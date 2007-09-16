@@ -36,7 +36,7 @@
             <resizelayout axis="y" spacing="0" />
         </view>
 
-        <text name="title" font="vera" fontsize="10" fgcolor="#DAE3E8"
+        <text name="title" fgcolor="#DAE3E8"
               width="${parent.width-30}" x="5" y="1"/>
 
         <view name="contents" x="3" y="19" height="${parent.height - 27}" 

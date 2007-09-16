@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -114,7 +114,14 @@ RuntimeException(
         }
         return mHome;
     }
-
+    
+    /**
+     * @return the directory which is the parent of the directory in the LPS_HOME property
+     */
+    public static String getHomeParent() {
+        File myfile = new File(LPS.HOME());
+        return (myfile.getParent());
+    }
     /** 
      * @return the "root directory" of the LPS bits.  Typically, HOME/WEB-INF/lps.
      */
@@ -172,6 +179,13 @@ RuntimeException(
     }
 
     /**
+     * @return the location of the images directory.
+     */
+    public static String getImagesDirectory()  {
+        return ROOT() + File.separator + "images";
+    }
+
+    /**
      * @return the location of the components directory.
      */
     public static String getComponentsDirectory()  {
@@ -189,7 +203,34 @@ RuntimeException(
      * @return the location of the lfc directory
      */
     public static String getLFCDirectory()  {
-        return ROOT() + File.separator + "lfc";
+      return HOME() + File.separator + LPS.getProperty("compiler.runtime.dir").replace('/', File.separatorChar);
+    }
+
+    public static String getLFCname(String runtime, boolean debug, boolean profile, boolean backtrace) {
+      String lfc = "LFC";
+      String extension = "js";
+      if (runtime == null) {
+        runtime = LPS.getProperty("compiler.runtime.default", "swf7");
+      }
+
+      if (runtime.indexOf("swf") == 0) {
+        runtime = runtime.substring("swf".length());
+        extension = "lzl";
+      }
+
+      lfc += runtime;
+
+      if (profile) {
+        lfc += "-profile";
+      }
+
+      if (backtrace) {
+        lfc += "-backtrace";
+      } else if (debug) {
+        lfc += "-debug";
+      }
+
+      return lfc + "." + extension;
     }
 
     /*
@@ -478,32 +519,6 @@ throw new ChainedException(
     public static Properties getProperties() {
         loadProperties();
         return mProperties;
-    }
-
-    private final static String KRANK_PORT_PROPERTY = "krankPortNum";
-    private final static int DEFAULT_KRANK_PORT = 4444;
-
-    /*** @return Krank listener port */
-    public static int getKrankPort () {
-        String portStr = LPS.getProperties().getProperty(KRANK_PORT_PROPERTY);
-        int portnum = DEFAULT_KRANK_PORT;
-        if (portStr == null) {
-            return portnum;
-        }
-        try {
-            portnum = Integer.parseInt(portStr);
-        } catch (NumberFormatException e) {
-            throw new 
-                RuntimeException(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Server configuration error: can't parse lps.properties entry '" + p[0] + "'"
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                LPS.class.getName(),"051019-496", new Object[] {KRANK_PORT_PROPERTY})
-                );            
-        }
-        return portnum;
     }
 
     /** @return a property from the LPS property file, defaulting

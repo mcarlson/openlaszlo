@@ -1,11 +1,8 @@
-/*****************************************************************************
- * ClassModel.java
- *****************************************************************************/
+/* -*- mode: Java; c-basic-offset: 2; -*- */
 
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
+/**
+ * LZX Classes
+ */
 
 package org.openlaszlo.compiler;
 import java.util.*;
@@ -313,3 +310,8 @@ class ClassModel implements Comparable {
         }
     }
 }
+
+/**
+ * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * Reserved.  Use is subject to license terms.
+ */

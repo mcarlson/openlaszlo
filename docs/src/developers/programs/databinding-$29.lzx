@@ -1,0 +1,39 @@
+ <canvas height="300" width="400" debug="true">
+   <debug y="100" />
+   <dataset name="ds">
+     <data>
+       <person name="a assdfasfva asdf sad" surname="a surname"/>
+       <person name="b" surname="b surname"/>
+       <person name="c" surname="c surname"/>
+     </data>
+   </dataset>
+   <simplelayout axis="y"/>
+   <button onclick="thedata.setAttribute('datapath', 'ds:/')">Set datapath</button>
+   <view id="thedata" ondata="Debug.warn('data %#w', arguments[0])">
+     <simplelayout axis="y"/>
+     <view>
+       <simplelayout axis="x"/>
+       <text>Datapath:</text>
+       <view>
+         <simplelayout axis="y"/>
+         <text datapath='data/person/@name' resize="true"
+               ondata="Debug.warn('datapath.ondata')"
+               />
+       </view>
+     </view>
+     <view>
+       <simplelayout axis="x"/>
+       <text>$path:</text>
+       <view>
+         <simplelayout axis="y"/>
+         <text text="$path{'data/person/@name'}" resize="true"
+               ondata="Debug.warn('$path.ondata')"
+               />
+       </view>
+     </view>
+   </view>
+ </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

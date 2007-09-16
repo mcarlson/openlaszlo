@@ -1,0 +1,20 @@
+
+<canvas >
+   <include href="extensions/html.lzx"/>
+   <class name="browser" extends="window" resizable="true" bgcolor="silver">
+      <edittext name="txt" text="http://openlaszlo.org/" width="300"/>
+      <button x="310" onclick="parent.htmlview.setSrc(parent.txt.getText()); parent.htmlview.setAttribute(visible, true)">
+      Load
+      </button>
+      <html name="htmlview"
+            width="${parent.width - 19}" 
+            height="${parent.height - 74}"
+            x="${parent.x + 7}" 
+            y="${parent.y + 53}"/>
+   </class>
+   <browser width="500" height="500" x="10" y="10"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -21,10 +21,10 @@
                    setter="_setFocusable(focusable)" />
 
         <!--- keeps the original focusable value set by user.
-              @keywords private -->
+              @access private -->
         <attribute name="_focusable" value="true" type="boolean" />
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <event name="onfocusable"/>
 
         <!--- the label or title of the component: instead of using this 
@@ -67,13 +67,13 @@
         <attribute name="isdefault" setter="this._setIsDefault(isdefault)"/>
 
         <!--- event: when isdefault changes
-              @keywords private -->
+              @access private -->
         <event name="onisdefault"/>
 
         <!--- set to true when this component will receive enter key events -->
         <attribute name="hasdefault" value="false" />
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="_setEnabled" args="isEnabled">
         <![CDATA[
             this._enabled = isEnabled;
@@ -87,7 +87,7 @@
         ]]>
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="_setFocusable" args="isFocusable">
             this._focusable = isFocusable;
             if (this.enabled) {
@@ -99,7 +99,7 @@
         </method>
 
         <!--- event: when isdefault changes
-              @keywords private -->
+              @access private -->
         <method name="construct" args="parent, args">
             super.construct(parent, args);
 
@@ -114,7 +114,7 @@
             }
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="init">  
             <![CDATA[
             super.init();
@@ -129,7 +129,7 @@
             ]]> 
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="_doMousedown"> 
         </method>
 
@@ -159,7 +159,7 @@
 
         <!--- setter for the isdefault property : changes the look of the
               button to its default look in the upstate 
-              @keywords private -->
+              @access private -->
         <method name="_setIsDefault" args="def">
             //avoid undefined property warnings
             this.isdefault = this[ 'isdefault' ] == true;
@@ -178,7 +178,7 @@
             }
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="_setDoesEnter" args="doe">
             this.doesenter = doe;
             if ( LzFocus.getFocus()  == this ){
@@ -201,16 +201,16 @@
         <!--- whether style should be applied to this component -->
         <attribute name="styleable" value="true" />
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <attribute name="_style" value="null"/>
-        <!--- @keywords private -->
+        <!--- @access private -->
         <event name="onstyle"/>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <attribute name="_styledel" value="null"/>
 
         <!--- when we're dependent on someone else's style
-              @keywords private -->
+              @access private -->
         <attribute name="_otherstyledel" value="null"/>
 
         <!--- Sets this component's style -->
@@ -253,7 +253,7 @@
             ]]>
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="_usestyle">  
             <![CDATA[
             if (this._initcomplete && this['style'] && this.style.isinited) {
@@ -265,7 +265,7 @@
             ]]>
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="_setstyle" args="s">  
             <![CDATA[
             if (!this._styledel) {
@@ -273,7 +273,9 @@
             } else {
                 _styledel.unregisterAll();
             }
-            _styledel.register( s, 'onstylechanged' );
+            if (s) {
+              _styledel.register( s, 'onstylechanged' );
+            }
 
             this.style = s;
             _usestyle();
@@ -282,7 +284,8 @@
         </method>
 
         <!--- this method applies the style object's attributes to this 
-              component -->
+              component 
+              @access protected -->
         <method name="_applystyle" args="s">
         </method>
 
@@ -297,6 +300,7 @@
                    will lighten or darken everything that is colorized -->
         <method name="setTint" args="v, color, brightness">
             <![CDATA[
+            if (v.capabilities.colortransform) {
             if (color != "" && color != null){
                 if (brightness == null) { brightness = 0; }
                 var rgb = color;
@@ -313,38 +317,39 @@
                 blue = blue/255*100;
 
                 v.setColorTransform( { ra : red, ga : green, ba : blue,
-                                    rb : brightness, gb : brightness, 
-                                    bb : brightness } );
+                                rb : brightness, gb : brightness, 
+                                bb : brightness } );
+                }
             }
             ]]>
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <event name="on_enabled"/>
 
         <!--- the value of _enabled is set via a constraint that is dependent
               on the component's 'enabled' property and whether the parent
               component is enabled this method allows subclasses to display
               themselves differently when disabled 
-              @keywords private -->
+              @access private -->
         <method name="_showEnabled">
         </method>
 
         <!--- when using databinding, this will interpret data supplied to this
               component as the text for the component 
-              @keywords private -->
+              @access private -->
         <method name="applyData" args="d">
             this.setAttribute( 'text' , d );
         </method>
 
         <!--- when using databinding, this will update data when the
               component's value changes (from user interaction or setAttribute)
-              @keywords private -->
+              @access private -->
         <method name="updateData">
             return this.text;
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="destroy">
             if (this._otherstyledel) {
                 this._otherstyledel.unregisterAll();
@@ -357,7 +362,7 @@
             super.destroy();
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="toString">
             <![CDATA[
             var idstring = "";
@@ -366,15 +371,23 @@
             if (this['id'] != null) idstring = "  id="+this.id;
             if (this['name'] != null) namestring = " named \""+this.name+"\"";
             if (this['text'] && this.text != "") textstring = "  text="+this.text;
-            return (this['classname'] ? this.classname : "" ) + namestring + idstring + textstring;
+            return this.constructor.classname + namestring + idstring + textstring;
             ]]>
         </method>
 
+        <doc>
+          <tag name="shortdesc"><text>an abstract class which all components subclass</text></tag>
+          <text>
+            <p>
+            An abstract base class that handles focus, the text attribute, and style.
+            </p>
+          </text>
+        </doc>
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -13,10 +13,10 @@
     <simplelayout axis="y" />
     <button text="Log Msg1" onclick="Debug.log('This is a test log message.')"/>
     <button text="Log Msg2" onclick="Debug.log('This is another log message!')"/>
-    <button text="Debug.write" onclick="Debug.write('debug.write output')"/>
+    <button text="Debug.write" onclick="Debug.write('Debug.write output')"/>
     <button text="Matrix" onclick="parent.matrix(3)"/>
     <button text="Back To Back" onclick="parent.backtoback(10)"/>
-    <button text="line numbers" onclick="for(var i=0; i &lt; 120; i++) debug.write(i)"/>
+    <button text="line numbers" onclick="for(var i=0; i &lt; 120; i++) Debug.write(i)"/>
     <button text="forcetext" onclick="parent.forcetext()"/>
 
 
@@ -24,26 +24,26 @@
 
     <method name="forcetext">
      <![CDATA[
-	var j;	
-	var msg = "";
-	for (j = 0; j < 100; j++) {
-	    msg = msg + j + "<br>";
-	}
+    var j;    
+    var msg = "";
+    for (j = 0; j < 100; j++) {
+        msg = msg + j + "<br>";
+    }
 
-	Debug.write(msg);
-	foo.settext(msg);
-	
+    Debug.write(msg);
+    foo.settext(msg);
+    
      ]]>
    </method>   
-	
+    
 
 
 
     <method name="backtoback" args="n">
      <![CDATA[
-	var j;
-	for (j = 0; j < n; j++) {
-	   Debug.log("log message "+j);
+    var j;
+    for (j = 0; j < n; j++) {
+       Debug.log("log message "+j);
         }
      ]]>
    </method>   
@@ -51,18 +51,18 @@
 
    <method name="matrix" args="n">
      <![CDATA[
-	var j;
+    var j;
         var k;
-	for (j = 0; j < n; j++) {
-	  for (k=0 ; k < n; k++) {
-	    this.doit(j,k);
+    for (j = 0; j < n; j++) {
+      for (k=0 ; k < n; k++) {
+        this.doit(j,k);
           }
         }
      ]]>
    </method>   
 
     <method name="doit" args="m,n">
-	if (m==n) {
+    if (m==n) {
           Debug.log(m+ " EQUALS "+n);
         } else {
           Debug.log(m+ " DOESN'T EQUAL "+n);
@@ -81,6 +81,6 @@
  
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,14 @@
+
+<canvas height="125">
+  <simplelayout axis="x" spacing="10"/>
+  <class name="gView">
+    <view height="100" width="100"/>
+  </class>     
+  <gView id="red"   bgcolor="rgb(255,0,0)"/>
+  <gView id="blue"  bgcolor="rgb(0,255,0)"/>
+  <gView id="green" bgcolor="rgb(0,0,255)"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** --> 

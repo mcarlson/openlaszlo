@@ -1,0 +1,8 @@
+<rsp stat="ok">
+<photos page="1" pages="5" perpage="100" total="500">
+<photo favoritetag="festive" id="107482615" secret="186edb2fc2" server="40" dateuploaded="1141451200" isfavorite="0" license="4" rotation="0" originalformat="jpg" />
+<photo favoritetag="flower" id="105287098" secret="0880413d66" server="40" dateuploaded="1141054213" isfavorite="0" license="4" rotation="0" originalformat="jpg" />
+<photo favoritetag="openlaszlo,ajax" id="34337425" secret="ecd918f39b" server="21" dateuploaded="1124142674" isfavorite="0" license="4" rotation="0" originalformat="jpg" />
+</photos>
+</rsp>
+<!-- Copyright 2006 Laszlo Systems --> 

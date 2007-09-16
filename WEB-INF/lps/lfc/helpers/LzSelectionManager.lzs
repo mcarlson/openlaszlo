@@ -1,0 +1,273 @@
+/**
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @affects lzselectionmanager
+  * @access public
+  * @topic LFC
+  * @subtopic Helpers
+  * @lzxname selectionmanager
+  */
+
+/**
+  * <p>Selection managers manage selection among a series of objects. They
+  * enable standard control and shift click modifiers to aid range
+  * selection. Selection managers provide methods to manipulate, add to
+  * and clear the selection.  For example:</p>
+  * 
+  * <example>
+  * &lt;canvas&gt;
+  * 
+  *   &lt;dataset name="fruits"&gt;
+  *     &lt;fruit&gt;Oranges&lt;/fruit&gt;
+  *     &lt;fruit&gt;Apples&lt;/fruit&gt;
+  *     &lt;fruit&gt;Bananas&lt;/fruit&gt;
+  * 
+  *     &lt;fruit&gt;Grapes&lt;/fruit&gt;
+  *     &lt;fruit&gt;Kiwis&lt;/fruit&gt;
+  *     &lt;fruit&gt;Papayas&lt;/fruit&gt;
+  *     &lt;fruit&gt;Watermelon&lt;/fruit&gt;
+  * 
+  *     &lt;fruit&gt;Strawberries&lt;/fruit&gt;
+  *     &lt;fruit&gt;Cherries&lt;/fruit&gt;
+  *   &lt;/dataset&gt;
+  *   
+  *   &lt;simplelayout/&gt;
+  *   
+  *   &lt;text&gt;Select a series of items below. The control and shift-click modifiers 
+  *   help select ranges.&lt;/text&gt;
+  * 
+  *   
+  *   &lt;view name="fruitlist"&gt;
+  *     &lt;selectionmanager name="selector" toggle="true"/&gt;
+  *     &lt;simplelayout/&gt;
+  *     
+  *     &lt;view name ="listitem"
+  *           datapath="fruits:/fruit" 
+  *           onclick="parent.selector.select(this);"&gt;
+  *       &lt;text name="txt" datapath="text()"/&gt;
+  * 
+  *       &lt;method name="setSelected" args="amselected"&gt;
+  * 
+  *         if (amselected) {
+  *           var txtColor = 0xFFFFFF;
+  *           var bgcolor = 0x999999;
+  *         } else {
+  *           var txtColor = 0x000000;
+  *           var bgcolor = 0xFFFFFF;
+  *         }
+  *         this.setBGColor( bgcolor );
+  *         this.txt.setAttribute('fgcolor', txtColor);
+  *       &lt;/method&gt;
+  *     &lt;/view&gt;
+  *     
+  *     &lt;method name="deleteSelected"&gt;
+  *     &lt;![CDATA[
+  *       var csel = this.selector.getSelection();
+  *       for (var i = 0; i &lt; csel.length; i++) {
+  *         csel[i].destroy();
+  *       }
+  *       this.selector.clearSelection();
+  *     ]]&gt;
+  *     &lt;/method&gt;
+  * 
+  *   &lt;/view&gt;
+  *   &lt;button onclick="fruitlist.deleteSelected();"&gt;Delete selection&lt;/button&gt;
+  * &lt;/canvas&gt;
+  * </example>
+  * 
+  * @shortdesc Manages selection among a series of objects.
+  * @lzxname selectionmanager
+  *
+  * @initarg Boolean toggle: If true, a re-selected element will lose
+  * the selection.
+  * @initarg private Boolean selFuncName: The name of the method to call (with true or
+  * false to represent selectedness) when an element changes its selectedness
+  */
+  
+class LzSelectionManager extends LzNode {
+
+/** @access private
+  * @modifiers override 
+  */
+static var tagname = 'selectionmanager';
+
+/** The name of the method to call on an object
+  * when an object's selectedness changes.  The method is called with a single Boolean argument.  The default value for this 
+  * field is <code>setSelected</code>.
+  * @type String
+  * @type token
+  */
+var sel;
+
+/** A hash of currently selected objects (by UID)
+  * @type Object
+  */
+var selectedHash;
+
+/** An array that represents the current selection
+  * @type Array
+  */
+var selected;
+
+/**
+  * @param LzView view: A view above this one in the hierarchy that will determine
+  * the placement of the selection manager.
+  * @param Object args: A hash of initialization arguments
+  * 
+  * @access private
+  */
+function construct ( view , args ) {
+    super.construct.apply(this, arguments);
+
+    this.toggle = args.toggle == true;
+
+    this.sel = args.selFuncName == null ? "setSelected" : args.selFuncName;
+    
+    this.selected = new Array;
+    this.selectedHash = new Object;
+    this.lastRange = null;
+}
+
+
+/**
+  * Called with a new member to be selected.
+  * @param LzView o: The new element that got selected.
+  */
+function select ( o ){
+    if (  this.isSelected( o ) && ( this.toggle ||
+                                                this.isMultiSelect( o ) ) ) {
+        this.unselect( o );
+        return;
+    }
+
+    if (this.selected.length > 0 && this.isRangeSelect( o ) ){
+        var s = this.lastRange != null ? this.lastRange : this.selected[ 0 ];
+        if ( s != o ){
+            this.selectRange( s , o );
+        }
+        return;
+    }
+
+    if ( ! this.isMultiSelect( o ) ){
+        this.clearSelection();
+    }
+    this.makeSelected( o );
+}
+
+/**
+  * Tests for selectedness of input.
+  * @param LzView o: The object to test for selectedness.
+  * @return Boolean: The selectedness of the input object.
+  */
+function isSelected ( o )  {
+    return this.selectedHash[ o.getUID() ];
+}
+
+/**
+  * Makes the given object selected.
+  * @access private
+  * @param LzView s: The object to make selected
+  */
+function makeSelected ( s )  {
+    if ( this.selectedHash[ s.getUID() ] ) return;
+
+    this.selectedHash[ s.getUID() ] = true;
+    this.selected.push( s );
+    s[ this.sel ] ( true );
+}
+
+
+/**
+  * Unselects the given object.
+  * @access protected
+  * @param LzView o: The object to make unselected
+  */
+function unselect ( o ){
+    for ( var i= this.selected.length-1 ; i >= 0; i-- ){
+        if ( this.selected[ i ] == o ) {
+            this.selectedHash[ o.getUID() ] = false;
+            o [ this.sel ] ( false );
+            this.selected.splice( i , 1 );
+            break;
+        }
+    }
+}
+
+/**
+  * Unselects any selected objects.
+  */
+function clearSelection (){
+    var s;
+    while ( s =  this.selected.pop()){
+        s[ this.sel ] ( false );
+    }
+    this.selected = new Array;
+    this.selectedHash = new Object;
+    this.lastRange = null;
+}
+
+/**
+  * Returns an array representing the current selection.
+  * @return Array: An array representing the current selection.
+  */
+function getSelection (){
+    return this.selected;
+}
+
+/**
+  * @access private
+  * @param LzDataPath s: The datapath that was at top of the selection stack
+  * @param LzView e: The newly selected view
+  */
+function selectRange ( s , e ){
+    var pview = s.immediateparent;
+
+    var svs = pview.subviews;
+    var st = null;
+    var en = null;
+    for ( var i = 0; i < svs.length; i++ ){
+        if ( svs[ i ] == s ) st = i;
+        if ( svs[ i ] == e ) en = i;
+        if ( null != st && null != en ) break;
+    }
+
+    var dir = st > en ? -1 : 1;
+    this.clearSelection();
+    
+    this.lastRange = s;
+    for ( var i = st; i != en + dir; i += dir ) {
+        this.makeSelected( pview.subviews[ i ] );
+    }
+    
+}
+
+/**
+  * Determines whether the an additional selection should be multi-selected or
+  * should replace the existing selection
+  * @access protected
+  * @return Boolean:  If true, multi select. If false, don't multi select
+  */
+function isMultiSelect ( ){
+    return LzKeys.isKeyDown( "control" );
+}
+
+/**
+  * Determines whether the an additional selection should be range-selected or
+  * should replace the existing selection
+  * @access protected
+  * @return Boolean: If true, range select. If false, don't range select
+  */
+function isRangeSelect(  ){
+    return LzKeys.isKeyDown( "shift" );
+}
+
+function toString (){
+    return "LzSelectionManager";
+}
+
+} // End of LzSelectionManager
+
+
+

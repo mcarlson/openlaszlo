@@ -250,7 +250,7 @@
             <view name="icon"/>
             <text name="title" fgcolor="${classroot['style'] ? classroot.style.textcolor : null}"
                 opacity="${classroot.state == 2 ? .7 : 1}"
-                    text="${classroot.title}" y="-1" />
+                    text="${classroot.title}" y="-1" resize="false" width="100%"/>
             <view name="gripper_right" y="1" resource="window_gripper_rsc"
                 clip="true" frame="${classroot.state}"/>
 
@@ -299,12 +299,41 @@
             }
         </method>
 
+        <doc>
+          <tag name="shortdesc"><text>
+              A draggable panel that provides common behavior for various window classes.
+          </text></tag>
+          <text>
+
+            <p>The <tagname>windowpanel</tagname> tag creates a floating view that
+              has a title area and can be moved by the user.  It provides common
+              behavior for <classname>window</classname>,
+              <classname>modaldialog</classname>, and
+              <classname>alert</classname>.</p>
+
+            <example class="code" title="window panel">
+              &lt;canvas width="300" height="150"&gt;
+              &lt;windowpanel x="10" y="10" width="200" height="100"
+              title="windowpanel" closeable="true"&gt;
+              &lt;text&gt;Hello&lt;/text&gt;
+              &lt;/windowpanel&gt;
+              &lt;/canvas&gt;
+            </example>
+
+            <seealso>
+              <classes>window modaldialog alert</classes>
+              <component-design id="windowpanel" title="Window Panel"/>
+            </seealso>
+
+          </text>
+        </doc>
+
     </class>
 
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -32,10 +32,12 @@ import java.io.Writer;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.*;
-import java.util.zip.*; 
+import java.util.zip.*;
 
 import org.apache.log4j.*;
 import org.apache.oro.text.regex.*;
+import java.io.InputStreamReader;
+import java.io.BufferedInputStream;
 
 // A dir is absolute if it begins with "" (the empty string to
 // the left of the initial '/'), or a drive letter.
@@ -89,14 +91,14 @@ public abstract class FileUtils {
         } catch (Exception e) {
             mLogger.error("Exception initializing FileUtils", e);
         }
-    } 
+    }
 
     /** Returns the contents of <var>file</var> as a byte[].
      * @param file a File
      * @return a byte[]
      * @throws IOException if an error occurs
      */
-    public static byte[] readFileBytes(File file) 
+    public static byte[] readFileBytes(File file)
         throws IOException
     {
         java.io.InputStream istr = new java.io.FileInputStream(file);
@@ -112,7 +114,7 @@ public abstract class FileUtils {
      * @throws IOException if an error occurs
      */
 
-    public static String readFileString(File file) 
+    public static String readFileString(File file)
         throws IOException
     {
         byte data[] = readFileBytes(file);
@@ -121,12 +123,12 @@ public abstract class FileUtils {
 
     /** Returns the contents of <var>file</var> as a String, using character encoding <var>encoding</var>.
      * @param file a File
-     * @param encoding a character set encoding name
+     * @param defaultEncoding a character set encoding name
      * @return a String
      * @throws IOException if an error occurs
      */
 
-    public static String readFileString(File file, String defaultEncoding) 
+    public static String readFileString(File file, String defaultEncoding)
         throws IOException
     {
         Reader reader = makeXMLReaderForFile(file.getAbsolutePath(), defaultEncoding);
@@ -137,6 +139,20 @@ public abstract class FileUtils {
     }
 
 
+    private static final Pattern pattern;
+    static {
+        Perl5Compiler compiler = new Perl5Compiler();
+        Pattern tmp = null;
+        try {
+            tmp = compiler.compile("[^<]*\\s*<[?]xml\\s+[^>]*encoding=[\"'](.*)['\"][^>]*?>", Perl5Compiler.READ_ONLY_MASK);
+        } catch( MalformedPatternException failed ) {
+            System.err.println( failed );
+            System.exit( 0 );
+        }
+        pattern = tmp;
+    }
+        
+
     /** Attempt to deduce the encoding of an XML file, by looking for the "encoding" attribute in the
      * XML declaration.
      * Default is to return "UTF-8"
@@ -144,24 +160,26 @@ public abstract class FileUtils {
      * @return the encoding name
      * @throws IOException if an error occurs
      */
-    public static String getXMLEncodingFromFile(String pathname, String defaultEncoding)
+    public static Reader getXMLEncodingFromFile(InputStream input, String defaultEncoding)
       throws IOException {
-        java.io.FileInputStream ifs = new java.io.FileInputStream(pathname);
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        send(ifs, bout);
+        send(input, bout);
         Perl5Matcher matcher = new Perl5Matcher();
-        try {
-            Perl5Compiler compiler = new Perl5Compiler();
-            Pattern pattern = compiler.compile("[^<]*\\s*<[?]xml\\s+[^>]*encoding=[\"'](.*)['\"][^>]*?>");
-            if (matcher.contains(new String(bout.toByteArray()), pattern)) {
-                MatchResult result = matcher.getMatch();
-                String encoding = result.group(1);
-                return encoding;
-            } else {
-                return "UTF-8";
-            }
-        } catch (MalformedPatternException e) {
-            throw new RuntimeException(e.getMessage());
+        
+        byte [] array = bout.toByteArray();
+        // We will ignore the byte order mark encoding for now,
+        // hopefully no one is going to be using UTF16. I don't want
+        // to deal right now with the case where the XML encoding
+        // directive conflicts with the byte order mark.
+        int skip = stripByteOrderMark( array );
+        ByteArrayInputStream bais = new ByteArrayInputStream( array, skip, array.length );
+        
+        if (matcher.contains(new String(array, 0, Math.min( 1024, array.length )), pattern)) {
+            MatchResult result = matcher.getMatch();
+            String encoding = result.group(1);
+            return new InputStreamReader( bais, encoding ); 
+        } else {
+            return new InputStreamReader( bais, defaultEncoding ); 
         }
     }
 
@@ -174,20 +192,13 @@ public abstract class FileUtils {
      */
     public static Reader makeXMLReaderForFile (String pathname, String defaultEncoding)
       throws IOException {
-        String encoding = getXMLEncodingFromFile(pathname, defaultEncoding);
-        InputStream ifs = new java.io.FileInputStream(pathname);
+        InputStream ifs = new BufferedInputStream( new java.io.FileInputStream(pathname) );
         if (pathname.endsWith(".lzo")) {
           ifs = new java.util.zip.GZIPInputStream(ifs);
         }
-        java.io.PushbackInputStream pbis = new java.io.PushbackInputStream(ifs, 1024);
-        // We will ignore the byte order mark encoding for now,
-        // hopefully no one is going to be using UTF16. I don't want
-        // to deal right now with the case where the XML encoding
-        // directive conflicts with the byte order mark.
-        FileUtils.stripByteOrderMark(pbis);
-        return new java.io.InputStreamReader(pbis, encoding);
+        return getXMLEncodingFromFile( ifs, defaultEncoding );
     }
-    
+
     /** Read a (pushback-able) byte input stream looking for some form of
         Unicode Byte Order Mark Defaults. If found, strip it out.
      * @param pbis a byte input stream
@@ -196,7 +207,7 @@ public abstract class FileUtils {
     public static String stripByteOrderMark (PushbackInputStream pbis) throws IOException {
         // We need to peek at the stream and if the first three chars
         // are a UTF-8 or UTF-16 encoded BOM (byte order mark) we will
-        // discard them. 
+        // discard them.
         int c1 = pbis.read();
         int c2 = pbis.read();
         int c3 = pbis.read();
@@ -223,13 +234,57 @@ public abstract class FileUtils {
         }
     }
 
+    /** Read a (pushback-able) byte input stream looking for some form of
+        Unicode Byte Order Mark Defaults. If found, strip it out.
+     * @param raw bytes
+     * @return the count of characters to skip
+     */
+    public static int stripByteOrderMark (byte[] raw) {
+        try {
+            // We need to peek at the stream and if the first three chars
+            // are a UTF-8 or UTF-16 encoded BOM (byte order mark) we will
+            // discard them. 
+            int c1 = ((int) raw[0]) & 0xff;
+            int c2 = ((int) raw[1]) & 0xff;
+            int c3 = ((int) raw[2]) & 0xff;
+            int count = 0;
+            if (c1 == 0xFF & c2 == 0xFE) {
+                // UTF16 Big Endian BOM
+                // discard the first two chars
+    //             pbis.unread(c3);
+    //             return "UTF-16BE";
+                return 2;
+            } else if (c1 == 0xFE & c2 == 0xFF) {
+                // UTF16 Little Endian BOM
+                // discard the first two chars
+    //             pbis.unread(c3);
+    //             return "UTF-16LE";
+                return 2;
+            } else if (c1 == 0xEF && c2 == 0xBB && c3 == 0xBF) {
+    //             // UTF-8 BOM
+    //             // discard all three chars
+    //             return "UTF-8";
+                return 3;
+            } else {
+                // Otherwise put back the chars we just read and proceed
+    //             pbis.unread(c3);
+    //             pbis.unread(c2);
+    //             pbis.unread(c1);
+    //             return null;
+                return 0;
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
     /**
      * @param file file to read
      * @return size of file
      * @throws FileNotFoundException
      * @throws IOException
      */
-    static public long fileSize(File file) 
+    static public long fileSize(File file)
         throws IOException, FileNotFoundException {
 
         RandomAccessFile raf = null;
@@ -256,7 +311,7 @@ mLogger.warn(
     /**
      * @param file file to read
      * @return size of file or -1 if it can't be determined.
-     */ 
+     */
     static public long getSize(File file) {
         try {
             return fileSize(file);
@@ -280,7 +335,7 @@ mLogger.warn(
         }
     }
 
-    /** 
+    /**
      * @return the ending extension
      * @param pathname a string
      */
@@ -291,6 +346,71 @@ mLogger.warn(
         }
         return "";
     }
+
+    /** Inserts a subdir between the file and existing location.
+     * Probably deals with cases that will never happen.
+     * @return path a string specifying file in subdir
+     * @param pathname a string
+     * @param subdir a string
+     */
+    public static String insertSubdir(String pathname, String subdir) {
+        boolean hasDrive = false;
+        if (pathname.length() > 1) {
+            hasDrive = (pathname.substring(1,2)==":");
+        }
+        String driveSpecifier ="";
+        if (hasDrive) {
+            driveSpecifier = pathname.substring(0,2);
+            pathname=pathname.substring(2);
+        }
+        char fSep=File.separatorChar;
+        int slashIndex = pathname.lastIndexOf(fSep);
+        if (slashIndex == -1) {
+            return (driveSpecifier + subdir + fSep + pathname);
+        }
+        else {
+            if (hasDrive | (slashIndex == 0)) {
+                return (driveSpecifier + fSep + subdir + pathname);
+            }
+            else {
+                String dir = pathname.substring(0, slashIndex);
+                String name = pathname.substring(slashIndex, pathname.length());
+                return (driveSpecifier + dir + fSep + subdir + name);
+            }
+        }
+    }
+
+    public static String insertSuffix(String pathname, String suffix) {
+        String base=getBase(pathname);
+        String type=getExtension(pathname);
+        return (base + suffix + '.' + type);
+    }
+
+    public static File[] matchPlusSuffix(File fFullPath) {
+        File mDir = fFullPath.getParentFile();
+        String sName = fFullPath.getName();
+        String sBase = getBase(sName);
+        String sType = getExtension(sName);
+
+        class StartsWithNameFilter implements FilenameFilter {
+                final String _name;
+            final String _type;
+            StartsWithNameFilter(String sBase, String sType) {
+                _name = sBase;
+                _type = sType;
+            }
+            public boolean accept(File fDir, String sName) {
+        final boolean lenTest = (_name.length() + _type.length() + 1) < sName.length();
+                return ((lenTest && sName.startsWith(_name) && sName.endsWith(_type)));
+            }
+        }
+        File[] fileNames = mDir.listFiles(new StartsWithNameFilter(sBase, sType));
+        if ((fileNames == null) || (fileNames.length == 0)) {
+        return null;
+        } else {
+        return fileNames;
+         }
+     }
 
     /** Remove the : from Windows Drive specifier found
      *  in Absolute path names.
@@ -309,7 +429,7 @@ mLogger.warn(
             return src;
 
         // Check to make sure we have a Windows absolute path
-        if (src.charAt(1) != ':') 
+        if (src.charAt(1) != ':')
             return src;
 
         // Sanity check to make sure we really have a drive specifier
@@ -319,8 +439,8 @@ mLogger.warn(
                            t == Character.LOWERCASE_LETTER);
         if (!isAscii) {
             return src;
-        } 
-        
+        }
+
         // Remove the : that was the 2nd character.
         return src.substring(0,1) + src.substring(2);
     }
@@ -357,7 +477,7 @@ mLogger.warn(
 
         return (delFileOk && delTreeOk);
     }
-    
+
     /**
      * Read the input stream and write contents to output stream.
      * @param input stream to read
@@ -366,7 +486,7 @@ mLogger.warn(
      * @throws IOException if there's an error reading or writing
      * the steams
      */
-    public static int send(InputStream input, OutputStream output) 
+    public static int send(InputStream input, OutputStream output)
         throws IOException {
 
         int available = input.available();
@@ -378,7 +498,7 @@ mLogger.warn(
         }
         return send(input, output, bsize);
     }
-    
+
     /**
      * Exception when there's an error writing a stream
      */
@@ -399,7 +519,7 @@ mLogger.warn(
         }
     }
 
-    
+
     /**
      * Read the input character stream and write contents to output stream.
      * @param input stream to read
@@ -408,7 +528,7 @@ mLogger.warn(
      * @throws IOException if there's an error reading or writing
      * the steams
      */
-    public static int send(Reader input, Writer output) 
+    public static int send(Reader input, Writer output)
         throws IOException {
         int bsize = BUFFER_SIZE;
         return send(input, output, bsize);
@@ -425,7 +545,7 @@ mLogger.warn(
      * @throws IOException if there's an error reading or writing
      * the steams
      */
-    public static int send(Reader input, Writer output, int size) 
+    public static int send(Reader input, Writer output, int size)
         throws IOException {
         int c = 0;
         char[] buffer = new char[size];
@@ -448,7 +568,7 @@ mLogger.warn(
      * @throws IOException if there's an error reading or writing
      * the steams
      */
-    public static int send(InputStream input, OutputStream output, int size) 
+    public static int send(InputStream input, OutputStream output, int size)
         throws IOException {
         int c = 0;
         byte[] buffer = new byte[size];
@@ -544,7 +664,7 @@ mLogger.warn(
      * @return number of bytes written to output
      * @throws IOException
      */
-    public static int escapeHTMLAndSend(InputStream input, OutputStream output) 
+    public static int escapeHTMLAndSend(InputStream input, OutputStream output)
         throws IOException {
 
         int available = input.available();
@@ -562,10 +682,10 @@ mLogger.warn(
      * @param input stream to read
      * @param output stream to write
      * @param size size of buffer to use
-     * @param return number of bytes written to output
+     * @return number of bytes written to output
      * @throws IOException
      */
-    public static int escapeHTMLAndSend(InputStream input, OutputStream output, int size) 
+    public static int escapeHTMLAndSend(InputStream input, OutputStream output, int size)
         throws IOException {
         int c = 0;
         byte[] buffer = new byte[size];
@@ -587,7 +707,7 @@ mLogger.warn(
      * @param ib input buffer
      * @param buflen input buffer size;
      * @param ob output buffer size;
-     * @param return number of bytes written to ob
+     * @return number of bytes written to ob
      */
     public static int escapeHTML(byte[] ib, int buflen, byte[] ob) {
         int bc = 0;
@@ -679,7 +799,7 @@ mLogger.warn(
      * @return the path to the given file, relative to the
      * given directory name.  If the file isn't inside the directory,
      * just return the entire file name.  Path separators are
-     * modified to always be '/'.  
+     * modified to always be '/'.
      */
     public static String relativePath(File file, String directoryName) {
         try {
@@ -698,16 +818,23 @@ mLogger.warn(
      * @return the path to the given file, relative to the
      * given directory name.  If the file isn't inside the directory,
      * just return the entire file name.  Path separators are
-     * modified to always be '/'.  
+     * modified to always be '/'.
      */
     public static String relativePath(String filename, String directoryName) {
         return relativePath(new File(filename), directoryName);
     }
 
+    public static String relativePath(File fFile, File directoryName) {
+        return relativePath(fFile, directoryName.toString());
+    }
+
     public static String toURLPath(File file) {
+      return toURLPath(file.getPath());
+    }
+
+    public static String toURLPath(String path) {
         // Can't call File.toURL, since it looks at the disk
-        return StringUtils.join(StringUtils.split(file.getPath(),
-                                                  file.separator),
+        return StringUtils.join(StringUtils.split(path, File.separator),
                                 "/");
     }
 
@@ -737,12 +864,12 @@ mLogger.warn(
      * @param encoding type of encoding to use ("gzip" or "deflate" supported).
      * @throws ChainedException if the requested encoding is not supported.
      */
-    static public void encode(File inputFile, File outputFile, String encoding) 
+    static public void encode(File inputFile, File outputFile, String encoding)
         throws IOException {
 
         FileInputStream    in = null;
 
-        try {    
+        try {
             in = new FileInputStream(inputFile);
             encode(in, outputFile, encoding);
         } finally {
@@ -758,7 +885,7 @@ mLogger.warn(
      * @param encoding type of encoding to use ("gzip" or "deflate" supported).
      * @throws ChainedException if the requested encoding is not supported.
      */
-    static public void decode(File inputFile, File outputFile, String encoding) 
+    static public void decode(File inputFile, File outputFile, String encoding)
         throws IOException {
 
         mLogger.debug("Starting decoding from " + encoding);
@@ -766,12 +893,12 @@ mLogger.warn(
         OutputStream out = new FileOutputStream(outputFile);
         InputStream ins = new FileInputStream(inputFile);
 
-        try {    
+        try {
             if (encoding.equals(GZIP)) {
                 in = new GZIPInputStream(ins);
-            } else if (encoding.equals(DEFLATE)) { 
+            } else if (encoding.equals(DEFLATE)) {
                 in = new InflaterInputStream(ins);
-            } else { 
+            } else {
 String message =
 /* (non-Javadoc)
  * @i18n.test
@@ -779,11 +906,11 @@ String message =
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 FileUtils.class.getName(),"051018-771", new Object[] {encoding});
-                
+
                 mLogger.error(message);
                 throw new ChainedException(message);
-            } 
-    
+            }
+
             // Note: use fixed size for buffer.  The send(in, out) method
             // will use in.available() to guess a good buffersize but
             // that won't work out well for these input streams.
@@ -813,12 +940,12 @@ mLogger.debug(
 
     /**
      * Encode the given file as requested to an outputFile.
-     * @param inputFile file to be encodeded
+     * @param input file to be encodeded
      * @param outputFile encoded file
      * @param encoding type of encoding to use ("gzip" or "deflate" supported).
-     * @throws ChainedException if the requested encoding is not supported.
+     * @throws IOException if the requested encoding is not supported.
      */
-    static public void encode(InputStream input, File outputFile, String encoding) 
+    static public void encode(InputStream input, File outputFile, String encoding)
         throws IOException {
 
         FileOutputStream   out = null;
@@ -833,16 +960,16 @@ mLogger.debug(
                                 FileUtils.class.getName(),"051018-823", new Object[] {encoding})
         );
 
-        try {    
+        try {
             FileUtils.makeFileAndParentDirs(outputFile);
 
             out = new FileOutputStream(outputFile);
 
             if (encoding.equals(GZIP)) {
                 filter = new GZIPOutputStream(out);
-            } else if (encoding.equals(DEFLATE)) { 
+            } else if (encoding.equals(DEFLATE)) {
                 filter = new DeflaterOutputStream(out);
-            } else { 
+            } else {
 String message =
 /* (non-Javadoc)
  * @i18n.test
@@ -850,10 +977,10 @@ String message =
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 FileUtils.class.getName(),"051018-842", new Object[] {encoding});
-                
+
                 mLogger.error(message);
                 throw new ChainedException(message);
-            } 
+            }
 
             FileUtils.send(input, filter, BUFFER_SIZE);
 
@@ -980,7 +1107,7 @@ mLogger.error(
          */
         class StartsWithNameFilter implements FilenameFilter {
             final String _name;
-        
+
             StartsWithNameFilter(String n) {
                 _name = n;
             }

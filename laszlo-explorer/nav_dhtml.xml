@@ -1,0 +1,317 @@
+<menu>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <section name="Welcome" src="/laszlo-explorer/coverpages/welcome/" title="OpenLaszlo Server" 
+             text="Designed for developers. Developed for design.">
+          <item name="Overview" src="/laszlo-explorer/coverpages/overview.html"/>
+          <item name="Getting Started" src="/laszlo-explorer/coverpages/getting_started.html"/>
+    </section>
+    
+    <section title="Demos" name="Demos" 
+             src="/laszlo-explorer/coverpages/demos_cover.html" 
+             text="See OpenLaszlo in action. Be sure to inspect the source code." >
+        <item title="Calendar" name="Calendar" 
+              src="/laszlo-explorer/coverpages/calendar_cover.html"
+              text="A desktop experience for an enterprise web application" >
+            <subitem title="Launch in DHTML" name="View in DHTML" action="popup" target="_blank"
+                     popup="/demos/calendar/calendar.lzx" runtime="dhtml" />
+            <subitem title="Launch in Flash" name="View in Flash" action="popup" target="_blank"
+                     popup="/demos/calendar/calendar.lzx" runtime="swf7" />
+            <subitem title="Source Code Explorer" name="Source" action="source"
+                     src="/demos/calendar/calendar.lzx" />
+        </item>
+        <item title="Amazon" name="Amazon" 
+              src="/laszlo-explorer/coverpages/amazon_cover.html"
+              text="An innovative shopping experience" >
+            <subitem title="Launch in DHTML" name="View in DHTML" action="popup" target="_blank"
+                     popup="/demos/amazon/amazon.lzx" runtime="dhtml" />
+            <subitem title="Launch in Flash" name="View in Flash" action="popup" target="_blank"
+                     popup="/demos/amazon/amazon.lzx" runtime="swf7" />
+            <subitem title="Source Code Explorer"
+                         src="/demos/amazon/amazon.lzx" name="Source"  action="source"/>
+        </item>
+        <item title="LZPIX" name="LZPIX"  
+              src="/laszlo-explorer/coverpages/lzpix_cover.html"
+              text="A demonstration of OpenLaszlo's multiple runtime capabilities." >
+            <subitem title="Launch in DHTML" name="View in DHTML" action="popup" target="_blank"
+                     popup="/demos/lzpix/app.lzx" runtime="dhtml" />
+            <subitem title="Launch in Flash" name="View in Flash" action="popup" target="_blank"
+                     popup="/demos/lzpix/app.lzx" runtime="swf7" />
+            <subitem title="Source Code Explorer"
+                src="/demos/lzpix/app.lzx" name="Source" action="source" />
+        </item>
+    </section>
+    
+    <section name="Laszlo in 10 Minutes" title="Laszlo in 10 minutes" text="A walkthrough for developers." action="explore_welcome">
+      <topic name="Introduction" 
+             src="/laszlo-explorer/coverpages/intor_cover.html" 
+             text="Essential concepts" autoselect="true">
+        <item name="Hello World" action="explore" 
+              src="/laszlo-explorer/basics/hello.lzx" text="The Canvas"/>
+        <item name="Button" action="explore" 
+              src="/laszlo-explorer/basics/hellobutton.lzx" 
+              text="A simple element."/>
+        <item name="Window" action="explore" 
+              src="/laszlo-explorer/basics/hellowindow.lzx" 
+              text="A window."/>     
+        <item name="Form" action="explore" 
+              src="/laszlo-explorer/basics/form.lzx" 
+              text="A form"/>     
+
+      </topic>
+      
+      <topic name="Basics" title="OpenLaszlo application basics" 
+             src="/laszlo-explorer/coverpages/basics_cover.html" 
+             text="Essential concepts" autoselect="true">
+        <item name="View" action="explore" 
+              src="/laszlo-explorer/basics/view.lzx" 
+              text="Views are the heart of LZX." />
+        <item name="Images" action="explore" 
+              src="/laszlo-explorer/basics/mediaimg.lzx" 
+              text="Attaching images to views"/>
+        <item name="Visual Layout" action="explore" 
+              src="/laszlo-explorer/basics/layout.lzx" 
+              text="Laying out the canvas"/>
+<!-- No Fonts for dhtml
+        <item name="Fonts" action="explore" 
+              src="/laszlo-explorer/basics/fonts.lzx" 
+              text="Using Fonts"/>        
+-->
+        <item name="Scrolling" action="explore" 
+              src="/laszlo-explorer/basics/scrolling.lzx" 
+              text="scrolling clipped views"/>        
+<!-- No Audio, Video for dhtml
+        <item name="Audio" action="explore" 
+              src="/laszlo-explorer/basics/mediaaudio.lzx" 
+              text="Attaching audio to views"/>
+        <item name="Video"  action="explore" 
+              src="/laszlo-explorer/basics/mediavideo.lzx" 
+              text="Attaching video to views"/>
+-->
+      </topic>
+
+      <topic name="Scripting" 
+             src="/laszlo-explorer/coverpages/scripting_cover.html" 
+             text="Procedural code in LZX." autoselect="true">
+        <item name="Event Handlers" action="explore" 
+              src="/laszlo-explorer/scripting/events.lzx"
+              text="Handling events" />
+        <item name="Methods" action="explore" 
+              src="/laszlo-explorer/scripting/methods.lzx" 
+              text="Using methods"/>           
+        <item name="Debugging" action="explore" 
+              src="/laszlo-explorer/scripting/debugger.lzx" 
+              text="Using the debugger."/>
+      </topic>
+
+      <topic title="Data" name="Data" 
+             src="/laszlo-explorer/coverpages/data_cover.html" 
+             text="XML Data in OpenLaszlo Applications" autoselect="true">
+        <item name="Data Binding" action="explore" 
+              src="/laszlo-explorer/data/databinding.lzx"  
+              text="Databinding, not data processing."/>
+        <item name="Relative Addressing" action="explore" 
+              src="/laszlo-explorer/data/datalocal.lzx" 
+              text="Data sources can be internal or external."/>
+        <item name="Replicated Views" action="explore" 
+              src="/laszlo-explorer/data/datarepeated.lzx" 
+              text="Views replicate according to data structure."/>
+        <item name="Remote Data" action="explore" 
+              src="/laszlo-explorer/data/dataremote.lzx" 
+              text="Data from remote source"/>
+        <item action="explore" name="Accessing Databases" 
+              src="/laszlo-explorer/data/database.lzx" 
+              text="Back end databases"/>
+      </topic>
+      
+      <topic title="Object Orientation" name="Object Orientation" src="/laszlo-explorer/coverpages/object_orientation_cover.html" text="LZX is an Object-Oriented language." autoselect="true">
+        <item action="explore" src="/laszlo-explorer/classes/withoutclasses.lzx" name="The Problem"  text="Why you need an OO language."/>
+        <item action="explore" src="/laszlo-explorer/classes/withclasses.lzx" name="The Solution"   text="OpenLaszlo's &lt;class&gt; tag"/>
+        <item action="explore" src="/laszlo-explorer/classes/inheritance.lzx" name="Inheritance"    text="Extending classes"/>
+        <item action="explore" src="/laszlo-explorer/classes/attributes.lzx" name="Defining Attributes"   text="Attributes and instances" />
+        <item action="explore" src="/laszlo-explorer/classes/events.lzx" name="Defining Events"  text="An event-driven system"/>
+        <item action="explore" src="/laszlo-explorer/classes/methods.lzx" name="Defining Methods" text="Methods on classes can be overwritten."/>
+      </topic>
+
+      <topic name="Animations" title="Animation" 
+             src="/laszlo-explorer/coverpages/animations_cover.html" text="Everything Animates" autoselect="true">
+        <item name="Animation Basics" action="explore" 
+              src="/laszlo-explorer/animation/animation.lzx" text="The 'animator'"/>
+        <item name="Animator Groups" action="explore" 
+              src="/laszlo-explorer/animation/animatorgroup.lzx" text="Combining animations"/>
+        <item name="Using Motion" action="explore" 
+              src="/laszlo-explorer/animation/motion.lzx" text="using motion attribute"/>
+
+      </topic>
+
+      <topic name="Constraints" src="/laszlo-explorer/coverpages/constraints_cover.html" text="Tie one attribute's value to another's " autoselect="true">
+        <item name="Basics" action="explore" 
+              src="/laszlo-explorer/constraints/basics.lzx"  
+              text="Constraint syntax and usage"/>
+        <item name="Proportions" action="explore" 
+              src="/laszlo-explorer/constraints/proportions.lzx"  
+              text="States -- a powerful abstraction"/>
+        <item name="Applying Constraints" action="explore" 
+              src="/laszlo-explorer/constraints/splitpanel.lzx"  
+              text="States -- a powerful abstraction"/>              
+        <item name="Drag and Drop" action="explore" 
+              src="/laszlo-explorer/constraints/dragdrop.lzx"   
+              text="States in action"/>
+      </topic>
+    </section>
+    
+    <section title="Small Applications" name="Small Applications" 
+             src="/laszlo-explorer/coverpages/small_applications_cover.html"  
+             text="short programs that illustrate specific aspects of OpenLaszlo development">
+        <item title="Weather" name="Weather" 
+              src="/demos/weather/weather.html" 
+              text="Displays weather information for a given zip code, based on and XML document.">
+            <subitem title="View in DHTML" name="View in DHTML" 
+                     src="/demos/weather/weather.html" runtime="dhtml" />
+            <subitem title="View in Flash" name="View in Flash" 
+                     src="/demos/weather/weather.html" runtime="swf7" />
+            <subitem name="Source" src="/demos/weather/weather.lzx"  action="source"/>
+        </item>
+        <item title="Survey" name="Survey" 
+              src="/demos/vacation-survey/vacation-survey.html" 
+              text="A survey built using OpenLaszlo components." >
+            <subitem title="View in DHTML" name="View in DHTML" 
+                     src="/demos/vacation-survey/vacation-survey.html" runtime="dhtml" />
+            <subitem title="View in Flash" name="View in Flash" 
+                     src="/demos/vacation-survey/vacation-survey.html" runtime="swf7" />
+            <subitem title="Learn by doing" name="Source" action="source" src="/demos/vacation-survey/vacation-survey.lzx" />
+        </item>
+        <item title="Contact List" name="Contact List" 
+              src="/examples/contactlist/contactlist.html" 
+              text="Demonstrates data binding and replication." >
+            <subitem title="View in DHTML" name="View in DHTML" 
+                     src="/examples/contactlist/contactlist.html" runtime="dhtml" />
+            <subitem title="View in Flash" name="View in Flash" 
+                     src="/examples/contactlist/contactlist.html" 
+                     runtime="swf7" />
+            <subitem title="Learn by doing" name="Source" action="source" src="/examples/contactlist/contactlist.lzx" />
+        </item>
+        <item  title="Animation" name="Animation" text="Demonstrates basic animation features"
+               src="/examples/animation/animation.html" >
+            <subitem title="View in DHTML" name="View in DHTML" 
+                     src="/examples/animation/animation.html" runtime="dhtml" />
+            <subitem title="View in Flash" name="View in Flash" 
+                     src="/examples/animation/animation.html" runtime="swf7" />
+            <subitem title="Learn by doing" name="Source" action="source" src="/examples/animation/animation.lzx" />
+        </item>
+        <item  title="Loading images" src="/examples/image-loading/image-loading.html" name="Image Loading" text="Loading images at compile time and at run time." >
+            <subitem title="View in DHTML" name="View in DHTML" 
+                     src="/examples/image-loading/image-loading.html" runtime="dhtml" />
+            <subitem title="View in Flash" name="View in Flash" 
+                     src="/examples/image-loading/image-loading.html" runtime="swf7" />
+            <subitem title="Learn by doing" name="Source" action="source" src="/examples/image-loading/dataimage.lzx" />
+        </item>
+        <item title="Playing music" name="Music" text="An example of streaming media."
+              src="/examples/music/music.html" runtime="swf7" >
+            <subitem title="View in Flash" name="View in Flash" 
+                     src="/examples/music/music.html" runtime="swf7" />
+            <subitem title="Learn by doing" name="Source" action="source" src="/examples/music/music.lzx" />
+        </item>
+        <item title="Component Sampler" name="Component Sampler" text="A sampler of OpenLaszlo widgets" 
+              src="/examples/components/style_example.html">
+            <subitem title="View in DHTML" name="View in DHTML" 
+                     src="/examples/components/style_example.html" runtime="dhtml" />
+            <subitem title="View in Flash" name="View in Flash" 
+                     src="/examples/components/style_example.html" runtime="swf7" />
+             <subitem src="/examples/components/style_example.lzx" name="Source" action="source" />
+        </item>
+    </section>
+    
+    <section name="Components" src="/laszlo-explorer/coverpages/components_cover.html"  title="Examples" text="Small applications that show key OpenLaszlo capabilities.">
+     <topic name="Sampler" src="/examples/components/style_example.lzx" >
+         <subitem src="/examples/components/style_example.lzx" name="Source" action="source" />
+     </topic>
+    <topic title="OpenLaszlo Form Components" name="Form Components"
+      src="/laszlo-explorer/coverpages/form_cover.html" 
+      text="Collect and submit responses without refresh.">
+      <item title="Button" src="/examples/components/button_example.lzx" name="Button" text="A simple multi-frame button.">
+          <subitem popup="/docs/reference/index.html?lz-button.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem src="/examples/components/button_example.lzx" name="Source" action="source" />
+      </item>
+      <item title="Checkbox" src="/examples/components/checkbox_example.lzx" name="Checkbox" text="A simple toggle button." >
+          <subitem popup="/docs/reference/index.html?lz-checkbox.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem src="/examples/components/checkbox_example.lzx" name="Source" action="source" />       </item>
+      <item title="Combobox" src="/examples/components/combobox_example.lzx" name="Combobox" text="A dropdown list of selectable items.">
+          <subitem popup="/docs/reference/index.html?lz-combobox.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem src="/examples/components/combobox_example.lzx" name="Source" action="source" />       </item>
+      <item title="Date Picker" src="/examples/components/datepicker_example.lzx" name="Date Picker" text="A Calendar Component">
+          <subitem popup="/docs/reference/index.html?lz-datepicker.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem src="/examples/components/datepicker_example.lzx" name="Source" action="source" />       </item>
+      <item title="Edittext" src="/examples/components/edittext_example.lzx" name="Edit Text" text="An editable text field">
+          <subitem popup="/docs/reference/index.html?lz-edittext.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem src="/examples/components/edittext_example.lzx" name="Source" action="source" />       </item>
+      <item title="Form" src="/examples/components/form_example.lzx" name="Form" text="A form builder">
+          <subitem popup="/docs/reference/index.html?lz-form.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem src="/examples/components/form_example.lzx" name="Source" action="source" />       </item>
+      <item title="List" src="/examples/components/list_example.lzx" name="List" text="For building lists">
+          <subitem popup="/docs/reference/index.html?lz-list.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem src="/examples/components/list_example.lzx" name="Source" action="source" />       </item>
+        <item title="Radio Group" src="/examples/components/radiogroup_example.lzx" name="Radio Group" text="Enables 'one of many' selection" >
+          <subitem popup="/docs/reference/index.html?lz-radiogroup.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem src="/examples/components/radiogroup_example.lzx" name="Source" action="source" />       </item>
+      <item title="slider" src="/examples/components/slider_example.lzx" name="Slider" text="Selection of single value from provided range.">
+          <subitem popup="/docs/reference/index.html?lz-slider.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem src="/examples/components/slider_example.lzx" name="Source" action="source" />
+      </item>
+    </topic>
+    <topic name="General Components" src="/laszlo-explorer/coverpages/general_cover.html" title="OpenLaszlo Components" text="Build applications with pre-built coponents written in LZX.">
+        <item title="Window" src="/examples/components/window_example.lzx" name="Window" text="OpenLaszlo's basic window.">
+            <subitem popup="/docs/reference/index.html?lz-window.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem src="/examples/components/window_example.lzx" name="Source" action="source" />
+        </item>
+        <item title="Tree Control" src="/examples/components/tree_example.lzx" name="Tree" text="Hide or reveal nesting">
+            <subitem popup="/docs/reference/index.html?lz-tree.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference" />
+            <subitem src="/examples/components/tree_example.lzx" name="Source" action="source" />
+        </item>
+        <item title="Data Grid" src="/examples/components/grid_example.lzx" name="Data Grid" text="Collect, display and manipulate data.">
+            <subitem popup="/docs/reference/index.html?lz-grid.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem src="/examples/components/grid_example.lzx" name="Source" action="source" />
+        </item>
+        <item title="Tabslider" src="/examples/components/tabslider_example.lzx" name="Tabslider" text="Animate tabs" >
+            <subitem popup="/docs/reference/index.html?tabslider.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem src="/examples/components/tabslider_example.lzx" name="Source" action="source" />
+        </item>
+        <item title="Tabs" src="/examples/components/tabs_example.lzx" name="Tabs" text="Gracefully hide or reveal related information." >
+            <subitem popup="/docs/reference/index.html?lz-tabs.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem src="/examples/components/tabs_example.lzx" name="Source" action="source" />
+        </item>
+        <item title="Floating list" src="/examples/components/floatinglist_example.lzx" name="Floating List" text="The list hovers over the canvas">
+            <subitem popup="/docs/reference/index.html?lz-floatinglist.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem src="/examples/components/floatinglist_example.lzx" name="Source" action="source" />
+        </item>
+        <item title="Scrollbar" src="/examples/components/scrollbar_example.lzx" name="Scrollbar" text="Horizontal or vertical.">
+            <subitem popup="/docs/reference/index.html?lz-scrollbar.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem src="/examples/components/scrollbar_example.lzx" name="Source" action="source" />
+        </item>
+        <item title="Menu" src="/examples/components/menu_example.lzx" name="Menu" text="Build menus easily.">
+            <subitem popup="/docs/reference/index.html?lz-menu.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem src="/examples/components/menu_example.lzx" name="Source" action="source" />
+        </item>
+      </topic>
+    <topic name="Class Hierarchy" src="/docs/component-browser/components.lzx" />
+  </section>
+
+  <section name="Documentation" title="Documentation" src="/laszlo-explorer/coverpages/documentation_cover.html" text="Tutorial, advanced, reference">
+    <topic src="/docs/installation/index.html" name="Installation" />
+    <topic src="http://www.openlaszlo.org/lps3/docs/reference/index.html" name="LZX Reference" action="popupexternal" target="laszlolzxreference" />
+    <topic popup="/docs/developers/index.html" name="Developer's Guide" action="popup" target="laszlodevguide" />
+    <topic popup="/docs/deployers/index.html" name="Administrator's Guide" action="popup" target="laszloadminguide" />
+    <!--topic popup="/docs/design/index.html" name="UI Designer's Guide" action="popup" target="laszlouiguide" /-->
+    <topic popup="/docs/component-design/index.html" name="Components Guide" action="popup" target="laszlocomponentguide" />
+    <topic popup="/docs/contributors/index.html" name="Contributor's Guide" action="popup" target="laszlocontributorsguide" />
+    <topic src="/docs/release-notes.html" name="Release Notes" />
+    <topic src="/tools/index.html" name="Developer's Tools" title="Development Tools"  text="Tips for IDEs"/>
+  </section>
+
+  <section name="Server Admin" src="/laszlo-explorer/coverpages/server_admin_cover.html">
+      <item src="/lps/admin/console.lzx" name="Admin Console" title="Administration" text="Set server parameters">
+      </item>
+  </section>
+</menu>

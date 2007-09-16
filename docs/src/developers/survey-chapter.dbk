@@ -1,0 +1,198 @@
+<chapter id="survey-chapter">
+
+
+<title>A Components-based application</title>
+
+<para>OpenLaszlo components are high level objects that implement common user-interface functions. 
+They range from relatively simple objects like <indexterm><primary>button</primary></indexterm><sgmltag class="element">&lt;button&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: button-->
+ to complex objects
+like <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: form-->
+ and <indexterm><primary>grid</primary></indexterm><sgmltag class="element">&lt;grid&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: grid-->
+.
+</para>
+<para>
+Sources for LZ components are <ulink url="../../lps/components/">here.</ulink>
+</para>
+
+<para>
+This chapter is a tutorial explains how
+components are used to create a simple survey tool.
+</para>
+
+
+
+
+<para/><section><title>Overview</title>
+<para>
+The following short tutorial shows how the <ulink url="../demos/vacation-survey/">vacation survey </ulink>application works.  In this tutorial we show how various components
+such as <indexterm><primary>radiobuttons</primary></indexterm><sgmltag class="element">&lt;radiobuttons&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: radiobuttons-->
+ and <indexterm><primary>radiogroup</primary></indexterm><sgmltag class="element">&lt;radiogroup&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: radiogroup-->
+s nest inside the <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag> component, and how these and other components can be bound to data to collect
+and display survey results.
+</para>
+<para>
+Please note that the methodology that we're using to explain how this application is constructed is not necessarily the best way to
+go about builing an application. It's simply a way of explaining how the application works from the inside out.
+</para>
+<para/></section><section><title>Building a Survey Tool</title>
+
+<para/><section><title>Starting with a radiogroup</title>
+<para>
+We begin constructing the questionaire at the heart of the survey:
+</para>
+
+<example role="live-example">
+   <title>Survey tool radiogroup</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/survey-chapter-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Survey Toolradiogroup</title><programlisting role="lzx-embednew"><filename>survey-chapter-$1.lzx</filename><parameter/><code>
+&lt;canvas height="200" &gt;
+        &lt;view&gt;
+          
+                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
+                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
+                &lt;/radiogroup&gt;
+                
+    
+        &lt;/view&gt;
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+&lt;canvas height="200" &gt;
+        &lt;view&gt;
+          
+                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
+                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
+                &lt;/radiogroup&gt;
+                
+    
+        &lt;/view&gt;
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/survey-chapter-$1.lzx></example?>
+<para/></section><section><title>Putting components inside a &lt;form&gt;</title>
+<para>
+As discussed above, the <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: form-->
+ element provides a structure for grouping various related components. 
+By handling layout and common funtions, <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag> allows you to concentrate on behavior. In the code below, we've
+added a button and associated it with the form's <indexterm><primary><literal>submit()</literal></primary></indexterm><methodname>submit()</methodname>.
+</para>
+
+<example role="live-example">
+   <title>Survey tool simple form</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/survey-chapter-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Survey Tool—Simple Form</title><programlisting role="lzx-embednew"><filename>survey-chapter-$2.lzx</filename><parameter/><code>
+&lt;canvas height="200" &gt;
+        &lt;view&gt;
+            &lt;form name="myform" bgcolor="#c0c0c0" spacing="33"&gt;
+                &lt;submit id="surveysubmit" /&gt;
+ 
+                &lt;view height="20"&gt;
+                    &lt;text&gt;What is your favorite vacation spot?&lt;/text&gt;
+                &lt;/view&gt; 
+                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
+                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
+                &lt;/radiogroup&gt;
+                &lt;button isdefault="true"&gt;Vote
+                    &lt;handler name="onclick"&gt;
+                        surveysubmit.submit();
+                    &lt;/handler&gt;
+                &lt;/button&gt;
+            &lt;/form&gt;
+        &lt;/view&gt;
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+&lt;canvas height="200" &gt;
+        &lt;view&gt;
+          <emphasis role="em">  &lt;form name="myform" bgcolor="#c0c0c0" spacing="33"&gt;</emphasis>
+                &lt;submit id="surveysubmit" /&gt;
+ 
+                &lt;view height="20"&gt;
+                    &lt;text&gt;What is your favorite vacation spot?&lt;/text&gt;
+                &lt;/view&gt; 
+                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
+                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
+                &lt;/radiogroup&gt;
+              <emphasis role="em">  &lt;button isdefault="true"&gt;Vote
+                    &lt;handler name="onclick"&gt;
+                        surveysubmit.submit();
+                    &lt;/handler&gt;
+                &lt;/button&gt;
+            &lt;/form&gt;</emphasis>
+        &lt;/view&gt;
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/survey-chapter-$2.lzx></example?>
+<para/></section><section><title>The Data Model</title>
+<para>
+As we've seen above, the <indexterm><primary><literal>submit()</literal></primary></indexterm><methodname>submit()</methodname> on the form causes user responses to be recorded.
+<remark role="fixme">
+More explanation. Say what the jsp does.
+</remark>
+</para>
+<example role="live-example"><title>data model</title><programlisting>
+    &lt;dataset name="surveydataset" type="http" src="http:survey.jsp"/&gt;
+
+    &lt;node id="resultdata"&gt;
+        &lt;attribute name="hawaii" value="$path{'surveydataset:/response/summary/option[1]/text()'}"/&gt;
+        &lt;attribute name="paris" value="$path{'surveydataset:/response/summary/option[2]/text()'}"/&gt;
+        &lt;attribute name="jamaica" value="$path{'surveydataset:/response/summary/option[3]/text()'}"/&gt;
+        &lt;attribute name="total" value="$path{'surveydataset:/response/summary/@total'}"/&gt;
+        &lt;attribute name="vote" value="$path{'surveydataset:/response/vote/text()'}"/&gt;
+    &lt;/node&gt;
+</programlisting></example>
+<para/><section><title>Associating the form with its dataset</title>
+<para>
+Note the <indexterm><primary>submit</primary></indexterm><sgmltag class="element">&lt;submit&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: submit-->
+ tag in the example (just below the <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag> tag.)
+</para>
+<programlisting><literal>
+                &lt;submit id="surveysubmit" data="${surveydataset}"/&gt;
+</literal>
+</programlisting>
+<para>
+The function of this tag is to associate the form with the dataset.  Later, when the <methodname role="LzDataset.prototype.submit">submit()</methodname> is invoked,
+the data will be sent to the server.
+</para>
+<para/></section></section><section><title>Extending the &lt;alert&gt; component</title>
+<para>
+As explained above, sometimes you can create your own new component by subclassing, or "extending" an existing component.  Here
+the <indexterm><primary>alert</primary></indexterm><sgmltag class="element">&lt;alert&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: alert-->
+ class is extended to create a new component called "myalert".  It is trivially different
+from the default <indexterm><primary>alert</primary></indexterm><sgmltag class="element">&lt;alert&gt;</sgmltag>; its only difference is that it centers nicely over the survey box.
+</para>
+<example role="live-example"><title>extending a component</title><programlisting>
+    &lt;class extends="alert" name="myalert" x="${Math.max(survey.width - this.width, 0)/2}" y="${Math.max(survey.height - this.height, 0)/3}"&gt;
+    &lt;/class&gt;
+</programlisting></example>
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
+The remainder of this chapter shows the construction of the survey tool.
+</remark></para>
+
+<para/></section></section></chapter>

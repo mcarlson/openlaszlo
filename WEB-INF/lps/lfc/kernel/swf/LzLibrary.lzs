@@ -1,0 +1,132 @@
+/**
+  * LzLibrary.as
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic LZX
+  * @subtopic Syntax
+  */
+
+/**
+  * @lzxname import
+  * @initarg stage
+  */
+class LzLibrary extends LzNode {
+
+/** @access private
+  * @modifiers override 
+  */
+static var tagname = 'import';
+
+/**
+  * @access private
+  */
+function construct (parent, args) {
+    this.stage = args.stage;
+    super.construct.apply(this, arguments);
+    this.sprite = new LzSprite(this, false, args);
+    LzLibrary.libraries[args.name] = this;
+}
+
+/**
+  * @access private
+  */
+function init( ) {
+    super.init.apply(this, arguments);
+    if (this.stage == "late") {
+        this.load();
+    }
+}
+
+
+static var libraries = [];
+
+/**
+  * @access private
+  */
+static function findLibrary (libname){
+    return LzLibrary.libraries[libname];
+}
+
+var loaded = false;
+var loading = false;
+
+function toString (){
+    return "Library " + this.href + " named " + this.name;
+}
+
+/**
+  * @access private
+  */
+function load (){
+  if (this.loading || this.loaded) {
+    return;
+  }
+  this.loading = true;
+  this.sprite.makeContainerResource();
+  var loader = this.loader = new LzLibraryLoader(this.sprite);
+
+  var proxied = canvas.proxied;
+  // check if this library has a "proxied" attribute which overrides canvas switch
+  if (typeof(this.proxied) != "undefined" && this.proxied != null) {
+      proxied = (this.proxied == true);
+  }
+
+  loader.proxied = proxied;
+
+  loader.request( this.href );
+}
+
+/**
+  * To 'unload' a snippet, three things have to be done:
+  * 1. Destroy all the instances that were created by the snippet.
+  * This is done by calling `iii.destroy();` for each instance
+  * iii. Note that if you have created references to the instance
+  * outside of the snippet, you must `delete` those references.
+  * 
+  * 2. Destroy all classes that were created by the snippet.  This
+  * is done by calling `ccc.destroy();` for each class ccc.  Note
+  * that if you have created references to the class outside of
+  * the snippet, you must `delete` those references.
+  * 
+  * 3. Unload the snippet.  This is done by calling
+  * `sss.unload()`, where sss is the name of the snippet (in the
+  * import tag).
+  * 
+  * At this point, you can re-load the snippet by calling
+  * `sss.load()`.  If you know you will never use the snippet
+  * again, you can call `sss.destroy();` to remove the snippet
+  * from your application altogether.
+  * 
+  * @access private
+  */
+function unload () {
+  if (! (this.loading || this.loaded)) {
+    return;
+  }
+  var loader = this.loader;
+  if (this.loading) {
+      loader.abort();
+  } else {
+      loader.unload();
+  }
+  this.loader.destroy();
+  delete this.loader;
+  this.loading = false;
+  this.loaded = false;
+  // TODO: [2005-08-31 ptw] Horrible modularity here, but
+  // loader.unload leaves this with a husk
+  delete this.__LZmovieClipRef
+}
+
+/**
+  * @access private
+  */
+function destroy () {
+    this.unload();
+    super.destroy.apply(this, arguments);
+}
+
+}; // End of LzLibrary
+

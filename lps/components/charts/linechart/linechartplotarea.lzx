@@ -116,7 +116,7 @@
             var labelList = listmanager.getList(this, "datalabel", seriesNum);
             if(xseries != null){
                 for(var i = 0; i < xseries.length; i++){                    
-                    if(datalabelseries[i] != "null" && datalabelseries[i] != null && datalabelseries[i] != ''){    
+                    if(datalabelseries && datalabelseries[i] != "null" && datalabelseries[i] != null && datalabelseries[i] != ''){    
                         var label = labelList.getViewAt(i);
                     
                         if(style.updateNeeded(label))
@@ -150,7 +150,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

@@ -1,0 +1,17 @@
+
+<canvas height="50" layout="y">
+  <class name="mytext">
+    <attribute name="text" type="html"/>
+    <text text="${parent.text}"/>
+  </class>
+  <class name="myinputtext">
+    <attribute name="text" type="html"/>
+    <inputtext text="${parent.text}"/>
+  </class>
+  <mytext><i>styled</i> text</mytext>
+  <myinputtext>plain text</myinputtext>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

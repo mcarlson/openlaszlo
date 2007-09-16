@@ -1,0 +1,91 @@
+
+<canvas debug="true" height="300" width="600">
+
+    <debug x="145" width="450" height="280" />
+
+    <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
+
+        <handler name="onload">
+            Debug.write('google soap service stub loaded');
+        </handler>
+
+        <handler name="onerror" args="error">
+            Debug.write('error:', error);
+        </handler>
+
+        <remotecall name="search" funcname="doGoogleSearch">
+
+            <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
+            <param value="'sweet'" />
+            <param value="1" />
+            <param value="10" />
+            <param value="true" />
+            <param value="''" />
+            <param value="true" />
+            <param value="''" />
+            <param value="''" />
+            <param value="''" />
+
+            <handler name="ondata" args="value">
+                Debug.write('result is:')
+                Debug.inspect(value);
+            </handler>
+
+        </remotecall>
+
+        <remotecall name="togglesearch" funcname="doGoogleSearch">
+
+            <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
+            <param>
+                <attribute name="toggle" value="0" type="number" />
+                <method name="getValue">
+                    var searchTerm;
+                    if (toggle % 2 == 0) {
+                        searchTerm = 'democrat';
+                        toggle = 1;
+                    } else {
+                        searchTerm = 'republican';
+                        toggle = 0;
+                    }
+                    Debug.write('search term is', searchTerm);
+                    return searchTerm;
+                </method>
+            </param>
+            <param value="1" />
+            <param value="10" />
+            <param value="true" />
+            <param value="''" />
+            <param value="true" />
+            <param value="''" />
+            <param value="''" />
+            <param value="''" />
+
+            <handler name="ondata" args="value">
+                Debug.write('result is:')
+                Debug.inspect(value);
+            </handler>
+
+        </remotecall>
+    </soap>
+
+    <simplelayout spacing="10" />
+
+    <button x="10" y="10" text="search">
+        <handler name="onclick">
+            Debug.write('invoking search...');
+            canvas.google.search.invoke();
+        </handler>
+    </button>
+
+    <button x="10" y="10" text="toggle search">
+        <handler name="onclick">
+            Debug.write('invoking togglesearch...');
+            canvas.google.togglesearch.invoke();
+        </handler>
+    </button>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

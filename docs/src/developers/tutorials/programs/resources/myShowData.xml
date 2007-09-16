@@ -1,0 +1,26 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<myXML>
+    <person show="simpsons">
+        <firstName>Homer</firstName>
+        <lastName>Simpson</lastName>
+    </person>
+    <person show="simpsons">
+        <firstName>Marge</firstName>
+        <lastName>Simpson</lastName>
+    </person>
+    <person show="simpsons">
+        <firstName>Montgomery</firstName>
+        <lastName>Burns</lastName>
+    </person>
+    <person show="south park">
+        <firstName>Eric</firstName>
+        <lastName>Cartman</lastName>
+    </person>
+    <person show="south park">
+        <firstName>Stan</firstName>
+        <lastName>Marsh</lastName>
+    </person>
+</myXML>

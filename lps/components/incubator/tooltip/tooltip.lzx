@@ -1,3 +1,7 @@
+<!---
+      @topic Incubator
+      @subtopic Tooltip
+  -->
 <library>
 
 <include href="tooltipview.lzx"/>
@@ -8,11 +12,11 @@
     
     For example:
 
-    @START_CODE
-        <button text="OK">
-            <tooltip>This is a tip.</tooltip>
-        </button>
-    @END_CODE
+    <example executable="false">
+        &lt;button text="OK"&gt;
+            &lt;tooltip&gt;This is a tip.&lt;/tooltip&gt;
+        &lt;/button&gt;
+    </example>
 
     The appearance of the tooltip is determined by a view on the canvas
     which must be named "tooltipview" and have a setText method and
@@ -114,7 +118,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.                 *
+* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

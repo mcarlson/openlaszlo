@@ -1,7 +1,7 @@
 <project name="schema" default="build">
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -79,8 +79,8 @@
 
     
   <target name="build" 
-          description="Build generated schema files" depends="rng,dtd"
-          unless="schemas.uptodate">
+          description="Build generated schema files" depends="rng"
+          unless="schemas.uptodate"> <!-- don't build dtd unless it is explicitly requested -->
           <java fork="true" failonerror="true"
             jar="${env.ANT_HOME}/lib/trang.jar"
             output="log.trang">
@@ -102,4 +102,5 @@
   <target name="all" 
           description="Clean, build, NO doc, and test" 
           depends="clean,build,test"/>
+          
 </project>

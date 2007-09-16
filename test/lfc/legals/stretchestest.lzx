@@ -1,0 +1,62 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+
+<canvas>
+    <resource name="spinner_rsc">
+        <frame src="spinner/pict1.png" />
+        <frame src="spinner/pict2.png" />
+        <frame src="spinner/pict3.png" />
+        <frame src="spinner/pict4.png" />
+        <frame src="spinner/pict5.png" />
+   </resource>
+
+    <resource name="logo" src="resc/logo.png"/>
+
+    <view resource="logo" y="10" width="200" height="200" stretches="both" onmousedown="this.resizer.apply()" onmouseup="this.resizer.remove()">
+        <state name="resizer">
+            <attribute name="width" value="${this.getMouse('x')}"/>
+            <attribute name="height" value="${this.getMouse('y')}"/>
+        </state>
+    </view>
+    <view resource="logo" y="220" width="200" height="200" stretches="width" onmousedown="this.resizer.apply()" onmouseup="this.resizer.remove()">
+        <state name="resizer">
+            <attribute name="width" value="${this.getMouse('x')}"/>
+            <attribute name="height" value="${this.getMouse('y')}"/>
+        </state>
+    </view>
+    <view resource="logo" y="420" width="200" height="200" stretches="height" onmousedown="this.resizer.apply()" onmouseup="this.resizer.remove()">
+        <state name="resizer">
+            <attribute name="width" value="${this.getMouse('x')}"/>
+            <attribute name="height" value="${this.getMouse('y')}"/>
+        </state>
+    </view>
+    <view resource="logo" y="620" width="200" height="200" onmousedown="this.resizer.apply()" onmouseup="this.resizer.remove()">
+        <state name="resizer">
+            <attribute name="width" value="${this.getMouse('x')}"/>
+            <attribute name="height" value="${this.getMouse('y')}"/>
+        </state>
+    </view>
+
+
+    <text x="300">Drag me to resize</text>
+    <view bgcolor="black" height="1" width="200" x="300" y="20"/>
+    <view bgcolor="black" height="2" width="200" x="300" y="22"/>
+    <view bgcolor="black" height="3" width="200" x="300" y="25"/>
+    <view resource="logo" x="300" y="30"/>
+    <view width="200" height="200" x="300" y="80" onmousedown="this.resizer.apply()" onmouseup="this.resizer.remove()" oninit="this.setSource('resc/logo.png')" stretches="both">
+        <state name="resizer">
+            <attribute name="width" value="${this.getMouse('x')}"/>
+            <attribute name="height" value="${this.getMouse('y')}"/>
+        </state>
+    </view>
+    <view resource="spinner_rsc" x="300" y="400" stretches="both" onmouseover="this.play()" onmouseout="this.stop()" onmousedown="this.resizer.apply()" onmouseup="this.resizer.remove()">
+        <state name="resizer">
+            <attribute name="width" value="${this.getMouse('x')}"/>
+            <attribute name="height" value="${this.getMouse('y')}"/>
+        </state>
+    </view>
+</canvas>

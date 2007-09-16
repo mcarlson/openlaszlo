@@ -1,0 +1,34 @@
+<canvas height="150" width="320">
+
+<stylesheet>
+
+[name="PurpleView"] {
+    width: "100";
+    height: "100";
+    bgcolor: "0x9900FF"
+}
+
+[width="200"] {
+    bgcolor: "0x0000FF";
+}
+
+</stylesheet>
+
+<simplelayout axis="x" spacing="10"/>
+
+<class name="myPurpleView">
+    <view name="PurpleView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/>
+</class>
+
+<class name="myWiderView">
+    <view name="hoo" height="100" width="200" bgcolor="$style{'bgcolor'}"/>
+</class>
+
+<myPurpleView/>
+<myWiderView/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

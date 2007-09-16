@@ -2,55 +2,6 @@
     <debug x="200" width="500" height="500"/>
     <include href="lzunit/lzunit.lzx" />
 
-    <view y="200" name="rpar">
-        <attribute name="repcnt" value="0"/>
-        <view datapath="somedat:/data/record[3]/">
-            <attribute name="n" value="$path{'name/text()'}"/>
-            <attribute name="w" value="$path{'phone/@work'}"/>
-            <attribute name="h" value="$path{'options/hairy/@color'}"/>
-            <attribute name="m" value="$path{'name()'}"/>
-            <attribute name="p" value="$path{'position()'}"/>
-            <attribute name="l" value="$path{'last()'}"/>
-
-            <inputtext name="i0" text="${parent.n}" />
-            <inputtext name="i1" text="${parent.w}" />
-            <inputtext name="i2" text="${parent.h}" />
-            <inputtext name="i3" text="${parent.m}" id="rr" />
-            <inputtext name="i4" text="${parent.p.toString()}" />
-            <inputtext name="i5" text="${parent.l.toString()}" />
-            <button>update
-                <method event="onclick">
-                    parent.setAttribute( "n" , parent.i0.getText() );
-                    parent.setAttribute( "w" , parent.i1.getText() );
-                    parent.setAttribute( "h" , parent.i2.getText() );
-                    parent.setAttribute( "m" , parent.i3.getText() );
-                    parent.setAttribute( "p" , parent.i4.getText() );
-                    parent.setAttribute( "l" , parent.i5.getText() );
-                </method>
-            </button>
-
-            <simplelayout/>
-        </view>
-        <view id="replator" oninit="parent.repcnt++">
-            <attribute name="pos" value="$path{'position()'}"/>
-            <attribute name="cnt" value="$path{'last()'}"/>
-
-            <attribute name="bgcolor" value="${this.pos%2 == 0 ? silver : teal}"/>
-            <datapath pooling="true" 
-                      xpath="somedat:/data/record/"/>
-            <text name="n" width="60" datapath="name/text()"/>
-            <text text="${parent.pos +'/' + parent.cnt }" width="40"/>
-            <text datapath="phone/@work"/>
-            <text>
-                <datapath xpath="options/hairy/@color" >
-                    <attribute name="dataControlsVisibility" value="false"/>
-                </datapath>
-            </text>
-            <simplelayout axis="x"/>
-        </view>
-        <simplelayout/>
-    </view>
-
     <dataset name="somedat">
         <data>
             <record show="true">
@@ -100,6 +51,57 @@
             </record>
         </data>
     </dataset>
+
+    <view y="200" name="rpar">
+        <attribute name="repcnt" value="0"/>
+        <view datapath="somedat:/data/record[3]/">
+            <attribute name="n" value="$path{'name/text()'}"/>
+            <attribute name="w" value="$path{'phone/@work'}"/>
+            <attribute name="h" value="$path{'options/hairy/@color'}"/>
+            <attribute name="m" value="$path{'name()'}"/>
+            <attribute name="p" value="$path{'position()'}"/>
+            <attribute name="l" value="$path{'last()'}"/>
+
+            <inputtext name="i0" text="${parent.n}" />
+            <inputtext name="i1" text="${parent.w}" />
+            <inputtext name="i2" text="${parent.h}" />
+            <inputtext name="i3" text="${parent.m}" id="rr" />
+            <inputtext name="i4" text="${parent.p.toString()}" />
+            <inputtext name="i5" text="${parent.l.toString()}" />
+            <button>update
+                <method event="onclick">
+                    parent.setAttribute( "n" , parent.i0.getText() );
+                    parent.setAttribute( "w" , parent.i1.getText() );
+                    parent.setAttribute( "h" , parent.i2.getText() );
+                    parent.setAttribute( "m" , parent.i3.getText() );
+                    parent.setAttribute( "p" , parent.i4.getText() );
+                    parent.setAttribute( "l" , parent.i5.getText() );
+                </method>
+            </button>
+
+            <simplelayout/>
+        </view>
+        <view id="replator" oninit="parent.repcnt++">
+            <attribute name="pos" value="$path{'position()'}"/>
+            <attribute name="cnt" value="$path{'last()'}"/>
+
+            <attribute name="bgcolor" value="${this.pos%2 == 0 ? silver : teal}"/>
+            <datapath pooling="true" 
+                      xpath="somedat:/data/record/"/>
+            <text name="n" width="60" datapath="name/text()"/>
+            <text text="${parent.pos +'/' + parent.cnt }" width="40"/>
+            <text datapath="phone/@work"/>
+            <text>
+                <datapath xpath="options/hairy/@color" >
+                    <attribute name="dataControlsVisibility" value="false"/>
+                </datapath>
+            </text>
+            <simplelayout axis="x"/>
+        </view>
+        <simplelayout/>
+    </view>
+
+
     <TestSuite>
         <TestCase>
             <method name="test1">
@@ -138,6 +140,6 @@
     </TestSuite>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

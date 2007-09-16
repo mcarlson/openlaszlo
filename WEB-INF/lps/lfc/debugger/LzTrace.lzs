@@ -1,0 +1,109 @@
+/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
+
+/**
+  * Support for tracing function calls in the debugger
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @topic LZX
+  * @subtopic Debugging
+  */
+
+
+/**
+  * A Trace is a warning with the tag 'TRACE'
+  * @access private
+  */
+var LzTrace = function(file, line, message) {
+  // super.apply(arguments);
+  LzSourceMessage.apply(this, arguments);
+}
+
+LzTrace.prototype = new LzSourceMessage();
+LzTrace.prototype.constructor = LzTrace;
+
+LzTrace.format = LzSourceMessage.format;
+
+LzTrace.prototype.type = 'TRACE';
+
+// Same color as Debug.debug
+LzTrace.prototype.color = '#00cc00';
+
+/**
+  * Create a trace message from a format string
+  * @param String control: a format control string
+  * @param any... args: the arguments to the format control
+  * 
+  * See also: Debug.format
+  * 
+  * @access private
+  */
+// TODO: [2005-08-15 ptw] Make the timestamp an attribute of the
+// instance that is automatically appended.  Perhaps all warnings
+// should be timestamped?
+Debug.traceMessage = function (control, args) {
+  return this.warnInternal.apply(this, [LzTrace].concat(Array.prototype.slice.call(arguments, 0)));
+}
+
+/**
+  * Trace a method of an object.
+  *
+  * Will trace the named method of the object and print a message to
+  * the Debug console each time it is called or returned from.  When
+  * called, the message will give a timestamp, the name of the function
+  * and the arguments it was called with.  When returned from, the
+  * message will give the name of the function and the value it
+  * returned (if any).
+  * 
+  * If backtraces are enabled, inspecting the message will reveal the
+  * call chain that caused the modification.
+  *
+  * @param Object who: the object whose method to trace
+  * @param String what: the name of the method to trace
+  * 
+  * @seealso Debug.untrace
+  */
+Debug.trace = function(who, what) {
+  if (who[what] instanceof Function) {
+    var f = who[what];
+    var m = function () {
+      Debug.traceMessage("[%6.2f] %s.apply(%w, %w)",
+                           (new Date).getTime() % 1000000,
+                           f, this, arguments);
+      var r = f.apply(this, arguments);
+      Debug.traceMessage("[%6.2f] %s -> %w",
+                           (new Date).getTime() % 1000000,
+                           f, r);
+      return r;
+    };
+    m._dbg_previous_definition = f;
+    who[what] = m;
+  } else {
+    Debug.error('%w.%s is not a function', who, what);
+  }
+}
+
+/**
+  * Stop tracing a method of an object.
+  *
+  * @param Object who: the object whose method to not trace
+  * @param String what: the name of the method to not trace
+  * 
+  * @seealso Debug.trace
+  */
+Debug.untrace = function(who, what) {
+  // Object.unwatch is Flash-specific
+  if (who[what] instanceof Function) {
+    var f = who[what];
+    var p = f['_dbg_previous_definition'];
+    if (p) { 
+      who[what] = p;
+    } else {
+        Debug.error('%w.%s is not being traced', who, what);
+    }
+  } else {
+    Debug.error('%w.%s is not a function', who, what);
+  }
+}

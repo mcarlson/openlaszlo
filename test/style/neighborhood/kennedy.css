@@ -1,7 +1,7 @@
 /* 
     This tries to match the rules created in descendantselectors_css.js
     with real css. 
-    Copyright 2006 Laszlo Systems
+    Copyright 2006-2007 Laszlo Systems
 */
 
 person {
@@ -10,12 +10,12 @@ person {
 
 #gJoeSr { 
     occupation: "politician";
-    favoritecolor: "0x000000";
+    favoritecolor: #000000;
 }
 
 #gJoeSr person {
     occupation: "politician";
-    favoritecolor: "0xFF0000";
+    favoritecolor: #FF0000;
 }
 
 /* this rule should win over the above rule, since specifying *this* id 
@@ -27,19 +27,19 @@ person {
 */
 #gJoeSr #gJFK {
     occupation: "president";
-    favoritecolor: "0xFF00FF";    
+    favoritecolor: #FF00FF;    
 }
 
 #gJoeSr #gTed {
     occupation: "senator";
-    favoritecolor: "0x00FF00";    
+    favoritecolor: #00FF00;    
 }
 
 
 /* JFK's kids are jetsetters */ 
 #gJoeSr #gJFK person {
     occupation: "jetsetter";
-    favoritecolor: "0x7777AA";        
+    favoritecolor: #7777AA;        
 }
 
 /* Cats usually have the misc attribute "plainoldcat" */

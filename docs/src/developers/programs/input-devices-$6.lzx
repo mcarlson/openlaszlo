@@ -1,0 +1,36 @@
+
+<canvas height="120">
+  <simplelayout spacing="3"/>
+  
+  <text>dragging within a bounded area</text>
+  <view bgcolor="yellow" height="40" width="160">
+    <view bgcolor="red" width="20" height="20" 
+          onmousedown="this.dragger.apply()"
+          onmouseup="this.dragger.remove()">
+      <dragstate name="dragger"
+          drag_min_x="0"
+          drag_max_x="$once{parent.width - this.width}"
+          drag_min_y="0"
+          drag_max_y="$once{parent.height - this.height}"
+          drag_axis="both"/>
+    </view>
+  </view>
+  
+  <text>dragging along the x-axis</text>
+  <view bgcolor="yellow" height="40" width="160">
+    <view bgcolor="red" width="20" height="20" 
+          onmousedown="this.dragger.apply()"
+          onmouseup="this.dragger.remove()">
+      <dragstate name="dragger"
+          drag_min_x="0"
+          drag_max_x="$once{parent.width - this.width}"
+          drag_min_y="0"
+          drag_max_y="$once{parent.height - this.height}"
+          drag_axis="x"/>
+    </view>
+  </view>
+ </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

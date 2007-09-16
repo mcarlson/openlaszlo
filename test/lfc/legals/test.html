@@ -1,0 +1,54 @@
+<head>
+    <title>DHTML Laszlo test</title>
+    <link rel="stylesheet" type="text/css" href="fvlogger/logger.css" />
+</head>
+<body>
+<script src="fvlogger/logger.js"></script>
+
+
+<div id="fvlogger">
+  <dl>
+    <dt>fvlogger</dt>
+    <dd class="all">
+      <a href="#fvlogger" onclick="showAll();" 
+        title="show all">all</a>
+    </dd>
+    <dd class="debug">
+      <a href="#fvlogger" onclick="showDebug();" 
+        title="show debug">debug</a>
+    </dd>
+    <dd class="info">
+      <a href="#fvlogger" onclick="showInfo();" 
+        title="show info">info</a>
+    </dd>
+    <dd class="warn">
+      <a href="#fvlogger" onclick="showWarn();" 
+        title="show warnings">warn</a>
+    </dd>
+    <dd class="error">
+      <a href="#fvlogger" onclick="showError();" 
+        title="show errors">error</a>
+    </dd>
+    <dd class="fatal">
+      <a href="#fvlogger" onclick="showFatal();" 
+        title="show fatals">fatal</a>
+    </dd>
+    <dd>
+      <a href="#fvlogger" onclick="eraseLog(true);" 
+        title="erase">erase</a>
+      </dd>
+  </dl>
+</div>
+
+
+    <script src="../events.js"></script>
+    <script src="../LFC.js"></script>
+    <script src="../node.js"></script>
+    <script src="../view.js"></script>
+    <script src="../window.js"></script>
+    <script src="../idle.js"></script>
+    <script src="../animator.js"></script>
+    <script src="test.js"></script>
+    
+
+</body>

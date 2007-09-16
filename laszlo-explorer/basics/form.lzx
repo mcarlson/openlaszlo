@@ -1,7 +1,7 @@
-<canvas  width="240">
+<canvas>
   <!-- An url that reads submitted form data -->
   <!-- and echoes it back in a response -->
-  <dataset name="echoer" src="http:echo.jsp"/>
+  <dataset name="echoer" src="http:echoxml.jsp"/>
   
   <window x="10" y="10" >
     <form id="ex1" bgcolor="0xAAB5C8" >
@@ -51,3 +51,5 @@
     </view>
   </window>
 </canvas>
+
+

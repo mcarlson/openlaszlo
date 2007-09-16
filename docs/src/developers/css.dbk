@@ -1,0 +1,886 @@
+<chapter id="css">
+
+
+<title>CSS -- Cascading Style Sheets</title>
+
+<para>Cascading Style Sheets (CSS) enable web designers to enhance the power
+of HTML tags. In old-fashioned HTML, an &lt;H1&gt; tag would make displayed
+text a little bigger and bolder, but font style, color, and size were
+left to the browser. With CSS, the web designer can use the &lt;H1&gt; tag to
+specify those font attributes.</para>
+
+<para>CSS support within OpenLaszlo helps designers who are not fluent with
+the LZX scripting language maintain the appearance of Laszlo
+applications. </para>
+
+
+
+
+<para/><section><title>Overview</title>
+
+<para>If an OpenLaszlo application is to be deployed
+more than once -- but with different colors, sizes, or resources in each
+deployment, for instance -- the designer can alter those attributes within a
+stylesheet.</para>
+
+<para/></section><section><title>Simple Views</title>
+
+<para>This is the simplest example of an OpenLaszlo view:</para>
+
+<example role="live-example">
+   <title>Simplest view</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Simplest view</title><programlisting role="lzx-embednew"><filename>css-$1.lzx</filename><parameter/><code>
+  &lt;canvas&gt;
+      &lt;view height="100" width="100" bgcolor="0x663399"/&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas&gt;
+      &lt;view height="100" width="100" bgcolor="0x663399"/&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/css-$1.lzx></example?>
+
+<para>To generate that view with a cascading stylesheet:</para>
+
+<example role="live-example">
+   <title>Simplest view with CSS</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Simplest view with CSS</title><programlisting role="lzx-embednew"><filename>css-$2.lzx</filename><parameter/><code>
+
+&lt;canvas&gt;
+
+&lt;stylesheet&gt;
+    #gView {
+        height: "100";
+        width: "100";
+        bgcolor: "0x663399";
+    }
+&lt;/stylesheet&gt;
+
+&lt;view id="gView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+
+&lt;canvas&gt;
+
+&lt;stylesheet&gt;
+    #gView {
+        height: "100";
+        width: "100";
+        bgcolor: "0x663399";
+    }
+&lt;/stylesheet&gt;
+
+&lt;view id="gView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/css-$2.lzx></example?>
+
+<para>The <literal>$style</literal> constraint tells the OpenLaszlo runtime to style an attribute according to the <literal>stylesheet</literal>. More than one stylesheet can be used in an LZX document; the application of a stylesheet is determined by selectors. </para>
+
+<para/></section><section><title>Selectors</title>
+
+<para>The stylesheet is a collection of rules that apply to the LZX document.
+Each rule applies to one aspect of the document, and consists of two
+parts: selector and declaration.</para>
+
+<example role="live-example"><title>Selector</title><programlisting>
+#myView { bgcolor: "0x0000FF"; }
+</programlisting></example>
+
+<para>The selector comes before the curly brace, the declaration after. In the
+example above, an LZX element with <literal>id="myView"</literal> and
+<literal>bgcolor="$style{'bgcolor'}</literal> within its declaration will get a blue
+background color.</para>
+
+<para>CSS support for OpenLaszlo enables four types of selectors:</para> 
+
+<orderedlist spacing="compact"><listitem><para>Attribute</para></listitem><listitem><para>Element</para></listitem><listitem><para>ID</para></listitem><listitem><para>Descendant</para></listitem></orderedlist>
+
+<para/><section><title>Attribute selectors</title>
+
+<example role="live-example"><title>Attribute example</title><programlisting>
+[attribute="value of attribute"] {
+	property: "foo";
+	}
+</programlisting></example>
+
+<para>The attribute selector applies when it corresponds to a node's attribute
+(for instance, <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> or <indexterm><primary>width</primary></indexterm><sgmltag class="attribute">width</sgmltag>):</para>
+
+<example role="live-example">
+   <title>Attribute selector</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$5.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Attribute selector</title><programlisting role="lzx-embednew"><filename>css-$5.lzx</filename><parameter/><code>
+
+&lt;canvas height="150" width="320"&gt;
+
+&lt;stylesheet&gt;
+
+[name="PurpleView"] {
+	width: "100";
+	height: "100";
+	bgcolor: "0x9900FF"
+}
+
+[width="200"] {
+	bgcolor: "0x0000FF";
+}
+
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="10"/&gt;
+
+&lt;class name="myPurpleView"&gt;
+	&lt;view name="PurpleView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="myWiderView"&gt;
+	&lt;view name="hoo" height="100" width="200" bgcolor="$style{'bgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;myPurpleView/&gt;
+&lt;myWiderView/&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+
+&lt;canvas height="150" width="200"&gt;
+
+&lt;stylesheet&gt;
+
+[name="PurpleView"] {
+	width: "100";
+	height: "100";
+	bgcolor: "0x9900FF"
+}
+
+[width="200"] {
+	bgcolor: "0x0000FF";
+}
+
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="10"/&gt;
+
+&lt;class name="myPurpleView"&gt;
+	&lt;view name="PurpleView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="myWiderView"&gt;
+	&lt;view name="hoo" height="100" width="200" bgcolor="$style{'bgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;myPurpleView/&gt;
+&lt;myWiderView/&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/css-$5.lzx></example?>
+
+<para>The class <literal>myPurpleView</literal> contains a view whose <literal>name</literal> corresponds to the
+stylesheet selector <literal>[name="PurpleView"]</literal>, so each of its <literal>$style</literal> rules is
+applied. The class <literal>myWiderView</literal> contains a view whose <literal>width</literal> fires the
+<literal>$style</literal> that applies to its background color.</para>
+
+<para/></section><section><title>Element selectors</title>
+
+<example role="live-example"><title>Element example</title><programlisting>
+        LzNode {
+            property: "foo";
+        }
+</programlisting></example>
+
+<para>The element selector applies when it matches the name of the node itself:</para>
+
+<example role="live-example">
+   <title>Element selector</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$7.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Element selector</title><programlisting role="lzx-embednew"><filename>css-$7.lzx</filename><parameter/><code>
+
+&lt;canvas height="200" width="200"&gt;
+ 
+&lt;stylesheet&gt;
+        view {
+            nicebgcolor: "0x0000FF";
+            micebgcolor: "0xCCCCCC";
+        }
+&lt;/stylesheet&gt;
+
+&lt;view height="100" width="100" bgcolor="$style{'nicebgcolor'}"/&gt;
+&lt;view height="75" width="75" bgcolor="0xFFFFFF"/&gt;
+&lt;view height="50" width="50" bgcolor="$style{'micebgcolor'}"/&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+
+&lt;canvas height="200" width="200"&gt;
+ 
+&lt;stylesheet&gt;
+        view {
+            nicebgcolor: "0x0000FF";
+            micebgcolor: "0xCCCCCC";
+        }
+&lt;/stylesheet&gt;
+
+&lt;view height="100" width="100" bgcolor="$style{'nicebgcolor'}"/&gt;
+&lt;view height="75" width="75" bgcolor="0xFFFFFF"/&gt;
+&lt;view height="50" width="50" bgcolor="$style{'micebgcolor'}"/&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/css-$7.lzx></example?>
+
+<para/></section><section><title>ID selectors</title>
+
+<example role="live-example"><title>ID example</title><programlisting>
+        #LzNode {
+            property: "foo";
+        }
+</programlisting></example>
+
+<para>ID selectors are identified by # in the stylesheet. The selector applies
+when it matches a node's ID:</para>
+
+<example role="live-example">
+   <title>ID selector</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$9.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>ID selector</title><programlisting role="lzx-embednew"><filename>css-$9.lzx</filename><parameter/><code>
+
+&lt;canvas height="200" width="200"&gt;
+
+&lt;stylesheet&gt;
+
+#red {
+    width: 100;
+    height: 100;
+	bgcolor: "0xFF3333";
+}
+
+#blue {
+    width: 150;
+    height: 150;
+	bgcolor: "0x3333FF";
+}
+ 
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="5" /&gt;
+
+&lt;class name="gBox" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
+
+&lt;gBox id="red" /&gt;
+&lt;gBox id="blue" /&gt;
+
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+
+&lt;canvas height="200" width="200"&gt;
+
+&lt;stylesheet&gt;
+
+#red {
+    width: 100;
+    height: 100;
+	bgcolor: "0xFF3333";
+}
+
+#blue {
+    width: 150;
+    height: 150;
+	bgcolor: "0x3333FF";
+}
+ 
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="5" /&gt;
+
+&lt;class name="gBox" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
+
+&lt;gBox id="red" /&gt;
+&lt;gBox id="blue" /&gt;
+
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/css-$9.lzx></example?>
+
+<para/></section><section><title>Descendant selectors </title>
+
+<example role="live-example"><title>Descendant example</title><programlisting>
+	fee fi {
+        property: "car";
+    }
+
+	fee fi foo {
+        property: "cart";
+    }
+    
+    fee fi foo fum {
+        property: "cartman";
+    }
+</programlisting></example>
+
+<para>A selector in an ancestor/descendant hierarchy applies when its
+ancestors do. In the snippet above, the "fee" selector depends on no
+ancestors, so it would always fire on an LzNode identified by "fee". The
+"fum" selector, on the other hand, would only fire if the LzNode had
+three ancestors "fee", "fi", and "foo".</para>
+
+<example role="live-example">
+   <title>Descendant selector</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$11.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Descendant selector</title><programlisting role="lzx-embednew"><filename>css-$11.lzx</filename><parameter/><code>
+
+&lt;canvas width="400" height="400"&gt;
+
+&lt;stylesheet&gt;
+
+    styledbox {
+        stylebgcolor: "0xCCCCCC";
+        styleinnercolor: "0xFF0000";
+    }
+
+    styledbox styledbox2 {
+        stylebgcolor: "0x999999";
+        styleinnercolor: "0x0000FF";
+    }
+
+    styledbox styledbox2 styledbox3 {
+        stylebgcolor: "0x666666";
+        styleinnercolor: "0x00FF00";
+    }
+
+&lt;/stylesheet&gt;
+
+&lt;class name="styledbox" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
+	&lt;view name="snow" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="styledbox2" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
+	&lt;view name="braxton" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="styledbox3" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
+	&lt;view name="jackson" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;styledbox id="comet" x="200" y="0"&gt;
+			&lt;styledbox2 id="shock" x="-100" y="100"&gt;
+					&lt;styledbox3 id="storm" x="-100" y="100"/&gt;
+			&lt;/styledbox2&gt;
+&lt;/styledbox&gt;
+
+&lt;styledbox2/&gt;
+&lt;styledbox3/&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+
+&lt;canvas width="400" height="400"&gt;
+
+&lt;stylesheet&gt;
+
+    styledbox {
+        stylebgcolor: "0xCCCCCC";
+        styleinnercolor: "0xFF0000";
+    }
+
+    styledbox styledbox2 {
+        stylebgcolor: "0x999999";
+        styleinnercolor: "0x0000FF";
+    }
+
+    styledbox styledbox2 styledbox3 {
+        stylebgcolor: "0x666666";
+        styleinnercolor: "0x00FF00";
+    }
+
+&lt;/stylesheet&gt;
+
+&lt;class name="styledbox" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
+	&lt;view name="snow" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="styledbox2" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
+	&lt;view name="braxton" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="styledbox3" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
+	&lt;view name="jackson" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;styledbox id="comet" x="200" y="0"&gt;
+			&lt;styledbox2 id="shock" x="-100" y="100"&gt;
+					&lt;styledbox3 id="storm" x="-100" y="100"/&gt;
+			&lt;/styledbox2&gt;
+&lt;/styledbox&gt;
+
+&lt;styledbox2/&gt;
+&lt;styledbox3/&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/css-$11.lzx></example?>
+
+<para>In the example above, the instances of <literal>styledbox2</literal> and <literal>styledbox3</literal> at the
+end of the script don't appear on the canvas at all, because there's no
+stylesheet information for <literal>styledbox2</literal> unless it descends from <literal>styledbox</literal>,
+and no stylesheet information for <literal>styledbox3</literal> unless it descends from
+<literal>stylebox</literal> and <literal>stylebox2</literal>.</para>
+
+<warning><para>Don't include an underscore in selector names, because the LZX file will not compile.</para></warning>
+
+<warning><para>The difference between an attribute selector and a descendant selector is as little as a spacebar. The attribute selector <literal>person[name='george']</literal> (no space between person and name) selects a person whose name is george, but the descendant selector <literal>person [name='george']</literal> selects a view named george which is a child of a person element.</para></warning>
+
+<para/></section></section><section><title>A Nested View</title>
+<para>The advantage of using stylesheets shows in a
+slightly more difficult OpenLaszlo application. If a designer wanted to reuse a template, no knowledge of OpenLaszlo's LZX language is necessary -- in this
+example, s/he just has to change the color hexcode(s) and the name(s) of
+the resource(s) in the stylesheet:</para>
+
+<example role="live-example">
+   <title>Nested view</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$12.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Nested view</title><programlisting role="lzx-embednew"><filename>css-$12.lzx</filename><parameter/><code>
+
+&lt;canvas height="350" width="700"&gt;
+
+&lt;stylesheet&gt;
+
+        #sun {
+          bgcolor: "0x16355E"; 
+          face: "../resources/smiley.gif";
+        }
+        
+        #monarchs {
+            bgcolor: "0xB2B9CB";
+            face: "../resources/sourface.png";
+        }
+ 
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="10"/&gt;
+
+&lt;class name="bouncebox"&gt;
+        &lt;view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}"&gt;
+            &lt;view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-100}" height="${immediateparent.height-100}" /&gt;
+        	&lt;view name="gBounce" source="$style{'face'}" x="50" y="50"&gt;
+				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
+				&lt;animator attribute="y" from="50" to="150" duration="1000" motion="linear"/&gt;
+				&lt;animator attribute="y" from="50" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
+   	   			&lt;/animatorgroup&gt;
+   	   		&lt;/view&gt;
+		&lt;/view&gt;
+&lt;/class&gt;
+
+&lt;bouncebox id="monarchs" /&gt;
+&lt;bouncebox id="sun" /&gt;
+
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+
+&lt;canvas height="350" width="700"&gt;
+
+&lt;stylesheet&gt;
+
+        #sun {
+          bgcolor: "0x16355E"; 
+          face: "../resources/smiley.gif";
+        }
+        
+        #monarchs {
+            bgcolor: "0xB2B9CB";
+            face: "../resources/sourface.png";
+        }
+ 
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="10"/&gt;
+
+&lt;class name="bouncebox"&gt;
+        &lt;view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}"&gt;
+            &lt;view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-100}" height="${immediateparent.height-100}" /&gt;
+        	&lt;view name="gBounce" source="$style{'face'}" x="50" y="50"&gt;
+				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
+				&lt;animator attribute="y" from="50" to="150" duration="1000" motion="linear"/&gt;
+				&lt;animator attribute="y" from="50" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
+   	   			&lt;/animatorgroup&gt;
+   	   		&lt;/view&gt;
+		&lt;/view&gt;
+&lt;/class&gt;
+
+&lt;bouncebox id="monarchs" /&gt;
+&lt;bouncebox id="sun" /&gt;
+
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/css-$12.lzx></example?>
+
+<para/></section><section><title>Dynamically-Created Views</title>
+
+<para>For styling a view created dynamically with <literal>new</literal>, it's easiest to define a class, then <literal>new</literal> instances of the class:</para>
+
+<example role="live-example">
+   <title>Styled views created dynamically</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$13.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Styled views created dynamically</title><programlisting role="lzx-embednew"><filename>css-$13.lzx</filename><parameter/><code>
+
+&lt;canvas debug="true"&gt;
+
+&lt;stylesheet&gt;
+mookie {
+height : 25;
+width : 25;
+bgcolor : #0000FF;
+}
+
+blaylock {
+title : "Blaylock";
+bgcolor : #FF0000;
+}
+
+wilson {
+height : 25;
+width : 200;
+fgcolor : #FF00FF;
+text : "Wilson";
+}
+&lt;/stylesheet&gt;
+
+&lt;class name="mookie" x="200" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;class name="blaylock"&gt;
+&lt;window title="$style{'title'}" x="250" height="100" width="150" bgcolor="$style{'bgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="wilson" &gt;
+&lt;text text="$style{'text'}" x="400" height="$style{'height'}" width="$style{'width'}" fgcolor="$style{'fgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;button text="Dynamically create Mookie"&gt;
+&lt;method event="onclick"&gt;
+canvas.mookieView=new mookie(canvas, {});
+&lt;/method&gt;
+&lt;/button&gt;
+
+&lt;button text="Dynamically create Blaylock" y="50"&gt;
+&lt;method event="onclick"&gt;
+canvas.blaylockWindow=new blaylock(canvas, {});
+&lt;/method&gt;
+&lt;/button&gt;
+
+&lt;button text="Dynamically create Wilson" y="100"&gt;
+&lt;method event="onclick"&gt;
+canvas.wilsonText=new wilson(canvas, {});
+&lt;/method&gt;
+&lt;/button&gt;
+
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+
+&lt;canvas debug="true"&gt;
+
+&lt;stylesheet&gt;
+mookie {
+height : 25;
+width : 25;
+bgcolor : #0000FF;
+}
+
+blaylock {
+title : "Blaylock";
+bgcolor : #FF0000;
+}
+
+wilson {
+height : 25;
+width : 200;
+fgcolor : #FF00FF;
+text : "Wilson";
+}
+&lt;/stylesheet&gt;
+
+&lt;class name="mookie" x="200" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;class name="blaylock"&gt;
+&lt;window title="$style{'title'}" x="250" height="100" width="150" bgcolor="$style{'bgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="wilson" &gt;
+&lt;text text="$style{'text'}" x="400" height="$style{'height'}" width="$style{'width'}" fgcolor="$style{'fgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;button text="Dynamically create Mookie"&gt;
+&lt;method event="onclick"&gt;
+canvas.mookieView=new mookie(canvas, {});
+&lt;/method&gt;
+&lt;/button&gt;
+
+&lt;button text="Dynamically create Blaylock" y="50"&gt;
+&lt;method event="onclick"&gt;
+canvas.blaylockWindow=new blaylock(canvas, {});
+&lt;/method&gt;
+&lt;/button&gt;
+
+&lt;button text="Dynamically create Wilson" y="100"&gt;
+&lt;method event="onclick"&gt;
+canvas.wilsonText=new wilson(canvas, {});
+&lt;/method&gt;
+&lt;/button&gt;
+
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/css-$13.lzx></example?>
+
+
+<para/></section><section><title>Specificity</title>
+
+<para>An instance of an LzNode -- most likely a view, or some other OpenLaszlo
+element -- can trigger more than one selector in the stylesheet. In such
+cases, CSS gives precedence according to <ulink url="http://www.w3.org/TR/CSS21/cascade.html#specificity">rules of
+specificity</ulink>. In general, the more specific the selector, the higher
+its precedence. For instance, the ID of a view is more specific (can
+only apply to one view) than view itself (applies to every view).</para>
+
+<para>Within OpenLaszlo's CSS support, the order of specificity is (in
+ascending order):</para>
+
+<orderedlist spacing="compact"><listitem><para>Element</para></listitem><listitem><para>Attribute</para></listitem><listitem><para>ID</para></listitem></orderedlist>
+
+<para>This example uses all three selectors:</para>
+
+<example role="live-example">
+   <title>Specificity</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$14.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Specificity</title><programlisting role="lzx-embednew"><filename>css-$14.lzx</filename><parameter/><code>
+
+&lt;canvas width="350" height="150"&gt;
+
+&lt;stylesheet&gt;
+
+view {
+	height: "50";
+	width: "50";
+	bgcolor: "0xFF0000";
+	}
+	
+[name='blue'] {
+	height: "50";
+	width: "50";
+	bgcolor: "0x0000FF";
+	}
+
+#green {
+	height: "50";
+	width: "50";
+	bgcolor: "0x006600";
+	}
+
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="25"/&gt;
+
+	&lt;view id="red" name="red" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/&gt;
+	&lt;view id="blue" name="blue" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
+	&lt;view id="green" name="green" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
+
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+
+&lt;canvas width="350" height="150"&gt;
+
+&lt;stylesheet&gt;
+
+view {
+	height: "50";
+	width: "50";
+	bgcolor: "0xFF0000";
+	}
+	
+[name='blue'] {
+	height: "50";
+	width: "50";
+	bgcolor: "0x0000FF";
+	}
+
+#green {
+	height: "50";
+	width: "50";
+	bgcolor: "0x006600";
+	}
+
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="25"/&gt;
+
+	&lt;view id="red" name="red" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/&gt;
+	&lt;view id="blue" name="blue" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
+	&lt;view id="green" name="green" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
+
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/css-$14.lzx></example?>
+
+<para>The first view -- <literal>red</literal> -- fires the element selector, because its ID is
+not "green", and its name is not "blue". It is an instance of a "view"
+element, which triggers the element selector. The second view -- <literal>blue</literal> -- fires the name selector; its ID is not "green", but the next selector in
+order of priority is attribute, which <literal>name='blue'</literal> matches. The third
+view -- <literal>green</literal> -- hits the highest-priority selector; <literal>id='green'</literal> matches
+the ID selector <literal>#green</literal>, and looks up that stylesheet.</para>
+
+<warning><para>Style selectors: Under W3C's CSS specificity rules, the highest-priority
+selector is "style='foo'", which directly looks up the foo stylesheet.
+The OpenLaszlo implementation does not support "style='foo'" because
+that expression cannot be used as a Laszlo property or attribute.</para></warning>
+
+<para/><section><title>Lexical order</title>
+
+<para>In some cases, more than one selector of the same type will be
+triggered. In this example, the view <literal>short</literal> fires two selectors:
+<literal>[height="50"]</literal> and <literal>[width="100"]</literal>. Neither selector takes precedence
+because they are both attribute selectors, so a tiebreaker has to be
+invoked. The selector closest to the bottom of the stylesheet prevails.</para>
+
+<example role="live-example">
+   <title>Lexical order</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/css-$15.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Lexical order</title><programlisting role="lzx-embednew"><filename>css-$15.lzx</filename><parameter/><code>
+
+&lt;canvas height="200" width="345"&gt;
+
+&lt;stylesheet&gt;
+	
+	[height="50"] {
+	height: "50";
+	width: "100";
+	bgcolor: "0xFF0000";
+	}
+	
+	[width="100"] {
+	height: "50";
+	width: "100";
+	bgcolor: "0x0000FF";
+	}
+	
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="y" spacing="10"/&gt;
+
+&lt;view name="short" width="100" height="50" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;view y="75"&gt;
+	&lt;text text="If I'm red, the first stylesheet was triggered."/&gt;
+&lt;/view&gt;
+
+&lt;view y="100"&gt;
+	&lt;text text="If I'm blue, the second stylesheet was triggered."/&gt;
+&lt;/view&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+
+&lt;canvas height="200" width="345"&gt;
+
+&lt;stylesheet&gt;
+	
+	[height="50"] {
+	height: "50";
+	width: "100";
+	bgcolor: "0xFF0000";
+	}
+	
+	[width="100"] {
+	height: "50";
+	width: "100";
+	bgcolor: "0x0000FF";
+	}
+	
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="y" spacing="10"/&gt;
+
+&lt;view name="short" width="100" height="50" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;view y="75"&gt;
+	&lt;text text="If I'm red, the first stylesheet was triggered."/&gt;
+&lt;/view&gt;
+
+&lt;view y="100"&gt;
+	&lt;text text="If I'm blue, the second stylesheet was triggered."/&gt;
+&lt;/view&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/css-$15.lzx></example?>
+
+<para/></section></section><section><title>Importing an external stylesheet</title>
+
+<para>A stylesheet can be imported by using</para>
+
+<example role="live-example"><title>Imported stylesheet clipping</title><programlisting>
+   &lt;stylesheet src="foo.css" /&gt;
+</programlisting></example>
+
+<para>when the stylesheet is in its typical format:</para>
+
+<example role="live-example"><title>Imported stylesheet example</title><programlisting>
+
+&lt;!--begin foo.css--&gt;
+
+#gPhilip {
+    width: 300;
+    height: 200;
+    bgcolor: "0x8F008F";
+}
+
+&lt;!--end--&gt;
+
+&lt;!--The LZX file--&gt;
+
+&lt;canvas&gt;
+
+	&lt;stylesheet src="foo.css" /&gt;
+
+	&lt;view id="gPhilip" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;/canvas&gt;
+
+</programlisting></example>
+
+<para/></section></chapter>

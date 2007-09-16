@@ -1,7 +1,4 @@
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
+/* -*- mode: Java; c-basic-offset: 2; -*- */
 
 package org.openlaszlo.sc;
 
@@ -29,3 +26,8 @@ public class CompilerError extends RuntimeException {
     return Compiler.getLocationString(node) + ": " + super.toString();
   }
 }
+
+/**
+ * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * Reserved.  Use is subject to license terms.
+ */

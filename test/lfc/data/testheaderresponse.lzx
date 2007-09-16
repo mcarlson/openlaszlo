@@ -1,0 +1,65 @@
+<library>
+  <include href="lzunit/lzunit.lzx" />
+
+  <dataset name="dsheaders" timeout="400000"
+    src="http:testdata.xml"
+    proxied="true"
+    getresponseheaders="true"
+           onerror="Debug.write('testheaderresponse: dsheaders got onerror')" 
+           ontimeout="Debug.write('testheaderresponse: dsheaders got ontimeout')" 
+
+    request="false"/>
+
+  <class name="TestResponseHeaders" extends="TestCase">
+    <attribute name="dpready" value="false"/>
+    <attribute name="t2del" value="false"/>
+    <attribute name="waitcnt" value="0"/>
+
+    <datapointer xpath="dsheaders:/" name="dp" 
+                 ondata="Debug.write('testheaderresponse: dpready = true'); parent.dpready = true"
+                 />
+
+    <method event="oninit">
+      dsheaders.setHeader("content-type", "application/xml");
+      dsheaders.setQueryType("POST");
+      dsheaders.doRequest();
+    </method>
+
+    <method name="test1">
+      if ( ! this.dpready ){
+          if ( ! this.t2del ){
+              Debug.write( "test isn't done until async test runs" );
+              this.t2del = new LzDelegate( this , 'test1' );
+          }
+
+          if ( this.waitcnt++ > 2000 ){
+              fail( "testheaderresponse: Didn't get async data" );
+          } else {
+              LzIdle.callOnIdle( this.t2del );
+          }
+          return;
+      }
+
+     Debug.write( 'running async test for loaded data (testheaderresponse.lzx)' );
+      this.doIt(dp);
+    </method>
+
+        <method name="doIt" args="dp">
+            <![CDATA[
+                   // check for Date header
+                   var hdrs = dsheaders.getAllResponseHeaders();
+                   Debug.write("hdrs=", hdrs);
+                   var dateheader = hdrs.getValue('Date');
+                   assertTrue(dateheader != null, "Date Header non null");
+            ]]>
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+

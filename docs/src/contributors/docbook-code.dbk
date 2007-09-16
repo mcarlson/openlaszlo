@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter language="en">
+<title>Documenting Your Code</title>
+
+<section><title>The Basics</title>
+</section>
+
+<section><title>Documenting LZX classes</title>
+  <section><title>Using comments</title>
+  </section>
+  
+  <section><title>Using the <sgmltag>doc</sgmltag> tag</title>
+  </section>
+</section>
+
+<section><title>Documenting JavaScript files</title>
+
+  <section><title>JS2 class declarations</title>
+  </section>
+  
+  <section><title>Function-as-class declarations</title>
+  </section>
+  
+  <section><title>Object-as-singleton declarations</title>
+  </section>
+  
+</section>
+</chapter>

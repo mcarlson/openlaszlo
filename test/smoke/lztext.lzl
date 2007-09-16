@@ -1,16 +1,231 @@
 <library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
+  <include href="lzunit" />
   <class name="LzTextTest" extends="TestCase">
+    <method name="setUp">
+      <![CDATA[
+             this.date = new Date(Date.UTC(1969, 6, 20, 20, 17, 40, 0));
+             this.dateString = this.date.toString();
+             this.array = [1, 2, 3];
+             this.object = {one: 1, two: 'too', 3: 'three'};
+             this.testString = '"String", with \'\\\' escapes';
+      ]]>
+    </method>
+
+    <method name="tearDown">
+    </method>
+
     <method name="testInputText">
-	var inp = new LzInputText(canvas, {x: 100, y: 100, width: 200});
-	inp.setText("foo\n\nbar");
-	// test getText() not eating newlines
-        assertEquals("foo\r\rbar", inp.getText());	
-	inp.setText(inp.getText() + "\nbaz\nfoo    whitespace\nbar.");
+    // must be multiline for multiline getText() to work in DHTML
+    var inp = new LzInputText(canvas, {x: 100, y: 100, width: 200, multiline: true});
+    inp.setText("foo\n\nbar");
+    // test getText() not eating newlines
+    if ($dhtml) {
+        assertEquals("foo\n\nbar", inp.getText());
+        inp.setText(inp.getText() + "\nbaz\nfoo    whitespace\nbar.");
+        assertEquals("foo\n\nbar\nbaz\nfoo    whitespace\nbar.", inp.getText());
+    } else {
+        // SWF returns \r instead of \n...
+        assertEquals("foo\r\rbar", inp.getText());
+        inp.setText(inp.getText() + "\nbaz\nfoo    whitespace\nbar.");
         assertEquals("foo\r\rbar\rbaz\rfoo    whitespace\rbar.", inp.getText());
+    }
+    </method>
+
+    <text id="textFormatTest">
+      This is some text.
+    </text>
+
+    <!-- Note this duplicates the debugger format tests, but ensures formatting works correctly in text -->
+    <method name="testTextFormat">
+      <![CDATA[
+               // The commented out tests can't be run because they
+               // print object ID's which can't be compared easily.
+               // Maybe someday lzunit will have a regexp compare
+               assertEquals('    3.14', (textFormatTest.format('%8.2f', Math.PI), textFormatTest.text));
+               assertEquals('    0.00', (textFormatTest.format('%8.2f', 0), textFormatTest.text));
+               assertEquals('   -3.14', (textFormatTest.format('%8.2f', -Math.PI), textFormatTest.text));
+               assertEquals('00003.14', (textFormatTest.format('%08.2f', Math.PI), textFormatTest.text));
+               assertEquals('00000.00', (textFormatTest.format('%08.2f', 0), textFormatTest.text));
+               assertEquals('-0003.14', (textFormatTest.format('%08.2f', -Math.PI), textFormatTest.text));
+               assertEquals('   +3.14', (textFormatTest.format('%+8.2f', Math.PI), textFormatTest.text));
+               assertEquals('    0.00', (textFormatTest.format('%+8.2f', 0), textFormatTest.text));
+               assertEquals('   -3.14', (textFormatTest.format('%+8.2f', -Math.PI), textFormatTest.text));
+               assertEquals('+0003.14', (textFormatTest.format('%+08.2f', Math.PI), textFormatTest.text));
+               assertEquals(' 0000.00', (textFormatTest.format('%+08.2f', 0), textFormatTest.text));
+               assertEquals('-0003.14', (textFormatTest.format('%+08.2f', -Math.PI), textFormatTest.text));
+               assertEquals('    3.14', (textFormatTest.format('% 8.2f', Math.PI), textFormatTest.text));
+               assertEquals('    0.00', (textFormatTest.format('% 8.2f', 0), textFormatTest.text));
+               assertEquals('   -3.14', (textFormatTest.format('% 8.2f', -Math.PI), textFormatTest.text));
+               assertEquals(' 0003.14', (textFormatTest.format('% 08.2f', Math.PI), textFormatTest.text));
+               assertEquals(' 0000.00', (textFormatTest.format('% 08.2f', 0), textFormatTest.text));
+               assertEquals('-0003.14', (textFormatTest.format('% 08.2f', -Math.PI), textFormatTest.text));
+               assertEquals('3.14    ', (textFormatTest.format('%-8.2f', Math.PI), textFormatTest.text));
+               assertEquals('0.00    ', (textFormatTest.format('%-8.2f', 0), textFormatTest.text));
+               assertEquals('-3.14   ', (textFormatTest.format('%-8.2f', -Math.PI), textFormatTest.text));
+               assertEquals('3.14    ', (textFormatTest.format('%-08.2f', Math.PI), textFormatTest.text));
+               assertEquals('0.00    ', (textFormatTest.format('%-08.2f', 0), textFormatTest.text));
+               assertEquals('-3.14   ', (textFormatTest.format('%-08.2f', -Math.PI), textFormatTest.text));
+               assertEquals('+3.14   ', (textFormatTest.format('%-+8.2f', Math.PI), textFormatTest.text));
+               assertEquals(' 0.00   ', (textFormatTest.format('%-+8.2f', 0), textFormatTest.text));
+               assertEquals('-3.14   ', (textFormatTest.format('%-+8.2f', -Math.PI), textFormatTest.text));
+               assertEquals('+3.14   ', (textFormatTest.format('%-+08.2f', Math.PI), textFormatTest.text));
+               assertEquals(' 0.00   ', (textFormatTest.format('%-+08.2f', 0), textFormatTest.text));
+               assertEquals('-3.14   ', (textFormatTest.format('%-+08.2f', -Math.PI), textFormatTest.text));
+               assertEquals(' 3.14   ', (textFormatTest.format('%- 8.2f', Math.PI), textFormatTest.text));
+               assertEquals(' 0.00   ', (textFormatTest.format('%- 8.2f', 0), textFormatTest.text));
+               assertEquals('-3.14   ', (textFormatTest.format('%- 8.2f', -Math.PI), textFormatTest.text));
+               assertEquals(' 3.14   ', (textFormatTest.format('%- 08.2f', Math.PI), textFormatTest.text));
+               assertEquals(' 0.00   ', (textFormatTest.format('%- 08.2f', 0), textFormatTest.text));
+               assertEquals('-3.14   ', (textFormatTest.format('%- 08.2f', -Math.PI), textFormatTest.text));
+               assertEquals('42     ', (textFormatTest.format('%-07d', 42), textFormatTest.text));
+               assertEquals('2A', (textFormatTest.format('%X', 42), textFormatTest.text));
+               assertEquals('2a     ', (textFormatTest.format('%-07x', 42), textFormatTest.text));
+               assertEquals('0X2A', (textFormatTest.format('%#X', 42), textFormatTest.text));
+               assertEquals('0x2a     ', (textFormatTest.format('%-07#x', 42), textFormatTest.text));
+               assertEquals('-42    ', (textFormatTest.format('%-07d', -42), textFormatTest.text));
+               assertEquals('D6', (textFormatTest.format('%X', -42), textFormatTest.text));
+               assertEquals('fffffd6', (textFormatTest.format('%-07x', -42), textFormatTest.text));
+               assertEquals('0XD6', (textFormatTest.format('%#X', -42), textFormatTest.text));
+               assertEquals('0xfffffd6', (textFormatTest.format('%-07#x', -42), textFormatTest.text));
+               // %d on string (e.g., array index)
+               assertEquals('42     ', (textFormatTest.format('%-07d', '42'), textFormatTest.text));
+               assertEquals('2A', (textFormatTest.format('%X', '42'), textFormatTest.text));
+               assertEquals('2a     ', (textFormatTest.format('%-07x', '42'), textFormatTest.text));
+               assertEquals('0X2A', (textFormatTest.format('%#X', '42'), textFormatTest.text));
+               assertEquals('0x2a     ', (textFormatTest.format('%-07#x', '42'), textFormatTest.text));
+               assertEquals('-42    ', (textFormatTest.format('%-07d', '-42'), textFormatTest.text));
+               assertEquals('D6', (textFormatTest.format('%X', '-42'), textFormatTest.text));
+               assertEquals('fffffd6', (textFormatTest.format('%-07x', '-42'), textFormatTest.text));
+               assertEquals('0XD6', (textFormatTest.format('%#X', '-42'), textFormatTest.text));
+               assertEquals('0xfffffd6', (textFormatTest.format('%-07#x', '-42'), textFormatTest.text));
+               assertEquals('Hello Laszlo!', (textFormatTest.format('%s', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals("'Hello Laszlo!'", (textFormatTest.format('%w', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals('Hello', (textFormatTest.format('%.5s', "Hello Laszlo!"), textFormatTest.text));
+               // non numeric
+               assertEquals('NaN    ', (textFormatTest.format('%-07d', 'forty-two'), textFormatTest.text));
+//                assertEquals('Hello', (textFormatTest.format('%.5w', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals('                 Hello Laszlo!', (textFormatTest.format('%30s', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals("               'Hello Laszlo!'", (textFormatTest.format('%30w', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals('                         Hello', (textFormatTest.format('%30.5s', "Hello Laszlo!"), textFormatTest.text));
+//                assertEquals('                         Hello', (textFormatTest.format('%30.5w', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals('Hello Laszlo!', (textFormatTest.format('%-s', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals("'Hello Laszlo!'", (textFormatTest.format('%-w', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals('Hello', (textFormatTest.format('%-.5s', "Hello Laszlo!"), textFormatTest.text));
+//                assertEquals('Hello', (textFormatTest.format('%-.5w', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals('Hello Laszlo!                 ', (textFormatTest.format('%-30s', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals("'Hello Laszlo!'               ", (textFormatTest.format('%-30w', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals('Hello                         ', (textFormatTest.format('%-30.5s', "Hello Laszlo!"), textFormatTest.text));
+//                assertEquals('Hello                         ', (textFormatTest.format('%-30.5w', "Hello Laszlo!"), textFormatTest.text));
+               assertEquals('1,2,3', (textFormatTest.format('%s', this.array), textFormatTest.text));
+               assertEquals('[1, 2, 3]', (textFormatTest.format('%w', this.array), textFormatTest.text));
+               assertEquals('1,2,3', (textFormatTest.format('%.5s', this.array), textFormatTest.text));
+//                assertEquals('[1, 2', (textFormatTest.format('%.5w', this.array), textFormatTest.text));
+               assertEquals('                         1,2,3', (textFormatTest.format('%30s', this.array), textFormatTest.text));
+               assertEquals('                     [1, 2, 3]', (textFormatTest.format('%30w', this.array), textFormatTest.text));
+               assertEquals('                         1,2,3', (textFormatTest.format('%30.5s', this.array), textFormatTest.text));
+//                assertEquals('                         [1, 2', (textFormatTest.format('%30.5w', this.array), textFormatTest.text));
+               assertEquals('1,2,3', (textFormatTest.format('%-s', this.array), textFormatTest.text));
+               assertEquals('[1, 2, 3]', (textFormatTest.format('%-w', this.array), textFormatTest.text));
+               assertEquals('1,2,3', (textFormatTest.format('%-.5s', this.array), textFormatTest.text));
+//                assertEquals('[1, 2', (textFormatTest.format('%-.5w', this.array), textFormatTest.text));
+               assertEquals('1,2,3                         ', (textFormatTest.format('%-30s', this.array), textFormatTest.text));
+               assertEquals('[1, 2, 3]                     ', (textFormatTest.format('%-30w', this.array), textFormatTest.text));
+               assertEquals('1,2,3                         ', (textFormatTest.format('%-30.5s', this.array), textFormatTest.text));
+//                assertEquals('[1, 2                         ', (textFormatTest.format('%-30.5w', this.array), textFormatTest.text));
+               assertEquals('[object Object]', (textFormatTest.format('%s', this.object), textFormatTest.text));
+               assertEquals('{one: 1, two: too, 3: three}', (textFormatTest.format('%w', this.object), textFormatTest.text));
+               assertEquals('[obje', (textFormatTest.format('%.5s', this.object), textFormatTest.text));
+//                assertEquals('{one:', (textFormatTest.format('%.5w', this.object), textFormatTest.text));
+               assertEquals('               [object Object]', (textFormatTest.format('%30s', this.object), textFormatTest.text));
+               assertEquals('  {one: 1, two: too, 3: three}', (textFormatTest.format('%30w', this.object), textFormatTest.text));
+               assertEquals('                         [obje', (textFormatTest.format('%30.5s', this.object), textFormatTest.text));
+//                assertEquals('                         {one:', (textFormatTest.format('%30.5w', this.object), textFormatTest.text));
+               assertEquals('[object Object]', (textFormatTest.format('%-s', this.object), textFormatTest.text));
+               assertEquals('{one: 1, two: too, 3: three}', (textFormatTest.format('%-w', this.object), textFormatTest.text));
+               assertEquals('[obje', (textFormatTest.format('%-.5s', this.object), textFormatTest.text));
+//                assertEquals('{one:', (textFormatTest.format('%-.5w', this.object), textFormatTest.text));
+               assertEquals('[object Object]               ', (textFormatTest.format('%-30s', this.object), textFormatTest.text));
+               assertEquals('{one: 1, two: too, 3: three}  ', (textFormatTest.format('%-30w', this.object), textFormatTest.text));
+               assertEquals('[obje                         ', (textFormatTest.format('%-30.5s', this.object), textFormatTest.text));
+//                assertEquals('{one:                         ', (textFormatTest.format('%-30.5w', this.object), textFormatTest.text));
+               assertEquals('true', (textFormatTest.format('%s', true), textFormatTest.text));
+               assertEquals('true', (textFormatTest.format('%w', true), textFormatTest.text));
+               assertEquals('true', (textFormatTest.format('%.5s', true), textFormatTest.text));
+               assertEquals('true', (textFormatTest.format('%.5w', true), textFormatTest.text));
+               assertEquals('                          true', (textFormatTest.format('%30s', true), textFormatTest.text));
+               assertEquals('                          true', (textFormatTest.format('%30w', true), textFormatTest.text));
+               assertEquals('                          true', (textFormatTest.format('%30.5s', true), textFormatTest.text));
+               assertEquals('                          true', (textFormatTest.format('%30.5w', true), textFormatTest.text));
+               assertEquals('true', (textFormatTest.format('%-s', true), textFormatTest.text));
+               assertEquals('true', (textFormatTest.format('%-w', true), textFormatTest.text));
+               assertEquals('true', (textFormatTest.format('%-.5s', true), textFormatTest.text));
+               assertEquals('true', (textFormatTest.format('%-.5w', true), textFormatTest.text));
+               assertEquals('true                          ', (textFormatTest.format('%-30s', true), textFormatTest.text));
+               assertEquals('true                          ', (textFormatTest.format('%-30w', true), textFormatTest.text));
+               assertEquals('true                          ', (textFormatTest.format('%-30.5s', true), textFormatTest.text));
+               assertEquals('true                          ', (textFormatTest.format('%-30.5w', true), textFormatTest.text));
+               assertEquals('"String", with \'\\\' escapes', (textFormatTest.format('%s', this.testString), textFormatTest.text));
+               assertEquals("'\"String\", with \\'\\\\\\' escapes'", (textFormatTest.format('%w', this.testString), textFormatTest.text));
+               assertEquals('"Stri', (textFormatTest.format('%.5s', this.testString), textFormatTest.text));
+//                assertEquals('"Stri', (textFormatTest.format('%.5w', this.testString), textFormatTest.text));
+               assertEquals('    "String", with \'\\\' escapes', (textFormatTest.format('%30s', this.testString), textFormatTest.text));
+               assertEquals("'\"String\", with \\'\\\\\\' escapes'", (textFormatTest.format('%30w', this.testString), textFormatTest.text));
+               assertEquals('                         "Stri', (textFormatTest.format('%30.5s', this.testString), textFormatTest.text));
+//                assertEquals('                         "Stri', (textFormatTest.format('%30.5w', this.testString), textFormatTest.text));
+               assertEquals('"String", with \'\\\' escapes', (textFormatTest.format('%-s', this.testString), textFormatTest.text));
+               assertEquals("'\"String\", with \\'\\\\\\' escapes'", (textFormatTest.format('%-w', this.testString), textFormatTest.text));
+               assertEquals('"Stri', (textFormatTest.format('%-.5s', this.testString), textFormatTest.text));
+//                assertEquals('"Stri', (textFormatTest.format('%-.5w', this.testString), textFormatTest.text));
+               assertEquals('"String", with \'\\\' escapes    ', (textFormatTest.format('%-30s', this.testString), textFormatTest.text));
+               assertEquals("'\"String\", with \\'\\\\\\' escapes'", (textFormatTest.format('%-30w', this.testString), textFormatTest.text));
+               assertEquals('"Stri                         ', (textFormatTest.format('%-30.5s', this.testString), textFormatTest.text));
+//                assertEquals('"Stri                         ', (textFormatTest.format('%-30.5w', this.testString), textFormatTest.text));
+               assertEquals(this.dateString, (textFormatTest.format('%s', this.date), textFormatTest.text));
+               assertEquals(this.dateString, (textFormatTest.format('%w', this.date), textFormatTest.text));
+               assertEquals(this.dateString.substring(0, 5), (textFormatTest.format('%.5s', this.date), textFormatTest.text));
+//                assertEquals(this.dateString.substring(0, 5), (textFormatTest.format('%.5w', this.date), textFormatTest.text));
+               assertEquals(this.dateString, (textFormatTest.format('%30s', this.date), textFormatTest.text));
+               assertEquals(this.dateString, (textFormatTest.format('%30w', this.date), textFormatTest.text));
+               assertEquals('                         '+this.dateString.substring(0, 5), (textFormatTest.format('%30.5s', this.date), textFormatTest.text));
+//                assertEquals('                         '+this.dateString.substring(0, 5), (textFormatTest.format('%30.5w', this.date), textFormatTest.text));
+               assertEquals(this.dateString, (textFormatTest.format('%-s', this.date), textFormatTest.text));
+               assertEquals(this.dateString, (textFormatTest.format('%-w', this.date), textFormatTest.text));
+               assertEquals(this.dateString.substring(0, 5), (textFormatTest.format('%-.5s', this.date), textFormatTest.text));
+//                assertEquals(this.dateString.substring(0, 5), (textFormatTest.format('%-.5w', this.date), textFormatTest.text));
+               assertEquals(this.dateString, (textFormatTest.format('%-30s', this.date), textFormatTest.text));
+               assertEquals(this.dateString, (textFormatTest.format('%-30w', this.date), textFormatTest.text));
+               assertEquals(this.dateString.substring(0, 5)+'                         ', (textFormatTest.format('%-30.5s', this.date), textFormatTest.text));
+//                assertEquals(this.dateString.substring(0, 5)+'                         ', (textFormatTest.format('%-30.5w', this.date), textFormatTest.text));
+               assertEquals('3.141592653589', (textFormatTest.format('%.14s', Math.PI), textFormatTest.text));
+//             assertEquals('3.141592653589', (textFormatTest.format('%.14w', Math.PI), textFormatTest.text));
+               assertEquals('3.141', (textFormatTest.format('%.5s', Math.PI), textFormatTest.text));
+//             assertEquals('3.141', (textFormatTest.format('%.5w', Math.PI), textFormatTest.text));
+               assertEquals('                3.141592653589', (textFormatTest.format('%30.14s', Math.PI), textFormatTest.text));
+//             assertEquals('                3.141592653589', (textFormatTest.format('%30.14w', Math.PI), textFormatTest.text));
+               assertEquals('                         3.141', (textFormatTest.format('%30.5s', Math.PI), textFormatTest.text));
+//             assertEquals('                         3.141', (textFormatTest.format('%30.5w', Math.PI), textFormatTest.text));
+               assertEquals('3.141592653589', (textFormatTest.format('%-.14s', Math.PI), textFormatTest.text));
+//             assertEquals('3.141592653589', (textFormatTest.format('%-.14w', Math.PI), textFormatTest.text));
+               assertEquals('3.141', (textFormatTest.format('%-.5s', Math.PI), textFormatTest.text));
+//             assertEquals('3.141', (textFormatTest.format('%-.5w', Math.PI), textFormatTest.text));
+               assertEquals('3.141592653589                ', (textFormatTest.format('%-30.14s', Math.PI), textFormatTest.text));
+//             assertEquals('3.141592653589                ', (textFormatTest.format('%-30.14w', Math.PI), textFormatTest.text));
+               assertEquals('3.141                         ', (textFormatTest.format('%-30.5s', Math.PI), textFormatTest.text));
+//             assertEquals('3.141                         ', (textFormatTest.format('%-30.5w', Math.PI), textFormatTest.text));
+               // 'write' compatibility mode tests
+               assertEquals('%\n', (textFormatTest.format('%'), textFormatTest.text));
+               Debug.info("Expect an excess arguments warning");
+               assertEquals('% %\n', (textFormatTest.format('%', '%'), textFormatTest.text));
+               assertEquals('1 2 3\n', (textFormatTest.format(1, 2, 3), textFormatTest.text));
+               Debug.info("Expect an excess arguments warning");
+               assertEquals('%1 %2 %3\n', (textFormatTest.format('%1', '%2', '%3'), textFormatTest.text));
+               Debug.info("Expect an excess arguments warning");
+               assertEquals('1% 2% 3%\n', (textFormatTest.format('1%', '2%', '3%'), textFormatTest.text));
+      ]]>
     </method>
   </class>
 </library>

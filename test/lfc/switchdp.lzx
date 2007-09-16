@@ -27,10 +27,10 @@
   
   <view>
     <view height="40" bgcolor="yellow" font="Helvetica" fontsize="20" 
-	  id="switcher">
+      id="switcher">
       <attribute name="mypath" value="keys:/keys/row[1]" type="string"/>
       <datapath >
-	<attribute name="xpath" value="parent.mypath" when="always" />
+    <attribute name="xpath" value="parent.mypath" when="always" />
       </datapath>
       
       <text name="key" width="30" datapath="key[1]/t/text()" />
@@ -39,10 +39,10 @@
     <simplelayout axis="y" spacing="4"/>
   </view>
   <button label="switchit" y="40"
-	  onclick="switcher.setAttribute( 'mypath' ,'keys:/keys/row[2]')" />
+      onclick="switcher.setAttribute( 'mypath' ,'keys:/keys/row[2]')" />
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,11 +1,8 @@
-/* *****************************************************************************
- * LibraryCompiler.java
-* ****************************************************************************/
+/* -*- mode: Java; c-basic-offset: 2; -*- */
 
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
+/**
+ * LZX Library Compiler
+ */
 
 package org.openlaszlo.compiler;
 import java.io.*;
@@ -74,7 +71,7 @@ class LibraryCompiler extends ToplevelCompiler {
                     env.getLoadableImportedLibraryFiles().put(key, env.getApplicationFile());
                 }
 
-                Document doc = env.getParser().parse(file);
+                Document doc = env.getParser().parse(file, env);
                 if (validate)
                     Parser.validate(doc, file.getPath(), env);
                 Element root = doc.getRootElement();
@@ -139,3 +136,8 @@ class LibraryCompiler extends ToplevelCompiler {
         }
     }
 }
+
+/**
+ * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * Reserved.  Use is subject to license terms.
+ */

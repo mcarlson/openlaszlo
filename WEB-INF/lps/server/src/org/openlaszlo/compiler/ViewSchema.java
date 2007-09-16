@@ -57,8 +57,8 @@ public class ViewSchema extends Schema {
     /** Type of script expressions. */
     public static final Type EXPRESSION_TYPE = newType("expression");
     public static final Type REFERENCE_TYPE = newType("reference");
-    /** Type of event bodies. */
-    public static final Type EVENT_TYPE = newType("script");
+    /** Type of event handler bodies. */
+    public static final Type EVENT_HANDLER_TYPE = newType("script");
 
     /** Type of attribute setter function */
     public static final Type SETTER_TYPE = newType("setter");
@@ -70,6 +70,7 @@ public class ViewSchema extends Schema {
     public static final Type SIZE_EXPRESSION_TYPE = newType("sizeExpression");
     public static final Type CSS_TYPE = newType("css");
     public static final Type INHERITABLE_BOOLEAN_TYPE = newType("inheritableBoolean");
+    public static final Type XML_LITERAL = newType("xmlLiteral");
     
     static {
         sHTMLContentElements.add("text");
@@ -78,6 +79,7 @@ public class ViewSchema extends Schema {
         // Define mapping from RNG Schema types to LPS types
         sRNGtoLPSTypeMap.put("ID",               ID_TYPE);
         sRNGtoLPSTypeMap.put("anyURI",           STRING_TYPE);
+        sRNGtoLPSTypeMap.put("booleanOrNull",    EXPRESSION_TYPE);
         sRNGtoLPSTypeMap.put("boolean",          EXPRESSION_TYPE);
         sRNGtoLPSTypeMap.put("booleanLiteral",   EXPRESSION_TYPE);
         sRNGtoLPSTypeMap.put("inheritableBooleanLiteral",   INHERITABLE_BOOLEAN_TYPE);
@@ -94,7 +96,7 @@ public class ViewSchema extends Schema {
         sRNGtoLPSTypeMap.put("numberExpression", NUMBER_EXPRESSION_TYPE);
         sRNGtoLPSTypeMap.put("propertyPath",     STRING_TYPE);
         sRNGtoLPSTypeMap.put("reference",        REFERENCE_TYPE);
-        sRNGtoLPSTypeMap.put("script",           EVENT_TYPE);
+        sRNGtoLPSTypeMap.put("script",           EVENT_HANDLER_TYPE);
         sRNGtoLPSTypeMap.put("size",             SIZE_EXPRESSION_TYPE);
         sRNGtoLPSTypeMap.put("sizeLiteral",      SIZE_EXPRESSION_TYPE);
         sRNGtoLPSTypeMap.put("sizeExpression",   SIZE_EXPRESSION_TYPE);
@@ -112,8 +114,8 @@ public class ViewSchema extends Schema {
             "onkeydown", "onkeyup", "onsubmit", "onreset", "onselect",
             "onchange" , "oninit", "onerror", "ondata", "ontimeout", 
             "oncommand" , "onapply" , "onremove"};
-        setAttributeTypes(mouseEventAttributes, EVENT_TYPE);
-        setAttributeTypes(eventAttributes, EVENT_TYPE);
+        setAttributeTypes(mouseEventAttributes, EVENT_HANDLER_TYPE);
+        setAttributeTypes(eventAttributes, EVENT_HANDLER_TYPE);
         sMouseEventAttributes = new HashSet(Arrays.asList(mouseEventAttributes));
     }
 
@@ -399,8 +401,8 @@ throw new CompilationError(sourceElement, attr.name, new Throwable(
      *
      * Modifies the in-core schema DOM tree as well, to clone the superclass node.
      *
-     * @param element the element to add to the map
-     * @param superclass an element to inherit attribute to type info from. May be null.
+     * @param elt the element to add to the map
+     * @param superclassName an element to inherit attribute to type info from. May be null.
      * @param attributeDefs list of attribute name/type defs
      */
     public void addElement (Element elt, String className,
@@ -972,7 +974,7 @@ throw new CompilationError(sourceElement, attr.name, new Throwable(
      * XML element. Unknown attributes have Expression type.
      *
      * @param e an Element
-     * @param name an attribute name
+     * @param attrName an attribute name
      * @return a value represting the type of the attribute's
      */
     public Type getAttributeType(Element e, String attrName) {
@@ -983,9 +985,8 @@ throw new CompilationError(sourceElement, attr.name, new Throwable(
      * Returns a value representing the type of an attribute within an
      * XML element. Unknown attributes have Expression type.
      *
-     * @param e an Element name
-     * @param name an attribute name
-     * @param throwException if no explicit type is found, throw UnknownAttributeException
+     * @param elt an Element name
+     * @param attrName an attribute name
      * @return a value represting the type of the attribute's
      */
     public Type getAttributeType(String elt, String attrName)
@@ -1034,21 +1035,21 @@ throw new CompilationError(sourceElement, attr.name, new Throwable(
         return (ClassModel) mClassMap.get(elementName);
     }
 
-  public String toLZX() {
-    return toLZX("");
-  }
-
-  public String toLZX(String indent) {
-    String lzx = "";
-    for (Iterator i = (new TreeSet(mClassMap.values())).iterator(); i.hasNext(); ) {
-      ClassModel model = (ClassModel)i.next();
-      if (model.hasNodeModel()) {
-        lzx += model.toLZX(indent);
-        lzx += "\n";
-      }
+    public String toLZX() {
+      return toLZX("");
     }
-    return lzx;
-  }
+
+    public String toLZX(String indent) {
+      String lzx = "";
+      for (Iterator i = (new TreeSet(mClassMap.values())).iterator(); i.hasNext(); ) {
+        ClassModel model = (ClassModel)i.next();
+        if (model.hasNodeModel()) {
+          lzx += model.toLZX(indent);
+          lzx += "\n";
+        }
+      }
+      return lzx;
+    }
 
     public void loadSchema() throws JDOMException, IOException {
         String schemaPath = SCHEMA_PATH;
@@ -1136,7 +1137,11 @@ throw new CompilationError(sourceElement, attr.name, new Throwable(
             || name.equals("u");
     }
 
-
+    static boolean isDocElement(Element e) {
+        String name = e.getName();
+        return name.equals("doc");
+    }
+    
     /* Constants for parsing CSS colors. */
     static final PatternMatcher sMatcher = new Perl5Matcher();
     static final Pattern sRGBPattern;

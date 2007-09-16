@@ -1,0 +1,104 @@
+<canvas>
+    <include href="extensions/drawview.lzx"/>
+
+    <simplelayout axis="x"/>
+    <drawview width="205" height="230" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()" bgcolor="green">
+        <dragstate name="dragger"/>
+        <method event="oncontext">
+            this.moveTo(100, 100);
+            this.lineTo(100, 200);
+            this.quadraticCurveTo(150, 250, 200, 200);
+            this.closePath();
+
+            this.globalAlpha = .5;
+            this.strokeStyle = '#ffff00';
+            this.lineWidth = 5;
+            this.stroke();
+            
+            var g = this.createRadialGradient(100, 100, .7, 200, 200, 100);
+            this.globalAlpha = 0;
+            g.addColorStop(0, '#000000');
+            this.globalAlpha = 1;
+            g.addColorStop(1, '#ffffff');
+            this.fillStyle = g;
+            this.fill();
+
+            this.fillStyle = '#0000ff';
+            this.globalAlpha = .2;
+            this.fill();
+
+            this.strokeStyle = 0x000000;
+            this.lineWidth = 0;
+            this.stroke();
+
+            this.beginPath();
+            this.lineTo(75, 0);
+            this.lineTo(75, 75);
+            this.lineTo(0, 75);
+            this.lineTo(0, 0);
+            this.closePath();
+            
+            var g = this.createLinearGradient(0,0,75,75)
+            this.globalAlpha = 0;
+            g.addColorStop(0, '#000000');
+            this.globalAlpha = 1;
+            g.addColorStop(1, '#ffffff');
+            this.fillStyle = g;
+            this.fill();
+        </method>
+    </drawview>
+
+<!-- test new arc, rect and oval methods -->
+    <drawview width="200" height="200">
+        <method event="oncontext">
+            this.beginPath();
+            this.arc(100, 100, 50, 0, 90);
+
+            this.oval(20, 120, 10);
+            this.oval(75, 120, 10, 40);
+
+            this.rect(10, 30, 30, 50);
+            this.rect(10, 150, 50, 40, 10);
+
+            this.stroke();
+            this.closePath();
+        </method>
+    </drawview>
+
+<!-- test new bezierCurveTo method  - from http://developer.mozilla.org/samples/canvas-tutorial/2_6_canvas_beziercurveto.html -->
+    <drawview width="200" height="200">
+        <method event="oncontext">
+            this.beginPath();
+            this.moveTo(75,40);
+            this.bezierCurveTo(75,37,70,25,50,25);
+            this.bezierCurveTo(20,25,20,62.5,20,62.5);
+            this.bezierCurveTo(20,80,40,102,75,120);
+            this.bezierCurveTo(110,102,130,80,130,62.5);
+            this.bezierCurveTo(130,62.5,130,25,100,25);
+            this.bezierCurveTo(85,25,75,37,75,40);
+            this.fill();
+        </method>
+    </drawview>
+
+<!-- from http://forum.openlaszlo.org/showthread.php?t=9478 -->
+    <class name="curve" extends="drawview">
+        <handler name="oncontext">
+            drawCurve(0,0, 0,200, 200,0, 200,200);
+        </handler>
+
+        <method name="drawCurve" args="x1,y1,cx1,cy1,cx2,cy2,x2,y2">
+        <![CDATA[
+              this.strokeStyle = 0xaaaaaa;
+              this.beginPath();
+            this.moveTo(x1, y1);
+            this.bezierCurveTo(cx1,cy1,cx2,cy2,x2,y2);
+            this.stroke();
+        ]]>
+        </method>
+    </class>
+    <curve x="100" y="100" width="200" height="200"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

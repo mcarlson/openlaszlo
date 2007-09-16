@@ -1,0 +1,49 @@
+
+
+<canvas width="400" height="400">
+
+<stylesheet>
+
+    styledbox {
+        stylebgcolor: "0xCCCCCC";
+        styleinnercolor: "0xFF0000";
+    }
+
+    styledbox styledbox2 {
+        stylebgcolor: "0x999999";
+        styleinnercolor: "0x0000FF";
+    }
+
+    styledbox styledbox2 styledbox3 {
+        stylebgcolor: "0x666666";
+        styleinnercolor: "0x00FF00";
+    }
+
+</stylesheet>
+
+<class name="styledbox" height="100" width="100" bgcolor="$style{'stylebgcolor'}">
+    <view name="snow" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/>
+</class>
+
+<class name="styledbox2" height="100" width="100" bgcolor="$style{'stylebgcolor'}">
+    <view name="braxton" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/>
+</class>
+
+<class name="styledbox3" height="100" width="100" bgcolor="$style{'stylebgcolor'}">
+    <view name="jackson" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/>
+</class>
+
+<styledbox id="comet" x="200" y="0">
+            <styledbox2 id="shock" x="-100" y="100">
+                    <styledbox3 id="storm" x="-100" y="100"/>
+            </styledbox2>
+</styledbox>
+
+<styledbox2/>
+<styledbox3/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

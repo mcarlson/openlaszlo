@@ -1,0 +1,22 @@
+
+<canvas>
+  <class name="constrainedDragState" extends="state">
+    <attribute name="dragMin" value="100"/>
+    <attribute name="dragMax" value="300"/>
+    <attribute name="mousePos" value="${parent.getMouse( 'x' ) - 10}"/>
+    <attribute name="x" 
+               value="${Math.max(Math.min(this.dragMax, this.mousePos),
+                                 this.dragMin )}"/>
+  </class>
+  
+  <view bgcolor="blue" width="20" height="20" x="100" y="50"
+        onmousedown="myDrag.apply()"
+        onmouseup="  myDrag.remove()">
+    <attribute name="mouseIsDown" value="false"/>
+    <constrainedDragState name="myDrag"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

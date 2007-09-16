@@ -1,0 +1,34 @@
+
+<canvas debug="true">
+     <debug />
+
+    <class name="myclass_with_handler">
+        <event name="myevent"/>
+        <handler name="myevent" args="myargs">
+            Debug.write(this, 'handling myevent, myargs=', myargs);
+        </handler>
+
+        <attribute name="season" type="string" value="spring" />
+        <event name="onseason" />
+        <handler name="onseason" args="s">
+            Debug.write("got season of ", s, ", season is ", season);
+        </handler>
+    </class>
+
+  <myclass_with_handler id="foo" />
+
+
+  <button onclick="foo.myevent.sendEvent(12)" text="send the event" />
+  <button onclick="foo.setAttribute('season', 'fall')" text="autumn" />
+
+  <!-- Don't do this! Setting an attribute directly with '=' shortcuts around
+       the event system. This is not right; use setAttribute instead -->
+  <button onclick="foo.season='winter'" text="evil" />
+
+  <simplelayout axis="x" spacing="5" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

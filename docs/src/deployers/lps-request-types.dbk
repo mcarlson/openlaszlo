@@ -1,0 +1,258 @@
+<chapter id="request-types">
+    <title>OpenLaszlo Request Types</title>
+    <para> 
+      This document briefly describes OpenLaszlo request types.  It assumes
+      that you are generally familiar with <ulink url="http://www.w3.org/Protocols/rfc2068/rfc2068">HTTP</ulink>, <ulink url="http://www.w3.org/Addressing/">URLs</ulink>,
+      and the OpenLaszlo architecture described in <xref linkend="deployers.architecture"/>.
+    </para>
+    
+    <para/><section id="request-types.request-types"><title>What are OpenLaszlo Request Types?</title>
+    
+    <para>
+      In general, an URL that is used to request a proxied OpenLaszlo application
+      is of the form:
+    </para>
+    
+    <programlisting>http://myhost[:myport]/mywebapp/myapp.lzx?lzt=<varname>type</varname></programlisting>
+    
+    <para>
+      Everything before the <literal>?</literal> character can typically
+      be configured via settings in your Servlet Container and/or
+      Web Server.  The value of the <literal>lzt</literal> query parameter
+      is interpreted by the OpenLaszlo Server as a <indexterm significance="preferred"><primary>request type</primary></indexterm><glossterm>request type</glossterm>.
+      Here are the standard request types:
+    </para>
+    
+    <para/><section><title>HTML Request Types</title>
+    
+    <para>These request types return an HTML page that displays the
+    application.  The mime-type of the response is
+    <literal>text/html</literal>.</para>
+    
+    <variablelist><varlistentry><term><literal>lzt=html</literal></term><listitem><para>
+      This request causes the OpenLaszlo Server to respond with an HTML wrapper page
+      for the Laszlo application.  The HTML page presents the
+      application.  The title and background color of the application
+      are set to the title and background color of the application
+      (the values of its <literal>canvas</literal> <literal>title</literal> and
+      <literal>bgcolor</literal> attributes, if present).
+      
+      </para><para>The page that this SWF returns uses JavaScript to include the
+      OpenLaszlo application.</para>
+      </listitem></varlistentry><varlistentry><term><literal>lzt=html-object</literal></term><listitem><para>
+      
+      Same as <literal>lzt=html</literal>, except this page embeds the
+      <literal>&lt;object&gt;</literal> and <literal>&lt;embed&gt;</literal> tags
+      directly in the HTML page.  This is the traditional technique
+      for including applications that is used on most web sites, but
+      it is incompatible with the announced changes to Internet
+      Explorer.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=window</literal></term><listitem><para>
+      
+      Show the application in a popup window sized to the canvas.
+      </para></listitem></varlistentry></variablelist>
+
+    <para/></section><section><title>Embedding Request Types</title>
+    <para>These request types are used to embed an application in an HTML
+    page.  Different requests are available depending on the request
+    is included on the server (<literal>object-tag</literal>) or the client
+    (everything else); whether the embedding technique is compatible
+    with the announced changes to Internet Explorer
+    (<literal>embed</literal> and <literal>js</literal>) or uses traditional
+    embedding techniques (<literal>object-tag</literal>), and whether it
+    creates <literal>&lt;object&gt;</literal> and <literal>&lt;embed&gt;</literal>
+    tags (<literal>embed</literal>, <literal>js</literal>, and
+    <literal>object-tag</literal>) or simply returns the swf file that
+    contains the application (<literal>swf</literal>).</para>
+
+    <variablelist><varlistentry><term><literal>lzt=embed</literal></term><listitem><para>
+      
+      Returns a JavaScript include file that is suitable for the
+      target of an HTML <literal>&lt;script&gt;</literal> tag.  The file
+      embeds the application into the HTML page at the site of the
+      <literal>&lt;script&gt;</literal> tag.  This is appropriate for
+      including an application in a way that is compatible with the
+      announced changes to Internet Explorer.
+      
+      </para><para>Usage:</para><programlisting>
+&lt;script type="text/javascript" language="JavaScript"
+        src="http://127.0.0.1:8080/lps-@VERSIONID@/examples/hello.lzx?lzt=embed"&gt;
+&lt;/script&gt;</programlisting>
+      </listitem></varlistentry><varlistentry><term><literal>lzt=js</literal></term><listitem><para>
+      
+      Same as <literal>lzt=embed</literal>, except the included file
+      depends on the functions defined in the <ulink url="../../lps/includes/embed.js"><literal>embed.js</literal></ulink> file.
+      
+      </para><para>Usage:</para><programlisting>
+&lt;html&gt;
+&lt;head&gt;
+…
+&lt;script type="text/javascript" language="JavaScript"
+        src="http://127.0.0.1:8080/lps-@VERSIONID@/lps/includes/embed.js"/ &gt;
+&lt;/head&gt;
+&lt;body&gt;
+…
+&lt;script type="text/javascript" language="JavaScript"
+        src="http://127.0.0.1:8080/lps-@VERSIONID@/examples/hello.lzx?lzt=js"&gt;
+&lt;/script&gt;
+…
+&lt;/body&gt;
+&lt;/html&gt;
+</programlisting>
+      </listitem></varlistentry><varlistentry><term><literal>lzt=object-tag</literal></term><listitem><para>
+      
+      Returns the HTML <literal>&lt;object&gt;</literal> and
+      <literal>&lt;embed&gt;</literal> tags that embed the application into
+      an HTML page.  This is useful for server-side includes, when
+      compatability with the announced changes to Internet Explorer is
+      not necessary.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=swf</literal></term><listitem><para>
+      
+      Returns the SWF file that represents the application, without
+      any HTML. This is used to embed an OpenLaszlo application in an HTML
+      page.  (Most of the other request types generate code that
+      includes a URL with this request type.)  The mime-type returned
+      by this request is <literal>application/x-shockwave-flash</literal>.
+      </para></listitem></varlistentry></variablelist>
+
+    <para/></section><section><title>Debugging Request Types</title>
+    <variablelist><varlistentry><term><literal>lzt=app_console</literal></term><listitem>
+      <para>This request causes the OpenLaszlo Server to respond with an HTML wrapper
+      page for the OpenLaszlo application.  The HTML page presents the
+      application.  It also displays compilation warnings for the
+      application, and links to development environment commands and
+      developer resources.  These commands are described <ulink url="../help/app-viewer.html">here</ulink>.</para>
+      
+      <para>This is the default request.  If no <literal>lzt</literal> query
+      string variable is present, the value is assumed to be
+      <literal>html</literal>.</para>
+      
+      <para>The mime-type returned by this request is
+      <literal>text/html</literal>.</para>
+      </listitem></varlistentry><varlistentry><term><literal>lzt=source</literal></term><listitem>
+        <para>Show the source in a &lt;textarea&gt; HTML element.  The
+        mime-type returned by this request is <literal>text/html</literal>.</para>
+      </listitem></varlistentry><varlistentry><term><literal>lzt=xml</literal></term><listitem>
+      <para>Show the source as plain XML (for XML-aware browsers).  The
+      mime-type returned by this request is <literal>text/xml</literal>.</para>
+      </listitem></varlistentry></variablelist>
+    
+    <para/></section><section><title>Implementation Request Types</title>
+    <para>These request types are used in the implementation and testing
+    of the OpenLaszlo Server.  Their behavior and existence should not be relied on,
+    and they may change in future releases.
+    </para>
+    
+    <itemizedlist spacing="compact"><listitem><para><literal>lzt=canvas-xml</literal></para></listitem><listitem><para><literal>lzt=deployment</literal></para></listitem><listitem><para><literal>lzt=inline-examples</literal></para></listitem><listitem><para><literal>lzt=v1</literal></para></listitem><listitem><para><literal>lzt=serverinfo</literal></para></listitem></itemizedlist>
+<para><literal>lzt=serverinfo</literal> returns a list of server attributes, some of which can also be fetched by an expression like Debug.write(canvas.version).</para> 
+    
+    <para/></section></section><section id="request-types.query-parameters"><title>Other Query Parameters</title>
+    
+    <para>
+      The <literal>debug=true</literal> query parameter can be used to include
+      the debugger in an application.  
+    </para>
+    <para id="debuglog-parameter">
+      The <literal>debuglog=true</literal> query parameter can be used to
+      log debug messages to the server log.  
+    </para>
+    <para>
+      The <literal>?lzrecompile=true</literal> query parameter can be used to force the
+    OpenLaszlo Server to recompile an application (.lzx only, not .lzo) even when the compilation manager's
+      dependency option is set to <emphasis role="i">never</emphasis>.  (See <xref linkend="deployers-guide"/> 
+      for details on the compilation manager's dependency option).  If the administrator
+      password is set, you must also provide the password in <literal>pwd=</literal> query parameter
+      for the recompile to take effect.
+    </para>
+    <para>
+      The <literal>?pwd=passwd</literal> query string can be used to pass
+      in the OpenLaszlo Server administrative password.
+    </para>
+    <para>
+      A running OpenLaszlo application can get access to any of the
+      query strings that was given in the URL used to access it
+      via the LzBrowser service's <indexterm><primary><literal>getInitArg()</literal> method</primary></indexterm><methodname>getInitArg()</methodname> method.  For
+      example if the following URL:
+    </para>
+    <programlisting>
+      http://host:port/myapps/wooker.lzx?wookie=Chewie
+    </programlisting>
+    <para>
+      were used to access the following app:
+    </para>
+    <example role="live-example"><title>Accessing query strings</title><programlisting>
+      &lt;canvas debug="true"&gt;
+        &lt;script&gt;
+          var wookieName = LzBrowser.getInitArg('wookie');
+          Debug.write("The Wookie's Name: " + wookieName);
+        &lt;/script&gt;
+      &lt;/canvas&gt;
+    </programlisting></example>
+    <para>
+      the debugger would display
+    </para>
+    <programlisting>
+      The Wookie's Name: Chewie
+    </programlisting>
+    <para>
+      Note that query strings that conflict with the OpenLaszlo Runime Library's global namespace
+      will be lost (for example,  "canvas" or "bgcolor").
+    </para>
+    <para/></section><section><title>Administrative Requests</title>
+    <para>
+      A password may be required for Administrative Requests.  See
+      <xref linkend="deployers-guide"/> for
+      more details.
+    </para>
+    <variablelist><varlistentry><term><literal>lzt=log</literal></term><listitem><para>
+      Show the current log file as <literal>text/html</literal>.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=clearlog</literal></term><listitem><para>
+      Clears the current log file.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=logconfig</literal></term><listitem><para>
+      Show OpenLaszlo Server log4j configuration as <literal>text/xml</literal>.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=clearcache</literal></term><listitem><para>
+      Clear OpenLaszlo Server media, data, and compilation caches.
+      Return a <literal>text/html</literal> status message.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=serverinfo</literal></term><listitem><para>
+      Show OpenLaszlo Server configuration information as <literal>text/xml</literal>.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=cacheinfo</literal></term><listitem><para>
+      Show  OpenLaszlo Server media and data cache information as <literal>text/xml</literal>.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=errorcount</literal></term><listitem><para>
+      Show the number of OpenLaszlo Server errors as <literal>text/xml</literal>.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=errorcount&amp;clear=1</literal></term><listitem><para>
+      Clear OpenLaszlo Server error count. 
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=stat</literal></term><listitem><para>
+      Monitor server statistics.
+      </para></listitem></varlistentry><varlistentry><term><literal>lzt=gc</literal></term><listitem><para>
+      Run the garbage collector.
+      </para></listitem></varlistentry></variablelist>    
+    
+    <para/></section><section><title>Preprocessed Requests</title>
+    <para>
+      The OpenLaszlo Server also supports using dynamic, server-side back-end
+      processors (e.g., PHP, JSP) to generate LZX application source
+      code before the OpenLaszlo Server compiles and serves it.  For URLs that end
+      in <literal>.lzx</literal> for which the OpenLaszlo Server can not find a matching
+      source file on disk, the Server removes the
+      <literal>.lzx</literal> suffix and uses HTTP GET to retrieve the content of
+      the modified URL.  The returned content
+      should be a valid LZX file.  The OpenLaszlo Server
+      compiles and serves an application based on the dynamically
+      generated source code.  For example see the
+      <literal>hello.jsp</literal> file in the examples directory.  This
+      example generates a Laszlo application that contains
+      information about the current time and session.  You can see
+      the generated LZX source at:
+    </para>
+    <programlisting>http://127.0.0.1:8080/lps-@VERSIONID@/examples/hello.jsp.lzx?lzt=source</programlisting>
+    <para>
+      and the generated application at:
+    </para>
+    <programlisting>http://127.0.0.1:8080/lps-@VERSIONID@/examples/hello.jsp.lzx</programlisting>
+    
+    <para>The use of dynamically generated LZX circumvents the OpenLaszlo Server
+    compilation cache, and compiles an application for each request.
+    This is not recommended for use in deployment.  Dynamic behavior
+    is best handled by a static application that requests data and
+    resources from the server during its initialization.  </para>
+  <para/></section></chapter>

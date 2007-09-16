@@ -1,7 +1,7 @@
 <canvas debug="true">
   <font name="mono" src="../../lps/fonts/mono-7-bold-regular-s.ttf"/>
 
-  <include href="../../lps/utils/lztestmanager.lzx" /> 
+  <include href="lztest/lztestmanager.lzx" /> 
 
   <simplelayout axis="x" spacing="5"/>
 
@@ -16,18 +16,18 @@
   </view>
 
 <!-- text3: simple text for checking methods -->
-  <text name="text3" y="20" bgcolor="0xaaaaaa"/>
+  <text name="text3" resize="false" y="20" bgcolor="0xaaaaaa"/>
 
 <!-- text4: simple text for checking selection methods -->
-  <text name="text4" bgcolor="0xaaaaaa"/>
+  <text name="text4" resize="false" bgcolor="0xaaaaaa"/>
 
 <!-- text5: simple text for checking scroll methods -->
   <view name="view5">
     <simplelayout axis="x"/>
-    <text name="t1" y="20" width="50" height="40" bgcolor="0xaaaaaa">
+    <text name="t1" y="20" resize="false" width="50" height="40" bgcolor="0xaaaaaa">
       1234567890abcdefghijklmnopqrstuvwxyz
     </text>
-    <text name="t2" y="20" width="50" height="40" multiline="true" bgcolor="0xcccccc">
+    <text name="t2" y="20" resize="false" width="50" height="40" multiline="true" bgcolor="0xcccccc">
       1234567890abcdefghijklmnopqrstuvwxyz
     </text>
   </view>
@@ -40,7 +40,7 @@
   </view>
 
 <!-- text7: Accessibility -->
-  <text name="text7" y="20" bgcolor="0xaaaaaa" aaactive="true">
+  <text name="text7" y="20" bgcolor="0xaaaaaa" resize="false" aaactive="true">
   openLaszlo
   </text>
 
@@ -50,17 +50,17 @@
       <simplelayout axis="y"/>
     <view name="v1">
       <simplelayout axis="x"/>
-      <text name="t1" bgcolor="0xaaaaaa">Hello</text>
-      <text name="t2" bgcolor="0xcccccc">World</text>
+      <text name="t1" resize="false" bgcolor="0xaaaaaa">Hello</text>
+      <text name="t2" resize="false" bgcolor="0xcccccc">World</text>
     </view>
     <view name="v2">
       <simplelayout axis="x"/>
-      <text name="t1" bgcolor="0xcccccc">Hello</text>
+      <text name="t1" resize="false" bgcolor="0xcccccc">Hello</text>
       <inputtext name="t2" bgcolor="0xaaaaaa">World</inputtext>
     </view>
     <view name="v3">
       <simplelayout axis="x"/>
-      <text name="t1" bgcolor="0xaaaaaa">HelloWorld</text>
+      <text name="t1" resize="false" bgcolor="0xaaaaaa">HelloWorld</text>
     </view>
 
   </view>
@@ -68,10 +68,10 @@
 <!-- text9: font test and sizing -->
   <view name="view9">
     <simplelayout axis="y"/>
-    <text name="t1" font="mono" bgcolor="0xaaaaaa">&lt;&gt;&apos;&amp;&quot;</text>
-    <text name="t2" font="mono" bgcolor="0xcccccc">.....</text>
-    <text name="t3" font="mono" bgcolor="0xaaaaaa">*****</text>
-    <text name="t4" font="mono" bgcolor="0xcccccc" width="66" multiline="true">1234567890</text>
+    <text name="t1" resize="false" font="mono" bgcolor="0xaaaaaa">&lt;&gt;&apos;&amp;&quot;</text>
+    <text name="t2" resize="false" font="mono" bgcolor="0xcccccc">.....</text>
+    <text name="t3" resize="false" font="mono" bgcolor="0xaaaaaa">*****</text>
+    <text name="t4" resize="false" font="mono" bgcolor="0xcccccc" width="66" multiline="true">1234567890</text>
   </view>
 
 <script><![CDATA[
@@ -120,9 +120,6 @@ suite.test1 = function() {
   LzTestManager.assertEquals (true, text1.resize, "text1.resize failure");
   LzTestManager.assertEquals (10, text1.maxlength, "text1.maxlength failure");
 
-  // "label" overrides "text" setting, if any
-  LzTestManager.assertEquals ("label", text1.getAttribute('text'), "text1.text failure");
-  LzTestManager.assertEquals ("label", text1.getText(), "text1.getText failure");
   // Change the length of the string
   text1.setText('12345678901234567890');
   LzTestManager.assertEquals ("1234567890", text1.getText(), "LPP-2208: text1 maxlength not working");  
@@ -156,9 +153,12 @@ suite.test2 = function() {
     LzTestManager.assertEquals (view2.t1.getTextWidth(), view2.t2.getTextWidth(), "getTextWidth do not match");
 
     // Make sure spacing is consistent
-    if (wlast != view2.t2.getTextWidth()) {
-      if (xspacing == 0)
+    /* Update, JC: getTextWidth() also measures the space before the first character, which wasn't accounted for
+    in the test. */
+    if (i != 0 && wlast != view2.t2.getTextWidth()) { // Wait until there's more than one character
+      if (i == 1){
         xspacing = view2.t2.getTextWidth() - wlast;
+      }
       LzTestManager.assertEquals (xspacing, (view2.t2.getTextWidth()-wlast), "xspacing error at character " + i);
     }
 
@@ -229,7 +229,15 @@ suite.test3 = function() {
   LzTestManager.assertEquals ('123', text3.getText(),  "text3.getText() failure");  
   text3.clearText();
   LzTestManager.assertEquals ('', text3.getText(),  "text3.getText() failure (2)");  
-  LzTestManager.assertEquals (text3.PAD_TEXTWIDTH, text3.getTextWidth(),  "text3.getTextWidth() failure (2)");  
+  /* This doesn't pad the text if there's no text to pad, so we need to set the text and then
+  find the size of the pre-padding. */
+  var prew = 0;
+  text3.setText('*');
+  var t3w1 = text3.getTextWidth();
+  text3.setText('**');
+  var t3w2 = text3.getTextWidth() - t3w1;
+  text3.setText('');
+  LzTestManager.assertEquals (text3.sprite.PAD_TEXTWIDTH, t3w1 - t3w2,  "text3.getTextWidth() failure (2)");  
   LzTestManager.assertEquals (0, text3.getTextHeight(),  "text3.getTextHeight() failure (2)");  
 
   // setText () (special characters)
@@ -354,7 +362,7 @@ suite.test6 = function() {
   LzTestManager.assertEquals (w, view6.t1.getTextWidth(),  "view6.t1.getTextWidth() underline failure");
   LzTestManager.assertEquals (h, view6.t1.getTextHeight(),  "view6.t1.getTextHeight() underline failure");
   LzTestManager.assertEquals (w, view6.t2.getTextWidth(),  "view6.t2.getTextWidth() underline failure");
-  LzTestManager.assertEquals (h, view6.t2.getTextHeight(),  "view6.t2.getTextHeight() underline failure");
+  LzTestManager.assertEquals (h, view6.t2.getTextHeight(),  "LPP-4651: view6.t2.getTextHeight() underline failure");
 
   var s5 = 'open<p>Laszlo</p>';
   view6.t1.setText(s5);
@@ -377,7 +385,7 @@ suite.test6 = function() {
   LzTestManager.assertEquals (w, view6.t1.getTextWidth(),  "view6.t1.getTextWidth() <br> failure");
   LzTestManager.assertEquals (h, view6.t1.getTextHeight(),  "view6.t1.getTextHeight() <br> failure");
   LzTestManager.assertEquals (w, view6.t2.getTextWidth(),  "LPP-2214: view6.t2.getTextWidth() <br> failure");
-  LzTestManager.assertEquals (h*3, view6.t2.getTextHeight(),  "view6.t2.getTextHeight() <br> failure");
+  LzTestManager.assertEquals (h*3, view6.t2.getTextHeight(),  "LPP-4651: view6.t2.getTextHeight() <br> failure");
 
   var s7 = 'open<img src="10x10.gif"/>Laszlo';
   view6.t1.setText(s7);
@@ -447,15 +455,15 @@ suite.test9 = function() {
 }
 
 
-suite.addTest(suite.test9);
-suite.addTest(suite.test8);
-suite.addTest(suite.test7);
-suite.addTest(suite.test6);
-suite.addTest(suite.test5);
-suite.addTest(suite.test4);
-suite.addTest(suite.test3);
-suite.addTest(suite.test2);
 suite.addTest(suite.test1);
+suite.addTest(suite.test2);
+suite.addTest(suite.test3);
+suite.addTest(suite.test4);
+suite.addTest(suite.test5);
+suite.addTest(suite.test6);
+suite.addTest(suite.test7);
+suite.addTest(suite.test8);
+suite.addTest(suite.test9);
 
 
 
@@ -466,7 +474,7 @@ suite.addTest(suite.test1);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

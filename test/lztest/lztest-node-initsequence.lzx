@@ -1,0 +1,311 @@
+<canvas width="100%" height="80%" debug="true">
+<!--
+  covers-tags : lznode smoketest
+-->
+
+<!--
+  <debug x="0" y="0"  fontsize="12" height="100%" width="100%"/>
+-->
+
+
+    <include href="lztest/lztestmanager.lzx" /> 
+
+  <!-- These unit tests verify order of invocation of four initialize-related 
+       method/events: construct, onconstruct, init, and oninit. We do this for 
+       a complex-enough node hierarchy over all the initstage values (although 
+       currently it doesn''t capture a difference between immediate and normal).
+       
+    -->
+  
+  <script>
+    <![CDATA[ 
+      global.suite = new LzTestSuite("LFC Node Init Sequence");  
+      global.testList = [];
+
+
+      // compare two array element by element for equality
+      arrayequal = function (a,b) {
+          if (a.length != b.length) return false;
+          for (var i = 0; i < a.length; i++) {
+              if (a[i] != b[i]) return false;
+          }
+          return true;
+      }
+// {testname: {casename1: [item, item, ...], casename2: [item, item, ...]}}
+
+      addlogitem = function (testresult, testname, casename, item) {
+          var mytest = testresult[testname];
+          if (mytest == null) {
+              mytest = {};
+              testresult[testname] = mytest;
+          }
+          var mycase = mytest[casename];
+          if (mycase == null) {
+              mytest[casename] = [item];
+          } else {
+              mycase.push(item);
+          }
+      }
+
+     ]]>
+  </script>
+
+  <attribute name="testresult" value="{}" />
+  
+  <method name="logitem" args="testCase, logname, item">
+     addlogitem(this.testresult,testCase,logname,item);
+  </method>
+  
+  <class name="inode" extends="node">    
+    <method name="logitem" args="logname,item">
+      parent.logitem(logname, item);
+    </method>
+    <method name="construct" args="parent,args">
+      super.construct(parent,args);
+      logitem('constructorder', args['name']);
+      logitem('sequence', 'construct' + args['name']);
+    </method>
+    <method event="onconstruct">
+      logitem('onconstructorder', this.name);
+      logitem('sequence', 'onconstruct' + this.name);
+    </method>
+    <method name="init">
+      super.init();
+      logitem('initorder', this.name);
+      logitem('sequence', 'init' + this.name);
+    </method>
+    <method event="oninit">
+      logitem('oninitorder', this.name);
+      logitem('sequence', 'oninit' + this.name);
+    </method>
+  </class>
+
+  <class name="ClassInitTestCase">
+      <method name="logitem" args="logname,item">
+        canvas.logitem(this.name, logname, item);
+      </method>
+
+
+      <method name="compareCase" args="casename"><![CDATA[
+        var testname = this.name;
+        var testresult = canvas.testresult[testname];
+        var caseresult = testresult[casename];
+        var expected = this.expectedresult[casename];
+        var result = arrayequal(expected,caseresult);
+        if (!result) {
+            Debug.write('compareCase this.name=',this.name, 'casename=', casename);
+            Debug.write('expected=', expected, 'caseresult=',caseresult);
+        }
+        return result;
+
+      ]]></method>
+      
+      <handler name="oninit">
+        var me = this;
+        var myclosure = function () {
+            LzTestManager.assertTrue(me.compareCase('constructorder'), "testConstruct");
+            LzTestManager.assertTrue(me.compareCase('onconstructorder'), "testOnConstruct");
+            LzTestManager.assertTrue(me.compareCase('initorder'), "testInit");
+            LzTestManager.assertTrue(me.compareCase('oninitorder'), "testOnInit");
+            LzTestManager.assertTrue(me.compareCase('sequence'), "testInitializationSequence");
+         }
+        global.testList.push(myclosure);
+      </handler>
+      
+  </class>
+
+
+    <ClassInitTestCase name="testClassNormalInit">
+    
+      <inode name="c">
+        <inode name="a">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <attribute name="expectedresult" value="{
+        constructorder: ['c', 'a', 'd', 'b'],
+        onconstructorder: ['c','a','d','b'],
+        initorder: ['d','a','b','c'],
+        oninitorder: ['d','a','b','c'],
+        sequence:  
+          ['constructc','onconstructc',
+          'constructa','onconstructa',
+          'constructd','onconstructd',
+          'constructb','onconstructb',
+          'initd','oninitd',
+          'inita','oninita',
+          'initb','oninitb',
+          'initc','oninitc']
+        }"/>
+
+    </ClassInitTestCase>
+
+
+   <ClassInitTestCase name="testClassImmediateInit">
+    
+      <inode name="c">
+        <inode name="a" initstage="immediate">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <attribute name="expectedresult" value="{
+        constructorder:
+          ['c','a','d','b'],
+        
+        onconstructorder:
+          ['c','a','d','b'],
+        
+        initorder:
+          ['d','a','b','c'],
+        
+        oninitorder:
+          ['d','a','b','c'],
+        
+        sequence:
+          ['constructc','onconstructc',
+          'constructa','onconstructa',
+          'constructd','onconstructd',
+          'constructb','onconstructb',
+          'initd','oninitd',
+          'inita','oninita',
+          'initb','oninitb',
+          'initc','oninitc']
+        }" />
+
+
+    </ClassInitTestCase>
+
+    <ClassInitTestCase name="testClassEarlyInit">
+    
+      <inode name="c">
+        <inode name="a" initstage="early">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <attribute name="expectedresult" value="{
+
+        constructorder:
+          ['c','a','d','b'],
+        
+        onconstructorder:
+          ['c','a','d','b'],
+        
+        initorder:
+          ['d','a','b','c'],
+        
+        oninitorder:
+          ['d','a','b','c'],
+        
+        sequence:
+          ['constructc','onconstructc',
+          'constructa','onconstructa',
+          'constructd','onconstructd',
+          'initd','oninitd',
+          'inita','oninita',
+          'constructb','onconstructb',
+          'initb','oninitb',
+          'initc','oninitc']
+      }" />
+      
+
+    </ClassInitTestCase>
+
+    <ClassInitTestCase name="testClassLateInit">
+    
+      <inode name="c">
+        <inode name="a" initstage="late">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <attribute name="expectedresult" value="{
+       constructorder: ['c','a','b','d'],
+
+       onconstructorder: ['c','a','b','d'],
+
+       initorder: ['b','c','d','a'],
+
+       oninitorder: ['b','c','d','a'],
+
+       sequence:
+        ['constructc','onconstructc',
+                 'constructa','onconstructa',
+                 'constructb','onconstructb',
+                 'initb','oninitb',
+                 'initc','oninitc',
+                 'constructd','onconstructd',
+                 'initd','oninitd',
+                 'inita','oninita']
+        
+      }" />
+
+    </ClassInitTestCase>
+
+
+   <ClassInitTestCase name="testClassDeferInit">
+    
+      <inode name="c">
+        <inode name="a" initstage="defer">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <attribute name="expectedresult" value="{
+        constructorder:
+          ['c','a','b'],
+        
+        onconstructorder:
+          ['c','a','b'],
+        
+        initorder:
+          ['b','c'],
+        
+        oninitorder:
+          ['b','c'],
+        
+        sequence:
+          ['constructc','onconstructc',
+          'constructa','onconstructa',
+          'constructb','onconstructb',
+          'initb','oninitb',
+          'initc','oninitc']
+        
+      }" />
+
+    </ClassInitTestCase>
+
+
+
+<node>
+  <handler name="oninit">
+     // have to do wait to run tests until after all the late inits have happened
+<![CDATA[
+       startTestsDelegate.unregisterAll();
+
+       for (var i = 0; i < global.testList.length; i++) {
+       var mytest = global.testList[i];
+       global.suite.addTest(mytest); 
+  }
+
+       LzTimer.addTimer(startTestsDelegate, 2500);
+
+]]>
+</handler>
+</node>
+
+          
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

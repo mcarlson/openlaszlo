@@ -1,0 +1,1591 @@
+<chapter id="performance-tuning">
+<title>Performance Monitoring and Tuning</title>
+<para>
+In this chapter we'll look at various ways to detect and address sources of poor performance. You may also want to investigate the <ulink url="http://www.openlaszlo.org/wiki/CallProfiler">OpenLaszlo Wiki</ulink>, where developers discuss advanced techniques, including unofficial and unsupported tools such as the call profiler.
+</para>
+<para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>
+size profiler stuff
+</remark></para>
+<para>
+This chapter discusses ways to measure the performance of your Laszlo
+client code and gives some tips for more efficient coding.
+</para>
+<para>
+Be sure also to see <xref linkend="debugging"/>,  which includes explanations of many useful techniques, such as tracing, backtracing, memory leak detection and object inspection, for finding performance problems.
+</para>
+<para/><section><title>Time Measurement</title>
+<para>
+Simple timing measurements can be made using <literal>(new
+Date).getTime()</literal>, which will return a millisecond time.  You
+can use <literal>Debug.write</literal> or <literal>Debug.log</literal> to output
+timing data.  Here is a simple framework illustrating how you can use
+this to measure the cost of certain operations.  A more complete
+framework is available by including <literal>utils/performance</literal>.
+</para>
+
+<example role="live-example">
+   <title>Measurement Framework</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Measurement Framework</title><programlisting role="lzx-embednew"><filename>performance-tuning-$1.lzx</filename><parameter/><code>
+  &lt;canvas height="150" debug="true"&gt;
+    &lt;script&gt;
+      var trials = 30;
+
+      function measure (target, iterations, description, trials, empty) {
+        // Default arguments
+        switch (arguments.length) {
+          case 0:
+            Debug.write("No measurement target");
+            return;
+          case 1:
+            iterations = 500;
+          case 2:
+            description = null;
+          case 3:
+            trials = 10;
+          case 4:
+            empty = function () {
+              for (var i = 0; i &amp;lt; iterations; ) i++;
+            }
+        }
+        // Compute overhead
+        var overhead = 0;
+        var total = 0;
+        for (var j = 0; j &amp;lt; trials; j++) {
+          var start = (new Date).getTime();
+          empty();
+          var end = (new Date).getTime();
+          overhead += end - start;
+          // Measure target
+          var start = (new Date).getTime();
+          target();
+          var end = (new Date).getTime();
+          total += end - start;
+        }
+        var usPerOp = Math.round((total-overhead)*1000/(trials*iterations));
+        // Report results
+        if (description != null) {
+          Debug.write(description + ": " + usPerOp + "us");
+        }
+        return usPerOp;
+      }
+
+      // What we want to measure
+      var iterations = 100;
+      function stringConcatenation () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          "foo" + "bar";
+        }
+      }
+
+      // Measure it
+      measure(stringConcatenation, iterations, "String concatenation");
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="150" debug="true"&gt;
+    &lt;script&gt;
+      var trials = 30;
+
+      function measure (target, iterations, description, trials, empty) {
+        // Default arguments
+        switch (arguments.length) {
+          case 0:
+            Debug.write("No measurement target");
+            return;
+          case 1:
+            iterations = 500;
+          case 2:
+            description = null;
+          case 3:
+            trials = 10;
+          case 4:
+            empty = function () {
+              for (var i = 0; i &amp;lt; iterations; ) i++;
+            }
+        }
+        // Compute overhead
+        var overhead = 0;
+        var total = 0;
+        for (var j = 0; j &amp;lt; trials; j++) {
+          var start = (new Date).getTime();
+          empty();
+          var end = (new Date).getTime();
+          overhead += end - start;
+          // Measure target
+          var start = (new Date).getTime();
+          target();
+          var end = (new Date).getTime();
+          total += end - start;
+        }
+        var usPerOp = Math.round((total-overhead)*1000/(trials*iterations));
+        // Report results
+        if (description != null) {
+          Debug.write(description + ": " + usPerOp + "us");
+        }
+        return usPerOp;
+      }
+
+      // What we want to measure
+      var iterations = 100;
+      function stringConcatenation () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          "foo" + "bar";
+        }
+      }
+
+      // Measure it
+      measure(stringConcatenation, iterations, "String concatenation");
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$1.lzx></example?>
+<para>
+Because <literal>Date.getTime</literal> is based on the real time clock,
+measurements using it can be deceiving: the runtime may choose to
+execute maintenance tasks during your measurement period (for
+instance, garbage collection) and the operating system may share the
+processor with other applications during your measurement period.  The
+<literal>utils/performance</literal> library uses a slightly more
+sophisticated meter that accumulates both a mean time, standard
+deviation, and min and max times.  In the examples below, the meters
+are presented as: <literal><replaceable>mean</replaceable> ±<replaceable>std. dev.</replaceable>
+[<replaceable>minimum</replaceable>..<replaceable>maximum</replaceable>]/<replaceable>trials</replaceable></literal>.  For the purposes
+of measuring the relative performance of two different techniques,
+comparing the minimum times of a large number of trials is probably
+the most accurate.
+</para>
+<para>
+You will see that in both the example framework and the performance
+library that we accumulate statistics in two loops: a short-term loop
+to ameliorate the overhead of getting the time, and a long-term loop
+to minimize the perturbation due to background or other processes.
+</para>
+
+<note><para>
+Be sure to do your testing on your most difficult target.  Clients
+with the Flash 6 player installed will be slower than those with the
+Flash 7 player installed.  Macintosh clients will, in general, be
+slower than Windows clients.  Most of the advice in this chapter holds
+across all players and platforms, but by viewing the examples on the
+particular client of interest, you can see exactly how important the
+advice is.
+</para></note>
+
+<para/></section><section><title>JavaScript Performance</title> 
+<para>
+Like most programming languages, Javascript often can express the same
+algorithm in a number of different ways.  Below are some tips on
+choosing the more efficient of those ways.
+</para>
+<para/><section><title>Variables</title>
+<para/><section><title>Use local variables rather than global</title>
+<para>
+Local variables are faster to access than global variables, so global
+variables should only be used when necessary.  In particular, watch
+out for erroneously writing <literal>for (i in ...)</literal> when you
+really mean <literal>for (var i in ...)</literal>; similarly, <literal>for (i =
+0; i &lt; ...; i++)</literal> will be less efficient than <literal>for (var
+i = 0; i &lt; ...; i++)</literal>.  [In addition you are liable to
+clobber an important global variable if you forget to use the
+<literal>var</literal> declaration in a <literal>for</literal> loop.]
+</para>
+<para>
+The example below uses the performance <literal>Measurement</literal> utility to
+illustrate the difference between incrementing a global variable and a
+local variable.
+</para>
+<example role="live-example">
+   <title>Globals vs. Locals</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Globals vs. Locals</title><programlisting role="lzx-embednew"><filename>performance-tuning-$2.lzx</filename><parameter/><code>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) {}
+      }
+      
+      var j = 0;
+      function globalReference () {
+        for (var i = 0; i &amp;lt; iterations; i++) {j++}
+      }
+
+      function localReference() {
+        var k = 0;
+        for (var i = 0; i &amp;lt; iterations; i++) {k++}
+      } 
+
+      (new Measurement({'Global reference': globalReference,
+                      'Local reference': localReference,
+                      'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) {}
+      }
+      
+      var j = 0;
+      function globalReference () {
+        for (var i = 0; i &amp;lt; iterations; i++) {j++}
+      }
+
+      function localReference() {
+        var k = 0;
+        for (var i = 0; i &amp;lt; iterations; i++) {k++}
+      } 
+
+      (new Measurement({'Global reference': globalReference,
+                      'Local reference': localReference,
+                      'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$2.lzx></example?>
+<para/></section><section><title>Cache constant global references</title>
+<para>
+If you need to access a global reference many times that you know will
+not change, create a local reference and use that instead.
+</para>
+
+<example role="live-example">
+   <title>Caching globals</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Cacheing globals</title><programlisting role="lzx-embednew"><filename>performance-tuning-$3.lzx</filename><parameter/><code>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var j;
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+         j = i;
+        }
+      }
+      
+      function globalReference () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          j = Math.PI;
+        }
+      }
+
+      function cachedGlobalReference() {
+        var PI = Math.PI;
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          j = PI;
+        }
+      } 
+
+      (new Measurement({'Global reference': globalReference,
+                      'Cached global reference': cachedGlobalReference,
+                      'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var j;
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+         j = i;
+        }
+      }
+      
+      function globalReference () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          j = Math.PI;
+        }
+      }
+
+      function cachedGlobalReference() {
+        var PI = Math.PI;
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          j = PI;
+        }
+      } 
+
+      (new Measurement({'Global reference': globalReference,
+                      'Cached global reference': cachedGlobalReference,
+                      'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$3.lzx></example?>
+<para/></section></section><section><title>Arrays</title>
+<para>
+For an array <literal>A</literal>, <literal>A.push(b)</literal> is more expensive
+than <literal>A[A.length] = b</literal>, which in turn is more expensive
+than <literal>A[i] = b</literal> (i.e., if you already had the current
+length of the array in a variable).
+</para>
+<para>
+Allocating an array in advance, when you know how many elements it
+will eventually hold, makes no difference on existing runtime
+platforms, because arrays are just objects that maintain a length
+field.
+</para>
+<para>
+Note that if you do not need to know how many elements are in the array, using an object can be slightly more efficient, because it does not have to maintain the lenght field.
+</para>
+<para>
+The example below illustrates the various ways of adding elements to an array.
+</para>
+
+<example role="live-example">
+   <title>Adding elements to an array</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$4.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Adding elements to an Array</title><programlisting role="lzx-embednew"><filename>performance-tuning-$4.lzx</filename><parameter/><code>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var textIndexes={};
+      for (var i = 0; i &amp;lt; iterations; i++) {
+        textIndexes[i] = i.toString();
+      }
+
+      function empty () {
+        var testArray = [];
+        for (var j in textIndexes ) {
+          ;
+        }
+      }
+
+      function measurePush () {
+        var testArray = [];
+        for (var j in textIndexes ) {
+          testArray.push(j);
+        }
+      }
+
+      function measureSetAtLength () {
+        var testArray = [];
+        for (var j in textIndexes) {
+          testArray[testArray.length] = j;
+        }
+      }
+
+      function measureSetAtIndex () {
+        var testArray = [];
+        for (var j in textIndexes) {
+          testArray[j] = j;
+        }
+      }
+
+      function measureSetAtIndexPreallocated () {
+        var testArray = new Array(iterations);
+        for (var j in textIndexes) {
+          testArray[j] = j;
+        }
+      }
+
+      function measureObjectSetAtIndex () {
+        var testObject = {};
+        for (var j in textIndexes) {
+          testObject[j] = j;
+        }
+      }
+
+      (new Measurement({'Array.push': measurePush,
+                        'Array[Array.length] =': measureSetAtLength,
+                        'Array[index] =':  measureSetAtIndex,
+                        'Array[index] = (preallocated)':
+                        measureSetAtIndexPreallocated,
+                        'Object[key] =': measureObjectSetAtIndex,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var textIndexes={};
+      for (var i = 0; i &amp;lt; iterations; i++) {
+        textIndexes[i] = i.toString();
+      }
+
+      function empty () {
+        var testArray = [];
+        for (var j in textIndexes ) {
+          ;
+        }
+      }
+
+      function measurePush () {
+        var testArray = [];
+        for (var j in textIndexes ) {
+          testArray.push(j);
+        }
+      }
+
+      function measureSetAtLength () {
+        var testArray = [];
+        for (var j in textIndexes) {
+          testArray[testArray.length] = j;
+        }
+      }
+
+      function measureSetAtIndex () {
+        var testArray = [];
+        for (var j in textIndexes) {
+          testArray[j] = j;
+        }
+      }
+
+      function measureSetAtIndexPreallocated () {
+        var testArray = new Array(iterations);
+        for (var j in textIndexes) {
+          testArray[j] = j;
+        }
+      }
+
+      function measureObjectSetAtIndex () {
+        var testObject = {};
+        for (var j in textIndexes) {
+          testObject[j] = j;
+        }
+      }
+
+      (new Measurement({'Array.push': measurePush,
+                        'Array[Array.length] =': measureSetAtLength,
+                        'Array[index] =':  measureSetAtIndex,
+                        'Array[index] = (preallocated)':
+                        measureSetAtIndexPreallocated,
+                        'Object[key] =': measureObjectSetAtIndex,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$4.lzx></example?>
+<para/></section><section><title>Loops</title>
+<para>
+In older players, <literal>while</literal> loops are slightly more efficient than <literal>for ... in</literal> loops which are slightly more efficent than <literal>for</literal> loops.  The difference is not enough that you should contort your code, but if any will work equally well, you should choose accordingly.
+</para>
+
+<example role="live-example">
+   <title>Iterating with for, for in, or while</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$5.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Iterating with for, for in, or while</title><programlisting role="lzx-embednew"><filename>performance-tuning-$5.lzx</filename><parameter/><code>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var testIndexes={};
+      for (var i = 0; i &amp;lt; iterations; i++) {
+        testIndexes[i] = i.toString();
+      }
+
+      function empty () {
+      }
+
+      function measureFor () {
+        for (var j = 0; j &amp;lt; iterations; j++ ) {
+          testIndexes[j];
+        }
+      }
+
+      function measureForIn () {
+        for (var j in testIndexes ) {
+          testIndexes[j];
+        }
+      }
+
+      function measureWhile () {
+        var j = 0;
+        while (j &amp;lt; iterations) {
+          testIndexes[j++];
+        }
+      }
+
+      (new Measurement({'for': measureFor,
+                        'for in': measureForIn,
+                        'while':  measureWhile,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var testIndexes={};
+      for (var i = 0; i &amp;lt; iterations; i++) {
+        testIndexes[i] = i.toString();
+      }
+
+      function empty () {
+      }
+
+      function measureFor () {
+        for (var j = 0; j &amp;lt; iterations; j++ ) {
+          testIndexes[j];
+        }
+      }
+
+      function measureForIn () {
+        for (var j in testIndexes ) {
+          testIndexes[j];
+        }
+      }
+
+      function measureWhile () {
+        var j = 0;
+        while (j &amp;lt; iterations) {
+          testIndexes[j++];
+        }
+      }
+
+      (new Measurement({'for': measureFor,
+                        'for in': measureForIn,
+                        'while':  measureWhile,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$5.lzx></example?>
+<para/></section><section><title>Conditionals</title>
+<para>
+Using a cascade of <literal>if</literal> statements is slightly more efficient that using
+the equivalent logical operators.  This is a bug that will be fixed in
+a future release, so you should not contort your code unless
+absolutely necessary.
+</para>
+
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>Is this really a bug?  What about <literal>switch</literal> — is this faster?</remark></para>
+
+<example role="live-example">
+   <title>Conditionals vs. logical operators</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$6.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Conditionals vs. logical operators</title><programlisting role="lzx-embednew"><filename>performance-tuning-$6.lzx</filename><parameter/><code>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var a = false;
+      var b = true;
+      var c = true;
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (a == false) {};
+        }
+      }
+
+      function measureLogicalAnd () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (a &amp;amp;&amp;amp; b &amp;amp;&amp;amp; c) {}
+        }
+      }
+
+      function measureIfProduct () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (a) {
+            if (b) {
+              if (c) {}
+            }
+          }
+        }
+      }
+
+      var d = true;
+      var e = false;
+      var f = false;
+      function measureLogicalOr () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (d || e || f) {}
+        }
+      }
+
+      function measureIfSum () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (c) {}
+          else if(d) {}
+          else if (e) {}
+        }
+      }
+
+      (new Measurement({'Logical And': measureLogicalAnd,
+                        'If Product': measureIfProduct,
+                        'Logical OR':  measureLogicalOr,
+                        'If Sum': measureIfSum,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var a = false;
+      var b = true;
+      var c = true;
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (a == false) {};
+        }
+      }
+
+      function measureLogicalAnd () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (a &amp;amp;&amp;amp; b &amp;amp;&amp;amp; c) {}
+        }
+      }
+
+      function measureIfProduct () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (a) {
+            if (b) {
+              if (c) {}
+            }
+          }
+        }
+      }
+
+      var d = true;
+      var e = false;
+      var f = false;
+      function measureLogicalOr () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (d || e || f) {}
+        }
+      }
+
+      function measureIfSum () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (c) {}
+          else if(d) {}
+          else if (e) {}
+        }
+      }
+
+      (new Measurement({'Logical And': measureLogicalAnd,
+                        'If Product': measureIfProduct,
+                        'Logical OR':  measureLogicalOr,
+                        'If Sum': measureIfSum,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$6.lzx></example?>
+<para/></section><section><title>with</title>
+<para>
+The use of <literal>with</literal> does not appear to affect performance, so it is a stylistic choice.
+</para>
+
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>Tucker, is this true?</remark></para>
+
+
+<example role="live-example">
+   <title>With (this) vx. this.</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$7.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>with (this) vs. this.</title><programlisting role="lzx-embednew"><filename>performance-tuning-$7.lzx</filename><parameter/><code>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var testObj = {a: 1, b: 2, c: 3, d: 4, e: 5, f: 6};
+
+      function e () {
+        return 0;
+      }
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          e.call(testObj);
+      }
+
+      function withThis () {
+        with (this) {return a + b + c + d + e + f};
+      } 
+      function measureWithThis () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          withThis.call(testObj);
+      }
+
+      function thisDot () {
+        return this.a + this.b + this.c + this.d + this.e + this.f;
+      }
+      function measureThisDot () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          thisDot.call(testObj);
+      }
+
+      (new Measurement({'with (this)': measureWithThis,
+                          'this.': measureThisDot,
+                          'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var testObj = {a: 1, b: 2, c: 3, d: 4, e: 5, f: 6};
+
+      function e () {
+        return 0;
+      }
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          e.call(testObj);
+      }
+
+      function withThis () {
+        with (this) {return a + b + c + d + e + f};
+      } 
+      function measureWithThis () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          withThis.call(testObj);
+      }
+
+      function thisDot () {
+        return this.a + this.b + this.c + this.d + this.e + this.f;
+      }
+      function measureThisDot () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          thisDot.call(testObj);
+      }
+
+      (new Measurement({'with (this)': measureWithThis,
+                          'this.': measureThisDot,
+                          'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$7.lzx></example?>
+
+<para/></section><section><title>Function calls</title>
+
+<para>The cost of a function call is about equivalent to three assignment
+statements, so modularizing your code using function calls is not
+going to create a big performance penalty.  Each argument passed to a
+function call is about equvalent to an aditional assignment.</para>
+
+<example role="live-example">
+   <title>The cost of a function call</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$8.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>The cost of a function call.</title><programlisting role="lzx-embednew"><filename>performance-tuning-$8.lzx</filename><parameter/><code>
+  &lt;canvas height="200"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var x;
+
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          ;
+      }
+
+      function measureAssignment () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          x = 0;
+      }
+
+      function eff () {
+        return 0;
+      }
+      function measureFunctionCall () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          eff();
+      }
+
+      function gee (a) {
+        return 0;
+      }
+      function measureFunctionCallWithOneParameter () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          gee(1);
+      }
+
+      function ache (a, b) {
+        return 0;
+      }
+      function measureFunctionCallWithTwoParameters () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          ache(1, 2);
+      }
+
+      function eye (a, b, c) {
+        return 0;
+      }
+      function measureFunctionCallWithThreeParameters () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          eye(1,2,3);
+      }
+
+      function jay (a, b, c, d) {
+        return 0;
+      }
+      function measureFunctionCallWithFourParameters () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          jay(1,2,3,4);
+      }
+
+      function MyObj () {}
+      MyObj.prototype.eff = eff;
+      MyObj.prototype.gee = gee;
+
+      var myObj = new MyObj();
+      function measurePrototypeMethodCall () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.eff();
+      }
+      function measurePrototypeMethodCallWithOneParameter () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.gee(1, 2, 3, 4, 5, 6);
+      }
+
+      var obj = {};
+      obj.f = eff;
+      obj.g = gee;
+      function measureMethodCall () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.eff();
+      }
+      function measureMethodCallWithOneParameter () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.gee(1);
+      }
+
+      (new Measurement({'assignment': measureAssignment,
+                        'function call': measureFunctionCall,
+                        'function call with 1 parameter': measureFunctionCallWithOneParameter,
+                        'function call with 2 parameters': measureFunctionCallWithTwoParameters,
+                        'function call with 3 parameters': measureFunctionCallWithThreeParameters,
+                        'function call with 4 parameters': measureFunctionCallWithFourParameters,
+                        'method call': measureMethodCall,
+                        'method call with 1 parameter': measureMethodCallWithOneParameter,
+                        'prototype method call': measurePrototypeMethodCall,
+                        'prototype method call with 1 parameter': measurePrototypeMethodCallWithOneParameter,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="200"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var x;
+
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          ;
+      }
+
+      function measureAssignment () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          x = 0;
+      }
+
+      function eff () {
+        return 0;
+      }
+      function measureFunctionCall () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          eff();
+      }
+
+      function gee (a) {
+        return 0;
+      }
+      function measureFunctionCallWithOneParameter () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          gee(1);
+      }
+
+      function ache (a, b) {
+        return 0;
+      }
+      function measureFunctionCallWithTwoParameters () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          ache(1, 2);
+      }
+
+      function eye (a, b, c) {
+        return 0;
+      }
+      function measureFunctionCallWithThreeParameters () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          eye(1,2,3);
+      }
+
+      function jay (a, b, c, d) {
+        return 0;
+      }
+      function measureFunctionCallWithFourParameters () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          jay(1,2,3,4);
+      }
+
+      function MyObj () {}
+      MyObj.prototype.eff = eff;
+      MyObj.prototype.gee = gee;
+
+      var myObj = new MyObj();
+      function measurePrototypeMethodCall () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.eff();
+      }
+      function measurePrototypeMethodCallWithOneParameter () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.gee(1, 2, 3, 4, 5, 6);
+      }
+
+      var obj = {};
+      obj.f = eff;
+      obj.g = gee;
+      function measureMethodCall () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.eff();
+      }
+      function measureMethodCallWithOneParameter () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.gee(1);
+      }
+
+      (new Measurement({'assignment': measureAssignment,
+                        'function call': measureFunctionCall,
+                        'function call with 1 parameter': measureFunctionCallWithOneParameter,
+                        'function call with 2 parameters': measureFunctionCallWithTwoParameters,
+                        'function call with 3 parameters': measureFunctionCallWithThreeParameters,
+                        'function call with 4 parameters': measureFunctionCallWithFourParameters,
+                        'method call': measureMethodCall,
+                        'method call with 1 parameter': measureMethodCallWithOneParameter,
+                        'prototype method call': measurePrototypeMethodCall,
+                        'prototype method call with 1 parameter': measurePrototypeMethodCallWithOneParameter,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$8.lzx></example?>
+
+<para/></section><section><title>Code hoisting</title>
+
+<para>
+It's always a good idea to carefully examine <indexterm significance="preferred"><primary>inner loops</primary></indexterm><glossterm>inner loops</glossterm> (loops that
+are central to an algorithm and executed many times) for expressions
+that don't vary with the loop index and move them out of the loop.
+This is just good standard programming practice, but it may not be
+quite so obvious in an object-oriented language such as Javascript.
+</para>
+<para>
+The example below shows how accessing a deeply nested element of a
+object heirarchy is really a constant expression that can be moved out
+of a loop.
+</para>
+
+<example role="live-example">
+   <title>Moving constant expressions out of a loop</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$9.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Moving constant expressions out of a loop.</title><programlisting role="lzx-embednew"><filename>performance-tuning-$9.lzx</filename><parameter/><code>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var x;
+
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          ;
+      }
+
+      var myObj = { a: 'eh?', b: 'be',
+                    c: { d: 'dee',
+                         e: { f: 'eff',
+                              g: { h: 'ache'}}}}
+
+      function measureHardWay () {
+        var ans;
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          ans = a.c.e.g.h;
+        }
+      }
+
+      function measureEasyWay () {
+        var ans;
+        var aceg = a.c.e.g;
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          ans = aceg.h;
+        }
+      }
+
+      (new Measurement({'in the loop': measureHardWay,
+                        'out of the loop': measureEasyWay,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var x;
+
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          ;
+      }
+
+      var myObj = { a: 'eh?', b: 'be',
+                    c: { d: 'dee',
+                         e: { f: 'eff',
+                              g: { h: 'ache'}}}}
+
+      function measureHardWay () {
+        var ans;
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          ans = a.c.e.g.h;
+        }
+      }
+
+      function measureEasyWay () {
+        var ans;
+        var aceg = a.c.e.g;
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          ans = aceg.h;
+        }
+      }
+
+      (new Measurement({'in the loop': measureHardWay,
+                        'out of the loop': measureEasyWay,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$9.lzx></example?>
+
+<para/></section></section><section><title>Optimizing startup time</title>
+
+
+<para/><section><title>Using Lazy Replication</title>
+<para>If you will have more items in your list than will appear to the user,
+you should use <literal>dataoption="lazy"</literal>.  In this case the
+listitem will use lazy replication  and the list will
+use a <indexterm><primary>LzDataSelectionManager</primary></indexterm><classname>LzDataSelectionManager</classname>, instead of a
+<indexterm><primary>LzSelectionManager</primary></indexterm><classname>LzSelectionManager</classname>.  Some of the APIs for adding
+and removing items will not be available, but startup time will be
+significantly faster.  In general, you can modify data through the
+data APIs instead of using list methods.  If you
+have created your own <indexterm><primary>listitem</primary></indexterm><classname>listitem</classname> class you can use the <indexterm><primary>LzDatapath</primary></indexterm><classname>LzDatapath</classname>
+<indexterm><primary>replication</primary></indexterm><sgmltag class="attribute">replication</sgmltag>
+attribute.</para>
+
+<para>In the example below, only four <indexterm><primary>textlistitem</primary></indexterm><classname>textlistitem</classname>
+views are created, even though there are ten items in the dataset.</para>
+
+
+<note><para>If you declare a <indexterm><primary>textlistitem</primary></indexterm><sgmltag class="element">&lt;textlistitem&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: textlistitem-->
+ with a child
+<indexterm><primary>datapath</primary></indexterm><sgmltag class="element">&lt;datapath&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: datapath-->
+, you must set
+<literal>datareplication="lazy"</literal> on the <indexterm><primary>datapath</primary></indexterm><sgmltag class="element">&lt;datapath&gt;</sgmltag>
+element if you set <literal>dataoption="lazy"</literal> in the list.  If you
+are using a <indexterm><primary>datapath</primary></indexterm><sgmltag class="attribute">datapath</sgmltag> attribute, that happens
+automatically.)</para></note>
+
+<example role="live-example">
+   <title>Lazy replication increases efficiency</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$10.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?informalexample role="live-example"><programlisting role="lzx-embednew"><filename>performance-tuning-$10.lzx</filename><parameter/><code>
+&lt;canvas width="200" height="120"&gt;
+  &lt;dataset name="mydata"&gt;
+    &lt;numbers&gt;
+      &lt;option name="first"/&gt;
+      &lt;option name="second"/&gt;
+      &lt;option name="third"/&gt;
+      &lt;option name="fourth"/&gt;
+      &lt;option name="fifth"/&gt;
+      &lt;option name="sixth"/&gt;
+      &lt;option name="seventh"/&gt;
+      &lt;option name="eigth"/&gt;
+      &lt;option name="ninth"/&gt;
+      &lt;option name="tenth"/&gt;
+    &lt;/numbers&gt;
+  &lt;/dataset&gt;
+  &lt;list id="mylist" shownitems="4" dataoption="lazy"&gt;
+    &lt;textlistitem datapath="mydata:/numbers/option/@name"/&gt;
+  &lt;/list&gt;
+  &lt;text text="${mylist.value}"/&gt;
+  &lt;simplelayout spacing="4" inset="10"/&gt;
+  &lt;constantlayout value="10" axis="x"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="200" height="120"&gt;
+  &lt;dataset name="mydata"&gt;
+    &lt;numbers&gt;
+      &lt;option name="first"/&gt;
+      &lt;option name="second"/&gt;
+      &lt;option name="third"/&gt;
+      &lt;option name="fourth"/&gt;
+      &lt;option name="fifth"/&gt;
+      &lt;option name="sixth"/&gt;
+      &lt;option name="seventh"/&gt;
+      &lt;option name="eigth"/&gt;
+      &lt;option name="ninth"/&gt;
+      &lt;option name="tenth"/&gt;
+    &lt;/numbers&gt;
+  &lt;/dataset&gt;
+  &lt;list id="mylist" shownitems="4" dataoption="lazy"&gt;
+    &lt;textlistitem datapath="mydata:/numbers/option/@name"/&gt;
+  &lt;/list&gt;
+  &lt;text text="${mylist.value}"/&gt;
+  &lt;simplelayout spacing="4" inset="10"/&gt;
+  &lt;constantlayout value="10" axis="x"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$10.lzx></informalexample?>
+
+<para/></section></section><section><title>Optimizing runtime performance with pooling</title>
+
+
+
+<para>If you are creating a list from data and then change the data that
+is represented by the list, you should consider
+<literal>dataoption="pooling"</literal>.  Normally, when the data which is bound to a view changes, the
+views are re-created. However, if you use pooling, only the data is reset— the views are not recreated.  With
+the textlistitem class this technique will work effectively.  If you have
+created your own listitem class you can use the
+<indexterm><primary>pooling</primary></indexterm><sgmltag class="attribute">pooling</sgmltag> attribute on <indexterm><primary>datapath</primary></indexterm><classname>datapath</classname>.</para>
+
+<note><para>If you use lazy replication as described above, pooling will
+also be true.</para></note>
+
+<example role="live-example">
+   <title>Pooling views </title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/performance-tuning-$11.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?informalexample role="live-example"><programlisting role="lzx-embednew"><filename>performance-tuning-$11.lzx</filename><parameter/><code>
+&lt;canvas height="200"&gt;
+  &lt;dataset name="letters"&gt;
+    &lt;item value="a" &gt;A&lt;/item&gt;
+    &lt;item value="b" &gt;B&lt;/item&gt;
+    &lt;item value="c" &gt;C&lt;/item&gt;
+    &lt;item value="d" &gt;D&lt;/item&gt;
+    &lt;item value="e" &gt;E&lt;/item&gt;
+    &lt;item value="f" &gt;F&lt;/item&gt;
+  &lt;/dataset&gt;
+
+  &lt;dataset name="numbers"&gt;
+    &lt;item value="1" &gt;I&lt;/item&gt;
+    &lt;item value="2" &gt;II&lt;/item&gt;
+    &lt;item value="3" &gt;III&lt;/item&gt;
+    &lt;item value="4" &gt;IV&lt;/item&gt;
+    &lt;item value="5" &gt;V&lt;/item&gt;
+    &lt;item value="6" &gt;VI&lt;/item&gt;
+  &lt;/dataset&gt;
+
+  &lt;simplelayout axis="x" spacing="60" inset="20"/&gt;
+  &lt;method name="toggle" args="list"&gt;
+    var xpath = list.datapath.xpath;
+    if (xpath == "letters:/") {
+      list.setDatapath("numbers:/");
+    } else {
+      list.setDatapath("letters:/");
+    }
+  &lt;/method&gt;
+
+  &lt;view y="10" layout="class: simplelayout; axis: y; spacing: 5"&gt;
+    &lt;text&gt;(list1)&lt;/text&gt;
+
+    &lt;button name="toggle" text="toggle list1"&gt;
+      &lt;handler name="onclick"&gt;
+        canvas.toggle(list1);
+      &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;list id="list1" width="130" shownitems="6"
+          datapath="letters:/"&gt;
+      &lt;textlistitem datapath="/item" text="$path{'text()'}"
+                    value="$path{'@value'}"/&gt;
+    &lt;/list&gt;
+  &lt;/view&gt;
+
+  &lt;view y="10" layout="class: simplelayout; axis: y; spacing: 5"&gt;
+    &lt;text&gt;(list2) dataoption="pooling"&lt;/text&gt;
+
+    &lt;button name="toggle" text="toggle list2"&gt;
+      &lt;handler name="onclick"&gt;
+        canvas.toggle(list2);
+      &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;list id="list2" width="130" shownitems="6"
+          datapath="letters:/" dataoption="pooling" &gt;
+      &lt;textlistitem datapath="/item"
+                    text="$path{'text()'}"
+                    value="$path{'@value'}"/&gt;
+    &lt;/list&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="200"&gt;
+  &lt;dataset name="letters"&gt;
+    &lt;item value="a" &gt;A&lt;/item&gt;
+    &lt;item value="b" &gt;B&lt;/item&gt;
+    &lt;item value="c" &gt;C&lt;/item&gt;
+    &lt;item value="d" &gt;D&lt;/item&gt;
+    &lt;item value="e" &gt;E&lt;/item&gt;
+    &lt;item value="f" &gt;F&lt;/item&gt;
+  &lt;/dataset&gt;
+
+  &lt;dataset name="numbers"&gt;
+    &lt;item value="1" &gt;I&lt;/item&gt;
+    &lt;item value="2" &gt;II&lt;/item&gt;
+    &lt;item value="3" &gt;III&lt;/item&gt;
+    &lt;item value="4" &gt;IV&lt;/item&gt;
+    &lt;item value="5" &gt;V&lt;/item&gt;
+    &lt;item value="6" &gt;VI&lt;/item&gt;
+  &lt;/dataset&gt;
+
+  &lt;simplelayout axis="x" spacing="60" inset="20"/&gt;
+  &lt;method name="toggle" args="list"&gt;
+    var xpath = list.datapath.xpath;
+    if (xpath == "letters:/") {
+      list.setDatapath("numbers:/");
+    } else {
+      list.setDatapath("letters:/");
+    }
+  &lt;/method&gt;
+
+  &lt;view y="10" layout="class: simplelayout; axis: y; spacing: 5"&gt;
+    &lt;text&gt;(list1)&lt;/text&gt;
+
+    &lt;button name="toggle" text="toggle list1"&gt;
+      &lt;handler name="onclick"&gt;
+        canvas.toggle(list1);
+      &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;list id="list1" width="130" shownitems="6"
+          datapath="letters:/"&gt;
+      &lt;textlistitem datapath="/item" text="$path{'text()'}"
+                    value="$path{'@value'}"/&gt;
+    &lt;/list&gt;
+  &lt;/view&gt;
+
+  &lt;view y="10" layout="class: simplelayout; axis: y; spacing: 5"&gt;
+    &lt;text&gt;(list2) dataoption="pooling"&lt;/text&gt;
+
+    &lt;button name="toggle" text="toggle list2"&gt;
+      &lt;handler name="onclick"&gt;
+        canvas.toggle(list2);
+      &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;list id="list2" width="130" shownitems="6"
+          datapath="letters:/" dataoption="pooling" &gt;
+      &lt;textlistitem datapath="/item"
+                    text="$path{'text()'}"
+                    value="$path{'@value'}"/&gt;
+    &lt;/list&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/performance-tuning-$11.lzx></informalexample?>
+<title>Data optimization checklist</title>
+<para>
+Data pooling gives you the key tool in optimizing performance issues related to XML data. The philosophy
+can be stated simply: </para>
+<orderedlist spacing="compact"><listitem><para>Pool replicated views.</para></listitem><listitem><para>Reduce the number of subviews in a replicated row.</para></listitem><listitem><para>Defer <indexterm><primary>init</primary></indexterm><sgmltag class="element">&lt;init&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: init-->
+ of parts of your application that aren't necessary immediately.</para></listitem></orderedlist>
+
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
+- removing/redefining the default font (can link to fonts chapter).
+</remark></para>
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
+This should go in the performance chapter (how large a {} is, how large a dataset node is, and the 
+recommendation to use attributes instead of child elements to decrease memory overhead).
+ 
+
+ var ll = []; for (var i = 0; i &lt;20000; i++) ll[i] = {foo: i}
+
+   
+
+When you consider that every object is a hashtable, and that most objects have a number of attributes, 
+it's probably not that unreasonable.  If you figure that a hash table needs at least two words for each entry (key, value) 
+and that if you use open hashing, you never want to be more than 2/3 full, then 562 bytes works out to at most 45 attributes.  
+If the hash table stores hash codes, make that 3 words per entry, and 30 attributes. 
+ That doesn't count for any table or class overhead either.
+
+  that still seems a little profligate, but   RAM is essentially free these days. 
+ Or perhaps they don't have a good solution for growing an object and updating all references to it, so they want 
+to allocate objects big enough that they seldom have to move.
+
+Include a graph that shows baseline memory levels.
+
+</remark></para>
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
+  
+   First of all, what do we consider a memory leak? If you run an application
+      for a while and its memory footprint grows and never comes down to its
+      original level, does that necessarily indicate a leak in our libraries? Unexpected change.
+      
+    
+
+</remark></para>
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
+Measurement is expensive.  Avoid things like getTextWidth() and for forth. Instead, use built-ins (such as ???).
+
+For details, see Adam.
+</remark></para>
+
+
+<para/></section><section><title>Application Size</title>
+
+<para/><section><title>Measuring Application Size</title>
+
+<para>The developer console displays the uncompressed and gzipped size of the application.  The gzipped size is the size that will be transferred to most browser clients; it is proportional to the file transfer time.  The uncompressed size is the size that will appear in the browser cache, or if you use a tool such as <literal>curl</literal> or <literal>wget</literal> to retrieve the file.</para>
+
+<informalfigure><mediaobject><imageobject><imagedata fileref="images/size.png"/></imageobject></mediaobject></informalfigure>
+
+<para>The developer console also contains a link to the <indexterm significance="preferred"><primary>size profile</primary></indexterm><glossterm>size profile</glossterm> for the application.  This page displays size statistics particular to the application.  These statistics are relative to the uncompressed size of the application, not the compressed size, but they are still a useful tool in finding the "size hot spots" of your application.</para>
+
+<para/></section><section><title>Optimizing Application Size</title>
+
+<para>Changing embedded datasets and resources to requested datasets and resources will reduce the initial download size of the application.  If these assets are only used in some execution paths, th this will also reduce the total download size of the application, for use cases that avoid these execution paths.</para>
+
+
+<para/></section></section><section id="inlined-classes"><title>Inlined Classes</title>
+
+<para>An <indexterm significance="preferred"><primary>inlined</primary></indexterm><glossterm>inlined class</glossterm> is a class that is applied to an instance when an application is compiled, rather than when the application is instantiated.  An inlined class has the same semantics as a regular class, except that the class cannot be instantiated or otherwise referred to by name in script code.  An inlined class is similar to an inline function, or a macro, in other languages.</para>
+
+<para>If a class is only instantiated once, inlining it can reduce the size of the generated application.  This is because instead of containing two definitions, one for the class and one for its instance, the application will contain only one definition.  The compiler may be able to combine tables that are used in the class with tables that are used in the instance, to save space.</para>
+
+<para>The <literal>&lt;?lzc?&gt;</literal> XML processor directive directs the compiler to inline a class:</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;canvas&gt;
+  &lt;?lzc class="c1" inline="true"?&gt;
+  &lt;class name="c1"&gt;
+    &lt;view name="v2"/&gt;
+    &lt;view name="v3"/&gt;
+  &lt;/class&gt;
+  &lt;view name="v1"&gt;
+    &lt;c1/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting></informalexample>
+
+<para>The program above compiles to the same executable as the following source code:</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;canvas&gt;
+  &lt;?lzc class="c1" inline="true"?&gt;
+  &lt;class name="c1"&gt;
+  &lt;/class&gt;
+  &lt;view name="v1"&gt;
+    &lt;view&gt;
+      &lt;view name="v2"/&gt;
+      &lt;view name="v3"/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting></informalexample>
+
+<para>The only difference between these programs the organization of the source code, which allows the developer to defer the decision about whether to combine the class and the instance definition, and to maintain the class definition separately, for readability and in order to easily revisit the decision if a second instance is added, for example.</para>
+
+<para>The compiler directive has two forms.  The <indexterm><primary>class</primary></indexterm><sgmltag class="attribute">class</sgmltag> attribute is a single class.  The <indexterm><primary>classes</primary></indexterm><sgmltag class="attribute">classes</sgmltag> attribute is a list of class names, so that this</para>
+<programlisting>
+&lt;?lzc class="c1" inline-only="true"?&gt;
+&lt;?lzc class="c1" inline-only="true"?&gt;</programlisting>
+<para>can be abbreviated as this:</para>
+<programlisting>
+  &lt;?lzc classes="c1 c2" inline-only="true"?&gt;
+</programlisting>
+
+<para><literal>inline-only</literal> has two effects: the class definition is applied at compile time, and the runtime representation of the class is omitted from the executable file.</para>
+
+<para>The compiler expands non-inlined class definitions that extend inlined classes, and inlined classes that extend inlined classes.</para>
+
+<para>The following cases can't be inlined.  They will result in a compilation error.</para>
+<itemizedlist spacing="compact"><listitem><para>A inlined class with an instance that defines a method with the same name as a method in the class definition.</para></listitem><listitem><para>A inlined class with an instance that defines an <literal>on<varname>event</varname></literal>code&gt; with the same name as an event that the class defines.</para></listitem><listitem><para>A inlined class that a non-inlined subclass extends.  If you inline a class, you have to inline its subclasses too.</para></listitem><listitem><para>A inlined class that contains the <indexterm><primary>defaultplacement</primary></indexterm><sgmltag class="attribute">defaultplacement</sgmltag> attribute.</para></listitem><listitem><para>An inlined class with an instance that contains a child with a <indexterm><primary>placement</primary></indexterm><sgmltag class="attribute">placement</sgmltag> attribute.</para></listitem><listitem><para>An inlined class that defines an an attribute value with a subclass or instance that defines an attribute for that attribute.</para></listitem></itemizedlist>
+
+<para>Inlined classes make it easier to factor a program across multiple files without a performance penalty.  In the following program, a view and a resource have been moved to a separate file.</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;canvas&gt;
+  &lt;?lzc class="c1" inline="true"?&gt;
+  &lt;include href="lib1.lzx"/&gt;
+  &lt;view name="v1"&gt;
+    &lt;c1/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting></informalexample>
+
+<example role="live-example"><title>lib1.lzx</title><programlisting>
+&lt;library&gt;
+  &lt;resource name="r1" src="pic1.jpg"/&gt;
+  &lt;class name="c1"&gt;
+    &lt;view name="v2"/&gt;
+    &lt;view name="v3"/&gt;
+  &lt;/class&gt;
+&lt;/library&gt;
+</programlisting></example>
+<para/></section><section><title>Managing Memory</title>
+<para>
+In optimizing the performance of your application, it can be useful to look at the "memory footprint" of your application, and in particular, to see if that footprint grows over time.  (The way to determine memory usage by your application depends on the operating system on which it runs and is beyond the scope of this chapter.)
+<para>
+If memory usage for a given application tends to go up over time, you may have a "memory leak."  See <xref linkend="debugging"/> for an explanation of how to use the debugger to detect leakage.
+</para>
+</para>
+<para/><section><title>Creating and Destroying Views</title>
+<para>
+In general, you do not have to worry about the resources consumed by creating views.  However,if you have an application that 
+creates a large number of views, you may want to use the <indexterm><primary><literal>destroy()</literal></primary></indexterm><methodname>destroy()</methodname> to free 
+memory.  
+</para>
+<para>
+You would not need to use destroy if a view could only be referenced by one variable.  
+Because views can be referenced in many ways (e.g., name, id, events, delegates, handlers) destroy can be used 
+to 'detach' a view from all these links so that it can be garbage-collected.  destroy should not be needed in simple 
+programs or programs that are built from Laszlo components.</para>
+<para>
+When tracking down memory usage, replicated views are a good place to look. When you make more than one copy of a view, you will use proportionally more memory.
+So when performance tuning, remember that <literal>$path</literal> is implicated in replication.
+</para>
+<para>
+Note that
+constraints do not consume large amounts of memory.  
+<literal>$once</literal> and <literal>$always</literal> are equivalent in memory usage, but clearly <literal>$always</literal> will require more cpu.
+
+</para>
+<para/></section></section><section><title>Hand-tuning constraints and attributes</title>
+<para>
+Once you get your program's functionality set, you can further optimize by "rebuilding in place."
+</para>
+<para/><section><title>Rewriting constraints</title>
+<para>
+Constraints are an extremely useful way to nicely lay out an application. They are conceptually elegant, allow for writing compact maintainable programs, and help with rapid application development. Constraints are so incredibly tasty for rapid prototyping. However, they can be expensive in terms of performance. 
+</para>
+<para>
+The significant contributions to the cost of constraints aren't so much in the evaluation of the constraint expression itself.  Rather, they come about from two causes:</para>
+<itemizedlist spacing="compact"><listitem><para>It's expensive to register a constraint.  Partly this is because each constraint requires two functions (which contributes to application size), and one function call (which contributes to startup time). </para></listitem><listitem><para>It's expensive to trigger a constraint, both because because there's one function call (it's the other function, this time), and because of the constraint machinery.</para></listitem></itemizedlist>
+<para>
+ Therefore it is sometimes helpful to replace constraints by explicitly setting attributes and chaining events with delegates. You should do this after the functionality of the program is essentially complete.
+</para>
+<para>Instead of writing</para>
+<programlisting>
+&lt;view id="foo" x="${parent.something}" y="${parent.something}"&gt;, 
+</programlisting>
+<para>
+write the code that changes <literal>parent.something</literal> to update foo's x and y instead, replacing several function calls and loops through the constraint system by one function call. Too may constraints can make operations,
+like resizing views and windows, pretty stuttery. Rethinking all those
+constraints to minimize them and do some programatically by hand can really help in some cases.</para>
+<para>
+The <literal>$once</literal> technique also helps:
+</para>
+<programlisting>
+&lt;view name="nugget" width="$once{thingy.width}" ... /&gt;
+</programlisting>
+<para>
+ instead of
+</para>
+<programlisting>
+&lt;view name="nugget" width="${thingy.width}" ... /
+</programlisting>
+<para>
+This constraint is just evaluated once, when the view's attributes are first set. This will only work for static layouts, of course, and only if instantiation order works right. In this case, thingy must be constructed, and its width attribute must be set, and "thingy" must be in scope, in order for the $once form to work.
+</para>
+<para>
+Another technique is to write your own "virtual constraints" in a method. This has the effect of reducing the number of method and function calls. The example below positions &lt;code&gt;dotty&lt;/code&gt; to sit inside &lt;code&gt;nugget&lt;/code&gt; with a padding of 5 pixels on the left and right.
+</para>
+<example role="live-example"><title>writing your own virtual constraints</title><programlisting>
+&lt;view name="nugget"&gt;
+&lt;view name="dotty" .... /&gt;
+&lt;method name="init"&gt;
+this.update();
+super.init();
+....
+&lt;/method&gt;
+
+&lt;method name="update"&gt;
+this.setAttribute("width", thingy.width);
+this.dotty.setX( 5 );
+this.dotty.setAttribute( thingy.width - 10 );
+...
+&lt;/method&gt;
+
+&lt;!-- Update positioning whenever thingy's width changes --&gt;
+&lt;method event="onwidth" target="thingy"&gt;
+this.update();
+&lt;/method&gt;
+....
+&lt;/view&gt;
+</programlisting></example>
+<para>
+Compare the above to:
+</para>
+<programlisting>
+&lt;view name="nugget" width="${thingy.width}"&gt;
+&lt;view name="dotty" x="5" width="${thingy.width - 10}"&gt;
+...
+&lt;/view&gt;
+...
+&lt;/view&gt;
+</programlisting>
+<para>
+The second form is much more compact and readable, but the first form uses zero constraints. The call <literal>&lt;method event="onwidth" target="thingy"&gt;</literal> is nearly a constraint on <literal>thingy.width</literal>, but: in the explicit-update form, one <literal>thingy.onwidth</literal> event can trigger a single call to update which, which will end up doing the repositioning that otherwise would require at least a handful of constraints. Like constraints, method calls are expensive. So, fewer constraints, fewer method calls, faster performance.</para>
+<para/></section><section><title>Tuning attribute assignments</title>
+<para>
+You may, in some limited circumstances, gain a performance boost by assinging attribute valutes instead of setting them using a setter, (preferably, the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method). In general, using <literal>object.setAttribute('attr', value); </literal> to set an attribute is the best way to set attributes, as explained in <xref linkend="methods-events-attributes"/>. </para>
+<para>
+For speed, however, you may sometimes use a direct assignment, as in <literal>object.attr = value;</literal>.  When you do this, you need to be aware that no events are generated, and you are giving up the chance for any dependency that refers to <literal>object.attr</literal> to update. Use this technique with caution and only if you are sure that you have handled any dependencies. As we have heard said at Laszlo Systems, it's like overclocking your motherboard. You can do it if you think you know what you're doing, but don't blame us if your machine catches on fire. (Your machine won't literaly catch on fire, of course, but your application may fail spectacularly!)
+</para>
+
+  <para/></section></section><section id="performance-tuning.compression"><title>Using compression to reduce size of DHTML downloads</title>
+<para>
+SWF files are internally gzip-compressed, which results in smaller files, especially when those files consist primarily of script, as do most OpenLaszlo-compiled applications. As a result, the smallest SWF-compiled OpenLaszlo application, which includes the LFC, is approximately 60K in size.
+The comparable DHTML-complied OpenLaszlo application, in contrast, is approximately 250K. This would be a serious problem, except that gzip compression is supported as part of the HTTP standard, and can be enabled in various ways, including by settings on the Web server (Apache Web Server or similar) or, when the deployment includes the OpenLaszlo server, in the Java server environment. 
+</para>
+<para>
+The effect of this compression, when correctly enabled in the serving environment, is that the compression is actually slightly better than the internal gzip compression supported by the SWF file format. Our measurements indicate that the 250K compresses down to 50K.
+</para>
+<para/><section><title>Server-side compression</title>
+<para>
+     The server-side configuration is different for different servlet containers and web servers. The idea is to tell whatever application responds to HTTP requests that it should compress JavaScript before sending it. We expect our users to deploy to a variety of servlet containers and web servers, so, instructions on how to configure a particular system to gzip JavaScript are beyond the scope of this document. We recommend that deployers do do this configuration. As an example, for tomcat, one would add attributes about compression to the connector tag in your server.xml:
+</para>
+
+<programlisting>
+&lt;Connector port="8080"
+compression="on"
+compressionMinSize="2048"
+noCompressionUserAgents="gozilla, traviata"
+compressableMimeType="text/html,text/xml,text/JavaScript,application/x-JavaScript,application/JavaScript"/&gt;
+</programlisting>
+<para/></section><section><title>Client-side decompression</title>
+<para>
+The client-side configuration is much easier; <ulink url="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html">the HTTP protocol specifies "content codings"</ulink> which may include <literal>gzip</literal>. A properly configured server will add the appropriate <literal>content-coding=gzip</literal> header, and modern browsers will recognize that that header means that the
+content will be gzipped. With todays browsers (including all browsers supported by OL4), this does not require any client-side (browser) configuration.
+    </para>
+<para/></section></section></chapter>

@@ -1,0 +1,75 @@
+<section>
+
+<para>OpenLaszlo applications are written in the LZX language and compiled to .swf files that execute in the Flash Player. This 
+Guide explains how to make those applications available to users on the Web. The <ulink url="../guide">Software Developer's
+Guide to Laszlo Applications</ulink> explains how to construct and test applications before you deploy them for general use.</para>
+
+<para/><section><title>Audience and rationale for this book</title>
+
+<para>This book is written for system administrators and others who are responsible for putting OpenLaszlo applications on the web.
+</para>
+
+
+
+<para>
+As explained in the Architecture chapter, there are two distinct ways to deploy applications:</para>
+<itemizedlist spacing="compact"><listitem><para>Using the OpenLaszlo Server (formerly called LPS), to serve .swf files and <emphasis role="i">proxy</emphasis>, that is, mediate the connection, between the client browser and any back-end services on the web.
+In this model you make available files having an .lzx or .lzo extension, which the server compiles to swf as necessary.</para></listitem><listitem><para>SOLO .swf files, <emphasis role="i">unproxied</emphasis>. In this model the developer simply precomiles LZX files, and deployment is trivial.</para></listitem></itemizedlist>
+<para>
+This <emphasis role="i">Guide</emphasis> is virtually all concerned with proxied deployment. If you're deploying your OpenLaszlo application as .swf 
+files you probably will not need to consult this manual.</para>
+
+
+
+<para/></section><section><title>Typographic Conventions</title>
+<para>Code is displayed thus: <literal>var a = f(2)</literal>.  Longer sections of code and other verbatim information is displayed in a separate paragraph:</para>
+
+<programlisting>
+An example file
+that spans several
+lines
+</programlisting>
+
+<para>Example programs are shown thus:</para>
+<informalexample role="live-example"><programlisting>&lt;canvas height="20"&gt;
+  &lt;text&gt;Hello World!&lt;/text&gt;
+&lt;/canvas&gt;</programlisting></informalexample>
+
+<para>Some example programs are run within the page.  The running
+application is shown first, followed by the application source code,
+followed by an Edit button that allows you to try out the effect of
+making changes to the application source code.</para>
+<informalexample role="live-example"><programlisting role="lzx-embednew"><filename>deploy-preface-$2.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
+  &lt;text&gt;Hello World!&lt;/text&gt;
+&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
+  &lt;text&gt;Hello World!&lt;/text&gt;
+&lt;/canvas&gt;</programlisting><?lzx-edit programs/deploy-preface-$2.lzx?></informalexample>
+
+
+
+<para/></section><section><title>Related documentation</title>
+
+  
+  
+
+<para>In addition to this <emphasis role="em">Administrator's Guide</emphasis>, please see also</para>
+<itemizedlist spacing="compact"><listitem><para>The <ulink url="../guide"><emphasis role="em">Software Developer's Guide to Laszlo Applications</emphasis></ulink>, the comprehensive 
+explanation of how to write and test OpenLaszlo programs.</para></listitem><listitem><para>The <ulink url="../design"><emphasis role="em">User Interface Designer's Guide to Laszlo Applications</emphasis></ulink>, 
+which addresses aspects
+of the Laszlo platform that are of special interest to UI and graphic designers</para></listitem><listitem><para>The <ulink url="../reference/../reference/" type="laszlo-reference"><emphasis role="em">LZX Reference
+  Manual</emphasis></ulink>. This online, hyperlinked, comprehensive reference
+  for LZX contains entries for each LZX tag and API. Its format will
+  be familiar to users of JavaDoc(tm) and similar systems. </para></listitem><listitem><para>The <ulink url="../guide/" type="laszlo-dguide">online tutorials</ulink> and sample
+  applications at <ulink url="http://www.laszlosystems.com/demos">http://www.laszlosystems.com/demos</ulink>
+  provide a hands-on instructional overview of the LZX language.</para></listitem></itemizedlist>
+
+<para/><section><title>Use the Forums</title>
+
+<para>The best way to learn any programming language is to draw upon the
+experience and goodwill of its development community (and to write
+code! as the saying goes, nobody learned to ride a bicycle by reading
+about it). The LZX developer community has a home at <ulink url="http://www.laszlosystems.com/developers/forums/">http://www.laszlosystems.com/developers/forums/</ulink>. There
+you will find an active discussion of all aspects of the language, and
+a place to ask questions of your own.</para>
+
+<para/></section></section></section>

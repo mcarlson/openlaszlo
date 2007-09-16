@@ -27,20 +27,23 @@ class ClassCompiler extends ViewCompiler {
     /**
        For a declaration of a class named "foobar"
        
-       <pre>&lt;class name="foobar" extends="view"&gt;</pre>
+       <pre>&lt;class name="foobar" extends="baz" with="mixin1,mixin2"&gt;</pre>
 
        We are going to call
 
        <pre>
        LzInstantiateView(
       {
-        name: 'userclass', 
+        name: 'class', 
         attrs: {
-                parent: "view", 
+                parent: "baz", 
                 initobj: {
                              name: "foobar",
-                             attrs: {name: "foobar"},
-
+                             attrs: { extends: "baz",
+                                      with: "mixin1,mixin2"" }
+                         }
+                }
+        }
        </pre>
      */
     static final String DEFAULT_SUPERCLASS_NAME = "view";
@@ -186,10 +189,12 @@ class ClassCompiler extends ViewCompiler {
                             "'name' is a required attribute of <" + child.getName() + "> and must be a valid identifier", child);
                     }
                     
-                    ViewSchema.Type attrType = ViewSchema.EVENT_TYPE;
+                    ViewSchema.Type attrType = ViewSchema.EVENT_HANDLER_TYPE;
                     AttributeSpec attrSpec = 
                         new AttributeSpec(attrName, attrType, null, null, child);
                     attributeDefs.add(attrSpec);
+                } else if (child.getName().equals("doc")) {
+                    // Ignore documentation nodes
                 }
             }
         }
@@ -254,7 +259,7 @@ class ClassCompiler extends ViewCompiler {
       elt, "extends", DEFAULT_SUPERCLASS_NAME);
     StringBuffer buffer = new StringBuffer();
     buffer.append(VIEW_INSTANTIATION_FNAME + 
-                  "({name: 'userclass', attrs: " +
+                  "({name: 'class', attrs: " +
                   "{parent: " +
                   ScriptCompiler.quote(extendsName) +
                   ", initobj: " + initobj +

@@ -10,12 +10,12 @@
     <purplestyle name="purplecolors"/>
 
     <dataset name="chatDset">
-    	<chatdata/>
+        <chatdata/>
     </dataset>
 
     <debug x="450" y="200" height="200"/>
-	<view id="s1" x="20" y="20">
-		<view layout="spacing:20">
+    <view id="s1" x="20" y="20">
+        <view layout="spacing:20">
             <text>Choose a style to change colors...</text>
 
             <view name="stylechooser" layout="axis:x; spacing:4">
@@ -99,7 +99,7 @@
                     <button height="22" >Submit</button>
                 </tabpane>
             </tabs>
-	    </view>
+        </view>
 
         <window text="test window" width="250" height="250"
             x="410" y="180"
@@ -130,7 +130,7 @@
             </menubar>
 <view name="frosty">
     <method event="oninit">
-        //debug.write("Frosty's parent: " + this.parent);
+        //Debug.write("Frosty's parent: " + this.parent);
     </method>  
 <text multiline="true" 
       x="6"
@@ -172,29 +172,29 @@ parent.parent.setAttribute('width','250');
             <scrollbar/>
         </window>
 
-		<view layout="spacing:14">
-			<button height="22">Submit</button>
-			<button height="22">Cancel</button>
-			<button height="22">OK</button>
-			<button height="22">Revert</button>
-			<button height="22" enabled="false">disabled</button>
+        <view layout="spacing:14">
+            <button height="22">Submit</button>
+            <button height="22">Cancel</button>
+            <button height="22">OK</button>
+            <button height="22">Revert</button>
+            <button height="22" enabled="false">disabled</button>
 
-			<combobox width="100">
-				<textlistitem text="pistachio" selected="true"/>
-				<textlistitem text="chocolate chip"/>
-				<textlistitem text="coffee"/>
-			</combobox>
+            <combobox width="100">
+                <textlistitem text="pistachio" selected="true"/>
+                <textlistitem text="chocolate chip"/>
+                <textlistitem text="coffee"/>
+            </combobox>
 
-			<radiogroup>
-				<radiobutton text="tension"/>
-				<radiobutton text="distance"/>
-				<radiobutton text="delerium"/>
-				<radiobutton text="froth"/>
-				<radiobutton text="persuasion"/>
-			</radiogroup>
-	    </view>
+            <radiogroup>
+                <radiobutton text="tension"/>
+                <radiobutton text="distance"/>
+                <radiobutton text="delerium"/>
+                <radiobutton text="froth"/>
+                <radiobutton text="persuasion"/>
+            </radiogroup>
+        </view>
 
-		<view layout="spacing:20">
+        <view layout="spacing:20">
             <view layout="spacing:10">
                 <checkbox text="I want to take a weekend flight"/>
                 <checkbox text="Also search airports within 70 miles"/>
@@ -204,13 +204,13 @@ parent.parent.setAttribute('width','250');
                 <edittext width="200" text="text entry here"/>
                 <edittext width="200" text="disabled" enabled="false"/>
             </view>
-		</view>
+        </view>
 
-		<simplelayout axis="x" spacing="20"/>
-	</view>
+        <simplelayout axis="x" spacing="20"/>
+    </view>
 
 <window title="Chat Mockup Window" resizable="true" name="chatWindow" width="450" height="200" 
-	x="${canvas.width - this.width}" y="${canvas.height - this.height}">
+    x="${canvas.width - this.width}" y="${canvas.height - this.height}">
 
     <view id="viewChat" width="${parent.width}" height="${parent.height}" x="0" y="0" bgcolor="${parent.bgcolor}"> 
         
@@ -248,7 +248,7 @@ parent.parent.setAttribute('width','250');
                 <method name="handler">
                     var message = this.parent.msg.getText();
                     if (message!=null &amp;&amp; message!="") {
-						viewChat.chatPtr.addNode("message", message);
+                        viewChat.chatPtr.addNode("message", message);
                         this.parent.msg.setText("");
                     }
                 </method>
@@ -256,10 +256,10 @@ parent.parent.setAttribute('width','250');
             
             <button name="clear">Clear messages
                 <method event="onclick">
-                	var rt = viewChat.chatPtr.p
-                	var c
-                	while((c = rt.getFirstChild()) != null)
-						rt.removeChild(c)
+                    var rt = viewChat.chatPtr.p
+                    var c
+                    while((c = rt.getFirstChild()) != null)
+                        rt.removeChild(c)
                 </method>
             </button>
             
@@ -345,6 +345,6 @@ parent.parent.setAttribute('width','250');
 </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

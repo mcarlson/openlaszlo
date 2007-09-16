@@ -1,0 +1,17 @@
+<rsp stat="ok">
+<photos page="1" pages="1" perpage="100" total="13">
+<photo id="104764937" owner="49503086499@N01" secret="1b06b5aeec" server="35" title="Isaac on the jungle gym" ispublic="0" isfriend="1" isfamily="1"/>
+<photo id="104764936" owner="49503086499@N01" secret="7a74d2bfee" server="38" title="We're builders, Papa!" ispublic="0" isfriend="1" isfamily="1"/>
+<photo id="104764935" owner="49503086499@N01" secret="c9e5813587" server="38" title="Pre-Construction" ispublic="0" isfriend="1" isfamily="1"/>
+<photo id="104764934" owner="49503086499@N01" secret="f81667a8b4" server="38" title="Not Halloween" ispublic="0" isfriend="1" isfamily="1"/>
+<photo id="104764933" owner="49503086499@N01" secret="32142b325d" server="42" title="Birthday Party" ispublic="0" isfriend="1" isfamily="1"/>
+<photo id="153389" owner="49503086499@N01" secret="295218821e" server="1" title="Brown Computer Graphics Lab atrium" ispublic="1" isfriend="0" isfamily="0"/>
+<photo id="153388" owner="49503086499@N01" secret="6bb5722b71" server="1" title="Juergen Schulze" ispublic="1" isfriend="0" isfamily="0"/>
+<photo id="153387" owner="49503086499@N01" secret="dcfc5ab049" server="1" title="Brown Computer Graphics Lab" ispublic="1" isfriend="0" isfamily="0"/>
+<photo id="153386" owner="49503086499@N01" secret="eb1ff4153d" server="1" title="Brown Computer Graphics Lab" ispublic="1" isfriend="0" isfamily="0"/>
+<photo id="153385" owner="49503086499@N01" secret="9c8cf46390" server="1" title="My workspace" ispublic="1" isfriend="0" isfamily="0"/>
+<photo id="150454" owner="49503086499@N01" secret="b1eba4d0f9" server="1" title="Self portrait" ispublic="1" isfriend="0" isfamily="0"/>
+<photo id="150429" owner="49503086499@N01" secret="1415bf2474" server="1" title="Phonecam" ispublic="0" isfriend="0" isfamily="0"/>
+<photo id="150428" owner="49503086499@N01" secret="968695a332" server="1" title="Fauxhawk" ispublic="1" isfriend="0" isfamily="0"/>
+</photos>
+</rsp>

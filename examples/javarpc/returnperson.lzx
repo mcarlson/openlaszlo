@@ -16,7 +16,7 @@
         </allow>
     </security>
 
-    <javarpc name="returnperson" scope="none" classname="examples.ReturnPersonExample">
+    <javarpc name="returnperson" scope="none" remoteclassname="examples.ReturnPersonExample">
         <method event="onload">
             Debug.write('proxy:');
             Debug.inspect(this.proxy);
@@ -50,7 +50,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

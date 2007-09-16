@@ -1,0 +1,92 @@
+<canvas height="420" width="620">
+  <include href="timing-support.lzx" />
+
+  <!-- Copyright 2006 Laszlo Systems -->
+      <stylesheet>
+          baseclass {
+              prop1: 10;
+              prop2: 100;
+          }
+
+          subclass {
+              prop2 : 20;
+              prop3 : 200;
+          }
+
+          subsubclass {
+              prop3 : 30;
+              prop4 : 300;
+          }
+
+          #subID {
+              prop5 : 40;
+          }
+
+          #subsubID {
+              prop6 : 50;
+          }
+
+          [name="subName"] {
+              prop7 : 60;
+          }
+
+          [name="subsubName"] {
+              prop8 : 70;
+          }
+      </stylesheet>
+
+      <class name="baseclass"/>
+      <class name="subclass"/>
+      <class name="subsubclass"/>
+
+      <baseclass>
+          <subclass>
+              <subsubclass>
+                  <subclass name="subName">
+                      <subclass name="subsubName">
+                          <subclass id="subID">
+                              <subsubclass id="subsubID">
+
+                              </subsubclass>
+
+                          </subclass>
+                      </subclass>
+
+                  </subclass>
+              </subsubclass>
+          </subclass>
+      </baseclass>
+      
+  <script>
+      function getCSSProp(n, prop) {      
+        var cssStyle = LzCSSStyle.getComputedStyle( n );
+        return cssStyle.getPropertyValue( prop ); 
+      } 
+
+      function lookupLotsOfProps() {
+        getCSSProp( subsubID, "prop1" );
+        getCSSProp( subsubID, "prop2" );
+        getCSSProp( subsubID, "prop3" );
+        getCSSProp( subsubID, "prop4" );
+        getCSSProp( subsubID, "prop5" );
+        getCSSProp( subsubID, "prop6" );
+        getCSSProp( subsubID, "prop7" );
+        getCSSProp( subsubID, "prop8" );
+       }
+       
+       function makeSomeNodes() {
+           new LzNode( subsubID );
+       }
+
+       addTest("lookupLotsOfProps", 10);
+       addTest("makeSomeNodes",10);
+   
+       runTests( 'cssperf' , 5 );
+   </script>
+   
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

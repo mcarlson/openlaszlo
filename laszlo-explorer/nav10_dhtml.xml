@@ -1,0 +1,125 @@
+<menu>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--    <section name="Welcome" src="/laszlo-explorer/coverpages/welcome/welcome.lzx" title="Laszlo Presentation Server" text="Designed for developers. Developed for design.">-->
+<!--          <item name="Overview" src="/laszlo-explorer/coverpages/overview.html"/>-->
+<!--          <item name="Getting Started" src="/laszlo-explorer/coverpages/getting_started.html"/>-->
+<!--    </section>-->
+
+<!--    <section name="Laszlo in 10 Minutes" title="OpenLaszlo in 10 minutes" text="A walkthrough for developers." action="explore_welcome">-->
+<!--    </section>-->
+
+    <section name="Introduction"
+           text="Essential concepts" autoselect="true">
+      <topic name="Hello World" action="explore"
+            src="/laszlo-explorer/basics/hello.lzx" text="The Canvas"/>
+      <topic name="Button" action="explore"
+            src="/laszlo-explorer/basics/hellobutton.lzx"
+            text="A simple element."/>
+      <topic name="Window" action="explore"
+            src="/laszlo-explorer/basics/hellowindow.lzx"
+            text="A window."/>
+      <topic name="Form" action="explore"
+            src="/laszlo-explorer/basics/form.lzx"
+            text="A form"/>
+
+    </section>
+    <section name="Basics" title="OpenLaszlo application basics"
+           text="Essential concepts" autoselect="true">
+      <topic name="View" action="explore"
+            src="/laszlo-explorer/basics/view.lzx"
+            text="Views are the heart of LZX." />
+      <topic name="Images" action="explore"
+            src="/laszlo-explorer/basics/mediaimg.lzx"
+            text="Attaching images to views"/>
+      <topic name="Visual Layout" action="explore"
+            src="/laszlo-explorer/basics/layout.lzx"
+            text="Laying out the canvas"/>
+<!-- No fonts for dhtml
+      <topic name="Fonts" action="explore"
+            src="/laszlo-explorer/basics/fonts.lzx"
+            text="Using Fonts"/>
+-->
+      <topic name="Scrolling" action="explore"
+            src="/laszlo-explorer/basics/scrolling.lzx"
+            text="scrolling clipped views"/>
+<!-- No Audio, Video for dhtml
+      <topic name="Audio" action="explore"
+            src="/laszlo-explorer/basics/mediaaudio.lzx"
+            text="Attaching audio to views"/>
+      <topic name="Video"  action="explore"
+            src="/laszlo-explorer/basics/mediavideo.lzx"
+            text="Attaching video to views"/>
+-->
+    </section>
+
+    <section name="Scripting"
+           text="Procedural code in LZX." autoselect="true">
+      <topic name="Event Handlers" action="explore"
+            src="/laszlo-explorer/scripting/events.lzx"
+            text="Handling events" />
+      <topic name="Methods" action="explore"
+            src="/laszlo-explorer/scripting/methods.lzx"
+            text="Using methods"/>
+      <topic name="Debugging" action="explore"
+            src="/laszlo-explorer/scripting/debugger.lzx"
+            text="Using the debugger."/>
+    </section>
+
+    <section title="Data" name="Data"
+           text="XML Data in OpenLaszlo Applications" autoselect="true">
+      <topic name="Data Binding" action="explore"
+            src="/laszlo-explorer/data/databinding.lzx"
+            text="Databinding, not data processing."/>
+      <topic name="Relative Addressing" action="explore"
+            src="/laszlo-explorer/data/datalocal.lzx"
+            text="Data sources can be internal or external."/>
+      <topic name="Replicated Views" action="explore"
+            src="/laszlo-explorer/data/datarepeated.lzx"
+            text="Views replicate according to data structure."/>
+      <topic name="Remote Data" action="explore"
+            src="/laszlo-explorer/data/dataremote.lzx"
+            text="Data from remote source"/>
+      <topic action="explore" name="Accessing Databases"
+            src="/laszlo-explorer/data/database.lzx"
+            text="Back end databases"/>
+    </section>
+
+    <section title="Object Orientation" name="Object Orientation" src="/laszlo-explorer/coverpages/object_orientation_cover.html" text="LZX is an Object-Oriented language." autoselect="true">
+      <topic action="explore" src="/laszlo-explorer/classes/withoutclasses.lzx" name="The Problem"  text="Why you need an OO language."/>
+      <topic action="explore" src="/laszlo-explorer/classes/withclasses.lzx" name="The Solution"   text="Laszlo's &lt;class&gt; tag"/>
+      <topic action="explore" src="/laszlo-explorer/classes/inheritance.lzx" name="Inheritance"    text="Extending classes"/>
+      <topic action="explore" src="/laszlo-explorer/classes/attributes.lzx" name="Defining Attributes"   text="Attributes and instances" />
+      <topic action="explore" src="/laszlo-explorer/classes/events.lzx" name="Defining Events"  text="An event-driven system"/>
+      <topic action="explore" src="/laszlo-explorer/classes/methods.lzx" name="Defining Methods" text="Methods on classes can be overwritten."/>
+    </section>
+    <section name="Animations" title="Animation"
+           src="/laszlo-explorer/coverpages/animations_cover.html" text="Everything Animates" autoselect="true">
+      <topic name="Animation Basics" action="explore"
+            src="/laszlo-explorer/animation/animation.lzx" text="The 'animator'"/>
+      <topic name="Animator Groups" action="explore"
+            src="/laszlo-explorer/animation/animatorgroup.lzx" text="Combining animations"/>
+      <topic name="Using Motion" action="explore"
+            src="/laszlo-explorer/animation/motion.lzx" text="using motion attribute"/>
+
+    </section>
+
+    <section name="Constraints" src="/laszlo-explorer/coverpages/constraints_cover.html" text="Tie one attribute's value to another's " autoselect="true">
+      <topic name="Basics" action="explore"
+            src="/laszlo-explorer/constraints/basics.lzx"
+            text="Constraint syntax and usage"/>
+      <topic name="Proportions" action="explore"
+            src="/laszlo-explorer/constraints/proportions.lzx"
+            text="States -- a powerful abstraction"/>
+      <topic name="Applying Constraints" action="explore"
+            src="/laszlo-explorer/constraints/splitpanel.lzx"
+            text="States -- a powerful abstraction"/>
+      <topic name="Drag and Drop" action="explore"
+            src="/laszlo-explorer/constraints/dragdrop.lzx"
+            text="States in action"/>
+    </section>
+
+
+</menu>

@@ -8,11 +8,11 @@
 
         <state apply="${classroot.showrange}">
             <text y="${classroot.track.y + classroot.track.height + 2}"
-                text="${classroot.minvalue}"
+                text="${classroot.minvalue}" fgcolor="${classroot.style ? classroot.style.textcolor : this.fgcolor}"
             />
             <text y="${classroot.track.y + classroot.track.height + 2}" resize="true"
                 x="${classroot.track.x+classroot.track.width-width}"
-                text="${classroot.maxvalue}"
+                text="${classroot.maxvalue}" fgcolor="${classroot.style ? classroot.style.textcolor : this.fgcolor}"
             />
         </state>
 
@@ -48,11 +48,31 @@
 
     <!--- the visual thumb the user drags to select a value -->
     <class name="sliderthumb" extends="basesliderthumb">
+      <doc>
+        <tag name="shortdesc"><text>
+            A slider.
+        </text></tag>
+        <text>
+
+          <p>The <tagname>slider</tagname> tag creates a slider which allows for
+            easy selection of a single value between a provided range.  Options
+            exist for setting the range, showing the range values, showing the
+            selected value while dragged, and showing a fill bar.
+          </p>
+
+          <example>
+            &lt;canvas height="60"&gt;
+            &lt;slider x="20" y="20" width="300" value="50"/&gt;
+            &lt;/canvas&gt;
+          </example>
+          </text>
+        </doc>
+
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

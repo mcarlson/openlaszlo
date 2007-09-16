@@ -2,7 +2,8 @@
 
 
 
-    <class name="calButton" clickable="true" >
+    <class name="calButton" clickable="true" font="Verdana,sans-serif" fontsize="10" 
+        fontstyle="bold">
         <attribute name="label"              value=""      type="string"/>
         <attribute name="icon"               value=""      type="string"/>
         <attribute name="divider"            value="3"     type="number"/>
@@ -19,6 +20,7 @@
         <attribute name="keepinitialwidth"   value="false"/>
         <attribute name="enabled"            value="true" />
         <attribute name="mouseisdown"        value="false"/>
+        <event name="onsafeclick"/>        
 
         <method name="widthSetter" args="w">
             this.setWidth(w)
@@ -101,14 +103,13 @@
             <attribute name="apply"   value="classroot.label != ''" when="always"/>
             <!-- if apply is TRUE, then button has a label so add text view support -->
 
-            <text name="title_hilite" opacity=".4" width="200" fgcolor="#143B45"
-                  font="vera" fontsize="10" pixellock="false" >
+            <text name="title_hilite" opacity=".4" width="200" fgcolor="#143B45" >
                 <attribute name="y"    value="parent.yadjust - 1" when="once"/>
-                <attribute name="x"    value="parent.bkgnd.lft.leftinset - 0.7" when="always" />
+                <attribute name="x"    value="parent.bkgnd.lft.leftinset - 1" when="always" />
                 <attribute name="text" value="parent.label" when="always" />
             </text>
-            <text name="title" y="2" fgcolor="white" font="vera"
-                  fontsize="10" pixellock="true" width="200" >
+            <text name="title" y="2" fgcolor="white" 
+                 pixellock="true" width="200" >
                 <attribute name="y"    value="parent.yadjust" when="once"/>
                 <attribute name="x"    value="parent.bkgnd.lft.leftinset" when="always" />
                 <attribute name="text" value="parent.label" when="always" />
@@ -215,7 +216,9 @@
     <!-- OTHER METHODS -->
     <method name="safeclick" >
         this.ocd.unregisterAll()
-        this['onsafeclick']['sendEvent']();
+        if (this.onsafeclick) {
+            this.onsafeclick.sendEvent();
+        }
     </method>
 
     <method name="domouseover" >
@@ -290,7 +293,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

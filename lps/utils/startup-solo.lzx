@@ -9,7 +9,12 @@
     var appstart = getTimer();
   </script>
 
-  <view resource="startup_launching.swf"/>
+<!--
+   <view resource="startup_launching.swf"/> 
+-->
+
+   <view resource="startup_launching.png"/> 
+
   <dataset name="svars" type="http" src="startup.var" request="true"/>
   <dataset name="ping" type="http"/>
 
@@ -80,6 +85,11 @@
 
     
   -->
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
 
 
 

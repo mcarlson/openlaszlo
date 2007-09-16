@@ -29,6 +29,8 @@ import org.openlaszlo.xml.internal.XMLUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.Text;
+import org.jdom.Content;
 import org.jdom.Namespace;
 
 /** Models a runtime LzNode. */
@@ -56,6 +58,9 @@ public class NodeModel implements Cloneable {
     protected ComparisonMap paths = new ComparisonMap();
     protected ComparisonMap setters = new ComparisonMap();
     protected ComparisonMap styles = new ComparisonMap();
+
+    protected NodeModel     datapath = null;
+
     /** [eventName: String, methodName: String, Function] */
     protected List delegateList = new Vector();
     protected ClassModel parentClassModel;
@@ -92,7 +97,7 @@ public class NodeModel implements Cloneable {
         this.schema = schema;
         this.env = env;
 
-        if (env.getSWFVersionInt() < 7) {
+        if ("swf6".equals(env.getRuntime())) {
             this.caseSensitive = false;
         }
         this.className = element.getName();
@@ -248,10 +253,6 @@ public class NodeModel implements Cloneable {
      * model.  The format of this representation is specified <a
      * href="../../../../doc/compiler/views.html">here</a>.
      *
-     * @param elt an element
-     * @param schema a schema, used to encode attribute values
-     * @param env the CompilationEnvironment
-     * @return see doc
      */
     public String asJavascript() {
         try {
@@ -329,22 +330,16 @@ public class NodeModel implements Cloneable {
         Map delegates = model.delegates;
         model.addAttributes(env);
 
-            // Trying to be future-compatible with JDOM 1.0:
-            // Element.getParentElement() will possibly return a
-            // Document object in 1.0.
-            Object parent = elt.getParentElement();
-            boolean local = ((parent != null)
-                             && (parent instanceof Element)
-                             && !((Element)parent).getName().equals("canvas")
-                             && !((Element)parent).getName().equals("library")
-                             && !((Element)parent).getName().equals("connectiondatasource")
-                             && !((Element)parent).getName().equals("datasource"));
-
         // This emits a local dataset node, so only process
         // <dataset> tags that are not top level datasets.
-        if (local && (elt.getName().equals("dataset"))) {
-            attrs.put("initialdata", getDatasetContent(elt, env));
-            includeChildren = false;
+
+        if (elt.getName().equals("dataset")) {
+            String datafromchild = elt.getAttributeValue("datafromchild");
+            if  (! "true".equals(datafromchild)) {
+                // Default to legacy behavior, treat all children as XML literal data.
+                attrs.put("initialdata", getDatasetContent(elt, env));
+                includeChildren = false;
+            }
         }
 
         if (includeChildren) {
@@ -473,8 +468,6 @@ public class NodeModel implements Cloneable {
     }
 
     void addAttributes(CompilationEnvironment env) {
-        boolean swf7 = (env.getSWFVersion().equals("swf7") ||
-                        env.getSWFVersion().equals("swf8"));
         // Add source locators, if requested.  Added here because it
         // is not in the schema
         if (env.getBooleanProperty(env.SOURCELOCATOR_PROPERTY)) {
@@ -488,6 +481,20 @@ public class NodeModel implements Cloneable {
                 WHEN_IMMEDIATELY);
             addAttribute(cattr, SOURCE_LOCATION_ATTRIBUTE_NAME, 
                          attrs, events, references, paths, styles);
+        }
+
+        // Add file/line information if debugging
+        if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
+          // File/line stored separately for string sharing
+          String name = "_dbg_filename";
+          String filename = Parser.getSourceMessagePathname(element);
+          CompiledAttribute cattr =
+            compileAttribute(element, name, filename, ViewSchema.STRING_TYPE, WHEN_IMMEDIATELY);
+          addAttribute(cattr, name, attrs, events, references, paths, styles);
+          name = "_dbg_lineno";
+          Integer lineno = Parser.getSourceLocation(element, Parser.LINENO);
+          cattr = compileAttribute(element, name, lineno.toString(), ViewSchema.NUMBER_TYPE, WHEN_IMMEDIATELY);
+          addAttribute(cattr, name, attrs, events, references, paths, styles);
         }
 
         ClassModel classModel = getClassModel();
@@ -537,11 +544,13 @@ public class NodeModel implements Cloneable {
             
 
             // Warn for redefine of a flash builtin
+            // TODO: [2006-01-23 ptw] What about colliding with DHTML globals?
             if ((name.equals("id") || name.equals("name")) &&
                  (value != null &&
-                  (swf7 ?
-                   sFlash7Builtins.containsKey(value) :
-                   sFlash6Builtins.containsKey(value.toLowerCase()))))  {
+                  (env.getRuntime().indexOf("swf") == 0) &&
+                  ("swf6".equals(env.getRuntime()) ?
+                   sFlash6Builtins.containsKey(value.toLowerCase()) :
+                   sFlash7Builtins.containsKey(value))))  {
                 env.warn(
 /* (non-Javadoc)
  * @i18n.test
@@ -613,7 +622,11 @@ public class NodeModel implements Cloneable {
                 if (className.equals("class")) {
                     type = getAttributeTypeInfoFromSuperclass(element, name);
                 }  else {
-                    type = classModel.getAttributeTypeOrException(name);
+                    // NOTE [2007-06-14 ptw]: Querying the classModel
+                    // directly will NOT work, because the schema
+                    // method has some special kludges in it for canvas
+                    // width and height!
+                    type = schema.getAttributeType(element, name);
                 }
 
             } catch (UnknownAttributeException e) {
@@ -648,6 +661,8 @@ solution =
 
             if (type == schema.ID_TYPE) {
                 this.id = value;
+            } else if (type == schema.EVENT_HANDLER_TYPE) {
+                addHandlerFromAttribute(element, name, value);
             } else {
                 String when = this.getAttributeValueDefault(
                     name, "when", WHEN_IMMEDIATELY);
@@ -692,7 +707,10 @@ solution =
                       ComparisonMap references, ComparisonMap paths,
                       ComparisonMap styles) {
         if (cattr.type == cattr.ATTRIBUTE) {
-            if (attrs.containsKey(name, caseSensitive)) {
+            // Ignore warnings for 'validate'
+            // FIXME [2007-08-31 pbr]: LPP-4620.
+            if (attrs.containsKey(name, caseSensitive) && 
+                !"validate".equalsIgnoreCase(name)) {
                 env.warn(
 /* (non-Javadoc)
  * @i18n.test
@@ -703,18 +721,6 @@ solution =
                     ,element);
             }
             attrs.put(name, cattr.value);
-        } else if (cattr.type == cattr.EVENT) {
-            if (events.containsKey(name, caseSensitive)) {
-                env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="redefining event '" + p[0] + "' which has already been defined on " + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-694", new Object[] {name, getMessageName()})
-                    ,element);
-            }
-            events.put(name, cattr.value);
         } else if ((cattr.type == cattr.REFERENCE) || (cattr.type == cattr.PATH)) {
             if (references.containsKey(name, caseSensitive)) {
                 env.warn(
@@ -738,14 +744,16 @@ solution =
         }
     }
 
+    static String getDatasetContent(Element element, CompilationEnvironment env) {
+        return getDatasetContent(element, env, false);
+    }
+
     // For a dataset (well really for any Element), writes out the
     // child literal content as an escaped string, which could be used
     // to initialize the dataset at runtime.
-    static String getDatasetContent(Element element, CompilationEnvironment env) {
+    static String getDatasetContent(Element element, CompilationEnvironment env, boolean trimwhitespace) {
         String srcloc =
             CompilerUtils.sourceLocationDirective(element, true);
-
-        Element data = element;
 
         // If type='http' or the path starts with http: or https:,
         // then don't attempt to include the data at compile
@@ -756,10 +764,12 @@ solution =
             return "null";
         }
 
-        boolean nsprefix = true;
-        if ("false".equals(element.getAttributeValue("nsprefix"))) {
-            nsprefix = false;
+        boolean nsprefix = false;
+        if ("true".equals(element.getAttributeValue("nsprefix"))) {
+            nsprefix = true;
         }
+
+        Element content = new Element("data");
 
         String src = element.getAttributeValue("src");
         // If 'src' attribute is a URL or null, don't try to expand it now,
@@ -773,11 +783,15 @@ solution =
             // Expands the src file content inline
             File file = env.resolveReference(element);
             try {
-                Element newdata = new org.jdom.input.SAXBuilder(false)
+                Element literaldata = new org.jdom.input.SAXBuilder(false)
                     .build(file)
                     .getRootElement();
-                newdata.detach();
-                data.addContent(newdata);
+                if (literaldata == null) {
+                    return "null";
+                }
+                literaldata.detach();
+                // add the expanded file contents as child node
+                content.addContent(literaldata);
             } catch (org.jdom.JDOMException e) {
                 throw new CompilationError(e);
             } catch (IOException e) {
@@ -795,6 +809,9 @@ solution =
                 NodeModel.class.getName(),"051018-761")
                         , element);
             }
+        } else {
+            // no 'src' attribute, use element inline content
+            content.addContent(element.cloneContent());
         }
 
         // Serialize the child elements, as the local data
@@ -807,11 +824,21 @@ solution =
         // the top element in the serialized string.
 
         if (!nsprefix) {
-            removeNamespaces(element);
+            removeNamespaces(content);
         }
 
-        String body = xmloutputter.outputString(element);
-        return ScriptCompiler.quote(body);
+        if (trimwhitespace) {
+            trimWhitespace(content);
+        }
+
+        String body = null;
+        if (content != null) {
+            body = xmloutputter.outputString(content);
+            return ScriptCompiler.quote(body);
+        } else {
+            return "null";
+        }
+
     }
 
     // Recursively null out the namespace on elt and children
@@ -823,15 +850,39 @@ solution =
         }
     }
 
+    // Recursively trim out the whitespace on text nodes
+    static void trimWhitespace(Content elt) {
+        if (elt instanceof Text) {
+            ((Text) elt).setText(((Text)elt).getTextTrim());
+        } else if (elt instanceof Element) {
+            for (Iterator iter = ((Element) elt).getContent().iterator(); iter.hasNext(); ) {
+                Content child = (Content) iter.next();
+                trimWhitespace(child);
+            }
+        }
+    }
+
+    boolean isDatapathElement(Element child) {
+        return (child.getName().equals("datapath"));
+    }
+
     void addChildren(CompilationEnvironment env) {
         // Encode the children
         for (Iterator iter = element.getChildren().iterator(); iter.hasNext(); ) {
             ElementWithLocationInfo child = (ElementWithLocationInfo) iter.next();
             try {
-                if (isPropertyElement(child)) {
+                if (child.getName().equals("data")) {
+                    // literal data
+                    addLiteralDataElement(child);
+                } else if (isPropertyElement(child)) {
                     addPropertyElement(child);
                 } else if (schema.isHTMLElement(child)) {
                     ; // ignore; the text compiler wiil handle this
+                } else if (schema.isDocElement(child)) {
+                    ; // ignore doc nodes.
+                } else if (isDatapathElement(child)) {
+                    NodeModel dpnode = elementAsModel(child, schema, env);
+                    this.datapath = dpnode;
                 } else {
                     NodeModel childModel = elementAsModel(child, schema, env);
                     children.add(childModel);
@@ -850,15 +901,7 @@ solution =
         } else if (tagName.equals("handler")) {
             addHandlerElement(element);
         } else if (tagName.equals("event")) {
-          // needed to prevent interpretation as an event handler for
-          // schema-defined events -- setting the value to immediate
-          // null is enough to do that
-          // TODO: [2006-01-29 ptw] This mechanism is a little
-          // fragile: right now ${} trumps any type, which is why this
-          // works; but that could easily break if we enforce
-          // types...
-          element.setAttribute("value", "$immediately{null}");
-          addAttributeElement(element);
+          addEventElement(element);
         } else if (tagName.equals("attribute")) {
             addAttributeElement(element);
         }
@@ -959,6 +1002,45 @@ solution =
                      childcontentloc +
                      body + "\n#endContent",
                      name_loc);
+
+        attrs.put(name, fndef);
+    }
+
+    void addHandlerFromAttribute(Element element, String event, String body) {
+        String srcloc =
+            CompilerUtils.sourceLocationDirective(element, true);
+        String parent_name =
+            element.getAttributeValue("id");
+        if (parent_name == null) {
+            parent_name =
+                CompilerUtils.attributeUniqueName(element, "event");
+        }
+        String name = env.methodNameGenerator.next();
+        Object referencefn = "null";
+         
+        // delegates is only used to determine whether to
+        // default clickable to true.  Clickable should only
+        // default to true if the event handler is attached to
+        // this view.
+        delegates.put(event, Boolean.TRUE);
+        delegateList.add(ScriptCompiler.quote(event));
+        delegateList.add(ScriptCompiler.quote(name));
+        delegateList.add(referencefn);
+
+        String childcontentloc =
+            CompilerUtils.sourceLocationDirective(element, true);
+
+        Function fndef = new
+            // Use "mangled" name, so it will be unique
+            Function(srcloc +
+                     parent_name + "_" + name,
+                     //"#beginAttribute\n" +
+                     "",
+                     "\n#beginContent\n" +
+                     "\n#pragma 'methodName=" + name + "'\n" +
+                     "\n#pragma 'withThis'\n" +
+                     childcontentloc +
+                     body + "\n#endContent");
 
         attrs.put(name, fndef);
     }
@@ -1120,6 +1202,8 @@ solution =
                 if (when.equals("")) {
                     when = WHEN_ALWAYS;
                 }
+            } else if (type == ViewSchema.XML_LITERAL) {
+                value = "LzDataNode.stringToLzData("+value+")";
             } else if (type == ViewSchema.COLOR_TYPE) {
                 if (when.equals(WHEN_IMMEDIATELY)) {
                     try {
@@ -1160,6 +1244,7 @@ solution =
                 // runtime parser
             } else if (type == ViewSchema.STRING_TYPE
                        || type == ViewSchema.TOKEN_TYPE
+                       || type == ViewSchema.ID_TYPE
                        ) {
                 // Immediate string attributes are auto-quoted
                 if (when.equals(WHEN_IMMEDIATELY)) {
@@ -1222,16 +1307,11 @@ solution =
                         when = WHEN_ALWAYS;
                     }
                 }
-            } else if (type == ViewSchema.EVENT_TYPE) {
-                // Oddball case -- short-circuit when altogether
-                return new CompiledAttribute(
-                    CompiledAttribute.EVENT,
-                    "function " +
-                    parent_name + "_" + name + "_event" +
-                    " () {" +
-                    "\n#pragma 'withThis'\n" +
-                    "{\n#beginAttributeStatements\n" +
-                    srcloc + value + "\n#endAttributeStatements\n}}");
+            } else if (type == ViewSchema.EVENT_HANDLER_TYPE) {
+              // Someone said <attribute name="..." ... /> instead of
+              // <event name="..." />
+              throw new CompilationError(element, name, 
+                                         new Throwable ("'" + name + "' is an event and may not be redeclared as an attribute"));
             } else if (type == ViewSchema.REFERENCE_TYPE) {
                 // type="reference" is defined to imply when="once"
                 // since reference expressions are unlikely to
@@ -1284,17 +1364,62 @@ solution =
                     "\n#beginAttribute\n" + srcloc + canonicalValue +
                     "\n#endAttribute\n)}");
             } else if (when.equals(WHEN_IMMEDIATELY)) {
-                if (type == ViewSchema.EXPRESSION_TYPE) {
-                    return new CompiledAttribute("\n#beginAttribute\n" + srcloc + canonicalValue + "\n#endAttribute");
-                } else {
-                    // it's already an object, compiled from a CSS list
+                if ((CanvasCompiler.isElement(source) &&
+                     ("width".equals(name) || "height".equals(name))) ||
+                    canonicalValue instanceof Map) {
+                    // The Canvas compiler depends on seeing width/height
+                    // unadulterated <sigh />.  Or, if it's already an
+                    // object, e.g., compiled from a CSS list, we
+                    // don't want to mess it up.
+                    //
+                    // TODO: [2007-05-05 ptw] (LPP-3949) The
+                    // #beginAttribute directives for the parser should
+                    // be added when the attribute is written, not
+                    // here...
                     return new CompiledAttribute(canonicalValue);
+                } else {
+                    return new CompiledAttribute("\n#beginAttribute\n" + srcloc + canonicalValue + "\n#endAttribute\n");
                 }
             } else {
                 throw new CompilationError("invalid when value '" +
                                            when + "'", source);
             }
         }
+
+    /* Handle the <event> tag
+     * example: <event name="onfoobar"/>
+    */
+    void addEventElement(Element element) {
+        String name;
+        try {
+            name = ElementCompiler.requireIdentifierAttributeValue(element, "name");
+        } catch (MissingAttributeException e) {
+            throw new CompilationError(
+                /* (non-Javadoc)
+                 * @i18n.test
+                 * @org-mes="'name' is a required attribute of <" + p[0] + "> and must be a valid identifier"
+                 */
+                org.openlaszlo.i18n.LaszloMessages.getMessage(
+                    NodeModel.class.getName(),"051018-1157", new Object[] {element.getName()})
+                , element);
+        }
+
+        if (events.containsKey(name, caseSensitive)) {
+            env.warn(
+                /* (non-Javadoc)
+                 * @i18n.test
+                 * @org-mes="redefining event '" + p[0] + "' which has already been defined on " + p[1]
+                 */
+                org.openlaszlo.i18n.LaszloMessages.getMessage(
+                    NodeModel.class.getName(),"051018-694", new Object[] {name, getMessageName()})
+                ,element);
+        }
+
+
+        // We about just the event names, so the runtime can set them
+        // to the default event sentinel object.
+        events.put(name, "");
+    }
 
     void addAttributeElement(Element element) {
         String name;
@@ -1419,6 +1544,34 @@ solution =
         }
     }
 
+    /* Handle a <data> tag.
+     * If there is more than one immediate child data node at the top level, signal a warning.
+     */
+
+    void addLiteralDataElement(Element element) {
+        String name = element.getAttributeValue("name");
+
+        if (name == null) {
+            name = "initialdata";
+        }
+
+        boolean trimWhitespace = "true".equals(element.getAttributeValue("trimwhitespace"));
+
+        String xmlcontent = getDatasetContent(element, env, trimWhitespace);
+
+        Element parent = element.getParentElement();
+
+        CompiledAttribute cattr = compileAttribute(element,
+                                                   name,
+                                                   xmlcontent,
+                                                   ViewSchema.XML_LITERAL,
+                                                   WHEN_IMMEDIATELY);
+
+        addAttribute(cattr, name, attrs, events, references, paths, styles);
+    }
+
+        
+
     boolean hasAttribute(String name) {
         return attrs.containsKey(name);
     }
@@ -1461,7 +1614,12 @@ solution =
             attrs.put("$delegates", delegateList);
         }
         if (!events.isEmpty()) {
-            attrs.put("$events", events);
+            List eventsList = new ArrayList();
+            for (Iterator iter = events.keySet().iterator(); iter.hasNext();) {
+                String eventName = (String) iter.next();
+                eventsList.add(ScriptCompiler.quote(eventName));
+            }
+            attrs.put("$events", eventsList);
         }
         if (!references.isEmpty()) {
             attrs.put("$refs", references);
@@ -1469,6 +1627,15 @@ solution =
         if (!paths.isEmpty()) {
             attrs.put("$paths", paths);
         }
+        if (datapath != null) {
+            attrs.put("$datapath", datapath.asMap());
+            // If we've got an explicit datapath value, we have to
+            // null out the "datapath" attribute with the magic
+            // LzNode._ignoreAttribute value, so it doesn't get
+            // overridden by an inherited value from the class.
+            attrs.put("datapath", "LzNode._ignoreAttribute");
+        }
+
         if (!styles.isEmpty()) {
             String styleMap;
             try {
@@ -1506,6 +1673,7 @@ solution =
         map.put("attrs", attrs);
         if (id != null) {
             map.put("id", ScriptCompiler.quote(id));
+            attrs.put("id", ScriptCompiler.quote(id));
         }
         if (!children.isEmpty()) {
             List childMaps = new Vector(children.size());

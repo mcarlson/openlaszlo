@@ -1,0 +1,1058 @@
+<chapter id="fonts">
+
+<title condition="dhtml">Fonts</title>
+ 
+<para>This chapter describes how to use fonts in LZX applications.</para>
+
+<para/><section><title>What is a font?</title>
+
+   <para> A font is a set of glyphs (images) representing the
+       characters from some particular character set in a
+       particular size, style, and typeface.  
+       There are several different computer representations for fonts.  
+       The most widely known are Adobe Systems, Inc.'s
+       PostScript font definitions and Apple's <ulink url="http://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html">TrueType.</ulink>
+   </para>
+   <anchor id="fonts.pixel-fonts"/>
+<para/><section><title>Runtime considerations</title>
+<para>
+Since DHTML doesn't support compiled fonts, we have to rely on system 
+fonts.  This means fonts may not look 
+exactly the same across runtimes because letter spacing and rendering/smoothing are often different from one implementation to the next.
+</para>
+
+<para>Small type isn't smoothed in DHTML as it is in SWF.  I'm not sure 
+what to do here, except choose our fonts carefully and/or avoid small 
+point sizes.
+</para>
+<para>
+We make every effort to make font metrics in DHTML match those in swf.  They may not match exactly but they're very close.
+</para>
+<para>
+It is virtually impossible to acheive pixel-perfect font 
+rendering across all runtimes.  However, with minimal changes for 
+alignment and font names, you can usually make SWF and DHTML versions of your application essentially indistinguishable with regard to appearance of text.
+</para>
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>conditionalizing application so they can be compiled to either</remark></para>
+   <para/></section><section><title>Bitmap fonts and outline fonts</title> 
+   <para> The image of each character in a font
+       may be encoded either as </para>
+<itemizedlist spacing="compact"><listitem><para> a bitmap (a <emphasis role="i">bitmap font</emphasis>, sometimes called a <emphasis role="i">pixel font</emphasis>) </para></listitem><listitem><para> a higher-level description in terms of lines and areas (an <emphasis role="i">outline font</emphasis>). </para></listitem></itemizedlist>
+<para>In general, bitmap fonts are intended to be
+       displayed at a specific size and outline fonts can be displayed at a variety of sizes.  
+         </para>
+
+<para/></section><section><title condition="swf">Embedded Fonts and Client Fonts</title>
+<para>
+Only some runtimes support embedded fonts (just SWF for now). Because of this, if you're not compiling to SWF all fonts need to be on the end-user's system and <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: font-->
+ tag(s) don't work.
+Font attributes can take a list of names (optionally including compiled font names for swf.)
+The runtime goes through the comma-separated list and picks the first one it finds on the system. This allows for fallback fonts if one or more fonts can't be found by name.
+</para>
+<para>
+OpenLaszlo applications can access fonts in either of two ways: by building them into the application itself (SWF only) or by using the fonts that 
+are resident on the client machine (DHTML and SWF).
+</para>
+ <para>
+       With embedded fonts, there is a reasonable guarantee that the text in that application will look the same, no 
+       matter where it is run. However, fonts are large, and including fonts in your application makes the application 
+(download) larger, and the startup time slower. With client fonts, (also called native
+       fonts or device fonts), applications are smaller and start faster, but there is no guarantee that the rendering of that font, or the font definitions themselves,
+       will be the same from computer to computer.  Embedded fonts provide higher fidelity.
+</para>
+<para/><section><title>Embedded fonts cannot be rotated or change opacity</title>
+<para>
+ In addition, because of limitations of
+the Flash Player, there are certain things you cannot do with client fonts.  For example, client fonts cannot be rotated, nor can
+you vary their opacity. Here is a summary of the differences:
+    </para>
+
+<para/></section><section><title>Summary of diffrences between client and embedded fonts</title>
+<para>
+<emphasis role="b">Client fonts</emphasis>
+</para>
+<itemizedlist spacing="compact"><listitem><para>Smaller downloads and faster initialization</para></listitem><listitem><para>Some limitations (no rotation, etc)</para></listitem><listitem><para>No guarantee that application will look the same on all platforms</para></listitem></itemizedlist>
+<para>
+<emphasis role="b">Embedded fonts</emphasis>
+</para>
+<itemizedlist spacing="compact"><listitem><para>Larger downloads; slower startup</para></listitem><listitem><para>All text manipulations available</para></listitem><listitem><para>Designer control over application appearance</para></listitem></itemizedlist>
+
+<para/></section></section><section><title>Default Fonts</title>
+<para>
+By default, OpenLaszlo applications use the device fonts.
+</para>
+
+<example role="live-example">
+   <title>Using device fonts</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>using device fonts</title><programlisting role="lzx-embednew"><filename>fonts-$1.lzx</filename><parameter/><code>
+&lt;canvas&gt; 
+  &lt;window title="Fonts are fun!" width="400" height="400" resizable="true"&gt;
+  &lt;view width="500"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view width="400" font="Arial" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Arial&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./ ;?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Arial&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Arial&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
+        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+    
+    &lt;view width="400" font="Arial Narrow" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Arial Narrow&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Arial Narrow&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;u&gt;Arial Narrow&lt;/u&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Arial Narrow&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
+        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+    &lt;view width="400" font="Times New Roman" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Times New Roman&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Times New Roman&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;u&gt;Times New Roman&lt;/u&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Times New Roman&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold&lt;/b&gt;
+        &lt;i&gt;Italic&lt;/i &gt;&lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;
+      &lt;/text&gt;
+    &lt;/view&gt;
+    &lt;/view&gt;
+    &lt;scrollbar axis="y"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas&gt; 
+  &lt;window title="Fonts are fun!" width="400" height="400" resizable="true"&gt;
+  &lt;view width="500"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view width="400" font="Arial" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Arial&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./ ;?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Arial&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Arial&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
+        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+    
+    &lt;view width="400" font="Arial Narrow" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Arial Narrow&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Arial Narrow&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;u&gt;Arial Narrow&lt;/u&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Arial Narrow&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
+        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+    &lt;view width="400" font="Times New Roman" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Times New Roman&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Times New Roman&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;u&gt;Times New Roman&lt;/u&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Times New Roman&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold&lt;/b&gt;
+        &lt;i&gt;Italic&lt;/i &gt;&lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;
+      &lt;/text&gt;
+    &lt;/view&gt;
+    &lt;/view&gt;
+    &lt;scrollbar axis="y"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$1.lzx></example?>
+<para>  You can override the default font by redefining the default font on the <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">&lt;canvas&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: canvas-->
+.
+Note that you need to do this within the <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">&lt;canvas&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: canvas-->
+ itself—you cannot do it using an attribute tag.  
+</para>
+
+<example role="live-example">
+   <title>setting the default font on the canvas</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>setting default tag on the canvas</title><programlisting role="lzx-embednew"><filename>fonts-$2.lzx</filename><parameter/><code>
+&lt;canvas width="500" height="100" bgcolor="gray" font="default" fontsize="8"&gt;
+     &lt;font name="default" src="verity/verityplus11.ttf"/&gt;
+     &lt;text &gt;default Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
+     &lt;text font="default" fontsize='8'&gt;Verity Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
+     &lt;text font="Verdana"&gt;Verdana Foobar the quick brown frotz jumped over the bad music&lt;/text&gt;
+     &lt;simplelayout /&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="500" height="100" bgcolor="gray" font="default" fontsize="8"&gt;
+     &lt;font name="default" src="verity/verityplus11.ttf"/&gt;
+     &lt;text &gt;default Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
+     &lt;text font="default" fontsize='8'&gt;Verity Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
+     &lt;text font="Verdana"&gt;Verdana Foobar the quick brown frotz jumped over the bad music&lt;/text&gt;
+     &lt;simplelayout /&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$2.lzx></example?>
+
+<para/></section></section><section><title condition="swf">OpenLaszlo "pseudo-pixel" fonts</title>
+
+
+    <para>Because the underlying Flash runtime can only display outline fonts, 
+    OpenLaszlo applications today can only support outline fonts.  This would seem to imply that
+    fonts in a OpenLaszlo application can be displayed at any size, and strictly speaking this is true.
+    However, the OpenLaszlo runtime library (the LFC) includes a number of "pseudo-pixel" fonts.  These font files contain outlines that describe precise 
+    bitmaps that, when rendered and antialiased by Flash at a specific size, appear pixel-accurate for another size.  
+    Again, even though you specify the font size in LZX as one value, the characters, as they are rendered,
+    will appear pixel accurate for another font size that is typically indicated by the font file name.  
+    </para>
+    <para>
+    The following font files in <literal>$LPS_HOME/lps/fonts</literal> are designed to be displayed at font size 8 only.  
+ </para>
+       <itemizedlist spacing="compact"><listitem><para><literal>lztahoe<replaceable>*</replaceable></literal></para></listitem><listitem><para><literal>lzsans<replaceable>*</replaceable></literal></para></listitem><listitem><para><literal>verity</literal>/<literal>verity<replaceable>*</replaceable></literal></para></listitem><listitem><para>Any font file whose name is of the form: <literal><replaceable>face</replaceable>-<replaceable>size</replaceable>-<replaceable>style</replaceable>-<replaceable>width</replaceable>.ttf</literal> </para></listitem></itemizedlist>
+
+     <note><para>Embarrassing historical tidbit: the lzsans fonts have an '8' in their name but actually appear as
+     size 9.</para></note>
+
+    <para/></section><section><title>Syntax</title>
+<para>
+There are two ways to identify which font your application, or any element of it, should to use: the <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute on <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: view-->
+s and classes derived from views, ant the <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag>.
+</para>
+<para/><section><title>The "font" attribute in opening tags</title>
+<para>
+The <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute specifies font to be used for any &lt;text&gt; or &lt;inputtext&gt; elements that appear inside this view. Like all the font properties (fontstyle and fontsize too) these properties cascade down the view hierarchy until a new value is specified. When the font attributes are modified at runtime, using JavaScript, the font is changed for the view itself, not for any of its subviews.
+</para>
+<para>
+For example,
+</para>
+<example role="live-example">
+   <title>Using the font attribute</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$3.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using the font attribute</title><programlisting role="lzx-embednew"><filename>fonts-$3.lzx</filename><parameter/><code>
+&lt;canvas&gt;
+  &lt;simplelayout/&gt;
+  &lt;view font="helvetica"&gt;
+    &lt;text&gt;Howdy!&lt;/text&gt;
+  &lt;/view&gt;
+  &lt;view font="times"&gt;
+    &lt;text&gt;Howdy back!&lt;/text&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas&gt;
+  &lt;simplelayout/&gt;
+  &lt;view font="helvetica"&gt;
+    &lt;text&gt;Howdy!&lt;/text&gt;
+  &lt;/view&gt;
+  &lt;view font="times"&gt;
+    &lt;text&gt;Howdy back!&lt;/text&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$3.lzx></example?>
+<para/><section><title>Specifying more than one font</title>
+<para>
+You can supply more than one font name as argument to the font attribute. At runtime, the system will try the font list from left to right and use the first one it finds. This can come in handy if you have an application that you would like to compile to both SWF and DHTML.
+</para>
+<para>
+The font attribute accepts a
+comma-separated list of fonts so DHTML can fall back to a system font when a 
+compiled font isn't found by name.  For example, say you have embedded the "helmet" font:
+</para>
+<programlisting>
+&lt;font name="helmet" src="helmet.ttf"/&gt;
+</programlisting>
+<para>
+Then the tag, 
+</para>
+<programlisting>
+&lt;text font="helmet,helvetica,sans-serif"&gt;
+</programlisting>
+<para>
+ finds the compiled font 
+'helmet' when you compile to SWF and falls back to 'helvetica, sans-serif' when you compile to DHTML. 
+</para>
+<para/></section></section><section><title condition="swf">The <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag> tag</title>  
+<para>
+The value of the <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute is the name of a embedded font, that is declared with the
+ <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: font-->
+ tag.
+</para>
+
+<para>
+The behavior of <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> in LZX closely parallels HTML/CSS, but is not equivalent in all cases. In particular:
+</para> 
+
+<itemizedlist spacing="compact"><listitem><para>The value of the 'font' attribute is a comma-separated list of font names. These font names are used in priority order. The first font in the list that is available is used to render the text of the view.</para></listitem><listitem><para>Font names can include the names of fonts on the client runtime, such as (typically) "Helvetica" and "Times".</para></listitem><listitem><para>There are three "generic family names", which can be used as font names. These generic family names are "serif", "sans-serif", and "monospace".</para></listitem><listitem><para>The default font is "sans-serif". No font is embedded in the application by default.</para></listitem><listitem><para>There are no warnings for fonts that are named as the literal values of 'font' attributes but don't have embedded <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> definitions.</para></listitem></itemizedlist>
+
+<para>OpenLaszlo does not implement generic font family definitions, but it does not preclude them nor is it incompatible with them 
+(as described below).
+</para>
+
+<example role="live-example">
+   <title>Default font</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$4.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Default font</title><programlisting role="lzx-embednew"><filename>fonts-$4.lzx</filename><parameter/><code>
+&lt;canvas height="40"&gt;
+     &lt;text&gt;Hello World&lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="40"&gt;
+     &lt;text&gt;Hello World&lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$4.lzx></example?>
+<para>
+ This renders Hello World in a client font.
+</para>
+
+<example role="live-example">
+   <title>Default font with non-default font size</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$5.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Default font with non-default font size</title><programlisting role="lzx-embednew"><filename>fonts-$5.lzx</filename><parameter/><code>
+&lt;canvas height="100"&gt;
+   &lt;text fontsize="24"&gt;Hello World&lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100"&gt;
+   &lt;text fontsize="24"&gt;Hello World&lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$5.lzx></example?>
+<para>
+This renders Hello World in a larger client font, with no jaggies.
+</para>
+
+<example role="live-example">
+   <title>Equivalence of generic and definite names</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$6.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Equivalence of generic and defite names</title><programlisting role="lzx-embednew"><filename>fonts-$6.lzx</filename><parameter/><code>
+&lt;canvas height="100"&gt;
+   &lt;simplelayout axis="y"/&gt;
+   &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
+   &lt;text font="Helvetica"&gt;Some text&lt;/text&gt;
+   &lt;text font="Times"&gt;Some text&lt;/text&gt;
+   &lt;text font="serif"&gt;Some text&lt;/text&gt;
+   &lt;text font="Courier"&gt;Some text&lt;/text&gt;
+   &lt;text font="monospace"&gt;Some text&lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100"&gt;
+   &lt;simplelayout axis="y"/&gt;
+   &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
+   &lt;text font="Helvetica"&gt;Some text&lt;/text&gt;
+   &lt;text font="Times"&gt;Some text&lt;/text&gt;
+   &lt;text font="serif"&gt;Some text&lt;/text&gt;
+   &lt;text font="Courier"&gt;Some text&lt;/text&gt;
+   &lt;text font="monospace"&gt;Some text&lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$6.lzx></example?>
+<para>
+ This displays three pairs of items. The items in each pair may be rendered in the same font, depending on the default fonts on the client.
+</para>
+<example role="live-example">
+   <title>"nofont" attribute</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$7.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>"nofont" attribute</title><programlisting role="lzx-embednew"><filename>fonts-$7.lzx</filename><parameter/><code>
+ &lt;canvas height="100"&gt;
+     &lt;simplelayout axis="y"/&gt;
+     &lt;text font="nofont, nofont, sans-serif"&gt;Some text&lt;/text&gt;
+     &lt;text font="nofont, sans-serif"&gt;Some text&lt;/text&gt;
+     &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
+ &lt;/canvas&gt;
+</code></programlisting><programlisting>
+ &lt;canvas height="100"&gt;
+     &lt;simplelayout axis="y"/&gt;
+     &lt;text font="nofont, nofont, sans-serif"&gt;Some text&lt;/text&gt;
+     &lt;text font="nofont, sans-serif"&gt;Some text&lt;/text&gt;
+     &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
+ &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$7.lzx></example?>
+<para>
+ This displays three lines in the same font.
+</para>
+<para/></section><section><title>Comparison to CSS</title>
+<para>
+ The OpenLaszlo <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute is similar to the CSS 'font' and 'font-family' properties: http://www.w3.org/TR/2004/CR-CSS21-20040225/fonts.html#font-family-prop. 
+The remaining differences are:
+</para>
+<itemizedlist spacing="compact"><listitem><para>LZX specifies the font as an XML attribute.    HTML+CSS specifies it is a CSS property.</para></listitem><listitem><para>An OpenLaszlo 'font' can only be a list of font names. This makes it more similar to the CSS 'font-family' than to the CSS 'font', which is a shorthand property that can also accept font size, style, variant, weight, and line-height values.</para></listitem><listitem><para>CSS defines the additional generic font families 'cursive' and 'fantasy' , as well as "system font" names 'caption', 'icon', 'menu', 'message-box', 'small-caption', and 'status-bar'. (Generic family name definitions, below, let the application or library developer define these system names.)</para></listitem><listitem><para>CSS allows multiword font names to be quoted, e.g. "Times New Roman" (where the quotes are part of the value). LZX does not allow this.</para></listitem></itemizedlist>
+
+
+    <para/></section><section><title>Importing fonts</title>
+    <para>In order to use any font other than the default font in an OpenLaszlo application, you must first declare it.  
+    The default font is described below.
+    </para>
+    <para>
+   OpenLaszlo documentation uses the verbs, <emphasis role="i">importing</emphasis>, <emphasis role="i">defining</emphasis>, and <emphasis role="i">declaring</emphasis>,
+    somewhat interchangeably when it comes to fonts.  Each of these words implies that you are letting LZX know
+    about a font you are going to use in your application.
+    In LZX, fonts are referred to by name and there is an application-global
+    namespace for fonts.  Fonts can be defined directly under the <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">&lt;canvas&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: canvas-->
+
+    or <indexterm><primary>library</primary></indexterm><sgmltag class="element">&lt;library&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: library-->
+ tags like:
+    </para>
+
+<example role="live-example"><title>Declaring a font</title><programlisting>
+&lt;font name="myfont" src="myfont.ttf"/&gt;
+</programlisting></example>
+
+    <para>
+    Each font that is imported has a <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag>, an optional
+    <indexterm><primary>style</primary></indexterm><sgmltag class="attribute">style</sgmltag>, and a <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> file that contains the TTF.  (The name
+    is interpreted as the font face when the LZX application renders HTML text.  See <xref linkend="text"/>.)
+    </para>
+
+    <para>
+    The style must be one of <literal>plain</literal>, <literal>bold</literal>, <literal>italic</literal>, or
+    <literal>bold italic</literal> and the default style is <literal>plain</literal>. You must declare each style of
+    a font that you intend to use.
+    The style of a font is interpreted when LZX applications render HTML text.
+    See <xref linkend="text"/> for more information.
+    </para>
+    <para>
+    The OpenLaszlo compiler will auto-include the plain, bold, italic, and bold italic styles of
+    the default font, if it can detect that they will be needed.  In general, it is safest to declare
+    the bold, italic, and bold italic styles explicitly if you know you will need them.  For fonts other than the default, you 
+    must explicitly import a file for each of the styles.  For more details, see the section on 
+    the default font.
+    </para>
+ 
+    <para>
+    Each font must be imported from an external file and the value of the <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute must be a
+    pathname to that file  (URLs are not currently supported).
+    Relative pathnames are resolved relative to the including file.
+    The OpenLaszlo Server also looks in <literal>$LPS_HOME/lps/fonts</literal> directory.
+    </para> 
+
+    <para/></section><section><title>Syntax for importing fonts</title>
+    <para>
+    There are two syntaxes for importing a font.  The example below imports the plain and bold style of 
+    a font named <literal>myfont</literal>.
+    </para>
+
+<example role="live-example"><title>Declaring fonts</title><programlisting>
+&lt;font name="myfont" src="myfont.ttf"      style="plain"/&gt;
+&lt;font name="myfont" src="myfont-bold.ttf" style="bold" /&gt;
+</programlisting></example>
+
+    <para>
+    Alternatively, you can declare several styles at once like:
+    </para>
+
+<example role="live-example"><title>Declaring multiple font styles (faces) at once</title><programlisting>
+&lt;font name="myfont"&gt;
+  &lt;face src="myfont.ttf"      style="plain"      /&gt;
+  &lt;face src="myfont-bold.ttf" style="bold"       /&gt;
+  &lt;face src="myfont-ital.ttf" style="italic"     /&gt;
+  &lt;face src="myfont-bita.ttf" style="bold italic"/&gt;
+&lt;/font&gt;
+</programlisting></example>
+
+    <para>Notes:</para>
+    <itemizedlist spacing="compact"><listitem><para> Redefining a font name is unsupported and application behavior is undefined if you do this.</para></listitem><listitem><para> There are no <emphasis role="i">font aliases</emphasis> today.  A single font can have only one name.  If you need the same
+    font to have two names, you must declare it twice (and it will be embedded twice).</para></listitem></itemizedlist>
+
+<para/></section></section><section><title>Using fonts</title>
+    <para/><section><title>Font attributes</title>
+
+        <para>The base LZX visual object, <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: view-->
+, has three font attributes, 
+        <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag>, <indexterm><primary>fontstyle</primary></indexterm><sgmltag class="attribute">fontstyle</sgmltag>, and <indexterm><primary>fontsize</primary></indexterm><sgmltag class="attribute">fontsize</sgmltag>.   
+        The <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute with value <literal>myfont</literal>
+        indicates that this view should look for and use a font named <literal>myfont</literal> to render text.
+        The <indexterm><primary>fontsize</primary></indexterm><sgmltag class="attribute">fontsize</sgmltag> attribute indicates the point size at which the font should be rendered and the 
+        <indexterm><primary>fontstyle</primary></indexterm><sgmltag class="attribute">fontstyle</sgmltag> indicates the style of the font that should be used.  
+        </para>
+        
+        <table><title>Default values for font attributes</title><tgroup cols="2"><thead><row><entry>Attribute name</entry><entry>Default value</entry></row></thead><tbody><row><entry><indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag></entry><entry><literal>"default"</literal></entry></row><row><entry><indexterm><primary>fontsize</primary></indexterm><sgmltag class="attribute">fontsize</sgmltag></entry><entry><literal>8</literal></entry></row><row><entry><indexterm><primary>fontstyle</primary></indexterm><sgmltag class="attribute">fontstyle</sgmltag></entry><entry><literal>plain</literal></entry></row></tbody></tgroup></table>
+        
+        <para>
+        As you will see below, these are actually the default values of the font attributes for the canvas.
+        Because of the way that font attributes cascade, the values of these attributes on the canvas
+        are essentially the defaults for the entire application.  Below are some examples of using
+        font attributes. </para>
+ 
+<example role="live-example">
+   <title>Using a font</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$11.lzx"/></textobject> 
+   </programlisting>
+</example>       
+<?example role="live-example"><title>Using a font</title><programlisting role="lzx-embednew"><filename>fonts-$11.lzx</filename><parameter/><code>
+&lt;canvas height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;text font="helmet" fontsize="20"&gt;Hello Helmet&lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;text font="helmet" fontsize="20"&gt;Hello Helmet&lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$11.lzx></example?>
+        <para>
+        As you can see below, The HTML text rendering tags, <indexterm><primary>b</primary></indexterm><sgmltag class="element">&lt;b&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: b-->
+ (for bold) and
+        <indexterm><primary>i</primary></indexterm><sgmltag class="element">&lt;i&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: i-->
+ (for italic) instruct the OpenLaszlo application to look for and use
+        the bold, italic, or bold italic version of the current font.</para>
+
+<example role="live-example">
+   <title>Using font styles and html text</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$12.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using font styles and HTML text</title><programlisting role="lzx-embednew"><filename>fonts-$12.lzx</filename><parameter/><code>
+&lt;canvas height="70"&gt;
+  &lt;font name="myfont"&gt;
+    &lt;face src="helmetr.ttf" style="plain"        /&gt;
+    &lt;face src="helmetb.ttf" style="bold"         /&gt;
+    &lt;face src="helmeti.ttf" style="italic"       /&gt;
+    &lt;face src="helmetbi.ttf" style="bold italic" /&gt;
+  &lt;/font&gt;
+  &lt;text font="myfont" fontsize="20"&gt;
+    plain 
+    &lt;b&gt;bold&lt;/b&gt;
+    &lt;i&gt;italic&lt;/i&gt;
+    &lt;b&gt;&lt;i&gt;bold italic&lt;/i&gt;&lt;/b&gt;
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="70"&gt;
+  &lt;font name="myfont"&gt;
+    &lt;face src="helmetr.ttf" style="plain"        /&gt;
+    &lt;face src="helmetb.ttf" style="bold"         /&gt;
+    &lt;face src="helmeti.ttf" style="italic"       /&gt;
+    &lt;face src="helmetbi.ttf" style="bold italic" /&gt;
+  &lt;/font&gt;
+  &lt;text font="myfont" fontsize="20"&gt;
+    plain 
+    &lt;b&gt;bold&lt;/b&gt;
+    &lt;i&gt;italic&lt;/i&gt;
+    &lt;b&gt;&lt;i&gt;bold italic&lt;/i&gt;&lt;/b&gt;
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$12.lzx></example?>
+
+    <para> In the example below, we use the HTML text <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: font-->
+ tag to
+    change fonts inside a single piece of text.</para>
+
+<example role="live-example">
+   <title>Using multiple fonts in HTML text</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$13.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using mulitple fonts in HTML text</title><programlisting role="lzx-embednew"><filename>fonts-$13.lzx</filename><parameter/><code>
+&lt;canvas height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;font name="arioso" src="ariosor.ttf"/&gt;
+  &lt;text fontsize="20"&gt;
+    &lt;font face="helmet"&gt;helmet&lt;/font&gt; 
+    &lt;font face="arioso"&gt;arioso&lt;/font&gt;
+  &lt;/text&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;font name="arioso" src="ariosor.ttf"/&gt;
+  &lt;text fontsize="20"&gt;
+    &lt;font face="helmet"&gt;helmet&lt;/font&gt; 
+    &lt;font face="arioso"&gt;arioso&lt;/font&gt;
+  &lt;/text&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$13.lzx></example?>
+
+    <para>In the example below, you can see that setting the <indexterm><primary>fontsize</primary></indexterm><sgmltag class="attribute">fontsize</sgmltag>
+    can get you very big text.</para>
+
+<example role="live-example">
+   <title>Using the fontsize attribute</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$14.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using the fontsize attribute</title><programlisting role="lzx-embednew"><filename>fonts-$14.lzx</filename><parameter/><code>
+&lt;canvas height="100"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;text resize="true" fontsize="100" font="helmet"&gt;BIG&lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;text resize="true" fontsize="100" font="helmet"&gt;BIG&lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$14.lzx></example?>
+
+        <para>Many of the fonts look too small at the default fontsize of 8.</para>
+
+<example role="live-example">
+   <title>Omitting the fontsize attribute</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$15.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Omitting the fontsize attribute.</title><programlisting role="lzx-embednew"><filename>fonts-$15.lzx</filename><parameter/><code>
+&lt;canvas height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;text font="helmet"&gt;Helmet at default size(8) is very hard to read!&lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;text font="helmet"&gt;Helmet at default size(8) is very hard to read!&lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$15.lzx></example?>
+
+    <para>You can specify the font for inputtext, too.</para>
+
+<example role="live-example">
+   <title>Specifying the font for inputtext</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$16.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Specifying the font for inputtext.</title><programlisting role="lzx-embednew"><filename>fonts-$16.lzx</filename><parameter/><code>
+&lt;canvas fontsize="20" height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;inputtext bgcolor="red" font="helmet"&gt;Type your text here&lt;/inputtext&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas fontsize="20" height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;inputtext bgcolor="red" font="helmet"&gt;Type your text here&lt;/inputtext&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$16.lzx></example?>
+
+<para>Note that HTML text does <emphasis role="b"><emphasis role="i">not</emphasis></emphasis> work in <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: inputtext-->
+.</para>
+<para/></section><section><title>How a view chooses its font attributes</title>
+<para>
+There are two basic rules that a view uses to choose its font attributes.</para>
+ 
+<itemizedlist spacing="compact"><listitem><para>font attributes cascade</para></listitem><listitem><para>font attribute definitions in classes bind tightly (to children)</para></listitem></itemizedlist>
+<para>
+These are described in turn below.
+</para>
+<para/><section><title>Font attribute cascading</title>
+        <para>  Cascading occurs when a view
+        does not specify one of its font attributes.  In this case, it will receive its parent's 
+        value for that font attribute.  If the parent doesn't specify a font attribute, it keeps
+        going up the view hierarchy to find a view that specifies a value for that font attribute,
+        going all the way to the canvas, if no ancestors specify a value for the given font attribute.
+        Each of the three font attributes cascade separately.
+        </para>
+
+<example role="live-example">
+   <title>Using cascaded font attributes</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$17.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using cascaded font attributes</title><programlisting role="lzx-embednew"><filename>fonts-$17.lzx</filename><parameter/><code>
+&lt;canvas height="250"&gt;
+  &lt;font name="conga" src="congar.ttf"/&gt;
+  &lt;font name="conga" src="congab.ttf" style="bold"/&gt;
+  &lt;view layout="axis: y; spacing: 2" font="conga"&gt;
+    &lt;text resize="true" fontsize="12" text="I will be in conga 12"/&gt;
+    &lt;text resize="true" fontsize="22" text="I will be in conga 22"/&gt;
+    &lt;text resize="true" fontsize="32" text="I will be in conga 32"/&gt;
+    &lt;view layout="axis: y; spacing: 2" fontsize="32" fontstyle="bold"&gt;
+      &lt;text resize="true" text="I will be bold"/&gt;
+      &lt;text resize="true" text="Me, too"/&gt;
+      &lt;text resize="true" fontsize="8" font="default" 
+            text="I will be in the default font"/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="250"&gt;
+  &lt;font name="conga" src="congar.ttf"/&gt;
+  &lt;font name="conga" src="congab.ttf" style="bold"/&gt;
+  &lt;view layout="axis: y; spacing: 2" font="conga"&gt;
+    &lt;text resize="true" fontsize="12" text="I will be in conga 12"/&gt;
+    &lt;text resize="true" fontsize="22" text="I will be in conga 22"/&gt;
+    &lt;text resize="true" fontsize="32" text="I will be in conga 32"/&gt;
+    &lt;view layout="axis: y; spacing: 2" fontsize="32" fontstyle="bold"&gt;
+      &lt;text resize="true" text="I will be bold"/&gt;
+      &lt;text resize="true" text="Me, too"/&gt;
+      &lt;text resize="true" fontsize="8" font="default" 
+            text="I will be in the default font"/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$17.lzx></example?>
+
+        <para>You can even specify font attributes on the canvas:</para>
+
+<example role="live-example">
+   <title>Specifying a canvas font</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$18.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Specifying a canvas font</title><programlisting role="lzx-embednew"><filename>fonts-$18.lzx</filename><parameter/><code>
+&lt;canvas font="tahoe" height="70" width="200"&gt;
+  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
+  &lt;text text="hello"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas font="tahoe" height="70" width="200"&gt;
+  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
+  &lt;text text="hello"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$18.lzx></example?>
+
+        <para/></section><section><title>Font attributes and classes</title>
+        <para>Specifying a font attribute on a class definition:</para>
+<orderedlist spacing="compact"><listitem><para>causes instances of that class to use the class definition of that font attribute and </para></listitem><listitem><para>the class definition font attribute cascades down to instance children in the class definition itself. </para></listitem></orderedlist>
+
+<para> Class font attributes bind more tightly than 
+        cascaded font attributes.
+        </para>
+        <para/></section><section><title>Font attribute summary</title>
+        <para>The following is a set of rules that a view uses to choose its font: </para>
+        <itemizedlist spacing="compact"><listitem><para>Use the font attribute set on the instance.  If not set, then</para></listitem><listitem><para>Use the font attribute set on this instance's baseclass (or any of its subclasses, going up the chain).  If it is not set,</para></listitem><listitem><para>Use the cascaded font attribute.</para></listitem></itemizedlist>
+
+        <para>You may want to use a font attribute on a class definition if you are going to closely tie
+        the implementation (design, layout, positioning) of that class to that specific font.  In general,
+        you should only do this when absolutely necessary.</para>
+
+<example role="live-example">
+   <title>Using font attributes in a class definition</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$19.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Using font attributes in a class definition</title><programlisting role="lzx-embednew"><filename>fonts-$19.lzx</filename><parameter/><code>
+&lt;canvas height="100"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
+  &lt;class name="myclass" fontsize="20" font="helmet"&gt;
+    &lt;attribute name="defaultplacement" value="'content'"/&gt;
+    &lt;text bgcolor="red" text="Uses the class font"/&gt;
+    &lt;view name="content"/&gt;
+  &lt;/class&gt;
+  
+  &lt;view layout="axis:y; spacing: 2" font="tahoe"&gt;
+    &lt;myclass/&gt;
+    &lt;text text="use cascaded font"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
+  &lt;class name="myclass" fontsize="20" font="helmet"&gt;
+    &lt;attribute name="defaultplacement" value="'content'"/&gt;
+    &lt;text bgcolor="red" text="Uses the class font"/&gt;
+    &lt;view name="content"/&gt;
+  &lt;/class&gt;
+  
+  &lt;view layout="axis:y; spacing: 2" font="tahoe"&gt;
+    &lt;myclass/&gt;
+    &lt;text text="use cascaded font"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$19.lzx></example?>
+
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>Note: sometime in these examples we set the text to be resizable.  Ask Adam or Sarah why</remark></para>
+     
+    <para/></section></section><section><title>The default font</title>
+        <para>All Laszlo applications come bundled with a default font.  The name of this
+        font is 'default'.  This font is actually the <literal>verity11</literal> pseudo-pixel font and is designed 
+        to look well when antialiased.  </para>
+<?ignore It gets included as if you had the following line
+        in your application:
+        </p>
+
+<example title="The automatically included default font" extract="false">
+&lt;font name="default" src="verity/verity11.ttf"/&gt;
+</example>
+
+        <p>
+        The verity fonts are intended to mimic the outline vera fonts that are provided in 
+        <code>$LPS_HOME/fonts/bitstream-vera-1.10/vera*.ttf</code>.
+        If you'd like to display the default font at different sizes, you can use the <code>verity9*</code>
+        files provided for 9 point text or you can use the <code>vera*</code> for arbitrary sizes.
+        </p>
+?>
+
+<example role="live-example">
+   <title>Verity and vera fonts</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$20.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Verity and vera fonts</title><programlisting role="lzx-embednew"><filename>fonts-$20.lzx</filename><parameter/><code>
+&lt;canvas height="120"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;font name="verity9" src="verity/verity9.ttf"/&gt;
+  &lt;font name="verity11" src="verity/verity11.ttf"/&gt;
+  &lt;simplelayout axis="y" spacing="2"/&gt;
+  
+  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
+    &lt;text pixellock="true" fontsize="9" font="vera" text="vera 9 abcdefghi"/&gt;
+    &lt;text pixellock="true" fontsize="8" font="verity9" text="verity 9 abcdefghi"/&gt;
+  &lt;/view&gt;
+  &lt;text fontsize="10" font="vera" text="vera 10 abcdefghi"/&gt;
+  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
+    &lt;text pixellock="true" fontsize="11" font="vera" text="vera 11 abcdefghi"/&gt;
+    &lt;text pixellock="true" fontsize="8" font="verity11" text="verity 11 abcdefghi"/&gt;
+  &lt;/view&gt;
+  
+  &lt;text pixellock="true" fontsize="12" font="vera" text="vera 12 abcdefghi"/&gt;
+  &lt;text pixellock="true" fontsize="14" font="vera" text="vera 14 abcdefghi"/&gt;
+  &lt;text pixellock="true" fontsize="20" font="vera" text="vera 20 abcdefghi"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="120"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;font name="verity9" src="verity/verity9.ttf"/&gt;
+  &lt;font name="verity11" src="verity/verity11.ttf"/&gt;
+  &lt;simplelayout axis="y" spacing="2"/&gt;
+  
+  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
+    &lt;text pixellock="true" fontsize="9" font="vera" text="vera 9 abcdefghi"/&gt;
+    &lt;text pixellock="true" fontsize="8" font="verity9" text="verity 9 abcdefghi"/&gt;
+  &lt;/view&gt;
+  &lt;text fontsize="10" font="vera" text="vera 10 abcdefghi"/&gt;
+  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
+    &lt;text pixellock="true" fontsize="11" font="vera" text="vera 11 abcdefghi"/&gt;
+    &lt;text pixellock="true" fontsize="8" font="verity11" text="verity 11 abcdefghi"/&gt;
+  &lt;/view&gt;
+  
+  &lt;text pixellock="true" fontsize="12" font="vera" text="vera 12 abcdefghi"/&gt;
+  &lt;text pixellock="true" fontsize="14" font="vera" text="vera 14 abcdefghi"/&gt;
+  &lt;text pixellock="true" fontsize="20" font="vera" text="vera 20 abcdefghi"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$20.lzx></example?>
+
+        <para>
+        The OpenLaszlo compiler also knows to automatically include the bold, italic, or bold italic
+        version of this font if it can detect that they are needed.
+        </para>
+
+        <para>
+        You may redefine the default font if you'd like.</para>
+
+<example role="live-example">
+   <title>Redefining the default font</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$21.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Redefining the default font</title><programlisting role="lzx-embednew"><filename>fonts-$21.lzx</filename><parameter/><code>
+&lt;canvas height="70"&gt;
+  &lt;font name="default" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;simplelayout axis="y" spacing="2"/&gt;
+  &lt;text text="vera"/&gt;
+  &lt;button text="vera button"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="70"&gt;
+  &lt;font name="default" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;simplelayout axis="y" spacing="2"/&gt;
+  &lt;text text="vera"/&gt;
+  &lt;button text="vera button"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$21.lzx></example?>
+
+        <para>Note that when you redefine the default font, the compiler no longer can automatically
+        include the bold, italic, or bold italic styles for you.</para>
+        
+    <para/></section><section><title>Fonts and components</title>
+
+        <para>Because components are classes in LZX, there can be an interaction between any component
+        that has a font attribute declared in its class definition.  In particular, the
+        <indexterm><primary>basecomponent</primary></indexterm><sgmltag class="element">&lt;basecomponent&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: basecomponent-->
+ class is defined to use the font named 'default'.  
+        </para>
+
+        <para>
+        The OpenLaszlo components are defined and built to use a specific font (verity11).
+        They should/may work with other fonts.  But today, you are only guaranteed that they work with the 
+        font they were designed with.</para>
+
+        <para>There is no mechanism for developers to easily
+        change the fonts used by the components.  (Note: some components may not work correctly
+        with anything except the default font.)
+        It can be done on component instances easily, or you can declare new classes like
+        </para>
+
+<example role="live-example"><title>Changing the fonts for Laszlo components</title><programlisting>
+&lt;class name="mybutton" extends="button" font="myfont"/&gt;
+&lt;class name="mycheckbox"  extends="checkbox" font="myfont"/&gt;
+⋮
+</programlisting></example>
+
+        <para>Another way to get components to use a font other than 'default' is to
+        actually redefine the default font.</para>
+
+<example role="live-example">
+   <title>Redefining the default font for OpenLaszlo components</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/fonts-$23.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Redefining the default font for Laszlo components</title><programlisting role="lzx-embednew"><filename>fonts-$23.lzx</filename><parameter/><code>
+&lt;canvas height="80"&gt;
+  &lt;font name="default" src="helmetr.ttf"/&gt;
+  &lt;button text="hello"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="80"&gt;
+  &lt;font name="default" src="helmetr.ttf"/&gt;
+  &lt;button text="hello"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/fonts-$23.lzx></example?>
+
+
+    <para/></section><section><title>Fonts provided with the OpenLaszlo Server</title>
+    <para>The OpenLaszlo Server provides a number of fonts for your use in <literal>$LPS_HOME/lps/fonts</literal>.
+    The pseudo-pixel fonts that come with the OpenLaszlo Server are described <link linkend="fonts.pixel-fonts">above</link>.  The OpenLaszlo
+    default (pseudo-pixel) font, <literal>verity11</literal> is there as is an outline version of the same
+    glyphs in <literal>bitstream-1.10-vera</literal>.
+    </para>
+<para/></section></section><section><title>Font Metrics</title>
+<para>OpenLaszlo provides some basic APIs for measuring text.  You can use the <interface>LzFontManager</interface>
+to look up information about a given font name and style, including character advances (widths) and line ascents
+and descents.  The font metrics provided by the OpenLaszlo Runtime Library are all for the version of the default size
+of the given font (which is 8).  In order to adjust the font metrics for a given font, you must
+multiply the font metric by a factor that adjusts for the change in font size, <literal>fontsize/8</literal>.
+(Note: These APIs are likely to be deprecated in the future in lieu of APIs that 
+simply measure text). 
+</para>
+<para>
+If you want to know the size of a piece of text, the simplest technique is to create a
+<indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: text-->
+ view using the font attributes that are appropriate and the call 
+the <interface>LzText.getTextWidth()</interface> method.
+</para>
+<para condition="dhtml">
+Note that in DHTML, measuring font metrics is computationaly "expensive". Do it sparingly, as it can slow your application's performance considerably.
+</para>
+<para/></section><section><title condition="dhtml">DHTML Font design considerations</title>
+<para>
+There is a general tension in DHTML regarding who controls type
+size—the user or the application.  w3c leans toward the end user having ultimate control, which
+means that you, as designer, have to be prepared for the fonts you have
+specified not being the ones that are displayed.
+</para>
+<para>
+Small type isn't smoothed in DHTML as it is in SWF.  It is hard to offer advice about 
+what to do here, except choose your fonts carefully and/or avoid small
+point sizes. This is a browser and/or display setting, so there is nothing you can do about it.  (For example., OS X allows you to set a
+minimum font size, below which smoothing will never happen; Safari
+lets you set a minimum font size for accessibility and smaller sizes
+will just be mapped up to that minimum.)
+</para>
+<para>However, note that the Flash Player and some browsers do not handle font sizes equivalently.
+You may find
+that, relative to applications compiled to SWF, you need to step the size down for some DHTML OpenLaszlo applications where the text
+shows up too large.
+</para>
+
+
+
+
+<para/></section><section><title>Runtime Font APIs</title>
+<para>
+Font attributes are cascaded down the view hierarchy but only instances 
+of <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: text-->
+ have access to their font attributes at runtime.  Text views will have the
+<indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag>, <indexterm><primary>fontsize</primary></indexterm><sgmltag class="attribute">fontsize</sgmltag>,  and <indexterm><primary>fontstyle</primary></indexterm><sgmltag class="attribute">fontstyle</sgmltag> attributes.
+You can look up the actual <interface>LzFont</interface> that is represented by a given 
+<indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> and  <indexterm><primary>fontstyle</primary></indexterm><sgmltag class="attribute">fontstyle</sgmltag> via the <interface>LzFontManager</interface>.
+If you need to know the font attribute associated with a view that is not a text instance, the simplest way is to get the font attributes from a sibling view.  If no such view exists, you can create an invisible text view.
+</para>
+<para/></section><section><title condition="swf">Performance considerations</title>
+<para>
+Embedded fonts (in applications compiled to SWF) increase the size the size of the application.
+</para>
+<para>When deciding what embedded fonts to use, you may need to take into account how
+fonts affect the size, hence download time, of your application. Here are some heuristics to help you
+with file size/download calculus. - </para>
+    <itemizedlist spacing="compact"><listitem><para>The <emphasis role="i">larger</emphasis> the font, the larger the application.  The size
+        of the font can be estimated by looking at the file size of the <literal>.ttf</literal> file. </para></listitem><listitem><para>Fonts with more complicated shape outlines will be larger.</para></listitem><listitem><para>Fonts with more character codes in them will be larger.  One size optimization technique
+        is to use a version of the font file that has only the characters in it that your application 
+        uses.</para></listitem></itemizedlist>
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
+Some outdated cruft, some of which may be still true.
+    <itemizedlist spacing="compact"><listitem><para>LPS 2.0 supports embedding <ulink url="http://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html">Apple's TrueType</ulink> (TTF) fonts.
+       TTF Details: <itemizedlist spacing="compact"><listitem><para>LZX only supports TTF that are encoded as outline fonts.</para></listitem><listitem><para>LZX does not import kerning information from TTFs.</para></listitem></itemizedlist>
+       </para></listitem><listitem><para>LZX does not use kerning information. </para></listitem></itemizedlist>
+</remark></para>
+<para/></section></chapter>

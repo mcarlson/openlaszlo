@@ -1,0 +1,181 @@
+<canvas>
+    <include href="lztest/lztestmanager.lzx" /> 
+
+    <!--
+  covers-tags: class smoketest
+    -->
+
+<script when="immediate"><![CDATA[
+
+// Test mixin overrides and super calls.
+  class Vanilla {
+    var initorder = "";
+    function initialize() {
+      super.initialize.apply(this, arguments);
+      this.initorder += "/vanilla";
+    }
+    function test() {
+      return 'vanilla';
+    }
+  }
+
+  trait Banana {
+    function initialize() {
+      super.initialize.apply(this, arguments);
+      this.initorder += "/banana";
+    }
+    function test() {
+      return 'banana' + ' ' + super.test.apply(this, arguments);
+    }
+  }
+
+  class Sundae extends Vanilla inherits Banana {
+    function initialize() {
+      super.initialize.apply(this, arguments);
+      this.initorder += "/sundae"
+    }
+    function test() {
+      return 'sundae' + ' ' + super.test.apply(this, arguments);
+    }
+  }
+]]>
+</script>
+
+
+<script><![CDATA[
+
+var suiteSubclasses = new LzTestSuite("Subclasses"); 
+
+
+suiteSubclasses.testSub = function() {
+
+     var LzSub = Class.make( "LzSub", null, 
+                       {initialize: function (){this.testAttr = true; this.accum = ""; }} );
+
+    LzSub.addProperty('testAttr2', "foo");
+     LzSub.addProperty('testMethod', function (a) { this.accum = this.accum + a; });
+    
+    LzTestManager.assertEquals("LzSub", LzSub.classname);
+
+
+
+    var subInst = new LzSub();
+
+    LzTestManager.assertTrue( subInst instanceof LzSub );
+    LzTestManager.assertEquals( true, subInst.testAttr );
+    LzTestManager.assertEquals( "foo", subInst.testAttr2 );
+
+    LzTestManager.assertEquals( "", subInst.accum );
+    subInst.testMethod("bar");
+    LzTestManager.assertEquals( "bar", subInst.accum );
+    subInst.testMethod("baz");
+    LzTestManager.assertEquals( "barbaz", subInst.accum );
+
+    
+    var LzSubSub = Class.make( "LzSubSub", LzSub, 
+                            {initialize: function () { 
+                                #pragma "methodName=initialize"
+                                super.initialize(); 
+                            }} );
+    LzSubSub.addProperty('testMethod', function (a) { 
+        #pragma "methodName=testMethod"
+      super.testMethod(a); });
+
+    LzTestManager.assertEquals("LzSubSub", LzSubSub.classname);
+    
+    var sub2Inst = LzSubSub.make();
+
+    LzTestManager.assertTrue( sub2Inst instanceof LzSub);
+    LzTestManager.assertTrue( sub2Inst instanceof LzSubSub);
+
+    LzTestManager.assertEquals( true, sub2Inst.testAttr );
+
+    LzTestManager.assertEquals( "foo", sub2Inst.testAttr2 );
+    LzTestManager.assertEquals( "", sub2Inst.accum );
+    sub2Inst.testMethod("bar");
+
+    LzTestManager.assertEquals( "bar", sub2Inst.accum );
+    sub2Inst.testMethod("baz");
+    LzTestManager.assertEquals( "barbaz", sub2Inst.accum );
+
+}
+
+suiteSubclasses.testClassNodeSub = function () {
+    var LzNodeSub = Class.make( "LzNodeSub", LzNode );
+    LzTestManager.assertEquals("LzNodeSub", LzNodeSub.classname);
+
+    var nodeSubInst = LzNodeSub.make();
+    LzTestManager.assertTrue( nodeSubInst instanceof LzNodeSub );
+
+}
+
+suiteSubclasses.testUserClass = function () {
+    new LzUserClass(canvas, 
+                    {parent: "node", 
+                     initobj: {attrs: {"extends": "node",
+                                       foocalls: 0,
+                                       foo: function () { 
+                                         #pragma "methodName=foo"
+                                         this.foocalls++; 
+                                            }}, 
+                               name: "suba"}}, 
+                    [], false);
+                    
+    var suba = _root["suba"];
+    
+    var insta = new suba(canvas, { name: "insta" }, [], false);
+    LzTestManager.assertTrue( insta instanceof suba );
+    
+    LzTestManager.assertEquals(0, insta.foocalls);
+    insta.foo();
+    LzTestManager.assertEquals(1, insta.foocalls);
+
+    new LzUserClass(canvas, 
+                    {parent: "suba", 
+                     initobj: {attrs: {"extends": "suba",
+                                       foooverrides: 0,
+                                       foo: function() { 
+                                         #pragma "methodName=foo"
+                                         super.foo(); 
+                                         this.foooverrides++; 
+                                            }}, 
+                               name: "subb"}}, 
+                    [], false);
+
+    var subb = _root["subb"];
+
+    var instb = new subb(canvas, { name: "instb" }, [], false);
+    LzTestManager.assertTrue( instb instanceof subb );
+    LzTestManager.assertTrue( instb instanceof suba );
+    
+    LzTestManager.assertEquals(0, instb.foocalls);
+    LzTestManager.assertEquals(0, instb.foooverrides);
+    instb.foo();
+    LzTestManager.assertEquals(1, instb.foocalls);
+    LzTestManager.assertEquals(1, instb.foooverrides);
+}
+
+suiteSubclasses.testTraitSuper = function() {
+  var treat = new Sundae();
+    
+  LzTestManager.assertEquals("/vanilla/banana/sundae", treat.initorder);
+  LzTestManager.assertEquals("sundae banana vanilla", treat.test());
+}
+
+
+suiteSubclasses.addTest(suiteSubclasses.testSub); 
+//suiteSubclasses.addTest(suiteSubclasses.testClassNodeSub); 
+//suiteSubclasses.addTest(suiteSubclasses.testUserClass); 
+suiteSubclasses.addTest(suiteSubclasses.testTraitSuper);
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

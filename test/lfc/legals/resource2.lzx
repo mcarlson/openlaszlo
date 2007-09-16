@@ -1,0 +1,20 @@
+<canvas width="100%" height="80%">
+
+<!-- test declared resources -->
+<resource name="fr1" src='resc/h_c_open_sign.gif' />
+<resource name="fr2" src='resc/h_c_web2con.gif' />
+
+  <view id="foo" width="256" height="100" resource='fr1' 
+        oninit="this.animate('x',200, 3000, true)">
+    <view id="bar" x="20" y="10" width="128" height="64" resource='fr2'
+                  oninit="this.animate('y',100, 3000, true)" />
+  </view>
+
+<!-- test inline view resource -->
+  <view id="foo2" x="300" width="256" height="100" resource='resc/wallpaper.jpg'
+        oninit="this.animate('x',300, 3000, true)">
+    <view id="bar2" x="20" y="10" width="128" height="64" resource='resc/logo.png'
+                  oninit="this.animate('y',100, 3000, true)" />
+  </view>
+
+</canvas>

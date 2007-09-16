@@ -1,4 +1,4 @@
-<canvas width="240">
+<canvas>
   <text x="5" y="5" >try dragging divider</text>
   
   <view id="divider" x="110" y="30"
@@ -24,3 +24,5 @@
     <text x="5" y="5" >Right Panel</text>
   </view>
 </canvas>
+
+

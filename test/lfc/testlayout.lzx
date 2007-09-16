@@ -3,7 +3,7 @@
 
     <class name="box" bgcolor="red" width="20" height ="10" >
         <animator attribute="width" to="80" relative="true"
-        		  duration="5000" motion="easeout"/>
+                  duration="5000" motion="easeout"/>
     </class>
 
     <text>simplelayout: red boxes animate width, inside black view</text>
@@ -43,7 +43,7 @@
         <attribute name="label" value="this.name" when="once" /> 
     </class>
 
-	<!--
+    <!--
     <view x="500">
         <showname name="showit1" />
         <showname name="showit2" />
@@ -54,10 +54,10 @@
         <showname name="showit5" />
         <simplelayout axis="y" spacing="33"/>
     </view>
-	-->
-	
+    -->
+    
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

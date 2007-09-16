@@ -90,10 +90,58 @@
             resource="lzscrollbar_ybuttonbottom_rsc"/>
     </view>
     <stableborderlayout axis="y"/>
+    <doc>
+      <tag name="shortdesc"><text>
+          Provides a vertical scrollbar.
+      </text></tag>
+      <text>
+
+        <p>This tag creates a vertical scrollbar.  If you do not specify a
+          <attribute>scrolltarget</attribute> the scrollbar will automatically
+          be aligned to the right and size its height to its parent's height.
+          It is expected that the parent view be smaller than the scrolltarget
+          and set <code>clip=true</code>.  The scrolling effect is produced by
+          moving the scrolltarget while its visible region is clipped by the
+          parent view.</p>
+
+        <p>If you would like the target view to start scrolled, simply set its
+          y position to a negative number.  For example, <code>y=-10</code> will
+          cause the view to be scrolled 10 pixels.
+        </p>
+
+        <note>If you have no horizontal scrollbars in your application, using
+          the <tagname>vscrollbar</tagname> tag will make the applications
+          slightly smaller, than if you were to use <code>&lt;scrollbar
+            axis="y"&gt;</code>.</note>
+        
+        <example title="Simple scrollbar">
+          &lt;canvas height="160" bgcolor="silver"&gt;
+          &lt;view name="main" x="20" y="20" bgcolor="white"
+          width="100" height="80" clip="true"&gt;
+          &lt;view name="contents"&gt;
+          &lt;text multiline="true"&gt;
+          1&lt;br/&gt;2&lt;br/&gt;3&lt;br/&gt;4&lt;br/&gt;5&lt;br/&gt;6&lt;br/&gt;7&lt;br/&gt;8&lt;br/&gt;9&lt;br/&gt;10
+          &lt;/text&gt;
+          &lt;/view&gt;
+          &lt;vscrollbar/&gt;
+          &lt;/view&gt;
+          &lt;/canvas&gt;
+        </example>
+
+        
+        <p>In the example above, the scrolltarget is the
+          <varname>contents</varname> view. A scrollbar moves its
+          <attribute>scrolltarget</attribute> along its axis.  The attribute
+          that is controlled by the scrollbar may be specified as the
+          <attribute>scrollattr</attribute>, overriding the default value of
+          <code>x</code> or <code>y</code>.</p>
+          </text>
+        </doc>
+
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

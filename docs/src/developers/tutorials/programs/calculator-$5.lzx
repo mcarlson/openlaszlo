@@ -1,0 +1,163 @@
+
+<canvas  height="500" width="800">
+    <!-- Uncomment to include fonts for SWF -->
+    <!-- fonts -->
+    <!-- 
+    <font src="helmetbi.ttf" name="obliqueText" />
+    <font src="helmetr.ttf" name="displayText" />
+    -->
+    <!-- art assets -->
+    <resource name="calc_body" src="resources/body.png" />
+    <resource name="calc_display" src="resources/display.png" />
+    <resource name="button_grn" src="resources/button_green.gif" />
+    <resource name="button_red" src="resources/button_red.gif" />
+    <resource name="button_blu" src="resources/button_blue.gif" />
+    
+    <view name="calculator" resource="calc_body" x="20" y="20">
+        <!-- display -->
+        <view id="display" resource="calc_display" x="20" y="31">
+            <!-- the text in the display -->
+            <text name="screen" height="30" width="165"
+                  font="displayText" fontsize="30"
+                  y="5" x="5">
+                0
+            </text>
+        </view>
+        <!-- 5 rows of buttons -->
+        <view name="buttons" x="19" y="88">
+            <simplelayout axis="y" spacing="7" />
+            <!-- row 2 -->
+            <view name="row2">
+                <simplelayout axis="x" spacing="7" />
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        7
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        8
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        9
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        *
+                    </text>
+                </view>
+            </view>
+            <!-- row 3 -->
+            <view name="row3">
+                <simplelayout axis="x" spacing="7" />
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        4
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        5
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        6
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="15" valign="middle">
+                        -
+                    </text>
+                </view>
+            </view>
+            <!-- row 4 -->
+            <view name="row4">
+                <simplelayout axis="x" spacing="7" />
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        1
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        2
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        3
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        +
+                    </text>
+                </view>
+            </view>
+            <!-- row 5 -->
+            <view name="row5">
+                <simplelayout axis="x" spacing="7" />
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        0
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="20" 
+                          fgcolor="#ffffff" x="5" valign="middle">
+                        +/-
+                    </text>
+                </view>
+                <view resource="button_blu" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        .
+                    </text>
+                </view>
+                <view resource="button_grn" clickable="true" 
+                      onclick="display.inputDigit( this );">
+                    <text name="buttonText" font="obliqueText" fontsize="30" 
+                          fgcolor="#ffffff" x="9" valign="middle">
+                        =
+                    </text>
+                </view>
+            </view>
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

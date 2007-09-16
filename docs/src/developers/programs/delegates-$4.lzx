@@ -1,0 +1,47 @@
+
+<canvas height="125"> 
+    <dataset name="people">
+        <people> 
+            <person name="John"/> 
+            <person name="Eric"/> 
+            <person name="Andrew"/> 
+            <person name="chrisk"/> 
+            <person name="Sarah"/> 
+            <person name="Pablo"/> 
+            <person name="Adam"/> 
+        </people>
+    </dataset> 
+
+    <view>
+        <text>
+            <datapath xpath="people:/people/person/@name">
+                <handler name="onclones">
+                    var lastclone = this.clones[ this.clones.length - 1 ];
+
+                    if( typeof this.del == "undefined" ) {
+                        this.del = new LzDelegate( this, "replicationComplete") 
+                    } else {
+                        this.del.ungregisterAll();
+                    }
+
+                    this.del.register( lastclone, "oninit"); 
+                </handler>
+
+                <method name="replicationComplete">
+                    lastRepText.setText("The last view has been replicated"); 
+                </method>
+            </datapath>
+        </text>
+        <simplelayout axis="y"/>
+    </view>
+
+    <text id="lastRepText" bgcolor="green" resize="true"> 
+        Replication incomplete
+    </text>
+   
+    <simplelayout axis="y"/> 
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** --> 

@@ -1,5 +1,11 @@
 <canvas debug="true">
-  <include href="../../lps/utils/lztestmanager.lzx" /> 
+  <include href="lztest/lztestmanager.lzx" /> 
+  <include href="utils/layouts/simpleboundslayout.lzx" /> 
+
+<!--
+  covers-tags : lzview
+-->
+
 
   <simplelayout axis="x" spacing="5"/>
 
@@ -76,7 +82,7 @@
       }
     </method>
 
-    // Idle handler that will setup the next resource to load
+    <!-- Idle handler that will setup the next resource to load -->
     <handler name="onidle" reference="LzIdle">
       if (view10changed) {
         view10changed = false;
@@ -308,6 +314,10 @@ suite.test4 = function() {
 
 
 suite.test5 = function() {
+  LzTestManager.assertEquals (0, (view1.getDepthList()).length, "view1.getDepthList() should have a length of 0");
+  
+  LzTestManager.assertEquals (1, (view3.getDepthList()).length, "view3.getDepthList() should have a length of 1");
+
   ztest ("ztest", view5.getDepthList(), [view5.v1, view5.v2, view5.v3]);
 
   view5.v2.bringToFront();
@@ -412,7 +422,7 @@ var view10changed = false;
 var view10resources=[
 [1, 1, '1x1.gif'],
 [10, 10, '10x10.gif'],
-[7, 7, 'http://www.laszlosystems.com/img/spacer.gif']
+[7, 7, 'spacer.gif']
 ];
 
 suite.test10 = function() {
@@ -461,19 +471,19 @@ suite.testN = function() {
 */
 
 // Run the tests in order (test1,test2,...)
-suite.addTest(suite.test13);
-suite.addTest(suite.test12);
-suite.addTest(suite.test11);
-suite.addTest(suite.test10);
-suite.addTest(suite.test9);
-suite.addTest(suite.test8);
-suite.addTest(suite.test7);
-suite.addTest(suite.test6);
-suite.addTest(suite.test5);
-suite.addTest(suite.test4);
-suite.addTest(suite.test3);
-suite.addTest(suite.test2);
 suite.addTest(suite.test1);
+suite.addTest(suite.test2);
+suite.addTest(suite.test3);
+suite.addTest(suite.test4);
+suite.addTest(suite.test5);
+suite.addTest(suite.test6);
+suite.addTest(suite.test7);
+suite.addTest(suite.test8);
+suite.addTest(suite.test9);
+suite.addTest(suite.test10);
+suite.addTest(suite.test11);
+suite.addTest(suite.test12);
+suite.addTest(suite.test13);
 
 
 
@@ -486,7 +496,7 @@ suite.addTest(suite.test1);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

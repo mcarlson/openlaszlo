@@ -2,43 +2,46 @@
 <!-- explanation page for animation example                                  -->
 <!--                                                                       -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--=======================================================================-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-      <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico">
-      <link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css">
+      <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico" />
+      <link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css" />
       <style type="text/css">
         .smallapp {margin-right: 200px;}
       </style>
-      <script src="../../lps/includes/embed.js" type="text/javascript"></script>
+      <script src="../../lps/includes/utils.js" type="text/javascript"></script>
       <title>Animation</title>
   </head>
    <body>
    <h1>Animation</h1>
-   <div class="smallapp">
-       <script type="text/javascript">
-              lzEmbed({url: 'animation.lzx?lzt=swf', bgcolor: '#eaeaea', width: '800', height: '300'});
-       </script>
+   <div class="smallapp" id="appcontainer">
    </div>
    <div class="desc">
     <p>
-       In Laszlo applications, anything can animate.  Click the buttons to
+       In OpenLaszlo applications, anything can animate.  Click the buttons to
        initiate simple animations.  You can also drag the window to move it.
-       All Laszlo components can be animated
+       All OpenLaszlo components can be animated
        just like any view.
     </p><p>
-       Animation can be used to orient the user when the application chages state.
-       For a practical example of animating a window, check out the Dashboard
-       demo, which uses animation in its window management.
-       Dashboard windows have a UI control that allows a person to restore
-       it to its original location, after it was moved or resized.
+     By gently calling attention to values that have changed or actions that are required, animation can be used to orient and guide the user. 
+      
        </p>
+       <p id="runtime" class="runtimelabel"></p>
     </div>
-
+    <script type="text/javascript">
+        var runtime = getQueryVariable("lzr", "swf7");
+        writeOpenLaszloApp(document.getElementById('appcontainer'), "animation.lzx", runtime, "600px", "300px");
+        document.getElementById("runtime").innerHTML = "Runtime: " + lzRuntimeTagToRuntimeName(runtime);
+    </script>
+    <noscript>
+      Please enable JavaScript in order to use this application. 
+    </noscript>
 </body>
 </html>

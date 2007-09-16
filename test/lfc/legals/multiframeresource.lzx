@@ -1,0 +1,18 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas width="100%" height="80%">
+    <resource name="tabrsrc" >
+        <frame src="resc/wallpaper.jpg" />
+        <frame src="resc/h_c_web2con.gif" />
+    </resource>
+
+    <resource name="logoanim" src="animation/"/>
+
+    <view name="foo" resource="tabrsrc" onmousedown="this.play()" onmouseup="this.stop()"/>
+
+    <view name="bar" resource="logoanim" x="300" oninit="this.play()"/>
+</canvas>

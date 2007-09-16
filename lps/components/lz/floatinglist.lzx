@@ -115,7 +115,7 @@
                   bgcolor="0x808080" />
         </view>
 
-        <view name="menucap" y="${parent._currentattachy == 'top'? -height:parent.height }"
+        <view name="menucap" y="${parent._currentattachy == 'top'? -height + 1:parent.height }"
               width="${classroot.width}" 
               ignoreplacement="true" 
               oninit="this.setResourceNumber(1)">
@@ -163,12 +163,39 @@
         <method name="getMenuCapHeight">
           return menucap.height;
         </method>
-        
+        <doc>
+          <tag name="shortdesc"><text>
+              a floatinglist appears above other components 
+          </text></tag>
+          <text>
+            <p>The <tagname>floatinglist</tagname> tag provides a list that floats
+              on top of the canvas.  It includes an attachment API for popping-up
+              relative to a target. This attachment API guarantees visibility on the
+              canvas, such that if the floatinglist intersects the canvas bounds,
+              the attach location will change to a more visible location.</p>
+
+            <example>
+              &lt;canvas height="100"&gt;
+              &lt;button x="10" y="10" text="owner"&gt;
+              &lt;floatinglist width="80" attach="right"&gt;
+              &lt;textlistitem text="one"/&gt;
+              &lt;textlistitem text="two"/&gt;
+              &lt;/floatinglist&gt;
+              &lt;/button&gt;
+              &lt;/canvas&gt;
+            </example>
+
+            <seealso>
+              <component-design id="floatinglist" title="Floating List"/>
+            </seealso>
+          </text>
+        </doc>
+
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

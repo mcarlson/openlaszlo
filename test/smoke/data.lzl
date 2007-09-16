@@ -1,6 +1,6 @@
 <library>  
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -20,11 +20,11 @@
     <view name="lor" datapath="http2:/root/child"/>
 
     <method name="testEmpty">
-      Debug.write("expect:  couldn't find dataset for http:/root");
+      Debug.info("expect:  couldn't find dataset for http:/root (error will print at beginning of debugger output)");
       assertEquals(0,0,0);
     </method>
     <method name="testEmpty2">
-      Debug.write("expect:  couldn't find dataset for http2:/root/child");
+      Debug.info("expect:  couldn't find dataset for http2:/root/child (error will print at beginning of debugger output)");
       assertEquals(0,0,0);
     </method>
   </class>

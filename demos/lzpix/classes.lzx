@@ -1,0 +1,355 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+
+    <class name="verticalindent" >
+        <view width="1" height="${parent.height}" bgcolor="0x2b2ba2" />
+        <view width="1" x="1" height="${parent.height}"  bgcolor="0xffffff" />
+    </class>
+    
+    <class name="buttonrepeater" extends="view" clickable="true" >
+       <!---  @keywords private -->
+       <attribute name="_lasttime" value="0"/>
+       <!---  @keywords private -->
+       <attribute name="stillDownDelegate" value="0"/>
+       <attribute name="onmousestilldown"  value="null"/>
+       <!---  @keywords private -->
+       <method name="stillDownEventGenerator">
+            var now = (new Date()).getTime();
+            var diff = now - this._lasttime;
+            this._lasttime = now;
+
+            if (this.isMouseDown) {
+                var next; 
+                if (diff > 600) {
+                    next = 500;
+                } else {
+                    next = 50;
+                    this.onmousestilldown.sendEvent();
+                }
+                LzTimer.resetTimer( this.stillDownDelegate, next );
+            }
+       </method>
+
+       <!--- @keywords private -->
+        <method event="onmousedown">
+            var now = new Date();
+            this._lasttime = now.getTime();
+            this.isMouseDown = true;
+            if (!this.stillDownDelegate) {
+               this.stillDownDelegate = new LzDelegate( this, "stillDownEventGenerator");
+           }
+            LzTimer.addTimer( this.stillDownDelegate, 500 );
+        </method>
+        <!--- @keywords private -->
+        <method event= "onmouseup">
+            this.isMouseDown=false;
+            LzTimer.removeTimer( this.stillDownDelegate );
+        </method>
+    </class>
+    
+    
+
+    <class name="photoother" bgcolor="white" width="77" height="${width}" >
+        <attribute name="defaultplacement" value="interior" type="text" />
+        
+        <!-- shadow -->
+        <view x="2" y="2" bgcolor="black" opacity=".5" 
+             width="${parent.width}" 
+             height="${parent.height}" />
+             
+        <!-- border -->
+        <view bgcolor="white" 
+              width="${parent.width}" 
+              height="${parent.height}" />
+        
+        <!-- -->
+        <view name="interior" x="2" y="2" bgcolor="black" clip="true" 
+              width="${parent.width - 4}" 
+              height="${parent.height - 4}" />
+    </class>
+
+
+    <class name="favoriteslayout" extends="layout" >
+        <!--- The axis in which this layout operates. One of 'x' or 'y'. -->
+        <attribute name="axis" value="x" setter="this.setAxis( axis )" 
+                   type="string" />
+    
+        <!--- A pixel amount to inset the first view controlled by the layout-->
+        <attribute name="inset" value="0"
+            setter="this.inset = inset;
+                   if( this.subviews &amp;&amp; this.subviews.length ) this.update();
+                   if (this['oninset']) this.oninset.sendEvent(this.inset)"/>
+    
+        <!--- A pixel amount to use between each view in the layout -->
+        <attribute name="spacing" value="0"
+                   setter="this.spacing = spacing;
+                          if( this.subviews &amp;&amp; this.subviews.length ) this.update();
+                          if (this['onspacing']) this.onspacing.sendEvent(this.spacing)"/>
+    
+        <!--- @keywords private -->
+        <method name="setAxis" args="a" >
+            this.axis = a;
+            this.sizeAxis = a == "x" ? "width" : "height"
+            this.updateDelegate.register( parent,  "onheight" );
+       </method>
+    
+        <!--- @keywords private -->
+        <method name="addSubview" args="newsub">
+            //this.updateDelegate.register( newsub,  "on" + this.sizeAxis);
+            this.updateDelegate.register( newsub,  "onvisible" );
+            //this is an optimization to avoid calling update in the simple case
+            //where a single subview was just added
+            if ( ! this.locked &amp;&amp; this.subviews.length ){
+                var s= this.subviews[ this.subviews.length-1 ];
+                var p =  s[ this.axis ] + s[ this.sizeAxis ] + this.spacing;
+                newsub.setAttribute( this.axis , p  ) ;
+            }
+            super.addSubview( newsub );
+        </method>
+    
+        <!--- This method is usually called automatically when any of the views
+              controlled by the layout change their size in the layout axis, or
+              their visibility. However it can be called directly to force the
+              layout to update -->
+        <method name="update">
+            <![CDATA[
+            if ( this.locked ) return;
+            this.locked = true;
+            var l = this.subviews.length;
+            var c = this.inset;
+    
+            for(var i=0; i < l; i++) {
+                var s = this.subviews[i]; 
+                s.setHeight( parent.height );
+                s.setWidth( s.height);
+                
+                if ( !s.visible ) continue;
+                if ( s[ this.axis ] != c ){
+                    s.setAttribute( this.axis , c );
+                }
+                c += this.spacing + s[ this.sizeAxis ];
+            }
+            this.locked = false;
+            ]]>
+        </method>
+    </class>
+    
+    
+    <class name="albumlayout" extends="layout" >
+        <!--- The primary axis for wrapping. -->
+        <attribute name="axis" value="x" setter="this.setAxis( axis )"
+                   type="string" />
+        <!--- A pixel amount to use between the views controlled by the layout in
+              both axes. By default, both xspacing and yspacing are set to this
+              value. -->
+        <attribute name="spacing" value="1"/>
+        <!--- A pixel amount to offset the first view controlled by the layout in x
+              axis -->
+        <attribute name="xinset" value="0"/>
+        <!--- A pixel amount to offset the first view controlled by the layout in y
+              axis -->
+        <attribute name="yinset" value="0"/>
+        <!--- A pixel amount to use between the views controlled by the layout in
+              the x axis. -->
+        <attribute name="xspacing" value="${this.spacing}" />
+        <!--- A pixel amount to use between the views controlled by the layout in
+              the y axis. -->
+        <attribute name="yspacing" value="${this.spacing}" />
+        <!--- If given, a number of miliseconds to use to animate the views in to
+              place.-->
+        <attribute name="photoscale" value="1" />
+        <attribute name="photodimension" value="70" />
+
+        <attribute name="duration"     value="0"/>
+        <!--- @keywords private -->
+        <method name="setAxis" args="a" >
+            <!-- CURRENTLY THIS METHOD IS NOT USED -->
+            this.axis = a;
+            this.otherAxis =  a == "x" ? "y" : "x"
+            this.sizeAxis = a == "x" ? "width" : "height"
+            this.otherSizeAxis = a == "x" ? "height" : "width"
+        </method>
+    
+        <!--- @keywords private -->
+        <method name="addSubview" args="newsub">
+            this.updateDelegate.register( newsub,  'onwidth');
+            this.updateDelegate.register( newsub,  'onheight');
+            this.updateDelegate.register( this.immediateparent,  'onwidth');
+            this.updateDelegate.register( this,  'onphotoscale');
+            super.addSubview( newsub );
+            this.update();
+       </method>
+    
+        <!--- This method is usually called automatically when any of the views
+              controlled by the layout change their size , or when the size of
+              layout's immediateparent changes. However it can be called directly
+              to force the layout to update -->
+       <method name="update">
+            <![CDATA[
+            if ( this.locked ) return;
+            this.locked = true;
+            var l = 0;
+            if (this.subviews) var l = this.subviews.length;
+            var limit = this.immediateparent[this.sizeAxis];
+    
+            // position along this.axis
+            var pos = this[this.axis + 'inset'];
+            // position along this.otherAxis
+            var otherpos = this[this.otherAxis + 'inset'];
+            var maxdimension = 0;
+            var space = this[this.axis + 'spacing'];    // spacing in axis dimension
+            var otherspace = this[this.otherAxis + 'spacing'];    // spacing in other axis dimension
+    
+            for(var i=0; i < l; i++) {
+                var s = this.subviews[i];
+                s.setAttribute(this.axis,pos);
+                s.setAttribute(this.otherAxis,otherpos);
+                s.setWidth(Math.round(photodimension*photoscale));
+                s.setHeight(Math.round(photodimension*photoscale));
+                
+                pos += s[this.sizeAxis];
+                if ( i < (l - 1)) {
+                    pos += space;
+                    maxdimension = Math.max(maxdimension,s[this.otherSizeAxis]);
+                    if (( pos > limit) ||
+                        (pos + this.subviews[i+1][this.sizeAxis] >  limit)) {
+                        pos = this[this.axis + 'inset'];
+                        otherpos += maxdimension + otherspace;
+                        maxdimension = 0;   // Reset the height/width after every row/column                    
+                    }
+                }
+    
+    
+            }
+            this.locked = false;
+            ]]>
+        </method>
+        <!--- @keywords private -->
+        <method name="toString">
+             return 'wrappinglayout for ' + this.immediateparent;
+        </method>
+    </class>
+
+
+
+    <class name="albumlayout2" extends="layout" >
+        <!--- The primary axis for wrapping. -->
+        <attribute name="axis" value="x" setter="this.setAxis( axis )"
+                   type="string" />
+        <!--- A pixel amount to use between the views controlled by the layout in
+              both axes. By default, both xspacing and yspacing are set to this
+              value. -->
+        <attribute name="spacing" value="59"/>
+        <!--- A pixel amount to offset the first view controlled by the layout in x
+              axis -->
+        <attribute name="xinset" value="0"/>
+        <!--- A pixel amount to offset the first view controlled by the layout in y
+              axis -->
+        <attribute name="yinset" value="0"/>
+        <!--- A pixel amount to use between the views controlled by the layout in
+              the x axis. -->
+        <attribute name="skew" value="1" setter="this.setSkew( skew )"/>
+        <attribute name="skewStep" value="1000" />
+        
+        <attribute name="xspacing" value="${this.spacing}" />
+        <!--- A pixel amount to use between the views controlled by the layout in
+              the y axis. -->
+        <attribute name="yspacing" value="${this.spacing}" />
+        <!--- If given, a number of miliseconds to use to animate the views in to
+              place.-->
+        <attribute name="duration"     value="0"/>
+        
+        <!--- @keywords private -->
+        <method name="setAxis" args="a" >
+            <!-- CURRENTLY THIS METHOD IS NOT USED -->
+            this.axis = a;
+            this.otherAxis =  a == "x" ? "y" : "x"
+            this.sizeAxis = a == "x" ? "width" : "height"
+            this.otherSizeAxis = a == "x" ? "height" : "width"
+        </method>
+
+        <method name="setSkew" args="s" >
+            <!-- save the past values of the animated skew values -->
+            if ( !this.skewarray ) this.skewarray = [s];
+            else this.skewarray.push( this.skew );
+            this.skew = s;
+            this['onskew'].sendEvent();
+        </method>
+     
+        <!--- @keywords private -->
+        <method name="addSubview" args="newsub">
+            this.updateDelegate.register( newsub,  'onwidth');
+            this.updateDelegate.register( newsub,  'onheight');
+            this.updateDelegate.register( this.immediateparent,  'onwidth');
+            this.updateDelegate.register( this,  'onskew');
+            super.addSubview( newsub );
+            this.update();
+       </method>
+    
+        <!--- This method is usually called automatically when any of the views
+              controlled by the layout change their size , or when the size of
+              layout's immediateparent changes. However it can be called directly
+              to force the layout to update -->
+       <method name="update">
+            <![CDATA[
+            if ( this.locked ) return;
+            this.locked = true;
+            var l = this.subviews.length;
+            var limit = this.immediateparent[this.sizeAxis];
+            var rowinset = 1000;
+            var skewindex = this.skewarray.length - 1;
+            
+            //Debug.write("array =", this.skewarray);
+    
+            // position along this.axis
+            var pos = this[this.axis + 'inset'];
+            
+            // position along this.otherAxis
+            var otherpos = this[this.otherAxis + 'inset'];
+            var maxdimension = 0;
+            var space = this[this.axis + 'spacing'];    // spacing in axis dimension
+            var otherspace = this[this.otherAxis + 'spacing'];    // spacing in other axis dimension
+    
+            for(var i=0; i < l; i++) {
+            
+                //selecte the view
+                var s = this.subviews[i];
+                
+                // set its's poistion
+                s.setAttribute(this.axis,pos);
+                s.setAttribute(this.otherAxis,otherpos);
+                s.setAttribute('opacity',1 - this.skewarray[skewindex]);
+                
+                // update values for next view
+                pos += s[this.sizeAxis]; //start the next postion at the postion of the current view
+                if ( i < (l - 1)) {
+                
+                    // add the spacing
+                    pos += space;
+                    
+                    // what is this?
+                    maxdimension = Math.max(maxdimension,s[this.otherSizeAxis]);
+                    
+                    
+                    if (( pos > limit + rowinset) ||
+                        (pos + this.subviews[i+1][this.sizeAxis] >  limit)) {
+                        Debug.write("skewindex, skewarray[skewindex], rowinset",skewindex, this.skewarray[skewindex],rowinset);
+                        pos = this[this.axis + 'inset']  + this.skewarray[skewindex]*rowinset;
+                        otherpos += maxdimension + otherspace;
+                        maxdimension = 0;   // Reset the height/width after every row/column  
+                        skewindex -= 2;
+                        skewindex = Math.max(skewindex,0);
+                    }
+                }
+    
+    
+            }
+            this.locked = false;
+            ]]>
+        </method>
+        <!--- @keywords private -->
+        <method name="toString">
+             return 'wrappinglayout for ' + this.immediateparent;
+        </method>
+    </class>
+</library>

@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
-    <!ENTITY build_opt SYSTEM "file:../../../build-tools/build-opt.xml">
-    ]>
+<!ENTITY build_opt SYSTEM "file:../../../build-tools/build-opt.xml">
+]>
 
 <project name="server" default="build" basedir=".">
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -15,50 +15,180 @@
 
   &build_opt;
 
+  <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"/>
+
   <property name="packages" value="org.openlaszlo.*.*" />
+
+<!--
+This comment summarizes the path and package property usage and the 
+compilation pipeline for each ant target and each major file transformation. 
+
+The items in curly braces show properties and/or 
+pathnames before and after the change that untangled the 1.3 and 1.4
+sources and removed the secondary sources from the build file.
+
+Transform; input-path ==to== output-path
+{Old Package Path Property and Path ==to== New Package Path Property and Path}
+
+Target [css-parser]
+javacc; ./src/org/openlaszlo/css/CSSParser.jj
+                ==to== 
+                ./build.1.4/src/org/openlaszlo/css/*.java
+                {build.java ==changed to== build.java.1.4}
+
+Target [sc-parser]
+jjtree; ./sc/src/org/openlaszlo/sc/Parser.jjt 
+               ==to== 
+               ./build.1.4/src/org/openlaszlo/sc/parser/Parser.jj
+
+javacc; ./buildJJ/src/org/openlaszlo/sc/parser/Parser.jj
+                ==to== 
+                (Java 1.4 jjt sources)
+                ./build.1.4/src/org/openlaszlo/sc/parser/*.java
+
+copy;   ./sc/src/org/openlaszlo/sc/parser/*.java
+                ==to== 
+                ./build.1.4/src/org/openlaszlo/sc/parser
+                {sc.build.java = build/src/org/openlaszlo/sc 
+                ==changed to==
+                sc.build.java.1.4 = build.1.4/src/org/openlaszlo/sc}
+
+javac (1.4);     
+      ${java.1.4.srcs} = 
+      ${buildsrc.1.4} : ${src}:${jgen.src}:${jjt.src} =
+      ./build.1.4/src : ./src : ./jgenerator-2.2/src : ./build.1.4/src/org/openlaszlo/sc/parser
+      ==to== 
+      ./build 
+-->
+  <!-- Package Path Properties: properties that define 
+       all the package-path strings in the build. -->
+  <property name="pkg.all" value="org/openlaszlo/*" />
+  <property name="pkg.css" value="org/openlaszlo/css" />
+  <property name="pkg.css.parser" value="org/openlaszlo/css/parser" />
+  <property name="pkg.flash" value="org/openlaszlo/iv/flash" />
+  <property name="pkg.i18n" value="org/openlaszlo/i18n" />
+  <property name="pkg.js2doc" value="org/openlaszlo/js2doc" />
+  <property name="pkg.sc" value="org/openlaszlo/sc" />
+  <property name="pkg.sc.parser" value="org/openlaszlo/sc/parser" />
+  <property name="pkg.server" value="org/openlaszlo/server" />
+  <property name="pkg.test" value="org/openlaszlo/test" />
+  <property name="pkg.xml" value="org/openlaszlo/xml" />
 
   <!-- Source Directories -->
   <property name="src" value="./src" />
   <property name="build" value="./build" />
+  <property name="build.1.3" value="./build.1.3" />
+  <property name="build.1.4" value="./build.1.4" />
+
   <!-- Use JGenerator 2.2 now -->
   <property name="jgen" value="./jgenerator-2.2" />
   <property name="jgen.src" value="${jgen}/src" />
 
   <!-- Programmatically generated Java files -->
-  <property name="build.java" value="${build}/src" />
-  <property name="jjt.src" value="${build}/src/org/openlaszlo/sc/parser" />
+  <property name="buildsrc.1.4" value="${build.1.4}/src" />
+  <property name="build.test.dir" value="${build}/test" />
+  <property name="jjt.src" value="${buildsrc.1.4}/${pkg.sc.parser}" />
+
+  <!-- Build file directories -->
+  <property name="buildsrc.sc.1.4"  value="${buildsrc.1.4}/${pkg.sc}" />
 
   <!-- All Java files that should be compiled: both hand-generated
        sources and programatically generated files. -->
-  <property name="java.1.4.srcs" value="${src}:${jgen.src}:${jjt.src}" />
-  <!-- Java files that have to be compiled with -source 1.3 (for now -->
-  <property name="java.1.3.srcs" value="${build.java}" />
-  <property name="javasrcs" value="${java.1.4.srcs}:${java.1.3.srcs}" />
+  <property name="java.1.4.srcs" value="${buildsrc.1.4}:${src}:${jgen.src}:${jjt.src}" />
+
+  <property name="javasrcs" value="${java.1.4.srcs}" />
     
   <!-- More directories and files -->
   <property name="lib" value="./lib" />
-  <property name="javadoc" value="./doc/api" />
-  <property name="compilerapi" value="./doc/compiler/api" />
   <property name="jgendoc" value="./jgendoc" />
+  <property name="python.exec"    value="python" />
 
   <!-- Source file directories -->
-  <property name="sc.src.java" value="./sc/src/org/openlaszlo/sc"/>
+  <property name="sc.src.java" value="./sc/src/${pkg.sc}"/>
   <property name="sc.src.py"   value="./sc" />
-  
-  <!-- Build file directories -->
-  <property name="sc.build.java"
-           value="${build.java}/org/openlaszlo/sc" />
+  <property name="js2doc.src.java" value="./src/${pkg.js2doc}"/>
 
+  <!--===============  Target [get-svn-info]  ==================-->
+  <target name="get-svn-info" unless="done.get-svn-info"
+    description="Get the current repository information">
+      <sequential>
+          <exec executable="svn" output="repository-info.xml">
+              <arg value="info" />
+              <arg value="--xml" />
+              <arg value="${LPS_HOME}" />
+          </exec>
+          <property name="done.get-svn-info" value="true" />
+      </sequential>
+  </target>
+
+  <!--===============  Target [setup-build-id]  ==================-->
+  <target name="setup-build-id" depends="get-svn-info" unless="build.id"
+    description="Load repository information into properties">
+      <xmlproperty file="repository-info.xml"/>
+      <property name="build.id" value="${info.entry(revision)} ${info.entry(path)}" />
+      <echo message="build.id is ${build.id}" />
+  </target>
+
+  <!--===============  Target [copyjgen]  ==================-->
+  <target name="copyjgen" unless="copyjgen.uptodate"
+    description="Copy jgen files into misc directory">
+    <property name="lpsmisc" value="${LPS_HOME}/WEB-INF/lps/misc" />
+    <mkdir dir="${lpsmisc}" />
+    <copy file="${jgen}/bin/error.swt" todir="${lpsmisc}" />
+    <copy file="${jgen}/bin/DefaultSymbolFile.swt" todir="${lpsmisc}"  />
+    <copy file="${jgen}/bin/fop-config.xml" todir="${lpsmisc}"  />
+    <property name="copyjgen.uptodate" value="true"/>
+  </target>
+  
+  <!--===============  Target [clean]  ==================-->
+  <target name="clean" depends="init"
+     description="Deletes all output files and directories generated by the build process.">
+
+    <delete failonerror="false">
+       <fileset dir="${build}" >
+           <exclude name=".project" />
+           <exclude name=".settings" />
+           <exclude name=".classpath" />
+           <!-- TODO: [2007-01-24 ptw] How could there be a .svn in a build dir? -->
+           <exclude name=".svn" />
+       </fileset>
+    </delete>
+    <delete failonerror="false">
+       <fileset dir="${build.1.4}" >
+           <exclude name=".project" />
+           <exclude name=".settings" />
+           <exclude name=".classpath" />
+           <!-- TODO: [2007-01-24 ptw] How could there be a .svn in a build dir? -->
+           <exclude name=".svn" />
+       </fileset>
+    </delete>
+    <delete dir="${lib}" failonerror="false" />
+    <delete dir="${debug}" failonerror="false" />
+    <delete dir="misc" failonerror="false" />
+    <delete dir="cache" failonerror="false" />
+    <delete file="repository-info.xml" failonerror="false" />
+    <delete failonerror="false">
+      <fileset dir="." defaultexcludes="no" includes="**/*~"/>
+    </delete>
+    <delete failonerror="false">
+      <fileset dir="sc" includes="*.class"/>
+    </delete>
+  </target>
+  
+  <target name="clean-classes" depends="init"
+          description="Delete just the .class files.">
+    <delete dir="${build}/org"/>
+  </target>
+  
   <!--===============  Target [init]  ===================-->
   <!-- Initialize property values for other targets to use. -->
-  <target name="init" unless="done.server.init" depends="build-opt">
+  <target name="init" depends="build-opt,setup-build-id">
     <tstamp/>
 
   <!-- Ignore the system classpath -->
   <property name="build.sysclasspath" value="ignore" />
 
-
-  <property name="build.debug" value="off"/>
+  <property name="build.debug" value="true"/>
 
   <property name="JAVA_HOME"      value="${env.JAVA_HOME}"/>
   <property name="JAVACC_HOME"    value="${env.JAVACC_HOME}"/>
@@ -68,11 +198,20 @@
 
   <property name="ANT_JAR"        value="${ANT_HOME}/lib/ant.jar"/>
   <property name="JUNIT_JAR"      value="${LZ_VENDOR_ROOT}/junit.jar"/>
+  <property name="XMLUNIT_JAR"    value="${ANT_HOME}/lib/xmlunit1.0.jar"/>
 
   <property name="properties.file" value="${LPS_HOME}/build.properties" />
   <property file="${properties.file}" />
 
   <property name="LPS_JAR" value="${lib}/${lps.jar}" />
+
+  <condition property="hasdom3">
+	<not>
+      <equals arg1="${ant.java.version}" arg2="1.4"/>
+	</not>
+  </condition>
+
+  <property name="rng2dtd.py" value="${LPS_HOME}/WEB-INF/lps/schema/rng2dtd.py" />
 
     <!-- Script compiler build properties -->
     <condition property="jython" value="${JYTHON_HOME}/jython">
@@ -85,30 +224,10 @@
       <os family="windows"/> 
     </condition>
 
-    <!-- Copy jgen files into misc directory -->
-    <property name="misc" value="${LPS_HOME}/WEB-INF/lps/misc" />
-    <mkdir dir="${misc}" />
-    <copy file="${jgen}/bin/error.swt" todir="${misc}" />
-    <copy file="${jgen}/bin/DefaultSymbolFile.swt" todir="${misc}"  />
-    <copy file="${jgen}/bin/fop-config.xml" todir="${misc}"  />
-
-    <!-- Create JAR manifest based on build info -->
-    <dependset>
-        <srcfilelist dir="/" files="${properties.file}" />
-        <targetfilelist dir="." files="manifest.mf" />
-    </dependset>
-    <copy file="manifest" tofile="manifest.mf" >
-          <filterset>
-              <filter token="BUILDID"   value="${build.id}" />
-              <filter token="RELEASE"   value="${release}" />
-              <filter token="RELEASEID" value="${release.id}" />
-              <filter token="VERSIONID" value="${version.id}" />
-          </filterset>
-   </copy>
-
    <path id="3rd.party.classpath" >
        <pathelement path="${ANT_JAR}" />
        <pathelement path="${JUNIT_JAR}" />
+       <pathelement path="${XMLUNIT_JAR}" />
        <fileset dir="${LPS_HOME}/WEB-INF/lib/" >
            <exclude name="${lps.jar}" />
        </fileset>
@@ -117,149 +236,58 @@
    
    <!-- Determine whether the css parser needs to be updated --> 
    <uptodate property="css-parser.uptodate"
-       targetfile="${build.java}/org/openlaszlo/css/CSSParser.java"
-       srcfile="${src}/org/openlaszlo/css/CSSParser.jj"/>
+       targetfile="${buildsrc.1.4}/${pkg.css}/CSSParser.java"
+       srcfile="${src}/${pkg.css}/CSSParser.jj"/>
    
    <condition property="sc-parser.uptodate">
       <and>
-          <uptodate targetfile="${sc.build.java}/parser/Parser.jj">
+          <uptodate targetfile="${buildsrc.sc.1.4}/parser/Parser.java">
               <srcfiles dir="${sc.src.java}" includes="Parser.jjt"/>
-          </uptodate>
-          <uptodate targetfile="${sc.build.java}/parser/Parser.java">
-              <srcfiles dir="${sc.build.java}/parser" includes="Parser.jj"/>
+              <srcfiles dir="${sc.src.java}/parser" includes="*.java"/>
           </uptodate>
       </and>
   </condition>
-  
-  <uptodate property="sc-compiler.uptodate"
-       targetfile="${sc.build.java}/LFCCompiler.java">
-         <srcfiles dir="${sc.src.py}" includes="*.py" 
-                   excludes="test*.py,jsdoc2xml.py,xmldocutils.py"/>
-  </uptodate>      
-  
-  <uptodate property="server-javadoc.uptodate" targetfile="${javadoc}/index.html">
-          <srcfiles dir="${src}" />
-  </uptodate>
+  <echo message="sc-parser.uptodate is ${sc-parser.uptodate}"/>
   
   <condition property="server.uptodate">
     <and>
         <istrue value="${sc-parser.uptodate}"/>
-        <istrue value="${sc-compiler.uptodate}"/>        
     </and>
   </condition>
-      
 
-    <property name="done.server.init" value="true" />
   </target>
-
-  <!--===============  Target [clean]  ==================-->
-  <!-- Deletes all output files and directories generated-->
-  <!-- by the build process                              -->
-
-  <target name="clean" depends="init"
-     description="Deletes build output files and directories.">
-
-    <delete dir="${build}" />
-    <delete dir="${lib}" />
-    <delete dir="${debug}" />
-    <delete dir="misc" />
-    <delete dir="cache" />
-    <delete file="manifest.mf" />
-    <delete>
-      <fileset dir="." defaultexcludes="no" includes="**/*~"/>
-    </delete>
-    <delete>
-      <fileset dir="sc" includes="*.class"/>
-    </delete>
-
-    <antcall target="cleandoc" inheritAll="true" />
-  </target>
-  
-  <target name="clean-classes" depends="init"
-          description="Delete just the .class files.">
-    <delete dir="${build}/com"/>
-  </target>
-  
-  <!--===============  Target [cleandoc]  ==================-->
-  <!-- Deletes all output files and directories generated-->
-  <!-- by the build process                              -->
-
-  <target name="cleandoc" depends="init"
-     description="Deletes generated documentation.">
-    <delete dir="${javadoc}" />
-    <delete dir="${compilerapi}" />
-    <delete dir="${jgendoc}" />
-  </target>
-
 
   <!--==============  Target [css-parser]  ===================-->
   <target name="css-parser" depends="init"
         unless="css-parser.uptodate"
         description="Run JavaCC to create the css-parser *.java files.">
-    <mkdir dir="${build.java}/org/openlaszlo/css/parser"/>
-    <javacc target="${src}/org/openlaszlo/css/CSSParser.jj"
-                outputdirectory="${build.java}/org/openlaszlo/css/"
+    <mkdir dir="${buildsrc.1.4}/${pkg.css.parser}"/>
+    <javacc target="${src}/${pkg.css}/CSSParser.jj"
+                outputdirectory="${buildsrc.1.4}/${pkg.css}/"
                 javacchome="${JAVACC_HOME}" />
   </target>
 
 
   <!--==============  Target [sc-parser]  ===================-->
-  <target name="sc-parser" depends="sc-parser-jjt,sc-parser-custom" />
-  
-  <!--==============  Target [sc-parser-jjt]  ===================-->
-  <target name="sc-parser-jjt" depends="init"
-      unless="sc-parser.uptodate"
-      description="Run JavaCC to create the parser *.java files."
-      >
+  <target name="sc-parser" depends="init"
+          unless="sc-parser.uptodate"
+          description="Run JavaCC to create the parser *.java files."
+          >
+    <mkdir dir="${buildsrc.sc.1.4}"/>
+    <mkdir dir="${buildsrc.sc.1.4}/parser"/>
 
-    <mkdir dir="${sc.build.java}"/>
-    <mkdir dir="${sc.build.java}/parser"/>
-
-        <jjtree target="${sc.src.java}/Parser.jjt"
-                outputdirectory="${sc.build.java}/parser"
-                javacchome="${JAVACC_HOME}"
-                />
-        <javacc target="${sc.build.java}/parser/Parser.jj"
-                outputdirectory="${sc.build.java}/parser"
-                javacchome="${JAVACC_HOME}"
-                />
-    </target>
-  
-    <!--==============  Target [sc-parser-custom]  ===================-->
-    <target name="sc-parser-custom" depends="init" unless="sc-parser.uptodate">
-        <!-- replace generated classes with our custom -->
-        <copy flatten="true" todir="${sc.build.java}/parser" overwrite="true">
-          <fileset dir="${sc.src.java}/parser" includes="*.java"/>
-        </copy>
-  </target>
-
-  
-  <!--==============  Target [sc-compiler]  ===================-->
-  <target name="sc-compiler" depends="init" unless="sc-compiler.uptodate"
-      description="Run jythonc to create *.java files.">
-
-    <mkdir dir="${sc.build.java}"/>
-            <exec executable="${jython}" dir="${sc.src.py}" failonerror="true" >
-              <arg value="${LPS_HOME}/3rd-party/tools/jythonc/jythonc.py"/>
-              <arg line="--package org.openlaszlo.sc"/>
-              <arg line="--workdir ../${build.java}"/>
-              <arg value="--deep"/>
-              <arg line="--compiler NONE"/>
-              <arg value="parseinstructions"/>
-              <arg value="LFCCompiler"/>
-              <arg value="Regenerator"/>
-            </exec>
-  </target>
-
-  <target name="test-jythonc" depends="init"
-          description="A target for quickly testing jythonc changes.">
-        <exec executable="${jython}" dir="${sc.src.py}" failonerror="true" >
-          <arg value="${LPS_HOME}/3rd-party/tools/jythonc/jythonc.py"/>
-          <arg line="--package org.openlaszlo.sc"/>
-          <arg line="--workdir ../${build.java}"/>
-          <arg line="--compiler NONE"/>
-          <arg value="Compiler"/>
-        </exec>
+    <jjtree target="${sc.src.java}/Parser.jjt"
+            outputdirectory="${buildsrc.sc.1.4}/parser"
+            javacchome="${JAVACC_HOME}"
+            />
+    <javacc target="${buildsrc.sc.1.4}/parser/Parser.jj"
+            outputdirectory="${buildsrc.sc.1.4}/parser"
+            javacchome="${JAVACC_HOME}"
+            />
+    <!-- replace generated classes with our custom -->
+    <copy flatten="true" todir="${buildsrc.sc.1.4}/parser" overwrite="true">
+      <fileset dir="${sc.src.java}/parser" includes="*.java"/>
+    </copy>
   </target>
 
   <!--==============  Target [lps-xml]  ===================-->
@@ -269,10 +297,10 @@
     <!-- Create LPS.xml based on timestamp -->
     <tstamp>
         <format property="BUILDDATE" 
-                pattern="hh:mm aa dd-MMM-yyyy" locale="en"/>
+                pattern="yyyy-MM-dd'T'HH:mm:ssZ" locale="en"/>
     </tstamp>
-    <copy overwrite="true" tofile="build/org/openlaszlo/server/lps.xml"
-            file="src/org/openlaszlo/server/lps.xml.proto">
+    <copy overwrite="true" tofile="build/${pkg.server}/lps.xml"
+            file="src/${pkg.server}/lps.xml.proto">
         <filterset>
             <filter token="BUILDDATE" value="${BUILDDATE}" />
             <filter token="BUILDID"   value="${build.id}" />
@@ -286,97 +314,152 @@
   </target>
 
   <!--==============  Target [compile]  ===================-->
-  <!-- Compile the java code from ${javasrcs} into ${build},  -->
-  <!-- jar up classes an place them in ${lib}            -->
   <target name="compile" 
-      depends="init,lps-xml,css-parser,sc-parser,sc-compiler"
-      description="Compile java code and jar classes into ${lib}">
+      depends="init,lps-xml,css-parser,sc-parser"
+      description="Compile java code and jar classes into ${build}">
 
     <javac classpathref="3rd.party.classpath"
-           srcdir="${java.1.3.srcs}"
+           srcdir="${java.1.4.srcs}"
            destdir="${build}" debug="${build.debug}"
-           source="1.3"
+           source="1.4"
            nowarn="true"
            >
-      <!-- 1.3 sources created by jython -->
-      <include name="org/openlaszlo/sc/**" />
-      <!-- not the jjt sources -->
-      <exclude name="org/openlaszlo/sc/parser/**" />
+
+      <include name="${pkg.all}*" />
+      <!-- yes the jjt sources -->
+      <include name="${pkg.sc.parser}/**" />
+      <!-- Parts of JGenerator 1.4 that we don't yet need -->
+      <!-- and don't compile easily without more external jars -->
+      <exclude name="${pkg.flash}/commands/FOPCommand" />
+      <exclude name="${pkg.flash}/xml/**" />
+      <exclude name="${pkg.flash}/js/**" />
+      <exclude name="${pkg.flash}/url/JSUrl.*" />
+      <exclude name="${pkg.flash}/**/*Test.*" />
+      <exclude name="${pkg.flash}/context/**" />
+      <exclude name="${pkg.flash}/fop/SWFRenderer.*" />
+
+      <!-- js2doc currently only builds with 1.5, 
+           so build in optional task below -->
+      <exclude name="${pkg.js2doc}/**" />
     </javac>
 
+  </target>
+
+  <!--==============  Target [js2doc.compile]  ===================-->
+  <target name="js2doc.compile" 
+          depends="compile" 
+          if="hasdom3">
     <javac classpathref="3rd.party.classpath"
            srcdir="${javasrcs}"
            destdir="${build}" debug="${build.debug}"
            source="1.4"
            nowarn="true"
            >
-      <include name="org/openlaszlo/**" />
-      <!-- yes the jjt sources -->
-      <include name="org/openlaszlo/sc/parser/**" />
-      <!-- Parts of JGenerator 1.4 that we don't yet need -->
-      <!-- and don't compile easily without more external jars -->
-      <exclude name="org/openlaszlo/iv/flash/commands/FOPCommand" />
-      <exclude name="org/openlaszlo/iv/flash/xml/**" />
-      <exclude name="org/openlaszlo/iv/flash/js/**" />
-      <exclude name="org/openlaszlo/iv/flash/url/JSUrl.*" />
-      <exclude name="org/openlaszlo/iv/flash/**/*Test.*" />
-      <exclude name="org/openlaszlo/iv/flash/context/**" />
-      <exclude name="org/openlaszlo/iv/flash/fop/SWFRenderer.*" />
+        <include name="${pkg.js2doc}/**" />
+        
+        <exclude name="${pkg.js2doc}/*.rnc" />
+        <exclude name="${pkg.js2doc}/tests/**" />
     </javac>
-
-    <!-- copy the i18n message catalogs -->
-    <copy todir="${LPS_HOME}/WEB-INF/classes}">
-          <fileset dir=".">
-              <include name="${src}/org/openlaszlo/i18n/*.properties" />
-          </fileset>
-      </copy>
-
-
-    <!-- Build jar files  -->
-    <mkdir dir="${lib}" />
-    <jar jarfile="${LPS_JAR}" manifest="manifest.mf">
-        <fileset dir="${build}" includes="org/**,EDU/**"
-                 excludes="org/openlaszlo/*/internal/*_Test.class,
-                           org/openlaszlo/*/*_Test*.class,
-                           org/openlaszlo/test/*" />
-        <fileset dir="${src}" includes="org/openlaszlo/i18n/*.properties" />
-    </jar>
   </target>
 
-  <!--===============  Target [jsdoc2xml]  ====================-->
-  <!-- create xml version of js docs                           -->
-  <target name="jsdoc2xml" depends="init"
-          description="create xml version of js docs">
-    <java classname="org.python.util.jython" dir="${sc.src.py}" fork="true">
+  <!--===============  Target [js2doc]    =================-->
+  <!-- extract documentation from .js file(s) given -->
+  <!-- Note that we don't depend on "build" here, which means you need to manually
+     - build if server sources change. The reason to skip this check is to avoid
+     - repeatedly touching the lps-*.jar file, which causes the java task to always
+     - re-run js2doc in this task. -->
+  <target name="js2doc" depends="init" if="hasdom3"
+        description="extract documentation from .js file(s) given">
+    <!-- fork=true is necessary, otherwise we get a FNF error trying to create the .xml file -->
+    <java classname="org.openlaszlo.js2doc.Main"
+          fork="yes"
+          failonerror="true">
         <classpath>
             <path refid="3rd.party.classpath"/>
             <pathelement path="${LPS_JAR}"/>
         </classpath> 
-        <arg value="-Dpython.home=${JYTHON_HOME}"/>
-        <arg value="-DLPS_HOME=${LPS_HOME}"/>
-        <arg value="jsdoc2xml.py"/>
+        <sysproperty key="LPS_HOME" value="${LPS_HOME}"/>
+        <sysproperty key="JS2DOC_LIBROOT" value="${LPS_HOME}"/>
+        <arg line="${js2doc.args}"/>
     </java>
-<!--
-    <exec executable="bash" dir="${sc.dir}" failonerror="${build.docs.error.fail}">
-          <arg line="-c &quot;./sci jsdoc2xml.py&quot;"/>
-        </exec>
--->
+  </target>
+  
+  <!--===============  Target [js2doc.rng]    =================-->
+  <target name="js2doc.rng" 
+          depends="js2doc.rng.dep"
+          unless="js2doc.rng.uptodate"
+          description="Generate js2doc RNG schema file">  
+      <mkdir dir="${lib}" />
+	  <copy todir="${lib}" file="${js2doc.src.java}/js2doc.rnc"/>
+      <!-- fork=true is required when running from a jar -->
+      <java jar="${env.ANT_HOME}/lib/trang.jar"
+            fork="true"
+            failonerror="true">
+        <arg value="${lib}/js2doc.rnc"/>
+        <arg value="${lib}/js2doc.rng"/>
+      </java>
+  </target>
+
+  <target name="js2doc.rng.dep" depends="init">
+      <uptodate property="js2doc.rng.uptodate"
+            srcfile="${js2doc.src.java}/js2doc.rnc"
+            targetfile="${lib}/js2doc.rnc" />
+  </target>
+  
+  <!--=============  Target [js2doc.validate]    ===============-->
+  <target name="js2doc.validate" depends="init">
+      <jing rngfile="${js2doc.src.java}/js2doc.rnc" compactsyntax="true">
+        <fileset dir="${js2doc.validate.arg.filedir}" includes="*.xml" />
+      </jing>
+  </target>
+
+  <!--===============  Target [js2doc.test]    =================-->
+  <target name="js2doc.test" depends="build,js2doc.rng" if="hasdom3">
+      <!-- first unit/integration tests -->
+      <junit haltonfailure="true" printsummary="withOutAndErr" showoutput="true" fork="yes">
+          <formatter type="plain" usefile="false"/>
+          <sysproperty key="LPS_HOME" value="${LPS_HOME}"/>
+          <sysproperty key="JS2DOC_LIBROOT" value="${LPS_HOME}"/>
+          <sysproperty key="JS2DOC_RNG" file="${lib}/js2doc.rng" />
+          <sysproperty key="JS2DOC_TESTCASES" file="${js2doc.src.java}/tests"/>
+          <classpath>
+              <path refid="3rd.party.classpath"/>
+              <pathelement location="build"/>
+          </classpath> 
+          <test name="org.openlaszlo.js2doc.Comment_Test"/>
+          <test name="org.openlaszlo.js2doc.Schema_Test"/>
+          <test name="org.openlaszlo.js2doc.JS2Doc_Test"/>
+          <test name="org.openlaszlo.js2doc.WholeFile_Test"/>
+      </junit>
+
+      <!-- now test the command-line tool itself -->
+      <mkdir dir="${build.test.dir}"/>
+      <antcall target="js2doc">
+          <param name="js2doc.args" value="-v --libraryid test --test ${lib}/js2doc.rng ${js2doc.src.java}/tests/shortest.js"/>
+      </antcall>
+      <antcall target="js2doc">
+          <param name="js2doc.args" value="-v --libraryid test --test ${lib}/js2doc.rng ${js2doc.src.java}/tests/LaszloEvents.js"/>
+      </antcall>
+      <antcall target="js2doc.validate">
+          <param name="js2doc.validate.arg.filedir" value="${build.test.dir}"/>
+      </antcall>
   </target>
   
   <!--===============  Target [test]  ====================-->
   <!-- build and run the tests                            -->
   <!-- XXX For now, we only have minimal things here      -->
-  <target name="test" depends="build"
-          description="Run tests">
-
-      <junit printsummary="withOutAndErr" showoutput="true" fork="yes">
+  <target name="test" depends="build,js2doc.test"
+          description="Run tests" if="megatest.do">
+      <junit haltonfailure="true" printsummary="withOutAndErr" showoutput="true" fork="yes">
           <formatter type="plain" usefile="false"/>
           <sysproperty key="LPS_HOME" value="${LPS_HOME}"/>
           <classpath>
               <path refid="3rd.party.classpath"/>
               <pathelement location="build"/>
           </classpath> 
-          <test name="org.openlaszlo.utils.FileUtils_Test"/>
+          <!-- currently failing - LPP-2054 
+                <test name="org.openlaszlo.utils.FileUtils_Test"/>
+          -->
           <test name="org.openlaszlo.xml.internal.XMLUtils_Test"/>
           <test name="org.openlaszlo.compiler.Compiler_Test"/>
           <test name="org.openlaszlo.compiler.TextCompiler_Test"/>
@@ -384,162 +467,40 @@
       </junit>
   </target>
 
+  <!--===============  Target [copy-i18n-catalogs]  ===================-->
+  <target name="copy-i18n-catalogs" unless="copy-i18n-catalogs.uptodate">
+    <!-- copy the i18n message catalogs -->
+    <copy todir="${LPS_HOME}/WEB-INF/classes}">
+      <fileset dir=".">
+          <include name="${src}/${pkg.i18n}/*.properties" />
+      </fileset>
+    </copy>
+    <property name="copy-i18n-catalogs.uptodate" value="true"/>
+  </target>
+  
   <!--===============  Target [build]  ===================-->
   <!-- Compile the source, doc, and test framrk           -->
-  <target name="build" depends="compile" description="Compile the source" />
-
-  <!--=================  Target [doc]  ==================-->
-  <!-- Really depends on css-parser but that will usually be done -->
-  <target name="doc" depends="init" 
-      description="Create documentation from ${src} into ${javadoc}"
-      unless="server-javadoc.uptodate">
-    <mkdir dir="${javadoc}" />
-    <property name="xtraparams" value=""/>
-    <condition property="xtraparams" value="-quiet -breakiterator">
-        <equals arg1="${ant.java.version}" arg2="1.4"/>
-    </condition>
-        <echo message="JAVA VERSION ${ant.java.version}"  />
-        <!-- build from ${javasrcs}, not ${srcs}, because the automatically
-        generated sources generally contain constructs that cause javadoc
-        to report errors. Exclude the jgenerator bits from our doc. -->
-        <mkdir dir="${build}/src" />
-        <javadoc packagenames="${packages}"
-                 sourcepath="${javasrcs}"
-                 classpathref="3rd.party.classpath"
-                 destdir="${javadoc}"
-                 author="true"
-                 version="true"
-                 use="true"
-                 windowtitle="${LPS_NAME} API"
-                 doctitle="${LPS_NAME} API"
-                 Private="true"
-                 excludepackagenames="org.openlaszlo.iv.*"
-                 additionalparam="${xtraparams}">
-            <bottom><![CDATA[
-<!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
-<p class="copyright">Copyright © 2002-2004 <a target="_top"
-href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
-All Rights Reserved. Unauthorized use, duplication or
-distribution is strictly prohibited. This is the proprietary
-information of Laszlo Systems, Inc. Use is subject to license terms.</p>
-<!-- * H_LZ_COPYRIGHT_END ************************************************* -->
-            ]]></bottom>
-        </javadoc>
-        <mkdir dir="${compilerapi}" />
-        
-        <javadoc packagenames="org.openlaszlo.sc,org.openlaszlo.compiler,org.openlaszlo.cm"
-                 sourcepath="${javasrcs}"
-                 classpath="${build}" 
-                 classpathref="3rd.party.classpath"
-                 destdir="${compilerapi}"
-                 author="true"
-                 use="true"
-                 windowtitle="Compiler API"
-                 doctitle="Compiler API"
-                 Private="false"
-                 additionalparam="${xtraparams}">
-            <bottom><![CDATA[
-<!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
-<p class="copyright">Copyright © 2002-2004 <a target="_top"
-href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
-All Rights Reserved. Unauthorized use, duplication or
-distribution is strictly prohibited. This is the proprietary
-information of Laszlo Systems, Inc. Use is subject to license terms.</p>
-<!-- * H_LZ_COPYRIGHT_END ************************************************* -->
-            ]]></bottom>
-        </javadoc>
-  </target>
-
-  <!--=================  Target [jgendoc]  ==================-->
-  <!-- We don't build this by default because the jgen code has
-       boatloads of javadoc warnings -->
-  <target name="jgendoc" depends="init" 
-      description="Create JGenerator documentation from ${jgen.src} into ${jgendoc}">
-    <mkdir dir="${jgendoc}" />
-    <javadoc classpathref="3rd.party.classpath"
-             packagenames="org.openlaszlo.iv.*.*"
-             sourcepath="${jgen.src}" 
-             destdir="${jgendoc}"
-             author="true"
-             version="true"
-             use="true"
-             windowtitle="JGenerator API"
-             doctitle="JGenerator API"
-             Private="true" >
-    </javadoc>
-
-  </target>
-
-  <!--=================  Target [javadoc-public]  ==================-->
-  <target name="javadoc-public" 
-      description="Build javadocs for deployment"
-      depends="init" 
-      unless="done.javadoc" >
-
-      <mkdir dir="${LPS_HOME}/docs/javadoc" />
-
-      <path id="javadoc.classpath" >
-           <fileset dir="${LPS_HOME}/WEB-INF/lib" >
-               <exclude name="${lps.jar}" />
-           </fileset> 
-           <fileset dir="lib" >
-               <exclude name="${lps_noship.jar}" />
-           </fileset> 
-           <fileset dir="${LPS_HOME}/3rd-party/jars/dev" />
-      </path>
-
-      <javadoc destdir="${LPS_HOME}/docs/javadoc" version="true" author="false"
-          classpathref="javadoc.classpath"
-          windowtitle="Laszlo Presentation Server API">
-
-          <packageset dir="src" >
-              <include name="org/openlaszlo/xml" />
-          </packageset>
-
-        <doctitle><![CDATA[<h1>Laszlo Presentation Server API</h1>]]></doctitle>
-        <bottom><![CDATA[
-<!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
-<p class="copyright">Copyright Â© 2002-2004 <a target="_top"
-href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
-All Rights Reserved. Unauthorized use, duplication or
-distribution is strictly prohibited. This is the proprietary
-information of Laszlo Systems, Inc. Use is subject to license terms.</p>
-<!-- * H_LZ_COPYRIGHT_END ************************************************* -->
-        ]]></bottom>
-<!--
-        <link href="http://java.sun.com/j2se/1.3/docs/api" />
-        <link href="http://java.sun.com/products/servlet/2.2/javadoc" />
-        <link href="http://java.sun.com/xml/jaxp/dist/1.1/docs/api" />
--->
-      </javadoc>
-
-      <property name="done.javadoc" value="true" />
-
-  </target>
-
-  <!--===============  Target [regression tests]  =================-->
-  <target name="regression-baseline" depends="compile"
-      description="Set the baseline for regression tests.">
-    <exec executable="python">
-      <arg value="bin/regression"/>
-      <arg value="baseline"/>
-    </exec>
-    <exec executable="python">
-      <arg value="bin/icregresserrors"/>
-      <arg value="baseline"/>
-    </exec>
-  </target>
-
-  <target name="regression-test" depends="compile"
-      description="Test against the regression test baseline.">
-    <exec executable="python">
-      <arg value="bin/regression"/>
-      <arg value="test"/>
-    </exec>
-    <exec executable="python">
-      <arg value="bin/icregresserrors"/>
-      <arg value="test"/>
-    </exec>
+  <target name="build" depends="compile,js2doc.compile,copy-i18n-catalogs,js2doc.rng" description="Build the source">
+    <!-- Build jar files  -->
+    <mkdir dir="${lib}" />
+    <jar jarfile="${LPS_JAR}">
+        <manifest>
+          <attribute name="Built-By" value="${user.name}"/>
+          <section name="org/openlaszlo/server/">
+            <attribute name="Specification-Title" value="LPS Server Package"/>
+            <attribute name="Specification-Version" value="${version.id}"/>
+            <attribute name="Specification-Vendor" value="laszlosystems.com"/>
+            <attribute name="Implementation-Title" value="org.openlaszlo.server"/>
+            <attribute name="Implementation-Version" value="${release.id} ${build.id}"/> 
+            <attribute name="Implementation-Vendor" value="org.openlaszlo"/>
+          </section>
+        </manifest>
+        <fileset dir="${build}" includes="org/**,EDU/**"
+                 excludes="${pkg.all}/internal/*_Test.class,
+                           ${pkg.all}/*_Test*.class,
+                           ${pkg.test}/*" />
+        <fileset dir="${src}" includes="${pkg.i18n}/*.properties" />
+    </jar>
   </target>
 
   <!--================  Target [all]  ===================-->

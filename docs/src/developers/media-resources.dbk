@@ -1,0 +1,815 @@
+<chapter id="media-resources">
+  <title>Media Resources</title>
+  <para>This chapter describes how to include external media
+  resources (images, audio, animation, and video) into OpenLaszlo
+  applications.</para>
+  <section>
+    <title>Overview</title>
+    <para>LZX is designed to make it easy for you to integrate
+    media resources into your application in a flexible and dynamic
+    manner. You can include images, audio, video, and animations
+    that were created using standard third-party content creation
+    tools. This chapter describes the media formats that are
+    currently supported as resources to 
+    <sgmltag class="element" role="LzView">view</sgmltag>s in
+    OpenLaszlo 4.0. It then goes on to describes how to integrate
+    and control media in your application. It concludes with some
+    optimization tips.</para>
+    <para>Note that in addition to media that can be attached as
+    resources to views, streaming audio and video can be played by 
+    <indexterm>
+      <primary>videoview</primary>
+    </indexterm>
+    <sgmltag class="element">videoview</sgmltag>s. Please see 
+    <xref linkend="video" />for a discussion of streaming
+    media.</para>
+    <para>For a discussion of streaming media, see 
+    <xref linkend="video" />.</para>
+  </section>
+  <section>
+    <title>Supported media types</title>
+    <para>The list of supported media types varies slightly
+    depending on the target runtime and whether the application is
+    to be deployed SOLO or proxied.</para>
+    <section>
+      <title condition="swf">Media for SWF SOLO
+      applications</title>
+      <para>SOLO applications compiled to SWF depend on Flash to
+      load images (whereas the proxied applications get help from
+      the transcoder on the server). This means that SOLO
+      applications are limited to file types supported natively by
+      Flash.</para>
+      <section>
+        <title>Flash 7 and Flash 8 limitations</title>
+        <para>Flash player version 7 it can only load a limited set
+        of jpegs encodings; it cannot do interleaved or progressive
+        jpeg. If you run Flash player 8 it can do more wide range
+        of jpeg encoding. Set the compiler to compile for Flash 8
+        as a target runtime to get this expanded range of image
+        formats (also PNG and GIF).</para>
+      </section>
+    </section>
+    <section>
+      <title condition="dhtml">DHTML Limitations and
+      workaround</title>
+      <para>Browsers do not natively support .swf or audio or video
+      formats. You must transcode them, omit them from your
+      application, or embed a flash player in your application to
+      handle them.</para>
+      <section>
+        <title>Transcoding .swf to .png</title>
+        <para>Files in .swf format can be transcoded to .png format
+        for display by the DHTML runtime. OpenLaszlo provides a
+        facility, called 
+        <literal>autopng</literal>, for doing this automatically.
+        As a convenience, the server and compiler search for a
+        corresponding png file if a swf file is referenced in the
+        DHTML runtime. To use this mechanism in your own code,
+        create a png file with the same basename as the swf file,
+        and place it in the same directory as the swf resource you
+        want it to replace.</para>
+      </section>
+      <section>
+        <title>Audio and Video in DHTML applications</title>
+        <note>
+          <para>The following discussion applies to audio and video
+          resources attached to 
+          <sgmltag class="element" role="LzView">view</sgmltag>s,
+          not to 
+          <indexterm>
+            <primary>videoview</primary>
+          </indexterm>
+          <sgmltag class="element">videoview</sgmltag>s. 
+          <indexterm>
+            <primary>videoview</primary>
+          </indexterm>
+          <sgmltag class="element">videoview</sgmltag>s are not
+          supported at all for the DHTML runtime.</para>
+        </note>
+        <para>In order to display swf-formatted audio and video
+        within a DHTML application, you may embedd a swf player in
+        the page. For a discussion of how to do this, see 
+        <xref linkend="browser-integration" />.</para>
+      </section>
+    </section>
+    <section>
+      <title>Summary of Supported Media</title>
+      <para>OpenLaszlo 4.0 and above support the following media
+      types:</para>
+      <variablelist>
+        <varlistentry>
+          <term>JPEG</term>
+          <listitem>
+            <para>Depending on target runtime and mode of
+            deployment, different .jpg and .jpeg files are
+            supported. Progressive and interleaved files are not
+            supported for Flash 7 SOLO deployment. See the 
+            <ulink url="http://www.w3.org/Graphics/JPEG/">W3C JPEG
+            JFIF Specification</ulink>. 
+            <note>
+              <para>
+              <emphasis>Progressive</emphasis>files are re-encoded
+              in the OpenLaszlo Server.</para>
+            </note></para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>GIF</term>
+          <listitem>
+            <para>All .gif files are supported. See the 
+            <ulink url="http://www.w3.org/Graphics/GIF/spec-gif89a.txt">
+            GIF Spec</ulink>.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PNG</term>
+          <listitem>
+            <para>All Portable Network Graphics files (
+            <ulink url="http://www.w3.org/Graphics/PNG/">PNG
+            details at W3C information</ulink>) are supported. This
+            includes PNGs with alpha channels
+            (transparency).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MP3</term>
+          <listitem>
+          <para condition="swf">For proxied applications compiled
+          to .swf, support is limited to audio MP3 files with 
+          <emphasis>sample</emphasis>-rates of 44.1 kHz, 22.050
+          kHz, 11.025 kHz, 8.000 kHz and 5.512 kHz.</para>
+              <!-- fix typo: works does not work -->
+          <para>Flash behaves poorly with mp3s it doesn't like,
+          which makes tracking down problems difficult. If you run
+          into a problem, a good idea would be to find out whether
+          your mp3 plays in a standalone Flash app separate from
+          OpenLaszlo. (You can use the mtasc.org compiler to test
+          this, using Flash's Sound class to load an play your
+          mp3.) If your mp3 does not work in standalone
+          Flash, hen the problem is not OpenLaszlo.</para>
+              <!-- add missing para tags LI LPP-4639 9/4/2007-->
+              <para>
+              Mp3s are
+          not natively supported by browsers, so applications that
+          compile to DHTML should make provisions, as described
+          above.</para></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>SWF</term>
+          <listitem>
+            <para>Macromedia Flash (SWF) files. (See 
+            <ulink url="http://www.macromedia.com/software/flash/open/licensing/fileformat/">
+            Macromedia documentation</ulink>).</para>
+            <para>For applications compiled to Flash, support is
+            limited to SWF files that contain stills or animation
+            only. Very limited ActionScript is allowed/supported
+            (see below for more details).</para>
+            <para>For applications compiled to DHTML, .swf format
+            files are not supported. See above for a
+            workaround.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>For up-to-date discussion of supported media and
+      considerations about their deployment in various runtimes,
+      see the 
+      <ulink url="http://wiki.openlaszlo.org/MediaSupport">
+      OpenLaszlo Wiki</ulink>.</para>
+    </section>
+  </section>
+  <section>
+    <title>Views and resources</title>
+    <para>The 
+    <sgmltag class="element" role="LzView">view</sgmltag>is the
+    most basic viewable element in an OpenLaszlo application and it
+    is described in 
+    <xref linkend="views" />. A view may have a 
+    <emphasis>resource</emphasis>attached to it. The resource
+    represents a piece of media (image, audio, video, or animation)
+    that the view controls. For images, the view typically displays
+    the image. For time-based media (audio, video, animation), the
+    view can be used to start, stop, or jump to a specific frame or
+    time in the media.</para>
+    <para>For a simple informal introduction to attaching resources
+    to views, see 
+    <xref linkend="art_assets" />. The chapter you're reading now
+    briefly goes over topics covered in that tutorial and then goes
+    into greater depth.</para>
+    <para>Resources may be declared directly inside a view using
+    the view's 
+    <sgmltag class="attribute" role="LzView.__ivars__.resource">
+    resource</sgmltag>attribute:</para>
+    <example role="live-example">
+      <title>Importing a resource</title>
+      <programlisting language="lzx">
+        <textobject>
+          <textdata fileref="programs/media-resources-$1.lzx" />
+        </textobject>
+      </programlisting>
+    </example>
+    <?example role="live-example"><title>Importing a resource</title><programlisting role="lzx-embednew"><filename>media-resources-$1.lzx</filename><parameter/><code>
+        &lt;canvas height="110"&gt;
+          &lt;view resource="../resources/logo.gif"/&gt;
+        &lt;/canvas&gt;
+        </code></programlisting><programlisting>
+        &lt;canvas height="110"&gt;
+          &lt;view resource="../resources/logo.gif"/&gt;
+        &lt;/canvas&gt;
+        </programlisting><?lzx-edit programs/media-resources-$1.lzx></example?>
+    <para>Or they may be declared externally as first-class objects
+    themselves:</para>
+    <example role="live-example">
+      <title>Declaring a resource</title>
+      <programlisting language="lzx">
+        <textobject>
+          <textdata fileref="programs/media-resources-$2.lzx" />
+        </textobject>
+      </programlisting>
+    </example>
+    <?example role="live-example"><title>Declaring a resource</title><programlisting role="lzx-embednew"><filename>media-resources-$2.lzx</filename><parameter/><code>
+        &lt;canvas height="110"&gt;
+          &lt;resource name="myname" src="../resources/logo.gif"/&gt;
+          &lt;view resource="myname"/&gt;
+        &lt;/canvas&gt;
+        </code></programlisting><programlisting>
+        &lt;canvas height="110"&gt;
+          &lt;resource name="myname" src="../resources/logo.gif"/&gt;
+          &lt;view resource="myname"/&gt;
+        &lt;/canvas&gt;
+        </programlisting><?lzx-edit programs/media-resources-$2.lzx></example?>
+    <section>
+      <title>Resources are not views</title>
+      <para>Note that a 
+      <sgmltag class="element" role="LzView.__ivars__.resource">
+      resource</sgmltag>is 
+      <emphasis>not</emphasis>itself a view. Resources do not have
+      x and y positions, or background color, or any of the 49 or
+      so attributes that views have. A resource that is not
+      attached to a view is essentially invisible to the
+      application. As explained below, in order to manipulate a
+      resource, you perform actions on the view to which the
+      resource is attached.</para>
+    </section>
+    <section>
+      <title>Summary of APIs that act on resources</title>
+      <para>There are a number of 
+      <sgmltag class="element">view</sgmltag>APIs (methods, fields,
+      and events) that can be used to find out about and control a
+      view's resource.</para>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Resource and view size, scaling and
+          stretching:</para>
+          <itemizedlist spacing="compact">
+            <listitem>
+              <sgmltag class="attribute"
+              role="LzView.__ivars__.resourcewidth">
+              resourcewidth</sgmltag>
+            </listitem>
+            <listitem>
+              <sgmltag class="attribute"
+              role="LzView.__ivars__.resourceheight">
+              resourceheight</sgmltag>
+            </listitem><?ignore obsolete?
+                        <listitem><sgmltag class="attribute" role="LzView.__ivars__.xscale">xscale</sgmltag></listitem>
+                        <listitem><sgmltag class="attribute" role="LzView.__ivars__.yscale">yscale</sgmltag></listitem>
+            ?>
+            <listitem>
+              <property role="LzView.stretches">
+              stretches</property>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.stretchResource">
+              stretchResource()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.measureWidth">
+              measureWidth()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.measureHeight">
+              measureHeight()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.updateResourceSize">
+              updateResourceSize()</methodname>
+            </listitem>
+          </itemizedlist>
+          <remark role="fixme">Discuss how view and resource sizes
+          interact (need details from Adam/Sarah since I'm not
+          really sure)</remark>
+        </listitem>
+        <listitem>
+          <para>Resource loading (discussed 
+          <link linkend="media-resources.loading">
+          below</link>):</para>
+          <itemizedlist spacing="compact">
+            <listitem>
+              <sgmltag class="attribute"
+              role="LzView.__ivars__.resource">resource</sgmltag>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.setSource">
+              setSource()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.unload">
+              unload()</methodname>
+            </listitem>
+            <listitem>
+              <sgmltag class="attribute"
+              role="LzView.__ivars__.loadratio">loadratio</sgmltag>
+            </listitem>
+            <listitem>
+              <sgmltag class="attribute"
+              role="LzView.__ivars__.framesloadratio">
+              framesloadratio</sgmltag>
+            </listitem>
+            <listitem>
+              <property role="LzView.prototype.onload">
+              onload</property>
+            </listitem>
+            <listitem>
+              <property role="LzView.prototype.onerror">
+              onerror</property>
+            </listitem>
+            <listitem>
+              <property role="LzView.prototype.ontimeout">
+              ontimeout</property>
+            </listitem>
+            <listitem>
+              <property role="LzView.prototype.onaddsubresource">
+              onaddsubresource</property>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+        <listitem>
+          <para>Animation/video/frames:</para>
+          <itemizedlist spacing="compact">
+            <listitem>
+              <methodname role="LzView.prototype.play">
+              play()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.stop">
+              stop()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.seek">
+              seek()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.getTotalTime">
+              getTotalTime()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.getCurrentTime">
+              getCurrentTime()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.setResourceNumber">
+              setResourceNumber()</methodname>
+            </listitem>
+            <listitem>
+              <sgmltag class="attribute"
+              role="LzView.__ivars__.frame">frame</sgmltag>
+            </listitem>
+            <listitem>
+              <sgmltag class="attribute"
+              role="LzView.__ivars__.totalframes">
+              totalframes</sgmltag>
+            </listitem>
+            <listitem>
+              <property role="LzView.prototype.onlastframe">
+              onlastframe</property>
+            </listitem>
+            <listitem>
+              <property role="LzView.prototype.onplay">
+              onplay</property>
+            </listitem>
+            <listitem>
+              <property role="LzView.prototype.onstop">
+              onstop</property>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+        <listitem>
+          <para>Audio:</para>
+          <itemizedlist spacing="compact">
+            <listitem>
+              <methodname role="LzView.prototype.getVolume">
+              getVolume()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.setVolume">
+              setVolume()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.getPan">
+              getPan()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.setPan">
+              setPan()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.play">
+              play()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.stop">
+              stop()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.getTotalTime">
+              getTotalTime()</methodname>
+            </listitem>
+            <listitem>
+              <methodname role="LzView.prototype.getCurrentTime">
+              getCurrentTime()</methodname>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
+    </section>
+    <section>
+      <title>Resource declarations and naming</title>
+      <para>When a resource is declared externally, it must be
+      given a name. The namespace for resources is global to the
+      entire application. Resource tags can only be used as direct
+      children of either the 
+      <sgmltag class="element" role="LzCanvas">canvas</sgmltag>or 
+      <sgmltag class="element" role="tag.library">
+      library</sgmltag>tags.</para>
+      <para>This style of resource inclusion makes it simpler to
+      separate out art assets from code and can make for improved
+      designer/developer interactions.</para>
+      <para>When you directly import a resource without naming it,
+      as in the first example, the LZX compiler assigns a unique
+      name to that resource.</para>
+      <para>Behavior when two resources share the same name is
+      undefined. Therefore you should take care to make sure that
+      each resource has a unique and appropriate name.</para>
+    </section>
+  </section>
+  <section>
+    <title>Multi-frame resources</title>
+    <para>Laszlo supports the notion of a resource 
+    <emphasis>frame</emphasis>. A multi-frame resource is a
+    resource that has a single name but refers to multiple
+    independent pieces of media that are sequenced. Here is an
+    example of declaring a multi-frame resource:</para>
+    <example role="live-example">
+      <title>Declaring a multi-frame resource</title>
+      <programlisting language="lzx">
+        <textobject>
+          <textdata fileref="programs/media-resources-$3.lzx" />
+        </textobject>
+      </programlisting>
+    </example>
+    <?example role="live-example"><title>Declaring a multi-frame resource</title><programlisting role="lzx-embednew"><filename>media-resources-$3.lzx</filename><parameter/><code>
+        &lt;canvas height="180"&gt;
+          &lt;resource name="myresource"&gt;
+            &lt;frame src="../resources/logo.gif"/&gt;
+            &lt;frame src="../resources/sky.jpg"/&gt;
+          &lt;/resource&gt;
+          &lt;simplelayout spacing="5"/&gt;
+          &lt;view id="myview" resource="myresource"/&gt;
+          &lt;view layout="axis: x; spacing: 3"&gt;
+            &lt;text&gt;Frame:&lt;/text&gt;
+            &lt;radiogroup&gt;
+              &lt;radiobutton selected="true"&gt;1&lt;/radiobutton&gt;
+              &lt;radiobutton&gt;2&lt;/radiobutton&gt;
+              &lt;handler name="onvalue" args="v"&gt;
+                myview.setResourceNumber(Number(v));
+              &lt;/handler&gt;
+            &lt;/radiogroup&gt;
+          &lt;/view&gt;
+        &lt;/canvas&gt;
+        </code></programlisting><programlisting>
+        &lt;canvas height="180"&gt;
+          &lt;resource name="myresource"&gt;
+            &lt;frame src="../resources/logo.gif"/&gt;
+            &lt;frame src="../resources/sky.jpg"/&gt;
+          &lt;/resource&gt;
+          &lt;simplelayout spacing="5"/&gt;
+          &lt;view id="myview" resource="myresource"/&gt;
+          &lt;view layout="axis: x; spacing: 3"&gt;
+            &lt;text&gt;Frame:&lt;/text&gt;
+            &lt;radiogroup&gt;
+              &lt;radiobutton selected="true"&gt;1&lt;/radiobutton&gt;
+              &lt;radiobutton&gt;2&lt;/radiobutton&gt;
+              &lt;handler name="onvalue" args="v"&gt;
+                myview.setResourceNumber(Number(v));
+              &lt;/handler&gt;
+            &lt;/radiogroup&gt;
+          &lt;/view&gt;
+        &lt;/canvas&gt;
+        </programlisting><?lzx-edit programs/media-resources-$3.lzx></example?>
+    <para>You can use a multi-frame resource to construct an
+    animation that moves between frames when you call the 
+    <interface>LzView.play()</interface>method. Conversely, when
+    you import a resource that contains an animation, each frame of
+    the animation automatically becomes a frame in that resource.
+    In other words, art assets that contain multiple frames
+    themselves 
+    <emphasis>are</emphasis>multi-frame resources. Just as with
+    multi-frame resources that are constructed in LZX by importing
+    each frame individually, you can control the frame that is
+    currently displayed.</para>
+    <example role="live-example">
+      <title>Importing an animation</title>
+      <programlisting language="lzx">
+        <textobject>
+          <textdata fileref="programs/media-resources-$4.lzx" />
+        </textobject>
+      </programlisting>
+    </example>
+    <?example role="live-example"><title>Importing an animation</title><programlisting role="lzx-embednew"><filename>media-resources-$4.lzx</filename><parameter/><code>
+        &lt;canvas height="220"&gt;
+          &lt;simplelayout spacing="5"/&gt;
+          &lt;resource name="myresource" src="resources/logo.swf"/&gt;
+          &lt;button onclick="me.stop()"&gt; Stop &lt;/button&gt;
+          &lt;button onclick="me.play()"&gt; Play &lt;/button&gt;
+          &lt;text text="${me.frame + ' out of ' + me.totalframes + ' frame(s)'}"/&gt;
+          &lt;view layout="axis: x; spacing: 4"&gt;
+            &lt;button isdefault="true" text="Set current frame: " 
+              onclick="me.setAttribute('frame', Number(tt.text))"/&gt;
+            &lt;edittext id="tt" width="50"/&gt;
+          &lt;/view&gt;
+          &lt;view id="me" resource="myresource"/&gt;
+        &lt;/canvas&gt;
+        </code></programlisting><programlisting>
+        &lt;canvas height="220"&gt;
+          &lt;simplelayout spacing="5"/&gt;
+          &lt;resource name="myresource" src="resources/logo.swf"/&gt;
+          &lt;button onclick="me.stop()"&gt; Stop &lt;/button&gt;
+          &lt;button onclick="me.play()"&gt; Play &lt;/button&gt;
+          &lt;text text="${me.frame + ' out of ' + me.totalframes + ' frame(s)'}"/&gt;
+          &lt;view layout="axis: x; spacing: 4"&gt;
+            &lt;button isdefault="true" text="Set current frame: " 
+              onclick="me.setAttribute('frame', Number(tt.text))"/&gt;
+            &lt;edittext id="tt" width="50"/&gt;
+          &lt;/view&gt;
+          &lt;view id="me" resource="myresource"/&gt;
+        &lt;/canvas&gt;
+        </programlisting><?lzx-edit programs/media-resources-$4.lzx></example?>
+    <para>Multi-frame resources are also useful for structuring the
+    display of a single visual element or component that takes on
+    different appearances:</para>
+    <example role="live-example">
+      <title>Using multi-frame resources</title>
+      <programlisting language="lzx">
+        <textobject>
+          <textdata fileref="programs/media-resources-$5.lzx" />
+        </textobject>
+      </programlisting>
+    </example>
+    <?example role="live-example"><title>Using multi-frame resources</title><programlisting role="lzx-embednew"><filename>media-resources-$5.lzx</filename><parameter/><code>
+        &lt;canvas height="120"&gt;
+          &lt;!-- create the multi-frame resource and give it a name --&gt;
+          &lt;resource name="mybutton_rsrc"&gt;
+            &lt;!-- first frame is the mouseup state of the button --&gt;     
+            &lt;frame src="../resources/button-up.png"/&gt;   
+            &lt;!-- second frame is the mouseover state of the button --&gt;     
+            &lt;frame src="../resources/button-over.png"/&gt; 
+            &lt;!-- third frame is the mousedown state of the button --&gt;     
+            &lt;frame src="../resources/button-down.png"/&gt; 
+          &lt;/resource&gt;
+        
+      &lt;!-- attach the resource to a view with mouse events --&gt;
+          &lt;view resource="mybutton_rsrc" 
+                onmouseover="setResourceNumber(2)"
+                onmouseout="setResourceNumber(1)"
+                onmousedown="setResourceNumber(3)"
+                onmouseup="setResourceNumber(2)"/&gt;
+        
+    &lt;/canvas&gt;
+        </code></programlisting><programlisting>
+        &lt;canvas height="120"&gt;
+          &lt;!-- create the multi-frame resource and give it a name --&gt;
+          &lt;resource name="mybutton_rsrc"&gt;
+            &lt;!-- first frame is the mouseup state of the button --&gt;     
+            &lt;frame src="../resources/button-up.png"/&gt;   
+            &lt;!-- second frame is the mouseover state of the button --&gt;     
+            &lt;frame src="../resources/button-over.png"/&gt; 
+            &lt;!-- third frame is the mousedown state of the button --&gt;     
+            &lt;frame src="../resources/button-down.png"/&gt; 
+          &lt;/resource&gt;
+        
+      &lt;!-- attach the resource to a view with mouse events --&gt;
+          &lt;view resource="mybutton_rsrc" 
+                onmouseover="setResourceNumber(2)"
+                onmouseout="setResourceNumber(1)"
+                onmousedown="setResourceNumber(3)"
+                onmouseup="setResourceNumber(2)"/&gt;
+        
+    &lt;/canvas&gt;
+        </programlisting><?lzx-edit programs/media-resources-$5.lzx></example?>
+    <section>
+      <title>Frame rates</title>
+      <para>As of OpenLaszlo 3.1, all LZX applications are compiled
+      to Macromedia Flash (SWF) files. With the exception of audio
+      files noted below, SWF files are played by the Flash plugin
+      at a fixed frame rate and all imported animations are played
+      at that frame rate. This frame rate is fixed at 30 frames per
+      second.</para>
+      <section>
+        <title>Audio rates</title>
+        <para>Animations that include an audio soundtrack are
+        played at a rate that maintains the original audio/video
+        synchronization in the incoming animation.</para>
+      </section>
+    </section>
+  </section>
+  <section id="media-resources.loading">
+    <title>Resource loading</title>
+    <para>In the examples above, we've declaratively tied resources
+    to view. But we haven't expressed anything about when or how
+    the application should pull in the needed resource. We call
+    this 
+    <indexterm significance="preferred">
+      <primary>resource loading</primary>
+    </indexterm>
+    <glossterm>resource loading</glossterm>and LZX provides
+    flexibility over how and when the application loads resources.
+    The most important choice is whether a resource should be
+    loaded at 
+    <glossterm>compile time</glossterm>or 
+    <glossterm>run time</glossterm>.</para>
+    <section>
+      <title>Compile time resources</title>
+      <para>Resources that are loaded at compile time are included
+      in the application binary and add to the initial download
+      size of the application.</para>
+      <example role="live-example">
+        <title>Including a resource at compile time</title>
+        <programlisting>&lt;resource name="myname"
+        src="resources/logo.gif"/&gt;</programlisting>
+      </example>
+      <para>Compile-time resource inclusion is good for</para>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>small assets that are fixed for the life-time of
+          the running application.</para>
+        </listitem>
+        <listitem>
+          <para>assets that are needed by all users of an
+          application</para>
+        </listitem>
+      </itemizedlist>
+      <para>Examples of resources that are included at compile time
+      include most of the assets associated with user-interface
+      components.</para>
+      <para>The LZX compiler may transcode compile-time resources
+      for inclusion in the SWF application; the OpenLaszlo Server
+      caches the results of these transcodes. The compiler checks
+      the last-modified time of all compile-time-included resources
+      to determine if an application needs to be recompiled.</para>
+    </section>
+    <section id="media-resources.runtime-resources">
+      <title>Run-time resources</title>
+      <para>There are two main ways to load resources at run-time.
+      The first is to use special syntax that is understood by the 
+      <sgmltag class="element" role="LzView">view</sgmltag>'s 
+      <sgmltag class="attribute" role="LzView.__ivars__.resource">
+      resource</sgmltag>attribute. If you specify a value for this
+      attribute that is an HTTP url, the compiler assumes that this
+      resource should be loaded at runtime:</para>
+      <example role="live-example">
+        <title>Loading a resource at runtime</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/media-resources-$7.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Loading a resource at runtime</title><programlisting role="lzx-embednew"><filename>media-resources-$7.lzx</filename><parameter/><code>
+            &lt;canvas height="180"&gt;
+              &lt;view resource="http:../resources/logo.gif"/&gt;
+            &lt;/canvas&gt;
+            </code></programlisting><programlisting>
+            &lt;canvas height="180"&gt;
+              &lt;view resource="http:../resources/logo.gif"/&gt;
+            &lt;/canvas&gt;
+            </programlisting><?lzx-edit programs/media-resources-$7.lzx></example?>
+      <para>The second method is to use the 
+      <methodname role="LzView.prototype.setSource">
+      setSource()</methodname>method. The previous example is
+      equivalent to the following one:</para>
+      <example role="live-example">
+        <title>Loading a resource at runtime using script</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/media-resources-$8.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <note>
+        <para>LZX treats HTTP URLs that omit the two slashes 
+        <literal>//</literal>after the colon (:) as being relative
+        to the application.</para>
+      </note>
+      <para>
+      <indexterm>
+        <primary>setSource</primary>
+      </indexterm>
+      <methodname role="LzView.prototype.setSource">
+      setSource()</methodname>provides more control over the
+      loading of the resource. Using this method, you can:</para>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>choose whether or not the server and/or client
+          should cache the resource;</para>
+        </listitem>
+        <listitem>
+          <para>specify a URL that instructs the server to use a
+          specific protocol to fetch the resource;</para>
+        </listitem>
+        <listitem>
+          <para>specify HTTP request headers that should be used
+          when fetching the resource over HTTP.</para>
+        </listitem>
+      </itemizedlist>
+      <section>
+        <title>Protocols for proxied applications</title>
+        <note>
+          <para>This section does not apply to SOLO
+          applications.</para>
+        </note>
+        <para>Before sending resources to a running, proxied,
+        OpenLaszlo application, the OpenLaszlo Server first fetches
+        (or proxies) the resource. The server uses the URL for the
+        resource to determine how and where to get the resource.
+        The term 
+        <emphasis>back-end</emphasis>is used to refer to the server
+        that is ultimately providing the resource. Depending on
+        your configuration, the back-end can be the OpenLaszlo
+        Server host itself. Or it may be another distinct
+        host.</para>
+        <para>The OpenLaszlo Server determines the protocol to use
+        to communicate to the back-end based on the URL for the
+        resource. By default, URLs that are to be loaded at
+        runtime, that don't specify the protocol are assumed to be
+        HTTP urls. OpenLaszlo supports communication to back-end
+        hosts (including localhost itself) via the HTTP protocol.
+        Relative HTTP URLs are thus fetched using a localhost HTTP
+        transfer.</para>
+      </section>
+      <section>
+        <title>Caching</title>
+        <para>By default, in proxied applications, media that is
+        accessed at runtime is cached both in the server 
+        <emphasis role="bold">and</emphasis>in the client browser.
+        The OpenLaszlo Server uses the standard HTTP
+        If-Modified-Since/Last-Modified caching mechanism specified
+        in the 
+        <ulink url="http://www.w3.org/Protocols/rfc2616/rfc2616.html">
+        HTTP 1.1 specification</ulink>.</para>
+        <para>The OpenLaszlo Server actually maintains two media
+        caches. One cache is used for resources that are requested
+        at runtime. This is simply called the 
+        <indexterm significance="preferred">
+          <primary>Media Cache</primary>
+        </indexterm>
+        <glossterm>Media Cache</glossterm>. It also maintains a
+        second cache for resources that are compiled into
+        applications called the 
+        <indexterm significance="preferred">
+          <primary>Compiler Media Cache</primary>
+        </indexterm>
+        <glossterm>Compiler Media Cache</glossterm>. In general,
+        the Compiler Media Cache settings only affect the speed of
+        the OpenLaszlo compiler. The settings for the Media Cache
+        can affect server performance. See 
+        <ulink url="../deploy/" type="">The Deployer's
+        Guide</ulink>for details.</para>
+        <para>The example below provides a text input area for you
+        to type in urls that you'd like to test. To run the
+        example, copy it into your local environment and compile
+        it:</para>
+        <example>
+          <title>Testing runtime resource loading</title>
+          <programlisting language="lzx">
+            <textobject>
+              <textdata fileref="programs/media-resources-$9.lzx" />
+            </textobject>
+          </programlisting>
+        </example>
+      </section>
+    </section>
+  </section>
+  <section>
+    <title>Using the &lt;image&gt; tag</title>
+    <para>The 
+    <sgmltag class="element" role="lz.image">image</sgmltag>tag has
+    the effect of declaring a view and associating a resource with
+    it. This is a convenient shorthand that can make your programs
+    easier to read and maintain. Do not confuse the 
+    <sgmltag class="element" role="lz.image">image</sgmltag>tag
+    with the 
+    <sgmltag class="element" role="img">img</sgmltag>tag. The
+    latter is used to include images inside HTML text and behaves
+    like the &lt;img&gt; tag in HTML.</para>
+  </section>
+</chapter>

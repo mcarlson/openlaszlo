@@ -1,0 +1,15 @@
+<canvas debug="true">
+<debug y="150"/>
+<include href="lzunit"/>
+<simplelayout axis="y" spacing="10"/>
+
+<TestSuite>
+    <TestCase>
+        <method name="testGoButtonTrue">
+            assertTrue(goButton.go);
+        </method>
+    </TestCase>   
+</TestSuite>
+
+</canvas>
+<!-- Copyright 2001-2007 Laszlo Systems, Inc. -->

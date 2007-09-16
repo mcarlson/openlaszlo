@@ -1,0 +1,70 @@
+
+<canvas debug="true" height="500" width="700">
+
+    <debug x="220" width="470" height="285" />
+
+    <dataset name="myDataset">
+        <region name="Region-A" />
+        <region name="Region-B"/>
+        <region name="Region-C"/>
+    </dataset>
+
+    <soap name="placefinder" 
+          wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl">
+
+        <attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" />
+
+        <method name="handler" args="ret">
+            Debug.write('ret:', ret);
+            if (ret.status == 'ok') {
+                Debug.write('myDataset childNodes:', myDataset.childNodes);
+            }
+        </method>
+
+        <handler name="onload">
+            Debug.write('placefinder soap service stub loaded');
+            myView.setAttribute('visible', true);
+            this.proxy.getTypes([], this.myDel);
+        </handler>
+
+    </soap>
+
+    <view name="myView" datapath="myDataset:/" x="10" visible="false">
+
+        <simplelayout spacing="2" inset="10" />
+
+        <view datapath="region" layout="spacing: 5">
+            <attribute name="text" value="$path{'@name'}" type="string" />
+
+            <text name="t" text="${parent.text + ' (click me)'}" resize="true" />
+
+            <method name="gotData">
+                this.setAttribute('clickable', false);
+                this.t.setText(this.text);
+            </method>
+
+            <handler name="onclick">
+                if (text == "Region-A") {
+                    this.regions.setDatapath("element/i[1-6]");
+                } else if (text == "Region-B") {
+                    this.regions.setDatapath("element/i[7-12]");
+                } else {
+                    this.regions.setDatapath("element/i[12-]");
+                }
+                var myDel = new LzDelegate(this, "gotData");
+                myDel.dataobject = this.datapath.p;
+                placefinder.proxy.getTypes([], myDel);
+            </handler>
+
+            <view name="regions" x="10">
+                <text datapath="key/text()" resize="true"/>
+                <text x="20" datapath="value/text()" resize="true"/>
+            </view>
+        </view>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

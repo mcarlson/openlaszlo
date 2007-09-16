@@ -1,0 +1,63 @@
+<canvas height="420" width="620">
+  <include href="timing-support.lzx" />
+
+  <script>
+  <![CDATA[
+    var scale = 20;
+
+    function createElements() {
+        for (var k = 0; k < scale; k++) {
+            var d = document.createElement('div');      
+        }
+    }
+
+    function createElementsAttach() {
+        var outer = document.body;
+        for (var k = 0; k < scale; k++) {
+            var div = document.createElement('div');      
+            outer.appendChild(div);
+        }
+    }
+
+    function createElementsAttachNested() {
+        var outer = document.body;
+        for (var k = 0; k < scale; k++) {
+            var div = document.createElement('div');      
+            outer.appendChild(div);
+            outer = div;
+        }
+    }
+
+    function setCSSProp() {
+        var div = document.createElement('div');      
+        div.style.position = 'absolute';
+        for (var k = 0; k < scale; k++) {
+            div.style.left = k + 'px';   
+        }
+    }
+
+    function setCSSPropAttached() {
+        var div = document.createElement('div');      
+        div.style.position = 'absolute';
+        document.body.appendChild(div);
+        for (var k = 0; k < scale; k++) {
+            div.style.left = k + 'px';   
+        }
+    }
+
+    addTest("createElements");
+    addTest("createElementsAttach");
+    addTest("createElementsAttachNested");
+    addTest("setCSSProp");
+    addTest("setCSSPropAttached");
+    
+    runTests( 'dhtmlnative' , 10 );
+
+  ]]>
+  </script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

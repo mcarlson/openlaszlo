@@ -1,0 +1,15 @@
+
+<canvas height="20">
+  <switch>
+    <when runtime="dhtml">
+       <text>This program has been compiled for DHTML</text>
+    </when>
+    <otherwise>
+      <text>This program has been compiled for SWF</text> 
+    </otherwise>
+  </switch>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

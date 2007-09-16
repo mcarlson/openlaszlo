@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -348,34 +348,71 @@ public class ScriptCompiler extends Cache {
             final char CHAR_ESCAPE = '\\';
             java.io.StringReader reader = new java.io.StringReader(s);
             java.io.StringWriter writer = new java.io.StringWriter();
-            writer.write('\"');
             int i;
+            int n = 0;
+            char quote = '\"';
+            // Minimize escaping of quotes
+            if (s.indexOf('\'') >= 0 || s.indexOf('\"') >= 0) {
+              while ((i = reader.read()) != -1) {
+                char c = (char) i;
+                switch (c) {
+                  case '\'': n--; break;
+                  case '\"': n++; break;
+                }
+              }
+              reader.reset();
+              quote = n > 0 ? '\'' : '\"';
+            }
+            writer.write(quote);
             while ((i = reader.read()) != -1) {
                 char c = (char) i;
                 switch (c) {
-                    // todo: look up other characters
                 case '\n':
                     writer.write("\\n");
                     break;                    
                 case '\r':
                     writer.write("\\r");
                     break;
+                case '\b':
+                    writer.write("\\b");
+                    break;
+                case '\t':
+                    writer.write("\\t");
+                    break;
+                case '\u000B':
+                    writer.write("\\v");
+                    break;
+                case '\f':
+                    writer.write("\\f");
+                    break;
                 case '\\':
-                case '\"':
-                    // quote...
                     writer.write(CHAR_ESCAPE);
                     writer.write(c);
                     break;
+                case '\'':
+                case '\"':
+                    if (c == quote) {
+                      writer.write(CHAR_ESCAPE);
+                    }
+                    writer.write(c);
+                    break;
                 default:
-                    if (i < 32 || i >= 256) {
-                        /*
-                          throw new RuntimeException("can't quote char #" + i +
-                                                   " in \"" + s + "\"");
-                        */
+                    if (i == 0) {
+                        // ECMAScript NUL is a special case
+                        writer.write(CHAR_ESCAPE);
+                        writer.write('0');
+                    } else if (i < 32 || (i >= 128 && i <= 0xff)) {
+                        // ECMAScript string literal hex unicode escape sequence
+                        writer.write(CHAR_ESCAPE);
+                        writer.write('x');
+                        // Format as \ xXX two-digit zero padded hex string
+                        writer.write(hexchar((c >> 4) & 0x0F));
+                        writer.write(hexchar(c & 0x0F));
+                    } else if (i > 0xff) {
                         // ECMAScript string literal hex unicode escape sequence
                         writer.write(CHAR_ESCAPE);
                         writer.write('u');
-                        // Format as \ uXXXX four digit zero padded hex string
+                        // Format as \ uXXXX four-digit zero padded hex string
                         writer.write(hexchar((c >> 12) & 0x0F));
                         writer.write(hexchar((c >> 8) & 0x0F));
                         writer.write(hexchar((c >> 4) & 0x0F));
@@ -385,7 +422,7 @@ public class ScriptCompiler extends Cache {
                     }
                 }
             }
-            writer.write('\"');
+            writer.write(quote);
             return writer.toString();
         } catch (java.io.IOException e) {
             throw new ChainedException(e);

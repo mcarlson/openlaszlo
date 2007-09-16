@@ -1,0 +1,29 @@
+<view id="gError" x="$once{ parent.width/2 - width /2 }"
+      y="$once{ parent.height/2 - height /2 }"
+      resource="resources/error_no_txt.png" visible="false">
+
+    <text name="title" fontsize="18" fgcolor="white" y="3"
+          x="$once{ parent.width/2 - width /2 }" width="170">
+        Data source error
+    </text>
+
+    <text x="10" y="32" width="220" multiline="true"> 
+        There was a problem loading data. Press the ok button to reload
+    </text>
+
+    <mybutton x="260" y="32">
+        <text x="8" y="10" valign="middle">ok</text>
+        <method event="onclick">
+            LzBrowser.loadURL( "javascript:window.location.href=window.location.href" );
+        </method>
+    </mybutton>
+
+    <method name="show" args="etext">
+        this.setVisible( true );
+    </method>
+</view>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->

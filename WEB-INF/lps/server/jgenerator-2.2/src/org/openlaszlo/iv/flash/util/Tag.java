@@ -6,6 +6,7 @@
  * The JGenerator Software License, Version 1.0
  *
  * Copyright (c) 2000 Dmitry Skavish (skavish@usa.net). All rights reserved.
+ * Copyright (c) 2007
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -123,6 +124,8 @@ public final class Tag {
     public static final int DEFINEVIDEOSTEAM     = 60; // Flash 6
     //public static final int                      = 61;
     public static final int DEFINEFONTINFO2      = 62;  // Flash 6
+    public static final int IMPORTASSETS2        = 71;  // Flash 8
+
 
     public static final String[] tagNames = {
         "End",
@@ -188,6 +191,15 @@ public final class Tag {
         "DefineVideoStream",
         "Unknown",
         "DefineFontInfo2",
+        "Unknown",
+        "Unknown",
+        "Unknown",
+        "Unknown",
+        "Unknown",
+        "Unknown",
+        "Unknown",
+        "Unknown",
+        "ImportAssets2"
     };
 
     public static final FlashObject END_TAG       = new FixedTag( END );

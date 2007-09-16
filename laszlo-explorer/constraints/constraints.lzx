@@ -1,4 +1,4 @@
-<canvas width="200" >
+<canvas>
   <view width="140" height="140" bgcolor="black">
     <view x="1" y="1" 
           width="${parent.width - 2}" 
@@ -12,3 +12,5 @@
     </view>
   </view>
 </canvas>
+
+

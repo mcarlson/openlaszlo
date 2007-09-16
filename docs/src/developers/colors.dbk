@@ -1,0 +1,585 @@
+<chapter id="color">
+
+
+<title>Color</title>
+
+
+<para/><section><title>Overview</title>
+
+<para>This chapter gives a brief introduction to the use of colors in OpenLaszlo applications. It explains the various syntaxes that are used to specify color, and gives general guidelines for using color effectively.</para>
+<para>
+OpenLaszlo uses the standard web color definitions, three hexadecimal values in a row, representing red, green, and blue components of a color (all colors can be created by mixing these three primary colors). Computer monitors are comprised of thousands of red, green, and blue dots grouped so closely by threes that our eyes see them as one blended color.
+</para>
+
+
+<para/></section><section><title>RGB or Red, Green, Blue</title>
+<para>
+Each red, blue, or green dot can have a value from 0 to 255. If the red dot is fully "on" at 255, while blue and green are fully "off" at 0, we see red. The RBG color code for red is 255,0,0. Blue is 0,255,0; green is 0,0,255. (Some graphics systems combine an RGB triplet with an 8-bit alpha value, and get a 32-bit color word; in those systems, we think of colors as RGBA.)
+</para>
+
+<example role="live-example">
+   <title>RGB color values</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/color-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>RGB color values</title><programlisting role="lzx-embednew"><filename>color-$1.lzx</filename><parameter/><code>
+&lt;canvas height="125"&gt;
+  &lt;simplelayout axis="x" spacing="10"/&gt;
+  &lt;class name="gView"&gt;
+    &lt;view height="100" width="100"/&gt;
+  &lt;/class&gt;     
+  &lt;gView id="red"   bgcolor="rgb(255,0,0)"/&gt;
+  &lt;gView id="blue"  bgcolor="rgb(0,255,0)"/&gt;
+  &lt;gView id="green" bgcolor="rgb(0,0,255)"/&gt;
+&lt;/canvas&gt; 
+</code></programlisting><programlisting>
+&lt;canvas height="125"&gt;
+  &lt;simplelayout axis="x" spacing="10"/&gt;
+  &lt;class name="gView"&gt;
+    &lt;view height="100" width="100"/&gt;
+  &lt;/class&gt;     
+  &lt;gView id="red"   bgcolor="rgb(255,0,0)"/&gt;
+  &lt;gView id="blue"  bgcolor="rgb(0,255,0)"/&gt;
+  &lt;gView id="green" bgcolor="rgb(0,0,255)"/&gt;
+&lt;/canvas&gt; 
+</programlisting><?lzx-edit programs/color-$1.lzx></example?>
+       
+
+<para/></section><section><title>Hexadecimal Code</title>
+<para>
+Some web applications require that RGB be expresssed in hexadecimal (base 16 instead of base 10) values. OpenLaszlo much prefers hex values; for one thing, using hexadecimal values enables the use of stylesheets (see Cascading Style Sheets):
+</para>
+
+<example role="live-example">
+   <title>Using Hex for colors with stylesheet</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/color-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using Hex for Colors with Sytlesheet</title><programlisting role="lzx-embednew"><filename>color-$2.lzx</filename><parameter/><code>
+&lt;canvas height="125"&gt;
+
+  &lt;stylesheet&gt;
+    
+    #red {
+        bgcolor: "0xFF0000";
+        }
+
+    #blue {
+        bgcolor: "0x00FF00";
+        }
+            
+    #green {
+        bgcolor: "0x0000FF";
+        }
+            
+  &lt;/stylesheet&gt;        
+        
+  &lt;simplelayout axis="x" spacing="10"/&gt;
+
+  &lt;class name="gView"&gt;
+    &lt;view height="100" width="100" bgcolor="$style{'bgcolor'}"/&gt;
+  &lt;/class&gt;
+        
+  &lt;gView id="red"  /&gt;
+  &lt;gView id="blue" /&gt;
+  &lt;gView id="green"/&gt;
+
+&lt;/canvas&gt;        
+</code></programlisting><programlisting>
+&lt;canvas height="125"&gt;
+
+  &lt;stylesheet&gt;
+    
+    #red {
+        bgcolor: "0xFF0000";
+        }
+
+    #blue {
+        bgcolor: "0x00FF00";
+        }
+            
+    #green {
+        bgcolor: "0x0000FF";
+        }
+            
+  &lt;/stylesheet&gt;        
+        
+  &lt;simplelayout axis="x" spacing="10"/&gt;
+
+  &lt;class name="gView"&gt;
+    &lt;view height="100" width="100" bgcolor="$style{'bgcolor'}"/&gt;
+  &lt;/class&gt;
+        
+  &lt;gView id="red"  /&gt;
+  &lt;gView id="blue" /&gt;
+  &lt;gView id="green"/&gt;
+
+&lt;/canvas&gt;        
+</programlisting><?lzx-edit programs/color-$2.lzx></example?>
+<para>
+OpenLaszlo enables coloring in four ways: 0x000000, #000000, rgb(0,0,0), and "black". For now, the best reason to prefer to use the hex style 0x000000 is that it always works, whether the color is assigned explicitly within the view, or by stylesheet. Color assignment by stylesheet fails by name, #hex, or rgb(). Explicit color assignment by rgb() fails unless the RGB values are all numerals -- that is, rgb(0,0,0) produces black, but rgb(FF,FF,FF), which should produce white, comes back at compile time as an invalid color.
+</para>
+<para>
+Coloring of text with fgcolor="foo" is enabled in the same fashions, but with the same limitations.
+</para>
+
+<example role="live-example">
+   <title>Coloring text using CSS</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/color-$3.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>coloring text using CSS</title><programlisting role="lzx-embednew"><filename>color-$3.lzx</filename><parameter/><code>
+&lt;canvas width="860" debug="true"&gt;
+
+&lt;stylesheet&gt;
+    #vName {
+    bgcolorName : "blue";
+    }
+    
+    #tName {
+    fgcolorName : "blue";
+    }
+
+    #vRGB {
+    bgcolorRGB : "#0000FF";
+    }
+    
+    #tRGB {
+    fgcolorRGB : "#0000FF";
+    }
+    
+    #vHex {
+    bgcolorHex : "0x0000FF";
+    }
+
+    #tHex {
+    fgcolorHex : "0x0000FF";
+    }
+
+    #vParens {
+    bgcolorParens : "rgb(0,0,255)";
+    }
+    
+    #tParens {
+    fgcolorParens : "rgb(0,0,255)";
+    }
+    
+&lt;/stylesheet&gt;
+
+&lt;wrappinglayout axis="x" spacing="10"/&gt;
+
+    &lt;view id="vName" height="100" width="100" bgcolor="$style{'bgcolorName'}"/&gt;
+    &lt;text id="tName" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorName'}"&gt;Blue1&lt;/text&gt;
+
+    &lt;view id="vRGB" height="100" width="100" bgcolor="$style{'bgcolorRGB'}"/&gt;
+    &lt;text id="tRGB" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorRGB'}"&gt;Blue2&lt;/text&gt;
+
+    &lt;view id="vHex" height="100" width="100" bgcolor="$style{'bgcolorHex'}"/&gt;
+    &lt;text id="tHex" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorHex'}"&gt;Blue3&lt;/text&gt;
+
+    &lt;view id="vParens" height="100" width="100" bgcolor="$style{'bgcolorParens'}"/&gt;
+    &lt;text id="tParens" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorParens'}"&gt;Blue4&lt;/text&gt;
+
+    &lt;view id="explicitVName" height="100" width="100" bgcolor="blue"/&gt;
+    &lt;text id="explicitTName" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="blue"&gt;Blue5&lt;/text&gt;
+    
+    &lt;view id="explicitVRGB" height="100" width="100" bgcolor="#0000FF"/&gt;
+    &lt;text id="explicitTRGB" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="#0000FF"&gt;Blue6&lt;/text&gt;
+
+    &lt;view id="explicitVHex" height="100" width="100" bgcolor="0x0000FF"/&gt;
+    &lt;text id="explicitTHex" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="0x0000FF"&gt;Blue7&lt;/text&gt;
+
+    &lt;view id="explicitVParens" height="100" width="100" bgcolor="rgb(0,0,255)"/&gt;
+    &lt;text id="explicitTParens" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="rgb(0,0,255)"&gt;Blue8&lt;/text&gt;
+
+&lt;script&gt;
+Debug.write("1=styled by blue");
+Debug.write("2=styled by #0000FF");
+Debug.write("3=styled by 0x0000FF");
+Debug.write("4=styled by rgb(0,0,255)");
+Debug.write("5=explicitly named blue");
+Debug.write("6=explicitly colored #0000FF");
+Debug.write("7=explicitly colored 0x0000FF");
+Debug.write("8=explicitly colored rgb(0,0,255)");
+&lt;/script&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="860" debug="true"&gt;
+
+&lt;stylesheet&gt;
+    #vName {
+    bgcolorName : "blue";
+    }
+    
+    #tName {
+    fgcolorName : "blue";
+    }
+
+    #vRGB {
+    bgcolorRGB : "#0000FF";
+    }
+    
+    #tRGB {
+    fgcolorRGB : "#0000FF";
+    }
+    
+    #vHex {
+    bgcolorHex : "0x0000FF";
+    }
+
+    #tHex {
+    fgcolorHex : "0x0000FF";
+    }
+
+    #vParens {
+    bgcolorParens : "rgb(0,0,255)";
+    }
+    
+    #tParens {
+    fgcolorParens : "rgb(0,0,255)";
+    }
+    
+&lt;/stylesheet&gt;
+
+&lt;wrappinglayout axis="x" spacing="10"/&gt;
+
+    &lt;view id="vName" height="100" width="100" bgcolor="$style{'bgcolorName'}"/&gt;
+    &lt;text id="tName" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorName'}"&gt;Blue1&lt;/text&gt;
+
+    &lt;view id="vRGB" height="100" width="100" bgcolor="$style{'bgcolorRGB'}"/&gt;
+    &lt;text id="tRGB" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorRGB'}"&gt;Blue2&lt;/text&gt;
+
+    &lt;view id="vHex" height="100" width="100" bgcolor="$style{'bgcolorHex'}"/&gt;
+    &lt;text id="tHex" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorHex'}"&gt;Blue3&lt;/text&gt;
+
+    &lt;view id="vParens" height="100" width="100" bgcolor="$style{'bgcolorParens'}"/&gt;
+    &lt;text id="tParens" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorParens'}"&gt;Blue4&lt;/text&gt;
+
+    &lt;view id="explicitVName" height="100" width="100" bgcolor="blue"/&gt;
+    &lt;text id="explicitTName" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="blue"&gt;Blue5&lt;/text&gt;
+    
+    &lt;view id="explicitVRGB" height="100" width="100" bgcolor="#0000FF"/&gt;
+    &lt;text id="explicitTRGB" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="#0000FF"&gt;Blue6&lt;/text&gt;
+
+    &lt;view id="explicitVHex" height="100" width="100" bgcolor="0x0000FF"/&gt;
+    &lt;text id="explicitTHex" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="0x0000FF"&gt;Blue7&lt;/text&gt;
+
+    &lt;view id="explicitVParens" height="100" width="100" bgcolor="rgb(0,0,255)"/&gt;
+    &lt;text id="explicitTParens" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="rgb(0,0,255)"&gt;Blue8&lt;/text&gt;
+
+&lt;script&gt;
+Debug.write("1=styled by blue");
+Debug.write("2=styled by #0000FF");
+Debug.write("3=styled by 0x0000FF");
+Debug.write("4=styled by rgb(0,0,255)");
+Debug.write("5=explicitly named blue");
+Debug.write("6=explicitly colored #0000FF");
+Debug.write("7=explicitly colored 0x0000FF");
+Debug.write("8=explicitly colored rgb(0,0,255)");
+&lt;/script&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/color-$3.lzx></example?>
+<para/><section><title>Mixing Colors</title>
+<para>
+To blend a color, combine the RGB values. Red (FF0000) plus blue (0000FF) equals fuchsia (FF00FF):
+</para>
+<example role="live-example">
+   <title>Blending Colors</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/color-$4.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Blending Colors</title><programlisting role="lzx-embednew"><filename>color-$4.lzx</filename><parameter/><code>
+&lt;canvas height="850"&gt;
+  &lt;window name="raptor" x="25" y="50" height="200" width="200" resizable="true" title="Resize this window"&gt;
+    &lt;view name="red" height="${raptor.height*.5}" width="${raptor.height*.5}" bgcolor="0xFF0000"/&gt;
+    &lt;view name="blue" height="${raptor.red.height}" width="${raptor.red.width}" bgcolor="0x0000FF" x="${raptor.red.width-(raptor.red.width*.5)}" y="${raptor.red.height-(raptor.red.height*.5)}"/&gt;
+    &lt;view name="fuchsia" height="${raptor.red.height*.5}" width="${raptor.red.width*.5}" bgcolor="0xFF00FF" x="${raptor.red.width-(raptor.red.width*.5)}" y="${raptor.red.height-(raptor.red.height*.5)}" /&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="850"&gt;
+  &lt;window name="raptor" x="25" y="50" height="200" width="200" resizable="true" title="Resize this window"&gt;
+    &lt;view name="red" height="${raptor.height*.5}" width="${raptor.height*.5}" bgcolor="0xFF0000"/&gt;
+    &lt;view name="blue" height="${raptor.red.height}" width="${raptor.red.width}" bgcolor="0x0000FF" x="${raptor.red.width-(raptor.red.width*.5)}" y="${raptor.red.height-(raptor.red.height*.5)}"/&gt;
+    &lt;view name="fuchsia" height="${raptor.red.height*.5}" width="${raptor.red.width*.5}" bgcolor="0xFF00FF" x="${raptor.red.width-(raptor.red.width*.5)}" y="${raptor.red.height-(raptor.red.height*.5)}" /&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/color-$4.lzx></example?>
+
+<para/></section><section><title>Standard Web Colors</title>
+<para>
+The 16 basic web colors can be employed by name:
+</para>
+
+<example role="live-example">
+   <title>Named colors</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/color-$5.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Named Colors</title><programlisting role="lzx-embednew"><filename>color-$5.lzx</filename><parameter/><code>
+&lt;canvas height="250" width="250"&gt;
+&lt;wrappinglayout axis="y" spacing="10"/&gt;
+    
+&lt;class name="swatch" width="50" height="50"  /&gt;
+&lt;swatch bgcolor="black"&gt;
+    &lt;text fgcolor="white" text="Black"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="silver"&gt;
+    &lt;text text="Silver"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="gray"&gt;
+    &lt;text text="Gray"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="white"&gt;
+    &lt;view name="inner" width="50" height="50" bgcolor="black"&gt;
+        &lt;view name="furtherinner" width="46" height="46" bgcolor="white" x="2" y="2"/&gt;
+    &lt;/view&gt;    
+    &lt;text text="White"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="maroon"&gt;
+    &lt;text fgcolor="white" text="Maroon"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="red"&gt;
+    &lt;text text="Red"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="purple"&gt;
+    &lt;text fgcolor="white" text="Purple"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="fuchsia"&gt;
+    &lt;text text="Fuchsia"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="green"&gt;
+    &lt;text text="Green"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="lime"&gt;
+    &lt;text text="Lime"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="olive"&gt;
+    &lt;text text="Olive"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="yellow"&gt;
+    &lt;text text="Yellow"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="navy"&gt;
+    &lt;text fgcolor="white" text="Navy"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="blue"&gt;
+    &lt;text fgcolor="white" text="Blue"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="teal"&gt;
+    &lt;text fgcolor="white" text="Teal"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="aqua"&gt;
+    &lt;text text="Aqua"/&gt;
+&lt;/swatch&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="250" width="250"&gt;
+&lt;wrappinglayout axis="y" spacing="10"/&gt;
+    
+&lt;class name="swatch" width="50" height="50"  /&gt;
+&lt;swatch bgcolor="black"&gt;
+    &lt;text fgcolor="white" text="Black"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="silver"&gt;
+    &lt;text text="Silver"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="gray"&gt;
+    &lt;text text="Gray"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="white"&gt;
+    &lt;view name="inner" width="50" height="50" bgcolor="black"&gt;
+        &lt;view name="furtherinner" width="46" height="46" bgcolor="white" x="2" y="2"/&gt;
+    &lt;/view&gt;    
+    &lt;text text="White"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="maroon"&gt;
+    &lt;text fgcolor="white" text="Maroon"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="red"&gt;
+    &lt;text text="Red"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="purple"&gt;
+    &lt;text fgcolor="white" text="Purple"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="fuchsia"&gt;
+    &lt;text text="Fuchsia"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="green"&gt;
+    &lt;text text="Green"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="lime"&gt;
+    &lt;text text="Lime"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="olive"&gt;
+    &lt;text text="Olive"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="yellow"&gt;
+    &lt;text text="Yellow"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="navy"&gt;
+    &lt;text fgcolor="white" text="Navy"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="blue"&gt;
+    &lt;text fgcolor="white" text="Blue"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="teal"&gt;
+    &lt;text fgcolor="white" text="Teal"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="aqua"&gt;
+    &lt;text text="Aqua"/&gt;
+&lt;/swatch&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/color-$5.lzx></example?>
+<para/></section><section><title>Non-Standard Colors</title>
+<para>
+To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes. Alternatively, the non-standard colors named in <literal>lps/components/base/colors.lzx</literal> were added to OpenLaszlo's global namespace. Those colors can also be employed by name, but note the ${constraint} syntax around the bgcolor specification.  There are two ways to make the constraint: <literal>bgcolor="${global['iceblue1']}"</literal> is the same as <literal>bgcolor="${iceblue1}"</literal>.
+</para>
+
+<example role="live-example">
+   <title>Non-standard colors</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/color-$6.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Non-standard colors</title><programlisting role="lzx-embednew"><filename>color-$6.lzx</filename><parameter/><code>
+
+&lt;canvas debug="true"&gt;
+&lt;simplelayout axis="x" spacing="10"/&gt;
+
+&lt;class name="box1" width="100" height="100" bgcolor="${global['gold4']}" /&gt;
+
+&lt;class name="box2" width="100" height="100" bgcolor="${iceblue1}" /&gt;
+ 
+&lt;box1 id="sun"&gt;
+    &lt;text text="Sun"/&gt;
+&lt;/box1&gt;
+
+&lt;box2 id="mystic"&gt;
+    &lt;text fgcolor="0xFFFFFF" text="Mystic"/&gt;
+&lt;/box2&gt;
+    
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+
+&lt;canvas debug="true"&gt;
+&lt;simplelayout axis="x" spacing="10"/&gt;
+
+&lt;class name="box1" width="100" height="100" bgcolor="${global['gold4']}" /&gt;
+
+&lt;class name="box2" width="100" height="100" bgcolor="${iceblue1}" /&gt;
+ 
+&lt;box1 id="sun"&gt;
+    &lt;text text="Sun"/&gt;
+&lt;/box1&gt;
+
+&lt;box2 id="mystic"&gt;
+    &lt;text fgcolor="0xFFFFFF" text="Mystic"/&gt;
+&lt;/box2&gt;
+    
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/color-$6.lzx></example?>
+
+<para/></section><section><title>Opacity</title>
+<para>
+In OpenLaszlo, a view has a color and an opacity which are handled separately. The opacity attribute ranges from 0 (transparent) to 1 (opaque).
+</para>
+
+<example role="live-example">
+   <title>Color and opacity</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/color-$7.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Color and Opacity</title><programlisting role="lzx-embednew"><filename>color-$7.lzx</filename><parameter/><code>
+&lt;canvas height="300" width="300" debug="true"&gt;
+  &lt;simplelayout axis="x"/&gt;
+  &lt;class name="fader"&gt;
+    &lt;view height="100" width="100"&gt;
+        &lt;handler name="onclick"&gt;
+            immediateparent.animate('opacity', -.20, 25, true);
+        &lt;/handler&gt;
+        &lt;handler name="onmouseout" &gt;
+            immediateparent.animate('opacity', 1, 2500, false);
+        &lt;/handler&gt;
+    &lt;/view&gt;
+    
+  &lt;/class&gt;
+  &lt;fader name="houston" bgcolor="0xFF0000"&gt;
+    &lt;text text="Comet"/&gt;
+  &lt;/fader&gt;
+  &lt;fader name="sacramento" bgcolor="0x800080"&gt;
+    &lt;text fgcolor="0xFFFFFF" text="Monarch"/&gt;
+  &lt;/fader&gt;
+  &lt;fader name="seattle" bgcolor="0x008000"&gt;
+    &lt;text text="Storm"/&gt;
+  &lt;/fader&gt;
+  &lt;script&gt;
+    Debug.write("Click on a view to reduce its opacity. Mouse out to restore 100% opacity.");
+  &lt;/script&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="300" width="300" debug="true"&gt;
+  &lt;simplelayout axis="x"/&gt;
+  &lt;class name="fader"&gt;
+    &lt;view height="100" width="100"&gt;
+        &lt;handler name="onclick"&gt;
+            immediateparent.animate('opacity', -.20, 25, true);
+        &lt;/handler&gt;
+        &lt;handler name="onmouseout" &gt;
+            immediateparent.animate('opacity', 1, 2500, false);
+        &lt;/handler&gt;
+    &lt;/view&gt;
+    
+  &lt;/class&gt;
+  &lt;fader name="houston" bgcolor="0xFF0000"&gt;
+    &lt;text text="Comet"/&gt;
+  &lt;/fader&gt;
+  &lt;fader name="sacramento" bgcolor="0x800080"&gt;
+    &lt;text fgcolor="0xFFFFFF" text="Monarch"/&gt;
+  &lt;/fader&gt;
+  &lt;fader name="seattle" bgcolor="0x008000"&gt;
+    &lt;text text="Storm"/&gt;
+  &lt;/fader&gt;
+  &lt;script&gt;
+    Debug.write("Click on a view to reduce its opacity. Mouse out to restore 100% opacity.");
+  &lt;/script&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/color-$7.lzx></example?>
+
+<para>When a view's opacity=0, the 'visible' attribute of that view turns to false.</para>
+
+<para/></section></section><section><title>When Red Isn't Red</title>
+
+<para>
+The print world paid careful attention to color matching: the color the client saw on the comprehensives in the conference room turned out the same as the color the customer saw on the cereal boxes. That involved synchronizing colors between a computer monitor and a laser printer (used to print the comprehensives), then the physical film separation into cyan, magenta, yellow, and black for the printer, and finally the finished product.
+</para>
+
+<para>
+Web publishers had to let go of all that. Color specifications look different on different platforms and workstations —Macintosh or Windows, normal backlit LCD screens or aging CRTs, projectors in a conference room or high fidelity cinema displays. Web designers pretend that "0x6C6BA2" is always the same color, and hope it looks right other places.
+</para>
+
+<para>
+The best you can do is look at your application on several different kinds of monitors and operating systems, and tweak the application until it looks decent on each platform.
+</para>
+
+<para>
+W3C aims to mitigate this problem with support for the color model <ulink url="http://www.w3.org/Graphics/Color/sRBG">SRBG: Standard Default Color Space for the Internet</ulink>.
+</para>
+
+<para>
+For more about this topic, look up "color gamut", "color space", "color matching", "display gamma", and the ActionScript function setColorTransform.
+</para>
+
+
+
+<para/></section></chapter>

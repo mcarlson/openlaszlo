@@ -1,0 +1,29 @@
+
+<canvas debug="true">
+  <class name="base" extends="button">
+    <handler name="onclick" method="handleonclick" />
+    <method name="handleonclick">
+      Debug.write("base click");
+    </method>
+  </class>
+
+  <class name="subaccumulate" extends="base">
+    <handler name="onclick">
+      Debug.write("subaccumulate click");
+    </handler>
+  </class>
+
+  <class name="suboverride" extends="base">
+    <method name="handleonclick">
+      Debug.write("suboverride click");
+    </method>
+  </class>
+
+  <subaccumulate>accumulate</subaccumulate>
+  <suboverride>override</suboverride>
+  <simplelayout />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

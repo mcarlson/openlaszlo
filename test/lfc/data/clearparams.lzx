@@ -1,5 +1,5 @@
 <canvas>
-    <dataset name="ds" src="http:httpecho.jsp" type="http"
+    <dataset name="ds" src="http:httpecho.jsp" type="http" timeout="120000"
              ondata="res.setText( res.escapeText( this.serialize() ) )"/>
     <simplelayout/>
     <edittext name="a"/>
@@ -13,6 +13,6 @@
           text="response goes here"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

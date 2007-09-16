@@ -11,25 +11,19 @@
 <!--                                                                       -->
 <!--=======================================================================-->
 
-<canvas bgcolor="#eaeaea" width="220" height="462">
-    <font src="bitstream-vera-1.10/verabd.ttf" name="boldfont"/>
 
+<canvas bgcolor="#eaeaea" width="220" height="462">
+    <include href="lz/tabelement.lzx" />
+    
     <dataset src="contactsdata.xml" name="mydata"/>
 
-    <resource name="tab_top_mid">
-        <frame src="art/top_btn_mid.swf"/>
-        <frame src="art/top_btn_mid_mo.swf"/>
-        <frame src="art/top_btn_mid_dn.swf"/>
-    </resource>
-    <resource name="tab_bot_mid" src="art/bot_btn_mid.swf"/>
-
-    <class name="row" height="30" bgcolor="0xE7E7D6" width="100%">
-        <attribute name="minheight" value="30"/>
-        <attribute name="maxheight" value="85"/>
+    <class name="row" height="23" bgcolor="0xE7E7D6" width="100%">
+        <attribute name="minheight" value="23"/>
+        <attribute name="maxheight" value="78"/>
 
         <view name="small"
             width="100%">
-            <basebutton resource="tab_top_mid" clickable="true"
+            <basebutton resource="tabrsrc" clickable="true"
                 width="${parent.width}"
                 stretches="both">
                  <method event="onclick">
@@ -53,8 +47,8 @@
             <text datapath="@work_webpage" width="100%"/>
             <simplelayout axis="y"/>
         </view>
-        <view name="bottom" width="100%" resource="tab_bot_mid"
-            stretches="both"/>
+        <view name="bottom" width="100%" resource="tabshadow"
+            stretches="both" height="2"/>
         <stableborderlayout axis="y" />
         <simplelayout axis="y"/>
     </class>
@@ -74,7 +68,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

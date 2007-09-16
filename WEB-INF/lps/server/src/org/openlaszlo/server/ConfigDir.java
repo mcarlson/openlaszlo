@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -23,7 +23,7 @@ public class ConfigDir {
 
     /** 
      * @return the absolute path for the configuration directory
-     * @param home LPS_HOME to be sued if the path is determined
+     * @param home LPS_HOME to be used if the path is determined
      * to be relative
      */
 

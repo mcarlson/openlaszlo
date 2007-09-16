@@ -1,0 +1,31 @@
+/**
+  * LzLibraryCleanup.as
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic Kernel
+  * @subtopic AS2
+  */
+
+// This will always be the last view instantiated by a library. It's job is to send
+// the "onload" event to the LzLibrary with the given name. 
+
+class LzLibraryCleanup extends LzNode {
+
+/** @access private
+  * @modifiers override 
+  */
+    static var tagname = '__libraryloadercomplete';
+
+
+    function initialize ( owner , args ) {
+        //this.callInherited( "constructor", arguments.callee ,owner ,args );
+        super.initialize.apply(this, arguments);
+        var lib = LzLibrary.findLibrary(args.libname);
+        lib.loading = false;
+        if (lib.onload.ready) lib.onload.sendEvent(true);
+    }
+
+}; // End of LzLibraryCleanup
+

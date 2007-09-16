@@ -1,0 +1,59 @@
+<!--=======================================================================-->
+<!-- weather_cover.html                                        -->
+<!--                                                                       -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--=======================================================================-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+      <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico" />
+      <link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css" />
+      <style type="text/css">
+        .smallapp {margin-bottom: 200px;}
+      </style>
+      <script src="../../lps/includes/utils.js" type="text/javascript"></script>
+      <title>Weather</title>
+</head>
+<body>
+   <h1>Weather</h1>
+   <div class="smallapp" id="appcontainer">
+   </div>
+   <div class="desc">
+    <p>
+       Executing in a 420 x 182 pixel window, the Laszlo weather application is
+       designed to run either within a regular browser or a handheld.
+       The application features four screens: one input screen for
+       entry of a U.S. Zip Code, and three display screens providing display
+       of the returned weather data.
+    </p>
+    <p>
+       Each of the display screens is accessed
+       via a "tabslider" interface element.
+       Switching between tabs occurs in a visually continuous manner,
+       with interface transition animations maintaining context.
+       The application looks and behaves like a desktop software application,
+       yet is deployed from a server.
+            </p><p>
+       In this example, the weather data source is an HTTP XML data feed
+       (a simple XML Web Service).  For more details about how this application
+       was built, read the
+       <a href="http://www.laszlosystems.com/demos/weather/weather_app_overview.pdf"
+       target="weatheroverview">application overview (PDF)</a>.
+       </p>
+       <p id="runtime" class="runtimelabel"></p>
+    </div>
+    <script type="text/javascript">
+        var runtime = getQueryVariable("lzr", "swf7");
+        writeOpenLaszloApp(document.getElementById('appcontainer'), "wrapper.lzx", runtime, "182px", "420px");
+        document.getElementById("runtime").innerHTML = "RUNTIME: " + lzRuntimeTagToRuntimeName(runtime);
+    </script>
+    <noscript>
+      Please enable JavaScript in order to use this application. 
+    </noscript>
+</body>
+</html>

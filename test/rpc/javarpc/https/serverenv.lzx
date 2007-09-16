@@ -25,10 +25,10 @@
     </security>
 
     <javarpc name="systemprop" scope="none" secure="true" secureport="8443"
-             classname="org.openlaszlo.test.xmlrpc.SystemProp">
+             remoteclassname="org.openlaszlo.test.xmlrpc.SystemProp">
 
         <method event="onload">
-            debug.write('onload invoke');
+            Debug.write('onload invoke');
             this.getProperties.invoke();
         </method>
 
@@ -38,7 +38,7 @@
         </method>
 
         <remotecall name="getProperties" funcname="getProperties" 
-                    dataobject="envDset">
+                    dataobject="$once{envDset}">
             <method event="ondata" args="d">
                 Debug.write('data:', d);
             </method>
@@ -47,7 +47,7 @@
     </javarpc>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

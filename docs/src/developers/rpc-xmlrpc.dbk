@@ -1,0 +1,157 @@
+<chapter id="rpc-xmlrpc">
+
+<title condition="proxied">XML-RPC</title>
+
+<para>XML-RPC is simple spec that describes how to invoke a remote operation using
+XML over HTTP.  OpenLaszlo XML-RPC is part of <ulink url="../guide/rpc.html" type="laszlo-dguide"> OpenLaszlo
+RPC</ulink> and shares many of the same APIs and concepts. OpenLaszlo RPC includes <ulink url="../guide/rpc-soap.html" type="laszlo-dguide">SOAP</ulink> and <ulink url="../guide/rpc-javarpc.html" type="laszlo-dguide">JavaRPC</ulink>. For more information on XML-RPC,
+go to <ulink url="http://www.xmlrpc.com/">XML-RPC.com</ulink></para>
+
+<para/><section><title>&lt;xmlrpc&gt;</title>
+
+<para>The &lt;xmlrpc&gt; element creates a client-side representation of an XML-RPC
+service. The service attribute is required and must be an URL.</para>
+
+<example role="live-example"><title>SOAP</title><programlisting>
+&lt;xmlrpc service="..."
+      autoload="[true|false]"
+      secure="[true|false]"
+      secureport="..." &gt;
+</programlisting></example>
+
+
+
+
+<para/><section><title>Attributes</title>
+
+<para><indexterm significance="preferred"><primary>service</primary></indexterm><glossterm>service</glossterm>: (String) URL of where service is located. This attribute
+is required.</para>
+
+<para><indexterm significance="preferred"><primary>autoload</primary></indexterm><glossterm>autoload</glossterm>: (Boolean) if true, calls to load client proxy during
+init stage. If false, the proxy must be loaded using the load() method. See the
+proxy section in the RPC chapter for details. <emphasis role="b">Default is true.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>secure</primary></indexterm><glossterm>secure</glossterm>: (Boolean) if true, creates a secure HTTPS connection
+between the client and the OpenLaszlo Server. Also see secureport below. <emphasis role="b">Default is
+false.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>secureport</primary></indexterm><glossterm>secureport</glossterm>: (Number) valid only when secure attribute is set to
+true. The secure port to use. There is no client-side default. Most servers use
+port 443 as the default HTTPS port.</para>
+
+
+<para/></section><section><title>Read-only properties</title>
+
+<para><indexterm significance="preferred"><primary>proxy</primary></indexterm><glossterm>proxy</glossterm>: (Object) unlike other RPC services, proxy functions are
+created based on declared remotecall elements. Because there is no XML-RPC
+service description, each function stub in the proxy is created by remotecall
+elements declared by the developer. In other RPC services, declared remotecalls
+refer to proxy function stubs that exist after load.</para>
+
+<para/></section><section><title>Methods</title>
+
+<para/><section id="rpc-xmlrpc.load"><title>load()</title>
+
+<para>Load() is responsible for setting up the proxy property. The proxy will have
+function stubs based on remotecalls declared in the body of the &lt;xmlrpc&gt;
+element. This method is automatically invoked if autoload is true. When the call
+returns, an onload event is sent.</para>
+
+<para/></section><section><title>unload()</title>
+
+<para>This method unloads the proxy from the RPC object and sets it to null. When
+the call returns, an onunload event is sent.</para>
+
+<para/></section></section></section><section><title>Using remotecall to creating function stubs</title>
+
+<para>Most  OpenLaszlo RPC objects like JavaRPC and SOAP will set function stubs in the
+proxy property during load based on methods described by a class (for JavaRPC)
+or on a service description (using a WSDL in SOAP). Remotecall declarations
+refer to these function stubs and any remotecalls not pointing to a function
+stub that doesn't exist will generate an error or warning. In &lt;xmlrpc&gt;,
+function stubs are create based on remotecall declarations. Note that XML-RPC
+use dot notation for their operation names. Because that will conflict with the
+view system's notation, it's suggested that remotecalls be explictly named.</para>
+
+<example role="live-example">
+   <title>Creating a function stub</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-xmlrpc-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Creating a function stub</title><programlisting role="lzx-embednew"><filename>rpc-xmlrpc-$2.lzx</filename><parameter/><code>
+
+&lt;canvas debug="true" height="400"&gt;
+    &lt;!-- this isues one call of the freshmeat XML-RPC API --&gt;
+    &lt;!-- Documented here: http://freshmeat.net/faq/view/49/ --&gt;
+
+    &lt;debug x="10" y="40" width="450" height="350" /&gt;
+
+    &lt;xmlrpc name="freshmeat"
+            service="http://freshmeat.net/xmlrpc/"&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('freshmeat XML-RPC service loaded');
+            Debug.write('proxy:');
+            Debug.inspect(this.proxy);
+        &lt;/handler&gt;
+
+        &lt;handler name="ondata" args="data"&gt;
+            Debug.write('got data:', data);
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('onerror:', error);
+        &lt;/handler&gt;
+
+        &lt;remotecall name="fal" funcname="fetch_available_licenses" /&gt;
+
+    &lt;/xmlrpc&gt;
+
+    &lt;button text="fetch_available_licenses" x="10" y="10"&gt;
+        &lt;handler name="onclick"&gt;
+            Debug.write('getting licenses...');
+            freshmeat.fal.invoke()
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+
+&lt;canvas debug="true" height="400"&gt;
+    &lt;!-- this isues one call of the freshmeat XML-RPC API --&gt;
+    &lt;!-- Documented here: http://freshmeat.net/faq/view/49/ --&gt;
+
+    &lt;debug x="10" y="40" width="450" height="350" /&gt;
+
+    &lt;xmlrpc name="freshmeat"
+            service="http://freshmeat.net/xmlrpc/"&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('freshmeat XML-RPC service loaded');
+            Debug.write('proxy:');
+            Debug.inspect(this.proxy);
+        &lt;/handler&gt;
+
+        &lt;handler name="ondata" args="data"&gt;
+            Debug.write('got data:', data);
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('onerror:', error);
+        &lt;/handler&gt;
+
+        &lt;remotecall name="fal" funcname="fetch_available_licenses" /&gt;
+
+    &lt;/xmlrpc&gt;
+
+    &lt;button text="fetch_available_licenses" x="10" y="10"&gt;
+        &lt;handler name="onclick"&gt;
+            Debug.write('getting licenses...');
+            freshmeat.fal.invoke()
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-xmlrpc-$2.lzx></example?>
+<para/></section></chapter>

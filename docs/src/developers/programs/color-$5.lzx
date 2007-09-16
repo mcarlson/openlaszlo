@@ -1,0 +1,61 @@
+
+<canvas height="250" width="250">
+<wrappinglayout axis="y" spacing="10"/>
+    
+<class name="swatch" width="50" height="50"  />
+<swatch bgcolor="black">
+    <text fgcolor="white" text="Black"/>
+</swatch>
+<swatch bgcolor="silver">
+    <text text="Silver"/>
+</swatch>
+<swatch bgcolor="gray">
+    <text text="Gray"/>
+</swatch>
+<swatch bgcolor="white">
+    <view name="inner" width="50" height="50" bgcolor="black">
+        <view name="furtherinner" width="46" height="46" bgcolor="white" x="2" y="2"/>
+    </view>    
+    <text text="White"/>
+</swatch>
+<swatch bgcolor="maroon">
+    <text fgcolor="white" text="Maroon"/>
+</swatch>
+<swatch bgcolor="red">
+    <text text="Red"/>
+</swatch>
+<swatch bgcolor="purple">
+    <text fgcolor="white" text="Purple"/>
+</swatch>
+<swatch bgcolor="fuchsia">
+    <text text="Fuchsia"/>
+</swatch>
+<swatch bgcolor="green">
+    <text text="Green"/>
+</swatch>
+<swatch bgcolor="lime">
+    <text text="Lime"/>
+</swatch>
+<swatch bgcolor="olive">
+    <text text="Olive"/>
+</swatch>
+<swatch bgcolor="yellow">
+    <text text="Yellow"/>
+</swatch>
+<swatch bgcolor="navy">
+    <text fgcolor="white" text="Navy"/>
+</swatch>
+<swatch bgcolor="blue">
+    <text fgcolor="white" text="Blue"/>
+</swatch>
+<swatch bgcolor="teal">
+    <text fgcolor="white" text="Teal"/>
+</swatch>
+<swatch bgcolor="aqua">
+    <text text="Aqua"/>
+</swatch>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

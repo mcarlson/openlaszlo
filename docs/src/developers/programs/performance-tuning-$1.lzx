@@ -1,0 +1,60 @@
+
+  <canvas height="150" debug="true">
+    <script>
+      var trials = 30;
+
+      function measure (target, iterations, description, trials, empty) {
+        // Default arguments
+        switch (arguments.length) {
+          case 0:
+            Debug.write("No measurement target");
+            return;
+          case 1:
+            iterations = 500;
+          case 2:
+            description = null;
+          case 3:
+            trials = 10;
+          case 4:
+            empty = function () {
+              for (var i = 0; i &lt; iterations; ) i++;
+            }
+        }
+        // Compute overhead
+        var overhead = 0;
+        var total = 0;
+        for (var j = 0; j &lt; trials; j++) {
+          var start = (new Date).getTime();
+          empty();
+          var end = (new Date).getTime();
+          overhead += end - start;
+          // Measure target
+          var start = (new Date).getTime();
+          target();
+          var end = (new Date).getTime();
+          total += end - start;
+        }
+        var usPerOp = Math.round((total-overhead)*1000/(trials*iterations));
+        // Report results
+        if (description != null) {
+          Debug.write(description + ": " + usPerOp + "us");
+        }
+        return usPerOp;
+      }
+
+      // What we want to measure
+      var iterations = 100;
+      function stringConcatenation () {
+        for (var i = 0; i &lt; iterations; i++) {
+          "foo" + "bar";
+        }
+      }
+
+      // Measure it
+      measure(stringConcatenation, iterations, "String concatenation");
+    </script>
+  </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

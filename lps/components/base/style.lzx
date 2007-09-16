@@ -87,7 +87,7 @@
         this.isdefault = def;
         if (isdefault) {
             global._componentmanager.service.setDefaultStyle(this);
-            if (typeof(this.canvascolor) != "undefined") {
+            if (this['canvascolor'] != null) {
                  canvas.setBGColor(this.canvascolor);
             }
         }
@@ -135,6 +135,88 @@
         if (this.onstylechanged) this.onstylechanged.sendEvent(this);
     ]]> </method>
 
+    <doc>
+      <tag name="shortdesc"><text>specifies colors used by components</text></tag>
+      <text>
+        <p>Styles may be defined to establish a consistent "look" for a group
+        of components.  There are a number of pre-defined styles.  If you
+        don't declare a default style, the OpenLaszlo components will use
+        <varname>whitestyle</varname>. To specify a different default style,
+        define a style with <code>isdefault="true"</code>.</p>
+        
+        <example title="Simple Style Example">
+        &lt;canvas height="60" width="200" &gt;
+          &lt;greenstyle name="mystyle" isdefault="true"/&gt;
+          &lt;checkbox&gt;Tell me more&lt;/checkbox&gt;
+          &lt;button&gt;Submit&lt;/button&gt;
+          &lt;simplelayout spacing="10" inset="10"/&gt;
+        &lt;/canvas&gt;
+        </example>
+        
+        <p>There are several styles defined as classes
+        (<varname>whitestyle</varname>, <varname>silverstyle</varname>,
+        <varname>bluestyle</varname>, <varname>greenstyle</varname>,
+        <varname>goldstyle</varname>, and <varname>purplestyle</varname>).
+        You may create an instance of one of these, create a new style, or
+        create an instance with one or more modified attributes.</p>
+        
+        <p>Different styles may be used in different parts of an application,
+        to highlight a single component or to distinguish a group of
+        components.  The style of a component applies to itself and any
+        component within it.</p>
+        
+        <p>In the example below, section one and two of the tabslider and the
+        checkboxes inside them appear gold.  Section Three and the components
+        inside it appear green.</p>
+        
+        <example title="Using Multiple Styles">
+        &lt;canvas height="250"&gt;
+          &lt;goldstyle name="defaultstyle" isdefault="true"/&gt;
+          &lt;greenstyle name="specialstyle"/&gt;
+          &lt;tabslider id="ts1" x="50" y="20"
+                     width="300" height="180"&gt;
+        
+            &lt;tabelement text="Section One" selected="true"&gt;
+              &lt;checkbox&gt;option one&lt;/checkbox&gt;
+            &lt;/tabelement&gt;
+        
+            &lt;tabelement text="Section Two"&gt;
+              &lt;checkbox&gt;option two&lt;/checkbox&gt;
+            &lt;/tabelement&gt;
+        
+            &lt;tabelement text="Section Three" style="$once{specialstyle}"&gt;
+              &lt;radiogroup&gt;
+                &lt;radiobutton&gt;Yes, I want to know more&lt;/radiobutton&gt;
+                &lt;radiobutton&gt;No, I prefer to remain blissfully unaware&lt;/radiobutton&gt;
+                &lt;radiobutton&gt;Please tell my neighbor, who may tell me&lt;/radiobutton&gt;
+              &lt;/radiogroup&gt;
+              &lt;button align="right"&gt;Submit&lt;/button&gt;
+              &lt;simplelayout axis="y" spacing="10"/&gt;
+            &lt;/tabelement&gt;
+          &lt;/tabslider&gt;
+        &lt;/canvas&gt;
+        </example>
+        
+        <p>You may define your own style by declaring values for various style
+        attributes described in the attribute reference below.  For example,
+        the following style uses the default values for most style attributes,
+        but provides custom values for the <attribute>basecolor</attribute>
+        (overall shade of the components) and the
+        <attribute>textcolor</attribute>.</p>
+        
+        <pre>
+        &lt;style name="customstyle" basecolor="0xddddff" textcolor="blue"/&gt;
+        </pre>
+        
+        <p><b>Further reading</b></p>
+        <p>
+        You can see the definitions of the pre-defined styles
+        in:  lps/components/base/defaultstyles.lzx  </p>
+        <p>
+        Named colors are defined in:  lps/components/base/colors.lzx
+        </p>
+      </text>
+    </doc>
 </class>
 
 <!--
@@ -149,7 +231,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

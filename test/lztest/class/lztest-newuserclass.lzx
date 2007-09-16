@@ -1,0 +1,56 @@
+<canvas>
+    <include href="../lztest/lztestmanager.lzx" /> 
+
+<!--
+  <class name="snode" extends="node" defaultplacement="subnode2">
+    <node name="subnode1"/>
+    <node name="subnode2"/>
+  </class>
+  
+  <snode name="sn1" id="snode1" />
+-->        
+<script><![CDATA[
+
+
+
+
+var ncanvas = NewLzNode.make(null, {name: 'fake canvas'}, []);
+
+
+ncanvas.makeChild({name: 'NewLzUserClass',
+                   attrs: {parent: "NewLzNode",
+                           initobj: {attrs: {defaultplacement: "subnode2", "extends": "NewLzNode"},
+                                     children:
+                                              [{attrs: {name: "subnode1"}, name: "NewLzNode"},
+                                               {attrs: {name: "subnode2"}, name: "NewLzNode"}],
+                                     name: "snode"}
+                      }
+                  }
+                     );
+
+
+var snode1 = ncanvas.makeChild({attrs: {name: "sn1"}, id: "snode1", name: "snode"});
+
+
+
+var suiteTestNode = new LzTestSuite("LFC Node Hierarchy"); 
+
+suiteTestNode.testClassroot = function() {
+    LzTestManager.assertEquals(snode1, snode1.subnode1.classroot);
+    LzTestManager.assertEquals(snode1, snode1.subnode2.parent);
+    LzTestManager.assertEquals(snode1, snode1.subnode2.immediateparent);
+}
+
+suiteTestNode.addTest(suiteTestNode.testClassroot); 
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

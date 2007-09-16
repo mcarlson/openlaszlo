@@ -136,7 +136,7 @@
                    setter="this._select(selected)" />
 
         <!--- Event sent when selected attribute selected or unselected. -->
-        <attribute name="onselected" value="null" />
+        <event name="onselected" />
 
         <!--- Send onselected event during init if we selected this radiobutton
               too early.

@@ -1,0 +1,689 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<js2doc>
+
+<property id="tag.switch" topic="LZX" subtopic="Basics" access="public">
+<doc>
+    <tag name="shortdesc"><text>Special syntax used to control compilation</text></tag>
+    <tag name="lzxname"><text>switch</text></tag>
+    <tag name="usage"><text>
+      <code>
+      &lt;switch&gt;
+        &lt;when runtime="<replaceable>runtime</replaceable>"&gt;
+          <replaceable>lzx code</replaceable>
+        &lt;/when&gt;
+        <replaceable>...</replaceable>
+        &lt;otherwise&gt;
+          <replaceable>lzx code</replaceable>
+        &lt;/otherwise&gt;
+      &lt;/switch&gt;
+      </code>
+    </text></tag>
+</doc>
+<class>
+</class>
+</property>
+
+<property id="tag.attribute" topic="LZX" subtopic="Basics" access="public">
+<doc>
+    <tag name="shortdesc"><text>Sets an attribute of the object that contains it.</text></tag>
+    <tag name="lzxname"><text>attribute</text></tag>
+    <text>
+<p>The <tagname>attribute</tagname> tag has two uses:</p>
+
+<ol>
+
+<li>
+<p>In a class definiiton, the <tagname>attribute</tagname> tag
+defines an attribute that can be set in instances of the class.</p>
+
+<example>
+&lt;canvas height="30"&gt;
+  &lt;class name="mybutton" extends="button"&gt;
+   <em> &lt;attribute name="myattr" type="string" value="after"/&gt;</em>
+  &lt;/class&gt;
+  &lt;mybutton text="before" myattr="after"
+            onclick="setAttribute('text', this.myattr)"/&gt;
+&lt;/canvas&gt;
+</example>
+</li>
+
+<li>
+<p>In an instance, the <tagname>attribute</tagname> tag attaches an attribute to the instance.  The attribute can be accessed from script.</p>
+
+<example>
+&lt;canvas height="30"&gt;
+
+  &lt;class name="mybutton" extends="button"&gt;
+      &lt;attribute name="myattr" type="string" value="after"/&gt;
+  &lt;/class&gt;
+  &lt;mybutton text="before" 
+            onclick="setAttribute('text', this.myattr)"&gt;
+    <em>&lt;attribute name="myattr" value="perhaps later"/&gt;</em>
+  &lt;/mybutton&gt;
+&lt;/canvas&gt;
+</example>
+
+</li>
+</ol>
+
+<p>See the <a href="${dguide}methods-events-attributes.html">Developer's Guide</a> for
+a complete discussion.  
+</p>
+
+<p>
+    Also see the documentation for <tagname
+    link="true">class</tagname> and the general description of LZX <a
+    href="info-attributes.html">attributes</a>.  The <a
+    href="${tutorials}classes-tutorial.html">Classes</a> tutorial describes how
+    to use attributes to define a class.
+</p>
+    </text>
+  </doc>
+<class>
+  <initarg name="name" modifiers="final" type="String">
+    <doc><text>The name of the attribute.</text></doc>
+  </initarg>
+  <initarg name="value" type="Object">
+    <doc><text>The initial value of the attribute.  The type of this value
+               is specified by the value of the type attribute; if that
+               attribute is not present, it's the type of this attribute
+               in this element's tag.  The attribute is given this value
+               when the element is created.
+    </text></doc>
+  </initarg>
+  <initarg name="when" modifiers="final">
+    <doc>
+      <tag name="since"><text>1.1</text></tag>
+      <tag name="lzxdefault"><text>"immediately"</text></tag>
+      <tag name="lzxtype"><text>"immediately" | "once" | "always"</text></tag>
+      <text> When the initial value expression is to be
+             evaluated.  One of:
+             <dl>
+               <dt>@c{immediately}</dt>
+               <dd>evaluate when the enclosing element is defined
+                   (must be a constant)</dd>
+               <dt>@c{once}</dt>
+               <dd>evaluate when the enclosing element is
+                   initialized</dd>
+               <dt>@c{always}</dt>
+               <dd>update whenever the value of the expression
+                   changes</dd>
+             </dl>
+             The default is @c{when="immediately"}.
+             
+             The setting for @c{when} can be overridden
+             when assigning a value to an attribute by using the
+             syntax <code><var>attribute
+             name</var>=$<var>when
+             value</var>{<var>expression</var>}</code>.  The
+             default for
+             <var>when value</var> is @c{always}, for
+             example: <code>&lt;view
+             title="$once{computeTitle()}" /&gt;</code> sets the
+             title of the view to a computed value and
+             <code>&lt;view title="${parent.subtitle}" \&gt;</code>
+             will cause the title of the view to
+             track @c{parent.subtitle}.
+      </text>
+    </doc>
+  </initarg>
+  <initarg name="type" type="String" modifiers="final">
+    <doc>
+      <tag name="lzxdefault"><text>"expression"</text></tag>
+      <tag name="lzxtype"><text>"boolean" | "color" | "expression" | "number" | "size" | "string" | "text" | "html"</text></tag>
+      <text>The type of the attribute.  This determines how the value is
+            parsed.  Attributes of type string are automatically quoted
+            if when="immediate", for any other value of when, a literal
+            string would have to be quoted to be used as a value.
+      </text>
+    </doc>
+  </initarg>
+  <initarg name="required" type="Boolean" modifiers="final">
+    <doc>
+      <tag name="lzxdefault"><text>"false"</text></tag>
+      <text>True if this is a required attribute.</text>
+    </doc>
+  </initarg>
+  <initarg name="setter" type="Object">
+    <doc>
+      <tag name="lzxtype"><text>script</text></tag>
+      <tag name="since"><text>1.1</text></tag>
+      <text>Code that is executed when setAttribute is used to set the value
+            of this attribute.  This code is executed within a context in
+            which the variable with this attribute's name is
+            bound to the value passed to setAttribute.
+      </text>
+    </doc>
+  </initarg>
+</class>
+</property>
+
+<property id="tag.event" topic="LZX" subtopic="Basics" access="public">
+  <doc>
+    <tag name="shortdesc"><text>The sender in Laszlo's point-to-point event system.</text></tag>
+    <tag name="lzxname"><text>event</text></tag>
+    <text><p>Events underly most of the functionality in OpenLaszlo  applications. 
+Unlike events in similar systems, OpenLaszlo's events are point-to-point, meaning that there is no general broadcast mechanism for events, and events do not trickle up or down the instance hierarchy. Instead, objects called <link linkend="LzDelegate">delegate</link> <link linkend="LzDelegate.prototype.register">register</link> for events, and if they try to register for an event that doesn't exist yet, the system creates the event. </p>
+<p>You can create a delegate explicitly using the <classname link="true">LzDelegate</classname> class, or implicitly by creating an handler.</p>
+<p>
+Because of the loose type requirements in LZX, calling an event that no delegate is listening for (and which therefore hasn't been created) has no effect. This allows objects to publish many more events than they actually need to create at runtime.
+</p>
+
+<p>There are two syntaxes with which you can specify an event handler: in the tag used to create that object, or by using the 
+<tagname link="true">handler</tagname> tag.</p>
+
+<p>To specify an event handler in an object-creation tag, simply include it like any other attribute.  For example,</p>
+
+<example extract="false"><programlisting class="code">
+&lt;view onmouseover="doSomething()"&gt;
+  &lt;method name="doSomething"&gt;
+    // code to be executed when mouse is over the view
+  &lt;/method&gt;
+&lt;/view&gt;
+</programlisting></example>
+
+<p>If you use the <tagname link="true">handler</tagname> tag, you do not need to include the handler in the tag that creates the object.</p>
+
+<example extract="false"><programlisting class="code">
+&lt;view&gt;
+ &lt;handler name="onmouseover"&gt;
+   // code to be executed when the mouse is over the view
+ &lt;/handler&gt;
+&lt;/view&gt;
+</programlisting></example>
+
+<p> The above two examples are functionally equivalent.  Using the <tagname>handler</tagname> tag, however, can often lead to more readable code because it removes clutter from the object creation tag.</p> 
+
+<p>Use the <tagname link="true">event</tagname> tag to create the events; then use the <method>sendEvent</method> method to dispatch it. The following example illustrates how to create custom events.</p>
+
+<example><programlisting class="program"
+         title="A simple example of publishing and listening for a custom event">
+&lt;canvas height="40"&gt;
+  &lt;simplelayout/&gt;
+  &lt;button name="eventSender" 
+          <em>onmouseover="this.customevent.sendEvent()"
+          onmouseout="this.customevent.sendEvent()"/&gt;</em>
+  &lt;event name="customevent"/&gt;
+  &lt;view bgcolor="red" width="20" height="20" oninit="this.setupDelegate()"&gt;
+    &lt;method name="setupDelegate"&gt;
+      this.del = new LzDelegate( this, "respondToEvent" );
+      <em>this.del.register( eventSender , "customevent" );</em>
+    &lt;/method&gt;
+    &lt;method name="respondToEvent"&gt;
+      this.setAttribute('x', this.x + 10);
+    &lt;/method&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting></example>
+
+<p>
+Events can be sent with a single argument, which usually conveys information about the property that changed. The default behavior of the <link linkend="LzNode.prototype.setAttribute">setAttribute</link> method is to set the named property and send the event called "on" + property. This is general mechanism that updates constraints in a OpenLaszlo programs. For instance, when a view changes its <attribute>x</attribute> position, it sends the event <event>onx</event> with the new value for its <attribute>x</attribute> property.
+</p>
+
+<example><programlisting class="program"
+         title="Event sending in response to setting an attribute">
+&lt;canvas height="40"&gt;
+  &lt;simplelayout/&gt;
+  &lt;button name="eventSender" 
+          <em>onmouseover="this.setAttribute('avalue', this.avalue + 10)"
+          onmouseout="this.setAttribute('avalue', this.avalue + 5)"</em>&gt;
+    &lt;attribute name="avalue" value="0"/&gt;
+  &lt;/button&gt;
+  &lt;view bgcolor="red" width="20" height="20" oninit="this.setupDelegate()"&gt;
+    &lt;method name="setupDelegate"&gt;
+      this.del = new LzDelegate(this, "respondToEvent");
+      this.del.register(eventSender, <em>"onavalue"</em>);
+    &lt;/method&gt;
+    &lt;method name="respondToEvent" args="v"&gt;
+      this.setAttribute('x' , v);
+    &lt;/method&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting></example>
+
+</text>
+  </doc>
+<class>
+  <property name="name" modifiers="final">
+    <doc>
+      <tag name="lzxtype"><text>token</text></tag>
+      <text>The name of the event.</text>
+    </doc>
+  </property>
+</class>
+</property>
+
+<property id="tag.handler" topic="LZX" subtopic="Basics" access="public">
+  <doc>
+    <tag name="shortdesc"><text>Attaches an event handler to an object or class.</text></tag>
+    <tag name="lzxname"><text>handler</text></tag>
+    <text>
+<p>Attaches a handler method for the named event to the object that contains this element.</p>
+
+<p>The <attribute>name</attribute> attribute gives the event for which this handler should be invoked.</p>
+
+<p>Events can be declared via the <tagname link="true">event</tagname> tag.  Events are also generated whenever the value of an attribute is changed using the <method>setAttribute</method> method.
+</p>
+
+<p>For example, if a handler is defined via:</p>
+
+<example extract="false">
+&lt;view id="obj"&gt;
+  &lt;hander name="onkeydown" args="kc"&gt;
+   if (kc == 13) this.doAction()
+  &lt;/handler&gt;
+  &lt;method name="doAction"&gt;
+    Debug.write("action");
+  &lt;/method&gt;
+&lt;/view&gt;
+</example>
+
+<p>
+then script code
+<code>obj.onmyevent.sendEvent(259)</code> will output "action".</p>
+
+<p>
+The argument passed to an event handler is whatever value was used in
+the call to sendEvent() which generated the event.  In the case where
+an attribute value is set using setAttribute, the new value is sent as
+the argument to sendEvent, and that will be the argument value
+received to any user-defined handler for that event.
+</p>
+<p>
+If the @method attribute is given, a method body is unnecessary and the named method will be invoked instead. For example, the handler below has the same behavior as the earlier example.</p>
+
+<example extract="false">
+&lt;view id="obj"&gt;
+  &lt;hander name="onkeydown" method="doAction"/&gt;
+  &lt;method name="doAction" args="kc"&gt;
+   if (kc == 13)
+     Debug.write("action");
+  &lt;/method&gt;
+&lt;/view&gt;
+</example>
+
+
+</text>
+  </doc>
+  <class>
+  <initarg name="name" modifiers="final">
+    <doc>
+      <tag name="lzxtype"><text>token</text></tag>
+      <text>The name of the event.</text>
+    </doc>
+  </initarg>
+  <initarg name="reference">
+    <doc>
+      <tag name="lzxdefault"><text>"this"</text></tag>
+      <text>If this attribute is present, it is a JavaScript expression
+            that evaluates to an object.  The code in this method executes
+            when this object sends the event named by the @a{event}
+            attribute.  This attribute may be present only if
+            the @a{event} attribute is present too.
+      </text>
+    </doc>
+  </initarg>
+  <initarg name="args" type="String" modifiers="final">
+    <doc>
+      <tag name="lzxtype"><text>string</text></tag>
+      <tag name="lzxdefault"><text>""</text></tag>
+      <text>The parameter names of this handler.  The value of this attribute
+            is a comma-separated list of JavaScript identifiers. Required if a
+            method body is given as the handler implementation.
+      </text>
+    </doc>
+  </initarg>
+  <initarg name="method" type="String">
+    <doc>
+      <tag name="lzxtype"><text>string</text></tag>
+      <text>A method to call when this handler is invoked.</text>
+    </doc>
+  </initarg>
+</class>
+</property>
+
+<property id="tag.import" topic="LZX" subtopic="Basics" access="public">
+  <doc>
+    <tag name="lzxname"><text>import</text></tag>
+  </doc>
+  <class>
+  <initarg name="href" type="String">
+    <doc>
+      <tag name="lzxtype"><text>xsd:anyURI</text></tag>
+      <text>A reference to a target file whose content is treated as a loadable module</text>
+    </doc>
+  </initarg>
+  <initarg name="onload">
+    <doc>
+      <tag name="lzxtype"><text>script</text></tag>
+    </doc>
+  </initarg>
+  <initarg name="onerror">
+    <doc>
+      <tag name="lzxtype"><text>script</text></tag>
+    </doc>
+  </initarg>
+  <initarg name="ontimeout">
+    <doc>
+      <tag name="lzxtype"><text>script</text></tag>
+    </doc>
+  </initarg>
+  <initarg name="proxied">
+    <doc>
+      <tag name="lzxtype"><text>booleanLiteral | "inherit"</text></tag>
+      <tag name="lzxdefault"><text>"inherit"</text></tag>
+    </doc>
+  </initarg>
+  <initarg name="stage">
+    <doc>
+      <tag name="lzxtype"><text>"late" | "defer"</text></tag>
+    </doc>
+  </initarg>
+</class>
+</property>
+
+<property id="tag.include" topic="LZX" subtopic="Basics" access="public">
+  <doc>
+    <tag name="shortdesc"><text>Includes code from other files.</text></tag>
+    <tag name="lzxname"><text>include</text></tag>
+    <text>
+<p>The <tagname>include</tagname> tag is used to include source code
+contained in another file.  See the <a
+href="${dguide}program-structure.html#program-structure.include-tag">Guide</a> for a complete
+discussion.  Also see the <tagname link="true">library</tagname>
+tag.</p>
+    </text>
+  </doc>
+  <class>
+  <initarg name="href" type="String">
+    <doc>
+      <tag name="lzxtype"><text>xsd:anyURI</text></tag>
+      <text>A reference to a target file whose content is included in the
+            application that contains this include element.
+      </text>
+    </doc>
+  </initarg>
+  <initarg name="type" type="String">
+    <doc>
+      <tag name="lzxtype"><text>"text" | "xml"</text></tag>
+      <tag name="lzxdefault"><text>"xml"</text></tag>
+      <text>If this attribute has the value @c{text}, the content of the
+            target file is included as text.  Otherwise, it is read as XML.
+      </text>
+    </doc>
+  </initarg>
+  </class>
+</property>
+
+<property id="tag.library" topic="LZX" subtopic="Basics" access="public">
+  <doc>
+    <tag name="shortdesc"><text>This tag marks the root element of a library file.</text></tag>
+    <tag name="lzxname"><text>library</text></tag>
+    <text>
+<p>The <tagname>library</tagname> tag defines the root element of a
+library file.  An application can use the <tagname>include</tagname>
+tag to include the code in a library file.</p>
+
+<p>See the <a href="${dguide}program-structure.html#program-structure.library-tag">Guide</a> for
+a complete discussion.  Also see the <tagname
+link="true">include</tagname> tag.</p>
+    </text>
+  </doc>
+  <class>
+  <initarg name="href" type="String" access="private">
+    <doc>
+      <tag name="lzxtype"><text>xsd:anyURI</text></tag>
+      <text>This attribute is used internally by the compiler.  It shouldn't
+            be used in user programs.
+      </text>
+    </doc>
+  </initarg>
+  <initarg name="proxied">
+    <doc>
+      <tag name="lzxtype"><text>booleanLiteral | "inherit"</text></tag>
+      <tag name="lzxdefault"><text>"inherit"</text></tag>
+    </doc>
+  </initarg>
+  <initarg name="validate">
+    <doc>
+      <tag name="lzxtype"><text>booleanLiteral</text></tag>
+      <tag name="lzxdefault"><text>"true"</text></tag>
+    </doc>
+  </initarg>
+  </class>
+</property>
+
+<property id="tag.method" topic="LZX" subtopic="Basics" access="public">
+  <doc>
+    <tag name="shortdesc"><text>Attaches a function or event handler to an object or class.</text></tag>
+    <tag name="lzxname"><text>method</text></tag>
+    <text>
+<p>Attaches a method to the object that contains this element.  The
+method must have a <attribute>name</attribute>.</p>
+
+<p>The <attribute>name</attribute> attribute
+allows the method to be invoked from JavaScript with this name.
+For example, if a method is defined via:</p>
+
+<example extract="false">
+&lt;view id="obj"&gt;
+  &lt;method name="f" args="a, b"&gt;
+    return a+b;
+  &lt;/method&gt;
+&lt;/view&gt;
+</example>
+
+<p>
+then script code
+can invoke <code>obj.f(1, 2)</code> to add two
+numbers.</p>
+    </text>
+  </doc>
+  <class>
+  <initarg name="name" modifiers="final">
+    <doc>
+      <tag name="lzxtype"><text>token</text></tag>
+      <text>The name of the method.</text>
+    </doc>
+  </initarg>
+  <initarg name="event" type="String">
+    <doc>
+      <text>The name of the event that this method is invoked in response
+            to.</text>
+    </doc>
+  </initarg>
+  <initarg name="reference" type="Object">
+    <doc>
+      <tag name="lzxdefault"><text>"this"</text></tag>
+      <tag name="lzxtype"><text>reference</text></tag>
+      <text>If this attribute is present, it is a JavaScript expression
+            that evaluates to an object.  The code in this method executes
+            when this object sends the event named by the @a{event}
+            attribute.  This attribute may be present only if
+            the @a{event} attribute is present too.</text>
+    </doc>
+  </initarg>
+  <initarg name="args" type="String" modifiers="final">
+    <doc>
+      <text>The parameter names of this method.  The value of this attribute
+            is a comma-separated list of JavaScript identifiers.</text>
+    </doc>
+  </initarg>
+  </class>
+</property>
+
+<property id="tag.splash+as2" topic="LZX" subtopic="Basics" access="public" runtimes="as2">
+  <doc>
+    <tag name="shortdesc"><text>Controls the presentation while the application is loading.</text></tag>
+    <tag name="lzxname"><text>splash</text></tag>
+    <text>
+<p>The <tagname>splash</tagname> tag controls the presentation while
+the application is loading.</p>
+
+<p>If the <tagname>splash</tagname> element is present but is empty, a
+progress bar is displayed while the application is loading. For
+example:</p>
+
+<example extract="false">
+&lt;canvas&gt;
+  &lt;splash/&gt;
+&lt;canvas&gt;
+</example>
+
+<p>The <tagname link="true">splash</tagname> element may contain
+<a href="tag.splash-view.html">"splash view"</a> elements to define the position and
+behavior of resources that are displayed during the load process. However,
+these <a href="tag.splash-view.html">"splash view"</a> elements, although they are declared with a "view" tag, have a limited feature set. That is to say, when you place a <a href="tag.splash-view.html">view</a> tag inside a <tagname link="true">splash</tagname> element, you are not getting the same object that you do when you place a <tagname link="true">view</tagname> tag elsewhere on the canvas.
+</p>
+<p>
+For example, the following program positions an image on the canvas during the "splash" loading portion of the program's execution and removes it once the application has loaded. The example below executes too quickly to be demonsrate the splash view; try it in a larger application to see how it works.</p>
+
+<example extract="false" title="using 'splash view' tag">
+&lt;canvas height="100"&gt;
+  &lt;splash&gt;
+    &lt;view resource="../images/logo.png"/&gt;
+  &lt;/splash&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+You can position more than one image by specifying its coordinates. The <attribute>persistent</attribute> attribute  on <tagname>splash</tagname> tag causes the "splash" views contained within the spash element to remain on the canvas once the
+load process is complete.</p>
+<example title="persisting splash views">
+&lt;canvas height="100"&gt;
+  &lt;splash persistent="true"&gt;
+    &lt;view x="5" resource="../images/logo.png" /&gt;
+    &lt;view x="50" resource="../images/logo.png" /&gt;
+    &lt;view x="150" resource="../images/logo.png" /&gt;
+  &lt;/splash&gt;
+&lt;/canvas&gt;
+</example>
+
+    </text>
+  </doc>
+  <class>
+  <initarg name="hideafterinit" type="Boolean" access="private">
+    <doc>
+      <tag name="lzxtype"><text>boolean</text></tag>
+    </doc>
+  </initarg>
+  <initarg name="persistent">
+    <doc>
+      <tag name="lzxtype"><text>xsd:boolean</text></tag>
+      <tag name="lzxdefault"><text>"false"</text></tag>
+      <text>If true, the splash views remain on the canvas after the
+            preload is complete.
+      </text>
+    </doc>
+  </initarg>
+  </class>
+</property>
+
+<property id="tag.splash-view" topic="LZX" subtopic="Basics" access="public" runtimes="as2">
+  <doc>
+    <tag name="shortdesc"><text>A view element within the splash element positions a resource on the canvas while the application is loading.</text></tag>
+    <tag name="lzxname"><text>splash view</text></tag>
+    <text><p>A <tagname>view</tagname> tag within a <tagname>splash</tagname>
+element defines a view that is used to present a resource while the
+application is loading.</p>
+
+<p>Only a few attributes of the standard <tagname>view</tagname>
+element can be used on this view, because it is displayed before most
+of the system is present.</p>
+
+<p>See the <tagname>splash</tagname> documentation for examples.</p>
+
+    </text>
+  </doc>
+  <class>
+  <property name="name" type="String">
+    <doc>
+      <text>This defines both a resource with this name, and a view.</text>
+    </doc>
+  </property>
+  <property name="resource" type="String">
+    <doc>
+      <text>This must be a pathname.  If the target contains text, the
+            text should be converted to outlines.</text>
+    </doc>
+  </property>
+  <property name="ratio" type="Number">
+    <doc>
+      <tag name="lzxtype"><text>xsd:double</text></tag>
+      <text>If this attribute is present, the resource is synchronized
+            to loading progress.  Its value should be either a number
+            between 0.0 and 1.0, or a percentage between 0% and 100%
+            (inclusive).  If the resource is a multiframe resource, the
+            value is the proportion of the frames to play during the
+            preload phase of application load; the remainder is played
+            during the initialization phase.
+      </text>
+    </doc>
+  </property>
+  <property name="x" type="Number">
+    <doc>
+      <tag name="lzxtype"><text>xsd:double</text></tag>
+      <tag name="lzxdefault"><text>"0"</text></tag>
+      <text>x position of this view relative to the canvas</text>
+    </doc>
+  </property>
+  <property name="y" type="Number">
+    <doc>
+      <tag name="lzxtype"><text>xsd:double</text></tag>
+      <tag name="lzxdefault"><text>"0"</text></tag>
+      <text>y position of this view relative to the canvas</text>
+    </doc>
+  </property>
+  <property name="center" type="Boolean">
+    <doc>
+      <tag name="lzxtype"><text>xsd:boolean</text></tag>
+      <tag name="lzxdefault"><text>"false"</text></tag>
+      <text>If true, this view is centered within the canvas.  This
+            overrides the @a{x} and @a{y} attributes.
+      </text>
+    </doc>
+  </property>
+  </class>
+</property>
+
+<property id="tag.security" topic="LZX" subtopic="Basics" access="public">
+  <doc>
+    <tag name="shortdesc"><text>Canvas element used to control RPC security</text></tag>
+    <tag name="lzxname"><text>security</text></tag>
+    <tag name="usage"><text>
+      <code>
+      &lt;security&gt;
+        &lt;allow&gt;
+          <replaceable>pattern</replaceable>
+        &lt;/allow&gt;
+        <replaceable>...</replaceable>
+        &lt;deny&gt;
+          <replaceable>pattern</replaceable>
+        &lt;/deny&gt;
+        <replaceable>...</replaceable>
+      &lt;/security&gt;
+      </code>
+    </text></tag>
+  </doc>
+  <class>
+  </class>
+</property>
+
+<property id="tag.debug" topic="LZX" subtopic="Basics" access="public">
+  <doc>
+    <tag name="shortdesc"><text>Canvas element used to control debug options</text></tag>
+    <tag name="lzxname"><text>debug</text></tag>
+    <tag name="usage"><text>
+      <code>
+      &lt;debug showInternalProperties=""&gt;
+      </code>
+    </text>
+    </tag>
+    <text>The <code>&lt;debug&gt;</code> element requests that the debugger (instance of <xref linkend="Debug+debug"/>) be compiled into the program.</text>
+  </doc>
+</property>
+
+</js2doc>

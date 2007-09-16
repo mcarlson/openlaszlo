@@ -1,0 +1,16 @@
+
+<canvas>
+  <view bgcolor="blue" width="20" height="20"
+        onmousedown="this.setAttribute('mouseIsDown', true )"
+        onmouseup="  this.setAttribute('mouseIsDown', false )">
+    <attribute name="mouseIsDown" value="false"/>
+    <state apply="${parent.mouseIsDown}">
+      <attribute name="x" value="${parent.getMouse('x') - 10}"/>
+      <attribute name="y" value="${parent.getMouse('y') - 10}"/>
+    </state>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

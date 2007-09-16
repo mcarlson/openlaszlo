@@ -1,0 +1,22 @@
+/**
+  * Library.lzs
+  *
+  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  */
+
+#include "kernel/dhtml/LFC.js"
+//#include "kernel/dhtml/LzRequires.js"
+#include "kernel/dhtml/LzPool.js"
+#include "kernel/dhtml/LzKeyboardKernel.js"
+#include "kernel/dhtml/LzMouseKernel.js"
+#include "kernel/dhtml/LzSprite.js"
+#include "kernel/dhtml/LzLibrary.js"
+#include "kernel/dhtml/LzTextSprite.js"
+#include "kernel/dhtml/LzInputTextSprite.js"
+#include "kernel/dhtml/LzXMLParser.js"
+#include "kernel/dhtml/LzXMLTranslator.js"
+#include "kernel/dhtml/LzHTTPLoader.js"
+#include "kernel/dhtml/LzScreenKernel.js"
+#include "kernel/dhtml/LzContextMenu.js"

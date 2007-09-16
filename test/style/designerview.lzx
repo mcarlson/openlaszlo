@@ -1,19 +1,26 @@
 <!-- Copyright 2006-2007 Laszlo Systems -->
 <library> 
 
-    <!-- This stylsheet provides default values. All other stylesheets should be more
-    specific and override it. --> 
-    <stylesheet>
-        designerview {
-            width: 50;
-            height: 50;
-            borderwidth: 10;
-            textinset: 2;
-            innercolor: #b4a88f;
-            bordercolor: #652f15;
-            labelcolor: #000000;
-        }
-    </stylesheet>
+<stylesheet>    
+    boring { 
+        simple: "easy"; 
+    } 
+
+</stylesheet>
+
+<!-- This stylsheet provides default values. All other stylesheets should be more
+specific and override it. --> 
+<stylesheet>
+    designerview {
+        width: 50;
+        height: 50;
+        borderwidth: 10;
+        textinset: 2;
+        innercolor: #b4a88f;
+        bordercolor: #652f15;
+        labelcolor: #000000;
+    }
+</stylesheet>
 
     <class name="designerview" >
         <attribute name="group" type="string" value="$style{'group'}" />

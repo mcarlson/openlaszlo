@@ -1,0 +1,231 @@
+<library>
+    <script src="md5.js" />
+
+    <!--
+        GLOBALS
+    -->
+    <node id="gGlobals">
+        <attribute name="SHAREDSECRET" type="string" value="b199acb45fd055e7"/>
+        <attribute name="API_KEY" type="string" value="563a40afe6128e60145dd1e347911e54"/>
+        <attribute name="RESTSRC" type="string" value="http://api.flickr.com/services/rest/"/>
+        <attribute name="SHOULDCONNECT" value="true" />
+    </node>
+    
+    <!--
+        DATA MANAGER
+    -->
+    <node name="gDataMan">
+        <method event="oninit">
+            this.errdel = new LzDelegate( this, "dsError" );
+            errdel.register( photods , "onerror" );
+            errdel.register( infods , "onerror" );
+            errdel.register( sizeds , "onerror" );
+            errdel.register( userds , "onerror" );
+            errdel.register( favoritesds , "onerror" );
+            errdel.register( frobds , "onerror" );
+            errdel.register( tokends , "onerror" );
+
+            errdel.register( photods , "ontimeout" );
+            errdel.register( infods , "ontimeout" );
+            errdel.register( sizeds , "ontimeout" );
+            errdel.register( userds , "ontimeout" );
+            errdel.register( favoritesds , "ontimeout" );
+            errdel.register( frobds , "ontimeout" );
+            errdel.register( tokends, "ontimeout" );
+            
+            // Set up whether to connect to the live server, from an url parameter
+            // Default is YES, we do connect
+            var noFlickr = LzBrowser.getInitArg("noconnect");
+            if (noFlickr == 'true') gGlobals.setAttribute("SHOULDCONNECT", false); 
+        </method>
+
+        <method name="dsError">
+            gError.show();
+        </method>
+        
+        <!-- 
+            builds, signs and sends authenticated FlickrRequest 
+            results go in provided dataset
+            
+            app *must* have called doAuth() and doToken() before trying to call doAuthFilterRequest()
+            
+            REQUIRED ARG - ds - dataset to make call with
+            REQUIRED ARG - argobjarr - array of objects {argname:[name], argvalue:[value]}
+            
+            SUPPORTS ALL  METHODS DESCRIBED IN FLICKR SERVICES API THAT REQUIRE AUTHENTICATION
+            http://www.flickr.com/services/api/
+        -->
+        <method name="doAuthFlickrRequest" args="ds, argobjarr"><![CDATA[
+            var token=tokends.getPointer().xpathQuery("rsp/auth/token/text()");
+            argobjarr.push(
+                {argname:"auth_token", 
+                argvalue:token} );
+                
+            doFlickrRequest(ds, argobjarr);
+        ]]></method>
+
+        <!-- 
+            builds, signs and sends FlickrRequest 
+            results go in provided dataset
+            
+            REQUIRED ARG - ds - dataset to make call with
+            REQUIRED ARG - argobjarr - array of objects {argname:[name], argvalue:[value]}
+            
+            SUPPORTS ALL METHODS DESCRIBED IN FLICKR SERVICES API
+            http://www.flickr.com/services/api/
+        -->
+        <method name="doFlickrRequest" args="ds, argobjarr"><![CDATA[
+        
+            if (gGlobals.SHOULDCONNECT) {
+                // clear query params
+                ds.setQueryParams(null);
+    
+                // string to start building sig
+                var api_sig_string=gGlobals.SHAREDSECRET;
+    
+                // set source
+                ds.setSrc(gGlobals.RESTSRC);
+    
+                // add api_key
+                argobjarr.push({argname:"api_key", argvalue:gGlobals.API_KEY});
+                
+                // alphabetize argobjs comparator
+                var argcomparator = function (a, b) {
+                    if (a.argname < b.argname) return -1;
+                    if (a.argname > b.argname) return 1;
+                    return 0
+                }
+                argobjarr.sort(argcomparator)
+    
+                // build argobject
+                for (var i=0;i<argobjarr.length;i++) 
+                {
+                    var argobj=argobjarr[i];
+    
+                    // set query param
+                    ds.setQueryParam(argobj.argname, argobj.argvalue);
+    
+                    // buid api_sig_string
+                    api_sig_string+=argobj.argname+argobj.argvalue                
+
+                }
+    
+
+                // sign call
+                var api_sig = hex_md5(api_sig_string);                
+                ds.setQueryParam("api_sig", api_sig);
+
+                // make actual request
+                ds.doRequest();
+    
+                // Debug.write('Loading URL', ds); 
+            } else {
+                // Debug.write("Not making live query to flickr server. SHOULDCONNECT is false."); 
+                loadOfflineData(ds, argobjarr); 
+            }
+        ]]></method>
+        
+        <method name="loadOfflineData" args="ds, argobj">
+            if (ds == photods) {
+                // TODO: get a different dataset depending on which tag was requested
+                photods.setSrc("data/offline/data1.xml"); 
+                photods.doRequest(); 
+            } else if (ds == infods) {  
+                var photoid = argobj[1].argvalue;
+                var infosrc ="data/offline/pinfo/pinfo_" + photoid + ".xml";
+                // Debug.write("loading offline data for photoid ", photoid);
+                infods.setSrc(infosrc); 
+                infods.doRequest();
+            } else if (ds == userds)  {
+                var userid = argobj[1].argvalue;            
+                userds.setSrc("data/offline/uinfo/uinfo_" + userid + ".xml"); 
+                userds.doRequest();            
+            } else {
+                Debug.write("Not making request, don't know what ds is: ", ds); 
+            }
+        </method>
+
+
+        <!-- 
+             authenticate if necessary but not if already authenticated 
+             
+             PUBLIC AUTH FUNCTIONS 
+        -->
+        <method name="doAuth" >
+            _getFrob();
+        </method>
+
+        <!-- renew token after successful out-of-app authentication -->
+        <method name="doToken">
+            var frob = frobds.getPointer().xpathQuery("rsp/frob/text()");
+            var argobj = [{argname:"method",argvalue:"flickr.auth.getToken"},
+                          {argname:"frob",argvalue:frob}];
+            gDataMan.doFlickrRequest(tokends, argobj);            
+        </method>
+
+        <!-- 
+             PRIVATE AUTH HANDLERS
+        -->
+        <method name="_getFrob">
+            var argobj = [{argname:"method",argvalue:"flickr.auth.getFrob"}];
+            gDataMan.doFlickrRequest(frobds, argobj);            
+        </method>
+        <method name="_handleFrob" ><![CDATA[
+            if (global['debugdata']) Debug.write("handle frob", frobds.serialize());
+            var frob = frobds.getPointer().xpathQuery("rsp/frob/text()");
+
+            // string to start building sig
+            var api_sig_string=gGlobals.SHAREDSECRET;
+            api_sig_string+="api_key"+gGlobals.API_KEY;
+            api_sig_string+="frob"+frob;
+            api_sig_string+="permswrite";            
+
+            var sig=hex_md5(api_sig_string);
+
+            // authenticate user
+            var url="http://flickr.com/services/auth/?api_key="+gGlobals.API_KEY
+            +"&perms=write&frob="+frob+"&api_sig="+sig;
+
+            // TODO: possibly put up some UI here to note that out-of-app authentication will occur
+            // then call doAuth() function again
+            LzBrowser.loadURL(url, "_blank");
+        ]]></method>
+        <method name="_handleToken"><![CDATA[
+            if (global['debugdata']) Debug.write("_handleToken", tokends);
+            var stat=tokends.getPointer().xpathQuery("rsp/@stat");
+        ]]></method>
+
+    </node>
+
+    <!-- ds to query for photos -->
+    <dataset name="photods" ondata="if (global['debugdata']) Debug.write('got data', this)" type="http"/>
+    
+    <!-- ds to query for photo info -->
+    <dataset name="infods"  ondata="if (global['debugdata']) Debug.write('got info', this)" type="http"/>
+    
+    <!-- photo sizes -->
+    <dataset name="sizeds" type="http" />
+    
+    <!-- ds to query for user info -->
+    <dataset name="userds" ondata="if (global['debugdata']) Debug.write('got user', this)" />
+
+    <!-- information about the favorites -->
+    <dataset name="favoritesds" ondata="if (global['debugdata']) Debug.write('got favorites', this)" 
+        src="../data/canned_favorites.xml" />
+
+    <!-- auth... -->
+    <dataset name="frobds" type="http" ondata="gDataMan._handleFrob()" />
+
+    <!-- token for logged-in user -->
+    <dataset name="tokends" type="http" ondata="gDataMan._handleToken()" />
+
+    <!-- just for testing... -->
+    <dataset name="testds" type="http" ondata="if (global['debugdata']) Debug.write('ondata', this)" />
+
+</library>
+
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->

@@ -1,0 +1,342 @@
+<!-- Tests for whether the test tool is working. 
+    This file contains the tests that used to be in test/smoke/lzunit-test.lzl
+    except for:
+    * ActionScriptSemantics. We don't test this because we are now only supporting
+        real javascript. The ActionScriptSemantics tests only applied to swf < swf7.
+    * IntentionalFailures: TODO. 
+    * IntentionalErrors: TODO
+-->
+<canvas>
+<!--
+  covers-tags : smoketest lztest
+-->
+
+
+    <include href="/lztest/lztestmanager.lzx" /> 
+
+<script><![CDATA[
+
+var javascriptSemanticsSuite = new LzTestSuite("JavaScript Semantics"); 
+var tautologiesSuite = new LzTestSuite("Tautologies"); 
+
+javascriptSemanticsSuite.simplestEver = function() {
+}
+
+javascriptSemanticsSuite.minimalTest = function () {
+    LzTestManager.assertTrue( true, "minimal test");
+}
+
+
+javascriptSemanticsSuite.truthTest = function() {
+    LzTestManager.assertTrue("non-empty", "'non-empty' is true");
+    LzTestManager.assertTrue('0', "'0' is true");
+    
+    LzTestManager.assertEquals('undefined', String(undefined),
+               "String(undefined) == 'undefined'");
+               
+    LzTestManager.assertSame(true, isNaN(Number(undefined)),
+             "isNaN(Number(undefined))");
+    
+}
+
+javascriptSemanticsSuite.notANumberTest = function () {
+    LzTestManager.assertTrue(NaN != 1.0, "NaN != 1.0");    
+    LzTestManager.assertSame(true, isNaN(0.0 / 0.0),
+               "isNaN(0.0 / 0.0)");
+    LzTestManager.assertSame(true, isNaN(Math.sqrt(-2.0)),
+               "isNaN(Math.sqrt(-2.0))");
+    LzTestManager.assertSame(true, isNaN(NaN + NaN),
+               "isNaN(NaN + NaN)");
+    LzTestManager.assertSame(true, isNaN(NaN + 2.0),
+               "isNaN(NaN + 2.0)");
+    LzTestManager.assertSame(true, isNaN(NaN * 3.0),
+               "isNaN(NaN * 3.0)");
+    LzTestManager.assertSame(true, isNaN((0.0 / 0.0) * Infinity),
+               "isNaN((0.0 / 0.0) * Infinity)");
+    LzTestManager.assertSame(true, isNaN(Math.abs(0.0 / 0.0)),
+               "isNaN(Math.abs(0.0 / 0.0))");
+               
+    LzTestManager.assertSame(false, NaN > -1.0, "NaN > -1.0");
+    LzTestManager.assertSame(false, NaN < -1.0, "NaN < -1.0");
+    LzTestManager.assertSame(false, NaN >= -1.0, "NaN >= -1.0");
+    LzTestManager.assertSame(false, NaN <= -1.0, "NaN <= -1.0");
+    LzTestManager.assertSame(false, NaN == -1.0, "NaN == -1.0");
+    LzTestManager.assertSame(true, NaN != -1.0, "NaN != -1.0");
+    LzTestManager.assertSame(false, NaN > 0.0, "NaN > 0.0");
+    LzTestManager.assertSame(false, NaN < 0.0, "NaN < 0.0");
+    LzTestManager.assertSame(false, NaN >= 0.0, "NaN >= 0.0");
+    LzTestManager.assertSame(false, NaN <= 0.0, "NaN <= 0.0");
+    LzTestManager.assertSame(false, NaN == 0.0, "NaN == 0.0");
+    LzTestManager.assertSame(true, NaN != 0.0, "NaN != 0.0");
+    LzTestManager.assertSame(false, NaN > 1.0, "NaN > 1.0");
+    LzTestManager.assertSame(false, NaN < 1.0, "NaN < 1.0");
+    LzTestManager.assertSame(false, NaN >= 1.0, "NaN >= 1.0");
+    LzTestManager.assertSame(false, NaN <= 1.0, "NaN <= 1.0");
+    LzTestManager.assertSame(false, NaN == 1.0, "NaN == 1.0");
+    LzTestManager.assertSame(true, NaN != 1.0, "NaN != 1.0");
+    LzTestManager.assertTrue(NaN != 1.0, "NaN != 1.0");
+           
+    
+}
+
+javascriptSemanticsSuite.infinityTest = function () {
+    LzTestManager.assertSame(false, NaN > Infinity,
+              "NaN > Infinity");
+    LzTestManager.assertSame(false, NaN < Infinity,
+              "NaN < Infinity");
+    LzTestManager.assertSame(false, (0.0 / 0.0) == (0.0 / 0.0),
+              "(0.0 / 0.0) == (0.0 / 0.0)");
+    LzTestManager.assertEquals(1.0 / 0.0, Infinity, "1.0 / 0.0 == Infinity");
+    LzTestManager.assertEquals(Infinity, Infinity, "Infinity == Infinity");
+    LzTestManager.assertEquals((1.0 / 0.0) + 2.0, Infinity, "(1.0 / 0.0) + 2.0 == Infinity");
+    LzTestManager.assertEquals((1.0 / 0.0) * 0.5, Infinity, "(1.0 / 0.0) * 0.5 == Infinity");
+    LzTestManager.assertEquals((1.0 / 0.0) + (1.0 / 0.0), Infinity,
+               "(1.0 / 0.0) + (1.0 / 0.0) == Infinity");
+    LzTestManager.assertEquals((1.0 / 0.0) * (1.0 / 0.0), Infinity,
+               "(1.0 / 0.0) * (1.0 / 0.0) == Infinity");
+    
+    LzTestManager.assertSame(true, isNaN((1.0 / 0.0) * 0.0),
+             "isNaN((1.0 / 0.0) * 0.0)");
+    LzTestManager.assertSame(true, isNaN((1.0 / 0.0) - (1.0 / 0.0)),
+             "isNaN((1.0 / 0.0) - (1.0 / 0.0))");
+    LzTestManager.assertSame(true, isNaN((1.0 / 0.0) / (1.0 / 0.0)),
+             "isNaN((1.0 / 0.0) / (1.0 / 0.0))");
+    
+    /* Negative Infinity */
+    LzTestManager.assertSame(false, NaN > -Infinity,
+              "NaN > -Infinity");
+    LzTestManager.assertSame(false, NaN < -Infinity,
+              "NaN < -Infinity");
+    LzTestManager.assertEquals(-1.0 / 0.0, -Infinity, "-1.0 / 0.0 == -Infinity");
+    LzTestManager.assertEquals(-Infinity, -Infinity, "-Infinity == -Infinity");
+    LzTestManager.assertEquals((-1.0 / 0.0) + 2.0, -Infinity, "(-1.0 / 0.0) + 2.0 == -Infinity");
+    LzTestManager.assertEquals((-1.0 / 0.0) * 0.5, -Infinity, "(-1.0 / 0.0) * 0.5 == -Infinity");
+    LzTestManager.assertEquals((-1.0 / 0.0) + (-1.0 / 0.0), -Infinity,
+               "(-1.0 / 0.0) + (-1.0 / 0.0) == -Infinity");
+    LzTestManager.assertEquals((-1.0 / 0.0) * (-1.0 / 0.0), Infinity,
+               "(-1.0 / 0.0) * (-1.0 / 0.0) == Infinity");
+    LzTestManager.assertEquals((-1.0 / 0.0) * (1.0 / 0.0), -Infinity,
+               "(-1.0 / 0.0) * (1.0 / 0.0) == -Infinity");
+    
+    LzTestManager.assertSame(true, isNaN((-1.0 / 0.0) * 0.0),
+             "isNaN((-1.0 / 0.0) * 0.0)");
+    LzTestManager.assertSame(true, isNaN((-1.0 / 0.0) - (-1.0 / 0.0)),
+             "isNaN((-1.0 / 0.0) - (-1.0 / 0.0))");
+    LzTestManager.assertSame(true, isNaN((-1.0 / 0.0) / (-1.0 / 0.0)),
+             "isNaN((-1.0 / 0.0) / (-1.0 / 0.0))");
+
+}
+
+javascriptSemanticsSuite.negativeZeroEtc = function () {
+      /* Negative 0 */
+      var negative0 = (-2/Infinity);
+      LzTestManager.assertEquals(0, negative0, "0 == -0");
+      LzTestManager.assertEquals(Infinity, 2 / 0, "Infinity == 2 / 0");
+      LzTestManager.assertEquals(-Infinity, -2 / 0, "-Infinity == -2 / 0");
+      LzTestManager.assertEquals(0, negative0 * negative0, "-0 * -0 == 0");
+      LzTestManager.assertEquals(3, 3 + negative0, "3 + -0 == 3");
+      LzTestManager.assertEquals(negative0, 4 * negative0, "4 * -0 == -0");
+      LzTestManager.assertEquals(0, 0 - 0, "0 - 0 == 0");
+      LzTestManager.assertEquals(0, negative0 - negative0, "-0 - -0 == 0");
+      LzTestManager.assertEquals(negative0, negative0 + negative0, "-0 + -0 == -0");
+      LzTestManager.assertEquals(0, negative0 + 0, "-0 + 0 == 0");
+      LzTestManager.assertEquals(0, 0 + negative0, "0 + -0 == 0");
+      LzTestManager.assertEquals(negative0, negative0 - 0, "-0 - 0 == -0");
+      LzTestManager.assertEquals(0, -(negative0), "-(-0) == 0");
+      LzTestManager.assertEquals(0, -(0), "-(0) == 0");
+      LzTestManager.assertSame(true, isNaN(0 / negative0), "isNaN(0 / -0)");
+
+}
+
+
+javascriptSemanticsSuite.henryNan = function () {
+    LzTestManager.assertSame(false, undefined < 1, "undefined < 1");
+    LzTestManager.assertSame(false, undefined > -1, "undefined > -1");
+    LzTestManager.assertSame(true, isNaN(Math.min(undefined, 1)), "isNaN(Math.min(undefined, 1))");
+    LzTestManager.assertSame(true, isNaN(Math.max(undefined, 1)), "isNaN(Math.max(undefined, 1))");
+    LzTestManager.assertSame(true, isNaN(Math.min(undefined, -1)), "isNaN(Math.min(undefined, -1))");
+    LzTestManager.assertSame(true, isNaN(Math.max(undefined, -1)), "isNaN(Math.max(undefined, -1))");
+
+}
+
+javascriptSemanticsSuite.nullnessTest = function () {
+    this.foo = {zot: "qux"};
+    this.nullvar = null;
+    
+    LzTestManager.assertSame(this.foo, this.foo, "object === itself");
+    
+    LzTestManager.assertNotSame(null, undefined, "null !== undefined");
+    
+    LzTestManager.assertNotNull(0, "0 is not null");
+    LzTestManager.assertNotNull(false, "false is not null");
+    LzTestManager.assertNotNull(undefined, "undefined is not null");
+    
+    LzTestManager.assertNotUndefined(0, "0 is not undefined");
+    LzTestManager.assertNotUndefined(false, "false is not undefined");
+    LzTestManager.assertNotUndefined(null, "null is not undefined");
+    LzTestManager.assertNotUndefined(this.nullvar, "variable initialized to null is not undefined");
+}
+
+tautologiesSuite.testBasicTruth = function () {
+    this.foo = {zot: "qux"};
+    this.nullvar = null;
+
+    LzTestManager.assertTrue(true, "true is true");
+    LzTestManager.assertTrue(1, "1 is true");
+    LzTestManager.assertTrue('1', "'1' is true");
+    LzTestManager.assertTrue('1492', "'1492' is true");
+    LzTestManager.assertTrue([], "[] is true");
+    LzTestManager.assertTrue({}, "{} is true");
+    LzTestManager.assertSame(true, isNaN(0/0), "0/0 isNaN");
+    LzTestManager.assertSame(true, isNaN(Infinity - Infinity),
+      "Infinity - Infinity isNaN");
+    LzTestManager.assertSame(true, isNaN(Infinity / Infinity),
+      "Infinity / Infinity isNaN");
+    LzTestManager.assertSame(true, isNaN('random string'), "'random string' isNaN");
+    
+    LzTestManager.assertFalse(false, "false is false");
+    LzTestManager.assertFalse(null, "null is false");
+    LzTestManager.assertFalse(0, "0 is false");
+    LzTestManager.assertFalse('', "'' is false");
+    LzTestManager.assertFalse(undefined, "undefined is false");
+    LzTestManager.assertFalse(0/0, "NaN is false");
+    
+    LzTestManager.assertEquals(null, undefined, "null == undefined");
+    LzTestManager.assertEquals('foo', 'foo', "'foo' == 'foo'");
+    LzTestManager.assertEquals(this.foo, this.foo, "object == itself");
+    LzTestManager.assertEquals(1, '1', "1 == '1'");
+    LzTestManager.assertEquals(1, true, "1 == true");
+    LzTestManager.assertEquals(true, '1', "true == '1'");
+    LzTestManager.assertEquals(0, false, "0 == false");
+    LzTestManager.assertEquals('0', false, "'0' == false");
+    LzTestManager.assertEquals(42, {valueOf: function() {return 42}},
+      "coercion to value");
+    
+    LzTestManager.assertWithin(0, .001, .01, ".001 within .01 of 0");
+    LzTestManager.assertWithin(0, Number.MAX_VALUE, Infinity,
+      "MAX_VALUE within Infinity of 0");
+    LzTestManager.assertWithin(0, 0.0, Number.MIN_VALUE, "0.0 within MIN_VALUE of 0");
+    
+    LzTestManager.assertSame(undefined, undefined, "undefined === undefined");
+    LzTestManager.assertSame(null, null, "null === null");
+    LzTestManager.assertSame(1, 1.000000000, "1 === 1.0");
+    LzTestManager.assertSame(Infinity, 1/0, "Infinity === 1/0");
+    LzTestManager.assertSame(1/Infinity, 0, "1/Infinity === 0");
+    LzTestManager.assertSame(Infinity * Infinity, Infinity,
+      "Infinity * Infinity === Infinity");
+    LzTestManager.assertSame(Infinity + Infinity, Infinity,
+      "Infinity + Infinity === Infinity");
+    
+    LzTestManager.assertSame(true, true, "true === true");
+}
+
+tautologiesSuite.testTrickiness = function () {
+    this.foo = {zot: "qux"};
+    this.nullvar = null;
+
+    // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
+      var flashVersion = LzBrowser.getVersion();
+      if ((! flashVersion) || flashVersion < 8 || flashVersion > 10) {
+          LzTestManager.assertNotSame(NaN, NaN, "NaN !== NaN");
+      }
+
+    LzTestManager.assertNotSame(NaN, Infinity, "NaN !== Infinity");
+    LzTestManager.assertNotSame(Infinity, NaN, "Infinity !== NaN");
+    LzTestManager.assertNotSame('', ' ', "'' !== ' '");
+    LzTestManager.assertNotSame(true, false, "true !== false");
+    LzTestManager.assertNotSame(this.foo, {zot: "qux"}, "object !== similar object");
+    
+    LzTestManager.assertNull(null, "null is null");
+    LzTestManager.assertNull(this.nullvar, "variable initialized to null is null");
+    
+    LzTestManager.assertNotNull('', "'' is not null");
+    LzTestManager.assertNotNull([], "[] is not null");
+    LzTestManager.assertNotNull({}, "{} is not null");
+    
+    LzTestManager.assertUndefined(undefined, "undefined is undefined");
+    
+    LzTestManager.assertNotUndefined('', "'' is not undefined");
+    LzTestManager.assertNotUndefined([], "[] is not undefined");
+    LzTestManager.assertNotUndefined({}, "{} is not undefined");
+}
+
+tautologiesSuite.testInstanceOf = function() {
+    /* instanceof */
+    var cases = [
+        {instance: [], constructor: Array},
+        {instance: new Boolean(false), constructor: Boolean},
+        {instance: new Date(), constructor: Date},
+        {instance: new Number(1), constructor: Number},
+        {instance: {}, constructor: Object},
+        {instance: new String(""), constructor: String},
+        {instance: true, constructor: null},
+        {instance: 0, constructor: null},
+        {instance: "test", constructor: null},
+        {instance: new LzNode(), constructor: LzNode}
+    ];
+    var types = [Array, Boolean, Date, Number, String];
+    
+    for (var k in cases) {
+        var i = cases[k].instance;
+        var c = cases[k].constructor;
+        for (var t in types) {
+            if (c) {
+                // All objects are instanceof Object
+                LzTestManager.assertSame(true, i instanceof Object, Debug.__String(i) + ' instanceof ' + Debug.__String(Object));
+            }
+            // Check constructor
+            if (c && types[t].prototype == c.prototype) {
+                LzTestManager.assertSame(true, i instanceof types[t], Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
+            } else {
+                LzTestManager.assertSame(false, i instanceof types[t], Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
+            }
+        }
+    }
+}
+
+tautologiesSuite.testProblematicComparisons = function () {
+    LzTestManager.assertSame(true, -1 < 0, "-1 < 0");
+    LzTestManager.assertSame(false, 0 < 0, "0 < 0");
+    LzTestManager.assertSame(false, 1 < 0, "1 < 0");
+    LzTestManager.assertSame(true, -1 <= 0, "-1 <= 0");
+    LzTestManager.assertSame(true, 0 <= 0, "0 <= 0");
+    LzTestManager.assertSame(false, 1 <= 0, "1 <= 0");
+    LzTestManager.assertSame(false, -1 == 0, "-1 == 0");
+    LzTestManager.assertSame(true, 0 == 0, "0 == 0");
+    LzTestManager.assertSame(false, 1 == 0, "1 == 0");
+    LzTestManager.assertSame(true, -1 != 0, "-1 != 0");
+    LzTestManager.assertSame(false, 0 != 0, "0 != 0");
+    LzTestManager.assertSame(true, 1 != 0, "1 != 0");
+    LzTestManager.assertSame(false, -1 > 0, "-1 > 0");
+    LzTestManager.assertSame(false, 0 > 0, "0 > 0");
+    LzTestManager.assertSame(true, 1 > 0, "1 > 0");
+    LzTestManager.assertSame(false, -1 >= 0, "-1 >= 0");
+    LzTestManager.assertSame(true, 0 >= 0, "0 >= 0");
+    LzTestManager.assertSame(true, 1 >= 0, "1 >= 0");
+}
+
+
+javascriptSemanticsSuite.addTest(javascriptSemanticsSuite.simplestEver); 
+javascriptSemanticsSuite.addTest(javascriptSemanticsSuite.minimalTest); 
+javascriptSemanticsSuite.addTest(javascriptSemanticsSuite.truthTest); 
+javascriptSemanticsSuite.addTest(javascriptSemanticsSuite.notANumberTest); 
+javascriptSemanticsSuite.addTest(javascriptSemanticsSuite.infinityTest); 
+javascriptSemanticsSuite.addTest(javascriptSemanticsSuite.negativeZeroEtc); 
+javascriptSemanticsSuite.addTest(javascriptSemanticsSuite.henryNan); 
+javascriptSemanticsSuite.addTest(javascriptSemanticsSuite.nullnessTest); 
+
+tautologiesSuite.addTest(tautologiesSuite.testBasicTruth);
+tautologiesSuite.addTest(tautologiesSuite.testTrickiness);
+tautologiesSuite.addTest(tautologiesSuite.testProblematicComparisons);
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

@@ -1,0 +1,81 @@
+<canvas>
+    <include href="../lztest/lztestmanager.lzx" /> 
+
+<script><![CDATA[
+
+var suiteTestNode = new LzTestSuite("LFC Node Hierarchy"); 
+
+
+/*  <node name="n1" id="node1">
+    <node name="a"/>
+    <node name="b"/>
+  </node>
+
+*/
+
+var ncanvas = NewLzNode.make(null, {name: 'fake canvas'}, []);
+
+var node1 = ncanvas.makeChild({attrs: {name: "n1", id: 'node1'}, children: [{attrs: {name: "a"}, name: "NewLzNode"},{attrs: {name: "b"}, name: "NewLzNode"}], name: "NewLzNode"});
+
+var n1 = node1;
+
+
+suiteTestNode.testBasicAttributes = function() {
+    LzTestManager.assertEquals("n1", node1.name);
+    LzTestManager.assertEquals("node1", node1.id);
+}
+
+suiteTestNode.testSubNodes = function() {
+    var sn = node1.subnodes;
+    LzTestManager.assertEquals(2, sn.length);
+    LzTestManager.assertEquals("a", sn[0].name);
+    LzTestManager.assertEquals("b", sn[1].name);
+}
+
+suiteTestNode.testParent = function() {
+    var sn = node1.subnodes;
+    LzTestManager.assertEquals(node1, sn[0].parent);
+    LzTestManager.assertEquals(node1, sn[1].parent);
+}      
+
+suiteTestNode.testChildOf = function() {
+    var sn = node1.subnodes;
+    LzTestManager.assertTrue(sn[0].childOf(n1));
+    LzTestManager.assertTrue(sn[1].childOf(n1));
+}
+      
+suiteTestNode.testImmediateParent = function() {
+    var sn = node1.subnodes;
+    LzTestManager.assertEquals(n1, sn[0].immediateparent);
+    LzTestManager.assertEquals(n1, sn[1].immediateparent);
+}
+      
+suiteTestNode.testNodeLevel = function() {
+    var sn = n1.subnodes;
+    LzTestManager.assertEquals(n1.nodeLevel + 1, sn[0].nodeLevel);
+    LzTestManager.assertEquals(n1.nodeLevel + 1, sn[1].nodeLevel);
+}
+
+
+suiteTestNode.testClassroot = function() {
+    LzTestManager.assertEquals(snode1, snode1.subnode1.classroot);
+}
+
+suiteTestNode.addTest(suiteTestNode.testBasicAttributes); 
+suiteTestNode.addTest(suiteTestNode.testSubNodes); 
+suiteTestNode.addTest(suiteTestNode.testParent); 
+suiteTestNode.addTest(suiteTestNode.testChildOf); 
+suiteTestNode.addTest(suiteTestNode.testImmediateParent); 
+suiteTestNode.addTest(suiteTestNode.testNodeLevel); 
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

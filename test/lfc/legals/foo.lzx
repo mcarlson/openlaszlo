@@ -1,0 +1,83 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas width="100%" height="80%">
+    <dataset name="mydata" src="http:mydata.xml" request='true' oninit="Debug.write('oninit event handler called');" onerror="Debug.write('got dataset onerror event', this);" ondata="Debug.write('got data', mydata.data); canvas.datatext.setText('Got data: ' + mydata.data);" />
+    <resource name="maxres">
+        <frame src="resc/h_c_open_sign.gif"/>
+        <frame src="resc/h_c_web2con.gif"/>
+    </resource>
+
+    <view width="240" height="200" resource='maxres' onclick="Debug.write('click')" opacity="0" oninit="this.animate('opacity', 1, 5000, true);" onmousedown="this.play();" onmouseup="this.stop();"> 
+        <view x="20" y="10" resource='resc/h_c_web2con.gif'  opacity=".5" onmouseover="this.setOpacity(1);" onmouseout="this.setOpacity(.5);"/>
+    </view>
+
+    <view x="400" width="240" height="200" resource='maxres' onclick="Debug.write('click')" opacity="0" oninit="this.animate('opacity', 1, 5000, true);" onmousedown="Debug.write('down');" onmouseup="Debug.write('up');"> 
+        <view x="20" y="10" resource='resc/h_c_web2con.gif'  opacity=".5" onmouseover="this.setOpacity(1);" onmouseout="this.setOpacity(.5);"/>
+    </view>
+
+    <view x="200" y="500" resource='resc/h_c_open_sign.gif' oninit="this.animate('x',200, 3000, true)"> 
+        <view x="20" y="10" resource='resc/h_c_web2con.gif' oninit="this.animate('y',100, 3000, true)" />
+    </view>
+
+    <view x="400" y="300" resource='http:resc/h_c_web2con.gif' onclick="this.animate('width', 100, 1000, true);this.animate('height', 100, 1000, true);" bgcolor="red"/>
+
+    <text bgcolor="0xffff00" width="100" y="250" onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Some text</text>
+
+    <view y="300" >
+        <inputtext name="foo" width="170" onblur="this.parent.bar.setText('blur: ' + this.getText());" onfocus="this.parent.bar.setText('focus')" onkeyup="this.parent.bar.setText('keyup')" onkeydown="this.parent.bar.setText('keydown')" onselect="this.parent.bar.setText('select')">Some input text</inputtext>
+        <view width="50" height="50" bgcolor="red">
+            <method event="onmousedown">
+                this.setAttribute('bgcolor', 0xffff00);
+            </method>
+            <method event="onmouseup">
+                this.setAttribute('bgcolor', 0xff9900);
+            </method>
+            <method event="onmouseover">
+                this.setAttribute('bgcolor', 0xff9900);
+            </method>
+            <method event="onmouseout">
+                this.setAttribute('bgcolor', 0xff0000);
+            </method>
+            <method event="onclick">
+                this.parent.bar.setText('Text is: ' + this.parent.foo.getText());
+            </method>
+        </view>
+        <simplelayout axis="x"/>
+        <text name="bar" y="40" width="200"/>
+    </view>
+
+
+
+    <view y="400" width="20" height="20" bgcolor="red" clip="true">
+        <method event="oninit">
+            this.animate('width', 100, 5000);
+            this.animate('height', 100, 5000);
+        </method>
+        <view resource="resc/logo.png" x="-20" y="-20"/>
+    </view>
+
+    <view resource="resc/logo.png" y="500" stretches="both">
+        <method event="oninit">
+            this.animate('width', 200, 5000);
+            this.animate('height', 200, 5000);
+        </method>
+    </view>
+
+    <text y="200" name="datatext" width="500"/>
+    
+
+    <resource name="tabrsrc" src="animation/" />
+
+    <class name="animlogo" oninit="this.setX(Math.random() * 800); this.setY(Math.random() * 800)">
+        <view x="102" resource="tabrsrc" oninit="this.play(); this.animate('y', 102, 2000, true); this.animate('opacity', .2, 2000, false);"/>
+        <view resource="tabrsrc" oninit="this.animate('x', 100, 2000, true); this.animate('y', 100, 2000, true); this.play();"/>
+    </class>
+
+    <animlogo/>
+
+
+</canvas>

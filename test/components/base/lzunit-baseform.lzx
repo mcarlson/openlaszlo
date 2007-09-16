@@ -3,6 +3,11 @@
   <include href="base/baseform.lzx"/>
   <include href="lz/checkbox.lzx"/>
 
+<!--
+  covers-tags: basecomponent baseform smoketest
+-->
+
+
   <TestSuite>
 
     <TestCase>

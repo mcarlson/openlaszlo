@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+<!ENTITY build_opt SYSTEM "file:../../../build-tools/build-opt.xml">
+]>
+
+<project name="includes" default="build">
+  <description>
+    This is the build file for the lps/includes
+  </description>
+
+  &build_opt;
+
+  <target name="init" depends="build-opt">
+    <tstamp />
+
+    <path id="lfctosc.classpath">
+      <fileset dir="${LPS_HOME}/3rd-party" includes="**/*.jar" />
+      <fileset dir="${LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
+    </path>
+
+    <available property="has_sc.Main"
+               classname="org.openlaszlo.sc.Main"
+               classpathref="lfctosc.classpath" />
+
+    <!-- Whether the compressed embed is up to date -->
+    <uptodate property="embed.uptodate" >
+      <srcfiles dir="." includes="embednew.js,flash.js,embed-library.lzs" />
+      <compositemapper>
+        <mergemapper to="../embed-compressed.js" />
+      </compositemapper>
+    </uptodate>
+
+    <!-- Whether the compressed excanvas is up to date -->
+    <uptodate property="excanvas.uptodate" >
+      <srcfiles dir="." includes="excanvas.js" />
+      <compositemapper>
+        <mergemapper to="../excanvas.js" />
+      </compositemapper>
+    </uptodate>
+  </target>
+
+  <target name="clean" depends="init">
+    <delete failonerror="false">
+      <fileset dir=".." includes="embed-compressed.js" />
+      <fileset dir=".." includes="excanvas.js" />
+    </delete>
+  </target>
+
+  <target name="compress" description="compress a .lzs library" >
+    <fail unless="has_sc.Main" message="Can't find org.openlaszlo.sc.Main in classpath." />
+    <echo message="Compiling ${output}" />
+    <java classname="org.openlaszlo.sc.Main"
+          classpathref="lfctosc.classpath"
+          fork="true"
+          failonerror="true">
+      <sysproperty key="LPS_HOME" value="${LPS_HOME}" />
+      <arg value="--runtime=dhtml" />
+      <arg value="-o${output}" />
+      <arg value="--default=${source}" />
+    </java>
+  </target>
+
+  <target name="embed"
+          depends="init"
+          unless="embed.uptodate">
+    <ant target="compress">
+      <property name="output" value="../embed-compressed.js" />
+      <property name="source" value="embed-library.lzs" />
+    </ant>
+  </target>
+
+  <target name="excanvas"
+          depends="init"
+          unless="excanvas.uptodate">
+    <ant target="compress">
+      <property name="output" value="../excanvas.js" />
+      <property name="source" value="excanvas.js" />
+    </ant>
+  </target>
+
+  <target name="doc">
+  </target>
+
+  <target name="build" description="Build all the includes, unless they're already up to date"
+          depends="init,embed,excanvas">
+  </target>
+
+  <target name="all"
+          description="Clean, build, (no doc here)"
+          depends="clean,build" />
+</project>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

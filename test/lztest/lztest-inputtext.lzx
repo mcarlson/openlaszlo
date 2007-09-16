@@ -1,5 +1,10 @@
 <canvas debug="true">
-  <include href="../../lps/utils/lztestmanager.lzx" /> 
+  <include href="lztest/lztestmanager.lzx" /> 
+
+<!--
+  covers-tags : lztext
+-->
+
 
   <simplelayout axis="x" spacing="5"/>
 
@@ -48,8 +53,8 @@ suite.test2 = function() {
 }
 
 
-suite.addTest(suite.test2);
 suite.addTest(suite.test1);
+suite.addTest(suite.test2);
 
 
 ]]>
@@ -59,7 +64,7 @@ suite.addTest(suite.test1);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

@@ -1,0 +1,35 @@
+
+<canvas height="200">
+  <class extends="dragstate" name="fadeDragger" pooling="true">
+    <handler name="onapply">
+      parent.bringToFront();
+      parent.setAttribute('opacity', .5)
+    </handler>
+    <handler name="onremove">
+      parent.setAttribute('opacity', 1)
+    </handler>
+    <view name="hShadow" x="10" y="${parent.body.height}"
+          width="${parent.body.width}" height="10"
+          opacity=".2" bgcolor="black"/>
+    <view name="vShadow"  x="${parent.body.width}" y="10"
+          width="10" height="${parent.body.height - 10}"
+          opacity=".2" bgcolor="black"/>
+  </class>
+  
+  <view
+        onmousedown="myFadeDragger.apply()"
+        onmouseup="myFadeDragger.remove()">
+    <fadeDragger name="myFadeDragger"/>
+    <view name="body" width="40" height="40" bgcolor="blue"/>
+  </view>
+  <view x="100" y="100"
+        onmousedown="myFadeDragger.apply()"
+        onmouseup="myFadeDragger.remove()">
+    <fadeDragger name="myFadeDragger"/>
+    <view name="body" width="60" height="60" bgcolor="red"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

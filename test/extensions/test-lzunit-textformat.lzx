@@ -2,7 +2,6 @@
     <include href="lzunit"/>
     <include href="/extensions/views/richinputtext.lzx" />
     <include href="/extensions/views/LzTextFormat.lzx" />
-    <include href="/incubator/textutils.lzx" />
 
     <!--- Constant for testing. --> 
     <attribute name="PLAIN_A" type="string" value="aaa." />
@@ -14,28 +13,35 @@
     <attribute name="PLAIN_RICH_A" type="string" value="rich" />
     <attribute name="PLAIN_RICH_B" type="string" value="i have spaces" />    
     <attribute name="PLAIN_RICH_C" type="string" value=" space before and after " />    
-    
+
+    <script>
+        // a little replace function, just to help with testing and such
+        function replace(s, f, r) {
+            return s.split(f).join(r);
+        }
+    </script>
+        
     <class name="Creation" extends="TestCase">
         <method name="testCreation">
-            var f = new LzTextFormat();
+            var f = new textformat();
             assertNotNull(f); 
             assertNull(f.font); 
         </method>
 
         <method name="testCreationWithArg">
-            var f = new LzTextFormat(this, {bold:true});
+            var f = new textformat(this, {bold:true});
             assertTrue(f.bold);
         </method>
 
         <method name="testCreationWithArgs">
-            var f = new LzTextFormat(this, {bold:true, font:"Verdana"});
+            var f = new textformat(this, {bold:true, font:"Verdana"});
             assertTrue(f.bold);
             assertSame("Verdana", f.font);
             assertNull(f.url); 
         </method>
        
         <method name="testCreationWithColor">
-            var f = new LzTextFormat(this, {color:0x0000FF});
+            var f = new textformat(this, {color:0x0000FF});
             assertSame(0x0000FF, f.color);
         </method>
     </class>        
@@ -43,14 +49,14 @@
     <class name="FormatToHTML" extends="TestCase">
         <!--- Doesn't do a proper test. -->
         <method name="testSimple">
-            var fmt = new LzTextFormat(this); 
+            var fmt = new textformat(this); 
             var html = fmt.toHTML();
             assertNotNull(html); 
         </method>
 
         <!--- Set the font, then turn it into html. Very fuzzy test. --> 
         <method name="testFont">
-            var fmt = new LzTextFormat(this, {font: "Verdana"}); 
+            var fmt = new textformat(this, {font: "Verdana"}); 
             var html = fmt.toHTML();
             Debug.write("FormatToHTML.testFont got " + html); 
             assertTrue(html.length &gt;= 9); 
@@ -81,6 +87,6 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

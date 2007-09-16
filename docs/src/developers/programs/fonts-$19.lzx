@@ -1,0 +1,19 @@
+
+<canvas height="100">
+  <font name="helmet" src="helmetr.ttf"/>
+  <font name="tahoe" src="lztahoe8.ttf"/>
+  <class name="myclass" fontsize="20" font="helmet">
+    <attribute name="defaultplacement" value="'content'"/>
+    <text bgcolor="red" text="Uses the class font"/>
+    <view name="content"/>
+  </class>
+  
+  <view layout="axis:y; spacing: 2" font="tahoe">
+    <myclass/>
+    <text text="use cascaded font"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

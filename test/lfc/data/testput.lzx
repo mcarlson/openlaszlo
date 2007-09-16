@@ -1,0 +1,67 @@
+<library>
+  <include href="lzunit/lzunit.lzx" />
+
+  <dataset  name="prdataput" src="http:echo.jsp" request="false" 
+            querytype="PUT" />
+
+  <!-- The post''ed data comes back from echoraw.jsp encapsulated in XML as
+      <response><echo>input stream here</echo> </response>
+  -->
+
+  <class name="TestPut" extends="TestCase">
+    <attribute name="dpready" value="false"/>
+    <attribute name="t2del" value="false"/>
+    <attribute name="waitcnt" value="0"/>
+
+    <handler reference="prdataput" name="ondata">
+       Debug.write('testcase got prdataput ondata');
+       this.dpready = true;
+    </handler>
+
+    <datapointer xpath="prdataput:/response" name="dp" 
+                 oninit="parent.sendit()"
+                 onerror='Debug.write("Got data fetch error with dataset prdataput", prdataput.errorstring)' />
+
+    <method name="sendit">
+      prdataput.setHeader("content-type", "application/xml");
+      prdataput.setHeader("fluffy-bunny-color", "pink/with-polka-dots");
+      prdataput.setHeader("fuzzy-dog-color", "golden/with-fuzzy-ears");
+      prdataput.setQueryParam("lzpostbody", "This is posted data.");
+      prdataput.doRequest();
+    </method>
+
+    <method name="test1">
+        if ( ! this.dpready ){
+          if ( ! this.t2del ){
+              Debug.write( "test isn't done until async test runs" );
+              this.t2del = new LzDelegate( this , 'test1' );
+          }
+
+          if ( this.waitcnt++ > 2000 ){
+              fail( "testput: Didn't get async data" );
+          } else {
+              LzIdle.callOnIdle( this.t2del );
+          }
+          return;
+      }
+
+      Debug.write( 'running async test for loaded data testput)' ,dp);
+      this.doIt(dp);
+    </method>
+
+        <method name="doIt" args="dp">
+            <![CDATA[
+              // look for "PUT" method echoed back from server
+              assertTrue(prdataput.serialize().indexOf('<method type="PUT"/>')  > 0);
+            ]]>
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+

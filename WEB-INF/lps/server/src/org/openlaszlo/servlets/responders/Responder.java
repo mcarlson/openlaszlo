@@ -42,6 +42,7 @@ public abstract class Responder
     public static final int MIME_TYPE_HTML = 1;
     public static final int MIME_TYPE_XML  = 2;
     public static final int MIME_TYPE_XMLDATA  = 3;
+    public static final int MIME_TYPE_SVG  = 4;
 
     public static final String LZCOOKIE = "lzc";
 
@@ -101,7 +102,11 @@ public abstract class Responder
      * @return integer indicating mime-type. See MIME_TYPE properties in this
      * class.
      */
-    public abstract int getMimeType();
+    public int getMimeType() { return MIME_TYPE_HTML; }
+
+    public int getMimeType(HttpServletRequest req) {
+        return MIME_TYPE_HTML;
+    }
 
 
     /** This needs to get called after the instantiation of the class object. */
@@ -291,6 +296,7 @@ public abstract class Responder
                 respondWithErrorHTML(res, m);
                 break;
             case MIME_TYPE_XML    :
+            case MIME_TYPE_SVG    :
                 respondWithErrorXML(res, xmlErrorMsg(status, m));
                 break;
             case MIME_TYPE_XMLDATA    :
@@ -308,18 +314,19 @@ public abstract class Responder
         }
     }
 
-    public void respondWithMessage(HttpServletResponse res, String msg)
+    public void respondWithMessage(HttpServletRequest req, HttpServletResponse res, String msg)
         throws IOException {
         String surl;
 
-        switch (getMimeType()) {
+        switch (getMimeType(req)) {
             case MIME_TYPE_SWF  :
-                respondWithMessageSWF(res, msg);
+              respondWithMessageSWF(res, msg);
                 break;
             case MIME_TYPE_HTML :
                 respondWithErrorHTML(res, msg);
                 break;
             case MIME_TYPE_XML    :
+            case MIME_TYPE_SVG    :
                 respondWithErrorXML(res, msg);
                 break;
             case MIME_TYPE_XMLDATA    :
@@ -334,6 +341,36 @@ public abstract class Responder
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 Responder.class.getName(),"051018-301")
 );
+        }
+    }
+
+    public void respondWithMessage( HttpServletResponse res, String msg)
+        throws IOException {
+        String surl;
+
+        switch (getMimeType()) {
+          case MIME_TYPE_SWF  :
+            respondWithMessageSWF(res, msg);
+            break;
+          case MIME_TYPE_HTML :
+            respondWithErrorHTML(res, msg);
+            break;
+          case MIME_TYPE_XML    :
+          case MIME_TYPE_SVG    :
+            respondWithErrorXML(res, msg);
+            break;
+          case MIME_TYPE_XMLDATA    :
+            respondWithErrorXML(res, msg, false);
+            break;
+          default:
+            throw new ChainedException(
+                /* (non-Javadoc)
+                 * @i18n.test
+                 * @org-mes="Responder mime type unknown"
+                 */
+                org.openlaszlo.i18n.LaszloMessages.getMessage(
+                    Responder.class.getName(),"051018-301")
+                );
         }
     }
 
@@ -570,7 +607,7 @@ public abstract class Responder
     /**
      * Send a SWF response indicating the exception.
      */
-    protected void respondWithException(HttpServletResponse res, Exception e)
+    protected void respondWithException(HttpServletResponse res, Throwable e)
     {
         String m = e.getMessage();
         StringWriter s = new StringWriter();
@@ -667,7 +704,7 @@ public abstract class Responder
         String msg = LPS.getProperty("messages.over-limit", 
             "The Laszlo Presentation Server that is responsible for serving " + 
              url.toString() + " is over its license limit.   The site administrator has been notified.");
-         respondWithMessage(res, msg);
+        respondWithMessage(req, res, msg);
      }
 
     /**

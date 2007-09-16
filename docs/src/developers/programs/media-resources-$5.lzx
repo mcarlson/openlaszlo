@@ -1,0 +1,24 @@
+
+<canvas height="120">
+  <!-- create the multi-frame resource and give it a name -->
+  <resource name="mybutton_rsrc">
+    <!-- first frame is the mouseup state of the button -->     
+    <frame src="resources/button-up.png"/>   
+    <!-- second frame is the mouseover state of the button -->     
+    <frame src="resources/button-over.png"/> 
+    <!-- third frame is the mousedown state of the button -->     
+    <frame src="resources/button-down.png"/> 
+  </resource>
+
+  <!-- attach the resource to a view with mouse events -->
+  <view resource="mybutton_rsrc" 
+        onmouseover="setResourceNumber(2)"
+        onmouseout="setResourceNumber(1)"
+        onmousedown="setResourceNumber(3)"
+        onmouseup="setResourceNumber(2)"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

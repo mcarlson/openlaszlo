@@ -1,12 +1,12 @@
 /* Stylesheet for LZX Documentation */
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 @import "styles.css";
 
-div.book, div.chapter, div.part, div.preface, div.appendix, div.index, div.glossary {
+div.book, div.chapter, div.part, div.preface, div.appendix, div.index, div.glossary, div.refentry, div.reference {
     padding-left : 60;
     padding-top : 20;
     padding-right : 100;  
@@ -22,6 +22,10 @@ div.book, div.chapter, div.part, div.preface, div.appendix, div.index, div.gloss
     margin-left : 10;
 }
 
+.toc dl dd {
+    padding-left : 30px;
+}
+
 h1 { margin-left : -45; }
 h2 { margin-left: -30; }
 h3 { margin-left : -15; }
@@ -34,7 +38,50 @@ td {
     background-color: yellow;
 }
 
+.refsect1 {
+    clear: both;
+    margin-top: -5px;
+}
+
+.refnamediv {
+    float: left;
+}
+
+.refsynopsisdiv {
+    float: right;
+    max-width: 40%;
+    margin: 5pt;
+    padding: 5pt;
+    border: 1px solid #7b839a;
+    background-color: #E0E0E0;
+}
+
+.refsynopsisdiv h2 {
+    margin-left: 0px;
+    font-size: 12px;
+    border-bottom: solid 1px #7b839a;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.indexdiv dl dd {
+    padding-bottom: inherit;
+}
+
 /* Inline markup */
+
+/* This substitutes for turning on shade.verbatim in parameters.xsl */
+pre.programlisting {
+  background-color: #DDDDDD ;
+  border: 1px solid #7b839a ;
+  padding: 1em;
+}
+
+em.lineannotation {
+  font-style: italic ;
+  font-weight: normal ;
+  color: inherit ;
+}
 
 /* Emphasis inside a program listing is bold blue, instead of italic */
 pre em {
@@ -43,12 +90,84 @@ pre em {
     font-style: normal;
 }
 
+code.fieldsynopsis {
+    white-space: normal;
+}
+
 /* This is used in the ECMAScript chapter to mark unsupported APIs */
 .strikeout {
     font-variant: italic;
     color: red;
 }
 
+/* variablelist */
+
+.variablelist .title {
+    color: white;
+    background-color: #5b607c;
+}
+
+.variablelist dd {
+    border-bottom: solid 1px #e5e5e5
+}
+
+/* Refentry */
+
+.refsect3 {
+    margin-top: 7pt;
+}
+
+/* Segmented Lists */
+
+.segmentedlist > .title {
+    margin-top: 7pt;
+    margin-bottom: 5pt;
+    background-color: #5b607c;
+    color: white;
+}
+
+tr.segtitle {
+    background-color: #e6e6e6;
+    text-align: left;
+}
+
+tr.segtitle > th {
+    width: 55px;
+}
+
+/* Synopsis */
+
+.classsynopsis, .methodsynopsis, .fieldsynopsis {
+    font-family:"Courier New",Courier,monospace;
+}
+
+.classsynopsis .classname, .methodsynopsis .methodname, .fieldsynopsis .varname {
+    font-weight:bold;
+}
+
+.methodsynopsis .parameter {
+    font-style:italic;
+}
+
+/* Conditional Text */
+
+.swf, .swf7, .dhtml, .svg, .jme {
+    border-left: 1px solid #7b839a;
+    border-right: 1px solid #7b839a;
+    border-top: 1px solid #b0b8cf;
+    border-bottom: 1px solid #8E96AD;
+    background-color: #F8F8F8;
+}
+
+.swf:before, .swf7:before, .dhtml:before, .svg:before, .jme:before {
+    content:attr(alt);
+    font-weight:bold;
+    display: block;
+    float: right;
+    text-align: right;
+    margin-right: 5pt;
+    margin-top: 5pt;
+}
 
 /* Live examples */
 
@@ -97,4 +216,8 @@ pre em {
 
 .edit-button {
     padding-left: 7pt;
+}
+
+td {
+vertical-align:top;
 }

@@ -1,0 +1,167 @@
+<!--=======================================================================-->
+<!-- clocks.lzx                                                            -->
+<!--                                                                       -->
+<!-- library classes for the world clocks class                            -->
+<!--                                                                       -->
+<!-- Copyright 2002-2007 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--                                                                       -->
+<!--=======================================================================-->
+<library>
+    <resource name="clockbkgnd"     src="images/clock_bg.png" />
+    <resource name="glasshilite"    src="images/crystal_hilite.png" />
+    <resource name="cap"            src="images/center_hub.png" />
+
+    <resource name="hourhand" >
+        <frame src="images/hour_hand/hour_01.png" />
+        <frame src="images/hour_hand/hour_02.png" />
+        <frame src="images/hour_hand/hour_03.png" />
+        <frame src="images/hour_hand/hour_04.png" />
+        <frame src="images/hour_hand/hour_05.png" />
+        <frame src="images/hour_hand/hour_06.png" />
+        <frame src="images/hour_hand/hour_07.png" />
+        <frame src="images/hour_hand/hour_08.png" />
+        <frame src="images/hour_hand/hour_09.png" />
+        <frame src="images/hour_hand/hour_10.png" />
+        <frame src="images/hour_hand/hour_11.png" />
+        <frame src="images/hour_hand/hour_12.png" />
+    </resource>
+    
+    <resource name="minutehand"      >
+        <frame src="images/minute_hand/min_01.png" />
+        <frame src="images/minute_hand/min_02.png" />
+        <frame src="images/minute_hand/min_03.png" />
+        <frame src="images/minute_hand/min_04.png" />
+        <frame src="images/minute_hand/min_05.png" />
+        <frame src="images/minute_hand/min_06.png" />
+        <frame src="images/minute_hand/min_07.png" />
+        <frame src="images/minute_hand/min_08.png" />
+        <frame src="images/minute_hand/min_09.png" />
+        <frame src="images/minute_hand/min_10.png" />
+        
+        <frame src="images/minute_hand/min_11.png" />
+        <frame src="images/minute_hand/min_12.png" />
+        <frame src="images/minute_hand/min_13.png" />
+        <frame src="images/minute_hand/min_14.png" />
+        <frame src="images/minute_hand/min_15.png" />
+        <frame src="images/minute_hand/min_16.png" />
+        <frame src="images/minute_hand/min_17.png" />
+        <frame src="images/minute_hand/min_18.png" />
+        <frame src="images/minute_hand/min_19.png" />
+        <frame src="images/minute_hand/min_20.png" />
+        
+        <frame src="images/minute_hand/min_21.png" />
+        <frame src="images/minute_hand/min_22.png" />
+        <frame src="images/minute_hand/min_23.png" />
+        <frame src="images/minute_hand/min_24.png" />
+        <frame src="images/minute_hand/min_25.png" />
+        <frame src="images/minute_hand/min_26.png" />
+        <frame src="images/minute_hand/min_27.png" />
+        <frame src="images/minute_hand/min_28.png" />
+        <frame src="images/minute_hand/min_29.png" />
+        <frame src="images/minute_hand/min_30.png" />
+
+        <frame src="images/minute_hand/min_31.png" />
+        <frame src="images/minute_hand/min_32.png" />
+        <frame src="images/minute_hand/min_33.png" />
+        <frame src="images/minute_hand/min_34.png" />
+        <frame src="images/minute_hand/min_35.png" />
+        <frame src="images/minute_hand/min_36.png" />
+        <frame src="images/minute_hand/min_37.png" />
+        <frame src="images/minute_hand/min_38.png" />
+        <frame src="images/minute_hand/min_39.png" />
+        <frame src="images/minute_hand/min_40.png" />
+
+        <frame src="images/minute_hand/min_41.png" />
+        <frame src="images/minute_hand/min_42.png" />
+        <frame src="images/minute_hand/min_43.png" />
+        <frame src="images/minute_hand/min_44.png" />
+        <frame src="images/minute_hand/min_45.png" />
+        <frame src="images/minute_hand/min_46.png" />
+        <frame src="images/minute_hand/min_47.png" />
+        <frame src="images/minute_hand/min_48.png" />
+        <frame src="images/minute_hand/min_49.png" />
+        <frame src="images/minute_hand/min_50.png" />
+
+        <frame src="images/minute_hand/min_51.png" />
+        <frame src="images/minute_hand/min_52.png" />
+        <frame src="images/minute_hand/min_53.png" />
+        <frame src="images/minute_hand/min_54.png" />
+        <frame src="images/minute_hand/min_55.png" />
+        <frame src="images/minute_hand/min_56.png" />
+        <frame src="images/minute_hand/min_57.png" />
+        <frame src="images/minute_hand/min_58.png" />
+        <frame src="images/minute_hand/min_59.png" />
+        <frame src="images/minute_hand/min_60.png" />
+    </resource>
+
+    <resource name="secondhand"      >
+        <frame src="images/second_hand/sec_01.png" />
+        <frame src="images/second_hand/sec_02.png" />
+        <frame src="images/second_hand/sec_03.png" />
+        <frame src="images/second_hand/sec_04.png" />
+        <frame src="images/second_hand/sec_05.png" />
+        <frame src="images/second_hand/sec_06.png" />
+        <frame src="images/second_hand/sec_07.png" />
+        <frame src="images/second_hand/sec_08.png" />
+        <frame src="images/second_hand/sec_09.png" />
+        <frame src="images/second_hand/sec_10.png" />
+
+        <frame src="images/second_hand/sec_11.png" />
+        <frame src="images/second_hand/sec_12.png" />
+        <frame src="images/second_hand/sec_13.png" />
+        <frame src="images/second_hand/sec_14.png" />
+        <frame src="images/second_hand/sec_15.png" />
+        <frame src="images/second_hand/sec_16.png" />
+        <frame src="images/second_hand/sec_17.png" />
+        <frame src="images/second_hand/sec_18.png" />
+        <frame src="images/second_hand/sec_19.png" />
+        <frame src="images/second_hand/sec_20.png" />
+        
+        <frame src="images/second_hand/sec_21.png" />
+        <frame src="images/second_hand/sec_22.png" />
+        <frame src="images/second_hand/sec_23.png" />
+        <frame src="images/second_hand/sec_24.png" />
+        <frame src="images/second_hand/sec_25.png" />
+        <frame src="images/second_hand/sec_26.png" />
+        <frame src="images/second_hand/sec_27.png" />
+        <frame src="images/second_hand/sec_28.png" />
+        <frame src="images/second_hand/sec_29.png" />
+        <frame src="images/second_hand/sec_30.png" />
+        
+        <frame src="images/second_hand/sec_31.png" />
+        <frame src="images/second_hand/sec_32.png" />
+        <frame src="images/second_hand/sec_33.png" />
+        <frame src="images/second_hand/sec_34.png" />
+        <frame src="images/second_hand/sec_35.png" />
+        <frame src="images/second_hand/sec_36.png" />
+        <frame src="images/second_hand/sec_37.png" />
+        <frame src="images/second_hand/sec_38.png" />
+        <frame src="images/second_hand/sec_39.png" />
+        <frame src="images/second_hand/sec_40.png" />
+
+        <frame src="images/second_hand/sec_41.png" />
+        <frame src="images/second_hand/sec_42.png" />
+        <frame src="images/second_hand/sec_43.png" />
+        <frame src="images/second_hand/sec_44.png" />
+        <frame src="images/second_hand/sec_45.png" />
+        <frame src="images/second_hand/sec_46.png" />
+        <frame src="images/second_hand/sec_47.png" />
+        <frame src="images/second_hand/sec_48.png" />
+        <frame src="images/second_hand/sec_49.png" />
+        <frame src="images/second_hand/sec_50.png" />
+
+        <frame src="images/second_hand/sec_51.png" />
+        <frame src="images/second_hand/sec_52.png" />
+        <frame src="images/second_hand/sec_53.png" />
+        <frame src="images/second_hand/sec_54.png" />
+        <frame src="images/second_hand/sec_55.png" />
+        <frame src="images/second_hand/sec_56.png" />
+        <frame src="images/second_hand/sec_57.png" />
+        <frame src="images/second_hand/sec_58.png" />
+        <frame src="images/second_hand/sec_59.png" />
+        <frame src="images/second_hand/sec_60.png" />
+    </resource>
+</library>

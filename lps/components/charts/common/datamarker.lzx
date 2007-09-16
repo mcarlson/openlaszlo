@@ -1,4 +1,5 @@
 <library>
+    <include href="extensions/drawview.lzx"/>
     <!--- datamarker for the chart -->
     <class name="datamarker" extends="drawview">
         <!--- @keywords private -->
@@ -19,7 +20,6 @@
             //resize this view
             this.pointrepresentation.setWidth(this.style.point.width);
             this.pointrepresentation.setHeight(this.style.point.height);
-            
                    //Check if it is a figure or an image
             if( this.style.point.image != null ) {
                 //Must be a resource
@@ -108,13 +108,25 @@
                 mygradient = this.createLinearGradient(0,0,this.pointrepresentation.width,this.pointrepresentation.height);
             }
 
-            mygradient.addColorStop(0, 0xffffff);
-            this.globalAlpha = 1;
-            mygradient.addColorStop(1, this.style.point.color);                
-            this.fillStyle = mygradient;
+            if (mygradient) {
+                mygradient.addColorStop(0, 0xffffff);
+                this.globalAlpha = 1;
+                mygradient.addColorStop(1, this.style.point.color);                
+                this.fillStyle = mygradient;
+            }
             this.fill();   
         ]]>
         </method>
+
+        <doc>
+          <tag name="shortdesc"><text>
+              a marker for a collection of data
+          </text></tag>
+          <text>
+
+            <warning>This component is of Beta quality and is subject to change.</warning>
+          </text>
+        </doc>
 
     </class>
     
@@ -123,7 +135,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

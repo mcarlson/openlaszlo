@@ -1,0 +1,49 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas width="1000" height="600">
+
+<text  id="foo" fontsize="6" y="0" bgcolor="0xffff00" width="300" x="10" onmouseover="this.setBGColor(0xff0000); this.setFontSize(12)" onmouseout="this.setBGColor(0xffff00); this.setFontSize(6)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">I am named foo</text>
+
+
+<text fontsize="9" y="30" bgcolor="0xffff00" width="300" x="10"  onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Some text</text>
+<text fontsize="14" y="60" bgcolor="0xffff00" width="300" x="10"  onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Some text</text>
+<text fontsize="18" y="100" bgcolor="0xffff00" width="300" x="10"  onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Some text</text>
+<text fontsize="24" y="150" bgcolor="0xffff00" width="300" x="10"  onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Some text</text>
+
+
+
+<text x="320" fontsize="6" y="0" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">plain</text>
+
+<text fontstyle="bold" x="320" fontsize="9" y="30" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Bold style</text>
+<text fontstyle="italic" x="320" fontsize="14" y="60" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Italic style</text>
+<text fontstyle="plain" x="320" fontsize="18" y="100" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Plain style </text>
+<text fontstyle="bold italic" x="320" fontsize="24" y="150" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">BoldItalic style</text>
+
+
+
+<text x="630"  fontsize="6" y="0" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">plain</text>
+
+<text font="Courier" fontstyle="bold" x="630" fontsize="12" y="30" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">default font</text>
+<text font="Comic Sans MS" fontstyle="italic" x="630" fontsize="12" y="60" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Italic style Comic Sans MS</text>
+<text font="Helvetica" fontstyle="plain" x="630" fontsize="12" y="100" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Plain style Helvetica </text>
+<text font="Lucida" fontstyle="bold italic" x="630" fontsize="12" y="150" bgcolor="0xffff00" width="300"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">BoldItalic style Lucida</text>
+
+
+
+
+
+
+<!--
+<inputtext y="300" width="300">Some input text</inputtext>
+<inputtext fontsize="8" y="350" width="300">Some input text</inputtext>
+<inputtext fontsize="28" y="300" width="300">Some input text</inputtext>
+-->
+<!-- 
+<view x="400" width="100" height="100" bgcolor="0xff0000" id="baz" name="harry"/>
+-->
+
+</canvas>

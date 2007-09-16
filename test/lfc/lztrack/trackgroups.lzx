@@ -8,19 +8,19 @@
         <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
         <attribute name="mycolor" value="0x000099"/>
         <method event="oninit">
-             debug.write("LzTrack.register(" + this, this.trackgroup + ")");
+             Debug.write("LzTrack.register(" + this, this.trackgroup + ")");
              LzTrack.register(this, this.trackgroup);
         </method>
         <method event="onmousetrackover">
             setAttribute('bgcolor', 0x00dd00);
-            debug.write("onmousetrackover", this);
+            Debug.write("onmousetrackover", this);
         </method>
         <method event="onmousetrackout">
             setAttribute('bgcolor', this.mycolor);
-            debug.write("onmousetrackout", this);
+            Debug.write("onmousetrackout", this);
         </method>
         <method event="onmousetrackup">
-            debug.write("onmousetrackup", this);
+            Debug.write("onmousetrackup", this);
         </method>
     </class>
 
@@ -40,10 +40,10 @@
         <checkbox text="${'group: ' + parent.trackgroup}">
             <method event="onvalue" args="v">
                 if (v) {
-                    debug.write('activate: '+parent.trackgroup);
+                    Debug.write('activate: '+parent.trackgroup);
                     LzTrack.activate(parent.trackgroup);
                 } else {
-                    debug.write('deactivate: '+parent.trackgroup);
+                    Debug.write('deactivate: '+parent.trackgroup);
                     LzTrack.deactivate(parent.trackgroup);
                 }
             </method>
@@ -61,11 +61,11 @@
         <checkbox text="${'groups: twoA and twoB'}">
             <method event="onvalue" args="v">
                 if (v) {
-                    debug.write('activate: twoA and twoB');
+                    Debug.write('activate: twoA and twoB');
                     LzTrack.activate("twoA");
                     LzTrack.activate("twoB");
                 } else {
-                    debug.write('deactivate: twoA and twoB');
+                    Debug.write('deactivate: twoA and twoB');
                     LzTrack.deactivate("twoA");
                     LzTrack.deactivate("twoB");
                 }
@@ -74,19 +74,19 @@
         <view bgcolor="0xddddff" name="container" width="84">
             <attribute name="trackgroup" value="twoA" type="string"/>
             <method event="oninit">
-                 debug.write("LzTrack.register(" + this, this.trackgroup + ")");
+                 Debug.write("LzTrack.register(" + this, this.trackgroup + ")");
                  LzTrack.register(this, this.trackgroup);
             </method>
             <method event="onmousetrackover">
                 setAttribute('bgcolor', 0xdddd00);
-                debug.write("onmousetrackover", this);
+                Debug.write("onmousetrackover", this);
             </method>
             <method event="onmousetrackout">
                 setAttribute('bgcolor', 0xddddff);
-                debug.write("onmousetrackout", this);
+                Debug.write("onmousetrackout", this);
             </method>
             <method event="onmousetrackup">
-                debug.write("onmousetrackup", this);
+                Debug.write("onmousetrackup", this);
             </method>
 
 
@@ -106,7 +106,7 @@
    </view>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

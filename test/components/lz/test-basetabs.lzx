@@ -1,9 +1,19 @@
 <canvas width="1000" height="1000" debug="true">
 
     <debug x="280" y="10" height="300" />
+    <goldstyle name="goldcolors"/>
     <attribute name="defaultstyle" value="${goldstyle}"/>
 
-    <include href="lz" />
+    <method name="newWorktab"><![CDATA[ 
+        var tab_id = "newtab";
+        var sldp = new tabpane(emptytabs, 
+                        { 
+                            text: tab_id,
+                            name: tab_id,
+                            bgcolor: 0x99bb99,
+                            selected: true
+                        });
+    ]]></method>
 
     <dataset name="customtextandvalue">
         <item>
@@ -305,7 +315,7 @@
         </text>
         <tabs id="reptabs1" x="5" y="5">
             <tabpane text='$path{"text/text()"}' 
-                     datapath="customtextandvalue:/item" datacontrolsvisibility="false">
+                     datapath="customtextandvalue:/item" visibility="visible">
                  <text datapath="value/text()"/>
             </tabpane>
         </tabs>
@@ -314,7 +324,7 @@
                 <text text="${parent.text}" />
             </basetabpane>
             <tabpane text='$path{"text/text()"}' 
-                     datapath="customtextandvalue:/item" datacontrolsvisibility="false">
+                     datapath="customtextandvalue:/item" visibility="visible">
                  <text datapath="value/text()"/>
             </tabpane>
             <basetabpane name="yyy" text="GOODBYE">
@@ -324,9 +334,15 @@
                 <text text="${parent.text}" />
             </tabpane>
         </tabs>
+        <text multiline="true" width="350">
+             (id=emptytabs) tabs: no tabs specified at init time
+         </text>        
+        <tabs id="emptytabs"> <!-- test for LPP-4000 -->
+        </tabs>
+        <button text="newWorktab" onclick="canvas.newWorktab();"/>        
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -2,7 +2,7 @@
 
     <!-- CLASS: CALENDAR DAY ============================================= -->
     <!-- ================================================================= -->
-    <class name="calendar_day" bgcolor="#7A949E"
+    <class name="calendar_day" bgcolor="0x7A949E"
             width="3"
             height="10"
             clickable="true"> <!-- extends="tabElement" -->
@@ -15,18 +15,36 @@
 
         <attribute name="eventwidth"
                    value="${details.bgrect.width - ( this.opened ? 38 : 0 )}"/>
-
+                   
+        <method name="animateTo" args="tox,toy,towidth,toheight">
+            // Debug.write("animateTo",tox,toy,towidth,toheight, this);
+            slideranim.xanim.setTo(tox);
+            slideranim.yanim.setTo(toy);
+            slideranim.widthanim.setTo(towidth);
+            slideranim.heightanim.setTo(toheight);
+            slideranim.doStart();
+        </method>
+                
+        <!-- This one animator controls all the animating we need to do for
+         switching between day, week, and month views. --> 
+        <animatorgroup name="slideranim" start="false" duration="500" process="simultaneous">
+            <animator name="xanim" attribute="x" to="333"/>
+            <animator name="yanim" attribute="y" to="444"/>
+            <animator name="widthanim" attribute="width" to="222"/>
+            <animator name="heightanim" attribute="height" to="111" />
+        </animatorgroup>
+        
         <!-- VIEWS -->
-        <view name="bkgnd" bgcolor="#526C7B" x="1" y="1"
+        <view name="bkgnd" bgcolor="0x526C7B" x="1" y="1"
             width="${parent.width - 2}" height="${parent.height - 2}" />
 
         <view name="details" width="${parent.width}" height="${parent.height}">
             <view resource="ctl"/>
 
-            <text name="dayofmonth"  font="vera" fontsize="10"
-                  fgcolor="#DAE3E8" width="35" x="3" y="1"/>
+            <text name="dayofmonth"
+                  fgcolor="0xDAE3E8" width="35" x="3" y="1"/>
             <view name="bgrect" clip="true" bgcolor="0x9BA9B1" x="3" y="19"
-                  width="${parent.width-6}" height="${parent.height-26}">
+                  width="${parent.width-8}" height="${parent.height-26}">
 
                 <!-- THIS SECTION FOR THE TIME GRID -->
                 <view name="timeview">
@@ -35,11 +53,7 @@
                                 parent.parent.scrollview.scrollState.apply()"
                        onremove="parent.parent.scrollview.scrollState.remove();
                                 parent.parent.container.setY(0)">
-                        <view name="marks" resource="tgrid" x="-2" pixellock="true">
-                            <method event="ony">
-                                parent.parent.container.setAttribute('y',this.y);
-                            </method>
-                        </view>
+                        <view name="marks" resource="tgrid" x="-2" pixellock="true"/>
                     </state>
                     <method name="setTimeOffset" args="hours">
                         var sv=classroot.details.bgrect.container.dataview['subviews'];
@@ -62,7 +76,7 @@
                         if (hours&gt;13) hours=12.5;
                         var tgrid_zero = 11;
                         var pixels_per_hour = 22;
-                        marks.setY(-(hours * pixels_per_hour + tgrid_zero));
+                        //marks.setY(-(hours * pixels_per_hour + tgrid_zero));
                     </method>
                 </view>
 
@@ -70,7 +84,7 @@
                      This corresponds to <day> node in the data -->
                 <!-- both of these are pixel locked so that the
                              pixel font doesn't blur -->
-                <view name="container">
+                <view name="container" y="${parent.timeview.y}">
                     <view name="dataview" width="${parent.parent.width}"
                         height="${parent.parent.height}" pixellock="true"
                         ondata="this.showData.apply()">
@@ -91,16 +105,10 @@
                     </view>
                 </view>
 
-
-
-                <view name="scrollview">
+                <scrollbar visible="${scrollable}"/>
+                <view name="scrollview" visible="false">
                     <state name="scrollState" apply="false" 
                            onapply="parent.bringToFront()">
-                        <vscrollbar name="sb" x="${parent.parent.width-14}"
-                                    height="${parent.parent.height}" >
-                            <attribute name="targetview"
-                                       value="${parent.parent.timeview.marks}"/>
-                        </vscrollbar>
                     </state>
                 </view>
 
@@ -120,7 +128,7 @@
          </method>
 
         <method name="setDate" args="d,dend" > <![CDATA[
-            //debug.write("CALLED setDate for " +
+            //Debug.write("CALLED setDate for " +
             //            this.details.dayofmonth + " with " + d);
             if (this.startdate == d) return;
 
@@ -140,7 +148,7 @@
                 '/month'+(this.month+1)+
                 '/day'+dayOfMonth;
 
-            //debug.write ("*assigning: "+this+" a new day datapath: "
+            //Debug.write ("*assigning: "+this+" a new day datapath: "
                             //+vDatapath);
 
             this.details.bgrect.container.dataview.setDatapath(vDatapath);
@@ -198,6 +206,9 @@
         </method>
 
         <method name="calcHourFromY" args="y">
+            if (!details) return 12; // [bshine 9.28.2006] PORTING if we're not totally initialized,
+                // just pretend it's noon. Avoid calling getAttributeRelative because it
+                // causes trouble in legals. 
             var ny = 1 + y - details.bgrect.timeview.marks.y -
                      details.bgrect.timeview.getAttributeRelative( 'y' , this );
             return ny/this.pixels_per_hour;
@@ -209,12 +220,12 @@
         </method>
 
         <method event="onopenstart" >
-           //debug.write('called onopenstart on day = ' + this.tostring());
+           //Debug.write('called onopenstart on day = ' + this.tostring());
            this.setAttribute( 'opened' , true);
         </method>
 
         <method event="onclosestart" >
-           //debug.write('called onclosestart on day = ' + this.tostring());
+           //Debug.write('called onclosestart on day = ' + this.tostring());
            this.setAttribute( 'opened' , false);
         </method>
 
@@ -222,7 +233,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

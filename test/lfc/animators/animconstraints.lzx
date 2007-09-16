@@ -38,20 +38,20 @@
             200
         </setThing>
         <setThing setAttr="from" id="cfrom">
-         	100
+            100
         </setThing>
         <setThing setAttr="duration" id="cduration" >
             1000
         </setThing>
         <setThing setAttr="motion" id="cmotion">
-        	easein
+            easein
         </setThing>
         <setThing setAttr="relative" id="crelative">
-        	1
+            1
         </setThing>
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

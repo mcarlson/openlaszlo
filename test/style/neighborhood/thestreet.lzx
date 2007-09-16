@@ -1,11 +1,11 @@
 <!-- More test data, with various tag types as nodes in the tree. -->
-<!-- Copyright 2006 Laszlo Systems --> 
+<!-- Copyright 2006-2007 Laszlo Systems --> 
   <street id="gStreet">
       <house id="gSmithHouse" >
           <person id="gGeorgeSmith" shortname="BigGeorge">
               <person id="gLittleGeorge" shortname="LilGeorge" >
                   <!-- Little George Smith has a cat named Blackie --> 
-                  <cat id="gBlackie" furcolor="0x555555" />
+                  <cat id="gBlackie" />
               </person>
               <person id="gBabySmithy" shortname="baby"/>
           </person>

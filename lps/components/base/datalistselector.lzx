@@ -149,8 +149,8 @@
             }
 
             if ( ! immediateparent.subviews[0].cloneManager ) {
-                return (immediateparent.subviews[0] == target_element ? 0 : -1);
-            }
+                return (immediateparent.subviews[0] == s ? 0 : -1);
+            } 
 
             var nodelist = immediateparent.subviews[0].cloneManager.nodes;
             var found_index = -1;
@@ -223,23 +223,27 @@
 
         <method name="getItemByData" args="data">
             <![CDATA[ 
-                return getItemByIndex( this.getItemIndexByData( data ) );
+                return data ? getItemByIndex( this.getItemIndexByData( data ) ) : null;
             ]]>
         </method>
 
         <method name="getItemIndexByData" args="data">
             <![CDATA[ 
-            var svs = immediateparent.subviews;
-            var nodes = svs[0].cloneManager['nodes'];
-            if( nodes != null ) {
-               for ( var i = 0; i< nodes.length; i++ ){
-                  if ( nodes[ i ] == data ){
-                      return i;
-                  }
-              }
+            if (data) {
+                var svs = immediateparent.subviews;
+                if (svs[0].cloneManager) {
+                    var nodes = svs[0].cloneManager['nodes'];
+                    if( nodes != null ) {
+                        for ( var i = 0; i< nodes.length; i++ ){
+                            if ( nodes[ i ] == data ){
+                                return i;
+                            }
+                        }
+                    }
+                } else if( svs[0].datapath.p == data ) {
+                    return 0;
+                }
             }
-            else if( svs[0].datapath.p == data )
-              return 0;
             return null;
             ]]>
        </method>
@@ -257,10 +261,15 @@
            }
            return true;
        </method>
+        <doc>
+          <tag name="shortdesc"><text></text></tag>
+          <text>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

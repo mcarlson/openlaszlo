@@ -1,33 +1,32 @@
 <canvas width="1024" height="1024">
-<include href="redmond"/>
 <simplelayout/>
 
-<text>Tab should move through A1-3 if the focus is in An, and
-similarly for Bn and Cn.</text>
-<text>Shift-TAB should move in the opposite order.</text>
+<inputtext>Tab should move through A1-3 if the focus is in An, and
+similarly for Bn and Cn.</inputtext>
+<inputtext>Shift-TAB should move in the opposite order.</inputtext>
 
 <!-- window is a focus trap -->
 <window height="200">
   <simplelayout/>
-  <windowtext>A1</windowtext>
-  <windowtext>A2</windowtext>
-  <windowtext>A3</windowtext>
+  <inputtext>A1</inputtext>
+  <inputtext>A2</inputtext>
+  <inputtext>A3</inputtext>
   <!-- A focus trap within a focus trap -->
   <window width="70">
     <simplelayout/>
-    <windowtext>B1</windowtext>
-    <windowtext>B2</windowtext>
-    <windowtext>B3</windowtext>
+    <inputtext>B1</inputtext>
+    <inputtext>B2</inputtext>
+    <inputtext>B3</inputtext>
   </window>
 </window>
 
 <!-- Elements directly on the canvas -->
-<windowtext>C1</windowtext>
-<windowtext>C2</windowtext>
-<windowtext>C3</windowtext>
+<inputtext>C1</inputtext>
+<inputtext>C2</inputtext>
+<inputtext>C3</inputtext>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

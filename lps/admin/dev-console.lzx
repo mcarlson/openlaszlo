@@ -7,14 +7,19 @@
 <!--=======================================================================-->
 
 
-<canvas width="100%"  height="370" proxied="false">
-  <include href="lz/textlistitem.lzx"/>
-  <debug options="ignorelayout"
-    fontsize="12" 
-    x="73"
-    y="100"
-    width="800"
-    height="270"/>
+<canvas width="100%"  height="70" proxied="false" bgcolor="#9494ad">
+ <switch>
+    <when runtime="dhtml">
+    </when>
+    <otherwise>
+        <debug options="ignorelayout"
+            fontsize="12" 
+            x="800"
+            y="0"
+            width="600"
+            height="80"/>
+    </otherwise>
+  </switch>
   <!-- flashvar named 'appinfo' will be supplied, it is XML data -->
   <script> 
     function escapeXML (str) {
@@ -64,6 +69,8 @@
          app_runtime = appdata.getPointer().xpathQuery("/request/param[@name = 'lzr']/@value");
        }
        var app_debug = appdata.getPointer().xpathQuery("/request/param[@name = 'debug']/@value");
+       var app_backtrace = appdata.getPointer().xpathQuery("/request/param[@name = 'lzbacktrace']/@value");
+       if (app_debug == 'y') app_debug = 'true';
        var app_console_debug = 
               appdata.getPointer().xpathQuery("/request/@console-remote-debug") == 'true';
        var app_floating_window = 
@@ -76,14 +83,21 @@
        var app_opt_exists = appdata.getPointer().xpathQuery("/request/@opt-exists")
        var app_lps_root = appdata.getPointer().xpathQuery("/request/@lps")
        var app_lzt = null;
-       var app_uid = (typeof(global.lzappuid) != 'undefined') ? "_"+global.lzappuid : '';
+       var app_uid = (typeof(global.lzappuid) != 'undefined') ? global.lzappuid : '';
+       app_uid = "XXX";
+
        ]]>
     </script>
 
   <method name="deploySOLO">
      var path = escape(app_fullpath.substring(app_lps_root.length));
-     var url = app_lps_root + "/lps/admin/solo-deploy.jsp?appurl="+path;
-     LzBrowser.loadURL(url);
+     if (app_runtime == 'dhtml') {
+        var url = app_lps_root + "/lps/admin/solo-dhtml-deploy.jsp?appurl="+path;
+     } else {
+        var url = app_lps_root + "/lps/admin/solo-deploy.jsp?appurl="+path;
+     }
+
+     this.loadURL(url);
   </method>
 
 
@@ -104,48 +118,65 @@
 
    <method name="viewDocs">
      var url = app_lps_root + "/docs/index.html";
-     LzBrowser.loadURL(url);
+     this.loadURL(url);
    </method>
    
    <method name="viewDev">
      var url = "http://www.laszlosystems.com/developers";
-     LzBrowser.loadURL(url);
+     this.loadURL(url);
    </method>
    
    <method name="viewForums">
      var url = "http://www.laszlosystems.com/developers/community/forums/";
-     LzBrowser.loadURL(url);
+     this.loadURL(url);
+   </method>
+
+   <method name="loadURL" args="url">
+     LzBrowser.loadURL(url, '_top');
    </method>
    
   <resource name="footer_logo" src="../assets/logo_laszlo_footer.gif"/>
 
   <view name="main" width="${parent.width}">
-      <view name="logo" resource="footer_logo" bgcolor="0x4c4c4c" height="100%"/>
+      <view name="logo" resource="footer_logo" bgcolor="0x4c4c4c" height="${app_console_debug ? 370 : 71}"/>
       <view name="controls" x="70">
         <view name="firstrow" y="4">
             <text fontsize="11" x="8" y="7"><b>Compile Options:</b></text>
-            <drawview x="125" name="compilecontrols">
-                <method event="oninit">
-                    this.rect(0, 0, 308, 31);
-                    this.stroke();
-                </method>
+            <view x="125" width="410" height="32" bgcolor="black">
+                <view x="1" y="1" width="408" height="30" bgcolor="#9494ad"/>
+            </view>
+            <view x="125" name="compilecontrols">
                 <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:4" x="6" y="8.75">
-                    <radiobutton id="rb6" value="'swf6'"
-                    selected="${app_runtime == 'swf6'}">swf6</radiobutton>
                     <radiobutton id="rb7" value="'swf7'" 
                     selected="${app_runtime == 'swf7'}">swf7</radiobutton >
                     <radiobutton id="rb8" value="'swf8'"
                     selected="${app_runtime == 'swf8'}">swf8</radiobutton >
+                    <radiobutton id="rbdhtml" value="'dhtml'"
+                    selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
+
                 </radiogroup>
-                <view height="14" width="1" bgcolor="black" x="161" y="9.5"/>
-                <checkbox id="cb_debug" value="${app_debug}" x="170" y="8.25">Debug</checkbox>
-                <button onclick="canvas.gotoApp()" x="233" y="4">Compile</button>
-            </drawview>
-            <view width="22" x="439"/>
-            <button onclick="canvas.viewSource()" x="529" y="3">View Source</button>
+                <view height="14" width="1" bgcolor="black" x="173" y="9.5"/>
+                <checkbox id="cb_debug" value="${app_debug == 'true'}"
+                          x="181" y="8.25">Debug</checkbox>
+                <checkbox id="cb_backtrace" 
+                          value="${app_backtrace == 'true'}" x="250" y="8.25">Backtrace</checkbox>
+                <button onclick="canvas.gotoApp()" x="334" y="4">Compile</button>
+                <handler name="onvalue" reference="cb_backtrace">
+                  if (cb_backtrace.value) {
+                     cb_debug.setAttribute('value', true);
+                  }
+                </handler>
+                <handler name="onvalue" reference="cb_debug">
+                  if (cb_debug.value == false) {
+                     cb_backtrace.setAttribute('value', false);
+                  }
+                </handler>
+            </view>
+            <view width="22" x="450"/>
+            <button onclick="canvas.viewSource()" x="580" y="3">View Source</button>
         </view>
 
-        <view bgcolor="black" width="8000" height="1" y="39"/>
+        <view bgcolor="black" width="${canvas.width - 70}" height="1" y="39"/>
           
         <view width="${parent.firstrow.width}" y="43">
           <text fontsize="11" x="8" y="4"><b>Deploy:</b></text>
@@ -171,67 +202,67 @@
           <view name="blank2" width="200"/>
 
           -->
-          <!-- this feature is not yet ready for prime time           
-          <checkbox id="cb_remotedebug" value="${app_console_debug}">Console Remote Debug</checkbox>
-          -->
+
+          <checkbox y="10" x="740" id="cb_remotedebug" visible="${app_runtime != 'dhtml'}" value="${app_console_debug}">Console Remote Debug</checkbox>
+
 
           <!-- <checkbox id="cb_popup" value="${app_floating_window}">in separate window</checkbox> -->
 
 
 
-        <!--
-        <view layout="axis:x;spacing:4" visible="${app_console_debug}">
-        -->
-          <!-- enter expression to be sent to app under debug -->
-        <!--
-          <text resize="true" text="${'Evaluate in '+app_url}"/>
-          <edittext  doesenter="true" id="expr2" width="300">
-            <method name="doEnterDown">
-              canvas.remoteEval(expr2.getText());
+
+ <switch>
+    <when runtime="dhtml">
+    </when>
+    <otherwise>
+        <state name="consoledebugstate" apply="${app_console_debug}">
+            <view y="90" layout="axis:x;spacing:4">
+
+            <!-- enter expression to be sent to app under debug -->
+
+            <text resize="true" text="${'Evaluate in '+app_url}"/>
+            <edittext  doesenter="true" id="expr2" width="300">
+                <method name="doEnterDown">
+                canvas.remoteEval(expr2.getText());
+                </method>
+            </edittext>
+            <button enabled="false" bgcolor="white" id="app_eval_btn"
+                    onclick="canvas.remoteEval(expr2.getText())">Eval</button>
+            <button onclick="app_eval_btn.setAttribute('enabled', true);
+                            canvas.sendConsoleAlive()">Connect To App</button>
+            </view>
+
+            <window title="console" id="console"
+                    width="1000"  y="120" height="200" resizable="true">
+            <method name="write" args="objects">
+                <![CDATA[
+                var n = arguments.length
+                // Pass each value to __write individually so they can be
+                // 'presented' as objects if applicable
+                for (var i = 0; i < n; i++) {
+                var v = arguments[i];
+                var s = ((i == (n-1)) ? '\n' : ' ');
+                this.content.addText(escapeXML(v)+s);
+                sbar.page(sbar.scrollmax);
+                }
+                ]]>
             </method>
-          </edittext>
-          <button enabled="false" bgcolor="white" id="app_eval_btn"
-                onclick="canvas.remoteEval(expr2.getText())">Eval</button>
-          <button onclick="app_eval_btn.setAttribute('enabled', true);
-                           canvas.sendConsoleAlive()">Connect To App</button>
-        </view>
 
-        <window title="console" id="console"
-                visible="${app_console_debug}" width="1000"  y="100" height="200" resizable="true">
-          <method name="write" args="objects">
-            <![CDATA[
-            var n = arguments.length
-            // Pass each value to __write individually so they can be
-            // 'presented' as objects if applicable
-            for (var i = 0; i < n; i++) {
-               var v = arguments[i];
-               var s = ((i == (n-1)) ? '\n' : ' ');
-              this.content.addText(escapeXML(v)+s);
-              sbar.page(sbar.scrollmax);
-            }
-            ]]>
-          </method>
-
-          <method name="writeRaw" args="objects">
-            <![CDATA[
-            var n = arguments.length
-            // Pass each value to __write individually so they can be
-            // 'presented' as objects if applicable
-            for (var i = 0; i < n; i++) {
-               var v = arguments[i];
-               var s = ((i == (n-1)) ? '\n' : ' ');
-              this.content.addText(v+s);
-              sbar.page(sbar.scrollmax);
-            }
-            ]]>
-          </method>
-          <text name="content" multiline='true' resize="true"
-                width="${parent.width}" />
-          <scrollbar name="sbar" id="sb"/>
-        </window>
-
-
-        -->
+            <method name="writeRaw" args="str">
+                <![CDATA[
+                // Funky thing that Henry discovered you have to do to make newlines
+                // why wouldn't <br/> work?
+                this.content.addText(str.split('\n').join('&#32;\n'));
+                sbar.page(sbar.scrollmax);
+                ]]>
+            </method>
+            <text name="content" multiline='true' resize="true" selectable="true"
+                    width="${parent.width}" />
+            <scrollbar name="sbar" id="sb"/>
+            </window>
+        </state>
+    </otherwise>
+  </switch>
 
       </view>
   </view>
@@ -248,6 +279,7 @@
     <![CDATA[
     var qruntime = rg_runtime.value;
     var qdebug = cb_debug.value;
+    var qbacktrace = cb_backtrace.value;
     var consoledebug = cb_remotedebug.value;
     
     // parse original app query string, override with user settings
@@ -257,6 +289,7 @@
     var qitems = LzParam.prototype.parseQueryString(app_query);
     // override debug,runtime args
     qitems['debug'] = qdebug;
+    qitems['lzbacktrace'] = qbacktrace;
     qitems['lzr'] = qruntime;
 
     /*
@@ -280,29 +313,43 @@
         qitems['lzt'] = app_lzt;
     }
 
-    // Copy values to LzParam object
-    for ( var key in qitems) {
-        params.setValue(key, qitems[key]);
+    if (qitems.lzr == 'dhtml') {
+        if (qitems.debug + '' == 'false') {
+            delete qitems['debug'];
+        } else {
+            qitems.debug = 'true';
+        }
     }
+    //Debug.write( 'qitems', qitems);
+    // Copy values to LzParam object
+    var seen = {};
+    for ( var key in qitems) {
+        // work aorund bugs in Safari
+        if (key == '') continue;
+        if (key.indexOf('#38;') != -1) {
+            var i = key.indexOf('#38;');
+            key = key.substring(i + 4, key.length);
+        }
+        if (seen[key]) continue;
+        //alert('params ' + key + ' ' + qitems[key]);
+        params.setValue(key, qitems[key]);
+        seen[key] = true;
+    }
+
+    //alert('params ' + params.toString());
 
     var url = app_fullpath+"?"+params.serialize();
 
-    //Debug.write('LzBrowser.loadURL("'+url+'")');
-    LzBrowser.loadURL(url);
+    //Debug.write('this.loadURL("'+url+'")');
+    this.loadURL(url);
 
     ]]>
   </method>
 
   <method name="displayObjectByID" args="uid">
     <![CDATA[
-    // Send a <inspect id="uid"> command
-    var seqnum = this.evalseqnum++;
-    var myXML = new XML();
-    var exec = myXML.createElement("inspect"); 
-    myXML.appendChild(exec);
-    exec.attributes.seq = seqnum;
-    exec.attributes.id = uid;
-    receivingLC.send("lc_appdebug"+app_uid, "evalExpr", myXML);
+    // Not very abstract, but it works for now
+    receivingLC.send("lc_appdebug"+app_uid, "evalExpr", "_root.$modules.lz.Debug.displayObj("+uid+")");
     ]]>
   </method>
 
@@ -316,7 +363,7 @@
 
   <method name="showWarning" args="filename,lineNumber,msg">
       <![CDATA[
-       console.writeRaw("<font color='#ff0000'>WARNING: "+filename+":"+lineNumber+": "+escapeXML(msg)+'</font><br>');
+       console.writeRaw(msg);
        ]]>
   </method>
 
@@ -333,8 +380,11 @@
   </method>
 
 
-  <!--script>
+  <script>
     <![CDATA[
+    if ($dhtml) {
+        canvas.width = document.body.clientWidth;
+    } else {
     var receivingLC = new LocalConnection();
     // receives remote app debug message
     receivingLC.debugResult = function(msg, oid) 
@@ -342,28 +392,29 @@
         if (oid != null) {
             console.writeRaw('<a href="asfunction:_root.canvas.displayObjectByID,' + oid + '"><font color="#0000FF">' + msg +"</font></a>");
         } else {
-            console.write(msg);
+            console.writeRaw(msg);
         }
     }
 
     // display warnings
     receivingLC.debugWarning = canvas.showWarning;
     
-    console.write("listening on lc_consoledebug"+app_uid);
+    console.write("listening on lc_consoledebug "+app_uid);
     receivingLC.connect("lc_consoledebug"+app_uid);
 
     var sendingLC = new LocalConnection();
 
     // sequence numbers for eval requests
     canvas.evalseqnum = 0;
+    }
     
     ]]>
-  </script-->
+  </script>
 
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

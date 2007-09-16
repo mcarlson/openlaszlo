@@ -1,0 +1,58 @@
+
+
+<canvas debug="true">
+
+<stylesheet>
+mookie {
+height : 25;
+width : 25;
+bgcolor : #0000FF;
+}
+
+blaylock {
+title : "Blaylock";
+bgcolor : #FF0000;
+}
+
+wilson {
+height : 25;
+width : 200;
+fgcolor : #FF00FF;
+text : "Wilson";
+}
+</stylesheet>
+
+<class name="mookie" x="200" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/>
+
+<class name="blaylock">
+<window title="$style{'title'}" x="250" height="100" width="150" bgcolor="$style{'bgcolor'}"/>
+</class>
+
+<class name="wilson" >
+<text text="$style{'text'}" x="400" height="$style{'height'}" width="$style{'width'}" fgcolor="$style{'fgcolor'}"/>
+</class>
+
+<button text="Dynamically create Mookie">
+<method event="onclick">
+canvas.mookieView=new mookie(canvas, {});
+</method>
+</button>
+
+<button text="Dynamically create Blaylock" y="50">
+<method event="onclick">
+canvas.blaylockWindow=new blaylock(canvas, {});
+</method>
+</button>
+
+<button text="Dynamically create Wilson" y="100">
+<method event="onclick">
+canvas.wilsonText=new wilson(canvas, {});
+</method>
+</button>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

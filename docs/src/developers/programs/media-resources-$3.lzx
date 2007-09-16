@@ -1,0 +1,23 @@
+
+<canvas height="180">
+  <resource name="myresource">
+    <frame src="resources/logo.gif"/>
+    <frame src="resources/sky.jpg"/>
+  </resource>
+  <simplelayout spacing="5"/>
+  <view id="myview" resource="myresource"/>
+  <view layout="axis: x; spacing: 3">
+    <text>Frame:</text>
+    <radiogroup>
+      <radiobutton selected="true">1</radiobutton>
+      <radiobutton>2</radiobutton>
+      <handler name="onvalue" args="v">
+        myview.setResourceNumber(Number(v));
+      </handler>
+    </radiogroup>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

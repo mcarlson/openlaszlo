@@ -1,0 +1,110 @@
+
+<canvas width="800" height="500">
+    <silverstyle name="silvercolors"/>
+    <greenstyle name="greencolors"/>
+    <bluestyle name="bluecolors"/>
+    <view id="s1" x="20" y="20">
+        <view layout="spacing:20">
+            <text>Choose a style to change colors...</text>
+
+            <view name="stylechooser" layout="axis:x; spacing:4">
+                <text>Style:</text>
+                <combobox width="120" editable="false">
+                    <handler name="onselect">
+                        var colorchoice = this.getText();
+                        canvas[colorchoice+'colors'].setAttribute("isdefault", true);
+                    </handler>
+
+                    <textlistitem text="silver"/>
+                    <textlistitem text="green"/>
+                    <textlistitem text="blue" selected="true"/>
+                </combobox>
+
+            </view>
+            <tabslider width="250" height="200">
+                <tabelement text="holiday cheer" selected="true">
+                    <radiogroup>
+                        <radiobutton text="peace on earth"/>
+                        <radiobutton text="joy to the world"/>
+                        <radiobutton text="happy new year"/>
+                    </radiogroup>
+                </tabelement>
+                <tabelement text="housewares">
+                    <simplelayout axis="y" spacing="10"/>
+                    <checkbox text="stainless steel"/>
+                    <checkbox text="glassware"/>
+                </tabelement>
+                <tabelement text="isotope">
+                    <text multiline="true" width="${immediateparent.width}">
+                        Atoms that have the same number of protons but a different number of neutrons. They are atoms of the same element that have different masses. The isotope number is the number of protons plus the number of neutrons.
+                    </text>
+                </tabelement>
+            </tabslider>
+
+            <tabs>
+                <tabpane>Insecticides
+                    <simplelayout spacing="10" inset="10"/>
+                    <radiogroup>
+                        <radiobutton>Yes, I want to know more</radiobutton>
+                        <radiobutton>No, I prefer to remain blissfully unaware</radiobutton>
+                        <radiobutton>Please tell my neighbor, who may tell me</radiobutton>
+                    </radiogroup>
+                </tabpane>
+                <tabpane text="Subliminal">
+                    <button height="22">Submit</button>
+                </tabpane>
+            </tabs>
+        </view>
+
+        <window text="test window" width="250" height="250" x="410" y="180" resizable="true" id="fw" title="A Simple Window">
+            <menubar name="mbar" placement="menubar">
+                 <menu name="file" id="mfile" width="80">File
+                     <menuitem text="item 1"/>
+                     <menuseparator/>
+                     <menuitem id="MWS" text="item 3">
+                         <menu name="subedit">subedit
+                             <menuitem text="subitem 1"/>
+                             <menuitem text="subitem 2"/>
+                         </menu>
+                     </menuitem>
+                 </menu>
+                 <menu name="Options">Document
+                     <menuitem text="option 1"/>
+                     <menuitem text="option 2"/>
+                 </menu>
+            </menubar>
+            <scrollbar/>
+        </window>
+
+        <view layout="spacing:14">
+            <button height="22">Submit</button>
+            <button height="22" enabled="false">disabled</button>
+
+            <combobox width="100">
+                <textlistitem text="pistachio" selected="true"/>
+                <textlistitem text="chocolate chip"/>
+            </combobox>
+
+            <radiogroup>
+                <radiobutton text="tension"/>
+                <radiobutton text="distance"/>
+            </radiogroup>
+        </view>
+
+        <view layout="spacing:20">
+            <view layout="spacing:10">
+                <checkbox text="I want to take a weekend flight"/>
+                <checkbox text="Also search airports within 70 miles"/>
+            </view>
+            <view layout="spacing:5">
+                <edittext width="200" text="text entry here"/>
+                <edittext width="200" text="disabled" enabled="false"/>
+            </view>
+        </view>
+        <simplelayout axis="x" spacing="20"/>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

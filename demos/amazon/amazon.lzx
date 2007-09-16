@@ -3,9 +3,6 @@
 <canvas width="780" height="540" bgcolor="#EAEAEA" fontsize="8">
     <!-- <inittimer/> -->
 
-    <include href="redmond/redmondinputtext.lzx" />
-    <include href="redmond/redmondradio.lzx" />
-
     <include href="resources.lzx"/>
     <include href="classlib.lzx"/>
     <include href="shoppinglist.lzx"/>
@@ -29,7 +26,7 @@
             searchLoader.hide();
         </method>
         <method event="ontimeout">
-            debug.write( "timeout in dataset: dsKeyword" );
+            Debug.write( "timeout in dataset: dsKeyword" );
             searchLoader.hide();
         </method>
     </datapointer>
@@ -48,7 +45,7 @@
             infoLoader.hide();
         </method>
         <method event="ontimeout">
-            debug.write( "timeout in dataset: dsAsin" );
+            Debug.write( "timeout in dataset: dsAsin" );
             infoLoader.hide();
         </method>
     </datapointer>
@@ -87,11 +84,13 @@
     </script>
 
     <!-- Splash -->
+<!--
     <splash persistent="true">
         <view resource="images/loading_bg.swf" />
         <view name="splash_anim" ratio="0.5" 
               resource="images/loading_anim.swf" />
     </splash>
+-->
 
     <!-- Give user a chance to see the splash at 100% -->
     <attribute name="initdelay" value="400" />
@@ -133,8 +132,8 @@
                                 onmouseover="setBGColor(0xFFFFFF)"
                                 onmouseout="setBGColor(0xCAD0EC)">
                                 <simplelayout axis="y"/>
-                                <text x="4" font="lztahoe8" datapath="ProductName/text()" width="${parent.width-6}"/>
-                                <text x="4" font="lztahoe8" datapath="Artists/Artist[1]/text()" width="${parent.width-6}"/>
+                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="ProductName/text()" width="${parent.width-6}" resize="false"/>
+                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="Artists/Artist[1]/text()" width="${parent.width-6}" resize="false"/>
 
                                 <!-- When one item is clicked, a request is sent to Amazon for deatailed informations about the item -->
                                 <method event="onclick">
@@ -259,9 +258,13 @@
                                     <simplelayout axis="y"/>
                                     <!-- Repeated view displaying the list of tracks -->
                                     <view width="${parent.width}">
+                                        <attribute name="trackid" type="string" value=""/>
+                                        <method event="onclonenumber" args="n">
+                                            this.trackid = n+1 + '.';
+                                        </method>
                                         <datapath xpath="Track" pooling="true" />
                                         <simplelayout axis="x" spacing="4"/>
-                                        <text label="${(parent.clonenumber+1)+'.'}" width="20"/>
+                                        <text name="tid" label="${parent.trackid}" width="20"/>
                                         <text datapath="text()" width="${parent.width}"/>
                                     </view>
                                 </view>
@@ -326,8 +329,9 @@
 
             <mouseview resource="search_butt" y="1" onclick="search()">
                 <inputtext name="searchKey" x="20" y="3" fontsize="11">
-                    <method event="onkeydown" reference="this.field" args="k">
+                    <method event="onkeydown" args="k">
                         if (k==13) {
+Debug.write("Searching");
                             parent.search();
                         }
                     </method>
@@ -452,9 +456,9 @@
                             </view>
                             <view width="100">
                                 <simplelayout axis="y" spacing="2"/>
-                                <text name="items" width="100" align="right" text="${Math.round(cart.total*100)/100}"/>
-                                <text name="shipment" width="100" align="right" text="${shipmentSelection.val}"/>
-                                <text width="100" align="right" fontsize="18" text="${Math.round((cart.total+parseFloat(shipmentSelection.val))*100)/100}"/>
+                                <text name="items" width="100" align="right" resize="false" text="${Math.round(cart.total*100)/100}"/>
+                                <text name="shipment" width="100" align="right" resize="false" text="${shipmentSelection.val}"/>
+                                <text width="100" align="right" fontsize="18" resize="false" text="${Math.round((cart.total+parseFloat(shipmentSelection.val))*100)/100}"/>
                             </view>
                         </view>
 
@@ -554,7 +558,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

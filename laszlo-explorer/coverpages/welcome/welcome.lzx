@@ -1,7 +1,7 @@
 <!--=======================================================================-->
 <!-- welcome.lzx                                                           -->
 <!--                                                                       -->
-<!-- Copyright 2002-2004 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Copyright 2002-2007 Laszlo Systems, Inc.  All Rights Reserved.        -->
 <!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
 <!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
 <!-- Use is subject to license terms.                                      -->
@@ -9,7 +9,14 @@
 <!--=======================================================================-->
 
 <canvas width="600" height="640"  bgcolor="#EAEAEA" >
-    <include href="clock.lzx"/>
+    <switch>
+        <when runtime="dhtml">
+            <include href="rclock/clock.lzx"/>
+        </when>
+        <otherwise>
+            <include href="clock.lzx"/>
+        </otherwise>
+    </switch>
     <include href="cityspot.lzx"/>
 
     <!-- DATA -->
@@ -22,6 +29,9 @@
         <face src="helmetb.ttf"  style="bold" />
     </font>
 
+    <!-- RESOURCES -->
+    <resource name="copyright" src="images/copyright_text.png" />
+    
     <simplelayout/>
 
     <view >
@@ -60,7 +70,7 @@
         <view x="15" y="64" layout="spacing:10">
 
             <!-- descriptive text -->
-            <text fgcolor="0x394660" multiline="true"
+            <text id="olintro" fgcolor="0x394660" multiline="true"
                 width="560">
                 Welcome to OpenLaszlo, the open source XML-native
                 platform for building rich Internet applications.  OpenLaszlo technology
@@ -91,10 +101,10 @@
         </view>
 
         <!-- CLOCKS -->
-        <view name="clocks" x="199" y="${clockintro.y + clockintro.parent.y + 14}" >
+        <view name="clocks" x="199" y="${clockintro.y + clockintro.parent.y + 14}" layout="axis:x; spacing: 5">
 
-            <!-- synced to SF permanetly -->
-            <view layout="axis:y; spacing:4">
+            <!-- synced to SF permanently -->
+            <view id="sfoclock" layout="axis:y; spacing:4">
                 <view layout="axis:y"  width="100%">
                     <text fgcolor="0x394660" fontstyle="bold" resize="true" align="center">Laszlo Systems</text>
                     <text fgcolor="0x394660" resize="true" align="center">San Francisco</text>
@@ -106,8 +116,8 @@
                 </clock>
             </view>
 
-            <!-- synced to BOSTON permanetly -->
-            <view layout="axis:y; spacing:4">
+            <!-- synced to BOSTON permanently -->
+            <view id="bosclock" layout="axis:y; spacing:4">
                 <view layout="axis:y" width="100%">
                     <text fgcolor="0x394660" fontstyle="bold" resize="true" align="center">Laszlo Systems</text>
                     <text fgcolor="0x394660" resize="true" align="center">Boston</text>
@@ -120,21 +130,30 @@
             </view>
 
             <!-- synced to user's choice -->
-            <view layout="axis:y; spacing:4" y="-10" >
-                <text fgcolor="0x394660" fontstyle="bold"  id="myclocktext"
-                    resize="true" align="center">London</text>
+            <view id="userclock" layout="axis:y; spacing:4" >
+                <!-- rclock can't be resized, so adjust position appropriately -->
+                <switch>
+                    <when runtime="dhtml">
+                        <attribute name="y" value="15"/>
+                    </when>
+                </switch>
+                <view layout="axis:y"  width="100%">
+                  <text fgcolor="0x394660" fontstyle="bold"  id="myclocktext"
+                        resize="true" align="center">London</text>
+                  <text fgcolor="0x394660" fontstyle="bold" resize="true" align="center"> </text>
+                </view>
                 <clock id="myclock"  >
-                    <attribute name="width" value="${this.unstretchedwidth*.6}" />
+                    <!-- since we can't resize the clock in dhtml, make it the same size in all runtimes -->
+                    <!-- attribute name="width" value="${this.unstretchedwidth*.6}" / -->
                     <handler name="oninit" reference="canvas" >
                         citySpotLondon.activateclock( this )
                     </handler>
                 </clock>
             </view>
-            <simplelayout axis="x" spacing="20" />
         </view>
 
         <!-- copyright art -->
-        <view resource="images/copyright_text.swf" x="15" y="${map.y+310}" />
+        <view resource="copyright" x="15" y="${map.y+310}" />
 
     </view>
 </canvas>

@@ -1,0 +1,490 @@
+<chapter id="debugging">
+
+
+<title>Debugging</title>
+<para>
+Openlaszlo provides a powerful debugger which you can use either embedded in the application or as a separate ("remote") process.  In addition, when you are compiling applications for deployment to DHTML, you may benefit from using tools for debugging in that environment.
+</para>
+
+<para/><section><title>Using the OpenLaszlo Debugger</title>
+
+<para>When you run an application with debugging enabled, the application
+is compiled with instrumentation to detect runtime errors, and the
+debugger window appears within the application canvas.  The debugger
+provides these features:</para>
+<itemizedlist spacing="compact"><listitem><para>The top portion of the debug window displays a scrolling list of
+  debug messages.  These include warning messages that the OpenLaszlo Runtime Library displays, as well as the arguments to calls to the <indexterm><primary><literal>Debug.write()</literal></primary></indexterm><methodname>Debug.write()</methodname>.</para></listitem><listitem><para>The command-line portion of the debug window can be used to
+  evaluate JavaScript statements and expressions within the context of
+  the running application.  Use this to inspect the program state, to
+  test the behavior of functions and methods on various arguments, and
+  to explore the LZX API.</para></listitem><listitem><para>Warnings for runtime errors such as undefined variables and
+  functions are detected, and printed to the debug console.</para></listitem></itemizedlist>
+
+<informalfigure><mediaobject><imageobject><imagedata fileref="images/debugger-new-console.png"/></imageobject></mediaobject></informalfigure>
+
+<?example role="live-example">
+   <title>The Debugger window</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="debugging-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>The Debugger window</title><programlisting role="lzx-embednew"><filename>debugging-$1.lzx</filename><parameter/><code>
+&lt;canvas height="150" debug="true"/&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150" debug="true"/&gt;
+</programlisting><?lzx-edit programs/debugging-$1.lzx></example?>
+
+<para>Debugging may cause the application to run more slowly, even if
+the debugger window is not visible.</para>
+
+
+<para/><section id="debugging.enabling-the-debugger"><title>Enabling the Debugger</title>
+
+<para>There are three ways to turn on the debugger in your application:</para>
+
+<variablelist><varlistentry><term>The <indexterm><primary>debug</primary></indexterm><sgmltag class="attribute">debug</sgmltag> attribute</term><listitem><para>The debugger is enabled on if the canvas <indexterm><primary>debug</primary></indexterm><sgmltag class="attribute">debug</sgmltag> attribute is set to true:</para>
+ 
+
+
+<example role="live-example">
+   <title>The canvas debug attribute</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/debugging-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>The &lt;canvas&gt; debug attribute</title><programlisting role="lzx-embednew"><filename>debugging-$2.lzx</filename><parameter/><code>
+&lt;canvas height="150" debug="true"/&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150" debug="true"/&gt;
+</programlisting><?lzx-edit programs/debugging-$2.lzx></example?>
+</listitem></varlistentry><varlistentry><term>The "Debug" button</term><listitem><para>Press the "Debug" button on the <glossterm>developer console</glossterm> to request a copy of the application with debugging enabled.  This is equivalent to recompiling the application with the <literal>debug="true"</literal>.</para>
+<!-- remove para tags; para is not a legal child of term LI LPP-4636 9/3/2007 -->
+<!-- <term><para>The <literal>debug</literal> query parameter</para></term> -->
+</listitem></varlistentry><varlistentry><term>The <literal>debug</literal> query parameter</term><listitem><para>Edit the URL that is used to request the application to include
+the <literal>debug=true</literal> <glossterm>query parameter</glossterm>.
+This is equivalent to pressing the "Debug" button in the developer
+console.</para>
+
+
+<para>See the<ulink url="../deploy/request-types.html" type="">System Administrator's Guide</ulink> for more information
+about request types.</para></listitem></varlistentry></variablelist>
+
+<para/></section><section id="debugging.runtime-error-checking"><title>Runtime Error Checking</title>
+
+<para>Enabling the debugger <?ignore Using any of the first three methods in <xref linkend="debugging.enabling-the-debugger"/>?> has two effects:</para>
+<itemizedlist spacing="compact"><listitem><para>It includes the debugger visual component.  This displays debug messages, and has a command line interface for evaluating JavaScript statements.</para></listitem><listitem><para>It compiles the application with additional instrumentation to perform <indexterm significance="preferred"><primary>runtime error checking</primary></indexterm><glossterm>runtime error checking</glossterm>.  Certain classes of erroneous code (below) result in warnings that are logged to the debug window.</para></listitem></itemizedlist>
+
+<para>A program that is compiled with runtime error checking will contain code that checks for the following conditions:</para>
+
+<table><title>Runtime error checks</title><tgroup cols="3"><thead><row><entry>Condition</entry><entry>Example</entry><entry>Notes</entry></row></thead><tbody><row><entry>Reference to undefined variable</entry><entry><literal>var w = canvs.width</literal></entry><entry><varname>canvs</varname> is not defined.  (There is a global
+  variable named <literal>canvas</literal>, instead.)</entry></row><row><entry>Reference to undefined property</entry><entry><literal>var w = canvas.widt</literal><footnote id="footnote.no-check-for-brackets"><para>The debugger does not warn about undefined references if the subscript notation is used: <literal>canvas['widt']</literal>, which is otherwise equivalent to <literal>canvas.widt</literal>, does not generate a warning.  This can be used as a workaround for the lack of the ECMASCript <literal>in</literal> relational operator in OpenLaszlo ECMASCript, to test whether an attribute exists.</para></footnote></entry><entry><varname>canvas</varname> does not have a <literal>widt</literal> property.  (The name of the property is <literal>canvas.width</literal>.)</entry></row><row><entry>Call to undefined method</entry><entry><literal>LzBrowser.getVerson()</literal></entry><entry><literal>LzBrowser.getVerson</literal> (with no "i") is not defined.</entry></row><row><entry>Call to undefined function</entry><entry><literal>var n = parseInteger("123")</literal></entry><entry><literal>parseInteger</literal> is not defined.  (There is a JavaScript function <literal>parseInt</literal>.)</entry></row><row><entry>Call to non-function</entry><entry><literal>var w = canvas.width()</literal></entry><entry><literal>canvas.width</literal> is a <indexterm><primary>Number</primary></indexterm><classname>Number</classname>,
+  not a <indexterm><primary>Function</primary></indexterm><classname>Function</classname>.</entry></row></tbody></tgroup></table>
+
+<para>Each runtime exception warning is printed once per line per program run, not once each time the exception is encountered.  The following program will print one warning, not ten.</para>
+
+<example role="live-example">
+   <title>Runtime exceptions printed once per line</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/debugging-$3.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?informalexample role="live-example"><programlisting role="lzx-embednew"><filename>debugging-$3.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="150"&gt;
+  &lt;handler name="oninit"&gt;&lt;![CDATA[
+    for (var i = 0; i &gt; 10; i ++) {
+      canvas.width();
+    }
+  ]]&gt;&lt;/handler&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="150"&gt;
+  &lt;handler name="oninit"&gt;&lt;![CDATA[
+    for (var i = 0; i &gt; 10; i ++) {
+      canvas.width();
+    }
+  ]]&gt;&lt;/handler&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/debugging-$3.lzx></informalexample?>
+
+<para>Turning on runtime error checking makes an application bigger
+and slower.  You should only perform size and speed optimization on
+the non-debug version of a program.  Nonetheless, you will frequently
+want to run the debug warning to see whether you have introduced any
+runtime errors.</para>
+
+<para/></section><section><title>Logging to the Debugger</title>
+
+<para>The top portion of the debugger window is the <indexterm significance="preferred"><primary>debugger
+log</primary></indexterm><glossterm>debugger
+log</glossterm>.  Use <indexterm><primary><literal>Debug.write()</literal></primary></indexterm><methodname>Debug.write()</methodname> to print to the debugger
+log.  This method is <indexterm significance="preferred"><primary>variadic</primary></indexterm><glossterm>variadic</glossterm>: it takes any number of
+arguments.  The text representations of the arguments are printed
+to the debugger log, separated by spaces.</para>
+
+<example role="live-example">
+   <title>Logging to the debugger</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/debugging-$4.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Logging to the debugger</title><programlisting role="lzx-embednew"><filename>debugging-$4.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="150"&gt;
+  &lt;script&gt;
+    Debug.write('user code');
+  &lt;/script&gt;
+  &lt;button onclick="Debug.write('click', getMouse('x'))"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="150"&gt;
+  &lt;script&gt;
+    Debug.write('user code');
+  &lt;/script&gt;
+  &lt;button onclick="Debug.write('click', getMouse('x'))"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/debugging-$4.lzx></example?>
+
+<para>Some object are <glossterm baseform="inspect">inspectable</glossterm>.  See <xref linkend="debugging.inspecting"/> for more about the inspect feature of
+the debugger.  See <xref linkend="debugging.debug-tostring"/> to see
+how to customize the display of objects within the debugger.</para>
+
+<para/></section><section><title>Using the Evaluator</title>
+
+<para>The bottom portion of the debugger window is the
+<indexterm significance="preferred"><primary>evaluator</primary></indexterm><glossterm>evaluator</glossterm>.  This is a command-line interface for evaluating
+JavaScript expressions and statements within the application.  Enter a
+JavaScript statement into this area and press the Enter key (in
+single-line mode) or the Evaluate button (in multi-line mode) to
+evaluate the statement within the application.  If the statement is an
+expression, its result (if the result is not <literal>undefined</literal>)
+is printed to the debugger log.  If it is a statement but not an
+expression, it is executed for effect.</para>
+
+<para>Examples of expressions are <literal>canvas.x</literal>,
+<literal>1+2</literal>, and
+<literal>LzBrowser.LoadURL('http://www.laszlosystems.com/',
+'_blank')</literal>.  (The last expression returns the value
+<literal>undefined</literal>, so the debugger does not print the expression
+value in the debugger log.)  An example of a non-expression statements
+is <literal>for (int i = 0; i &lt; 10; i++) Debug.write(i)</literal>.  This
+is evaluated for effect, and the statement itself does not result in a
+value, although each execution of the loop prints the value of
+<varname>i</varname> to the debugger log.</para>
+
+<para>The debugger can be used to define global variables.  Use the
+<literal>var</literal> keyword to define a new global variable.  For
+example, after evaluating <literal>var n=100</literal>, evaluating
+<literal>n+1</literal> will print the value <literal>101</literal>.</para>
+
+<note><para>The <literal>var</literal> keyword is only necessary to define
+<emphasis role="em">new</emphasis> global variables.  You do not need it to change the value
+of existing variables.  For example, after evaluating <literal>var
+n=100</literal>, you can evaluate <literal>n=200</literal> to change the value
+of <varname>n</varname>.  You do not need to evaluate
+<literal>var n=200</literal> (although the extra <literal>var</literal>
+is harmless.)</para></note>
+
+<para>You can also use <literal>var</literal> to create new global functions.
+<literal>var f = function (x) {return x+1}</literal> creates a new function
+named <varname>f</varname>, which can be used in subsequent
+expressions such as <literal>f(1)</literal>.</para>
+
+<para/><section><title>Functions and Expressions</title>
+<para>
+Consider the following debugger evaluations. Notice that the second case is terminated with a semicolon; otherwise the expressions are identical:</para>
+<programlisting>
+lzx&gt; function foo () { return 'Fu'; }
+Function#0| foo
+lzx&gt; foo
+WARNING: interactive-eval-2:-1: reference to undefined variable 'foo'
+lzx&gt; function foo () { return 'Fu'; };
+lzx&gt; foo
+Function#2| foo
+</programlisting>
+<para>
+In the first case, a function named 'foo' is created, but it is not the value of the global `foo`.  Instead the Debug evaluator returns a value which is that function object.  In the second case, the evaluator does not return a value, and the global `foo` <emphasis role="i">is</emphasis> defined to be the function.  Why is that?</para>
+<para>
+The answer is that the debugger evaluator will first try to evaluate what you type as an expression, and if that fails, it will try to evaluate it as a statement.  The second form is clearly not an expression (think of what you type as having parentheses around it—the semi-colon forces the second form to be a statement list, with an empty second statement).  This distinction, although subtle, is correct ECMAscript semantics.  It is not whether you name a function or not that determines when a global definition will be made; rather, two things must be true: </para>
+<itemizedlist spacing="compact"><listitem><para>the function must be named, and </para></listitem><listitem><para>the function declaration must occur in a statement context.</para></listitem></itemizedlist>
+<para>
+If the function declaration occurs in an expression context, all you have done is to create a named function object as the value of that expression, you have not defined that name as the function.
+</para>
+
+<para>Therefore, if you ever wonder why when you define a function in the debugger it does not behave as you expect, take a clue from what the evaluator prints out:  if it prints out a function object, all you did was create a function, not define a function.  Add the semi-colon after your definition and you will define the function (and not see a value printed).
+</para>
+
+<para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>Explain the single-line and multi-line mode of the evaluator</remark></para>
+
+<para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>Screenshot</remark></para>
+
+<para/></section><section><title>Debugger Variables</title>
+
+<para>Within a debugger expression, <literal>_</literal> refers to the value of
+the previous expression.  For example, after evaluating
+<literal>canvas.width</literal> to display the width of the canvas, you can
+evaluate the expression <literal>_/2</literal> to display half this
+width.</para>
+
+<para>The debugger defines the following variables:</para>
+<variablelist><varlistentry><term><literal>_</literal></term><listitem><para>The result of the previous expression with a non-undefined value.</para></listitem></varlistentry><varlistentry><term><literal>__</literal> [two underscore characters])</term><listitem><para>The result of the expression prior to the previous expression.</para></listitem></varlistentry><varlistentry><term><literal>___</literal> [three underscore characters]</term><listitem><para>The result of the expression prior to the <literal>__</literal> expression.</para></listitem></varlistentry></variablelist>
+
+<para/></section></section><section id="debugging.inspecting"><title>Inspecting Objects</title>
+
+<para>Evaluating <literal>Debug.write(<varname>object</varname>)</literal>, where
+<literal><varname>object</varname></literal> is an expression that evaluates to a
+JavaScript object, displays an <indexterm significance="preferred"><primary>inspectable representation</primary></indexterm><glossterm>inspectable representation</glossterm>
+of the object in the debugger.    Clicking on an
+inspectable object displays its non-private properties and their
+values.  Those values which are objects are also displayed as
+inspectable objects, so that they can be clicked on as well.</para>
+
+<para>An object's <indexterm significance="preferred"><primary>private properties</primary></indexterm><glossterm>private properties</glossterm> are those whose names begin with <literal>$</literal> or <literal>___</literal> (three underscore characters). These names are used by the compiler and by the OpenLaszlo Runtime Library implementation, respectively, and are not part of the documented API for the object.</para> 
+
+<para>An <indexterm significance="preferred"><primary>inspectable object</primary></indexterm><glossterm>inspectable object</glossterm> can be an OpenLaszlo Runtime Library object such as a
+window or <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>, or a built-in JavaScript
+object: for example, an array such as <literal>[1, 2, 3]</literal>, or a
+<indexterm><primary>Object</primary></indexterm><classname>Object</classname> such as <literal>{a: 1, b: 2}</literal>.</para>
+
+<para>The <indexterm><primary><literal>Debug.inspect()</literal></primary></indexterm><methodname>Debug.inspect()</methodname> function also displays the object and
+its properties.  Evaluating <literal>Debug.inspect(<varname>object</varname>)</literal> is
+equivalent to evaluating <literal>Debug.write(<varname>object</varname>)</literal> and
+then clicking on the object's representation.</para>
+
+<note><para><indexterm><primary><literal>Debug.write()</literal></primary></indexterm><methodname>Debug.write()</methodname> behaves differently depending on whether its argument is a string or a non-string object.  Note the difference between the two calls to <indexterm><primary><literal>Debug.write()</literal></primary></indexterm><methodname>Debug.write()</methodname> in the example below.</para></note>
+
+<example role="live-example">
+   <title>Two ways of calling Debug.write</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/debugging-$5.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Two ways of calling Debug.write</title><programlisting role="lzx-embednew"><filename>debugging-$5.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="150"&gt;
+  &lt;handler name="oninit"&gt;
+    Debug.write('subviews: ' + canvas.subviews); 
+    Debug.write('subviews:',   canvas.subviews);  
+  &lt;/handler&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="150"&gt;
+  &lt;handler name="oninit"&gt;
+    Debug.write('subviews: ' + canvas.subviews); <co id="N10239"/>
+    Debug.write('subviews:',   canvas.subviews); <co id="N10243"/> 
+  &lt;/handler&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/debugging-$5.lzx></example?>
+<calloutlist><callout arearefs="N10239"><para>The (only) argument to <indexterm><primary><literal>Debug.write()</literal> method</primary></indexterm><methodname>Debug.write()</methodname> is a string, so the value of <literal>canvas.subviews</literal> is not inspectable.</para></callout><callout arearefs="N10243"><para>The second argument to <indexterm><primary><literal>Debug.write()</literal> method</primary></indexterm><methodname>Debug.write()</methodname> is an non-string Object, so it is inspectable.</para></callout></calloutlist>
+<para/></section><section><title>Conditional Compilation of Debugging Code</title>
+<para>
+Sometimes you may have computations that you need to make only when you're debugging an application. For example, you may include some time stamps in order to measure performance of certain sections of code.
+</para>
+<para>
+The best practice here is to enclose any debug-only computations in
+</para>
+<programlisting>
+if ($debug) {
+  ...
+}
+</programlisting>
+<para>
+The compiler will omit those statements when you compile without debugging.
+</para>
+<para/></section></section><section><title>Configuring the Debugger</title>
+<para/><section><title>Debugger Window Position</title>
+
+<para>By default, the debugger comes up over the top left corner of your
+application. You can change the basic properties of the debugger by
+including the <indexterm><primary>debug</primary></indexterm><sgmltag class="element">&lt;debug&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: debug-->
+ tag in your app, like this:
+<literal>&lt;debug x="100" y="100" height="500"/&gt;</literal>.</para>
+
+<para>Note that this does not <emphasis role="em">enable</emphasis> the debugger; it merely
+configures its appearance when the debugger is enabled.  You still
+have use one of the methods in <xref linkend="debugging.enabling-the-debugger"/> to enable debugging.  The
+effect of this is that you can leave the <indexterm><primary>debug</primary></indexterm><sgmltag class="element">&lt;debug&gt;</sgmltag> in
+your program at all times (including in production code), and it will
+only have an effect when debugging is enabled.</para>
+
+<para/></section><section id="debugging.debug-tostring"><title>Customizing <indexterm><primary><literal>Debug.write()</literal></primary></indexterm><methodname>Debug.write()</methodname></title>
+
+<para><indexterm><primary><literal>Debug.write()</literal></primary></indexterm><methodname>Debug.write()</methodname> displays the <indexterm significance="preferred"><primary>printable representation</primary></indexterm><glossterm>printable representation</glossterm> of an object.  Where possible, the representation of an object is what you would type to represent that object in a program.  This is the case for instances of <indexterm significance="preferred"><primary>Singleton</primary></indexterm><glossterm>Singleton</glossterm> types (types with only a single instance, e.g., <indexterm><primary>Undefined</primary></indexterm><classname>Undefined</classname> and <indexterm><primary>Null</primary></indexterm><classname>Null</classname>) and for instances of <indexterm significance="preferred"><primary>Atomic</primary></indexterm><glossterm>Atomic</glossterm> types (types whose members have only a single value, no properties; e.g., <indexterm><primary>Boolean</primary></indexterm><classname>Boolean</classname> or <indexterm><primary>Number</primary></indexterm><classname>Number</classname>).  Instances of <indexterm><primary>String</primary></indexterm><classname>String</classname>s are normally not presented in this fashion (i.e., they are not quoted), as usually they are either a message or formatting.  Instances of <indexterm significance="preferred"><primary>compound types</primary></indexterm><glossterm>compound types</glossterm> (types with properties, e.g., <indexterm><primary>Array</primary></indexterm><classname>Array</classname> and <indexterm><primary>Object</primary></indexterm><classname>Object</classname>) and Strings that are longer than <literal>Debug.printLength</literal> are printed in <indexterm significance="preferred"><primary>inspectable</primary></indexterm><glossterm>inspectable</glossterm> format:
+</para>
+<blockquote><para>
+<literal>«<varname>type</varname>(<varname>length</varname>)#<varname>id</varname>|<varname>name</varname>»</literal>
+ </para></blockquote>
+<para>
+where:
+</para>
+<variablelist><varlistentry><term>type</term><listitem><para>is the type of the object, as computed by <indexterm><primary><literal>Debug.__typeof()</literal></primary></indexterm><methodname>Debug.__typeof()</methodname>.  You can customize this field by defining a <literal>String</literal>-valued property <literal>_dbg_typename</literal> or a method yielding a <literal>String</literal> of the same name on your class</para></listitem></varlistentry><varlistentry><term>length</term><listitem><para>is the length of the object, if it is of a type that has a length, such as <indexterm><primary>Array</primary></indexterm><classname>Array</classname> or <indexterm><primary>String</primary></indexterm><classname>String</classname></para></listitem></varlistentry><varlistentry><term>id</term><listitem><para>is a unique identifier that can be used to visually distinguish objects whose printed representation may be the same but which are not in fact the same object</para></listitem></varlistentry><varlistentry><term>name</term><listitem><para>is a descriptive name of the object, as computed by <indexterm><primary><literal>Debug.__String()</literal></primary></indexterm><methodname>Debug.__String()</methodname>.  You can customize this field by defining a <literal>String</literal>-valued property <literal>_dbg_name</literal> or a method yielding a <literal>String</literal> of the same name on your class</para></listitem></varlistentry></variablelist>
+<para>
+By default an object is described by
+its properties, a function by its name (if available).</para>
+
+<para>In addtion to 
+Debug.write, Debug.warn, Debug.info, Debug.format, there are utilities for determining client environment (Debug.versionInfo() and others)
+    </para>
+    <itemizedlist spacing="compact"><listitem><para>
+	    Canvas.versionInfoString(), Debug.versionInfo() which can be very helpful to record for bug reports.
+	  </para></listitem><listitem><para>
+        Debug.debug, Debug.info—like Debug.warn and Debug.error, but with different colors and tags that match many popular Ajax runtimes.
+      </para></listitem><listitem><para>
+        Debug.[write,format,debug,info,warn,error] all "Do What I Mean"  for format string
+      </para></listitem></itemizedlist>
+
+<para>Descriptions and Strings are abbreviated to the first
+<literal>Debug.printLength</literal> characters.  This property defaults to
+<literal>1024</literal>.  You can see all the properties of an abbreviated
+object, or all of a string by inspecting it (but take care to check
+the length of the object — it may take a very long time to
+print if it is large).</para>
+<para>
+When the debugger prints an object, if the type part of the description is enclosed in ?'s, it means that the object is potentially corrupted. (Technically it means that <literal>object instanceof object.[[prototype]].constructor</literal> is not true.)</para>
+<para/></section></section><section id="logging-to-the-server"><title>Logging to the Server</title>
+
+<para>Messages can be written from an LZX application to the
+<glossterm>server log</glossterm> through the use of the
+<literal>debuglog=true</literal> query parameter and the <indexterm><primary><literal>Debug.log()</literal></primary></indexterm><methodname>Debug.log()</methodname>
+method.</para>
+
+<para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>Examples</remark></para>
+
+<para>See the <ulink url="../deploy/logging.html" type="">System Administrator's Guide to Delpoying OpenLaszlo Applications</ulink>  for information about configuration
+and reading the server log.</para>
+<para/></section><section><title>Formatting Output</title>
+<para>
+The debugger has capabilities for formatting output according to control strings.
+</para>
+
+<para/><section><title>Using 'printf' conversions</title>
+<para>
+<literal>Debug.formatToString</literal> produces formatted output to a string, formatting its arguments according to the control string:</para>
+
+<itemizedlist spacing="compact"><listitem><para>The standard <literal>printf</literal> conversions are accepted, with the exception of <literal>a</literal>, <literal>n</literal>, and <literal>p</literal>. </para></listitem><listitem><para><literal>e</literal>, <literal>f</literal>, and <literal>g</literal> conversions are accepted but equivalent to <literal>f</literal>.  </para></listitem><listitem><para>The <literal>h</literal> and <literal>l</literal> length modifiers are accepted but ignored.  No errors are signalled for invalid format controls or insufficient arguments.</para></listitem></itemizedlist>
+
+
+<para>There is an additional format specifier <literal>w</literal> that formats the argument as if by <literal>Debug.__String</literal> with the 'pretty' option and creates a 'hotlink' so the object can be inspected.  If alternate format is requested (#), <literal>w</literal> uses the full <literal>Debug.__String</literal> format used by <literal>Debug.write</literal>.  <literal>w</literal> format obeys <literal>Debug.printLength</literal>, binding it to the maximum width, if specified in the control string.</para>
+<para/></section><section><title>Printing 'single-escape' characters</title>
+<para>
+When the debugger prints a string and <literal>Debug.printPretty</literal> is false, it will escape all the <literal>SingleEscapeCharacter</literal>'s in the string (i.e., <literal>' " \ b \f \n \r \t \v</literal>).  For example:</para>
+
+	<programlisting><literal>Debug.format('%#w', 'This is a "test"\nS\bring')  -&gt;«string#6| "This is a \"test\"\nS\bring"»</literal></programlisting> 
+<para/><section><title>On-the-fly type conversions</title>
+<para>
+The %d, %u, %i, %o, and %x directives (and their capital
+    variants) cast their arguments to the type Number before formatting
+    them.  The %s directive casts its argument to a String. There is no
+    default precision for these format directives —they will
+    print the fractional part of non-integers by default. If you
+    require that they round to the nearest integer, you can use
+    %.0d. If passed an argument that cannot be coerced to a
+    Number, these format directives print `NaN` (Not a Number).
+</para>
+<para/></section></section><section><title>Inspecting Warnings and Errors</title>
+<para>Warnings and Errors are 'inspectable'.  If you click on them, you will inspect the warning or error object.  If backtracing is enabled, a backtrace will be one of the properties of the object that you can inspect.  Inspecting the backtrace will reveal the recorded stack frames which record:  the function called, <literal>this</literal> and the arguments to the function.</para>
+
+<para/></section></section><section><title>Monitoring object properties</title>
+<para><literal>Debug.monitor(who, what)</literal>: Takes an object and property name
+and will emit a 'monitor message' each time that property is
+changed.
+</para>
+<para>
+<literal>Debug.unmonitor(who, what)</literal>: Turns that off.
+</para>
+<para>
+A monitor message consists of a timestamp, the function that caused the change, the object and property, and the old and new
+values.  E.g.:</para>
+<programlisting><literal>
+    MONITOR: [69227.23] LzLoader.initializeRequestObj: «LoadMovie#0| __debugger.lzx (loaded)».valid: true -&gt; true
+    MONITOR: [69265.36] LzLoader.initializeRequestObj: «LoadMovie#0| __debugger.lzx (loaded)».loaded: true -&gt; false
+    MONITOR: [69317.96] LzLoader.initializeRequestObj: «LoadMovie#0| __debugger.lzx (loading)».loading: true -&gt; false
+    MONITOR: [69378.19] LzLoader.initializeRequestObj: «LoadMovie#0| __debugger.lzx (initialized)».timedout: false -&gt; false
+    MONITOR: [69436.51] LzLoadQueue.makeRequest: «LoadMovie#0| __debugger.lzx (initialized)».loading: false -&gt; true
+    MONITOR: [69702.58] LzLoader.returnData: «LoadMovie#0| __debugger.lzx (loading)».loaded: false -&gt; true
+</literal>
+</programlisting>
+<para/></section><section><title>Tracing and Backtracing</title>
+<para>The debugger provides methods that allow you to see interactions between parts of your application.</para>
+<para/><section><title>Tracing</title>
+<para>
+When you invoke the <methodname role="LzDebug.prototype.trace">trace()</methodname>, the debugger traces the named method of the object and prints a message to the Debug console each time it is called or returned from. When called, the message includes a timestamp, the name of the function and the arguments it was called with. When returned from, the message gives the name of the function and the value it returned (if any).  If backtraces are enabled, inspecting the message will reveal the call chain that caused the modification.
+</para>
+<para/></section><section><title>Backtracing</title>
+<para>
+The configuration parameter <literal>compiler.debug.backtrace</literal>, when true, causes the compiler to instrument functions to maintain a call stack. You must recompile both the OpenLaszlo Runtime Library and your program if you change the setting of this parameter. It defaults to false because there is significant overhead introduced in enabling backtracing; in general it is only useful on small test cases.
+</para>
+<para>
+The configuration parameter is set in the configuration file<literal> lps.config </literal>, as explained in the <ulink url="../deploy/deployers-guide.html#deployers-guide.lps.properties" type="">System Administrator's Guide</ulink>.</para>
+
+<para>
+To create your own backtrace at any time:
+</para>
+<programlisting><literal>
+Debug.backtrace()</literal>
+</programlisting>
+<para>
+There is an optional argument that is the number of frames to skip in creating the backtrace.
+</para><para>
+If you print a backtrace using <literal>Debug.write</literal>, it may be abbreviated, but clicking on it will reveal the full backtrace.
+</para>
+<para>
+Debugger warnings will automatically include a backtrace. A backtrace snapshot can created by Debug.backtrace(). A backtrace is a subclass of array, converting it to a string will create a trace from innermost to outermost call, inspecting it will reveal the actual function objects that make up the array.
+</para>
+<para>
+To get the full backtrace out of a debugger warning, you need to use:
+</para><programlisting><literal>
+__LzDebug.ObjectForID(NN)
+</literal></programlisting>
+<para>
+Where NN is the object ID of the backtrace object, and then click on the resulting object to see the full trace.
+</para>
+<para/></section></section><section><title>Finding "memory leaks"</title>
+<para>
+A running OpenLaszlo application allocates parts of available virtual memory to store objects.  When these objects are no longer needed the memory should be released by the application in order to become once again available for other use.  Sometimes unneeded memory is not properly released, in which case the application tends to slow down over time as less and less memory becomes available.  This is "leaking memory."  The OpenLaszlo debugger can help you find memory leaks.
+</para><para>
+Three methods on <classname>__LzDebug</classname> are used to find leaks:</para>
+
+<orderedlist spacing="compact"><listitem><para><methodname role="LzDebug.prototype.markObjects">markObjects()</methodname></para></listitem><listitem><para><methodname role="LzDebug.prototype.findNewObjects">findNewObjects()</methodname></para></listitem><listitem><para><methodname role="LzDebug.prototype.whyAlive">whyAlive()</methodname></para></listitem></orderedlist>
+
+<para>
+You use them in that order.  Typically, you will start up your program, run it for a bit until you think it has reached a steady state.  Then invoke <literal>__LzDebug.markObjects()</literal>.  This runs in the background and will mark all the objects that are currently in use.  When you see the output '''Trace Done''' you can move on to the next step.
+</para>
+<para>
+You exercise your application in a way that you expect not to result in any retained storage (or some small amount of retained storage).  Run <literal>__LzDebug.findNewObjects()</literal>.  This also runs in the background and will find any new objects that have been allocated since the <literal>markObjects</literal> call that have not yet been garbage-collected.  When you see the output '''Trace Done''' you can move on to the next step.
+</para>
+<para>
+Call <literal>__LzDebug.whyAlive()</literal>. This returns a ''leak list'', which you can call <literal>.toString()</literal> on to see ''&lt;why&gt; (&lt;size&gt;): &lt;what&gt;'' pairs.  ''&lt;why&gt;'' is the shortest path from <literal>_root</literal> that is keeping the object from being collected; ''&lt;size&gt;'' is a count of the slots in that object and all its descendants, which is a rough indication of the cost of the object; ''&lt;what&gt;'' is the debugger representation of the object.  You may want to set <literal>Debug.printLength</literal> to a larger value before converting to a string.  You can also inspect the ''leak list'' to see the objects that have been retained.
+</para>
+<para/></section><section><title condition="dhtml">Debugging in DHTML</title>
+<para/><section><title>Using the Firebug extension</title>
+    <para>
+      For debugging the DHTML runtime, we recommend the <ulink url="http://getfirebug.com/">FireBug</ulink> extension to FireFox. If Firebug reports an error (with a little tiny red X in the bottom right hand corner of your firefox window) then there is probably a bug in your code or an OpenLaszlo bug. The errors reported by FireBug can be very obscure, but they usually happen when you are dereferencing a null pointer.
+    </para>
+    <para>
+      Firebug is more useful if you compile your DHTML application under debug mode (<literal>debug=true</literal>) so that method names show up in firebug stack traces. Dropping down the arrow next to an exception in firebug will show a complete stack trace - often helpful for tracking down the root cause.  Please file bugs with a stack trace if possible!
+    </para>
+<para>
+When you're compiling to DHTML, you generally use a two-step/two debugger process. It is always a good practice for you to have Firebug, because the OpenLaszlo debugger does not catch _all_ errors (it would be too much overhead to do so). We try to make our code debuggable in Firebug, as much as possible, but there are several limitations:</para>
+<itemizedlist spacing="compact"><listitem><para>Firebug does not know about our class system, so it cannot display our objects as intelligently as our debugger, and </para></listitem><listitem><para>Firebud does not understand OpenLaszlo #file and #line declarations, so it cannot give as accurate error locations as our debugger does. </para></listitem></itemizedlist>
+
+<para/></section><section><title>The &lt;debug&gt; tag</title>
+<para>
+In DHTML, the debugger appears as a separate HTML frame, rather than
+in-line in the application. As a consequence the <indexterm><primary>debug</primary></indexterm><sgmltag class="element">&lt;debug&gt;</sgmltag> tag does not actually control the size of the debugger frame.
+</para>
+
+    <para/></section><section id="debugging.deref"><title>Dereferencing Null Pointers</title>
+    <para>
+      The Flash runtime is permissive about dereferencing a null reference and getting properties on an undefined object. DHTML blows up if you do this. By "blows up" we mean that each DHTML browser crashes or hangs in a different way when the application code dereferences a null pointer.  Lots of legacy code doesn't check for null.
+    </para>
+    <para>
+      In JavaScript you are allowed to ask for a non-existent slot, but not for a slot on something that is not an object. Therefore, don't say <literal>foo.bar</literal> unless you know that foo is an object. If you know foo is either an object or null, you can say <literal>if (foo)</literal> before you say <literal>foo.bar</literal>. If you don't even know that, you would need to say <literal>if (foo instanceof Object)</literal>.
+    </para>
+    <para condition="dhtml">
+      Furthermore, in DHTML you cannot reference a non-existent variable. Therefore you should declare all your variables. In SWF, you could get by without declaring them, and they would just appear to be `undefined`, in DHTML, it is an error to refer to foo if you have not first said <literal>var foo</literal>.
+    </para>
+    <para>
+      If you are trying to make some legacy code work, you can ask <literal>if ('foo' in global)</literal> to see if foo had been declared, but that's sloppy. It's better to inspect your code to make sure that all variables are initialized before they're referenced.  Even if you're not planning to compile to DHTML, you should use the more conservative style, as this will enhance maintainability and allow you to retarget for DHTML in the future if you decide to do so.
+    </para>
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis> Reference here to porting guide?</remark></para>
+
+<para/></section></section></chapter>

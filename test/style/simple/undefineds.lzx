@@ -1,0 +1,40 @@
+<library>
+    <include href="lzunit" />
+    
+    <stylesheet>
+        box {
+            txt: "Hello World!!!";
+            height: 100;
+            width: 100;
+            color: #336699;
+        }
+    </stylesheet>
+
+    <class name="box" 
+           width="$style{'width'}" height="$style{'height'}"
+           bgcolor="$style{'color'}">
+        <attribute name="text" value="$style{'txt'}" />
+        <attribute name="undef" value="$style{'idontexist'}" />
+
+        <text text="${parent.text}"/>
+        <text text="${parent.undef}"/>
+        <simplelayout />
+    </class>
+
+    <box id="fazzleblarb" />
+
+    <!-- See LPP-4182 undefined CSS values used to be null. now they're undefined. -->
+    <class name="UndefinedsTestCase" extends="TestCase">
+            <method name="testUndefinedIsUndefined">
+                assertUndefined(fazzleblarb.getAttribute("foobles"));
+            </method>
+            <method name="testUnspecifiedIsUndefined">
+                assertUndefined(fazzleblarb.getAttribute("undef"));
+            </method>
+    </class>
+    
+    <script>
+        Debug.info("there should be a warning about a reference to an undefined property 'undef'");
+    </script>
+</library>
+<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. -->

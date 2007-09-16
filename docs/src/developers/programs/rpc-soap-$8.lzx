@@ -1,0 +1,60 @@
+
+<canvas debug="true" height="400" width="530">
+
+    <debug x="10" y="190" width="510" height="200" />
+
+    <dataset name="googleDset" />
+
+    <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
+        <handler name="onload">
+            Debug.write('google soap service loaded');
+        </handler>
+
+        <handler name="onerror" args="error">
+            Debug.write('error:', error);
+        </handler>
+
+        <!-- See RPC chapter for details on remotecall and how dataobject is
+             used to data bind to RPC operation results. --> 
+        <remotecall name="search" funcname="doGoogleSearch" 
+                    dataobject="googleDset">
+
+            <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
+            <param value="${ s.text }" />
+            <param value="1" />
+            <param value="10" />
+            <param value="true" />
+            <param value="''" />
+            <param value="true" />
+            <param value="''" />
+            <param value="''" />
+            <param value="''" />
+
+            <handler name="ondata" args="value">
+                Debug.write('search result:\n', value);
+            </handler>
+
+        </remotecall>
+    </soap>
+
+    <view x="10" y="10" layout="spacing: 5" >
+        <view layout="axis: x; spacing: 5">
+            <edittext id="s" text="SOAP" />
+            <button text="search" onclick="Debug.write('Invoking search...'); google.search.invoke()" />
+        </view>
+
+        <view width="505" height="140" bgcolor="silver" clip="true" layout="axis: y" >
+            <view>
+                <datapath xpath="googleDset:/resultElements/item" pooling="true" />
+                <text width="200" datapath="title/text()" clip="true" />
+                <text x="205" width="300" datapath="URL/text()" clip="true" />
+            </view>
+        </view>
+
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

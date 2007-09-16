@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -24,6 +24,8 @@ class DebugCompiler extends ViewCompiler {
         super(env);
     }
 
+    static final String DEBUG_WINDOW_CLASSNAME = "LzDebugWindow";
+
     /** Returns true iff this class applies to this element.
      * @param element an element
      * @return see doc
@@ -34,10 +36,13 @@ class DebugCompiler extends ViewCompiler {
 
     public void compile(Element element) throws CompilationError
     {
+        element.setName(DEBUG_WINDOW_CLASSNAME);
         // If the canvas does not have the debug flag, or if we have already instantiated a debugger,
         // return now.
         if (!mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY)
-            || mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW)) {
+            || mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW)
+            // No debug window in DHTML -- it is in its own iframe.
+            || mEnv.isDHTML()) {
             return;
         } else {
             mEnv.setProperty(mEnv.USER_DEBUG_WINDOW, true);

@@ -15,13 +15,24 @@
     <attribute name="yinset" value="0"/>
     <!--- A pixel amount to use between the views controlled by the layout in
           the x axis. -->
-    <attribute name="xspacing" value="${this.spacing}" />
+    <attribute name="xspacing" value="null" />
     <!--- A pixel amount to use between the views controlled by the layout in
           the y axis. -->
-    <attribute name="yspacing" value="${this.spacing}" />
+    <attribute name="yspacing" value="null" />
     <!--- If given, a number of miliseconds to use to animate the views in to
           place.-->
     <attribute name="duration"     value="0"/>
+
+    <!--- @keywords private -->
+    <method name="construct" args="parent, args">
+        super.construct(parent, args);
+        <!-- The class default value is this.spacing, but the user may override that in args -->
+        <!-- If x and y spacing are not specified they take on the default value -->
+        var defaultSpacing = ('spacing' in args)?args.spacing:this.spacing;
+        if (! ('xspacing' in args)) args.xspacing = defaultSpacing;
+        if (! ('yspacing' in args)) args.yspacing = defaultSpacing;
+    </method>
+
     <!--- @keywords private -->
     <method name="setAxis" args="a" >
         <!-- CURRENTLY THIS METHOD IS NOT USED -->
@@ -78,8 +89,9 @@
             if ( j < (inuse - 1)) {
                 pos += space;
                 maxdimension = Math.max(maxdimension,s[this.otherSizeAxis]);
-                if (( pos > limit) ||
-                    (pos + this.subviews[i+1][this.sizeAxis] >  limit)) {
+                var next = i + 1;
+                while (this.subviews[next] && !this.subviews[next].visible) next++;
+                if ((pos + this.subviews[next][this.sizeAxis] > limit)) { 
                     pos = this[this.axis + 'inset'];
                     otherpos += maxdimension + otherspace;
                     maxdimension = 0;   // Reset the height/width after every row/column                    
@@ -97,7 +109,7 @@
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

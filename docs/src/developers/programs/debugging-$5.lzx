@@ -1,0 +1,11 @@
+
+<canvas debug="true" height="150">
+  <handler name="oninit">
+    Debug.write('subviews: ' + canvas.subviews);  <?lzx-co N10239?>
+    Debug.write('subviews:',   canvas.subviews);  <?lzx-co N10243?> 
+  </handler>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

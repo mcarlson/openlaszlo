@@ -1,4 +1,4 @@
-<canvas width="300" layout="spacing: 10">
+<canvas layout="spacing: 10">
   
   <text multiline="true" width="300">The following view uses the
   <i>dragging</i> library.</text>
@@ -21,3 +21,5 @@
     </state>
   </view>
 </canvas>
+
+

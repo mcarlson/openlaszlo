@@ -60,7 +60,10 @@
 
         <!--- @keywords private -->
         <method name="doClick">
-            this._parentcomponent.select(this);
+            // FIXME [hqm 2006-09] LPP-2829 is it really ok that _parentcomponent is ever null?
+          if (this._parentcomponent) {
+              this._parentcomponent.select(this);
+          }
         </method>
 
         <!--- when the user clicks on an item, the
@@ -110,11 +113,17 @@
             ]]>
         </method>
 
+        <doc>
+          <tag name="shortdesc"><text>a group of these are managed by a baselist</text></tag>
+          <text>
+            <p>See <classname>baselist</classname> for details.</p>
+          </text>
+        </doc>
         </class>
 </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

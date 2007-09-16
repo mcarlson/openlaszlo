@@ -1,22 +1,21 @@
 <!-- Copyright 2007 Laszlo Systems --> 
-<canvas>
-<include href="lzunit" />
-<include href="../designerview.lzx" />
+<library>
 
+
+<include href="../designerview.lzx" />   
 <stylesheet>
     #gSimple {
-        bgcolor: "0x0000FA";
-    }
+        bgcolor: #0000FA;
+    }       
 </stylesheet>
 
 <simplelayout axis="y" spacing="5" />
 <view width="50" height="50" bgcolor="0x00B300" />
-
 <view id="gSimple" width="50" height="50">
-    <handler name="onconstruct" method="applyStyle" />
+    <handler name="onconstruct" method="applyStyle" /> 
     
     <method name="applyStyle">
-        Debug.write("this is not simple");
+        Debug.write("this is not simple bbbb");
         var style = LzCSSStyle.getComputedStyle( this );
         var bgc = style.getPropertyValue( "bgcolor" );
         this.setBGColor(bgc);
@@ -25,7 +24,7 @@
 </view> 
 
 <view width="50" height="50" bgcolor="0x00B300" />
-
+ 
 <stylesheet>
     #gTravis { innercolor: #6ab5e6; }
 </stylesheet>
@@ -37,18 +36,14 @@
 </view>    
 
 
-
-<TestSuite>
-    <TestCase>
+   <class name="SimpleTestCase" extends="TestCase">
         <method name="testBasics">
-            assertEquals(50, gSoy.width);
+            assertEquals(50, gSoy.width);  // KNOWN TO FAIL by bshine as of 08.01.2007
+            Debug.warn('expected 50 got 279 is a known failure in simple.lzx');
             assertEquals(75, gAngelica.width);
         </method>
         <method name="testColors">
             assertEquals(0x6ab5e6, gTravis.innercolor);
         </method>
-    </TestCase>
-</TestSuite>
-
-
-</canvas>
+    </class>
+</library>

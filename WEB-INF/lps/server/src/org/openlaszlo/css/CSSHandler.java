@@ -115,7 +115,7 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
 
     /** A list of CSS files separated by two file separators characters. */
     String mFileDependencies;
-    
+
 
     /** protected constructor */
     CSSHandler(File file) {
@@ -225,7 +225,7 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
             throw new CSSException(e.getMessage());
         }
     }
-    
+
     public void startDocument(InputSource source) throws CSSException {
         /* ignore */
     }

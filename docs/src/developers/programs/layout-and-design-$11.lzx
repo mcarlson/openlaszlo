@@ -1,0 +1,63 @@
+
+<canvas width="800" >
+  <!-- A draggable floating view -->
+  <class name="floater" height="20" bgcolor="0x93A5FF" visible="false">
+    <dragstate name="dragger"/>
+    <text name="txt" width="100"/>
+    <method name="showFloater" args="xpos, ypos, itemwidth, itemlabel">
+      myfloater.bringToFront();
+      this.setX(xpos);
+      this.setY(ypos);
+      this.setWidth(itemwidth);
+      this.txt.setText(itemlabel);
+      this.setVisible(true)
+      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+      this.setVisible(true);
+      this.dragger.apply();
+    </method>
+
+    <method name="cancelFloater">
+      this.dragger.remove();
+      this.setVisible(false);
+    </method>
+  </class>
+  
+  <!-- An instance of the floater -->
+  <floater id="myfloater"/>
+  
+  <!-- An item that will get clicked and dragged -->
+  <class name="imageRow" bgcolor="0x93A5FF" width="$once{parent.width}" height="20">
+    <attribute name="text" type="text"/>
+    <text name="txt" text="${parent.text}" resize="true"/>
+    <handler name="onmousedown">
+      myfloater.showFloater(this.getAttributeRelative("x", canvas),
+                            this.getAttributeRelative("y", canvas),
+                            this.width,
+                            this.txt.getText());
+    </handler>
+  </class>
+  
+  <view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea">
+    <!-- Area for viewing images -->
+    <text>Stage</text>
+    <!-- ... -->
+  </view>
+  
+  <view name="listOfImages" width="200" height="300" x="500" bgcolor="0xffff00">
+    <!-- Data-replicated list of images -->
+    <simplelayout axis="y" spacing="2"/>
+    <imageRow>One</imageRow>
+    <imageRow>Two</imageRow>
+    <imageRow>Three</imageRow>
+  </view>
+  
+  <view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000">
+    <!-- Trash for disposing of images -->
+    <text>Trash</text>
+    <!-- ... -->
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

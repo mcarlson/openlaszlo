@@ -1,0 +1,338 @@
+/**
+  * LzMediaLoader.as
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic Kernel
+  * @subtopic AS2
+  */
+
+/**
+  * @access private
+  */
+class LzMediaLoader extends LzLoader {
+    function initialize( owner , args ) {
+        super.initialize.apply(this, arguments);
+
+        this.owner.owner.loadperc = 0;
+
+        this.loadChecker = new LzDelegate( this , "testLoad" );
+
+        this.removeLoadCheckerDel = 
+            new LzDelegate( this, 
+                                  "removeLoadChecker", this, "onloaddone" );
+
+        this.timeout = canvas.medialoadtimeout;
+
+        //setup loadmovie stuff that never changes
+        this.mc.loader = this;
+        this.mc.mc = this.mc;
+        this.mc.timeout = this.timeout;
+        this.lastrequest = this.mc;
+        // [2005-08-28] We use the view's clip as the loadobj, so
+        // monitor it (as we would in LzLoader if we created a new
+        // loadobj).
+        if ($debug) {
+            LzLoader.debugLoadObj(this.mc, 'MediaLoadObj');
+        }
+    }
+
+DeclareEvent(prototype, 'onstreamstart' );
+DeclareEvent(prototype, 'onloaddone' );
+
+
+var LOADERDEPTH = 9;
+
+/**
+  * @access private
+  */
+function removeLoadChecker() {
+    // Remove loadChecker delegate
+    this.loadChecker.unregisterAll();
+    this.removeLoadCheckerDel.unregisterAll();
+}
+
+/**
+  * @access private
+  * [2005-08-29 ptw] It appears the intent here is that there is 1
+  * media loader per view with a resource, so we use the view's
+  * movieclip as the loadmovie, rather than creating another.
+  */
+function getLoadMovie ( ){
+    // Abort any load in progress
+    this.unload( this.mc );
+    if (this.isaudio != true && this._oldmc != null) {
+        // restore regular loader if audio was used before.
+        this.mc.unload();
+        var m = this._oldmc;
+        this._oldmc = null;
+        this.mc = m;
+    } else if (this.isaudio == true && this._oldmc == null) {
+        this._oldmc = this.mc;
+        this.mc = new SoundMC(this.mc);
+        this.initializeRequestObj(this.mc);
+        if ($debug) {
+            LzLoader.debugLoadObj(this.mc, 'MediaLoadObj');
+        }
+        //Debug.warn('getLoadMovie lmc %w %w', this.mc, this.mc.lmc)
+    } else {
+        //Debug.warn('getLoadMovie not audio %2 %w', this.mc, this.mc.lmc)
+    } 
+
+    // return the view's clip
+    return this.mc;
+}
+
+/**
+  * @access private
+  */
+function attachLoadMovie ( resc ){
+    var mc = this.getLoadMovie();
+    //Debug.warn('attachLoadMovie %w %w %w', resc, mc, this._oldmc)
+    if (this.isaudio == true && this._oldmc != null) {
+        // restore regular loader if audio was used before.
+        this.mc.unload();
+        var m = this._oldmc;
+        this._oldmc = null;
+        this.mc = m;
+        mc = m;
+    }
+    if (resc) {
+        mc.attachMovie( resc , "lmc", this.LOADERDEPTH );
+        if (this.mc.loading == true) {
+            Debug.error('already loading', this.mc);
+            LzLoadQueue.loadFinished( mc );
+        }    
+    } else {
+        Debug.error('%w.attachMovie(%w)', this, resc);
+    }
+}
+
+/**
+  * @access private
+  */
+function startingLoad ( loadmc ){
+    this.checkonce = false;
+    this.loadChecker.register( LzIdle, "onidle" );
+    this.removeLoadCheckerDel.register( this, "onloaddone" );
+}
+
+//=============================================================================
+// Media types which cannot be loaded directly (serverless) at runtime.
+//
+// We use a blacklist instead of a whitelist, because the user may
+// want to access a URL which generates a supported format, but has an
+// suffix from which it is not possible to deduce the file type, like
+// .jsp or .php.
+static var unsupportedMediaTypes = {
+    "bmp": true,
+    "tiff": true,
+    "tif": true,
+    "wmf": true,
+    "wmv": true
+
+
+};
+
+static var unsupportedMediaTypesSWF7 = {
+    "png": true,
+    "gif": true
+}
+
+
+
+/**
+  * @access private
+  */
+function request( req , cache , headers ) {
+    var o = { url: req , lzt: "media", timeout: this.timeout };
+
+    if ( cache == "none" ){
+        o.cache = false;
+        o.ccache = false;
+    } else if ( cache == "clientonly" ){
+        o.cache = false;
+        o.ccache = true;
+    } else if ( cache == "serveronly" ){
+        o.cache = true;
+        o.ccache = false;
+    } else {
+        o.cache = true;
+        o.ccache = true;
+    }
+
+    var policy = LzView.__LZcheckProxyPolicy( req );
+    this.proxied = policy;
+    o.proxied = policy;
+
+    if (!this.proxied) {
+        // warn for unsupported media types
+        var suffix = null;
+        var si = req.lastIndexOf(".");
+        if (si != -1) {
+            suffix = req.substring(si+1, si.length).toLowerCase();
+        }
+        if ($debug) {
+            if (suffix != null && ((LzMediaLoader.unsupportedMediaTypes[suffix] == true)
+                                   ||
+                                   ((canvas.runtime == "swf7" || canvas.runtime == "swf6")
+                                    && (LzMediaLoader.unsupportedMediaTypesSWF7[suffix] == true)))) {
+                Debug.warn("serverless loading of resources with type '%s'" +
+                           " is not supported by the Flash player. %w", suffix, req);
+            }
+        }
+        if (suffix == 'jpeg' || suffix == 'jpg') {
+            this.isjpeg = true;
+        } else if (suffix == 'mp3') {
+            this.isaudio = true;
+        } else {
+            this.isaudio = false;
+        }
+        //Debug.write('suffix', suffix, this.isaudio);
+    }
+
+    if ( headers != null ) o.headers = headers;
+    super.request( o );
+    this.owner.owner.setAttribute( "framesloadratio" , 0 );
+    this.owner.owner.setAttribute( "loadratio" , 0 ); 
+}
+
+/**
+  * @access private
+  */
+function testLoad (){
+    //skip first check because this can get called before load starts, in 
+    //which case load info is wrong
+    //getBytesTotal is wrong before the header of the movie has loaded
+
+    /*
+    Debug.write('%w %w %w %w %w %w %w %w %w', this.mc.lmc, typeof(this.mc.lmc.getBytesTotal),
+                      this.mc.lmc.getBytesLoaded(), typeof(this.mc.lmc.getBytesLoaded()),
+                      this.mc.lmc.getBytesTotal(), typeof(this.mc.lmc.getBytesTotal()),
+                      this.mc.lmc._currentframe, this.mc.lmc._framesloaded, this.mc.lmc._totalframes);
+    */
+       
+    if ( this.isjpeg && this.mc.lmc._height <= 0) {
+        //Debug.error('skipping 0 height jpeg');
+        return;
+    }    
+
+    if ( this.checkonce ){
+        var lr = this.mc.lmc.getBytesLoaded() / this.mc.lmc.getBytesTotal();
+        if (lr != this.owner.owner["loadratio"] && !isNaN(lr)) {
+            this.owner.owner.setAttribute("loadratio" , lr);
+            //reset timeout for media which is streaming
+            this.mc.loadtime = getTimer();
+        }
+    }
+
+    if ( this.checkonce && this.mc.lmc.getBytesTotal == void 0 
+         && this.mc.lmc._totalframes > 0  ) {
+             //a swf loaded from another domain will be sandboxed. no load
+             //information is available;
+             if ( !this.sentLoadStart ){
+                 this.sentLoadStart = true;
+                 if ( ! this.mc.loaded ) {
+                     if (this.onstreamstart.ready) this.onstreamstart.sendEvent( this );
+                 }
+             }
+
+             var nlp = this.mc.lmc._framesloaded / 
+             this.mc.lmc._totalframes;
+
+             if ( nlp >= this.owner.owner.loadperc ){
+                 //reset timeout for media which is streaming
+                 //Debug.write( "here" , this.mc.lmc._framesloaded , 
+                 //this.mc.lmc._totalframes );
+
+                 if (this.mc.lmc._totalframes > 0) {
+                     var nlp = this.mc.lmc._framesloaded / 
+                         this.mc.lmc._totalframes;
+
+                     if ( nlp > this.owner.owner.loadperc ){
+                         //reset timeout for media which is streaming
+                         this.mc.loadtime = getTimer();
+                     }
+
+                     this.owner.owner.loadperc = nlp;
+                     if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( this.owner.owner.loadperc );
+                     this.owner.owner.setAttribute( "framesloadratio" , nlp );
+                     this.owner.owner.setAttribute( "loadratio" , nlp );
+
+                     if ( this.mc.lmc._totalframes == this.mc.lmc._framesloaded && this.mc.lmc._currentframe > 0){
+                         if (!this.mc.loaded && this.onloaddone.ready) this.onloaddone.sendEvent( this );
+                         this.returnData( this.mc );
+                     }
+                 }
+             }
+         }
+
+    if ( this.checkonce && this.mc.lmc._currentframe > 0 
+         && typeof(this.mc.lmc.getBytesTotal) != "undefined"
+         && this.mc.lmc.getBytesTotal() > this.minHeader ) {
+        
+             if ( !this.sentLoadStart ){
+                 this.sentLoadStart = true;
+                 //this assumes that an error swf will have already called back
+                 //into the LFC by the time the load is detected. If this is
+                 //wrong, then the view will send both onload and onrror.
+                 if ( ! this.mc.loaded ) {
+                     if (this.onstreamstart.ready) this.onstreamstart.sendEvent( this );
+                 }
+             }
+
+             if (this.mc.lmc._totalframes > 0) {
+                 var nlp = this.mc.lmc._framesloaded / 
+                 this.mc.lmc._totalframes;
+
+                 if ( nlp > this.owner.owner.loadperc ){
+                     //reset timeout for media which is streaming
+                     this.mc.loadtime = getTimer();
+                 }
+
+                 this.owner.owner.loadperc = nlp;
+                 if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( this.owner.owner.loadperc );
+                 this.owner.owner.setAttribute( "framesloadratio" , nlp );
+             }
+
+             if ( this.mc.lmc.getBytesTotal() == this.mc.lmc.getBytesLoaded() ){
+                 //load is done
+
+                 if (!this.mc.loaded && this.onloaddone.ready) this.onloaddone.sendEvent( this );
+                 //if mc.loaded is set, means returnData has already been called
+                 //(probably by error swf.)
+                 if ( !this.mc.loaded ){
+                     this.returnData( this.mc );
+                 }
+             }
+         }
+    
+    if ( !this.checkonce ){
+        this.sentLoadStart = false;
+        this.checkonce = true;
+    }
+}
+/**
+  * @access private
+  */
+function unload ( loadobj ){
+    super.unload( loadobj );
+    if ( this.owner.owner.loadratio != 0 ){
+        this.owner.owner.loadperc = 0;
+        if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( 0 );
+        this.owner.owner.setAttribute( "loadratio" , 0 );
+        this.owner.owner.setAttribute( "framesloadratio" , 0 );
+    }
+
+    this.removeLoadChecker();
+}
+
+/**
+  * @access private
+  */
+function getLoadMC (){
+    return this.mc.lmc;
+}
+
+}; // End of LzMediaLoader

@@ -1,0 +1,50 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas height="60">
+  <class name="colorspot" clickable="true"
+    width="22" height="22" bgcolor="0x000000">
+    <attribute name="mycolor"/>
+    <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
+    <view name="spot" bgcolor="${parent.mycolor}"
+        x="2" y="2" width="18" height="18"/>
+    <method event="oninit">
+        //info('colorspot.init', this.trackgroup);
+        LzTrack.register(this, this.trackgroup);
+    </method>
+    <method event="onmousetrackover">
+        //info('colorspot.onmousetrackover', this.trackgroup);
+        setAttribute('bgcolor', 0xdedede); // hilite: gray
+    </method>
+    <method event="onmousetrackout">
+        //info('colorspot.onmousetrackout', this.trackgroup);
+        setAttribute('bgcolor', 0x000000); // normal: black
+    </method>
+    <method event="onmousetrackup">
+        parent.onnewcolor.sendEvent(this.spot.bgcolor);
+    </method>
+  </class>
+
+  <view bgcolor="0x0000ff" width="20" height="20"
+      onmousedown="this.colorpicker.setVisible(true); LzTrack.activate('mymenu');"
+      onmouseup="this.colorpicker.setVisible(false); ">
+    <view name="colorpicker" visible="false" x="10" y="10">
+      <attribute name="trackgroup" value="mymenu" type="string"/>
+      <method event="onnewcolor" args="newcolor">
+          parent.setAttribute('bgcolor', newcolor);
+      </method>
+
+      <simplelayout axis="x"/>
+      <colorspot mycolor="0x0000ff"/>
+      <colorspot mycolor="0x00ff00"/>
+      <colorspot mycolor="0xffff00"/>
+      <colorspot mycolor="0xff0000"/>
+      <colorspot mycolor="0x00ffff"/>
+    </view>
+  </view>
+  <text>Click on the square, then release the mouse button to select a new color.</text>
+  <simplelayout axis="y" spacing="20"/>
+</canvas>

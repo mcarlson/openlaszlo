@@ -1,3 +1,7 @@
+<!---
+      @topic Incubator
+      @subtopic Rich Text Editor
+  -->
 <library>
     <include href="baserichedittext.lzx" />
 
@@ -32,7 +36,7 @@
                     classname = "vscrollbar";
                 }
                 if ($debug) {
-                    if (typeof(global[classname]) == "undefined") {
+                    if (typeof(lz[classname]) == "undefined") {
                         Debug.write("scrollbarclassname undefined", this);
                     }
                 }
@@ -46,19 +50,19 @@
                     
                     // _vs.stepsize="${parent.inp.lineheight}" 
                     this.applyConstraint("stepsize", 
-                        function() { this.setAttribute("stepsize", parent.inp.lineheight); }, 
+                        function() { this.setAttribute("stepsize", this.parent.inp.lineheight); }, 
                         [p.inp, "lineheight"]);
                     
                     // _vs.scrollmax="${parent.inp.maxheight}" />
                     this.applyConstraint("scrollmax", 
-                        function() { this.setAttribute("scrollmax", parent.inp.maxheight); }, 
+                        function() { this.setAttribute("scrollmax", this.parent.inp.maxheight); }, 
                         [p.inp, "maxheight"]);
 
                     #pragma "methodName=init"
                     super.init();
                 }
                 
-                this._vs = new global[classname](this, 
+                this._vs =  new (lz[classname])(this, 
                                                  { axis: "y",
                                                    scrollattr: "pos",
                                                    scrolltarget: this.inp,
@@ -79,9 +83,19 @@
                        value="${this.getTextHeight()/this.maxscroll}"/>
             <attribute name="maxheight" 
                        value="${this.height + this.lineheight * (this.maxscroll - 1)}"/>
-            <attribute name="onpos" value="null"/>
+            <event name="onpos" />
             <attribute name="pos" value="0" setter="this.setPos(pos)"/>
 
+
+            <method name="init">
+                super.init();
+                // Store a link to the enclosing rich text edit area deep in this
+                // swf sprite, so that we can do a clever fix for LPP-4396, 
+                // "clicking bold moves insertion point." 
+                // See the LzModeManager.rawMouseEvent handler defined in 
+                // richtexteditarea.lzx to see how we use this breadcrumb. 
+                this.sprite.__LZtextclip.__LZrte = this.parent;
+            </method>
             <!--- Set the scroll position and update the scrollbar to match 
                 @param Number p: position-->
             <method name="setPos" args="p">
@@ -114,7 +128,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

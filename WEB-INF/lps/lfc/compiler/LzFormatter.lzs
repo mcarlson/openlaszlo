@@ -1,0 +1,431 @@
+/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
+
+/**
+ * Formatted output
+ *
+ * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ *
+ * @access public
+ * @topic LZX
+ * @subtopic Formatted Output
+ */
+
+/**
+ * This will be replaced by a more complete definition if the debugger
+ * is included
+ *
+ * @access private
+ */
+class LzMessage {
+  var message = '';
+
+  static function initialize (message) {
+    this.message = message;
+  }
+
+  function appendInternal (str, obj) {
+    this.message += str;
+  }
+
+  function append (str) {
+    var len = arguments.length;
+    for (var i = 0; i < len; i++) {
+      this.appendInternal(String(arguments[i]));
+    }
+  }
+
+  function toString () {
+    return this.message;
+  }
+
+  function toHTML () {
+    return this.toString();
+  }
+}
+
+
+/**
+ * Formatted output support
+ */
+mixin LzFormatter {
+
+  /**
+   * pad or trim a string to a specified length
+   *
+   * @param * value: the value to pad, will be coerced to a string if not a number
+   * @param Number minWidth: the minimum width, if negative pad on the right
+   * @param Number decMax: for numbers: ensure decimals characters to the right
+   * of '.', padding with 0, otherwise maximum width
+   * @param String pad: character to pad on left with, default ' '
+   * @param String sign: ' ', '-', '+', default '-'
+   * @param Number radix: radix to represent numbers in, default 10
+   * @param Boolean force: ensure numbers always have a decimal
+   */
+  function pad (value, widthMin, decMax, pad, sign, radix, force) {
+    switch (arguments.length) {
+      case 0:
+        value = '';
+      case 1:
+        widthMin = null;
+      case 2:
+        decMax = null;
+      case 3:
+        pad = ' ';
+      case 4:
+        sign = '-';
+      case 5:
+        radix = 10;
+      case 6:
+        force = false;
+    }
+    var isNumber = typeof(value) == 'number';
+    // coerce to be string
+    if (isNumber) {
+      if (decMax != null) {
+        var precision = Math.pow(10, (- decMax));
+        value = Math.round(value/precision)*precision;
+      }
+      value = Number(value).toString(radix);
+      if (sign != '-') {
+        if (value.indexOf('-') != 0) {
+          if (value != 0) {
+            value = sign + value;
+          } else {
+            // ' 0' not '+0'
+            value = ' ' + value;
+          }
+        }
+      }
+    } else {
+      value = '' + value;
+    }
+    var strlen = value.length;
+    // enforce precision
+    if (decMax != null) {
+      if (isNumber) {
+        var decimal = value.lastIndexOf('.');
+        if (decimal == -1) {
+          var decimals = 0;
+          if (force || (decMax > 0)) {
+            value += '.';
+          }
+        } else {
+          var decimals = strlen - (decimal + 1);
+        }
+        for (var i = decimals; i < decMax; i++) value += '0';
+      } else {
+        value = value.substring(0, decMax);
+      }
+    }
+    // enforce minimum width
+    strlen = value.length;
+    if (! widthMin) {
+      widthMin = 0;
+    }
+    var leftJustify = false;
+    if (widthMin < 0) {
+      widthMin = (- widthMin);
+      leftJustify = true;
+    }
+    if (strlen >= widthMin) {
+      return value;
+    }
+    if (leftJustify) {
+      for (var i = strlen; i < widthMin; i++) value = value + ' ';
+    } else {
+      sign = null;
+      if (pad != ' ') {
+        // Need to move sign to left of padding
+        if (" +-".indexOf(value.substring(0, 1)) >= 0) {
+          sign = value.substring(0, 1);
+          value = value.substring(1);
+        }
+      }
+      for (var i = strlen; i < widthMin; i++) value = pad + value;
+      if (sign != null) {
+        value = sign + value;
+      }
+    }
+    return value;
+  }
+
+  /**
+   * Formatted output to string
+   * Formats its arguments according to the control string
+   *
+   * The standard printf conversions are accepted, with the exception
+   * of `a`, `n`, and `p`.  `e`, `f`, and `g` conversions are accepted
+   * but equivalent to `f`.  The `h` and `l` length modifiers are
+   * accepted but ignored.  No errors are signalled for invalid format
+   * controls or insufficient arguments.
+   *
+   * If the Debugger is present, There is an additional format
+   * specifier `w` that formats the argument as if by `Debug.__String`
+   * with the 'pretty' option and creates a 'hotlink' so the object can
+   * be inspected.  If alternate format is requested (#), `w` uses the
+   * full `Debug.__String` format used by <xref
+   * linkend="Debug+debug.write"/>.  `%w` format obeys <xref
+   * linkend="Debug+debug.printLength"/>.  If a precision is specified,
+   * that is used as printLength.
+   *
+   * @param string control: A control string where % indicates a
+   * subsequent argument is to be substituted.
+   *
+   * @param any... args: arguments to be formatted according to the
+   * control string.
+   *
+   * @return LzMessage: the return value is an LzMessage which can be
+   * coreced to a string or HTML (the latter supports the hot-linking
+   * feature).
+   *
+   * @devnote For backwards compatibility with <xref
+   * linkend="Debug+debug.write"/>, if control is not a string or
+   * control has no formatting directives but there are multiple
+   * arguments, all the arguments are emitted separated by spaces.
+   */
+  function formatToString (control, args) {
+    var al = arguments.length;
+    // 'write compatibility mode': control is not a string or # of
+    // arguments is incompatible with control directives.
+    if ((! (typeof control == 'string' || control instanceof String)) ||
+        ((al > 1) != (control.indexOf('%') >= 0))) {
+      // Process each value to individually so they can be
+      // 'presented' as objects if applicable
+      var out = new LzMessage;
+      for (var i = 0; i < al; i++) {
+        var arg = arguments[i];
+        var sep = ((i == (al-1)) ? '\n' : ' ');
+        out.append(arg);
+        // separator is always pretty
+        out.appendInternal(sep);
+      }
+      return out;
+    }
+    // Normal mode
+    if (al < 1) { control = '' };
+    var ctrl = '' + control;
+    // skip control
+    var argno = 1;
+    var arglist = arguments;
+    function getarg(i) {
+      if (i >= al) {
+        if ($debug) {
+          Debug.warn("%#0.48w: insufficient arguments", control);
+        }
+        return null;
+      }
+      return arglist[i];
+    }
+    var base = 0, limit = ctrl.length;
+    var start = 0, end = 0;
+    var out = new LzMessage();
+    while (start < limit) {
+      end = ctrl.indexOf('%');
+      if (end == -1) {
+        out.append(ctrl.substring(start, limit));
+        break;
+      }
+      out.append(ctrl.substring(start, end));
+      // skip %
+      base = end;
+      start = end + 1;
+      end = end + 2;
+      var sign = '-';
+      var pad = ' ';
+      var alternate = false;
+      var length = '';
+      var precision = null;
+      var directive = null;
+//       var extra = null;
+      while ((start < limit) &&
+             // swf7 (! directive)
+             (directive == null)) {
+        var char = ctrl.substring(start, end);
+        start = end++;
+        // This is a little sloppy.  It will parse valid options,
+        // but also permits invalid ones, whose behaviour is
+        // undefined.
+        switch (char) {
+          case '-': length = char; break;
+          case '+': case ' ':
+            sign = char;
+            break;
+          case '#': alternate = true; break;
+          case '0':
+            if (length === '' && precision === null) {
+              pad = char; break;
+            }
+          case '1': case '2': case '3': case '4': case '5':
+          case '6': case '7': case '8': case '9':
+            if (precision !== null) {
+              precision += char;
+            } else {
+              length += char;
+            }
+            break;
+          case '$':
+            argno = length;
+            length = '';
+            break;
+          case '*':
+            if (precision !== null) {
+              precision = getarg(argno);
+              argno++;
+            } else {
+              length = getarg(argno);
+              argno++;
+            }
+            break;
+          case '.': precision = ''; break;
+          case 'h': case 'l': break;
+//           case '{':
+//             // Look for a match
+//             var close = ctrl.indexOf('}', start);
+//             if (close > start) {
+//               extra = ctrl.substring(start, close);
+//               start = close + 1;
+//               end = start + 1;
+//               break;
+//             }
+//             // Otherwise fall through
+          default:
+            directive = char;
+            break;
+        }
+      }
+      var value = getarg(argno);
+      // set decimals
+      var decimals = null;
+      var force = false;
+      // NOTE: [2006-11-17 ptw] Number("010") -> 8 in swf, 10 in ECMA,
+      // hence use null/'' as flag not ''/'0'
+      if (precision !== null) {
+        decimals = 1 * precision;
+      } else {
+        switch (directive) {
+          case 'F': case 'E': case 'G':
+          case 'f': case 'e': case 'g':
+            decimals = 6;
+            force = alternate;
+            break;
+          case 'O': case 'o':
+            if (alternate && value != 0) {
+              out.append('0');
+            }
+            break;
+          case 'X': case 'x':
+            if (alternate && value != 0) {
+              out.append('0' + directive);
+            }
+            break;
+        }
+      }
+      // set radix
+      var radix = 10;
+      switch (directive) {
+        case 'o': case 'O':
+          radix = 8; break;
+        case 'x': case'X':
+          radix = 16; break;
+      }
+      //     Debug.write('directive', directive, 'value', value, 'length', length,
+      //                 'decimals', decimals, 'pad', pad, 'sign', sign, 'radix', radix);
+      // 'unsigned'
+      switch (directive) {
+        case 'U': case 'O': case 'X':
+        case 'u': case 'o': case 'x':
+          if (value < 0) {
+            value = (- value);
+            // NOTE: [2006-11-17 ptw] Number('') -> NaN in swf, 0 in
+            // ECMA, hence use parseInt
+            var wid = Math.abs(parseInt(length));
+            if (isNaN(wid)) {
+              wid = Number(value).toString(radix).length;
+            }
+            var max = Math.pow(radix, wid);
+            value = max - value;
+          }
+      }
+      //     Debug.write('directive', directive, 'value', value, 'length', length,
+      //                 'decimals', decimals, 'pad', pad, 'sign', sign, 'radix', radix);
+      // do the directive
+      // e, f, and, g could be implemented with toExponential or
+      // toPrecision if they existed in the runtime.
+      switch (directive) {
+        case 'D': case 'U': case 'I': case 'O': case 'X': case 'F': case 'E': case 'G':
+          value = Number(value);
+          out.append(this.pad(value, length, decimals, pad, sign, radix, force).toUpperCase());
+          argno++;                  // consume value
+          break;
+        case 'c':
+          value = String.fromCharCode(value);
+        case 'w':
+          if ($debug) {
+            var width = decimals || Debug.printLength;
+            // alternate => Debug.write => pretty but unique (see
+            // LzMessage.append)
+            // We let __String abbreviate, for best legibility
+            out.appendInternal(this.pad(Debug.__String(value, true, width, alternate),
+                                        length, null, pad, sign, radix, force),
+                               value);
+            argno++;                  // consume value
+            break;
+          }
+        case 's':
+          // TODO: [2006-06-01 ptw] Generalize this to write 'pretty'
+          // values for all
+          var str;
+          if (value instanceof Function) {
+            if ($debug) {
+              str = this.functionName(value);
+            }
+            if (! str) {
+              str =  'function () {...}';
+            }
+          } else if (typeof value == 'number') {
+            // Must convert number to string for proper padding
+            str = Number(value).toString(radix);
+          } else {
+            str = '' + value;
+          }
+          out.appendInternal(this.pad(str, length, decimals, pad, sign, radix, force),
+                             value);
+          argno++;                  // consume value
+          break;
+        case 'd': case 'u': case 'i': case 'o': case 'x': case 'f': case 'e': case 'g':
+          value = Number(value);
+          out.append(this.pad(value, length, decimals, pad, sign, radix, force));
+          argno++;                  // consume value
+          break;
+        case '%':
+          out.append('%');
+          break;
+        default:
+          // treat unknown directive as literal
+          out.append(ctrl.substring(base, start));
+          break;
+      }
+      ctrl = ctrl.substring(start, limit);
+      base = 0, limit = ctrl.length;
+      start = 0, end = 0;
+    }
+    if (argno < al) {
+      if ($debug) {
+        Debug.warn("%#0.48w: excess arguments", control);
+      }
+      // Output excess in 'write compatibility' mode
+      out.appendInternal(' ');
+      for (; argno < al; argno++) {
+        var arg = getarg(argno);
+        var sep = ((argno == (al-1)) ? '\n' : ' ');
+        out.append(arg);
+        out.appendInternal(sep);
+      }
+    }
+
+    return out;
+  }
+
+};
+

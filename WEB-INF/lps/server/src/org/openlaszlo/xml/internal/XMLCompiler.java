@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -46,7 +46,7 @@ public class XMLCompiler {
     /**
      * Compile XML to actionscript
      * 
-     * @param XML string to compile
+     * @param x XML string to compile
      * @return Actionscript representation of XML
      */
     public static String compile(String x) {
@@ -66,7 +66,7 @@ public class XMLCompiler {
     /**
      * Compile XML to actionscript
      * 
-     * @param Element e JDOM element to compile
+     * @param e JDOM element to compile
      * @return Actionscript representation of XML
      */
     public static String compile(Element e) {
@@ -76,8 +76,8 @@ public class XMLCompiler {
     /**
      * Compile XML to actionscript
      * 
-     * @param Element e JDOM element to compile
-     * @param Schema schema Laszlo Schema to follow (what is var, function)
+     * @param e JDOM element to compile
+     * @param schema Laszlo Schema to follow (what is var, function)
      * @return Actionscript representation of XML
      */
     public static String compile(Element e, Schema schema) {
@@ -89,9 +89,9 @@ public class XMLCompiler {
     /**
      * Compile XML to actionscript
      * 
-     * @param Element e JDOM element to compile
-     * @param Schema schema Laszlo Schema to follow (what is var, function)
-     * @param StringBuffer base Base of current element - used when called 
+     * @param e JDOM element to compile
+     * @param schema Laszlo Schema to follow (what is var, function)
+     * @param base Base of current element - used when called 
      *  recursively
      * @return Actionscript representation of XML
      */
@@ -106,11 +106,11 @@ public class XMLCompiler {
     /**
      * Compile XML to actionscript
      * 
-     * @param Element e JDOM element to compile
-     * @param Schema schema Laszlo Schema to follow (what is var, function)
-     * @param StringBuffer base Base of current element - used when called 
+     * @param e JDOM element to compile
+     * @param schema Laszlo Schema to follow (what is var, function)
+     * @param base Base of current element - used when called 
      *         recursively
-     * @param String varname Variable name to use instead of element name
+     * @param varname Variable name to use instead of element name
      * @return Actionscript representation of XML
      */
     public static String compile(Element e, Schema schema,
@@ -305,7 +305,7 @@ public class XMLCompiler {
      * Escapes strings for inclusion inside actionscript strings,
      * ex: ' to \'
      * 
-     * @param string to escape
+     * @param s string to escape
      * @return an escaped string
      */
     private static String escapeQuote(String s) {

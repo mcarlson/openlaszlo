@@ -74,27 +74,27 @@
             <view width="${parent.parent.width}">
                 <simplelayout axis="y" spacing="1"/>
                 <text width="${parent.width}" fgcolor="#666699">Fullname:</text>
-                <windowtext width="180" datapath="@fullname" />
+                <edittext width="180" datapath="@fullname" />
             </view>
             <view width="${parent.width}">
                 <simplelayout axis="y" spacing="1"/>
                 <text width="${parent.width}" fgcolor="#666699">Address:</text>
-                <windowtext width="180" datapath="@address" />
+                <edittext width="180" datapath="@address" />
             </view>
             <view width="${parent.width}">
                 <simplelayout axis="y" spacing="1"/>
                 <text width="${parent.width}" fgcolor="#666699">City:</text>
-                <windowtext width="180" datapath="@city" />
+                <edittext width="180" datapath="@city" />
             </view>
             <view width="${parent.width}">
                 <simplelayout axis="y" spacing="1"/>
                 <text width="${parent.width}" fgcolor="#666699">State:</text>
-                <windowtext width="50" datapath="@state" />
+                <edittext width="50" datapath="@state" />
             </view>
             <view width="${parent.width}">
                 <simplelayout axis="y" spacing="1"/>
                 <text width="${parent.width}" fgcolor="#666699">Zip:</text>
-                <windowtext width="80" datapath="@zip" />
+                <edittext width="80" datapath="@zip" />
             </view>
 
         </view>
@@ -117,7 +117,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

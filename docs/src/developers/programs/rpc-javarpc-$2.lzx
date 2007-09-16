@@ -1,0 +1,60 @@
+
+<canvas debug="true">
+ 
+    <debug x="100" y="10" height="275" />
+
+    <!-- The security describes what classes are accessible or are allowed to be
+         instantiated in the server. See the security section in this chapter
+         for more information. -->
+    <security>
+        <allow>
+            <pattern>^examples\.ConstructExample</pattern>
+        </allow>
+    </security>
+
+    <!-- See $LPS_HOME/WEB-INF/classes/ConstructExample.java for java
+        source. -->
+    <javarpc name="ce" scope="session" autoload="false"
+             remoteclassname="examples.ConstructExample"
+             createargs="[1, 'a string', 1.45]">
+
+        <handler name="onerror" args="err">
+            Debug.write("----------");
+            Debug.write("onerror:", err)
+        </handler>
+
+        <handler name="onload">
+            Debug.write("----------");
+            Debug.write("constructed with", this.createargs);
+            Debug.write(this.proxy);
+        </handler>
+
+    </javarpc>
+    
+    <simplelayout inset="10" spacing="5" />
+
+    <button x="10" text="construct">
+        <handler name="onclick">
+            canvas.ce.load();
+        </handler>
+    </button>
+
+    <button x="10" text="getinfo">
+        <handler name="onclick">
+            this.getInfo.invoke();
+        </handler>
+
+        <remotecall funcname="getInfo" remotecontext="$once{canvas.ce}">
+            <handler name="ondata" args="res">
+                Debug.write("----------");
+                Debug.write("method:", this.name)
+                Debug.write("return type:", typeof(res))
+                Debug.write("return value:", res);
+            </handler>
+        </remotecall>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

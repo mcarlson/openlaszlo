@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -261,11 +261,11 @@ mLogger.warn(
     /** Pull response headers from method and put into 
      * servlet response object.
      *
-     * @param req http servlet response object to proxy to
      * @param method method to proxy from
+     * @param res http servlet response object to proxy to
      * @param isSecure true if get method is secure
      */
-    static public void proxyResponseHeaders(GetMethod meth, 
+    static public void proxyResponseHeaders(HttpMethodBase meth, 
                                             HttpServletResponse res,
                                             boolean isSecure)
     {
@@ -336,7 +336,7 @@ mLogger.error(
      * method will return null. See ServletContext.getRealPath() for more
      * details.
      *
-     * @param ctx servlet context
+     * @param ctxt servlet context
      * @param path virtual webapp path to resolve into a real path
      * @return the real path, or null if the translation cannot be performed
      */
@@ -355,8 +355,8 @@ mLogger.error(
     /**
      * Replace real path forward slash characters to back-slash for Windoze.
      *
-     * @param ctx servlet context
-     * @param generating request
+     * @param ctxt servlet context
+     * @param req generating request
      * @return the real path, or null if the translation cannot be performed
      */
     static public String getRealPath(ServletContext ctxt, HttpServletRequest req)
@@ -375,8 +375,7 @@ mLogger.error(
      * context path. If context path is <code>/</code>, the function just
      * removes the <code>/@WEBAPP@</code> string.
      *
-     * @param contextPath current context path.
-     * @param url URL to check if <code>/@WEBAPP</code> token exists.
+     * @param url URL to check if <code>/@WEBAPP@</code> token exists.
      * @return if <code>/@WEBAPP@</code> exists, new modified URL else old URL.
      */
     public static String modifyWEBAPP(HttpServletRequest req, String url)
@@ -418,11 +417,11 @@ mLogger.warn(
      */
     static public URI newURI(String s) throws URIException {
         try {
-            return new URI(s.toCharArray());
+            return new URI(s, true);
         } catch (URIException urie) {
             // Try escaping
             try {
-                return new URI(s);
+                return new URI(s, false);
             } catch (Exception e) {
                 // Escaping failed, throw the original error
                 throw urie;

@@ -1,5 +1,6 @@
 <library>
     <include href="timing-classes.lzx"/>
+    <include href="reporter.lzx" />    
 
     <script>
     // Support for timing code fragments
@@ -96,7 +97,24 @@
         ' ' + this.pad ('[ ' + prec(this.min) + '..' + prec(this.max) + ']' +
                                         '/' + this.count , 25 ) ;
     }
-
+    
+    //---
+    // Just one number representing the mean of results for this meter.
+    //---
+    Meter.prototype.calcMean = function () {
+        if (this.count == 0) return "NaNcountIsZero";
+        var m = this.total / this.count; 
+        return m; 
+    }
+    
+    //---
+    // Just one number representing the uncertainty of results for this meter
+    //---
+    Meter.prototype.calcUncertainty = function () {
+        if (this.count == 0) return "NaNcountIsZero";
+        var mean = this.calcMean();
+        return Math.sqrt(this.meanSquared - (mean * mean));
+    }
 
     //---
     // Test collection
@@ -131,11 +149,16 @@
 
                 TimingOutput.write(this.$title);
                 TimingOutput.write( report() );
+                sendReport(this.$title);
             }
         }
             
 
         ]]>
+    }
+    
+    function sendReport(title) {
+        reporter.sendLogData(title);    
     }
 
     //---
@@ -174,6 +197,6 @@
     </script>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

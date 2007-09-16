@@ -2,20 +2,32 @@
 <!-- calendar_cover.html                                        -->
 <!--                                                                       -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--=======================================================================-->
+<!DOCTYPE html 
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css">
+<link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <h1>Calendar</h1>
-<div class="desc">
-<a href="../../demos/calendar/calendar.lzo?fb=1&lzt=html" target="_blank" >
-    <img border="0" align="left" src="images/cover-images/cal.png" />
-</a>
+<div style="float: left">
+    <div style="margin: 10px">
+        <img border="0" src="images/cover-images/calendar.jpg" alt="Calendar Application" width="328" height="321" /> 
+        <div style="text-align: center">
+            <a title="Flash Version" onclick="window.open(this.href, '_blank', 'width=835,height=600'); return false" href="../../demos/calendar/calendar.lzx?lzr=swf7&amp;lzt=html">
+                <img src="images/cover-images/button-flash.png" alt="Calendar Flash Version" border="0" />
+            </a> 
+            <a title="DHTML Version" onclick="window.open(this.href, '_blank', 'width=835,height=600'); return false" href="../../demos/calendar/calendar.lzx?lzr=dhtml&amp;lzt=html">
+                <img src="images/cover-images/button-dhtml.png" alt="Calendar DHTML Version" border="0" />
+            </a> 
+        </div>
+    </div>
+</div>
 <p>
 This application opens in a window.  If you don't see it, you may need to
 bring that window to the front.
@@ -23,7 +35,7 @@ bring that window to the front.
     <p> Click through months,
       noting that only data is requested from the server&#8212;no layout or graphic
       content. Click on a day: it expands in place, providing a visual indication
-      of the day's timeline.<br>
+      of the day's timeline.<br />
     To change the time of an event, simply drag it. Notice that the view automatically
     scrolls as you drag. If you want to get more details, simply click and the
     info panel slides in. Notice how the layout adjusts dynamically.</p><p>
@@ -32,6 +44,5 @@ anywhere. This calendar, with its drag-n-drop interface, graceful information hi
 revealing, and data-filtering, shows the real power of the web for bringing
 people together.
 </p>
-</div>
 </body>
 </html>

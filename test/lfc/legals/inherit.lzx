@@ -1,0 +1,103 @@
+<canvas>
+    <script>
+
+sup = makeLFCConstructor();
+sup.prototype.classname = 'sup';
+
+sup.prototype.f = function (){
+    //info('sup.f', 1);
+    return 1;
+}
+
+sup.prototype.g = function (){
+    //info('sup.g', 100);
+    return 100;
+}
+
+sup.prototype.h = function (){
+    return 222;
+}
+
+// return val + callee[fname]( val );
+sup.prototype.fancy = function ( val , callee , fname ){
+    var o = val + callee[ fname] ( val );
+    //info('sub.fancy', val, callee.classname, fname, o)
+    return o
+}
+
+sup.prototype.recursive = function ( list ){
+    if ( !list.length ) return 0;
+    return list[ 0 ] + this.recursive( list.splice( 1 ) );
+}
+
+
+sub = makeLFCConstructor( sup );
+sub.prototype.classname = 'sub';
+
+sub.prototype.g = function () {
+    var o = 1 + this.callInherited( "g" , arguments.callee );
+    //info('sub.g', o);
+    return o;
+}
+
+sub.prototype.h = function () {
+    return "no super call";
+}
+
+subsub = makeLFCConstructor( sub );
+subsub.prototype.classname = 'subsub';
+
+subsub.prototype.g = function () {
+    var o = 5 + this.callInherited( "g", arguments.callee);
+    //info('subsub.g', o)
+    return o;
+}
+
+subsub.prototype.fancy = function ( val , callee , fname ){
+    var o = 22 + this.callInherited( "fancy", arguments.callee, val, callee, fname );
+    //info('subsub.fancy', val, callee.classname, fname, o)
+    return o;
+}
+subsub.prototype.recursive = function ( list ){
+    return 1 + this.callInherited( "recursive", arguments.callee, list );
+}
+
+var ia  = LzFactory.create(sup);
+var ib  = LzFactory.create(sub);
+var ic  = LzFactory.create(subsub);
+var id  = LzFactory.create(subsub);
+
+assertTrue(sub == sub);
+assertEquals(ia.f(), 1);
+assertEquals(ia.f, ia.f);
+assertNotSame(ia.f, ia.g);
+
+assertEquals(ib.f(), 1);
+assertEquals(ib.h(), 'no super call');
+
+assertEquals(ib.g(), 101);
+assertEquals(ic.g(), 106);
+
+assertEquals(ia.fancy( 10 , ia, 'f' ), 11);
+assertEquals(ia.fancy( 10 , ib, 'g' ), 111);
+assertEquals(ic.fancy( 10 , ic, 'g' ), 138);
+assertEquals(ic.fancy( 10 , id, 'g' ), 138);
+
+assertEquals(ia.recursive( [ 1 , 10 , 100 ] ), 111);
+//gets called 4 times (once with zero length list
+assertEquals(ic.recursive( [ 1 , 10 , 100 ] ), 115);
+
+id.g = function (){
+    return 1000 + this.callInherited( "g", arguments.callee );
+}
+assertEquals(id.g(), 1106);
+
+
+assertEquals(ia.constructor, sub);
+assertEquals(ib.constructor, sup);
+assertEquals(ic.constructor, subsub);
+
+
+
+</script>
+</canvas>

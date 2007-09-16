@@ -3,7 +3,7 @@
 <!--                                                                       -->
 <!-- library classes for the world clocks class                            -->
 <!--                                                                       -->
-<!-- Copyright 2002-2006 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Copyright 2002-2007 Laszlo Systems, Inc.  All Rights Reserved.        -->
 <!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
 <!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
 <!-- Use is subject to license terms.                                      -->
@@ -38,7 +38,7 @@
 
 
         <!-- AM or PM -->
-        <text font="Helmet" fontsize="14" name="dayandampm" x="130" y="132" visible="false" >SUN  AM
+        <text font="Helmet,Arial,Helvetica,sans-serif" fontsize="14" name="dayandampm" x="130" y="132" visible="false" >SUN  AM
             <handler name="ontext" >
                 this.setX(100 - Math.floor(this.getTextWidth()/2.0));
                 this.setVisible(true);

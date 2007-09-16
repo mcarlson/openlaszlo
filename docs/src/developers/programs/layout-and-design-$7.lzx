@@ -1,0 +1,47 @@
+
+<canvas>
+  <!-- A single colored box -->
+  <class name="coloredBox" width="50" height="50" bgcolor="0xff0000"/>
+  <!-- Blue border; invisible at start -->
+  <view id="floater" width="50" height="50" visible="false">
+    <!-- Animate to the coordinates of a given view -->
+    <method name="goTo" args="whichBox">
+      this.setVisible(true);
+      this.bringToFront();
+      var destX = whichBox.getAttributeRelative("x", canvas);
+      var destY = whichBox.getAttributeRelative("y", canvas);
+      this.animate("x", destX, 1000, false);
+      this.animate("y", destY, 1000, false);
+    </method>
+    <stableborderlayout axis="y"/>
+    <view bgcolor="0xFFFF00" height="5" width="${parent.width}"/>
+    <view width="${parent.width}">
+      <stableborderlayout axis="x"/>
+      <view bgcolor="0xFFFF00" width="5" height="${parent.height}"/>
+      <view height="${parent.height}"/>
+      <view bgcolor="0xFFFF00" width="5" height="${parent.height}"/>
+    </view>
+    <view bgcolor="0xFFFF00" height="5" width="${parent.width}"/>
+  </view>
+  <!-- Controls -->
+  <view bgcolor="yellow">
+    <simplelayout axis="y" spacing="10"/>
+    <button onclick="floater.goTo(blueBox)">Go to Blue Box</button>
+    <button onclick="floater.goTo(redBox)">Go to Red Box</button>
+    <button onclick="floater.goTo(greenBox)">Go to Green Box</button>
+  </view>
+  <!-- View hierarchy -->
+  <view x="20" y="15">
+    <coloredBox id="blueBox" bgcolor="0x0000ff" x="200"/>
+    <view x="5" y="40">
+      <coloredBox id="greenBox" bgcolor="0x00ff00" y="150" x="13"/>
+      <view x="1" y="90">
+        <coloredBox id="redBox" bgcolor="0xff0000" y="150"/>
+      </view>
+    </view>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -145,9 +145,9 @@
         <view name="sendView" x="0" y="335">
             <text>msg:</text>
             <edittext name="msg" width="200" />
-            <button id="bSend" name="send" width="50" height="24" onclick="this.handler();">
+            <button id="bSend" name="send" width="50" height="24" onclick="this.inputhandler();">
                 Send
-                <method name="handler">
+                <method name="inputhandler">
                     var message = this.parent.msg.getText();
                     if (message!=null &amp;&amp; message!="") {
                         canvas.myconnection.sendMessage("*", message, "message");
@@ -262,13 +262,13 @@
 
     <method event="onkeyup" reference="LzKeys" args="k">
         if ( k == 13 ) {
-            bSend.handler();
+            bSend.inputhandler();
         }
     </method>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -36,6 +36,14 @@
             this.formdata[itemname] = item;
         </method>
 
+        <method name="removeFormItem" args="item">
+            for (var name in this.formdata) {
+                if (this.formdata[name] == item) {
+                    delete this.formdata[name];
+                }
+            }
+        </method>
+
         <!--- Setter to to set baseform's status to changed. Baseformitems
               should set baseform's changed to true when its values change and
               set baseform's changed to false when its values are rollback or
@@ -52,6 +60,19 @@
 
             var oldchanged = this.changed;
             this.changed = changed;
+
+            // if we got notified about a reset check if we are complete in
+            // original state
+            if(!changed && skipformdata && this['formdata']){
+                var fd = this.formdata;
+                for(var k in fd){
+                    if(fd[k].changed){
+                        // still something in changed state...
+                        this.changed = true;
+                        break;
+                    }
+                }
+            }
 
             // set formdata all to unchanged if changed is set to false.
             if (! changed && ! skipformdata && this['formdata'] ) {
@@ -95,11 +116,32 @@
             }
             this.setChanged(false, true);
         </method>
+        <doc>
+          <tag name="shortdesc"><text>web form</text></tag>
+          <text>
+            <p>The <tagname>baseform</tagname> tag allows you to create a web
+            form.  The data represented by components that are enclosed in the
+            form tag can be sent to the server using the <tagname>submit</tagname>
+            tag.  Each form component, such as <tagname>checkbox</tagname>,
+            <tagname>combobox</tagname> or <tagname>radiogroup</tagname> must have
+            a name.  The data is submitted as name-value pairs, using the name and
+            value of the component.</p>
+            
+            <p><classname>baseform</classname> provides no layout for its
+            contents.  If you want a simple automatic form layout use the
+            <tagname>form</tagname> tag.</p>
+            
+            <seealso>
+            <tags>form submit</tags>
+            <tags label="Form components">checkbox radiogroup combobox button edittext list</tags>
+            </seealso>
+          </text>
+        </doc>
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

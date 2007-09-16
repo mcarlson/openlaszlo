@@ -1,0 +1,106 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+    <class name="search" >
+        <attribute name="sendsearch_del" 
+                   value="$once{new LzDelegate( this, 'sendsearch') }"/>
+
+        <method name="doSearch">
+            if ( !canvas.isopen ) {
+                this.sendsearch_del.unregisterAll();
+                var anm = canvas.setOpen(true);
+                this.sendsearch_del.register(anm, 'onstop' );
+            } else {
+                this.sendsearch();
+            }        
+        </method>
+    
+        <view width="88" name="title" >
+            <stableborderlayout axis="x" />
+            <view resource="../assets/search/title-left.gif" />
+            <view resource="../assets/search/title-mid.gif" stretches="width" />
+            <view resource="../assets/search/title-right.gif" />
+        </view>
+        
+        <view x="6" y="7" resource="../assets/search/title-text.gif" />
+        
+        <mybutton 
+            resource="transparent_rsc"
+            width="${parent.width}" height="${parent.height}" >
+            <method event="onclick">
+                classroot.doSearch(); 
+            </method>
+        </mybutton>
+        
+        
+        <view name="content" x="$once{parent.title.width}"  
+              width="${classroot.width - parent.title.x}"
+              height="${parent.height - 1}" >
+        
+
+            <view resource="../assets/search/content-mid.gif" stretches="width"  width="${parent.width}" />
+                  
+            <view resource="../assets/search/content-right.gif"  x="${parent.width - width}" />
+
+            <inputtext name="txt"  width="${parent.width}" height="${parent.height}" y="3">       
+                <method event="onkeyup" args="k" >
+                    if ( k == 13 ) { //return key
+                        classroot.doSearch();
+                    }
+                </method>
+            </inputtext>
+        </view>
+
+        <!-- Only search for photos with a creative commons license:
+            http://creativecommons.org/licenses/by/2.0/
+        -->
+        <method name="sendsearch" >
+            var tags = this.getText();
+            var argobj;
+            if (tags == "interesting") {
+                // Special search for interesting photos            
+                argobj = [
+                    {argname:"method", 
+                        argvalue:"flickr.interestingness.getList"}
+                ]            
+            } else if (tags=="recent") {
+                argobj = [
+                    {argname:"method", 
+                        argvalue:"flickr.photos.getRecent"}
+                ]                        
+            } else {
+                // search by tags
+                argobj = [
+                    {argname:"method", argvalue:"flickr.photos.search"},
+                    // Any Creative-Commons license (all include attribution)
+                    {argname:"license", argvalue:"1,2,3,4,5,6"},
+                    {argname:"tags", argvalue:this.getText()},
+                    {argname:"tag_mode", argvalue:"all"},
+                    {argname:"sort", argvalue:"interestingness-desc"}
+                ]
+            } 
+            gDataMan.doFlickrRequest(photods, argobj);                    
+            //info('sendsearch', tags);
+            tls.displayPage();
+        </method>
+        
+        <!-- Search for interesting photos. Gets the photos from today. -->
+        <method name="searchInteresting">
+            this.txt.setText("interesting");
+            this.sendsearch();
+        </method>
+
+        <method name="setText" args="t" >
+            this.content.txt.setText(t);
+        </method>
+
+        <method name="getText" args="t" >
+            return this.content.txt.getText(t);
+        </method>
+    </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->

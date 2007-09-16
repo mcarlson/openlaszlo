@@ -1,0 +1,16 @@
+<data>
+<!--
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+
+
+
+    <record a="1"> Line one </record>
+    <record a="2"> Line two</record>
+    <record a="11"> Line three </record>
+    <record>Line four </record>
+    <record> Line five </record>
+</data>

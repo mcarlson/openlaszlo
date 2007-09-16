@@ -41,7 +41,7 @@
     </view>
   <class name="showselection" extends='button'
         text="show selected"
-        onclick="debug.write(r.getSelection(), r.value)">
+        onclick="Debug.write(r.getSelection(), r.value)">
       <attribute name="r" value="0" when="always"/>
  </class>
     <view>
@@ -97,6 +97,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

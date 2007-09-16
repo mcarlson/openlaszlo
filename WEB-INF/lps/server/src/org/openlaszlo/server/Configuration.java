@@ -186,24 +186,18 @@ mLogger.error(
 
 
     /**
-     * @param path application path - .lzo extensions treated like .lzx
+     * @param path application path
      * @return table of application options
      */
     public Map getApplicationOptions(String path) {
-        if (path.endsWith(".lzo")) {
-            path = path.substring(0, path.length()-1) + 'x';
-        }
         return (Map)mAppOptions.get(path);
     }
 
     /**
-     * @param path application path - .lzo extensions treated like .lzx
+     * @param path application path
      * @param opts application option hashtable from LZX
      */
     public void setApplicationOptions(String path, Map opts) {
-        if (path.endsWith(".lzo")) {
-            path = path.substring(0, path.length()-1) + 'x';
-        }
         mAppOptions.put(path, opts);
     }
 

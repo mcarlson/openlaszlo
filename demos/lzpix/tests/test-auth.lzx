@@ -1,0 +1,26 @@
+<canvas title="test-auth.lzx">
+
+<include href="../classes/dataman.lzx"/>
+<simplelayout axis="y" spacing="10" />
+<button onclick="gDataMan.doAuth()">authorize</button>
+<button onclick="gDataMan.doToken()">renew token (after authorizing)</button>
+<edittext name="idtext">153387</edittext>
+<edittext name="tagtext">lzpixtest4</edittext>
+<button>tag it
+    <method event="onclick">
+            var argobj = [
+                {argname:"method", 
+                argvalue:"flickr.photos.addTags"},
+                {argname:"photo_id",
+                argvalue: idtext.getText()},
+                {argname:"tags",
+                argvalue: tagtext.getText()}                
+                ];
+            gDataMan.doAuthFlickrRequest(canvas.infods, argobj);                                                                
+    </method>
+</button>
+
+<text datapath="infods:/rsp/@stat">
+</text>
+
+</canvas>

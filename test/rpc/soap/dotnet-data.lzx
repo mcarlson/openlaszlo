@@ -1,5 +1,9 @@
 <canvas width="1000">
 
+  <script when="immediate">
+    status = {};
+    status.setText = function (n) {Debug.write(n)}
+  </script>
     <text><b>Test .NET QuickStart DataService using LZX Web Services</b></text>
     <text resize="true" text="${'WSDL ' + canvas.wsdl}" />
 
@@ -9,6 +13,8 @@
 
     <attribute name="wsdl" type="string"
 value="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/DataService/CS/DataService.asmx?WSDL" />
+    <text id="status">::STATUS::</text>
+
 
     <soap name="dataservice" wsdl="$once{canvas.wsdl}" >
 
@@ -27,7 +33,7 @@ value="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/DataServ
             status.setText('timeout');
         </method>
 
-        <remotecall funcname="GetTitleAuthors" dataobject="authors" >
+        <remotecall funcname="GetTitleAuthors" dataobject="$once{authors}" >
             <param value="'&lt;GetTitleAuthors/&gt;'" />
 
             <method event="ondata" args="value">
@@ -46,7 +52,6 @@ value="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/DataServ
         ]]></method>
 
     </button>
-    <text id="status"/>
 
     <grid id="table" datapath="authors:/item/GetTitleAuthorsResponse/GetTitleAuthorsResult/diffgram/NewDataSet" contentdatapath="Authors">
         <gridtext width="100" datapath="au_id/text()" >ID</gridtext>
@@ -62,6 +67,6 @@ value="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/DataServ
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

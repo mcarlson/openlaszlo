@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -61,16 +61,12 @@ original :  private static String sStyleSheetPathname =
             // write the compilation error, nothing has been written
             // to out yet.
             // Replace .lzo with .lzx 
-            boolean isKranked = false;
             String orig = fileName;
-            if (fileName.endsWith(".lzo")) {
-                isKranked = true;
-                fileName = fileName.substring(0, fileName.length() - 1) + "x";
-            }
+
             /* This method doesn't call writeHeader and writeFooter, since
              * the stylesheet handles the whole HTML generation. */
             Canvas canvas = getCanvas(fileName, req);
-            writeCanvas(out, req, canvas, orig, isKranked);
+            writeCanvas(out, req, canvas, orig);
         } finally {
             FileUtils.close(out);
         }
@@ -232,14 +228,12 @@ original :  private static String sStyleSheetPathname =
      * @param canvas the canvas for the given request
      */
     private void writeCanvas(ServletOutputStream out, HttpServletRequest req, 
-                             Canvas canvas, String fileName, boolean isKranked)
+                             Canvas canvas, String fileName)
         throws IOException 
     {
         String xmlString = canvas.getXML(getRequestXML(req, fileName));
         mLogger.debug(xmlString);
         Properties properties = new Properties();
-        if (isKranked)
-            properties.setProperty("isKranked", "true");
         try {
             TransformUtils.applyTransform(sStyleSheetPathname, properties,
                                           xmlString, out);
@@ -359,4 +353,7 @@ original :  private static String sStyleSheetPathname =
     {
         return MIME_TYPE_HTML;
     }
+
+
+
 }

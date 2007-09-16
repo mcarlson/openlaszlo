@@ -2,13 +2,14 @@
 <canvas debug="true"  bgcolor="#AAAAAA">
     <include href="lzunit"/>
     <debug/>
+    <include href="../neighborhood/neighborhoodclasses.lzx" />
+    <include href="../neighborhood/kennedyfamily.lzx" />
+    <include href="../neighborhood/thestreet.lzx" />
+    
     <include href="simplerdescendant-test.lzx" />
     <include href="descendantselector-test.lzx" />    
     <include href="complex-descendant-selector-test.lzx" />
 
-    <include href="../neighborhood/neighborhoodclasses.lzx" />
-    <include href="../neighborhood/kennedyfamily.lzx" />
-    <include href="../neighborhood/thestreet.lzx" />
     
     <TestSuite>
         <SimplerDescendantSelectorTestCase />

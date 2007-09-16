@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -45,8 +45,8 @@ class SolutionMessages {
 
     /** Perform string substitution using pattern matching.
      * @param str the source string
-     * @param pattern pattern to look for
-     * @param subst the string to replace <i>pattern</i> with. Perl5 references to matches are allowed. See
+     * @param p pattern to look for
+     * @param s the string to replace <i>pattern</i> with. Perl5 references to matches are allowed. See
      * <a href="http://jakarta.apache.org/oro/api/org/apache/oro/text/regex/Perl5Substitution.html">http://jakarta.apache.org/oro/api/org/apache/oro/text/regex/Perl5Substitution.html</a>
      * @param numSubs number of substitutions to perform, Util.SUBSTITUTE_ALL will cause all occurences to be replaced
      * @return the string with the substitution made for numSubs occurences of the pattern

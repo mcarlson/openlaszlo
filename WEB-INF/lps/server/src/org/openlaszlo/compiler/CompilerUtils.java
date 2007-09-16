@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -110,8 +110,6 @@ public class CompilerUtils  {
      * relative to the beginning or end position of the source text
      * for this element.
      *
-     * @param start true if the location should be relative to the
-     * start of the element (otherwise it is relative to the end)
      */
     public static String sourceLocationDirective(String pathname,
                                                  Integer lineno,

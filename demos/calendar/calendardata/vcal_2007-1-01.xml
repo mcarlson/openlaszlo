@@ -1,0 +1,175 @@
+<vcalendar>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <year2007>
+        <month1>
+            <day19>
+                <event>
+                       <summary value="Martin Luther King Holiday"/>
+                       <comment value="I have a dream"/>
+                       <start year="2007" month="1" day="19" hour="9" />
+                       <end year="2007" month="1" day="19" hour="16" />
+                       <category value="holiday"/>
+                </event>
+            </day19>
+            <day1>
+                <event>
+                   <summary value="New Years Day"/>
+                   <comment value="New Years Day"/>
+                   <start year="2007" month="1" day="1" hour="1" minute="0"/>
+                   <end year="2007" month="1" day="1" hour="23" minute="0"/>
+                   <category/>
+                </event>
+            </day1>
+
+            <day15>
+                <event>
+                       <summary value="Lunch with Bob"/>
+                       <comment value="Lunch with Bob"/>
+                       <start year="2007" month="1" day="15" hour="14" minute="1"/>
+                       <end year="2007" month="1" day="15" hour="16" minute="1"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Meeting"/>
+                       <comment value="Meeting"/>
+                       <start year="2007" month="1" day="15" hour="16" minute="30"/>
+                       <end year="2007" month="1" day="15" hour="17" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Pick up kids"/>
+                       <comment value="Pick up kids"/>
+                       <start year="2007" month="1" day="15" hour="17" minute="0"/>
+                       <end year="2007" month="1" day="15" hour="18" minute="0"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Send letter"/>
+                       <comment value="Send letter"/>
+                       <start year="2007" month="1" day="15" hour="13" minute="2"/>
+                       <end year="2007" month="1" day="15" hour="14" minute="2"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Call Irene"/>
+                       <comment value="Call Irene"/>
+                       <start year="2007" month="1" day="15" hour="9" minute="12"/>
+                       <end year="2007" month="1" day="15" hour="10" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day15>
+            <day2>
+                <event>
+                       <summary value="A test event"/>
+                       <comment value="A test event"/>
+                       <start year="2007" month="1" day="2" hour="8" minute="30"/>
+                       <end year="2007" month="1" day="2" hour="10" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="A longer event to show wrapping"/>
+                       <comment value="A longer event to show wrapping"/>
+                       <start year="2007" month="1" day="2" hour="14" minute="12"/>
+                       <end year="2007" month="1" day="2" hour="15" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Go to new office"/>
+                       <comment value="Go to new office"/>
+                       <start year="2007" month="1" day="2" hour="7" minute="12"/>
+                       <end year="2007" month="1" day="2" hour="8" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day2>
+            <day6>
+                <event>
+                       <summary value="Another meeting"/>
+                       <comment value="Another meeting"/>
+                       <start year="2007" month="1" day="6" hour="3" minute="30"/>
+                       <end year="2007" month="1" day="6" hour="5" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Lunch with kids"/>
+                       <comment value="Lunch with kids"/>
+                       <start year="2007" month="1" day="6" hour="12" minute="12"/>
+                       <end year="2007" month="1" day="6" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Pick up car"/>
+                       <comment value="Pick up car"/>
+                       <start year="2007" month="1" day="6" hour="12" minute="12"/>
+                       <end year="2007" month="1" day="6" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day6>
+            <day30>
+                <event>
+                       <summary value="Happy birthday bob!"/>
+                       <comment value="Happy birthday bob!"/>
+                       <start year="2007" month="1" day="30" hour="3" minute="30"/>
+                       <end year="2007" month="1" day="30" hour="5" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Good evening"/>
+                       <comment value="Good evening"/>
+                       <start year="2007" month="1" day="30" hour="12" minute="12"/>
+                       <end year="2007" month="1" day="30" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Another example event"/>
+                       <comment value="Another example event"/>
+                       <start year="2007" month="1" day="30" hour="12" minute="12"/>
+                       <end year="2007" month="1" day="30" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day30>
+            <day18>
+                <event>
+                       <summary value="How we do it back home"/>
+                       <comment value="How we do it back home"/>
+                       <start year="2007" month="1" day="18" hour="3" minute="30"/>
+                       <end year="2007" month="1" day="18" hour="5" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Text wrapping for dummies class"/>
+                       <comment value="Text wrapping for dummies class"/>
+                       <start year="2007" month="1" day="18" hour="12" minute="12"/>
+                       <end year="2007" month="1" day="18" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Conference"/>
+                       <comment value="Conference"/>
+                       <start year="2007" month="1" day="18" hour="12" minute="12"/>
+                       <end year="2007" month="1" day="18" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day18>
+        </month1>
+    </year2007>
+</vcalendar>

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -44,9 +44,11 @@ public abstract class RequestCache extends Cache {
     /**
      * Creates a new <code>RequestCache</code> instance.
      *
+     * @param name
      * @param cacheDirectory a <code>File</code> naming a directory
      * where cache files should be kept
-     * @param dataSource back end data source for the cache
+     * @param converter
+     * @param props
      */
     public RequestCache(String name, File cacheDirectory, Converter converter,
             Properties props)

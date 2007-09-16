@@ -1,4 +1,78 @@
 <canvas>
+
+
+<?ignore
+    <script><![CDATA[
+
+        LzDrawView.prototype.arc = function(x, y, radius, startAngle, endAngle, clockwise) {
+
+            var sx = x + radius*Math.cos(startAngle);
+            var sy = y + radius*Math.sin(2 * Math.PI - startAngle);
+
+            startAngle *= 180/Math.PI;
+            endAngle *= 180/Math.PI;
+            var arc = clockwise == true ? startAngle - endAngle : endAngle - startAngle;
+
+            this.moveTo(sx, sy);
+
+            return this._drawArc(x, y, radius, arc, startAngle);
+        }
+
+        LzDrawView.prototype._drawArc = function(x, y, radius, arc, startAngle, yRadius){
+            if (arguments.length<5) {
+                return;
+            }
+            // if yRadius is undefined, yRadius = radius
+            if (yRadius == undefined) {
+                yRadius = radius;
+            }
+            // Init vars
+            var segAngle, theta, angle, angleMid, segs,bx, by, cx, cy;
+            // no sense in drawing more than is needed :)
+            if (Math.abs(arc)>360) {
+                arc = 360;
+            }
+            // Flash uses 8 segments per circle, to match that, we draw in a maximum
+            // of 45 degree segments. First we calculate how many segments are needed
+            // for our arc.
+            segs = Math.ceil(Math.abs(arc)/45);
+            // Now calculate the sweep of each segment
+            segAngle = arc/segs;
+            // The math requires radians rather than degrees. To convert from degrees
+            // use the formula (degrees/180)*Math.PI to get radians. 
+            theta = -(segAngle/180)*Math.PI;
+            // convert angle startAngle to radians
+            angle = -(startAngle/180)*Math.PI;
+
+            // if our arc is larger than 45 degrees, draw as 45 degree segments
+            // so that we match Flash's native circle routines.
+            if (segs>0) {
+                // Loop for drawing arc segments
+                for (var i = 0; i<segs; i++) {
+                    // increment our angle
+                    angle += theta;
+                    // find the angle halfway between the last angle and the new
+                    angleMid = angle-(theta/2);
+                    // calculate our end point
+                    bx = x+Math.cos(angle)*radius;
+                    by = y+Math.sin(angle)*yRadius;
+                    // calculate our control point
+                    cx = x+Math.cos(angleMid)*(radius/Math.cos(theta/2));
+                    cy = y+Math.sin(angleMid)*(yRadius/Math.cos(theta/2));
+                    // draw the arc segment
+                    this.quadraticCurveTo(cx, cy, bx, by);
+                }
+            }
+            // In the native draw methods the user must specify the end point
+            // which means that they always know where they are ending at, but
+            // here the endpoint is unknown unless the user calculates it on their 
+            // own. Lets be nice and let save them the hassle by passing it back. 
+            return {x:bx, y:by};
+
+        }
+    ]]></script>
+?>
+
     <constantlayout axis="x" value="200"/>
 
     <simplelayout axis="y" spacing="20" inset="200"/>

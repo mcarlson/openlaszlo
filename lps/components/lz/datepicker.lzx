@@ -38,6 +38,7 @@
     </resource>
 
 
+        <!--- @access private -->
         <class name="datepickercombobox" extends="basecombobox" fontsize="8" 
         bgcolor="0xeaeaea" editable="false">
         <attribute name="text_y" value="-3"/>
@@ -55,10 +56,12 @@
         </class>
 
 
+    <!--- @access private -->
     <class name="datepickerlistitem" extends="textlistitem"
         fontsize="8" text_y="-2" height="12"/>
 
 
+    <!--- @access private -->
    <class name="_datepicker_dirButton" 
           width="14"
           stretches="height"
@@ -168,6 +171,7 @@
               text="${classroot.daynum}" 
               resize="true" 
               align="center" 
+              valign="middle"
               visible="${!parent.disabled}"
               fgcolor="${parent.selectable ? 0x000000 : 0x888888 }"/> 
     </class>
@@ -280,12 +284,12 @@
             </handler>
         </view>
 
-        <windowpanel name="main" 
+        <windowpanel name="main" visible="true"
                      bgcolor="0x565656"
                      closeable="false"
                      datapath="."
              allowdrag = "${parent.allowdrag}">
- 
+
 
             <view name="toolbar_view" 
                   x="6"
@@ -496,10 +500,47 @@
             <view resource="resources/datepicker/date_bg.swf"/> 
 
         </windowpanel> 
+ <doc>
+          <tag name="shortdesc"><text>
+              A simple date picker
+          </text></tag>
+          <text>
+            <p>
+              Datepicker is a simple component that makes it easy for users to select dates.  
+            </p>
+            <example class="program" id="datepicker-1"> 
+              &lt;canvas height="200"&gt; 
+              &lt;datepicker showingdate="new Date()"
+              earliestdate="new Date( 2007, 1, 1)" 
+              latestdate="new Date( 2008, 11, 31)"
+              selecteddate="new Date()"&gt;
+              &lt;handler name="onselecteddate"&gt;
+              if( this.selecteddate != null ) {
+              display.year.setText( this.selecteddate.getFullYear() );
+              display.month.datapath.setXPath(
+              "datepicker_strings_en:/months/month[@index='" + 
+              this.selecteddate.getMonth() + "']/@full" ); 
+              display.date.setText( this.selecteddate.getDate() );
+              } 
+              &lt;/handler&gt;
+              &lt;/datepicker&gt; 
+
+              &lt;view id="display"&gt;
+              &lt;text name="month" resize="true" datapath="."/&gt;
+              &lt;text name="date" resize="true"/&gt;
+              &lt;text name="year" resize="true"/&gt; 
+              &lt;simplelayout axis="x" spacing="2"/&gt;
+              &lt;/view&gt;
+              &lt;simplelayout axis="y" spacing="10"/&gt;
+              &lt;/canvas&gt;
+            </example>
+          </text>
+        </doc>
+
     </class> 
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

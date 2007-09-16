@@ -1,19 +1,25 @@
-<canvas width="200" height="200">
+<canvas width="500" height="300">
   <dataset name="mydata" type="http" src="http:../resources/xml/800_forms.xml" request="true"/>
+
+  <text x="10" width="${canvas.width-20}" multiline="true">
+        Click on an item in the list, it should appear yellow to indicate that the
+        dataselectionmanager is working.  Selecting another item should de-select the first.
+        Scrolling should retain selection.
+  </text>
 
   <class name="selectme" onclick="immediateparent.selector.select(this)"
          height="17" width="100" bgcolor="white">
     <text datapath="text()"/>
-    <method name="setselected" args="isselected">
+    <method name="setSelected" args="isselected">
       if (isselected) setAttribute('bgcolor', yellow);
       else setAttribute('bgcolor', white);
     </method>
   </class>
 
-  <view height="70" clip="true">
+  <view y="50" height="70" clip="true">
     <view>
       <dataselectionmanager name="selector"/>
-      <selectme>
+      <selectme id="v">
         <datapath xpath="mydata:/resultset/row/reporter/" replication="lazy"/>
       </selectme>
       <simplelayout/>
@@ -21,4 +27,7 @@
     <scrollbar/>
   </view>
 </canvas>
-
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

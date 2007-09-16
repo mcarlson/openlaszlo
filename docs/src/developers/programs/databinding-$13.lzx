@@ -1,0 +1,22 @@
+
+<canvas debug="true">
+
+    <dataset name="boxes">
+        <boxes>
+         <box color="0xFF0000"/>
+         <box color="0x00FF00"/>
+         <box color="0x0000FF"/>
+         </boxes>
+    </dataset>
+
+<simplelayout axis="x" spacing="10" />
+
+<class name="coloredbox"  height="50" width="50" bgcolor="$path{'@color'}"/>
+
+<coloredbox datapath="boxes:/boxes/box"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** --> 

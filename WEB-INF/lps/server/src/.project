@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>server-src</name>
+	<comment></comment>
+	<projects>
+		<project>jgenerator</project>
+		<project>lps-server-build-src</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>bin/server-build</name>
+			<type>2</type>
+			<location>/Users/papley/src/svn/legals/WEB-INF/lps/server/build</location>
+		</link>
+		<link>
+			<name>bin/server-build/server-build</name>
+			<type>2</type>
+			<location>/Users/papley/src/svn/legals/WEB-INF/lps/server/build</location>
+		</link>
+	</linkedResources>
+</projectDescription>

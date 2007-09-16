@@ -1,0 +1,546 @@
+<chapter id="constraints">
+ 
+<title>Constraints</title>
+
+<para/><section><title>Constraints defined</title>
+
+<para>In LZX, a <indexterm significance="preferred"><primary>constraint</primary></indexterm><glossterm>constraint</glossterm> is an attribute whose value is a
+function of one or more other attribute's value(s).</para>
+
+<para>Constraints help you quickly create dependencies without writing a
+lot of code. You can specify that certain views are the same size or
+positioned relative to one another. Specific elements can appear only
+under certain conditions; and those conditions may be declared with a
+simple expression. Constraints may be used for non-visual attributes
+as well.</para>
+
+<para/></section><section><title>Syntax for creating and removing constraints</title>
+<para>Constraints may be created in either of two ways:</para>
+<itemizedlist spacing="compact"><listitem><para>in a tag, using the ${} syntax to tie the value of one attribute to that of another</para></listitem><listitem><para>in script, using the <indexterm><primary><literal>applyConstraint()</literal></primary></indexterm><methodname>applyConstraint()</methodname> method</para></listitem><listitem><para>in script, using delegates</para></listitem></itemizedlist>
+<para>These are described in turn below.</para>
+<para>There is no method for removing constraints.  Therefore if you have a constraint that you wish to sometimes be in force and other times not be in force, you should use <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: state-->
+s.</para>
+
+<para/><section><title>Creating Constraints in Tags</title>
+
+<para>The syntax for coding a constraint is:</para> 
+
+<programlisting>$<replaceable>when</replaceable>{<replaceable>expression</replaceable>}</programlisting>
+
+<para>where:</para>
+<itemizedlist spacing="compact"><listitem><para><literal>$</literal> is the token indicating a constraint</para></listitem><listitem><para><literal><replaceable>when</replaceable></literal> is an optional compiler directive:
+  <literal>immediately</literal>, <literal>once</literal>, or <literal>always</literal>.
+  <literal>$always{<replaceable>expression</replaceable>}</literal> can be abbreviated to
+  <literal>${<replaceable>expression</replaceable>}</literal> </para></listitem><listitem><para><literal>{</literal> and <literal>}</literal> are tokens delimiting the
+  expression to be evaluated</para></listitem><listitem><para><literal><replaceable>expression</replaceable></literal> is a JavaScript expression</para></listitem></itemizedlist>
+<para/></section><section><title>Creating constraints from script</title> 
+
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis> note the lousy explanation below </remark></para>
+
+<para>The following example uses the <indexterm><primary><literal>applyConstraint()</literal></primary></indexterm><methodname>applyConstraint()</methodname> method inherited from <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> in order to create a constraint at
+runtime. You'll see that the <literal>setConstraint</literal> method has the same effect as the simple expression <literal>y=${m.y}</literal>
+</para>
+
+
+<example role="live-example">
+   <title>Runtime constraintes with applyConstraint</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Runtime constraints with applyConstraint</title><programlisting role="lzx-embednew"><filename>constraints-$1.lzx</filename><parameter/><code>
+&lt;canvas&gt;
+  &lt;view x="250" width="20" height="20" bgcolor="red"
+        y="${m.y}"/&gt;
+
+  &lt;view x="300" width="20" height="20" bgcolor="blue"&gt;  
+    &lt;handler name="oninit"&gt;
+      var f = function () {   
+        this.setAttribute("y", m.y);       
+      }
+      var d = [m, "y"];
+      this.applyConstraint("y", f, d);
+    &lt;/handler&gt;
+  &lt;/view&gt;
+
+  &lt;window id="m" x="10" title="Drag me" width="160" height="20"/&gt;  
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+&lt;canvas&gt;
+  &lt;view x="250" width="20" height="20" bgcolor="red"
+        y="${m.y}"/&gt;
+
+  &lt;view x="300" width="20" height="20" bgcolor="blue"&gt;  
+    &lt;handler name="oninit"&gt;
+      var f = function () {   
+        this.setAttribute("y", m.y);       
+      }
+      var d = [m, "y"];
+      this.applyConstraint("y", f, d);
+    &lt;/handler&gt;
+  &lt;/view&gt;
+
+  &lt;window id="m" x="10" title="Drag me" width="160" height="20"/&gt;  
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/constraints-$1.lzx></example?>
+
+<para><literal>f</literal> is a callback function that is required for the <indexterm><primary><literal>applyConstraint()</literal></primary></indexterm><methodname>applyConstraint()</methodname> method. <varname>d</varname> 
+is an array consisting of a pointer to a reference node, and the attribute to bind to.</para>
+<para/></section><section><title>Delegates and constraints</title> 
+<para>Laszlo applications can use something called a <glossterm>delegate</glossterm> in script to associate a 
+method or any global function with an event.  When the event is triggered, the method is called.</para>
+
+<para>
+The above constraint expression could also be written in script as:
+</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;handler name="oninit"&gt;
+  var width_del = new LzDelegate(this, "updateMyWidth");
+  width_del.register(parent, "onwidth");
+&lt;/handler&gt;
+  
+&lt;method name="updateMyWidth"&gt;
+  this.setWidth(parent.width);
+&lt;/method&gt;
+</programlisting></informalexample>
+<para>
+You can read more about delegates in <xref linkend="delegates"/>.
+</para>
+<para/></section><section><title>States: a quick look</title>
+<para>States are a convenient way to set and remove constraints at runtime.</para>
+<para>You create states using the <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: state-->
+ tag, for example:</para>
+<example role="live-example"><title>states and constraints</title><programlisting>
+&lt;state name="flexistate"&gt;
+    &lt;attribute name="width" value="${parent.width}" /&gt;
+&lt;/state&gt;
+
+&lt;state name="boringstate" apply="false"&gt;
+    &lt;attribute name="width" value="50" /&gt;
+&lt;/state&gt;
+</programlisting></example>
+<para>States are further explained in <xref linkend="states"/>.</para>
+<para/></section></section><section><title>Constraints in action</title>
+<para>Whenever the value of an attribute changes, its <indexterm><primary>on event</primary></indexterm><literal>on</literal>
+event is generated. Because a constraint is an attribute whose value
+is dependent upon the values of one or more other attribute(s), the
+value of the constraint is recalculated whenever it receives the
+<indexterm><primary>on event</primary></indexterm><literal>on</literal> event for the attributes on which it depends. </para>
+
+<para>Consider</para> 
+<informalexample role="live-example"><programlisting> 
+&lt;view name="someView" 
+   width="${someAttribute + someOtherAttribute}" 
+   /&gt; 
+</programlisting></informalexample>
+
+<para>Then the value of <literal>someView.width</literal> would be recomputed whenever an <indexterm><primary>onsomeAttribute event</primary></indexterm><literal>onsomeAttribute</literal> or <indexterm><primary>onsomeOtherAttribute event</primary></indexterm><literal>onsomeOtherAttribute</literal> event occurred.</para> 
+
+<para>So for example</para> 
+<informalexample role="live-example"><programlisting>
+&lt;view name="beatles" width="${this.paul.width + 28}"&gt;
+   &lt;view name="paul" onclick="clickhandler()"&gt;
+      &lt;!-- clickhandler method here to increase paul's width based on user clicking mouse --&gt;
+   &lt;/view&gt;
+&lt;/view&gt;
+</programlisting></informalexample>
+
+<para>The width of <varname>beatles</varname> will increase or
+decrease as a function of <varname>paul</varname>'s width;
+the expression <literal>this.paul.width + 28</literal> is a constraint.</para>
+
+<para>This is a trivial
+example, but it serves to make the point that in declaring the
+structure of your objects in LZX you also declare the rules by which
+they will relate to each other. Constraints are a fundamental concept
+in LZX programming, and learning to "think in LZX" is a
+mostly a matter of learning to properly model your system's behavior
+in terms of the constraints on its constituent parts.</para>
+
+<para/><section><title>Modeling real system constraints</title>
+
+<para>You can think about constraints as modeling real system interrelationships.  A constraint
+expression can establish that two objects are connected.</para>
+
+<para>In the example below, the visibility of the blue square is
+connected to the value of the checkbox.  When you toggle the checkbox,
+the visibility of the blue square automatically switches as
+well.</para>
+
+<example role="live-example">
+   <title>An element appears when a checkbox is set</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/ex.constraints.1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example" id="ex.constraints.1"><title>An element appears when a checkbox is set</title><programlisting role="lzx-embednew"><filename>ex.constraints.1.lzx</filename><parameter/><code>
+&lt;canvas height="120"&gt;
+  &lt;checkbox id="cb" text="Show Blue Square"/&gt;
+  &lt;view visible="${cb.value}"
+        width="30" height="30" bgcolor="blue"/&gt;
+  &lt;simplelayout/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="120"&gt;
+  &lt;checkbox id="cb" text="Show Blue Square"/&gt;
+  &lt;view visible="${cb.value}"
+        width="30" height="30" bgcolor="blue"/&gt;
+  &lt;simplelayout/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/ex.constraints.1.lzx></example?>
+
+<para>In the example below, the position of the blue square is connected
+to the position of the mouse.  If you move the mouse inside the
+canvas, the blue square will move as the mouse moves, floating
+relative to the position of the mouse.  In this case, the constraint
+expression includes a method call, but it works in the same way as the
+simple attribute expression in <xref linkend="ex.constraints.1"/>.</para>
+
+<example role="live-example">
+   <title>Constrain to mouse position</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/ex.constraints.2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example" id="ex.constraints.2"><title>Constrain to Mouse Position</title><programlisting role="lzx-embednew"><filename>ex.constraints.2.lzx</filename><parameter/><code>
+&lt;canvas height="120"&gt;
+  &lt;view bgcolor="blue" width="40" height="40"
+        x="${parent.getMouse('x')}"
+        y="${parent.getMouse('y')}"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="120"&gt;
+  &lt;view bgcolor="blue" width="40" height="40"
+        x="${parent.getMouse('x')}"
+        y="${parent.getMouse('y')}"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/ex.constraints.2.lzx></example?>
+
+<para>The constraint expression may be almost any Javascript expression.  For
+example, you could change the y value in example <xref linkend="ex.constraints.1"/> to
+<literal>y="${immediateparent.getMouse('y')+10}"</literal> and cause the
+blue square to float below the mouse.  If you centered the blue square
+at the mouse position by setting the y value with
+<literal>y="${immediateparent.getMouse('y') - this.width/2}"</literal>
+— if the width of the blue square changes, the y value with be
+updated to position the blue square relative to the new width and the
+mouse position.</para>
+<para>
+See <link linkend="constraints.functions">Constraints and Functions</link>, below, for limitations on the types of expression you can use in constraints.
+</para>
+<para/></section></section><section><title>Events and Dependencies</title> 
+
+<para>Every constraint has one or more dependencies.  For example, the constraint expression:</para>
+
+<informalexample role="live-example"><programlisting>
+width="${parent.width}"
+</programlisting></informalexample>
+
+<para>creates a dependency on the parent's width attribute.  As explained
+in <xref linkend="methods-events-attributes"/>, whenever an attribute
+is set by calling <literal>setAttribute('whatever', 4) </literal> an
+<indexterm><primary>onwhatever event</primary></indexterm><literal>onwhatever</literal> event is sent.  Following the above example
+for the <indexterm><primary>width</primary></indexterm><sgmltag class="attribute">width</sgmltag> attribute, an
+<indexterm><primary>onwidth event</primary></indexterm><literal>onwidth</literal> event is sent whether the attribute has been
+set with <literal>setAttribute, setWidth()</literal> or by another
+constraint.</para>
+
+<para>When you use a constraint expression, a function is automatically
+generated to set the value of the attribute.  That function is then
+called whenever an event is triggered on which the constraint has a
+dependency.</para>
+
+
+<para/></section><section><title>Multiple Dependencies</title> 
+
+<para>Constraints can have dependencies on multiple attributes.  In the code below, the <indexterm><primary>width</primary></indexterm><sgmltag class="attribute">width</sgmltag> attribute
+is dependent on the immediateparent's <literal>width</literal> attribute and the parent's <literal>bordersize</literal> attribute.  When either attribute is 
+set the <indexterm><primary>width</primary></indexterm><sgmltag class="attribute">width</sgmltag> updates. Immediateparent.width is used instead of parent.width, because immediateparent, in this case, is the interior view of the window, while parent is the whole window.</para>
+
+<informalexample role="live-example"><programlisting>
+width="${immediateparent.width - parent.bordersize * 2}"
+</programlisting></informalexample>
+
+<para>Experiment with the working example below to see multiple dependencies in action.  Resizing the window
+will resize the blue bar.  You can also move the slider to adjust the border size.</para>
+
+<example role="live-example">
+   <title>Multiple Dependencies</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/constraints-$10.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Multiple Dependencies</title><programlisting role="lzx-embednew"><filename>constraints-$10.lzx</filename><parameter/><code>
+&lt;canvas height="300" width="700"&gt;
+  &lt;window width="400" height="200" resizable="true"&gt;
+    &lt;attribute name="bordersize" value="${editor.bordersize.value}"/&gt;
+    &lt;view y="20" name="editor" layout="axis:x; spacing:10; inset:10"&gt;
+      &lt;text y="-4" resize="true"&gt;bordersize:&lt;/text&gt;
+      &lt;slider name="bordersize" value="10"/&gt;
+    &lt;/view&gt;
+
+    &lt;view bgcolor="0xFFC834" y="80"
+          width="${immediateparent.width}" height="10" /&gt;
+    &lt;view x="${parent.bordersize}" y="80"
+             width="${immediateparent.width - parent.bordersize * 2}"
+             height="10" bgcolor="blue" /&gt;
+    
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="300" width="700"&gt;
+  &lt;window width="400" height="200" resizable="true"&gt;
+    &lt;attribute name="bordersize" value="${editor.bordersize.value}"/&gt;
+    &lt;view y="20" name="editor" layout="axis:x; spacing:10; inset:10"&gt;
+      &lt;text y="-4" resize="true"&gt;bordersize:&lt;/text&gt;
+      &lt;slider name="bordersize" value="10"/&gt;
+    &lt;/view&gt;
+
+    &lt;view bgcolor="0xFFC834" y="80"
+          width="${immediateparent.width}" height="10" /&gt;
+    &lt;view x="${parent.bordersize}" y="80"
+             width="${immediateparent.width - parent.bordersize * 2}"
+             height="10" bgcolor="blue" /&gt;
+    
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/constraints-$10.lzx></example?>
+
+<para/></section><section><title>Circular Constraints</title> 
+
+<para>A constraint loop exists when the value of an attribute <varname>A</varname> depends on <varname>B</varname>, and <varname>B</varname> depends on <varname>A</varname>. 
+It's actually a very natural thing to do in LZX.
+For example, in the Laszlo application below, the <literal>y</literal> values of the red and blue squares are constrained to each other.
+</para>
+
+<example role="live-example">
+   <title>Circular constraints</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/constraints-$11.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Circular Constraints</title><programlisting role="lzx-embednew"><filename>constraints-$11.lzx</filename><parameter/><code>
+&lt;canvas height="120"&gt;
+  &lt;view name="redview" bgcolor="red"
+        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
+        width="40" height="40" y="${blueview.y}"&gt;
+    &lt;dragstate name="gragger"/&gt;
+  &lt;/view&gt;
+  &lt;view name="blueview" bgcolor="blue"
+        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
+        width="40" height="40" y="${redview.y}"&gt;
+    &lt;dragstate name="gragger"/&gt;
+  &lt;/view&gt;
+  &lt;simplelayout spacing="40" axis="x"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="120"&gt;
+  &lt;view name="redview" bgcolor="red"
+        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
+        width="40" height="40" y="${blueview.y}"&gt;
+    &lt;dragstate name="gragger"/&gt;
+  &lt;/view&gt;
+  &lt;view name="blueview" bgcolor="blue"
+        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
+        width="40" height="40" y="${redview.y}"&gt;
+    &lt;dragstate name="gragger"/&gt;
+  &lt;/view&gt;
+  &lt;simplelayout spacing="40" axis="x"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/constraints-$11.lzx></example?>
+
+<para>
+How does it work?  When you drag
+the red view to change its on y position, it sends an <indexterm><primary>ony event</primary></indexterm><literal>ony</literal> event.  The blue view is listening for the
+red view's <indexterm><primary>ony event</primary></indexterm><literal>ony</literal> event and responds by updating its own y position.  The red view is listening
+for the blue view's <indexterm><primary>ony event</primary></indexterm><literal>ony</literal> event; however, it doesn't respond to that event because an event handler only gets 
+called one time on each event.</para>
+
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
+That above explanation is pretty lame.
+</remark></para>
+
+<para/></section><section><title>Performance Considerations</title> 
+
+<para>
+Constraints are an effective way to write user interface code and in some cases to manage non-visual
+application state.  As with any code, you will want to understand the performance implications, as well as
+when it is best to use constraints as opposed to alternate methods of achieving similar effects.
+</para>
+
+<para/><section><title>Declaring When Constraints are to be evaluated</title>
+
+<para>
+Often you will want to use constraint expressions to create the initial state of your application, but 
+you don't need attributes to update dynamically while the application is in use.  In this case, you
+can improve startup time performance by declaring <literal>when</literal> the expression should be evaluated.
+</para>
+
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
+Need a table of values for when
+</remark></para>
+
+<para>When you write a constraint using the <literal>${...}</literal> syntax (as in the example below),  <literal>when="always"</literal> is the default.</para>
+
+<programlisting>
+&lt;view width="${parent.width}" height="10" bgcolor="yellow"/&gt;
+</programlisting>
+
+<para>To optimize this expression for the case when the dependency will not change, you will want to
+specify <literal>when="once"</literal>:</para>
+
+<programlisting>
+&lt;view width="$once{parent.width}" height="10" bgcolor="yellow"/&gt;
+</programlisting>
+
+<para>When declaring class attributes, the attribute is typically declared using
+  an <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: attribute-->
+ tag, where the <literal>when</literal> value may be declared explicitly:</para>
+
+<programlisting>
+&lt;class name="myclass"&gt;
+  &lt;attribute name="width" value="${parent.width}" when="once"/&gt;
+&lt;/class&gt;
+</programlisting>
+
+<para>
+In this case if <literal><replaceable>when</replaceable></literal> is not specified, the value is <literal>immediately</literal>,
+which means that it initializes the attribute to the value of the expression
+when the enclosing element is defined. The value must be a constant expression
+and
+cannot
+depend on any other objects.</para>
+
+<para/></section><section><title>When to use Layouts instead of Constraints</title>
+<para>
+Constraints can be very useful for positioning and determining the size of views.  However, if you 
+have a large number of views updating based on the same information, it is better to use a <indexterm><primary>layout</primary></indexterm><sgmltag class="element">&lt;layout&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: layout-->
+
+instead of writing a complex constraint system. 
+There are quite a few layouts available in the Openlaszlo platform, and furthermore you can write your own if none of these meet your needs. See <xref linkend="layout-and-design"/> for more 
+on this subject.
+</para>
+
+<para/></section><section><title>When to use events and methods instead of constraints</title> 
+
+<para>Generally, if you have a lot of different things that need to be updated based on a single dependency, it
+is optimal to write a setter for the dependent attribute and in that setter take appropriate actions.</para>
+
+
+
+<?ignore <fixme>
+It would be good to include info about 
+ "<a href="http://www.laszlosystems.com/developers/community/forums/showthread.php?s=&amp;threadid=497">constraints with 
+variable targets</a>"
+</fixme>
+
+
+<h4>Constraints derived from datapaths</h4>
+<p>
+The <code>$path{'<varname>expression</varname>'}</code> syntax is used to signify the value returned by evaluating the XPath expression within the braces (note the single quotes enclosing the XPath expression. For example:</p>
+
+<pre> 
+&lt;textlistitem datapath="mydata:/list/item" text="$path{'text()'}" value="$path{'@value'}"/&gt;
+</pre>
+<fixme>
+ say something about ${path} syntax and put in a link to Adam's chapter
+</fixme>
+
+<fixme> Example: using constraints for layout  -- forward reference to layout chapter, building your own layout
+</fixme>
+<fixme>
+ii.	The "video player" example
+1.	Original design constraint as Method
+2.	Better design
+iii.	The "shadow box" example  (This is from Tucker's AppWeek report --instructive example of doing the same thing with and without constraints)
+1.	procedural version
+2.	Constraint-based version
+</fixme>
+<fixme>
+<p>
+
+more stuff for performance section:
+iv.When NOT to use constraints
+1.performance analysis comparing constraints and layouts
+2.optimization difficult if too many intersecting dependencies
+ Summary: powerful, but excessive use of constraints can make program hard to understand/maintain
+</p>
+ </fixme>
+<fixme>
+
+
+  Why should the defaults for "when" be different, depending on whether you use the ${} syntax or not?
+
+This matches the use of ${} in an inline attribute:
+ &lt;view width="100"
+has an $immediately when;
+ &lt;view width="${expr}"
+has an $always when.
+
+Similarly:
+ &lt;view&gt;
+   &lt;attribute name="width" value="100"/&gt;
+is $immediately;
+ &lt;view&gt;
+   &lt;attribute name="width" value="${expr}"
+</fixme>
+?>
+
+<anchor id="constraints.functions"/>
+<para/></section></section><section><title>Constraints and Functions</title>
+<para>
+Take care when using JavaScript functions inside of constraints.
+</para>
+<para>
+In general, there are only a limited number of LZX functions that have  dependency
+functions and can be expected to correctly participate in a  constraint. 
+No ECMAScript  functions have dependency functions, so none of them will work  properly in a constraint.
+</para>
+<para>
+More precisely, ECMAScript functions will work properly if they are  stateless
+(they depend only on the values of their arguments), so, for example,<literal>
+value="Math.max(parent.width, parent.height)"</literal> will do the right thing.   (Any
+stateless function works.)  However, many apparently simple functions do not work within constrains.
+</para>
+<para>Consider</para>
+<programlisting>
+     &lt;param value="${escape(canvas.options.serialize())}"/&gt;
+</programlisting>
+<para>
+in which the value of a parameter is constrained to that returned by a serializing function. 
+Upon inspection, we see that he dependencies of </para>
+
+<programlisting>
+     value="escape(canvas.options.serialize())"
+</programlisting>
+<para>
+ will be calculated as:</para>
+
+ <itemizedlist spacing="compact"><listitem><para>the dependencies of <literal>escape</literal> (which includes the value of 
+<literal>canvas.options.serialize())</literal></para></listitem><listitem><para>the dependencies of serialize</para></listitem></itemizedlist>
+<para>In  this case, <literal>value</literal> gets evaluated too early (i.e. before the dataset has any data) 
+and that's why you don't see any data. Instead, you would use <indexterm><primary><literal>getValue()</literal></primary></indexterm><methodname>getValue()</methodname>which acts as 
+a getter for &lt;param&gt;, instead of using a constraint.</para>
+<para>
+In evaluating dependencies in constraints, the OpenLaszlo compiler only look at the 'tail' of a chain, so if you  have
+an expression a.b.c, only c will be depended on.  For a function,  the function
+itself computes its dependencies, based on its  arguments.  In the case of
+<literal>escape</literal>, it doesn't have a dependency  function, nor does <literal>serialize</literal>, so in this
+particular example, there  will be no dependencies at all.
+</para>
+<para>
+EXCEPT that the constraint mechanism only looks at a tail, so for example NEITHER 
+<literal>value="parent.selected.width"</literal> NOR <literal>value="Math.max(parent.width, 
+parent.selected.width"</literal> will work if <literal>parent.selected</literal> changes value (it's  fine if
+<literal>parent.selected </literal>stays the same but <literal>parent.selected.width </literal> changes).  </para>
+<para>
+The bottom line is that the constraint calculator is not really designed to be used in functions. It
+works for many situations, but not for anything complex.</para>
+<para/></section></chapter>

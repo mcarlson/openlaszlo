@@ -1,0 +1,11 @@
+
+<canvas height="36">
+  <class name="diamond" width="${this.size}" height="${this.size}" rotation="45">
+    <attribute name="size" type="number"/>
+  </class>
+  <diamond size="25" x="36" bgcolor="red"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

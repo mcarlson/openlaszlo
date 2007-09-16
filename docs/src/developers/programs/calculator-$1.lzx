@@ -1,0 +1,21 @@
+
+<canvas height="500" width="800">
+      <!-- Uncomment to include fonts for SWF -->
+    <!-- fonts -->
+    <!-- 
+    <font src="helmetbi.ttf" name="obliqueText" />
+    <font src="helmetr.ttf" name="displayText" />
+    -->
+    <!-- art assets -->
+    <resource name="calc_body" src="resources/body.png" />
+    <resource name="calc_display" src="resources/display.png" />
+    <resource name="button_grn" src="resources/button_green.gif" />
+    <resource name="button_red" src="resources/button_red.gif" />
+    <resource name="button_blu" src="resources/button_blue.gif" />
+    <view name="calculator" resource="calc_body" x="20" y="20">
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

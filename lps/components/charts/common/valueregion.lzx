@@ -1,4 +1,5 @@
 <library>
+    <include href="extensions/drawview.lzx"/>
     <!--- Represents a region of values in the chart -->
     <class name="valueregion" extends="drawview">
         <!--- enable the rendering of the value region in the chart -->
@@ -120,7 +121,8 @@
 
                    if( this.style.region.image != null ) {
                        this.setSource( this.style.region.image );
-                       this.setAttribute( "stretches", this.style.region.stretches );
+                       if ('stretches' in this.style.region)
+                           this.setAttribute( "stretches", this.style.region.stretches );
                    }
                }
              ]]> 
@@ -238,11 +240,21 @@
         <method name="clear">
             super.clear();
         </method>
+        <doc>
+          <tag name="shortdesc"><text>
+              a region of values in a chart
+          </text></tag>
+          <text>
+
+            <warning>This component is of Beta quality and is subject to change.</warning>
+          </text>
+        </doc>
+
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

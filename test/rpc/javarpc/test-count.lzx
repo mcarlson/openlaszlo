@@ -57,7 +57,7 @@
         </method>
 
         <javarpc name="counter" loadoption="create" scope="session" 
-                 classname="org.openlaszlo.test.xmlrpc.PeerCounter">
+                 remoteclassname="org.openlaszlo.test.xmlrpc.PeerCounter">
             <method event="onload">
                 parent.assertTrue(this['proxy'])
                 var dp = parent.cur_meth.dupePointer()
@@ -74,7 +74,7 @@
     </class>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </library>

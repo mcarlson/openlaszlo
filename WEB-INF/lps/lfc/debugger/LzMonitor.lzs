@@ -1,0 +1,61 @@
+/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
+
+/**
+  * Support for monitoring properties in the debugger
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @topic LZX
+  * @subtopic Debugging
+  */
+
+/**
+  * A Monitor is a debug message with the tag 'MONITOR'
+  *
+  * @access private
+  */
+var LzMonitor = function(file, line, message) {
+  // super.apply(arguments);
+  LzSourceMessage.apply(this, arguments);
+};
+
+LzMonitor.prototype = new LzSourceMessage();
+LzMonitor.prototype.constructor = LzMonitor;
+LzMonitor.format = LzSourceMessage.format;
+LzMonitor.prototype.type = 'MONITOR';
+// Same color as Debug.debug
+LzTrace.prototype.color = '#00cc00';
+
+/**
+  * Create a monitor message from a format string
+  * @param String control: a format control string
+  * @param any... args: the arguments to the format control
+  * 
+  * @seealso Debug.format
+  * 
+  * @access private
+  * 
+  * @todo 2005-08-15 ptw: Make the timestamp an attribute of the
+  * instance that is automatically appended.  Perhaps all warnings
+  * should be timestamped?
+  */
+Debug.monitorMessage = function (control, args) {
+  return this.warnInternal.apply(this, [LzMonitor].concat(Array.prototype.slice.call(arguments, 0)));
+};
+
+// Debug.monitor and Debug.unmonitor have platform-specific
+// implementations
+if ($as2) {
+  #include "debugger/platform/swf/LzMonitor.as"
+} else if ($dhtml) {
+  #include "debugger/platform/dhtml/LzMonitor.js"
+} else {
+  Debug.monitor = function () {
+    Debug.error("Debug.monitor not supported on $s", $runtime);
+  };
+  Debug.unmonitor = function () {
+    Debug.error("Debug.unmonitor not supported on $s", $runtime);
+  };
+}

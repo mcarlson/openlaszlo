@@ -1,0 +1,43 @@
+
+<canvas debug="true" height="300" width="680">
+
+    <debug x="100" width="450" height="280" />
+
+    <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
+        <handler name="onload">
+            Debug.write('google soap service stub loaded');
+        </handler>
+    </soap>
+
+    <button text="search" onclick="this.doGoogleSearch.invoke()">
+
+        <!-- if name isn't set, name defaults to value of funcname. -->
+
+        <remotecall funcname="doGoogleSearch" 
+                    remotecontext="$once{canvas.google}">
+
+            <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
+            <param value="'sweet'" />
+            <param value="1" />
+            <param value="10" />
+            <param value="true" />
+            <param value="''" />
+            <param value="true" />
+            <param value="''" />
+            <param value="''" />
+            <param value="''" />
+
+            <handler name="ondata" args="value">
+                Debug.write('got result');
+                Debug.inspect(value);
+            </handler>
+            <handler name="onerror" args="error">
+                Debug.write('error:', error);
+            </handler>
+        </remotecall>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

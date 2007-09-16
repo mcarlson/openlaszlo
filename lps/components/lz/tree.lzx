@@ -20,8 +20,8 @@
     <!--- Folder/file icon resource:
           frame 1 (open folder), frame 2 (closed folder), frame 3 (file) -->
     <resource name="lztree_folder_rsc">
-        <frame src="resources/tree/folder_closed.swf"/>
-        <frame src="resources/tree/folder_opened.swf"/>
+        <frame src="resources/tree/folder_closed.png"/>
+        <frame src="resources/tree/folder_opened.png"/>
         <frame src="resources/tree/document.swf"/>
     </resource>
 
@@ -131,11 +131,88 @@
             </text>
         </view>
 
-    </class>
+        <doc>
+          <tag name="shortdesc"><text>
+              A tree control.
+          </text></tag>
+          <text>
 
+            <p>A <classname>tree</classname> provides a hierarchical view of
+              data. Each node is represented by an <dfn>expander resource</dfn>, an
+              <dfn>icon resource</dfn>, and a <dfn>label</dfn>. A tree can be
+              specified lexically or through data replication
+              <!--link-->.</p>
+
+            <p>Note that a data replicated tree passes its XPath
+              <!--link--> down to its subtrees, so avoid specifying an XPath
+              such as "<code>mydataset:/*</code>" or your tree will infinite
+              loop. Instead, do the following:</p>
+
+            <example class="program" executable="false" extract="false">
+              &lt;tree datapath="mydataset:/" showroot="false"&gt;
+              &lt;tree datapath="*"&gt;
+              &lt;/tree&gt;
+            </example>
+
+            <p>Each resource, if specified, should have three states. The expander resource
+              should have an open (frame 1), closed (frame 2), and transparent (frame 3)
+              state. The icon resource should have similar frames. See the default resources
+              in tree as an example.</p>
+
+            <example title="A lexical tree and a data replicated tree">
+              &lt;canvas width="450" height="250"&gt;
+              &lt;include href="lz/tree.lzx"/&gt;
+
+              &lt;dataset name="ancestors"&gt;
+              &lt;hobbit name="Frodo"&gt;
+              &lt;hobbit name="Drogo"&gt;
+              &lt;hobbit name="Fosco" grandparent="true"/&gt;
+              &lt;hobbit name="Bolger, Ruby" grandparent="true"/&gt;
+              &lt;/hobbit&gt;
+              &lt;hobbit name="Brandybuck, Primula"&gt;
+              &lt;hobbit name="Brandybuck, Gorbadoc" grandparent="true"/&gt;
+              &lt;hobbit name="Took, Mirabella" grandparent="true"/&gt;
+              &lt;/hobbit&gt;
+              &lt;/hobbit&gt;
+              &lt;/dataset&gt;
+
+              &lt;view x="20" y="20" layout="axis: x; spacing: 10"&gt;
+              &lt;!-- declared tree --&gt;
+              &lt;view width="200" height="200"&gt;
+              &lt;tree open="true" text="valuemeal"&gt;
+              &lt;tree text="fries" isleaf="true"/&gt;
+              &lt;tree open="true" text="drink"&gt;
+              &lt;tree text="cola" isleaf="true"/&gt;
+              &lt;/tree&gt;
+              &lt;tree open="true" text="burger"&gt;
+              &lt;tree text="patty" isleaf="true"/&gt;
+              &lt;tree text="lettuce" isleaf="true"/&gt;
+              &lt;tree text="onions" isleaf="true"/&gt;
+              &lt;tree text="buns" isleaf="true"/&gt;
+              &lt;/tree&gt;
+              &lt;/tree&gt;
+              &lt;/view&gt;
+              
+              &lt;!-- data replicated tree --&gt;
+              &lt;view width="200" height="200"&gt;
+              &lt;tree datapath="ancestors:/" icon="null" showroot="false"&gt;
+              &lt;tree datapath="*" icon="null" text="$path{'@name'}" 
+              isleaf="$path{'@grandparent'}"/&gt;
+              &lt;/tree&gt;
+              &lt;/view&gt;
+              &lt;/view&gt;
+              &lt;/canvas&gt;
+            </example>
+
+            <seealso>
+              <classes>basetree</classes>
+            </seealso>
+          </text>
+        </doc>
+    </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

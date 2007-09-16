@@ -1,0 +1,15 @@
+
+<canvas width="500" height="200">
+  <resource name="sourFace" src="resources/sourface.png"/>
+  <resource name="smileyFace" src="resources/smiley.gif"/>
+  
+  <view resource="smileyFace" x="10" y="10"/>
+  <view resource="sourFace" x="50" y="10"/>
+  
+  <view x="10" y="50" width="363" height="242" 
+  stretches="both" resource="resources/sunset.jpg"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

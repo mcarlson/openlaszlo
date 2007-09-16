@@ -1,0 +1,14 @@
+<library>
+  <!-- INCLUDES -->
+  
+  <include href="./supportclasses.lzx" />
+  
+  <!-- FONT RESOURCES -->
+  
+  <font src="helmetcb.ttf" name="titleFont"/>
+  <font src="helmetb.ttf"  name="rulerFont"/>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

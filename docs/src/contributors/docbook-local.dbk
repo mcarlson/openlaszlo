@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter language="en" id="docbook-local">
+<title>Local Docbook Style Guide</title>
+
+<section><title>Introduction</title>
+
+  <para>This chapter contains information about writing Docbook documentation within the OpenLaszlo project. It builds on the standard information available about <ulink url="http://www.docbook.org/tdg/en/html/docbook.html">Docbook itself</ulink> and the <ulink url="http://www.sagehill.net/docbookxsl/">Docbook-XSL tool</ulink>. Content in this chapter assumes you are familiar with the basic information available in those references. For general information about the local Docbook-based OpenLaszlo documentation tool chain, see <xref linkend="doc-toolchain"/>.</para>
+
+</section>
+
+<section><title>General information</title>
+
+  <section><title>Index term label generation</title>
+    <para>When using an <sgmltag class="element">indexterm</sgmltag> tag, be aware that the text of the corresponding entry in the index will be generated from the <sgmltag class="element">title</sgmltag> or <sgmltag class="attribute">xreflabel</sgmltag> found nearest to the <sgmltag class="element">indexterm</sgmltag> itself.</para>
+    
+    <informalexample><programlisting>&lt;section&gt;
+  &lt;title&gt;Including HTML markup in OpenLaszlo applications&lt;/title&gt;
+  &lt;para&gt;Openlaszlo provides support for incorporating HTML. Here's a list of tags that are supported:&lt;/para&gt;
+  &lt;simplelist&gt;
+    &lt;listitem&gt;
+      &lt;indexterm&gt;&lt;primary&gt;a&lt;/primary&gt;&lt;/indexterm&gt;
+      &lt;sgmltag class="element"&gt;&lt;a&gt;&lt;/sgmltag&gt;
+    &lt;/listitem&gt;
+    &lt;listitem&gt;
+      &lt;indexterm&gt;&lt;primary&gt;font&lt;/primary&gt;&lt;/indexterm&gt;
+      &lt;sgmltag class="element"&gt;&lt;font&gt;&lt;/sgmltag&gt;
+    &lt;/listitem&gt;
+  &lt;/simplelist&gt;
+&lt;/section&gt;
+</programlisting></informalexample>
+
+    <para>Here, the index entry text for <sgmltag class="element">a</sgmltag> and <sgmltag class="element">font</sgmltag> both read, "Including HTML markup in OpenLaszlo applications."</para>
+    
+  </section>
+  
+</section>
+
+<section><title>Markup for class members</title>
+
+  <para>Mentions of class members (properties, methods, etc.) within the text that have been properly declared are automatically expanded to include index entries and hyperlinks to the appropriate section of the reference guide.</para>
+  
+  <para>For example, this declaration:</para>
+  
+  <informalexample><programlisting>&lt;sgmltag class="attribute" role="<replaceable>LzView.__ivars__.resourcewidth</replaceable>"&gt;<replaceable>resourcewidth</replaceable>&lt;/sgmltag&gt;</programlisting></informalexample>
+
+  <para>is expanded to this Docbook markup:</para>
+  
+  <informalexample><programlisting>&lt;indexterm&gt;
+  &lt;primary&gt;resourcewidth&lt;/primary&gt;
+&lt;/indexterm&gt;
+&lt;link linkend="LzView.__ivars__.resourcewidth">
+  &lt;sgmltag class="attribute"&gt;resourcewidth&lt;/sgmltag&gt;
+&lt;/link&gt;</programlisting></informalexample>
+
+  <para>The <sgmltag class="element">indexterm</sgmltag> block generates an entry in the index. The entry text is automatically derived from the nearest surrounding section title.</para>
+  
+  <para>The <sgmltag class="element">link</sgmltag> block is a hypertext link into the appropriate reference page. The value of the <sgmltag class="attribute">role</sgmltag> attribute is the same as the automatically-generated <sgmltag class="attribute">id</sgmltag> of that member in the js2doc output.</para>
+  
+  <section><title>Markup tags that are automatically expanded</title>
+    <para>Expansion of markup occurs in the preprocess stage, and requires inclusion of the <sgmltag class="attribute">role</sgmltag> attribute in the relevant tag. The tags currently supported are:
+    <simplelist type='inline'>
+      <member><sgmltag class="element">structfield</sgmltag></member>
+      <member><sgmltag class="element">property</sgmltag></member>
+      <member><sgmltag class="element">methodname</sgmltag></member>
+      <member><sgmltag class="element">sgmltag</sgmltag></member>
+    </simplelist>
+    .</para>
+    <para>Note that <sgmltag class="element">classname</sgmltag>, <sgmltag class="element">tag</sgmltag>, and other potentially relevant tags, are not currently supported. Adding support should be relatively straightforward, perhaps as simple as adding a new match clause to the relevant XSLT template.</para>
+  </section>
+  
+  <section><title>Determining <sgmltag class="attribute">role</sgmltag> values</title>
+    <para>The simplest way of determining what string to put into the <sgmltag class="attribute">role</sgmltag> value is to find the desired entry in the HTML version of the Reference Guide and note the first <sgmltag class="element">a</sgmltag> tag in the member entry.</para>
+    
+    <informalexample><programlisting>
+      &lt;span class="term"&gt;
+        &lt;a name="LzView.__ivars__.resourcewidth"&gt;
+        &lt;a class="indexterm" name="d0e187250"&gt;
+        "resourcewidth"
+      &lt;/span&gt;
+    </programlisting></informalexample>
+    
+  </section>
+  
+</section>
+
+<section><title>Inline examples</title>
+
+  <section><title>Basic inline examples</title>
+    <para>Here is an simple version of an inline example:</para>
+  
+    <informalexample><programlisting>&lt;example&gt;
+  &lt;title&gt;A simple animator&lt;/title&gt;
+  &lt;programlisting language="lzx"&gt;
+&amp;lt;canvas height="100" width="500"&amp;gt;
+  &amp;lt;window&amp;gt;
+    &amp;lt;animator attribute="x" to="100" duration="1000"/&amp;gt;
+  &amp;lt;/window&amp;gt;
+&amp;lt;/canvas&amp;gt;&lt;/programlisting&gt;
+&lt;/example&gt;</programlisting></informalexample>
+
+    <para>Here is a version that transcludes the source code.</para>
+
+    <informalexample><programlisting>&lt;example&gt;
+  &lt;title&gt;A simple animator&lt;/title&gt;
+  &lt;programlisting language="lzx" &gt;
+    <emphasis>&lt;textobject&gt;
+      &lt;textdata fileref="programs/animation-$4.lzx"/&gt;
+    &lt;/textobject&gt;</emphasis>
+  &lt;/programlisting&gt;
+&lt;/example&gt;</programlisting></informalexample>
+  
+  </section>
+  
+  <section><title>Live examples</title>
+
+    <para>Here is a version that runs within the documentation page:</para>
+  
+    <informalexample><programlisting>&lt;example <emphasis>role="live-example"</emphasis>&gt;
+  &lt;title&gt;Importing a resource&lt;/title&gt;
+  &lt;programlisting language="lzx"&gt;
+    &lt;textobject&gt;
+      &lt;textdata fileref="programs/animation-$4.lzx" /&gt;
+    &lt;/textobject&gt;
+  &lt;/programlisting&gt;
+&lt;/example&gt;
+    </programlisting></informalexample>
+  
+  </section>
+  
+  <section><title>Emphasized Areas</title>
+
+    <para>Here is a version with highlighted areas:</para>
+    
+    <informalexample><programlisting>&lt;example role="live-example"&gt;
+  &lt;title&gt;Controlling animation with a script&lt;/title&gt;
+  <emphasis>&lt;programlistingco&gt;</emphasis>
+    &lt;programlisting language="lzx"&gt;
+      &lt;textobject&gt;&lt;textdata fileref="programs/animation-$4.lzx"/&gt;&lt;/textobject&gt;
+    &lt;/programlisting&gt;
+    <emphasis>&lt;areaspec&gt;
+      &lt;area units="other" otherunits="/canvas[1]/view[1]/@onclick"/&gt;
+    &lt;/areaspec&gt;</emphasis>
+  <emphasis>&lt;/programlistingco&gt;</emphasis>
+&lt;/example&gt;</programlisting></informalexample>
+
+    <para>The <sgmltag class="element">areaspec</sgmltag> block is an OpenLaszlo specialization of Docbook-XSL that highlights any portion of an LZX program that matches the given XPath expression. Here, we are targeting a section of the following LZX source:</para>
+  
+    <informalexample><programlisting>&lt;canvas height="100" width="500"&gt;
+  &lt;view bgcolor="red" width="100" height="100" <emphasis>onclick="this.myAnimator.doStart()"</emphasis>&gt;
+    &lt;animator name="myAnimator" attribute="x" to="100" duration="1000" start="false"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;</programlisting></informalexample>
+
+  <para>The XPath expression refers to the attribute highlighted in the above source.</para>
+  
+  </section>
+  
+  <section><title>Callouts</title>
+    
+    <para>Less commonly, there is a need to use callouts within live examples. </para>
+
+    <informalexample><programlisting>&lt;example role="live-example"&gt;
+   &lt;title&gt;Using attributes and class children together&lt;/title&gt;
+   &lt;programlisting language="lzx"&gt;
+   &lt;textobject&gt;&lt;textdata fileref="programs/class-1.lzx"/&gt;&lt;/textobject&gt; 
+   &lt;/programlisting&gt;
+&lt;/example&gt;
+&lt;calloutlist&gt;
+  &lt;callout arearefs="N10086"&gt;&lt;para&gt;Blah blah&lt;/para&gt;&lt;/callout&gt;
+  &lt;callout arearefs="N10090"&gt;&lt;para&gt;Blah blah&lt;/para&gt;&lt;/callout&gt;
+&lt;/calloutlist&gt;</programlisting></informalexample>
+
+    <para>To accomplish this, we can't use XPath expressions, so we have to embed processing instructions into the source.</para>
+    
+    <informalexample><programlisting>&lt;canvas height="40"&gt;
+  &lt;class name="myframe" extends="view"&gt;&lt;?lzx-co N10086 ?&gt;
+    &lt;attribute name="bgcolor" value="red"/&gt;
+    &lt;view x="5" y="5" width="${parent.width-10}" 
+          height="${parent.height-10}" 
+          bgcolor="blue"/&gt;
+  &lt;/class&gt;
+  
+  &lt;myframe width="40" height="40"/&gt;&lt;?lzx-co N10090 ?&gt;
+&lt;/canvas&gt;</programlisting></informalexample>
+    
+  </section>
+  
+  <section><title>Current Gotchas</title>
+    <itemizedlist>
+      <listitem><ulink url="http://www.openlaszlo.org/jira/browse/LPP-4308">LPP-4308</ulink>: Examples whose text is not transcluded (included from an external file) are not pretty-printed.</listitem>
+      <listitem><ulink url="http://www.openlaszlo.org/jira/browse/LPP-4033">LPP-4033</ulink>: Long source code lines are not auto-wrapped</listitem>
+      <listitem><ulink url="http://www.openlaszlo.org/jira/browse/LPP-4146">LPP-4146</ulink>: Reports of erroneously-compiled example scripts are too small to read in devguide</listitem>
+    </itemizedlist>
+  </section>
+  
+</section>
+
+<section><title>Runtime-specific content</title>
+
+  <para>Docbook content can be marked as runtime specific. This is done using the <sgmltag class="attribute">condition</sgmltag> attribute within a selection of Docbook markup tags.</para>
+  
+  <para>The currently-supported list of tags is
+  <simplelist type="inline">
+    <listitem><sgmltag class="element">para</sgmltag></listitem>
+    <listitem><sgmltag class="element">title</sgmltag> within a <sgmltag class="element">section</sgmltag></listitem>
+  </simplelist></para>
+  
+  <para>Support within other tags is possible by editing the relevant portion of <literal>docs/src/xsl/conditional-html.xsl</literal>.</para>
+
+  <para>Currently only one runtime may be given within an <sgmltag class="attribute">condition</sgmltag> attribute.</para>
+
+</section>
+
+</chapter>

@@ -65,13 +65,13 @@
     </method>
      <!-- step(1) to move ahead, step(-1) to move back -->
     <method name="step" args="n">
-        //debug.write("step("+n+")");
+        //Debug.write("step("+n+")");
         this.setPosRelative(n*stepsize);
     </method>
 
     <!-- page(1) to page ahead, page(-1) to back back -->
     <method name="page" args="n">
-        //debug.write("page("+n+")");
+        //Debug.write("page("+n+")");
         this.setPosRelative(n*this.height);
     </method>
 </class>
@@ -143,15 +143,19 @@ Math.limit = function(value, min, max) {
              </method>
 
              <method name="updateY">
-                 var newY = Math.floor((-classroot.targetview.y/classroot.targetview.height)
-                            *parent.height);
-                 this.setY(newY);
+               if (classroot.targetview) {
+                   var newY = Math.floor((-classroot.targetview.y/classroot.targetview.height)
+                                         *parent.height);
+                   this.setY(newY);
+               }
              </method>
 
              <method name="updateHeight">
+               if (classroot.targetview) {
                    var newHeight = Math.floor((classroot.height/classroot.targetview.height)
                         *parent.height);
                    this.setHeight(newHeight);
+               }
              </method>
 
              <state name="thumbdrag">
@@ -170,7 +174,7 @@ Math.limit = function(value, min, max) {
                                  (thumb.parent.height-thumb.height)) *
                                  (target.height - thumb.classroot.height );
                       }
-                     //debug.write("thumbControl pos:"+pos);
+                     //Debug.write("thumbControl pos:"+pos);
                      target.setAttribute('y', pos);
 
                      thumbpos = Math.limit(ymouse - this.ydoffset,
@@ -228,7 +232,7 @@ Math.limit = function(value, min, max) {
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -53,7 +53,7 @@
       //this.setText("foobar &#19977;&#x6708; &#22235;&#x6708;");
       this.setText("Foobar is foo plus bar");
       this.__LZText.type = 'input';
-      debug.write(this.getNewTextFormat());
+      Debug.write(this.getNewTextFormat());
     </method>
   </swf6text>
 
@@ -69,7 +69,7 @@
       this.setText("I am default, Oh so flash6-y!");
 
       this.__LZText.type = 'input';
-      debug.write(this.getNewTextFormat());
+      Debug.write(this.getNewTextFormat());
     </method>
   </swf6text>
   <simplelayout/>
@@ -77,6 +77,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

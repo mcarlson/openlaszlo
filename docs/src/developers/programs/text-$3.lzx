@@ -1,0 +1,16 @@
+
+<canvas height="80">
+  <text id="ttext" multiline="true" height="300">
+    This text field contains some preformatted text
+    <pre>
+    This is a line of text.
+
+    here was a blank line before this line.
+    And another line of text.
+    </pre>
+   </text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

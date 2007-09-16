@@ -14,8 +14,8 @@
 
 
         <text name="_title"
-                    x="$once{classroot.text_x}"
-                    y="$once{classroot.text_y}"
+                    x="${classroot.text_x}"
+                    y="${classroot.text_y}"
                     width="100%"
               text="${parent.text}" />
 
@@ -48,11 +48,34 @@
          ]]>
          </method>
 
-     </class>
+         <doc>
+           <tag name="shortdesc"><text>
+               a textlistitem extends listitem and provides text display 
+           </text></tag>
+           <text>
 
+             <p>A <classname>textlistitem</classname> is a
+               <classname>listitem</classname> which displays text.  This is the most
+               common form of a <classname>listitem</classname>, and is the default
+               listitem for <classname>combobox</classname>s,
+               <classname>menu</classname>s, <classname>list</classname>s, and
+               <classname>floatinglist</classname>s.
+             </p> 
+
+             <example>
+               &lt;canvas height="100"&gt;
+               &lt;list&gt;
+               &lt;textlistitem text="item 1" value="1" selected="true"/&gt;
+               &lt;textlistitem text="item 2" value="2"/&gt;
+               &lt;/list&gt;
+               &lt;/canvas&gt;
+             </example>
+           </text>
+         </doc>
+    </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

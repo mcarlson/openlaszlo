@@ -2,7 +2,7 @@
     <include href="button.lzx" />
     <include href="base/basegridcolumn.lzx" />   
 
-    <resource name="lzgridcursor_rsrc" src="resources/grid/grid_cursor.swf"/>
+    <resource name="colResize" src="resources/grid/grid_cursor.swf"/>
     <resource name="lzgridsortarrow_rsrc">
         <frame src="resources/grid/sort_arrow_up.swf"/>
         <frame src="resources/grid/sort_arrow_dn.swf"/>
@@ -85,8 +85,7 @@
                     placement="header"
                     name="resizer"
                     clickable="$once{parent.resizable}"
-                    onmouseover="LzCursor.setCursorGlobal ( 'lzgridcursor_rsrc' )"
-                    onmouseout="LzCursor.restoreCursor()"
+                    cursor="colResize"
                     onmousedown="LzCursor.lock();parent.rs.apply()"
                     onmouseup="LzCursor.unlock();parent.rs.remove()" >
                     <view resource="resources/grid/column_resize_top.swf"/>
@@ -108,10 +107,50 @@
         </state>
 
 
+        <doc>
+          <tag name="shortdesc"><text>
+              Declares a column in a grid.
+          </text></tag>
+          <text>
+            <p>
+              The <classname>gridcolumn</classname> class can be used to declare a
+              column in a <classname>grid</classname> with the standard column
+              header look without specifying exactly what goes inside the
+              column. This can be useful for embedding other components within a
+              grid.</p>
+
+            <example>
+              &lt;canvas height="160"&gt;
+              &lt;dataset name="contacts" request="true"
+              src="http://www.openlaszlo.org/lps/demos/contacts/contactsdata.xml"/&gt;
+
+              &lt;grid datapath="contacts:/resultset"&gt;
+              &lt;gridcolumn showheader="false" width="50"&gt;
+              &lt;view bgcolor="#CCCCCC" width="${parent.width}"
+              placement="header"
+              height="${parent.immediateparent.height-1}"/&gt;
+              &lt;text datapath="position()"/&gt;
+              &lt;/gridcolumn&gt;
+              &lt;gridcolumn width="200"&gt; Name
+              &lt;text datapath="@displayname"/&gt;
+              &lt;/gridcolumn&gt;
+              &lt;gridcolumn sortable="false"&gt; Home
+              &lt;checkbox value="$path{'@home_default'}"
+              xoffset="${10-parent.width/2}"&gt;
+              &lt;handler name="onvalue"&gt;
+              this.datapath.updateData();
+              &lt;/handler&gt;
+              &lt;/checkbox&gt;
+              &lt;/gridcolumn&gt;
+              &lt;/grid&gt;
+              &lt;/canvas&gt;
+            </example>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

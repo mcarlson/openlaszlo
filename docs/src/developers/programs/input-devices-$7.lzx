@@ -1,0 +1,22 @@
+
+<canvas height="500" width="500" debug="true">
+   <debug y="300"/>
+   <view width="300" height="300" bgcolor="red" clickable="true" >
+       <attribute name="moustracker_del" value="$once{ new LzDelegate( this, 'trackmouse' )}" />
+         <handler name="onmousedown" >
+           moustracker_del.register(LzIdle,'onidle');
+       </handler>
+
+       <handler name="onmouseup" >
+           moustracker_del.unregisterAll();
+       </handler>
+
+       <method name="trackmouse" >
+           Debug.write("mousex,mousey =", this.getMouse('x'),this.getMouse('y'));
+       </method>
+         </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

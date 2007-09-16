@@ -1,0 +1,28 @@
+
+<canvas debug="true" height="180">
+  <debug height="160"/>
+
+  <class name="container">
+    <handler name="onconstruct" args="v">
+      Debug.write("container onconstruct", v);
+    </handler>
+
+    <method name="createChildren" args="c">
+      Debug.write("container createChildren", c);
+      Debug.write("    c[0].name:", c[0].name);
+      Debug.write("    c[0].attrs:", c[0].attrs);
+      Debug.write("    c[0].children:", c[0].children);
+      super.createChildren(c);
+    </method>
+  </class>
+
+  <container>
+   <view name="outside">
+     <view name="inside"/>
+   </view>
+  </container>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

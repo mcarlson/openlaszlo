@@ -2,20 +2,32 @@
 <!-- calendar_cover.html                                        -->
 <!--                                                                       -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--=======================================================================-->
+<!DOCTYPE html 
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css">
+<link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <h1>Amazon</h1>
-<div class="desc">
-<a href="../../demos/amazon/amazon.lzo?fb=1&lzt=html" target="_blank" >
-    <img border="0" align="left" src="images/cover-images/amazon.png" />
-</a>
+<div style="float: left">
+    <div style="margin: 10px">
+        <img border="0" src="images/cover-images/amazon.jpg" alt="Amazon Application" width="328" height="321" /> 
+        <div style="text-align: center">
+            <a title="Flash Version" onclick="window.open(this.href, '_blank', 'width=800,height=600'); return false" href="../../demos/amazon/amazon.lzx?lzr=swf7&amp;lzt=html">
+                <img src="images/cover-images/button-flash.png" alt="Amazon Flash Version" border="0" />
+            </a> 
+            <a title="DHTML Version" onclick="window.open(this.href, '_blank', 'width=800,height=600'); return false" href="../../demos/amazon/amazon.lzx?lzr=dhtml&amp;lzt=html">
+                <img src="images/cover-images/button-dhtml.png" alt="Amazon DHTML Version" border="0" />
+            </a> 
+        </div>
+    </div>
+</div>
 <p>
 This application opens in a window.  If you don't see it, you may need to
 bring that window to the front.
@@ -28,6 +40,5 @@ communication with the back end transpires in the background without disrupting 
 To see the information associated with an album, such as reviews and track listings,
 double-click on the album cover image.
 </p>
-</div>
 </body>
 </html>

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -156,7 +156,7 @@ public class XMLRPCCompiler
 
     /**
      * Write XMLRPC boolean response to SWF.
-     * @param boleanval XMLRPC boolean string response to parse and push.
+     * @param booleanval XMLRPC boolean string response to parse and push.
      */
     void writeBoolean(String booleanval)
         throws IOException {
@@ -303,7 +303,7 @@ public class XMLRPCCompiler
 
     /**
      * Write XMLRPC fault response struct to SWF.
-     * @param faul the fault element.
+     * @param fault the fault element.
      */
     void writeFault(Element fault)
         throws IOException {
@@ -383,7 +383,6 @@ public class XMLRPCCompiler
     /**
      * Make SWF
      *
-     * @param xpp parser which is pointing at XML data
      * @return FlashFile containing entire SWF with header
      */
     public FlashFile makeSWF(Element element, int xmlsize, int swfversion)
@@ -405,7 +404,6 @@ public class XMLRPCCompiler
     /**
      * Get XML to output stream SWF
      *
-     * @param xpp an XPP XML parser which points to the XML data
      * @return swf input stream
      */
     public byte[] getSWF(Element element, int xmlsize, int swfversion)
@@ -436,7 +434,7 @@ public class XMLRPCCompiler
 
     /**
      * Compile the XMLRPC response to SWF bytecode.
-     * @param in XMLRPC input.
+     *
      * @return SWF bytecode for flash client.
      */
     public static byte[] compile(Reader reader, int xmlsize, int swfversion)

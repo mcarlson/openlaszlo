@@ -1,0 +1,45 @@
+<rsp stat="ok">
+	<photo id="104764934" secret="f81667a8b4" server="38" dateuploaded="1140979315" isfavorite="0" license="0" rotation="0" originalformat="jpg">
+		<owner nsid="49503086499@N01" username="sbshine" realname="Sascha Shine" location="" />
+		<title>
+			Not Halloween
+		</title>
+		<description>
+			Zeb the astronaut and his little brother Isaac.
+		</description>
+		<visibility ispublic="0" isfriend="1" isfamily="1" />
+		<dates posted="1140979315" taken="2006-02-26 13:41:55" takengranularity="0" lastupdate="1140979766" />
+		<permissions permcomment="3" permaddmeta="2" />
+		<editability cancomment="1" canaddmeta="1" />
+		<comments>
+			0
+		</comments>
+		<notes>
+			<note id="72057594070757717" author="49503086499@N01" authorname="sbshine" x="49" y="255" w="182" h="135">
+				Happy Isaac
+			</note>
+			<note id="72057594070757959" author="49503086499@N01" authorname="sbshine" x="155" y="28" w="181" h="386">
+				Zebbie the Astronaut
+			</note>
+		</notes>
+		<tags>
+			<tag id="38248-104764934-2585035" author="49503086499@N01" raw="seattlebeckers">
+				seattlebeckers
+			</tag>
+			<tag id="38248-104764934-2585108" author="49503086499@N01" raw="zebediah">
+				zebediah
+			</tag>
+			<tag id="38248-104764934-9062" author="49503086499@N01" raw="astronaut">
+				astronaut
+			</tag>
+			<tag id="38248-104764934-6033" author="49503086499@N01" raw="isaac">
+				isaac
+			</tag>
+		</tags>
+		<urls>
+			<url type="photopage">
+				http://www.flickr.com/photos/saschabshine/104764934/ 
+			</url>
+		</urls>
+	</photo>
+</rsp>

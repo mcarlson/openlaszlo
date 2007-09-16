@@ -1,10 +1,10 @@
 <canvas height="600" width="600" bgcolor="0xeaeaea">
     <resource name="cherry" src="testmedia/cherry.png"/>
     
-    <class name="scrollview" defaultplacement="content" clip="true">
+    <class name="scrollview" defaultplacement="content" clip="true" focusable="true">
         <attribute name="scrollto" value="0" type="number"/>
         <view x="${-parent.scrollto}" name="content"/>
-        <scrollbar name="sbx" axis="x"/>
+        <scrollbar name="sbx" usemousewheel="false" axis="x"/>
         <scrollbar name="sby"/>
     </class>
     
@@ -72,7 +72,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

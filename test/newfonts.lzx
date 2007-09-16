@@ -13,7 +13,6 @@
 
 <canvas>
     <include href="utils/layouts/alllayouts.lzx" />
-    <include href="redmond" />
     <splash/>
 
     <font name="ario" src="ariosob.ttf" style="bold" />
@@ -67,10 +66,10 @@
         <inputtext width="${immediateparent.width}">
             Base input text
         </inputtext>
-        <windowtext multiline="true" width="${immediateparent.width}" 
+        <text multiline="true" width="${immediateparent.width}" 
             height="200" >
             Wrap me baby wrap me up.
-        </windowtext>
+        </text>
         <view bgcolor="black" height="2" width="${immediateparent.width}" />
         <method name="doit" > 
             fn.setText(fn.font.name);
@@ -100,6 +99,6 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

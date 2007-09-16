@@ -494,7 +494,7 @@
         </method> 
     </class>
     
-    <dataset name="bug1314">
+    <dataset name="bug1314" nsprefix='false'>
         <root>some text</root>
     </dataset>
     <class name="bug_1314" extends="TestCase">
@@ -745,7 +745,7 @@
         
         <method name="testEmptyXPath">
                 dp.setNodeAttribute("foo", "bar")
-                assertEquals(0, dp.getNodeCount())
+                assertEquals(dp.getNodeCount(), 0)
         </method>
     </class>
 

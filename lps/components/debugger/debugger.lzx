@@ -181,7 +181,8 @@
     <method name="initEvalView">
       <![CDATA[
        global._ = null;
-       this.evalloader = new LzLoader(this, { attachname: 'debugloader' });
+       //TODO: This uses Flash-specific APIs
+       this.evalloader = new LzLoader(this.sprite, { attachname: 'debugloader' });
        this.loaded();
        var text = this.bottom.center.input;
        this.lineheight = text.getTextHeight()+4;
@@ -193,22 +194,38 @@
     </method>
 
     <method name="handleFocus">
+      <![CDATA[
       this.bringToFront();
       if (this.bottom.center.input.height > this.smallInputAreaHeight) {
         _dbg_cmd_eval.active = false;
         _dbg_cmd_hist_prev.active = false;
         _dbg_cmd_hist_next.active = false;
+        _dbg_cmd_complete_tab.active = false;
+//         _dbg_cmd_complete_dot.active = false;
+//         _dbg_cmd_complete_bracket.active = false;
+//         _dbg_cmd_complete_paren.active = false;
       } else {
         _dbg_cmd_eval.active = true;
         _dbg_cmd_hist_prev.active = true;
         _dbg_cmd_hist_next.active = true;
+        _dbg_cmd_complete_tab.active = true;
+//         _dbg_cmd_complete_dot.active = true;
+//         _dbg_cmd_complete_bracket.active = true;
+//         _dbg_cmd_complete_paren.active = true;
       }
+      ]]>
     </method>
 
     <method name="handleBlur">
+       <![CDATA[
        _dbg_cmd_eval.active = false;
        _dbg_cmd_hist_prev.active = false;
        _dbg_cmd_hist_next.active = false;
+       _dbg_cmd_complete_tab.active = false;
+//        _dbg_cmd_complete_dot.active = false;
+//        _dbg_cmd_complete_bracket.active = false;
+//        _dbg_cmd_complete_paren.active = false;
+       ]]>
     </method>
 
 
@@ -216,7 +233,12 @@
     <command id="_dbg_cmd_eval" onselect="parent.doEval()"  key="['Enter']" active="false"/>
     <command id="_dbg_cmd_hist_prev" onselect="parent.doCommandHistory(-1)"  key="['uparrow']" active="false"/>
     <command id="_dbg_cmd_hist_next" onselect="parent.doCommandHistory(1)"  key="['downarrow']" active="false"/>        
-
+    <command id="_dbg_cmd_complete_tab" onselect="parent.doCommandCompletion('\t')"  key="['tab']" active="false"/>        
+    <?broken
+    <command id="_dbg_cmd_complete_dot" onselect="parent.doCommandCompletion('.')"  key="['.']" active="false"/>        
+    <command id="_dbg_cmd_complete_bracket" onselect="parent.doCommandCompletion('[')"  key="['[']" active="false"/>        
+    <command id="_dbg_cmd_complete_paren" onselect="parent.doCommandCompletion('(')"  key="['(']" active="false"/>        
+    ?>
     <!--- Substitute entity character escapes for HTML meta-characters  -->
     <method name="escapeText" args="ts" >
       <![CDATA[
@@ -327,11 +349,6 @@
          }
        }
 
-       if (this.consoleRemote) {
-         __LzDebug.cdSendMsg(this.__String(result));
-         return;
-       }
-
        if (this.remoteDebug) { return; } 
 
        this.freshLine();
@@ -395,13 +412,181 @@
     </method>
 
     <method name="doCommandHistory" args="offset">
+        <![CDATA[
         var ptr = this.commandhistory_ptr;
+        var expr;
+        // Save any partial input
+        if ((offset < 0) &&
+            (ptr == this.commandhistory.length) &&
+            (expr = this.bottom.center.input.getText())) {
+          this.commandhistory[this.commandhistory.length] = expr;
+          this.commandhistory_ptr = this.commandhistory.length;
+        }
         ptr += offset;
         ptr = Math.max(0, Math.min(this.commandhistory.length-1, ptr));
         this.stuffInput(this.commandhistory[ptr]);
         this.commandhistory_ptr = ptr;
+        ]]>
     </method>
 
+    <attribute name="lastpart" value="null" />
+    <attribute name="lastobj" value="null" />
+    <method name="doCommandCompletion" args="char">
+      <![CDATA[
+        var leader = '';
+        var expr = this.bottom.center.input.getText();
+        // Find the last completable expression
+        // TODO: [2006-11-23 ptw] If not in a partial member
+        // expression, find next enclosing call expression (to print arg
+        // list)
+        // TODO: [2006-11-23 ptw] Skip over balanced quotes and parens.
+        for (var i = expr.length - 1; i >= 0; i--) {
+          // last puncutation other than '.'
+          if(" \n\r(){}[];,=><!~?:|&+-*/^%".indexOf(expr.charAt(i)) >= 0) {
+            leader = expr.substring(0, i + 1);
+            expr = expr.substring(i + 1);
+//             Debug.debug('leader', leader, 'expr', expr);
+            break;
+          }
+        }
+        var objs = expr.split('.');
+        var part = null;
+        if (objs[0]['constructor']) {
+          obj = eval(objs[0]) || global;
+        } else {
+          obj = global;
+        }
+        // descend to the partial member
+        for (var i = (obj == global ? 0 : 1); i < objs.length; i++) {
+          part = objs[i];
+          if (this.lastobj == obj &&
+              this.lastpart == part) {
+            // 2nd time through
+            break;
+          } else if (part in obj) {
+            // use eval for more generality?
+            obj = obj[objs[i]];
+            part = null;
+          } else {
+            // no match
+            break;
+          }
+        }
+        // Some built-ins are not instanceof Object
+        if (obj instanceof Object || typeof(obj) == 'object') {
+          ;
+        } else if (obj['constructor'] instanceof Function) {
+          // primitives have methods of constructor prototype
+          obj = obj.constructor.prototype;
+        } else {
+          // don't know how to find possibilities
+          Debug.info('No possible completions of %#w', part);
+          return;
+        }
+//         Debug.debug('lastobj', this.lastobj, 'lastpart', this.lastpart, 'obj', obj);
+        if (this.lastobj == obj) {
+          // 2nd time and no partial
+          if (i == objs.length) {
+            expr = objs.join('.');
+            // Infer next separator
+            if (char == '\t') {
+              if (obj instanceof Function) {
+                expr += '(';
+              } else if (obj instanceof Array) {
+                expr += '[';
+              } else if (obj instanceof Object) {
+                expr += '.';
+              }
+            } else {
+              expr += char;
+            }
+//             Debug.debug('no part');
+            this.stuffInput(leader + expr);
+            return;
+          }
+        } else {
+          // looking at new partial
+          this.lastobj = obj;
+          this.lastpart = null;
+        }
+        // Compute longest match and accumulate choices
+        var longest = null;
+        var choices = null;
+//           if ($as2) {
+//             var enumerableSlots = [];
+//             for (var e in obj) { enumerableSlots.push(e); }
+//             // reveal all slots
+//             ASSetPropFlags(obj, null, 0, 1);
+//           }
+        for (var poss in obj) {
+          if (poss.indexOf(part) == 0) {
+            var p = obj[poss];
+            // possibility must be compatible with completion char
+            var compat = true;
+            switch (char) {
+              case '\t':
+                break;
+              case '.':
+                if (! (p instanceof Object)) compat = false;
+                break;
+              case '[':
+                if (! (p instanceof Array)) compat = false;
+                break;
+              case '(':
+                if (! (p instanceof Function)) compat = false;
+                break;
+            }
+            if (! compat) continue;
+            // accumulate choices
+            if (choices == null) {
+              choices = [ poss ];
+            } else {
+              choices.push(poss);
+            }
+            // compute longest match
+            if (longest == null) {
+              longest = poss;
+            } else {
+              for (var j = 0;
+                   ((j < poss.length) &&
+                    (j < longest.length) &&
+                    (poss.charAt(j) == longest.charAt(j)));
+                   j++);
+              longest = longest.substring(0, j);
+            }
+          }
+        }
+//           if ($as2) {
+//             // Reset the enumerability
+//             // Make everything unenumerable, and then expose your saved list
+//             ASSetPropFlags(x, null, 1, 1);
+//             ASSetPropFlags(x, enumerableSlots, 0, 1);
+//           }
+        if (longest != null) {
+//             Debug.debug('longest',longest,'choices',choices);
+          if (choices.length > 1) {
+            // 2nd time or not too many, print choices
+            if ((choices.length < 8) || (longest == this.lastpart)) {
+              choices.sort(function (a, b) {
+                var al = a.toLowerCase();
+                var bl = b.toLowerCase();
+                return (al > bl) - (al < bl);
+              });
+              Debug.info('Possible completions: %s', choices.join(' '));
+            } else {
+              this.lastpart = longest;
+              Debug.info('%d possibilities: press %#w again to see them all', choices.length, char);
+            }
+          } else {
+            this.lastobj = obj[longest];
+            this.lastpart = null;
+          }
+          objs[i] = longest;
+          expr = objs.join('.');
+          this.stuffInput(leader + expr);
+        }
+     ]]>
+    </method>
 
     <method name="stuffObjectId" args="id">
         this.bottom.center.input.setText(this.ObjectForID(id));
@@ -704,15 +889,11 @@
 
   <method name="addText"  args="msg">
      <![CDATA[
-       if (global.$krank) {
-           global.LzSerializer.comment('Debug.write', String(msg));
-       } else if (__LzDebug.isLoading) {
+       if (__LzDebug.isLoading) {
            __LzDebug.saved_msgs.push(msg);
-       } else if (this.consoleRemote) {
-           __LzDebug.cdSendMsg(msg);
        } else {
            var str;
-           if (msg instanceof LzWarning || msg instanceof LzMessage) {
+           if (msg && msg['toHTML']) {
                str = msg.toHTML();
            } else {
                str = String(msg).toHTML();
@@ -731,8 +912,6 @@
        // Funky thing that Henry discovered you have to do to make newlines
        // why wouldn't <br/> work?
        this.middle.content.addText(str.split('\n').join('&#32;\n'));
-       this.atFreshLine = (str.charAt(str.length-1) == '\n');
-       if (str.length) { this.atPrompt = false; }
        if (this.autoscroll) {
            this.middle.content.scrollToEnd();
        }
@@ -777,7 +956,7 @@
             // Write out any queued messages from app startup.
             for (var i = 0; i < this.saved_msgs.length; i++) {
                 var msg = this.saved_msgs[i];
-                if (msg instanceof LzWarning) {
+                if (msg instanceof LzSourceMessage) {
                     this.sockWriteWarning(msg.file, msg.line, msg.message.toString());
                 } else {
                     this.sockWriteLog(String(msg));
@@ -788,8 +967,7 @@
 
             // print saved messages and warnings
             for (var i = 0; i < this.saved_msgs.length; i++) {
-                this.freshLine();
-                this.addText(this.saved_msgs[i]);
+                this.__write(this.saved_msgs[i]);
             }
             this.setVisible( true );
             this.bringToFront();

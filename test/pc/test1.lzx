@@ -1,0 +1,86 @@
+<canvas debug="true" height="600" width="1200">
+  <debug y="60" />
+<!--
+//* A_LZ_COPYRIGHT_BEGIN ******************************************************
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Use is subject to license terms.                                          *
+//* A_LZ_COPYRIGHT_END ********************************************************
+-->
+
+  <connection authenticator="anonymous">
+    <handler name="onconnect">
+      Debug.write("persistent connection established");
+    </handler>
+    <handler name="ondisconnect">
+      Debug.write("persistent connection closed");
+    </handler>
+  </connection>
+
+  <connectiondatasource name="mycd">
+    <dataset name="dsetMessage" />
+    <dataset name="dsetXML" />
+  </connectiondatasource>
+
+  <!-- Datapointer to listen for persistent connection messages -->
+  <datapointer xpath="mycd:dsetMessage:/*[1]">
+    <handler name="ondata">
+      var from = this.xpathQuery('/from[0]/@name');
+      var mesg = this.xpathQuery('/text()');
+      Debug.write("got message (from " + from + "): '"+ mesg + "'");
+    </handler>
+  </datapointer>
+
+  <!-- Datapointer to listen for persistent connection XML messages -->
+  <datapointer xpath="mycd:dsetXML:/*[1]">
+    <handler name="ondata">
+      var mesg = this.xpathQuery('/myxml/text()');
+      Debug.write("got xml mesg: '" + mesg + "'");
+    </handler>
+  </datapointer>
+
+  <!-- Datapointer to listen for result of sendMessage call. -->
+  <datapointer xpath="mycd:sendMessageDset:/*[1]">
+    <handler name="ondata" args="d">
+      Debug.write("d", d);
+    </handler>
+    <handler name="onerror" args="dset">
+      Debug.write("error sending message: " + dset.errorstring);
+    </handler>
+  </datapointer>
+
+  <!-- Datapointer to listen for result of sendXML call. -->
+  <datapointer xpath="mycd:sendXMLDset:/*[1]">
+    <handler name="ondata" args="d">
+      Debug.write("d", d);
+    </handler>
+    <handler name="onerror" args="dset">
+        Debug.write("error sending XML: " + dset.errorstring);
+    </handler>
+  </datapointer>
+  
+  <view x="10" y="10" layout="class: simplelayout; axis: x; spacing: 10">
+    <button onclick="connection.connect()" text="connect" />
+    <button onclick="connection.disconnect()" text="disconnect" />
+
+    <button>send hello
+      <handler name="onclick">
+        mycd.sendMessage("*", "hello, world", "dsetMessage");
+      </handler>
+    </button>
+
+    <button>send XML
+      <handler name="onclick">
+      <![CDATA[
+          mycd.sendXML("*", "<myxml>hello, xml</myxml>", "dsetXML");
+      ]]>
+      </handler>
+    </button>
+
+    <button>login
+      <handler name="onclick">
+        connection.login( 'david', 'david' );
+      </handler>
+    </button>
+
+  </view>
+</canvas>

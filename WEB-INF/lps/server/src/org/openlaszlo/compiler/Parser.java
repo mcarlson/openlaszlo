@@ -295,10 +295,10 @@ public class Parser {
         
         // Parse the document
         java.io.Reader reader = FileUtils.makeXMLReaderForFile(
-            pathname, "UTF-8");
+            key.getPath(), "UTF-8");
         InputSource source = new InputSource(reader);
         source.setPublicId(messagePathname);
-        source.setSystemId(pathname);
+        source.setSystemId(key.getPath());
         Document doc = builder.build(source);
         reader.close();
         fileCache.put(key, doc);
@@ -382,7 +382,7 @@ public class Parser {
      * This is a helper function for parse(), which is factored out
      * so that expandIncludes can be apply it recursively to included
      * files. */
-    protected Document readExpanded(File file, Set currentFiles)
+    protected Document readExpanded(File file, Set currentFiles, CompilationEnvironment env)
         throws IOException, JDOMException
     {
         File key = file.getCanonicalFile();
@@ -400,32 +400,120 @@ public class Parser {
         newCurrentFiles.add(key);
         Document doc = read(file);
         Element root = doc.getRootElement();
-        expandIncludes(root, newCurrentFiles);
+        expandIncludes(root, newCurrentFiles, env);
         return doc;
     }
+
+    static final String WHEN = "when";
+    static final String OTHERWISE = "otherwise";
+
+    protected boolean evaluateConditions(Element element, CompilationEnvironment env) {
+        if (element.getAttribute("runtime") != null
+            && !element.getAttributeValue("runtime").equals(env.getRuntime())) {
+            return false;
+        }
+        return true;
+    }
+
+    public static String xmltostring(Element e) {
+        org.jdom.output.XMLOutputter outputter =
+            new org.jdom.output.XMLOutputter();
+        return outputter.outputString(e);
+    }
+
+    protected void expandChildrenIncludes(Element element, Set currentFiles, CompilationEnvironment env)
+      throws IOException, JDOMException {
+        for (Iterator iter = element.getChildren().iterator();
+             iter.hasNext(); ) {
+            Element child = (Element) iter.next();
+            expandIncludes(child, currentFiles, env);
+        }
+    }
+
     
+    /*
+      <switch>  
+         <when runtime="swf8">
+          <view .../>
+        </when>
+        <otherwise >
+          <view .../>
+        </otherwise>
+      </switch>
+
+      returns the child list of the active arm of the <switch>
+
+    */
+    protected List evaluateSwitchStatement(Element elt, CompilationEnvironment env) {
+        Element selected = null;
+        for (Iterator iter = elt.getChildren(WHEN, elt.getNamespace()).iterator();
+             iter.hasNext(); ) {
+            Element when = (Element) iter.next();
+            if (evaluateConditions(when, env)) {
+                selected = when;
+                break;
+            }
+        }
+        if (selected == null) {
+            for (Iterator iter = elt.getChildren(OTHERWISE, elt.getNamespace()).iterator();
+                 iter.hasNext(); ) {
+                Element other = (Element) iter.next();
+                selected = other;
+                break;
+            }
+        }
+        if (selected == null) {
+            return new ArrayList();
+        } else {
+            return selected.cloneContent();
+        }
+    }
+
+
+    // Makes a copy of the element's child list.
+    protected List copyChildList (Element element) {
+        ArrayList children = new ArrayList(); 
+        for (Iterator iter = element.getChildren().iterator(); iter.hasNext(); ) {
+            Element child = (Element) iter.next();
+            children.add(child);
+        }
+        return children;
+    }
+
     /** Replaces include statements by the content of the included
      * file.
      *
      * This is a helper function for readExpanded, which is factored
      * out so that readExpanded can apply it recursively to included
      * files. */
-    protected void expandIncludes(Element element, Set currentFiles)
+    protected void expandIncludes(Element element, Set currentFiles, CompilationEnvironment env)
         throws IOException, JDOMException
     {
-        // Do this in two passes: collect the replacements, and then
-        // make them.  This is necessary because it's impossible to
-        // modify a list that's being iterated.
-        //
-        // Replacements is a map of Element -> Maybe Element. The key
-        // is an Element instead of an index into the content, because
-        // deletions will alter the index. Replacements could be a
-        // list [(Element, Maybe Element)], but since there's no Pair
-        // type the map gets to use prefab types.
-        Map replacements = new HashMap();
-        for (Iterator iter = element.getChildren().iterator();
+        // Copy the child list, to avoid the concurrentModificationError problem
+        // we get if we use the getChildren list directly. 
+        List children = copyChildList(element);
+
+        // expand (replace) any <switch> elements with only the selected arm of the
+        // <switch>
+        for (Iterator iter = children.iterator();
              iter.hasNext(); ) {
             Element child = (Element) iter.next();
+            if (child.getName().equals("switch")) {
+                List goodies  = evaluateSwitchStatement(child, env);
+                // splice these in place of the <switch>
+                int index = element.indexOf(child);
+                element.setContent(index, goodies);
+            }
+        }
+
+        // Get a new copy of the children list, with expanded <switch> elements from above.
+        children = copyChildList(element);
+
+        for (Iterator iter = children.iterator();
+             iter.hasNext(); ) {
+            Element child = (Element) iter.next();
+
+
             if (child.getName().equals("include")) {
                 String base = new File(getSourcePathname(element)).getParent();
                 String type = XMLUtils.getAttributeValue(child, "type", "xml");
@@ -448,12 +536,14 @@ public class Parser {
                   continue;
                 }
                 if (type.equals("text")) {
-                    replacements.put(child,
-                                     new org.jdom.Text(
-                                         FileUtils.readFileString(target, "UTF-8")));
+                    List content = element.getContent();
+                    int index = content.indexOf(child);
+                    content.set(index,new org.jdom.Text(
+                                    FileUtils.readFileString(target, "UTF-8")));
                 } else if (type.equals("xml")) {
                     // Pass the target, not the key, so that source
                     // location information is correct.
+                    //System.err.println("including xml "+target);
                     Document doc = read(target);
                     // If it's a top-level library, the compiler will
                     // process it during the compilation phase.  In
@@ -470,11 +560,15 @@ public class Parser {
                         // information is preserved.
                         child.setName(doc.getRootElement().getName());
                     } else {
-                        doc = readExpanded(target, currentFiles);
-                        replacements.put(child, doc.getRootElement());
-                        // The replacement below destroys this tree,
-                        // so insure that the next call to read gets a
-                        // fresh one.
+                        doc = readExpanded(target, currentFiles, env);
+
+                        // replace the <include> child element with the expanded file contents
+                        List content = element.getContent();
+                        int index = content.indexOf(child);
+                        Element root = doc.getRootElement();
+                        root.detach();
+                        content.set(index, root);
+
                         File key = target.getCanonicalFile();
                         fileCache.remove(key);
                     }
@@ -489,29 +583,19 @@ public class Parser {
 );
                 }
             } else {
-                expandIncludes(child, currentFiles);
+                expandIncludes(child, currentFiles, env);
             }
-        }
-        // Now make the replacements.
-        List contents = element.getContent();
-        for (Iterator iter = replacements.entrySet().iterator();
-             iter.hasNext(); ) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            int index = contents.indexOf(entry.getKey());
-            Content value = (Content )entry.getValue();
-            value.detach();
-            contents.set(index, value);
         }
     }
 
     /** Reads an XML file, expands includes, and validates it.
      */
-    public Document parse(File file)
+    public Document parse(File file, CompilationEnvironment env)
       throws CompilationError
     {
         String pathname = file.getPath();
         try {
-            Document doc = readExpanded(file, new HashSet());
+            Document doc = readExpanded(file, new HashSet(), env);
             // Apply the stylesheet
             doc = preprocess(doc);
             return doc;
@@ -530,7 +614,7 @@ public class Parser {
     /** Cache of compiled schema verifiers.  Type Map<String,
      * org.iso_relax.verifier.Schema>, where the key is the string
      * serialization of the schema.  */
-    private static LRUMap mSchemaCache = new LRUMap();
+    private static LRUMap mSchemaCache = new LRUMap(1);
     
     /** Validates an XML file against the Laszlo schema. Errors are
      * thrown as the text of a CompilationError.
@@ -575,9 +659,15 @@ public class Parser {
                     InputSource schemaInputSource = new InputSource(schemaXMLSource);
 
                     // System.err.println("validator pool cache miss: " + pathname + " " + key.length());
+                    long st = System.currentTimeMillis();
+                    
                     VerifierFactory factory = VerifierFactory.newInstance(
                         "http://relaxng.org/ns/structure/1.0");
                     schema = factory.compileSchema(schemaInputSource);
+                    long elapsed = System.currentTimeMillis() - st; 
+                    mLogger.debug("compileSchema took "+elapsed+"ms");
+
+
                     synchronized (mSchemaCache) {
                         mSchemaCache.put(key, schema);
                     }

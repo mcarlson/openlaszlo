@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter language="en">
+<title>JS2Doc Reference</title>
+
+<note>This book part is currently being drafted. Stay tuned for more contents!</note>
+
+<section><title>Overview</title>
+
+  <para>The <application>js2doc</application> tool extracts reference documentation from ECMAScript (ECMA-262) 3rd Edition source code, with some provision for ECMAScript 4th Edition extensions such as <literal>class</literal>. (It is intended that eventually <application>js2doc</application> will support the full <acronym>ES4</acronym> language once that standard has been finalized.) The tool generates an XML representation of the declarations in the source, augmented by material extracted from specially-formatted comments found adjacent to the program declarations. This XML output can be used to generate human-readable documentation in a number of different formats, or to extract information about the program source under study.</para>
+
+  <note>The <application>js2doc</application> tool was built to document JavaScript source associated with the OpenLaszlo project, and as such contains several proprietary extensions in support of OpenLaszlo. The intention is to remove these extensions as the <acronym>ES4</acronym> language nears acceptance.</note>
+
+</section>
+
+<section><title>Format of Structured Comments</title>
+
+  <para>Structured comments generally follow the format defined for <ulink url="http://java.sun.com/j2se/javadoc/">javadoc</ulink>.</para>
+</section>
+
+<section><title>Matching Comments to Declarations</title>
+
+  <para>The js2doc tool works by matching comments to declarations. Generally speaking, the comment immediately preceding the declaration is matched if it has the correct format. The comment must immediately precede the declaration: if an improperly-formatted (or unformatted) comment intervenes between a properly formatted comment and a declaration, there is no match. Note that special rules apply to a structured comment intended to apply to the source file as a whole; see below for details.</para>
+  
+  <para>Here is a simple example:</para>
+  
+  <informalexample><programlisting>/** Whether the process is complete **/
+var isdone = false;</programlisting></informalexample>
+
+  <para>And another:</para>
+  
+  <informalexample><programlisting>/** class for monitoring process status **/
+class foo {
+  /** Whether the process is complete **/
+  var isdone = false;
+}</programlisting></informalexample>
+
+  <para>A comment placed before a multi-term variable declaration is distributed to all variables in the declaration. This is consistent with javadoc's behavior.</para>
+  
+  <informalexample><programlisting>/** Whether the process is complete **/
+var isdone = false,
+    isprivate = false;  <lineannotation>Comment is same as for <literal>isdone</literal></lineannotation></programlisting></informalexample>
+
+  <para>Separate comments should be placed 'inside' the declaration:</para>
+  
+  <informalexample><programlisting>var 
+  /** Whether the process is complete **/
+  isdone = false,
+  /** Whether the process is private **/
+  isprivate = false;</programlisting></informalexample>
+
+  <para>Documentation can be provided for an entire source file, by placing a structured comment at the top of the file. Note that there is a potential for ambiguity: a structured comment at the top of a file may also precede a declaration and therefore logically apply to that declaration. To eliminate this ambiguity, the js2doc tool currently requires a whole-file comment to contain a <literal>@copyright</literal> field, which will typically be the case anyway.</para>
+  
+  <informalexample><programlisting>/** Math utilities
+   @copyright Copyright 2007 Laszlo Systems, all rights reserved
+   */
+   
+   var pi = 3.14159;  <lineannotation>Preceding comment applies to file, not var</lineannotation>
+   </programlisting></informalexample>
+</section>
+
+<section><title>Conditional Annotations</title>
+
+  <para>The js2doc tool tracks the use of top-level conditional expressions and automatically annotates its output with information about those conditionals. Two types of constants are tracked: <emphasis>runtime designators</emphasis>, and <emphasis>build types</emphasis>.</para>
+  
+  <para>In the following example, the js2doc output will annotate the <literal>foo</literal> variable as if it had an associated comment with the field <code>@runtimes $swf7</code>.</para>
+  
+  <informalexample><programlisting>if ($swf7) {
+  var foo = 10;
+}</programlisting></informalexample>
+
+  <para>Only boolean literals (<literal>true</literal> or <literal>false</literal>) or predefined constants are tracked, but complex boolean expressions combining those elements are supported. In the following example, with a set of three known runtime constants (<literal>$swf7</literal>, <literal>$swf8</literal>, and <literal>$dhtml</literal>) <literal>foo</literal> is annotated as if by <code>@runtimes $swf7 $swf8</code>, and <literal>bar</literal> is annotated as if by <code>@runtimes $dhtml</code>.</para>
+  
+  <informalexample><programlisting>if ($swf7 || $swf8) {
+  var foo = 10;
+} else {
+  var bar = 20;
+}</programlisting></informalexample>
+
+  <para>Conditionals that can be proven to evaluate to <literal>true</literal> or <literal>false</literal> are automatically compiled away in the expected manner. In the following example, js2doc emits information about the variable <literal>bar</literal> but not <literal>foo</literal>.</para>
+
+  <informalexample><programlisting>if (false) {
+  var foo = 10;
+} else {
+  var bar = 20;
+}</programlisting></informalexample>
+
+</section>
+
+<section><title>Supported Comment Fields</title>
+    <variablelist><title>Standard Comment Fields</title>
+        <varlistentry>
+            <term>topic</term>
+            <term>subtopic</term>
+            <listitem>The topic and subtopic used to organize this declaration within its output book. Valid only for file-level and top-level declarations.</listitem>
+        </varlistentry>
+        <varlistentry>
+            <term>copyright</term>
+            <listitem></listitem>
+        </varlistentry>
+        
+        <varlistentry>
+            <term>access</term>
+            <listitem>The visibility (private|public|protected) of the declaration.</listitem>
+        </varlistentry>
+        <varlistentry>
+            <term>type</term>
+            <listitem>The JavaScript type of the declaration. Will become unnecessary once type declaration support is added to the compiler. May not exist if @lzxtype is given since in that case the JS type can be trivially derived (<code>lz.<replaceable>lzxtype</replaceable></code>).</listitem>
+        </varlistentry>
+        <varlistentry>
+            <term>modifiers</term>            <listitem>(final|virtual|deprecated|override|abstract|const|readonly|read-only)</listitem>
+        </varlistentry>
+        <varlistentry>
+            <term>param</term>
+            <listitem>Used to describe a particular function or method parameter. Format is <code>@param [<replaceable>jstype</replaceable>] <replaceable>name</replaceable> : <replaceable>description</replaceable></code>. The description may be multi-line, as with all comment fields. Ignored if not given as part of a function or method comment.</listitem>
+        </varlistentry>
+        <varlistentry>
+            <term>return</term>
+            <term>returns</term>
+            <listitem>Used to describe the return value of a function or method. Format is <code>@param [<replaceable>jstype</replaceable> : ] <replaceable>description</replaceable></code>. The description may be multi-line, as with all comment fields. Ignored if not given as part of a function or method comment.</listitem>
+        </varlistentry>
+        <varlistentry>
+            <term>keyword</term>
+            <term>keywords</term>
+            <listitem>
+                <para>The <literal>keywords</literal> field is a mechanism to give various forms of modifiers.</para>
+                <variablelist><title>Standard Comment Keywords</title>
+                    <varlistentry>
+                        <term>public</term>
+                        <term>protected</term>
+                        <term>private</term>
+                        <listitem>Equivalent to giving <code>@access</code>.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>final</term>
+                        <term>virtual</term>
+                        <term>deprecated</term>
+                        <term>override</term>
+                        <term>abstract</term>
+                        <term>const</term>
+                        <term>readonly</term>
+                        <term>read-only</term>
+                        <listitem>Equivalent to giving <code>@modifiers</code>.</listitem>
+                    </varlistentry>
+                </variablelist>
+            </listitem>
+        </varlistentry>
+    </variablelist>
+    <variablelist><title>OpenLaszlo-specific Comment Fields</title>
+      <varlistentry>
+        <term>initarg</term>
+        <listitem></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>runtimes</term>
+        <listitem></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>lzxtype</term>
+        <listitem></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>lzxname</term>
+        <listitem></listitem>
+      </varlistentry>
+    </variablelist>
+</section>
+
+<section><title>JS2Doc and LZX files</title>
+
+  <para>Structured comments in LZX files generally follow the same format and conventions as the comments in JavaScript documents. The comments themselves are in XML format, of course:</para>
+  
+  <informalexample><programlisting>&lt;!-- A simple button 
+    @access private
+    --&gt;
+&lt;class name="mybutton" extends="view" /&gt;</programlisting></informalexample>
+
+  <para>One difference is that documentation can also be given in XML format directly:</para>
+  
+  <informalexample><programlisting>&lt;class name="mybutton" extends="view" &gt;
+  &lt;doc&gt;
+    &lt;tag name="access"&gt;&lt;text&gt;private&lt;/text&gt;&lt;/tag&gt;
+    &lt;text&gt;A simple button&lt;/text&gt;
+  &lt;/doc&gt;
+  &lt;/class&gt;</programlisting></informalexample>
+  
+</section>
+
+<section><title>To Do</title>
+</section>
+
+<section><title>JS2Doc Schema</title>
+    <para>This section gives the schema describing output of the <application>js2doc</application> tool, in Relax-NG Compact notation.</para>
+    <programlisting>
+      <textobject><textdata fileref="build/contributors/js2doc.rnc"/></textobject>
+    </programlisting>
+</section>
+
+</chapter> <!-- JS2Doc Reference -->

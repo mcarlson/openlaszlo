@@ -1,0 +1,10 @@
+
+<canvas height="20">
+  <class name="square" width="20" height="20" bgcolor="red"/>
+  <square/>
+  <square x="30"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
  * SWFWriter.java
  * ****************************************************************************/
@@ -23,7 +24,6 @@ import org.openlaszlo.iv.flash.api.shape.*;
 import org.openlaszlo.iv.flash.api.text.*;
 import org.openlaszlo.iv.flash.util.*;
 import org.openlaszlo.iv.flash.cache.*;
-
 import org.openlaszlo.compiler.CompilationEnvironment;
 
 import org.openlaszlo.media.*;
@@ -42,45 +42,28 @@ import org.apache.log4j.*;
 
 /** Accumulates code, XML, and assets to a SWF object file.
  *
- * Once there's a second target, the methods here can be lifted into
- * an API that SWFWriter implements.  Rationale for not doing this
- * now: It's easier to generalize from more than one instance, and
- * having to change signatures twice for every refactoring is an
- * unnecessary burden during early development.
- *
  * Make heavy use of JGenerator API.
  *
  * Properties documented in Compiler.getProperties.
  */
-class SWFWriter {
-    /** Stream to write to. */
-    protected OutputStream mStream = null;
+class SWFWriter extends ObjectWriter {
+
     /** Movie being constructed. */
     private SWFFile mFlashFile;
+
     /** Fonts being collected. */
-    private FontsCollector mFontsCollector = new FontsCollector();
     private FontsCollector mPreloaderFontsCollector = new FontsCollector();
     private FontManager mFontManager = new FontManager();
+    /** Have any fonts been imported into this swf movie?  */
+    private boolean mLibFontsDefined = false;
+
     /** True iff close() has been called. */
-    protected boolean mCloseCalled = false;
+    private boolean mCloseCalled = false;
 
-    protected final CompilationEnvironment mEnv;
-
-    /** Set of resoures we're importing into the output SWF */
-    private final HashSet mMultiFrameResourceSet = new HashSet();
-
-    /** Constant */
-    private final int TWIP = 20;
     
     /** Total number of frames in the movie **/
     private int mLastFrame = 0;
     
-    /** Unique name supply for clip/js names */
-    protected SymbolGenerator mNameSupply = new SymbolGenerator("$LZ");
-
-    /** Properties */
-    protected Properties mProperties;
-
     /** Input text fontinfo map */
     private final TreeMap mInputTextSet = new TreeMap();
 
@@ -109,15 +92,6 @@ class SWFWriter {
     /** Leading for text and input text */
     private int mTextLeading = 2; 
 
-    /** media cache for transcoding */
-    private CompilerMediaCache mCache = null;
-
-    /** <String,Resource> maps resource files to the Resources 
-     * definition in the swf file. */
-    protected Map mResourceMap = new HashMap();
-    protected Map mClickResourceMap = new HashMap();
-    protected Map mMultiFrameResourceMap = new HashMap();
-
     private Map mDeviceFontTable = new HashMap();
 
     /** Logger */
@@ -126,36 +100,13 @@ class SWFWriter {
     /** Height for generated advance (width) table */
     public static final int DEFAULT_SIZE = 8;
 
-    /**
-     * Initialize jgenerator
-     */
-    static {
-        org.openlaszlo.iv.flash.util.Util.init(LPS.getConfigDirectory());
-    }
-
-    /**
-     * Compiled ExpiryProgram
-     */
-    private static Program mExpiryProgram = null;
-
-    /** Canvas Height */
-    private int mHeight = 0;
-
-    /** Canvas Width */
-    private int mWidth = 0;
 
     /** Width of the "root" text output object. Defaults to canvas width. */
     private int mMaxTextWidth = 0;
 
-
     /** Height of the "root" text output object. Defaults to canvas height. */
     private int mMaxTextHeight = 0;
 
-    /** Has the preloader been added? */
-    private boolean mPreloaderAdded = false;
-
-    /** InfoXML */
-    private Element mInfo = new Element("swf");
 
     /** Logger for jgenerator */
     /**
@@ -172,10 +123,7 @@ class SWFWriter {
               CompilerMediaCache cache,
               boolean importLibrary,
               CompilationEnvironment env) {
-        this.mProperties   = props;
-        this.mCache        = cache;
-        this.mStream       = stream;
-        this.mEnv          = env;
+        super(props, stream, cache, importLibrary, env);
 
         String s;
 
@@ -287,7 +235,7 @@ class SWFWriter {
         // preloader.lzl (e.g. debug, profile).
         File f;
         try {
-            f = env.resolve("lzpreloader.lzl", "");
+            f = env.resolve("lzpreloader.lzl", null);
         } catch (FileNotFoundException e) {
             throw new ChainedException(e);
         }
@@ -323,6 +271,7 @@ class SWFWriter {
         // so that build id etc... are easy for qa to pick out.
         Properties props = (Properties)mProperties.clone();
         props.setProperty("disableConstantPool", "1");
+        //scriptWriter.println(canvasConstructor);
         byte[] action = ScriptCompiler.compileToByteArray(canvasConstructor, props);
         Program program = new Program(action, 0, action.length);
         mLogger.debug("    Adding a program of " + action.length + " bytes.");
@@ -399,8 +348,9 @@ class SWFWriter {
      * @param script the script to be compiled
      * @return the number of bytes
      */
-    int addScript(String script) {
+    public int addScript(String script) {
          byte[] action = ScriptCompiler.compileToByteArray(script, mProperties);
+         //scriptWriter.println(script);
          Program program = new Program(action, 0, action.length);
          mLogger.debug(
 /* (non-Javadoc)
@@ -422,6 +372,7 @@ class SWFWriter {
      */
     private void addScript(String script, int offset) {
          byte[] action = ScriptCompiler.compileToByteArray(script, mProperties);
+         //scriptWriter.println(script);
          Program program = new Program(action, 0, action.length);
          mLogger.debug(
 /* (non-Javadoc)
@@ -443,7 +394,7 @@ class SWFWriter {
          Frame frame = mFlashFile.getMainScript().getFrameAt(mLastFrame);
          frame.addFlashObject(new DoAction(program));
     }
-    
+
     /**
      * Adds the program to the specified frame
      *
@@ -455,23 +406,6 @@ class SWFWriter {
          frame.addFlashObject(new DoAction(program));
     }
 
-
-    class ImportResourceError extends CompilationError {
-
-        ImportResourceError(String fileName, CompilationEnvironment env) {
-            super("Can't import " + stripBaseName(fileName, env));
-        }
-        ImportResourceError(String fileName, String type, CompilationEnvironment env) {
-            super("Can't import " + type + " " + stripBaseName(fileName, env));
-        }
-        ImportResourceError(String fileName, Exception e, CompilationEnvironment env) {
-            super("Can't import " + stripBaseName(fileName, env) + ": " + e.getMessage());
-        }
-        ImportResourceError(String fileName, Exception e, String type, CompilationEnvironment env) {
-            super("Can't import " + type + " " + stripBaseName(fileName, env) + ": " + e.getMessage());
-        }
-
-    }
 
     public static String stripBaseName (String fileName, CompilationEnvironment env) {
         try {
@@ -494,120 +428,6 @@ class SWFWriter {
         }
     }
 
-   /** Find a resource for importing into a movie and return a flashdef.
-     * Doesn't includes stop action.
-     *
-     * @param fileName file name of the resource
-     * @param name name of the resource
-     */
-    private Resource getMultiFrameResource(String fileName, String name, int fNum) 
-        throws ImportResourceError
-    {
-        Resource res = (Resource)mMultiFrameResourceMap.get(fileName);
-        if (res != null) {
-            return res;
-        }
-
-        res = getResource(fileName, "$" + name + "_lzf_" + (fNum+1), false);
-
-        mMultiFrameResourceMap.put(fileName, res);
-        return res;
-    }
-
-   /** Find a resource for importing into a movie and return a flashdef.
-     * Includes stop action.
-     *
-     * @param fileName file name of the resource
-     * @param name name of the resource
-     */
-    private Resource getResource(String fileName, String name)
-        throws ImportResourceError
-    {
-        return getResource(fileName, name, true);
-    }
-
-   /** Find a resource for importing into a movie and return a flashdef.
-     *
-     * @param name name of the resource
-     * @param fileName file name of the resource
-     * @param stop include stop action if true
-     */
-    private Resource getResource(String fileName, String name, boolean stop)
-        throws ImportResourceError
-    {
-        try {
-            String inputMimeType = MimeType.fromExtension(fileName);
-            if (!Transcoder.canTranscode(inputMimeType, MimeType.SWF) 
-                && !inputMimeType.equals(MimeType.SWF)) {
-                inputMimeType = Transcoder.guessSupportedMimeTypeFromContent(fileName);
-                if (inputMimeType == null || inputMimeType.equals("")) {
-                    throw new ImportResourceError(fileName, new Exception(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="bad mime type"
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                SWFWriter.class.getName(),"051018-549")
-), mEnv);
-                }
-            }
-            // No need to get these from the cache since they don't need to be
-            // transcoded and we usually keep the cmcache on disk.
-            if (inputMimeType.equals(MimeType.SWF)) {
-        
-                long fileSize =  FileUtils.getSize(new File(fileName));
-    
-                Element elt = new Element("resource");
-                    elt.setAttribute("name", name);
-                    elt.setAttribute("mime-type", inputMimeType);
-                    elt.setAttribute("source", fileName);
-                    elt.setAttribute("filesize", "" + fileSize);
-                mInfo.addContent(elt);
-    
-                return importSWF(fileName, name, false);
-            }
-
-            // TODO: [2002-12-3 bloch] use cache for mp3s; for now we're skipping it 
-            // arguably, this is a fixme
-            if (inputMimeType.equals(MimeType.MP3) || 
-                inputMimeType.equals(MimeType.XMP3)) {
-                return importMP3(fileName, name);
-            }
-    
-            File inputFile = new File(fileName);
-            File outputFile = mCache.transcode(inputFile, inputMimeType, MimeType.SWF);
-            mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="importing: " + p[0] + " as " + p[1] + " from cache; size: " + p[2]
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                SWFWriter.class.getName(),"051018-584", new Object[] {fileName, name, new Long(outputFile.length())})
-                                        );
-
-            long fileSize =  FileUtils.getSize(outputFile);
-
-            Element elt = new Element("resource");
-                elt.setAttribute("name", name);
-                elt.setAttribute("mime-type", inputMimeType);
-                elt.setAttribute("source", fileName);
-                elt.setAttribute("filesize", "" + fileSize);
-            mInfo.addContent(elt);
-
-            return importSWF(outputFile.getPath(), name, stop);
-        } catch (Exception e) {
-            mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Can't get resource " + p[0]
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                SWFWriter.class.getName(),"051018-604", new Object[] {fileName})
-);
-            throw new ImportResourceError(fileName, e, mEnv);
-        }
-
-    }
 
     /** Import a resource file into the preloader movie.
      * Using a name that already exists clobbers the
@@ -625,6 +445,14 @@ class SWFWriter {
         importResource(fileName, name, 0, mPreloaderFontsCollector);
     }
 
+    public void importPreloadResource(File fFileName, String name) 
+        throws ImportResourceError
+    {
+        if (name.equals(""))
+            name = createName();
+        importResource(fFileName.toString(), name, 0, mPreloaderFontsCollector);
+    }
+
     /** Import a multiframe resource into the current movie.  Using a
      * name that already exists clobbers the old resource (for now).
      */
@@ -634,6 +462,33 @@ class SWFWriter {
         if (name.equals("")) 
             name = createName();
         importResource(sources, name, parent, 0, mPreloaderFontsCollector);
+    }
+
+
+
+    /** Import a multiframe resource into the current movie.  Using a
+     * name that already exists clobbers the old resource (for now).
+     *
+     * @param sources file names of the resources
+     * @param name name of the MovieClip/Sprite
+     * @param parent parent's File object 
+     */
+    public void importResource(List sources, String name, File parent)
+    {
+        importResource(sources, name, parent, -1);
+    }
+
+    /** Import a multiframe resource into the current movie.  Using a
+     * name that already exists clobbers the old resource (for now).
+     *
+     * @param sources file names of the resources
+     * @param name name of the MovieClip/Sprite
+     * @param parent parent's File object 
+     * @param frameNum frame offset to add to
+     */
+    public void importResource(List sources, String name, File parent, int frameNum)
+    {
+        importResource(sources, name, parent, frameNum, null);
     }
 
     /** Import a resource file into the current movie.
@@ -648,6 +503,12 @@ class SWFWriter {
         throws ImportResourceError
     {
         importResource(fileName, name, -1);
+    }
+
+    public void importResource(File fFile, String name)
+        throws ImportResourceError
+    {
+        importResource(fFile.toString(), name);
     }
 
     /** Import a resource file into the current movie.
@@ -680,8 +541,27 @@ class SWFWriter {
                                FontsCollector fontsCollector)
         throws CompilationError
     {
-        mLogger.debug("    Importing resource " + name);
 
+            File inputFile = new File(fileName);
+            if (inputFile.isDirectory()) {
+                String[] sources = inputFile.list();
+                ArrayList outsources = new ArrayList();
+                
+                for (int i = 0; i < sources.length; i++) {
+                    String fname = fileName + File.separator + sources[i];
+                    File f = new File(fname);
+                    //mLogger.debug("SWFWriter file: " + f.isFile());    
+
+                    if (f.isFile()) {
+                        //mLogger.debug("SWFWriter adding: " + fname);    
+                        outsources.add(fname);
+                    }
+                }
+                importResource(outsources, name, null, -1, null, false);
+                return;
+            }
+
+        mLogger.debug("    Importing resource " + name);
         try {
             fileName = new File(fileName).getCanonicalPath();
         } catch (java.io.IOException e) {
@@ -704,6 +584,7 @@ class SWFWriter {
         } else {
             def = res.getFlashDef();
             if (fontsCollector != null) def.collectFonts(fontsCollector);
+
             // Add an element with 0 size, since it's already there.
             Element elt = new Element("resource");
                 elt.setAttribute("name", name);
@@ -713,7 +594,6 @@ class SWFWriter {
             mInfo.addContent(elt);
         } 
         
-    
         ExportAssets ea = new ExportAssets();
         ea.addAsset(name, def);
         Timeline timeline = mFlashFile.getMainScript().getTimeline();
@@ -724,27 +604,101 @@ class SWFWriter {
         frame.addFlashObject(ea);
     }
     
-    /** Imports file, if it has not previously been imported, and
-     * returns in any case the name of the clip that refers to it.
-     * File should refer to a graphical asset. */
-    public String importResource(File file)
-    {
-        Resource res;
+    /** Import a multiframe resource into the current movie.  Using a
+     * name that already exists clobbers the old resource (for now).
+     *
+     * @param sources file names of the resources
+     * @param name name of the MovieClip/Sprite
+     * @param parent parent's File object 
+     * @param frameNum frame offset to add to
+     * @param fontsCollector fonts collector for resource (used by preloader)
+     */
+    public void importResource(List sources, String name, File parent, int frameNum, 
+                               FontsCollector fontsCollector)
 
-        try {
-            file = file.getCanonicalFile();
-            res = (Resource) mResourceMap.get(file.getCanonicalPath());
-        } catch (java.io.IOException e) {
-            throw new CompilationError(e);
-        }
-        if (res == null) {
-            String clipName = createName();
-            importResource(file.getPath(), clipName);
-            return clipName;
-        } else {
-            return res.getName();
-        }
+    {
+        importResource(sources, name, parent, frameNum, fontsCollector, true);
     }
+
+    /** Import a multiframe resource into the current movie.  Using a
+     * name that already exists clobbers the old resource (for now).
+     *
+     * @param sources file names of the resources
+     * @param name name of the MovieClip/Sprite
+     * @param parent parent's File object 
+     * @param frameNum frame offset to add to
+     * @param fontsCollector fonts collector for resource (used by preloader)
+     * @param addStop if true, add a stop frame after each imported resource 
+     */
+    public void importResource(List sources, String name, File parent, int frameNum, 
+                               FontsCollector fontsCollector, boolean addStop)
+    {
+        Script out = new Script(1);
+        String fileName = null;
+        mLogger.debug("Including multiple resources as " + name);
+        int width = 0;
+        int height = 0;
+        int fNum = 0;
+        for (Iterator e = sources.iterator() ; e.hasNext() ;) {
+            fileName = (String)e.next();
+            mLogger.debug("    Importing " + fileName);
+
+            // Definition to add to the library (without stop)
+            Resource res = getMultiFrameResource(fileName, name, fNum);
+            Script scr = (Script)res.getFlashDef(); 
+            if (fontsCollector != null) scr.collectFonts(fontsCollector);
+            int bc = out.getFrameCount();
+            out.appendScript(scr);
+            int fc = out.getFrameCount();
+            Frame f = out.getFrameAt(fc - 1);
+            if (addStop) f.addStopAction();
+            mLogger.debug("    Added " + (fc - bc) + " of " + fc + "frame(s)");
+
+            int rw = res.getWidth();
+            int rh = res.getHeight();
+            if (rw > width) {
+                width = rw;
+            }
+            if (rh > height) {
+                height = rh;
+            }
+            // NOTE: add the ratio attribute to each frame here; this 
+            // appears to be required to make a multi-frame resource that has individual 
+            // frames that are swfs with nested movieclips work correctly.
+            // This was "guessed" by dumping the contents
+            // of a multi-frame SWF created by the Flash tool itself.
+            // This is weird since the docs on 'ratio' say it is only
+            // needed to cope with Morphing.  Hmph.  See bug 4961 for details.
+            if (fNum > 0) {
+                for (int i = 0; i < f.size(); i++) {
+                    if (f.getFlashObjectAt(i) instanceof Instance) {
+                        Instance inst = (Instance) f.getFlashObjectAt(i);
+                        inst.ratio = fNum;
+                        break;
+                    }
+                }
+            }
+            fNum++;
+        }
+
+        // TODO [2003-1-2 bloch]: Could optimize and only add
+        // multi-frame resources when the total size is greater than
+        // the size of the first frame
+        mMultiFrameResourceSet.add(new Resource(name, out, width, height));
+
+        FlashDef def = (FlashDef)out;
+        mFlashFile.addDefToLibrary(name, def);
+        def.setName(name);
+        ExportAssets ea = new ExportAssets();
+        ea.addAsset(name, def);
+        Timeline timeline = mFlashFile.getMainScript().getTimeline();
+        if (frameNum == -1) {
+            frameNum = timeline.getFrameCount() - 1;
+        }
+        Frame frame = timeline.getFrameAt(frameNum);
+        frame.addFlashObject(ea);
+    }
+
 
     /** Imports this resource, if it has not previously been imported, as
      * resource that can be used as a click region, and returns in any
@@ -841,115 +795,6 @@ class SWFWriter {
 
         return name;
     }
-
-    /** Import a multiframe resource into the current movie.  Using a
-     * name that already exists clobbers the old resource (for now).
-     *
-     * @param sources file names of the resources
-     * @param name name of the MovieClip/Sprite
-     * @param parent parent's File object 
-     */
-    public void importResource(List sources, String name, File parent)
-    {
-        importResource(sources, name, parent, -1);
-    }
-
-    /** Import a multiframe resource into the current movie.  Using a
-     * name that already exists clobbers the old resource (for now).
-     *
-     * @param sources file names of the resources
-     * @param name name of the MovieClip/Sprite
-     * @param parent parent's File object 
-     * @param frameNum frame offset to add to
-     */
-    public void importResource(List sources, String name, File parent, int frameNum)
-    {
-        importResource(sources, name, parent, frameNum, null);
-    }
-
-
-    /** Import a multiframe resource into the current movie.  Using a
-     * name that already exists clobbers the old resource (for now).
-     *
-     * @param sources file names of the resources
-     * @param name name of the MovieClip/Sprite
-     * @param parent parent's File object 
-     * @param frameNum frame offset to add to
-     * @param fontsCollector fonts collector for resource (used by preloader)
-     */
-    public void importResource(List sources, String name, File parent, int frameNum, 
-                               FontsCollector fontsCollector)
-    {
-        Script out = new Script(1);
-        String fileName = null;
-        mLogger.debug("Including multiple resources as " + name);
-        int width = 0;
-        int height = 0;
-        int fNum = 0;
-        for (Iterator e = sources.iterator() ; e.hasNext() ;) {
-            fileName = (String)e.next();
-            mLogger.debug("    Importing " + fileName);
-     
-            // Definition to add to the library (without stop)
-            Resource res = getMultiFrameResource(fileName, name, fNum);
-            Script scr = (Script)res.getFlashDef(); 
-            if (fontsCollector != null) scr.collectFonts(fontsCollector);
-            int bc = out.getFrameCount();
-            out.appendScript(scr);
-            int fc = out.getFrameCount();
-            Frame f = out.getFrameAt(fc - 1);
-            f.addStopAction();
-            mLogger.debug("    Added " + (fc - bc) + " of " + fc + "frame(s)");
-
-            int rw = res.getWidth();
-            int rh = res.getHeight();
-            if (rw > width) {
-                width = rw;
-            }
-            if (rh > height) {
-                height = rh;
-            }
-            // NOTE: add the ratio attribute to each frame here; this 
-            // appears to be required to make a multi-frame resource that has individual 
-            // frames that are swfs with nested movieclips work correctly.
-            // This was "guessed" by dumping the contents
-            // of a multi-frame SWF created by the Flash tool itself.
-            // This is weird since the docs on 'ratio' say it is only
-            // needed to cope with Morphing.  Hmph.  See bug 4961 for details.
-            if (fNum > 0) {
-                for (int i = 0; i < f.size(); i++) {
-                    if (f.getFlashObjectAt(i) instanceof Instance) {
-                        Instance inst = (Instance) f.getFlashObjectAt(i);
-                        inst.ratio = fNum;
-                        break;
-                    }
-                }
-            }
-            fNum++;
-        }
-
-        // TODO [2003-1-2 bloch]: Could optimize and only add
-        // multi-frame resources when the total size is greater than
-        // the size of the first frame
-        mMultiFrameResourceSet.add(new Resource(name, out, width, height));
-
-        FlashDef def = (FlashDef)out;
-        mFlashFile.addDefToLibrary(name, def);
-        def.setName(name);
-        ExportAssets ea = new ExportAssets();
-        ea.addAsset(name, def);
-        Timeline timeline = mFlashFile.getMainScript().getTimeline();
-        if (frameNum == -1) {
-            frameNum = timeline.getFrameCount() - 1;
-        }
-        Frame frame = timeline.getFrameAt(frameNum);
-        frame.addFlashObject(ea);
-    }
-
-    /** Returns a new unique js name. */
-    String createName() {
-        return mNameSupply.next();
-    }
     
     /**
      * Recursively strips out the ActionScript from a 
@@ -981,86 +826,22 @@ class SWFWriter {
         }
     }
 
-    /**
-     * @param fileName
-     * @param name
-     * @param addStop if true, add stop action to last frame
+
+    /** strip compiler pragmas from script
      */
-    private Resource importSWF(String fileName, String name, boolean addStop) 
-        throws IVException, FileNotFoundException  {
-
-        FlashFile f = FlashFile.parse(fileName);
-        Script s = f.getMainScript();
-        collectFonts(s);
-        if (addStop) {
-            Frame frame = s.getFrameAt(s.getFrameCount() - 1);
-            frame.addStopAction();
-        }
-
-        Rectangle2D rect = s.getBounds();
-        int mw = (int)(rect.getMaxX()/TWIP);
-        int mh = (int)(rect.getMaxY()/TWIP);
-
-        Resource res = new Resource(name, s, mw, mh);
-
-        // Add multi-frame SWF resources that have bounds that
-        // are different than their first frame to the resource table.
-        if (s.getFrameCount() > 1) {
-
-            Rectangle2D f1Rect = new Rectangle2D.Double();
-            s.getFrameAt(0).addBounds(f1Rect);
-            int f1w = (int)(f1Rect.getMaxX()/TWIP);
-            int f1h = (int)(f1Rect.getMaxY()/TWIP);
-            if (f1w < mw || f1h < mh) {
-                mMultiFrameResourceSet.add(res);
-            }
-        }
- 
-        return res;
-    }
-
-    /**
-     * collect fonts for later use
-     */
-    private void collectFonts(Script s) {
-
-        Timeline tl = s.getTimeline();
-        // If preloader is added, skip frame 0. Assume that preloader is only
-        // one frame long starting at frame 0.
-        for(int i=0; i<tl.getFrameCount(); i++ ) {
-            Frame frame = tl.getFrameAt(i);
-            for( int k=0; k<frame.size(); k++ ) {
-                FlashObject fo = frame.getFlashObjectAt(k);
-                //mLogger.debug("collecting from a " + fo.getClass().getName());
-                fo.collectFonts( mFontsCollector );
-                //mLogger.debug("FONTS size " 
-                         //+ mFontsCollector.getFonts().size());
-            }
-        }
-    }
-
-    /**
-     * @param fileName
-     * @param name
-     */
-    private Resource importMP3(String fileName, String name) 
-        throws IVException, IOException {
-
-        long fileSize =  FileUtils.getSize(new File(fileName));
-        FileInputStream stream = new FileInputStream(fileName);
-        FlashBuffer buffer = new FlashBuffer(stream);
-        Sound sound = MP3Sound.newMP3Sound(buffer);
-
-        Element elt = new Element("resource");
-            elt.setAttribute("name", name);
-            elt.setAttribute("mime-type", MimeType.MP3);
-            elt.setAttribute("source", fileName);
-            elt.setAttribute("filesize", "" + fileSize);
-        mInfo.addContent(elt);
-
-        stream.close();
-
-        return new Resource(sound);
+    String stripPragmas(String str) {
+        String s2 = str;
+        //s2 = s2.replaceAll("[\r\n]#[^\r\n]*[\r\n]", "");
+        s2 = s2.replaceAll("#line\\s\\d*", "");
+        s2 = s2.replaceAll("#beginAttributeStatements", "");
+        s2 = s2.replaceAll("#endAttributeStatements", "");
+        s2 = s2.replaceAll("#pragma\\s\\S*", "");
+        s2 = s2.replaceAll("#beginAttribute", "");
+        s2 = s2.replaceAll("#endAttribute", "");
+        s2 = s2.replaceAll("#beginContent", "");
+        s2 = s2.replaceAll("#endContent", "");
+        s2 = s2.replaceAll("#file\\s[^ \t\"]*", "");
+        return s2;
     }
 
     /** Writes the SWF to the <code>OutputStream</code> that was
@@ -1073,24 +854,11 @@ class SWFWriter {
             throw new IllegalStateException("SWFWriter.close() called twice");
         }
         
-        // Create the textfield movieclip; name must match that used in LFC
-        if ((mFlashVersion == 5) && (mDefaultFont == null)) {
-            try {
-                File f = mEnv.resolve(mDefaultFontFileName, "");
-                mDefaultFont = importFontStyle(f.getAbsolutePath(), mDefaultFontName, "plain", mEnv);
-            } catch (FileNotFoundException fnfe) {
-                throw new CompilationError("default font " 
-                        + mDefaultFontFileName + " missing " + fnfe);
-            }
-        }
-
         // Add font information
         addFontTable();
 
         // Add resource information to canvas.
         addResourceTable();
-
-        addDefaultTextWidth();
 
         if (mPreloaderAdded == true) {
             // Add script to hide the preloader after finishing instantiation
@@ -1103,7 +871,7 @@ class SWFWriter {
             addScript("_dbg_log_all_writes = true;");
         }
 
-        boolean debug = mProperties.getProperty("debug", "fa && makedebugwindowlse").equals("true");
+        boolean debug = mProperties.getProperty("debug", "false").equals("true");
 
         // This indicates whether the user's source code already manually invoked
         // <debug> to create a debug window. If they didn't explicitly call for
@@ -1115,12 +883,6 @@ class SWFWriter {
             addScript("__LzDebug.makeDebugWindow()");
         }
 
-        boolean kranking = "true".equals(mEnv.getProperty("krank"));
-
-        // Bake the krank TCP server port into the app
-        if (kranking) {
-            addScript("_root.LzSerializer.krankport = "+LPS.getKrankPort()+";");
-        }
         // Tell the canvas we're done loading.
         addScript("canvas.initDone()");
 
@@ -1130,17 +892,19 @@ class SWFWriter {
         program.none();
         addProgram(program);
 
-        // Don't compress flash5 files or krank files
-        if (mFlashVersion != 5 && !kranking) {
-            mFlashFile.setCompressed(true);
-        }
+        // Always compress
+        mFlashFile.setCompressed(true);
      
         try { 
+
             InputStream input;
             input = mFlashFile.generate(mEnv.getEmbedFonts() ? mFontsCollector : new FontsCollector(), 
-                                        mEnv.getEmbedFonts() ? mPreloaderFontsCollector : new FontsCollector(),
-                                        mPreloaderAdded).getInputStream();
+                                            mEnv.getEmbedFonts() ? mPreloaderFontsCollector : new FontsCollector(),
+                                            mPreloaderAdded).getInputStream();
+
             FileUtils.send(input, mStream);
+
+
         } catch (IVException e) {
             throw new ChainedException(e);
         }
@@ -1148,11 +912,12 @@ class SWFWriter {
         mCloseCalled = true;
     }
 
-    public void openSnippet() throws IOException {
+    public void openSnippet(String liburl) throws IOException {
         // How do we make sure an initial frame exists?  Does this do it? 
         Frame frame = mFlashFile.getMainScript().getFrameAt(mLastFrame);
         // if we don't have any frame, then code which adds resources gets
         // an error. This happens if you have a resource declared before any code.
+        this.liburl = liburl;
     }
 
     public void closeSnippet() throws IOException {
@@ -1163,7 +928,47 @@ class SWFWriter {
 
         mFlashFile.setCompressed(true);
 
-        // TODO [hqm 2004-09-29] Add callback for snippet loader onload event
+        // If any fonts have been declared in this library, add an
+        // ImportAssets(2?) to import assets.  While this doesn't seem
+        // to be of any use (importing our own assets) it does cause
+        // the font assets to become visible to the main app for some
+        // reason.
+        //
+        // Note: This trick doesn't seem to work for image resource,
+        // unfortunately; we haven't figured out a way to make the
+        // imported image assets be visible/attachable to the loading
+        // movieclip.
+        
+
+        if (mLibFontsDefined) {
+            ImportAssets2 ia = new ImportAssets2();
+            //System.err.println("setting ImportAssets url="+this.liburl);
+            //get property of base url for fonts to import
+            String importFontUrlPath = LPS.getProperty("import.font.base.url");
+            if (importFontUrlPath != null) {
+                if (importFontUrlPath.endsWith("/") == false) {
+                    importFontUrlPath += "/";
+                }
+                if (liburl.startsWith("/")) {
+                    liburl = liburl.substring(1);
+                }
+                liburl = importFontUrlPath + liburl;
+            }
+            ia.setUrl(liburl);
+
+            Enumeration enu = mFlashFile.definitions();
+            while (enu.hasMoreElements()) {
+                FlashDef def = (FlashDef) enu.nextElement();
+                ia.addAsset(def.getName(), def);
+            }
+        
+            Timeline timeline = mFlashFile.getMainScript().getTimeline();
+            Frame frame = timeline.getFrameAt(timeline.getFrameCount() - 1);
+            frame.addFlashObject(ia);
+        }
+
+        ////////////////////////////////////////////////////////////////
+
         // Make sure we stop
         addScript("this._parent.loader.snippetLoaded(this._parent, null)");
         Program program = new Program();
@@ -1202,7 +1007,7 @@ class SWFWriter {
      * @param face face name of font
      * @param style style of font
      */
-    Font importFontStyle(String fileName, String face, String style,
+    void importFontStyle(String fileName, String face, String style,
             CompilationEnvironment env)
         throws FileNotFoundException, CompilationError {
 
@@ -1221,6 +1026,7 @@ class SWFWriter {
         boolean isDefault = false;
 
         Font font = importFont(fileName, face, styleBits, false);
+        mLibFontsDefined = true;
 
         if (fontInfo.getName().equals(face)) {
             if (styleBits == FontInfo.PLAIN) {
@@ -1293,14 +1099,13 @@ class SWFWriter {
 );
         }
 
-        return font;
     }
 
     /**
      * Import a font into the SWF we are writing
      *
-     * @param name of font in LZX
      * @param fileName name of font file 
+     * @param face font name of font in LZX
      */
     private Font importFont(String fileName, String face, int styleBits,
         boolean replace)
@@ -1530,9 +1335,10 @@ class SWFWriter {
          Iterator resources = sset.iterator();
          while(resources.hasNext()) {
              Resource res = (Resource)resources.next();
-             buf.append("canvas.resourcetable[\"" + res.getName() + 
+             String str = "canvas.resourcetable[\"" + res.getName() + 
                     "\"]={ width : " + res.getWidth() + ", height :" + 
-                    res.getHeight() + "};\n");
+                           res.getHeight() + "};\n";
+             buf.append(str);
          }
 
          byte[] action = ScriptCompiler.compileToByteArray(buf.toString(), mProperties);
@@ -1544,19 +1350,8 @@ class SWFWriter {
      }
 
     /**
-     * Sets the lfc's default text width
-     * LzAbstractText.prototype.DEFAULT_WIDTH,
-     * from the compiler's default value
-     */
-    private void addDefaultTextWidth() {
-        StringBuffer buf = new StringBuffer("");
-        buf.append("_root.LzAbstractText.prototype.DEFAULT_WIDTH = "+mEnv.getDefaultTextWidth()+";\n");
-        addScript(buf.toString());
-    }
-
-    /**
      * @return height of fontinfo in pixels
-     * @param fontinfo
+     * @param fontInfo
      */
     double getFontHeight (FontInfo fontInfo) {
         return fontHeight(getFontFromInfo(fontInfo));
@@ -1564,7 +1359,6 @@ class SWFWriter {
 
     /**
      * @return lineheight which lfc LzInputText expects for a given fontsize
-     * @param fontinfo, int fontsize
      */
     double getLFCLineHeight (FontInfo fontInfo, int fontsize) {
         return lfcLineHeight(getFontFromInfo(fontInfo), fontsize);
@@ -1745,46 +1539,6 @@ class SWFWriter {
 
 
     /**
-     * A resource we've imported
-     */
-    class Resource implements Comparable {
-        /** Name of the resource */
-        private String mName = "";
-        /** width of the resource in pixels */
-        private int mWidth = 0;
-        /** height of the resource in pixels */
-        private int mHeight = 0;
-        /** Flash definition of this resource */
-        private FlashDef mFlashDef = null;
-
-        /** Create a resource that represents this flash def
-         * @param def
-         */
-        public Resource(FlashDef def) {
-            mFlashDef = def;
-        }
-
-        /** Create a resource 
-         */
-        public Resource(String name, FlashDef def, int width, int height) {
-            mName = name;
-            mFlashDef = def;
-            mWidth = width;
-            mHeight = height;
-        }
-
-        public String getName()  { return mName; }
-        public int getWidth()  { return mWidth; }
-        public int getHeight() { return mHeight; }
-        public FlashDef getFlashDef() { return mFlashDef; }
-
-        public int compareTo(Object other) throws ClassCastException {
-          Resource o = (Resource)other;
-          return mName.compareTo(o.mName);
-        }
-    }
-
-    /**
      * @return font given a font info
      */
     private Font getFontFromInfo(FontInfo fontInfo) {
@@ -1836,7 +1590,7 @@ class SWFWriter {
         if (fontInfo.getName().equals(mDefaultFontName) && 
             fontInfo.styleBits == FontInfo.PLAIN) {
             try {
-                    File f = mEnv.resolve(mDefaultFontFileName, "");
+                    File f = mEnv.resolve(mDefaultFontFileName, null);
                     importFontStyle(f.getAbsolutePath(), mDefaultFontName, "plain", mEnv);
                 } catch (FileNotFoundException fnfe) {
                     throw new CompilationError(
@@ -1854,7 +1608,7 @@ class SWFWriter {
         if (fontInfo.getName().equals(mDefaultFontName) &&
             fontInfo.styleBits == FontInfo.BOLD) {
             try {
-                File f = mEnv.resolve(mDefaultBoldFontFileName, "");
+                File f = mEnv.resolve(mDefaultBoldFontFileName, null);
                 importFontStyle(f.getAbsolutePath(), mDefaultFontName, "bold", mEnv);
             } catch (FileNotFoundException fnfe) {
                 throw new CompilationError(
@@ -1872,7 +1626,7 @@ class SWFWriter {
         if (fontInfo.getName().equals(mDefaultFontName) &&
             fontInfo.styleBits == FontInfo.ITALIC) {
             try {
-                File f = mEnv.resolve(mDefaultItalicFontFileName, "");
+                File f = mEnv.resolve(mDefaultItalicFontFileName, null);
                 importFontStyle(f.getAbsolutePath(), mDefaultFontName, "italic", mEnv);
             } catch (FileNotFoundException fnfe) {
                 throw new CompilationError(
@@ -1890,7 +1644,7 @@ class SWFWriter {
         if (fontInfo.getName().equals(mDefaultFontName) &&
             fontInfo.styleBits == FontInfo.BOLDITALIC) {
             try {
-                File f = mEnv.resolve(mDefaultBoldItalicFontFileName, "");
+                File f = mEnv.resolve(mDefaultBoldItalicFontFileName, null);
                 importFontStyle(f.getAbsolutePath(), mDefaultFontName, "bold italic", mEnv);
             } catch (FileNotFoundException fnfe) {
                 throw new CompilationError(

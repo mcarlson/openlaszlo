@@ -105,7 +105,7 @@
   <xsl:template match="/xhtml:html/xhtml:head">
     <xsl:element name="{local-name()}">
       <xsl:apply-templates select="@*"/>
-      <script type="text/javascript" language="JavaScript" src="{$lpsdir}lps/includes/embed.js"/>&cr;
+      <script type="text/javascript" language="JavaScript" src="{$lpsdir}lps/includes/embed-compressed.js"/>&cr;
       <script type="text/javascript" language="JavaScript" src="{$lpsdir}docs/includes/docs.js"/>&cr;
       <xsl:if test="not(link[@rel='STYLESHEET']) and not(xhtml:link[@rel='STYLESHEET'])">
         <link rel="STYLESHEET" type="text/css" href="{$lpsdir}docs/includes/styles.css"/>
@@ -522,10 +522,6 @@ information of Laszlo Systems, Inc. Use is subject to license terms.</p>
       </xsl:if>
     </xsl:param>
     
-    <xsl:param name="query-parameters"><xsl:if test="@query-parameters">&amp;<xsl:value-of select="@query-parameters"></xsl:value-of></xsl:if></xsl:param>
-    
-    <xsl:param name="js-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=swf', $query-parameters)"/>', width: 497, height: 403 }</xsl:param>
-    
     <div class="liveExample">
       <a name="{generate-id(.)}"/>
       <xsl:if test="$title!=''">
@@ -537,22 +533,11 @@ information of Laszlo Systems, Inc. Use is subject to license terms.</p>
         </div>
       </xsl:if>
       <xsl:if test="$executable">
-        <div class="exampleCanvas">
-          <script type="text/javascript" language="JavaScript">
-            <xsl:choose>
-              <xsl:when test="$requestType='js'">
-                lzEmbed(<xsl:value-of select="$js-embed-params"/>);
-              </xsl:when>
-              <xsl:otherwise>
-                if (lzShowInlineExamples()) {
-                  lzEmbed(<xsl:value-of select="$js-embed-params"/>);
-                } else {
-                  document.write('&lt;button onclick="lzSetShowInlineExamples(true)"&gt;Show Examples&lt;/button&gt;');
-                }
-              </xsl:otherwise>
-            </xsl:choose>
-          </script>
-        </div>
+        <programlisting role="lzx-embednew">
+          <filename><xsl:value-of select="$fname"/></filename>
+          <parameter><xsl:value-of select="@query-parameters"/></parameter>
+          <code><xsl:value-of select="$text"/></code>
+        </programlisting>
       </xsl:if>
       <div style="background-color: #c1c8da">
         <pre class="code">
@@ -694,10 +679,9 @@ information of Laszlo Systems, Inc. Use is subject to license terms.</p>
         <xhtml:a href="{$href}"><xsl:value-of select="@title"/></xhtml:a>
     </xsl:variable>
     
-    <p>For details on how this component is constructed, see the
-    <xsl:apply-templates select="exslt:node-set($chapter-ref)"/>
-    section of the <a href="../component-design/index.html">Component
-    Design Guide</a>.</p>
+            <p>For details on how this component is constructed see 
+            <a href="${component-design}/index.html"> The Component Design Guide</a>.
+            </p>
   </xsl:template>
   
   <xsl:template name="do-tags">

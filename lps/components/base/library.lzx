@@ -1,3 +1,7 @@
+<!---
+      @topic Components
+      @subtopic Base Components
+  -->
 <library>
     <include href="baseform.lzx"/>
     <include href="submit.lzx"/>
@@ -6,6 +10,7 @@
     <include href="multistatebutton.lzx"/>
     <include href="style.lzx"/>
     <include href="basecomponent.lzx"/>
+    <include href="basecombobox.lzx"/>
     <include href="basedatacombobox.lzx"/>
     <include href="basedatepicker.lzx"/>
     <include href="basedatepickerday.lzx"/>
@@ -33,7 +38,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

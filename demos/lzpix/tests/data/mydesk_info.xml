@@ -1,0 +1,41 @@
+ 
+<rsp stat="ok">
+	<photo id="153385" secret="9c8cf46390" server="1" dateuploaded="1091738927" isfavorite="0" license="0" rotation="0" originalformat="jpg">
+		<owner nsid="49503086499@N01" username="sbshine" realname="Sascha Shine" location="" />
+		<title>
+			My workspace
+		</title>
+		<description />
+		<visibility ispublic="1" isfriend="0" isfamily="0" />
+		<dates posted="1091738927" taken="2004-08-05 16:39:21" takengranularity="0" lastupdate="1140983780" />
+		<permissions permcomment="3" permaddmeta="2" />
+		<editability cancomment="1" canaddmeta="1" />
+		<comments>
+			1
+		</comments>
+		<notes>
+			<note id="72057594070749973" author="49503086499@N01" authorname="sbshine" x="85" y="105" w="135" h="122">
+				my Tablet PC
+			</note>
+			<note id="72057594070750421" author="49503086499@N01" authorname="sbshine" x="243" y="119" w="104" h="97">
+				greendragon, back when it ran windows
+			</note>
+			<note id="72057594070750905" author="49503086499@N01" authorname="sbshine" x="164" y="304" w="149" h="71">
+				Stack of Inventor Mentor's, taped together as a footrest. We've had about fifty of these floating around the graphics lab since 1996. 
+			</note>
+			<note id="72057594070751308" author="49503086499@N01" authorname="sbshine" x="94" y="70" w="291" h="59">
+				My paintings and photos
+			</note>
+		</notes>
+		<tags>
+			<tag id="38248-153385-59656" author="49503086499@N01" raw="graphics lab">
+				graphicslab
+			</tag>
+		</tags>
+		<urls>
+			<url type="photopage">
+				http://www.flickr.com/photos/saschabshine/153385/
+			</url>
+		</urls>
+	</photo>
+</rsp>

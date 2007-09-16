@@ -18,8 +18,6 @@
 <include href="incubator/rich-text/formatfontcolor.lzx"/>
 <include href="incubator/rich-text/formatfontface.lzx"/>
 
-<!-- These includes are part of the test. We actually want them to break. --> 
-<include href="indentbuttongroup.lzx" />
 <include href="formatfontsize.lzx" />
 
 <view x="20" y="80" width="${canvas.width-40}" height="${canvas.height-80}">
@@ -28,9 +26,9 @@
     <formatbtn name="boldbtn" id="gBoldBtn" format="bold" iconname="bold" icony="4" />    
     <formatbtn name="underlinebtn" id="gUnderlineBtn" format="underline" iconname="underline" />  
     <formatbtn name="italicbtn" id="gItalicBtn" format="italic" iconname="italic" icony="4" />
-    <formatfontface name="fontfacecb" y="${(parent.height-this.height)/2}"/>
-    <formatfontcolor name="fontcolorcb" y="${(parent.height-this.height)/2}"/>
-    <formatfontsize name="fontsizecb" y="${Math.round((parent.height-this.height)/2)}"/>
+    <formatfontface name="fontfacecb" id="gFontFaceCB" y="${(parent.height-this.height)/2}"/>
+    <formatfontcolor name="fontcolorcb" id="gFontColorCB" y="${(parent.height-this.height)/2}"/>
+    <formatfontsize name="fontsizecb" id="gFontSizeCB" y="${Math.round((parent.height-this.height)/2)}"/>
     </richtexttoolbar>
         
 
@@ -44,6 +42,16 @@
             defaultfontcolor="0x336699"
 
             border="10"  text="For reasons which many persons thought ridiculous, Mrs. Lightfoot Lee decided to pass the winter in Washington. She was in excellent health, but she said that the climate would do her good. In New York she had troops of friends, but she suddenly became eager to see again the very small number of those who lived on the Potomac. It was only to her closest intimates that she honestly acknowledged herself to be tortured by ennui. Since her husband's death, five years before, she had lost her taste for New York society; she had felt no interest in the price of stocks, and very little in the men who dealt in them; she had become serious. What was it all worth, this wilderness of men and women as monotonous as the brown stone houses they lived in? In her despair she had resorted to desperate measures. She had read philosophy in the original German, and the more she read, the more she was disheartened that so much culture should lead to nothing... nothing.">
+                <method name="init">
+                    super.init();
+                    gBoldBtn.setAttribute("editor", this); 
+                    gUnderlineBtn.setAttribute("editor", this); 
+                    gItalicBtn.setAttribute("editor", this); 
+                    gFontFaceCB.setAttribute("editor", this);                         
+                    gFontSizeCB.setAttribute("editor", this);                         
+                    gFontColorCB.setAttribute("editor", this);               
+                </method>           
+            
         </richtexteditarea>
     </view> 
 </view>
@@ -149,7 +157,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-    * Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+    * Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.                    *
     * Use is subject to license terms.                                            *
     * X_LZ_COPYRIGHT_END ****************************************************** -->
     <!-- @LZX_VERSION@                                                         -->

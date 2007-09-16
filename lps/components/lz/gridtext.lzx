@@ -59,7 +59,8 @@
                 LzFocus.setFocus( editbox );
             </method>
 
-            <text visible="${!parent.editing}" width="${parent.width}"
+            <text visible="${!parent.editing}" width="${parent.width}" 
+                  resize="false"
                   y="$once{ parent.height /2 - this.height/2}"
                   fgcolor="${ parent.immediateparent.selected ? 
                                     classroot._textselectedcolor:
@@ -148,10 +149,34 @@
                 </edittext>
             </state>
         </view>
+        <doc>
+          <tag name="shortdesc"><text>
+              Declares a text column in a grid.
+          </text></tag>
+          <text>
+            <p>The <classname>gridtext</classname> class can be used to present
+              editable column data. This is the default class used by
+              <classname>grid</classname> when it infers columns.</p>
+
+            <example>
+              &lt;canvas height="250"&gt;
+              &lt;dataset name="contacts" request="true"
+              src="http://www.openlaszlo.org/lps/demos/contacts/contactsdata.xml"/&gt;
+
+              &lt;grid datapath="contacts:/resultset"&gt;
+              &lt;gridtext editable="false" datapath="@id" datatype="number"&gt;ID
+              &lt;/gridtext&gt;
+              &lt;gridtext datapath="@displayname" width="200"&gt; Name
+              &lt;/gridtext&gt;
+              &lt;/grid&gt;
+              &lt;/canvas&gt;
+            </example>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,47 @@
+
+<canvas width="550" height="200">
+  <dataset name="tabnames">
+    <title name="Account Info"/>
+    <title name="Order History"/>
+    <title name="Preferences"/>
+    <title name="Shopping Cart"/>
+  </dataset>
+  <simplelayout axis="x" spacing="25"/>
+  <button text="Create tabs">
+    <handler name="onclick">
+      gs.pane.setDatapath('tabnames:/title')
+      bs.pane.setDatapath('tabnames:/title')
+    </handler>
+  </button>
+  
+  <class name="repltabelt" extends="tabelement" text="$path{'@name'}" visible="true"/>
+    <tabslider width="150" name="gs" height="150" spacing="2">
+      <repltabelt name="pane">
+        <datapath>
+          <handler name="onclones">
+            if (!this['doneDel']) {
+              this.doneDel = new LzDelegate(this, 'openOH')
+              this.doneDel.register(clones[clones.length - 1], 'oninit')
+            }
+          </handler>
+          <method name="openOH">
+            parent.select(this.getCloneNumber(0))
+          </method>
+        </datapath>
+      </repltabelt>
+    </tabslider>
+      
+    <tabslider width="150" name="bs" height="150" spacing="2">
+      <repltabelt name="pane">
+        <datapath>
+          <handler name="onclones">
+          parent.select(this.getCloneNumber(0))
+        </handler>
+      </datapath>
+    </repltabelt>
+  </tabslider>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

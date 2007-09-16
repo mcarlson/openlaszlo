@@ -1,0 +1,33 @@
+<canvas debug="true">
+  <include href="lzunit" />
+
+<!--
+  covers-tags: lzutils smoketest
+-->
+
+  <TestSuite>
+    <TestCase>
+        <method name="testdectohex">
+            assertEquals('ffff', LzUtils.dectohex(0xffff), "Convert to hex");
+            assertEquals('d', LzUtils.dectohex(13), "Convert to hex");
+        </method>
+        <method name="testcolorconversion">
+            assertEquals('#ffff00', LzUtils.color.inttohex(0xffff00), "Convert to hex");
+            assertEquals('#0005f3', LzUtils.color.inttohex(1523), "Convert to hex");
+            assertEquals(1523, LzUtils.color.hextoint('#0005F3'), "Convert to decimal");
+            assertEquals(14540253, LzUtils.color.hextoint('#DdD'), "Convert to decimal");
+            assertEquals(0xffff00, LzUtils.color.hextoint('#ffff00'), "Convert to decimal");
+            assertEquals('rgb(221,221,221)', LzUtils.color.torgb('#DDD'), "Convert to RGB");
+            assertEquals('rgb(221,221,221)', LzUtils.color.torgb('#DDDDDD'), "Convert to RGB");
+            assertEquals('rgb(221,221,221,221)', LzUtils.color.torgb('#DDDD'), "Convert to RGB");
+            assertEquals('rgb(221,221,221,221)', LzUtils.color.torgb('#DDDDDDDD'), "Convert to RGB");
+        </method>
+    </TestCase>
+
+  </TestSuite>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,13 +1,4 @@
-<!--
-    $Id$
-
-Debugger Tests
--->
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-     * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-     * Use is subject to license terms.                                            *
-     * X_LZ_COPYRIGHT_END ****************************************************** -->
-
+<!-- Debugger Tests -->
 <library>
   <class name="TestDebugger" extends="TestCase">
     <method name="setUp">
@@ -92,21 +83,21 @@ Debugger Tests
                assertEquals('0XD6', Debug.formatToString('%#X', '-42'));
                assertEquals('0xfffffd6', Debug.formatToString('%-07#x', '-42'));
                assertEquals('Hello Laszlo!', Debug.formatToString('%s', "Hello Laszlo!"));
-               assertEquals('Hello Laszlo!', Debug.formatToString('%w', "Hello Laszlo!"));
+               assertEquals("'Hello Laszlo!'", Debug.formatToString('%w', "Hello Laszlo!"));
                assertEquals('Hello', Debug.formatToString('%.5s', "Hello Laszlo!"));
                // non numeric
                assertEquals('NaN    ', Debug.formatToString('%-07d', 'forty-two'));
 //                assertEquals('Hello', Debug.formatToString('%.5w', "Hello Laszlo!"));
                assertEquals('                 Hello Laszlo!', Debug.formatToString('%30s', "Hello Laszlo!"));
-               assertEquals('                 Hello Laszlo!', Debug.formatToString('%30w', "Hello Laszlo!"));
+               assertEquals("               'Hello Laszlo!'", Debug.formatToString('%30w', "Hello Laszlo!"));
                assertEquals('                         Hello', Debug.formatToString('%30.5s', "Hello Laszlo!"));
 //                assertEquals('                         Hello', Debug.formatToString('%30.5w', "Hello Laszlo!"));
                assertEquals('Hello Laszlo!', Debug.formatToString('%-s', "Hello Laszlo!"));
-               assertEquals('Hello Laszlo!', Debug.formatToString('%-w', "Hello Laszlo!"));
+               assertEquals("'Hello Laszlo!'", Debug.formatToString('%-w', "Hello Laszlo!"));
                assertEquals('Hello', Debug.formatToString('%-.5s', "Hello Laszlo!"));
 //                assertEquals('Hello', Debug.formatToString('%-.5w', "Hello Laszlo!"));
                assertEquals('Hello Laszlo!                 ', Debug.formatToString('%-30s', "Hello Laszlo!"));
-               assertEquals('Hello Laszlo!                 ', Debug.formatToString('%-30w', "Hello Laszlo!"));
+               assertEquals("'Hello Laszlo!'               ", Debug.formatToString('%-30w', "Hello Laszlo!"));
                assertEquals('Hello                         ', Debug.formatToString('%-30.5s', "Hello Laszlo!"));
 //                assertEquals('Hello                         ', Debug.formatToString('%-30.5w', "Hello Laszlo!"));
                assertEquals('1,2,3', Debug.formatToString('%s', this.array));
@@ -158,19 +149,19 @@ Debugger Tests
                assertEquals('true                          ', Debug.formatToString('%-30.5s', true));
                assertEquals('true                          ', Debug.formatToString('%-30.5w', true));
                assertEquals('"String", with \'\\\' escapes', Debug.formatToString('%s', this.testString));
-               assertEquals('"String", with \'\\\' escapes', Debug.formatToString('%w', this.testString));
+               assertEquals("'\"String\", with \\'\\\\\\' escapes'", Debug.formatToString('%w', this.testString));
                assertEquals('"Stri', Debug.formatToString('%.5s', this.testString));
 //                assertEquals('"Stri', Debug.formatToString('%.5w', this.testString));
                assertEquals('    "String", with \'\\\' escapes', Debug.formatToString('%30s', this.testString));
-               assertEquals('    "String", with \'\\\' escapes', Debug.formatToString('%30w', this.testString));
+               assertEquals("'\"String\", with \\'\\\\\\' escapes'", Debug.formatToString('%30w', this.testString));
                assertEquals('                         "Stri', Debug.formatToString('%30.5s', this.testString));
 //                assertEquals('                         "Stri', Debug.formatToString('%30.5w', this.testString));
                assertEquals('"String", with \'\\\' escapes', Debug.formatToString('%-s', this.testString));
-               assertEquals('"String", with \'\\\' escapes', Debug.formatToString('%-w', this.testString));
+               assertEquals("'\"String\", with \\'\\\\\\' escapes'", Debug.formatToString('%-w', this.testString));
                assertEquals('"Stri', Debug.formatToString('%-.5s', this.testString));
 //                assertEquals('"Stri', Debug.formatToString('%-.5w', this.testString));
                assertEquals('"String", with \'\\\' escapes    ', Debug.formatToString('%-30s', this.testString));
-               assertEquals('"String", with \'\\\' escapes    ', Debug.formatToString('%-30w', this.testString));
+               assertEquals("'\"String\", with \\'\\\\\\' escapes'", Debug.formatToString('%-30w', this.testString));
                assertEquals('"Stri                         ', Debug.formatToString('%-30.5s', this.testString));
 //                assertEquals('"Stri                         ', Debug.formatToString('%-30.5w', this.testString));
                assertEquals(this.dateString, Debug.formatToString('%s', this.date));
@@ -189,23 +180,36 @@ Debugger Tests
                assertEquals(this.dateString, Debug.formatToString('%-30w', this.date));
                assertEquals(this.dateString.substring(0, 5)+'                         ', Debug.formatToString('%-30.5s', this.date));
 //                assertEquals(this.dateString.substring(0, 5)+'                         ', Debug.formatToString('%-30.5w', this.date));
-               assertEquals('3.14159265358979', Debug.formatToString('%s', Math.PI));
-               assertEquals('3.14159265358979', Debug.formatToString('%w', Math.PI));
+               assertEquals('3.141592653589', Debug.formatToString('%.14s', Math.PI));
+//             assertEquals('3.141592653589', Debug.formatToString('%.14w', Math.PI));
                assertEquals('3.141', Debug.formatToString('%.5s', Math.PI));
-//                assertEquals('3.141', Debug.formatToString('%.5w', Math.PI));
-               assertEquals('              3.14159265358979', Debug.formatToString('%30s', Math.PI));
-               assertEquals('              3.14159265358979', Debug.formatToString('%30w', Math.PI));
+//             assertEquals('3.141', Debug.formatToString('%.5w', Math.PI));
+               assertEquals('                3.141592653589', Debug.formatToString('%30.14s', Math.PI));
+//             assertEquals('                3.141592653589', Debug.formatToString('%30.14w', Math.PI));
                assertEquals('                         3.141', Debug.formatToString('%30.5s', Math.PI));
-//                assertEquals('                         3.141', Debug.formatToString('%30.5w', Math.PI));
-               assertEquals('3.14159265358979', Debug.formatToString('%-s', Math.PI));
-               assertEquals('3.14159265358979', Debug.formatToString('%-w', Math.PI));
+//             assertEquals('                         3.141', Debug.formatToString('%30.5w', Math.PI));
+               assertEquals('3.141592653589', Debug.formatToString('%-.14s', Math.PI));
+//             assertEquals('3.141592653589', Debug.formatToString('%-.14w', Math.PI));
                assertEquals('3.141', Debug.formatToString('%-.5s', Math.PI));
-//                assertEquals('3.141', Debug.formatToString('%-.5w', Math.PI));
-               assertEquals('3.14159265358979              ', Debug.formatToString('%-30s', Math.PI));
-               assertEquals('3.14159265358979              ', Debug.formatToString('%-30w', Math.PI));
+//             assertEquals('3.141', Debug.formatToString('%-.5w', Math.PI));
+               assertEquals('3.141592653589                ', Debug.formatToString('%-30.14s', Math.PI));
+//             assertEquals('3.141592653589                ', Debug.formatToString('%-30.14w', Math.PI));
                assertEquals('3.141                         ', Debug.formatToString('%-30.5s', Math.PI));
-//                assertEquals('3.141                         ', Debug.formatToString('%-30.5w', Math.PI));
+//             assertEquals('3.141                         ', Debug.formatToString('%-30.5w', Math.PI));
+               // 'write' compatibility mode tests
+               assertEquals('%\n', Debug.formatToString('%'));
+               Debug.info("Expect an excess arguments warning");
+               assertEquals('% %\n', Debug.formatToString('%', '%'));
+               assertEquals('1 2 3\n', Debug.formatToString(1, 2, 3));
+               Debug.info("Expect an excess arguments warning");
+               assertEquals('%1 %2 %3\n', Debug.formatToString('%1', '%2', '%3'));
+               Debug.info("Expect an excess arguments warning");
+               assertEquals('1% 2% 3%\n', Debug.formatToString('1%', '2%', '3%'));
       ]]>
     </method>
   </class>
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+     * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Use is subject to license terms.                                            *
+     * X_LZ_COPYRIGHT_END ****************************************************** -->

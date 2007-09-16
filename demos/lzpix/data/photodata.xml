@@ -1,0 +1,37 @@
+<rsp stat="ok">
+    <photos page="1" pages="2" perpage="100" total="102">
+        <photo id="98431430" owner="48524006@N00" secret="41a7189b24" server="38" title="Laszlo" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98431427" owner="48524006@N00" secret="6a83d7618a" server="40" title="Laszlo (Montreuil)" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98431429" owner="48524006@N00" secret="2eb523cea6" server="42" title="Laszlo (Montreuil)" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98199306" owner="96419267@N00" secret="44c138e861" server="28" title="Passage de la Bonne Graine" ispublic="1" isfriend="1" isfamily="1"/>
+        <photo id="98185794" owner="48524006@N00" secret="7918104896" server="39" title="Laszlo" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98185791" owner="48524006@N00" secret="91e305916b" server="43" title="Laszlo -Passage de la main dOR" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98185790" owner="48524006@N00" secret="d4a197cc94" server="24" title="Laszlo" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98185793" owner="48524006@N00" secret="12d71f10a9" server="29" title="Laszlo -  Passage de la Bonne Graine" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98185795" owner="48524006@N00" secret="bc7de3e6df" server="25" title="Laszlo" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98185792" owner="48524006@N00" secret="0c168ff76c" server="29" title="Laszlo" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98151744" owner="40467171@N00" secret="dffba1d3e5" server="36" title="Fairy Basslet on Brain Coral" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98145503" owner="40467171@N00" secret="84f738c332" server="25" title="Vicki's Turtle Video" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98143700" owner="40467171@N00" secret="c3bf4977af" server="27" title="Sargassum Triggerfish" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="98136990" owner="40467171@N00" secret="58d2617e62" server="43" title="Beauty's in the Eye..." ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="97894314" owner="40467171@N00" secret="a9abd45248" server="32" title="Laughing Fish" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="97415886" owner="40467171@N00" secret="a9b051a574" server="22" title="Night-time Slipper" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="97408103" owner="40467171@N00" secret="314a1dea5a" server="31" title="Spotted Cleaner Shrimp" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="96632753" owner="40467171@N00" secret="c8718cf908" server="12" title="Common Octopus and Brain Coral" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="96172533" owner="40467171@N00" secret="97260bbfb9" server="26" title="Camouflage" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="96091367" owner="40467171@N00" secret="4cffd7fa82" server="25" title="Banded Coral Shrimp" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="95400250" owner="40467171@N00" secret="f35b557444" server="42" title="Grand Specter" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="95351615" owner="40467171@N00" secret="e4ff74aca9" server="39" title="Caribbean Spiny Lobster" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="95308652" owner="40467171@N00" secret="485d2f03f2" server="21" title="Neon Spots" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="92977479" owner="40467171@N00" secret="9fecb755a6" server="19" title="Okay, Who Grunted" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="92977474" owner="40467171@N00" secret="a1bec34bb0" server="21" title="Party Balloon" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="92977475" owner="40467171@N00" secret="e2f4c06bf2" server="41" title="Pastel Phantom" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="92977477" owner="40467171@N00" secret="8af8f2059a" server="29" title="White Christmas" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="90109118" owner="40467171@N00" secret="97832a1887" server="43" title="A Small Army" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="90109116" owner="40467171@N00" secret="cebf43039b" server="26" title="Azure Vase Sponge" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="90109119" owner="40467171@N00" secret="e94854de25" server="35" title="Blue Angelfish" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="90109120" owner="40467171@N00" secret="55def042f8" server="17" title="Lone Blue Chromis" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="90109115" owner="40467171@N00" secret="4c9c78051b" server="24" title="Pretty in Pink" ispublic="1" isfriend="0" isfamily="0"/>
+        <photo id="89070414" owner="20781207@N00" secret="ba92a5d6ce" server="14" title="Karaoke" ispublic="1" isfriend="1" isfamily="1"/>
+    </photos>
+</rsp>

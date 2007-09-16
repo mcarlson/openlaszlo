@@ -1,0 +1,22 @@
+
+<canvas height="100">
+    <simplelayout axis="x" spacing="10" inset="10"/>
+    <list shownitems="4">
+        <textlistitem>judy</textlistitem>
+        <textlistitem>ann</textlistitem>
+        <textlistitem>betsy</textlistitem>
+        <textlistitem>sarah</textlistitem>
+        <textlistitem>carol</textlistitem>
+        <textlistitem>danah</textlistitem>
+    </list>
+
+    <radiogroup>
+        <radiobutton text="apple"/>
+        <radiobutton text="cherry"/>
+        <radiobutton text="key lime"/>
+    </radiogroup>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

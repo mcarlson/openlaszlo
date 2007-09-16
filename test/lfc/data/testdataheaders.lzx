@@ -1,8 +1,9 @@
 <canvas>
   <include href="lzunit"/>
 
-  <dataset name="acceptData" src="http:httpheader.jsp?parameter=accept" request="true"/>
-  <dataset name="acceptEncodingData" src="http:httpheader.jsp?parameter=accept-encoding" request="true"/>
+  <dataset name="acceptData" src="http:httpheader.jsp?parameter=accept" request="true" timeout="120000"/>
+  <dataset name="acceptEncodingData" src="http:httpheader.jsp?parameter=accept-encoding" 
+           timeout="120000" request="true" />
 
   <simplelayout axis="y"/>
   <text name="accept" datapath="acceptData:/value/text()" width="600"/>
@@ -29,6 +30,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

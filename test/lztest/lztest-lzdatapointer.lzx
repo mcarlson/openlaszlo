@@ -1,0 +1,49 @@
+<canvas>
+
+<include href="lztest/lztestmanager.lzx" /> 
+
+
+<!-- test LzDatapointer -->
+<!-- This test is incomplete and only tests the behavior on an empty object -->
+
+<script>
+<![CDATA[
+
+function test_lzdatapointer_1() {
+
+   // Test behavior on undefined object
+   var dp = new LzDatapointer();
+
+   LzTestManager.assertUndefined(dp.getNodeName(), 'getNodeName');
+   LzTestManager.assertUndefined(dp.getNodeAttributes(), 'getNodeAttributes');
+   LzTestManager.assertUndefined(dp.getNodeAttribute(), 'getNodeAttribute');
+   LzTestManager.assertUndefined(dp.getNodeText(), 'getNodeText');
+   LzTestManager.assertUndefined(dp.addNode(null, null, null), 'addNode');
+   LzTestManager.assertUndefined(dp.deleteNode(), 'deleteNode');
+   LzTestManager.assertUndefined(dp.addNodeFromPointer({p: null}), 'addNodeFromPointer');
+   LzTestManager.assertUndefined(dp.serialize(), 'serialize');
+}
+
+function test_lzdatapointer_2() {
+   // Visual test. In debug mode each call should generate a warning. 
+   // Removed tests run by test_lzdatapointer_1
+   var dp = new LzDatapointer();
+   dp.setNodeName(null);
+   dp.setNodeAttribute(null, null);
+   dp.deleteNodeAttribute(null);
+   dp.setNodeText(null);
+}
+
+var testDataPointerSuite = new LzTestSuite("Test Suite for LzDatapointer"); 
+testDataPointerSuite.addTest( test_lzdatapointer_1 ); 
+testDataPointerSuite.addTest( test_lzdatapointer_2 ); 
+
+
+]]>
+</script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

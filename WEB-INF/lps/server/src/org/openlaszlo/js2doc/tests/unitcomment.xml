@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<js2doc buildoptions="debug profile" runtimeoptions="dhtml j2me svg swf7 swf8 swf9"><unit path="WEB-INF/lps/server/src/org/openlaszlo/js2doc/tests/unitcomment.js" id="test.unitcomment.js"><doc><text>unitcomment.js</text><tag name="author"><text>jgrandy</text></tag><tag name="affects"><text>test1 test2</text></tag><tag name="copyright"><text>Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.
+ Use is subject to license terms.</text></tag></doc></unit></js2doc>
+

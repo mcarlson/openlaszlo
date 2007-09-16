@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -328,8 +328,6 @@ public class SourceLocatorSAXOutputter extends XMLFilterImpl{
      * </p>
      *
      * @param element <code>Element</code> used in callbacks.
-     * @param eltNamespaces <code>List</code> of namespaces to declare with
-     * the element or <code>null</code>.
      */
     private void startElement(Element element) 
                       throws JDOMException {

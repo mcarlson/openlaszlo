@@ -1,0 +1,23 @@
+
+<canvas width="800" height="80">
+   <!-- Uncomment to include fonts for SWF -->
+    <!-- fonts -->
+    <!-- 
+    <font src="helmetbi.ttf" name="obliqueText" />
+    -->
+  <!-- art assets -->
+  <resource name="button_blu" src="resources/button_blue.gif"/>
+  
+  
+  <view resource="button_blu" clickable="true" 
+        onclick="display.inputDigit(this);">
+    <text name="buttonText" font="obliqueText" fontsize="30" 
+          fgcolor="#ffffff" x="9" valign="middle">
+      0
+    </text>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

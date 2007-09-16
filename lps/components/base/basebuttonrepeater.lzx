@@ -41,11 +41,23 @@
             this.isMouseDown=false;
             LzTimer.removeTimer( this.stillDownDelegate );
         </handler>
+        
+        <doc>
+          <tag name="shortdesc"><text>a basebutton that sends an event if the mouse is held down.</text></tag>
+          <text>
+            <p>This class is a simple extension of
+            <classname>basebutton</classname>.  If the user holds the mouse button
+            down over the button (for more than a half second), then an event
+            <event>onmousestilldown</event> will be sent.  The
+            <event>onmousestilldown</event> event will continue to be sent every
+            50 milliseconds until the mouse button is released.</p>
+          </text>
+        </doc>
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

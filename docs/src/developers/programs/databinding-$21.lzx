@@ -1,0 +1,36 @@
+
+<canvas height="150">
+  <dataset name="busy">
+    <Monday order="1"/>
+    <Tuesday order="2"/>
+    <Wednesday order="3"/>
+    <Thursday order="4"/>
+    <Friday order="5"/>
+  </dataset>
+  <dataset name="free"/>
+  
+  <simplelayout axis="x" spacing="20"/>
+  
+  <class name="schedule" height="150" width="100">
+    <attribute name="title" type="string"/>
+    <attribute name="target"/>
+    
+    <simplelayout spacing="5"/>
+    <text bgcolor="white" fgcolor="blue" text="$once{parent.title}"/>
+    <text bgcolor="0xe0e0e0" 
+          onmouseover="setBGColor(0xc0c0c0)" onmouseout="setBGColor(0xe0e0e0)">
+      <datapath xpath="*/name()" sortpath="@order" sortorder="ascending"/>
+      <handler name="onclick">
+        parent.target.datapath.addNodeFromPointer(this.datapath)
+        this.datapath.deleteNode()
+      </handler>
+    </text>
+  </class>
+  
+  <schedule name="b" target="${f}" title="Busy" bgcolor="0xd0000a" datapath="busy:/"/>
+  <schedule name="f" target="${b}"  title="Free" bgcolor="0x00a000" datapath="free:/"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

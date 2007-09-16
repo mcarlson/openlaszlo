@@ -1,0 +1,185 @@
+/**
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @affects lztimer
+  * @access public
+  * @topic LFC
+  * @subtopic Services
+  */
+
+/**
+  * <p>
+  * LzTimer is used to invoke functionality after a specific amount of time. By using a <xref linkend="LzDelegate"/> to refer to a particular method, and then by adding a timer to that delegate, the developer can control the timing of the method's start.  Use LzTimer to tweak sequence and timing of visual animations, delay the effects of user events, or implement user experiences with expiration features.
+  * </p>
+  * <p>It should be noted that the time passed to the LzTimer service describes the time <i>before</i> which the delegate may not run -- it is not guaranteed that the delegate will run at that time.  Depending on application needs and client performance, the specified delegate may be invoked at any time <i>after</i> the amount of time specified.
+  * 
+  * </p>
+  * <p>The following example displays some text when a button is clicked, and uses LzTimer to fade the text away after three seconds.</p>
+  * 
+  * <example class="program" title="Using LzTimer to invoke method" id="lztimer-1">
+  * &lt;canvas height="50" &gt;
+  * 
+  *     &lt;button text="Show then Fade" onclick="canvas.showText()" /&gt;
+  *     &lt;text name="myText" opacity="0.0" bgcolor="#CCCCCC"&gt;The Invisible Man&lt;/text&gt;
+  *     &lt;simplelayout axis="y" spacing="10" /&gt;
+  * 
+  *     &lt;method name="showText"&gt;
+  *         this.myText.setAttribute( "opacity", 1.0 );
+  *         this.fadeDelegate = new LzDelegate( this, "fadeText" );
+  *         LzTimer.addTimer( this.fadeDelegate, 3000 );
+  *     &lt;/method&gt;
+  * 
+  *     &lt;method name="fadeText"&gt;
+  *         this.myText.animate( "opacity", 0.0, 1000 );
+  *     &lt;/method&gt;
+  * 
+  * &lt;/canvas&gt;
+  * </example>
+  * 
+  * @shortdesc Handles calling of a delegate after a specified number of milliseconds.
+  * @devnote The timer calls a given delegate in a specified number of miliseconds.
+  * @devnote Unfortunately the original semantics of LzTimer allows one to add more
+  * than one timer to a single delegate, but only allows one to remove the
+  * oldest timer from a delegate -- there's no way of specifying which one.
+  * The logic below is faithful to the original while still attempting to be
+  * efficient. In the common case of one timer per delegate, we simply
+  * store the timer id in the delegate's timer list entry. If the program
+  * attempts to store more than one timer with a single delegate, we shift
+  * to storing an array of them in the timer list entry. This saves an
+  * array allocation in the common single-timer case, at the cost of increased
+  * code complexity.
+  *
+  */
+class LzTimerClass {
+
+/** @access private */
+var timerList = new Object;
+
+/**
+  * Adds a timer. NB: The timer guarantees that the delegate will not be called
+  * before the number of miliseconds specified here, but cannot guarantee that
+  * it will be called at exactly that time.
+  * 
+  * @param LzDelegate d: The delegate to call when the timer expires
+  * @param Number milisecs: The number of milisecs to wait before calling the 
+  * delegate.
+  */
+function addTimer ( d , milisecs ){
+    var p = { 'delegate' : d };
+    var f = function () {
+        // This closure captures 'p', and relies on the fact that p.id will 
+        // have been set by the time the closure is invoked.
+        
+        // User LzTimer explicitly below; "this" is not the outer function's
+        // this here.
+        LzTimer.removeTimerWithID(p.delegate, p.id); 
+        p.delegate.execute( (new Date()).getTime() );
+    }
+    var id = setInterval(f, milisecs);
+    if ($debug) {
+        // Debug.format("created timer %w for delegate %w\n", id, d);
+        if (id instanceof Array)
+            // we rely on the setInterval value being a non-array, otherwise
+            // our storage scheme won't work. Error if this happens -- should only
+            // occur when bootstrapping a new runtime.
+            Debug.error("setInterval result type is unexpected; LzTimer will fail");
+    }
+    p.id = id;
+    var tle = this.timerList[d];
+    if (tle == null) {
+        this.timerList[d] = id;
+    } else if (! (tle instanceof Array)) {
+        this.timerList[d] = [tle, id];
+    } else {
+        tle.push(id);
+    }
+    return id;
+}
+
+/**
+  * Removes the first timer that calls the given delegate from the timerlist.
+  * @param LzDelegate d: The delegate called by the timer to be removed. If there
+  * are multiple timerList entries that call delegate d, removes the first in the
+  * order received.
+  */
+function removeTimer ( d ){
+    var tle = this.timerList[d];
+    var id = null;
+    if (tle != null) {
+        if (tle instanceof Array) {
+            id = tle.shift();
+            clearInterval(id);
+            if (tle.length == 0)
+                delete this.timerList[d];
+        } else {
+            id = tle;
+            clearInterval(id);
+            delete this.timerList[d];
+        }
+        // Debug.format("cleared timer %w for delegate %w (2)\n", id, d);
+    }
+    return id;
+}
+
+/**
+  * Removes the timer with the given id that calls the given delegate from the 
+  * timerlist.
+  * 
+  * @param LzDelegate d: The delegate called by the timer to be removed.
+  * @param id: the id of the timer to remove.
+  * @access private
+  */
+function removeTimerWithID ( d, id ){
+    var tle = this.timerList[d];
+    if (tle != null) {
+        if (tle instanceof Array) {
+            var i = 0;
+            for (i=0; i<tle.length; i++) {
+                var id2 = tle[i];
+                if (id2 == id) {
+                    clearInterval(id);
+                    tle.splice(i,1);
+                    break;
+                }
+            }
+            if (tle.length == 0)
+                delete this.timerList[d];
+        } else if (tle == id) {
+            clearInterval(id);
+            delete this.timerList[d];
+        }
+    }
+}
+
+/**
+  * Resets the timer for the given delegate to the new amount of time. If the
+  * delegate is not found, a new timer is created.
+  * 
+  * @param LzDelegate d: The delegate called by the timer to be reset. If there are
+  * multiple timers for this delegate, the first one is reset. If this delegate
+  * is not found in the timer list, a new timer event is created for it.
+  * 
+  * @param milisecs: The number of miliseconds to wait before calling the timer.
+  */
+function resetTimer ( d  , milisecs ){
+    this.removeTimer( d );
+    return this.addTimer( d , milisecs );
+}
+
+if ($debug) {
+  function countTimers ( d ){
+    var tle = this.timerList[d];
+    if (tle == null)
+        return 0;
+    else if (tle instanceof Array)
+        return tle.length;
+    else
+        return 1;
+  }
+}
+
+} // End of LzTimerClass
+
+var LzTimer = new LzTimerClass ();

@@ -1,0 +1,77 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+
+<canvas>
+<include href="lztest/lztestmanager.lzx" /> 
+
+<!--
+  covers-tags : lznode lzcanvas smoketest
+-->
+
+<node id="gMyNode" />
+
+<node name="mine" />
+
+<node name="thingy" id="gThingy" />
+
+<node name="horace">
+    <node name="hoo" />
+    <node name="eel" />
+</node>
+
+<node name="cell">
+    <node name="nucleus">
+        <node name="chromosome1"  />
+        <node name="chromosome2" >
+            <node name="gene">
+                <node name="basepair1" />
+                <node name="basepair2" />
+            </node>
+        </node>
+            
+        <node name="chromosome3"  />
+    </node>
+    <node name="endoplasmicreticulum">
+    </node>
+    <node name="protoplasm" />
+</node>
+
+<script>
+    
+var idSuite = new LzTestSuite("Ids of Nodes"); 
+
+function test_ids_defined() {   
+    LzTestManager.assertNotUndefined(global.gMyNode, "testing for defined id"); 
+    LzTestManager.assertNotNull(global.gMyNode, "testing for non-null id");     
+    LzTestManager.assertNotUndefined(global.mine, "testing for defined name on global.mine"); 
+    LzTestManager.assertNotNull(global.mine, "testing for defined name on global.mine"); 
+    LzTestManager.assertNotSame( global.mine, global.gMyNode, "mine and myNode should not match" );    
+    LzTestManager.assertSame( global.thingy, global.gThingy, "name and id refer to same object" )
+}
+
+    
+function test_ids_subnodes() {    
+    LzTestManager.assertNotNull(global.horace, "horace existence");
+    LzTestManager.assertNotNull(global.horace.hoo, "horace has a hoo");
+    LzTestManager.assertNotNull(global.horace.eel, "horace has an eel");
+    
+    LzTestManager.assertNotNull(global.cell, "cell existence");
+    LzTestManager.assertNotNull(global.cell.nucleus, "subnode of cell"); 
+    LzTestManager.assertNotNull(global.cell.nucleus.chromosome1, "subnode of subnode of cell");
+    LzTestManager.assertNotNull(global.cell.nucleus.chromosome2.gene, "sn of subnode of subnode of cell");
+    LzTestManager.assertNotNull(global.cell.protoplasm, "another subnode of cell");
+} 
+
+idSuite.addTest( test_ids_defined );
+idSuite.addTest( test_ids_subnodes ); 
+
+</script>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

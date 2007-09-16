@@ -4,8 +4,8 @@
     <button text="changeit" onclick="this.nextState(); this.doMeth();" >
         <attribute name="statelist" value="[ 'd' , 'c' , 'b' , 'a' ] " />
         <method name="nextState">
-        	if (this.statelist.length > 0)
-        	    this[ this.statelist.pop() ].apply();
+            if (this.statelist.length > 0)
+                this[ this.statelist.pop() ].apply();
         </method>
 
         <state name="a">
@@ -40,6 +40,6 @@
     <view y="60" resource="drag" name="testr" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,28 @@
+#! /bin/bash -f
+
+# For the debug LFC, we don't compile with --debug, as that turns on
+# undefined warnings and is very slow, but we do turn on nameFunctions,
+# which makes 'inspect' much more useful, and define $debug=true, which 
+# will conditionally compile in the debug aspects of LaszloLibrary
+
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+
+runtime=`sed -n -e '/compiler.runtime.default/s/.*=\(.*\)$/\1/p' < ../config/lps.properties`
+options=
+while [ $# -gt 0 ]; do
+  case "$1" in 
+   -o ) output=$2 ; shift 2 ;;
+   --runtime=* ) runtime=${1#--runtime=} ; shift ;;
+   * ) options="${options} $1"; shift ;;
+  esac
+done
+if [ "$runtime" == "dhtml" ]; then
+    suffix="js"
+fi
+ant -Dlfc.output=${output:-LFC${runtime#swf}-backtrace.${suffix:-"lzl"}} -Dlfc.runtime=${runtime} -Dlfc.source=LaszloLibrary.lzs \
+    -Dlfc.options="--option debugBacktrace  --option nameFunctions --option warnGlobalAssignments \"-D\\\$debug=true\" ${options}" lfc
+
+

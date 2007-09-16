@@ -9,78 +9,78 @@
     </dataset>
 
     <command id="cmd_new"
-             onselect="debug.write('EXECUTED command new')"
+             onselect="Debug.write('EXECUTED command new')"
              key="['Control','Shift','N']"/>
              
     <command id="cmd_open"
-             onselect="debug.write('EXECUTED command open')"
+             onselect="Debug.write('EXECUTED command open')"
              key="['Control','Shift','O']"/>
              
-	<window title="menu test - menubar w/no assigned height" 
-	        x="350" y="20" width="320" height="170" resizable="true">
-		<menubar name="mbar" placement="menubar">
-			<menu name="file" width="200"  >File
-            	<menuitem text="New..." command="cmd_new" />
-				<menuseparator/>
-				<menuitem text="Open..." command="cmd_open" />
-        	</menu>
-		</menubar>
-	</window>
-	
-	<window title="menu test - menubar with assigned height" 
-	        x="350" y="230" width="320" height="170" resizable="true">
-		<menubar name="mbar" height="18" width="100%" placement="menubar" >
-			<menu name="file" width="200"  >File
-            	<menuitem text="New..." command="cmd_new" />
-				<menuseparator/>
-				<menuitem text="Open..." command="cmd_open" />
-        	</menu>
-	        <menu name="Document" initstage="late" >Document
-	            <menuitem  text="item 1 for doc" onselect="debug.write('EXECUTED onselect for menuitem - item 1 for doc' )" />
-				<menuseparator/>
-	            <menuitem text="item 2" >
-					<menu name="subedit" >subedit            
-						<menuitem text="subitem 1" />
-						<menuitem text="subitem 2" />
-					</menu>
-	            </menuitem>
-	        </menu>            
-		</menubar>
-	</window>
+    <window title="menu test - menubar w/no assigned height" 
+            x="350" y="20" width="320" height="170" resizable="true">
+        <menubar name="mbar" placement="menubar">
+            <menu name="file" width="200"  >File
+                <menuitem text="New..." command="cmd_new" />
+                <menuseparator/>
+                <menuitem text="Open..." command="cmd_open" />
+            </menu>
+        </menubar>
+    </window>
+    
+    <window title="menu test - menubar with assigned height" 
+            x="350" y="230" width="320" height="170" resizable="true">
+        <menubar name="mbar" height="18" width="100%" placement="menubar" >
+            <menu name="file" width="200"  >File
+                <menuitem text="New..." command="cmd_new" />
+                <menuseparator/>
+                <menuitem text="Open..." command="cmd_open" />
+            </menu>
+            <menu name="Document" initstage="late" >Document
+                <menuitem  text="item 1 for doc" onselect="Debug.write('EXECUTED onselect for menuitem - item 1 for doc' )" />
+                <menuseparator/>
+                <menuitem text="item 2" >
+                    <menu name="subedit" >subedit            
+                        <menuitem text="subitem 1" />
+                        <menuitem text="subitem 2" />
+                    </menu>
+                </menuitem>
+            </menu>            
+        </menubar>
+    </window>
 
-	<menubar name="mbar" width="300" x="10" y="20" onclick="this.setX(300)">
+    <menubar name="mbar" width="300" x="10" y="20" onclick="this.setX(300)">
          <menu name="file" width="200"  >File
             <menuitem text="New..." command="cmd_new" />
-			<menuseparator/>
-			<menuitem text="Open..." command="cmd_open" />
+            <menuseparator/>
+            <menuitem text="Open..." command="cmd_open" />
         </menu>
 
         <menu name="Document" initstage="late" >Document
-            <menuitem  text="item 1 for doc" onselect="debug.write('EXECUTED onselect for menuitem - item 1 for doc' )" />
-			<menuseparator/>
+            <menuitem  text="item 1 for doc" onselect="Debug.write('EXECUTED onselect for menuitem - item 1 for doc' )" />
+            <menuseparator/>
             <menuitem text="item 2" >
-				<menu name="subedit" >subedit            
-					<menuitem text="subitem 1" />
-					<menuitem text="subitem 2" />
-				</menu>
+                <menu name="subedit" >subedit            
+                    <menuitem text="subitem 1" />
+                    <menuitem text="subitem 2" />
+                </menu>
             </menuitem>            
             <menuitem text="item 3" >
-				<menu name="submenu-depth-1 " >subedit            
-					<menuitem text="subitem 1" />
-					<menuitem text="subitem 2" >
-						<menu name="submenu-depth-2" width="200" >subedit            
-							<menuitem text="subitem 1" command="cmd_new" />
-							<menuitem text="subitem 2" />
-							<menuitem text="subitem 3" />
-						</menu>
-					</menuitem>
-					<menuitem text="subitem 3" />
-					<menuitem text="subitem 4" />
-					<menuitem text="subitem 5" />
-					<menuitem text="subitem 6" />
-					<menuitem text="subitem 7" />
-					<menuitem text="subitem 8" />
-				</menu>
+                <menu name="submenu-depth-1 " >subedit            
+                    <menuitem text="subitem 1" />
+                    <menuitem text="subitem 2" >
+                        <menu name="submenu-depth-2" width="200" >subedit            
+                            <menuitem text="subitem 1" command="cmd_new" />
+                            <menuitem text="subitem 2" />
+                            <menuitem text="subitem 3" />
+                        </menu>
+                    </menuitem>
+                    <menuitem text="subitem 3" />
+                    <menuitem text="subitem 4" />
+                    <menuitem text="subitem 5" />
+                    <menuitem text="subitem 6" />
+                    <menuitem text="subitem 7" />
+                    <menuitem text="subitem 8" />
+                </menu>
             </menuitem>            
             <menuitem text="item 4" />
             <menuitem text="item 5" />
@@ -92,36 +92,36 @@
    <menubar name="mbarbottom" width="300" x="10" y="400" onclick="this.setX(300)">
          <menu name="file" id="mfile" width="200"  >File
             <menuitem text="New..." command="cmd_new" />
-			<menuseparator/>
-			<menuitem text="Open..." command="cmd_open" />
+            <menuseparator/>
+            <menuitem text="Open..." command="cmd_open" />
         </menu>
 
         <menu name="Document" initstage="late" >Document
-            <menuitem  text="item 1 for doc" onselect="debug.write('EXECUTED onselect for menuitem - item 1 for doc' )" />
-			<menuseparator/>
+            <menuitem  text="item 1 for doc" onselect="Debug.write('EXECUTED onselect for menuitem - item 1 for doc' )" />
+            <menuseparator/>
             <menuitem text="item 2" >
-				<menu name="subedit" >subedit            
-					<menuitem text="subitem 1" />
-					<menuitem text="subitem 2" />
-				</menu>
+                <menu name="subedit" >subedit            
+                    <menuitem text="subitem 1" />
+                    <menuitem text="subitem 2" />
+                </menu>
             </menuitem>            
             <menuitem text="item 3" >
-				<menu name="submenu-depth-1 " >subedit            
-					<menuitem text="subitem 1" />
-					<menuitem text="subitem 2" >
-						<menu name="submenu-depth-2" width="200" >subedit            
-							<menuitem text="subitem 1" command="cmd_new" />
-							<menuitem text="subitem 2" />
-							<menuitem text="subitem 3" />
-						</menu>
-					</menuitem>
-					<menuitem text="subitem 3" />
-					<menuitem text="subitem 4" />
-					<menuitem text="subitem 5" />
-					<menuitem text="subitem 6" />
-					<menuitem text="subitem 7" />
-					<menuitem text="subitem 8" />
-				</menu>
+                <menu name="submenu-depth-1 " >subedit            
+                    <menuitem text="subitem 1" />
+                    <menuitem text="subitem 2" >
+                        <menu name="submenu-depth-2" width="200" >subedit            
+                            <menuitem text="subitem 1" command="cmd_new" />
+                            <menuitem text="subitem 2" />
+                            <menuitem text="subitem 3" />
+                        </menu>
+                    </menuitem>
+                    <menuitem text="subitem 3" />
+                    <menuitem text="subitem 4" />
+                    <menuitem text="subitem 5" />
+                    <menuitem text="subitem 6" />
+                    <menuitem text="subitem 7" />
+                    <menuitem text="subitem 8" />
+                </menu>
             </menuitem>            
             <menuitem text="item 4" />
             <menuitem text="item 5" />
@@ -129,57 +129,57 @@
         </menu>
    </menubar>
 
-	<view x="20" y="200" >
-	    <button text="openMenu below" >
-	        <menu name="foo" attach="bottom" >Document
-	            <menuitem text="item 1" />
-	            <menuitem text="item 2" >
-	            	<menu name="foo" attach="right" >Document
-	            		<menuitem text="subitem 1" />
-	            		<menuitem text="subitem 2" />
-	        		</menu>
-	            </menuitem>
-	        </menu>
-	        <method event="onmousedown">
-	            this.foo.setOpen(true);
-	        </method>
-		</button>
-		
-	    <button text="openMenu right" >
-	        <menu name="foo" attach="right" >Document
-	            <menuitem text="item 1" />
-	            <menuitem text="item 2" />
-	        </menu>
-	        <method event="onmousedown">
-	            this.foo.setOpen(true);
-	        </method>
-		</button>
-		
-	    <button text="openMenu top" >
-	        <menu name="foo" attach="top" >Document
-	            <menuitem text="item 1" />
-	            <menuitem text="item 2" />
-	        </menu>
-	        <method event="onmousedown">
-	            this.foo.setOpen(true);
-	        </method>
-		</button>
-		
-	    <button text="openMenu left" >
-	        <menu name="foo" attach="left" >Document
-	            <menuitem text="item 1" />
-	            <menuitem text="item 2" />
-	        </menu>
-	        <method event="onmousedown">
-	            this.foo.setOpen(true);
-	        </method>
-		</button>
-		<simplelayout spacing="50" axis="x" />
-	</view>
+    <view x="20" y="200" >
+        <button text="openMenu below" >
+            <menu name="foo" attach="bottom" >Document
+                <menuitem text="item 1" />
+                <menuitem text="item 2" >
+                    <menu name="foo" attach="right" >Document
+                        <menuitem text="subitem 1" />
+                        <menuitem text="subitem 2" />
+                    </menu>
+                </menuitem>
+            </menu>
+            <method event="onmousedown">
+                this.foo.setOpen(true);
+            </method>
+        </button>
+        
+        <button text="openMenu right" >
+            <menu name="foo" attach="right" >Document
+                <menuitem text="item 1" />
+                <menuitem text="item 2" />
+            </menu>
+            <method event="onmousedown">
+                this.foo.setOpen(true);
+            </method>
+        </button>
+        
+        <button text="openMenu top" >
+            <menu name="foo" attach="top" >Document
+                <menuitem text="item 1" />
+                <menuitem text="item 2" />
+            </menu>
+            <method event="onmousedown">
+                this.foo.setOpen(true);
+            </method>
+        </button>
+        
+        <button text="openMenu left" >
+            <menu name="foo" attach="left" >Document
+                <menuitem text="item 1" />
+                <menuitem text="item 2" />
+            </menu>
+            <method event="onmousedown">
+                this.foo.setOpen(true);
+            </method>
+        </button>
+        <simplelayout spacing="50" axis="x" />
+    </view>
 
  <inittimer/>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

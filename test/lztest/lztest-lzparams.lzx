@@ -1,0 +1,77 @@
+<canvas>
+<include href="lztest/lztestmanager.lzx" /> 
+
+<!--
+  covers-tags: lzparam
+-->
+
+
+<script>
+<![CDATA[
+
+function test_lzparams() {
+   var lp = new LzParam();
+   var items = lp.parseQueryString("a=10&b=259&c=foobar&d=%2e%2f%2d");
+    // {a: 10, b: 259, c: foobar, d: ./-}
+   LzTestManager.assertEquals(10, items.a);
+   LzTestManager.assertEquals(259, items.b);
+   LzTestManager.assertEquals("foobar", items.c);
+   LzTestManager.assertEquals("./-", items.d);
+
+   lp = new LzParam();
+   lp.addObject({a: 10, b: 259, c: 'foobar'});
+   LzTestManager.assertEquals(10, lp.getValue('a'));
+   LzTestManager.assertEquals(259, lp.getValue('b'));
+   LzTestManager.assertEquals("foobar", lp.getValue('c'));   
+
+   var lp2 = lp.clone();
+   LzTestManager.assertEquals(lp.getValue('a'), lp2.getValue('a'));
+   LzTestManager.assertEquals(lp.getValue('b'), lp2.getValue('b'));
+   LzTestManager.assertEquals(lp.getValue('c'),lp2.getValue('c'));   
+
+}
+
+function test_lpremove () {   
+   lp = new LzParam();
+   lp.addObject({a: 10, b: 259, c: 'foobar'});
+   lp.remove('b');
+   LzTestManager.assertEquals(lp.getValue('b'), null);
+}
+
+function test_lpset () {   
+   lp = new LzParam();
+   lp.addObject({a: 10, b: 259, c: 'foobar'});
+   lp.setValue('color', 'orange');
+   LzTestManager.assertEquals(lp.getValue('color'), 'orange');
+
+   lp.setValue('color', 'orange/red');
+   LzTestManager.assertEquals(lp.getValue('color'), 'orange/red');
+
+   lp.setValue('color', 'orange/red', true);
+   LzTestManager.assertEquals(lp.getValue('color').toLowerCase(), 'orange%2Fred'.toLowerCase());
+
+}
+
+function test_lpadd () {   
+   lp = new LzParam();
+   lp.addObject({a: 10, b: 259, c: 'foobar'});
+
+   lp.addValue("a", 20);
+   lp.addValue("a", 30);
+
+   LzTestManager.assertEquals(lp.getValue('a'), 10);
+}
+
+var testLzParamSuite = new LzTestSuite( "Test LzParams"); 
+testLzParamSuite.addTest( test_lzparams ); 
+testLzParamSuite.addTest( test_lpremove ); 
+testLzParamSuite.addTest( test_lpset ); 
+testLzParamSuite.addTest( test_lpadd ); 
+]]>
+</script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,19 @@
+
+<canvas height="100">
+  <simplelayout/> 
+  <!-- This is a red view --> 
+  <view bgcolor="red" width="100" height="20"/> 
+  
+  <?lzx-co N102A3 ?><?ignore 
+  <!-- This is a blue view --> 
+  <view bgcolor="blue" width="100" height="20"/> 
+  <!-- This is a green view --> 
+  <view bgcolor="green" width="100" height="20"/> 
+  ?><?lzx-co N102AD ?>    
+  <!-- This is a yellow view --> 
+  <view bgcolor="yellow" width="100" height="20"/> 
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->  

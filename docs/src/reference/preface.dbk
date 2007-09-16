@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<preface id="ref.preface">
+<title>Preface</title>
+
+  <para>The OpenLaszlo Reference describes all of the public XML tags and JavaScript APIs in the LZX language. A companion document, the Contributor's Guide, includes descriptions of all private APIs, and other information of interest to contributors to the OpenLaszlo platform.</para>
+
+  <sect1><title>Other Sources of Information</title>
+    <simplelist>
+      <member><ulink url="../guide/tutorials.html" target="_blank"><citetitle>Tutorials</citetitle></ulink></member>
+      <member><ulink url="../guide/index.html" target="_blank"><citetitle>Developers Guide</citetitle></ulink></member>
+      <member><ulink url="../../laszlo-explorer/" target="_blank"><citetitle>Laszlo Explorer</citetitle></ulink></member>
+      <member><ulink url="http://www.openlaszlo.org/community" target="_blank"><citetitle>OpenLaszlo Community</citetitle></ulink></member>
+      <member><ulink url="http://forum.openlaszlo.org" target="_blank"><citetitle>Developer Forums</citetitle></ulink></member>
+    </simplelist>
+  </sect1>
+  
+  <sect1><title>Using the Reference</title>
+  
+    <sect2><title>Section Organization</title>
+      <para>
+      The Reference Guide is divided into chapters, each describing a distinct category of programming interfaces.
+      Each chapter contains a number of sub-chapters, corresponding to sub-categories of APIs, and each sub-chapter contains entries for each of those APIs.
+      </para>
+      <para>
+      Each reference entry contains a title (with an optional short description), a synopsis (floated to the right of the page in HTML), an optional Usage section, a Description, followed by a Details section. 
+      Each of these is pretty self-explanatory except for the Details section, which is described in the next section.
+      </para>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2><title>Reference Entry Details Section</title>
+
+      <para>
+      The Details section contains information about the methods and properties of each LZX tag-class. 
+      Each method or property is described using both LZX syntax and JavaScript syntax. 
+      </para>
+      <para>
+      Fully understanding a method or property entry requires understanding a bit about how LZX tags correspond to JavaScript classes.
+      Almost every LZX tag in the language -- and every LZX class declared in your program -- is implemented under the covers as a JavaScript class.
+      An LZX tag's methods and attributes correspond to JavaScript methods and properties. LZX's events and handlers correspond to more complex JavaScript constructs.
+      </para>
+
+      <para>
+      Certain information about a class or its methods or properties can only be described using JavaScript syntax. 
+      For example, an item can be public, private, or protected (meaning that it is only visible to a subclass); this information is given as a modifier to the JavaScript item declaration.
+      </para>
+      
+      <sect3><title>LZX and JavaScript Types</title>
+        <para>
+        Certain parts of the LZX language are actually written in JavaScript, so LZX type information given for these entries in the Reference Guide must be inferred from the original JavaScript type declaration. 
+        All other portions of LZX -- including your application source -- are of course written in LZX, so JavaScript type information given in the Reference Guide for those portions (useful when writing scripts) much be inferred from any typing information given in the LZX source.
+        </para>
+
+        <para>
+        LZX types are mostly advisory, but can have an effect on program execution.
+        See the <a href="../guide/methods-events-attributes.html#d0e18610">Attribute Types</a> section in the Developer's Guide for more information on this.
+        </para>
+      </sect3>
+
+    </sect2>
+
+  </sect1>
+  
+</preface>

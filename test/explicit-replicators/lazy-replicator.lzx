@@ -1,0 +1,29 @@
+<canvas debug="true" proxied="false">
+    <debug x="50%" y="5%" height="90%" />
+
+    <dataset name="mydata">
+      <product name="vanilla" color="1 white"/>
+      <product name="chocolate" color="2 brown"/>
+      <product name="strawberry" color="3 red"/>
+      <product name="pistachio" color="4 green"/>
+      <product name="pumpkin" color="5 orange"/>
+      <product name="mango" color="6 yellow"/>
+      <product name="peppermint" color="7 pink"/>
+      <product name="chocolate chip" color="8 white and black"/>
+      <product name="coffee" color="9 coffee"/>
+      <product name="green tea" color="10 light green"/>
+    </dataset>
+
+    <view name="clipper" width="300" height="85" bgcolor="#ccffcc" clip="true">
+        <view name="container">
+            <lazyreplicator name="lzreplicator"
+                            dataset="mydata"
+                            xpath="/product/@color" >
+                <text width="200" bgcolor="#cccccc" onclick="Debug.inspect(this)"/>
+            </lazyreplicator>
+        </view>
+        <scrollbar/>
+    </view>
+
+</canvas>
+<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->

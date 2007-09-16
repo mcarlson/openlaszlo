@@ -20,10 +20,12 @@
         <view name="img" resource="radio_rsc" y="2"/>
 
         <method name="select">
+          if (selectionobject.selectedItem) {
             selectionobject.selectedItem.img.setResourceNumber(1);
-            this.img.setResourceNumber(2);
-            selectionobject.setAttribute("selectedItem", this);
-            selectionobject.setAttribute("val", this.val);
+          }
+          this.img.setResourceNumber(2);
+          selectionobject.setAttribute("selectedItem", this);
+          selectionobject.setAttribute("val", this.val);
         </method>
 
     </class>
@@ -45,7 +47,7 @@
 
         <attribute name="tabresource" type="string" value="slider_cart" />
         <attribute name="openingsize" type="string" value="200" />
-        <attribute name="opened" value="false" type="boolean"/>
+        <attribute name="opened" value="false"/>
         <attribute name="xdoffset" value="0" type="number" />
 
         <simplelayout axis="x"/>
@@ -53,18 +55,18 @@
 
             <simplelayout axis="y"/>
             <view clickable="true" name="tabButton"
-                onmouseover="setResourceNumber(classroot.opened?5:2)"
-                onmouseout="setResourceNumber(classroot.opened?4:1)"
-                onmousedown="setResourceNumber(classroot.opened?6:3)"
-                onmouseup="setResourceNumber(classroot.opened?4:1)">
+                onmouseover="setResourceNumber(classroot.opened=='true'?5:2)"
+                onmouseout="setResourceNumber(classroot.opened=='true'?4:1)"
+                onmousedown="setResourceNumber(classroot.opened=='true'?6:3)"
+                onmouseup="setResourceNumber(classroot.opened=='true'?4:1)">
                 <attribute name="resource" value="${classroot.tabresource}"/>
                 <method event="onclick">
-                    if (classroot.opened) {
+                    if (classroot.opened=="true") {
                         classroot.close();
-                        classroot.opened=false;
+                        classroot.opened="false";
                     } else {
                         classroot.open();
-                        classroot.opened=true;
+                        classroot.opened="true";
                     }
                 </method>
             </view>
@@ -77,37 +79,42 @@
                     classroot.panelDragger.apply();
                 </method>
                 <method event="onmouseup">
-                    if ( !classroot.opened ) classroot.opened = true;
+                    if ( !classroot.opened ) classroot.opened = 'true';
                     if ( classroot.width == parent.width ) {
                         // User has just closed the tab by dragging the panel
                         // manually.
-                        classroot.opened = false;
+                        classroot.opened = 'false'
                     }
-                    parent.tabButton.setResourceNumber(classroot.opened?4:1);
+                    parent.tabButton.setResourceNumber(classroot.opened=='true'?4:1);
                     classroot.panelDragger.remove();
                 </method>
 
             </vtabsliderbutton>
         </view>
 
-        <view width="${parent.width-parent.tab.width}" height="${parent.height}">
+        <view width="${parent.width-parent.tab.width}" height="${parent.height}" name="container">
             <view name="div" resource="divider_panel" width="${parent.width}" stretches="both"/>
-            <view name="content" width="${parent.width}" height="${parent.height-parent.div.height}" 
-                  clip="true"/>
+            <view name="content" width="${parent.width}" height="${parent.height-parent.div.height}" clip="true" visible="false"/>
         </view>
 
         <method name="open">
+            this.container.content.setVisible(true);
             this.animate("width",openingsize,333,false);
         </method>
 
         <method name="close">
-            this.animate("width",tab.width,333,false);
+            var a = this.animate("width",tab.width,333,false);
+            if (! this.__closeDel) this.__closeDel = new LzDelegate(this, 'hidecontent', a, 'onstop');
+        </method>
+
+        <method name="hidecontent">
+            this.container.content.setVisible(false);
         </method>
 
         <!-- Nudge the tab left then right to give feedback that something's
              been added to it -->
         <method name="nudge">
-            if ( this.opened != true ) {
+            if ( this.opened != 'true' ) {
                 this.nudgeAnim.doStart();
             }
         </method>
@@ -135,7 +142,7 @@
     </class>
 
     <class name="tabpanel" clip="true" x="1" width="${parent.width-2}" 
-           bgcolor="#FFFFFF" height="${top.height}" defaultplacement="content">
+           bgcolor="#FFFFFF" height="$once{top.height}" defaultplacement="content">
 
         <attribute name="label" type="string"/>
 
@@ -202,7 +209,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,18 @@
+
+<canvas height="200">
+    <dataset name="mydata" src="resources/contacts.xml" request="true"/>
+    <simplelayout axis="x" spacing="10" inset="10"/>
+    <list id="a">
+        <textlistitem datapath="mydata:/contacts/person"
+                      text="$path{'@firstname'}"/>
+    </list>
+
+    <list id="b" shownitems="4">
+        <textlistitem datapath="mydata:/contacts/person"
+                      text="$path{'@firstname'}"/>
+    </list>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

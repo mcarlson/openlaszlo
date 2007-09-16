@@ -1,0 +1,650 @@
+<chapter id="custom-components">
+
+<title>Designing Custom Components</title>
+ 
+<para>A component is a reusable class that is typically simple and easy to
+use. Examples of a few components that ship with OpenLaszlo are <indexterm><primary>button</primary></indexterm><classname>button</classname>, <indexterm><primary>window</primary></indexterm><classname>window</classname>, and
+<indexterm><primary>tabslider</primary></indexterm><classname>tabslider</classname>. The standard OpenLaszlo components can be found in the
+<literal>lps/components</literal> directory.</para>
+
+<para>This chapter assumes you know how to use the OpenLaszlo components, have a good
+understanding of OpenLaszlo classes, know how to include resources, and are
+well-versed in LZX.</para>
+
+<para/><section><title>Base components and LZ components</title>
+
+<para>There are two types of standard components: <indexterm significance="preferred"><primary>base components</primary></indexterm><glossterm>base components</glossterm> and
+<indexterm significance="preferred"><primary>lz components</primary></indexterm><glossterm>lz components</glossterm>. Base components are generally non-visual, abstract classes. Lz
+components are visual classes that ship with art assets and maintain a
+particular look and feel.</para>
+
+<para>This division in classes exists so that you can create a subclass that has
+  complete control over the look and feel of the component, yet still leverage
+  common behavior. Occasionally you will want to define
+  views
+  and
+  interaction behavior that is inherited. For example: the windowpanel class
+  is extended by window, alert and modal dialog.</para>
+
+<para>An lz component should be subclassed if the look and feel matches the custom
+component desired. Minor changes to methods and adding new views should be
+straightforward. For example: you would subclass lz classes, if you want a class
+  for a frequently used icon button or a specific kind of listitem. Subclass
+  a base
+  component
+  if you want
+  a completely
+  different look and feel
+or if the functionality is extensively different than what's available in the lz classes.</para>
+
+<para>Ideally, when writing a complex custom component, it's best to implement as much of
+the non-visual behaviors as possible in a base class. Visible views and
+functions that are applied specifically to those views should go into an visual
+component class. While this can seem a lot of extra effort, it promotes base
+  class
+reusability by allowing subclasses to create different looks while maintaining
+the same functionality. For examples, compare <literal>base/basebutton.lzx</literal>
+to <literal>lz/button.lzx</literal> and <literal>base/baselist.lzx</literal>
+to <literal>lz/list.lzx</literal>.</para>
+
+<para/></section><section><title>Deciding what base component to subclass</title>
+
+<para>A big part of implementing a custom component is understanding how it's going
+to be used. Is it part of a list? Will it hold a value? This section describes
+how to decide which base class a custom component should use.</para>
+
+<para>There are four basic types of base components:</para>
+
+<itemizedlist spacing="compact"><listitem><para><indexterm><primary>basecomponent</primary></indexterm><classname>basecomponent</classname></para></listitem><listitem><para><indexterm><primary>basevaluecomponent</primary></indexterm><classname>basevaluecomponent</classname></para></listitem><listitem><para><indexterm><primary>baseformitem</primary></indexterm><classname>baseformitem</classname></para></listitem><listitem><para><indexterm><primary>baselistitem</primary></indexterm><classname>baselistitem</classname></para></listitem><listitem><para><indexterm><primary>baselist</primary></indexterm><classname>baselist</classname></para></listitem></itemizedlist>
+
+<para/><section><title>Basecomponent</title>
+
+<para><indexterm><primary>basecomponent</primary></indexterm><classname>basecomponent</classname> is the abstract class that all
+components subclass. <indexterm><primary>basecomponent</primary></indexterm><classname>basecomponent</classname> applies
+styles, defines an HTML text attribute, and handles focus events, to
+name a few basic features. See the source code in
+<literal>lps/components/base/basecomponent.lzx</literal>.</para>
+
+<para/></section><section><title>Basevaluecomponent</title>
+
+<para>Subclasses of <indexterm><primary>basevaluecomponent</primary></indexterm><classname>basevaluecomponent</classname> are known
+to have a <literal>value</literal> property. This is the value that the item
+instance represents. When the item is selected, the parent selection
+group's value will be set to this
+value. <indexterm><primary>basevaluecomponent</primary></indexterm><classname>basevaluecomponent</classname> should be subclassed
+if the component has to represent a
+value. <indexterm><primary>basevaluecomponent</primary></indexterm><classname>basevaluecomponent</classname> has a
+<indexterm><primary><literal>getValue()</literal></primary></indexterm><methodname>getValue()</methodname> method that, if no value is set, it returns
+the class's text as its value. Hence, the value retrieved with the
+<indexterm><primary>value</primary></indexterm><sgmltag class="attribute">value</sgmltag> attribute may be different from the value
+that <indexterm><primary><literal>getValue()</literal></primary></indexterm><methodname>getValue()</methodname> returns. Because of this, most
+subclasses of <indexterm><primary>basevaluecomponent</primary></indexterm><classname>basevaluecomponent</classname> require that
+<indexterm><primary><literal>getValue()</literal></primary></indexterm><methodname>getValue()</methodname> is called instead of directly accessing the
+<indexterm><primary>value</primary></indexterm><sgmltag class="attribute">value</sgmltag> attribute.</para>
+
+<example role="live-example">
+   <title>Basevaluecomponent</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/custom-components-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Basevaluecomponent example</title><programlisting role="lzx-embednew"><filename>custom-components-$1.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="260"&gt;
+  &lt;debug height="240"/&gt;
+  &lt;include href="base/basevaluecomponent.lzx"/&gt;
+
+  &lt;class name="myvaluecomponent" extends="basevaluecomponent"&gt;
+    &lt;handler name="oninit"&gt;
+      Debug.write(this.name + ' text: "' + this.text + '"');
+      Debug.write(this.name + ' value: "' + this.value + '"');
+      Debug.write(this.name + ' getValue(): "' + this.getValue() + '"');
+      Debug.write("");
+    &lt;/handler&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- Text is inherited from basecomponent, the superclass of --&gt;
+  &lt;!-- basevalue component.                                    --&gt;
+  &lt;myvaluecomponent name="one" text="this is the text"/&gt;
+
+  &lt;!-- Set the value this time. Note that value is an expression type. --&gt;
+  &lt;!-- Have to use quotes to set a string value.                       --&gt;
+  &lt;myvaluecomponent name="two" value="'this is the value'"/&gt;
+
+  &lt;!-- Set both text and value. --&gt;
+  &lt;myvaluecomponent name="three" text="this is the text" 
+                    value="'this is the value'"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="260"&gt;
+  &lt;debug height="240"/&gt;
+  &lt;include href="base/basevaluecomponent.lzx"/&gt;
+
+  &lt;class name="myvaluecomponent" extends="basevaluecomponent"&gt;
+    &lt;handler name="oninit"&gt;
+      Debug.write(this.name + ' text: "' + this.text + '"');
+      Debug.write(this.name + ' value: "' + this.value + '"');
+      Debug.write(this.name + ' getValue(): "' + this.getValue() + '"');
+      Debug.write("");
+    &lt;/handler&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- Text is inherited from basecomponent, the superclass of --&gt;
+  &lt;!-- basevalue component.                                    --&gt;
+  &lt;myvaluecomponent name="one" text="this is the text"/&gt;
+
+  &lt;!-- Set the value this time. Note that value is an expression type. --&gt;
+  &lt;!-- Have to use quotes to set a string value.                       --&gt;
+  &lt;myvaluecomponent name="two" value="'this is the value'"/&gt;
+
+  &lt;!-- Set both text and value. --&gt;
+  &lt;myvaluecomponent name="three" text="this is the text" 
+                    value="'this is the value'"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/custom-components-$1.lzx></example?>
+
+<para/></section><section><title>Baseformitem</title>
+
+<para><indexterm><primary>baseformitem</primary></indexterm><classname>baseformitem</classname> is a subclass of
+<indexterm><primary>basevaluecomponent</primary></indexterm><classname>basevaluecomponent</classname>. Instances of
+<indexterm><primary>baseformitem</primary></indexterm><classname>baseformitem</classname> can have their value accessed and
+submitted using the <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: form-->
+ tag. Subclass
+<indexterm><primary>baseformitem</primary></indexterm><classname>baseformitem</classname> if the custom component needs to
+be accessed in a <indexterm><primary>form</primary></indexterm><classname>form</classname>. Examples of
+<indexterm><primary>baseformitem</primary></indexterm><classname>baseformitem</classname>: <indexterm><primary>checkbox</primary></indexterm><classname>checkbox</classname>,
+<indexterm><primary>radiogroup</primary></indexterm><classname>radiogroup</classname>, <indexterm><primary>combobox</primary></indexterm><classname>combobox</classname> and <indexterm><primary>datacombobox</primary></indexterm><sgmltag class="element">&lt;datacombobox&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: datacombobox-->
+.
+Note that <indexterm><primary>radiobutton</primary></indexterm><classname>radiobutton</classname> is a
+<indexterm><primary>basevalueitem</primary></indexterm><classname>basevalueitem</classname> not a
+<indexterm><primary>baseformitem</primary></indexterm><classname>baseformitem</classname>, because it contributes its value
+to a <indexterm><primary>radiogroup</primary></indexterm><classname>radiogroup</classname>, rather than to a
+<indexterm><primary>form</primary></indexterm><classname>form</classname>.</para>
+
+<para/></section><section><title>Baselistitem</title>
+
+<para>Another subclass of <indexterm><primary>basevaluecomponent</primary></indexterm><classname>basevaluecomponent</classname> is
+<indexterm><primary>baselistitem</primary></indexterm><classname>baselistitem</classname>. Instances of <indexterm><primary>baselistitem</primary></indexterm><classname>baselistitem</classname> are
+typically used within a <indexterm><primary>baselist</primary></indexterm><classname>baselist</classname>. When a baselistitem instance is
+selected, the parent of the instance (baselist/list) is informed of the
+selection. Subclass <indexterm><primary>baselistitem</primary></indexterm><classname>baselistitem</classname> if the custom component should
+be
+accessed in a list context. Examples of baseformitem: <indexterm><primary>radiobutton</primary></indexterm><classname>radiobutton</classname>, <indexterm><primary>tabelement</primary></indexterm><classname>tabelement</classname>, <indexterm><primary>listitem</primary></indexterm><classname>listitem</classname>. </para>
+<para/></section><section><title>Baselist</title>
+<para><indexterm><primary>baselist</primary></indexterm><classname>baselist</classname> is a subclass of <indexterm><primary>baseformitem</primary></indexterm><classname>baseformitem</classname>.
+  Typically a subclass of <indexterm><primary>baselist</primary></indexterm><classname>baselist</classname> will contribute its value to
+  a form (like <indexterm><primary>list</primary></indexterm><classname>list</classname> and <indexterm><primary>combobox</primary></indexterm><classname>combobox</classname>, although <indexterm><primary>baselist</primary></indexterm><classname>baselist</classname> is also used by any
+  component that manages any list of items, such as <indexterm><primary>tabslider</primary></indexterm><classname>tabslider</classname> and <indexterm><primary>tabs</primary></indexterm><classname>tabs</classname>. </para>
+<para/></section><section><title>basefloatinglist</title>
+<para>
+This implements the base class for lists that "float" above the application.  Two kinds of floating lists that are derived from it ship with the OpenLaszlo platform: <indexterm><primary>floatinglist</primary></indexterm><sgmltag class="element">&lt;floatinglist&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: floatinglist-->
+ and <indexterm><primary>plainfloatinglist</primary></indexterm><sgmltag class="element">&lt;plainfloatinglist&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: plainfloatinglist-->
+.
+</para>
+<para/></section></section><section><title>Writing the slider component</title>
+
+<para>The slider will be used to demonstrate how to design and write a custom
+component. You can find the complete code in <literal>base/baseslider.lzx</literal> and
+<literal>lz/slider.lzx</literal>.</para>
+
+<para/><section><title>Design</title>
+
+<para>First, we need to think about the different parts a slider consists of. To
+drag and adjust a slider a thumb button has to exist. A slider track is needed
+so it can contain the thumb that will ride on it. Finally, we need a container
+to hold the track. The container will be our slider component and will pass down
+attributes and styles for the track and the thumb.</para>
+
+<para>The basic design of our slider will look like:</para>
+
+<figure><title>Basic design of custom slider</title><mediaobject><imageobject><imagedata fileref="images/slider.png"/></imageobject></mediaobject></figure>
+
+<para/></section><section><title>The base classes</title>
+
+<para/><section><title>Baseslider</title>
+
+<para>The <indexterm><primary>baseslider</primary></indexterm><classname>baseslider</classname> is the base component for
+<indexterm><primary>slider</primary></indexterm><classname>slider</classname>.</para>
+
+<para/><section><title>Framework</title>
+
+<para>We'll start off by building our slider with the base (non-visual) class and
+extend <indexterm><primary>basevaluecomponent</primary></indexterm><classname>basevaluecomponent</classname>, since a slider contains a value.</para>
+
+<example role="live-example"><title>Baseslider extends basevaluecomponent</title><programlisting>
+&lt;class name="baseslider" <emphasis role="b">extends="basevaluecomponent"</emphasis>&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para/></section><section><title>Attributes</title>
+<para>An attribute for the size of the track and thumb will be needed.</para>
+
+<example role="live-example"><title>Basic baseslider attributes</title><programlisting>
+&lt;class name="baseslider" extends="basevaluecomponent" <emphasis role="b">width="200"</emphasis>&gt;
+  &lt;attribute <emphasis role="em">name="trackheight"</emphasis> value="8" type="number"/&gt;
+  &lt;attribute <emphasis role="em">name="thumbwidth"</emphasis> value="10" type="number"/&gt;
+  &lt;attribute <emphasis role="em">name="thumbheight"</emphasis> value="18" type="number"/&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para>The track will constrain its width to the <indexterm><primary>baseslider</primary></indexterm><classname>baseslider</classname>'s width and
+its height to <literal>trackheight</literal>. The thumb will constrain its width and
+height to the <indexterm><primary>baseslider</primary></indexterm><classname>baseslider</classname>'s <literal>thumbwidth</literal> and
+<literal>thumbheight</literal>, respectively.</para>
+
+<para>Other values that a slider will need to include:</para>
+
+<variablelist><varlistentry><term><indexterm><primary>minvalue</primary></indexterm><sgmltag class="attribute">minvalue</sgmltag></term><listitem><para>The minimum value of the slider.</para></listitem></varlistentry><varlistentry><term><indexterm><primary>maxvalue</primary></indexterm><sgmltag class="attribute">maxvalue</sgmltag></term><listitem><para>the maximum value of the slider.</para></listitem></varlistentry><varlistentry><term><indexterm><primary>showfill</primary></indexterm><sgmltag class="attribute">showfill</sgmltag></term><listitem><para>Boolean to show a filled area in the slider's track.</para></listitem></varlistentry><varlistentry><term><indexterm><primary>showvalue</primary></indexterm><sgmltag class="attribute">showvalue</sgmltag></term><listitem><para>Boolean to show a floating value text on top of the thumb when
+  the user drags.</para></listitem></varlistentry><varlistentry><term><indexterm><primary>showrange</primary></indexterm><sgmltag class="attribute">showrange</sgmltag></term><listitem><para>Boolean to show the bounding min and max value range.</para></listitem></varlistentry></variablelist>
+
+<example role="live-example"><title>More baseslider attributes</title><programlisting>
+&lt;class name="baseslider" extends="basevaluecomponent" width="200"&gt;
+  &lt;attribute name="trackheight" value="8" type="number"/&gt;
+  &lt;attribute name="thumbwidth" value="10" type="number"/&gt;
+  &lt;attribute name="thumbheight" value="18" type="number"/&gt;
+
+  &lt;attribute <emphasis role="em">name="minvalue"</emphasis> value="0" type="number"/&gt;
+  &lt;attribute <emphasis role="em">name="maxvalue"</emphasis> value="100" type="number"/&gt;
+  &lt;attribute <emphasis role="em">name="showfill"</emphasis> value="true"/&gt;
+  &lt;attribute <emphasis role="em">name="showvalue"</emphasis> value="true" type="boolean"/&gt;
+  &lt;attribute <emphasis role="em">name="showrange"</emphasis> value="true" type="boolean"/&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para/></section><section><title>Methods</title>
+
+<para>The slider will need to provide APIs to set and get the value as a percentage
+of the range.</para>
+
+<example role="live-example"><title>Percentage APIs</title><programlisting>
+&lt;class name="baseslider" extends="basevaluecomponent" width="200"&gt;
+  &lt;!-- attributes begin here --&gt;
+  &lt;!-- ...                   --&gt;
+  &lt;!-- attributes end here   --&gt;
+
+  &lt;!--- Sets the value for the slider that must be within min and max.
+        @param Number v: a number between the minimum and maximum value
+        for the slider. --&gt;
+  &lt;method <emphasis role="em">name="setValue"</emphasis> args="v"&gt;
+    if (this.value == v) return;
+    // ensure in bounds
+    v = math.max(v,this.minValue);
+    v = math.min(v,this.maxValue);
+    this.value = v;
+    if (onvalue) onvalue.sendEvent();
+    if (!isinited) return;
+    <emphasis role="em">_adjustThumb();</emphasis>
+  &lt;/method&gt;
+
+  &lt;!--- Set the value by percentage of range from min to max.
+        @param Number p: a percentage between the min and the max. --&gt;
+  &lt;method <emphasis role="em">name="setPercentage"</emphasis> args="p"&gt;
+    var diff = this.minValue-this.maxValue;
+    setValue( diff*p + this.minValue );
+  &lt;/method&gt;
+
+  &lt;!--- Get the percentage of the range selected by the value.
+        @return Number: the percentage selected. --&gt;
+  &lt;method <emphasis role="em">name="getPercentage"</emphasis>&gt;
+    return (this.value-this.minValue) / (this.maxValue-this.minValue);
+  &lt;/method&gt;
+
+  &lt;!--- adjusts the thumb location
+        @keywords private --&gt;
+  &lt;method <emphasis role="em">name="_adjustThumb"</emphasis>&gt;
+    var perc = getPercentage();
+    var x = Math.round( (this.width-track.thumb.width)*perc );
+    <emphasis role="em">track.thumb.setX(x);</emphasis>
+  &lt;/method&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para>The <indexterm><primary sortas="adjustThumb"><literal>_adjustThumb()</literal></primary></indexterm><methodname>_adjustThumb()</methodname> method is called whenever the
+value of the slider, or the percentage of the slider, changes.  This
+is so the thumb maintains a correct position relative to the slider's
+range.  <indexterm><primary>baseslider</primary></indexterm><classname>baseslider</classname> assumes its subclasses will
+contain a track node called <varname>track</varname> that contains a
+thumb node called <varname>thumb</varname>.</para>
+
+<para>Note that <indexterm><primary sortas="adjustThumb"><literal>_adjustThumb()</literal></primary></indexterm><methodname>_adjustThumb()</methodname> begins with an underscore. This naming
+convention indicates that the method or attribute should be considered private
+to the user of the component. The <indexterm><primary>value</primary></indexterm><sgmltag class="attribute">value</sgmltag> attribute is inherited from
+<indexterm><primary>basevaluecomponent</primary></indexterm><classname>basevaluecomponent</classname>.</para>
+
+<para/></section><section><title>Events</title>
+
+<para>Now the slider needs a set of APIs to get and set its min and max
+values. Components can declare events by adding a prefix of "on" with a type of
+<glossterm>expression</glossterm>. For example, the event name used when the width changes is
+<indexterm><primary>onwidth event</primary></indexterm><literal>onwidth</literal>. Initialize the event attributes to
+<literal>null</literal>. Undeclared events will display a debugger warning.</para>
+
+<example role="live-example"><title>Min/max value APIs and events </title><programlisting>
+&lt;class name="baseslider" extends="basevaluecomponent" width="200"&gt;
+  &lt;!-- attributes begin here --&gt;
+  &lt;!-- ...                   --&gt;
+  
+  &lt;!-- Event handler when minvalue changes. --&gt; 
+  &lt;attribute <emphasis role="em">name="onminvalue"</emphasis> value="null" type="expression"/&gt;
+  
+  &lt;!-- Event handler when maxvalue changes. --&gt; 
+  &lt;attribute <emphasis role="em">name="onmaxvalue"</emphasis> value="null" type="expression"/&gt;
+
+  &lt;!-- attributes end here   --&gt;
+
+  &lt;method name="setValue" args="v"&gt;
+    // setValue body
+  &lt;/method&gt;
+
+  &lt;method name="setPercentage" args="p"&gt;
+    // setPercentage body
+  &lt;/method&gt;
+
+  &lt;method name="getPercentage"&gt;
+    // getPercentage body
+  &lt;/method&gt;
+
+  &lt;method name="_adjustThumb"&gt;
+    // _adjustThumb body
+  &lt;/method&gt;
+
+  &lt;!--- Get the minimum value of the slider.
+        @return Number: the minimum value. --&gt;
+  &lt;method <emphasis role="em">name="getMinValue"</emphasis>&gt;
+    return this.minValue;
+  &lt;/method&gt;
+  &lt;!--- Get the maximum value of the slider.
+        @return Number: the maximum value. --&gt;
+  &lt;method <emphasis role="em">name="getMaxValue"</emphasis>&gt;
+    return this.maxValue;
+  &lt;/method&gt;
+
+  &lt;!--- Set the minimum value.
+        @param Number v: the minimum value. --&gt;
+  &lt;method <emphasis role="em">name="setMinValue"</emphasis> args="v"&gt;
+    if (this.minValue == v) return;
+    this.minValue = v;
+    <emphasis role="em">if (this.onminvalue) this.onminvalue.sendEvent();</emphasis>
+    // adjust value
+    if (this.minValue &gt; this.value) this.setAttribute("value",v);
+    _adjustThumb();
+  &lt;/method&gt;
+
+  &lt;!--- Set the maximum value.
+        @param Number v: the maximum value. --&gt;
+  &lt;method <emphasis role="em">name="setMaxValue"</emphasis> args="v"&gt;
+    if (this.maxValue == v) return;
+    this.maxValue = v;
+    <emphasis role="em">if (this.onmaxvalue) this.onmaxvalue.sendEvent();</emphasis>
+    // adjust value
+    if (this.value &gt; v) this.setAttribute("value",v);
+    _adjustThumb();
+  &lt;/method&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para>This code structure is common when sending events:</para>
+
+<example role="live-example"><title>Sending events</title><programlisting>
+    if (this.onmaxvalue) this.onmaxvalue.sendEvent();
+</programlisting></example>
+
+<para>It only sends the event if the user of the component defines it like:</para>
+
+<example role="live-example"><title>Defining events in the slider</title><programlisting>
+&lt;slider onminvalue="Debug.write('minvalue:', this.minvalue)"
+        onmaxvalue="Debug.write('maxvalue:', this.maxvalue)"/&gt;
+</programlisting></example>
+
+<para/></section><section><title><indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> vs. <indexterm><primary>oninit event</primary></indexterm><literal>oninit</literal></title>
+
+<para>The slider needs to set the position of the its thumb during
+initialization. Setting the value doesn't position the thumb in the correct
+location so we do this in the <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> method.</para>
+
+<example role="live-example"><title>Min/max value APIs and events </title><programlisting>
+&lt;class name="baseslider" extends="basevaluecomponent" width="200"&gt;
+  &lt;!-- attributes begin here --&gt;
+  &lt;!-- ...                   --&gt;
+  &lt;!-- attributes end here   --&gt;
+
+  &lt;method name="init"&gt;
+    super.init();
+    // have to adjust thumb once at start 
+    _adjustThumb();
+  &lt;/method&gt;        
+
+  &lt;!-- methods begin here --&gt;
+  &lt;!-- ...                --&gt;
+  &lt;!-- methods end here   --&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para>When writing a component, it's recommended that <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> is used
+over handling the <indexterm><primary>oninit event</primary></indexterm><literal>oninit</literal> event. The reason is that the order in
+which <indexterm><primary>oninit event</primary></indexterm><literal>oninit</literal> gets called is undefined, whereas <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> is
+well-defined because it gets called synchronously. By writing the component using <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname>, 
+any user of the component may define <indexterm><primary>oninit event</primary></indexterm><literal>oninit</literal> code which is guaranteed to be called
+after the component's init code. When using
+<indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname>, be sure to call <literal>super.init()</literal> in the body or
+the class may not initialize correctly.</para>
+
+<para/></section></section><section><title>Baseslidertrack</title>
+
+<para>The slider track contains the thumb. The visual aspect of the track
+will be discussed later. An instance of
+<indexterm><primary>baseslidertrack</primary></indexterm><classname>baseslidertrack</classname> expects to be contained in a
+<indexterm><primary>baseslider</primary></indexterm><classname>baseslider</classname> and sets its class parent's track
+attribute to itself.</para>
+
+<example role="live-example"><title>Baseslidertrack</title><programlisting>
+&lt;!--- Baseslidertrack expects to be within a baseslider (or its
+    subclass). In other words, its "classroot" should be a slider. --&gt;
+&lt;class name="baseslidertrack" width="100%" bgcolor="0x333333" 
+       height="${classroot.trackheight}"&gt;
+  &lt;method name="init"&gt;
+    super.init();
+    classroot.track = this;
+  &lt;/method&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para/></section><section><title>Basesliderthumb</title>
+
+<para>The thumb is basically a draggable button that rides on top of a slider
+track. The slider track contains the thumb.</para>
+
+<example role="live-example"><title>Basesliderthumb</title><programlisting>
+&lt;!--- Basesliderthumb expects to be within a baseslidertrack (or its
+    subclass). In other words, its "classroot" should be a
+    slidertrack. --&gt;
+&lt;class name="basesliderthumb" <emphasis role="em">extends="button"</emphasis> <emphasis role="em">focusable="false"</emphasis>
+       width="${parent.classroot.thumbwidth}" 
+       height="${parent.classroot.thumbheight}"
+       <emphasis role="em">onmousedown="thedragstate.apply();"</emphasis>
+       <emphasis role="em">onmouseup="thedragstate.remove();"</emphasis>
+       y="${(parent.height-height)/2}"&gt;
+
+  &lt;!--- Toggles the floating value text when dragging thumb. Constrain
+        showvalue to baseslider's showvalue: parent is track,
+        parent.parent is slider container. --&gt;
+  &lt;attribute <emphasis role="em">name="showvalue" value="${parent.parent.showvalue}"</emphasis>/&gt;
+
+  &lt;!--- @keywords private --&gt;
+  &lt;dragstate <emphasis role="em">name="thedragstate"</emphasis> drag_axis="x"&gt;
+    &lt;text name="t"
+         resize="true"
+         x="${classroot.width/2-width/2}"
+         y="-14"
+         text="${parent.parent.parent.value}"
+         visible="${classroot.showvalue}"
+    /&gt;
+  &lt;/dragstate&gt;
+
+  &lt;!--- constrain to parents bounds, and adjust slider value when dragged
+        @keywords private --&gt;
+  &lt;method <emphasis role="em">name="setX"</emphasis> args="x"&gt;
+    var boundedx = x;
+    if ( x &gt; parent.getWidth()-getWidth() ) {
+      var constrainX = parent.getWidth()-getWidth();
+      boundedx = constrainX;
+    } else
+    if (parent.x &gt; x) {
+      boundedx =  parent.x;
+    }
+    super.setX(boundedx);
+
+    //update slider value
+    var perc = ( (x) / (parent.parent.width-width) );
+    var val = Math.round( ( (perc)*(parent.parent.maxValue-parent.parent.minValue) )
+                          + parseInt(parent.parent.minValue) );
+    //only adjust value if user is dragging or left or right key is pressed
+    if (thedragstate.isapplied || 
+      LzKeys.isKeyDown("leftarrow") || 
+      LzKeys.isKeyDown("rightarrow") ) {
+      parent.parent.setValue(val);
+    }
+  &lt;/method&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para>Technically speaking, <indexterm><primary>basesliderthumb</primary></indexterm><classname>basesliderthumb</classname> would not really be
+considered a base component because there's no way to override its visual look
+since it extends from <indexterm><primary>button</primary></indexterm><classname>button</classname>. By default, a
+<indexterm><primary>basesliderthumb</primary></indexterm><classname>basesliderthumb</classname> is keyboard focusable because it's a
+<indexterm><primary>button</primary></indexterm><classname>button</classname>. However, since it's really part of the
+<indexterm><primary>baseslider</primary></indexterm><classname>baseslider</classname> component, the <indexterm><primary>basesliderthumb</primary></indexterm><classname>basesliderthumb</classname> has this
+attribute set to false.</para>
+
+<para>Since <indexterm><primary>basesliderthumb</primary></indexterm><classname>basesliderthumb</classname> must be draggable, a
+<indexterm><primary>dragstate</primary></indexterm><classname>dragstate</classname> is declared in its body. It's applied when the mouse is
+down and removed when the mouse is up.</para>
+
+<para>The thumb assumes that it's contained in a <indexterm><primary>baseslidertrack</primary></indexterm><classname>baseslidertrack</classname>
+(parent), which in turn is contained in a <indexterm><primary>baseslider</primary></indexterm><classname>baseslider</classname>
+(parent.parent). The thumb's <literal>showvalue</literal> is constrained to the
+<literal>baseslider</literal>'s <literal>showvalue</literal>.</para>
+
+<para>The <indexterm><primary><literal>setX()</literal></primary></indexterm><methodname>setX()</methodname> method sets the correct value for the slider and
+ensures that the thumb is placed within the bounds of its parents'.</para>
+
+<para/></section></section><section><title>The lz (visual) classes</title>
+
+<figure><title>Enlarged view of custom slider</title><mediaobject><imageobject><imagedata fileref="images/slider1.png"/></imageobject></mediaobject></figure>
+
+<para/><section><title>Slider</title>
+
+<para>The <indexterm><primary>slider</primary></indexterm><classname>slider</classname> is a visual subclass of
+<indexterm><primary>baseslider</primary></indexterm><classname>baseslider</classname>. Since it contains visual elements, this is where styles
+should be applied. The <indexterm><primary sortas="applystyle"><literal>_applystyle()</literal></primary></indexterm><methodname>_applystyle()</methodname> method sets the colors for the
+<literal>slider</literal>'s track. </para>
+
+<para><indexterm><primary>slider</primary></indexterm><classname>slider</classname> declares and contains an instance of
+<indexterm><primary>baseslidertrack</primary></indexterm><classname>baseslidertrack</classname> or its
+subclasses. <indexterm><primary>baseslidertrack</primary></indexterm><classname>baseslidertrack</classname> creates a reference
+to itself (in <indexterm><primary>baseslider</primary></indexterm><classname>baseslider</classname>) during
+initialization.</para>
+
+<para>If <indexterm><primary>showrange</primary></indexterm><sgmltag class="attribute">showrange</sgmltag> is true, the min and max values will be shown on
+the left and right sides of the slider, respectively.</para>
+
+<example role="live-example"><title>Slider</title><programlisting>
+&lt;!--- a slider component allowing for easy selection of a value within a range --&gt;
+&lt;class name="slider" extends="baseslider"&gt;
+  &lt;<emphasis role="em">slidertrack</emphasis>/&gt;
+
+  &lt;<emphasis role="em">state apply="${classroot.showrange}"</emphasis>&gt;
+      &lt;text y="${classroot.track.y + classroot.track.height + 2}"
+            text="${classroot.minvalue}"/&gt;
+      &lt;text y="${classroot.track.y + classroot.track.height + 2}" resize="true"
+            x="${classroot.track.x+classroot.track.width-width}"
+            text="${classroot.maxvalue}"/&gt;
+  &lt;/<emphasis role="em">state</emphasis>&gt;
+
+  &lt;!--- @keywords private --&gt;
+  &lt;method <emphasis role="em">name="_applystyle"</emphasis> args="s"&gt;
+    track.setbgcolor(s.bordercolor);
+    track.background.setbgcolor(s.basecolor);
+    track.filled.setbgcolor(s.selectedcolor);
+  &lt;/method&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para/></section><section><title>Slidertrack</title>
+
+<para>An instance of <indexterm><primary>slidertrack</primary></indexterm><classname>slidertrack</classname> has three
+views:</para>
+
+<variablelist><varlistentry><term><varname>background</varname></term><listitem><para>The background color of the track.</para></listitem></varlistentry><varlistentry><term><varname>filled</varname></term><listitem><para>The background color of the filled track area.</para></listitem></varlistentry><varlistentry><term><varname>thumb</varname></term><listitem><para>An instance of <indexterm><primary>basesliderthumb</primary></indexterm><classname>basesliderthumb</classname> that is the
+  draggable button of the track.</para></listitem></varlistentry></variablelist>
+
+<para>This class constrains its <indexterm><primary>showfill</primary></indexterm><sgmltag class="attribute">showfill</sgmltag> attribute to its parent's
+(<indexterm><primary>slider</primary></indexterm><classname>slider</classname>) <indexterm><primary>showfill</primary></indexterm><sgmltag class="attribute">showfill</sgmltag> attribute.</para>
+
+<example role="live-example"><title>Slidertrack</title><programlisting>
+&lt;!--- the inner track on which the sliderthumb rides --&gt;
+&lt;class name="slidertrack" <emphasis role="em">extends="baseslidertrack"</emphasis>&gt;
+  &lt;!--- @keywords private --&gt;
+  &lt;attribute <emphasis role="em">name="showfill"</emphasis> value="${parent.showfill}" type="number"/&gt;
+
+  &lt;view name="background" bgcolor="red"
+        height="${parent.height-(2*parent.classroot.bordersize)}"
+        width="${parent.width-(2*parent.classroot.bordersize)}"
+        x="${parent.classroot.bordersize}"
+        y="${(parent.height-height)/2}"
+  /&gt;
+  &lt;!-- the filled area --&gt;
+  &lt;view name="filled" bgcolor="0xff9933" opacity=".8" visible="${classroot.showfill}"
+        height="${parent.height-(2*parent.classroot.bordersize)}"
+        width="${Math.max(0,Math.min(classroot.thumb.x+classroot.thumb.width,parent.width)-
+                                     (2*parent.classroot.bordersize))}"
+        y="${(parent.height-height)/2}"
+        x="${parent.classroot.bordersize}"
+  /&gt;
+
+  &lt;sliderthumb name="thumb"/&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para/></section><section><title>Sliderthumb</title>
+
+<para>Since <indexterm><primary>basesliderthumb</primary></indexterm><classname>basesliderthumb</classname> already contains a borrowed look and feel
+from <indexterm><primary>button</primary></indexterm><classname>button</classname>, sliderthumb can just extend itself from
+<indexterm><primary>basesliderthumb</primary></indexterm><classname>basesliderthumb</classname>. Alternatively, the slider track could've just
+declared <indexterm><primary>basesliderthumb</primary></indexterm><classname>basesliderthumb</classname> instead of <indexterm><primary>sliderthumb</primary></indexterm><classname>sliderthumb</classname>.</para>
+
+<example role="live-example"><title>Sliderthumb</title><programlisting>
+&lt;!--- the visual thumb the user drags to select a value --&gt;
+&lt;class name="sliderthumb" <emphasis role="em">extends="basesliderthumb"</emphasis>&gt;
+&lt;/class&gt;
+</programlisting></example>
+
+<para/></section></section><section><title>Using the slider</title>
+
+<para>Examine <literal>base/baseslider</literal> and <literal>lz/slider.lzx</literal> for the complete
+code set.</para>
+
+<para>The following example demonstrates how to use the slider component.</para>
+
+<example role="live-example">
+   <title>Using slider</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/custom-components-$15.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using slider</title><programlisting role="lzx-embednew"><filename>custom-components-$15.lzx</filename><parameter/><code>
+&lt;canvas height="200"&gt;
+  &lt;include href="lz/slider.lzx"/&gt;
+  &lt;slider x="50" y="50" value="30"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="200"&gt;
+  &lt;include href="lz/slider.lzx"/&gt;
+  &lt;slider x="50" y="50" value="30"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/custom-components-$15.lzx></example?>
+
+<para/></section></section></chapter>

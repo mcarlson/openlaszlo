@@ -51,32 +51,32 @@
     <text width="350" text="${'toString() : ' + parent.defaultattrs}"/>
     <text>defaultattrs: up, over, down, disabled</text>
     <basebutton id="d" name="defaultattrs" resource="defaultattrs_res"
-        onclick="debug.write('click', this)"/>
+        onclick="Debug.write('click', this)"/>
     <button onclick="d.setAttribute('enabled', !d.enabled)">toggle enabled</button>
 
     <text>ddefaultattrs: up, over, down, disabled (enabled="false")</text>
     <basebutton name="ddefaultattrs" resource="defaultattrs_res"
         enabled="false"
-        onclick="debug.write('click', this)"/>
+        onclick="Debug.write('click', this)"/>
 
     <text>uponly: up</text>
     <basebutton name="uponly" resource="up_res"
-        onclick="debug.write('click', this)"/>
+        onclick="Debug.write('click', this)"/>
 
     <text>downupover: down, up, over</text>
     <basebutton name="downupover" resource="downupover_res"
         downResourceNumber="1"
         normalResourceNumber="2"
         overResourceNumber="3"
-        onclick="debug.write('click', this)"/>
+        onclick="Debug.write('click', this)"/>
 
     <text>upover: up, over</text>
     <basebutton name="upover" resource="upover_res"
-        onclick="debug.write('click', this)"/>
+        onclick="Debug.write('click', this)"/>
 
     <text>over state unused, just up and down</text>
     <basebutton x="2" name="close_btn" resource="updown_res"
-        downResourceNumber="2" onclick="debug.write('click', this)"
+        downResourceNumber="2" onclick="Debug.write('click', this)"
         overResourceNumber="0"  />
         
         
@@ -89,7 +89,7 @@
     </basebutton>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

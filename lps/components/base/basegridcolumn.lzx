@@ -60,7 +60,7 @@
         </method>
 
         <!--- @keywords private -->
-        <method name="determinePlacement" args="v , p">
+        <method name="determinePlacement" args="v, p, args">
             if ( p == "content" ){
                 if ( !_contentsPackage ){
                     this._contentsPackage = [];
@@ -73,7 +73,7 @@
                     a[ k ] = v._instanceAttrs[ k ];
                 }
 
-                var o = { name:  v.classname, attrs: a };
+                var o = { name:  v.constructor.tagname, attrs: a };
 
                 if ( typeof( v._instanceChildren ) != "undefined" ){
                     o.children = v._instanceChildren;
@@ -88,7 +88,8 @@
             } else if ( p == "gridcontent" ){
                 return parent.content;
             } else {
-                return super.determinePlacement( v , p );
+                return super.determinePlacement.apply(this, arguments);
+//                return super.determinePlacement( v , p , args );
             }
         </method>
 
@@ -103,7 +104,7 @@
             }
 
             //else, there's more than one subview, so we need to pack them up
-            return { name:     'LzView',
+            return { name:     'view',
                      attrs:    { ownerColumn : this },
                      children: _contentsPackage };
         </method>
@@ -233,10 +234,24 @@
                   options="ignorelayout"/>
         </state>
 
+        <doc>
+          <tag name="shortdesc"><text>An abstract column in a grid.</text></tag>
+          <text>
+            <p><classname>basegridcolumn</classname> can be used in
+            <classname>basegrid</classname>s or <classname>grid</classname>s to
+            customize the look of both the column header and the row contents for
+            that column. In cases where a standard column header look is desired,
+            but the contents may vary, use <classname>gridcolumn</classname>.</p>
+            
+            <p>The placement of "header" can be used to place nodes in the header
+            of the grid, and the default placement for the class will place things
+            in the row. See the example in <classname>basegrid</classname>.</p>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -15,8 +15,12 @@
                                                 new LzDataElement( "b" ) ] );
 
             assertEquals( zdat.nodeName , "foo"  ); 
-            assertEquals( zdat.serialize() , '<foo x="33" y="plop"><a/>some text<b/></foo>'); 
-
+            assertTrue( xmlstringequals(zdat.serialize() , '<foo x="33" y="plop"><a/>some text<b/></foo>')); 
+            assertEquals( zdat.attributes.x , "33");
+            assertEquals( zdat.attributes.y , "plop");
+            assertEquals( zdat.childNodes[0].nodeName , "a");
+            assertEquals( zdat.childNodes[1].data , "some text");
+            assertEquals( zdat.childNodes[2].nodeName , "b");
 
             zdat.insertBefore ( new LzDataElement( "aa" ), zdat.childNodes[1] );
 
@@ -28,16 +32,17 @@
 
             assertTrue( zdat.hasChildNodes () );
             assertFalse( (new LzDataElement()).hasChildNodes());
-            assertEquals(zdat.serialize(),
-                    '<foo x="33" y="plop"><aa/>some text<bb/>more text</foo>' );
+
+            assertTrue(xmlstringequals(zdat.serialize(),
+                                       '<foo x="33" y="plop"><aa/>some text<bb/>more text</foo>' ));
 
             zdat.appendChild( zdat.cloneNode ( ) );
             zdat.appendChild( zdat.cloneNode ( true ) );
 
             zdat.setAttr ( 'z' , 77 );
 
-            assertEquals( zdat.serialize() , 
-                        '<foo z="77" x="33" y="plop"><aa/>some text<bb/>more text<foo y="plop" x="33"/><foo y="plop" x="33"><aa/>some text<bb/>more text<foo x="33" y="plop"/></foo></foo>' );
+            assertTrue(xmlstringequals(zdat.serialize() , 
+                        '<foo z="77" x="33" y="plop"><aa/>some text<bb/>more text<foo y="plop" x="33"/><foo y="plop" x="33"><aa/>some text<bb/>more text<foo x="33" y="plop"/></foo></foo>' ));
 
             assertEquals( 77,  zdat.getAttr( 'z' ) );
             zdat.removeAttr( "y" );
@@ -49,7 +54,7 @@
                                                                     "plop" );
 
 
-            assertUndefined ( zdat.getPreviousSibling () , null );
+            assertNull ( zdat.getPreviousSibling () , null );
 
             //zdat.getNextSibling ();
             assertEquals( zdat.getLastChild().getPreviousSibling().attributes.x , 33 );
@@ -62,26 +67,26 @@
             //zdat.setAttrNode (newAttr);
             zdat.removeChild( zdat.getLastChild() );
             zdat.removeChild( zdat.getLastChild() );
-            assertEquals( '<foo z="77" x="33"><aa/>some text<bb/>more text</foo>' , zdat.serialize() );
+            assertTrue(xmlstringequals( '<foo z="77" x="33"><aa/>some text<bb/>more text</foo>' , zdat.serialize() ));
 
 
             zdat.getFirstChild().setChildNodes( [ new LzDataElement( 'first' ),
                                                 new LzDataText( 'second' ) ] );
-            assertEquals( '<foo z="77" x="33"><aa><first/>second</aa>some text<bb/>more text</foo>' , zdat.serialize() );
+            assertTrue(xmlstringequals( '<foo z="77" x="33"><aa><first/>second</aa>some text<bb/>more text</foo>' , zdat.serialize() ));
 
             zdat.setNodeName ( "myx" );
-            assertEquals( '<myx z="77" x="33"><aa><first/>second</aa>some text<bb/>more text</myx>' , zdat.serialize() );
+            assertTrue(xmlstringequals('<myx z="77" x="33"><aa><first/>second</aa>some text<bb/>more text</myx>' , zdat.serialize() ));
 
 
             //zdat.setOwnerDocument ( ownerDoc );
 
             //zdat.removeAttributeNode (oldAttr) ;
 
-            zdat.appendChild( new LzDataElement( 'aa' , {r :22} ) );
+            zdat.appendChild( new LzDataElement( 'aa' , {r :22, p: '\n\r\t'} ) );
             var arr = zdat.getElementsByTagName ( 'aa' ) ;
 
-            assertEquals( arr[ 0 ].serialize() , "<aa><first/>second</aa>" );
-            assertEquals( arr[ 1 ].serialize() , '<aa r="22"/>' );
+            assertEquals(  "<aa><first/>second</aa>" , arr[ 0 ].serialize());
+            assertEquals(  '<aa r="22" p="&#xa;&#xd;&#x9;"/>', arr[ 1 ].serialize());
 
             //zdat.setAttrNS (namespaceURI, qualifiedName, ;
             //zdat.getAttrNS ( "local" , "foo") ;
@@ -105,6 +110,6 @@
         Debug.write( LzText.prototype.escapeText( zdat.serialize() ) );
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

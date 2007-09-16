@@ -10,7 +10,7 @@
 # are all generated from this file.
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
@@ -30,6 +30,7 @@ constraint = xsd:string {pattern="$(style|path|immediately|once|always)?\{.*\}"}
 
 # Attribute value types
 boolean = booleanLiteral | constraint
+booleanOrNull = boolean | "null"
 color = colorLiteral | constraint
 script = string
 expression = string
@@ -70,14 +71,9 @@ element canvas {
   & attribute layout {css}?
   & ## If false, disables validation against the schema during compilation
     [a:defaultValue="true"] attribute validate {booleanLiteral}?
-  & ## If true, requests for data and media are proxied through LPS server.
-    ## if false, requests are made directly to target URLs. 
-    ## inherit, inherit from lzproxied query arg.
-    [a:defaultValue="inherit"] attribute proxied {inheritableBooleanLiteral}? 
-  & ## If true, the application is compiled with debugging enabled.
-    ## See the <a href="${dguide}debugging.html">Debugging</a> chapter of
-    ## the Guide for more information about debugging.
-    [a:defaultValue="false"] attribute debug {booleanLiteral}?
+  & [a:defaultValue="inherit"] attribute proxied {inheritableBooleanLiteral}? 
+  & [a:defaultValue="false"] attribute debug {booleanLiteral}?
+  & [a:defaultValue="false"] attribute backtrace {booleanLiteral}?
   & ## If present, specifies the maximum width in pixels of any output text field.
     ## Text which extends beyond this width will be clipped.
     ## If this attribute is omitted, it defaults to the canvas width.
@@ -86,10 +82,8 @@ element canvas {
     ## Text which extends beyond this height will be clipped.
     ## If this attribute is omitted, it defaults to the canvas height.
     attribute maxtextheight {sizeLiteral}?
-  & ## If present, specifies the default timeout in milliseconds of data load requests
-    attribute dataloadtimeout {numberExpression}?
-  & ## If present, specifies the default timeout in milliseconds of media load requests
-    attribute medialoadtimeout {numberExpression}?
+  & attribute dataloadtimeout {numberExpression}?
+  & attribute medialoadtimeout {numberExpression}?
   & ## A list of names for libraries that are included in the application.
     [a:defaultValue=""] attribute libraries {string}?
   & [a:defaultValue="true"] attribute embedfonts {booleanLiteral}?
@@ -97,28 +91,24 @@ element canvas {
   & splash?
   & datapathChildren
   & toplevelElements
-  & ## The lpsversion of this lzx application.
-    [a:defaultValue="1.1"] attribute version {string}?
-  & ## Specifies if this application is intended to be accessible
-    [a:defaultValue="false"] attribute accessible {booleanLiteral}?
+  & [a:defaultValue="1.1"] attribute version {string}?
+  & [a:defaultValue="false"] attribute accessible {booleanLiteral}?
 }
 
 library =
 element library {
-  ## This attribute is used internally by the compiler.  It shouldn't
-  ## be used in user programs.
   [lza:visibility="private"]
   attribute href {xsd:anyURI} |
   ([lza:visibility="private"] attribute includes {string}? &
    [a:defaultValue="inherit"] attribute proxied {booleanLiteral | "inherit"}? &
    (toplevelElements &
-     ## If false, disables validation against the schema during compilation
     [a:defaultValue="true"] attribute validate {booleanLiteral}? 
     & datapointer*))
 }
 
 toplevelElements = (
     (viewElement | scriptElement | styleSheetElement | asset | font)*
+  & datarequest*
   & datasource*
   & connectiondatasource*
   & dataset*
@@ -145,12 +135,8 @@ element debug {
 
 includeElement =
 element include {
-  ## A reference to a target file whose content is included in the
-  ## application that contains this include element.
      attribute href {xsd:anyURI}
-  & ## If this attribute has the value @c{text}, the content of the
-    ## target file is included as text.  Otherwise, it is read as XML.
-    [a:defaultValue="xml"]
+  & [a:defaultValue="xml"]
     attribute type {"text" | "xml"}?
 }
 
@@ -169,8 +155,6 @@ toplevelSwitch = element switch {
 #
 
 idAttribute =
-  ## A unique identifier for this element.  Can be used as a global
-  ## variable name in JavaScript code.
   [lza:modifiers="final"]
   attribute id {xsd:ID}
 srcAttribute =
@@ -191,44 +175,12 @@ oninitAttribute =
   ## children, if any, have been initialized.
   attribute oninit {script}
 initstageAttribute =
-  ## The execution of a @c{node}'s <method>init</method> method and
-  ## sending of the <event>oninit</event> event is under the control
-  ## of its @a{initstage} attribute, as follows:
-  ##<dl>
-  ## <dt>@c{immediate}</dt><dd>The <method>init</method> method is called immediately as the
-  ## last stage of instantiation.
-  ##</dd>
-  ## <dt>@c{early}</dt><dd>The <method>init</method> method is called immediately after the
-  ## view and its children have been instantiated.
-  ##</dd>
-  ## <dt>@c{normal}</dt><dd>The <method>init</method> method is called when the parent
-  ## is initialized.
-  ##</dd>
-  ## <dt>@c{late}</dt><dd>The <method>init</method> method is called during idle time.
-  ## To check whether <method>init</method> has been called, check the @a{isinited}
-  ## property.  Force calling <method>init</method> using the <method>completeInstantiation</method> method.
-  ##</dd>
-  ## <dt>@c{defer}</dt><dd>The <method>init</method> method will not be called unless
-  ## explicitly requested by the <method>completeInstantiation</method> method.
-  ## </dd>
-  ## </dl>
   [a:defaultValue="normal"
    lza:modifiers="final"]
     attribute initstage {"early" | "normal" | "late" | "immediate" | "defer"}
 datapathAttribute =
-  ## Specifies the data source for this node and its children.
-  ## If the value begins with an identifier followed by a colon, the
-  ## identifier names a dataset, and the portion of the string after
-  ## the colon is an XPath description of a portion of the data.
-  ## Otherwise the entire attribute value is an XPath description of
-  ## the data, relative to the data source of this node's parent element.
-  ## Examples: "mydata:", "mydata:/a/b", "/a/b".
   attribute datapath {string}
 placementAttribute =
-  ## Instructions to this element's container about where it should go
-  ## within the its container's internal hierarchy. See
-  ## the <method>LzNode.determinePlacement</method> method.
-  ## Defaults to the container itself.
   [lza:modifiers="final"]
   attribute placement {string}
 classAttribute =
@@ -236,9 +188,6 @@ classAttribute =
   [lza:modifiers="final"]
   attribute class {token}
 ignoreplacementAttribute =
-  ## Overrides placement attribute (and defaultplacement in lexical parent). See
-  ## the <method>LzNode.determinePlacement</method> method.
-  ## Defaults to false.
   [lza:modifiers="final"]
   attribute ignoreplacement {boolean}
 
@@ -255,178 +204,80 @@ objectAttributes = (
 
 viewAttributes = (
   nodeAttributes,
-  ## The opacity of the view's contents. @c{1.0} is opaque; @c{0.0} is
-  ## totally transparent (invisible).
     [a:defaultValue="1.0"]
     attribute opacity {opacity}?,
   attribute bgcolor {color}?,
-  ## The cursor to display when the mouse is over this view. Any
-  ## resource can be used as a cursor. This attribute can be set for
-  ## any view with clickable=true, or any view whose class defaults
-  ## clickable to true.
   attribute cursor {token}?,
-  ## If true, this view intercepts click events; otherwise they are passed
-  ## to its container.  This defaults to true if the view defines a mouse
-  ## event handler or a cursor.
   attribute clickable {boolean}?,
   attribute clickregion {string}?,
-  ## If true, this view "traps" the focus, for example in a window or dialog.
-  ## See focus manager (LzFocus) for more details.
   attribute focustrap {boolean}?,
-  ## If true, this view will receive focus events.
-  ## See focus manager (LzFocus) for more details.
   attribute focusable {boolean}?,
-  ## If this view has a multi-frame resource, this allows setting which
-  ## resource frame is displayed.  Defaults to the first frame (1).
   [a:defaultValue="0"]
   attribute frame {numberExpression}?,
-  ## A color to use to render object that appears inside this view,
-  ## which includes any vector or bitmap art in the view's resource
-  ## and any contained views.
   attribute fgcolor {color}?,
-  ## The font to use for any @c{<text>} or @c{<inputtext>} elements that
-  ## appear inside this view. Like all the font properties
-  ## (<code>fontstyle</code> and <code>fontsize</code> too) these
-  ## properties cascade down the view hierarchy until a new value is
-  ## specified. When the font attributes are modified at runtime,
-  ## using JavaScript, the font is changed for the view itself, not
-  ## for any of its subviews.
   attribute font {string}?,
-  ## The style to use to render text fields that appear inside of
-  ## this view. Once of "plain", "bold" , "italic" or "bolditalic".
   attribute fontstyle {string}?,
-  ## Pixel size to use to render text which appears inside this
-  ## view. The default is 8.
   attribute fontsize {size}?,
-  ## A resource that is presented in the background of this view.  The
-  ## value can be either the name of a resource defined with the
-  ## @e{resource} tag, a URL, or a pathname.  If the value is a URL,
-  ## the resource is requested when the view is displayed.  If it's a
-  ## pathname, the file named by the pathname is compiled into the
-  ## application, and attached to this view.
   attribute resource {string}?,
   [lza:visibility="private"]
   attribute source {expression}?, 
-  ## Clip the view's contents to its size.
   [a:defaultValue="false"
    lza:modifiers="final"]
   attribute clip {boolean}?,
   [a:defaultValue="left"
    lza:modifiers="final"]
    attribute align {"left" | "center" | "right" | constraint}?, 
-  ## Creates a constraint on the view's y position which is a function
-  ## of its height and its parent's height. The default for this is
-  ## "top".
   [a:defaultValue="top"] attribute valign {"top" | "middle" | "bottom" | constraint}?, 
-  ## A CSS sequence of layout parameters in property: value form.
-  ## These values are used to create a layout that is attached to this view.
-  ## If there
-  ## is a class property, it names the class of the layout; otherwise
-  ## <tagname>simplelayout</tagname> is used.  If the value of this attribute is a single
-  ## id, it is used as the axis attribute of a simplelayout.
-  ## Examples: <code>axis: x</code>, <code>class: constantlayout</code>; 
-  ## <code>axis: y</code>; <code>axis: x; spacing: 5</code>.
   attribute layout {css}?,
-  ## The view system supports sub-pixel positioning to enable smooth
-  ## animation. This may be turned off to make the view snap to a
-  ## pixel boundary by setting pixellock to true.
   [a:defaultValue="false"
    lza:modifiers="final"]
   attribute pixellock {booleanLiteral}?,
   [a:defaultValue="0"] attribute rotation {numberExpression}?,
-  ## Specifies whether to present the resource attached to this view.
   [a:defaultValue="0"] attribute xoffset {numberExpression}?,
-  ## Specifies a translation point for drawing of this view. If the xoffset
-  ## is set, then rotation and x position will be calculated by first adding
-  ## the xoffset.
   [a:defaultValue="0"] attribute yoffset {numberExpression}?,
-  ## If true, the resource attached to this view begins playing when
-  ## the view is instantiated.
   [a:defaultValue="true"]
   attribute play {boolean}?,
   #[a:defaultValue="true"]
   attribute selectiontype
        {"none" | "single" | "toggle" | "multi" | "range"}?,
-  ## Setting <code>stretches</code> causes a view to change its
-  ## coordinate space so that everything it contains (resources and
-  ## other views) fit exactly into the view's width and/or height. The
-  ## default for this property is "none". This is used to resize a
-  ## view's contents by setting its width and/or height.
   attribute stretches {"width" | "height" | "both"}?,
-  [a:defaultValue="true"] attribute visible {boolean}?,
+  [a:defaultValue="true"] attribute visible {booleanOrNull}?,
+  [a:defaultValue="visible"] attribute visibility {string}?,
   attribute width {sizeExpression}?,
   attribute height {sizeExpression}?,
   [lza:visibility="private"]
   attribute textwidth {sizeExpression}?,
   [lza:visibility="private"]
   attribute textheight {sizeExpression}?,
-  ## The horizontal offset of this view's upper left corner from the
-  ## upper left corner of its container.
   [a:defaultValue="0"]
     attribute x {numberExpression}?,
-  ## The vertical offset of this view's upper left corner from the
-  ## upper left corner of its container
   [a:defaultValue="0"]
     attribute y {numberExpression}?,
-  ## Set accessibility name
   attribute aaname {string}?,
-  ## Activate/inactivate children for accessibility
   attribute aaactive {boolean}?,
-  ## Set accessibility description
   attribute aadescription {string}?,
-  ## Set accessibility tab order
   attribute aatabindex {number}?,
-  ## Set accessibility silencing/unsilencing
   attribute aasilent {boolean}?,
-  ## Show or hide the hand cursor for this view, if clickable
   attribute showhandcursor {boolean}?,
-  ## A list of CSS property names and values that configure the
-  ## behavior of objects, such as data binding and view layouts, that
-  ## operate on this view.
   [lza:modifiers="final"]
   attribute options {css}?,
   eventAttributes
 )
 
 eventAttributes =
-  ## The onclick script is executed when the pointing device button is
-  ## clicked over an element.
   attribute onclick {script}?,
-  ## The ondblclick script is executed when the pointing device button
-  ## is double clicked over an element.
   attribute ondblclick {script}?,
-  ## The onmousedown script is executed when the pointing device button is
-  ## pressed over an element.
   attribute onmousedown {script}?,
-  ## The onmouseup script is executed when the pointing device button is
-  ## released over an element.
   attribute onmouseup {script}?,
-  ## The onmouseover script is executed when the pointing device is
-  ## moved onto an element.
   attribute onmouseover {script}?,
-  ## The onmouseout script is executed when the point device is moved
-  ## so that is is no longer over an element.
   attribute onmouseout {script}?,
-  ## The onfocus script is executed when an element receives focus
-  ## either by the pointing device or by tabbing navigation.
   attribute onfocus {script}?,
-  ## The onblur script is executed when an element loses focus either
-  ## by the pointing device or by tabbing navigation.
   attribute onblur {script}?,
-  ## The onkeydown script is executed when this view has the focus and
-  ## a key is pressed down.  Multiple key down events are sent for a
-  ## key that is held down.  If you want the script executed only
-  ## once, use onkeyup. This event is sent with the keycode for the key that is
-  ## down.
   attribute onkeydown {script}?,
-  ## The onkeyup script is executed when this view has the focus and a
-  ## key is released. This event is sent with the keycode for the key that 
-  ## went up.
   attribute onkeyup {script}?,
   attribute onselect {script}?,
-  ## The ondata script is executed when the data selected by a view's datapath
-  ## changes.
   attribute ondata {script}?
+
 
 
 #
@@ -481,44 +332,24 @@ animatorgroup =
 animatorContent =
   objectAttributes &
   objectElements &
-  ## The name of the attribute whose value is animated.  This
-  ## attribute is required on an animator, unless the animator is
-  ## inside an animatorgroup that specifies an attribute.
   attribute attribute {token}? &
-  ## Whether to start the animation instantly (the default),
-  ## or wait for a script command.
   [a:defaultValue="true"] attribute start {boolean}? &
-  ## The start value for the animation.  Defaults to the
-  ## targeted attribute's current value.
   attribute from {number}? &
-  ## The final value for the targeted attribute.
   attribute to {number}? &
-  ## The duration of the animation, in milliseconds (1000 = 1 second).
   attribute duration {xsd:float {minInclusive="0"} | constraint}? &
   [a:since="1.1"
    a:defaultValue="false"]
   attribute indirect {boolean}? &
-  ## Whether the to value is relative to the initial value of the
-  ## attribute (@c{true}), or is absolute (@c{false}).
   [a:defaultValue="false"] attribute relative {boolean}? &
   [a:defaultValue="easeboth"]
   attribute motion {"linear" | "easein" | "easeout" | "easeboth"}? &
-  ## Executed when the animator starts.  This code is executed
-  ## multiple times if the animator repeats.
   attribute onstart {script}? &
-  ## Executed when the animator finishes.
   attribute onstop {script}? &
-  ## The number of times to repeat the animation.  This should be a
-  ## positive integer, or 'Infinity'.  Changes to the repeat value
-  ## take effect, after the animation is finished and then restarted.
   [lza:since="1.1"]
   attribute repeat {expression}? &
-  ## The paused state of the animator. If true, the animator will stop. When
-  ## changed to false, the animator will resume from its current location
   [a:defaultValue="false"] attribute paused {boolean}? &
-  ## the object for which an attribute will be animated (by default, this
-  ## is the immediateParent)
   attribute target {reference}?
+
 
 #
 # View elements
@@ -527,8 +358,6 @@ animatorContent =
 viewElement = (
 
   element view {viewContent}
-  | 
-  element drawview {viewContent}
   | 
     element text {
       viewContent
@@ -554,38 +383,26 @@ viewElement = (
 )
 
 textAttributes =
-  ## If true, the lines of text are wrapped to fit within the text
-  ## width.  (The name @c{multiline} is a misnomer.  Unwrapped text
-  ## can be multiple lines if it contains a @c{<br />} or @c{<p>}
-  ## element, or a line break within a @c{<pre>} element.
-  ##
-  ## This attribute defaults to true if width and height are
-  ## explicitly specified.
-  ##
-  ## If you set multiline=true, you probably want to explicitly a
-  ## width for the text also; if multiline=true and you do not specify
-  ## a width, the system will pick an arbitrary width (100 pixels at
-  ## the moment).
-  ##
-  ## When multiline=true, the text is automatially re-wrapped whenever
-  ## the content is modified by calls to <method>setText</method>, or whenever the
-  ## width of the text view is modified.
   [a:defaultValue="false"
    lza:modifiers="final"]
   attribute multiline {boolean}? &
-  ## If true, the width of the text field will be recomputed each time
-  ## setText() is called, so that the text view is exactly as wide as
-  ## the width of the widest line.
   [a:defaultValue="false"]
   attribute resize {booleanLiteral}? &
-  ## If true, the text is selectable
   [a:defaultValue="false"]
   attribute selectable {booleanLiteral}? &
   [a:defaultValue="null"]
   attribute maxlength {numberExpression}? &
   attribute pattern {string}? &
-  attribute label {string}?
-
+  attribute label {string}? &
+     [a:defaultValue="advanced"]
+  attribute antiAliasType {"normal" | "advanced"}? &
+     [a:defaultValue="subpixel"]  
+  attribute gridFit {"none" | "pixel" | "subpixel"}? &
+     [a:defaultValue="0"]
+  attribute sharpness {numberExpression}? &
+     [a:defaultValue="0"]  
+  attribute thickness {numberExpression}?
+    
 textContent =
   (attribute text {xsd:string}
    | text?)
@@ -692,12 +509,7 @@ resource =
   
   element resource {
     nameAttribute &
-    (## If src is an identifier name, it must match the name of a resource
-     ## that has been defined by the @e{resource} tag.  If it is a URL, it
-     ## refers to a resource that is requested when the application is run.
-     ## Otherwise it should be a pathname, and must name a resource file
-     ## that is compiled into the application.
-      srcAttribute
+    (srcAttribute
     | 
       element frame {nameAttribute? & srcAttribute}*)
   }
@@ -719,7 +531,7 @@ datasource = element datasource {
     ## of the dataset can be used in the datapath attribute of
     ## a view.
     [lza:name="datasource dataset"]
-    element dataset {datasetAttributes & datasetContent}*
+    element dataset {datasetAttributes & anyXML}*
   & oninitAttribute?
   & objectElements
 }
@@ -798,19 +610,23 @@ element connection {
     attribute onuserdisconnect {script}?
   & agent*
   & method*
+  & handler*
 }
 
 dataset =
 
 [lza:name="top-level dataset"]
 element dataset {
-  datasetAttributes &
-  (datasetContent | anyXML)
+  datasetAttributes & anyXML
 }
 
-datasetAttributes = objectAttributes
-
-datasetContent =
+datasetAttributes = objectAttributes & 
+  ## If true, namespace prefixes are preserved in XML tag and attribute names
+  ## defaults to false in proxied apps, but SOLO apps currently only support
+  ## a value of 'true' (namespace prefixes are always attached to
+  ## element and attribute names)
+  [lza:defaultValue="true"]
+  attribute nsprefix {boolean}? &
   ## If true, enable a response to be encoded via the clients Accept-Encoding
   ## HTTP header.  This allows the server to gzip the response.
   [lza:since="1.1"
@@ -829,6 +645,11 @@ datasetContent =
   [lza:since="1.1"
    lza:defaultValue="false"]
   attribute request {boolean}? &
+  ## If true, every change to the dataset source or query params will
+  ## cause a new request to be made automatically
+  [lza:since="4.1"
+   lza:defaultValue="false"]
+  attribute autorequest {boolean}? &
   ## If true, the client should ensure that each request is made,
   ## rather than just making and reporting the last request.
   [lza:since="1.1"
@@ -841,6 +662,8 @@ datasetContent =
   ## url from which to load its content, rather than as a static xml file to
   ## inline.
   attribute type {xsd:string}? &
+  ## If true, initial literal XML data is taken from <data> child node
+  attribute datafromchild {boolean}? &
   [lza:visibility="private"]
   attribute endpoint {xsd:string}? &
   [lza:visibility="private"]
@@ -864,13 +687,6 @@ datasetContent =
   [a:defaultValue="false"]
   attribute trimwhitespace {boolean}?
   & 
-  ## If true, namespace prefixes are preserved in XML tag and attribute names
-  ## defaults to false in proxied apps, but SOLO apps currently only support
-  ## a value of 'true' (namespace prefixes are always attached to
-  ## element and attribute names)
-  [a:defaultValue="true"]
-  attribute nsprefix {boolean}?
-  & 
   ## Enables caching of the data response on both the LPS server
   ## and the client.  There are security issues with enabling this.
   ## You usually want the getresponseheaders attribute to be false when
@@ -887,7 +703,7 @@ datasetContent =
   [lza:since="1.1"]
   attribute ontimeout {script}? &
   ## HTTP request method = post | get
-  attribute querytype {"get" | "post" | "GET" | "POST"}?
+  attribute querytype {"get" | "post" | "GET" | "POST" | "put" | "PUT" | "delete" | "DELETE"}?
 
 anyXML = mixed {
     element * {
@@ -980,65 +796,21 @@ objectElements = method*
 
 attributeElement = 
 element attribute { 
-     ## The name of the attribute.
         [lza:modifiers="final"]
         attribute name {token} 
-     & (  ## The initial value of the attribute.  The type of this value
-           ## is specified by the value of the type attribute; if that
-           ## attribute is not present, it's the type of this attribute
-           ## in this element's tag.  The attribute is given this value
-           ## when the element is created.
-           attribute value {string} ?
+     & (attribute value {string} ?
            & [lza:since="1.1"]
-             ( ## When the initial value expression is to be
-               ## evaluated.  One of:
-               ## <dl>
-               ##   <dt>@c{immediately}</dt>
-               ##   <dd>evaluate when the enclosing element is defined
-               ##       (must be a constant)</dd>
-               ##   <dt>@c{once}</dt>
-               ##   <dd>evaluate when the enclosing element is
-               ##       initialized</dd>
-               ##   <dt>@c{always}</dt>
-               ##   <dd>update whenever the value of the expression
-               ##       changes</dd>
-               ## </dl>
-               ## The default is @c{when="immediately"}.
-               ## 
-               ## The setting for @c{when} can be overridden
-               ## when assigning a value to an attribute by using the
-               ## syntax <code><var>attribute
-               ## name</var>=$<var>when
-               ## value</var>{<var>expression</var>}</code>.  The
-               ## default for
-               ## <var>when value</var> is @c{always}, for
-               ## example: <code>&lt;view
-               ## title="$once{computeTitle()}" /&gt;</code> sets the
-               ## title of the view to a computed value and
-               ## <code>&lt;view title="${parent.subtitle}" \&gt;</code>
-               ## will cause the title of the view to
-               ## track @c{parent.subtitle}.
-               ## 
-               [a:defaultValue="immediately"]
+             ([a:defaultValue="immediately"]
                attribute when { "immediately" | "once" | "always" }
              )?
        )?
-     & ## The type of the attribute.  This determines how the value is
-       ## parsed.  Attributes of type string are automatically quoted
-       ## if when="immediate", for any other value of when, a literal
-       ## string would have to be quoted to be used as a value.
-       [a:defaultValue="expression"
+     & [a:defaultValue="expression"
         lza:modifiers="final"]
        attribute type {"boolean" | "color" | "expression" | "number" | "size" |
                        "string" | "text" | "html"}?
-     & ## True if this is a required attribute.
-       [a:defaultValue="false"] 
+     & [a:defaultValue="false"] 
        attribute required {booleanLiteral}? 
-     &## Code that is executed when setAttribute is used to set the value
-       ## of this attribute.  This code is executed within a context in
-       ## which the variable with this attribute's name is
-       ## bound to the value passed to setAttribute.
-       [lza:since="1.1"]
+     & [lza:since="1.1"]
        attribute setter {script}?
      }
 
@@ -1051,11 +823,12 @@ class =
      [a:defaultValue="view"
       lza:modifiers="final"]
      attribute extends {token}? &
-     ## The comma-separated list of traits, applied in order
-     attribute traits {string}? &
+     ## The comma-separated list of mixins, applied in order
+     attribute with {string}? &
      ## Any attribute can occur, depending on superclass.
      ## We need to handle this in a preprocessing step.
-     attribute * - (name|extends|traits) {string}*
+     attribute * - (name|extends|with) {string}*
+   & docElement?
    & viewContentElements
   }
 
@@ -1071,8 +844,18 @@ interface =
      ## Any attribute can occur, depending on superclass.
      ## We need to handle this in a preprocessing step.
      attribute * - (name|extends|traits) {string}*
+   & docElement?
    & viewContentElements
   }
+
+docElement =
+    element doc {
+        # it actually has more structure than this,
+        # but the DTD compiler chokes if we get too descriptive here.
+        any
+    }
+
+any = (text | element * { attribute * { text }*, any })*
 
 trait =
   element trait {
@@ -1088,22 +871,13 @@ trait =
 handler =
   element handler {
      nameAttribute
-   & ## If this attribute is present, it is a JavaScript expression
-     ## that evaluates to an object.  The code in this method executes
-     ## when this object sends the event named by the @a{event}
-     ## attribute.  This attribute may be present only if
-     ## the @a{event} attribute is present too.
-     [a:defaultValue="this"]
+   & [a:defaultValue="this"]
      attribute reference {reference}?
-   & ((
-       ## The parameter names of this handler.  The value of this attribute
-       ## is a comma-separated list of JavaScript identifiers.
-       [a:defaultValue=""
+   & (([a:defaultValue=""
         lza:modifiers="final"]
        attribute args {string}? &
        text) |
-      ( ## A method to call when this handler is invoked.
-       attribute method {string}))
+      (attribute method {string}))
   }
 
 event =
@@ -1113,24 +887,15 @@ event =
 
 method =
   element method {
-   ( nameAttribute |
-   ( nameAttribute? &
-     ## The name of the event that this method is invoked in response
-     ## to.
+   (nameAttribute |
+    (nameAttribute? &
      attribute event {string} &
-     ## If this attribute is present, it is a JavaScript expression
-     ## that evaluates to an object.  The code in this method executes
-     ## when this object sends the event named by the @a{event}
-     ## attribute.  This attribute may be present only if
-     ## the @a{event} attribute is present too.
      [a:defaultValue="this"]
      attribute reference {reference}?)) &
-    ## The parameter names of this method.  The value of this attribute
-    ## is a comma-separated list of JavaScript identifiers.
-    [a:defaultValue=""
-     lza:modifiers="final"]
-    attribute args {string}? &
-    text
+   [a:defaultValue=""
+   lza:modifiers="final"]
+   attribute args {string}? &
+   text
   }
 
 importElement =
@@ -1172,9 +937,11 @@ nodeAttributes = (
 nodeElements =
     objectElements
   & datapathChildren
+  & element data {
+     datasetAttributes & anyXML
+  }*
   & element dataset {
-     datasetAttributes &
-    (datasetContent | anyXML)
+     datasetAttributes & anyXML
   }*
     
 nodeContent =
@@ -1184,6 +951,9 @@ nodeContent =
 node =
 
   element node {nodeContent}
+
+datarequest = 
+   element datarequest {nodeContent}
 
 layout = 
 
@@ -1199,33 +969,17 @@ splash =
   element splash {
      [lza:visibility="private"]
       attribute hideafterinit {booleanLiteral}? &
-      ## If true, the splash views remain on the canvas after the
-      ## preload is complete.
       [a:defaultValue="false"]
       attribute persistent {booleanLiteral}? &
       [lza:name="splash view"]
       element view {
-        ## This defines both a resource with this name, and a view.
         attribute name {token}? &
-        ## This must be a pathname.  If the target contains text, the
-        ## text should be converted to outlines.
         attribute resource {xsd:anyURI} &
-        ## If this attribute is present, the resource is synchronized
-        ## to loading progress.  Its value should be either a number
-        ## between 0.0 and 1.0, or a percentage between 0% and 100%
-        ## (inclusive).  If the resource is a multiframe resource, the
-        ## value is the proportion of the frames to play during the
-        ## preload phase of application load; the remainder is played
-        ## during the initialization phase.
         attribute ratio {xsd:string}? &
-        ## x position of this view relative to the canvas
         [a:defaultValue="0"]
         attribute x {numberLiteral}? &
-        ## y position of this view relative to the canvas
         [a:defaultValue="0"]
         attribute y {numberLiteral}? &
-        ## If true, this view is centered within the canvas.  This
-        ## overrides the @a{x} and @a{y} attributes.
         [a:defaultValue="false"]
         attribute center {booleanLiteral}?
       }*

@@ -3,6 +3,7 @@
     <include href="charts/styles/styleparser.lzx"/>
     <include href="charts/styles/defaultchartstyle.lzx"/>
     <include href="base/basecomponent.lzx"/>
+    <include href="extensions/drawview.lzx"/>
     <!---
         chart is the base class representing a chart. In general,
         this class is not instantiated directly. A chart contains 
@@ -37,7 +38,7 @@
         <!--- enable value region -->
         <attribute name="valueregionsenabled" type="boolean" value="true"/>        
         <attribute name="databorderEnabled" type="boolean" value="true" />
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="_datalabelpool" type="string" />
         <!--- subview have  -->
         <attribute name="initdone" value="false" type="boolean"/>
@@ -73,7 +74,7 @@
 
         <method event="oninitdone">
             // No style defined.
-            if( this.style.classname != "chartstyle" ) {
+            if( this.style.constructor.tagname != "chartstyle" ) {
                 this.style = this.defaultstyle;
             } else {
             // Check for a complete style definition.
@@ -254,7 +255,7 @@
             var objs = [];                       
             for (var i = 0; i < this.subnodes.length; i++)
             {
-                if(this.subnodes[i].classname == className)
+                if(this.subnodes[i].constructor.tagname == className)
                 {
                     objs.push(this.subnodes[i]);
                 }               
@@ -273,7 +274,7 @@
                 if((className == "dataseries" || className == "datacolumn") && this.subnodes[i] instanceof dataseries){
                     return this.subnodes[i];
                 }
-                if(this.subnodes[i].classname == className)
+                if(this.subnodes[i].constructor.tagname == className)
                 {
                     return this.subnodes[i];
                 }               
@@ -319,13 +320,21 @@
         <method event="oninitdone">
             //Debug.write("initdone: " + this.initdone);
         </method>
+        <doc>
+          <tag name="shortdesc"><text>
+              a simple chart
+          </text></tag>
+          <text>
+            <warning>This component is of Beta quality and is subject to change.</warning>
+          </text>
+        </doc>
 
     </class>
 </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

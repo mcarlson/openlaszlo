@@ -1,0 +1,89 @@
+<canvas width="100%" height="80%" >
+
+<script>
+    function debug (arg1, arg2, arg3) {
+        Debug.write(arg1,arg2,arg3);
+    }
+</script>
+     
+
+<!-- setters on class declaration -->
+<class name="foo">
+    <attribute name="blah" value="0" setter="this.pleaseSetMyBlah( blah )" 
+               type="string" />
+    <method name="pleaseSetMyBlah" args="b">
+     debug('CLASS SETTER RUNNING ', this, ' setBlah() setting blah to ', b);
+      this.otherblah = 'my value is '+(b*100);
+      this.blah = b;
+    </method>
+  </class>
+    
+  <foo id="bar" blah="17"/>
+
+  <foo id="bar2">
+     <attribute name="blah" setter="this.overridingBlahSetter(blah)"/>
+     <method name="overridingBlahSetter" args="b">
+       debug("INSTANCE SETTER OVERRIDES CLASS SETTER", this, b);
+       this.blah = b;
+     </method>
+  </foo>
+
+  <class name="newfoo" extends="foo">
+    <attribute name="blah" setter="this.overridingClassBlahSetter(blah)"/>
+    <method name="overridingClassBlahSetter" args="b">
+     debug('CLASS OVERRIDE SETTER RUNNING ', this, ' setBlah() setting blah to ', b);
+      this.blah = b;
+    </method>
+  </class>
+
+  <newfoo/>
+  <newfoo blah="42"/>
+  <newfoo blah="420">
+     <attribute name="blah" setter="this.overridingInstanceBlahSetter(blah)"/>
+     <method name="overridingInstanceBlahSetter" args="b">
+       debug("INSTANCE SETTER OVERRIDES SUBCLASS SETTER", this, b);
+       this.blah = b;
+     </method>
+  </newfoo>
+
+<!-- setter on an instance -->
+
+  <view id="s2">
+      <attribute name="flavor" value='booberry' type='string'
+          setter="this.pleaseSetMyFlavor(flavor)"/>
+      <method name="pleaseSetMyFlavor" args="flv">
+          debug('VIEW INSTANCE SETTER RUNNING: your flavor is being set to '+flv);
+          this.flavor = flv;
+      </method>
+ </view>
+
+<script>
+  bar2.setAttribute('blah', 259);
+   s2.setAttribute('flavor', 'chocolate');
+</script>
+
+
+<!--
+canvas = new LzCanvas({__LZproxied: "true", bgcolor: 16777215, build: "INTERNAL", embedfonts: true, fontname: "Verdana,Vera,sans-serif", fontsize: 11, fontstyle: "plain", height: "80%", lpsrelease: "Alpha", lpsversion: "3.2", runtime: "swf7", width: "100%"});
+
+LzInstantiateView({name: 'userclass', 
+                          attrs: {parent: "view",
+                              initobj: {attrs:
+                                           {$setters: {blah: 
+                                                   function $setters$2Elzx_5_32_blah_onset (blah) {
+                                                       this.pleaseSetMyBlah( blah )
+                                              }},
+                                            blah: "0",
+                                            pleaseSetMyBlah:
+                                                function $setters$2Elzx_6_45_pleaseSetMyBlah (b)) {
+                                               debug(this,'setBlah() setting blah to ', b);
+                                               this.otherblah = 'my value is '+(b*100);
+                                               this.blah = b;
+                                           }},
+                              name: "foo"}}}, 1);
+
+LzInstantiateView({attrs: {blah: "17"}, id: "bar", name: "foo"}, 1);
+canvas.initDone()
+
+-->
+</canvas>

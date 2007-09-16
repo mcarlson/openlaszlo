@@ -1,0 +1,13 @@
+
+<canvas height="125">
+  <simplelayout spacing="5"/>
+  <text bgcolor="#ccccff" multiline="true" width="400" >
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit.<br/> Cras
+    nibh. Quisque justo. <br/>Donec porta, wisi quis vehicula interdum,
+    augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+  </text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

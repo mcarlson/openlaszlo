@@ -1,0 +1,43 @@
+
+<canvas height="350">
+  <dataset name="vegetables">
+    <celery/> <celeriac/> <carrot/> <florence_fennel/> <parsnip/> 
+    <parsley/> <winter_endive/> <witloof_chicory/> <cardoon/> 
+    <artichoke/> <head_lettuce/> <cos_lettuce/> <black_salsify/> 
+    <swedish_turnip/> <cauliflower/> <cabbage/> <brussels_sprouts/> 
+    <kohlrabi/> <broccoli/> <savoy_cabbage/> <turnip/> <radish/> 
+    <water_cress/> <garden_cress/> <foliage_beet/> <spinach/> 
+    <sweet_potato/> <watermelon/> <melon/> <cucumber/> <winter_squash/> 
+    <marrow/> <chickpea/> <lentil/> <runner_bean/> <common_bean/> 
+    <pea/> <faba_bean/> <leek/> <shallot/> <onion/> <salsify/> 
+    <welsh_onion/> <garlic/> <chives/> <asparagus/> <ladyfinger/> 
+    <sweet_corn/> <rhubarb/> <capsicum_pepper/> <tomato/> <eggplant/>
+  </dataset>
+
+  <simplelayout spacing="10"/>
+  <text width="200" oninit="checkSubviews()">
+    <handler
+            name="onaddsubview" reference="replicationParent">
+      this.setText('number of subviews: ' + 
+                   replicationParent.subviews.length);
+    </handler>
+  </text>
+
+  <view clip="true" width="100" height="100" id="clipper" bgcolor="silver">
+    <view id="replicationParent">
+      <text>
+        <datapath xpath="vegetables:/*/name()" replication="lazy"/>
+      </text>
+    </view>
+    <scrollbar/>
+  </view>
+  <button>Make it bigger
+    <handler name="onclick">
+      clipper.setAttribute('height', clipper.height + 50);
+    </handler>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<canvas  width="1200" height="600" >
+
+  <debug fontsize="18" oninit="Debug.showInternalProperties = true"/>
+    
+  <resource name="test4" src="../resources/swf/star_button.swf" />
+
+  <import name="lib" href="fontlib.lzx" 
+          stage="defer"
+          onload="canvas.doLoaded()"/>
+
+  <method name="doLoaded">
+    Debug.write("dynamic library loaded");
+  </method>
+
+  <simplelayout/>
+
+  <button onclick="canvas.loadstuff()">Load fontlib.swf</button>
+  <button onclick="canvas.makeview('test1')">Instantiate resource test1 using fontlib.swf</button>
+  <button onclick="canvas.makeview('test2')">Instantiate resource test2 using fontlib.swf</button>
+  <button onclick="canvas.maketext('KentuckyFriedChickenFont')">text using kentucky font</button>
+  <button onclick="canvas.maketext('kingfont')">text using kentucky font</button>
+      <view id="foo"  resource="../resources/png/smiley.png">
+      
+      </view>
+
+
+
+  <method name="loadstuff">
+    lib.load();
+  </method>
+
+  <method name="makeview" args="rname">
+    var v = new LzView(canvas, {resource: rname});
+  </method>
+
+  <method name="maketext" args="fname">
+    var k = new LzText(canvas, {font: fname, fontsize: "26",  text: "This is some Kentucky Text" });
+  </method>
+
+<!-- 
+  <class name="startOverButton" extends="button" clickable="true"
+        onmousedown="this.setResourceNumber(2)" 
+        onmouseup="this.setResourceNumber(1)" />
+
+-->
+
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

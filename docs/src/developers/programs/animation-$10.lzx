@@ -1,0 +1,65 @@
+
+<canvas width="800" height="300" bgcolor="0xE5E1B0" >
+  <!-- INCLUDES That provide framework for the example -->
+  <include href="animation_library.lzx"/>
+  
+  <!-- The EXAMPLE itself-->
+  <view id="tutorial2" height="400" width="${parent.width}" visible="true">
+    <ruler name="rlr" height="300" y="0"/>
+    <view height="30"/>
+    <view height="200" y="40">
+      <view>
+        <text>easeboth</text>
+        <box id="B11" x="50" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="x" to="600"
+                    duration="1000" start="false" motion="easeboth"/>
+        </box>
+      </view>
+      
+      <view>
+        <text>easein</text>
+        <box id="B12" x="50" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="x" to="600"
+                    duration="1000" start="false" motion="easein"/>
+        </box>
+      </view>
+      
+      <view>
+        <text>easeout</text>
+        <box id="B13" x="50" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="x" to="600"
+                    duration="1000" start="false" motion="easeout"/>
+        </box>
+      </view>
+      
+      <view>
+        <text>linear</text>
+        <box id="B14" x="50" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="x" to="600"
+                    duration="1000" start="false" motion="linear"/>
+        </box>
+      </view>
+      <simplelayout axis="y" spacing="5"/>
+    </view>
+  </view>
+  
+  <!-- The TEST and RESET buttons -->
+  <view x="50" y="260">
+    <richbutton label="Test" x="50" cap="rightsheer"
+                 onclick="B11.anm.doStart();
+                          B12.anm.doStart();
+                          B13.anm.doStart();
+                          B14.anm.doStart()"/>
+    <richbutton label="Reset" cap="leftsheer"
+                 onclick="B11.setX(50);
+                          B12.setX(50);
+                          B13.setX(50);
+                          B14.setX(50);
+                          this.parent.P2.setDisplay(' ');"/>
+    <simplelayout axis="x"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

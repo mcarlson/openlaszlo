@@ -1,20 +1,29 @@
 <!---
-linkdialog
-A dialog to let the user set a hyperlink on the currently selected text.
-[ben 7.26.05]
--->
+      @topic Incubator
+      @subtopic Rich Text Editor
+  -->
 <library>
 
     
     <!-- dependencies  -->
     <!-- include href="../borderinput.lzx" /--> 
         
+    <!---
+    A dialog to let the user set a hyperlink on the currently selected text.
+    @author ben 7.26.05
+    -->
     <class name="linkdialog" width="${parent.toolbar.width}" height="${parent.toolbar.height}" bgcolor="0xD4D7E6" visible="false">
         
         <!--- Reference to the associated richtexteditor. (default: grte) --> 
         <attribute name="editor" value="${grte}"/>
         
         <attribute name="ystart" value="110"/>
+        
+        <!--- the start index of the text to mark as an url --> 
+        <attribute name="ssel" value="0" />
+        <!--- the end index of the text to mark as an url --> 
+        <attribute name="esel" value="0" />
+
         
         <animator 
             name="_animShow" attribute="y" to="0" 
@@ -32,6 +41,8 @@ A dialog to let the user set a hyperlink on the currently selected text.
         <!--- show
             slides in the dialog. -->
         <method name="show">
+            this.ssel = this.editor._ssel;
+            this.esel = this.editor._esel; 
             this.urlfield.setText("http://");
             var ntextlength = this.urlfield.getText().length;
             this.urlfield.setSelection(ntextlength,ntextlength);
@@ -48,13 +59,20 @@ A dialog to let the user set a hyperlink on the currently selected text.
         <!--- makelink
             Assigns link and standard link formatting to text selected in the editor. --> 
         <method name="makelink">
+            if (this.ssel == this.esel) {
+                // it doesn't make sense to make a link to an empty selection, so, 
+                // let's see if the editor has a more useful selection. 
+                this.ssel = this.editor._ssel;
+                this.esel = this.editor._esel; 
+            }
+        
             var url = urlfield.getText();
-            var fmt = this.editor.currentformat; 
+            var fmt = this.editor.getTextFormat(this.ssel, this.esel); 
             fmt.url = url;
             fmt.color = blue; 
             fmt.target = "_new"; 
             fmt.underline = true; 
-            this.editor.setCurrentFormat(fmt); 
+            this.editor.setTextFormat(fmt, this.ssel, this.esel);
             var ncaratinsertpoint = this.editor.getAttribute("_esel");
 
             // make sure that next onfocus, which will be triggered by doing setSelection here, is ignored by editor.
@@ -94,7 +112,7 @@ A dialog to let the user set a hyperlink on the currently selected text.
     
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

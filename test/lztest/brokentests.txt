@@ -1,0 +1,7 @@
+# These tests fail as of 4.22.06 [bshine]
+test/lztest/lztest-align.lzx
+test/lztest/lztest-placement.lzx
+test/lztest/lztest-lzbrowser.lzx
+test/lztest/lztest-lzdatanode.lzx
+test/lztest/lztest-lzparams.lzx
+# Copyright 2006 Laszlo Systems

@@ -1,0 +1,15 @@
+
+<canvas height="300">
+    <simplelayout spacing="5"/>
+    <class name="box" height="100" width="100" bgcolor="red">
+       <attribute name="label" value="Label"  type="string"/>
+       <text text="${parent.label}" />
+    </class>
+
+    <box label="Box1"/>
+    <box/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

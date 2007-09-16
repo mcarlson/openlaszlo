@@ -8,7 +8,7 @@
         <attribute name="daynum" value="null"/>
 
         <!--- Indicates if this day should be enabled or disabled.  The day 
-              would be disbled if it should not show it's daynum.
+              would be disbled if it should not show its daynum.
               @keywords protected 
         --> 
         <attribute name="disabled" type="boolean" value="false"/> 
@@ -24,12 +24,12 @@
         -->
         <attribute name="selected" type="boolean" value="false"/> 
 
-        <!--- This method is called when this day recieves focus. 
+        <!--- This method is called when this day receives focus. 
               @keywords protected -->
         <method name="gotFocus">
         </method> 
 
-        <!--- This method is called when this day looses focus. 
+        <!--- This method is called when this day loses focus. 
               @keywords protected -->
         <method name="removeFocus">
         </method> 
@@ -52,10 +52,25 @@
         <method name="buttonrelease" event="onmouseup"> 
         </method> 
 
+        <doc>
+          <tag name="shortdesc"><text>An abstract class representing a day for use with <classname>basedatepicker</classname></text></tag>
+          <text>
+            <p> 
+               Basedatepickerday is an abstract class representing a day for use with the 
+               basedatepicker. When creating an implementation of basedatepickerday, it is expected that certain methods from basedatepicker,
+                basedatepickerday and basedatepickerweek will be overridden to provide full
+                functionality of a datepicker.  For basedatepickerday, these methods include
+                buttonpush(), buttonrelease(), gotFocus(), and removeFocus().  See the source code of
+                datepicker for a more extensive example. 
+               See also <xref linkend="lz.basedatepicker"/> and <xref linkend="lz.basedatepickerweek"/>
+            
+            </p>
+          </text>
+        </doc>
     </class> 
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

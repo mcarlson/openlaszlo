@@ -1,0 +1,32 @@
+
+<canvas debug="true" height="150">
+
+    <debug x="80" y="10" width="400" height="120" />
+
+    <dataset name="myDataset" />
+
+    <simplelayout spacing="5" />
+
+    <method name="v2e" args="v">
+        Debug.write('setting', v, 'to mydataset');
+        var de = LzDataElement.valueToElement(v);
+        myDataset.setChildNodes( de.childNodes )
+        Debug.write(myDataset.serialize());
+    </method>
+
+    <view datapath="myDataset:/" x="10" layout="inset: 10; spacing: 2">
+        <button text="array">
+            <handler name="onclick">
+                var arr = [1, 2, 3];
+                canvas.v2e(arr);
+            </handler>
+        </button>
+
+        <text datapath="item/text()" />
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

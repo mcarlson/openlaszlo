@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--
@@ -11,6 +11,11 @@ Convert html to docbook:
    <section><title>text<section><section></section>
 -->
 
+<!DOCTYPE xsl:stylesheet [
+<!ENTITY condition "<xsl:if test='@condition'>
+                      <xsl:attribute name='condition'><xsl:value-of select='@condition'/></xsl:attribute>
+                    </xsl:if>">
+]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:dyn="http://exslt.org/dynamic"
                 xmlns:exslt="http://exslt.org/common"
@@ -61,9 +66,11 @@ see http://www.exslt.org/math/functions/max/
         Text must be inside a &lt;p&gt; tag.
       </xsl:message>
     </xsl:if>
+    <xsl:variable name="nodes" select="//h:body/node()|//h:body/text()"/>
+    <xsl:variable name="nodescount" select="count($nodes)"/>
     <xsl:call-template name="section-content">
       <xsl:with-param name="level" select="1"/>
-      <xsl:with-param name="nodes" select="//h:body/node()|//h:body/text()"/>
+      <xsl:with-param name="nodes" select="$nodes"/>
     </xsl:call-template>
   </xsl:template>
   
@@ -122,11 +129,14 @@ see http://www.exslt.org/math/functions/max/
             </xsl:when>
           </xsl:choose>
         </xsl:for-each>
-        <xsl:call-template name="section-content">
-          <xsl:with-param name="level" select="$level+1"/>
-          <xsl:with-param name="nodes" select="exslt:node-set($nodes)[
+        
+        <xsl:variable name="new-nodes" select="exslt:node-set($nodes)[
                           count(following-sibling::*[local-name()=$h2])=
                           count(current()/following-sibling::*[local-name()=$h2])]"/>
+        <xsl:variable name="nodescount" select="count($new-nodes)"/>
+        <xsl:call-template name="section-content">
+          <xsl:with-param name="level" select="$level+1"/>
+          <xsl:with-param name="nodes" select="$new-nodes"/>
         </xsl:call-template>
       </section>
     </xsl:for-each>
@@ -134,6 +144,7 @@ see http://www.exslt.org/math/functions/max/
   
   <xsl:template match="h:h1|h:h2|h:h3|h:h4|h:h5|h:h6">
     <title>
+      &condition;
       <xsl:apply-templates mode="skip-anchors" select="node()"/>
     </title>
   </xsl:template>
@@ -166,6 +177,7 @@ see http://www.exslt.org/math/functions/max/
   
   <xsl:template match="h:code|h:tt">
     <literal>
+      &condition;
       <xsl:if test="@class">
         <xsl:attribute name="role"><xsl:value-of select="@class"/></xsl:attribute>
       </xsl:if>
@@ -175,6 +187,7 @@ see http://www.exslt.org/math/functions/max/
   
   <xsl:template match="h:body/h:code|h:pre">
     <programlisting>
+      &condition;
       <xsl:apply-templates/>
     </programlisting>
   </xsl:template>
@@ -195,6 +208,7 @@ see http://www.exslt.org/math/functions/max/
       </xsl:choose>
       
       <mediaobject>
+        &condition;
         <imageobject>
           <imagedata fileref="{@src}"/>
         </imageobject>
@@ -212,6 +226,7 @@ see http://www.exslt.org/math/functions/max/
   
   <xsl:template match="h:p">
     <para>
+      &condition;
       <xsl:call-template name="id"/>
       <xsl:apply-templates/>
     </para>
@@ -263,6 +278,7 @@ see http://www.exslt.org/math/functions/max/
 
   <xsl:template match="h:blockquote">
     <blockquote>
+      &condition;
       <xsl:apply-templates mode="wrap" select="."/>
     </blockquote>
   </xsl:template>
@@ -281,6 +297,7 @@ see http://www.exslt.org/math/functions/max/
   <xsl:template match="h:dt">
     <xsl:variable name="item-number" select="count(preceding-sibling::h:dt)+1"/>
     <varlistentry>
+      &condition;
       <term>
         <xsl:apply-templates/>
       </term>
@@ -360,6 +377,7 @@ see http://www.exslt.org/math/functions/max/
   
   <xsl:template match="h:ol">
     <orderedlist spacing="compact">
+      &condition;
       <xsl:for-each select="h:li">
         <listitem>
           <xsl:apply-templates mode="wrap" select="."/>
@@ -370,6 +388,7 @@ see http://www.exslt.org/math/functions/max/
   
   <xsl:template match="h:ul">
     <itemizedlist spacing="compact">
+      &condition;
       <xsl:for-each select="h:li">
         <listitem>
           <xsl:apply-templates mode="wrap" select="."/>
@@ -380,6 +399,7 @@ see http://www.exslt.org/math/functions/max/
   
   <xsl:template match="h:ul[processing-instruction('html2dbk')]">
     <simplelist>
+      &condition;
       <xsl:for-each select="h:li">
         <member type="vert">
           <xsl:apply-templates mode="wrap" select="."/>

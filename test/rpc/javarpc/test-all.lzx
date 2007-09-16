@@ -1,11 +1,12 @@
-<canvas width="800" height="600" debug="true">
+<canvas width="1400" height="600" debug="true">
+  <debug fontsize="16" x="20" y="260" />
 
     <include href="lzunit"/>
     <include href="test-databinding.lzx"/>
     <include href="test-count.lzx"/>
     <include href="test-typemap.lzx"/>
 
-    <debug x="20" y="260" />
+
 
     <security>
         <allow>
@@ -20,7 +21,7 @@
     </TestSuite>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

@@ -1,0 +1,82 @@
+<canvas>
+
+<include href="lztest/lztestmanager.lzx" /> 
+
+
+<!-- test LzDataNode -->
+
+<dataset name="mydata">
+  <records>
+    <record id="a">
+       some text data
+    </record> 
+    <record id="b">
+       more text data
+    </record>
+    <record id="c">
+      <potato type="idaho"/>
+    </record>
+  </records>
+</dataset>
+
+
+<script>
+<![CDATA[
+
+var testDataNodeSuite = new LzTestSuite("Test Suite for LzDataNode"); 
+
+Debug.write("FOO");
+
+
+
+function test_lzdatanode() {
+//    assertNotUndefined(global.mynode, "[1] testing for defined id"); 
+//    assertFalse(mynode.setme, "[2] testing for attribute setme == false"); 
+
+   var parentnode = mydata.childNodes[0];
+   var node1 = mydata.childNodes[0].childNodes[0];
+   var node2 = mydata.childNodes[0].childNodes[1];
+   var node3 = mydata.childNodes[0].childNodes[2];
+
+// getPreviousSibling
+   LzTestManager.assertEquals(node3.getPreviousSibling(), node2, "[3] tested getPreviousSibling");
+// getNextSibling
+   LzTestManager.assertEquals(node2.getNextSibling(), node3, "[4] tested getPreviousSibling");
+
+
+
+//childOf
+   LzTestManager.assertTrue(node2.childOf(parentnode),       "[5] tested childOf ");
+   LzTestManager.assertTrue(node2.childOf(parentnode, true), "[5.1] tested childOf ");
+
+
+//setOwnerDocument
+  
+   LzTestManager.assertEquals(node2.ownerDocument, mydata, "[6] ownerDocument");
+
+
+ //__LZXMLescape
+  LzTestManager.assertEquals(node1.__LZXMLescape("foo&bar<>"), "foo&amp;bar&lt;&gt;", "[7] __LZXMLescape");
+
+
+
+//stringToLzData
+  var xml = LzDataNode.stringToLzData('<foo bar="12"/>');
+  LzTestManager.assertEquals(12, xml.attributes.bar, "[8] stringToLzData");
+
+
+//trim
+  LzTestManager.assertEquals(LzDataNode.trim("   foo bar    "), "foo bar", "[9] trim");
+
+}
+
+testDataNodeSuite.addTest( test_lzdatanode ); 
+
+]]>
+</script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

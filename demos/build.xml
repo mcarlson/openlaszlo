@@ -1,6 +1,6 @@
 <project name="demos" default="test" basedir=".">
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
   <description>
@@ -27,15 +27,14 @@
   <target name="test" 
       description="Make sure all demos compile"
       depends="init" >
-
-      <apply executable="bash" parallel="true">
+      <echo message="running demos test" />
+      <apply executable="bash" parallel="false" failonerror="true">
           <arg line="${LPS_HOME}/WEB-INF/lps/server/bin/lzc -dir build" />
           <fileset dir="." >
-              <include name="contacts/contacts.lzx"/>
               <include name="weather/weather.lzx"/>
-              <include name="chat/chat.lzx"/>
               <include name="calendar/calendar.lzx"/>
-              <include name="dashboard/dashboard.lzx"/>
+              <include name="lzpix/app.lzx"/>
+              <include name="vacation-survey/vacation-survey.lzx"/>              
           </fileset>
       </apply>
   </target>

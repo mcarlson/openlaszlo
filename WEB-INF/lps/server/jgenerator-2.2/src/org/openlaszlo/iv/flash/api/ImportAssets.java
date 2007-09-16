@@ -6,6 +6,7 @@
  * The JGenerator Software License, Version 1.0
  *
  * Copyright (c) 2000 Dmitry Skavish (skavish@usa.net). All rights reserved.
+ * Copyright (c) 2007
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -75,8 +76,8 @@ import org.openlaszlo.iv.flash.context.Context;
 public class ImportAssets extends FlashObject {
 
     private String url;             // the url of the exporting swf file
-    private IVVector defs;          // imported definitions references (ImportedDef)
-    private IVVector names;         // imported definitions names
+    private IVVector defs = new IVVector(); // imported definitions references (ImportedDef)
+    private IVVector names = new IVVector();         // imported definitions names
 
     public ImportAssets() {}
 
@@ -89,10 +90,6 @@ public class ImportAssets extends FlashObject {
     }
 
     public void addAsset( String name, FlashDef def ) {
-        if( defs == null ) {
-            names = new IVVector();
-            defs = new IVVector();
-        }
         names.addElement(name);
         defs.addElement(def);
     }

@@ -1,0 +1,22 @@
+
+<canvas height="125">
+  <debug x="400"/>
+  <simplelayout/>
+  <!-- Single line text, the default -->
+  <text id="t1" bgcolor="#ffcccc" resize="false">
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+  </text>
+  <text id="t2" bgcolor="#ccffcc" resize="true">
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+  </text>
+  <button text="setText(...)">
+    <handler name="onclick">
+      t1.setText('resize='+t1.resize);
+      t2.setText('resize='+t2.resize);
+    </handler>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

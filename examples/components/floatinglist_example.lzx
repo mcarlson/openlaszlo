@@ -1,4 +1,4 @@
-<canvas bgcolor="#eaeaea">
+<canvas bgcolor="#eaeaea" width="80%">
     <silverstyle name="silvercolors" canvascolor="null"/>
     <greenstyle name="greencolors" canvascolor="null"/>
     <bluestyle name="bluecolors" canvascolor="null"/>
@@ -131,7 +131,7 @@
         height="${canvas.height-40}" width="1"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

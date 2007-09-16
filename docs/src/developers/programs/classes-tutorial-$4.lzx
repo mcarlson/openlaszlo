@@ -1,0 +1,18 @@
+
+<canvas width="500" height="80">
+  <class name="SpecialButton" extends="button" onclick="changeLabel()">
+    <attribute name="changeToLabel" value="Clicked!" type="string"/>
+    <method name="changeLabel">
+      var newLabel = this.getAttribute('changeToLabel');
+      this.setAttribute('text', newLabel);
+    </method>
+  </class>
+  
+  <simplelayout axis="y" spacing="10"/>
+  <SpecialButton>Not clicked</SpecialButton>
+  <SpecialButton changeToLabel="Thank You!">Please click me!</SpecialButton>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,1015 @@
+
+<chapter id="browser-integration">
+<!-- move title here for valid DocBook LI, LPP-4594 9/3/2007   -->
+    <title>Browser Integration</title>
+    <para role="fixme">
+        <remark role="fixme">
+            <emphasis role="para-label">FIXME:</emphasis>- Need reverse
+    example (lzSetCanvasAttribute()) in this section. - You must
+    use a &lt;handler name="onmyattr"&gt; in your canvas - You have
+    to use the lzSetCanvasAttribute() method call from browser
+    JS.</remark>
+    </para>
+
+    <para>OpenLaszlo applications run inside web browsers, and web
+  browsers are desiged to render HTML pages. This means that each
+  compiled OpenLaszlo application has a relationship to the HTML
+  page that delivers it to the browser. Depending on whether the OL
+  application was compiled to SWF or to DHTML, the mechanics of
+  this relationship differ. However, at an abstract level the model
+  is pretty much the same for all runtimes: an OpenLaszlo
+  application resides within a web page that is executed by a
+  browser; that browser has a "JavaScipt" engine. The OpenLaszlo
+  application can make requests for the JavaScript engine to
+  execute, and the surrounding HTML page can include JavaScript
+  code that makes requests of the OpenLaszlo application.</para>
+    <para>This chapter discusses the way that OpenLaszlo Applications
+  relate to the HTML pages in which they're delivered, and ways in
+  which the OpenLaszlo appliction and browser JavaScript engine can
+  communicate with each other.</para>
+    <para />
+    <section>
+        <title>Using the Developer Console</title>
+        <para>In this chapter we'll be talking about the structure of
+    HTML pages that contain LZX applications. Keep in mind that if
+    you compile your applications using the Developer Console, HTML
+    pages of the proper structure are generated automatically.
+    Situations may arise where you may need to customized these
+    pages or even generate pages from scratch, but in many cases,
+    the automaticaly generated page is all you need. Simply press
+    the appropriate button, "Server" or "SOLO", and follow the
+    instructions that are then displayed.</para>
+        <para />
+    </section>
+    <section>
+        <title>A model of Browser/LZX application interaction</title>
+        <para>Before going into the actual mechanics, let's take a
+    closer look at concepts and teminology.</para>
+        <para />
+        <section>
+            <title>The "wrapper page"</title>
+            <para>As we said above, web browsers display HTML pages. This
+      means that OpenLaszlo applications are delivered to browsers
+      by means of HTML pages. Sometimes those HTML pages contain
+      nothing visible to the user other than the LZX application
+      itself. In such cases the HTML page is essentially invisible,
+      and the fact that there's an HTML page there at all doesn't
+      really matter to the developer or to the user of the
+      application. Such HTML pages, whose only function is to
+      present the OpenLaszlo application to the browser, are
+      sometimes called "wrapper pages."</para>
+            <para>Depending on which target runtime they're compiled for,
+      OpenLaszlo applications have different relationships with the
+      JavaScript engine of the browser in which they run. To a
+      rough approximation, LZX applications compiled to SWF are
+      foreign objects embedded into an HTML page, and you must use
+      a formal protocol to get across this logical barrier between
+      the LZX application and the JavaScript engine. Applications
+      compiled to DHTML become just a part of the HTML page that
+      contains them. From the point of view of the browser, there
+      is no difference between the OpenLaszlo application and the
+      surrounding page.</para>
+            <para>But although some of the implementation details differ
+      for the different runtime targets, the OpenLaszlo APIs are,
+      wherever possible, consistent, so that you use the same
+      programming model regardless of the target runtime. So, for
+      example, there is a method called 
+      <indexterm>
+        <primary>
+          <literal>swfEmbed()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>swfEmbed()</methodname>for embedding SWF OL
+      applcations into the HTML page; this generates an HTML
+      &lt;embed&gt; tag. Similarly, there is an 
+      <indexterm>
+        <primary>
+          <literal>dhtmlEmbed()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>dhtmlEmbed()</methodname>for placing an OL
+      application compiled to DHTML within a web page. In this case
+      there is no &lt;embed&gt; generated or required, but the
+      methods have similar names because they perform analogous
+      functions.</para>
+            <para />
+        </section>
+        <section>
+            <title>Applications Compiled to SWF</title>
+            <para condition="swf">Applications compiled to SWF are
+      executed by the Flash player and must make use of the 
+      <indexterm>
+        <primary>LzBrowser</primary>
+                </indexterm>
+                <classname>LzBrowser</classname>service in order to "escape"
+      to the browser's JavaScript environment.</para>
+            <para>Any attributes that are declared on the canvas are
+      visible to the browser JavaScript. To go "the other way",
+      from the browser "into" the OpenLaszlo application, the 
+      <indexterm>
+        <primary>
+          <literal>setCanvasAttribute()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>setCanvasAttribute()</methodname>and 
+      <indexterm>
+        <primary>
+          <literal>setCanvasAttribute()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>setCanvasAttribute()</methodname>methods are
+      used.</para>
+            <para>This are discussed below.</para>
+            <para>Alhough OpenLaszlo applications deployed on the Flash
+      runtime are not dependent on the browser or operating system
+      for their look or behavior, there are some important
+      limitations that the browser container places on the
+      application. There are also a number of Flash Player features
+      that your application can use which are not available in
+      applications compiled to DHTML.</para>
+            <para>OpenLaszlo applications compiled to SWF can be sent
+      from the OpenLaszlo Server to client in any of several
+      forms:</para>
+            <itemizedlist spacing="compact">
+                <listitem>
+                    <para>as "naked" swf</para>
+                </listitem>
+                <listitem>
+                    <para>as swf embedded in an html "wrapper" page</para>
+                </listitem>
+                <listitem>
+                    <para>as xml source</para>
+                </listitem>
+            </itemizedlist>
+            <para />
+            <section>
+                <title condition="swf">The LzBrowser service</title>
+                <para>The 
+        <indexterm>
+          <primary>LzBrowser</primary>
+                    </indexterm>
+                    <classname>LzBrowser</classname>service provides access to
+        the browser and player environment. It includes methods to
+        load URLs in the browser and check the version of the
+        player. Furthermore, by using the 
+        <literal>LzBrowser</literal>service together with other
+        OpenLaszlo functions described below, you can build
+        applications that pass information and control between the
+        OpenLaszlo application and the JavaScript of the
+        browser.</para>
+                <para>The 
+        <literal>LzBrowser</literal>is always running.</para>
+                <para />
+            </section>
+        </section>
+        <section>
+            <title condition="dhtml">Applications Compiled to
+      DHTML</title>
+            <para>Applications that are compiled for DHTML run within the
+      browser's JavaScript envinronment. They are essentially
+      compiled into the DOM of that page.</para>
+            <para>Each LZX application has exactly one 
+      <indexterm>
+        <primary>canvas</primary>
+                </indexterm>
+                <sgmltag class="element">&lt;canvas&gt;</sgmltag>
+                <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: canvas-->
+      element, which, when compiled to DHTML, becomes an object.
+      When you embed an LZX application compiled to DHTML into an
+      HTML page, it just becomes part of that page's DOM,and you
+      can address it directly. The "foo" object of the LZX
+      application becomes canvas.foo of the DOM. If there is a swf
+      embedded in that (DHTML) Openlaszlo application, you can
+      still use the mechanism for talking to SWF applications to
+      reach it.</para>
+            <para>For DHTML, you can call canvas JavaScript directly
+      because it is loaded in the browser. That is to say, unlike
+      in the case of communicating with SWFs, you do not need to
+      use 
+      <indexterm>
+        <primary>
+          <literal>setCanvasAttribute()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>setCanvasAttribute()</methodname>ore 
+      <indexterm>
+        <primary>
+          <literal>setCanvasAttribute()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>setCanvasAttribute()</methodname>, nor do you
+      need to use the 
+      <indexterm>
+        <primary>LzBrowser</primary>
+                </indexterm>
+                <classname>LzBrowser</classname>service.</para>
+            <para />
+            <section>
+                <title condition="dhtml">Embedding the LFC for DHTML
+        applications</title>
+                <para>When you compile an application to SWF, the compiler
+        includes the Laszlo Foundation Class, or LFC in the
+        resulting file. This does not happen for applications
+        compiled to DHTML, therefore the LFC must be downloaded
+        explicitly. To make the LFC available to DHTML
+        applications, include the following call in the page
+        head:</para>
+                <para />
+            </section>
+        </section>
+    </section>
+    <section>
+        <title>The Lz Class</title>
+        <para>For both applications compiled to SWF and applications
+    compiled to DHTML, the methods used for bidirectional
+    communication with the browser are in the class 
+    <indexterm>
+      <primary>Lz</primary>
+            </indexterm>
+            <classname>Lz</classname>. Note that the letter "L" in this
+    class is uppper case. This is not a typo!.</para>
+        <para>Unlike other OpenLaszlo classes which you use to build
+    LZX applications, the 
+    <indexterm>
+      <primary>Lz</primary>
+            </indexterm>
+            <classname>Lz</classname>is designed to be incorporated into
+    the HTML page in which your LZX application runs. That is to
+    say, your LZX application is designed to be executed in the
+    &lt;body&gt; section of the page, but the 
+    <indexterm>
+      <primary>Lz</primary>
+            </indexterm>
+            <classname>Lz</classname>must be include in the &lt;lt;head&gt;
+    section of the page.</para>
+        <para>The 
+    <indexterm>
+      <primary>Lz</primary>
+            </indexterm>
+            <classname>Lz</classname>class is defined in</para>
+        <programlisting>
+    lps/includes/source/embednew.js</programlisting>
+        <para>The source for 
+    <literal>embednew.js</literal>isshipped compressed as</para>
+        <programlisting>
+    lps/includes/embed-compressed.js.</programlisting>
+        <para>The comments/API documentation are in the source file and
+    the class is documented in the Reference Manual.</para>
+        <para>To have access to the 
+    <indexterm>
+      <primary>Lz</primary>
+            </indexterm>
+            <classname>Lz</classname>class, your application must include a
+    line like</para>
+        <programlisting>&lt;script type="text/javascript"
+    src="/legals/lps/includes/embed-compressed.js"&gt;&lt;/script&gt;</programlisting>
+        <para>If you generate wrappers using the developer's console,
+    the correct &lt;script&gt; tag will be generated for you
+    automatically.</para>
+        <para>Remember, if you compile your application using the
+    Developer's Console, the wrapper pages generated include the
+    proper calls to the 
+    <indexterm>
+      <primary>Lz</primary>
+            </indexterm>
+            <classname>Lz</classname>class. It "just works" and you don't
+    have to do anything special. If you craft your HTML pages "by
+    hand", of course, you will need to make sure that you
+    incorporate the Lz class.</para>
+        <para />
+    </section>
+    <section>
+        <title>Placing the LZX application in the HTML page</title>
+        <para>When you place a OpenLaszlo application inside an HTML
+    page, that page has to have some way to know where to place the
+    application, and how to handle it. That is, you must inform the
+    browser that the embedded OpenLaszlo application is actually a
+    SWF file, and so forth.</para>
+        <para>In the 
+    <literal role="code">&lt;html&gt;&lt;head&gt;</literal>of an
+    HTML document that embeds an OpenLaszlo application compiled to
+    SWF, add this line:</para>
+        <example role="live-example">
+            <title>The Lz Class</title>
+            <programlisting>&lt;script src="/embed-compressed.js"
+      language="JavaScript"
+      type="text/javascript"/&gt;</programlisting>
+        </example>
+        <para condition="swf">At the location within the
+    &lt;html&gt;&lt;body&gt; where the application is to be
+    embeded, add this line:</para>
+        <example role="live-example">
+            <title>Placing the LZX (SWF) application within an HTML
+      page</title>
+            <programlisting>&lt;script language="JavaScript"
+      type="text/javascript"&gt; lz.swfEmbed({url: '?lzt=swf',
+      bgcolor: '#000000', width: '', height: ''});
+      &lt;/script&gt;</programlisting>
+        </example>
+        <para>where the url matches the URI that the application is
+    served from, and the other properties match the attributes of
+    the application's canvas.</para>
+        <para condition="dhtml">At the location within the
+    &lt;html&gt;&lt;body&gt; where the application is to be
+    embeded, add this line:</para>
+        <example role="live-example">
+            <title>Placing the LZX (DHTML) application within an HTML
+      page</title>
+            <programlisting>&lt;script language="JavaScript"
+      type="text/javascript"&gt; lz.dhtmlEmbed({url: '?lzt=swf',
+      bgcolor: '#000000', width: '', height: ''});
+      &lt;/script&gt;</programlisting>
+        </example>
+        <para>where the url matches the URI that the application is
+    served from, and the other properties match the attributes of
+    the application's canvas.</para>
+        <para />
+        <section>
+            <title>Placing LZX applications within &lt;div&gt;s</title>
+            <para>The optional 
+      <indexterm>
+        <primary>appenddivid</primary>
+                </indexterm>
+                <sgmltag class="attribute">appenddivid</sgmltag>property can
+      be passed in to 
+      <indexterm>
+        <primary>
+          <literal>swfEmbed()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>swfEmbed()</methodname>or 
+      <indexterm>
+        <primary>
+          <literal>dhtmlEmbed()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>dhtmlEmbed()</methodname>method to specify the id
+      of a div whose contents should be replaced with the LZX
+      application. If a div with that ID doesn't exist, one will be
+      written into the document where 
+      <literal>swf/dhtmlEmbed()</literal>is called. If appenddivid
+      is not specified, the div written will be based on the id
+      property + 'Container'.</para>
+            <para>Alternatively, you can generate wrappers by using the
+      various request types on the url you use to browse to your
+      application, as explained in 
+      <xref linkend="compiler" />:</para>
+            <orderedlist spacing="compact">
+                <listitem>
+                    <para>Invoke the lzx application with request type
+          "?lzt=html". This generates the "wrapper."</para>
+                </listitem>
+                <listitem>
+                    <para>Using your browser's "View source" function, copy
+          the contents of the wrapper and place in a new file with
+          a .html extension.</para>
+                </listitem>
+                <listitem>
+                    <para>In the head of the HTML file, you will see the
+          script tag that includes 
+          <literal>embed-compressed.js</literal>Adjust the path if
+          necessary for deployment.</para>
+                </listitem>
+                <listitem>
+                    <para>paste to wherever you want the OpenLaszlo
+          application to appear in HTML page</para>
+                </listitem>
+                <listitem>
+                    <para>verify by running HTML file in your browser.</para>
+                </listitem>
+            </orderedlist>
+            <?ignore <p>
+      Consider the following simple OpenLaszlo application. (For now, pay no attention to the <code>onreset</code> method; we'll see it used later.):
+      </p>
+      <example title="Hello Grace!">
+      &lt;canvas height="200" debug="true" proxied="false"&gt;
+        &lt;attribute name="reset"/&gt;
+        &lt;handler name="onreset"&gt;
+          redview.unfade.dostart()
+          Debug.write('Reset Button clicked')
+        &lt;/handler&gt;
+        &lt;debug y="100"/&gt;
+           &lt;view name="redview" bgcolor="red" height="30" width="150" clip="true"&gt;
+             &lt;animator name="fade" attribute="opacity" to=".10" duration="2000"/&gt;
+             &lt;animator name="unfade" attribute="opacity" to="1" duration="2000" start="false"/&gt;
+             &lt;text x="15"&gt; Hello Grace!
+               &lt;animator name="wrapper" attribute="x" to="150" duration="2000"/&gt;
+             &lt;/text&gt;
+           &lt;/view&gt;
+      &lt;/canvas&gt;
+      </example>
+      <p>
+      The wrapper page returned with by invoking it with the ?lzt=html type returns the following wrapper:
+      </p>
+      <example extract="false" title="Simple wrapper page">
+      &lt;!DOCTYPE html
+        PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;
+      &lt;html&gt;&lt;head&gt;
+            &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+         &lt;link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico"&gt;&lt;title&gt;OpenLaszlo Application&lt;/title&gt;&lt;script type="text/javascript"&gt;
+                // If loaded bare into a browser, set the browser size to the canvas size
+                if (window === top) {
+                  (function (width, height) {
+                    // Cf. http://www.quirksmode.org/viewport/compatibility.html
+                    if (window.innerHeight) {
+                      // Sadly, innerHeight/Width is not r/w on some browsers, and resizeTo is for outerHeight/Width
+                      window.resizeTo(width ? (width + window.outerWidth - window.innerWidth) : window.outerWidth,
+                                      height ? (height + window.outerHeight - window.innerHeight) : window.outerHeight);
+                    } else if (document.documentElement &amp;&amp; document.documentElement.clientHeight) {
+                      if (width) {
+                        document.documentElement.clientWidth = width;
+                      }
+                      if (height) {
+                        document.documentElement.clientHeight = height;
+                      }
+                    } else {
+                      if (width) {
+                        document.body.clientWidth = width;
+                      }
+                      if (height) {
+                        document.body.clientHeight = height;
+                      }
+                    }
+                  })(null, 200);
+                }
+              &lt;/script&gt;&lt;script type="text/javascript"&gt;
+                  lzOptions = { ServerRoot: '/legals', appendDivID: 'lzdhtmlappdiv'};
+              &lt;/script&gt;&lt;script type="text/javascript" <em>src="/legals/lps/includes/embed-compressed.js"</em>&gt;&lt;/script&gt;&lt;style type="text/css"&gt;
+                  html, body
+                  {
+                      /* http://www.quirksmode.org/css/100percheight.html */
+                      height: 100%;
+                      /* prevent scrollbars */
+                      margin: 0;
+                      padding: 0;
+                      border: 0 none;
+                      overflow: hidden;
+                  }
+                  body {
+                      background-color: #ffffff;
+                  }
+                  
+                  img { border: 0 none; }
+              &lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;script type="text/javascript"&gt;
+                    Lz.swfEmbed({url: 'grace.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzapp', accessible: 'false'});
+                  &lt;/script&gt;&lt;noscript&gt;
+                  Please enable JavaScript in order to use this application.
+              &lt;/noscript&gt;&lt;/body&gt;&lt;/html&gt;
+      </example>
+      <p>
+      Later on in this chapter we'll show how to modify this wrapper to enable more sophisticated applications.
+      </p>
+
+      <h3>The <tagname link="false">embed</tagname> tag</h3>
+
+      <p>To embed OpenLaszlo applications in HTML pages, you use
+      <tagname>embed</tagname> tag. The mechanics of this can be handled automatically as we have seen above. For your reference,
+      here's a sample embed object:</p>
+
+      <example extract="false" title="The embed tag">
+      &lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+              codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,79,0"
+              width="705"
+              height="80"&gt;
+        &lt;param name="movie" value="OpenLaszloapplication.lzx?lzt=swf"&gt;
+        &lt;param name="quality" value="high"&gt;
+        &lt;param name="scale" value="noscale"&gt;
+        &lt;param name="salign" value="LT"&gt;
+        &lt;param name="menu" value="false"&gt;
+        &lt;param name="bgcolor" value="#394660"&gt;
+        &lt;embed src="OpenLaszloapplication.lzx?lzt=swf" 
+               scale="noscale" 
+               salign="lt" 
+               width="705" 
+               height="80" 
+               bgcolor="#394660" 
+               type="application/x-shockwave-flash" 
+               pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"&gt;
+        &lt;/embed&gt;
+      &lt;/object&gt;
+      </example>
+      ?>
+            <para />
+        </section>
+        <section>
+            <title>Detecting which flash player is running</title>
+            <para>The default wrapper page contains logic to detect the
+      version of flash running on the client.</para>
+            <para>This page that will look something like the
+      following:</para>
+            <example role="live-example">
+                <title>Flash player version-detecting wrapper</title>
+                <programlisting>
+        <!-- remove para tags for valid DocBook LI, LPP-4594 9/3/2007   -->
+        <!-- para is not a legal child of programlisting -->
+          <!-- <para role="fixme"> -->
+                    <remark role="fixme">
+                        <emphasis role="para-label">FIXME:</emphasis>
+                    </remark>
+          <!-- </para> -->
+                </programlisting>
+            </example>
+            <para>Depending on which version is running, you may wish to
+      use some LZX features that run in some, but not all, versions
+      of the Flash Player.</para>
+            <para />
+            <section>
+                <title>Version detection</title>
+                <para>OpenLaszlo uses client-side player detection. If the
+        user either a) doesn't have the Flash Player plug-in or b)
+        has an older version, they'll be prompted to download a
+        fresh version. This feature is included in the default HTML
+        wrappers for lzt=html and the SOLO deployment wizard</para>
+                <para />
+            </section>
+            <section>
+                <title>Features available only in Flash 7 or later</title>
+                <para>The following features are available only in the
+        Flash 7 or later environments:</para>
+                <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>Support for the html &lt;img&gt; tag</para>
+                    </listitem>
+                    <listitem>
+                        <para>Support for context ("right-click") menus</para>
+                    </listitem>
+                </itemizedlist>
+                <para />
+            </section>
+        </section>
+    </section>
+    <section>
+        <title>Integrating with Frames</title>
+        <para>Frames are a very handy way to use OpenLaszlo
+    applications within a page. If you are using a OpenLaszlo
+    application for your navigation or as a widget in your page you
+    might consider using frames to format your layout.</para>
+        <para />
+        <section>
+            <title>Frame Sets</title>
+            <para>When laying out a page that will use OpenLaszlo
+      applications in different places, you can use a frameset like
+      this:</para>
+            <example role="live-example">
+                <title>example frameset</title>
+                <programlisting>&lt;html&gt; &lt;frameset cols="128,*"&gt;
+        &lt;frame name="navBar" src="myOpenLaszloNav.lzx?lzt=html"
+        /&gt; &lt;frame name="contentArea"
+        src="myOpenLaszloContent.lzx?lzt=html" /&gt;
+        &lt;/frameset&gt; &lt;/html&gt;</programlisting>
+            </example>
+            <para>Inside your application use the target parameter of 
+      <indexterm>
+        <primary>
+          <literal>LzBrowser.LoadURL()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>LzBrowser.LoadURL()</methodname>to load pages in
+      the target frame.</para>
+            <example role="live-example">
+                <title>target in loadURL</title>
+                <programlisting>
+        LzBrowser.loadURL('http://www.laszlosystems.com','contentArea');</programlisting>
+            </example>
+            <para />
+        </section>
+        <section>
+            <title>Inline Frames</title>
+            <para>Like framesets, OpenLaszlo applications can be embedded
+      within an "inline frame" or &lt;iframe&gt; which can be more
+      flexible for your layout and easier to use. Like regular
+      frames, inline frames can be named for later reference by the
+      OpenLaszlo application.</para>
+            <example role="live-example">
+                <title>iframes and applications</title>
+                <programlisting>&lt;html&gt; &lt;body&gt; &lt;h1&gt;Here is
+        a header&lt;/h1&gt; &lt;div align="center"&gt; &lt;iframe
+        src="myOpenLaszloApplication.lzx?lzt=html" width="200"
+        height="200" frameborder="0" name="inlineApplication"
+        scrolling="no"/&gt; &lt;/div&gt; &lt;/body&gt;
+        &lt;/html&gt;</programlisting>
+            </example>
+            <para>Bear in mind that the iframe will contain a canvas, and
+      unless you want the browser to provide scrollbars, you should
+      set the width and height equal to that of your canvas plus
+      any margin you may have included.</para>
+            <para />
+        </section>
+        <section>
+            <title>Popping and reusing browser windows</title>
+            <para>The same way you would target content to a frame, you
+      can target the loadUrl to new window.</para>
+            <example role="live-example">
+                <title>new blank browser window</title>
+                <programlisting language="lzx">
+                    <textobject>
+                        <textdata fileref="programs/browser-integration-$8.lzx" />
+                    </textobject>
+                </programlisting>
+            </example>
+            <?example role="live-example"><title>new Blank window</title><programlisting role="lzx-embednew"><filename>browser-integration-$8.lzx</filename><parameter/><code>
+      &lt;canvas height="27" &gt;
+        &lt;button onclick="LzBrowser.loadURL('http://www.laszlosystems.com','_blank');" text="Click Me!"/&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="27" &gt;
+        &lt;button onclick="LzBrowser.loadURL('http://www.laszlosystems.com','_blank');" text="Click Me!"/&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/browser-integration-$8.lzx></example?>
+            <para>This mechanism can also be used to name the window
+      allowing subsequent loads to occur in the same window</para>
+            <example role="live-example">
+                <title>reusing new browswer window</title>
+                <programlisting language="lzx">
+                    <textobject>
+                        <textdata fileref="programs/browser-integration-$9.lzx" />
+                    </textobject>
+                </programlisting>
+            </example>
+            <?example role="live-example"><title>new Blank window</title><programlisting role="lzx-embednew"><filename>browser-integration-$9.lzx</filename><parameter/><code>
+      &lt;canvas height="56" &gt;
+        &lt;simplelayout/&gt;
+        &lt;button onclick="LzBrowser.loadURL('http://www.openlaszlo.org','newOpenLaszloWindow');" text="OpenLaszlo Homepage"/&gt;
+        &lt;button onclick="LzBrowser.loadURL('http://www.mylaszlo.com','newOpenLaszloWindow');" text="myLaszlo.com"/&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="56" &gt;
+        &lt;simplelayout/&gt;
+        &lt;button onclick="LzBrowser.loadURL('http://www.openlaszlo.org','newOpenLaszloWindow');" text="OpenLaszlo Homepage"/&gt;
+        &lt;button onclick="LzBrowser.loadURL('http://www.mylaszlo.com','newOpenLaszloWindow');" text="myLaszlo.com"/&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/browser-integration-$9.lzx></example?>
+            <para />
+        </section>
+    </section>
+    <section>
+        <title>Passing startup Data to Embedded Applications</title>
+        <para>Any query parameters that you add to the end of your url
+    to load the application get passed into the application as
+    globals.</para>
+        <example role="live-example">
+            <title>Passing query parameters to LZX application</title>
+            <programlisting>
+        <!-- remove para tags for valid DocBook LI, LPP-4594 9/3/2007   -->
+        <!-- para is not a legal child of programlisting -->
+        <!-- <para role="fixme"> -->
+                <remark role="fixme">
+                    <emphasis role="para-label">FIXME:</emphasis>example
+          showing passing of parameters</remark>
+        <!-- </para> -->
+            </programlisting>
+        </example>
+        <para />
+        <section>
+            <title>Query Parameters and Global Variables</title>
+            <para>Once the data has been passed in you can simply access
+      it as a global variable from within the OpenLaszlo
+      application.</para>
+            <example role="live-example">
+                <title>Accessing parameters</title>
+                <programlisting>&lt;canvas debug="true"
+        oninit="Debug.write(globalVar)"/&gt;</programlisting>
+            </example>
+            <para>In many cases you will have full control of the HTML
+      content that is embedding your application. In many other
+      cases you won't be able to depend on the existence of those
+      query parameters so it is wise to provide sane defaults for
+      those values:</para>
+            <example role="live-example">
+                <title>setting defaluts</title>
+                <programlisting language="lzx">
+                    <textobject>
+                        <textdata fileref="programs/browser-integration.setting-defaults.lzx" />
+                    </textobject>
+                </programlisting>
+            </example>
+            <?example role="live-example"><title>Setting defaults</title><programlisting role="lzx-embednew"><filename>browser-integration.setting-defaults.lzx</filename><parameter/><code>
+      &lt;canvas debug="true" width="200" height="200"&gt;
+        &lt;script&gt;
+          var innerVar = typeof(global.globalVar) != 'undefined' ? global.globalVar : 'bar';
+          Debug.write(global.innerVar);
+        &lt;/script&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas debug="true" width="200" height="200"&gt;
+        &lt;script&gt;
+          var innerVar = typeof(global.globalVar) != 'undefined' ? global.globalVar : 'bar';
+          Debug.write(global.innerVar);
+        &lt;/script&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/browser-integration.setting-defaults.lzx></example?>
+            <para>The above application is requested without a 
+      <literal>globalVar</literal>query parameter. The debugger
+      therefore displays the default value 
+      <literal>bar</literal>. If this application is requested with
+      the 
+      <literal>globalVar=foo</literal>query parameter, it will
+      display the default value 'bar'. Click 
+      <ulink type="onclick"
+                        url="javascript:window.open('programs/browser-integration.setting-defaults.lzx?lzt=swf&amp;globalVar=foo','example','resizable=0,width=200,height=200,menubar=0,location=0,status=0,scrollbars=0,toolbar=0,address=0')">
+      here</ulink>to see the application in a popup window with the
+      query parameter applied.</para>
+            <para />
+        </section>
+        <section>
+            <title>Application state</title>
+            <para>Using query parameters, you can craft your application
+      to start up in a specific state. The default behavior of a
+      tabslider is to have none of the tabelements opened at
+      startup. The following application changes that default to
+      open to the tab specified on the query parameter, and if one
+      isn't provided, open to the first element.</para>
+            <example role="live-example">
+                <title>setting defaluts</title>
+                <programlisting language="lzx">
+                    <textobject>
+                        <textdata fileref="programs/browser-integration.restoring-state.lzx" />
+                    </textobject>
+                </programlisting>
+            </example>
+            <?example role="live-example"><title>Restoring state</title><programlisting role="lzx-embednew"><filename>browser-integration.restoring-state.lzx</filename><parameter/><code>
+      &lt;canvas width="300" height="250"&gt;
+        &lt;script&gt;
+          var opened = typeof(global.tab) != 'undefined' ? global.tab : 'one';
+        &lt;/script&gt;
+        &lt;tabslider width="150" x="10" y="10"
+                   height="200"
+                   spacing="2" slideduration="300" oninit="this[global.opened].setAttribute('selected',true)"&gt;
+          &lt;tabelement name="one" text="Tabelement One"/&gt;
+          &lt;tabelement name="two" text="Tabelement Two"/&gt;
+          &lt;tabelement name="three" text="Tabelement Three"/&gt;
+        &lt;/tabslider&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas width="300" height="250"&gt;
+        &lt;script&gt;
+          var opened = typeof(global.tab) != 'undefined' ? global.tab : 'one';
+        &lt;/script&gt;
+        &lt;tabslider width="150" x="10" y="10"
+                   height="200"
+                   spacing="2" slideduration="300" oninit="this[global.opened].setAttribute('selected',true)"&gt;
+          &lt;tabelement name="one" text="Tabelement One"/&gt;
+          &lt;tabelement name="two" text="Tabelement Two"/&gt;
+          &lt;tabelement name="three" text="Tabelement Three"/&gt;
+        &lt;/tabslider&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/browser-integration.restoring-state.lzx></example?>
+            <para>Click 
+      <ulink type="onclick"
+                        url="javascript:window.open('programs/browser-integration.restoring-state.lzx?lzt=swf&amp;tab=two','example','resizable=0,width=200,height=250,menubar=0,location=0,status=0,scrollbars=0,toolbar=0,address=0')">
+      here</ulink>to see this application in a popup with a
+      different initial state applied. This is useful when creating
+      links from outside the application, or for creating a
+      bookmark for an application. Another thing to do is read
+      browser cookies from JavaScript and pass in the parameters
+      when calling the application.</para>
+            <para />
+        </section>
+    </section>
+    <section>
+        <title>Supporting Multiple Resolutions</title>
+        <para>Most web surfers have discovered the merits of high
+    resolution displays. Some, though, still view the web using
+    very low resolutions. OpenLaszlo applications can be written in
+    a way that allows for multiple resolution versions of the same
+    application to coexist using the same codebase.</para>
+        <para>Begin by creating your application in a library file
+    instead of a canvas, but use 
+    <literal>$once{}</literal>constraints to size the visual
+    elements relative to the canvas.</para>
+        <example role="live-example">
+            <title>Multi-canvas application library</title>
+            <programlisting>mainApplication.lzx: &lt;library&gt;
+      &lt;tabslider width="$once{canvas.width - 20}" x="10" y="10"
+      height="$once{canvas.height - 20}" spacing="2"
+      slideduration="300"&gt; &lt;tabelement name="one"
+      text="Tabelement One"/&gt; &lt;tabelement name="two"
+      text="Tabelement Two"/&gt; &lt;tabelement name="three"
+      text="Tabelement Three"/&gt; &lt;/tabslider&gt;
+      &lt;/library&gt;</programlisting>
+        </example>
+        <para>Then create multiple files, one for each canvas area you
+    wish to support.</para>
+        <example role="live-example">
+            <title>Multi-canvas application files</title>
+            <programlisting>mainApplication640.lzx: &lt;canvas
+      width="640" height="480"&gt; &lt;include
+      href="mainApplication.lzx"/&gt; &lt;/canvas&gt;
+      mainApplication800.lzx: &lt;canvas width="800"
+      height="600"&gt; &lt;include href="mainApplication.lzx"/&gt;
+      &lt;/canvas&gt; mainApplication1024.lzx: &lt;canvas
+      width="1024" height="768"&gt; &lt;include
+      href="mainApplication.lzx"/&gt; &lt;/canvas&gt;
+      mainApplication1280.lzx: &lt;canvas width="1280"
+      height="1024"&gt; &lt;include href="mainApplication.lzx"/&gt;
+      &lt;/canvas&gt;</programlisting>
+        </example>
+        <para>For real world deployments, you will want to set the size
+    of your canvas to account for screen area occupied by browser
+    controls. Selecting the correct application size requires some
+    JavaScript to pick the right application when the visitor comes
+    to the page. This example keys off the screen width which will
+    help you determine with high accuracy the height of the client
+    as well.</para>
+        <example role="live-example">
+            <title>Selecting the Correct Canvas</title>
+            <programlisting>
+            <!-- remove para tags for valid DocBook LI, LPP-4594 9/3/2007    -->
+        <!-- para is not a legal child of programlisting -->
+      <!-- <para role="fixme"> -->
+                <remark role="fixme">
+                    <emphasis role="para-label">FIXME:</emphasis>this is
+        broken</remark>
+      <!-- </para> -->
+      &lt;script type="text/javascript"&gt; var screenW =
+      screen.width; var screenH =0; switch (true) { case (screenW
+      &gt;= 1280): screenW = 1280; screenH = 1024; break; case
+      (screenW &gt;= 1024): screenW = 1024; screenH = 768; break;
+      case (screenW &gt;= 800): screenW = 800; screenH = 600;
+      break; default: screenW = 640; screenH = 480; break; }
+      lzEmbed({url: 'mainApplication'+screenW+'.lzx?lzt=swf',
+      bgcolor: '#394660', width: screenW, height: screenH});
+      &lt;/script&gt;</programlisting>
+        </example>
+        <!-- move title to the next example. title is hot valid here -->
+        <!-- <title>Example: building a URL</title> -->
+        <para>The 
+    <methodname role="LzBrowser.prototype.loadURL">
+    loadURL()</methodname>method is used to create a URL based on
+    user input. This URL is then communicated to browser, where a
+    JavaScript function is used to unpack it and fill in a form.
+    The wrapper page is shown immediately below.</para>
+    <!-- change to example to include title LI, LPP-4594 9/3/2007  -->
+    <!--         <informalexample role="live-example"> -->
+        <example role="live-example">
+            <title>Example: building a URL</title>
+            <programlisting>&lt;canvas width="200" height="400"&gt;
+      &lt;attribute name="appear" type="number" value="0" /&gt;
+      &lt;handler name="onappear"&gt; win.show.doStart();
+      &lt;/handler&gt; &lt;window id="win" title="Create and
+      Account" y="-300" width="180" height="300"&gt; &lt;animator
+      name="show" attribute="y" from="-300" to="50" start="false"
+      relative="false" duration="500" /&gt; &lt;animator
+      name="hide" attribute="y" from="50" to="-300" start="false"
+      relative="false" duration="500" /&gt; &lt;simplelayout
+      axis="y" spacing="4" /&gt; &lt;state name="question"
+      apply="true"&gt; &lt;text multiline="true" width="160"
+      align="center"&gt; It looks like you don't have an account.
+      Would you like to create one now? &lt;/text&gt;
+      &lt;button&gt;Go &lt;handler name="onclick"&gt;
+      parent.question.remove(); parent.signup.apply();
+      &lt;/handler&gt; &lt;/button&gt; &lt;/state&gt; &lt;state
+      name="signup"&gt; &lt;text&gt;Name:&lt;/text&gt; &lt;edittext
+      /&gt; &lt;text&gt;Email:&lt;/text&gt; &lt;edittext /&gt;
+      &lt;text&gt;Username:&lt;/text&gt; &lt;edittext
+      name="uname"/&gt; &lt;text&gt;Password:&lt;/text&gt;
+      &lt;edittext name="pass" /&gt; &lt;button&gt;Create Account
+      &lt;handler name="onclick"&gt; var s =
+      "javascript:fillFormValues('" + parent.uname.getText() + "',
+      '" + parent.pass.getText() + "')"; LzBrowser.loadURL(s);
+      parent.hide.doStart(); &lt;/handler&gt; &lt;/button&gt;
+      &lt;/state&gt; &lt;/window&gt;
+      &lt;/canvas&gt;</programlisting>
+        </example>
+        <para />
+    </section>
+    <section>
+        <title>Using the browser's "back" button</title>
+        <para>The 
+    <indexterm>
+      <primary>LzHistory</primary>
+            </indexterm>
+            <classname>LzHistory</classname>service allows you to preserve
+    the state of your application, and then use the "back" button
+    of the browser to move among such states.</para>
+        <para>The default wrapper page enables the back button and
+    browser-to-LZX communication. Once you've got this, you can
+    call the browser javascript method</para>
+        <programlisting>javascript:lzSetCanvasAttribute(attributeName,
+    value)</programlisting>
+        <para>to set a canvas attribute and send an event. The
+    following example shows the way the 
+    <indexterm>
+      <primary>LzHistory</primary>
+            </indexterm>
+            <classname>LzHistory</classname>service works to move among
+    states. To see the program in action, copy this code to your
+    applications directory.</para>
+        <example role="live-example">
+            <title>Communicating with Back button</title>
+            <programlisting>&lt;canvas width="1400" height="600"
+      debug="true"&gt; &lt;debug width="500" height="500"
+      fontsize="12" x="450"/&gt; &lt;!-- Click on blob START,
+      STATE_2, STATE_3, END, then click browser back button --&gt;
+      &lt;!-- a blob you can click on to select --&gt; &lt;class
+      name="blob" extends="drawview" width="100" height="100"&gt;
+      &lt;attribute name="title" type="text"/&gt; &lt;attribute
+      name="selected" type="boolean" /&gt; &lt;text y="20" x="4"
+      fontsize="16" text="${parent.title}"/&gt; &lt;handler
+      name="onclick"&gt; this.setAttribute('selected', true);
+      main.selectBlob(this); &lt;/handler&gt; &lt;method
+      name="select" args="val"&gt; if (val) { // draw a border to
+      select this.lineStyle = 0x000000; this.lineWidth = 4;
+      moveTo(0,0); lineTo(0,100); lineTo(100,100); lineTo(100,0);
+      lineTo(0,0); stroke(); } else { clear(); } &lt;/method&gt;
+      &lt;/class&gt; &lt;!-- A view with four states --&gt;
+      &lt;view id="main" x="10" y="10" layout="axis: x; spacing:
+      10"&gt; &lt;attribute name="mystate" type="string"
+      value="START"/&gt; &lt;blob bgcolor="#ffcccc" id="s1"
+      title="START"/&gt; &lt;blob bgcolor="#ccccff" id="s2"
+      title="STATE_2"/&gt; &lt;blob bgcolor="#ccffcc" id="s3"
+      title="STATE_3"/&gt; &lt;blob bgcolor="#cccccc" id="s4"
+      title="END"/&gt; &lt;method name="unselectAll"&gt;
+      s1.select(false); s2.select(false); s3.select(false);
+      s4.select(false); &lt;/method&gt; &lt;method
+      name="selectBlob" args="blob"&gt; 
+      <emphasis role="em">// save the old state
+      LzHistory.next();</emphasis>setAttribute('mystate',
+      blob.title); unselectAll(); blob.select(true);
+      recordState(blob.title); &lt;/method&gt; &lt;handler
+      name="oninit"&gt; unselectAll(); recordState("START");
+      selectBlob(s1); &lt;/handler&gt; &lt;handler
+      name="onmystate"&gt; Debug.write("got onmystate event: ",
+      this.mystate); gotoState(this.mystate); &lt;/handler&gt;
+      &lt;method name="recordState" args="newstate"&gt;
+      this.mystate = newstate; 
+      <emphasis role="em">LzHistory.save(this,'mystate',
+      this.mystate);</emphasis>Debug.write("recordState", newstate)
+      &lt;/method&gt; &lt;method name="gotoState" args="ns"&gt;
+      unselectAll(); if (ns == "START") { s1.select(true); } else
+      if (ns == "STATE_2") { s2.select(true); } else if (ns ==
+      "STATE_3") { s3.select(true); } else if (ns == "END") {
+      s4.select(true); } &lt;/method&gt; &lt;/view&gt;
+      &lt;/canvas&gt;</programlisting>
+        </example>
+        <para />
+    </section>
+    <section>
+        <title>Scaling OpenLaszlo Applications to Browser
+    Dimensions</title>
+        <para>You can make the canvas of the OpenLaszlo application
+    either a fixed size, or you can make it expand or contract as
+    the browser window expands or contracts. To make the canvas an
+    absolute size, set its height and width with integer values,
+    for example, 
+    <literal>width="40" height="40"</literal>. To have the canvas
+    scale, simply express the height and width as
+    percentages.</para>
+        <para />
+    </section>
+    <section>
+        <title>Browser Limitations</title>
+        <para>Intercepting keystrokes can pose some challenges. The
+    keys that are intercepted varies from browser to browser, but
+    anything that the browser defines will not be passed to your
+    OpenLaszlo application. Mozilla Firefox seems to do this
+    correctly, but many browsers won't pass alt and ctrl key
+    combinations down to the application. The application below
+    should demonstrate this, [Ctrl-n] in many browsers is the
+    command you use to open a new browser window. In Mozilla
+    Firefox, you can get the debugger to print the right message,
+    but only if your mouse is floating over the application.</para>
+        <example role="live-example">
+            <title>Intercepting keystrokes</title>
+            <programlisting language="lzx">
+                <textobject>
+                    <textdata fileref="programs/browser-integration-$19.lzx" />
+                </textobject>
+            </programlisting>
+        </example>
+        <?informalexample role="live-example"><programlisting role="lzx-embednew"><filename>browser-integration-$19.lzx</filename><parameter/><code>
+    &lt;canvas height="130" debug="true"&gt;
+      &lt;command oninit="this.setKeys(['Control','n'])"
+               onselect="Debug.write('the [Ctrl-n] key combination was pressed');" /&gt;
+    &lt;/canvas&gt;
+    </code></programlisting><programlisting>
+    &lt;canvas height="130" debug="true"&gt;
+      &lt;command oninit="this.setKeys(['Control','n'])"
+               onselect="Debug.write('the [Ctrl-n] key combination was pressed');" /&gt;
+    &lt;/canvas&gt;
+    </programlisting><?lzx-edit programs/browser-integration-$19.lzx></informalexample?>
+        <para role="fixme">
+            <remark role="fixme">
+                <emphasis role="para-label">FIXME:</emphasis>Safari caching
+      info goes here</remark>
+        </para>
+        <para role="fixme">
+            <remark role="fixme">
+                <emphasis role="para-label">FIXME:</emphasis>not all browsers
+      support transparency of Flash over html. In those cases
+      changing the background color has no effect. canvas
+      transparent by default -- so bgcolor should be respected by
+      rendering browser. Default bgcolor comes from canvas, if set.
+      Two classes of browsers -- active x -- plug ing Windows
+      browsers often active x exception is open source mozilla(s)
+      Active X -- uses object tag others use embed tag so,
+      "Wrapper" page must include info for BOTH types. Esoteric
+      combinations exist, but we generate code for general cases.
+      what we send depends on request type. If lzt=swf then we just
+      send swf. Else, we send and html page (of some form -- link
+      to chapter on lps request types.)</remark>
+        </para>
+        <para />
+    </section>
+</chapter>

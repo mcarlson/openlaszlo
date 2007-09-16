@@ -1,21 +1,30 @@
+<!---
+      @topic Charting And Graphing
+      @subtopic Common
+  -->
 <library>
-  <include href="charts/common/axis.lzx" />
-  <include href="charts/common/chart.lzx" />
-  <include href="charts/common/databar.lzx" />
-  <include href="charts/common/datalabel.lzx" />
-  <include href="charts/common/datamarker.lzx" />
-  <include href="charts/common/datapoints.lzx" />
-  <include href="charts/common/dataseries.lzx" />
-  <include href="charts/common/datatip.lzx" />
-  <include href="charts/common/horizontalaxis.lzx" />
-  <include href="charts/common/label.lzx" />
-  <include href="charts/common/legend.lzx" />
-  <include href="charts/common/rectangularchart.lzx" />
-  <include href="charts/common/tickmarklabel.lzx" />
-  <include href="charts/common/valueline.lzx" />
-  <include href="charts/common/valuepoints.lzx" />
-  <include href="charts/common/valueregion.lzx" />
-  <include href="charts/common/verticalaxis.lzx" />
-  <include href="charts/common/viewspoolmanager.lzx" />
-  <include href="charts/common/virtualdrawview.lzx" />
+  <include href="axis.lzx" />
+  <include href="chart.lzx" />
+  <include href="databar.lzx" />
+  <include href="datalabel.lzx" />
+  <include href="datamarker.lzx" />
+  <include href="datapoints.lzx" />
+  <include href="dataseries.lzx" />
+  <include href="datatip.lzx" />
+  <include href="horizontalaxis.lzx" />
+  <include href="label.lzx" />
+  <include href="legend.lzx" />
+  <include href="rectangularchart.lzx" />
+  <include href="tickmarklabel.lzx" />
+  <include href="valueline.lzx" />
+  <include href="valuepoints.lzx" />
+  <include href="valueregion.lzx" />
+  <include href="verticalaxis.lzx" />
+  <include href="viewspoolmanager.lzx" />
+  <include href="virtualdrawview.lzx" />
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,11 +1,8 @@
-/* *****************************************************************************
- * Parser.java
-* ****************************************************************************/
+/* -*- mode: Java; c-basic-offset: 2; -*- */
 
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
+/**
+ * LZX Attributes
+ */
 
 package org.openlaszlo.compiler;
 
@@ -53,7 +50,7 @@ class AttributeSpec {
   public String toLZX(String indent, ClassModel superclass) {
     AttributeSpec superSpec = superclass.getAttribute(name);
     if (superSpec == null) {
-      if (ViewSchema.EVENT_TYPE.equals(type)) {
+      if (ViewSchema.EVENT_HANDLER_TYPE.equals(type)) {
         return indent + "<event name='" + name + "' />";
       }
       return indent + "<attribute name='" + name + "'" +
@@ -62,7 +59,7 @@ class AttributeSpec {
         ((when != NodeModel.WHEN_IMMEDIATELY)?(" when='" + when + "'"):"") + 
         (required?(" required='true'"):"") +
         " />";
-    } else if (! ViewSchema.EVENT_TYPE.equals(type)) {
+    } else if (! ViewSchema.EVENT_HANDLER_TYPE.equals(type)) {
       String attrs = "";
       if (defaultValue != null &&
           (! defaultValue.equals(superSpec.defaultValue))) {
@@ -120,3 +117,8 @@ class AttributeSpec {
         this.required = required;
     }
 }
+
+/**
+ * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * Reserved.  Use is subject to license terms.
+ */

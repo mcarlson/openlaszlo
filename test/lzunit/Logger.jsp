@@ -1,3 +1,4 @@
+<%@ page isThreadSafe="false" %>
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 <%@ page import="javax.servlet.http.HttpServletResponse" %>
 <%@ page import="javax.servlet.http.HttpServlet" %>
@@ -14,6 +15,7 @@
 <%@ page import="org.openlaszlo.server.ConfigDir" %>
 <%@ page import="org.openlaszlo.server.LPS" %>
 
+
 <%
 
 /******************************************************************************
@@ -22,7 +24,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -37,8 +39,12 @@
 
 response.setContentType("text/xml");
 
-String logfile = request.getQueryString();
-logfile = URLDecoder.decode(logfile.substring(logfile.indexOf("logfile=")+8));
+
+String logfile = request.getParameter("logfile");
+if (logfile == null ) {
+    out.println("error couldn't find logfile in query arg: "+logfile);
+    return;
+}
 
 //String logfile = "lzunit.log";
 
@@ -50,15 +56,16 @@ if (logfile == null) {
     return;
 }
 
+String msg = request.getParameter("msg");
 out.println("<status>start logging to "+logfile+"</status>");
-writeRawLogMessage(logfile, request.getInputStream());
+writeRawLogMessage(logfile, msg);
 out.println("</lps>");
 
 %>
 
 <%!
     /** Dump log file to output stream */
-    static void printLog(Writer out, String logfile) throws IOException {
+    void printLog(Writer out, String logfile) throws IOException {
         FileUtils.send(getLogReader(logfile), out);
     }
 
@@ -66,31 +73,42 @@ out.println("</lps>");
 
 <%!
 
-    static void writeRawLogMessage(String logfile, InputStream is) throws IOException {
+    void writeRawLogMessage(String logfile, String msg) throws IOException {
         OutputStream log = getLogStream(logfile);
         // read data from POST
-        FileUtils.send(is, log);        
+        log.write(msg.getBytes());        
         log.close();
     }
 %>
 
 <%!
 
-    static String getLogFilePath(String logfile) {
-        return LPS.getWorkDirectory() + File.separator + "logs" + File.separator + logfile;
+        String getLogFilePath(String logfile) {
+        ServletContext cx = getServletContext();
+        String rpath = cx.getRealPath("WEB-INF/lps/work/logs");
+        return rpath + File.separator + logfile;
     }
 %>
 
 <%!
+    boolean ensureLogDir() throws IOException {
+        boolean success = false;
 
-    static OutputStream getLogStream(String logfile) throws IOException {
+        return success;
+    }
+%>
+
+
+<%!
+
+     OutputStream getLogStream(String logfile) throws IOException {
         String path = getLogFilePath(logfile);
         return new FileOutputStream(path, true);
     }
 %>
 
 <%!
-    static Reader getLogReader(String logfile) throws IOException {
+     Reader getLogReader(String logfile) throws IOException {
         return new FileReader(getLogFilePath(logfile));
     }
 %>

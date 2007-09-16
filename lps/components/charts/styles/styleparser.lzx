@@ -37,7 +37,7 @@ This class complete the chart style class in case the developer has not defined 
         <!--- @keyword private-->
         <method name="readChildrenNode" >
         <![CDATA[
-            if( this.style.classname == this.defaultstyle.classname ) {
+            if( this.style.constructor.tagname == this.defaultstyle.constructor.tagname ) {
                 lParser = new styleparser(this, {defaultstyle:this.defaultstyle.subnodes[this.increment], style:this.style});
             } else if( this.style[this.defaultstyle.name] ) {
                 lParser = new styleparser(this, {defaultstyle:this.defaultstyle.subnodes[this.increment], style:this.style[this.defaultstyle.name]});
@@ -53,7 +53,7 @@ This class complete the chart style class in case the developer has not defined 
         <!--- @keyword private-->
         <method name="readLeafNode" event="onisleaf">
         if( this.style != null )
-            if( this.style.classname == this.defaultstyle.classname ) {
+            if( this.style.constructor.tagname == this.defaultstyle.constructor.tagname ) {
                 // continue;
             } else if( this.style[this.defaultstyle.name] ) {
                 // continue;
@@ -67,3 +67,12 @@ This class complete the chart style class in case the developer has not defined 
     </class>
 
 </library>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@  -->
+

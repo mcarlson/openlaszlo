@@ -2,8 +2,13 @@
     <include href="lzunit"/>
     <include href="/extensions/views/richinputtext.lzx" />
     <include href="/extensions/views/LzTextFormat.lzx" />
-    <include href="/utils/textutils.lzx" />
 
+<script>
+    // a little replace function, just to help with testing and such
+    function replace(s, f, r) {
+        return s.split(f).join(r);
+    }
+</script>
     <class name="RichTextTestBase" extends="TestCase"> 
         <!--- Constant for testing. --> 
         <attribute name="PLAIN_A" type="string" value="aaa." />
@@ -43,7 +48,7 @@
 
         <method name="testFixCRs">
             var str = new String(PLAIN_A + "\r" + PLAIN_B);
-            var foo = textutils.replace(str, "\r", ""); 
+            var foo = replace(str, "\r", ""); 
             assertSame(PLAIN_A  + PLAIN_B, foo); 
         </method>
 
@@ -51,27 +56,27 @@
             var orig = "I am a little teapot.";
             var findme = "t";
             var replacewith = "!";
-            var processed = textutils.replace(orig, findme, replacewith);
+            var processed = replace(orig, findme, replacewith);
             assertSame("I am a li!!le !eapo!.", processed)
 
             // single replacement at beginning of the string
-            processed = textutils.replace("twelve", findme, replacewith);
+            processed = replace("twelve", findme, replacewith);
             assertSame("!welve", processed)
             
             // single replacement in middle of the string
-            processed = textutils.replace("lite", findme, replacewith);
+            processed = replace("lite", findme, replacewith);
             assertSame("li!e", processed)
             
             // test single replacement at end of string
-            processed = textutils.replace("great", findme, replacewith);
+            processed = replace("great", findme, replacewith);
             assertSame("grea!", processed)
 
             // test two replacements in a row
-            processed = textutils.replace("utter", findme, replacewith);
+            processed = replace("utter", findme, replacewith);
             assertSame("u!!er", processed)
 
             // test complete replacement
-            processed = textutils.replace("tttttt", findme, replacewith);
+            processed = replace("tttttt", findme, replacewith);
             assertSame("!!!!!!", processed)
             
 
@@ -81,7 +86,7 @@
     
     <class name="TestDefaultDefault" extends="TestCase">
         <method name="testDefault">
-            if (!rich['defaultformat']) rich.defaultformat = new LzTextFormat(this, {font:"GreenPeas", size:25}); 
+            if (!rich['defaultformat']) rich.defaultformat = new textformat(this, {font:"GreenPeas", size:25}); 
             assertNotNull(rich.defaultformat); 
             assertEquals("GreenPeas", rich.defaultformat.font); 
         </method>
@@ -113,7 +118,8 @@
         <method name="testAppendHTMLFudge">
             rich.appendText(RICH_B, true); 
             var after = rich.getText();
-            var munge = textutils.replace(after, "\r", ""); 
+            var munge = replace(after, "\r", ""); 
+            munge = replace(munge, "\n", "");            
             assertSame(PLAIN_A + PLAIN_RICH_B, munge); 
         </method>
         
@@ -165,7 +171,8 @@
         <method name="testAppendHTML">
             rich.appendText(RICH_B, true); 
             var after = rich.getText();
-            var munge = textutils.replace(after, "\r", ""); 
+            var munge = replace(after, "\r", ""); 
+            munge = replace(munge, "\n", "");
             assertSame(PLAIN_RICH_A + PLAIN_RICH_B, munge); 
         </method>
         
@@ -173,7 +180,8 @@
             rich.appendText(RICH_B, true); 
             rich.appendText(RICH_C, true); 
             var after = rich.getText();
-            var munge = textutils.replace(after, "\r", "");             
+            var munge = replace(after, "\r", "");             
+            munge = replace(munge, "\n", "");            
             assertSame(PLAIN_RICH_A + PLAIN_RICH_B + PLAIN_RICH_C, munge); 
         </method>
     </class>
@@ -191,10 +199,10 @@
         <method name="setUp">
             Debug.write("FormatsTestBase.setUp"); 
             rich.setText(NUMBERS); 
-            plainFormat = new LzTextFormat(); 
-            boldFormat = new LzTextFormat(this, {bold:true});
-            niceFormat = new LzTextFormat(this, {font:"Verdana", size:11, align:"left"});            
-            weirdFormat = new LzTextFormat(this, {font:"Courier", size:50, color:0x9900BB, 
+            plainFormat = new textformat(); 
+            boldFormat = new textformat(this, {bold:true});
+            niceFormat = new textformat(this, {font:"Verdana", size:11, align:"left"});            
+            weirdFormat = new textformat(this, {font:"Courier", size:50, color:0x9900BB, 
                                                  italic:true, align:"center"});         
         </method>
 
@@ -360,7 +368,7 @@
             rich.setHTMLText(newstr); 
             var f = rich.getTextFormat(LONG_A.length, LONG_A.length + 1);
             assertEquals("Verdana", f.font);
-            var pt = textutils.replace(rich.getText(), "\r", ""); 
+            var pt = replace(rich.getText(), "\r", ""); 
             assertEquals(LONG_A + PLAIN_A, pt); 
         </method>
     </class>
@@ -407,7 +415,7 @@
     <class name="TestTypingFormat" extends="FormatsTestBase">
         
         <method name="testMoreSetup">
-            var myformat =  new LzTextFormat(this, {font:"Monaco", size:20, align:"left"});  
+            var myformat =  new textformat(this, {font:"Monaco", size:20, align:"left"});  
             rich.setDefaultFormat(myformat); 
             sameFormat(myformat, rich.defaultformat); 
         </method>
@@ -418,13 +426,13 @@
             
             var initialFormat = rich.getTextFormat(0, rich.getText().length); 
             
-            var myformat =  new LzTextFormat(this, {font:"Monaco", size:20, align:"left"});  
-            var otherformat =  new LzTextFormat(this, {font:"Tahoma", size:9, align:"center", italic:true});  
+            var myformat =  new textformat(this, {font:"Monaco", size:20, align:"left"});  
+            var otherformat =  new textformat(this, {font:"Tahoma", size:9, align:"center", italic:true});  
             
             // Make sure that setting the default actually sets the default,
             // but doesn't change the format of the existing text
             rich.setDefaultFormat(myformat); 
-            sameFormat(myFormat, rich.defaultformat); 
+            sameFormat(myformat, rich.defaultformat); 
             var afterChangingDefault = rich.getTextFormat(0, rich.getText().length); 
             sameFormat(initialFormat, afterChangingDefault);             
         </method>
@@ -434,8 +442,8 @@
             assertTrue(rich.getText().length > 0); 
             
             var initialFormat = rich.getTextFormat(0, rich.getText().length); 
-            var myformat =  new LzTextFormat(this, {font:"Monaco", size:20, align:"left"});  
-            var otherformat =  new LzTextFormat(this, {font:"Tahoma", size:9, align:"center", italic:true});  
+            var myformat =  new textformat(this, {font:"Monaco", size:20, align:"left"});  
+            var otherformat =  new textformat(this, {font:"Tahoma", size:9, align:"center", italic:true});  
             
             // Make sure that setting the default actually sets the default,
             // but doesn't change the format of the existing text
@@ -488,6 +496,6 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -11,6 +11,15 @@
         <frame src="resources/menu/menu_arrow_lft.swf"/>
     </resource>
 
+    <!-- LPP-3399 -->
+    <class name="menutrackgroup" extends="basetrackgroup" >
+      <method name="addSubview" args="sv" >
+        if( !(sv instanceof lz.menu) ){
+          super.addSubview.apply( this, arguments );
+        }
+      </method>
+    </class>
+
     <!-- class: menubar -->
     <class name="menubar"
            extends="basecomponent" focusable="false">
@@ -21,9 +30,9 @@
              past its container ( which has the same width as the content ) so
              it's default width is immediateparent.width + 1 -->
         <attribute name="width"  value="${immediateparent.width + 1}"/>
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="_clickcounter" value="0" />
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="_openedmenu" value="0" />
         
 
@@ -45,7 +54,7 @@
 
         <!-- a basetracker to hold and track the menuButtons when the mouse is 
              down -->
-        <basetrackgroup name="mbarcontent" 
+        <menutrackgroup name="mbarcontent" 
                         layout="axis:x; spacing:-2"
                         deactivateevents="[]" height="100%"/> 
 
@@ -255,6 +264,19 @@
             // If a menuitem also has a submenu then that is displayed by calling...
             if ( _submenu ) this._opensubmenu( true );
         </handler>
+
+        <!--- @keywords private -->
+        <handler name="onmouseout">
+            <![CDATA[
+            // hide the submenu if exiting item
+            // except when moving into the submenu
+            // x can be variable based on performance of system
+            // and speed of mouse movement, hence a small buffer
+            if (this.getMouse('x') < (parent.width-6)) {
+                if ( _submenu ) this._opensubmenu( false );
+            }
+            ]]>
+        </handler>
         
          <!---  @keywords private -->
         <handler name="onmousetrackover" >
@@ -389,7 +411,8 @@
         </method>
 
    </class> <!-- menuitem -->
-    
+   
+   <!--- @access private -->
    <class name="menufloatinglist" extends="floatinglist"
           bgcolor="0x445566" autoscrollbar="false"
           visible="false" focusable="false">
@@ -470,12 +493,15 @@
         </handler>
         
         <!--- @keywords private -->
-         <handler name="onconstruct" >
+        <attribute name="_menuitems" value="null" />
+        
+        <!--- @keywords private -->
+         <method name="init" >
             // create a floating list. Though the parent for this floating
             // list is this menu, the floating list will be created on the
             // canvas and its owner attribute will point to this menu.
             var w = width;
-            if ( (this.parent) instanceof menubar) { 
+            if ( (this.parent) instanceof lz.menubar) { 
                 // menu's parent is a menubar so create a floating list
                 // with the following parameters...
                 // create a floating list that will attach to the bottom
@@ -486,9 +512,9 @@
                              { attach:'bottom',
                                attachoffset:-2,
                                width:w,
-                               shadowcrn:1 });  
+                               shadowcrn:1 }, this._menuitems);  
                                // border_top:0, border_bottom:0,
-            } else if ( (this.parent) instanceof  menuitem ) { 
+            } else if ( (this.parent) instanceof  lz.menuitem ) { 
                 // menu's parent is a menuitem so attach the floatinglist to 
                 // the right ( again canvas-aware will try right but display left
                 // if necessary )
@@ -496,7 +522,7 @@
                              { attach:'right',
                                width:w,
                                issubmenu:true, 
-                               shadowcrn:2 });  
+                               shadowcrn:2 }, this._menuitems);
             } else {
                 // menu's parent is some other type of view so attach the 
                 // floatinglist to the value of 'attach' attribute
@@ -504,18 +530,18 @@
                 this.flist = new menufloatinglist(this,
                              { attach:atch,
                                width:w, 
-                               shadowcrn:1 });             
+                               shadowcrn:1 }, this._menuitems);
             }
             
             // By default the floating list's target will be constrained to the
             // menu's parent. This  private variable wil be change if necessary
             this._flisttarget = this.parent;
                         
-            if ( parent instanceof menubar ) {
+            if ( parent instanceof lz.menubar ) {
                 // Since the parent is a menubar ...
                           
                 // Create a menubutton and have the menu keep a reference to it.
-                this._menubutton = new menubutton( parent,{text:this.text}, null, true);
+                this._menubutton = new menubutton( parent,{text:this.text}, null, false);
                 
                 //Likewise, have the menubutton keep a reference to this menu
                 this._menubutton._menuref = this;
@@ -533,28 +559,28 @@
                 // this case )
                 this._flisttarget = this._menubutton;
                                 
-            } else if ( parent instanceof  menuitem ) {
+            } else if ( parent instanceof  lz.menuitem ) {
                 // insert an arrow into the target
                 new menuarrow( this._flisttarget, { name:'_menuarrow' } );
                 
                 // have the menuitem keep a reference to its submenu
                 this.parent._submenu = this;
             } 
-        </handler>
-        
-        <!--- @keywords private -->
-         <method name="init" >
+            
             // need to wait until here when the width and heights of the target
             // set before I activate the constraints
-            super.init();
+            super.init.apply( this, arguments );
             this.flist.setAttachTarget(this._flisttarget);
         </method>
         
-        <!-- instantiate children of menu in its floatinglist instead of itself.
+        <!-- old: instantiate children of menu in its floatinglist instead of itself.
+             new: save childrenarray in the private field _menuitems
              this method is called autmatically.
              @param array childrenarray: an array of nodes to be created-->                
         <method name="createChildren" args="childrenarray" ><![CDATA[
-            this.flist.createChildren(childrenarray);
+            super.createChildren( [] );
+            this._menuitems = childrenarray;
+            //this.flist.createChildren(childrenarray);
         ]]></method>
         
         <!--- @keywords private -->
@@ -565,9 +591,9 @@
             // Now check to make sure that mousedown has not occurred in another
             // part of the menu hierarchy
 
-            if ( v instanceof  menuitem ) {
+            if ( v instanceof  lz.menuitem ) {
                 var aMenuRef = v.parent.owner;
-                while ( aMenuRef instanceof menu) {
+                while ( aMenuRef instanceof lz.menu) {
                     result = ( this == aMenuRef );
                     if (result) break;
                     if (aMenuRef.parent.parent['owner'] == null) break;
@@ -610,7 +636,7 @@
             // iterate up the parent chain starting with this menu's parent
             var mcp = mc;
             while ( mcp != canvas ){
-                if ( mcp instanceof menu ){
+                if ( mcp instanceof lz.menu ){
                     mc = mcp;
                 }
                 // in case view is contained within a floating list
@@ -632,10 +658,10 @@
             // and as we iterate open/close as we go
             var mcp = mc;
             while ( mcp != canvas ){
-                if ( mcp instanceof menu ){
+                if ( mcp instanceof lz.menu ){
                     mc = mcp;
                     mc.setOpen( openit );
-                } else if ( mcp instanceof menubar){
+                } else if ( mcp instanceof lz.menubar){
                     mcp.openMenu( mc, openit )
                 }
                 // in case view is contained within a floating list
@@ -654,7 +680,7 @@
             var mi;
             for (var k=0; k < this.flist.interior.content.subviews.length ; k++) {          
                 mi = this.flist.interior.content.subviews[k];
-                if ( mi instanceof menuitem){
+                if ( mi instanceof lz.menuitem){
                     if ( mi._submenu ) mi._submenu.close();
                 }
             }
@@ -694,11 +720,84 @@
             this.setOpen(!this.opened);
         </method>
 
+         <doc>
+           <tag name="shortdesc"><text>
+               A pull-down menu that can be used within a menubar, a menuitem or any other view.
+           </text></tag>
+           <text>
+             <p>The <tagname>menu</tagname> tag creates a menu that floats above
+               all other views when activated.  If a menu is a subview of a
+               <classname>menubar</classname>, then it will create a
+               "menubutton" in the menubar with the its
+               <attribute>text</attribute> attribute equal to that of the menu's. This "menubutton"
+               inherits its properties from <tagname>button</tagname>.
+             </p>
+
+             <p>
+               typical use of a menu is shown below, with its children of <tagname
+                                                                             link="true">menuitem</tagname>s and <tagname
+                                                                                                                    link="true">menuseparator</tagname>s. Note, however, that the parent
+               of a menuitem is not the menu itself, but rather a <tagname
+                                                                     link="true">floatinglist</tagname> that is implicity part of the menu.
+               To access the menu from a menuitem (or any other subview) use the
+               reference "<code>parent.owner</code>".
+             </p>
+
+             <example title="using the menubar">
+               &lt;canvas debug="true" height="230"&gt;
+               &lt;debug y="100"/&gt;
+               &lt;menubar width="200" &gt;
+               &lt;menu text="Menu 1" width="100"&gt;
+               &lt;menuitem text="Item 1" onselect="canvas.whichOne(this);"/&gt;
+               &lt;menuitem text="Item 2" onselect="canvas.whichOne(this);"/&gt;
+               &lt;menuitem text="Item 3" onselect="canvas.whichOne(this);"/&gt;
+               &lt;menuseparator/&gt;           
+               &lt;menuitem text="Item 4" onselect="canvas.whichOne(this);"/&gt;   
+               &lt;/menu&gt; 
+               &lt;menu text="Menu 2" width="100"&gt;
+               &lt;menuitem text="More items..." onselect="canvas.whichOne(this);"/&gt;  
+               &lt;/menu&gt;
+               &lt;/menubar&gt;
+
+               &lt;method name="whichOne" args="vThis"&gt;
+               Debug.write(vThis.parent.owner.text + " - "+ vThis.text);
+               &lt;/method&gt;
+               &lt;/canvas&gt;
+             </example>
+
+             <example title="simple menu">
+               &lt;canvas debug="true" height="235"&gt;
+               &lt;debug y="105"/&gt;
+               &lt;button text="openMenu below"&gt;
+               &lt;menu name="topmenu" attach="bottom"&gt;
+               &lt;menuitem text="item 1"/&gt;
+               &lt;menuitem text="item 2"&gt;
+               &lt;menu name="submenu"&gt;
+               &lt;menuitem text="subitem 1"/&gt;
+               &lt;menuitem text="subitem 2"/&gt;
+               &lt;/menu&gt;
+               &lt;/menuitem&gt;
+               &lt;/menu&gt;
+               
+               &lt;handler name="onmousedown"&gt;
+               this.topmenu.setOpen(true);
+               &lt;/handler&gt;
+               &lt;/button&gt;
+               &lt;/canvas&gt;
+             </example>
+
+             <seealso>
+               <tags>command menuitem menubar menuseparator floatinglist</tags>
+               <component-design id="menus" title="Menus"/>
+             </seealso>
+          </text>
+        </doc>
+
     </class> <!-- end menu -->
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

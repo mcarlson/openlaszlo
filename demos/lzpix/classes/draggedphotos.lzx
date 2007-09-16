@@ -1,0 +1,55 @@
+<library>
+    <include href="photocollection.lzx" />    
+    <class name="draggedphotos" extends="photocollection">
+
+        <attribute name="stackoffset" value="4"/>
+
+        <method name="startDrag" args="who, sel , ix , iy">
+            this.setX( who.getAttributeRelative( 'x', this ) + ix );
+            this.setY( who.getAttributeRelative( 'y', this ) + iy );
+            if ( activephotos.length ) this.poolAll();
+            this.sellist = sel.concat();
+            this.addSelection( sellist );
+
+            ds.apply();
+
+            LzTrack.activate( "photos" );
+            gClipboard.dragStarted();
+        </method>
+
+        <method name="stopDrag">
+            ds.remove();
+            this.poolAll();
+            LzTrack.deactivate( "photos" );
+            gClipboard.dragFinished( sellist );
+        </method>
+
+        <method name="showAfterLoad">
+            <![CDATA[
+            var animdur = 250;
+            var adur = activephotos.length > 1 ? animdur : 0;
+            for ( var i = activephotos.length -1; i >=0; i-- ){
+                var p = activephotos[ i ];
+                if ( !( p.loaded && !p.visible ) ) continue;
+                var e = sellist[ i ];
+                p.setVisible( true );
+                p.setX( e.getAttributeRelative( 'x', p ) );
+                p.setY( e.getAttributeRelative( 'y', p ) );
+                p.setAttribute( "clipfactor" , 0 );
+
+                p.animate( "x", i * stackoffset , adur );
+                p.animate( "y", i * stackoffset , adur );
+                p.animate( "clipfactor", 1 , animdur );
+            }
+            ]]>
+        </method>
+
+        <dragstate name="ds"/>
+
+    </class>
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->

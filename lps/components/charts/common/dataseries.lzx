@@ -79,11 +79,11 @@
         -->     
         <method name="getNestedAttribute" args="attName">
         <![CDATA[
-            //debug.write("attribeName " + attName);
-            //debug.write("attribeValue " + this[attName]);
+            //Debug.write("attribeName " + attName);
+            //Debug.write("attribeValue " + this[attName]);
             if((this[attName] != "") && (this[attName] != null))
             {
-                //debug.write("attribeValue " + this[attName]);
+                //Debug.write("attribeValue " + this[attName]);
                 return this[attName];
             }
             else
@@ -142,13 +142,13 @@
         
         <!--- clear the cache -->
         <method name="clearCache">
-            //debug.write("data column clear Cache");
+            //Debug.write("data column clear Cache");
             this.values = null;
         </method>
         
         <!--- @keyword private -->
         <method name="datachange">
-            //debug.write("********column datachange ")
+            //Debug.write("********column datachange ")
             //this.values = null;
         </method>
         
@@ -169,6 +169,16 @@
             //this.getRootDataseries().ondata.sendEvent();
         </method>
         
+        <doc>
+          <tag name="shortdesc"><text>
+              a series of data
+          </text></tag>
+          <text>
+
+            <warning>This component is of Beta quality and is subject to change.</warning>
+          </text>
+        </doc>
+
     </class>
           
     <!---          
@@ -192,8 +202,8 @@
         -->        
         <method name="getNestedAttribute" args="attName">
         <![CDATA[
-            //debug.write("getNestedAttribute: " + attName);
-            //debug.write("getNestedAttributeValue: " + this[attName]);
+            //Debug.write("getNestedAttribute: " + attName);
+            //Debug.write("getNestedAttributeValue: " + this[attName]);
             if((this[attName] != "") && (this[attName] != null))
             {
                 return this[attName];
@@ -214,7 +224,7 @@
         -->
         <method name="getDataColumn" args="name">
         <![CDATA[
-            //debug.write("datacolumnsmap[name]: "  + datacolumnsmap[name]);
+            //Debug.write("datacolumnsmap[name]: "  + datacolumnsmap[name]);
 
             if(name != undefined){            
                 if(datacolumnsmap[name] && datacolumnsmap[name].values)
@@ -224,7 +234,7 @@
                 
                 for(var i = 0; i < this.subnodes.length; i++)
                 {
-                    //debug.write("subnodename: " + this.subnodes[i].name);
+                    //Debug.write("subnodename: " + this.subnodes[i].name);
                     if((this.subnodes[i] instanceof datacolumn) && (this.subnodes[i].name == name))
                     {
                     
@@ -294,11 +304,11 @@
             var ds = canvas["legendds"];
             if(!canvas["legendds"])
             {
-                ds = new LzDataset("legendds");
+                ds = new LzDataset(canvas, { name: "legendds"});
                 canvas["legendds"] = ds;     
             } else {
                 dscounter++;
-                ds = new LzDataset("legendds"+dscounter);
+                ds = new LzDataset(canvas, { name: "legendds"+dscounter});
                 canvas["legendds"+dscounter] = ds;
             }
  
@@ -307,7 +317,7 @@
             var series = this.getDataSeriesLeafs();
             var dp = ds.getPointer();
  
-            if( parent.class.classname == 'piechart') {
+            if( parent.constructor.tagname == 'piechart') {
                 
                 if(parent.getDataSeries().getDataSeries(0).getDataColumn("x") != null){
                     var xseries = parent.getDataSeries().getDataSeries(0).getDataColumn("x").values;
@@ -323,7 +333,7 @@
                  
             } else {
                            
-                var yseriesname = (parent.class.classname == 'barchart'? 'x' : 'y');
+                var yseriesname = (parent.constructor.tagname == 'barchart'? 'x' : 'y');
 
                 for(var i = 0; i < series.length; i++)
                 {
@@ -404,7 +414,7 @@
         <method event="ondata">
             // Have to keep this from happening on linechart, or else it doesn't
             // draw it properly the first time.  This may need to be fixed.  -JC
-            if(this.getRootDataSeries().parent.class.classname != "linechart"){
+            if(this.getRootDataSeries().parent.constructor.tagname != "linechart"){
                 this.clearCache();
                 this.setAttribute("datadone", true);
             }
@@ -414,7 +424,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

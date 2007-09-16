@@ -1,0 +1,22 @@
+
+<canvas height="125">
+  <simplelayout spacing="5"/>
+  <!-- Single line text, the default -->
+  <text bgcolor="#ffcccc">
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
+    nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
+    augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+    </text>
+
+    <!-- Multiline text (without an explicit width, the width would be
+     sized to fit the entire string on a single line) -->
+    <text bgcolor="#ccccff" multiline="true" width="300" >
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
+    nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
+    augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+  </text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,53 +1,52 @@
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->
-
+<!--- @copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.
+                 Use is subject to license terms.
+  -->
 <library>
   <!---  This should be declared as a child of the thing for which you want to
         enable dragging.  You will need to define a view (an instance of a
-        subclass of basedragimage)
+        subclass of <xref linkend="lz.basedragimage"/>)
         to define the visual look of the thing while its being dragged.
-        @START_CODE
-        <class name="dragger" >
+        <example executable="false">
+        &lt;class name="dragger" &gt;
             ...
-            <method event="onmousedown">
+            &lt;method event="onmousedown"&gt;
                 checkdrag.apply();
-            </method>
-            <method event="onmouseup">
+            &lt;/method>
+            &lt;method event="onmouseup"&gt;
                 canvas.dragimage.stopdrag(this);
                 checkdrag.remove();
-            </method>
+            &lt;/method&gt;
 
-            <checkdragstate name="checkdrag" draggername="dragimage"/>
-        </class>
-        @END_CODE
+            &lt;checkdragstate name="checkdrag" draggername="dragimage"/&gt;
+        &lt;/class&gt;
+        </example>
 
         The object that you want to accept a drop action, needs to register with
         LzTrack using the same group as is declared in the dragimage.
 
-        @START_CODE
-        <class name="droptarget">
+        <example executable="false">
+        &lt;class name="droptarget"&gt;
             ...
-            <method name="init">
+            &lt;method name="init"&gt;
                 super.init();
                 LzTrack.register(this, 'target');
-           </method>
+            &lt;/method&gt;
 
-           <method event="onmousetrackover">
+            &lt;method event="onmousetrackover"&gt;
                setAttribute('bgcolor', 0xffff00); // hilite
-           </method>
-           <method event="onmousetrackout">
+            &lt;/method&gt;
+            &lt;method event="onmousetrackout"&gt;
                setAttribute('bgcolor', null); // normal
-           </method>
-           <method event="onmousetrackup">
+            &lt;/method&gt;
+            &lt;method event="onmousetrackup"&gt;
                setAttribute('bgcolor', null); // normal
                canvas.dragimage.dropcomplete(this);
-               debug.write('dropped: '+dragimage.source.text);
-           </method>
-        </class>
-         @END_CODE
+               Debug.write('dropped: '+dragimage.source.text);
+            &lt;/method&gt;
+        &lt;/class>
+        </example>
+        
+        @access public
   -->
   <class name="checkdragstate" extends="state">
     <!--- an instance subclass of basedragimage that defines the
@@ -91,7 +90,9 @@
   
   
   <!--- the visual representation of an object being dragged.
-      See checkdragstate for usage details -->
+        See <xref linkend="lz.checkdragstate"/> for usage details 
+        @access public
+  -->
   <class name="basedragimage"  options="ignorelayout"
          visible="false" >
     <!--- the group that drop targets will register with -->
@@ -160,6 +161,5 @@
                  value="${this.immediateparent.getMouse( 'x' ) - this.xdoffset}" />
     </state>
   </class>
-  
   
 </library>

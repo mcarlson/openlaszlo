@@ -1,0 +1,537 @@
+/***
+ * Classes for Javascript with Mixins
+ *
+ * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+ * Use is subject to license terms.
+ *
+ * @access private
+ * @topic LZX
+ * @subtopic Runtime
+ * @author ptw
+ * @author adam
+ * @author max
+ */
+
+/**
+  * Instance class
+  *
+  * The root of the Class tree.  All LZX instances are
+  * instanceof Instance.
+  *
+  * @access private
+  * @bootstrap true
+  *
+  * @devnote This is the first class constructor.  Constructors for
+  * all other classes are created by Class.make (below).
+  */
+var Instance = function constructor () {
+  this.constructor = arguments.callee
+  this.initialize.apply(this, arguments);
+};
+Instance.prototype.constructor = Instance; 
+Instance.prototype.__initialized = false;
+Instance.classname = 'Instance';
+Instance.prototype.classname = 'Object';
+if ($debug) {
+  Instance._dbg_typename = 'Class';
+  Instance._dbg_name = Instance.prototype._dbg_typename = 'Instance';
+}
+
+
+/**
+  * Add a property to an instance
+  *
+  * If the property is a Function (method), annotates the method so
+  * nextMethod can find the next most applicable method
+  *
+  * @param String name: the name of the property
+  * @param value: the value of the property
+  *
+  * @access private
+  */
+(function () {
+  var addProperty = function AddProperty (name, value) {
+    this[name] = value;
+    if (value instanceof Function) {
+      var xtor = this.constructor;
+      if (value.hasOwnProperty('superclasses')) {
+        var os = value.superclasses, found = false;
+        for (var i = os.length - 1; i >= 0; i--) {
+          if (os[i] === xtor) {
+            found = true;
+            break;
+          }
+        }
+        if (! found) {
+          value.superclasses.push(xtor);
+        }
+      } else if (value.hasOwnProperty('superclass') && value.superclass !== xtor) {
+        var superclass = value.superclass;
+        delete value.superclass;
+        value.superclasses = [ superclass, xtor ];
+      } else {
+        value.superclass = xtor;
+      }
+      if ($debug) {
+        if (! value._dbg_typename) {
+          // Delay 'til runtime so classes can adjust their name to be
+          // their tag name
+          value._dbg_owner = this;
+          value._dbg_typename = function _dbg_typename () {
+            var o = this._dbg_owner;
+            var t = o._dbg_typename;
+            // Prototypes have their own typename, instances should
+            // not, use that to distinguish methods that have been
+            // added directly to instances
+            if (! o.hasOwnProperty('_dbg_typename')) {
+              t += '#' + Debug.IDForObject(o);
+            }
+            return t + ' function';
+          }
+        }
+      }
+    }
+  };
+  // Bootstrap self
+  addProperty.call(Instance.prototype, 'addProperty', addProperty);
+})();
+
+
+/**
+  * Find the next most applicable method
+  *
+  * Arguments are the current method and the name of the method you
+  * want.  Returns the method.  this.nextMethod(arguments.callee,
+  * 'aMethod').apply(this, arguments);
+  *
+  * @param Function currentMethod: the method from which this is calle,
+  * typically arguments.callee
+  * @param String nextMethodName: the method that is being looked for
+  * (can be other than the current method)
+  *
+  * @access private
+  */
+Instance.prototype.addProperty('nextMethod', function nextMethod (currentMethod, nextMethodName) {
+  var next;
+  if (currentMethod.hasOwnProperty('superclass')) {
+    next = currentMethod.superclass.prototype[nextMethodName];
+  } else {
+    var superclasses = currentMethod.superclasses;
+    for (var i = superclasses.length - 1; i >= 0; i--) {
+      if (this instanceof superclasses[i]) {
+        next = superclasses[i].prototype[nextMethodName];
+        break;
+      }
+    }
+  }
+  // TODO: [2006-05-21 ptw] Call this.noNextMethod(nextMethodName, currentMethod)
+  if ($debug) {
+    if (! next) {
+      Debug.error('No next method %s in %w', nextMethodName, currentMethod);
+    }
+  }
+  return next;
+});
+
+/**
+  * Instance initialize method
+  *
+  * Called by Instance.make as the last operation on a new instance of a class.
+  * Arguments are the arguments that were passed to make.
+  *
+  * Can be overridden in subclasses, but must call superclass initialze
+  * if so.
+  *
+  * Default method does nothing
+  *
+  * @access private
+  *
+  * @devnote The call to the default method is optimized away in class constructors
+  */
+Instance.prototype.addProperty('initialize', function initialize () {});
+
+/**
+  * Class initialize method
+  *
+  * Called by Class.make each time a class or subclass is made.
+  * Argument is the prototype of the class.  The class initializer
+  * allows the class to initialize prototype properties with
+  * non-constant values.
+  *
+  * Class initializers are invoked from least to most specific,
+  * automatically by the Class.make method.  They cannot be overridden.
+  *
+  * Default method does nothing
+  *
+  * @access private
+  */
+Instance.initialize = function initialize (prototype) {
+  // Scaffolding until the LFC is rewritten
+  prototype.__initialized = false;
+};
+
+if ($debug) {
+  Instance.initialize._dbg_typename = 'Instance static function';
+}
+
+
+/**
+  * Default Instance factory
+  *
+  * Make a new instance of a class.
+  *
+  * @access private
+  *
+  * @devnote This is just for coherence with the Class interface.
+  * Normally new instances will be created by `new _class_`.
+  */
+Instance.make = function make () {
+  // Should not be called in the new world...
+  if ($debug) {
+    Debug.info("`%w.%s` is deprecated.  Use `new %w` instead.", this, arguments.callee, this);
+  }
+  {
+    #pragma "passThrough=true"
+    if (arguments.length > 0) {
+      // We have to work hard to break a conventional constructor into a
+      // constructor and initializer when there are args, because
+      // Javascript does not support apply of new.
+      var constructor = this;
+      function xtor () { this.constructor = constructor; };
+      xtor.prototype = constructor.prototype;
+      var o = new xtor();
+      constructor.apply(o, arguments);
+      return o;
+    }
+    return new this();
+  }
+};
+
+if ($debug) {
+  Instance.make._dbg_typename = 'Instance static function';
+};
+
+if ($debug) {
+  Instance.prototype.addProperty('validateClassStructure', function validateClassStructure () {
+    // Verifies that superclass links for nextMethod are correct
+    var prototype = this.constructor.prototype;
+    do {
+      var constructor = prototype.constructor;
+      if (! prototype.__initialized) {
+        // Debug.debug('Validating', constructor);
+        for (var k in prototype) {
+          if (prototype.hasOwnProperty(k) && k != 'constructor') {
+            // Debug.debug(k);
+            var value = prototype[k];
+            // Cf., Instance.addProperty
+            if (value instanceof Function) {
+              if (value.hasOwnProperty('superclasses')) {
+                var os = value.superclasses, found = false;
+                for (var i = os.length - 1; i >= 0; i--) {
+                  if (os[i] === constructor) {
+                    found = true;
+                    break;
+                  }
+                }
+                if (! found) {
+                  value.superclasses.push(constructor);
+                  Debug.error('Invalid class structure [3+]: Use `addProperty` to create %w.%s', this, k);
+                }
+              } else if (value.hasOwnProperty('superclass')) {
+                var o = value.superclass;
+                if (o !== constructor) {
+                  delete value.superclass;
+                  value.superclasses = [ o, constructor ];
+                  Debug.error('Invalid class structure [2]: Use `addProperty` to create %w.%s', this, k);
+                }
+              } else {
+                value.superclass = constructor;
+                Debug.error('Invalid class structure [1]: Use `addProperty` to create %w.%s', this, k);
+              }
+            }
+          }
+        }
+        prototype.__initialized = true;
+      }
+      prototype = constructor.prototype;
+    } while (constructor !== Instance);
+    });
+};
+
+/**
+  * Bootstrap Class class
+  * @todo [2006-05-03 ptw] Rename to Class when LFC has been converted
+  */
+var Class = {
+  prototype: new Instance(),
+  // Add a method to a class by adding it to the class's prototype
+  addProperty: function addProperty (name, value) {
+    var proto = this.prototype;
+    // TODO: [2006-09-28 ptw] Waiting for compiler support.  Enable
+    // this when the compiler allows you to declare your intent to
+    // override
+//     if (false /* not ok to override */) {
+//       if ((name in proto) && (proto[name] !== value)) {
+//         var over = proto;
+//         while (over && (over.constructor !== Instance) && (! (over.constructor.prototype.hasOwnProperty(name)))) {
+//           over = over.constructor.prototype;
+//         }
+//         Debug.debug("%s.prototype.%s (%w) overrides %s.prototype.%s (%w)", 
+//                     this, name, value,
+//                     over.constructor, name, over.constructor.prototype[name]);
+//       }
+//     }
+    proto.addProperty.apply(proto, arguments);
+  },
+  addStaticProperty: function addStaticProperty (name, value) {
+    // TODO: [2006-09-28 ptw] Waiting for compiler support.  Enable
+    // this when the compiler allows you to declare your intent to
+    // override
+//     if ($debug) {
+//       if ((name in nc) && (nc[name] !== value)) {
+//         Debug.debug("%s.%s (%w) overrides %s.%s (%w)", 
+//                     nc, name, value,
+//                     nc.prototype.constructor, name, nc[name]);
+//       }
+//     }
+    this[name] = value;
+    if ($debug) {
+      if (value instanceof Function && (! value._dbg_typename)) {
+        value._dbg_owner = this;
+        value._dbg_typename = function _dbg_typename () { return this._dbg_owner._dbg_name + ' static function'};
+      }
+    }
+  },
+  _dbg_name: 'Class',
+  allClasses: {Instance: Instance},
+  // Class class factory. This is how you make a new class. Arguments
+  // are classname:String (required); traitsAndSuperclass:(Null ||
+  // Class || Array) if Null defaults to Instance, if Array, the
+  // elements of the array are the traits followed by the superclass;
+  // instanceProperties:Object is a hash of initial instance properties;
+  // staticProperties:Object is a hash of the inital class properties;
+  make: function make (classname, traitsAndSuperclass, instanceProperties, staticProperties) {
+    // The constructor notes itself in every instance
+    var nc = function constructor () {
+      this.constructor = arguments.callee;
+      if ($debug) {
+        // Must come after the constructor is installed
+//         Debug.debug("Validate", this, this.validateClassStructure);
+        this.validateClassStructure();
+      }
+      // Call the initializer if it is not the default
+      if (this.initialize !== Instance.prototype.initialize) {
+        // Debug.debug('Initializing', this);
+        this.initialize.apply(this, arguments);
+      }
+    };
+    nc.constructor = this;
+    nc.classname = classname;
+    if ($debug) {
+      nc._dbg_typename = this._dbg_name;
+      nc._dbg_name = classname;
+    }
+    this.addStaticProperty.call(nc, 'addStaticProperty', this.addStaticProperty);
+    // NOTE: [2006-10-10 ptw] This could be inherited from the
+    // superclass, and hence overridable... not needed yet.
+    nc.addStaticProperty('addProperty', this.addProperty);
+    var superclass = null;
+    if (traitsAndSuperclass instanceof Array) {
+      for (var k = traitsAndSuperclass.length - 1; k >= 0; k--) {
+        var c = traitsAndSuperclass[k];
+        if (c instanceof Function) {
+          if ($debug) {
+            if (superclass) {
+              Debug.error("Class.make: Multiple superclasses %s and %s for class %s", superclass, c, classname);
+            }
+          }
+          traitsAndSuperclass.splice(k, 1);
+          superclass = c;
+        }
+      }
+    } else if (traitsAndSuperclass instanceof Function) {
+      superclass = traitsAndSuperclass;
+      traitsAndSuperclass = null;
+    } else if ($debug) {
+      if (traitsAndSuperclass) {
+        Debug.error("Class.make: invalid superclass %w", traitsAndSuperclass);
+      }
+    }
+    if (! superclass) { superclass = Instance; }
+    // Default factory
+    nc.addStaticProperty('make', superclass.make);
+    // The prototype is an instance of our super, which causes us to
+    // inherit our super's instanceProperties
+    {
+      // This has to be constructed carefully, so as _not_ to run the
+      // class instance initializer
+      var xtor = function prototype () { this.constructor = superclass; };
+      xtor.prototype = superclass.prototype;
+      #pragma "passThrough=true"
+      var prototype = new xtor(); // --- superclass.make();
+    }
+    // Create any trait interstitials, following the pattern above
+    if (traitsAndSuperclass instanceof Array) {
+      while (traitsAndSuperclass.length) {
+        var t = traitsAndSuperclass.pop();
+        prototype = t.makeInterstitial(prototype, traitsAndSuperclass.length > 0);
+      }
+    }
+    // Install the staticProperties
+    for (var name in staticProperties) {
+      nc.addStaticProperty(name, staticProperties[name]);
+    }
+    // Create super link
+    nc.prototype = prototype;
+    if ($debug) {
+      // NOTE: [2007-01-12 ptw] Debug.__String relies on prototypes
+      // having their own `_dbg_typename` property as a hint that it
+      // may be a prototype object (and _dbg_name may not work).
+      prototype._dbg_typename = classname
+    }
+    // Class.initialize:  Install initial values
+    for (var p in instanceProperties) {
+      nc.addProperty(p, instanceProperties[p]);
+    }
+    // Run class initializers from least to most specific
+    (function classInit (prototype, constructor) {
+      if (constructor !== Instance) {
+        arguments.callee(prototype, constructor.prototype.constructor);
+      }
+      if (constructor.hasOwnProperty('initialize')) {
+        // Apply the static initializer, so 'this' in the
+        // initializer is the class whose prototype is
+        // being initialized
+        constructor.initialize.call(nc, prototype);
+      }
+    })(prototype, nc);
+    this.allClasses[classname] = nc;
+    return nc;
+  }
+};
+
+if ($debug) {
+  Class.addProperty._dbg_typename = 'Class static function';
+  Class.addStaticProperty._dbg_typename = 'Class static function';
+  Class.make._dbg_typename = 'Class static function';
+}
+
+/** Bootstrap Trait class */
+var Trait = {
+  prototype: new Instance(),
+  allTraits: {},
+  _dbg_typename: Class._dbg_name,
+  _dbg_name: 'Trait',
+  // Adds a property to the Trait, and to all implementations
+  addProperty: function addProperty (name, value) {
+    // Save for future implementations
+    this.prototype[name] = value;
+    // Add it to existing implementations
+    var impls = this.implementations;
+    for (var mash in impls) {
+      var t = impls[mash];
+      t.addProperty.apply(t, arguments);
+    }
+    if ($debug) {
+      if (value instanceof Function && (! value._dbg_typename)) {
+        value._dbg_typename = this._dbg_name + ' function';
+      }
+    }
+  },
+  addStaticProperty: function addStaticProperty (name, value) {
+    this[name] = value;
+    if ($debug) {
+      if (value instanceof Function && (! value._dbg_typename)) {
+        value._dbg_typename = this._dbg_name + ' static function';
+      }
+    }
+  },
+  // TODO: [2006-05-19 ptw] Should traits have make?  Can you
+  // instantiate a trait?  Don't use make as the method for making
+  // an interstitial.
+  // Used internally to create a trait interstitial
+  makeInterstitial: function makeInterstitial (superclassInstance, sharable) {
+    var impls = this.implementations;
+    // Remember combinations and re-use them if possible
+    var mash = this.classname + '+' + superclassInstance.constructor.classname;
+    // TODO: [2006-05-19 ptw] When is sharing permissible?
+    // Clearly not when the last interstitial defines a class, as
+    // then you would have some class that shares being a
+    // subclass, when it should not be.
+    if (false) {
+      if (impls.hasOwnProperty(mash)) {
+        // Debug.debug('Found ', mash, ' for ', this.classname);
+        return impls[mash];
+      }
+    }
+    // Add the properties to the prototype (superclassInstance)
+    var prototype = this.prototype;
+    for (var name in prototype) {
+//       if ($debug) {
+//         if (name in superclassInstance) {
+//           Debug.debug("%s.%s overrides %s.%s", this.classname, name,
+//                       superclassInstance.constructor.classname, name);
+//         }
+//       }
+      superclassInstance.addProperty.call(superclassInstance, name, prototype[name]);
+    }
+    // Make the interstitial
+    var xtor = function interstitial () { this.constructor = arguments.callee; };
+    xtor.prototype = superclassInstance;
+    // The trait's initialize method will run in Class.make (in the
+    // proper order).
+    // TODO: [2006-05-26 ptw] are there other class properties
+    // that need to be copied onto the interstitial?
+    if (this.hasOwnProperty('initialize')) {
+      xtor.initialize = this.initialize;
+    }
+    // Unique name must identify superclass chain, punctuation is
+    // added for debugging
+    xtor.classname = mash;
+    if ($debug) {
+      xtor._dbg_typename = 'Interstitial Constructor';
+      xtor._dbg_name = xtor.classname;
+    }
+    #pragma "passThrough=true"
+    var t = new xtor();
+    // Remember
+    impls[mash] = t;
+    return t;
+  },
+  // How to make a Trait
+  make: function make (classname, superTrait, instanceProperties, staticProperties) {
+    var nt = {
+      constructor: this,
+      classname: classname,
+      _dbg_typename: this._dbg_name,
+      _dbg_name: classname,
+      prototype: superTrait ? superTrait.make() : new Object,
+      // Remembers all implementations of the Trait
+      implementations: {}
+    };
+    this.addStaticProperty.call(nt, 'addStaticProperty', this.addStaticProperty);
+    nt.addStaticProperty('addProperty', this.addProperty);
+    nt.addStaticProperty('makeInterstitial', this.makeInterstitial);
+    // Install the staticProperties
+    for (var p in staticProperties) {
+      nt.addStaticProperty(p, staticProperties[p]);
+    }
+    // Trait.initialize:  install initial values
+    for (var p in instanceProperties) {
+      nt.addProperty(p, instanceProperties[p]);
+    }
+    // Run the initializer if there is one
+    if (nt.hasOwnProperty('initialize')) {
+      nt.initialize(nt.prototype);
+    }
+    this.allTraits[classname] = nt;
+    return nt;
+  }
+};
+
+if ($debug) {
+  Trait.addStaticProperty._dbg_typename = 'Trait static function';
+  Trait.addProperty._dbg_typename = 'Trait static function';
+  Trait.makeInterstitial._dbg_typename = 'Trait static function';
+  Trait.make._dbg_typename = 'Trait static function';
+}

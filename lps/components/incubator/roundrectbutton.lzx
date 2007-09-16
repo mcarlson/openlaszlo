@@ -1,22 +1,20 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
-<!--- 
-This file defines the <roundrectbuton class, which is a class for making nice-
-looking, styleable buttons with gradients, without any art assets.
-
-See test/test-roundrectbutton.lzx for several examples of how to use this component. 
-
-The component attributes are only used for initialization. They are not live constraints.
-The best way to change them at runtime is to apply a <style>; the best way to 
-change them at compile time is with CSS. 
--->
 <library>
 
 <include href="incubator/roundrect.lzx" />
 
+<!--- 
+A class for making nice-looking, styleable buttons with gradients, without any art assets.
+
+See test/test-roundrectbutton.lzx for several examples of how to use this component. 
+
+The component attributes are only used for initialization. They are not live constraints.
+Currently the best way to change them at runtime is to apply a &lt;style&gt;. 
+-->
 <class name="roundrectbutton" extends="basecomponent" styleable="true">
 
     <attribute name="downStartColor" type="color" value="0xFFFFFF" />
@@ -77,8 +75,8 @@ change them at compile time is with CSS.
     </method>
 
     <method event="onmouseup">
-        _rr.setAttribute("backgroundStartColor", this.upStartColor);
-        _rr.setAttribute("backgroundStopColor", this.upStopColor);        
+        _rr.setAttribute("backgroundStartColor", this.overStartColor);
+        _rr.setAttribute("backgroundStopColor", this.overStopColor);        
         _rr.drawStructure(); 
     </method>
     

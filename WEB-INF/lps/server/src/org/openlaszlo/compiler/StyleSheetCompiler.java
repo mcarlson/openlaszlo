@@ -156,11 +156,15 @@ class StyleSheetCompiler extends LibraryCompiler {
         }
         mLogger.debug("whole stylesheet as css " + script +"\n\n");
         mEnv.compileScript(CompilerUtils.sourceLocationDirective(element, true) +
+                           // NOTE [2007-06-02 bshine] This semicolon is needed 
+                           // to work around bug LPP-4083, javascript compiler 
+                           // doesn't emit a semicolon somewhere
+                           ";" +
                            // NOTE: [2007-02-11 ptw] It is crucial
                            // that this be terminated with a `;` so
                            // that it is a statement, not an
                            // expression.
-                           "(function() { " + script + "})();", element ); 
+                           " (function() { " + script + "})();", element ); 
     }
 
 

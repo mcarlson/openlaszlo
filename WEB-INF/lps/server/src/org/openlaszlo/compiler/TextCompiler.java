@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -41,7 +41,7 @@ abstract class TextCompiler {
 
     /** Check if a specified font is known by the Font Manager
      *
-     * @param manager a font manager
+     * @param generator
      * @param fontInfo the font spec you want to check
      *
      * This will throw an informative CompilationError if the font does not exist.

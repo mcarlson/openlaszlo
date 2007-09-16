@@ -1,0 +1,38 @@
+<canvas debug="true">
+<debug y="150"/>
+<include href="lzunit"/>
+<simplelayout axis="y" spacing="10"/>
+
+<button name="goButton" width="100" text="Go">
+
+<attribute name="go" type="boolean" value="true"/>
+<attribute name="counter" type="number" value="1" when="once"/>
+
+<method event="onclick">
+    if (goButton.go==true) {
+        this.setAttribute('text', 'Stop');
+        this.setAttribute('go', false);
+        while (goButton.counter&lt;Number.MAX_VALUE) {
+            Debug.write(goButton.counter);
+            counter=counter+1;
+            }
+        }
+    else {
+    this.setAttribute('text', 'Go');
+    this.setAttribute('go', true);
+    }
+</method>
+
+</button>
+
+<TestSuite>
+    <TestCase>
+        <method name="testGoButtonTrue">
+            assertEquals(1, goButton.counter);
+            assertTrue(goButton.go);
+        </method>
+    </TestCase>   
+</TestSuite>
+
+</canvas>
+<!-- Copyright 2001-2007 Laszlo Systems, Inc. -->

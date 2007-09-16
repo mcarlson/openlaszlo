@@ -91,8 +91,11 @@ class ImportCompiler extends ToplevelCompiler {
             // directly for now.
             String libfile = libsrcfile.getName();
             String libprefix = mEnv.getLibPrefix();
-            String objfilename = libprefix + "/" + libfile + ".swf";
-                
+            String runtime = mEnv.getProperty(mEnv.RUNTIME_PROPERTY);
+            String extension = Compiler.SCRIPT_RUNTIMES.contains(runtime) ? ".js" : ".swf";
+            String objfilename = libprefix + "/" + libfile + extension;
+            String objpath = mEnv.getLibPrefixRelative() + "/" + libfile + extension;
+
             mLogger.info(
 /* (non-Javadoc)
  * @i18n.test
@@ -108,14 +111,13 @@ class ImportCompiler extends ToplevelCompiler {
                 throw new CompilationError(element, e);
             }
 
-            compileLibrary(libsrcfile, objfilename, module);
+            compileLibrary(libsrcfile, objfilename, objpath, module);
 
             // Emit code into main app to instantiate a LzLibrary
             // object, which implements the load() method.
             ViewCompiler vc =  new ViewCompiler(mEnv);
 
             // Override the href with a pointer to the library object-file build directory
-            String objpath = mEnv.getLibPrefixRelative() + "/" + libfile + ".swf";
             element.setAttribute("href", objpath);
             vc.compile(element);
         }
@@ -131,7 +133,7 @@ class ImportCompiler extends ToplevelCompiler {
     /**
      * Compile a standalone binary library file with no canvas.
      */
-    void compileLibrary(File infile, String outfile, Element element) throws CompilationError{
+    void compileLibrary(File infile, String outfile, String liburl, Element element) throws CompilationError{
         // copy fields from mEnv to new Environment
         CompilationEnvironment env =  new CompilationEnvironment(mEnv);
         CompilationErrorHandler errors = env.getErrorHandler();
@@ -142,29 +144,42 @@ class ImportCompiler extends ToplevelCompiler {
         try {
 
             OutputStream ostream = new FileOutputStream(outfile);
-
             try {
-                SWFWriter writer = new SWFWriter(env.getProperties(), ostream,
-                                                 env.getMediaCache(), false, env);
-                env.setSWFWriter(writer);
+                ObjectWriter writer;
+
+                String runtime = env.getProperty(env.RUNTIME_PROPERTY);
+                if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
+                    writer = new DHTMLWriter(env.getProperties(), ostream,
+                                             env.getMediaCache(), false, env);
+                } else if (Compiler.SWF_RUNTIMES.contains(runtime)) {
+                    writer = new SWFWriter(env.getProperties(), ostream,
+                                           env.getMediaCache(), false, env);
+                } else {
+                    throw new CompilationError("runtime "+runtime+" not supported for generating an import library", element);
+                }
+                    
+                env.setObjectWriter(writer);
                 // Set the main SWFWriter so we can output resources
                 // to the main app
-                env.setMainSWFWriter(mEnv.getGenerator());
+                env.setMainObjectWriter(mEnv.getGenerator());
 
-                // TODO [hqm 2004-10-05] For now we'll never include fonts in the library file.
-                // At some later date we can decide if we want to do that, and if so, we'll have to
-                // make the compiler use a separate FontsCollector when it descends into the library.
-                env.setEmbedFonts(false);
+                // Mark it as an runtime-importable library.
+                env.setImportLib(true);
+
+                // We can embed swf fonts in libraries now
+                env.setEmbedFonts(true);
 
                 // copy the fontmanager from old env to new one.
                 writer.setFontManager(mEnv.getGenerator().getFontManager());
                 writer.setCanvasDefaults(mEnv.getCanvas(), mEnv.getMediaCache());
-
-                writer.openSnippet();
+                
+                writer.openSnippet(liburl);
 
                 // allows snippet code to call out to LzInstantiateView in the main app:
                 // var LzInstantiateView = _level0.LzInstantiateView;
-                env.compileScript("var "+VIEW_INSTANTIATION_FNAME+" = _level0."+VIEW_INSTANTIATION_FNAME, element);
+                if (Compiler.SWF_RUNTIMES.contains(runtime)) {
+                    env.compileScript("var "+VIEW_INSTANTIATION_FNAME+" = _level0."+VIEW_INSTANTIATION_FNAME, element);
+                }
 
                 // Note: canvas.initDone() resets the _lzinitialsubviews list, so
                 // that has to be called when the library finishes loading. This is currently

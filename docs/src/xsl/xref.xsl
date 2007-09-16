@@ -101,12 +101,22 @@
   <xsl:param name="target.db" select="'../build/reference/target.db'"/>
   <xsl:key name="targetptr-key" match="div|obj" use="@targetptr"/>
   
+  <!-- xref.xsl calls this -->
+  <xsl:template name="wrap-link">
+    <xsl:param name="href"/>
+    <xsl:param name="content"/>
+    <ulink url="../reference/{$href}" type="reference">
+      <xsl:copy-of select="$content"/>
+    </ulink>
+  </xsl:template>
+  
   <xsl:template name="find-target">
     <xsl:param name="prefix" select="''"/>
     <xsl:param name="key">
       <xsl:value-of select="$prefix"/>
       <xsl:value-of select="text()"/>
     </xsl:param>
+<!-- [jgrandy 10/31/06] Turn this off until we have the refguide building on Legals again
     <xsl:for-each select="document($target.db)">
       <xsl:choose>
         <xsl:when test="starts-with($key, 'class-') and
@@ -143,6 +153,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:for-each>
+-->
   </xsl:template>
   
   <xsl:template name="link-member">

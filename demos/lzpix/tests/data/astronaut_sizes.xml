@@ -1,0 +1,9 @@
+<rsp stat="ok">
+<sizes>
+<size label="Square" width="75" height="75" source="http://static.flickr.com/38/104764934_f81667a8b4_s.jpg" url="http://www.flickr.com/photo_zoom.gne?id=104764934&size=sq"/>
+<size label="Thumbnail" width="75" height="100" source="http://static.flickr.com/38/104764934_f81667a8b4_t.jpg" url="http://www.flickr.com/photo_zoom.gne?id=104764934&size=t"/>
+<size label="Small" width="180" height="240" source="http://static.flickr.com/38/104764934_f81667a8b4_m.jpg" url="http://www.flickr.com/photo_zoom.gne?id=104764934&size=s"/>
+<size label="Medium" width="375" height="500" source="http://static.flickr.com/38/104764934_f81667a8b4.jpg" url="http://www.flickr.com/photo_zoom.gne?id=104764934&size=m"/>
+<size label="Large" width="600" height="800" source="http://static.flickr.com/38/104764934_f81667a8b4_o.jpg" url="http://www.flickr.com/photo_zoom.gne?id=104764934&size=o"/>
+</sizes>
+</rsp>

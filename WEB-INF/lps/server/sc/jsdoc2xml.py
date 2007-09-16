@@ -244,10 +244,11 @@ class CommentExtractor(Visitor):
                      value.name == 'Object':
                 self.handler.addClass(name, 'Object', comment)
             # name = Class("name", null, ...);
-            # name = Class("name", Super, ...);            
+            # name = Class("name", Super, ...);
+            # --- Temporarily look for NewLzClass
             elif value.class is CallExpression and \
                  value[0].class is Identifier and \
-                 value[0].name == 'Class' and \
+                 value[0].name in ['Class', 'NewLzClass'] and \
                  value[1][0].value == name:
                 if value[1][1].class is Identifier:
                     super = value[1][1].name
@@ -342,6 +343,7 @@ class CommentExtractor(Visitor):
         if value.class is CallExpression and \
            value[0].class is Identifier and \
            value[0].name == 'Class' and \
+           value[1][0].class is Literal and \
            value[1][0].value == name.name:
             s = node.comment and extractComment(node.comment)
             if value[1][1].class is Identifier:
@@ -535,7 +537,7 @@ def showComments(n):
         print n, n.comment
     map(showComments, n.children)
 
-def process(fname='LaszloLibrary.as'):
+def process(fname='LaszloLibrary.lzs'):
     import os
     try: os.makedirs('jsdocs')
     except: pass

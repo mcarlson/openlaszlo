@@ -1,12 +1,11 @@
 <!-- vacation-survey.lzx -->
 
-<canvas width="600" height="206" bgcolor="0xeaeaea" title="Vacation Survey" >
+<canvas width="457" height="206" bgcolor="0xeaeaea" title="Vacation Survey" proxied="true">
 
-    <splash/>
+    <!-- [2006-9-25 jgrandy] (LPP-2755) commented out  <splash/> -->
 
     <include   href="utils/layouts/reverselayout.lzx" />
 
-    <font name="hel" src="helmetr.ttf" />
     <debug x="250"/>
 
     <dataset name="surveydataset" type="http" src="http:survey.jsp"/>
@@ -223,7 +222,7 @@
     </myalert>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

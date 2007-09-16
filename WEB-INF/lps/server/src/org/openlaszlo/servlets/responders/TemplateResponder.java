@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -76,7 +76,12 @@ original :   String pathname =  org.openlaszlo.server.LPS.getTemplateDirectory()
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 TemplateResponder.class.getName(),"051018-69", new Object[] {fileName})
 );
-        res.setContentType("text/html");
+        if ("svg".equals(req.getParameter("lzr")) &&
+            "svg".equals(req.getParameter("lzt"))) {
+            res.setContentType ("image/svg+xml");
+        } else {
+            res.setContentType("text/html");
+        }
         ServletOutputStream out = res.getOutputStream();
         try {
             // Get the canvas first, so that if this fails and we

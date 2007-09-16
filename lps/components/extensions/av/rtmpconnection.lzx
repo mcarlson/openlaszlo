@@ -7,12 +7,9 @@
 <library>
 
 
-    <!--
-        RTMP connection. 
-
-        @START_CODE
-            <rtmpconnection/>
-        @END_CODE
+    <!---
+        RTMP connection.
+        @todo document
     -->
     <class name="rtmpconnection" extends="node">
 
@@ -247,10 +244,8 @@
 
 
     <!---
-        Net remote call. [TODO: Document netremotecall class.]
-        @START_CODE
-            <netremotecall/>
-        @END_CODE
+        Net remote call. 
+        @todo Document netremotecall class.
     -->
     <class name="netremotecall" extends="node">
 
@@ -264,6 +259,11 @@
         <!--- Error handling event. -->
         <event name="onerror"/>
 
+        <attribute name="remotecontext" value="null" />
+
+        <attribute name="dataobject" value="null" />
+        
+        <handler name="ondata" args="value" />
 
         <!--- Call the remote method, passing the array of params. -->
         <method name="call" args="params"><![CDATA[
@@ -299,6 +299,14 @@
                 Debug.write(this.name, "error: first argument (params) is not an array");
                 return -1;
             }
+            var rtmpObject = null;
+            if (this.parent instanceof rtmpconnection){
+                rtmpObject = this.parent;
+            } else if(this.remotecontext  instanceof rtmpconnection){
+                rtmpObject = this.remotecontext;
+            } else {
+                Debug.write("ERROR: no remotecontext availible abort call");
+            }
 
             //Debug.write("call", this, this.parent, this.parent.status);
 
@@ -315,7 +323,9 @@
             // Can be overriden.
             // Would be great if it can be used with dataobject,
             // but I don't know how to convert Array/primitive to LzDataset/LzDataPointer.
-            //Debug.write("netremotecall", this, "onResult", value);
+            //Debug.write("onResult: ",this,value,dataobject);
+            if (this.dataobject!=null) this.dataobject.valueToElement(value);
+            this.ondata.sendEvent(value);
           ]]>
         </method>
 
@@ -324,11 +334,9 @@
 
 
     <!---
-        Net parameter. [TODO: Document netparam class.]
+        Net parameter.
         Element to use inside netremotecall.
-        @START_CODE
-            <netparam/>
-        @END_CODE
+        @todo Document netparam class.
     -->
     <class name="netparam" extends="node">
 

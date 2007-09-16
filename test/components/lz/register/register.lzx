@@ -55,7 +55,7 @@
 
         </method>
         <method event="ontimeout">
-            debug.write('request timed out');
+            Debug.write('request timed out');
         </method>
     </dataset>
 
@@ -402,6 +402,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

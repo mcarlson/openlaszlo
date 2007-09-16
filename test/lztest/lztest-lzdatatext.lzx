@@ -1,0 +1,66 @@
+<canvas>
+
+<include href="lztest/lztestmanager.lzx" /> 
+
+
+<!-- test LzDataText -->
+
+<dataset name="mydata">
+  <records>
+    <record id="a">some text data</record> 
+    <record id="b">
+       more text data
+    </record>
+    <record id="c">
+      <potato type="idaho"/>
+    </record>
+  </records>
+</dataset>
+
+
+<script>
+<![CDATA[
+
+var testDataElementSuite = new LzTestSuite("Test Suite for LzDataElement"); 
+
+
+function test_lzdatatext_1() {
+   var parentnode = mydata.childNodes[0];
+   var node1 = mydata.childNodes[0].childNodes[0];
+   var node2 = mydata.childNodes[0].childNodes[1];
+   var node3 = mydata.childNodes[0].childNodes[2];
+
+    // Test compiled-in data
+   var tnode = node1.childNodes[0];
+   LzTestManager.assertEquals("some text data", tnode.data, "[0] compiled-in text data content" );
+
+   tnode.setData("xyzzy");
+   LzTestManager.assertEquals("xyzzy", tnode.data, "[0.1] setData" );
+
+   // test insertBefore
+
+   var pnode = LzDataNode.stringToLzData('<foo><bar1>my content</bar1><bar2/><bar3/></foo>');
+   LzTestManager.assertEquals("my content",  pnode.childNodes[0].childNodes[0].data, "[1] data text content ");
+
+   var clone = pnode.cloneNode(true);
+   LzTestManager.assertEquals("my content",  clone.childNodes[0].childNodes[0].data, "[2] clone data text content ");   
+
+
+
+}
+
+
+
+
+testDataElementSuite.addTest( test_lzdatatext_1 ); 
+
+
+
+]]>
+</script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

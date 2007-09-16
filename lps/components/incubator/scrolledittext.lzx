@@ -24,7 +24,7 @@
                        value="${this.getTextHeight() - (this.getTextHeight()/this.getMaxScroll())}"/>
             <attribute name="maxheight" 
                        value="${this.height + this.maxtextheight}"/>
-            <attribute name="onpos" value="null"/>
+            <event name="onpos" />
             <attribute name="pos" value="0" setter="this.setPos(pos)"/>
             
             <method name="setPos" args="p">

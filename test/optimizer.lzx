@@ -1,18 +1,18 @@
 <canvas bgcolor="silver"  width="1600" height="600">
     <font name="Times Roman">
-	<face src="timmonsr.ttf" />
-	<face src="timmonsb.ttf"  style="bold" />
-	<face src="timmonsi.ttf"  style="italic" />
-	<face src="timmonsbi.ttf" style="bold italic" />
+    <face src="timmonsr.ttf" />
+    <face src="timmonsb.ttf"  style="bold" />
+    <face src="timmonsi.ttf"  style="italic" />
+    <face src="timmonsbi.ttf" style="bold italic" />
     </font>
 
 
     <class name="mytext" >
       <attribute name="text" type="html"/>
       <inputtext x="1" y="1" name="it1"
-		 width="$once{parent.width-5}" height="$once{parent.height-5}"
-		 multiline="true" resizable="false"
-		 onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )">click me</inputtext>
+         width="$once{parent.width-5}" height="$once{parent.height-5}"
+         multiline="true" resizable="false"
+         onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )">click me</inputtext>
     </class>
 
   <simplelayout axis="x" spacing="10" />
@@ -21,40 +21,40 @@
 
     <text>single line, explicit width=200, implicit height = font lineheight</text>
     <inputtext id="t1_1" width="200" 
-	       onfocus="debug.write('foo'); this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
+           onfocus="Debug.write('foo'); this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
 
     <text>fixed size text field, single line, implicit textwidth, implicit height</text>
     <inputtext id="t1_1_1"  
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me,  width and height precomputed by the compiler</inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me,  width and height precomputed by the compiler</inputtext>
 
 
     <text>fixed size text field, single line, with fontsize = 20, explicit width=200</text>
     <inputtext id="t1_2" width="200" fontsize="20"   
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
 
     <text>fixed size text field, single line, explicit height</text>
     <inputtext id="t1_3" width="200" height="20"  
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
 
 
     <text>fixed size text field, single line, no content, no height</text>
     <inputtext id="t1_3_1" 
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" ></inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" ></inputtext>
 
 
     <text>fixed size text field, single line, no content, no height, fontsize=24</text>
     <inputtext id="t1_3_2" fontsize="24"
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" ></inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" ></inputtext>
 
 
 
     <text>fixed size text field, multiline, explicit height</text>
     <inputtext id="t1_4" width="224" height="120"  multiline="true"  
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
 
     <text>fixed size text field, multiline, explicit height, fontsize = 12</text>
     <inputtext id="t1_5" fontsize="12" width="186" height="180"  multiline="true"  
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )" bgcolor="white" >click me</inputtext>
 
 
   </view>
@@ -64,17 +64,17 @@
     <simplelayout axis="y" spacing="10"/>
     <text>using explicit font Times Roman, font size = 14 </text>
     <inputtext id="t2_1" width="200"  bgcolor="#cccccc" 
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"  >click me</inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"  >click me</inputtext>
     <text>using explicit font Times Roman bold </text>
     <inputtext id="t2_2"  width="200"  bgcolor="#ffffcc" fontstyle="bold" 
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"  >click me</inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"  >click me</inputtext>
     <text>using explicit font Times Roman bold-italic</text>
     <inputtext id="t2_3" width="200"  bgcolor="#ffcccc" fontstyle="bold italic" 
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"  >click me</inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"  >click me</inputtext>
 
     <text>using font Times Roman, font size = 26 </text>
     <inputtext id="t2_4" width="200"  bgcolor="#cccccc"  fontsize="26" 
-	       onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"  >click me</inputtext>
+           onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"  >click me</inputtext>
 
 
     <text>component that uses constraints for width/height</text>
@@ -98,18 +98,18 @@
 
     <text>edittext width=300 height=150, multiline=true resizable=false</text>
     <edittext id="t3_3" width="300" height="150" multiline="true" bgcolor="#ffcccc" resizable="false"
-		  text="These will be optimized if edittext has constraints that compiler can understand" />
+          text="These will be optimized if edittext has constraints that compiler can understand" />
     <text width="300" onclick="this.settext(' edittext above field.fixedsize='+t3_3.field.fixedsize)">click me</text>
 
     <text>edittext width=300 height=150, multiline=true resizable=true</text>
     <edittext id="t3_4" width="300" height="150" multiline="true" bgcolor="#ffcccc" resizable="false"
-		  text="These will be optimized if edittext has constraints that compiler can understand" />
+          text="These will be optimized if edittext has constraints that compiler can understand" />
     <text width="300" onclick="this.settext(' edittext above field.fixedsize='+t3_4.field.fixedsize)">click me</text>
   </view>
 
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

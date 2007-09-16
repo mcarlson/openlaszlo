@@ -1,0 +1,190 @@
+/**
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @affects lzdataselectionmanager
+  * @access public
+  * @topic LFC
+  * @subtopic Helpers
+  * @lzxname dataselectionmanager
+  */
+
+/**
+  * Implements same functionality as a normal selection manager, but without
+  * storing view references, which become invalid as views created by a datapath
+  * that uses lazy replication do. Does this by storing subview numbers.
+  *
+  */
+
+class LzDataSelectionManager extends LzSelectionManager {
+
+/** @access private
+  * @modifiers override 
+  */
+static var tagname = 'dataselectionmanager';
+
+/**
+  * Makes the given view selected
+  * @access protected
+  * @param LzView o: The view to be selected
+  */
+function makeSelected ( o ){
+    var so = o.datapath.p;
+    if ( this.manager == null ) this.manager = o.cloneManager; 
+    if ( so.sel ) return; 
+    so.sel = true;
+    this.selected.push( so );
+    o.datapath[ this.sel ]( true );    
+    
+    if ( this.manager == null ){
+        //just one "clone", mark it!
+        this.singleClone = o;
+    }
+}
+
+/**
+  * Unselect the given view
+  * @param LzView o: The view to be unselected
+  */
+function unselect ( o ){
+    if ( this.manager == null ) this.manager = o.cloneManager;//try to get a cloneManager  
+
+    var so = o.datapath.p;
+    so.sel = false;
+    for ( var i = this.selected.length-1 ; i >= 0; i-- ){
+        if ( this.selected[ i ] == so ) {
+            this.selected.splice( i , 1 );
+            break;
+        }
+    }      
+    o.datapath[ this.sel ]( false );
+    
+    if ( o == this.singleClone ) this.singleClone = null;//clear "singleClone"
+}
+
+/**
+  * Selects the range between the datapath that was lastselected and the newly
+  * selected view
+  * @access private
+  * @param LzDataPath s: The datapath that was at top of the selection stack
+  * @param LzView e: The newly selected view
+  */
+function selectRange ( s , e ){
+    if ( this.manager == null ){        
+        this.manager = e.cloneManager;
+        
+        //maybe we've got now clones
+        if ( this.manager == null ){
+        //still no clones?          
+        //so it's nothing to do, just hope so...
+        if ( $debug ){
+            Debug.write( "selectRange failed, no clones" );
+        }
+        return;
+        }
+    }
+    
+    var nodes = this.manager.nodes;
+
+    var st = -1;
+    var en = -1;
+    var i  = 0;
+    var ennode = e.datapath.p;
+    //find the start and end in the sort array of parents
+
+    while ( ( st == -1 || en == -1 ) && i < nodes.length ){
+        if ( nodes[ i ] == s ){
+            st = i;
+        } 
+        if ( nodes[ i ] == ennode ){
+            en = i;
+        } 
+        i++;
+    }
+
+        
+    var dir = st > en ? -1 : 1;
+    
+    this.clearSelection();
+
+    this.lastRange = s;
+
+    //couldn't find -- wierd
+    if ( st == -1 || en == -1 ) return;
+    
+    for ( var i = st; i != en + dir; i += dir ) {
+        var p = nodes[ i ];
+        p.sel = true;
+        this.selected.push( p );
+        this.__LZsetSelected( p, true );
+    }
+}
+
+/**
+  * Returns a list of datapointers, which point to the selected records
+  * @return Array: A list of datapointers
+  */
+function getSelection (){
+    var r = [];
+    for ( var i = 0; i < this.selected.length ; i++ ){
+        r.push( new LzDatapointer( null , {pointer : this.selected[i] }));
+    }
+    return r;    
+}
+
+/**
+  * Unselects everything that is currently selected and clears the selection
+  * list
+  * 
+  */
+function clearSelection ( ){
+    while ( this.selected.length ){
+        var p  = this.selected.pop();
+        p.sel = false;
+        this.__LZsetSelected( p , false );
+    }
+    this.lastRange = null;
+}
+        
+/**
+  * Tests whether the given view is selected
+  * @param LzView o: The view to test for selectedness
+  * @return Boolean: The selectedness of the input object.
+  */
+function isSelected ( o){
+    if ( this.manager == null ) this.manager = o.cloneManager;//try to get a cloneManager
+
+    return o.datapath.p.sel;
+}
+
+/**
+  * sets the selected attribute of the data, if there is a clone, it will
+  * call setselected on the clone
+  * @param LzDataElement p: the node we want to set
+  * @param Boolean val: new value for selected
+  * @access private
+  */
+function __LZsetSelected ( p, val ){
+    if ( this.manager != null ){
+        var cl = this.manager.getCloneForNode( p, true );
+        if ( cl ){
+            cl.datapath[this.sel]( val );
+        } else { // no clone on screen
+            p.sel = val;
+        }
+    } else {//no clones
+        //if caller is selectRange, then "this.manager" won't be "null"
+        //but if caller is clearSelection, "this.manager" could be "null", but then "val" is definitely "false"
+        if ( !val ){
+            if ( this.singleClone != null && this.singleClone.datapath.p == p ){
+                this.singleClone.datapath[this.sel]( false );
+                this.singleClone = null;
+                return;//job is done...
+            }
+        }
+        p.sel = val;//default action
+    }
+}
+
+} // End of LzDataSelectionManager

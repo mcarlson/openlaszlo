@@ -1,0 +1,25 @@
+<!--
+//* A_LZ_COPYRIGHT_BEGIN ******************************************************
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Use is subject to license terms.                                          *
+//* A_LZ_COPYRIGHT_END ********************************************************
+-->
+
+<script>
+function doSVGEval (expr) {
+  val = top.eval_in_svg(expr);
+  alert('eval := '+val);
+}
+
+</script>
+
+  <form id="dhtml-debugger-input" action="#" onsubmit="doSVGEval(document.getElementById('LaszloDebuggerInput').value); return false">
+    <div>
+      <input size="150" id="LaszloDebuggerInput" type="text">
+      <input  type="button" value="eval" onclick="doSVGEval(document.getElementById('LaszloDebuggerInput').value); return false">
+    </div>
+  </form>
+
+
+
+<object id="svgObject" data="out.svg" width="1200" height="500"/>

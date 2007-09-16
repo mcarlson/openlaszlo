@@ -1,0 +1,33 @@
+
+<canvas height="135" width="700" debug="true">
+   <debug x="200"/>
+   <button x="15" y="15"
+      onclick="Debug.write(canvas.theField.getText());">
+      Get Text 
+   </button>
+
+   <button x="100" y="15"
+      onclick="canvas.theField.setText('Hello, Laszlo!');">
+         Set Text
+   </button>
+
+   <button x="180" y="115"
+      onclick="addText();">
+         Add Text
+   </button>
+
+   <script>
+      function addText() {
+      var origText = canvas.theField.getText();
+      var newText = origText + " And on.";
+           canvas.theField.setText(newText);
+      }
+   </script>
+
+   <text x="45" y="60" width="150" height="75" multiline="true"
+      name="theField">Some sample text.</text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

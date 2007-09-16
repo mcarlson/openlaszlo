@@ -1,0 +1,34 @@
+/**
+  * Library.lzs
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access private
+  */
+
+#include "services/LzInstantiator.lzs"
+#include "services/LzGlobalMouse.lzs"
+#include "services/LzModeManager.lzs"
+#include "services/LzCursor.lzs"
+#include "services/LzURL.lzs"
+if ($js1) {
+    #include "services/platform/dhtml/LzModeManager.js"
+    #include "services/platform/dhtml/LzBrowser.js"
+    #include "services/platform/dhtml/LzKeys.js"
+    #include "services/platform/dhtml/LzHistory.js"
+} else if ($as2) {
+    #include "services/platform/swf/LzModeManager.as"
+    #include "services/platform/swf/LzKeys.as"
+    #include "services/platform/swf/LzBrowser.as"
+    #include "services/platform/swf/LzHistory.as"
+} else {
+    Debug.error('services/Library.lzs unsupported runtime %s', $runtime);
+}
+#include "services/LzCSSStyle.js"
+#include "services/LzStyleSheet.js"
+#include "services/LzCSSStyleSheet.js"
+#include "services/LzTrack.lzs"
+#include "services/LzFocus.lzs"
+#include "services/LzIdle.lzs"
+#include "services/LzTimer.lzs"

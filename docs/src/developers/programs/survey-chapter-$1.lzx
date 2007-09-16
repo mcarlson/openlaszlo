@@ -1,0 +1,19 @@
+
+<canvas height="200" >
+        <view>
+          
+                <radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote">
+                    <radiobutton value="'hawaii'" selected="true">Hawaii</radiobutton>
+                    <radiobutton value="'paris'">Paris</radiobutton>
+                    <radiobutton value="'jamaica'">Jamaica</radiobutton>
+                    <radiobutton value="'trenton'">Trenton</radiobutton>
+                </radiogroup>
+                
+    
+        </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

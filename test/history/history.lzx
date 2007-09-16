@@ -1,26 +1,30 @@
-<canvas debug="true">
+<canvas>
     <simplelayout/>
     <text text="${LzHistory.offset}"/>
     <attribute name="foo" value="null"/>
+    <attribute name="bar" value="null"/>
     <method event="onfoo" args="f">
         Debug.write('external call', f); 
     </method>
+    <method event="oninit">
+        LzHistory.setPersist(true);
+    </method>
 
     <class name="histinputtext" extends="inputtext">
-        <method event="oninit">
-            LzHistory.save(this, 'text', this.getText())
-        </method>
         <method event="onblur">
-            LzHistory.save(this, 'text', this.getText())
+            LzHistory.save(this.id, 'text', this.getText())
         </method>
     </class>
-    <histinputtext>A value</histinputtext>
-    <histinputtext>Another value</histinputtext>
+    <histinputtext id="hist1">A value</histinputtext>
+    <histinputtext id="hist2">Another value</histinputtext>
+    <text text="${canvas.foo}"/>
+    <text text="${canvas.bar}"/>
     
     <view layout="axis: x">
         <button onclick="LzHistory.prev()">Prev</button>
         <button onclick="LzHistory.next()">Next</button>
         <button onclick="LzHistory.commit()">Save</button>
+        <button onclick="LzHistory.clear()">Clear all</button>
     </view>
 
     <button onclick="LzBrowser.loadJS('alert(\'hi folks!\');')">Call javaScript alert in browser</button>
@@ -99,6 +103,6 @@
     </view-->
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

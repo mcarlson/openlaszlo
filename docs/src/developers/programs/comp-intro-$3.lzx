@@ -1,0 +1,18 @@
+
+<canvas height="150">
+  <simplelayout/>
+  <!--Here is a button created with a tag -->
+  <button name="framitz" width="50">
+   hello
+  </button>
+  <script>
+  //And here is a button created with using script 
+   var b = new button();
+   b.setAttribute("width", 50);
+    b.setAttribute("height", 50);
+   </script>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

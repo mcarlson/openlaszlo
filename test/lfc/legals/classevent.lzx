@@ -1,0 +1,27 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas width="100%" height="80%">
+    <class name="settest" x="200" width="50" height="50" bgcolor="red">
+        <method event="oninit">
+            Debug.write('init');
+            this.setAttribute('x', 100);
+            this.bar();
+        </method>
+        <method name="bar">
+            this.setX(300);
+            Debug.write('x', this.x);
+        </method>
+    </class>
+
+    <settest oninit="Debug.write('instance init');"/>
+
+    <view>
+        <method event="oninit">
+            assertEquals('init,x 300,instance init', getLog(), 'Equality test')
+        </method>
+    </view>
+</canvas>

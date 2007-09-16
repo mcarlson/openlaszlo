@@ -21,7 +21,7 @@
         var c = 0;            
         for(var i=0; i < l; i++) {
             var s = this.subviews[i]; 
-            //debug.write(c);
+            //Debug.write(c);
             s.setAttribute( this.axis , Math.Round(c) );
             c += spacing;
         }        
@@ -30,6 +30,6 @@
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

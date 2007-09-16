@@ -1,0 +1,33 @@
+
+<canvas debug="true" height="300">
+
+    <debug width="470" height="285" />
+
+    <soap name="geography" 
+          wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl">
+
+        <attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" />
+
+        <method name="handler" args="retval">
+            if (retval.status == 'error') {
+                Debug.write('error:', retval.message);
+                return;
+            }
+
+            Debug.write('Got', retval.data);
+            var el = LzDataElement.valueToElement(retval.data);
+            Debug.write(el.serialize());
+        </method>
+
+        <handler name="onload">
+            Debug.write('geography soap service stub loaded');
+            this.proxy.getTypes([], this.myDel);
+        </handler>
+
+    </soap>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,173 @@
+<canvas height="800">
+<!--
+  covers-tags : lztext
+
+  check that text height is being set properly based on font size
+-->
+
+    <include href="lztest/lztestmanager.lzx" /> 
+  <class name="post" bgcolor="yellow">
+    <attribute name="posttext" value="" type="string"/>
+    <text name="thetext" multiline="true" width="110" text="${parent.posttext}"/>
+  </class>
+
+    <simplelayout axis="y" spacing="2" />
+    <view width="17" height="17" bgcolor="red"/>
+    <text resize="true" id="t1">A</text>
+    <text fontsize="28" id="t2">B</text>
+    <text fontsize="36" id="t3" >C</text>
+    <text multiline="true" width="100" id="t4" oninit="setText('oneline\ntwolines');"/>
+    <text text="Username:" id="t5"/>
+    <text multiline="true" id="t6">Oneline<br/>Two lines<br/>Three</text>
+    <text multiline="true" id="t7" width="350">The text that appears in the combobox may be different from the
+        value represented by the list item.  In the examples below the value is
+        displayed using a constraint tied to the value attribute of the combobox</text>
+    <text text="" resize="false" width="100" fgcolor="0x1b1191" fontsize="10" name="t8" oninit="this.setText('foo bar bar foo')"/>
+    <text text="" width="100" fgcolor="0x1b1191" fontsize="10" name="t9" oninit="this.setText('foo bar bar foo')"/>
+    <text text="" resize="true" width="100" fgcolor="0x1b1191" fontsize="10" name="t10" oninit="this.setText('foo bar bar foo')"/>
+    <text multiline="true" id="t11" width="350" oninit="this.setText('The text that appears in the combobox may be different from the
+        value represented by the list item.  In the examples below the value is
+        displayed using a constraint tied to the value attribute of the combobox')"/>
+
+    <text id="tempty"/>
+    <inputtext  width="200" id="it1" fgcolor="red">A</inputtext>
+    <inputtext  width="200" fontsize="28" fgcolor="red" id="it2">B</inputtext>
+    <inputtext  width="200" fontsize="36" fgcolor="red" id="it3" >C</inputtext>
+    <inputtext  fontsize="28" resize="false" fgcolor="red" id="it4">D</inputtext>
+    <inputtext  fontsize="20" fgcolor="red" id="it5" multiline="true">E<br/>F</inputtext>
+    <inputtext  fontsize="28" fgcolor="red" id="it6">D</inputtext>
+    <inputtext multiline="true" id="it7" width="350"/>
+
+    <dataset name="testds">
+        <text><![CDATA[What was this guy thinking?  I mean to each their own, but I can't figure out someone would think this would look good.  You've got to view the <a href="http://www.flickr.com/photo_zoom.gne?id=174062027&size=l">Large Version</a> of this photo to take it all in...
+
+I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at that... one 1977 Corvette that needs repainted.
+
+<b>NOTE:</b> This photo made it into Flickr's '<a href="http://flickr.com/explore/">Explore</a>" as one of the top five hundred most interesting photos on a particular day.  You can see all of my photo's that have made it into the Flickr Explore pages <a href="http://www.flickr.com/photos/fensterbme/tags/interestingness/">here</a>.]]></text>
+    </dataset>
+
+    <view width="230">   
+        <text id="t12" datapath="testds:/text/text()" 
+                  fgcolor="0x5c5c5c" bgcolor="yellow"
+                  multiline="true"
+                  width="${parent.width}" />
+    </view>
+
+<script><![CDATA[
+
+var textSizeSuite = new LzTestSuite("Text Size Test Suite"); 
+
+
+textSizeSuite.testJustText = function () {
+    t1.setText("Heebee Jeebee");
+    LzTestManager.assertEquals( "Heebee Jeebee", t1.getText());
+    it4.setText("DDD");
+    LzTestManager.assertEquals( "DDD", it4.getText());
+    it6.setText("DDD");
+    LzTestManager.assertEquals( "DDD", it6.getText());
+    it7.setText('The text that appears in the combobox may be different from the value represented by the list item.  In the examples below the value is displayed using a constraint tied to the value attribute of the combobox');
+    LzTestManager.assertEquals( 'The text that appears in the combobox may be different from the value represented by the list item.  In the examples below the value is displayed using a constraint tied to the value attribute of the combobox', it7.getText());
+    new post(canvas,{posttext:'Type some text here please', id:'thepost'});
+}
+
+textSizeSuite.testHeight = function () {
+
+    // color set at compile time 
+    LzTestManager.assertEquals(17, t1.getAttribute("height"), "text1 height");
+    LzTestManager.assertEquals(38, t2.getAttribute("height"), "text2 height");
+    LzTestManager.assertEquals(48, t3.getAttribute("height"), "text3 height");
+    LzTestManager.assertEquals(30, t4.getAttribute("height"), "multiline4 text height");
+    LzTestManager.assertEquals(17, t5.height, "text5 height");
+    LzTestManager.assertEquals(43, t6.getAttribute("height"), "multiline6 text height");
+    LzTestManager.assertEquals(43, t6.height, "multiline6 text.height");
+    LzTestManager.assertEquals(56, t7.getAttribute("height"), "multiline7 text height");
+    LzTestManager.assertEquals(56, t7.height, "multiline7 text.height");
+    LzTestManager.assertEquals(16, t8.getAttribute("height"), "text8 height");
+    LzTestManager.assertEquals(16, t8.height, "text8 height");
+    LzTestManager.assertEquals(16, t9.getAttribute("height"), "text9 height");
+    LzTestManager.assertEquals(16, t9.height, "text9 height");
+    LzTestManager.assertEquals(16, t10.getAttribute("height"), "text10 height");
+    LzTestManager.assertEquals(16, t10.height, "text10 height");
+    LzTestManager.assertEquals(56, t11.getAttribute("height"), "multiline11 text height");
+    LzTestManager.assertEquals(56, t11.height, "multiline11 text.height");
+    LzTestManager.assertEquals(277, t12.getAttribute("height"), "text12 height");
+    LzTestManager.assertEquals(277, t12.height, "text12 text.height");
+    LzTestManager.assertEquals(17, it1.getAttribute("height"), "inputtext1 height");
+    LzTestManager.assertEquals(17, it1.height, "inputtext4.height");
+    LzTestManager.assertEquals(38, it2.getAttribute("height"), "inputtext2 height");
+    LzTestManager.assertEquals(38, it2.height, "inputtext4.height");
+    LzTestManager.assertEquals(48, it3.getAttribute("height"), "inputtext3 height");
+    LzTestManager.assertEquals(48, it3.height, "inputtext4.height");
+    LzTestManager.assertEquals(38, it4.getAttribute("height"), "inputtext4 height");
+    LzTestManager.assertEquals(38, it4.height, "inputtext4.height");
+    LzTestManager.assertEquals(52, it5.getAttribute("height"), "multiline inputtext5 height");
+    LzTestManager.assertEquals(52, it5.height, "multiline inputtext5.height");
+    LzTestManager.assertEquals(38, it6.getAttribute("height"), "inputtext6 height");
+    LzTestManager.assertEquals(38, it6.height, "inputtext6.height");
+    LzTestManager.assertEquals(56, it7.getAttribute("height"), "multiline7 inputtext height");
+    LzTestManager.assertEquals(56, it7.height, "multiline7 inputtext.height");
+    LzTestManager.assertEquals(17, tempty.height, "tempty.height");
+
+    LzTestManager.assertEquals(30, thepost.getAttribute("height"), "thepost height");
+    LzTestManager.assertEquals(30, thepost.height, "thepost.height");
+}
+
+textSizeSuite.testWidth = function () {
+    // color set at compile time 
+    LzTestManager.assertEquals(91, t1.getAttribute("width"), "text1 width");
+    LzTestManager.assertEquals(23, t2.getAttribute("width"), "text2 width");
+    LzTestManager.assertEquals(29, t3.getAttribute("width"), "text3 width");
+    LzTestManager.assertEquals(100, t4.getAttribute("width"), "multiline4 text width");
+    LzTestManager.assertEquals(67, t5.width, "text5 width");
+    LzTestManager.assertEquals(t6.parent.width, t6.getAttribute("width"), "multiline6 text.width");
+    LzTestManager.assertEquals(t6.parent.width, t6.width, "multiline6 text width");
+    LzTestManager.assertEquals(350, t7.getAttribute("width"), "multiline7 text.width");
+    LzTestManager.assertEquals(350, t7.width, "multiline7 text width");
+    LzTestManager.assertEquals(100, t8.getAttribute("width"), "text8 width");
+    LzTestManager.assertEquals(100, t8.width, "text8 width");
+    LzTestManager.assertEquals(100, t9.getAttribute("width"), "text9 width");
+    LzTestManager.assertEquals(100, t9.width, "text9 width");
+    LzTestManager.assertEquals(88, t10.getAttribute("width"), "text10 width");
+    LzTestManager.assertEquals(88, t10.width, "text10 width");
+    LzTestManager.assertEquals(350, t11.getAttribute("width"), "multiline7 text.width");
+    LzTestManager.assertEquals(350, t11.width, "multiline7 text width");
+    LzTestManager.assertEquals(230, t12.getAttribute("width"), "text12.width");
+    LzTestManager.assertEquals(230, t12.width, "text12 width");
+    LzTestManager.assertEquals(200, it1.getAttribute("width"), "inputtext1 width");
+    LzTestManager.assertEquals(200, it1.width, "inputtext1.width");
+    LzTestManager.assertEquals(200, it2.getAttribute("width"), "inputtext2 width");
+    LzTestManager.assertEquals(200, it2.width, "inputtext2.width");
+    LzTestManager.assertEquals(200, it3.getAttribute("width"), "inputtext3 width");
+    LzTestManager.assertEquals(200, it3.width, "inputtext3.width");
+    LzTestManager.assertEquals(26, it4.getAttribute("width"), "inputtext4 width");
+    LzTestManager.assertEquals(26, it4.width, "inputtext4.width");
+    LzTestManager.assertEquals(it5.parent.width, it5.getAttribute("width"), "multiline inputtext5 width");
+    LzTestManager.assertEquals(it5.parent.width, it5.width, "multiline inputtext5.width");
+    LzTestManager.assertEquals(26, it6.getAttribute("width"), "inputtext6 width");
+    LzTestManager.assertEquals(26, it6.width, "inputtext6.width");
+
+    LzTestManager.assertEquals(350, it7.getAttribute("width"), "multiline7 inputtext.width");
+    LzTestManager.assertEquals(350, it7.width, "multiline7 inputtext width");
+    LzTestManager.assertEquals(0, tempty.width, "tempty.width");
+
+
+    LzTestManager.assertEquals(110, thepost.getAttribute("width"), "thepost width");
+    LzTestManager.assertEquals(110, thepost.width, "thepost.width");
+}
+
+textSizeSuite.addTest(textSizeSuite.testJustText); 
+textSizeSuite.addTest(textSizeSuite.testHeight); 
+textSizeSuite.addTest(textSizeSuite.testWidth); 
+
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

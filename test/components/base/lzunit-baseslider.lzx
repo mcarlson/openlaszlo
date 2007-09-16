@@ -4,85 +4,100 @@
   <include href="lzunit" />
   <include href="lz/slider.lzx" />
 
-  <script>
-    asynchronousTests = false;
-  </script>
+<!--
+  covers-tags: basecomponent baseslider smoketest
+-->
 
+  <class name="testslider" extends="slider">
+
+    <attribute name="c1" type="number" value="0"/>
+    <handler name="onvalue">
+        this.c1++;
+    </handler>
+    
+    <attribute name="c2" type="number" value="0"/>
+    <handler name="onminvalue">
+        this.c2++;
+    </handler>
+    
+    <attribute name="c3" type="number" value="0"/>
+    <handler name="onmaxvalue">
+        this.c3++;
+    </handler>
+    
+    <attribute name="c4" type="number" value="0"/>
+    <method name="setMinValue" args="v">
+        super.setMinValue(v);
+        this.c4++;
+    </method>
+    
+    <attribute name="c5" type="number" value="0"/>
+    <method name="setMaxValue" args="v">
+        super.setMaxValue(v);
+        this.c5++;
+    </method>
+    
+    <attribute name="c6" type="number" value="0"/>
+    <method name="setValue" args="v">
+        super.setValue(v);
+        this.c6++;
+    </method>
+      
+    <method name="checkConsistency" args="tc"><![CDATA[
+      tc.assertEquals(this.value, this.track.thumb._valueFromThumb(), "value-to-thumb mapping");
+      tc.assertEquals(this.track.thumb.x, this.track.thumb._thumbFromValue(), "thumb-to-value mapping");
+      tc.assertTrue(this.minvalue <= this.maxvalue, "minvalue <= maxvalue");
+      tc.assertTrue(this.value >= this.minvalue, "value >= minvalue");
+      tc.assertTrue(this.value <= this.maxvalue, "value <= maxvalue");
+    ]]></method>
+    
+    <method name="resetState" args="t"><![CDATA[
+      // use different values here than in slider initialization
+      // so we can count calls to onvalue, etc.
+      //if (this.c1 < 3) Debug.format("c1: %w\n", this.c1);
+      this.setMinValue(0);
+      this.setMaxValue(100);
+      this.setValue(35);
+    ]]></method>
+    
+  </class>
+
+  <class name="MyTestCase" extends="TestCase">
+    <testslider name="t" value="45" minvalue="10" maxvalue="110" width="200" y="20" />
+    
+    <method name="setUp">
+      t.resetState();
+      t.checkConsistency(this);
+    </method>
+    
+    <method name="tearDown">
+      t.checkConsistency(this);
+    </method>
+      
+  </class>
+  
   <TestSuite>
 
-    <TestCase>
+    <MyTestCase>
     
-        <slider name="t" width="200" y="20" value="45" minvalue="10" maxvalue="110">
-          <attribute name="c1" type="number" value="0"/>
-          <method event="onvalue">
-            c1++;
-            //if (c1 &lt; 3) Debug.format("onvalue: %w\n", c1);
-          </method>
-          <attribute name="c2" type="number" value="0"/>
-          <method event="onminvalue">
-            c2++;
-          </method>
-          <attribute name="c3" type="number" value="0"/>
-          <method event="onmaxvalue">
-            c3++;
-          </method>
-          <attribute name="c4" type="number" value="0"/>
-          <method name="setMinValue" args="v">
-            super.setMinValue(v);
-            c4++;
-          </method>
-          <attribute name="c5" type="number" value="0"/>
-          <method name="setMaxValue" args="v">
-            super.setMaxValue(v);
-            c5++;
-          </method>
-          <attribute name="c6" type="number" value="0"/>
-          <method name="setValue" args="v">
-            super.setValue(v);
-            c6++;
-          </method>
-        </slider>
-      
-        <method name="checkConsistency" args="t"><![CDATA[
-          assertEquals(t.value, t.track.thumb._valueFromThumb());
-          assertEquals(t.track.thumb.x, t.track.thumb._thumbFromValue());
-          assertTrue(t.minvalue <= t.maxvalue);
-          assertTrue(t.value >= t.minvalue);
-          assertTrue(t.value <= t.maxvalue);
-        ]]></method>
-        
-        <method name="resetState" args="t"><![CDATA[
-          // use different values here than in slider initialization
-          // so we can count calls to onvalue, etc.
-          //if (t.c1 < 3) Debug.format("c1: %w\n", t.c1);
-          t.setMinValue(0);
-          t.setMaxValue(100);
-          t.setValue(35);
-        ]]></method>
-        
-        <method name="setUp">
-          resetState(t);
-          checkConsistency(t);
-        </method>
-        
-        <method name="tearDown">
-          checkConsistency(t);
-        </method>
-      
         <!-- test whether initial setters were called -->
         <method name="testinitalsetters">
           // these should all be 2 because of 1) default value setup and 2) resetState
           // called implicitly at the start of this test. Requires default values
           // and resetState values to be different, and assumes this is the first test to
           // be run.
-          assertEquals(2, t.c1);
-          assertEquals(2, t.c2);
-          assertEquals(2, t.c3);
-          assertEquals(2, t.c4);
-          assertEquals(2, t.c5);
-          assertEquals(2, t.c6);
+          assertEquals(2, t.c1, "onvalue count");
+          assertEquals(2, t.c2, "onminvalue count");
+          assertEquals(2, t.c3, "onmaxvalue count");
+          assertEquals(2, t.c4, "setMinValue count");
+          assertEquals(2, t.c5, "setMaxValue count");
+          assertEquals(2, t.c6, "setValue count");
         </method>
-        
+
+    </MyTestCase>
+
+    <MyTestCase>
+ 
         <!-- first check initial value -->
         <method name="testreset">
           assertEquals(35, t.value);
@@ -90,22 +105,34 @@
           assertEquals(100, t.maxvalue);
         </method>
         
+    </MyTestCase>
+
+    <TestCase>
+
         <!-- test slider with min == max -->
-        <slider name="t0" value="35" minvalue="35" maxvalue="35"/>
+        <testslider name="t0" value="35" minvalue="35" maxvalue="35"/>
         <method name="testzerorange">
           assertEquals(35, t0.value);
           assertEquals(35, t0.minvalue);
           assertEquals(35, t0.maxvalue);
         </method>
         
+    </TestCase>
+
+    <TestCase>
+
         <!-- test correct handling of out-of-bounds initial value -->
-        <slider name="t2" value="35" minvalue="40" maxvalue="50"/>
+        <testslider name="t2" value="35" minvalue="40" maxvalue="50"/>
         <method name="testoutofbounds">
           assertEquals(40, t2.value);
           assertEquals(40, t2.minvalue);
           assertEquals(50, t2.maxvalue);
         </method>
         
+    </TestCase>
+
+    <TestCase>
+
         <!-- test correct handling of inverted bounds -->
         <slider name="t3" value="35" minvalue="50" maxvalue="30"/>
         <method name="testinvertedbounds">
@@ -114,6 +141,10 @@
           assertEquals(50, t3.maxvalue);
         </method>
         
+    </TestCase>
+
+    <MyTestCase>
+
         <!-- check that setValue is getting called -->
         <method name="testsetval1">
           var newval = t.value + 5;
@@ -121,6 +152,10 @@
           assertEquals(newval, t.value);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <!-- check that setAttribute works -->
         <method name="testsetval2">
           var newval = t.value + 5;
@@ -128,6 +163,10 @@
           assertEquals(newval, t.value);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <!-- check that onvalue event is getting dispatched -->
         <method name="testonvalue">
           var c0 = t.c1;
@@ -135,17 +174,29 @@
           assertEquals(c0 + 1, t.c1);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <method name="testunderval">
           t.setAttribute("minvalue", 10);
           t.setAttribute("value", 5);
           assertEquals(t.value, t.minvalue);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <method name="testoverval">
           t.setAttribute("value", t.maxvalue + 5);
           assertEquals(t.value, t.maxvalue);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <method name="testsetmin1">
           var oldval = t.value;
           var newmin = t.value - 5;
@@ -154,6 +205,10 @@
           assertEquals(oldval, t.value);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <method name="testsetmin2">
           var oldval = t.value;
           var newmin = t.value - 5;
@@ -162,12 +217,20 @@
           assertEquals(oldval, t.value);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <method name="testonminvalue">
           var c0 = t.c2;
           t.setAttribute("minvalue", t.minvalue + 1);
           assertEquals(c0 + 1, t.c2);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <method name="testsetmax1">
           var oldval = t.value;
           var newmax = t.value + 5;
@@ -176,6 +239,10 @@
           assertEquals(oldval, t.value);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <method name="testsetmax2">
           var oldval = t.value;
           var newmax = t.value + 5;
@@ -184,12 +251,20 @@
           assertEquals(oldval, t.value);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <method name="testonmaxvalue">
           var c0 = t.c3;
           t.setAttribute("maxvalue", t.maxvalue + 1);
           assertEquals(c0 + 1, t.c3);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <!-- test whether setting minvalue higher than maxvalue does the right thing -->
         <method name="testovermin">
           var newmin = t.maxvalue + 5;
@@ -198,6 +273,10 @@
           assertEquals(t.minvalue, t.maxvalue);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <!-- test whether setting maxvalue lower than minvalue does the right thing -->
         <method name="testundermax">
           t.setMinValue(0);
@@ -207,6 +286,10 @@
           assertEquals(t.minvalue, t.maxvalue);
         </method>
         
+    </MyTestCase>
+
+    <MyTestCase>
+
         <method name="verifyrange"><![CDATA[
           var oldval = t.value;
           var lo = t.minvalue;
@@ -214,7 +297,7 @@
           for (var i=lo; i<=hi; i++)
           {
             t.setValue(i);
-            checkConsistency(t);
+            t.checkConsistency(this);
           }
           t.setValue(oldval);
         ]]></method>
@@ -227,26 +310,26 @@
           for (var i=lo; i<=hi; i+=delta)
           {
             t.track.thumb.setX(i);
-            checkConsistency(t);
+            t.checkConsistency(this);
           }
           t.track.thumb.setX(oldval);
         ]]></method>
-  
+
         <method name="testlittlerange">
           t.setMinValue(0);
           t.setMaxValue(10);
-          checkConsistency(t);
+          t.checkConsistency(this);
           verifyrange(t);
           verifythumbrange(t);
         </method>
         
-    </TestCase>
+    </MyTestCase>
   </TestSuite>
   
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

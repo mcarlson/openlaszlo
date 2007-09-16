@@ -7,13 +7,13 @@
     <!--- A pixel amount to inset the first view controlled by the layout-->
     <attribute name="inset" value="0"
         setter="this.inset = inset;
-               if( this.subviews.length ) this.update();
+               if( this.subviews &amp;&amp; this.subviews.length ) this.update();
                if (this['oninset']) this.oninset.sendEvent(this.inset)"/>
 
     <!--- A pixel amount to use between each view in the layout -->
     <attribute name="spacing" value="0"
                setter="this.spacing = spacing;
-                      if( this.subviews.length ) this.update();
+                      if(this.subviews &amp;&amp; this.subviews.length ) this.update();
                       if (this['onspacing']) this.onspacing.sendEvent(this.spacing)"/>
 
     <!--- @keywords private -->

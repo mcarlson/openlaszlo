@@ -1,0 +1,135 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+<library>
+  <switch>
+    <when runtime="dhtml">
+    </when>
+    <otherwise>
+<script>
+// proxy object for browser Lz.iframemanager
+Lz.iframemanager = {
+    owners: {}
+    ,create: function(owner, name, appendto) {
+        LzBrowser.callJS('Lz.iframemanager.create', function (id) { 
+                Lz.iframemanager.owners[id] = owner;
+                owner.setiframeid(id); 
+            }, "", name, appendto);
+    }
+    ,setPosition: function(id, x, y, width, height, v) {
+        LzBrowser.callJS('Lz.iframemanager.setPosition', false, id, x, y, width, height, v);
+    }
+    ,setSrc: function(id, src) {
+        LzBrowser.callJS('Lz.iframemanager.setSrc', null, id, src);
+    }
+    ,setVisible: function(id, v) {
+        LzBrowser.callJS('Lz.iframemanager.setVisible', false, id, v);
+    }
+    ,bringToFront: function(id) {
+        LzBrowser.callJS('Lz.iframemanager.bringToFront', null, id);
+    }
+    ,__gotload: function(id) {
+        if (Lz.iframemanager.owners[id]) Lz.iframemanager.owners[id].__gotload();
+    }
+}
+</script>
+</otherwise>
+</switch>
+
+<class name="html" extends="node">
+    <attribute name="xoffset" type="number" value="0"/>
+    <attribute name="yoffset" type="number" value="0"/>
+    <attribute name="widthoffset" type="number" value="0"/>
+    <attribute name="heightoffset" type="number" value="0"/>
+    <attribute name="loading" type="boolean" value="false"/>
+    <attribute name="appendto" value="null"/>
+    <attribute name="iframe" value="null"/>
+    <attribute name="ready" value="false"/>
+
+    <attribute name="target" value="null" setter="this.setTarget(target)"/>
+    <attribute name="framename" value="" type="string"/>
+    <event name="onload"/>
+    <event name="onready"/>
+    <method name="setTarget" args="t">
+        if (t == null) return;
+        this.target = t;
+        if (this['_posdel']) {
+            this._posdel.unregisterAll();
+        } else {
+            this._posdel = new LzDelegate(this, '__updatepos'); 
+        }
+        this._posdel.register(this.target, 'onwidth');
+        this._posdel.register(this.target, 'onheight');
+        this._posdel.register(this.target, 'onx');
+        this._posdel.register(this.target, 'ony');
+        //Debug.write(t);
+        this.__updatepos();
+        if (this['ontarget']) this.ontarget.sendEvent(t);
+    </method>
+
+    <attribute name="visible" type="boolean" value="true" setter="this.setVisible(visible)"/>
+    <method name="setVisible" args="v">
+        this.visible = v;
+        if (this['iframeid']) Lz.iframemanager.setVisible(this.iframeid, v);
+        if (this['onvisible']) this.onvisible.sendEvent(v);
+    </method>
+
+    <attribute name="src" type="text" setter="this.setSrc(src)"/>
+    <event name="onsrc"/>
+    <method name="setSrc" args="s">
+        this.src = s;
+        this.setAttribute('loading', true);
+        if (this['iframeid']) {
+            Lz.iframemanager.setSrc(this.iframeid, s);
+        } else {
+            this.srcset = s;
+        }
+        this.onsrc.sendEvent(s);
+    </method>
+
+    <!--- @access private -->
+    <method name="init">
+        super.init();
+
+        if (this['target'] == null) {
+            this.setAttribute('target', this.parent);
+        }
+        var i = Lz.iframemanager.create(this, this.framename);
+        if (i) this.setiframeid(i);
+    </method>
+
+    <!--- @access private -->
+    <method name="__updatepos">
+        var x = this.target.getAttributeRelative("x", canvas) + this.xoffset;
+        var y = this.target.getAttributeRelative("y", canvas) + this.yoffset;
+        var width = this.target.getAttributeRelative("width", canvas) + this.widthoffset;
+        var height = this.target.getAttributeRelative("height", canvas) + this.heightoffset;
+        if (this['iframeid']) {
+            Lz.iframemanager.setPosition(this.iframeid, x, y, width, height, this.visible);
+        } else {
+            this.cachepos = true;
+        }
+    </method>
+    <!--- @access private -->
+    <method name="setiframeid" args="id">
+        //Debug.write('setiframeid', id, this)
+        this.iframeid = id;
+        if (this['cachepos']) this.__updatepos();
+        if (this['isfront']) this.bringToFront();
+        if (this['srcset']) Lz.iframemanager.setSrc(id, this.srcset);
+        this.setAttribute('ready', true);
+    </method>
+    <method name="__gotload">
+        this.setAttribute('loading', false);
+        this.__updatepos();
+        this.onload.sendEvent();
+    </method>
+    <method name="bringToFront">
+        this.isfront = true;
+        if (this['iframeid']) Lz.iframemanager.bringToFront(this.iframeid);
+    </method>
+</class>
+</library>

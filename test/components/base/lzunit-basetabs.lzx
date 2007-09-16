@@ -2,6 +2,10 @@
   <include href="lzunit"/>
   <include href="lz/tabs.lzx"/>
 
+<!--
+  covers-tags: basetabs basecomponent smoketest
+-->
+
   <class name="ptab" extends="tab"/>
   <class name="ptabpane" extends="tabpane" tabclass="ptab"/>
 
@@ -28,15 +32,15 @@
       </tabs>
       
       <method name="testTabClassImplicit">
-        assertEquals('tab', tabs0.bar.subviews[0].classname);
+        assertEquals('tab', tabs0.bar.subviews[0].constructor.classname);
       </method>
       
       <method name="testTabClassDirect">
-        assertEquals('ptab', tabs1.bar.subviews[0].classname);
+        assertEquals('ptab', tabs1.bar.subviews[0].constructor.classname);
       </method>
       
       <method name="testTabClassInherited">
-        assertEquals('ptab', tabs2.bar.subviews[0].classname);
+        assertEquals('ptab', tabs2.bar.subviews[0].constructor.classname);
       </method>
         
     </TestCase>
@@ -93,7 +97,7 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

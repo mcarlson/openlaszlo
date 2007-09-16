@@ -1,0 +1,99 @@
+<canvas>
+
+<include href="lztest/lztestmanager.lzx" /> 
+
+<!--
+  covers-tags : lzevent lzdelegate smoketest
+-->
+
+<node id="mynode">
+  <attribute name="setme" value="false"/>
+  <attribute name="foo" value="0"/>
+  <event name="myevent"/>
+  <handler name="myevent">
+     this.setme = true;
+  </handler>
+  <method name="somemethod">
+    // Debug.write("called mynode.somemethod()");
+    this.foo = 259;
+  </method>
+
+</node>
+
+
+<node id="othernode">
+  <event name="event2"/>
+</node>
+
+<script>
+
+var testEventsSuite = new LzTestSuite("Testing Events"); 
+
+function test_events_basics() {
+    LzTestManager.assertNotUndefined(global.mynode, "[1] testing for defined id"); 
+    mynode.setme = false;
+    LzTestManager.assertFalse(mynode.setme, "[2] testing for attribute setme == false"); 
+}
+
+
+function test_events_setme() {
+    // should cause "setme" to be set true
+    mynode.setme = false;
+    mynode.myevent.sendEvent(); 
+    LzTestManager.assertTrue(mynode.setme, "[3] testing for attribute setme == true"); 
+}
+
+function test_events_delegates() {
+    mynode.setme = false;
+    // Test adding and removing delegates
+    var del_0 = new LzDelegate(mynode, "somemethod", mynode, "someevent");
+    mynode.someevent.sendEvent();
+    LzTestManager.assertTrue(mynode.foo == 259, "[4] testing for attribute mynode.foo == 259");     
+
+    // reset this value for next test
+    mynode.foo = 0;
+
+    // registers to call mynode.somemethod() when othernode is sent event "event2"
+    var del_1 = new LzDelegate(mynode, "somemethod", othernode, "event2");
+    othernode.event2.sendEvent();
+    LzTestManager.assertTrue(mynode.foo == 259, "[5] testing for attribute mynode.foo == 259");     
+
+    // test LzDelegate.unregisterAll()
+    mynode.foo = 0;
+    del_1.unregisterAll();
+    othernode.event2.sendEvent();
+    LzTestManager.assertTrue(mynode.foo == 0, "[6] testing for attribute mynode.foo == 0");         
+
+    // test LzDelegate.register()
+    mynode.foo = 0;
+    del_1.register(othernode, "event2");
+    othernode.event2.sendEvent();
+    LzTestManager.assertTrue(mynode.foo == 259, "[7] testing for attribute mynode.foo == 259");         
+
+    // test LzDelegate.unregisterFrom()
+    mynode.foo = 0;
+    del_1.unregisterFrom(othernode.event2);
+    othernode.event2.sendEvent();
+    LzTestManager.assertTrue(mynode.foo == 0, "[8] testing for attribute mynode.foo == 0");         
+
+    // test LzDelegate.disable()
+    mynode.foo = 0;
+    del_1.register(othernode, "event2");
+    del_1.disable();
+    othernode.event2.sendEvent();
+    LzTestManager.assertTrue(mynode.foo == 0, "[0] testing for attribute mynode.foo == 0");         
+    del_1.enable();
+    othernode.event2.sendEvent();
+    LzTestManager.assertTrue(mynode.foo == 259, "[10] testing for attribute mynode.foo == 259");         
+}
+
+testEventsSuite.addTest( test_events_basics ); 
+testEventsSuite.addTest( test_events_setme ); 
+testEventsSuite.addTest( test_events_delegates ); 
+</script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

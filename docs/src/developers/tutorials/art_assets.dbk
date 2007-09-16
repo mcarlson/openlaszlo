@@ -1,0 +1,241 @@
+<chapter id="art_assets">
+<?dbhtml dir="tutorials" ?>
+
+<title>Introduction to Media and Art Assets</title>
+<para>This tutorial provides an informal overview of how to use media resources such
+as images, video and audio in OpenLaszlo applications. These topics are covered in greater depth in
+<xref linkend="media-resources"/>.</para>
+<para>
+There are two ways in which you can import an image into OpenLaszlo applications:</para>
+<itemizedlist spacing="compact"><listitem><para>as a media resource attached to a view;</para></listitem><listitem><para>as an image inserted within HTML text</para></listitem></itemizedlist>
+<para>
+In this tutorial we'll be talking about using resources attached to views, which is the more general mechanism. This technique allows you to import not only images, but audio, video "progressive" images and similar complex media.
+</para>
+<section><title>Runtime Considerations</title>
+<para>Depending on which runtime (SWF or DHTML) you're compiling to and whether your application is deployed proxied or SOLO, there may be certain types of assets that may be available. For example, in applications deployed to SWF, you can use assets in SWF format, these are not available in applications compiled to DHTML. Additionally, various formats that are not natively supported by the Flash Player are available only when you run in proxied mode, in which the OpenLaszlo Server transcodes formats.
+</para>
+<para>
+When you insert an image into HTML text, you can only include images in the formats natively supported by the targeted runtime.  For a discussion of how to use the <sgmltag class="element" role="img">img</sgmltag>
+<!--unknown tag: img-->
+ tag within HTML text, see <xref linkend="text"/>.
+</para>
+<para>Being able to bring in art assets is not just for pictures - you can create your own custom view system too.</para>
+
+
+</section><section id="art_assets.basics"><title>Resources</title>
+<para>
+
+In OpenLaszlo applications, <sgmltag class="element" role="LzView">view</sgmltag>
+<!--unknown tag: view-->
+s are the fundamental visible entities, and resources
+are externally generated media to be incorporated in applications. Resources are made available by being
+attatched to views. Thus in OpenLaszlo applications you don't "insert an image" into a view; 
+instead you insert a view whose <emphasis>resource</emphasis> is an image. 
+</para>
+
+<para>Let's look at the simplest way of including an art asset (resource). 
+In this case, a GIF image:</para>
+
+<example role="live-example">
+   <title>Using the 'resource' attribute</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/art_assets-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using 'resource'</title><programlisting role="lzx-embednew"><filename>art_assets-$1.lzx</filename><parameter/><code>
+&lt;canvas width="500" height="80"&gt;
+  &lt;view resource="../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="500" height="80"&gt;
+  &lt;view resource="../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/art_assets-$1.lzx></example?>
+
+<para>This tiny OpenLaszlo application loads an image called <literal>smiley.gif</literal> 
+(which is located in <literal>resources</literal>, a subdirectory of the one that contains the application).</para>
+<para>To position an image, position the view that contains that image as a resource:</para>
+
+ <example role="live-example">
+   <title>Positioning images</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/art_assets-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>positioning images</title><programlisting role="lzx-embednew"><filename>art_assets-$2.lzx</filename><parameter/><code>
+ &lt;canvas width="500" height="100"&gt;
+   &lt;view resource="../resources/smiley.gif"/&gt;
+   &lt;view x="50" y="50" resource="../resources/smiley.gif"/&gt;
+ &lt;/canvas&gt;
+</code></programlisting><programlisting>
+ &lt;canvas width="500" height="100"&gt;
+   &lt;view resource="../resources/smiley.gif"/&gt;
+   &lt;view <emphasis role="em">x="50" y="50"</emphasis> resource="../resources/smiley.gif"/&gt;
+ &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/art_assets-$2.lzx></example?>
+
+<para>We'll come to changing the size of an image later.</para>
+
+
+
+</section><section id="art_assets.including"><title>Ways to include resources</title>
+
+<para>In the example above, we included an image from the current local directory that was loaded when the application was compiled on the server. This may or may not be right for the particular application, so LZX has four ways to load images:</para>
+
+<section><title>Loading resources at compile time</title>
+<para>The resource gets bundled with the rest of the application when it is compiled on the server, so there will be a larger initial download, but the images will display instantly.</para>
+
+<para>All of these four methods will eventually show the same result on screen:</para>
+<example role="live-example"><title>Local pathname</title><programlisting>
+&lt;canvas width="500" height="100"&gt;
+  &lt;view resource="../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</programlisting></example>
+
+
+<example role="live-example"><title>Using the resource global identifier</title><programlisting>
+&lt;canvas width="500" height="100"&gt;
+  <emphasis role="em">&lt;resource name="smileyFaceImg" src="../resources/smiley.gif"/&gt;</emphasis>
+  &lt;view resource="<emphasis role="em">smileyFaceImg</emphasis>"/&gt;
+&lt;/canvas&gt;
+</programlisting></example>
+
+
+</section><section><title>Loading resources at run-time</title>
+<para>The resource does not get loaded until the view is initialized, so the rest of the application will load and there may be a visible delay. The initial download will be smaller, because the images are not bundled with it. The server that does the compiling requests the image (if it resides on a different server), and it routes it to the app that is already running in the client.</para>
+
+<example role="live-example"><title>Absolute referencing</title><programlisting>
+&lt;canvas&gt;
+  &lt;view resource="<emphasis role="em">http://www.laszlosystems.com/images/smiley.gif</emphasis>"&gt;
+&lt;/canvas&gt;
+</programlisting></example>
+
+<example role="live-example"><title>Local referencing</title><programlisting>
+&lt;canvas&gt;
+  &lt;view resource="<emphasis role="em">http:</emphasis>../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</programlisting></example>
+
+<para>The best way to include a resources that are part of your application is usually with the global identifier (using the <sgmltag class="element" role="resource">resource</sgmltag> tag). That way all resources can be included in one place, and if you need to change a resource's location or the resource itself, you only need to change it once. (Reasons to use other ways of including resources are described in later chapters.)</para>
+</section></section>
+
+<section id="art_assets.types"><title>File types</title>
+
+<example role="live-example">
+   <title>Stretching resources</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/art_assets-$7.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Stretching resources</title><programlisting role="lzx-embednew"><filename>art_assets-$7.lzx</filename><parameter/><code>
+&lt;canvas width="500" height="200"&gt;
+  &lt;resource name="sourFace" src="../resources/sourface.png"/&gt;
+  &lt;resource name="smileyFace" src="../resources/smiley.gif"/&gt;
+  
+  &lt;view resource="smileyFace" x="10" y="10"/&gt;
+  &lt;view resource="sourFace" x="50" y="10"/&gt;
+  
+  &lt;view x="10" y="50" width="363" height="242" 
+  stretches="both" resource="../resources/sunset.jpg"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="500" height="200"&gt;
+  &lt;resource name="sourFace" src="<emphasis role="em">../resources/sourface.png</emphasis>"/&gt;
+  &lt;resource name="smileyFace" src="../resources/smiley.gif"/&gt;
+  
+  &lt;view resource="smileyFace" x="10" y="10"/&gt;
+  &lt;view resource="sourFace" x="50" y="10"/&gt;
+  
+  &lt;view x="10" y="50" width="363" height="242" 
+  <emphasis role="em">stretches="both"</emphasis> resource="../resources/sunset.jpg"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/art_assets-$7.lzx></example?>
+
+<para> OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <indexterm><primary>stretches</primary></indexterm><sgmltag class="attribute">stretches</sgmltag> attribute of the view that contains the resource to <literal>both</literal>, <literal>width</literal> or <literal>height</literal>.</para>
+
+</section><section id="art_assets.multiframe"><title>Multi-frame Resources</title>
+
+<para>Resources can be multi frame, meaning that a single resource is actually made up of a number of different resources, each of which can only be shown one at a time.</para>
+
+<para>The format for doing this is:</para>
+
+<example role="live-example">
+   <title>Multiframe resources</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/art_assets-$8.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Multiframe Resources</title><programlisting role="lzx-embednew"><filename>art_assets-$8.lzx</filename><parameter/><code>
+&lt;canvas width="500" height="100"&gt;
+  &lt;resource name="face"&gt;
+    &lt;frame src="../resources/sourface.png"/&gt;
+    &lt;frame src="../resources/smiley.gif"/&gt;
+  &lt;/resource&gt;
+  
+  &lt;view x="150" y="50" resource="face"
+         onclick="this.setResourceNumber(2);"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="500" height="100"&gt;
+  &lt;resource name="face"&gt;
+    &lt;frame src="../resources/sourface.png"/&gt;
+    &lt;frame src="../resources/smiley.gif"/&gt;
+  &lt;/resource&gt;
+  
+  &lt;view x="150" y="50" resource="face"
+         onclick="this.setResourceNumber(2);"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/art_assets-$8.lzx></example?>
+
+<para>The resources nested within the resource tag are numbered starting with 1.</para>
+<para>As you can see, OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <sgmltag class="attribute" role="LzView.stretches">stretches</sgmltag> attribute of the view that contains the resource to either <literal>both</literal>, <literal>width</literal> or <literal>height</literal>.</para>
+
+</section><section id="art_assets.swfs"><title condition="swf">Working with SWFs</title>
+
+<para>In applications compiled to SWF, you can treat SWF-formatted assets as resources, whether they are animated or not:</para>
+
+<example role="live-example">
+   <title>Working with swf files</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/art_assets-$9.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<para>Any animation will loop <emphasis>ad infinitum</emphasis>. You will probably want to control the animation of a SWF file from the script in your application. To prevent it from playing, we can tell it to stop when the view is initialized:</para>
+
+<programlisting>&lt;view x="150" y="20" resource="anim_swf.swf" <emphasis role="em">oninit="this.stop();"</emphasis>/&gt;</programlisting>
+
+<example role="live-example">
+   <title>Stopping swf animations</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/art_assets-$10.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<para>Clicking on the image will cause the animation to stop. The <property role="LzView.prototype.onclick">onclick</property> event handler will be covered in the "Scripting" tutorial.</para>
+
+<para>Instead of just using <methodname role="LzView.prototype.stop">stop()</methodname>, we could have passed the <methodname role="LzView.prototype.stop">stop()</methodname> method an argument instructing it at which frame to stop.
+ In addition, we could have used the <methodname role="LzView.prototype.play">play()</methodname> method (also with optional frame argument) to play from a given frame.</para>
+
+<para>We can't really progress beyond this point without covering scripting, but here is a preview of some of 
+the other
+ attributes and methods of <sgmltag class="element" role="LzView">view</sgmltag>s that pertain to resources:</para>
+
+<variablelist>
+<?ignore no longer supported?
+  <varlistentry><term><sgmltag class="attribute" role="LzView.__ivars__.playing">playing</sgmltag></term>
+    <listitem><para>An attribute that is true if the SWF is currently playing; false if it is stopped.</para></listitem>
+  </varlistentry>
+?>
+  <varlistentry><term><sgmltag class="attribute" role="LzView.__ivars__.frame">frame</sgmltag></term>
+    <listitem><para>The number of the current frame.</para></listitem>
+  </varlistentry>
+  <varlistentry><term><sgmltag class="attribute" role="LzView.__ivars__.totalframes">totalframes</sgmltag></term>
+    <listitem><para>The total number of frames in the SWF.</para></listitem>
+  </varlistentry>
+  <varlistentry><term><methodname role="LzView.prototype.seek">seek</methodname></term>
+    <listitem><para>Jumps forward or backward <emphasis>n</emphasis> seconds through the SWF.</para></listitem>
+  </varlistentry>
+</variablelist>
+<para>These and other APIs are discussed in greater detail in <xref linkend="media-resources"/>.</para>
+</section></chapter>

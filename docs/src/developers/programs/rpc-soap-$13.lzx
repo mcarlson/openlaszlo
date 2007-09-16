@@ -1,0 +1,33 @@
+
+<canvas debug="true" height="580" width="530">
+
+    <debug x="10" y="10" width="510" height="560" />
+
+    <dataset name="googleDset" />
+
+    <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
+        <handler name="onload">
+            Debug.write('google soap service loaded');
+            Debug.write('----------------');
+            Debug.write('google proto:');
+            Debug.inspect(google.proto)
+            Debug.write('----------------');
+            Debug.write('ResultElement proto:');
+            Debug.inspect(google.proto.ResultElement)
+            Debug.write('ResultElement members are:');
+            Debug.inspect(google.proto.ResultElement.members)
+            Debug.write('----------------');
+            Debug.write('ResultElementArray proto:');
+            Debug.inspect(google.proto.ResultElementArray)
+        </handler>
+
+        <handler name="onerror" args="error">
+            Debug.write('error:', error);
+        </handler>
+    </soap>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

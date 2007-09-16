@@ -1,0 +1,23 @@
+
+<canvas debug="true">
+  <class name="testState" extends="state">
+    <attribute name="countApplies"  value="0"
+               setter="this.countApplies = countApplies"/>
+    <method name="apply">
+      this.setAttribute('countApplies', ++this.countApplies);
+      super.apply();
+    </method>
+  </class>
+  <button >Try it
+    <handler name="onclick">
+      ts.apply();
+      Debug.write("applies:" + ts.countApplies);
+      ts.remove();
+    </handler>
+    <testState name="ts"/>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

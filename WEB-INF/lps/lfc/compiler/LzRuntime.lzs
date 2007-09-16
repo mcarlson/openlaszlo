@@ -1,0 +1,435 @@
+/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
+
+/**
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access private
+  * @topic LZX
+  * @subtopic Runtime
+  */
+
+/**
+  * Trampoline for 'conventional' constructors
+  * @access private
+  */
+Function.prototype.make = function () {
+  #pragma "passThrough=true"
+  if (arguments.length > 0) {
+    // We have to work too hard to break a conventional constructor
+    // into a constructor and initializer when there are args, because
+    // Javascript does not support apply of new.
+    function xtor () {};
+    xtor.prototype = this.prototype;
+    var o = new xtor;
+    this.apply(o, arguments);
+    return o;
+  } else {
+    return new this;
+  }
+}
+
+// Object, Array, and Function constructors can be called as functions
+
+/**
+  * @access private
+  */
+Object.make = Object;
+
+/**
+  * @access private
+  */
+Array.make = Array;
+
+/**
+  * @access private
+  */
+Function.make = Function;
+
+// The String, Boolean, Number, and Date constructors when called as
+// functions, convert rather than constructing, so we have to handle
+// them specifically.  We wouldn't have to if you could say `new
+// this.apply(this, arguments)` but Javascript doesn't permit that...
+
+/**
+  * @access private
+  */
+String.make = function (value) {
+  switch (arguments.length) {
+    case 0:
+      value = "";
+  }
+  #pragma "passThrough=true"
+  return new String(value);
+}
+/**
+  * @access private
+  */
+Boolean.make = function (value) {
+  #pragma "passThrough=true"
+  return new Boolean(value);
+}
+/**
+  * @access private
+  */
+Number.make = function (value) {
+  switch (arguments.length) {
+    case 0:
+      value = +0;
+  }
+  #pragma "passThrough=true"
+  return new Number(value);
+}
+/**
+  * @access private
+  */
+Date.make = function (year, month, date, hours, minutes, seconds, ms) {
+  switch (arguments.length) {
+    case 2:
+      date = 1;
+    case 3:
+      hours = 0;
+    case 4:
+      minutes = 0;
+    case 5:
+      seconds = 0;
+    case 6:
+      ms = 0;
+  }
+  #pragma "passThrough=true"
+  return new Date(year, month, date, hours, minutes, seconds, ms);
+}
+
+
+/**
+  * DHTML/SWF compatibility
+  * 
+  * @todo 2006-04-07 ptw Remove when _root is eradicated from .lzs
+  */
+window._root = window;
+
+/**
+ * Modules
+ * TODO [2006-03-12 ptw] if the LFC is shared this needs to be multiplexed
+ */
+var $modules = {};
+
+/**
+ * Define runtime module
+ */
+$modules.runtime = this;
+
+/**
+ * Define LZ module
+ * TODO: [2006-03-21 ptw] Make this an object that inherits from
+ * runtime so that we do not pollute the runtime module
+ */
+$modules.lz = $modules.runtime;
+
+/**
+ * Define USER module
+ * TODO: [2006-03-21 ptw] Make this an object that inherits from
+ * LZ so that we do not pollute the LZ module
+ */
+$modules.user = $modules.lz;
+
+/**
+ * Define global
+ * TODO [2006-03-12 ptw] if the LFC is shared this needs to be multiplexed
+ */
+var global = $modules.user;
+
+if ($debug) {
+  /**
+    * Expose this to the DHTML debugger
+    * The application and debugger share their parent.
+    */
+  window.parent.$modules = $modules;
+}
+
+if ($as2) {
+var encodeURIComponent = escape;
+}
+
+/**
+ * Compiler support for debugger warnings.  These presently pollute
+ * the global environment, because you need a toe-hold somewhere.
+ */
+if ($debug) {
+
+  /** Set by the server to tell Debug.__write to log back to the server 
+    * @access private 
+    */
+  var _dbg_log_all_writes;
+
+  // Automatically enable logging if there is a javascript console log
+  // function
+  if ($js1) {
+    _dbg_log_all_writes = ('console' in global) && (typeof console.log == 'function');
+  }
+
+  // Silence global warning
+  var Debug;
+
+  /**
+    * Automatically created when an application is
+    * compiled in debug mode (requested by either using the
+    * <xref linkend="LzCanvas"/> <code>debug='true'</code> attribute or by loading the
+    * application using the <code>?debug=true</code> option).
+    *
+    * @shortdesc The Laszlo debugger
+    * @keywords private_constructor
+    * @access public
+    * @topic LZX
+    * @subtopic Debugging
+    * 
+    * @devnote This is defined here rather than in debug/LzDebug so that a few
+    * bootstrap methods can be hung off it to handle logging of errors
+    * and warnings as early as possible.
+    */
+  var Debug = new Object;
+
+  /** Backtrace stack
+    * @access private
+    */
+  Debug.backtraceStack = new Array();
+  /** Max depth allowed
+    * @access private
+    */
+  Debug.backtraceStack.maxDepth = 100;
+
+  /**
+    * Doc'd on real definition
+    * Bootstrap version
+    * @access private
+    */
+  Debug.addText = function (msg) {
+#pragma "warnUndefinedReferences=false"
+    if ($dhtml) {
+      try {
+        // The application and debugger are sibling iframes in the
+        // embedding.
+        var dw = window.parent.frames['LaszloDebugger'];
+        var dwd = dw.document;
+        var span = dwd.createElement('span');
+        // IE does not display \n in white-space: pre, so we translate...
+        span.innerHTML = '<span style="white-space: pre">' + msg.split('\n').join('<br />') + '</span>';
+        dwd.body.appendChild(span);
+        // Scroll to end
+        span.scrollIntoView(false);
+      } catch (e) {
+        try {
+          // Rhino?
+          if (print.length > 0) {
+            print(msg);
+            return;
+          }
+        } catch (e) {};
+      }
+    }
+  };
+
+  /**
+    * Doc'd on real definition
+    * Bootstrap version
+    * @access private
+    */
+// Implementation of Debug.log  does not depend on any of
+// the LFC working and hence can be used from startup on.
+  Debug.log = function (msg) {
+#pragma "warnUndefinedReferences=false"
+    if ($as2) {
+
+      // SWF case
+      if (_dbg_log_all_writes) {
+        // send URL to LzServlet: lzt=eval lz_log=true lz_msg=$MSG
+        var url = _root._url; // LzBrowser.getLoadURL();
+        var q = url.indexOf("?");
+        if (q >= 0) {
+          url = url.substring(0, q);
+        }
+        url += "?lz_log=true&lzt=eval&lz_load=false&lz_script="+encodeURIComponent(String(msg));
+        // Flash-specific call -- 5 is magic?!
+        _root.loadVariables(url, 5);
+      }
+    } else {
+      // Log to firebug console, if it exists
+      if (('console' in global) && (typeof console.log == 'function')) {
+        console.log('' + msg);
+      }
+    }
+  };
+
+  /**
+    * Doc'd on real definition
+    * Bootstrap version
+    * @access private
+    */
+  Debug.__write = function (msg) {
+    if (_dbg_log_all_writes) {
+      this.log(msg);
+    }
+    this.addText(msg);
+  };
+
+  /**
+    * Doc'd on real definition
+    * Bootstrap version
+    * @access private
+    */
+  Debug.debug = function () {
+    this.__write('DEBUG: ' + Array.prototype.slice.call(arguments, 0).join(' '));
+  };
+  /**
+    * Doc'd on real definition
+    * Bootstrap version
+    * @access private
+    */
+  Debug.info = function () {
+    this.__write('INFO: ' + Array.prototype.slice.call(arguments, 0).join(' '));
+  };
+  /**
+    * Doc'd on real definition
+    * Bootstrap version
+    * @access private
+    */
+  Debug.warn = function () {
+    this.__write('WARNING: ' + Array.prototype.slice.call(arguments, 0).join(' '));
+  };
+  /**
+    * Doc'd on real definition
+    * Bootstrap version
+    * @access private
+    */
+  Debug.error = function () {
+    this.__write('ERROR: ' + Array.prototype.slice.call(arguments, 0).join(' '));
+  };
+
+  /** Bootstrap version of base warning function
+    * @access private
+    */
+  function $reportSourceWarning (filename, lineNumber, msg, fatal) {
+#pragma "warnUndefinedReferences=false"
+    var warning = (fatal?'ERROR:  ':'WARNING: ') + filename + ':' + lineNumber + ': ' + msg + '\n';
+    Debug.__write(warning);
+  };
+
+  Debug.debug("Source warnings enabled");
+  $reportSourceWarning('testing', 0, 'Test source warning');
+
+  // Each of the warnings that the compile may call maintains a flag to
+  // avoid recursing (e.g., when the debugger has a bug).
+
+  // TODO: [2003-01-08 ptw] Consider a fall-back mechanism for getting
+  // debugger bugs reported.
+
+  /** @access private */
+  function $reportUndefinedObjectProperty (filename, lineNumber, propertyName) {
+#pragma "warnUndefinedReferences=false"
+    if (! arguments.callee._dbg_recursive_call) {
+      arguments.callee._dbg_recursive_call = true;
+      $reportSourceWarning(filename, lineNumber, "undefined object does not have a property '" + propertyName + "'", true);
+      arguments.callee._dbg_recursive_call = false;
+    }
+  };
+  $reportUndefinedObjectProperty._dbg_recursive_call = false;
+
+  /** @access private */
+  function $reportUndefinedProperty (filename, lineNumber, propertyName) {
+#pragma "warnUndefinedReferences=false"
+    if (! arguments.callee._dbg_recursive_call) {
+      arguments.callee._dbg_recursive_call = true;
+      $reportSourceWarning(filename, lineNumber, "reference to undefined property '" + propertyName + "'", false);
+      arguments.callee._dbg_recursive_call = false;
+    }
+  };
+  $reportUndefinedProperty._dbg_recursive_call = false;
+
+  /** @access private */
+  function $reportUndefinedVariable (filename, lineNumber, variableName) {
+#pragma "warnUndefinedReferences=false"
+    if (! arguments.callee._dbg_recursive_call) {
+      arguments.callee._dbg_recursive_call = true;
+      $reportSourceWarning(filename, lineNumber, "reference to undefined variable '" + variableName + "'", true);
+      arguments.callee._dbg_recursive_call = false;
+    }
+  };
+  $reportUndefinedVariable._dbg_recursive_call = false;
+
+  /** @access private */
+  function $reportNotFunction(filename, lineNumber, name, value) {
+#pragma "warnUndefinedReferences=false"
+    if (! arguments.callee._dbg_recursive_call) {
+      arguments.callee._dbg_recursive_call = true;
+      var msg = "call to non-function";
+      if (typeof name == "string")
+        msg += " '" + name + "'";
+      msg += " (type '" + typeof value + "')";
+      if (typeof value == "undefined") {
+        msg = "call to undefined function";
+        if (typeof name == "string")
+          msg += " '" + name + "'";
+      }
+      $reportSourceWarning(filename, lineNumber, msg, true)
+        arguments.callee._dbg_recursive_call = false;
+    }
+  };
+  $reportNotFunction._dbg_recursive_call = false;
+
+  /** @access private */
+  function $reportUndefinedMethod(filename, lineNumber, name, value) {
+#pragma "warnUndefinedReferences=false"
+    if (! arguments.callee._dbg_recursive_call) {
+      {
+        arguments.callee._dbg_recursive_call = true;
+
+        var msg = "call to non-method";
+        if (typeof name == "string")
+          msg += " '" + name + "'";
+        msg += " (type '" + typeof value + "')";
+        if (typeof value == "undefined") {
+          msg = "call to undefined method";
+          if (typeof name == "string")
+            msg += " '" + name + "'";
+        }
+        $reportSourceWarning(filename, lineNumber, msg, true);
+      }
+      {
+        arguments.callee._dbg_recursive_call = false;
+      }
+    }
+  };
+  $reportUndefinedMethod._dbg_recursive_call = false;
+
+  if ($js1) {
+
+    /**
+      * In the DHTML runtime, the checking is done by subroutines, for
+      * compactness.
+      * @access private
+      */
+    Debug.evalCarefully = function (fileName, lineNumber, closure, context) {
+#pragma "warnUndefinedReferences=false"
+      try {
+        return closure.call(context);
+      } catch(e) {
+        $reportSourceWarning(fileName, lineNumber, e);
+      }
+    };
+
+    /**
+     * We can't use that everywhere, so we also install a default
+     * error handler
+     */
+    if (typeof window.addEventListener == 'function') {
+      // The DOM 1 interface is more useful than the DOM 2 interface.
+      window.onerror = function (errorString, fileName, lineNo) {
+#pragma "warnUndefinedReferences=false"
+        $reportSourceWarning(fileName, lineNo, errorString, true);
+        // pass through to browser debugger
+        return false;
+      }
+    }
+  }
+}
+

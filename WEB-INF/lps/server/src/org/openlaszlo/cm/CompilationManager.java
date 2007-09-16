@@ -21,10 +21,10 @@ import java.util.*;
 import org.openlaszlo.compiler.*;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.server.Configuration;
-import org.openlaszlo.servlets.KrankListener;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.utils.LZHttpUtils;
 import org.openlaszlo.cache.Cache;
+import org.openlaszlo.compiler.CompilationEnvironment;
 import org.apache.log4j.*;
 
 /** A <code>CompilationManager</code> is responsible for maintaining
@@ -65,9 +65,9 @@ public class CompilationManager extends Cache {
     /** See getProperties. */
     protected Properties mProperties = null;
 
-    public static KrankListener sKrankListener = null;
-
     protected File mLPSJarFile = null;
+
+    private int[] lfcsizes = null;
 
     public static final String RECOMPILE = "lzrecompile";
 
@@ -211,50 +211,11 @@ public class CompilationManager extends Cache {
         return getItem(pathname, props).getFile();
     }
 
-    /**
-       Abort the krank thread if it is running.
-     */
-    public synchronized static void abortKrankProcess () {
-        KrankListener kt = sKrankListener;
-        mLogger.info(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="called abortKrankProcess()"
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-224")
-);
-        // try and halt any previous listener that is sitting around hogging port 4444
-        if (kt != null) {
-            kt.setStateString(KrankListener.ABORTED);
-            try {
-                // [todo: hqm 10-1-2003 for some reason
-                // thread.interrupt() seems to have no effect on the
-                // running krank thread. Thread.stop() stops it
-                // alright, but is deprecated by Sun
-                kt.closeSocket();
-                kt.interrupt();
-            } catch (Exception e) {
-                mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="abortKrankProcess exception while killing thread: " + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-243", new Object[] {e.getMessage()})
-);
-            }
-        }
-
-    }
 
     /**
      * Returns an InputStream containing the compiled form of the file 
      * named by pathname, suitable play on the client.  
      *
-     * If the krank flag is set, run a krank workflow thread including
-     * starting the krank listener on port 4444
-     * 
      * @param pathname a <code>String</code> value.  If
      * <var>pathname</var> is relative, it is resolved relative to the
      * CompilationManager's <var>sourceDirectory</var>.
@@ -265,180 +226,24 @@ public class CompilationManager extends Cache {
     public synchronized InputStream getObjectStream(String pathname, Properties props)
         throws CompilationError, IOException
     {
-        // +++ We really want the actual original source file path , from the HttpRequest
-        // is that what we are getting? check the log for this message:
-        boolean kranking = "true".equals(props.get("krank"));
-        if (kranking) {
-            startKrankWorkflow(pathname, props);
-        }
         return getItem(pathname, props).getStream();
     }
 
     /**
-     * Start a thread which does the krank workflow; listen on TCP port for xml serializtion,
-     * and when that completes, compile the kranked swf file and leave it in the source directory
-     * with a .lzo suffix.
-     * @param pathname path to source file
+     * Returns an InputStream containing the script form of the file 
+     * named by pathname, suitable play on the client.  
+     *
+     * @param pathname a <code>String</code> value.  If
+     * <var>pathname</var> is relative, it is resolved relative to the
+     * CompilationManager's <var>sourceDirectory</var>.
      * @param props params for dependency tracker and compiler
+     * @return the compiled File object.
+     * @exception CompilationError if an error occurs.
      */
-    protected void startKrankWorkflow (String pathname, Properties props) {
-        File srcfile = new File(pathname);
-        // Get just the prefix of the file basename:  /bar/baz/foo.lzx => foo
-        String fname = new File(pathname).getName();
-        String prefix;
-        int idx = fname.indexOf(".");
-        if (idx != -1) {
-            prefix = fname.substring(0, idx);
-        } else {
-            prefix = fname;
-        }
-
-        // Where is the source directory?
-        mLogger.debug("getObjectStream pathname= " + pathname.toString());
-        mLogger.debug("krank prefix= "+prefix);
-
-        // Java requires variables that are referenced from inside
-        // a closure (the KrankListener runner thread below) to be
-        // declared final. Why? 
-
-        File xmlFile = new File(srcfile.getParent(), prefix + "obj__.xml");
-        File krankedSWFfilecopy = new File(srcfile.getParent(), prefix + "__.swf");
-
-        String myfileName = pathname;
-        Properties myprops = (Properties) props.clone();
-        mLogger.debug("myprops = "+myprops.toString());
-        String myprefix = prefix;
-
-        // returns path with no suffix,  like "c:/lps-krank/test/simple"
-        File basepath = new File(srcfile.getParent(), myprefix);
-        File targetSWF = new File(basepath.getAbsolutePath()+".lzo");
-        File targetSWFgz = new File(basepath.getAbsolutePath()+".lzo.gz");
-
-        try {
-            targetSWF.delete();
-        } catch (SecurityException e) {
-            mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Could not delete old .lzo file at" + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-325", new Object[] {targetSWF.getAbsolutePath()})
-);
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Could not delete old .lzo file at" + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-325", new Object[] {targetSWF.getAbsolutePath()})
-);
-        }
-
-        try {
-            krankedSWFfilecopy.delete();
-        } catch (SecurityException e) {
-            mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Could not delete old swf file at" + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-346", new Object[] {krankedSWFfilecopy.getAbsolutePath()})
-);
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Could not delete old swf file at" + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-346", new Object[] {krankedSWFfilecopy.getAbsolutePath()})
-);
-        }
-
-
-        try {
-            targetSWFgz.delete();
-        } catch (SecurityException e) {
-            mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Could not delete old gzipped .lzo file at" + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-368", new Object[] {targetSWFgz.getAbsolutePath()})
-);
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Could not delete gzipped .lzo file at" + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-376", new Object[] {targetSWFgz.getAbsolutePath()})
-);
-        }
-
-        try {
-            xmlFile.delete();
-        } catch (SecurityException e) {
-            mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Could not delete old xml data file at" + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-389", new Object[] {xmlFile.getAbsolutePath()})
-);
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Could not delete old xml data file at" + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-389", new Object[] {xmlFile.getAbsolutePath()})
-);
-        }
-
-        mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Krank xml data file  is " + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-407", new Object[] {xmlFile.getAbsolutePath()})
-);
-
-        // kill any old listener hanging around;
-        abortKrankProcess();
-
-        // Remove gzip encoding property, so we can get our
-        // hands on an unzipped swf to give to the kranker
-        myprops.remove("Content-Encoding"); 
-        File krankedSWF;
-        try {
-            krankedSWF  = getObjectFile(myfileName, myprops);
-        } catch (IOException e) {
-throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="IOException could not locate kranked swf file for " + p[0] + " " + p[1] + ": " + p[2]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CompilationManager.class.getName(),"051018-426", new Object[] {myfileName, myprops, e.getMessage()})
-);
-        }
-
-        sKrankListener = new KrankListener(
-            prefix,
-            xmlFile,
-            krankedSWF,
-            krankedSWFfilecopy,
-            basepath,
-            targetSWF,
-            targetSWFgz,
-            myprops);
-
-        sKrankListener.start();
+    public synchronized InputStream getScriptStream(String pathname, Properties props)
+        throws CompilationError, IOException
+    {
+        return getItem(pathname, props).getStream();
     }
 
     /**
@@ -474,6 +279,23 @@ throw new CompilationError(
     }
 
     /**
+     * @return an array with the size and gzipped size of the InputStream in 
+     * bytes
+     */
+    private int[] getLFCSizes(InputStream in) 
+        throws IOException {
+        java.io.ByteArrayOutputStream outbuf = new java.io.ByteArrayOutputStream();
+        java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(outbuf);
+        int size = FileUtils.sendToStream(in, out);
+        in.close();
+        out.finish();
+        int gzsize = outbuf.size();
+        out.close();
+        int[] result =  {size, gzsize};
+        return result;
+    }
+
+    /**
      * @return a String containing XML info about this app
      */
     public synchronized String getInfoXML(String pathname, Properties props) 
@@ -483,15 +305,28 @@ throw new CompilationError(
              return "";
         }
 
-        Properties altProps = (Properties)props.clone();
         Item item = getItem(pathname, props);
         String enc = props.getProperty(LZHttpUtils.CONTENT_ENCODING);
-        long size = item.getSize();
-        if (enc == null) {
-            enc = "";
-        }
 
         boolean isDebug = "true".equals(props.getProperty("debug"));
+        boolean isProfile = "true".equals(props.getProperty("profile"));
+        boolean isBacktrace = "true".equals(props.getProperty("backtrace"));
+        String runtime = props.getProperty(CompilationEnvironment.RUNTIME_PROPERTY);
+
+        String lfc = LPS.getLFCname( runtime, isDebug, isProfile, isBacktrace);
+        String path = LPS.getLFCDirectory();
+
+        File lfcfile = new File(path, lfc);
+
+        // TODO: update to cache correct size for debug, profiled LFC
+        if (lfcsizes == null) lfcsizes = getLFCSizes(new FileInputStream(lfcfile));
+        int lfcsize = lfcsizes[0];
+        int gzlfcsize = lfcsizes[1];
+
+        int[] sizes = getLFCSizes(getObjectStream(pathname, props));
+        int size = sizes[0];
+        int gzsize = sizes[1];
+
         boolean debugExists = isDebug;
         boolean nondebugExists = !isDebug;
         boolean debugUptodate = false;
@@ -539,35 +374,17 @@ throw new CompilationError(
             }
         }
 
-        long gzsize = 0;
-        long ungzsize = 0;
-
-        // Only swf5 has alternate compressed file version,
-        // swf6 and greater has internal file compression.
-        String version = props.getProperty(CompilationEnvironment.SWFVERSION_PROPERTY);
-        if ("swf5".equals(version)) {
-            if (enc.equals("gzip")) {
-                altProps.setProperty(LZHttpUtils.CONTENT_ENCODING, "");
-                ungzsize = getItem(pathname, altProps).getSize();
-                gzsize = size;
-            } else {
-                altProps.setProperty(LZHttpUtils.CONTENT_ENCODING, "gzip");
-                gzsize = getItem(pathname, altProps).getSize();
-                ungzsize = size;
-            }
-        } else {
-            ungzsize = size;
-        }
-
-        return "<info size=\"" + ungzsize + 
-               "\" gz-size=\"" + gzsize + 
+        return "<info size=\"" + size + 
                "\" debug=\"" + isDebug + 
                "\" encoding=\"" + enc + 
                "\" debug-exists=\"" + debugExists + 
                "\" debug-up-to-date=\"" + debugUptodate + 
                "\" nondebug-exists=\"" + nondebugExists + 
                "\" nondebug-up-to-date=\"" + nondebugUptodate +
-               "\" runtime=\"" + version +  
+               "\" runtime=\"" + runtime +  
+               "\" gzsize=\"" + gzsize + 
+               "\" lfcsize=\"" + lfcsize + 
+               "\" gzlfcsize=\"" + gzlfcsize + 
                "\" />";
     }
 
@@ -1023,7 +840,6 @@ throw new RuntimeException(
     }
 }
 
-
 /** A FileResolver that tracks dependencies.
  *
  * @author Oliver Steele
@@ -1056,6 +872,15 @@ class TrackingFileResolver implements FileResolver {
         mDependencies.addFile(file);
         return file;
     }
+
+    public File resolve(CompilationEnvironment env, String pathname, String base, boolean asLibrary)
+        throws FileNotFoundException
+    {
+        File file = mBaseResolver.resolve(env, pathname, base, asLibrary);
+        mDependencies.addFile(file);
+        return file;
+    }
+
 
     /** For debugging. */
     /*void writeResults() {

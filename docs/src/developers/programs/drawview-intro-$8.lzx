@@ -1,0 +1,22 @@
+  
+<canvas height="200" proxied="false">
+      <drawview height="150" width="300"  bgcolor="blue">
+        <handler name="oninit">
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         var g = this.createLinearGradient(200,100, 150, 300)
+         this.globalAlpha = 0;
+         g.addColorStop(0, 0xffffff);
+         this.globalAlpha = 1;
+         g.addColorStop(.3, 0xff00ff);
+         this.fillStyle = g;
+         this.fill();
+        </handler>
+      </drawview>
+    </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

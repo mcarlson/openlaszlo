@@ -1,0 +1,74 @@
+<canvas debug="true">
+
+<font src="helmetr.ttf"               name="Helvetica" />
+
+<!-- http://www.osflash.org/flashcoders/undocumented/flash8 -->
+<!-- http://livedocs.adobe.com/flash/8/main/wwhelp/wwhimpl/common/html/wwhelp.htm?context=LiveDocs_Parts&file=00002788.html -->
+
+    <class name="tweakedtext" extends="text">
+      <attribute name="antiAliasType" value="'normal'"/>
+      <attribute name="gridFitType" value="'none'"/>
+      <attribute name="thickness" value="0"/>
+      <attribute name="sharpness" value="0"/>
+      <method name="setAntiAliasType" args="aliasType, gridFit, thickness, sharpness">
+        #pragma "passThrough=true"
+        var mc = this.sprite.__LZtextclip;
+        mc.antiAliasType = aliasType; // "normal" or "advanced"
+        mc.gridFitType = gridFit; // "none", "pixel", or "subpixel"
+        mc.thickness = thickness; // -200 to 200
+        mc.sharpness = sharpness; // -400 to 400
+      </method>
+      
+      <handler name="oninit">
+        this.setAntiAliasType(this.antiAliasType, this.gridFitType, this.thickness, this.sharpness);
+      </handler>
+      <handler name="onthickness">
+        this.setAntiAliasType(this.antiAliasType, this.gridFitType, this.thickness, this.sharpness);
+      </handler>
+      <handler name="onsharpness">
+        this.setAntiAliasType(this.antiAliasType, this.gridFitType, this.thickness, this.sharpness);
+      </handler>
+    </class>
+
+    <view layout="axis:x">
+      <view layout="axis:y">
+        <tweakedtext antiAliasType="'normal'" 
+              text="Twas brillig and the slithy toves" font="Helvetica" fontsize="9"/>
+        <tweakedtext antiAliasType="'normal'" 
+              text="Did gyre and gimble in the wabe" font="Helvetica" fontsize="13"/>
+        <tweakedtext antiAliasType="'normal'" 
+              text="All mimsy were the borogroves" font="Helvetica" fontsize="18"/>
+        <tweakedtext antiAliasType="'normal'" 
+              text="And the momeraths outgrabe" font="Helvetica" fontsize="24"/>
+      </view>    
+      <view layout="axis:y">
+        <attribute name="antiAliasType" value="'advanced'"/>
+        <attribute name="gridFitType" value="'subpixel'"/>
+        <attribute name="thickness" value="${thicknessslider.value}"/>
+        <attribute name="sharpness" value="${sharpnessslider.value}"/>
+        <tweakedtext 
+              antiAliasType="${parent.antiAliasType}" gridFitType="${parent.gridFitType}" 
+              thickness="${parent.thickness}" sharpness="${parent.sharpness}"
+              text="Twas brillig and the slithy toves" 
+              fontsize="9" font="Helvetica"/>
+        <tweakedtext antiAliasType="${parent.antiAliasType}" gridFitType="${parent.gridFitType}" 
+              thickness="${parent.thickness}" sharpness="${parent.sharpness}"
+              text="Did gyre and gimble in the wabe" 
+              fontsize="13" font="Helvetica"/>
+        <tweakedtext antiAliasType="${parent.antiAliasType}" gridFitType="${parent.gridFitType}" 
+              thickness="${parent.thickness}" sharpness="${parent.sharpness}"
+              text="All mimsy were the borogroves" 
+              fontsize="18" font="Helvetica"/>
+        <tweakedtext antiAliasType="${parent.antiAliasType}" gridFitType="${parent.gridFitType}" 
+              thickness="${parent.thickness}" sharpness="${parent.sharpness}"
+              text="And the momeraths outgrabe" 
+              fontsize="24" font="Helvetica"/>
+        <slider name="thicknessslider" minvalue="-200" maxvalue="200" value="0"/>
+        <slider name="sharpnessslider" minvalue="-400" maxvalue="400" value="0"/>
+      </view>
+    </view>    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

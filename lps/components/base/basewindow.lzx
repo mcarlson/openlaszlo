@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -45,15 +45,6 @@
            value="true"
            type="boolean" />
 
-       <!--- Controls the datapath of this window. If true, the datapath
-             associated with the window will cause the window to be invisible if
-             it matches no data or visible if it does match data, overriding
-             whatever had been set as the visible attribute of the window.
-             Default: false.
-             @keywords final -->
-       <attribute name="datacontrolsvisibility"
-                  value="false" type="expression" />
-
         <state name="_windowDrag">
             <attribute name="starty" value="$once{this.y}"/>
             <attribute name="startx" value="$once{this.x}"/>
@@ -78,12 +69,13 @@
 
         <!--- @keywords private -->
         <method name="construct" args="parent,args">
-            var wlist = parent.options['windowlist'];
+            super.construct.apply(this, arguments);
+
+            var wlist = this.parent.options['windowlist'];
             if (wlist == null || typeof wlist == "undefined") {
                 wlist = [];
-                parent.setOption('windowlist', wlist);
+                this.parent.setOption('windowlist', wlist);
             }
-            super.construct(parent,args);
         </method>
         
         <!--- @keywords private -->
@@ -91,7 +83,7 @@
             // Windows that are datamappped control their own visibility
             if (this.datapath != null) {
                 this.datapath.setAttribute('datacontrolsvisibility',
-                    this.datacontrolsvisibility);
+                    this.visibility == "collapse");
             }
 
             super.init();
@@ -126,7 +118,9 @@
                 }
             }
             super.sendInFrontOf(v);
-            wlist[wlist.length-1].setAttribute("haswindowfocus",true);
+            if (wlist.length > 0) {
+                wlist[wlist.length-1].setAttribute("haswindowfocus",true);
+            }
             ]]>
         </method>
 
@@ -142,33 +136,39 @@
                 }
             }
             super.sendBehind(v);
-            wlist[wlist.length-1].setAttribute("haswindowfocus",true);
+            if (wlist.length > 0) {
+                wlist[wlist.length-1].setAttribute("haswindowfocus",true);
+            }
             ]]>
         </method>
 
         <method name="bringToFront"> <![CDATA[
             var wlist = parent.options['windowlist'];
-            if (this.visible) {
+            if (this.visible && wlist.length > 0) {
                 if (wlist[wlist.length-1] != this) {
                     this._removeFromWindowlist();
                     wlist.push(this);
                 }
             }
             super.bringToFront();
-            wlist[wlist.length-1].setAttribute("haswindowfocus",true);
+            if (wlist.length > 0) {
+                wlist[wlist.length-1].setAttribute("haswindowfocus",true);
+            }
             ]]>
         </method>
 
         <method name="sendToBack"> <![CDATA[
             var wlist = parent.options['windowlist'];
             if (this.visible) {
-                if (wlist[0] != this) {
+                if ( (wlist.length > 0) && wlist[0] != this) {
                     this._removeFromWindowlist();
                     wlist.splice(0,0,this);
                 }
             }
             super.sendToBack();
-            wlist[wlist.length-1].setAttribute("haswindowfocus",true);
+            if (wlist.length > 0) {
+                wlist[wlist.length-1].setAttribute("haswindowfocus",true);
+            }
             ]]>
         </method>
         <!--- Called onmousedown, sets haswindowfocus to true and starts the
@@ -299,7 +299,7 @@
                         break;
                     }
                 }
-                if (!siblingfocus) {    // need to select a frontmost window
+                if (!siblingfocus && wlist.length > 0) {    // need to select a frontmost window
                     var wlist = parent.options['windowlist'];
                     var v = wlist[wlist.length-1];
                     if (v != null)
@@ -349,6 +349,19 @@
            super.setWidth(nw);
         </method>
 
+        <doc>
+          <tag name="shortdesc"><text>base window class</text></tag>
+          <text>
+            <p>
+            This abstract class provides useful methods and states for a view that is moveable
+            and resizeable.
+            </p>
+            
+            <seealso>
+            <classname>window windowpanel modaldialog alert</classname>
+            </seealso>
+          </text>
+        </doc>
     </class>
 
 

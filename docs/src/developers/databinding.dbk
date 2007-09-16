@@ -1,0 +1,2751 @@
+<chapter id="databinding">
+ 
+<title>Data Access and Binding</title>
+<para>This chapter describes various methods of tying XML data structures into your LZX application.  See 
+<xref linkend="data-structures"/> for discussion of some of the concepts used in this chapter.
+For a gentle introduction to databinding and manipulation in OpenLaszlo applications, you may start
+ with the <ulink url="../guide/data-tutorial.html" type="laszlo-dguide">tutorials</ulink>.
+</para>
+<para/><section><title>Preview of databinding</title>
+<para>By "databinding" we mean the automatic association of a value in an XML data structure with an element in the LZX view hierarchy of the application. This chapter explores various aspects of databinding and manipulation in OpenLaszlo applications. Before going into spefici details, we'll start with a conceptual overview of how data is represented in LZX applications, and the APIs for manipulating it.</para>
+<para/><section><title>Types of data objects</title>
+<para>
+A dataset (<indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>) is two things:</para>
+<itemizedlist spacing="compact"><listitem><para>Firstly, it is the client side store for XML data. It's where a single XML document lives in an OpenLaszlo application. </para></listitem><listitem><para>Secondly, it's the mechanism by which OpenLaszlo applications make HTTP GET or POST requests.</para></listitem></itemizedlist>
+<para>An <indexterm><primary>LzDataElement</primary></indexterm><classname>LzDataElement</classname> is the LZX class that represents a single XML data tag in OpenLaszlo applications. LzDataElements are usually kept in a dataset, although data-bound views can get pointers to them even if they are not in a dataset. Inside of a dataset, LzDataElements are linked in a tree-like structure, but that doesn't mean to say that an LzDataElement <emphasis role="i">must</emphasis> go inside of a dataset. </para>
+<para>
+LzDataElement is a subclass of <indexterm><primary>LzDataNode</primary></indexterm><classname>LzDataNode</classname>, as is <indexterm><primary>LzDataText.</primary></indexterm><classname>LzDataText.</classname>.
+</para>
+<para>Finally, note that a dataset is a subclass of LzDataElement, which means that all of the methods which work on LzDataElements also work on LzDataSets, although the usual method of manipulating datasets is with datapaths and datapointers, as explained below.</para>
+<para/></section><section><title>Two ways to interact with data</title>
+<para>
+As we have said, all data in OpenLaszlo applications is in XML format. 
+There are two related but distinct ways of using and manipulating that data in OpenLaszlo applications; that is, there two API models:</para>
+<itemizedlist spacing="compact"><listitem><para>The DOM model—in which the APIs allow you to directly manipulate elements of a Document Object Model using DOM conventions.</para></listitem><listitem><para>The DataPointer model—in which the APIs allow you to position a logical cursor within the dataset using XPATH syntax</para></listitem></itemizedlist>
+<para>
+These two categories of APIs have similar functionality with large areas of overlap. However, there are some things that can only be done (or can best be done) using one specific approach (and not the other).  This means that in many situations there are two logically distinct ways to achieve the same result. Learning to master data manipulation in LZX is a matter of becoming fluent in both approaches and knowing when to use each.</para>
+<para/><section><title>LzDataNodes and the DOM APIs</title>
+<para>
+The <ulink url="http://www.w3.org/DOM/">Document Object Model</ulink> is, according to the W3C specification, "a platform-  and language-neutral interface that will allow programs and  scripts to dynamically access and update the content, structure  and style of documents." In the LZX context, the "document" is that LzDatanode.
+</para>
+<para><indexterm><primary>LzDataNode</primary></indexterm><classname>LzDataNode</classname> is the base class for the classes that represent LZX's hierarchical data format. An LzDataNode
+comprises <indexterm><primary>LzDataElement</primary></indexterm><classname>LzDataElement</classname>s.
+An LzDataElement represents a node in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or 
+<indexterm><primary>LzDataText</primary></indexterm><classname>LzDataText</classname>, which represents a text node.
+ More 
+advanced data manipulation in OpenLaszlo applications employ the various methods on the LzDataElement class, such as 
+<indexterm><primary><literal>appendChild()</literal></primary></indexterm><methodname>appendChild()</methodname>, <indexterm><primary><literal>getNextSibling()</literal></primary></indexterm><methodname>getNextSibling()</methodname>, and so forth. These classes can only be created in script, not by tags. For tag-based data manipulation, use <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: dataset-->
+ and the related concepts of datapointers and datapaths.
+</para>
+
+<para/></section><section><title>Datapointers and Datapaths</title>
+<para>
+In addition to LzDataNodes, which can only be manipulated in script, LZX includes the notions of
+ <indexterm><primary>datapath</primary></indexterm><sgmltag class="element">&lt;datapath&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: datapath-->
+ and <indexterm><primary>datapointer</primary></indexterm><sgmltag class="element">&lt;datapointer&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: datapointer-->
+, which provide a convenient, tag-based
+mechanism for typical data manipulation. By using datapointers to move through the data, you control the behavior of views that are bound to that data.
+</para>
+<para/></section></section></section><section id="databinding.datasets"><title>OpenLaszlo datasets and data nodes</title>
+<para>
+Data in OpenLaszlo applications can be declared with a tag, or built up using procedural (script) APIs. The script APIs operate on <indexterm><primary>LzDataNode</primary></indexterm><classname>LzDataNode</classname>s.
+</para>
+<para>All declaratively-declared data in OpenLaszlo applications is contained within one or more datasets. The content of a dataset is an XML fragment with a single root node, but without the XML declaration. A given dataset usually represents a single conceptual set that may or may not be modified or reloaded during the execution of the application.</para> 
+ 
+
+<para>You declare a dataset in your application using the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: dataset-->
+ tag. The name of the dataset is used in the <indexterm><primary>datapath</primary></indexterm><sgmltag class="attribute">datapath</sgmltag>
+ attribute of a view, as will be explained below. </para>
+<para>Datasets can be embedded directly in applications, constructed at
+runtime, or procured from remote servers.  A dataset may be declared on the canvas, in which case it is visible to the entire application, or it may be declared within a class, in which case it is visible to the members of that class.</para>
+<para>
+
+To embed a dataset directly
+in an OpenLaszlo application, you use the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> tag as
+below. In this example, you can get access to the given dataset by referring to
+<literal>canvas.shelf</literal>.</para>
+
+<example role="live-example"><title>Embedding data in an OpenLaszlo application</title><programlisting>
+&lt;canvas&gt;
+  &lt;dataset name="shelf"&gt;
+    &lt;bookshelf&gt;
+      &lt;book binding="paperback"&gt;
+        &lt;title&gt;Acts of the Apostles&lt;/title&gt;
+        &lt;author&gt;John F.X. Sundman &lt;/author&gt;
+        &lt;publisher&gt;Rosalita Associates &lt;/publisher&gt;
+        &lt;price&gt;15.00&lt;/price&gt;
+        &lt;year&gt;1999&lt;/year&gt;
+        &lt;category&gt;thriller&lt;/category&gt;
+        &lt;rating&gt;4.5 &lt;/rating&gt;
+      &lt;/book&gt;
+      &lt;book binding="casebound"&gt;
+        &lt;title&gt;Shock&lt;/title&gt;
+        &lt;author&gt;Robin Cook &lt;/author&gt;
+        &lt;publisher&gt;Putnam &lt;/publisher&gt;
+        &lt;price&gt;24.95&lt;/price&gt;
+        &lt;year&gt;2001&lt;/year&gt;
+        &lt;category&gt;thriller&lt;/category&gt;
+        &lt;rating&gt;3.5 &lt;/rating&gt;
+      &lt;/book&gt;
+      &lt;book binding="paperback"&gt;
+        &lt;title&gt;Cheap Complex Devices&lt;/title&gt;
+        &lt;editor&gt;John Compton Sundman &lt;/editor&gt;
+        &lt;publisher&gt;Rosalita Associates &lt;/publisher&gt;
+        &lt;price&gt;11.00&lt;/price&gt;
+        &lt;year&gt;2002&lt;/year&gt;
+        &lt;category&gt;metafiction&lt;/category&gt;
+        &lt;rating&gt;5.0 &lt;/rating&gt;
+      &lt;/book&gt;
+    &lt;/bookshelf&gt;  
+  &lt;/dataset&gt;
+&lt;/canvas&gt;
+</programlisting></example>
+
+<para>This style of dataset inclusion is called <indexterm significance="preferred"><primary>local data</primary></indexterm><glossterm>local data</glossterm> in
+that the data is included locally in the application, rather than
+being retrieved from a remote data source or web service.  Data can be
+included from a remote source by specifying the
+<indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute as follows:</para>
+
+<example role="live-example">
+   <title>Dataset from a remote source</title>
+   <programlisting language="lzx">
+      <textobject><textdata fileref="programs/databinding-$2.lzx"/></textobject>
+   </programlisting>
+</example>
+
+<para>In this example the OpenLaszlo application, when it starts up, makes a
+HTTP request for the url,
+<literal>http://www.w3schools.com/xml/simple.xml</literal> and populates the
+dataset named <varname>menu</varname> with the XML returned.  You can
+click the button to see the serialized contents of the dataset.</para>
+
+
+<para/><section><title>The <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute</title>
+
+<para>The <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute should be a well-formed
+URL that points to the back-end data source that will produce the
+data.  This may be an absolute or relative URL.  (All requests made
+for relative URLs are relative to the application's URL.)  The URL may
+point to a static XML file or a server-side processor (such as JSP, ASP,
+PHP, and so on) that produces XML data.</para>
+<para>
+The <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute of the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> element specifies whether the data is compiled into the 
+application or fetched at runtime:
+</para>
+<itemizedlist spacing="compact"><listitem><para>If the src attribute is a URL, the value of
+ the dataset is the XML data that a request to the URL named by the
+ src attribute returns when the application is run.</para></listitem><listitem><para>If the src
+ attribute is a pathname, the value of the dataset is the content of
+ the XML file that the pathname refers to, and is compiled into the
+ application.</para></listitem><listitem><para>  If the src attribute is not present, the value of the
+ dataset is the content of the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> element.</para></listitem></itemizedlist>
+<para>
+
+The data within a dataset is accessed using a <indexterm><primary>datapointer</primary></indexterm><sgmltag class="element">&lt;datapointer&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: datapointer-->
+ or a instance of one of its subclasses. 
+</para>
+<para>A dataset is an instantiation of the <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname> class. An <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>
+is a Javascript object that provides a <glossterm>Document Object
+Model</glossterm> (DOM) API for accessing, manipulating, and creating
+XML elements and attributes in memory.  These APIs are discussed in
+<xref linkend="databinding"/>.  The dataset also has APIs that
+pertain to data transport.</para>
+  <anchor id="databinding.datapaths"/>
+
+<para/><section><title>Interpreting a datapath</title>
+<para>The <indexterm><primary>datapath</primary></indexterm><sgmltag class="attribute">datapath</sgmltag> 
+of the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: text-->
+ tag binds it to the data.</para>
+
+<para>Datapaths use XPath attributes to navigate through the XML data. So the name of the dataset to use goes before 
+the colon <literal>myData:</literal>, followed by the nodes, separated by forward slashes (/). The square brackets provide
+ a (one-based) space to enter which sibling node we want. [1] is implied, so the above example could be rewritten
+without any "[1]"s.</para>
+<?ignore <p>In plain English, the above example says: "get me the text from the first firstName node, of the first person 
+node of the first (and of course, only) myXML node." The text() method call returns that node's text.</p>
+
+<p>To get Marge's name, we could rewrite the <tagname>text</tagname> tag as follows:</p>
+
+<pre class="code">
+&lt;text datapath="myData:/myXML/person[2]/firstName/text()" /&gt; 
+</pre>
+
+<p>Note that the "[1]"s are omitted, as they are implied. To get the "show" attribute of Montgomery, we could write:</p>
+
+<pre class="code">
+&lt;text datapath="myData:/myXML/person[3]/@show" /&gt; 
+</pre>
+?>
+<para>The <literal>/text()</literal> path segment is unnecessary with the
+<indexterm><primary>datapath</primary></indexterm><sgmltag class="attribute">datapath</sgmltag> attribute.</para>
+
+
+<para>So far we've used the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tag in conjunction with a single datapath. 
+If we wanted to present tabular information, this would mean each text element would need its own
+ datapath, and would be cumbersome and difficult to write. Instead let's make a quick table, by giving 
+a <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: view-->
+ a datapath:</para>
+
+<example role="live-example">
+   <title>Assigning a datapath to a view</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$3.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?ignore role="lzx-embednew"><filename>databinding-$3.lzx</filename><parameter/><code>
+&lt;canvas height="80" width="500"&gt;
+  &lt;dataset name="myData"&gt;
+    &lt;myXML&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Homer&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Marge&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+        &lt;lastName&gt;Burns&lt;/lastName&gt;
+      &lt;/person&gt;
+    &lt;/myXML&gt;
+  &lt;/dataset&gt;
+
+  &lt;view name="rowOfData" datapath="myData:/myXML[1]/person[1]"&gt;
+    &lt;simplelayout axis="x" /&gt;
+    &lt;text datapath="firstName/text()" /&gt; 
+    &lt;text datapath="lastName/text()" /&gt; 
+    &lt;text datapath="@show" /&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="80" width="500"&gt;
+  &lt;dataset name="myData"&gt;
+    &lt;myXML&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Homer&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Marge&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+        &lt;lastName&gt;Burns&lt;/lastName&gt;
+      &lt;/person&gt;
+    &lt;/myXML&gt;
+  &lt;/dataset&gt;
+
+  &lt;view name="rowOfData" <emphasis role="em">datapath="myData:/myXML[1]/person[1]"</emphasis>&gt;
+    &lt;simplelayout axis="x" /&gt;
+    &lt;text <emphasis role="em">datapath="firstName/text()"</emphasis> /&gt; 
+    &lt;text <emphasis role="em">datapath="lastName/text()"</emphasis> /&gt; 
+    &lt;text <emphasis role="em">datapath="@show"</emphasis> /&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$3.lzx></example>
+?>
+<para>The datapath of the entire <varname>rowOfData</varname> view has now become Homer's <varname>person</varname> node. 
+The child elements of <varname>rowOfData</varname> inherit this, so their datapaths can be referenced relatively.</para>
+
+<para/></section><section><title>Multiple rows of data</title>
+
+<para>In the above example we used a single <varname>rowOfData</varname> node. Next, we shall use a range of all of the nodes:</para>
+
+<example role="live-example">
+   <title>Range of nodes</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$4.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?ignore example role="live-example"><title></title><programlisting role="lzx-embednew"><filename>databinding-$4.lzx</filename><parameter/><code>
+&lt;canvas height="80" width="500" &gt;
+  &lt;dataset name="myData"&gt;
+    &lt;myXML&gt;
+        &lt;person show="simpsons"&gt;
+          &lt;firstName&gt;Homer&lt;/firstName&gt;
+          &lt;lastName&gt;Simpson&lt;/lastName&gt;
+        &lt;/person&gt;
+        &lt;person show="simpsons"&gt;
+          &lt;firstName&gt;Marge&lt;/firstName&gt;
+          &lt;lastName&gt;Simpson&lt;/lastName&gt;
+        &lt;/person&gt;
+        &lt;person show="simpsons"&gt;
+          &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+          &lt;lastName&gt;Burns&lt;/lastName&gt;
+        &lt;/person&gt;
+      &lt;/myXML&gt;
+  &lt;/dataset&gt;
+
+  &lt;view name="myTable"&gt;
+    &lt;simplelayout axis="y" /&gt;
+    &lt;view name="rowOfData" datapath="myData:/myXML[1]/person"&gt;
+      &lt;simplelayout axis="x" /&gt;
+      &lt;text datapath="firstName/text()" /&gt; 
+      &lt;text datapath="lastName/text()" /&gt; 
+      &lt;text datapath="@show" /&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="80" width="500" &gt;
+  &lt;dataset name="myData"&gt;
+    &lt;myXML&gt;
+        &lt;person show="simpsons"&gt;
+          &lt;firstName&gt;Homer&lt;/firstName&gt;
+          &lt;lastName&gt;Simpson&lt;/lastName&gt;
+        &lt;/person&gt;
+        &lt;person show="simpsons"&gt;
+          &lt;firstName&gt;Marge&lt;/firstName&gt;
+          &lt;lastName&gt;Simpson&lt;/lastName&gt;
+        &lt;/person&gt;
+        &lt;person show="simpsons"&gt;
+          &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+          &lt;lastName&gt;Burns&lt;/lastName&gt;
+        &lt;/person&gt;
+      &lt;/myXML&gt;
+  &lt;/dataset&gt;
+
+  &lt;view name="myTable"&gt;
+    &lt;simplelayout axis="y" /&gt;
+    &lt;view name="rowOfData" datapath="myData:/myXML[1]/person"&gt;
+      &lt;simplelayout axis="x" /&gt;
+      &lt;text datapath="firstName/text()" /&gt; 
+      &lt;text datapath="lastName/text()" /&gt; 
+      &lt;text datapath="@show" /&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/></example?>
+
+<para>Whichever tag contains the <indexterm><primary>datapath</primary></indexterm><sgmltag class="attribute">datapath</sgmltag> attribute will get repeated as 
+often as is necessary.</para>
+
+
+<para>Remember that datapaths bind themselves to a view, so if the data changes, so will the view. </para>
+<para/></section></section></section><section id="databinding.including"><title>Ways to include data</title>
+
+<para>
+The source for a dataset may be anything that returns XML, including sources elsewhere on the web.  For instance, the source may be a URL for a .jsp or .php program that generates XML data "on the fly."  This is a typical architecture for OpenLaszlo applications.  
+The table below highlights ways of categorizing datasets according to where the data comes from and how it is integrated into the application.
+</para>
+ 
+<informaltable><tgroup cols="3"><thead><row><entry>How is it included?</entry><entry>When is it loaded?</entry><entry>Syntax</entry></row></thead><tbody><row><entry><link linkend="databinding.embedded">Embedded</link></entry><entry>Compile-time</entry><entry>
+<informalexample role="live-example"><programlisting>
+&lt;dataset name="myData"&gt;
+  &lt;myXML&gt;
+     &lt;!-- ... other XML tags ... --&gt;
+  &lt;/myXML&gt;
+&lt;/dataset&gt;
+</programlisting></informalexample>
+    </entry></row><row><entry><link linkend="databinding.included">Included</link></entry><entry>Compile-time</entry><entry>
+<programlisting>
+&lt;dataset name="myData" src="myXMLDoc.xml"/&gt;
+</programlisting>
+    </entry></row><row><entry><link linkend="databinding.http">HTTP data</link></entry><entry>Runtime</entry><entry>
+<programlisting>
+&lt;dataset name="myData" request="true" 
+         type="http" src="myXMLDoc.xml" /&gt;
+</programlisting>
+    </entry></row></tbody></tgroup></informaltable>
+
+
+<para/><section id="databinding.embedded"><title>Embedded Data</title>
+
+<para>Embedded data is XML between the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> tags. When the OpenLaszlo Compiler compiles the application, the data is bound into it. The data can still be changed after the application runs. </para>
+
+
+<para/></section><section id="databinding.included"><title>Included Data</title>
+<para>Included data is essentially the same as embedded data, except that the XML itself is kept in a separate file. The size of the initial download will be the same as with embedded data.</para>
+
+<para>It is locally referenced via the filesystem, so it can be placed in other directories. Included data is static.</para>
+
+
+<para/></section><section id="databinding.http"><title>HTTP Data</title>
+<para>Remote data goes over HTTP, which means it can (but doesn't have to) be dynamic. If it is static, then the only difference between it and included or embedded data is that it is downloaded after the application loads. The <literal>type="http"</literal> attribute tells the OpenLaszlo Server that this is an HTTP request. The requests can be either GET or POST. </para>
+
+<para>There are several points at which the client makes requests for the data:</para>
+
+<itemizedlist spacing="compact"><listitem><para>The client will request the data
+<!-- fix typo LI 9/3/2007 -->
+<!-- as soon as the app loads if the the dataset's  -->
+as soon as the app loads if the dataset's <indexterm><primary>request</primary></indexterm><sgmltag class="attribute">request</sgmltag> attribute is true. </para></listitem><listitem><para>The client will also request the data every time the querystring or base URL of the dataset changes (using the <indexterm><primary><literal>setQueryString()</literal></primary></indexterm><methodname>setQueryString()</methodname> or <indexterm><primary><literal>setURL()</literal></primary></indexterm><methodname>setURL()</methodname> respectively) methods of the LzHTTPDataset object.</para></listitem><listitem><para>When the dataset's <indexterm><primary><literal>doRequest()</literal></primary></indexterm><methodname>doRequest()</methodname> method gets called.</para></listitem></itemizedlist>
+
+<para>In the table above, we referenced a file locally (myXMLDoc.xml), but we could have done it absolutely, or we could have hit a server-side script (PHP, ASP, JSP or some CGI) that returned an XML document. We could add the query string to the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> tag:</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;dataset name="myData"
+         <emphasis role="em">src="http://www.myServer.com/cgi-bin/myXMLDoc.cgi?return=addresses"</emphasis>/&gt;
+</programlisting></informalexample>
+
+<para>The <literal>type="http"</literal> attribute gets implied when the <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute contains "<literal>http://</literal>".</para>
+
+<note><para>You do not have to worry about speed of the Flash Player's XML parser when using the OpenLaszlo Server.</para></note>
+
+
+<para/></section><section><title>Dataset Scope</title>
+<para>
+If specified on the canvas, datasets are visible to and accesible by the entire application. Datasets can also be local to a class.
+</para>
+<itemizedlist spacing="compact"><listitem><para>Datasets will automatically name themselves <literal>localdata</literal> if a name is not specified </para></listitem><listitem><para>Local datapath syntax is 
+datapath="local:<emphasis role="i">reference.to.dataset.relative.to.parent</emphasis>:/path" </para></listitem><listitem><para> The name of the dataset can be omitted fromm the datapath if the dataset name is the default 'localdata', e.g. 'local:classroot:/' can be used instead of 'local:classroot.localdata:/' for a dataset named localdata in the classroot</para></listitem></itemizedlist>
+<para>
+Here is a simple program that illustrates use of local datasets (the file tests/data,  a sample XML file is included in this directory also.)
+</para>
+<example role="live-example">
+   <title>local datasets</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$7.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title></title><programlisting role="lzx-embednew"><filename>databinding-$7.lzx</filename><parameter/><code>
+&lt;canvas width="100%" height="200" &gt;
+  &lt;debug fontsize="12"/&gt;
+
+   &lt;view layout="axis: y"&gt;
+    &lt;dataset name="ds" src="http://..."/&gt;
+    &lt;text datapath="this.ds:/record/text()"/&gt;
+   &lt;/view&gt;
+
+  &lt;class name="myclass" layout="axis: y"&gt;
+    &lt;dataset name="ds" src="http://..."/&gt;
+    &lt;text datapath="this.ds:/record/text()"/&gt;
+  &lt;/class&gt;
+  &lt;myclass/&gt;
+  &lt;myclass/&gt;
+
+
+    &lt;dataset name="gdata" src="../testdata.xml"/&gt;
+
+  &lt;simplelayout spacing="2"/&gt;
+
+  &lt;view name="nodatanoname" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.localdata);
+    &lt;/handler&gt;
+    &lt;dataset/&gt;
+    &lt;text&gt;empty local dataset with no name&lt;/text&gt;
+  &lt;/view&gt;
+
+  &lt;view name="nodata" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+    &lt;/handler&gt;
+    &lt;dataset name="lds"/&gt;
+    &lt;text&gt;empty local dataset&lt;/text&gt;
+  &lt;/view&gt;
+
+  &lt;view name="somedata" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+    &lt;/handler&gt;
+    &lt;dataset name="lds"&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+    &lt;/dataset&gt;
+    &lt;text&gt;local dataset&lt;/text&gt;
+    &lt;handler reference="lds" name="oninit"&gt;
+      &lt;![CDATA[
+      Debug.write("somedata test data loaded", this);
+      if (this.lds.serialize() != '&lt;lds&gt;&lt;foo&gt;bar&lt;/foo&gt;&lt;/lds&gt;') {
+      Debug.error("somedata serialized data does not match expected value");
+      }
+      ]]&gt;
+    &lt;/handler&gt;
+  &lt;/view&gt;
+
+  &lt;view name="filedata" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+    &lt;/handler&gt;
+    &lt;dataset name="lds" src="../testdata.xml"/&gt;
+    &lt;text&gt;local dataset compiled in from external file&lt;/text&gt;
+    &lt;handler reference="lds" name="oninit"&gt;
+      &lt;![CDATA[
+      Debug.write("filedata test data loaded", this);
+      if (this.lds.serialize() != '&lt;lds&gt;&lt;persons&gt;&lt;person id="1"&gt;&lt;firstName&gt;Dan&lt;/firstName&gt;&lt;lastName&gt;McGowan&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;address code="ML" id="1"&gt;&lt;line1&gt;2210 North 184th Street&lt;/line1&gt;&lt;line2/&gt;&lt;city&gt;Shoreline&lt;/city&gt;&lt;/address&gt;&lt;/person&gt;&lt;person id="2"&gt;&lt;firstName&gt;Barry&lt;/firstName&gt;&lt;lastName&gt;Bonds&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;person id="3"&gt;&lt;firstName&gt;Jeff&lt;/firstName&gt;&lt;lastName&gt;Beck&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;/persons&gt;&lt;/lds&gt;') {
+      Debug.error("filedata serialized data does not match expected value");
+      }
+      ]]&gt;
+    &lt;/handler&gt;
+  &lt;/view&gt;
+
+  &lt;view name="remotedata" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+    &lt;/handler&gt;
+    &lt;dataset name="lds" src="../testdata.xml" type="http" request="true"/&gt;
+    &lt;text&gt;local dataset loaded at runtime&lt;/text&gt;
+    &lt;text datapath="local:parent.lds:/persons/person/firstName/text()" onclick="Debug.write(this.datapath)"/&gt;
+    &lt;handler reference="lds" name="ondata"&gt;
+      &lt;![CDATA[
+      Debug.write("remotedata test data loaded", this);
+      if (this.lds.serialize() != '&lt;lds&gt;&lt;persons&gt;&lt;person id="1"&gt;&lt;firstName&gt;Dan&lt;/firstName&gt;&lt;lastName&gt;McGowan&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;address id="1" code="ML"&gt;&lt;line1&gt;2210 North 184th Street&lt;/line1&gt;&lt;line2/&gt;&lt;city&gt;Shoreline&lt;/city&gt;&lt;/address&gt;&lt;/person&gt;&lt;person id="2"&gt;&lt;firstName&gt;Barry&lt;/firstName&gt;&lt;lastName&gt;Bonds&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;person id="3"&gt;&lt;firstName&gt;Jeff&lt;/firstName&gt;&lt;lastName&gt;Beck&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;/persons&gt;&lt;/lds&gt;') {
+      Debug.error("remotedata serialized data does not match expected value");
+      }
+      ]]&gt;
+    &lt;/handler&gt;
+  &lt;/view&gt;
+
+  &lt;view name="remotedatarelative" layout="axis: y" bgcolor="#cccccc" datapath="local:lds:/persons/" visible="true"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+        this.datapath.setXPath(this.datapath.xpath);
+    &lt;/handler&gt;
+    &lt;dataset name="lds" src="../testdata.xml" type="http" request="true"/&gt;
+    &lt;text&gt;local dataset loaded at runtime and relative datapath - datapath doesn't resolve because dataset doesn't exist yet.  click to reparse xpath&lt;/text&gt;
+    &lt;text datapath="person/firstName/text()" onclick="Debug.write(this.datapath)"/&gt;
+  &lt;/view&gt;
+
+  &lt;class name="localdatatest"&gt;
+    &lt;dataset/&gt;
+    &lt;view datapath="local:classroot:/"&gt;
+      &lt;simplelayout/&gt;
+      &lt;handler name="onclick"&gt;
+        this.datapath.addNode('child', 'Click to remove this node', {});
+      &lt;/handler&gt;
+      &lt;text&gt;Click to add a node to my local dataset&lt;/text&gt;
+      &lt;text x="10" datapath="child/text()" onclick="this.datapath.deleteNode();"/&gt;
+    &lt;/view&gt;
+  &lt;/class&gt;
+
+  &lt;class name="redlocaldatatest" extends="localdatatest" bgcolor="red"/&gt;
+
+  &lt;localdatatest/&gt;
+  &lt;localdatatest/&gt;
+  &lt;redlocaldatatest/&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="100%" height="200" &gt;
+  &lt;debug fontsize="12"/&gt;
+
+   &lt;view layout="axis: y"&gt;
+    &lt;dataset name="ds" src="http://..."/&gt;
+    &lt;text datapath="this.ds:/record/text()"/&gt;
+   &lt;/view&gt;
+
+  &lt;class name="myclass" layout="axis: y"&gt;
+    &lt;dataset name="ds" src="http://..."/&gt;
+    &lt;text datapath="this.ds:/record/text()"/&gt;
+  &lt;/class&gt;
+  &lt;myclass/&gt;
+  &lt;myclass/&gt;
+
+
+    &lt;dataset name="gdata" src="../testdata.xml"/&gt;
+
+  &lt;simplelayout spacing="2"/&gt;
+
+  &lt;view name="nodatanoname" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.localdata);
+    &lt;/handler&gt;
+    &lt;dataset/&gt;
+    &lt;text&gt;empty local dataset with no name&lt;/text&gt;
+  &lt;/view&gt;
+
+  &lt;view name="nodata" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+    &lt;/handler&gt;
+    &lt;dataset name="lds"/&gt;
+    &lt;text&gt;empty local dataset&lt;/text&gt;
+  &lt;/view&gt;
+
+  &lt;view name="somedata" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+    &lt;/handler&gt;
+    &lt;dataset name="lds"&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+    &lt;/dataset&gt;
+    &lt;text&gt;local dataset&lt;/text&gt;
+    &lt;handler reference="lds" name="oninit"&gt;
+      &lt;![CDATA[
+      Debug.write("somedata test data loaded", this);
+      if (this.lds.serialize() != '&lt;lds&gt;&lt;foo&gt;bar&lt;/foo&gt;&lt;/lds&gt;') {
+      Debug.error("somedata serialized data does not match expected value");
+      }
+      ]]&gt;
+    &lt;/handler&gt;
+  &lt;/view&gt;
+
+  &lt;view name="filedata" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+    &lt;/handler&gt;
+    &lt;dataset name="lds" src="../testdata.xml"/&gt;
+    &lt;text&gt;local dataset compiled in from external file&lt;/text&gt;
+    &lt;handler reference="lds" name="oninit"&gt;
+      &lt;![CDATA[
+      Debug.write("filedata test data loaded", this);
+      if (this.lds.serialize() != '&lt;lds&gt;&lt;persons&gt;&lt;person id="1"&gt;&lt;firstName&gt;Dan&lt;/firstName&gt;&lt;lastName&gt;McGowan&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;address code="ML" id="1"&gt;&lt;line1&gt;2210 North 184th Street&lt;/line1&gt;&lt;line2/&gt;&lt;city&gt;Shoreline&lt;/city&gt;&lt;/address&gt;&lt;/person&gt;&lt;person id="2"&gt;&lt;firstName&gt;Barry&lt;/firstName&gt;&lt;lastName&gt;Bonds&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;person id="3"&gt;&lt;firstName&gt;Jeff&lt;/firstName&gt;&lt;lastName&gt;Beck&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;/persons&gt;&lt;/lds&gt;') {
+      Debug.error("filedata serialized data does not match expected value");
+      }
+      ]]&gt;
+    &lt;/handler&gt;
+  &lt;/view&gt;
+
+  &lt;view name="remotedata" layout="axis: y" bgcolor="#cccccc"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+    &lt;/handler&gt;
+    &lt;dataset name="lds" src="../testdata.xml" type="http" request="true"/&gt;
+    &lt;text&gt;local dataset loaded at runtime&lt;/text&gt;
+    &lt;text datapath="local:parent.lds:/persons/person/firstName/text()" onclick="Debug.write(this.datapath)"/&gt;
+    &lt;handler reference="lds" name="ondata"&gt;
+      &lt;![CDATA[
+      Debug.write("remotedata test data loaded", this);
+      if (this.lds.serialize() != '&lt;lds&gt;&lt;persons&gt;&lt;person id="1"&gt;&lt;firstName&gt;Dan&lt;/firstName&gt;&lt;lastName&gt;McGowan&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;address id="1" code="ML"&gt;&lt;line1&gt;2210 North 184th Street&lt;/line1&gt;&lt;line2/&gt;&lt;city&gt;Shoreline&lt;/city&gt;&lt;/address&gt;&lt;/person&gt;&lt;person id="2"&gt;&lt;firstName&gt;Barry&lt;/firstName&gt;&lt;lastName&gt;Bonds&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;person id="3"&gt;&lt;firstName&gt;Jeff&lt;/firstName&gt;&lt;lastName&gt;Beck&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;/persons&gt;&lt;/lds&gt;') {
+      Debug.error("remotedata serialized data does not match expected value");
+      }
+      ]]&gt;
+    &lt;/handler&gt;
+  &lt;/view&gt;
+
+  &lt;view name="remotedatarelative" layout="axis: y" bgcolor="#cccccc" datapath="local:lds:/persons/" visible="true"&gt;
+    &lt;handler name="onclick"&gt;
+        Debug.write(this.lds);
+        this.datapath.setXPath(this.datapath.xpath);
+    &lt;/handler&gt;
+    &lt;dataset name="lds" src="../testdata.xml" type="http" request="true"/&gt;
+    &lt;text&gt;local dataset loaded at runtime and relative datapath - datapath doesn't resolve because dataset doesn't exist yet.  click to reparse xpath&lt;/text&gt;
+    &lt;text datapath="person/firstName/text()" onclick="Debug.write(this.datapath)"/&gt;
+  &lt;/view&gt;
+
+  &lt;class name="localdatatest"&gt;
+    &lt;dataset/&gt;
+    &lt;view datapath="local:classroot:/"&gt;
+      &lt;simplelayout/&gt;
+      &lt;handler name="onclick"&gt;
+        this.datapath.addNode('child', 'Click to remove this node', {});
+      &lt;/handler&gt;
+      &lt;text&gt;Click to add a node to my local dataset&lt;/text&gt;
+      &lt;text x="10" datapath="child/text()" onclick="this.datapath.deleteNode();"/&gt;
+    &lt;/view&gt;
+  &lt;/class&gt;
+
+  &lt;class name="redlocaldatatest" extends="localdatatest" bgcolor="red"/&gt;
+
+  &lt;localdatatest/&gt;
+  &lt;localdatatest/&gt;
+  &lt;redlocaldatatest/&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$7.lzx></example?>
+
+<para/></section><section><title><indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal>, <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal> and <indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal> event</title>
+
+<para>When the application's <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname> receives the data, the
+<indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal> event is sent.  In the case that an error occured
+in communicating with the back-end (which may be proxied by the OpenLaszlo Server in proxied applications, or direct, in SOLO applications), an <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal> event is
+sent instead.  And, if there is a timeout (currently hard-coded at 30
+seconds) in communicating with the back end, an <indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal>
+event is sent.  The OpenLaszlo Runtime guarentees that each request generates
+exactly one of <indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal>, <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal>, or
+<indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal>.
+</para>
+
+
+<para/></section><section><title>POST support</title>
+<para>Datasets support both HTTP GET and POST methods for communicating
+with the OpenLaszlo Server and back-end servers.  The default is GET but this can be
+changed with the <literal>LzDataset.setQueryType()</literal> API.  In
+general, requests with large query parameters should be sent via
+POST.</para>
+
+
+
+<para/></section><section><title>HTTP Request and Response headers</title>
+
+<para>In general, the OpenLaszlo Server proxies HTTP request and response headers
+to and from the back-end.  However, certain headers are specifically
+omitted or modified.</para>
+<para>
+Note that response headers are not available to SOLO applications.
+</para>
+
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>include the list here</remark></para>
+
+<para/></section><section><title>Cookies</title>
+
+<para>The OpenLaszlo Server proxies all "Cookie" request headers and all
+"<literal>Set-Cookie</literal>" response headers.  Because of
+the domain name restrictions on cookies, the OpenLaszlo Server can only properly
+proxy these cookie headers when the back-end host is in the same
+domain (or a subdomain) or the OpenLaszlo host.  For more on this topic, see <xref linkend="cookies"/></para>
+
+
+<para/></section><section><title>Datasources</title>
+
+<para>Underlying each dataset that communicates over HTTP is an
+<indexterm><primary>LzDatasource</primary></indexterm><classname>LzDatasource</classname> object.  This object abstracts all protocol
+specific communication.  In general, you do not need to use the
+datasource object yourself, except for very rare situations.</para>
+<para>
+For example, one situation is when you are running the OpenLaszlo Server secure port
+on something other than 443; the only place you can specify the
+secure port is on the datasource.</para>
+
+<para/></section></section><section><title>AJAX API</title>
+<para>
+ 
+<indexterm><primary>XMLHTTPRequest</primary></indexterm><sgmltag class="element">&lt;XMLHTTPRequest&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: XMLHTTPRequest-->
+ implements XMLHttpRequest as <ulink url="http://developer.apple.com/internet/webcontent/xmlhttpreq.html"> specified</ulink> by the <ulink url="http://www.whatwg.org/specs/web-apps/current-work/#scripted-http">what-wg
+</ulink> consortium. Basically, this class allows you to fetch XML data from a URL, and so it is essentially equivalent to the <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname> API (or the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: dataset-->
+ tag.)  It is provided as a convenience to developers who are familiar with its syntax from its use in AJAX applications.  
+</para>
+<para>
+Here is an example of the XMLHTTPRequest class.
+</para>
+<example role="live-example">
+   <title>XMLHTTPRequest</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$8.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title></title><programlisting role="lzx-embednew"><filename>databinding-$8.lzx</filename><parameter/><code>
+&lt;canvas width="1400" height="600" debug="true"&gt;
+  &lt;debug width="400" height="300" fontsize="12" x="400"/&gt;
+
+  &lt;include href="rpc/ajax.lzx" /&gt;
+
+  &lt;script&gt;
+    &lt;![CDATA[
+    
+    var req = null;
+
+    function processReqChange() {
+        Debug.write("processReqChange: req.readyState", req.readyState);
+        // only if req shows "loaded"
+        if (req.readyState == 4) {
+            // only if "OK"
+            if (req.status == 200) {
+                Debug.write("req.status", req.status);
+                Debug.write("req.responseText:", req.responseText);
+                Debug.write("req.responseXML:", req.responseXML);
+                Debug.write("req.getAllResponseHeaders:", req.getAllResponseHeaders());
+            } else {
+                Debug.write("There was a problem retrieving the XML data:\n" +
+                            req.statusText);
+            }
+        }
+    }
+
+    
+    function loadXMLDoc(url) {
+        // branch for native XMLHttpRequest object
+        req = new XMLHttpRequest();
+        req.onreadystatechange = processReqChange;
+        req.open("GET", url, true);
+        req.setRequestHeader('X-Test', 'one');
+        req.setRequestHeader('X-Test', 'two');
+        req.send(null);
+    }
+    
+
+
+    ]]&gt;
+  &lt;/script&gt;
+    &lt;simplelayout spacing="4"/&gt;
+    &lt;edittext id="in1"&gt;echo.jsp&lt;/edittext&gt;
+    &lt;button onclick="loadXMLDoc(in1.getText())"&gt;Load Data&lt;/button&gt;
+
+    &lt;button onclick="loadXMLDoc('badurl')"&gt;Test Error Handling, this should fail&lt;/button&gt;
+
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+&lt;canvas width="1400" height="600" debug="true"&gt;
+  &lt;debug width="400" height="300" fontsize="12" x="400"/&gt;
+
+  &lt;include href="rpc/ajax.lzx" /&gt;
+
+  &lt;script&gt;
+    &lt;![CDATA[
+    
+    var req = null;
+
+    function processReqChange() {
+        Debug.write("processReqChange: req.readyState", req.readyState);
+        // only if req shows "loaded"
+        if (req.readyState == 4) {
+            // only if "OK"
+            if (req.status == 200) {
+                Debug.write("req.status", req.status);
+                Debug.write("req.responseText:", req.responseText);
+                Debug.write("req.responseXML:", req.responseXML);
+                Debug.write("req.getAllResponseHeaders:", req.getAllResponseHeaders());
+            } else {
+                Debug.write("There was a problem retrieving the XML data:\n" +
+                            req.statusText);
+            }
+        }
+    }
+
+    
+    function loadXMLDoc(url) {
+        // branch for native XMLHttpRequest object
+        req = new XMLHttpRequest();
+        req.onreadystatechange = processReqChange;
+        req.open("GET", url, true);
+        req.setRequestHeader('X-Test', 'one');
+        req.setRequestHeader('X-Test', 'two');
+        req.send(null);
+    }
+    
+
+
+    ]]&gt;
+  &lt;/script&gt;
+    &lt;simplelayout spacing="4"/&gt;
+    &lt;edittext id="in1"&gt;echo.jsp&lt;/edittext&gt;
+    &lt;button onclick="loadXMLDoc(in1.getText())"&gt;Load Data&lt;/button&gt;
+
+    &lt;button onclick="loadXMLDoc('badurl')"&gt;Test Error Handling, this should fail&lt;/button&gt;
+
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/databinding-$8.lzx></example?>
+<para/><section><title>Using XMLHTTPRequest() in SOLO applications</title>
+<para>In SOLO applications, the <indexterm><primary>XMLHTTPRequest</primary></indexterm><classname>XMLHTTPRequest</classname> class does provide one capability that is not currently available from datasets; that is, you can get the raw text of the XML as a string, before it is parsed.  You do this using the <indexterm><primary><literal>responseText()</literal></primary></indexterm><methodname>responseText()</methodname> method. This capability is only available in SOLO applications.
+</para>
+<para>
+Note that by accessing a URL in this way you can fetch data that is not XML, which may come in handy in some situations.  However, since LZX is predicated on the XML data model, in general you shouldn't expect to be using this technique very much.</para>
+<para>
+Also, in SOLO deployed applications, the <indexterm><primary>XMLHTTPRequest</primary></indexterm><classname>XMLHTTPRequest</classname> class departs from the what-wg specification in these ways:</para>
+<itemizedlist spacing="compact"><listitem><para>HTTP headers are not settable</para></listitem><listitem><para>response headers are not accessible</para></listitem><listitem><para>you cannot send raw POST data</para></listitem><listitem><para>you cannot send repeated query args in a POST using LoadVars</para></listitem><listitem><para>Username/password HTTP Auth args to send() are not supported.</para></listitem></itemizedlist>
+
+  
+<para/></section></section><section id="databinding.datapointers"><title>Datapointers</title>
+
+<para>We introduced datapaths first, which are extensions of datapointers, but they can become cumbersome. A datapointer points to just one place of the dataset at a time, but can be moved around -- you can have multiple datapointers, each pointing to a different part of a dataset.</para>
+
+<para>Datapointers are not bound to views like datapaths are, but they do have a place in the view hierarchy—that is, they "know about" parents and children.</para>
+
+<para>You will use a datapointer when you need to operate on the data in some way. For example, using the same format of data as in the previous examples, say you wanted to find all the people who were in the South Park show:</para>
+
+<example role="live-example">
+   <title>Manipulating datapointers</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$9.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title></title><programlisting role="lzx-embednew"><filename>databinding-$9.lzx</filename><parameter/><code>
+&lt;canvas height="180" width="500" debug="true"&gt;
+  &lt;dataset name="myData" src="../../guide/myShowData.xml" /&gt;
+  
+  &lt;datapointer xpath="myData:/" ondata="processData()"&gt;
+    &lt;method name="processData"&gt;
+      this.selectChild(2); 
+      do {
+        if (this.xpathQuery( '@show' ) == 'south park') {
+            Debug.write(this.xpathQuery('lastName/text()'));
+        }
+      } while (this.selectNext()); 
+    &lt;/method&gt;
+  &lt;/datapointer&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="180" width="500" debug="true"&gt;
+  &lt;dataset name="myData" src="../../guide/myShowData.xml" /&gt;
+  
+  &lt;datapointer xpath="myData:/" ondata="processData()"&gt;
+    &lt;method name="processData"&gt;
+      this.selectChild(2); 
+      do {
+        if (this.xpathQuery( '@show' ) == 'south park') {
+            Debug.write(this.xpathQuery('lastName/text()'));
+        }
+      } while (this.selectNext()); 
+    &lt;/method&gt;
+  &lt;/datapointer&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$9.lzx></example?>
+
+<para>For brevity's sake, we are writing to the debugger, and we are including the data from a local file.</para>
+
+<para>The <literal>selectChild(2)</literal> method call selects the <indexterm><primary>myXML</primary></indexterm><sgmltag class="element">&lt;myXML&gt;</sgmltag> node, then the South Park <indexterm><primary>person</primary></indexterm><sgmltag class="element">&lt;person&gt;</sgmltag> node -- it selects the second-depth node because of the depth argument "2" we passed it (otherwise it would default to 1.</para>
+
+<para>The <literal>selectNext</literal> method call returns <literal>true</literal> as long as an XML node was successfully selected (i.e. until there aren't any more). We exploit this by using it in a <literal>do <replaceable>…</replaceable> while</literal> loop, so that the same iteration occurs for every <indexterm><primary>person</primary></indexterm><sgmltag class="element">&lt;person&gt;</sgmltag> node.</para>
+
+<para>We could also have given the <indexterm><primary>datapointer</primary></indexterm><sgmltag class="element">&lt;datapointer&gt;</sgmltag> <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal> and <indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal> event handlers to capture any problems. </para>
+
+
+
+
+<para/></section><section><title>Accessing data</title>
+<para/><section><title>Datasets</title>
+
+<para>A <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: dataset-->
+ provides a way to
+encapsulate arbitrary XML data in an OpenLaszlo application. Depending on
+the source of the data, datasets can be static or dynamic. When a
+dataset is explicitly declared with <literal>type="http"</literal>, the
+value of its <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> is interpreted as an URL and
+the dataset is populated with data at runtime. If the
+<indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute is absent, the data it represents
+is expected to be contained within the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag>
+tags, and thus also compiled into the application.</para>
+
+<para>When we say that HTTP datasets are dynamic, we mean that you can
+repopulate them programmatically by calling the
+<indexterm><primary><literal>doRequest()</literal></primary></indexterm><methodname>doRequest()</methodname> method of the dataset object, or if the
+<indexterm><primary>request</primary></indexterm><sgmltag class="attribute">request</sgmltag> attribute is set to true, by changing
+the URL of the dataset when one of the <indexterm><primary><literal>setSrc()</literal></primary></indexterm><methodname>setSrc()</methodname>,
+<indexterm><primary><literal>setQueryString()</literal></primary></indexterm><methodname>setQueryString()</methodname>, or <indexterm><primary><literal>setQueryParam()</literal></primary></indexterm><methodname>setQueryParam()</methodname>
+methods is called.</para>
+<para/><section><title>Globally Visible Datasets</title>
+<para>When a dataset is defined as an immediate child of <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">&lt;canvas&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: canvas-->
+ or <indexterm><primary>library</primary></indexterm><sgmltag class="element">&lt;library&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: library-->
+, it can be referenced
+anywhere in the code through the <indexterm><primary>datasets</primary></indexterm><sgmltag class="attribute">datasets</sgmltag>
+property of canvas, i.e.  <literal>canvas.datasets['mydset']</literal>, or
+simply by its name (it is globally visible):</para>
+<example role="live-example">
+   <title>Explicitly defined datasets</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$10.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title></title><programlisting role="lzx-embednew"><filename>databinding-$10.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="200"&gt;
+  &lt;debug height="150"/&gt;
+  &lt;dataset name="mydset" src="http:?lzt=xml"/&gt;
+  
+  &lt;dataset name="week"&gt;
+    &lt;day&gt;Sunday&lt;/day&gt;
+    &lt;day&gt;Monday&lt;/day&gt;
+    &lt;day&gt;Tuesday&lt;/day&gt;
+    &lt;day&gt;Wednesday&lt;/day&gt;
+    &lt;day&gt;Thursday&lt;/day&gt;
+    &lt;day&gt;Friday&lt;/day&gt;
+  &lt;/dataset&gt;
+  
+  &lt;script&gt;
+    Debug.write(mydset);
+    Debug.write(canvas.datasets['mydset']);
+    Debug.write(week)
+  &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="200"&gt;
+  &lt;debug height="150"/&gt;
+  &lt;dataset name="mydset" src="http:?lzt=xml"/&gt;
+  
+  &lt;dataset name="week"&gt;
+    &lt;day&gt;Sunday&lt;/day&gt;
+    &lt;day&gt;Monday&lt;/day&gt;
+    &lt;day&gt;Tuesday&lt;/day&gt;
+    &lt;day&gt;Wednesday&lt;/day&gt;
+    &lt;day&gt;Thursday&lt;/day&gt;
+    &lt;day&gt;Friday&lt;/day&gt;
+  &lt;/dataset&gt;
+  
+  &lt;script&gt;
+    Debug.write(mydset);
+    Debug.write(canvas.datasets['mydset']);
+    Debug.write(week)
+  &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$10.lzx></example?>
+<para/></section><section><title>Datasets created at runtime</title>
+<para>Datasets can also be created at runtime in script by calling the constructor for the <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>:
+<literal>var dset = new LzDataset(null, {name: 'mydset'})</literal>. The first argument to the constructor is 
+the dataset's parent node, which is the <indexterm><primary>datasource</primary></indexterm><sgmltag class="element">&lt;datasource&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: datasource-->
+ that encloses this dataset; this
+parameter is allowed to be null — in this case a datasource will be created implicitly.
+</para>
+
+
+<para/></section></section></section><section><title>Simple binding</title>
+
+<para>The LZX event system allows you to insert custom data
+handling into the application as needed. This is typically done by
+overriding the <indexterm><primary><literal>applyData()</literal></primary></indexterm><methodname>applyData()</methodname> method of the databound
+node, by providing a handler for the <indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal> event on
+the datapointer or datapath, or by defining a <literal>$path</literal>
+constraint on an expression-type attribute and processing changes to
+the attribute's value with the
+<literal>on<varname>attribute_name</varname></literal> handler.</para>
+
+<para/><section><title>Overriding applyData</title>
+
+<para>The <indexterm><primary><literal>applyData()</literal></primary></indexterm><methodname>applyData()</methodname> method is called on any node that is
+declared with a datapath that matches a terminal selector, such as
+<literal>text()</literal> or <literal>@<varname>attribute</varname></literal> when the data it
+matches is changed. The argument passed to the method is the string
+the data represents. Use the <indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal> event if the node
+is bound to a datapath that matches a data node (see below).
+</para>
+<example role="live-example">
+   <title>Overriding applyData</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$11.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title></title><programlisting role="lzx-embednew"><filename>databinding-$11.lzx</filename><parameter/><code>
+&lt;canvas height="150"&gt;
+  &lt;dataset name="colors"&gt;
+    &lt;value&gt;red&lt;/value&gt;
+    &lt;value&gt;green&lt;/value&gt;
+    &lt;value&gt;olive&lt;/value&gt;
+    &lt;value&gt;yellow&lt;/value&gt;
+    &lt;value&gt;blue&lt;/value&gt;
+    &lt;value&gt;teal&lt;/value&gt;
+  &lt;/dataset&gt;
+
+  &lt;simplelayout spacing="10"/&gt;
+  &lt;view name="swatch" width="200" height="30" 
+  datapath="colors:/value[1]/text()"&gt;
+    &lt;method name="applyData" args="v"&gt;
+      setBGColor(eval(v))
+      display.setText(v)
+    &lt;/method&gt;
+  &lt;/view&gt;
+  &lt;text name="display" resize="true"/&gt;
+
+  &lt;button text="Change view color"&gt;
+    &lt;attribute name="ind" value="$once{1}"/&gt;
+    &lt;handler name="onclick"&gt;
+      if (++ind == 7) ind = 1
+      swatch.setDatapath('colors:/value[' + ind + ']/text()')
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150"&gt;
+  &lt;dataset name="colors"&gt;
+    &lt;value&gt;red&lt;/value&gt;
+    &lt;value&gt;green&lt;/value&gt;
+    &lt;value&gt;olive&lt;/value&gt;
+    &lt;value&gt;yellow&lt;/value&gt;
+    &lt;value&gt;blue&lt;/value&gt;
+    &lt;value&gt;teal&lt;/value&gt;
+  &lt;/dataset&gt;
+
+  &lt;simplelayout spacing="10"/&gt;
+  &lt;view name="swatch" width="200" height="30" 
+  datapath="colors:/value[1]/text()"&gt;
+    <emphasis role="em">&lt;method name="applyData" args="v"&gt;</emphasis>
+      setBGColor(eval(v))
+      display.setText(v)
+    &lt;/method&gt;
+  &lt;/view&gt;
+  &lt;text name="display" resize="true"/&gt;
+
+  &lt;button text="Change view color"&gt;
+    &lt;attribute name="ind" value="$once{1}"/&gt;
+    &lt;handler name="onclick"&gt;
+      if (++ind == 7) ind = 1
+      swatch.setDatapath('colors:/value[' + ind + ']/text()')
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$11.lzx></example?>
+
+<para/></section><section><title>Attribute bindings using $path</title>
+<para>Attributes of a node can be bound to data explicitly by using the <literal>$path{}</literal> constraint syntax. The expression
+inside the curly brackets must evaluate to a string, which is interpreted as a relative XPath expression. 
+</para>
+<para/><section><title>Absolute paths</title>
+<para>If you
+need to use an absolute path in the expression, you could instead constrain the attribute to the result of an 
+<indexterm><primary><literal>xpathQuery()</literal></primary></indexterm><methodname>xpathQuery()</methodname> call: <literal>visible="dp.xpathQuery('mydset:/record/row[1]/@visible')"</literal>. A
+ limitation of the <literal>$path{}</literal> constraint is that the expression it contains is evaluated only at the 
+initialization time, that is, an expression such as <literal>$path{'mynode[' + i + ']/@attr'}</literal> will behave like a 
+<literal>$once{}</literal> constraint.</para> 
+<para>$path bindings are two-way, so calling <indexterm><primary><literal>updateData()</literal></primary></indexterm><methodname>updateData()</methodname> 
+on a node's datapath will store the current value for that attribute back in the dataset.
+</para>
+<example role="live-example">
+   <title>$path constratint bindings</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$12.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title></title><programlisting role="lzx-embednew"><filename>databinding-$12.lzx</filename><parameter/><code>
+&lt;canvas height="150" &gt;
+  &lt;dataset name="sizes"&gt;
+    &lt;value&gt;200&lt;/value&gt;
+    &lt;value&gt;150&lt;/value&gt;
+    &lt;value&gt;100&lt;/value&gt;
+  &lt;/dataset&gt;
+  
+  &lt;button text="Shrink me" datapath="sizes:/value[1]" &gt; 
+    &lt;attribute name="width" value="$path{'text()'}"/&gt;
+    &lt;handler name="onclick"&gt;
+      if (!datapath.selectNext()) this.setAttribute('text', 'Done')
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  &lt;button y="40" text="Stretch me" datapath="sizes:/value[1]"&gt; 
+    &lt;attribute name="width" value="$path{'text()'}"/&gt;
+    &lt;handler name="onclick"&gt;
+            datapath.setNodeText(Number(datapath.getNodeText()) + 20)
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150" &gt;
+  &lt;dataset name="sizes"&gt;
+    &lt;value&gt;200&lt;/value&gt;
+    &lt;value&gt;150&lt;/value&gt;
+    &lt;value&gt;100&lt;/value&gt;
+  &lt;/dataset&gt;
+  
+  &lt;button text="Shrink me" datapath="sizes:/value[1]" &gt; 
+    <emphasis role="em">&lt;attribute name="width" value="$path{'text()'}"/&gt;</emphasis>
+    &lt;handler name="onclick"&gt;
+      if (!datapath.selectNext()) this.setAttribute('text', 'Done')
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  &lt;button y="40" text="Stretch me" datapath="sizes:/value[1]"&gt; 
+    <emphasis role="em">&lt;attribute name="width" value="$path{'text()'}"/&gt;</emphasis>
+    &lt;handler name="onclick"&gt;
+            datapath.setNodeText(Number(datapath.getNodeText()) + 20)
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$12.lzx></example?>
+
+<para/></section><section><title>Attribute values by $path constraint</title>
+
+<para>The <literal>dataset</literal> is basically an array. Assigning a node's attribute value by <literal>$path</literal> constraint, and then using the XPath expression <literal>myData:/myXML/person</literal> -- which gathers all the "person" nodes -- results in replication of the node as many times as necessary to correspond with each item in the dataset.</para>
+
+<para>In this example, there are three items in the dataset, so the <literal>box</literal> node replicates three times.</para>
+
+<example role="live-example">
+   <title>Assigning an attribute value by $path constraint</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$13.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title></title><programlisting role="lzx-embednew"><filename>databinding-$13.lzx</filename><parameter/><code>
+&lt;canvas debug="true"&gt;
+
+    &lt;dataset name="boxes"&gt;
+        &lt;boxes&gt;
+         &lt;box color="0xFF0000"/&gt;
+         &lt;box color="0x00FF00"/&gt;
+         &lt;box color="0x0000FF"/&gt;
+         &lt;/boxes&gt;
+    &lt;/dataset&gt;
+
+&lt;simplelayout axis="x" spacing="10" /&gt;
+
+&lt;class name="coloredbox"  height="50" width="50" bgcolor="$path{'@color'}"/&gt;
+
+&lt;coloredbox datapath="boxes:/boxes/box"/&gt;
+
+&lt;/canvas&gt; 
+</code></programlisting><programlisting>
+&lt;canvas debug="true"&gt;
+
+    &lt;dataset name="boxes"&gt;
+        &lt;boxes&gt;
+         &lt;box color="0xFF0000"/&gt;
+         &lt;box color="0x00FF00"/&gt;
+         &lt;box color="0x0000FF"/&gt;
+         &lt;/boxes&gt;
+    &lt;/dataset&gt;
+
+&lt;simplelayout axis="x" spacing="10" /&gt;
+
+&lt;class name="coloredbox"  height="50" width="50" bgcolor="$path{'@color'}"/&gt;
+
+&lt;coloredbox datapath="boxes:/boxes/box"/&gt;
+
+&lt;/canvas&gt; 
+</programlisting><?lzx-edit programs/databinding-$13.lzx></example?>
+<para/></section><section><title>$path values in calculations</title>
+<para>
+JavaScript provides easy casting from string to numeric data types. The $path{...} syntax is defined to return a string, which can be used to assign a value to an attribute.  You can combine attributes to preform calculations based on strings returned from a $path{...} inquiry on a dataset.
+</para>
+<para>
+Say, for example that you had a dataset that contained temperatures in Farenheit that you wished to convert to centegrade. You would have to create an intermediate attribute that binds to the (possibly replicated) path constraint and then bind your text field to a calculation on that attribute. Something like:</para>
+<example role="live-example"><title>calculations on $path{} values</title><programlisting>
+  &lt;attribute name='intermediate' value="$path{'degf'}" \&gt;
+  &lt;attribute name='text' value="${Number(intermediate) * 5 / 9}" /&gt;
+</programlisting></example>
+
+
+
+<para/></section></section><section><title>The .data property</title>
+<para>The <structfield>data</structfield> property is a shorthand way of accessing data referenced by a datapointer or a datapath. 
+For convenience, a datamapped node gets its data property set to that of the datapath it is bound to. In the example
+below, the color view changes its properties as the data field to which they are constrained follows the "order" 
+attribute of the nodes in the dataset. Note that the data is a string value of the attribute; this is the case when 
+the XPath matches an operator. The datapath of the enclosing view, however, refers to entire node in the dataset,
+and its data property contains an instance of <indexterm><primary>LzDataNode</primary></indexterm><classname>LzDataNode</classname> that the XPath references. This is
+evident from the debugger output.</para>
+<example role="live-example">
+   <title>Using the data property</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$15.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Using the data property</title><programlisting role="lzx-embednew"><filename>databinding-$15.lzx</filename><parameter/><code>
+&lt;canvas height="150" debug="true"&gt;
+  &lt;debug x="150"/&gt;
+  &lt;dataset name="onion"&gt;
+    &lt;layer order="1"&gt;&lt;layer&gt;&lt;layer&gt;core&lt;/layer&gt;&lt;/layer&gt;&lt;/layer&gt;
+  &lt;/dataset&gt;
+
+  &lt;view datapath="onion:/layer"&gt;
+     &lt;simplelayout spacing="5"/&gt;
+     &lt;view width="${100 / this.data}" height="${100 / this.data}" 
+           bgcolor="0x09d055" datapath="@order" 
+           opacity="${Math.min(1, this.data / 3)}"/&gt;
+    
+    &lt;button text="Peel next layer"&gt;
+      &lt;handler name="onclick"&gt;
+        with (parent.datapath) {
+          Debug.write(data)
+          if (!selectChild()) this.setAttribute('enabled', false) 
+          else setNodeAttribute('order', Number(p.parentNode.attributes['order']) + 1)
+         }
+      &lt;/handler&gt;
+    &lt;/button&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150" debug="true"&gt;
+  &lt;debug x="150"/&gt;
+  &lt;dataset name="onion"&gt;
+    &lt;layer order="1"&gt;&lt;layer&gt;&lt;layer&gt;core&lt;/layer&gt;&lt;/layer&gt;&lt;/layer&gt;
+  &lt;/dataset&gt;
+
+  &lt;view datapath="onion:/layer"&gt;
+     &lt;simplelayout spacing="5"/&gt;
+     <emphasis role="em">&lt;view width="${100 / this.data}" height="${100 / this.data}" 
+           bgcolor="0x09d055" datapath="@order" 
+           opacity="${Math.min(1, this.data / 3)}"/&gt;</emphasis>
+    
+    &lt;button text="Peel next layer"&gt;
+      &lt;handler name="onclick"&gt;
+        with (parent.datapath) {
+          <emphasis role="em">Debug.write(data)</emphasis>
+          if (!selectChild()) this.setAttribute('enabled', false) 
+          else setNodeAttribute('order', Number(p.parentNode.attributes['order']) + 1)
+         }
+      &lt;/handler&gt;
+    &lt;/button&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$15.lzx></example?>
+
+<para/></section><section><title>Using ondata to process updates</title>
+<para>For a datapointer, a datapath, or a datamapped node, the <indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal> event is sent whenever the data it 
+is bound to changes. This implies that for XPaths that select a data node, ondata event is sent only when the 
+datapointer is set to point to a different node. If the pointer selects an operator, i.e. <literal>"text()"</literal> or <literal>"@attr"</literal> it is 
+also sent when the text or the attribute it matches has changed. The argument sent with the event is the current 
+value of the data property of the node or the datapointer (see previous section).</para>
+
+<para>The example below makes use of the ondata event sent by a temporary
+datapointer to calculate the average of a sequence of accumulated
+numbers and display it. Then event is sent when the
+<indexterm><primary><literal>setXPath()</literal></primary></indexterm><methodname>setXPath()</methodname> method is invoked on the
+datapointer. Typically, a problem like this would be easier to program
+using Javascript's built-in arrays, but this version illustrates the
+data-driven approach. It also introduces the concept of data
+replication, which is explained in more detail later in this
+document.</para>
+<example role="live-example">
+   <title>Ondata event</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$16.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Ondata event</title><programlisting role="lzx-embednew"><filename>databinding-$16.lzx</filename><parameter/><code>
+&lt;canvas height="200" &gt;
+  &lt;dataset name="numbers"/&gt;
+  &lt;datapointer name="top" xpath="numbers:/"/&gt;
+  
+  &lt;datapointer name="numptr"&gt;
+    &lt;handler name="ondata" args="d"&gt;
+      // d is LzDataElement object 
+      result.update(d.nodeName)
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+  
+  &lt;simplelayout spacing="5"/&gt;
+  &lt;text&gt;Type in a number and press the button or the Enter key&lt;/text&gt;
+  &lt;view&gt;
+    &lt;simplelayout spacing="10" axis="x"/&gt;
+    &lt;edittext name="input"&gt;
+      &lt;handler name="onkeyup" args="k"&gt;
+        if ( k == 13 ) {
+          parent.bSend.compute();
+        }
+      &lt;/handler&gt;
+    &lt;/edittext&gt;
+    &lt;button name="bSend" text="Add"&gt;
+      &lt;handler name="onclick" method="compute"/&gt;
+        &lt;method name="compute"&gt;
+        top.addNode(parent.input.getText())
+        var end = top.xpathQuery('*/last()')
+        numptr.setXPath('numbers:/*[' + end + ']')
+        parent.input.clearText()
+      &lt;/method&gt;
+    &lt;/button&gt;
+&lt;/view&gt;
+&lt;view height="100" &gt;
+    &lt;text bgcolor="0xcecece" datapath="numbers:/*/name()"/&gt;
+    &lt;wrappinglayout axis="y" spacing="3"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view&gt;
+    &lt;attribute name="sum" value="$once{0}"/&gt;
+    &lt;simplelayout axis="x"/&gt;
+    &lt;text&gt;&lt;b&gt;AVG: &lt;/b&gt;&lt;/text&gt;
+    &lt;text id="result" fgcolor="blue" fontstyle="bold"&gt;
+      &lt;method name="update" args="v"&gt;
+        parent.sum += Number(v)
+        this.setText(parent.sum / top.p.childNodes.length)
+      &lt;/method&gt;
+    &lt;/text&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="200" &gt;
+  &lt;dataset name="numbers"/&gt;
+  &lt;datapointer name="top" xpath="numbers:/"/&gt;
+  
+  &lt;datapointer name="numptr"&gt;
+    <emphasis role="em">&lt;handler name="ondata" args="d"&gt;
+      // d is LzDataElement object 
+      result.update(d.nodeName)
+    &lt;/handler&gt;</emphasis>
+  &lt;/datapointer&gt;
+  
+  &lt;simplelayout spacing="5"/&gt;
+  &lt;text&gt;Type in a number and press the button or the Enter key&lt;/text&gt;
+  &lt;view&gt;
+    &lt;simplelayout spacing="10" axis="x"/&gt;
+    &lt;edittext name="input"&gt;
+      &lt;handler name="onkeyup" args="k"&gt;
+        if ( k == 13 ) {
+          parent.bSend.compute();
+        }
+      &lt;/handler&gt;
+    &lt;/edittext&gt;
+    &lt;button name="bSend" text="Add"&gt;
+      &lt;handler name="onclick" method="compute"/&gt;
+        &lt;method name="compute"&gt;
+        top.addNode(parent.input.getText())
+        var end = top.xpathQuery('*/last()')
+        numptr.setXPath('numbers:/*[' + end + ']')
+        parent.input.clearText()
+      &lt;/method&gt;
+    &lt;/button&gt;
+&lt;/view&gt;
+&lt;view height="100" &gt;
+    &lt;text bgcolor="0xcecece" datapath="numbers:/*/name()"/&gt;
+    &lt;wrappinglayout axis="y" spacing="3"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view&gt;
+    &lt;attribute name="sum" value="$once{0}"/&gt;
+    &lt;simplelayout axis="x"/&gt;
+    &lt;text&gt;&lt;b&gt;AVG: &lt;/b&gt;&lt;/text&gt;
+    &lt;text id="result" fgcolor="blue" fontstyle="bold"&gt;
+      &lt;method name="update" args="v"&gt;
+        parent.sum += Number(v)
+        this.setText(parent.sum / top.p.childNodes.length)
+      &lt;/method&gt;
+    &lt;/text&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$16.lzx></example?>
+
+<para/></section></section><section><title>Manipulating datapointers</title>
+<para>
+Recall that datapointer is an object that represents a pointer to a node in a <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>. The datapointer can be repositioned using either cursor movements calls such as <indexterm><primary><literal>selectNext()</literal></primary></indexterm><methodname>selectNext()</methodname>, or by running an XPath request via <indexterm><primary><literal>setXPath()</literal></primary></indexterm><methodname>setXPath()</methodname>.
+</para>
+<para>
+Datapointers support a subset of the XPath specification, which uses a notation similar to the UNIX file-system to refer to nodes within a dataset. Once a datapointer is bound to a node in a dataset it will keep pointing to that node until it is moved. If the dataset is edited, the behavior of the datapointer will be controlled by its rerunxpath attribute. If this attribute is true (the default value), it will continue pointing to its current node as long as it is valid.
+</para>
+<para/><section><title><indexterm><primary>rerunxpath</primary></indexterm><sgmltag class="attribute">rerunxpath</sgmltag></title>
+<para>The <indexterm><primary>rerunxpath</primary></indexterm><sgmltag class="attribute">rerunxpath</sgmltag> property of datapointer determines whether the XPath expression is re-evaluated every time the 
+contents of the dataset change. The default is false; if set to true, every time the dataset is edited, the XPath 
+binding is refreshed. In other words, the datapointer is assumed to be "constant" unless the <indexterm><primary>rerunxpath</primary></indexterm><sgmltag class="attribute">rerunxpath</sgmltag> attribute 
+is true.</para>
+<example role="live-example">
+   <title>Using rerunxpath attribute</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$17.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Using rerunxpath attribute</title><programlisting role="lzx-embednew"><filename>databinding-$17.lzx</filename><parameter/><code>
+&lt;canvas height="200"&gt;
+  &lt;dataset name="stack"&gt;
+    &lt;root/&gt;
+  &lt;/dataset&gt;
+  &lt;datapointer name="top" xpath="stack:/root"/&gt;
+  
+  &lt;datapointer xpath="stack:/root/*[1]/name()" rerunxpath="true"&gt;
+    &lt;handler name="ondata" args="d"&gt;
+      good_result.setText(d)
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+
+  &lt;datapointer xpath="stack:/root/*[1]/name()"&gt;
+    &lt;handler name="ondata" args="d"&gt;
+      bad_result.setText(d)
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+  
+  &lt;simplelayout spacing="5"/&gt;
+  &lt;text&gt;Type in a string and press the button or the Enter key&lt;/text&gt;
+  &lt;view&gt;
+    &lt;simplelayout spacing="10" axis="x"/&gt;
+    &lt;edittext name="input"&gt;
+      &lt;handler name="onkeyup" args="k"&gt;
+        if ( k == 13 ) {
+          parent.bAdd.handler();
+        }
+      &lt;/handler&gt;
+    &lt;/edittext&gt;
+    &lt;button name="bAdd" text="Push"&gt;
+      &lt;handler name="onclick" &gt;
+        var n = parent.input.getText() 
+        if (!top.p['childNodes'])
+          top.addNode(n)
+        else 
+        {    
+          var ne = new LzDataElement(n)
+          top.p.insertBefore(ne, top.p.getFirstChild())
+        }
+        parent.input.clearText()
+      &lt;/handler&gt;
+    &lt;/button&gt;
+    &lt;button name="bPop" text="Pop"&gt;
+      &lt;handler name="onclick"&gt;
+        var last = top.xpathQuery('*[1]')
+        top.p.removeChild(last)
+      &lt;/handler&gt;
+    &lt;/button&gt;
+  &lt;/view&gt;
+  
+  &lt;view height="100"&gt;
+    &lt;text bgcolor="0xcecece" text="$path{'name()'}"&gt;
+    &lt;datapath xpath="stack:/root/*/name()"/&gt; 
+    &lt;/text&gt;
+    &lt;wrappinglayout axis="y" spacing="3"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view&gt;
+    &lt;simplelayout axis="x" spacing="5"/&gt;
+    &lt;text&gt;&lt;b&gt;TOP: &lt;/b&gt;&lt;/text&gt;
+    &lt;text id="good_result" resize="true" fgcolor="green" fontstyle="bold"/&gt;
+    &lt;text id="bad_result" resize="true" fgcolor="red" fontstyle="bold"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="200"&gt;
+  &lt;dataset name="stack"&gt;
+    &lt;root/&gt;
+  &lt;/dataset&gt;
+  &lt;datapointer name="top" xpath="stack:/root"/&gt;
+  
+  <emphasis role="em">&lt;datapointer xpath="stack:/root/*[1]/name()" rerunxpath="true"&gt;</emphasis>
+    &lt;handler name="ondata" args="d"&gt;
+      good_result.setText(d)
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+
+  <emphasis role="em">&lt;datapointer xpath="stack:/root/*[1]/name()"&gt;</emphasis>
+    &lt;handler name="ondata" args="d"&gt;
+      bad_result.setText(d)
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+  
+  &lt;simplelayout spacing="5"/&gt;
+  &lt;text&gt;Type in a string and press the button or the Enter key&lt;/text&gt;
+  &lt;view&gt;
+    &lt;simplelayout spacing="10" axis="x"/&gt;
+    &lt;edittext name="input"&gt;
+      &lt;handler name="onkeyup" args="k"&gt;
+        if ( k == 13 ) {
+          parent.bAdd.handler();
+        }
+      &lt;/handler&gt;
+    &lt;/edittext&gt;
+    &lt;button name="bAdd" text="Push"&gt;
+      &lt;handler name="onclick" &gt;
+        var n = parent.input.getText() 
+        if (!top.p['childNodes'])
+          top.addNode(n)
+        else 
+        {    
+          var ne = new LzDataElement(n)
+          top.p.insertBefore(ne, top.p.getFirstChild())
+        }
+        parent.input.clearText()
+      &lt;/handler&gt;
+    &lt;/button&gt;
+    &lt;button name="bPop" text="Pop"&gt;
+      &lt;handler name="onclick"&gt;
+        var last = top.xpathQuery('*[1]')
+        top.p.removeChild(last)
+      &lt;/handler&gt;
+    &lt;/button&gt;
+  &lt;/view&gt;
+  
+  &lt;view height="100"&gt;
+    &lt;text bgcolor="0xcecece" text="$path{'name()'}"&gt;
+    &lt;datapath xpath="stack:/root/*/name()"/&gt; 
+    &lt;/text&gt;
+    &lt;wrappinglayout axis="y" spacing="3"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view&gt;
+    &lt;simplelayout axis="x" spacing="5"/&gt;
+    &lt;text&gt;&lt;b&gt;TOP: &lt;/b&gt;&lt;/text&gt;
+    &lt;text id="good_result" resize="true" fgcolor="green" fontstyle="bold"/&gt;
+    &lt;text id="bad_result" resize="true" fgcolor="red" fontstyle="bold"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$17.lzx></example?>
+
+<para>This example illustrates the effect of the <indexterm><primary>rerunxpath</primary></indexterm><sgmltag class="attribute">rerunxpath</sgmltag> property. The text fields at the bottom are updated when 
+the ondata event is sent by the datapointers intended to be bound to the first node in the dataset. However, the 
+first one is declared with <literal>rerunxpath="true"</literal>, and therefore it points to the actual first data node, while the 
+second one remembers the node it was referencing initially, and never gets updated.</para>
+<para/></section><section><title>Forcing visibility of datamapped views</title>
+<para>By default, any view whose datapath does not match any data will not be visible. However, sometimes it is 
+desirable to override this behavior, specifying that a datamapped view should be visible regardless of whether or 
+not it has data. A typical example of this is a panel containing placeholder views mapped to dynamically retrieved 
+data records, that need to be visible at all times. This is accomplished by defining the view's datapath with the 
+<indexterm><primary>datacontrolsvisibility</primary></indexterm><sgmltag class="attribute">datacontrolsvisibility</sgmltag> attribute and setting its value to <literal>false</literal>.</para>
+
+<para>The following example illustrates the usage of this attribute. The green square view's datapath initially has 
+no data, but its datapath is declared with <indexterm><primary>datacontrolsvisibility</primary></indexterm><sgmltag class="attribute">datacontrolsvisibility</sgmltag> set to false, and thus it is always visible.
+The red square's datapath initially matches nothing, and <indexterm><primary>dataControlsVisibility</primary></indexterm><sgmltag class="attribute">dataControlsVisibility</sgmltag> is left at its default value of <literal>true</literal>,
+and as expected, the view is not shown. But after we add another node to the dataset, the datapath has a match, and
+the view becomes visible. The blue square is declared with a matching datapath, so it is made visible.</para>
+<example role="live-example">
+   <title>Visibility of datamapped views</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$18.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Visibility of datamapped views</title><programlisting role="lzx-embednew"><filename>databinding-$18.lzx</filename><parameter/><code>
+&lt;canvas height="150"&gt;
+  &lt;dataset name="mydata"&gt; 
+    &lt;element&gt;data&lt;/element&gt;
+  &lt;/dataset&gt;
+  &lt;simplelayout spacing="5"/&gt;
+  &lt;view layout="axis: x"&gt;
+    &lt;view name="cs" width="20" height="20" bgcolor="green"&gt; 
+      &lt;datapath xpath="mydata:/element[2]"&gt; 
+                &lt;attribute name="datacontrolsvisibility" value="false"/&gt;
+      &lt;/datapath&gt;
+    &lt;/view&gt;
+    &lt;text text="${parent.cs.datapath.xpath}"/&gt;
+  &lt;/view&gt;
+  &lt;view layout="axis: x"&gt;
+    &lt;view name="cs" width="20" height="20" bgcolor="red"
+      datapath="mydata:/element[2]/text()"/&gt;
+    &lt;text text="${parent.cs.datapath.xpath}"/&gt;
+  &lt;/view&gt;
+  &lt;view layout="axis: x"&gt;
+    &lt;view name="cs" width="20" height="20" bgcolor="blue"
+          datapath="mydata:/element[1]/text()"/&gt;
+    &lt;text text="${parent.cs.datapath.xpath}"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button text="Add data node" 
+          onclick="mydata.getPointer().addNode('element', 'data')"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150"&gt;
+  &lt;dataset name="mydata"&gt; 
+    &lt;element&gt;data&lt;/element&gt;
+  &lt;/dataset&gt;
+  &lt;simplelayout spacing="5"/&gt;
+  &lt;view layout="axis: x"&gt;
+    &lt;view name="cs" width="20" height="20" bgcolor="green"&gt; 
+      &lt;datapath xpath="mydata:/element[2]"&gt; 
+                <emphasis role="em">&lt;attribute name="datacontrolsvisibility" value="false"/&gt;</emphasis>
+      &lt;/datapath&gt;
+    &lt;/view&gt;
+    &lt;text text="${parent.cs.datapath.xpath}"/&gt;
+  &lt;/view&gt;
+  &lt;view layout="axis: x"&gt;
+    &lt;view name="cs" width="20" height="20" bgcolor="red"
+      datapath="mydata:/element[2]/text()"/&gt;
+    &lt;text text="${parent.cs.datapath.xpath}"/&gt;
+  &lt;/view&gt;
+  &lt;view layout="axis: x"&gt;
+    &lt;view name="cs" width="20" height="20" bgcolor="blue"
+          datapath="mydata:/element[1]/text()"/&gt;
+    &lt;text text="${parent.cs.datapath.xpath}"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button text="Add data node" 
+          onclick="mydata.getPointer().addNode('element', 'data')"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$18.lzx></example?>
+
+<para>Lastly, <indexterm><primary>datacontrolsvisibility</primary></indexterm><sgmltag class="attribute">datacontrolsvisibility</sgmltag> is read-only, which means that changing it at runtime has 
+no effect, and is expected to be declared as a separate attribute.</para>
+
+<para/></section><section><title>Update timing (order of data initialization)</title>
+<para>Because data contained by static datasets is compiled into the application, it is available immediately. 
+Therefore any datapointers that have a static dataset as part of their paths will send the ondata event before
+any children of the canvas are instantiated by the runtime. This is important to remember if all changes in the 
+data need to be reflected in the application's interface. In other words, when writing handlers for <literal>ondata</literal>, one 
+should be careful not to reference views that may not have been fully initialized.</para>
+
+<para>In the example below, we attempt to expand a datamapped tree in response to the ondata event, but the tree is 
+backed by the same data and is not yet fully initialized, since there was not enough time for databinding to occur. 
+Thus, the <indexterm><primary><literal>openChildren()</literal></primary></indexterm><methodname>openChildren()</methodname> call on the first tree fails and the tree is not expanded. The solution is to move the 
+call to the handler for <indexterm><primary>oninit event</primary></indexterm><literal>oninit</literal>, which will be sent when the tree and all of its children (also trees) 
+have finished initializing. This result of this approach is that the call succeeds and the second tree is expanded.</para>
+<example role="live-example">
+   <title>Proper handling of data updates</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$19.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Proper handling of data updates</title><programlisting role="lzx-embednew"><filename>databinding-$19.lzx</filename><parameter/><code>
+&lt;canvas height="200"&gt;
+  &lt;include href="lz/tree.lzx" /&gt;
+  &lt;dataset name="filesys" src="resources/dirtree.xml"/&gt;
+  &lt;class name="fs_tree" extends="tree"&gt;
+    &lt;datapath xpath="filesys:/entry/@name"/&gt;
+    &lt;attribute name="autoscroll" value="true"/&gt;
+    &lt;tree datapath="*" text="$path{'@name'}" 
+          isleaf="${this.datapath.xpathQuery('@type') == 'file'}"/&gt;
+  &lt;/class&gt;
+  
+  &lt;simplelayout axis="x" spacing="20"/&gt;
+  
+  &lt;view width="200" height="200" clip="true"&gt;
+    &lt;fs_tree id="myfs"/&gt;
+    &lt;scrollbar visible="${scrollable}"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view width="200" height="200" clip="true"&gt;
+    &lt;fs_tree oninit="openChildren(true)"/&gt;
+    &lt;scrollbar visible="${scrollable}"/&gt;
+  &lt;/view&gt;
+
+  &lt;datapointer xpath="filesys:/" ondata="myfs.openChildren()"/&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="200"&gt;
+  &lt;include href="lz/tree.lzx" /&gt;
+  &lt;dataset name="filesys" src="resources/dirtree.xml"/&gt;
+  &lt;class name="fs_tree" extends="tree"&gt;
+    &lt;datapath xpath="filesys:/entry/@name"/&gt;
+    &lt;attribute name="autoscroll" value="true"/&gt;
+    &lt;tree datapath="*" text="$path{'@name'}" 
+          isleaf="${this.datapath.xpathQuery('@type') == 'file'}"/&gt;
+  &lt;/class&gt;
+  
+  &lt;simplelayout axis="x" spacing="20"/&gt;
+  
+  &lt;view width="200" height="200" clip="true"&gt;
+    &lt;fs_tree id="myfs"/&gt;
+    &lt;scrollbar visible="${scrollable}"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view width="200" height="200" clip="true"&gt;
+    &lt;fs_tree <emphasis role="em">oninit="openChildren(true)"</emphasis>/&gt;
+    &lt;scrollbar visible="${scrollable}"/&gt;
+  &lt;/view&gt;
+
+  &lt;datapointer xpath="filesys:/" <emphasis role="em">ondata="myfs.openChildren()"</emphasis>/&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$19.lzx></example?>
+
+<para>On the other hand, dynamic datasets have to fetch data externally, so they may not deliver it before the visual 
+elements that depend on it are in a stable state. This is why the logic in the code should only attempt to
+use these datamapped elements in response to the ondata event or by overriding the applyData method (see above).
+Note that the <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname> object itself sends an ondata event whenever it receives new data; this is a convenient 
+way of synchronizing UI operations with arrival of data it is tied to. As stated above, static datasets cause ondata 
+to be sent as soon as they are instantiated.</para>
+
+<para/></section><section><title>Iterator methods</title>
+<para>Often, the <indexterm><primary>LzDatapointer</primary></indexterm><classname>LzDatapointer</classname> API provides the most convenient way to traverse the hierarchy of nodes in a dataset. Below
+is an example that recursively walks a dataset mapped to a tree by calling iterator methods on a datapointer initially 
+set to the top of the dataset, and adds a new node at each level.</para>
+<example role="live-example">
+   <title>Using datapointer's iterator methods</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$20.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Using datapointer's iterator methods</title><programlisting role="lzx-embednew"><filename>databinding-$20.lzx</filename><parameter/><code>
+&lt;canvas height="200" &gt;
+  &lt;include href="lz/tree.lzx"/&gt;
+  &lt;dataset name="filesys" src="resources/dirtree.xml"/&gt;
+  
+  &lt;simplelayout axis="x" spacing="20"/&gt;
+  
+  &lt;view width="200" height="200" clip="true"&gt;
+    &lt;tree name="fs_tree" open="true" datapath="filesys:/entry/@name"
+          autoscroll="true"&gt;
+      &lt;tree datapath="*" text="$path{'@name'}" open="true"
+              isleaf="${this.datapath.xpathQuery('@type') == 'file'}"/&gt;
+    &lt;/tree&gt;
+    &lt;scrollbar visible="${scrollable}"/&gt;
+  &lt;/view&gt;
+  
+  &lt;datapointer name="dptr" xpath="filesys:/entry" /&gt;
+  
+  &lt;button text="Add a dot dir"&gt;
+    &lt;handler name="onclick"&gt;
+      // Allow to do this only once 
+      if (!dptr.xpathQuery('*[@name = "."]')) 
+        traverse(dptr);
+    &lt;/handler&gt;
+    &lt;method name="traverse" args="top"&gt;
+      var ne = new LzDataElement('entry', {name: '.', type: 'dir'})
+        do {
+          if (top.xpathQuery('@type') == 'dir') {
+            var root = top.dupePointer();
+            
+            // If this node has children, insert the dot before the first one 
+            // and descend one level, otherwise, just add below self.
+            if (root.selectChild()) {
+              top.p.insertBefore(ne, top.p.getFirstChild()) 
+              traverse(root)
+            }
+            else top.p.appendChild(ne)
+          }
+        } while (top.selectNext())
+      &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="200" &gt;
+  &lt;include href="lz/tree.lzx"/&gt;
+  &lt;dataset name="filesys" src="resources/dirtree.xml"/&gt;
+  
+  &lt;simplelayout axis="x" spacing="20"/&gt;
+  
+  &lt;view width="200" height="200" clip="true"&gt;
+    &lt;tree name="fs_tree" open="true" datapath="filesys:/entry/@name"
+          autoscroll="true"&gt;
+      &lt;tree datapath="*" text="$path{'@name'}" open="true"
+              isleaf="${this.datapath.xpathQuery('@type') == 'file'}"/&gt;
+    &lt;/tree&gt;
+    &lt;scrollbar visible="${scrollable}"/&gt;
+  &lt;/view&gt;
+  
+  &lt;datapointer name="dptr" xpath="filesys:/entry" /&gt;
+  
+  &lt;button text="Add a dot dir"&gt;
+    &lt;handler name="onclick"&gt;
+      // Allow to do this only once 
+      if (!dptr.xpathQuery('*[@name = "."]')) 
+        traverse(dptr);
+    &lt;/handler&gt;
+    &lt;method name="traverse" args="top"&gt;
+      var ne = new LzDataElement('entry', {name: '.', type: 'dir'})
+        do {
+          if (top.xpathQuery('@type') == 'dir') {
+            var root = top.dupePointer();
+            
+            // If this node has children, insert the dot before the first one 
+            // and descend one level, otherwise, just add below self.
+            if (root.selectChild()) {
+              top.p.insertBefore(ne, top.p.getFirstChild()) 
+              traverse(root)
+            }
+            else top.p.appendChild(ne)
+          }
+        } while (top.selectNext())
+      &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$20.lzx></example?>
+
+<para/></section></section><section><title>Data processing</title>
+<para/><section><title>Using <indexterm><primary><literal>setPointer()</literal></primary></indexterm><methodname>setPointer()</methodname> to bind data</title>
+<para>As an essential part of their functionality, datapointers (and datapaths) can be set directly to data nodes. 
+The example below uses the <indexterm><primary><literal>setPointer()</literal></primary></indexterm><methodname>setPointer()</methodname> method to set the target view's datapath to the node referenced by the 
+datapath of the selected view. In effect, this maps the details view to the contact currently selected in the 
+dataset.</para>
+<example role="live-example">
+   <title>Using setPointer</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$21.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Using setPointer</title><programlisting role="lzx-embednew"><filename>databinding-$21.lzx</filename><parameter/><code>
+&lt;canvas height="150"&gt;
+  &lt;dataset name="phonebook" src="resources/phonebook.xml"/&gt;
+  &lt;simplelayout axis="x" spacing="20"/&gt;
+  
+  &lt;view name="contacts" height="150" width="100"&gt;
+    &lt;view bgcolor="0xe0e0e0" datapath="phonebook:/contacts/contact"
+          onmouseover="setBGColor(0xc0c0c0)" onmouseout="setBGColor(0xe0e0e0)"
+          onclick="details.datapath.setPointer(this.datapath.p)"&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;
+      &lt;text datapath="@firstName" resize="true"/&gt;
+      &lt;text datapath="@lastName" resize="true"/&gt;
+    &lt;/view&gt;
+    &lt;simplelayout spacing="5"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view id="details" width="150" height="150" bgcolor="0xe0e0e0" fgcolor="blue"&gt;
+    &lt;datapath/&gt;
+    &lt;text datapath="@firstName"/&gt;
+    &lt;text datapath="@lastName"/&gt;
+    &lt;text datapath="@phone"/&gt;
+    &lt;text datapath="@email"/&gt;
+    &lt;simplelayout spacing="5"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150"&gt;
+  &lt;dataset name="phonebook" src="resources/phonebook.xml"/&gt;
+  &lt;simplelayout axis="x" spacing="20"/&gt;
+  
+  &lt;view name="contacts" height="150" width="100"&gt;
+    &lt;view bgcolor="0xe0e0e0" datapath="phonebook:/contacts/contact"
+          onmouseover="setBGColor(0xc0c0c0)" onmouseout="setBGColor(0xe0e0e0)"
+          <emphasis role="em">onclick="details.datapath.setPointer(this.datapath.p)"</emphasis>&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;
+      &lt;text datapath="@firstName" resize="true"/&gt;
+      &lt;text datapath="@lastName" resize="true"/&gt;
+    &lt;/view&gt;
+    &lt;simplelayout spacing="5"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view id="details" width="150" height="150" bgcolor="0xe0e0e0" fgcolor="blue"&gt;
+    &lt;datapath/&gt;
+    &lt;text datapath="@firstName"/&gt;
+    &lt;text datapath="@lastName"/&gt;
+    &lt;text datapath="@phone"/&gt;
+    &lt;text datapath="@email"/&gt;
+    &lt;simplelayout spacing="5"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$21.lzx></example?>
+<para/></section><section><title>Controlling a datapath</title>
+
+<para><indexterm><primary>LzDatapath</primary></indexterm><classname>LzDatapath</classname> is a subclass of <indexterm><primary>LzDatapointer</primary></indexterm><classname>LzDatapointer</classname>, and therefore can be used in much the same way to iterate over data.
+The example below treats the datapath of each of the replicated view as a pointer to the dataset that backs it.
+The datapath of the enclosing view in this context is simply a pointer to the root of the dataset, and thus it
+could be used to manipulate and add children nodes.</para>
+<example role="live-example">
+   <title>Dereferencing datapaths</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$22.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Dereferencing datapaths</title><programlisting role="lzx-embednew"><filename>databinding-$22.lzx</filename><parameter/><code>
+&lt;canvas height="150"&gt;
+  &lt;dataset name="busy"&gt;
+    &lt;Monday order="1"/&gt;
+    &lt;Tuesday order="2"/&gt;
+    &lt;Wednesday order="3"/&gt;
+    &lt;Thursday order="4"/&gt;
+    &lt;Friday order="5"/&gt;
+  &lt;/dataset&gt;
+  &lt;dataset name="free"/&gt;
+  
+  &lt;simplelayout axis="x" spacing="20"/&gt;
+  
+  &lt;class name="schedule" height="150" width="100"&gt;
+    &lt;attribute name="title" type="string"/&gt;
+    &lt;attribute name="target"/&gt;
+    
+    &lt;simplelayout spacing="5"/&gt;
+    &lt;text bgcolor="white" fgcolor="blue" text="$once{parent.title}"/&gt;
+    &lt;text bgcolor="0xe0e0e0" 
+          onmouseover="setBGColor(0xc0c0c0)" onmouseout="setBGColor(0xe0e0e0)"&gt;
+      &lt;datapath xpath="*/name()" sortpath="@order" sortorder="ascending"/&gt;
+      &lt;handler name="onclick"&gt;
+        parent.target.datapath.addNodeFromPointer(this.datapath)
+        this.datapath.deleteNode()
+      &lt;/handler&gt;
+    &lt;/text&gt;
+  &lt;/class&gt;
+  
+  &lt;schedule name="b" target="${f}" title="Busy" bgcolor="0xd0000a" datapath="busy:/"/&gt;
+  &lt;schedule name="f" target="${b}"  title="Free" bgcolor="0x00a000" datapath="free:/"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150"&gt;
+  &lt;dataset name="busy"&gt;
+    &lt;Monday order="1"/&gt;
+    &lt;Tuesday order="2"/&gt;
+    &lt;Wednesday order="3"/&gt;
+    &lt;Thursday order="4"/&gt;
+    &lt;Friday order="5"/&gt;
+  &lt;/dataset&gt;
+  &lt;dataset name="free"/&gt;
+  
+  &lt;simplelayout axis="x" spacing="20"/&gt;
+  
+  &lt;class name="schedule" height="150" width="100"&gt;
+    &lt;attribute name="title" type="string"/&gt;
+    &lt;attribute name="target"/&gt;
+    
+    &lt;simplelayout spacing="5"/&gt;
+    &lt;text bgcolor="white" fgcolor="blue" text="$once{parent.title}"/&gt;
+    &lt;text bgcolor="0xe0e0e0" 
+          onmouseover="setBGColor(0xc0c0c0)" onmouseout="setBGColor(0xe0e0e0)"&gt;
+      &lt;datapath xpath="*/name()" sortpath="@order" sortorder="ascending"/&gt;
+      &lt;handler name="onclick"&gt;
+        <emphasis role="em">parent.target.datapath.addNodeFromPointer(this.datapath)
+        this.datapath.deleteNode()</emphasis>
+      &lt;/handler&gt;
+    &lt;/text&gt;
+  &lt;/class&gt;
+  
+  &lt;schedule name="b" target="${f}" title="Busy" bgcolor="0xd0000a" datapath="busy:/"/&gt;
+  &lt;schedule name="f" target="${b}"  title="Free" bgcolor="0x00a000" datapath="free:/"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$22.lzx></example?>
+
+<para>There is an important restriction on usage of iterator methods with a datapath. If you move it by calling any 
+of <literal>select<replaceable>...</replaceable>()</literal> or <literal>set<replaceable>XXX</replaceable>Pointer()</literal> methods, its XPath is then removed, which means that any updates to underlying 
+data will not notify the datamapped UI element. Consider the following example.</para>
+<example role="live-example">
+   <title>Datapath iteration</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$23.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Datapath iteration</title><programlisting role="lzx-embednew"><filename>databinding-$23.lzx</filename><parameter/><code>
+&lt;canvas height="150" width="250"&gt;
+  &lt;dataset name="phonebook" src="resources/phonebook.xml" /&gt;
+  
+  &lt;button text="Previous" y="125"
+          onclick="details.datapath.selectPrev()"/&gt;
+  
+  &lt;view name="details" options="releasetolayout" height="150"&gt;
+    &lt;datapath xpath="phonebook:/contacts/contact[1]"/&gt;
+    &lt;text datapath="@firstName"/&gt;
+    &lt;text datapath="@lastName"/&gt;
+    &lt;text datapath="@phone"/&gt;
+    &lt;text datapath="@email"/&gt;
+    &lt;button text="Delete record"
+            onclick="parent.datapath.deleteNode()"/&gt;
+    &lt;simplelayout spacing="5"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button text="Next" y="125"
+          onclick="details.datapath.selectNext()"/&gt;
+  &lt;resizelayout axis="x" spacing="10"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150" width="250"&gt;
+  &lt;dataset name="phonebook" src="resources/phonebook.xml" /&gt;
+  
+  &lt;button text="Previous" y="125"
+          onclick="<emphasis role="em">details.datapath.selectPrev()</emphasis>"/&gt;
+  
+  &lt;view name="details" options="releasetolayout" height="150"&gt;
+    &lt;datapath xpath="phonebook:/contacts/contact[1]"/&gt;
+    &lt;text datapath="@firstName"/&gt;
+    &lt;text datapath="@lastName"/&gt;
+    &lt;text datapath="@phone"/&gt;
+    &lt;text datapath="@email"/&gt;
+    &lt;button text="Delete record"
+            onclick="parent.datapath.deleteNode()"/&gt;
+    &lt;simplelayout spacing="5"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button text="Next" y="125"
+          onclick="<emphasis role="em">details.datapath.selectNext()</emphasis>"/&gt;
+  &lt;resizelayout axis="x" spacing="10"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$23.lzx></example?>
+
+<para>You can move the datapath of the contact detail view in either direction, and the text fields will update 
+correctly. This is because their respective datapaths are unaffected by the scrolling (it only moves the 
+datapath of the containing view). However, deleting a contact will only result in an automatic update to the 
+text fields if no navigation has yet occurred. The solution is to reset the datapath's XPath to the proper value
+by calling the <indexterm><primary><literal>setXPath()</literal></primary></indexterm><methodname>setXPath()</methodname> method:</para>
+<example role="live-example">
+   <title>Datapath iteration workaround</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$24.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Datapath iteration workaround</title><programlisting role="lzx-embednew"><filename>databinding-$24.lzx</filename><parameter/><code>
+&lt;canvas height="150" width="250"&gt;
+  &lt;dataset name="phonebook" src="resources/phonebook.xml"/&gt;
+  
+  &lt;button text="Previous" y="125"&gt;
+    &lt;handler name="onclick"&gt;
+      with (details.datapath) {
+        selectPrev()
+        setXPath('phonebook:/contacts/contact[' + getNodeOffset() + ']' )
+      }
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;view name="details" options="releasetolayout" height="150"&gt;
+    &lt;datapath xpath="phonebook:/contacts/contact[1]"/&gt;
+    &lt;text datapath="@firstName"/&gt;
+    &lt;text datapath="@lastName"/&gt;
+    &lt;text datapath="@phone"/&gt;
+    &lt;text datapath="@email"/&gt;
+    &lt;button text="Delete record"
+           onclick="parent.datapath.deleteNode()"/&gt;
+    &lt;simplelayout spacing="5"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button text="Next" y="125"&gt;
+    &lt;handler name="onclick"&gt;
+      with (details.datapath) {
+        selectNext()
+        setXPath('phonebook:/contacts/contact[' + getNodeOffset() + ']')
+      }
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;resizelayout axis="x" spacing="10"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150" width="250"&gt;
+  &lt;dataset name="phonebook" src="resources/phonebook.xml"/&gt;
+  
+  &lt;button text="Previous" y="125"&gt;
+    &lt;handler name="onclick"&gt;
+      <emphasis role="em">with (details.datapath) {
+        selectPrev()
+        setXPath('phonebook:/contacts/contact[' + getNodeOffset() + ']' )
+      }</emphasis>
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;view name="details" options="releasetolayout" height="150"&gt;
+    &lt;datapath xpath="phonebook:/contacts/contact[1]"/&gt;
+    &lt;text datapath="@firstName"/&gt;
+    &lt;text datapath="@lastName"/&gt;
+    &lt;text datapath="@phone"/&gt;
+    &lt;text datapath="@email"/&gt;
+    &lt;button text="Delete record"
+           onclick="parent.datapath.deleteNode()"/&gt;
+    &lt;simplelayout spacing="5"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button text="Next" y="125"&gt;
+    &lt;handler name="onclick"&gt;
+      <emphasis role="em">with (details.datapath) {
+        selectNext()
+        setXPath('phonebook:/contacts/contact[' + getNodeOffset() + ']')
+      }</emphasis>
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;resizelayout axis="x" spacing="10"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$24.lzx></example?>
+
+<?ignore <h3>"Double buffering" data</h3>
+
+<fixme>missing content</fixme>
+?>
+<para/></section></section><section id="databinding.replication"><title>Data replication</title>
+
+<para>As shown in some of the examples above, datapaths that match
+multiple nodes cause their nodes to be <indexterm significance="preferred"><primary>replicated</primary></indexterm><glossterm>replicated</glossterm>. By
+"replicated", we mean that for each match of the XPath expression one
+instance of the mapped view is created. This is one of the most
+important features of the databinding facilities in LZX.</para>
+
+<para/><section><title>Replication Manager</title>
+
+<para>A <indexterm significance="preferred"><primary>replication manager</primary></indexterm><glossterm>replication manager</glossterm> is a runtime object that is
+created automatically whenever data replication occurs as a result of
+a datapath matching more than once. When that happens, the
+<indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> or <indexterm><primary>id</primary></indexterm><sgmltag class="attribute">id</sgmltag> attribute of
+the replicated view (if the view is named) is taken over by the
+replication manager, and from then on referring to that name will
+access the replication manager object, and not the view. In order to
+reference the replicated views, known as <indexterm significance="preferred"><primary>clones</primary></indexterm><glossterm>clones</glossterm>, you should
+use the <indexterm><primary>LzReplicationManager</primary></indexterm><classname>LzReplicationManager</classname> API.</para>
+
+<para/><section><title>The <indexterm><primary>replication</primary></indexterm><sgmltag class="attribute">replication</sgmltag> attribute</title>
+
+<para>If a datapath matches multiple nodes, it will create a replication
+manager.  If <indexterm><primary>replication</primary></indexterm><sgmltag class="attribute">replication</sgmltag> is <literal>normal</literal>
+(the default), then the replication manager will be a direct instance
+of <indexterm><primary>LzReplicationManager</primary></indexterm><classname>LzReplicationManager</classname>.  If it is
+<literal>lazy</literal>, it will instead create a
+<indexterm><primary>LzLazyReplicationManager</primary></indexterm><classname>LzLazyReplicationManager</classname>.</para>
+
+<para/></section><section><title>Clones and the <indexterm><primary>onclones event</primary></indexterm><literal>onclones</literal> event</title>
+
+<para>As mentioned above, when a view is replicated, its copies are
+managed by the replication manager object.  Once clones are created,
+the instance of the replication manager contains references to them in
+the <indexterm><primary>clones</primary></indexterm><sgmltag class="attribute">clones</sgmltag> property, which is an array of
+views. Note that <indexterm><primary>LzReplicationManager</primary></indexterm><classname>LzReplicationManager</classname> extends
+<indexterm><primary>LzDatapath</primary></indexterm><classname>LzDatapath</classname>, and a cloned view along with its
+datapath is replaced with the replication manager object. Armed with
+this knowledge, we have a technique for determining when a view is
+cloned. The example below demonstrates the use of the clones property
+by declaring a handler for the <indexterm><primary>onclones event</primary></indexterm><literal>onclones</literal> event on the
+view's datapath.</para>
+<example role="live-example">
+   <title>Using clones and the onclones event</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$25.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Using clones and the onclones event</title><programlisting role="lzx-embednew"><filename>databinding-$25.lzx</filename><parameter/><code>
+&lt;canvas width="550" height="200"&gt;
+  &lt;dataset name="tabnames"&gt;
+    &lt;title name="Account Info"/&gt;
+    &lt;title name="Order History"/&gt;
+    &lt;title name="Preferences"/&gt;
+    &lt;title name="Shopping Cart"/&gt;
+  &lt;/dataset&gt;
+  &lt;simplelayout axis="x" spacing="25"/&gt;
+  &lt;button text="Create tabs"&gt;
+    &lt;handler name="onclick"&gt;
+      gs.pane.setDatapath('tabnames:/title')
+      bs.pane.setDatapath('tabnames:/title')
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;class name="repltabelt" extends="tabelement" text="$path{'@name'}" visible="true"/&gt;
+    &lt;tabslider width="150" name="gs" height="150" spacing="2"&gt;
+      &lt;repltabelt name="pane"&gt;
+        &lt;datapath&gt;
+          &lt;handler name="onclones"&gt;
+            if (!this['doneDel']) {
+              this.doneDel = new LzDelegate(this, 'openOH')
+              this.doneDel.register(clones[clones.length - 1], 'oninit')
+            }
+          &lt;/handler&gt;
+          &lt;method name="openOH"&gt;
+            parent.select(this.getCloneNumber(0))
+          &lt;/method&gt;
+        &lt;/datapath&gt;
+      &lt;/repltabelt&gt;
+    &lt;/tabslider&gt;
+      
+    &lt;tabslider width="150" name="bs" height="150" spacing="2"&gt;
+      &lt;repltabelt name="pane"&gt;
+        &lt;datapath&gt;
+          &lt;handler name="onclones"&gt;
+          parent.select(this.getCloneNumber(0))
+        &lt;/handler&gt;
+      &lt;/datapath&gt;
+    &lt;/repltabelt&gt;
+  &lt;/tabslider&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="550" height="200"&gt;
+  &lt;dataset name="tabnames"&gt;
+    &lt;title name="Account Info"/&gt;
+    &lt;title name="Order History"/&gt;
+    &lt;title name="Preferences"/&gt;
+    &lt;title name="Shopping Cart"/&gt;
+  &lt;/dataset&gt;
+  &lt;simplelayout axis="x" spacing="25"/&gt;
+  &lt;button text="Create tabs"&gt;
+    &lt;handler name="onclick"&gt;
+      gs.pane.setDatapath('tabnames:/title')
+      bs.pane.setDatapath('tabnames:/title')
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;class name="repltabelt" extends="tabelement" text="$path{'@name'}" visible="true"/&gt;
+    &lt;tabslider width="150" name="gs" height="150" spacing="2"&gt;
+      &lt;repltabelt name="pane"&gt;
+        &lt;datapath&gt;
+          <emphasis role="em">&lt;handler name="onclones"&gt;</emphasis>
+            if (!this['doneDel']) {
+              this.doneDel = new LzDelegate(this, 'openOH')
+              this.doneDel.register(clones[clones.length - 1], 'oninit')
+            }
+          &lt;/handler&gt;
+          &lt;method name="openOH"&gt;
+            parent.select(this.getCloneNumber(0))
+          &lt;/method&gt;
+        &lt;/datapath&gt;
+      &lt;/repltabelt&gt;
+    &lt;/tabslider&gt;
+      
+    &lt;tabslider width="150" name="bs" height="150" spacing="2"&gt;
+      &lt;repltabelt name="pane"&gt;
+        &lt;datapath&gt;
+          <emphasis role="em">&lt;handler name="onclones"&gt;</emphasis>
+          parent.select(this.getCloneNumber(0))
+        &lt;/handler&gt;
+      &lt;/datapath&gt;
+    &lt;/repltabelt&gt;
+  &lt;/tabslider&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$25.lzx></example?>
+
+<para>Because the <indexterm><primary>onclones event</primary></indexterm><literal>onclones</literal> event is sent when the
+<indexterm><primary>clones</primary></indexterm><sgmltag class="attribute">clones</sgmltag> attribute is set, it only signals the
+start of view replication, but in this example it is used to determine
+the exact moment when replication is finished. Since replicated views
+are initialized in the same order they are in inserted in the clones
+array, we only need to wait for the oninit event for the last clone in
+the list. This is necessary because initialization of the
+<indexterm><primary>tab</primary></indexterm><classname>tab</classname> elements takes a non-zero amount of time,
+and an attempt to perform an operation on their container — tab
+slider — before it is completed will leave the component in an
+inconsistent state. For illustration purposes, the second
+<indexterm><primary>tabslider</primary></indexterm><classname>tabslider</classname> has this problem, whereby
+selecting the first <indexterm><primary>tab</primary></indexterm><classname>tab</classname> element too soon
+renders its parent unusable (the other
+<indexterm><primary>tabelement</primary></indexterm><classname>tabelement</classname>s are gone).</para>
+
+<para>This example also takes advantage of the fact that, by default, views
+become visible when they consume data (see section on visibility of
+datamapped views above). Before the button is clicked, there is a
+single <indexterm><primary>tabelement</primary></indexterm><classname>tabelement</classname> object within the
+tabslider. However, it is kept invisible until it receives data, at
+which point its replication occurs, and its clones are displayed.</para>
+
+<para/></section><section><title>Nodes and the <indexterm><primary>onnodes event</primary></indexterm><literal>onnodes</literal> event</title>
+
+<para>Similarly to the <indexterm><primary>clones</primary></indexterm><sgmltag class="attribute">clones</sgmltag> property,
+<indexterm><primary>LzReplicationManager</primary></indexterm><classname>LzReplicationManager</classname> maintains a list of
+matched data nodes in the <indexterm><primary>nodes</primary></indexterm><sgmltag class="attribute">nodes</sgmltag> property. It is
+an array of <indexterm><primary>LzDataElement</primary></indexterm><classname>LzDataElement</classname> objects that are
+mapped to the replicated views, and is available before any clones are
+created. And as with the <indexterm><primary>onclones event</primary></indexterm><literal>onclones</literal> event, a handler
+for <indexterm><primary>onnodes event</primary></indexterm><literal>onnodes</literal> may be declared to respond to data
+replication in a custom way. The code below qualifies the value of
+<indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> attribute of each replicated data node
+with the value of the text field, if any.</para>
+<example role="live-example">
+   <title>Using the nodes property</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$26.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Using the nodes property</title><programlisting role="lzx-embednew"><filename>databinding-$26.lzx</filename><parameter/><code>
+&lt;canvas height="200"&gt;
+  &lt;dataset name="tabnames"&gt;
+    &lt;title name="Account Info"/&gt;
+    &lt;title name="Order History"/&gt;
+    &lt;title name="Preferences"/&gt;
+    &lt;title name="Shopping Cart"/&gt;
+  &lt;/dataset&gt;
+  &lt;simplelayout axis="x" spacing="25"/&gt;
+  &lt;button text="Create tabs for user:"&gt;
+    &lt;handler name="onclick"&gt;
+      nav.pane.setDatapath('tabnames:/title')
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;edittext name="user" width="120" options="ignorelayout" y="25"/&gt;
+  &lt;tabslider width="150" name="nav" height="150" spacing="2"&gt;
+    &lt;tabelement name="pane" text="$path{'@name'}" visible="true"&gt;
+      &lt;datapath&gt;
+        &lt;handler name="onnodes"&gt;
+          if (user.text.length)
+            for (var i = 0; i &amp;lt; nodes.length ; i++) {
+              var title = nodes[i].getAttr('name')
+              pos = title.indexOf(':')
+              if (pos != -1)
+                title = user.text + title.substr(pos)
+              else 
+                title = user.text + ': ' + title
+              nodes[i].setAttr('name', title)
+            }
+        &lt;/handler&gt;
+      &lt;/datapath&gt;
+    &lt;/tabelement&gt;
+  &lt;/tabslider&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="200"&gt;
+  &lt;dataset name="tabnames"&gt;
+    &lt;title name="Account Info"/&gt;
+    &lt;title name="Order History"/&gt;
+    &lt;title name="Preferences"/&gt;
+    &lt;title name="Shopping Cart"/&gt;
+  &lt;/dataset&gt;
+  &lt;simplelayout axis="x" spacing="25"/&gt;
+  &lt;button text="Create tabs for user:"&gt;
+    &lt;handler name="onclick"&gt;
+      nav.pane.setDatapath('tabnames:/title')
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;edittext name="user" width="120" options="ignorelayout" y="25"/&gt;
+  &lt;tabslider width="150" name="nav" height="150" spacing="2"&gt;
+    &lt;tabelement name="pane" text="$path{'@name'}" visible="true"&gt;
+      &lt;datapath&gt;
+        <emphasis role="em">&lt;handler name="onnodes"&gt;</emphasis>
+          if (user.text.length)
+            for (var i = 0; i &amp;lt; nodes.length ; i++) {
+              var title = nodes[i].getAttr('name')
+              pos = title.indexOf(':')
+              if (pos != -1)
+                title = user.text + title.substr(pos)
+              else 
+                title = user.text + ': ' + title
+              nodes[i].setAttr('name', title)
+            }
+        &lt;/handler&gt;
+      &lt;/datapath&gt;
+    &lt;/tabelement&gt;
+  &lt;/tabslider&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$26.lzx></example?>
+
+<para/></section></section><section id="databinding.pooling"><title>Pooling</title>
+
+<para>If your application uses data replication and the data backing
+replicated views changes at runtime, by default the replication
+manager destroys and re-creates the replicated views whose data has
+changed. The typical scenarios when this will occur are a change in
+the datapath of the replicated view, or deletion/addition of rows to
+the dataset. Because the dataset may contain many data elements, this
+adjustment is often an expensive operation that results in a
+noticeable flicker of the user interface while view removal/creation
+takes place.</para>
+
+<para>In order to make updates to datamapped elements more efficient, you can declare the datapath that will match multiple
+nodes with the <indexterm><primary>pooling</primary></indexterm><sgmltag class="attribute">pooling</sgmltag> attribute set to
+<literal>true</literal>. The effect of this is that the views that have already been
+created as a result of replication will be reused internally, instead
+of re-created. Since the replication manager only needs to remap the
+changed data to the existing clones, data updates are reflected in UI
+much faster than they would be if the runtime had to create new views. 
+Consider the following example.</para>
+<example role="live-example">
+   <title>Using pooling to optimize data updates</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$27.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Using pooling to optimize data updates</title><programlisting role="lzx-embednew"><filename>databinding-$27.lzx</filename><parameter/><code>
+&lt;canvas height="300"&gt;
+  &lt;dataset name="phonebook" src="resources/phonebook.xml"/&gt;
+  
+  &lt;simplelayout axis="y" spacing="3"/&gt;
+  &lt;view&gt;
+    &lt;view name="newContact" datapath="new:/contact"&gt;
+      &lt;text&gt;First Name:&lt;/text&gt;
+      &lt;edittext name="firstName" datapath="@firstName" x="80"/&gt;
+      &lt;text y="25"&gt;Last Name:&lt;/text&gt;
+      &lt;edittext name="lastname" datapath="@lastName" x="80" y="25"/&gt;
+      &lt;text y="50"&gt;Phone:&lt;/text&gt;
+      &lt;edittext name="phone" datapath="@phone" x="80" y="50"/&gt;
+      &lt;text y="75"&gt;Email:&lt;/text&gt;
+      &lt;edittext name="email" datapath="@email" x="80" y="75"/&gt;
+      &lt;button width="80" x="200"&gt;Add
+        &lt;handler name="onclick"&gt;
+          parent.datapath.updateData();
+          var dp= phonebook.getPointer();   
+          dp.selectChild();
+          dp.addNodeFromPointer(parent.datapath);     
+          parent.setDatapath("new:/contact");         
+        &lt;/handler&gt;
+      &lt;/button&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+  &lt;button text="Delete selected"&gt;
+    &lt;handler name="onclick"&gt;&lt;![CDATA[
+      for (var c = 0; c &lt; all.nodes.length; ++c)
+        with (all.clones[c]) {
+          if (datapath.xpathQuery('@checked') == true)  {
+            datapath.deleteNode()
+            c--
+          }
+        }]]&gt;
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;view name="all"&gt;
+    &lt;datapath xpath="phonebook:/contacts/contact" pooling="true"/&gt;
+    &lt;view&gt;
+      &lt;simplelayout axis="x"/&gt;
+      &lt;checkbox width="30" datapath="@checked"&gt;
+        &lt;handler name="onvalue"&gt;
+          datapath.updateData()
+        &lt;/handler&gt;
+        &lt;method name="updateData"&gt;
+          return this.value
+        &lt;/method&gt;
+        &lt;method name="applyData" args="d"&gt;
+          setValue(d)
+        &lt;/method&gt;
+      &lt;/checkbox&gt;
+      &lt;text datapath="@firstName"/&gt;
+      &lt;text datapath="@lastName"/&gt;
+      &lt;text datapath="@phone"/&gt;
+      &lt;text datapath="@email"/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="300"&gt;
+  &lt;dataset name="phonebook" src="resources/phonebook.xml"/&gt;
+  
+  &lt;simplelayout axis="y" spacing="3"/&gt;
+  &lt;view&gt;
+    &lt;view name="newContact" datapath="new:/contact"&gt;
+      &lt;text&gt;First Name:&lt;/text&gt;
+      &lt;edittext name="firstName" datapath="@firstName" x="80"/&gt;
+      &lt;text y="25"&gt;Last Name:&lt;/text&gt;
+      &lt;edittext name="lastname" datapath="@lastName" x="80" y="25"/&gt;
+      &lt;text y="50"&gt;Phone:&lt;/text&gt;
+      &lt;edittext name="phone" datapath="@phone" x="80" y="50"/&gt;
+      &lt;text y="75"&gt;Email:&lt;/text&gt;
+      &lt;edittext name="email" datapath="@email" x="80" y="75"/&gt;
+      &lt;button width="80" x="200"&gt;Add
+        &lt;handler name="onclick"&gt;
+          parent.datapath.updateData();
+          var dp= phonebook.getPointer();   
+          dp.selectChild();
+          dp.addNodeFromPointer(parent.datapath);     
+          parent.setDatapath("new:/contact");         
+        &lt;/handler&gt;
+      &lt;/button&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+  &lt;button text="Delete selected"&gt;
+    &lt;handler name="onclick"&gt;&lt;![CDATA[
+      for (var c = 0; c &lt; all.nodes.length; ++c)
+        with (all.clones[c]) {
+          if (datapath.xpathQuery('@checked') == true)  {
+            datapath.deleteNode()
+            c--
+          }
+        }]]&gt;
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;view name="all"&gt;
+    &lt;datapath xpath="phonebook:/contacts/contact" <emphasis role="em">pooling="true"</emphasis>/&gt;
+    &lt;view&gt;
+      &lt;simplelayout axis="x"/&gt;
+      &lt;checkbox width="30" datapath="@checked"&gt;
+        &lt;handler name="onvalue"&gt;
+          datapath.updateData()
+        &lt;/handler&gt;
+        &lt;method name="updateData"&gt;
+          return this.value
+        &lt;/method&gt;
+        &lt;method name="applyData" args="d"&gt;
+          setValue(d)
+        &lt;/method&gt;
+      &lt;/checkbox&gt;
+      &lt;text datapath="@firstName"/&gt;
+      &lt;text datapath="@lastName"/&gt;
+      &lt;text datapath="@phone"/&gt;
+      &lt;text datapath="@email"/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$27.lzx></example?>
+
+<para>In the code above, we handle data removal by going through the list of data nodes, and deleting the nodes whose 
+<indexterm><primary>checked</primary></indexterm><sgmltag class="attribute">checked</sgmltag> attribute is set to "true". Note how this attribute is controlled by and mapped to the value of 
+the corresponding checkbox. Any change in the state of the checkbox results in an update to the data node attribute, 
+and vice versa — when views are created or reused (due to deletion), the appearance of their checkboxes is unchecked 
+because initially the attribute is not set.</para><para>This kind of syncing to the underlying data is generally required
+when pooling is in effect and the state of the visual elements can be changed as a result of a user interaction. 
+In a simpler case, the UI would not be modifiable by the user, so the data flow is one way only and the views are 
+completely data-driven, and therefore consistency of data with its presentation would be maintained automatically.</para> 
+
+<para/><section><title>When not to use pooling</title>
+
+<para>Pooling is generally a good optimization in cases where
+the data completely informs the state of a replicated view. If the
+view has additional state which can change through user interaction or
+depends on setting attributes at init time, then this option cannot
+usually be used. The default value for the <indexterm><primary>pooling</primary></indexterm><sgmltag class="attribute">pooling</sgmltag> on <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> is "false", except when
+replication is set to <literal>lazy</literal>, in which case it must be
+true, as described below.
+</para>
+
+<para/></section></section><section id="databinding.lazy-replication"><title>Lazy replication</title>
+<?ignore Needs work
+?>
+<para>If a datapath's <indexterm><primary>replication</primary></indexterm><sgmltag class="attribute">replication</sgmltag> attribute is set
+to <literal>lazy</literal>, then a match to multiple nodes will create an
+<indexterm><primary>LzLazyReplicationManager</primary></indexterm><classname>LzLazyReplicationManager</classname> instead of an
+<indexterm><primary>LzReplicationManager</primary></indexterm><classname>LzReplicationManager</classname>. This kind of replication manager is called "lazy" because it doesn't do the work of creating a view until it has to, and it does the bare minimum of work. The lazy replication
+manager creates only enough replicated views necessary to display the
+data, so there is not a view for each data node. This enables the
+display of very large datasets.</para>
+
+<para>Because the <indexterm><primary>LzLazyReplicationManager</primary></indexterm><classname>LzLazyReplicationManager</classname> is relatively specialized, there are several restrictions on its use:</para>
+
+<itemizedlist spacing="compact"><listitem><para>The replicated views should be contained in a view which is not the view that clips. The replicated views can be positioned by moving this container. This container will be sized to the size of the replicated list.</para></listitem><listitem><para>The parent of the container must be a view that clips (that is, its <indexterm><primary>clip</primary></indexterm><sgmltag class="attribute">clip</sgmltag> attribute is set to "true".</para></listitem><listitem><para>The replicated view cannot change its size in the replication axis, and the size cannot be a constraint. If the replicated view is sized by its contents, then lazy replication may not work in all cases.</para></listitem><listitem><para>The data should completely inform the display of the view. Any attributes that are changed through interaction with a replicated view should be stored in the dataset.</para></listitem><listitem><para>Selection within the replicated views should be controlled by a <indexterm><primary>LzDataSelectionManager</primary></indexterm><classname>LzDataSelectionManager</classname>.</para></listitem></itemizedlist>
+<para>This example shows use of the lazy replication manager to display a large dataset.  The replication does not create a view for each node in the dataset; rather it only creates enough views to fill the clipping view that contains it.
+As you click the "Make it bigger" button, you will see that more items from the list are shown.  Notice also that these views are actually being created when you press the button, as you can see by then "number of subviews" value at the top of the canvas.
+</para>
+<example role="live-example">
+   <title>Using a lazyreplicationmanager to display a large dataset</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$28.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Using a lazy replication manager to display a large dataset</title><programlisting role="lzx-embednew"><filename>databinding-$28.lzx</filename><parameter/><code>
+&lt;canvas height="350"&gt;
+  &lt;dataset name="vegetables"&gt;
+    &lt;celery/&gt; &lt;celeriac/&gt; &lt;carrot/&gt; &lt;florence_fennel/&gt; &lt;parsnip/&gt; 
+    &lt;parsley/&gt; &lt;winter_endive/&gt; &lt;witloof_chicory/&gt; &lt;cardoon/&gt; 
+    &lt;artichoke/&gt; &lt;head_lettuce/&gt; &lt;cos_lettuce/&gt; &lt;black_salsify/&gt; 
+    &lt;swedish_turnip/&gt; &lt;cauliflower/&gt; &lt;cabbage/&gt; &lt;brussels_sprouts/&gt; 
+    &lt;kohlrabi/&gt; &lt;broccoli/&gt; &lt;savoy_cabbage/&gt; &lt;turnip/&gt; &lt;radish/&gt; 
+    &lt;water_cress/&gt; &lt;garden_cress/&gt; &lt;foliage_beet/&gt; &lt;spinach/&gt; 
+    &lt;sweet_potato/&gt; &lt;watermelon/&gt; &lt;melon/&gt; &lt;cucumber/&gt; &lt;winter_squash/&gt; 
+    &lt;marrow/&gt; &lt;chickpea/&gt; &lt;lentil/&gt; &lt;runner_bean/&gt; &lt;common_bean/&gt; 
+    &lt;pea/&gt; &lt;faba_bean/&gt; &lt;leek/&gt; &lt;shallot/&gt; &lt;onion/&gt; &lt;salsify/&gt; 
+    &lt;welsh_onion/&gt; &lt;garlic/&gt; &lt;chives/&gt; &lt;asparagus/&gt; &lt;ladyfinger/&gt; 
+    &lt;sweet_corn/&gt; &lt;rhubarb/&gt; &lt;capsicum_pepper/&gt; &lt;tomato/&gt; &lt;eggplant/&gt;
+  &lt;/dataset&gt;
+
+  &lt;simplelayout spacing="10"/&gt;
+  &lt;text width="200" oninit="checkSubviews()"&gt;
+    &lt;handler
+            name="onaddsubview" reference="replicationParent"&gt;
+      this.setText('number of subviews: ' + 
+                   replicationParent.subviews.length);
+    &lt;/handler&gt;
+  &lt;/text&gt;
+
+  &lt;view clip="true" width="100" height="100" id="clipper" bgcolor="silver"&gt;
+    &lt;view id="replicationParent"&gt;
+      &lt;text&gt;
+        &lt;datapath xpath="vegetables:/*/name()" replication="lazy"/&gt;
+      &lt;/text&gt;
+    &lt;/view&gt;
+    &lt;scrollbar/&gt;
+  &lt;/view&gt;
+  &lt;button&gt;Make it bigger
+    &lt;handler name="onclick"&gt;
+      clipper.setAttribute('height', clipper.height + 50);
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="350"&gt;
+  &lt;dataset name="vegetables"&gt;
+    &lt;celery/&gt; &lt;celeriac/&gt; &lt;carrot/&gt; &lt;florence_fennel/&gt; &lt;parsnip/&gt; 
+    &lt;parsley/&gt; &lt;winter_endive/&gt; &lt;witloof_chicory/&gt; &lt;cardoon/&gt; 
+    &lt;artichoke/&gt; &lt;head_lettuce/&gt; &lt;cos_lettuce/&gt; &lt;black_salsify/&gt; 
+    &lt;swedish_turnip/&gt; &lt;cauliflower/&gt; &lt;cabbage/&gt; &lt;brussels_sprouts/&gt; 
+    &lt;kohlrabi/&gt; &lt;broccoli/&gt; &lt;savoy_cabbage/&gt; &lt;turnip/&gt; &lt;radish/&gt; 
+    &lt;water_cress/&gt; &lt;garden_cress/&gt; &lt;foliage_beet/&gt; &lt;spinach/&gt; 
+    &lt;sweet_potato/&gt; &lt;watermelon/&gt; &lt;melon/&gt; &lt;cucumber/&gt; &lt;winter_squash/&gt; 
+    &lt;marrow/&gt; &lt;chickpea/&gt; &lt;lentil/&gt; &lt;runner_bean/&gt; &lt;common_bean/&gt; 
+    &lt;pea/&gt; &lt;faba_bean/&gt; &lt;leek/&gt; &lt;shallot/&gt; &lt;onion/&gt; &lt;salsify/&gt; 
+    &lt;welsh_onion/&gt; &lt;garlic/&gt; &lt;chives/&gt; &lt;asparagus/&gt; &lt;ladyfinger/&gt; 
+    &lt;sweet_corn/&gt; &lt;rhubarb/&gt; &lt;capsicum_pepper/&gt; &lt;tomato/&gt; &lt;eggplant/&gt;
+  &lt;/dataset&gt;
+
+  &lt;simplelayout spacing="10"/&gt;
+  &lt;text width="200" oninit="checkSubviews()"&gt;
+    &lt;handler
+            name="onaddsubview" reference="replicationParent"&gt;
+      this.setText('number of subviews: ' + 
+                   replicationParent.subviews.length);
+    &lt;/handler&gt;
+  &lt;/text&gt;
+
+  &lt;view <emphasis role="em">clip="true"</emphasis> width="100" height="100" id="clipper" bgcolor="silver"&gt;
+    &lt;<emphasis role="em">view id="replicationParent"</emphasis>&gt;
+      &lt;text&gt;
+        &lt;datapath xpath="vegetables:/*/name()" <emphasis role="em">replication="lazy"</emphasis>/&gt;
+      &lt;/text&gt;
+    &lt;/view&gt;
+    &lt;scrollbar/&gt;
+  &lt;/view&gt;
+  &lt;button&gt;Make it bigger
+    &lt;handler name="onclick"&gt;
+      clipper.setAttribute('height', clipper.height + 50);
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$28.lzx></example?>
+
+<para>See the <ulink url="../../examples/paging.lzx" type="">paging.lzx example</ulink> for
+another example of lazy replication.</para>
+<para/></section><section><title>$path bindings and replication</title>
+<para>
+Only a datapath can cause replication. Although it might seem that $path might be used to implicitly force replication, it will not. A $path expression will only yield a single value. If it matches multiple values, it is an error and it will act as if it matched none.  In the example below, note that The $path constraint does not update when the enclosing datapath is set.
+</para>
+<example role="live-example">
+   <title>$path does not replicate</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/databinding-$29.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>$path does not replicate</title><programlisting role="lzx-embednew"><filename>databinding-$29.lzx</filename><parameter/><code>
+ &lt;canvas height="300" width="400" debug="true"&gt;
+   &lt;debug y="100" /&gt;
+   &lt;dataset name="ds"&gt;
+     &lt;data&gt;
+       &lt;person name="a assdfasfva asdf sad" surname="a surname"/&gt;
+       &lt;person name="b" surname="b surname"/&gt;
+       &lt;person name="c" surname="c surname"/&gt;
+     &lt;/data&gt;
+   &lt;/dataset&gt;
+   &lt;simplelayout axis="y"/&gt;
+   &lt;button onclick="thedata.setAttribute('datapath', 'ds:/')"&gt;Set datapath&lt;/button&gt;
+   &lt;view id="thedata" ondata="Debug.warn('data %#w', arguments[0])"&gt;
+     &lt;simplelayout axis="y"/&gt;
+     &lt;view&gt;
+       &lt;simplelayout axis="x"/&gt;
+       &lt;text&gt;Datapath:&lt;/text&gt;
+       &lt;view&gt;
+         &lt;simplelayout axis="y"/&gt;
+         &lt;text datapath='data/person/@name' resize="true"
+               ondata="Debug.warn('datapath.ondata')"
+               /&gt;
+       &lt;/view&gt;
+     &lt;/view&gt;
+     &lt;view&gt;
+       &lt;simplelayout axis="x"/&gt;
+       &lt;text&gt;$path:&lt;/text&gt;
+       &lt;view&gt;
+         &lt;simplelayout axis="y"/&gt;
+         &lt;text text="$path{'data/person/@name'}" resize="true"
+               ondata="Debug.warn('$path.ondata')"
+               /&gt;
+       &lt;/view&gt;
+     &lt;/view&gt;
+   &lt;/view&gt;
+ &lt;/canvas&gt;
+</code></programlisting><programlisting>
+ &lt;canvas height="300" width="400" debug="true"&gt;
+   &lt;debug y="100" /&gt;
+   &lt;dataset name="ds"&gt;
+     &lt;data&gt;
+       &lt;person name="a assdfasfva asdf sad" surname="a surname"/&gt;
+       &lt;person name="b" surname="b surname"/&gt;
+       &lt;person name="c" surname="c surname"/&gt;
+     &lt;/data&gt;
+   &lt;/dataset&gt;
+   &lt;simplelayout axis="y"/&gt;
+   &lt;button onclick="thedata.setAttribute('datapath', 'ds:/')"&gt;Set datapath&lt;/button&gt;
+   &lt;view id="thedata" ondata="Debug.warn('data %#w', arguments[0])"&gt;
+     &lt;simplelayout axis="y"/&gt;
+     &lt;view&gt;
+       &lt;simplelayout axis="x"/&gt;
+       &lt;text&gt;Datapath:&lt;/text&gt;
+       &lt;view&gt;
+         &lt;simplelayout axis="y"/&gt;
+         &lt;text datapath='data/person/@name' resize="true"
+               ondata="Debug.warn('datapath.ondata')"
+               /&gt;
+       &lt;/view&gt;
+     &lt;/view&gt;
+     &lt;view&gt;
+       &lt;simplelayout axis="x"/&gt;
+       &lt;text&gt;$path:&lt;/text&gt;
+       &lt;view&gt;
+         &lt;simplelayout axis="y"/&gt;
+         &lt;text text="$path{'data/person/@name'}" resize="true"
+               ondata="Debug.warn('$path.ondata')"
+               /&gt;
+       &lt;/view&gt;
+     &lt;/view&gt;
+   &lt;/view&gt;
+ &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/databinding-$29.lzx></example?>
+<para/></section><section><title>$path syntax to determine order of replicated views</title>
+<para>
+Sometimes you want to know the position of a view; for example, say you wanted to alternate background colors. You might think of checking for the position of the view in its <indexterm><primary><literal>oninit()</literal></primary></indexterm><methodname>oninit()</methodname> method.
+</para>
+<para>
+However, if you're using datapath pooling (you'll probably want to for long lists), the <literal>oninit</literal> events for views created by data replication don't necessarily fire because the views may be reused. In that case, the <literal>ondata</literal> event will fire, so you might consider using the <indexterm><primary><literal>ondata()</literal></primary></indexterm><methodname>ondata()</methodname> handler. However, incrementing a counter isn't the most reliable way to determine order because views may not instantiate in linear order. </para>
+<para>
+That's why it's better to use a datapath expression. Add attribute like this inside your replicated node:
+</para>
+<programlisting>
+&lt;attribute name="pos" value="$path{'position()'}"/&gt;
+</programlisting>
+<para>
+This will tie the pos attribute to the physical position in the data. You can then then tie the background color like so:
+</para>
+<programlisting>
+&lt;attribute name="bgcolor" value="${this.pos % 2 == 0 ? 0x00EEEE : 0x00DDDD}"/&gt; 
+</programlisting>
+
+<para/></section><section id="databinding.procedural_and_replicated"><title>Be careful of mixing replication and classes declared procedurally</title>
+<para>
+Views that you create procedurally are not the same as "clones" created by data replication. In fact, data replication overrides procedurally created views. For example:
+</para>
+<orderedlist spacing="compact"><listitem><para>Declare a view.</para></listitem><listitem><para>Add subviews to it (procedurally), and alter its properties.</para></listitem><listitem><para>Set a datapath on the view (from step 1) that would make it replicate.</para></listitem></orderedlist>
+<para>
+Changes made in step 2 will be ignored after replication.
+</para>
+
+<?ignore <h4>Lazy replication gotchas</h4>
+<todo>Sizing, required structure, attribute resetting</todo>
+
+<h4>Using a dataselectionmanager</h4>
+
+        
+<h2>Tags/APIs discussed in this chapter</h2>
+<ul>
+    <li><classname link="true">LzDataElement</classname></li>
+    <li><classname link="true">LzDataNode</classname></li>
+    <li><classname link="true">LzDataText</classname></li>
+    <li><classname link="true">LzDatapointer</classname></li>
+    <li><classname link="true">LzDatapath</classname></li>
+    <li><classname link="true">LzReplicationManager</classname></li>
+    <li><classname link="true">LzLazyReplicationManager</classname></li>
+    <li><classname link="true">LzDataSelectionManager</classname></li>
+</ul>
+
+<fixme>
+..  Cleanup structure a bit and add nicer intro
+
+..  There should be a discussion early of LzNodes and LzDatanodes as well as the special 'datapath' attribute of LzNodes that takes an XPath expression and binds the LzDatanodes to LzNodes (and replicates the LzNodes if the XPath matches multipel LzDatanodes).  (edb: this is my defn of what Laszlo databinding *is*.)
+
+..  move/splice descrition of datasource/dataset with data transport chapter
+
+.. Add description of '/', '.', and '..' in XPath
+
+.. Possibly simplify examples where possible (avoid use of ?lzt=xml).
+</fixme>
+?>
+<para/></section></section></chapter>

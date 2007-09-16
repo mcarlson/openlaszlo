@@ -1,8 +1,11 @@
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<%@ page import="java.util.*,
+<!--
+@!@!@!@!@ ATTENTION EDITORS OF THIS FILE @!@!@!@!@
+
+If you edit this file, please validate your work using http://validator.w3.org/
+-->
+<!-- charset needs to match xsl charset -->
+<%@ page contentType="text/html; charset=UTF-8"
+      import="java.util.*,
       java.io.*,
       javax.servlet.*,
       javax.xml.transform.*,
@@ -15,7 +18,7 @@
     /**
      * Trims / from directory name.
      */
-    public String trim(String dirName) { 
+    public String trim(String dirName) {
         if (dirName.length() == 0) return "";
         StringBuffer buf = new StringBuffer(dirName);
         int len = buf.length();
@@ -53,7 +56,7 @@
       try {
 	String p = getServletContext().getRealPath(fname);
 	if (p != null && !new File(p).exists()) {
-	    String resolved = FileResolver.DEFAULT_FILE_RESOLVER.resolve(fname, base).toString();
+	    String resolved = FileResolver.DEFAULT_FILE_RESOLVER.resolve(fname, base, false).toString();
 	    if (resolved.startsWith(getServletContext().getRealPath(""))) {
 	      fname = resolved.substring(getServletContext().getRealPath("").length());
 	      found = true;
@@ -69,7 +72,7 @@
       response.sendError(HttpServletResponse.SC_NOT_FOUND,
         "The requested file or directory (" + fname + ") was not found.");
       return;
-    }      
+    }
 
     if (request.getParameter("base") != null) {
       response.sendRedirect(viewer + "?file=" + fname.replace(File.separatorChar, '/'));
@@ -134,7 +137,7 @@
 
       for (int i = -1; i < files.length; i++) {
 
-	// Don't display '..' if we're at a base 
+	// Don't display '..' if we're at a base
 	if (i < 0 && (isBase))
 	    continue;
 
@@ -163,14 +166,18 @@
       transformer.setParameter("fname", new File(fname).getName());
       transformer.setParameter("url", viewer + /*"?mode=" + xform +*/ "?base=" + base + "&file=");
       // Perform the transformation, sending the output to the response.
-      transformer.transform(xmlSource, 
+      transformer.transform(xmlSource,
                            new javax.xml.transform.stream.StreamResult(writer));
     // If an Exception occurs, return the error to the client.
     } catch (IOException e) {
       throw e;
     } catch (Exception e) {
       writer.println(e.getMessage());
-      e.printStackTrace(writer);    
+      e.printStackTrace(writer);
     }
     writer.close();
 %>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

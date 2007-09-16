@@ -1,54 +1,61 @@
 <library>
   <include href="lzunit/lzunit.lzx" />
 
-  <dataset name="postData" src="http:echo.jsp" request="false"/>
+  <dataset name="edata" src="http:echo.jsp" 
+           getresponseheaders="true" 
+           timeout="120000"/>
 
   <class name="TestSetHeaders" extends="TestCase">
     <attribute name="dpready" value="false"/>
     <attribute name="t2del" value="false"/>
     <attribute name="waitcnt" value="0"/>
 
-    <datapointer xpath="postData:/" name="dp" 
-                 oninit="parent.sendit()"
-                 ondata="Debug.write('got data'); parent.dpready = true"/>
+    <datapointer xpath="edata:/echo" name="dp" 
+                 oninit="Debug.write('sending edata request'); parent.sendit()" />
+
+    <handler reference="edata" name="ondata">
+       Debug.write('testcase got edata ondata');
+       this.dpready = true;
+    </handler>
 
     <method name="sendit">
-      postData.setHeader("content-type", "application/xml");
-      postData.setQueryType("POST");
-      Debug.write('making data request');
-      postData.doRequest();
+      Debug.write("testsetheaders.lzx sending edata");
+      edata.setHeader("content-type", "pink-elephants/xml");
+      edata.setQueryType("POST");
+      edata.doRequest();
     </method>
 
-    <method name="test2">
-      Debug.write('test2', this.waitcnt);
+    <method name="test1">
+          Debug.write("this.dpready = ",this.dpready);
       if ( ! this.dpready ){
           if ( ! this.t2del ){
               Debug.write( "test isn't done until async test runs" );
-              this.t2del = new LzDelegate( this , 'test2' );
+              this.t2del = new LzDelegate( this , 'test1' );
           }
 
-          if ( this.waitcnt++ > 100 ){
-              fail( "Didn't get async data" );
+          if ( this.waitcnt++ > 1000 ){
+              fail( "testsetheaders: Didn't get async data" );
           } else {
               LzIdle.callOnIdle( this.t2del );
           }
-          return;
-      }
 
-     Debug.write( 'running async test for loaded data' );
+          return;
+      } 
+      Debug.write( 'running testsetheaders test on loaded data' );
       this.doIt(dp);
     </method>
 
         <method name="doIt" args="dp">
             <![CDATA[
-            assertTrue(  dp.xpathQuery( '/echo/headers/text()' ).indexOf('application/xml') > 0 );
+                     Debug.write("/echo/headers/text()=",dp.xpathQuery( '/echo/headers/text()' ));
+                     assertTrue(  dp.xpathQuery( '/echo/headers/text()' ).indexOf('pink-elephants/xml') > 0 , "looking for pink-elephants/xml header ");
             ]]>
         </method>
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

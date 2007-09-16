@@ -86,7 +86,11 @@ public class CompilationError extends RuntimeException {
     public CompilationError(Throwable cause) {
         super(getCauseMessage(cause));
         SAXParseException se = null; // is there a SAXParseException with more location info?
-        if (cause instanceof JDOMException) {
+        if (cause instanceof ParseException) {
+            this.initPathname(((ParseException) cause).getPathname());
+            this.setLineNumber(((ParseException) cause).getBeginLine());
+            this.setColumnNumber(((ParseException) cause).getBeginColumn());
+        } else if (cause instanceof JDOMException) {
             JDOMException je = (JDOMException) cause;
             if (je.getCause() instanceof SAXParseException) {
                  se = (SAXParseException) je.getCause();
@@ -156,7 +160,7 @@ public class CompilationError extends RuntimeException {
     
     /** Set the 'solution message', a hint as to what might have
         caused this error.
-        @param solution a helpful message to be appended to the error message
+        @param sol a helpful message to be appended to the error message
      */
     public void setSolution(String sol) {
         this.solutionMessage = sol;
@@ -184,14 +188,15 @@ public class CompilationError extends RuntimeException {
                                 );
         }
         this.mElement = element;
-        this.initPathname(Parser.getSourceMessagePathname(element));
 
         // Prefer the script compiler's suggestion of what line number
         // the error occurred on
         if (cause instanceof ParseException) {
+            this.initPathname(((ParseException) cause).getPathname());
             this.setLineNumber(((ParseException) cause).getBeginLine());
             this.setColumnNumber(((ParseException) cause).getBeginColumn());
         } else {
+            this.initPathname(Parser.getSourceMessagePathname(element));
             this.setLineNumber(Parser.getSourceLocation(element, Parser.LINENO).intValue());
             this.setColumnNumber(Parser.getSourceLocation(element, Parser.COLNO).intValue());
         }

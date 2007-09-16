@@ -1,3 +1,7 @@
+<!---
+      @topic Incubator
+      @subtopic Tooltip
+  -->
 <library>
 
 <resource name="tooltip_ptr_rsc" >
@@ -5,7 +9,8 @@
     <frame src="resources/tooltip_pointer_dn.png" />
 </resource>
 
-<!--- used by tooltip class -->
+<!--- used by tooltip class
+      @access private-->
 <view name="tooltipview" options="ignorelayout"  id="tp" 
       bgcolor="0x252525"
       width="${t.width + 6}" height="17" 
@@ -56,7 +61,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

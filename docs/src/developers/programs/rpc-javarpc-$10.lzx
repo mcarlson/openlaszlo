@@ -1,0 +1,177 @@
+
+<canvas debug="true" height="450" width="800">
+ 
+    <debug x="10" y="130" width="740" height="275" />
+
+    <security>
+        <allow>
+            <pattern>^examples\.ReturnTypeExample</pattern>
+        </allow>
+    </security>
+
+    <!-- See WEB-INF/classes/ReturnTypeExample.java for java source. -->
+    <javarpc name="return_type_example_rpc" scope="none" 
+             remoteclassname="examples.ReturnTypeExample">
+        <handler name="onload">
+            // Set buttons visible only after JavaRPC object loads
+            canvas.buttons.setAttribute('visible', true);
+        </handler>
+        <handler name="ondata" args="res">
+            Debug.write('(return type ondata) value:', res, ', type:', typeof(res));
+        </handler>
+        <handler name="onerror" args="errmsg">
+            Debug.write('(return type onerror) error:', errmsg);
+        </handler>
+    </javarpc>
+
+    
+    <view x="10" y="10" name="buttons" visible="false" layout="spacing: 5" >
+
+        <view layout="axis: x; spacing: 2" >
+
+            <button text="integer" onclick="this.returnInteger.invoke()">
+                <remotecall funcname="returnInteger" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="integer object " onclick="this.returnIntegerObject.invoke()">
+                <remotecall funcname="returnIntegerObject" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="short" onclick="this.returnShort.invoke()">
+                <remotecall funcname="returnShort" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="short object " onclick="this.returnShortObject.invoke()">
+                <remotecall funcname="returnShortObject" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="long" onclick="this.returnLong.invoke()">
+                <remotecall funcname="returnLong" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="long object" onclick="this.returnLongObject.invoke()">
+                <remotecall funcname="returnLongObject" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="float" onclick="this.returnFloat.invoke()">
+                <remotecall funcname="returnFloat" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="float object" onclick="this.returnFloatObject.invoke()">
+                <remotecall funcname="returnFloatObject" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="double" onclick="this.returnDouble.invoke()">
+                <remotecall funcname="returnDouble" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="double object" onclick="this.returnDoubleObject.invoke()">
+                <remotecall funcname="returnDoubleObject" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+        </view>
+
+        <view layout="axis: x; spacing: 2" >
+
+            <button text="byte" onclick="this.returnByte.invoke()">
+                <remotecall funcname="returnByte" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="byte object" onclick="this.returnByteObject.invoke()">
+                <remotecall funcname="returnByteObject" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="boolean" onclick="this.returnBoolean.invoke()">
+                <remotecall funcname="returnBoolean" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="boolean object" onclick="this.returnBooleanObject.invoke()">
+                <remotecall funcname="returnBooleanObject" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="character" onclick="this.returnCharacter.invoke()">
+                <remotecall funcname="returnCharacter" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="character object" onclick="this.returnCharacterObject.invoke()">
+                <remotecall funcname="returnCharacterObject" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="string" onclick="this.returnString.invoke()">
+                <remotecall funcname="returnString" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="coordinate object" onclick="this.rco.invoke()">
+                <remotecall name="rco" funcname="returnCoordinateObject" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+        </view>
+
+        <view layout="axis: x; spacing: 2" >
+
+            <button text="integer array" onclick="this.returnIntegerArray.invoke()">
+                <remotecall funcname="returnIntegerArray" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="string array" onclick="this.returnStringArray.invoke()">
+                <remotecall funcname="returnStringArray" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="coordinate object array " onclick="this.returnCoordinateObjectArray.invoke()">
+                <remotecall funcname="returnCoordinateObjectArray" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="integer list" onclick="this.returnIntegerList.invoke()">
+                <remotecall funcname="returnIntegerList" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="integer map" onclick="this.rim.invoke()">
+                <remotecall name="rim" funcname="returnIntegerMap" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+        </view>
+
+        <view layout="axis: x; spacing: 2" >
+
+            <button text="coordinate object list " onclick="this.returnCoordinateObjectList.invoke()">
+                <remotecall funcname="returnCoordinateObjectList" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+            <button text="coordinate object map" onclick="this.rcom.invoke()">
+                <remotecall name="rcom" funcname="returnCoordinateObjectMap" 
+                            remotecontext="$once{ return_type_example_rpc }" />
+            </button>
+
+        </view>
+
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -20,10 +20,16 @@
         <view name="img" resource="radio_rsc" y="2"/>
 
         <method name="select">
-            selectionobject.selectedItem.img.setResourceNumber(1);
-            this.img.setResourceNumber(2);
-            selectionobject.setAttribute("selectedItem", this);
-            selectionobject.setAttribute("val", this.val);
+          if (selectionobject.selectedItem) {
+            if (selectionobject.selectedItem.img)
+              selectionobject.selectedItem.img.setResourceNumber(1);
+            else
+              // Looks like the selected radio button was deleted
+              selectionobject.selectedItem = null;
+          }
+          this.img.setResourceNumber(2);
+          selectionobject.setAttribute("selectedItem", this);
+          selectionobject.setAttribute("val", this.val);
         </method>
 
     </class>
@@ -90,17 +96,23 @@
             </vtabsliderbutton>
         </view>
 
-        <view width="${parent.width-parent.tab.width}" height="${parent.height}">
+        <view width="${parent.width-parent.tab.width}" height="${parent.height}" name="container">
             <view name="div" resource="divider_panel" width="${parent.width}" stretches="both"/>
-            <view name="content" width="${parent.width}" height="${parent.height-parent.div.height}" clip="true"/>
+            <view name="content" width="${parent.width}" height="${parent.height-parent.div.height}" clip="true" visible="false"/>
         </view>
 
         <method name="open">
+            this.container.content.setVisible(true);
             this.animate("width",openingsize,333,false);
         </method>
 
         <method name="close">
-            this.animate("width",tab.width,333,false);
+            var a = this.animate("width",tab.width,333,false);
+            if (! this.__closeDel) this.__closeDel = new LzDelegate(this, 'hidecontent', a, 'onstop');
+        </method>
+
+        <method name="hidecontent">
+            this.container.content.setVisible(false);
         </method>
 
         <!-- Nudge the tab left then right to give feedback that something's
@@ -134,7 +146,7 @@
     </class>
 
     <class name="tabpanel" clip="true" x="1" width="${parent.width-2}" 
-           bgcolor="#FFFFFF" height="${top.height}" defaultplacement="content">
+           bgcolor="#FFFFFF" height="$once{top.height}" defaultplacement="content">
 
         <attribute name="label" type="string"/>
 
@@ -201,7 +213,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

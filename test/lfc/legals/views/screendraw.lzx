@@ -1,0 +1,32 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas>
+    <simplelayout/>
+    <text height="20">The red and green views should 
+                      appear at the same time.</text>
+
+    <method event="oninit">
+        <![CDATA[
+        //wait a bit before we do the test
+        var a = this.animate( "height", 10 , 500 );
+        new LzDelegate( this , "doTest", a , "onstop" );
+        ]]>
+    </method>
+    <method name="doTest">
+        <![CDATA[
+        var et = ( new Date() ).getTime() + 2000;
+        v1.setVisible( true );
+        while( (new Date() ).getTime() < et ){ };
+        v2.setVisible( true );
+        ]]>
+    </method>
+
+    <view name="v1" visible="false" bgcolor="red" width="10" height="10">
+    </view>
+    <view name="v2" visible="false" bgcolor="green" width="10" height="10">
+    </view>
+</canvas>

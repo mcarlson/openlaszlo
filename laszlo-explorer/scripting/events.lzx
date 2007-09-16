@@ -1,18 +1,14 @@
-<canvas width="200">
-  <button onclick="vw.setWidth(200)" 
-          text="Expand Width" />
+<canvas>
+  <button onclick="vw.setWidth(200)">Expand Width</button>
+  <button x="120" onclick="vw.setWidth(100)">Reset</button>
   
-  <view id="vw" bgcolor="blue" 
-        y="30" width="100" height="100" >
+  <view id="vw" y="30" width="100" height="100" >
     
     <!-- onwidth is sent anytime width is changed --> 
     <handler name="onwidth" > 
-      this.setBGColor(0xFF0000) 
+        this.setAttribute('bgcolor', (this.width > 100 ? red : blue));
     </handler>
    </view>
 </canvas>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                          -->
+
+<!-- Copyright 2006 - 2007 Laszlo Systems, Inc.  All rights reserved.  Use subject to license terms. -->

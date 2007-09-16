@@ -1,5 +1,6 @@
 <canvas debug="true">
-  <include href="../../lps/utils/lztestmanager.lzx" /> 
+  <include href="lztest/lztestmanager.lzx" /> 
+  <include href="utils/layouts/simpleboundslayout.lzx"/>
 
 <!-- simpleboundslayout. x layout, with spacing -->
   <simplelayout axis="x" spacing="5"/>
@@ -32,7 +33,7 @@
 
 <script><![CDATA[
 
-var suite = new LzTestSuite("LzAnimator Test Suite"); 
+var suite = new LzTestSuite("Simpleboundslayout Test Suite"); 
 
 
 // 
@@ -90,8 +91,8 @@ suite.test2 = function() {
 }
 
 // Run the tests in order (test1,test2,...)
-suite.addTest(suite.test2);
 suite.addTest(suite.test1);
+suite.addTest(suite.test2);
 
 ]]>
 </script>
@@ -100,7 +101,7 @@ suite.addTest(suite.test1);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

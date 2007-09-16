@@ -1,0 +1,39 @@
+<library>
+
+    <include href="common.lzx" />
+
+    <class name="tabsliderview" layout="axis: y">
+        
+        <view width="${parent.width}" layout="axis: x">
+            <border width="50%" height="40" cbgcolor="${canvas.lcdcolor}">
+                <textlink y="10">tabslider</textlink>
+            </border>
+            <border width="50%" height="40" cbgcolor="${canvas.lcdcolor}">
+                <textlink y="10">tabelement</textlink>
+            </border>
+        </view>
+
+        <view width="${parent.width}" layout="axis: x">
+            <border width="50%" height="40" cbgcolor="${canvas.basecolor}">
+                <textlink y="10">basetabslider</textlink>
+            </border>
+            <border width="50%" height="40" cbgcolor="${canvas.basecolor}">
+                <textlink y="10">basetabelement</textlink>
+            </border>
+        </view>
+
+        <view width="${parent.width}" layout="axis: x">
+            <border width="50%" height="40" cbgcolor="${canvas.basecolor}">
+                <textlink y="10">baselist</textlink>
+            </border>
+            <border width="50%" height="40" cbgcolor="${canvas.basecolor}">
+                <textlink y="10">baselistitem</textlink>
+            </border>
+        </view>
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -14,11 +14,19 @@
         <method name="getValue">
             return this.value == null ? this.text : this.value;
         </method>
-
+        <doc>
+          <tag name="shortdesc"><text>an abstract class for components which represent data</text></tag>
+          <text>
+            <p>
+            This abstract class provides a value attribute with data binding to a specific
+            valuedatapath.
+            </p>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

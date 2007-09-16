@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -44,43 +44,6 @@
         </method>
     </class>
 
-    <!--- An abstract class to create dropdown lists of selectable items. Define
-          the look in a subclass. Also, a basedatacombobox_text must be declared in
-          the subclass. 
-
-          
-          <code>
-          <class name="simplecombobox" extends="basedatacombobox" width="100">
-              <attribute name="_cbtext" value="$once{this._text}"/>
-              <view width="100%" height="20" focusable="false" bgcolor="#CCCCCC">
-                  <handler name="onclick">
-                      LzFocus.setFocus(this,false); 
-                      classroot.toggle()
-                  </handler>
-                  <handler name="onmouseout">
-                      this.setBGColor(0xCCCCCC);
-                  </handler>
-                  <handler name="onmouseup">
-                      this.setBGColor(0xCCCCCC);
-                  </handler>
-                  <handler name="onmouseover">
-                      this.setBGColor(0xEEEEEE);
-                  </handler>
-                  <handler name="onmousedown">
-                      this.setBGColor(0xAAAAAA);
-                  </handler>
-              </view>
-              <text name="_text" width="${ parent.width - 19 }" x="7" />
-          </class>
-          </code>
-
-           ** Caveat: Combobox items will not update if the attributes
-            that are mapped to textdatapath or valuedatapath change.
-            To force the changes to update, call 
-            <code> node.parentNode.replaceChild(node.cloneNode(true), node) </code>
-            where node is the dataelement of the list item. Don't forget 
-            to reset the seleciton on the list, as well.
-             -->
     <class name="basedatacombobox" extends="baseformitem">
 
         <!--- Datapath to items in list. -->
@@ -234,14 +197,14 @@
 
             var t = dp.xpathQuery(this.textdatapath);
             // if t is null, use default text (if it exists)
-            if( ( t == null || t.length == 0 ) && this.defaulttext['length'] > 0 )
+            if( ( t == null || t.length == 0 ) && this.defaulttext && this.defaulttext['length'] > 0 )
                t = this.defaulttext;
 
             if ( this._cbtext && (this.statictext == null) ) {
                 this._cbtext.setText(t);
             }
 
-            if ( dp['p'] == this.selected['p'] ) return;
+            if ( this.selected && dp['p'] == this.selected['p'] ) return;
 
             if (! (dontSetValue || this.ismenu)) {
                 var v = dp.xpathQuery(this.valuedatapath);
@@ -252,7 +215,7 @@
             if (this.ismenu) {
                 // Clear the selection
                 this._selectedIndex = -1;
-                if (this._cblist['_selector']) {
+                if (this._cblist && this._cblist['_selector']) {
                     this._cblist._selector.clearSelection();
                 }
             }
@@ -536,9 +499,9 @@
             return ( this.value == null ? '' : this.value );
         </method>        
 
-        <!--- Arrow down and up, and spacebar all popup floatinglist.
-              @keywords private -->
+        <!--- Arrow down and up, and spacebar all popup floatinglist.-->
         <handler name="onkeydown" method="_dokeydown"/>
+        <!--- @keywords private -->
         <method name="_dokeydown" args="key"><![CDATA[
             // 38: up-arrow, 40: down-arrow, 32: space, 13: return, 27: escape
             if ( (key==38) || (key==40) || (key==32) ) {
@@ -604,6 +567,46 @@
             }
         ]]></handler>
 
+        <doc>
+          <tag name="shortdesc"><text>baseclass for a datacombobox</text></tag>
+          <text>
+              An abstract class to create dropdown lists of selectable items. Define
+              the look in a subclass. Also, a basedatacombobox_text must be declared in
+              the subclass. 
+              
+              <example class="fragment">
+              &lt;class name="simplecombobox" extends="basedatacombobox" width="100"&gt;
+                  &lt;attribute name="_cbtext" value="$once{this._text}"/&gt;
+                  &lt;view width="100%" height="20" focusable="false" bgcolor="#CCCCCC"&gt;
+                      &lt;handler name="onclick"&gt;
+                          LzFocus.setFocus(this,false); 
+                          classroot.toggle()
+                      &lt;/handler&gt;
+                      &lt;handler name="onmouseout"&gt;
+                          this.setBGColor(0xCCCCCC);
+                      &lt;/handler&gt;
+                      &lt;handler name="onmouseup"&gt;
+                          this.setBGColor(0xCCCCCC);
+                      &lt;/handler&gt;
+                      &lt;handler name="onmouseover"&gt;
+                          this.setBGColor(0xEEEEEE);
+                      &lt;/handler&gt;
+                      &lt;handler name="onmousedown"&gt;
+                          this.setBGColor(0xAAAAAA);
+                      &lt;/handler&gt;
+                  &lt;/view&gt;
+                  &lt;text name="_text" width="${ parent.width - 19 }" x="7" /&gt;
+              &lt;/class&gt;
+              </example>
+    
+               ** Caveat: Combobox items will not update if the attributes
+                that are mapped to textdatapath or valuedatapath change.
+                To force the changes to update, call 
+                <code> node.parentNode.replaceChild(node.cloneNode(true), node) </code>
+                where node is the dataelement of the list item. Don't forget 
+                to reset the seleciton on the list, as well.
+          </text>
+        </doc>
     </class>
 
 </library>

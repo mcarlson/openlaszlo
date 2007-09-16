@@ -1,0 +1,46 @@
+
+<canvas height="200" >
+  <include href="lz/tree.lzx"/>
+  <dataset name="filesys" src="resources/dirtree.xml"/>
+  
+  <simplelayout axis="x" spacing="20"/>
+  
+  <view width="200" height="200" clip="true">
+    <tree name="fs_tree" open="true" datapath="filesys:/entry/@name"
+          autoscroll="true">
+      <tree datapath="*" text="$path{'@name'}" open="true"
+              isleaf="${this.datapath.xpathQuery('@type') == 'file'}"/>
+    </tree>
+    <scrollbar visible="${scrollable}"/>
+  </view>
+  
+  <datapointer name="dptr" xpath="filesys:/entry" />
+  
+  <button text="Add a dot dir">
+    <handler name="onclick">
+      // Allow to do this only once 
+      if (!dptr.xpathQuery('*[@name = "."]')) 
+        traverse(dptr);
+    </handler>
+    <method name="traverse" args="top">
+      var ne = new LzDataElement('entry', {name: '.', type: 'dir'})
+        do {
+          if (top.xpathQuery('@type') == 'dir') {
+            var root = top.dupePointer();
+            
+            // If this node has children, insert the dot before the first one 
+            // and descend one level, otherwise, just add below self.
+            if (root.selectChild()) {
+              top.p.insertBefore(ne, top.p.getFirstChild()) 
+              traverse(root)
+            }
+            else top.p.appendChild(ne)
+          }
+        } while (top.selectNext())
+      </method>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

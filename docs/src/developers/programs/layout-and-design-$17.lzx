@@ -1,0 +1,32 @@
+
+<canvas height="100">
+  <class name="col" clickable="true" bgcolor="blue" width="15" height="80"/>
+
+  <layout>
+    <attribute name="spacing" value="25" type="number"/>
+    <method name="addSubview" args="s">
+      super.addSubview(s);
+      this.update();
+    </method>
+
+    <method name="update">
+      <![CDATA[  
+      if (this.locked) return;
+      this.locked = true;
+      for (var i = 0; i < subviews.length; i++){
+          subviews[i].setAttribute('x',  i * this.spacing);
+      }
+      this.locked= false;
+      ]]>
+    </method>
+  </layout>
+
+  <col/>
+  <col/>
+  <col/>
+  <col/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

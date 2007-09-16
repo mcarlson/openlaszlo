@@ -100,7 +100,7 @@ LZ_XML_COPYRIGHT_END -->
                        <uid/>
                 </event>
                 <event>
-                       <summary value="Attend Black & White Ball"/>
+                       <summary value="Attend Black &amp; White Ball"/>
                        <comment value="How we do it back home"/>
                        <start year="2006" month="12" day="31" hour="20" minute="0"/>
                        <end year="2006" month="12" day="31" hour="23" minute="0"/>

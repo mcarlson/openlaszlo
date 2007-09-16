@@ -1,0 +1,39 @@
+<canvas>
+  <include href="utils/performance" />
+  <script>
+    var iterations = Measurement.defaultIterations;
+    var testObj = {a: 1, b: 2, c: 3, d: 4, e: 5, f: 6};
+
+    function e () {
+      return 0;
+    }
+    function empty () {
+      for (var i = 0; i &lt; iterations; i++) 
+        e.call(testObj);
+    }
+
+    function withThis () {
+      with (this) {return a + b + c + d + e + f};
+    } 
+    function measureWithThis () {
+      for (var i = 0; i &lt; iterations; i++) 
+        withThis.call(testObj);
+    }
+
+    function thisDot () {
+      return this.a + this.b + this.c + this.d + this.e + this.f;
+    }
+    function measureThisDot () {
+      for (var i = 0; i &lt; iterations; i++) 
+        thisDot.call(testObj);
+    }
+
+    (new Measurement({'with (this)': measureWithThis,
+                        'this.': measureThisDot,
+                        'empty': empty})).run();
+  </script>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,104 @@
+/**
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @affects lzcommand
+  * @access public
+  * @topic LFC
+  * @subtopic Views
+  */
+
+/**
+  * <example class="program" id="command-1">
+  * &lt;canvas height="130" debug="true"&gt;
+  *   &lt;command onselect="Debug.write('the enter key was pressed');" 
+  *             key="['Enter']" /&gt;
+  * 
+  * &lt;/canvas&gt;
+  * </example>
+  * 
+  * <p>Sample applications that use the <tagname>command</tagname> tag:</p>
+  * <ul>
+  *     <li> <a href="${demos}weather/weather.lzx">Weather</a></li>
+  *     <li> <a href="${demos}contacts/contacts.lzx">Contacts</a></li>
+  * 
+  * </ul>
+  * Also, see <xref linkend="LzKeys+dhtml"/> or <xref linkend="LzKeys+swf7+swf8+swf9"/>.
+  * 
+  * @devnote A command is an object that sends an event in response to keyboard input.
+  * @shortdesc An element that sends events in response to keyboard input.
+  * @lzxname command
+  */
+class LzCommand extends LzNode {
+
+/** @access private
+  * @modifiers override 
+  */
+static var tagname = 'command';
+
+/**
+  * true if the command is currently active.
+  * The default is <i>true</i>.
+  * @type Boolean
+  */
+var active = true;
+
+/** array of keys (strings) that, when pressed together,
+  * cause the onselect event of the command to be sent. For example:
+  * setAttribute('key', ['a', 'shift']) or setKeys(['j', 'control'])
+  * @type [String]
+  */
+var keys;
+setters.key = "setKeys";
+
+/**
+  * If the command is active, this event is sent
+  * when the keys array are pressed simultaneously.
+  */
+DeclareEvent(prototype, 'onselect' );
+
+/**
+  * This registers the given key array so that the command is executed when the
+  * key array is pressed.
+  * @param [String] k: An array of keys, given as strings. 
+  */
+function setKeys ( k ){
+    this.keys = k;
+    LzKeys.callOnKeyCombo( this , k );
+}
+
+/**
+  * Sends the command's onselect event.
+  * @param any d: this optional parameter is passed to the onselect event
+  */
+function execute ( d ){
+    if ( this.active ){
+        if (this.onselect.ready) this.onselect.sendEvent( d );
+    }
+}
+
+/**
+  * This is a utility method that returns a string that describes the key 
+  * combination that causes this command to be invoked.
+  * 
+  * @return String: A string containing the key combination that causes this
+  * command to be invoked.
+  */
+function keysToString ( ){
+    var DisplayKeys = {control:"Ctrl", shift:"Shift", alt:"Alt"}
+    var s= ""
+    var k = ""
+    var l= this.keys.length;
+    for( var i=0; i<l-1; i++ ){
+        k = this.keys[i];
+        if (k=="Control") k="Ctrl";
+        s = s + k + "+"
+    }
+    k = this.keys[i];
+    if (k=="Control") k="Ctrl";
+    s = s + k;
+    return s;
+}
+
+}; // End of LzCommand

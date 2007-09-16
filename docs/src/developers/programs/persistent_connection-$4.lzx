@@ -1,0 +1,38 @@
+
+<canvas debug="true" height="200">
+  <debug y="60"/>
+  <connection authenticator="anonymous"/>
+
+
+  <script>
+      connection.connect();
+  </script>
+
+  <connectiondatasource name="myconnection">
+      <dataset name="messages"/>
+  </connectiondatasource>
+
+  <datapointer xpath="myconnection:messages:/*[1]">
+    <handler name="ondata">
+      var from = this.xpathQuery('/from[0]/@name');
+      var mesg = this.xpathQuery('/text()');
+      Debug.write('got data from ' + from +  ', mesg is ['+ mesg + ']!');
+    </handler>
+  </datapointer>
+  
+  <datapointer xpath="myconnection:sendMessageDset:/*[1]">
+    <handler name="ondata">
+      Debug.write("*** got result back ***");
+    </handler>
+  </datapointer>
+  
+  <button>send message
+    <handler name="onclick">
+      myconnection.sendMessage('*', 'a message', 'messages');
+    </handler>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

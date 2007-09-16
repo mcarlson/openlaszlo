@@ -154,11 +154,11 @@
 
     <resource name="loading_background" src="images/loading_bg.swf" />
 
-    <resource name="loading_anim" src="images/loading_anim.swf" />
+    <!-- <resource name="loading_anim" src="images/loading_anim.swf" /> -->
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

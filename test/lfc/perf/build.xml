@@ -1,0 +1,168 @@
+<project name="performancelogger" default="reset">
+
+    <description>
+        This build file handles the log output from the performance analyzer.
+        Call ant reset to store the current log in svn then clear out the local log.
+        To just discard the local log, call ant zaplog.
+        By default, this build fetches the current revision number from
+        subversion.
+        To avoid calling subversion for a build number, either
+            call no-svn or pass in a build id with -Dbuild.id=2455
+        Pass in branch name with -Dbranch=branches-legals or -Dbranch=trunk. Default is branches-legals    
+    </description>
+
+    <!-- Figure out which client OS we're executing on -->
+    <condition property="client.platform" value="windows" >
+        <os family="windows" />
+    </condition>
+    <condition property="client.platform" value="macosx" >
+         <os name="Mac OS X" />
+    </condition>
+    <condition property="client.platform" value="unix" >
+        <os family="unix" />
+    </condition>
+
+    <!-- The server to hit to run the tests as a client browser -->
+    <property name="serverurl" value="http://localhost:8080/" />
+    <property name="branch" value="branches-wafflecone" />
+    <!-- The command to invoke the browser -->
+    <property name="os.opener" value="open" />
+    <property name="os.browser.firefox" value="Firefox" />
+    <property name="os.browser.safari" value="Safari" />
+    <property name="os.browser.webkit" value="WebKit" />
+    <!-- Delay between launching tests, in seconds. Make it long to ensure we're not running two tests simultaneously. -->
+    <property name="delaybetweentests" value="10" />
+    <property name="testtimeout" value="2500" /> <!-- delay before timing out of a test, in milliseconds -->
+
+
+    <target name="init" depends="init.vars.mac">
+        <available property="have.results" file="results.txt"/>
+        <fail unless="have.results" message="results.txt doesn't exist. To create it, visit viewperf.lzx in your browser, at http://localhost:8080/legals/test/lfc/perf/viewperf.lzx?lzr=dhtml" />
+    </target>
+
+    <target name="init.vars.mac">
+        <echo message="client.platform is ${client.platform}" />
+        <!-- The server to hit to run the tests as a client browser -->
+        <property name="serverurl" value="http://localhost:8080/legals" />
+        <!-- The command to invoke the browser -->
+        <property name="os.opener" value="open" />
+        <property name="os.browser.firefox" value="Firefox" />
+        <property name="os.browser.safari" value="Safari" />
+        <property name="os.browser.webkit" value="WebKit" />
+        <property name="delaybetweentests" value="3" /> <!-- delay between launching tests, in seconds -->
+        <property name="testtimeout" value="2500" /> <!-- delay before timing out of a test, in milliseconds -->
+
+    </target>
+
+    <target name="no-svn">
+        <property name="build.id" value="xxxx" />
+        <property name="no.svn" value="true" />
+    </target>
+
+    <target name="get-svn-info" unless="build.id">
+        <sequential>
+            <!-- Get the current repository information.
+               Requires subversion 1.3 or later. If this is a problem,
+               call no-svn as the first target. -->
+            <exec executable="svn" output="repository-info.xml">
+                <arg value="info" />
+                <arg value="--xml" />
+                <arg value="." />
+            </exec>
+            <property name="done.get-svn-info" value="true" />
+        </sequential>
+    </target>
+
+    <target name="setup-build-id" depends="init,get-svn-info" unless="build.id">
+        <!-- Load repository information into properties -->
+        <xmlproperty file="repository-info.xml"/>
+        <!-- TODO: change build id to match branch name, when merging to another branch -->
+        <property name="build.id" value="${info.entry(revision)}-openlaszlo-${branch}" />
+        <echo message="build.id is ${build.id}" />
+    </target>
+
+    <target name="zaplog" depends="init" description="Delete the current log, if it exists.">
+        <delete file="results.txt" quiet="true"/>
+    </target>
+
+    <target name="storelog" depends="init,setup-build-id" unless="no.svn">
+
+        <exec executable="svn" failonerror="true">
+            <arg value="import"/>
+            <arg value="-m 'automated import of performance log results'" />
+            <arg value="results.txt" />
+            <arg value="http://svn.openlaszlo.org/test/performance/raw/${build.id}.txt" />
+        </exec>
+    </target>
+
+    <target name="reset" depends="init"
+        description="Store logs into svn, then reset the logs for a new run">
+        <ant target="storelog"/>
+        <ant target="zaplog" />
+    </target>
+
+    <target name="prefetch" description="Hit the server to compile the test apps without measuring.">
+        <echo message="TODO: force the apps to compile before hitting them." />
+    </target>
+
+    <target name="hitonebrowser" description="Run a single web browser on a single test">
+        <echo message="hitonebrowser called for ${webapp} browser ${browser} and runtime ${runtime} and suite ${suite}" />
+        <exec
+            executable="${os.opener}" failonerror="true" timeout="${testtimeout}">
+            <arg value="-a" />
+            <arg value="${browser}" />
+            <arg value="${serverurl}${webapp}/test/lfc/perf/${suite}.lzx?lzr=${runtime}"/>
+        </exec>
+        <sleep seconds="${delaybetweentests}" />
+    </target>
+
+    <target name="hitallbrowsers" description="Run the web browser on the tests... using rhino for easy iteration">
+         <script language="javascript"><![CDATA[
+            var runOneSuite = function(suitename, browser, runtime, webapp) {
+                var myant = performancelogger.createTask("ant");
+                myant.setTarget("hitonebrowser");
+
+                var suiteprop = myant.createProperty();
+                suiteprop.setName("suite");
+                suiteprop.setValue( suitename );
+
+                var browserprop = myant.createProperty();
+                browserprop.setName("browser");
+                browserprop.setValue( browser );
+
+                var runtimeprop = myant.createProperty();
+                runtimeprop.setName("runtime");
+                runtimeprop.setValue( runtime );
+
+                var webappprop = myant.createProperty();
+                webappprop.setName("webapp");
+                webappprop.setValue( webapp )
+
+                myant.setInheritAll(true);
+                myant.execute();
+            }
+
+             var suites = ["sprite", "functions", "viewperf", "imageperformance", "textperformance"];
+             var runtimes = ["swf8", "dhtml"]; // swf7 numbers are boring, almost identical to swf8 numbers
+             var browsers = ["Firefox", "Safari"];
+             var webapps = ["wafflecone"];
+
+             for (var b in browsers) {
+                 for (var w in webapps) {
+                    for (var suite in suites) {
+                        for (var runtime in runtimes) {
+                            runOneSuite(suites[suite],
+                                browsers[b],
+                                runtimes[runtime],
+                                webapps[w]);
+                            }
+                        }
+                    }
+                }
+
+         ]]></script>
+    </target>
+
+</project>
+
+<!-- Copyright 2006-2007 Laszlo Systems -->

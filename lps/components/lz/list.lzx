@@ -91,7 +91,7 @@
 
                <handler name="onaddsubview" args="v"> <![CDATA[
                     if ( classroot.itemclassname == "" ){
-                        classroot.itemclassname = v.classname;
+                        classroot.itemclassname = v.constructor.classname;
                     }
                     if ( ( classroot.dataoption == "lazy" ||
                            classroot.dataoption == "resize" ) &&
@@ -313,11 +313,57 @@
                 if (this._bgcolor == null) interior.setBGColor(s.bgcolor);
             }
         </method>
+
+        <!--- @keywords private -->
+        <method name="destroy" ><![CDATA[
+            if (this.autoscrollbar)
+                this.setAttribute("autoscrollbar", false);
+            if (this.shownitems != -1)
+                this.setAttribute("shownitems", -1);
+                    
+            super.destroy.apply(this, arguments);
+        ]]></method> 
+        <doc>
+          <tag name="shortdesc"><text>
+              contains listitems and provides selection capabilities.
+          </text></tag>
+          <text>
+            <p>The <tagname>list</tagname> tag creates a list which may contain
+              <tagname>listitem</tagname>s.  Subclasses of
+              <classname>listitem</classname>, such as
+              <classname>textlistitem</classname>, may be used as well.
+              <tagname>list</tagname> provides basic layout and a selection API
+              <!--link-->.  If there are more items than specified in the
+              <attribute>shownitems</attribute> attribute, a
+              <classname>scrollbar</classname> will be provided.</p>
+
+            <example>
+              &lt;canvas width="200" height="100"&gt;
+              &lt;list x="10" y="10"&gt;
+              &lt;textlistitem text="item 1" value="1" selected="true"/&gt;
+              &lt;textlistitem text="item 2" value="2"/&gt;
+              &lt;textlistitem text="item 3" value="3"/&gt;
+              &lt;/list&gt;
+              &lt;/canvas&gt;
+            </example>
+
+            <h2>Optimizing performance with lazy replication and data pooling</h2>
+
+            <p>When you have more items on your list than appear to the user, or if you are creating a list from data and then changing 
+              the data that is represented by the list, you should use "lazy replication" and data pooling, respectively, to 
+              optimize performance of your lists. See <a href="${dguide}performance-tuning.html">Performance Tuning</a> for a discussion.</p>
+
+            <p>See the <a
+                          href="${examples}components/list_example.lzx">list_example.lzx</a> for
+              more list use cases.</p>
+          </text>
+        </doc>
+
     </class> <!-- end list -->
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

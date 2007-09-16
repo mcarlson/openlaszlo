@@ -1,0 +1,23 @@
+
+<canvas debug="true" height="200">    
+  <debug x="155"/>
+
+  <class name="container" defaultplacement="'red'">
+    <view name="red" bgcolor="red" width="150" height="150"/>
+  </class>
+
+  <!-- yellow's parent is top and its immediateparent   -->
+  <!-- is red, since that's where it's actually placed. -->
+  <container name="top">
+    <view name="yellow" bgcolor="yellow" width="50" height="50">
+      <handler name="oninit">
+        Debug.write('parent: ', this.parent);
+        Debug.write('immediateparent: ', this.immediateparent);
+      </handler>
+    </view>
+  </container>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

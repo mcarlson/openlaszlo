@@ -1,0 +1,160 @@
+# js2doc.rnc is in the RELAXNG Compact syntax:
+# http://www.thaiopensource.com/relaxng/compact/syntax.html
+#
+# js2doc.rng is a RELAXNG schema:
+# http://www.oasis-open.org/committees/relax-ng/
+#
+# Note: js2doc.rnc is the master schema. 
+#
+
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                 *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+
+# Notes
+#
+# This isn't yet the best structure, according to what we know about ES4.
+# (http://developer.mozilla.org/es4/spec/chapter_9_classes.html)
+# Better would be to introduce separate traits and methods productions within
+# object|function|class and also instancetraits and instancemethods productions
+# within class. Properties would only appear at top level. But this would 
+# involve a fairly large code change in the js2doc parser, which I'm not 
+# willing to make right now.
+#
+# Another improvement to make would be to get rid of the initarg element and
+# add a 'ctors' element containing function/method elements. The initargs can
+# be attached as metatadata added to the 'options' parameter conventionally
+# used in the openlaszlo object system.
+
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
+
+# Literals & Tags
+booleanLiteral = xsd:boolean
+optionsTag = string        # was: xsd:string {pattern="[+\-][a-zA-Z0-9\-_:.]*"}
+
+# Attributes
+idAttribute = attribute id {token}
+modifiersAttribute = attribute modifiers {string}
+typeAttribute = ([a:defaultValue="Object"] attribute type {token})
+accessAttribute = ([a:defaultValue="public"] attribute access {"public" | "protected" | "private"})
+
+conditionAttributes = (
+      attribute runtimes {optionsTag}?
+    & attribute includebuilds   {optionsTag}?
+    & attribute excludebuilds   {optionsTag}?
+    )
+
+topicAttributes = (
+      attribute topic {token}?
+    & attribute subtopic {token}?
+    )
+
+bindingAttributes = (
+      idAttribute
+    & conditionAttributes
+    & accessAttribute?
+    & modifiersAttribute?
+    )
+
+toplevelAttributes = (
+      topicAttributes
+    & attribute unitid {token}?
+    & bindingAttributes
+    )
+    
+any = (text | element * { attribute * { text }*, any })*
+  
+# Grammar
+start = js2doc
+
+js2doc =
+    element js2doc {
+        attribute runtimeoptions {optionsTag}?
+      & attribute buildoptions {optionsTag}?
+      & (propertyElement | unitElement)*
+    }
+
+unitElement =
+    element unit {
+        attribute path {string}
+      & toplevelAttributes
+      & docElement?
+    }
+    
+propertyElement =
+    element property {
+        attribute name {token}?
+      & toplevelAttributes?
+      & typeAttribute?
+      # use @value attribute for literals, elements otherwise
+      # TODO [jgrandy 2/14/2007] consider removing this abbreviation, just support elements
+      & attribute value {token}?
+      & (objectElement | functionElement | classElement)?
+      & docElement?
+    }
+
+objectElement =
+    element object {
+        attribute type {token}?
+      & propertyElement*
+    }
+
+classElement =
+    element class {
+        [a:defaultValue="class"] attribute variant {token}?
+      & attribute extends {token}?
+      & (propertyElement | initargElement)*
+    }
+
+functionElement = 
+    element function {
+       (parameterElement)*
+      & returnsElement?
+      & propertyElement*
+    }
+
+parameterElement =
+    element parameter {
+        attribute name {token}
+      & typeAttribute?
+      & docElement?
+    }
+
+returnsElement =
+    element returns {
+        typeAttribute?
+      & docElement?
+    }
+
+## this is (sort of) an OpenLaszlo-specific element
+## it corresponds to properties passed in the args parameter to the
+## class instance constructor that are processed by the constructor rather
+## than being used to directly initialize instance properties.
+initargElement =
+    element initarg {
+        attribute name {token}
+      & typeAttribute?
+      & bindingAttributes
+      & docElement?
+    }
+
+docElement =
+    element doc {
+        attribute keywords {string}?
+      & docTagElement*
+      & docTextElement?
+    }
+
+docTagElement =
+    element tag {
+        attribute name {token}
+      & docTextElement?
+    }
+
+docTextElement =
+    element text { 
+        [a:defaultValue="text/html"] 
+        attribute content {string}?
+      & any }

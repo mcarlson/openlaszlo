@@ -1,10 +1,13 @@
 <canvas width="900" height="90%" debug="true">
     <debug x="300" width="300" height="400"/>
+<!--
+  covers-tags: lzdata smoketest
+-->
 
+    <include href="lztest/xmlequals.lzx"/>
     <include href="datanode.lzx"/>
     <include href="datapointer.lzx"/>
     <include href="datapointerServerless.lzx"/>
-
     <include href="datapointerdependencies.lzx"/>
     <include href="datapath.lzx"/>
     <include href="specialop.lzx"/>
@@ -14,10 +17,15 @@
     <include href="namespace-solo.lzx"/>
     <include href="whitespace.lzx"/>
     <include href="testsetheaders.lzx"/>
+    <include href="testsetheaders-solo.lzx"/>
+    <include href="testrawpost.lzx"/>
+    <include href="testput.lzx"/>
+    <include href="testrawpost-solo.lzx"/>
+    <include href="testheaderresponse.lzx"/>
+    <include href="testclientcachebreaker.lzx"/>
     <include href="sendheaders.lzx"/>
 
     <TestSuite>
-
         <TestDatanode/>
         <TestDatapointer/>
         <TestDatapointerServerless/>
@@ -31,9 +39,18 @@
         <TestTrimWhitespace/>
         <TestSendHeaders/>
         <TestSetHeaders/>
+        <TestSetHeadersSOLO/>
+        <TestRawPost/>
+        <TestPut/>
+        <TestRawPostSOLO/>
+        <TestResponseHeaders/>
+
+        <TestClientCacheBreaker/>
+
+
     </TestSuite>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

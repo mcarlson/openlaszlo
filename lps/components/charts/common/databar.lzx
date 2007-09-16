@@ -1,4 +1,5 @@
 <library>
+    <include href="extensions/drawview.lzx"/>
 <!--- @keyword private
     Render a bar or column of data in the chart-->
     <class name="databar" extends="drawview">
@@ -49,7 +50,7 @@
                 }
             }
             
-            if( parent.classname == "barchartplotarea" ) {
+            if( parent.constructor.tagname == "barchartplotarea" ) {
                 if (parent.parent.databorderEnabled) {
                     this.renderBorder(width, - borderWidth, 
                                       1 + borderWidth / 2, height - 1 );
@@ -63,7 +64,7 @@
                 this.setOpacity(style.region.opacity);
 
             }
-            else if( parent.classname == "columnchartplotarea" ) {
+            else if( parent.constructor.tagname == "columnchartplotarea" ) {
                 if (parent.parent.databorderEnabled) {
 
                     this.renderBorder(borderWidth / 2, borderWidth/2, 
@@ -136,7 +137,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

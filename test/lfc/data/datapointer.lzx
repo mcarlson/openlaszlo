@@ -6,6 +6,10 @@
     <dataset name="loadme" type="http" src="http:testdata.xml" request="true" trimwhitespace="false">
     </dataset>
 
+    <dataset name="syntax">
+        <data a="avalue" b="bvalue" a.b="a.bvalue"/>
+    </dataset>
+
     <class name="TestDatapointer" extends="TestCase">
         <attribute name="dp2ready" value="false"/>
         <attribute name="t2del" value="false"/>
@@ -15,6 +19,8 @@
 
         <datapointer xpath="loadme:/data" name="dp2" 
                      ondata="parent.dp2ready = true"/>
+
+        <datapointer xpath="syntax:/data" name="dp3" />
 
         <method name="test">
             this.doIt( dp1 , 'localme');
@@ -27,15 +33,15 @@
                     this.t2del = new LzDelegate( this , 'test2' );
                 }
 
-                if ( this.waitcnt++ > 100 ){
-                    fail( "Didn't get async data" );
+                if ( this.waitcnt++ > 2000 ){
+                    fail( "datapointer: Didn't get async data" );
                 } else {
                     LzIdle.callOnIdle( this.t2del );
                 }
                 return;
             }
 
-            Debug.write( 'running async test for loaded data' );
+            Debug.write( 'running async test for loaded data (datapointer.lzx)' );
             this.doIt( dp2 , 'loadme' );
         </method>
 
@@ -65,7 +71,8 @@
 
             assertEquals( global[ dsname ], dp.getDataset( ) );
             dp.setNodeName ("bunny");
-            assertEquals( '<bunny x="22"><ee/><ff/><bb> otherbb </bb><bb last="true"/></bunny>' ,  dp.serialize() );
+            assertTrue(xmlstringequals('<bunny x="22"><ee/><ff/><bb> otherbb </bb><bb last="true"/></bunny>',
+                                       dp.serialize() ));
 
 
 
@@ -125,10 +132,19 @@
             ]]>
             
         </method>
+
+        <method name="test3">
+            assertTrue( true );
+            assertEquals(  'data' , dp3.xpathQuery( '/data[1]/name()' ) );
+            assertEquals( 'avalue', dp3.xpathQuery( '/data[1]/@a'));
+            assertEquals( 'bvalue', dp3.xpathQuery( '/data[1]/@b'));
+            assertEquals( 'a.bvalue', dp3.xpathQuery( '/data[1]/@a.b'));
+        </method>
+
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

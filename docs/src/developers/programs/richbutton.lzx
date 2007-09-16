@@ -1,0 +1,189 @@
+<!-- CLASS: richbutton -->
+<library>
+  <!-- FONTS -->
+  <font name="btn_font" src="bitstream-vera-1.10/vera.ttf"/>
+  
+  <!-- RESOURCES for all styles of button -->
+  <resource name="btn_mid" >
+    <frame src="images/btn_mid.swf" />
+    <frame src="images/btn_mid_ovr.swf" />
+    <frame src="images/btn_mid_dwn.swf" />
+  </resource>
+  
+  <!-- RESOURCES for oval button ( bevevled) -->
+  <resource name="btn_lft_oval_beveled" >
+    <frame src="images/r_btn_lft.png" />
+    <frame src="images/r_btn_lft_ovr.png" />
+    <frame src="images/r_btn_lft_dwn.png" />
+  </resource>
+  
+  <resource name="btn_rgt_oval_beveled" >
+    <frame src="images/r_btn_rgt.png" />
+    <frame src="images/r_btn_rgt_ovr.png" />
+    <frame src="images/r_btn_rgt_dwn.png" />
+  </resource>
+  
+  <!-- RESOURCES for rectangle button ( beveled ) -->
+  <resource name="btn_lft_rectangle_beveled" >
+    <frame src="images/s_btn_lft.png" />
+    <frame src="images/s_btn_lft_ovr.png" />
+    <frame src="images/s_btn_lft_dwn.png" />
+  </resource>
+
+  <resource name="btn_rgt_rectangle_beveled" >
+    <frame src="images/s_btn_rgt.png" />
+    <frame src="images/s_btn_rgt_ovr.png" />
+    <frame src="images/s_btn_rgt_dwn.png" />
+  </resource>
+  
+  <!-- RESOURCES for sheer elements -->
+  <resource name="btn_lft_sheer_beveled" >
+    <frame src="images/sep_lgt.swf" />
+    <frame src="images/sep_lgt_ovr.swf" />
+    <frame src="images/sep_lgt_dwn.swf" />
+  </resource>
+  
+  <resource name="btn_rgt_sheer_beveled" >
+    <frame src="images/sep_drk.swf" />
+    <frame src="images/sep_drk_ovr.swf" />
+    <frame src="images/sep_drk_dwn.swf" />
+  </resource>
+  
+  <!-- resource name="btn_lft_sheer_beveled" src="images/shr_btn_lft.swf" /-->
+  <!--resource name="btn_rgt_sheer_beveled" src="images/shr_btn_rgt.swf" /-->
+  
+  
+  <!-- CLASS DEFINITION -->
+  <class name="richbutton" width="100" 
+         onmousedown="this.doMouseDown()"  
+         onclick="this.doMouseUp()"  
+         onmouseout="this.doMouseOut()"  
+         onmouseover="this.doMouseOver()" >
+    
+    <!-- CLASS ATTRIBUTES -->
+    <attribute name="label"            value=""  type="string"/>
+    <attribute name="icon"             type="string" value="none"/> 
+    <attribute name="alignicon"        value="left" type="string" /> 
+    <attribute name="appearence"       value="beveled" type="string"/>
+    
+    <attribute name="style"            value="oval"    type="string"/> 
+    <!-- oval,rectangle -->
+    
+    <attribute name="cap"                value="default" setter="this.setStyles(cap)" type="string"/>
+    <!-- leftrect,rightrect,leftsheer,rightsheer,bothsheer -->
+    
+    <attribute name="inset"             value="7" /> 
+    <!-- the number of pixels to inset the title and icon for the oval button,
+         rectangle button subtracts 2 from this value -->
+    
+    <attribute name="padding"           value="6" /> <!-- adjustment for shadows on art assets" -->
+    
+    <attribute name="normalRsrcNumber" type="number" value="1"/>
+    <attribute name="overRsrcNumber"   type="number" value="2"/>
+    <attribute name="downRsrcNumber"   type="number" value="3"/>
+    
+    
+    <!-- CLASS VIEWS -->
+    <view name="bkgnd" width="100%" >
+      <view name="lft">
+        <attribute name="resource" value="$once{'btn_lft_' + parent.parent.leftstyle + '_' + parent.parent.appearence}" />
+      </view>
+      <view name="mid" stretches="width" options="releasetolayout" resource="btn_mid" />
+      <view name="rgt" >
+        <attribute name="resource" value="$once{'btn_rgt_' + parent.parent.rightstyle + '_' + parent.parent.appearence}" />
+      </view>
+      <resizelayout axis="x"/>
+    </view>
+    
+    <view name="content" x="${this.parent.leftinset}" y="1" >
+      <!-- define early so parent.layouts is initialized -->
+      <simplelayout axis="x" spacing="0" />
+      <view name="iconview" >
+        <attribute name="resource" value="$once{classroot.icon}" />
+      </view>
+      <!-- FIXME: the following line used to include font="btn_font" -->
+      <text name="title" fontsize="12"  width="300"  height="16" >
+        <method name="getWidth" >
+          return this.getTextWidth();
+        </method>
+        <handler name="ontext" >
+          this.parent.layouts[0].update()
+        </handler>
+      </text>
+      <method name="getWidth" >
+        var sp = 3;
+        var w = this.title.getTextWidth();
+        if ( this.parent.label == "" ) { sp = 0; w = 0 }
+        if ( this.iconview.width > 0 ) w =  w + this.iconview.width + sp;
+        return w;
+      </method>
+      <handler name="oninit" >
+        if ( this.iconview.width > 0 ) this.layouts[0].spacing = 3;
+        if ( this.parent.alignicon != 'left' ) {
+          this.layouts[0].swapsubvieworder(this.iconview,this.title);
+        }
+      </handler>
+    </view>
+    
+    
+    <!-- CLASS METHODS -->
+    <handler name="oninit" >
+      this.content.title.setText(this.label);
+      if ( this.rightstyle == "sheer" ) this.padding = 3;
+      this.setWidth(Math.floor(this.content.getWidth() + this.leftinset + this.rightinset + this.padding)); // to allow for shadow
+    </handler>
+    
+    <method name="setStyles" args="cap" >
+      this.leftstyle = this.style;
+      this.rightstyle = this.style;
+      if ( cap == "leftrect") this.leftstyle  = "rectangle" 
+      else if ( cap == "rightrect")  { this.rightstyle = "rectangle"}
+      else if ( cap == "leftsheer")  { this.leftstyle  = "sheer" }
+      else if ( cap == "rightsheer") {this.rightstyle = "sheer" }
+      else if ( cap == "bothsheer")  {
+        this.leftstyle = "sheer";
+        this.rightstyle = "sheer";
+      }
+      this.onstyle.sendEvent();
+    </method>
+    
+    <handler name="onstyle" >
+      this.leftinset = inset;
+      this.rightinset = inset;
+      if ( this.leftstyle  == "rectangle") this.leftinset = this.inset - 2;
+      if ( this.rightstyle == "rectangle") this.rightinset = this.inset - 2;
+      if ( this.leftstyle  == "sheer" )    this.leftinset = this.inset - 2;
+      if ( this.rightstyle == "sheer" )    this.rightinset = this.inset - 2;
+    </handler>
+    
+    <method name="doMouseOver" >
+      this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );
+      this.bkgnd.mid.setResourceNumber( this.overRsrcNumber );    
+      this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );    
+    </method>
+    
+    <method name="doMouseOut" >
+      this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
+      this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );    
+      this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );    
+    </method>
+    
+    <method name="doMouseDown" >
+      this.bkgnd.lft.setResourceNumber( this.downRsrcNumber );
+      this.bkgnd.mid.setResourceNumber( this.downRsrcNumber );    
+      this.bkgnd.rgt.setResourceNumber( this.downRsrcNumber );
+      this.content.setX(this.leftinset + 1);
+      this.content.setY(2);
+    </method>
+    
+    <method name="doMouseUp" >
+      this.doMouseOver();
+      this.content.setX(this.leftinset);
+      this.content.setY(1);
+    </method>
+  </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

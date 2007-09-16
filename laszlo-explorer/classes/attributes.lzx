@@ -1,4 +1,4 @@
-<canvas width="200">
+<canvas>
   <simplelayout spacing="5"/>
   
   <class name="box" height="100" width="100" bgcolor="red"/>
@@ -16,3 +16,5 @@
   <borderedbox bordersize="6"/>
   <borderedbox bordersize="9"/>
 </canvas>
+
+

@@ -1,0 +1,39 @@
+
+<canvas height="50" width="700" bgcolor="#D4D0C8">
+  <dataset name="dset">
+    <phonebook>
+      <contact category="friends">
+        <firstName>John</firstName>
+        <lastName>Smith</lastName>
+        <phone>617-536-7855</phone>
+        <email>jsmith@mail.com</email>
+      </contact>
+      <contact category="business">
+        <firstName>Mary</firstName>
+        <lastName>Jones</lastName>
+        <phone>415-534-1186</phone>
+        <email>mjones@mail.com</email>
+      </contact>
+      <contact category="friends">
+        <firstName>Lisa</firstName>
+        <lastName>Brown</lastName>
+        <phone>212-423-1132</phone>
+        <email>lbrown@mail.com</email>
+      </contact>
+    </phonebook>
+  </dataset>
+  <simplelayout axis="y"/>
+  <view name="list" datapath="dset:/phonebook/contact">
+    <simplelayout axis="x"/>
+    <!-- 1 -->
+    <text datapath="firstName/text()"/>
+    <text datapath="lastName/text()"/>
+    <text datapath="phone/text()"/>
+    <text datapath="email/text()"/>
+    <text datapath="@category"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

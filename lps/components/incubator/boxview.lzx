@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-        Class: boxview v1.1 by Brad Erickson
-        implements the CSS box model in a view that allows for margins, padding, and a border.
-        Allows for an italized title.
-        By default functions the same as a view, but has a 1 pixel black border.
-        v1.0 - Original
-        v1.1 - Bugfix added " - parent.parent.vTitle.height" to vPadding height on !_contentheight state
--->
+<!--- @topic Incubator 
+      @subtopic Components 
+   -->
 <library>
+        <!---
+                implements the CSS box model in a view that allows for margins, padding, and a border.
+                Allows for an italized title.
+                By default functions the same as a view, but has a 1 pixel black border.
+                v1.0 - Original
+                v1.1 - Bugfix added " - parent.parent.vTitle.height" to vPadding height on !_contentheight state
+                @author Brad Erickson
+         -->
         <!-- Named for the css box model -->
         <class name="boxview" extends="view">
                 <!--- Size of the margin --> 
@@ -101,7 +104,7 @@
         </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

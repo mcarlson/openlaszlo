@@ -1,0 +1,27 @@
+<canvas width="100%" height="80%" >
+  <debug  width="600" height="400" fontsize="12"/> 
+
+  <switch>
+    <when runtime="dhtml">
+      <view height="200" width="800">
+        <text width="${parent.width}" text="${'canvas.runtime = '+canvas.runtime+ ', This should be a DHTML runtime'}" x="0" fontsize="12"  fgcolor="0x1f13b1" y="40" />
+        <text text="${'TEST RESULT ERROR: wrong runtime switch branch selected by compiler: '+canvas.runtime}"
+              x="0" fontsize="12"  fgcolor="red" visible="${canvas.runtime != 'dhtml'}"
+              y="70" />        
+      </view>
+    </when>
+    <otherwise>
+      <view height="200" width="800">
+        <text width="${parent.width}" text="${'canvas.runtime = '+canvas.runtime+ ', This should be a SWF runtime'}" x="0" fontsize="12"  fgcolor="0x1f13b1" y="40" />
+        <text text="${'TEST RESULT ERROR: wrong runtime switch branch selected by compiler: '+canvas.runtime}"
+              x="0" fontsize="12"  fgcolor="red" visible="${canvas.runtime.indexOf('swf') != 0}"
+              y="70" />        
+      </view>
+    </otherwise>
+  </switch>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

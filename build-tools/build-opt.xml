@@ -1,7 +1,7 @@
 <target name="build-opt" unless="done.build-opt">
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -24,14 +24,6 @@
     <property name="build.tools" value="" />
     <property name="build.qa" value="" />
     
-    <!-- We usually don't want an official build id. Just use "INTERNAL"
-        unless the current user is "laszlo" --> 
-    <condition property="build.id" value="x.x.x.x" else="INTERNAL">
-        <not>
-            <equals arg1="${user.name}" arg2="laszlo" />
-        </not>
-    </condition>
-    
     <condition property="isautomatedbuild">
          <equals arg1="${user.name}" arg2="laszlo" />
     </condition>
@@ -46,7 +38,7 @@
     <condition property="build.platform" value="unix" >
         <os family="unix" />
     </condition>
-
+    
     <!-- Determine value of filesystem casesensitivity -->
     <condition property="filesystem.casesensitive" value="false" >
         <os family="windows" />
@@ -71,9 +63,17 @@
     
     <!-- Remove these property definitions if you want the associated
         ant target to run. [bshine 8.25.06] -->     
-    <property name="skip.prefetch" value="true" />    
-    <property name="skip.wrappertest" value="true" />
-    <property name="skip.runlzunit" value="true" />
+    <property name="skip.prefetch" value="true" />
+    <!-- property name="skip.wrappertest" value="true" -->
+    <!-- <property name="skip.runlzunit" value="true" -->
     
+    <!-- currently unable to generate the reference on Windows -->
+    <condition property="skip.doc.reference" value="true">
+        <os family="windows"/>
+    </condition>
+    <!-- property name="skip.doc.reference" value="true" / -->
+
+	<property name="build.doc.index" value="1" />
+
     <property name="done.build-opt" value="true" />
 </target>

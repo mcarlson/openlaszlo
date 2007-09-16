@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                  *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"-->
+<set xmlns:xi="http://www.w3.org/2003/XInclude">
+    <?dbhtml filename="userindex.html" ?>
+    
+    <xi:include href="developers/index.dbk">
+      <xi:fallback><para>Missing: Developers Guide</para></xi:fallback>
+    </xi:include>
+
+    <xi:include href="deployers/deployers-index.dbk">
+      <xi:fallback><para>Missing: Deployers Guide</para></xi:fallback>
+    </xi:include>
+
+    <xi:include href="reference/index.dbk">
+      <xi:fallback><para>Missing: Reference</para></xi:fallback>
+    </xi:include>
+
+    <appendix>
+      <title>Indices</title>
+<?ignore      
+      <index type="tags"/>
+      <index type="deprecated"/>
+?>
+      <index>
+        <title>General Index</title>
+      </index>
+    </appendix>  
+</set>

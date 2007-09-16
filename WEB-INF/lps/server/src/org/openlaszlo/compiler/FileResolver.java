@@ -9,9 +9,12 @@
 
 package org.openlaszlo.compiler;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.*;
 import org.openlaszlo.server.*;
 import org.apache.log4j.*;
+
+import org.openlaszlo.utils.FileUtils;
 
 /**
  * Provides an interface for resolving a pathname to a File.  The
@@ -33,6 +36,9 @@ public interface FileResolver {
     File resolve(String pathname, String base, boolean asLibrary)
         throws java.io.FileNotFoundException;
 
+    File resolve(CompilationEnvironment env, String pathname, String base, boolean asLibrary)
+        throws java.io.FileNotFoundException;
+
     /**
      * The Set of Files that represents the includes that have been
      * implicitly included by binary libraries.  This is updated by
@@ -45,7 +51,7 @@ public interface FileResolver {
 /** DefaultFileResolver maps each pathname onto the File that
  * it names, without doing any directory resolution or other
  * magic.  (The operating system's notion of a working directory
- * supplies the context for partial pathnames.) 
+ * supplies the context for partial pathnames.)
  */
 class DefaultFileResolver implements FileResolver {
 
@@ -56,39 +62,44 @@ class DefaultFileResolver implements FileResolver {
     public DefaultFileResolver() {
     }
 
-    /** @see FileResolver */
     public File resolve(String pathname, String base, boolean asLibrary)
+        throws java.io.FileNotFoundException {
+        return resolve(null, pathname, base, asLibrary);
+    }
+
+    /** @see FileResolver */
+    public File resolve(CompilationEnvironment env, String pathname, String base, boolean asLibrary)
         throws java.io.FileNotFoundException {
         if (asLibrary) {
             // If it is a library, search for .lzo's, consider the
             // path may be just to the directory of the library
             File library = null;
             if (pathname.endsWith(".lzx")) {
-                library = resolveInternal(pathname.substring(0, pathname.length()-4) +".lzo", base);
+                library = resolveInternal(env, pathname.substring(0, pathname.length()-4) +".lzo", base);
                 if (library != null) {
                   return library;
                 }
             } else {
                 // Try pathname as a directory
-                library = resolveInternal((new File(pathname, "library.lzo").getPath()), base);
+                library = resolveInternal(env, (new File(pathname, "library.lzo").getPath()), base);
                 if (library != null) {
                   return library;
                 }
-                library = resolveInternal((new File(pathname, "library.lzx").getPath()), base);
+                library = resolveInternal(env, (new File(pathname, "library.lzx").getPath()), base);
                 if (library != null) {
                   return library;
                 }
             }
         }
         // Last resort for a library, normal case for plain files
-        File resolved = resolveInternal(pathname, base);
+        File resolved = resolveInternal(env, pathname, base);
         if (resolved != null) {
             return resolved;
         }
         throw new java.io.FileNotFoundException(pathname);
     }
 
-    protected File resolveInternal(String pathname, String base) {
+    protected File resolveInternal(CompilationEnvironment env, String pathname, String base) {
         Logger mLogger = Logger.getLogger(FileResolver.class);
 
         final String FILE_PROTOCOL = "file";
@@ -120,6 +131,18 @@ class DefaultFileResolver implements FileResolver {
 );
         }
 
+        // Determine whether to substitue resource files initially just swf to png
+        String pnext = FileUtils.getExtension(pathname);
+        boolean dhtmlResourceFlag = false;
+        if (env != null) {
+            dhtmlResourceFlag = env.isDHTML();
+        }
+        boolean SWFtoPNG = dhtmlResourceFlag && pnext.equalsIgnoreCase("swf");
+        if (SWFtoPNG) {
+            String pnbase = FileUtils.getBase(pathname);
+            pathname = pnbase + ".png";
+        }
+
         // FIXME: [ebloch] this vector should be in a properties file
         Vector v = new Vector();
         if (pathname.startsWith("/")) {
@@ -127,12 +150,17 @@ class DefaultFileResolver implements FileResolver {
           v.add("");
         }
         v.add(base);
+        if (SWFtoPNG) {
+          String toAdd = FileUtils.insertSubdir(base + "/", "autoPng");
+          mLogger.debug("Default File Resolver Adding " + toAdd + '\n');
+          v.add(toAdd);
+        }
         if (!pathname.startsWith("./") && !pathname.startsWith("../")) {
           v.add(LPS.getComponentsDirectory());
           v.add(LPS.getFontDirectory());
           v.add(LPS.getLFCDirectory());
         }
-        
+
         Enumeration e = v.elements();
         while (e.hasMoreElements()) {
             String dir = (String)e.nextElement();
@@ -140,10 +168,23 @@ class DefaultFileResolver implements FileResolver {
               File f = (new File(dir, pathname)).getCanonicalFile();
               if (f.exists() ||
                   ((binaryIncludes != null) && binaryIncludes.contains(f))) {
-                // TODO: [2002-11-23 ows] check for case mismatch
                 mLogger.debug("Resolved " + pathname + " to "  +
                               f.getAbsolutePath());
-                    return f;
+                return f;
+              } else if (SWFtoPNG) {
+                String autoPngPath = FileUtils.insertSubdir(f.getPath(), "autoPng");
+                mLogger.debug("Default File Resolver Looking for " + autoPngPath + '\n');
+                File autoPngFile = new File(autoPngPath);
+                if (autoPngFile.exists()) {
+                  mLogger.debug("Default File Resolver " + pathname + " to "  +
+                                autoPngFile.getAbsolutePath() + '\n');
+                  return autoPngFile;
+                } else {
+                  File [] pathArray = FileUtils.matchPlusSuffix(autoPngFile);
+                  if (pathArray != null && pathArray.length != 0)  {
+                    return autoPngFile;
+                  }
+                }
               }
             } catch (java.io.IOException ex) {
               // Not a valid file?

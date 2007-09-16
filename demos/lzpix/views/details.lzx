@@ -1,0 +1,264 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+
+    <class name="taglink" width="100"  clickable="true" >
+        <view resource="../assets/details/taglink_icon.gif" />
+        <text name="txt" x="15" y="-4" text="tag title" width="100" fgcolor="0x5c5c5c" fontsize="10"/>
+        <method event="ondata" args="t" >
+            if ( t == null || t == undefined ) t = "";                
+            this.txt.setText(t);            
+        </method>
+
+    </class>
+
+    <class name="buddyicon" width="24" height="24" stretches="both" >
+        <method event="ondata" args="d">
+            if (!d) return; 
+            var dp = this.datapath;
+            var iconserver = dp.xpathQuery('@iconserver');
+            var userid = dp.xpathQuery('@id');            
+            this.setSource(this.getBuddyIconUrl(userid, iconserver)); 
+        </method>
+
+        <!-- Get buddy icon from http://static.flickr.com/{icon-server}/buddyicons/{nsid}.jpg
+            ie  http://static.flickr.com/27/buddyicons/49503086499@N01.jpg -->        
+        <method name="getBuddyIconUrl" args="userid,iconserver">
+            <![CDATA[
+            var s="http://static.flickr.com/" + iconserver + "/buddyicons/" + userid + ".jpg";
+            return s;            
+            ]]>
+        </method>
+    </class>
+
+    <!-- naturalimg view is an image view with a one-pixel frame that sizes
+         itself within its parent, preserving aspect ratio -->
+    <class name="naturalimgview" bgcolor="0x5b5b5b" opacity="0" >
+        
+        <attribute name="fadein" value="500"/>
+        
+        <animator name="anm_opacity" attribute="opacity" to="1" duration="$once{parent.fadein}" />
+
+        <view name="interior" x="1" y="1" 
+              width="${this.parent.width - 2}" 
+              height="${this.parent.height - 2}"
+              stretches="both"/>
+
+        <method event="onload" reference="interior">
+            this.setDimensions();
+            this.setVisible( true );
+            this.anm_opacity.doStart();
+        </method>
+        
+        <method name="setDimensions" ><![CDATA[
+            //Debug.write(this.name, "setDimensions");
+            var i = this.interior;
+            if (i['resourceheight'] == null) { return; }
+            var rh = i.resourceheight;
+            var rw = i.resourcewidth;
+            if (rw == 0) { return; }
+            var rar = rh / rw;
+            var h = this.parent.height;
+            var w = this.parent.width;
+            if (w == 0) { return; }
+            var par = h / w;
+            if (par < rar) {
+                this.setHeight(h);
+                this.setWidth( Math.round(h / rar) );
+            } else if (par > rar) {
+                this.setHeight( Math.round(w * rar) );
+                this.setWidth(w);
+            } else {
+                this.setHeight(h);
+                this.setWidth(w);
+            }
+        ]]></method>
+    </class>
+    
+    <class name="detailsview" visible="false"  width="300" >
+        <attribute name="_monthmap" value="$once{[
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December']}" />
+        <datapointer name="user_dp" xpath="userds:/person"  />
+        <datapointer name="photo_dp" xpath="infods:/rsp/photo/owner" />
+
+        <attribute name="photosource_t" type="string" value=""/>
+        <attribute name="photosource_m" type="string" value=""/>
+        
+        <method name="setImage" args="t, m">
+            this.setAttribute('photosource_t', t);
+            this.setAttribute('photosource_m', m);
+            this.ph.reset();
+            this.ph.intparent.interior.setSource(t);
+        </method>
+        
+        <method name="toDateString" args="d">
+            // Flickr gives us dates in seconds-since-1970, but Javascript
+            // wants milliseconds-since-1970, so we multiply by 1000. 
+            var secondsSinceEpoch = 1000 * d; 
+            var mydate = new Date(secondsSinceEpoch);
+            var day = mydate.getDate(); 
+            var month = _monthmap[ mydate.getMonth() ];
+            var year = mydate.getFullYear();
+            var str = month + " " + day + ", " + year;
+            // Debug.write("built date string: ", str);             
+            return str; 
+        </method> 
+
+        <!-- Load details for the photo  --> 
+        <method name="loadDetails" args="photo_id">
+            var argobj = [
+                {argname:"method", 
+                argvalue:"flickr.photos.getInfo"},
+                {argname:"photo_id",
+                argvalue: photo_id}
+                ];
+            gDataMan.doFlickrRequest(canvas.infods, argobj);             
+            loadSizeInfo(photo_id);  
+        </method>
+
+        <!-- Load owner info --> 
+        <method name="loadUserInfo" args="user_id">
+            //Debug.write("loadUserInfo"); 
+            var argobj = [
+                {argname:"method", 
+                argvalue:"flickr.people.getInfo"},
+                {argname:"user_id",
+                argvalue: user_id}
+                ];
+            gDataMan.doFlickrRequest(canvas.userds, argobj);
+        </method>
+                    
+        <!-- Load size info. --> 
+        <method name="loadSizeInfo" args="photo_id">
+            // Debug.write("loadSizeInfo"); 
+            var argobj = [
+                {argname:"method", 
+                argvalue:"flickr.photos.getSizes"},
+                {argname:"photo_id",
+                argvalue: photo_id}
+                ];
+            // gDataMan.doFlickrRequest(canvas.sizeds, argobj);
+        </method>
+
+        <!-- title --> 
+        <!-- transition animator will move this to x="40" -->
+        <text name="title" datapath="infods:/rsp/photo/title/text()" 
+            x="-300"
+            y="101"
+            fontsize="14" 
+            width="500"
+            fontstyle="bold"
+            fgcolor="0x191c43" 
+            />
+
+        <view name="ph" > <!-- x,y set by animator in main app -->
+            <!-- position photo -->
+            <animatorgroup name="posme" start="false" process="simultaneous" >
+                <animator attribute="x"      to="43"   duration="$once{canvas.anm_multipler*300}"/>
+                <animator attribute="y"      to="131"  duration="$once{canvas.anm_multipler*300}"/>
+                <animator attribute="width"  to="440"  duration="$once{canvas.anm_multipler*300}"/>
+                <animator attribute="height" to="310"  duration="$once{canvas.anm_multipler*300}"/>
+            </animatorgroup>
+
+            <naturalimgview name="intparent" id="gPhV">
+                <method event="onstart" reference="anm_opacity" >
+                    var m = classroot.photosource_m;
+                    if (m) this.parent.intparent2.interior.setSource(m);
+                </method>
+            </naturalimgview>
+            
+            <naturalimgview name="intparent2" fadein="250"/>
+            
+            <!-- The notes -->             
+            <view name="notescontainer">
+                <!-- note datapath="infods:/rsp/photo/notes/note" -->                
+            </view>
+
+            <!-- Set the low res, thumbnail image -->
+            <method name="reset">                
+                 this.setVisible( true );
+                 this.intparent2.setAttribute('opacity',0);
+                 this.intparent.setAttribute('opacity',0);
+            </method>
+
+             <handler name="onheight">
+                this.intparent.setDimensions();
+                this.intparent2.setDimensions();
+            </handler>
+        </view>
+    <!-- User info and date posted. 
+        iconserver comes from userds:/rsp/person/@iconserver
+    -->
+    <view name="info" height="345" width="230" 
+          x="600" y="131"
+          clip="true"> <!-- [bret] clip=true  to hide long details. this needs to be fixed -->
+        <view name="userinfo" datapath="infods:/rsp/photo/">
+            <view bgcolor="0x5b5b5b" width="26" height="26" /> <!-- buddyicon background -->
+            <buddyicon id="gBud" x="1" y="1" datapath="userds:/rsp/person"/>
+            
+            <method event="ondata" args="d" >
+                // change text to reflect the correct formatting of the date and time 
+                if ( !d ) return;
+                var str = classroot.toDateString( datapath.xpathQuery( "dates/@posted" ) );
+                inner.formattedDate.setText(str); 
+                inner.userlabel.setText( datapath.xpathQuery( "owner/@username" ) );
+            </method>
+
+            <view name="inner" x="30" y="-3" visible="true">
+                <text fgcolor="0x5c5c5c">Updated on </text>
+                <text name="formattedDate" x="70" width="175"
+                    >
+                    ...
+                </text>
+                <text y="14" fgcolor="0x5c5c5c" >by </text>
+                <text name="userlabel" x="20" y="14" />
+            </view>
+        </view>
+
+        <view y="40" width="230" > <!--  width="${canvas.width - parent.x - 10}"  -->
+            <simplelayout axis="y" spacing="1" />
+
+            <text fgcolor="0x5c5c5c"  visible="${parent.txt.getText() != ''}" fontstyle="bold" fontsize="12" height="23" >Description</text>
+
+            <!-- Photo description -->
+            <text name="txt" datapath="infods:/rsp/photo/description/text()" 
+                  fgcolor="0x5c5c5c"
+                  multiline="true"
+                  width="${parent.width}" />         
+                  
+            <view height="4" />
+
+            <view datapath="infods:/rsp/photo"> 
+                <method event="onclick">
+                    var s = this.datapath.xpathQuery("urls/url/text()"); 
+                    LzBrowser.loadURL( s, "_blank", "toolbar=yes"); 
+                </method>
+                <text fgcolor="#324FDB">view on flickr</text>
+            </view>
+            
+            <view height="7" />
+
+            <text fgcolor="0x5c5c5c" fontstyle="bold" fontsize="12" height="23" >Tags</text>
+            <view x="5"  width="${parent.width}">
+                <method event="ondata" reference="infods">
+                    this.tl.setDatapath('infods:/rsp/photo/tags/tag[1-19]/text()');
+                </method>
+                <wrappinglayout spacing="3" />      
+                <!-- Only display first 20 tags --> 
+                <taglink name="tl" clickable="true" >
+                     <method event="onclick"  >
+                        var t = this.txt.getText();
+                        canvas.srch.setText( t );
+                        canvas.srch.sendsearch();
+                    </method>
+                </taglink>
+            </view>
+        </view>
+    </view>
+    </class>
+
+</library>

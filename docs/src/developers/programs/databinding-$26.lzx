@@ -1,0 +1,64 @@
+
+<canvas height="300">
+  <dataset name="phonebook" src="resources/phonebook.xml"/>
+  
+  <simplelayout axis="y" spacing="3"/>
+  <view>
+    <view name="newContact" datapath="new:/contact">
+      <text>First Name:</text>
+      <edittext name="firstName" datapath="@firstName" x="80"/>
+      <text y="25">Last Name:</text>
+      <edittext name="lastname" datapath="@lastName" x="80" y="25"/>
+      <text y="50">Phone:</text>
+      <edittext name="phone" datapath="@phone" x="80" y="50"/>
+      <text y="75">Email:</text>
+      <edittext name="email" datapath="@email" x="80" y="75"/>
+      <button width="80" x="200">Add
+        <handler name="onclick">
+          parent.datapath.updateData();
+          var dp= phonebook.getPointer();   
+          dp.selectChild();
+          dp.addNodeFromPointer(parent.datapath);     
+          parent.setDatapath("new:/contact");         
+        </handler>
+      </button>
+    </view>
+  </view>
+  <button text="Delete selected">
+    <handler name="onclick"><![CDATA[
+      for (var c = 0; c < all.nodes.length; ++c)
+        with (all.clones[c]) {
+          if (datapath.xpathQuery('@checked') == true)  {
+            datapath.deleteNode()
+            c--
+          }
+        }]]>
+    </handler>
+  </button>
+  
+  <view name="all">
+    <datapath xpath="phonebook:/contacts/contact" pooling="true"/>
+    <view>
+      <simplelayout axis="x"/>
+      <checkbox width="30" datapath="@checked">
+        <handler name="onvalue">
+          datapath.updateData()
+        </handler>
+        <method name="updateData">
+          return this.value
+        </method>
+        <method name="applyData" args="d">
+          setValue(d)
+        </method>
+      </checkbox>
+      <text datapath="@firstName"/>
+      <text datapath="@lastName"/>
+      <text datapath="@phone"/>
+      <text datapath="@email"/>
+    </view>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

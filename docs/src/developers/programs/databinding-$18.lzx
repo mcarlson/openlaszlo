@@ -1,0 +1,30 @@
+
+<canvas height="200">
+  <include href="lz/tree.lzx" />
+  <dataset name="filesys" src="resources/dirtree.xml"/>
+  <class name="fs_tree" extends="tree">
+    <datapath xpath="filesys:/entry/@name"/>
+    <attribute name="autoscroll" value="true"/>
+    <tree datapath="*" text="$path{'@name'}" 
+          isleaf="${this.datapath.xpathQuery('@type') == 'file'}"/>
+  </class>
+  
+  <simplelayout axis="x" spacing="20"/>
+  
+  <view width="200" height="200" clip="true">
+    <fs_tree id="myfs"/>
+    <scrollbar visible="${scrollable}"/>
+  </view>
+  
+  <view width="200" height="200" clip="true">
+    <fs_tree oninit="openChildren(true)"/>
+    <scrollbar visible="${scrollable}"/>
+  </view>
+
+  <datapointer xpath="filesys:/" ondata="myfs.openChildren()"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

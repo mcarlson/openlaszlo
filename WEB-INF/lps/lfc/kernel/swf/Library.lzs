@@ -1,0 +1,33 @@
+/**
+  * Library.js
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic Kernel
+  * @subtopic AS2
+  */
+
+#include "kernel/swf/LzRequires.as"
+#include "kernel/swf/LzSprite.as"
+#include "kernel/swf/LzTextSprite.as"
+#include "kernel/swf/LzInputTextSprite.as"
+#include "kernel/swf/LzMakeLoadSprite.as"
+#include "kernel/swf/LzLoader.lzs"
+#include "kernel/swf/LzMediaLoader.lzs"
+#include "kernel/swf/LzLibraryLoader.lzs"
+#include "kernel/swf/LzFontManager.as"
+#include "kernel/swf/LzLoadQueue.as"
+#include "kernel/swf/LzFunctions.as"
+#include "kernel/swf/LzSoundMC.as"
+#include "kernel/swf/LzLibrary.lzs"
+#include "kernel/swf/LzXMLParser.as"
+#include "kernel/swf/LzXMLTranslator.as"
+#include "kernel/swf/LzHTTPLoader.as"
+#include "kernel/swf/LzMouseKernel.as"
+#include "kernel/swf/LzKeyboardKernel.as"
+#include "kernel/swf/LzAudio.as"
+#include "kernel/swf/LzScreenKernel.as"
+#include "kernel/swf/LzContextMenu.lzs"
+#include "kernel/swf/dojo/Library.lzs"
+

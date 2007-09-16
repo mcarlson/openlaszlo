@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book language="en" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <?dbhtml dir="contribref" ?>
+  <?dbhtml filename="index.html" ?>
+  <title>OpenLaszlo 4.0 Comprehensive Reference</title>
+  <titleabbrev>OL4 Comprehensive Reference</titleabbrev>
+
+  <xi:include href="book-info.dbk"></xi:include>
+  
+  <xi:include href="preface.dbk">
+    <xi:fallback><para>Missing: Preface</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="jsref.dbk">
+    <xi:fallback><para>Missing: JavaScript Reference</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="kernelref.dbk">
+    <xi:fallback><para>Missing: Kernel Reference</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="lzxref.dbk">
+    <xi:fallback><para>Missing: LZX Reference</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="lfcref.dbk">
+    <xi:fallback><para>Missing: LFC Reference</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="compref.dbk">
+    <xi:fallback><para>Missing: Components Reference</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="extref.dbk">
+    <xi:fallback><para>Missing: Extensions Reference</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="chartref.dbk">
+    <xi:fallback><para>Missing: Charting Reference</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="incref.dbk">
+    <xi:fallback><para>Missing: Incubator Reference</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="xref.dbk">
+    <xi:fallback><para>Missing: Cross-Reference</para></xi:fallback>
+  </xi:include>
+  
+  <?appendix id="schema"><title>Schema</title></appendix ?>
+  <?appendix id="reserved-words"><title>Reserved words</title></appendix ?>
+
+  
+</book>

@@ -1,0 +1,67 @@
+<canvas height="420" width="620">
+  <include href="timing-support.lzx" />
+  <script>
+  <![CDATA[
+    var scale = 20;
+
+    function baseline() {
+        for (var k = 0; k < scale; k++) {
+        }    
+    }
+
+    function createElements() {
+        for (var k = 0; k < scale; k++) {
+            var s = new LzTextSprite(this, {text: 'foo'});      
+        }
+    }
+
+    function createElementsAttach() {
+        var outer = canvas.sprite;
+        for (var k = 0; k < scale; k++) {
+            var s = new LzTextSprite(this, {text: 'foo'});      
+            outer.addChildSprite(s);
+        }
+    }
+
+    function createElementsAttachNested() {
+        var outer = canvas.sprite;
+        for (var k = 0; k < scale; k++) {
+            var s = new LzTextSprite(this, {text: 'foo'});      
+            outer.addChildSprite(s);
+            outer = s;
+        }
+    }
+
+    function setCSSProp() {
+        var s = new LzTextSprite(this, {text: 'foo'});
+        for (var k = 0; k < scale; k++) {
+            s.setFontSize(k);
+        }
+    }
+
+    function setCSSPropAttached() {
+        var outer = canvas.sprite;
+        var s = new LzTextSprite(this, {text: 'foo'});
+        outer.addChildSprite(s);
+        for (var k = 0; k < scale; k++) {
+            s.setFontSize(k);
+        }
+    }
+
+    addTest("baseline");
+    addTest("createElements");
+    addTest("createElementsAttach");
+    addTest("createElementsAttachNested");
+    addTest("setCSSProp");
+    addTest("setCSSPropAttached");
+    
+    runTests( 'text' , 10 );
+
+  ]]>
+  </script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,10 +1,5 @@
 <library>
 
-    <!-- Fonts -->
-    <font src="bitstream-vera-1.10/verabd.ttf" name="vera"/>
-    <font src="fonts/kroe0655.ttf" name="eventfont"/>
-    <font src="fonts/stan0765.ttf" name="eventTimefont"/>
-
     <!-- RESOURCES Menubar -->
     <resource src="images/menubar/mainbar-overlay.png"  name="menubar"/>
     <resource src="images/menubar/logo.png" name="logo"/>

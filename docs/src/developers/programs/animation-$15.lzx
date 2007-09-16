@@ -1,0 +1,37 @@
+
+<canvas width="800" height="185" bgcolor="0xE5E1B0">
+  <!-- INCLUDES That provide framework for the example -->
+  <include href="animation_library.lzx"/>
+  
+  <!-- The EXAMPLE itself-->
+  <view id="tutorial2" height="200" width="${parent.width}" visible="true">
+    <ruler name="rlr" height="150" y="0"/>
+    <view height="30"/>
+    <view height="60" y="40">
+      <view id="V01" x="50">
+        <borderedbox/>
+        <borderedbox/>
+        <borderedbox/>
+        <borderedbox/>
+        
+        <simplelayout name="lyt" axis="x" spacing="5">
+          <animatorgroup name="anm" start="false" process="sequential">
+            <animator attribute="spacing" from="5"   to="50"  duration="1000"/>
+            <animator attribute="spacing" from="50"  to="-49" duration="1000"/>
+            <animator attribute="spacing" from="-49" to="5"   duration="1000"/>
+          </animatorgroup>
+        </simplelayout>
+      </view>
+    </view>
+    
+    <!-- The TEST button -->
+    <view x="50" y="150">
+      <richbutton label="Test" x="50" cap="both"
+                  onclick="V01.lyt.anm.doStart()"/>
+    </view>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,62 @@
+
+<canvas> 
+  <window title="Fonts are fun!" width="400" height="400" resizable="true">
+  <view width="500">
+    <simplelayout axis="y" spacing="10"/>
+    <view width="400" font="Arial" fontsize="14">
+      <simplelayout axis="y" spacing="10"/>
+      <text>Arial</text>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./ ;?;':"[]{}\~`</text>
+      <text><b>Arial</b></text>
+      <text><i>Arial</i></text>
+      <text><b><i>Arial</i></b></text>
+      <inputtext>inputtext here</inputtext>
+      <inputtext multiline="true" height="100" width="100">hello there</inputtext>
+      <inputtext>Arial</inputtext>
+      <text>
+        <b><i>BoldItalic</i> Bold </b><i>Italic</i>
+        <u>Underline <b>Bold Underline</b></u></text>
+    </view>
+    
+    <view width="400" font="Arial Narrow" fontsize="14">
+      <simplelayout axis="y" spacing="10"/>
+      <text>Arial Narrow</text>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`</text>
+      <text><b>Arial Narrow</b></text>
+      <text><i>Arial Narrow</i></text>
+      <text><u>Arial Narrow</u></text>
+      <text><b><i>Arial Narrow</i></b></text>
+      <inputtext>inputtext here</inputtext>
+      <inputtext multiline="true" height="100" width="100">hello there</inputtext>
+      <inputtext>Arial Narrow</inputtext>
+      <text>
+        <b><i>BoldItalic</i> Bold </b><i>Italic</i>
+        <u>Underline <b>Bold Underline</b></u></text>
+    </view>
+    <view width="400" font="Times New Roman" fontsize="14">
+      <simplelayout axis="y" spacing="10"/>
+      <text>Times New Roman</text>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`</text>
+      <text><b>Times New Roman</b></text>
+      <text><i>Times New Roman</i></text>
+      <text><u>Times New Roman</u></text>
+      <text><b><i>Times New Roman</i></b></text>
+      <inputtext>inputtext here</inputtext>
+      <inputtext multiline="true" height="100" width="100">hello there</inputtext>
+      <inputtext>Times New Roman</inputtext>
+      <text>
+        <b><i>BoldItalic</i> Bold</b>
+        <i>Italic</i ><u>Underline <b>Bold Underline</b></u>
+      </text>
+    </view>
+    </view>
+    <scrollbar axis="y"/>
+  </window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

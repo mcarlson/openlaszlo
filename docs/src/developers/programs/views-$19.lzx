@@ -1,0 +1,19 @@
+
+<canvas>
+  <view bgcolor="yellow" width="300" height="300">
+    <attribute name="someXValue" type="number" value="50"/>
+
+    <view bgcolor="red" name="red" width="20" height="20" 
+            x="$once{20 + 5}" y="$once{70 + 5}"/>
+
+    <view bgcolor="blue" width="20" height="20" 
+            x="${parent.red.y}" y="${parent.red.x}"/>
+
+    <view bgcolor="green" width="20" height="20" 
+            x="${parent.someXValue}" y="${this.x}"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

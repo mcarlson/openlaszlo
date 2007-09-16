@@ -1,5 +1,5 @@
 <canvas debug="true">
-  <include href="../../lps/utils/lztestmanager.lzx" /> 
+  <include href="lztest/lztestmanager.lzx" /> 
 
 <!-- stableborderlayout. x layout -->
   <simplelayout axis="x" spacing="5"/>
@@ -25,12 +25,13 @@
     <method name="toggleAxis">
       sl1.setAttribute ('axis', (sl1.axis == "x") ? "y" : "x");
 <!-- The update call should be inside the object -->
+      sl1.reset();
       sl1.update();
     </method>
     <stableborderlayout id="sl1" axis="x">
-      <method event="onaxis" args="axis">
+      <handler name="onaxis" args="axis">
         n_onaxis++;
-      </method>
+      </handler>
     </stableborderlayout>
     <view name="v1" bgcolor="blue" height="30" width="50"/>
     <view name="v2" bgcolor="red" height="30" width="50"/>
@@ -115,9 +116,9 @@ suite.test3 = function() {
 
 
 // Run the tests in order (test1,test2,...)
-suite.addTest(suite.test3);
-suite.addTest(suite.test2);
 suite.addTest(suite.test1);
+suite.addTest(suite.test2);
+suite.addTest(suite.test3);
 
 ]]>
 </script>
@@ -126,7 +127,7 @@ suite.addTest(suite.test1);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

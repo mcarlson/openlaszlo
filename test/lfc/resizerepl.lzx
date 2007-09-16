@@ -113,7 +113,7 @@
         <simplelayout axis='x'/>
         <text valign="middle" datapath="${'@month'}" width="50"/>
         <text valign="middle" datapath="${'@num'}" width="50"/>
-        <text valign="middle" datapath="@day"/>
+        <text valign="middle" datapath="@day" width="100"/>
         <view bgcolor="red" options="ignorelayout"
               align="right" width="30" height="10">
             <method event="onclick">
@@ -190,7 +190,7 @@
          <button>scroll-and-select first
              <method event="onclick">
                  var rm = repman;
-                 debug.write('rm', rm);
+                 Debug.write('rm', rm);
                  var first = rm.nodes[0];
                  repman.parent.setY(0);
                  var cl = rm.getCloneForNode(first);
@@ -202,6 +202,6 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

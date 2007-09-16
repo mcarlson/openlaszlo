@@ -20,15 +20,15 @@
                     this.t2del = new LzDelegate( this , 'test2' );
                 }
 
-                if ( this.waitcnt++ > 100 ){
-                    fail( "Didn't get async data" );
+                if ( this.waitcnt++ > 2000 ){
+                    fail( "datapointerServerless: Didn't get async data" );
                 } else {
                     LzIdle.callOnIdle( this.t2del );
                 }
                 return;
             }
 
-            Debug.write( 'running async test for loaded data' );
+            Debug.write( 'running async test for loaded data (datapointerServerless.lzx)' );
             this.doIt( dp2 , 'loadme2' );
         </method>
 
@@ -114,6 +114,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

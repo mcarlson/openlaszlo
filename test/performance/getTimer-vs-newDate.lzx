@@ -1,0 +1,32 @@
+<canvas>
+  <include href="utils/performance" />
+  <script>
+    <![CDATA[
+    var iterations = Measurement.defaultIterations;
+
+    function e () {
+      return 0;
+    }
+
+    function empty () {
+      for (var i = 0; i < iterations; i++)
+        e.call();
+    }
+
+    function measureGetTimer () {
+      for (var i = 0; i < iterations; i++)
+        getTimer();
+    }
+
+    function measureNewDate () {
+      for (var i = 0; i < iterations; i++)
+        (new Date).getTime();
+    }
+
+    (new Measurement({'getTimer': measureGetTimer,
+                        'new Date': measureNewDate,
+                        'empty': empty})).run();
+   ]]>
+  </script>
+</canvas>
+<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

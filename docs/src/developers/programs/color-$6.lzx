@@ -1,0 +1,23 @@
+
+
+<canvas debug="true">
+<simplelayout axis="x" spacing="10"/>
+
+<class name="box1" width="100" height="100" bgcolor="${global['gold4']}" />
+
+<class name="box2" width="100" height="100" bgcolor="${iceblue1}" />
+ 
+<box1 id="sun">
+    <text text="Sun"/>
+</box1>
+
+<box2 id="mystic">
+    <text fgcolor="0xFFFFFF" text="Mystic"/>
+</box2>
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

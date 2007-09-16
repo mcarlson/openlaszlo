@@ -1,0 +1,9 @@
+<rsp stat="ok">
+<photos page="1" pages="5" perpage="100" total="500">
+<photo  favoritetag="interestingness"  id="103527225" secret="3b95044747" server="35" dateuploaded="1140727370" />
+<photo favoritetag="london" id="8753669" secret="fb27969bed" server="7" />
+<photo id="103082481" favoritetag="ocean" owner="44124338993@N01" secret="fbe2a381ac" server="28" title="don't kill trees" ispublic="1" isfriend="0" isfamily="0"/>
+<photo id="103033525" favoritetag="sanfrancisco" owner="71374899@N00" secret="ef4ae24577" server="25" title="Sunrise 4" ispublic="1" isfriend="0" isfamily="0"/>
+<photo id="103069664" favoritetag="pine" owner="59006464@N00" secret="3c33310e73" server="24" title="Safe and Warm" ispublic="1" isfriend="0" isfamily="0"/>
+</photos>
+</rsp>

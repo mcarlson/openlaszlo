@@ -1,0 +1,65 @@
+<library>
+    <!-- this tests if the client is making new requests to the server for each doRequest,
+         rather than getting the content from the client cache.
+     It uses a .jsp on the server which returns sequential numbers for each request, and compares
+     the two values to make sure that the second returned value is not the same as the first.
+     -->
+
+  <include href="lzunit/lzunit.lzx" />
+
+  <dataset  proxied="false" name="ds1" src="http:httpsequence.jsp" request="true" timeout="120000"/>
+  <dataset  proxied="false" name="ds2" src="http:httpsequence.jsp" request="true" timeout="120000" />
+
+  <dataset  proxied="true" name="ds3" src="http:httpsequence.jsp" request="true" timeout="120000" />
+  <dataset  proxied="true" name="ds4" src="http:httpsequence.jsp" request="true" timeout="120000" />
+
+  <class name="TestClientCacheBreaker" extends="TestCase">
+    <attribute name="dpready" value="false"/>
+    <attribute name="t2del" value="false"/>
+    <attribute name="waitcnt" value="0"/>
+
+    <handler reference="ds4" name="ondata">
+       Debug.write('testcase got ds4 ondata');
+       this.dpready = true;
+    </handler>
+
+    <datapointer name="dp" />
+
+
+    <method name="test1">
+        if ( ! this.dpready ){
+          if ( ! this.t2del ){
+              Debug.write( "test isn't done until async test runs" );
+              this.t2del = new LzDelegate( this , 'test1' );
+          }
+
+          if ( this.waitcnt++ > 720 ){
+              fail( "testclinetcachebreaker: Didn't get async data" );
+          } else {
+              LzIdle.callOnIdle( this.t2del );
+          }
+          return;
+      }
+
+      Debug.write( 'running async test for loaded data (testclientcachebreaker.lzx)' ,dp);
+      this.doIt(dp);
+    </method>
+
+        <method name="doIt" args="dp">
+            <![CDATA[
+              assertFalse( (Number(dp.xpathQuery("ds1:/response/text()"))) == 
+                            Number(dp.xpathQuery("ds2:/response/text()")) );
+              assertFalse( (Number(dp.xpathQuery("ds3:/response/text()"))) == 
+                            Number(dp.xpathQuery("ds4:/response/text()")) );
+            ]]>
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+

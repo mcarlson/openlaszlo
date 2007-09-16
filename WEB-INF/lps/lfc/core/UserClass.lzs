@@ -1,0 +1,292 @@
+/**
+  * UserClass.lzs 
+  *
+  * 
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic LZX
+  * @subtopic Basics
+  * @access public
+  */
+  
+/**
+  * An LzUserClass is the implementation of the <tagname>class</tagname> tag.  It ensures that 
+  * the class is instantiated in lexical order with surrounding nodes
+  *
+  * <p>The <tagname>class</tagname> tag defines a new tag, which be used
+  * anywhere in the source file where a built-in tag such as
+  * <tagname>view</tagname> or <tagname>layout</tagname> can be used.</p>
+  * <p>
+  *   Defines a new XML tag name, that can be used in the remainder of
+  *    the application source.  An element whose name is this tag name
+  *    will inherit the attributes and content of this definition.
+  *   </p>
+  * <p>
+  * For example, </p>
+  * 
+  * <example executable="false"><programlisting>
+  * &lt;class name="mywindow" extends="window" layout="y" title="My Class"&gt;
+  *   &lt;text&gt;my class&lt;/text&gt;
+  * &lt;/class&gt;
+  * </programlisting></example>
+  * 
+  * <p>
+  * defines a new tag named <code>mywindow</code>.  This tag can be used anywhere that <code>window</code> is used. 
+  * </p>
+  * 
+  * <example executable="false"><programlisting>
+  * &lt;mywindow x="10"&gt;
+  *   &lt;button&gt;Click&lt;/button&gt;
+  * &lt;/mywindow&gt;
+  * </programlisting></example>
+  * 
+  * <p>
+  *  is equivalent to 
+  * </p>
+  * 
+  * <example executable="false"><programlisting>
+  * &lt;window layout="y" title="My Class"&gt;
+  *   &lt;text&gt;my class&lt;/text&gt;
+  *   &lt;button&gt;Click&lt;/button&gt;
+  * &lt;/window&gt;
+  * </programlisting></example>
+  * 
+  * <p>
+  *    Class definitions must precede view definitions that use the name
+  *    of the class.  An application can use a tag that is defined in a
+  *    library, if the library is included before the point where
+  *    the tag is used.
+  * </p>
+  * 
+  * <p>
+  * For an introduction to classes in LZX, see the <a href="${tutorials}classes-tutorial.html">Classes</a> tutorial.  For a concise
+  * explanation of classes in LZX, see the <a href="${dguide}introductory-classes.html">Classes</a> chapter in the Guide.  For advanced topics
+  * see the  <a href="${dguide}class-inheritance.html">Extending Classes</a> chapter.</p>
+  *
+  * @shortdesc Defining your own tags.
+  * @lzxname class
+  */
+class LzUserClass extends LzNode {
+
+/** @access private
+  * @modifiers override 
+  */
+static var tagname = 'class';
+
+function initialize (parent, args) {
+  #pragma "warnUndefinedReferences=true"
+  // TODO: [2006-05-19 ptw] The original did not do this, should we?
+  // super.initialize.apply(this, arguments);
+  var classobj = args.initobj;
+  var classname = classobj.name;
+  var attrs = classobj.attrs;
+  var extend = args.parent;
+  var sup;
+
+    if ( extend == null ){
+        sup = LzView;
+    } else {
+        sup = ConstructorMap[ extend ]; 
+    }
+    if ($debug) {
+      if (! ((sup instanceof Function) && (sup === LzNode || sup.prototype instanceof LzNode))) {
+        Debug.error('Invalid superclass %w for %s', 
+                    sup, classname);
+      }
+    }
+
+    var traitList = null;
+    if ('with' in attrs) { 
+        traitList = attrs['with'].split(' ').join('').split(',');
+        for (var i = traitList.length - 1; i >= 0; i--) {
+            var n = traitList[i];
+            traitList[i] = global[n];
+            if (traitList[i] == null || traitList[i].makeInterstitial == null) {
+                if ($debug) {
+                    Debug.error("LzUserClass.initialize: skipping invalid trait %w for class %w", n, classname);
+                }
+                traitList.splice(i, 1);
+            }
+        }
+        traitList.push(sup);
+    }
+
+    var newclass = this.userclass = Class.make(
+      classname,
+      traitList ? traitList : sup,
+      null,
+      // LzNode.initialize installs the tagname in ConstructorMap
+      {tagname: classname}
+      );
+
+    // For backward compatibility, we also install the class as a
+    // global constructor, so long as it does not clobber a runtime
+    // global
+    // TODO: [2006-09-28 ptw] (LPP-2817) Remove this in 4.1
+    if (! (classname in global)) {
+      // TODO: [2006-09-30 ptw] This breaks instanceof global.class in
+      // debug mode.  Need to figure out some other way to make
+      // deprecation warnings.
+//       if ($debug) {
+//         var trampoline = new LzInheritedHash(newclass);
+//         // Compiler transforms new to make
+//         trampoline.make = function LzUserClassDeprecatedTrampolineMake () {
+//           if ($debug) {
+//             Debug.warn("`new %s` is deprecated.  Use `new lz.%s` instead.", newclass, newclass);
+//           }
+//           return newclass.make.apply(newclass, arguments);
+//         };
+//         global[classname] = trampoline;
+//       } else {
+        global[classname] = newclass;
+//       }
+    } else {
+      if ($debug) {
+        Debug.info("The global `%s` is already defined.  To dynamically create a <%s> element, you will have to use `%s`.",
+                   classname, classname, newclass);
+      }
+    }
+
+    var newproto = newclass.prototype;
+
+    delete attrs.name;
+
+    var cc;
+    if ( 'classChildren' in sup.prototype && sup.prototype.classChildren.length ){
+        cc = sup.prototype.classChildren.concat();
+    } else{
+        cc = []
+    }
+
+    if ( 'children' in classobj && classobj.children.length ){
+        cc = cc.concat( classobj.children );
+    }
+
+    // TODO: [2006-09-28 ptw] There must be a better way.  See comment
+    // below where this is inserted in ConstructorMap regarding the
+    // wart this is.  You need some way to not set defaultplacement
+    // until the class-defined children are instantiated, only the
+    // instance-defined children should get default placement.  For
+    // now this is done by inserting this sentinel in the child
+    // nodes...
+    if ( 'defaultplacement' in attrs && attrs.defaultplacement != null ){
+        cc.push( { name : "__LZUserClassPlacementObject" , 
+                   attrs : attrs.defaultplacement } );
+
+        delete attrs.defaultplacement;
+    }
+
+    if ( cc.length ){
+        newproto.addProperty('classChildren', cc);
+    }
+
+
+    var haveone = false;
+    if ('$events' in attrs) {
+        var events = attrs.$events;
+        var classname = newproto.classname;
+        var elen = events.length;
+        for ( var k = 0; k < elen; k++ ){
+            var eventName = events[k];
+            newproto.addProperty(eventName, LzDeclaredEvent);
+        }
+
+        delete attrs.$events;
+    }
+
+    var customsetters = '$setters' in attrs ? attrs.$setters : null;
+    if (customsetters) {
+    delete attrs.$setters;
+    
+    for ( var s in customsetters ){
+        var attrSet = "_anonSet" + s;
+        newproto.addProperty(attrSet, customsetters[ s ]);
+        newproto.setters[ s ] = attrSet;
+    }
+    }
+
+    // TODO: [2006-05-25 ptw] Share this crud with LzNode
+    // LzNode class initializer assures that we already have a
+    // defaultattrs property that is an LzInheritedHash
+    var dattrs = newproto.defaultattrs;
+    if (attrs) {
+      var dattr$refs = '$refs' in dattrs && dattrs.$refs;
+      var cleanup = null;
+      var setters = newproto.setters;
+      // Could this test be an instanceof test?
+      var isstate = (('$isstate' in newproto) && (newproto.$isstate));
+      for ( var k in attrs ) {
+        var attrk = attrs[k];
+        // Check for literal overriding a constraint
+        if ( dattr$refs && dattr$refs[ k ] ){
+          if (! cleanup ) { cleanup = {} };
+          cleanup[k] = true;
+        }
+        // --- this is different from LzNode, why?
+        // if there's no setter, then attach this to the prototype
+        if (setters[k] == null && (! isstate)) {
+          if ((attrk instanceof Object) && (! (attrk instanceof Function))) {
+//             Debug.debug("%w: LzUserClass.initialize: NOT merging %s", this, k);
+          }
+          newproto.addProperty( k, attrk );
+          continue;
+        }
+        // Check for object and array merges
+        if (attrk instanceof Object) {
+          var dattrk = dattrs[k];
+          if (dattrk instanceof Object) {
+            if ( attrk instanceof Array ) {
+//               Debug.debug("%w: LzUserClass.initialize: merging Array %s", this, k);
+              dattrs[ k ] = attrk.concat( dattrk );
+              continue;
+            } else if (typeof attrk == 'object') {
+//               Debug.debug("%w: LzUserClass.initialize: merging Object %s", this, k);
+              var tmp = new LzInheritedHash(dattrk);
+              for (var j in attrk) {
+                tmp[j] = attrk[j];
+              }
+              dattrs[ k ] = tmp;
+              continue;
+            }
+          }
+        }
+        // Just a normal value, install it
+        dattrs[k] = attrk;
+      }
+      // Finish literal over constraint processing
+      if (cleanup) {
+        // We are going to shadow some defaults, so create a
+        // clean hash to do that in if we don't already have
+        // one.
+        if (! dattrs.hasOwnProperty('$refs')) {
+          //we know the defaultattrs has $refs, so attach it
+          dattrs.$refs = new LzInheritedHash(dattr$refs);
+        }
+        var ia = LzNode._ignoreAttribute;
+        for (var k in cleanup) {
+          dattrs.$refs[ k ] = ia;
+        }
+      }
+    }
+}
+
+  if ($debug) {
+    /** @access private */
+    function _dbg_name() {
+      return Debug.formatToString("for %s", this.userclass);
+    };
+  }
+} // End of LzUserClass
+
+/**
+  * @access private
+  * @todo [2006-09-28 ptw] This is a wart, needed for backward
+  * compatibility with the current implementation of
+  * defaultplacement.  There is no such tag as &lt;__LZUserClassPlacementObject&gt;!
+  */
+ConstructorMap.__LZUserClassPlacementObject = function __LZUserClassPlacementObject ( parent , placement ){
+    parent.defaultplacement = placement;
+};
+
+

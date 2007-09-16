@@ -19,7 +19,7 @@
         <!--- The maximum value. -->
         <attribute name="maxvalue" value="100" type="number" setter="setMaxValue(maxvalue)"/>
         
-        <!--- Turns on / off the slider's filled area. -->
+        <!--- Turns on / off the slider''s filled area. -->
         <attribute name="showfill" value="true"/>
         
         <!--- Turns on / off the floating value text when the user
@@ -40,6 +40,9 @@
 
         <!--- @keywords private -->
         <event name="onvalue"/>
+
+        <event name="onmaxvalue"/>
+        <event name="onminvalue"/>
         
         <!--- @keywords private -->
         <method name="init"><![CDATA[
@@ -79,6 +82,7 @@
         <!--- Set the minimum value.
                       @param Number v: the minimum value. -->
         <method name="setMinValue" args="v"><![CDATA[
+            v = v * 1;
         
             if (!isinited) {
               // bounds check and sendEvent are done in init() override in this case
@@ -106,6 +110,7 @@
         <!--- Set the maximum value.
                       @param Number v: the maximum value. -->
         <method name="setMaxValue" args="v"><![CDATA[
+            v = v * 1;
         
             if (!isinited) {
               // bounds check and sendEvent are done in init() override in this case
@@ -134,6 +139,7 @@
                       @param Number v: a number between the minimum and maximum
                       value for the slider. -->
         <method name="setValue" args="v"><![CDATA[
+            v = v * 1;
 
             if (!isinited) {
               // bounds check and sendEvent are done in init() override in this case
@@ -158,6 +164,7 @@
                       @param Number p: a percentage between the min and
                       the max. -->
         <method name="setPercentage" args="p">
+            v = v * 1;
             var diff = this.minvalue-this.maxvalue;
             setValue( diff*p + this.minvalue );
         </method>
@@ -172,16 +179,22 @@
         <!--- adjusts the thumb location
               @keywords private -->
         <method name="_adjustThumb">
-            track.thumb.setX(track.thumb._thumbFromValue());
+          if (this.track) {
+              this.track.thumb.setX(track.thumb._thumbFromValue());
+          }
         </method>
         
         <!--- @keywords private -->
         <handler name="onkeydown" args="k">
-            //left arrow
-            if (k==37) this.track.thumb.setX(this.track.thumb.x-keystep);
-            else
-            //right arrow
-            if (k==39) this.track.thumb.setX(this.track.thumb.x+keystep);
+          //left arrow
+          if (this.track) {
+              if (k==37) {
+                  this.track.thumb.setX(this.track.thumb.x-keystep);
+              } else if (k==39) {
+                  //right arrow
+                   this.track.thumb.setX(this.track.thumb.x+keystep);
+              }
+          }
         </handler>
         
         <!--- @keywords private -->
@@ -192,6 +205,14 @@
             var fh = this.getAttributeRelative('height',canvas) + 6;
             return [fx,fy,fw,fh];
         </method>
+        <doc>
+          <tag name="shortdesc"><text>A non-visual base class for implementing sliders.</text></tag>
+          <text>
+            <p>
+            Baseslider is a non-visual representation of a slider.
+            </p>
+          </text>
+        </doc>
     </class><!-- end baseslider class -->
     
     <!--- Baseslidertrack expects to be within a baseslider (or its
@@ -222,6 +243,7 @@
                 y="-14"
                 text="${parent.parent.parent.value}"
                 visible="${classroot.showvalue}"
+                fgcolor="${classroot.style.textcolor}"
             />
         </dragstate>
 
@@ -266,7 +288,7 @@
     </class><!-- end basesliderthumb class -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

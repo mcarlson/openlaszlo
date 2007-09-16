@@ -1,0 +1,26 @@
+
+<canvas height="150" width="250">
+  <dataset name="phonebook" src="resources/phonebook.xml" />
+  
+  <button text="Previous" y="125"
+          onclick="details.datapath.selectPrev()"/>
+  
+  <view name="details" options="releasetolayout" height="150">
+    <datapath xpath="phonebook:/contacts/contact[1]"/>
+    <text datapath="@firstName"/>
+    <text datapath="@lastName"/>
+    <text datapath="@phone"/>
+    <text datapath="@email"/>
+    <button text="Delete record"
+            onclick="parent.datapath.deleteNode()"/>
+    <simplelayout spacing="5"/>
+  </view>
+  
+  <button text="Next" y="125"
+          onclick="details.datapath.selectNext()"/>
+  <resizelayout axis="x" spacing="10"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

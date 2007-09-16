@@ -20,7 +20,8 @@
     >
 
 
-        <!--- If true, show camera on immediateparent videoview. -->
+        <!--- If true, show camera on immediateparent videoview. 
+              @access private -->
         <attribute name="show" value="false" setter="this._setShow(show)"/>
 
         <!--- The width (resolution) that will be captured by the camera. -->
@@ -74,7 +75,6 @@
                 dev = Camera.get(deviceindex);
             }
             
-
             this._dev = dev;
             this.setQuality(bandwidth,picturequality);
 
@@ -136,7 +136,8 @@
               then the camera is shown, 
               otherwise it's not shown. 
               Of course the camera will really only be shown if 
-              it's also allowed by the user. -->
+              it's also allowed by the user. 
+              @access private -->
         <method name="_setShow" args="show"><![CDATA[
 
             //Debug.write("camera _setShow", this, show);

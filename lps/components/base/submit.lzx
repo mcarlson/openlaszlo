@@ -12,11 +12,11 @@
         <attribute name="error" type="string" value="" />
 
 
-        <!--- keywords private -->
+        <!--- @access private -->
         <attribute name="_timeoutDel" value="0" />
-        <!--- keywords private -->
+        <!--- @access private -->
         <attribute name="_errorDel" value="0" />
-        <!--- keywords private -->
+        <!--- @access private -->
         <attribute name="_dataDel" value="0" />
 
         <!--- Method to set the dataset associated with form.
@@ -39,19 +39,19 @@
 
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="_recvdata" >
             this.setAttribute('status', 'ok');
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="_recverror" >
             Debug.write('form submission error', this.data);
             this.setAttribute('status', 'error');
             this.setAttribute('error', this.data.getErrorString());
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="_recvtimeout" >
             Debug.write('form submission timeout');
             this.setAttribute('status', 'timeout');
@@ -83,7 +83,7 @@
         </method>
 
         <!--- Remove any existing delegates.
-              @keywords private -->
+              @access private -->
         <method name="_clearDels">
             if (this._dataDel) {
                 this._dataDel.unregisterAll();
@@ -99,14 +99,28 @@
             }
         </method>
 
-        <!--- @keywords private -->
+        <!--- @access private -->
         <method name="destroy">
             this._clearDels();
             super.destroy();
         </method>
+        
+        <doc>
+          <tag name="shortdesc"><text>associates a form with a dataset</text></tag>
+          <text>
+            <p>
+            Used with <classname>form</classname> or <classname>baseform</classname>, the <tagname>submit</tagname> tag associates the
+            form with its dataset.  See <tagname>form</tagname> tag for example code.
+            </p>
+            
+            <seealso>
+            <tags>form baseform dataset</tags>
+            </seealso>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,6 +1,5 @@
 <!DOCTYPE canvas PUBLIC "-//LaszloSystems, Inc.//Application Description Language P2//EN" "c:/laszlo/dev/lps/schema/laszlo.dtd">
 <canvas> 
-    <include href="redmond"/>
     <text>Hello Laszlo!</text>
 <!--
 <script>#error
@@ -8,6 +7,6 @@ syntax error
 </script>-->
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

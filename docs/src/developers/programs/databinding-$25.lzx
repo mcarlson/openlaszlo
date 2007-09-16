@@ -1,0 +1,39 @@
+
+<canvas height="200">
+  <dataset name="tabnames">
+    <title name="Account Info"/>
+    <title name="Order History"/>
+    <title name="Preferences"/>
+    <title name="Shopping Cart"/>
+  </dataset>
+  <simplelayout axis="x" spacing="25"/>
+  <button text="Create tabs for user:">
+    <handler name="onclick">
+      nav.pane.setDatapath('tabnames:/title')
+    </handler>
+  </button>
+  
+  <edittext name="user" width="120" options="ignorelayout" y="25"/>
+  <tabslider width="150" name="nav" height="150" spacing="2">
+    <tabelement name="pane" text="$path{'@name'}" visible="true">
+      <datapath>
+        <handler name="onnodes">
+          if (user.text.length)
+            for (var i = 0; i &lt; nodes.length ; i++) {
+              var title = nodes[i].getAttr('name')
+              pos = title.indexOf(':')
+              if (pos != -1)
+                title = user.text + title.substr(pos)
+              else 
+                title = user.text + ': ' + title
+              nodes[i].setAttr('name', title)
+            }
+        </handler>
+      </datapath>
+    </tabelement>
+  </tabslider>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -7,7 +7,7 @@
 
     <!--- @keywords private -->
     <method name="reset">
-        if ( this.locked || this.subviews.length &lt; 2 ) { return; }
+        if ( this.locked || (this.subviews &amp;&amp; this.subviews.length &lt; 2 )) { return; }
         this.subviews[ 1 ].setAttribute(this.axis ,
                             this.subviews[ 0 ][(this.sizeAxis )] );
         this.update();
@@ -51,14 +51,14 @@
     <method name="setAxis" args="a" >
         this.axis = a;
         this.sizeAxis = a == "x" ? "width" : "height"
-        this.updateDelegate.register( this.immediateparent, 
+        if (this.updateDelegate) this.updateDelegate.register( this.immediateparent, 
                                       "on" + this.sizeAxis ); 
     </method>
 
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

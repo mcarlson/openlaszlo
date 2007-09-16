@@ -1,0 +1,41 @@
+<canvas debug="true" proxied="false">
+
+  <dataset name="mydata">
+    <product name="vanilla" color="white"/>
+    <product name="chocolate" color="brown"/>
+    <product name="strawberry" color="red"/>
+    <product name="pistachio" color="green"/>
+    <product name="pumpkin" color="orange"/>
+  </dataset>
+
+    <simplelayout/>
+
+  <button text="add new item">
+    <handler name="onclick">
+      mydata.appendChild(new LzDataElement("product", { name: "NEW ITEM", color: 'purple'}));
+    </handler>
+  </button>
+
+  <view name="bar">
+    <simplelayout axis="y" spacing="2" />
+    <replicator name="foo"
+                dataset="mydata"
+                xpath="/product/">
+      <view bgcolor="red" height="23">
+        <handler name="onclick">
+          this.data.parentNode.removeChild(this.data);
+        </handler> 
+        <simplelayout axis="x" />
+        <text datapath="@name"
+              width="75"
+              bgcolor="green" />
+        <text name="color"
+              width="50"
+              bgcolor="yellow"
+              text="$path{'@color'}" />
+      </view>
+    </replicator>
+  </view>
+
+</canvas>
+<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->

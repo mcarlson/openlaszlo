@@ -1,0 +1,44 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas width="100%" height="80%" >
+
+  <resource name="maxres">
+    <frame src="resc/h_c_open_sign.gif"/>
+    <frame src="resc/h_c_web2con.gif"/>
+  </resource>
+  
+  <class name="myclass" bgcolor="red" resource="resc/h_c_open_sign.gif">
+    <view id="foo" resource='maxres'
+          opacity="0" 
+          onclick="this.parent.blah();debug('click')"
+          oninit="this.animate('opacity', 1, 1000, true);"
+          onmousedown="debug('down');"
+          onmouseup="debug('up');"> 
+      <view name="baz" resource="resc/h_c_web2con.gif" 
+            oninit="this.animate('x',100, 1000,true); this.animate('y',100, 1000,true)"
+            >
+        <view width="75" height="75" resource='maxres'
+              onclick="debug('click')" stretches="both"
+              oninit="this.animate('x', 50, 2000, true);"
+              onmouseover="this.setAttribute('width', this.width + 25); this.setAttribute('height', this.height + 25)"
+              onmouseout="this.setAttribute('height', this.height - 25); this.setAttribute('width', this.width - 25)"
+              onmouseup="debug('up');"/> 
+      </view>
+    </view>
+    <method name="blah">
+      debug('blah blah');
+    </method>
+    
+  </class>
+  
+  
+  <myclass id="v1" x="0"/>
+  <myclass id="v2" x="400"/>
+  <myclass id="v3" y="400"/>
+  <myclass id="v4" y="400" x="400"/>
+  
+</canvas>

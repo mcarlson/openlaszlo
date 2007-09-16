@@ -1,0 +1,76 @@
+<canvas height="420" width="620">
+  <include href="timing-support.lzx" />
+  <include href="lz/button.lzx" />
+
+  <!-- Copyright 2006 Laszlo Systems -->
+  <library> 
+
+  <class name="busyview" 
+      width="50" height="50" >
+
+      <attribute name="group" type="string" />
+      <attribute name="borderwidth" value="10" />
+      <attribute name="textinset" value="2" />    
+      <attribute name="innercolor" value="0xb4a88f" />
+      <attribute name="bordercolor" value="0x652f15" />
+      <attribute name="labelcolor" value="black" />    
+      <view name="outerborder" width="100%" height="100%" 
+          bgcolor="${classroot.bordercolor}">
+          <view name="innerbox" 
+              x="${classroot.borderwidth}" 
+              y="${classroot.borderwidth}"
+              width="${parent.width-2*this.x}"
+              height="${parent.height-2*this.y}"
+              bgcolor="${classroot.innercolor}">
+              <text x="${classroot.textinset}"
+                  fgcolor="${classroot.labelcolor}"
+                  fontsize="9"
+                  y="${classroot.textinset}" 
+                  name="txt" text="${classroot.id}" />
+          </view>
+      </view>
+  </class>
+  </library>
+  
+  <script>
+      
+  <![CDATA[
+  
+    function newView() {
+        var v = new LzView( canvas, { width: 100, height: 100, y: 200} );        
+    }
+    
+    function newBusyView() {
+        var v = new busyview( canvas, { width: 100, height: 100, y: 200 } );
+    }
+    
+    function addViewsToCanvas() {
+        var v = new LzView( canvas, { width: 100, height: 100, y: 200 } );        
+        canvas.addSubview(v);
+    }
+    
+    function createComponent() {
+        var b = new button( canvas, {width:100, height:100, y: 200 } );
+    }
+
+    function addComponent() {
+        var b = new button( canvas, {width:100, height:100, y: 200 } );
+        canvas.addSubview(b);
+    }
+    
+    
+    addTest("newBusyView" , 20);    
+    addTest("addViewsToCanvas", 20);
+    addTest("addComponent", 10);
+    
+    runTests( 'viewperf' , 10 );
+
+  ]]>
+  </script>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

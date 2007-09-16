@@ -1,0 +1,99 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas width="100%" height="80%" bgcolor="0x919191">
+    
+    <inputtext name="foo" bgcolor="yellow">
+        foo Some input text
+        <method event="onblur">
+            bar.setText(this.getText());
+            Debug.write('blur on foo');
+        </method>
+        <method event="onfocus">
+            Debug.write('focus on foo')
+        </method>
+        <method event="onkeyup" args="k">
+            Debug.write('keyup', k)
+        </method>
+        <method event="onkeydown" args="k">
+            Debug.write('keydown', k)
+        </method>
+        <method event="onselect">
+            Debug.write('select')
+        </method>
+    </inputtext>
+    <inputtext name="foo2" width="100" bgcolor="yellow">
+        foo2 Some input text
+        <method event="onblur">
+            bar.setText(this.getText());
+            Debug.write('blur on foo2');
+        </method>
+        <method event="onfocus">
+            Debug.write('focus on foo2')
+        </method>
+        <method event="onkeyup" args="k">
+            Debug.write('keyup', k)
+        </method>
+        <method event="onkeydown" args="k">
+            Debug.write('keydown', k)
+        </method>
+        <method event="onselect">
+            Debug.write('select')
+        </method>
+    </inputtext>
+    
+    <inputtext name="fubar" width="200" height="200" multiline="true" bgcolor="green">
+        fubar Some input text
+        <method event="onblur">
+            bar.setText(this.getText());
+            Debug.write('blur');
+        </method>
+        <method event="onfocus">
+            Debug.write('focus')
+        </method>
+        <method event="onkeyup" args="k">
+            Debug.write('keyup', k)
+        </method>
+        <method event="onkeydown" args="k">
+            Debug.write('keydown', k)
+        </method>
+        <method event="onselect">
+            Debug.write('select')
+        </method>
+    </inputtext>
+
+    <view width="50" height="50" bgcolor="red">
+        <method event="onmousedown">
+            this.setAttribute('bgcolor', 0xffff00);
+        </method>
+        <method event="onmouseup">
+            this.setAttribute('bgcolor', 0xff9900);
+        </method>
+        <method event="onmouseover">
+            this.setAttribute('bgcolor', 0xff9900);
+        </method>
+        <method event="onmouseout">
+            this.setAttribute('bgcolor', 0xff0000);
+        </method>
+        <method event="onclick">
+            Debug.write('text is ' + canvas.foo.getText());
+        </method>
+    </view>
+    
+    <!-- See [LPP-434] 
+       If you assign a mouse event (down/up/click) to an inputtext, 
+       you can no longer edit the inputtext by clicking the mouse. 
+       (This does not seem to be a problem anymore [bshine 10.13.06])
+   -->
+    <inputtext text="lpp-434" width="100">
+        <method event="onmouseup">
+        </method>
+    </inputtext>
+    
+    <simplelayout axis="x"/>
+
+    <text id="bar" y="40" width="200"/>
+</canvas>

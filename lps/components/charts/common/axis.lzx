@@ -2,6 +2,7 @@
     <include href="../styles/strokestyle.lzx"/>
     <include href="../common/label.lzx"/>
     <include href="../common/tickmarklabel.lzx"/>
+    <include href="extensions/drawview.lzx"/>
 
      <!--- A abstract class that represents one of the axes of a rectangular chart. In general, axis isn't instantiated directly     
     -->     
@@ -475,7 +476,7 @@
         ]]> 
     </method>    
     <!--- setter for data series 
-          @param expression dataSeries: dataSeries to set to the Axis. 
+          @param expression dataseries: dataSeries to set to the Axis. 
           @keyword private -->
     <method name="setDataSeries" args="dataseries"> 
         this.setAttribute('dataSeries', dataseries); 
@@ -541,12 +542,20 @@
             return pNum;
         ]]>  
     </method>
+    <doc>
+      <tag name="shortdesc"><text>
+          an axis for a chart
+      </text></tag>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

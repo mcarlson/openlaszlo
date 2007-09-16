@@ -49,7 +49,7 @@
 
         <button text="amazon keyword search" onclick="this.myKSR1.invoke()">
             <remotecall name="myKSR1" funcname="KeywordSearchRequest"
-                        dataobject="amazonDset1" remotecontext="$once{amazon}">
+                        dataobject="$once{amazonDset1}" remotecontext="$once{amazon}">
                 <param value="${canvas.amazon.myobject1}" />
                 <method event="ondata" args="value">
                     Debug.write('amazon keyword search result:', value);
@@ -59,7 +59,7 @@
 
         <button text="google search" onclick="this.search.invoke()">
             <remotecall name="search" funcname="doGoogleSearch" 
-                        dataobject="googleDset" remotecontext="$once{google}">
+                        dataobject="$once{googleDset}" remotecontext="$once{google}">
 
                 <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
                 <param value="'sweet'" />
@@ -112,6 +112,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

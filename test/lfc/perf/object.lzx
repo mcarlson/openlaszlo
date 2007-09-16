@@ -1,0 +1,168 @@
+<canvas height="420" width="1000">
+  <include href="timing-support.lzx" />
+
+  <script>
+  <![CDATA[
+    function createObject1000() {
+        for (var k = 0; k < 1000; k++) {
+            new Object();
+        }
+    }
+
+    function createObject2000() {
+        for (var k = 0; k < 2000; k++) {
+            new Object();
+        }
+    }
+
+    function createObject4000() {
+        for (var k = 0; k < 4000; k++) {
+            new Object();
+        }
+    }
+
+    function createObject8000() {
+        for (var k = 0; k < 8000; k++) {
+            new Object();
+        }
+    }
+
+
+    function createObjectProps1000() {
+        o = new Object();
+        for (var k = 0; k < 1000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+    function createObjectProps2000() {
+        o = new Object();
+        for (var k = 0; k < 2000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+
+    function createObjectProps4000() {
+        o = new Object();
+        for (var k = 0; k < 4000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+
+    function createObjectProps8000() {
+        o = new Object();
+        for (var k = 0; k < 8000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+
+    function createObjectProps16000() {
+        o = new Object();
+        for (var k = 0; k < 16000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+    function createArrayProps1000() {
+        o = new Array();
+        for (var k = 0; k < 1000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+    function createArrayProps2000() {
+        o = new Array();
+        for (var k = 0; k < 2000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+    function createArrayProps4000() {
+        o = new Array();
+        for (var k = 0; k < 4000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+    function createArrayProps8000() {
+        o = new Array();
+        for (var k = 0; k < 8000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+    function createArrayProps16000() {
+        o = new Array();
+        for (var k = 0; k < 16000; k++) {
+            o[k] = k + 1;
+        }
+    }
+
+    function createArrayPropsasString1000() {
+        o = new Array();
+        for (var k = 0; k < 1000; k++) {
+            o[k + ''] = k + 1;
+        }
+    }
+
+    function createArrayPropsasString2000() {
+        o = new Array();
+        for (var k = 0; k < 2000; k++) {
+            o[k + ''] = k + 1;
+        }
+    }
+
+    function createArrayPropsasString4000() {
+        o = new Array();
+        for (var k = 0; k < 4000; k++) {
+            o[k + ''] = k + 1;
+        }
+    }
+
+    function createArrayPropsasString8000() {
+        o = new Array();
+        for (var k = 0; k < 8000; k++) {
+            o[k + ''] = k + 1;
+        }
+    }
+
+    function createArrayPropsasString16000() {
+        o = new Array();
+        for (var k = 0; k < 16000; k++) {
+            o[k + ''] = k + 1;
+        }
+    }
+
+    addTest("createObject1000");
+    addTest("createObject2000");
+    addTest("createObject4000");
+    addTest("createObject8000");
+    addTest("createObjectProps1000");
+    addTest("createObjectProps2000");
+    addTest("createObjectProps4000");
+    addTest("createObjectProps8000");
+    addTest("createObjectProps16000");
+    addTest("createArrayProps1000");
+    addTest("createArrayProps2000");
+    addTest("createArrayProps4000");
+    addTest("createArrayProps8000");
+    addTest("createArrayProps16000");
+    addTest("createArrayPropsasString1000");
+    addTest("createArrayPropsasString2000");
+    addTest("createArrayPropsasString4000");
+    addTest("createArrayPropsasString8000");
+    addTest("createArrayPropsasString16000");
+    
+    runTests( 'Array/Object Timings' , 25 );
+
+  ]]>
+  </script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

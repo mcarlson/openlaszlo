@@ -11,8 +11,8 @@
         <!--attribute name="scrolltarget" init="parent.content"/-->
         <!--attribute name="targetview" init="parent.content"/-->
         <method event="oninit">
-           // debug.write("targetview ="+targetview);
-           // debug.write("targetview height="+targetview.height);
+           // Debug.write("targetview ="+targetview);
+           // Debug.write("targetview height="+targetview.height);
         </method>
     </scrollbar>
 
@@ -35,7 +35,7 @@
         </scrollview>
         <view>
             <inputtext id="scrolltopos" width="50" bgcolor="silver">0</inputtext>
-            <button onclick="debug.write(number(scrolltopos.getText()));
+            <button onclick="Debug.write(number(scrolltopos.getText()));
                     sv1.setAttribute('scrollto',number(scrolltopos.getText()))">set scroll</button>
             <simplelayout axis="x" spacing="10"/>
         </view>
@@ -48,9 +48,9 @@
     <view>
     <inputtext id="h" width="50" bgcolor="silver">20</inputtext>
     <button onclick="sv2.pic.setAttribute('height', number(h.getText()))">set height</button>
-    <button onclick="debug.write('height='+sv2.pic.height);
+    <button onclick="Debug.write('height='+sv2.pic.height);
                     sv2.pic.animate('height', number(h.getText()), 1000);
-                    debug.write('height='+sv2.pic.getExpectedAttribute('height'));">anim height</button>
+                    Debug.write('height='+sv2.pic.getExpectedAttribute('height'));">anim height</button>
     <simplelayout axis="y" spacing="20"/>
     </view>
 
@@ -81,11 +81,11 @@
 
         <view x="260" >
             <inputtext name="h" width="50" bgcolor="silver">200</inputtext>
-            <button onclick="debug.write('h='+parent.h.getText());
+            <button onclick="Debug.write('h='+parent.h.getText());
                 clippy.setAttribute('height', number(parent.h.getText()))">set height</button>
-            <button onclick="debug.write('height='+clippy.height);
+            <button onclick="Debug.write('height='+clippy.height);
                             clippy.animate('height', number(parent.h.getText()), 1000);
-                            debug.write('height='+clippy.getExpectedAttribute('height'));">anim height</button>
+                            Debug.write('height='+clippy.getExpectedAttribute('height'));">anim height</button>
             <simplelayout axis="y" spacing="20"/>
         </view>
     </view>
@@ -97,6 +97,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

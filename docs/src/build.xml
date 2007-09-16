@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE project [
@@ -8,7 +8,9 @@
 ]>
 
 <project name="reference" default="build">
+    
   &build_opt;
+
   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
   <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"/>
   
@@ -19,42 +21,6 @@
          location="dtds/xhtml1-transitional.dtd"/>
   </xmlcatalog>
 
-  <path id="saxon.processor.classpath">
-    <pathelement path="../../WEB-INF/lib/saxon-6.5.3-lz-p1.jar" />
-    <pathelement path="../../3rd-party/jars/dev/xercesImpl.jar"/>
-    <pathelement path="${docbook-xsl}/extensions/saxon651.jar" />
-  </path>
-
-  <!-- Lets us get environment variables so we know where to look for docbook stuff. --> 
-  <property environment="env" /> 
-
-  <!-- Format a single html file and extract its examples.  This is a
-       helper target for the reference and tutorials builds. -->
-  <target name="format-one" depends="init">
-    <!-- the tail is everything after the final / or \ -->
-    <propertyregex property="tail"
-              input="${fname}"
-              regexp=".*[\\/](.*)"
-              select="\1"/>
-    <!-- the basename is the tail minus .suffix -->
-    <propertyregex property="base"
-              input="${fname}"
-              regexp=".*[\\/](.*)\.[^.]*"
-              select="\1"/>
-    <style style="xsl/format.xsl" in="${fname}"
-           out="${reference.output.dir}/${tail}">
-      <xmlcatalog refid="commonDTDs"/>
-      <param name="show.comments" expression="${show.comments}"/>
-      <param name="show.fixmes" expression="${show.fixmes}"/>
-      <param name="docid" expression="${base}"/>
-      <param name="localdir" expression="docs/reference/"/>
-      <param name="lpsdir" expression="../../"/>
-      <!-- lxz dir encodes lpsdir and localdir so make-php can translate -->
-      <param name="lzxdir" expression="../../docs/reference/"/>
-      <param name="requestType" expression="inline-example"/>
-    </style>
-  </target>
-
   <target name="init" description="Init tasks for documentation generation"
           unless="docs.src.done.init" depends="build-opt">
       
@@ -62,8 +28,11 @@
       <property file="${LPS_HOME}/build.properties"/>
       
       <!-- doc build properties -->
-      <property name="docbook-xsl" value="${env.LZ_VENDOR_ROOT}/docbook-xsl-1.65.1"/>
+      <property name="docbook-xsl" value="${env.LZ_VENDOR_ROOT}/experimental/docbook-xsl-1.71.1"/>
+      <property name="docbook-xml" value="${env.LZ_VENDOR_ROOT}/docbook-xml-4.5"/>
       <property name="docs.output.dir" value="${LPS_HOME}/docs" />
+      <property name="docs.src.dir" value="${LPS_HOME}/docs/src" />
+      <property name="docs.build.dir" value="${LPS_HOME}/docs/src/build" />
       <if><equals arg1="${release}" arg2="Production" casesensitive="true" trim="true"/>
       <then>
         <property name="draft.mode" value="no"/>
@@ -85,531 +54,149 @@
       </if>
       <echo message="draft.mode=${draft.mode}" />
       
-      <!-- reference properties -->
+      <echo message="skip.doc=${skip.doc}" />
+      <echo message="skip.doc.reference=${skip.doc.reference}" />
+      
+      <mkdir dir="${docs.build.dir}" />
+
+      <!-- js2doc properties -->
       <property name="schema.dir" value="${LPS_HOME}/WEB-INF/lps/schema" />
       <property name="components.dir" value="${LPS_HOME}/lps/components"/>
-      <property name="tagdocs.dir" value="${schema.dir}/tagdocs" />
-      <property name="server.dir" value="${LPS_HOME}/WEB-INF/lps/server" />
-      <property name="sc.dir" value="${server.dir}/sc" />
-      <property name="jsdocs.dir" value="${sc.dir}/jsdocs" />
-      <property name="lfc.dir" value="${LPS_HOME}/WEB-INF/lps/lfc" />
-      <property name="reference.input.dir" value="hardpages"/>
-      <property name="reference.input.wrappers.dir" value="wrappers"/>
-      <property name="reference.redmond.input.tags" value="build"/>
-      <property name="reference.build.dir" value="build/reference"/>
-      <property name="reference.build.html.dir" value="${reference.build.dir}/html"/>
-      <property name="reference.build.xml.dir" value="${reference.build.dir}/xml"/>
+      <property name="incubator.dir" value="${LPS_HOME}/lps/components/incubator"/>
+      <property name="lps.server.dir" value="${LPS_HOME}/WEB-INF/lps/server" />
+      <property name="lfc.src.dir" value="${LPS_HOME}/WEB-INF/lps/lfc" />
+      <property name="lfc.js2doc.dir" value="${lfc.src.dir}/docs"/>
+      <property name="js2doc.build.dir" value="${docs.build.dir}/js2doc" />
+    
+      <!-- reference/contribref properties -->
       <property name="reference.output.dir" value="${docs.output.dir}/reference" />
+      <property name="reference.build.dir" value="${docs.build.dir}/reference"/>
+      <property name="reference.src.dir" value="${LPS_HOME}/docs/src/reference"/>
+      <property name="contribref.output.dir" value="${docs.output.dir}/contribref" />
+      <property name="contribref.build.dir" value="${docs.build.dir}/contribref"/>
+      <property name="contribref.src.dir" value="${LPS_HOME}/docs/src/contribref"/>
       
-      <!-- TODO: [2005-02-18 ptw] s/dguide/developers/ -->
-      <!-- dguide properties -->
-      <property name="dguide.input.dir" value="dguide"/>
-      <property name="dguide.input.index" value="index.dbk"/>
-      <property name="dguide.build.dir" value="build/dguide"/>
-      <property name="dguide.output.dir" value="${docs.output.dir}/guide"/>
-      <property name="dguide.output.index" value="index.html"/>
+      <condition property="reference.skip">
+        <or>
+          <isset property="skip.doc"/>
+          <isset property="skip.doc.reference"/>
+          <isset property="java1.4"/>
+        </or>
+      </condition>
+ 
+      <!-- server/compiler reference properties -->
+      <property name="reference.server.build.dir" value="${docs.build.dir}/server" />
+      <property name="reference.server.output.dir" value="${docs.output.dir}/server" />
+      <property name="reference.compiler.build.dir" value="${docs.build.dir}/compiler" />
+      <property name="reference.compiler.output.dir" value="${docs.output.dir}/compiler" />
+      <property name="reference.compiler.packages" value="org.openlaszlo.css,org.openlaszlo.compiler,org.openlaszlo.sc,org.openlaszlo.sc.parser,org.openlaszlo.js2doc"/>
 
-      <property name="dguide.fast.output.dir" value="${docs.output.dir}/fast-dguide"/>
-      <property name="dguide.old.input.dir" value="dguide"/>
-      <property name="dguide.old.build.dir" value="build/old-dguide"/>
-      <property name="dguide.old.output.dir" value="${docs.output.dir}/old-developers-guide"/>
-      
-      <!-- deployers properties -->
-      <property name="deployers.input.dir" value="dguide"/>
+      <!-- developers guide properties -->
+      <property name="developers.input.dir" value="${LPS_HOME}/docs/src/developers"/>
+      <property name="developers.input.index" value="index.dbk"/>
+      <property name="developers.build.dir" value="${docs.build.dir}/developers"/>
+      <property name="developers.output.dir" value="${docs.output.dir}/developers"/>
+      <property name="developers.dbk.index" value="index.dbk"/>
+      <property name="developers.html.index" value="index.html"/>
+
+      <!-- deployers guide properties -->
+      <property name="deployers.input.dir" value="${LPS_HOME}/docs/src/deployers"/>
       <property name="deployers.input.index" value="deployers-index.dbk"/>
-      <property name="deployers.build.dir" value="build/deploy"/>
-      <property name="deployers.output.dir" value="${docs.output.dir}/deploy"/>
-      <property name="deployers.output.index" value="deployers-index.html"/>
+      <property name="deployers.build.dir" value="${docs.build.dir}/deployers"/>
+      <property name="deployers.output.dir" value="${docs.output.dir}/deployers"/>
+      <property name="deployers.dbk.index" value="index.dbk"/>
+      <property name="deployers.html.index" value="index.html"/>
       
-      <!-- designers properties -->
-      <property name="designers.input.dir" value="dguide"/>
-      <property name="designers.input.index" value="designers-index.dbk"/>
-      <property name="designers.build.dir" value="build/design"/>
-      <property name="designers.output.dir" value="${docs.output.dir}/design"/>
-      <property name="designers.output.index" value="designers-index.html"/>
+      <!-- contributors guide properties -->
+      <property name="contributors.input.dir" value="${LPS_HOME}/docs/src/contributors"/>
+      <property name="contributors.input.index" value="index.dbk"/>
+      <property name="contributors.build.dir" value="${docs.build.dir}/contributors"/>
+      <property name="contributors.output.dir" value="${docs.output.dir}/contributors"/>
+      <property name="contributors.dbk.index" value="index.dbk"/>
+      <property name="contributors.html.index" value="index.html"/>
       
-      <!-- internal properties -->
-      <property name="internal.input.dir" value="internal"/>
-      <property name="internal.input.index" value="index.dbk"/>
-      <property name="internal.build.dir" value="build/internal"/>
-      <property name="internal.output.dir" value="${docs.output.dir}/internal"/>
-      <property name="internal.output.index" value="index.html"/>
-
-      <!-- tutorial properties -->
-      <property name="tutorials.input.dir" value="tutorials"/>
-      <property name="tutorials.input.index" value="index.dbk"/>
-      <property name="tutorials.build.dir" value="build/tutorials"/>
-      <property name="tutorials.output.dir" value="${dguide.output.dir}"/>
-      <property name="tutorials.output.index" value="index.html"/>
       
-      <property name="tutorials.old.input.dir" value="tutorials"/>
-      <property name="tutorials.old.build.dir" value="build/old-tutorials"/>
-      <property name="tutorials.old.output.dir" value="${docs.output.dir}/old-tutorials"/>
-      
-      <property name="docs.src.done.init" value="true" />
-  </target>
-
-  <!-- 
-      little tweak to refer to the location of docbook-xsl-1.65.1 relative to
-      ${docbook-xsl} based on environment variables defined in init task.
-  -->
-  <target name="fix-docbook-references" depends="init">
-      <copy todir="xsl">
-          <fileset dir="xsl" />
-          <!-- copy the offending files from .xsl.proto to .xsl -->           
-          <globmapper from="*.xsl.proto" to="*.xsl"/>
-          <!-- As we copy, replace the token @LZ_DOCBOOK_XSL_HOME@ with
-              the installation-dependent value for ${docbook-xsl} --> 
-          <filterset>
-            <filter token="LZ_DOCBOOK_XSL_HOME" value="${docbook-xsl}" />
-          </filterset>          
-      </copy>
-  </target>
-  
-  <!--
-    targets relating to the reference:
-  -->
-
-  <target name="clean-reference-html" depends="init">
-    <delete failonerror="false" includeEmptyDirs="true">
-      <fileset dir="${reference.output.dir}" includes="**/*"/>
-    </delete>
-  </target>
-
-  <target name="clean-local-reference" depends="init">
-    <delete failonerror="false" includeEmptyDirs="true">
-      <fileset dir="build" includes="*.xml" excludes="redmond-*.xml"/>
-      <fileset dir="${reference.build.dir}"/>
-      <fileset dir="${reference.output.dir}"/>
-    </delete>
-  </target>
-  
-  <target name="clean-reference" description="Clean the reference files"
-          depends="init,clean-local-reference">
-    <delete failonerror="false" includeEmptyDirs="true">
-      <fileset dir="${tagdocs.dir}"/>
-      <fileset dir="${jsdocs.dir}"/>
-      <fileset dir="${reference.input.wrappers.dir}" includes="**/*.xml"
-               excludes="**/schemas.xml"/>
-    </delete>
-  </target>
-  
-  <target name="api-xml" description="Build the API doc XML files"
-          depends="init">
-      <if><not>
-        <uptodate targetfile="${jsdocs.dir}/api-lzview.xml">
-           <srcfiles dir="${lfc.dir}" includes="**/*.as" />
-           <srcfiles dir="${sc.dir}" includes="*.py" />
-        </uptodate></not>
-      <then>
-        <mkdir dir="${jsdocs.dir}" />
-        <delete>
-          <fileset dir="${jsdocs.dir}" includes="api-*.xml"/>
-        </delete>
-        <ant dir="${server.dir}" target="compile" />
-        <ant dir="${server.dir}" target="jsdoc2xml" />
-      </then></if>
-      <!-- Copy the files -->
-      <copy todir="${reference.input.wrappers.dir}">
-        <fileset dir="${jsdocs.dir}" includes="*.xml" excludes="schemas.xml">
-          <depend targetdir="${reference.input.wrappers.dir}"/>
-        </fileset>
-      </copy>
-  </target>
-  
-  <target name="tag-xml" description="Build the tag doc XML files" 
-          depends="init">
-      <if><not><uptodate targetfile="${tagdocs.dir}/tag-view.xml">
-            <srcfiles dir="${schema.dir}" includes="lzx.rnc"/>
-            <srcfiles dir="${schema.dir}" includes="*.py"/>
-            <srcfiles dir="${components.dir}" includes="**/*.lzx"/>
-        </uptodate></not>
-      <then>
-          <mkdir dir="${tagdocs.dir}"/>
-          <delete>
-            <fileset dir="${tagdocs.dir}" includes="tag-*.xml"/>
-          </delete>
-          <ant dir="${schema.dir}"/>
-          <exec executable="python" dir="${schema.dir}" failonerror="${build.docs.error.fail}">
-             <arg line="rng2xml.py"/>
-          </exec>
-      </then></if>
-      <!-- Copy the files -->
-      <copy todir="${reference.input.wrappers.dir}">
-        <fileset dir="${tagdocs.dir}" includes="**/*.xml">
-          <depend targetdir="${reference.input.wrappers.dir}"/>
-        </fileset>
-      </copy>
-  </target>
-
-  <target name="combined-xml" depends="init,tag-xml,api-xml"> <!-- ,validate -->
-      <if><not><uptodate targetfile="${reference.build.xml.dir}/view.xml">
-            <srcfiles dir="${tagdocs.dir}" includes="**/*"/>
-            <srcfiles dir="${reference.input.wrappers.dir}" includes="**/*"/>
-            <srcfiles dir="." includes="*.py"/>
-        </uptodate></not>
-      <then>
-        <mkdir dir="${reference.build.html.dir}"/>
-        <mkdir dir="${reference.build.xml.dir}"/>
-        <exec executable="python" failonerror="${build.docs.error.fail}">
-          <arg line="makeXML.py"/>
-          <arg line="--output ${reference.build.xml.dir}"/>
-          <arg line="--indexdir ${reference.build.html.dir}"/>
-          <arg line="-q"/>
-        </exec>
-    </then></if>
-    <copy todir="${reference.build.xml.dir}">
-      <fileset dir="${reference.redmond.input.tags}" includes="*.xml"/>
-    </copy>
-  </target>
-  
-  <!-- Build the HTML files and place them in build/html.  They still
-       need to be run through the stylesheet. -->
-  <target name="raw-html" depends="init,combined-xml">
-    <mkdir dir="${reference.build.dir}"/>
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="." includes="*.py"/>
-        <fileset dir="wrappers" includes="**/*"/>
-      </sourcefiles>
-      <mapper type="glob" dir="wrappers"
-              from="*.xml" to="${reference.build.html.dir}/*.html"/>
-      <sequential>
-        <exec executable="python" failonerror="${build.docs.error.fail}">
-	  <arg line="makeHTML.py"/>
-          <arg line="--input ${reference.build.xml.dir}"/>
-          <arg line="--output ${reference.build.html.dir}"/>
-	  <arg line="-q"/>
-        </exec>
-      </sequential>
-    </outofdate>
-  </target>
-  
-  <target name="reference.target.db" depends="init,raw-html">
-    <concat destfile="${reference.build.dir}/target.db">
-      <filelist dir="." files="target.db.header"/>
-      <fileset  dir="${reference.build.html.dir}" includes="*.db.fragment"
-                excludes="redmond-*,splash-view.*,html-font.*"/>
-      <filelist dir="." files="target.db.footer"/>
-    </concat>
-  </target>
-  
-  <!-- This assures that the target db exists, but not that it's up to
-       date.  It's a much faster alternative to reference.target.db
-       for use in incremental guide and tutorial builds. -->
-  <target name="reference.target.db.exists" depends="init">
-    <if>
-      <not><available file="${reference.build.dir}/target.db"/></not>
-      <then>
-        <ant target="reference.target.db"/>
-      </then>
-    </if>
-  </target>
-  
-  <target name="reference.html"
-          depends="init,raw-html,reference.target.db">
-    <mkdir dir="${reference.output.dir}"/>
-    <!-- If the stylesheets have changed more recently than the html
-         output files, force the latter to rebuild by deleting
-         them. -->
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="xsl" includes="format.xsl"/>
-      </sourcefiles>
-      <targetfiles>
-        <fileset dir="${reference.output.dir}" includes="**/*.html"/>
-      </targetfiles>
-      <sequential>
-        <delete>
-          <fileset dir="${reference.output.dir}" includes="**/*.html"/>
-        </delete>
-      </sequential>
-    </outofdate>
-    <style style="xsl/redmond-components.xsl"
-           in="${reference.build.html.dir}/index-alphabetical.html"
-           out="${reference.build.html.dir}/redmond-components.html">
-      <xmlcatalog refid="commonDTDs"/>
-    </style>
-    <!-- Copy the HTML files from build/html and hardpages, formatting
-         them with the stylesheet as they're copied.  This stylesheet
-         extracts the *.lxz.in files and places them in the output
-         directory. -->
-    <foreach param="fname" target="format-one">
-      <path>
-        <fileset dir="${reference.build.html.dir}" includes="*.html">
-          <depend targetdir="${reference.output.dir}"/>
-        </fileset>
-        <fileset dir="${reference.input.dir}"
-                 includes="*.html" 
-                 excludes="nav.html,html-nav.html">
-          <depend targetdir="${reference.output.dir}"/>
-        </fileset>
+      <path id="3rd.party.classpath" >
+          <pathelement path="${ANT_JAR}" />
+          <pathelement path="${JUNIT_JAR}" />
+          <fileset dir="${LPS_HOME}/3rd-party/jars/dev" />
       </path>
-    </foreach>
+ 
+      <property name="docs.src.done.init" value="true" />
+      
   </target>
-  
-  <target name="reference" description="Build the reference"
-          depends="init,reference.html">
-    <!-- Copy non-html pages from hardpages -->
-    <copy todir="${reference.output.dir}">
-      <fileset dir="${reference.input.dir}" excludes="*.html,schemas.xml">
-        <depend targetdir="${reference.output.dir}"/>
-      </fileset>
-      <fileset dir="${reference.build.html.dir}" includes="*.xml"/>
-      <fileset dir="wrappers" includes="images/**"/>
-      <fileset dir="wrappers" includes="resources/**"/>
-    </copy>
+
+  <target name="docbook.catalog.generate" depends="init">
+      <!-- TODO [jgrandy 2007-01-16] This needs to be updated for Cygwin. See
+           http://docbook.sourceforge.net/outgoing/catalogs-cygwin.txt
+        -->
+        
+      <mkdir dir="${docs.build.dir}"/>
+
+      <path id="saxon.processor.classpath">
+          <pathelement location="${LZ_VENDOR_ROOT}/experimental/saxon655.jar" />
+          <pathelement location="${docbook-xsl}/extensions/saxon651.jar" />
+          <pathelement location="${LZ_VENDOR_ROOT}/experimental/xerces-2_6_2/resolver.jar"/>
+          <pathelement location="${LZ_VENDOR_ROOT}/experimental/xerces-2_6_2/xercesImpl.jar"/>
+          <pathelement path="${docs.build.dir}" />
+      </path>
+
+      <echo file="${docs.build.dir}/CatalogManager.properties" append="false">
+catalogs=${docbook-xml}/catalog.xml;${docbook-xsl}/catalog.xml
+relative-catalogs=false
+static-catalog=yes
+catalog-class-name=org.apache.xml.resolver.Resolver
+verbosity=1
+      </echo>
     
-    <!-- Create the *.lzx files from the *.lzx.in files that the
-         stylesheet created. -->
-    <copy todir="${reference.output.dir}">
-      <fileset dir="${reference.output.dir}" includes="*.in"/>
-      <filterset begintoken="&amp;" endtoken=";">
-        <filtersfile file="entities.properties"/>
-      </filterset>
-      <mapper type="glob" from="*.in" to="*"/>
-    </copy>
-    <!-- Now delete the *.in files -->
-    <delete>
-      <fileset dir="${reference.output.dir}" includes="*.in"/>
-    </delete>
-    
-    <!-- Create the navbar data -->
-    <style style="xsl/make-toc.xsl"
-           in="${reference.build.html.dir}/categories.xml"
-           out="${reference.output.dir}/toc.xml">
+      <!-- Tell interested tasks where to find Docbook XSLT transforms -->
+      <!-- To do: use CatalogManager.properties in classpath instead of xmlcatalog -->
+      <xmlcatalog id="docbook.local.xsl">
+        <entity publicId="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"
+             location="${docbook-xsl}/html/chunk.xsl"/>
+        <entity publicId="http://docbook.sourceforge.net/release/xsl/current/htmlhelp/htmlhelp.xsl"
+             location="${docbook-xsl}/htmlhelp/htmlhelp.xsl"/>
+        <entity publicId="http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl"
+             location="${docbook-xsl}/html/docbook.xsl"/>
+        <entity publicId="http://docbook.sourceforge.net/release/xsl/current/fo/docbook.xsl"
+             location="${docbook-xsl}/fo/docbook.xsl"/>
+      </xmlcatalog>
+  </target>        
+
+  <!-- PARAMETERIZED TARGETS -->
+
+  <target name="dbk.topic.generate" depends="init,docbook.catalog.generate">
+    <!--- @param local.input.file
+          @param local.output.file
+          @param visibility.filter
+          @param filter.topic
+          @param draft.mode
+          @param dbk.show.comments
+          @param dbk.show.fixmes
+       -->
+    <echo message="visibility.filter is ${visibility.filter}"/>
+    <style style="xsl/js2doc2topics.xsl"
+           in="${local.input.file}"
+           out="${local.output.file}">
       <xmlcatalog refid="commonDTDs"/>
-    </style>
-    <style style="xsl/make-tag-index.xsl"
-           in="${reference.output.dir}/index.xml"
-           out="${reference.output.dir}/tags.xml">
-      <param name="class" expression="tag"/>
-    </style>
-    <style style="xsl/make-tag-index.xsl"
-           in="${reference.output.dir}/index.xml"
-           out="${reference.output.dir}/classes.xml">
-      <param name="class" expression="api"/>
-    </style>
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="${reference.output.dir}" includes="toc.xml,tags.xml,classes.xml"/>
-      </sourcefiles>
-      <targetfiles>
-        <fileset dir="${reference.output.dir}" includes="nav.html,html-nav.html"/>
-      </targetfiles>
-      <sequential>
-        <delete>
-          <fileset dir="${reference.output.dir}" includes="nav.html,html-nav.html"/>
-        </delete>
-      </sequential>
-    </outofdate>
-    <style style="xsl/reference-nav.xsl"
-           basedir="${reference.input.dir}"
-           destdir="${reference.output.dir}"
-           includes="nav.html,html-nav.html">
-      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+      <param name="visibility.filter" expression="${visibility.filter}"/>
+      <param name="filter.topic" expression="${filter.topic}"/>
+      <param name="draft.mode" expression="${draft.mode}"/>
+      <param name="docid" expression="${filter.topic}"/>
+      <param name="show.comments" expression="${dbk.show.comments}"/>
+      <param name="show.fixmes" expression="${dbk.show.fixmes}"/>
     </style>
   </target>
   
-  
-  <!--
-    implementation targets shared by the dguide and tutorials
-  -->
-  
-  <target name="dguide-or-tutorials" description="Build the tutorials"
-          depends="init,fix-docbook-references">
-    <!-- Copy the input files to the build directory.  The stylesheet
-         formats them and extracts the lzx programs as *.in files. -->
-    <mkdir dir="${local.build.dir}"/>
-    <style style="xsl/format.xsl" basedir="${local.input.dir}"
-           destdir="${local.build.dir}" includes="*.html">
-      <xmlcatalog refid="commonDTDs"/>
-      <!-- lxz dir encodes lpsdir and localdir so make-php can translate -->
-      <param name="lzxdir" expression="${param.lpsdir}${param.localdir}programs/"/>
-      <param name="localdir" expression="${param.localdir}"/>
-      <param name="lpsdir" expression="${param.lpsdir}"/>
-      <param name="bodyClass" expression="${param.bodyClass}"/>
-      <param name="make-toc" expression="true"/>
-    </style>
-    
-    <!-- Copy the build files to the output directory. -->
-    <mkdir dir="${local.output.dir}"/>
-    <chmod dir="${local.output.dir}" perm="ugo+w" includes="*.html"/>
-    <copy todir="${local.output.dir}">
-      <fileset dir="${local.build.dir}" includes="*.html" />
-    </copy>
-    
-    <!-- Extract the lzx (and other) files from the *.in files. -->
-    <mkdir dir="${local.output.dir}/programs"/>
-    <copy todir="${local.output.dir}/programs">
-      <fileset dir="${local.build.dir}" includes="*.in"/>
-      <filterset begintoken="&amp;" endtoken=";">
-        <filtersfile file="entities.properties"/>
-      </filterset>
-      <mapper type="glob" from="*.in" to="*"/>
-    </copy>
-    
-    <!-- Copy non-html files -->
-    <copy todir="${local.output.dir}">
-      <fileset dir="${local.input.dir}" excludes="*.html,schemas.xml,build.xml"/>
-    </copy>
-  </target>
-  
-  <target name="old-tutorials" description="Build the tutorials"
-          depends="init">
-    <foreach target="dguide-or-tutorials" list="tutorials" param="dir" inheritall="true">
-      <param name="local.build.dir" value="${tutorials.old.build.dir}"/>
-      <param name="local.input.dir" value="${tutorials.old.input.dir}"/>
-      <param name="local.output.dir" value="${tutorials.old.output.dir}"/>
-      <param name="param.localdir" value="docs/tutorials/"/>
-      <param name="param.lpsdir" value="../../"/>
-      <param name="param.bodyClass" value="tutorial"/>
-    </foreach>
-  </target>
-  
-  <!-- A parameterized target called by *.resources.  Inputs are
-       local.input.dir, local.build.dir, and local.output.dir -->
-  <target name="book.resources" depends="init">
-    <!-- Extract the lzx (and other) files from the *.in files. -->
-    <mkdir dir="${local.output.dir}/programs"/>
-    <copy todir="${local.output.dir}/programs">
-      <fileset dir="${local.build.dir}" includes="*.in"/>
-      <filterset begintoken="&amp;" endtoken=";">
-        <filtersfile file="entities.properties"/>
-      </filterset>
-      <mapper type="glob" from="*.in" to="*"/>
-    </copy>
-    
-    <copy todir="${local.output.dir}/images">
-      <fileset dir="${docbook-xsl}/images"/>
-    </copy>
-    
-    <mkdir dir="${local.output.dir}/programs/resources"/>
-    <copy todir="${local.output.dir}/programs/resources">
-      <fileset dir="${local.input.dir}/resources"/>
-    </copy>
-    <copy todir="${local.output.dir}">
-      <fileset dir="${local.input.dir}" excludes="*.html,*.dbk,schemas.xml"/>
-    </copy>
-  </target>
-  
-  <target name="tutorials.preprocess" depends="init,reference.target.db.exists">
-    <foreach target="book.preprocess" list="tutorials" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${tutorials.input.dir}"/>
-      <param name="local.input.index" value="${tutorials.input.index}"/>
-      <param name="local.build.dir" value="${tutorials.build.dir}"/>
-    </foreach>
-  </target>
-  
-  <target name="tutorials.docbook" depends="init,tutorials.preprocess">
-    <mkdir dir="${tutorials.output.dir}/programs"/>
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="${LPS_HOME}" includes="build.properties"/>
-        <fileset dir="xsl" includes="common-html.xsl"/>
-        <fileset dir="xsl" includes="parameters.xsl"/>
-        <fileset dir="xsl" includes="tutorials.xsl"/>
-        <fileset dir="${tutorials.build.dir}" includes="*"/>
-      </sourcefiles>
-      <targetfiles>
-        <fileset dir="${tutorials.output.dir}" includes="*.html"/>
-        <pathelement path="${tutorials.output.dir}/${tutorials.output.index}"/>
-      </targetfiles>
-      <sequential>
-        <java classname="com.icl.saxon.StyleSheet"
-              fork="yes" 
-              failonerror="${build.docs.error.fail}">
-          <classpath refid="saxon.processor.classpath" />
-          <jvmarg value="-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"/>
-          <jvmarg value="-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl"/>
-          <jvmarg value="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration"/>
-          
-          <arg line="-o ${tutorials.output.dir}/${tutorials.output.index}"/>
-          <arg line="${tutorials.build.dir}/${tutorials.input.index}"/>
-          <arg line="xsl/tutorials.xsl"/>
-          <arg line="base.dir=${tutorials.output.dir}/"/>
-          <arg line="localdir=docs/tutorials/"/>
-          <arg line="draft.mode=${draft.mode}"/>
-          <arg line="show.comments=${show.comments}"/>
-          <arg line="show.fixmes=${show.fixmes}"/>
-        </java>
-      </sequential>
-    </outofdate>
-  </target>
-  
-  <target name="tutorials.resources" depends="init">
-    <foreach target="book.resources" list="tutorials" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${tutorials.input.dir}" />
-      <param name="local.output.dir" value="${tutorials.output.dir}" />
-      <param name="local.build.dir" value="${tutorials.build.dir}" />
-    </foreach>
-  </target>
-  
-  <target name="tutorials" depends="init,tutorials.docbook,tutorials.resources">
-    <copy file="${tutorials.input.dir}/${tutorials.output.index}"
-          todir="${tutorials.output.dir}"
-          overwrite="true"/>
-  </target>
-  
-  <!-- dguide targets -->
-  
-  <target name="old-dguide" description="Build the dguide"
-          depends="init">
-    <mkdir dir="${dguide.old.build.dir}"/>
-    <foreach target="dguide-or-tutorials" list="dguide" param="dir" inheritall="true">
-      <param name="local.build.dir" value="${dguide.old.build.dir}"/>
-      <param name="local.input.dir" value="${dguide.old.input.dir}"/>
-      <param name="local.output.dir" value="${dguide.old.output.dir}"/>
-      <param name="param.localdir" value="docs/guide/"/>
-      <param name="param.lpsdir" value="../../"/>
-      <param name="param.bodyClass" value="dguide-chapter"/>
-    </foreach>
-    <mkdir dir="${dguide.old.output.dir}/programs/resources"/>
-    <copy todir="${dguide.old.output.dir}/programs/resources">
-        <fileset dir="${dguide.old.input.dir}/resources"/>
-    </copy>
-  </target>
-  
-  <!-- A parameterized target called by *.preprocess.  Inputs are
-       local.input.dir, local.input.index, and local.build.dir -->
-  <target name="book.preprocess" depends="init,reference.target.db.exists,fix-docbook-references">
-    <mkdir dir="${local.build.dir}"/>
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="xsl" includes="html2dbk.xsl,xref.xsl"/>
-      </sourcefiles>
-      <targetfiles>
-        <fileset dir="${local.build.dir}" includes="*.dbk" excludes="${local.input.index}"/>
-      </targetfiles>
-      <sequential>
-        <delete>
-          <fileset dir="${local.build.dir}" includes="*.dbk" excludes="${local.input.index}"/>
-        </delete>
-      </sequential>
-    </outofdate>
-    <style style="xsl/collect-includes.xsl"
-           in="${local.input.dir}/${local.input.index}"
-           out="${local.build.dir}/includes.txt"/>
-    <style style="xsl/doc2dbk.xsl"
-           basedir="${local.input.dir}"
-           includesfile="${local.build.dir}/includes.txt"
-           destdir="${local.build.dir}"
-           extension=".dbk"
-           excludes="${local.output.index}">
-      <xmlcatalog refid="commonDTDs"/>
-      <param name="show.fixmes" expression="${show.fixmes}"/>
-    </style>
-    <copy todir="${local.build.dir}">
-      <fileset dir="${local.input.dir}" includes="*.dbk" excludes="${local.input.index}"/>
-    </copy>
-  </target>
-  
-  <!-- A parameterized target called by *.docbook.  Inputs are
-       local.build.dir, local.input.index, local.output.dir, and
-       local.output.index -->
-  <target name="book.docbook" depends="init">
+  <target name="dbk.examples.preprocess" depends="init,docbook.catalog.generate">
+    <!--- @param local.input.dir
+          @param local.input.index
+          @param local.output.dir
+          @param local.output.index
+          @param local.worksheet
+       -->
+
     <!-- localdir is the output dir relative to LPS_HOME -->
     <propertyregex property="LPS_HOME.escaped" input="${LPS_HOME}"
         regexp="\\" replace="\\\\\\\\" global="true" defaultvalue="${LPS_HOME}" />
@@ -617,383 +204,1119 @@
               input="${local.output.dir}"
               regexp="${LPS_HOME.escaped}/(.*)"
               select="\1/"/>
-    <mkdir dir="${local.output.dir}/programs"/>
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="${LPS_HOME}" includes="build.properties"/>
-        <fileset dir="xsl" includes="parameters.xsl"/>
-        <fileset dir="xsl" includes="common-html.xsl"/>
-        <fileset dir="xsl" includes="local.xsl"/>
-        <fileset dir="${local.build.dir}" includes="*"/>
-      </sourcefiles>
-      <targetfiles>
-        <fileset dir="${local.output.dir}" includes="*.html"/>
-        <pathelement path="${local.output.dir}/${local.output.index}"/>
-      </targetfiles>
-      <sequential>
-        <java classname="com.icl.saxon.StyleSheet"
-              fork="yes"
-              failonerror="${build.docs.error.fail}">
-          <classpath refid="saxon.processor.classpath" />
-          <jvmarg value="-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"/>
-          <jvmarg value="-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl"/>
-          <jvmarg value="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration"/>
-          
-          <arg line="-o ${local.output.dir}/${local.output.index}"/>
-          <arg line="${local.build.dir}/${local.input.index}"/>
-          <arg line="${local.worksheet}"/>
-          <arg line="base.dir=${local.output.dir}/"/>
-          <arg line="localdir=${localdir}"/>
-          <arg line="draft.mode=${draft.mode}"/>
-          <arg line="show.comments=${show.comments}"/>
-          <arg line="show.fixmes=${show.fixmes}"/>
-        </java>
-      </sequential>
-    </outofdate>
-  </target>
-  
-  <!-- developer's guide -->
-  <target name="dguide.preprocess" depends="init,tutorials.preprocess">
-    <foreach target="book.preprocess" list="dguide" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${dguide.input.dir}"/>
-      <param name="local.input.index" value="${dguide.input.index}"/>
-      <param name="local.build.dir" value="${dguide.build.dir}"/>
-    </foreach>
-    <style in="${dguide.input.dir}/${dguide.input.index}"
-           style="xsl/insert-preface.xsl"
-           out="${dguide.build.dir}/${dguide.input.index}">
-      <param name="preface.dir" expression="${dguide.build.dir}"/>
-    </style>
-  </target>
-  
-  <target name="dguide.docbook" depends="init,dguide.preprocess">
-    <foreach target="book.docbook" list="dguide" param="dir"
-             inheritall="true">
-      <param name="local.build.dir" value="${dguide.build.dir}"/>
-      <param name="local.input.index" value="${dguide.input.index}"/>
-      <param name="local.output.dir" value="${dguide.output.dir}"/>
-      <param name="local.output.index" value="${dguide.output.index}"/>
-      <param name="local.worksheet" value="xsl/dguide.xsl"/>
-    </foreach>
-  </target>
-  
-  <target name="dguide.resources" depends="init">
-    <foreach target="book.resources" list="dguide" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${dguide.input.dir}"/>
-      <param name="local.output.dir" value="${dguide.output.dir}"/>
-      <param name="local.build.dir" value="${dguide.build.dir}"/>
-    </foreach>
-    <foreach target="book.resources" list="tutorials" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${tutorials.input.dir}"/>
-      <param name="local.output.dir" value="${tutorials.output.dir}"/>
-      <param name="local.build.dir" value="${tutorials.build.dir}"/>
-    </foreach>
-  </target>
-  
-  <target name="dguide" depends="init,dguide.docbook,dguide.resources"/>
-  
-  <!-- deployer's guide -->
-  <target name="deployers.preprocess" depends="init,tutorials.preprocess">
-    <foreach target="book.preprocess" list="deployers" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${deployers.input.dir}"/>
-      <param name="local.input.index" value="${deployers.input.index}"/>
-      <param name="local.build.dir" value="${deployers.build.dir}"/>
-    </foreach>
-    <style in="${deployers.input.dir}/${deployers.input.index}"
-           style="xsl/insert-preface.xsl"
-           out="${deployers.build.dir}/${deployers.input.index}">
-      <param name="preface.dir" expression="${deployers.build.dir}"/>
-    </style>
-  </target>
-  
-  <target name="deployers.docbook" depends="init,deployers.preprocess">
-    <foreach target="book.docbook" list="deployers" param="dir"
-             inheritall="true">
-      <param name="local.build.dir" value="${deployers.build.dir}"/>
-      <param name="local.input.index" value="${deployers.input.index}"/>
-      <param name="local.output.dir" value="${deployers.output.dir}"/>
-      <param name="local.output.index" value="${deployers.output.index}"/>
-      <param name="local.worksheet" value="xsl/dguide.xsl"/>
-    </foreach>
-  </target>
-  
-  <target name="deployers.resources" depends="init">
-    <foreach target="book.resources" list="deployers" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${deployers.input.dir}"/>
-      <param name="local.output.dir" value="${deployers.output.dir}"/>
-      <param name="local.build.dir" value="${deployers.build.dir}"/>
-    </foreach>
-    <!-- [2005-02-18 ptw] No tutorials here? -->
-  </target>
-  
-  <target name="deployers" depends="init,deployers.docbook,deployers.resources"/>
-  
-  <!-- designer's guide -->
-  <target name="designers.preprocess" depends="init,tutorials.preprocess">
-    <foreach target="book.preprocess" list="designers" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${designers.input.dir}"/>
-      <param name="local.input.index" value="${designers.input.index}"/>
-      <param name="local.build.dir" value="${designers.build.dir}"/>
-    </foreach>
-    <style in="${designers.input.dir}/${designers.input.index}"
-           style="xsl/insert-preface.xsl"
-           out="${designers.build.dir}/${designers.input.index}">
-      <param name="preface.dir" expression="${designers.build.dir}"/>
-    </style>
-  </target>
-  
-  <target name="designers.docbook" depends="init,designers.preprocess">
-    <!-- YS added the following copy as a temporary work around for a bug in oliver's doc tools! -->
-    <copy todir="${designers.build.dir}">
-        <fileset dir="${tutorials.build.dir}">
-            <include name="laszlo_basics-*"/>
-            <include name="text-*"/>
-            <include name="art_assets-*"/>
-            <include name="views-*"/>
-        </fileset>
-        <filterset begintoken="../" endtoken="/">
-           <filter token="resources" value="../../guide/resources/" />
-           <filter token="images" value="../../guide/images/" />
-        </filterset>
-    </copy>
-    <foreach target="book.docbook" list="designers" param="dir"
-             inheritall="true">
-      <param name="local.build.dir" value="${designers.build.dir}"/>
-      <param name="local.input.index" value="${designers.input.index}"/>
-      <param name="local.output.dir" value="${designers.output.dir}"/>
-      <param name="local.output.index" value="${designers.output.index}"/>
-      <param name="local.worksheet" value="xsl/dguide.xsl"/>
-    </foreach>
-  </target>
-  
-  <target name="designers.resources" depends="init">
-    <foreach target="book.resources" list="designers" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${designers.input.dir}"/>
-      <param name="local.output.dir" value="${designers.output.dir}"/>
-      <param name="local.build.dir" value="${designers.build.dir}"/>
-    </foreach>
-    <!-- [2005-02-18 ptw] No tutorials here? -->
-  </target>
-  
-  <target name="designers" depends="init,designers.docbook,designers.resources"/>
-  
-  <!-- internal docs -->
-  <target name="internal.preprocess" depends="init,tutorials.preprocess">
-    <foreach target="book.preprocess" list="internal" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${internal.input.dir}"/>
-      <param name="local.input.index" value="${internal.input.index}"/>
-      <param name="local.build.dir" value="${internal.build.dir}"/>
-    </foreach>
-    <style in="${internal.input.dir}/${internal.input.index}"
-           style="xsl/insert-preface.xsl"
-           out="${internal.build.dir}/${internal.input.index}">
-      <param name="preface.dir" expression="${internal.build.dir}"/>
-    </style>
-  </target>
-  
-  <target name="internal.docbook" depends="init,internal.preprocess">
-    <foreach target="book.docbook" list="internal" param="dir"
-             inheritall="true">
-      <param name="local.build.dir" value="${internal.build.dir}"/>
-      <param name="local.input.index" value="${internal.input.index}"/>
-      <param name="local.output.dir" value="${internal.output.dir}"/>
-      <param name="local.worksheet" value="xsl/dguide.xsl"/>
-    </foreach>
-  </target>
-  
-  <target name="internal.resources" depends="init">
-    <copy todir="${internal.output.dir}/images">
-      <fileset dir="${docbook-xsl}/images"/>
-    </copy>
-    <copy todir="${internal.output.dir}">
-      <fileset dir="${internal.input.dir}">
-        <include name="**"/>
-        <exclude name="*.dbk"/>
-        <exclude name="schema.xml"/>
-      </fileset>
-    </copy>
-  </target>
-  
-  <target name="internal" depends="init,internal.docbook,internal.resources"/>
-  
-  <!-- component-design -->
 
-  <target name="component-design" depends="init">
-    <property name="component-design.input.dir" value="component-design"/>
-    <property name="component-design.build.dir" value="build/component-design"/>
-    <property name="component-design.output.dir" value="${docs.output.dir}/component-design"/>
-    <foreach target="book.preprocess" list="component-design" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${component-design.input.dir}"/>
-      <param name="local.input.index" value="${component-design.input.index}"/>
-      <param name="local.build.dir" value="${component-design.build.dir}"/>
-    </foreach>
-    <foreach target="book.docbook" list="dguide" param="dir"
-             inheritall="true">
-      <param name="local.build.dir" value="${component-design.build.dir}"/>
-      <param name="local.input.index" value="${component-design.input.index}"/>
-      <param name="local.output.dir" value="${component-design.output.dir}"/>
-      <param name="local.worksheet" value="xsl/dguide.xsl"/>
-    </foreach>
-    <foreach target="book.resources" list="dguide" param="dir"
-             inheritall="true">
-      <param name="local.input.dir" value="${component-design.input.dir}"/>
-      <param name="local.output.dir" value="${component-design.output.dir}"/>
-      <param name="local.build.dir" value="${component-design.build.dir}"/>
-    </foreach>
+    <java classname="com.icl.saxon.StyleSheet"
+          fork="yes"
+          failonerror="yes"
+          maxmemory="512m">
+      <classpath refid="saxon.processor.classpath"/>
+      <jvmarg value="-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"/>
+      <jvmarg value="-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl"/>
+      <jvmarg value="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration"/>
+
+      <arg line="-x org.apache.xml.resolver.tools.ResolvingXMLReader"/>
+      <arg line="-y org.apache.xml.resolver.tools.ResolvingXMLReader"/>
+      <arg line="-r org.apache.xml.resolver.tools.CatalogResolver"/>
+      <arg line="-o ${local.output.dir}/${local.output.index}"/>
+      <arg line="${local.input.dir}/${local.input.index}"/>
+      <arg line="${local.worksheet}"/>
+      <arg line="base.dir=${local.input.dir}/"/>
+    </java>
+
   </target>
   
-  <target name="fast-dguide.resources" depends="init">
-    <property name="local.output.dir" value="${dguide.fast.output.dir}" />
-    <property name="local.build.dir" value="${dguide.build.dir}" />
+  <target name="book.html.generate" depends="init,docbook.catalog.generate">
+    <!--- @param local.input.dir
+          @param local.input.index
+          @param local.output.dir
+          @param local.output.index
+          @param local.output.depends.dir
+          @param local.output.depends.set
+          @param local.worksheet
+       -->
+
+    <!-- localdir is the output dir relative to LPS_HOME -->
+    <propertyregex property="LPS_HOME.escaped" input="${LPS_HOME}"
+        regexp="\\" replace="\\\\\\\\" global="true" defaultvalue="${LPS_HOME}" />
+    <propertyregex property="localdir"
+              input="${local.output.dir}"
+              regexp="${LPS_HOME.escaped}/(.*)"
+              select="\1/"/>
+
+    <dependset>
+      <srcfilelist dir="${LPS_HOME}" files="build.properties"/>
+      <srcfilelist dir="xsl" files="${local.worksheet}"/>
+      <srcfilelist dir="xsl" files="conditional-html.xsl,common-html.xsl,parameters.xsl"/>
+      <srcfileset dir="${local.input.dir}" includes="*.dbk"/>
+      <srcfilelist dir="" files="${local.worksheet}"/>
+      <targetfileset dir="${local.output.depends.dir}" includes="local.output.depends.set"/>
+    </dependset>
+
+    <java classname="com.icl.saxon.StyleSheet"
+          fork="yes"
+          failonerror="yes"
+          maxmemory="512m">
+      <classpath refid="saxon.processor.classpath"/>
+      <jvmarg value="-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"/>
+      <jvmarg value="-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl"/>
+      <jvmarg value="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration"/>
+
+      <arg line="-x org.apache.xml.resolver.tools.ResolvingXMLReader"/>
+      <arg line="-y org.apache.xml.resolver.tools.ResolvingXMLReader"/>
+      <arg line="-r org.apache.xml.resolver.tools.CatalogResolver"/>
+      <arg line="-o ${local.output.dir}/${local.output.index}"/>
+      <arg line="${local.input.dir}/${local.input.index}"/>
+      <arg line="${local.worksheet}"/>
+      <arg line="base.dir=${local.output.dir}/"/>
+      <arg line="localdir=${localdir}"/>
+      <arg line="index.on.type=1"/>
+      <arg line="chunk.fast=1"/>
+      <arg line="draft.mode=${draft.mode}"/>
+      <arg line="show.comments=${show.comments}"/>
+      <arg line="show.fixmes=${show.fixmes}"/>
+      <arg line="id.warnings=0"/>
+    </java>
+
+  </target> <!-- book.html.generate -->
+
+  <target name="book.resources.generate" depends="init">
+    <!--- @param local.input.dir
+          @param local.build.dir
+          @param local.output.dir
+       -->
     <!-- Extract the lzx (and other) files from the *.in files. -->
     <mkdir dir="${local.output.dir}/programs"/>
     <copy todir="${local.output.dir}/programs">
-      <fileset dir="${local.build.dir}" includes="*.in"/>
+      <fileset dir="${local.build.dir}/programs" includes="*.lzx"/>
+    </copy>
+
+    <mkdir dir="${local.output.dir}/images"/>
+    <copy todir="${local.output.dir}/images">
+      <fileset dir="${docbook-xsl}/images"/>
+    </copy>
+    <copy todir="${local.output.dir}/images" failonerror="false">
+      <fileset dir="${local.build.dir}/images"/>
+    </copy>
+
+    <mkdir dir="${local.output.dir}/programs/resources"/>
+    <copy todir="${local.output.dir}/programs/resources" failonerror="false">
+      <fileset dir="${local.input.dir}/resources" />
+    </copy>
+
+    <mkdir dir="${local.output.dir}/data"/>
+    <copy todir="${local.output.dir}/data" failonerror="false">
+      <fileset dir="${local.build.dir}/data"/>
+    </copy>
+
+    <mkdir dir="${local.output.dir}/resources"/>
+    <copy todir="${local.output.dir}/resources" failonerror="false">
+      <fileset dir="${local.build.dir}/resources"/>
+    </copy>
+
+    <copy todir="${local.output.dir}">
+      <fileset dir="${local.input.dir}" excludes="*.html,*.dbk,schemas.xml"/>
+    </copy>
+  </target> <!-- book.resources.generate -->
+
+  <target name="library.resourcedir.copy" depends="init">
+    <!--- @param local.in.dir
+          @param local.out.dir
+          @param resource.dir.name
+       -->
+    <copy todir="${local.out.dir}/${resource.dir.name}">
+      <fileset dir="${local.in.dir}/" includes="**/${resource.dir.name}/**"/>
+      <mapper type="regexp" from="(.*?)/${resource.dir.name}/(.*)" to="\2"/>
+    </copy>
+  </target> <!-- library.resourcedir.copy -->    
+  
+
+  <target name="javadoc.dbk.generate" depends="init">
+    <!--- @param local.include.packages
+          @param local.exclude.packages
+          @param local.source.dir
+          @param local.build.dir
+          @param local.book.title
+       -->
+    <mkdir dir="${reference.server.build.dir}" />
+    <property name="xtraparams" value=""/>
+    <condition property="xtraparams" value="-quiet -breakiterator">
+        <equals arg1="${ant.java.version}" arg2="1.4"/>
+    </condition>
+    <javadoc packagenames="${local.include.packages}"
+              sourcepath="${local.source.dir}"
+              classpathref="3rd.party.classpath"
+              destdir="${local.build.dir}"
+              author="true"
+              version="true"
+              use="true"
+              source="1.4"
+              maxmemory="256m"
+              windowtitle="${local.book.title}"
+              doctitle="${local.book.title}"
+              Private="true"
+              excludepackagenames="${local.exclude.packages}"
+              additionalparam="${xtraparams}">
+              <doclet name="org.dbdoclet.doclet.docbook.DocBookDoclet"
+                  path="${LZ_VENDOR_ROOT}/experimental/dbdoclet/jars/dbdoclet.jar">
+              </doclet>
+              <bottom><![CDATA[
+<!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
+<p class="copyright">Copyright 2002-2007 <a target="_top"
+href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+All Rights Reserved. Use is subject to license terms.</p>
+<!-- * H_LZ_COPYRIGHT_END ************************************************* -->
+           ]]></bottom>
+    </javadoc>
+  </target>
+
+
+  <!-- JS2DOC-RELATED TARGETS -->
+  
+  <target name="js2doc.rng"
+          unless="reference.skip">
+    <ant dir="${lps.server.dir}" target="js2doc.rng" inheritAll="false"/>
+  </target>
+
+  <target name="lfc.js2doc.generate" 
+          description="Build the XML docs for the LFC"
+          depends="init,lfc.js2doc.dep"
+          unless="lfc.js2doc.uptodate">
+
+    <mkdir dir="${js2doc.build.dir}" />
+    <property name="js2doc.args" value="-v --dir ${js2doc.build.dir} ${lfc.src.dir}/LaszloLibrary.lzs" />
+    <ant dir="${lps.server.dir}" target="js2doc" />
+
+  </target>
+  
+  <target name="lfc.js2doc.dep" depends="init">
+   <echo message="reference.skip is ${reference.skip}"/>
+   <condition property="lfc.js2doc.uptodate">
+     <or>
+       <isset property="reference.skip"/>
+       <uptodate targetfile="${js2doc.build.dir}/LaszloLibrary.xml">
+           <srcfiles dir="${lfc.src.dir}" includes="**/*.lzs" />
+           <srcfiles dir="${lfc.src.dir}" includes="**/*.as" />
+           <srcfiles dir="${lfc.src.dir}" includes="**/*.js" />
+           <srcfiles dir="${lps.server.dir}/lib" includes="${lps.jar}" />
+       </uptodate>
+     </or>
+   </condition>
+   <echo message="lfc.js2doc.uptodate is ${lfc.js2doc.uptodate}"/>
+  </target>
+  
+  <target name="lfc.js2doc.test" depends="lfc.js2doc.generate,js2doc.rng"
+        unless="reference.skip">
+    <jing rngfile="${lps.server.dir}/lib/js2doc.rng">
+      <fileset dir="${js2doc.build.dir}" includes="LaszloLibrary.xml" />
+    </jing>
+  </target>
+
+  <target name="lfc.js2doc.clean" depends="init">
+    <delete failonerror="false" file="${js2doc.build.dir}" />
+  </target>
+
+  <target name="lzx2js2doc.transform" depends="init,docbook.catalog.generate">
+    <!--- @param local.input.file
+          @param local.output.file
+       -->
+    <style style="xsl/lzx2js2doc.xsl"
+           in="${local.input.file}"
+           out="${local.output.file}">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+      <param name="base.dir" expression="${lzx.base.dir}"/>
+      <param name="root.path" expression="${lzx.root.path}"/>
+    </style>
+  </target>
+  
+  <target name="js2doc.validate" depends="init,js2doc.rng">
+    <!--- @param local.input.dir
+          @param local.input.file
+       -->
+    <jing rngfile="${lps.server.dir}/lib/js2doc.rng">
+      <fileset dir="${local.input.dir}" includes="${local.input.file}" />
+    </jing>
+  </target>
+  
+  <!-- REFERENCE / CONTRIBUTORS TARGETS -->
+
+  <target name="embednew.js2doc.generate" depends="init,js2doc.rng"
+          unless="reference.skip">
+
+    <mkdir dir="${reference.build.dir}"/>
+    <property name="server.dir" value="${lps.server.dir}"/>
+    <property name="js2doc.args" value="-v --dir ${reference.build.dir} ${LPS_HOME}/lps/includes/source/embednew.js" />
+    <ant dir="${server.dir}" target="js2doc" />
+
+    <jing rngfile="${server.dir}/lib/js2doc.rng">
+      <fileset dir="${reference.build.dir}" includes="embednew.xml" />
+    </jing>
+
+  </target>
+  
+  <target name="components.js2doc.generate" depends="init"
+          unless="reference.skip">
+          
+    <antcall target="lzx2js2doc.transform" inheritAll="true">
+      <param name="local.input.file" value="${components.dir}/library.lzx"/>
+      <param name="local.output.file" value="${reference.build.dir}/components-raw.xml"/>
+      <param name="lzx.base.dir" value="${components.dir}"/>
+      <param name="lzx.root.path" value="lps/components/"/>
+    </antcall>
+
+    <ant dir="${lps.server.dir}" target="js2doc" inheritAll="false">
+      <property name="js2doc.args" value="-v --libraryid test --reprocess --out ${reference.build.dir}/components.xml ${reference.build.dir}/components-raw.xml"/>
+    </ant>
+
+  </target>
+
+  <target name="incubator.js2doc.generate" depends="init"
+          unless="reference.skip">
+          
+    <antcall target="lzx2js2doc.transform" inheritAll="true">
+      <param name="local.input.file" value="${incubator.dir}/library.lzx"/>
+      <param name="local.output.file" value="${reference.build.dir}/incubator-raw.xml"/>
+      <param name="lzx.base.dir" value="${incubator.dir}"/>
+      <param name="lzx.root.path" value="lps/components/incubator/"/>
+    </antcall>
+
+    <ant dir="${lps.server.dir}" target="js2doc" inheritAll="false">
+      <property name="js2doc.args" value="-v --libraryid test --reprocess --out ${reference.build.dir}/incubator.xml ${reference.build.dir}/incubator-raw.xml"/>
+    </ant>
+
+  </target>
+
+  <!-- this will pick up the incubator resources as well -->
+  <target name="components.resources.generate" depends="init"
+          unless="reference.skip">
+
+    <mkdir dir="${reference.build.dir}/programs/resources"/>
+    
+    <antcall target="library.resourcedir.copy" inheritAll="true">
+      <param name="local.in.dir" value="${components.dir}"/>
+      <param name="local.out.dir" value="${reference.build.dir}/programs"/>
+      <param name="resource.dir.name" value="resources"/>
+    </antcall>
+    
+  </target>
+  
+  <!-- REFERENCE GUIDE -->
+
+  <target name="reference.js2doc.generate" depends="lfc.js2doc.generate,components.js2doc.generate,incubator.js2doc.generate,embednew.js2doc.generate">
+  </target>
+
+  <target name="reference.js2doc.build" 
+          depends="init,docbook.catalog.generate,reference.js2doc.generate,components.resources.generate"
+          unless="reference.skip">
+  
+    <!-- bundle together the LFC, LZX, and Components js2doc output -->
+    
+    <style style="xsl/js2doc-append.xsl"
+           in="${js2doc.build.dir}/LaszloLibrary.xml"
+           out="${reference.build.dir}/LaszloLibrary-1.js2doc">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+      <param name="merge.file" expression="${reference.src.dir}/langref.xml"/>
+    </style>
+    
+    <style style="xsl/js2doc-append.xsl"
+           in="${reference.build.dir}/LaszloLibrary-1.js2doc"
+           out="${reference.build.dir}/LaszloLibrary-2.js2doc">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+      <param name="merge.file" expression="${reference.build.dir}/components.xml"/>
+    </style>
+    
+    <style style="xsl/js2doc-append.xsl"
+           in="${reference.build.dir}/LaszloLibrary-2.js2doc"
+           out="${reference.build.dir}/LaszloLibrary-3.js2doc">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+      <param name="merge.file" expression="${reference.build.dir}/incubator.xml"/>
+    </style>
+    
+    <style style="xsl/js2doc-append.xsl"
+           in="${reference.build.dir}/LaszloLibrary-3.js2doc"
+           out="${reference.build.dir}/LaszloLibrary-4.js2doc">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+      <param name="merge.file" expression="${reference.build.dir}/embednew.xml"/>
+    </style>
+    
+    <!-- make certain information explicit to ease processing by js2doc2dbk.xsl -->
+    <style style="xsl/js2doc-verbose.xsl"
+           in="${reference.build.dir}/LaszloLibrary-4.js2doc"
+           out="${reference.build.dir}/LaszloLibrary-verbose.js2doc">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+    </style>
+    
+  </target>
+  
+  <target name="reference.js2doc.validate" depends="init,reference.js2doc.build"
+          unless="reference.skip">
+    <antcall target="js2doc.validate" inheritAll="true">
+      <param name="local.input.dir" value="${reference.build.dir}"/>
+      <param name="local.input.file" value="LaszloLibrary-verbose.js2doc"/>
+    </antcall>
+  </target>
+    
+  <target name="reference.dbk.build" depends="init,reference.js2doc.build,docbook.catalog.generate"
+          unless="reference.skip">
+
+    <property name="ref.file.in" value="${reference.build.dir}/LaszloLibrary-verbose.js2doc"/>
+    <property name="ref.visibility.filter" value="public protected"/>
+    <property name="ref.show.comments" value="${show.comments}"/>
+    <property name="ref.show.fixmes" value="${show.fixmes}"/>
+    
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${ref.file.in}"/>
+      <param name="local.output.file" value="${reference.build.dir}/embedref.dbk"/>
+      <param name="filter.topic" value="Browser"/>
+      <param name="visibility.filter" value="${ref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${ref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${ref.file.in}"/>
+      <param name="local.output.file" value="${reference.build.dir}/lzxref.dbk"/>
+      <param name="filter.topic" value="LZX"/>
+      <param name="visibility.filter" value="${ref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${ref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${ref.file.in}"/>
+      <param name="local.output.file" value="${reference.build.dir}/lfcref.dbk"/>
+      <param name="filter.topic" value="LFC"/>
+      <param name="visibility.filter" value="${ref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${ref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${ref.file.in}"/>
+      <param name="local.output.file" value="${reference.build.dir}/compref.dbk"/>
+      <param name="filter.topic" value="Components"/>
+      <param name="visibility.filter" value="${ref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${ref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${ref.file.in}"/>
+      <param name="local.output.file" value="${reference.build.dir}/chartref.dbk"/>
+      <param name="filter.topic" value="Charting And Graphing"/>
+      <param name="visibility.filter" value="${ref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${ref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${ref.file.in}"/>
+      <param name="local.output.file" value="${reference.build.dir}/extref.dbk"/>
+      <param name="filter.topic" value="Extensions"/>
+      <param name="visibility.filter" value="${ref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${ref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${ref.file.in}"/>
+      <param name="local.output.file" value="${reference.build.dir}/incref.dbk"/>
+      <param name="filter.topic" value="Incubator"/>
+      <param name="visibility.filter" value="${ref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${ref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${ref.file.in}"/>
+      <param name="local.output.file" value="${reference.build.dir}/devref.dbk"/>
+      <param name="filter.topic" value="Development"/>
+      <param name="visibility.filter" value="${ref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${ref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
+    </antcall>
+
+    <style style="xsl/js2doc2xref.xsl"
+           in="${ref.file.in}"
+           out="${reference.build.dir}/xref.dbk">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+      <param name="visibility.filter" expression="${ref.visibility.filter}"/>
+      <param name="draft.mode" expression="${draft.mode}"/>
+      <param name="show.comments" expression="${ref.show.comments}"/>
+      <param name="show.fixmes" expression="${ref.show.fixmes}"/>
+      <param name="build.general.index" expression="1"/>
+    </style>
+  </target>
+  
+  <target name="reference.preprocess" depends="init,reference.dbk.build"
+          unless="reference.skip">
+  
+    <copy todir="${reference.build.dir}">
+      <fileset dir="${reference.src.dir}" includes="*.dbk"/>
+    </copy>
+
+    <copy todir="${reference.build.dir}/programs">
+      <fileset dir="${reference.build.dir}/programs" includes="*.in"/>
       <filterset begintoken="&amp;" endtoken=";">
         <filtersfile file="entities.properties"/>
       </filterset>
       <mapper type="glob" from="*.in" to="*"/>
     </copy>
-    
-    <copy todir="${local.output.dir}/images">
-      <fileset dir="${docbook-xsl}/images"/>
-    </copy>
-    
-    <mkdir dir="${local.output.dir}/programs/resources"/>
-    <copy todir="${local.output.dir}/programs/resources">
-        <fileset dir="dguide/resources"/>
-    </copy>
-    <copy todir="${local.output.dir}">
-      <fileset dir="${dguide.input.dir}" excludes="*.html"/>
-    </copy>
+
+    <antcall target="dbk.examples.preprocess" inheritAll="true">
+      <param name="local.input.dir" value="${docs.build.dir}"/>
+      <param name="local.input.index" value="reference/index.dbk"/>
+      <param name="local.output.dir" value="${reference.output.dir}"/>
+      <param name="local.output.index" value="reference.dbk"/>
+      <param name="local.worksheet" value="xsl/dbkpreprocessexamples.xsl"/>
+    </antcall>
   </target>
   
-  <target name="fast-dguide"
-          depends="init,dguide.preprocess,fast-dguide.resources">
-    <style style="xsl/fast-dguide.xsl"
-           basedir="${dguide.build.dir}"
-           destdir="${dguide.fast.output.dir}"
-           includes="*.dbk">
-      <param name="localdir" expression="docs/fast-dguide/"/>
+  <target name="reference.html.dep" depends="init">
+   <condition property="reference.html.uptodate">
+     <or>
+       <isset property="reference.skip"/>
+       <uptodate>
+         <srcfiles dir="${reference.output.dir}" includes="reference.dbk"/>
+         <srcfiles dir="xsl" includes="refguide-html.xsl"/>
+         <mergemapper to="${reference.output.dir}/index.html"/>
+       </uptodate>
+     </or>
+   </condition>
+   <echo message="reference.skip is $reference.skip"/>
+  </target>
+  
+
+  <target name="reference.html.generate" depends="init,reference.preprocess,reference.html.dep"
+          unless="reference.html.uptodate">
+
+    <antcall target="book.html.generate" inheritAll="true">
+      <param name="local.input.dir" value="${reference.output.dir}"/>
+      <param name="local.input.index" value="reference.dbk"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="reference/index.html"/>
+      <param name="local.output.depends.dir" value="${docs.output.dir}/reference"/>
+      <param name="local.output.depends.set" value="*"/>
+      <param name="local.worksheet" value="xsl/refguide-html.xsl"/>
+      <param name="localdir" value="docs/reference/"/>
+    </antcall>
+
+
+  </target>
+
+  <target name="reference.resources" depends="init,reference.preprocess,components.resources.generate"
+          unless="reference.skip">
+
+    <ant target="reference.frameset.generate" />
+
+    <mkdir dir="${contribref.build.dir}"/>
+    <antcall target="book.resources.generate" inheritAll="true">
+      <param name="local.input.dir" value="${reference.src.dir}"/>
+      <param name="local.build.dir" value="${reference.build.dir}"/>
+      <param name="local.output.dir" value="${reference.output.dir}"/>
+    </antcall>
+    
+
+  </target>
+
+  <target name="reference" description="Build the reference"
+          depends="init,reference.resources,reference.html.generate,reference.frameset.generate"
+          unless="reference.skip">
+  </target>
+
+  <target name="reference.validate" depends="reference.js2doc.validate"
+          unless="reference.skip">
+  </target>
+
+  <target name="reference.clean" depends="init">
+    <delete failonerror="false" includeemptydirs="true">
+      <fileset dir="${reference.build.dir}"/>
+      <fileset dir="${reference.output.dir}"/>
+    </delete>
+  </target>
+  
+  <target name="reference.examples.verify" depends="reference.resources"
+      description="Make sure all examples compile"
+      unless="skip.doc">
+      <echo message="compiling examples in ${reference.output.dir}/programs" />
+      <apply executable="bash" parallel="false" failonerror="true">
+          <arg line="${LPS_HOME}/WEB-INF/lps/server/bin/lzc -dir build" />
+          <fileset dir="${reference.output.dir}/programs" includes="*-*.lzx"/>
+      </apply>
+  </target>
+  
+  <target name="reference.frameset.generate" depends="init"
+      description="Copy a hand-generated html index for the reference into the output directory.">
+      <echo message="***gonna copy in reference frameset ***" />      
+      <!-- To actually build or update the index-generated.html, see navbuilder/navbuilder.rb -->
+      <copy todir="${reference.output.dir}">
+          <fileset dir="${reference.src.dir}/navbuilder" includes="index*.html"/>
+      </copy>
+  </target>
+  
+  <!-- CONTRIBUTORS GUIDE -->
+  
+  <target name="contribref.dbk.build" depends="init,reference.js2doc.build,docbook.catalog.generate"
+          unless="reference.skip">
+
+    <property name="contribref.file.in" value="${reference.build.dir}/LaszloLibrary-verbose.js2doc"/>
+    <property name="contribref.visibility.filter" value="public protected private"/>
+    <property name="contribref.show.comments" value="1"/>
+    <property name="contribref.show.fixmes" value="1"/>
+    
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${contribref.file.in}"/>
+      <param name="local.output.file" value="${contribref.build.dir}/jsref.dbk"/>
+      <param name="filter.topic" value="JavaScript"/>
+      <param name="visibility.filter" value="${contribref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${contribref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${contribref.file.in}"/>
+      <param name="local.output.file" value="${contribref.build.dir}/kernelref.dbk"/>
+      <param name="filter.topic" value="Kernel"/>
+      <param name="visibility.filter" value="${contribref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${contribref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${contribref.file.in}"/>
+      <param name="local.output.file" value="${contribref.build.dir}/lfcref.dbk"/>
+      <param name="filter.topic" value="LFC"/>
+      <param name="visibility.filter" value="${contribref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${contribref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${contribref.file.in}"/>
+      <param name="local.output.file" value="${contribref.build.dir}/lzxref.dbk"/>
+      <param name="filter.topic" value="LZX"/>
+      <param name="visibility.filter" value="${contribref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${contribref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${contribref.file.in}"/>
+      <param name="local.output.file" value="${contribref.build.dir}/compref.dbk"/>
+      <param name="filter.topic" value="Components"/>
+      <param name="visibility.filter" value="${contribref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${contribref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${contribref.file.in}"/>
+      <param name="local.output.file" value="${contribref.build.dir}/chartref.dbk"/>
+      <param name="filter.topic" value="Charting And Graphing"/>
+      <param name="visibility.filter" value="${contribref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${contribref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${contribref.file.in}"/>
+      <param name="local.output.file" value="${contribref.build.dir}/extref.dbk"/>
+      <param name="filter.topic" value="Extensions"/>
+      <param name="visibility.filter" value="${contribref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${contribref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${contribref.file.in}"/>
+      <param name="local.output.file" value="${contribref.build.dir}/incref.dbk"/>
+      <param name="filter.topic" value="Incubator"/>
+      <param name="visibility.filter" value="${contribref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${contribref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
+    </antcall>
+
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${contribref.file.in}"/>
+      <param name="local.output.file" value="${contribref.build.dir}/extras.dbk"/>
+      <param name="filter.topic" value="none"/>
+      <param name="visibility.filter" value="${contribref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${contribref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
+    </antcall>
+
+    <style style="xsl/js2doc2xref.xsl"
+           in="${contribref.file.in}"
+           out="${contribref.build.dir}/xref.dbk">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+      <param name="visibility.filter" expression="${contribref.visibility.filter}"/>
+      <param name="draft.mode" expression="${draft.mode}"/>
+      <param name="build.general.index" expression="0"/>
     </style>
   </target>
-   
-  <target name="clean-tutorials" depends="init"
-      description="clean up generated tutorial files">
-    <mkdir dir="${tutorials.old.output.dir}"/>
-    <chmod dir="${tutorials.old.output.dir}" perm="ugo+w" includes="*.html"/>
-    <delete failonerror="false" includeEmptyDirs="true">
-      <fileset dir="${tutorials.old.build.dir}"/>
-      <fileset dir="${tutorials.old.output.dir}"/>
-      <fileset dir="${tutorials.build.dir}"/>
-      <fileset dir="${tutorials.output.dir}"/>
-    </delete>
+  
+  <target name="contribref.preprocess" depends="init,contribref.dbk.build,js2doc.rng"
+          unless="reference.skip">
+          
+    <copy todir="${contribref.build.dir}">
+      <fileset dir="${contribref.src.dir}" includes="*.dbk"/>
+    </copy>
+    
+    <copy todir="${contribref.build.dir}/programs">
+      <fileset dir="${contribref.build.dir}/programs" includes="*.in"/>
+      <filterset begintoken="&amp;" endtoken=";">
+        <filtersfile file="entities.properties"/>
+      </filterset>
+      <mapper type="glob" from="*.in" to="*"/>
+    </copy>
+
+    <copy todir="${contribref.build.dir}" file="${lps.server.dir}/lib/js2doc.rnc"/>
+
+    <antcall target="dbk.examples.preprocess" inheritAll="true">
+      <param name="local.input.dir" value="${docs.build.dir}"/>
+      <param name="local.input.index" value="contribref/index.dbk"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="contribref/contribref.dbk"/>
+      <param name="local.worksheet" value="xsl/dbkpreprocessexamples.xsl"/>
+    </antcall>
+  </target>
+
+<!-- wont read dtd - need to debug
+  <target name="contribref.dbk.validate" depends="init,contribref.preprocess">
+    <jing schemaFile="${docbook-xml}/docbookx.dtd">
+      <fileset dir="${contribref.build.dir}" includes="*.dbk"/>
+    </jing>
+  </target>
+-->
+
+  <target name="contribref.html.dep" depends="init">
+   <condition property="contribref.html.uptodate">
+     <or>
+       <isset property="reference.skip"/>
+       <uptodate>
+         <srcfiles dir="${contribref.output.dir}" includes="contribref.dbk"/>
+         <srcfiles dir="xsl" includes="refguide-html.xsl"/>
+         <mergemapper to="${contribref.output.dir}/index.html"/>
+       </uptodate>
+     </or>
+   </condition>
   </target>
   
-  <target name="clean-dguide" depends="init,clean-tutorials"
+  <target name="contribref.html.generate" depends="init,contribref.preprocess,contribref.html.dep"
+          unless="contribref.html.uptodate">
+    
+    <antcall target="book.html.generate" inheritAll="true">
+      <param name="local.input.dir" value="${docs.output.dir}"/>
+      <param name="local.input.index" value="contribref/contribref.dbk"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="contribref/index.dbk"/>
+      <param name="local.output.depends.dir" value="${contribref.output.dir}"/>
+      <param name="local.output.depends.set" value="*"/>
+      <param name="local.worksheet" value="xsl/refguide-html.xsl"/>
+    </antcall>
+ </target>
+
+  <target name="contribref.resources" depends="init"
+          unless="reference.skip">
+          
+    <mkdir dir="${contribref.build.dir}"/>
+    <antcall target="book.resources.generate" inheritAll="true">
+      <param name="local.input.dir" value="${reference.src.dir}"/>
+      <param name="local.build.dir" value="${contribref.build.dir}"/>
+      <param name="local.output.dir" value="${contribref.output.dir}"/>
+    </antcall>
+
+  </target>
+
+  <target name="contribref" description="Build the contribref guide"
+          depends="init,contribref.html.generate,contribref.resources"
+          unless="reference.skip">
+  </target>
+  
+  <target name="contribref.validate" depends="reference.js2doc.validate"   
+          unless="reference.skip">
+  </target>
+
+  <target name="contribref.clean" depends="init,docbook.catalog.generate">
+    <delete failonerror="false" includeemptydirs="true">
+      <fileset dir="${contribref.build.dir}"/>
+      <fileset dir="${contribref.output.dir}"/>
+    </delete>
+  </target>
+
+  <!-- SERVER REFERENCE -->
+
+  <target name="reference.server.dbk.generate" depends="init" 
+      description="Create documentation from ${lps.server.dir}/src into ${reference.server.build.dir}">
+      
+    <antcall target="javadoc.dbk.generate" inheritAll="true">
+      <param name="local.include.packages" value="org.openlaszlo.*.*"/>
+      <param name="local.exclude.packages" value="org.openlaszlo.iv.*,${reference.compiler.packages}"/>
+      <param name="local.source.dir" value="${lps.server.dir}/src"/>
+      <param name="local.build.dir" value="${reference.server.build.dir}"/>
+      <param name="local.book.title" value="${LPS_NAME} Server API"/>
+    </antcall>
+  </target>
+
+  <target name="reference.server.html.generate" depends="init,reference.server.dbk.generate">
+    <antcall target="book.html.generate" inheritAll="true">
+      <param name="local.input.dir" value="${reference.server.build.dir}"/>
+      <param name="local.input.index" value="Reference.xml"/>
+      <param name="local.output.dir" value="${reference.server.output.dir}"/>
+      <param name="local.output.index" value="server.dbk"/>
+      <param name="local.output.depends.dir" value="${reference.server.output.dir}"/>
+      <param name="local.output.depends.set" value="*"/>
+      <param name="local.worksheet" value="xsl/refguide-html.xsl"/>
+    </antcall>
+ </target>
+
+  <target name="reference.server.resources.generate" depends="init,reference.server.dbk.generate">
+    <copy todir="${reference.server.output.dir}/figures">
+      <fileset dir="${reference.server.build.dir}/figures"/>
+    </copy>
+ </target>
+
+  <target name="reference.server.clean" depends="init"
+     description="Deletes generated Server Reference.">
+    <delete dir="${reference.server.build.dir}" />
+    <delete dir="${reference.server.output.dir}" />
+  </target>
+
+  <target name="reference.server.build" depends="reference.server.html.generate,reference.server.resources.generate"/>
+
+  <!-- COMPILER REFERENCE -->
+
+  <target name="reference.compiler.dbk.generate" depends="init" 
+      description="Create documentation from ${lps.server.dir}/src into ${reference.compiler.build.dir}">
+    <antcall target="javadoc.dbk.generate" inheritAll="true">
+      <param name="local.include.packages" value="${reference.compiler.packages}"/>
+      <param name="local.exclude.packages" value=""/>
+      <param name="local.source.dir" value="${lps.server.dir}/src"/>
+      <param name="local.build.dir" value="${reference.compiler.build.dir}"/>
+      <param name="local.book.title" value="${LPS_NAME} Compiler API"/>
+    </antcall>
+  </target>
+
+  <target name="reference.compiler.html.generate" depends="init,reference.compiler.dbk.generate">
+    <antcall target="book.html.generate" inheritAll="true">
+      <param name="local.input.dir" value="${reference.compiler.build.dir}"/>
+      <param name="local.input.index" value="Reference.xml"/>
+      <param name="local.output.dir" value="${reference.compiler.output.dir}"/>
+      <param name="local.output.index" value="server.dbk"/>
+      <param name="local.output.depends.dir" value="${reference.compiler.output.dir}"/>
+      <param name="local.output.depends.set" value="*"/>
+      <param name="local.worksheet" value="xsl/refguide-html.xsl"/>
+    </antcall>
+  </target>
+  
+  <target name="reference.compiler.resources.generate" depends="init,reference.compiler.dbk.generate">
+    <copy todir="${reference.compiler.output.dir}/figures">
+      <fileset dir="${reference.compiler.build.dir}/figures"/>
+    </copy>
+ </target>
+
+  <target name="reference.compiler.clean" depends="init"
+     description="Deletes generated Compiler Reference.">
+    <delete dir="${reference.compiler.build.dir}" />
+    <delete dir="${reference.compiler.output.dir}" />
+  </target>
+
+  <target name="reference.compiler.build" depends="reference.compiler.html.generate,reference.compiler.resources.generate"/>
+  
+  <!-- developer's guide -->
+
+  <target name="developers.preprocess" depends="init">
+    <copy todir="${developers.build.dir}">
+      <fileset dir="${developers.input.dir}"/>
+    </copy>
+  </target>
+  
+  <target name="developers.resources" depends="developers.preprocess">
+    <foreach target="book.resources.generate" list="developers" param="dir"
+             inheritall="true">
+      <param name="local.input.dir" value="${developers.build.dir}"/>
+      <param name="local.output.dir" value="${developers.output.dir}"/>
+      <param name="local.build.dir" value="${developers.build.dir}"/>
+    </foreach>
+    <foreach target="book.resources.generate" list="tutorials" param="dir"
+             inheritall="true">
+      <param name="local.input.dir" value="${developers.build.dir}/tutorials"/>
+      <param name="local.output.dir" value="${developers.output.dir}/tutorials"/>
+      <param name="local.build.dir" value="${developers.build.dir}/tutorials"/>
+    </foreach>
+  </target>
+  
+  <target name="developers.examples.preprocess" depends="developers.preprocess">
+    <antcall target="dbk.examples.preprocess" inheritAll="true">
+      <param name="local.input.dir" value="${docs.build.dir}"/>
+      <param name="local.input.index" value="developers/${developers.input.index}"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="developers/${developers.dbk.index}"/>
+      <param name="local.worksheet" value="xsl/dbkpreprocessexamples.xsl"/>
+    </antcall>
+  </target>
+  
+  <target name="developers.html.generate" depends="developers.examples.preprocess">
+    <antcall target="book.html.generate" inheritAll="true">
+      <param name="local.input.dir" value="${docs.output.dir}"/>
+      <param name="local.input.index" value="developers/${developers.dbk.index}"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="developers/${developers.html.index}"/>
+      <param name="local.output.depends.dir" value="${developers.output.dir}"/>
+      <param name="local.output.depends.set" value="*"/>
+      <param name="local.worksheet" value="xsl/dguide.xsl"/>
+    </antcall>
+  </target>
+  
+  <target name="developers" depends="developers.resources,developers.html.generate"
+      unless="skip.doc">
+  </target>
+  
+  <target name="developers.clean" depends="init"
       description="clean up generated dguide files">
-    <mkdir dir="${dguide.old.output.dir}"/>
-    <chmod dir="${dguide.old.output.dir}" perm="ugo+w" includes="*.html"/>
     <delete failonerror="false" includeEmptyDirs="true">
-      <fileset dir="${dguide.old.build.dir}"/>
-      <fileset dir="${dguide.old.output.dir}"/>
-      <fileset dir="${dguide.build.dir}"/>
-      <fileset dir="${dguide.output.dir}"/>
+      <fileset dir="${developers.output.dir}"/>
     </delete>
   </target>
   
-  <target name="clean-deployers" depends="init,clean-tutorials"
+  <target name="developers.examples.verify" depends="developers.resources"
+      description="Make sure all examples compile"
+      unless="skip.doc">
+      <!-- Change the value of this property to verify a different runtime -->
+      <property name="developers.examples.runtime" value="swf7"/>
+      <echo message="compiling examples in ${developers.output.dir}/programs in runtime ${developers.examples.runtime}" />
+      <apply executable="bash" parallel="false" failonerror="true">
+          <arg line="${LPS_HOME}/WEB-INF/lps/server/bin/lzc --runtime=${developers.examples.runtime} -dir build" />
+          <fileset dir="${developers.output.dir}/programs" includes="*-*.lzx"/>
+      </apply>
+      <echo message="compiling examples in ${developers.output.dir}/tutorials/programs in runtime ${developers.examples.runtime}" />
+      <apply executable="bash" parallel="false" failonerror="true">
+          <arg line="${LPS_HOME}/WEB-INF/lps/server/bin/lzc --runtime=${developers.examples.runtime} -dir build" />
+          <fileset dir="${developers.output.dir}/tutorials/programs" includes="*-*.lzx"/>
+      </apply>
+  </target>
+
+  <!-- wont read dtd - need to debug -->  
+  <target name="developers.validate" depends="init">
+    <jing schemaFile="${docbook-xml}/docbookx.dtd">
+      <fileset dir="${developers.input.dir}" includes="*.dbk"/>
+    </jing>
+  </target>
+  
+  <!-- deployer's guide -->
+
+  <target name="deployers.preprocess" depends="init">
+    <copy todir="${deployers.build.dir}">
+      <fileset dir="${deployers.input.dir}"/>
+    </copy>
+  </target>
+  
+  <target name="deployers.resources" depends="init">
+    <foreach target="book.resources.generate" list="deployers" param="dir"
+             inheritall="true">
+      <param name="local.input.dir" value="${deployers.input.dir}"/>
+      <param name="local.output.dir" value="${deployers.output.dir}"/>
+      <param name="local.build.dir" value="${deployers.input.dir}"/>
+    </foreach>
+  </target>
+  
+  <target name="deployers.examples.preprocess" depends="deployers.preprocess">
+    <antcall target="dbk.examples.preprocess" inheritAll="true">
+      <param name="local.input.dir" value="${docs.build.dir}"/>
+      <param name="local.input.index" value="deployers/${deployers.input.index}"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="deployers/${deployers.dbk.index}"/>
+      <param name="local.worksheet" value="xsl/dbkpreprocessexamples.xsl"/>
+    </antcall>
+  </target>
+  
+  <target name="deployers.html.generate" depends="deployers.examples.preprocess">
+    <antcall target="book.html.generate" inheritAll="true">
+      <param name="local.input.dir" value="${docs.output.dir}"/>
+      <param name="local.input.index" value="deployers/${deployers.dbk.index}"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="deployers/${deployers.html.index}"/>
+      <param name="local.output.depends.dir" value="${deployers.output.dir}"/>
+      <param name="local.output.depends.set" value="*"/>
+      <param name="local.worksheet" value="xsl/dguide.xsl"/>
+    </antcall>
+  </target>
+  
+  <target name="deployers" depends="deployers.resources,deployers.html.generate"
+      unless="skip.doc">
+  </target>
+  
+  <target name="deployers.clean" depends="init"
       description="clean up generated deployers files">
     <delete failonerror="false" includeEmptyDirs="true">
-      <fileset dir="${deployers.build.dir}"/>
       <fileset dir="${deployers.output.dir}"/>
     </delete>
   </target>
 
-  <target name="clean-designers" depends="init,clean-tutorials"
-      description="clean up generated designers files">
-    <delete failonerror="false" includeEmptyDirs="true">
-      <fileset dir="${designers.build.dir}"/>
-      <fileset dir="${designers.output.dir}"/>
+  <!-- wont read dtd - need to debug -->  
+  <target name="deployers.validate" depends="init">
+    <jing schemaFile="${docbook-xml}/docbookx.dtd">
+      <fileset dir="${deployers.input.dir}" includes="*.dbk"/>
+    </jing>
+  </target>
+ 
+  <!-- user set -->
+  
+  <target name="users.preprocess" depends="reference.preprocess,developers.preprocess,deployers.preprocess">
+
+    <copy todir="${docs.build.dir}">
+      <fileset dir="${docs.src.dir}" includes="userset.dbk"/>
+    </copy>
+
+    <antcall target="dbk.examples.preprocess" inheritAll="true">
+      <param name="local.input.dir" value="${docs.build.dir}"/>
+      <param name="local.input.index" value="userset.dbk"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="userindex.dbk"/>
+      <param name="local.worksheet" value="xsl/dbkpreprocessexamples.xsl"/>
+    </antcall>
+  </target>
+  
+  <target name="users" depends="developers.resources,deployers.resources,users.preprocess,reference.resources">
+    <antcall target="book.html.generate" inheritAll="true">
+      <param name="local.input.dir" value="${docs.output.dir}"/>
+      <param name="local.input.index" value="userindex.dbk"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="userindex.html"/>
+      <param name="local.output.depends.dir" value="${docs.output.dir}"/>
+      <param name="local.output.depends.set" value="userindex.html indexapa.html developers/*.html deployers/*.html reference/*.html"/>
+      <param name="local.worksheet" value="xsl/refguide-html.xsl"/>
+    </antcall>
+  </target>
+  
+  <!-- Theoretically, this task can be used to generate an XML version of the 
+       User Guide's table of contents. This XML TOC could be used to
+       drive a left navigation bar for a more interactive interface to the
+       User's Guide. However, there are two problems that have yet to be 
+       resolved:
+       
+       1. This task requires that docs/userindex.html be a valid XML document,
+          which means that it must be output as XHTML
+          
+       2. Saxon 6.5.5 appears to output header material when generating XML in
+          this particular case. Simply turning on XHTML (by loading 
+          'xhtml/chunk.xsl' instead of 'html/chunk.xsl' in common-html.xsl)
+          causes userindex.html to have this header:
+          
+          <?xml version="1.0" encoding="UTF-8"?>tandalone="yes"?>
+
+          Turning off generation of the xml header similarly causes Saxon to
+          generate a truncated version of the DOCTYPE declaration.
+          
+          It appears to be a buffer overflow or underflow error.
+    -->
+  <target name="users.xmltoc" depends="init">
+    <java classname="com.icl.saxon.StyleSheet"
+          fork="yes"
+          failonerror="yes"
+          maxmemory="512m">
+      <classpath refid="saxon.processor.classpath"/>
+      <jvmarg value="-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"/>
+      <jvmarg value="-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl"/>
+      <jvmarg value="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration"/>
+
+      <arg line="-x org.apache.xml.resolver.tools.ResolvingXMLReader"/>
+      <arg line="-y org.apache.xml.resolver.tools.ResolvingXMLReader"/>
+      <arg line="-r org.apache.xml.resolver.tools.CatalogResolver"/>
+      <arg line="-o ${docs.output.dir}/userindex.xml"/>
+      <arg line="${docs.output.dir}/userindex.html"/>
+      <arg line="xsl/dbk-toc2nav.xsl"/>
+      <arg line="base.dir=${docs.output.dir}/"/>
+    </java>
+  </target>
+  
+  <target name="users.clean" depends="reference.clean,developers.clean,deployers.clean">
+    <delete failonerror="false">
+      <fileset dir="${docs.output.dir}" includes="userindex.dbk"/>
+      <fileset dir="${docs.output.dir}" includes="userindex.html"/>
+      <fileset dir="${docs.output.dir}" includes="indexapa.html"/>
     </delete>
   </target>
-  <!--
-    Validation.  Optional because it requires a web connection
-    for DTD resolution.
-  -->
   
-  <target name="validate-reference" depends="init">
-    <jing rngfile="schemas/wrapper.rnc" compactsyntax="true" checkid="true">
-      <fileset dir="wrappers" includes="**/*.html"/>
-    </jing>
-  </target>
+  <!-- contributors set -->
   
-  <target name="validate-dguide" depends="init">
-    <jing rngfile="schemas/docs.rnc" compactsyntax="true" checkid="true">
-      <fileset dir="dguide" includes="*.html"/>
-    </jing>
-  </target>
-  
-  <target name="validate-deployers" depends="init">
-    <jing rngfile="schemas/docs.rnc" compactsyntax="true" checkid="true">
-      <fileset dir="deployers" includes="*.html"/>
-    </jing>
-  </target>
-  
-  <target name="validate-designers" depends="init">
-    <jing rngfile="schemas/docs.rnc" compactsyntax="true" checkid="true">
-      <fileset dir="designers" includes="*.html"/>
-    </jing>
-  </target>
-  
-  <target name="validate-tutorials" depends="init">
-    <jing rngfile="schemas/docs.rnc" compactsyntax="true" checkid="true">
-      <fileset dir="tutorials" includes="**/*.html"/>
-    </jing>
-  </target>
-  
-  <target name="validate" depends="validate-dguide,validate-deployers,validate-designers,validate-reference,validate-tutorials"/>
+  <target name="contributors.preprocess" depends="contribref.preprocess">
 
+    <copy todir="${contributors.build.dir}">
+      <fileset dir="${contributors.input.dir}"/>
+      <fileset dir="${lps.server.dir}/lib" includes="js2doc.rnc"/>
+    </copy>
+
+    <copy todir="${docs.build.dir}">
+      <fileset dir="${docs.src.dir}" includes="contribset.dbk"/>
+    </copy>
+
+    <antcall target="dbk.examples.preprocess" inheritAll="true">
+      <param name="local.input.dir" value="${docs.build.dir}"/>
+      <param name="local.input.index" value="contribset.dbk"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="contribindex.dbk"/>
+      <param name="local.worksheet" value="xsl/dbkpreprocessexamples.xsl"/>
+    </antcall>
+  </target>
+
+  <target name="contributors.resources" depends="init">
+    <foreach target="book.resources.generate" list="contributors" param="dir"
+             inheritall="true">
+      <param name="local.input.dir" value="${contributors.build.dir}"/>
+      <param name="local.output.dir" value="${contributors.output.dir}"/>
+      <param name="local.build.dir" value="${contributors.build.dir}"/>
+    </foreach>
+  </target>
+  
+  <target name="contributors" depends="contributors.preprocess,contribref.resources,contributors.resources">
+    <antcall target="book.html.generate" inheritAll="true">
+      <param name="local.input.dir" value="${docs.output.dir}"/>
+      <param name="local.input.index" value="contribindex.dbk"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="contribindex.html"/>
+      <param name="local.output.depends.dir" value="${docs.output.dir}"/>
+      <param name="local.output.depends.set" value="contribindex.html contributors/*.html contribref/*.html"/>
+      <param name="local.worksheet" value="xsl/refguide-html.xsl"/>
+    </antcall>
+  </target>
+  
+  <target name="contributors.clean" depends="contribref.clean">
+    <delete failonerror="false" includeEmptyDirs="true">
+      <fileset dir="${contributors.output.dir}"/>
+    </delete>
+    <delete failonerror="false">
+      <fileset dir="${docs.output.dir}" includes="contribindex.dbk"/>
+      <fileset dir="${docs.output.dir}" includes="contribindex.html"/>
+    </delete>
+  </target>
+  
   <!--
     targets relating to both ref and tutorial docs:
   -->
 
   <target name="build" description="Make the documentation"
-          depends="reference,dguide,deployers,designers"/> 
+          depends="users,contributors"
+          unless="skip.doc"/> 
 
-  <target name="clean" depends="clean-reference,clean-dguide,clean-deployers,clean-designers,clean-tutorials"
-      description="clean up generated files">
-    <delete failonerror="false" includeemptydirs="true">
-      <!-- Old build locations.  These can be removed once the
-           2004-07-04 version of this file has propogated through the
-           branches.  (Please update this date if you add to the list
-           below, or add a new section with a later date.) -->
-      <fileset dir="../developers-guide" includes="**/*"/>
-      <fileset dir="../lzx-reference"/>
-      <fileset dir="build/html"/>
-      <fileset dir="build">
-        <exclude name="redmond-*" />
-      </fileset>
-    </delete>
+  <target name="clean" description="clean up generated files"
+          depends="users.clean,contributors.clean">
+    <delete dir="${docs.build.dir}"/>
   </target>
   
-  <target name="test">
-    <property file="build.properties"/>
-    <echo message="Examples with long lines:"/>
-    <apply executable="grep" parallel="true">
-      <arg line="-l '${long.lines.pattern}'"/>
-      <fileset dir="build" includes="**/*.in"/>
-      <fileset dir="../reference" includes="**/*.lzx"/>
-      <!--fileset dir=".." includes="**/*.lzx"/-->
-    </apply>
-  </target>
+  <target name="validate" depends="developers.validate,deployers.validate,reference.validate,contribref.validate"/>
+
+  <target name="test" depends="init,lfc.js2doc.test,validate"/>
+
+  <!-- Broken out into a separate test target because it takes a long time to run.
+       TODO [jgrandy 5/23/07] add to megatest -->
+  <target name="examples.verify" depends="init,developers.examples.verify,reference.examples.verify"/>
+  
 </project>

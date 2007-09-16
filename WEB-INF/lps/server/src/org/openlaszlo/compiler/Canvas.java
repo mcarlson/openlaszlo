@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -118,8 +118,17 @@ public class Canvas implements java.io.Serializable {
     private String mTitle = DEFAULT_TITLE;
     
     /** Version of the flash player file format which we compile to **/
-    private String mSWFVersion = LPS.getProperty("compiler.runtime.default", "swf6");
+    private String mRuntime = LPS.getProperty("compiler.runtime.default", "swf7");
     
+    /** computed debug flag, based on canvas 'debug' attribute + compilation request args **/
+    private boolean mDebug = false;
+
+    /** computed backtrace flag, based on canvas 'backtrace' attribute + compilation request args **/
+    private boolean mBacktrace = false;
+
+    /** computed profile flag from request args **/
+    private boolean mProfile = false;
+
     /** ID for the canvas. */
     private String mID = DEFAULT_ID;
     
@@ -148,13 +157,38 @@ public class Canvas implements java.io.Serializable {
         mCompilationWarningXML = xml;
     }
     
-    public void setSWFVersion(String text) {
-        mSWFVersion = text;
+    public void setRuntime(String text) {
+        mRuntime = text;
     }
 
-    public String getSWFVersion() {
-        return mSWFVersion;
+    public String getRuntime() {
+        return mRuntime;
     }
+
+    public void setDebug(boolean val) {
+        mDebug = val;
+    }
+
+    public boolean getDebug() {
+        return(mDebug);
+    }
+
+    public void setBacktrace(boolean val) {
+        mBacktrace = val;
+    }
+
+    public boolean getBacktrace() {
+        return(mBacktrace);
+    }
+
+    public void setProfile(boolean val) {
+        mProfile = val;
+    }
+
+    public boolean getProfile() {
+        return(mProfile);
+    }
+
 
     public void addInfo(Element info) {
         mInfo.addContent(info);
@@ -180,7 +214,7 @@ public class Canvas implements java.io.Serializable {
         return mFilePath;
     }
 
-    /** @return file path */
+    /** @param filePath */
     public void setFilePath(String filePath) {
         mFilePath = filePath;
     }
@@ -198,13 +232,13 @@ public class Canvas implements java.io.Serializable {
             return mWidthString;
     }
 
-    /** @param width */
+    /** @param w */
     public void setWidth(int w) {
         mWidth = w;
         mWidthString = null;
     }
 
-    /** @param width */
+    /** @param w */
     public void setWidthString(String w) {
         mWidthString = w;
     }
@@ -223,13 +257,13 @@ public class Canvas implements java.io.Serializable {
             return mHeightString;
     }
 
-    /** @param height */
+    /** @param h */
     public void setHeight(int h) {
         mHeight = h;
         mHeightString = null;
     }
 
-    /** @param height */
+    /** @param h */
     public void setHeightString(String h) {
         mHeightString = h;
     }
@@ -240,7 +274,7 @@ public class Canvas implements java.io.Serializable {
         return mMaxTextWidth;
     }
 
-    /** @param maxTextWidth */
+    /** @param h */
     public void setMaxTextWidth(int h) {
         mMaxTextWidth = h;
     }
@@ -250,7 +284,7 @@ public class Canvas implements java.io.Serializable {
         return mMaxTextHeight;
     }
 
-    /** @param maxTextHeight */
+    /** @param h */
     public void setMaxTextHeight(int h) {
         mMaxTextHeight = h;
     }
@@ -302,12 +336,12 @@ public class Canvas implements java.io.Serializable {
         return "192975213X";
     }
     
-    /** @param title */
+    /** @param t */
     public void setTitle(String t) {
         mTitle = t;
     }
 
-    /** @param ID */
+    /** @param id */
     public void setID(String id) {
         mID = id;
     }
@@ -334,7 +368,7 @@ public class Canvas implements java.io.Serializable {
 
     }
 
-    /** @param group */
+    /** @param g */
     public void setGroup(String g) {
         mGroup = g;
     }
@@ -345,7 +379,7 @@ public class Canvas implements java.io.Serializable {
 
     }
 
-    /** @param authenticator */
+    /** @param a */
     public void setAuthenticator(String a) {
         mAuthenticator = a;
     }
@@ -360,7 +394,7 @@ public class Canvas implements java.io.Serializable {
         mSendUserDisconnect = sud;
     }
 
-    /** @param serverless */
+    /** @param val */
     public void setProxied(boolean val) {
         mProxied = val;
     }
@@ -412,14 +446,17 @@ public class Canvas implements java.io.Serializable {
         StringBuffer buffer = new StringBuffer();
         buffer.append(
             "<canvas " +
-            "title=\"" + XMLUtils.escapeXml(getTitle()) + "\" " +
-            "bgcolor=\"" + getBGColorString() + "\" " +
-            "width=\"" + getWidthXML() + "\" " +
-            "height=\"" + getHeightXML() + "\" " +
-            "proxied=\"" + isProxied() + "\" " +
-            "runtime=\"" + getSWFVersion() +"\" " +
-            "id=\"" + XMLUtils.escapeXml(getID()) +"\" " +
-            "accessible=\"" + XMLUtils.escapeXml(getAccessible() + "") +"\" " +
+            "title='" + XMLUtils.escapeXml(getTitle()) + "' " +
+            "bgcolor='" + getBGColorString() + "' " +
+            "width='" + getWidthXML() + "' " +
+            "height='" + getHeightXML() + "' " +
+            "proxied='" + isProxied() + "' " +
+            "runtime='" + getRuntime() +"' " +
+            "lfc='" + LPS.getProperty("compiler.runtime.dir") +
+            "/" + LPS.getLFCname(getRuntime(), mDebug, mProfile, mBacktrace) + "' " +
+            "debug='" + mDebug + "' " +
+            "id='" + XMLUtils.escapeXml(getID()) +"' " +
+            "accessible='" + XMLUtils.escapeXml(getAccessible() + "") +"' " +
             ">");
         buffer.append(content);
         buffer.append(getInfoAsString());

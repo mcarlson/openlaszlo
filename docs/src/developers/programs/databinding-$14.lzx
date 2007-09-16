@@ -1,0 +1,28 @@
+
+<canvas height="150" debug="true">
+  <debug x="150"/>
+  <dataset name="onion">
+    <layer order="1"><layer><layer>core</layer></layer></layer>
+  </dataset>
+
+  <view datapath="onion:/layer">
+     <simplelayout spacing="5"/>
+     <view width="${100 / this.data}" height="${100 / this.data}" 
+           bgcolor="0x09d055" datapath="@order" 
+           opacity="${Math.min(1, this.data / 3)}"/>
+    
+    <button text="Peel next layer">
+      <handler name="onclick">
+        with (parent.datapath) {
+          Debug.write(data)
+          if (!selectChild()) this.setAttribute('enabled', false) 
+          else setNodeAttribute('order', Number(p.parentNode.attributes['order']) + 1)
+         }
+      </handler>
+    </button>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

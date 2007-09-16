@@ -7,36 +7,41 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
-    <xsl:output method="html" indent="yes" />
+    <xsl:output
+      doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+      doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
+    <!-- [2007-09-24 jgrandy] (LPP-2771) we should use method="xhtml" below, but the XSLT processor used on many people's machines doesn't support this nonstandard extension.
+         See http://www.velocityreviews.com/forums/t167968-xhtml-doctype-and-output.html -->
+    <xsl:output method="xml" indent="yes" />
 
     <xsl:template match="/menu">
         <html>
         <head>
-            <title>Laszlo Presentation Server Quick Index</title>
-            <link rel="STYLESHEET" type="text/css" href="lps/includes/styles.css"/>
-            <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/images/laszlo.ico"/>
-            <script src="lps/includes/script.js" type="text/javascript"></script>
+            <title>OpenLaszlo Quick Index</title>
+            <link rel="STYLESHEET" type="text/css" href="lps/includes/styles.css" />
+            <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/images/laszlo.ico" />
         </head>
         <body>
-        <div align="right"><img border="0" src="lps/includes/logo_web_sm.gif"/></div>
-        <h1>Laszlo Presentation Server Quick Index</h1>
+        <div style="float:right"><img border="0" src="lps/includes/logo_web_sm.gif" alt="OpenLaszlo logo" /></div>
+        <h1>OpenLaszlo Quick Index</h1>
         
-        <p>If this is the first time you've run Laszlo Presentation Server
+        <p><a href="docs/release-notes.html">Release Notes</a></p>
+        <p>If this is the first time you've run OpenLaszlo
             or you are looking for an introduction, please try 
-            the <a href="laszlo-explorer">Laszlo Explorer</a>.
+            Laszlo Explorer (<a href="laszlo-explorer/index.jsp?lzr=swf7">Flash</a>) (<a href="laszlo-explorer/index.jsp?lzr=dhtml">DHTML</a>).
         </p>
         <ul>
             <xsl:apply-templates select="*[not(@name='Laszlo in 10 Minutes')]"/> 
         </ul>
         <hr/>
 <!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
-<p class="copyright">Copyright © 2002-2004 <a target="_top"
+<p class="copyright">Copyright © 2002-2007 <a target="_top"
 href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
 All Rights Reserved. Unauthorized use, duplication or
 distribution is strictly prohibited. This is the proprietary
 information of Laszlo Systems, Inc. Use is subject to license terms.</p>
 <!-- * H_LZ_COPYRIGHT_END ************************************************* -->
-        <p>LPS @VERSIONID@ build @BUILDID@ </p>
+        <p>OpenLaszlo @VERSIONID@ build @BUILDID@ </p>
         </body>
         </html>
     </xsl:template>
@@ -59,10 +64,21 @@ information of Laszlo Systems, Inc. Use is subject to license terms.</p>
                                </xsl:otherwise>
                            </xsl:choose>
                            <xsl:value-of select="@popup"/>
+                           <xsl:if test="@runtime != ''">
+                               <xsl:text>?lzr=</xsl:text>
+                               <xsl:value-of select="@runtime"/>
+                           </xsl:if>
                        </xsl:when>
+                       <xsl:when test="@action = 'popupexternal'">
+                           <xsl:value-of select="@src"/>
+                       </xsl:when>                       
                        <xsl:otherwise>
                             <xsl:text>.</xsl:text>
                             <xsl:value-of select="@src"/>
+                            <xsl:if test="@runtime != ''">
+                                <xsl:text>?lzr=</xsl:text>
+                                <xsl:value-of select="@runtime"/>
+                            </xsl:if>
                        </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>

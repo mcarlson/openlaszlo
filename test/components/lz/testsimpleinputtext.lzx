@@ -10,8 +10,8 @@
     <view x="30" y="30">
 
          <simpleinputtext id="a" >(A) text in tag</simpleinputtext>
-        <simpleinputtext id="a1" onfocus="debug.write('onfocus', this)"
-            onblur="debug.write('onblur', this)"
+        <simpleinputtext id="a1" onfocus="Debug.write('onfocus', this)"
+            onblur="Debug.write('onblur', this)"
             >(A1) text in tag - test focus</simpleinputtext>
 
 
@@ -31,6 +31,6 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

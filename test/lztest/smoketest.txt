@@ -1,0 +1,31 @@
+# Copyright 2006 Laszlo Systems
+test/lztest/lztest-textstyle.lzx
+test/lztest/lztest-align.lzx
+# test/lztest/lztest-animator.lzx
+#test/lztest/lztest-animatorgroup.lzx
+test/lztest/lztest-class-impl.lzx
+test/lztest/lztest-events.lzx
+test/lztest/lztest-ids.lzx
+# test/lztest/lztest-inputtext.lzx
+# test/lztest/lztest-layout.lzx
+test/lztest/lztest-lzbrowser.lzx
+test/lztest/lztest-lzdataelement.lzx
+# test/lztest/lztest-lzdatanode.lzx
+# test/lztest/lztest-lzdatatext.lzx
+# test/lztest/lztest-lzparams.lzx
+test/lztest/lztest-node-initsequence.lzx
+test/lztest/lztest-node-options.lzx
+test/lztest/lztest-node.lzx
+test/lztest/lztest-output.lzx
+test/lztest/lztest-placement.lzx
+test/lztest/lztest-selftest.lzx
+test/lztest/lztest-simple.lzx
+# test/lztest/lztest-simpleboundslayout.lzx
+# test/lztest/lztest-stableborderlayout.lzx
+# test/lztest/lztest-text.lzx
+test/lztest/lztest-this.lzx
+test/lztest/lztest-view.lzx
+test/lztest/lztest-textheight.lzx
+test/lztest/lztest-lzurl.lzx
+
+

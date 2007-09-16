@@ -12,7 +12,7 @@
       <attribute name="title" value="" type="string"/>
       <attribute name="tag" value="" type="string"/>
       <animator name="zipin" to="0" from="$once{-parent.width}" attribute="x" duration="300" start="false"/>
-      <view name="hdr" resource="header" oninit="debug.write(this.height)">
+      <view name="hdr" resource="header" oninit="Debug.write(this.height)">
         <basebutton resource="sitelink" x="470" y="26">
           <handler name="onclick" >
             LzBrowser.loadURL('javascript:window.open("http://www.openlaszlo.org","laszlo","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); void(0);');
@@ -31,6 +31,6 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

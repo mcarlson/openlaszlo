@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <project name="examples" default="test" basedir=".">
@@ -29,7 +29,7 @@
       description="Make sure all examples compile"
       depends="init" >
 
-      <apply executable="bash" parallel="true">
+      <apply executable="bash" parallel="false" failonerror="true">
           <arg line="${LPS_HOME}/WEB-INF/lps/server/bin/lzc -dir build" />
           <fileset dir="." >
               <include name="**/*.lzx"/>
@@ -55,17 +55,6 @@
   <target name="all" 
       description="Clean, build, doc, test"
       depends="clean, build, doc, test">
-  </target>
-
-  <target name="t" depends="init" >
-     <copy file="hello.lzx" tofile="hello.lzx.z" >
-          <filterset>
-              <filter token="LZX_COPYRIGHT" value="${LZ_LZX_COPYRIGHT}"/>
-          </filterset>
-     </copy>
-     <fixcrlf srcdir="." >
-         <include name="hello.lzx.z" />
-     </fixcrlf>
   </target>
 
 </project>

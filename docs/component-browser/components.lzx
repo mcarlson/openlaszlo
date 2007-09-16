@@ -1,0 +1,122 @@
+<canvas title="Components Hierarchy" width="630" height="540" bgcolor="#EAEAEA">
+
+    <debug x="160" y="380" />
+
+    <include href="common.lzx" />
+    <include href="base/basetree.lzx" />
+    <include href="lz/tree.lzx" />
+    <include href="hierarchyview.lzx" />
+    <include href="formview.lzx" />
+    <include href="listview.lzx" />
+    <include href="menuview.lzx" />
+    <include href="tabsview.lzx" />
+    <include href="tabsliderview.lzx" />
+    <include href="windowview.lzx" />
+    <include href="scrollbarview.lzx" />
+    <include href="treeview.lzx" />
+
+    <view name="treehier" x="15" y="15" width="${canvas.width - 2*this.x}" 
+          height="${canvas.height - 2*this.y}">
+        <simplelayout spacing="10" />
+        <text align="center"><b>Component Hierarchy</b></text>
+        <view layout="axis: x; spacing: 20">
+            <hierarchyview name="tv" height="${parent.parent.height - 60}"/>
+            <keyview width="${parent.parent.width - 40 - parent.tv.width - this.boxsize}" />
+        </view>
+        <button name="other" text="See Related Components">
+            <method event="onclick">
+                canvas.treehier.setAttribute('visible', false);
+                canvas.related.setAttribute('visible', true);
+            </method>
+        </button>
+    </view>
+
+    <view name="related" width="${canvas.width - 2*this.x}" x="15" y="15" 
+          height="${canvas.height - 2*this.y}" visible="false"
+          layout="spacing: 10">
+        <tabs width="100%" height="${parent.height - parent.back.height - 10}">
+            <tabpane text="Form">
+                <simplelayout axis="y" spacing="10" />
+                <text align="center"><b>Form Classes</b></text>
+                <nodeview width="${parent.width - 20}"/>
+                <text resize="true" width="${parent.width - 40}" multiline="true">
+                    * multistatebutton extends basebutton: it is used in radiobutton
+                    and checkbox, but is not subclassed by any of the higher level
+                    components.
+                </text>
+                <keyview />
+            </tabpane>
+            <tabpane text="List">
+                <simplelayout axis="y" spacing="10" />
+                <text align="center"><b>List Classes</b></text>
+                <listview width="${parent.width - 20}"/>
+                <text resize="true" width="${parent.width - 40}" multiline="true">
+                    In addition to radiogroup listed in "Form", there are many
+                    kinds of lists (see "Tabs" and "Tabslider"). Each list
+                    extends baselist and contains items that extend
+                    baselistitem.
+                </text>
+                <keyview />
+            </tabpane>
+            <tabpane text="Tabslider">
+                <simplelayout axis="y" spacing="10" />
+                <text align="center"><b>Tabslider Classes</b></text>
+                <tabsliderview width="${parent.width - 20}"/>
+                <keyview />
+            </tabpane>
+            <tabpane text="Tabs">
+                <simplelayout axis="y" spacing="10" />
+                <text align="center"><b>Tabs Classes</b></text>
+                <tabsview width="${parent.width - 20}"/>
+                <text resize="true" width="${parent.width - 40}" multiline="true">
+                    Tabs automatically creates a tabsbar and tab
+                    items. Typically you would use only tabs and tabpane
+                    classes. When changing how the components looks and behave,
+                    you might use or extend the base classes.
+                </text>
+                <keyview />
+            </tabpane>
+            <tabpane text="Menu">
+                <simplelayout axis="y" spacing="10" />
+                <text align="center"><b>Menu Classes</b></text>
+                <menuview width="${parent.width - 20}"/>
+                <text resize="true" width="${parent.width - 40}" multiline="true">
+                    Like combobox, menu does not subclass list, but has a
+                    floatinglist.
+                </text>
+                <keyview />
+            </tabpane>
+            <tabpane text="Window">
+                <simplelayout axis="y" spacing="10" />
+                <text align="center"><b>Window Classes</b></text>
+                <windowview width="${parent.width - 20}"/>
+                <keyview />
+            </tabpane>
+            <tabpane text="Scrollbar">
+                <simplelayout axis="y" spacing="10" />
+                <text align="center"><b>Scrollbar Classes</b></text>
+                <scrollbarview width="${parent.width - 20}"/>
+                <keyview />
+            </tabpane>
+            <tabpane text="Tree">
+                <simplelayout axis="y" spacing="10" />
+                <text align="center"><b>Tree Classes</b></text>
+                <treeview width="${parent.width - 20}" />
+                <keyview />
+            </tabpane>
+        </tabs>
+
+        <button name="back" text="See Components Hierarchy">
+            <method event="onclick">
+                canvas.treehier.setAttribute('visible', true);
+                canvas.related.setAttribute('visible', false);
+            </method>
+        </button>
+
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

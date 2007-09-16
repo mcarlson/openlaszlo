@@ -1,0 +1,151 @@
+<canvas>
+    <!--
+        spike test to get a user's public photos
+        
+        demonstrates use of gDataMan to make queries and stick data in datasets
+    -->
+    <include href="../dataman.lzx" />
+
+    <!--method event="oninit">
+        /// 
+        // CHANGE user_id HERE TO GET DIFFERENT USER'S PUBLIC PHOTOS
+
+        var argobj = [
+            {argname:"method", 
+                argvalue:"flickr.people.getPublicPhotos"},
+            {argname:"user_id",
+               argvalue:"27412496@N00"}
+        ]
+        gDataMan.doFlickrRequest(photods, argobj);
+    </method-->
+
+    <class name="photolist">
+        <text datapath="@title" resize="true"/>
+        <method event="onclick">
+            ///
+            // display image
+
+            // build URL to image
+            var server=datapath.p.getAttr("server");
+            var id=datapath.p.getAttr("id");
+            var secret=datapath.p.getAttr("secret");
+            var s="http://static.flickr.com/"+server+"/"+id+"_"+secret+".jpg";
+            
+            // set URL to image
+            photo.setSource(s);
+
+            /// 
+            // get info
+
+            // get info
+            var argobj = [
+                {argname:"method", 
+                    argvalue:"flickr.photos.getInfo"},
+                {argname:"photo_id", 
+                    argvalue:id}
+            ]
+                        
+            gDataMan.doFlickrRequest(infods, argobj);
+        </method>
+    </class>
+    
+    <class name="box" >
+        <view bgcolor="0xffffff" width="${parent.width}" height="1" />
+        <view bgcolor="0xffffff" width="${parent.width}" height="1" y="${parent.height - 1}" />
+        <view bgcolor="0xffffff" height="${parent.height}" width="1" />
+        <view bgcolor="0xffffff" height="${parent.height}" width="1" x="${parent.width - 1}" />
+    </class>
+    
+    
+    <class name="note" extends="box" onmouseover="this.txtborder.setOpacity(1)" onmouseout="this.txtborder.setOpacity(0)">
+        <!-- should be using a drawview, but I will be using views instead -->
+        <box name="txtborder" y="${parent.height - 1}" width="${parent.width}" height="20" opacity=".1">
+            <view bgcolor="white" opacity=".7" x="1" y="1" width="${parent.width - 2}" height="${parent.height - 2}" />
+            <view bgcolor="black" width="${parent.width - 2}" height="1" x="1" y="1" opacity=".5" />
+            <view bgcolor="black" width="1" height="${parent.height - 3}" x="1" y="2" opacity=".5" />
+            <inputtext name="txt" y="2" x="5" width="${parent.width - 5}" >
+                <method event="onfocus" >
+                    this.parent.setAttribute('opacity',1);
+                </method>
+            </inputtext>
+        </box>
+        
+     </class>
+
+    <view>
+        <text fontsize="15"><b>click on a list item to view photo</b></text>
+        <view height="160" clip="true" >
+            <view >
+                <photolist  datapath="photods:/rsp/photos/photo" />
+                <simplelayout />
+            </view>
+            <scrollbar />
+        </view>
+        <simplelayout />
+    </view>
+
+    <view id="photo" >
+        <note datapath="infods:/rsp/photo/notes/note" width="0" height="0" x="10" y="10">
+            <method event="ondata" args="d" ><![CDATA[
+                var dp = this.datapath;
+                this.txtborder.txt.setText( dp.xpathQuery('text()') );
+                this.setX(Number(dp.xpathQuery('@x')));
+                this.setY(Number(dp.xpathQuery('@y')));
+                this.animate('width',Number(dp.xpathQuery('@w')),300);
+                this.animate('height',Number(dp.xpathQuery('@h')),300);
+                /*
+                this.setWidth(Number(dp.xpathQuery('@w')));
+                this.setHeight(Number(dp.xpathQuery('@h')));
+                */
+            ]]></method>
+        </note>
+    </view>
+
+    <!--
+        info
+    -->
+    <view id="details" datapath="infods:/rsp/photo/"  >
+        <text fontstyle="bold" multiline="true" datapath="title/text()" width="300"/>
+        <text multiline="true" datapath="description/text()" width="300"/>
+        <text fontstyle="bold" text="tags" />
+        <text multiline="true" datapath="tags/*/text()" />
+        <view>
+            <text bgcolor="green"  datapath="owner/@username" />
+            <text bgcolor="blue" datapath="tags/tag/text()" />
+            <view bgcolor="red" datapath="comments" >
+                <text x="10" datapath="text()" />
+            </view>
+    
+            <view x="10" bgcolor="yellow" datapath="notes" >
+                <text x="10" datapath="note/text()" />
+            </view>
+            <simplelayout />
+        </view>
+
+        <simplelayout />
+         <method event="ondata" args="d" >
+            Debug.write("ondata",d);
+        </method>
+   </view>
+
+    <!--
+        popup window
+    -->
+    <window width="300" x="100" y="200" title="flickr navigator">
+        <text>enter comma-delieated list of tags here</text>
+        <edittext name="it" width="100%" text="Garden Statues"/>
+        <button text="search for tagged photos">
+            <method event="onclick">
+                var argobj = [
+                    {argname:"method", 
+                        argvalue:"flickr.photos.search"},
+                    {argname:"tags",
+                        argvalue:parent.it.getText()}
+                ]
+                gDataMan.doFlickrRequest(photods, argobj);
+            </method>
+        </button>
+        <simplelayout />
+    </window>
+    <simplelayout axis="x" spacing="5" />
+</canvas>

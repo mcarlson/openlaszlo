@@ -4,8 +4,15 @@
 <%@ page import="java.util.regex.*" %>
 <%@ page import="java.util.zip.*" %>
 <%@ page import="java.io.*" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="org.openlaszlo.utils.FileUtils.*" %>
     
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
+
 
 <html>
     <head>
@@ -22,10 +29,17 @@
 
       That should make a zip file which is relative to the web root and has
       /lps/includes/**
-      /foo/bar/**   -- will include the SOLO .lzx.swf file(s)
+      /foo/bar/**   -- will include the SOLO .lzx.lzr=swf7.swf file(s)
       /foo/bar/baz.lzx.html  -- the wrapper file
     */
 
+
+// Set this to make a limit on the size of zip file that is created
+int maxZipFileSize = 64000000; // 64MB max
+int warnZipFileSize = 10000000; // warn at 10MB
+boolean warned = false;
+
+String zipfilename = "";
 
 String whatpage = request.getParameter("whatpage");
 if (whatpage == null) {
@@ -116,6 +130,12 @@ certainly not what you want.
         lzhistUrl = new URL(new URL(baseUrl),
                              appUrl + "?lzt=html&lzproxied=false");
 
+        URL swf8Url = new URL(new URL(baseUrl),
+                             appUrl + "?lzr=swf8&lzproxied=false");
+
+        URL swf7Url = new URL(new URL(baseUrl),
+                             appUrl + "?lzr=swf7&lzproxied=false");
+
         // Grab a copy of the html-object wrapper
         String str;
         BufferedReader in = new BufferedReader(new InputStreamReader(wrapperUrl.openStream()));
@@ -133,13 +153,28 @@ certainly not what you want.
         }
         in.close();
 
+        // load a copy of the swf 8 version
+        in = new BufferedReader(new InputStreamReader(swf8Url.openStream()));
+        while ((str = in.readLine()) != null) 
+        {
+        }
+        in.close();
+
+        // load a copy of the swf 7 version
+        in = new BufferedReader(new InputStreamReader(swf7Url.openStream()));
+        while ((str = in.readLine()) != null) 
+        {
+        }
+        in.close();
+
         lzhistwrapper = lzhistbuf.toString();
         // We need to adjust the lzhistory wrapper, to make the path to lps/includes/embed.js
         // be relative rather than absolute.
         
         // remove the servlet prefix and leading slash
         lzhistwrapper = lzhistwrapper.replaceAll(request.getContextPath()+"/", "");
-        lzhistwrapper = lzhistwrapper.replaceAll("[.]lzx[?]lzt=swf", ".lzx.swf?");
+        lzhistwrapper = lzhistwrapper.replaceAll(request.getContextPath(), "");
+        lzhistwrapper = lzhistwrapper.replaceAll("[.]lzx[?]lzt=swf", ".lzx.lzr=swf7.swf?");
 
     } 
     catch (MalformedURLException e) { %>
@@ -243,7 +278,7 @@ try {
 <p>
 
 <%
-String soloURL = (request.getContextPath()+"/" + appUrl + ".swf?lzproxied=false");
+String soloURL = (request.getContextPath()+"/" + appUrl + ".lzr=swf7.swf?lzproxied=false");
 %>
 
 <tt>Using URL</tt> <a href="<%= soloURL %>"><tt><%= soloURL %></tt></a>
@@ -289,10 +324,7 @@ String soloURL = (request.getContextPath()+"/" + appUrl + ".swf?lzproxied=false"
      // These are the files to include in the ZIP file
      ArrayList filenames = new ArrayList();
      // LPS includes, (originally copied from /lps/includes/*)
-     filenames.add("lps/includes/embed.js");
-     filenames.add("lps/includes/h.html");
-     filenames.add("lps/includes/h.swf");
-     filenames.add("lps/includes/vbembed.js");
+     filenames.add("lps/includes/embed-compressed.js");
 
      ArrayList appfiles = new ArrayList();
      listFiles(appfiles, appdir);
@@ -303,7 +335,10 @@ String soloURL = (request.getContextPath()+"/" + appUrl + ".swf?lzproxied=false"
     
      try {
          // Create the ZIP file
-         String outFilename = "solo-deploy.zip";
+         SimpleDateFormat format = 
+             new SimpleDateFormat("EEE_MMM_dd_yyyy_HH_mm_ss");
+         String outFilename = "solo_deploy_" + format.format(new Date()) + ".zip";
+         zipfilename = outFilename;
          ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tmpdir+"/"+outFilename));
 
          // create a byte array from lzhistory wrapper text
@@ -330,6 +365,9 @@ String soloURL = (request.getContextPath()+"/" + appUrl + ".swf?lzproxied=false"
              in.close();
          }
 
+     // track how big the file is, check that we don't write more than some limit
+     int contentSize = 0;
+
          // Compress the app files
          for (int i=0; i<appfiles.size(); i++) {
              // skip the appname.lzx.html if it exists, since we just created a new
@@ -345,11 +383,31 @@ String soloURL = (request.getContextPath()+"/" + appUrl + ".swf?lzproxied=false"
              // Transfer bytes from the file to the ZIP file
              int len;
              while ((len = in.read(buf)) > 0) {
+             contentSize += len;
                  zout.write(buf, 0, len);
              }
              // Complete the entry
              zout.closeEntry();
              in.close();
+
+             if (contentSize > maxZipFileSize) {
+                 throw new IOException("file length exceeds max of "+ (maxZipFileSize/1000000) +"MB");
+             }
+
+             if (contentSize > warnZipFileSize && !warned) {
+
+                 warned = true;
+                 %> 
+                <h3><font color="red">The zip file has had more than <%= warnZipFileSize / 1000000 %>MB of content added to it, perhaps this is what you intended, but remember that the SOLO deployment tool creates an
+archive of all files, recursively, from the directory that
+contains your specified application source file.  If your application source file
+is in a directory with other apps, this tool will create a zip that
+                     contains all those apps and their assets (and subdirectories) as well. 
+</h3>
+
+
+             <% }
+
          }
 
          // Complete the ZIP file
@@ -366,7 +424,7 @@ String soloURL = (request.getContextPath()+"/" + appUrl + ".swf?lzproxied=false"
 
 
 
-Click here to <a href="solo-deploy.zip">download <tt>solo-deploy.zip</tt></a> zipfile.
+Click here to download zip-archived file <a href="<%=zipfilename%>"><tt><%=zipfilename%></tt></a>.
 <p>
 In the zip file, a wrapper HTML file named <tt><%= htmlfile %></tt> has been created
 to launch your SOLO application.
@@ -394,8 +452,8 @@ Paste this wrapper into a browser to deploy your app:
           html, body { margin: 0; padding: 0; height: 100%; }
           body { background-color: #eaeaea; }
         </style></head>
-   <body><object type="application/x-shockwave-flash" data="<%= appUrl %>.swf?lzproxied=false" width="640" height="400">
-         <param name="movie" value="<%= appUrl %>.swf?lzproxied=false">
+   <body><object type="application/x-shockwave-flash" data="<%= appUrl %>.lzr=swf7.swf?lzproxied=false" width="640" height="400">
+         <param name="movie" value="<%= appUrl %>.lzr=swf7.swf?lzproxied=false">
          <param name="quality" value="high">
          <param name="scale" value="noscale">
          <param name="salign" value="LT">
@@ -441,8 +499,8 @@ swin.document.write('<style type=\'text/css\'>');
 swin.document.write('          html, body { margin: 0; padding: 0; height: 100%; }');
 swin.document.write('          body { background-color: #eaeaea; }');
 swin.document.write('        </style></head>');
-swin.document.write('   <body><object type=\'application/x-shockwave-flash\' data=\'<%= appUrl %>.swf?lzproxied=false\' width=\'640\' height=\'400\'>');
-swin.document.write('         <param name=\'movie\' value=\'<%= appUrl %>.swf?lzproxied=false\'>');
+swin.document.write('   <body><object type=\'application/x-shockwave-flash\' data=\'<%= appUrl %>.lzr=swf7.swf?lzproxied=false\' width=\'640\' height=\'400\'>');
+swin.document.write('         <param name=\'movie\' value=\'<%= appUrl %>.lzr=swf7.swf?lzproxied=false\'>');
 swin.document.write('         <param name=\'quality\' value=\'high\'>');
 swin.document.write('         <param name=\'scale\' value=\'noscale\'>');
 swin.document.write('         <param name=\'salign\' value=\'LT\'>');
@@ -470,14 +528,18 @@ swin.document.write('</html>');
 <%! 
     // utility methods
 
+
     public void listFiles(ArrayList fnames, File dir) {
-       if (dir.isDirectory()) {
-           String[] children = dir.list();
-           for (int i=0; i<children.length; i++) {
-               listFiles(fnames, new File(dir, children[i]));
-           }
-       } else {
-           fnames.add(dir.getPath());
-       }
+    if (dir.isDirectory()) {   
+        if (!(dir.getName().startsWith(".svn"))) {
+            String[] children = dir.list();
+            for (int i=0; i<children.length; i++) {
+                listFiles(fnames, new File(dir, children[i]));
+            }
+        }
+    } else {
+        fnames.add(dir.getPath());
     }
+  }
+
 %>

@@ -1,11 +1,11 @@
 <library>
-<script>
+<script when="immediate">
 <![CDATA[
-#pragma 'warnUndefinedReferences=false' 
+
 
 /* LZ_COPYRIGHT_BEGIN */
 /****************************************************************************
- * Copyright (c) 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.       *
+ * Copyright (c) 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.       *
  * Use is subject to license terms                                          *
  ****************************************************************************/
 /* LZ_COPYRIGHT_END */
@@ -15,58 +15,65 @@
 //
 // Implements an object to make remote java direct and XMLRPC calls.
 //======================================================================
-var LzRPC = Class( "LzRPC", null, function () { } );
+class LzRPC {
 
 // object used for void return types
-LzRPC.t_void = { type: 'void' };
+static var t_void = { type: 'void' };
 
 // @keywords private
-LzRPC.__LZloaderpool = [];
-
+static var __LZloaderpool = [];
 
 //------------------------------------------------------------------------------
 // @param Number num: number to pass down to explicitly cast to a double
 //------------------------------------------------------------------------------
-LzRPC.DoubleWrapper = function(num) {
+function DoubleWrapper (num) {
     this.num = num;
 }
 
 //------------------------------------------------------------
 // Global RPC sequence number for server requests.
 //------------------------------------------------------------
-LzRPC.__LZseqnum = 0;
+static var __LZseqnum = 0;
 
 //------------------------------------------------------------------------------
 // Override loader's returnData function. Call appropritate delegate.
 // @keywords private
 //------------------------------------------------------------------------------
-LzRPC.prototype.__LZloaderReturnData = function (loadmc, data, responseheaders) {
+function __LZloaderReturnData (loadmc, data, responseheaders) {
 
     // FIXME [2005-06-28 pkang]: would be nice to fix this in the platform.
 
     _root.LzLoadQueue.loadFinished( loadmc );
 
-    var delegate = this.rpcinfo.delegate;
-    var opinfo   = this.rpcinfo.opinfo;
-    var seqnum   = this.rpcinfo.seqnum;
-    delete this.rpcinfo;
+    var delegate = null;
+    var opinfo   =  {};
+    var seqnum   =  -1;
+
+    if ('rpcinfo' in this) {
+        delegate = this.rpcinfo.delegate;
+        opinfo   = ('opinfo' in this.rpcinfo) ? this.rpcinfo.opinfo : opinfo;
+        seqnum   = this.rpcinfo.seqnum;
+        delete this.rpcinfo;
+    } 
 
     // responseheaders is specific to SOAP -pk
     opinfo.responseheaders = (responseheaders!=null ? responseheaders : null);
 
     // check to see if the data is the stub 
-    if ( data.__LZstubload ) {
+    if ( data['__LZstubload'] ) {
 
         var stub = data.stub;
         var stubinfo = data.stubinfo;
         
-        this.owner.__LZloadHook(stubinfo); 
+        if (this.owner['__LZloadHook']) {
+            this.owner.__LZloadHook(stubinfo);
+        }
 
         delegate.execute( { status: 'ok', message: 'ok', 
                             stub: stub, stubinfo: stubinfo,
                             seqnum: seqnum } );
 
-    } else if (data.childNodes[0].nodeName == 'error') {
+    } else if ((data instanceof LzDataNode) && data.childNodes[0].nodeName == 'error') {
 
         var error = data.childNodes[0].attributes['msg'];
 
@@ -120,17 +127,17 @@ LzRPC.prototype.__LZloaderReturnData = function (loadmc, data, responseheaders) 
 
     } else {
 
-        if (delegate.dataobject != null) {
-            if ( delegate.dataobject instanceof _root.LzDataset ) {
-                var element = _root.LzDataElement.valueToElement(data);
+        if (delegate['dataobject'] != null) {
+            if ( delegate.dataobject instanceof LzDataset ) {
+                var element = LzDataElement.prototype.valueToElement(data);
                 // the child nodes of element will be placed in datasets childNodes
-                delegate.dataobject.setData( element );
-            } else if ( delegate.dataobject instanceof _root.LzDataElement ) {
-                var element = _root.LzDataElement.valueToElement(data);
+                delegate.dataobject.setData( element.childNodes );
+            } else if ( delegate.dataobject instanceof LzDataElement ) {
+                var element = LzDataElement.prototype.valueToElement(data);
                 // xpath: element/value
                 delegate.dataobject.appendChild( element );
             } else {
-                _root.Debug.write('WARNING: dataobject is not LzDataset or LzDataElement:', 
+                Debug.write('WARNING: dataobject is not LzDataset or LzDataElement:', 
                                   delegate.dataobject);
             }
         }
@@ -147,7 +154,7 @@ LzRPC.prototype.__LZloaderReturnData = function (loadmc, data, responseheaders) 
 // @return sequence number of request.
 // @keywords private
 //------------------------------------------------------------------------------
-LzRPC.prototype.request = function( o, delegate, secure, secureport ) {
+function request ( o, delegate, secure, secureport ) {
     var pool = LzRPC.__LZloaderpool;
     var loader = ( pool.length != 0 ? pool.pop() : this.getNewLoader() );
 
@@ -171,13 +178,43 @@ LzRPC.prototype.request = function( o, delegate, secure, secureport ) {
     return seqnum;
 }
 
+
+//------------------------------------------------------------------------------
+// Create a Flash-specific dataswf loader, and modify loader callback to work with RPC.
+// @return an LzLoader.
+// @keywords private
+//------------------------------------------------------------------------------
+function makeLzLoader (proxied, timeout){
+    if ( typeof ($dataloaders) == 'undefined' ){
+        // SWF-specific
+        attachMovie("empty", "$dataloaders", 4242);
+        var mc = $dataloaders;
+        mc.dsnum = 1;
+    }
+
+    $dataloaders.attachMovie( "empty", 
+                                   "dsloader" + $dataloaders.dsnum,
+                                   $dataloaders.dsnum );
+    var newloadermc = $dataloaders[ "dsloader" + 
+                                          $dataloaders.dsnum ];
+    $dataloaders.dsnum++;
+    
+    //Debug.write("dataset timeout", this.timeout);
+
+    return new LzLoader( this, { attachRef : newloadermc ,
+                                       timeout : timeout,
+                                       proxied: proxied} );
+}
+
+
+
 //------------------------------------------------------------------------------
 // Wraps LzDataSource.getNewLoader() and modifies loader to work with RPC.
 // @return an LzLoader.
 // @keywords private
 //------------------------------------------------------------------------------
-LzRPC.prototype.getNewLoader = function () {
-    var loader = LzDatasource.prototype.getNewLoader();
+function getNewLoader () {
+    var loader = this.makeLzLoader(false,  LzDataset.prototype.timeout);
     loader.owner = this;
     loader.returnData = this.__LZloaderReturnData;
     return loader;
@@ -188,17 +225,17 @@ LzRPC.prototype.getNewLoader = function () {
 // @param String reqtype: 'GET' or 'POST'
 // @keywords private
 //------------------------------------------------------------------------------
-LzRPC.prototype.__LZgetBasicLoadParams = function(reqtype) {
+function __LZgetBasicLoadParams (reqtype) {
     return { reqtype: reqtype, lzt: "data", ccache: false, cache: false, 
              sendheaders: false };
 }
 
-
+}
 ]]>
 </script>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

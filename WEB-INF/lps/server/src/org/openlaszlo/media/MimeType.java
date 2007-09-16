@@ -29,6 +29,7 @@ public class MimeType {
     public static final String XMP3 = "audio/x-mpeg";
     public static final String XML = "text/xml";
     public static final String HTML = "text/html";
+    public static final String JS = "application/x-javascript";
 
     public static final String UNKNOWN = "unknown";
 

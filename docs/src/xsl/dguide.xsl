@@ -6,7 +6,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
   
-  <xsl:import href="common-html.xsl"/>
+  <xsl:import href="conditional-html.xsl"/>
   <xsl:param name="html.body.class" select="'docbook-tutorial'"/>
 
   <!--xsl:param name="rootid" select="'ecmascript-and-lzx'"/-->

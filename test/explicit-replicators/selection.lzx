@@ -1,0 +1,149 @@
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true" proxied="false">
+  <debug height="90%" width="40%" x="55%" y="5%" />
+
+  <dataset name="testdata">
+    <fibs>
+      <fib value="2" />
+      <fib value="3" />
+      <fib value="5" />
+      <fib value="8" />
+      <fib value="13" />
+      <fib value="21" />
+      <fib value="34" />
+      <fib value="55" />
+      <fib value="89" />
+      <fib value="144" />
+      <fib value="233" />
+      <fib value="377" />
+      <fib value="610" />
+      <fib value="987" />
+      <fib value="1597" />
+      <fib value="2584" />
+      <fib value="4181" />
+      <fib value="6765" />
+      <fib value="10946" />
+      <fib value="17711" />
+      <fib value="28657" />
+      <fib value="46368" />
+      <fib value="75025" />
+      <fib value="121393" />
+      <fib value="196418" />
+      <fib value="317811" />
+      <fib value="514229" />
+    </fibs>
+  </dataset>
+
+  <text multiline="true">
+    Compares selection behavior across replicators where the parent is a view (had problems with parent being a list.)  Be sure to test range selection and scrolling at various speeds.
+  </text>
+
+  <window width="20%" height="20%" x="5%" y="5%" name="explicitlazyrepltest"
+          resizable="true" title="explicit lazy replicator">
+    <view>
+      <dataselectionmanager name="selman" id="dsel"/>
+      <lazyreplicator id="elr" dataset="testdata" xpath="fibs/fib">
+        <text width="100">
+          <attribute name="selected" value="false"/>
+          <attribute name="bgcolor"
+                     value="${selected ? 0xCCDDEE : null }"/>
+          <attribute name="index" value="$path{'position()'}" />
+          <attribute name="value" value="$path{'@value'}" />
+          <method name="applyData">
+            this.format('%s: %d', this.index, this.value);
+          </method>
+          <handler name="onclick">
+            //Debug.write(parent.selman.isSelected( this ), parent.selman.toggle);
+            parent.selman.select( this );
+          </handler>
+          <method name="setSelected" args="value">
+            this.selected = value;
+            this.onselected.sendEvent(value);
+          </method>
+        </text>
+      </lazyreplicator>
+    </view>
+    <scrollbar/>
+  </window>
+
+  <window width="20%" height="20%" x="30%" y="5%" name="implicitlazyrepltest"
+          resizable="true" title="implicit lazy replicator">
+    <view>
+      <dataselectionmanager name="selman" id="dsel2"/>
+      <text width="100" id="ilr">
+        <datapath xpath="testdata:/fibs/fib" replication="lazy" />
+        <attribute name="selected" value="false"/>
+        <attribute name="bgcolor"
+                   value="${('selected' in this &amp;&amp; this.selected) ? 0xCCDDEE : null }"/>
+        <attribute name="index" value="$path{'position()'}" />
+        <attribute name="value" value="$path{'@value'}" />
+        <handler name="ondata">
+          this.format('%s: %d', this.index, this.value);
+        </handler>
+        <handler name="onclick">
+          //Debug.write(parent.selman.isSelected( this ), parent.selman.toggle);
+          parent.selman.select( this );
+        </handler>
+        <method name="setSelected" args="value">
+          this.selected = value;
+          this.onselected.sendEvent(value);
+        </method>
+      </text>
+    </view>
+    <scrollbar/>
+  </window>
+
+  <window width="20%" height="20%" x="5%" y="50%" name="explicitsimplerepltest"
+          resizable="true" title="explicit replicator">
+    <view>
+      <selectionmanager name="selman" />
+      <simplelayout axis="y" spacing="0" />
+      <replicator id="esr" dataset="testdata" xpath="/fibs/fib">
+        <text width="100">
+          <attribute name="selected" value="false"/>
+          <attribute name="bgcolor"
+                     value="${selected ? 0xCCDDEE : null }"/>
+          <attribute name="index" value="$path{'position()'}" />
+          <attribute name="value" value="$path{'@value'}" />
+          <method name="applyData">
+            this.format('%s: %d', this.index, this.value);
+          </method>
+          <handler name="onclick">
+            //Debug.write(parent.selman.isSelected( this ), parent.selman.toggle);
+            parent.selman.select( this );
+          </handler>
+        </text>
+      </replicator>
+    </view>
+    <scrollbar/>
+  </window>
+
+  <window width="20%" height="20%" x="30%" y="50%" name="implicitsimplerepltest"
+          resizable="true" title="implicit replicator">
+    <view>
+      <selectionmanager name="selman" />
+      <simplelayout axis="y" spacing="0" />
+      <text width="100" id="isr" datapath="testdata:/fibs/fib">
+        <attribute name="selected" value="false" setter="setSelected" />
+        <attribute name="bgcolor"
+                   value="${('selected' in this &amp;&amp; this.selected) ? 0xCCDDEE : null }"/>
+        <attribute name="index" value="$path{'position()'}" />
+        <attribute name="value" value="$path{'@value'}" />
+        <handler name="ondata">
+          this.format('%s: %d', this.index, this.value);
+        </handler>
+        <handler name="onclick">
+          //Debug.write(parent.selman.isSelected( this ), parent.selman.toggle);
+          parent.selman.select( this );
+        </handler>
+        <method name="setSelected" args="value">
+          this.selected = value;
+          this.onselected.sendEvent(value);
+        </method>
+      </text>
+    </view>
+    <scrollbar/>
+  </window>
+
+</canvas>
+<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. -->

@@ -1,0 +1,15 @@
+
+    <canvas height="200" proxied="false">
+      <drawview>
+        <handler name="oninit">
+         this.moveTo(100,100)
+         this.lineTo(200,100)
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+        </handler>
+      </drawview>
+    </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

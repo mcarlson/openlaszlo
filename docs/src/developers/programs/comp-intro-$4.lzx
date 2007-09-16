@@ -1,0 +1,20 @@
+
+<canvas height="150">
+    <simplelayout spacing="10"/>
+    <list id="mylist" height="82">     
+        <textlistitem text="something"/>
+    </list>
+
+    <view layout="axis:x;spacing:4" >
+        <edittext id="item" text="new item"/>
+        <button text="Add" isdefault="true">
+            <handler name="onclick">
+               mylist.addItem(item.getText());
+            </handler>
+        </button>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

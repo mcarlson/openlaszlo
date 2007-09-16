@@ -1,0 +1,21 @@
+
+<canvas width="500" height="80">
+  <class name="SpecialButton" extends="button" onclick="changeLabel()">
+    <method name="changeLabel">
+      this.setAttribute('text', 'Clicked!');
+    </method>
+  </class>
+  
+  <simplelayout axis="y" spacing="10"/>
+  <SpecialButton>Not clicked</SpecialButton>
+  <SpecialButton>
+    Click Me Now
+    <method name="changeLabel">
+      this.setAttribute('text', 'Smashing!');
+    </method>
+  </SpecialButton>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

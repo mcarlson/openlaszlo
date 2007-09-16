@@ -1,0 +1,23 @@
+
+<canvas debug="true">
+  <debug y="215" width="435"/>
+  
+  <class name="one">
+    <view name="r" bgcolor="red" width="200" height="200"/>
+  </class>
+  
+  <class name="two" extends="one">
+    <view name="g" bgcolor="green" width="100" height="100"/>
+  </class>
+  
+  <class name="three" extends="two">
+    <view name="t" bgcolor="teal" width="50" height="50"/>
+    <view name="y" bgcolor="yellow" width="25" height="25"/>
+  </class>
+  
+  <three id="mysubclass" oninit="Debug.write('subviews: ' + this.subviews)"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

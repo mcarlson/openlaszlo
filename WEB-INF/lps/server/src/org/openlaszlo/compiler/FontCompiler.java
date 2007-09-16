@@ -1,11 +1,8 @@
-/******************************************************************************
- * FontNode.java
- * ****************************************************************************/
+/* -*- mode: Java; c-basic-offset: 2; -*- */
 
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
+/**
+ * LZX Fonts
+ */
 
 package org.openlaszlo.compiler;
 
@@ -40,17 +37,6 @@ class FontCompiler extends ElementCompiler {
         String name = XMLUtils.requireAttributeValue(element, "name");
         String src = element.getAttributeValue("src");
 
-        if (mEnv.isImportLib()) {
-            mEnv.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="A loadable library cannot embed fonts; If you want to use this font, add it to the main application sources."
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                FontCompiler.class.getName(),"051018-49")
-, element);
-        }
-
         if (!mEnv.getEmbedFonts() ||
             "true".equals(element.getAttributeValue("device"))) {
             mEnv.getGenerator().setDeviceFont(name);
@@ -82,3 +68,8 @@ class FontCompiler extends ElementCompiler {
         }
     }
 }
+
+/**
+ * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * Reserved.  Use is subject to license terms.
+ */

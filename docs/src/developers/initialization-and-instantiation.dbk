@@ -1,0 +1,122 @@
+<appendix id="initialization-and-instantiation">
+<?html2db class="appendix"?>
+
+<title>Understanding Instantiation</title>
+<para/><section><title>Overview</title>
+<para>
+The instantiation of <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> objects such as
+<indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> and <indexterm><primary>LzLayout</primary></indexterm><classname>LzLayout</classname> is a
+multi-phase procedure, but in general, you do not need to know the
+details of the instantiation of view objects; they "just work".  In
+rare cases, you will need to understand the details of the process.
+Parts of the process can be deferred to speed startup of an
+application.</para>
+
+<para>
+This chapter assumes you are familar with classes and objects.  In the
+descriptions below, we distinguish between <indexterm significance="preferred"><primary>creation</primary></indexterm><glossterm>creation</glossterm>, by
+which we mean storage for the object is allocated and constant
+properties assigned — a process that cannot be customized — and
+<indexterm significance="preferred"><primary>initialization</primary></indexterm><glossterm>initialization</glossterm>, by which we mean the instantiation of
+children and the application of computed attributes, which can be
+customized (by overriding the <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> method).  These
+two processes together are referred to as <indexterm significance="preferred"><primary>instantiation</primary></indexterm><glossterm>instantiation</glossterm>.
+</para>
+
+<para/></section><section><title>When instances are instantiated</title>
+<para>
+At a high level, the initialization of a <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname>,
+the calling of its <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> method, and sending of the
+<indexterm><primary><literal>oninit()</literal></primary></indexterm><methodname>oninit()</methodname> event is under the control of its
+<literal>initstage</literal> attribute, as follows:</para>
+  <variablelist><varlistentry><term>
+      <literal>immediate</literal>
+    </term><listitem><para>
+      Initialization happens immediately as the last stage of
+      <literal>instantiation</literal>.
+    </para></listitem></varlistentry><varlistentry><term>
+      <literal>early</literal>
+    </term><listitem><para>
+      Initialization happens right after the view and its children
+      have been <literal>created</literal>.
+    </para></listitem></varlistentry><varlistentry><term>
+      <literal>normal</literal>
+    </term><listitem><para>
+      Initialization happens when the parent is
+      <literal>initialized</literal>.
+    </para></listitem></varlistentry><varlistentry><term>
+      <literal>late</literal>
+    </term><listitem><para>
+      Initialization happens during idle time. To check whether the
+      view has been initialized, check the <literal>isinited</literal>
+      property. Force initialization using the
+      <indexterm><primary><literal>completeInstantiation()</literal></primary></indexterm><methodname>completeInstantiation()</methodname> method.
+    </para></listitem></varlistentry><varlistentry><term>
+      <literal>defer</literal>
+    </term><listitem><para>
+      Initialization will not happen unless explicitly requested by
+      calling the <indexterm><primary><literal>completeInstantation()</literal></primary></indexterm><methodname>completeInstantation()</methodname> method.
+    </para></listitem></varlistentry></variablelist>
+
+<para/></section><section><title>How instances are instantiated</title>
+<para>
+When a <glossterm>node</glossterm> is instantiated, its
+attributes are the attributes explicitly given in the object, plus any
+attributes that the class specifies.  Similarly, its children will be
+the childen explicitly given in the object, plus any children that are
+specified in the class.  The class <indexterm><primary><literal>construct()</literal></primary></indexterm><methodname>construct()</methodname> method
+is called, with these attributes and the parent view.
+</para>
+<para>The steps happen in the following sequence:</para>
+<orderedlist spacing="compact"><listitem><para>A single dictionary is created which combines the attributes of
+  the instance with the attributes of the class</para></listitem><listitem><para>A single array is created which combines the children of the
+  instance with the children of the class</para></listitem><listitem><para><literal>construct(<varname>args</varname>, <varname>parent</varname>)</literal> is called.
+  <literal><varname>args</varname></literal> is a dictionary of your attributes (does not
+  include expressions, such <literal>width="${parent.width}"</literal>),
+  <literal><varname>parent</varname></literal> is the lexical parent. This method can only be
+  declared in a class, not in an instance. You can modify the
+  arguments or the parent before calling
+  <literal>super.construct</literal>.</para></listitem><listitem><para>Any <literal>&lt;handler name="<varname>...</varname>"&gt;</literal> for the class or
+  event handlers (e.g. onclick in the tag) for the class are created
+  for the instance</para></listitem><listitem><para>Attributes with <literal>when="immediately"</literal> values are applied
+  <orderedlist spacing="compact"><listitem><para>Attributes with no setters are set</para></listitem><listitem><para>Special LFC attributes are set
+    <itemizedlist spacing="compact"><listitem><para>The <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> attribute</para></listitem><listitem><para>The <indexterm><primary>id</primary></indexterm><sgmltag class="attribute">id</sgmltag> attribute</para></listitem><listitem><para>Event handlers</para></listitem><listitem><para>Event methods</para></listitem><listitem><para>The <indexterm><primary>classroot</primary></indexterm><sgmltag class="attribute">classroot</sgmltag> attribute</para></listitem><listitem><para>Datapath children are created (datapath set using
+      <literal>&lt;datapath xpath="<varname>...</varname>"&gt;</literal>)</para></listitem></itemizedlist>
+    </para></listitem><listitem><para>Attributes with setters (<literal>&lt;attribute name="foo"
+    value="0" setter="setfoo(foo)"
+    /&gt;</literal>). <literal>setfoo(0)</literal> will be called before
+    initialization and before children are instantiated, but after you
+    have a parent and the attributes mentioned above applied)</para></listitem></orderedlist>
+  </para></listitem><listitem><para><indexterm><primary><literal>createChildren()</literal></primary></indexterm><methodname>createChildren()</methodname> is called with an
+  array of children with the superclass' children first (deepest
+  first). There are two options for how children are created:
+  synchronously and asynchronously. When whichever method is chosen
+  completes, <literal>__LZinstantiationDone</literal> will be called on this
+  instance.
+  <variablelist><varlistentry><term><glossterm>Synchronous creation</glossterm></term><listitem><para>No other code can run
+      until all the children for this instance are created
+      <variablelist><varlistentry><term><literal>intstage="immediate"</literal></term><listitem><para><literal>new <varname>classname</varname>(<varname>parent</varname>, <varname>args</varname>, <varname>children</varname>, false)</literal> or any
+        trailing args are omitted, e.g. <literal>new classname(<varname>parent</varname>,
+        <varname>args</varname>)</literal></para></listitem></varlistentry></variablelist>
+    </para></listitem></varlistentry><varlistentry><term><glossterm>Asynchronous creation</glossterm></term><listitem><para>Children for this
+    instance will be put on the <indexterm><primary>LzInstantiator</primary></indexterm><classname>LzInstantiator</classname> queue and
+    created later.
+    <variablelist><varlistentry><term><literal>initstage="early"</literal></term><listitem><para/></listitem></varlistentry><varlistentry><term><literal>initstage="normal"</literal></term><listitem><para>Children will be created at high
+      priority</para></listitem></varlistentry><varlistentry><term><literal>initstage="late"</literal></term><listitem><para>Children will be created at low
+      priority</para></listitem></varlistentry><varlistentry><term><literal>intstage="defer"</literal></term><listitem><para>Children are not created until
+      <indexterm><primary><literal>completeInstantiation()</literal></primary></indexterm><methodname>completeInstantiation()</methodname> is called</para></listitem></varlistentry></variablelist>
+    </para></listitem></varlistentry></variablelist>
+  </para></listitem><listitem><para>After the children have been created, initialization will
+  happen if:
+  <itemizedlist spacing="compact"><listitem><para><literal>initstage="early"</literal></para></listitem><listitem><para>The instance's <indexterm><primary>immediateparent</primary></indexterm><sgmltag class="attribute">immediateparent</sgmltag> has already been initialized</para></listitem><listitem><para>The instance is the canvas</para></listitem><listitem><para>The <indexterm><primary><literal>completeInstantiation()</literal></primary></indexterm><methodname>completeInstantiation()</methodname> was called</para></listitem></itemizedlist>
+  otherwise initialization will be triggered by this instance's
+  <indexterm><primary>immediateparent</primary></indexterm><sgmltag class="attribute">immediateparent</sgmltag> being initialized.
+  </para></listitem><listitem><para><glossterm>Initialization</glossterm>
+  <orderedlist spacing="compact"><listitem><para>Resolve references:
+    <orderedlist spacing="compact"><listitem><para><literal>$once{...}</literal></para></listitem><listitem><para><literal>$always{...}</literal></para></listitem><listitem><para><literal>&lt;method<replaceable>...</replaceable>" reference="<replaceable>...</replaceable>"&gt;</literal></para></listitem></orderedlist>
+    </para></listitem><listitem><para>Initialize subviews that are not <literal>initstage="late"</literal> or
+    <literal>initstage="defer"</literal></para></listitem><listitem><para>Call the <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> method</para></listitem><listitem><para>Send the <indexterm><primary>oninit event</primary></indexterm><literal>oninit</literal> event</para></listitem></orderedlist>
+  </para></listitem></orderedlist>
+
+
+<para/></section></appendix>

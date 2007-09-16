@@ -1,0 +1,25 @@
+
+<canvas height="150" >
+  <dataset name="sizes">
+    <value>200</value>
+    <value>150</value>
+    <value>100</value>
+  </dataset>
+  
+  <button text="Shrink me" datapath="sizes:/value[1]" > 
+    <attribute name="width" value="$path{'text()'}"/>
+    <handler name="onclick">
+      if (!datapath.selectNext()) this.setAttribute('text', 'Done')
+    </handler>
+  </button>
+  <button y="40" text="Stretch me" datapath="sizes:/value[1]"> 
+    <attribute name="width" value="$path{'text()'}"/>
+    <handler name="onclick">
+            datapath.setNodeText(Number(datapath.getNodeText()) + 20)
+    </handler>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

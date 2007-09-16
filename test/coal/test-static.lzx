@@ -1,0 +1,8 @@
+<!-- Copyright 2007 Laszlo Systems -->
+<canvas>
+    <!-- based on diamond/client/framework/placementlayout.lzx -->
+    <script>
+        var o = {};
+        o.static = null; // this line gives a compilation error: test-static.lzx:7:11: Syntax error: the token "static" was not expected at this position.
+    </script>
+</canvas>

@@ -1,0 +1,274 @@
+/**
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @affects lztext
+  * @topic LFC
+  * @subtopic Text
+  */
+
+/**
+  * <p>This tag creates an area of the canvas that the user can use to
+  * edit text.  It is equivalent to the HTML <code>&lt;input
+  * type="text"&gt;</code>, <code>&lt;input type="password"&gt;</code>,
+  * and <code>textarea</code> tags.</p>
+  * <p>See the documentation for the <tagname link="true">text</tagname>
+  * tag for a description of the <attribute>width</attribute> and <attribute>height</attribute> attributes,
+  * and of scrolling.</p>
+  * <h2>Single-line input text</h2>
+  * 
+  * <p>With the <attribute>multiline</attribute> and
+  * <attribute>password</attribute> attributes set to <code>false</code>
+  * (the default), this tag is similar to the HTML <code>&lt;input
+  * type="text"&gt;</code> tag.  In this use, long lines of text are
+  * clipped according to the <attribute>width</attribute> attribute.</p>
+  * 
+  * <example title="Simple inputtext"><programlisting>&lt;canvas height="50"&gt;
+  *   &lt;inputtext width="150"&gt;This text is editable.&lt;/inputtext&gt;
+  * &lt;/canvas&gt;</programlisting></example>
+  * 
+  * <h2>Multi-line input text</h2>
+  * 
+  * <p>With the <attribute>multiline</attribute> attribute set to
+  * <code>true</code>, this tag is similar to the HTML
+  * <code>&lt;textarea&gt;</code> tag.  In this use, text is wrapped to
+  * the length of the <attribute>width</attribute> attribute, and the user
+  * can press Enter to create multiple lines of input.</p>
+  * 
+  * <example title="Simple inputtext"><programlisting>&lt;canvas height="20"&gt;
+  *   &lt;inputtext width="150" multiline="true"&gt;This text is editable.&lt;/inputtext&gt;
+  * &lt;/canvas&gt;</programlisting></example>
+  * 
+  * <h2>Passwords</h2>
+  * 
+  * <p>With <attribute>password</attribute> set to <code>true</code>, this
+  * tag is similar to the HTML <code>&lt;input type="password"&gt;</code>
+  * tag.  Input characters are displayed as the asterisk
+  * ('<code>*</code>') character.</p>
+  * 
+  * <example title="Password inputtext"><programlisting>&lt;canvas height="20"&gt;
+  *   &lt;inputtext width="100" password="true"&gt;password.&lt;/inputtext&gt;
+  * &lt;/canvas&gt;</programlisting></example>
+  * 
+  * 
+  * <h2 id="fixedsize-optimization">Optimizing <code>inputtext</code></h2>
+  * 
+  * <p>A large <tagname>inputtext</tagname> view will respond to character
+  * input slowly.  In many cases, it will not be able to keep up with
+  * reasonable typing speed, even on a fast machine.</p>
+  * 
+  * <p>If an instance of <tagname>inputtext</tagname> will not be resized
+  * at runtime, and the compiler can determine its size at compile time,
+  * the compiler can substitute a <tagname>inputtext</tagname> view that
+  * is optimized to accept text at that size for the generic resizable
+  * <tagname>inputtext</tagname> view.  This optimized
+  * <tagname>inputtext</tagname> view can keep up with typing speed even
+  * at large sizes or on a slow computer.</p>
+  * 
+  * <p>A program can request an optimized <tagname>inputtext</tagname> by
+  * setting the <attribute>resizable</attribute> attribute to
+  * <code>false</code>, and supplying recognizable
+  * <attribute>width</attribute> and <attribute>height</attribute>
+  * dimension attributes.  A recognizable dimension attribute is an
+  * attribute that is defined as a numeric literal, such as
+  * <code>width="100"</code>, or that is defined as a simple
+  * <code>$once</code> expression that adds or subtracts a numeric literal
+  * to the <attribute>width</attribute> or <attribute>height</attribute>
+  * attribute of the view's parent, its parent's parent, or so on.  This
+  * final optimization allows the optimization to apply to
+  * <tagname>inputtext</tagname> tags within a class definition, as in the
+  * second example below.</p>
+  * 
+  * <example title="Optimized inputtext"><programlisting>
+  * &lt;canvas height="20"&gt;
+  *   &lt;inputtext resizable="false" width="150" height="20"&gt;
+  *     This text is editable.
+  *   &lt;/inputtext&gt;
+  * &lt;/canvas&gt;
+  * </programlisting></example>
+  * 
+  * <example title="Component with optimized inputtext"><programlisting>
+  * &lt;canvas height="20"&gt;
+  *   &lt;class name="mytext" width="150" height="20" bgcolor="gray"&gt;
+  *     &lt;attribute name="text" type="text"/&gt;
+  *     &lt;inputtext resizable="false" text="${parent.text}" bgcolor="white"
+  *       x="1" y="1"
+  *       width="$once{parent.width-2}" height="$once{parent.height-2}"/&gt;
+  *   &lt;/class&gt;
+  *   &lt;mytext&gt;This text is editable.&lt;/mytext&gt;
+  * &lt;/canvas&gt;
+  * </programlisting></example>
+  * 
+  * <p>The compiler can also infer the values of the
+  * <attribute>width</attribute> and <attribute>height</attribute>
+  * attributes if they are not supplied.  If supplied, the value of the
+  * <attribute>font</attribute> must be a constant string in order for the
+  * text field to be optimized.  If supplied, the value of the
+  * <attribute>fontsize</attribute> must be a constant in order to
+  * for the text field to be optimized. Generally these can be omitted and
+  * the inputtext will inherit the parent's font size and style by
+  * default.</p>
+  * 
+  * @shortdesc The basic input-text element.
+  * @lzxname inputtext
+  */
+class LzInputText extends LzText {
+
+
+DeclareEvent(prototype, 'onenabled');
+DeclareEvent(prototype, 'onselect');
+
+/**  whenever the text in the field changes. */
+DeclareEvent(prototype, 'ontext');
+
+/** @access private
+  * @modifiers override 
+  */
+static var tagname = 'inputtext';
+
+/** 
+  * Width to use for text field if none is specified
+  * @access private
+  */
+function getDefaultWidth () {
+    return 100;
+}
+
+defaultattrs.selectable = true;
+defaultattrs.enabled = true;
+
+
+/**
+  * @access private
+  */
+function construct ( parent , args ){
+    super.construct.apply(this, arguments);
+    this._onfocusDel = new LzDelegate( this , "_gotFocusEvent" , this,
+                                            "onfocus" );
+    this._onblurDel = new LzDelegate( this , "_gotBlurEvent" , this,
+                                            "onblur" );
+}
+
+/**
+  * Called to create the sprite object.  May be overridden to use a specific 
+  * version, e.g. LzTextSprite();
+  * @access private
+  */
+function __makeSprite(args) {
+    this.sprite = new LzInputTextSprite(this, args);
+}
+
+/** @access private */
+function _gotFocusEvent(){
+    this._focused = true;
+    this.sprite.gotFocus();
+}
+
+/** @access private */
+function _gotBlurEvent(){
+    this._focused = false;
+    this.sprite.gotBlur();
+}
+
+// Receive input text events from sprite
+function inputtextevent (eventname, value){
+    //Debug.warn('inputtextevent', eventname, value);
+    if (eventname == 'onfocus' && this._focused) return;
+    if (eventname == 'onblur' && ! this._focused) return;
+    if (eventname == 'onfocus' || eventname == 'onmousedown') {
+        this._focused = true;
+        if (LzFocus.getFocus() != this) {
+            var tabdown = LzKeys.isKeyDown('tab');
+            LzFocus.setFocus(this, tabdown);
+            return;
+        }
+    } else if (eventname == 'onchange') {
+        //multiline resizable fields adjust their height
+        if ( this.multiline && 
+             this.sizeToHeight && 
+             this.height != this.sprite.getTextHeight() ) {
+                this.setHeight(this.sprite.getTextfieldHeight());
+        }
+        if (this.ontext.ready) this.ontext.sendEvent(value);
+        return;
+    } else if (eventname == 'onblur') {
+        this._focused = false;
+    }
+    if (this[eventname].ready) this[eventname].sendEvent(value);
+}
+
+// FIXME [2006-09-27 pbr] (LPP-2397) Uncomment 'override' when implemented
+/* override */ var focusable = true;  // Defined in LzView
+
+
+/**
+  * Retrieves the contents of the text field for use by a datapath. See
+  * <code>LzDatapath.updateData</code> for more on this.
+  * @access protected
+  */
+function updateData (){
+    return this.sprite.text;
+}
+
+
+/**
+  * Sets whether user can modify input text field
+  * @param Boolean enabled: true if the text field can be edited
+  */
+function setEnabled (enabled){
+    this.setAttribute('focusable', enabled);
+    this.enabled = enabled;
+    this.sprite.setEnabled(enabled);
+    if (this.onenabled.ready) this.onenabled.sendEvent(enabled);
+}
+
+/**
+  * @access private
+  */
+setters.enabled = "setEnabled";
+
+/**
+  * Set the html flag on this text view
+  */
+function setHTML (htmlp) {
+    if (this.capabilities['htmlinputtext']) {
+        this.sprite.setHTML(htmlp);
+    } else if ($debug) {
+        this.__warnCapability('inputtext.setHTML()'); 
+    }
+}
+
+/**
+  * setText sets the text of the field to display
+  * @param String t: the string to which to set the text
+  */
+function setText ( t ){
+    // force to a string
+    t += '';
+    this.sprite.setText(t);
+    this.text =  t;
+    // [todo 2006-06 hqm] when should we send onwidth and onheight events?
+
+    // recalculate height
+    if (this.height < 9 || this.sizeToHeight) {
+        this.height = this.sprite.getTextfieldHeight();
+        if (this.onheight.ready) this.onheight.sendEvent();
+        if (this.height > 0) {
+            this.setHeight(this.height);
+        }
+    }
+
+    if (this.ontext.ready) this.ontext.sendEvent(t);
+}
+
+function getText ( ){
+    return this.sprite.getText();    
+}
+
+prototype.getText.dependencies = function(who, self) {
+    return [ self, "text" ];
+}
+
+} // End of LzInputText

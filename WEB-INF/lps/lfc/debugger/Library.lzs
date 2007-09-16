@@ -1,0 +1,63 @@
+/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
+
+/**
+  * Library.lzs
+  *
+  * This file is conditionally loaded by the compiler as part of the
+  * core when debug is true.
+  *
+  * In some runtimes the Debug object is subclassed for added
+  * functionality by the component/debug library
+  *
+  * @copyright Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access private
+  */
+
+
+// Scope the #pragma
+{
+#pragma 'warnUndefinedReferences=true'
+
+  /*
+   * The ordering of these includes is crucial.  Do not reorder unless
+   * you understand why they are the way they are.
+   */
+
+  // Debug object must be defined first
+  #include "debugger/LzDebug.lzs"
+  // Next to get generic output
+  #include "debugger/LzFormat.lzs"
+  // Next to make output work
+  if ($dhtml) {
+    #include "debugger/platform/dhtml/kernel.js"
+  } else if ($as2) {
+    #include "debugger/platform/swf/kernel.as"
+  } else if ($svg) {
+    // NYI
+  } else {
+    // no debugger for other platforms
+  }
+  // Now we can install a better $reportSourceWarning
+  #include "debugger/LzCompiler.lzs"
+  // Now we can make warnings 'spiffy'
+  #include "debugger/LzMessage.lzs"
+  // Platform-specific value presentation and inspection
+  if ($dhtml) {
+    #include "debugger/platform/dhtml/LzDebug.js"
+  } else if ($as2) {
+    #include "debugger/platform/swf/LzDebug.as"
+  }
+  // Make backtraces work
+  #include "debugger/LzBacktrace.lzs"
+  #include "debugger/LzTrace.lzs"
+  #include "debugger/LzMonitor.lzs"
+  if ($as2) {
+    // Order beyond here has not been thought about (yet)
+    #include "debugger/platform/swf/LzRemote.as"
+    #include "debugger/platform/swf/LzMemory.as"
+    #include "debugger/platform/swf/LzFlashRemote.as"
+  }
+  // N.B.: LzInit.as is loaded as the last thing in LaszloLibrary
+}

@@ -1,0 +1,53 @@
+<library>
+    <!-- Copyright 2006-2007 Laszlo Systems --> 
+
+    <node id="reporter"> 
+        <method name="sendLogData" args="suitename">
+          <![CDATA[
+          // TODO: get webapp url from runtime
+          var url = LzBrowser.getLoadURL();
+          var p1 = url.indexOf("/", 8);
+          var p2 = url.indexOf("/", p1+1);
+          var base = url.substring(0,p2);
+          
+           var serverURL = base + "/test/lfc/perf/reporter.jsp";
+           var buildid = canvas.lpsbuild.split(" ")[0];
+           var browserInfo = LzBrowser.urlEscape(LzBrowser.getVersion());
+           for (var k in timingMeters) {
+               var meter = timingMeters[k];
+               // Debug.write("k %w", k);
+               // Debug.write("meter %w", meter);
+               var mean = meter.calcMean(); 
+               var query = "testname="+LzBrowser.urlEscape(meter.name)
+                 + "&suitename=" + LzBrowser.urlEscape(suitename)
+                 + "&duration=" + LzBrowser.urlEscape(mean) 
+                 + "&count=" + LzBrowser.urlEscape(meter.count)
+                 + "&min=" + LzBrowser.urlEscape(meter.min)
+                 + "&max=" + LzBrowser.urlEscape(meter.max)
+                 + "&uncertainty=" + LzBrowser.urlEscape(meter.calcUncertainty())
+                 + "&suiteName=" + LzBrowser.urlEscape(suitename)
+                 + "&runtime=" + LzBrowser.urlEscape(canvas.runtime) 
+                 + "&debug=" + LzBrowser.urlEscape($debug)
+                 + "&buildid=" + LzBrowser.urlEscape(buildid) 
+                 + "&builddate=" + LzBrowser.urlEscape(canvas.lpsbuilddate)
+                 + "&browserinfo=" + browserInfo
+                 + "&branch=" + LzBrowser.urlEscape("branches-wafflecone"); 
+                 query += "&debug=" + LzBrowser.urlEscape($debug)                  
+                // Debug.write("sendLogData", query);
+                var completeURL = serverURL + "?" + query;
+                
+                var tloader = new LzHTTPLoader(this, false, null);
+                tloader.open ("GET" , completeURL, /* username */ null, /* password */ null);
+                tloader.send (/* content */ null);                
+                
+                // In flash, loadURL opens multiple windows each time we call it, which we don't want.
+                // In dhtml, loadURL works properly. 
+                // LzBrowser.loadURL( completeURL, "perfresults");
+                
+            }
+            
+         ]]>
+        </method>
+    </node>
+    
+</library>

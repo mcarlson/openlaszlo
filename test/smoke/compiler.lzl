@@ -1,8 +1,8 @@
 <!--
-  Compiler Tests
+    Compiler Tests
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-     * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
      * Use is subject to license terms.                                            *
      * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -10,22 +10,25 @@
   <class name="TestCompiler" extends="TestCase">
     <method name="setUp">
     </method>
-
+    
     <method name="tearDown">
     </method>
-
-
+    
+    
     <method name="testConditionalCompilation">
       <![CDATA[
              // Verify compile-time conditionals are consistent
-             if ($swf6) {
-               assertEquals('swf6', $runtime, "Compile-time constant");
-             }
              if ($swf7) {
                assertEquals('swf7', $runtime, "Compile-time constant");
-             }
+             } else
              if ($swf8) {
                assertEquals('swf8', $runtime, "Compile-time constant");
+             } else
+             if ($dhtml) {
+               assertEquals('dhtml', $runtime, "Compile-time constant");
+             } else
+             {
+               assertTrue(false, "Unknown $runtime " + $runtime);
              }
              // Verify runtime matches requested
              var url = LzBrowser.getLoadURLAsLzURL();

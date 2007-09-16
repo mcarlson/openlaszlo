@@ -1,0 +1,168 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+    <view id="tls" name="tools" 
+        y="$once{canvas.height - 50}" x="1000" >
+          
+        <attribute name="zoomscale" value="${Math.max(1,Math.min(1 + this.thmb.x/60,3))}" type="number"/>
+        <attribute name="numberofphotos" value="0"  type="number" />
+        <attribute name="numberofpages"  value="0"  type="number" />
+        <attribute name="pageindex"      value="1"  type="number" />
+        <attribute name="pagemax"        value="1"  type="number" />
+        <attribute name="pagesize"       value="18" type="number" />
+        <attribute name="ondataflag"     value="false"/>
+
+        <attribute name="indexoffset"    value="0"/>
+        <attribute name="startindex"     value="1"/>
+        <attribute name="nextstartindex"     value="1"/>
+        <attribute name="endindex"       value="18"/>
+        <attribute name="nextendindex"     value="18"/>
+
+
+        <method name="reset">
+           this.startindex = 1;
+           this.endindex  = this.startindex + photoscontainer.lyt.pagesize -1;
+           this.displayRange(this.startindex,this.endindex);
+        </method>
+
+        <method name="enableZoom">
+            thmb.setVisible(true);
+            zoomScreen.setVisible(false); 
+        </method>
+        
+        <method name="disableZoom">
+            thmb.setVisible(false);
+            zoomScreen.setVisible(true); 
+        </method>
+
+        <view name="zoombg" resource="../assets/tools/zoom-bkgnd.gif" 
+            x="0" y="13"  />        
+            
+        <view name="thmb" resource="../assets/tools/zoom-thumb.png" x="5" y="16" 
+              onmousedown="this.startdragging()" onmouseup="this.stopdragging()" >
+
+            <dragstate name="dragging" drag_axis="x" 
+                drag_min_x="5"
+                drag_max_x="117"/>
+    
+            <method name="startdragging" args="dragImage">
+                dragging.apply();
+                photoscontainer.lyt.calcpageparams = true;
+                photoscontainer.lyt.setAttribute('textvisible',false);
+                photoscontainer.lyt.update();
+            </method>
+    
+            <method name="stopdragging">
+                dragging.remove();
+                photoscontainer.lyt.setAttribute('textvisible',true);
+                photoscontainer.lyt.update();
+            </method>
+        </view>
+
+              
+        <!-- Film to cover zoom widget so it looks disabled --> 
+        <view name="zoomScreen" clickable="false" visible="false" 
+            opacity="0.5"
+            showhandcursor="false" onclick="" bgcolor="0x7F7F7F" 
+            x="0" y="13" width="130" height="30" />
+
+        <text name="firstphotoindex"  fgcolor="0x463e9D" y="7" x="152" fontsize="9"/>
+        <text text="-" fgcolor="0x463e9D" y="4" x="165" />        
+        <text name="lastphotoindex"  fgcolor="0x463e9D" y="7" x="172" fontsize="9" />
+   
+        <!-- Button for previous page -->
+        <mybutton name="pageprev" 
+            resource="prevpgae_rsc"
+            x="138"
+            y="21"            
+             onclick="parent.displayPrevPage()" >
+        </mybutton>
+
+        <!-- Button for next page -->
+        <mybutton name="pagenext" 
+            resource="nextpage_rsc"
+            x="168"
+            y="21"            
+             onclick="parent.displayNextPage()" >
+        </mybutton>
+
+        
+       
+        <method name="displayNextPage" >
+            //get paging parameters at this point ( before layout is animated offscreen )
+            this.nextstartindex = this.endindex + 1;
+            this.nextendindex   = Math.min( this.nextstartindex + photoscontainer.lyt.pagesize - 1, this.numberofphotos );
+            photoscontainer.lyt.calcpageparams = false;
+            photoscontainer.lyt.pageNext.doStart();
+        </method>
+        
+        <method event="onstop" reference="photoscontainer.lyt.pageNext" >
+            //photoscontainer.lyt.dim( true );
+            //this.setAttribute('pageindex',Math.min( this.pageindex + 1, this.pagemax));
+            this.displayPage();
+            photoscontainer.lyt.calcpageparams = true;
+            if ( photoscontainer.lyt.isgrid ) photoscontainer.lyt.setAttribute('pivot_x',50)
+            else {
+                photoscontainer.lyt.setAttribute('pivot_x',10);
+                photoscontainer.lyt.setAttribute('pivotindex',0);
+            }
+        </method>
+
+        <method name="displayPrevPage" >
+            if ( this.startindex > 1 ) {
+                this.nextendindex     = this.startindex - 1;
+                this.nextstartindex   = Math.max( this.nextendindex - photoscontainer.lyt.pagesize + 1, 1 );
+                if (  this.nextstartindex == 1  ) this.nextendindex =  photoscontainer.lyt.pagesize;
+                photoscontainer.lyt.calcpageparams = false;
+                photoscontainer.lyt.pagePrev.doStart();
+            }
+        </method>
+
+        <method event="onstop" reference="photoscontainer.lyt.pagePrev" >
+            this.displayPage();
+            photoscontainer.lyt.calcpageparams = true;
+            if ( photoscontainer.lyt.isgrid ) photoscontainer.lyt.setAttribute('pivot_x',50)
+            else {
+                photoscontainer.lyt.setAttribute('pivot_x',10);
+                photoscontainer.lyt.setAttribute('pivotindex',0);
+            }
+       </method>
+
+        <method name="displayPage"  >
+            var bufferamount = 23;
+            var eindex = this.nextstartindex + bufferamount;
+            var xpath_str  = 'photods:/rsp/photos/photo[' + this.nextstartindex + '-' + eindex + ']'
+
+            photoscontainer.ph.setDatapath(xpath_str);
+            photoscontainer.watchforlast();
+            this.startindex = this.nextstartindex;
+            this.endindex = this.nextendindex;
+        </method>
+
+        <!-- if photos are zoomed then page end will change -->
+        <method event="onpageend"  reference="photoscontainer.lyt" >
+            //Debug.write("onpageend: this.startindex, this.endindex",this.startindex, this.endindex);
+            
+            this.endindex  = this.startindex + photoscontainer.lyt.pagesize -1;
+            this.displayRange( this.startindex, this.endindex );
+        </method>
+
+        <method name="displayRange"  args="s,e" >
+            this.firstphotoindex.setText( s);
+            this.lastphotoindex.setText( e );
+        </method>
+
+        <method name="setpPagingParams" args="n" >
+           //Debug.write('setpPagingParams -----------------------------------',n );
+           this.setAttribute('numberofphotos',Number(n));
+           this.setAttribute('pageindex',1);
+           this.ondataflag = true;
+        </method>
+
+        <method event="ondata" reference="photods" >
+            photoscontainer.lyt.calcparams = true;
+        </method>
+
+    </view>

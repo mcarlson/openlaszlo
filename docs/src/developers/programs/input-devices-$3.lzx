@@ -1,0 +1,16 @@
+
+<canvas height="30">
+  <resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/>
+  <button onclick="setCursor()" text="Click me to change the cursor for 1/2 second">
+    <method name="setCursor">
+      LzCursor.setCursorGlobal('waitcursor');
+      // call LzCursor.restoreCursor() after 1/2 second
+      var del= new LzDelegate(LzCursor, 'restoreCursor');
+      LzTimer.addTimer(del, 500);
+    </method>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,38 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas>
+<include href="lztest/lztestmanager.lzx" /> 
+<!--
+  covers-tags : smoketest
+-->
+
+
+
+<script><![CDATA[
+    var suiteBasic = new LzTestSuite("Basic test suite"); 
+    suiteBasic.testOutput = function() {
+        Debug.write("I am Debug.write"); 
+    }
+    
+    suiteBasic.testError = function () {
+        Debug.error("I am Debug.error"); 
+    }
+    suiteBasic.testWarn = function () {
+        Debug.warn("I am Debug.warn"); 
+    }
+    
+    suiteBasic.testInfo = function () {
+        Debug.info("I am Debug.info"); 
+    }
+    
+    suiteBasic.addTest(suiteBasic.testOutput); 
+    suiteBasic.addTest(suiteBasic.testError); 
+    suiteBasic.addTest(suiteBasic.testWarn); 
+    suiteBasic.addTest(suiteBasic.testInfo); 
+]]>
+</script>
+</canvas>

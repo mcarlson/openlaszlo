@@ -1,3 +1,12 @@
+/* *****************************************************************************
+ * Font.java
+ * ****************************************************************************/
+
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+ * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+ * Use is subject to license terms.                                            *
+ * J_LZ_COPYRIGHT_END *********************************************************/
+
 /*
  * $Id: Font.java,v 1.3 2002/07/12 07:46:51 skavish Exp $
  *
@@ -249,9 +258,9 @@ public final class Font {
         return f;
     }
 
-    private void init( String fontName ) {
+    private void init( String aFontName ) {
         flags = HAS_LAYOUT | ANSI;
-        fontName = fontName;
+        fontName = aFontName;
         codeTable = new int[] { ' ' };
         advanceTable = new int[] { 0 };
         kernRightCodes = kernAdjustment = kernLeftCodes = new int[] { 0 };

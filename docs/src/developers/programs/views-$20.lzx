@@ -1,0 +1,17 @@
+
+<canvas height="250" bgcolor="gray">
+  <view x="100" y="100" bgcolor="teal">
+    <view bgcolor="red" width="20" height="20"
+            onclick="this.animate('y' , -50 , 1000, true)"/>
+    <view bgcolor="silver" width="20" height="20"
+            onclick="this.animate('x' , -50 , 1000, true)"/>
+    <view bgcolor="blue" width="20" height="20"
+            onclick="this.animate('y' , 50 , 1000, true)"/>
+    <view bgcolor="black" width="20" height="20"
+            onclick="this.animate('x' , 50 , 1000, true)"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

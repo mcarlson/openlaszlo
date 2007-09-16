@@ -22,7 +22,7 @@
         <button text="Toggle" onclick= "checkMe.setAttribute('value', !checkMe.value);"/>
         <button text="Disable" onclick= "checkMe.setAttribute('enabled', false);"/>
         <button text="Enable" onclick= "checkMe.setAttribute('enabled', true)"/>
-        <button text="status" onclick= "debug.write('value: '+checkMe.value);"/>
+        <button text="status" onclick= "Debug.write('value: '+checkMe.value);"/>
         <simplelayout axis="y" spacing="4"/>
 
     </view>
@@ -52,7 +52,7 @@
 
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

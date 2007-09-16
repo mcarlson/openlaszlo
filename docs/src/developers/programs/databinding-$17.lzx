@@ -1,0 +1,32 @@
+
+<canvas height="150">
+  <dataset name="mydata"> 
+    <element>data</element>
+  </dataset>
+  <simplelayout spacing="5"/>
+  <view layout="axis: x">
+    <view name="cs" width="20" height="20" bgcolor="green"> 
+      <datapath xpath="mydata:/element[2]"> 
+                <attribute name="datacontrolsvisibility" value="false"/>
+      </datapath>
+    </view>
+    <text text="${parent.cs.datapath.xpath}"/>
+  </view>
+  <view layout="axis: x">
+    <view name="cs" width="20" height="20" bgcolor="red"
+      datapath="mydata:/element[2]/text()"/>
+    <text text="${parent.cs.datapath.xpath}"/>
+  </view>
+  <view layout="axis: x">
+    <view name="cs" width="20" height="20" bgcolor="blue"
+          datapath="mydata:/element[1]/text()"/>
+    <text text="${parent.cs.datapath.xpath}"/>
+  </view>
+  
+  <button text="Add data node" 
+          onclick="mydata.getPointer().addNode('element', 'data')"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

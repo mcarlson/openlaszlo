@@ -1,10 +1,17 @@
-<canvas width="800" height="600" >
-    <silverstyle name="silvercolors"/>
-    <greenstyle name="greencolors"/>
-    <bluestyle name="bluecolors"/>
-    <goldstyle name="goldcolors"/>
-    <whitestyle name="whitecolors"/>
-    <purplestyle name="purplecolors"/>
+<canvas width="800" height="450" >
+    <switch>
+        <when runtime="dhtml">
+        </when>
+        <otherwise>
+            <silverstyle name="silvercolors"/>
+            <greenstyle name="greencolors"/>
+            <bluestyle name="bluecolors"/>
+            <goldstyle name="goldcolors"/>
+            <whitestyle name="whitecolors"/>
+            <purplestyle name="purplecolors"/>
+        </otherwise>
+    </switch>
+    
     <include href="lz/tree.lzx"/>
 
     <debug x="450" y="200" height="200"/>
@@ -12,25 +19,31 @@
            src="http://www.laszlosystems.com/cgi-pub/weather.cgi?zip=30622"/>
     <view id="s1" x="20" y="20">
         <view layout="spacing:20">
-            <text>Choose a style to change colors...</text>
+            <switch>
+                <when runtime="dhtml">
+                </when>
+                <otherwise>
+                    <text>Choose a style to change colors...</text>
 
-            <view name="stylechooser" layout="axis:x; spacing:4">
-                <text>Style:</text>
-                <combobox width="120" editable="false">
-                    <method event="onselect">
-                        var colorchoice = this.getText();
-                        canvas[colorchoice+'colors'].setAttribute("isdefault", true);
-                    </method>
+                    <view name="stylechooser" layout="axis:x; spacing:4">
+                        <text>Style:</text>
+                        <combobox width="120" editable="false">
+                            <method event="onselect">
+                                var colorchoice = this.getText();
+                                canvas[colorchoice+'colors'].setAttribute("isdefault", true);
+                            </method>
 
-                    <textlistitem text="silver" />
-                    <textlistitem text="green" />
-                    <textlistitem text="blue" selected="true"/>
-                    <textlistitem text="gold" />
-                    <textlistitem text="white"/>
-                    <textlistitem text="purple" />
-                </combobox>
+                            <textlistitem text="silver" />
+                            <textlistitem text="green" />
+                            <textlistitem text="blue" selected="true"/>
+                            <textlistitem text="gold" />
+                            <textlistitem text="white"/>
+                            <textlistitem text="purple" />
+                        </combobox>
 
-            </view>
+                    </view>
+                </otherwise>
+            </switch>
             <tabslider width="250" height="200">
                 <tabelement text="holiday cheer" selected="true">
                     <radiogroup>
@@ -93,6 +106,7 @@
             resizable="true"
             id="fw" title="Frosty the Snowman"
             >
+<!-- [jgrandy 2006-09-29 no menubar in Legals yet
             <menubar name="mbar" placement="menubar">
                  <menu name="file" id="mfile" width="80">File
                      <menuitem text="item 1" />
@@ -115,6 +129,7 @@
                      <menuitem  text="option 6" />
                  </menu>
             </menubar>
+-->
             <include href="testmedia/frosty.lzx" />
             <scrollbar/>
         </window>
@@ -169,7 +184,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

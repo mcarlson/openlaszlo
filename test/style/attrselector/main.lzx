@@ -4,9 +4,8 @@
     <include href="../designerview.lzx" />
 
     <script>
-    Debug.write("This test file exercises compiler support for CSS [attr='val'].");
+    Debug.write("This test file exercises compiler support for CSS [attr='val']. Yep.");
     </script>
-    <include href="../test"/>
     <debug/>
 
     <include href="name-test.lzx" />    

@@ -1,0 +1,18 @@
+
+<canvas height="60">
+  <simplelayout axis="y"/>
+
+  <font name="Times Roman" src="bitstream-vera-1.10/vera.ttf"/>
+  
+  <text height="30">
+    <font face="Times Roman" size="24">Times Roman</font>
+  </text>
+  <text bgcolor="#ffcccc">
+    <font color="#FF0000">C</font><font color="#FFFF00">O</font><font color="#00FFCC">L</font
+    ><font color="#CC00CC">O</font><font color="#AABB00">R</font><font color="#DDA00A">S</font>
+  </text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

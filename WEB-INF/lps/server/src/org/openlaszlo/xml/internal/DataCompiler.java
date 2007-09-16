@@ -5,7 +5,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -99,7 +99,7 @@ public class DataCompiler extends DataCommon {
     /**
      * Compile XML to SWF
      *
-     * @param String x XML string to compile
+     * @param x XML string to compile
      * @return input stream
      *
      * The size of the input XML will always be greater than the
@@ -210,10 +210,16 @@ public class DataCompiler extends DataCommon {
     private static byte constructor_idx = 0;
     private static byte textnode_idx    = 1;
 
+    static String getStackTrace( Throwable aThrowable ) {
+        final Writer result = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter( result );
+        aThrowable.printStackTrace( printWriter );
+        return result.toString();
+    }
+
     /**
      * Main loop which pulls XPP events and writes swf bytecodes to build the node structure.
      *
-     * @param FlashBuffer body flashbuffer to write to
      * @param xpp XML parser pointing to data
      * @param programs a list of Flash Programs. Add to it as we create new frames. 
      * enter assuming that root node is on the stack
@@ -252,13 +258,6 @@ public class DataCompiler extends DataCommon {
 
     */
 
-
-    static String getStackTrace( Throwable aThrowable ) {
-        final Writer result = new StringWriter();
-        final PrintWriter printWriter = new PrintWriter( result );
-        aThrowable.printStackTrace( printWriter );
-        return result.toString();
-    }
 
     private static final DataContext writeXMLData(XmlPullParser xpp,
                                                   Vector programs,
@@ -669,11 +668,6 @@ public class DataCompiler extends DataCommon {
      *
      *
      * @param xpp XML XPP parser which is reading from the data content string
-     * @param splitframes if true, split program across multiple frames. In that case, a final stop will be inserted at the last frame. If false, a single frame program will be returned, with no stop or end of frame.
-     * @param addwrapper add LPS headers wrapper XML
-     * @param trimWhitespace trim whitespace around text content
-     * @param localdata data is to be inlined in app at compile time
-     * @param nsprefix add namespace prefixes to element names
      * @return Vector of one or more (if frame splitting) Flash Programs */
     public static Vector makeProgram(XmlPullParser xpp, XmlPullParser xpheaders,
                                      int xmlsize, DCOptions ioptions)

@@ -5,8 +5,8 @@
     <view y="20">
         <text>these components set enabled attribute</text>
         <view layout="axis:x;spacing:10">
-            <button id="b" onclick="debug.write('clicked', this)" enabled="${c.value}">Browse...</button>
-            <button isdefault="true" onclick="debug.write('clicked', this)" enabled="${c.value}">Default</button>
+            <button id="b" onclick="Debug.write('clicked', this)" enabled="${c.value}">Browse...</button>
+            <button isdefault="true" onclick="Debug.write('clicked', this)" enabled="${c.value}">Default</button>
         </view>
         <checkbox enabled="${c.value}">Save Changes</checkbox>
         <view layout="axis:x;spacing:40">
@@ -63,8 +63,8 @@
     <basecomponent enabled="${c.value}" y="20">
         <text>these components get enabled from parent component </text>
         <view layout="axis:x;spacing:10">
-            <button onclick="debug.write('clicked', this)">Browse...</button>
-            <button isdefault="true" onclick="debug.write('clicked', this)">Default</button>
+            <button onclick="Debug.write('clicked', this)">Browse...</button>
+            <button isdefault="true" onclick="Debug.write('clicked', this)">Default</button>
         </view>
         <checkbox>Save Changes</checkbox>
         <view layout="axis:x;spacing:40">
@@ -122,7 +122,7 @@
 
     <simplelayout axis="x" spacing="20" inset="20"/>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

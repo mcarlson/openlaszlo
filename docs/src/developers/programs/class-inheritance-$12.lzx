@@ -1,0 +1,18 @@
+
+<canvas height="50">
+  <class name="htmlText">
+    <attribute name="text" type="html"/>
+    <text resize="true" text="${parent.text}"/>
+  </class>
+  
+  <simplelayout/>
+  <htmlText>
+    <b>bold</b> text declared here with 
+    <a href="http://www.openlaszlo.org"><i>anchor</i></a>
+  </htmlText>
+  <htmlText text="&lt;b&gt;bold&lt;/b&gt; text set here"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

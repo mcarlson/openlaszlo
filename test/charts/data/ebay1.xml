@@ -1,4 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+﻿<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <stock symbol="EBAY">
   <item index="28" date="1/19/2005 12:00:00 AM" high="107.77" low="102.87" close="103.05" />
   <item index="29" date="1/18/2005 12:00:00 AM" high="106.83" low="104.6" close="106.37" />

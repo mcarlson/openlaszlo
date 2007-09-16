@@ -1,0 +1,125 @@
+<canvas proxied="true">
+
+
+    <class name="search" >
+        <attribute name="sendsearch_del" 
+                   value="$once{new LzDelegate( this.txt, 'sendsearch') }"/>
+ 
+        <inputtext name="txt">
+            <method event="onkeyup" args="k" >
+                if ( k == 13 ) { //return key
+                    this.sendsearch();
+                }
+            </method>
+            
+            <method name="sendsearch" >
+                var argobj = [
+                    {argname:"method", 
+                        argvalue:"flickr.photos.search"},
+                    {argname:"tags",
+                        argvalue:this.getText()}
+                ]
+                gDataMan.doFlickrRequest(photods, argobj);                    
+            </method>
+                        
+        </inputtext>
+    </class>
+
+
+    <!--
+        GLOBALS
+    -->
+    <node id="gGlobals">
+        <attribute name="SHAREDSECRET" type="string" value="b199acb45fd055e7"/>
+        <attribute name="API_KEY" type="string" value="563a40afe6128e60145dd1e347911e54"/>
+        <attribute name="RESTSRC" type="string" value="http://www.flickr.com/services/rest/"/>
+    </node>
+
+    <!--
+        DATA MANAGER
+    -->
+    <node name="gDataMan">
+        <!--
+            builds, signs and sends FlickrRequest 
+            results go in provided dataset
+            
+            REQUIRED ARG - ds - dataset to make call with
+            REQUIRED ARG - argobjarr - array of objects {argname:[name], argvalue:[value]}
+            
+            SUPPORTS ALL METHODS DESCRIBED IN FLICKR SERVICES API
+            http://www.flickr.com/services/api/
+        -->
+        <method name="doFlickrRequest" args="ds, argobjarr"><![CDATA[
+            // clear query params
+            ds.setQueryParams(null);
+
+            // string to start building sig
+            var api_sig_string=gGlobals.SHAREDSECRET;
+
+            // set source
+            ds.setSrc(gGlobals.RESTSRC);
+
+            // add api_key
+            argobjarr.push({argname:"api_key", argvalue:gGlobals.API_KEY});
+            
+            // alphabetize argobjs comparator
+            var argcomparator = function (a, b) {
+                if (a.argname < b.argname) return -1;
+                if (a.argname > b.argname) return 1;
+                return 0
+            }
+            argobjarr.sort(argcomparator)
+
+            // build argobject
+            for (var i=0;i<argobjarr.length;i++) 
+            {
+                var argobj=argobjarr[i];
+
+                // set query param
+                ds.setQueryParam(argobj.argname, argobj.argvalue);
+
+                // buid api_sig_string
+                api_sig_string+=argobj.argname+argobj.argvalue                
+
+            }
+
+            // sign call
+            //var api_sig = hex_md5(api_sig_string);                
+            //ds.setQueryParam("api_sig", api_sig);
+
+            Debug.write('Loading URL', ds.src); 
+
+            // make actual request
+            ds.doRequest();
+        ]]></method>
+    </node>
+
+    <!-- ds to query for photos -->
+    <dataset name="photods" ondata="Debug.write('got data')" type="http"/>
+    
+    <!-- ds to query for photo info -->
+    <dataset name="infods"  ondata="Debug.write('got info')" type="http" />
+
+    <!-- just for testing... -->
+    <dataset name="testds" type="http"/>
+
+    <method event="oninit">
+        var argobj = [ {argname:"method", argvalue:"flickr.photos.search"}, {argname:"tags", argvalue:"max"} ];
+        gDataMan.doFlickrRequest(photods, argobj);
+    </method>
+
+    <view name="foo">
+        <view name="bar">
+            <method event="ondata" reference="canvas.photods">
+                Debug.write('ondata', this);
+            </method>
+        </view>
+    </view>
+
+
+    <search/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

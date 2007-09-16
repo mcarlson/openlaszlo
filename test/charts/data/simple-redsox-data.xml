@@ -1,3 +1,8 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
 <records>
     <record year="2004" league="AL East" wins="98" losses="64" finish="WS,2" stadium="Fenway Park II" attendance="2,837,294" attend-g="35,028" attend-rank="4th out of 14" team-age-bat-pit="30.5/32.5" park-factor-bat-pit="106/105" />
     <record year="2003" league="AL East" wins="95" losses="67" finish="WC,2" stadium="Fenway Park II" attendance="2,724,165" attend-g="33,632" attend-rank="4th out of 14" team-age-bat-pit="29.7/31.2" park-factor-bat-pit="105/104" />

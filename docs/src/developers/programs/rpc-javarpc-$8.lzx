@@ -1,0 +1,105 @@
+
+<canvas debug="true" height="300" width="800">
+ 
+    <debug x="250" y="10" width="500" height="275" />
+
+    <security>
+        <allow>
+            <pattern>^examples\.TypesExample</pattern>
+        </allow>
+    </security>
+
+    <!-- See WEB-INF/classes/TypesExample.java for java source. -->
+    <javarpc name="types_example_rpc" scope="none" remoteclassname="examples.TypesExample">
+
+        <handler name="onload">
+            // Set buttons visible only after JavaRPC object loads
+            canvas.buttons.setAttribute('visible', true);
+        </handler>
+
+        <handler name="ondata" args="res">
+            Debug.write('(types ondata) response is:', res);
+        </handler>
+
+        <handler name="onerror" args="errmsg">
+            Debug.write('(types onerror) error:', errmsg);
+        </handler>
+
+        <!-- Declaratively pass an integer. -->
+        <remotecall funcname="passInteger">
+            <param value="42" />
+        </remotecall>
+
+        <!-- Declaratively pass a double. Note that we name this function pd1
+             because we have multiple remotecall declarations that call
+             passDouble but with different parameters. -->
+        <remotecall name="pd1" funcname="passDouble">
+            <param value="42.1" />
+        </remotecall>
+
+        <!-- Declaratively pass a double with 0 decimal. The 0 decimal will
+             truncate and the number will become an integer type when it reaches
+             the server. This call will fail. -->
+        <remotecall name="pd2" funcname="passDouble">
+            <param value="42.0" />
+        </remotecall>
+
+        <!-- Declaratively pass a double with 0 decimal. Wrapping the double in
+             DoubleWrapper will ensure the value will remain a double when
+             reaching the server. -->
+        <remotecall name="pd3" funcname="passDouble">
+            <param> 
+                <method name="getValue">
+                    return new LzRPC.DoubleWrapper(42.0);
+                </method>
+            </param>
+        </remotecall>
+
+    </javarpc>
+
+    
+    <view name="buttons" visible="false" layout="spacing: 10" >
+
+        <button text="pass integer"
+                onclick="types_example_rpc.passInteger.invoke()" />
+
+        <button text="pass double"
+                onclick="types_example_rpc.pd1.invoke()" />
+
+        <button text="pass double (will fail)"
+                onclick="types_example_rpc.pd2.invoke()" />
+
+        <button text="pass double w/LzRPC.DoubleWrapper" 
+                onclick="types_example_rpc.pd3.invoke()" />
+
+        <button text="pass boolean" onclick="this.passBoolean.invoke()">
+            <!-- This is a way to declare a remotecall closer to where it's being
+                 used. The remotecontext must be set. -->
+            <remotecall funcname="passBoolean" 
+                        remotecontext="$once{ types_example_rpc }">
+                <param value="true" />
+            </remotecall>
+        </button>
+
+        <button text="pass array" onclick="this.passArray.invoke()">
+            <remotecall name="passArray" funcname="passClientArray" 
+                        remotecontext="$once{ types_example_rpc }">
+                <param value="[1, 'a string', 4.5, false]" />
+            </remotecall>
+        </button>
+
+        <button text="pass hash" onclick="this.passObject.invoke()">
+            <remotecall name="passObject" funcname="passClientObject" 
+                        remotecontext="$once{ types_example_rpc }">
+                <param value="{ a: 1, b: 3.14159, c: 'a string value', d: true}">
+                </param>
+            </remotecall>
+        </button>
+
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

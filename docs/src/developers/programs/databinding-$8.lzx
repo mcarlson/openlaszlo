@@ -1,0 +1,55 @@
+
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+
+  <include href="rpc/ajax.lzx" />
+
+  <script>
+    <![CDATA[
+    
+    var req = null;
+
+    function processReqChange() {
+        Debug.write("processReqChange: req.readyState", req.readyState);
+        // only if req shows "loaded"
+        if (req.readyState == 4) {
+            // only if "OK"
+            if (req.status == 200) {
+                Debug.write("req.status", req.status);
+                Debug.write("req.responseText:", req.responseText);
+                Debug.write("req.responseXML:", req.responseXML);
+                Debug.write("req.getAllResponseHeaders:", req.getAllResponseHeaders());
+            } else {
+                Debug.write("There was a problem retrieving the XML data:\n" +
+                            req.statusText);
+            }
+        }
+    }
+
+    
+    function loadXMLDoc(url) {
+        // branch for native XMLHttpRequest object
+        req = new XMLHttpRequest();
+        req.onreadystatechange = processReqChange;
+        req.open("GET", url, true);
+        req.setRequestHeader('X-Test', 'one');
+        req.setRequestHeader('X-Test', 'two');
+        req.send(null);
+    }
+    
+
+
+    ]]>
+  </script>
+    <simplelayout spacing="4"/>
+    <edittext id="in1">echo.jsp</edittext>
+    <button onclick="loadXMLDoc(in1.getText())">Load Data</button>
+
+    <button onclick="loadXMLDoc('badurl')">Test Error Handling, this should fail</button>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

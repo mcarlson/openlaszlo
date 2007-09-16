@@ -1,0 +1,83 @@
+<canvas width="800" height="500" proxied="false">
+
+<!-- 
+//* A_LZ_COPYRIGHT_BEGIN ******************************************************
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Use is subject to license terms.                                          *
+//* A_LZ_COPYRIGHT_END ********************************************************
+-->
+
+  <class name="spinner">
+    <attribute name="xspan" value="100"/>
+    <attribute name="yspan" value="100"/>
+    <attribute name="color" value="0xff0000"/>
+    <attribute name="bgcolor" value="$once{this.color}"/>
+    <method name="spin">
+      this.animate('rotation', 90, 2000,true); 
+      this.animate('x', this.xspan, 2000,true); 
+      this.animate('y', this.yspan, 2000,true); 
+    </method>
+  </class>
+
+<!--
+(loop for x from 100 to 300 by 10
+do (insert (format "
+ <spinner x='100' y='100' width='40' height='40'  xspan='%d' yspan='%d' bgcolor='%d'/>" x x (* x 102348))))
+
+-->
+<view  bgcolor="#cccccc" name="spinners"     onclick="_debug('got click'); this.spinAll()">
+ <spinner x='10' y='10' width='40' height='40'  xspan='100' yspan='100' color='102348'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='110' yspan='110' color='112582'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='120' yspan='120' color='122817'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='130' yspan='130' color='133052'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='140' yspan='140' color='143287'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='150' yspan='150' color='153522'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='160' yspan='160' color='163756'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='170' yspan='170' color='173991'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='180' yspan='180' color='184226'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='190' yspan='190' color='194461'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='200' yspan='200' color='204696'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='210' yspan='210' color='214930'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='220' yspan='220' color='225165'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='230' yspan='230' color='235400'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='240' yspan='240' color='245635'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='250' yspan='250' color='255870'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='260' yspan='260' color='266104'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='270' yspan='270' color='276339'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='280' yspan='280' color='286574'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='290' yspan='290' color='296809'/>
+ <spinner x='10' y='10' width='40' height='40'  xspan='300' yspan='300' color='307044'/>
+   <method name="spinAll">
+     <![CDATA[
+        for (var i = 0; i < this.subviews.length; i++) {
+           this.subviews[i].spin();
+       }        
+     ]]>
+     </method>
+
+
+
+</view>
+
+
+  <view name="v1" 
+        x="5" y="10" 
+        width="60" height="20"
+        bgcolor="blue" 
+        onclick="this.setBGColor(0xff0000)"/>
+
+  <view name="v2" id="myred" 
+        x="0" y="50" 
+        width="80" height="10"
+        bgcolor="red" 
+        onclick="this.setBGColor(0xffccaa); this.animate('y',50,1000,true)"/>
+
+<!--  <view name="blank" width="40" height="40" x="400" y="0"/> -->
+
+  <view name="v3" x="100" y="100"  id="myview" onclick="this.animate('rotation', 45, 1000, true); 
+              this.v4.setText('You can\'t rotate native text in SWF or DHTML, but you can in SVG')" >
+    <text  id="mytext" name="v4"
+            width="550"  >My name is SVG Sprite. Please to meet you! Click me!</text>
+  </view>
+
+</canvas>

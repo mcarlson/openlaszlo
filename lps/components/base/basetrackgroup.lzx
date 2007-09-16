@@ -54,14 +54,56 @@
         <event name="onmousetrackoutleft" />
 
         <!--- @keywords private -->
-        <handler name="onconstruct">
+        <method name="construct">
+            super.construct.apply(this, arguments);
+            
             this._activateDL    = new LzDelegate(this,'activateTrackgroup');
             this._deactivateDL  = new LzDelegate(this,'deactivateTrackgroup');
             this._repeattrackDL = new LzDelegate(this,'trackingout');
             this._destroyDL = new LzDelegate(this,'destroyitem');
             this._trackgroup = "tg" + this.getUID();
             this._boundstrackgroup = "btg" + this.getUID();
-        </handler>
+        </method>
+        
+        <!--- @keywords private -->
+        <method name="init" >
+            super.init.apply(this, arguments);
+            
+            LzTrack.register( this.boundsref, this._boundstrackgroup );
+        </method>
+        
+        <!--- @keywords private -->
+        <method name="destroy" ><![CDATA[
+            this.setTracking(false);
+
+            //LzTrack.unregisterAll(this._trackgroup);//LPP-4429: we would call this if it was implemented
+            LzTrack.unregister(this.boundsref, this._boundstrackgroup);
+            
+            if (_destroyDL in this) {
+                this._destroyDL.unregisterAll();
+                delete this._destroyDL;
+            }
+            
+            if (_activateDL in this) {
+                this._activateDL.unregisterAll();
+                delete this._activateDL;
+            }
+            
+            if (_deactivateDL in this) {
+                this._deactivateDL.unregisterAll();
+                delete this._deactivateDL;
+            }
+
+            if (_repeattrackDL in this) {
+                this._repeattrackDL.unregisterAll();
+                delete this._repeattrackDL;
+            }
+            
+            delete this.activateevents;//improvement for "onremovesubview"
+            delete this.deactivateevents;//improvement for "onremovesubview"
+            
+            super.destroy.apply(this, arguments);
+        ]]></method>
 
         <!--- sets the view that will act as the bounds for this trackgroup -->
         <method name="setBoundsRef" args="ref" >
@@ -130,11 +172,6 @@
         ]]>
         </handler>
 
-        <!--- @keywords private -->
-        <handler name="oninit" >
-            LzTrack.register( this.boundsref, this._boundstrackgroup );
-        </handler>
-
         <!--- Called when the mouse is down and tracked
               outside the bounding rect defined by boundsref. this method
               generates the onmousetrackoutleft, onmousetrackoutright,
@@ -162,11 +199,68 @@
             }
         ]]></method>
 
-
+        <doc>
+          <tag name="shortdesc"><text>used for grouping a set of views responding to mousetrack events.</text></tag>
+          <text>
+            <p>A utility class which simplifies tracking of cursor movement across
+            a set of views while in a mousedown state.  This involves creating a
+            trackgroup with a unique ID and the registering of any views
+            associated with that trackgroup.</p>
+            
+            <p><classname>basetrackgroup</classname> handles this
+            automatically. It creates the unique trackgroup name and automatically
+            registers its subviews to be tracked by the group. A developer needs
+            to create the methods within the subviews to respond to the set of
+            mousetrack events.</p>
+            
+            <p>The example below displays four colored rectangles within a
+            <classname>basetrackgroup</classname> layed out vertically.  The
+            rectangles respond to the various moustrack events by changing their
+            background colors.  Try pressing the mouse down on one square, and
+            dragging across the other squares.</p>
+            
+            <example>
+            &lt;canvas height="200"&gt;
+                &lt;include href="/base/basetrackgroup.lzx"/&gt;
+                &lt;class name="testview"  bgcolor="red" width="100%" height="30" clickable="true"&gt;
+                &lt;handler name="onmousetrackover"&gt;
+                  this.setHilite(true);
+                &lt;/handler&gt;
+            
+                &lt;handler name="onmousetrackout"&gt;
+                  this.setHilite(false);
+                &lt;/handler&gt;
+            
+                &lt;handler name="onmousetrackup"&gt;
+                  this.setSelect(true);
+                &lt;/handler&gt;
+            
+                &lt;method name="setHilite" args="ishilite"&gt;
+                 if (ishilite ) this.setBGColor(0x00FF00);
+                 else this.setBGColor(0xFF0000)
+                &lt;/method&gt;
+            
+                &lt;method name="setSelect" args="isSelect"&gt;
+                  if (isSelect) this.setBGColor(0x0000FF);
+                  else this.setBGColor(0xFF0000)
+                &lt;/method&gt;
+              &lt;/class&gt;
+            
+              &lt;basetrackgroup x="20" y="20" width="100" height="200"&gt;
+                &lt;testview name="v1"/&gt;
+                &lt;testview name="v2"/&gt;
+                &lt;testview name="v3"/&gt;
+                &lt;testview name="v4"/&gt;
+                &lt;simplelayout axis="y" spacing="10"/&gt;
+              &lt;/basetrackgroup&gt;
+            &lt;/canvas&gt;
+            </example>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

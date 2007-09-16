@@ -93,7 +93,6 @@ public final class ResponderXMLDATA extends ResponderCache
 
         String path = req.getServletPath();
         String url;
-        res.setContentType(MimeType.XML);
         try {
             url  = DataSource.getURL(req);
         } catch (java.net.MalformedURLException e) {
@@ -103,6 +102,9 @@ public final class ResponderXMLDATA extends ResponderCache
             }
             return;
         }
+
+        res.setContentType("application/xml");
+
 
         if (req.getMethod().intern() == "POST") {
             float fpv = getFlashPlayerVersion(req);
@@ -150,7 +152,7 @@ public final class ResponderXMLDATA extends ResponderCache
                 return;
             }
 
-            res.setContentType(MimeType.SWF);
+            res.setContentType("application/xml");
 
             String app = LZHttpUtils.getRealPath(mContext, req);
             boolean isClientCacheable = DataSource.isClientCacheable(req);
@@ -290,7 +292,7 @@ public final class ResponderXMLDATA extends ResponderCache
         } catch (Throwable e) { 
             // Makes much easier to debug runtime exceptions
             // but perhaps not strictly correct.
-            respondWithException(res, (Exception) e);
+            respondWithException(res, e);
             errType = URLStat.ERRTYPE_OTHER;
         } 
 

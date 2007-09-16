@@ -1,0 +1,15 @@
+#pragma "passThrough=true"
+try {
+    if (lzOptions) {}
+} catch (e) {
+    lzOptions = {};
+}    
+
+#include "embednew.js"
+#include "flash.js"
+#include "iframemanager.js"
+#include "LzMousewheelKernel.js"
+#include "lzhistory.js"
+// Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.  Use is
+// subject to license terms.
+

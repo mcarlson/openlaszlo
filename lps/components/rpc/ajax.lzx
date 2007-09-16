@@ -48,7 +48,7 @@
 
         <!-- Event handler for an event that fires at every state change
              onreadystatechange -->
-        <attribute name="onreadystatechange" value="null" type="expression"/>
+        <event name="onreadystatechange" />
 
         <!--- responseText
               String version of data returned from server process -->
@@ -234,7 +234,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

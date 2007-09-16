@@ -1,0 +1,20 @@
+
+<canvas debug="true">
+  <script>
+    var foo = new LzView(canvas, {width: 50, height: 50, 
+                                  x: 50, y: 100,
+                                  bgcolor: 0,
+                                  name: "myview"});
+  </script>
+  
+  <button>Make window red
+    <handler name="onclick">
+      var nameOfView = "myview";
+      canvas[nameOfView].setAttribute('bgcolor', 0xff0000);
+    </handler>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** --> 

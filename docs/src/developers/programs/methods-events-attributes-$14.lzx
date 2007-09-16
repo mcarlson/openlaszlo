@@ -1,0 +1,11 @@
+<canvas height="20">
+  <view>
+    <attribute name="width" type="number" value="20"/>
+    <attribute name="height" type="number" value="20"/>
+    <attribute name="bgcolor" type="color" value="red"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

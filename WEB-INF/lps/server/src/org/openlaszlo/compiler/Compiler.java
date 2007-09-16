@@ -35,8 +35,12 @@ public class Compiler {
     /** Set this to log the modified schema. */
     public static Logger SchemaLogger = Logger.getLogger("schema");
     
-    protected static List KNOWN_RUNTIMES =
-        Arrays.asList(new String[] {"swf6", "swf7", "swf8"});
+    public static List KNOWN_RUNTIMES =
+        Arrays.asList(new String[] {"swf7", "swf8", "swf9", "dhtml", "j2me", "svg"});
+    public static List SCRIPT_RUNTIMES =
+        Arrays.asList(new String[] {"swf9", "dhtml", "j2me", "svg"});
+    public static List SWF_RUNTIMES =
+        Arrays.asList(new String[] {"swf7", "swf8"});
     
     /** Called to resolve file references (<code>src</code>
      * attributes).
@@ -131,6 +135,10 @@ public class Compiler {
         return compile(sourceFile, objectFile, props);
     }
 
+    public static String getObjectFileExtensionForRuntime (String runtime) {
+        String ext = SCRIPT_RUNTIMES.contains(runtime) ? ".js" : ".lzr=" + runtime + ".swf";
+        return ext;
+    }
 
     /** Compiles <var>sourceFile</var> to <var>objectFile</var>.  If
      * compilation fails, <var>objectFile</var> is deleted.
@@ -154,7 +162,7 @@ public class Compiler {
         FileUtils.makeFileAndParentDirs(objectFile);
 
         // Compile to a byte-array, and write out to objectFile, and 
-        // write a copy into sourceFile.swf if this is a serverless deployment.
+        // write a copy into sourceFile.[swf|js] if this is a serverless deployment.
         CompilationEnvironment env = makeCompilationEnvironment();
         ByteArrayOutputStream bstream = new ByteArrayOutputStream();
         OutputStream ostream = new FileOutputStream(objectFile);
@@ -168,10 +176,14 @@ public class Compiler {
 
             // If the app is serverless, write out a .lzx.swf file when compiling
             if (canvas != null && !canvas.isProxied()) {
+
+                // Create a foo.lzx.[js|swf] serverless deployment file for sourcefile foo.lzx
+                String runtime = props.getProperty(CompilationEnvironment.RUNTIME_PROPERTY);
+                String soloExtension = getObjectFileExtensionForRuntime(runtime);
+
                 OutputStream fostream = null;
                 try {
-                    // Create a foo.lzx.swf serverless deployment file for sourcefile foo.lzx
-                    File deploymentFile = new File(sourceFile+".swf");
+                    File deploymentFile = new File(sourceFile+soloExtension);
                     fostream = new FileOutputStream(deploymentFile);
                     bstream.writeTo(fostream);
                 } finally {
@@ -196,6 +208,21 @@ public class Compiler {
         }
     }
 
+  ObjectWriter createObjectWriter(Properties props,  OutputStream ostr, CompilationEnvironment env, Element root) {
+        if ("false".equals(props.getProperty(env.LINK_PROPERTY))) {
+          return new LibraryWriter(props, ostr, mMediaCache, true, env, root);
+        }
+
+        String runtime = props.getProperty(env.RUNTIME_PROPERTY);
+        // Must be kept in sync with server/sc/lzsc.py compile
+        if (SCRIPT_RUNTIMES.contains(runtime)) {
+            return new DHTMLWriter(props, ostr, mMediaCache, true, env);
+        } else {
+            return new SWFWriter(props, ostr, mMediaCache, true, env);
+        }
+    }
+
+
     /**
      * Compiles <var>file</var>, and write the bytes to
      * a stream.
@@ -208,6 +235,7 @@ public class Compiler {
      *
      * The parameters currently being looked for in the PROPS arg
      * are "debug", "logdebug", "profile", "krank"
+     *
      */
 
     public Canvas compile(File file, OutputStream ostr, Properties props, CompilationEnvironment env)
@@ -220,13 +248,13 @@ public class Compiler {
         
         // Copy target properties (debug, logdebug, profile, krank,
         // runtime) from props arg to CompilationEnvironment
-        String swfversion = props.getProperty(CompilationEnvironment.SWFVERSION_PROPERTY);
+        String runtime = props.getProperty(env.RUNTIME_PROPERTY);
         boolean linking = (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY)));
 
-        if (swfversion != null) {
-            mLogger.info("canvas compiler compiling runtime = " + swfversion);
-            env.setProperty(CompilationEnvironment.SWFVERSION_PROPERTY, swfversion);
-            if (! KNOWN_RUNTIMES.contains(swfversion)) {
+        if (runtime != null) {
+            mLogger.info("canvas compiler compiling runtime = " + runtime);
+            env.setProperty(env.RUNTIME_PROPERTY, runtime);
+            if (! KNOWN_RUNTIMES.contains(runtime)) {
                 List runtimes = new Vector();
                 for (Iterator iter = KNOWN_RUNTIMES.iterator();
                      iter.hasNext(); ) {
@@ -237,7 +265,7 @@ public class Compiler {
                     MessageFormat.format(
                         "Request for unknown runtime: The \"lzr\" query parameter has the value \"{0}\".  It must be {1}{2}.",
                         new String[] {
-                            swfversion,
+                            runtime,
                             new ChoiceFormat(
                                 "1#| 2#either | 2<one of ").
                             format(runtimes.size()),
@@ -272,6 +300,14 @@ public class Compiler {
             env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, debug);
         }
 
+        String backtrace = props.getProperty(CompilationEnvironment.BACKTRACE_PROPERTY);
+        if (backtrace != null) {
+            if ("true".equals(backtrace)) {
+                env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "true" );
+            }
+            env.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, backtrace);
+        }
+
         String validate = props.getProperty(CompilationEnvironment.VALIDATE_PROPERTY,
                                             LPS.getProperty("compiler.validate", "true"));
         if (validate != null) {
@@ -303,7 +339,7 @@ public class Compiler {
                 Compiler.class.getName(),"051018-303", new Object[] {file.getAbsolutePath()})
 );
 
-            Document doc = env.getParser().parse(file);
+            Document doc = env.getParser().parse(file, env);
             Element root = doc.getRootElement();
             
             // Override passed in runtime target properties with the
@@ -354,16 +390,40 @@ public class Compiler {
                 Parser.validate(doc, file.getPath(), env);
             } 
             
-            SWFWriter writer = null;
-            if (linking) {
-              writer = new SWFWriter(env.getProperties(), ostr, mMediaCache, true, env);
-            } else {
-              LibraryWriter lw = new LibraryWriter(props, ostr, mMediaCache, true, env);
-              env.setApplicationFile(file);
-              lw.setRoot(root);
-              writer = lw;
-            }
-            env.setSWFWriter(writer);
+            Properties nprops = (Properties) env.getProperties().clone();
+            Map compileTimeConstants = new HashMap();
+            compileTimeConstants.put("$debug", new Boolean(
+                                         env.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY)));
+            compileTimeConstants.put("$profile", new Boolean(
+                                         env.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY)));
+            compileTimeConstants.put("$backtrace", new Boolean(
+                                         env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY)));
+
+            runtime = env.getProperty(env.RUNTIME_PROPERTY);
+
+            // Must be kept in sync with server/sc/lzsc.py main
+            compileTimeConstants.put("$runtime", runtime);
+            compileTimeConstants.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
+            compileTimeConstants.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
+            compileTimeConstants.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8", "swf9"}).contains(runtime)));
+            compileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
+            compileTimeConstants.put("$as3", Boolean.valueOf(Arrays.asList(new String[] {"swf9"}).contains(runtime)));
+            compileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
+            compileTimeConstants.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
+            compileTimeConstants.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
+            compileTimeConstants.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
+            
+            // [todo: 2006-04-17 hqm] These compileTimeConstants will be used by the script compiler
+            // at compile time, but they won't be emitted into the object code for user apps. Only
+            // the compiled LFC emits code which defines these constants. We need to have some
+            // better way to ensure that the LFC's constants values match the app code's.
+            nprops.put("compileTimeConstants", compileTimeConstants);
+
+            ObjectWriter writer = createObjectWriter(nprops, ostr, env, root);
+
+            env.setObjectWriter(writer);
+
+
             mLogger.debug("new env..." + env.getProperties().toString());
             if (root.getName().intern() != 
                 (linking ? "canvas" :  "library")) {
@@ -426,13 +486,12 @@ public class Compiler {
         }
     }
 
-
-    public void compileAndWriteToSWF (String script, String seqnum, OutputStream out, String swfversion) {
+    public void compileAndWriteToSWF (String script, String seqnum, OutputStream out, String runtime) {
         try {
             CompilationEnvironment env = makeCompilationEnvironment();
             env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, true);
             Properties props = (Properties) env.getProperties().clone();
-            env.setProperty(CompilationEnvironment.SWFVERSION_PROPERTY, swfversion);
+            env.setProperty(env.RUNTIME_PROPERTY, runtime);
             byte[] action;
 
             // Try compiling as an expression first.  If that fails,
@@ -479,7 +538,7 @@ public class Compiler {
                 }
             }
 
-            ScriptCompiler.writeScriptToStream(action, out, LPS.getSWFVersionNum(swfversion));
+            ScriptCompiler.writeScriptToStream(action, out, LPS.getSWFVersionNum(runtime));
             out.flush();
             out.close();
         } catch (IOException e) {
@@ -506,6 +565,8 @@ public class Compiler {
             return new LibraryCompiler(env);
         } else if (ScriptElementCompiler.isElement(element)) {
             return new ScriptElementCompiler(env);
+        } else if (DataCompiler.isElement(element)) {
+            return new DataCompiler(env);
         } else if (SecurityCompiler.isElement(element)) {
             return new SecurityCompiler(env);
         } else if (SplashCompiler.isElement(element)) {
@@ -516,16 +577,12 @@ public class Compiler {
             return new ResourceCompiler(env);
         } else if (ClassCompiler.isElement(element)) {
             return new ClassCompiler(env);
-        } else if (DataCompiler.isElement(element)) {
-            return new DataCompiler(env);
         } else if (InterfaceCompiler.isElement(element)) {
             return new InterfaceCompiler(env);
         } else if (DebugCompiler.isElement(element)) {
             return new DebugCompiler(env);
         } else if (StyleSheetCompiler.isElement(element)) {
-                return new StyleSheetCompiler(env);
-        } else if (SwitchCompiler.isElement(element)) {
-            return new SwitchCompiler(env);
+            return new StyleSheetCompiler(env);
             // The following test tests true for everything, so call
             // it last.
         } else if (ViewCompiler.isElement(element)) {

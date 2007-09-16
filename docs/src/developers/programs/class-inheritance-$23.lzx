@@ -1,0 +1,22 @@
+
+<canvas height="50">
+  <class name="myframe" extends="view">
+    <attribute name="bgcolor" value="red"/>
+    
+    <!-- child views of class instances will be placed in the first view
+            called insideview -->
+    <attribute name="defaultplacement" value="insideview" type="string"/>
+    
+    <view x="5" y="5" width="${parent.width-10}" name="insideview"
+                height="${parent.height-10}" 
+                bgcolor="#FFFFCC"/>
+  </class>
+  <!-- make an instance of myframe with text inside it-->
+  <myframe width="220" height="50">
+    <text>This is some text</text>
+  </myframe>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

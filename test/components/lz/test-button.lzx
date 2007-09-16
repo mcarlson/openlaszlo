@@ -31,7 +31,7 @@
         <view>
             <button height="20" id="c1"
                     width="76"
-                    onclick="debug.write(this, 'clicked')"
+                    onclick="Debug.write(this, 'clicked')"
                     text_x="6">
                Name
                 <view name="sortarrow" resource="LzWinSort_rsc"
@@ -95,7 +95,7 @@
     </view>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

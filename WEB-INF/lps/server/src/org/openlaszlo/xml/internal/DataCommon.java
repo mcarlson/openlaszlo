@@ -5,7 +5,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -170,7 +170,6 @@ public abstract class DataCommon {
      * We try to put them into the string pool immediately, as opposed to using the
      * heuristic of waiting until the string is seen again before interning it.
      *
-     * @return number of bytes written to buffer
      */
     static public final void pushMergedStringDataSymbol(String s, FlashBuffer body, DataContext dc) {
         int idx = internString(s, dc);
@@ -192,7 +191,6 @@ public abstract class DataCommon {
      * which bypass FlashBuffer's ensureCapacity(), so the FlashBuffer must have been allocated with enough
      * space for these writes, or an ArrayBoundsException may happen.
      *
-     * @return number of bytes written to buffer
      */
     static public final void _pushMergedStringDataSymbol(String s, FlashBuffer body, DataContext dc) {
         int idx = internString(s, dc);

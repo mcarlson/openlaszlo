@@ -1,0 +1,60 @@
+<library>
+    <class name="photocollection">
+
+        <attribute name="photoclass" value="photo" when="once"/>
+
+        <attribute name="activephotos" value="$once{ [] }"/>
+
+        <method name="addSelection" args="sel">
+            <![CDATA[
+            for ( var i =0; i< sel.length; i++ ){
+                var p = this.getPhoto( );
+                var e = sel[ i ];
+                p.datapath.setFromPointer( e.datapath );
+
+                p.sendToBack();
+
+                activephotos.push( p );
+            }
+            ]]>
+        </method>
+
+        <attribute name="photopool" value="$once{ [] }"/>
+
+        <method name="getPhoto">
+            var r;
+            if ( photopool.length ) {
+                r = photopool.pop();
+            } else {
+                r = new photoclass( this , { visible : false } );
+                new LzDatapath( r );
+                r.txt.setVisible( false )
+            }
+            showdel.register( r, "onloaded" );
+            return r;
+        </method>
+
+        <attribute name="showdel" 
+                   value="$once{ new LzDelegate( this, 'showAfterLoad' ) }"/>
+
+        <!-- pure virtual
+        <method name="showAfterLoad">
+        -->
+
+        <method name="poolAll">
+            while( activephotos.length ){
+                var p = activephotos.pop();
+                p.setVisible( false );
+                p.datapath.setPointer( null );
+                photopool.push( p );
+            }
+            showdel.unregisterAll();
+        </method>
+
+    </class>
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->

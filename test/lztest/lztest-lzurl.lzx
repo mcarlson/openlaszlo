@@ -1,0 +1,346 @@
+<canvas>
+<include href="lztest/lztestmanager.lzx" /> 
+<debug fontsize="18"/>
+
+<!--
+  covers-tags: lzurl smoketest
+
+ See http://www.ietf.org/rfc/rfc2396.txt specified the syntax for a URI
+
+    protocol
+    host 
+    port 
+    path 
+    file 
+    query
+    fragment
+-->
+
+
+<script>
+<![CDATA[
+
+// path with filename
+function test_lzurls1() {
+   var u1 = new LzURL("http://blog.scifi.com/tech/archives/2007/02/20/brand_your_brea.html");
+   LzTestManager.assertEquals("http",           u1.protocol, "test_lzurls1 protocol");
+   LzTestManager.assertEquals("blog.scifi.com", u1.host, "test_lzurls1 host");
+   LzTestManager.assertEquals(null,             u1.port, "test_lzurls1 port ");
+   LzTestManager.assertEquals("/tech/archives/2007/02/20/", u1.path, "test_lzurls1 path");
+   LzTestManager.assertEquals("brand_your_brea.html", u1.file, "test_lzurls1 file");
+   LzTestManager.assertEquals(null,             u1.query, "test_lzurls1 query");
+   LzTestManager.assertEquals(null,             u1.fragment, "test_lzurls1 fragment");
+   LzTestManager.assertEquals("http://blog.scifi.com/tech/archives/2007/02/20/brand_your_brea.html",
+                              u1.toString());
+
+}
+
+
+// path without filename
+function test_lzurls2() {
+    var u2 = new LzURL("http://www.tinyliving.com/store/department/1/kitchen/");
+    LzTestManager.assertEquals("http",               u2.protocol, "test_lzurls2 protocol");
+    LzTestManager.assertEquals("www.tinyliving.com", u2.host, "test_lzurls2 host");
+    LzTestManager.assertEquals(null,                   u2.port, "test_lzurls2 port");
+    LzTestManager.assertEquals("/store/department/1/kitchen/", u2.path, "test_lzurls2 path");
+    LzTestManager.assertEquals(null,                 u2.file, "test_lzurls2 file");
+    LzTestManager.assertEquals(null,                 u2.query, "test_lzurls2 query");
+    LzTestManager.assertEquals(null,                 u2.fragment, "test_lzurls2 fragment");
+    LzTestManager.assertEquals("http://www.tinyliving.com/store/department/1/kitchen/",
+                               u2.toString());
+}
+
+// query arg
+function test_lzurls3() {
+   var u3 = new LzURL("http://www.google.com/search?btnI=1&q=laszlosystems.com");
+   LzTestManager.assertEquals("http",                         u3.protocol, "test_lzurls3 protocol");
+   LzTestManager.assertEquals("www.google.com",               u3.host, "test_lzurls3 host");
+   LzTestManager.assertEquals(null,                           u3.port, "test_lzurls3 port");
+   LzTestManager.assertEquals("/",                            u3.path, "test_lzurls3 path");
+   LzTestManager.assertEquals("search",                       u3.file, "test_lzurls3 file");
+   LzTestManager.assertEquals("btnI=1&q=laszlosystems.com",  u3.query, "test_lzurls3 query");
+   LzTestManager.assertEquals(null,                           u3.fragment, "test_lzurls3 fragment");
+   LzTestManager.assertEquals("http://www.google.com/search?btnI=1&q=laszlosystems.com",
+                              u3.toString());
+}
+
+// fragment
+function test_file() {
+    var u3 = new LzURL("file:///C:/Program%20Files/Picasa2/i18n/uninstall_de.html") 
+    LzTestManager.assertEquals("file",                        u3.protocol, "test_lzurls4 protocol");
+    LzTestManager.assertEquals(null,            u3.host, "test_lzurls4 host");
+    LzTestManager.assertEquals(null,                          u3.port, "test_lzurls4 port");
+    LzTestManager.assertEquals('/C:/Program%20Files/Picasa2/i18n/',
+                               u3.path, "test_lzurls4 path");
+    LzTestManager.assertEquals('uninstall_de.html', u3.file, "test_lzurls4 file");
+    LzTestManager.assertEquals(null,      u3.query, "test_lzurls4 query");
+    LzTestManager.assertEquals(null, u3.fragment, "test_lzurls4 fragment");
+    LzTestManager.assertEquals("file:///C:/Program%20Files/Picasa2/i18n/uninstall_de.html",
+                               u3.toString());
+}
+
+// fragment
+function test_lzurls4() {
+    var u3 = new LzURL("http://en.wikipedia.org/wiki/Toast#_note-1");
+    LzTestManager.assertEquals("http",                        u3.protocol, "test_lzurls4 protocol");
+    LzTestManager.assertEquals("en.wikipedia.org",            u3.host, "test_lzurls4 host");
+    LzTestManager.assertEquals(null,                          u3.port, "test_lzurls4 port");
+    LzTestManager.assertEquals("/wiki/",                      u3.path, "test_lzurls4 path");
+    LzTestManager.assertEquals("Toast",                       u3.file, "test_lzurls4 file");
+    LzTestManager.assertEquals(null,      u3.query, "test_lzurls4 query");
+    LzTestManager.assertEquals("_note-1", u3.fragment, "test_lzurls4 fragment");
+    LzTestManager.assertEquals("http://en.wikipedia.org/wiki/Toast#_note-1",
+                               u3.toString());
+}
+
+
+// query arg with slashes
+function test_lzurls5() {
+    var u3 = new LzURL("http://www.explorenewengland.com/travel?special=/specials/ski/");
+    LzTestManager.assertEquals("http",                         u3.protocol, "test_lzurls4 protocol");
+    LzTestManager.assertEquals("www.explorenewengland.com",
+                               u3.host, "test_lzurls4 host");
+    LzTestManager.assertEquals(null,                           u3.port, "test_lzurls4 port");
+    LzTestManager.assertEquals("/",                           u3.path, "test_lzurls4 path");
+    LzTestManager.assertEquals("travel",                       u3.file, "test_lzurls4 file");
+    LzTestManager.assertEquals("special=/specials/ski/",  u3.query, "test_lzurls4 query");
+    LzTestManager.assertEquals(null, u3.fragment, "test_lzurls4 fragment");
+    LzTestManager.assertEquals("http://www.explorenewengland.com/travel?special=/specials/ski/",
+                               u3.toString());
+}
+
+
+// port number and query arg
+function test_lzurls6() {
+    var u3 = new LzURL("http://localhost:8080/legals2/test/lztest/lztest-lzurl.lzx?debug=true&lzr=swf7");
+    LzTestManager.assertEquals("http",                    u3.protocol, "test_lzurls4 protocol");
+    LzTestManager.assertEquals("localhost",               u3.host, "test_lzurls4 host");
+    LzTestManager.assertEquals("8080",                    u3.port, "test_lzurls4 port");
+    LzTestManager.assertEquals("/legals2/test/lztest/",   u3.path, "test_lzurls4 path");
+    LzTestManager.assertEquals("lztest-lzurl.lzx",        u3.file, "test_lzurls4 file");
+    LzTestManager.assertEquals("debug=true&lzr=swf7",     u3.query, "test_lzurls4 query");
+    LzTestManager.assertEquals(null,                      u3.fragment, "test_lzurls4 fragment");
+    LzTestManager.assertEquals("http://localhost:8080/legals2/test/lztest/lztest-lzurl.lzx?debug=true&lzr=swf7",
+                               u3.toString());
+}
+
+// relative urls
+function test_lzurls_relative() {
+   var u1 = new LzURL("search?btnI=1&q=laszlosystems.com");
+   LzTestManager.assertEquals(null,   u1.protocol, "test_lzurls_relative p1.1");
+   LzTestManager.assertEquals(null,   u1.port,     "test_lzurls_relative p1.2");
+   LzTestManager.assertEquals(null,   u1.host,     "test_lzurls_relative p1.3");
+   LzTestManager.assertEquals(null,   u1.path,     "test_lzurls_relative p1.4");
+   LzTestManager.assertEquals("search",   u1.file,     "test_lzurls_relative p1.5");
+   LzTestManager.assertEquals("btnI=1&q=laszlosystems.com",   u1.query,     "test_lzurls_relative p1.6");
+   LzTestManager.assertEquals(null,   u1.fragment,     "test_lzurls_relative p1.7");
+    LzTestManager.assertEquals("search?btnI=1&q=laszlosystems.com",
+                               u1.toString());
+
+   var u2 = new LzURL("search.html?btnI=1&q=laszlosystems.com");
+   LzTestManager.assertEquals(null,   u2.protocol, "test_lzurls_relative p2.1");
+   LzTestManager.assertEquals(null,   u2.port,     "test_lzurls_relative p2.2");
+   LzTestManager.assertEquals(null,   u2.host,     "test_lzurls_relative p2.3");
+   LzTestManager.assertEquals(null,   u2.path,     "test_lzurls_relative p2.4");
+   LzTestManager.assertEquals("search.html",   u2.file,     "test_lzurls_relative p2.5");
+   LzTestManager.assertEquals("btnI=1&q=laszlosystems.com", u2.query, "test_lzurls_relative p2.6");
+   LzTestManager.assertEquals(null, u2.fragment, "test_lzurls_relative p2.7");
+
+   var u3 = new LzURL("search.html.lzx?btnI=1&q=laszlosystems.com");
+   LzTestManager.assertEquals(null,   u3.protocol, "test_lzurls_relative p3.1");
+   LzTestManager.assertEquals(null,   u3.port,     "test_lzurls_relative p3.2");
+   LzTestManager.assertEquals(null,   u3.host,     "test_lzurls_relative p3.3");
+   LzTestManager.assertEquals(null,   u3.path,     "test_lzurls_relative p3.4");
+   LzTestManager.assertEquals("search.html.lzx",   u3.file,     "test_lzurls_relative p3.5");
+   LzTestManager.assertEquals("btnI=1&q=laszlosystems.com", u3.query, "test_lzurls_relative p3.6");
+   LzTestManager.assertEquals(null, u3.fragment, "test_lzurls_relative p3.7");
+
+   var u4 = new LzURL("?btnI=1&q=laszlosystems.com");
+   LzTestManager.assertEquals(null,   u4.protocol, "test_lzurls_relative p4.1");
+   LzTestManager.assertEquals(null,   u4.port,     "test_lzurls_relative p4.2");
+   LzTestManager.assertEquals(null,   u4.host,     "test_lzurls_relative p4.3");
+   LzTestManager.assertEquals(null,   u4.path,     "test_lzurls_relative p4.4");
+   LzTestManager.assertEquals(null,   u4.file,     "test_lzurls_relative p4.5");
+   LzTestManager.assertEquals("btnI=1&q=laszlosystems.com", u4.query, "test_lzurls_relative p4.6");
+   LzTestManager.assertEquals(null, u4.fragment, "test_lzurls_relative p4.7");
+
+   var u5 = new LzURL("?btnI=1&q=laszlosystems.com#foobar;bax");
+   LzTestManager.assertEquals(null,   u5.protocol, "test_lzurls_relative p5.1");
+   LzTestManager.assertEquals(null,   u5.port,     "test_lzurls_relative p5.2");
+   LzTestManager.assertEquals(null,   u5.host,     "test_lzurls_relative p5.3");
+   LzTestManager.assertEquals(null,   u5.path,     "test_lzurls_relative p5.4");
+   LzTestManager.assertEquals(null,   u5.file,     "test_lzurls_relative p5.5");
+   LzTestManager.assertEquals("btnI=1&q=laszlosystems.com", u5.query, "test_lzurls_relative p5.6");
+   LzTestManager.assertEquals("foobar;bax", u5.fragment, "test_lzurls_relative p5.7");
+
+   var u6 = new LzURL("blah/barf/searchme?btnI=1&q=laszlosystems.com#foobar;bax");
+   LzTestManager.assertEquals(null,   u6.protocol, "test_lzurls_relative p6.1");
+   LzTestManager.assertEquals(null,   u6.port,     "test_lzurls_relative p6.2");
+   LzTestManager.assertEquals(null,   u6.host,     "test_lzurls_relative p6.3");
+   LzTestManager.assertEquals("blah/barf/",   u6.path,     "test_lzurls_relative p6.4");
+   LzTestManager.assertEquals("searchme",     u6.file,     "test_lzurls_relative p6.5");
+   LzTestManager.assertEquals("btnI=1&q=laszlosystems.com", u6.query, "test_lzurls_relative p6.6");
+   LzTestManager.assertEquals("foobar;bax", u6.fragment, "test_lzurls_relative p6.7");
+
+
+
+
+   // absolute path
+
+   var u7 = new LzURL("/blah/barf/searchme");
+   LzTestManager.assertEquals(null,   u7.protocol, "test_lzurls_relative p7.1");
+   LzTestManager.assertEquals(null,   u7.port,     "test_lzurls_relative p7.2");
+   LzTestManager.assertEquals(null,   u7.host,     "test_lzurls_relative p7.3");
+   LzTestManager.assertEquals("/blah/barf/",   u7.path,     "test_lzurls_relative p7.4");
+   LzTestManager.assertEquals("searchme",      u7.file,     "test_lzurls_relative p7.5");
+   LzTestManager.assertEquals(null, u7.query, "test_lzurls_relative p7.7");
+   LzTestManager.assertEquals(null, u7.fragment, "test_lzurls_relative p7.8");
+
+   var u8 = new LzURL("/blah/barf/");
+   LzTestManager.assertEquals(null,   u8.protocol, "test_lzurls_relative p8.1");
+   LzTestManager.assertEquals(null,   u8.port,     "test_lzurls_relative p8.2");
+   LzTestManager.assertEquals(null,   u8.host,     "test_lzurls_relative p8.3");
+   LzTestManager.assertEquals("/blah/barf/",   u8.path,     "test_lzurls_relative p8.4");
+   LzTestManager.assertEquals(null,      u8.file,     "test_lzurls_relative p8.5");
+   LzTestManager.assertEquals(null, u8.query, "test_lzurls_relative p8.8");
+   LzTestManager.assertEquals(null, u8.fragment, "test_lzurls_relative p8.8");
+   LzTestManager.assertEquals("/blah/barf/", u8.toString(),   "test_lzurls_relative p8.9");    
+
+   var u9 = new LzURL("contacts.jsp?q=list");
+   LzTestManager.assertEquals(null,   u9.protocol, "test_lzurls_relative p9.1");
+   LzTestManager.assertEquals(null,   u9.port,     "test_lzurls_relative p9.2");
+   LzTestManager.assertEquals(null,   u9.host,     "test_lzurls_relative p9.3");
+   LzTestManager.assertEquals(null,   u9.path,     "test_lzurls_relative p9.4");
+   LzTestManager.assertEquals("contacts.jsp",      u9.file,     "test_lzurls_relative p9.5");
+   LzTestManager.assertEquals("q=list", u9.query, "test_lzurls_relative p9.9");
+   LzTestManager.assertEquals(null, u9.fragment, "test_lzurls_relative p9.10");
+   LzTestManager.assertEquals("contacts.jsp?q=list", u9.toString(),   "test_lzurls_relative p9.11");    
+
+
+
+}
+
+function test_lzurls_compact() {
+    /* Need to test these nonstandard cases that we support
+         http:foo.html
+         http:/foo/bar.html
+         http:foo.ksp?q=12
+         http:/foo.ksp?q=12
+         http:/foo/bar.ksp?q=12
+    */
+
+    var u1 = new LzURL("http:foo.html");
+    LzTestManager.assertEquals("http",   u1.protocol, "test_lzurls_compact p1.1");
+    LzTestManager.assertEquals(null,   u1.port,       "test_lzurls_compact p1.2");
+    LzTestManager.assertEquals("foo.html", u1.file,   "test_lzurls_compact p1.3");
+    LzTestManager.assertEquals(null, u1.path,   "test_lzurls_compact p1.4");
+    LzTestManager.assertEquals(null, u1.query,   "test_lzurls_compact p1.5");
+    LzTestManager.assertEquals("http:foo.html", u1.toString(),   "test_lzurls_compact p1.6");
+    
+    var u2 = new LzURL("http:/foo/bar.html");
+    LzTestManager.assertEquals("http",   u2.protocol, "test_lzurls_compact p2.1");
+    LzTestManager.assertEquals(null,   u2.port,       "test_lzurls_compact p2.2");
+    LzTestManager.assertEquals("bar.html", u2.file,   "test_lzurls_compact p2.3");
+    LzTestManager.assertEquals("/foo/", u2.path,   "test_lzurls_compact p2.4");
+    LzTestManager.assertEquals(null, u2.query,   "test_lzurls_compact p2.5");
+    LzTestManager.assertEquals("http:/foo/bar.html", u2.toString(),   "test_lzurls_compact p2.6");
+    
+    var u3 = new LzURL("http:foo.jsp?q=12");
+    LzTestManager.assertEquals("http",   u3.protocol, "test_lzurls_compact p3.1");
+    LzTestManager.assertEquals(null,   u3.port,       "test_lzurls_compact p3.2");
+    LzTestManager.assertEquals("foo.jsp", u3.file,   "test_lzurls_compact p3.3");
+    LzTestManager.assertEquals(null, u3.path,   "test_lzurls_compact p3.4");
+    LzTestManager.assertEquals("q=12", u3.query,   "test_lzurls_compact p3.5");
+    LzTestManager.assertEquals("http:foo.jsp?q=12", u3.toString(),   "test_lzurls_compact p3.6");    
+    
+    var u4  = new LzURL("http:/foo.jsp?q=12");
+    LzTestManager.assertEquals("http",   u4.protocol, "test_lzurls_compact p4.1");
+    LzTestManager.assertEquals(null,   u4.port,       "test_lzurls_compact p4.2");
+    LzTestManager.assertEquals("foo.jsp", u4.file,   "test_lzurls_compact p4.3");
+    LzTestManager.assertEquals("/", u4.path,   "test_lzurls_compact p4.4");
+    LzTestManager.assertEquals("q=12", u4.query,   "test_lzurls_compact p4.5");
+    LzTestManager.assertEquals("http:/foo.jsp?q=12", u4.toString(),   "test_lzurls_compact p4.6");    
+
+    
+    var u5  = new LzURL("http:/foo/bar.jsp?q=12");
+    LzTestManager.assertEquals("http",   u5.protocol, "test_lzurls_compact p5.1");
+    LzTestManager.assertEquals(null,   u5.port,       "test_lzurls_compact p5.2");
+    LzTestManager.assertEquals("bar.jsp", u5.file,   "test_lzurls_compact p5.3");
+    LzTestManager.assertEquals("/foo/", u5.path,   "test_lzurls_compact p5.4");
+    LzTestManager.assertEquals("q=12", u5.query,   "test_lzurls_compact p5.5");
+    LzTestManager.assertEquals("http:/foo/bar.jsp?q=12", u5.toString(),   "test_lzurls_compact p5.6");    
+    
+}
+
+
+
+//url with hostname only
+function test_lzurls_host() {
+   var u1 = new LzURL("http://foo.bar.baz");
+   LzTestManager.assertEquals("http",   u1.protocol, "test_lzurls_host p1.1");
+   LzTestManager.assertEquals(null,   u1.port,       "test_lzurls_host p1.2");
+   LzTestManager.assertEquals("foo.bar.baz",
+                              u1.host,     "test_lzurls_host p1.3");
+   LzTestManager.assertEquals(null,   u1.path,     "test_lzurls_host p1.4");
+   LzTestManager.assertEquals(null,   u1.file,     "test_lzurls_host p1.5");
+   LzTestManager.assertEquals(null,   u1.query,    "test_lzurls_host p1.6");
+   LzTestManager.assertEquals(null,   u1.fragment, "test_lzurls_host p1.7");
+
+
+   var u2 = new LzURL("http://foo.bar.baz:8081");
+   LzTestManager.assertEquals("http",   u2.protocol, "test_lzurls_host p2.1");
+   LzTestManager.assertEquals("8081",   u2.port,     "test_lzurls_host p2.2");
+   LzTestManager.assertEquals("foo.bar.baz",   
+                              u2.host,               "test_lzurls_host p2.3");
+   LzTestManager.assertEquals(null,   u2.path,     "test_lzurls_host p2.4");
+   LzTestManager.assertEquals(null,   u2.file,     "test_lzurls_host p2.5");
+   LzTestManager.assertEquals(null,   u2.query,    "test_lzurls_host p2.6");
+   LzTestManager.assertEquals(null,   u2.fragment, "test_lzurls_host p2.7");
+}
+
+function test_lzurls_merge() {
+   var u1 = new LzURL("http://foo.bar.baz");
+   LzTestManager.assertEquals("http",   u1.protocol, "test_lzurls_merge p1.1");
+   LzTestManager.assertEquals(null,   u1.port,       "test_lzurls_merge p1.2");
+   LzTestManager.assertEquals("foo.bar.baz",
+                              u1.host,     "test_lzurls_merge p1.3");
+   LzTestManager.assertEquals(null,   u1.path,     "test_lzurls_merge p1.4");
+   LzTestManager.assertEquals(null,   u1.file,     "test_lzurls_merge p1.5");
+   LzTestManager.assertEquals(null,   u1.query,    "test_lzurls_merge p1.6");
+   LzTestManager.assertEquals(null,   u1.fragment, "test_lzurls_merge p1.7");
+
+   var u1rel = new LzURL("/state/local/foo.html?x=12");
+   LzTestManager.assertEquals("/state/local/",   u1rel.path, "test_lzurls_merge p1.1.1");
+   LzTestManager.assertEquals("foo.html",       u1rel.file, "test_lzurls_merge p1.1.2");
+
+   var u1merge = LzURL.merge(u1rel, u1);
+   LzTestManager.assertEquals("/state/local/",   u1merge.path, "test_lzurls_merge p1.1.3");
+   LzTestManager.assertEquals("http",   u1merge.protocol, "test_lzurls_merge p1.1.4");
+   LzTestManager.assertEquals(null,     u1merge.port,     "test_lzurls_merge p1.1.4");
+   LzTestManager.assertEquals("foo.bar.baz",     u1merge.host,     "test_lzurls_merge p1.1.5");
+   LzTestManager.assertEquals("x=12",   u1merge.query,    "test_lzurls_merge p1.1.6");   
+
+}
+
+
+
+var testLzUrlSuite = new LzTestSuite( "Test LzURL"); 
+testLzUrlSuite.addTest( test_lzurls1 );
+testLzUrlSuite.addTest( test_lzurls2 );
+testLzUrlSuite.addTest( test_lzurls3 );
+testLzUrlSuite.addTest( test_lzurls4 );
+testLzUrlSuite.addTest( test_lzurls5 ); 
+testLzUrlSuite.addTest( test_lzurls6 ); 
+testLzUrlSuite.addTest( test_lzurls_relative );
+testLzUrlSuite.addTest( test_lzurls_host );
+testLzUrlSuite.addTest( test_lzurls_merge );
+testLzUrlSuite.addTest(  test_lzurls_compact );
+
+]]>
+</script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

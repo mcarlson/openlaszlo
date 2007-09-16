@@ -10,6 +10,7 @@
         #gCarla { cssbg: #245680; }
     </stylesheet>
     <view id="gCarla" bgcolor="$style{'cssbg'}" width="100" height="100" />
+    <text>This test MUST be run with a url parameter to choose the css file: paramifyme.lzx?cssfile=carla.css</text>
 
     <testsuite name="paramifysuite" loglevel="log">
         <handler name="oninit">

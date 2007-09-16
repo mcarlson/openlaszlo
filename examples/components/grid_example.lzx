@@ -5,7 +5,7 @@
     <dataset name="weatherdata" request="true" type="http"
             src="http://www.laszlosystems.com/cgi-pub/weather.cgi?zip=94114"/>
     <dataset name="contactsData" request="true" type="http"
-    src="http:../../demos/contacts/contactsdata.xml"/>
+    src="http:contactsdata.xml"/>
     <tabs style="bluecolors">
         <tabpane> Contacts
             <grid datapath="contactsData:/*" sizetoheader="false">
@@ -81,7 +81,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

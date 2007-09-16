@@ -1,5 +1,66 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-<phonebook>    <employee>        <firstName>Aimee</firstName>        <lastName>Taylor</lastName>        <phone>415-435-6645</phone>        <email>aimee@mail.com</email>    </employee>    <employee>        <firstName>Susan</firstName>        <lastName>Jones</lastName>        <phone>415-544-1234</phone>        <email>susan@mail.com</email>    </employee>    <employee>        <firstName>Peter</firstName>        <lastName>Smith</lastName>        <phone>415-233-5544</phone>        <email>peter@mail.com</email>    </employee>    <employee>        <firstName>John</firstName>        <lastName>Baldwin</lastName>        <phone>415-344-0987</phone>        <email>john@mail.com</email>    </employee>    <employee>        <firstName>Lisa</firstName>        <lastName>King</lastName>        <phone>415-554-1324</phone>        <email>lisa@mail.com</email>    </employee>    <employee>        <firstName>Nathalie</firstName>        <lastName>Ducharme</lastName>        <phone>415-546-9834</phone>        <email>nathalie@mail.com</email>    </employee>    <employee>        <firstName>Paul</firstName>        <lastName>Brown</lastName>        <phone>415-355-9876</phone>        <email>paul@mail.com</email>    </employee>    <employee>        <firstName>Roberto</firstName>        <lastName>Rodriguez</lastName>        <phone>415-435-6475</phone>        <email>roberto@mail.com</email>    </employee>    <employee>        <firstName>Laura</firstName>        <lastName>Reynolds</lastName>        <phone>415-333-7664</phone>        <email>laura@mail.com</email>    </employee>    <employee>        <firstName>Paula</firstName>        <lastName>Green</lastName>        <phone>415-435-9835</phone>        <email>paula@mail.com</email>    </employee></phonebook>
+<phonebook>
+    <employee>
+        <firstName>Aimee</firstName>
+        <lastName>Taylor</lastName>
+        <phone>415-435-6645</phone>
+        <email>aimee@mail.com</email>
+    </employee>
+    <employee>
+        <firstName>Susan</firstName>
+        <lastName>Jones</lastName>
+        <phone>415-544-1234</phone>
+        <email>susan@mail.com</email>
+    </employee>
+    <employee>
+        <firstName>Peter</firstName>
+        <lastName>Smith</lastName>
+        <phone>415-233-5544</phone>
+        <email>peter@mail.com</email>
+    </employee>
+    <employee>
+        <firstName>John</firstName>
+        <lastName>Baldwin</lastName>
+        <phone>415-344-0987</phone>
+        <email>john@mail.com</email>
+    </employee>
+    <employee>
+        <firstName>Lisa</firstName>
+        <lastName>King</lastName>
+        <phone>415-554-1324</phone>
+        <email>lisa@mail.com</email>
+    </employee>
+    <employee>
+        <firstName>Nathalie</firstName>
+        <lastName>Ducharme</lastName>
+        <phone>415-546-9834</phone>
+        <email>nathalie@mail.com</email>
+    </employee>
+    <employee>
+        <firstName>Paul</firstName>
+        <lastName>Brown</lastName>
+        <phone>415-355-9876</phone>
+        <email>paul@mail.com</email>
+    </employee>
+    <employee>
+        <firstName>Roberto</firstName>
+        <lastName>Rodriguez</lastName>
+        <phone>415-435-6475</phone>
+        <email>roberto@mail.com</email>
+    </employee>
+    <employee>
+        <firstName>Laura</firstName>
+        <lastName>Reynolds</lastName>
+        <phone>415-333-7664</phone>
+        <email>laura@mail.com</email>
+    </employee>
+    <employee>
+        <firstName>Paula</firstName>
+        <lastName>Green</lastName>
+        <phone>415-435-9835</phone>
+        <email>paula@mail.com</email>
+    </employee>
+</phonebook>

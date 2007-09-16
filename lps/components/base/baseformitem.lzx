@@ -53,6 +53,12 @@
             }
             super.init();
         </method>
+
+        <method name="destroy">
+            if (this._parentform)
+                this._parentform.removeFormItem(this);
+            super.destroy();
+        </method>
         
         <handler name="oninit"><![CDATA[
             var fp = this.findForm();
@@ -94,6 +100,15 @@
                     this._parentform.setChanged(changed);
                 }
             }
+            // notify about reset to original state...
+            if(!skipform && !this.changed && !ignoreform){
+                // It's possible that baseformitem is not in a form.
+                if(this['_parentform'] &&
+                    this._parentform['changed'] != undefined &&
+                    this._parentform.changed){
+                    this._parentform.setChanged(changed, true);
+                }
+            }
             ]]>
         </method>
 
@@ -120,7 +135,7 @@
             if (isinitvalue || ! this._initcomplete) {
                 this.rollbackvalue = v;
             }
-            this.setChanged(didchange && !isinitvalue);
+            this.setChanged(didchange && !isinitvalue && this.rollbackvalue != v);
             if (this['onvalue']) this.onvalue.sendEvent(v);
             ]]>
         </method>
@@ -174,11 +189,22 @@
             }
             return (LzBrowser.xmlEscape(this.submitname) + "=\"" + LzBrowser.xmlEscape(val) + '"'); 
         </method>
-
+        <doc>
+          <tag name="shortdesc"><text>an abstract class for components which are used in a form</text></tag>
+          <text>
+            <p>This abstract class works with <classname>form</classname> or
+            <classname>baseform</classname>.  All form components subclass this.</p>
+            
+            <seealso>
+            <tags>form submit</tags>
+            <tags label="Form components">checkbox radiogroup combobox button edittext list</tags>
+            </seealso>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

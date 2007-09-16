@@ -1,6 +1,6 @@
 <library>
-    
     <include href="../common/label.lzx"/>
+    <include href="extensions/drawview.lzx"/>
         
     <!--- Represents a line in the chart -->
     <class name="valueline" extends="drawview">       
@@ -124,7 +124,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

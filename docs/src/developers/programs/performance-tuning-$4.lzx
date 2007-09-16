@@ -1,0 +1,65 @@
+
+  <canvas height="150">
+    <include href="utils/performance" />
+    <script>
+      var iterations = Measurement.defaultIterations;
+      var textIndexes={};
+      for (var i = 0; i &lt; iterations; i++) {
+        textIndexes[i] = i.toString();
+      }
+
+      function empty () {
+        var testArray = [];
+        for (var j in textIndexes ) {
+          ;
+        }
+      }
+
+      function measurePush () {
+        var testArray = [];
+        for (var j in textIndexes ) {
+          testArray.push(j);
+        }
+      }
+
+      function measureSetAtLength () {
+        var testArray = [];
+        for (var j in textIndexes) {
+          testArray[testArray.length] = j;
+        }
+      }
+
+      function measureSetAtIndex () {
+        var testArray = [];
+        for (var j in textIndexes) {
+          testArray[j] = j;
+        }
+      }
+
+      function measureSetAtIndexPreallocated () {
+        var testArray = new Array(iterations);
+        for (var j in textIndexes) {
+          testArray[j] = j;
+        }
+      }
+
+      function measureObjectSetAtIndex () {
+        var testObject = {};
+        for (var j in textIndexes) {
+          testObject[j] = j;
+        }
+      }
+
+      (new Measurement({'Array.push': measurePush,
+                        'Array[Array.length] =': measureSetAtLength,
+                        'Array[index] =':  measureSetAtIndex,
+                        'Array[index] = (preallocated)':
+                        measureSetAtIndexPreallocated,
+                        'Object[key] =': measureObjectSetAtIndex,
+                        'empty': empty})).run();
+    </script>
+  </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

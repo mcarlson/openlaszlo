@@ -1,0 +1,77 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas>
+    <dataset name="dsTest">
+        <root>
+            <anode x="1"/>
+            <bnode y="2"/>
+            <cnode>some Text</cnode>
+            <repl>
+                <element a="1">text</element>
+                <element a="1">text</element>
+            </repl>
+        </root>
+    </dataset>
+
+    <view name="myp" datapath="dsTest:/root/anode">
+        <method event="ondata" args="d">
+            var ex = dsTest.getFirstChild().getFirstChild();
+            Debug.write( 'expecting', ex );
+            Debug.write( 'got', d );
+            if ( d != ex ){
+                Debug.write( 'FAIL!' );
+            }
+            if ( ex != this.data ){
+                Debug.write( "didn't set this.data" );
+            }
+        </method>
+    </view>
+    <view name="myp2" datapath="dsTest:/root/bnode/@y">
+        <method event="ondata" args="d">
+            Debug.write( 'expecting 2' );
+            Debug.write( 'got', d );
+            if ( d != 2 ){
+                Debug.write( 'FAIL!' );
+            }
+            if ( 2 != this.data ){
+                Debug.write( "didn't set this.data" );
+            }
+        </method>
+    </view>
+    <view name="myp3" datapath="dsTest:/root/cnode">
+        <method event="ondata" args="d">
+            var ex = dsTest.getFirstChild().childNodes[ 2 ];
+            Debug.write( 'expecting', ex );
+            Debug.write( 'got', d );
+            if ( d != ex ){
+                Debug.write( 'FAIL!' );
+            }
+            if ( ex != this.data ){
+                Debug.write( "didn't set this.data" );
+            }
+            var fc = ex.getFirstChild();
+            Debug.write( 'fc', fc.classname );
+            Debug.write( 'firstchild instance of LzDataText?', 
+                          ex.getFirstChild() instanceof LzDataText );
+            if ( !( ex.getFirstChild() instanceof LzDataText ) ){
+                Debug.write( 'FAIL!' );
+            }
+        </method>
+    </view>
+
+    <simplelayout/>
+    <view datapath="dsTest:/root/repl/element[1-19]/text()">
+        <method event="ondata" args="d">
+            Debug.write('got', d, 'expecting', 'text');
+        </method>
+    </view>
+    <view datapath="dsTest:/root/repl/element[1-19]/@a">
+        <method event="ondata" args="d">
+            Debug.write('got', d, 'expecting', '1');
+        </method>
+    </view>
+</canvas>

@@ -1,0 +1,34 @@
+<canvas debug="true">
+<debug y="150"/>
+<include href="lzunit"/>
+<simplelayout axis="y" spacing="10"/>
+
+<button name="goButton" width="100" text="Go">
+
+<attribute name="go" type="boolean" value="true"/>
+
+<method event="onclick">
+    if (goButton.go==true) {
+        this.setAttribute('text', 'Stop');
+        this.setAttribute('go', false);
+        Debug.write(this.getAttribute('go'), "should be 'false'");
+        }
+    else {
+    this.setAttribute('text', 'Go');
+    this.setAttribute('go', true);
+    Debug.write(this.getAttribute('go'), "should be 'true'");
+    }
+</method>
+
+</button>
+
+<TestSuite>
+    <TestCase>
+        <method name="testGoButtonTrue">
+            assertTrue(goButton.go);
+        </method>
+    </TestCase>   
+</TestSuite>
+
+</canvas>
+<!-- Copyright 2001-2007 Laszlo Systems, Inc. -->

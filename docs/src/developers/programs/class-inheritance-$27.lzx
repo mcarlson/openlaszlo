@@ -1,0 +1,35 @@
+
+<canvas debug="true" height="200">
+  <debug x="155"/>
+
+  <class name="container" defaultplacement="'red'">
+    <attribute name="contentview" value="null" type="expression"/>
+
+    <method name="init">
+      super.init();
+
+      // get a reference to the content node
+      if ( this.contentview == null ) {
+        if ( this.defaultplacement != null ){
+          this.contentview = this.searchSubnodes( "name" , this.defaultplacement );
+        } else {
+          this.contentview = this;
+        }
+      }
+      
+      Debug.write("content view", this.contentview);
+    </method>
+
+    <view name="green" bgcolor="green" width="100" height="100">
+      <view name="yellow" bgcolor="yellow" width="50%" height="50%">
+        <view name="red" bgcolor="red" width="50%" height="50%"/>
+      </view>
+    </view>
+  </class>
+
+  <container name="top"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

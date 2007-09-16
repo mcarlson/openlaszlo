@@ -1,0 +1,24 @@
+
+<canvas debug="true" height="200">
+  <debug height="150"/>
+  <dataset name="mydset" src="http:?lzt=xml"/>
+  
+  <dataset name="week">
+    <day>Sunday</day>
+    <day>Monday</day>
+    <day>Tuesday</day>
+    <day>Wednesday</day>
+    <day>Thursday</day>
+    <day>Friday</day>
+  </dataset>
+  
+  <script>
+    Debug.write(mydset);
+    Debug.write(canvas.datasets['mydset']);
+    Debug.write(week)
+  </script>
+  </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -33,14 +33,16 @@ view system's notation, it's suggested that remotecalls are explictly named.</p>
 
 <example>
 &lt;canvas debug="true" height="400"&gt;
+    &lt;!-- this isues one call of the freshmeat XML-RPC API --&gt;
+    &lt;!-- Documented here: http://freshmeat.net/faq/view/49/ --&gt;
 
     &lt;debug x="10" y="40" width="450" height="350" /&gt;
-    
-    &lt;xmlrpc name="meerkat"
-            service="http://www.oreillynet.com/meerkat/xml-rpc/server.php"&gt;
+
+    &lt;xmlrpc name="freshmeat"
+            service="http://freshmeat.net/xmlrpc/"&gt;
 
         &lt;handler name="onload"&gt;
-            Debug.write('meerkat XML-RPC service loaded');
+            Debug.write('freshmeat XML-RPC service loaded');
             Debug.write('proxy:');
             Debug.inspect(this.proxy);
         &lt;/handler&gt;
@@ -53,14 +55,14 @@ view system's notation, it's suggested that remotecalls are explictly named.</p>
             Debug.write('onerror:', error);
         &lt;/handler&gt;
 
-        &lt;remotecall name="gc" funcname="meerkat.getCategories" /&gt;
+        &lt;remotecall name="fal" funcname="fetch_available_licenses" /&gt;
 
     &lt;/xmlrpc&gt;
 
-    &lt;button text="getCategories" x="10" y="10"&gt;
+    &lt;button text="fetch_available_licenses" x="10" y="10"&gt;
         &lt;handler name="onclick"&gt;
-            Debug.write('getting categories...');
-            meerkat.gc.invoke()
+            Debug.write('getting licenses...');
+            freshmeat.fal.invoke()
         &lt;/handler&gt;
     &lt;/button&gt;
 
@@ -79,6 +81,6 @@ view system's notation, it's suggested that remotecalls are explictly named.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,60 @@
+<canvas height="800" width="620">
+  <include href="timing-support.lzx" />
+
+  <resource name="sunnycat" src="resources/sunnycat.jpg" />
+  <resource name="cave" src="resources/iebooks-cave.png" />
+  <resource name="maroonPng" src="resources/marooned.png" />
+  <resource name="maroonJpg" src="resources/marooned.jpg" />  
+  
+  <view name="sunnycat" resource="sunnycat" y="100" />
+  
+  <script>
+      
+  <![CDATA[
+    
+    function loadImages() {
+        var iv = new LzView( canvas, { y : 200 });        
+        iv.setSource('http:resources/marooned.png');
+        canvas.addSubview(iv);    
+        
+        var cat = new LzView( canvas, { y : 150 });
+        cat.setSource("http:resources/sunnycat.jpg");
+        var w = cat.getWidth();
+        var h = cat.getHeight();
+        canvas.addSubview(cat);        
+    }
+    
+    function scaleImages() {
+        var v = new LzView( canvas, { y : 300, resource: "cave" });
+        canvas.addSubview(v);
+        var bigView = new LzView( canvas, { 
+            y : 150, x : -300, y : 250,
+            resource: "cave", 
+            width : 1211, height : 123, stretches : "both" });
+        canvas.addSubview(bigView);        
+    }
+    
+    function opaqueness() {
+        var maroonPngView = new LzView( canvas, { resource : "maroonPng", y : 250, opacity : 0.3 });
+        var maroonJpgView = new LzView( canvas, { resource : "maroonJpg", x: 270, y : 275, opacity : 0.3 });        
+        canvas.addSubview(maroonPngView);
+        canvas.addSubview(maroonJpgView);
+    }
+
+    
+    
+    addTest("loadImages", 3);    
+    addTest("scaleImages", 10);
+    addTest("opaqueness", 10);
+    
+    runTests( 'imageperformance' , 10 );
+
+  ]]>
+  </script>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

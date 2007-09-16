@@ -1,0 +1,12 @@
+<canvas width="1000" height="300">
+
+<inputtext font="Verdana" fontsize="24" id="inp">foobar</inputtext>
+
+<text id="foo"  font="Courier" fontstyle="bold" x="630" fontsize="24" y="30" bgcolor="0xcccccc" 
+      width="200"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Courier Font Bold</text>
+
+<text id="bar" font="Comic Sans MS" fontstyle="italic" x="630" fontsize="12" y="60" bgcolor="0xffff00" 
+      width="200"   onmouseover="this.setBGColor(0xff0000)" onmouseout="this.setBGColor(0xffff00)" onmousedown="this.setText('down');" onmouseup="this.setText('up');">Italic style Comic Sans MS</text>
+
+
+</canvas>

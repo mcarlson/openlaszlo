@@ -1,6 +1,57 @@
+<!---
+      @topic Incubator
+      @subtopic Rich Text Editor
+  -->
 <library>
     <include href="scrollrichedittext.lzx"/>
+        
+        
+        
+  <!-- 
+      This is a fix for EM-1129 and LPP-4396: clicking bold moves the insertion
+      point. We need to store the selection before losing the selection to 
+      another view. [bshine 2007.08.13]
+    -->
+    <script><![CDATA[
+        LzModeManager.rawMouseEvent = function ( eName ) {
+            //Debug.warn("rawmouseevent %w", eName);
+            //assume this happens before handleMouseEvent though order is
+            //not guaranteed
+            
+            // Store the selection in the currently focused text editor
+            // (if any). Useful for restoring a text field's selection
+            // after a click event.
+            var focus = Selection.getFocus();
+            if (focus) {
+                // Debug.info("got focus: %w", focus);             
+                // focus is a path string - we have to eval() it to get
+                // an actual movieclip
+                var textclip = eval(focus); // apologies - dstowell
+                // [NB dstowell] __LZrte is a field I created to
+                // store a reference to a rich text editor view
+                // in the textclip itself. This field is _not_ part
+                // of the LFC.
+                if ("__LZrte" in textclip) {
+                    // if we get here, it means that the focus is 
+                    // currently the rich text editor. Before
+                    // we handle the mouse event, store the selection. 
+                    var beginIndex = Selection.getBeginIndex();
+                    var endIndex   = Selection.getEndIndex();
+                    if (-1 != beginIndex && -1 != endIndex) {
+                        // Debug.warn("rawMouseEvent is changing the ssel and esel to %d-%d", beginIndex, endIndex); 
+                        textclip.__LZrte._ssel = beginIndex;
+                        textclip.__LZrte._esel = endIndex;
+                    }
+                }
+            }
 
+            this.clickStream.push( this.clstDict[ eName ] );
+            //call the cleanup delegate
+
+            this.callNext();
+        }
+    ]]></script>
+            
     <!--- 
     A view which contains the text area for a rich text editor. Combine with a 
     richtexttoolbar to make an actual editor. 
@@ -10,11 +61,15 @@
         <!--- The placement for the toolbar in the richtexteditor. -->
         <attribute name="toolbarplacement" value="null"/>
 
-        <!--- Reference to the toolbar associated with this editor. --> 
-        <attribute name="toolbar" value="$once{parent.parent.toolbar}" />
+        <!--- Reference to the toolbar associated with this editor. 
+            For the toolbar to show the correct format when the insertion
+            point moves, this attribute must be set by users. -->
+        <attribute name="toolbar"  />
         
-        <!--- Reference to the hyperlink creation dialog --> 
-        <attribute name="linkpanel" value="$once{parent.parent.linkpanel}" />
+        <!--- Reference to the hyperlink creation dialog.
+            This attribute should be set by users, if there is 
+            an associated link panel --> 
+        <attribute name="linkpanel"/>
         
         <!-- The defaultfontsize, defaultfontname, and defaultfontcolor
              determine the initial configuration of the toolbar, and thus, the
@@ -48,15 +103,15 @@
         <attribute name="insertionpoint" value="0" />
 
         <!--- Start in selection region. 
-              @keywords private -->
+              @access private -->
         <attribute name="_ssel" value="0"/>
 
         <!--- End in selectionregion.
-              @keywords private -->
+              @access private -->
         <attribute name="_esel" value="0"/>
         
         <!--- Whether to inform toolbar of changes in the caret position. 
-            @keywords private -->
+            @access private -->
         <attribute name="_shouldresettoolbar" value="true" />
 
         <!--- The size in points of an indent -->
@@ -64,56 +119,62 @@
                    
         <!--- the component on which a mousedown originated, if the mouse is
             currently down 
-            @keywords private
+            @access private
             --> 
         <attribute name="_mousedownorigin" value="null"/>
         
         <!--- True if the input text associated with this RTE has focus. 
-            @keywords private
+            @access private
             -->
         <attribute name="_fieldhasfocus" value="false" />
 
         <!--- True if the next onfocus should be ignored.
-              @keywords private -->
+              @access private -->
         <attribute name="_ignorenextfocus" value="false" />
 
 <!-- CONSTRUCTOR    .........................................................-->
 
         <!--- @keywords private -->
         <method name="init">
-            // Debug.write("richtexteditor.init"); 
             super.init();
-                        
             // Create a currentformat object, and initialize it to the format
             // specified by the various defaultfontsize/defaultfontcolor/defaultfontname
             // attributes. 
-            this.currentformat = new LzTextFormat();
+            this.currentformat = new textformat();
             this._resetFormatToDefaults();
             this.startformat = this.currentformat;
             this.inp.setDefaultFormat(this.currentformat);
-            
-            // I need to force the editor's default to get pushed out to 
-            // any listeners *and* to the actual format of the text field. 
-            // However, my oncurrentformat event hasn't yet been registered. 
-            // So: explicitly push the format to the toolbar
-            this.toolbar.matchformat(this.currentformat);
         </method>
 
 <!-- PUBLIC METHODS .........................................................-->
         
         <!--- Reset the values of the richtexteditor. -->
-        <method name="reset">
+        <method name="reset"><![CDATA[
             this.clearText(true); 
             this._resetFormatToDefaults();
             this.inp.setDefaultFormat(this.currentformat);
             this.rollback();
             
-            if (this.linkpanel) this.linkpanel.hide();
-            if (this.toolbar) this.toolbar.reset();
+            if ("linkpanel" in this && this.linkpanel) this.linkpanel.hide();
+            if ("toolbar" in this && this.toolbar) this.toolbar.reset();
             
             this.isHTML = false;
             this._shouldresettoolbar = true;
             this._ssel = this._esel = 0;
+        ]]></method>
+
+        <!--- Hook this editor up to a toolbar, so that the toolbar's ui
+            will stay synchronized with the format at the insertion point
+            of this editor. --> 
+        <method name="setToolbar" args="tb">            
+            this.toolbar = tb;
+            if (this.isinited) this.toolbar.matchformat(this.currentformat);
+        </method>
+        
+        <!--- Hook this editor up to a link panel, so that the
+            linkpanel will be hidden when the editor is reset -->        
+        <method name="setLinkPanel" args="lp">
+            this.linkpanel = lp;
         </method>
 
 
@@ -188,26 +249,6 @@
                 }
             }
         ]]></method>
-
-        <!--- Forget the selection if we lose focus to a focusable widget, but
-            keep the selection if we lose focus to a non-focusable widget, like
-            the toolbar buttons. 
-            @param view s: the view which is gaining the selection
-        -->
-        <method event="onblur" args="s">
-            this._fieldhasfocus = false; 
-            // If we're blurring and the focus is going to anything *but* the toolbar
-            // widgets, set _ssel and _esel to nothing. 
-            // Semantically, we want to get rid of the selection if we lose focus. 
-            if (s != null) {
-                // We're really giving focus to something else, so, forget 
-                // about whatever was selected while this component still had focus.
-                // It seems to "feel" right to me to move the cursor to the end of 
-                // the text. 
-                this._ssel = this._esel = this.getText().length;
-            }
-        </method>
-        
         
         <!--- If the mouse down is over me or any of my children, remember that,
             so we can listen for an onmouseup anywhere. A mouseup after a mousedown
@@ -217,14 +258,15 @@
         <method event="onmousedown" reference="LzGlobalMouse" args="who"><![CDATA[
             if ((who != null) && (this._containsView(who))) {
                 // the mouse went down on a child of me
-                // Debug.write("mousedown on child of me"); 
+                // Debug.info("mousedown on child of me, this is %w, who is %#w", this, who); 
                 this._mousedownorigin = who; 
             } else if ((who == null) && (inp.containsPt(this.getMouse("x"), this.getMouse("y")))) {
                 // the mouse went down on me
                 // Debug.write("mousedown on me"); 
                 this._mousedownorigin = this; 
             } else {
-                // the mouse went down on someone other than me; i'm not interested. 
+                // the mouse went down on someone other than me, 
+                // Debug.info("mousedown on someone else: %w", who); 
                 this._mousedownorigin = null;
             }
             ]]>
@@ -237,21 +279,23 @@
             is there a mousedown/mouseup pair in progress? 
             @param view who: the current mousedown element (ben shine)
         -->
-        <method event="onmouseup" reference="LzGlobalMouse" args="who">
+       <method event="onmouseup" reference="LzGlobalMouse" args="who"><![CDATA[
             if (this._fieldhasfocus) {
                 // Debug.write("onmouseup, field has focus, who is ", who); 
 
                 if (this._mousedownorigin != null) {
                     // We have focus, and there _is_ a mousedown/mouseup pair in progress. 
-                    if (this._mousedownorigin == this) {
+                    if (this._mousedownorigin == this || this._mousedownorigin == this.inp) {
                     
                         // The mouse click started on the richtext editor.
                         
                         // If the mouse click also ended on the rich text editor, 
                         // it's just a caret move. 
                         if (inp.containsPt(this.getMouse("x"), this.getMouse("y"))) {
+                            // Debug.info("mouse click starts and ends on RTE"); 
                             this._caretmove(); 
-                        } else {                        
+                        } else {  
+                            // Debug.write("handleLostMouseDown"); 
                             // If the mouseclick ended anywhere but the rich text editor,
                             // it's a lost mousedown. 
                             this._handleLostMouseDown();                       
@@ -259,7 +303,6 @@
                     } else {
                         // We have focus, and there's a mousedown/mouseup pair in progress,
                         // and it started on one of the subviews of the RTE. 
-                        // Debug.write("lost mousedown, origin was ", this._mousedownorigin); 
                     } 
 
                 } else {
@@ -272,24 +315,25 @@
             // Clear the mousedown attribute; a mouseup means that whatever
             // the mousedown was, it's gone now. 
             this._mousedownorigin = null;          
-        </method>
+        ]]></method>
         
         
         <!--- Save selected region. -->
         <method name="saveSelectionRegion"><![CDATA[  
-            if (LzFocus.getFocus() == this._field) {
+            if (LzFocus.getFocus() == this._field) {                
                 var selpos  = this._field.getSelectionPosition();
                 var selsize = this._field.getSelectionSize();
                 if( selpos >= 0 && selsize >= 0){  
                     this.setAttribute('_ssel', selpos);
                     this.setAttribute('_esel', selpos + selsize );
+                    // Debug.write("fascinating, storing selection of %d-%d", this._ssel, this._esel); 
                 }
-            }
+            } 
             ]]>
        </method>
         
         <!--- Change the format of the selection by attributes contained in TextFormat object.
-            @param LzTextFormat fmt: The TextFormat object to apply to the current selection or the insertion point
+            @param textformat fmt: The TextFormat object to apply to the current selection or the insertion point
             @param boolean inCaretMove: True when the the method was called from a caret motion event
         -->
         
@@ -345,7 +389,7 @@
             var ssel = this._ssel;
             var esel = this._esel;
 
-
+            // Debug.write("setFormatAttribute, sel is %d to %d", ssel, esel);             
             this.currentformat[attr] = val;
             this.isHTML = true;
                                     
@@ -369,7 +413,6 @@
             if (! this['_selectiondel']) {
                 this._selectiondel = new LzDelegate(this, '_restoreSelection');
             }            
-            
             // After the formatting has been completed, need to wait a frame to
             // restore the selection.
             LzIdle.callOnIdle(this._selectiondel);       
@@ -381,7 +424,6 @@
             if (! this['_focusseldel']) {
                 this._focusseldel = new LzDelegate(this, '_focussel');
             }
-            
             LzIdle.callOnIdle(this._focusseldel);  
         </method>
         
@@ -395,12 +437,10 @@
 
         <!--- Called whenever the caret (aka insertion point) moves in this text field. 
                     // see [BUG ZIM-1268]
-              @keywords private
+              @access private
         --> 
         <method name="_caretmove">
-        // Debug.write("caret");
-        // Don't do any of this if this message isn't already rich-text! 
-        // It's *all* just about formatting tweaks. 
+        // Don't do any of this if this field isn't already rich-text! 
         if (!this.isHTML) return; 
 
         //------------------------------------------------------------
@@ -414,7 +454,6 @@
         // Note: we don't get caretmove called when the selection changes by
         // mouseout then mouseup not over richinputtext. 
         //------------------------------------------------------------
-        
         
         var selstart = this._field.getSelectionPosition();
         var sellen = this._field.getSelectionSize();
@@ -476,17 +515,17 @@
 
         </method>
 
-        <!-- Called by a delegate after we get focus, to get rid of the default
+        <!--- Called by a delegate after we get focus, to get rid of the default
             select of everything, and instead just move the insertion point to the end
             and make sure the insertion point is formatted properly.
-            @keywords private -->
+            @access private -->
         <method name="_focussel">
             // We really should have focus now! 
             var havelzfocus =  (LzFocus.getFocus() == this._field); 
             if (havelzfocus) {
                 var len = this.getText().length;
-            // move the insertion point to the beginning of the text
-                this.setSelection(len, len); 
+                // move the insertion point to the beginning of the text
+                this.setSelection(len, len);
                 this._caretmove(); 
             }
         </method>
@@ -494,7 +533,7 @@
         <!--- Helper method for applyFormat() to apply format at insertion point.
             Only do this if the message is html already. 
               @param Number ip: insertion point.
-              @keywords private -->
+              @access private -->
         <method name="_formatAtInsertion" args="ip">
             if (this.isHTML) {
                 if (this.getText().length == ip){
@@ -511,7 +550,7 @@
         <!---
             Handle the case where a mouse drag began on the RTE but the mouse up
             was not on the RTE. 
-            @keywords private
+            @access private
         -->
         <method name="_handleLostMouseDown">
             var selstart = this._field.getSelectionPosition();
@@ -523,7 +562,7 @@
             Note: this must be called from a delegate in an idle event
             *after* flash completes the "frame" in which the selection or focus
             changed. 
-              @keywords private -->
+              @access private -->
         <method name="_restoreSelection">
             //------------------------------------------------------------
             // FIXME [2005-08-16 pkang]: Need to know in which direction
@@ -532,12 +571,13 @@
             this._shouldresettoolbar = false; 
             this.setSelection(this._ssel, this._esel);
             this._shouldresettoolbar = true; 
+
         </method>
         
-        <!--- Helper method to set an LzTextFormat to its default for this
+        <!--- Helper method to set an textformat to its default for this
               richtexteditor.
-              @param LzTextFormat fmt: the format to set to default values.
-              @keywords private -->
+              @param textformat fmt: the format to set to default values.
+              @access private -->
         <method name="_resetFormatToDefaults" args="fmt">
             this.currentformat.color = this.defaultfontcolor;
             this.currentformat.font = this.defaultfontname;
@@ -553,7 +593,7 @@
             of the toolbar. 
             @param XMLnode? v: ???
             @return string: (need to ask Ben S.)
-            @keywords _private
+            @keywords private
         -->
         <method name="_containsView" args="v">
             return (v.searchParents("name", this.name) || v.searchParents("name", this.toolbar.name));
@@ -561,7 +601,7 @@
         
         <!--- Returns whether the string passed in is entirely whitespace
             @return boolean: True if the textfield is completely whitespace, False if not
-            @keywords _private --> 
+            @access private --> 
         <method name="_containsOnlyWhitespace"><![CDATA[
             var str = this.getText(); 
             var len = str.length;
@@ -577,7 +617,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2005-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

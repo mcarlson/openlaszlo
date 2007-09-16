@@ -98,10 +98,61 @@
             width="${parent.height}" height="${parent.height}"/>
     </state>
 
+    <doc>
+      <tag name="shortdesc"><text>
+          Provides a horizontal scrollbar.
+      </text></tag>
+      <text>
+        <p>A scrollbar manipulates the x or y position of a target view that is clipped by its parent, 
+          creating a scrolling effect when the user clicks up/down arrows, clicks on the scroll track
+          or drags the thumb.
+        </p>
+        <p>This tag creates a horizontal scrollbar.  If you do not specify a
+          <attribute>scrolltarget</attribute> the scrollbar will automatically
+          be aligned to the bottom and size its width to its parent's width.  It
+          is expected that the parent view be smaller than the scrolltarget and
+          set <code>clip=true</code>.  The scrolling effect is produced by moving
+          the scrolltarget while its visible region is clipped by the parent
+          view.</p>
+
+        <p>If you would like the target view to start scrolled, simply set its
+          x position to a negative number.  For example, <code>x=-10</code> will
+          cause the view to be scrolled 10 pixels.</p>
+
+        <note>If you have no vertical scrollbars in your application, using
+          the <tagname>hscrollbar</tagname> tag will make the applications
+          slightly smaller than if you were to use &lt;scrollbar
+          axis="x"&gt;.</note>
+
+        <example title="Simple scrollbar">
+          &lt;canvas height="100"&gt;
+          &lt;view name="main" width="100" height="90" clip="true"&gt;
+          &lt;view name="contents"&gt;
+          &lt;text width="200"  height="70" multiline="true" &gt;
+          Remember not only to say the right thing in the right place,
+          but far more difficult still, to leave unsaid the wrong thing
+          at the tempting moment.
+          -- Benjamin Franklin
+          &lt;/text&gt;
+          &lt;/view&gt;
+          &lt;hscrollbar/&gt;
+          &lt;/view&gt;
+          &lt;/canvas&gt;
+        </example>
+        
+        <p>In the example above, the scrolltarget is the 'contents' view. A
+          scrollbar moves its <attribute>scrolltarget</attribute> along its
+          axis.  The attribute that is controlled by the scrollbar may be
+          specified as the <attribute>scrollattr</attribute>, overriding the
+          default value of <code>x</code> or <code>y</code>.</p>
+
+      </text>
+    </doc>
+
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

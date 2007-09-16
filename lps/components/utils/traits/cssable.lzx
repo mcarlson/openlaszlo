@@ -1,16 +1,21 @@
-<!-- Copyright 2006 Laszlo Systems --> 
+<!-- Copyright 2007 Laszlo Systems --> 
 <library>
+<!-- [todo: max 2-13-2007] moved to bottom of LzNode until <mixin/> is available-->
+<script when="immediate">
+trait cssable {
 
-<trait name="cssable">
-  <!-- Attributes are supported -->
-  <attribute name="cssPropertyMap" value="null"/>
-  <attribute name="cssStyle" value="null" />
-  <attribute name="fontcolor" value="0" type="number" /> <!-- Special attribute for fontcolor --> 
-  
-  <!-- Declaring this here should work, but doesn't. See LPP-2490 --> 
-  <handler name="onconstruct" method="_applyCSS" />
-  
-  <method name="_applyCSS">
+function initialize () {
+    if (this['_applyCSS']) this._applyCSS();
+}
+DeclareEvent(prototype, 'cssPropertyMap' );
+DeclareEvent(prototype, 'cssStyle' );
+DeclareEvent(prototype, 'fontcolor' );
+
+var cssPropertyMap = null;
+var cssStyle = null;
+var fontcolor = null;
+
+function _applyCSS () {
       // Look up the style
       this.cssStyle = LzCSSStyle.getComputedStyle( this );
       var st = this.cssStyle; // put it in a register
@@ -40,6 +45,7 @@
               }
           }
       }
-  </method> 
-</trait>
+}
+}
+</script>
 </library>

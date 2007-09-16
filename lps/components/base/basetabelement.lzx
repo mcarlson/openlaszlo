@@ -131,6 +131,12 @@
         <method name="openned">
             if ( onopenstop ) this.onopenstop.sendEvent();
             this.isopening -= 1;
+            if (this.isopening == 0) {
+                //now we can savely call unregisterAll
+                if (this.dlo) {
+                    this.dlo.unregisterAll();
+                }
+            } 
         </method>
 
         <!--- Called when the tabelement is completely closed. -->
@@ -151,12 +157,36 @@
                 this.updateDefault();
             }
         ]]></method>
-    
+
+        <!--- @keywords private -->
+        <method name="destroy" ><![CDATA[
+            if (dlo in this) {
+                this.dlo.unregisterAll();
+                delete this.dlo;
+            }
+            
+            if (dlc in this) {
+                this.dlc.unregisterAll();
+                delete this.dlc;
+            }
+            
+            super.destroy.apply(this, arguments);
+        ]]></method> 
+
+        <doc>
+          <tag name="shortdesc"><text>Base class for the contents of a basetabslider.</text></tag>
+          <text>
+            <p><classname>basetabelement</classname> is the base class for the
+            contents of a <classname>basetabslider</classname>. The
+            <classname>basetabelement</classname> is focusable
+            if it is closed, and not focusable when it is open.</p>
+          </text>
+        </doc>
     </class> <!-- END: basetabelement -->
 
  </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

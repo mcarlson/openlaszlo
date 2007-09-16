@@ -1,13 +1,12 @@
 <canvas width="100%" height="80%" >
-  <debug  fontsize="12" oninit="setWrapLines(true)"/>
-
   <simplelayout/>
 
   <method event="oninit">
+    // Test install of custom menu on the Canvas
     var nm = new LzContextMenu();
     var item1 = nm.makeMenuItem('Canvas Hello', function () { Debug.write("Hi, I'm this canvas", this); } );
     nm.addItem(item1);
-    this.setContextMenu(nm);
+    this.setDefaultContextMenu(nm);
     Debug.write("setting new contextmenu on canvas from api.lzx");
   </method>
 
@@ -45,15 +44,15 @@
   </method>
 
   <method name="menuselected" args="val">
-    Debug.write("A context menu was opened with a right click, menu = ", val);
+    Debug.write("A context menu was opened with a right click, menu = ", val.items);
   </method>
 
   <method name="menuitemselected" args="val">
-    Debug.write("A right click on an item was detected, item = ", val);
+    Debug.write("A right click on an item was detected, item = ", val.cmenuitem.caption);
   </method>
 
   <method name="handlerightclick" args="val">
-    Debug.write("handle item handlerightclick, val=", val);
+    Debug.write("handle item handlerightclick, val=", val.cmenuitem.caption);
   </method>
 
   <method name="showdialog">
@@ -75,3 +74,9 @@
 
 
 </canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

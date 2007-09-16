@@ -1,4 +1,4 @@
-<canvas width="200">
+<canvas>
   <font name="helmet" src="helmetb.ttf"/>
   
   <simplelayout axis="y" spacing="8"/>
@@ -9,3 +9,4 @@
   
   <view resource="cd_cover.jpg"/>
 </canvas>
+

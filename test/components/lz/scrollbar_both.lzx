@@ -27,7 +27,7 @@
         </scrollview>
         <view>
             <inputtext id="scrolltopos" width="50" bgcolor="silver">0</inputtext>
-            <button onclick="debug.write(number(scrolltopos.getText()));
+            <button onclick="Debug.write(number(scrolltopos.getText()));
                     sv1.setAttribute('scrollto',number(scrolltopos.getText()))">set scroll</button>
             <simplelayout axis="x" spacing="10"/>
         </view>
@@ -40,9 +40,9 @@
     <view>
     <inputtext id="w" width="50" bgcolor="0xeaeaea">20</inputtext>
     <button onclick="sv2.pic.setAttribute('width', number(w.getText()))">set width</button>
-    <button onclick="debug.write('width='+sv2.pic.width);
+    <button onclick="Debug.write('width='+sv2.pic.width);
                     sv2.pic.animate('width', number(w.getText()), 1000);
-                    debug.write('width='+sv2.pic.getExpectedAttribute('width'));">anim width</button>
+                    Debug.write('width='+sv2.pic.getExpectedAttribute('width'));">anim width</button>
     <simplelayout axis="y" spacing="20"/>
     </view>
     <view layout="axis:y">
@@ -73,6 +73,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

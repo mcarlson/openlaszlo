@@ -1,0 +1,46 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- hello.lzx                                                             -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas height="700"> 
+    <attribute name="mytext" value="Hello!" type="text"/>
+    <attribute name="foo" value="" type="text"/>
+    <attribute name="farb" value="" type="text"/>
+    <attribute name="historyinit" value="" type="text"/>
+    <button onclick="">Get browser useragent
+        <handler name="onclick">
+            LzBrowser.callJS('getUserAgent', function (ua) { canvas.setAttribute('mytext', ua) })
+        </handler>
+    </button>
+    <button x="200">Test callJS queuing
+        <handler name="onclick">
+            LzBrowser.callJS('getFoo', function (a) { if (a != 'foo') LzBrowser.loadJS('alert(\'warning: did not get foo: ' + a + '\')') });
+            LzBrowser.callJS('getBar', function (a) { if (a != 'bar') LzBrowser.loadJS('alert(\'warning: did not get bar: ' + a + '\')') });
+        </handler>
+    </button>
+    <text y="40" text="${parent.mytext}" width="1000"/>
+    <text y="60" text="${parent.foo}" width="100"/>
+    <text y="60" x="110" text="${parent.farb}" width="100"/>
+    <text y="100" name="stat" multiline="true" width="1000"/>
+    <text y="120" oninit="this.setText('Flash player version: ' + LzBrowser.getVersion())" width="1000"/>
+
+    <view name="aview" y="80" bgcolor="red" width="20" height="30">
+        <method name="testMethod" args="str, bool1, bool2, num1, num2, prop1, prop2">
+        <![CDATA[
+            if (str == 'foo' && bool1 ==true && bool2 == false && num1 == 1 && num2 == 0 && prop1 == 20 && prop2 == 30) {
+                this.setBGColor(0x00ff00);
+                return true;
+            } 
+        ]]>
+        </method>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

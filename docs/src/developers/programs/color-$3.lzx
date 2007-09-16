@@ -1,0 +1,80 @@
+
+<canvas width="860" debug="true">
+
+<stylesheet>
+    #vName {
+    bgcolorName : "blue";
+    }
+    
+    #tName {
+    fgcolorName : "blue";
+    }
+
+    #vRGB {
+    bgcolorRGB : "#0000FF";
+    }
+    
+    #tRGB {
+    fgcolorRGB : "#0000FF";
+    }
+    
+    #vHex {
+    bgcolorHex : "0x0000FF";
+    }
+
+    #tHex {
+    fgcolorHex : "0x0000FF";
+    }
+
+    #vParens {
+    bgcolorParens : "rgb(0,0,255)";
+    }
+    
+    #tParens {
+    fgcolorParens : "rgb(0,0,255)";
+    }
+    
+</stylesheet>
+
+<wrappinglayout axis="x" spacing="10"/>
+
+    <view id="vName" height="100" width="100" bgcolor="$style{'bgcolorName'}"/>
+    <text id="tName" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorName'}">Blue1</text>
+
+    <view id="vRGB" height="100" width="100" bgcolor="$style{'bgcolorRGB'}"/>
+    <text id="tRGB" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorRGB'}">Blue2</text>
+
+    <view id="vHex" height="100" width="100" bgcolor="$style{'bgcolorHex'}"/>
+    <text id="tHex" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorHex'}">Blue3</text>
+
+    <view id="vParens" height="100" width="100" bgcolor="$style{'bgcolorParens'}"/>
+    <text id="tParens" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorParens'}">Blue4</text>
+
+    <view id="explicitVName" height="100" width="100" bgcolor="blue"/>
+    <text id="explicitTName" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="blue">Blue5</text>
+    
+    <view id="explicitVRGB" height="100" width="100" bgcolor="#0000FF"/>
+    <text id="explicitTRGB" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="#0000FF">Blue6</text>
+
+    <view id="explicitVHex" height="100" width="100" bgcolor="0x0000FF"/>
+    <text id="explicitTHex" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="0x0000FF">Blue7</text>
+
+    <view id="explicitVParens" height="100" width="100" bgcolor="rgb(0,0,255)"/>
+    <text id="explicitTParens" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="rgb(0,0,255)">Blue8</text>
+
+<script>
+Debug.write("1=styled by blue");
+Debug.write("2=styled by #0000FF");
+Debug.write("3=styled by 0x0000FF");
+Debug.write("4=styled by rgb(0,0,255)");
+Debug.write("5=explicitly named blue");
+Debug.write("6=explicitly colored #0000FF");
+Debug.write("7=explicitly colored 0x0000FF");
+Debug.write("8=explicitly colored rgb(0,0,255)");
+</script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

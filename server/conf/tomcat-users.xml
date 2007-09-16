@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tomcat-users>
+  <role rolename="manager"/>
+  <role rolename="admin"/>
+  <!-- Uncomment this line to enable access to the manager webapp 
+  <user username="admin" password="laszlo" roles="admin,manager"/>
+  -->
+</tomcat-users>
+<!-- Copyright 2007 Laszlo Systems -->

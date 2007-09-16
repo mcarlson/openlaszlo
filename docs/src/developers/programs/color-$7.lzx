@@ -1,0 +1,31 @@
+
+<canvas height="300" width="300" debug="true">
+  <simplelayout axis="x"/>
+  <class name="fader">
+    <view height="100" width="100">
+        <handler name="onclick">
+            immediateparent.animate('opacity', -.20, 25, true);
+        </handler>
+        <handler name="onmouseout" >
+            immediateparent.animate('opacity', 1, 2500, false);
+        </handler>
+    </view>
+    
+  </class>
+  <fader name="houston" bgcolor="0xFF0000">
+    <text text="Comet"/>
+  </fader>
+  <fader name="sacramento" bgcolor="0x800080">
+    <text fgcolor="0xFFFFFF" text="Monarch"/>
+  </fader>
+  <fader name="seattle" bgcolor="0x008000">
+    <text text="Storm"/>
+  </fader>
+  <script>
+    Debug.write("Click on a view to reduce its opacity. Mouse out to restore 100% opacity.");
+  </script>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

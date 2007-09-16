@@ -1,15 +1,18 @@
 <library>
 
+    <!-- local data set -->
+    <dataset name="eventdata" />
+
     <!-- loads one month of data at a time; source is set by dataloader 
          below-->
-    <datasource name="http">
-        <dataset name="serverdata" 
-                 ondata="dataloader.run()"/>
-    </datasource>
+     <script>
+       var dataloader = null;
+     </script>         
+    <dataset name="serverdata" type="http"/>
 
     <!-- controls loading of server data; once data has loaded calls 
          notifies localdatacontroller -->
-    <datapointer name="dataloader" xpath="serverdata:/*" >
+    <datapointer name="dataloader" xpath="serverdata:/*" ondata="this.run()">
 
         <attribute name="reqq" value="[]"/>
         <attribute name="requestrunning" value="false"/>
@@ -38,8 +41,8 @@
             var nr = this.reqq.shift();
             //Debug.write( "make request "  + nr );
             this.requestrunning = true;
-            http.serverdata.setAttribute( "src", nr );
-            http.serverdata.doRequest();
+            serverdata.setAttribute( "src", nr );
+            serverdata.doRequest();
         </method>
 
         <method name="enqueueRequest" args="r">
@@ -56,7 +59,11 @@
             this.setXPath( "eventdata:/vcalendar/year" + yr + "/month" + mo );
             //this is unfortunate, but there's no easy way to see if this
             //succeeded as v1
-            return this.getNodeName() == "month"+mo;
+            if(this.p != null){
+                return this.getNodeName() == "month"+mo;
+            } else {
+                return false;
+            }
         </method>
     </datapointer>
 
@@ -69,8 +76,11 @@
 
             while ( ptr.getNodeCount() == 1 ){
                 var op = this.p;
-                this.setXPath( ptr.getNodeName() );
-                if ( this.getNodeName() != ptr.getNodeName() ){
+                if(ptr.p != null){
+                    this.setXPath( ptr.getNodeName() );
+                }
+                var thisgnn = (this.p == null ? null : this.getNodeName());
+                if ( thisgnn != ptr.getNodeName() ){
                     this.setPointer ( op );
                     break;
                 }
@@ -83,14 +93,15 @@
         </method>
     </datapointer>
 
-    <!-- local data set -->
-    <dataset name="eventdata" />
 
     <!-- used for adding events -->
     <dataset name="blankEvent">
         <event>
             <summary value=""/>
             <comment value=""/>
+            <notes value=""/>
+            <location value=""/>
+            <attendees value=""/>
             <start year="" month="" day="" hour="" minute="" />
             <end year="" month="" day="" hour="" minute="" />
             <category value=""/>
@@ -103,6 +114,9 @@
         <event>
             <summary value=""/>
             <comment value=""/>
+            <notes value=""/>
+            <location value=""/>
+            <attendees value=""/>
             <start year="" month="" day="" hour="" minute="" />
             <end year="" month="" day="" hour="" minute="" />
             <category value=""/>
@@ -256,8 +270,8 @@
         <method name="updateEventDate" args="dp,year,month,day">
             //This changes the attributes of the event's 
             //data to the right year,month,day
-            //debug.write("updateEventDate");
-            //debug.write("Year: "+year+"  month: "+month+"  day: "+day);
+            //Debug.write("updateEventDate");
+            //Debug.write("Year: "+year+"  month: "+month+"  day: "+day);
 
             tempDP.setFromPointer( dp );
 
@@ -393,11 +407,61 @@
             ]]>
         </method>
 
+        <method name="changeTitle" args="newtitle">
+            //This changes the attributes of the event's 
+            //data to the right information
+            tempDP.setFromPointer( currenteventDP );
+
+            tempDP.setXPath('summary[1]');
+            tempDP.setNodeAttribute('value', newtitle);
+        </method>
+
+        <method name="changeNotes" args="newnotes">
+            //This changes the attributes of the event's 
+            //data to the right information
+            tempDP.setFromPointer( currenteventDP );
+
+            tempDP.setXPath('notes[1]');
+            if(tempDP.isValid()){
+                tempDP.setNodeAttribute('value', newnotes);
+            } else {
+                tempDP.setFromPointer( currenteventDP );
+                tempDP.addNode('notes', null, {value : newnotes});
+            }
+        </method>
+
+        <method name="changeLocation" args="newloc">
+            //This changes the attributes of the event's 
+            //data to the right information
+            tempDP.setFromPointer( currenteventDP );
+
+            tempDP.setXPath('location[1]');
+            if(tempDP.isValid()){
+                tempDP.setNodeAttribute('value', newloc);
+            } else {
+                tempDP.setFromPointer( currenteventDP );
+                tempDP.addNode('location', null, {value : newloc});
+            }
+        </method>
+
+        <method name="changeAttendees" args="newattend">
+            //This changes the attributes of the event's 
+            //data to the right information
+            tempDP.setFromPointer( currenteventDP );
+
+            tempDP.setXPath('attendees[1]');
+            if(tempDP.isValid()){
+                tempDP.setNodeAttribute('value', newattend);
+            } else {
+                tempDP.setFromPointer( currenteventDP );
+                tempDP.addNode('attendees', null, {value : newattend});
+            }
+        </method>
     </node>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

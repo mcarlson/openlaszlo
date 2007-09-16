@@ -1,58 +1,61 @@
 <canvas debug="true" >
   <include href="lzunit" />
   <include href="lz/checkbox.lzx"/>
-  <include href="lz/button.lzx"/>
+
+<!--
+  covers-tags: basecomponent smoketest
+-->
 
     <!-- set testPrivateAttributes to false to test only public/protected attributes -->
   <attribute name="testPrivateAttributes" value="true"/>
 
-  <script>
-    asynchronousTests = false;
+  <class name="testcheckbox" extends="checkbox">
+    <attribute name="c0" value="0"/>
+    <method event="on_enabled" args="v">
+      this.c0++;
+    </method>
     
-  </script>
-
-  <TestSuite>
-
-    <TestCase>
+    <attribute name="c1" value="0"/>
+    <handler name="onfocusable">
+      this.c1++;
+    </handler>
     
-      <!-- use checkbox because it's pretty much the simplest component -->
-      <checkbox name="tb">
-        <attribute name="c0" value="0"/>
-        <method event="on_enabled" args="v">
-          c0++;
-        </method>
-        <attribute name="c1" value="0"/>
-        <method event="onfocusable" args="v">
-          c1++;
-        </method>
-        <attribute name="c2" value="0"/>
-        <method event="onisdefault" args="v">
-          c2++;
-        </method>
-      </checkbox>
-      
-      <method name="checkConsistency" args="tc">
-        if (tc.enabled == false) {
-          assertEquals(false, tc.focusable);
+    <attribute name="c2" value="0"/>
+    <handler name="onisdefault">
+      this.c2++;
+    </handler>
+
+    <method name="checkConsistency" args="tc">
+        if (enabled == false) {
+          tc.assertEquals(false, focusable);
         }
-      </method>
+    </method>
+    
+    <method name="resetState">
+        setAttribute('enabled', true);
+        setAttribute('focusable', true);
+        setAttribute('doesenter', true);
+        setAttribute('isdefault', false);
+    </method>
       
-      <method name="resetState" args="tc">
-        tc.setAttribute('enabled', true);
-        tc.setAttribute('focusable', true);
-        tc.setAttribute('doesenter', true);
-        tc.setAttribute('isdefault', false);
-      </method>
-      
+  </class>
+  
+  <class name="MyTestCase" extends="TestCase">
+      <testcheckbox name="tb"/>
       <method name="setUp">
-        resetState(tb);
-        checkConsistency(tb);
+        tb.resetState();
+        tb.checkConsistency(this);
       </method>
       
       <method name="tearDown">
-        checkConsistency(tb);
+        tb.checkConsistency(this);
       </method>
-      
+  </class>
+  
+  <TestSuite>
+
+    <MyTestCase>
+    
       <!-- test whether setting enabled works -->
       <method name="testSetEnabled">
         assertEquals(true, tb.enabled);
@@ -62,15 +65,23 @@
         assertEquals(true, tb.enabled);
       </method>
       
+    </MyTestCase>
+    
+    <MyTestCase>
+    
       <!-- test whether on_enabled event is called when enabled attr changes -->
       <method name="testOnEnabled">
         if (canvas.testPrivateAttributes) {
           var c = tb.c0;
           tb.setAttribute('enabled', ! tb.enabled);
-          assertEquals(c + 1, tb.c0);
+          assertEquals(c + 1, tb.c0, "onenabled called");
         }
       </method>
 
+    </MyTestCase>
+    
+    <MyTestCase>
+    
       <!-- test whether setting focusable works -->
       <method name="testSetFocusable">
         <!-- tb is enabled now -->
@@ -81,13 +92,21 @@
         assertEquals(false, tb.focusable);
       </method>
       
+    </MyTestCase>
+    
+    <MyTestCase>
+    
       <!-- test whether onfocusable event is called when focusable attr changes -->
       <method name="testOnFocusable">
         var c = tb.c1;
         tb.setAttribute('focusable', false);
-        assertEquals(c + 1, tb.c1);
+        assertEquals(c + 1, tb.c1, "onfocusable called");
       </method>
 
+    </MyTestCase>
+    
+    <MyTestCase>
+    
       <!-- test whether component is (de)focusable when it is enabled -->
       <method name="testFocusableWhenEnabled">
         assertEquals(true, tb.focusable);
@@ -98,6 +117,10 @@
         assertEquals(true, tb.focusable);
       </method>
 
+    </MyTestCase>
+    
+    <MyTestCase>
+    
       <!-- test whether component is no longer focusable when it isn't enabled -->
       <method name="testNotFocusableWhenDisabled">
         assertEquals(true, tb.focusable);
@@ -106,43 +129,59 @@
         assertEquals(false, tb.focusable);
       </method>
 
+    </MyTestCase>
+    
+    <MyTestCase>
+    
       <!-- test whether text can be set and retrieved -->
       <method name="testSetText">
         var tx = "this is some text.";
         tb.setAttribute('text', tx);
-        assertEquals(tx, tb.text);
+        assertEquals(tx, tb.text, "text changed");
       </method>
       
+    </MyTestCase>
+    
+    <MyTestCase>
+    
       <method name="testDoesEnter">
         assertEquals(true, tb.doesenter);
         tb.setAttribute('doesenter', false);
         assertEquals(false, tb.doesenter);
         tb.setAttribute('doesenter', true);
-        assertEquals(true, tb.doesenter);
+        assertEquals(true, tb.doesenter, "doesenter true");
       </method>
       
+    </MyTestCase>
+    
+    <MyTestCase>
+    
       <method name="testSetIsDefault">
         assertEquals(false, tb.isdefault);
         tb.setAttribute('isdefault', true);
-        assertEquals(true, tb.isdefault);
+        assertEquals(true, tb.isdefault, "isdefault true");
       </method>
       
+    </MyTestCase>
+    
+    <MyTestCase>
+    
       <method name="testOnIsDefault">
         if (canvas.testPrivateAttributes) {
           var c = tb.c2;
           tb.setAttribute('isdefault', true);
-          assertEquals(c + 1, tb.c2);
+          assertEquals(c + 1, tb.c2, "onisdefault called");
         }
       </method>
       
-    </TestCase>
+    </MyTestCase>
     
   </TestSuite>
   
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->
+<!-- @LZX_VERSION@                                                          -->

@@ -22,7 +22,7 @@
         <method name="artDeco">
         
             Debug.write("art deco."); 
-            var tf = new LzTextFormat();
+            var tf = new textformat();
             tf.font = "Futura";
             tf.color = 0xAACC44; 
             tf.size = 32;
@@ -32,7 +32,7 @@
         <method name="soSerify">
             Debug.write("soSerify"); 
 
-            var tf = new LzTextFormat();
+            var tf = new textformat();
             tf.color = blue; 
             tf.italic = true;
             tf.font = 'Courier'; 
@@ -42,7 +42,7 @@
         <method name="defuseBomb">
             Debug.write("defuseBomb"); 
 
-            var tf = new LzTextFormat();
+            var tf = new textformat();
             tf.color = green; 
             tf.bold = true;
             tf.font = 'Monaco'; 
@@ -54,7 +54,7 @@
         <method name="bestGuess">
             Debug.write("bestGuess"); 
 
-            var tf = new LzTextFormat();
+            var tf = new textformat();
             tf.color = 0x3399FF; 
             tf.underline = true;
             tf.font = 'Arial'; 
@@ -67,9 +67,9 @@
         <method name="pratfall">
             Debug.write("pratfall"); 
 
-            var tf = new LzTextFormat();
+            var tf = new textformat();
             tf.color = 0xFF9933; ; 
-            tf.italic = true;s
+            tf.italic = true;
             tf.font = 'Times'; 
             
 
@@ -84,7 +84,7 @@
         <method name="headphones">
             Debug.write("headphones"); 
 
-            var tf = new LzTextFormat();
+            var tf = new textformat();
             tf.color = 0xFF3399; ; 
             tf.italic = true;
             tf.font = 'Times'; 
@@ -99,7 +99,7 @@
         <method name="goowy">
             Debug.write("goowy"); 
 
-            var tf = new LzTextFormat();
+            var tf = new textformat();
             tf.color = 0xFF3399; ; 
             tf.italic = true;
             tf.font = 'Times'; 
@@ -113,7 +113,7 @@
         <method name="spacer">
             Debug.write("spacer"); 
 
-            var tf = new LzTextFormat();
+            var tf = new textformat();
             tf.color = 0xFF3399;  
             tf.italic = true;
             tf.font = 'Times'; 
@@ -146,6 +146,6 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

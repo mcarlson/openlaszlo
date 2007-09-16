@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- LZX viewer -->
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--
+@!@!@!@!@ ATTENTION EDITORS OF THIS FILE @!@!@!@!@
+
+If you edit this file, please validate your work using http://validator.w3.org/
+-->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns="http://www.w3.org/1999/xhtml"
                 version="1.0">
-  
-  <xsl:output method="html"/>
+
+  <xsl:output method="html"
+              indent="yes"
+              doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
+              doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
   <xsl:param name="fname"/>
   <xsl:param name="base"/>
   <xsl:param name="url"/>
   <xsl:param name="urlbase"/>
-  
+
   <xsl:template match="/">
     <html>
       <head>
@@ -113,7 +115,7 @@
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
-  
+
   <xsl:template priority="1" name="element" match="*">
     <span class="element">
       <span class="markup"><xsl:text>&lt;</xsl:text></span>
@@ -137,25 +139,25 @@
       </xsl:choose>
     </span>
   </xsl:template>
-  
+
   <xsl:template priority="4" match="comment()[local-name(following-sibling::*)='attribute' or local-name(following-sibling::*)='method']">
     <span class="{local-name(following-sibling::*)}-element-comment">
       <xsl:call-template name="comment"/>
     </span>
   </xsl:template>
-  
+
   <xsl:template priority="2" match="text()[normalize-space()='' and (local-name(following-sibling::*)='attribute' or local-name(following-sibling::*)='method')]">
     <span class="{local-name(following-sibling::*)}-element-text">
       <xsl:call-template name="text"/>
     </span>
   </xsl:template>
-  
+
   <xsl:template match="attribute|method">
     <span class="{local-name()}-element">
       <xsl:call-template name="element"/>
     </span>
   </xsl:template>
-  
+
   <xsl:template match="@*">
     <span class="attrname"><xsl:value-of select="name()"/></span>
     <xsl:text>="</xsl:text>
@@ -164,11 +166,11 @@
     </span>
     <xsl:text>"</xsl:text>
   </xsl:template>
-  
+
   <!--
     Special display for attribute values
   -->
-  
+
   <xsl:template mode="attribute-value" match="@*">
     <xsl:value-of select="."/>
   </xsl:template>
@@ -188,7 +190,7 @@
     </span>
     <span class="constraint-markup">}</span>
   </xsl:template>
-  
+
   <xsl:template mode="attribute-value" match="@id">
     <span class="name"><xsl:value-of select="."/></span>
   </xsl:template>
@@ -205,7 +207,7 @@
                 |resource/frame/@src">
     <a href="{$base}{.}"><xsl:value-of select="."/></a>
   </xsl:template>
-  
+
   <xsl:template name="text" match="text()">
     <xsl:param name="quote" select="contains(., '&lt;') or contains(., '&gt;') or contains(., '&amp;')"/>
     <code>
@@ -218,16 +220,16 @@
       </xsl:if>
     </code>
   </xsl:template>
-  
+
   <xsl:template mode="attribute-value" match="attribute/@value">
     <code><xsl:value-of select="."/></code>
   </xsl:template>
-  
+
   <!--xsl:template match="@bgcolor">
     <xsl:value-of select="."/>
     <span style="background-color: {.}">.</span>
   </xsl:template-->
-  
+
   <xsl:template priority="3" name="comment" match="comment()">
     <xsl:if test="not(ancestor::*)">
       <xsl:text>&#10;</xsl:text>
@@ -236,12 +238,12 @@
     <span class="comment-markup"><xsl:text>&lt;!--</xsl:text></span>
     <span class="comment"><xsl:value-of select="."/></span>
     <span class="comment-markup"><xsl:text>--&gt;</xsl:text></span>
-    
+
     <xsl:if test="not(ancestor::*) and following-sibling::*[1]=following-sibling::node()[1]">
       <xsl:text>&#10;</xsl:text>
     </xsl:if>
   </xsl:template>
-  
+
   <xsl:template match="//resource/@src|//resource/frame/@src" mode="imagelist">
     <xsl:choose>
       <xsl:when test="substring(., string-length()-3, string-length()) = '.swf'">
@@ -257,7 +259,7 @@
             bgcolor="#FFFFFF"
             width="100" height="100"
             salign="tl"
-            type="application/x-shockwave-flash" 
+            type="application/x-shockwave-flash"
             pluginspage="http://www.macromedia.com/go/getflashplayer">
           </embed>
         </object>
@@ -269,3 +271,7 @@
   </xsl:template>
 
 </xsl:stylesheet>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

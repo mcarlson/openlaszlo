@@ -79,8 +79,9 @@
 
             // no other subviews should be allowed (todo: schema)
             var mc = 
-                immediateparent.attachResourceToChildView("__LZvideo", this);
-            this.setMovieClip(mc);
+                immediateparent.sprite.attachResourceToChildView("__LZvideo", this.sprite);
+            this.sprite.setMovieClip(mc);
+            this.__LZmovieClipRef = this.sprite.__LZmovieClipRef;
 
             this._sound = 
                 new Sound(

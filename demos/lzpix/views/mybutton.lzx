@@ -1,0 +1,127 @@
+<library>
+
+<!-- These are the resources for a rectangular 3 piece Laszlo Button-->
+    <resource name="mybutton_rsc">
+        <frame src="resources/button/mybutton_mouseup.png" />
+        <frame src="resources/button/mybutton_mouseover.png" />
+        <frame src="resources/button/mybutton_mousedown.png" />
+        <frame src="resources/button/mybutton_disabled.png" />
+    </resource>
+
+    <!--- Button class for making buttons with up-over-down states. -->
+    <class name="mybutton" resource="mybutton_rsc">
+    
+    
+        <!--- when false the component should appear as its disabled state and
+              not respond to user events (default: true) The component is
+              automatically set to clickable when enabled, and not clickable
+              when disabled.-->
+        <attribute name="enabled" value="true"/>
+              
+        <!--- The resource for the mouse up state, and initial state of the
+              button. Default: 1.
+              @keywords final -->
+        <attribute name="normalResourceNumber" type="number" value="1"/>
+
+        <!--- The resource for the mouse over state, default: 2. 
+              Use 0 if the resource has at least 2 frames, but there is no over
+              state.
+              @keywords final -->
+        <attribute name="overResourceNumber" type="number" value="2"/>
+
+        <!--- The resource for the mouse down state, default: 3.
+              Use 0 if the resources has at least 3 frames, but there is no down
+              state.
+              @keywords final -->
+        <attribute name="downResourceNumber" type="number" value="3"/>
+
+        <!--- The resource for the disabled state, default: 4.
+              Use 0 if the resource has at least 4 frames, but there
+              is no disabled state.
+              @keywords final -->
+        <attribute name="disabledResourceNumber" type="number" value="4"/>
+    
+        <!---  @keywords private -->
+        <attribute name="_msdown" value="false" />
+        <attribute name="_msin" value="false" />
+        <attribute name="_enabled" value="true" />
+
+
+        <method name="_callShow"><![CDATA[
+            if ( this._msdown && this._msin) { 
+                this.showDown();
+        } else if ( this._msin ) {
+            this.showOver();
+        } else {    
+            this.showUp();
+        }
+        ]]> </method>
+
+        <!--- @keywords private -->
+        <method name="init">
+            // now that subviews are created reset resourceviewcount
+            super.init();
+            this._callShow();
+        </method>
+        
+        <handler name="onmouseover">
+            this.setAttribute( '_msin' , true );
+            this._callShow();
+        </handler>
+
+        <handler name="onmouseout">
+            this.setAttribute( '_msin' , false );
+            this._callShow();
+        </handler>
+
+        <handler name="onmousedown">
+            this.setAttribute( '_msdown' , true );
+            this._callShow();
+        </handler>
+
+        <handler name="onmouseup">
+            this.setAttribute( '_msdown' , false );
+            this._callShow();
+        </handler>
+
+        <!--- Sets clickable to true and shows appropriate resource.
+              @keywords private -->
+        <method name="_showEnabled"> <![CDATA[
+            showUp();
+        ]]>
+        </method>
+
+        <!--- This function is called whenever the button's visible state
+              should appear to be down.
+              @param Boolean sd: unused. -->
+        <method name="showDown" args="sd">
+            this.setResourceNumber( this.downResourceNumber );
+        </method>
+
+        <!--- This function is called whenever the button's visible state
+              should appear to be up. 
+              @param Boolean sd: unused. -->
+        <method name="showUp" args="sd"> <![CDATA[
+            if (!_enabled && this.disabledResourceNumber) {
+                this.setResourceNumber( this.disabledResourceNumber );
+            } else {
+                this.setResourceNumber( this.normalResourceNumber );
+            }
+        ]]>
+        </method>
+
+        <!--- This function is called whenever the button's visible state should
+              appear to be hilited to indicate that it can be clicked. 
+              @param Boolean sd: unused. -->
+        <method name="showOver" args="sd">
+            this.setResourceNumber( this.overResourceNumber );
+        </method>
+
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

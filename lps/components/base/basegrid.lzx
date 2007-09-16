@@ -43,10 +43,12 @@
         <!--- @keywords private -->
         <attribute name="_lastmousey" value="null"/>
 
-        <!--- @keywords protected The class to use to construct columns, if the
-              columns are inferred by the basegrid. -->
+        <!--- The class to use to construct columns, if the
+              columns are inferred by the basegrid. 
+              @access protected -->
         <attribute name="_columnclass" value="basegridcolumn" when="once"/>
-        <!--- @keywords protected The class to use to construct rows. -->
+        <!--- The class to use to construct rows.
+              @access protected -->
         <attribute name="_rowclass" value="basegridrow" when="once"/>
 
         <!--- A boolean. If true, the grid will keep its width set to the size
@@ -273,7 +275,7 @@
             }
             this._lastmousex = lmx;
             this._lastmousey = lmy;
-            if (hilite) { hilite.setAttribute( "highlighted" , false ); }
+            if (this.hilite) { this.hilite.setAttribute( "highlighted" , false ); }
             this.setAttribute( "hilite" , who );
             if (who) { who.setAttribute( "highlighted" , true ); }
             ]]>
@@ -312,18 +314,20 @@
                 if (kc == 37  || kc == 38) {
                     next = _selector.getNextSubview(s, -1);
                 }
-                if ( hilite  ) {
+                if ( this.hilite  ) {
                     this.hilite.setAttribute( "highlighted" , false );
                 }
                 this.setAttribute( "hilite" , next );
-                this.hilite.setAttribute( "highlighted" , true );
+                if (this.hilite) {
+                    this.hilite.setAttribute( "highlighted" , true );
+                }    
              }
             ]]>
         </method>
 
         <!--- @keywords private -->
         <method name="_doblur" event="onblur">
-            this.hilite.setAttribute( "highlighted" , false );
+            if (this.hilite) this.hilite.setAttribute( "highlighted" , false );
             this.setAttribute( "hilite" , null );
         </method>
 
@@ -349,11 +353,11 @@
 
                 if ( ! this.datapath ) {
                     haddatapath = false;
-                    var ovisible = this.visible;
+                    var ovisibility = this.visibility;
                     this.setDatapath( "." );
                     this.datapath.setAttribute( "datacontrolsvisibility",
                                                 false );
-                    this.setVisible( ovisible );
+                    this.setVisibility( ovisibility );
                 }
 
                 var cells = this.inferColumns();
@@ -428,6 +432,8 @@
             if ( ! this.hassetheight ){
                 this.setAttribute( "shownitems" , 8 );
             }
+
+            this.header.bringToFront();
 
             ]]>
         </method>
@@ -517,11 +523,42 @@
             if ( sel && sel.p ) return this._selector.getItemByData( sel.p );
             ]]>
         </method>
-
+        <doc>
+          <tag name="shortdesc"><text>An abstract row-based container for data elements.</text></tag>
+          <text>
+            <p><classname>basegrid</classname> is an abstract container for
+            row-based data stored in a dataset.  Because
+            <classname>basegrid</classname> uses <a
+            href="lzlazyreplicationmanager.html">lazy replication</a>, it is an efficient way to
+            present large datasets, and it abstracts some of the complications
+            involved in maintaining a selection within a dataset.</p>
+            
+            <example>
+            &lt;canvas height="150"&gt;
+              &lt;dataset name="contacts" request="true"
+                  src="http:resources/contactsdata.xml"/&gt;
+            
+              &lt;basegrid datapath="contacts:/resultset" width="200"
+                           height="150"&gt;
+                &lt;basegridcolumn&gt;
+                  &lt;text placement="header"&gt;Check 'em off&lt;/text&gt;
+                  &lt;checkbox text="$path{ '@displayname'}" 
+                            value="$path{'@checked'}"&gt;
+                    &lt;handler name="onvalue"&gt;
+                      this.parent.parent.datapath.updateData();
+                    &lt;/handler&gt;
+                  &lt;/checkbox&gt;
+                &lt;/basegridcolumn&gt;
+                &lt;scrollbar placement="content"/&gt;
+              &lt;/basegrid&gt;
+            &lt;/canvas&gt;
+            </example>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

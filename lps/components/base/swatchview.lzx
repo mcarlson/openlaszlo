@@ -71,11 +71,24 @@
         this.setBGColor(this.color);
     </method>
 
+    <doc>
+      <tag name="shortdesc"><text>A simple space-filling colored view.</text></tag>
+      <text>
+        <p>
+        A simple view that is filled with a single color.
+        Either 'fgcolor' and 'bgcolor' may be used to set the color of the view.
+        By default it fills the space of the parent with white.
+        </p>
+        <p>
+        Unlike with other views, setColorTransform will affect the bgcolor of the view.
+        </p>
+      </text>
+    </doc>
 </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

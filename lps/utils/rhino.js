@@ -1,15 +1,32 @@
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
+// Load fake dom
+load("3rd-party/tools/BUFakeDom.js"); 
 
 // some setup to fake what the html embed does 
-LzApplicationRoot = '/coal';
+lzOptions = {ServerRoot: '/legals'};
+Lz = {__propcache: { appenddiv: document.createElement() } };
+LzMousewheelKernel = {
+  setCallback: function() {}
+  
+};
+// Fake the browser DOM
+// Laszlo app expects to run in an iframe
 window = this;
+
+self = window;
+
+// And share a parent with the debugger
+window.parent = {};
+// document.write is missing from BUFakeDom, DHTML Sprite wants this
+// to write the CSS into the document
+document.write = function(args) { }
+document.body = document.createElement();
 this._root = this;
 var top = this; 
-var Debug = {};
 var __nexttimerid = 1;
 var setTimeout = function() { return __nexttimerid++; }
 var setInterval = function() { return __nexttimerid++; }
@@ -17,12 +34,15 @@ var clearTimeout = function() { }
 var clearInterval = function() { }
 var LzIdle = {};
 function getVersion() {
-    return "rhino-coal"; 
+    return "rhino-dhtml,linux linux fun"; 
 }
 var navigator = {userAgent: "lztest",
                 appVersion: "1.5R3",
                 vendor: "openlaszlo",
                 platform: "unknown"}; // This is expected to be in the top level namespace. 
+
+// Load the LFC!
+load("lps/includes/lfc/LFCdhtml-debug.js"); 
 
 // Cover up a few functions that trouble us
 LzIdle.update = function() { }
@@ -54,4 +74,7 @@ Debug.log = function( s ) {
     // Write the message out to a file
     lzjumReportWriter.write( s ); 
 }
+
+
+
 

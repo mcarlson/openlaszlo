@@ -1,0 +1,33 @@
+<canvas debug="true">
+<!--
+  covers-tags : lznode smoketest
+-->
+
+  <include href="lztest/lztestmanager.lzx" />
+
+  <class name="top" options="some: 'thing'" />
+  <class name="middle" extends="top" options="other: 'else'" />
+  <class name="bottom" extends="middle" options="besides: 'what'" />
+  <middle id="m1">
+    <bottom id="b1" options="last: 'end'">
+    </bottom>
+  </middle>
+
+  <script>
+    <![CDATA[
+    var suiteTestOptions = new LzTestSuite("LzNode Options");
+
+    suiteTestOptions.testOptions = function () {
+      LzTestManager.assertEquals(b1.options.some, 'thing');
+      LzTestManager.assertEquals(b1.options.other, 'else');
+      LzTestManager.assertEquals(b1.options.besides, 'what');
+      LzTestManager.assertEquals(b1.options.last, 'end');
+      b1.setOption('other', 'another');
+      LzTestManager.assertEquals(m1.options.other, 'else');
+    }
+
+    suiteTestOptions.addTest(suiteTestOptions.testOptions);
+    ]]>
+  </script>
+</canvas>
+<!-- Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.  Use subject to license terms. -->

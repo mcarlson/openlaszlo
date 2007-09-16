@@ -1,0 +1,43 @@
+
+<canvas height="100"> 
+    <view width="80"> 
+        <button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/>
+        <button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/>
+        <button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/>
+        <button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/>
+        <button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/>
+        <button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/>
+        <button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/>
+        <button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/>
+        <button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/>
+        <wrappinglayout/>
+    </view> 
+    <text id="statusText" bgcolor="green" resize="true"/> 
+    <button text="start over" onclick="canvas.startover()"/>
+    <simplelayout axis="y"/>
+
+    <method name="regbutton" args="b"> 
+        if( typeof this.del == "undefined" )  {
+            this.del = new LzDelegate( this, "buttonclickedagain" ); 
+        }      
+
+        this.del.register( b, "onclick" );
+    </method> 
+
+    <method name="startover">
+        this.del.unregisterAll(); 
+        this.reset();
+    </method>
+
+    <method name="reset"> 
+        statusText.setAttribute("text", "Nothing special");
+    </method> 
+
+    <method name="buttonclickedagain"> 
+        statusText.setAttribute("text", "That button was clicked two or more times");
+    </method> 
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

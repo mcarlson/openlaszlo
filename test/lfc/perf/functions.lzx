@@ -127,7 +127,11 @@
     addTest("noArgs", 1000 );
     addTest("manyArgs", 1000 );
     addTest("doLoop", 100 );
-    addTest("doRecur", 100 );
+    // This test makes IE 6 and IE 7 blow up with a 
+    // stack overflow, so we have to skip it to get 
+    // any numbers at all for the other tests in those
+    // browsers
+    // addTest("doRecur", 10 );
    
     //short vs. long identifiers
     //global vs. local variable vs. object property
@@ -137,13 +141,13 @@
     //number of keys effect on lookup speed
 
     
-    runTests( 'Functions' , 25 );
+    runTests( 'functions' , 10 );
 
   ]]>
   </script>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

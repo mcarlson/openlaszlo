@@ -16,6 +16,7 @@
     </stylesheet>
     <view id="gCarla" bgcolor="$style{'cssbg'}" width="100" height="100" />
     <view id="gPaul" bgcolor="$style{'cssbg'}" width="100" height="100" />    
+    <text id="gSteve" text="$style{'miscdata'}" width="200" height="100" />    
 
 <TestSuite name="paramifysuite">
 <TestCase>

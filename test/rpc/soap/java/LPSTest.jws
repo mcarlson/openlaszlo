@@ -59,6 +59,16 @@ public class LPSTest {
         return l.toArray();
     }
 
+    public Object[] nobjects (String str, int n) {
+        Vector l = new Vector();
+        for (int i = 0; i < n; i++) {
+            l.add(str);
+        }
+        return l.toArray();
+    }
+
+
+
     /* Return n copies of a string, as an array */
     public String[] strings (String str, int n) {
         String out[] = new String[n];
@@ -86,6 +96,7 @@ public class LPSTest {
     }
 
 
+
     public MyData[] struct2 (int n) {
         MyData val = new MyData();
         val.m = 4096;
@@ -94,6 +105,20 @@ public class LPSTest {
     }
 
     */
+
+
+    public Object[] arrayOfStringArray () {
+        Object[] arr = new Object[4];
+        for (int i = 0; i < arr.length; i++) {
+            String var[] = new String[3];
+            arr[i] = var;
+            for (int k = 0; k < 3; k++) {
+                var[k] = "FOO-"+i+"-"+k;
+            }
+        }
+        return arr;
+    }
+
 
 }
 

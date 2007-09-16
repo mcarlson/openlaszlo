@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"-->
+<book xmlns:xi="http://www.w3.org/2003/XInclude">
+  <title>Designer's Guide to Laszlo Applications</title>
+  <titleabbrev>Designer's Guide</titleabbrev>
+  <part id="preface">
+   <xi:include href="design-preface.dbk"/>
+  </part>
+  
+  <part id="overview">
+    <title>Overview</title>
+   
+    <xi:include href="architecture.dbk"/>
+    <xi:include href="designers.dbk"/>
+    <!--xi:include href="program-development.dbk"/-->
+  </part>
+  <?ignore
+   We need to find a way to include these files or equivalent, but right
+now simply including them causes all kinds of broken links and confusion (doctools problems).
+  <part id="tutorials">
+    <title>Fundamental Concepts for Designers</title>
+    <xi:include href="../tutorials/laszlo_basics.dbk"/>
+    <xi:include href="comp-intro.dbk"/>
+    <xi:include href="../tutorials/views.dbk"/>
+    <xi:include href="../tutorials/art_assets.dbk"/>
+    <xi:include href="../tutorials/text.dbk"/>
+    <xi:include href="comp-overview.dbk"/>
+    <xi:include href="layout-and-design.dbk"/>
+    <xi:include href="media-resources.dbk"/>
+    <xi:include href="text.dbk"/>
+    <xi:include href="fonts.dbk"/>
+   
+    <xi:include href="animation.dbk"/>
+  </part>
+  ?>
+
+  
+
+
+  <?ignore
+  <part id="advanced">
+    <title>Power Programming in LZX</title>
+    <!--Procedural Programming using Script-->
+?>
+
+<?ignore
+    <!--xi:include href="focus-modality.dbk"/-->
+     <!--xi:include href="best-practices.dbk"/-->
+  </part>
+  ?>
+  
+
+
+  <!--part id="internal-documentation">
+    <title>Internal Documentation</title>
+    <xi:include href="chapter-template.dbk"/>
+    <chapter>
+      <title>Orphaned Chapters</title>
+      <para><ulink url="../components/components.lzx?lzt=html">Components Hierarchy</ulink></para>
+      <para><ulink url="../help/app-viewer.html">Online help</ulink></para>
+    </chapter>
+  </part-->
+
+  <!--appendix id="schema"><title>Schema</title></appendix-->
+  <!--appendix id="reserved-words"><title>Reserved words</title></appendix-->
+
+  <!--index/-->
+
+  <xi:include href="book-info.dbk"/>
+
+</book>

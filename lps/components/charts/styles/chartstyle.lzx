@@ -41,7 +41,7 @@
         if(this["root"] != null)
         {           
         } 
-        else if(this.classname == "chartstyle")
+        else if(this.constructor.tagname == "chartstyle")
         {
             this.root = this;            
         }
@@ -317,7 +317,7 @@ bar and column chart: regionstyle. linestyle for the border
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

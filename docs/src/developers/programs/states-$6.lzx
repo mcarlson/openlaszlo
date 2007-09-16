@@ -1,0 +1,35 @@
+
+<canvas>
+  <window title="state demo" width="400" height="300">
+    <state name="max" apply="true">
+      <animatorgroup duration="1000" process="simultaneous">
+        <animator attribute="width" to="400"/>
+        <animator attribute="height" to="300"/>
+        <animator attribute="x" to="100"/>
+        <animator attribute="y" to="100"/>
+      </animatorgroup>
+      <text align="center" y="20%">M a x i m i z e d</text>
+    </state>
+    <state name="min" >
+      <animatorgroup duration="1000" process="simultaneous">
+        <animator attribute="width" to="170"/>
+        <animator attribute="height" to="100"/>
+        <animator attribute="x" to="0"/>
+        <animator attribute="y" to="0"/>
+      </animatorgroup>
+      <text align="center" valign="middle">Minimized</text>
+    </state>
+    <button placement="title_area" align="right" height="16"> Toggle
+      <attribute name="isMax" value="true"/>
+      <handler name="onclick">
+        if (this.isMax) {parent.max.remove(); parent.min.apply();}
+        else {parent.max.apply(); parent.min.remove();}
+        this.isMax = !this.isMax;
+      </handler>
+    </button>
+</window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,37 @@
+<canvas title="etech details test" bgcolor="0xCFCFCF">
+
+    <include href="lzunit" />
+    <include href="classes/dataman.lzx" />
+    <include href="views/mybutton.lzx" />
+    <include href="views/details.lzx" />
+
+    <detailsview id="gDetails" visible="true" /> 
+    
+    <TestSuite>
+        <TestCase>
+            <method name="testLoadPhotoInfo"> 
+                Debug.write("going to do request"); 
+                var argobj = [
+                    {argname:"method", 
+                        argvalue:"flickr.photos.getInfo"},
+                    {argname:"photo_id",
+                        argvalue:"98185793"}
+                    ];
+                gDataMan.doFlickrRequest(canvas.infods, argobj);                                    
+                Debug.write("did request."); 
+            </method>
+        </TestCase>
+        <TestCase>
+            <method name="testLoadDetailsMethod">
+                gDetails.loadDetails("97894314");
+            </method>
+        </TestCase>
+    </TestSuite>
+     
+
+</canvas>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.               *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->

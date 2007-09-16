@@ -1,14 +1,6 @@
 <library>
-    <view initstage="early" resource="images/loading/cal_load_still.swf">
-        <text x="370" y="294" width="40" font="vera" fgcolor="white" fontsize="10">
-            <method event="onpercentcreated" reference="canvas" args="p">
-                pp = Math.floor( 100*p );
-                this.setText(  pp + "%" );
-            </method>
-        </text>
-        <method event="oninit" reference="canvas">
-            this.destroy();
-        </method>
+    <view id="loadingView" initstage="early" resource="images/loading/cal_load_still.png"
+        x="${(parent.width-this.width)/2}" y="${(parent.height-this.height)/2}">
     </view>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

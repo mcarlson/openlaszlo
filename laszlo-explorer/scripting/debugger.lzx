@@ -1,9 +1,32 @@
-<canvas debug="true" width="200">
-  <debug y="130" width="180" height="240" />
+<canvas debug="true">
+  <button
+      id="myButton"
+      onclick="Debug.format('You clicked %s\n',this)">
+    Click Me!
+  </button>
 
-  <button id="myButton" text="Click Me!" 
-          onclick="Debug.write('Button Clicked',this)" />
-  
-  <view id="logo" x="10" y="20" 
-        resource="logo.swf" visible="false"/>
+  <view id="logo" x="10" y="20" resource="logo.png" visible="false"/>
 </canvas>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Copyright 2006 - 2007 Laszlo Systems, Inc.  All rights reserved.  Use subject to license terms. -->

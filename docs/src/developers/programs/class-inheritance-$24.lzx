@@ -1,0 +1,38 @@
+
+<canvas height="150">
+  <class name="myframe" extends="view">
+      <attribute name="bgcolor" value="red"/>
+
+      <attribute name="defaultplacement" value="'insideview'"/>
+
+      <view x="5" y="5" width="${parent.width-10}" name="insideview"
+              height="${parent.height-10}" 
+              bgcolor="#FFFFCC"/>
+
+      <!-- this view is not affected by defaultplacement -->
+      <!-- because it's declared in the class.           --> 
+      <view x="5" y="${parent.height}" name="anotherview" 
+            width="${parent.width-10}" height="10"
+            bgcolor="blue"/>
+  </class>
+
+  <class name="subframe" extends="myframe">
+    <!-- the layout and text will be placed in insideview of myframe -->
+    <simplelayout axis="y"/>
+    <text bgcolor="teal">subframe text</text>
+  </class>
+
+
+  <myframe width="220" height="50">
+    <!-- this will be placed in insideview -->
+    <text>This is some text</text>
+  </myframe>
+
+  <subframe width="220" height="50" y="70">
+    <text bgcolor="green">More subframe text</text>
+  </subframe>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,1558 @@
+<chapter id="rpc">
+
+<title>OpenLaszlo RPC</title>
+<warning><para>
+Remote procedure calls work in proxied applications only.  They do not work in SOLO applications.
+</para></warning>
+
+<para/><section><title>Overview</title>
+<para><indexterm significance="preferred"><primary>OpenLaszlo RPC</primary></indexterm><glossterm>OpenLaszlo RPC</glossterm>, or just <indexterm significance="preferred"><primary>RPC</primary></indexterm><glossterm>RPC</glossterm>, is the general term used to
+define the implementation and APIs that invoke remote procedures calls or
+services over the network. Current RPC implementations are <indexterm><primary>javarpc</primary></indexterm><sgmltag class="element">&lt;javarpc&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: javarpc-->
+, <indexterm><primary>xmlrpc</primary></indexterm><sgmltag class="element">&lt;xmlrpc&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: xmlrpc-->
+, and
+<indexterm><primary>soap</primary></indexterm><sgmltag class="element">&lt;soap&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: soap-->
+.</para>
+<para>
+A related class, <indexterm><primary>XMLHTTPRequest</primary></indexterm><classname>XMLHTTPRequest</classname> (also called "AJAX API"), is described in <xref linkend="data-structures"/>.
+</para>
+
+
+<para><indexterm><primary>javarpc</primary></indexterm><sgmltag class="element">&lt;javarpc&gt;</sgmltag> allows server-side Java methods to be invoked from the
+application. Java objects can be stored in the OpenLaszlo Server using an HTTP session (<ulink url="http://java.sun.com/products/servlet/2.3/javadoc/javax/servlet/http/HttpSession.html">HttpSession</ulink>)
+or the web application object (<ulink url="http://java.sun.com/products/servlet/2.3/javadoc/javax/servlet/ServletContext.html">SevletContext</ulink>).
+See the <ulink url="http://java.sun.com/products/servlet/2.3/javadoc/">Java Servlet
+APIs</ulink> for more information. 
+</para>
+<para>
+<indexterm><primary>xmlrpc</primary></indexterm><sgmltag class="element">&lt;xmlrpc&gt;</sgmltag> implements <ulink url="http://www.xmlrpc.com">XML-RPC</ulink>, a simple spec that
+allows applications to make remote procedure calls on different systems. Its
+transport is HTTP and it uses an XML encoded message to invoke remote functions. </para>
+<para>
+<indexterm><primary>soap</primary></indexterm><sgmltag class="element">&lt;soap&gt;</sgmltag> implements the W3C <ulink url="http://www.w3.org/TR/soap12-part0">SOAP
+specification</ulink>. Like <indexterm><primary>xmlrpc</primary></indexterm><sgmltag class="element">&lt;xmlrpc&gt;</sgmltag> SOAO also uses XML to send messages over the network. Though HTTP
+is commonly used as its transport, it isn't required. The specification is more
+complex than XML-RPC and supports different styles of operations (rpc or
+document), overloaded methods, passing header information, and so forth.</para>
+
+<para>The <indexterm><primary>rpc</primary></indexterm><sgmltag class="element">&lt;rpc&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: rpc-->
+tag is the abstract base class for all<indexterm significance="preferred"><primary>RPC classes</primary></indexterm><glossterm>RPC classes</glossterm>.
+Instances of RPC classes are referred to as <indexterm significance="preferred"><primary>RPC objects</primary></indexterm><glossterm>RPC objects</glossterm>. RPC classes
+include &lt;soap&gt;, &lt;javarpc&gt;, &lt;xmlrpc&gt;, &lt;sessionrpc&gt;, and
+&lt;webapprpc&gt;. These classes are essentially LZX wrappers of ORL LzRPC
+services. <indexterm><primary>LzRPC</primary></indexterm><classname>LzRPC</classname> is the ORL abstract class for ORL RPC services. This service
+provides the basic framework to invoke remote functions over the network.
+LzJavaRPCService, LzXMLRPCService, and LzSOAPService are subclasses of LzRPC,
+and implement JavaRPC, XML-RPC, and SOAP, respectively.</para>
+
+
+
+<para/></section><section><title>&lt;rpc&gt;</title>
+
+<para>The &lt;rpc&gt; tag is the abstract base class for RPC classes. Subclasses
+must implement the <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname> method, which is responsible for creating the proxy
+object. The <indexterm significance="preferred"><primary>proxy</primary></indexterm><glossterm>proxy</glossterm> object contains a set of stub functions that invoke
+a remote function (or procedure) over the network. It's up to the caller of the
+stub function to know what parameters need to be passed in by looking at what
+the backend remote function expects. 
+</para>
+<para>If you're calling a JavaRPC function, for example, you will need to look at 
+the associated Java API. If you're calling a SOAP function, you will need to look at the corresponding operation in a WSDL file.</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;rpc autoload="[true|false]"
+     secure="[true|false]"
+     secureport="..."&gt;
+</programlisting></informalexample>
+
+<para>The implementation of this class can be seen in
+<literal>lps/components/rpc/rpc.lzx</literal>.</para>
+
+
+
+<para/><section><title>Attributes</title>
+
+<para><indexterm significance="preferred"><primary>autoload</primary></indexterm><glossterm>autoload</glossterm>: (Boolean) if true, calls to load client proxy during
+init stage. If false, the proxy must be loaded using the load() method.
+<emphasis role="b">Default is true.</emphasis></para>
+<para><indexterm significance="preferred"><primary>secure</primary></indexterm><glossterm>secure</glossterm>: (Boolean) if true, creates a secure HTTPS connection
+between the client and the OpenLaszlo Server. Also see secureport below. <emphasis role="b">Default is
+false.</emphasis></para>
+<para><indexterm significance="preferred"><primary>secureport</primary></indexterm><glossterm>secureport</glossterm>: (Number) valid only when secure attribute is set to
+true. The secure port to use. There is no client-side default. Most servers use
+port 443 as the default HTTPS port.</para>
+
+
+
+<para/><section><title>Read-only properties</title>
+
+<para><indexterm significance="preferred"><primary>proxy</primary></indexterm><glossterm>proxy</glossterm>: (Object) this is the object containing function stubs. It
+is created by calling <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname> (which happens during init if autoload is
+true).
+</para>
+<para>
+<literal>proxy</literal> is equivalent to:</para>
+<itemizedlist spacing="compact"><listitem><para>a class in JavaRPC</para></listitem><listitem><para>a service in SOAP </para></listitem></itemizedlist>
+
+<para>
+<literal>proxy</literal>
+function stubs are equivalent to:</para>
+<itemizedlist spacing="compact"><listitem><para>class methods in JavaRPC</para></listitem><listitem><para>operations in SOAP</para></listitem><listitem><para>methods in XML-RPC. </para></listitem></itemizedlist>
+
+<para>
+Note that proxy is not defined until the <indexterm><primary>onload event</primary></indexterm><literal>onload</literal> event is
+sent, thus, function stubs cannot be invoked until onload. Each function stub
+requires two arguments: an array of parameters and delegate. You can unload it
+(i.e., set to null) by calling the <indexterm><primary><literal>unload()</literal></primary></indexterm><methodname>unload()</methodname> method. Go to the proxy section for
+details.</para>
+
+
+
+<para/></section></section><section><title>Events</title>
+
+<para>Note: event handler methods must be declared in the body of &lt;rpc&gt;.
+Attribute event handlers will not work.</para>
+
+<para><indexterm significance="preferred"><primary>onload</primary></indexterm><glossterm>onload</glossterm>: this event is triggered when the proxy is returned
+to the client. </para>
+
+<para><indexterm significance="preferred"><primary>onunload</primary></indexterm><glossterm>onunload</glossterm>: this event is triggered when the proxy is unloaded from
+the client.</para>
+
+<para><indexterm significance="preferred"><primary>ondata</primary></indexterm><glossterm>ondata</glossterm>: this event is triggered when a declared &lt;remotecall&gt;
+doesn't handle its ondata events. See the &lt;remotecall&gt; section for
+details.</para>
+
+<para><indexterm significance="preferred"><primary>onerror</primary></indexterm><glossterm>onerror</glossterm>: this event is triggered if there was a problem loading or
+unloading the stub, or if a declared &lt;remotecall&gt; didn't handle its
+onerror event. See the &lt;remotecall&gt; section for details.</para>
+
+
+
+<para/></section><section><title>Methods</title>
+
+
+
+<para/><section><title>load()</title>
+
+<para>The <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname> method is abstract in this class. Each subclass must define this
+method. <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname> is responsible for setting up the proxy </para>
+
+<para><emphasis role="b">load() implementation in javarpc.lzx</emphasis></para>
+
+<informalexample role="live-example"><programlisting>
+&lt;method name="load"&gt;
+
+    /* other code here */
+
+    var opts = {
+        loadoption: this.loadoption,
+        params: this.createargs,
+        classname: this.classname,
+        oname: this.attributename,
+        scope: this.scope
+    }
+
+    LzJavaRPCService.loadObject(this._loadDel, opts, this.secure, this.secureport);
+&lt;/method&gt;
+</programlisting></informalexample>
+
+<para><emphasis role="b">load() implementation in soap.lzx</emphasis></para>
+
+<informalexample role="live-example"><programlisting>
+&lt;method name="load"&gt;
+    LzSOAPService.loadObject(this._loadDel,
+        { wsdl: this.wsdl, service: this.service, port: this.port },
+          this.secure, this.secureport);
+&lt;/method&gt;
+</programlisting></informalexample>
+
+<para><emphasis role="b">load() implementation in xmlrpc.lzx</emphasis></para>
+
+<informalexample role="live-example"><programlisting>
+&lt;method name="load"&gt;
+    // Since there aren't any prototypes to load for XML-RPC services, we just
+    // create proxy using declared calls.
+    for (var cn in this.subnodes) {
+        /* code to set up this.proxy */
+    }
+
+    this._loadDel.execute( 
+        { status: 'ok', message: 'ok', 
+          stub: this.proxy, stubinfo: null }
+    );
+
+&lt;/method&gt;
+</programlisting></informalexample>
+
+<para>There are several private, undocumented properties in &lt;rpc&gt;. But one
+that implementors of subclasses should be made aware of is the delegate property
+called _loadDel (note: an underscore prefix in a component variable indicates that it is
+private). This delegate must be passed in to any lower-level ORL APIs or must be
+called at the end of <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname>, as is done in the xmlrpc.lzx implementation of
+<indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname> (shown above). In turn, <literal>_loadDel</literal> calls the <indexterm><primary sortas="load"><literal>_load()</literal></primary></indexterm><methodname>_load()</methodname> method (a private
+method in &lt;rpc&gt;) that sets up the proxy, registers declared
+&lt;remotecall&gt; nodes, and finally sends the onload event.</para>
+
+
+
+<para/></section><section><title>unload()</title>
+
+<para>This method unloads the proxy from the RPC object. Just like load(), this
+method has a corresponding _unloadDel delegate and _unload handler method. By
+default, unload() sets the proxy property to null and then an unload event is
+sent. However, you can override this function in the cases where
+server-side clean up is required, as is done with JavaRPC objects.</para>
+
+<para><emphasis role="b">unload() implementation in javarpc.lzx</emphasis></para>
+
+<informalexample role="live-example"><programlisting>
+&lt;method name="unload"&gt;
+    /* some other code here */
+
+    // clean up server-side code
+    LzJavaRPCService.unloadObject(this._unloadDel, 
+        {
+          classname: this.classname, 
+          oname: this.attributename, 
+          scope: this.scope
+        }, 
+        this.secure, this.secureport);
+&lt;/method&gt;
+</programlisting></informalexample>
+
+<para>See <literal>lps/components/rpc/javarpc.lzx</literal> for more details.</para>
+
+
+
+<para/></section></section></section><section><title>Declaring rpc</title>
+
+<para>Since rpc is an abstract class, SOAP, JavaRPC, and XML-RPC declarations will
+be used for demonstration.</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;!-- SOAP --&gt;
+&lt;soap name="mySOAP" wsdl="..."&gt;
+    &lt;handler name="onload"&gt;
+        Debug.write('soap proxy loaded:', this.proxy);
+    &lt;/handler&gt;
+    &lt;handler name="onunload"&gt;
+        Debug.write('soap proxy unloaded:', this.proxy);
+    &lt;/handler&gt;
+&lt;/soap&gt;
+
+&lt;!-- JavaRPC --&gt;
+&lt;javarpc name="myJavaRPC" classname="..." scope="..."&gt;
+    &lt;handler name="onload"&gt;
+        Debug.write('javarpc proxy loaded:', this.proxy);
+    &lt;/handler&gt;
+    &lt;handler name="onunload"&gt;
+        Debug.write('javarpc proxy unloaded:', this.proxy);
+    &lt;/handler&gt;
+&lt;/javarpc&gt;
+
+&lt;!-- XML-RPC --&gt;
+&lt;xmlrpc name="myXMLRPC" service="..."&gt;
+    &lt;handler name="onload"&gt;
+        Debug.write('xmlrpc proxy loaded:', this.proxy);
+    &lt;/handler&gt;
+    &lt;handler name="onunload"&gt;
+        Debug.write('xmlrpc proxy unloaded:', this.proxy);
+    &lt;/handler&gt;
+&lt;/xmlrpc&gt;
+</programlisting></informalexample>
+
+
+<anchor id="rpc.proxy"/>
+<para/></section><section><title>Proxy</title>
+
+<para>The proxy property is an object that contains function stubs. It's set when
+the load call returns. Each function represents a client-side stub to a remote
+function or operation. Each function requires two arguments: an array of
+parameters and a delegate. The order of parameters in the array should
+match the parameters the backend operation expects. The delegate is required
+because RPC calls are asynchronous, that is, there is no way to know when the
+function call will return from the backend. When the response is received, the delegate calls the appropriate method.</para>
+<para>
+<anchor id="rpc.delegate-as-attribute"/>
+</para>
+<informalexample role="live-example"><programlisting>
+&lt;!-- Assume mySOAP.proxy contains a function stub called someFunction() --&gt;
+&lt;soap name="mySOAP" wsdl="..."&gt;
+    &lt;handler name="onload"&gt;
+        Debug.write('soap proxy loaded:');
+        Debug.inspect(this.proxy);
+    &lt;/handler&gt;
+    &lt;handler name="onunload"&gt;
+        Debug.write('soap proxy unloaded:', this.proxy);
+    &lt;/handler&gt;
+&lt;/soap&gt;
+
+&lt;button text="clickme"&gt;
+    &lt;attribute name="mydel" type="expression"
+               value="$once{new LzDelegate(this, 'handler')}"
+
+    &lt;handler name="onclick"&gt;
+        mySOAP.proxy.someFunction([p1, p2, ..., pN], this.myDel);
+    &lt;/handler&gt;
+
+    &lt;method name="handler" args="retObj"&gt;
+        Debug.write('RPC call returned', retObj);
+    &lt;/method&gt;
+
+&lt;/button&gt;
+</programlisting></informalexample>
+
+
+
+
+<para/><section><title>RPC call return object</title>
+
+<para>When a remote call returns, an object is returned into the callback handler
+that is specified in the delegate passed in the function stub call. The object
+contains information relevant to the call and will be referred to as the
+<indexterm significance="preferred"><primary>return object</primary></indexterm><glossterm>return object</glossterm>. Successful return objects contain <indexterm significance="preferred"><primary>return
+values</primary></indexterm><glossterm>return
+values</glossterm>, which is the actual value returned from the RPC call. The return
+value can be a simple type, array, or object. A successful return object looks
+like:</para>
+
+<informalexample role="live-example"><programlisting>
+{
+  status: 'ok',
+  message: 'ok',
+  data: DATA,
+  opinfo: OPINFO
+}
+</programlisting></informalexample>
+
+<para>Data is the return value from the RPC call. Opinfo is information specific to
+the operation. For SOAP, this will contain the operation name, operation style,
+and SOAP response headers. For JavaRPC, will contain the remote class name,
+method name, attribute name of where this object was saved, and other values
+specific to this call. For XML-RPC, opinfo will contain service URL and method
+name.</para>
+
+<para>A successful call can also return a void return type:</para>
+
+<informalexample role="live-example"><programlisting>
+{
+  status: 'ok',
+  message: 'void', 
+  data: LzRPC.t_void, 
+  opinfo: OPINFO 
+}
+</programlisting></informalexample>
+
+<para>LzRPC.t_void is an object that represent a void return type.</para>
+
+<para>A bad call returns an error object:</para>
+
+<informalexample role="live-example"><programlisting>
+{
+  status: 'error', 
+  errortype: ERROR_TYPE, 
+  message: ERROR_MESSAGE, 
+  error: ERROR_OBJECT,
+  opinfo: OPINFO
+}
+</programlisting></informalexample>
+
+<para>Message is a one sentence description of the error. The error property exists
+only for exception and fault error types. There are four types of errors:</para>
+<itemizedlist spacing="compact"><listitem><para>fault</para></listitem><listitem><para>exception</para></listitem><listitem><para>timeout</para></listitem><listitem><para>servererror</para></listitem></itemizedlist>
+ 
+<para>A <indexterm significance="preferred"><primary>fault</primary></indexterm><glossterm>fault</glossterm> error type indicates that
+there was a problem handling the remote function call. An <indexterm significance="preferred"><primary>exception</primary></indexterm><glossterm>exception</glossterm>
+error type is only thrown by SOAP calls and indicates the OpenLaszlo Server had a problem
+handling the remote function call. Both fault and exception return an error
+object that can be inspected by looking at the error property. A
+<indexterm significance="preferred"><primary>servererror</primary></indexterm><glossterm>servererror</glossterm> is returned for general OpenLaszlo Server errors like forbidden
+requests. <indexterm significance="preferred"><primary>Timeout</primary></indexterm><glossterm>Timeout</glossterm> is returned when the application hasn't heard from
+back from the OpenLaszlo Server in a certain amount of time. This currently defaults to 30
+seconds and can't be changed.</para>
+
+<example role="live-example">
+   <title>Return object</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-$11.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Return object</title><programlisting role="lzx-embednew"><filename>rpc-$11.lzx</filename><parameter/><code>
+&lt;canvas debug="true" width="600"&gt;
+
+    &lt;debug x="150" y="20" width="400" height="360" /&gt;
+
+    &lt;soap name="temperature" 
+          wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter"&gt;
+
+        &lt;attribute name="myDel" value="$once{new LzDelegate(this, 'myhandler')}" /&gt;
+
+        &lt;method name="init"&gt;
+            Debug.write('soap service loading...');
+            super.init();
+        &lt;/method&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('temperature service loaded!');
+            Debug.inspect(this.proxy);
+        &lt;/handler&gt;
+
+        &lt;method name="myhandler" args="returnObject"&gt;
+            Debug.write('got returned object:');
+            Debug.inspect(returnObject);
+        &lt;/method&gt;
+
+    &lt;/soap&gt;
+
+    &lt;view layout="spacing: 5" x="20" y="20"&gt;
+        &lt;button text="ok conversion"&gt;
+            &lt;handler name="onclick"&gt;
+                Debug.write('requesting good conversion...');
+                temperature.proxy.FtoC([ 100 ], temperature.myDel);
+            &lt;/handler&gt;
+        &lt;/button&gt;
+        &lt;button text="bad conversion"&gt;
+            &lt;handler name="onclick"&gt;
+                Debug.write('requesting bad conversion...');
+                temperature.proxy.FtoC([ 'string' ], temperature.myDel);
+            &lt;/handler&gt;
+        &lt;/button&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" width="600"&gt;
+
+    &lt;debug x="150" y="20" width="400" height="360" /&gt;
+
+    &lt;soap name="temperature" 
+          wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter"&gt;
+
+        &lt;attribute name="myDel" value="$once{new LzDelegate(this, 'myhandler')}" /&gt;
+
+        &lt;method name="init"&gt;
+            Debug.write('soap service loading...');
+            super.init();
+        &lt;/method&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('temperature service loaded!');
+            Debug.inspect(this.proxy);
+        &lt;/handler&gt;
+
+        &lt;method name="myhandler" args="returnObject"&gt;
+            Debug.write('got returned object:');
+            Debug.inspect(returnObject);
+        &lt;/method&gt;
+
+    &lt;/soap&gt;
+
+    &lt;view layout="spacing: 5" x="20" y="20"&gt;
+        &lt;button text="ok conversion"&gt;
+            &lt;handler name="onclick"&gt;
+                Debug.write('requesting good conversion...');
+                temperature.proxy.FtoC([ 100 ], temperature.myDel);
+            &lt;/handler&gt;
+        &lt;/button&gt;
+        &lt;button text="bad conversion"&gt;
+            &lt;handler name="onclick"&gt;
+                Debug.write('requesting bad conversion...');
+                temperature.proxy.FtoC([ 'string' ], temperature.myDel);
+            &lt;/handler&gt;
+        &lt;/button&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-$11.lzx></example?>
+
+<warning><para>
+Remote procedure calls return native objects, not XML, and cannot be used with <ulink url="../guide/data-structures.html" type="laszlo-dguide">XPath</ulink>.
+</para></warning>
+
+
+
+<para/></section><section><title>Generating LzDataElement from return values</title>
+
+<para>Return values can be mapped to datasets or LzDataElements. This creates a
+convenient way to bind return values from remote calls zto elements in the OpenLaszlo canvas. <indexterm significance="preferred"><primary>Data mapped
+return values</primary></indexterm><glossterm>Data mapped
+return values</glossterm> can be generated using the <indexterm><primary><literal>LzDataElement.valueToElement()</literal></primary></indexterm><methodname>LzDataElement.valueToElement()</methodname>
+method.</para>
+
+<example role="live-example">
+   <title>LzDataElement.valueToElement()</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-$12.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>LzDataElement.valueToElement()</title><programlisting role="lzx-embednew"><filename>rpc-$12.lzx</filename><parameter/><code>
+&lt;canvas debug="true" width="600"&gt;
+
+    &lt;debug x="150" y="15" width="400" height="360" /&gt;
+
+    &lt;simplelayout spacing="5" /&gt;
+
+    &lt;method name="v2e" args="v"&gt;
+        Debug.write('Got', v);
+        var de = LzDataElement.valueToElement(v);
+        Debug.write(de.serialize());
+    &lt;/method&gt;
+
+    &lt;button text="number"&gt;
+        &lt;handler name="onclick"&gt;
+            var num = 5;
+            canvas.v2e(num);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="string"&gt;
+        &lt;handler name="onclick"&gt;
+            var str = "a string";
+            canvas.v2e(str);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="array"&gt;
+        &lt;handler name="onclick"&gt;
+            var arr = [1, 2, 3];
+            canvas.v2e(arr);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="object"&gt;
+        &lt;handler name="onclick"&gt;
+            var obj = { p1: "a string", p2: 5 }
+            canvas.v2e(obj);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="complex array"&gt;
+        &lt;handler name="onclick"&gt;
+            var arr = [ 1, { p1: "a string", p2: 5 }, [ 1, 2, 3] ];
+            canvas.v2e(arr);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="complex object"&gt;
+        &lt;handler name="onclick"&gt;
+            var obj = { p1: [1, 2, 3], p2: 5 };
+            canvas.v2e(obj);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" width="600"&gt;
+
+    &lt;debug x="150" y="15" width="400" height="360" /&gt;
+
+    &lt;simplelayout spacing="5" /&gt;
+
+    &lt;method name="v2e" args="v"&gt;
+        Debug.write('Got', v);
+        var de = LzDataElement.valueToElement(v);
+        Debug.write(de.serialize());
+    &lt;/method&gt;
+
+    &lt;button text="number"&gt;
+        &lt;handler name="onclick"&gt;
+            var num = 5;
+            canvas.v2e(num);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="string"&gt;
+        &lt;handler name="onclick"&gt;
+            var str = "a string";
+            canvas.v2e(str);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="array"&gt;
+        &lt;handler name="onclick"&gt;
+            var arr = [1, 2, 3];
+            canvas.v2e(arr);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="object"&gt;
+        &lt;handler name="onclick"&gt;
+            var obj = { p1: "a string", p2: 5 }
+            canvas.v2e(obj);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="complex array"&gt;
+        &lt;handler name="onclick"&gt;
+            var arr = [ 1, { p1: "a string", p2: 5 }, [ 1, 2, 3] ];
+            canvas.v2e(arr);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button text="complex object"&gt;
+        &lt;handler name="onclick"&gt;
+            var obj = { p1: [1, 2, 3], p2: 5 };
+            canvas.v2e(obj);
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-$12.lzx></example?>
+
+<para>The root node of <indexterm><primary><literal>LzDataElement.valueToElement()</literal></primary></indexterm><methodname>LzDataElement.valueToElement()</methodname> is named
+&lt;element&gt;. Simple type values are placed as text nodes of the root node.
+Array items are placed as &lt;item&gt; nodes under the root. Object properties
+are placed under the root with the name of the property representing the
+element that wraps its value.</para> 
+
+<para>In the example above, the number</para>
+<programlisting>
+5 
+</programlisting>
+<para>
+maps to</para>
+<programlisting> &lt;element&gt;5&lt;/element&gt;</programlisting>
+<para>
+The string
+</para>
+<programlisting>
+"a string" 
+</programlisting>
+<para>
+maps to</para>
+<programlisting> &lt;element&gt;a string&lt;/element&gt;</programlisting>
+
+<para> the array</para>
+<programlisting>
+[1, 2, 3]
+</programlisting>
+<para>
+maps to</para>
+<programlisting>
+&lt;element&gt;
+    &lt;item&gt;1&lt;/item&gt;
+    &lt;item&gt;2&lt;/item&gt;
+    &lt;item&gt;3&lt;/item&gt;
+&lt;/element&gt;
+</programlisting>
+<para>the object</para>
+<programlisting>
+{ p1: "a string", p2: 5 }
+</programlisting>
+<para>
+maps to</para>
+<programlisting>
+&lt;element&gt;
+    &lt;p1&gt;a string&lt;/p1&gt;
+    &lt;p2&gt;5&lt;/p2&gt;
+&lt;/element&gt;
+</programlisting>
+
+<para/><section><title>SOAP calls and LzDataElements</title>
+<para>Note that returned arrays from SOAP calls are treated a little
+differently. Each item in a SOAP array has a wrapper element, which is remapped
+back when turned into an <indexterm><primary>LzDataElement</primary></indexterm><classname>LzDataElement</classname>. That is, instead of wrapping array items
+in &lt;item&gt;, they're wrapped with the original element name specified in the
+SOAP message.</para>
+
+<para>For example, assume the original SOAP message for an array return value looks like:</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;soap:Envelope soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" ...&gt;
+   &lt;soap:Body&gt; &lt;n:getTypesResponse xmlns:n="http://arcweb.esri.com/v2"&gt;
+         &lt;Result href="#id0" /&gt;
+      &lt;/n:getTypesResponse&gt;
+      &lt;id0 id="id0" soapenc:root="0" xsi:type="soapenc:Array" soapenc:arrayType="ns5:KeyValue[19]"&gt;
+         &lt;i href="#id1" /&gt;
+         &lt;i href="#id2" /&gt;
+         &lt;i href="#id3" /&gt;
+         &lt;i href="#id4" /&gt;
+         &lt;!-- ... --&gt;
+      &lt;/id0&gt;
+      &lt;id1 id="id1" soapenc:root="0" xsi:type="ns5:KeyValue"&gt;
+         &lt;key xsi:type="xsd:string"&gt;A&lt;/key&gt;
+         &lt;value xsi:type="xsd:string"&gt;Countries&lt;/value&gt;
+      &lt;/id1&gt;
+      &lt;id2 id="id2" soapenc:root="0" xsi:type="ns5:KeyValue"&gt;
+         &lt;key xsi:type="xsd:string"&gt;B&lt;/key&gt;
+         &lt;value xsi:type="xsd:string"&gt;Large Non-U.S. Cities&lt;/value&gt;
+      &lt;/id2&gt;
+      &lt;id3 id="id3" soapenc:root="0" xsi:type="ns5:KeyValue"&gt;
+         &lt;key xsi:type="xsd:string"&gt;C&lt;/key&gt;
+         &lt;value xsi:type="xsd:string"&gt;Large U.S. Cities&lt;/value&gt;
+      &lt;/id3&gt;
+      &lt;!-- ... --&gt;
+
+   &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</programlisting></informalexample>
+
+<para>This example shows that &lt;item&gt; is not used as the wrapper element for
+array items.</para>
+
+<example role="live-example">
+   <title>SOAP array</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-$14.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>SOAP array</title><programlisting role="lzx-embednew"><filename>rpc-$14.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="300"&gt;
+
+    &lt;debug width="470" height="285" /&gt;
+
+    &lt;soap name="geography" 
+          wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl"&gt;
+
+        &lt;attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" /&gt;
+
+        &lt;method name="handler" args="retval"&gt;
+            if (retval.status == 'error') {
+                Debug.write('error:', retval.message);
+                return;
+            }
+
+            Debug.write('Got', retval.data);
+            var el = LzDataElement.valueToElement(retval.data);
+            Debug.write(el.serialize());
+        &lt;/method&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('geography soap service stub loaded');
+            this.proxy.getTypes([], this.myDel);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="300"&gt;
+
+    &lt;debug width="470" height="285" /&gt;
+
+    &lt;soap name="geography" 
+          wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl"&gt;
+
+        &lt;attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" /&gt;
+
+        &lt;method name="handler" args="retval"&gt;
+            if (retval.status == 'error') {
+                Debug.write('error:', retval.message);
+                return;
+            }
+
+            Debug.write('Got', retval.data);
+            var el = LzDataElement.valueToElement(retval.data);
+            Debug.write(el.serialize());
+        &lt;/method&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('geography soap service stub loaded');
+            this.proxy.getTypes([], this.myDel);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-$14.lzx></example?>
+
+<para>The data-mapped return value can then be used with another <indexterm><primary>LzDataElement</primary></indexterm><classname>LzDataElement</classname> for
+databinding purposes.</para>
+
+<example role="live-example">
+   <title>Setting generated return value LzDataElement in a dataset</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-$15.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Setting generated return value LzDataElement in dataset</title><programlisting role="lzx-embednew"><filename>rpc-$15.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="150"&gt;
+
+    &lt;debug x="80" y="10" width="400" height="120" /&gt;
+
+    &lt;dataset name="myDataset" /&gt;
+
+    &lt;simplelayout spacing="5" /&gt;
+
+    &lt;method name="v2e" args="v"&gt;
+        Debug.write('setting', v, 'to mydataset');
+        var de = LzDataElement.valueToElement(v);
+        myDataset.setChildNodes( de.childNodes )
+        Debug.write(myDataset.serialize());
+    &lt;/method&gt;
+
+    &lt;view datapath="myDataset:/" x="10" layout="inset: 10; spacing: 2"&gt;
+        &lt;button text="array"&gt;
+            &lt;handler name="onclick"&gt;
+                var arr = [1, 2, 3];
+                canvas.v2e(arr);
+            &lt;/handler&gt;
+        &lt;/button&gt;
+
+        &lt;text datapath="item/text()" /&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="150"&gt;
+
+    &lt;debug x="80" y="10" width="400" height="120" /&gt;
+
+    &lt;dataset name="myDataset" /&gt;
+
+    &lt;simplelayout spacing="5" /&gt;
+
+    &lt;method name="v2e" args="v"&gt;
+        Debug.write('setting', v, 'to mydataset');
+        var de = LzDataElement.valueToElement(v);
+        myDataset.setChildNodes( de.childNodes )
+        Debug.write(myDataset.serialize());
+    &lt;/method&gt;
+
+    &lt;view datapath="myDataset:/" x="10" layout="inset: 10; spacing: 2"&gt;
+        &lt;button text="array"&gt;
+            &lt;handler name="onclick"&gt;
+                var arr = [1, 2, 3];
+                canvas.v2e(arr);
+            &lt;/handler&gt;
+        &lt;/button&gt;
+
+        &lt;text datapath="item/text()" /&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-$15.lzx></example?>
+
+
+
+
+
+<para/></section></section><section><title>Using dataobject to map return values</title>
+
+<para>There is more convenient way to generate data mapped return values. Instead
+of calling <methodname role="LzDataElement.prototype.valueToElement">valueToElement()</methodname> after each call, a <literal>dataobject</literal> property
+can be set in the delegate. <indexterm significance="preferred"><primary>Dataobject</primary></indexterm><glossterm>Dataobject</glossterm> must be a dataset or an
+LzDataElement and tells the RPC function to create a data mapped return value
+and set it on the dataobject. If the dataobject is a dataset, the child nodes of
+the data mapped return value are set as the child nodes of the dataset. If the
+dataobject is an LzDataElement, the root node of data mapped return value is
+appended as a child of the LzDataElement dataobject.</para>
+
+<example role="live-example">
+   <title>Setting a dataobject toa dataset</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-$16.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Setting dataobject to a dataset</title><programlisting role="lzx-embednew"><filename>rpc-$16.lzx</filename><parameter/><code>
+&lt;canvas debug="true" width="700"&gt;
+
+    &lt;debug x="220" width="470" height="285" /&gt;
+
+    &lt;dataset name="myDataset" /&gt;
+
+    &lt;soap name="geography" 
+          wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl"&gt;
+
+        &lt;attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" /&gt;
+
+        &lt;method name="handler" args="ret"&gt;
+            Debug.write('ret:', ret);
+            if (ret.status == 'ok') {
+                Debug.write('myDataset childNodes:', myDataset.childNodes);
+            }
+        &lt;/method&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('geography soap service stub loaded');
+
+            // Here we set data
+            this.myDel.dataobject = myDataset;
+
+            this.proxy.getTypes([], this.myDel);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+
+    &lt;view datapath="myDataset:/" x="10" layout="inset: 10; spacing: 2"&gt;
+        &lt;view datapath="i"&gt;
+            &lt;text datapath="key/text()" resize="true"/&gt;
+            &lt;text x="20" datapath="value/text()" resize="true"/&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" width="700"&gt;
+
+    &lt;debug x="220" width="470" height="285" /&gt;
+
+    &lt;dataset name="myDataset" /&gt;
+
+    &lt;soap name="geography" 
+          wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl"&gt;
+
+        &lt;attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" /&gt;
+
+        &lt;method name="handler" args="ret"&gt;
+            Debug.write('ret:', ret);
+            if (ret.status == 'ok') {
+                Debug.write('myDataset childNodes:', myDataset.childNodes);
+            }
+        &lt;/method&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('geography soap service stub loaded');
+
+            // Here we set data
+            this.myDel.dataobject = myDataset;
+
+            this.proxy.getTypes([], this.myDel);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+
+    &lt;view datapath="myDataset:/" x="10" layout="inset: 10; spacing: 2"&gt;
+        &lt;view datapath="i"&gt;
+            &lt;text datapath="key/text()" resize="true"/&gt;
+            &lt;text x="20" datapath="value/text()" resize="true"/&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-$16.lzx></example?>
+
+<para>Note how the passed in LzDataElement child nodes are the child nodes of the
+dataset. Here's another example using an LzDataElement.</para>
+
+<example role="live-example">
+   <title>Setting dataobject to an LzDataElement</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-$17.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Setting dataobject to an LzDataElement</title><programlisting role="lzx-embednew"><filename>rpc-$17.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="500" width="700"&gt;
+
+    &lt;debug x="220" width="470" height="285" /&gt;
+
+    &lt;dataset name="myDataset"&gt;
+        &lt;region name="Region-A" /&gt;
+        &lt;region name="Region-B"/&gt;
+        &lt;region name="Region-C"/&gt;
+    &lt;/dataset&gt;
+
+    &lt;soap name="placefinder" 
+          wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl"&gt;
+
+        &lt;attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" /&gt;
+
+        &lt;method name="handler" args="ret"&gt;
+            Debug.write('ret:', ret);
+            if (ret.status == 'ok') {
+                Debug.write('myDataset childNodes:', myDataset.childNodes);
+            }
+        &lt;/method&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('placefinder soap service stub loaded');
+            myView.setAttribute('visible', true);
+            this.proxy.getTypes([], this.myDel);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+    &lt;view name="myView" datapath="myDataset:/" x="10" visible="false"&gt;
+
+        &lt;simplelayout spacing="2" inset="10" /&gt;
+
+        &lt;view datapath="region" layout="spacing: 5"&gt;
+            &lt;attribute name="text" value="$path{'@name'}" type="string" /&gt;
+
+            &lt;text name="t" text="${parent.text + ' (click me)'}" resize="true" /&gt;
+
+            &lt;method name="gotData"&gt;
+                this.setAttribute('clickable', false);
+                this.t.setText(this.text);
+            &lt;/method&gt;
+
+            &lt;handler name="onclick"&gt;
+                if (text == "Region-A") {
+                    this.regions.setDatapath("element/i[1-6]");
+                } else if (text == "Region-B") {
+                    this.regions.setDatapath("element/i[7-12]");
+                } else {
+                    this.regions.setDatapath("element/i[12-]");
+                }
+                var myDel = new LzDelegate(this, "gotData");
+                myDel.dataobject = this.datapath.p;
+                placefinder.proxy.getTypes([], myDel);
+            &lt;/handler&gt;
+
+            &lt;view name="regions" x="10"&gt;
+                &lt;text datapath="key/text()" resize="true"/&gt;
+                &lt;text x="20" datapath="value/text()" resize="true"/&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="500" width="700"&gt;
+
+    &lt;debug x="220" width="470" height="285" /&gt;
+
+    &lt;dataset name="myDataset"&gt;
+        &lt;region name="Region-A" /&gt;
+        &lt;region name="Region-B"/&gt;
+        &lt;region name="Region-C"/&gt;
+    &lt;/dataset&gt;
+
+    &lt;soap name="placefinder" 
+          wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl"&gt;
+
+        &lt;attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" /&gt;
+
+        &lt;method name="handler" args="ret"&gt;
+            Debug.write('ret:', ret);
+            if (ret.status == 'ok') {
+                Debug.write('myDataset childNodes:', myDataset.childNodes);
+            }
+        &lt;/method&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('placefinder soap service stub loaded');
+            myView.setAttribute('visible', true);
+            this.proxy.getTypes([], this.myDel);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+    &lt;view name="myView" datapath="myDataset:/" x="10" visible="false"&gt;
+
+        &lt;simplelayout spacing="2" inset="10" /&gt;
+
+        &lt;view datapath="region" layout="spacing: 5"&gt;
+            &lt;attribute name="text" value="$path{'@name'}" type="string" /&gt;
+
+            &lt;text name="t" text="${parent.text + ' (click me)'}" resize="true" /&gt;
+
+            &lt;method name="gotData"&gt;
+                this.setAttribute('clickable', false);
+                this.t.setText(this.text);
+            &lt;/method&gt;
+
+            &lt;handler name="onclick"&gt;
+                if (text == "Region-A") {
+                    this.regions.setDatapath("element/i[1-6]");
+                } else if (text == "Region-B") {
+                    this.regions.setDatapath("element/i[7-12]");
+                } else {
+                    this.regions.setDatapath("element/i[12-]");
+                }
+                var myDel = new LzDelegate(this, "gotData");
+                myDel.dataobject = this.datapath.p;
+                placefinder.proxy.getTypes([], myDel);
+            &lt;/handler&gt;
+
+            &lt;view name="regions" x="10"&gt;
+                &lt;text datapath="key/text()" resize="true"/&gt;
+                &lt;text x="20" datapath="value/text()" resize="true"/&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-$17.lzx></example?>
+
+<para>Unlike a dataset, the generated LzDataElement from the return value is
+appended as a child of the LzDataElement dataobject.</para>
+
+
+
+<para/></section></section><section><title>&lt;remotecall&gt;</title>
+
+<para>In the previous section we discussed how to make RPC calls using function
+stubs defined in the proxy. Though not discouraged, calling function stubs
+directly will generally result in your code looking very "scripty". The
+<indexterm><primary>remotecall</primary></indexterm><sgmltag class="element">&lt;remotecall&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: remotecall-->
+ tag allows for a more declarative style approach to using RPC
+functions.</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;remotecall funcname="..."
+     name="..."
+     dataobject="..."
+     remotecontext="..."&gt;
+</programlisting></informalexample>
+
+<para/><section><title>Attributes</title>
+<para>
+The <indexterm><primary>remotecall</primary></indexterm><sgmltag class="element">&lt;remotecall&gt;</sgmltag> tag has the following attributes:
+</para>
+
+<para><indexterm significance="preferred"><primary>funcname</primary></indexterm><glossterm>funcname</glossterm>: (String) the name of the function stub remotecall
+represents. <emphasis role="b">This is required.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>name</primary></indexterm><glossterm>name</glossterm>: (String) the name of the remotecall. Multiple remotecalls
+can refer to the same function stub, but names must be unique. <emphasis role="b">Default is
+value of funcname.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>dataobject</primary></indexterm><glossterm>dataobject</glossterm>: (Dataset|LzDataElement) if set, the return value will
+also be represented as a dataset or as a child of the LzDataElement. <emphasis role="b">Default
+is null.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>remotecontext</primary></indexterm><glossterm>remotecontext</glossterm>: (Object) this attribute is used when the remotecall
+isn't declared inside of an RPC object. This attribute should be set to the RPC
+context the remotecall should run from. <emphasis role="b">Default is null.</emphasis></para>
+
+
+<para/></section><section><title>Events</title>
+
+<para><indexterm significance="preferred"><primary>ondata</primary></indexterm><glossterm>ondata</glossterm>: this event is triggered when the remotecall successfully
+returns data. If ondata is not handled in the remotecall, ondata cascades up to
+its parent. If the parent doesn't handle it, it then cascades up to the
+remotecontext, if defined. If none of these objects handle the ondata event, the returned data is ignored. The ondata event
+sends two arguments to its event handler. The first is the actual return value,
+the second is information on the operation that returned the value.</para>
+
+<para><indexterm significance="preferred"><primary>onerror</primary></indexterm><glossterm>onerror</glossterm>: this event is triggered when the remotecall returns an
+error. If an onerror is not handled in the remotecall, onerror cascades up to
+its parent. If the parent doesn't handle it, it then cascades up to the
+remotecontext, if defined. If none of these objects handle the onerror event, the error is displayed in the debugger. The
+onerror event sends three arguments to its event handler: the error message, an
+error object (which can be null or undefined depending on the error type), and
+information on the operation that originated the failed return.</para>
+
+<para/></section><section><title>Methods</title>
+
+<para/><section><title>invoke(params, delegate)</title>
+
+<para><indexterm significance="preferred"><primary>params</primary></indexterm><glossterm>params</glossterm>: (Array) an array of parameters to pass to the
+remotecall. If null, the remotecall will use &lt;param&gt; tag values declared
+inside of it. <emphasis role="b">Default is null</emphasis>.</para>
+<para><indexterm significance="preferred"><primary>delegate</primary></indexterm><glossterm>delegate</glossterm>: (LzDelegate) a delegate to handle the callback. If null,
+the remotecall will use the default delegate which calls the default handler,
+whose job is to receive data and raise ondata/onerror events. <emphasis role="b">Default is
+null</emphasis>.</para>
+
+<para>Call this method to invoke remotecall.</para>
+
+
+
+<para/></section></section><section><title>Using remotecall</title>
+
+<para>Use the invoke() method to use remotecall. If the parameter array (the first
+argument) is null, declared &lt;param&gt; are used as arguments. A &lt;param&gt;
+can set either a value attribute or define a getValue() method in its body. The
+getValue() method is expected to return a value. If both value and getValue()
+are defined, getValue() always wins. Note that the value attribute is an
+expression type so strings must be quoted like <literal>value="'my
+string'"</literal>. To set null, use the <literal>value="$once{null}"</literal>
+syntax.</para>
+
+<para>Function stubs can be referenced by two different remotecalls with different
+parameters. The funcname attribute doesn't have to be unique, but if referenced
+more than once, remotecalls must explicitly define their name attributes.</para>
+
+<example role="live-example">
+   <title>Remotecall</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-$19.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Remotecall</title><programlisting role="lzx-embednew"><filename>rpc-$19.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="300" width="600"&gt;
+
+    &lt;debug x="145" width="450" height="280" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service stub loaded');
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;remotecall name="search" funcname="doGoogleSearch"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param value="'sweet'" /&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('result is:')
+                Debug.inspect(value);
+            &lt;/handler&gt;
+
+        &lt;/remotecall&gt;
+
+        &lt;remotecall name="togglesearch" funcname="doGoogleSearch"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param&gt;
+                &lt;attribute name="toggle" value="0" type="number" /&gt;
+                &lt;method name="getValue"&gt;
+                    var searchTerm;
+                    if (toggle % 2 == 0) {
+                        searchTerm = 'democrat';
+                        toggle = 1;
+                    } else {
+                        searchTerm = 'republican';
+                        toggle = 0;
+                    }
+                    Debug.write('search term is', searchTerm);
+                    return searchTerm;
+                &lt;/method&gt;
+            &lt;/param&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('result is:')
+                Debug.inspect(value);
+            &lt;/handler&gt;
+
+        &lt;/remotecall&gt;
+    &lt;/soap&gt;
+
+    &lt;simplelayout spacing="10" /&gt;
+
+    &lt;button x="10" y="10" text="search"&gt;
+        &lt;handler name="onclick"&gt;
+            Debug.write('invoking search...');
+            canvas.google.search.invoke();
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button x="10" y="10" text="toggle search"&gt;
+        &lt;handler name="onclick"&gt;
+            Debug.write('invoking togglesearch...');
+            canvas.google.togglesearch.invoke();
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="300" width="600"&gt;
+
+    &lt;debug x="145" width="450" height="280" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service stub loaded');
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;remotecall name="search" funcname="doGoogleSearch"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param value="'sweet'" /&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('result is:')
+                Debug.inspect(value);
+            &lt;/handler&gt;
+
+        &lt;/remotecall&gt;
+
+        &lt;remotecall name="togglesearch" funcname="doGoogleSearch"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param&gt;
+                &lt;attribute name="toggle" value="0" type="number" /&gt;
+                &lt;method name="getValue"&gt;
+                    var searchTerm;
+                    if (toggle % 2 == 0) {
+                        searchTerm = 'democrat';
+                        toggle = 1;
+                    } else {
+                        searchTerm = 'republican';
+                        toggle = 0;
+                    }
+                    Debug.write('search term is', searchTerm);
+                    return searchTerm;
+                &lt;/method&gt;
+            &lt;/param&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('result is:')
+                Debug.inspect(value);
+            &lt;/handler&gt;
+
+        &lt;/remotecall&gt;
+    &lt;/soap&gt;
+
+    &lt;simplelayout spacing="10" /&gt;
+
+    &lt;button x="10" y="10" text="search"&gt;
+        &lt;handler name="onclick"&gt;
+            Debug.write('invoking search...');
+            canvas.google.search.invoke();
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+    &lt;button x="10" y="10" text="toggle search"&gt;
+        &lt;handler name="onclick"&gt;
+            Debug.write('invoking togglesearch...');
+            canvas.google.togglesearch.invoke();
+        &lt;/handler&gt;
+    &lt;/button&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-$19.lzx></example?>
+
+
+
+<para/><section><title>Using dataobject with remotecall</title>
+
+<para>Just like passing in a delegate with a dataobject property as discussed
+previously with function stubs, a dataobject can be used in a remotecall by
+setting the dataobject attribute.</para>
+
+<example role="live-example">
+   <title>Setting dataobject in remotecall</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-$20.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Setting dataobject in remotecall</title><programlisting role="lzx-embednew"><filename>rpc-$20.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="300" width="680"&gt;
+
+    &lt;debug x="225" width="450" height="280" /&gt;
+
+    &lt;dataset name="googleDset" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service stub loaded');
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;remotecall name="search" funcname="doGoogleSearch" 
+                    dataobject="googleDset"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param value="'sweet'" /&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('got result');
+                Debug.inspect(value);
+            &lt;/handler&gt;
+
+        &lt;/remotecall&gt;
+    &lt;/soap&gt;
+
+    &lt;view layout="spacing: 5" &gt;
+        &lt;button text="search" onclick="google.search.invoke()" /&gt;
+        &lt;view bgcolor="yellow" layout="axis: y" &gt;
+            &lt;view&gt;
+                &lt;datapath xpath="googleDset:/resultElements/item" pooling="true" /&gt;
+                &lt;text datapath="URL/text()" resize="true"/&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="300" width="680"&gt;
+
+    &lt;debug x="225" width="450" height="280" /&gt;
+
+    &lt;dataset name="googleDset" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service stub loaded');
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;remotecall name="search" funcname="doGoogleSearch" 
+                    dataobject="googleDset"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param value="'sweet'" /&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('got result');
+                Debug.inspect(value);
+            &lt;/handler&gt;
+
+        &lt;/remotecall&gt;
+    &lt;/soap&gt;
+
+    &lt;view layout="spacing: 5" &gt;
+        &lt;button text="search" onclick="google.search.invoke()" /&gt;
+        &lt;view bgcolor="yellow" layout="axis: y" &gt;
+            &lt;view&gt;
+                &lt;datapath xpath="googleDset:/resultElements/item" pooling="true" /&gt;
+                &lt;text datapath="URL/text()" resize="true"/&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-$20.lzx></example?>
+
+
+
+<para/></section><section><title>Remotecall remotecontext</title>
+
+<para>In previous examples, a button was used to invoke a remotecall that was
+declared in an RPC object. The code for a remotecall might have read better if
+it was placed in the location where it's actually being used. Remotecall can
+actually be declared anywhere in the node hierarchy, but when doing so, not only
+must it know the function stub that it will trigger (i.e., the funcname), it
+also must know which RPC context it will run from. To do so, the remotecontext
+attribute must be set when declaring a remotecall outside of an RPC object.</para>
+
+<example role="live-example">
+   <title>Remotecontext</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-$21.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Remotecontext</title><programlisting role="lzx-embednew"><filename>rpc-$21.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="300" width="680"&gt;
+
+    &lt;debug x="100" width="450" height="280" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service stub loaded');
+        &lt;/handler&gt;
+    &lt;/soap&gt;
+
+    &lt;button text="search" onclick="this.doGoogleSearch.invoke()"&gt;
+
+        &lt;!-- if name isn't set, name defaults to value of funcname. --&gt;
+
+        &lt;remotecall funcname="doGoogleSearch" 
+                    remotecontext="$once{canvas.google}"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param value="'sweet'" /&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('got result');
+                Debug.inspect(value);
+            &lt;/handler&gt;
+            &lt;handler name="onerror" args="error"&gt;
+                Debug.write('error:', error);
+            &lt;/handler&gt;
+        &lt;/remotecall&gt;
+    &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="300" width="680"&gt;
+
+    &lt;debug x="100" width="450" height="280" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service stub loaded');
+        &lt;/handler&gt;
+    &lt;/soap&gt;
+
+    &lt;button text="search" onclick="this.doGoogleSearch.invoke()"&gt;
+
+        &lt;!-- if name isn't set, name defaults to value of funcname. --&gt;
+
+        &lt;remotecall funcname="doGoogleSearch" 
+                    remotecontext="$once{canvas.google}"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param value="'sweet'" /&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('got result');
+                Debug.inspect(value);
+            &lt;/handler&gt;
+            &lt;handler name="onerror" args="error"&gt;
+                Debug.write('error:', error);
+            &lt;/handler&gt;
+        &lt;/remotecall&gt;
+    &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-$21.lzx></example?>
+
+<para/></section></section></section></chapter>

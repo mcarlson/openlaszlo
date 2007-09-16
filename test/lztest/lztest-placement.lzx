@@ -1,0 +1,78 @@
+<canvas>
+<!--
+  covers-tags : lznode smoketest
+-->
+
+    <include href="lztest/lztestmanager.lzx" /> 
+
+
+    <class name="nc1" extends="node">
+        <node name="n1"/>
+    </class>
+    
+    <class name="nc2" extends="node" defaultplacement="n1">
+        <node name="n1"/>
+    </class>
+    
+    <class name="nc3" extends="node" defaultplacement="n2">
+        <nc2 name="n2"/>
+    </class>
+    
+    <class name="nc4" extends="node" defaultplacement="n1">
+        <nc2 name="n1"/>
+    </class>
+    
+    <class name="nc5" extends="nc2" defaultplacement="n2">
+        <node name="n2"/>
+    </class>
+    
+    <class name="nc6" extends="node" defaultplacement="n2">
+        <node name="n1">
+        <node name="n2"/>
+        </node>
+    </class>
+    
+    <class name="TestCaseWrapper" extends="node">
+    </class>
+    
+    <TestCaseWrapper name="basicPlacement" id="basicPlacementWrapper">
+        <nc1 name="nci1">
+            <node name="n2" placement="n1"/> 
+        </nc1>
+        
+        <nc1 name="nci2">
+            <method name="determinePlacement" args="v, p, a">
+                return super.determinePlacement(v,p,a);
+            </method>
+            <node name="n2" placement="n1"/> 
+        </nc1>
+        
+    </TestCaseWrapper>
+    
+
+<script><![CDATA[
+
+var suiteNodePlacement = new LzTestSuite("Node Placement"); 
+
+suiteNodePlacement.basicPlacement = function () {
+    LzTestManager.assertEquals(basicPlacementWrapper.nci1.n2, basicPlacementWrapper.nci1.n1.searchImmediateSubnodes("name", "n2"));
+    LzTestManager.assertEquals(basicPlacementWrapper.nci2.n2, basicPlacementWrapper.nci2.n1.searchImmediateSubnodes("name", "n2"));    
+}
+
+suiteNodePlacement.addTest(suiteNodePlacement.basicPlacement); 
+suiteNodePlacement.addTest( function() { 
+    LzTestManager.assertTrue("false", "TODO: port the rest of test/lzunit/lzunit-node-placement.lzx (bshine 4.24.06)");
+}
+);
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

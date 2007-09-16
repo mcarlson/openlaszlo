@@ -118,35 +118,35 @@
         </method>        
     </class>  
     
-     <!--- @keyword private
-     a pool of ordered view  
-     -->
+     <!--- A pool of ordered view  
+         - @keyword private
+        -->
     <class name="viewslist" extends="node">             
-        <attribute name="list" value="$once{[]}"/>
+        <attribute name="vlist" value="$once{[]}"/>
         <attribute name="parentview" value="${parent}"/>
         <attribute name="viewclass" type="string" value="$once{null}"/>
         
         <!-- get a view the pool -->
         <method name="getViewAt" args="index, args">            
-            if(this.list[index] == null)
+            if(this.vlist[index] == null)
             {
-                this.list[index] = new global[viewclass](parentview, args);                 
+                this.vlist[index] = new global[viewclass](parentview, args);                 
             }
             else
             {
-                this.list[index].setVisible(true);
+                this.vlist[index].setVisible(true);
             }
-            return this.list[index];            
+            return this.vlist[index];            
         </method>   
         
         <!-- put are the view back to the pools -->         
         <method name="reclaimAll">
         <![CDATA[             
-             for(var i = 0; i < list.length; i++)
+             for(var i = 0; i < vlist.length; i++)
              {                
-                 if(list[i] != undefined){
-                    list[i].setVisible(false);
-                    //list[i].clear();
+                 if(vlist[i] != undefined){
+                    vlist[i].setVisible(false);
+                    //vlist[i].clear();
                 }
              }
         ]]>
@@ -155,7 +155,7 @@
 </library>   
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

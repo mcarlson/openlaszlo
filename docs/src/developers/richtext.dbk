@@ -1,0 +1,489 @@
+<chapter id="richtext">
+
+
+<title condition="swf">Rich Text</title>
+
+
+<para>OpenLaszlo provides a rich text object and capabilities for procedurally setting HTML text attributes:</para>
+
+
+<para/><section><title condition="swf">Overview</title>
+
+<para>This chapter explains the <indexterm><primary>richinputtext</primary></indexterm><sgmltag class="element">&lt;richinputtext&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: richinputtext-->
+ component, which  allows you to include and manipulate html-formatted text in your applications. This diagram describes the architecture of the rich text editor:</para>
+
+<informalfigure><mediaobject><imageobject><imagedata fileref="images/object_model.png"/></imageobject></mediaobject></informalfigure>
+<para>
+To use rich this component, include the line:</para>
+<programlisting>
+&lt;include href="/extensions/views/richinputtext.lzx" /&gt;
+</programlisting>
+<para>Formatting capabilities include:</para>
+<itemizedlist spacing="compact"><listitem><para>Text style of bold, underline, or italics</para></listitem><listitem><para>Font type and size</para></listitem><listitem><para>Text color</para></listitem><listitem><para>Hyperlink creation, specifying a URL, and choosing a target type</para></listitem><listitem><para>Paragraph alignment: left, right, center</para></listitem><listitem><para>Block indent/outdent</para></listitem></itemizedlist>
+<para>
+You can specify html text by:
+</para>
+<itemizedlist spacing="compact"><listitem><para>Directly including markup</para></listitem><listitem><para>Using procedural code to set rich text attributes</para></listitem></itemizedlist>
+<para>
+Each of these methods is described in turn below.
+</para>
+
+<para/></section><section><title>Directly including rich text markup</title>
+<para>
+You can specify the html formatting directly in the <indexterm><primary>richinputtext</primary></indexterm><sgmltag class="element">&lt;richinputtext&gt;</sgmltag> tag, if you escape it with CDATA, like this:
+</para>
+<example role="live-example">
+   <title>Inline markup of rich text</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/richtext-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Inline markup of rich text</title><programlisting role="lzx-embednew"><filename>richtext-$1.lzx</filename><parameter/><code>
+&lt;canvas bgcolor="#EAEAEA" height="110" width="400"&gt;
+&lt;include href="/extensions/views/richinputtext.lzx" /&gt;
+    &lt;simplelayout axis="y" spacing="4" /&gt;
+    &lt;richinputtext name="myRichText" width="300" height="100"&gt;
+        &lt;![CDATA[
+            foo &lt;b&gt;bar&lt;/b&gt; baz lum
+         ]]&gt;
+    &lt;/richinputtext&gt;
+&lt;/canvas&gt; 
+</code></programlisting><programlisting>
+&lt;canvas bgcolor="#EAEAEA" height="110" width="400"&gt;
+&lt;include href="/extensions/views/richinputtext.lzx" /&gt;
+    &lt;simplelayout axis="y" spacing="4" /&gt;
+    &lt;richinputtext name="myRichText" width="300" height="100"&gt;
+        &lt;![CDATA[
+            foo &lt;b&gt;bar&lt;/b&gt; baz lum
+         ]]&gt;
+    &lt;/richinputtext&gt;
+&lt;/canvas&gt; 
+</programlisting><?lzx-edit programs/richtext-$1.lzx></example?>
+<para/></section><section><title>Procedurally modifying text</title>
+<para>
+The <indexterm><primary><literal>setTextFormat()</literal></primary></indexterm><methodname>setTextFormat()</methodname> method allows you to procedurally set text properties. Using <indexterm><primary><literal>setTextFormat()</literal></primary></indexterm><methodname>setTextFormat()</methodname> is a two step process:
+</para>
+<orderedlist spacing="compact"><listitem><para>Create a <indexterm><primary>textformat</primary></indexterm><classname>textformat</classname> and assign to it the values of the properties you want to change;</para></listitem><listitem><para>Pass the <indexterm><primary>textformat</primary></indexterm><classname>textformat</classname> object as the argument to the <indexterm><primary><literal>setTextFormat()</literal></primary></indexterm><methodname>setTextFormat()</methodname> method.</para></listitem></orderedlist>
+
+
+<para>
+The example below demonstrates several ways that the richinputtext class can be used to apply rich formatted text.
+</para>
+
+<example role="live-example">
+   <title>Rich text manipulation</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/richtext-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Rich text manipulation</title><programlisting role="lzx-embednew"><filename>richtext-$2.lzx</filename><parameter/><code>
+&lt;canvas bgcolor="#EAEAEA" height="600" width="1000"&gt;
+&lt;!--- 
+    This file demonstrates several ways to use the richinputtext class
+    to set the formatting of rich formatted text. Corresponding "get"
+    methods also exist.
+--&gt; 
+
+&lt;!-- auto-included BUT NOT in lps-dev --&gt; 
+&lt;include href="/extensions/views/richinputtext.lzx" /&gt;
+&lt;!-- --&gt; 
+&lt;debug x="300"/&gt;
+&lt;view x="20" y="20"&gt;
+
+&lt;window title="toggleFormat"&gt; 
+&lt;simplelayout axis="y" spacing="4" /&gt; 
+     
+    &lt;!--- These checkboxes use the toggleFormat function to 
+        toggle the boldness, italic-ness, or underline-ness of the
+        text. 
+    --&gt;
+
+    &lt;richinputtext name="rich" width="300" height="100" 
+        multiline="true"
+         text="This richinputtext demonstrates the toggleFormat api. " &gt;        
+    &lt;/richinputtext&gt;
+
+    &lt;checkbox text="bold" onclick="parent.toggleFormat('bold')" /&gt;
+    &lt;checkbox text="italic" onclick="parent.toggleFormat('italic')"/&gt;
+    &lt;checkbox text="underline" onclick="parent.toggleFormat('underline')"/&gt;
+
+    
+    &lt;method name="toggleFormat" args="attr"&gt;
+        rich.toggleFormat(attr, 0, 300);
+    &lt;/method&gt;
+   
+&lt;/window&gt;
+
+
+&lt;window x="120" y="120" title="setTextAttr"&gt;
+&lt;simplelayout axis="y" spacing="4" /&gt; 
+    
+    &lt;!--- With the setTextAttr function, we can set particular attributes
+        of text to be particular values, in whatever combinations we choose.
+        Notice that only the specified values change; if textformat.color 
+        is not defined, the color of the font doesn't change.         
+    --&gt; 
+    &lt;richinputtext name="rich" width="300" height="100" 
+        multiline="true"
+         text="Use setTextFormat to set several formatting attributes at once." &gt;        
+    &lt;/richinputtext&gt;
+ 
+
+    &lt;button onclick="parent.bigAndSans()" &gt;
+        make it huge and futura
+    &lt;/button&gt;
+
+    &lt;button onclick="parent.redAndSmall()" &gt;
+        make it red and big
+    &lt;/button&gt;
+
+    &lt;button onclick="parent.blueAndItalic()" &gt;
+        make it blue and italic and Times
+    &lt;/button&gt;
+    
+    
+    &lt;method name="bigAndSans"&gt;
+        var tf = new textformat();
+        tf.font = "Futura";
+        tf.size = 32;
+        rich.setTextFormat(tf, 0, 300);  
+    &lt;/method&gt; 
+    
+    &lt;method name="redAndSmall"&gt;
+        var tf = new textformat();
+        tf.color = red; 
+        tf.size = 18;
+        rich.setTextFormat(tf, 0, 300);
+    &lt;/method&gt;    
+    
+    &lt;method name="blueAndItalic"&gt;
+        var tf = new textformat();
+        tf.color = blue; 
+        tf.italic = true;
+        tf.font = 'Times'; 
+        rich.setTextFormat(tf, 0, 300);  
+    &lt;/method&gt;    
+        
+    
+
+&lt;/window&gt;
+
+
+&lt;window x="240" y="240" title="applyTextAttr"&gt;
+    &lt;simplelayout axis="y" spacing="4" /&gt; 
+
+    &lt;richinputtext name="rich" width="300" height="100" 
+        multiline="true"
+         text="Use applyTextAttr to set a single attribute at a time." &gt;        
+    &lt;/richinputtext&gt;
+
+    &lt;slider name="sizeslider" minvalue="10" maxvalue="32" showvalue="false" value="12"&gt;
+        &lt;handler name="onvalue"&gt;
+            parent.rich.applyTextAttr("size", this.value, 0, 300); 
+        &lt;/handler&gt;
+    &lt;/slider&gt;
+    
+
+&lt;/window&gt; 
+
+&lt;window x="360" y="10" title="Default Format" width="500" height="500"
+    id="trickster"&gt;
+    &lt;simplelayout axis="y" spacing="4" /&gt; 
+    
+    &lt;view name="explanation"&gt;
+        &lt;text&gt;
+        See the richinputtext api documentation for an explanation. 
+        &lt;/text&gt;
+    &lt;/view&gt;
+
+    &lt;richinputtext name="rich" width="${parent.width-10}" height="100" 
+        multiline="true"
+         text="01234567890123456789" &gt;        
+    &lt;/richinputtext&gt;
+
+    &lt;view name="btns"&gt;
+    
+        &lt;simplelayout axis="x" spacing="4" /&gt;
+        
+        &lt;text&gt;Set default format to...&lt;/text&gt;
+        &lt;button onclick="parent.parent.redAndBig()" focusable="false" &gt;
+            red and big
+        &lt;/button&gt;
+    
+        &lt;button onclick="parent.parent.blueAndItalic()" focusable="false" &gt;
+            blue and italic and Times
+        &lt;/button&gt;
+        
+
+    &lt;/view&gt;        
+    
+    &lt;view name="trick"&gt;
+        &lt;simplelayout axis="x" spacing="4" /&gt;
+         &lt;checkbox name="trickcheckbox" text="Use Insertion Point trick" /&gt;
+
+        &lt;text visible="${parent.trickcheckbox.value}"&gt;Move insertion point to...&lt;/text&gt;
+        &lt;slider name="slider" minvalue="0" maxvalue="20" showvalue="true" value="12"
+            visible="${parent.trickcheckbox.value}"
+        &gt;
+        &lt;/slider&gt;
+    &lt;/view&gt;
+
+    
+    &lt;method name="redAndBig"&gt;
+        var tf = new textformat();
+        tf.color = red; 
+        tf.size = 18;
+        rich.setDefaultFormat(tf); 
+
+        var insertionpoint = this.trick.slider.getValue(); 
+        
+        if (this.trick.trickcheckbox.getValue()) {
+            this.forceFormatAt(insertionpoint);
+        }
+
+        this.rich.setSelection(insertionpoint + 1, insertionpoint +1); 
+
+        
+    &lt;/method&gt;    
+    
+    &lt;method name="blueAndItalic"&gt;
+        var tf = new textformat();
+        tf.color = blue; 
+        tf.italic = true;
+        tf.font = 'Times'; 
+        rich.setDefaultFormat(tf); 
+
+        var insertionpoint = this.trick.slider.getValue(); 
+        
+        if (this.trick.trickcheckbox.getValue()) {
+            this.forceFormatAt(insertionpoint);
+        }
+
+        this.rich.setSelection(insertionpoint + 1, insertionpoint +1); 
+        
+    &lt;/method&gt;    
+        
+     &lt;method name="forceFormatAt" args="index"&gt;
+        // Insert some text
+        this.rich.replaceText(index, index, 'AZ');
+        
+        // Format the text we just inserted
+        this.rich.setTextFormat(this.rich.defaultformat, index, index+2); 
+        
+        // Now if you put the insertion point between the A and Z, you'll
+        // get the format specified in default format. 
+     &lt;/method&gt;
+    
+
+&lt;/window&gt; 
+
+&lt;/view&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas bgcolor="#EAEAEA" height="600" width="1000"&gt;
+&lt;!--- 
+    This file demonstrates several ways to use the richinputtext class
+    to set the formatting of rich formatted text. Corresponding "get"
+    methods also exist.
+--&gt; 
+
+&lt;!-- auto-included BUT NOT in lps-dev --&gt; 
+&lt;include href="/extensions/views/richinputtext.lzx" /&gt;
+&lt;!-- --&gt; 
+&lt;debug x="300"/&gt;
+&lt;view x="20" y="20"&gt;
+
+&lt;window title="toggleFormat"&gt; 
+&lt;simplelayout axis="y" spacing="4" /&gt; 
+     
+    &lt;!--- These checkboxes use the toggleFormat function to 
+        toggle the boldness, italic-ness, or underline-ness of the
+        text. 
+    --&gt;
+
+    &lt;richinputtext name="rich" width="300" height="100" 
+        multiline="true"
+         text="This richinputtext demonstrates the toggleFormat api. " &gt;        
+    &lt;/richinputtext&gt;
+
+    &lt;checkbox text="bold" onclick="parent.toggleFormat('bold')" /&gt;
+    &lt;checkbox text="italic" onclick="parent.toggleFormat('italic')"/&gt;
+    &lt;checkbox text="underline" onclick="parent.toggleFormat('underline')"/&gt;
+
+    
+    &lt;method name="toggleFormat" args="attr"&gt;
+        rich.toggleFormat(attr, 0, 300);
+    &lt;/method&gt;
+   
+&lt;/window&gt;
+
+
+&lt;window x="120" y="120" title="setTextAttr"&gt;
+&lt;simplelayout axis="y" spacing="4" /&gt; 
+    
+    &lt;!--- With the setTextAttr function, we can set particular attributes
+        of text to be particular values, in whatever combinations we choose.
+        Notice that only the specified values change; if textformat.color 
+        is not defined, the color of the font doesn't change.         
+    --&gt; 
+    &lt;richinputtext name="rich" width="300" height="100" 
+        multiline="true"
+         text="Use setTextFormat to set several formatting attributes at once." &gt;        
+    &lt;/richinputtext&gt;
+ 
+
+    &lt;button onclick="parent.bigAndSans()" &gt;
+        make it huge and futura
+    &lt;/button&gt;
+
+    &lt;button onclick="parent.redAndSmall()" &gt;
+        make it red and big
+    &lt;/button&gt;
+
+    &lt;button onclick="parent.blueAndItalic()" &gt;
+        make it blue and italic and Times
+    &lt;/button&gt;
+    
+    
+    &lt;method name="bigAndSans"&gt;
+        var tf = new textformat();
+        tf.font = "Futura";
+        tf.size = 32;
+        rich.setTextFormat(tf, 0, 300);  
+    &lt;/method&gt; 
+    
+    &lt;method name="redAndSmall"&gt;
+        var tf = new textformat();
+        tf.color = red; 
+        tf.size = 18;
+        rich.setTextFormat(tf, 0, 300);
+    &lt;/method&gt;    
+    
+    &lt;method name="blueAndItalic"&gt;
+        var tf = new textformat();
+        tf.color = blue; 
+        tf.italic = true;
+        tf.font = 'Times'; 
+        rich.setTextFormat(tf, 0, 300);  
+    &lt;/method&gt;    
+        
+    
+
+&lt;/window&gt;
+
+
+&lt;window x="240" y="240" title="applyTextAttr"&gt;
+    &lt;simplelayout axis="y" spacing="4" /&gt; 
+
+    &lt;richinputtext name="rich" width="300" height="100" 
+        multiline="true"
+         text="Use applyTextAttr to set a single attribute at a time." &gt;        
+    &lt;/richinputtext&gt;
+
+    &lt;slider name="sizeslider" minvalue="10" maxvalue="32" showvalue="false" value="12"&gt;
+        &lt;handler name="onvalue"&gt;
+            parent.rich.applyTextAttr("size", this.value, 0, 300); 
+        &lt;/handler&gt;
+    &lt;/slider&gt;
+    
+
+&lt;/window&gt; 
+
+&lt;window x="360" y="10" title="Default Format" width="500" height="500"
+    id="trickster"&gt;
+    &lt;simplelayout axis="y" spacing="4" /&gt; 
+    
+    &lt;view name="explanation"&gt;
+        &lt;text&gt;
+        See the richinputtext api documentation for an explanation. 
+        &lt;/text&gt;
+    &lt;/view&gt;
+
+    &lt;richinputtext name="rich" width="${parent.width-10}" height="100" 
+        multiline="true"
+         text="01234567890123456789" &gt;        
+    &lt;/richinputtext&gt;
+
+    &lt;view name="btns"&gt;
+    
+        &lt;simplelayout axis="x" spacing="4" /&gt;
+        
+        &lt;text&gt;Set default format to...&lt;/text&gt;
+        &lt;button onclick="parent.parent.redAndBig()" focusable="false" &gt;
+            red and big
+        &lt;/button&gt;
+    
+        &lt;button onclick="parent.parent.blueAndItalic()" focusable="false" &gt;
+            blue and italic and Times
+        &lt;/button&gt;
+        
+
+    &lt;/view&gt;        
+    
+    &lt;view name="trick"&gt;
+        &lt;simplelayout axis="x" spacing="4" /&gt;
+         &lt;checkbox name="trickcheckbox" text="Use Insertion Point trick" /&gt;
+
+        &lt;text visible="${parent.trickcheckbox.value}"&gt;Move insertion point to...&lt;/text&gt;
+        &lt;slider name="slider" minvalue="0" maxvalue="20" showvalue="true" value="12"
+            visible="${parent.trickcheckbox.value}"
+        &gt;
+        &lt;/slider&gt;
+    &lt;/view&gt;
+
+    
+    &lt;method name="redAndBig"&gt;
+        var tf = new textformat();
+        tf.color = red; 
+        tf.size = 18;
+        rich.setDefaultFormat(tf); 
+
+        var insertionpoint = this.trick.slider.getValue(); 
+        
+        if (this.trick.trickcheckbox.getValue()) {
+            this.forceFormatAt(insertionpoint);
+        }
+
+        this.rich.setSelection(insertionpoint + 1, insertionpoint +1); 
+
+        
+    &lt;/method&gt;    
+    
+    &lt;method name="blueAndItalic"&gt;
+        var tf = new textformat();
+        tf.color = blue; 
+        tf.italic = true;
+        tf.font = 'Times'; 
+        rich.setDefaultFormat(tf); 
+
+        var insertionpoint = this.trick.slider.getValue(); 
+        
+        if (this.trick.trickcheckbox.getValue()) {
+            this.forceFormatAt(insertionpoint);
+        }
+
+        this.rich.setSelection(insertionpoint + 1, insertionpoint +1); 
+        
+    &lt;/method&gt;    
+        
+     &lt;method name="forceFormatAt" args="index"&gt;
+        // Insert some text
+        this.rich.replaceText(index, index, 'AZ');
+        
+        // Format the text we just inserted
+        this.rich.setTextFormat(this.rich.defaultformat, index, index+2); 
+        
+        // Now if you put the insertion point between the A and Z, you'll
+        // get the format specified in default format. 
+     &lt;/method&gt;
+    
+
+&lt;/window&gt; 
+
+&lt;/view&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/richtext-$2.lzx></example?>
+<para/></section></chapter>

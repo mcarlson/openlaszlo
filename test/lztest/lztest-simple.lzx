@@ -1,0 +1,54 @@
+<canvas>
+    <include href="lztest/lztestmanager.lzx" /> 
+
+<!--
+  covers-tags : lztest smoketest
+-->
+
+<script><![CDATA[
+
+var suiteSimpleToo = new LzTestSuite("Simple2 Test Suite"); 
+
+suiteSimpleToo.simplestEver = function() {
+}
+
+suiteSimpleToo.minimalTest = function () {
+    LzTestManager.assertTrue( true, "minimal test");
+}
+
+suiteSimpleToo.minimalFailure = function () {
+    LzTestManager.assertTrue( false, "intentional failure to demonstrate failure"); 
+}
+
+suiteSimpleToo.truthTest = function() {
+    LzTestManager.assertTrue("non-empty", "'non-empty' is true");
+    LzTestManager.assertTrue('0', "'0' is true");
+    
+    LzTestManager.assertEquals('undefined', String(undefined),
+               "String(undefined) == 'undefined'");
+               
+    LzTestManager.assertSame(true, isNaN(Number(undefined)),
+             "isNaN(Number(undefined))");
+    
+}
+
+suiteSimpleToo.notANumberTest = function () {
+    LzTestManager.assertTrue(NaN != 1.0, "NaN != 1.0");
+}
+
+suiteSimpleToo.addTest(suiteSimpleToo.simplestEver); 
+suiteSimpleToo.addTest(suiteSimpleToo.minimalTest); 
+suiteSimpleToo.addTest(suiteSimpleToo.truthTest); 
+suiteSimpleToo.addTest(suiteSimpleToo.notANumberTest); 
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

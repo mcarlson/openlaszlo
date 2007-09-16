@@ -93,15 +93,16 @@ public class CodeGenerator implements Translator {
   public void setOptions(Compiler.OptionMap options) {
     this.options = options;
     this.runtime = ((String)options.get(Compiler.RUNTIME)).intern();
-    assert "swf6".equals(runtime) || "swf7".equals(runtime) || "swf8".equals(runtime) : "unknown runtime " + runtime;
+    assert org.openlaszlo.compiler.Compiler.SWF_RUNTIMES.contains(runtime) : "unknown runtime " + runtime;
     Instructions.setRuntime(runtime);
   }
 
-  public void translate(SimpleNode program) {
+  public SimpleNode translate(SimpleNode program) {
     // Make a new collector each time, since the old one may be
     // referenced by the instruction cache
     this.collector = new InstructionCollector(this.options.getBoolean(Compiler.DISABLE_CONSTANT_POOL), true);
     translateInternal(program, "b", true);
+    return program;
   }
 
   public InstructionCollector getCollector() {
@@ -169,6 +170,8 @@ public class CodeGenerator implements Translator {
 
   // Binop translation for swf6.  visitBinaryExpression handles swf5
   // exceptions.
+  // TODO: [2006-06-17 ptw] Remove swf6 kludges now that we only
+  // support swf7 and above
   static LessHalfAssedHashMap BinopInstrs = new LessHalfAssedHashMap();
   static {
     BinopInstrs.put(ParserConstants.PLUS, new Instruction[] {Instructions.ADD});
@@ -428,25 +431,23 @@ public class CodeGenerator implements Translator {
   }
 
   Boolean evaluateCompileTimeConditional(SimpleNode node) {
+    Object value = null;
     if (node instanceof ASTIdentifier) {
+      String name = ((ASTIdentifier)node).getName();
       Map constants = (Map)options.get(Compiler.COMPILE_TIME_CONSTANTS);
       if (constants != null) {
-        String name = ((ASTIdentifier)node).getName();
         if (constants.containsKey(name)) {
-          Object value = constants.get(name);
-          if (value != null) {
-            if (value instanceof String &&
-                ("true".equalsIgnoreCase((String)value) ||
-                 "false".equalsIgnoreCase((String)value))) {
-              return Boolean.valueOf((String)value);
-            }
-            // Python crap
-            return value.equals(new Integer(0)) ? Boolean.FALSE : Boolean.TRUE;
-          }
+          value = constants.get(name);
+//           if (value != null) {
+//             System.err.print( (new Compiler.ParseTreePrinter()).visit(node) + ": " + value + "(" + value.getClass() + ")");
+//           }
         }
       }
     }
-    return null;
+//     if (value != null) {
+//       System.err.println(" => " + value + "(" + value.getClass() + ")");
+//     }
+    return (Boolean)value;
   }
 
   public void visitProgram(SimpleNode node, SimpleNode[] directives, String cpass) {
@@ -455,12 +456,20 @@ public class CodeGenerator implements Translator {
 
   public void visitProgram(SimpleNode node, SimpleNode[] directives, String cpass, boolean top) {
     // cpass is "b"oth, 1, or 2
+    assert "b".equals(cpass) || "1".equals(cpass) || "2".equals(cpass) : "bad pass: " + cpass;
     if ("b".equals(cpass)) {
       visitProgram(node, directives, "1", top);
-      visitProgram(node, directives, "2", top);
+      // Everything is done in one pass for now.
+//       visitProgram(node, directives, "2", top);
       return;
     }
-    if ("1".equals(cpass) && top) {
+    if ("1".equals(cpass) && top &&
+        // Here this means 'compiling the LFC' we only want to emit
+        // the constants into the LFC
+        // FIXME: There needs to be a way that the object writer
+        // ensures that the constants the LZX is compiled with are the
+        // same ones as are set in the LFC it is linked to
+        options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY)) {
       // emit compile-time contants to runtime
       Map constants = (Map)options.get(Compiler.COMPILE_TIME_CONSTANTS);
       if (constants != null) {
@@ -521,27 +530,18 @@ public class CodeGenerator implements Translator {
         // Function, class, and top-level expressions are processed in pass 1
         if (directive instanceof ASTFunctionDeclaration) {
           visitStatement(directive);
-// TODO: [2006-01-17 ptw] Implement some day
-//         } else if (directive instanceof ASTClassDefinition) {
-//           visitClassDefinition(directive, directive.getChildren());
+        } else if (directive instanceof ASTClassDefinition) {
+          visitClassDefinition(directive, directive.getChildren());
         } else if (directive instanceof ASTStatement) {
-          // Statements are processed in pass 2
-          ;
+          // Statements are processed in pass 1 for now
+          visitStatement(directive);
         } else {
           visitExpression(directive, false);
         }
       }
       if ("2".equals(cpass)) {
-        // Statements are processed in pass 2
-        if (directive instanceof ASTStatement) {
-          //               int newIndex = compileAssignments(directives, index-1, options.getBoolean(Compiler.OBFUSCATE));
-          //               //newIndex = false
-          //               if (newIndex != -1) {
-          //                 index = newIndex;
-          //               } else {
-          visitStatement(directive);
-          //               }
-        }
+        // There is no pass 2 any more
+        assert false : "bad pass " + cpass;
       }
     }
     showStats(node);
@@ -728,101 +728,148 @@ public class CodeGenerator implements Translator {
     }
   }
 
-// TODO: [2006-01-17 ptw] Implement some day
-//     public void visitClassDefinition(SimpleNode node, SimpleNode[] children) {
-//       ASTIdentifier classname = (ASTIdentifier)children[0];
-//       ASTIdentifier superclass = (ASTIdentifier)children[1];
-//       SimpleNode[] defs = (new ArrayList(children)).sublist(2, children.length).toArray();
-//         // Flatten nested StatementList structures
-//         void flatten(src) {
-//             dst = [];
-//             for (node in src) {
-//                 if (node instanceof ASTStatementList) {
-//                     dst += flatten(node.getChildren());
-//                 } else {
-//                     dst.append(node);
-//                 }
-//             }
-//             return dst;
-//         }
-//         defs = flatten(defs);
-//         // Separate the defs into constructors, instance variable
-//         // declarations, and methods
-//         ctors = [];
-//         instancevars = [];
-//         methods = [];
-//         for (node in defs) {
-//             if (node instanceof ASTFunctionDeclaration) {
-//                 if (node.get(0).name == classname.name) {
-//                     ctors.append(node);
-//                 } else {
-//                     methods.append(node);
-//                 }
-//             } else if (node instanceof ASTVariableDeclaration) {
-//                 // make sure there's an initializer, for ease of
-//                 // downstream processing
-//                 if (len(node) == 1) {
-//                     node.jjtAddChild(EmptyExpression(0), len(node.getChildren()));
-//                 }
-//                 instancevars.append(node);
-//             } else {
-//                 // TODO: [2002 ows] move this error into the parser,
-//                 // once the spec has settled
-//                 throw new UnimplementedError("unimplemented class block directive", node);
-//             }
-//         }
-//         // Get a constructor, to attach the other definitions to.
-//         if (len(ctors) > 1) {
-//             throw new UnimplementedError("duplicate constructors for %s" %
-//                                      classname, node);
-//         }
-//         if (ctors) {
-//             ctor = ctors[0];
-//         } else {
-//             ctor = Compiler.Parser().build(FunctionDeclaration(0), classname, \
-//                                   (FormalParameterList(0),), \
-//                                   (StatementList(0),));
-//         }
-//         visitStatement(ctor);
-//         // If it's a subclass, extend the superclass
-//         if (super instanceof ASTIdentifier) {
-//             stmt = Compiler.Parser().parse("Object.class.extends(%s, %s)" %
-//                                   (super.name, classname.name))[0][0];
-//             visitStatement(stmt);
-//         }
-//         // Add the instance variable definitions
-//         assign = Operator(0);
-//         assign.operator = ParserConstants.ASSIGN;
-//         void makePrototype() {
-//             return Compiler.Parser().build(PropertyIdentifierReference(0), classname,
-//                                   Identifier("prototype"));
-//         }
-//         for (node in instancevars) {
-//             var, init = node.getChildren();
-//             n = Compiler.Parser().build(
-//                 AssignmentExpression(0),
-//                 (PropertyIdentifierReference(0), makePrototype(), var),
-//                 assign,
-//                 init);
-//             visitStatement(n);
-//         }
-//         // Add the member functions
-//         for (node in methods) {
-//             if (node instanceof ASTFunctionDeclaration) {
-//                 n = Compiler.Parser().build(
-//                     AssignmentExpression(0),
-//                     (PropertyIdentifierReference(0), makePrototype(), node.get(0)),
-//                     assign,
-//                     (FunctionExpression(0),) + tuple(node.getChildren()[1:]));
-//                 //n = Compiler.Parser().substitute("_0.prototype._1 = function (_3) {_4}",
-//                 //                        _0=Identifier(classname),
-//                 //                        _1=node.get(1),
-//                 //                        _2=Compiler.Splice(node.get(2).getChildren()),
-//                 //                        _3=Compiler.Splice(node.get(3).getChildren()))
-//                 visitStatement(n);
-//             }
-//         }
-//      }
+  // Flatten nested StatementList structures
+  private List flatten(SimpleNode[] src) {
+    List dst = new ArrayList();
+    for (int i = 0; i < src.length; i++) {
+      SimpleNode node = src[i];
+      if (node instanceof ASTStatementList) {
+        dst.addAll(flatten(node.getChildren()));
+      } else {
+        dst.add(node);
+      }
+    }
+    return dst;
+  }
+
+  void visitClassDefinition(SimpleNode node, SimpleNode[] children) {
+    ASTIdentifier classortrait = (ASTIdentifier)children[0];
+    ASTIdentifier classname = (ASTIdentifier)children[1];
+    String classnameString = classname.getName();
+    SimpleNode superclass = children[2];
+    SimpleNode traits = children[3];
+    SimpleNode traitsandsuper;
+    if (traits instanceof ASTEmptyExpression) {
+      if (superclass instanceof ASTEmptyExpression) {
+        traitsandsuper = new ASTLiteral(null);
+      } else {
+        traitsandsuper = superclass;
+      }
+    } else {
+      traitsandsuper = new ASTArrayLiteral(0);
+      traitsandsuper.setChildren(traits.getChildren());
+      if (! (superclass instanceof ASTEmptyExpression)) {
+        traitsandsuper.set(traitsandsuper.size(), superclass);
+      }
+    }
+
+    SimpleNode[] dirs = (SimpleNode [])(Arrays.asList(children).subList(4, children.length).toArray(new SimpleNode[0]));
+    List props = new ArrayList();
+    List classProps = new ArrayList();
+    List stmts = new ArrayList();
+    translateClassDirectivesBlock(dirs, classnameString, props, classProps, stmts);
+
+    SimpleNode instanceProperties;
+    if (props.isEmpty()) {
+      instanceProperties = new ASTLiteral(null);
+    } else {
+      instanceProperties = new ASTObjectLiteral(0);
+      instanceProperties.setChildren((SimpleNode[])(props.toArray(new SimpleNode[0])));
+    }
+    SimpleNode classProperties;
+    if (classProps.isEmpty()) {
+      classProperties = new ASTLiteral(null);
+    } else {
+      classProperties = new ASTObjectLiteral(0);
+      classProperties.setChildren((SimpleNode[])(classProps.toArray(new SimpleNode[0])));
+    }
+
+    Map map = new HashMap();
+    String xtor = "class".equals(classortrait.getName())?"Class":"Trait";
+    map.put("_1", classname);
+    map.put("_2", traitsandsuper);
+    map.put("_3", instanceProperties);
+    map.put("_4", classProperties);
+    SimpleNode newNode = (new Compiler.Parser()).substitute(xtor + ".make(" +
+                                                            ScriptCompiler.quote(classnameString) +
+                                                            ", _2, _3, _4);",
+                                                            map);
+    SimpleNode varNode = new ASTVariableDeclaration(0);
+    varNode.set(0, classname);
+    varNode.set(1, newNode);
+    SimpleNode replNode = varNode;
+
+    if (! stmts.isEmpty()) {
+      SimpleNode statements = new ASTStatementList(0);
+      statements.setChildren((SimpleNode[])(stmts.toArray(new SimpleNode[0])));
+      map.put("_5", statements);
+      SimpleNode stmtNode = (new Compiler.Parser()).substitute("(function () { with(_1) with(_1.prototype) { _5 }})()",
+                                                               map);
+      replNode = new ASTStatementList(0);
+      replNode.set(0, varNode);
+      replNode.set(1, stmtNode);
+    }
+    visitStatement(replNode);
+  }
+
+  public void translateClassDirectivesBlock(SimpleNode[] dirs, String classnameString, List props, List classProps, List stmts) {
+    dirs = (SimpleNode[])(flatten(dirs).toArray(new SimpleNode[0]));
+
+    // Scope #pragma directives to block
+    Compiler.OptionMap savedOptions = options;
+    try {
+      options = options.copy();
+      for (int i = 0; i < dirs.length; i++) {
+        SimpleNode n = dirs[i];
+        List p = props;
+        if (n instanceof ASTClassProperty) {
+          n = n.get(0);
+          p = classProps;
+        }
+        if (n instanceof ASTFunctionDeclaration) {
+          SimpleNode[] c = n.getChildren();
+          assert c.length == 3;
+          p.add(c[0]);
+          SimpleNode funexpr = new ASTFunctionExpression(0);
+          funexpr.setBeginLocation(n.filename, n.beginLine, n.beginColumn);
+          funexpr.setChildren(c);
+          p.add(funexpr);
+        } else if (n instanceof ASTVariableStatement) {
+          SimpleNode [] c = n.getChildren();
+          for (int j = 0, len = c.length; j < len; j++) {
+            SimpleNode v = c[j];
+            assert v instanceof ASTVariableDeclaration : v.getClass();
+            p.add(v.get(0));
+            if (v.getChildren().length > 1) {
+              p.add(v.get(1));
+            } else {
+              p.add(new ASTLiteral(null));
+            }
+          }
+        } else if (n instanceof ASTClassDirectiveBlock) {
+          translateClassDirectivesBlock(n.getChildren(), classnameString, props, classProps, stmts);
+        } else if (n instanceof ASTClassIfDirective) {
+          Boolean value = evaluateCompileTimeConditional(n.get(0));
+          if (value == null) {
+            stmts.add(n);
+          } else if (value.booleanValue()) {
+            SimpleNode clause = n.get(1);
+            translateClassDirectivesBlock(clause.getChildren(), classnameString, props, classProps, stmts);
+          } else if (n.size() > 2) {
+            SimpleNode clause = n.get(2);
+            translateClassDirectivesBlock(clause.getChildren(), classnameString, props, classProps, stmts);
+          }
+        } else if (n instanceof ASTPragmaDirective) {
+          visitPragmaDirective(n, n.getChildren());
+        } else {
+          stmts.add(n);
+        }
+      }
+    }
+    finally {
+      options = savedOptions;
+    }
+  }
 
   public void visitStatementList(SimpleNode node, SimpleNode[] stmts) {
     int i = 0;
@@ -919,11 +966,10 @@ public class CodeGenerator implements Translator {
       visitPragmaDirective(node, children);
       return;
     }
-// TODO: [2006-01-17 ptw] Implement some day
-//     if (node instanceof ASTClassDefinition) {
-//       visitClassDefinition(node, children);
-//       return;
-//     }
+    if (node instanceof ASTClassDefinition) {
+      visitClassDefinition(node, children);
+      return;
+    }
     if (node instanceof ASTStatementList) {
       visitStatementList(node, children);
       return;
@@ -1788,6 +1834,31 @@ public class CodeGenerator implements Translator {
     return false;
   }
 
+  private static SimpleNode parseFragment(String code) {
+    if (code.equals("\"\"") || code == null) {
+        code = "";
+    }
+    code =
+      "{" +
+      "\n#pragma 'warnUndefinedReferences=false'\n" +
+      "\n#file CodeGenerator.parseFragment\n#line 0\n" +
+      code +
+      "}";
+    // Extract the statement list from the program
+    try {
+      return (new Compiler.Parser()).parse(code).get(0);
+    } catch (ParseException e) {
+      System.err.println("while compiling " + code);
+      throw e;
+    }
+  }
+
+  // TODO: [2007-08-20 ptw] Replace with Java 1.5 UUID
+  private Random rand = new Random();
+  private Integer UUID() {
+    return new Integer(rand.nextInt(Integer.MAX_VALUE));
+  }
+
   public boolean visitCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode fnexpr = children[0];
     SimpleNode[] args = children[1].getChildren();
@@ -1881,70 +1952,99 @@ public class CodeGenerator implements Translator {
     // them.
     // FIXME: [2002-12-03 ptw] This substitution is not correct
     // because it does not verify that the method being inlined is
-    // actually ViewsystemNode.setAttribute.
-    // TODO: [2004-03-29 ptw] Enable this optimization for swf 7 by
-    // allocating some temp registers if it is worth it
-    if (fnexpr instanceof ASTPropertyIdentifierReference &&
-        "setAttribute".equals(((ASTIdentifier)fnexpr.get(1)).getName()) &&
-        arglen == 2 &&
-        (! options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY)) &&
-        (! options.getBoolean(Compiler.GENERATE_FUNCTION_2))) {
-      Object[] onprop = new Instruction[] 
-        {Instructions.PUSH.make("on"),
-         Instructions.PUSH.make(Values.Register(1)),
-         Instructions.ADD};
-      // Optimize literal property name
-      // TODO: [2002-12-03 ptw] Should check for constant expression
-      if (args[0] instanceof ASTLiteral) {
-        Object v = translateLiteralNode(args[0]);
-        if (v instanceof String) {
-          onprop = new Instruction[]
-            {Instructions.PUSH.make("on" + v)};
+    // actually LzNode.setAttribute.
+    if (
+      // Here this means 'compiling the lfc'
+      options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) &&
+      (! options.getBoolean("passThrough")) &&
+      (fnexpr instanceof ASTPropertyIdentifierReference)) {
+      SimpleNode[] fnchildren = fnexpr.getChildren();
+      String name = ((ASTIdentifier)fnchildren[1]).getName();
+      // We can't expand this if an expression value is expected,
+      // since we don't have 'let'
+      if (name.equals("setAttribute") && (! isReferenced)) {
+        SimpleNode scope = fnchildren[0];
+        SimpleNode property = args[0];
+        SimpleNode value = args[1];
+        List newBody = new ArrayList();
+        String thisvar = "$lzsc$" + UUID().toString();
+        String propvar = "$lzsc$" + UUID().toString();
+        String valvar = "$lzsc$" + UUID().toString();
+        String changedvar = "$lzsc$" + UUID().toString();
+        String svar = "$lzsc$" + UUID().toString();
+        String evtvar = "$lzsc$" + UUID().toString();
+        String decls = "";
+        Compiler.ParseTreePrinter ptp = new Compiler.ParseTreePrinter();
+        if (scope instanceof ASTIdentifier || scope instanceof ASTThisReference) {
+          thisvar = ptp.visit(scope);
+        } else {
+          decls += "var " + thisvar + " = " + ptp.visit(scope) + ";";
         }
+        if (property instanceof ASTLiteral || property instanceof ASTIdentifier) {
+          propvar = ptp.visit(property);
+          if (property instanceof ASTLiteral) {
+            assert propvar.startsWith("\"") || propvar.startsWith("'");
+            evtvar = propvar.substring(0,1) + "on" + propvar.substring(1);
+          }
+        } else {
+          decls += "var " + propvar + " = " + ptp.visit(property) + ";";
+        }
+        if (value instanceof ASTLiteral || value instanceof ASTIdentifier) {
+          valvar = ptp.visit(value);
+        } else {
+          decls += "var " + valvar + " = " + ptp.visit(value) + ";";
+        }
+        if (arglen > 2) {
+          SimpleNode ifchanged = args[2];
+          if (ifchanged instanceof ASTLiteral || ifchanged instanceof ASTIdentifier) {
+            changedvar = ptp.visit(ifchanged);
+          } else {
+            decls += "var " + changedvar + " = " + ptp.visit(ifchanged) + ";";
+          }
+        }
+        newBody.add(parseFragment(decls));
+        String fragment = "if (! (" + thisvar + ".__LZdeleted " +
+            ((arglen > 2) ? ("|| (" + changedvar + " && (" + thisvar + "[" + propvar + "] == " + valvar + "))") : "") +
+            ")) {" +
+            "var " + svar + " = " + thisvar + ".setters;" +
+            "if (" + svar + " && (" + propvar + " in " + svar + ")) {" +
+            "    " + thisvar + "[" + svar + "[" + propvar + "]](" + valvar + ");" +
+            "} else {" +
+            "    if ($debug) {" +
+            "        if (" + svar + " == null) {" +
+            "            Debug.warn('null setters on', " + thisvar + ", " + propvar + ", " + valvar + ");" +
+            "        }" +
+            "    }" +
+            "    " + thisvar + "[ " + propvar + " ] = " + valvar + ";" +
+          ((property instanceof ASTLiteral) ? "" : ("    var " + evtvar + " = (\"on\" + " + propvar + ");")) +
+            "    if (" + evtvar + " in " + thisvar + ") {" +
+            "        if (" + thisvar + "[" + evtvar + "].ready) {" + thisvar + "[ " + evtvar + " ].sendEvent( " + valvar + " ); }" +
+            "    }" +
+          "}}";
+        newBody.add(parseFragment(fragment));
+        SimpleNode newStmts = new ASTStatementList(0);
+        newStmts.setChildren((SimpleNode[])newBody.toArray(new SimpleNode[0]));
+        visitStatement(newStmts);
+        return true;
       }
-      // exprs are evaluated first, in proper order, and
-      // before any registers are set (as they might be
-      // clobbered by expression evaluation).
-      List code = new ArrayList(Arrays.asList(new Object[] {fnexpr.get(0), // : obj
-                                              Instructions.DUP, // : obj, obj
-                                              args[0],   // : obj, obj, prop
-                                              args[1],   // : obj, obj, prop, val
-                                              Instructions.SetRegister.make(3), // r3 = val
-                                              Instructions.POP, // : obj, obj, prop
-                                              Instructions.SetRegister.make(1), // r1 = prop
-                                              Instructions.SWAP, // : obj, prop, obj
-                                              Instructions.PUSH.make("setters"), // : obj, prop, obj, setters
-                                              Instructions.GetMember, // : obj, prop, obj.setters
-                                              Instructions.SWAP, // : obj, obj.setters, prop
-                                              Instructions.GetMember, // : obj, obj.setters[prop]
-                                              Instructions.SetRegister.make(2), // r2 = obj.setters[prop]
-                                              Instructions.PUSH.make(Values.Null), // : obj, obj.setters[prop], null
-                                              Instructions.EQUALS, // : obj, null == obj.setters[prop]
-                                              Instructions.BranchIfTrue.make(0), // : obj
-                                              Instructions.SetRegister.make(0), // r0 = obj
-                                              Instructions.POP, // :
-                                              Instructions.PUSH.make(Values.Register(3)), // : val
-                                              Instructions.PUSH.make(1), // : val, 1
-                                              Instructions.PUSH.make(Values.Register(0)), // : val, 1, obj
-                                              Instructions.PUSH.make(Values.Register(2)), // : val, 1, obj, setter
-                                              Instructions.BRANCH.make(1),
-                                              new Integer(0), // : obj
-                                              Instructions.SetRegister.make(0), // r0 = obj
-                                              Instructions.PUSH.make(Values.Register(1)), // : obj, prop
-                                              Instructions.PUSH.make(Values.Register(3)), // : obj, prop, val
-                                              Instructions.SetMember, // :
-                                              Instructions.PUSH.make(Values.Register(3)), // : val
-                                              Instructions.PUSH.make(1), // : val, 1
-                                              Instructions.PUSH.make(Values.Register(0))}));
-      code.addAll(Arrays.asList(onprop));
-      code.addAll(Arrays.asList((new Object[] {Instructions.GetMember, // : val, 1, obj["on"+prop]
-                                Instructions.PUSH.make("sendEvent"), // : val, 1, obj["on"+prop], "sendEvent"
-                                new Integer(1),
-                                Instructions.CallMethod, // : result
-                                Instructions.POP}))); // :
-      translateControlStructure(node, code.toArray());
-      return true;        // no return value
     }
+
+    // Note current call-site in a function context and backtracing
+    if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine != 0)) &&
+        (context.findFunctionContext() != null)) {
+      Map registers = (Map)context.get(TranslationContext.REGISTERS);
+      // We know arguments register will exist if we are doing
+      // bactraces because it will be referenced in the function
+      // prefix.
+      if (registers != null && registers.containsKey("arguments")) {
+        collector.push(Values.Register(((Instructions.Register)registers.get("arguments")).regno));
+        collector.push("lineno");
+        collector.push(node.beginLine);
+        collector.emit(Instructions.SetMember);
+      }
+    }
+
+    // Okay, it is not going to be transformed.  Just do it!
     visitCallParameters(node, isReferenced, args);
     boolean isref = translateReferenceForCall(fnexpr, true, node);
     if (isref) {
@@ -1964,20 +2064,18 @@ public class CodeGenerator implements Translator {
 
   public boolean visitSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode fname = children[0];
-    SimpleNode args = children[1];
+    SimpleNode callapply = children[1];
+    SimpleNode args = children[2];
     String name;
+    String ca = null;
+    String pattern = "(arguments.callee.superclass?arguments.callee.superclass.prototype[_1]:this.nextMethod(arguments.callee, _1)).call(this, _2)";
     if (fname instanceof ASTEmptyExpression) {
       name = "constructor";
     } else {
       name = ((ASTIdentifier)fname).getName();
     }
-    String methodName = (String)options.get(Compiler.METHOD_NAME);
-    if (methodName != null && (! name.equals(methodName))) {
-      String supplement = "";
-      if (name.equalsIgnoreCase(name)) {
-        supplement = ".  The method names must have the same capitalization.";
-      }
-      throw new UnimplementedError("unimplemented: calling super." + name + " from " + methodName + supplement, node);
+    if (callapply instanceof ASTIdentifier) {
+      ca = ((ASTIdentifier)callapply).getName();
     }
     // FIXME: [2005-03-09 ptw] (LPP-98 "Compiler source-source
     // transformations should be in separate phase") This should be
@@ -1989,19 +2087,23 @@ public class CodeGenerator implements Translator {
     Map map = new HashMap();
     map.put("_1", new ASTLiteral(name));
     map.put("_2", new Compiler.Splice(args.getChildren()));
-    SimpleNode n = (new Compiler.Parser()).substitute("this.__LZcallInherited(_1, arguments.callee, _2)", map);
+    if (ca == null) {
+      ;
+    } else if ("call".equals(ca)) {
+      pattern = "(arguments.callee.superclass?arguments.callee.superclass.prototype[_1]:this.nextMethod(arguments.callee, _1)).call(_2)";
+    } else if ("apply".equals(ca)) {
+      pattern = "(arguments.callee.superclass?arguments.callee.superclass.prototype[_1]:this.nextMethod(arguments.callee, _1)).apply(_2)";
+    } else {
+      assert false: "Unhandled super call " + ca;
+    }
+    SimpleNode n = (new Compiler.Parser()).substitute(pattern, map);
     visitCallExpression(n, isReferenced, n.getChildren());
     return false;
   }
 
   public boolean visitNewExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode ref = children[0];
-    SimpleNode[] args = new SimpleNode[0];
-    if (ref instanceof ASTCallExpression) {
-      SimpleNode[] cn = ref.getChildren();
-      ref = cn[0];
-      args = cn[1].getChildren();
-    }
+    SimpleNode[] args = children[1].getChildren();
     visitCallParameters(node, isReferenced, args);
     boolean isref = translateReferenceForCall(ref, true, node);
     if (isref) {
@@ -2192,7 +2294,6 @@ public class CodeGenerator implements Translator {
       ref.get();
       visitExpression(rhs);
       Instruction[] instrs = (Instruction[])BinopInstrs.get(AssignOpTable.get(op));
-
       for (int i = 0, len = instrs.length; i < len; i++) {
         collector.emit(instrs[i]);
       }
@@ -2209,6 +2310,7 @@ public class CodeGenerator implements Translator {
     return true;
   }
 
+  // useName => declaration not expression
   void translateFunction(SimpleNode node, boolean useName, SimpleNode[] children) {
     // label for profiling return
     String label = newLabel(node);
@@ -2245,6 +2347,7 @@ public class CodeGenerator implements Translator {
   }
 
   // Internal helper function for above
+  // useName => declaration not expression
   SimpleNode translateFunctionInternal(SimpleNode node, boolean useName, SimpleNode[] children) {
     // ast can be any of:
     //   FunctionDefinition(name, args, body)
@@ -2313,22 +2416,19 @@ public class CodeGenerator implements Translator {
       prefix.addAll(Arrays.asList((new Compiler.Parser()).parse("" +
              "{" +
                "\n#pragma 'warnUndefinedReferences=false'\n" +
-               "var $lzsc$s = _root.__LzDebug['backtraceStack'];" +
+               "var $lzsc$s = Debug['backtraceStack'];" +
                "if ($lzsc$s) {" +
                  "var $lzsc$l = $lzsc$s.length;" +
                  "$lzsc$s.length = $lzsc$l + 1;" +
                  "arguments['this'] = this;" +
                  "$lzsc$s[$lzsc$l] = arguments;" +
+                 "if ($lzsc$l > $lzsc$s.maxDepth) {Debug.stackOverflow()};" +
                "}" +
              "}" +
              "").getChildren()));
-      // TODO: [2005-05-12 ptw] (LPP-350) Until we analyze
-      // $flasm, have to re-establish our vars here because
-      // $flasm may have clobbered them if registered
       postfix.addAll(Arrays.asList((new Compiler.Parser()).parse("" +
              "{" +
                "\n#pragma 'warnUndefinedReferences=false'\n" +
-               "var $lzsc$s = _root.__LzDebug['backtraceStack'];" +
                "if ($lzsc$s) {" +
                  "$lzsc$s.length--;" +
                "}" +
@@ -2676,6 +2776,30 @@ public class CodeGenerator implements Translator {
       collector.push("name");
       collector.push(userFunctionName);
       collector.emit(Instructions.SetMember);
+      if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
+        // TODO: [2007-09-04 ptw] Come up with a better way to
+        // distinguish LFC from user stack frames.  See
+        // lfc/debugger/LzBactrace
+        String fn = (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ? "lfc/" : "") + filename;
+        if (functionName != null) {
+          collector.push(functionName);
+          collector.emit(Instructions.GetVariable);
+        } else {
+          collector.emit(Instructions.DUP);
+        }
+        collector.push("_dbg_filename");
+        collector.push(fn);
+        collector.emit(Instructions.SetMember);
+        if (functionName != null) {
+          collector.push(functionName);
+          collector.emit(Instructions.GetVariable);
+        } else {
+          collector.emit(Instructions.DUP);
+        }
+        collector.push("_dbg_lineno");
+        collector.push(lineno);
+        collector.emit(Instructions.SetMember);
+      }
     }
     if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {
 //       assert (functionName != null);
@@ -2768,6 +2892,378 @@ public class CodeGenerator implements Translator {
     return isref;
   }
 
+  /***
+   * A Reference represents a variable, property, or array reference ---
+   * a LeftHandSide in the grammar.  References can be retrieved or
+   * assigned.
+   */
+  static public abstract class Reference {
+    public CodeGenerator translator;
+    public SimpleNode node;
+    public int referenceCount;
+    protected Compiler.OptionMap options;
+    protected InstructionCollector collector;
+
+    public Reference (CodeGenerator translator, SimpleNode node, int referenceCount) {
+      this.translator = translator;
+      this.options = translator.getOptions();
+      this.collector = translator.getCollector();
+      this.node = node;
+      this.referenceCount = referenceCount;
+    }
+
+    protected void report(String reportMethod, String message) {
+        // TODO: [2005-12-21 ptw]
+  //       collector.emitCall(reportMethod,
+  //                          fname, lineno, propertyName);
+        collector.push(message);
+        collector.push(node.beginLine);
+        collector.push(node.filename);
+        collector.push(3);
+        collector.push(reportMethod);
+        collector.emit(Instructions.CallFunction);
+        //
+        collector.emit(Instructions.POP); // pop error return
+    }
+
+    // Check that the reference count supplied at initialization
+    // time was large enough.
+    protected void _pop() {
+      assert referenceCount > 0;
+      referenceCount -= 1;
+    }
+
+    // Emit instructions that push this reference's value onto the
+    // stack.
+    public abstract Reference get(boolean checkUndefined);
+
+    public Reference get() {
+      return get(true);
+    }
+
+    // Emit instructions that set the stack up to set this
+    // reference's value.  Example use:
+    //           reference.preset()
+    //           generator.push(1)
+    //           reference.set().
+    public abstract Reference preset();
+
+    // Emit instructions that set the value of this object.  See
+    // preset() for an example.
+    public abstract Reference set(Boolean warnGlobal);
+
+    public Reference set() {
+      return set(null);
+    }
+
+    public Reference set(boolean warnGlobal) {
+      return set(Boolean.valueOf(warnGlobal));
+    }
+
+    public Reference declare() {
+      throw new CompilerError("unsupported reference operation: declare");
+    }
+
+    public Reference init() {
+      throw new CompilerError("unsupported reference operation: init");
+    }
+  }
+
+  static public abstract class MemberReference extends Reference {
+    protected SimpleNode object;
+
+    public MemberReference(CodeGenerator translator, SimpleNode node, int referenceCount, 
+                          SimpleNode object) {
+      super(translator, node, referenceCount);
+      this.object = object;
+    }
+
+    // Emits code to check that the object exists before making a
+    // property reference.  Expects the object to be at the top of stack
+    // when called.
+    protected void checkUndefinedObjectProperty(String propertyName) {
+      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
+        String label = translator.newLabel(node);
+        collector.emit(Instructions.DUP);
+        collector.emit(Instructions.TypeOf);
+        collector.push("undefined");
+        collector.emit(Instructions.EQUALS);
+        collector.emit(Instructions.NOT);
+        collector.emit(Instructions.BranchIfTrue.make(label));
+        report("$reportUndefinedObjectProperty", propertyName);
+        collector.emit(Instructions.LABEL.make(label));
+      }
+    }
+
+    // Emits code to check that an object property selector is
+    // defined.  Note this test is a little looser than other undefined
+    // tests -- we want to warn if someone is using null as a selector
+    // too, hence the '==undefined' test.  Expects the object member to
+    // be at the top of stack when called.
+    protected void checkUndefinedPropertySelector(String propertyName) {
+      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
+        String label = translator.newLabel(node);
+        collector.emit(Instructions.DUP); // s s
+        collector.push(Values.Undefined); // s s UNDEF
+        collector.emit(Instructions.EQUALS); // s s==UNDEF
+        collector.emit(Instructions.NOT); // s s!=UNDEF
+        collector.emit(Instructions.BranchIfTrue.make(label));
+        report("$reportUndefinedProperty", propertyName);
+        collector.emit(Instructions.LABEL.make(label));
+      }
+    }
+
+    // Emits code to check that an object property is defined.
+    // Expects the object member to be at the top of stack when
+    // called.
+    protected void checkUndefinedProperty(String propertyName) {
+      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
+        String label = translator.newLabel(node);
+        collector.emit(Instructions.DUP);
+        collector.emit(Instructions.TypeOf);
+        collector.push("undefined");
+        collector.emit(Instructions.EQUALS);
+        collector.emit(Instructions.NOT);
+        collector.emit(Instructions.BranchIfTrue.make(label));
+        report("$reportUndefinedProperty", propertyName);
+        collector.emit(Instructions.LABEL.make(label));
+      }
+    }
+
+    protected abstract void pushObject(boolean checkUndefined);
+
+    public Reference preset() {
+      _pop();
+      pushObject(true);
+      return this;
+    }
+
+    public Reference set(Boolean warnGlobal) {
+      collector.emit(Instructions.SetMember);
+      return this;
+    }
+  }
+
+  static public class VariableReference extends Reference {
+    TranslationContext context;
+    public final String name;
+    public final Instructions.Register register;
+    boolean known;
+
+    public VariableReference(CodeGenerator translator, SimpleNode node, int referenceCount, String name) {
+      super(translator, node, referenceCount);
+      this.name = name;
+      this.context = (TranslationContext)translator.getContext();
+      Map registers = (Map)context.get(TranslationContext.REGISTERS);
+      if (registers != null) {
+        this.register = (Instructions.Register)registers.get(name);
+        if ("swf6".equals(Instructions.getRuntime())) {
+          Map lowerRegisters = (Map)context.get(TranslationContext.LOWERREGISTERS);
+          if (register != null && (! lowerRegisters.containsKey(name.toLowerCase()))) {
+            System.err.println("Warning: Different case used for " + name +
+                               " in " + node.filename +
+                               " (" + node.beginLine + ")");
+          }
+        }
+      } else {
+        this.register = null;
+      }
+      Set variables = (Set)context.get(TranslationContext.VARIABLES);
+      if (variables != null) {
+        this.known = variables.contains(name);
+        if ("swf6".equals(Instructions.getRuntime())) {
+          Set lowerVariables = (Set)context.get(TranslationContext.LOWERVARIABLES);
+          if (known && (! lowerVariables.contains(name.toLowerCase()))) {
+            System.err.println("Warning: Different case used for " + name +
+                               " in " + node.filename +
+                               " (" + node.beginLine + ")");
+          }
+        }
+        // TODO: [2005-12-22 ptw] Not true ECMAscript
+        // Ensure undefined is "defined"
+        known |= "undefined".equals(name);
+      }
+    }
+
+    // Emits code to check that an object variable is defined.
+    // Expects the value of the variable to be at the top of stack when
+    // called.
+    private void checkUndefinedVariable(SimpleNode node, String variableName) {
+      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
+        String label = translator.newLabel(node);
+        collector.emit(Instructions.DUP);
+        collector.emit(Instructions.TypeOf);
+        collector.push("undefined");
+        collector.emit(Instructions.EQUALS);
+        collector.emit(Instructions.NOT);
+
+        collector.emit(Instructions.BranchIfTrue.make(label));
+        report("$reportUndefinedVariable", variableName);
+        collector.emit(Instructions.LABEL.make(label));
+      }
+    }
+
+    public Reference get(boolean checkUndefined) {
+      _pop();
+      if (register != null) {
+        collector.emit(Instructions.PUSH.make(Values.Register(register.regno)));
+      } else {
+        collector.push(name);
+        collector.emit(Instructions.GetVariable);
+      }
+      if (checkUndefined && (! known)) {
+        checkUndefinedVariable(node, name);
+      }
+      return this;
+    }
+
+    public Reference preset() {
+      _pop();
+      if (register == null) {
+        if ("undefined".equals(name)) {
+          throw new SemanticError("Invalid l-value", node);
+        }
+        collector.push(name);
+      }
+      return this;
+    }
+
+    public Reference set(Boolean warnGlobal) {
+      if (warnGlobal == null) {
+        if (context.type instanceof ASTProgram) {
+          warnGlobal = Boolean.FALSE;
+        } else {
+          warnGlobal = Boolean.valueOf(options.getBoolean(Compiler.WARN_GLOBAL_ASSIGNMENTS));
+        }
+      }
+      if ((! known) && warnGlobal.booleanValue()) {
+        System.err.println("Warning: Assignment to free variable " + name +
+                           " in " + node.filename + 
+                           " (" + node.beginLine + ")");
+      }
+      if (register != null) {
+        collector.emit(Instructions.SetRegister.make(new Integer(register.regno)));
+        // TODO: [2004-03-24 ptw] Optimize this away if the value is used
+        collector.emit(Instructions.POP);
+      } else {
+        collector.emit(Instructions.SetVariable);
+      }
+      return this;
+    }
+
+    public Reference declare() {
+      // If in a function, already declared
+      if (! known) {
+        collector.emit(Instructions.VAR);
+      }
+      return this;
+    }
+
+    public Reference init() {
+      // If in a function, already declared
+      if (known) {
+        set();
+      } else {
+        collector.emit(Instructions.VarEquals);
+      }
+      return this;
+    }
+  }
+
+  static public class PropertyReference extends MemberReference {
+    String propertyName;
+
+    public PropertyReference(CodeGenerator translator, SimpleNode node, int referenceCount, 
+                               SimpleNode object, ASTIdentifier propertyName) {
+      super(translator, node, referenceCount, object);
+      this.propertyName = (String)propertyName.getName();
+    }
+
+    protected void pushObject(boolean checkUndefined) {
+      translator.visitExpression(object);
+      if (checkUndefined) {
+        checkUndefinedObjectProperty(propertyName);
+        if (propertyName == "undefined") {
+          throw new SemanticError("Invalid l-value", node);
+        }
+      }
+      collector.push(propertyName);
+    }
+
+    public Reference get(boolean checkUndefined) {
+      _pop();
+      pushObject(checkUndefined);
+      collector.emit(Instructions.GetMember);
+      if (checkUndefined) {
+        checkUndefinedProperty(propertyName);
+      }
+      return this;
+    }
+
+  }
+
+  static public class IndexReference extends MemberReference {
+    SimpleNode indexExpr;
+
+    public IndexReference(CodeGenerator translator, SimpleNode node, int referenceCount, 
+                          SimpleNode object, SimpleNode indexExpr) {
+      super(translator, node, referenceCount, object);
+      this.indexExpr = indexExpr;
+    }
+
+    protected void pushObject(boolean checkUndefined) {
+      // incorrect semantics, but compatible with Flash
+      translator.visitExpression(object);
+      if (checkUndefined) {
+        checkUndefinedObjectProperty("[]");
+      }
+      translator.visitExpression(indexExpr);
+      if (checkUndefined) {
+        // TODO: [2005-04-17 ptw] Perhaps use Compiler.nodeString(node)
+        // instead of "[]"?
+        checkUndefinedPropertySelector("[]");
+      }
+    }
+
+    public Reference get(boolean checkUndefined) {
+      _pop();
+      pushObject(checkUndefined);
+      collector.emit(Instructions.GetMember);
+      // TODO: [2003-05-14 ptw] checkUndefined
+      if (false) {                // (checkUndefined) {
+        checkUndefinedProperty("[]");
+      }
+      return this;
+    }
+
+  }
+
+  // NOTE: [2002-10-24 ptw] Not completely right, this handles the case
+  // where a literal is the target of a method operation.  It is like a
+  // reference but it is not an lvalue.
+  static public class LiteralReference extends Reference {
+
+    public LiteralReference(CodeGenerator translator, SimpleNode node, int referenceCount) {
+      super(translator, node, referenceCount);
+    }
+
+    public Reference get(boolean checkUndefined) {
+      _pop();
+      translator.visitExpression(node);
+      return this;
+    }
+
+    public Reference preset() {
+      throw new SemanticError("Invalid literal operation", node);
+    }
+
+    public Reference set(Boolean warnGlobal) {
+      throw new SemanticError("Invalid literal operation", node);
+    }
+  }
+
+
+
   Reference translateReference(SimpleNode node) {
     return translateReference(node, 1);
   }
@@ -2779,21 +3275,14 @@ public class CodeGenerator implements Translator {
     if (node instanceof ASTThisReference) {
       return new VariableReference(this, node, referenceCount, "this");
     }
-    if (node instanceof ASTArrayLiteral ||
-        node instanceof ASTLiteral ||
-        node instanceof ASTObjectLiteral ||
-        node instanceof ASTCallExpression ||
-        node instanceof ASTNewExpression) {
-      return new LiteralReference(this, node, referenceCount);
-    }
     SimpleNode[] args = node.getChildren();
     if (node instanceof ASTPropertyIdentifierReference) {
       return new PropertyReference(this, node, referenceCount, args[0], (ASTIdentifier)args[1]);
     } else if (node instanceof ASTPropertyValueReference) {
       return new IndexReference(this, node, referenceCount, args[0], args[1]);
-    } else {
-      throw new SemanticError("Invalid reference expression: " + (new Compiler.ParseTreePrinter()).visit(node), node);
     }
+
+    return new LiteralReference(this, node, referenceCount);
   }
 }
 

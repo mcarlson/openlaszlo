@@ -1,6 +1,9 @@
 <canvas debug="true">
-
   <include href="lzunit" />
+
+<!--
+  covers-tags: lztimer smoketest
+-->
 
   <class name="timertester" extends="node">
     <attribute name="del1" value="null"/>

@@ -1,5 +1,6 @@
 <%@ page contentType="text/xml" %>
 <%@ page import="java.util.*" %>
+<%@ page import="java.util.regex.*" %>
 <%@ page import="java.io.*" %>
 <%@ page import="java.net.*" %>
 <%@ page import="java.text.*" %>
@@ -15,15 +16,15 @@
      * X_LZ_COPYRIGHT_END ******************************************************/
 
 
-    public String devId = 
+    public String devId =
         "cdVNj_FoE_w";
 
 
     public void reportError(
-        String message, 
+        String message,
         Document result)
     {
-        Element el = 
+        Element el =
             new Element("error");
 
         el.setAttribute("message", message);
@@ -39,7 +40,7 @@
         BufferedReader inputFile = null;
         try {
             URL u = new URL(url);
-            inputFile = 
+            inputFile =
                 new BufferedReader(
                     new InputStreamReader(
                         u.openStream()));
@@ -53,7 +54,7 @@
             return null;
         }
 
-        SAXBuilder builder = 
+        SAXBuilder builder =
             new SAXBuilder();
         Document doc = null;
 
@@ -113,10 +114,10 @@
         Iterator videoListIt =
             videoList.iterator();
         while (videoListIt.hasNext()) {
-            Element videoEl = 
+            Element videoEl =
                 (Element)videoListIt.next();
 
-            Element resultEl = 
+            Element resultEl =
                 new Element("video");
 
             libraryEl.addContent(
@@ -124,7 +125,7 @@
 
             Element el;
 
-            el = 
+            el =
                 videoEl.getChild("id");
             if (el == null) {
                 reportError("Expected id element.", result);
@@ -134,7 +135,7 @@
                 "id",
                 el.getText());
 
-            el = 
+            el =
                 videoEl.getChild("url");
             if (el == null) {
                 reportError("Expected url element.", result);
@@ -144,17 +145,17 @@
                 "pageUrl",
                 el.getText());
 
-            el = 
+            el =
                 videoEl.getChild("thumbnail_url");
             if (el == null) {
                 reportError("Expected thumbnail_url element.", result);
                 return false;
             }
             resultEl.setAttribute(
-                "icon", 
+                "icon",
                 el.getText());
 
-            el = 
+            el =
                 videoEl.getChild("title");
             if (el == null) {
                 reportError("Expected title element.", result);
@@ -164,7 +165,7 @@
                 "title",
                 el.getText());
 
-            el = 
+            el =
                 videoEl.getChild("description");
             if (el == null) {
                 reportError("Expected description element.", result);
@@ -174,14 +175,14 @@
                 "description",
                 el.getText());
 
-            el = 
+            el =
                 videoEl.getChild("length_seconds");
             if (el == null) {
                 reportError("Expected length_seconds element.", result);
                 return false;
             }
             resultEl.setAttribute(
-                "duration", 
+                "duration",
                 el.getText());
 
         }
@@ -204,7 +205,7 @@
         BufferedReader inputFile = null;
         try {
             URL u = new URL(pageUrl);
-            inputFile = 
+            inputFile =
                 new BufferedReader(
                     new InputStreamReader(
                         u.openStream()));
@@ -213,6 +214,10 @@
             return;
         } // try
 
+        Element resultEl =
+            new Element("videoGetFlvUrlResult");
+
+		String videoId = "";
         while (true) {
             String line = null;
 
@@ -227,50 +232,28 @@
             }
 
             int start =
-                line.indexOf("SWFObject");
+                line.indexOf("swfArgs");
             if (start == -1) {
                 continue;
+            } else {
+            	// Extract the video_id from the args line
+				Pattern p = Pattern.compile("video_id:'[\\w\\d]+'?");
+				Matcher m = p.matcher(line);
+				if ( m.find() ) {
+				    videoId = (line.substring(m.start(), m.end()));
+				    videoId = videoId.substring(10, videoId.length()-1);
+				} else {
+					reportError("video_id argument not found in HTML page", result);
+					return;
+				}
             }
 
-            start = 
-                 line.indexOf("\"", start);
-            if (start == -1) {
-                reportError("Could not find first double quote.", result);
-                return;
-            }
+            String url =
+                "http://cache.googlevideo.com/get_video?video_id=" + videoId;
 
-            start =
-                line.indexOf("?", start);
-            if (start == -1) {
-                reportError("Could not find question mark.", result);
-                return;
-            }
-
-            start++;
-
-            int finish =
-                line.indexOf("\"", start);
-            if (finish == -1) {
-                reportError("Could not find second double quote.", result);
-                return;
-            }
-
-            String params = 
-                line.substring(start, finish);
-
-            String url = 
-                "http://www.YouTube.com/get_video.php?" +
-                params +
-                "&.flv";
-
-            Element resultEl =
-                new Element("videoGetFlvUrlResult");
-
-            resultEl.setAttribute("id", id);
+            resultEl.setAttribute("id", videoId);
             resultEl.setAttribute("url", url);
-
-            result.setRootElement(
-                resultEl);
+            result.setRootElement(resultEl);
 
             return;
         }
@@ -283,7 +266,7 @@
         String id,
         Document result)
     {
-        String url = 
+        String url =
             "http://www.youtube.com/api2_rest.php?method=youtube.videos.get_details&dev_id=";
         url += devId;
         url += "&video_id=";
@@ -325,7 +308,7 @@
             "id",
             id);
 
-        el = 
+        el =
             videoDetailsEl.getChild("author");
         if (el == null) {
             reportError("Expected author element.", result);
@@ -335,7 +318,7 @@
             "author",
             el.getText());
 
-        el = 
+        el =
             videoDetailsEl.getChild("title");
         if (el == null) {
             reportError("Expected title element.", result);
@@ -345,7 +328,7 @@
             "title",
             el.getText());
 
-        el = 
+        el =
             videoDetailsEl.getChild("rating_avg");
         if (el == null) {
             reportError("Expected rating_avg element.", result);
@@ -355,7 +338,7 @@
             "rating_avg",
             el.getText());
 
-        el = 
+        el =
             videoDetailsEl.getChild("rating_count");
         if (el == null) {
             reportError("Expected rating_count element.", result);
@@ -365,7 +348,7 @@
             "rating_count",
             el.getText());
 
-        el = 
+        el =
             videoDetailsEl.getChild("tags");
         if (el == null) {
             reportError("Expected tags element.", result);
@@ -375,7 +358,7 @@
             "tags",
             el.getText());
 
-        el = 
+        el =
             videoDetailsEl.getChild("description");
         if (el == null) {
             reportError("Expected description element.", result);
@@ -385,37 +368,37 @@
             "description",
             el.getText());
 
-        el = 
+        el =
             videoDetailsEl.getChild("view_count");
         if (el == null) {
             reportError("Expected view_count element.", result);
             return;
         }
         detailsEl.setAttribute(
-            "view_count", 
+            "view_count",
             el.getText());
 
-        el = 
+        el =
             videoDetailsEl.getChild("upload_time");
         if (el == null) {
             reportError("Expected upload_time element.", result);
             return;
         }
         detailsEl.setAttribute(
-            "upload_time", 
+            "upload_time",
             el.getText());
 
-        el = 
+        el =
             videoDetailsEl.getChild("length_seconds");
         if (el == null) {
             reportError("Expected length_seconds element.", result);
             return;
         }
         detailsEl.setAttribute(
-            "duration", 
+            "duration",
             el.getText());
 
-        el = 
+        el =
             videoDetailsEl.getChild("comment_list");
         if (el == null) {
             reportError("Expected comment_list element.", result);
@@ -428,7 +411,7 @@
             reportError("Expected comment children.", result);
             return;
         }
-        
+
         Element commentsEl =
             new Element("comments");
 
@@ -438,16 +421,16 @@
         Iterator commentListIt =
             commentList.iterator();
         while (commentListIt.hasNext()) {
-            Element commentEl = 
+            Element commentEl =
                 (Element)commentListIt.next();
 
-            Element commentResultEl = 
+            Element commentResultEl =
                 new Element("comment");
 
             commentsEl.addContent(
                 commentResultEl);
 
-            el = 
+            el =
                 commentEl.getChild("author");
             if (el == null) {
                 reportError("Expected author element.", result);
@@ -457,7 +440,7 @@
                 "author",
                 el.getText());
 
-            el = 
+            el =
                 commentEl.getChild("time");
             if (el == null) {
                 reportError("Expected time element.", result);
@@ -467,14 +450,14 @@
                 "time",
                 el.getText());
 
-            el = 
+            el =
                 commentEl.getChild("text");
             if (el == null) {
                 reportError("Expected text element.", result);
                 return;
             }
             commentResultEl.setAttribute(
-                "text", 
+                "text",
                 el.getText());
 
         }
@@ -487,7 +470,7 @@
     public void videosListFeatured(
         Document result)
     {
-        String url = 
+        String url =
             "http://www.youtube.com/api2_rest.php?method=youtube.videos.list_featured&dev_id=";
         url += devId;
 
@@ -497,7 +480,7 @@
         if (doc == null) {
             return;
         }
-        
+
         returnLibrary(doc, result);
     }
 
@@ -506,7 +489,7 @@
         String tag,
         Document result)
     {
-        String url = 
+        String url =
             "http://www.youtube.com/api2_rest.php?method=youtube.videos.list_by_tag&dev_id=";
         url += devId;
         url += "&tag=";
@@ -518,7 +501,7 @@
         if (doc == null) {
             return;
         }
-        
+
         returnLibrary(doc, result);
     }
 
@@ -527,7 +510,7 @@
         String user,
         Document result)
     {
-        String url = 
+        String url =
             "http://www.youtube.com/api2_rest.php?method=youtube.videos.list_by_user&dev_id=";
         url += devId;
         url += "&user=";
@@ -539,7 +522,7 @@
         if (doc == null) {
             return;
         }
-        
+
         returnLibrary(doc, result);
     }
 
@@ -553,10 +536,10 @@
     Document result =
         new Document();
 
-    Enumeration params = 
+    Enumeration params =
         request.getParameterNames();
 
-    String method = 
+    String method =
         request.getParameter("method");
 
     if (method == null) {
@@ -565,27 +548,27 @@
 
     } else if (method.equals("videoGetDetails")) {
 
-        String id = 
+        String id =
             request.getParameter("id");
-        
+
         if (id == null) {
             reportError("Undefined id parameter.", result);
         } else {
             videoGetDetails(
-                id, 
+                id,
                 result);
         }
 
     } else if (method.equals("videoGetFlvUrl")) {
 
-        String id = 
+        String id =
             request.getParameter("id");
-        
+
         if (id == null) {
             reportError("Undefined id parameter.", result);
         } else {
             videoGetFlvUrl(
-                id, 
+                id,
                 result);
         }
 
@@ -596,27 +579,27 @@
 
     } else if (method.equals("videosListByTag")) {
 
-        String tag = 
+        String tag =
             request.getParameter("tag");
-        
+
         if (tag == null) {
             reportError("Undefined tag parameter.", result);
         } else {
             videosListByTag(
-                tag, 
+                tag,
                 result);
         }
 
     } else if (method.equals("videosListByUser")) {
 
-        String user = 
+        String user =
             request.getParameter("user");
 
         if (user == null) {
             reportError("Undefined user parameter.", result);
         } else {
             videosListByUser(
-                user, 
+                user,
                 result);
         }
 
@@ -626,7 +609,7 @@
 
     }
 
-    org.jdom.output.Format format = 
+    org.jdom.output.Format format =
         org.jdom.output.Format.getCompactFormat();
     format.setOmitDeclaration(
         true);

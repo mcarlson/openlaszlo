@@ -1,4 +1,4 @@
-<canvas width="200">
+<canvas>
   <button onclick="vw.toggleSize()" 
           text="Toggle Size" />
   
@@ -19,3 +19,5 @@
     </method>
   </view>
 </canvas>
+
+

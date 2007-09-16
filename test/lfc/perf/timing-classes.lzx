@@ -1,16 +1,17 @@
 <library>
-    <font src="mono-7-plain-regular.ttf" name="mono"/>
-    <text id="timingOutput" multiline="true" font="mono" selectable="true">
+    <text text="&lt;pre&gt;" id="TimingOutput" multiline="true" selectable="true">
         <attribute name="visible" value="false"/>
         <attribute name="width" value="$once{canvas.width}"/>
         <attribute name="height" value="$once{canvas.height}"/>
         <method name="write" args="s">
+          <![CDATA[
             if ( !this.visible ) this.setVisible( true );
             this.addText( s + "\n" );
+            ]]>
         </method>
     </text>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

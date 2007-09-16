@@ -1,11 +1,12 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
+<%@ page pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="java.util.ArrayList,
                  java.util.regex.*,
                  java.io.*"%>
-
 <%!
 class TmpFileManager implements HttpSessionBindingListener
 {
@@ -52,7 +53,13 @@ class TmpFileManager implements HttpSessionBindingListener
 
 <%
     String src = request.getParameter("src");
+    if (src == null) {
+       out.println("no src query arg was supplied");
+       return;
+    }
     String title = request.getParameter("title");
+    if (title == null) title = "";
+    
     String fname = src;
     // Check if url is in proper subdir of this JSP 
     if (!isValidSubdir(application.getRealPath(src))) {
@@ -134,14 +141,27 @@ class TmpFileManager implements HttpSessionBindingListener
             sourceCode = sb.toString();
         }
         String basefile = src.substring(src.lastIndexOf("/")+1);
+        
+        String lzr = request.getParameter("lzr");
+        if (lzr != null) {
+        	lzr = "&amp;lzr=" + lzr;
+        } else {
+        	lzr = "";
+        }
 %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>OpenLaszlo Explorer</title>
   <link rel="stylesheet" href="../lps/includes/explore.css" type="text/css">
 </head>
 
 <body class="source-view"
-      onload="parent.swf.location.href='loading.jsp?src=<%= temp?request.getContextPath()+"/"+tempUrl:request.getContextPath()+"/"+src %>?showTaskBar=false';">
+      onload="parent.swf.location.href='loading.jsp?src=<%= temp?request.getContextPath()+"/"+tempUrl:request.getContextPath()+"/"+src %>&amp;showTaskBar=false<%= lzr %>';">
 
 <h2><%= title %></h2>
 

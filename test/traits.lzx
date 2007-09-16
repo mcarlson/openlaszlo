@@ -1,10 +1,12 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
 <canvas>
 
+<!-- [bshine 2007.06.05] traits are not supported in user-land -->
+<?ignore
     <include href="../lps/components/lzunit"/>
 
     <class name="tc0">
@@ -40,6 +42,7 @@
 
     <class name="tc2" extends="tc0" traits="ta2">
     </class>
+
 
     <class name="tc3" extends="tc0" traits="ta1,ta2">
     </class>
@@ -123,4 +126,5 @@
             </method>
         </TestCase>
     </TestSuite>
+?>
 </canvas>

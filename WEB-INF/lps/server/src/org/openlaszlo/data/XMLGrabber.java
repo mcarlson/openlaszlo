@@ -8,7 +8,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -106,34 +106,18 @@ public class XMLGrabber extends Converter {
         //   <headers> ... </headers>
         // </resultset>
 
-        StringReader bs = new StringReader (body);
-        try {
-            Element resultElt = new Element("resultset");
-            Element bodyElt = new Element("body");
-            Element newdata = new org.jdom.input.SAXBuilder(false)
-                .build(bs)
-                .getRootElement();
-            newdata.detach();
-            bodyElt.addContent(newdata);
-            resultElt.addContent(bodyElt);
+        StringBuffer xdata = new StringBuffer();
+        xdata.append("<resultset>\n");
+        xdata.append("<body>\n");
+        String xbody = body.replaceFirst("<[?]xml.*?[?]>","");
+        xdata.append(xbody);
+        xdata.append("</body>\n");
+        xdata.append(headers);
+        xdata.append("</resultset>\n");
 
-            
-            Element headersElt = new org.jdom.input.SAXBuilder(false)
-                .build(new StringReader(headers))
-                .getRootElement();
-            headersElt.detach();
-            resultElt.addContent(headersElt);
-            
-            // generate inputstream from DOM
-            String xml = new XMLOutputter().outputString(resultElt);
-            ByteArrayInputStream dis = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-            return dis;
-
-        } catch (org.jdom.JDOMException e) {
-            throw new ConversionException(e.getMessage());
-        }
-
-     
+        // generate inputstream from DOM
+        ByteArrayInputStream dis = new ByteArrayInputStream((xdata.toString()).getBytes("UTF-8"));
+        return dis;
     }
 
     /**

@@ -1,0 +1,23 @@
+
+<canvas height="40">
+  <view bgcolor="red" clickable="true"
+         x="10" y="10"
+         width="20" height="20">
+    <handler name="onmousedown">
+      this.setWidth(30);
+      this.setheight(30);
+      this.setX(5);
+      this.setY(5);
+    </handler>
+    <handler name="onmouseup">
+      this.setWidth(20);
+      this.setheight(20);
+      this.setX(10);
+      this.setY(10);
+    </handler>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

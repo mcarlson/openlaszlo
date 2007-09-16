@@ -4,7 +4,7 @@
     .setters for those attributes.
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -12,42 +12,42 @@
     <include href="lzunit/lzunit.lzx" />
 
     <class name="GetterTest" extends="TestCase">
-	<method name="testWidthOnObject">
-	    assertEquals(10, {width: 10}.width);
-	</method>
+        <method name="testWidthOnObject">
+            assertEquals(10, {width: 10}.width);
+        </method>
     </class>
 
     <class name="SetterTest" extends="TestCase">
         <method name="testHeightOnObject">
-	    var foo = {height: 5};
-	    foo.height = 42;
+            var foo = {height: 5};
+            foo.height = 42;
             assertEquals(42, foo.height);
         </method>
     </class>
 
     <class name="GSViewTest" extends="TestCase">
-	<view name="tester" bgcolor="yellow">
-	    <view width="20" height="20" bgcolor="red" />
-	    <view x="100" y="120"  width="50" height="120" bgcolor="blue" />
-	</view>
+        <view name="tester" bgcolor="yellow">
+            <view width="20" height="20" bgcolor="red" />
+            <view x="100" y="120"  width="50" height="120" bgcolor="blue" />
+        </view>
 
-	<method name="testGettersOnView">
-	    assertEquals(tester.getAttribute("x"), tester.x);
-	    assertEquals(tester.getAttribute("y"), tester.y);
-	    assertEquals(tester.getAttribute("width"), tester.width);    
-	    assertEquals(tester.getAttribute("height"), tester.height);    
-	</method>
+        <method name="testGettersOnView">
+            assertEquals(tester.getAttribute("x"), tester.x);
+            assertEquals(tester.getAttribute("y"), tester.y);
+            assertEquals(tester.getAttribute("width"), tester.width);    
+            assertEquals(tester.getAttribute("height"), tester.height);    
+        </method>
 
-	<method name="testSettersOnView">
-	    tester.x = 27;
-	    tester.setAttribute("y", tester.y+152);
-	    tester.height = 314;
-	    tester.setAttribute("width", 159);
-	    assertEquals(tester.getAttribute("x"), tester.x);
-	    assertEquals(tester.getAttribute("y"), tester.y);
-	    assertEquals(tester.getAttribute("width"), tester.width);    
-	    assertEquals(tester.getAttribute("height"), tester.height);    
-	</method>
+        <method name="testSettersOnView">
+            tester.setAttribute('x', 27);
+            tester.setAttribute("y", tester.y+152);
+            tester.setAttribute('height', 314);
+            tester.setAttribute("width", 159);
+            assertEquals(tester.getAttribute("x"), tester.x);
+            assertEquals(tester.getAttribute("y"), tester.y);
+            assertEquals(tester.getAttribute("width"), tester.width);    
+            assertEquals(tester.getAttribute("height"), tester.height);    
+        </method>
     </class>
 
 </library>

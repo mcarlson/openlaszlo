@@ -9,12 +9,22 @@
         <!--- @keyword private -->
         <attribute name="labelOut" type="boolean" value="true"/>
 
+        <doc>
+          <tag name="shortdesc"><text>
+              a label for a chart
+          </text></tag>
+          <text>
+
+            <warning>This component is of Beta quality and is subject to change.</warning>
+          </text>
+        </doc>
+
     </class>
 <!-- End Vertical Axis Class -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

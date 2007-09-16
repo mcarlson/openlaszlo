@@ -27,14 +27,19 @@ import org.openlaszlo.xml.internal.XMLUtils;
  */
 public class CompilationEnvironment {
     private final Properties mProperties;
-    public static final String SWFVERSION_PROPERTY = "runtime";
-    public static final String PROXIED_PROPERTY    = "lzproxied";
-    public static final String DEBUG_PROPERTY      = "debug";
-    public static final String PROFILE_PROPERTY    = "profile";
-    public static final String LINK_PROPERTY       = "link";
-    public static final String VALIDATE_PROPERTY   = "validate";
-    public static final String CSSFILE_PROPERTY    = "cssfile";
+    public static final String RUNTIME_PROPERTY = "runtime";
+    public static final String PROXIED_PROPERTY           = "lzproxied";
+    public static final String DEBUG_PROPERTY             = "debug";
 
+    // matches the value of sc.Compiler.DEBUG_BACKTRACE
+    public static final String BACKTRACE_PROPERTY         = "debugBacktrace";
+
+    public static final String PROFILE_PROPERTY           = "profile";
+    public static final String LINK_PROPERTY              = "link";
+    public static final String VALIDATE_PROPERTY          = "validate";
+    // e_validate is defined if a user explicitly defined validate attribute
+    public static final String VALIDATE_EXPLICIT_PROPERTY = "e_validate";
+    public static final String CSSFILE_PROPERTY           = "cssfile";
     // Log all debug.write messages back to the server
     public static final String LOGDEBUG_PROPERTY      = "logdebug";
     public static final String REMOTEDEBUG_PROPERTY   = "remotedebug";
@@ -55,13 +60,11 @@ public class CompilationEnvironment {
     final SymbolGenerator methodNameGenerator;
 
     /** Output is written here.
-     *
-     * When we support multiple targets, this can be generalized to an
-     * interface that SWFWriter implements.*/
-    private SWFWriter mSWFWriter;
+     */
+    private ObjectWriter mObjectWriter;
     /** Main program output when generating a loadable
-     * library. Otherwise same as mSWFWriter */
-    private SWFWriter mMainSWFWriter;
+     * library. Otherwise same as mObjectWriter */
+    private ObjectWriter mMainObjectWriter;
 
     private final FileResolver mFileResolver;
 
@@ -126,11 +129,12 @@ public class CompilationEnvironment {
     private static int mDefaultTextWidth = 100;
 
     /** Default SWF version to compile to */
-    private String mDefaultSWFVersion = LPS.getProperty("compiler.runtime.default", "swf6");
+    private String mDefaultRuntime = LPS.getProperty("compiler.runtime.default", "swf7");
 
     /** Constructs an instance.
      * @param properties compilation properties
-     * @param writer output is sent here
+     * @param resolver
+     * @param mcache
      */
     CompilationEnvironment(Properties properties, FileResolver resolver, CompilerMediaCache mcache) {
         // Use a local symbol generator so that we recycle method
@@ -179,6 +183,7 @@ public class CompilationEnvironment {
         } else {
             mParser.basePathnames.add(0, file.getParent());
         }
+        // It appears that basePathnames is only used for error reporting.
         // TODO: [12-26-2002 ows] Consolidate this list with the one
         // in FileResolver.
         mParser.basePathnames.add(LPS.getComponentsDirectory());
@@ -260,15 +265,15 @@ public class CompilationEnvironment {
         this.setProperty(EMBEDFONTS_PROPERTY, embed);
     }
 
-    public void setSWFWriter(SWFWriter writer) {
-        assert mSWFWriter == null;
-        this.mSWFWriter = writer;
-        this.mMainSWFWriter = writer;
+    public void setObjectWriter(ObjectWriter writer) {
+        assert mObjectWriter == null;
+        this.mObjectWriter = writer;
+        this.mMainObjectWriter = writer;
     }
     
-    public void setMainSWFWriter(SWFWriter writer) {
-        assert mMainSWFWriter == null || mMainSWFWriter == mSWFWriter;
-        this.mMainSWFWriter = writer;
+    public void setMainObjectWriter(ObjectWriter writer) {
+        assert mMainObjectWriter == null || mMainObjectWriter == mObjectWriter;
+        this.mMainObjectWriter = writer;
     }
     
     public ViewSchema getSchema() {
@@ -358,24 +363,38 @@ public class CompilationEnvironment {
      * environment writes to.
      * @return the object writer
      */
-    SWFWriter getGenerator() {
-        return mSWFWriter;
+    ObjectWriter getGenerator() {
+        return mObjectWriter;
     }
 
-    /** Returns the SWF writer for the main program compilation when 
-     * compiling a loadable library.
+    /** By pointing at the main SWFWriter, this makes the resources
+        compile into the main app. We have to do this because we
+        haven't figured out a way to get Flash to attach individual
+        exported assets from a runtime loaded library into views in
+        the main app.
      * @return the object writer
      */
-    SWFWriter getResourceGenerator() {
-        return mMainSWFWriter;
-    }
 
-    
+    ObjectWriter getResourceGenerator() {
+        return mMainObjectWriter;
+        
+        // Note: Returning the library's SWFWriter, as shown below,
+        // would make the compiler compile the resources into the
+        // loadable library:
+        //return mObjectWriter; 
+     }
+     
+    private boolean mSnippet = false;
+
     /** Returns true if we're compiling a loadable library file.
      * @return isLibrary
      */
     public boolean isImportLib() {
-        return mMainSWFWriter != mSWFWriter;
+        return mSnippet;
+    }
+
+    public void setImportLib(boolean v) {
+        mSnippet = v;
     }
 
     /** Returns the file resolver used in this environment.
@@ -421,23 +440,22 @@ public class CompilationEnvironment {
     }
 
     /** Return target Flash version (5, 6, ...) **/
-    public String getSWFVersion() {
-        return getProperty(SWFVERSION_PROPERTY, mDefaultSWFVersion);
+    public String getRuntime() {
+        return getProperty(RUNTIME_PROPERTY, mDefaultRuntime);
     }
 
-    public String getSWFVersion(String defaultVersion) {
-        return getProperty(SWFVERSION_PROPERTY, defaultVersion);
+    public String getRuntime(String defaultVersion) {
+        return getProperty(RUNTIME_PROPERTY, defaultVersion);
     }
 
     public int getSWFVersionInt() {
-        if ("swf6".equals(getSWFVersion())) {
-            return 6;
-        } else if ("swf7".equals(getSWFVersion())) {
+      String runtime = getRuntime();
+        if ("swf7".equals(runtime)) {
             return 7;
-        } else if ("swf8".equals(getSWFVersion())) {
+        } else if ("swf8".equals(runtime)) {
             return 8;
         } else {
-            return 5;
+          throw new CompilationError("'" + runtime + "' is not a SWF runtime");
         }
     }
 
@@ -456,9 +474,9 @@ public class CompilationEnvironment {
     void compileScript(String script) {
         try {
             int size = getGenerator().addScript(script);
-            Element info = new Element("block");
-            info.setAttribute("size", "" + size);
             if (mCanvas != null) {
+                Element info = new Element("block");
+                info.setAttribute("size", "" + size);
                 mCanvas.addInfo(info);
             }
         } catch (org.openlaszlo.sc.CompilerException e) {
@@ -468,7 +486,7 @@ public class CompilationEnvironment {
 
     void compileScript(String script, Element elt) {
         try {
-            int size = getGenerator().addScript(script);
+            int size = getGenerator().addScript(CompilerUtils.sourceLocationDirective(elt, true) + script);
             if (mCanvas != null) {
               Element info = new Element("block");
               info.setAttribute("pathname", Parser.getSourceMessagePathname(elt) );
@@ -500,19 +518,19 @@ public class CompilationEnvironment {
      * @return a unique name in the SWF
      */
     String uniqueName() {
-        return mSWFWriter.createName();
+        return mObjectWriter.createName();
     }
 
     File resolve(String name, String base)
         throws FileNotFoundException
     {
-        return mFileResolver.resolve(name, base, false);
+        return mFileResolver.resolve(this, name, base, false);
     }
 
     File resolveLibrary(String name, String base)
         throws FileNotFoundException
     {
-        return mFileResolver.resolve(name, base, true);
+        return mFileResolver.resolve(this, name, base, true);
     }
 
     File resolveReference(Element element, String aname)
@@ -531,7 +549,7 @@ public class CompilationEnvironment {
         String href =  XMLUtils.requireAttributeValue(element, aname);
 
         try {
-            return mFileResolver.resolve(href, base, asLibrary);
+            return mFileResolver.resolve(this, href, base, asLibrary);
         } catch (FileNotFoundException e) {
             throw new CompilationError(element, e);
         }
@@ -551,7 +569,7 @@ public class CompilationEnvironment {
     File resolveReference(Element elt)
         throws CompilationError
     {
-        return resolveReference(elt, "src");
+        return (resolveReference(elt, "src"));
     }
 
     /** If the argument is a relative URL with no host, return an URL
@@ -591,19 +609,33 @@ public class CompilationEnvironment {
         }
     }
 
+    // [TODO hqm 01/06] this should be keyed off of the 'lzr' runtime
+    // arg, it should return true for lzr=dhtml
+    public boolean isDHTML() {
+        return Compiler.SCRIPT_RUNTIMES.contains(this.getRuntime());
+    }
+
+    public boolean isSWF() {
+        return Compiler.SWF_RUNTIMES.contains(this.getRuntime());
+    }
+
     /** If the argument is a relative URL with no host, return an URL
      * that resolves to the same address relative to the main source
      * file as the argument does relative to the file that contains
      * elt.  Otherwise return the argument unchanged. */
     String adjustRelativeURL(String string, Element elt) {
-        File appdir = mApplicationFile.getParentFile();
-        File localdir = new File(Parser.getSourcePathname(elt)).getParentFile();
+      try {
+        File appdir = getApplicationFile().getCanonicalFile().getParentFile();
+        File localdir = new File(Parser.getSourcePathname(elt)).getCanonicalFile().getParentFile();
         if (appdir == null) {
-            appdir = new File(".");
+            appdir = new File(".").getCanonicalFile();
         }
         if (localdir == null) {
-            localdir = new File(".");
+            localdir = new File(".").getCanonicalFile();
         }
         return adjustRelativeURL(string, appdir, localdir);
+      } catch (java.io.IOException e) {
+        throw new CompilationError(elt, e);
+      }
     }
 }

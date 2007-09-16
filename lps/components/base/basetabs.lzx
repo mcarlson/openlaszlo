@@ -119,7 +119,8 @@
             super.init();
             var sel = this.getSelection();
             if (!sel) {
-                subviews[0].setAttribute('selected', true);
+                if (subviews[0] != null)
+                    subviews[0].setAttribute('selected', true);
             }
         </method>
 
@@ -157,6 +158,47 @@
         ]]>
         </method>
 
+        <doc>
+          <tag name="shortdesc"><text>A non-visual container for basetab components.</text></tag>
+          <text>
+            <p>A <classname>basetabsbar</classname> is a non-visual container
+            class that uses a default x-axis <classname>simplelayout</classname>
+            to lay out its <classname>basetab</classname>
+            children. <classname>basetabsbar</classname> is contained in a
+            <classname>basetabs</classname> component.</p>
+            
+            <example title="custom basetabsbar">
+            &lt;canvas width="150" height="75"&gt;
+              &lt;include href="base"/&gt;
+            
+              &lt;class name="aquatab" extends="basetab" 
+                        width="40" height="20" bgcolor="aqua"&gt;
+                &lt;text&gt;tab&lt;/text&gt;
+              &lt;/class&gt;
+            
+              &lt;class name="spacetabsbar" extends="basetabsbar" bgcolor="black" 
+                     layout="class: simplelayout; axis: x; spacing: 4"&gt;
+              &lt;/class&gt;
+            
+              &lt;basetabs x="10" y="10" tabclass="aquatab" barclass="spacetabsbar"&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;one&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;two&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;three&lt;/text&gt;
+                &lt;/basetabpane&gt;
+              &lt;/basetabs&gt;
+            &lt;/canvas&gt;
+            </example>
+            
+            <seealso>
+            <tags>basetab basetabs</tags>
+            </seealso>
+          </text>
+        </doc>
     </class> <!-- class basetabsbar -->
 
     <!-- ==================== -->
@@ -217,10 +259,7 @@
            width="${parent._contentWidth}" height="${parent._contentHeight}"
            visible="false">
 
-        <!--- If a datapath tag is declared, this attribute will be passed to
-              the datapath when it's created. Default is false. -->
-              <attribute name="datacontrolsvisibility" value="false" />
-        
+       
         <!--- If a basetabpane is selected, then it will be shown.
               Its associated tab will be also be selected. -->
         <attribute name="selected" value="false" type="boolean" 
@@ -275,8 +314,8 @@
                 this.datapath.setXPath(dp);
             } else {
                 var data_args = { xpath : dp }
-                if (this.datacontrolsvisibility != null) {
-                    data_args.datacontrolsvisibility = this.datacontrolsvisibility;
+                if (this.visibility != "collapse") {
+                    data_args.datacontrolsvisibility = (this.visibility == "collapse");
                 }
                 new LzDatapath ( this, data_args );
             }
@@ -318,6 +357,87 @@
               this.tab.setAttribute("selected", s);
         </method>
 
+        <doc>
+          <tag name="shortdesc"><text>A non-visual tabpane for the basetabs component.</text></tag>
+          <text>
+            <p>A <classname>basetabpane</classname> is the non-visual container
+            for content in <classname>basetabs</classname>. Each
+            <classname>basetabpane</classname> has a corresponding
+            <classname>basetab</classname> created. Normally, you won't want to
+            extend this class. If you want a consistent background across all
+            <classname>basetabpane</classname>s, you can add a background to your
+            <classname>basetabscontent</classname> component. If you want a
+            different background for each <classname>basetabpane</classname>, you
+            could do that in the content placed inside of your
+            <classname>basetabpane</classname>.</p>
+            
+            <p>Be aware that the content of <classname>basetabpane</classname> is
+            <code>initstage="late"</code><!--link-->. You can override this by
+            declaring an <attribute>initstage</attribute> on a specific subclass
+            or instance of <classname>basetabpane</classname>.</p>
+            
+            <example executable="false" extract="false">
+            &lt;basetabpane initstage="normal"&gt;
+              &lt;!-- ..content... --&gt;
+            &lt;/basetabpane&gt;
+            </example>
+            
+            <note>The parent of a <tagname>basetabpane</tagname> is
+            <tagname>basetabs</tagname>, but its <em>immediate parent</em> is the
+            default placement of the
+            <classname>basetabscontent</classname>.</note>
+            
+            <example title="parent and immediate parent of basetabpane">
+            &lt;canvas width="500" height="140" debug="true"&gt;
+              &lt;debug x="150" y="10"/&gt;
+              
+              &lt;include href="base"/&gt;
+            
+              &lt;class name="aquatab" extends="basetab" width="40" height="20" bgcolor="aqua"&gt;
+                &lt;text&gt;tab&lt;/text&gt;
+              &lt;/class&gt;
+              
+              &lt;class name="borderedtabscontent" extends="basetabscontent" bgcolor="black"&gt;
+                &lt;attribute name="defaultplacement" value="borderedcontent" type="string"/&gt;
+                &lt;view name="borderedcontent"
+                      x="${parent.parent.bordersize}"
+                      y="${parent.parent.bordersize}"
+                      width="${parent.width-(2*parent.parent.bordersize)}"
+                      height="${parent.height-(2*parent.parent.bordersize)}"
+                      clip="true" bgcolor="red"/&gt;
+              &lt;/class&gt;
+            
+              &lt;basetabs x="10" y="10" bordersize="3" 
+                        tabclass="aquatab" 
+                        contentclass="borderedtabscontent"&gt;
+                &lt;basetabpane name="one"&gt;
+                  &lt;handler name="onvisible" args="isvisible"&gt;
+                    if (isvisible) {
+                      Debug.write("parent: " + parent);
+                      Debug.write("immediate parent: " + immediateparent);
+                    }
+                  &lt;/handler&gt;
+                  &lt;text&gt;one&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;two&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text height="${parent.height}" width="${parent.width}" 
+                        bgcolor="green"&gt;
+                    three
+                  &lt;/text&gt;
+                &lt;/basetabpane&gt;
+              &lt;/basetabs&gt;
+            &lt;/canvas&gt;
+            </example>
+            
+            <seealso>
+            <tags>basetab basetabs basetabscontent</tags>
+            </seealso>
+          </text>
+        </doc>
+        
     </class> <!-- class basetabpane -->
 
 
@@ -349,6 +469,58 @@
         ]]>
         </method>
 
+        <doc>
+          <tag name="shortdesc"><text>The non-visual container for basetabpanes.</text></tag>
+          <text>
+            <p><classname>basetabscontent</classname> is the non-visual container
+            (and immediate parent) of <classname>basetabpane</classname>s. Extend
+            <classname>basetabscontent</classname> to give the content area of
+            your <classname>basetabs</classname> a look, e.g., adding borders to
+            your content. <classname>basetabscontent</classname> is a child of the
+            <classname>basetabs</classname> component.</p>
+            
+            <example title="custom basetabscontent with borders">
+            &lt;canvas width="150" height="75"&gt;
+              &lt;include href="base"/&gt;
+            
+              &lt;class name="aquatab" extends="basetab" 
+                        width="40" height="20" bgcolor="aqua"&gt;
+                &lt;text&gt;tab&lt;/text&gt;
+              &lt;/class&gt;
+            
+              &lt;class name="borderedtabscontent" extends="basetabscontent" 
+                        bgcolor="black"&gt;
+                &lt;attribute name="defaultplacement" value="borderedcontent" 
+                              type="string" /&gt;
+                &lt;view name="borderedcontent"
+                    x="${parent.parent.bordersize}"
+                    y="${parent.parent.bordersize}"
+                    width="${parent.width-(2*parent.parent.bordersize)}"
+                    height="${parent.height-(2*parent.parent.bordersize)}"
+                    clip="true" bgcolor="red"/&gt;
+              &lt;/class&gt;
+              
+              &lt;basetabs x="10" y="10" bordersize="3"
+                           tabclass="aquatab" 
+                           contentclass="borderedtabscontent"&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;one&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;two&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;three&lt;/text&gt;
+                &lt;/basetabpane&gt;
+              &lt;/basetabs&gt;
+            &lt;/canvas&gt;
+            </example>
+            
+            <seealso>
+            <tags>basetabpane basetabs</tags>
+            </seealso>
+          </text>
+        </doc>
     </class> <!-- class basetabscontent -->
 
 
@@ -515,6 +687,7 @@
                     setAttribute("_maxTabpaneContentWidth", checkW);
                 }
             } else if (this.width != _contentWidth) {
+                setAttribute("_maxTabpaneContentWidth", this.width);
                 setAttribute("_contentWidth", this.width);
             }
         ]]>
@@ -547,12 +720,110 @@
             }
         ]]>
         </method>
-
+        <doc>
+          <tag name="shortdesc"><text>A non-visual container for basetabpanes.</text></tag>
+          <text>
+            <p>The <classname>basetabs</classname> component conceptually houses a
+            row of tabs that control the visibility of a stack of
+            <classname>basetabpane</classname>s. When a
+            <classname>basetabpane</classname> is added to the
+            <classname>basetab</classname> component, a corresponding
+            <classname>basetab</classname> is created for that
+            <classname>basetabpane</classname>.</p>
+            
+            <p>Due to the non-visual nature of <classname>basetab</classname>, a
+            visible subclass of <classname>basetab</classname> is used in the next
+            example to demonstrate the correlation between
+            <classname>basetabpane</classname> and <classname>basetab</classname>
+            items.</p>
+            
+            <example title="introduction to basetabs">
+            &lt;canvas width="150" height="75"&gt;
+              &lt;include href="base"/&gt;
+            
+              &lt;class name="aquatab" extends="basetab" width="40" height="20" 
+                      bgcolor="aqua"&gt;
+                &lt;text&gt;tab&lt;/text&gt;
+              &lt;/class&gt;
+            
+              &lt;basetabs x="10" y="10" tabclass="aquatab"&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;one&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;two&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;three&lt;/text&gt;
+                &lt;/basetabpane&gt;
+              &lt;/basetabs&gt;
+            &lt;/canvas&gt;
+            </example>
+            
+            <p>As can be seen, three <classname>basetab</classname> items have
+            been created for the three <tagname>basetabpane</tagname>s
+            declared.</p>
+            
+            <p>Though the <tagname>basetabpane</tagname> <em>element</em> is the
+            child of a <tagname>basetab</tagname> element, in the runtime view
+            hierarchy instances of <classname>basetabs</classname> are the
+            immediate parents of a <classname>basetabsbar</classname> (where
+            <classname>basetab</classname> components are placed and laid out) and
+            <classname>basetabscontent</classname> (where the
+            <classname>basetabpane</classname> components are placed and laid
+            out).</p>
+            
+            <p>The following diagram illustrates the correlation between
+            <classname>basetabs</classname>, <classname>basetabsbar</classname>
+            (the container for <classname>basetab</classname> items), and
+            <classname>basetabscontent</classname> (the container for
+            <classname>basetabpane</classname>s).</p>
+            
+            <img src="images/basetabs/tabs-diagram.gif" width="416" height="120" />
+            
+            <p>You can change the look and feel of your basetabs by using a
+            different <classname>basetab</classname>,
+            <classname>basetabsbar</classname>, and/or
+            <classname>basetabscontent</classname>.</p>
+            
+            <example title="modifying the basetabs look">
+            &lt;canvas width="150" height="75"&gt;
+              &lt;include href="base"/&gt;
+              
+              &lt;class name="mytab" extends="basetab" width="40" height="20" bgcolor="lime"&gt;
+                &lt;text&gt;mytab&lt;/text&gt;
+              &lt;/class&gt;
+              
+              &lt;class name="mytabsbar" extends="basetabsbar" bgcolor="navy"
+                     layout="class: simplelayout; axis: x; spacing: 5"/&gt;
+              
+              &lt;class name="mytabscontent" extends="basetabscontent" bgcolor="silver"/&gt;
+              
+              &lt;basetabs x="10" y="10" tabclass="mytab" barclass="mytabsbar"
+                        contentclass="mytabscontent"&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;one&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;two&lt;/text&gt;
+                &lt;/basetabpane&gt;
+                &lt;basetabpane&gt;
+                  &lt;text&gt;three&lt;/text&gt;
+                &lt;/basetabpane&gt;
+              &lt;/basetabs&gt;
+            &lt;/canvas&gt;
+            </example>
+            
+            <seealso>
+            <tags>basetab basetabsbar basetabpane basetabscontent</tags>
+            </seealso>
+          </text>
+        </doc>
     </class> <!-- class basetabs -->
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

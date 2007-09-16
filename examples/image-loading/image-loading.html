@@ -2,37 +2,44 @@
 <!-- explanation page for image loading example                                  -->
 <!--                                                                       -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--=======================================================================-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-      <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico">
-      <link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css">
+      <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico" />
+      <link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css" />
       <style type="text/css">
         .smallapp {margin-right: 200px;}
       </style>
-      <script src="../../lps/includes/embed.js" type="text/javascript"></script>
+      <script src="../../lps/includes/utils.js" type="text/javascript"></script>
       <title>Image Loading</title>
   </head>
    <body>
    <h1>Image Loading</h1>
-   <div class="smallapp">
-       <script type="text/javascript">
-              lzEmbed({url: 'dataimage.lzx?lzt=swf', bgcolor: '#eaeaea', width: '620', height: '300'});
-       </script>
+   <div class="smallapp" id="appcontainer">
    </div>
    <div class="desc">
     <p>
-       Laszlo applications can use images in many formats, either compiled into
+       OpenLaszlo applications can use images in many formats, either compiled into
        the animation or fetched at runtime.  In this example, the icons and
-       header graphic are built into the app, and the photos and illustrations
+       header graphic are built into the application, and the photos and illustrations
        are loaded at runtime via http.
     </p>
+       <p id="runtime" class="runtimelabel"></p>
     </div>
+    <script type="text/javascript">
+        var runtime = getQueryVariable("lzr", "swf7");
+        writeOpenLaszloApp(document.getElementById('appcontainer'), "dataimage.lzx", runtime, "620px", "300px");
+        document.getElementById("runtime").innerHTML = "Runtime: " + lzRuntimeTagToRuntimeName(runtime);
+    </script>
+    <noscript>
+      Please enable JavaScript in order to use this application. 
+    </noscript>
 
 </body>
 </html>

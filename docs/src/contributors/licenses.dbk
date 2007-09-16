@@ -1,0 +1,998 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+ "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<appendix>
+  <title>Third-Party Software Used in this Release</title>
+  <segmentedlist>
+    <?dbhtml list-presentation="table"?>
+    <segtitle>Name</segtitle>
+    <segtitle>File and Location</segtitle>
+    <segtitle>Version (M=manifest, F=filename, R=readme)</segtitle>
+    <segtitle>License Type</segtitle>
+    <segtitle>License Link</segtitle>
+    <seglistitem>
+      <seg>activation.jar</seg>
+      <seg>test/rpc/soap/https/version/webapps/axis/WEB-INF/lib/activation.jar</seg>
+      <seg>1.0.2 (implementation) (M)</seg>
+      <seg>Sun Microsystems, Inc. Binary Code License Agreement</seg>
+      <seg>http://java.sun.com/products/javabeans/glasgow/jaf.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>activation.jar</seg>
+      <seg>WEB-INF/lib/activation.jar</seg>
+      <seg>1.0.2 (implementation) (M)</seg>
+      <seg>Sun Microsystems, Inc. Binary Code License Agreement</seg>
+      <seg>http://java.sun.com/products/javabeans/glasgow/jaf.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>activation.jar</seg>
+      <seg>vendor/activation.jar</seg>
+      <seg>1.0.2 (implementation) (M)</seg>
+      <seg>Sun Microsystems, Inc. Binary Code License Agreement</seg>
+      <seg>http://java.sun.com/products/javabeans/glasgow/jaf.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>ant.jar</seg>
+      <seg>server/common/lib/ant.jar</seg>
+      <seg>1.6.1 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>ant-contrib.jar</seg>
+      <seg>vendor/ant-contrib.jar</seg>
+      <seg>1.0b2 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>axis.jar</seg>
+      <seg>test/rpc/soap/https/version/webapps/axis/WEB-INF/lib/axis.jar</seg>
+      <seg>1.2RC1 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>axis.jar</seg>
+      <seg>WEB-INF/lib/axis.jar</seg>
+      <seg>1.2RC1 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>axis-ant.jar</seg>
+      <seg>test/rpc/soap/https/version/webapps/axis/WEB-INF/lib/axis-ant.jar</seg>
+      <seg>1.2RC1 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>batik-css.jar</seg>
+      <seg>WEB-INF/lib/batik-css.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://xmlgraphics.apache.org/batik/license.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>batik-svggen.jar</seg>
+      <seg>WEB-INF/lib/batik-svggen.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://xmlgraphics.apache.org/batik/license.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>batik-util.jar</seg>
+      <seg>WEB-INF/lib/batik-util.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://xmlgraphics.apache.org/batik/license.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>Bitstream Vera Font</seg>
+      <seg>lps/fonts/bitstream-vera-1.10</seg>
+      <seg>1.1</seg>
+      <seg>Bitstream Vera Fonts Copyright</seg>
+      <seg>http://svn.openlaszlo.org/openlaszlo/branches/3.3/lps/fonts/bitstream-vera-1.10/copyright.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>bootstrap.jar</seg>
+      <seg>server/bin/bootstrap.jar</seg>
+      <seg>1.0 (specification) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>bsf.jar</seg>
+      <seg>vendor/bsf.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>BUFakeDom.js</seg>
+      <seg>3rd-party/tools/BUFakeDom.js</seg>
+      <seg>?</seg>
+      <seg>Academic Free License 1.2</seg>
+      <seg>http://www.opensource.org/licenses/academic.php</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>catalina.jar</seg>
+      <seg>server/server/lib/catalina.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>catalina-ant.jar</seg>
+      <seg>server/server/lib/catalina-ant.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>catalina-ant.jar</seg>
+      <seg>vendor/catalina-ant.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>catalina-cluster.jar</seg>
+      <seg>server/server/lib/catalina-cluster.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>catalina-i18n-es.jar</seg>
+      <seg>server/server/lib/catalina-i18n-es.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>catalina-i18n-fr.jar</seg>
+      <seg>server/server/lib/catalina-i18n-fr.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>catalina-i18n-ja.jar</seg>
+      <seg>server/server/lib/catalina-i18n-ja.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>catalina-optional.jar</seg>
+      <seg>server/server/lib/catalina-optional.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-beanutils.jar</seg>
+      <seg>server/server/lib/commons-beanutils.jar</seg>
+      <seg>1.6 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-beanutils.jar</seg>
+      <seg>WEB-INF/lib/commons-beanutils.jar</seg>
+      <seg>1.6 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-codec-1.3.jar</seg>
+      <seg>WEB-INF/lib/commons-codec-1.3.jar</seg>
+      <seg>1.3 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-collections.jar</seg>
+      <seg>server/common/lib/commons-collections.jar</seg>
+      <seg>2.1 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-collections.jar</seg>
+      <seg>WEB-INF/lib/commons-collections.jar</seg>
+      <seg>2.1 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-daemon.jar</seg>
+      <seg>server/bin/commons-daemon.jar</seg>
+      <seg>1.0 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-dbcp-1.1.jar</seg>
+      <seg>server/common/lib/commons-dbcp-1.1.jar</seg>
+      <seg>1.1 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-digester.jar</seg>
+      <seg>server/server/lib/commons-digester.jar</seg>
+      <seg>1.5 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-discovery.jar</seg>
+      <seg>test/rpc/soap/https/version/webapps/axis/WEB-INF/lib/commons-discovery.jar</seg>
+      <seg>0.2-dev (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-discovery.jar</seg>
+      <seg>WEB-INF/lib/commons-discovery.jar</seg>
+      <seg>0.2-dev (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-el.jar</seg>
+      <seg>server/common/lib/commons-el.jar</seg>
+      <seg>1.0 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-fileupload-1.0.jar</seg>
+      <seg>server/server/lib/commons-fileupload-1.0.jar</seg>
+      <seg>1.0 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-httpclient-2.0-rc1.jar</seg>
+      <seg>test/connection/server-api/WEB-INF/lib/commons-httpclient-2.0-rc1.jar</seg>
+      <seg>2.0-rc1 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-httpclient-3.0.jar</seg>
+      <seg>WEB-INF/lib/commons-httpclient-3.0.jar</seg>
+      <seg>3.0 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-jexl-1.0-dev.jar</seg>
+      <seg>WEB-INF/lib/commons-jexl-1.0-dev.jar</seg>
+      <seg>1.0-dev (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-jxpath.jar</seg>
+      <seg>3rd-party/jars/dev/commons-jxpath.jar</seg>
+      <seg>1.0-beta2 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-logging.jar</seg>
+      <seg>server/common/lib/commons-logging.jar</seg>
+      <seg>1.0.4 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-logging.jar</seg>
+      <seg>test/rpc/soap/https/version/webapps/axis/WEB-INF/lib/commons-logging.jar</seg>
+      <seg>1.0.3 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-logging.jar</seg>
+      <seg>WEB-INF/lib/commons-logging.jar</seg>
+      <seg>1.0.3 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-logging-api.jar</seg>
+      <seg>server/bin/commons-logging-api.jar</seg>
+      <seg>1.0.3 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-modeler.jar</seg>
+      <seg>server/server/lib/commons-modeler.jar</seg>
+      <seg>1.1.0 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>commons-pool-1.1.jar</seg>
+      <seg>server/common/lib/commons-pool-1.1.jar</seg>
+      <seg>1.1 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>custom_rhino.jar</seg>
+      <seg>3rd-party/jars/custom_rhino.jar</seg>
+      <seg>?</seg>
+      <seg>MPL License Version 1.1</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>DocBook XML 4.5</seg>
+      <seg>vendor/docbook-xml-4.5</seg>
+      <seg>4.5</seg>
+      <seg>DocBook License</seg>
+      <seg>http://wiki.docbook.org/topic/DocBookLicense</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>DocBook XSL 1.65.1</seg>
+      <seg>vendor/docbook-xsl-1.65.1</seg>
+      <seg>1.65.1</seg>
+      <seg>DocBook License</seg>
+      <seg>http://wiki.docbook.org/topic/DocBookLicense</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>DocBook XSL 1.71.1</seg>
+      <seg>vendor/docbook-xsl-1.71.1</seg>
+      <seg>1.71.1</seg>
+      <seg>DocBook License</seg>
+      <seg>http://wiki.docbook.org/topic/DocBookLicense</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>Dojo 0.40.0</seg>
+      <seg>vendor/dojo-0.4.0</seg>
+      <seg>0.4.0</seg>
+      <seg>BSD License</seg>
+      <seg>http://opensource.org/licenses/bsd-license.php</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>edu.oswego.cs.dl.util.concurrent</seg>
+      <seg>WEB-INF/lps/server/src/edu/oswego/cs/dl/util/concurrent</seg>
+      <seg>?</seg>
+      <seg>Public Domain</seg>
+      <seg>http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>fop.jar</seg>
+      <seg>3rd-party/jars/dev/fop.jar</seg>
+      <seg>0.19.0-CVS (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>ftp.jar</seg>
+      <seg>WEB-INF/lib/ftp.jar</seg>
+      <seg>(M)</seg>
+      <seg>GNU Lesser General Public License</seg>
+      <seg>http://crawler.archive.org/cmdline-jmxclient/license.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>iso-relax.jar</seg>
+      <seg>WEB-INF/lib/iso-relax.jar</seg>
+      <seg>20030108 (M)</seg>
+      <seg>Copyright (c) 2001-2002, SourceForge ISO-RELAX Project</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jakarta-regexp-1.2.jar</seg>
+      <seg>WEB-INF/lib/jakarta-regexp-1.2.jar</seg>
+      <seg>1.2 (F)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jakarta-regexp-1.3.jar</seg>
+      <seg>server/server/lib/jakarta-regexp-1.3.jar</seg>
+      <seg>1.3 (F)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jasper-compiler.jar</seg>
+      <seg>server/common/lib/jasper-compiler.jar</seg>
+      <seg>?</seg>
+      <seg>JasPer License Version 2.0</seg>
+      <seg>http://www.ece.uvic.ca/~mdadams/jasper/LICENSE</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jasper-runtime.jar</seg>
+      <seg>server/common/lib/jasper-runtime.jar</seg>
+      <seg>?</seg>
+      <seg>JasPer License Version 2.0</seg>
+      <seg>http://www.ece.uvic.ca/~mdadams/jasper/LICENSE</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>javamail-1.4.jar</seg>
+      <seg>vendor/javamail-1.4.jar</seg>
+      <seg>1.4 (implementation) (M)</seg>
+      <seg>Sun Microsystems, Inc. Binary Code License Agreement</seg>
+      <seg>http://java.sun.com/products/javamail/javamail-1_2.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jaxrpc.jar</seg>
+      <seg>test/rpc/soap/https/version/webapps/axis/WEB-INF/lib/jaxrpc.jar</seg>
+      <seg>1.1 (specification) (M)</seg>
+      <seg>Sun Microsystems, Inc. Binary Code License Agreement</seg>
+      <seg>http://java.sun.com/xml/downloads/jaxrpc.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jaxrpc.jar</seg>
+      <seg>WEB-INF/lib/jaxrpc.jar</seg>
+      <seg>1.1 (specification) (M)</seg>
+      <seg>Sun Microsystems, Inc. Binary Code License Agreement</seg>
+      <seg>http://java.sun.com/xml/downloads/jaxrpc.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jdbcpool-0.99.jar</seg>
+      <seg>test/perf/jdbcwebapp/WEB-INF/lib/jdbcpool-0.99.jar</seg>
+      <seg>0.99 (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jdbcpool-0.99.jar</seg>
+      <seg>test/perf/potstore/WEB-INF/lib/jdbcpool-0.99.jar</seg>
+      <seg>0.99 (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jdom.jar</seg>
+      <seg>test/connection/server-api/WEB-INF/lib/jdom.jar</seg>
+      <seg>1.0 beta8-dev (implementation) (M)</seg>
+      <seg>BSD/Apache</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jdom.jar</seg>
+      <seg>test/perf/jdbcwebapp/WEB-INF/lib/jdom.jar</seg>
+      <seg>1.0 beta8-dev (implementation) (M)</seg>
+      <seg>BSD/Apache</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jdom.jar</seg>
+      <seg>test/perf/potstore/WEB-INF/lib/jdom.jar</seg>
+      <seg>1.0 beta8-dev (implementation) (M)</seg>
+      <seg>BSD/Apache</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jdom.jar</seg>
+      <seg>WEB-INF/lib/jdom.jar</seg>
+      <seg>1.0.1 (implementation) (M)</seg>
+      <seg>BSD/Apache (Copyright (C) 2000-2004 Jason Hunter &amp; Brett McLaughlin.)</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>Jgenerator</seg>
+      <seg>WEB-INF/lps/server/jgenerator-2.2</seg>
+      <seg>?</seg>
+      <seg>The JGenerator Software License, Version 1.0 Version 1.0</seg>
+      <seg>http://www.flashgap.com/license.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jing.jar</seg>
+      <seg>WEB-INF/lib/jing.jar</seg>
+      <seg>?</seg>
+      <seg>Jing Copying Conditions</seg>
+      <seg>http://www.thaiopensource.com/relaxng/copying.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jing.jar</seg>
+      <seg>vendor/jing.jar</seg>
+      <seg>?</seg>
+      <seg>Jing Copying Conditions</seg>
+      <seg>http://www.thaiopensource.com/relaxng/copying.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jkconfig.jar</seg>
+      <seg>server/server/lib/jkconfig.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jkshm.jar</seg>
+      <seg>server/server/lib/jkshm.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jmx.jar</seg>
+      <seg>server/bin/jmx.jar</seg>
+      <seg>1.1.1 (implementation) (M)</seg>
+      <seg>GNU Lesser General Public License</seg>
+      <seg>http://crawler.archive.org/cmdline-jmxclient/license.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>js.jar</seg>
+      <seg>vendor/js.jar</seg>
+      <seg>?</seg>
+      <seg>Netscape Publice License Version 1.1</seg>
+      <seg>http://www.mozilla.org/MPL/NPL-1.1.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jsp-api.jar</seg>
+      <seg>server/common/lib/jsp-api.jar</seg>
+      <seg>2.0.public_draft (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>junit.jar</seg>
+      <seg>vendor/junit.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>jython.jar</seg>
+      <seg>WEB-INF/lib/jython.jar</seg>
+      <seg>?</seg>
+      <seg>BeOpen / CNRI license</seg>
+      <seg>http://www.jython.org/license.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>log4j-1.2.6.jar</seg>
+      <seg>server/common/lib/log4j-1.2.6.jar</seg>
+      <seg>1.2.6 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>log4j-1.2.6.jar</seg>
+      <seg>test/connection/server-api/WEB-INF/lib/log4j-1.2.6.jar</seg>
+      <seg>1.2.6 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>log4j-1.2.6.jar</seg>
+      <seg>test/perf/jdbcwebapp/WEB-INF/lib/log4j-1.2.6.jar</seg>
+      <seg>1.2.6 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>log4j-1.2.6.jar</seg>
+      <seg>WEB-INF/lib/log4j-1.2.6.jar</seg>
+      <seg>1.2.6 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>log4j-1.2.6.jar</seg>
+      <seg>test/perf/potstore/WEB-INF/lib/log4j-1.2.6.jar</seg>
+      <seg>1.2.6 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>log4j-1.2.8.jar</seg>
+      <seg>test/rpc/soap/https/version/webapps/axis/WEB-INF/lib/log4j-1.2.8.jar</seg>
+      <seg>1.2.8 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>miniml Fonts</seg>
+      <seg>lps/fonts/{ceriph-*.ttf,copy-*.ttf,header-*.ttf,hooge-*.ttf,italic-*.ttf,kroeger-*.ttf,mono-*.ttf,standard-*.ttf,uni-*.ttf}</seg>
+      <seg>?</seg>
+      <seg>"Free"</seg>
+      <seg>http://www.miniml.com/fonts/license/index.htm</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>mysql-connector-java-3.0.6-stable-bin.jar</seg>
+      <seg>test/perf/jdbcwebapp/WEB-INF/lib/mysql-connector-java-3.0.6-stable-bin.jar</seg>
+      <seg>3.0.6-stable (M)</seg>
+      <seg>GNU Lesser General Public License</seg>
+      <seg>http://crawler.archive.org/cmdline-jmxclient/license.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>mysql-connector-java-3.0.6-stable-bin.jar</seg>
+      <seg>test/perf/potstore/WEB-INF/lib/mysql-connector-java-3.0.6-stable-bin.jar</seg>
+      <seg>3.0.6-stable (M)</seg>
+      <seg>GNU Lesser General Public License</seg>
+      <seg>http://crawler.archive.org/cmdline-jmxclient/license.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>naming-common.jar</seg>
+      <seg>server/common/lib/naming-common.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>naming-factory.jar</seg>
+      <seg>server/common/lib/naming-factory.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>naming-java.jar</seg>
+      <seg>server/common/lib/naming-java.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>naming-resources.jar</seg>
+      <seg>server/common/lib/naming-resources.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>Open Office Fonts</seg>
+      <seg>lps/fonts/{arioso*.ttf,chevara*.ttf,conga*.ttf,helmet*.ttf,timmons*.ttf)</seg>
+      <seg>?</seg>
+      <seg>Sun Industry Standards Source License (SISSL)</seg>
+      <seg>http://www.openoffice.org/license.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>PyXML</seg>
+      <seg>vendor/PyXML-0.8.3.tar.gz</seg>
+      <seg>0.8.3</seg>
+      <seg>Python License (CNRI Python License)</seg>
+      <seg>http://www.opensource.org/licenses/pythonpl.php</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>resolver.jar</seg>
+      <seg>vendor/experimental/xerces-2_6_2/resolver.jar</seg>
+      <seg>1.1 (implementation) (M)</seg>
+      <seg>The Apache Software License, Version 1.1</seg>
+      <seg>http://xml.apache.org/dist/LICENSE.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saaj.jar</seg>
+      <seg>test/rpc/soap/https/version/webapps/axis/WEB-INF/lib/saaj.jar</seg>
+      <seg>1.2 (implementation) (M)</seg>
+      <seg>Sun Microsystems, Inc. Binary Code License Agreement</seg>
+      <seg>http://java.sun.com/xml/downloads/saaj.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saaj.jar</seg>
+      <seg>WEB-INF/lib/saaj.jar</seg>
+      <seg>1.2 (specification) (M)</seg>
+      <seg>Sun Microsystems, Inc. Binary Code License Agreement</seg>
+      <seg>http://java.sun.com/xml/downloads/saaj.html</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>sac.jar</seg>
+      <seg>WEB-INF/lib/sac.jar</seg>
+      <seg>?</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saxon-6.5.3-lz-p1.jar</seg>
+      <seg>WEB-INF/lib/saxon-6.5.3-lz-p1.jar</seg>
+      <seg>6.5.3-lz-p1 (M)</seg>
+      <seg>Mozilla Public License Version 1.0</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saxon643.jar</seg>
+      <seg>vendor/docbook-xsl-1.65.1/extensions/saxon643.jar</seg>
+      <seg>6.4.3 (F)</seg>
+      <seg>Mozilla Public License Version 1.0</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saxon644.jar</seg>
+      <seg>vendor/docbook-xsl-1.65.1/extensions/saxon644.jar</seg>
+      <seg>6.4.4 (F)</seg>
+      <seg>Mozilla Public License Version 1.0</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saxon65.jar</seg>
+      <seg>vendor/docbook-xsl-1.65.1/extensions/saxon65.jar</seg>
+      <seg>6.5 (F)</seg>
+      <seg>Mozilla Public License Version 1.0</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saxon65.jar</seg>
+      <seg>vendor/experimental/docbook-xsl-1.71.1/extensions/saxon65/dist/saxon65.jar</seg>
+      <seg>6.5 (F)</seg>
+      <seg>Mozilla Public License Version 1.0</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saxon65.jar</seg>
+      <seg>vendor/experimental/docbook-xsl-1.71.1/extensions/saxon65.jar</seg>
+      <seg>6.5 (F)</seg>
+      <seg>Mozilla Public License Version 1.0</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saxon651.jar</seg>
+      <seg>vendor/docbook-xsl-1.65.1/extensions/saxon651.jar</seg>
+      <seg>6.5.1 (F)</seg>
+      <seg>Mozilla Public License Version 1.0</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saxon651.jar</seg>
+      <seg>vendor/experimental/docbook-xsl-1.71.1/extensions/saxon651.jar</seg>
+      <seg>6.5.1 (F)</seg>
+      <seg>Mozilla Public License Version 1.0</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>saxon655.jar</seg>
+      <seg>vendor/experimental/saxon655.jar</seg>
+      <seg>6.5.5 (F)</seg>
+      <seg>Mozilla Public License Version 1.0</seg>
+      <seg>http://www.mozilla.org/MPL/</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>serializer.jar</seg>
+      <seg>vendor/serializer.jar</seg>
+      <seg>2.7.0 (implementation) (M)</seg>
+      <seg>The Apache Software License, Version 1.1</seg>
+      <seg>http://xml.apache.org/dist/LICENSE.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>servlet-2.2.jar</seg>
+      <seg>test/perf/jdbcwebapp/servlet-2.2.jar</seg>
+      <seg>2.2 (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>servlet-2.2.jar</seg>
+      <seg>test/perf/potstore/servlet-2.2.jar</seg>
+      <seg>2.2 (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>servlet-2.3.jar</seg>
+      <seg>3rd-party/jars/dev/servlet-2.3.jar</seg>
+      <seg>2.3.1 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>servlet-api.jar</seg>
+      <seg>server/common/lib/servlet-api.jar</seg>
+      <seg>2.4.public_draft (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>servlets-common.jar</seg>
+      <seg>server/server/lib/servlets-common.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>servlets-default.jar</seg>
+      <seg>server/server/lib/servlets-default.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>servlets-invoker.jar</seg>
+      <seg>server/server/lib/servlets-invoker.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>servlets-webdav.jar</seg>
+      <seg>server/server/lib/servlets-webdav.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>swflib.jar</seg>
+      <seg>WEB-INF/lib/swflib.jar</seg>
+      <seg>?</seg>
+      <seg>?</seg>
+      <seg>?</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>tomcat-coyote.jar</seg>
+      <seg>server/server/lib/tomcat-coyote.jar</seg>
+      <seg>1.0-dev (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>tomcat-http11.jar</seg>
+      <seg>server/server/lib/tomcat-http11.jar</seg>
+      <seg>1.0-dev (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>tomcat-jk.jar</seg>
+      <seg>server/server/lib/tomcat-jk.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>tomcat-jk2.jar</seg>
+      <seg>server/server/lib/tomcat-jk2.jar</seg>
+      <seg>2.1 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>tomcat-jni.jar</seg>
+      <seg>server/server/lib/tomcat-jni.jar</seg>
+      <seg>?</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>tomcat-util.jar</seg>
+      <seg>server/server/lib/tomcat-util.jar</seg>
+      <seg>5.1 (implementation) (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>trang.jar</seg>
+      <seg>vendor/trang.jar</seg>
+      <seg>?</seg>
+      <seg>Thai Open Source Software Copyright</seg>
+      <seg>http://www.thaiopensource.com/download/old/relaxng/20020724/copying.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>Verity Font</seg>
+      <seg>lps/fonts/verity</seg>
+      <seg>?</seg>
+      <seg>Verity readme and license document</seg>
+      <seg>http://svn.openlaszlo.org/openlaszlo/branches/3.3/lps/fonts/verity/readme.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>wsdl4j.jar</seg>
+      <seg>test/rpc/soap/https/version/webapps/axis/WEB-INF/lib/wsdl4j.jar</seg>
+      <seg>1.5 (implementation) (M)</seg>
+      <seg>Common Public License, Version 0.5</seg>
+      <seg>http://dsd.lbl.gov/firefish/licenses/wsdl4j.LICENSE.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>wsdl4j.jar</seg>
+      <seg>WEB-INF/lib/wsdl4j.jar</seg>
+      <seg>1.5 (implementation) (M)</seg>
+      <seg>Common Public License, Version 0.5</seg>
+      <seg>http://dsd.lbl.gov/firefish/licenses/wsdl4j.LICENSE.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xalan.jar</seg>
+      <seg>server/common/endorsed/xalan.jar</seg>
+      <seg>?</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xalan.jar</seg>
+      <seg>vendor/xalan.jar</seg>
+      <seg>2.7.0 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xalan2.jar</seg>
+      <seg>vendor/docbook-xsl-1.65.1/extensions/xalan2.jar</seg>
+      <seg>2 (F)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xalan2.jar</seg>
+      <seg>vendor/experimental/docbook-xsl-1.71.1/extensions/xalan2/dist/xalan2.jar</seg>
+      <seg>2 (F)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xalan2.jar</seg>
+      <seg>vendor/experimental/docbook-xsl-1.71.1/extensions/xalan2.jar</seg>
+      <seg>2 (F)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xalan25.jar</seg>
+      <seg>vendor/docbook-xsl-1.65.1/extensions/xalan25.jar</seg>
+      <seg>2.5 (F)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xalan27.jar</seg>
+      <seg>vendor/experimental/docbook-xsl-1.71.1/extensions/xalan27/dist/xalan27.jar</seg>
+      <seg>2.7 (F)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xalan27.jar</seg>
+      <seg>vendor/experimental/docbook-xsl-1.71.1/extensions/xalan27.jar</seg>
+      <seg>2.7 (F)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xerces.jar</seg>
+      <seg>test/connection/server-api/WEB-INF/lib/xerces.jar</seg>
+      <seg>?</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xercesImpl.jar</seg>
+      <seg>3rd-party/jars/dev/xercesImpl.jar</seg>
+      <seg>2.6.2 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xercesImpl.jar</seg>
+      <seg>server/common/endorsed/xercesImpl.jar</seg>
+      <seg>2.6.2 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xercesImpl.jar</seg>
+      <seg>vendor/experimental/xerces-2_6_2/xercesImpl.jar</seg>
+      <seg>2.6.2 (implementation) (M)</seg>
+      <seg>The Apache Software License, Version 1.1</seg>
+      <seg>http://xml.apache.org/dist/LICENSE.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xmlParserAPIs.jar</seg>
+      <seg>server/common/endorsed/xmlParserAPIs.jar</seg>
+      <seg>1.2.01 (implementation) (M)</seg>
+      <seg>Apache Software License, Version 1.1</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-1.1</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xmlrpc-1.2-b1.jar</seg>
+      <seg>WEB-INF/lib/xmlrpc-1.2-b1.jar</seg>
+      <seg>1.2-b1 (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xmlunit1.0.jar</seg>
+      <seg>vendor/xmlunit1.0.jar</seg>
+      <seg>1.0 (F)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>xpp3-1.1.3.4d_b4.jar</seg>
+      <seg>WEB-INF/lib/xpp3-1.1.3.4d_b4.jar</seg>
+      <seg>1.1.3.4d_b4 (M)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem />
+    <seglistitem />
+  </segmentedlist>
+</appendix>

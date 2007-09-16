@@ -1,0 +1,7 @@
+test/jum/jum-basictests.lzx 
+test/jum/jumtest-scriptingids.lzx
+test/jum/jumtest-events.lzx
+test/jum/jumtest-lzdatanode.lzx
+test/jum/jumtest-lzdatelement.lzx
+test/jum/jumtest-lzparams.lzx
+# Copyright 2006 Laszlo Systems, Inc. 

@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -34,7 +34,7 @@ abstract class ElementCompiler {
     }
 
     /** Compiles this element within the compilation environment.
-     * @param env a compilation environment
+     * @param element
      */
     abstract void compile(Element element) throws CompilationError;
 

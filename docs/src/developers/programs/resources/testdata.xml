@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persons>
+
+    
+        <person id ="1">
+            <firstName>Dan</firstName>
+            <lastName>McGowan</lastName>
+            <modifyDate>3/25/05</modifyDate>
+            
+                <address id ="1" code="ML">
+                    <line1>2210 North 184th Street</line1>
+                    <line2></line2>
+                    <city>Shoreline</city>
+                </address>
+            
+        </person>
+    
+        <person id ="2">
+            <firstName>Barry</firstName>
+            <lastName>Bonds</lastName>
+            <modifyDate>3/25/05</modifyDate>
+            
+        </person>
+    
+        <person id ="3">
+            <firstName>Jeff</firstName>
+            <lastName>Beck</lastName>
+            <modifyDate>3/25/05</modifyDate>
+            
+        </person>
+    
+
+</persons>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

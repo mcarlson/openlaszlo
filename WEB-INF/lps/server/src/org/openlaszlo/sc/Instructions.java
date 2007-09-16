@@ -6,11 +6,6 @@
  * Description: SWF Action Code instruction opcode constants
  */
 
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
-
 package org.openlaszlo.sc;
 import java.io.*;
 import java.nio.*;
@@ -810,14 +805,14 @@ public class Instructions {
 
     // Python interfaces
     public Instruction make(Object arg) {
-      assert arg instanceof Number || arg instanceof Value || arg instanceof String;
+      assert arg instanceof Number || arg instanceof Value || arg instanceof String || arg instanceof Boolean;
       return new PUSHInstruction(Collections.singletonList(arg));
     }
 
     public Instruction make(Object[] args) {
       for (Iterator i = this.args.iterator(); i.hasNext(); ) {
         Object arg = i.next();
-        assert arg instanceof Number || arg instanceof Value || arg instanceof String;
+        assert arg instanceof Number || arg instanceof Value || arg instanceof String || arg instanceof Boolean;
       }
       return new PUSHInstruction(Arrays.asList(args));
     }
@@ -932,6 +927,12 @@ public class Instructions {
             if (v instanceof ParameterizedValue) {
               bytes.put(((ParameterizedValue)v).value);
             }
+          } else if (o instanceof Boolean) {
+            Value v = ((Boolean)o).booleanValue() ? Values.True : Values.False;
+            bytes.put(v.type);
+            if (v instanceof ParameterizedValue) {
+              bytes.put(((ParameterizedValue)v).value);
+            }
           } else if (o instanceof String) {
             String s = (String)o;
             if (constants != null && constants.containsKey(s)) {
@@ -950,12 +951,11 @@ public class Instructions {
               bytes.put((byte)0);
             }
           } else {
-            throw new CompilerException("Unknown type for PUSH: " + o);
+            throw new CompilerException("Unknown type for PUSH: " + o + " (in args " + this.args + ")");
           }
         }
-
       } catch (UnsupportedEncodingException e) {
-        assert false : "this can't happen";
+        assert false : "this can't happen, but Java is too stupid to know that";
       }
     }
 
@@ -988,8 +988,12 @@ public class Instructions {
             b += 1;
           }
         } else if (o instanceof String) {
-          String s = (String)o;
-          b += 1 + s.length() + 1;
+          try {
+            String s = (String)o;
+            b += 1 + (s.getBytes("UTF-8").length) + 1;
+          } catch (UnsupportedEncodingException e) {
+            assert false : "this can't happen, but Java is too stupid to know that";
+          }
         }
       }
       return b;
@@ -1283,3 +1287,9 @@ public class Instructions {
     NameInstruction.put("BLOB", BLOB);
   }
 }
+
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+

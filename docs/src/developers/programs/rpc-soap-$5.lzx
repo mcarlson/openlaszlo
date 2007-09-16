@@ -1,0 +1,74 @@
+
+<canvas debug="true">
+
+    <debug y="30" x="145" width="350" height="300" />
+
+    <!-- This SOAP service uses document/literal messages for its
+         operations. Each operation is passed a document as a parameter. -->
+    <soap name="maths" 
+          wsdl="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/MathService/VB/MathService.asmx?WSDL">
+
+        <!-- Method to make a document for SOAP message requests -->
+        <method name="makedoc" args="func, av, bv">
+        <![CDATA[
+            if (func == null) return;
+            var s =  '<' + func + ' xmlns="' + 'http://tempuri.org/' + '" >' + 
+                               '<A>' + av + '</A>' + 
+                               '<B>' + bv + '</B>' + 
+                   '</' + func + '>';
+            Debug.write(s);
+            return s;
+        ]]>
+        </method>
+       
+        <handler name="onload">
+            // make buttons visible once SOAP object is loaded
+            canvas.buttons.setAttribute('visible', true);            
+        </handler>
+
+        <handler name="onerror" args="error">
+            Debug.write('error:', error);
+        </handler>
+
+        <handler name="ontimeout" args="error">
+            Debug.write('timeout:', error);
+        </handler>
+
+        <handler name="ondata" args="value">
+            Debug.write(value);
+            result.setText(value);
+        </handler>
+
+        <remotecall funcname="Add">
+            <param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" />
+        </remotecall>
+        <remotecall funcname="Subtract">
+            <param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" />
+        </remotecall>
+        <remotecall funcname="Multiply">
+            <param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" />
+        </remotecall>
+        <remotecall funcname="Divide">
+            <param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" />
+        </remotecall>
+    </soap>
+
+    <view name="buttons" x="10" y="10" visible="false" layout="spacing: 10" >
+        <text><b>.NET MathService</b></text>
+
+        <view layout="axis: x" ><text y="3">a:</text><edittext id="a" text="10"/></view>
+        <view layout="axis: x" ><text y="3">b:</text><edittext id="b" text="2" /></view>
+        <view layout="axis: x" ><text>result:</text><text id="result"/></view>
+
+        <button text="add"      onclick="canvas.maths.Add.invoke()" />
+        <button text="subtract" onclick="canvas.maths.Subtract.invoke()" />
+        <button text="multiply" onclick="canvas.maths.Multiply.invoke()" />
+        <button text="divide"   onclick="canvas.maths.Divide.invoke()" />
+
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,14 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<canvas>
+    <view stretches="both" width="10" height="10"
+          resource="http:pict5.jpg">
+        <method event="onload">
+            Debug.write( "expecting: 229 172 " );
+            Debug.write( this.resourcewidth , this.resourceheight );
+        </method>
+    </view>
+</canvas>

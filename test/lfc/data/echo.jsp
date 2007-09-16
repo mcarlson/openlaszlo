@@ -1,5 +1,5 @@
 <%@ page import="java.util.*" %><%@ page import="java.io.*" %><%@ page import="java.lang.Integer" %><%@ page import="org.openlaszlo.xml.internal.XMLUtils" %><%
-/* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+/* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 */
 
@@ -65,6 +65,7 @@
 
     bout.append( "]]>\n</data>\n" );
     bout.append("<headers>\n");
+    bout.append("<![CDATA[\n" );
     Enumeration headers = request.getHeaderNames();
     if (headers != null) {
         while(headers.hasMoreElements()) {
@@ -73,6 +74,7 @@
         }
     } 
 
+    bout.append("]]>\n" );
     bout.append("</headers>\n");
     bout.append( "\n<method type=\"" + request.getMethod() +"\"/>\n");
 

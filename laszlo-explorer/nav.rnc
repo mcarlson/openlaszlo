@@ -28,7 +28,7 @@ item =
   }
 
 itemAttributes =
-  attribute action { "edit" | "explore" | "popup" | "source" }?,
+  attribute action { "edit" | "explore" | "popup" | "source" | "popupexternal" }?,
   attribute name { text },
   attribute params { string }?,
   attribute popup { xsd:anyURI }?,

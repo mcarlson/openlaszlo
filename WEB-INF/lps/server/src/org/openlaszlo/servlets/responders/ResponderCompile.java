@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -33,7 +33,7 @@ import org.openlaszlo.server.LPS;
 import org.openlaszlo.servlets.LZBindingListener;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
-
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.log4j.Logger;
 
 
@@ -188,10 +188,6 @@ public abstract class ResponderCompile extends Responder
             // Check that global config knows about app security options
             String path = req.getServletPath();
             if (LPS.configuration.getApplicationOptions(path) == null) {
-                // Filename could still be lzo here.
-                if (fileName.endsWith(".lzo")) {
-                    fileName = fileName.substring(0, fileName.length()-1) + 'x';
-                }
                 Canvas canvas = getCanvas(fileName, req);
                 LPS.configuration.setApplicationOptions(path, canvas.getSecurityOptions());
             }
@@ -281,8 +277,12 @@ public abstract class ResponderCompile extends Responder
             }
         }
 
+        HostConfiguration hostConfig = new HostConfiguration();
+        hostConfig.setHost(url.getHost(),url.getPort(),url.getProtocol());
+ 
+
         HttpClient htc = new HttpClient();
-        htc.startSession(url);
+        htc.setHostConfiguration(hostConfig);
 
         int rc = htc.executeMethod(getRequest);
         mLogger.debug("Response Status: " + rc);
@@ -406,11 +406,13 @@ public abstract class ResponderCompile extends Responder
      * <ul>
      * <li> "debug"
      * <li> "logdebug"
+     * <li> "lzbacktrace"
      * <li> "profile"
      * <li> "validate"
      * <li> "sourcelocators"
      * <li> "lzr" (swf version := swf5 | swf6)
      * <li> "lzproxied" true|false
+     * <li> "lzscript" true|false   -- emit javascript, not object file
      * <li> "cssfile"
      * <ul>
      * also grabs the request URL.
@@ -420,11 +422,11 @@ public abstract class ResponderCompile extends Responder
         Properties props = new Properties();
 
         // Look for "runtime=..." flag
-        String swfversion = req.getParameter("lzr");
-        if (swfversion == null) {
-            swfversion = LPS.getProperty("compiler.runtime.default", "swf6");
+        String runtime = req.getParameter("lzr");
+        if (runtime == null) {
+            runtime = LPS.getProperty("compiler.runtime.default", "swf6");
         }
-        props.setProperty(CompilationEnvironment.SWFVERSION_PROPERTY, swfversion);
+        props.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, runtime);
 
         // TODO: [2003-04-11 pkang] the right way to do this is to have a
         // separate property to see if this allows debug.
@@ -464,12 +466,25 @@ public abstract class ResponderCompile extends Responder
             if (profile != null) {
                 props.setProperty(CompilationEnvironment.PROFILE_PROPERTY, profile);
             }
+
+            // Look for "lzbacktrace=true" flag
+            props.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, "false");
+            String backtrace = req.getParameter("lzbacktrace");
+            if (backtrace != null) {
+                props.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, backtrace);
+            }
+            
         }
 
         // Set the 'lzproxied' default = false
         String proxied = req.getParameter(CompilationEnvironment.PROXIED_PROPERTY);
         if (proxied != null) {
             props.setProperty(CompilationEnvironment.PROXIED_PROPERTY, proxied);
+        }
+
+        String lzs = req.getParameter("lzscript");
+        if (lzs != null) {
+            props.setProperty("lzscript", lzs);
         }
 
         if (mAllowRecompile) {
@@ -491,16 +506,6 @@ public abstract class ResponderCompile extends Responder
 );
                 }
             }
-        }
-
-
-        String encoding = ContentEncoding.chooseEncoding(req);
-        // Only try to compress SWF5,  SWF6 and later have built in
-        // compression.
-
-        if ("swf5".equals(props.getProperty(CompilationEnvironment.SWFVERSION_PROPERTY))
-             && (encoding != null)) {
-            props.setProperty(LZHttpUtils.CONTENT_ENCODING, encoding);
         }
 
         return props;

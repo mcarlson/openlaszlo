@@ -1,0 +1,18 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas>
+    <include href="lzunit"/>
+    <view>
+        <view name="arg"/>
+        <method name="meth" args="arg">
+            assertEquals(arg, 'foo', "should be the same")
+        </method>
+        <method event="oninit">
+            this.meth('foo');
+        </method>
+    </view>
+</canvas>

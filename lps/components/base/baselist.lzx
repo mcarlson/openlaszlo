@@ -45,9 +45,12 @@
 
         <!--- @keywords private -->
         <method name="doEnterDown">
-            if ( this._hiliteview.enabled) {
+            <![CDATA[
+            // TODO: [hqm 2006-09] LPP-2819 _hiliteview is null sometimes, why?
+            if ( this._hiliteview && this._hiliteview.enabled) {
                 this._hiliteview.setAttribute('selected', true);
             }
+            ]]>
         </method>
 
         <!--- @keywords private -->
@@ -86,27 +89,37 @@
         <method name="_doFocus" event="onfocus">
             <![CDATA[
             // the hiliteview is used for keyboard nav hiliting
-            var sel = this._selector.getSelection();
-                if (sel && sel.length > 0) {
-                    this._hiliteview = sel[0];
+                if (this['_selector']) {
+                    var sel = this._selector.getSelection();
+                    if (sel && sel.length > 0) {
+                        this._hiliteview = sel[0];
+                    }
                 }
             ]]>
         </method>
 
         <!--- @keywords private -->
         <method name="_doblur" event="onblur">
-            this._hiliteview['setHilite'](false);
-            this._hiliteview = null;
+        <![CDATA[
+          if (this._hiliteview && this._hiliteview.setHilite) {
+              this._hiliteview['setHilite'](false);
+          }
+          this._hiliteview = null;
+        ]]>
         </method>
 
         <!--- Set which view has the hilite.
               @param LzView v: the view to hilite. -->
         <method name="setHilite" args="v" >
+        <![CDATA[
             if (this._selector.allowhilite(v)) {
-                if ( _hiliteview ) this._hiliteview['setHilite'](false);
+                if ( this._hiliteview && this._hiliteview.setHilite) this._hiliteview['setHilite'](false);
                 this._hiliteview = v;
-                v['setHilite'](true);
+                if (this._hiliteview) {
+                    v['setHilite'](true);
+                }
             }
+        ]]>    
         </method>
 
         <!--- @keywords private -->
@@ -140,7 +153,7 @@
                 if (kc == 37  || kc == 38) {
                     next = _selector.getNextSubview(s, -1);
                 }
-                if ( _hiliteview && (_hiliteview!=0) ) {
+                if ( this._hiliteview && this._hiliteview.setHilite && this._hiliteview != 0 ) {
                     this._hiliteview['setHilite'](false);
                 }
                 next['setHilite'](true);
@@ -370,12 +383,12 @@
                 }
             }
 
-            if ( this._hiliteview && this._hiliteview['enabled']) {
+            if ( this._hiliteview && this._hiliteview.setHilite && this._hiliteview['enabled']) {
                 this._hiliteview['setHilite'](false);
                 this._hiliteview = null;
             }
             this.setAttribute( 'doesenter', false );
-            if ( onselect ) this.onselect.sendEvent(item);
+            if ( this.onselect ) this.onselect.sendEvent(item);
             ]]>
         </method>
 
@@ -392,11 +405,85 @@
         <method name="updateData">
             return this.getValue();
         </method>
-
+        <doc>
+          <tag name="shortdesc"><text>contains a group of baselistitems</text></tag>
+          <text>
+            <p>This class is a container for a group of
+            <classname>baselistitem</classname>s.  To use
+            <classname>baselist</classname>, <classname>baselistitem</classname>
+            must be subclassed to provide a visual representation of the list
+            item.  It supports single select by default.  Set
+            <attribute>multiselect</attribute> to true to allow multiple selection
+            (shift-click for a range, control-click for an arbitrary set).</p>
+            
+            <p>Contained list items may be declared inside the list, such as:</p>
+            
+            <example>
+            &lt;canvas height="100"&gt;
+              &lt;baselist layout="axis:y;spacing:2"&gt;
+                &lt;baselistitem height="15" width="25" bgcolor="${selected ? 0xffff00 : 0x0000ff}"/&gt;
+                &lt;baselistitem height="15" width="50" bgcolor="${selected ? 0xffff00 : 0x0000ff}"/&gt;
+                &lt;baselistitem height="15" width="100" bgcolor="${selected ? 0xffff00 : 0x0000ff}"/&gt;
+              &lt;/baselist&gt;
+              &lt;text y="70"&gt;Click bar to select it.&lt;/text&gt;
+            &lt;/canvas&gt;
+            </example>
+            
+            <p>or replicated from data: </p>
+            
+            <example>
+            &lt;canvas height="70"&gt;
+             &lt;dataset name="items"&gt;
+                &lt;item&gt;one&lt;/item&gt;
+                &lt;item&gt;two&lt;/item&gt;
+                &lt;item&gt;three&lt;/item&gt;
+              &lt;/dataset&gt;
+            
+              &lt;class name="myitem" extends="baselistitem"
+                     bgcolor="${selected ? yellow : white}"&gt;
+                 &lt;attribute name="text" type="text"/&gt;
+                 &lt;method name="applydata" args="d"&gt;
+                     setAttribute('text', d);
+                 &lt;/method&gt;
+                 &lt;text text="${parent.text}"/&gt;
+              &lt;/class&gt;
+            
+              &lt;baselist layout="axis:y; spacing:2"&gt;
+                &lt;myitem datapath="items:/item/text()"/&gt;
+              &lt;/baselist&gt;
+              &lt;text y="70" &gt;Click on a number to select it.&lt;/text&gt;
+             &lt;/canvas&gt;   
+            </example>
+            
+            <h2>Optimizing Lists</h2>
+            
+            <p>If your lists represent data from a datapath, there are two
+            optimizations that you may want to consider:</p>
+            
+            <dl>
+            
+            <dt>pooling</dt>
+            <dd>If you will be changing the data that is represented by the list
+            after it has been created, you can set
+            <code>dataoption="pooling"</code>.  For more about pooling see the
+            datapath <xref linkend="LzDatapath.__ivars__.pooling"/> attribute
+            and the example in <classname library="lz">list</classname>.</dd>
+            
+            <dt>lazy</dt>
+            <dd>If there are more items in the list than will be visible and all
+            list items are the same size (for example, in a scrolling list or
+            combobox), you should set dataoption="lazy".  For more about lazy
+            replication see the datapath 
+            <xref linkend="LzDatapath.__ivars__.replication"/> attribute,
+            <classname>LzLazyReplicationManager</classname>, and the example in
+            <classname library="lz">list</classname>.</dd>
+            </dl>
+          </text>
+        </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

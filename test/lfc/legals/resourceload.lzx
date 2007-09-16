@@ -1,0 +1,38 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas width="100%" height="400">
+  <simplelayout/>    
+
+  <dataset name="imgs">
+    <photos>
+      <photo url="http://static.flickr.com/75/193389296_3f5772d801_t.jpg"/>
+      <photo url="http://static.flickr.com/75/193389296_3f5772d801_t.jpg"/>
+      <photo url="http://static.flickr.com/75/193389296_3f5772d801_t.jpg"/>
+      <photo url="http://static.flickr.com/75/193389296_3f5772d801_t.jpg"/>
+      <photo url="http://static.flickr.com/75/193389296_3f5772d801_t.jpg"/>
+      <photo url="http://static.flickr.com/75/193389296_3f5772d801_t.jpg"/>
+    </photos>
+  </dataset>
+
+  <class name="phot" opacity="0" bgcolor="blue">
+    <view name="interior"/>
+    <handler name="ondata" args="d">
+        Debug.write('data', d, this.getUID()); 
+        this.interior.setSource(d);
+        this.interior.setSource(d);
+        this.interior.setSource(d);
+        this.setVisible(false);
+    </handler>
+    <handler name="onload" reference="interior">
+        Debug.write('onload', this.getUID(), this.interior.resourcewidth, this.interior.resourceheight);
+        this.setVisible(true);
+        this.animate('opacity', 1, 1000);
+    </handler>
+  </class>
+
+  <phot datapath="imgs:/photos/photo/@url"/>
+</canvas>

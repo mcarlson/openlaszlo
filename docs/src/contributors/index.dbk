@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book language="en" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <?dbhtml dir="contributors" ?>
+  <?dbhtml filename="index.html" ?>
+  <title>OpenLaszlo 4.0 Contributor's Guide (alpha)</title>
+  <titleabbrev>OL4 Contributor's Guide</titleabbrev>
+
+  <?xi :include href="preface.dbk">
+    <xi:fallback><para>Missing: Preface</para></xi:fallback>
+  </xi:include ?>
+
+  <part id="contributors.policies">
+    <title>Policies and Procedures</title>
+    
+    <xi:include href="change-submission.dbk">
+	  <xi:fallback><para>Missing: Change Submission Policy</para></xi:fallback>
+    </xi:include>
+    
+    <xi:include href="branch-management.dbk">
+	  <xi:fallback><para>Missing: Branch Management Policy</para></xi:fallback>
+    </xi:include>
+    
+    <xi:include href="release-management.dbk">
+	  <xi:fallback><para>Missing: Release Management Procedures</para></xi:fallback>
+    </xi:include>
+    
+  </part>
+  
+  <part id="contributors.technical">
+    <title>Technical Information for Contributors</title>
+    
+    <xi:include href="source-build.dbk">
+	  <xi:fallback><para>Missing: Building from Source</para></xi:fallback>
+    </xi:include>
+    
+  </part>
+  
+  <part id="contributors.doctools">
+    <title>Documentation Tools and Guidelines</title>
+
+    <xi:include href="doc-toolchain.dbk">
+	  <xi:fallback><para>Missing: Doc Tool Chain</para></xi:fallback>
+    </xi:include>
+
+    <xi:include href="docbook-local.dbk">
+	  <xi:fallback><para>Missing: Docbook Local Style Guide</para></xi:fallback>
+    </xi:include>
+
+    <xi:include href="docbook-code.dbk">
+	  <xi:fallback><para>Missing: Docbook Code Comment Style Guide</para></xi:fallback>
+    </xi:include>
+
+    <xi:include href="js2doc-ref.dbk">
+	  <xi:fallback><para>Missing: JS2Doc Reference</para></xi:fallback>
+    </xi:include>
+
+  </part>
+  
+  <part id="contributors.appendices">
+    <title>Appendices</title>
+    
+    <xi:include href="licenses.dbk">
+      <xi:fallback><para>Missing: Licenses Reference</para></xi:fallback>
+    </xi:include>
+  </part>
+  
+</book>

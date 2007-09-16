@@ -1,0 +1,44 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+
+    <resource name="icon_plus_rsc" >
+        <frame src="assets/clipboard/grow_plus_up.gif" />
+        <frame src="assets/clipboard/grow_plus_ov.gif" />
+        <frame src="assets/clipboard/grow_plus_dn.gif" />
+    </resource>
+
+    <resource name="icon_minus_rsc" >
+        <frame src="assets/clipboard/grow_minus_up.gif" />
+        <frame src="assets/clipboard/grow_minus_ov.gif" />
+        <frame src="assets/clipboard/grow_minus_dn.gif" />
+    </resource>
+    
+    <resource name="hidedetails_rsc">
+        <frame src="views/resources/hidedetails/hidedetails.png" />
+        <frame src="views/resources/hidedetails/hidedetails_mouseover.png" />
+        <frame src="views/resources/hidedetails/hidedetails_mousedown.png" />
+    </resource>
+
+    <resource name="prevpgae_rsc">
+        <frame src="assets/tools/page-left-up.gif" />
+        <frame src="assets/tools/page-left-ov.gif" />
+        <frame src="assets/tools/page-left-dn.gif" />
+    </resource>
+
+    <resource name="nextpage_rsc">
+        <frame src="assets/tools/page-right-up.gif" />
+        <frame src="assets/tools/page-right-ov.gif" />
+        <frame src="assets/tools/page-right-dn.gif" />
+    </resource>
+
+    <resource name="transparent_rsc">
+        <frame src="assets/transparent.png" />
+        <frame src="assets/transparent.png" />
+        <frame src="assets/transparent.png" />
+    </resource>
+
+</library>

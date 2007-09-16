@@ -1,0 +1,88 @@
+/**
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @topic LFC
+  * @subtopic Data
+  */
+
+/**
+  * An LzDataText represents a text node a in a hierarchical dataset. An LzDataText can only contain text data. It can be a child a of an <classname>LzDataElement</classname>. See the example on <classname>LzDataNode</classname>. 
+  *
+  * @shortdesc Represents a text node in a set of data.
+  * @see lzdatanode, lzdataelement, datapointer
+  * @fixme [2006-07-26] (LPP-2412) The Instance reference is required for lzpix
+  *                                to run.
+  */
+class LzDataText extends LzMiniNode inherits LzDataNode {
+
+/**
+  * @param String text: The text that this node holds.
+  */
+function initialize ( text ){
+    super.initialize.apply(this, arguments);
+    this.data = text;
+}
+
+
+DeclareEvent(LzDataText.prototype, 'onDocumentChange' );
+DeclareEvent(LzDataText.prototype, 'onparentNode' );
+DeclareEvent(LzDataText.prototype, 'onchildNode' );
+DeclareEvent(LzDataText.prototype, 'onchildNodes' );
+DeclareEvent(LzDataText.prototype, 'onattributes' );
+DeclareEvent(LzDataText.prototype, 'onnodeName' );
+
+/** This property is of type String, can raise a DOMException object on setting
+  * and can raise a DOMException object on retrieval. */
+var nodeType = LzDataNode.TEXT_NODE;
+
+setters.data = "setData";
+
+/** The data held by this node.
+  * @type String */
+var data = "";
+
+/** read-only property
+  * @type Number */
+var length = 0;
+
+/**
+  * Sets the string that this node holds.
+  * @param String newdata: The new string for this node.
+  */
+function setData ( newdata ) {
+    this.data = newdata;
+    if (this.ondata && this.ondata.ready) {
+        this.ondata.sendEvent( newdata );
+    }
+    if (this.ownerDocument) {
+        this.ownerDocument.handleDocumentChange( "data" , this , 1 );
+    }
+}
+
+/**
+  * @access private
+  */
+function cloneNode ( ){
+    var n = new LzDataText(this.data);
+    return n;
+}
+
+/**
+  * @access private
+  */
+function serialize (){
+    return this.__LZXMLescape( this.data );
+}
+
+/**
+  * @access private
+  */
+function toString (){
+    //return this.serialize();
+    return this.data;
+}
+
+} // End of LzDataText

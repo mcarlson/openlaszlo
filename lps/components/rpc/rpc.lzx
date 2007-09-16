@@ -34,15 +34,15 @@
         <attribute name="secureport" value="null" type="number" />
 
         <!--- This event is triggered when the remote object is loaded. -->
-        <attribute name="onload" value="null" type="expression" />
+        <event name="onload" />
         <!--- This event is triggered when the remote object is unloaded. -->
-        <attribute name="onunload" value="null" type="expression" />
-        <!--- This event is triggered when declared inner calls don't handle
+        <event name="onunload" />
+        <!--- This event is triggered when declared inner calls do not handle
               their ondata events. -->
-        <!-- <attribute name="ondata" value="null" type="expression" /> -->
+        <event name="ondata" />
         <!--- This event is triggered when an error or timeout occurs associated
               with getting this object or calling one of its remote methods. -->
-        <!-- <attribute name="onerror" value="null" type="expression" /> -->
+        <event name="onerror" />
 
         <!--- @keywords private -->
         <attribute name="_loadDel" value="null" type="expression" />
@@ -60,7 +60,7 @@
 
         <!--- ABSTRACT: method to load the remote object interface. -->
         <method name="load">
-            Debug.write(this.name, "error: load method not defined");
+            Debug.error(this.name, "load method not defined");
         </method>
 
         <!--- Interface to unload proxy stub. Default is to null proxy. -->
@@ -86,10 +86,10 @@
         <method name="_load" args="o">
         <![CDATA[
             if (o.status == "error") {
-                if (typeof(this.onerror) != "undefined") {
+                if (this.onerror != LzDeclaredEvent) {
                     this.onerror.sendEvent(o.message, o['error']);
                 } else {
-                    Debug.write(this.name, "load error:", o.message);
+                    Debug.error(this.name, "load error:", o.message);
                 }
                 return false;
             }
@@ -104,10 +104,10 @@
         <method name="_unload" args="o">
         <![CDATA[
             if (o.status == "error") {
-                if (this.onerror) {
+                if (this.onerror != LzDeclaredEvent) {
                     this.onerror.sendEvent(o.message, o['error']);
                 } else {
-                    Debug.write(this.name, "load error:", o.message);
+                    Debug.error(this.name, "load error:", o.message);
                 }
                 return false;
             }
@@ -196,9 +196,9 @@
 
         <!--- This event is triggered when data is returned from a remote
               method. -->
-        <!-- <attribute name="ondata" value="null" type="expression"/> -->
+        <event name="ondata" /> 
         <!--- This event is triggered when an error occurs. -->
-        <!-- <attribute name="onerror" value="null" type="expression" /> -->
+        <event name="onerror" />
 
         <!--- Reference to remote function.
               @keywords private readonly -->
@@ -207,7 +207,7 @@
         <!--- Call this method to invoke function with passed in parameters. 
               @param Array params: array of parameters. A parameter can be an
               object, array, or primitive type. This is optional if
-              &lt;param&gt;s have been declared this remotecall's body.
+              &lt;param&gt;s have been declared this remotecall''s body.
               @param LzDelegate delegate: (optional) the remotecall will use the
               passed in delegate, otherwise it will run the default. Note: if
               LzDelegate passed in contains a property called 'dataobject', the
@@ -218,7 +218,7 @@
         <method name="invoke" args="params, delegate">
         <![CDATA[
             if (typeof(this._funcref) != 'function') {
-                Debug.write(this.name, "error: could not invoke; is remote service loaded?");
+                Debug.error(this.name, "could not invoke; is remote service loaded?");
                 return -1;
             }
 
@@ -236,15 +236,15 @@
                         }
                     }
                 }
-            } else if (params.__proto__ != Array.prototype) {
-                Debug.write(this.name, "error: first argument (params) is not an array");
+            } else if (! (params instanceof Array)) {
+                Debug.error(this.name, "first argument (params) is not an array");
                 return -1;
             }
 
             if (delegate == null) {
                 delegate = this._delegate
             } else if ( ! ( delegate instanceof LzDelegate ) ) {
-                Debug.write(this.name, "error: second argument (delegate) is not a delegate");
+                Debug.error(this.name, "second argument (delegate) is not a delegate");
                 return -1;
             }
 
@@ -256,7 +256,7 @@
         <!--- @keywords private -->
         <method name="init">
             if (this.funcname == null) {
-                Debug.write(this.name, "error: required funcname is not set");
+                Debug.error(this.name, "required funcname is not set");
                 return;
             }
 
@@ -277,6 +277,7 @@
         <!--- @keywords private -->
         <method name="_handler" args="o">
         <![CDATA[
+            Debug.write("rpc.lzx _handler", o);
             // responseheaders are SOAP specific
             if (o.opinfo['responseheaders'] != null) {
                 var r = new _root.LzDataElement("root", { }, o.opinfo.responseheaders);
@@ -295,15 +296,17 @@
                         info: o.opinfo, seqnum: o.seqnum }
                     :  o.message;
 
-                if (this['onerror']) {
+                if (this.onerror != LzDeclaredEvent) {
                     this.onerror.sendEvent(retval);
-                } else if (parent['onerror']) {
+                } else if (parent.onerror != LzDeclaredEvent) {
                     parent.onerror.sendEvent(retval);
                 } else if (this.remotecontext != null &&
-                           this.remotecontext['onerror']) {
+                           this.remotecontext['onerror'] &&
+                           this.remotecontext.onerror != LzDeclaredEvent
+                           ) {
                     this.remotecontext.onerror.sendEvent(retval);
                 } else {
-                    Debug.write(this.name, "remotecall onerror:", o.error);
+                    Debug.error(this.name, "remotecall onerror:", o.error);
                 }
                 return;
             }
@@ -313,9 +316,10 @@
                 ? { data: o.data, info: o.opinfo, seqnum: o.seqnum }
                 : o.data;
 
-            if (this['ondata']) {
+            if (this['ondata'] && this.ondata != LzDeclaredEvent) {
+                Debug.write('sending ondata from remotecall _handler',this,retval);
                 this.ondata.sendEvent(retval);
-            } else if (parent['ondata']) {
+            } else if (parent['ondata'] && parent.ondata != LzDeclaredEvent) {
                 parent.ondata.sendEvent(retval);
             } else if (this.remotecontext != null &&
                        this.remotecontext['ondata']) {
@@ -338,7 +342,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

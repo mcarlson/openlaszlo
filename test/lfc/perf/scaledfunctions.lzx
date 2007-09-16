@@ -1,0 +1,187 @@
+<!-- Copyright 2007 Laszlo Systems -->
+<canvas title="scaled functions performance">
+    <include href="timing-support.lzx"/>
+    
+<script><![CDATA[
+    
+    function timeMany(funname, iter) {
+        var fun = global[ funname ];
+        var start = (new Date).getTime();
+        for ( var n = 0; n < iter; n++ ) {
+            fun();
+        }
+        var stop = (new Date).getTime();
+        elapsed = stop - start;
+        // record totals
+        if (typeof(timingMeters[funname]) == 'undefined') {
+            timingMeters[funname] = new Meter(funname);
+        }
+        timingMeters[funname].accumulate(elapsed);
+        return elapsed;    
+    }
+        
+    function addOne ( x ){ return x +1; }
+
+    function oneFunctionCall (){
+        var x = 1;
+        x += 1;
+        x = addOne( x );
+        return x;
+    }
+    
+    function twoFunctionCalls (){
+        var x = 1;
+        x = addOne( x );
+        x = addOne( x );
+        return x;
+    }
+
+    globobj= {};
+    globobj.x = 0;
+    globobj.aMethod = function (){
+        if ( ++this.x == 10 ) this.x = 0;
+    }
+
+    globobj.bMethod = function (){
+        this.x++;
+        this.cMethod();
+    }
+    globobj.cMethod = function (){
+        if ( ++this.x == 10 ) this.x = 0;
+    }
+
+    function callSingleMethod(){
+        globobj.aMethod();
+    }
+    function callTwoMethods(){
+        globobj.bMethod();
+    }
+    
+    global.anObj = {
+        aaa : 1,
+        bbb : 2,
+        ccc : 3,
+        ddd : 4,
+        eee : 5,
+        fff : 6,
+        ggg : 7, 
+        hhh : 8 };
+
+    function functionWith(){
+        with( anObj ){
+            return aaa + bbb + ccc;
+        }
+    }
+    function functionWithout(){
+        return this.aaa + this.bbb + this.ccc;
+    }
+    global.anObj2 = { xxx: 14 };
+    global.anObj3 = { yyy: 15 };
+    global.anObj4 = { zzz: 16 };
+
+    function functionDeepWith(){
+        with( anObj ){
+            with( anObj2 ){
+                with( anObj3 ){
+                    with( anObj4 ){
+                        return aaa + bbb + ccc;
+                    }
+                }
+            }
+        }
+    }
+
+    function noArgs(){
+        1,2,3,4,5;
+        takesNoArgs();
+    }
+    function manyArgs(){
+        takesManyArgs( 1, 2, 3, 4, 5 );
+    }
+    function takesManyArgs( a, b, c, d , e){
+        var x =1;
+        return x + x + x + x + x + x;
+    }
+    function takesNoArgs(){
+        var x =1;
+        return x + x + x + x + x + x;
+    }
+
+    var looprecurnum = 100;
+    function doLoop(){
+        x = 1;
+        for ( var i = 0; i < looprecurnum; i++ ){
+            x = loopF( x );
+        }
+    }
+    function doRecur(){
+        x = recurF( looprecurnum );
+    }
+
+    function loopF( x ){
+        return x+1;
+    }
+
+    function recurF( n ){
+        if ( n == 0 ) return 0;
+        return 1 + recurF( n - 1 );
+    }
+        
+    
+    // Do the specified function, iters number of times
+    function repeat( funname, iters ) {
+        var fun = global[ funname ];    
+        for (j = 0; j < iters; j++) {
+            fun();
+        }
+    }
+    
+    
+    function repeatThing() {
+        // Debug.write("gonna repeat repeatThing %d times", numIters);
+        repeat( "oneFunctionCall", numIters ); 
+    }
+        
+    function scaleToTen() {    
+        // figure out how many times to run a single test to get 
+        // reasonable data
+        var duration = 0; 
+        while ((duration = time("repeatThing", 5)) < 100) {
+            // Debug.write("duration is %f", duration);         
+            // Debug.write("%d iters is too low, try 10*that", numIters);
+            numIters = numIters * 10;     
+        }
+        return numIters; 
+    }
+    
+    function testNamedFunctionManyTimes( funname ) {
+        var tm = timeMany(funname, numIters);
+        reportString = "" + tm + " ms for test '" + funname + "' repeated " + numIters + " times";
+        Debug.write(reportString);
+        TimingOutput.write(reportString); 
+    }
+
+    ////////// main //////////////////////////////
+    // figure out how many times to run tests to get big enough numbers 
+    var numIters = 10; 
+    scaleToTen(); // modifies numIters 
+    var reportString = "determined proper number of iterations is: " + numIters;
+    TimingOutput.write(reportString); 
+
+    
+    testNamedFunctionManyTimes( "oneFunctionCall" );
+    testNamedFunctionManyTimes( "twoFunctionCalls" );    
+    testNamedFunctionManyTimes( "callSingleMethod" );        
+    testNamedFunctionManyTimes( "callTwoMethods" );            
+    testNamedFunctionManyTimes("functionWith"); 
+    testNamedFunctionManyTimes("functionDeepWith");
+    testNamedFunctionManyTimes("noArgs" );
+    testNamedFunctionManyTimes("manyArgs" ); 
+/*    
+    testNamedFunctionManyTimes("doLoop" ); 
+    testNamedFunctionManyTimes("doRecur" );     
+*/        
+    
+]]></script>
+        
+</canvas>

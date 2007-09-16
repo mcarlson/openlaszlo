@@ -1,8 +1,15 @@
 <canvas debug="true" title="lzunit-basedatacombobox.lzx" >
   <include href="lzunit" />
   <include href="base/basedatacombobox.lzx"/>
+  <include href="lz/plainfloatinglist.lzx" />  
 
-  <class name="simplecombobox" extends="basedatacombobox" width="100">
+<!--
+  covers-tags: basedatacombobox smoketest
+-->
+
+
+  <class name="simplecombobox" extends="basedatacombobox" width="100"
+      menuclassname="plainfloatinglist">
       <attribute name="_cbtext" value="$once{this._text}"/>
       <view width="100%" height="20" focusable="false" bgcolor="#CCCCCC">
           <handler name="onclick">
@@ -31,11 +38,36 @@
     <item value="3" text="C"/>
   </dataset>
   
-  <simplecombobox itemdatapath="ds1:/"/>
+  <simplecombobox x="100" id="scbox" itemdatapath="ds1:/item"/>
   
   <TestSuite>
 
     <TestCase>
+        <method name="testSimpleSetGet">
+            scbox.setValue(3);
+            assertEquals(3, scbox.getValue() ); 
+        </method>
+        <method name="testBadSelectionIndex">
+            scbox.setValue(2);            
+            assertEquals( 2, scbox.getValue() ); 
+            scbox._updateSelectionByIndex( -1, false, false); 
+            // Changing the selection to -1 should make the value become undefined, or null,
+            // but it shouldn't just keep the same value as before. 
+            assertFalse( 2 == scbox.getValue() ); 
+        </method>
+        
+        <method name="testSelectItemAt">
+            scbox.setValue(3); 
+            scbox.selectItemAt(1);
+            assertEquals(2, scbox.getValue()); 
+        </method>
+        
+        <method name="testBadSelectItemAt">
+            scbox.setValue(3); 
+            scbox.selectItemAt(-1);
+            assertEquals('', scbox.getValue() ); 
+        </method>
+        
     
     </TestCase>
     
@@ -44,7 +76,7 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

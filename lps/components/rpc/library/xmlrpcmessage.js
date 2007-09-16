@@ -1,12 +1,11 @@
 <library>
 <include href="rpc.js" />
-<script>
+<script when="immediate">
 <![CDATA[
-#pragma 'warnUndefinedReferences=false' 
 
 /* LZ_COPYRIGHT_BEGIN */
 /****************************************************************************
- * Copyright (c) 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.       *
+ * Copyright (c) 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.       *
  * Use is subject to license terms                                          *
  ****************************************************************************/
 /* LZ_COPYRIGHT_END */
@@ -82,7 +81,7 @@ XMLRPCMessage.dataTypeOf = function (o){
     case "object":
       var proto = o.__proto__;
       // Number and Date have the same prototype
-      if ( proto == LzRPC.DoubleWrapper.prototype ) {
+      if ( proto == LzRPC.prototype.DoubleWrapper.prototype ) {
           type = "doublewrapper"
       } else if ( proto == Date.prototype &&
                   o.getMilliseconds != null ) {
@@ -191,7 +190,7 @@ function leadingZero(n){
 </script>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

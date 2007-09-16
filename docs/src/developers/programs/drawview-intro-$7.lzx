@@ -1,0 +1,27 @@
+    
+<canvas height="200" proxied="false">
+      <drawview>
+        <handler name="oninit">
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         //the gradient starts at the x and y where the curved line starts
+         var g = this.createLinearGradient(200,100, 150, 300)
+         //opacity is 0 -- the fill is invisible
+         this.globalAlpha = 0;
+         //starting color is black
+         g.addColorStop(0, 0x000000);
+         //now the opacity is set to opaque
+         this.globalAlpha = 1;
+         //the gradient goes from black to purple
+         g.addColorStop(1, 0xff00ff);
+         this.fillStyle = g;
+         this.fill();
+        </handler>
+      </drawview>
+    </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

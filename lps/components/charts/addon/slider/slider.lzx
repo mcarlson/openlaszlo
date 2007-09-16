@@ -1,5 +1,6 @@
 <!-- slider is not part of the laszlo charting component. It is here to serve as an example only -->
 <library>
+    <include href="extensions/drawview.lzx"/>
     <resource name="slider_background" src="images/slider_background.swf"/>
     <resource name="slider_l" src="images/slider_l.swf"/>
     <resource name="slider_m" src="images/slider_m.swf"/>
@@ -147,17 +148,17 @@
             
         </sliderknob>
         <method event="onisMousedown" reference="leftknob">
-            debug.write("set left");
+            Debug.write("set left");
             this.setAttribute("isMouseDown", leftknob.isMouseDown);        
         </method>
                 
         <method event="onisMousedown" reference="rightknob">
-            debug.write("set right");
+            Debug.write("set right");
             this.setAttribute("isMouseDown", rightknob.isMouseDown);
         </method>
         
         <method event="onmaxlimit">
-            debug.write("*************slider width: " + this.width);
+            Debug.write("*************slider width: " + this.width);
             leftknob.setX(0);
             rightknob.setX(this.width);
         </method>
@@ -178,3 +179,8 @@
         
     </class>
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                          -->

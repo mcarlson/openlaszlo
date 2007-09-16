@@ -1,0 +1,87 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+
+<canvas width="100%" height="80%" >
+
+  <class name="myclass" oninit="Debug.write('1')">
+    <method name="blah" args="n">
+      Debug.write(n);
+    </method>
+   </class>
+
+  <myclass/>
+
+  <myclass oninit="Debug.write('2');"/>
+
+  <myclass oninit="this.blah('3');"/>
+
+  <myclass>
+    <method event="oninit">
+      this.blah('4');
+    </method>
+  </myclass>
+
+  <class name="mysubclass" extends="myclass" oninit="Debug.write('sub');"/>
+
+  <mysubclass/>
+
+  <mysubclass oninit="Debug.write('5')"/>
+
+  <mysubclass oninit="this.blah('6')"/>
+
+  <mysubclass>
+    <method event="oninit">
+      this.blah('7');
+    </method>
+  </mysubclass>
+
+  <!-- behavior gets strange here in existing runtime also... >
+  <class name="mysubsubclass" extends="mysubclass" oninit="Debug.write('subsub');"/>
+
+  <mysubsubclass/>
+
+  <mysubsubclass oninit="Debug.write('8')"/-->
+
+  <view>
+    <method event="oninit">
+        assertEquals('1,2,1,3,1,4,1,1,sub,5,1,sub,6,1,sub,7,1,sub', getLog(), 'Equality test')
+    </method>
+  </view>
+
+<text>
+From flash:
+1 
+2 
+1 
+3 
+1 
+4 
+1 
+1 
+sub 
+5 
+1 
+sub 
+6 
+1 
+sub 
+7 
+1 
+sub 
+
+
+After the second subclass, it gets strange:
+
+1 
+sub 
+subsub 
+8 
+1 
+sub 
+subsub
+</text>
+</canvas>

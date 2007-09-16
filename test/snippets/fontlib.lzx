@@ -1,0 +1,11 @@
+<library>
+  <resource name="test1" src="../resources/swf/logo.swf"/>
+  <resource name="test2" src="../resources/swf/startoverbtn.swf" />
+  <font name="KentuckyFriedChickenFont" src="../resources/ttf/KentuckyFriedChickenFont.ttf" />
+  <font name="kingfont" src="../resources/ttf/the_King__26_Queen_font.ttf" />
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

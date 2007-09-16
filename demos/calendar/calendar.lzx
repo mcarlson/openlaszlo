@@ -4,13 +4,13 @@
 <!-- respect to variable and method names: some are all lower case, some   -->
 <!-- use underscores ("_") and some use mixedCase.                         -->
 
-<canvas title="Laszlo Calendar" bgcolor="#1E3A49" width="830" height="600" fontsize="8">
+<canvas title="Laszlo Calendar" bgcolor="#1E3A49" width="835" height="600" >
     <include href="resources.lzx"/>
     <include href="cal-button.lzx" />
 
 
     <!-- INCLUDES -->
-    <include href="vscrollbar.lzx" />
+    <include href="lz/scrollbar.lzx" />
 
     <include href="gridsliderlayout.lzx"/>
     <include href="basepanel.lzx" />
@@ -22,6 +22,8 @@
     <include href="dayname.lzx"/>
     <include href="selected-daylook.lzx"/>
     <include href="eventselector.lzx"/>
+    
+
 
     <attribute name="calMonths" value='[ "January","February","March","April",
                                          "May","June", "July","August",
@@ -31,9 +33,6 @@
     <!-- ============================ LOADING ============================= -->
     <!-- Displays splash, instantiation progress                            -->
     <!-- ================================================================== -->
-    <splash>
-        <view resource="images/splash/callogostart.swf"/>
-    </splash>
 
     <include href="loading.lzx"/>
 
@@ -43,7 +42,8 @@
 
     <!-- The top panel holds the views above the calendar grid, which include
          the day names that appear as column titles.  -->
-    <view font="vera" id="toppanel" x="20" y="-50"  width="806" >
+    <view font="Verdana,sans-serif" id="toppanel" x="20" y="-50"  width="806" 
+        fontsize="10">
 
         <!-- This is the bar that appears below the toolbar (and contains the
              day names. This comes first in the file because it needs to be
@@ -119,16 +119,16 @@
             </view>
 
             <!-- constrain shadow to the top -->
-            <text name="monthtitleshdw" font="vera" fontsize="10"
-                  fgcolor="#143B45" y="${parent.monthtitle.y -0.5}"
+            <text name="monthtitleshdw" fontstyle="bold"
+                  fgcolor="#143B45" y="${parent.monthtitle.y -1}"
                   x="${parent.monthtitle.x -0.3}" opacity=".5">
                   <attribute name="text" value="${parent.monthtitle.text}" />
             </text>
-            <text name="monthtitle" font="vera" fontsize="10"
+            <text name="monthtitle" fontstyle="bold"
                 fgcolor="#FFFFFF" y="10">
                 <method event="ontext">
                     this.setX( Math.round( ( this.parent.width -
-                               this.getTextWidth())/2.0) - 4);
+                               this.getTextWidth())/2.0) - 2);
                     this.setWidth (this.getTextWidth()+2);
                     this.parent.monthtitleshdw.setWidth (this.getTextWidth()+2);
 
@@ -140,379 +140,389 @@
         </view>
 
         <!-- animates in top panel on startup -->
-        <animator attribute="y" to="0" duration="500"
-                  onstop="calgrid.finishStartSequence()"/>
+    <animator id="slideInTopPanel" attribute="y" 
+        to="0" duration="500" start="false" 
+        onstop="calgrid.finishStartSequence()"/>
+
     </view>
 
     <!-- The cal interior holds the views in the calendar with the exception
          of the top view.  -->
-    <view id="cal_interior" x="20" y="57" visible="false" font="vera"
+    <view id="cal_interior" x="20" y="57" visible="false" 
+          opacity="0" clip="true"
+          font="Verdana,sans-serif"
           width="810" height="516" pixellock="true">
+        <attribute name="viewstyle" type="string" value="month"/>
 
         <animator name="fadeUp" attribute="opacity"
                   onstop="dayselectorlook.setOpacity( 1 )"
-                  duration="500" from="0" to="1"
+                  duration="1000" from="0" to="1"
                   start="false"/>
-
-        <view id="calgrid" x="0" y="0"
-            width="${parent.width - 2}" height="${parent.height}" >
-            <attribute name="viewmode" value="month" type="string" />
-            <attribute name="firstDay" value="null"/>
-
-            <!-- this is the right way to do this, even though it seems
-                 ridiculous. The cells are calendar_day's are part of the
-                 app; they don't really depend on any data at this point.
-                 It would be nice to move them to another file, but the
-                 library tag won't work here, and we don't want to use an
-                 extra view to make the included file valid XML (with a
-                 single root element.) -->
-            <calendar_day id="cell1"/>
-            <calendar_day id="cell2"/>
-            <calendar_day id="cell3"/>
-            <calendar_day id="cell4"/>
-            <calendar_day id="cell5"/>
-            <calendar_day id="cell6"/>
-            <calendar_day id="cell7"/>
-
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-            <calendar_day />
-
-            <gridsliderlayout name="gridlayout" cols="7" spacing="4"/>
-
-
-            <!-- METHODS -->
-            <method name="finishStartSequence">
-                parent.setVisible( true );
-                var now = new Date();
-                this.setMonthAndYear(now.getMonth(), now.getFullYear());
-                parent.fadeUp.doStart();
-            </method>
-
-            <!-- Finds the day associated with a given JavaScript Date
-                 object -->
-            <method name="get_dayview" args="t">       <![CDATA[
-                if (t < this.startdate || t > this.enddate)
-                    return null;
-                // to deal with daylight savings and such, we find an
-                //  approximate date and then refine it by looking at
-                //  the start and end of the dayviews
-                var d = Math.round((t.getTime() - this.startdate.getTime())
-                                   / 86400000);
-                // NOTE: 86400000 represents one day in miliseconds
-
-                if (d >= this.subviews.length) d = this.subviews.length - 1
-                if (d < 0) d = 0;
-
-                var dv = this.subviews[d];
-                while (dv.startdate > t) {
-                    d--;
-                    dv = this.subviews[d];
-                }
-                while (dv.enddate <= t) {
-                    d++;
-                    dv = this.subviews[d];
-                }
-                return dv;
-            ]]></method>
-
-
-           <!-- Makes the passed day the open day (with the grid in the
-                background -->
-           <method name="openday" args="d" >       <![CDATA[
-                // d is a reference to a dayview
-
-                //make sure it's selected
-                this.daySelectionMgr.select( d );
-
-                // don't do anything else if already opened
-               // if (this['open_day'] == d) { return; }
-
-                // Open one day, close the last
-
-                // update gridslider
-                if(gridlayout.displaymode == 'grid') gridlayout.doanimation = false;
-
-                gridlayout.setopenview(d,true);
-
-                this.open_day = d;  // Make the requested day the open day
-
-
-            ]]></method>
-
-
-            <method name="closeday" >      <![CDATA[
-                //if (this['open_day'] == undefined || this.open_day == null)
-                //    return;
-
-                //this.open_day.setAttribute( 'opened' , false);
-                //this.open_day = null;
-                gridlayout.doanimation = false;
-                gridlayout.setopenview(null,true);
-
-            ]]></method>
-
-            <method name="prevMonth">
-                var prvmonth = this.month - 1;
-                var prvyear = this.year;
-                if (this.month == 0) {
-                    prvmonth = 11;
-                    prvyear -= 1;
-                }
-                this.setMonthAndYear(prvmonth,prvyear);
-            </method>
-
-            <method name="nextMonth">
-                var nxtmonth = this.month + 1;
-                var nxtyear = this.year;
-                if (this.month == 11) {
-                    nxtmonth = 0;
-                    nxtyear += 1;
-                }
-                var t = getTimer();
-                this.setMonthAndYear(nxtmonth,nxtyear);
-                if (global['mytext'] != null)
-                    mytext.setText( getTimer() -t );
-            </method>
-
-            <!-- BEGIN: VIEW MODE METHODS ASSOCIATED WITH VIEW BUTTONS -->
-            <method name="showonedaytitle" args="dayindex"> <![CDATA[
-                var svs = toppanel.weekbkgnd.daynames.subviews;
-                for (var i = 0; i < 7; i++){
-                    if (i == dayindex)
-                        svs[i].setVisible(true);
-                    else
-                        svs[i].setVisible(false);
-                }
-            ]]> </method>
-
-            <method name="showdayview"> <![CDATA[
-                var sday = daySelectionMgr.getSelection()[0];
-                this.showonedaytitle( sday.col);
-                gridlayout.showcell(sday.row,sday.col);
-            ]]> </method>
-
-            <method name="showweekview"> <![CDATA[
-                var sday = daySelectionMgr.getSelection()[0];
-                gridlayout.showrow(sday.row);
-            ]]> </method>
-
-            <method name="showmonthview" args="withanimation" > <![CDATA[
-                gridlayout.showgrid();
-            ]]> </method>
-
-            <!-- END: VIEW MODE METHODS ASSOCIATED WITH VIEW BUTTONS -->
-
-            <method name="setMonthAndYear" args="mth,yr"> <![CDATA[
-                if (mth == this['month'] && yr == this['year'])
-                    return;
-
-                eventselector.hide();
-
-                this.month = mth;
-                this.year  = yr;
-
-                this.gridlayout.setopenview(null,false);
-
-                // don't animate  gridlayout on update
-                gridlayout.setAttribute('doanimation',false);
-                //this.gridlayout.setAttribute('displaymode','grid');
-                var noanimation = true;
-                gridlayout.showgrid(noanimation);
-
-                var t = canvas.calMonths[mth] + " " + yr;
-                toppanel.mbar.monthtitle.setText(t);
-
-                this.setDates();
-
-
-                ]]>
-            </method>
-
-
-            <!-- These are used by the info panel when it slides in and out -->
-            <method name="contract" >
-                gridlayout.doanimation = false;
-                this.setWidth(this.parent.width - 208);
-            </method>
-
-            <method name="expand" >
-                gridlayout.doanimation = false;
-                this.setWidth(this.parent.width);
-            </method>
-
-            <!-- This method sets the dates for all the days in the grid,
-                 depending on the current month. Also ensures that data is
-                 loaded for all visible months -->
-            <method name="setDates" > <![CDATA[
-                this.calcBoundaryDates();
-
-                var k=0;
-                var firstDay="";
-
-                var dtstart = new Date(this.startdate);
-                var lastVisibleDay = this.gridlayout.rows*7;
-
-                for (k=0;k< this.subviews.length && k <= lastVisibleDay; k++) {
-                    // to get start of next day, add 26 hours, then
-                    //  zero hours/mins/secs/msecs
-                    dtend = new Date(dtstart.getTime() + 26 * 3600000);
-                    dtend.setHours(0);
-                    dtend.setMinutes(0);
-                    dtend.setSeconds(0);
-                    dtend.setMilliseconds(0);
-
-                    dayview = this.subviews[k];
-                    dayview.setDate(dtstart, dtend);
-
-                    //debug.write("dtstart:  "+dtstart.getDate());
-
-                    if (firstDay=="" && dtstart.getDate()==1)
-                        firstDay=dayview;
-
-                   //debug.write( "k, DATE, subview =" + k + ","
-                     //            + dtstart.toString() + "," + dayview);
-
-                    dtstart = dtend;
-                }
-
-                this.enddate = dtstart;
-                var i = this.startdate.getYear() * 100 +
-                        this.startdate.getMonth();
-                var en= this.enddate.getYear() * 100 +
-                        this.enddate.getMonth();
-                //now request all the months that are visible onscreen from
-                //the data loader
-                while (  i <= en  ){
-                    var mo = i%100;
-                    var yr = Math.floor( i/100 );
-                    if ( mo < 11 ) i++
-                    else           i += ( 100 - 11 );
-                    //Debug.write( "request mo " + mo +" yr " + yr);
-                    dataloader.loadData( mo+1 , yr+1900 );
-                }
-
-                // point to the new 1st day of the month
-                this.daySelectionMgr.select( firstDay );
-                ]]>
-            </method>
-
-            <method name="calcBoundaryDates" >
-                //This method is a helper for setDates
-                <![CDATA[
-                // GET A NEW DATE OBJECT FOR STARTDATE
-                this.startdate = new Date();
-
-                // SET THE DATE TO THE FIRST OF THE MONTH
-                this.startdate.setMonth(this.month,1);
-                this.startdate.setFullYear(this.year);
-
-                // Find the first sunday of that week which contains
-                // the first of the specified month
-                // NOTE: 86400000 milliseconds represents one day
-                this.startdate.setTime( this.startdate.getTime() -
-                                        86400000*this.startdate.getDay());
-
-                // Zero the time for that day
-                this.startdate.setHours(0,0,0,0);
-
-                // Get a new date object for end date
-                this.enddate = new Date();
-
-                // Find the date coressponding to the sunday 5 weeks later
-                // from the startdate
-                this.enddate.setTime(this.startdate.getTime() + 86400000*7*5);
-
-                // NOW set the real end date if the 5TH sunday is part of
-                // the current month or not
-                // first make sure next month is correct if part of next year
-                var nxtmonth = this.enddate.getMonth();
-                if ((this.month == 11) && (nxtmonth == 0)) nxtmonth = 12;
-
-                if ( nxtmonth > this.month) {
-                    this.enddate.setTime(this.enddate.getTime() - 86400000);
-                    //step back a day
-                    this.gridlayout.setAttribute('rows',5);
-                } else {
-                    this.enddate.setTime(this.enddate.getTime() + 86400000*6);
-                    //set for next sat
-                    this.gridlayout.setAttribute('rows',6);
-                }
-                ]]>
-            </method>
-
-            <selectionmanager name="daySelectionMgr" />
-
-        </view>
 
         <info_Panel name="infopanel" id="infopanel" x="830" width="203"
                     height="516" visible="false" initstage="late" 
+                    font="Verdana,sans-serif"                    
                     pixellock="true">
             <datapath p="${currenteventDP.p}" />
         </info_Panel>
       </view>
 
+        <view id="calgrid" x="${cal_interior.x}" y="${cal_interior.y}"
+          width="${cal_interior.width - 2}" height="${cal_interior.height}" >
+          <attribute name="viewmode" value="month" type="string" />
+          <attribute name="firstDay" value="null"/>
+          <attribute name="keepinfoopen" type="boolean" value="false"/>
+
+          <!-- this is the right way to do this, even though it seems
+               ridiculous. The cells are calendar_day's are part of the
+               app; they don't really depend on any data at this point.
+               It would be nice to move them to another file, but the
+               library tag won't work here, and we don't want to use an
+               extra view to make the included file valid XML (with a
+               single root element.) -->
+          <calendar_day id="cell1"/>
+          <calendar_day id="cell2"/>
+          <calendar_day id="cell3"/>
+          <calendar_day id="cell4"/>
+          <calendar_day id="cell5"/>
+          <calendar_day id="cell6"/>
+          <calendar_day id="cell7"/>
+
+          <calendar_day id="cell8"/>
+          <calendar_day id="cell9"/>
+          <calendar_day id="cell10"/>
+          <calendar_day id="cell11"/>
+          <calendar_day id="cell12"/>
+          <calendar_day id="cell13"/>
+          <calendar_day id="cell14"/>
+
+          <calendar_day id="cell15"/>
+          <calendar_day id="cell16"/>
+          <calendar_day id="cell17"/>
+          <calendar_day id="cell18"/>
+          <calendar_day id="cell19" />
+          <calendar_day id="cell20"/>
+          <calendar_day id="cell21"/>
+
+          <calendar_day id="cell22"/>
+          <calendar_day id="cell23"/>
+          <calendar_day id="cell24"/>
+          <calendar_day id="cell25"/>
+          <calendar_day id="cell26"/>
+          <calendar_day id="cell27"/>
+          <calendar_day id="cell28"/>
+
+          <calendar_day id="cell29"/>
+          <calendar_day id="cell30"/>
+          <calendar_day id="cell31"/>
+          <calendar_day id="cell32"/>
+          <calendar_day id="cell33"/>
+          <calendar_day id="cell34"/>
+          <calendar_day id="cell35"/>
+
+          <calendar_day id="cell36"/>
+          <calendar_day id="cell37"/>
+          <calendar_day id="cell38"/>
+          <calendar_day id="cell39"/>
+          <calendar_day id="cell40"/>
+          <calendar_day id="cell41"/>
+          <calendar_day id="cell42"/>
+
+          <gridsliderlayout name="gridlayout" cols="7" spacing="4"/>
+
+
+          <!-- METHODS -->
+          <method name="finishStartSequence">
+              cal_interior.setVisible( true );
+              var now = new Date();
+              this.setMonthAndYear(now.getMonth(), now.getFullYear());
+              cal_interior.fadeUp.doStart();
+          </method>
+
+          <!-- Finds the day associated with a given JavaScript Date
+               object -->
+          <method name="get_dayview" args="t">       <![CDATA[
+              if (t < this.startdate || t > this.enddate)
+                  return null;
+              // to deal with daylight savings and such, we find an
+              //  approximate date and then refine it by looking at
+              //  the start and end of the dayviews
+              var d = Math.round((t.getTime() - this.startdate.getTime())
+                                 / 86400000);
+              // NOTE: 86400000 represents one day in miliseconds
+
+              if (d >= this.subviews.length) d = this.subviews.length - 1
+              if (d < 0) d = 0;
+
+              var dv = this.subviews[d];
+              while (dv.startdate > t) {
+                  d--;
+                  dv = this.subviews[d];
+              }
+              while (dv.enddate <= t) {
+                  d++;
+                  dv = this.subviews[d];
+              }
+              return dv;
+          ]]></method>
+
+
+         <!-- Makes the passed day the open day (with the grid in the
+              background -->
+         <method name="openday" args="d" >       <![CDATA[
+              // d is a reference to a dayview
+
+              //make sure it's selected
+              this.daySelectionMgr.select( d );
+
+              // don't do anything else if already opened
+              // if (this['open_day'] == d) { return; }
+
+              // Open one day, close the last
+
+              // update gridslider
+              if(gridlayout.displaymode == 'grid') gridlayout.doanimation = false;
+
+              gridlayout.setopenview(d,true);
+
+              this.open_day = d;  // Make the requested day the open day
+          ]]></method>
+
+
+          <method name="closeday" >      <![CDATA[
+              //if (this['open_day'] == undefined || this.open_day == null)
+              //    return;
+
+              //this.open_day.setAttribute( 'opened' , false);
+              //this.open_day = null;
+              gridlayout.doanimation = false;
+              gridlayout.setopenview(null,true);
+
+          ]]></method>
+
+          <method name="prevMonth">
+              var prvmonth = this.month - 1;
+              var prvyear = this.year;
+              if (this.month == 0) {
+                  prvmonth = 11;
+                  prvyear -= 1;
+              }
+              this.setMonthAndYear(prvmonth,prvyear);
+              cal_interior.viewstyle = "month";
+          </method>
+
+          <method name="nextMonth">
+              var nxtmonth = this.month + 1;
+              var nxtyear = this.year;
+              if (this.month == 11) {
+                  nxtmonth = 0;
+                  nxtyear += 1;
+              }
+              var t = getTimer();
+              this.setMonthAndYear(nxtmonth,nxtyear);
+              if (global['mytext'] != null){
+                  mytext.setText( getTimer() -t );
+              }
+              cal_interior.viewstyle = "month";
+          </method>
+
+          <!-- BEGIN: VIEW MODE METHODS ASSOCIATED WITH VIEW BUTTONS -->
+          <method name="showonedaytitle" args="dayindex"> <![CDATA[
+              var svs = toppanel.weekbkgnd.daynames.subviews;
+              for (var i = 0; i < 7; i++){
+                  if (i == dayindex)
+                      svs[i].setVisible(true);
+                  else
+                      svs[i].setVisible(false);
+              }
+          ]]> </method>
+
+          <method name="showdayview"> <![CDATA[
+              var sday = daySelectionMgr.getSelection()[0];
+              this.showonedaytitle(sday.col);
+              gridlayout.showcell(sday.row,sday.col);
+              cal_interior.setAttribute("viewstyle", "day");
+          ]]> </method>
+
+          <method name="showweekview"> <![CDATA[
+              var sday = daySelectionMgr.getSelection()[0];
+              gridlayout.showrow(sday.row);
+              cal_interior.setAttribute("viewstyle", "week");
+          ]]> </method>
+
+          <method name="showmonthview" args="withanimation" > <![CDATA[
+              gridlayout.showgrid();
+              cal_interior.setAttribute("viewstyle", "month");
+          ]]> </method>
+
+          <!-- END: VIEW MODE METHODS ASSOCIATED WITH VIEW BUTTONS -->
+
+          <method name="setMonthAndYear" args="mth,yr"> <![CDATA[
+              if (mth == this['month'] && yr == this['year']){
+                  return;
+              }
+
+              if(this.keepinfoopen == false){
+                  eventselector.hide();
+              }
+
+              this.month = mth;
+              this.year  = yr;
+
+              this.gridlayout.setopenview(null,false);
+
+              // don't animate  gridlayout on update
+              gridlayout.setAttribute('doanimation',false);
+              //this.gridlayout.setAttribute('displaymode','grid');
+              var noanimation = true;
+              gridlayout.showgrid(noanimation);
+
+              var t = canvas.calMonths[mth] + " " + yr;
+              toppanel.mbar.monthtitle.setText(t);
+
+              this.setDates();
+
+
+              ]]>
+          </method>
+
+
+          <!-- These are used by the info panel when it slides in and out -->
+          <method name="contract" >
+              gridlayout.doanimation = false;
+              this.setWidth(cal_interior.width - 208);
+          </method>
+
+          <method name="expand" >
+              gridlayout.doanimation = false;
+              this.setWidth(cal_interior.width);
+          </method>
+
+          <!-- This method sets the dates for all the days in the grid,
+               depending on the current month. Also ensures that data is
+               loaded for all visible months -->
+          <method name="setDates" > <![CDATA[
+              this.calcBoundaryDates();
+
+              var k=0;
+              var firstDay="";
+
+              var dtstart = new Date(this.startdate);
+              var lastVisibleDay = this.gridlayout.rows*7;
+
+              for (k=0;k< this.subviews.length && k <= lastVisibleDay; k++) {
+                  // to get start of next day, add 26 hours, then
+                  //  zero hours/mins/secs/msecs
+                  dtend = new Date(dtstart.getTime() + 26 * 3600000);
+                  dtend.setHours(0);
+                  dtend.setMinutes(0);
+                  dtend.setSeconds(0);
+                  dtend.setMilliseconds(0);
+
+                  dayview = this.subviews[k];
+                  dayview.setDate(dtstart, dtend);
+
+                  //Debug.write("dtstart:  "+dtstart.getDate());
+
+                  if (firstDay=="" && dtstart.getDate()==1)
+                      firstDay=dayview;
+
+                 //Debug.write( "k, DATE, subview =" + k + ","
+                   //            + dtstart.toString() + "," + dayview);
+
+                  dtstart = dtend;
+              }
+
+              this.enddate = dtstart;
+              // Calls to getYear() returns 2 digits on FF, and 4 digits
+              // on IE6. getFullYear() returns 4 digits in all.
+              var i = this.startdate.getFullYear() * 100 +
+                      this.startdate.getMonth();
+              var en= this.enddate.getFullYear() * 100 +
+                      this.enddate.getMonth();
+              //now request all the months that are visible onscreen from
+              //the data loader
+              while (  i <= en  ){
+                  var mo = i%100;
+                  var yr = Math.floor( i/100 );
+                  if ( mo < 11 ) i++
+                  else           i += ( 100 - 11 );
+                  //Debug.write( "request mo " + mo +" yr " + yr);
+                  dataloader.loadData( mo+1 , yr );
+              }
+
+              // point to the new 1st day of the month
+              this.daySelectionMgr.select( firstDay );
+              ]]>
+          </method>
+
+          <method name="calcBoundaryDates" >
+              //This method is a helper for setDates
+              <![CDATA[
+              // GET A NEW DATE OBJECT FOR STARTDATE
+              this.startdate = new Date();
+
+              // SET THE DATE TO THE FIRST OF THE MONTH
+              this.startdate.setMonth(this.month,1);
+              this.startdate.setFullYear(this.year);
+
+              // Find the first sunday of that week which contains
+              // the first of the specified month
+              // NOTE: 86400000 milliseconds represents one day
+              this.startdate.setTime( this.startdate.getTime() -
+                                      86400000*this.startdate.getDay());
+
+              // Zero the time for that day
+              this.startdate.setHours(0,0,0,0);
+
+              // Get a new date object for end date
+              this.enddate = new Date();
+
+              // Find the date coressponding to the sunday 5 weeks later
+              // from the startdate
+              this.enddate.setTime(this.startdate.getTime() + 86400000*7*5);
+
+              // NOW set the real end date if the 5TH sunday is part of
+              // the current month or not
+              // first make sure next month is correct if part of next year
+              var nxtmonth = this.enddate.getMonth();
+              if ((this.month == 11) && (nxtmonth == 0)) nxtmonth = 12;
+
+              if ( nxtmonth > this.month) {
+                  this.enddate.setTime(this.enddate.getTime() - 86400000);
+                  //step back a day
+                  this.gridlayout.setAttribute('rows',5);
+              } else {
+                  this.enddate.setTime(this.enddate.getTime() + 86400000*6);
+                  //set for next sat
+                  this.gridlayout.setAttribute('rows',6);
+              }
+              ]]>
+          </method>
+
+          <selectionmanager name="daySelectionMgr" />
+
+      </view>
+
 
     <!-- This is the beveled treatment for the selected day, plus the button
          that appears in the top right corner -->
-    <selectedDayLook id="dayselectorlook" width="150" height="23" font="vera"
-                     visible="false" opacity="0"/>
+    <selectedDayLook id="dayselectorlook" width="150" height="23" 
+        font="Verdana,sans-serif"
+        visible="false" opacity="0"/>
 
-    <eventSelectorbar id="eventselector" font="vera"/>
+    <eventSelectorbar id="eventselector" 
+        font="Verdana,sans-serif" />
 
-    <!-- This little bit of code puts a white box in the top left corner
-         that gives time to app init in milliseconds.-->
-    <!--view name="inittime" bgcolor="white" visible="true" >
-        <method event="oninit" reference="canvas">
-            var d = new LzDelegate( mytext , "tellTime" );
-            LzIdle.callOnIdle( d );
-            this.bringToFront();
-        </method>
-        <text id="mytext" resize="true">
-            <method name="tellTime" args="t">
-                this.setText( "Time taken: " + t );
-            </method>
-        </text>
-    </view-->
+    <!-- Start the ui appearing with a cool animation when the canvas is ready -->
+    <method reference="canvas" event="oninit">
+        slideInTopPanel.doStart(); // make the top panel slide in
+        loadingView.destroy();  
+    </method>
+    
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

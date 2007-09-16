@@ -1,0 +1,109 @@
+<!-- Copyright 2007 Laszlo Systems -->
+<canvas title="rendering comparison" width="1100" height="100%">
+
+    <font src="helmetr.ttf"               name="Helvetica" />
+    <class name="sampletext" extends="text" font="Helvetica"
+            antiAliasType = "${parent.antiAliasType}"
+            gridFit       = "${parent.gridFit}"
+            thickness     = "${parent.thickness}"
+            sharpness     = "${parent.sharpness}"
+            multiline     = "true"
+            width         = "${parent.width}"
+        >
+        <attribute name="text"  value="As the months passed"  />
+    </class>
+
+    <class name="multitextsample" width="200">
+        <attribute name="antiAliasType" value="advanced" type="string" />
+        <attribute name="gridFit" value="none" type="string" />
+        <attribute name="thickness" value="0" type="number"/>
+        <attribute name="sharpness" value="0" type="number" />
+        <simplelayout axis="y" />
+        <sampletext fontsize="9" text="As sands in the hourglass, such are" />
+        <sampletext fontsize="12" text="Carol is living proof of the resilience" />
+        <sampletext fontsize="15" text="Unfortunately, Oliver" />
+        <sampletext fontsize="24" text="Oxygen-starved!" />
+    </class>
+
+    <class name="description" height="30" bgcolor="#CCCCCC" width="100%">
+        <attribute name="label" value="unlabled" type="string"/>
+        <text text="${parent.label}" y="5" x="5"/>
+    </class>
+
+    <view x="5">
+        <simplelayout axis="y" spacing="5" />
+        <view width="10" height="10"/> <!-- padding -->
+
+        <description label="vary thickness from -200 to 200" />
+        <view>
+            <simplelayout axis="x" spacing="5" />
+            <multitextsample id="t0"
+                thickness="-200"
+            />
+            <multitextsample id="t1"
+                thickness="-100"
+            />
+            <multitextsample id="t2"
+                thickness="0"
+            />
+            <multitextsample id="t3"
+                thickness="100"
+            />
+            <multitextsample id="t4"
+                thickness="200"
+            />
+
+        </view>
+
+        <description label="vary sharpness from -400 to 400" />
+         <view>
+             <simplelayout axis="x" spacing="5" />
+             <multitextsample id="t0a"
+                 sharpness="-400"
+             />
+             <multitextsample id="t1a"
+                 sharpness="-200"
+             />
+             <multitextsample id="t2a"
+                 sharpness="0"
+             />
+             <multitextsample id="t3a"
+                 sharpness="200"
+             />
+             <multitextsample id="t4a"
+                 sharpness="400"
+             />
+         </view>
+
+         <description label="antiAliasType = normal, advanced" />
+         <view>
+              <simplelayout axis="x" spacing="5" />
+              <multitextsample id="tAAnormal"
+                  antiAliasType="normal"
+              />
+              <multitextsample id="tAAadvanced"
+                  antiAliasType="advanced"
+              />
+         </view>
+
+         <description label="gridFit = none, pixel, subpixel (antiAliasType='advanced')" />
+         <view>
+              <simplelayout axis="x" spacing="5" />
+              <multitextsample id="tGFnormalaaa"
+                  gridFit="none"
+                  antiAliasType="advanced"  
+                  width="200"
+              />
+              <multitextsample id="tGFpixelaaa"
+                  gridFit="pixel"
+                  antiAliasType="advanced"
+                  width="200"
+              />
+              <multitextsample id="tGFsubpixelaaa"
+                  gridFit="subpixel"
+                  antiAliasType="advanced"
+                  width="200"
+              />
+         </view>
+     </view>
+</canvas>

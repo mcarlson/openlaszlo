@@ -1,0 +1,421 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<library>
+<!--
+    [enw] notes porting lzunit to DHTML target 
+    * removed jsTrue
+    * ported DebugObject
+    * ported Test
+    * added format to Test
+-->
+
+<class name="DebugObject">
+    <!--- whether or not to emit debugging statements -->
+    <attribute name="debugWrite" />
+
+    <!--- @keywords required -->
+    <method name="debugFields">
+        return [];
+    </method>
+
+    <!--- @keywords required -->
+    <method name="_dbg_typename">
+        return "DebugObject";
+    </method>
+
+    <!---
+      @keywords constructor
+    -->
+    <method name="construct" args="parent, args">
+        this.debugWrite = args["debugWrite"];
+
+// [enw] workaround for super.construct
+        callInherited("construct", parent, args);
+//        super.construct(parent, args);
+
+
+        dw("DebugObject.construct(", args, ")");
+    </method>
+
+    <!---
+      @return String: a string describing the object in detail.
+    -->
+    <method name="_dbg_name">
+        <![CDATA[
+            var f = this.debugFields();
+            var s = this["toString"]();
+            if (f.length > 0 || s == "[object Object]") {
+                s = "";
+                for (var e in f) {
+                    var i = f[e];
+                    var v = this[i];
+                    // Ignore "empty" properties
+                    if (v && ("" + v) != "") {
+                        s += "" + i + ": " + v + ", ";
+                    }
+                }
+                if (s != "")
+                    s = "{" + s.substring(0, s.length - 2) + "}";
+            }
+            return s;
+        ]]>
+    </method>
+
+    <!---
+      Takes any number of arguments and outputs them using
+      Debug.write.  Strings are output literally, any other objects
+      are described in more detail using Debug.__String (which uses
+      _dbg_typename and _dbg_name of objects that support it).
+
+      @keywords private
+    -->
+    <method name="dw" args="s">
+        Debug.write(s);
+    </method>
+
+</class>
+
+<class name="Test" extends="DebugObject">
+    <method name="_dbg_typename">
+        return "Test";
+    </method>
+
+    <!-- attributes -->
+    <!---
+      Used to accumulate test results in the absence of exceptions
+      @keywords private
+    -->
+    <attribute name="result" />
+    <!---
+      one of 'actionscript' or 'javascript'
+      @keywords private
+    -->
+    <attribute name="semantics" value="'actionscript'"/>
+
+    <!---
+      whether to emit debugging statements about the execution of
+      tests
+      @keywords private
+    -->
+    <attribute name="debugLZUnit" value="false" />
+
+    <method name="_dbg_name">
+        return this.classname;
+    </method>
+
+    <method name="debugFields">
+// [enw] workaround for super.construct
+        var f=callInherited("debugFields");
+//        var f = super.debugFields();
+
+        return f.concat([ "result", "semantics" ]);
+    </method>
+
+    <!---
+        @keywords constructor
+    -->
+    <method name="construct" args="parent, args">
+        <!-- TODO: [2002-11-14 ptw] (uninitialized attributes) remove
+        when uninitialized attributes are initialized to null by
+        default -->
+        this.result = null;
+
+        <!-- args.semantics handled by default initialization -->
+//        super.construct(parent, args);
+// [enw] workaround for super.construct
+//        this.callInherited("construct", [parent, args]);
+
+// [enw] TODO: fix inheritance?
+//        dw("Test.construct(", args, ")");
+    </method>
+
+
+    <!---
+      Set the result accumulator, creating one if none supplied.
+
+      @keywords private
+
+      @param TestResult theTestResult: (optional) result accumulator.
+     -->
+    <method name="setResult" args="theTestResult">
+        if (typeof(theTestResult) == "undefined") {
+            theTestResult = new TestResult();
+        } else {
+          this.result = theTestResult;
+        }
+    </method>
+
+    <!---
+      Implements !! according to the settings of semantics.
+
+      @keywords private
+
+      @param condition: The condition value to test.
+      @return Boolean: whether the condition is true or not.
+    -->
+    <method name="semanticsTrue" args="condition">
+    <![CDATA[
+             // Safe test for undefined
+             if (typeof(condition) == "undefined") {
+               return false;
+             } else if (semantics == "javascript") {
+               return condition;
+             } else if (semantics == "actionscript") {
+               return (!! condition);
+             } else {
+               error("Unknown semantics: " + semantics);
+             }
+    ]]>
+    </method>
+
+
+    <!-- These methods will all be apparent to individual tests and
+     accumulate their results into the result attibute -->
+
+    <!---
+      Record a failure.
+
+      @param message: the reason for the failure
+     -->
+    <method name="fail" args="message">
+// [enw] TODO: fix suite.message
+//        var suite = this.parent;
+//        suite.ontestfail.sendEvent(message);
+        if (this.result) {
+          this.result.addFailure(message);
+        } else {
+          Debug.write('result is null on fail call: "' + message + '"');
+        }
+    </method>
+
+    <!---
+      Record an error.
+
+      @param message: the reason for the error
+    -->
+    <method name="error" args="message">
+        var suite = this.parent;
+        suite.ontestfail.sendEvent(message);
+        if (this.result) {
+          this.result.addError(message);
+        } else {
+          Debug.write('result is null on error call: "' + message + '"');
+        }
+    </method>
+    
+    <!---
+      Format a failure message from a message, expected and actual
+      values.
+
+      @keywords private
+
+      @param message: the failure message
+      @param expected: the expected value
+      @param actual: the actual value
+      @return String: the formatted failure message
+    -->
+    <method name="format" args="message, expected, actual">
+// TODO: Debug
+        var msg = (message ? message + ": " : "") +
+        ' expected ' + expected + " got " + actual;
+
+/*        if (Debug) {
+          Debug.freshLine();
+          // create an error, which will include a backtrace, if applicable
+          Debug.__write(new LzError(null, null, msg));
+        }
+*/
+
+        return String(msg);
+    </method>
+
+    <!---
+      Assert that a condition is true.
+
+      Note that this tests that condition, if supplied as the argument
+      to an if statement, would cause the then clause to be chosen.
+      This does not test that condition == true, or that condition
+      === true, use assertEquals or assertSame to make such tests.
+
+      @param condition: the condition to be tested
+      @param assertion: (optional) the assertion the condition represents
+    -->
+    <method name="assertTrue" args="condition, assertion">
+        if (! semanticsTrue(condition)) {
+            this.fail(this.format(assertion ? assertion : "True", true, condition));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)
+    </method>
+
+
+    <!---
+      Assert that a condition is false.
+
+      Note that this tests that condition, if supplied as the argument
+      to an if statement, would cause the else clause to be chosen.
+      This does not test that condition == false, or that condition
+      === false, use assertEquals or assertSame to make such tests.
+
+      @param condition: the condition to be tested
+      @param assertion: (optional) the assertion the condition represents
+    -->
+    <method name="assertFalse" args="condition, assertion">
+        if (!! semanticsTrue(condition)) {
+            this.fail(this.format(assertion ? assertion :  "False", false, condition));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that an actual value equals (==) an expected value.
+
+      @param expected: the expected value
+      @param actual: the actual value
+      @param message: (optional) the failure message
+    -->
+    <method name="assertEquals" args="expected, actual, message">
+        <!-- note NaN compares are always false -->
+        if (! (expected == actual)) {
+            this.fail(this.format(message ? message :  "Equals", expected, actual));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)
+    </method>
+
+    <!---
+      Assert that an actual value is within delta of an expected value.
+
+      @param expected: the expected value
+      @param actual: the actual value
+      @param delta: the tolerance
+      @param message: (optional) the failure message
+    -->
+    <method name="assertWithin" args="expected, actual, delta,
+            message">
+        <![CDATA[
+            // handle infinite expected
+            if (expected == actual) return;
+
+            var error = (actual <= expected) ? (expected - actual) : (actual - expected);
+            // note NaN compares are always false
+            if (! (error <= delta)) {
+                this.fail(this.format(message ? message : "Within", "" + expected + "\u00B1" +
+                     delta , actual));
+            }
+            canvas.setAttribute('runTests', canvas.runTests + 1)            
+        ]]>
+    </method>
+
+    <!---
+      Assert that a value is (===) null.
+
+      @param object: the value to be tested
+      @param message: (optional) the failure message
+    -->
+    <method name="assertNull" args="object, message">
+        if (object !== null) {
+           this.fail(this.format(message ? message : "Null",
+                       null, object));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that a value is not (!==) null.
+
+      @param object: the value to be tested
+      @param message: (optional) the failure message
+    -->
+    <method name="assertNotNull" args="object, message">
+        if (object === null) {
+           this.fail(this.format(message ? message : "NotNull",
+                       "non-null value", object));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that a value is undefined.
+
+      @param object: the value to be tested
+      @param message: (optional) the failure message
+    -->
+    <method name="assertUndefined" args="object, message">
+        if (typeof(object) != "undefined") {
+           this.fail(this.format(message ? message : "Undefined",
+                       "undefined value", object));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that a value is not undefined.
+
+      @param object: the value to be tested
+      @param message: (optional) the failure message
+    -->
+    <method name="assertNotUndefined" args="object, message">
+        if (typeof(object) == "undefined") {
+           this.fail(this.format(message ? message : "NotUndefined",
+                       "defined value", object));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that an actual value is the same as (===) an expected
+      value.
+
+      @param expected: the expected value
+      @param actual: the actual value
+      @param message: (optional) the failure message
+    -->
+    <method name="assertSame" args="expected, actual, message">
+    <![CDATA[
+             // Use typeof to compare undefined without warnings
+             if (typeof(expected) == "undefined" &&
+                 typeof(actual) == "undefined") {
+                   return;
+             }
+             if (expected !== actual) {
+               this.fail(this.format(message ? message : "Same",
+                           expected, actual));
+             }
+            canvas.setAttribute('runTests', canvas.runTests + 1)             
+    ]]>
+    </method>
+
+    <!---
+      Assert that an actual value is not the same as (!==) an expected
+      value.
+
+      @param expected: the expected value
+      @param actual: the actual value
+      @param message: (optional) the failure message
+    -->
+    <method name="assertNotSame" args="expected, actual, message">
+            if (expected === actual) {
+                // In-line Test.format so we can invert the sense
+// TODO: Debug
+var msg="NOT SAME "+message+" "+expected+" "+actual;
+/*
+                var msg = Debug.formatToString(
+                    '%s expected anything but %#w got %#w',
+                    (message ? message + ": " : "NotSame: "), expected, actual);
+                if (Debug) {
+                  Debug.freshLine();
+                  // create an error, which will include a backtrace, if applicable
+                  Debug.__write(new LzError(null, null, msg));
+                }
+*/
+
+                this.fail(msg);
+            }
+            canvas.setAttribute('runTests', canvas.runTests + 1)                            
+    </method>
+
+</class>
+</library>

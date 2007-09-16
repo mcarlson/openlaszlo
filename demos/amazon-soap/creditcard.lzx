@@ -16,7 +16,7 @@
                 parent.form.form.setDatapath("dsCreditCardList:/creditcardlist/creditcard["+(clonenbr+1)+"]");
             </method>
         </cardlist>
-        <cardform name="form" width="${parent.width}" height="0">
+        <cardform name="form" width="${parent.width}" height="0" visible="${this.height != 0}">
             <method name="done">
                 this.setAttribute("height", 0);
                 parent.list.setAttribute("height", parent.height);
@@ -46,7 +46,7 @@
                         </view>
                         <view align="right">
                             <simplelayout axis="x" spacing="2"/>
-                            <linktext width="20" onclick="parent.parent.parent.parent.parent.parent.editCard(parent.parent.clonenumber)">
+                            <linktext width="20" onclick="classroot.editCard(parent.parent.clonenumber)">
                                 edit
                             </linktext>
                             <text width="4">|</text>
@@ -67,25 +67,25 @@
         <text fontstyle="bold" fontsize="12" fgcolor="#666699" width="${parent.width}" text="${parent.mode=='new'?'Enter new card:':'Edit card:'}"/>
         <view name="form">
             <text y="0" width="${parent.width}" fgcolor="#666699">Type:</text>
-            <!-- #TODO: use new combobox -->
-            <?xxx
-            <combobox y="15" width="120" shownitems="6" itemfield="dsCreditCard:/card/@name" datapath="@type" name="mycombo"/>
-            ?>
+
+            <combobox  y="15" width="120" visible="true" 
+                 shownitems="6"  editable="false"
+                 name="mycombo" datapath="@type">
+              <textlistitem  fontsize="10" datapath="dsCreditCard:/card/"  visible="true" 
+                             value="$path{'@name'}"
+                             text="$path{'@name'}" />
+            </combobox>
+
             <text y="45" width="${parent.width}" fgcolor="#666699">Number:</text>
-            <!-- #TODO-->
-            <?xxx
-            <windowtext y="60" width="180" datapath="@number"/>
-            ?>
+            <!-- #TODO -->
+
+            <edittext y="60" width="180" datapath="@number"/>
             <text y="90" width="${parent.width}" fgcolor="#666699">Holder Name:</text>
-            <!-- #TODO-->
-            <?xxx
-            <windowtext y="105" width="180" datapath="@holder"/>
-            ?>
+            <!-- #TODO -->
+            <edittext y="105" width="180" datapath="@holder"/>
             <text y="135" width="${parent.width}" fgcolor="#666699">Expiration:</text>
-            <!-- #TODO-->
-            <?xxx
-            <windowtext y="150" datapath="@expiration" width="70"/>
-            ?>
+            <!-- #TODO -->
+            <edittext y="150" datapath="@expiration" width="70"/>
         </view>
         <view>
             <simplelayout axis="x" spacing="4"/>
@@ -107,7 +107,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

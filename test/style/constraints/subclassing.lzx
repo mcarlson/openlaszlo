@@ -10,6 +10,7 @@
     <stylesheet>
         happystyledbox {
             stylebgcolor : purple;
+            stylewidth : 999;
             styleinnercolor : attr(myInnerColor);
         }
     </stylesheet>
@@ -36,12 +37,15 @@
         <attribute name="bgcolor" value="navy" />
         <attribute name="width" value="150" />
         <attribute name="innerColor" value="blue" />
+        <view name="specialview" width="10" height="10" bgcolor="black" />
     </class>
 
     <!-- This box should be green with an inner view of lime. -->
-    <class name="otherlassbox" extends="happystyledbox" bgcolor="green">
+    <class name="otherlassbox" extends="happystyledbox" bgcolor="green" width="88">
         <attribute name="innerColor" value="lime" />
     </class>
+
+    <class name="lpp_4451" extends="happystyledbox" width="${parent.width/2}" />
 
     <happystyledbox id="sb0" />
 
@@ -49,7 +53,11 @@
     <happystyledbox id="sb1" bgcolor="maroon" innerColor="red" />
 
     <subclassbox id="sb2" />
-    <otherlassbox id="sb3" />
+    <otherlassbox id="sb3" width="$style{'stylewidth'}"/>
+
+    <subclassbox id="sb4" />
+
+    <lpp_4451 id="sb5" width="$style{'stylewidth'}"/>
 
     <class name="CSSSubclassingTestCase" extends="TestCase" >
 
@@ -64,11 +72,16 @@
          </method>
 
          <method name="testSubclassOverrideConstraint">
+             <![CDATA[
              this.assertEquals("150", sb2.getAttribute("width"));
-             this.assertEquals(navy, sb2.getAttribute("bgcolor"));
+             this.assertEquals(navy, sb2.getAttribute("bgcolor")); // fails! [2007.05.28 bshine]
              this.assertEquals(blue, sb2.inner.getAttribute("bgcolor"));
-             this.assertEquals(green, sb3.getAttribute("bgcolor"));
+             this.assertEquals(green, sb3.getAttribute("bgcolor")); // fails! [2007.05.28 bshine]
+             this.assertEquals(999, sb3.getAttribute("width"));
              this.assertEquals(lime, sb3.inner.getAttribute("bgcolor"));
+             // FIXME: [2007-08-08 ptw] (LPP-4451) Uncomment when fixed
+             // this.assertEquals(999, sb5.width, "LPP-4451");
+             ]]>
          </method>
      </class>
 </library>

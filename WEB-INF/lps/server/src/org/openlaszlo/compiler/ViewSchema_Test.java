@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -122,7 +122,7 @@ public class ViewSchema_Test extends TestCase {
         schema.setAttributeType(elt1, "mynewclass", "barbaz", new AttributeSpec("barbaz", schema.STRING_TYPE, null, null));
 
         schema.setAttributeType(elt1, "mynewsubclass", "baz-width", new AttributeSpec("baz-width", schema.SIZE_EXPRESSION_TYPE, null, null));
-        schema.setAttributeType(elt1, "mynewsubclass", "barbaz", new AttributeSpec("barbaz", schema.EVENT_TYPE, null, null));
+        schema.setAttributeType(elt1, "mynewsubclass", "barbaz", new AttributeSpec("barbaz", schema.EVENT_HANDLER_TYPE, null, null));
 
         assertEquals("mynewclass foo-width type",
                      schema.SIZE_EXPRESSION_TYPE,
@@ -143,7 +143,7 @@ public class ViewSchema_Test extends TestCase {
 
         // Attribute type of subclass should override superclass type
         assertEquals("mynewsubclass barbaz type",
-                     schema.EVENT_TYPE,
+                     schema.EVENT_HANDLER_TYPE,
                      schema.getAttributeType(subclass, "barbaz"));
 
         // test for duplicate attributes, undefined superclass, redefined class, attr inheritance

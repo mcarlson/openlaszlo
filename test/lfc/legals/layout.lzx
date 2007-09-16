@@ -1,0 +1,22 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+
+<canvas width="100%" height="80%" >
+
+  <resource name="maxres">
+    <frame src="resc/h_c_open_sign.gif"/>
+    <frame src="resc/h_c_web2con.gif"/>
+  </resource>
+  
+  <simplelayout axis="x"/>
+  <view name="a" resource="maxres"/>
+  <view name="b" resource="maxres"/>
+  <view name="c" resource="maxres"/>
+  <view name="d" resource="maxres"/>
+  <simplelayout axis="y"/>
+  
+</canvas>

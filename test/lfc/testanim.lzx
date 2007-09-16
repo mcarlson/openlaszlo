@@ -8,47 +8,47 @@
     
     <!-- VIEWS -->
     
-	<view bgcolor="0x3F4977" width="1005" height="30" />
-	<text fgcolor="white" y="7" x="7" >Animation Tests</text>	
-	<box name="abox" y="50" x="10" >
-		<animator name="simp" attribute="x" duration="1000" to="100" from="10" start="false"/>
-		<animator name="rel" attribute="width" duration="400" to="10" relative="true" start="false"/>
-		<animatorgroup name="group" repeat="2" duration="1000" to="50" start="false" relative="true">
-			<animator attribute="x" />
-			<animator attribute="height" />
-		</animatorgroup>
-	</box>
+    <view bgcolor="0x3F4977" width="1005" height="30" />
+    <text fgcolor="white" y="7" x="7" >Animation Tests</text>   
+    <box name="abox" y="50" x="10" >
+        <animator name="simp" attribute="x" duration="1000" to="100" from="10" start="false"/>
+        <animator name="rel" attribute="width" duration="400" to="10" relative="true" start="false"/>
+        <animatorgroup name="group" repeat="2" duration="1000" to="50" start="false" relative="true">
+            <animator attribute="x" />
+            <animator attribute="height" />
+        </animatorgroup>
+    </box>
 
-	<view name="eases" x="10" y="100">
-		<simplelayout axis="y" spacing ="5"/>
-		<box name="a">
-			<animator name="a" motion="easeboth" to="200" duration="1000"  start="false"
-					  attribute="x" />
-		</box>
-		<box name="b">
-			<animator name="a" motion="linear" to="200" duration="1000" start="false"
-					  attribute="x" />
-		</box>
-		<box name="c">
-			<animator name="a" motion="easeout" to="200" duration="1000" start="false"
-					  attribute="x" />
-		</box>
-		<box name="d">
-			<animator name="a" motion="easein" to="200" duration="1000" start="false"
-					  attribute="x" />
-		</box>
-		<box name="e">
-			<animator name="a"  to="200" duration="1000" indirect="true" start="false"
-					  attribute="x" />
-		</box>
-		<method name="go" >
-			this.a.a.doStart();
-			this.b.a.doStart();
-			this.c.a.doStart();
-			this.d.a.doStart();
-			this.e.a.doStart();
-		</method>
-	</view>
+    <view name="eases" x="10" y="100">
+        <simplelayout axis="y" spacing ="5"/>
+        <box name="a">
+            <animator name="a" motion="easeboth" to="200" duration="1000"  start="false"
+                      attribute="x" />
+        </box>
+        <box name="b">
+            <animator name="a" motion="linear" to="200" duration="1000" start="false"
+                      attribute="x" />
+        </box>
+        <box name="c">
+            <animator name="a" motion="easeout" to="200" duration="1000" start="false"
+                      attribute="x" />
+        </box>
+        <box name="d">
+            <animator name="a" motion="easein" to="200" duration="1000" start="false"
+                      attribute="x" />
+        </box>
+        <box name="e">
+            <animator name="a"  to="200" duration="1000" indirect="true" start="false"
+                      attribute="x" />
+        </box>
+        <method name="go" >
+            this.a.a.doStart();
+            this.b.a.doStart();
+            this.c.a.doStart();
+            this.d.a.doStart();
+            this.e.a.doStart();
+        </method>
+    </view>
 
     <buttonpanel y="3">
         <attribute name="moveamnt" value="10" />
@@ -69,10 +69,10 @@
             }
         </method>
         <method name="pauseCurr" >
-        	if (typeof(this.currA) != "undefined")
-        	{
-            	this.currA.pause(!this.currA.paused );
-			}
+            if (typeof(this.currA) != "undefined")
+            {
+                this.currA.pause(!this.currA.paused );
+            }
         </method>
     </buttonpanel>
 
@@ -101,6 +101,6 @@
     -->
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

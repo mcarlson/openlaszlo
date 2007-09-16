@@ -1,0 +1,19 @@
+
+<canvas width="700" height="300" debug="true">
+      <debug y="120"/>
+      <font src="helmetb.ttf" name="helmet"/>
+  <view stretches="both" height="100" bgcolor="red" 
+           onclick="this.animate('height', -10, 1000 , true );
+           Debug.write('greenview new width is', greenview.width)">
+    <attribute name="aspect" value="${unstretchedwidth/unstretchedheight}"/>
+    <attribute name="width" value="${ height * aspect}"/>
+    <view name="greenview" height="100" width="80" bgcolor="green"/>
+    <text font="helmet" fontsize="22" resize="true">
+      This is some text
+    </text>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

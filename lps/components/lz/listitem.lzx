@@ -88,10 +88,31 @@
         ]]>
         </method>
 
+        <doc>
+          <tag name="shortdesc"><text>
+              a listitem is an element of a list
+          </text></tag>
+          <text>
+            <p>A <classname>listitem</classname> is an element with a value that
+              is contained within a list.  As with
+              <classname>baselistitem</classname>, the selected attribute will be
+              true when selected.</p> 
+
+            <example>
+              &lt;canvas height="80"&gt;
+              &lt;list&gt;
+              &lt;listitem value="1" selected="true"/&gt;
+              &lt;listitem value="2" /&gt;
+              &lt;/list&gt;
+              &lt;/canvas&gt;
+            </example>
+          </text>
+        </doc>
+
      </class> <!-- END listitem -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -6,7 +6,7 @@
 
         [name="monkresource"] {
             cssimage: "monk.jpg"; 
-        }
+        }  
 
     </stylesheet>
 
@@ -20,7 +20,8 @@
 
     <view id="gBonk" source="$style{'styledresource'}" />
 
-    <!-- this should give a warning -->
+    <!-- BUG LPP-3024 this should give a warning, but does not  
+         [bshine 08.03.2007] -->     
     <view id="gMissing" source="$style{'nostyledefined'}" />
 
     <resource name="niceresource" src="test.png" />
@@ -50,14 +51,14 @@
         <!-- Descendant selectors test -->
         <method name="testFoundResource">
             assertTrue( "test.png", gJason.getAttribute("resource") );
-            assertEquals( 77, gJason.getAttribute("resourceheight") );
-            assertEquals( 206, gJason.getAttribute("resourcewidth") );
+            assertEquals( 77, gJason.getAttribute("resourceheight"), "jason resourceheight" );
+            assertEquals( 206, gJason.getAttribute("resourcewidth"), "jason resourcewidth");
 
-            assertTrue( 77, gMarsh.getAttribute("resourceheight") );
-            assertTrue( 206, gMarsh.getAttribute("resourcewidth") );
+            assertTrue( 77, gMarsh.getAttribute("resourceheight"), "marsh height" );
+            assertTrue( 206, gMarsh.getAttribute("resourcewidth"), "marsh width" );
 
-            assertTrue( 77, gJim.getAttribute("resourceheight") );
-            assertTrue( 206, gJim.getAttribute("resourcewidth") );
+            assertTrue( 77, gJim.getAttribute("resourceheight"), "jim height" );
+            assertTrue( 206, gJim.getAttribute("resourcewidth"), "jim width" );
         </method>
 
         <method name="testFoundStyledResource">

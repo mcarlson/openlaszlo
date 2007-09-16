@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -25,10 +25,14 @@
   <xsl:param name="tablecolumns.extension" select="0"/>
   <!-- Automatic labeling -->
   <xsl:param name="section.autolabel" select="1"/>
+  <!-- Indexing -->
+  <xsl:param name="l10n.gentext.language" select="'en'"/>
+  <xsl:param name="index.term.separator" select="', '"/>
+  <xsl:param name="index.number.separator" select="', '"/>
+  <xsl:param name="index.range.separator" select="'-'"/>
   <!-- HTML -->
   <xsl:param name="draft.mode" select="'yes'"/>
   <xsl:param name="draft.watermark.image" select="'./images/draft.png'"/>
-  <xsl:param name="html.stylesheet" select="'../includes/docbook.css'"/>
   <xsl:param name="use.id.as.filename" select="1"/>
   <!-- Meta/*.info -->
   <xsl:param name="make.year.ranges" select="1"/>
@@ -44,26 +48,26 @@
   <xsl:param name="chunker.output.indent" select="'yes'"/>
   <xsl:param name="html.extra.head.links" select="0"/>
   <!-- Miscellaneous -->
-  <xsl:param name="shade.verbatim" select="1"/>  
   <xsl:param name="show.comments">1</xsl:param>
 
   <xsl:param name="generate.toc">
-    appendix  toc,title
-    article/appendix  nop
-    article   toc,title
-    book      toc,title
-    chapter   toc,title,figure,table,example,equation
-    part      toc,title
+    set       toc,title,index
+    book      toc,title,figure,table,example,equation,refentry
+    part      toc,title,figure,table,example,equation,refentry
+    chapter   toc,title
     preface   toc,title
+    reference toc,title
+    appendix  toc,title
     qandadiv  toc
     qandaset  toc
-    reference toc,title
     sect1     toc
     sect2     toc
     sect3     toc
     sect4     toc
     sect5     toc
     section   toc
-    set       toc,title
+    appendix/index  toc,title
+    article/appendix  nop
+    article   toc,title
   </xsl:param>
 </xsl:stylesheet>

@@ -84,7 +84,7 @@ echo "---------------------------------------"
 case "${build_os}" in
     unix)
         env JAVA_OPTS="-Xms128m -Xmx512m -DuseBogusErrorCode=true" ${prefetch_dir}/${tomcat}/bin/startup.sh
-        sleep 5
+        sleep 1
         ;;
     windows)
         # Copy tools.jar to $TOMCAT_HOME/common/lib for JSPs (see bug 4560) -pk 
@@ -132,7 +132,10 @@ for path in $paths; do
 done
 
 
-paths=`${find} ${findwhere} ! -path 'docs/src/*' -name '*.jsp'`
+# Only prefetch the jsps in the explorer and docs. We don't want
+# to prefetch the admin console, because we don't want to
+# do any admin to the server right here while we're prefetching.
+paths=`${find} laszlo-explorer ! -path 'docs/src/*' -name '*.jsp'`
 for p in $paths; do
     output2=`retry 5 '000)' curl -L -w"%{url_effective} (%{time_total}s, %{size_download}b, %{http_code})" \
         -s -o/dev/null http://localhost:8080/${webapp}/$p`
@@ -155,7 +158,7 @@ curl -L -s "http://localhost:8080/${webapp}/foo.lzx?lzt=clearcache&cache=script"
 curl -L -s "http://localhost:8080/${webapp}/foo.lzx?lzt=clearcache&cache=media"
 
 # populate components script cache
-lastlzx=examples/components/style_example.lzx
+lastlzx=laszlo-explorer/components/components.lzx
 curl -L -w"prefetch scache: %{url_effective} (%{time_total}s, %{size_download}b, %{http_code})\n" \
         -s -o/dev/null "-HAccept-Encoding: gzip" \
         "http://localhost:8080/${webapp}/${lastlzx}?lzrecompile=true"
@@ -172,8 +175,9 @@ unix)
     ;;
 windows)
     net stop LPS
-    rm $TOMCAT_HOME/common/lib/tools.jar
-    if [ $? != 0 ]; then exit 1; fi # fail prefetch if rm couldn't be done
+    # why on earth would we remove a jar from tomcat now? [bshine 10.26.06] 
+    # rm $TOMCAT_HOME/common/lib/tools.jar
+    # if [ $? != 0 ]; then exit 1; fi # fail prefetch if rm couldn't be done
     ;;
 esac
 

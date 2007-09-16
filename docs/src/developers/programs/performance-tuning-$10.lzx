@@ -1,0 +1,27 @@
+
+<canvas width="200" height="120">
+  <dataset name="mydata">
+    <numbers>
+      <option name="first"/>
+      <option name="second"/>
+      <option name="third"/>
+      <option name="fourth"/>
+      <option name="fifth"/>
+      <option name="sixth"/>
+      <option name="seventh"/>
+      <option name="eigth"/>
+      <option name="ninth"/>
+      <option name="tenth"/>
+    </numbers>
+  </dataset>
+  <list id="mylist" shownitems="4" dataoption="lazy">
+    <textlistitem datapath="mydata:/numbers/option/@name"/>
+  </list>
+  <text text="${mylist.value}"/>
+  <simplelayout spacing="4" inset="10"/>
+  <constantlayout value="10" axis="x"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

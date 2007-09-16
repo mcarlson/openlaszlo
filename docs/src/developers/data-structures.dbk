@@ -1,0 +1,253 @@
+<chapter id="data-structures">
+
+<title>Data, XML, and XPath</title>
+
+
+<para>
+The term <indexterm significance="preferred"><primary>data</primary></indexterm><glossterm>data</glossterm> refers to numbers, characters, or text 
+in a form that can be displayed or manipulated by 
+a Laszlo application.  The specific form that data takes in a Laszlo application
+is either an XML document (or fragment) or a Javascript object.  This chapter
+contains a brief introduction to <indexterm significance="preferred"><primary>XML</primary></indexterm><glossterm>XML</glossterm> and the associated <indexterm significance="preferred"><primary>XPath syntax</primary></indexterm><glossterm>XPath syntax</glossterm>.  Javascript objects are 
+described in the section on Objects in the <xref linkend="language-preliminaries"/>.
+</para>
+
+<para/><section><title>Data in LZX</title>
+<para>
+LZX is designed to make it easy to manipulate data and tie that data to a user interface.  In particular, LZX provides for:
+</para>
+<itemizedlist spacing="compact"><listitem><para>embedding data directly into an application</para></listitem><listitem><para>receiving data from or sending data to a remote data source at runtime</para></listitem><listitem><para>receiving data from or sending data to a web service</para></listitem><listitem><para>creating and manipulating data at runtime </para></listitem><listitem><para><emphasis role="i">binding</emphasis> data to the user-interface declaratively as well as with script</para></listitem></itemizedlist>
+
+<para>
+For a gentle introduction to databinding and manipulation in OpenLaszlo applications, you may start with the <ulink url="../guide/data-tutorial.html" type="laszlo-dguide">tutorials</ulink>
+</para>
+
+<para/></section><section><title>What is XML?</title>
+
+<para>Chances are, if you're reading this document, you already know something about XML.
+Briefly put, XML is a markup language for describing structured data.  XML syntax is very well-defined. This enables a large 
+number of systems that understand data encoded as XML to inter-operate.  (LZX itself is actually an application of XML [see <xref linkend="language-preliminaries"/>]).
+</para>
+
+<para>
+If you don't already know what the words
+<glossterm>document</glossterm>, <glossterm>element</glossterm> and
+<glossterm>attribute</glossterm> mean in the context of XML, you
+should probably read one of the following decent introductions or grab
+a book:</para>
+
+<itemizedlist spacing="compact"><listitem><para><ulink url="http://www.w3schools.com/xml/xml_whatis.asp">W3 Schools: Introduction to XML</ulink></para></listitem><listitem><para><ulink url="http://www.xml.com/pub/a/98/10/guide0.html">XML.com: A Technical introduction to XML</ulink></para></listitem></itemizedlist>
+
+<para>In general, the structure of an XML document is hierarchical with
+nodes in the tree called <indexterm significance="preferred"><primary>element</primary></indexterm><glossterm>element</glossterm>s and data associated with
+each node called an <indexterm significance="preferred"><primary>attribute</primary></indexterm><glossterm>attribute</glossterm>.  The following is a sample
+XML document:</para>
+
+<example role="live-example"><title>An XML Document</title><programlisting>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;bookshelf&gt;
+  &lt;book binding="paperback"&gt;
+    &lt;title&gt;Acts of the Apostles&lt;/title&gt;
+    &lt;author&gt;John F.X. Sundman&lt;/author&gt;
+    &lt;publisher&gt;Rosalita Associates&lt;/publisher&gt;
+    &lt;price&gt;15.00&lt;/price&gt;
+    &lt;year&gt;1999&lt;/year&gt;
+    &lt;category&gt;thriller&lt;/category&gt;
+    &lt;rating&gt;4.5&lt;/rating&gt;
+  &lt;/book&gt;
+  &lt;book binding="casebound"&gt;
+    &lt;title&gt;Shock&lt;/title&gt;
+    &lt;author&gt;Robin Cook&lt;/author&gt;
+    &lt;publisher&gt;Putnam&lt;/publisher&gt;
+    &lt;price&gt;24.95&lt;/price&gt;
+    &lt;year&gt;2001&lt;/year&gt;
+    &lt;category&gt;thriller&lt;/category&gt;
+    &lt;rating&gt;3.5&lt;/rating&gt;
+  &lt;/book&gt;
+  &lt;book binding="paperback"&gt;
+    &lt;title&gt;Cheap Complex Devices&lt;/title&gt;
+    &lt;editor&gt;John Compton Sundman&lt;/editor&gt;
+    &lt;publisher&gt;Rosalita Associates&lt;/publisher&gt;
+    &lt;price&gt;11.00&lt;/price&gt;
+    &lt;year&gt;2002&lt;/year&gt;
+    &lt;category&gt;metafiction&lt;/category&gt;
+    &lt;rating&gt;5.0&lt;/rating&gt;
+  &lt;/book&gt;
+&lt;/bookshelf&gt;  
+</programlisting></example>
+
+<para>As all XML documents must, it has exactly one outer-most, or
+<indexterm significance="preferred"><primary>document root element</primary></indexterm><glossterm>document root element</glossterm>: <indexterm><primary>bookshelf</primary></indexterm><sgmltag class="element">&lt;bookshelf&gt;</sgmltag>.  The root element has three child
+elements all named <indexterm><primary>book</primary></indexterm><sgmltag class="element">&lt;book&gt;</sgmltag>.  Each element
+has a single <glossterm>attribute</glossterm> named
+<literal>"binding"</literal>.  Inside each
+<literal>&lt;book&gt;</literal> are several other elements.  In general XML
+documents can be arbitrarily deep and the structure of elements and
+attributes is highly variable.</para>
+
+<para>For those interested in the details, the XML specification itself
+can be found at <ulink url="http://www.w3.org/XML/">the W3C website</ulink>.  OpenLaszlo supports
+the full XML 1.0 specification with the following exceptions:</para>
+
+<itemizedlist spacing="compact"><listitem><para>Limited support for namespaces.  Namespaces are stripped when the XML document is parsed.</para></listitem><listitem><para>Limited character set support.  (Only 8-bit characters from the Microsoft Windows 
+  <ulink url="http://www.microsoft.com/typography/unicode/1252.htm">Cp1252</ulink> character set
+  are supported regardless of the declaracter character set in the XML file.)</para></listitem><listitem><para>No support for external entity declarations.</para></listitem><listitem><para> There are some restrictions on data size.  There is a maximum
+  of 64 KBytes for the text content for an element and a maximum of 64
+  KBytes for the combined length of an element's attributes and the
+  name of the element.</para></listitem></itemizedlist>
+<para/><section><title>Whitespace</title>
+<para>Handling of "whitespace" (spaces, tabs, linefeeds and carriage returns) is one of the reasons why XML can be problematic as an unambiguous data interchange format, because applications make different assumptions about how whitespace is to be handled.  In OpenLaszlo applications this problem is complicated by the fact that whitespace is handled differently on proxied and SOLO applications.</para>
+<para>
+In OpenLaszlo applications, the runtime doesn't trim whitespace. Rather, it totally removes text
+nodes which have <emphasis role="em">all</emphasis> whitespace. Like, for example</para>
+<programlisting>
+&lt;foo&gt;
+&lt;bar/&gt;
+
+&lt;/foo&gt;
+</programlisting>
+<para>
+would have two text nodes of all whitespace, before and after the &lt;bar&gt; tag.
+</para><para>
+This is because programs typically don't
+expect to get
+all those whitespace nodes, and furthermore the client XML parser used in SOLO applications cannot handle data that does not conform. But it does mean that you can't have an
+all-whitespace text content. You get no node at all instead, which in some cases is not really the
+right thing either. </para>
+<para>
+The lesson here is that handling whitespace can be tricky and that you should pay careful attention to it if your data does not appear as you expect, especially if the behavior changes between SWF and DHTML implementations of the same program.
+</para>
+<para condition="dhtml">
+For apps running in DHTML, in SOLO mode, the web browser's XML parser is
+very picky about the data source. This may result in applications which run when compiled to SWF failing to run when compiled to SWF.
+</para>
+<para>
+The server delivering the data must mark the HTTP content type header as
+text/xml and it doesn't hurt to have an &lt;?xml ... ?&gt; declaration either, and
+no whitespace
+between the start of the file, the &lt;?xml...?&gt; declaration, and the start of
+the data.
+</para>
+<para>
+In a JSP file, you can do this at the top, to avoid whitespace:</para>
+<programlisting>
+&lt;%@ page import="java.util.*" %&gt;&lt;%@ page import="java.io.*" %&gt;&lt;%@ page
+contentType="text/xml; charset=UTF-8" %&gt;&lt;?xml version='1.0' encoding='UTF-8'
+standalone='yes' ?&gt;&lt;%@ page import="java.util.*,org.jdom.output.*"%&gt;
+</programlisting>
+<para/></section></section><section><title>XPath</title>
+
+<para>
+LZX data access and binding makes heavy use of the W3C <ulink url="http://www.w3.org/TR/xpath">XPath</ulink> standard
+for identifying parts of an XML document.
+LZX supports a subset of Xpath. The complete list of Xpath
+expressions
+supported in LZX is listed in a <link linkend="data-structures.xpathnodes">table in a later section</link>.</para>
+
+<para>
+Because XML documents have a tree structure, XPath is basically a set of syntax
+  rules for identifying tree nodes. XPath rules are based on a path notation,
+  hence the name. XPath includes expressions and a library of functions for
+  manipulating data.  For example, the <literal>name()</literal> function returns the
+  name of a node, and <literal>text()</literal> returns its text content.  Thus XPath
+  serves as a pattern-matching language uniquely suited to matching patterns
+  in XML
+  documents. 
+</para>
+
+<para>
+XPath notation is similar to the notation used to identify files in modern operating systems. Paths can be relative or absolute; absolute paths start at the topmost node, called the root, and begin with the slash (<literal>/</literal>) character.  The language of genealogy is used to denote the relationship of nodes to their near neighbors. A node can have, for example, a parent, a grandparent, children, grandchildren, and siblings. 
+</para>
+
+<para>
+The slash <literal>/</literal> is used to separate parents from children. Consider
+the
+XML document example above.
+The XPath expression <literal>/bookshelf/book</literal> selects all book elements.
+ 
+The XPath expression <literal>/bookshelf/book/title</literal>  selects all titles,
+and so forth.</para>
+
+<para>
+Square brackets are used to further specify elements.
+For example, the XPath expression <literal>/bookshelf/book[1]</literal> selects the
+first child element of the element book. </para>
+<para>
+The <literal>@</literal> character is used as a shorthand to refer to an XML attribute.
+Thus, 
+<literal>/bookshelf/book[@price]</literal> selects all books
+  with
+a price attribute.</para>
+<para>The XPath expression<literal>/bookshelf/book[@binding='paperback']</literal> selects
+  the nodes
+for books having the attribute paperback. </para>
+<para> The XPath expression <literal>/bookshelf/book[@price]/@price</literal> selects
+  the prices of all books with price attributes. </para>
+<para>
+The concepts involved in using XPath are few and simple, and the notation is
+  straightforward. Nevertheless, by using XPath functions it is possible to perform
+increasingly sophisticated tests on XML nodes.  </para>
+<para>
+The full power of this syntax/pattern-matching language can be seen in programming examples, 
+for example, such as can be written in XSLT. The XPath specification is online at <ulink url="http://www.w3.org/TR/xpath">http://www.w3.org/TR/xpath</ulink>.
+</para>
+<para>
+See the <xref linkend="databinding"/> for an explanation of how XPath is used 
+in LZX to provide powerful databinding and data manipulation.</para>
+<para/><section><title>Supported XPath functionality</title>
+<para>XPath is an extensive specification that is largely, but not entirely, implemented in LZX.</para>
+<para><anchor id="data-structures.xpathnodes"/>The following table shows XPath functionality implemented in OpenLaszlo:</para>
+
+<example role="live-example"><title>Datasets</title><programlisting>
+&lt;canvas height="80" width="500" &gt;
+  &lt;dataset name="myData"&gt;
+    &lt;myXML&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Homer&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Marge&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+        &lt;lastName&gt;Burns&lt;/lastName&gt;
+      &lt;/person&gt;
+    &lt;/myXML&gt;
+  &lt;/dataset&gt;
+&lt;/canvas&gt;
+</programlisting></example>
+
+
+<informaltable><tgroup cols="3"><tbody><row><entry>Example</entry><entry>Meaning</entry><entry>In this case</entry></row><row><entry><programlisting>myData:/myXML[1]/person[1]</programlisting>
+        </entry><entry>Just the first "person" node.</entry><entry>Homer</entry></row><row><entry><programlisting>myData:/myXML[1]/person</programlisting>
+        </entry><entry>All the "person" nodes</entry><entry>Homer, Marge, Montgomery</entry></row><row><entry><programlisting>myData:/myXML[1]/person[2-3]</programlisting>
+        </entry><entry>"person" nodes 2 to 3 inclusive</entry><entry>Marge, Montgomery</entry></row><row><entry><programlisting>myData:/myXML[1]/person[2-]</programlisting>
+        </entry><entry>"person" nodes 2 and onwards</entry><entry>Marge, Montgomery</entry></row><row><entry><programlisting>myData:/myXML[1]/person[-2]</programlisting>
+        </entry><entry>"person" nodes up to and including 2</entry><entry>Homer, Marge</entry></row><row><entry><programlisting>myData:/myXML[1]/person[@show]</programlisting>
+      </entry><entry>All "person" nodes that have
+          a "show" attribute</entry><entry>Homer, Marge, Montgomery</entry></row><row><entry><programlisting>myData:/myXML[1]/person[@show = 'simpsons']</programlisting>
+      </entry><entry>All "person" nodes that have a "show"
+          attribute which equals "Simpsons" (compare is case-sensitive)</entry><entry>Homer, Marge, Montgomery</entry></row><row><entry><programlisting>myData:/myXML/*/firstname</programlisting>
+      </entry><entry>All "firstname" nodes under any node in
+          "myXML"</entry><entry>Homer, Marge, Montgomery</entry></row><row><entry>Attributes and Functions</entry><entry/><entry/></row><row><entry><programlisting>myData:/myXML[1]/person[1]/@show</programlisting>
+      </entry><entry>The "show" attribute of the first "person" node</entry><entry>simpsons</entry></row><row><entry><programlisting>myData:/myXML[1]/person[1]/lastname/text()</programlisting>
+      </entry><entry>The text of the "lastname" node of
+          the first "person" node</entry><entry>Simpson</entry></row><row><entry><programlisting>myData:/myXML[1]/person/last()</programlisting>
+      </entry><entry>The number of "person" nodes</entry><entry>3</entry></row><row><entry><programlisting>myData:/myXML[1]/person[1]/position()</programlisting>
+      </entry><entry>When used for a replicated view, this will be
+          the position of the view in the set</entry><entry>n/a</entry></row></tbody></tgroup></informaltable>
+
+<para/></section><section><title>More XPath Documentation</title>
+<para>
+XPath is commonly used with XSLT, a language for transforming one XML document into another XML document, 
+and also by some web browsers.  Decent XSLT documentation often contains good documentation on XPath.  You may
+also find the following online documents useful:
+</para>
+<itemizedlist spacing="compact"><listitem><para><ulink url="http://www.w3schools.com/xpath/default.asp">W3 Schools: XPath Tutorial</ulink></para></listitem><listitem><para><ulink url="http://www.oreilly.com/catalog/xmlnut/chapter/ch09.html">XML in a Nutshell A Desktop Quick Reference, Chapter 9. XPath </ulink></para></listitem></itemizedlist>
+
+
+
+
+<para/></section></section></chapter>

@@ -1,0 +1,79 @@
+<canvas>
+    <include href="lztest/lztestmanager.lzx" /> 
+
+      <!-- The width and height are all different in order to detect
+      bugs where x, y, width, or height are transposed. -->
+      <view width="200" height="125" bgcolor="yellow">
+        <view id="v1" width="50" height="25" bgcolor="blue"/>
+      </view>
+
+<!--
+  covers-tags: lzview smoketest
+-->
+
+
+<script><![CDATA[
+
+var suiteAlign = new LzTestSuite("Align Test Suite"); 
+
+/* Each test sets the alignment to something else first, in
+order to (1) uncover bugs where changing the alignment doesn't
+change the position *back*, and (2) avoid depending on the
+unspecified behavior of setting the alignment to the same
+value that it already had. */ 
+
+suiteAlign.testAlignLeft = function () {
+    v1.setAttribute('align', 'right');
+    v1.setAttribute('align', 'left');
+    LzTestManager.assertEquals(0, v1.x);
+}
+
+suiteAlign.testAlignCenter = function () {
+    v1.setAttribute('align', 'left');
+    v1.setAttribute('align', 'center');
+    LzTestManager.assertEquals(75, v1.x);
+}
+
+suiteAlign.testAlignRight = function () {
+    v1.setAttribute('align', 'left');
+    v1.setAttribute('align', 'right');
+    LzTestManager.assertEquals(150, v1.x);
+}
+
+suiteAlign.testAlignTop = function () {
+    v1.setAttribute('valign', 'bottom');
+    v1.setAttribute('valign', 'top');
+    LzTestManager.assertEquals(0, v1.y);
+}
+
+suiteAlign.testAlignMiddle = function () {
+    v1.setAttribute('valign', 'top');
+    v1.setAttribute('valign', 'middle');
+    LzTestManager.assertEquals(50, v1.y);
+}
+
+suiteAlign.testAlignBottom = function () {
+    v1.setAttribute('valign', 'top');
+    v1.setAttribute('valign', 'bottom');
+    LzTestManager.assertEquals(100, v1.y);
+}
+
+
+suiteAlign.addTest(suiteAlign.testAlignLeft); 
+suiteAlign.addTest(suiteAlign.testAlignCenter); 
+suiteAlign.addTest(suiteAlign.testAlignRight); 
+suiteAlign.addTest(suiteAlign.testAlignTop); 
+suiteAlign.addTest(suiteAlign.testAlignMiddle); 
+suiteAlign.addTest(suiteAlign.testAlignBottom); 
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

@@ -1,0 +1,1426 @@
+<chapter id="layout-and-design">
+ 
+<title>Layout and Design</title>
+<para>
+LZX enables the creation of applications that have high design values and fluid, graceful interaction.  
+In this chapter we discuss some basic tools for layout and design.  For more advanced topics and exploration of the aesthetics of OpenLaszlo application design, see the <ulink url="../design/" type="">Designer's Guide</ulink>.
+</para>
+<para/><section><title>Declarative positioning of views using layouts</title>
+<para>
+By default, all views position themselves at x="0" y="0" in their coordinate space. That means 
+that two sibling views will sit on top of each other. Aside from explicitly positioning the views so they don't overlap, 
+the easiest way to separate the siblings is to use a <indexterm><primary>simplelayout</primary></indexterm><classname>simplelayout</classname>:</para>
+
+
+<para>
+Instead of specifying each view's coordinates (either through a
+constraint or absolutely), you can declare a layout that decides how
+sibling views position themselves relative to one another. The
+simplest layout is <indexterm><primary>simplelayout</primary></indexterm><classname>simplelayout</classname>, which
+positions sibling elements beneath (or to the right of) each other:
+</para>
+
+<example role="live-example">
+   <title>Simple Layout</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>simple layout</title><programlisting role="lzx-embednew"><filename>layout-and-design-$1.lzx</filename><parameter/><code>
+&lt;canvas height="80"&gt;
+  &lt;view bgcolor="yellow" width="100" height="100"&gt;
+    &lt;simplelayout axis="y" spacing="5"/&gt;
+    &lt;view bgcolor="red" width="20" height="20"/&gt;
+    &lt;view bgcolor="blue" width="20" height="20"/&gt;
+    &lt;view bgcolor="green" width="20" height="20"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="80"&gt;
+  &lt;view bgcolor="yellow" width="100" height="100"&gt;
+    <emphasis role="em">&lt;simplelayout axis="y" spacing="5"/&gt;</emphasis>
+    &lt;view bgcolor="red" width="20" height="20"/&gt;
+    &lt;view bgcolor="blue" width="20" height="20"/&gt;
+    &lt;view bgcolor="green" width="20" height="20"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$1.lzx></example?>
+<para>
+Here's an example that shows how to use layouts to resize views in response to user actions:
+</para>
+
+<example role="live-example">
+   <title>Adding a view to a layout</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>Simple Layout</title><programlisting role="lzx-embednew"><filename>layout-and-design-$2.lzx</filename><parameter/><code>
+&lt;canvas height="140"&gt;
+  &lt;class name="coloredRect" width="20" height="80"
+         onclick="this.setWidth(this.width+2)"/&gt;
+    &lt;view x="10" y="10" name="container"&gt;
+      &lt;simplelayout axis="x" spacing="10"/&gt;
+      &lt;coloredRect bgcolor="red"/&gt;
+      &lt;coloredRect bgcolor="aqua"/&gt;
+      &lt;coloredRect bgcolor="yellow"/&gt;
+      &lt;coloredRect bgcolor="green"/&gt;
+      &lt;coloredRect bgcolor="blue"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button x="10" y="110"&gt;Create A New View
+    &lt;handler name="onclick"&gt;
+      var newView = new coloredRect(container, { bgcolor : 0x000000 });
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="140"&gt;
+  &lt;class name="coloredRect" width="20" height="80"
+         onclick="this.setWidth(this.width+2)"/&gt;
+    &lt;view x="10" y="10" name="container"&gt;
+      &lt;simplelayout axis="x" spacing="10"/&gt;
+      &lt;coloredRect bgcolor="red"/&gt;
+      &lt;coloredRect bgcolor="aqua"/&gt;
+      &lt;coloredRect bgcolor="yellow"/&gt;
+      &lt;coloredRect bgcolor="green"/&gt;
+      &lt;coloredRect bgcolor="blue"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button x="10" y="110"&gt;Create A New View
+    &lt;handler name="onclick"&gt;
+      var newView = new coloredRect(container, { bgcolor : 0x000000 });
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$2.lzx></example?>
+
+<para>Like all layouts, <indexterm><primary>simpleLayout</primary></indexterm><classname>simpleLayout</classname> affects how <glossterm>sibling</glossterm> views relate to one another. This remains true even if views are dynamically instantiated. You can set both the axis of a simplelayout as well as the distance between the elements. Also note layouts update as the dimensions of the affected views change.</para>
+
+<para>If you need a specific group of views to be affected by a
+simplelayout, but want them to be isolated from the rest of the
+application, encase them in a <glossterm>parent view</glossterm>. You
+can then specify coordinates on the parent view:</para>
+
+<example role="live-example">
+   <title>Isolating views</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$3.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>isolating views</title><programlisting role="lzx-embednew"><filename>layout-and-design-$3.lzx</filename><parameter/><code>
+&lt;canvas height="120"&gt;
+  &lt;class name="coloredRect" width="20" height="80"/&gt;
+  &lt;view width="50" height="50" bgcolor="yellow"/&gt;
+  &lt;!-- Group of horizontally stacked views, isolated from app --&gt;
+  &lt;view name="container" x="175" y="20"&gt;
+    &lt;simplelayout axis="x" spacing="10"/&gt;
+    &lt;coloredRect bgcolor="red"/&gt; 
+    &lt;coloredRect bgcolor="blue"/&gt; 
+    &lt;coloredRect bgcolor="teal"/&gt; 
+    &lt;coloredRect bgcolor="black"/&gt; 
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="120"&gt;
+  &lt;class name="coloredRect" width="20" height="80"/&gt;
+  &lt;view width="50" height="50" bgcolor="yellow"/&gt;
+  &lt;!-- Group of horizontally stacked views, isolated from app --&gt;
+  &lt;view name="container" x="175" y="20"&gt;
+    &lt;simplelayout axis="x" spacing="10"/&gt;
+    &lt;coloredRect bgcolor="red"/&gt; 
+    &lt;coloredRect bgcolor="blue"/&gt; 
+    &lt;coloredRect bgcolor="teal"/&gt; 
+    &lt;coloredRect bgcolor="black"/&gt; 
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$3.lzx></example?>
+<para/></section><section><title>Horizontal and Vertical Boxes</title>
+<para>
+In addition to layouts, LZX includes the <indexterm><primary>hbox</primary></indexterm><sgmltag class="element">&lt;hbox&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: hbox-->
+ and <indexterm><primary>vbox</primary></indexterm><sgmltag class="element">&lt;vbox&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: vbox-->
+ tags that allow you to group views horizontally and vertically. Unlike layouts, which are objects that affect the behavior of their siblings, <indexterm><primary>hbox</primary></indexterm><sgmltag class="element">&lt;hbox&gt;</sgmltag> and <indexterm><primary>vbox</primary></indexterm><sgmltag class="element">&lt;vbox&gt;</sgmltag> are themselves views that constrain the layout of their children. Each <indexterm><primary>hbox</primary></indexterm><sgmltag class="element">&lt;hbox&gt;</sgmltag> or <indexterm><primary>vbox</primary></indexterm><sgmltag class="element">&lt;vbox&gt;</sgmltag> contains a layout, and the tag syntax allows you to set the layout attributes directly on the hbox or vbox.
+</para>
+<para>You can also combine <indexterm><primary>hbox</primary></indexterm><sgmltag class="element">&lt;hbox&gt;</sgmltag> and <indexterm><primary>vbox</primary></indexterm><sgmltag class="element">&lt;vbox&gt;</sgmltag> elements to form tables. The following example illustrates this. (There are more elegant ways to achieve this effect; we include it here to illustrate the principles.)</para>
+
+<example role="live-example">
+   <title>hbox and vbox</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$4.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>hbox and vbox</title><programlisting role="lzx-embednew"><filename>layout-and-design-$4.lzx</filename><parameter/><code>
+&lt;canvas height="50"&gt;
+    &lt;hbox spacing="10"&gt;
+    &lt;vbox spacing="10" name="column1" bgcolor="red"&gt;
+        &lt;handler name="onclick"&gt;
+            this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
+        &lt;/handler&gt;
+        &lt;text&gt;click&lt;/text&gt;
+        &lt;text&gt;to&lt;/text&gt;
+        &lt;text&gt;animate&lt;/text&gt;
+        &lt;text&gt;spacing&lt;/text&gt;
+    &lt;/vbox&gt;
+    &lt;vbox spacing="10" name="column2" bgcolor="blue"&gt;
+        &lt;handler name="onclick"&gt;
+            this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
+        &lt;/handler&gt;
+        &lt;text&gt;click&lt;/text&gt;
+        &lt;text&gt;to&lt;/text&gt;
+        &lt;text&gt;animate&lt;/text&gt;
+        &lt;text&gt;spacing&lt;/text&gt;
+    &lt;/vbox&gt;
+    &lt;vbox spacing="10" name="column3" bgcolor="yellow"&gt;
+        &lt;handler name="onclick"&gt;
+            this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
+        &lt;/handler&gt;
+        &lt;text&gt;click&lt;/text&gt;
+        &lt;text&gt;to&lt;/text&gt;
+        &lt;text&gt;animate&lt;/text&gt;
+        &lt;text&gt;spacing&lt;/text&gt;
+    &lt;/vbox&gt;
+    &lt;/hbox&gt;
+&lt;/canvas&gt;
+
+</code></programlisting><programlisting>
+&lt;canvas height="50"&gt;
+    &lt;hbox spacing="10"&gt;
+    &lt;vbox spacing="10" name="column1" bgcolor="red"&gt;
+        &lt;handler name="onclick"&gt;
+            this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
+        &lt;/handler&gt;
+        &lt;text&gt;click&lt;/text&gt;
+        &lt;text&gt;to&lt;/text&gt;
+        &lt;text&gt;animate&lt;/text&gt;
+        &lt;text&gt;spacing&lt;/text&gt;
+    &lt;/vbox&gt;
+    &lt;vbox spacing="10" name="column2" bgcolor="blue"&gt;
+        &lt;handler name="onclick"&gt;
+            this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
+        &lt;/handler&gt;
+        &lt;text&gt;click&lt;/text&gt;
+        &lt;text&gt;to&lt;/text&gt;
+        &lt;text&gt;animate&lt;/text&gt;
+        &lt;text&gt;spacing&lt;/text&gt;
+    &lt;/vbox&gt;
+    &lt;vbox spacing="10" name="column3" bgcolor="yellow"&gt;
+        &lt;handler name="onclick"&gt;
+            this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
+        &lt;/handler&gt;
+        &lt;text&gt;click&lt;/text&gt;
+        &lt;text&gt;to&lt;/text&gt;
+        &lt;text&gt;animate&lt;/text&gt;
+        &lt;text&gt;spacing&lt;/text&gt;
+    &lt;/vbox&gt;
+    &lt;/hbox&gt;
+&lt;/canvas&gt;
+
+</programlisting><?lzx-edit programs/layout-and-design-$4.lzx></example?>
+
+<para/></section><section id="layout-and-design.variations"><title>Variations on Layout</title>
+<para>
+As mentioned previously, layouts act upon sibling elements, but they can control more than just spacing. For example, they can
+be used to cause views to grow and shrink, as shown below.
+</para>
+
+
+<para/><section id="layout-and-design.stableborderlayout"><title>StableBorderLayout</title>
+<para>
+A frequent layout problem when designing GUIs is to have an element stretch while its two surrounding siblings maintain a constant size across the stretch axis. LZX solves this problem with the <indexterm><primary>stableborderlayout</primary></indexterm><classname>stableborderlayout</classname>:</para>
+
+<example role="live-example">
+   <title>Stableborder Layout</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$5.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>stableborderlayout</title><programlisting role="lzx-embednew"><filename>layout-and-design-$5.lzx</filename><parameter/><code>
+&lt;canvas height="140"&gt;
+  &lt;class name="coloredRect" height="80"/&gt;
+  
+  &lt;view x="10" y="10" name="container" width="200"&gt;
+    &lt;stableborderlayout axis="x"/&gt;
+    &lt;coloredRect bgcolor="navy" width="20"/&gt;
+    &lt;coloredRect bgcolor="yellow"/&gt;
+    &lt;coloredRect bgcolor="navy" width="20"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button x="205" y="110"&gt;Increase width of container
+    &lt;handler name="onclick"&gt;
+      container.setWidth(container.width + 10);
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;button x="10" y="110"&gt;Decrease width of container
+    &lt;handler name="onclick"&gt;
+      container.setWidth(container.width - 10);
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="140"&gt;
+  &lt;class name="coloredRect" height="80"/&gt;
+  
+  &lt;view x="10" y="10" name="container" width="200"&gt;
+    &lt;stableborderlayout axis="x"/&gt;
+    &lt;coloredRect bgcolor="navy" width="20"/&gt;
+    &lt;coloredRect bgcolor="yellow"/&gt;
+    &lt;coloredRect bgcolor="navy" width="20"/&gt;
+  &lt;/view&gt;
+  
+  &lt;button x="205" y="110"&gt;Increase width of container
+    &lt;handler name="onclick"&gt;
+      container.setWidth(container.width + 10);
+    &lt;/handler&gt;
+  &lt;/button&gt;
+  
+  &lt;button x="10" y="110"&gt;Decrease width of container
+    &lt;handler name="onclick"&gt;
+      container.setWidth(container.width - 10);
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$5.lzx></example?>
+
+<para>
+As the name suggests, this layout can be used to create a border with
+a stable dimension (width or
+height). <indexterm><primary>stableborderlayout</primary></indexterm><classname>stableborderlayout</classname> is very useful for
+creating borders, frames and windows. In this example,
+<indexterm><primary>stableborderlayout</primary></indexterm><classname>stableborderlayout</classname> is combined with some
+constraints to create a 5 pixel blue border:</para>
+
+<example role="live-example">
+   <title>Creating a border</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$6.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>creating a border</title><programlisting role="lzx-embednew"><filename>layout-and-design-$6.lzx</filename><parameter/><code>
+&lt;canvas height="200"&gt;
+  &lt;!-- Sliders to control width and height --&gt;
+  &lt;text x="200" y="22"&gt;Set the width:&lt;/text&gt;
+  &lt;slider id="widthSlider" x="200" y="50" width="100" value="50"
+          minvalue="20" maxvalue="100"/&gt;
+  
+  &lt;text x="200" y="92"&gt;Set the height:&lt;/text&gt;
+  &lt;slider id="heightSlider" x="200" y="120" width="100" value="50"
+          minvalue="20" maxvalue="100"/&gt;
+  
+  &lt;!-- Blue border --&gt;
+  &lt;view width="${widthSlider.value}" height="${heightSlider.value}" 
+         x="20" y="20"&gt;
+    &lt;stableborderlayout axis="y"/&gt;
+    &lt;view bgcolor="blue" height="5" width="${parent.width}"/&gt;
+    &lt;view width="${parent.width}"&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+      &lt;view bgcolor="blue" width="5" height="${parent.height}"/&gt;
+      &lt;view height="${parent.height}"/&gt;
+      &lt;view bgcolor="blue" width="5" height="${parent.height}"/&gt;
+    &lt;/view&gt;
+    &lt;view bgcolor="blue" height="5" width="${parent.width}"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="200"&gt;
+  &lt;!-- Sliders to control width and height --&gt;
+  &lt;text x="200" y="22"&gt;Set the width:&lt;/text&gt;
+  &lt;slider id="widthSlider" x="200" y="50" width="100" value="50"
+          minvalue="20" maxvalue="100"/&gt;
+  
+  &lt;text x="200" y="92"&gt;Set the height:&lt;/text&gt;
+  &lt;slider id="heightSlider" x="200" y="120" width="100" value="50"
+          minvalue="20" maxvalue="100"/&gt;
+  
+  &lt;!-- Blue border --&gt;
+  &lt;view width="${widthSlider.value}" height="${heightSlider.value}" 
+         x="20" y="20"&gt;
+    &lt;stableborderlayout axis="y"/&gt;
+    &lt;view bgcolor="blue" height="5" width="${parent.width}"/&gt;
+    &lt;view width="${parent.width}"&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+      &lt;view bgcolor="blue" width="5" height="${parent.height}"/&gt;
+      &lt;view height="${parent.height}"/&gt;
+      &lt;view bgcolor="blue" width="5" height="${parent.height}"/&gt;
+    &lt;/view&gt;
+    &lt;view bgcolor="blue" height="5" width="${parent.width}"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$6.lzx></example?>
+
+<para>
+If you wanted to use the above code to frame a particular view irrespective of where it was in the view hierarchy, a good 
+way would be to use a <link linkend="layout-and-design.floatingviews">floating view</link>:
+</para>
+
+<example role="live-example">
+   <title>Using a floating view</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$7.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>using a floating view</title><programlisting role="lzx-embednew"><filename>layout-and-design-$7.lzx</filename><parameter/><code>
+&lt;canvas&gt;
+  &lt;!-- A single colored box --&gt;
+  &lt;class name="coloredBox" width="50" height="50" bgcolor="0xff0000"/&gt;
+  &lt;!-- Blue border; invisible at start --&gt;
+  &lt;view id="floater" width="50" height="50" visible="false"&gt;
+    &lt;!-- Animate to the coordinates of a given view --&gt;
+    &lt;method name="goTo" args="whichBox"&gt;
+      this.setVisible(true);
+      this.bringToFront();
+      var destX = whichBox.getAttributeRelative("x", canvas);
+      var destY = whichBox.getAttributeRelative("y", canvas);
+      this.animate("x", destX, 1000, false);
+      this.animate("y", destY, 1000, false);
+    &lt;/method&gt;
+    &lt;stableborderlayout axis="y"/&gt;
+    &lt;view bgcolor="0xFFFF00" height="5" width="${parent.width}"/&gt;
+    &lt;view width="${parent.width}"&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+      &lt;view bgcolor="0xFFFF00" width="5" height="${parent.height}"/&gt;
+      &lt;view height="${parent.height}"/&gt;
+      &lt;view bgcolor="0xFFFF00" width="5" height="${parent.height}"/&gt;
+    &lt;/view&gt;
+    &lt;view bgcolor="0xFFFF00" height="5" width="${parent.width}"/&gt;
+  &lt;/view&gt;
+  &lt;!-- Controls --&gt;
+  &lt;view bgcolor="yellow"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;button onclick="floater.goTo(blueBox)"&gt;Go to Blue Box&lt;/button&gt;
+    &lt;button onclick="floater.goTo(redBox)"&gt;Go to Red Box&lt;/button&gt;
+    &lt;button onclick="floater.goTo(greenBox)"&gt;Go to Green Box&lt;/button&gt;
+  &lt;/view&gt;
+  &lt;!-- View hierarchy --&gt;
+  &lt;view x="20" y="15"&gt;
+    &lt;coloredBox id="blueBox" bgcolor="0x0000ff" x="200"/&gt;
+    &lt;view x="5" y="40"&gt;
+      &lt;coloredBox id="greenBox" bgcolor="0x00ff00" y="150" x="13"/&gt;
+      &lt;view x="1" y="90"&gt;
+        &lt;coloredBox id="redBox" bgcolor="0xff0000" y="150"/&gt;
+      &lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas&gt;
+  &lt;!-- A single colored box --&gt;
+  &lt;class name="coloredBox" width="50" height="50" bgcolor="0xff0000"/&gt;
+  &lt;!-- Blue border; invisible at start --&gt;
+  &lt;view id="floater" width="50" height="50" visible="false"&gt;
+    &lt;!-- Animate to the coordinates of a given view --&gt;
+    &lt;method name="goTo" args="whichBox"&gt;
+      this.setVisible(true);
+      this.bringToFront();
+      var destX = whichBox.getAttributeRelative("x", canvas);
+      var destY = whichBox.getAttributeRelative("y", canvas);
+      this.animate("x", destX, 1000, false);
+      this.animate("y", destY, 1000, false);
+    &lt;/method&gt;
+    &lt;stableborderlayout axis="y"/&gt;
+    &lt;view bgcolor="0xFFFF00" height="5" width="${parent.width}"/&gt;
+    &lt;view width="${parent.width}"&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+      &lt;view bgcolor="0xFFFF00" width="5" height="${parent.height}"/&gt;
+      &lt;view height="${parent.height}"/&gt;
+      &lt;view bgcolor="0xFFFF00" width="5" height="${parent.height}"/&gt;
+    &lt;/view&gt;
+    &lt;view bgcolor="0xFFFF00" height="5" width="${parent.width}"/&gt;
+  &lt;/view&gt;
+  &lt;!-- Controls --&gt;
+  &lt;view bgcolor="yellow"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;button onclick="floater.goTo(blueBox)"&gt;Go to Blue Box&lt;/button&gt;
+    &lt;button onclick="floater.goTo(redBox)"&gt;Go to Red Box&lt;/button&gt;
+    &lt;button onclick="floater.goTo(greenBox)"&gt;Go to Green Box&lt;/button&gt;
+  &lt;/view&gt;
+  &lt;!-- View hierarchy --&gt;
+  &lt;view x="20" y="15"&gt;
+    &lt;coloredBox id="blueBox" bgcolor="0x0000ff" x="200"/&gt;
+    &lt;view x="5" y="40"&gt;
+      &lt;coloredBox id="greenBox" bgcolor="0x00ff00" y="150" x="13"/&gt;
+      &lt;view x="1" y="90"&gt;
+        &lt;coloredBox id="redBox" bgcolor="0xff0000" y="150"/&gt;
+      &lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$7.lzx></example?>
+
+
+
+
+
+
+<para/></section><section id="layout-and-design.constantlayout"><title>Constant Layout</title>
+<para>
+The <indexterm><primary>constantlayout</primary></indexterm><sgmltag class="element">&lt;constantlayout&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: constantlayout-->
+ tag is a way of defining a margin. For example, if all of the children of a container needed to be
+ indented 10 pixels from the left hand edge of the container:
+</para>
+
+<example role="live-example">
+   <title>Constant Layout</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$8.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>ConstantLayout</title><programlisting role="lzx-embednew"><filename>layout-and-design-$8.lzx</filename><parameter/><code>
+&lt;canvas height="140"&gt;
+  &lt;class name="coloredRect" width="60" height="15"/&gt;
+
+  &lt;view x="10" y="10" name="container" bgcolor="silver" width="80" 
+        height="120"&gt;
+    &lt;constantlayout axis="x" value="10"/&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;coloredRect bgcolor="red" width="40"/&gt;
+    &lt;coloredRect bgcolor="aqua" width="50"/&gt;
+    &lt;coloredRect bgcolor="yellow"/&gt;
+    &lt;coloredRect bgcolor="green" width="20"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="140"&gt;
+  &lt;class name="coloredRect" width="60" height="15"/&gt;
+
+  &lt;view x="10" y="10" name="container" bgcolor="silver" width="80" 
+        height="120"&gt;
+    &lt;constantlayout axis="x" value="10"/&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;coloredRect bgcolor="red" width="40"/&gt;
+    &lt;coloredRect bgcolor="aqua" width="50"/&gt;
+    &lt;coloredRect bgcolor="yellow"/&gt;
+    &lt;coloredRect bgcolor="green" width="20"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$8.lzx></example?>
+<para>Here <indexterm><primary>constantlayout</primary></indexterm><sgmltag class="element">&lt;constantlayout&gt;</sgmltag> and
+<indexterm><primary>simplelayout</primary></indexterm><sgmltag class="element">&lt;simplelayout&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: simplelayout-->
+ are combined so that the
+<indexterm><primary>constantlayout</primary></indexterm><sgmltag class="element">&lt;constantlayout&gt;</sgmltag> controls the left, whereas
+the<indexterm><primary>simplelayout</primary></indexterm><sgmltag class="element">&lt;simplelayout&gt;</sgmltag> dictates the vertical spacing between the
+siblings.
+</para>
+
+
+<para/></section></section><section id="layout-and-design.designconsiderations"><title>Design considerations in LZX programs</title>
+<para>
+This section 
+discusses <literal>layouts</literal>, which are constructs that allow you to focus on larger design issues by freeing you from the 
+tedium of positioning views. Layouts are implemented with <literal>constraints</literal>, which are described in 
+<xref linkend="constraints"/>.
+For more on designing the "look and feel" of OpenLaszlo applications, please see
+<xref linkend="designers"/>.
+</para>
+
+
+<para/><section><title>The view hierarchy</title>
+<para>
+Views can be nested inside one another, and they can reference other parts of the view hierarchy using 
+dot syntax and/or IDs. 
+The view hierarchy helps you define how the various elements of your application relate to one another. 
+It is helpful to break your application into various elements. Consider a photo-viewing application that has a list of images in 
+a right-hand column, and a main stage area for displaying the images to the left. There is also a trash area that we'll cover later. 
+At a very high level, you might break your application up as follows:
+</para>
+
+<example role="live-example">
+   <title>Outline of photo application</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$9.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>outline of photo application</title><programlisting role="lzx-embednew"><filename>layout-and-design-$9.lzx</filename><parameter/><code>
+&lt;canvas width="800"&gt;
+  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
+    &lt;!-- Area for viewing images --&gt;
+    &lt;text&gt;Stage&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="listOfImages" width="200" height="300" x="500" bgcolor="0xffff00"&gt;
+    &lt;!-- Data-replicated list of images --&gt;
+    &lt;text&gt;List of images&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
+    &lt;!-- Trash for disposing of images --&gt;
+    &lt;text&gt;Trash&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="800"&gt;
+  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
+    &lt;!-- Area for viewing images --&gt;
+    &lt;text&gt;Stage&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="listOfImages" width="200" height="300" x="500" bgcolor="0xffff00"&gt;
+    &lt;!-- Data-replicated list of images --&gt;
+    &lt;text&gt;List of images&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
+    &lt;!-- Trash for disposing of images --&gt;
+    &lt;text&gt;Trash&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$9.lzx></example?>
+
+<para>
+You can use views with background colors when mocking up applications as shown above, to make them easier to prototype.</para>
+
+<para>If you approach the application in this manner, you've effectively broken it up into manageable pieces already. <varname>listOfImages</varname>, <varname>stage</varname> and <varname>trash</varname> could all be developed independently of one another. <varname>listOfImages</varname> would contain the text-list of images that are bound to some data with the descriptive text showing. When the user clicks one of the images, it would call a <indexterm><primary><literal>showImage()</literal></primary></indexterm><methodname>showImage()</methodname> method on <varname>stage</varname> with the URL of the image to show as an argument.</para>
+
+<para>The replicated views inside of <varname>listOfImages</varname>
+would best be positioned using a layout.
+</para>
+
+
+<para/><section id="layout-and-design.floatingviews"><title>Floating views</title>
+<para>
+The view hierarchy could also be a constraint. Imagine that in the above example, you wanted to be able to drag an item from the list of image names from <varname>listOfImages</varname> to <varname>trash</varname>. 
+Frequently in drag-and-drop environments, the original item that was dragged is left in place (although some indication may be given that it is in a transient state, such as being faded out), while a copy of it is dragged. If each of the image titles was draggable, then not only might a dragged item disrupt the arrangement of its siblings, but you wouldn't be able to leave the original intact, in order to obtain the behavior described above. 
+</para>
+
+<para>
+To get around this problem, you could use a floating view as the draggable view. A floating view is one that floats on top of the rest of your application, and only appears when dragging:
+</para>
+<orderedlist spacing="compact"><listitem><para>User clicks and holds on a view.</para></listitem><listitem><para>Floating view made visible, and located over clicked view.</para></listitem><listitem><para>Any visual changes applied to clicked view (e.g. color/alpha transform).</para></listitem><listitem><para>As mouse moves around, the floating view follows the mouse.</para></listitem><listitem><para>Onmouseup the floating view disappears, any actions performed, original clicked view restored.</para></listitem></orderedlist>
+<para>
+To position the floating view over the clicked view, you can use the <indexterm><primary><literal>getAttributeRelative()</literal></primary></indexterm><methodname>getAttributeRelative()</methodname> method of view to obtain the x and y coordinates of the view relative to a view other than its parent. For example, consider the case below:</para>
+
+<informalexample role="live-example"><programlisting role="lzx-embednew"><filename>layout-and-design-$10.lzx</filename><parameter/><code>
+&lt;canvas width="800" &gt;
+  &lt;!-- An item that will get clicked and dragged --&gt;
+  &lt;class name="imageRow" bgcolor="0x93A5FF" width="$once{parent.width}" height="20"&gt;
+    &lt;attribute name="text" type="text"/&gt;
+    &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
+    &lt;handler name="onmousedown"&gt;
+      this.f = new LzView(canvas, {width: this.width,
+                                   height: this.height,
+                                   bgcolor: this.bgcolor,
+                                   x: this.getAttributeRelative("x", canvas),
+                                   y: this.getAttributeRelative("y", canvas),
+                                   clickable: true
+                                   });
+      // Make view follow mouse around
+      this.x_offset = this.getMouse("x");
+      this.y_offset = this.getMouse("y");
+      this.startDraggingFloater();
+    &lt;/handler&gt;
+    
+    &lt;method name="startDraggingFloater"&gt;
+      this.d = new LzDelegate(this, "adjustFloaterPosition", LzIdle, "onidle");
+      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+    &lt;/method&gt;
+    
+    &lt;method name="adjustFloaterPosition"&gt;
+      this.f.setX(canvas.getMouse("x")-this.x_offset);
+      this.f.setY(canvas.getMouse("y")-this.y_offset);
+    &lt;/method&gt;
+    
+    &lt;method name="cancelFloater"&gt;
+      this.gm.unregisterAll();
+      this.d.unregisterAll();
+      this.f.destroy();
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
+    &lt;!-- Area for viewing images --&gt;
+    &lt;text&gt;Stage&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="listOfImages" width="200" height="300" x="500" bgcolor="0xffff00"&gt;
+    &lt;!-- Data-replicated list of images --&gt;
+    &lt;simplelayout axis="y" spacing="2"/&gt;
+    
+    &lt;imageRow&gt;One&lt;/imageRow&gt;
+    &lt;imageRow&gt;Two&lt;/imageRow&gt;
+    &lt;imageRow&gt;Three&lt;/imageRow&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
+    &lt;!-- Trash for disposing of images --&gt;
+    &lt;text&gt;Trash&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="800" &gt;
+  &lt;!-- An item that will get clicked and dragged --&gt;
+  &lt;class name="imageRow" bgcolor="0x93A5FF" width="$once{parent.width}" height="20"&gt;
+    &lt;attribute name="text" type="text"/&gt;
+    &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
+    &lt;handler name="onmousedown"&gt;
+      this.f = new LzView(canvas, {width: this.width,
+                                   height: this.height,
+                                   bgcolor: this.bgcolor,
+                                   x: this.getAttributeRelative("x", canvas),
+                                   y: this.getAttributeRelative("y", canvas),
+                                   clickable: true
+                                   });
+      // Make view follow mouse around
+      this.x_offset = this.getMouse("x");
+      this.y_offset = this.getMouse("y");
+      this.startDraggingFloater();
+    &lt;/handler&gt;
+    
+    &lt;method name="startDraggingFloater"&gt;
+      this.d = new LzDelegate(this, "adjustFloaterPosition", LzIdle, "onidle");
+      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+    &lt;/method&gt;
+    
+    &lt;method name="adjustFloaterPosition"&gt;
+      this.f.setX(canvas.getMouse("x")-this.x_offset);
+      this.f.setY(canvas.getMouse("y")-this.y_offset);
+    &lt;/method&gt;
+    
+    &lt;method name="cancelFloater"&gt;
+      this.gm.unregisterAll();
+      this.d.unregisterAll();
+      this.f.destroy();
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
+    &lt;!-- Area for viewing images --&gt;
+    &lt;text&gt;Stage&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="listOfImages" width="200" height="300" x="500" bgcolor="0xffff00"&gt;
+    &lt;!-- Data-replicated list of images --&gt;
+    &lt;simplelayout axis="y" spacing="2"/&gt;
+    
+    &lt;imageRow&gt;One&lt;/imageRow&gt;
+    &lt;imageRow&gt;Two&lt;/imageRow&gt;
+    &lt;imageRow&gt;Three&lt;/imageRow&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
+    &lt;!-- Trash for disposing of images --&gt;
+    &lt;text&gt;Trash&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$10.lzx?></informalexample>
+
+
+<para>To achieve this, you could create a view from script when the mouse goes down over one of the views you want to drag:
+</para>
+
+<para>
+This code is not easy to read, although conceptually it's fairly simple — 
+"create a new view when the mouse button is depressed, and drag it until the mouse button is released". 
+Note also that you have to listen for the global <indexterm><primary>onmouseup event</primary></indexterm><literal>onmouseup</literal> event instead of the <indexterm><primary>onmouseup event</primary></indexterm><literal>onmouseup</literal> on the dynamically created view. Because it was positioned under the cursor after the mouse was down, the event system does not get notified when the mouse goes up over it.</para>
+<para>
+This approach is fairly laborious — you have to copy all of the attributes of the original view to the new one. If you wanted to have the text field appear in the dragged view, you would have to create a new text field to match it at run-time. As the dragged view becomes more complex, it will take longer to instantiate when the user depresses the mouse button, since view instantiation is fairly processor-expensive.</para>
+<para>
+
+A better approach would be to have the floating view ready in advance:
+</para>
+
+<example role="live-example">
+   <title>Building a "floating view"</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$11.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>building a "floating view"</title><programlisting role="lzx-embednew"><filename>layout-and-design-$11.lzx</filename><parameter/><code>
+&lt;canvas width="800" &gt;
+  &lt;!-- A draggable floating view --&gt;
+  &lt;class name="floater" height="20" bgcolor="0x93A5FF" visible="false"&gt;
+    &lt;dragstate name="dragger"/&gt;
+    &lt;text name="txt" width="100"/&gt;
+    &lt;method name="showFloater" args="xpos, ypos, itemwidth, itemlabel"&gt;
+      myfloater.bringToFront();
+      this.setX(xpos);
+      this.setY(ypos);
+      this.setWidth(itemwidth);
+      this.txt.setText(itemlabel);
+      this.setVisible(true)
+      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+      this.setVisible(true);
+      this.dragger.apply();
+    &lt;/method&gt;
+
+    &lt;method name="cancelFloater"&gt;
+      this.dragger.remove();
+      this.setVisible(false);
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- An instance of the floater --&gt;
+  &lt;floater id="myfloater"/&gt;
+  
+  &lt;!-- An item that will get clicked and dragged --&gt;
+  &lt;class name="imageRow" bgcolor="0x93A5FF" width="$once{parent.width}" height="20"&gt;
+    &lt;attribute name="text" type="text"/&gt;
+    &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
+    &lt;handler name="onmousedown"&gt;
+      myfloater.showFloater(this.getAttributeRelative("x", canvas),
+                            this.getAttributeRelative("y", canvas),
+                            this.width,
+                            this.txt.getText());
+    &lt;/handler&gt;
+  &lt;/class&gt;
+  
+  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
+    &lt;!-- Area for viewing images --&gt;
+    &lt;text&gt;Stage&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="listOfImages" width="200" height="300" x="500" bgcolor="0xffff00"&gt;
+    &lt;!-- Data-replicated list of images --&gt;
+    &lt;simplelayout axis="y" spacing="2"/&gt;
+    &lt;imageRow&gt;One&lt;/imageRow&gt;
+    &lt;imageRow&gt;Two&lt;/imageRow&gt;
+    &lt;imageRow&gt;Three&lt;/imageRow&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
+    &lt;!-- Trash for disposing of images --&gt;
+    &lt;text&gt;Trash&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="800" &gt;
+  &lt;!-- A draggable floating view --&gt;
+  &lt;class name="floater" height="20" bgcolor="0x93A5FF" visible="false"&gt;
+    &lt;dragstate name="dragger"/&gt;
+    &lt;text name="txt" width="100"/&gt;
+    &lt;method name="showFloater" args="xpos, ypos, itemwidth, itemlabel"&gt;
+      myfloater.bringToFront();
+      this.setX(xpos);
+      this.setY(ypos);
+      this.setWidth(itemwidth);
+      this.txt.setText(itemlabel);
+      this.setVisible(true)
+      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+      this.setVisible(true);
+      this.dragger.apply();
+    &lt;/method&gt;
+
+    &lt;method name="cancelFloater"&gt;
+      this.dragger.remove();
+      this.setVisible(false);
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- An instance of the floater --&gt;
+  &lt;floater id="myfloater"/&gt;
+  
+  &lt;!-- An item that will get clicked and dragged --&gt;
+  &lt;class name="imageRow" bgcolor="0x93A5FF" width="$once{parent.width}" height="20"&gt;
+    &lt;attribute name="text" type="text"/&gt;
+    &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
+    &lt;handler name="onmousedown"&gt;
+      myfloater.showFloater(this.getAttributeRelative("x", canvas),
+                            this.getAttributeRelative("y", canvas),
+                            this.width,
+                            this.txt.getText());
+    &lt;/handler&gt;
+  &lt;/class&gt;
+  
+  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
+    &lt;!-- Area for viewing images --&gt;
+    &lt;text&gt;Stage&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="listOfImages" width="200" height="300" x="500" bgcolor="0xffff00"&gt;
+    &lt;!-- Data-replicated list of images --&gt;
+    &lt;simplelayout axis="y" spacing="2"/&gt;
+    &lt;imageRow&gt;One&lt;/imageRow&gt;
+    &lt;imageRow&gt;Two&lt;/imageRow&gt;
+    &lt;imageRow&gt;Three&lt;/imageRow&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
+    &lt;!-- Trash for disposing of images --&gt;
+    &lt;text&gt;Trash&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$11.lzx></example?>
+
+<para>
+This code is much cleaner, and the floater code is now completely independent of the <literal>imagerow</literal> code. Individual properties of the floater can still be set (in this case they're passed as arguments to the showFloater method).
+</para>
+<para>
+Taking this a step further, if our list of images were replicated against a dataset an even more elegant approach would be to pass the data node of the replicated <literal>imageRow</literal> instance to the floater, and have the floater do the right thing with the data.
+</para>
+
+<example role="live-example">
+   <title>Using a dataset to drive layouts</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$12.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using a dataset to drive layouts</title><programlisting role="lzx-embednew"><filename>layout-and-design-$12.lzx</filename><parameter/><code>
+&lt;canvas width="800" &gt;
+  &lt;!-- The data that provides the images --&gt;
+  &lt;dataset name="ds_items"&gt;
+    &lt;items&gt;
+      &lt;item description="One" src="one.jpg"/&gt;
+      &lt;item description="Two" src="two.jpg"/&gt;
+      &lt;item description="Three" src="three.jpg"/&gt;
+    &lt;/items&gt;
+  &lt;/dataset&gt;
+  
+  &lt;!-- A draggable floating view --&gt;
+  &lt;class name="floater" height="20" bgcolor="0x93A5FF" visible="false"
+         datapath=""&gt;
+    &lt;dragstate name="dragger"/&gt;
+    
+    &lt;text name="txt" datapath="@description" resize="true"/&gt;
+    &lt;text name="imgurl" datapath="@src" resize="true" align="right"/&gt;
+    
+    &lt;method name="showFloater" args="xpos, ypos, itemwidth, dataNode"&gt;
+      myfloater.bringToFront();
+      this.setX(xpos);
+      this.setY(ypos);
+      this.setWidth(itemwidth);
+      this.datapath.setPointer(dataNode);
+      this.setVisible(true)
+      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+      this.setVisible(true);
+      this.dragger.apply();
+    &lt;/method&gt;
+    
+    &lt;method name="cancelFloater"&gt;
+      this.dragger.remove();
+      this.setVisible(false);
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- An instance of the floater --&gt;
+  &lt;floater id="myfloater"/&gt;
+  
+  &lt;!-- An item that will get clicked and dragged --&gt;
+  &lt;class name="imageRow" bgcolor="0x93A5FF" 
+         width="$once{parent.width}" 
+         height="20"&gt;
+    &lt;attribute name="text" type="text"/&gt;
+    &lt;text name="txt" datapath="@description" resize="true"/&gt;
+    &lt;handler name="onmousedown"&gt;
+      myfloater.showFloater(this.getAttributeRelative("x", canvas),
+                            this.getAttributeRelative("y", canvas),
+                            this.width,
+                            this.datapath.p);
+    &lt;/handler&gt;
+  &lt;/class&gt;
+  
+  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
+    &lt;!-- Area for viewing images --&gt;
+    &lt;text&gt;Stage&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="listOfImages" width="200" height="300" x="500" 
+        bgcolor="0xffff00"
+        datapath="ds_items:/items"&gt;
+    &lt;!-- Data-replicated list of images --&gt;
+    &lt;simplelayout axis="y" spacing="2"/&gt;
+    &lt;imageRow datapath="item"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
+    &lt;!-- Trash for disposing of images --&gt;
+    &lt;text&gt;Trash&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas width="800" &gt;
+  &lt;!-- The data that provides the images --&gt;
+  &lt;dataset name="ds_items"&gt;
+    &lt;items&gt;
+      &lt;item description="One" src="one.jpg"/&gt;
+      &lt;item description="Two" src="two.jpg"/&gt;
+      &lt;item description="Three" src="three.jpg"/&gt;
+    &lt;/items&gt;
+  &lt;/dataset&gt;
+  
+  &lt;!-- A draggable floating view --&gt;
+  &lt;class name="floater" height="20" bgcolor="0x93A5FF" visible="false"
+         <emphasis role="em">datapath=""</emphasis>&gt;
+    &lt;dragstate name="dragger"/&gt;
+    
+    &lt;text name="txt" datapath="@description" resize="true"/&gt;
+    &lt;text name="imgurl" datapath="@src" resize="true" align="right"/&gt;
+    
+    &lt;method name="showFloater" args="xpos, ypos, itemwidth, dataNode"&gt;
+      myfloater.bringToFront();
+      this.setX(xpos);
+      this.setY(ypos);
+      this.setWidth(itemwidth);
+      <emphasis role="em">this.datapath.setPointer(dataNode);</emphasis>
+      this.setVisible(true)
+      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+      this.setVisible(true);
+      this.dragger.apply();
+    &lt;/method&gt;
+    
+    &lt;method name="cancelFloater"&gt;
+      this.dragger.remove();
+      this.setVisible(false);
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- An instance of the floater --&gt;
+  &lt;floater id="myfloater"/&gt;
+  
+  &lt;!-- An item that will get clicked and dragged --&gt;
+  &lt;class name="imageRow" bgcolor="0x93A5FF" 
+         width="$once{parent.width}" 
+         height="20"&gt;
+    &lt;attribute name="text" type="text"/&gt;
+    &lt;text name="txt" datapath="@description" resize="true"/&gt;
+    &lt;handler name="onmousedown"&gt;
+      myfloater.showFloater(this.getAttributeRelative("x", canvas),
+                            this.getAttributeRelative("y", canvas),
+                            this.width,
+                            <emphasis role="em">this.datapath.p</emphasis>);
+    &lt;/handler&gt;
+  &lt;/class&gt;
+  
+  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
+    &lt;!-- Area for viewing images --&gt;
+    &lt;text&gt;Stage&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="listOfImages" width="200" height="300" x="500" 
+        bgcolor="0xffff00"
+        datapath="ds_items:/items"&gt;
+    &lt;!-- Data-replicated list of images --&gt;
+    &lt;simplelayout axis="y" spacing="2"/&gt;
+    &lt;imageRow datapath="item"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
+    &lt;!-- Trash for disposing of images --&gt;
+    &lt;text&gt;Trash&lt;/text&gt;
+    &lt;!-- ... --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$12.lzx></example?>
+
+<para>
+See the Reference for an explanation of the <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> call.
+</para>
+
+<para>
+The floater must have an empty datapath assigned in advance. Notice how since only a pointer to the <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> element is passed to the floating view, the floater can access attributes of the data that were not referenced in the <literal>imageRow</literal> class (for example,the <literal>src</literal> attribute). This can become particularly useful when you want to "drop" the floater somewhere. The drop target may need to access other data properties (or even delete the XML node in the dataset), and passing a pointer to it saves retracing it.</para>
+<para>
+
+A floating view is not only for draggable objects. If you wanted to frame a specified view, regardless of where it was in the view hierarchy, you might also find a floating view to be the best option. See the <link linkend="layout-and-design.stableborderlayout">StableBorderLayout</link> section for more.
+</para>
+
+<para/></section><section><title>Resources and ignoring layouts</title>
+
+<para>
+You should avoid placing views inside of views with a
+resource. Instead, to have a background image in a container view, have
+a view that attaches the resource be a child of the parent view. Use
+<literal>options="ignorelayout"</literal> to prevent the background image
+from being affected by any layouts that act upon the children of its
+container:
+</para>
+
+<example role="live-example"><title>ignorelayout</title><programlisting>
+&lt;view name="container"&gt;
+  &lt;view resource="someimg.jpg" options="ignorelayout"/&gt;
+  &lt;view name="childView"/&gt;
+&lt;/view&gt;
+</programlisting></example>
+
+
+
+
+
+
+<para/></section></section></section><section><title>Scripting and Layouts</title>
+
+<para/><section id="layout-and-design.addressing"><title>Addressing Layouts</title>
+
+<para>Since a layout extends Node, it can be addressed using dot syntax:</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;canvas height="140"&gt;
+  &lt;class name="coloredRect" width="20" height="80"/&gt;
+
+  &lt;view name="container"&gt;
+    &lt;simplelayout name="slayout" axis="x" spacing="10"/&gt;
+    &lt;coloredRect bgcolor="red"/&gt;
+    &lt;coloredRect bgcolor="aqua"/&gt;
+    &lt;coloredRect bgcolor="yellow"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting></informalexample>
+
+<para>In the above example, the layout could be accessed by:
+<literal>container.slayout</literal>.</para>
+
+<para>You might need to address a layout in script, in order to change
+one of its attributes at run-time, to call the layout's
+<indexterm><primary><literal>update()</literal></primary></indexterm><methodname>update()</methodname> method, or to lock it. A layout can also have
+an id, so that it can be accessed globally.</para>
+<para/></section><section><title>Layouts Array</title>
+<para>
+All nodes
+have a layouts array, which contains pointers to all of the layouts
+that act upon its children:</para>
+
+<example role="live-example">
+   <title>Addressing layouts</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$15.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Addressing Layouts</title><programlisting role="lzx-embednew"><filename>layout-and-design-$15.lzx</filename><parameter/><code>
+&lt;canvas height="180"&gt;
+  &lt;class name="coloredSquare" width="20" height="20"/&gt;
+
+  &lt;view name="container" bgcolor="silver" x="10" y="10"&gt;
+    &lt;simplelayout axis="x" spacing="2"/&gt;
+    &lt;simplelayout id="yLayout" axis="y" spacing="2"/&gt;
+
+    &lt;coloredSquare bgcolor="red"/&gt;
+    &lt;coloredSquare bgcolor="red"/&gt;
+    &lt;coloredSquare bgcolor="red"/&gt;
+    &lt;coloredSquare bgcolor="red"/&gt;
+    &lt;coloredSquare bgcolor="red"/&gt;
+  &lt;/view&gt;
+
+  &lt;button y="150" x="10"&gt;Increase spacing of BOTH x and y layouts
+    &lt;handler name="onclick"&gt;
+      &lt;![CDATA[
+      for (var i=0; i&lt;container.layouts.length; i++) {
+          var lyt = container.layouts[i];
+          lyt.setAttribute('spacing', lyt.spacing + 2);
+      }
+      ]]&gt;
+    &lt;/handler&gt;
+  &lt;/button&gt;
+
+  &lt;button y="150" x="280"&gt;Increase spacing of y layout ONLY
+    &lt;handler name="onclick"&gt;
+      yLayout.setAttribute('spacing', yLayout.spacing + 2);
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="180"&gt;
+  &lt;class name="coloredSquare" width="20" height="20"/&gt;
+
+  &lt;view name="container" bgcolor="silver" x="10" y="10"&gt;
+    &lt;simplelayout axis="x" spacing="2"/&gt;
+    &lt;simplelayout id="yLayout" axis="y" spacing="2"/&gt;
+
+    &lt;coloredSquare bgcolor="red"/&gt;
+    &lt;coloredSquare bgcolor="red"/&gt;
+    &lt;coloredSquare bgcolor="red"/&gt;
+    &lt;coloredSquare bgcolor="red"/&gt;
+    &lt;coloredSquare bgcolor="red"/&gt;
+  &lt;/view&gt;
+
+  &lt;button y="150" x="10"&gt;Increase spacing of BOTH x and y layouts
+    &lt;handler name="onclick"&gt;
+      &lt;![CDATA[
+      for (var i=0; i&lt;container.layouts.length; i++) {
+          var lyt = container.layouts[i];
+          lyt.setAttribute('spacing', lyt.spacing + 2);
+      }
+      ]]&gt;
+    &lt;/handler&gt;
+  &lt;/button&gt;
+
+  &lt;button y="150" x="280"&gt;Increase spacing of y layout ONLY
+    &lt;handler name="onclick"&gt;
+      yLayout.setAttribute('spacing', yLayout.spacing + 2);
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$15.lzx></example?>
+
+
+
+<para/></section><section><title>Locking and Unlocking Layouts</title>
+
+<para>Layouts can be locked and unlocked using the <indexterm><primary><literal>lock()</literal></primary></indexterm><methodname>lock()</methodname>
+and <indexterm><primary><literal>unlock()</literal></primary></indexterm><methodname>unlock()</methodname> methods respectively (inherited from the
+<indexterm><primary>layout</primary></indexterm><classname>layout</classname> class).  When you lock a layout, you prevent it from
+updating. For example, if you click the colored boxes in the following
+example to enlarge them, the simplelayout will automatically update,
+and the spacing between the boxes will remain consistent. However, if
+you lock the layout, then grow the boxes, the simplelayout will not
+update, until the <indexterm><primary><literal>unlock()</literal></primary></indexterm><methodname>unlock()</methodname> method is called on the
+layout:</para>
+
+<example role="live-example">
+   <title>Locking and unlocking layouts</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$16.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Locking and Unlocking Layouts</title><programlisting role="lzx-embednew"><filename>layout-and-design-$16.lzx</filename><parameter/><code>
+&lt;canvas height="140"&gt;
+  &lt;class name="coloredRect" width="20" height="80"
+         onclick="this.setWidth(this.width+2)"/&gt;
+
+  &lt;view x="10" y="10" name="container"&gt;
+    &lt;simplelayout name="slayout" axis="x" spacing="10"/&gt;
+    &lt;coloredRect bgcolor="red"/&gt;
+    &lt;coloredRect bgcolor="aqua"/&gt;
+    &lt;coloredRect bgcolor="yellow"/&gt;
+    &lt;coloredRect bgcolor="green"/&gt;
+    &lt;coloredRect bgcolor="blue"/&gt;
+  &lt;/view&gt;
+
+  &lt;button x="10" y="110"&gt;Lock
+    &lt;handler name="onclick"&gt;
+      container.slayout.lock();
+    &lt;/handler&gt;
+  &lt;/button&gt;
+
+  &lt;button x="70" y="110"&gt;Unlock
+    &lt;handler name="onclick"&gt;
+      container.slayout.unlock();
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="140"&gt;
+  &lt;class name="coloredRect" width="20" height="80"
+         onclick="this.setWidth(this.width+2)"/&gt;
+
+  &lt;view x="10" y="10" name="container"&gt;
+    &lt;simplelayout name="slayout" axis="x" spacing="10"/&gt;
+    &lt;coloredRect bgcolor="red"/&gt;
+    &lt;coloredRect bgcolor="aqua"/&gt;
+    &lt;coloredRect bgcolor="yellow"/&gt;
+    &lt;coloredRect bgcolor="green"/&gt;
+    &lt;coloredRect bgcolor="blue"/&gt;
+  &lt;/view&gt;
+
+  &lt;button x="10" y="110"&gt;Lock
+    &lt;handler name="onclick"&gt;
+      container.slayout.lock();
+    &lt;/handler&gt;
+  &lt;/button&gt;
+
+  &lt;button x="70" y="110"&gt;Unlock
+    &lt;handler name="onclick"&gt;
+      container.slayout.unlock();
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$16.lzx></example?>
+
+<para>The <indexterm><primary><literal>lock()</literal></primary></indexterm><methodname>lock()</methodname> method sets the layout's
+<indexterm><primary>locked</primary></indexterm><sgmltag class="attribute">locked</sgmltag> attribute to true. The <indexterm><primary><literal>unlock()</literal></primary></indexterm><methodname>unlock()</methodname> method
+calls the layout's <indexterm><primary><literal>update()</literal></primary></indexterm><methodname>update()</methodname> method, then sets the
+<indexterm><primary>locked</primary></indexterm><sgmltag class="attribute">locked</sgmltag> attribute to <literal>false</literal>.</para>
+
+<para/></section></section><section><title>Animating layout</title>
+<para>Layouts can be animated; that is, the properties of the layout can be set to vary over time.
+For an example and an explanation of how this is done, see <xref linkend="animation"/></para>
+
+<para/></section><section><title>Writing Custom Layouts</title>
+<para>
+When none of the default OpenLaszlo layouts do what you need, you can write a custom layout of your own. This section shows the essential aspects of building one.
+</para>
+
+
+<para/><section><title>The <indexterm><primary><literal>update()</literal></primary></indexterm><methodname>update()</methodname> method</title>
+
+<para>The <indexterm><primary><literal>update()</literal></primary></indexterm><methodname>update()</methodname> method is the most important method in
+a layout — it controls what the layout does. For example, here
+is a very basic custom layout that spaces views 20px apart. This
+is similar to the behavior of the<indexterm><primary>simplelayout</primary></indexterm><sgmltag class="element">&lt;simplelayout&gt;</sgmltag>, but unlike <indexterm><primary>simplelayout</primary></indexterm><sgmltag class="element">&lt;simplelayout&gt;</sgmltag> this one spaces
+the left hand edge of the views, rather than distributing them
+evenly:</para>
+
+<example role="live-example">
+   <title>Updating a layout</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$17.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Updating a layout</title><programlisting role="lzx-embednew"><filename>layout-and-design-$17.lzx</filename><parameter/><code>
+&lt;canvas height="100"&gt;
+  &lt;class name="col" clickable="true" bgcolor="blue" width="15" height="80"/&gt;
+
+  &lt;layout&gt;
+    &lt;attribute name="spacing" value="25" type="number"/&gt;
+    &lt;method name="addSubview" args="s"&gt;
+      super.addSubview(s);
+      this.update();
+    &lt;/method&gt;
+
+    &lt;method name="update"&gt;
+      &lt;![CDATA[  
+      if (this.locked) return;
+      this.locked = true;
+      for (var i = 0; i &lt; subviews.length; i++){
+          subviews[i].setAttribute('x',  i * this.spacing);
+      }
+      this.locked= false;
+      ]]&gt;
+    &lt;/method&gt;
+  &lt;/layout&gt;
+
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100"&gt;
+  &lt;class name="col" clickable="true" bgcolor="blue" width="15" height="80"/&gt;
+
+  &lt;layout&gt;
+    &lt;attribute name="spacing" value="25" type="number"/&gt;
+    &lt;method name="addSubview" args="s"&gt;
+      super.addSubview(s);
+      this.update();
+    &lt;/method&gt;
+
+    &lt;method name="update"&gt;
+      &lt;![CDATA[  
+      if (this.locked) return;
+      this.locked = true;
+      for (var i = 0; i &lt; subviews.length; i++){
+          subviews[i].setAttribute('x',  i * this.spacing);
+      }
+      this.locked= false;
+      ]]&gt;
+    &lt;/method&gt;
+  &lt;/layout&gt;
+
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$17.lzx></example?>
+
+<para>All layouts have a <literal>subviews</literal> array, which allows you to cycle through the sibling views and adjust their properties accordingly. The <indexterm><primary><literal>addSubview()</literal></primary></indexterm><methodname>addSubview()</methodname> method is automatically called whenever a view is added—at init time, when a view is dynamically generated from script or via data replication. It ensures that the <indexterm><primary><literal>update()</literal></primary></indexterm><methodname>update()</methodname> method gets called so that the layout updates. If the <indexterm><primary><literal>addSubview()</literal></primary></indexterm><methodname>addSubview()</methodname>method were not present, the above example would still look fine when the application first started, but any dynamically created views would appear out of the layout.</para>
+
+<para>Notice both:</para>
+
+<orderedlist spacing="compact"><listitem><para>The test for the <indexterm><primary>locked</primary></indexterm><sgmltag class="attribute">locked</sgmltag> attribute (<literal>if (this.locked) return;</literal>) to ensure conformance with normal layout response to the locking and unlocking of layouts.</para></listitem><listitem><para>The use of the <indexterm><primary>locked</primary></indexterm><sgmltag class="attribute">locked</sgmltag> attribute in the <indexterm><primary><literal>update()</literal></primary></indexterm><methodname>update()</methodname> method (<literal>this.locked = true;</literal> and <literal>this.locked = false;</literal>) to prevent simultaneous changes to the layout.</para></listitem></orderedlist>
+<para>
+Here is a slightly more complicated example. In fact the layout defined below is the same as <literal>&lt;simplelayout axis="x" spacing="10"/&gt;</literal>.
+</para>
+<example role="live-example">
+   <title>Horizontal simplelayout</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$18.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Horizontal Simplelayout</title><programlisting role="lzx-embednew"><filename>layout-and-design-$18.lzx</filename><parameter/><code>
+&lt;canvas height="100"&gt;
+  &lt;class name="col" clickable="true" bgcolor="blue" 
+         width="20" height="80" onclick="this.setWidth(this.width+2)"/&gt;
+  &lt;layout&gt;
+    &lt;attribute name="spacing" value="10" type="number"/&gt;
+    &lt;method name="addSubview" args="s"&gt;
+      this.updateDelegate.register(s, "onwidth");
+      super.addSubview(s);
+      this.update();
+    &lt;/method&gt;
+    &lt;method name="update"&gt;
+      &lt;![CDATA[  
+      if (this.locked) return;
+      this.locked = true;
+      var indent = 0;
+      for (var i = 0; i &lt; subviews.length; i++){
+          var s = subviews[i];
+          s.setAttribute('x',  indent);
+          indent += s.width + this.spacing;
+      }
+      this.locked = false;
+      ]]&gt;
+    &lt;/method&gt;
+  &lt;/layout&gt;
+
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100"&gt;
+  &lt;class name="col" clickable="true" bgcolor="blue" 
+         width="20" height="80" onclick="this.setWidth(this.width+2)"/&gt;
+  &lt;layout&gt;
+    &lt;attribute name="spacing" value="10" type="number"/&gt;
+    &lt;method name="addSubview" args="s"&gt;
+      <emphasis role="em">this.updateDelegate.register(s, "onwidth");</emphasis>
+      super.addSubview(s);
+      this.update();
+    &lt;/method&gt;
+    &lt;method name="update"&gt;
+      &lt;![CDATA[  
+      if (this.locked) return;
+      this.locked = true;
+      var indent = 0;
+      for (var i = 0; i &lt; subviews.length; i++){
+          <emphasis role="em">var s = subviews[i];
+          s.setAttribute('x',  indent);
+          indent += s.width + this.spacing;</emphasis>
+      }
+      this.locked = false;
+      ]]&gt;
+    &lt;/method&gt;
+  &lt;/layout&gt;
+
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+  &lt;col/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/layout-and-design-$18.lzx></example?>
+
+<para>
+Notice that the <indexterm><primary><literal>update()</literal></primary></indexterm><methodname>update()</methodname> method is slightly different
+now — it adds up the total widths of the preceding siblings
+(adding the spacing) and sets the x to the total. That is the basic
+algorithm for simplelayout. Another very important difference is that
+the <indexterm><primary><literal>addSubview()</literal></primary></indexterm><methodname>addSubview()</methodname> method registers the inherited
+<indexterm><primary><literal>updateDelegate()</literal></primary></indexterm><methodname>updateDelegate()</methodname> to listen for changes to that
+subview's width. <indexterm><primary><literal>updateDelegate()</literal></primary></indexterm><methodname>updateDelegate()</methodname> is a delegate that
+all subclasses of layout have. It calls that layout's
+<indexterm><primary><literal>update()</literal></primary></indexterm><methodname>update()</methodname> method. In this example, the layout needs to
+update when the width of any of the sibling views changes, so the call
+to register it happens in the <indexterm><primary><literal>addSubview()</literal></primary></indexterm><methodname>addSubview()</methodname> method.
+</para>
+
+
+
+
+
+
+<para/></section></section></chapter>

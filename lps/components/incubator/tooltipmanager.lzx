@@ -1,11 +1,13 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.              *
+* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
+<!---
+      @topic Incubator
+      @subtopic Tooltip Manager
+  -->
 <library>
-
-  
   
     <class name="tooltipManager" extends="view" x="-1000" y="-1000" width="0" height="0" visible="false" opacity="0" >
 
@@ -18,13 +20,17 @@
         <attribute name="delay"     value="1000"       type="number"   />
 
     
-        <!-- these are all private attributes -->
+        <!--- @access private -->
         <attribute name="onMouseOverDelegateArray" value="[]"/>
+        <!--- @access private -->
         <attribute name="onMouseOutDelegateArray" value="[]"/>
     
+        <!--- @access private -->
         <attribute name="__timerDelegate"       value="[]"/>
+        <!--- @access private -->
         <attribute name="__currentComponent"    value="[]"/>
     
+        <!--- @access private -->
         <attribute name="messageMap" value="[]" />
     
         <method event="ondata"><![CDATA[    

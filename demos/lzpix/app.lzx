@@ -1,0 +1,638 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<canvas width="800" height="600" bgcolor="0xcfcfcf" proxied="true" title="LZPIX"> <!-- bgcolor="0xc0c0c0" -->
+    <inittimer/>
+    <versioninfo/>
+    <attribute name="anm_multipler" value="1" />
+    <!-- demo for photo app -->
+ 
+    <!-- loading sequence -->
+    
+    <!-- openning sequence -->
+
+    <script>
+        LzView.addProxyPolicy( function (){ return false } );
+    </script>
+       
+    <!-- include href="classes/classes.lzx" /-->
+    <include href="views/details.lzx" />
+    <include href="classes/albumlayout.lzx" />
+    <include href="classes/pivotlayout.lzx" />
+    <include href="classes/photo.lzx" />    
+    <include href="classes/clipboard.lzx" />
+    <include href="classes/favorites.lzx" />
+    <include href="classes/search.lzx" />    
+    <include href="classes/draggedphotos.lzx" />    
+    <include href="classes/dataman.lzx" />    
+    <include href="classes/spinner.lzx" />    
+    <include href="views/mybutton.lzx" />
+    <include href="classes/linkbutton.lzx" />
+    <include href="resources.lzx" />
+    
+    <attribute name="isopen" value="false"/>
+    
+    <view name="interior" bgcolor="0xf0f0f0" width="${parent.width}" height="${parent.height}">
+    
+        <!-- this view is tied to the divider ( on the canvas ) and is animated in height in the transition to details -->
+        <view name="details_bkgnd" bgcolor="white" height="${canvas.divider.y}" width="${canvas.width}"  />
+   
+        <!-- the light blue area below the header that currently only contains ( visually )  the search field -->
+        <view name="tools" width="800" height="91" bgcolor="0xbac0f8" >
+            <text fgcolor="0x1f13b1" x="96" y="68" text="Flickr Search:" fontsize="10"/>
+            <text id="gResultsCountLabel" fgcolor="0x1f13b1" 
+                x="175" y="68" width="200" 
+                fontstyle="bold" fontsize="10"
+                />
+            <!--  TODO: bret will replace with art
+            view width="800" height="1" y="88" bgcolor="0x9993ee" />
+            <view width="800" height="1" y="89" bgcolor="0xFFFFFF" /-->
+        </view>
+
+        <view name="beveled-divider"  y="${parent.tools.height}" resource="assets/beveled-divider.gif" 
+              stretches="width" width="${parent.width}" />
+        
+        <view id="photoscontainer" name="photos" visible="false" width="${parent.width}"  height="460" y="93"  >
+           <attribute name="detailphoto" value="null" /> <!-- the ref to the photo displayed in details -->
+
+           <pivotlayout name="lyt" 
+                        yinset="50" 
+                        xinset="0"
+                        spacing="50" 
+                        photodimension="70" photoscale="${canvas.tools.zoomscale}"
+                        skew="0" 
+                        pivotindex="0"  
+                        pivot_y="0" 
+                        pivot_x="50" >
+ 
+                <method name="myreset">
+                    if ( isgrid ) {
+                        this.photoscale = canvas.tools.zoomscale;
+                        this.photodimension = 70;
+                        this.spacing = 50;
+                        this.skew = 0;
+                        this.pivot_x = 50;
+                        yinset = 50;
+                        xinset = 0;
+                        this.pivot_y = 0;
+                        this.yspacing = 50;
+                        this.xspacing = 50;
+                        this.pivotindex=0;
+                    } else {
+                        this.photodimension = 50;
+                        this.photoscale = 1;
+                        this.skew = 1;
+                        //this.pivot_x = 50;
+                        this.pivot_y = 405;
+                        this.yspacing = -50;
+                        this.xspacing = 10;
+                        pivotindex=0;
+                    }
+                    this.update();
+                   
+                </method>
+
+                 <!-- this animator used to chnage the layout paramters to work in details mode -->
+
+
+                <animatorgroup name="transitiontolinear_anm" start="false">
+                    
+                    <animatorgroup name="grp" process="simultaneous"   >
+                       <animator                  attribute="skew" from="0" to="1"   duration="${canvas.anm_multipler*350}" motion="easeout" />
+                       <animator name="yspacing"  attribute="yspacing"      to="-70" duration="${canvas.anm_multipler*450}"  />
+                       <animator                  attribute="xspacing"      to="11"  duration="${canvas.anm_multipler*550}" />
+                    </animatorgroup> 
+                    
+                   <animatorgroup process="simultaneous"   onstop="canvas.details.ph.posme.doStart();">
+                        <!-- pivot_x this needs to be fixed. The value needs to calcualted 
+                             and assigned before this animation actiavtes -->
+                        <animator attribute="pivot_x" to="-40" relative="true" duration="${canvas.anm_multipler*350}"/>                         
+                        <animator attribute="pivot_y" to="357"                 duration="${canvas.anm_multipler*350}" />
+                        <animator attribute="photodimension" to="50"           duration="${canvas.anm_multipler*350}" />
+                        <animator attribute="photoscale"     to="1"            duration="${canvas.anm_multipler*350}"/>
+                        <animator attribute="yspacing"       to="-50"          duration="${canvas.anm_multipler*350}"/>
+                    </animatorgroup>   
+                    
+                    <animatorgroup process="simultaneous"  duration="${canvas.anm_multipler*350}" >
+                         <!-- animate the photo within the details view into position -->
+                        <animator attribute="x"  to="40"   target="${canvas.details.title}" duration="${canvas.anm_multipler*350}"/>
+                        <animator attribute="x"  to="550"  target="${canvas.details.info}"  duration="${canvas.anm_multipler*350}"/>
+                        <animator attribute="y"  to="485"  target="${canvas.divider}"       duration="${canvas.anm_multipler*350}" /> 
+                    </animatorgroup>
+              
+               </animatorgroup>
+
+               
+
+                <!-- When the transition is done, load in the medium image to the
+                    details view. -->
+               <method event="onstop" reference="transitiontolinear_anm" >
+                    this.animate('dimmer',1,500);
+                    //canvas.details.ph.posme.doStart(); 
+                    //canvas.details.loadMediumImage();
+                    this.updateOnIdle( false );
+               </method>
+
+
+
+                 <!-- this animator used to chnage the layout paramters to work in details mode -->
+                <animatorgroup name="transitiontogrid_anm" start="false"  duration="${canvas.anm_multipler*300}" process="simultaneous" >                
+                    <animator attribute="x"  to="-300"  target="${canvas.details.title}" />
+                    <animator attribute="x"  to="1500"  target="${canvas.details.info}" />
+                    <animator attribute="y"  to="0"     target="${canvas.divider}"   />
+                </animatorgroup>
+                
+                <animator name="pageNext" attribute="pivot_x" to="-800" relative="true" duration="1000" start="false" />
+                <animator name="pagePrev" attribute="pivot_x" to="800"  relative="true" duration="1000" start="false" />
+            </pivotlayout>
+
+ 
+            <attribute name="initialDone" value="false"/>
+
+            <method name="displaytext"  args="show" ><![CDATA[
+                var i;
+                for (i in photoscontainer.lyt.subviews) {
+                   if (photoscontainer.lyt.subviews[i].txt && photoscontainer.lyt.subviews[i].txt.setVisible) photoscontainer.lyt.subviews[i].txt.setVisible( show );
+                }
+            ]]></method>
+            
+            <method name="transitionToDetails" args="ph_arg" >      
+                // locate the details photo to that of the selected photo
+                //Debug.write("ph_arg: ", ph_arg);
+                //Debug.write("ph_arg.intparent: ", ph_arg.intparent);
+                //Debug.write("ph_arg.intparent.interior", ph_arg.intparent.interior); 
+                var v =  ph_arg.intparent.interior;
+                //Debug.write("transitionToDetails");
+
+                canvas.details.ph.setX( v.getAttributeRelative('x', canvas) -1 );
+                canvas.details.ph.setY( v.getAttributeRelative('y', canvas) -1 );
+                var maxdim = (v.width > v.height) ? v.width + 2 : v.height + 2;
+                canvas.details.ph.setWidth( maxdim );
+                canvas.details.ph.setHeight( maxdim );
+
+                canvas.details.setVisible( true );
+
+                this.lyt.setAttribute('textvisible',false);
+                this.lyt.setAttribute('isgrid',false);
+                
+                //photoscontainer.lyt.registeronly( ['onskew','onphotodimension', 'ondimmer'] );
+                
+                //adjust an animation parameter before starting transition
+                this.lyt.updateOnIdle( true );
+                canvas.interior.details_bkgnd.setHeight(2);
+                canvas.interior.details_bkgnd.setVisible( true );
+                this.lyt.transitiontolinear_anm.grp.yspacing.setAttribute('to', -photoscontainer.lyt.photodimension*photoscontainer.lyt.photoscale);
+                this.lyt.transitiontolinear_anm.doStart();
+                // canvas.details.ph.posme.doStart(); //max's edit?
+                //anm_openphotodetails.doStart();
+           </method>
+
+            <method name="transitionToGrid"  > 
+                this.lyt.transitiontogrid_anm.doStart();
+            </method>
+            
+            <method event="onstop" reference="this.lyt.transitiontogrid_anm" >
+                //Debug.write("TOOLS back onclick", photoscontainer.detailphoto);
+                canvas.interior.details_bkgnd.setHeight(0);
+                canvas.interior.details_bkgnd.setVisible( false );
+                this.lyt.isgrid = true;
+                this.lyt.myreset();
+                this.lyt.setAttribute('textvisible',true); this.lyt.update();
+                this.showPhotoDetails( false );   
+                tls.enableZoom();
+            </method>
+
+            <method name="showPhotoDetails"  args="show,ph_arg" ><![CDATA[
+                if ( show ) {
+                    var photoid = ph_arg.datapath.p.getAttr("id"); 
+                    canvas.details.setVisible( true ); 
+                    canvas.details.loadDetails( photoid ); 
+                    canvas.details.loadUserInfo( ph_arg.datapath.p.getAttr("owner"));
+                    
+                    // Disable zoom when in details mode 
+                    tls.disableZoom(); 
+                } else  {
+                
+                    canvas.details.setVisible( false );
+                    canvas.details.info.setX(1500);
+                }
+                
+            ]]></method>
+
+            <!-- end of animation back to photo grid -->
+            <!--
+            <method event="onstop" reference="anm_closephotodetails" >
+                photoscontainer.lyt.setAttribute('textvisible',true);
+                photoscontainer.lyt.setAttribute('isgrid',true);
+            </method>
+            -->
+
+
+            <datapointer name="pagecounter_dp" xpath="photods:/rsp/photos/"  />
+            <attribute name="doneDel" 
+                       value="$once{ new LzDelegate( this, 'initialReplicationDone' ) }"/>
+            
+            <!-- once that data has loaded set the datapath on the photo -->
+            <method event="ondata" reference="photods" >
+                //Debug.write('ondata');
+                //Debug.write(this.pagecounter_dp);
+                this.initialReplicationDone();
+                // create a method to be called when the last photo view is created
+                // find out how many images there are
+                if (! this.pagecounter_dp.p) return;
+                var c = this.pagecounter_dp.p.childNodes.length;               
+                tls.setpPagingParams( c );
+                gResultsCountLabel.setText( this.buildResultsString(c) );                 
+                this.watchforlast();
+                photoscontainer.lyt.calcpageparams = true;
+            </method>
+            
+            <method name="watchforlast" >
+                //info('watchforlast');
+                if (! this.ph['clones']) return;
+                var lc = this.ph.clones[ this.ph.clones.length-1 ];
+                //Debug.write("ondata ( dataset ): lc .......................................",lc);                
+                this.doneDel.unregisterAll();
+                this.doneDel.register( lc, "oninit" );
+            </method>
+                        
+            <method name="initialReplicationDone">
+                <![CDATA[
+                //this.setAttribute( "initialDone", true );
+                //Debug.write("initialReplicationDone");
+                photoscontainer.lyt.unlock();
+                photoscontainer.lyt.update();
+                photoscontainer.setVisible(true);
+                spnr.setVisible(false);
+                ]]>
+            </method>
+
+            <!-- Build string showing how many results were found
+            @args num number of results found-->
+            <method name="buildResultsString" args="num"><![CDATA[
+                var str = "No photos found"; 
+                if (num ==  1) {
+                    str = "Found one photo"; 
+                } else if (num >= 100) {
+                    str = "Found hundreds of photos";
+                } else if (num >= 0) {
+                    str = num + " photos found";                    
+                } 
+                return str; 
+            ]]></method>
+
+
+            <selectionmanager name="selman" toggle="false">
+                <method name="isMultiSelect">
+                    return LzKeys.isKeyDown( "control" ) || LzKeys.isKeyDown( "shift" ) ||
+                           parent.isRectangleSelecting;
+                </method>
+            </selectionmanager>
+
+            <attribute name="isRectangleSelecting" value="false"/>
+            <method name="selectInRectangle" args="x1, y1, x2, y2">
+                <![CDATA[
+                if ( !selman.isMultiSelect() ){
+                    selman.clearSelection();
+                }
+                this.setAttribute( "isRectangleSelecting", true );
+                if ( x1 > x2 ){
+                    var tmp = x1;
+                    x1 = x2;
+                    x2 = tmp;
+                }
+                if ( y1 > y2 ){
+                    var tmp = y1;
+                    y1 = y2;
+                    y2 = tmp;
+                }
+                for ( var i = subviews.length-1; i >=0; i-- ){
+                    var sv = subviews[ i ];
+                    if ( ! ( sv instanceof photo ) ) continue;
+                    if ( sv.intersectsRectangle( x1, y1, x2 , y2 ) ){
+                        selman.select( sv );
+                    }
+                }
+                this.setAttribute( "isRectangleSelecting", false );
+                ]]>
+            </method>
+            
+            <!-- PHOTO INSTANCE -->
+            <photo name="ph" doesdrag="true"  width="70" height="70" > <!-- visible="${ loaded }" -->
+                <datapath xpath="photods:/rsp/photos/photo[1-18]" />
+                <!-- this is what should trigger photo editing -->
+                
+                <method event="onplainclick">
+                    if ( parent.selman.isMultiSelect() ){
+                        // Debug.write( this , " other click." );
+                        parent.selman.select( this );
+                        
+                    } else {
+                        // there are two states to the photo collection..
+                        // grid-mode and list-mode. if in grid mode
+                        // clicking on details will invoke a transition, while
+                        // clikcing on details in list-mode is a simpler ( fade ) transition
+                        
+                        if ( parent.lyt.isgrid ) { 
+                            canvas.details.setImage( this.getImageURL('t'), this.getImageURL('') );
+                            photoscontainer.lyt.pivotAround(this);
+                            photoscontainer.lyt.setAttribute('dimmer',0.2); //a visual affect that can be eliminated if need be.
+                            parent.transitionToDetails( this );
+                            
+                            parent.showPhotoDetails( true, this );
+                            
+                        } else {
+                            // Ignore this click if this photo is already the detailsphoto
+                            if (photoscontainer.detailphoto == this) {
+                                return;
+                            } else {
+                                canvas.details.setImage( this.getImageURL('t'), this.getImageURL('') );
+                                parent.showPhotoDetails( true, this );
+                            }
+                        }
+                        photoscontainer.detailphoto = this;
+                    }
+                </method>
+ 
+
+                <attribute name="selected" value="false"/>
+
+                <method name="startDrag" args="offx, offy">
+                    super.startDrag();
+                    if ( !isselected ) parent.selman.select( this );
+                    gDragged.startDrag( this, parent.selman.getSelection() , offx, offy );
+                </method>
+
+                <method name="stopDrag">
+                    super.stopDrag();
+                    gDragged.stopDrag( );
+                    parent.selman.clearSelection();
+                </method>
+
+                <attribute name="isselected" value="false"/>
+
+                <method name="setSelected" args="s">
+                    this.borderbg.setBGColor(s ? "0xFFD800" : "0xFFFFFF"); 
+                    this.setAttribute( "isselected" , s );
+                    this.intparent.setOpacity( s ? .5 : 1 );
+                </method>
+
+                <method name="intersectsRectangle" args="x1, y1, x2, y2">
+                    <![CDATA[
+                    return  x + width >  x1 && x < x2 &&
+                         y + height > y1 && y < y2;
+                    ]]>
+                </method>
+
+            </photo>
+
+            <view name="rubberband" opacity=".3" options="ignorelayout"
+                    visible="false" bgcolor="0x0000BB">
+                <attribute name="_sx" value="0"/>
+                <attribute name="_sy" value="0" />
+
+                <attribute name="updel" value="$once{ new LzDelegate( this , 'update' ) }"/>
+                <method name="start">
+                    this.setVisible( true );
+                    this._sx = parent.getMouse( "x" );
+                    this._sy = parent.getMouse( "y" );
+                    this.updel.register( LzIdle, "onidle" );
+                    this.bringToFront();
+                    this.update();
+                </method>
+
+                <method name="update">
+                    <![CDATA[
+                    var mx = this.parent.getMouse( 'x' );
+                    var my = this.parent.getMouse( 'y' );
+                    if ( mx < _sx ){
+                        this.setX( mx );
+                        this.setWidth( this._sx - mx - 1);
+                    } else {
+                        this.setX( this._sx );
+                        this.setWidth( mx - this._sx + 1);
+                    }
+                    if ( my < this._sy ){
+                        this.setY( my );
+                        this.setHeight( this._sy - my - 1);
+                    } else {
+                        this.setY( this._sy );
+                        this.setHeight( my - this._sy + 1);
+                    }
+                    ]]>
+                </method>
+
+                <method name="stop">
+                    this.setVisible( false );
+                    this.updel.unregisterAll();
+                    this.parent.selectInRectangle( this._sx , this._sy , 
+                                                this.parent.getMouse( 'x' ),
+                                                this.parent.getMouse( 'y' ) );
+                </method>
+            </view>
+
+            <attribute name="showhandcursor" value="false"/>
+            <method event="onmousedown">
+                if ( lyt.isgrid ) rubberband.start();
+            </method>
+            <method event="onmouseup">
+                rubberband.stop();
+            </method>
+
+        </view> <!-- end photos -->
+        
+        <view name="btm" width="800" height="88" y="${canvas.bottom.y - 2}" >
+            <view width="800" height="1"       bgcolor="0x9993ee" />
+            <view width="800" height="1" y="1" bgcolor="0xFFFFFF" />
+        </view>
+
+    </view> <!-- end interior -->
+
+    <!-- details view starts off invisibile. we set it to visible in 
+    showDetailsView -->
+    <detailsview name="details" visible="false"/>
+
+    <view name="divider" y="0" >
+        <view bgcolor="0x9993ee"  width="800" height="1" />
+        <view bgcolor="0xffffff"  width="800" height="1" y="1"/>
+        <view resource="assets/details/hide.gif"
+              x="700"
+              y="-4" />
+         <!--animator -->
+        <!-- Button for return to grid view, aka "hide details" -->
+        <mybutton name="hideDetailsButton" width="70" id="hdb"
+                  x="718"  
+                  onclick="this.returnToGridView()"
+                  resource="hidedetails_rsc"                
+                  y="-5">
+             <text fgcolor="0x463e9D" x="15" y="-2" fontsize="9" width="100">hide details</text>
+            <method name="returnToGridView">
+                photoscontainer.transitionToGrid();
+            </method> 
+            <view width="70" height="20"
+                  onmouseover="parent.onmouseover.sendEvent()"
+                  onmouseout="parent.onmouseout.sendEvent()"
+                  onmousedown="parent.onmousedown.sendEvent()"
+                  onmouseup="parent.onmouseup.sendEvent()"
+                  onclick="photoscontainer.transitionToGrid()" />
+        </mybutton>
+   
+    </view>
+
+    <!-- top of app -->
+    <view name="topview" bgcolor="0x1f13b1" opacity="1"
+          height="300" width="${parent.width}" >
+          
+        <animatorgroup name="anm" start="false" process="simultaneous"  duration="1000" >
+            <animator attribute="height" to="60" />
+            <animator target="${canvas.logo}"      attribute="x"      to="100"  />
+            <animator target="${canvas.logo}"      attribute="y"      to="14"   />
+            <animator target="${canvas.large_cam}" attribute="width"  to="104"  />
+            <animator target="${canvas.large_cam}" attribute="height" to="89"   />
+        </animatorgroup>
+
+        <view bgcolor="0xffffff" width="${parent.width}" height="1" y="${parent.height - 1}" />
+        
+        <method event="onstop" reference="this.anm" >
+            this.parent.large_cam.setVisible( false );
+            this.parent.little_cam.setVisible( true );
+        </method>
+    </view>
+
+        
+    <view resource="assets/shadow.png" width="${parent.topview.width}" y="${parent.topview.height}" stretches="width" />
+    <view name="large_cam"  resource="assets/branding/big_cam.png" stretches="both" />
+    <view name="little_cam" resource="assets/branding/lil_cam.png"  visible="false" />        
+    <view name="logo" resource="assets/branding/logo.png" x="474" y="160"/>
+
+    <!-- bottom of app -->
+    <view name="bottom" 
+          bgcolor="0xf0f0f0"
+          y="${canvas.height - height}"
+          height="300" 
+          width="${parent.width}">
+          <!--
+          <view name="cover" height="300" width="${parent.width}" bgcolor="0x7979e9"/>
+          -->
+          
+         <animatorgroup name="anm" id="agroup" start="false" process="simultaneous"  duration="1000" >
+            <animator attribute="height" to="43" start="false"/>
+            <!-- animator target="${parent.cover}"       attribute="opacity"   to="0" start="false"/-->
+            <animator target="${canvas.fav}"         attribute="height"    to="59"  start="false" />
+            <animator target="${canvas.fav}"         attribute="width"     to="141" start="false" />
+            <animator target="${canvas.fav}"         attribute="x"         to="654" start="false" />
+            <animator target="${canvas.fav}"         attribute="y"         to="0"   start="false" />
+            <animator target="${canvas.fav}"         attribute="titlearea" to="15"   start="false" />
+            <animator target="${canvas.fav.photos.interior.lyt}"  attribute="spacing"      to="8"  start="false" />
+            <animator target="${gClipboard}"         attribute="x"         to="0"   start="false" />
+            <animator target="${canvas.tools}"       attribute="x"         to="594"   start="false" />
+            <animator target="${canvas.srch}"        attribute="y"         to="65"   />
+            <animator target="${canvas.srch}"        attribute="x"         to="568"  />
+            <animator target="${canvas.srch}"        attribute="width"     to="117"  />
+         </animatorgroup>
+         
+        
+    </view>
+
+    <view name="links"  x="475" y="350" >
+        <!-- TODO: simplelayout is not working width text -->
+        <simplelayout spacing="5" />
+
+        <!-- [TODO: chnage link and fix this comment ] pop up source code in new window. -->    
+        <linkbutton label="View LZX source code" 
+            width="500"
+            url="http:../../lps/utils/viewer/viewer.jsp?file=demos/lzpix/app.lzx&amp;lzt=source"
+            targetframe="_blank" 
+            windowopts="" 
+        />
+
+        <!-- [TODO: change link and fix this comment ] load flash app in place -->        
+        <linkbutton label="Flash application" 
+            width="500"
+            url="http:app-loader.html?lzr=swf7"
+            targetframe="_top" 
+            windowopts="" 
+        />
+
+        <!-- [TODO: change link and fix this comment ] load dhtml app in place -->
+        <linkbutton label="DHTML application" 
+            width="500"
+            url="http:app-loader.html?lzr=dhtml"
+            targetframe="_top" 
+            windowopts="" 
+        />
+
+        <linkbutton label="Learn about OpenLaszlo and LZPIX" 
+            width="500"
+            url="http://www.openlaszlo.org"
+            targetframe="_blank" 
+            windowopts="" 
+        />
+
+    </view> <!-- end links -->
+    
+    <favorites name="fav" x="475" width="240" height="80" y="210"  />
+    
+    <search name="srch" id="gSearch" width="156" x="475" y="315">
+        <attribute name="firsttime" value="true"/>
+        <method name="sendsearch" >
+            photoscontainer.setVisible(false); 
+            //Debug.write("sendsearch: photoscontainer.lyt.lock called");
+            photoscontainer.lyt.isgrid = true;
+            photoscontainer.lyt.myreset();
+            photoscontainer.lyt.lock();
+            canvas.spnr.setVisible( true );
+            photoscontainer.lyt.transitiontogrid_anm.doStart();
+            canvas.details.setVisible( false );
+            if (this.firsttime) {
+                this.firsttime = false;
+                photoscontainer.lyt.calcpageparams = true;
+            } else {
+                photoscontainer.lyt.calcpageparams = false;
+            }
+            tls.reset();
+            tls.enableZoom();
+            gResultsCountLabel.setText("...searching..."); 
+            super.sendsearch();           
+        </method>
+
+    </search>
+
+    <include href="views/tools.lzx" />
+ 
+    <spinner name="spnr" x="375" y="250" />
+    
+    <view id="scrn" bgcolor="0x000000" visible="false" clickable="true"
+          width="${parent.width}"  
+          height="${parent.height - this.y}" 
+          y="91" opacity=".3" />
+    
+    <clipboard id="gClipboard" width="590" x="-800" />
+
+    <!-- bottom border -->
+    <view bgcolor="0x312897" y="598" width="800" height="1"  opacity=".6" />
+    <view bgcolor="0xffffff" y="599" width="800" height="1"  />
+
+
+    <!-- right border -->
+    <view bgcolor="0x312897" x="798" width="1" height="599"  opacity=".6" />
+    <view bgcolor="0xffffff" x="799" width="1" height="599"  />
+
+    <draggedphotos id="gDragged"/>
+    
+   <!-- text id="dbgr" x="5" y="5" text="something" /-->
+     
+    <method name="setOpen" args="o" >
+        if ( o ) {
+            this.topview.anm.doStart();
+            this.bottom.anm.doStart();
+            this.isopen = true; 
+            this.links.setVisible( false );
+            return this.bottom.anm;
+        }
+    </method>
+
+    <include href="views/error.lzx" />
+</canvas>

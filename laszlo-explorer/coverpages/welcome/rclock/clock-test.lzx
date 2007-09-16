@@ -1,0 +1,25 @@
+<!--=======================================================================-->
+<!-- clocks.lzx                                                            -->
+<!--                                                                       -->
+<!-- library classes for the world clocks class                            -->
+<!--                                                                       -->
+<!-- Copyright 2002-2007 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--                                                                       -->
+<!--=======================================================================-->
+<canvas>
+    <include href="clock.lzx" />
+    
+    <clock id="clk" x="100" y="100" oninit="this.setCurrentTime()" />
+    
+    <button name="hour" x="400" y="100" text="h"
+            onclick="clk.updateHands( Math.max( 1,(clk.lasthour +  3)%13), clk.lastminute, clk.lastsecond)"  />
+            
+    <button name="min" x="440" y="100" text="m"
+            onclick="clk.updateHands( clk.lasthour, Math.max( 1, (clk.lastminute + 10)%61), clk.lastsecond)"  />
+            
+    <button name="sec" x="460" y="100" text="s"
+            onclick="clk.updateHands(  clk.lasthour, clk.lastminute, Math.max(1, (clk.lastsecond + 20)%61) )"  />
+</canvas>

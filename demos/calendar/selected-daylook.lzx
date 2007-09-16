@@ -26,7 +26,7 @@
                     </method>
                 </multistatebutton>
             </view>
-            <text name="day"  font="vera" fontsize="10" fgcolor="#DAE3E8"
+            <text name="day" fgcolor="#DAE3E8"
                 width="60" height="20" x="3" y="2" >
                 0
             </text>
@@ -40,7 +40,7 @@
                 width="${parent.width - 6}" height="${parent.height}"/>
             <!-- scrollbar axis="y"/-->
             <view name="r" resource="rgt" stretches="height"
-                x="${parent.content.x + parent.width - 8}"
+                x="${parent.content.x + parent.width - 6}"
                 height="${parent.height}"/>
         </view>
         <view name="bottom" width="${parent.width}" height="7">
@@ -69,6 +69,7 @@
         </method>
 
         <method name="select" args="day"> <![CDATA[
+            //Debug.write("select for ", this, day);
             //if (dayview == day) return;
 
             // store a reference to this calendar day
@@ -81,17 +82,19 @@
             // Make sure the grow button is set to '+'
             //top.bkgnd.r.setStateNum(dayview.opened ? 1:0);
 
-            this.followstate.remove();
-            this.followstate.apply();
+            if (this.dayview) {
+                this.followstate.remove();
+                this.followstate.apply();
+            }
 
             setVisible(true); ]]>
         </method>
 
-        <state name="followstate">
+        <state name="followstate" apply="false">
             <attribute name="x" value="${dayview.getAttributeRelative( 'x',
-                                                        this )}"/>
+                                                        canvas )}"/>
             <attribute name="y" value="${dayview.getAttributeRelative( 'y',
-                                                        this )}"/>
+                                                        canvas )}"/>
 
             <attribute name="width" value="${this.dayview.width}"/>
 
@@ -103,7 +106,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

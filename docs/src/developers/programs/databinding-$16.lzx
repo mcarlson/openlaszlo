@@ -1,0 +1,69 @@
+
+<canvas height="200">
+  <dataset name="stack">
+    <root/>
+  </dataset>
+  <datapointer name="top" xpath="stack:/root"/>
+  
+  <datapointer xpath="stack:/root/*[1]/name()" rerunxpath="true">
+    <handler name="ondata" args="d">
+      good_result.setText(d)
+    </handler>
+  </datapointer>
+
+  <datapointer xpath="stack:/root/*[1]/name()">
+    <handler name="ondata" args="d">
+      bad_result.setText(d)
+    </handler>
+  </datapointer>
+  
+  <simplelayout spacing="5"/>
+  <text>Type in a string and press the button or the Enter key</text>
+  <view>
+    <simplelayout spacing="10" axis="x"/>
+    <edittext name="input">
+      <handler name="onkeyup" args="k">
+        if ( k == 13 ) {
+          parent.bAdd.handler();
+        }
+      </handler>
+    </edittext>
+    <button name="bAdd" text="Push">
+      <handler name="onclick" >
+        var n = parent.input.getText() 
+        if (!top.p['childNodes'])
+          top.addNode(n)
+        else 
+        {    
+          var ne = new LzDataElement(n)
+          top.p.insertBefore(ne, top.p.getFirstChild())
+        }
+        parent.input.clearText()
+      </handler>
+    </button>
+    <button name="bPop" text="Pop">
+      <handler name="onclick">
+        var last = top.xpathQuery('*[1]')
+        top.p.removeChild(last)
+      </handler>
+    </button>
+  </view>
+  
+  <view height="100">
+    <text bgcolor="0xcecece" text="$path{'name()'}">
+    <datapath xpath="stack:/root/*/name()"/> 
+    </text>
+    <wrappinglayout axis="y" spacing="3"/>
+  </view>
+  
+  <view>
+    <simplelayout axis="x" spacing="5"/>
+    <text><b>TOP: </b></text>
+    <text id="good_result" resize="true" fgcolor="green" fontstyle="bold"/>
+    <text id="bad_result" resize="true" fgcolor="red" fontstyle="bold"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,11 @@
+
+<canvas height="50">
+  <simplelayout axis="y"/>
+  <text><b>Default bold</b></text>
+  <text><i>Default italic</i></text>
+  <text fontstyle="bold"><i>Default bold italic</i></text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->    

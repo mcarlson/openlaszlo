@@ -905,7 +905,8 @@
 
 
         <!--- Pause the video if true.
-              This does nothing when you record. -->
+              This does nothing when you record. 
+              @access private -->
         <method name="_setPaused" args="paused"><![CDATA[
             //Debug.write("_setPaused", this, "paused", paused, "mode", this.mode, "progress", this.progress);
             if ((this.mode != "playing")  || !this._flashstream) {

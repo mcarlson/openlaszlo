@@ -1,0 +1,21 @@
+/**
+  * Library.js
+  *
+  * @copyright Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic Kernel
+  * @subtopic SVG
+  */
+
+#include "kernel/svg/LFC.js"
+#include "kernel/svg/LzPool.js"
+#include "kernel/svg/LzSprite.js"
+#include "kernel/svg/LzTextSprite.js"
+#include "kernel/svg/LzKeyboardKernel.js"
+#include "kernel/svg/LzMouseKernel.js"
+#include "kernel/svg/LzInputTextSprite.js"
+#include "kernel/svg/LzXMLParser.js"
+#include "kernel/svg/LzXMLTranslator.js"
+#include "kernel/svg/LzHTTPLoader.js"
+

@@ -1,0 +1,116 @@
+/**
+  * LzDefs.lzs
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  * @todo 2006-04-07 hqm This machinery could be removed if all
+  * callers to sendEvent can be guaranteed to check if the event slot
+  * is null before calling it as a function.
+  * @topic LZX
+  * @subtopic Runtime
+  */
+
+/** no op
+  * @access private
+  */
+var LzDeclaredEvent = {};
+/**
+  * @access private
+  */
+LzDeclaredEvent.sendEvent = function ( ){ };
+
+/**
+  * @access private
+  */
+LzDeclaredEvent.clearDelegates = function ( ){ };
+
+/**
+  * @access private
+  */
+LzDeclaredEvent.removeDelegate = function ( ){ };
+
+/**
+  * @access private
+  */
+LzDeclaredEvent.getDelegateCount = function ( ){return 0};
+
+/**
+  * @access private
+  */
+LzDeclaredEvent.toString = function ( ){
+    return "LzDeclaredEvent";
+}
+
+/**
+  * @access private
+  */
+LzDeclaredEvent.ready = false;
+
+/**
+  * @access private
+  */
+function DeclareEvent( who , what ){
+    //    Debug.debug('declare ' + who + ' what ' + what);
+    who[ what ] = LzDeclaredEvent;
+}
+
+/**
+  * @access private
+  */
+function DeclareEvents( who , what ){
+    //    Debug.debug('DeclareEvents', who, what);
+    for (var i in what) {
+        //Debug.info('what', what[i]);
+        who[what[i]] = LzDeclaredEvent;
+    }
+}
+
+/**
+  * Used to efficiently clone hashtables using Object's
+  * N.B. these tables incorrectly will appear to have entries for all
+  * the properties of Object.prototype.  To avoid this (but pay the
+  * overhead of a slower implementation, use LzDictionary).
+  * @access private
+  */
+function LzInheritedHash (parent)  {
+  if (parent) {
+    // NOTE: [2007-08-31 ptw] AS2 does not allow returning an
+    // alternate object from a constructor, so we have to resort to
+    // platform-specific code to implement inheritance.
+    if ($as2) {
+      this.__proto__ = parent;
+    } else {
+      // NOTE: [2007-08-30 ptw/hqm/max] We tried to set the
+      // constructor property for this object to LzInheritedHash for
+      // the debugger, but that does not work (in at least Firefox and
+      // Opera).  Apparently there is something we don't fully
+      // understand about the constructor property in Javascript.
+      function xtor() {};
+      xtor.prototype = parent;
+      return new xtor();
+    }
+  }
+}
+
+/** A map of element names, to functions that create instances of the
+  * appropriate type.
+  * Each built-in class that defines the implementation of a tag adds
+  * itself to this table
+  *
+  * @access private
+  */
+var ConstructorMap = {};
+
+/** The `lz` object is a pseudo-package for all LZX globals. Any declared LZX tag
+  * can be accessed from JavaScript using the tag name and the `lz` object.
+  *
+  * <example executable="false">
+  *   var foo = new lz.view(canvas, 
+  *                         {name:'foo', visible:true, options: {ignorelayout:true}})
+  * </example>
+  *
+  * @short-desc Pseudo-package for all LZX globals
+  * @access public
+  */
+var lz = ConstructorMap;
+

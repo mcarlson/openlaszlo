@@ -8,7 +8,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -70,6 +70,12 @@ public class ParseException extends CompilerException {
         specialConstructor = false;
     }
 
+    public ParseException(Token currentTokenVal, String message) {
+        super(message);
+        specialConstructor = false;
+        currentToken = currentTokenVal;
+    }
+
     /**
      * This variable determines which constructor was used to create
      * this object and thereby affects the semantics of the
@@ -114,6 +120,16 @@ public class ParseException extends CompilerException {
         }
     }
 
+    String pathname = null;
+
+    public String getPathname() {
+        return pathname;
+    }
+
+    public void initPathname(String pathname) {
+        this.pathname = pathname;
+    }
+
     /**
      * This method has the standard behavior when this object has been
      * created using the standard constructors.  Otherwise, it uses
@@ -130,7 +146,11 @@ public class ParseException extends CompilerException {
     
     public String getMessage(boolean includeSourceLocation) {
         if (!specialConstructor) {
-            return super.getMessage();
+            String retval = super.getMessage();
+            if (currentToken != null && includeSourceLocation) {
+              retval += " at line " + currentToken.beginLine + ", column " + currentToken.beginColumn;
+            }
+            return retval;
         }
         String expected = "";
         int expectedCount = 0;

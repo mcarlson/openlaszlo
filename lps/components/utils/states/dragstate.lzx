@@ -17,20 +17,20 @@
     <attribute name="drag_max_y" value="null" type="number"/>
 
     <!--- @keywords private -->
-    <attribute name="__dragstate_ydoffset" value="this.getMouse( 'y' )" when="once" />
+    <attribute name="__dragstate_ydoffset" value="$once{this.yoffset - this.getMouse( 'y' )}"/>
     <attribute name="y"
        value="(this.drag_axis == 'both' || this.drag_axis == 'y') ?
             __dragstate_getnewpos('y',
-                this.immediateparent.getMouse( 'y' ) - this.__dragstate_ydoffset)
+                this.immediateparent.getMouse( 'y' ) + this.__dragstate_ydoffset)
            : this.y"
         when="always"/>
 
     <!--- @keywords private -->
-    <attribute name="__dragstate_xdoffset" value="this.getMouse( 'x' )" when="once" />
+    <attribute name="__dragstate_xdoffset" value="$once{this.xoffset - this.getMouse( 'x' )}"/>
     <attribute name="x"
        value="(this.drag_axis == 'both' || this.drag_axis == 'x') ?
            __dragstate_getnewpos('x',
-                this.immediateparent.getMouse( 'x' ) - this.__dragstate_xdoffset)
+                this.immediateparent.getMouse( 'x' ) + this.__dragstate_xdoffset)
            : this.x"
         when="always"/>
 
@@ -43,11 +43,71 @@
         return newpos;
     ]]>
     </method>
+    
+    <doc>
+      <tag name="shortdesc"><text>A standard dragging behavior.</text></tag>
+      <text>
+        <p>
+        The dragstate is a class which can be used to make any view draggable.
+        When the dragstate is applied, the view with the dragstate will follow the mouse.
+        </p>
+        <example class="program" id="dragstate-1" title="Simple use of a dragstate">
+        &lt;canvas width="200" height="100"&gt;
+            &lt;view bgcolor="blue" width="20" height="20"
+                  onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+                &lt;dragstate name="dragger"/&gt;
+            &lt;/view&gt;
+        &lt;/canvas&gt;
+        </example>
+        
+        <example class="program" id="dragstate-2" title="Horizontal drag">
+        &lt;canvas width="200" height="100"&gt;
+            &lt;view bgcolor="red" width="20" height="20"
+                  onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+                &lt;dragstate name="dragger" drag_axis="x"/&gt;
+            &lt;/view&gt;
+        &lt;/canvas&gt;
+        </example>
+        
+        <example class="program" id="dragstate-3" 
+            title="Horizontal drag with simple bounds checking">
+        &lt;canvas width="200" height="100"&gt;
+            &lt;view bgcolor="red" width="20" height="20"
+                  onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+                &lt;dragstate name="dragger" drag_axis="x"
+                        drag_min_x="0"  drag_max_x="100"/&gt;
+            &lt;/view&gt;
+        &lt;/canvas&gt;
+        </example>
+        
+        <example class="program" id="dragstate-4"
+            title="Drag within bounds of parent view">
+        &lt;canvas width="500" height="350"&gt;
+            &lt;view bgcolor="blue" x="100" y="40" width="300" height="200"&gt;
+                &lt;view bgcolor="red" width="20" height="20"
+                      onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+                    &lt;dragstate name="dragger" drag_axis="both"
+                        drag_min_x="0"
+                        drag_max_x="$once{parent.width - this.width}"
+                        drag_min_y="0"
+                        drag_max_y="$once{parent.height - this.height}"/&gt;
+                &lt;/view&gt;
+            &lt;/view&gt;
+        &lt;/canvas&gt;
+        </example>
+        <p>The above example allows the user to drag the red square within the
+        bounds of the larger blue rectangle.  Note that as with all states the
+        dragstate's attributes are evaluated in the context of its parent.  So
+        to refer to the blue view's width, the example uses parent.width, and to
+        refer to the red square's width, the example uses this.width.
+        </p>
+      </text>
+    </doc>
 </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

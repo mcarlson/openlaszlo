@@ -1,0 +1,38 @@
+<!-- copyright 2006 Laszlo Systems, Inc.  All rights reserved. -->
+<canvas width="100%" height="80%" >
+
+    <!--    
+        time the creation of 1000 views
+    -->
+
+    <resource name="rsrc" >
+        <frame src="resc/h_c_open_sign.gif"/>
+    </resource>
+
+
+    <class name="SpriteC" resource="rsrc" oninit="this.doinit();">
+        <attribute name="x_init" />
+        <attribute name="y_init" />
+        <method name="doinit" >
+            this.x_init=Math.random()*400;
+            this.y_init=Math.random()*400;
+            this.setAttribute("x", this.x_init);
+            this.setAttribute("y", this.y_init);
+        </method>
+    </class>
+
+    <method event="oninit"><![CDATA[
+        var NUMSPRITES = 1000;
+        
+        var ts=(new Date()).getTime();
+        for ( var i=0; i<NUMSPRITES; i++ ) 
+        {
+            new SpriteC (canvas);
+        }
+            
+        var ttaken = (new Date()).getTime() - ts;
+        Debug.write("creation of " + NUMSPRITES + " views took " + ttaken + " ms..")
+        Debug.write("which is " + ttaken/NUMSPRITES + " ms. per view.");
+   ]]></method>
+
+</canvas>

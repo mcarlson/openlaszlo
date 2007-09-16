@@ -1,28 +1,29 @@
 <library>
-    <!--- @keyword private 
+    <!--- @access private 
     virtualdrawview override the drawing api methods to provide drawing in virtual spac coordinate. 
     -->
+    <include href="extensions/drawview.lzx"/>
     <class name="virtualdrawview"  extends="drawview" clickable="true"  clip="true">
-        <!--- @keyword private -->
+        <!--- @access private -->
         <viewspool name="_viewspool" parentview="${parent}" viewclass="datapoints"/>
         
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="minx" type="number" value="0"/>
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="miny" type="number" value="0"/>
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="maxx" type="number" value="100"/>
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="maxy" type="number" value="100"/>
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="_xscale" type="number" value="1"/>
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="_yscale" type="number" value="1"/>
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="_xoffset" type="number" value="0"/>
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="_yoffset" type="number" value="0"/>
-        <!--- @keyword private -->
+        <!--- @access private -->
         <attribute name="markers"/>
 
         <!--- set boundary for the virtual coordinate
@@ -82,16 +83,16 @@
         <!--- moveTo in virtual coordinate
          -->
         <method name="moveTo" args="x, y">
-            //debug.write("moveTo(" + x + ", " + y + ")");            
-            //debug.write("moveTo2(" + x * this._xscale + this._xoffset+ ", " + y * this._yscale + this._yoffset + ")");            
+            //Debug.write("moveTo(" + x + ", " + y + ")");            
+            //Debug.write("moveTo2(" + x * this._xscale + this._xoffset+ ", " + y * this._yscale + this._yoffset + ")");            
             super.moveTo(x * this._xscale + this._xoffset, y * this._yscale + this._yoffset);
         </method>        
         
         <!--- lineTo in  virtual coordinate
          -->
         <method name="lineTo" args="x, y">
-            //debug.write("lineTo(" + x + ", " + y + ")");
-            //debug.write("lineto2(" + x * this._xscale + this._xoffset+ ", " + y * this._yscale + this._yoffset + ")");            
+            //Debug.write("lineTo(" + x + ", " + y + ")");
+            //Debug.write("lineto2(" + x * this._xscale + this._xoffset+ ", " + y * this._yscale + this._yoffset + ")");            
             super.lineTo(x * this._xscale + this._xoffset, y * this._yscale + this._yoffset);
         </method>
          
@@ -102,7 +103,7 @@
         </method>
         
         
-        <!--- @keyword private
+        <!--- @access private
             might not be used
          -->
         <method name="drawRect" args="startx, starty, endx, endy">
@@ -116,7 +117,7 @@
         </method>
         
 
-        <!--- @keyword private
+        <!--- @access private
             might not be used
          -->
         <method name="drawvgridline" args="y">            
@@ -129,7 +130,7 @@
             this.stroke();
         </method>                        
         
-        <!--- @keyword private
+        <!--- @access private
              TODO:: This method will be put into consideration for
                     optimization of the renderPlotArea() methods -->           
         <method name="pruneArray" args="pArray, pHMin, pHMax, pVMin, pVMax">
@@ -145,7 +146,7 @@
             var pTArray = pArray[2];
             var pLArray = pArray[3];
 
-            if( this.class.classname != "barchartplotarea" ) {
+            if( this.constructor.tagname != "barchartplotarea" ) {
                 if( pHArray != null && pHArray.length > 0 ) {
             for( i = 0; i < pHArray.length; i++ ) {
                 if( pHArray[i] >= pHMin && pHArray[i] <= pHMax ) {
@@ -175,7 +176,7 @@
         ]]> 
         </method>
 
-        <!--- @keyword private
+        <!--- @access private
             TODO:: This method will be put into consideration for
                     optimization of the renderPlotArea() methods -->
         <method name="loadDataSeriesValues" args="pLeafSeries">
@@ -220,7 +221,7 @@
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

@@ -1,0 +1,30 @@
+<canvas validate="false">
+    <!-- testText2:"Here we try to escape the \<i>mark-up\</i>.";
+-->
+    <stylesheet src="embeddedhtml.css" />
+    <stylesheet>
+        #gTestView {
+            stuff:"Here is some text with <i>mark-up</i>.<br/>Does this violate the <a href="http://www.w3.org/TR/CSS21/syndata.html#tokenization">CSS 2.1 grammer</a>?";
+        }
+        #simple {
+            stuff:"i am simple";
+        }
+        #gPeter {
+            stuff: "<b>wow</b> does this <i>work?</i>"; /* not very well */ 
+        }
+        #gNancy {
+            stuff:  "nancy is &lt;i&gt;way logical&lt;/i&gt;";            
+        }
+    </stylesheet>
+    <simplelayout axis="y" />
+    <text id="gTestView" text="$style{'stuff'}" width="200" height="120"></text>
+    <text id="simple" text="$style{'stuff'}" />
+    <text id="gPeter" text="$style{'stuff'}" />    
+    <text id="gNancy" text="$style{'stuff'}" />        
+    <text text="i am the &lt;i&gt;man&lt;/i&gt;" />
+    <!-- this does not work <text text="backslashes do not \<b\>work\</b\>" />    -->
+    <!-- this does not work <text text="<b>wow</b> does this <i>work?</i>" />  -->
+    <text id="gRonny" width="200" height="100" text="$style{'miscdata'}"/>
+    <text id="gLinkToMothership" width="200" text="$style{'mothershiplink'}" />
+</canvas>
+<!-- Copyright 2007 Laszlo Systems --> 

@@ -1,0 +1,33 @@
+<canvas>
+  <include href="utils/performance" />
+  <script>
+    var iterations = Measurement.defaultIterations;
+    var j;
+    function empty () {
+      for (var i = 0; i &lt; iterations; i++) {
+        j = i;
+      }
+    }
+
+    function globalReference () {
+      for (var i = 0; i &lt; iterations; i++) {
+        j = Math.PI;
+      }
+    }
+
+    function cachedGlobalReference() {
+      var PI = Math.PI;
+      for (var i = 0; i &lt; iterations; i++) {
+        j = PI;
+      }
+    } 
+
+    (new Measurement({'Global reference': globalReference,
+                        'Cached global reference': cachedGlobalReference,
+                        'empty': empty})).run();
+  </script>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

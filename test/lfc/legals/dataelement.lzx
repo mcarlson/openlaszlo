@@ -1,0 +1,10 @@
+<canvas>
+    <script>
+        var e =  LzFactory.createClass(LzDataElement, 'funk', {name: 'value'});
+        Debug.write(e);
+    </script>
+    <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,69 @@
+
+<canvas width="800" height="200" bgcolor="0xE5E1B0" >
+  <!-- INCLUDES That provide framework for the example -->
+  <include href="animation_library.lzx"/>
+  
+  <!-- The EXAMPLE itself-->
+  <view id="tutorial1" height="600" width="${parent.width}" visible="true">
+    <ruler name="rlr" height="3000" y="0"/>
+    <view height="30"/>
+    <view height="120" y="30">
+      <view x="50">
+        <boxtitle label="opacity"/>
+        <boxtitle label="rotation"/>
+        <boxtitle label="width"/>
+        <boxtitle label="height"/>
+        <boxtitle label="x"/>
+        <boxtitle label="y"/>
+        <simplelayout axis="x" spacing="51"/>
+      </view>
+      <view y="20">
+        <box id="B1" x="50" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="opacity"  to=".5"  duration="500" start="false"/>
+        </box>
+        <box id="B2" x="150" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="rotation" to="45"  duration="500" start="false"/>
+        </box>
+        <box id="B3" x="250" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="width"    to="99"  duration="500" start="false"/>
+        </box>
+        <box id="B4" x="350" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="height"   to="100" duration="500" start="false"/>
+        </box>
+        <box id="B5" x="450" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="x"        to="500" duration="500" start="false"/>
+        </box>
+        <box id="B6" x="550" onclick="this.anm.doStart()">
+          <animator name="anm" attribute="y"        to="50"  duration="500" start="false"/>
+        </box>
+      </view>
+      <simplelayout axis="y" spacing="5"/>
+    </view>
+    
+    <!-- The TEST and RESET buttons -->
+    <view x="50"   y="150" width="${parent.width - 50}">
+      <button x="50"
+                  onclick="B1.anm.doStart();
+                           B2.anm.doStart();
+                           B3.anm.doStart();
+                           B4.anm.doStart();
+                           B5.anm.doStart();
+                           B6.anm.doStart();
+                           ">Test</button>
+      <button
+                  onclick="B1.setOpacity(1);
+                           B2.setRotation(0);
+                           B3.setWidth(49);
+                           B4.setHeight(49);
+                           B5.setX(450);
+                           B6.setY(0);
+                           this.parent.P2.setDisplay(' ');
+                           ">Reset</button>
+      <simplelayout axis="x"/>
+    </view>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

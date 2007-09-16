@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -29,7 +29,7 @@
       
       <h2>HTMLラッパーを利用</h2>
       <p>アプリケーションの配置に一番簡単な方法は <code>html</code> リクエストを使うことです。
-	ここでは、 <code>embed.js</code>JavaScriptライブラリを使いアプリケーションを埋め込んだHTMLを作成します。
+	ここでは、 <code>embed-compressed.js</code>JavaScriptライブラリを使いアプリケーションを埋め込んだHTMLを作成します。
 	（リクエストタイプを指定していない）開発用ページとは違い、デベロッパーコンソールとコンパイラ・ワーニングを表示しません。</p>
       
       <p>HTML配置ページ結果のプレビューは <a
@@ -56,22 +56,22 @@ Windows版Internet Explorer向けに生成されたコードは、正しいFlash
   &lt;param name="menu" value="false" />
 &lt;/object></pre>
       
-      <h2><code>embed.js</code> JavaScriptライブラリを利用した配置</h2>
-      <p> <code>embed.js</code>JavaScriptライブラリを利用して配置するには、次の行をLaszloアプリケーションを貼り付けるHTMLドキュメントの<code>&lt;head&gt;</code>セクションに貼り付けます。
+      <h2><code>embed-compressed.js</code> JavaScriptライブラリを利用した配置</h2>
+      <p> <code>embed-compressed.js</code>JavaScriptライブラリを利用して配置するには、次の行をLaszloアプリケーションを貼り付けるHTMLドキュメントの<code>&lt;head&gt;</code>セクションに貼り付けます。
 </p>
       
-      <pre>&lt;script src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/embed.js" type="text/javascript">&lt;/script></pre>
+      <pre>&lt;script src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/embed-compressed.js" type="text/javascript">&lt;/script></pre>
       
       <p>次に次のコードを<code>&lt;body></code>セクション内のLaszloアプリケーションを表示したい場所へ貼り付けます。
 </p>
       
       <pre>&lt;script type="text/javascript"&gt;
-          lzEmbed({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>'});
+          Lz.swfEmbed({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>'});
 &lt;/script></pre>
 
       <p> <a href="{/canvas/request/@url}?lzt=html{/canvas/request/@query_arg}">こちら</a>をクリックして配置ページの例をご覧下さい。これにはクライアント側でのバージョン確認用とブラウザ履歴統合の追加コードが含まれています。</p>
       
-      <p><code>lzEmbed</code>を呼ぶコードを生成するよう<code>js</code>リクエストタイプを使うこともできます。 </p>
+      <p><code>Lz.swfEmbed</code>を呼ぶコードを生成するよう<code>js</code>リクエストタイプを使うこともできます。 </p>
       
       <pre>&lt;script src="<xsl:value-of select="/canvas/request/@url"/>?lzt=js" type="text/javascript"&gt;
 &lt;/script></pre>
@@ -89,14 +89,14 @@ Windows版Internet Explorer向けに生成されたコードは、正しいFlash
       select="//@opt-url"/>?fb=1</code>と置き換えます。</p>
       
       <h2>拡大縮小と大きさ指定</h2>
-      <p>アプリケーションの幅と高さを指定するには、<code>scale: 'noscale'</code>を<code>lzEmbed</code>内に追加します。そうでなければ、アプリケーションは自動的に最大化されます。</p>
+      <p>アプリケーションの幅と高さを指定するには、<code>scale: 'noscale'</code>を<code>Lz.swfEmbed</code>内に追加します。そうでなければ、アプリケーションは自動的に最大化されます。</p>
 <h2>SOLOアプリケーションへパラメータを渡す</h2>
 <p>
 配置したSOLOアプリケーションへ、パラメータをアプリケーションに渡したい場合はサーバーが生成したHTMLラッパーページの修正が必要となります。</p>
 <p>
-次の<code>lzEmbed</code>行はすべてのクエリパラメータをLaszloアプリケーションへ渡しています。</p>
+次の<code>Lz.swfEmbed</code>行はすべてのクエリパラメータをLaszloアプリケーションへ渡しています。</p>
 <pre>
-lzEmbed({url: 'main.lzx.swf?'+window.location.search.substring(1), bgcolor: '#ffffff', width: '100%', height: '100%'});
+Lz.swfEmbed({url: 'main.lzx.lzr=swf7.swf?'+window.location.search.substring(1), bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
 </pre>
 <p>
 <code>main.lzx?lzt=swf</code>から<code>main.lzx.swf? </code>への変更点は<code>'+window.location.search.substring(1)'</code>が追加されていることです。</p>
@@ -106,9 +106,9 @@ OpenLaszloサーバーには、SOLO配置用にアプリケーションのパッ
 
       <h2>もっと情報が必要なら</h2>
       <ul>
-        <li><a href="{/canvas/request/@lps}/docs/deploy/deployers-guide.html">Laszloアプリケーション配置用システム管理者用ガイド</a></li>
-        <li><a href="{/canvas/request/@lps}/docs/guide/request-types.html">ソフトウェア開発者ガイド</a></li>
-        <li><a href="http://www.laszlosystems.com/developers/community/forums/">開発者フォーラム</a></li>
+        <li><a href="{/canvas/request/@lps}/docs/deploy/">Laszloアプリケーション配置用システム管理者用ガイド</a></li>
+        <li><a href="{/canvas/request/@lps}/docs/guide/">ソフトウェア開発者ガイド</a></li>
+        <li><a href="http://forum.openlaszlo.org/">開発者フォーラム</a></li>
       </ul>
   </body>
 </html>

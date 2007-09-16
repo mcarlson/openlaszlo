@@ -1,0 +1,101 @@
+/**
+  *
+  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access private
+  * @topic LFC
+  * @subtopic Data
+  */
+  
+/** @access private */
+class LzDataAttrBind extends LzDatapointer {
+
+function initialize ( ndpath , attr, path ){
+                            this.setAttr = attr;
+                            this.pathparent = ndpath;
+                            this.node = ndpath.immediateparent;
+                            this.setXPath( path );
+
+                            if ( ndpath.__LZdepChildren == null ){
+                                ndpath.__LZdepChildren = [ this ];
+                            } else {
+                                ndpath.__LZdepChildren.push( this );
+                            }
+}
+
+
+prototype.rerunxpath = true; // Override value defined in LzDatapointer
+var $pathbinding = true;
+
+function __LZsendUpdate ( a , b ){ 
+    var pchg = this.__LZpchanged;
+    if ( ! super.__LZsendUpdate.apply(this, arguments) ) return;
+    if ( pchg ||
+         this.node[ this.setAttr ] != this.data ||
+         this.parsedPath.operator == "attributes" ){
+         this.node.setAttribute( this.setAttr , this.data == null ? 
+                                               null : this.data );
+                                               //this test is necessary or 
+                                               //or properties get set to
+                                               //undefined
+    }
+}
+
+
+/**
+  * This matches the LzDelegate method of the same name so that these objects
+  * can be stored in a node's __LZdelegates array.
+  */
+function unregisterAll ( ){ 
+    var dca = this.pathparent.__LZdepChildren;
+
+    if (dca != null) {
+        for ( var i = 0; i < dca.length ; i++ ){
+            if ( dca [ i ] == this ){
+                dca.splice( i , 1 );
+                break;
+            }
+        }
+    }
+
+    this.destroy();
+}
+
+
+function setDataContext ( dc ){
+    super.setDataContext( dc || this.pathparent );
+}
+
+
+
+function updateData (){
+    //this code is largely copied from LzDatapath, but it's slightly different
+    var dat = this.node[ this.setAttr ];
+    if ( this.data == dat ) return;
+    var ppdo = this.parsedPath.operator;
+    if ( ppdo != null){
+        if ( ppdo =="nodeName" ){
+            this.setNodeName( dat );
+        } else  if ( ppdo =="__LZgetText" ){
+            this.setNodeText( dat );
+        } else  if ( ppdo =="attributes" ){
+            this.p.setAttrs( dat );
+        } else {
+            //remove the "attributes." from the operator
+            this.setNodeAttribute( ppdo.substring( 11 ) , dat );
+        }
+    }
+}
+
+function toString ( ){ 
+    return 'binder ' + this.xpath;
+}
+
+if ($debug) {
+    function _dbg_name () {
+        return Debug.formatToString("%w.%s=\"$path{%w}\"", this.node, this.setAttr, this.xpath);
+    }
+}
+
+} // End of LzDataAttrBind

@@ -1,0 +1,32 @@
+
+<canvas debug="true">
+  <debug y="150"/>
+  <include href="lzunit"/>
+
+  <script>
+    asynchronousTests = false
+  </script>
+
+  <class name="syncrun" extends="TestCase">
+    <attribute name="counter" value="1" when="once"/>
+    <method name="testfirst">
+      assertEquals(1, counter++)
+    </method>
+
+    <method name="testsecond">
+      assertEquals(2, counter++)
+    </method>
+
+    <method name="testthird">
+      assertEquals(3, counter++)
+    </method>
+  </class>
+
+  <TestSuite>
+    <syncrun/>
+  </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

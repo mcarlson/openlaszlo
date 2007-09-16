@@ -1,7 +1,6 @@
 <canvas width="200" height="605" bgcolor="0xeaeaea" debug="false">
 
   <!-- Datasets -->
-  <dataset name="sinfo" src="http:explorer-nav.lzx?lzt=serverinfo" request="true" />
   <dataset name="navdata"/>
 
   <!-- Included Libraries -->
@@ -16,8 +15,14 @@
 
   <handler name="oninit">
     var navset = global['navset'];
-    if (typeof(navset) == 'undefined')
+    if (typeof(navset) == 'undefined') {
         navset = "nav.xml";
+        var lzr = global['lzr'];
+        if (lzr &amp;&amp; lzr == 'dhtml') {
+            Debug.info("gonna use dhtml nav."); 
+            navset = "nav_dhtml.xml";
+        }  
+    }
     canvas.navdata.setSrc(navset);
     canvas.navdata.doRequest();
   </handler>
@@ -59,6 +64,7 @@
     closechildren="true" closesiblings="true" layout="class:null">
     <attribute name="level" type="number"/>
     <attribute name="defaultplacement" value="itemlist" type="string"/>
+    <event name="onopendone"/>
 
     <datapath xpath="*">
         <attribute name="doneDel" value="null"/>
@@ -193,14 +199,12 @@
 
     <method name="largetext">
         icon.setAttribute("y", 9);
-        label.setAttribute("y", 3);
         label.setAttribute("fgcolor", 0xffffff);
         label.setAttribute("fontsize", 13);
     </method>
     
     <method name="smalltext">
         icon.setAttribute("y", 5);
-        label.setAttribute("y", 2);
         label.setAttribute("fgcolor", 0xd4dcec);
         label.setAttribute("fontsize", 11);
     </method>
@@ -219,41 +223,53 @@
         }
 
         var action = dp.xpathQuery("@action");
-        if (action == 'popup' || action == 'source') {
+        if (action == 'popup' || action == 'source' || action == 'popupexternal') {
             icon.setResourceNumber(4);
         }
     </handler>
 
-    <handler name="onopendone" reference="classroot" method="doaction"/>
+    <handler name="onopen" reference="classroot" method="doaction"/>
     <method name="doaction">  <![CDATA[
         var dp = this.datapath;
         var autoselect = dp.xpathQuery("@autoselect");
         if (autoselect == "true") {
-            classroot.itemlist.subviews[0].header.open();
+            if (classroot.itemlist.subviews.length > 0 && 
+                'open' in classroot.itemlist.subviews[0].header)
+                    classroot.itemlist.subviews[0].header.open();
         } else {
             var action = dp.xpathQuery("@action");
-            var params = dp.xpathQuery("@params");
+            var runtime = dp.xpathQuery("@runtime");
+            if (typeof runtime == "undefined")
+                runtime = $runtime;
             var src = dp.xpathQuery("@src");
             var tagline = dp.xpathQuery("@text");
             var title = dp.xpathQuery("@title");
               if (action=='popup'){
                 var popup = dp.xpathQuery("@popup");
                 var target = dp.xpathQuery("@target");
-                LzBrowser.loadURL('loading.jsp?src=' + popup + '&action=' + action + '&' + params,
-                      target=="" ? "_blank" : target);
+                if (target == null) target = escape(popup + runtime);
+                if ($runtime == 'dhtml') {
+                    LzBrowser.loadURL("loading.jsp?src=" + popup + "&lzr=" + runtime + "&lzt=html", target, "scrollbars=yes,width=860,height=600");
+                } else {
+                    LzBrowser.loadJS('window.open("loading.jsp?src=' + popup + '&lzr=' + runtime + '&lzt=html", "' + target + '", "scrollbars=yes,width=860,height=600")');
+                }
                 if (src != null){
                   LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
-                                    '&title=' + title + '&' + params, 'content');
+                                    '&title=' + title + '&lzr=' + runtime, 'content');
                 }
-              } else if (action=='source'){
-                  LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
-                                '&title=' + title + '&action=source' + '&' + params, 'source');
+              } else if (action =='popupexternal') {
+                var jsOpenStr = "window.open('" + src + "'," 
+                    + "'" + target + "'," + 
+                    "'scrollbars=yes,resizable=yes,toolbar=yes,location=yes,menubar=yes,width=860,height=600')";
+                LzBrowser.loadJS(jsOpenStr); 
+                
               } else {
                 if (title ==null){
                    title = classroot.name;
                 }
                 LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
-                                   '&title=' + title + '&action=' + action+ '&' + params, 'content');
+                                  '&title=' + title + '&action=' + action + '&lzr=' + runtime, 
+                                  (action=='source') ? 'source' : 'content');
            }
         }
         ]]>
@@ -268,13 +284,12 @@
       classroot.changeFocus();
 
       // only open subitems if there are
-      if (this.isleaf) {
-        this.doaction();
-      } else {
+      if (! this.isleaf) {
         // only open menu if not already opened ( i.e don't toggle like before )
         // if ( !classroot.open ) -- this did not completely work, so just always open
         classroot.setAttribute("open", true);
       }
+      this.doaction();
       ]]>
     </method>
 
@@ -292,9 +307,8 @@
     <view name="icon" resource="icon" y="9" stretches="both" width="11" height="11"
         x="${classroot.width - this.width - 6 }" />
       
-    <text name="label" x="${6 + classroot.level*7}" y="3" font="itemfont" fgcolor="#ffffff"
+    <text name="label" x="${6 + classroot.level*7}" valign="middle" font="itemfont,helvetica,sans-serif" fgcolor="#ffffff"
         fontsize="13" width="${parent.width-x}" text="${classroot.text}"/>
-        
   </class>
 
   <class name="navbutton" extends="menubutton" width="${immediateparent.width}">
@@ -312,10 +326,9 @@
             </method>
     </basebutton>
     <view x="10" y="570" layout="axis:y">
-      <text resize="true" fgcolor="white" font="smallfont" fontsize="8" text="${'Version: ' + canvas.version}" />
+      <text resize="true" fgcolor="white" font="smallfont,verdana,sans-serif" fontsize="8" text="${'Version: ' + canvas.version + ' (' + canvas.runtime + ')'}" />
       <view>
-        <text fgcolor="white" font="smallfont" fontsize="8" text="Build: "/>
-        <text resize="true" fgcolor="white" font="smallfont" fontsize="8" datapath="sinfo:/*/@build"/>
+        <text fgcolor="white" font="smallfont,verdana,sans-serif" fontsize="8" text="${'Build: ' + canvas.lpsbuild}"/>
         <simplelayout axis="x"/>
       </view>
     </view>
@@ -344,7 +357,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

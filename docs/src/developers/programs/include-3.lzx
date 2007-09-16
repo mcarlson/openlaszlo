@@ -1,0 +1,11 @@
+
+<canvas height="100">
+  <window layout="axis: y">
+    <include href="inner.lzx"/>
+    <include href="inner.lzx"/>
+  </window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

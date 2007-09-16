@@ -1,0 +1,18 @@
+
+<canvas height="120">
+  <view name="redview" bgcolor="red"
+        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
+        width="40" height="40" y="${blueview.y}">
+    <dragstate name="gragger"/>
+  </view>
+  <view name="blueview" bgcolor="blue"
+        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
+        width="40" height="40" y="${redview.y}">
+    <dragstate name="gragger"/>
+  </view>
+  <simplelayout spacing="40" axis="x"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

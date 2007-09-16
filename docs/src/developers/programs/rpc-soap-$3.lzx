@@ -1,0 +1,29 @@
+
+<canvas debug="true" height="170">
+
+    <debug x="10" y="10" width="415" height="150" />
+
+    <soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl">
+
+        <handler name="onload">
+            Debug.write('Amazon soap service loaded');
+            Debug.write('proxy is:', this.proxy);
+            this.unload();
+        </handler>
+
+        <handler name="onunload">
+            Debug.write('Amazon soap service unloaded');
+            Debug.write('proxy is:', this.proxy)
+        </handler>
+
+        <handler name="onerror" args="error">
+            Debug.write('error:', error);
+        </handler>
+
+    </soap>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

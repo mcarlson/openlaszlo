@@ -9,56 +9,7 @@
   intercepting the error and signalling and error if no error or the
   wrong error is signalled).
 -->
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-
 <library>
-  <!--
-    Test cases that depend on ActionScript semantics
-  -->
-  <class name="ActionScriptSemantics" extends="TestCase" semantics="'actionscript'">
-    <method name="setUp">
-      this.foo = {zot: "qux"};
-      this.nullvar = null;
-    </method>
-
-    <method name="tearDown">
-      delete this.foo;
-      delete this.nullvar;
-    </method>
-
-    <method name="testActionScriptSemantics">
-    <![CDATA[
-         // coercion of strings to booleans is fudged for Flash 4
-         // compatibility
-         if (canvas.runtime < "swf7") {
-           assertFalse("non-empty", "'non-empty' is false");
-           assertFalse('0', "'0' is false");
-
-           // As is coercion of undefined to a string or number
-           assertEquals(String(undefined), '',
-                        "String(undefined) == ''");
-           assertEquals(Number(undefined), 0,
-                        "Number(undefined) == 0");
-           // Why do I need the explicit String coercion? 
-           assertEquals("foo", "" + {toString: function() {return "foo"}},
-                        "coercion to string");
-           // Henry's checks
-           assertSame(true, undefined < 1, "undefined < 1");
-           assertSame(true, undefined > -1, "undefined > -1");
-           assertEquals(0, Math.min(undefined, 1), "Math.min(undefined, 1) == 0");
-           assertEquals(-1, Math.min(undefined, -1), "Math.min(undefined, -1) == -1");
-           assertEquals(1, Math.max(undefined, 1), "Math.max(undefined, 1) == 1");
-           assertEquals(0, Math.max(undefined, -1), "Math.max(undefined, -1) == 0");
-         }
-         else {
-           Debug.write('ActionScriptSemantics: 11 tests skipped for runtime >= swf7');
-         }
-    ]]>
-    </method>
-  </class>
 
   <!--
     Test cases that depend on JavaScript semantics
@@ -79,7 +30,8 @@
       assertTrue("non-empty", "'non-empty' is true");
       assertTrue('0', "'0' is true");
 
-      if (canvas.runtime >= "swf7") {
+      if (canvas.runtime.indexOf("swf") == -1 ||
+          (canvas.runtime.indexOf("swf") == 0 && canvas.runtime >= "swf7")) {
           assertEquals('undefined', String(undefined),
                        "String(undefined) == 'undefined'");
           assertSame(true, isNaN(Number(undefined)),
@@ -189,7 +141,8 @@
       assertSame(true, isNaN(0 / negative0), "isNaN(0 / -0)");
 
       /* Henry's checks */
-      if (canvas.runtime >= "swf7") {
+      if (canvas.runtime.indexOf("swf") == -1 ||
+          (canvas.runtime.indexOf("swf") == 0 && canvas.runtime >= "swf7")) {
           assertSame(false, undefined < 1, "undefined < 1");
           assertSame(false, undefined > -1, "undefined > -1");
           assertSame(true, isNaN(Math.min(undefined, 1)), "isNaN(Math.min(undefined, 1))");
@@ -199,7 +152,7 @@
       }
       else {
           /* 6 skipped here, 2 skipped earlier */
-          Debug.write('JavaScriptSemantics: 8 tests skipped for runtime < swf7');
+          Debug.write('JavaScriptSemantics: 8 tests skipped for runtime %s', canvas.runtime);
       }
 
       assertSame(true, isNaN(Infinity * 0), "Infinity * 0 isNaN");
@@ -259,7 +212,7 @@
       assertFalse(0, "0 is false");
       assertFalse('', "'' is false");
       assertFalse(undefined, "undefined is false");
-      assertFalse(0/0, "NaN is false");
+      assertFalse(NaN, "NaN is false");
 
       assertEquals(null, undefined, "null == undefined");
       assertEquals('foo', 'foo', "'foo' == 'foo'");
@@ -316,32 +269,33 @@
 
       /* instanceof */
       var cases = [
-        {instance: [], constructor: Array},
-        {instance: new Boolean(false), constructor: Boolean},
-        {instance: new Date(), constructor: Date},
-        {instance: new Number(1), constructor: Number},
-        {instance: {}, constructor: Object},
-        {instance: new String(""), constructor: String},
-        {instance: true, constructor: null},
-        {instance: 0, constructor: null},
-        {instance: "test", constructor: null},
-        {instance: new LzNode(), constructor: LzNode}
+        {test: 'Array Literal', instance: [], constructor: Array},
+        {test: 'new Boolean', instance: new Boolean(false), constructor: Boolean},
+        {test: 'new Date', instance: new Date(), constructor: Date},
+        {test: 'new Number', instance: new Number(1), constructor: Number},
+        {test: 'Object Literal', instance: {}, constructor: Object},
+        {test: 'new String', instance: new String(""), constructor: String},
+        {test: 'boolean Literal', instance: true, constructor: null},
+        {test: 'number Literal', instance: 0, constructor: null},
+        {test: 'string Literal', instance: "test", constructor: null},
+        {test: 'new LzNode', instance: new LzNode(), constructor: LzNode}
       ];
       var types = [Array, Boolean, Date, Number, String];
 
-      for (var k in cases) {
+      for (var k = 0; k < cases.length; k++) {
+        var n = cases[k].test;
         var i = cases[k].instance;
         var c = cases[k].constructor;
-        for (var t in types) {
+        for (var t = 0; t < types.length; t++) {
           if (c) {
             // All objects are instanceof Object
-            assertSame(true, i instanceof Object, Debug.__String(i) + ' instanceof ' + Debug.__String(Object));
+            assertSame(true, i instanceof Object, n + ': ' + Debug.__String(i) + ' instanceof ' + Debug.__String(Object));
           }
           // Check constructor
           if (c && types[t].prototype == c.prototype) {
-            assertSame(true, i instanceof types[t], Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
+            assertSame(true, i instanceof types[t], n + ': ' + Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
           } else {
-            assertSame(false, i instanceof types[t], Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
+            assertSame(false, i instanceof types[t], n + ': ' + Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
           }
         }
       }
@@ -390,16 +344,17 @@
     <!-- Override fail for testing purposes -->
     <method name="fail" args="message">
       <![CDATA[
-        dw("IntentionalFailures.fail(", message, ")");
         if (typeof(expectedFailure) == "null") {
             return super.fail(message);
         } else if (typeof(expectedFailure) == "function") {
             if (expectedFailure(message)) {
                 expectedFailures++;
+                Debug.info("Testing test system: '%0.24s' (above) is expected as part of this test", message);
                 return;
             }
         } else if (expectedFailure == message) {
             expectedFailures++;
+            Debug.info("Testing test system: '%0.24s' (above) is expected as part of this test", message);
             return;
         }
         super.fail(format("Wrong failure", expectedFailure,
@@ -420,6 +375,7 @@
 
     <method name="testFailure">
       expectedFailure = "This is an intentional failure"
+      Debug.debug("Testing test system: '%0.24s' will NOT be output as an error (even though you will get a message saying it is expected)", expectedFailure);
       fail(expectedFailure);
       assertEquals(expectedFailures, 1, "Total number of expected failures");
     </method>
@@ -445,7 +401,7 @@
       assertTrue(0, "Expected");
       assertTrue('', "Expected");
       assertTrue(undefined, "Expected");
-      assertTrue(0/0, "Expected");
+      assertTrue(NaN, "Expected");
       expectedFailure = null;
       assertEquals(12, expectedFailures, "Total number of expected failures");
       expectedFailure = ef;
@@ -488,6 +444,8 @@
       // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
       var flashVersion = LzBrowser.getVersion();
       var nexp = 27;
+
+
       if ((! flashVersion) || flashVersion < 8 || flashVersion > 10) {
           nexp++;
           assertSame(NaN, NaN, "Expected");
@@ -563,13 +521,13 @@
             return super.error(message);
         } else if (typeof(expectedError) == "function") {
             if (expectedError(message)) {
-                Debug.write("Expected error: " + message);
                 expectedErrors++;
+                Debug.info("Testing error system: '%0.24s' (above) is expected as part of this test", message);
                 return;
             }
         } else if (expectedError == message) {
-            Debug.write("Expected error: " + message);
             expectedErrors++;
+            Debug.info("Testing error system: '%0.24s' (above) is expected as part of this test", message);
             return;
         }
         super.error(format("Wrong error", expectedError,
@@ -591,6 +549,7 @@
 
     <method name="testError">
       expectedError = "This is an intentional error";
+      Debug.debug("Testing error system: '%0.24s' will NOT be output as an error (even though you will get a message saying it is expected)", expectedError);
       error(expectedError);
       assertEquals(1, expectedErrors, "Total number of expected errors");
     </method>
@@ -605,15 +564,19 @@
       }
 
       expectedError.expectedMatch = "testing";
-      error("testing: 1, 2, 3");
+      var msg = "testing: 1, 2, 3";
+      Debug.debug("Testing error system: '%0.24s' will NOT be output as an error (even though you will get a message saying it is expected)", msg);
+      error(msg);
       assertEquals(1, expectedErrors, "Total number of expected errors");
 
       expectedError.expectedMatch = "This is a";
-      $reportSourceWarning(0, 0, "This is a test");
+      $reportSourceWarning(0, 0, "This is a test", true);
       assertEquals(2, expectedErrors, "Total number of expected errors");
 
-      // These tests only work if debugging is enabled
-      if (Debug) {
+      // Only test errors that are caught by the debug compiler for each runtime
+      if ($dhtml) {
+        // There are none for the dhtml compiler at present
+      } else {
         expectedError.expectedMatch = "flooglesnort";
         // TODO: [2002-11-16 ptw] below currently signals two errors
         undefined.flooglesnort;
@@ -654,3 +617,8 @@
     </method>
   </class>
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

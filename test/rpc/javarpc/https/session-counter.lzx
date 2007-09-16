@@ -21,7 +21,7 @@
             Debug.write('xxx error:', mesg);
         </method>
 
-        <remotecall funcname="getAttributeNames" dataobject="infoDset" />
+        <remotecall funcname="getAttributeNames" dataobject="$once{infoDset}" />
     </sessionrpc>
 
     <webapprpc name="webappinfo" secure="true" secureport="8443">
@@ -33,15 +33,14 @@
             Debug.write('xxx error:', mesg);
         </method>
 
-        <remotecall funcname="getAttributeNames" dataobject="infoDset" />
+        <remotecall funcname="getAttributeNames" dataobject="$once{infoDset}" />
     </webapprpc>
 
     <class name="counter" loadoption="${settings.replace.loadoption}" autoload="false"
-           classname="org.openlaszlo.test.xmlrpc.PeerCounter" extends="javarpc"
-           secure="true" secureport="8443">
+           remoteclassname="org.openlaszlo.test.xmlrpc.PeerCounter" extends="javarpc">
         
         <method event="onerror" args="mesg">
-            debug.write(this.name, 'onerror:', mesg)
+            Debug.write(this.name, 'onerror:', mesg)
         </method>
         
         <method event="ondata" args="data">
@@ -107,7 +106,7 @@
     </list>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

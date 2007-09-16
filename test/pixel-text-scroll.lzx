@@ -18,7 +18,6 @@
 -->
 
 <canvas width="1000" height="800" >
-<include href="redmond"/>
 
 <script>
  <![CDATA[
@@ -98,24 +97,24 @@ function addTest(n) {
 <view id="v3" width="100" bgcolor="#0000cc" x="830" 
      oninit='Debug.setAttribute("x", 380); Debug.setAttribute("y", 447); Debug.setAttribute("height", 300); Debug.setAttribute("width", 400); ' >
   <simplelayout axis="y" spacing="3" />
-  <button width="100" label="Add Text 10" onclick="addTest(10)" />
-  <button width="100" label="Add Text 50" onclick="addTest(50)" />
-  <button width="100" label="Add Text 100" onclick="addTest(100)" />
-  <button width="100" label="Add Text 250" onclick="addTest(250)" />
-  <button width="100" label="Add Text 1K" onclick="addTest(1000)" />
-  <button width="100" label="Add Text 2K" onclick="addTest(2000)" />
-  <button width="100" label="Clear Text" onclick="bar.setText('')" />
-  <button width="100" label="Set Height 200" onclick="v1.setHeight(200)" />
-  <button width="100" label="Set Height 400" onclick="v1.setHeight(400)" />
-  <button width="100" label="Set Height 600" onclick="v1.setHeight(600)" />
-  <button width="100" label="Set Height 800" onclick="v1.setHeight(800)" />
-  <button width="100" label="Multiline=TRUE" onclick="bar.setMultiline(true)" />
-  <button width="100" label="Multiline=FALSE" onclick="bar.setMultiline(false)" />
+  <button width="100" text="Add Text 10" onclick="addTest(10)" />
+  <button width="100" text="Add Text 50" onclick="addTest(50)" />
+  <button width="100" text="Add Text 100" onclick="addTest(100)" />
+  <button width="100" text="Add Text 250" onclick="addTest(250)" />
+  <button width="100" text="Add Text 1K" onclick="addTest(1000)" />
+  <button width="100" text="Add Text 2K" onclick="addTest(2000)" />
+  <button width="100" text="Clear Text" onclick="bar.setText('')" />
+  <button width="100" text="Set Height 200" onclick="v1.setHeight(200)" />
+  <button width="100" text="Set Height 400" onclick="v1.setHeight(400)" />
+  <button width="100" text="Set Height 600" onclick="v1.setHeight(600)" />
+  <button width="100" text="Set Height 800" onclick="v1.setHeight(800)" />
+  <button width="100" text="Multiline=TRUE" onclick="bar.setMultiline(true)" />
+  <button width="100" text="Multiline=FALSE" onclick="bar.setMultiline(false)" />
 
-  <button width="100" label="YScroll 1 " onclick="bar.setattribute('yscroll', bar.yscroll + 1)" />
-  <button width="100" label="YScroll -1 " onclick="bar.setattribute('yscroll', bar.yscroll - 1)" />
+  <button width="100" text="YScroll 1 " onclick="bar.setattribute('yscroll', bar.yscroll + 1)" />
+  <button width="100" text="YScroll -1 " onclick="bar.setattribute('yscroll', bar.yscroll - 1)" />
 
-  <button width="100" label="Status " onclick="parent.showstatus()" />
+  <button width="100" text="Status " onclick="parent.showstatus()" />
    <text>Sample Text Columns</text>
   <windowtext id="cols" width="100">80</windowtext>
 
@@ -124,6 +123,6 @@ function addTest(n) {
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

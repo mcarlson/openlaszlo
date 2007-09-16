@@ -2,30 +2,27 @@
 <!-- weather_cover.html                                        -->
 <!--                                                                       -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--=======================================================================-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-      <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico">
-      <link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css">
+      <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico" />
+      <link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css" />
       <style type="text/css">
         .smallapp {margin-bottom: 100px;}
       </style>
-      <script src="../../lps/includes/embed.js" type="text/javascript"></script>
+      <script src="../../lps/includes/utils.js" type="text/javascript"></script>
       <title>Contact List</title>
 
   </head>
    <body>
    <h1>Contact List</h1>
-   <div class="smallapp">
-
-   <script type="text/javascript">
-          lzEmbed({url:'contactlist.lzx?lzt=swf', bgcolor: '#eaeaea', width: '220', height: '462'});
-   </script>
+   <div class="smallapp" id="appcontainer">
    </div>
    <div class="desc-short">
     <p>
@@ -41,15 +38,20 @@
         fetched at runtime via http or http from a file, JSP, or any XML data source.
         </p>
         <p>
-       This sample application combines the use of a standard Laszlo component,
+       This sample application combines the use of a standard OpenLaszlo component,
        the scrollbar, with a custom class to display a contact item.
        A single class "row" defines one entry in the list.  The row is
        replicated for every "result" node in the data set.
        </p>
-       <p>
-
-       </p>
+       <p id="runtime" class="runtimelabel"></p>
     </div>
-
+    <script type="text/javascript">
+        var runtime = getQueryVariable("lzr", "swf7");
+        writeOpenLaszloApp(document.getElementById('appcontainer'), "contactlist.lzx", runtime, "220px", "462px");
+        document.getElementById("runtime").innerHTML = "Runtime: " + lzRuntimeTagToRuntimeName(runtime);
+    </script>
+    <noscript>
+      Please enable JavaScript in order to use this application. 
+    </noscript>
 </body>
 </html>

@@ -145,22 +145,18 @@ class SWFFile extends FlashFile {
 
             // 3. movieclip called "frameupdate" which has two frames and some clip actions:
             movieClip = new Script(2);
-            block = actionBlock("_root.LzIdle.onidle.sendEvent( getTimer() );");
-            movieClip.getFrameAt(0).addFlashObject(block);
-            movieClip.getFrameAt(1).addFlashObject(block);
-
             // NOTE: depth=2 required in order for this to work in swf6 for some
             // unknown reason!
             inst = frame.addInstance(movieClip, 2, null, null, "frameupdate");
             ca = new ClipActions();
             ca.setMask(ClipAction.KEY_DOWN|ClipAction.KEY_UP|ClipAction.MOUSE_DOWN|ClipAction.MOUSE_UP);
-            s = "_root.LzKeys.gotKeyDown(Key.getCode())";
+            s = "_root.LzKeyboardKernel.__keyboardEvent(Key.getCode(), 'onkeydown')";
             ca.addAction(new ClipAction(ClipAction.KEY_DOWN, program(s)));
-            s = "_root.LzKeys.gotKeyUp(Key.getCode())";
+            s = "_root.LzKeyboardKernel.__keyboardEvent(Key.getCode(), 'onkeyup')";
             ca.addAction(new ClipAction(ClipAction.KEY_UP, program(s)));
-            s = "_root.LzModeManager.rawMouseEvent('onmousedown')";
+            s = "_root.LzMouseKernel.__mouseEvent('onmousedown')";
             ca.addAction(new ClipAction(ClipAction.MOUSE_DOWN, program(s)));
-            s = "_root.LzModeManager.rawMouseEvent('onmouseup')";
+            s = "_root.LzMouseKernel.__mouseEvent('onmouseup')";
             ca.addAction(new ClipAction(ClipAction.MOUSE_UP, program(s)));
             inst.actions = ca;
 
@@ -266,6 +262,14 @@ class SWFFile extends FlashFile {
             export("__LZvideo", movieClip);
             video = new VideoStream(160,120);
             movieClip.getFrameAt(0).addInstance(video, 8, offScreen, null, "__lzvideo");
+
+            // 9.3 A movieclip for receiving javascript events from the browser
+            movieClip = new Script(2);
+            export("__LZjsevent", movieClip);
+            block = actionBlock("_root.DojoExternalInterface._gatewayReady();stop();");
+            movieClip.getFrameAt(0).addFlashObject(block); 
+            block = actionBlock("_root.DojoExternalInterface._handleJSCall();stop();");
+            movieClip.getFrameAt(1).addFlashObject(block); 
 
             // 10. The LFC ActionScript block, the only def in the incoming file 
             FlashFile oldLibrary = FlashFile.parse(path);

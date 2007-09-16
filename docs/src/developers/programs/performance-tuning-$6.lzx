@@ -1,0 +1,58 @@
+
+  <canvas height="150">
+    <include href="utils/performance" />
+    <script>
+      var iterations = Measurement.defaultIterations;
+      var a = false;
+      var b = true;
+      var c = true;
+      function empty () {
+        for (var i = 0; i &lt; iterations; i++) {
+          if (a == false) {};
+        }
+      }
+
+      function measureLogicalAnd () {
+        for (var i = 0; i &lt; iterations; i++) {
+          if (a &amp;&amp; b &amp;&amp; c) {}
+        }
+      }
+
+      function measureIfProduct () {
+        for (var i = 0; i &lt; iterations; i++) {
+          if (a) {
+            if (b) {
+              if (c) {}
+            }
+          }
+        }
+      }
+
+      var d = true;
+      var e = false;
+      var f = false;
+      function measureLogicalOr () {
+        for (var i = 0; i &lt; iterations; i++) {
+          if (d || e || f) {}
+        }
+      }
+
+      function measureIfSum () {
+        for (var i = 0; i &lt; iterations; i++) {
+          if (c) {}
+          else if(d) {}
+          else if (e) {}
+        }
+      }
+
+      (new Measurement({'Logical And': measureLogicalAnd,
+                        'If Product': measureIfProduct,
+                        'Logical OR':  measureLogicalOr,
+                        'If Sum': measureIfSum,
+                        'empty': empty})).run();
+    </script>
+  </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

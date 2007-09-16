@@ -1,0 +1,17 @@
+
+<canvas width="300" height="250">
+  <script>
+    var opened = typeof(global.tab) != 'undefined' ? global.tab : 'one';
+  </script>
+  <tabslider width="150" x="10" y="10"
+             height="200"
+             spacing="2" slideduration="300" oninit="this[global.opened].setAttribute('selected',true)">
+    <tabelement name="one" text="Tabelement One"/>
+    <tabelement name="two" text="Tabelement Two"/>
+    <tabelement name="three" text="Tabelement Three"/>
+  </tabslider>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

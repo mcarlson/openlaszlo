@@ -30,7 +30,7 @@
     ]]>
     </method>
 
-    <soap name="lpstest" wsdl="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws?wsdl">
+    <soap name="lpstest" wsdl="http://localhost:8080/legals3/test/rpc/soap/java/LPSTest.jws?wsdl">
         <method event="onload">
             Debug.write('lps test soap service stub loaded');
         </method>
@@ -83,7 +83,7 @@
         </remotecall>
 
         <remotecall name="testStringArray" funcname="strings" 
-                    dataobject="stringdata">
+                    dataobject="$once{stringdata}">
             <param value="'Foobar Baz'" />      
             <param value="6" />     
             <method event="ondata" args="value">
@@ -96,12 +96,25 @@
         </remotecall>
 
         <remotecall name="testObjectArray" funcname="objects" 
-                    dataobject="objectsdata">
+                    dataobject="$once{objectsdata}">
             <param value="'Foobar Baz'" />      
             <method event="ondata" args="value">
             <![CDATA[
                 for (var i = 0; i < 6; i++) {
                     canvas.assert_equal('testObjectArray', value[i], "Foobar Baz");
+                }
+            ]]>
+            </method>
+        </remotecall>
+
+        <remotecall name="testNObjectArray" funcname="nobjects" 
+                    dataobject="$once{objectsdata}">
+            <param value="'Klondike Bar'" />      
+            <param value="10" />     
+            <method event="ondata" args="value">
+            <![CDATA[
+                for (var i = 0; i < 10; i++) {
+                    canvas.assert_equal('testObjectArray', value[i], "Klondike Bar");
                 }
             ]]>
             </method>
@@ -134,9 +147,14 @@
                 lpstest.test_float_float.invoke();
                 lpstest.test_double_double.invoke();
                 lpstest.testReverse.invoke();
+
                 lpstest.testObjectArray.invoke();   
                 lpstest.testStringArray.invoke();
+
+                lpstest.testNObjectArray.invoke();   
                 lpstest.test_void.invoke();
+
+
             </method>
             <button text="objects" onclick="lpstest.testObjectArray.invoke()" />
             <view bgcolor="#ffcccc" layout="axis: y; spacing: 4" >
@@ -157,6 +175,6 @@
     
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

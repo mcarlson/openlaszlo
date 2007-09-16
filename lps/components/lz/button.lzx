@@ -151,25 +151,82 @@
     <!-- button edges:
         bezel resource uses hairline stroke, Flash Player draws hairline
         below and to the right of the coordinate -->
-    <view name="_outerbezel" resource="lzbutton_bezel_outer_rsc"
-        width="${parent.width-1}" height="${parent.height-1}" stretches="both"/>
-    <view name="_innerbezel" resource="lzbutton_bezel_inner_rsc"
-        x="1" y="1" width="${parent.width-3}" height="${parent.height-3}" stretches="both"/>
+    <view name="_outerbezel" bgcolor="0x919191" x="0" y="0" width="${parent.width-1}" height="${parent.height-1}"/>
+    <view name="_innerbezel" bgcolor="0xFFFFFF" x="1" y="1" width="${parent.width-3}" height="${parent.height-3}"/>
 
     <view name="_face" resource="lzbutton_face_rsc" stretches="both"
         x="2" y="2" width="${parent.width-4}" height="${parent.height-4}"/>
+
+    <view name="_innerbezelbottom" > 
+        <view bgcolor="0x585858" x="${parent.parent.width-2}" y="1" width="1" height="${parent.parent.height-2}"/>
+        <view bgcolor="0x585858" x="1" y="${parent.parent.height-2}" width="${parent.parent.width-3}" height="1" />
+    </view>
+    
+    <view name="_outerbezelbottom" > 
+        <view bgcolor="0xFFFFFF" opacity="0.7" x="${parent.parent.width-1}" y="0" width="1" height="${parent.parent.height}"/>
+        <view bgcolor="0xFFFFFF" opacity="0.7" x="0" y="${parent.parent.height-1}" width="${parent.parent.width-1}" height="1" />
+    </view>
+
 
     <text name="_title"
             x="${parent.text_x + parent.titleshift}"
             y="${parent.text_y + parent.titleshift}"
             text="${parent.text}"
             resize="true"/>
+ <doc>
+          <tag name="shortdesc"><text>
+              The button class provides a simple pushbutton.</text></tag>
+          <text>
+            <p>The <classname>button</classname> tag provides a simple button. The
+button is rectangular and typically displays a text label describing
+its action. The button adjusts to fit the label.</p>
+
+<example class="code" title="Simple button">
+&lt;canvas height="30"&gt;      
+  &lt;button onclick="animate('x', 100, 1000, true)"&gt;
+    Move me
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>If you need to format the text using additional tags such as
+<tagname>b</tagname>, add the text inside the button tags instead of
+using the <attribute>text</attribute> attribute.</p>
+
+<example class="code" title="XHTML button">
+&lt;canvas height="30"&gt;      
+  &lt;button onclick="animate('x', 100, 1000, true)"&gt;
+    Move &lt;b&gt;me&lt;/b&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>A <tagname>button</tagname> may contain both XHTML markup, and
+object tags such as <tagname>attribute</tagname> and
+<tagname>method</tagname>.</p>
+
+<example class="code" title="XHTML button">
+&lt;canvas height="30"&gt;      
+  &lt;button onclick="moveHoriz(5);"&gt;
+    Move &lt;b&gt;me&lt;/b&gt;
+    &lt;method name="moveHoriz" args="moveAmount"&gt;
+      this.setAttribute("x", this.x+moveAmount);
+    &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<component-design id="button" title="Button"/>
+</seealso>
+          </text>
+        </doc>
 
 </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

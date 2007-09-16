@@ -24,8 +24,7 @@
         <attribute name="scrollattr" type="string" value=""/>
 
         <!--- The maximum distance to scroll, default: the height or width
-              of the scrolltarget.
-              @keywords final -->
+              of the scrolltarget. -->
         <attribute name="scrollmax" type="number" value="null" />
         
         <!--- @keywords public -->
@@ -212,6 +211,50 @@
             ]]>
         </method>
 
+        <!--- @keywords private -->
+        <method name="destroy" ><![CDATA[
+            if ('_mwActivateDel' in this) {
+                this._mwActivateDel.unregisterAll();
+                delete this._mwActivateDel;
+            }
+
+            if ('_mwDeactivateDel' in this) {
+                this._mwDeactivateDel.unregisterAll();
+                delete this._mwDeactivateDel;
+            }
+
+            if ('_mwUpdateDel' in this) {
+                this._mwUpdateDel.unregisterAll();
+                delete this._mwUpdateDel;
+            }
+
+            if ('clipSizeDel' in this) {
+                this.clipSizeDel.unregisterAll();
+                delete this.clipSizeDel;
+            }
+
+            if ('targetHeightDel' in this) {
+                this.targetHeightDel.unregisterAll();
+                delete this.targetHeightDel;
+            }
+
+            if ('targetPosDel' in this) {
+                this.targetPosDel.unregisterAll();
+                delete this.targetPosDel;
+            }
+
+            if ('heightDel' in this) {
+                this.heightDel.unregisterAll();
+                delete this.heightDel;
+            }
+
+            delete this.scrolltarget;
+            delete this.focusview;
+            delete this.othersb;
+
+            super.destroy.apply(this, arguments);
+        ]]></method>
+
         <!---  @keywords private -->
         <method name="activateMouseWheel">  <![CDATA[
             this.setAttribute('mousewheelactive', true);
@@ -232,10 +275,18 @@
             ]]>
         </method>
 
-        <!---  @keywords private -->
+        <!--- @keywords private -->
         <method name="targetSizeUpdate">
-            this.setAttribute("scrollmax", this.scrolltarget[this.sizeAxis]);
-            this.scrollbarSizeUpdate();
+            <![CDATA[
+            if (this.scrolltarget) {
+                var sm = this.scrolltarget[this.sizeAxis];
+                if (this.othersb && this.othersb.visible) {
+                    sm += this[this.otherSizeAxis];
+                }
+                this.setAttribute("scrollmax", sm);
+                this.scrollbarSizeUpdate();
+            }
+            ]]>
         </method>
 
         <!---  @keywords private -->
@@ -274,12 +325,14 @@
 
         <!---  @keywords private -->
         <method name="updateThumbPos">
+        <![CDATA[
             var new_pos = 0;
-            if (this.scrollmax > 0)  {
+            if (this.scrollmax > 0 && this.scrolltrack && this.scrolltarget)  {
                 new_pos = Math.min(Math.ceil((-this.scrolltarget[this.scrollattr]/this.scrollmax)
                        *this.scrolltrack[this.sizeAxis]), (this.scrolltrack[this.sizeAxis])-this.thumb[this.sizeAxis]);
             }
             this.thumb.setAttribute(this.axis, new_pos);
+        ]]>
         </method>
 
         <!--- Subclasses can override to change visual state when the scrollable
@@ -297,19 +350,28 @@
             <![CDATA[
             // disable/enable the scrollbar if necessary
             if (this.scrollmax <= this.scrolltarget.immediateparent[this.sizeAxis]) {
-                    if (this.scrollable) this.setAttribute('scrollable',false);
+                    if (this.scrollable) {
+                        this.setAttribute('scrollable',false);
+                        if (this.othersb) // hint othersb about our disappearance...
+                        this.othersb.targetSizeUpdate();
+                    }
                     return;
             } else {
-                if (!this.scrollable) this.setAttribute('scrollable', true);
+                if (!this.scrollable) {
+                 this.setAttribute('scrollable', true);
+                     if (this.othersb) // hint othersb about our appearance...
+                     this.othersb.targetSizeUpdate();
+                }
            }
-              var newsize = 0;
-              if (this.scrollmax > 0) {
-                  newsize = Math.floor(
-                (this.scrolltarget.immediateparent[this.sizeAxis]/this.scrollmax)
-                    *scrolltrack[this.sizeAxis]);
-              }
-              if (newsize < 14) newsize = 14;
-              thumb.setAttribute(this.sizeAxis, newsize);
+            
+            var newsize = 0;
+            if (this.scrollmax > 0 && this.scrolltrack && this.scrolltarget) {
+                newsize = Math.floor(
+                    (this.scrolltarget.immediateparent[this.sizeAxis]/this.scrollmax)
+                    *this.scrolltrack[this.sizeAxis]);
+            }
+            if (newsize < 14) newsize = 14;
+            thumb.setAttribute(this.sizeAxis, newsize);
             ]]>
         </method>
 
@@ -350,7 +412,99 @@
                 setTint(this, this.style.basecolor);
             }
         </method>
-
+        <doc>
+          <tag name="shortdesc"><text>Provides non-visual aspects of scrollbar.</text></tag>
+          <text>
+            <p>If you want to create a scrollbar with a custom look, you can use
+            <classname>basescrollbar</classname> along with helper classes
+            <classname>basescrolltrack</classname>,
+            <classname>basescrollthumb</classname>, and
+            <classname>basescrollarrow</classname>. These classes will allow you
+            to change resources, colors, and the position or presence of various
+            elements.
+            </p>
+            
+            
+            <example title="An unconventional scrollbar">
+            &lt;canvas height="120" bgcolor="silver" maxtextheight="700"&gt;
+              &lt;class name="myscrollbar" extends="basescrollbar" width="20"&gt;
+                &lt;view name="scrolltrack" width="100%" options="releasetolayout"&gt;
+                  &lt;basescrolltrack x="5" direction="-1"
+                      width="${parent.width-10}" height="${parent.thumb.y}"
+                      bgcolor="yellow"/&gt;
+                  &lt;basescrollthumb name="thumb" x="1" width="${parent.width-2}"
+                      bgcolor="green" /&gt;
+                  &lt;basescrolltrack x="5" direction="1"
+                      y="${parent.thumb.y+parent.thumb.height}"
+                      width="${parent.width-10}"
+                      height="${parent.height - parent.thumb.y - parent.thumb.height}"
+                      bgcolor="yellow"/&gt;
+                &lt;/view&gt;
+            
+                &lt;basescrollarrow direction="-1"
+                    x="2" bgcolor="yellow" &gt;
+                    &lt;text&gt;up&lt;/text&gt;
+                    &lt;/basescrollarrow&gt;
+            
+                &lt;basescrollarrow direction="1"
+                    x="2" bgcolor="yellow" &gt;
+                  &lt;text&gt;dn&lt;/text&gt;
+                  &lt;/basescrollarrow&gt;
+                &lt;resizelayout spacing="4"/&gt;
+              &lt;/class&gt;
+            
+              &lt;view x="10" y="10" bgcolor="white"
+                    width="200" height="100" clip="true"&gt;
+                &lt;text multiline="true" width="180"&gt;
+                  Man through his scientific genius has been able to draw distance and
+                  save time and space. He has been able to carry highways through the
+                  stratosphere. We read just the other day that a rocket plane went 1900
+                  miles in one hour. Twice as fast as the speed of sound. This is the
+                  new age. Bob Hope has described this new age, this jet age; it is an
+                  age in which planes will be moving so fast that we will have a
+                  non-stop flight from New York to Los Angeles, when you start out you
+                  might develop the hiccups and you will hic in New York and cup in Los
+                  Angeles. This is an age in which it will be possible to leave Tokyo on
+                  a Sunday morning and arrive in Seattle, Washington on the preceding
+                  Saturday night. When your friends meet you at the airport and ask what
+                  time did you leave Tokyo, you will have to say I left tomorrow. That
+                  is this new age.  We live in one world geographically. We face the
+                  great problem of making it one spiritually.
+                  &lt;br/&gt;
+                  Through our scientific means we have made of the world a
+                  neighborhood and now the challenge confronts us through our
+                  moral and spiritual means to make of it a brotherhood. We must
+                  live together, we are not independent we are interdependent. We
+                  are all involved in a single process. Whatever affects one
+                  directly affects all indirectly for we are tied together in a
+                  single progress. We are all linked in the great chain of
+                  humanity.
+                  &lt;br/&gt;
+                  Martin Luther King, Jr.
+                  &lt;br/&gt;
+                  11 August 1956
+                &lt;/text&gt;
+                &lt;myscrollbar/&gt;
+              &lt;/view&gt;
+            &lt;/canvas&gt;
+            </example>
+            
+            <p>Scrollbar arrows are optional or may be placed anywhere within the
+            scrollbar.  The thumb and track elements expect to be inside a view
+            named <varname>scrolltrack</varname>.  It may seem odd that the
+            scrolltrack is placed twice, but this allows a more flexible
+            appearance as well as particular behaviors that you may want to
+            trigger differently when the user clicks the track to scroll up or
+            down.</p>
+            
+            <p>For another example of using <classname>basescrollbar</classname>,
+            you can look at lps/components/lz/scrollbar.lzx to see the code for
+            the lz <classname>scrollbar</classname> class.  An easy way to make
+            your own scrollbar is to copy that file and replace resources and
+            modify attributes or views to suit your design goals.
+            </p>
+          </text>
+        </doc>
     </class>
 
     <!--- Basescrollthumb expects to be within a basescrollbar (or a subclass).
@@ -365,7 +519,15 @@
        <handler name="oninit">
            classroot.thumb = this;
        </handler>
-
+        
+        <!--- @keywords private -->
+        <method name="destroy" ><![CDATA[
+            delete this.classroot.thumb;
+            delete this.target;
+            
+            super.destroy.apply(this, arguments);
+        ]]></method>
+        
         <state name="ythumbdrag">
             <attribute name="doffset" value="this.getMouse( 'y' )" when="once" />
             <attribute name="y"
@@ -406,7 +568,16 @@
             ]]>
         </method>
 
-
+        <doc>
+          <tag name="shortdesc"><text>Provides non-visual aspects of a scrollbar thumb.</text></tag>
+          <text>
+            <p>
+                This class must be used with basescrollbar.
+                The thumb automatically scales its height to display the relationship between
+                the target height and the track height.
+            </p>
+          </text>
+        </doc>
     </class> <!-- basescrollthumb -->
 
     <!--- Provides non-visual aspects of scrollbar's arrow. -->
@@ -422,6 +593,18 @@
             <handler name="onmousestilldown">
                 classroot.step(this.direction);
             </handler>
+        <doc>
+          <tag name="shortdesc"><text>Provides non-visual aspects of scrollbar's arrow.</text></tag>
+          <text>
+            <p>
+                 This is a simple helper class to provide scrollbar arrow behavior.  If
+                 the mouse is held down on the arrow, the scrollbar will scroll until the
+                 mouse button is released.
+            </p>
+            
+            <p>  See <xref linkend="lz.basescrollbar"/> for more details. </p>
+          </text>
+        </doc>
     </class>
 
     <!--- Provides non-visual aspects of a scrollbar track. -->
@@ -442,11 +625,20 @@
         <handler name="onmouseup">
             //setAttribute('bgcolor', 0xdedede);
         </handler>
+        <doc>
+          <tag name="shortdesc"><text>Provides non-visual aspects of a scrollbar track.</text></tag>
+          <text>
+            <p>
+                This class must be used with basescrollbar.
+                See <xref linkend="lz.basescrollbar"/> for more details.
+            </p>
+          </text>
+        </doc>
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

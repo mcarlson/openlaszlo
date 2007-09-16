@@ -5,7 +5,7 @@
  */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -22,7 +22,7 @@ public interface Translator {
 
   public void setOptions(Compiler.OptionMap options);
 
-  public void translate(SimpleNode program);
+  public SimpleNode translate(SimpleNode program);
 
   public InstructionCollector getCollector();
 
@@ -30,7 +30,6 @@ public interface Translator {
 
   public void unwindEnumeration(SimpleNode node);
 
-  public boolean visitExpression(SimpleNode node);
 }
 
 

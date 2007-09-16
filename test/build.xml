@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -39,7 +39,7 @@
       </exec>
       -->
       <echo message="Compiling ${file}" />
-      <apply executable="bash" parallel="true">
+      <apply executable="bash" parallel="false" failonerror="true">
           <arg line="${LPS_HOME}/WEB-INF/lps/server/bin/lzc -dir build" />
           <fileset dir="." >
               <include name="*.lzx"/>
@@ -51,9 +51,12 @@
 
   <!--================  Target [smoke] ==============-->
   <target name="smoke" description="Run LPS Smoke tests" >
+      <echo message="test/smoke temporarily disabled. quickcheck.py should be repaired. [bshine 11.01.2006]" />
+      <!--
       <exec executable="${python.exec}" taskname="quickcheck" >
           <arg line="quickcheck.py -config smoke-test.xml -home ${LPS_HOME} -port 8080 -path lps" />
       </exec>
+  -->
   </target>
 
   <!--================  Target [golden] ==============-->

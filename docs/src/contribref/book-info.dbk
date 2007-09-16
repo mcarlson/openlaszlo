@@ -1,0 +1,29 @@
+   <bookinfo>
+    <corpauthor>Laszlo Systems, Inc.</corpauthor>
+    <productname>OpenLaszlo</productname>
+    <mediaobject><imageobject><imagedata fileref="logo.png"/></imageobject></mediaobject>
+    <copyright>
+      <year>2001</year>
+      <year>2002</year>
+      <year>2003</year>
+      <year>2004</year>
+      <year>2005</year>
+      <year>2006</year>
+      <year>2007</year>
+      <holder>Laszlo Systems, Inc.</holder>
+    </copyright>
+   <legalnotice>
+      <para>
+        All Rights Reserved. Use is subject to license terms.</para>
+<para>Flash&#153; and Macromedia Flash&#153; are trademarks of Adobe Systems, Inc.</para>
+<para>Laszlo&#174; is a registered trademark, and OpenLaszlo&#153;, LZX&#153; and OpenLaszlo Explorer&#153; are
+ trademarks of Laszlo Systems, Inc.
+</para>
+
+    </legalnotice>
+  </bookinfo>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

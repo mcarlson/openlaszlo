@@ -16,7 +16,7 @@
     
     <include href="utils/traits/cssable.lzx" />
 
-    <class name="B" traits="cssable" bgcolor="0x776699" width="50" height="50">
+    <class name="B" with="cssable" bgcolor="0x776699" width="50" height="50">
         <handler name="onconstruct" method="_applyCSS" />
         <attribute name="cssPropertyMap" 
             value="{width: 'width', bgcolor: 'lzx-bgcolor', coolness: 'coolness', height: 'lzxheight'}" />

@@ -2,6 +2,11 @@
   <!-- Debugger parameters, if invoked with debug=true -->
   <debug height="50%" y="50%" width="100%" x="0"/>
 
+<!--
+  covers-tags: lzview lznode lzdata smoketest
+-->
+
+
   <include href="lzunit" />
   <include href="compiler.lzl" />
   <include href="lzunit-test.lzl" />
@@ -22,7 +27,6 @@
     <!-- LZUnit Tests: verify it is working first -->
     <Tautologies /> 
     <JavaScriptSemantics />
-    <ActionScriptSemantics />
     <IntentionalFailures />
     <IntentionalErrors />
     <!-- end of LZUnit Tests -->
@@ -133,6 +137,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

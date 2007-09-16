@@ -2,7 +2,7 @@
     <include href="lz/list.lzx" /> 
 
     <class name="basefloatinglist" extends="list"
-           options="ignorelayout" >
+           options="ignorelayout" x="-1000" y="-1000">
         <!--- @keywords private -->
         <attribute name="owner" />
 
@@ -29,8 +29,10 @@
         <attribute name="_origshownitems" value="-2" type="number" />
 
         <!--- our style is contrained to the style of our attachtarget
+            TODO: [hqm 2006-09] LPP-2820 
+            attachtarget is sometimes null, should it be initialized with a sentinel?
               @keywords private -->
-        <attribute name="style" value="${attachtarget['style']}"/>
+        <attribute name="style" value="${attachtarget ? attachtarget['style'] : null}"/>
         
         <!--- Set the target to which the floating list will attach.  Set the
               "attach" attribute for attachment location relative to this attach
@@ -60,7 +62,7 @@
             // reset _parentcomponent
             var p = this.owner;
             while (p != canvas) {
-                if (p instanceof basecomponent) {
+                if (p instanceof lz.basecomponent) {
                     this._parentcomponent = p;
                     break;
                 }
@@ -310,6 +312,9 @@
         <method name="setVisible" args="v">
             if (v) {
                 updateAttachLocation();
+            } else {
+                this.setX(-1000);
+                this.setY(-1000);
             }
             super.setVisible(v);
         </method>

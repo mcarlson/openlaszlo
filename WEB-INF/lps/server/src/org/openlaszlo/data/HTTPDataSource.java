@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -29,6 +29,8 @@ import org.openlaszlo.xml.internal.XMLUtils;
 import org.openlaszlo.utils.LZHttpUtils;
 import org.openlaszlo.utils.LZGetMethod;
 import org.openlaszlo.utils.LZPostMethod;
+import org.openlaszlo.utils.LZPutMethod;
+import org.openlaszlo.utils.LZDeleteMethod;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.server.LPS;
 import org.apache.oro.text.regex.*;
@@ -288,12 +290,17 @@ public class HTTPDataSource extends DataSource {
          int redirCount, int timeout)
          throws IOException, HttpException, DataSourceException, MalformedURLException {
 
-        GetMethod request = null;
+        HttpMethodBase request = null;
         HostConfiguration hcfg = new HostConfiguration();
 
-        if (res != null) {
+        /*
+          [todo hqm 2006-02-01] Anyone know why this code was here? It is setting
+          the mime type to something which just confuses the DHTML parser.
+          
+          if (res != null) {
             res.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-        }
+            }
+        */
 
         try {
 
@@ -324,13 +331,24 @@ public class HTTPDataSource extends DataSource {
             }
     
             boolean isPost = false;
+            mLogger.debug("reqtype = "+reqType);
     
             if (reqType != null && reqType.equals("POST")) {
                 request = new LZPostMethod();
                 request.setRequestHeader("Content-Type",
                                          "application/x-www-form-urlencoded;charset=UTF-8");
                 isPost = true;
+                mLogger.debug("setting POST req method");
+            } else if (reqType != null && reqType.equals("PUT")) {
+                request = new LZPutMethod();
+                // todo [hqm 2007] treat PUT like POST? 
+                isPost = true;
+                mLogger.debug("setting PUT req method");
+            } else if (reqType != null && reqType.equals("DELETE")) {
+                request = new LZDeleteMethod();
+                mLogger.debug("setting DELETE req method");
             } else {
+                mLogger.debug("setting GET (default) req method");
                 request = new LZGetMethod();
             }
 
@@ -410,7 +428,7 @@ public class HTTPDataSource extends DataSource {
                     if (query.startsWith(postbodyparam)) {
                         // Get the unescaped query string
                         String v = uri.getQuery().substring(postbodyparam.length());
-                        ((LZPostMethod)request).setRequestBody(v);
+                        ((EntityEnclosingMethod)request).setRequestBody(v);
                     } else {
                         StringTokenizer st = new StringTokenizer(query, "&");
                         while (st.hasMoreTokens()) {
@@ -488,7 +506,9 @@ public class HTTPDataSource extends DataSource {
             htc.setHttpConnectionFactoryTimeout(mConnectionPoolTimeout);
     
             // TODO: [2003-03-05 bloch] this should be more configurable (per app?)
-            request.setFollowRedirects(mFollowRedirects > 0);
+            if (!isPost) {
+                request.setFollowRedirects(mFollowRedirects > 0);
+            }
     
             long t1 = System.currentTimeMillis();
             mLogger.debug("starting remote request");
@@ -545,7 +565,7 @@ public class HTTPDataSource extends DataSource {
 
             return data;
 
-        } catch (HttpConnection.ConnectionTimeoutException ce) {
+        } catch (ConnectTimeoutException ce) {
             // Transduce to an InterrupedIOException, since lps takes these to be timeouts.
             if (request != null) {
                 request.releaseConnection();
@@ -606,7 +626,7 @@ public class HTTPDataSource extends DataSource {
         public final int code;
     
         /** Http request */
-        public final GetMethod  request;
+        public final HttpMethodBase  request;
     
         private PatternMatcher pMatcher = new Perl5Matcher();
         private static final Pattern charsetPattern;
@@ -626,7 +646,7 @@ public class HTTPDataSource extends DataSource {
          * @param r filled request
          * @param c response code
          */
-        public HttpData(GetMethod r, int c) {
+        public HttpData(HttpMethodBase r, int c) {
             code = c;
             request = r;
         }

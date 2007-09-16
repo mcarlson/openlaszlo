@@ -70,10 +70,6 @@
   </canvas>
 -->
 
-<!-- Fonts -->
-<font src="helmetr.ttf" name="Helvetica"/>
-<debug y="500"/>
-
 <script>
 <![CDATA[
 
@@ -153,7 +149,7 @@ TestError.prototype.toString = function toString() {
   should be printed when debugging.  _dbg_typename should return a
   string that is the descriptive name of the class for debugging.
 
-  @keywords private
+  @keywords public
 
   @param Boolean debugWrite: Whether or not to emit debugging statements.
 -->
@@ -239,8 +235,7 @@ TestError.prototype.toString = function toString() {
   It accumulates the results of the test and defines the various
   assert methods that can be used to implement each test.
 
-  <a href="testcase.html">TestCase</a> and <a
-  href="testresult.html">TestResult</a> extend this class to provide
+  <xref linkend="lz.TestCase"/> and <xref linkend="lz.TestResult"/> extend this class to provide
   functionality.
 
   @param semantics: one of "javascript" or "actionscript", defaults to
@@ -272,7 +267,7 @@ TestError.prototype.toString = function toString() {
     <attribute name="debugLZUnit" value="false" />
 
     <method name="_dbg_name">
-        return this.classname;
+        return this.constructor.classname;
     </method>
 
     <method name="debugFields">
@@ -572,7 +567,7 @@ TestError.prototype.toString = function toString() {
 <!---
   TestCase implements an individual test case.
 
-  See the documentation for <a href="testsuite.html">TestSuite</a>
+  See the documentation for <xref linkend="lz.TestSuite"/>
   for an example of this tag.
 
   @param testName: the name of the test
@@ -594,7 +589,7 @@ TestError.prototype.toString = function toString() {
       @keywords constructor
      -->
     <method name="construct" args="parent, args">
-        this.name = jsTrue(args["testName"]) ? args.testName : this.class;
+        this.name = jsTrue(args["testName"]) ? args.testName : this.constructor.classname;
 
         super.construct(parent, args);
 
@@ -610,8 +605,9 @@ TestError.prototype.toString = function toString() {
     <method name="run" args="theTestResult, theTestName">
         dw("TestCase.run(", theTestName, ")");
         setResult(theTestResult);
-        
-        var prefix = (this._dbg_name() != this._dbg_typename()) ? this._dbg_name() + ' >>> ' : ''
+        var dn = this._dbg_name instanceof Function ? this._dbg_name() : this._dbg_name;
+        var tn = this._dbg_typename instanceof Function ? this._dbg_typename() : this._dbg_typename;
+        var prefix = (dn != tn) ? dn + ' >>> ' : ''
         this.result.startTest(prefix + theTestName);
         setUp();
         <!-- capture source warnings as errors around test -->
@@ -621,7 +617,7 @@ TestError.prototype.toString = function toString() {
                 if (! inrsw) {
                     // TODO: [2002-11-16 ptw] fluid-bind
                     inrsw = true;
-                    rsw(fn, ln, msg);
+                    rsw.apply(this, arguments);
                     testcase.error(msg);
                     inrsw = false;
                 }
@@ -768,10 +764,10 @@ TestError.prototype.toString = function toString() {
   its first child view so the results of the test suite will be
   displayed.
 
-  See the documentation for <a href="testsuite.html">testsuite</a>
+  See the documentation for <xref linkend="lz.TestSuite"/>
   for an example of this tag.
 -->
-<class name="TestResult" extends="DebugObject">
+<class name="TestResult" extends="DebugObject" opacity="0.9" bgcolor="0xCCCCCC">
     <method name="_dbg_typename">
         return "TestResult";
     </method>
@@ -897,12 +893,10 @@ TestError.prototype.toString = function toString() {
                 }
             }
             if (totalBad > 0) {
-                display.showFailure();
-            } else {
-                display.showSuccess(); 
+                readout.setAttribute("bgcolor", red);
             }
             // TODO: [2002-11-10 ptw] setAttribute("text", ...) does not work?
-            readout.setText(LzBrowser.xmlEscape(this.toString()));
+            readout.setAttribute("text", LzBrowser.xmlEscape(this.toString()));
         ]]>
     </method>
 
@@ -916,41 +910,26 @@ TestError.prototype.toString = function toString() {
       Below the progress bar a textual presentation of the test status
       and any failures is given.
     -->
-    <silverstyle id="errorstyle" basecolor="0xFF0000" bgcolor="0xFFAAAA" textcolor="0xFFFFFF"/>
-    <greenstyle id="successstyle" basecolor="0x1D490B" bgcolor="0xC2FFAA" textcolor="0xFFFFFF"/>
-    <silverstyle id="progstyle" textcolor="0xFFFFFF"/>
-    <window name="display" title="LzUnit Console Output" 
-        width="400" height="300" opacity="0.7" oninit="bringToFront()"
-        resizable="true"
-        style="progstyle">
-        <method name="showFailure">
-            this.setAttribute("style", errorstyle); 
-        </method>
-        <method name="showSuccess">
-            this.setAttribute("style", successstyle); 
-        </method>
-        <view name="progress" x="0" y="10" bgcolor="black" width="${parent.width}" height="10">
+    <view name="display" width="100%" height="100%" oninit="bringToFront()">
+        <simplelayout axis="y" spacing="15" />
+        <text>Test Progress</text>
+        <view name="progress" bgcolor="black" width="${parent.width}" height="10">
             <view name="background" bgcolor="white" width="${parent.width-2}" height="8" x="1" y="1" />
             <view name="donebar" bgcolor="green" width="0" height="8" x="1" y="1" />
             <view name="failbar" bgcolor="red" width="0" height="8" x="1" y="1" />
             <view name="errorbar" bgcolor="yellow" width="0" height="8" x="1" y="1" />
         </view>
-        <view clip="true" x="10" width="${parent.width-28}" height="${parent.height-75}" y="30">
-            <view name="contents" id="lzuContents" width="${parent.width-parent.vs.width}">
-                <text id="readout" selectable="true" multiline="true" width="100%" fontsize="10">
-                    Results
-                </text>
-            </view>
-            <vscrollbar name="vs"/>
-        </view>
-    </window>
+            <text id="readout" selectable="true" width="100%" multiline="true">
+                Test Results
+            </text>
+    </view>
 
 </class>
 
 
 <script>
   // TODO [2004-08-10 ptw] Workaround for SWF6 toString default bug
-  TestResult.prototype.toString = TestResult.prototype.myToString;
+  lz.TestResult.prototype.toString = lz.TestResult.prototype.myToString;
 </script>
 
 <!---
@@ -962,7 +941,7 @@ TestError.prototype.toString = function toString() {
   accumulate the results of running the TestCases, and finally to
   display the results of the tests.
 -->
-<class name="TestSuite" extends="Test">
+<class name="TestSuite" extends="Test" width="100%" height="100%">
     <method name="_dbg_typename">
         return "TestSuite";
     </method>
@@ -972,7 +951,7 @@ TestError.prototype.toString = function toString() {
     <attribute name="logfile" type="string" value="lzunit.log" />
     <!--- @keywords private
          [Flash] XML xmlresult: an XML object to add results to -->
-    <attribute name="xmlresult" />
+    <attribute name="resultstring" value="''"/>
 
     <!--- @keywords private -->
     <attribute name="tests" />
@@ -981,8 +960,36 @@ TestError.prototype.toString = function toString() {
     <!--- @keywords private -->
     <attribute name="nextTest" />
 
-    <method event="onsuitestart"/>
-    <method event="ontestfinish"/>
+    <event name="onsuitestart" />
+    <event name="onsuitefinish" />
+    <event name="onteststart" />
+    <event name="ontestfinish" />
+    <event name="ontestfail" />
+
+
+    <!---
+      direct fetch of a URL, for control of server logging
+
+      @param reqobj hash table {cmd: , logfile:, testname:, status:, msg: }
+      @keywords private
+      -->
+
+    <method name="sendLogData" args="logfile,msg">
+      <![CDATA[
+      // compute the base directory of the current app
+        var url = LzBrowser.getLoadURL();
+        var p1 = url.indexOf("/", 8);
+        var p2 = url.indexOf("/", p1+1);
+        var base = url.substring(0,p2);
+
+        var query = "logfile="+escape(logfile)+"&msg="+escape(msg);
+        var reqstr =  LzBrowser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
+        //Debug.write("sendServerLogCommand", reqobj, reqstr);
+        var tloader = new LzHTTPLoader(this, false, null);
+        tloader.open ("GET" , reqstr, /* username */ null, /* password */ null);
+        tloader.send (/* content */ null)        
+      ]]>
+    </method>
 
     <method name="debugFields">
         var f = super.debugFields();
@@ -1009,29 +1016,24 @@ TestError.prototype.toString = function toString() {
         event handler for test suite end  -->
     <method event="onsuitefinish">
       //Debug.write("onsuitefinish");
-      this.suite.attributes.failures = this.result.numFailures();
-      this.suite.attributes.time = getTimer() - this.starttime;
-      this.sendLogData(this.logfile, this.xmlresult);
+      //this.resultstring += ("failures: "+ this.result.numFailures()+ "\n");
+      //this.resultstring += ("time: "+ (((new Date)['getTime']()) - this.starttime)+"\n");
+      this.resultstring += "finish_testsuite: "+this.testpath + " failures: "+ this.result.numFailures()+ "\n";
+      this.sendLogData(this.logfile, this.resultstring);
     </method>
 
     <!--- @keywords private  
          event handler for test start  -->
     <method event="onteststart" args="tc">
-      this.testStartTime = getTimer();
-      var testcase = this.xmlresult.createElement("testcase");
-      testcase.attributes.name = tc;
-      testcase.attributes.time = getTimer() - this.testStartTime;
-      this.currentTestcase = testcase;
-      this.suite.appendChild(testcase);
+      this.testStartTime = ((new Date)['getTime']());
+      var testcase = "testcase: "+tc+" "+((((new Date)['getTime']()) - this.testStartTime));
+      //this.resultstring += (testcase+"\n");
     </method>
-
 
     <!--- @keywords private  
          event handler for tets fail  -->
-    <method event="ontestfail" args="obj">
-      var failure = this.xmlresult.createElement("failure"); 
-      failure.attributes.message = obj;
-      this.currentTestcase.appendChild(failure);
+    <method event="ontestfail" args="msg">
+       //this.resultstring += ("failure: "+msg+"\n");
     </method>
 
     <!--- @keywords private -->
@@ -1040,20 +1042,13 @@ TestError.prototype.toString = function toString() {
             super.init();
             this.tests = [];
             initSuite()
+            var lzurl = LzBrowser.getLoadURLAsLzURL();
+            // strip the deployment name from the path
+            this.testpath = lzurl.path.substring(lzurl.path.substring(1).indexOf("/")+2) + lzurl.file; 
 
-            this.starttime = getTimer();
-            this.xmlresult = new XML();
-            // <testsuite errors="0" failures="0"
-            // name="org.openlaszlo.compiler.ViewSchema_Test" tests="3" time="0.431">
-            // <testcase name="testParseColors" time="0.09"></testcase>
-            // <testcase name="testHTMLContent" time="0.0"></testcase>
-            // <testcase name="testSetAttributes" time="0.16"></testcase>
-            // </testsuite>
+            this.starttime = ((new Date)['getTime']());
+            //this.resultstring = "start testsuite: "+this.testpath +"\n";
 
-            this.suite = xmlresult.createElement("testsuite"); 
-            this.suite.attributes.name = LzBrowser.getBaseURL();
-            this.suite.attributes.tests = this.tests.length;
-            xmlresult.appendChild(this.suite);
         ]]>
     </method>
 
@@ -1069,7 +1064,7 @@ TestError.prototype.toString = function toString() {
         {
             var sv = subviews[this.nextCase];
             dw("TestSuite.initSuite: subviews[", this.nextCase, "] = ", sv);
-            if (sv instanceof TestCase)
+            if (sv instanceof lz.TestCase)
             {
                 for (var n in sv) {
                     var t = sv[n];
@@ -1099,6 +1094,7 @@ TestError.prototype.toString = function toString() {
       @keywords private
     -->
     <method name="run">
+        this.controlPanel.bringToFront(); // make sure we can see the control panel 
         dw("TestSuite.run()");
         <!-- bleah -->
         this.setResult(controlPanel.theTestResult);
@@ -1154,6 +1150,11 @@ TestError.prototype.toString = function toString() {
         }
         var c = new LzDelegate( this , "runNextTest" )
         LzIdle.callOnIdle(c);
+            // This fix papers over a difference between swf and dhtml, and I'm not sure
+            // why this fixes it. In dhtml, without this change, the control panel 
+            // becomes invisible when the tests fail, but in swf, we don't see that problem.
+            // in any case, this fixes bug LPP-4109 [bshine 2007.06.29]
+        this.controlPanel.bringToFront(); // make sure we can see the control panel 
         return true;
       ]]>
     </method>
@@ -1176,36 +1177,17 @@ TestError.prototype.toString = function toString() {
       @keywords private
       -->
 
-    <method name="sendLogData" args="logfile,xmlobj">
-      <![CDATA[
-      // compute the base directory of the current app
-        var url = LzBrowser.getLoadURL();
-        var p1 = url.indexOf("/", 8);
-        var p2 = url.indexOf("/", p1+1);
-        var base = url.substring(0,p2);
-
-        var query = "logfile="+escape(logfile);
-        var reqstr =  LzBrowser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
-        //Debug.write("sendServerLogCommand", reqobj, reqstr);
-        this.xmlreply = new XML();
-        xmlobj.sendAndLoad(reqstr, this.xmlreply );
-      ]]>
-    </method>
-
-
-    <simplelayout axis="y" spacing="10" />
-
     <!-- default view of the TestResult -->
-    <view name="controlPanel">
+    <view name="controlPanel" height="100%" width="100%">
         <simplelayout axis="y" spacing="10" />
         <!-- for testing -->
 <!--          <button onclick="parent.parent.run()">Run</button> -->
         <TestResult name="theTestResult"
-          width="500" height="500"
+          width="100%" height="100%"
          />
     </view>
-
 </class>
+
 
 <script>
 <![CDATA[
@@ -1255,6 +1237,7 @@ function xmlequals(x1, x2) {
 
 ]]>
 </script>
+
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

@@ -1,0 +1,36 @@
+
+<canvas height="180">
+  <class name="coloredSquare" width="20" height="20"/>
+
+  <view name="container" bgcolor="silver" x="10" y="10">
+    <simplelayout axis="x" spacing="2"/>
+    <simplelayout id="yLayout" axis="y" spacing="2"/>
+
+    <coloredSquare bgcolor="red"/>
+    <coloredSquare bgcolor="red"/>
+    <coloredSquare bgcolor="red"/>
+    <coloredSquare bgcolor="red"/>
+    <coloredSquare bgcolor="red"/>
+  </view>
+
+  <button y="150" x="10">Increase spacing of BOTH x and y layouts
+    <handler name="onclick">
+      <![CDATA[
+      for (var i=0; i<container.layouts.length; i++) {
+          var lyt = container.layouts[i];
+          lyt.setAttribute('spacing', lyt.spacing + 2);
+      }
+      ]]>
+    </handler>
+  </button>
+
+  <button y="150" x="280">Increase spacing of y layout ONLY
+    <handler name="onclick">
+      yLayout.setAttribute('spacing', yLayout.spacing + 2);
+    </handler>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

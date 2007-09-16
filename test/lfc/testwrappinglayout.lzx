@@ -3,7 +3,7 @@
 
     <class name="box" bgcolor="red" width="20" height ="10" >
 <!--        <animator attribute="width" to="80" relative="true"-->
-<!--        		  duration="5000" motion="easeout"/>-->
+<!--                  duration="5000" motion="easeout"/>-->
     </class>
 
     <text>wrappinglayout: axis=x, spacing 10, inset 20</text>
@@ -25,6 +25,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

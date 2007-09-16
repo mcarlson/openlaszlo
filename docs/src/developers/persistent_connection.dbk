@@ -1,0 +1,1057 @@
+<chapter id="persistent_connection">
+
+<title >The Persistent Connection</title>
+ 
+<note><para>This feature is provisional.  It works in limited capacity
+situations and is fine to develop with, but it is not recommend
+deployment (with the possible exception of low-capacity, non-mission
+critical deployment) with this feature. 
+</para></note>
+<para condition="swf">
+The Persistent Connection Manager works in the Flash runtime only. It is not supported in DHTML.
+</para>
+
+<para>This document describes persistent connection concepts, definitions, and
+elements. It also demonstrates how to program in LZX using the persistent
+connection. It assumes you have a basic knowledge of LZX (in particular,
+datasets and datapointers) and a basic understanding of servlet containers and
+HTTP cookies/sessions.</para>
+
+
+
+
+
+<para/><section id="persistent_connection.overview"><title>Overview</title>
+
+<para>A <indexterm significance="preferred"><primary>persistent connection</primary></indexterm><glossterm>persistent connection</glossterm> is a one-way pipe held by an application from
+the OpenLaszlo Server. Because all transactions are done through an HTTP port, it allows an
+application to receive asynchronous messages from the server without the need to
+open up a port in the firewall. Maintanance of an application's persistent
+connection is done by the <link linkend="persistent_connection.connection-manager"><indexterm significance="preferred"><primary>connection
+manager</primary></indexterm><glossterm>connection
+manager</glossterm></link>, whose job is to multiplex all incoming data into a connection
+dataset. A <link linkend="persistent_connection.connection-datasource"><indexterm significance="preferred"><primary>connection datasource</primary></indexterm><glossterm>connection datasource</glossterm></link> is
+used to declare connection datasets. Each connection datasource registers itself
+with the connection manager. This allows the connection manager to look through
+its list of connection datasources to see if there's a dataset that matches the
+destination of an incoming message. It's possible that two separate datasets
+receive the same message if different datasources declare datasets with the same
+name. Assuming the following:</para>
+
+<programlisting>
+&lt;connectiondatasource name="one"&gt;
+  &lt;dataset name="message"&gt;
+  &lt;dataset name="alert"&gt;
+&lt;/connectiondatasource&gt;
+
+&lt;connectiondatasource name="two"&gt;
+  &lt;dataset name="stock"&gt;
+  &lt;dataset name="alert"&gt;
+&lt;/connectiondatasource&gt;
+</programlisting>
+
+
+<para>datasets <literal>one.alert</literal> and <literal>two.alert</literal> will receive the
+same data for messages destined for "alert".</para>
+
+<para/></section><section><title>Architectural Limitations on Scalability</title>
+<para>
+The persistent connection does hold a socket open; but it's an HTTP
+connection. This makes it work with firewalls, etc &#x8212; often, non-port 80
+traffic will be blocked. This technique is sometimes called "HTTP trickle"
+and it's used in systems other than OpenLaszlo, such as KnowNow, mod_pubsub,
+Kenemea, etc. A single HTTP request is made to the OpenLaszlo server; that
+connection remains open and the server trickles info back (1) when a
+real-time event is being pushed to the client, and (2) just to keep the
+connection alive (a minimal amount of info is returned every few seconds in
+the absence of pushed events).
+</para>
+<para>
+However, the persistent connection feature is incomplete. HTTP connections
+have their own issues (such as incompatibility with Safari, and excess
+consumption of server resources, at least as currently implemented). That
+hasn't stopped OpenLaszlo users from deploying applications that use this feature, but it
+isn't adequate for a high-scale deployment.
+</para>
+<para>
+Another approach would be to "drop down" into Flash and use the Flash
+socket API as its basis. The persistent connection might
+first try the socket, and if that failed, fall back to HTTP trickle (at least
+when the OpenLaszlo server is part of the deployment); such an approach is not part of Openlaszlo now, but applications using that architecture have been developed and deployed. We mention it here merely as a hint to developers who might want to extend the persistent connection manager on their own.</para>
+
+
+
+
+<para/></section><section id="persistent_connection.connection-manager"><title>The connection manager</title>
+
+<para>The connection manager is an <literal>LzConnection</literal> object that is
+instantiated when <literal>&lt;connection&gt;</literal> is declared in the
+canvas (note: <literal>&lt;connection&gt;</literal> can't be declared in a
+library). Once constructed, the connection manager can be accessed using
+<literal>canvas.connection</literal>.</para>
+
+<example role="live-example">
+   <title>Simple connection manager</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/persistent_connection-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Simple connection manager</title><programlisting role="lzx-embednew"><filename>persistent_connection-$1.lzx</filename><parameter/><code>
+  &lt;canvas height="120" debug="true"&gt;
+      &lt;connection/&gt;
+      &lt;script&gt;
+          Debug.write('my connection manager: ' + canvas.connection);
+      &lt;/script&gt;
+  &lt;/canvas&gt;
+</code></programlisting><programlisting>
+  &lt;canvas height="120" debug="true"&gt;
+      &lt;connection/&gt;
+      &lt;script&gt;
+          Debug.write('my connection manager: ' + canvas.connection);
+      &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting><?lzx-edit programs/persistent_connection-$1.lzx></example?>
+
+<para>To establish a persistent connection to the OpenLaszlo Server, use the
+<indexterm><primary><literal>LzConnection.connect()</literal></primary></indexterm><methodname>LzConnection.connect()</methodname> method.</para>
+
+<informalexample role="live-example"><programlisting>
+  &lt;canvas&gt;
+      &lt;connection authenticator="anonymous"/&gt;
+      &lt;script&gt;
+        canvas.connection.connect();
+      &lt;/script&gt;
+  &lt;/canvas&gt;
+</programlisting></informalexample>
+
+<para>An anonymous <indexterm significance="preferred"><primary>authenticator</primary></indexterm><glossterm>authenticator</glossterm> tells the connection that it doesn't
+require authentication. An authenticator ensures connection requests to the
+server are authorized. By default, the connection validates its request is valid
+by calling a back-end authentication server. See <link linkend="persistent_connection.authentication">Authentication</link> for more details.</para>
+
+<para>Once a connection is established, it is identified with a <indexterm significance="preferred"><primary>username</primary></indexterm><glossterm>username</glossterm> and
+a unique <indexterm significance="preferred"><primary>connection session id</primary></indexterm><glossterm>connection session id</glossterm>. The username gives the connection a
+target for other clients to use for sending messages. Multiple connection
+sessions may have the same username. You can get these values by calling
+<indexterm><primary><literal>LzConnection.getUsername()</literal></primary></indexterm><methodname>LzConnection.getUsername()</methodname> and
+<indexterm><primary><literal>LzConnection.getSID()</literal></primary></indexterm><methodname>LzConnection.getSID()</methodname>.</para>
+
+<para/><section id="persistent_connection.connection-attributes"><title>attributes</title>
+
+<para>You can modify the behavior of the persistent connection by
+changing attributes in the connection tag. The available attributes
+are:</para>
+
+<variablelist><varlistentry><term><indexterm><primary>group</primary></indexterm><sgmltag class="attribute">group</sgmltag></term><listitem><para>used to name the connection group an application's persistent
+connection belongs to</para></listitem></varlistentry><varlistentry><term><indexterm><primary>secure</primary></indexterm><sgmltag class="attribute">secure</sgmltag><indexterm><primary>secureport</primary></indexterm><sgmltag class="attribute">secureport</sgmltag></term><listitem><para>used to establish a secure persistent
+connection</para></listitem></varlistentry><varlistentry><term><indexterm><primary>heartbeat</primary></indexterm><sgmltag class="attribute">heartbeat</sgmltag>/<indexterm><primary>timeout</primary></indexterm><sgmltag class="attribute">timeout</sgmltag></term><listitem><para>sets the frequency at which the OpenLaszlo Server checks to see
+if an application is still listening to the persistent connection</para></listitem></varlistentry><varlistentry><term><indexterm><primary>receiveuserdisconnect</primary></indexterm><sgmltag class="attribute">receiveuserdisconnect</sgmltag></term><listitem><para>if true, receives notification from the OpenLaszlo Server whenever a
+client closes their persistent connection</para></listitem></varlistentry><varlistentry><term><indexterm><primary>authenticator</primary></indexterm><sgmltag class="attribute">authenticator</sgmltag>/<indexterm><primary>authparam</primary></indexterm><sgmltag class="attribute">authparam</sgmltag></term><listitem><para>the java authentication class to use
+in the OpenLaszlo Server for connection requests</para></listitem></varlistentry></variablelist>
+
+<para/><section id="persistent_connection.group"><title>group</title>
+
+<para>A <indexterm significance="preferred"><primary>connection group</primary></indexterm><glossterm>connection group</glossterm> is a set of connected applications. Messages sent
+to a group can be received by other connections registered to that group. A
+connection with an unspecified group name has its webapp path as its group. You
+can use the <literal>group</literal> attribute to register your connection to a
+group.</para>
+
+<programlisting>
+&lt;connection group="mygroup"/&gt;
+</programlisting>
+
+<para>Clients not registered the same group are not allowed to send messages to
+each other.</para>
+
+<para/></section><section id="persistent_connection.secure"><title>secure/secureport</title>
+
+<para>To establish a secure persistent connection, set the <literal>secure</literal>
+attribute to true. Your server must be configured to allow HTTPS requests. You
+can also specify a different port if your SSL listener is not on the standard
+443 port.</para>
+
+<programlisting>
+&lt;connection secure="true" secureport="8443"/&gt;
+</programlisting>
+<para>
+Setting the secure attribute also secures connection functions that make
+requests to the OpenLaszlo Server, for example, <indexterm><primary><literal>LzConnection.connect()</literal></primary></indexterm><methodname>LzConnection.connect()</methodname>,
+<indexterm><primary><literal>LzConnectionDatasource.sendMesage()</literal></primary></indexterm><methodname>LzConnectionDatasource.sendMesage()</methodname>, etc.</para>
+
+
+<para/></section><section id="persistent_connection.heartbeat"><title>heartbeat/timeout</title>
+
+<para>By default, the OpenLaszlo Server verifies a connection is alive by sending a <indexterm significance="preferred"><primary>heartbeat</primary></indexterm><glossterm>heartbeat</glossterm>
+every 5 seconds. The connection is configured to timeout if a message or
+heartbeat hasn't been heard from the server in 20 seconds. You can change these
+values using the <literal>heartbeat</literal> and <literal>timeout</literal> attributes,
+whose values are in milliseconds.</para>
+
+<programlisting>
+&lt;connection heartbeat="10000" timeout="30000"/&gt;
+</programlisting>
+
+<para/></section><section id="persistent_connection.receiveuserdisconnect"><title>receiveuserdisconnect</title>
+
+<para>An application can be notified through the persistent connection whenever
+another client disconnects. To turn this feature on, just set
+<literal>receiveuserdisconnect</literal> to true.</para>
+
+<programlisting>
+&lt;connection receiveuserdisconnect="true"/&gt;
+</programlisting>
+
+<para>This feature is false by default.</para>
+
+<para/></section><section id="persistent_connection.authenticator"><title>authenticator/authparam</title>
+
+<para>An authenticator is a server-side object that validates connection requests.
+By default, the connection uses
+<literal>org.openlaszlo.auth.HTTPAuthentication</literal>. By default, this
+authenticator contacts the provided authentication servlet located in
+<literal>http://.../WEBAPP/AuthenticationServlet</literal>, where <literal>WEBAPP</literal>
+is the web application path where you installed the OpenLaszlo Server (typically,
+<literal>lps-@VERSIONID@</literal>).</para>
+
+
+<para>You can use the <literal>authenticator</literal> attribute to use a different
+authenticator for your connection. This attribute expects a java class
+name. When the first connection request is made, the server instantiates an
+object based on the java class specified. Subsequent calls uses this java
+authentication object to authenticate requests. Parameters can be passed into
+the java authenticator using the <literal>authparam</literal> attribute, which expects
+a query-styled string. To skip authentication altogether, you can set
+<literal>authenticator="anonymous"</literal>. All connections are named "user" unless
+you set <literal>authparam="myusername"</literal>.</para>
+
+<para>See <link linkend="persistent_connection.authentication">Authentication</link> for more details.</para>
+
+
+<para/></section></section><section id="persistent_connection.connection-methods"><title>methods</title>
+
+<para/><section id="persistent_connection.login"><title>login(name, password)</title>
+
+<para>Login allows you to session your application. The connection manager uses its
+authenticator for sessioning. Cookies and response headers returned by an
+authentication server will be set in the application. The return value of this
+call is returned in <literal>connection.loginDset</literal> with a root element of
+&lt;login&gt; like:</para>
+
+<programlisting>
+&lt;login status="message"&gt;
+  loginXML
+&lt;/login&gt;
+</programlisting>
+
+<para>See <link linkend="persistent_connection.httpauthentication-login">HTTPAuthentication Login</link> for the
+login XML return.</para>
+
+<para/></section><section id="persistent_connection.logout"><title>The <indexterm><primary><literal>logout()</literal></primary></indexterm><methodname>logout()</methodname> method</title>
+
+<para>Use the <indexterm><primary><literal>logout()</literal></primary></indexterm><methodname>logout()</methodname> method to remove an application's session. The return value of this call
+is returned in <literal>connection.logoutDset</literal> with a root element of
+&lt;logout like:</para>
+
+<programlisting>
+&lt;logout status="message"&gt;
+  logoutXML
+&lt;/logout&gt;
+</programlisting>
+
+<para>See <link linkend="persistent_connection.httpauthentication-logout">HTTPAuthentication Logout</link> for
+the logout XML return.</para>
+
+<para/><section><title>Example:</title>
+
+<para>This demonstrates how to session and unsession your application.</para>
+
+<programlisting>
+&lt;canvas debug="true" height ="200"  &gt;
+  &lt;debug y="60"/&gt;
+  &lt;connection/&gt;
+
+  &lt;datapointer xpath="connection:loginDset:/login[1]/authentication[1]/response[1]/status[1]"&gt;
+    &lt;handler name="ondata"&gt;
+      var statusMessage = this.xpathQuery('@msg');
+      Debug.write('login: ' + statusMessage);
+    &lt;/handler&gt;
+    &lt;handler name="onerror"&gt;
+      Debug.write('login resulted in error');
+    &lt;/handler&gt;
+    &lt;handler name="ontimeout"&gt;
+      Debug.write('login timed out');
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+
+  &lt;datapointer xpath="connection:logoutDset:/logout[1]/authentication[1]/response[1]/status[1]"&gt;
+    &lt;handler name="ondata"&gt;
+      var statusMessage = this.xpathQuery('@msg');
+      Debug.write('logout: ' + statusMessage);
+    &lt;/handler&gt;
+    &lt;handler name="onerror"&gt;
+      Debug.write('logout resulted in error');
+    &lt;/handler&gt;
+    &lt;handler name="ontimeout"&gt;
+      Debug.write('logout timed out');
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+
+  &lt;view&gt;
+    &lt;simplelayout axis="x" spacing="5"/&gt;
+    &lt;button&gt;login
+      &lt;handler name="onclick"&gt;
+        canvas.connection.login('adam', 'adam');
+      &lt;/handler&gt;
+    &lt;/button&gt;
+    &lt;button&gt;logout
+      &lt;handler name="onclick"&gt;
+        canvas.connection.logout();
+      &lt;/handler&gt;
+    &lt;/button&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting>
+
+
+<para/></section></section><section id="persistent_connection.connect"><title>The <indexterm><primary><literal>connect()</literal></primary></indexterm><methodname>connect()</methodname> method</title>
+
+<para>To establish a connection, you can use the <indexterm><primary><literal>connect()</literal></primary></indexterm><methodname>connect()</methodname> method. The
+first time <indexterm><primary><literal>connect()</literal></primary></indexterm><methodname>connect()</methodname> is called, the connection manager establishes
+the connection. Since only once persistent connection can exist per application,
+subsequent calls to <indexterm><primary><literal>connect()</literal></primary></indexterm><methodname>connect()</methodname> will close the previous connection and establish a
+new one.</para>
+
+<para/></section><section id="persistent_connection.disconnect"><title>The <indexterm><primary><literal>disconnect()</literal></primary></indexterm><methodname>disconnect()</methodname> method</title>
+
+<para>Use <indexterm><primary><literal>disconnect()</literal></primary></indexterm><methodname>disconnect()</methodname> to close the persistent connection. This function calls the
+server to immediately inform it to close down the connection, as well as closing
+down the client-side connection. If you just want to close down the client-side
+connection, use <indexterm><primary><literal>clientDisconnect()</literal></primary></indexterm><methodname>clientDisconnect()</methodname>. The benefit to using <indexterm><primary><literal>disconnect()</literal></primary></indexterm><methodname>disconnect()</methodname> is that
+the server is immediately informed of the disconnection instead of having to wait
+for the next heartbeat. You can view the return status of <indexterm><primary><literal>disconnect()</literal></primary></indexterm><methodname>disconnect()</methodname> using
+connection.disconnectDset dataset.</para>
+
+<para/><section><title>Example:</title>
+
+<para>This demonstrates how to use <indexterm><primary><literal>connect()</literal></primary></indexterm><methodname>connect()</methodname>, <indexterm><primary><literal>disconnect()</literal></primary></indexterm><methodname>disconnect()</methodname>, and
+<indexterm><primary><literal>clientDisconnect()</literal></primary></indexterm><methodname>clientDisconnect()</methodname>.</para>
+
+<example role="live-example">
+   <title>Different ways to disconnect</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/persistent_connection-$3.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Different ways to disconnect</title><programlisting role="lzx-embednew"><filename>persistent_connection-$3.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="200"&gt;
+  &lt;debug y="60"/&gt;
+  &lt;connection authenticator="anonymous"&gt;
+    &lt;handler name="onconnect"&gt;
+      Debug.write('connected');
+    &lt;/handler&gt;
+    &lt;handler name="ondisconnect"&gt;
+      Debug.write('client disconnected');
+    &lt;/handler&gt;
+  &lt;/connection&gt;
+
+  &lt;datapointer xpath="connection:disconnectDset:/*[1]"&gt;
+    &lt;handler name="ondata"&gt;
+      Debug.write('server disconnected');
+    &lt;/handler&gt;
+    &lt;handler name="onerror"&gt;
+      Debug.write('disconnect call to server resulted in error');
+    &lt;/handler&gt;
+    &lt;handler name="ontimeout"&gt;
+      Debug.write('disconnect call to server timed out');
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+
+  &lt;view&gt;
+    &lt;simplelayout axis="x" spacing="5"/&gt;
+    &lt;button&gt;connect
+      &lt;handler name="onclick"&gt;
+        canvas.connection.connect();
+      &lt;/handler&gt;
+    &lt;/button&gt;
+    &lt;button&gt;disconnect
+      &lt;handler name="onclick"&gt;
+        canvas.connection.disconnect();
+      &lt;/handler&gt;
+    &lt;/button&gt;
+    &lt;button&gt;client disconnect
+      &lt;handler name="onclick"&gt;
+        canvas.connection.clientDisconnect();
+      &lt;/handler&gt;
+    &lt;/button&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="200"&gt;
+  &lt;debug y="60"/&gt;
+  &lt;connection authenticator="anonymous"&gt;
+    &lt;handler name="onconnect"&gt;
+      Debug.write('connected');
+    &lt;/handler&gt;
+    &lt;handler name="ondisconnect"&gt;
+      Debug.write('client disconnected');
+    &lt;/handler&gt;
+  &lt;/connection&gt;
+
+  &lt;datapointer xpath="connection:disconnectDset:/*[1]"&gt;
+    &lt;handler name="ondata"&gt;
+      Debug.write('server disconnected');
+    &lt;/handler&gt;
+    &lt;handler name="onerror"&gt;
+      Debug.write('disconnect call to server resulted in error');
+    &lt;/handler&gt;
+    &lt;handler name="ontimeout"&gt;
+      Debug.write('disconnect call to server timed out');
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+
+  &lt;view&gt;
+    &lt;simplelayout axis="x" spacing="5"/&gt;
+    &lt;button&gt;connect
+      &lt;handler name="onclick"&gt;
+        canvas.connection.connect();
+      &lt;/handler&gt;
+    &lt;/button&gt;
+    &lt;button&gt;disconnect
+      &lt;handler name="onclick"&gt;
+        canvas.connection.disconnect();
+      &lt;/handler&gt;
+    &lt;/button&gt;
+    &lt;button&gt;client disconnect
+      &lt;handler name="onclick"&gt;
+        canvas.connection.clientDisconnect();
+      &lt;/handler&gt;
+    &lt;/button&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/persistent_connection-$3.lzx></example?>
+
+
+
+
+<para/></section></section></section></section><section id="persistent_connection.connection-datasource"><title>The connection datasource</title>
+
+<para>While the connection tag configures the behavior of the persistent connection,
+the <indexterm significance="preferred"><primary>connection datasource</primary></indexterm><glossterm>connection datasource</glossterm> is where you declare the datasets that handle
+incoming data. A connection datasource is a LzConnectionDatasource
+object. Unlike the connection tag, connection datasources and datasets can be
+declared in libraries.</para>
+
+<programlisting>
+&lt;library&gt;
+  &lt;connectiondatasource name="mydatasource"&gt;
+    &lt;dataset name="message"/&gt;
+    &lt;dataset name="alert"/&gt;
+  &lt;/connectiondatasource&gt;
+&lt;/library&gt;
+</programlisting>
+
+<para>When a connection datasource is declared, it registers itself with the
+connection manager. In turn, The connection manager routes messages received
+from the connection to a connection datasource's dataset.</para>
+
+<para>Since connection datasets only receive data, they will only raise ondata
+events. You can handle events raised by the persistent connection through the
+connection manager or a connection datasource.</para>
+
+<para/><section id="persistent_connection.connectiondatasource-methods"><title>LzConnectionDatasource methods</title>
+
+<para>Many methods in <indexterm><primary>LzConnectionDatasource</primary></indexterm><classname>LzConnectionDatasource</classname>
+return their results in a dataset.</para>
+
+<table><title>LzConnectionDatasource Methods</title><tgroup cols="2"><thead><row><entry>Methods</entry><entry>Result dataset</entry></row></thead><tbody><row><entry><literal>sendMessage(toList, mesg, dest)</literal></entry><entry><literal>sendMessageDset</literal></entry></row><row><entry><literal>sendXML(toList, xml, dest)</literal></entry><entry><literal>sendXMLDset</literal></entry></row><row><entry><literal>sendUserXML(userList, xml, dest)</literal></entry><entry><literal>sendXMLDset</literal></entry></row><row><entry><literal>sendAgentXML(agentList, xml)</literal></entry><entry><literal>sendXMLDset</literal></entry></row><row><entry><literal>getList(userList)</literal></entry><entry><literal>getListDset</literal></entry></row></tbody></tgroup></table>
+
+<para>You can listen for a response status by declaring a datapointer to the
+corresponding dataset. An example is shown below.</para>
+ 
+<example role="live-example">
+   <title>Sending message over connection</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/persistent_connection-$4.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Sending message over connection</title><programlisting role="lzx-embednew"><filename>persistent_connection-$4.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="200"&gt;
+  &lt;debug y="60"/&gt;
+  &lt;connection authenticator="anonymous"/&gt;
+
+
+  &lt;script&gt;
+      connection.connect();
+  &lt;/script&gt;
+
+  &lt;connectiondatasource name="myconnection"&gt;
+      &lt;dataset name="messages"/&gt;
+  &lt;/connectiondatasource&gt;
+
+  &lt;datapointer xpath="myconnection:messages:/*[1]"&gt;
+    &lt;handler name="ondata"&gt;
+      var from = this.xpathQuery('/from[0]/@name');
+      var mesg = this.xpathQuery('/text()');
+      Debug.write('got data from ' + from +  ', mesg is ['+ mesg + ']!');
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+  
+  &lt;datapointer xpath="myconnection:sendMessageDset:/*[1]"&gt;
+    &lt;handler name="ondata"&gt;
+      Debug.write("*** got result back ***");
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+  
+  &lt;button&gt;send message
+    &lt;handler name="onclick"&gt;
+      myconnection.sendMessage('*', 'a message', 'messages');
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="200"&gt;
+  &lt;debug y="60"/&gt;
+  &lt;connection authenticator="anonymous"/&gt;
+
+
+  &lt;script&gt;
+      connection.connect();
+  &lt;/script&gt;
+
+  &lt;connectiondatasource name="myconnection"&gt;
+      &lt;dataset name="messages"/&gt;
+  &lt;/connectiondatasource&gt;
+
+  &lt;datapointer xpath="myconnection:messages:/*[1]"&gt;
+    &lt;handler name="ondata"&gt;
+      var from = this.xpathQuery('/from[0]/@name');
+      var mesg = this.xpathQuery('/text()');
+      Debug.write('got data from ' + from +  ', mesg is ['+ mesg + ']!');
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+  
+  &lt;datapointer xpath="myconnection:sendMessageDset:/*[1]"&gt;
+    &lt;handler name="ondata"&gt;
+      Debug.write("*** got result back ***");
+    &lt;/handler&gt;
+  &lt;/datapointer&gt;
+  
+  &lt;button&gt;send message
+    &lt;handler name="onclick"&gt;
+      myconnection.sendMessage('*', 'a message', 'messages');
+    &lt;/handler&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/persistent_connection-$4.lzx></example?>
+
+<para/><section id="persistent_connection.sendmessage"><title>sendMessage() / sendXML()</title>
+
+<para>There are two ways to send data to other clients: <indexterm><primary><literal>sendMessage()</literal></primary></indexterm><methodname>sendMessage()</methodname> and
+<indexterm><primary><literal>sendXML()</literal></primary></indexterm><methodname>sendXML()</methodname>. Each send function takes three parameters:</para>
+
+    <itemizedlist spacing="compact"><listitem><para>comma-separated list of destination clients</para></listitem><listitem><para>message</para></listitem><listitem><para>destination dataset where the message should be pushed into</para></listitem></itemizedlist>
+
+<para>The <indexterm><primary><literal>sendMessage()</literal></primary></indexterm><methodname>sendMessage()</methodname> method sends a message string. The message is
+received by other clients like:</para>
+
+<programlisting>
+&lt;root dset="aDataset"&gt;
+   &lt;from name="sender"/&gt;
+   message string
+&lt;/root&gt;
+</programlisting>
+
+<para>The <literal>sendXML()</literal> call sends arbitray XML data. The sent data looks
+like:</para>
+
+<programlisting>
+&lt;root dset="aDataset"&gt;
+  &lt;XML&gt;
+&lt;/root&gt;
+</programlisting>
+
+<para>The results of the call are returned in the connection datasource's
+<literal>sendMessageDset</literal> and <literal>sendXMLDset</literal>, respectively. Both
+<methodname role="LzDatasource.prototype.sendMessage">sendMessage()</methodname> and <methodname role="LzDatasource.prototype.sendXML">sendXML()</methodname> send data to <glossterm>users</glossterm> and
+<glossterm>agents</glossterm>. You can narrow that domain by using <indexterm><primary><literal>sendUserXML()</literal></primary></indexterm><methodname>sendUserXML()</methodname> and
+<indexterm><primary><literal>sendAgentXML()</literal></primary></indexterm><methodname>sendAgentXML()</methodname>. Users are peer applications and agents are back-end
+servers.</para>
+
+<para>The XML result from a sent request looks like:</para>
+
+<programlisting>&lt;send count="sent-messages"/&gt;</programlisting>
+
+<para>If there's a response from any agent, the resultset can look like:</para>
+
+<programlisting>
+&lt;send count="sent-messages"&gt;
+  &lt;agent name="agent1"&gt;
+    Agent1XML
+  &lt;/agent&gt;
+  &lt;agent name="agent2"&gt;
+    Agent2XML
+  &lt;/agent&gt;
+  ...
+&lt;/send&gt;
+</programlisting>
+
+<para>See "<link linkend="persistent_connection.agents">Agents</link>" for details on connection agents.</para>
+
+
+<para/></section><section id="persistent_connection.getlist"><title>getList()</title>
+
+<para>To get a list of connected usernames, use the <literal>getList()</literal>
+call. The function takes a comma-separated list of usernames, or use * for all
+users. The result is returned in the getListDset dataset like:</para>
+
+<programlisting>
+&lt;list&gt;
+  &lt;user name="name1"&gt;
+  &lt;user name="name2"&gt;
+  &lt;user name="name3"&gt;
+  ...
+&lt;/list&gt;
+</programlisting>
+
+
+<para/></section></section><section id="persistent_connection.events"><title>events</title>
+
+<para>The connection manager and connection datasource can handle these connection
+events:</para>
+
+<variablelist><varlistentry><term><indexterm><primary>onconnect event</primary></indexterm><literal>onconnect</literal></term><listitem><para>raised as soon as an established connection is verified.
+  </para></listitem></varlistentry><varlistentry><term><indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal></term><listitem><para>raised whenever new data arrives for one of the datasource's
+  datasets. The root node of the data is returned along with the ondata event
+  and looks like:
+
+<programlisting>
+&lt;root dset="dataset"&gt;
+  arbitraryXML
+&lt;/root&gt; </programlisting>
+</para></listitem></varlistentry><varlistentry><term><indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal></term><listitem><para>raised if there was a problem establishing the persistent
+  connection. An error XML is returned with onerror event and looks like:
+
+  <programlisting>&lt;error status="code" msg="message"/&gt;</programlisting>
+  </para></listitem></varlistentry><varlistentry><term><indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal></term><listitem><para>raised when the client hasn't heard a message or heartbeat
+  in the timeout interval. The connection is assumed to be closed if this event
+  is raised.
+  </para></listitem></varlistentry><varlistentry><term><indexterm><primary>ondisconnect event</primary></indexterm><literal>ondisconnect</literal></term><listitem><para>raised right after the persistent connection is
+  closed. If the <indexterm><primary><literal>connect()</literal></primary></indexterm><methodname>connect()</methodname> method has been called more than once, calling
+  <indexterm><primary><literal>disconnect()</literal></primary></indexterm><methodname>disconnect()</methodname> once will not trigger this event until the connection count
+  reaches zero.
+  </para></listitem></varlistentry><varlistentry><term><indexterm><primary>onuserdisconnect event</primary></indexterm><literal>onuserdisconnect</literal></term><listitem><para>raised whenever another client disconnects. The
+  connection must have been configured with senduserdisconnect="true".
+  </para></listitem></varlistentry></variablelist>
+
+<para>The same events are raised by the connection manager.</para>
+
+<para/></section></section><section id="persistent_connection.agents"><title>Agents</title>
+
+<para>An agent is a back-end server that pushes and receives client data. The OpenLaszlo Server
+proxies the data between agents and clients. All communication between agent and
+the server is done using HTTP. Only white-listed agent IPs are allowed, which can be
+configured using the "connection-agent-ip" option.</para>
+
+<programlisting>
+&lt;option name="connection-agent-ip"&gt;
+  &lt;allow&gt;
+    &lt;pattern&gt;127.0.0.1&lt;/pattern&gt;
+  &lt;/allow&gt;
+&lt;/option&gt;
+</programlisting>
+
+<para>Agents are associated with an url and one or more connection groups. An agent
+can't send or receive data outside of its own group(s). A connection group is a
+set of connected applications. Messages sent to a group can be received by
+applications and other agents registered to that group. An application with an
+unspecified group name has its webapp path as its group. The OpenLaszlo Server must receive an
+agent's url and group with each request for validation.</para>
+
+<para>Agents are configured in the application as child elements of the
+connection. For example:</para>
+
+<programlisting>
+&lt;connection group="dashboard"&gt;
+  &lt;agent url="http://127.0.0.1:8080/server-api/History"/&gt;
+  &lt;agent url="http://info.com/StockTicker"/&gt;
+&lt;/connection&gt;
+</programlisting>
+
+<para>Each declared agent inherits its group from the connection and
+requires an url, which serves as the agent's unique identifier and its
+location.</para>
+
+<para/><section id="persistent_connection.receiving-data"><title>Receiving data</title>
+
+<para>The OpenLaszlo Server sends data to an agent using the "xml" query parameter. An agent must be
+able to accept that parameter and parse its contents. Agents designed only to
+push information can choose to ignore this.</para>
+
+
+<para/></section><section id="persistent_connection.agent-sending-data"><title>Sending data</title>
+
+<para>Agents can use the "agentmessage" request type to send data to clients
+and/or other agents. In addition to the validation parameters, "agentmessage"
+expects:</para>
+
+<variablelist><varlistentry><term><literal>to</literal></term><listitem><para>list of names to send data; use * for everyone</para></listitem></varlistentry><varlistentry><term><literal>dset</literal></term><listitem><para>destination dataset; this can be ignored by other
+                           agents
+  </para></listitem></varlistentry><varlistentry><term><literal>msg</literal></term><listitem><para>arbitrary xml; this parameter is allowed to be
+                           empty
+  </para></listitem></varlistentry><varlistentry><term><literal>range</literal></term><listitem><para>one of "all", "user", "agent"; if null, default is
+                           "all"
+  </para></listitem></varlistentry></variablelist>
+
+<para>The query string to OpenLaszlo Server should look something like:</para>
+
+<programlisting>
+<emphasis role="em">lzt=agentmessage</emphasis>&amp;<emphasis role="em">url</emphasis>=http://info.com/StockTicker&amp;<emphasis role="em">group</emphasis>=business&amp;<emphasis role="em">to</emphasis>=*&amp;<emphasis role="em">dset</emphasis>=portfolio&amp;<emphasis role="em">msg</emphasis>=&lt;url-encoded&gt;&lt;stock-list&gt;
+  &lt;stock name="BACL" price="50.0"/&gt;&lt;stock name="BGRT" price="38.0"/&gt;&lt;/stock-list&gt;&lt;/url-encoded&gt;&amp;<emphasis role="em">range</emphasis>=user</programlisting>
+
+<para>The response from the server will look like:</para>
+
+<programlisting>
+&lt;lps&gt;
+  &lt;status&gt;200&lt;/status&gt;
+  &lt;message&gt;MESG&lt;/message&gt;
+&lt;/lps&gt;
+</programlisting>
+
+<para>where MESG is either "message sent" or "no one specified connected (range:
+[all|user|angent])".</para>
+
+<para/></section><section id="persistent_connection.agent-get-list"><title>Getting a list of connected users</title>
+
+<para>The "agentlist" OpenLaszlo request type sends back a list of connected clients and
+expects only the "users" query parameter, which can be a list of names or *. The
+query should look something like:</para>
+
+<programlisting>
+<emphasis role="em">lzt=agentlist</emphasis>&amp;<emphasis role="em">name</emphasis>=stock&amp;<emphasis role="em">password</emphasis>=secret&amp;<emphasis role="em">group</emphasis>=business&amp;<emphasis role="em">users</emphasis>=*
+</programlisting>
+
+<para>The response from the server will look like:</para>
+
+<programlisting>
+&lt;lps&gt;
+  &lt;status&gt;200&lt;/status&gt;
+  &lt;message&gt;ok&lt;/message&gt;
+  &lt;body&gt;
+    &lt;list&gt;
+      &lt;user name="name1"&gt;
+      &lt;user name="name2"&gt;
+      &lt;user name="name3"&gt;
+      ...
+    &lt;/list&gt;
+  &lt;/body&gt;
+&lt;/lps&gt;
+</programlisting>
+
+
+
+
+
+<para/></section></section><section id="persistent_connection.authentication"><title>Authentication</title>
+
+<para>The OpenLaszlo Server authenticates all <indexterm significance="preferred"><primary>server connection requests</primary></indexterm><glossterm>server connection requests</glossterm> to ensure
+that they are not spoofed. Server connection requests are made through
+function calls in LzConnection and LzConnectionDatasource. They are
+the connect function, the disconnect function, any of the send message
+functions, and the get list of connected users function. <remark role="fixme">See
+"Using connection functions" for more details.</remark></para>
+
+<para>The server uses an <indexterm significance="preferred"><primary>authenticator</primary></indexterm><glossterm>authenticator</glossterm> to validate each server connection
+request. You can tell the server what authenticator to use for your connection using
+the connection tag's <literal>authenticator</literal> attribute. Parameters for an
+authenticator can be passed through the <literal>authparam</literal> attribute. The
+string has to be in query string format.</para>
+
+<programlisting>
+&lt;connection authenticator="com.mycompany.Security" 
+            authparam="usr=myusr&amp;amp;pwd=mypwd"/&gt;
+</programlisting> 
+
+<para>Note that &amp;amp; was used to XML escape the ampersand. Be sure to URL
+encode values that contain <literal>&amp;</literal> or <literal>=</literal> to %26 and %3D,
+respectively.</para>
+
+<para>If no authenticator is defined for the connection, the server uses the
+<literal><link linkend="persistent_connection.httpauthentication">HTTPAuthentication</link></literal>
+authenticator. HTTPAuthentication validates a connection by using an
+application's session cookie. It proxies the cookie to a default security server
+at <literal>http://&lt;lps-host&gt;:&lt;lps-port&gt;/WEBAPP/AuthenticationServlet</literal>. You
+can specify a different security server by passing an <literal>url</literal>
+parameter:</para>
+
+<programlisting>
+&lt;connection authenticator="org.openlaszlo.auth.HTTPAuthentication"
+            authparam="url=http://other.host.com/MySecurityServer"/&gt;
+</programlisting>
+
+<para>If the authentication was successful, the security server should return
+HTTPAuthentication a username, which, in turn, is returned to the OpenLaszlo Server. You can
+change the default authenticator with the
+<literal>connection.default.authenticator</literal> property. See the "Deployer's
+Guide" for more on how to configure your server and <link linkend="persistent_connection.httpauthentication">HTTPAuthentication</link> for what the XML response
+format of authentication servers should look like.</para>
+
+
+
+
+<para/><section id="persistent_connection.authenticationservlet"><title>AuthenticationServlet</title>
+
+<para>The AuthenticationServlet is the default authentication server used by
+HTTPAuthentication. You can find the source code for this servlet in
+<literal>WEB-INF/classes/AuthenticationServlet.java</literal>.</para>
+
+<para>AuthenticationServlet provides request types for login (create session),
+logout (remove session), and getusername (validate session) as described below
+in <link linkend="persistent_connection.httpauthentication">HTTPAuthentication</link>. During intialization,
+AuthenticationServlet reads a list of usernames and passwords from
+<literal>WEB-INF/lps/config/lzusers.xml</literal> to use for login validation. The
+format of the file looks like:</para>
+
+<programlisting>
+&lt;users&gt;
+  &lt;user name="adam" password="adam"/&gt;
+  &lt;user name="bret" password="bret"/&gt;
+  ...
+&lt;/users&gt;
+</programlisting>
+
+
+
+
+
+
+
+
+<para/></section><section id="persistent_connection.skipping-auth"><title>Skipping authentication</title>
+
+<para>You can turn off server authentication by using the anonymous
+authenticator.</para>
+
+<programlisting>
+&lt;connection authenticator="anonymous"/&gt;
+</programlisting>
+
+<para>The anonymous authenticator assigns your connection a default username of
+<literal>user</literal>. You can change the default value through the
+<literal>connection.none-authenticator.username</literal> property. Optionally,
+you can pass it a <literal>usr</literal> parameter with the name of your choice. For
+example, this sets the connection's username to sam:</para>
+
+<programlisting>
+&lt;connection authenticator="anonymous" authparam="usr=sam"/&gt;
+</programlisting>
+
+
+
+
+<para/></section><section id="persistent_connection.implementing-an-authenticator"><title>Implementing an authenticator</title>
+
+<para>Connection authenticators are server-side java objects that implement the
+<literal>org.openlaszlo.servlets.Authentication</literal> interface. The server validates
+a request if and only if an authenticator returns a username. Four functions
+must be implemented:</para>
+
+<programlisting>
+void <emphasis role="em">init</emphasis>(Properties prop);
+
+String <emphasis role="em">getUsername</emphasis>(HttpServletRequest req, HttpServletResponse res, 
+                   HashMap param) 
+
+int <emphasis role="em">login</emphasis>(HttpServletRequest req, HttpServletResponse res,
+          HashMap param, StringBuffer xmlResponse)
+
+int <emphasis role="em">logout</emphasis>(HttpServletRequest req, HttpServletResponse res,
+           HashMap param, StringBuffer xmlResponse)
+</programlisting>
+
+<para>The <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> function is called right after an authenticator is
+instantiated by the OpenLaszlo Server. Parameters from the <literal>lps.properties</literal> file
+(located in the <literal>WEB-INF/lps/config</literal> server directory) are passed
+into <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname>.</para>
+
+<para>The server uses <indexterm><primary><literal>getUsername()</literal></primary></indexterm><methodname>getUsername()</methodname> to authenticate each server connection
+request. A value of null is assumed to mean that the request is invalid. Any
+other string value, including an empty string, is considered ok.</para>
+
+<para>Both <indexterm><primary><literal>login()</literal></primary></indexterm><methodname>login()</methodname> and <indexterm><primary><literal>logout()</literal></primary></indexterm><methodname>logout()</methodname> are used by clients to
+session and unsession the application, respectively.</para>
+
+
+<para/><section id="persistent_connection.httpauthentication"><title>org.openlaszlo.plugins.HTTPAuthentication</title>
+
+<para>This class makes HTTP requests to back-end authentication servers to
+session/unsession applications and validate connection requests. Required client
+cookies are proxied to authentication servers. If set by the authentication
+server, response headers are proxied back to the client. HTTPAuthentication
+expects the authentication server to handle login, logout, and getusername
+request types.</para>
+
+<para>Authentication servers are expected to return an XML response that looks
+like:</para>
+
+<programlisting>
+&lt;authentication&gt;
+  &lt;response type="<varname>login</varname>|<varname>logout</varname>|<varname>getusername</varname>y"&gt;
+    &lt;status code="NUMBER" msg="MESSAGE"/&gt;
+    [&lt;username&gt;name&lt;/username&gt;]
+  &lt;/response&gt;
+&lt;/authentication&gt;
+</programlisting>
+
+<para>If a status code doesn't exist or isn't <literal>0</literal>, the request is assumed
+to have failed.</para>
+
+
+
+
+<para/><section id="persistent_connection.httpauthentication-login"><title>Login</title>
+
+<para>For sessioning, the login query should look like
+<literal>?rt=login&amp;usr=userame&amp;pwd=secret</literal>.</para>
+
+<para>A successful login will look like:</para>
+
+<programlisting>
+&lt;authentication&gt;
+   &lt;response type="login"&gt;
+     &lt;status code="0" msg="ok"/&gt;
+     &lt;username&gt;username&lt;/username&gt;
+   &lt;/response&gt;
+&lt;/authentication&gt;
+</programlisting>
+
+<para>A failed login:</para>
+
+<programlisting>
+&lt;authentication&gt;
+  &lt;response type="login"&gt;
+    &lt;status code="3" msg="invalid"/&gt;
+  &lt;/response&gt;
+&lt;/authentication&gt;
+</programlisting>
+
+
+
+
+<para/></section><section id="persistent_connection.httpauthentication-logout"><title>Logout</title>
+
+<para>The authentication server must be able to accept the <literal>rt=logout</literal>
+parameter for unsessioning.</para>
+
+<para>A successful logout will look like:</para>
+
+<programlisting>
+&lt;authentication&gt;
+  &lt;response type="logout"&gt;
+    &lt;status code="0" msg="ok"/&gt;
+  &lt;/response&gt;
+&lt;/authentication&gt;
+</programlisting>
+
+<para>A failed logout:</para>
+
+<programlisting>
+&lt;authentication&gt;
+  &lt;response type="logout"&gt;
+    &lt;status code="4" msg="invalid session"/&gt;
+  &lt;/response&gt;
+&lt;/authentication&gt;
+</programlisting>
+
+
+
+
+<para/></section><section id="persistent_connection.httpauthentication-getusername"><title>Getusername</title>
+
+<para>For validation, the authentication server must accept the
+<literal>rt=getusername</literal> parameter.</para>
+
+<para>If the client has a valid session, the server should return:</para>
+<programlisting>
+&lt;authentication&gt;
+  &lt;response type="getusername"&gt;
+    &lt;status code="0" msg="ok"/&gt;
+    &lt;username&gt;username&lt;/username&gt;
+  &lt;/response&gt;
+&lt;/authentication&gt;
+</programlisting>
+
+<para>If the client has an invalid session, the server should return:</para>
+<programlisting>
+ &lt;authentication&gt;
+  &lt;response type="getusername"&gt;
+    &lt;status code="4" msg="invalid session"/&gt;
+  &lt;/response&gt;
+ &lt;/authentication&gt; 
+</programlisting>
+
+<para/></section></section><section id="persistent_connection.nullauthentication"><title>org.openlaszlo.servlets.NullAuthentication</title>
+
+<para>Using NullAuthentication is similar to saying:</para>
+
+<programlisting>&lt;connection authenticator="anonymous"/&gt;</programlisting>
+
+<para>However, NullAuthentication allows you to name your connection:</para>
+
+<programlisting>
+  &lt;connection authenticator="org.openlaszlo.servlets.NullAuthentication"
+              authparam="usr=lauren"/&gt;
+</programlisting>
+
+<para>This connection will be named lauren.</para>
+
+
+
+
+
+<para/></section></section></section><section id="persistent_connection.appendix"><title>Appendix</title>
+
+<para/><section id="persistent_connection.glossary"><title>Glossary</title>
+
+<para><emphasis role="b">agent</emphasis>: a back-end server that pushes data to clients and/or other agents,
+and vice-versa.</para>
+
+<para><emphasis role="b">application</emphasis>: an LZX program.</para>
+
+<para><emphasis role="b">authenticator</emphasis>: the server-side java object that authenticates server
+connection requests.</para>
+
+<para><emphasis role="b">connection</emphasis>: (see persistent connection)</para>
+
+<para><emphasis role="b">connection datasource</emphasis>: See LzConnectionDatasource in the LZX
+Reference.</para>
+
+<para><emphasis role="b">connection manager</emphasis>: a handler that multiplexes all incoming connection
+data through a connection datasource into a dataset. See LzConnection in the LZX
+Reference.</para>
+
+<para><emphasis role="b">connection session id</emphasis>: the unique identifier of a persistent
+connection.</para>
+
+<para><emphasis role="b">server connection requests</emphasis>: LzConnection and LzConnectionDatasource
+function calls that make requests to the server. They are <indexterm><primary><literal>connect()</literal></primary></indexterm><methodname>connect()</methodname>,
+<indexterm><primary><literal>disconnect()</literal></primary></indexterm><methodname>disconnect()</methodname>, <indexterm><primary><literal>sendMessage()</literal></primary></indexterm><methodname>sendMessage()</methodname>, <indexterm><primary><literal>sendXML()</literal></primary></indexterm><methodname>sendXML()</methodname>,
+<indexterm><primary><literal>sendUserXML()</literal></primary></indexterm><methodname>sendUserXML()</methodname>, and <indexterm><primary><literal>sendAgentXML()</literal></primary></indexterm><methodname>sendAgentXML()</methodname>.</para>
+
+<para><emphasis role="b">group</emphasis>: a set of applications that can push messages to each other.</para>
+
+<para><emphasis role="b">heartbeat</emphasis>: a server to client ping to verify that a connection is
+still alive.</para>
+
+<para><emphasis role="b">persistent connection</emphasis>: a one-way pipeline from server to client that
+allows an application to receive asynchronous data.</para>
+
+<para><emphasis role="b">session id</emphasis>: (see connection session id)</para>
+
+<para><emphasis role="b">username</emphasis>: a connection name for other applications to target. This
+value may not be unique among different connections.</para>
+
+<para/></section><section id="persistent_connection.demos"><title>Demo applications</title>
+<itemizedlist spacing="compact"><listitem><para>Chat (demos/chat/chat.lzx)</para></listitem><listitem><para>Dashboard (demos/dashboard/dashboard.lzx)</para></listitem></itemizedlist>
+
+<para/></section></section></chapter>

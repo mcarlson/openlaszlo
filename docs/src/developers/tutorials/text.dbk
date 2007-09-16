@@ -1,0 +1,748 @@
+<chapter id="text-tutorial">
+<?dbhtml dir="tutorials" ?>
+<title>Introduction to Text and Fonts</title>
+<para/><section><title>Introduction</title>
+
+<para>This tutorial shows how to work with text and fonts in OpenLaszlo applications. Later chapters on 
+<xref linkend="text"/> and <xref linkend="fonts"/>
+explain more advanced topics.</para>
+<para>
+Note that the behavior of LZX applications differs between applications compiled for the Flash Player (SWF format) and those compiled for DHTML. Certain APIs are available in only one or the other runtime. We'll call attention to these subjectst in the sections that follow.
+</para>
+<para/></section><section id="text-tutorial.basics"><title>The &lt;text&gt; tag</title>
+
+<para>Entering text is easy with the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: text-->
+ tag:</para>
+
+<example role="live-example">
+   <title>The simple &lt;text&gt; tag</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>The simple &lt;text&gt; tag</title><programlisting role="lzx-embednew"><filename>text-tutorial-$1.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500" &gt;
+  &lt;text&gt;
+    Hello, World!
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500" &gt;
+  &lt;text&gt;
+    Hello, World!
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$1.lzx></example?>
+
+<para>Text that is between the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tags is normalized, meaning that preceding and trailing whitespace is ignored, as are multiple whitespace elements between words. i.e. if you put several spaces between words, the output will still be a single space. If you put a line break in the text, it will be rendered as a single whitespace element (i.e. a space), and text fields will stretch to fit their contents.</para>
+
+<para>The default OpenLaszlo font is used (LzTahoe), at its default size (10pt).</para>
+
+<para>The <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tag is a view, so it can be treated as one. It can be given all the default view attributes, such as width, x, y and so forth.</para>
+
+<example role="live-example">
+   <title>&lt;text&gt; is a &lt;view&gt;</title>
+   <programlistingco>
+     <areaspec>
+       <area units="other" otherunits="/canvas[1]/text[1]/@x"/>
+       <area units="other" otherunits="/canvas[1]/text[1]/@y"/>
+       <area units="other" otherunits="/canvas[1]/text[1]/@width"/>
+     </areaspec>
+     <programlisting language="lzx">
+     <textobject><textdata fileref="programs/text-tutorial-$2.lzx"/></textobject> 
+     </programlisting>
+   </programlistingco>
+</example>
+<?example role="live-example"><title>&lt;text&gt; is a &lt;view&gt;</title><programlisting role="lzx-embednew"><filename>text-tutorial-$2.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500"&gt;
+  &lt;text x="15" y="20" width="150"&gt;
+    Hello, World!
+    We would like to welcome you to the launch of the OpenLaszlo 
+    Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500"&gt;
+  &lt;text <emphasis role="em">x="15" y="20" width="150"</emphasis>&gt;
+    Hello, World!
+    We would like to welcome you to the launch of the OpenLaszlo 
+    Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$2.lzx></example?>
+
+<para>Notice how the text gets cut off because we set the width attribute? </para>
+
+
+<para/></section><section id="text-tutorial.multiline"><title>Multiline text</title>
+
+<para>Having multiline areas of text is just as easy. All we do is set the <indexterm><primary>multiline</primary></indexterm><sgmltag class="attribute">multiline</sgmltag> attribute to <literal>true</literal>:</para>
+
+<example role="live-example">
+   <title>Multiline text</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$3.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Multiline text</title><programlisting role="lzx-embednew"><filename>text-tutorial-$3.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500"&gt;
+  &lt;text x="15" y="20" width="150" multiline="true"&gt;
+    Hello, World!
+    We would like to welcome you to the launch of the OpenLaszlo 
+    Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500"&gt;
+  &lt;text x="15" y="20" width="150" <emphasis role="em">multiline="true"</emphasis>&gt;
+    Hello, World!
+    We would like to welcome you to the launch of the OpenLaszlo 
+    Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$3.lzx></example?>
+
+<para>The text still follows the same normalization rules, so in this case the text wraps at 150px (because we explicitly set the width of the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tag to that), and stretches vertically as far as it needs to go.</para>
+
+<para>The line breaks are still being ignored, but we can fix that by entering them manually:</para>
+
+<example role="live-example">
+   <title>Inserting line breaks</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$4.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Inserting line breaks</title><programlisting role="lzx-embednew"><filename>text-tutorial-$4.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500"&gt;
+   &lt;text x="15" y="20" width="150" multiline="true"&gt;
+      Hello, World!&lt;br /&gt;&lt;br /&gt;
+      We would like to welcome you to OpenLaszlo 4.
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500"&gt;
+   &lt;text x="15" y="20" width="150" multiline="true"&gt;
+      Hello, World!<emphasis role="em">&lt;br /&gt;&lt;br /&gt;</emphasis>
+      We would like to welcome you to OpenLaszlo 4.
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$4.lzx></example?>
+
+<para>The <indexterm><primary>br</primary></indexterm><sgmltag class="element">&lt;br&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: br-->
+ tag is used to denote a single line break. This may be familiar to you from HTML. Just be careful to note that since we are working in XML, empty elements have to be closed with a forward slash: <literal>&lt;br/&gt;</literal>. (This is the same as in XHTML.)</para>
+
+<para/></section><section><title>Including HTML markup in OpenLaszlo applications</title>
+
+<para>Openlaszlo provides support for incorporating HTML. Here's a list of tags that are supported:</para>
+
+<para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>Find out if P tag has been made obsolete.</remark></para>
+
+<informaltable><tgroup cols="2"><thead><row><entry>Tag</entry><entry>Meaning</entry></row></thead><tbody><row><entry>
+    <indexterm><primary>a</primary></indexterm><sgmltag class="element">&lt;a&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: a-->
+
+  </entry><entry>
+    <para>Hypertext Link</para>
+  </entry></row><row><entry>
+    <indexterm><primary>b</primary></indexterm><sgmltag class="element">&lt;b&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: b-->
+
+  </entry><entry>
+    <para>Bold Text</para>
+  </entry></row><row><entry>
+    <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: font-->
+
+  </entry><entry>
+    <para>Defines and implements fonts</para>
+  </entry></row><row><entry>
+    <indexterm><primary>i</primary></indexterm><sgmltag class="element">&lt;i&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: i-->
+
+  </entry><entry>
+    <para>Italic text</para>
+  </entry></row><row><entry>
+    <indexterm><primary>p</primary></indexterm><sgmltag class="element">&lt;p&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: p-->
+
+  </entry><entry>
+    <para>Paragraph</para>
+  </entry></row><row><entry>
+    <indexterm><primary>u</primary></indexterm><sgmltag class="element">&lt;u&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: u-->
+
+  </entry><entry>
+    <para>Underline</para>
+  </entry></row><row><entry>
+    <indexterm><primary>img</primary></indexterm><sgmltag class="element">&lt;img&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: img-->
+
+  </entry><entry>
+    <para>image</para>
+  </entry></row></tbody></tgroup></informaltable>
+<para/><section><title>Including links</title>
+<example role="live-example">
+   <title>Specifying a font</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$5.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>specifying a font</title><programlisting role="lzx-embednew"><filename>text-tutorial-$5.lzx</filename><parameter/><code>
+&lt;canvas height="150" width="500"&gt;
+  &lt;font name="default" style="bold" /&gt;
+  &lt;text x="15" y="20" width="150" multiline="true"&gt;
+    &lt;b&gt;Hello, &lt;font color="#ff0000"&gt;World!&lt;/font&gt;&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;font size="16"&gt;We&lt;/font&gt; would like to welcome &lt;u&gt;you&lt;/u&gt; to the 
+      launch of the &lt;a href="http://www.openlaszlo.org/" target="_blank"&gt;OpenLaszlo&lt;/a&gt; 
+      Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150" width="500"&gt;
+  &lt;font name="default" style="bold" /&gt;
+  &lt;text x="15" y="20" width="150" multiline="true"&gt;
+    &lt;b&gt;Hello, <emphasis role="em">&lt;font color="#ff0000"&gt;</emphasis>World!<emphasis role="em">&lt;/font&gt;</emphasis>&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+<emphasis role="em">&lt;font size="16"&gt;</emphasis>We<emphasis role="em">&lt;/font&gt;</emphasis> would like to welcome <emphasis role="em">&lt;u&gt;</emphasis>you<emphasis role="em">&lt;/u&gt;</emphasis> to the 
+      launch of the <emphasis role="em">&lt;a href="http://www.openlaszlo.org/" target="_blank"&gt;</emphasis>OpenLaszlo<emphasis role="em">&lt;/a&gt; </emphasis>
+      Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$5.lzx></example?>
+
+<para>The word "OpenLaszlo" becomes a hyperlink because of the <indexterm><primary>a</primary></indexterm><sgmltag class="element">&lt;a&gt;</sgmltag> tag. It does not get underlined as it might in a browser. We can do that ourselves by nesting a <indexterm><primary>u</primary></indexterm><sgmltag class="element">&lt;u&gt;</sgmltag> tag inside it. However, it is important to note that tags must be nested correctly:</para>
+
+<programlisting>&lt;a href="..."&gt;<emphasis role="em">&lt;u&gt;</emphasis>Link<emphasis role="em">&lt;/u&gt;</emphasis>&lt;/a&gt;</programlisting>
+
+<para>is correct, but</para>
+
+<programlisting>&lt;a href="..."&gt;<emphasis role="em">&lt;u&gt;</emphasis>Link&lt;/a&gt;<emphasis role="em">&lt;/u&gt;</emphasis></programlisting>
+
+<para>is wrong because the <indexterm><primary>a</primary></indexterm><sgmltag class="element">&lt;a&gt;</sgmltag> tag was closed before the <indexterm><primary>u</primary></indexterm><sgmltag class="element">&lt;u&gt;</sgmltag> tag.</para>
+
+<para/></section><section><title condition="html">The &lt;html&gt; tag</title>
+<para>
+In applications compiled for DHTML, the <indexterm><primary>html</primary></indexterm><sgmltag class="element">&lt;html&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: html-->
+ tag allows you to include complete html pages within an OpenLaszlo application.  In the example below, the <indexterm><primary>html</primary></indexterm><sgmltag class="element">&lt;html&gt;</sgmltag> is used inside an OpenLaszlo window, which automatically provides scrollbars. Don't worry if you don't understand how the code in this example works; the concepts will be explained in later chapters. The key thing to note is that you can embed entire HTML pages.
+</para>
+<example role="live-example">
+   <title>The &lt;html&gt; tag</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$6.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>The HTML tag</title><programlisting role="lzx-embednew"><filename>text-tutorial-$6.lzx</filename><parameter/><code>
+&lt;canvas &gt;
+   &lt;include href="extensions/html.lzx"/&gt;
+   &lt;class name="browser" extends="window" resizable="true" bgcolor="silver"&gt;
+      &lt;edittext name="txt" text="http://openlaszlo.org/" width="300"/&gt;
+      &lt;button x="310" onclick="parent.htmlview.setSrc(parent.txt.getText()); parent.htmlview.setAttribute(visible, true)"&gt;
+      Load
+      &lt;/button&gt;
+      &lt;html name="htmlview"
+            width="${parent.width - 19}" 
+            height="${parent.height - 74}"
+            x="${parent.x + 7}" 
+            y="${parent.y + 53}"/&gt;
+   &lt;/class&gt;
+   &lt;browser width="500" height="500" x="10" y="10"/&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas &gt;
+   &lt;include href="extensions/html.lzx"/&gt;
+   &lt;class name="browser" extends="window" resizable="true" bgcolor="silver"&gt;
+      &lt;edittext name="txt" text="http://openlaszlo.org/" width="300"/&gt;
+      &lt;button x="310" onclick="parent.htmlview.setSrc(parent.txt.getText()); parent.htmlview.setAttribute(visible, true)"&gt;
+      Load
+      &lt;/button&gt;
+      &lt;html name="htmlview"
+            width="${parent.width - 19}" 
+            height="${parent.height - 74}"
+            x="${parent.x + 7}" 
+            y="${parent.y + 53}"/&gt;
+   &lt;/class&gt;
+   &lt;browser width="500" height="500" x="10" y="10"/&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$6.lzx></example?>
+
+<para/></section></section><section id="text-tutorial.fonts"><title>Fonts</title>
+<para>
+OpenLaszlo provides capabilities for specifying the which fonts will appear in your application. All applications can use fonts that are provided by the local system. In addition, applications compiled to SWF can also embed fonts.
+</para>
+<para/><section><title condition="swf">Fonts in SWF applications"</title>
+<para>
+In applications compiled to SWF, OpenLaszlo supports both <emphasis role="i">embedded </emphasis>fonts, which are downloaded with your application, and <emphasis role="i">client</emphasis> fonts, which reside natively on the machines on which your application is used. By default, client fonts are used. Client fonts have certain limitations; for example they cannot be rotated or changed in opacity (due to a limitation of the Flash Player).  See <xref linkend="fonts"/>.
+</para>
+<para/><section><title condition="swf">Including Fonts</title>
+<para>
+When compiling to SWF, you can embed fonts using the <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> of the <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag> tag.
+</para>
+<example role="live-example">
+   <title>Using the src attribute to specify font</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$7.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>specifying a font</title><programlisting role="lzx-embednew"><filename>text-tutorial-$7.lzx</filename><parameter/><code>
+&lt;canvas height="150" width="500"&gt;
+  &lt;font name="default" style="bold" src="lztahoe8b.ttf"/&gt;
+  &lt;text x="15" y="20" width="150" multiline="true"&gt;
+    &lt;b&gt;Hello, &lt;font color="#ff0000"&gt;World!&lt;/font&gt;&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;font size="16"&gt;We&lt;/font&gt; would like to welcome &lt;u&gt;you&lt;/u&gt; to the 
+      launch of the &lt;a href="http://www.openlaszlo.org/" target="_blank"&gt;OpenLaszlo&lt;/a&gt; 
+      Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="150" width="500"&gt;
+  &lt;font name="default" style="bold" src="lztahoe8b.ttf"/&gt;
+  &lt;text x="15" y="20" width="150" multiline="true"&gt;
+    &lt;b&gt;Hello, <emphasis role="em">&lt;font color="#ff0000"&gt;</emphasis>World!<emphasis role="em">&lt;/font&gt;</emphasis>&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+<emphasis role="em">&lt;font size="16"&gt;</emphasis>We<emphasis role="em">&lt;/font&gt;</emphasis> would like to welcome <emphasis role="em">&lt;u&gt;</emphasis>you<emphasis role="em">&lt;/u&gt;</emphasis> to the 
+      launch of the <emphasis role="em">&lt;a href="http://www.openlaszlo.org/" target="_blank"&gt;</emphasis>OpenLaszlo<emphasis role="em">&lt;/a&gt; </emphasis>
+      Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$7.lzx></example?>
+<para>OpenLaszlo supports TrueType fonts, and the simplest way to use one is as follows:</para>
+
+<example role="live-example">
+   <title>Naming a font family</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$8.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Naming a font family</title><programlisting role="lzx-embednew"><filename>text-tutorial-$8.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont" src="timmonsr.ttf"/&gt;
+   &lt;text width="150" height="20"&gt;
+      &lt;font face="serifFont" size="14"&gt;Hello, World!&lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont" src="timmonsr.ttf"/&gt;
+   &lt;text width="150" height="20"&gt;
+      &lt;font face="serifFont" size="14"&gt;Hello, World!&lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$8.lzx></example?>
+
+<para>We called this font <emphasis role="i">serifFont</emphasis>, but we could call it whatever we wanted, and that is what will be used to declare its use elsewhere in the application.</para>
+
+<para>The font TTF files can be located in the current directory or another one and referenced relatively (<literal>src="../fonts/..."</literal>). Otherwise they are included in the LPS webapp directory of the installation under WEB-INF/lps/fonts. timonnsr is a font that comes packaged with the OpenLaszlo Server in this location.</para>
+
+<para>A truetype file is required for each style of font (e.g. italic, bold, regular), which is how fonts are actually packaged. So the following code will <emphasis role="b">not</emphasis> work:</para>
+
+
+<informalexample role="live-example"><programlisting>
+&lt;canvas&gt;
+   &lt;!-- WARNING: Bad example! --&gt;
+   &lt;font name="serifFont" src="timmonsr.ttf"/&gt;
+   &lt;text width="150" height="20"&gt;
+      &lt;font face="serifFont" size="14"&gt;Hello, <emphasis role="em">&lt;b&gt;</emphasis>World!<emphasis role="em">&lt;/b&gt;</emphasis>&lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting></informalexample>
+
+
+<para>To correct this, we need to add one line of code to include the bold font:</para>
+
+<example role="live-example">
+   <title>Including bold font</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$10.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Including bold font</title><programlisting role="lzx-embednew"><filename>text-tutorial-$10.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont"&gt;
+      &lt;face src="timmonsr.ttf"/&gt;
+      &lt;face src="timmonsb.ttf" style="bold"/&gt;
+   &lt;/font&gt;
+   &lt;text width="150" height="20"&gt;
+      &lt;font face="serifFont" size="14"&gt;Hello, &lt;b&gt;World!&lt;/b&gt;&lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500"&gt;
+   <emphasis role="em">&lt;font name="serifFont"&gt;
+      &lt;face src="timmonsr.ttf"/&gt;
+      &lt;face src="timmonsb.ttf" style="bold"/&gt;
+   &lt;/font&gt;</emphasis>
+   &lt;text width="150" height="20"&gt;
+      &lt;font face="serifFont" size="14"&gt;Hello, &lt;b&gt;World!&lt;/b&gt;&lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$10.lzx></example?>
+
+<para>The plain font style does not need to be explicitly set; <literal>style="plain"</literal> is implied. This method of markup is not always the best solution, because it depends on writing cumbersome <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag> tags. </para>
+<para>Instead we can tell the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tag what fonts and sizes to use:</para>
+
+<example role="live-example">
+   <title>Assigning fonts to &lt;text&gt; tag</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$11.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>assigning fonts to &lt;text&gt; tag</title><programlisting role="lzx-embednew"><filename>text-tutorial-$11.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont"&gt;
+      &lt;face src="timmonsr.ttf"/&gt;
+      &lt;face src="timmonsb.ttf" style="bold"/&gt;
+   &lt;/font&gt;
+
+   &lt;text width="150" height="150"
+   font="serifFont" fontsize="15" multiline="true"&gt;
+      Hello, &lt;b&gt;World!&lt;/b&gt;&lt;br /&gt;
+         Sometimes it is easier to avoid writing extra &lt;u&gt;font&lt;/u&gt; tags.
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont"&gt;
+      &lt;face src="timmonsr.ttf"/&gt;
+      &lt;face src="timmonsb.ttf" style="bold"/&gt;
+   &lt;/font&gt;
+
+   &lt;text width="150" height="150"
+   <emphasis role="em">font="serifFont" fontsize="15"</emphasis> multiline="true"&gt;
+      Hello, &lt;b&gt;World!&lt;/b&gt;&lt;br /&gt;
+         Sometimes it is easier to avoid writing extra &lt;u&gt;font&lt;/u&gt; tags.
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$11.lzx></example?>
+
+<para>In fact, we can do this with any view (including <indexterm><primary>window</primary></indexterm><sgmltag class="element">&lt;window&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: window-->
+ tags, and so forth) tag, and its children will inherit the fonts that were set:</para>
+
+<example role="live-example">
+   <title>Views inherit font properties</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$12.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Views inherit font properties</title><programlisting role="lzx-embednew"><filename>text-tutorial-$12.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont"&gt;
+      &lt;face src="timmonsr.ttf"/&gt;
+      &lt;face src="timmonsb.ttf" style="bold"/&gt;
+   &lt;/font&gt;
+
+   &lt;view name="grandParent" font="serifFont" fontsize="15"&gt;
+      &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
+         &lt;text&gt;Hello&lt;/text&gt;
+      &lt;/view&gt;
+      &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
+         &lt;text&gt;World&lt;/text&gt;
+      &lt;/view&gt;
+   &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont"&gt;
+      &lt;face src="timmonsr.ttf"/&gt;
+      &lt;face src="timmonsb.ttf" style="bold"/&gt;
+   &lt;/font&gt;
+
+   &lt;view name="grandParent" <emphasis role="em">font="serifFont" fontsize="15"</emphasis>&gt;
+      &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
+         &lt;text&gt;Hello&lt;/text&gt;
+      &lt;/view&gt;
+      &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
+         &lt;text&gt;World&lt;/text&gt;
+      &lt;/view&gt;
+   &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$12.lzx></example?>
+
+<para>The font here is specified in the <emphasis role="i">grandParent</emphasis> view, and it is inherited by both text fields.</para>
+
+<para>Of course font specifications can be overridden further down the hierarchy, both through the use of <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag> tags, and by defining font specifications of child views:</para>
+
+<example role="live-example">
+   <title>Overwriting font specifications</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$13.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Overwriting font specifications</title><programlisting role="lzx-embednew"><filename>text-tutorial-$13.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500"&gt;
+  &lt;font name="serifFont"&gt;
+    &lt;face src="timmonsr.ttf"/&gt;
+    &lt;face src="timmonsb.ttf" style="bold"/&gt;
+  &lt;/font&gt;
+  
+  &lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;
+  
+  &lt;view name="grandParent" font="serifFont" fontsize="15"&gt;
+    &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
+      &lt;text&gt;
+        &lt;font color="#CC6600" size="12"&gt;Hello&lt;/font&gt;
+      &lt;/text&gt;
+    &lt;/view&gt;
+    &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
+      &lt;text font="sansSerifFont"&gt;World&lt;/text&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500"&gt;
+  &lt;font name="serifFont"&gt;
+    &lt;face src="timmonsr.ttf"/&gt;
+    &lt;face src="timmonsb.ttf" style="bold"/&gt;
+  &lt;/font&gt;
+  
+  <emphasis role="em">&lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;</emphasis>
+  
+  &lt;view name="grandParent" font="serifFont" fontsize="15"&gt;
+    &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
+      &lt;text&gt;
+        <emphasis role="em">&lt;font color="#CC6600" size="12"&gt;</emphasis>Hello<emphasis role="em">&lt;/font&gt;</emphasis>
+      &lt;/text&gt;
+    &lt;/view&gt;
+    &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
+      &lt;text <emphasis role="em">font="sansSerifFont"</emphasis>&gt;World&lt;/text&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$13.lzx></example?>
+
+<para>Both the text fields here have overridden some of the font specs. The ones that aren't overridden (such as the face in the left example and the size in the right example) are inherited.</para>
+
+
+<para/></section></section></section><section id="text-tutorial.changing"><title>Changing Text</title>
+
+<para>The <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> element has two methods for reading and writing contents:</para>
+<itemizedlist spacing="compact"><listitem><para><indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname></para></listitem><listitem><para><indexterm><primary><literal>setText()</literal></primary></indexterm><methodname>setText()</methodname></para></listitem></itemizedlist>
+
+<para>The <indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname> method returns the contents of the text box, and the <indexterm><primary><literal>setText()</literal></primary></indexterm><methodname>setText()</methodname> method takes an argument of the string to put in the text field:</para>
+
+<example role="live-example">
+   <title>Getting and setting text</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$14.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Getting and setting text</title><programlisting role="lzx-embednew"><filename>text-tutorial-$14.lzx</filename><parameter/><code>
+&lt;canvas height="135" width="700" debug="true"&gt;
+   &lt;debug x="200"/&gt;
+   &lt;button x="15" y="15"
+      onclick="Debug.write(canvas.theField.getText());"&gt;
+      Get Text 
+   &lt;/button&gt;
+
+   &lt;button x="100" y="15"
+      onclick="canvas.theField.setText('Hello, Laszlo!');"&gt;
+         Set Text
+   &lt;/button&gt;
+
+   &lt;button x="180" y="115"
+      onclick="addText();"&gt;
+         Add Text
+   &lt;/button&gt;
+
+   &lt;script&gt;
+      function addText() {
+      var origText = canvas.theField.getText();
+      var newText = origText + " And on.";
+           canvas.theField.setText(newText);
+      }
+   &lt;/script&gt;
+
+   &lt;text x="45" y="60" width="150" height="75" multiline="true"
+      name="theField"&gt;Some sample text.&lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="135" width="700" debug="true"&gt;
+   &lt;debug x="200"/&gt;
+   &lt;button x="15" y="15"
+      onclick="Debug.write(canvas.theField.getText());"&gt;
+      Get Text 
+   &lt;/button&gt;
+
+   &lt;button x="100" y="15"
+      onclick="canvas.theField.setText('Hello, Laszlo!');"&gt;
+         Set Text
+   &lt;/button&gt;
+
+   &lt;button x="180" y="115"
+      onclick="addText();"&gt;
+         Add Text
+   &lt;/button&gt;
+
+   &lt;script&gt;
+      function addText() {
+      var origText = canvas.theField.getText();
+      var newText = origText + " And on.";
+           canvas.theField.setText(newText);
+      }
+   &lt;/script&gt;
+
+   &lt;text x="45" y="60" width="150" height="75" multiline="true"
+      name="theField"&gt;Some sample text.&lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$14.lzx></example?>
+
+<para>Using these two methods it is possible to concatenate text and work with it as a string.</para>
+
+<para>An important thing to remember when working with text is that everything between the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tags is returned by <indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname>.</para>
+
+<example role="live-example">
+   <title>Text returned</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$15.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>text returned</title><programlisting role="lzx-embednew"><filename>text-tutorial-$15.lzx</filename><parameter/><code>
+&lt;canvas height="135" width="700" debug="true"&gt;
+    &lt;debug x="200"/&gt;
+   &lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;
+
+   &lt;script&gt;
+      function writeOutBit() {
+      var myText = canvas.theField.getText();
+      Debug.write(myText);
+   }
+   &lt;/script&gt;
+
+   &lt;button x="15" y="15"
+      onclick="writeOutBit();"&gt;
+         Write part of line
+   &lt;/button&gt;
+  
+   &lt;text x="45" y="60" width="150" height="75" multiline="true"
+      name="theField"&gt;
+      &lt;font face="sansSerifFont" size="12"&gt;Some lovely sample 
+      text.
+      &lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="135" width="700" debug="true"&gt;
+    &lt;debug x="200"/&gt;
+   &lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;
+
+   &lt;script&gt;
+      function writeOutBit() {
+      var myText = canvas.theField.getText();
+      <emphasis role="em">Debug.write(myText);</emphasis>
+   }
+   &lt;/script&gt;
+
+   &lt;button x="15" y="15"
+      onclick="writeOutBit();"&gt;
+         Write part of line
+   &lt;/button&gt;
+  
+   &lt;text x="45" y="60" width="150" height="75" multiline="true"
+      name="theField"&gt;
+      &lt;font face="sansSerifFont" size="12"&gt;Some lovely sample 
+      text.
+      &lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$15.lzx></example?>
+
+<para>This can be both useful and a nuisance. If we were to start parsing the string that is returned by the <indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname> method, then we would have to compensate for the markup tags. To avoid it, set the font in the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tag.</para>
+
+
+<para/></section><section id="text-tutorial.input"><title>Input Text</title>
+
+<para>The simplest way to provide users with a text field is with the <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: inputtext-->
+ tag:</para>
+
+<example role="live-example">
+   <title>Using &lt;inputtext&gt;</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$16.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using &lt;inputtext&gt;</title><programlisting role="lzx-embednew"><filename>text-tutorial-$16.lzx</filename><parameter/><code>
+&lt;canvas height="135" width="700" debug="true"&gt;
+    &lt;debug x="200"/&gt;
+   &lt;inputtext name="myText" x="10" y="15"&gt;Enter text here&lt;/inputtext&gt;
+   &lt;button x="45" y="45"
+      onclick="Debug.write(canvas.myText.getText());"&gt;
+         Write out text 
+   &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="135" width="700" debug="true"&gt;
+    &lt;debug x="200"/&gt;
+   &lt;inputtext name="myText" x="10" y="15"&gt;Enter text here&lt;/inputtext&gt;
+   &lt;button x="45" y="45"
+      onclick="Debug.write(canvas.myText.getText());"&gt;
+         Write out text 
+   &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$16.lzx></example?>
+
+<para>The <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag> field gives no indication that the text can be selected and edited, other than an insert cursor when the user rolls over it. The <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag> element can accept all the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> attributes, as well as fonts:</para>
+
+<example role="live-example">
+   <title>&lt;inputtext&gt; accepts &lt;text&gt; attributes</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$17.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>&lt;inputtext&gt; accepts &lt;text&gt; attributes</title><programlisting role="lzx-embednew"><filename>text-tutorial-$17.lzx</filename><parameter/><code>
+&lt;canvas height="100" width="500"&gt;
+  &lt;font name="Helmet" src="helmetr.ttf" /&gt;
+  &lt;inputtext name="myText" x="10" y="15"
+      font="Helmet" fontsize="12"
+      width="200" height="50" multiline="true"&gt;
+         Enter very large quantities of text here.
+  &lt;/inputtext&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="100" width="500"&gt;
+  &lt;font name="Helmet" src="helmetr.ttf" /&gt;
+  &lt;inputtext name="myText" x="10" y="15"
+      font="Helmet" fontsize="12"
+      width="200" height="50" multiline="true"&gt;
+         Enter very large quantities of text here.
+  &lt;/inputtext&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$17.lzx></example?>
+
+<para><literal>getText</literal> and <literal>setText</literal> methods will work on <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag> fields as well.</para>
+
+<para>To overcome the problem of the text field not being recognizable, OpenLaszlo provides the <indexterm><primary>edittext</primary></indexterm><sgmltag class="element">&lt;edittext&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: edittext-->
+ tag:</para>
+
+<example role="live-example">
+   <title>Using &lt;edittext&gt;</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/text-tutorial-$18.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using &lt;edittext&gt;</title><programlisting role="lzx-embednew"><filename>text-tutorial-$18.lzx</filename><parameter/><code>
+&lt;canvas height="160" width="500"&gt;
+   &lt;edittext name="myText" x="10" y="15"&gt;Enter text here&lt;/edittext&gt;
+
+   &lt;edittext name="myBigText" x="10" y="45"
+      width="250" height="100" multiline="true"&gt;
+         Enter a lot more text here
+   &lt;/edittext&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="160" width="500"&gt;
+   &lt;edittext name="myText" x="10" y="15"&gt;Enter text here&lt;/edittext&gt;
+
+   &lt;edittext name="myBigText" x="10" y="45"
+      width="250" height="100" multiline="true"&gt;
+         Enter a lot more text here
+   &lt;/edittext&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/text-tutorial-$18.lzx></example?>
+
+<para>The <indexterm><primary>edittext</primary></indexterm><sgmltag class="element">&lt;edittext&gt;</sgmltag> tag can be multiline, and can be adjusted in size.</para>
+
+<para/></section></chapter>

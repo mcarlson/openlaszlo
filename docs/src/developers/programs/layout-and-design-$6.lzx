@@ -1,0 +1,29 @@
+
+<canvas height="200">
+  <!-- Sliders to control width and height -->
+  <text x="200" y="22">Set the width:</text>
+  <slider id="widthSlider" x="200" y="50" width="100" value="50"
+          minvalue="20" maxvalue="100"/>
+  
+  <text x="200" y="92">Set the height:</text>
+  <slider id="heightSlider" x="200" y="120" width="100" value="50"
+          minvalue="20" maxvalue="100"/>
+  
+  <!-- Blue border -->
+  <view width="${widthSlider.value}" height="${heightSlider.value}" 
+         x="20" y="20">
+    <stableborderlayout axis="y"/>
+    <view bgcolor="blue" height="5" width="${parent.width}"/>
+    <view width="${parent.width}">
+      <stableborderlayout axis="x"/>
+      <view bgcolor="blue" width="5" height="${parent.height}"/>
+      <view height="${parent.height}"/>
+      <view bgcolor="blue" width="5" height="${parent.height}"/>
+    </view>
+    <view bgcolor="blue" height="5" width="${parent.width}"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

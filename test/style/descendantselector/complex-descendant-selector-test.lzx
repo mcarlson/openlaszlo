@@ -16,21 +16,21 @@
 
         <!-- Descendant selectors test -->
         <method name="testTopLevel">
-            assertEquals( "0x000000", gJoeSr.getAttribute("favoritecolor"));
+            assertEquals( 0x000000, gJoeSr.getAttribute("favoritecolor"));
         </method>
 
         <method name="testTwoLevel">
-            assertEquals( "0xFF00FF", gJFK.getAttribute("favoritecolor"));
-            assertEquals( "0xAA0000", gBo.getAttribute("favoritecolor"));
+            assertEquals( 0xFF00FF, gJFK.getAttribute("favoritecolor"));
+            assertEquals( 0xAA0000, gBo.getAttribute("favoritecolor"));
             assertEquals( "gstreetcat", gKittycat.getAttribute("meowsound"));
             assertEquals( "gstreetcat", gBlackie.getAttribute("meowsound"));
-            assertEquals( "kennedycat", gPatCat.getAttribute("meowsound"));
+            assertEquals( "I say!", gPatCat.getAttribute("meowsound")); // see LPP-2894; this is the correct behavior
         </method>
 
         <method name="testThreeLevel">
-            assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
-            assertEquals( "0xAA00AA", gRobertJr.getAttribute("favoritecolor"));
-            assertEquals( "0x441a0a", gIndio.getAttribute("favoritecolor"));
+            assertEquals( 0xAA00AA, gLittleGeorge.getAttribute("favoritecolor"));
+            assertEquals( 0xAA00AA, gRobertJr.getAttribute("favoritecolor"));
+            assertEquals( 0x441a0a, gIndio.getAttribute("favoritecolor"));
         </method>
     </class>
 

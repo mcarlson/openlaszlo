@@ -1,0 +1,35 @@
+<!-- Copyright 2007 Laszlo Systems Inc. --> 
+<library>
+    
+    <class name="mtext" extends="text" resize="false">
+        <!--- Style name 'textx'. -->
+        <attribute name="x" value="$style{'textx'}"/>
+    </class>
+    
+    <text id="gene" />
+    
+    <mtext id="perry" />
+
+    <!-- We should see a warning here, and we do:
+        WARNING: No CSS value found for node #lana for property name textx  -->
+    <mtext id="lana" />
+    
+    <!-- We should not see a warning about textx here, because we override the 
+        style constraint with a constant. However, we *do* see a warning. 
+        This is bug LPP-4443 [bshine 08.08.2007] -->        
+    <mtext id="dyson" x="27" />
+        
+    <class name="ContentionTestCase" extends="TestCase">
+        <method name="testCantThinkOfAName">
+            assertUndefined(perry.getAttribute("textx"), "textx should be undefined"); 
+            assertEquals(0, gene.getAttribute("x"), "gene should have an x of 0"); 
+            assertEquals(0, perry.getAttribute("x"), "perry should have an x of 0"); 
+        </method>
+        
+        <method name="testConstantOverridesConstraint">
+            assertEquals(27, dyson.getAttribute("x")); 
+        </method>
+    </class>
+    
+    
+</library>

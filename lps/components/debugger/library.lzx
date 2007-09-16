@@ -1,8 +1,19 @@
+<!---
+      @topic LZX
+      @subtopic Debugging
+  -->
 <library>
-  <include href="debugger.lzx"/>
+  <switch>
+    <when runtime="dhtml">
+      <!-- no debug window in DHTML, it is in its own iframe -->
+    </when>
+    <otherwise>
+      <include href="debugger.lzx"/>
+    </otherwise>
+  </switch>
 </library>
+
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,45 @@
+
+<canvas height="200" width="700" bgcolor="#D4D0C8">
+  <dataset name="dset" src="resources/phonebook.xml"/>
+  <simplelayout axis="y"/>
+  <view datapath="dset:/phonebook/contact">
+    <simplelayout axis="y"/>
+    <!-- 1 -->
+    <view name="list" 
+          onclick="parent.updateContact.setVisible(!parent.updateContact.visible);">
+      <simplelayout axis="x"/>
+      <text datapath="@firstName"/>
+      <text datapath="@lastName"/>
+      <text datapath="@phone"/>
+      <text datapath="@email"/>
+    </view>
+    <view name="updateContact" visible="false" x="20" height="120">
+      <text y="10">First Name:</text>
+      <!-- 2 -->
+      <edittext name="firstName" datapath="@firstName" x="80" y="10"/>
+      <text y="35">Last Name:</text>
+      <edittext name="lastname" datapath="@lastName" x="80" y="35"/>
+      <text y="60">Phone:</text>
+      <edittext name="phone" datapath="@phone" x="80" y="60"/>
+      <text y="85">Email:</text>
+      <edittext name="email" datapath="@email" x="80" y="85"/>
+      <button width="80" x="200" y="10">Update
+        <!-- 2a -->
+        <handler name="onclick">
+            parent.parent.datapath.updateData();
+        </handler>
+      </button>
+      <button width="80" x="200" y="40">Delete
+        <!-- 2b -->
+        <handler name="onclick">
+            parent.parent.datapath.deleteNode();
+        </handler>
+      </button>
+      <!-- 3 -->
+    </view>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

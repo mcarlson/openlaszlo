@@ -1,0 +1,69 @@
+
+<canvas debug="true" height="530">
+
+    <debug x="10" y="40" width="470" height="450" />
+
+    <soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl">
+
+        <attribute name="handlerDel" value="null" type="expression" />
+
+        <handler name="onload">
+            Debug.write('Amazon soap service loaded.');
+            Debug.write('Click keyword search button to get started.');
+            Debug.write('--');
+            search.setAttribute('visible', true);            
+        </handler>
+
+        <handler name="onerror" args="error">
+            Debug.write('error:', error);
+        </handler>
+
+        <method name="invokeKeywordSearchRequest" args="keyword">
+
+            //------------------------------------------------------------
+            // Instantiate proto.KeywordRequest prototype to pass into
+            // KeywordSearchRequest.
+            //------------------------------------------------------------
+            var keyReqParam = new this.proto.KeywordRequest();
+
+            keyReqParam.keyword = keyword;
+            keyReqParam.page = 1;
+            keyReqParam.mode = 'book';
+            keyReqParam.tag = 'webservices-20';
+            keyReqParam.type = 'lite';
+            keyReqParam.devtag = '12FRM39DPGD6QZRMTEG2';
+            keyReqParam.format = 'xml';
+            keyReqParam.version = '1.0';
+
+            if (this.handlerDel == null) {
+                this.handlerDel = new LzDelegate(this, 'handler');
+            }
+
+            //------------------------------------------------------------
+            // Array of parameters and a delegate for callback handler must
+            // be passed in when invoking raw stub function.  For more
+            // information on proxy, see proxy section in RPC chapter
+            //------------------------------------------------------------
+            Debug.write('Invoking Amazon KeywordSearchRequest...');
+
+            this.proxy.KeywordSearchRequest( [ keyReqParam ], this.handlerDel);
+        </method>
+
+        <method name="handler" args="response">
+            Debug.write('Got response:', response);
+        </method>
+
+    </soap>
+
+    <view id="search" x="10" y="10" layout="spacing: 5" visible="false">
+        <view layout="axis: x; spacing: 5">
+            <edittext id="s" text="services" />
+            <button text="keyword search" onclick="amazon.invokeKeywordSearchRequest(s.text)" />
+        </view>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

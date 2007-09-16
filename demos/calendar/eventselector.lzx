@@ -5,8 +5,9 @@
     <!-- The event class is a 9 part collection much like a window object  -->
     <!-- ================================================================= -->
     <class name="eventSelectorbar" clip="true"
-           y="$once{calgrid.getAttributeRelative( 'y' , this)}"
-           width="$once{canvas.width}" height="$once{calgrid.height}"
+           y="61"
+           x="16"
+           width="${parent.width}" height="$once{calgrid.height}"
            pixellock="false"
            clickable="false">
 
@@ -23,8 +24,8 @@
               onmousedown="parent.domousedown()"
               onmouseup="parent.domouseup()">
 
-            <text name="timeArea" font="eventTimefont" fgcolor="#4B5D6C"
-                  datapath="start[1]" y="5" x="2">
+            <text name="timeArea" fgcolor="#4B5D6C"
+                  datapath="start[1]" y="5" x="2" resize="true">
                   <attribute name="hour" value="$path{'@hour'}"/>
                 <method event="onhour">
                     <![CDATA[
@@ -38,10 +39,14 @@
                 </method>
             </text>
 
-            <text name="smalltitletext" font="eventfont" fgcolor="#4B5D6C"
-                    width="${parent.width - this.x}" height="20" x="25"
-                    y="$once{parent.timeArea.y}"
-                    datapath="summary/@value"/>
+            <view width="${parent.width}" height="${parent.height}" clip="true">
+                <text name="smalltitletext" 
+                        fgcolor="#4B5D6C"
+                        width="${parent.width - this.x}" height="15"
+                        x="${parent.parent.timeArea.width + 5}"
+                        y="$once{parent.parent.timeArea.y}"
+                        datapath="summary/@value"/>
+            </view>
 
             <view name="gripper" width="100%" height="100%" >
                 <view name="top" clip="true" x="-2"
@@ -72,7 +77,7 @@
 
         </view>
 
-        <state name="clipSizing">
+        <state name="clipSizing" >
 
             <attribute name="y"
               value="${followview.classroot.details.bgrect.getAttributeRelative(
@@ -93,7 +98,7 @@
             this.clipdel = new LzDelegate(this,"checkClip");
             this.hidedel = new LzDelegate(this,"checkHide");
             this.startDragDel = new LzDelegate(this,"startDrag");
-            //debug.write("event selector.oninit");
+            //Debug.write("event selector.oninit");
         </method>
 
         <method name="hide">
@@ -103,15 +108,19 @@
             this.clipdel.unregisterAll();
             this.hidedel.unregisterAll();
             this.setAttribute( "freedragging" , true );
-            infopanel.unselectEvent();
+            if(calgrid.keepinfoopen == false){
+                infopanel.unselectEvent();
+            }
         </method>
 
         <!-- All new data events must call this -->
         <method name="selectData" args="e">
-            //debug.write("selectData: "+e);
-            //debug.write ("selectData Deselecting: "+
+            //Debug.write("selectData: "+e);
+            //Debug.write ("selectData Deselecting: "+
                             //currenteventDP.serialize());
-            currenteventDP.setNodeAttribute( "selected" , false );
+            if(currenteventDP.p != null){
+                currenteventDP.setNodeAttribute( "selected" , false );
+            }
             e.datapath.setNodeAttribute( "selected" , true );
         </method>
 
@@ -148,6 +157,7 @@
 
             // change selected day
             calgrid.daySelectionMgr.select(e.classroot);
+            calgrid.open_day = e.classroot;
 
             //reinitialize the constraints to the new view
             //(there are no meta-constraints in v1
@@ -203,7 +213,8 @@
             } else if ( this.clipping && this.freedragging ){
                 this.clipSizing.remove();
                 this.clipping = false;
-                this.setAttributeRelative( 'y' , calgrid);
+                // this.setAttributeRelative( 'y' , calgrid); // [bshine 9.28.06] TODO beware this in legals
+                this.setAttribute('y', this.getAttributeRelative('y', calgrid) );                
                 this.setAttribute( 'height' , calgrid.height);
             }]]>
         </method>
@@ -221,7 +232,7 @@
         </method>
 
         <method event="ondblclick">
-            //debug.write("eventselector doubleclick");
+            //Debug.write("eventselector doubleclick");
             infopanel.open();
             // OLD  cal_interior.showInfo(smallevent.event);
         </method>
@@ -317,10 +328,10 @@
                             //need to reset y in new coordinate system
                         }
                         if ( ybar <= 0 ){
-                            followview.classroot.details.bgrect.scrollview.sb.step(-1);
+                            if (followview.classroot.details.bgrect.scrollview.sb) followview.classroot.details.bgrect.scrollview.sb.step(-1);
                             bar.setY( 0 );
                         } else if ( ybar > h ){
-                            followview.classroot.details.bgrect.scrollview.sb.step(1);
+                            if (followview.classroot.details.bgrect.scrollview.sb) followview.classroot.details.bgrect.scrollview.sb.step(1);
                             bar.setY( h );
                         } else {
                             bar.setY( this.getMouse( 'y' ) - yoff );
@@ -415,7 +426,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

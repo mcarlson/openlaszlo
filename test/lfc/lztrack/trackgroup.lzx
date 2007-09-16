@@ -1,5 +1,4 @@
 <canvas debug="true">
-     <debug y="240"/>
     <view name="myglobals">
         <attribute name="unregister" value="false"/>
     </view>
@@ -10,34 +9,34 @@
         <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
         <attribute name="mycolor" value="0x000099"/>
         <method event="oninit">
-             debug.write("LzTrack.register(" + this, this.trackgroup + ")");
+             Debug.write("LzTrack.register(" + this, this.trackgroup + ")");
              LzTrack.register(this, this.trackgroup);
         </method>
         <method event="onmousedown">
             if (canvas.myglobals.unregister) {
-                debug.write("LzTrack.unregister(" + this.trackgroup, this + ")");
+                Debug.write("LzTrack.unregister(" + this.trackgroup, this + ")");
                  this.setAttribute('mycolor', 0xaa0000);
                  LzTrack.unregister(this, this.trackgroup);
             } else {
-                debug.write("LzTrack.activate(" + this.trackgroup + ")");
+                Debug.write("LzTrack.activate(" + this.trackgroup + ")");
                 LzTrack.activate(this.trackgroup);
             }
         </method>
         <method event="onmouseup">
-            debug.write("LzTrack.deactivate(" + this.trackgroup + ")");
+            Debug.write("LzTrack.deactivate(" + this.trackgroup + ")");
             LzTrack.deactivate(this.trackgroup);
         </method>
         <method event="onmousetrackover">
             setAttribute('bgcolor', 0x00dd00);
-            debug.write("onmousetrackover", this);
+            Debug.write("onmousetrackover", this);
         </method>
         <method event="onmousetrackout">
             setAttribute('bgcolor', this.mycolor);
-            debug.write("onmousetrackout", this);
+            Debug.write("onmousetrackout", this);
         </method>
         <method event="onmousetrackup">
             setAttribute('bgcolor', this.mycolor);
-            debug.write("onmousetrackup", this);
+            Debug.write("onmousetrackup", this);
         </method>
         <method event="onmouseover">
             setAttribute('bgcolor', 0x009900);
@@ -103,7 +102,7 @@
 
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

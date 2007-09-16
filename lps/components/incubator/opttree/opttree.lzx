@@ -1,5 +1,9 @@
+<!---
+      @topic Incubator
+      @subtopic Opttree
+  -->
 <library>
-    <!-- A keyboard navigable (with arrow keys) tree control that supports 
+    <!--- A keyboard navigable (with arrow keys) tree control that supports 
          selection and dynamic data loading. This tree must be backed by an
          XML DOM datastructure and presented within a clipping region. 
          
@@ -280,6 +284,7 @@
             </method>
         </view>
 
+        <!--- @access private -->
         <method name="_setupDrag">
             this.dragged = new nodeclass( this );
             dragged.setVisible( false );
@@ -311,6 +316,7 @@
 
         </method>
 
+        <!--- @access private -->
         <method name="_updateDragged">
             dragged.setY( this.getMouse( 'y' ) - _ydragoff );
         </method>
@@ -360,7 +366,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

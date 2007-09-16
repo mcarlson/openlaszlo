@@ -1,0 +1,46 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas>
+    <include href="lzunit" />
+
+    <view oninit="this.doinit()">
+        <method name="doinit">
+            Debug.write("oninit");
+            var t=new Test();
+    
+            t.assertTrue(true, "assertTrue(true)");
+            t.assertEquals (true, true, "assertEquals(true, true)");
+            t.assertEquals (false, false, "assertEquals(false, false)");
+            t.assertEquals ("string", "string", "assertEquals(str,str)");
+            t.assertEquals (42, 42, "assertEquals(string, string)");
+            t.assertEquals (false, false, "assertEquals(false, false)");
+
+            t.assertTrue(true);
+            t.assertFalse(false);
+            t.assertEquals(null, undefined);
+            t.assertWithin(0, .001, .01);
+            t.assertSame(null, null);
+            t.assertNotSame(null, undefined);
+            t.assertNull(null);
+            t.assertNotNull(undefined);
+            t.assertUndefined(undefined);
+            t.assertNotUndefined(null);
+    
+            // t.intentional failures
+//            t.assertEquals (true, false, "assertEquals(true, false)");
+//            t.assertTrue(false, "assertTrue(false)");
+    
+            // assertWithin
+            // assertNull
+            // assertNotNull
+            // assertUndefined
+            // assertNotUndefined
+            // assertSame
+            // assertNotSame
+        </method>
+    </view>
+</canvas>

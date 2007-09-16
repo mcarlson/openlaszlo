@@ -1,0 +1,47 @@
+
+<canvas debug="true" height="200">
+  <debug y="60"/>
+  <connection authenticator="anonymous">
+    <handler name="onconnect">
+      Debug.write('connected');
+    </handler>
+    <handler name="ondisconnect">
+      Debug.write('client disconnected');
+    </handler>
+  </connection>
+
+  <datapointer xpath="connection:disconnectDset:/*[1]">
+    <handler name="ondata">
+      Debug.write('server disconnected');
+    </handler>
+    <handler name="onerror">
+      Debug.write('disconnect call to server resulted in error');
+    </handler>
+    <handler name="ontimeout">
+      Debug.write('disconnect call to server timed out');
+    </handler>
+  </datapointer>
+
+  <view>
+    <simplelayout axis="x" spacing="5"/>
+    <button>connect
+      <handler name="onclick">
+        canvas.connection.connect();
+      </handler>
+    </button>
+    <button>disconnect
+      <handler name="onclick">
+        canvas.connection.disconnect();
+      </handler>
+    </button>
+    <button>client disconnect
+      <handler name="onclick">
+        canvas.connection.clientDisconnect();
+      </handler>
+    </button>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

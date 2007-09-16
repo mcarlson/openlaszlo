@@ -1,0 +1,1072 @@
+<!---
+   
+    @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+               Use is subject to license terms.
+   
+    @access public
+    @affects lzdrawview
+    @topic LFC
+    @subtopic Views
+  -->
+<library>
+
+  <interface name="drawview" extends="view">
+  
+    <doc>
+      <tag name="shortdesc"><text>Adds procedural drawing APIs to view.</text></tag>
+      <text>
+        <p><tagname>drawview</tagname> adds procedural drawing APIs to <tagname>view</tagname></p> 
+        
+        <p><tagname>drawview</tagname> implements a subset of the WHATWG drawing APIs, which can be found at:
+        <a href="http://www.whatwg.org/specs/web-apps/current-work/#graphics">http://www.whatwg.org/specs/web-apps/current-work/#graphics</a>
+        </p>
+        
+        <example><programlisting class="code">
+        &lt;canvas&gt;
+            &lt;drawview width="200" height="200"&gt;
+                &lt;handler name="oncontext"&gt;
+                    this.moveTo(100, 100);
+                    this.lineTo(100, 200);
+                    this.quadraticCurveTo(150, 250, 200, 200);
+                    this.closePath();
+        
+                    this.fillStyle = 0x0000ff;
+                    this.globalAlpha = .5;
+                    this.fill();
+                    
+                    this.strokeStyle = 0xffff00;
+                    this.lineWidth = 5;
+                    this.stroke();
+                    
+                    var g = this.createRadialGradient(75, 75, .7, 300, 300, 0)
+                    this.globalAlpha = 0;
+                    g.addColorStop(0, 0x000000);
+                    this.globalAlpha = 1;
+                    g.addColorStop(1, 0xffffff);
+                    this.fillStyle = g;
+                    this.fill();
+        
+                    this.strokeStyle = 0x000000;
+                    this.lineWidth = 0;
+                    this.stroke();
+        
+                    this.beginPath();
+                    this.lineTo(75, 0);
+                    this.lineTo(75, 75);
+                    this.lineTo(0, 75);
+                    this.lineTo(0, 0);
+                    this.closePath();
+                    
+                    var g = this.createLinearGradient(0,0,75,75)
+                    this.globalAlpha = 0;
+                    g.addColorStop(0, 0x000000);
+                    this.globalAlpha = 1;
+                    g.addColorStop(1, 0xffffff);
+                    this.fillStyle = g;
+                    this.fill();
+                &lt;/handler&gt;
+            &lt;/drawview&gt;
+        &lt;/canvas&gt;
+        </programlisting></example>
+                
+        <p><classname>drawview</classname> extends <classname>LzView</classname>,
+        which is the fundamental visual class of LZX.</p>
+      </text>
+    </doc>
+
+    <!--- Gives an alpha value that is applied to shapes and images
+          before they are composited onto the canvas. The valid range of
+          values is from 0.0 (fully transparent) to 1.0 (no additional
+          transparency). If the attribute is set to values outside this range,
+          they are ignored. When the context is created, the globalAlpha
+          attribute initially has the value 1.0.
+          @type Number
+          @access public
+    -->
+    <attribute name="globalAlpha" value= "1" type="number"/>
+    
+    <!--- Gives the default width of lines, in coordinate space units.
+          Negative values are ignored.  0 draws hairlines in swf - lines that
+          are always 1 pixel wide even when scaled.
+          @type Number
+          @access public
+    -->
+    <attribute name="lineWidth" value= "1" type="number"/>
+
+    <!--- Gives the default lineCap value for lines.  Round for consistency between swf and dhtml.
+          @type string
+          @access public
+    -->
+    <attribute name="lineCap" value="round" type="string"/>
+    
+    <!--- Represents the colour to use for the lines around shapes.  Specified as a hexadecimal number (0xffffff) or a CSS string ('#ff00ff' or '#f0f').
+      @access public
+    -->
+    <attribute name="strokeStyle" value= "#000000" type="string"/>
+    
+    <!--- Represents the colour or style to use for the fill inside the shapes. Can be either a hexadecimal number (0xffffff), a CSS string ('#ff00ff' or '#f0f'), or a CanvasGradient/LzCanvasGradient.
+      @access public
+    -->
+    <attribute name="fillStyle" value= "#000000" type="string"/>
+
+    
+    <!--- Contains a reference to the raw drawview context.  oncontext is sent when the context is ready to use, which can take some time in IE.
+      @access public
+    -->
+    <attribute name="context" value="null"/>
+    
+    <!--- If true, the bitmap result will be cached where possible.
+      @access public
+    -->
+    <attribute name="cachebitmap" value="true"/>
+    
+    <!--- Sent when the context is ready to use, which can take some time in IE.
+      @access public
+    -->
+    <event name="oncontext"/>
+
+    <!---
+      Resets the list of subpaths to an empty list, and calls moveTo() with the point (0,0).
+    -->
+    <method name="beginPath"/>
+
+    <!---
+      Adds a straight line from the current position to the first point in the last subpath and marks the subpath as closed, if the last subpath isn't closed, and if it has more than one point in its list of points. If the last subpath is not open or has only one point, it does nothing.
+    -->
+    <method name="closePath"/>
+
+    <!---
+      Sets the current position to the given coordinate and creates a new subpath with that point as its first (and only) point. If there was a previous subpath, and it consists of just one point, then that subpath is removed from the path.
+    -->
+    <method name="moveTo" args="x, y"/>
+
+    <!---
+      Adds the given coordinate (x, y) to the list of points of the subpath, and connects the current position to that point with a straight line. It then sets the current position to the given coordinate (x, y).
+      @param Number x: x position to draw to
+      @param Number y: y position to draw to
+    -->
+    <method name="lineTo" args="x, y"/>
+
+    <!---
+      Adds the given coordinate (x, y) to the list of points of the subpath, and connects the current position to that point with a quadratic curve with control point (cpx, cpy). It then sets the current position to the given coordinate (x, y).
+      @param Number cpx: curve control point's x position
+      @param Number cpy: curve control point's y position
+      @param Number x: x position to draw to
+      @param Number y: y position to draw to
+    -->
+    <method name="quadraticCurveTo" args="cpx, cpy, x, y"/>
+    
+    <!---
+      bezierCurveTo() adds the given coordinate (x, y) to the list of points of 
+      the subpath, and connects the two points with a bezier curve with control 
+      points (cp1x, cp1y) and (cp2x, cp2y). It then sets the current position to 
+      the given coordinate (x, y).
+      
+      @param Number cp1x: X value of control point 1
+      @param Number cp1y: Y value of control point 1
+      @param Number cp2x: X value of control point 2
+      @param Number cp2y: Y value of control point 2
+      @param Number x: X value of endpoint
+      @param Number y: Y value of endpoint
+    -->
+    <method name="bezierCurveTo" args="cp1x, cp1y, cp2x, cp2y, x, y"/>
+
+    <!---
+      Fills each subpath of the current path in turn, using fillStyle, and using the non-zero winding number rule. Open subpaths are implicitly closed when being filled (without affecting the actual subpaths).
+      Note that closePath() is called before the line is filled.
+    -->
+    <method name="fill" />
+
+    <!---
+      Strokes each subpath of the current path in turn, using the strokeStyle and lineWidth attributes.
+    -->
+    <method name="stroke" />
+
+    <!---
+      Clears drawing area
+    -->
+    <method name="clear" />
+
+    <!---
+      Takes four arguments, representing the start point (x0, y0) and end point (x1, y1) of the gradient, in coordinate space units, and returns an object representing a linear gradient initialised with that line.
+      Linear gradients are rendered such that at the starting point on the canvas the colour at offset 0 is used, that at the ending point the color at offset 1 is used, that all points on a line perpendicular to the line between the start and end points have the colour at the point where those two lines cross. (Of course, the colours are only painted where the shape they are being painted on needs them.) 
+      
+      @param Number x0: Starting x position
+      @param Number y0: Starting y position
+      @param Number x1: Ending x position
+      @param Number y1: Ending y position
+      @return LzCanvasGradient: Opaque class used to add color/offset/alpha steps - see LzCanvasGradient.addColorStop();
+    -->
+    <method name="createLinearGradient" args="x0, y0, x1, y1" />
+
+    <!---
+      Takes six arguments, the first three representing the start point (x0, y0) and rotation r0, and the last three representing the end point (x1, y1) and radius r1. The values are in coordinate space units. 
+      Rotation doesn't appear to work for radial gradients.  Even so, it can be set by specifying r0 in radians.  r1 is ignored.
+      
+      @param Number x0: Starting x position
+      @param Number y0: Starting y position
+      @param Number r0: Rotation of the gradient - not working
+      @param Number x1: Ending x position
+      @param Number y1: Ending y position
+      @param Number r1: Ignored
+      @return LzCanvasGradient: Opaque class used to add color/offset/alpha steps - see addColorStop();
+    -->
+    <method name="createRadialGradient" args="x0, y0, r0, x1, y1, r1" />
+
+    <!---
+      Adds an arc to the current path. The arc is a segment of a circle that has radius as given. 
+      The circle segment is determined by the two angles startAngle and endAngle and begins at the given coordinate (x,y).
+      If clockwise is true, the arc is drawn clockwise from startAngle to endAngle, otherwise it is drawn counter-clockwise (anti-clockwise).
+      
+      @param Number x: Starting x position
+      @param Number y: Starting y position
+      @param Number radius: Radius
+      @param Number startAngle: Angle to start in radians
+      @param Number endAngle: Angle to end in radians
+      @param Number clockwise: anticlockwise if true, clockwise otherwise 
+    -->
+    <method name="arc" args="x, y, radius, startAngle, endAngle, clockwise" />
+
+    <!---
+      Rect creates a new subpath containing just the rectangle with top left coordinate (x, y), width w and height h.
+      based on mc.drawRect() - by Ric Ewing (ric@formequalsfunction.com)
+      
+      @param Number x: starting x position
+      @param Number y: starting y position
+      @param Number w: Width
+      @param Number h: Height
+      @param Number cornerRadius: Optional radius of rounding for corners (defaults to 0)
+    -->
+    <method name="rect" args="x, y, w, h, cornerRadius" />
+
+    <!--
+      Draws an oval at the origin x, y with a radius radius.  If yRadius is specified, radius is the x radius of the oval.
+      based on mc.drawOval() - by Ric Ewing (ric@formequalsfunction.com) - version 1.1 - 4.7.2002
+      
+      @param Number x: Starting x position
+      @param Number y: Starting y position
+      @param Number radius: The radius of the oval. If [optional] yRadius is defined, r is the x radius.
+      @param Number yRadius: Optional y radius of the oval
+    -->
+    <method name="oval" args="x, y, radius, yRadius" />
+
+  </interface> <!-- drawview -->
+
+  <switch>
+    <when runtime="dhtml">
+      <script when="immediate"><![CDATA[
+      
+        class drawview extends LzView {
+            static var tagname = 'drawview';
+            
+            var globalAlpha = 1;
+            var lineWidth = 1;
+            var lineCap = 'round';
+            var strokeStyle = '#000000';
+            var fillStyle = '#000000';
+            var context = null;
+            var cachebitmap = true;
+            var _colorcache = {};
+            
+            DeclareEvent(prototype, 'oncontext');
+    
+            function construct(parent,args) {
+                super.construct(parent, args);
+                new LzDelegate( this , "_onconstruct" , this , "onconstruct" );
+            }
+
+            function _onconstruct(args) {
+                var w = args ? args['width'] : this.width;
+                var h = args ? args['height'] : this.height;
+                if (this['__id'] == null && w > 0 && h > 0) {
+                    this._buildcanvas(w, h);
+                }
+            }
+    
+            function _buildcanvas(width, height) {
+                if (drawview.prototype.uid == null) {
+                    drawview.prototype.uid = 0;
+                }
+                this.__id = 'canvas-' + drawview.prototype.uid++;
+                //Debug.write('_buildcanvas', this.__id, width, height);
+    
+                this.__LZcanvas = document.createElement('canvas');
+                this.__LZcanvas.setAttribute('id', this.__id);
+                this.__LZcanvas.setAttribute('width', width);
+                this.__LZcanvas.setAttribute('height', height);
+                this.__canvaswidth = width;
+                this.__canvasheight = height;
+                var div = this.getMCRef();
+                div.appendChild(this.__LZcanvas);
+                this.beginPath();
+    
+                if (Lz.__BrowserDetect.isIE) {
+                    // IE can take a while to start up.
+                    this.maxTries = 10;
+                    this.__initie();
+                } else {
+                    this.setAttribute('context', this.__LZcanvas.getContext("2d"));
+                }
+            }
+            function setWidth(w) {
+                super.setWidth(w);
+                if (this['__id'] == null && this.height > 0) {
+                    this._buildcanvas(w, this.height);
+                }
+            }
+            function setHeight(h) {
+                super.setHeight(h);
+                if (this['__id'] == null && this.width > 0) {
+                    this._buildcanvas(this.width, h);
+                }
+            }
+ 
+            function __initie() {
+                try {
+                    if (this.__LZcanvas && this.__LZcanvas.parentNode != null) {
+                        this.__LZcanvas = G_vmlCanvasManager.initElement(this.__LZcanvas);
+                        if (this.tId) clearTimeout(this.tId);
+                        this.setAttribute('context', this.__LZcanvas.getContext("2d"));
+                    } else {
+                        var callback = LzUtils.callback.getcallbackstr(this, '__initie');
+                        this.tId = setTimeout(callback, 50);
+                    }
+                } catch (e) {
+                    if (this.maxTries-- > 0) {
+                        var callback = LzUtils.callback.getcallbackstr(this, '__initie');
+                        this.tId = setTimeout(callback, 50);
+                    }
+                }
+            }
+    
+            function __checkContext() {
+                if ($debug) {
+                    if (! this['context']) Debug.warn('this.context is not yet defined.  Please check for the presence of the context property before using drawing methods, and/or register for the oncontext event to find out when the property is available.');
+                }
+            }
+    
+            function beginPath() {
+                this.__path = [[1,0,0]];
+                this.__pathisopen = true;
+            }
+    
+            function closePath() {
+                if (this.__pathisopen) {
+                    this.__path.push([0]);
+                }
+                this.__pathisopen = false;
+            }
+    
+            function moveTo(x,y) {
+                if (this.__pathisopen) {
+                    this.__path.push([1, x,y]);
+                }
+            }
+    
+            function lineTo(x,y) {
+                if (this.__pathisopen) {
+                    this.__path.push([2, x,y]);
+                }
+            }
+    
+            function quadraticCurveTo(cpx, cpy, x, y) {
+                if (this.__pathisopen) {
+                    this.__path.push([3, cpx, cpy, x, y]);
+                }
+            }
+    
+            function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
+                if (this.__pathisopen) {
+                    this.__path.push([4, cp1x, cp1y, cp2x, cp2y, x, y]);
+                }
+            }
+    
+            function fill() {
+                this.__playPath();
+                this.context.fill();
+            }
+    
+            function __playPath() {
+                if (this.__path.length == 0) return;
+                if ($debug) this.__checkContext();
+                if (this._lineWidth != this.lineWidth) {
+                    this.context.lineWidth = this.lineWidth;
+                    this._lineWidth = this.lineWidth;
+                }
+                if (this._lineCap != this.lineCap) {
+                    this.context.lineCap = this.lineCap;
+                    this._lineCap = this.lineCap;
+                }
+                if (this._fillStyle != this.fillStyle) {
+                    if (this.fillStyle instanceof LzCanvasGradient) {
+                        //Debug.write('before apply');
+                        this.fillStyle.__applyTo(this.context);
+                    } else {
+                        if (! this._colorcache[this.fillStyle]) {
+                            this._colorcache[this.fillStyle] = LzUtils.color.torgb(this.fillStyle);
+                        }
+                        this.context.fillStyle = this._colorcache[this.fillStyle];
+                    }
+                    this._fillStyle = this.fillStyle;
+                }
+    
+                if (this._strokeStyle != this.strokeStyle) {
+                    if (! this._colorcache[this.strokeStyle]) {
+                        this._colorcache[this.strokeStyle] = LzUtils.color.torgb(this.strokeStyle);
+                    }
+                    this.context.strokeStyle = this._colorcache[this.strokeStyle];
+                    this._strokeStyle = this.strokeStyle;
+                }
+
+                if (this._globalAlpha != this.globalAlpha) {
+                    this.context.globalAlpha = this.globalAlpha;
+                    this._globalAlpha = this.globalAlpha;
+                }
+
+                this.context.beginPath();
+                for (var i = 0; i < this.__path.length; i += 1) {
+                    var a = this.__path[i];
+                    var n = a[0];
+                    if (n == 0) {
+                        this.context.closePath();
+                    } else if (n == 3) {
+                        this.context.quadraticCurveTo(a[1], a[2], a[3], a[4]); 
+                    } else if (n == 4) {
+                        this.context.bezierCurveTo(a[1], a[2], a[3], a[4], a[5], a[6]); 
+                    } else if (n == 1) {
+                        this.context.moveTo(a[1], a[2]); 
+                    } else if (n == 2) {
+                        this.context.lineTo(a[1], a[2]); 
+                    }
+                }
+            }
+    
+            function clip() {
+                if ($debug) {
+                    Debug.warn('Drawview.clip() is not currently supported in DHTML.');
+                }
+            }
+    
+            function stroke() {
+                this.__playPath();
+                this.context.stroke();
+            }
+    
+            function clear() {
+                if ($debug) this.__checkContext();
+                this.context.clearRect(0, 0, this.__canvaswidth, this.__canvasheight);
+            }
+    
+            function clearMask() {
+                if ($debug) {
+                    Debug.warn('Drawview.clearMask() is not currently supported in DHTML.');
+                }
+            }
+    
+            function createLinearGradient(x0, y0, x1, y1) {
+                return new LzCanvasGradient(this.context.createLinearGradient(x0, y0, x1, y1));
+            }
+    
+            function createRadialGradient(x0, y0, r0, x1, y1, r1) {
+                return new LzCanvasGradient(this.context.createRadialGradient(x0, y0, r0, x1, y1, r1));
+            }
+        }        
+
+        /**
+          * <p>
+          * The <tagname>LzCanvasGradient</tagname> is used by drawviews to describe a gradient fill.
+          * </p>
+          * 
+          * @shortdesc An object for describing gradient fills
+          * @devnote LzCanvasGradient is an opaque object, which is used for assigning to 
+          * other attributes, e.g. fillStyle.  It is also used to add color stops.
+          * An LzCanvasGradient is returned by drawview.createRadialGradient or  
+          * drawview.createRadialGradient.
+          */
+        function LzCanvasGradient(g) {
+            this._g = g;
+        }
+
+        /**
+          * Adds a new stop to a gradient. gradients are rendered such that at the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used.  globalAlpha is stored for each gradient step added.
+          * @param Number o: The offset this stop used for placement in the gradient.  Gradients are rendered such that for the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used and all colors between those offsets are blended.  Must be less than 0 or greater than 1.
+          * @param Number c: The color to be used at this color.  A hexadecimal value, e.g. 0xffffff
+          */
+        LzCanvasGradient.prototype.addColorStop = function(o, c) {
+            if (! lz.drawview.prototype._colorcache[c]) {
+                lz.drawview.prototype._colorcache[c] = LzUtils.color.torgb(c);
+            }
+            this._g.addColorStop(o, lz.drawview.prototype._colorcache[c])
+        }
+
+        LzCanvasGradient.prototype.__applyTo = function(scope) {
+            scope.fillStyle = this._g;
+        }
+
+      ]]></script>
+    </when>
+    <otherwise>
+      <!-- TODO [jgrandy 6/1/2007] <otherwise> should be <when runtime="as2"> but that isn't currently supported -->
+      <script when="immediate"><![CDATA[
+
+        class drawview extends LzView {
+
+            static var tagname = 'drawview';
+            
+            var globalAlpha = 1;
+            var lineWidth = 1;
+            var strokeStyle = '#000000';
+            var fillStyle = '#000000';
+            var context = null;
+            var cachebitmap = true;
+            var _colorcache = {}
+            var __MOVETO_OP = 0;
+            var __LINETO_OP = 1;
+            var __QCURVE_OP = 2;
+            
+            DeclareEvent(prototype, 'oncontext');
+    
+            function construct(parent,args) {
+                args['width'] = args['width'] > -1 ? args.width : null;
+                args['height'] = args['height'] > -1 ? args.height : null;
+                args['clip'] = args['clip'] == true ? args.clip : null;
+                super.construct(parent, args);
+                this.context = this.getMCRef();
+                this.context.cacheAsBitmap = args['cachebitmap'] != null ? args['cachebitmap'] : this.cachebitmap;
+                this.beginPath();
+
+                new LzDelegate( this , "_oninit" , this , "oninit" );
+            }
+    
+            function _oninit() {
+                this.oncontext.sendEvent();
+            }
+
+    
+            function beginPath() {
+                //Debug.write('beginPath');
+                this.__path=[]
+                this.__pathisopen = true;
+                this.context.moveTo(0,0);
+            }
+    
+            function closePath() {
+                if (this.__pathisopen && this.__path.length > 1) {   
+                    var p = this.__path[0];
+                    if (p[0] == this.__MOVETO_OP || p[0] == this.__LINETO_OP) {
+                        var x = p[1];
+                        var y = p[2];
+                    } else if (p[0] == this.__QCURVE_OP) {
+                        var x = p[3];
+                        var y = p[4];
+                    } else {
+                        return;
+                    }
+                    //Debug.write('closePath', x, y);
+                    this.lineTo(x,y);
+                    this.__pathisopen = false;
+                }
+            }
+    
+            function moveTo(x, y) {
+                if (this.__pathisopen) {
+                    this.__path[this.__path.length] = [this.__MOVETO_OP, x, y];
+                }
+                //Debug.write('moveTo', this.__path);
+            }
+    
+            function lineTo (x, y) {
+                if (this.__pathisopen) {
+                    this.__path[this.__path.length] = [this.__LINETO_OP, x, y];
+                }
+                //Debug.write('lineTo', this.__path);
+            }
+    
+            function quadraticCurveTo(cpx, cpy, x, y) {
+                if (this.__pathisopen) {
+                    this.__path[this.__path.length] = [this.__QCURVE_OP, cpx, cpy, x, y];
+                }
+                //Debug.write('quadraticCurveTo', this.__path);
+            }
+    
+            var bezierCurveTo_error = 10;
+
+            function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
+                var error = this.bezierCurveTo_error;
+                
+                // Start from the cursor position, or (0, 0)
+                var x0 = 0, y0 = 0;
+                if (this.__path.length) {
+                    var instr = this.__path[this.__path.length - 1];
+                    x0 = instr[instr.length - 2];
+                    y0 = instr[instr.length - 1];
+                }
+                // The algorithm used is to recursively subdivide the cubic until
+                // it's close enough to a quadratic, and then draw that.
+                // The code below has the effect of
+                //   function draw_cubic(cubic) {
+                //     if (|midpoint(cubic)-midpoint(quadratic)| < error)
+                //       draw_quadratic(qudratic);
+                //     else
+                //       map(draw_cubic, subdivide(cubic));
+                //   }
+                // where the recursion has been replaced by an explicit
+                // work item queue.
+                
+                // To avoid recursion and undue temporary structure, the following
+                // loop has a funny control flow.  Each iteration either pops
+                // the next work item from queue, or creates two new work items
+                // and pushes one to the queue while setting +points+ to the other one.
+                // The loop effectively exits from the *middle*, when the next
+                // work item is null.  (This continues to the loop test,
+                // which then exits.)
+                
+                // each item is a list of control points, with a sentinel of null
+                var work_items = [null]; 
+                // the current work item
+                var points = [{x: x0, y: y0}, {x: cp1x, y: cp1y}, {x: cp2x, y: cp2y}, {x: x, y: y}];
+                while (points) {
+                    // Posit a quadratic.  For C1 continuity, control point has to
+                    // be at the intersection of the tangents.
+                    var q1 = this.intersection.apply(null, points);
+                    var q0 = points[0];
+                    var q2 = points[3];
+                    
+                    if (!q1 || q1 == -1) {
+                    var flush = true;
+                    var start_first = points[0].x == points[1].x && points[0].y == points[1].y;
+                    var second_end = points[2].x == points[3].x && points[2].y == points[3].y;
+                    if (start_first) {
+                        if (second_end) {
+                        this.lineTo(q2.x, q2.y);
+                        } else {
+                        var q1 = points[2];
+                        this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
+                        }
+                    }
+                    else if (second_end) {
+                        var q1 = points[1];
+                        this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
+                    } else {
+                        //both straight lines are collinear
+                        //now we have to test whether they're identical or non-identical
+                        if (!q1) {
+                        q1 = {x:0,y:0};//default-value...
+                        flush = false;
+                        } else {
+                        this.lineTo(q2.x, q2.y);
+                        }
+                    }
+                    if (flush) {
+                        points = work_items.pop();
+                        continue;
+                    }
+                    }
+                    
+                    // Compute the triangle, since the fringe is the subdivision
+                    // if we need that and the peak is the midpoint which we need
+                    // in any case
+                    var m = [points, [], [], []];
+                    for (var i = 1; i < 4; i++) {
+                        for (var j = 0; j < 4 - i; j++) {
+                            var c0 = m[i-1][j];
+                            var c1 = m[i-1][j+1];
+                            m[i][j] = {x: (c0.x + c1.x)/2,
+                                    y: (c0.y + c1.y)/2};
+                        }
+                    }
+                    
+                    var qa = this.midpoint(q0, q1);
+                    var qb = this.midpoint(q1, q2);
+                    var qm = this.midpoint(qa, qb);
+                    // Is the midpoint of the quadratic close to the midpoint of
+                    // the cubic?  If so, use it as the approximation.
+                    if (this.distance(qm, m[3][0]) < error) {
+                        this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
+                        points = work_items.pop();
+                        continue;
+                    }
+                    // Otherwise subdivide the cubic.  The first division is the
+                    // next work item, and the second goes on the work queue.
+                    var left = new Array(4), right = new Array(4);
+                    for (i = 0; i < 4; i++) {
+                        left[i]  = m[i][0];
+                        right[i] = m[3-i][i];
+                    }
+                    points = left;
+                    work_items.push(right);
+                }
+            }
+
+    
+            function fill() {
+                if (this.fillStyle instanceof LzCanvasGradient) {
+                    //Debug.write('before apply');
+                    this.fillStyle.__applyTo(this.context);
+                } else {
+                    if (! this._colorcache[this.fillStyle]) {
+                        this._colorcache[this.fillStyle] = LzUtils.color.hextoint(this.fillStyle);
+                    }
+                    //Debug.write('fill', this.context, this.fillStyle, this.globalAlpha * 100);
+                    this.context.beginFill(this._colorcache[this.fillStyle], this.globalAlpha * 100);
+                }
+                this.closePath();
+                this.__playPath(this.context);
+                this.context.endFill();
+                this.sprite.updateResourceSize();
+            }
+    
+            function __playPath(m) {
+                this.context._visible = false;
+                var p = this.__path;
+                //Debug.write(p, m);
+                for (var i = 0; i < p.length; i++) {
+                    var op = p[i];
+                    var optype = op[0];
+                    if (optype == this.__MOVETO_OP) {
+                        //Debug.write(m, 'moveTo', op[1], op[2]);
+                        m.moveTo(op[1], op[2]);
+                    } else if (optype == this.__LINETO_OP) {
+                        //Debug.write(m, 'lineTo', op[1], op[2]);
+                        m.lineTo(op[1], op[2]);
+                    } else if (optype == this.__QCURVE_OP) {
+                        //Debug.write(m, 'quadraticCurveTo', op[1], op[2], op[3], op[4]);
+                        m.curveTo(op[1], op[2], op[3], op[4]);
+                    }
+                }
+                this.context._visible = this.visible;
+            }
+    
+            function clip () {
+                if (this.sprite.mask)
+                    this.sprite.removeMask(); // Remove any mask created by clip="true"
+                if (this.sprite.__LZmaskClip == null){
+                    this.sprite.applyMask(true);
+                }
+                //Debug.write('mask', this.__LZmaskClip, this.masked, this.__LZmovieClipRef);
+                this.fill(this.sprite.__LZmaskClip);
+            }
+    
+            function stroke() {
+                if (this.strokeStyle instanceof LzCanvasGradient) {
+                    if ($debug) {
+                        Debug.warn ("Gradient line fills aren't supported.");
+                    }
+                    return;
+                }
+                if (! this._colorcache[this.strokeStyle]) {
+                    this._colorcache[this.strokeStyle] = LzUtils.color.hextoint(this.strokeStyle);
+                }
+                this.context.lineStyle(this.lineWidth, this._colorcache[this.strokeStyle], this.globalAlpha * 100);
+                //Debug.write(this.context, 'stroke',this.lineWidth, this._colorcache[this.strokeStyle], this.globalAlpha * 100);
+                this.__playPath(this.context);
+                this.context.lineStyle(undefined);
+                this.sprite.updateResourceSize();
+            }
+    
+            function clear() {
+                this.context.clear();
+            }
+    
+            function clearMask() {
+                if (this.sprite.__LZmaskClip) this.sprite.__LZmaskClip.clear();
+            }
+    
+            function createLinearGradient(x0, y0, x1, y1) {
+                var dx = x1-x0;
+                var dy = y1-y0;
+                var r = Math.atan2(dy, dx);
+                var h = Math.sqrt(dx*dx + dy*dy);
+                var w = h;
+                var y = y0;
+                var x = x0;
+                if (y1 < y0) {
+                    y = y1;
+                }
+                if (x1 < x0) {
+                    x = x1;
+                }
+                
+                var g = new LzCanvasGradient(this, {matrixType:"box", x:x, y:y, w:w, h:h, r:r}, false);
+                //Debug.write('createLinearGradient', {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r});
+                return g;
+            }
+    
+            function createRadialGradient(x0, y0, r0, x1, y1, r1) {
+                var w = x1-x0;
+                var h = y1-y0;
+                // Rotation doesn't seem to work
+                var r = r0 != null ? r0 : Math.atan2(h, w);
+                var g = new LzCanvasGradient(this, {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r}, true);
+                //Debug.write('createRadialGradient', {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r});
+                return g;
+            }
+        }
+
+        /**
+          * <p>
+          * The <tagname>LzCanvasGradient</tagname> is used by drawviews to describe a gradient fill.
+          * </p>
+          * 
+          * @shortdesc An object for describing gradient fills
+          * @devnote LzCanvasGradient is an opaque object, which is used for assigning to 
+          * other attributes, e.g. fillStyle.  It is also used to add color stops.
+          * An LzCanvasGradient is returned by drawview.createRadialGradient or  
+          * drawview.createRadialGradient.
+          */
+        function LzCanvasGradient(c, m, isradial) {
+            this._context = c;
+            this._m = m;
+            this._t = isradial ? 'radial' : 'linear';
+            this._c = [];
+            this._a = [];
+            this._o = [];
+        }
+
+
+        /**
+          * Adds a new stop to a gradient. gradients are rendered such that at the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used.  globalAlpha is stored for each gradient step added.
+          * @param Number o: The offset this stop used for placement in the gradient.  Gradients are rendered such that for the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used and all colors between those offsets are blended.  Must be less than 0 or greater than 1.
+          * @param Number c: The color to be used at this color.  A hexadecimal value, e.g. 0xffffff
+          */
+        LzCanvasGradient.prototype.addColorStop = function(o, c) {
+            this._o[this._o.length] = o * 255;
+            if (! this._context._colorcache[c]) {
+                this._context._colorcache[c] = LzUtils.color.hextoint(c);
+            }
+            this._c[this._c.length] = this._context._colorcache[c];
+            this._a[this._a.length] = this._context.globalAlpha * 100;
+        }
+
+        /**
+          * @access private
+          */
+        LzCanvasGradient.prototype.__applyTo = function(m) {
+            //Debug.write('LzCanvasGradient.__applyTo', this._t, this._c, this._a, this._o, this._m);
+            m.beginGradientFill(this._t, this._c, this._a, this._o, this._m)
+        }
+      ]]></script>
+    </otherwise>
+  </switch>
+  
+  <!-- these methods are implemented the same in all runtimes -->
+  <script when="immediate"><![CDATA[
+  
+    lz.drawview.addProperty('arc', function (x, y, radius, startAngle, endAngle, clockwise) {
+        var sx = x + radius*Math.cos(startAngle);
+        var sy = y + radius*Math.sin(2 * Math.PI - startAngle);
+        startAngle *= 180/Math.PI;
+        endAngle *= 180/Math.PI;
+        var arc = clockwise == true ? ((endAngle - startAngle) - 360): endAngle - startAngle;
+        //move pen to the point along the circle at startAngle
+        this.moveTo(sx, sy);
+        //retain the center of the arc as the center point passed in.
+        return this._drawArc(x, y, radius, arc, startAngle);
+    });
+
+    lz.drawview.addProperty('rect', function (x, y, w, h, cornerRadius) {
+        if (arguments.length<4) {
+            return;
+        }
+        // if the user has defined cornerRadius our task is a bit more complex. :)
+        if (cornerRadius>0) {
+            // init vars
+            var theta, angle, cx, cy, px, py;
+            // make sure that w + h are larger than 2*cornerRadius
+            if (cornerRadius>Math.min(w, h)/2) {
+                cornerRadius = Math.min(w, h)/2;
+            }
+            // theta = 45 degrees in radians
+            theta = Math.PI/4;
+            // draw top line
+            this.moveTo(x+cornerRadius, y);
+            this.lineTo(x+w-cornerRadius, y);
+            //angle is currently 90 degrees
+            angle = -Math.PI/2;
+            // draw tr corner in two parts
+            cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+            py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+            this.quadraticCurveTo(cx, cy, px, py);
+            angle += theta;
+            cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+            py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+            this.quadraticCurveTo(cx, cy, px, py);
+            // draw right line
+            this.lineTo(x+w, y+h-cornerRadius);
+            // draw br corner
+            angle += theta;
+            cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+            py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+            this.quadraticCurveTo(cx, cy, px, py);
+            angle += theta;
+            cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+            py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+            this.quadraticCurveTo(cx, cy, px, py);
+            // draw bottom line
+            this.lineTo(x+cornerRadius, y+h);
+            // draw bl corner
+            angle += theta;
+            cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+            py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+            this.quadraticCurveTo(cx, cy, px, py);
+            angle += theta;
+            cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+            py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+            this.quadraticCurveTo(cx, cy, px, py);
+            // draw left line
+            this.lineTo(x, y+cornerRadius);
+            // draw tl corner
+            angle += theta;
+            cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+            py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+            this.quadraticCurveTo(cx, cy, px, py);
+            angle += theta;
+            cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+            py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+            this.quadraticCurveTo(cx, cy, px, py);
+        } else {
+            // cornerRadius was not defined or = 0. This makes it easy.
+            this.moveTo(x, y);
+            this.lineTo(x+w, y);
+            this.lineTo(x+w, y+h);
+            this.lineTo(x, y+h);
+            this.lineTo(x, y);
+        }
+    });
+
+    lz.drawview.addProperty('oval', function (x, y, radius, yRadius) {
+        if (arguments.length<3) {
+            return;
+        }
+        // init variables
+        var theta, xrCtrl, yrCtrl, angle, angleMid, px, py, cx, cy;
+        // if only yRadius is undefined, yRadius = radius
+        if (yRadius == undefined) {
+            yRadius = radius;
+        }
+        var s = (radius < 20 && yRadius < 20) ? 5 : 8;
+        // covert to radians for our calculations
+        theta = Math.PI/ (s / 2);
+        // calculate the distance for the control point
+        xrCtrl = radius/Math.cos(theta/2);
+        yrCtrl = yRadius/Math.cos(theta/2);
+        // start on the right side of the circle
+        angle = 0;
+        this.moveTo(x+radius, y);
+        // this loop draws the circle in n segments
+        for (var i = 0; i<s; i++) {
+            // increment our angles
+            angle += theta;
+            angleMid = angle-(theta/2);
+            // calculate our control point
+            cx = x+Math.cos(angleMid)*xrCtrl;
+            cy = y+Math.sin(angleMid)*yrCtrl;
+            // calculate our end point
+            px = x+Math.cos(angle)*radius;
+            py = y+Math.sin(angle)*yRadius;
+            // draw the circle segment
+            this.quadraticCurveTo(cx, cy, px, py);
+        }
+        return {x:px, y:py};
+    });
+
+    lz.drawview.addProperty('_drawArc', function (x, y, radius, arc, startAngle, yRadius) {
+        if (arguments.length<5) {
+            return;
+        }
+        // if yRadius is undefined, yRadius = radius
+        if (yRadius == undefined) {
+            yRadius = radius;
+        }
+        // Init vars
+        var segAngle, theta, angle, angleMid, segs,bx, by, cx, cy;
+        // no sense in drawing more than is needed :)
+        if (Math.abs(arc)>360) {
+            arc = 360;
+        }
+        // Flash uses 8 segments per circle, to match that, we draw in a maximum
+        // of 45 degree segments. First we calculate how many segments are needed
+        // for our arc.
+        segs = Math.ceil(Math.abs(arc)/45);
+        // Now calculate the sweep of each segment
+        segAngle = arc/segs;
+        // The math requires radians rather than degrees. To convert from degrees
+        // use the formula (degrees/180)*Math.PI to get radians. 
+        theta = -(segAngle/180)*Math.PI;
+        // convert angle startAngle to radians
+        angle = -(startAngle/180)*Math.PI;
+
+        // if our arc is larger than 45 degrees, draw as 45 degree segments
+        // so that we match Flash's native circle routines.
+        if (segs>0) {
+            // Loop for drawing arc segments
+            for (var i = 0; i<segs; i++) {
+                // increment our angle
+                angle += theta;
+                // find the angle halfway between the last angle and the new
+                angleMid = angle-(theta/2);
+                // calculate our end point
+                bx = x+Math.cos(angle)*radius;
+                by = y+Math.sin(angle)*yRadius;
+                // calculate our control point
+                cx = x+Math.cos(angleMid)*(radius/Math.cos(theta/2));
+                cy = y+Math.sin(angleMid)*(yRadius/Math.cos(theta/2));
+                // draw the arc segment
+                this.quadraticCurveTo(cx, cy, bx, by);
+            }
+        }
+        // In the native draw methods the user must specify the end point
+        // which means that they always know where they are ending at, but
+        // here the endpoint is unknown unless the user calculates it on their 
+        // own. Lets be nice and let save them the hassle by passing it back. 
+        return {x:bx, y:by};
+    });
+
+    lz.drawview.addProperty('distance', function (p0, p1) {
+        // These would be useful generally, but put them inside the
+        // function so they don't pollute the general namespace.
+        var dx = p1.x - p0.x;
+        var dy = p1.y - p0.y;
+        return Math.sqrt(dx*dx+dy*dy);
+    });
+
+    lz.drawview.addProperty('intersection', function (p0, p1, p2, p3) {
+          // returns null if they're collinear and non-identical
+          // returns -1 if they're collinear and identical
+          var u = (p3.x-p2.x)*(p0.y-p2.y) - (p3.y-p2.y)*(p0.x-p2.x);
+          var d = (p3.y-p2.y)*(p1.x-p0.x) - (p3.x-p2.x)*(p1.y-p0.y);
+          if (!d) {
+            if (!u) {
+              return -1;//identical
+            } else {
+              return null;//non-identical
+            }
+          }
+          u /= d;
+          return {x: p0.x + (p1.x-p0.x) * u,
+                  y: p0.y + (p1.y-p0.y) * u};
+    });
+
+    lz.drawview.addProperty('midpoint', function (p0, p1) {
+        return {x: (p0.x+p1.x)/2, y: (p0.y+p1.y)/2};
+    });
+    
+  ]]></script>
+  
+</library>

@@ -24,7 +24,7 @@
 
             <method name="test2">
                 rte.reset();
-                this.defaultformat = new LzTextFormat(this, {font: "Arial", size: 18}); 
+                this.defaultformat = new textformat(this, {font: "Arial", size: 18}); 
                 Debug.write("faked a default val for defaultformat:", this['defaultformat']);
                 
                 rte.setText("Many secrets are known by the uninitiated. The truth is spreading.");
@@ -52,7 +52,7 @@
             </method>
         </button>
         
-        <button text="reset" onclick="rte.reset()"/>
+        <button text="reset" onclick="rte.clearText()"/>
     </view>
     <view x="20" y="250" width="200">
         <simplelayout axis="x" spacing="5" />
@@ -61,3 +61,7 @@
     </view>
 
 </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

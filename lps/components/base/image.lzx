@@ -5,7 +5,8 @@
         <attribute name="prefix" value="" type="string"/>
         <!--- The URL to load the image from.  May be set directly on this attribute or indirectly by specifying a datapath for this tag. -->
         <attribute name="src" value="" type="string"/>
-        <!--- The last URL loaded by this image tag.  Used to prevent the same URL from loading twice.  @keywords readonly-->
+        <!--- The last URL loaded by this image tag.  Used to prevent the same URL from loading twice.  
+              @keywords readonly-->
         <attribute name="lastloaded" value="" type="string"/>
         <!--- If true, the same URL will be reloaded.  If false, the same URL will not load multiple times.  -->
         <attribute name="forcereload" value="false" type="boolean"/>
@@ -16,8 +17,13 @@
             this.setAttribute('src', d);
         </method>
 
-        <!--- Loads an image in response to the src attribute being set.  Should not be called directly - setAttribute('src' ...) shoudl be used instead. @keywords private -->
-        <method name="loadNow" event="onsrc" args="img">
+        <event name="onsrc" />
+        
+        <handler name="onsrc" method="loadNow" />
+        
+        <!--- Loads an image in response to the src attribute being set.  Should not be called directly - setAttribute('src' ...) should be used instead. 
+              @keywords private -->
+        <method name="loadNow" args="img">
         <![CDATA[ 
             // don't reload the same thing unless we're told to
             if (this.forcereload == false && this.lastloaded == this.prefix + img) return;
@@ -26,14 +32,48 @@
         ]]>
         </method>
 
-        <!--- Loads the image on init.  @keywords private -->
+        <!--- Loads the image on init.
+              @keywords private -->
         <handler name="oninit">
         <![CDATA[  
             if (this.src != '' && this.src != null) 
                 this.loadNow(this.src);
         ]]>
         </handler>
+        
+        <doc>
+          <tag name="shortdesc"><text>A way to import images</text></tag>
+          <text>
+            <example title="image">
+            &lt;canvas debug="true"&gt;
+                &lt;dataset name="imagedata"&gt;
+                    &lt;image url="http://www.openlaszlo.org/images/horses/horse-1-sm.jpg"/&gt;
+                &lt;/dataset&gt;
+            
+                &lt;wrappinglayout/&gt;
+                &lt;image src="http://www.openlaszlo.org/images/horses/horse-1-sm.jpg"/&gt;
+                &lt;image datapath="imagedata:/image/@url"/&gt;
+                &lt;image prefix="http://www.openlaszlo.org/images/horses/" src="horse-1-sm.jpg"/&gt;
+                &lt;image src="http://www.openlaszlo.org/images/horses/horse-1-sm.jpg"/&gt;
+                &lt;image&gt;
+                    &lt;text&gt;Click me&lt;/text&gt;
+                    &lt;handler name="onclick"&gt;
+                        this.setAttribute('src', 'http://www.openlaszlo.org/images/horses/horse-1-sm.jpg');
+                    &lt;/handler&gt;
+                &lt;/image&gt;
+                &lt;image forcereload="true"&gt;
+                    &lt;text&gt;Click me to reload&lt;/text&gt;
+                    &lt;handler name="onclick"&gt;
+                        this.setAttribute('src', 'http://www.openlaszlo.org/images/horses/horse-1-sm.jpg');
+                    &lt;/handler&gt;
+                &lt;/image&gt;
+            &lt;/canvas&gt;
+            </example>
+          </text>
+        </doc>
     </class>
 </library>
-<!-- @LZX_COPYRIGHT@ -->
-
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

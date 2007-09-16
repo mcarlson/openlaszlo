@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -134,8 +134,10 @@ mLogger.debug(
             } 
         }
 
+
         if (allow) {
             ListIterator iter = deniesList.listIterator();
+            int i = 0;
             while (iter.hasNext()) {
                 RE re = (RE)iter.next();
                 if (re.match(val)) {

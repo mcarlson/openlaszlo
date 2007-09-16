@@ -1,0 +1,63 @@
+<canvas bgcolor="#EAEAEA" width="640" height="140" >
+    <method name="setAttr" args="n, v">
+        if (n != null) audioplayer.setAttribute(n, v * 1);
+    </method>
+
+    <!--method event="oninit">
+        Lz.callMethod('audioplayer.setSource(\'music.mp3\')');
+    </method-->
+
+    <view name="audioplayer">
+        <view>
+            <simplelayout axis="x" spacing="-1" />
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.setSource(\'music.mp3\')')">
+               Load
+            </button>
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.play(1)');" >
+               <view resource="icons/rewind_all.png"  y="6" align="center"/>
+            </button>
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.seek(-2)');" >
+                <view resource="icons/rewind.png"  y="6" align="center"/>
+            </button>        
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.stop()')" >
+                <view resource="icons/stop.png"  y="6" align="center"/>
+            </button>
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.play()')" >
+                <view resource="icons/play.png"  y="5" align="center"/>
+            </button>
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.seek(2)')" >
+                <view resource="icons/fastfwd.png"  y="6" align="center"/>
+            </button>
+        </view>
+        
+        <view>
+            <simplelayout axis="x" spacing="-1" />
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.quieter()')">
+                    <view resource="icons/quieter.png"  y="5" align="center"/>
+                </button>
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.louder()')">
+                    <view resource="icons/louder.png"  y="5" align="center"/>
+                </button>
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.panLeft()')" >
+                    <view resource="icons/pan_left.png"  y="5" align="center"/>
+            </button>
+            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.panRight()')" >
+                    <view resource="icons/pan_right.png"  y="5" align="center"/>
+            </button>
+        </view>
+        
+        <simplelayout axis="x" spacing="10"/>
+        <view name="background" bgcolor="black" width="202" height="15" y="50" options="ignorelayout;">
+            <view name="loadbar" resource="icons/audio_scrubtrack.png"
+                  width="${audioplayer.loadperc * 200}" >
+            <view name="playbar" resource="icons/audio_scrubber.png" y="1"
+                  x="${Math.round(180 * audioplayer.frame/audioplayer.totalframes)}" />
+            </view>
+        </view>
+    </view>
+</canvas>    
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

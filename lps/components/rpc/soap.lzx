@@ -49,11 +49,15 @@
 
         <!--- @keywords private -->
         <method name="init">
-            if (this['wsdl'] == null) {
-                Debug.write('soap error: required wsdl attribute not set');
-                return;
-            }
-            super.init();
+          if (canvas.runtime == "dhtml") {
+              Debug.warn("SOAP RPC only partially implemented in the DHTML runtime.");
+          }  
+
+          if (this['wsdl'] == null) {
+              Debug.write('soap error: required wsdl attribute not set');
+              return;
+          }
+          super.init();
         </method>
 
         <!--- @keywords private -->
@@ -82,7 +86,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

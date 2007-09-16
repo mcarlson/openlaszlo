@@ -1,0 +1,49 @@
+<canvas height="400"> 
+  <font src="helmetr.ttf" name="helvet"/> 
+  <simplelayout spacing="3"/> 
+  <view> 
+    <simplelayout axis="x" spacing="2"/> 
+    <text valign="middle">Type url:</text> 
+    <edittext width="500" id="url">http:../resources/logo.gif</edittext>
+  </view>
+  <text>(also try resources/logo.swf)</text> 
+  <command onselect="butt.doit();" key="['Enter']" active="true"/> 
+  <checkbox text="Cache in client" id="ccache"/> 
+  <checkbox text="Cache in server" id="scache"/> 
+  <button id="butt">
+    Make request 
+    <handler name="onclick"> this.doit(); </handler> 
+    <method name="doit"> <![CDATA[ 
+      status.setText("Requesting: " + url.getText()); 
+      // Determine caching from checkboxes 
+      var caching = 'none';
+      if (ccache.getValue() & scache.getValue()) { 
+          caching = 'both'; 
+      } else if (ccache.getValue()) { 
+          caching = 'clientonly'; 
+      } else if (scache.getValue()) { 
+          caching = 'serveronly'; 
+      } 
+      me.setSource(url.getText(), caching); 
+    ]]></method> 
+  </button> 
+  <button onclick="me.stop()"> Stop </button> 
+  <button onclick="me.play()"> Play </button> 
+  <text text="${me.frame + ' out of ' + me.totalframes + ' frame(s)'}"/> 
+  <text multiline="true" width="200" height="100" id="status"/> 
+  <view id="me"> 
+    <handler name="onload" args="e"> 
+      status.setText('loaded: ' + e); 
+    </handler> 
+    <handler name="onerror" args="e"> 
+      status.setText('error: ' + e); 
+    </handler> 
+    <handler name="ontimeout" args="e"> 
+      status.setText('timeout: ' + e); 
+    </handler> 
+  </view> 
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

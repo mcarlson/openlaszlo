@@ -1,0 +1,29 @@
+
+<canvas height="150">
+  <dataset name="phonebook" src="resources/phonebook.xml"/>
+  <simplelayout axis="x" spacing="20"/>
+  
+  <view name="contacts" height="150" width="100">
+    <view bgcolor="0xe0e0e0" datapath="phonebook:/contacts/contact"
+          onmouseover="setBGColor(0xc0c0c0)" onmouseout="setBGColor(0xe0e0e0)"
+          onclick="details.datapath.setPointer(this.datapath.p)">
+      <simplelayout axis="x" spacing="5"/>
+      <text datapath="@firstName" resize="true"/>
+      <text datapath="@lastName" resize="true"/>
+    </view>
+    <simplelayout spacing="5"/>
+  </view>
+  
+  <view id="details" width="150" height="150" bgcolor="0xe0e0e0" fgcolor="blue">
+    <datapath/>
+    <text datapath="@firstName"/>
+    <text datapath="@lastName"/>
+    <text datapath="@phone"/>
+    <text datapath="@email"/>
+    <simplelayout spacing="5"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

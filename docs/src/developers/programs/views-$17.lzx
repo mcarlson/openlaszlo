@@ -1,0 +1,17 @@
+
+<canvas height="100">
+  <view x="60" y="60" height="40" width="40" bgcolor="red"
+        onclick="this.rotate.doStart()">
+    <animator name="rotate" attribute="rotation" to="45" duration="500"
+              start="false" relative="true"/>
+  </view>
+  <view x="60" y="60" height="40" width="40" bgcolor="blue" xoffset="20" yoffset="20"
+        onclick="this.rotate.doStart()">
+    <animator name="rotate" attribute="rotation" to="45" duration="500" start="false"
+              relative="true"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

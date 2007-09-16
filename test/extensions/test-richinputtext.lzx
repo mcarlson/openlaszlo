@@ -5,7 +5,7 @@
     methods also exist.
 --> 
 
-<!-- auto-included BUT NOT in lps-dev --> 
+<!-- auto-included BUT NOT in lps-dev -->    
 <include href="/extensions/views/richinputtext.lzx" />
 <!-- --> 
 <debug x="300"/>
@@ -13,7 +13,7 @@
 
 <window title="toggleFormat"> 
 <simplelayout axis="y" spacing="4" /> 
-     
+        
     <!--- These checkboxes use the toggleFormat function to 
         toggle the boldness, italic-ness, or underline-ness of the
         text. 
@@ -41,7 +41,7 @@
     
     <!--- With the setTextAttr function, we can set particular attributes
         of text to be particular values, in whatever combinations we choose.
-        Notice that only the specified values change; if LzTextFormat.color 
+        Notice that only the specified values change; if textformat.color 
         is not defined, the color of the font doesn't change.         
     --> 
     <richinputtext name="rich" width="300" height="100" 
@@ -64,21 +64,21 @@
     
     
     <method name="bigAndSans">
-        var tf = new LzTextFormat();
+        var tf = new textformat();
         tf.font = "Futura";
         tf.size = 32;
         rich.setTextFormat(tf, 0, 300);  
     </method> 
     
     <method name="redAndSmall">
-        var tf = new LzTextFormat();
+        var tf = new textformat();
         tf.color = red; 
         tf.size = 18;
         rich.setTextFormat(tf, 0, 300);
     </method>    
     
     <method name="blueAndItalic">
-        var tf = new LzTextFormat();
+        var tf = new textformat();
         tf.color = blue; 
         tf.italic = true;
         tf.font = 'Times'; 
@@ -151,7 +151,7 @@
 
     
     <method name="redAndBig">
-        var tf = new LzTextFormat();
+        var tf = new textformat();
         tf.color = red; 
         tf.size = 18;
         rich.setDefaultFormat(tf); 
@@ -168,7 +168,7 @@
     </method>    
     
     <method name="blueAndItalic">
-        var tf = new LzTextFormat();
+        var tf = new textformat();
         tf.color = blue; 
         tf.italic = true;
         tf.font = 'Times'; 
@@ -202,7 +202,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN  ***************************************************
-* Copyright 2005 Laszlo Systems, Inc.  All Rights  Reserved.                   *
+* Copyright 2007 Laszlo Systems, Inc.  All Rights  Reserved.                   *
 * Use is subject to license  terms.                                            *
 * X_LZ_COPYRIGHT_END  ****************************************************** -->
 <!--  @LZX_VERSION@  -->

@@ -1,0 +1,11 @@
+/**
+  * Library.lzs
+  *
+  * @copyright Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access private
+  */
+
+#include "glue/LaszloInitiator.lzs"
+

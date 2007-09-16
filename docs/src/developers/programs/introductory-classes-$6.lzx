@@ -1,0 +1,12 @@
+<canvas height="20">
+  <class name="square" width="${this.size}" height="${this.size}" bgcolor="red">
+    <attribute name="size" value="20"/>
+  </class>
+  <square/>
+  <square size="15" x="30"/>
+  <square size="10" x="50"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

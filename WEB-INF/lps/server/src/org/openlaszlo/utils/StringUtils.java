@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -185,8 +185,8 @@ public abstract class StringUtils {
     /**
      * Replace index in string with given character
      * @param str string to start with
-     * @param index to use
-     * @param char to replace with
+     * @param x to use
+     * @param c to replace with
      * @return str with char replaced
      */
     public static String setCharAt(String str, int x, char c) 

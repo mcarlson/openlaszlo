@@ -54,7 +54,7 @@
         </view>
 
     <remotecall name="userAsinSearchDetailed" funcname="AsinSearchRequest" 
-                remotecontext="$once{canvas.amazon}" dataobject="dsCDInfo">
+                remotecontext="$once{canvas.amazon}" dataobject="$once{dsCDInfo}">
 
       <method event="ondata" args="mydata">
         recommend.setVisible( false );
@@ -91,7 +91,7 @@
     <class name="recommendationpanel" font="Arial,Helvetica" fontsize="11" bgcolor="#CAD0EC">
 
     <remotecall name="userAsinSearchLite" funcname="AsinSearchRequest" 
-                    remotecontext="$once{canvas.amazon}" dataobject="dsRecommend">
+                    remotecontext="$once{canvas.amazon}" dataobject="$once{dsRecommend}">
 
       <method event="ondata" args="mydata">
         infoLoader.hide();
@@ -145,7 +145,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

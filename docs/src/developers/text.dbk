@@ -1,0 +1,1398 @@
+<chapter id="text">
+  <title>Text Views</title>
+  <para>This section describes the 
+  <indexterm>
+    <primary>text</primary>
+  </indexterm>
+  <sgmltag class="element">&lt;text&gt;</sgmltag>
+  <remark role="fixme">[unknown tag]</remark>
+  <!--unknown tag: text-->
+  and 
+  <indexterm>
+    <primary>inputtext</primary>
+  </indexterm>
+  <sgmltag class="element">&lt;inputtext&gt;</sgmltag>
+  <remark role="fixme">[unknown tag]</remark>
+  <!--unknown tag: inputtext-->
+  tags (
+  <indexterm>
+    <primary>LzText</primary>
+  </indexterm>
+  <classname>LzText</classname>and 
+  <indexterm>
+    <primary>LzInputText</primary>
+  </indexterm>
+  <classname>LzInputText</classname>classes). It assumes you're
+  familiar with basic LZX concepts such as views (
+  <xref linkend="views" />), methods, and attributes.</para>
+  <para>For a gentle introduction, see 
+  <xref linkend="text-tutorial" />.</para>
+     <!-- remove empty para tag LI LPP-4642 9/4/2007-->
+    <!-- <para /> -->
+  <section>
+    <title>Summary of properties</title>
+    <para>To a first approximation, "text" refers to displayable
+    data in UTF-8 encoding; depending on context "text" can mean
+    the data itself, or its display. The term "font" refers to the
+    software that is used to draw, or render, the textual
+    characters on the screen. The topics are intertwined. In this
+    chapter we'll be talking about mostly about text, but you
+    should be sure that you understand key concepts about fonts in
+    OpenLaszlo applications.</para>
+    <para condition="swf">In particular, you should understand the
+    difference between client fonts and embedded fonts in
+    applications compiled to SWF. (Applications compiled to DHTML
+    cannot use embedded fonts). Because they don't always behave
+    the same way (for example client fonts can not be rotated or
+    changed in opacity due to a limitation of the Flash Player),
+    changing from one to the other can cause bewildering changes in
+    behavior. Furthermore, it's possible to implicitly change from
+    one kind of font to the other in your application without
+    realizing you've done so. Fonts are described in 
+    <xref linkend="fonts" />.</para>
+    <para />
+  </section>
+  <section>
+    <title>Text as attribute and text as object</title>
+    <para>LZX is an XML language. By deffinition, in XML, whatever
+    comes between an opening and closing tag is called text. As we
+    have seen text in this context is implemented as HTML.</para>
+    <para>In other words, despite being called text, in our
+    implementation you can use HTML markup in anything that is
+    text. (In browser DOM, there are properties innerText,
+    outerText, innerHTML, and outerHTML. Only the latter two
+    interpret HTML markup.)</para>
+    <para>In LZX, we've also exposed that text as an attribute of
+    components, because sometimes it is useful to do so. For
+    example, you might want to constrain the text of a node; that's
+    easy to do with LZX constraints. Thus, text can be specified as
+    an attribute in the opening tag of basecomponent and
+    subclasses, which include all components. For example,</para>
+    <programlisting>&lt;button text="this is a fine kettle of
+    fish"&gt;</programlisting>
+    <para>is equvalent to</para>
+    <programlisting>&lt;button&gt; this is a fine kettle of fish
+    &lt;/button&gt;</programlisting>
+    <para>LZX also includes a text object, 
+    <literal>lz.text</literal>, which can be instantiated by using
+    the 
+    <sgmltag class="element">&lt;text&gt;</sgmltag>tag.</para>
+    <para>In addition to the HTML markup properties of text
+    attributes, 
+    <sgmltag class="element">lz.text</sgmltag>objects have
+    additional properties such as maximum length, selectability,
+    and so forth, which are described later on in this chapter.
+    Oddly enough, one of the attributes of the 
+    <sgmltag class="element">&lt;lz.text&gt;</sgmltag>object is 
+    <literal>text</literal>.</para>
+    <para>Thus,</para>
+    <programlisting>&lt;text id="sam" text="King Samuel was a fine
+    hamster"&gt;</programlisting>
+    <para>is equvalent to</para>
+    <programlisting>&lt;text id="sam"&gt; King Samuel was a fine
+    hamster &lt;/text&gt;</programlisting>
+    <para>In each case we have defined an 
+    <literal>lz.text</literal>object with an id of "sam" whose text
+    attribute is set to the string King Samuel was a fine hamster,
+    which can be marked up with the supported HTML markup supported
+    by LZX, as defined below. In this document, we have tried to
+    make clear when we are talking about text as text, and when we
+    are talking about text as an lz.text object. However, we may
+    have been loose at times. If you keep in mind that many
+    objects, including the 
+    <literal>lz.text</literal>object have 
+    <literal>text</literal>attributes.</para>
+  </section>
+  <!-- <para /> -->
+    <!-- remove empty para tag LI LPP-4642 9/4/2007-->
+  <section>
+    <title>Text width and height</title>
+    <para>Generally speaking, unless an explicit width and height
+    are specified as attributes, the text field will by default be
+    sized to a width and height which encloses its compile-time
+    text content. The text field can be set to automatically resize
+    itself when its value is modified at runtime, by setting the
+    attribute 
+    <literal>resize="true"</literal>.</para>
+    <para>The exception to this rule is when the 
+    <indexterm>
+      <primary>text</primary>
+    </indexterm>
+    <sgmltag class="element">&lt;text&gt;</sgmltag>element contains
+    an 
+    <indexterm>
+      <primary>img</primary>
+    </indexterm>
+    <sgmltag class="element">&lt;img&gt;</sgmltag>
+    <remark role="fixme">[unknown tag]</remark>
+    <!--unknown tag: img-->
+    tag, in which case you may in some cases have to explicitly set
+    the height and width of the 
+    <indexterm>
+      <primary>text</primary>
+    </indexterm>
+    <sgmltag class="element">&lt;text&gt;</sgmltag>, as explained
+    below.</para>
+    <programlisting>&lt;text resize="true" bgcolor="#ffcccc"
+    name="t1"&gt;Initial text from
+    server.&lt;/text&gt;</programlisting>
+    <para>Text can be set to automatically wrap at the right
+    margin, by setting the attribute 
+    <literal>multiline="true"</literal>.</para>
+    <para />
+    <section>
+      <title>HTML formatting</title>
+      <para>Within a text element, a simple subset of HTML
+      formatting is supported for the text content, supporting
+      XHTML tags 
+      <indexterm>
+        <primary>br</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;br&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: br-->
+      , 
+      <indexterm>
+        <primary>b</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;b&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: b-->
+      , 
+      <indexterm>
+        <primary>i</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;i&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: i-->
+      , 
+      <indexterm>
+        <primary>u</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;u&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: u-->
+      , 
+      <indexterm>
+        <primary>font</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;font&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: font-->
+      , 
+      <indexterm>
+        <primary>pre</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;pre&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: pre-->
+      , and 
+      <indexterm>
+        <primary>a</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;a&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: a-->
+      .</para>
+      <para>The 
+      <indexterm>
+        <primary>img</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;img&gt;</sgmltag>is also
+      supported, but with some caveats. See below.</para>
+      <para>The examples below show how to use XHTML tags in text
+      content:</para>
+      <para>For font style, the text element itself supports
+      attributes for setting the font parameters. These are the 
+      <indexterm>
+        <primary>font</primary>
+      </indexterm>
+      <sgmltag class="attribute">font</sgmltag>, 
+      <indexterm>
+        <primary>fontstyle</primary>
+      </indexterm>
+      <sgmltag class="attribute">fontstyle</sgmltag>, and 
+      <indexterm>
+        <primary>fontsize</primary>
+      </indexterm>
+      <sgmltag class="attribute">
+      fontsize</sgmltag>attributes:</para>
+      <example role="live-example">
+        <title>Setting font, fontstyle and fontsize</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$1.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>setting font, fonstyle and fontsize</title><programlisting role="lzx-embednew"><filename>text-$1.lzx</filename><parameter/><code>
+      &lt;canvas height="50"&gt;
+        &lt;simplelayout axis="y"/&gt;
+        &lt;text fontstyle="bold"&gt;Default bold&lt;/text&gt;
+        &lt;text fontstyle="italic"&gt;Default italic&lt;/text&gt;
+        &lt;text fontstyle="bold italic"&gt;Default bold italic&lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="50"&gt;
+        &lt;simplelayout axis="y"/&gt;
+        &lt;text fontstyle="bold"&gt;Default bold&lt;/text&gt;
+        &lt;text fontstyle="italic"&gt;Default italic&lt;/text&gt;
+        &lt;text fontstyle="bold italic"&gt;Default bold italic&lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$1.lzx></example?>
+      <para>Within the text content, HTML tags may also be
+      used:</para>
+      <example role="live-example">
+        <title>HTML tags within text</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$2.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>HTML tags within text</title><programlisting role="lzx-embednew"><filename>text-$2.lzx</filename><parameter/><code>
+      &lt;canvas height="50"&gt;
+        &lt;simplelayout axis="y"/&gt;
+        &lt;text&gt;&lt;b&gt;Default bold&lt;/b&gt;&lt;/text&gt;
+        &lt;text&gt;&lt;i&gt;Default italic&lt;/i&gt;&lt;/text&gt;
+        &lt;text fontstyle="bold"&gt;&lt;i&gt;Default bold italic&lt;/i&gt;&lt;/text&gt;
+      &lt;/canvas&gt;    
+      </code></programlisting><programlisting>
+      &lt;canvas height="50"&gt;
+        &lt;simplelayout axis="y"/&gt;
+        &lt;text&gt;&lt;b&gt;Default bold&lt;/b&gt;&lt;/text&gt;
+        &lt;text&gt;&lt;i&gt;Default italic&lt;/i&gt;&lt;/text&gt;
+        &lt;text fontstyle="bold"&gt;&lt;i&gt;Default bold italic&lt;/i&gt;&lt;/text&gt;
+      &lt;/canvas&gt;    
+      </programlisting><?lzx-edit programs/text-$2.lzx></example?>
+      <para>Text can contain preformatted regions, where linebreaks
+      and whitespace are preserved:</para>
+      <example role="live-example">
+        <title>Preformatted text</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$3.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Preformatted text</title><programlisting role="lzx-embednew"><filename>text-$3.lzx</filename><parameter/><code>
+      &lt;canvas height="80"&gt;
+        &lt;text id="ttext" multiline="true" height="300"&gt;
+          This text field contains some preformatted text
+          &lt;pre&gt;
+          This is a line of text.
+
+          here was a blank line before this line.
+          And another line of text.
+          &lt;/pre&gt;
+         &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="80"&gt;
+        &lt;text id="ttext" multiline="true" height="300"&gt;
+          This text field contains some preformatted text
+          &lt;pre&gt;
+          This is a line of text.
+
+          here was a blank line before this line.
+          And another line of text.
+          &lt;/pre&gt;
+         &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$3.lzx></example?>
+      <para>Within a text element, the HTML 
+      <emphasis role="i">font</emphasis>tag supports the 
+      <indexterm>
+        <primary>face</primary>
+      </indexterm>
+      <sgmltag class="attribute">face</sgmltag>, 
+      <indexterm>
+        <primary>size</primary>
+      </indexterm>
+      <sgmltag class="attribute">size</sgmltag>, and 
+      <indexterm>
+        <primary>color</primary>
+      </indexterm>
+      <sgmltag class="attribute">color</sgmltag>attributes. The
+      color must be specified as an RGB hex string of the form "
+      <literal>#
+      <varname>RRGGBB</varname></literal>".</para>
+      <example role="live-example">
+        <title>Setting text colors using RGB strings</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$4.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Setting text colors using RGB strings</title><programlisting role="lzx-embednew"><filename>text-$4.lzx</filename><parameter/><code>
+      &lt;canvas height="60"&gt;
+        &lt;simplelayout axis="y"/&gt;
+
+        &lt;font name="Times Roman" src="bitstream-vera-1.10/vera.ttf"/&gt;
+        
+        &lt;text height="30"&gt;
+          &lt;font face="Times Roman" size="24"&gt;Times Roman&lt;/font&gt;
+        &lt;/text&gt;
+        &lt;text bgcolor="#ffcccc"&gt;
+          &lt;font color="#FF0000"&gt;C&lt;/font&gt;&lt;font color="#FFFF00"&gt;O&lt;/font&gt;&lt;font color="#00FFCC"&gt;L&lt;/font
+          &gt;&lt;font color="#CC00CC"&gt;O&lt;/font&gt;&lt;font color="#AABB00"&gt;R&lt;/font&gt;&lt;font color="#DDA00A"&gt;S&lt;/font&gt;
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="60"&gt;
+        &lt;simplelayout axis="y"/&gt;
+
+        &lt;font name="Times Roman" src="bitstream-vera-1.10/vera.ttf"/&gt;
+        
+        &lt;text height="30"&gt;
+          &lt;font face="Times Roman" size="24"&gt;Times Roman&lt;/font&gt;
+        &lt;/text&gt;
+        &lt;text bgcolor="#ffcccc"&gt;
+          &lt;font color="#FF0000"&gt;C&lt;/font&gt;&lt;font color="#FFFF00"&gt;O&lt;/font&gt;&lt;font color="#00FFCC"&gt;L&lt;/font
+          &gt;&lt;font color="#CC00CC"&gt;O&lt;/font&gt;&lt;font color="#AABB00"&gt;R&lt;/font&gt;&lt;font color="#DDA00A"&gt;S&lt;/font&gt;
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$4.lzx></example?>
+      <para>If you wish to include HTML escape characters in the
+      text value, you can use entity codes such as 
+      <literal>&amp;amp;</literal>or 
+      <literal>&amp;lt;</literal>(or the numeric codes 
+      <literal>&amp;#
+      <varname>ddd</varname>;</literal>), or you may enclose the
+      characters using a CDATA region:</para>
+      <example role="live-example">
+        <title>Escaping HTML characters</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$5.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Escaping HTML characters</title><programlisting role="lzx-embednew"><filename>text-$5.lzx</filename><parameter/><code>
+      &lt;canvas height="20"&gt;
+        &lt;text bgcolor="#ffcccc"&gt;&lt;![CDATA[&lt;b&gt;this text shouldn't be bold&lt;/b&gt;]]&gt;&lt;/text&gt; 
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="20"&gt;
+        &lt;text bgcolor="#ffcccc"&gt;&lt;![CDATA[&lt;b&gt;this text shouldn't be bold&lt;/b&gt;]]&gt;&lt;/text&gt; 
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$5.lzx></example?>
+      <para />
+      <section>
+        <title>Text Scrolling</title>
+        <para>Text fields can be scrolled using the 
+        <indexterm>
+          <primary>
+            <literal>setXScroll()</literal>
+          </primary>
+        </indexterm>
+        <methodname>setXScroll()</methodname>and 
+        <indexterm>
+          <primary>
+            <literal>setYScroll()</literal>
+          </primary>
+        </indexterm>
+        <methodname>setYScroll()</methodname>methods. The arguments
+        to these functions set the pixel position of the top line
+        of text relative to the text view bounding box, and should
+        be less than or equal to zero. When the text is scrolled
+        horizontaly or vertically, an 
+        <indexterm>
+          <primary>onscrollx event</primary>
+        </indexterm>
+        <literal>onscrollx</literal>or 
+        <indexterm>
+          <primary>onscrolly event</primary>
+        </indexterm>
+        <literal>onscrolly</literal>event will be sent.</para>
+        <para />
+      </section>
+    </section>
+    <section>
+      <title>Text Width</title>
+      <para>A text view which is not given an explicit width will
+      default to have a width which is the length of the longest
+      line. (See below, however, about resizing text fields, and
+      also about the 
+      <indexterm>
+        <primary>img</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;img&gt;</sgmltag>.) Given that
+      the initial text content is normalized according to HTML
+      normalization rules, and if you do not specify an explicit
+      width, the only way a linebreak will occur is if you have an
+      explicit HTML linebreak code such as 
+      <literal>&lt;br/&gt;</literal>, 
+      <literal>&lt;p/&gt;</literal>or a newline inside of the text
+      contents of a 
+      <indexterm>
+        <primary>pre</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;pre&gt;</sgmltag>element.</para>
+      <para>The text view will default to a height which encloses
+      all of the lines of text.</para>
+      <para>If you want to know the total height of the text in a
+      text field (if you want to know how large to draw a
+      scrollbar, for example) there are a couple of ways to figure
+      this out: For a 
+      <literal>multiline=false</literal>text field (i.e., one in
+      which wrapping is not being done automatically by the
+      system), you can use the 
+      <indexterm>
+        <primary>
+          <literal>getTextHeight()</literal>
+        </primary>
+      </indexterm>
+      <methodname>getTextHeight()</methodname>method on 
+      <indexterm>
+        <primary>LzText</primary>
+      </indexterm>
+      <classname>LzText</classname>.</para>
+      <para>For a 
+      <literal>multiline=true</literal>output text field, the
+      system computes a property 
+      <indexterm>
+        <primary>text.scrollHeight</primary>
+      </indexterm>
+      <sgmltag class="attribute">text.scrollHeight</sgmltag>which
+      which you may examine. This field is not maintained for input
+      text.</para>
+      <para>There are two basic classes for displaying text, 
+      <indexterm>
+        <primary>text</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;text&gt;</sgmltag>and 
+      <indexterm>
+        <primary>inputtext</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;inputtext&gt;</sgmltag>. The 
+      <indexterm>
+        <primary>text</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;text&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: text-->
+      class is used for displaying text, while 
+      <indexterm>
+        <primary>inputtext</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;inputtext&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: inputtext-->
+      is used for input fields where the user can type or edit text
+      interactively.</para>
+      <para />
+      <section>
+        <title>Resizable text fields</title>
+        <para>Take care when using text whose width must be
+        calculated at run time. Because the compiler does not know
+        what the text is (and the text field doesn't even know what
+        it is until the contraints evaluate), it can't really know
+        at construct time how wide to make itself.</para>
+        <para>If you add 
+        <literal>resize=true</literal>, the field will expand to
+        fit the text. In the example below, notice how the last
+        concatenation is invisible and the last digit of the
+        numeric value from the slider gets cut off.</para>
+        <example role="live-example">
+          <title>Non-resizing text does not concatenate</title>
+          <programlisting language="lzx">
+            <textobject>
+              <textdata fileref="programs/text-$6.lzx" />
+            </textobject>
+          </programlisting>
+        </example>
+        <?example role="live-example"><title>non-resizing text does not concatentate</title><programlisting role="lzx-embednew"><filename>text-$6.lzx</filename><parameter/><code>
+        &lt;canvas height="50" &gt;
+          &lt;simplelayout/&gt;
+          &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
+        keystep="1000"/&gt;
+          &lt;text text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
+        &lt;/canvas&gt;
+        </code></programlisting><programlisting>
+        &lt;canvas height="50" &gt;
+          &lt;simplelayout/&gt;
+          &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
+        keystep="1000"/&gt;
+          &lt;text text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
+        &lt;/canvas&gt;
+        </programlisting><?lzx-edit programs/text-$6.lzx></example?>
+        <para>The following shows the use of 
+        <indexterm>
+          <primary>resize="true"</primary>
+        </indexterm>
+        <sgmltag class="attribute">resize="true"</sgmltag>to get
+        the desired behavior.</para>
+        <example role="live-example">
+          <title>Using the 'resize' attribute</title>
+          <programlisting language="lzx">
+            <textobject>
+              <textdata fileref="programs/text-$7.lzx" />
+            </textobject>
+          </programlisting>
+        </example>
+        <?example role="live-example"><title>Using the 'resize' attribute</title><programlisting role="lzx-embednew"><filename>text-$7.lzx</filename><parameter/><code>
+
+        &lt;canvas height="50"&gt;
+          &lt;simplelayout/&gt;
+          &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
+        keystep="1000"/&gt;
+          &lt;text resize="true" text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
+        &lt;/canvas&gt;
+        </code></programlisting><programlisting>
+
+        &lt;canvas height="50"&gt;
+          &lt;simplelayout/&gt;
+          &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
+        keystep="1000"/&gt;
+          &lt;text <emphasis role="em">resize="true"</emphasis> text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
+        &lt;/canvas&gt;
+        </programlisting><?lzx-edit programs/text-$7.lzx></example?>
+        <para />
+      </section>
+    </section>
+  </section>
+  <section id="text.textview">
+    <title>The 
+    <indexterm>
+      <primary>text</primary>
+    </indexterm>
+    <sgmltag class="element">&lt;text&gt;</sgmltag>View</title>
+    <para>The 
+    <indexterm>
+      <primary>text</primary>
+    </indexterm>
+    <sgmltag class="element">&lt;text&gt;</sgmltag>
+    <remark role="fixme">[unknown tag]</remark>
+    <!--unknown tag: text-->
+    tag instantiates an 
+    <indexterm>
+      <primary>LzText</primary>
+    </indexterm>
+    <classname>LzText</classname>view. The text content can be
+    specified at compile time using either of the two methods
+    below; as the content of the 
+    <indexterm>
+      <primary>text</primary>
+    </indexterm>
+    <sgmltag class="element">&lt;text&gt;</sgmltag>tag, or as the 
+    <indexterm>
+      <primary>text</primary>
+    </indexterm>
+    <sgmltag class="attribute">text</sgmltag>attribute.</para>
+    <example role="live-example">
+      <title>Text views</title>
+      <programlisting language="lzx">
+        <textobject>
+          <textdata fileref="programs/text-$8.lzx" />
+        </textobject>
+      </programlisting>
+    </example>
+    <?example role="live-example"><title>Text views</title><programlisting role="lzx-embednew"><filename>text-$8.lzx</filename><parameter/><code>
+    &lt;canvas height="125"&gt;
+      &lt;simplelayout/&gt;
+      &lt;text&gt;Hello World!&lt;/text&gt;
+      &lt;text text="Hello World!"/&gt;
+    &lt;/canvas&gt;
+    </code></programlisting><programlisting>
+    &lt;canvas height="125"&gt;
+      &lt;simplelayout/&gt;
+      &lt;text&gt;Hello World!&lt;/text&gt;
+      &lt;text text="Hello World!"/&gt;
+    &lt;/canvas&gt;
+    </programlisting><?lzx-edit programs/text-$8.lzx></example?>
+       <!-- remove empty para tag LI LPP-4642 9/4/2007-->
+      <!-- <para /> -->
+  <!-- duplicate section id; the other looks correct LI LPP-4642 9/4/2007-->
+    <!--    <section id="text.multiline"> -->
+    <section>
+      <title>Idiosyncrasies of lz.text views</title>
+      <para>
+      <literal>lz.text</literal>extends 
+      <literal>lz.view</literal>, but some of its behaviors are
+      different from what you might expect. For example, 
+      <literal>lz.text</literal>inherits opacity from view, as well
+      as rotation. But these attributes don't work in all cases, as
+      described below.</para>
+      <para>
+      <literal>lz.text</literal>has the following additional
+      peculiarities:</para>
+        
+      <itemizedlist spacing="compact">
+        <listitem><para>Unlike lz.views, lz.text elements do not
+        auto-size to fit their contents. Use the resize or
+        multiline attributes to acheive this.</para></listitem>
+        <listitem><para>Even though lz.text is a subclass of lz.view, you
+        cannot nest views inside of it.</para></listitem>
+        <listitem><para>Data-bound text fields will automatically display
+        the text theyare bound to.</para></listitem>
+      </itemizedlist>
+    </section>
+       <!-- remove empty para tag LI LPP-4642 9/4/2007-->
+      <!-- <para /> -->
+    <section id="text.multiline">
+      <title>Single-line and multiline text</title>
+      <para>A text field can be either a single line or multiple
+      lines. The 
+      <indexterm>
+        <primary>multiline</primary>
+      </indexterm>
+      <sgmltag class="attribute">multiline</sgmltag>sets whether
+      wrapping is enabled. The default is a single-line text
+      field.</para>
+      <example role="live-example">
+        <title>Multiline text</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$9.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Multiline text</title><programlisting role="lzx-embednew"><filename>text-$9.lzx</filename><parameter/><code>
+      &lt;canvas height="125"&gt;
+        &lt;simplelayout spacing="5"/&gt;
+        &lt;!-- Single line text, the default --&gt;
+        &lt;text bgcolor="#ffcccc"&gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
+          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
+          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+          &lt;/text&gt;
+
+          &lt;!-- Multiline text (without an explicit width, the width would be
+           sized to fit the entire string on a single line) --&gt;
+          &lt;text bgcolor="#ccccff" multiline="true" width="300" &gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
+          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
+          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="125"&gt;
+        &lt;simplelayout spacing="5"/&gt;
+        &lt;!-- Single line text, the default --&gt;
+        &lt;text bgcolor="#ffcccc"&gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
+          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
+          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+          &lt;/text&gt;
+
+          &lt;!-- Multiline text (without an explicit width, the width would be
+           sized to fit the entire string on a single line) --&gt;
+          &lt;text bgcolor="#ccccff" multiline="true" width="300" &gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
+          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
+          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$9.lzx></example?>
+      <para>With multiline text, the automatic wrapping is always
+      enabled. You can disable wrapping by setting the 
+      <indexterm>
+        <primary>multiline</primary>
+      </indexterm>
+      <sgmltag class="attribute">multiline</sgmltag>to false. When
+      multiline=false, the linebreaks will only be placed where you
+      specify them in the text content, either as 
+      <literal>&lt;br/&gt;</literal>tags for HTML content, or
+      newlines inside of a 
+      <literal>&lt;pre/&gt;</literal>preformatted text
+      region.</para>
+      <example role="live-example">
+        <title>Multiline text with explicit line breaks</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$10.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Multiline text with explicit linebreaks</title><programlisting role="lzx-embednew"><filename>text-$10.lzx</filename><parameter/><code>
+      &lt;canvas height="125"&gt;
+        &lt;simplelayout spacing="5"/&gt;
+        &lt;text bgcolor="#ccccff" multiline="true" width="400" &gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit.&lt;br/&gt; Cras
+          nibh. Quisque justo. &lt;br/&gt;Donec porta, wisi quis vehicula interdum,
+          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="125"&gt;
+        &lt;simplelayout spacing="5"/&gt;
+        &lt;text bgcolor="#ccccff" multiline="true" width="400" &gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit.&lt;br/&gt; Cras
+          nibh. Quisque justo. &lt;br/&gt;Donec porta, wisi quis vehicula interdum,
+          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$10.lzx></example?>
+      <para>Below is a non-wrapping text field with explicit line
+      breaks.</para>
+      <example role="live-example">
+        <title>non-wrapping text with breaks</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$11.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Non-wrapping text with breaks</title><programlisting role="lzx-embednew"><filename>text-$11.lzx</filename><parameter/><code>
+      &lt;canvas height="125"&gt;
+        &lt;simplelayout spacing="5"/&gt;
+        &lt;text bgcolor="#ccccff" multiline="false" width="500" height="100" &gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras&lt;br/&gt;
+          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,&lt;br/&gt;
+          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="125"&gt;
+        &lt;simplelayout spacing="5"/&gt;
+        &lt;text bgcolor="#ccccff" multiline="false" width="500" height="100" &gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras&lt;br/&gt;
+          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,&lt;br/&gt;
+          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$11.lzx></example?>
+      <para />
+    </section>
+    <section id="text.width-height">
+      <title>Text Width and Height</title>
+      <para>If no explicit text width and height attributes are
+      supplied, the text field will be sized to contain the initial
+      text content. If the text view is single-line, then it will
+      be sized to the height of the current font.</para>
+      <para>Setting the 
+      <indexterm>
+        <primary>resize</primary>
+      </indexterm>
+      <sgmltag class="attribute">resize</sgmltag>on a text field
+      will cause it to be resized to fit its text content at
+      runtime, whenever the 
+      <methodname role="LzText.prototype.setText">
+      setText()</methodname>method is called.</para>
+      <para>Note: If no initial text content is specified, i.e.,
+      you have an empty tag such as &lt;text/&gt; , then the text
+      view will be sized to some nonzero default width and height.
+      This helps in debugging applications, (especially in the case
+      of text views which are initialized from datapaths) because
+      zero width text fields would be invisible no matter what
+      their text value was set to at runtime.</para>
+      <example role="live-example">
+        <title>Resizing text</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$12.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Resizing text</title><programlisting role="lzx-embednew"><filename>text-$12.lzx</filename><parameter/><code>
+      &lt;canvas height="125"&gt;
+        &lt;debug x="400"/&gt;
+        &lt;simplelayout/&gt;
+        &lt;!-- Single line text, the default --&gt;
+        &lt;text id="t1" bgcolor="#ffcccc" resize="false"&gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+        &lt;/text&gt;
+        &lt;text id="t2" bgcolor="#ccffcc" resize="true"&gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+        &lt;/text&gt;
+        &lt;button text="setText(...)"&gt;
+          &lt;handler name="onclick"&gt;
+            t1.setText('resize='+t1.resize);
+            t2.setText('resize='+t2.resize);
+          &lt;/handler&gt;
+        &lt;/button&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="125"&gt;
+        &lt;debug x="400"/&gt;
+        &lt;simplelayout/&gt;
+        &lt;!-- Single line text, the default --&gt;
+        &lt;text id="t1" bgcolor="#ffcccc" resize="false"&gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+        &lt;/text&gt;
+        &lt;text id="t2" bgcolor="#ccffcc" resize="true"&gt;
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+        &lt;/text&gt;
+        &lt;button text="setText(...)"&gt;
+          &lt;handler name="onclick"&gt;
+            t1.setText('resize='+t1.resize);
+            t2.setText('resize='+t2.resize);
+          &lt;/handler&gt;
+        &lt;/button&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$12.lzx></example?>
+      <para />
+    </section>
+    <section id="text.selection">
+      <title>Text Selection</title>
+      <para>Text can be made user-selectable with the 
+      <indexterm>
+        <primary>selectable</primary>
+      </indexterm>
+      <sgmltag class="attribute">selectable</sgmltag>attribute.
+      This allows copy operations (and cut and paste, for 
+      <indexterm>
+        <primary>inputtext</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;inputtext&gt;</sgmltag>) by the
+      user.</para>
+      <example role="live-example">
+        <title>Selectable text</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$13.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Selectable text</title><programlisting role="lzx-embednew"><filename>text-$13.lzx</filename><parameter/><code>
+      &lt;canvas height="125"&gt;
+        &lt;simplelayout spacing="4"/&gt;
+        &lt;!-- Single line text, the default --&gt;
+        &lt;text id="t1" bgcolor="#ffcccc" selectable="true" resize="false"&gt;
+           I am selectable text. Select me!
+        &lt;/text&gt;
+        &lt;text id="t2" bgcolor="#ccffcc" resize="true"&gt;
+          I am not selectable text. Try to select me!
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="125"&gt;
+        &lt;simplelayout spacing="4"/&gt;
+        &lt;!-- Single line text, the default --&gt;
+        &lt;text id="t1" bgcolor="#ffcccc" selectable="true" resize="false"&gt;
+           I am selectable text. Select me!
+        &lt;/text&gt;
+        &lt;text id="t2" bgcolor="#ccffcc" resize="true"&gt;
+          I am not selectable text. Try to select me!
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$13.lzx></example?>
+      <para />
+    </section>
+    <section>
+      <title>HTML Text Content</title>
+      <para>Within a text view, a limited set of HTML tags and
+      parameter entities may be used to format the text.</para>
+      <table>
+        <title>HTML Tags</title>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Tag</entry>
+              <entry>Example</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                <literal>&lt;b&gt;</literal>
+              </entry>
+              <entry>
+                <programlisting>&lt;b&gt;bold
+                text&lt;/b&gt;</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>&lt;a href="url"&gt;</literal>
+              </entry>
+              <entry>
+                <programlisting>&lt;a
+                href="http://www.boston.com"&gt;The Boston
+                Globe&lt;/a&gt;</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>&lt;font [color="#xxxxxx"] [face="Type
+                Face"] [size="Type Size"]&gt;</literal>
+              </entry>
+              <entry>
+                <programlisting>&lt;font color="#ff0000"
+                face="myfont" size="12"&gt;Red text in LPS font
+                'myfont'&lt;/font&gt;</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>&lt;i&gt;</literal>
+              </entry>
+              <entry>
+                <programlisting>&lt;i&gt;italic
+                text&lt;/i&gt;</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>&lt;p&gt;</literal>
+              </entry>
+              <entry>
+                <programlisting>line break &lt;p&gt; after p
+                tag</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>u</literal>
+              </entry>
+              <entry>
+                <programlisting>&lt;u&gt;underline
+                text&lt;/u&gt;</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>&amp;quot;</literal>
+              </entry>
+              <entry>
+                <programlisting>"</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>&amp;apos;</literal>
+              </entry>
+              <entry>
+                <programlisting>'</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>&amp;amp;</literal>
+              </entry>
+              <entry>
+                <programlisting>&amp;</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>&amp;lt;</literal>
+              </entry>
+              <entry>
+                <programlisting>&lt;</programlisting>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <literal>&amp;gt;</literal>
+              </entry>
+              <entry>
+                <programlisting>&gt;</programlisting>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para>To see the example below, compile it and run it in your
+      local environment (Openlaszlo's live examples cannot include
+      CDATA sections).</para>
+      <example role="live-example">
+        <title>HTML tags in text views</title>
+        <programlisting>&lt;canvas height="125"&gt; &lt;font
+        name="Times Roman"&gt; &lt;face src="timmonsr.ttf" /&gt;
+        &lt;face src="timmonsb.ttf" style="bold"/&gt; &lt;face
+        src="timmonsi.ttf" style="italic"/&gt; &lt;face
+        src="timmonsbi.ttf" style="bold italic"/&gt; &lt;/font&gt;
+        &lt;splash/&gt; &lt;view font="Times Roman"
+        fontsize="16"&gt; &lt;simplelayout axis="y"/&gt;
+        &lt;text&gt; normal &lt;i&gt;italic&lt;/i&gt;
+        &lt;b&gt;bold&lt;/b&gt;
+        &lt;b&gt;&lt;i&gt;bold-italic&lt;/i&gt;&lt;/b&gt; HTML
+        Metachars: &amp;lt; &amp;gt; &amp;amp; &amp;quot;
+        &lt;/text&gt; &lt;text&gt; &lt;font
+        color="#FF0000"&gt;C&lt;/font&gt;&lt;font
+        color="#FFFF00"&gt;O&lt;/font&gt;&lt;font
+        color="#00FFCC"&gt;L&lt;/font &gt;&lt;font
+        color="#CC00CC"&gt;O&lt;/font&gt;&lt;font
+        color="#AABB00"&gt;R&lt;/font&gt;&lt;font
+        color="#DDA00A"&gt;S&lt;/font&gt; &lt;/text&gt;
+        &lt;text&gt;&lt;![CDATA[&lt;b&gt;this text shouldn't be
+        bold, it's CDATA&lt;/b&gt;]]&gt;&lt;/text&gt; &lt;text
+        height="30"&gt;&lt;font size="24"&gt;This is a 24 point
+        font.&lt;/font&gt;&lt;/text&gt; &lt;/view&gt;
+        &lt;/canvas&gt;</programlisting>
+      </example>
+         <!-- remove empty para tag LI LPP-4642 9/4/2007-->
+        <!-- <para /> -->
+    </section>
+    <section>
+      <title>Using &lt;img&gt; tag to include images in HTML
+      content</title>
+      <para>The 
+      <indexterm>
+        <primary>img</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;img&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: img-->
+      tag allows you to include certain kinds of images in HTML
+      content within a 
+      <indexterm>
+        <primary>text</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;text&gt;</sgmltag>element, or
+      within an HTML element that a &lt;text&gt; element
+      contains</para>
+      <para condition="swf">When you're compiling to SWF, the image
+      you include must be natively supported by the Flash Player
+      (regardless whether your application is SOLO or
+      proxied).</para>
+      <note>
+        <para>
+        <indexterm>
+          <primary>img</primary>
+        </indexterm>
+        <sgmltag class="element">&lt;img&gt;</sgmltag>tag does not
+        work inside 
+        <indexterm>
+          <primary>inputtext</primary>
+        </indexterm>
+        <sgmltag class="element">&lt;inputtext&gt;</sgmltag>, only 
+        <indexterm>
+          <primary>text</primary>
+        </indexterm>
+        <sgmltag class="element">&lt;text&gt;</sgmltag>.</para>
+      </note>
+      <para>Due to implementation details of the Flash Player, the
+      &lt;img&gt; tag is only rendered when the 
+      <indexterm>
+        <primary sortas="multiline">@multiline</primary>
+      </indexterm>
+      <sgmltag class="attribute">@multiline</sgmltag>attribute of
+      the &lt;text&gt; element is true.</para>
+      <para condition="dhtml">Applications compiled to DTHML may
+      not match exactly the appearance of those compiled to SWF.
+      You may find that you need to "tweak" the layout using things
+      like &lt;br&gt; tags. However, remember that applications
+      compiled to DHTML can make use of the 
+      <indexterm>
+        <primary>HTML</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;HTML&gt;</sgmltag>
+      <remark role="fixme">[unknown tag]</remark>
+      <!--unknown tag: HTML-->
+      tag, which supports all HTML markup.</para>
+      <para>The &lt;img&gt; tag supports the following attributes.
+      All of these attributes are optional except the 
+      <indexterm>
+        <primary>src</primary>
+      </indexterm>
+      <sgmltag class="attribute">src</sgmltag>attribute. All
+      attributes must be specified as literals (not constraints) in
+      the program source.</para>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>@src: This attribute is either a URI, or a
+          JavaScript identifier. If it is a URI, it specifies the
+          location of the image resource, which must be a JPEG or
+          (Flash deployment targets only) SWF file. If it is a
+          JavaScript identifier, it must be the name of a resource
+          defined via the &lt;resource&gt; tag. This attribute is
+          required.</para>
+        </listitem>
+        <listitem>
+          <para>@align = bottom | middle | top | left | right. The
+          values have the same meaning as in HTML:</para>
+        </listitem>
+        <listitem>
+          <para>bottom: means that the bottom of the object should
+          be vertically aligned with the current baseline. This is
+          the default value.</para>
+        </listitem>
+        <listitem>
+          <para>middle: means that the center of the object should
+          be vertically aligned with the current baseline.</para>
+        </listitem>
+        <listitem>
+   <!-- remove duplicate para tag LI LPP-4642 9/4/2007-->        
+            <!-- <para> -->
+          <para>Two other values, left and right, cause the image
+          to float to the current left or right margin</para>
+        </listitem>
+        <!-- </para> -->
+               <!-- insert missing listitem, para tags LI LPP-4642 9/4/2007-->
+            <listitem>
+                <para>
+ 
+            top: means that the top of the object should be
+        vertically aligned with the top of the current text
+        line.</para></listitem>
+        <listitem>
+          <para>@alt: string. When specified, the content of this
+          attribute is made available to screen readers.</para>
+        </listitem>
+        <listitem>
+          <para>@width, @height: When specified, the width and
+          height attributes scale the natural image size to these
+          values. The value of @width and @height is a literal
+          number of pixels.</para>
+        </listitem>
+        <listitem>
+          <para>@hspace: This attribute specifies the amount of
+          white space to be inserted to the left and right of an
+          IMG. The default value is not specified, but is generally
+          a small, non-zero length. (On the Flash deployment
+          target, this value is 8 pixels.)</para>
+        </listitem>
+        <listitem>
+          <para>@vspace: This attribute specifies the amount of
+          white space to be inserted above and below an IMG. The
+          default value is not specified, but is generally a small,
+          non-zero length. (On the Flash deployment target, this
+          value is 8 pixels.)</para>
+        </listitem>
+      </itemizedlist>
+      <para>The &lt;text&gt; view is not by default sized to the
+      content of the &lt;img&gt; tag.</para>
+      <para>Here's an example of the basic use of the 
+      <indexterm>
+        <primary>img</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;img&gt;</sgmltag>tag.</para>
+      <example role="live-example">
+        <title>Basic use of &lt;img&gt; tag</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$15.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Basic use of &lt;img&gt; tag</title><programlisting role="lzx-embednew"><filename>text-$15.lzx</filename><parameter/><code>
+      &lt;canvas height="320" &gt;
+        &lt;text multiline="true" width="300" height="300"&gt;
+          Hello dear friends on the Red Planet! How is the Garden today?
+          &lt;img src="./images/horse-3.jpg"/&gt;
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="320" &gt;
+        &lt;text multiline="true" width="300" height="300"&gt;
+          Hello dear friends on the Red Planet! How is the Garden today?
+          &lt;img src="./images/horse-3.jpg"/&gt;
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$15.lzx></example?>
+      <para>Notice that you cannot have an image in a text tag
+      without also having text. Watch what happens when we comment
+      out the text:</para>
+      <example role="live-example">
+        <title>You must include text with images</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$16.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>You must include text with images</title><programlisting role="lzx-embednew"><filename>text-$16.lzx</filename><parameter/><code>
+      &lt;canvas height="220" &gt;
+        &lt;text multiline="true" width="200" height="200"&gt;
+          &lt;!--Hello dear friends on the Red Planet! How is the Garden today?--&gt;
+          &lt;img src="./images/horse-3.jpg"/&gt;
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="220" &gt;
+        &lt;text multiline="true" width="200" height="200"&gt;
+          <emphasis role="em">&lt;!--Hello dear friends on the Red Planet! How is the Garden today?--&gt;</emphasis>
+          &lt;img src="./images/horse-3.jpg"/&gt;
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$16.lzx></example?>
+      <para>By giving values to the 
+      <indexterm>
+        <primary>height</primary>
+      </indexterm>
+      <sgmltag class="attribute">height</sgmltag>and 
+      <indexterm>
+        <primary>width</primary>
+      </indexterm>
+      <sgmltag class="attribute">width</sgmltag>attributes on the 
+      <indexterm>
+        <primary>img</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;img&gt;</sgmltag>tag, you can
+      scale the image:</para>
+      <example role="live-example">
+        <title>Scaling an image included in text</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$17.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Scaling an image included in text</title><programlisting role="lzx-embednew"><filename>text-$17.lzx</filename><parameter/><code>
+      &lt;canvas height="100"&gt;  
+        &lt;text multiline="true" height="80"&gt;
+          Some text and
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+          some more text
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="100"&gt;  
+        &lt;text multiline="true" height="80"&gt;
+          Some text and
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+          some more text
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$17.lzx></example?>
+      <para>You can position the included image by setting the 
+      <indexterm>
+        <primary>align</primary>
+      </indexterm>
+      <sgmltag class="attribute">align</sgmltag></para>
+      <example role="live-example">
+        <title>Scaled and left-aligned image</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$18.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Scaled and left-aligned image</title><programlisting role="lzx-embednew"><filename>text-$18.lzx</filename><parameter/><code>
+      &lt;canvas height="350"&gt;  
+        &lt;text multiline="true" height="300"&gt;
+          Some text and
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+          some more text
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas height="350"&gt;  
+        &lt;text multiline="true" height="300"&gt;
+          Some text and
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+          some more text
+        &lt;/text&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$18.lzx></example?>
+      <para>You can include multiple 
+      <indexterm>
+        <primary>img</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;img&gt;</sgmltag>tags within the
+      same 
+      <indexterm>
+        <primary>text</primary>
+      </indexterm>
+      <sgmltag class="element">&lt;text&gt;</sgmltag>elements. Take
+      care with the positioning; it's possible to position the
+      images on top of each other, so you may not get the effect
+      you want.</para>
+      <example role="live-example">
+        <title>Multiple images in text</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text-$19.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <?example role="live-example"><title>Multiple images in text</title><programlisting role="lzx-embednew"><filename>text-$19.lzx</filename><parameter/><code>
+      &lt;canvas&gt;
+        &lt;text multiline="true" width="100%"&gt;
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. 
+          &lt;img src="./images/horse-3.jpg"/&gt;
+      Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. 
+          &lt;img src="./images/horse-3.jpg"/&gt;
+      Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. 
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
+      Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante. Suspendisse accumsan, mauris dapibus pretium laoreet, nibh purus imperdiet lectus, a euismod elit enim a mi. Morbi commodo lacus quis nisl. 
+          &lt;img src="./images/horse-3.jpg" align="left"/&gt;
+       Duis leo tortor, gravida eget, euismod non, ullamcorper quis, metus. Phasellus ornare facilisis metus. Aliquam at est.
+          &lt;img src="./images/horse-3.jpg" align="right"/&gt;
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. Phasellus eget massa sit amet lorem condimentum porta. Ut nec lorem. Pellentesque quam. Sed porttitor, elit vitae faucibus porta, enim nibh cursus augue, vitae iaculis enim lorem at eros. 
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" hspace="50"/&gt;
+      Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. 
+          &lt;img src="http:horse-3.jpg"/&gt;
+      Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. Nulla facilisi. Aenean metus. Nullam vitae sem id risus accumsan luctus. Nam sit amet velit. Mauris ut est. Proin id sem ullamcorper pede luctus tristique. Pellentesque dapibus, neque et pellentesque tincidunt, sapien diam imperdiet ipsum, nec porttitor turpis lectus nec libero. Praesent ut elit.
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+      Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante.  Etiam adipiscing urna quis tellus. Nam aliquam vehicula arcu.
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
+      Nunc malesuada. Curabitur tortor metus, malesuada et, suscipit ut, convallis ac, magna. Nam venenatis viverra ipsum. Phasellus dignissim sagittis urna. Phasellus cursus. Cras pede arcu, tempus a, consectetuer vel, faucibus fermentum, diam. Donec lacus. 
+      &lt;img src="./images/horse-3.jpg"/&gt;Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. In suscipit congue dolor. 
+      &lt;/text&gt;
+      &lt;scrollbar/&gt;
+      &lt;/canvas&gt;
+      </code></programlisting><programlisting>
+      &lt;canvas&gt;
+        &lt;text multiline="true" width="100%"&gt;
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. 
+          &lt;img src="./images/horse-3.jpg"/&gt;
+      Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. 
+          &lt;img src="./images/horse-3.jpg"/&gt;
+      Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. 
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
+      Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante. Suspendisse accumsan, mauris dapibus pretium laoreet, nibh purus imperdiet lectus, a euismod elit enim a mi. Morbi commodo lacus quis nisl. 
+          &lt;img src="./images/horse-3.jpg" align="left"/&gt;
+       Duis leo tortor, gravida eget, euismod non, ullamcorper quis, metus. Phasellus ornare facilisis metus. Aliquam at est.
+          &lt;img src="./images/horse-3.jpg" align="right"/&gt;
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. Phasellus eget massa sit amet lorem condimentum porta. Ut nec lorem. Pellentesque quam. Sed porttitor, elit vitae faucibus porta, enim nibh cursus augue, vitae iaculis enim lorem at eros. 
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" hspace="50"/&gt;
+      Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. 
+          &lt;img src="http:horse-3.jpg"/&gt;
+      Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. Nulla facilisi. Aenean metus. Nullam vitae sem id risus accumsan luctus. Nam sit amet velit. Mauris ut est. Proin id sem ullamcorper pede luctus tristique. Pellentesque dapibus, neque et pellentesque tincidunt, sapien diam imperdiet ipsum, nec porttitor turpis lectus nec libero. Praesent ut elit.
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+      Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante.  Etiam adipiscing urna quis tellus. Nam aliquam vehicula arcu.
+          &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
+      Nunc malesuada. Curabitur tortor metus, malesuada et, suscipit ut, convallis ac, magna. Nam venenatis viverra ipsum. Phasellus dignissim sagittis urna. Phasellus cursus. Cras pede arcu, tempus a, consectetuer vel, faucibus fermentum, diam. Donec lacus. 
+      &lt;img src="./images/horse-3.jpg"/&gt;Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. In suscipit congue dolor. 
+      &lt;/text&gt;
+      &lt;scrollbar/&gt;
+      &lt;/canvas&gt;
+      </programlisting><?lzx-edit programs/text-$19.lzx></example?>
+      <para />
+    </section>
+  </section>
+  <section>
+    <title>The 
+    <indexterm>
+      <primary>inputtext</primary>
+    </indexterm>
+    <sgmltag class="element">
+    &lt;inputtext&gt;</sgmltag>View</title>
+    <para>Editable text fields are created with the 
+    <indexterm>
+      <primary>inputtext</primary>
+    </indexterm>
+    <sgmltag class="element">&lt;inputtext&gt;</sgmltag>tag. Like
+    the non-editable 
+    <indexterm>
+      <primary>text</primary>
+    </indexterm>
+    <sgmltag class="element">&lt;text&gt;</sgmltag>view, an input
+    text field can be single line or multiline (wrapped).</para>
+    <!-- remove empty para tag LI LPP-4642 9/4/2007-->
+      <!--    <para /> -->
+    <section>
+      <title>Handling Inputtext Selection</title>
+      <para>When a region of text is selected in an inputtext view,
+      the 
+      <indexterm>
+        <primary>
+          <literal>getSelectionPosition()</literal>
+        </primary>
+      </indexterm>
+      <methodname>getSelectionPosition()</methodname>and 
+      <indexterm>
+        <primary>
+          <literal>getSelectionSize()</literal>
+        </primary>
+      </indexterm>
+      <methodname>getSelectionSize()</methodname>methods can be
+      used to obtain the offset and length of the selected text.
+      The 
+      <indexterm>
+        <primary>
+          <literal>setSelection()</literal>
+        </primary>
+      </indexterm>
+      <methodname>setSelection()</methodname>selects a region of
+      text in the view.</para>
+     <!-- remove empty para tag LI LPP-4642 9/4/2007-->
+        <!--     <para />  -->
+    </section>
+  </section>
+</chapter>

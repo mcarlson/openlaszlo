@@ -1,0 +1,40 @@
+
+<canvas width="800" height="270" bgcolor="0xE5E1B0" >
+  <!-- INCLUDES That provide framework for the example -->
+  <include href="animation_library.lzx"/>
+  
+  <!-- The EXAMPLE itself-->
+  <view id="tutorial2" height="400" width="${parent.width}" visible="true">
+    <ruler name="rlr" height="250" y="0"/>
+    <view height="30"/>
+    <view height="200" y="40">
+      <view height="10"/>   
+      <box id="B22" x="50" onclick="this.anm.doStart()">
+        <animator name="anm" attribute="x" to="500"
+                  duration="1000" start="false"/>
+      </box>
+
+      <box id="B23" x="50" onclick="this.anm.doStart()">
+        <animator name="anm" attribute="x" to="500"
+                  duration="1000" start="false" indirect="true"/>
+      </box>
+  
+      <simplelayout axis="y" spacing="10"/>
+    </view>
+  </view>
+
+  <!-- The TEST and RESET buttons -->
+  <view x="50" y="250">
+    <richbutton label="Test" x="50" cap="rightsheer"
+               onclick="B22.anm.doStart();B23.anm.doStart()"/>
+    <richbutton label="Reset" cap="leftsheer"
+               onclick="B22.setX(50);
+                        B23.setX(50);
+                        this.parent.P2.setDisplay(' ');"/>
+    <simplelayout axis="x"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

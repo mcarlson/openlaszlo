@@ -1,0 +1,103 @@
+#!/usr/bin/bash
+#
+# Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+# Use is subject to license terms.                                          *
+
+cat > out.svg << EOF 
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg id="svgdoc" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 550" 
+     onload="onLoad(evt)">
+    <title>OpenLaszlo SVG Runtime, Sprite Test</title>
+
+    <g  x="0" y="0" width="1200" height="1200" id="_canvasrect" />
+
+
+    <rect x="800" width="20" height="20" fill="green" id="_protoRect" 
+      onclick="_debug('clicked on '+this.id); "
+      />
+
+<!--
+    <rect  x="0" y="200" width="800" height="20" stroke-width="1px" stroke="#000000" fill="none">
+          <text width="800" height="20" id="_debugeval" editable="true"
+              onclick="_debug('text edited was '+this.firstChild.nodeValue); " />
+      </rect>
+    -->
+
+    <g transform="translate(0,100)" id="DebugConsole" font-size="12px" font-family="Arial">
+      <text id="_protoText" > text initial value</text>
+    </g>
+
+
+
+    <script type="text/ecmascript">
+        <![CDATA[
+               function gid (id) { return document.getElementById(id);}
+          var svg_ns = "http://www.w3.org/2000/svg";    
+
+          var DebugConsole;
+          var _svgdebug = {};
+          _svgdebug.lineheight = 14;
+          _svgdebug.lines = [''];
+
+      
+      // +++ FIXME
+      var LzApplicationRoot = "/legals4"
+
+         
+         function _debug (str) {
+             _svgdebug.lines[_svgdebug.lines.length]= str;
+             var tspan = document.createElementNS(svg_ns, "text");
+             tspan.setAttribute('x', 0);
+             tspan.setAttribute('y', _svgdebug.lines.length*_svgdebug.lineheight);
+             var content = document.createTextNode(str);
+             tspan.appendChild(content);
+             DebugConsole.appendChild(tspan);
+         }
+
+          function onLoad(evt){
+              // Get Document
+                var svgElement = evt.target;
+                var doc = svgElement.ownerDocument;
+                top.eval_in_svg = function (x) { return eval(x); } ;
+                DebugConsole = document.getElementById("DebugConsole");
+                //DebugConsole = document.getElementById("DebugConsole");
+                _debug('loaded');
+
+            }
+
+DebugConsole = document.getElementById("DebugConsole");
+
+EOF
+
+# should be lzr=svg someday
+wget -O lfc 'http://localhost:8080/legals4/test/svg/sprite.lzx?lzt=lfc&lzr=dhtml'
+wget -O app 'http://localhost:8080/legals4/test/svg/sprite.lzx?lzt=object&lzr=dhtml'
+cat lfc >> out.svg
+cat app >> out.svg
+
+
+
+
+
+# epilog
+cat >> out.svg << EOF 
+
+
+]]>
+    </script>
+
+
+    <script type="text/ecmascript">
+        <![CDATA[
+//            _debug("LFC inited.");
+//            _debug("App starting up.");
+
+        ]]>
+    </script>
+
+</svg>
+
+
+
+EOF

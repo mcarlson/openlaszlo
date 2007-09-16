@@ -1,0 +1,490 @@
+<chapter id="states">
+
+
+ 
+<title> States </title>
+
+<para>This chapter discusses the general use of states and the built in states dragstate and resizestate.</para>
+
+<para/><section id="states.I"><title>Overview</title>
+
+<para><indexterm significance="preferred"><primary>States</primary></indexterm><glossterm>States</glossterm> are a convenient method of defining multiple complex behaviors in your application using declarative syntax, 
+behaviors that might normally be contained in a script block.
+ </para>
+<para>States are written within the object to which the state is applied and can contain any number of children. 
+All code in a <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: state-->
+ is written as if it were directly inside the parent of the state when it is applied.  This concept sounds 
+a bit abstract, but in practice seems quite natural, as we hope the following discussion will make clear.</para>
+
+<para/></section><section><title>States vs Procedures</title> 
+
+<para>
+Declarative programming is great for declaring the initial state of an application, but 
+subsequent transformations may make the originally declared structures barely recognizable. 
+Laszlo's <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: state-->
+ construct provides a way to make declarative constructs effectively procedural.
+</para>
+<para>
+The alternative to using states is to declare the initial state of your program with tags, and then 
+manipulate that state with procedural code, 
+that is, with script.  This poses a problem, because some of LZX's most powerful features are difficult to add 
+programmatically.
+</para>
+<para>
+This is particularly true of animators and constraints. Constraints are central to the whole Laszlo idea, but manipulating them with script can be very tricky.
+For instance, here's a small program where the blue box follows the mouse:
+</para>
+
+<example role="live-example">
+   <title>Following mouse events without states</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/states-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>following mouse without states</title><programlisting role="lzx-embednew"><filename>states-$1.lzx</filename><parameter/><code>
+&lt;canvas&gt;
+  &lt;view bgcolor="blue" width="20" height="20"&gt;
+    &lt;attribute name="x" value="${parent.getMouse('x') - 10}"/&gt;
+    &lt;attribute name="y" value="${parent.getMouse('y') - 10}"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas&gt;
+  &lt;view bgcolor="blue" width="20" height="20"&gt;
+    &lt;attribute name="x" value="${parent.getMouse('x') - 10}"/&gt;
+    &lt;attribute name="y" value="${parent.getMouse('y') - 10}"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/states-$1.lzx></example?>
+
+<para>
+While this is a nice way of expressing this kind of thing (made possible by Laszlo's constraint system), it's rarely useful in a program.
+ Usually, objects only follow the mouse when they're being dragged. What's needed for that is a way to write declarative LZX nodes that 
+could be applied and removed depending on whether the view is to be dragged or not.
+</para>
+<para>
+The <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag> tag makes this possible. Here's a rewrite of the above program using states to make the blue 
+box drag only when the mouse is down:
+</para>
+<example role="live-example">
+   <title>Using states to follow mouse</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/states-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>using &lt;state&gt; to follow mouse</title><programlisting role="lzx-embednew"><filename>states-$2.lzx</filename><parameter/><code>
+&lt;canvas&gt;
+  &lt;view bgcolor="blue" width="20" height="20"
+        onmousedown="this.setAttribute('mouseIsDown', true )"
+        onmouseup="  this.setAttribute('mouseIsDown', false )"&gt;
+    &lt;attribute name="mouseIsDown" value="false"/&gt;
+    &lt;state apply="${parent.mouseIsDown}"&gt;
+      &lt;attribute name="x" value="${parent.getMouse('x') - 10}"/&gt;
+      &lt;attribute name="y" value="${parent.getMouse('y') - 10}"/&gt;
+    &lt;/state&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas&gt;
+  &lt;view bgcolor="blue" width="20" height="20"
+        onmousedown="this.setAttribute('mouseIsDown', true )"
+        onmouseup="  this.setAttribute('mouseIsDown', false )"&gt;
+    &lt;attribute name="mouseIsDown" value="false"/&gt;
+    &lt;state apply="${parent.mouseIsDown}"&gt;
+      &lt;attribute name="x" value="${parent.getMouse('x') - 10}"/&gt;
+      &lt;attribute name="y" value="${parent.getMouse('y') - 10}"/&gt;
+    &lt;/state&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/states-$2.lzx></example?>
+
+<para>
+Note that the syntax of the constraints hasn't changed; they're just inside a <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag> tag. 
+This is useful, but it's also a little strange: the <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag> tag is essentially an invisible node of 
+hierarchy. You can see this in the fact that the <literal>parent</literal> in the apply constraint for the state is
+ not the same object as the <literal>parent</literal> in the drag constraints inside the state.
+</para>
+<para>
+This example highlights the metaphysical nature of states: they modify the meta-object protocol enough so that
+ their contents can be stored and applied elsewhere. (This could conceivably be a feature of the system as a whole 
+ as in, for example, <literal>an LzNode.setParent(otherLzNode)</literal>, but it's not). 
+</para>
+<para/>
+<section><title>Attributes of states</title>
+<para>
+Here's a question: what should happen when you write this?
+</para>
+<example role="live-example"><title>attributes of states</title><programlisting>
+  &lt;class name="myDragState" extends="state"&gt;
+    &lt;attribute name="dragMin" value="2"/&gt;
+    &lt;attribute name="dragMax" value="20"/&gt;
+    &lt;!-- ... --&gt;
+  &lt;/class&gt;
+</programlisting></example>
+<para>
+Do the attributes <indexterm><primary>dragMin</primary></indexterm><sgmltag class="attribute">dragMin</sgmltag> and <indexterm><primary>dragMax</primary></indexterm><sgmltag class="attribute">dragMax</sgmltag> pertain to the state itself, 
+or to the state's container? The former is more powerful: it would allow for developers to extend the special behavior of states, 
+say by over-riding the state's apply method. The latter, though, is more consistent with the LZX idiom, where, 
+as a first-order approximation, a class behaves like a macro.
+</para>
+<para>
+The answer is, the behavior is the latter: attributes apply to the state's container. Here's a little test program that shows that.</para>
+
+<example role="live-example">
+   <title>Attributes pertain to container, not to parent</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/states-$4.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>attributes pertain to container, not parent</title><programlisting role="lzx-embednew"><filename>states-$4.lzx</filename><parameter/><code>
+&lt;canvas&gt;
+  &lt;class name="constrainedDragState" extends="state"&gt;
+    &lt;attribute name="dragMin" value="100"/&gt;
+    &lt;attribute name="dragMax" value="300"/&gt;
+    &lt;attribute name="mousePos" value="${parent.getMouse( 'x' ) - 10}"/&gt;
+    &lt;attribute name="x" 
+               value="${Math.max(Math.min(this.dragMax, this.mousePos),
+                                 this.dragMin )}"/&gt;
+  &lt;/class&gt;
+  
+  &lt;view bgcolor="blue" width="20" height="20" x="100" y="50"
+        onmousedown="myDrag.apply()"
+        onmouseup="  myDrag.remove()"&gt;
+    &lt;attribute name="mouseIsDown" value="false"/&gt;
+    &lt;constrainedDragState name="myDrag"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas&gt;
+  &lt;class name="constrainedDragState" extends="state"&gt;
+    &lt;attribute name="dragMin" value="100"/&gt;
+    &lt;attribute name="dragMax" value="300"/&gt;
+    &lt;attribute name="mousePos" value="${parent.getMouse( 'x' ) - 10}"/&gt;
+    &lt;attribute name="x" 
+               value="${Math.max(Math.min(this.dragMax, this.mousePos),
+                                 this.dragMin )}"/&gt;
+  &lt;/class&gt;
+  
+  &lt;view bgcolor="blue" width="20" height="20" x="100" y="50"
+        onmousedown="myDrag.apply()"
+        onmouseup="  myDrag.remove()"&gt;
+    &lt;attribute name="mouseIsDown" value="false"/&gt;
+    &lt;constrainedDragState name="myDrag"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/states-$4.lzx></example?>
+<para>
+Note that the references to <literal>dragMin</literal>, <literal>dragMax</literal> and such are all qualified by the keyword <literal>this</literal>.
+</para>
+
+<para>
+Any attribute for which the state has a setter belongs to the state itself, 
+whereas any attribute that doesn't belongs to the state's <literal>apply</literal> target. This makes sense, 
+because any setter for an attribute which is intended to be applied by the state 
+(and not kept by the state) can be written in the apply target. 
+This how it  works in LZX. Here's a little program that proves that:</para>
+
+<example role="live-example">
+   <title>Using setters in &lt;state&gt; attributes</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/states-$5.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<?example role="live-example"><title>using setters in &lt;state&gt; attributes</title><programlisting role="lzx-embednew"><filename>states-$5.lzx</filename><parameter/><code>
+&lt;canvas debug="true"&gt;
+  &lt;class name="testState" extends="state"&gt;
+    &lt;attribute name="countApplies"  value="0"
+               setter="this.countApplies = countApplies"/&gt;
+    &lt;method name="apply"&gt;
+      this.setAttribute('countApplies', ++this.countApplies);
+      super.apply();
+    &lt;/method&gt;
+  &lt;/class&gt;
+  &lt;button &gt;Try it
+    &lt;handler name="onclick"&gt;
+      ts.apply();
+      Debug.write("applies:" + ts.countApplies);
+      ts.remove();
+    &lt;/handler&gt;
+    &lt;testState name="ts"/&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true"&gt;
+  &lt;class name="testState" extends="state"&gt;
+    &lt;attribute name="countApplies"  value="0"
+               setter="this.countApplies = countApplies"/&gt;
+    &lt;method name="apply"&gt;
+      this.setAttribute('countApplies', ++this.countApplies);
+      super.apply();
+    &lt;/method&gt;
+  &lt;/class&gt;
+  &lt;button &gt;Try it
+    &lt;handler name="onclick"&gt;
+      ts.apply();
+      Debug.write("applies:" + ts.countApplies);
+      ts.remove();
+    &lt;/handler&gt;
+    &lt;testState name="ts"/&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/states-$5.lzx></example?>
+ 
+<para/>
+</section>
+<section><title>The 'this' keyword in states</title>
+<para>
+In states, the "this" keyword refers to the view or node that state is nested inside of. Methods nested inside of a state apply to the view. There is an exception to the above rule: when listening to the onapply or onremove events, the methods apply to the state, and the "this" keyword points to the state.
+</para>
+</section>
+<section><title>Performance Considerations</title>
+<para>All states are instantiated. Therefore your application "pays the instantiation cost" of a regular node 
+of hierarchy for a state, whether or not it is applied. This is because the state is itself an <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname>,
+ which must be processed by the <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> constructor.</para> 
+<para>
+The advantage of limiting the ways in which a developer can modify a 
+state itself is that then a given state can have a limited number of attributes, which are controlled by the runtime. 
+
+Allowing developers to change the semantics of "state" by attaching attributes and methods to it would make it harder to make 
+this optimization. 
+</para>
+ 
+ 	
+<example role="live-example">
+   <title>Using states to animiate transitions</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/states-$6.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>using states to animate transitions</title><programlisting role="lzx-embednew"><filename>states-$6.lzx</filename><parameter/><code>
+&lt;canvas&gt;
+  &lt;window title="state demo" width="400" height="300"&gt;
+    &lt;state name="max" apply="true"&gt;
+      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
+        &lt;animator attribute="width" to="400"/&gt;
+        &lt;animator attribute="height" to="300"/&gt;
+        &lt;animator attribute="x" to="100"/&gt;
+        &lt;animator attribute="y" to="100"/&gt;
+      &lt;/animatorgroup&gt;
+      &lt;text align="center" y="20%"&gt;M a x i m i z e d&lt;/text&gt;
+    &lt;/state&gt;
+    &lt;state name="min" &gt;
+      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
+        &lt;animator attribute="width" to="170"/&gt;
+        &lt;animator attribute="height" to="100"/&gt;
+        &lt;animator attribute="x" to="0"/&gt;
+        &lt;animator attribute="y" to="0"/&gt;
+      &lt;/animatorgroup&gt;
+      &lt;text align="center" valign="middle"&gt;Minimized&lt;/text&gt;
+    &lt;/state&gt;
+    &lt;button placement="title_area" align="right" height="16"&gt; Toggle
+      &lt;attribute name="isMax" value="true"/&gt;
+      &lt;handler name="onclick"&gt;
+        if (this.isMax) {parent.max.remove(); parent.min.apply();}
+        else {parent.max.apply(); parent.min.remove();}
+        this.isMax = !this.isMax;
+      &lt;/handler&gt;
+    &lt;/button&gt;
+&lt;/window&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas&gt;
+  &lt;window title="state demo" width="400" height="300"&gt;
+    &lt;state name="max" apply="true"&gt;
+      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
+        &lt;animator attribute="width" to="400"/&gt;
+        &lt;animator attribute="height" to="300"/&gt;
+        &lt;animator attribute="x" to="100"/&gt;
+        &lt;animator attribute="y" to="100"/&gt;
+      &lt;/animatorgroup&gt;
+      &lt;text align="center" y="20%"&gt;M a x i m i z e d&lt;/text&gt;
+    &lt;/state&gt;
+    &lt;state name="min" &gt;
+      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
+        &lt;animator attribute="width" to="170"/&gt;
+        &lt;animator attribute="height" to="100"/&gt;
+        &lt;animator attribute="x" to="0"/&gt;
+        &lt;animator attribute="y" to="0"/&gt;
+      &lt;/animatorgroup&gt;
+      &lt;text align="center" valign="middle"&gt;Minimized&lt;/text&gt;
+    &lt;/state&gt;
+    &lt;button placement="title_area" align="right" height="16"&gt; Toggle
+      &lt;attribute name="isMax" value="true"/&gt;
+      &lt;handler name="onclick"&gt;
+        if (this.isMax) {parent.max.remove(); parent.min.apply();}
+        else {parent.max.apply(); parent.min.remove();}
+        this.isMax = !this.isMax;
+      &lt;/handler&gt;
+    &lt;/button&gt;
+&lt;/window&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/states-$6.lzx></example?>
+<para>
+   The state element is declared with the <indexterm><primary>apply</primary></indexterm><sgmltag class="attribute">apply</sgmltag>, <indexterm><primary>onapply</primary></indexterm><sgmltag class="attribute">onapply</sgmltag>, and
+   <indexterm><primary>onremove</primary></indexterm><sgmltag class="attribute">onremove</sgmltag> attributes, and the <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: view-->
+.  <indexterm><primary>apply</primary></indexterm><sgmltag class="attribute">apply</sgmltag>, 
+<indexterm><primary>onapply</primary></indexterm><sgmltag class="attribute">onapply</sgmltag>,
+   and <indexterm><primary>onremove</primary></indexterm><sgmltag class="attribute">onremove</sgmltag> control the behavior of the state itself.  Any other
+   attributes and children are applied to the state's parent, when
+   the state is applied.
+   </para>
+<para/></section><section><title>States that are not children of views</title>
+<para>
+If the state is a child of an element that is not a view,
+   such as a <indexterm><primary>layout</primary></indexterm><sgmltag class="element">&lt;layout&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: layout-->
+ or <indexterm><primary>animator</primary></indexterm><sgmltag class="element">&lt;animator&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: animator-->
+, then the view attributes may not
+   make sense.  It is possible to attach an attribute that applies
+   to one of these other elements to a state, by using
+   the <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: attribute-->
+ element.
+</para>
+ 
+
+
+<para/></section><section id="states.II"><title>States may contain views or classes </title>
+
+
+<para>States can also contain views or classes that are only created when the state is applied.</para>
+
+<programlisting>
+&lt;state name="showchildren"&gt;
+  &lt;view y="13" x="13" name="children"&gt;
+    &lt;simplelayout/&gt;
+    &lt;treeitem grown="${parent.opened}"&gt;
+      &lt;datapath xpath="*" pooling="true"/&gt;
+    &lt;/treeitem&gt;
+   &lt;/view&gt;
+&lt;/state&gt;
+</programlisting>
+
+<para/></section><section><title>Classroot not available in &lt;state&gt;</title>
+<para>
+The <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag> tag does not define classroot.  Therefore, its sublasses don't have it either.
+If you subclass state you don't get classroot.</para>
+<programlisting>
+&lt;class name="redState" extends="state" /&gt;
+</programlisting>
+<para>
+will not have classroot defined.</para>
+<para/></section><section><title>Dragstate</title>
+<para>You can subclass <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag> to suit whatever purpose is at hand. LZX contains two such subclasses of <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag> 
+to solve common problems.</para>
+<para>This example shows how to subclass the <indexterm><primary>dragstate</primary></indexterm><sgmltag class="element">&lt;dragstate&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: dragstate-->
+ class to create a state functionality that you can apply to
+ different views. </para>
+
+<example role="live-example">
+   <title>Dropshadow done using states</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/states-$7.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Dropshadow done using states</title><programlisting role="lzx-embednew"><filename>states-$7.lzx</filename><parameter/><code>
+&lt;canvas height="200"&gt;
+  &lt;class extends="dragstate" name="fadeDragger" pooling="true"&gt;
+    &lt;handler name="onapply"&gt;
+      parent.bringToFront();
+      parent.setAttribute('opacity', .5)
+    &lt;/handler&gt;
+    &lt;handler name="onremove"&gt;
+      parent.setAttribute('opacity', 1)
+    &lt;/handler&gt;
+    &lt;view name="hShadow" x="10" y="${parent.body.height}"
+          width="${parent.body.width}" height="10"
+          opacity=".2" bgcolor="black"/&gt;
+    &lt;view name="vShadow"  x="${parent.body.width}" y="10"
+          width="10" height="${parent.body.height - 10}"
+          opacity=".2" bgcolor="black"/&gt;
+  &lt;/class&gt;
+  
+  &lt;view
+        onmousedown="myFadeDragger.apply()"
+        onmouseup="myFadeDragger.remove()"&gt;
+    &lt;fadeDragger name="myFadeDragger"/&gt;
+    &lt;view name="body" width="40" height="40" bgcolor="blue"/&gt;
+  &lt;/view&gt;
+  &lt;view x="100" y="100"
+        onmousedown="myFadeDragger.apply()"
+        onmouseup="myFadeDragger.remove()"&gt;
+    &lt;fadeDragger name="myFadeDragger"/&gt;
+    &lt;view name="body" width="60" height="60" bgcolor="red"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="200"&gt;
+  &lt;class extends="dragstate" name="fadeDragger" pooling="true"&gt;
+    &lt;handler name="onapply"&gt;
+      parent.bringToFront();
+      parent.setAttribute('opacity', .5)
+    &lt;/handler&gt;
+    &lt;handler name="onremove"&gt;
+      parent.setAttribute('opacity', 1)
+    &lt;/handler&gt;
+    &lt;view name="hShadow" x="10" y="${parent.body.height}"
+          width="${parent.body.width}" height="10"
+          opacity=".2" bgcolor="black"/&gt;
+    &lt;view name="vShadow"  x="${parent.body.width}" y="10"
+          width="10" height="${parent.body.height - 10}"
+          opacity=".2" bgcolor="black"/&gt;
+  &lt;/class&gt;
+  
+  &lt;view
+        onmousedown="myFadeDragger.apply()"
+        onmouseup="myFadeDragger.remove()"&gt;
+    &lt;fadeDragger name="myFadeDragger"/&gt;
+    &lt;view name="body" width="40" height="40" bgcolor="blue"/&gt;
+  &lt;/view&gt;
+  &lt;view x="100" y="100"
+        onmousedown="myFadeDragger.apply()"
+        onmouseup="myFadeDragger.remove()"&gt;
+    &lt;fadeDragger name="myFadeDragger"/&gt;
+    &lt;view name="body" width="60" height="60" bgcolor="red"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/states-$7.lzx></example?>
+
+ 
+
+
+
+ 
+<?ignore <h3>Resizestate</h3>
+
+
+
+
+ 
+ States and Performance  
+ 
+ 
+
+It would be good to point out the use of a multi-frame resource for different states (like what's done in window and button)
+ 
+
+    Avoid changing a state's view at runtime
+     Costly
+ 
+  Use "frames" instead
+ States
+    Analogous to layouts: temporal placement of multiple views
+       two uses/benefits
+           Express changes that can be applied at runtime
+           To optimize application performance 
+ Views aren't created until needed
+       A description of an instance hierarchy 
+       can be applied or removed at runtime
+       Applying state with a constraint
+           Adds constraint, doesn't replace
+Tags discussed in this chapter: state, dragstate, resizestate,
+ ?>
+
+<para/></section></section></chapter>

@@ -1,0 +1,36 @@
+
+<canvas debug="true" height="200">
+  <debug height="175"/>
+  
+  <class name="foo">
+    <method name="doit">
+      Debug.write("foo: this is [" + this + "]");
+      Debug.write("foo: classroot is [" + classroot + "]");
+      Debug.write("foo: classroot.classroot is [" + classroot.classroot + "]");
+    </method>
+  </class>
+  
+  <!-- boo contains a foo -->
+  <class name="boo">
+    <foo name="myfoo"/>
+  </class>
+  
+  <!-- goo contains a boo -->
+  <class name="goo">
+    <boo name="myboo"/>
+    <handler name="oninit">
+      myboo.myfoo.doit();
+      Debug.write("-----");
+      Debug.write("goo: this is [" + this + "]");
+      // warning will be displayed -- there is no classroot
+      Debug.write("goo: classroot is [" + classroot + "]");
+    </handler>
+  </class>
+  
+  <!-- Make an instance of goo -->
+  <goo name="mygoo"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

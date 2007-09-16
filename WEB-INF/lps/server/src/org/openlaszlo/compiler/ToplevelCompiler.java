@@ -34,8 +34,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
      * as well. */
     static boolean isElement(Element element) {
         return CanvasCompiler.isElement(element)
-            || LibraryCompiler.isElement(element)
-            || SwitchCompiler.isElement(element);
+            || LibraryCompiler.isElement(element);
     }
     
     public void compile(Element element) {
@@ -85,8 +84,11 @@ abstract class ToplevelCompiler extends ElementCompiler {
      */
     void setValidateProperty(Element root , CompilationEnvironment env) {
         String validate = CompilationEnvironment.VALIDATE_PROPERTY;
+        String e_validate = CompilationEnvironment.VALIDATE_EXPLICIT_PROPERTY;
         // Look for canvas attribute
         if (root.getAttributeValue(validate) != null) {
+            // Record that the user explicitly defined validate
+            env.setProperty(e_validate, true);
             if ("false".equals(root.getAttributeValue("validate"))) {
                 env.setProperty(validate, false);
             } else {
@@ -100,6 +102,8 @@ abstract class ToplevelCompiler extends ElementCompiler {
             Element child = (Element) iter.next();
             if (child.getName().equals("attribute")
                 && validate.equals(child.getAttributeValue("name"))) {
+                // Record that the user explicitly defined validate
+                env.setProperty(e_validate, true);
                 if ("false".equals(child.getAttributeValue("value"))) {
                     env.setProperty(validate, false);
                 }
@@ -116,6 +120,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
                                   Element element, Set defined,
                                   Set referenced, Map libsVisited) {
         ElementCompiler compiler = Compiler.getElementCompiler(element, env);
+        ViewCompiler.collectLayoutElement(element, referenced);
         if (compiler instanceof ToplevelCompiler) {
             Set libStart = null;
             Set libFound = null;
@@ -253,7 +258,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
             }
             String pathname = LPS.getComponentsDirectory() +
                 File.separator + "debugger" +
-                File.separator + "debugger.lzx";
+                File.separator + "library.lzx";
             libraries.add(new File(pathname));
         }
         return libraries;
@@ -284,31 +289,16 @@ abstract class ToplevelCompiler extends ElementCompiler {
 
 
     static String getBaseLibraryName (CompilationEnvironment env) {
-        // returns 5 or 6; coerce to string
-        String swfversion = "" + env.getSWFVersionInt();
-
-        // Load the appropriate LFC Library according to debug,
-        // profile, or krank
-        
-        // We will now have LFC library with swf version encoded after
-        // the base name like:
-        // LFC6.lzl
-        // LFC5-debug.lzl
-        // etc.
-        String ext = swfversion; 
-        
-        ext += env.getBooleanProperty(env.PROFILE_PROPERTY)?"-profile":"";
-        ext += env.getBooleanProperty(env.DEBUG_PROPERTY)?"-debug":"";
-        return "LFC" + ext + ".lzl";
+      return LPS.getLFCname(env.getRuntime(),
+                            env.getBooleanProperty(env.DEBUG_PROPERTY),
+                            env.getBooleanProperty(env.PROFILE_PROPERTY),
+                            env.getBooleanProperty(env.BACKTRACE_PROPERTY));
     }
 
     static void handleAutoincludes(CompilationEnvironment env, Element element) {
         // import required libraries, and collect explanations as to
         // why they were required
         Canvas canvas = env.getCanvas();
-
-        String baseLibraryName = getBaseLibraryName(env);
-        String baseLibraryBecause = "Required for all applications";
 
         Map explanations = new HashMap();
         for (Iterator iter = getLibraries(env, element, explanations, null, new HashSet()).iterator();
@@ -317,25 +307,30 @@ abstract class ToplevelCompiler extends ElementCompiler {
             Compiler.importLibrary(file, env);
         }
         
+        Element info;
         // canvas info += <include name= explanation= [size=]/> for LFC
-        Element info = new Element("include");
-        info.setAttribute("name", baseLibraryName);
-        info.setAttribute("explanation", baseLibraryBecause);
-        try {
-            info.setAttribute("size", "" + 
-                              FileUtils.getSize(env.resolveLibrary(baseLibraryName, "")));
-        } catch (Exception e) {
-            mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="exception getting library size"
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                ToplevelCompiler.class.getName(),"051018-228")
-                                , e);
+        if (env.isSWF()) {
+          String baseLibraryName = getBaseLibraryName(env);
+          String baseLibraryBecause = "Required for all applications";
+          info = new Element("include");
+          info.setAttribute("name", baseLibraryName);
+          info.setAttribute("explanation", baseLibraryBecause);
+          try {
+              info.setAttribute("size", "" + 
+                                FileUtils.getSize(env.resolveLibrary(baseLibraryName, "")));
+          } catch (Exception e) {
+              mLogger.error(
+  /* (non-Javadoc)
+   * @i18n.test
+   * @org-mes="exception getting library size"
+   */
+                          org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                  ToplevelCompiler.class.getName(),"051018-228")
+                                  , e);
+          }
+          canvas.addInfo(info);
         }
-        canvas.addInfo(info);
-        
+
         // canvas info += <include name= explanation=/> for each library
         for (Iterator iter = explanations.entrySet().iterator();
              iter.hasNext(); ) {

@@ -1,7 +1,9 @@
-<canvas width="200">
+<canvas>
   <simplelayout spacing="5"/>
   
   <view height="100" width="100" bgcolor="red"/>
   <view height="100" width="100" bgcolor="red"/>
   <view height="100" width="100" bgcolor="red"/>
 </canvas>
+
+

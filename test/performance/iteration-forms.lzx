@@ -1,0 +1,41 @@
+  <canvas>
+    <include href="utils/performance" />
+    <script>
+      var iterations = Measurement.defaultIterations;
+    var testIndexes={};
+    for (var i = 0; i &lt; iterations; i++) {
+      testIndexes[i] = i.toString();
+    }
+
+    function empty () {
+    }
+
+    function measureFor () {
+      for (var j = 0; j &lt; iterations; j++ ) {
+        testIndexes[j];
+      }
+    }
+
+    function measureForIn () {
+      for (var j in testIndexes ) {
+        testIndexes[j];
+      }
+    }
+
+    function measureWhile () {
+      var j = 0;
+      while (j &lt; iterations) {
+        testIndexes[j++];
+      }
+    }
+
+    (new Measurement({'for': measureFor,
+                        'for in': measureForIn,
+                        'while':  measureWhile,
+                        'empty': empty})).run();
+    </script>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+  </canvas>

@@ -1,5 +1,6 @@
 <library>
-<include href="../styles/chartstyle.lzx"/>
+    <include href="../styles/chartstyle.lzx"/>
+    <include href="extensions/drawview.lzx"/>
     <!-- Begin Data Label Class -->
      <!--- An abstract class that applies all features label.
     -->     
@@ -118,14 +119,26 @@
         </method>        
         <!--- @keywords private -->
         <method name="embeddedFont" args="str" >
+            if (typeof(LzFontManager) == "undefined")
+                return false;
             return LzFontManager['fonts'] != null ?  LzFontManager.fonts[ str ] != null:false;
         </method>         
+        <doc>
+          <tag name="shortdesc"><text>
+              a label for a chart
+          </text></tag>
+          <text>
+
+            <warning>This component is of Beta quality and is subject to change.</warning>
+          </text>
+        </doc>
+
     </class>
 <!-- End Vertical Axis Class -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

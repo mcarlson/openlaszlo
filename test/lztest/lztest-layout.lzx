@@ -1,5 +1,9 @@
 <canvas width="1800" debug="true">
-  <include href="../../lps/utils/lztestmanager.lzx" /> 
+  <include href="lztest/lztestmanager.lzx" /> 
+
+<!--
+  covers-tags : lzview lzlayout simplelayout
+-->
 
   <simplelayout axis="x" spacing="5"/>
 <!-- No layout -->
@@ -407,14 +411,17 @@ suite.test8 = function() {
 
 
 // Run the tests in order (test1,test2,...)
-suite.addTest(suite.test8);
-suite.addTest(suite.test7);
-suite.addTest(suite.test6);
-suite.addTest(suite.test5);
-suite.addTest(suite.test4);
-suite.addTest(suite.test3);
-suite.addTest(suite.test2);
 suite.addTest(suite.test1);
+suite.addTest(suite.test2);
+suite.addTest(suite.test3);
+suite.addTest(suite.test4);
+suite.addTest(suite.test5);
+suite.addTest(suite.test6);
+suite.addTest(suite.test7);
+suite.addTest(suite.test8);
+
+
+
 
 ]]>
 </script>

@@ -1,7 +1,7 @@
 /* ****************************************************************************
  * Parser.jjt
  *
- * Copyright (c) 2002-2003 Laszlo Systems, Inc.
+ * Copyright (c) 2002-2007 Laszlo Systems, Inc.
  * All Rights Reserved.
  *
  * This software is the proprietary information of Laszlo Systems, Inc.
@@ -34,6 +34,8 @@ package org.openlaszlo.sc.parser;
 import org.openlaszlo.sc.CompilerException;
 
 public class Parser {
+    static boolean allowIn = true;
+
     /** Save the source location. */
     void jjtreeOpenNodeScope(Node n) {
         Token t = getToken(1);
@@ -56,7 +58,7 @@ public class Parser {
             }
         }
     }
-    
+
     /** Dummy routine, required because NODE_SCOPE_HOOK is true. */
     void jjtreeCloseNodeScope(Node n) {
         //Token t = getToken(1);
@@ -70,7 +72,7 @@ PARSER_END(Parser)
 
 TOKEN_MGR_DECLS :
 {
-   String pathname;
+   public String pathname;
    int beginLine;
 }
 
@@ -124,7 +126,7 @@ MORE: {
 
 <IN_SINGLE_LINE_COMMENT>
 SPECIAL_TOKEN: {
-  <SINGLE_LINE_COMMENT: "\n" | "\r" | "\r\n" > 
+  <SINGLE_LINE_COMMENT: "\n" | "\r" | "\r\n" >
   { input_stream.backup(1); } : DEFAULT
 }
 
@@ -142,9 +144,14 @@ MORE: {
 
 TOKEN: {
   < BREAK: "break" >
+| < CASE: "case" >
+| < CATCH: "catch" >
 | < CONTINUE: "continue" >
+| < _DEFAULT: "default" >
 | < DELETE: "delete" >
+| < DO: "do" >
 | < ELSE: "else" >
+| < FINALLY: "finally" >
 | < FOR: "for" >
 | < FUNCTION: "function" >
 | < IF: "if" >
@@ -152,29 +159,32 @@ TOKEN: {
 | < INSTANCEOF: "instanceof" >
 | < NEW: "new" >
 | < RETURN: "return" >
+| < SWITCH: "switch" >
 | < THIS: "this" >
+| < THROW: "throw" >
+| < TRY: "try" >
 | < TYPEOF: "typeof" >
 | < VAR: "var" >
 | < VOID: "void" >
 | < WHILE: "while" >
 | < WITH: "with" >
 
-| < CASE: "case" >
-| < CATCH: "catch" >
+// Future
 | < CLASS: "class" >
 | < CONST: "const" >
 | < DEBUGGER: "debugger" >
-| < _DEFAULT: "default" >
-| < DO: "do" >
 | < ENUM: "enum" >
 | < EXPORT: "export" >
 | < EXTENDS: "extends" >
-| < FINALLY: "finally" >
+| < FINAL: "final" >
+| < IMPLEMENTS: "implements" >
 | < IMPORT: "import" >
+| < INHERITS: "inherits" >
+| < INTERFACE: "interface" >
+| < STATIC: "static" >
 | < SUPER: "super" >
-| < SWITCH: "switch" >
-| < THROW: "throw" >
-| < TRY: "try" >
+| < TRAIT: "trait" >
+| < MIXIN: "mixin" >
 
 // These are not supposed to be keywords
 | < TRUE: "true" >
@@ -189,9 +199,9 @@ TOKEN: {
 | < HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ >
 | < OCTAL_LITERAL: "0" (["0"-"7"])* >
 | < FLOATING_POINT_LITERAL:
-        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? 
-      | "." (["0"-"9"])+ (<EXPONENT>)? 
-      | (["0"-"9"])+ (<EXPONENT>)? 
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)?
+      | "." (["0"-"9"])+ (<EXPONENT>)?
+      | (["0"-"9"])+ (<EXPONENT>)?
   >
 | < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
 | < STRING_LITERAL:
@@ -206,12 +216,11 @@ TOKEN: {
         )*
         "'"
   >
-|  // Maybe x and u could be x,X and u,U
+|  // The Octal escapes are not in the spec, but rhino accepts them
   < #ESCAPE_SEQUENCE:
       "\\"
-        ( ["n","t","b","r","f","\\","'","\""]
-        | ["0"-"7"] ( ["0"-"7"] )?
-        | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+        ( ["n","t","b","r","f","v","\\","'","\""]
+        | (["0"-"3"])? (["0"-"7"])? ["0"-"7"]
         | ["x"] ["0"-"9","a"-"f","A"-"F"] ["0"-"9","a"-"f","A"-"F"]
         | ["u"] ["0"-"9","a"-"f","A"-"F"] ["0"-"9","a"-"f","A"-"F"] ["0"-"9","a"-"f","A"-"F"] ["0"-"9","a"-"f","A"-"F"]
         )
@@ -314,7 +323,7 @@ void Literal() #Literal : {Token t;}
 |  t = <NULL>
      {jjtThis.setNullValue();}
 |  t = <UNTERMINATED_STRING_LITERAL>
-     {throw new CompilerException("unterminated string");}
+     { throw new ParseException(t, "unterminated string: " + t.image.substring(0, t.image.length()-1)); }
 }
 
 void StringLiteral() #Literal : {Token t;}
@@ -322,7 +331,7 @@ void StringLiteral() #Literal : {Token t;}
    t = <STRING_LITERAL>
      {jjtThis.setStringValue(t.image.substring(1,t.image.length()-1));}
 |  t = <UNTERMINATED_STRING_LITERAL>
-     {throw new CompilerException("unterminated string");}
+     { throw new ParseException(t, "unterminated string: " + t.image.substring(0, t.image.length()-1)); }
 }
 
 void NumericLiteral() #Literal : {Token t;}
@@ -348,6 +357,12 @@ void IdentifierOrKeyword() #Identifier : {Token t;}
     {jjtThis.setName(t.image);}
 | "class" {jjtThis.setName("class");}
 | "extends" {jjtThis.setName("extends");}
+| "implements" {jjtThis.setName("implements");}
+| "inherits" {jjtThis.setName("inherits");}
+| "with" {jjtThis.setName("with");}
+| "interface" {jjtThis.setName("interface");}
+| "trait" {jjtThis.setName("trait");}
+| "mixin" {jjtThis.setName("mixin");}
 }
 
 
@@ -363,18 +378,17 @@ void PrimaryExpression() #void : {}
 |   ArrayLiteral()
 |   ObjectLiteral()
 |   "(" Expression() ")"
-//|   AllocationExpression()  
+//|   AllocationExpression()
 |   FunctionExpression()
 }
 
 void PrimarySuffix() #void : {}
 {
-    ((Arguments()) #FunctionCallParameters)
-|   (("[" Expression() "]") #PropertyValueReference)
+    (("[" Expression() "]") #PropertyValueReference)
 |   (("." IdentifierOrKeyword()) #PropertyIdentifierReference)
 }
 
-void Arguments() # void: {}
+void Arguments() #FunctionCallParameters: {}
 {
     "(" [ArgumentList()] ")"
 }
@@ -403,18 +417,33 @@ void PropertyNameAndValue() #void : {}
     (Identifier() | StringLiteral() | NumericLiteral()) ":" AssignmentExpression()
 }
 
-void CallExpression() #CallExpression(>1) : {}
+// A member expression is any number of '.' and '[' expressions
+void MemberExpression() #CallExpression(>1) : {}
 {
-  PrimaryExpression() ((PrimarySuffix())*)
-| ("super" ((["." Identifier()]) #EmptyExpression(jjtree.nodeArity()==0))
-    (Arguments() #FunctionCallParameters)) #SuperCallExpression
+  PrimaryExpression() ((LOOKAHEAD("." | "[") PrimarySuffix())*)
 }
 
-void LeftHandSideExpression() #NewExpression(>1) : {}
+// A new expression ends with the first argument list
+void NewExpression() #NewExpression : {}
 {
-//   LOOKAHEAD(3)
-   (("new" CallExpression()) #NewExpression) | CallExpression()
-//|  ("new" "super" (Arguments() #FunctionCallParameters))
+  "new" MemberExpression()  ([LOOKAHEAD("(") Arguments()] #EmptyExpression(jjtree.nodeArity()==0))
+}
+
+// Whereas a call expression allows intermingled '.', '[', and '(' expressions
+void CallExpression() #CallExpression(>1) : {}
+{
+  PrimaryExpression() (PrimarySuffix() | Arguments())*
+  | NewExpression() (PrimarySuffix() | Arguments())*
+  | SuperCallExpression()
+}
+
+void SuperCallExpression() #SuperCallExpression : {}
+{
+  "super" "." Identifier()
+          ([ LOOKAHEAD("." Identifier(), { "apply".equals(getToken(2).image) || "call".equals(getToken(2).image) })
+            "." Identifier()
+           ] #EmptyExpression(jjtree.nodeArity()==0))
+          Arguments()
 }
 
 void PostfixOp() #Operator : {Token t;}
@@ -425,17 +454,17 @@ void PostfixOp() #Operator : {Token t;}
 
 void PostfixExpression() #PostfixExpression(>1) : {}
 {
-    LeftHandSideExpression() [PostfixOp()] 
+    CallExpression() [PostfixOp()]
 }
 
 void UnaryOp() #Operator : {Token t;}
-{ 
+{
   ("delete" | "void" | "typeof" | "++" | "--" | "+" | "-" | "~" | "!")
     {jjtThis.setOperator(getToken(0).kind);}
 }
 
 void UnaryExpression() #UnaryExpression(>1) : {}
-{ 
+{
     PostfixExpression()
 |   UnaryOp() UnaryExpression()
 }
@@ -447,9 +476,9 @@ void MulOp() #Operator : {Token t;}
 }
 
 void MultiplicativeExpression() #BinaryExpressionSequence(>1) : {}
-{  
+{
     UnaryExpression() (MulOp() UnaryExpression())*
-} 
+}
 
 void AddOp() #Operator : {Token t;}
 {
@@ -460,11 +489,11 @@ void AddOp() #Operator : {Token t;}
 void AdditiveExpression() #BinaryExpressionSequence(>1) : {}
 {
     MultiplicativeExpression()(AddOp() MultiplicativeExpression())*
-} 
+}
 
 void ShiftOp() #Operator : {Token t;}
 {
-  ("<<" | ">>" | ">>>") 
+  ("<<" | ">>" | ">>>")
     {jjtThis.setOperator(getToken(0).kind);}
 }
 
@@ -473,9 +502,17 @@ void ShiftExpression() #BinaryExpressionSequence(>1) : {}
     AdditiveExpression()(ShiftOp() AdditiveExpression())*
 }
 
+JAVACODE boolean getAllowIn() {
+  return allowIn;
+}
+
+JAVACODE void setAllowIn(boolean newVal) {
+  allowIn = newVal;
+}
+
 void RelOp() #Operator : {Token t;}
 {
-  ("<" | ">" | "<=" | ">=" | "instanceof") 
+  ("<" | ">" | "<=" | ">=" | "instanceof" | LOOKAHEAD({getAllowIn()}) "in")
     {jjtThis.setOperator(getToken(0).kind);}
 }
 
@@ -492,7 +529,7 @@ void EqualOp() #Operator : {Token t;}
 
 void EqualityExpression() #BinaryExpressionSequence(>1) : {}
 {
-    RelationalExpression() (EqualOp() RelationalExpression())*  
+    RelationalExpression() (EqualOp() RelationalExpression())*
 }
 
 void BitwiseANDOp() #Operator : {Token t;}
@@ -579,7 +616,7 @@ void ToplevelStatement() #void : {}
  |  ThrowStatement()
  |  TryStatement()
 }
- 
+
 void Statement() #Statement : {}
 {
     // Lookahead so that "{" starts a Block, not an ObjectLiteral
@@ -591,7 +628,7 @@ void Statement() #Statement : {}
 
 void Block() #void : {}
 {
-   LOOKAHEAD(3) 
+   LOOKAHEAD(3)
    "{" "}" #StatementList
  | LOOKAHEAD(2) "{" "#beginContent" [StatementList()] "#endContent" "}"
  | LOOKAHEAD(2) "{" "#beginAttributeStatements" [StatementList()] "#endAttributeStatements" "}"
@@ -607,32 +644,32 @@ void VariableDeclarationList() #StatementList(>1) : {}
 {
     VariableDeclaration() ("," VariableDeclaration())*
 }
- 
+
 void VariableDeclaration() #VariableDeclaration : {}
 {
     Identifier() [Initializer()]
 }
- 
+
 void Initializer() #void : {}
 {
  //    "=" Expression()
      "=" AssignmentExpression()
 }
- 
+
 void EmptyStatement() #void : {}
 {
     ";"
 }
- 
+
 void ExpressionStatement() #void : {}
 {
-    Expression() Sc() 
+    Expression() Sc()
 }
- 
+
 // Optional semicolon predicate
 JAVACODE boolean optionalSc(Token tok)
 {
-  return (tok.kind == SEMICOLON) 
+  return (tok.kind == SEMICOLON)
     || ((tok.specialToken != null) &&
         ((tok.specialToken.kind == EOL) ||
          (tok.specialToken.kind == SINGLE_LINE_COMMENT)))
@@ -650,7 +687,7 @@ JAVACODE void Sc()
       throw generateParseException();
     }
 }
- 
+
 void IfStatement() #IfStatement : {}
 {
   /*
@@ -660,7 +697,7 @@ void IfStatement() #IfStatement : {}
    */
    "if" "(" Expression() ")" Statement() [LOOKAHEAD(1) "else" Statement()]
 }
- 
+
 void IterationStatement() #void : {}
 {
      ("while" "(" Expression() ")" Statement()) #WhileStatement
@@ -671,55 +708,55 @@ void IterationStatement() #void : {}
  |   LOOKAHEAD(3) ForInStatement()
  |   LOOKAHEAD(3) ForVarInStatement()
 }
- 
+
 void ForStatement() #ForStatement : {}
 {
-     "for" "(" ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ";"  
-               ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ";"  
-               ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ")" 
+     "for" "(" ({ setAllowIn(false); } [Expression()] { setAllowIn(true); }) #EmptyExpression(jjtree.nodeArity()==0) ";"
+               ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ";"
+               ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ")"
          Statement()
 }
- 
+
 void ForVarStatement() #ForVarStatement : {}
 {
-     "for" "(" "var"  VariableDeclarationList()  ";"  
-               ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ";"  
-               ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ")" 
+     "for" "(" "var"  { setAllowIn(false); } VariableDeclarationList() { setAllowIn(true); } ";"
+               ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ";"
+               ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ")"
          Statement()
 }
- 
+
 void ForInStatement() #ForInStatement : {}
 {
-     "for" "(" Expression() "in" Expression() ")" Statement()
+     "for" "(" { setAllowIn(false); } Expression() { setAllowIn(true); } "in" Expression() ")" Statement()
 }
- 
+
 void ForVarInStatement() #ForVarInStatement : {}
 {
-     "for" "(" "var" Identifier() ([Initializer()]) #EmptyExpression(jjtree.nodeArity()==0) "in" Expression() ")" Statement()
+     "for" "(" "var" Identifier() ({ setAllowIn(false); } [Initializer()] { setAllowIn(true); }) #EmptyExpression(jjtree.nodeArity()==0) "in" Expression() ")" Statement()
 }
- 
+
 void ContinueStatement() #ContinueStatement : {}
 {
     "continue" [Identifier()] Sc()
 }
- 
+
 void BreakStatement() #BreakStatement : {}
 {
     "break" [Identifier()] Sc()
 }
- 
+
 void ReturnStatement() #ReturnStatement : {}
 {
      // Choose return with no value over gobbling the next expression
      // in the case of an implicit ;
      "return" ([LOOKAHEAD( { (! optionalSc(getToken(1))) } ) Expression()]) #EmptyExpression(jjtree.nodeArity()==0) Sc()
 }
- 
+
 void WithStatement() #WithStatement : {}
 {
     "with" "(" Expression() ")" Statement()
 }
- 
+
 void SwitchStatement() #SwitchStatement : {}
 {
    "switch" "(" Expression() ")"
@@ -748,15 +785,15 @@ void ThrowStatement() #ThrowStatement : {}
 
 void TryStatement() #TryStatement : {}
 {
-   "try" Block() (Catch() [Finally()] | Finally())
+   "try" Block() (CatchClause() [FinallyClause()] | FinallyClause())
 }
 
-void Catch() #void : {}
+void CatchClause() #CatchClause : {}
 {
    "catch" "(" Identifier() ")" Block()
 }
 
-void Finally() #void : {}
+void FinallyClause() #FinallyClause : {}
 {
    "finally" Block()
 }
@@ -800,18 +837,17 @@ void Directive() #void : {}
 | (ToplevelStatement()) #Statement
 | LOOKAHEAD(2) IncludeDirective() Sc()
 | PragmaDirective() Sc()
-| ("if" "(" Expression() ")" DirectiveBlock() [LOOKAHEAD(1) "else" DirectiveBlock()]) #IfDirective
+| IfDirective()
 }
 
 void DirectiveBlock() #DirectiveBlock: {}
 {
-  
   "{" (Directive())* "}"
 }
 
 SimpleNode StatementList() #StatementList : {Token t;}
 {
-    (LOOKAHEAD(1) FunctionDeclaration() | Statement() | PragmaDirective())+
+    ( ClassDefinition() | LOOKAHEAD(1) FunctionDeclaration() | Statement() | PragmaDirective())+
       { return jjtThis; }
 }
 
@@ -827,15 +863,68 @@ SimpleNode PragmaDirective() #PragmaDirective : {Token t;}
   {return jjtThis;}
 }
 
+SimpleNode IfDirective() #IfDirective : { Token t;}
+{
+  "if" "(" Expression() ")" DirectiveBlock()
+  [LOOKAHEAD(1) "else" ( DirectiveBlock() | IfDirective() # DirectiveBlock(1) )]
+  {return jjtThis;}
+}
+
 JAVACODE void NoLineBreak()
 {
   // TBD: verify that the next token isn't a line break
 }
 
+SimpleNode ClassProperty() #ClassProperty : {Token t;}
+{
+  "static" (FunctionDeclaration() | VariableStatement())
+  {return jjtThis; }
+}
+
+SimpleNode TraitsList() #TraitsList : {Token t;}
+{
+   Identifier() ("," Identifier())*
+     { return jjtThis; }
+}
+
+void ClassOrTrait() #Identifier : {Token t;}
+{
+  "class" {jjtThis.setName("class");}
+| "trait" {jjtThis.setName("trait");}
+| "mixin" {jjtThis.setName("trait");}
+}
+
+void ClassDirective() #void : {}
+{
+   ClassProperty()
+ | LOOKAHEAD(1) FunctionDeclaration()
+ | LOOKAHEAD(1) VariableStatement()
+ | LOOKAHEAD("{") ClassDirectiveBlock()
+ | (ToplevelStatement()) #Statement
+ | PragmaDirective() Sc()
+ | ClassIfDirective()
+}
+
+void ClassDirectiveBlock() #ClassDirectiveBlock: {}
+{
+  "{" (ClassDirective())* "}"
+}
+
+SimpleNode ClassIfDirective() #ClassIfDirective : { Token t;}
+{
+  "if" "(" Expression() ")" ClassDirectiveBlock()
+  [LOOKAHEAD(1) "else" ( ClassDirectiveBlock() | ClassIfDirective() #ClassDirectiveBlock(1) )]
+  {return jjtThis;}
+}
+
 SimpleNode ClassDefinition() #ClassDefinition : {Token t;}
 {
-  "class" Identifier()
-   ["extends" Identifier()] #Extends(jjtree.nodeArity()==0)
-   "{" (FunctionDeclaration() | VariableStatement())* "}"
+   ClassOrTrait() Identifier()
+
+   ["extends" Identifier() ] #EmptyExpression(jjtree.nodeArity()==0)
+   [("inherits" | "with" ) TraitsList() ] #EmptyExpression(jjtree.nodeArity()==0)
+   "{" (
+        ClassDirective()
+       )* "}"
   {return jjtThis;}
 }

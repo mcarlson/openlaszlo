@@ -44,6 +44,10 @@ class CanvasCompiler extends ToplevelCompiler {
         // canvas attribute
         String cproxied = element.getAttributeValue("proxied");
 
+        canvas.setDebug(mEnv.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY));
+        canvas.setProfile(mEnv.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY));
+        canvas.setBacktrace(mEnv.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY));
+
         // Set the "proxied" flag for this app.
         // canvas attribute overrides passed in arg, warn for conflict
         if (cproxied != null && !cproxied.equals("inherit")) {
@@ -92,17 +96,17 @@ class CanvasCompiler extends ToplevelCompiler {
                 mEnv.warn(msg, element);
         }
 
-        String baseLibraryName = getBaseLibraryName(mEnv);
-        String baseLibraryBecause = "Required for all applications";
+        if (mEnv.isSWF()) {
+          String baseLibraryName = getBaseLibraryName(mEnv);
+          String baseLibraryBecause = "Required for all applications";
 
-        // TODO [2004-06-02]: explanation for debug attribute and request
-        // parameter
+          // TODO [2004-06-02]: explanation for debug attribute and
+          // request parameter
         
-        mEnv.getGenerator().importBaseLibrary(baseLibraryName, mEnv);
+            mEnv.getGenerator().importBaseLibrary(baseLibraryName, mEnv);
+        }
         
-
-        
-        canvas.setSWFVersion(mEnv.getSWFVersion());
+        canvas.setRuntime(mEnv.getRuntime());
         initializeFromElement(canvas, element);
         
         // Default to true, embed fonts in swf file
@@ -175,13 +179,19 @@ class CanvasCompiler extends ToplevelCompiler {
         collectObjectProperties(element, model, visited);
         model.updateAttrs();
         Map attrs = model.attrs;
+
+        // default width is 100% by 100%
+        if (attrs.get("width") == null) attrs.put("width", "100%"); 
+        if (attrs.get("height") == null) attrs.put("height", "100%"); 
+
         setDimension(attrs, "width", canvas.getWidth());
         setDimension(attrs, "height", canvas.getHeight());
         
-        attrs.put("build", ScriptCompiler.quote(LPS.getBuild()));
+        attrs.put("lpsbuild", ScriptCompiler.quote(LPS.getBuild()));
+        attrs.put("lpsbuilddate", ScriptCompiler.quote(LPS.getBuildDate()));
         attrs.put("lpsversion", ScriptCompiler.quote(LPS.getVersion()));
         attrs.put("lpsrelease", ScriptCompiler.quote(LPS.getRelease()));
-        attrs.put("runtime", ScriptCompiler.quote(canvas.getSWFVersion()));
+        attrs.put("runtime", ScriptCompiler.quote(canvas.getRuntime()));
         attrs.put("__LZproxied",
                   ScriptCompiler.quote(
                       mEnv.getProperty(mEnv.PROXIED_PROPERTY, APP_PROXIED_DEFAULT ? "true" : "false")));

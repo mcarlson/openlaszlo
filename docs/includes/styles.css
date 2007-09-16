@@ -1,6 +1,6 @@
 /* Stylesheet for LPS docs                                            */
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -14,7 +14,6 @@ body, th, td {
 
 h1, h2, h3, h4, h5, h6 {
     font-weight : bold;
-    margin-bottom : -5px;
     margin-top : 20px;
 }
 
@@ -63,7 +62,7 @@ img.illustration, img.screenshot {
     line-height : 18px;
 }
 
-.smaller, .copyright {
+.smaller, .copyright, .legalnotice, .pubdate {
     font-size : 10px;
     line-height : 16px;
 }
@@ -220,23 +219,36 @@ body.doc-index {
     font-weight: bold;
 }
 
-.note {
+.note, .warning, .todo, .fixme {
     border-top: 1px solid;
     border-bottom: 1px solid;
-}
-
-.warning {
-    border-top: 1px solid;
-    border-bottom: 1px solid;
+    margin-left: 0.5in; 
+    margin-right: 0.5in;
+    margin-top: 0.2in;
+    margin-bottom: 0.2in;
+    min-height: 54px;
 }
 
 .todo, .fixme {
     background-color: yellow;
-    border-top: 1px solid red;
-    border-bottom: 1px solid red;
-
 }
 
+.condition-glyph {
+    float: left;
+    clear: left;
+    width: 40px;
+    margin: 4px auto;
+    padding: 1px;
+    text-align: center;
+}
+
+.condition-description {
+    margin-left: 46px;
+}
+
+.condition-sidebar {
+    margin-left: -46px;
+}
 
 /* Code ******************************************* */
 

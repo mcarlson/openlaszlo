@@ -1,0 +1,27 @@
+<canvas bgcolor="#EAEAEA" width="800" height="510">
+
+  <simplelayout axis="x"/>
+    <tabs x="5">
+        <tabpane inset_left="0" inset_top="0" inset_bottom="0" inset_right="0">Insets 0
+            <text onclick="Debug.write('onclick', this)">Yellow butterflies</text>
+        </tabpane>
+        <tabpane selected="true">Default
+            <text onclick="Debug.write('onclick', this)">Green grasshoppers</text>
+        </tabpane>
+    </tabs>
+
+
+  <button id='foo'>Hello World</button>
+
+
+
+
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

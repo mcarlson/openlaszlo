@@ -1,11 +1,6 @@
-/* ****************************************************************************
- * ASTLiteral.java
-* ****************************************************************************/
-
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
+/**
+ * Parser support for literals
+ */
 
 package org.openlaszlo.sc.parser;
 
@@ -84,7 +79,7 @@ public class ASTLiteral extends SimpleNode {
         throw new RuntimeException("Illegal hex or unicode constant");
         // Should never come here
     }
-    
+
     static final int octval(char c) {
         switch(c) {
         case '0' :
@@ -103,35 +98,12 @@ public class ASTLiteral extends SimpleNode {
             return 6;
         case '7' :
             return 7;
-        case '8' :
-            return 8;
-        case '9' :
-            return 9;
-
-        case 'a' :
-        case 'A' :
-            return 10;
-        case 'b' :
-        case 'B' :
-            return 11;
-        case 'c' :
-        case 'C' :
-            return 12;
-        case 'd' :
-        case 'D' :
-            return 13;
-        case 'e' :
-        case 'E' :
-            return 14;
-        case 'f' :
-        case 'F' :
-            return 15;
         }
-        
+
         throw new RuntimeException("Illegal octal constant");
         // Should never come here
     }
-  
+
     public void setStringValue(String image) {
         int l = image.length();
         StringBuffer sb = new StringBuffer(l);
@@ -145,9 +117,10 @@ public class ASTLiteral extends SimpleNode {
                 else if (c=='f') c = '\f';
                 else if (c=='r') c = '\r';
                 else if (c=='t') c = '\t';
+                else if (c=='v') c = '\u000B';
                 else if (c =='x') {
                     c = (char)(hexval(image.charAt(i+1)) << 4 |
-                               hexval(image.charAt(i+1)));
+                               hexval(image.charAt(i+2)));
                     i +=2;
                 } else if (c =='u') {
                     c = (char)(hexval(image.charAt(i+1)) << 12 |
@@ -156,11 +129,15 @@ public class ASTLiteral extends SimpleNode {
                                hexval(image.charAt(i+4)));
                     i +=4;
                 } else if (c >='0' && c <= '7') {
+                    // Accepts anything from 0 - 377
                     c = (char)(octval(image.charAt(i)));
-                    if ((image.length()>i) && 
-                        (image.charAt(i+1)>='0') && (image.charAt(i+1)<='7')) {
-                        i++;
-                        c = (char) ((c<<4) | octval(image.charAt(i)));
+                    i++;
+                    for (int j = i + ((int)c <= 3 ? 2 : 1);
+                         (i < j) &&
+                             (i < l) &&
+                             (image.charAt(i)>='0') && (image.charAt(i)<='7');
+                         i++) {
+                        c = (char) ((c<<3) | octval(image.charAt(i)));
                     }
                 }
             }
@@ -168,7 +145,11 @@ public class ASTLiteral extends SimpleNode {
         }
         mValue = sb.toString();
     }
-    
+
+    public void setRegexpValue(String image) {
+        mValue = "" + image;
+    }
+
     public void setDecimalValue(String image) {
         try {
             mValue = new Long(Long.parseLong(image));
@@ -176,16 +157,16 @@ public class ASTLiteral extends SimpleNode {
             mValue = new Double(image);
         }
     }
-    
+
     public void setOctalValue(String image) {
         try {
-            String imageWithout0 = image.substring(1);          
+            String imageWithout0 = image.substring(1);
             mValue = new Long(Long.parseLong(imageWithout0,8));
         } catch (NumberFormatException e) {
             mValue = new Double(image);
         }
     }
-    
+
     public void setHexValue(String image) {
         try {
             String imageWithout0x = image.substring(2);
@@ -194,19 +175,19 @@ public class ASTLiteral extends SimpleNode {
             mValue = new Double(image);
         }
     }
-    
+
     public void setFloatingPointValue(String image) {
         mValue = new Double(image);
     }
-    
+
     public void setBooleanValue(boolean value) {
         mValue = new Boolean(value);
     }
-    
+
     public void setNullValue() {
         mValue = null;
     }
-  
+
     public String toString() {
         if (mValue == null) {
             return "null";
@@ -215,3 +196,9 @@ public class ASTLiteral extends SimpleNode {
     }
 
 }
+
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+

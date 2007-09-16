@@ -1,0 +1,17 @@
+
+<canvas height="40">
+  <view bgcolor="red"
+        onmouseover="txt.setText('onmouseover')"
+        onmouseout="txt.setText('onmouseout')"
+        onmousedown="txt.setText('onmousedown')"
+        onmouseup="txt.setText('onmouseup')"
+        onclick="txt.setText('onmouseup, onclick')"
+        x="10" y="10" width="20" height="20"/>
+
+  <text id="txt"
+        x="40" y="11" width="150"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

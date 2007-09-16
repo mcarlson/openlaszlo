@@ -1,0 +1,156 @@
+<canvas>
+
+<include href="lztest/lztestmanager.lzx" /> 
+
+
+<!-- test LzDataElement -->
+
+<dataset name="mydata">
+  <records>
+    <record id="a">
+       some text data
+    </record> 
+    <record id="b">
+       more text data
+    </record>
+    <record id="c">
+      <potato type="idaho"/>
+    </record>
+  </records>
+</dataset>
+
+
+<script>
+<![CDATA[
+
+var testDataElementSuite = new LzTestSuite("Test Suite for LzDataElement"); 
+
+   var parentnode = mydata.childNodes[0];
+   var node1 = mydata.childNodes[0].childNodes[0];
+   var node2 = mydata.childNodes[0].childNodes[1];
+   var node3 = mydata.childNodes[0].childNodes[2];
+
+
+function test_lzdataelement_1() {
+
+   // test insertBefore
+
+   var parentnode = LzDataNode.stringToLzData('<foo><bar1/><bar2/><bar3/></foo>');
+   var newnode = new LzDataElement("barxxx");
+
+   var node3 = parentnode.childNodes[2];
+   parentnode.insertBefore(newnode, node3);
+   LzTestManager.assertEquals(node3.getPreviousSibling(), newnode, "[3] tested insertBefore");
+   LzTestManager.assertEquals(parentnode.childNodes[2], newnode, "[3.1] tested insertBefore");
+
+   var repnode = new LzDataElement("replacement");
+   parentnode.replaceChild(repnode, node3);
+   LzTestManager.assertEquals(parentnode.childNodes[3], repnode, "[4] tested replaceChild");   
+
+}
+
+function test_lzdataelement_2() {
+   var parentnode = LzDataNode.stringToLzData('<foo><bar1/><bar2/><bar3/></foo>');
+   var node0 = parentnode.childNodes[0];
+   var node1 = parentnode.childNodes[1];
+   var node2 = parentnode.childNodes[2];
+   parentnode.removeChild(node0);
+   var newnode0 = parentnode.childNodes[0];
+   LzTestManager.assertEquals(node1, newnode0, "[4] tested removeChild");
+
+   var parentnode = LzDataNode.stringToLzData('<foo><bar1/><bar2/><bar3/></foo>');
+   var newchild = new LzDataElement("replacement");
+   parentnode.appendChild(newchild);
+   LzTestManager.assertEquals(newchild, parentnode.childNodes[3], "[5] tested appendChild");   
+
+   LzTestManager.assertTrue(parentnode.hasChildNodes(), "[6] tested hasChildNodes");      
+   var nochildren = LzDataNode.stringToLzData('<foo/>');
+   LzTestManager.assertFalse(nochildren.hasChildNodes(), "[6.1] tested hasChildNodes");      
+
+}
+
+function test_lzdataelement_clone() {
+   var parentnode = LzDataNode.stringToLzData('<foo a="12" b="259"><bar1 c="red"/><bar2/><bar3/></foo>');
+   var node0 = parentnode.childNodes[0];
+   var node1 = parentnode.childNodes[1];
+   var node2 = parentnode.childNodes[2];
+   // [TODO hqm 4-2006] this call fails because ownerDocument is not bound to anything for some reason
+   var clone = parentnode.cloneNode(true);
+   LzTestManager.assertEquals(node0.attributes['red'], clone.childNodes[0].attributes['red'], "[7] tested cloneNode");   
+
+}
+
+
+function test_lzdataelement_attr() {
+   var parentnode = LzDataNode.stringToLzData('<foo a="12" b="259"><bar1 c="red"/><bar2/><bar3/></foo>');
+   var node0 = parentnode.childNodes[0];
+   var node1 = parentnode.childNodes[1];
+   var node2 = parentnode.childNodes[2];
+   LzTestManager.assertEquals('red', node0.getAttr('c'), "[8] tested getAttr");
+
+   node0.setAttr('flavor', 'vanilla');
+   LzTestManager.assertEquals('vanilla', node0.getAttr('flavor'), "[8.1] tested setAttr");   
+
+   node0.removeAttr('flavor');
+   LzTestManager.assertEquals(undefined, node0.getAttr('flavor'), "[8.2] tested removeAttr");      
+
+   LzTestManager.assertTrue(node0.hasAttr('c'), "[8.3] tested hasAttr"); 
+   LzTestManager.assertFalse(node0.hasAttr('nosuchattr'), "[8.4] tested hasAttr");      
+
+   node2.setAttrs({color: 'blue', flavor: 'peppermint', size: 259});
+   LzTestManager.assertEquals('blue', node2.getAttr('color'), "[8.5] tested setAttrs");
+   LzTestManager.assertEquals('peppermint', node2.getAttr('flavor'), "[8.5] tested setAttrs");
+   LzTestManager.assertEquals(259, node2.getAttr('size'), "[8.5] tested setAttrs");
+
+
+}
+
+function test_lzdataelement_children() {
+   var parentnode = LzDataNode.stringToLzData('<foo a="12" b="259"><bar1 c="red"/><bar2/><bar3/></foo>');
+   var node0 = parentnode.childNodes[0];
+   var node1 = parentnode.childNodes[1];
+   var node2 = parentnode.childNodes[2];
+   LzTestManager.assertEquals(node0, parentnode.getFirstChild(), "[9] tested getFirstChild");
+   LzTestManager.assertEquals(node2, parentnode.getLastChild(), "[9.1] tested getLastChild");
+   // test internal child position counter
+   LzTestManager.assertEquals(node2.__LZo, 2, "[9.2] tested __LZo");
+   LzTestManager.assertEquals(node1.__LZo, 1, "[9.2] tested __LZo");
+   LzTestManager.assertEquals(node0.__LZo, 0, "[9.2] tested __LZo");
+   LzTestManager.assertEquals(node1.getOffset(), 1, "[9.3] tested getOffset");
+
+
+   //   getElementsByTagName(name)
+   var gn = parentnode.getElementsByTagName('bar2');
+   LzTestManager.assertEquals(node1, gn[0], "[9.6] test getElementsByTagName");
+
+   var nn1 = new LzDataElement("replacement");
+   var nn2 = new LzDataElement("replacement");
+
+   parentnode.setChildNodes([nn1, nn2]);
+   LzTestManager.assertEquals(nn1, parentnode.childNodes[0], "[9.4] tested setChildNodes");   
+
+   //   setNodeName(name)
+   node0.setNodeName('mynewnodename');
+   LzTestManager.assertEquals('mynewnodename', node0.nodeName, "[9.5] setNodeName");
+
+   //__LZgetText
+
+
+}
+
+
+testDataElementSuite.addTest( test_lzdataelement_1 ); 
+testDataElementSuite.addTest( test_lzdataelement_2 );
+testDataElementSuite.addTest( test_lzdataelement_clone );
+testDataElementSuite.addTest( test_lzdataelement_attr );
+testDataElementSuite.addTest( test_lzdataelement_children ); 
+
+
+]]>
+</script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

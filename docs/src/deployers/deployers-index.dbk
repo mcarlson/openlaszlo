@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"-->
+<book xmlns:xi="http://www.w3.org/2003/XInclude">
+  <?dbhtml dir="deployers" ?>
+  <?dbhtml filename="index.html" ?>
+  <title>System Administrator's Guide to Deploying OpenLaszlo Applications</title>
+  <titleabbrev>Deployer Guide</titleabbrev>
+  
+  <preface id="deployers.preface">
+    <title>Preface</title>
+    <xi:include href="deploy-preface.dbk"/>
+  </preface>
+
+  <part id="deployers.overview">
+    <title>Overview</title>
+  
+    <xi:include href="architecture.dbk"/>
+    <!--xi:include href="program-development.dbk"/-->
+  </part>
+
+  <part id="deployers.server-integration">
+    <title>Managing OpenLaszlo Server Deployments</title>
+
+    <!--xi:include href="integrating-existing.dbk"/-->
+    <xi:include href="logging.dbk"/>
+    <xi:include href="lps-request-types.dbk"/>
+    <xi:include href="deployers-guide.dbk"/>
+    <!--xi:include href="caching.dbk"/-->
+  </part>
+
+  <xi:include href="book-info.dbk"/>
+
+</book>

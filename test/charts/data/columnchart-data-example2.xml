@@ -1,3 +1,8 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
 <records>
     <record value="1" month="Jan" hits="198" />
     <record value="2" month="Jan" hits="100" />

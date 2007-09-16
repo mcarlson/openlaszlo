@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <%@ page import="java.util.*" %>
@@ -7,6 +7,8 @@
 <%@ page import="java.lang.Integer" %>
 
 <value><%
+// Return the specified HTTP Request header as the <value> to the client can examine it
+
     response.setContentType("text/xml");
 Map table = javax.servlet.http.HttpUtils.parseQueryString(request.getQueryString());
 String[] strings = (String[]) table.get("parameter");

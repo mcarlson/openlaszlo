@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -39,6 +39,8 @@ class SplashCompiler extends ElementCompiler {
     }
 
     public void compile(Element element) throws CompilationError {
+        if (mEnv.isDHTML()) return;
+        
         ViewCompiler viewCompiler = new ViewCompiler(mEnv);
         ResourceCompiler res = new ResourceCompiler(mEnv);
         StringBuffer script = new StringBuffer();
@@ -50,18 +52,19 @@ class SplashCompiler extends ElementCompiler {
 
         if (element.getChild("view", element.getNamespace()) == null) {
             // Add default preloader
-            ElementWithLocationInfo child = new ElementWithLocationInfo("view", element.getNamespace());
-            child.initSourceLocator(((ElementWithLocationInfo)element).getSourceLocator() );
-            child.setAttribute("hideafterinit", hideafterinit);
-            child.setAttribute("resource", "defaultpreloader.swf");
-            child.setAttribute("center", "true");
-            child.setAttribute("ratio", "100%");
-            child.setAttribute("name", "lzprelresource");
-            child.setAttribute("resourcename", "lzprelresource");
-            element.addContent(child);
+
+                ElementWithLocationInfo child = new ElementWithLocationInfo("view", element.getNamespace());
+                child.initSourceLocator(((ElementWithLocationInfo)element).getSourceLocator() );
+                child.setAttribute("hideafterinit", hideafterinit);
+                child.setAttribute("resource", "defaultpreloader.swf");
+                child.setAttribute("center", "true");
+                child.setAttribute("ratio", "100%");
+                child.setAttribute("name", "lzprelresource");
+                child.setAttribute("resourcename", "lzprelresource");
+                element.addContent(child);
         }
         
-        SWFWriter sw = mEnv.getGenerator();
+        ObjectWriter sw = mEnv.getGenerator();
         sw.addPreloader(mEnv);
         
         for (Iterator iter = element.getChildren("view", element.getNamespace()).iterator();

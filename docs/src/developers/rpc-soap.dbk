@@ -1,0 +1,1321 @@
+<chapter id="rpc-soap">
+    <!-- move title before warning to validate against DocBook dtd LI LPP-4641 9/4/2007 -->
+<title>SOAP</title>
+<warning><para>
+This feature works in proxied applications only.  It does not work in SOLO applications.
+</para></warning>
+<para>SOAP (Simple Object Access Prototcol) is used to exchange information in a
+distributed environment. A typical scenario involves a SOAP client invoking a
+client-side function stub to invoke a SOAP web service operation. The SOAP web
+service then returns data —such as stock information or the result to
+a math function— to the client. The <ulink url="http://www.w3.org/TR/soap/">SOAP protocol</ulink> is a
+work in progress being drafted by the <ulink url="http://www.w3.org">W3C</ulink>.</para>
+
+<para>This chapter discusses how to use and invoke SOAP web services in an LZX
+application. OpenLaszlo SOAP is part of OpenLaszlo RPC and shares many of the same APIs
+and concepts. This chapter assumes that you have read the OpenLaszlo RPC chapter
+and have a basic knowledge of SOAP, WSDL, XML, namespaces, and XML Schema. WSDL
+(Web Service Definition Language) is an XML format to describe a web service. A
+WSDL may also describe the types used by a web service using an XML Schema. XML
+Schema defines the structure and constraints of XML documents. For more information,
+see the references section at end of this chapter.</para>
+
+
+
+
+<para/><section><title>&lt;soap&gt;</title>
+
+<para>The <indexterm><primary>soap</primary></indexterm><sgmltag class="element">&lt;soap&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: soap-->
+ element creates a client-side representation of a SOAP
+service based on a WSDL. The name and wsdl attributes are required.</para>
+
+<example role="live-example"><title>A simple SOAP tag</title><programlisting>
+&lt;soap wsdl="..."
+      service="..."
+      port="..."
+      autoload="[true|false]"
+      secure="[true|false]"
+      secureport="..." &gt;
+</programlisting></example>
+
+
+
+
+<para/><section><title><indexterm><primary>soap</primary></indexterm><sgmltag class="element">&lt;soap&gt;</sgmltag> attributes</title>
+<para>The <indexterm><primary>soap</primary></indexterm><sgmltag class="element">&lt;soap&gt;</sgmltag> element accepts the following attributes, some of which are required:</para>
+
+<para><indexterm significance="preferred"><primary>wsdl</primary></indexterm><glossterm>wsdl</glossterm>: (String) the WSDL to use for the SOAP object. File or http
+URLs may be used, such as <literal>file:mylocal.wsdl</literal> or
+<literal>http://api.google.com/GoogleSearch.wsdl</literal>. <emphasis role="b">This is a required
+attribute.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>service</primary></indexterm><glossterm>service</glossterm>: (String) set this value to the desired SOAP service if
+more than one SOAP service is available. <emphasis role="b">Default is the first SOAP
+service.</emphasis> After the soap object loads, the service property is set with the
+name of the SOAP service being used.</para>
+
+<para><indexterm significance="preferred"><primary>port</primary></indexterm><glossterm>port</glossterm>: (String) set this value if more than one SOAP port is
+available. <emphasis role="b">Default is the first SOAP port.</emphasis> Once the soap object loads,
+the service property is set with the name of the SOAP port being used.</para>
+
+<para><indexterm significance="preferred"><primary>requestheaders</primary></indexterm><glossterm>requestheaders</glossterm>: (String) set this value to set SOAP request
+headers. The string must contain XML and multiple nodes are allowed, i.e., a
+root node is not required. See the "SOAP headers" section for more
+details. <emphasis role="b">Default is null.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>responseheaders</primary></indexterm><glossterm>responseheaders</glossterm>: (LzDataset) if this is set, the responseheaders
+dataset contains the response header information from the last call that
+returned headers. See the "SOAP headers" section below for more
+details. <emphasis role="b">Default is null.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>autoload</primary></indexterm><glossterm>autoload</glossterm>: (Boolean) if true, calls to load client proxy during
+init stage. If false, the proxy must be loaded using the load() method. See the
+proxy section in the RPC chapter for details. <emphasis role="b">Default is true.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>secure</primary></indexterm><glossterm>secure</glossterm>: (Boolean) if true, creates a secure HTTPS connection
+between the client and OpenLaszlo Server. Also see secureport below. <emphasis role="b">Default is
+false.</emphasis></para>
+
+<para><indexterm significance="preferred"><primary>secureport</primary></indexterm><glossterm>secureport</glossterm>: (Number) valid only when secure attribute is set to
+true. The secure port to use. There is no client-side default. Most servers use
+port 443 as the default HTTPS port.</para>
+
+
+<para/></section><section><title>Read-only properties</title>
+
+<para><indexterm significance="preferred"><primary>proto</primary></indexterm><glossterm>proto</glossterm>: (Object) contains prototypes that can be used to create
+objects described in the types section of a WSDL. These prototypes can be used
+to instantiate parameter objects to pass SOAP rpc-style functions. Returned
+objects from a SOAP call will also be prototyped. The prototypes are mapped to
+&lt;complexType&gt; elements found in a WSDL's schema. See the "Passing complex
+type parameters" section for more details.</para>
+
+<para><indexterm significance="preferred"><primary>proxy</primary></indexterm><glossterm>proxy</glossterm>: (Object) this is the object containing function stubs. It
+is created by calling load() (which happens during init if <indexterm><primary>autoload</primary></indexterm><sgmltag class="attribute">autoload</sgmltag> is
+true). The proxy functions are stubs to SOAP operations defined by the
+WSDL. 
+</para>
+<para>Note that <literal>proxy</literal> is not defined until the <literal>onload </literal>event is sent, thus
+function stubs cannot be invoked until <literal>onload.</literal> Each function stub requires two
+arguments: an array of parameters and delegate. You can unload it (i.e., set to
+null) by calling the <methodname>unload()</methodname> method. Go to the proxy section in the RPC chapter
+for details.</para>
+
+
+<para/></section><section><title>Events</title>
+
+<para>Note: event handler methods must be declared in the body of &lt;soap&gt;.
+Attribute event handlers will not work.</para>
+
+<para><indexterm significance="preferred"><primary>onload</primary></indexterm><glossterm>onload</glossterm>: this event is triggered when the proxy is returned
+to the client.</para>
+
+<para><indexterm significance="preferred"><primary>onunload</primary></indexterm><glossterm>onunload</glossterm>: this event is triggered when the proxy is unloaded from
+the client.</para>
+
+<para><indexterm significance="preferred"><primary>ondata</primary></indexterm><glossterm>ondata</glossterm>: this event is triggered when a declared &lt;remotecall&gt;
+doesn't handle its ondata events. See the &lt;remotecall&gt; section for
+details.</para>
+
+<para><indexterm significance="preferred"><primary>onerror</primary></indexterm><glossterm>onerror</glossterm>: this event is triggered if there was a problem loading or
+unloading the stub, or if a declared &lt;remotecall&gt; didn't handle its
+onerror event. See the &lt;remotecall&gt; section for details.</para>
+
+
+<para/></section><section><title>Methods</title>
+
+<para/><section id="rpc-soap.load"><title>load()</title>
+
+<para>Load() is responsible for setting up the proxy property. This method is
+automatically invoked if autoload is true. When the call returns, an onload
+event is sent and the proxy will contain function stubs that mirror the SOAP
+operations defined in the WSDL.</para>
+<para>
+Here's an example that shows a Laszlo application interacting with the SOAP service provided by 
+Amazon.com.  This example doesn't do much: it merely shows that the two ends are communicating.
+</para>
+
+<example role="live-example">
+   <title>Loading Amazon SOAP service</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-soap-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Loading Amazon SOAP service</title><programlisting role="lzx-embednew"><filename>rpc-soap-$2.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="530"&gt;
+
+    &lt;debug x="15" y="15" width="415" height="500" /&gt;
+
+    &lt;soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('Amazon soap service loaded');
+            Debug.write('Compare proxy stubs with WSDL SOAP operations.');
+            Debug.write('Amazon WSDL at ' + this.wsdl);            
+            Debug.write('proxy:');
+            Debug.inspect(this.proxy);
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="530"&gt;
+
+    &lt;debug x="15" y="15" width="415" height="500" /&gt;
+
+    &lt;soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('Amazon soap service loaded');
+            Debug.write('Compare proxy stubs with WSDL SOAP operations.');
+            Debug.write('Amazon WSDL at ' + this.wsdl);            
+            Debug.write('proxy:');
+            Debug.inspect(this.proxy);
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-soap-$2.lzx></example?>
+
+<para/></section><section><title>unload()</title>
+
+<para>This method unloads the proxy from the RPC object and sets it to null. When
+the call returns, an onunload event is sent.</para>
+<para>
+In the example below, the, SOAP service is unloaded.
+</para>
+
+<example role="live-example">
+   <title>Unloading Amazon SOAP service</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-soap-$3.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Unloading Amazon SOAP service</title><programlisting role="lzx-embednew"><filename>rpc-soap-$3.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="170"&gt;
+
+    &lt;debug x="10" y="10" width="415" height="150" /&gt;
+
+    &lt;soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('Amazon soap service loaded');
+            Debug.write('proxy is:', this.proxy);
+            this.unload();
+        &lt;/handler&gt;
+
+        &lt;handler name="onunload"&gt;
+            Debug.write('Amazon soap service unloaded');
+            Debug.write('proxy is:', this.proxy)
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="170"&gt;
+
+    &lt;debug x="10" y="10" width="415" height="150" /&gt;
+
+    &lt;soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('Amazon soap service loaded');
+            Debug.write('proxy is:', this.proxy);
+            this.unload();
+        &lt;/handler&gt;
+
+        &lt;handler name="onunload"&gt;
+            Debug.write('Amazon soap service unloaded');
+            Debug.write('proxy is:', this.proxy)
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-soap-$3.lzx></example?>
+
+<para/></section></section></section><section><title>Document style operation</title>
+
+<para>Document style operations use XML data(that is, documents) as paramaters. The SOAP
+specification is moving towards document style operations as being the preferred
+way of invoking web services. The alternative RPC style posed interoperability
+challenges that were difficult to resolve. The WS-I's <ulink url="http://www.ws-i.org/archive/Profiles/Basic/2002-10/basicprofile-1.0-wgd.htm">Basic
+Profile 1.0 Draft</ulink> describes a preference to document style, which is also
+the preferred style in SOAP 1.2.</para>
+
+<example role="live-example"><title>WS-I Basic Profile 1.0 Draft: Section 4.1, R1005-R1007</title><programlisting>
+R1005 MESSAGEs MUST NOT contain soap:encodingStyle attributes on any of the
+elements whose [namespace name] is "http://schemas.xmlsoap.org/soap/envelope/".
+
+R1006 MESSAGEs MUST NOT contain soap:encodingStyle attributes on any element
+which is a child of soap:Body.
+
+R1007 MESSAGEs MUST NOT contain soap:encodingStyle attributes on any elements
+which are grandchildren of soap:Body.
+
+For interoperability, literal XML is preferred.
+</programlisting></example>
+
+<para>In the application, a document style operation returns an array of
+<indexterm><primary>LzDataElement</primary></indexterm><sgmltag class="element">&lt;LzDataElement&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: LzDataElement-->
+s, though often only a single
+<indexterm><primary>LzDataElement</primary></indexterm><sgmltag class="element">&lt;LzDataElement&gt;</sgmltag> will exist in the array.</para>
+
+<para>The parameter passed into the operation must match the XML schema as defined
+in the WSDL. The parameter passed in can be an XML string or a dataset. The
+following example demonstrates how to invoke a document style operation through
+LZX.</para>
+
+<example role="live-example">
+   <title>Document sytle SOAP operation</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-soap-$5.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Document style SOAP operation</title><programlisting role="lzx-embednew"><filename>rpc-soap-$5.lzx</filename><parameter/><code>
+&lt;canvas debug="true"&gt;
+
+    &lt;debug y="30" x="145" width="350" height="300" /&gt;
+
+    &lt;!-- This SOAP service uses document/literal messages for its
+         operations. Each operation is passed a document as a parameter. --&gt;
+    &lt;soap name="maths" 
+          wsdl="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/MathService/VB/MathService.asmx?WSDL"&gt;
+
+        &lt;!-- Method to make a document for SOAP message requests --&gt;
+        &lt;method name="makedoc" args="func, av, bv"&gt;
+        &lt;![CDATA[
+            if (func == null) return;
+            var s =  '&lt;' + func + ' xmlns="' + 'http://tempuri.org/' + '" &gt;' + 
+                               '&lt;A&gt;' + av + '&lt;/A&gt;' + 
+                               '&lt;B&gt;' + bv + '&lt;/B&gt;' + 
+                   '&lt;/' + func + '&gt;';
+            Debug.write(s);
+            return s;
+        ]]&gt;
+        &lt;/method&gt;
+       
+        &lt;handler name="onload"&gt;
+            // make buttons visible once SOAP object is loaded
+            canvas.buttons.setAttribute('visible', true);            
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;handler name="ontimeout" args="error"&gt;
+            Debug.write('timeout:', error);
+        &lt;/handler&gt;
+
+        &lt;handler name="ondata" args="value"&gt;
+            Debug.write(value);
+            result.setText(value);
+        &lt;/handler&gt;
+
+        &lt;remotecall funcname="Add"&gt;
+            &lt;param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" /&gt;
+        &lt;/remotecall&gt;
+        &lt;remotecall funcname="Subtract"&gt;
+            &lt;param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" /&gt;
+        &lt;/remotecall&gt;
+        &lt;remotecall funcname="Multiply"&gt;
+            &lt;param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" /&gt;
+        &lt;/remotecall&gt;
+        &lt;remotecall funcname="Divide"&gt;
+            &lt;param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" /&gt;
+        &lt;/remotecall&gt;
+    &lt;/soap&gt;
+
+    &lt;view name="buttons" x="10" y="10" visible="false" layout="spacing: 10" &gt;
+        &lt;text&gt;&lt;b&gt;.NET MathService&lt;/b&gt;&lt;/text&gt;
+
+        &lt;view layout="axis: x" &gt;&lt;text y="3"&gt;a:&lt;/text&gt;&lt;edittext id="a" text="10"/&gt;&lt;/view&gt;
+        &lt;view layout="axis: x" &gt;&lt;text y="3"&gt;b:&lt;/text&gt;&lt;edittext id="b" text="2" /&gt;&lt;/view&gt;
+        &lt;view layout="axis: x" &gt;&lt;text&gt;result:&lt;/text&gt;&lt;text id="result"/&gt;&lt;/view&gt;
+
+        &lt;button text="add"      onclick="canvas.maths.Add.invoke()" /&gt;
+        &lt;button text="subtract" onclick="canvas.maths.Subtract.invoke()" /&gt;
+        &lt;button text="multiply" onclick="canvas.maths.Multiply.invoke()" /&gt;
+        &lt;button text="divide"   onclick="canvas.maths.Divide.invoke()" /&gt;
+
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true"&gt;
+
+    &lt;debug y="30" x="145" width="350" height="300" /&gt;
+
+    &lt;!-- This SOAP service uses document/literal messages for its
+         operations. Each operation is passed a document as a parameter. --&gt;
+    &lt;soap name="maths" 
+          wsdl="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/MathService/VB/MathService.asmx?WSDL"&gt;
+
+        &lt;!-- Method to make a document for SOAP message requests --&gt;
+        &lt;method name="makedoc" args="func, av, bv"&gt;
+        &lt;![CDATA[
+            if (func == null) return;
+            var s =  '&lt;' + func + ' xmlns="' + 'http://tempuri.org/' + '" &gt;' + 
+                               '&lt;A&gt;' + av + '&lt;/A&gt;' + 
+                               '&lt;B&gt;' + bv + '&lt;/B&gt;' + 
+                   '&lt;/' + func + '&gt;';
+            Debug.write(s);
+            return s;
+        ]]&gt;
+        &lt;/method&gt;
+       
+        &lt;handler name="onload"&gt;
+            // make buttons visible once SOAP object is loaded
+            canvas.buttons.setAttribute('visible', true);            
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;handler name="ontimeout" args="error"&gt;
+            Debug.write('timeout:', error);
+        &lt;/handler&gt;
+
+        &lt;handler name="ondata" args="value"&gt;
+            Debug.write(value);
+            result.setText(value);
+        &lt;/handler&gt;
+
+        &lt;remotecall funcname="Add"&gt;
+            &lt;param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" /&gt;
+        &lt;/remotecall&gt;
+        &lt;remotecall funcname="Subtract"&gt;
+            &lt;param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" /&gt;
+        &lt;/remotecall&gt;
+        &lt;remotecall funcname="Multiply"&gt;
+            &lt;param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" /&gt;
+        &lt;/remotecall&gt;
+        &lt;remotecall funcname="Divide"&gt;
+            &lt;param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" /&gt;
+        &lt;/remotecall&gt;
+    &lt;/soap&gt;
+
+    &lt;view name="buttons" x="10" y="10" visible="false" layout="spacing: 10" &gt;
+        &lt;text&gt;&lt;b&gt;.NET MathService&lt;/b&gt;&lt;/text&gt;
+
+        &lt;view layout="axis: x" &gt;&lt;text y="3"&gt;a:&lt;/text&gt;&lt;edittext id="a" text="10"/&gt;&lt;/view&gt;
+        &lt;view layout="axis: x" &gt;&lt;text y="3"&gt;b:&lt;/text&gt;&lt;edittext id="b" text="2" /&gt;&lt;/view&gt;
+        &lt;view layout="axis: x" &gt;&lt;text&gt;result:&lt;/text&gt;&lt;text id="result"/&gt;&lt;/view&gt;
+
+        &lt;button text="add"      onclick="canvas.maths.Add.invoke()" /&gt;
+        &lt;button text="subtract" onclick="canvas.maths.Subtract.invoke()" /&gt;
+        &lt;button text="multiply" onclick="canvas.maths.Multiply.invoke()" /&gt;
+        &lt;button text="divide"   onclick="canvas.maths.Divide.invoke()" /&gt;
+
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-soap-$5.lzx></example?>
+
+<para>The XML Schema in the WSDL describes how the XML should be structured for
+each of the operations. The WSDL below describes how what the schema should look
+like for the Add operation.</para>
+
+<example role="live-example"><title>XML Schema for .NET Math</title><programlisting>
+&lt;definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:s="http://www.w3.org/2001/XMLSchema"
+             xmlns:s0="http://tempuri.org/"
+             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+             xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+             xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+             targetNamespace="http://tempuri.org/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"&gt;
+
+  &lt;types&gt;
+    &lt;s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/"&gt;
+      &lt;s:element name="Add"&gt;
+        &lt;s:complexType&gt;
+          &lt;s:sequence&gt;
+            &lt;s:element minOccurs="1" maxOccurs="1" name="A" type="s:float" /&gt;
+            &lt;s:element minOccurs="1" maxOccurs="1" name="B" type="s:float" /&gt;
+          &lt;/s:sequence&gt;
+        &lt;/s:complexType&gt;
+      &lt;/s:element&gt;
+
+      &lt;s:element name="AddResponse"&gt;
+        &lt;s:complexType&gt;
+          &lt;s:sequence&gt;
+            &lt;s:element minOccurs="1" maxOccurs="1" name="AddResult" type="s:float" /&gt;
+          &lt;/s:sequence&gt;
+        &lt;/s:complexType&gt;
+      &lt;/s:element&gt;
+
+      &lt;!-- MORE SCHEMA DECLARATION (for Subtract, Multiply, Divide) HERE --&gt;
+
+    &lt;/s:schema&gt;
+  &lt;/types&gt;
+
+  &lt;message name="AddSoapIn"&gt;
+    &lt;part name="parameters" element="s0:Add" /&gt;
+  &lt;/message&gt;
+  &lt;message name="AddSoapOut"&gt;
+    &lt;part name="parameters" element="s0:AddResponse" /&gt;
+  &lt;/message&gt;
+
+  &lt;!-- OTHER MESSAGES (for Subtract, Multiply, Divide) HERE --&gt;
+
+  &lt;portType name="MathServiceSoap"&gt;
+    &lt;operation name="Add"&gt;
+      &lt;input message="s0:AddSoapIn" /&gt;
+      &lt;output message="s0:AddSoapOut" /&gt;
+    &lt;/operation&gt;
+    &lt;!-- OTHER PORT TYPE OPERATIONS (for Subtract, Multiply, Divide) HERE --&gt;
+  &lt;/portType&gt;
+
+  &lt;binding name="MathServiceSoap" type="s0:MathServiceSoap"&gt;
+    &lt;soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" /&gt;
+    &lt;operation name="Add"&gt;
+      &lt;soap:operation soapAction="http://tempuri.org/Add" style="document" /&gt;
+      &lt;input&gt;
+        &lt;soap:body use="literal" /&gt;
+      &lt;/input&gt;
+      &lt;output&gt;
+        &lt;soap:body use="literal" /&gt;
+      &lt;/output&gt;
+    &lt;/operation&gt;
+    &lt;!-- OTHER SOAP BINDING OPERATIONS (for Subtract, Multiply, Divide) HERE --&gt;
+  &lt;/binding&gt;
+
+  &lt;service name="MathService"&gt;
+    &lt;port name="MathServiceSoap" binding="s0:MathServiceSoap"&gt;
+      &lt;soap:address location="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/MathService/VB/MathService.asmx" /&gt;
+    &lt;/port&gt;
+  &lt;/service&gt;
+
+&lt;/definitions&gt;
+</programlisting></example>
+
+<para>The WSDL describes that Add is a document style operation and that a single
+element (XML message) is passed in. According to the XML schema, the XML message
+for the Add operation has to look something like:</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;Add xmlns="http://tempuri.org/"&gt;
+  &lt;A&gt;NUMBER&lt;/A&gt;
+  &lt;B&gt;NUMBER&lt;/B&gt;
+&lt;/Add&gt;
+</programlisting></informalexample>
+
+<para>Notice that the XML Schema describes elements that are in the
+"http://tempuri.org/". When creating the XML, make sure namespaces and elements
+match exactly as described in the schema. For example, "http://tempuri.org/"
+(trailing slash) and "http://tempuri.org" (no trailing slash) are not the same
+namespace. The schema describes that the Add element contains elements
+&lt;A&gt;NUMBER&lt;/A&gt; and &lt;B&gt;NUMBER&lt;/B&gt;. Since the case of each
+element name matters, it would be wrong to declare &lt;a&gt;number&lt;/a&gt; and
+&lt;b&gt;number&lt;/b&gt; in the Add element.</para>
+
+
+<para/></section><section><title>RPC style operation</title>
+
+<para>RPC style operations behave just like functions in that, instead of
+documents, values are passed in as parameters. Parameters can be of simple data
+type (number, boolean), array, or object. The parameter type for the operation
+is described in the WSDL's XML schema.</para>
+
+<example role="live-example">
+   <title>Passing simple parameters in RPC style operation</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-soap-$8.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Passing simple paramaters in RPC style operation</title><programlisting role="lzx-embednew"><filename>rpc-soap-$8.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="400" width="530"&gt;
+
+    &lt;debug x="10" y="190" width="510" height="200" /&gt;
+
+    &lt;dataset name="googleDset" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service loaded');
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;!-- See RPC chapter for details on remotecall and how dataobject is
+             used to data bind to RPC operation results. --&gt; 
+        &lt;remotecall name="search" funcname="doGoogleSearch" 
+                    dataobject="googleDset"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param value="${ s.text }" /&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('search result:\n', value);
+            &lt;/handler&gt;
+
+        &lt;/remotecall&gt;
+    &lt;/soap&gt;
+
+    &lt;view x="10" y="10" layout="spacing: 5" &gt;
+        &lt;view layout="axis: x; spacing: 5"&gt;
+            &lt;edittext id="s" text="SOAP" /&gt;
+            &lt;button text="search" onclick="Debug.write('Invoking search...'); google.search.invoke()" /&gt;
+        &lt;/view&gt;
+
+        &lt;view width="505" height="140" bgcolor="silver" clip="true" layout="axis: y" &gt;
+            &lt;view&gt;
+                &lt;datapath xpath="googleDset:/resultElements/item" pooling="true" /&gt;
+                &lt;text width="200" datapath="title/text()" clip="true" /&gt;
+                &lt;text x="205" width="300" datapath="URL/text()" clip="true" /&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="400" width="530"&gt;
+
+    &lt;debug x="10" y="190" width="510" height="200" /&gt;
+
+    &lt;dataset name="googleDset" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service loaded');
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;!-- See RPC chapter for details on remotecall and how dataobject is
+             used to data bind to RPC operation results. --&gt; 
+        &lt;remotecall name="search" funcname="doGoogleSearch" 
+                    dataobject="googleDset"&gt;
+
+            &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+            &lt;param value="${ s.text }" /&gt;
+            &lt;param value="1" /&gt;
+            &lt;param value="10" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="true" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+            &lt;param value="''" /&gt;
+
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('search result:\n', value);
+            &lt;/handler&gt;
+
+        &lt;/remotecall&gt;
+    &lt;/soap&gt;
+
+    &lt;view x="10" y="10" layout="spacing: 5" &gt;
+        &lt;view layout="axis: x; spacing: 5"&gt;
+            &lt;edittext id="s" text="SOAP" /&gt;
+            &lt;button text="search" onclick="Debug.write('Invoking search...'); google.search.invoke()" /&gt;
+        &lt;/view&gt;
+
+        &lt;view width="505" height="140" bgcolor="silver" clip="true" layout="axis: y" &gt;
+            &lt;view&gt;
+                &lt;datapath xpath="googleDset:/resultElements/item" pooling="true" /&gt;
+                &lt;text width="200" datapath="title/text()" clip="true" /&gt;
+                &lt;text x="205" width="300" datapath="URL/text()" clip="true" /&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-soap-$8.lzx></example?>
+
+<para>The example demonstrates how a result value, which is actually a JavaScript
+object, can be data bound through the dataobject attribute in remotecall. For
+more details, see the remotecall section in the RPC chapter.</para>
+
+<para/><section><title>Passing complex type parameters</title>
+
+<para>There are RPC style operations that require complex type parameters which are
+described in the WSDL's XML schema. For instance, the Amazon WSDL has a SOAP
+operation called KeywordSearchRequest that expects a KeywordRequest type
+parameter.</para>
+
+<example role="live-example"><title>Amazon WSDL: KeywordSearchRequest SOAP operation</title><programlisting>
+&lt;!-- For complete WSDL go to
+        http://soap.amazon.com/schemas3/AmazonWebServices.wsdl --&gt;
+
+&lt;wsdl:definitions name="AmazonSearch"
+                  xmlns:typens="http://soap.amazon.com"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns="http://schemas.xmlsoap.org/wsdl/"
+                  targetNamespace="http://soap.amazon.com"&gt;
+
+  &lt;wsdl:types&gt;
+
+    &lt;xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+                targetNamespace="http://soap.amazon.com"&gt;
+
+      &lt;xsd:complexType name="KeywordRequest"&gt;
+        &lt;xsd:all&gt;
+          &lt;xsd:element name="keyword" type="xsd:string"/&gt;
+          &lt;xsd:element name="page" type="xsd:string"/&gt;
+          &lt;xsd:element name="mode" type="xsd:string"/&gt;
+          &lt;xsd:element name="tag" type="xsd:string"/&gt;
+          &lt;xsd:element name="type" type="xsd:string"/&gt;
+          &lt;xsd:element name="devtag" type="xsd:string"/&gt;
+          &lt;xsd:element name="sort" type="xsd:string" minOccurs="0"/&gt;
+          &lt;xsd:element name="locale" type="xsd:string" minOccurs="0"/&gt;
+          &lt;xsd:element name="price" type="xsd:string" minOccurs="0"/&gt;
+        &lt;/xsd:all&gt;
+      &lt;/xsd:complexType&gt;
+
+      &lt;xsd:complexType name="ProductInfo"&gt;
+
+        &lt;xsd:all&gt;
+          &lt;xsd:element name="TotalResults" type="xsd:string" minOccurs="0"/&gt;
+          &lt;!-- Total number of Search Results --&gt;
+          &lt;xsd:element name="TotalPages" type="xsd:string" minOccurs="0"/&gt;
+          &lt;!-- Total number of Pages of Search Results --&gt;
+          &lt;xsd:element name="ListName" type="xsd:string" minOccurs="0"/&gt;
+          &lt;!-- Listmania list name --&gt;
+          &lt;xsd:element name="Details" type="typens:DetailsArray" minOccurs="0"/&gt;
+        &lt;/xsd:all&gt;
+
+      &lt;/xsd:complexType&gt;
+
+      &lt;!-- OTHER SCHEMA TYPES HERE --&gt;
+
+    &lt;/xsd:schema&gt;
+
+  &lt;/wsdl:types&gt;
+
+  &lt;message name="KeywordSearchRequest"&gt;
+    &lt;!-- Messages for Amazon Web APIs --&gt;
+    &lt;!-- KeywordSearchRequest message contains only one part and is of type
+         typens:KeywordRequest --&gt;
+    &lt;part name="KeywordSearchRequest" type="typens:KeywordRequest"/&gt;
+  &lt;/message&gt;
+
+  &lt;message name="KeywordSearchResponse"&gt;
+    &lt;part name="return" type="typens:ProductInfo"/&gt;
+  &lt;/message&gt;
+
+  &lt;portType name="AmazonSearchPort"&gt;
+    &lt;!-- Port for Amazon Web APIs --&gt;
+    &lt;operation name="KeywordSearchRequest"&gt;
+      &lt;!-- The KeywordSearchRequest message element (above) describes input. --&gt;
+      &lt;input message="typens:KeywordSearchRequest"/&gt;
+      &lt;!-- The KeywordSearchResponse message element (above) describes
+           input. --&gt;
+      &lt;output message="typens:KeywordSearchResponse"/&gt;
+    &lt;/operation&gt;
+
+    &lt;!-- OTHER OPERATIONS HERE --&gt;
+
+  &lt;/portType&gt;
+
+  &lt;binding name="AmazonSearchBinding" type="typens:AmazonSearchPort"&gt;
+
+    &lt;soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/&gt;
+
+    &lt;!-- Binding for Amazon Web APIs - RPC, SOAP over HTTP --&gt;
+    &lt;!-- This binds to the AmazonSearchPort portType operation above. --&gt; 
+    &lt;operation name="KeywordSearchRequest"&gt;
+
+      &lt;soap:operation soapAction="http://soap.amazon.com"/&gt;
+
+      &lt;input&gt;
+        &lt;soap:body use="encoded" 
+                   encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                   namespace="http://soap.amazon.com"/&gt;
+      &lt;/input&gt;
+      &lt;output&gt;
+        &lt;soap:body use="encoded" 
+                   encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                   namespace="http://soap.amazon.com"/&gt;
+      &lt;/output&gt;
+
+    &lt;/operation&gt;
+
+    &lt;!-- OTHER OPERATIONS HERE --&gt;
+
+  &lt;/binding&gt;
+
+  &lt;service name="AmazonSearchService"&gt;
+
+    &lt;port name="AmazonSearchPort" binding="typens:AmazonSearchBinding"&gt;
+
+      &lt;soap:address location="http://soap.amazon.com/onca/soap3"/&gt;
+
+    &lt;/port&gt;
+
+  &lt;/service&gt;
+
+&lt;/wsdl:definitions&gt;
+</programlisting></example>
+
+<para>The <indexterm significance="preferred"><primary>proto</primary></indexterm><glossterm>proto</glossterm> property in a soap object can be used to pass complex
+types as parameters. When the soap object loads, its proto property is set with
+JavaScript function prototypes representing complex structures described in the
+WSDL. In Amazon WSDL, the KeywordSearchRequest operation expects a
+KeywordRequest parameter. To invoke KeywordSearchRequest, the proto property
+should be used to instantiate a KeywordRequest object as shown in this
+example.</para>
+
+<example role="live-example">
+   <title>Inovoking a SOAP operation using a complex type value</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-soap-$10.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Invoking a SOAP operation using a complex type value</title><programlisting role="lzx-embednew"><filename>rpc-soap-$10.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="530"&gt;
+
+    &lt;debug x="10" y="40" width="470" height="450" /&gt;
+
+    &lt;soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
+
+        &lt;attribute name="handlerDel" value="null" type="expression" /&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('Amazon soap service loaded.');
+            Debug.write('Click keyword search button to get started.');
+            Debug.write('--');
+            search.setAttribute('visible', true);            
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;method name="invokeKeywordSearchRequest" args="keyword"&gt;
+
+            //------------------------------------------------------------
+            // Instantiate proto.KeywordRequest prototype to pass into
+            // KeywordSearchRequest.
+            //------------------------------------------------------------
+            var keyReqParam = new this.proto.KeywordRequest();
+
+            keyReqParam.keyword = keyword;
+            keyReqParam.page = 1;
+            keyReqParam.mode = 'book';
+            keyReqParam.tag = 'webservices-20';
+            keyReqParam.type = 'lite';
+            keyReqParam.devtag = '12FRM39DPGD6QZRMTEG2';
+            keyReqParam.format = 'xml';
+            keyReqParam.version = '1.0';
+
+            if (this.handlerDel == null) {
+                this.handlerDel = new LzDelegate(this, 'handler');
+            }
+
+            //------------------------------------------------------------
+            // Array of parameters and a delegate for callback handler must
+            // be passed in when invoking raw stub function.  For more
+            // information on proxy, see proxy section in RPC chapter
+            //------------------------------------------------------------
+            Debug.write('Invoking Amazon KeywordSearchRequest...');
+
+            this.proxy.KeywordSearchRequest( [ keyReqParam ], this.handlerDel);
+        &lt;/method&gt;
+
+        &lt;method name="handler" args="response"&gt;
+            Debug.write('Got response:', response);
+        &lt;/method&gt;
+
+    &lt;/soap&gt;
+
+    &lt;view id="search" x="10" y="10" layout="spacing: 5" visible="false"&gt;
+        &lt;view layout="axis: x; spacing: 5"&gt;
+            &lt;edittext id="s" text="services" /&gt;
+            &lt;button text="keyword search" onclick="amazon.invokeKeywordSearchRequest(s.text)" /&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="530"&gt;
+
+    &lt;debug x="10" y="40" width="470" height="450" /&gt;
+
+    &lt;soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
+
+        &lt;attribute name="handlerDel" value="null" type="expression" /&gt;
+
+        &lt;handler name="onload"&gt;
+            Debug.write('Amazon soap service loaded.');
+            Debug.write('Click keyword search button to get started.');
+            Debug.write('--');
+            search.setAttribute('visible', true);            
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+
+        &lt;method name="invokeKeywordSearchRequest" args="keyword"&gt;
+
+            //------------------------------------------------------------
+            // Instantiate proto.KeywordRequest prototype to pass into
+            // KeywordSearchRequest.
+            //------------------------------------------------------------
+            var keyReqParam = new this.proto.KeywordRequest();
+
+            keyReqParam.keyword = keyword;
+            keyReqParam.page = 1;
+            keyReqParam.mode = 'book';
+            keyReqParam.tag = 'webservices-20';
+            keyReqParam.type = 'lite';
+            keyReqParam.devtag = '12FRM39DPGD6QZRMTEG2';
+            keyReqParam.format = 'xml';
+            keyReqParam.version = '1.0';
+
+            if (this.handlerDel == null) {
+                this.handlerDel = new LzDelegate(this, 'handler');
+            }
+
+            //------------------------------------------------------------
+            // Array of parameters and a delegate for callback handler must
+            // be passed in when invoking raw stub function.  For more
+            // information on proxy, see proxy section in RPC chapter
+            //------------------------------------------------------------
+            Debug.write('Invoking Amazon KeywordSearchRequest...');
+
+            this.proxy.KeywordSearchRequest( [ keyReqParam ], this.handlerDel);
+        &lt;/method&gt;
+
+        &lt;method name="handler" args="response"&gt;
+            Debug.write('Got response:', response);
+        &lt;/method&gt;
+
+    &lt;/soap&gt;
+
+    &lt;view id="search" x="10" y="10" layout="spacing: 5" visible="false"&gt;
+        &lt;view layout="axis: x; spacing: 5"&gt;
+            &lt;edittext id="s" text="services" /&gt;
+            &lt;button text="keyword search" onclick="amazon.invokeKeywordSearchRequest(s.text)" /&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-soap-$10.lzx></example?>
+
+<para>There are two kinds of prototypes: objects and arrays. An object prototype
+contains three properties:</para>
+
+<itemizedlist spacing="compact"><listitem><para><indexterm significance="preferred"><primary>name</primary></indexterm><glossterm>name</glossterm>: (String) type name.</para></listitem><listitem><para><indexterm significance="preferred"><primary>ns</primary></indexterm><glossterm>ns</glossterm>: (LzNamespace) prototype container which is associated to
+    a particular namespace. This object is the same object pointed by
+    LzNamespace.ns[MYNAMESPACE]. Inspect LzNamespace.ns in the debugger for
+    details. The source for LzNamespace can be found in
+    lps/components/rpc/library/namespace.js.</para></listitem><listitem><para><indexterm significance="preferred"><primary>members</primary></indexterm><glossterm>members</glossterm>: (Object) members this prototype contains as
+    described in the WSDL.</para></listitem></itemizedlist>
+
+<para>The members property gives the developer an idea of what values should be set
+in the object. In the Amazon example, each member in the instantiated
+KeywordRequest object can be seen in the members property of the KeywordRequest
+prototype. Objects are represented in the WSDL's XML schema like:</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;!-- Assume xsd is "http://www.w3.org/2001/XMLSchema" and
+     soapenc is "http://schemas.xmlsoap.org/soap/encoding/". --&gt;
+&lt;xsd:complexType name="COMPLEX_TYPE_NAME"&gt;
+  &lt;xsd:all&gt;
+    &lt;xsd:element name="NAME1" type="TYPE1" /&gt;
+    &lt;xsd:element name="NAME2" type="TYPE2" /&gt;
+    &lt;!-- other elements... --&gt;
+  &lt;/xsd:all&gt;
+&lt;/xsd:complexType&gt;
+</programlisting></informalexample>
+
+<para>An array prototype contains three properties:</para>
+
+<itemizedlist spacing="compact"><listitem><para><indexterm significance="preferred"><primary>name</primary></indexterm><glossterm>name</glossterm>: (String) type name.</para></listitem><listitem><para><indexterm significance="preferred"><primary>ns</primary></indexterm><glossterm>ns</glossterm>: (LzNamespace) prototype container which is associated to
+    a particular namespace. This object is the same object pointed by
+    LzNamespace.ns[MYNAMESPACE]. Inspect LzNamespace.ns in the debugger for
+    details. The source for LzNamespace can be found in
+    lps/components/rpc/library/namespace.js.</para></listitem><listitem><para><indexterm significance="preferred"><primary>arraytype</primary></indexterm><glossterm>arraytype</glossterm>: (QName) type of array this prototype represents,
+    as described in the WSDL. A Qname contains a namespace and a localname, both
+    of type string. The source for QName can be found in
+    lps/components/rpc/library/qname.js.</para></listitem></itemizedlist>
+<para>Basic &lt;complexType&gt; and arrays are prototyped in the client based
+    on a WSDL's schema. The prototypes are stored in LzNamespace.ns[NAMESPACE],
+    where NAMESPACE is the namespace of the schema.</para>
+<para>The OpenLaszlo SOAP WSDL parser expects the XML schema array pattern to look like:</para>
+
+<example role="live-example"><title>XML schema array pattern</title><programlisting>
+&lt;xsd:complexType name="ARRAY_NAME"&gt;
+    &lt;xsd:complexContent&gt;
+          &lt;xsd:restriction base="soapenc:Array"&gt;
+             &lt;xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="ARRAY_TYPE[]"/&gt;
+          &lt;/xsd:restriction&gt;
+    &lt;/xsd:complexContent&gt;
+&lt;/xsd:complexType&gt;
+</programlisting></example>
+
+<para>The following example demonstrates what the client-side prototype of the
+Google XML schema type looks like:</para>
+
+<example role="live-example">
+   <title>Google array complex type and object complex type</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/rpc-soap-$13.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Google array complex type and object complex type</title><programlisting role="lzx-embednew"><filename>rpc-soap-$13.lzx</filename><parameter/><code>
+&lt;canvas debug="true" height="580" width="530"&gt;
+
+    &lt;debug x="10" y="10" width="510" height="560" /&gt;
+
+    &lt;dataset name="googleDset" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service loaded');
+            Debug.write('----------------');
+            Debug.write('google proto:');
+            Debug.inspect(google.proto)
+            Debug.write('----------------');
+            Debug.write('ResultElement proto:');
+            Debug.inspect(google.proto.ResultElement)
+            Debug.write('ResultElement members are:');
+            Debug.inspect(google.proto.ResultElement.members)
+            Debug.write('----------------');
+            Debug.write('ResultElementArray proto:');
+            Debug.inspect(google.proto.ResultElementArray)
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+    &lt;/soap&gt;
+
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas debug="true" height="580" width="530"&gt;
+
+    &lt;debug x="10" y="10" width="510" height="560" /&gt;
+
+    &lt;dataset name="googleDset" /&gt;
+
+    &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+        &lt;handler name="onload"&gt;
+            Debug.write('google soap service loaded');
+            Debug.write('----------------');
+            Debug.write('google proto:');
+            Debug.inspect(google.proto)
+            Debug.write('----------------');
+            Debug.write('ResultElement proto:');
+            Debug.inspect(google.proto.ResultElement)
+            Debug.write('ResultElement members are:');
+            Debug.inspect(google.proto.ResultElement.members)
+            Debug.write('----------------');
+            Debug.write('ResultElementArray proto:');
+            Debug.inspect(google.proto.ResultElementArray)
+        &lt;/handler&gt;
+
+        &lt;handler name="onerror" args="error"&gt;
+            Debug.write('error:', error);
+        &lt;/handler&gt;
+    &lt;/soap&gt;
+
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/rpc-soap-$13.lzx></example?>
+
+<para>The XML schema in the WSDL for Google looks like:</para>
+
+<informalexample role="live-example"><programlisting>
+&lt;definitions name="GoogleSearch"
+             targetNamespace="urn:GoogleSearch"
+             xmlns:typens="urn:GoogleSearch"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"&gt;
+
+  &lt;types&gt;
+    &lt;xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" 
+                targetNamespace="urn:GoogleSearch"&gt;
+            
+      &lt;!-- This is represented as an object prototype with 11 members in the
+              client. --&gt;
+      &lt;xsd:complexType name="GoogleSearchResult"&gt;
+        &lt;xsd:all&gt;
+          &lt;xsd:element name="documentFiltering" type="xsd:boolean"/&gt;
+          &lt;xsd:element name="searchComments" type="xsd:string"/&gt;
+          &lt;xsd:element name="estimatedTotalResultsCount"  type="xsd:int"/&gt;
+          &lt;xsd:element name="estimateIsExact" type="xsd:boolean"/&gt;
+          &lt;xsd:element name="resultElements" type="typens:ResultElementArray"/&gt;
+          &lt;xsd:element name="searchQuery" type="xsd:string"/&gt;
+          &lt;xsd:element name="startIndex" type="xsd:int"/&gt;
+          &lt;xsd:element name="endIndex" type="xsd:int"/&gt;
+          &lt;xsd:element name="searchTips" type="xsd:string"/&gt;
+          &lt;xsd:element name="directoryCategories" type="typens:DirectoryCategoryArray"/&gt;
+          &lt;xsd:element name="searchTime" type="xsd:double"/&gt;
+        &lt;/xsd:all&gt;
+      &lt;/xsd:complexType&gt;
+
+      &lt;!-- This will be represented as an object prototype with 9 members in
+              the client. --&gt;
+      &lt;xsd:complexType name="ResultElement"&gt;
+        &lt;xsd:all&gt;
+          &lt;xsd:element name="summary" type="xsd:string"/&gt;
+          &lt;xsd:element name="URL" type="xsd:string"/&gt;
+          &lt;xsd:element name="snippet" type="xsd:string"/&gt;
+          &lt;xsd:element name="title" type="xsd:string"/&gt;
+          &lt;xsd:element name="cachedSize" type="xsd:string"/&gt;
+          &lt;xsd:element name="relatedInformationPresent" type="xsd:boolean"/&gt;
+          &lt;xsd:element name="hostName" type="xsd:string"/&gt;
+          &lt;xsd:element name="directoryCategory" type="typens:DirectoryCategory"/&gt;
+          &lt;xsd:element name="directoryTitle" type="xsd:string"/&gt;
+        &lt;/xsd:all&gt;
+      &lt;/xsd:complexType&gt;
+
+      &lt;!-- This is represented as an array prototype in the client. --&gt;
+      &lt;xsd:complexType name="ResultElementArray"&gt;
+        &lt;xsd:complexContent&gt;
+          &lt;xsd:restriction base="soapenc:Array"&gt;
+             &lt;xsd:attribute ref="soapenc:arrayType" 
+                             wsdl:arrayType="typens:ResultElement[]"/&gt;
+          &lt;/xsd:restriction&gt;
+        &lt;/xsd:complexContent&gt;
+      &lt;/xsd:complexType&gt;
+
+      &lt;!-- This will be reprsented as an array prototype. --&gt;
+      &lt;xsd:complexType name="DirectoryCategoryArray"&gt;
+        &lt;xsd:complexContent&gt;
+          &lt;xsd:restriction base="soapenc:Array"&gt;
+             &lt;xsd:attribute ref="soapenc:arrayType"
+                             wsdl:arrayType="typens:DirectoryCategory[]"/&gt;
+          &lt;/xsd:restriction&gt;
+        &lt;/xsd:complexContent&gt;
+      &lt;/xsd:complexType&gt;
+
+      &lt;!-- This will be reprsented as an object prototype with 2 members. --&gt;
+      &lt;xsd:complexType name="DirectoryCategory"&gt;
+        &lt;xsd:all&gt;
+          &lt;xsd:element name="fullViewableName" type="xsd:string"/&gt;
+          &lt;xsd:element name="specialEncoding" type="xsd:string"/&gt;
+        &lt;/xsd:all&gt;
+      &lt;/xsd:complexType&gt;
+
+    &lt;/xsd:schema&gt;    
+  &lt;/types&gt;
+
+  &lt;!-- rest of WSDL --&gt;
+
+&lt;/definitions&gt;
+</programlisting></informalexample>
+
+
+<para/></section><section><title>Type Mapping</title>
+
+<para/><section><title>Type mapping of parameters from JavaScript to SOAP encoding</title>
+
+<para>Parameters passed into a SOAP function from a Laszlo application will
+automatically be typed according to the XML schema description in the WSDL. For
+example, if a function foo() expects an integer parameter, the function can be
+invoked either like foo(1) or foo('1'). When foo is invoked(), the SOAP message
+sent is serialized appropriately with the correct encoding type.</para>
+
+<para/></section><section><title>Type mapping of SOAP to JavaScript return types</title>
+
+<para>
+Javascript is a loosely-typed language and may not support all the types used by the originating service.  Therefore the OpenLaszlo soap service must perform a mapping.  Here are the values used:
+</para>
+<informaltable><tgroup cols="2"><thead><row><entry>SOAP types</entry><entry>JavaScript function stub return types</entry></row></thead><tbody><row><entry><emphasis role="b">XSD types</emphasis></entry></row><row><entry>xsd:anySimpleType</entry><entry>String</entry></row><row><entry>xsd:string</entry><entry>String</entry></row><row><entry>xsd:boolean</entry><entry>Boolean</entry></row><row><entry>xsd:double</entry><entry>Number+</entry></row><row><entry>xsd:float</entry><entry>Number+</entry></row><row><entry>xsd:int</entry><entry>Number+</entry></row><row><entry>xsd:integer</entry><entry>Number+</entry></row><row><entry>xsd:long</entry><entry>Number+</entry></row><row><entry>xsd:short</entry><entry>Number+</entry></row><row><entry>xsd:byte</entry><entry>Number+</entry></row><row><entry><emphasis role="b">SOAP-ENC types</emphasis></entry></row><row><entry>soapenc:string</entry><entry>String</entry></row><row><entry>soapenc:boolean</entry><entry>Boolean</entry></row><row><entry>soapenc:double</entry><entry>Number+</entry></row><row><entry>soapenc:float</entry><entry>Number+</entry></row><row><entry>soapenc:int</entry><entry>Number+</entry></row><row><entry>soapenc:long</entry><entry>Number+</entry></row><row><entry>soapenc:short</entry><entry>Number+</entry></row><row><entry>soapenc:byte</entry><entry>Number+</entry></row><row><entry>soapenc:Array</entry><entry>Array</entry></row><row><entry><emphasis role="b">Other types</emphasis></entry></row><row><entry>complex types</entry><entry>Object (based on SOAP object proto prototype)</entry></row></tbody></tgroup></informaltable>
+<para/></section><section><title>Numbers</title>
+<para>
+In JavaScript all numbers are floating-point numbers. JavaScript uses the standard 8 byte IEEE floating-point numeric format, which
+means the range is from:</para>
+<programlisting>
+
++/- 1.7976931348623157x10^308 - very large, and +/- 5x10^-324 - very small.
+</programlisting>
+<para>
+As JavaScript uses floating-point numbers the accuracy is only assured for
+integers between: -9,007,199,254,740,992 (-2^53) and 9,007,199,254,740,992
+(2^53)
+</para>
+<para/></section><section><title>Unsupported return types</title>
+<para>OpenLaszlo SOAP doesn't currently support the following return types:</para>
+
+<itemizedlist spacing="compact"><listitem><para>xsd:QName</para></listitem><listitem><para>xsd:anyType</para></listitem><listitem><para>xsd:date</para></listitem><listitem><para>xsd:time</para></listitem><listitem><para>xsd:gYearMonth</para></listitem><listitem><para>xsd:gYear</para></listitem><listitem><para>xsd:gMonth</para></listitem><listitem><para>xsd:gDay</para></listitem><listitem><para>xsd:gMonthDay</para></listitem><listitem><para>xsd:token</para></listitem><listitem><para>xsd:normalizedString</para></listitem><listitem><para>xsd:unsignedLong</para></listitem><listitem><para>xsd:unsignedInt</para></listitem><listitem><para>xsd:unsignedShort</para></listitem><listitem><para>xsd:unsignedByte</para></listitem><listitem><para>xsd:nonNegativeInteger</para></listitem><listitem><para>xsd:negativeInteger</para></listitem><listitem><para>xsd:positiveInteger</para></listitem><listitem><para>xsd:nonPositiveInteger</para></listitem><listitem><para>xsd:Name</para></listitem><listitem><para>xsd:NCName</para></listitem><listitem><para>xsd:ID</para></listitem><listitem><para>xsd:language</para></listitem><listitem><para>xsd:NMTOKEN</para></listitem><listitem><para>xsd:NMTOKENS</para></listitem><listitem><para>xsd:NOTATION</para></listitem><listitem><para>xsd:ENTITY</para></listitem><listitem><para>xsd:ENTITIES</para></listitem><listitem><para>xsd:IDREF</para></listitem><listitem><para>xsd:IDREFS</para></listitem><listitem><para>xsd:duration</para></listitem><listitem><para>xsd:anyURI</para></listitem><listitem><para>xsd:schema</para></listitem><listitem><para>soapenc:Map</para></listitem><listitem><para>soapenc:Element</para></listitem><listitem><para>soapenc:Document</para></listitem><listitem><para>soapenc:Vector</para></listitem></itemizedlist>
+<para/></section></section></section><section><title>SOAP headers</title>
+
+<para>SOAP headers are the metadata passed with SOAP messages. During transmission,
+intermerdiaries may process headers while leaving the SOAP body unchanged. For
+example, a security service could provide authentication this way.  Though SOAP
+headers are largely unused today, this may change as more secured SOAP services
+are implemented.</para>
+
+<para/><section><title>Request headers</title>
+
+<para>To set SOAP request headers with each outgoing message, set the
+requestheaders attribute with an XML string (a root node is not required).</para>
+
+<example role="live-example"><title>SOAP request headers</title><programlisting>
+&lt;soap name="calendar" wsdl="http://www.mycompany.com/Calendar.wsdl"&gt;  
+    &lt;attribute name="requestheaders" value='&lt;usr&gt;name&lt;/usr&gt;&lt;pwd&gt;secret&lt;/pwd&gt;' /&gt;  
+&lt;!-- ... --&gt; 
+&lt;/soap&gt;  
+</programlisting></example>
+
+<para>You can use the <indexterm><primary><literal>onload()</literal></primary></indexterm><methodname>onload()</methodname> event to trigger the setting of a
+header value.</para>
+
+<example role="live-example"><title>Setting SOAP request headers in a method</title><programlisting>
+&lt;soap name="calendar" wsdl="http://www.mycompany.com/Calendar.wsdl"&gt; 
+    &lt;handler name="onload"&gt;  
+    &lt;![CDATA[
+       this.requestheaders = '&lt;usr&gt;name&lt;/usr&gt;' +  '&lt;pwd&gt;secret&lt;/pwd&gt;'
+    ]]&gt; 
+    &lt;/handler&gt;  
+    &lt;!-- ... --&gt; 
+&lt;/soap&gt; 
+</programlisting></example>
+
+<para>To remove request headers, simply clear the requestheaders attribute by
+resetting its value, for example, <literal>requestheaders=''.</literal></para>
+
+<para/></section><section><title>Response headers</title>
+
+<para>To access response headers from a SOAP response, set the responseheaders
+attribute with a dataset.</para>
+
+<example role="live-example"><title>SOAP response headers</title><programlisting>
+&lt;canvas&gt;
+
+    &lt;dataset name="resds" /&gt;
+
+    &lt;soap name="lq" wsdl="file:ReservationService.wsdl" requestheaders="..." 
+          responseheaders="resds"&gt;
+          ...
+        &lt;handler name="ondata"&gt;
+            // print out response headers whenever we get data.
+            Debug.write(resds.serialize());
+        &lt;/handler&gt;
+
+    &lt;/soap&gt;
+
+    &lt;!-- ... --&gt;
+&lt;/canvas&gt;
+</programlisting></example>
+<para/></section></section><section><title>Handling of overloaded methods on the service</title>
+<para>
+The SOAP specification allows overloaded operations, that is, methods that contain the same name but have different parameters. This creates a mismatch with Javascript, which does not allow overloaded methods. Here is how we handle this.</para>
+<para>
+If there are overloaded SOAP operations the OpenLaslo Server returns "mangled" names for those operations based on the request and response parameters. For example, if there are SOAP operations that are defined like the following in the WSDL:
+</para>
+<programlisting>
+
+  getFoo(request1, response1)
+  getFoo(request2, response2)
+  getFoo(request3, response3)
+</programlisting>
+<para>
+the SOAP object in the LZX application will contain the following methods:
+</para>
+<programlisting>
+  getFoo()
+  getFoo_request2_response2()
+  getFoo_request3_response3()
+</programlisting>
+<para>
+The reason why these methods need to be mangeld in LZX is because there's no way to have more than instance of <indexterm><primary><literal>getFoo()</literal></primary></indexterm><methodname>getFoo()</methodname> in Javascript so we do this on the client to differentiate the three method calls.
+</para>
+<para/></section><section><title>Limitations on OpenLaszlo SOAP implementation</title>
+<para>
+The OpenLaszlo implementation of the SOAP specification has the following deviations:
+</para>
+<itemizedlist spacing="compact"><listitem><para>Only WSDL 1.1 documents are suppported. WSDL 2.0 documents are not
+    supported.</para></listitem><listitem><para>The WSDL &lt;import&gt; tag is not supported.</para></listitem><listitem><para>SOAP 1.1 partially transmitted arrays and sparse arays are not
+    supported.</para></listitem><listitem><para>Multidimensional arrays are not supported.</para></listitem><listitem><para>SOAP attachments are not supported.</para></listitem><listitem><para>Multireferences are not supported. Items that are referenced more than
+    once are created as different instances.</para></listitem></itemizedlist>
+
+
+<para/></section><section><title>References</title>
+
+<itemizedlist spacing="compact"><listitem><para>
+    <ulink url="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/">
+        SOAP 1.1 (W3C Note)
+    </ulink>
+    </para></listitem><listitem><para>
+    <ulink url="http://www.w3.org/TR/soap12-part0/">
+        SOAP 1.2 Part 0: Primer (W3C Recommendation)
+    </ulink>
+    </para></listitem><listitem><para>
+    <ulink url="http://www.w3.org/TR/wsdl">
+        WSDL 1.1 (W3C Note)
+    </ulink>
+    </para></listitem><listitem><para>
+    <ulink url="http://www.w3.org/TR/wsdl20/">
+        WSDL 2.0 Part 1: Core Language (W3C Working Draft)
+    </ulink>
+    </para></listitem><listitem><para>
+    <ulink url="http://www.ws-i.org/Profiles/BasicProfile-1.0-2004-04-16.html">
+        Basic Profile Version 1.0 (WS-I Final Material)
+    </ulink>
+    </para></listitem><listitem><para>
+    <ulink url="http://www-106.ibm.com/developerworks/webservices/library/ws-whichwsdl/">
+        Which style of WSDL should I use? (IBM developer works)
+    </ulink>
+    </para></listitem><listitem><para>
+    <ulink url="http://www.w3.org/TR/2001/REC-xmlschema-0-20010502/">
+        XML Schema Part 0: Primer (W3C Recommendation)
+    </ulink>
+    </para></listitem><listitem><para>
+    <ulink url="http://www.w3.org/TR/REC-xml/">
+    Extensible Markup Language (XML) 1.0 (W3C Recommendation)
+    </ulink>
+    </para></listitem><listitem><para>
+    <ulink url="http://www.w3.org/TR/1999/REC-xml-names-19990114/">
+        Namespaces in XML
+    </ulink>
+    </para></listitem><listitem><para>WSDLs used in this document
+
+        <itemizedlist spacing="compact"><listitem><para><ulink url="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl">Amazon</ulink>:
+            RPC style operation parameters are complex data structures</para></listitem><listitem><para><ulink url="http://api.google.com/GoogleSearch.wsdl">Google</ulink>:
+            RPC style operation parameters are simple types</para></listitem><listitem><para><ulink url="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/MathService/VB/MathService.asmx?WSDL">.NET
+            MathService: Document style operations</ulink></para></listitem></itemizedlist>
+    
+    </para></listitem></itemizedlist>
+
+
+<para/></section></chapter>

@@ -19,27 +19,27 @@
         </view>
         
         <javarpc name="remote" scope="session" id="xxx"
-                 classname="org.openlaszlo.test.xmlrpc.TypeMap">
+                 remoteclassname="org.openlaszlo.test.xmlrpc.TypeMap">
             
             <method event="onerror" args="msg">
                 canvas.setAttribute('runTests', canvas.runTests + 1)
                 parent.onerror.sendEvent(msg);
             </method>
 
-            <remotecall funcname="getMappedObject" dataobject="mapDset">
+            <remotecall funcname="getMappedObject" dataobject="$once{mapDset}">
                 <method event="ondata">
                     classroot.assertTrue(mapDset.childNodes != null)
                 </method>
             </remotecall>
 
 
-            <remotecall funcname="getList" dataobject="listDset">
+            <remotecall funcname="getList" dataobject="$once{listDset}">
                 <method event="ondata">
                     classroot.assertTrue(listDset.childNodes != null)
                 </method>
             </remotecall>
 
-            <remotecall funcname="getDouble" dataobject="scalarDset">
+            <remotecall funcname="getDouble" dataobject="$once{scalarDset}">
                 <method event="ondata" args="data">
                     classroot.assertTrue(scalarDset.childNodes != null)
                     classroot.assertTrue(scalarDset.childNodes[0].data == data)
@@ -62,7 +62,7 @@
     </class>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

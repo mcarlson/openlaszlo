@@ -1,0 +1,41 @@
+/* * Stylesheet for LPS viewer */
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+
+.programlisting .code { background-color: inherit }
+.starttag, .endtag, .sgmltag-element {color: #0000B7}
+.endtag {color: #0000B7}
+.attrname, .sgmltag-attribute {color: #8B0D3A}
+.attrvalue, sgmltag-attvalue {color: #9A3300}
+.markup {color: #0000B7}
+.name {color: #9A3300}
+.lzxpp-co { font-weight: bold; }
+.lzx-copyright { display: none; }
+.comment-body {color: gray; }
+.comment-markup {color: gray; }
+.constraint-markup {color: gray}
+.constraint-expression {color: red}
+
+/* Next two styles, .warningheader and .warningheader a, 
+are for the in-progress tag for the OL4.0.5 reference only. 
+After 4.0.5, these can be deleted. [bshine 2007.08.30] 
+Bug LPP-4539. */
+.warningheader {
+    padding-top: 10pt;
+    padding-bottom: 10pt;
+    padding-left: 20pt;
+    border-top: 1pt solid red;
+    border-bottom: 1pt solid red;
+    
+    background-color: #FF9999;
+    color : #ffffff;
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 15px;
+    text-decoration: none;
+}
+
+.warningheader a {
+    color: #000099;
+}

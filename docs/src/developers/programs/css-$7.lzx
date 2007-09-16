@@ -1,0 +1,20 @@
+
+
+<canvas height="200" width="200">
+ 
+<stylesheet>
+        view {
+            nicebgcolor: "0x0000FF";
+            micebgcolor: "0xCCCCCC";
+        }
+</stylesheet>
+
+<view height="100" width="100" bgcolor="$style{'nicebgcolor'}"/>
+<view height="75" width="75" bgcolor="0xFFFFFF"/>
+<view height="50" width="50" bgcolor="$style{'micebgcolor'}"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,25 @@
+
+<canvas height="100">
+  <!-- create a simplelayout so embedded views are laid out  -->
+  <!-- on top of each other.                                 -->
+  <class name="class1" layout="class: simplelayout; spacing: 2">
+    <attribute name="label" value="class1 label" type="string"/>
+    <text>from class1</text>
+    <button text="${classroot.label}"/>
+  </class>
+
+  <!-- overrides class1's label; inherits text and button -->
+  <class name="class2" extends="class1" label="class2 label">
+    <text>from class2</text>
+  </class>
+
+  <!-- inherit class1's text and button; inherit class2's text -->
+  <class name="class3" extends="class2">
+    <text>from class3</text>
+  </class>
+  <class3/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

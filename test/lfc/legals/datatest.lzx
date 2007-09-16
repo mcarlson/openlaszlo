@@ -1,0 +1,42 @@
+<canvas width="1200" height="600"  proxied='false'>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+
+<script>
+<![CDATA[
+
+LzDataset.prototype.showReplicated = function () {
+    debug('got data');
+//    debug('serialized data : ', this.serialize());
+    var y = 0; 
+    var n = this.data;
+    if (n != null) {
+        for (var i =0;  i < n.childNodes.length; i++) {
+            var child = n.childNodes[i];
+            y += 50; var d = n[i]; 
+            var  txt = child.childNodes[0].data;
+            LzFactory.create(LzText, canvas, { width: 200, text: txt, y: y});
+        }
+    }
+
+}
+]]>
+</script>
+
+
+  <dataset name="mydata" src="http:mydata.xml" 
+           request='true'
+           oninit="debug('oninit event handler called');"
+           onerror="debug('got dataset onerror event', this);"
+           ondata="this.showReplicated()"
+           />
+
+
+
+</canvas>
+
+

@@ -1,0 +1,36 @@
+
+<canvas width="500" height="200">
+  <window x="100" y="60"
+          title="Window 2" name="windowTwo" id="windowTwoId">
+    <!-- Moves the second window twenty pixels 
+         in specified direction -->
+    <method name="moveWindow" args="direction, distance">
+      // decide which direction to go
+      if (direction == "left") {
+        var increment = -1 * distance;
+      } else if (direction == "right") {
+        var increment = distance;
+      }
+      var originalX = this.getAttribute('x');
+      var newX = originalX + increment;
+      this.setAttribute('x', newX);
+    </method>
+    <text>This is the second window.</text>
+  </window>
+  <window x="20" y="20" width="300"
+      title="Simple Window">
+      <simplelayout axis="x" spacing="4"/>
+      <button text="Left 2" name="button1" 
+              onclick="windowTwoId.moveWindow('left', 2)"/>
+      <button text="Left 20" name="button2" 
+              onclick="windowTwoId.moveWindow('left', 20)"/>
+      <button text="Right 20" 
+              onclick="windowTwoId.moveWindow('right', 20)"/>
+      <button text="Right 2" 
+              onclick="windowTwoId.moveWindow('right', 2)"/>
+  </window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

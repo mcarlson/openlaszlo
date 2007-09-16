@@ -1,0 +1,30 @@
+
+<canvas debug="true" height="260">
+  <debug height="240"/>
+  <include href="base/basevaluecomponent.lzx"/>
+
+  <class name="myvaluecomponent" extends="basevaluecomponent">
+    <handler name="oninit">
+      Debug.write(this.name + ' text: "' + this.text + '"');
+      Debug.write(this.name + ' value: "' + this.value + '"');
+      Debug.write(this.name + ' getValue(): "' + this.getValue() + '"');
+      Debug.write("");
+    </handler>
+  </class>
+  
+  <!-- Text is inherited from basecomponent, the superclass of -->
+  <!-- basevalue component.                                    -->
+  <myvaluecomponent name="one" text="this is the text"/>
+
+  <!-- Set the value this time. Note that value is an expression type. -->
+  <!-- Have to use quotes to set a string value.                       -->
+  <myvaluecomponent name="two" value="'this is the value'"/>
+
+  <!-- Set both text and value. -->
+  <myvaluecomponent name="three" text="this is the text" 
+                    value="'this is the value'"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

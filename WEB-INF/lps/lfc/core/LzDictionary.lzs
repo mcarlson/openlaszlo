@@ -1,0 +1,100 @@
+/**
+  * Dictionary
+  *
+  * Operations are containsKey, get, put, putAll
+  *
+  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * Use is subject to license terms.
+  *
+  * @todo 2006-05-22 ptw Needs proper iteration support
+  * @topic LZX
+  * @subtopic Runtime
+  */
+{
+#pragma "warnUndefinedReferences=true"
+
+  class LzDictionary extends Instance {
+    // If object is supplied, the elements of object will be added to
+    // the dictionary
+    function initialize (object) {
+      // have to hold entries in an object not self or our methods
+      // appear as keys
+      this.entries = new Object;
+      if (arguments.length > 0) {
+        this.putAll(object);
+      }
+    }
+
+    /** Returns true if the key is in the dictionary */
+    function containsKey (key) {
+      return this.entries.hasOwnProperty(key);
+    }
+
+    /** If the value is in the dictionary, returns a corresponding key */
+    function containsValue (value) {
+      var entries = this.entries;
+      for (var k in entries) {
+        if (entries.hasOwnProperty(k) && entries[k] === value) {
+          return k;
+        }
+      }
+      return false;
+    }
+
+    /** Gets the value at key.  If the key is not in the dictionary,
+      * returns defaultValue, if supplied, or the undefined value */
+    function get (key, defaultValue) {
+      var entries = this.entries;
+      if (entries.containsKey(key)) {
+        return entries[key];
+      }
+      return defaultValue;
+    }
+
+    /** Puts the value at key, replacing any previous value.  Returns
+      * value. */
+    function put (key, value) {
+      return this.entries[key] = value;
+    }
+
+    /** Adds all the elements of object to the dictionary. */
+    function putAll (object) {
+      // Only use the containsKey filter for dictionaries.  Objects
+      // will not have that method, and may inherit properties though
+      // their [[prototype]]
+      var entries = this.entries;
+      if (object instanceof this.constructor) {
+        var objectEntries = object.entries;
+        for (var k in objectEntries) {
+          if (objectEntries.containsKey(k)) {
+            entries[k] = objectEntries[k];
+          }
+        }
+      } else {
+        for (var k in object) {
+          entries[k] = object[k];
+        }
+      }
+      return this;
+    }
+
+    /** Removes the value at key, returns the removed value, or the
+      * undefined value if the key was not present */
+    function remove (key) {
+      var entries = this.entries;
+      if (entries.containsKey(key)) {
+        var value = entries[key];
+        delete entries[key];
+        return value;
+      }
+      return void 0;
+    }
+
+    /** Removes all elements from the dictionary */
+    function removeAll () {
+      this.entries = {};
+      return this;
+    }
+  }
+
+}

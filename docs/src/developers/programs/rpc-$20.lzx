@@ -1,0 +1,52 @@
+
+<canvas debug="true" height="300" width="680">
+
+    <debug x="225" width="450" height="280" />
+
+    <dataset name="googleDset" />
+
+    <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
+        <handler name="onload">
+            Debug.write('google soap service stub loaded');
+        </handler>
+
+        <handler name="onerror" args="error">
+            Debug.write('error:', error);
+        </handler>
+
+        <remotecall name="search" funcname="doGoogleSearch" 
+                    dataobject="googleDset">
+
+            <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
+            <param value="'sweet'" />
+            <param value="1" />
+            <param value="10" />
+            <param value="true" />
+            <param value="''" />
+            <param value="true" />
+            <param value="''" />
+            <param value="''" />
+            <param value="''" />
+
+            <handler name="ondata" args="value">
+                Debug.write('got result');
+                Debug.inspect(value);
+            </handler>
+
+        </remotecall>
+    </soap>
+
+    <view layout="spacing: 5" >
+        <button text="search" onclick="google.search.invoke()" />
+        <view bgcolor="yellow" layout="axis: y" >
+            <view>
+                <datapath xpath="googleDset:/resultElements/item" pooling="true" />
+                <text datapath="URL/text()" resize="true"/>
+            </view>
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

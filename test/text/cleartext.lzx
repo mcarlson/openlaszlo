@@ -1,0 +1,53 @@
+<!-- Demonstrates bugs LPP-4106 and LPP-4087 -->
+<canvas debug="true">
+    <include href="lzunit" />
+
+    <text id="gText" text="rammstein is a german rock band" 
+        x="100"/>
+    <text id="gText2" text="enya is an odd musician" 
+        x="300"/>
+    <text id="gText3" text="yossie is a nickname for joseph" 
+        x="500" />
+    <text id="gText4" text="eep app ork spells i love you" 
+        x="100" y="5" />
+        
+    
+    <class name="ClearTextTestCase" extends="TestCase">
+        <method name="testSelectable">
+            assertEquals(-1, gText.getSelectionPosition());
+            assertEquals(-1, gText.getSelectionSize());
+        </method>
+        <method name="testSelectionRange">
+            gText2.setSelectable(true);
+            gText2.setSelection(3, 7);
+            assertEquals(3, gText2.getSelectionPosition());
+            assertEquals(4, gText2.getSelectionSize());
+        </method>
+        <method name="testClearText"><![CDATA[
+            gText3.setSelection(3,7);
+            assertEquals(3, gText3.getSelectionPosition());
+            assertEquals(4, gText3.getSelectionSize());     
+            // Clearing the text should also clear the selection       
+            gText3.clearText();
+            assertEquals("", gText3.getText());
+            var selpos = gText3.getSelectionPosition();
+            var selsize = gText3.getSelectionSize();
+            assertTrue( selpos == -1 || selpos == 0)
+            assertTrue( selsize == -1 || selsize == 0);
+        ]]></method>
+        <method name="testClearSelectableText"><![CDATA[
+            gText4.setSelectable(true);
+            gText4.setSelection(3,7);
+            gText4.clearText();
+            var selpos = gText4.getSelectionPosition();
+            var selsize = gText4.getSelectionSize();
+            assertTrue( selpos == -1 || selpos == 0)
+            assertTrue( selsize == -1 || selsize == 0);            
+        ]]></method>
+    </class>
+    
+    <TestSuite>
+        <ClearTextTestCase />
+    </TestSuite>
+</canvas>
+<!-- Copyright 2007 Laszlo Systems -->

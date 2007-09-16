@@ -52,7 +52,6 @@
         // Create delegates used by the update method.
         this.updateDelegate.register( immediateparent,  "onwidth");
         this.updateDelegate.register( immediateparent,  "onheight");
-        this.delayvisDL = new LzDelegate(this,'delayVisibility');
         this.resetvisDL = new LzDelegate(this,'resetVisibility');
     ]]> </method>
 
@@ -98,6 +97,8 @@
         setopenview(newView,withupdate);
     ]]> </method>
 
+    <event name="onopenstart" />
+    <event name="onclosestart" />
     <!-- METHOD: setopenview -->
     <!-- opens the designated view and sets the open indicies-->
     <method name="setopenview" args="v,withupdate"> <![CDATA[
@@ -129,14 +130,14 @@
     ]]> </method>
 
     <method name="setopenrow" args="row"> <![CDATA[
-        // using brackets avoids the undefined warning in the debugger
+        // using brackets avoids the undefined warning in the Debugger
         if (this['openrow'] == row) { return; }
         this.openrow = row;
         this.update();
     ]]> </method>
 
     <method name="setopencol" args="col"> <![CDATA[
-        // using brackets avoids the undefined warning in the debugger
+        // using brackets avoids the undefined warning in the Debugger
         if (this['opencol'] == col) { return; }
         this.opencol = col;
         this.update();
@@ -225,15 +226,18 @@
     ]]> </method>
 
 
+    <event name="onupdatestart" />
     <!-- METHOD: update -->
-
     <method name="update" >
         <![CDATA[
         if ( this['locked'] ) { return }
-        this['onupdatestart']['sendEvent'](this.openview);
+        if (this.onupdatestart) {
+            this.onupdatestart.sendEvent(this.openview);
+        }
 
         // store a local value for fast reference
         var didAnimation=false;
+        // [bshine 10.01.06] uh-oh, we re-declare w and h below
         var w = immediateparent.width;
         var h = immediateparent.height;
 
@@ -314,14 +318,9 @@
                             // at the end of the animations. called by the 'delayvisDL'
                             // delegate.
                             s.update_vis_later = true;
-                        } else {
-                            var anm;
-                            if (s.x != x)       anm = s.animate('x',x,this.duration,false);
-                            if (s.y != y)       anm = s.animate('y',y,this.duration,false);
-                            if (s.width != w)   anm = s.animate('width',w,this.duration,false);
-                            if (s.height != h)  anm = s.animate('height',h,this.duration,false);
+                        } else {                        
+                            s.animateTo(x, y, w, h);
                             didAnimation=true;
-                            this.delayvisDL.register(anm,'onstop');
                         }
                     } else {
                         if (s.x != x)       s.setX(x);
@@ -336,8 +335,7 @@
                         // headers for the day of week (which are constrained to the
                         // top row) move correctly. only need width and x info.
                         if (this.doanimation) {
-                            if (s.x != x)       s.animate('x',x,this.duration,false);
-                            if (s.width != w)   s.animate('width',w,this.duration,false);
+                            s.animateTo(x, s.y, w, s.height);
                         } else {
                             if (s.x != x)       s.setX(x);
                             if (s.width != w)   s.setWidth(w);
@@ -365,32 +363,37 @@
              }
          }
 
-         if (!didAnimation) this.resetVisibility();
-
+         // When the layout is in its completed state, 
+         // correct the visibility of all of the calendar cells.
+         // We can do this right way if there wasn't any animation...
+         if (!didAnimation) 
+            this.resetVisibility();
+        else { // if we started some animation, wait until it finishes
+            // to reset the visibility. 
+            // We know that the animations are set to 500 ms,
+            // so we wait a little tiny bit longer than that, 
+            // then call this delegate to correct visibility.
+            // [bshine 10.01.06] Instead of a constant delay and a timer,
+            // here, we could put an onstop delegate on an animator, but
+            // this way is simpler. Less flexibile, but simpler. 
+            LzTimer.addTimer(this.resetvisDL,600);        }
          ]]>
     </method>
 
-    <method name="delayVisibility" ><![CDATA[
-       // delay the updating of the invisible views so that
-       // at least one idle frame occurs. This allows for the
-       // animation to complete before making the hidden views
-       // visible
-       this.delayvisDL.unregisterAll();
-       LzTimer.addTimer(this.resetvisDL,300);
-    ]]> </method>
-
+    <event name="onupdatestop" />
     <method name="resetVisibility" ><![CDATA[
+        // Debug.write("resetting visibility");
         // Now show the views that were hidden
         var s;
         for (var i =0; i < this.subviews.length; i++) {
             s = this.subviews[i];
             if (s['update_vis_later']){
-                if (!s.opened) s.details.bgrect.dataview.setY(0);
+                if (!s.opened && s.details.bgrect.dataview) s.details.bgrect.dataview.setY(0);            
                 s.setVisible(true);
             }
 
         }
-        //this['closedview']['onclosestart']['sendevent']();
+        //this['closedview']['onclosestart']['sendevent'](); 
         //this['openview']['onopenstart']['sendevent']();
 
         // Process is complete so send  onupdatestop event
@@ -494,7 +497,7 @@
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

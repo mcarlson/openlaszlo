@@ -147,7 +147,7 @@
             if (! _initcomplete) return;
             for (var i=0; i < subnodes.length; i++) {
                 var sn = subnodes[i];
-                if (sn instanceof  simplelayout) {
+                if (sn instanceof  lz.simplelayout) {
                     sn.setAttribute('spacing', s);
                 }
             }
@@ -194,11 +194,11 @@
         </method>
 
         <!--- @keywords private -->
-        <method name="_applystyle" args="s">
-            if (this.style != null) {
+        <method name="_applystyle" args="s"><![CDATA[
+            if (this.style != null && ('background' in this)) {
                 setTint(background, s.basecolor);
             }
-        </method>
+        ]]></method>
 
     </class> <!-- class tabpane -->
 
@@ -282,11 +282,49 @@
             this._setTabAlign(tabalign);
         </method>
 
+        <doc>
+          <tag name="shortdesc"><text>
+              The tabs class takes tabpanes, and provides a tab for each one.
+          </text></tag>
+          <text>
+            <p>The <classname>tabs</classname> component contains a row of
+              <classname>tabs</classname> that control the visibility of a stack of
+              <classname>tabpane</classname>s. When a <classname>tabpane</classname>
+              is added to a <classname>tabs</classname> component, a corresponding
+              tab is created for that tabpane. The text which shows up in the tab is
+              derived from the <attribute>text</attribute> attribute of the
+              tabpane.</p>
+
+            <p>The <classname>tabs</classname> component will be sized
+              automatically to the largest <classname>tabpane</classname>, unless an
+              explicit <attribute>height</attribute> or <attribute>width</attribute>
+              is specified within the <tagname>tabs</tagname> tag.</p>
+
+            <example>
+              &lt;canvas width="150" height="100"&gt;
+              &lt;tabs&gt;
+              &lt;tabpane text="one"&gt;
+              &lt;button&gt;press one&lt;/button&gt;
+              &lt;/tabpane&gt;
+              &lt;tabpane text="two"&gt;
+              &lt;button&gt;press two&lt;/button&gt;
+              &lt;/tabpane&gt;
+              &lt;/tabs&gt;
+              &lt;/canvas&gt;
+            </example>
+
+            <seealso>
+              <classes>tab tabsbar tabpane tabscontent basetabs</classes>
+              <component-design id="tabs" title="Tabs"/>
+            </seealso>
+          </text>
+        </doc>
+
     </class> <!-- class tabs -->
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

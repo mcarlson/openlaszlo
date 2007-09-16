@@ -1,0 +1,28 @@
+
+<canvas height="200" >
+        <view>
+            <form name="myform" bgcolor="#c0c0c0" spacing="33">
+                <submit id="surveysubmit" />
+ 
+                <view height="20">
+                    <text>What is your favorite vacation spot?</text>
+                </view> 
+                <radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote">
+                    <radiobutton value="'hawaii'" selected="true">Hawaii</radiobutton>
+                    <radiobutton value="'paris'">Paris</radiobutton>
+                    <radiobutton value="'jamaica'">Jamaica</radiobutton>
+                    <radiobutton value="'trenton'">Trenton</radiobutton>
+                </radiogroup>
+                <button isdefault="true">Vote
+                    <handler name="onclick">
+                        surveysubmit.submit();
+                    </handler>
+                </button>
+            </form>
+        </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

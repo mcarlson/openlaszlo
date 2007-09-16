@@ -1,0 +1,43 @@
+
+<canvas debug="true" height="300">
+ 
+    <debug x="100" y="10" height="275" />
+
+    <security>
+        <allow>
+            <pattern>^examples\.ConstructExample</pattern>
+        </allow>
+    </security>
+
+    <!-- See $LPS_HOME/WEB-INF/classes/ConstructExample.java for java
+        source. -->
+    <javarpc name="ce" scope="session" remoteclassname="examples.ConstructExample"
+             createargs="[1, 'a string', 1.45]">
+
+        <handler name="onerror" args="err">
+            Debug.write("onerror:", err)
+        </handler>
+
+        <handler name="onload">
+            Debug.write("loaded proxy:", this.proxy);
+        </handler>
+
+        <handler name="onunload">
+            Debug.write("unloaded proxy:", this.proxy);
+        </handler>
+
+    </javarpc>
+    
+    <simplelayout spacing="10" />
+
+    <button text="load" onclick="canvas.ce.load()" />
+
+    <button text="unload" onclick="canvas.ce.unload()" />
+
+    <button text="proxy" onclick="Debug.write('proxy is', canvas.ce.proxy)" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

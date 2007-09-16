@@ -1,0 +1,131 @@
+<canvas height="450" >
+    <include href="../classes/pivotlayout.lzx" />
+    <dataset name="tester" >
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+        <item/>
+    </dataset>
+    
+    <class name="box" bgcolor="red" onclick="canvas.vw.lyt.pivotAround(this); canvas.vw.lyt.transitiontolist.doStart()" />
+    
+    <view name="vw" bgcolor="yellow" 
+          width="400" height="300" 
+          x="200" y="50" oninit="this.lyt.update()" >
+          
+        <pivotlayout name="lyt" photodimension="50" 
+                     spacing="10" skew="0" 
+                     pivotindex="0"  pivot_x="0"  pivot_y="0"
+                     >
+                     
+            <animatorgroup name="transitiontolist" start="false"  duration="500" >
+                <animator attribute="skew" from="0" to="1" />
+                
+                <!-- animator attribute="yspacing" to="-50" -->
+                <animatorgroup process="simultaneous" >
+                    <!-- animator attribute="photodimension" to="30"  /-->
+                    <animator attribute="pivot_y" to="300"  /> 
+                    <animator attribute="yspacing" to="-50" />
+                </animatorgroup>                    
+                <animatorgroup process="simultaneous" >
+                    <animator attribute="photodimension" to="30"  />
+                    <animator attribute="yspacing" to="-30"  />
+                </animatorgroup>                    
+           </animatorgroup>
+           
+            <animatorgroup name="transitiontogrid" start="false"  duration="500" >
+            
+                <!-- scale imgaes back up to the dimension associated with the grid state -->
+                <animatorgroup process="simultaneous" >
+                    <animator attribute="photodimension" to="50"  />
+                    <animator attribute="yspacing" to="-50"  />
+                </animatorgroup>                    
+
+<?ignore
+                <animatorgroup process="simultaneous" >
+                    <!-- animator attribute="photodimension" to="30"  /-->
+                    <animator attribute="pivot_y" to="0"  /> 
+                    <animator attribute="yspacing" to="10" />
+                </animatorgroup>                    
+
+                <animator attribute="skew" from="1" to="0" />
+?>                
+                <!-- animator attribute="yspacing" to="-50" -->
+           </animatorgroup>
+
+           <animator name="yspacing_anm" attribute="yspacing" to="10" duration="500" start="false" />
+           <animator name="skew_anm" attribute="skew" from="1" to="0" duration="500" start="false" />
+
+           <method event="onstop" reference="this.transitiontogrid" >
+                this.animate("pivot_y", this.pivotview.gridy, 500 );
+                this.animate("pivot_x", this.pivotview.gridx, 500 );
+                this.yspacing_anm.doStart();
+           </method>
+
+           <method event="onstop" reference="this.yspacing_anm" >
+                this.skew_anm.doStart();
+           </method>
+
+           <method name="myreset" >
+                this.photodimension=50 ;
+                this.xspacing = 10 ;
+                this.yspacing = 10;
+                this.skew = 0 ;
+                this.pivotindex = 0;
+                this.pivot_y = 0;
+                this.pivot_x = 0;
+                this.update();
+           </method>
+           
+        </pivotlayout>
+         
+                     
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+        <box/>
+    </view>
+    
+    <view y="400" x="10" layout="axis:x;spacing:10" >
+        <button text="reset" onclick="canvas.vw.lyt.myreset()" />
+        <button text="transition to list"  onclick="canvas.vw.lyt.transitiontolist.doStart()" />
+        <button text="transition to grid"  onclick="canvas.vw.lyt.transitiontogrid.doStart()" />
+        <view width="30" />
+        <button text="animate pivot_x left" onclick="canvas.vw.lyt.animate('pivot_x',-100,300,true)" />
+        <button text="animate pivot_x right" onclick="canvas.vw.lyt.animate('pivot_x',100,300,true)" />
+        <button text="animate photodimension" onclick="canvas.vw.lyt.animate('photodimension',70,300)" />
+        <button text="animate skew" onclick="canvas.vw.lyt.animate('skew',1,300)" />
+        <button text="animate pivot_y" onclick="canvas.vw.lyt.animate('pivot_y',100,300)" />
+    </view>
+</canvas>

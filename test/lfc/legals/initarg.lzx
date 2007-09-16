@@ -1,0 +1,14 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas>
+    <text width="400" multiline="true" height="40">Add a variable named qs to the browser url and its value should appear below</text>
+    <text name="foo"/>
+    <method event="oninit">
+        foo.setText( LzBrowser.getInitArg( "qs" ) );
+    </method>
+    <simplelayout/>
+</canvas>

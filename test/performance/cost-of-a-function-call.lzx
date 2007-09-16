@@ -1,0 +1,99 @@
+<canvas>
+  <include href="utils/performance" />
+  <script>
+    var iterations = Measurement.defaultIterations;
+    var x;
+
+    function empty () {
+      for (var i = 0; i &lt; iterations; i++) 
+        ;
+    }
+
+    function measureAssignment () {
+      for (var i = 0; i &lt; iterations; i++) 
+        x = 0;
+    }
+
+    function eff () {
+      return 0;
+    }
+    function measureFunctionCall () {
+      for (var i = 0; i &lt; iterations; i++) 
+        eff();
+    }
+
+    function gee (a) {
+      return 0;
+    }
+    function measureFunctionCallWithOneParam () {
+      for (var i = 0; i &lt; iterations; i++) 
+        gee(1);
+    }
+
+    function ache (a, b) {
+      return 0;
+    }
+    function measureFunctionCallWithTwoParams () {
+      for (var i = 0; i &lt; iterations; i++) 
+        ache(1, 2);
+    }
+
+    function eye (a, b, c) {
+      return 0;
+    }
+    function measureFunctionCallWithThreeParams () {
+      for (var i = 0; i &lt; iterations; i++) 
+        eye(1,2,3);
+    }
+
+    function jay (a, b, c, d) {
+      return 0;
+    }
+    function measureFunctionCallWithFourParams () {
+      for (var i = 0; i &lt; iterations; i++) 
+        jay(1,2,3,4);
+    }
+
+    function MyObj () {}
+    MyObj.prototype.eff = eff;
+    MyObj.prototype.gee = gee;
+
+    var myObj = new MyObj();
+    function measureProtoMethodCall () {
+      for (var i = 0; i &lt; iterations; i++) 
+        myObj.eff();
+    }
+    function measureProtoMethodCallWithOneParam () {
+      for (var i = 0; i &lt; iterations; i++) 
+        myObj.gee(1, 2, 3, 4, 5, 6);
+    }
+
+    var obj = {};
+    obj.f = eff;
+    obj.g = gee;
+    function measureMethodCall () {
+      for (var i = 0; i &lt; iterations; i++) 
+        myObj.eff();
+    }
+    function measureMethodCallWithOneParam () {
+      for (var i = 0; i &lt; iterations; i++) 
+        myObj.gee(1);
+    }
+
+    (new Measurement({'assignment': measureAssignment,
+                        'function call': measureFunctionCall,
+                        'function call with 1 param': measureFunctionCallWithOneParam,
+                        'function call with 2 params': measureFunctionCallWithTwoParams,
+                        'function call with 3 params': measureFunctionCallWithThreeParams,
+                        'function call with 4 params': measureFunctionCallWithFourParams,
+                        'method call': measureMethodCall,
+                        'method call with 1 param': measureMethodCallWithOneParam,
+                        'proto method call': measureProtoMethodCall,
+                        'proto method call with 1 param': measureProtoMethodCallWithOneParam,
+                        'empty': empty})).run();
+  </script>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

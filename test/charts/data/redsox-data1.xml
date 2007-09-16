@@ -1,3 +1,8 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
 <records>
     <record year="1954" league="American Lg" wins="69" losses="85" finish="4" stadium="Fenway Park II" attendance="931,127" attend-g="11,786" attend-rank="6th out of 8" team-age-bat-pit="26.8/27.2" park-factor-bat-pit="111/110" />
     <record year="1950" league="American Lg" wins="94" losses="60" finish="3" stadium="Fenway Park II" attendance="1,344,080" attend-g="17,456" attend-rank="4th out of 8" team-age-bat-pit="29.8/27.9" park-factor-bat-pit="110/107" />

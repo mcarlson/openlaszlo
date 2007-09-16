@@ -20,31 +20,28 @@ import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.JavascriptCompressor;
 import org.openlaszlo.utils.*;
 
-import org.openlaszlo.iv.flash.util.FontsCollector;
-
 /** Accumulates code, XML, and assets to a Library object file.
  *
  * Properties documented in Compiler.getProperties.
  */
-class LibraryWriter extends SWFWriter {
+class LibraryWriter extends DHTMLWriter {
 
   PrintStream out;
-  protected PrintWriter scriptWriter = null;
-  protected StringWriter scriptBuffer = null;
   Element root;
 
   LibraryWriter(Properties props, OutputStream stream,
                 CompilerMediaCache cache,
                 boolean importLibrary,
-                CompilationEnvironment env) {
+                CompilationEnvironment env,
+                Element root) {
     super(props, stream, cache, importLibrary, env);
-    this.scriptBuffer = new StringWriter();
-    this.scriptWriter= new PrintWriter(scriptBuffer);
+
     try {
       this.out = new PrintStream(new java.util.zip.GZIPOutputStream(mStream));
     } catch (Exception e) {
       throw new ChainedException(e);
     }
+    this.root = root;
   }
 
 
@@ -58,64 +55,29 @@ class LibraryWriter extends SWFWriter {
   void setCanvas(Canvas canvas, String canvasConstructor) {
   }
 
-  void setRoot(Element root) {
-    this.root = root;
-  }
+  private Map resourceMap = new TreeMap();
 
-  // TODO: [[2007-01-30 ptw] This should become an error
-  void setCanvasDefaults(Canvas canvas, CompilerMediaCache mc) { };
-
-  public int addScript(String script) {
-    scriptWriter.println(script);
-    return script.length();
-  }
-
-  private Map resourceMap = new LinkedHashMap();
-
-    public void importResource(String fileName, String name)
-        throws ImportResourceError
-    {
-        importResource(fileName, name, -1);
-    }
-
-    public void importResource(String fileName, String name, int frameNum)
-        throws CompilationError
-    {
-        importResource(fileName, name, frameNum, null);
-    }
-
-    public String importResource(File file)
-    {
-      System.err.println("importResource: " + file.toString());
-      String clipName = createName();
-      importResource(file.getPath(), clipName);
-      return clipName;
-    }
-
-    public String importClickResource(File file) throws ImportResourceError
-    {
-      System.err.println("importClickResource: " + file.toString());
-      return importResource(file);
-    }
-
-
-  public void importResource(String fileName, String name, int frameNum, FontsCollector fontsCollector)
+  /** Import a resource file into the current movie.
+   * Using a name that already exists clobbers the
+   * old resource (for now).
+   *
+   * @param fileName file name of the resource
+   * @param name name of the MovieClip/Sprite
+   * @throws CompilationError
+   */
+  public void importResource(String fileName, String name)
     throws ImportResourceError
     {
       resourceMap.put(name, fileName);
     }
 
-    public void importResource(List sources, String name, File parent)
+  public void importResource(File inputFile, String name)
+    throws ImportResourceError
     {
-        importResource(sources, name, parent, -1);
+      importResource(inputFile.toString(), name);
     }
 
-    public void importResource(List sources, String name, File parent, int frameNum)
-    {
-        importResource(sources, name, parent, frameNum, null);
-    }
-
-  public void importResource(List sources, String name, File parent, int frameNum, FontsCollector fontsCollector)
+  public void importResource(List sources, String name, File parent)
     {
      resourceMap.put(name, sources);
     }
@@ -137,10 +99,13 @@ class LibraryWriter extends SWFWriter {
   }
 
   private void exportAttributes() {
-      // Write out the validate attribute of the source library
-      String property = CompilationEnvironment.VALIDATE_PROPERTY;
-      String validate = mEnv.getProperty(property, null);
-      if (validate != null) {
+      // Write out the validate attribute of the source library, but only if
+      // it was explicitly defined by the user
+      String property   = CompilationEnvironment.VALIDATE_PROPERTY;
+      String e_property = CompilationEnvironment.VALIDATE_EXPLICIT_PROPERTY;
+      String validate   = mEnv.getProperty(property, null);
+      String e_validate = mEnv.getProperty(e_property, null);
+      if (e_validate != null && validate != null) {
         out.println("<attribute name='" + property + "' value='" + validate + "' />");
       }
   }
@@ -243,6 +208,7 @@ class LibraryWriter extends SWFWriter {
       exportResources();
       exportScript();
       out.println("</library>");
+
     } catch (Exception e) {
       throw new ChainedException(e);
     } finally {

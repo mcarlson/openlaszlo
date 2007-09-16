@@ -1,0 +1,60 @@
+
+<canvas debug="true" width="600">
+
+    <debug x="150" y="15" width="400" height="360" />
+
+    <simplelayout spacing="5" />
+
+    <method name="v2e" args="v">
+        Debug.write('Got', v);
+        var de = LzDataElement.valueToElement(v);
+        Debug.write(de.serialize());
+    </method>
+
+    <button text="number">
+        <handler name="onclick">
+            var num = 5;
+            canvas.v2e(num);
+        </handler>
+    </button>
+
+    <button text="string">
+        <handler name="onclick">
+            var str = "a string";
+            canvas.v2e(str);
+        </handler>
+    </button>
+
+    <button text="array">
+        <handler name="onclick">
+            var arr = [1, 2, 3];
+            canvas.v2e(arr);
+        </handler>
+    </button>
+
+    <button text="object">
+        <handler name="onclick">
+            var obj = { p1: "a string", p2: 5 }
+            canvas.v2e(obj);
+        </handler>
+    </button>
+
+    <button text="complex array">
+        <handler name="onclick">
+            var arr = [ 1, { p1: "a string", p2: 5 }, [ 1, 2, 3] ];
+            canvas.v2e(arr);
+        </handler>
+    </button>
+
+    <button text="complex object">
+        <handler name="onclick">
+            var obj = { p1: [1, 2, 3], p2: 5 };
+            canvas.v2e(obj);
+        </handler>
+    </button>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

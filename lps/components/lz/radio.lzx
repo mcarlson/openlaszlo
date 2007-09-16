@@ -15,7 +15,6 @@
         <frame src="resources/radio/radiobtn_dsbl_dn.swf" />
     </resource>
 
-    <!--- Enables a one-of-many selection of its children. -->
     <class name="radiogroup" extends="baselist"
         itemclassname="radiobutton" defaultselection="0">
 
@@ -34,6 +33,12 @@
         <method name="applyData" args="d">
             //try to find the relevant radio button, or clear selection if none
             this._setvalue( d );
+            var item = null;
+            if (d != null) {
+                item = this.getItem( d );
+            }
+            if ( item ) this.select( item );
+            else this.clearSelection();
         </method>
 
         <!--- @keywords private -->
@@ -45,14 +50,70 @@
                     item = this.getItem( val );
                 }
                 this.value = val;
-                if ( item ) this.select( item );
-                else this.clearSelection();
             } else {
                 this.value = val;
             }
             if( this.onvalue ) this.onvalue.sendEvent( val );
         </method>
             
+        <doc>
+          <tag name="shortdesc"><text>Enables a one-of-many selection of its children.</text></tag>
+          <text>
+            <p>The <tagname>radiogroup</tagname> component encloses a list of
+            <tagname link="true">radiobutton</tagname>s.  It ensures that a single
+            item is selected at a time. Initially it will select the first item in
+            a group if none is set to be selected.  By default the radio buttons
+            are spaced vertically.</p>
+            
+            <p>
+            In the following example, the second radio button is selected.  The text
+            that appears is separate from the value that is represented by each item.
+            In this example, <tt>group1.value</tt> is 2.
+            </p>
+            
+            <example>
+            &lt;canvas width="200" height="100"&gt;
+              &lt;radiogroup id="group1"&gt;
+                &lt;radiobutton value="1" text="one"/&gt;
+                &lt;radiobutton value="2" text="two" selected="true"/&gt;
+                &lt;radiobutton value="3" text="three"/&gt;
+              &lt;/radiogroup&gt;
+            &lt;/canvas&gt;
+            </example>
+            
+            <p>
+            You can use radio group with your own layout attribute, by overriding the
+            <tagname>view</tagname> layout attribute. The example below uses a wrapping layout
+            to create two columns of radio buttons.  Note that a height must be given to
+            indicate to the layout where to wrap.
+            </p>
+            
+            <example>
+            &lt;canvas width="200" height="100"&gt;
+              &lt;radiogroup height="60" layout="class:wrappinglayout; axis:y"&gt;
+                &lt;radiobutton value="1" text="one"/&gt;
+                &lt;radiobutton value="2" text="two"/&gt;
+                &lt;radiobutton value="3" text="three"/&gt;
+                &lt;radiobutton value="4" text="four"/&gt;
+                &lt;radiobutton value="5" text="five"/&gt;
+                &lt;radiobutton value="6" text="six"/&gt;
+              &lt;/radiogroup&gt;
+            &lt;/canvas&gt;
+            </example>
+            
+            <p>
+            A <tt>radiogroup</tt> can contain a set of any <tagname>baselistitem</tagname>.
+            To make radio buttons with
+            a different look and feel, create a subclass of <tagname>baselistitem</tagname> to use instead
+            of the <tagname>radiobutton</tagname> class.
+            </p>
+            
+            <seealso>
+            <tags>radiobutton baselistitem</tags>
+            <component-design id="radio" title="Radio Button"/>
+            </seealso>
+          </text>
+        </doc>
     </class>
 
     <!--- Implements a "radio" button, allows a one-of-many selection when
@@ -99,25 +160,38 @@
         </method>
         
         <!--- @keywords private -->
-        <handler name="onclick">
-            if (!this.selected) {
-                parent.select(this);
-            }
-        </handler>
-
-        <!--- @keywords private -->
         <method name="setHilite" args="dohilite">
             _title.setAttribute('fgcolor',
                 dohilite ? style.texthilitecolor : style.textcolor);
         </method>
 
+        <!-- FIXME: [hqm 2006-09] LPP-2244 This used to be y="$once{classroot.text_y}"
+        but the DHTML runtime fires an early text onheight  event, which has the wrong value,
+        so we need to use an 'always' constraint till we fix it
+        -->
+
         <text name="_title" resize="true"
-            x="17" y="$once{classroot.text_y}" text="${parent.text}"/>
+            x="17" y="${classroot.text_y}" text="${parent.text}"/>
+
+        <doc>
+          <tag name="shortdesc"><text>
+              The radio tag provides a simple radio button.
+          </text></tag>
+          <text>
+
+            <p>The <classname>radiobutton</classname> class provides a simple
+              two-state button with a text label, for use in
+              <classname>radiogroup</classname>.</p>
+
+            <p>See <tagname library="lz" link="true">radiogroup</tagname> for
+              details on use.</p>
+          </text>
+        </doc>
 
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

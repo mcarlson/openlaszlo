@@ -1,11 +1,8 @@
-/* ****************************************************************************
- * ViewCompiler.java
- * ****************************************************************************/
+/* -*- mode: Java; c-basic-offset: 2; -*- */
 
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
+/**
+ * LZX View Compiler
+ */
 
 package org.openlaszlo.compiler;
 
@@ -153,11 +150,19 @@ public class ViewCompiler extends ElementCompiler {
      * runtime data structure named _lzViewTemplate.
      *
      * @param element an element
-     * @param schema a schema
      * @param fontInfo font info inherited from canvas
      */
     void compileXML(Element element, FontInfo fontInfo)
     {
+        // TODO: [2007-09-03 ptw] (LPP-4634) You should not be able to
+        // get here.  This appears to happen when a binary file has
+        // already included a sub-library and that same sub-library is
+        // included by a source file.  Since the include is already
+        // loaded, it is not expanded in expandIncludes, but because
+        // ViewCompiler.isElement returns true for everything, we end up
+        // here.  For now, just don't do anything.
+        if ("include".equals(element.getName())) return;
+
         // TODO: [12-27-2002 ows] use the log4j API instead of this property
         boolean tracexml = mEnv.getBooleanProperty("trace.xml");
         if (tracexml) {
@@ -253,18 +258,22 @@ public class ViewCompiler extends ElementCompiler {
     
     static void checkUnsupportedMediaTypes(CompilationEnvironment env, Element elt, String url) {
         String suffix = FileUtils.getExtension(url);
-        if ( (sUnsupportedServerlessFiletypes.containsKey(suffix.toLowerCase())) ||
-             (env.getSWFVersionInt() < 8 &&
-              sUnsupportedServerlessFiletypesSWF7.containsKey(suffix.toLowerCase())))
-             {
-            env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="The runtime loadable resource type '" + p[0] + " is not supported by the Flash runtime. Supported resource types are JPEG (non-interlaced), SWF, and MP3"
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ViewCompiler.class.getName(),"051018-258", new Object[] {url})
-, elt);
+        if (env.isSWF()) {
+          if ( (sUnsupportedServerlessFiletypes.containsKey(suffix.toLowerCase())) ||
+               (env.getSWFVersionInt() < 8 &&
+                sUnsupportedServerlessFiletypesSWF7.containsKey(suffix.toLowerCase())))
+               {
+              env.warn(
+  /* (non-Javadoc)
+   * @i18n.test
+   * @org-mes="The runtime loadable resource type '" + p[0] + " is not supported by the Flash runtime. Supported resource types are JPEG (non-interlaced), SWF, and MP3"
+   */
+              org.openlaszlo.i18n.LaszloMessages.getMessage(
+                  ViewCompiler.class.getName(),"051018-258", new Object[] {url})
+  , elt);
+          }
+        } else {
+          // TODO: [2006-06-19 ptw] Handle media types for DHTML, etc.
         }
     }
 
@@ -368,7 +377,7 @@ public class ViewCompiler extends ElementCompiler {
                 // getResourceGenerator below
                 try {
                     value = env.getResourceGenerator().importResource(file);
-                } catch (SWFWriter.ImportResourceError e) {
+                } catch (ObjectWriter.ImportResourceError e) {
                     env.warn(e, elt);
                 }
                 elt.setAttribute(RESOURCE_ATTR_NAME, value);
@@ -423,7 +432,7 @@ public class ViewCompiler extends ElementCompiler {
                 File file = env.resolveReference(elt, ATTR_NAME);
                 try {
                     value = env.getResourceGenerator().importClickResource(file);
-                } catch (SWFWriter.ImportResourceError e) {
+                } catch (ObjectWriter.ImportResourceError e) {
                     env.warn(e, elt);
                 }
                 elt.setAttribute(ATTR_NAME, value);
@@ -541,9 +550,7 @@ public class ViewCompiler extends ElementCompiler {
         // Now override with any directly declared attributes
         mergeFontInfo(elt, fontInfo);
         
-        FontManager fmgr = env.getGenerator().getFontManager();
         String fontName = fontInfo.getName();
-
 
         // If it inherits from text or inputttext, annotate it with font info
         if ("text".equals(elt.getName()) ||
@@ -740,4 +747,7 @@ public class ViewCompiler extends ElementCompiler {
     }
 }
 
-
+/**
+ * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * Reserved.  Use is subject to license terms.
+ */

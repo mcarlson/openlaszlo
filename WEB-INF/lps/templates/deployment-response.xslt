@@ -29,19 +29,23 @@
       
       <h2>Using the HTML Wrapper</h2>
       <p>The simplest way to deploy an application is to use the
-      <code>html</code> request type.  This generates an HTML page
-      that uses the JavaScript <code>embed.js</code> library to embed the
-      application.  Unlike the development page (with no request
-      type), it does not display the developer console and compiler
+      <code>?lzt=html</code> request type.  This generates an HTML page
+      that uses the JavaScript embedding library to embed the
+      application.  Unlike the development page (<code>?lzt=app_console</code>),
+      it does not display the developer console or compiler
       warnings.</p>
       
       <p>View the result of the HTML deployment page <a
       href="{/canvas/request/@url}?lzt=html{/canvas/request/@query_args}">here</a>.
       (Note that this page is generated dynamically in the browser,
-      adapting to the particular browser's capabilities, so the
+      adapting to the
+      runtime choice and
+      particular browser's capabilities, so the
       browser source view is not equivalent to the HTML deployment
       page source.)</p>
       
+<xsl:choose><xsl:when test="/canvas/@runtime != 'dhtml'">
+
       <h2>Deployment with an Embedded <code>object</code> Tag</h2>
       <p>The application can also be embedded within a page that does
       not use the JavaScript library.  This can be a good choice if you
@@ -75,26 +79,26 @@
   &lt;param name="menu" value="false" />
 &lt;/object></pre>
       
-      <h2>Deployment with the JavaScript <code>embed.js</code> Library</h2>
-      <p>To deploy using the JavaScript <code>embed.js</code> library,
+      <h2>Deployment with the JavaScript <code>embed-compressed.js</code> Library</h2>
+      <p>To deploy using the JavaScript <code>embed-compressed.js</code> library,
       place the following line within the <code>&lt;head&gt;</code>
       section of the HTML document that embeds the OpenLaszlo
       application:</p>
       
-      <pre>&lt;script src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/embed.js" type="text/javascript">&lt;/script></pre>
+      <pre>&lt;script src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/embed-compressed.js" type="text/javascript">&lt;/script></pre>
       
       <p>Place the following element within the <code>&lt;body></code>
       section of the document, at the location where the Laszlo
       application should appear:</p>
       
       <pre>&lt;script type="text/javascript"&gt;
-          lzEmbed({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
+          Lz.swfEmbed({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
 &lt;/script></pre>
 
-      <p>Click <a href="{/canvas/request/@url}?lzt=html{/canvas/request/@query_arg}">here</a> to see an example deployment page.  Note that it includes extra code for client-side version detection and interacting with browser history.</p>
+      <p>Click <a href="{/canvas/request/@url}?lzt=html{/canvas/request/@query_arg}">here</a> to see an example deployment page.</p>
       
       <p>You can also use the <code>js</code> request type to generate
-      the call to <code>lzEmbed</code>:</p>
+      the call to <code>Lz.swfEmbed</code>:</p>
       
       <pre>&lt;script src="<xsl:value-of select="/canvas/request/@url"/>?lzt=js" type="text/javascript"&gt;
 &lt;/script></pre>
@@ -110,24 +114,26 @@ If you are deploying a SOLO application and wish to pass parameters down to the 
  modifications to the stock html wrapper page that the server provides. 
 </p>
 <p>
-Here is an <code>lzEmbed</code> line that passes all of the query params down to the Laszlo app undamaged:</p>
+Here is an <code>Lz.swfEmbed</code> line that passes all of the query params down to the Laszlo app undamaged:</p>
 <pre>
-lzEmbed({url: 'main.lzx.swf?'+window.location.search.substring(1), bgcolor: '#ffffff', width: '100%', height: '100%'});
+Lz.swfEmbed({url: 'main.lzx.lzr=swf7.swf?'+window.location.search.substring(1), bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
 </pre>
 <p>
 
-The thing that's different is the alteration to <code>main.lzx.swf? </code>from <code>main.lzx?lzt=swf</code> and the addition of 
+The thing that's different is the alteration to <code>main.lzx.lzr=swf7.swf? </code>from <code>main.lzx?lzt=swf</code> and the addition of 
 <code>'+window.location.search.substring(1)'</code>
 </p>
 
 <h3><a href='{canvas/request/@lps}/lps/admin/solo-deploy.jsp?appurl={canvas/request/@relurl}'>SOLO Deployment Wizard</a></h3>
 There is also a <a href='{canvas/request/@lps}/lps/admin/solo-deploy.jsp?appurl={canvas/request/@relurl}'>SOLO Deployment Wizard</a> application on the OpenLaszlo server which can assist in packaging an entire application directory for SOLO use.
 
+</xsl:when></xsl:choose>
+
       <h2>More Information</h2>
       <ul>
-        <li><a href="{/canvas/request/@lps}/docs/deploy/deployers-guide.html">System Administrator's Guide to Deploying OpenLaszlo Applications</a></li>
-        <li><a href="{/canvas/request/@lps}/docs/guide/request-types.html">Software Developer's Guide</a></li>
-        <li><a href="http://www.laszlosystems.com/developers/community/forums/">Developer Forums</a></li>
+        <li><a href="{/canvas/request/@lps}/docs/deploy/">System Administrator's Guide to Deploying OpenLaszlo Applications</a></li>
+        <li><a href="{/canvas/request/@lps}/docs/guide/">Software Engineer's Guide to Developing OpenLaszlo Applications</a></li>
+        <li><a href="http://forum.openlaszlo.org/">Developer Forums</a></li>
       </ul>
   </body>
 </html>

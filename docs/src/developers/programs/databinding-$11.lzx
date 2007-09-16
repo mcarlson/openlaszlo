@@ -1,0 +1,33 @@
+
+<canvas height="150">
+  <dataset name="colors">
+    <value>red</value>
+    <value>green</value>
+    <value>olive</value>
+    <value>yellow</value>
+    <value>blue</value>
+    <value>teal</value>
+  </dataset>
+
+  <simplelayout spacing="10"/>
+  <view name="swatch" width="200" height="30" 
+  datapath="colors:/value[1]/text()">
+    <method name="applyData" args="v">
+      setBGColor(eval(v))
+      display.setText(v)
+    </method>
+  </view>
+  <text name="display" resize="true"/>
+
+  <button text="Change view color">
+    <attribute name="ind" value="$once{1}"/>
+    <handler name="onclick">
+      if (++ind == 7) ind = 1
+      swatch.setDatapath('colors:/value[' + ind + ']/text()')
+    </handler>
+  </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

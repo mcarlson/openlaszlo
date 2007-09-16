@@ -1,0 +1,37 @@
+
+<canvas height="100">
+  <class name="col" clickable="true" bgcolor="blue" 
+         width="20" height="80" onclick="this.setWidth(this.width+2)"/>
+  <layout>
+    <attribute name="spacing" value="10" type="number"/>
+    <method name="addSubview" args="s">
+      this.updateDelegate.register(s, "onwidth");
+      super.addSubview(s);
+      this.update();
+    </method>
+    <method name="update">
+      <![CDATA[  
+      if (this.locked) return;
+      this.locked = true;
+      var indent = 0;
+      for (var i = 0; i < subviews.length; i++){
+          var s = subviews[i];
+          s.setAttribute('x',  indent);
+          indent += s.width + this.spacing;
+      }
+      this.locked = false;
+      ]]>
+    </method>
+  </layout>
+
+  <col/>
+  <col/>
+  <col/>
+  <col/>
+  <col/>
+  <col/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

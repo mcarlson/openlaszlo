@@ -20,7 +20,6 @@
 
          the state delays instantiation until the RTE is used. -->
 
-     <state name="fontSizeData">
 
          <dataset name="fontsizes">
 
@@ -40,7 +39,6 @@
 
          </dataset>
 
-     </state>
 
      
 
@@ -50,7 +48,7 @@
 
          
 
-         <attribute name="editor" value="$once{this.parent.editor}" />
+         <attribute name="editor" />
 
          <attribute name="toolbar" value="$once{this.parent}" />
 
@@ -72,8 +70,6 @@
 
              toolbar.registerTool(this,"size");
 
-             this.setValue(this.editor.defaultfontsize, true); 
-
          </method>
 
          <!---  @keywords private
@@ -84,8 +80,6 @@
 
              super.construct(parent, args);
 
-             fontSizeData.apply();
-
          </method>
 
          
@@ -93,7 +87,7 @@
          <!---  @keywords private -->
 
          <method event="onselect"><![CDATA[
-
+                this.setChanged(true); 
                 //------------------------------------------------------------
 
                 // make sure that we call into editor if this combobox has
@@ -103,17 +97,22 @@
                 //------------------------------------------------------------
 
                 if (this.changed && this.toolbar._passthruchanges) {                   
+                    if ("editor" in this) {
+                        this.editor.setFormatAttribute("size", this.getValue()); 
+                        this.editor.delegateRestoreSelection(); 
+                    }
 
-                    this.editor.setFormatAttribute("size", this.getValue()); 
-
-                    this.editor.delegateRestoreSelection(); 
-
-                }
-
+                } 
                 ]]>
 
          </method>
 
+         
+         <!-- When we get an editor to hook up to, make this menu's value
+            match up to the default font of the editor.  -->
+         <method event="oneditor" args="e">
+             this.setValue(this.editor.defaultfontsize, true);
+         </method>
          
 
          <!--- method broadcast out by the toolbar for clearing tool's state -->
@@ -155,7 +154,7 @@
  
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2005-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

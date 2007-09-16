@@ -4,18 +4,20 @@
     <!-- start and end date.                                                -->
     <!-- ================================================================== -->
     <!-- more comments on use -->
-    <!-- get rid of debug.code -->
+    <!-- get rid of Debug.code -->
 
-    <include href="lz/simpletext.lzx"/>
+    <include href="basepanel.lzx" />    
     <include href="base/basetabslider.lzx"/>
+    <include href="textbox.lzx" />
 
 
     <!-- CLASS: infoTab ================================================== -->
     <!-- ================================================================= -->
-    <class name="infoTab" extends="basetabelement" clickable="false" bgcolor="0xEEF0EB" >
+    <class name="infoTab" extends="basetabelement" clickable="false" bgcolor="0xEEF0EB" 
+        clip="true">
 
         <!-- ATTRIBUTES -->
-        <attribute name="minheight" value="17"/>
+        <attribute name="minheight" value="21"/>
         <attribute name="label" type="string" />
         <attribute name="defaultplacement" value="interior" type="string"/>
 
@@ -28,21 +30,17 @@
             <view name="bline" height="1" width="${parent.width}"
                 bgcolor="0xC6C7C4" y="${parent.height - 1}"  />
             <text name="ttl" width="150" x="5" y="1"
-                font="eventTimefont" fgcolor="#898B86" pixellock="true"  >
+                fgcolor="#898B86" pixellock="true"  >
                 <attribute name="text" value="${classroot.label}"/>
             </text>
             <view name="arrowref" resource="tabarrow"
                 x="${parent.width - 15}" y="${Math.floor(parent.height/2)}">
-                <animator name="rotateDown" attribute="x" to="90"
-                    duration="333"  start="false"/>
-                <animator name="rotateUp"   attribute="rotation" to="-90"
-                    duration="333" start="false"/>
             </view>
         </view>
         <view name="interior" clip="true" width="${immediateparent.width}"
-            options="releasetolayout" />
-        <resizelayout axis="y"/>
-
+            options="releasetolayout" visible="false"/>
+            <resizelayout axis="y"/>
+            
         <!-- METHODS -->
         <method event="onopenstart" >
             // tab is about to open
@@ -50,7 +48,6 @@
             this.top.setBGColor(0xE2E4DF);
             this.top.tline.setBGColor(0xB8B9B5)
             this.top.bline.setBGColor(0xFDFFFF)
-            this.top.arrowref.animate("rotation",90,333,true);
         </method>
 
         <method event="onclosestart" >
@@ -58,7 +55,6 @@
             this.top.setBGColor(0xEEF0EB);
             this.top.tline.setBGColor(0xFDFFFF)
             this.top.bline.setBGColor(0xC6C7C4)
-            this.top.arrowref.animate("rotation",-90,333,true);
         </method>
 
         <method event="onclosestop" >
@@ -70,48 +66,6 @@
             // ugh - tabslider doesn't support closing tabs yet
             this.parent.openTab(this.parent,true);
         </method>
-
-        <!-- attribute name="defaultplacement" value="interior" type="string" /-->
-    </class>
-
-    <!-- CLASS: textbox ================================================== -->
-    <!-- ================================================================= -->
-    <class name="textbox" height="14">
-        <attribute name="bordercolor" value="0x000000" />
-        <view name="v_border" height="1" bgcolor="${parent.bordercolor}" width="${parent.width}" />
-        <view name="h_border" width="1"  y="1" bgcolor="${parent.bordercolor}" height="${parent.height -1}" />
-        <view y="${parent.height}" width="${parent.width}" bgcolor="white" height="1"/>
-        <view x="${parent.width}" y="${parent.height}" bgcolor="white" width="1"/>
-        <text name="txt" x="2" width="${parent.width-4}" opacity=".7" font="eventTimefont" /> <!-- fgcolor="#535353" -->
-        <method name="setText" args="t">
-            txt.setText(t);
-        </method>
-
-        <method name="changeDataset" args="DP,path">
-           var tempDP = dupePointer.DP;
-        </method>
-    </class>
-    
-    <!-- CLASS: inputtextbox ============================================= -->
-    <!-- ================================================================= -->
-    <class name="inputtextbox" extends="inputtext" bgcolor="white"
-        resizable="true" 
-        font="eventTimefont" opacity=".7" > <!-- fgcolor="#535353"-->
-        <view name="v_border" height="1"       bgcolor="black" width="${parent.width}" />
-        <view name="h_border" width="1"  y="1" bgcolor="black" height="${parent.height -1}" />
-
-        <command name="myenter" onselect="parent.datapath.updateData();"  
-                 key="['Enter']"
-                 active="false"/>
-        
-        <method event="onfocus">
-            myenter.setAttribute( "active" ,true );
-        </method>
-
-        <method event="onblur">
-            this.datapath.updateData();
-            myenter.setAttribute( "active" ,false );
-        </method>
     </class>
 
     <!-- CLASS: info_Panel =============================================== -->
@@ -121,11 +75,12 @@
         <attribute name="opened" value="false"/>
 
         <!-- VIEWS -->
-        <view name="summary" width="198" height="${this.content.height + 20}" bgcolor="0xEEF0EB">
-            <view y="10" name="content" x="10" width="${parent.width - 20}" >
-                <inputtextbox name="title"
-                    width="${immediateparent.width}" height="15"
-                    datapath="summary/@value"/>
+        <view name="summary" width="198" height="83" bgcolor="0xEEF0EB">
+            <view y="10" name="content" x="10" width="${parent.width - 20}" height="65">
+                <inputtextbox name="title" id="sitbox"
+                    width="${immediateparent.width}" height="20"
+                    datapath="summary/@value">
+                </inputtextbox>
 
                 <view name="day" y="29" >
                    <!-- <basebutton resource="info_minical" width="15" x="-2"
@@ -146,10 +101,57 @@
                             ]]>
                         </method>
                     </textbox>
-                    <basebutton x="149" width="14" resource="info_larrow"
-                        onclick="eventDataMgr.changeDay(-1);"/>
-                    <basebutton x="163" width="14" resource="info_rarrow"
-                        onclick="eventDataMgr.changeDay(+1);"/>
+                    <basebutton x="149" width="14" resource="info_larrow">
+                        <method event="onclick">
+                            calgrid.keepinfoopen = true;
+                            var thiscell = calgrid.open_day.id;
+                            thiscell = Number(thiscell.substr(4));
+                            if(thiscell == 1){
+                                calgrid.prevMonth();
+                                calgrid.keepinfoopen = false;
+                            }
+                            var prevcell = 'cell' + Number(thiscell - 1);
+                            calgrid.daySelectionMgr.select(global[prevcell]);
+                            calgrid.open_day = global[prevcell];
+                            eventDataMgr.changeDay(-1);
+                            if(cal_interior.viewstyle == "day"){
+                                calgrid.showdayview();
+                            }
+                            if(cal_interior.viewstyle == "week"){
+                                calgrid.showweekview();
+                            }
+                            calgrid.keepinfoopen = false;
+                        </method>
+                    </basebutton>
+                    <basebutton x="163" width="14" resource="info_rarrow">
+                        <method event="onclick">
+                            calgrid.keepinfoopen = true;
+                            var thiscell = calgrid.open_day.id;
+                            thiscell = Number(thiscell.substr(4));
+                            if(thiscell == 42){
+                                calgrid.nextMonth();
+                                calgrid.keepinfoopen = false;
+                            }
+                            if(thiscell == 35){
+                                if(cell42.visible == false){
+                                    calgrid.nextMonth();
+                                    calgrid.keepinfoopen = false;
+                                }
+                            }
+                            var nextcell = 'cell' + Number(thiscell + 1);
+                            calgrid.daySelectionMgr.select(global[nextcell]);
+                            calgrid.open_day = global[nextcell];
+                            eventDataMgr.changeDay(+1);
+                            if(cal_interior.viewstyle == "day"){
+                                calgrid.showdayview();
+                            }
+                            if(cal_interior.viewstyle == "week"){
+                                calgrid.showweekview();
+                            }
+                            calgrid.keepinfoopen = false;
+                        </method>
+                    </basebutton>
+                            
                 </view>
 
                 <view name="times" x="0" y="50">
@@ -170,7 +172,7 @@
 
                         return h+':'+m+ap;
                     </method>
-                    <textbox name="stime" x="0" y="1" width="42" 
+                    <textbox name="stime" x="0" y="1" width="45" 
                              bgcolor="0xEEF0EB" bordercolor="0x333333"
                              datapath="start[1]/@*" >
                         <method name="applyData" args="attrs">
@@ -186,10 +188,10 @@
                                 datapath="start[1]"
                                 onclick="eventDataMgr.changetime('start',+1);"/>
 
-                    <text x="$immediately{92-11}" y="2" width="20" height="13">
+                    <text x="$immediately{92-11}" y="0" width="20" >
                         to</text>
 
-                    <textbox name="etime" x="100" y="1" width="42" 
+                    <textbox name="etime" x="100" y="1" width="45" 
                              bgcolor="0xEEF0EB" bordercolor="0x333333"
                              datapath="end[1]/@*" >
                         <method name="applyData" args="attrs">
@@ -224,45 +226,55 @@
         </view>
 
 
-        <view name="gutter1" bgcolor="0xEEF0EB" y="${parent.summary.height}"
-            width="${immediateparent.width}" height="50">
-            <view name="tline" height="1" width="${parent.width}"
+        <view name="gutter1" bgcolor="0xEEF0EB" y="$once{parent.summary.height}"
+            width="${parent.width-7}" height="4">
+            <view name="tline" height="1" width="$once{parent.width}"
                 bgcolor="0xB8B9B5"/>
-            <view name="bline" height="1" y="3" width="${parent.width}"
+            <view name="bline" height="1" y="3" width="$once{parent.width}"
                 bgcolor="0xFDFFFF"/>
         </view>
 
-        <basetabslider name="tabs" height="360" bgcolor="0xEEF0EB" width="100%" y="${parent.summary.height + 4}" pixellock="true"
+        <basetabslider name="tabs" height="365" width="100%" y="${parent.summary.height + 4}" pixellock="true"
             slideduration="200" mintabheight="20" oninit="this.openTab(this.notes,true)" >
+
             <infoTab name="notes" label="Notes" pixellock="true">
                 <!-- fixed size input text is best for large multiline text,
                  so it is good to declare with values for width/height -->
                 <inputtextbox name="txt" x="10" y="10" multiline="true" pixellock="true"
-                              width="${immediateparent.width - 20}" height="289" />
+                    width="175" height="280" datapath="notes/@value" visible="true"/>
             </infoTab>
             
-            <infoTab label="Location" pixellock="true">
+            <infoTab name="location" label="Location" pixellock="true">
                 <inputtextbox name="txt" x="10" y="10" multiline="true" pixellock="true"
-                              width="${immediateparent.width - 20}" height="289" />
+                    width="175" height="280" datapath="location/@value" visible="true"/>
             </infoTab>
-            <infoTab label="Attendees" pixellock="true">
+            <infoTab name="attendees" label="Attendees" pixellock="true">
                 <inputtextbox name="txt" x="10" y="10" multiline="true" pixellock="true"
-                              width="${immediateparent.width - 20}" height="289" />
+                    width="175" height="280" datapath="attendees/@value" visible="true"/>
             </infoTab>
+
         </basetabslider>
 
         <view name="gutter2"  bgcolor="0xEEF0EB" 
               y="${parent.tabs.y + parent.tabs.height}" height="3" 
-              width="${immediateparent.width}" > <!-- bgcolor="0xEEF0EB"  47-->
-            <view name="tline" height="1" width="${parent.width}"
+              width="$once{parent.width-7}" >
+            <view name="tline" height="1" width="$once{parent.width}"
                 bgcolor="0xB8B9B5"/>
-            <view name="bline" height="1" y="3" width="${parent.width}"
+            <view name="bline" height="1" y="3" width="$once{parent.width}"
                 bgcolor="0xFDFFFF"/>
+
+            <calButton label="Apply" x="15" y="13">
+                <method event="onclick">
+                    eventDataMgr.changeTitle(sitbox.getText());
+                    eventDataMgr.changeNotes(classroot.tabs.notes.txt.getText());
+                    eventDataMgr.changeLocation(classroot.tabs.location.txt.getText());
+                    eventDataMgr.changeAttendees(classroot.tabs.attendees.txt.getText());
+                </method>
+            </calButton>
                 
             <calButton label="Delete" x="${parent.width - width - 15}" y="13"
                        onclick="eventDataMgr.deleteEvent()"/>
         </view>
-
 
         <!-- ANIMATORS -->
         <animator start="false" name="slideopen1old" attribute="width" to="204"
@@ -321,7 +333,7 @@
         </method>
 
         <method name="close_done" >
-            //debug.write("close_done");
+            //Debug.write("close_done");
             calgrid.expand();
             this.setVisible(false);
         </method>
@@ -335,7 +347,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

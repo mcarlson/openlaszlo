@@ -1,0 +1,37 @@
+/**
+  * LzIdleKernel.js
+  *
+  * @copyright Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic Kernel
+  * @subtopic DHTML
+  * @author Max Carlson &lt;max@openlaszlo.org&gt;
+  */
+
+{
+// Avoid idle noise in the profiler
+#pragma "profile=false"
+
+// Receives idle events and sends them into the runtime
+var LzIdleKernel = {
+    __callbacks: []
+    ,addCallback: function (scope, funcname) {
+        LzIdleKernel.__callbacks.push([scope, funcname]);
+    }    
+    ,removeCallback: function (scope, funcname) {
+        for (var i = LzIdleKernel.__callbacks.length - 1; i >= 0; i--) {
+            if (LzIdleKernel.__callbacks[i][0] == scope && LzIdleKernel.__callbacks[i][1] == funcname) {
+                return LzIdleKernel.__callbacks.splice(i, 1)        
+            }    
+        }    
+    }    
+    ,__update: function (){
+        for (var i = LzIdleKernel.__callbacks.length - 1; i >= 0; i--) {
+            var s = LzIdleKernel.__callbacks[i][0];
+            s[LzIdleKernel.__callbacks[i][1]]( getTimer() );
+        }
+    }
+}
+setInterval( LzIdleKernel.__update, 33 );
+}

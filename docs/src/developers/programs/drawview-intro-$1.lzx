@@ -1,0 +1,10 @@
+
+    <canvas height="75" proxied="false">
+      <simplelayout spacing="5" axis="x"/>
+      <view height="50" width="50" bgcolor="red"/>
+      <drawview height="50" width="50" bgcolor="blue"/>
+    </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

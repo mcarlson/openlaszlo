@@ -1,0 +1,38 @@
+
+
+<canvas width="350" height="150">
+
+<stylesheet>
+
+view {
+    height: "50";
+    width: "50";
+    bgcolor: "0xFF0000";
+    }
+    
+[name='blue'] {
+    height: "50";
+    width: "50";
+    bgcolor: "0x0000FF";
+    }
+
+#green {
+    height: "50";
+    width: "50";
+    bgcolor: "0x006600";
+    }
+
+</stylesheet>
+
+<simplelayout axis="x" spacing="25"/>
+
+    <view id="red" name="red" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/>
+    <view id="blue" name="blue" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" />
+    <view id="green" name="green" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

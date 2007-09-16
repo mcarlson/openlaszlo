@@ -1,0 +1,25 @@
+<canvas>
+    <include href="lztest/lztestmanager.lzx" /> 
+
+<script><![CDATA[
+
+var suiteLzBrowser = new LzTestSuite("LzBrowser suite"); 
+
+suiteLzBrowser.testVersion = function () {
+    var theVersion = LzBrowser.getVersion();
+    LzTestManager.assertNotNull(theVersion, "LzBrowser.getVersion");
+}
+
+suiteLzBrowser.addTest(suiteLzBrowser.testVersion); 
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

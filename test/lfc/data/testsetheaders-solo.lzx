@@ -1,0 +1,65 @@
+<library>
+  <include href="lzunit/lzunit.lzx" />
+
+  <dataset name="edata" src="http:echo.jsp"  proxied="false"
+           getresponseheaders="true" 
+           timeout="120000"/>
+
+  <class name="TestSetHeadersSOLO" extends="TestCase">
+    <attribute name="dpready" value="false"/>
+    <attribute name="t2del" value="false"/>
+    <attribute name="waitcnt" value="0"/>
+
+    <datapointer xpath="edata:/echo" name="dp" 
+                 oninit="Debug.write('sending edata request'); parent.sendit()" />
+
+    <handler reference="edata" name="ondata">
+       Debug.write('testcase got edata ondata');
+       this.dpready = true;
+    </handler>
+
+    <method name="sendit">
+      Debug.write("testsetheaders.lzx sending edata");
+      edata.setHeader("content-type", "pink-elephants/xml");
+      edata.setHeader("my-personal-header", "vanilla/with-chocolate-syrup");
+      edata.setHeader("my-other-personal-header", "milk chocolate with almonds");
+      edata.setQueryType("POST");
+      edata.doRequest();
+    </method>
+
+    <method name="test1">
+      if ( ! this.dpready ){
+          if ( ! this.t2del ){
+              Debug.write( "test isn't done until async test runs" );
+              this.t2del = new LzDelegate( this , 'test1' );
+          }
+
+          if ( this.waitcnt++ > 1000 ){
+              fail( "testsetheaders: Didn't get async data" );
+          } else {
+              LzIdle.callOnIdle( this.t2del );
+          }
+
+          return;
+      } 
+      Debug.write( 'running testsetheaders test on loaded data' );
+      this.doIt(dp);
+    </method>
+
+        <method name="doIt" args="dp">
+            <![CDATA[
+                     Debug.write("/echo/headers/text()=",dp.xpathQuery( '/echo/headers/text()' ));
+                     assertTrue(  dp.xpathQuery( '/echo/headers/text()' ).indexOf('pink-elephants/xml') > 0 , "looking for pink-elephants/xml header ");
+                     assertTrue(  dp.xpathQuery( '/echo/headers/text()' ).indexOf('vanilla/with-chocolate-syrup') > 0 , "looking for vanilla/with-chocolate-syrup header ");
+            ]]>
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+

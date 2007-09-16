@@ -1,0 +1,52 @@
+<canvas width="100%" height="80%">
+    <resource name="tabrsrc" >
+        <frame src="animation/logo0001.png" />
+        <frame src="animation/logo0010.png" />
+        <frame src="animation/logo0015.png" />
+        <frame src="animation/logo0020.png" />
+        <frame src="animation/logo0025.png" />
+        <frame src="animation/logo0030.png" />
+        <frame src="animation/logo0035.png" />
+        <frame src="animation/logo0040.png" />
+        <frame src="animation/logo0045.png" />
+        <frame src="animation/logo0050.png" />
+        <frame src="animation/logo0055.png" />
+        <frame src="animation/logo0060.png" />
+        <frame src="animation/logo0065.png" />
+        <frame src="animation/logo0070.png" />
+        <frame src="animation/logo0075.png" />
+        <frame src="animation/logo0080.png" />
+        <frame src="animation/logo0085.png" />
+        <frame src="animation/logo0090.png" />
+        <frame src="animation/logo0095.png" />
+        <frame src="animation/logo0100.png" />
+        <frame src="animation/logo0105.png" />
+        <frame src="animation/logo0110.png" />
+        <frame src="animation/logo0115.png" />
+        <frame src="animation/logo0120.png" />
+        <frame src="animation/logo0125.png" />
+        <frame src="animation/logo0130.png" />
+        <frame src="animation/logo0135.png" />
+        <frame src="animation/logo0140.png" />
+        <frame src="animation/logo0145.png" />
+        <frame src="animation/logo0150.png" />
+        <frame src="animation/logo0155.png" />
+        <frame src="animation/logo0160.png" />
+        <frame src="animation/logo0165.png" />
+        <frame src="animation/logo0170.png" />
+        <frame src="animation/logo0175.png" />
+        <frame src="animation/logo0180.png" />
+        <frame src="animation/logo0185.png" />
+        <frame src="animation/logo0190.png" />
+        <frame src="animation/logo0195.png" />
+        <frame src="animation/logo0200.png" />
+        <frame src="animation/logo0205.png" />
+        <frame src="animation/logo0210.png" />
+        <frame src="animation/logo0215.png" />
+        <frame src="animation/logo0220.png" />
+        <frame src="animation/logo0225.png" />
+    </resource>
+
+    <view name="foo" resource="tabrsrc" oninit="this.play()"/>
+
+</canvas>

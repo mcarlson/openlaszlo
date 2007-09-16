@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -282,7 +282,13 @@ public abstract class ResponderCache extends Responder
             }
 
             try {
-                mDataSourceMap.put("soap",   new SOAPDataSource());
+                mDataSourceMap.put("soap-json",   new org.openlaszlo.data.json.SOAPDataSource());
+            } catch (Throwable e) {
+                mLogger.warn("can't load soap datasource", e);
+            }
+
+                        try {
+                mDataSourceMap.put("soap-swf",   new org.openlaszlo.data.swf.SOAPDataSource());
             } catch (Throwable e) {
                 mLogger.warn("can't load soap datasource", e);
             }
@@ -535,6 +541,19 @@ public abstract class ResponderCache extends Responder
         if (ds == null) {
             source = mHTTPDataSource;
         } else {
+            if ("soap".equals(ds)) {
+                // SOAP: dispatch on runtime ('lzr' query arg ) to figure out what
+                // kind of datatype the client wants (SWF or JSON).
+                // lzr == "dhtml" ? JSON : SWF
+
+                String runtime = req.getParameter("lzr");
+                if ("dhtml".equals(runtime)) {
+                    ds = "soap-json";
+                } else {
+                    ds = "soap-swf";
+                }
+            }
+
             source = (DataSource) mDataSourceMap.get(ds);
             if (source == null) 
                 respondWithErrorSWF(res, 

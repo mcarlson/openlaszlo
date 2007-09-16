@@ -1,11 +1,14 @@
+<!---
+      @topic Incubator
+      @subtopic Rich Text Editor
+  -->
 <library>
     
     <!-- dependencies  -->
     <include href="../stylishbutton.lzx" />
     <include href="../tooltip/tooltip.lzx" />
     
-    <!--- formatbtn
-        class for use richtexttoolbar buttons  -->
+    <!--- class for use of <xref linkend="lz.richtexttoolbar" /> buttons  -->
     <class name="formatbtn" extends="stylishbutton" width="26" 
            focusable="false" style="formatbtn_style">
         <!--- the format type that the button will control -->
@@ -96,7 +99,7 @@
 
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,9 @@
+<canvas width="100%" height="80%">
+
+  <view id="foo" width="256" height="100" resource='resc/h_c_open_sign.gif' 
+        oninit="this.animate('x',200, 3000, true)">
+    <view id="bar" x="20" y="10" width="128" height="64" resource='resc/h_c_web2con.gif'
+                  oninit="this.animate('y',100, 3000, true)" />
+  </view>
+
+</canvas>

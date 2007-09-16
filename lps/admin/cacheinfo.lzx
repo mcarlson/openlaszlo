@@ -28,7 +28,7 @@
                         <method event="onclick">
                         <![CDATA[
                             if (typeof(classroot.parent.parent.mt) == "undefined") {
-                                debug.write('itemlist: no parent.parent.mt')
+                                Debug.write('itemlist: no parent.parent.mt')
                                 return;
                             }
 
@@ -304,7 +304,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

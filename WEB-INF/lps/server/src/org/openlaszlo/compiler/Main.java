@@ -37,14 +37,16 @@ public class Main {
         "  Doesn't flush script cache before compiling.",
         "",
         "Output options:",
-        "--runtime=[swf6|swf7|swf8]",
-        "  Compile to swf6, swf7, swf8.",
+        "--runtime=[swf7|swf8|swf9|dhtml|j2me|svg]",
+        "  Compile to swf7, swf8, swf9, dhtml, j2me, svg",
         "--dir outputdir",
         "  Output directory.",
         "-c | --compile",
         "  Compile and assemble, but do not link",
-        "-g | --debug",
-        "  Add debugging information into the output object.",
+        "-g1 | --debug",
+        "  Add debugging support into the output object.",
+        "-g | -g2 | --backtrace",
+        "  Add debugging and backtrace support into the output object.",
         "-p | --profile",
         "  Add profiling information into the output object.",
         "",
@@ -63,7 +65,7 @@ public class Main {
         "  Writes JavaScript to standard output."
     };
 
-    /** Compiles each file base.ext to the output file base.swf,
+    /** Compiles each file base.ext to the output file base.swf (or .js),
      * writing progress information to standard output.  This method
      * is intended for testing the compiler.
      *
@@ -108,6 +110,8 @@ public class Main {
 
         String scacheDir = LPS.getWorkDirectory() + File.separator + "scache";
         ScriptCompiler.initScriptCompilerCache(new File(scacheDir), new Properties());
+        // Set default runtime to compiler.runtime.default
+        compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, LPS.getProperty("compiler.runtime.default", "swf7"));
         boolean flushScriptCache = false;
 
         for (int i = 0; i < args.length; i++) {
@@ -135,14 +139,14 @@ public class Main {
                         "throw".equals(value);
                 } else if (arg.startsWith("--runtime=")) {
                     String value = arg.substring("--runtime=".length());
-                    if (value.equals("swf6") || value.equals("swf7") || value.equals("swf8")) {
-                      compiler.setProperty(CompilationEnvironment.SWFVERSION_PROPERTY, value);
+                    if ((new HashSet(Compiler.KNOWN_RUNTIMES)).contains(value)) {
+                      compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, value);
                     } else {
                       System.err.println("Invalid value for --runtime");
                       return 1;
                     }
                 } else if (arg == "-S" || arg == "--script") {
-                    // This is bogus -- should write out a .lzx file
+                    // TODO: [2007-05-25 ptw] This is bogus -- should write out a .lzs file
                     Logger.getLogger(org.openlaszlo.sc.ScriptCompiler.class)
                         .setLevel(Level.ALL);
                 } else if (arg == "-mcache" || arg == "--mcache") {
@@ -179,8 +183,11 @@ public class Main {
                     if (level != "" && level != null) {
                         thisLogger.setLevel(Level.toLevel(level));
                     }
-                } else if (arg == "-g" || arg == "--debug") {
+                } else if (arg == "-g1" || arg == "--debug") {
                     compiler.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "true");
+                } else if (arg == "-g" || arg == "-g2" || arg == "--backtrace") {
+                    compiler.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "true");
+                    compiler.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, "true");
                 } else if (arg == "-p" || arg == "--profile") {
                     compiler.setProperty(CompilationEnvironment.PROFILE_PROPERTY, "true");
                 } else if (arg == "-c" || arg == "--compile") {
@@ -219,42 +226,42 @@ public class Main {
 
     static private int compile(Compiler compiler,
                                 Logger logger,
-                                String sourceName,
-                                String outFileName,
+                                String sourcePath,
+                                String outName,
                                 String outDir)
     {
-        File sourceFile = new File(sourceName);
-
+        File sourceFile = new File(sourcePath);
         String objExtension = null;
         String finalExtension = null;
-        String finalFileName = null;
+        String finalName = null;
         if ("false".equals(compiler.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
           objExtension = ".gz";
           finalExtension = ".lzo";
         } else {
-          objExtension = ".swf";
+          String runtime = compiler.getProperty(CompilationEnvironment.RUNTIME_PROPERTY);
+          objExtension = compiler.getObjectFileExtensionForRuntime(runtime);
         }
-
+        if (outName == null) {
+          String baseName = FileUtils.getBase(sourceFile.getName());
+          outName = baseName + objExtension;
+          if (finalExtension != null) {
+            finalName = baseName + finalExtension;
+          }
+        }
         if (outDir == null) {
           outDir = sourceFile.getParent();
         }
-        if (outFileName == null) {
-          String base = FileUtils.getBase(sourceName);
-          outFileName = base + objExtension;
-          if (finalExtension != null) {
-            finalFileName = base + finalExtension;
-          }
-        }
-        File objectFile = new File(outDir, outFileName);
+        File objectFile = new File(outDir, outName);
         try {
+          System.err.println("Compiling: " + sourceFile + " to " + objectFile);
             compiler.compile(sourceFile, objectFile, new Properties());
-            if (finalFileName != null) {
-              File dest = new File(finalFileName);
-              if (dest.exists()) {
-                dest.delete();
+            if (finalName != null) {
+              File finalFile = new File(outDir, finalName);
+              if (finalFile.exists()) {
+                finalFile.delete();
               }
-              if (! objectFile.renameTo(dest)) {
-                throw new CompilationError("Could not rename " + objectFile + " to " + dest);
+              if (! objectFile.renameTo(finalFile)) {
+                throw new CompilationError("Could not rename " + objectFile + " to " + finalFile);
               }
             }
         } catch (CompilationError e) {

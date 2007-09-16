@@ -1,0 +1,25 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<canvas title="test-urldisplay">
+<include href="views/mybutton.lzx" />
+
+<dataset name="infods" src="data/offline/pinfo/pinfo_71211325.xml" />
+
+
+<simplelayout axis="x" spacing="10" />
+
+    <mybutton datapath="infods:/rsp/photo" resource="assets/transparent.png" 
+        width="100" height="20" bgcolor="0x999900">
+        <text x="8" y="10" valign="middle">open flickr page in new window</text>
+        <method event="onclick">
+            var s = this.datapath.xpathQuery("urls/url/text()"); 
+            Debug.write("how about ", s );
+            LzBrowser.loadURL( s, "_blank", "toolbar=yes"); 
+        </method>
+    </mybutton>
+
+
+</canvas>

@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -63,7 +63,8 @@ public class XMLRPCDataSource extends DataSource
                                 XMLRPCDataSource.class.getName(),"051018-62")
 );
 
-        int swfversion = LPS.getSWFVersionNum(req);
+        String runtime = req.getParameter("lzr");
+
         try {
             if (! req.getMethod().equals("POST"))
                 return compileFault(
@@ -73,7 +74,7 @@ public class XMLRPCDataSource extends DataSource
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 XMLRPCDataSource.class.getName(),"051018-74")
-, swfversion);
+, runtime);
 
             String url = getHTTPURL(getURL(req));
             if (url == null) {
@@ -84,7 +85,7 @@ public class XMLRPCDataSource extends DataSource
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 XMLRPCDataSource.class.getName(),"051018-85", new Object[] {url})
-, swfversion);
+, runtime);
             }
 
             String postbody = req.getParameter("lzpostbody");
@@ -97,14 +98,15 @@ public class XMLRPCDataSource extends DataSource
             mXMLRPCLoad.increment();
             try {
                 Data data = HTTPDataSource.getHTTPData(req, res, url, -1);
-                return new XMLRPCData(data.getAsString().getBytes(), swfversion);
+                mLogger.error("xmlrpc data "+ data.getAsString());
+                return new XMLRPCData(data.getAsString().getBytes(), runtime);
             } finally {
                 t1 = System.currentTimeMillis();
                 mXMLRPCLoad.decrement((int)(t1-t0));
             }
 
         } catch (Exception e) {
-            return compileFault(e, swfversion);
+            return compileFault(e, runtime);
         }
     }
 
@@ -118,20 +120,29 @@ public class XMLRPCDataSource extends DataSource
     /**
      * Compile fault exception message.
      */
-    Data compileFault(Exception e, int swfversion) {
+    Data compileFault(Exception e, String runtime) {
         mLogger.error("compileFault", e);
-        return compileFault(e.getMessage(), swfversion);
+        return compileFault(e.getMessage(), runtime);
     }
 
     /**
      * Compile fault response.
      */
-    Data compileFault(String mesg, int swfversion) {
+    Data compileFault(String mesg, String runtime) {
         mLogger.error("compileFault mesg: " + mesg);
         try {
-            byte[] d = XMLRPCCompiler.compileFault(XMLUtils.escapeXml(mesg), 
-                                                   swfversion);
-            return new XMLRPCData().setResult(d);
+
+            if ("dhtml".equals(runtime)) {
+                byte[] d = XMLRPCJSONCompiler.compileFault(XMLUtils.escapeXml(mesg), 
+                                                       runtime);
+                return new XMLRPCData().setResult(d);
+            } else {
+                int swfversion = LPS.getSWFVersionNum(runtime);
+                byte[] d = XMLRPCCompiler.compileFault(XMLUtils.escapeXml(mesg), 
+                                                       swfversion);
+                return new XMLRPCData().setResult(d);
+            }
+
         } catch (Exception e) {
             mLogger.error("Exception", e);
             // this is an error since we can't build a fault response
@@ -162,10 +173,16 @@ public class XMLRPCDataSource extends DataSource
 
         public XMLRPCData() { }
 
-        public XMLRPCData(byte[] result, int swfversion) 
+        public XMLRPCData(byte[] result, String runtime) 
             throws IOException {
             InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(result));
-            mResult = XMLRPCCompiler.compile(reader, result.length, swfversion);
+            mLogger.debug("XMLRPCData runtime="+runtime);
+            if ("dhtml".equals(runtime)) {
+                mResult = XMLRPCJSONCompiler.compile(reader, runtime);
+            } else {
+                int swfversion = LPS.getSWFVersionNum(runtime);
+                mResult = XMLRPCCompiler.compile(reader, result.length, swfversion);
+            }
         }
 
         public String getMimeType() {

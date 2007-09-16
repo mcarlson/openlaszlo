@@ -20,7 +20,7 @@
         <!--- The remote class name associated with the remote object. This must
               be set if creating the remote object. If loading the object, the
               classname will be set during onload. -->
-       <attribute name="classname" type="string" />
+       <attribute name="remoteclassname" type="string" />
 
         <!--- One of 'loadcreate', 'loadonly', or 'create'. 'Loadcreate' tries
               to load javarpc object if it exists in the server, else it creates
@@ -81,7 +81,7 @@
             var opts = {
                 loadoption: this.loadoption,
                 params: arguments,
-                classname: this.classname,
+                classname: this.remoteclassname,
                 oname: this.attributename,
                 scope: this.scope
             }
@@ -113,7 +113,7 @@
 
             LzJavaRPCService.unloadObject(this._unloadDel, 
                 {
-                  classname: this.classname, 
+                  classname: this.remoteclassname, 
                   oname: this.attributename, 
                   scope: this.scope
                 }, 
@@ -185,7 +185,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

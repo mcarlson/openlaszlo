@@ -1,0 +1,189 @@
+<chapter id="compiler">
+
+
+<title>Understanding Compilation</title>
+
+<para>You can compile your applications for any of several runtimes using any of several techniques. In this chapter we'll look at the various ways of invoking the compiler and its various options:</para>
+
+<itemizedlist spacing="compact"><listitem><para>Using the Developer's Console to invoke the OpenLaszlo Server</para></listitem><listitem><para>Using URLs to invoke the OpenLaszlo Server</para></listitem><listitem><para>Invoking the lzc compiler directly from the command line</para></listitem></itemizedlist>
+
+
+<para/><section><title>Overview</title>
+
+<para>You can cause compilation either by implicitly calling the compiler through the OpenLaszlo Server, or by explicitly calling it from the command line. The most usual way to invoke the server is using the Developer's Console.</para>
+
+<para/><section><title>The Developer's Console</title>
+<para>
+The Developer's Console is a small OpenLaszlo application for selecting things like the target runtime, the deployment mode (proxied or SOLO) and whether the debugger is included.  When you first compile an OpenLaszlo application (as explained below), by default it is returned with the Developer's Console appearing at the bottom of the application.</para>
+<para>
+Depending on whether your compile to SWF (the default) or DHTML, a slightly different version of the Developer's Console is returned. The illustrations below call out features of both versions.
+</para> 
+<informalfigure><mediaobject><imageobject><imagedata fileref="images/dev_console_dhtml.gif"/></imageobject></mediaobject></informalfigure>
+
+<para/></section></section><section><title>The Command Line Compiler</title>
+<para>
+In OpenLaszlo, 'the compiler' consists (currently) of two phases: 1) 'the view compiler', which compiles LZX to Javascript, and 2) 'the script compiler', which compiles Javascript to the target runtime  (SWF7, SWF8 and DHTML). `lzc` invokes both those phases (although you can ask for the intermediate output).
+</para>
+<para>
+The Debugger needs an OL server to be able to evaluate forms (it calls the server to compile the form and then loads and runs the result). It will try to talk to OL server (using the url the application was loaded from), so it should 'just work', so long as you are running a server, even if you don't use the server for compiling your application. 
+</para>
+
+<para/><section><title>Running the Command Line Compiler</title>
+<para>
+To run lzc you must do so from a current directory that matches the value of LPS_HOME, and LPS_HOME must be set to the correct value for the build.
+</para>
+<para>
+Say the application to be compiled is</para>
+<programlisting>
+$LPS_HOME/laszlo-explorer/basics/mediatst.lzx
+</programlisting>
+<para>
+To compile it correctly you would set the current directory first:
+</para>
+<programlisting>
+cd $LPS_HOME;
+</programlisting>
+<para>
+and then compile using
+</para>
+<programlisting>
+lzc --script --runtime=dhtml laszlo-explorer/basics/mediatst.lzx;
+</programlisting>
+<para>
+Let's say the file $LPS_HOME/laszlo-explorer/basics/mediatst.lzx wants to reference the file
+$LPS_HOME/laszlo-explorer/basics/assets/background.jpg. It might contain the following reference.
+</para>
+<informalexample role="live-example"><programlisting>
+&lt;canvas&gt;
+  &lt;view resource="assets/background.jpg"/&gt;
+&lt;/canvas&gt;
+</programlisting></informalexample>
+<para>
+Running LZC from other than LPS_HOME will result in a file not found error. 
+</para>
+<para/></section><section><title>Command Line Options</title>
+<para>
+Here are the options available for compilation:
+</para>
+<para><emphasis role="b">Options:</emphasis></para>
+<variablelist><varlistentry><term>-D&lt;name&gt;=&lt;value&gt;</term><listitem><para> Set the name/var property to value (See Compiler.getProperties).</para></listitem></varlistentry><varlistentry><term>-D&lt;name&gt;</term><listitem><para> Short for -Dname=true.</para></listitem></varlistentry><varlistentry><term>-v</term><listitem><para>Write progress information to standard output.</para></listitem></varlistentry><varlistentry><term>--mcache on|off</term><listitem><para>Turns on/off media cache.  Default is off.</para></listitem></varlistentry><varlistentry><term>--onerror [throw|warn]</term><listitem><para>Action to take on compilation errors.  Defaults to warn.</para></listitem></varlistentry><varlistentry><term>--help</term><listitem><para>lists all options.</para></listitem></varlistentry><varlistentry><term>--flush-script-cache</term><listitem><para>Doesn't flush script cache before compiling.</para></listitem></varlistentry></variablelist>
+<para><emphasis role="b">Output options:</emphasis></para>
+<variablelist><varlistentry><term>--runtime=[swf7|swf8|dhtml]</term><listitem><para> Compile to swf7, swf8, or dhtml.</para></listitem></varlistentry><varlistentry><term>--dir outputdir</term><listitem><para>Output directory.</para></listitem></varlistentry><varlistentry><term>-g | --debug</term><listitem><para> Add debugging information into the output object.</para></listitem></varlistentry><varlistentry><term>-p | --profile</term><listitem><para> Add profiling information into the output object.</para></listitem></varlistentry></variablelist>
+
+<para><emphasis role="b">Logging options:</emphasis></para>
+<variablelist><varlistentry><term>-l&lt;loglevel&gt;</term><listitem><para>Logging level (See org.apache.log4j.Level)</para></listitem></varlistentry><varlistentry><term>-l&lt;loggerName&gt;=&lt;loglevel&gt;</term><listitem><para>Logging level (See org.apache.log4j.Level)</para></listitem></varlistentry><varlistentry><term>-lp file</term><listitem><para>Log4j properties files</para></listitem></varlistentry><varlistentry><term>--log logfile</term><listitem><para>Specify logfile (output still goes to console as well)</para></listitem></varlistentry><varlistentry><term>--schema</term><listitem><para> Writes the schema to standard output.</para></listitem></varlistentry><varlistentry><term>--script</term><listitem><para>Writes JavaScript to standard output.</para></listitem></varlistentry></variablelist>
+<para/></section><section><title>Compile-time constants</title>
+<para>
+You can define compile-time constants to `lzc` by using `-D_name_=_value_`, where _value_ should be either `true` or `false`. By convention, we use `$` as the first character of _name_, but nothing enforces that.
+</para>
+<para>
+The compiler will compile only the chosen branch of an if statement when the condition expression is a compile-time constant (i.e., just the constant name, no other computation). For example:
+</para>
+<programlisting>
+  if ($slow) {
+    ... slow way ...
+  } else {
+    ... fast way ...
+  }
+</programlisting>
+<para>
+You can define compile-time constants to `lzc` by using `-D_name_=_value_`, where _value_ should be either `true` or `false`. By convention, we use `$` as the first character of _name_, but nothing enforces that. The compiler will compile only the chosen branch of an if statement when the condition expression is a compile-time constant (i.e., just the constant name, no other computation). 
+</para>
+<para>
+For example: </para>
+<programlisting>
+  if ($slow) {     ... slow way ...   } else {     ... fast way ...   } Can be made to run fast by `lzc -Dslow=false`
+</programlisting>
+  <para/></section><section><title>
+      New DHTML Runtime and new URL parameters 
+    </title>
+    <para>
+      As part of the architectural overhaul, we have created a new version of the client runtime (LFC plus kernel). To invoke an application compiled for DHMTML, use the <literal>?lzr=dhtml</literal> query.
+    </para>
+    <para>
+      The <literal>?lzr</literal> parameter selects the runtime.  Your choices are swf7, swf8, dhtml.  The default is specified in lps/config/lps.properties as compiler.runtime.default.  The default runtime selector is swf7.
+    </para>
+    <para>
+      The <literal>?lzt</literal> parameter is the 'request type', in general what kind of 'wrapper' page will be generated around your application.  Your choices are: app_console or html.  app_console is the developer console, html is your app in an html page.  The latter can be used as a model for embedding your app in a custom page, or you can simply embed using an iframe:
+    </para>
+    <para>
+      <literal>&lt;iframe src=".../app.lzx?lzt=html"&gt;&lt;/iframe&gt;</literal>
+    </para>
+    <para>
+      The default for <literal>?lzt</literal> is specified in lps/config/lps.properties as defaultRequestType.  The default value is app_console.
+    </para>
+    <para>
+      Mnemonics:
+    </para>
+    <itemizedlist spacing="compact"><listitem><para>lzr - Laszlo <emphasis role="em">R</emphasis>untime</para></listitem><listitem><para>lzt - Laszlo request <emphasis role="em">T</emphasis>ype </para></listitem></itemizedlist>
+    <para>
+      So, for example, to view an LZX application in DHTML within a browser, download it from a live server with an url parameter requesting the DHTML runtime <literal>lzt=html</literal>: <ulink url="../../examples/components/button_example.lzx?lzt=html">http://<emphasis role="i">myserver</emphasis>/mylaszloapp.lzx?<emphasis role="b">lzr=dhtml</emphasis></ulink>. To request the SWF runtime, use  <ulink url="../../examples/components/button_example.lzx?lzt=swf">http://<emphasis role="i">myserver</emphasis>/mylaszloapp.lzx?<emphasis role="b">lzr=swf</emphasis></ulink>.
+</para>
+<para> To specify that the application run in the Developer's Console, use the <literal>lzt</literal> flag:
+      <literal>lzt=app_console</literal> loads the application with the Developer's Console.
+      <literal>lzr=swf7</literal> and <literal>lzr=swf8</literal> loads the application compiled for the SWF7 or SWF8 runtime, with the Developer's Console.
+      Several lzr values have been added for future use, but are not currently supported: <literal>swf9, j2me, svg</literal>
+    </para>
+
+
+<para/></section></section><section><title>Compiler Errors and Warnings</title>
+<para>
+When the compiler detects an error that makes it impossible to compile the application, the error is reported in the browser window, or, if you invoked compilation using lzc, in the terminal window.
+</para>
+<para>
+When the compiler detects code that may be problematic but does not prevent compilation, it issues a warning.  If you have debugging enabled, the warning is displayed there. See <xref linkend="debugging"/> for a detailed discussion of how to detect errors.
+</para>
+<para/></section><section><title>Compiler Directives</title>
+
+<para/><section><title>Conditional Compilation of Runtime-Dependent code</title>
+<para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
+Revisit this after Henry finalizes the syntax of the "when" tag.
+</remark></para>
+
+<para>
+You can enclose blocks of code within <indexterm><primary>switch</primary></indexterm><sgmltag class="element">&lt;switch&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: switch-->
+ elements that are associated with a specific runtime.  The <indexterm><primary>switch</primary></indexterm><sgmltag class="element">&lt;switch&gt;</sgmltag> is a compiler directive that instructs the compiler to compile or omit blocks according to the target runtime to which the application is being compiled. Within a <indexterm><primary>switch</primary></indexterm><sgmltag class="element">&lt;switch&gt;</sgmltag> block, use the <indexterm><primary>when</primary></indexterm><sgmltag class="element">&lt;when&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: when-->
+ to specify the runtime.
+</para>
+
+<example role="live-example">
+   <title>&lt;switch&gt; for conditional compilation</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/compiler-$2.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>switch tag for condtional compilation</title><programlisting role="lzx-embednew"><filename>compiler-$2.lzx</filename><parameter/><code>
+&lt;canvas height="20"&gt;
+  &lt;switch&gt;
+    &lt;when runtime="dhtml"&gt;
+       &lt;text&gt;This program has been compiled for DHTML&lt;/text&gt;
+    &lt;/when&gt;
+    &lt;otherwise&gt;
+      &lt;text&gt;This program has been compiled for SWF&lt;/text&gt; 
+    &lt;/otherwise&gt;
+  &lt;/switch&gt;
+&lt;/canvas&gt;
+</code></programlisting><programlisting>
+&lt;canvas height="20"&gt;
+  &lt;switch&gt;
+    &lt;when runtime="dhtml"&gt;
+       &lt;text&gt;This program has been compiled for DHTML&lt;/text&gt;
+    &lt;/when&gt;
+    &lt;otherwise&gt;
+      &lt;text&gt;This program has been compiled for SWF&lt;/text&gt; 
+    &lt;/otherwise&gt;
+  &lt;/switch&gt;
+&lt;/canvas&gt;
+</programlisting><?lzx-edit programs/compiler-$2.lzx></example?>
+<para/></section><section><title>Font and Face</title>
+<para>
+The <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: font-->
+ and <indexterm><primary>face</primary></indexterm><sgmltag class="element">&lt;face&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: face-->
+ tags are also compiler directives. Unlike most other LZX tags, they do not correspond to a class; rather, they tell the compiler which fonts and typefaces are to be bound to objects.
+</para>
+
+<para/></section></section></chapter>

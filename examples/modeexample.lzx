@@ -40,7 +40,7 @@
                         bgcolor="0xaaffaa">close</text>
                 </view>
                 <method name="passModeEvent" args="event_name, view">
-                    //debug.write("passModeEvent", event_name, view);
+                    //Debug.write("passModeEvent", event_name, view);
                     if (event_name == "onmousedown") {
                         this.close();
                     }
@@ -91,7 +91,7 @@
                     <inputtext x="1" y="1" bgcolor="white" width="198" name="input">type something here</inputtext>
                 </view>
                 <method event="onfocus" reference="frame.input">
-                    //debug.write('onfocus', this);
+                    //Debug.write('onfocus', this);
                     this.open();
                 </method>
                 <method name="open">
@@ -121,7 +121,7 @@
                 <method name="checkForClick"> <![CDATA[
                     xpos = this.getMouse('x');
                     ypos = this.getMouse('y');
-                    //debug.write('checkForClick', xpos, ypos);
+                    //Debug.write('checkForClick', xpos, ypos);
 
                     if (xpos > 0 && xpos < this.width && ypos > 0 && ypos < this.height) {
                           this.open();
@@ -140,7 +140,7 @@
                     if no argument, mode is released unconditionally
                 -->
                 <method name="releaseMode" args="kc">
-                    //debug.write('releaseMode', kc);
+                    //Debug.write('releaseMode', kc);
                     if (kc == 9) {      // tab
                         this.close();
                     }
@@ -164,10 +164,10 @@
                     <text>focusable view</text>
                     <text>yellow=has focus</text>
                     <method event="onfocus">
-                        setbgcolor(0xffff00);
+                        setBGColor(0xffff00);
                     </method>
                     <method event="onblur">
-                        setbgcolor(0xffffff);
+                        setBGColor(0xffffff);
                     </method>
                 </view>
             </view>
@@ -262,7 +262,7 @@
         </method>
 
         <method name="passModeEvent" args="event_name, view">
-            //debug.write("passModeEvent", event_name, view);
+            //Debug.write("passModeEvent", event_name, view);
             return false;
         </method>
    </class>
@@ -308,7 +308,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

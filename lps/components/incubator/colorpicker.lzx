@@ -1,4 +1,8 @@
-<canvas>
+<!---
+      @topic Incubator
+      @subtopic Components
+  -->
+<library>
 
   <class name="colorpot" width="13" height="13">
     <attribute name="mycolor" type="color" value="#000000"/>
@@ -234,9 +238,9 @@
   </class>
   
   <colorpicker id="the_colorpicker"/>
-</canvas>
+</library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

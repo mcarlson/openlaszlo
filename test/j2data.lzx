@@ -14,16 +14,16 @@
 
       <!-- When data is received from the datasource, do this -->
       <method name="processData">
-            debug.write("processData");
+            Debug.write("processData");
        </method>   
 
       <method name="showError">
-    debug.write("Server error: " + 
+    Debug.write("Server error: " + 
     this.getDataset().getErrorString());
       </method>
 
       <method name="showTimeout">
-    debug.write("Error: Load timed out.");
+    Debug.write("Error: Load timed out.");
       </method>
     </datapointer>
 
@@ -60,6 +60,6 @@ UTF-8 Byte String (hex): 5F E6 98 8E E6 9C 9D
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

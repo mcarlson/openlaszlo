@@ -1,0 +1,39 @@
+<canvas>
+    <include href="lztest/lztestmanager.lzx" /> 
+
+<!--
+  covers-tags: lztext 
+-->
+
+<simplelayout/>
+<text id="t3" bgcolor="#000088" fgcolor="#ff0000" fontsize="20">foobar</text>
+<text id="t31" width="200" bgcolor="#000088" fgcolor="#ff0000" fontsize="20">foobar</text>
+<inputtext id="t4" bgcolor="#000088" fgcolor="#ff0000" fontsize="20"></inputtext>
+<inputtext id="t41" width="200" bgcolor="#000088" fgcolor="#ff0000" fontsize="20"></inputtext>
+
+<script><![CDATA[
+
+var suiteTextWidth = new LzTestSuite("Text Width Suite"); 
+
+suiteTextWidth.minimalTest = function () {
+    LzTestManager.assertEquals( t3.sprite.width, t3.width, "t3.width == t3.sprite.width");
+
+    LzTestManager.assertEquals( 200, t31.width, "t31.width");
+    LzTestManager.assertEquals( 200, t31.sprite.width, "t31.sprite.width");
+}
+
+suiteTextWidth.addTest(suiteTextWidth.minimalTest); 
+
+
+]]>
+</script>
+
+
+</canvas>
+
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
