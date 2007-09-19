@@ -110,6 +110,7 @@ Lz = {
             ,getCanvasAttribute: Lz._getCanvasAttributeSWF
             ,callMethod: Lz._callMethodSWF
             ,_ready: Lz._ready
+            ,loaded: false
             ,_sendMouseWheel: Lz._sendMouseWheel
             ,_setCanvasAttributeDequeue: Lz._setCanvasAttributeDequeue
         }
@@ -198,6 +199,7 @@ Lz = {
             runtime: 'dhtml'
             ,_id: properties.id
             ,_ready: Lz._ready
+            ,loaded: false
             ,setCanvasAttribute: Lz._setCanvasAttributeDHTML
             ,getCanvasAttribute: Lz._getCanvasAttributeDHTML
         }
@@ -337,7 +339,7 @@ Lz = {
      * @param hist:Boolean value - if true, add a history event.
      */
     _setCanvasAttributeSWF: function (name, value, hist) {
-        if (dojo.flash.ready) {
+        if (this.loaded) {
             if (hist) {
                 Lz.history._store(name, value);
             } else {
@@ -386,6 +388,7 @@ Lz = {
     }
     ,/** @access private */
     _ready: function (cref) {
+        this.loaded = true;
         if (this._setCanvasAttributeQ) {
             this._setCanvasAttributeDequeue();
         }
@@ -402,7 +405,7 @@ Lz = {
      * @param name:String name of the property to read
      */
     _getCanvasAttributeSWF: function (name) {
-        if (dojo.flash.ready) {
+        if (this.loaded) {
             return dojo.flash.comm.getCanvasAttribute(name);
         } else {
             alert('Flash is not ready: getCanvasAttribute' + name);
@@ -545,7 +548,7 @@ Lz = {
      * @param js:String javascript to call in the form 'foo.bar.methodcall(arg1,arg2,...)'
      */
     _callMethodSWF: function (js) {
-        if (dojo.flash.ready) {
+        if (this.loaded) {
             return dojo.flash.comm.callMethod(js);
         } else {
             this._lastjs = function() {

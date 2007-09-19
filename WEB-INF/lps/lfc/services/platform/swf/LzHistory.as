@@ -37,7 +37,7 @@ LzHistory.isReady = true;
 LzHistory.__setHistory = function(s) {
     //Debug.write('__setHistory', s);
     LzBrowser._jsreset();
-    LzBrowser.callJS('Lz.history.set("' + s + '")', false);
+    LzBrowser.callJS('Lz.history.set', false, s);
     this.__lzloading = true;
 }
 

@@ -33,7 +33,7 @@ Lz.history = {
             // use an iframe;
             var i = document.createElement('iframe');
             Lz.__setAttr(i, 'id', 'lzHistory');
-            Lz.__setAttr(i, 'border', '0');
+            Lz.__setAttr(i, 'border', 0);
             document.body.appendChild(i);
             i.style.position = 'absolute';
             i.style.display = 'none';
@@ -97,8 +97,8 @@ Lz.history = {
     ,/** */
     set: function(s) {
         if (s == null) s = '';
-        if (this._currentstate == s) return;
-        this._currentstate = s;
+        if (Lz.history._currentstate == s) return;
+        Lz.history._currentstate = s;
 
         var hash = '#' + s;
 
@@ -108,19 +108,19 @@ Lz.history = {
             doc.open();
             doc.close();
             doc.location.hash = hash;
-            this._parse(s + '');
+            Lz.history._parse(s + '');
         } else if (Lz.__BrowserDetect.isSafari) {
             // can't preserve query strings :(
-            this._form.action = hash;
-            top.document.location.lzaddr.history = this._history.toString();
-            this._skip = true;
-            this._history[history.length] = hash;
-            this._historylength = history.length + 1;
-            this._form.submit()
-            this._skip = false;
+            Lz.history._form.action = hash;
+            top.document.location.lzaddr.history = Lz.history._history.toString();
+            Lz.history._skip = true;
+            Lz.history._history[history.length] = hash;
+            Lz.history._historylength = history.length + 1;
+            Lz.history._form.submit()
+            Lz.history._skip = false;
         } else {
             top.location.hash = hash;
-            this._parse(s + '');
+            Lz.history._parse(s + '');
         }
         return true;
     }
