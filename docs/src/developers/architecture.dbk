@@ -8,7 +8,7 @@ The OpenLaszlo system architecture combines the power and usability of client/se
 administrative advantages and cost effectiveness of web applications.
 </para>
 <para>
-OpenLaszlo applications are written in the XML language LZX, which compiles to any of several runtime targets, including, as of OpenLaszlo 4.0, sw7, sw8, and native browswer JavaScript, also sometimes called DHTML or Ajax. Applications compiled to SWF7 or SWF8 run in the Flash 9 player.</para>
+OpenLaszlo applications are written in the XML language LZX, which compiles to any of several runtime targets, including, as of OpenLaszlo 4.0, sw7, sw8, and native browser JavaScript, also sometimes called DHTML or Ajax. Applications compiled to SWF7 or SWF8 run in the Flash 9 player.</para>
 <para/><section><title>Deployment Modes</title>
 <para>
 OpenLaszlo applications can be made available on the web, or <emphasis role="i">deployed</emphasis> in either of two ways:
@@ -17,7 +17,7 @@ OpenLaszlo applications can be made available on the web, or <emphasis role="i">
      <itemizedlist spacing="compact"><listitem><para>Compiles source programs as necessary and sends the resultant file to be executed on the client; and</para></listitem><listitem><para>Proxies interactions between the client and other servers on the Internet, performing data manipulation as necessary</para></listitem></itemizedlist>
    </para></listitem><listitem><para><emphasis role="em">SOLO</emphasis> You use the OpenLaszlo compiler to "precompile" programs and make the resulting file (in SWF or JavaScript) available on your sever. When executed on the
         client, the application contacts other servers directly, without mediation by the OpenLaszlo Server. This "serverless", or
-<emphasis role="i">Standalone OpenLaszlo Output</emphasis> deployment is caled SOLO.</para></listitem></itemizedlist>
+<emphasis role="i">Standalone OpenLaszlo Output</emphasis> deployment is called SOLO.</para></listitem></itemizedlist>
 <figure><title>Applications may be deployed either SOLO or proxied by the OpenLaszlo Server</title><mediaobject><imageobject><imagedata fileref="images/deploy_options.png"/></imageobject></mediaobject></figure>
 <para>
 Later chapters explain in detail the differences between proxied and SOLO OpenLaszlo applications.  In general:
@@ -36,8 +36,8 @@ The OpenLaszlo Server is a Java application that executes in a J2EE servlet
 container. The OpenLaszlo Server may communicate with <glossterm>back end</glossterm>
 servers and data sources using a variety of protocols. OpenLaszlo
 applications written in LZX are compiled by the OpenLaszlo Server and served either as bytecode
-to a plug in that runs in the client's web browser (such as Flash or J2ME) or as JavaScript (DHTML) that is directly executed by the browser itself.  This constitutes
-the <indexterm significance="preferred"><primary>front end</primary></indexterm><glossterm>front end</glossterm>.  OpenLaszlo applications run consistently and reliably on a variety of operating systems and device types, including Windows, Pocket PC, Mac OS, Linux, and Solaris, and a variety of mobile and set-top box platformss.
+to a plug-in that runs in the client's web browser (such as Flash or J2ME) or as JavaScript (DHTML) that is directly executed by the browser itself.  This constitutes
+the <indexterm significance="preferred"><primary>front end</primary></indexterm><glossterm>front end</glossterm>.  OpenLaszlo applications run consistently and reliably on a variety of operating systems and device types, including Windows, Pocket PC, Mac OS, Linux, and Solaris, and a variety of mobile and set-top box platforms.
 </para>
 <para>
 When compiling for execution by the Flashplayer, the OpenLaszlo Server outputs bytecode in the SWF ("shockwave format") file
@@ -48,7 +48,7 @@ higher).
 When compiled for execution natively in the browser, the OpenLaszlo Server outputs JavaScript. This script is human readable but optimized for size and execution speed, with comments removed, variable names shortened, etc. 
 </para>
 <para>
-In the future, OpenLaszlo may support other run time clients as
+In the future, OpenLaszlo may support other run-time clients as
 they become widely available.</para>
 <figure><title>OpenLaszlo Compiles to Different Runtimes</title><mediaobject><imageobject><imagedata fileref="images/kernels.png"/></imageobject></mediaobject></figure>
 <para>
@@ -196,7 +196,7 @@ comparison to HTML-based and other Web applications. Caching on both the server 
 <para>
 The OpenLaszlo application platform supports the SSL security model. Data transmissions across the Internet can 
 be encrypted using 
-SSL encryption over HTTPS.  When compiled for native execution by the browser, the security model is that of whicherver  browser is used to execute the application.
+SSL encryption over HTTPS.  When compiled for native execution by the browser, the security model is that of whichever  browser is used to execute the application.
 </para>
 <para>
 The security model employed by OpenLaszlo applications differs slightly depending on the runtime target. OpenLaszlo applications compiled to swf format execute on the client computer within the secure "sandbox" environment of
@@ -213,7 +213,7 @@ mechanism prevents use of the OpenLaszlo Server as a proxy or gateway into insec
 The OpenLaszlo architecture is designed to support multiple device types. Its dynamic layout mechanisms enable simple modifications to such properties as an application's overall 
 size to be intelligently applied by the platform. This simplifies adapting an application to work on screens and devices of different size.</para>
 
-<para>All screen visualizations in OpenLaszlo appllications use time-based rather than
+<para>All screen visualizations in OpenLaszlo applications use time-based rather than
 frame-based animation, and thus transparently accommodate the
 processor speed differences of various device types. An interface
 transition specified to take 500 milliseconds will take 500
