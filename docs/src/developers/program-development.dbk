@@ -25,7 +25,7 @@ debug and modify the program</para></listitem><listitem><para>
 repeat steps 2-5 until the program is perfect</para></listitem><listitem><para>
 deploy the application</para></listitem></orderedlist>
 <para>
-Each of these steps is described in turn below, and explored in greater depth throughout this Guide. But first we'll say a word aobut the Developer's Console, which is the default interface for performing common development activities.</para>
+Each of these steps is described in turn below, and explored in greater depth throughout this Guide. But first we'll say a word about the Developer's Console, which is the default interface for performing common development activities.</para>
 <para/><section><title>The Developer's Console</title>
 <para>
 The Developer's Console is a small OpenLaszlo application for selecting things like the target runtime, the deployment mode (proxied or SOLO) and whether the debugger is included.  When you first compile an OpenLaszlo application (as explained below), by default it is returned with the Developer's Console appearing at the bottom of the application.</para>
@@ -103,7 +103,7 @@ to keep viruses from accessing ActiveX controls, and it only appears when you're
 </para>
 <para>
 Internet Explorer uses an ActiveX
-control to display Fash files. It assumes that a local file
+control to display Flash files. It assumes that a local file
 trying to access an ActiveX control may very well be a virus, so it
 puts up the warning. 
 </para>
@@ -197,7 +197,7 @@ and width of the canvas, in pixels, by assigning values to attributes
 in the opening tag:</para>
 
 <example role="live-example"><title>invisible canvas</title><programlisting>
-&lt;canvas height="20" width="30&gt; 
+&lt;canvas height="20" width="30"&gt; 
 &lt;/canvas&gt;
 </programlisting></example>
 
@@ -220,7 +220,7 @@ about the visual structures of LZX applications.</para>
 <!--unknown tag: script-->
  tag</title>
 
-<para>Within LZX applications, you can embed arbitrary Javascript
+<para>Within LZX applications, you can embed arbitrary JavaScript
 functions by nesting them in <indexterm><primary>script</primary></indexterm><sgmltag class="element">&lt;script&gt;</sgmltag>
 constructs. This is helpful for defining (global) functions that will
 be used by different classes. The <indexterm><primary>script</primary></indexterm><sgmltag class="element">&lt;script&gt;</sgmltag> tag must
