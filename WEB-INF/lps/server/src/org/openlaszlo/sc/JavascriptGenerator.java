@@ -1421,9 +1421,19 @@ public class JavascriptGenerator implements Translator {
   }
 
   // TODO: [2007-08-20 ptw] Replace with Java 1.5 UUID
+  private Boolean usePredictable = null;
   private Random rand = new Random();
-  private Integer UUID() {
-    return new Integer(rand.nextInt(Integer.MAX_VALUE));
+  private int uuidCounter = 1;
+  protected Integer UUID() {
+    if (usePredictable == null) {
+      usePredictable = new Boolean(options.getBoolean(Compiler.GENERATE_PREDICTABLE_TEMPS));
+    }
+    if (usePredictable.equals(Boolean.TRUE)) {
+      return new Integer(uuidCounter++);
+    }
+    else {
+      return new Integer(rand.nextInt(Integer.MAX_VALUE));
+    }
   }
 
   // Could do inline expansions here, like setAttribute
