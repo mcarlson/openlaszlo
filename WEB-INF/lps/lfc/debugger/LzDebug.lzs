@@ -454,7 +454,10 @@ Debug.bugReport = function (error, verbose) {
       });
     for (var i = 0; i < keys.length; i++) {
       var obj = inspected[keys[i]];
-      Debug.format("\n%s\n", Debug.inspectInternal(obj));
+      Debug.format("\n");
+      // Thus copy/paste will not get the 'hotlink' markup
+      Debug.inspect(obj);
+      Debug.format("\n");
     }
   }
   Debug.format("\n---END OF BUG REPORT---\n");
