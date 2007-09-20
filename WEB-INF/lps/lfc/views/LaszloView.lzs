@@ -2529,7 +2529,7 @@ static function __LZcheckProxyPolicy ( url ){
   * loaded
   * 
   * @param Function f: A function that takes a URL as a string and returns one
-  * of "server", "none", or null meaning respectively that the request should be
+  * of true, false, or null meaning respectively that the request should be
   * proxied by the LPS server; made directly to the URL; or should be passed to
   * the next policy function in the list. The default policy function returns
   * the value of canvas.proxied
