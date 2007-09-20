@@ -13,7 +13,7 @@ Parts of the process can be deferred to speed startup of an
 application.</para>
 
 <para>
-This chapter assumes you are familar with classes and objects.  In the
+This chapter assumes you are familiar with classes and objects.  In the
 descriptions below, we distinguish between <indexterm significance="preferred"><primary>creation</primary></indexterm><glossterm>creation</glossterm>, by
 which we mean storage for the object is allocated and constant
 properties assigned — a process that cannot be customized — and
@@ -63,7 +63,7 @@ the calling of its <indexterm><primary><literal>init()</literal></primary></inde
 When a <glossterm>node</glossterm> is instantiated, its
 attributes are the attributes explicitly given in the object, plus any
 attributes that the class specifies.  Similarly, its children will be
-the childen explicitly given in the object, plus any children that are
+the child en explicitly given in the object, plus any children that are
 specified in the class.  The class <indexterm><primary><literal>construct()</literal></primary></indexterm><methodname>construct()</methodname> method
 is called, with these attributes and the parent view.
 </para>

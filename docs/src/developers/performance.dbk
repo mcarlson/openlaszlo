@@ -176,7 +176,7 @@ advice is.
 
 <para/></section><section><title>JavaScript Performance</title> 
 <para>
-Like most programming languages, Javascript often can express the same
+Like most programming languages, JavaScript often can express the same
 algorithm in a number of different ways.  Below are some tips on
 choosing the more efficient of those ways.
 </para>
@@ -339,7 +339,7 @@ platforms, because arrays are just objects that maintain a length
 field.
 </para>
 <para>
-Note that if you do not need to know how many elements are in the array, using an object can be slightly more efficient, because it does not have to maintain the lenght field.
+Note that if you do not need to know how many elements are in the array, using an object can be slightly more efficient, because it does not have to maintain the length field.
 </para>
 <para>
 The example below illustrates the various ways of adding elements to an array.
@@ -476,7 +476,7 @@ The example below illustrates the various ways of adding elements to an array.
 </programlisting><?lzx-edit programs/performance-tuning-$4.lzx></example?>
 <para/></section><section><title>Loops</title>
 <para>
-In older players, <literal>while</literal> loops are slightly more efficient than <literal>for ... in</literal> loops which are slightly more efficent than <literal>for</literal> loops.  The difference is not enough that you should contort your code, but if any will work equally well, you should choose accordingly.
+In older players, <literal>while</literal> loops are slightly more efficient than <literal>for ... in</literal> loops which are slightly more efficient than <literal>for</literal> loops.  The difference is not enough that you should contort your code, but if any will work equally well, you should choose accordingly.
 </para>
 
 <example role="live-example">
@@ -780,7 +780,7 @@ The use of <literal>with</literal> does not appear to affect performance, so it 
 <para>The cost of a function call is about equivalent to three assignment
 statements, so modularizing your code using function calls is not
 going to create a big performance penalty.  Each argument passed to a
-function call is about equvalent to an aditional assignment.</para>
+function call is about equivalent to an additional assignment.</para>
 
 <example role="live-example">
    <title>The cost of a function call</title>
@@ -989,11 +989,11 @@ It's always a good idea to carefully examine <indexterm significance="preferred"
 are central to an algorithm and executed many times) for expressions
 that don't vary with the loop index and move them out of the loop.
 This is just good standard programming practice, but it may not be
-quite so obvious in an object-oriented language such as Javascript.
+quite so obvious in an object-oriented language such as JavaScript.
 </para>
 <para>
 The example below shows how accessing a deeply nested element of a
-object heirarchy is really a constant expression that can be moved out
+object hierarchy is really a constant expression that can be moved out
 of a loop.
 </para>
 
@@ -1373,7 +1373,7 @@ For details, see Adam.
 
 <para/></section><section><title>Optimizing Application Size</title>
 
-<para>Changing embedded datasets and resources to requested datasets and resources will reduce the initial download size of the application.  If these assets are only used in some execution paths, th this will also reduce the total download size of the application, for use cases that avoid these execution paths.</para>
+<para>Changing embedded datasets and resources to requested datasets and resources will reduce the initial download size of the application.  If these assets are only used in some execution paths, this will also reduce the total download size of the application, for use cases that avoid these execution paths.</para>
 
 
 <para/></section></section><section id="inlined-classes"><title>Inlined Classes</title>
@@ -1477,7 +1477,7 @@ So when performance tuning, remember that <literal>$path</literal> is implicated
 <para>
 Note that
 constraints do not consume large amounts of memory.  
-<literal>$once</literal> and <literal>$always</literal> are equivalent in memory usage, but clearly <literal>$always</literal> will require more cpu.
+<literal>$once</literal> and <literal>$always</literal> are equivalent in memory usage, but clearly <literal>$always</literal> will require more CPU.
 
 </para>
 <para/></section></section><section><title>Hand-tuning constraints and attributes</title>
@@ -1558,9 +1558,9 @@ Compare the above to:
 The second form is much more compact and readable, but the first form uses zero constraints. The call <literal>&lt;method event="onwidth" target="thingy"&gt;</literal> is nearly a constraint on <literal>thingy.width</literal>, but: in the explicit-update form, one <literal>thingy.onwidth</literal> event can trigger a single call to update which, which will end up doing the repositioning that otherwise would require at least a handful of constraints. Like constraints, method calls are expensive. So, fewer constraints, fewer method calls, faster performance.</para>
 <para/></section><section><title>Tuning attribute assignments</title>
 <para>
-You may, in some limited circumstances, gain a performance boost by assinging attribute valutes instead of setting them using a setter, (preferably, the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method). In general, using <literal>object.setAttribute('attr', value); </literal> to set an attribute is the best way to set attributes, as explained in <xref linkend="methods-events-attributes"/>. </para>
+You may, in some limited circumstances, gain a performance boost by assigning attribute values instead of setting them using a setter, (preferably, the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method). In general, using <literal>object.setAttribute('attr', value); </literal> to set an attribute is the best way to set attributes, as explained in <xref linkend="methods-events-attributes"/>. </para>
 <para>
-For speed, however, you may sometimes use a direct assignment, as in <literal>object.attr = value;</literal>.  When you do this, you need to be aware that no events are generated, and you are giving up the chance for any dependency that refers to <literal>object.attr</literal> to update. Use this technique with caution and only if you are sure that you have handled any dependencies. As we have heard said at Laszlo Systems, it's like overclocking your motherboard. You can do it if you think you know what you're doing, but don't blame us if your machine catches on fire. (Your machine won't literaly catch on fire, of course, but your application may fail spectacularly!)
+For speed, however, you may sometimes use a direct assignment, as in <literal>object.attr = value;</literal>.  When you do this, you need to be aware that no events are generated, and you are giving up the chance for any dependency that refers to <literal>object.attr</literal> to update. Use this technique with caution and only if you are sure that you have handled any dependencies. As we have heard said at Laszlo Systems, it's like overclocking your motherboard. You can do it if you think you know what you're doing, but don't blame us if your machine catches on fire. (Your machine won't literally catch on fire, of course, but your application may fail spectacularly!)
 </para>
 
   <para/></section></section><section id="performance-tuning.compression"><title>Using compression to reduce size of DHTML downloads</title>

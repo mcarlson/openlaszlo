@@ -11,7 +11,7 @@
        particular size, style, and typeface.  
        There are several different computer representations for fonts.  
        The most widely known are Adobe Systems, Inc.'s
-       PostScript font definitions and Apple's <ulink url="http://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html">TrueType.</ulink>
+       Postscript font definitions and Apple's <ulink url="http://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html">TrueType.</ulink>
    </para>
    <anchor id="fonts.pixel-fonts"/>
 <para/><section><title>Runtime considerations</title>
@@ -29,7 +29,7 @@ point sizes.
 We make every effort to make font metrics in DHTML match those in swf.  They may not match exactly but they're very close.
 </para>
 <para>
-It is virtually impossible to acheive pixel-perfect font 
+It is virtually impossible to achieve pixel-perfect font 
 rendering across all runtimes.  However, with minimal changes for 
 alignment and font names, you can usually make SWF and DHTML versions of your application essentially indistinguishable with regard to appearance of text.
 </para>
@@ -68,7 +68,7 @@ the Flash Player, there are certain things you cannot do with client fonts.  For
 you vary their opacity. Here is a summary of the differences:
     </para>
 
-<para/></section><section><title>Summary of diffrences between client and embedded fonts</title>
+<para/></section><section><title>Summary of differences between client and embedded fonts</title>
 <para>
 <emphasis role="b">Client fonts</emphasis>
 </para>

@@ -454,7 +454,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
 
 <para>Test-driven development demands thoughtful design. In the "waterfall" model, testing is the last phase, so programmers stumble through the implementation phase, not certain that the code will fulfill the requirements <emphasis role="i">because it is untested</emphasis>. In test-first development, the programmer must be accurate and specific about what the code is meant to accomplish, and design a test for that before going further.</para>
 
-<para>The strongest chessplayers play their best moves at the end of the game. The players who study the opening find that they drift into fearful territory, while the players proficient at endgames grow in confidence. Those endgame-savvy chessplayers are like "test-infected" developers who worked on the <emphasis role="i">last phase first</emphasis>: they always know where they're headed.</para>
+<para>The strongest chess players play their best moves at the end of the game. The players who study the opening find that they drift into fearful territory, while the players proficient at endgames grow in confidence. Those endgame-savvy chess players are like "test-infected" developers who worked on the <emphasis role="i">last phase first</emphasis>: they always know where they're headed.</para>
 
 <para>A similar analogy: A well-trained chess student should be coached to play moves that are foolish at the start -- as practice for difficult situations in the future. Beck instructs that at the start of the TDD cycle to write a test that <emphasis role="i">fails</emphasis>.  Red in the opening, green in the endgame.</para></section>
 
@@ -507,7 +507,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
 
 <section id="lzunit.count"><title>Counting Infinitely</title>
 
-<para>In test-driven development, we devise a successful test case first, and then we fail it (because we wrote the test first). We want the first button click to change "stop" to "go", and the second click to "stop". The easiest solution, I think, is to give the button a "go" attribute which is a boolean, where its initial state is "false".</para>
+<para>In test-driven development, we devise a successful test case first, and then we fail it (because we wrote the test first). We want the first button click to change "stop" to "go", and the second click to "stop". The easiest solution, I think, is to give the button a "go" attribute which is a Boolean, where its initial state is "false".</para>
 
 <para>Sometimes I think I most often revisit the OpenLaszlo developers' guide <xref linkend="methods-events-attributes">methods, events, and attributes</xref>. This attribute is a simple one, though: we'll instantiate an instance of the button class, and assign it an attribute named "go", of the type boolean, with two values: "go" or "stop" according to the boolean expression "true" or "false".</para>
 

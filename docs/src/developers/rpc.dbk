@@ -33,7 +33,7 @@ allows applications to make remote procedure calls on different systems. Its
 transport is HTTP and it uses an XML encoded message to invoke remote functions. </para>
 <para>
 <indexterm><primary>soap</primary></indexterm><sgmltag class="element">&lt;soap&gt;</sgmltag> implements the W3C <ulink url="http://www.w3.org/TR/soap12-part0">SOAP
-specification</ulink>. Like <indexterm><primary>xmlrpc</primary></indexterm><sgmltag class="element">&lt;xmlrpc&gt;</sgmltag> SOAO also uses XML to send messages over the network. Though HTTP
+specification</ulink>. Like <indexterm><primary>xmlrpc</primary></indexterm><sgmltag class="element">&lt;xmlrpc&gt;</sgmltag> SOAP also uses XML to send messages over the network. Though HTTP
 is commonly used as its transport, it isn't required. The specification is more
 complex than XML-RPC and supports different styles of operations (rpc or
 document), overloaded methods, passing header information, and so forth.</para>
@@ -190,7 +190,7 @@ method. <indexterm><primary><literal>load()</literal></primary></indexterm><meth
 </programlisting></informalexample>
 
 <para>There are several private, undocumented properties in &lt;rpc&gt;. But one
-that implementors of subclasses should be made aware of is the delegate property
+that implementers of subclasses should be made aware of is the delegate property
 called _loadDel (note: an underscore prefix in a component variable indicates that it is
 private). This delegate must be passed in to any lower-level ORL APIs or must be
 called at the end of <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname>, as is done in the xmlrpc.lzx implementation of
@@ -844,7 +844,7 @@ dataobject is an LzDataElement, the root node of data mapped return value is
 appended as a child of the LzDataElement dataobject.</para>
 
 <example role="live-example">
-   <title>Setting a dataobject toa dataset</title>
+   <title>Setting a dataobject to a dataset</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/rpc-$16.lzx"/></textobject> 
    </programlisting>

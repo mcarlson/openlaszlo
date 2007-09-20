@@ -25,7 +25,7 @@ basic features. Later chapters explain how to use advanced features of component
 <para>
 The simplest way to build an OpenLaszlo application is to use LZ components "out of the box" with their default
 behaviors. This chapter includes a few such examples. It also includes a few examples that use concepts that have not yet been introduced.
-Don't worry if you don't understand exactly how they work.  The idea here is to get aquainted with the general "feel" of an OpenLaszlo
+Don't worry if you don't understand exactly how they work.  The idea here is to get acquainted with the general "feel" of an OpenLaszlo
 application that is built mostly from components. The subsequent tutorials present the concepts you'll need in order to create your
 own applications.
 </para>
@@ -35,7 +35,7 @@ Before reading this chapter about how to use components to build an OpenLaszlo a
 moments to get familiar with the range of components that ship with OpenLaszlo. 
 </para>
 <para>
-The example below shows a miscellaneous collection of components. It's an abreviated version of the sampler
+The example below shows a miscellaneous collection of components. It's an abbreviated version of the sampler
 in the <ulink url="../../laszlo-explorer/index.jsp">OpenLaszlo Explorer,</ulink> which contains a visual tour of all the components. The code that implements
 these components may look a little intimidating if you have not worked with this kind of language before, but don't be put off.
 In fact you may not even want to look at the code yet. Your goal here is to start thinking about the kinds of things you can do in 

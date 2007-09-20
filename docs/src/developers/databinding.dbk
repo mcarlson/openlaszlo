@@ -7,7 +7,7 @@ For a gentle introduction to databinding and manipulation in OpenLaszlo applicat
  with the <ulink url="../guide/data-tutorial.html" type="laszlo-dguide">tutorials</ulink>.
 </para>
 <para/><section><title>Preview of databinding</title>
-<para>By "databinding" we mean the automatic association of a value in an XML data structure with an element in the LZX view hierarchy of the application. This chapter explores various aspects of databinding and manipulation in OpenLaszlo applications. Before going into spefici details, we'll start with a conceptual overview of how data is represented in LZX applications, and the APIs for manipulating it.</para>
+<para>By "databinding" we mean the automatic association of a value in an XML data structure with an element in the LZX view hierarchy of the application. This chapter explores various aspects of databinding and manipulation in OpenLaszlo applications. Before going into specific details, we'll start with a conceptual overview of how data is represented in LZX applications, and the APIs for manipulating it.</para>
 <para/><section><title>Types of data objects</title>
 <para>
 A dataset (<indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>) is two things:</para>
@@ -151,7 +151,7 @@ The data within a dataset is accessed using a <indexterm><primary>datapointer</p
  or a instance of one of its subclasses. 
 </para>
 <para>A dataset is an instantiation of the <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname> class. An <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>
-is a Javascript object that provides a <glossterm>Document Object
+is a JavaScript object that provides a <glossterm>Document Object
 Model</glossterm> (DOM) API for accessing, manipulating, and creating
 XML elements and attributes in memory.  These APIs are discussed in
 <xref linkend="databinding"/>.  The dataset also has APIs that
@@ -394,10 +394,10 @@ as soon as the app loads if the dataset's <indexterm><primary>request</primary><
 
 <para/></section><section><title>Dataset Scope</title>
 <para>
-If specified on the canvas, datasets are visible to and accesible by the entire application. Datasets can also be local to a class.
+If specified on the canvas, datasets are visible to and accessible by the entire application. Datasets can also be local to a class.
 </para>
 <itemizedlist spacing="compact"><listitem><para>Datasets will automatically name themselves <literal>localdata</literal> if a name is not specified </para></listitem><listitem><para>Local datapath syntax is 
-datapath="local:<emphasis role="i">reference.to.dataset.relative.to.parent</emphasis>:/path" </para></listitem><listitem><para> The name of the dataset can be omitted fromm the datapath if the dataset name is the default 'localdata', e.g. 'local:classroot:/' can be used instead of 'local:classroot.localdata:/' for a dataset named localdata in the classroot</para></listitem></itemizedlist>
+datapath="local:<emphasis role="i">reference.to.dataset.relative.to.parent</emphasis>:/path" </para></listitem><listitem><para> The name of the dataset can be omitted from the datapath if the dataset name is the default 'localdata', e.g. 'local:classroot:/' can be used instead of 'local:classroot.localdata:/' for a dataset named localdata in the classroot</para></listitem></itemizedlist>
 <para>
 Here is a simple program that illustrates use of local datasets (the file tests/data,  a sample XML file is included in this directory also.)
 </para>
@@ -1183,7 +1183,7 @@ on a node's datapath will store the current value for that attribute back in the
 JavaScript provides easy casting from string to numeric data types. The $path{...} syntax is defined to return a string, which can be used to assign a value to an attribute.  You can combine attributes to preform calculations based on strings returned from a $path{...} inquiry on a dataset.
 </para>
 <para>
-Say, for example that you had a dataset that contained temperatures in Farenheit that you wished to convert to centegrade. You would have to create an intermediate attribute that binds to the (possibly replicated) path constraint and then bind your text field to a calculation on that attribute. Something like:</para>
+Say, for example that you had a dataset that contained temperatures in Fahrenheit that you wished to convert to Centigrade. You would have to create an intermediate attribute that binds to the (possibly replicated) path constraint and then bind your text field to a calculation on that attribute. Something like:</para>
 <example role="live-example"><title>calculations on $path{} values</title><programlisting>
   &lt;attribute name='intermediate' value="$path{'degf'}" \&gt;
   &lt;attribute name='text' value="${Number(intermediate) * 5 / 9}" /&gt;
@@ -1268,7 +1268,7 @@ datapointer to calculate the average of a sequence of accumulated
 numbers and display it. Then event is sent when the
 <indexterm><primary><literal>setXPath()</literal></primary></indexterm><methodname>setXPath()</methodname> method is invoked on the
 datapointer. Typically, a problem like this would be easier to program
-using Javascript's built-in arrays, but this version illustrates the
+using JavaScript's built-in arrays, but this version illustrates the
 data-driven approach. It also introduces the concept of data
 replication, which is explained in more detail later in this
 document.</para>
@@ -2739,7 +2739,7 @@ Changes made in step 2 will be ignored after replication.
 <fixme>
 ..  Cleanup structure a bit and add nicer intro
 
-..  There should be a discussion early of LzNodes and LzDatanodes as well as the special 'datapath' attribute of LzNodes that takes an XPath expression and binds the LzDatanodes to LzNodes (and replicates the LzNodes if the XPath matches multipel LzDatanodes).  (edb: this is my defn of what Laszlo databinding *is*.)
+..  There should be a discussion early of LzNodes and LzDatanodes as well as the special 'datapath' attribute of LzNodes that takes an XPath expression and binds the LzDatanodes to LzNodes (and replicates the LzNodes if the XPath matches multiple LzDatanodes).  (edb: this is my defn of what Laszlo databinding *is*.)
 
 ..  move/splice descrition of datasource/dataset with data transport chapter
 

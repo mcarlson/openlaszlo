@@ -73,7 +73,7 @@ is the same as:
  del.register(sender, event);
 </programlisting> 
 
-<para/></section><section><title>Relationship betwen delegates and tag-generated events</title>
+<para/></section><section><title>Relationship between delegates and tag-generated events</title>
 
 <para>
 The <indexterm><primary>LzDelegate</primary></indexterm><classname>LzDelegate</classname> class is used to create delegates in script. 

@@ -544,7 +544,7 @@ The text is smaller relative to the canvas and to the computer screen, but not t
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Simple scaling wtih text</title><programlisting role="lzx-embednew"><filename>views-$14.lzx</filename><parameter/><code>
+<?example role="live-example"><title>Simple scaling with text</title><programlisting role="lzx-embednew"><filename>views-$14.lzx</filename><parameter/><code>
 &lt;canvas width="700" height="100"&gt;
       &lt;font src="helmetb.ttf" name="helmet"/&gt;
   &lt;view stretches="both" height="100" bgcolor="red" 
@@ -960,7 +960,7 @@ still work.  We call this ordering of objects the "node hierarchy." The term "vi
 hierarchy" is more correct.  (Notice that in the above example,
 "dragger" is a node, not a view)</para>
 
-<para>If you're an experienced javascript programmer you will have seen this pattern before. 
+<para>If you're an experienced JavaScript programmer you will have seen this pattern before. 
 When you see "immediateparent" in JavaScript, think "container".</para>
 
 <para> Similarly, if you've looked at XAML, you may have seen that

@@ -26,7 +26,7 @@ HTTP cookies/sessions.</para>
 <para>A <indexterm significance="preferred"><primary>persistent connection</primary></indexterm><glossterm>persistent connection</glossterm> is a one-way pipe held by an application from
 the OpenLaszlo Server. Because all transactions are done through an HTTP port, it allows an
 application to receive asynchronous messages from the server without the need to
-open up a port in the firewall. Maintanance of an application's persistent
+open up a port in the firewall. Maintenance of an application's persistent
 connection is done by the <link linkend="persistent_connection.connection-manager"><indexterm significance="preferred"><primary>connection
 manager</primary></indexterm><glossterm>connection
 manager</glossterm></link>, whose job is to multiplex all incoming data into a connection

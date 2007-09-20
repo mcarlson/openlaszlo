@@ -43,7 +43,7 @@ or 'webapp'. <emphasis role="b">Defaults to the name attribute of this object.</
 scope means that the server object will be saved in a session attribute (see
 javax.servlet.http.HttpSession). If scope is webapp, the server object is saved
 in a web application context (see javax.servlet.ServletContext). For session and
-webapp scopes, client-side remote methods will always invoke the samve saved
+webapp scopes, client-side remote methods will always invoke the same saved
 server objects. The objects are saved in a java.util.Map that is placed in an
 attribute called "__lzobj". The map key for the object is the
 <literal>attributename</literal> of the client-side javarpc object. If scope is none, no
@@ -714,7 +714,7 @@ object isn't saved anywhere in the server.</programlisting></para>
    <textobject><textdata fileref="programs/rpc-javarpc-$10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Java to Javascript return</title><programlisting role="lzx-embednew"><filename>rpc-javarpc-$10.lzx</filename><parameter/><code>
+<?example role="live-example"><title>Java to Javacript return</title><programlisting role="lzx-embednew"><filename>rpc-javarpc-$10.lzx</filename><parameter/><code>
 &lt;canvas debug="true" height="450" width="800"&gt;
  
     &lt;debug x="10" y="130" width="740" height="275" /&gt;

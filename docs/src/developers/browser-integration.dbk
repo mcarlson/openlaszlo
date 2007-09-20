@@ -12,20 +12,20 @@
     </para>
 
     <para>OpenLaszlo applications run inside web browsers, and web
-  browsers are desiged to render HTML pages. This means that each
+  browsers are designed to render HTML pages. This means that each
   compiled OpenLaszlo application has a relationship to the HTML
   page that delivers it to the browser. Depending on whether the OL
   application was compiled to SWF or to DHTML, the mechanics of
   this relationship differ. However, at an abstract level the model
   is pretty much the same for all runtimes: an OpenLaszlo
   application resides within a web page that is executed by a
-  browser; that browser has a "JavaScipt" engine. The OpenLaszlo
+  browser; that browser has a "JavaScript" engine. The OpenLaszlo
   application can make requests for the JavaScript engine to
   execute, and the surrounding HTML page can include JavaScript
   code that makes requests of the OpenLaszlo application.</para>
     <para>This chapter discusses the way that OpenLaszlo Applications
   relate to the HTML pages in which they're delivered, and ways in
-  which the OpenLaszlo appliction and browser JavaScript engine can
+  which the OpenLaszlo application and browser JavaScript engine can
   communicate with each other.</para>
     <para />
     <section>
@@ -36,7 +36,7 @@
     pages of the proper structure are generated automatically.
     Situations may arise where you may need to customized these
     pages or even generate pages from scratch, but in many cases,
-    the automaticaly generated page is all you need. Simply press
+    the automatically generated page is all you need. Simply press
     the appropriate button, "Server" or "SOLO", and follow the
     instructions that are then displayed.</para>
         <para />
@@ -44,7 +44,7 @@
     <section>
         <title>A model of Browser/LZX application interaction</title>
         <para>Before going into the actual mechanics, let's take a
-    closer look at concepts and teminology.</para>
+    closer look at concepts and terminology.</para>
         <para />
         <section>
             <title>The "wrapper page"</title>
@@ -80,7 +80,7 @@
                     </primary>
                 </indexterm>
                 <methodname>swfEmbed()</methodname>for embedding SWF OL
-      applcations into the HTML page; this generates an HTML
+      applications into the HTML page; this generates an HTML
       &lt;embed&gt; tag. Similarly, there is an 
       <indexterm>
         <primary>
@@ -120,7 +120,7 @@
                 <methodname>setCanvasAttribute()</methodname>methods are
       used.</para>
             <para>This are discussed below.</para>
-            <para>Alhough OpenLaszlo applications deployed on the Flash
+            <para>Although OpenLaszlo applications deployed on the Flash
       runtime are not dependent on the browser or operating system
       for their look or behavior, there are some important
       limitations that the browser container places on the
@@ -166,7 +166,7 @@
             <title condition="dhtml">Applications Compiled to
       DHTML</title>
             <para>Applications that are compiled for DHTML run within the
-      browser's JavaScript envinronment. They are essentially
+      browser's JavaScript environment. They are essentially
       compiled into the DOM of that page.</para>
             <para>Each LZX application has exactly one 
       <indexterm>
@@ -228,7 +228,7 @@
       <primary>Lz</primary>
             </indexterm>
             <classname>Lz</classname>. Note that the letter "L" in this
-    class is uppper case. This is not a typo!.</para>
+    class is upper case. This is not a typo!.</para>
         <para>Unlike other OpenLaszlo classes which you use to build
     LZX applications, the 
     <indexterm>
@@ -303,7 +303,7 @@
             <title>Placing the LZX (SWF) application within an HTML
       page</title>
             <programlisting>&lt;script language="JavaScript"
-      type="text/javascript"&gt; lz.swfEmbed({url: '?lzt=swf',
+      type="text/javascript"&gt; Lz.swfEmbed({url: '?lzt=swf',
       bgcolor: '#000000', width: '', height: ''});
       &lt;/script&gt;</programlisting>
         </example>
@@ -317,7 +317,7 @@
             <title>Placing the LZX (DHTML) application within an HTML
       page</title>
             <programlisting>&lt;script language="JavaScript"
-      type="text/javascript"&gt; lz.dhtmlEmbed({url: '?lzt=swf',
+      type="text/javascript"&gt; Lz.dhtmlEmbed({url: '?lzt=swf',
       bgcolor: '#000000', width: '', height: ''});
       &lt;/script&gt;</programlisting>
         </example>

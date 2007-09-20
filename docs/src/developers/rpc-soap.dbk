@@ -4,7 +4,7 @@
 <warning><para>
 This feature works in proxied applications only.  It does not work in SOLO applications.
 </para></warning>
-<para>SOAP (Simple Object Access Prototcol) is used to exchange information in a
+<para>SOAP (Simple Object Access Protocol) is used to exchange information in a
 distributed environment. A typical scenario involves a SOAP client invoking a
 client-side function stub to invoke a SOAP web service operation. The SOAP web
 service then returns data —such as stock information or the result to
@@ -256,7 +256,7 @@ In the example below, the, SOAP service is unloaded.
 
 <para/></section></section></section><section><title>Document style operation</title>
 
-<para>Document style operations use XML data(that is, documents) as paramaters. The SOAP
+<para>Document style operations use XML data(that is, documents) as parameters. The SOAP
 specification is moving towards document style operations as being the preferred
 way of invoking web services. The alternative RPC style posed interoperability
 challenges that were difficult to resolve. The WS-I's <ulink url="http://www.ws-i.org/archive/Profiles/Basic/2002-10/basicprofile-1.0-wgd.htm">Basic
@@ -288,7 +288,7 @@ following example demonstrates how to invoke a document style operation through
 LZX.</para>
 
 <example role="live-example">
-   <title>Document sytle SOAP operation</title>
+   <title>Document style SOAP operation</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/rpc-soap-$5.lzx"/></textobject> 
    </programlisting>
@@ -539,7 +539,7 @@ element name matters, it would be wrong to declare &lt;a&gt;number&lt;/a&gt; and
 
 <para>RPC style operations behave just like functions in that, instead of
 documents, values are passed in as parameters. Parameters can be of simple data
-type (number, boolean), array, or object. The parameter type for the operation
+type (number, Boolean), array, or object. The parameter type for the operation
 is described in the WSDL's XML schema.</para>
 
 <example role="live-example">
@@ -548,7 +548,7 @@ is described in the WSDL's XML schema.</para>
    <textobject><textdata fileref="programs/rpc-soap-$8.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Passing simple paramaters in RPC style operation</title><programlisting role="lzx-embednew"><filename>rpc-soap-$8.lzx</filename><parameter/><code>
+<?example role="live-example"><title>Passing simple parameters in RPC style operation</title><programlisting role="lzx-embednew"><filename>rpc-soap-$8.lzx</filename><parameter/><code>
 &lt;canvas debug="true" height="400" width="530"&gt;
 
     &lt;debug x="10" y="190" width="510" height="200" /&gt;

@@ -11,7 +11,7 @@ We'll discuss OpenLaszlo's ability to support designers and engineers in buildin
  </para>
 <para/><section><title>Leaning to Think Laszlorificly</title>
 <para>
-With OpenLaszlo technology, web appllication designers are freed from the familiar limitations of static, linear, page-based task flow. 
+With OpenLaszlo technology, web application designers are freed from the familiar limitations of static, linear, page-based task flow. 
 Your visions of dynamic, data-driven, concise and intelligent UI can become a reality. But you may need to change your thinking
 a little bit, because things are possible with OpenLaszlo that aren't possible with most other technologies.  And while it is not necessary for you to learn to write code in order to be an effective designer on an OpenLaszlo project, 
 a familiarity with the basic structure and features of the LZX language will help you understand how to approach your task. 
@@ -49,7 +49,7 @@ between designers who write code and engineers with design sensibility mean that
 Yet all teams need to spend time dissecting the problem, brainstorming, and arriving 
 at a unanimous understanding of, and agreement on the solution. </para>
 <para>
-These are some time-proven steps in the process: </para>
+These are some time-prooven steps in the process: </para>
 <orderedlist spacing="compact"><listitem><para><indexterm significance="preferred"><primary>Wire-frames</primary></indexterm><glossterm>Wire-frames</glossterm>. Wire-frame examples of layouts will help begin the visualization of the pieces as a whole.</para>
  These are basic definitions of placement for the UI; often including navigation, branding and content. </listitem><listitem><para><indexterm significance="preferred"><primary>Storyboards</primary></indexterm><glossterm>Storyboards</glossterm>. Once a structure has been defined, storyboards of both general and detailed task flow help to refine and 
     communicate the vision of interactivity. Storyboards can begin as simple flowcharts and evolve into pictures of each state of each element. 
@@ -110,7 +110,7 @@ be used in SWF files included in LZX.</para></note>
 Fonts
 </title>
 <para>
-Your options with regard to fonts differ greatly dependin on whether the application will be compiled to SWF or DHTML. In applications compiled to SWF, you have the option to include virtually whatever font you like within the application. Applications that are to be compiled to DHTML, on the other hand, are limited to those fonts that are commonly found in all runtime environments (that is, all supported browsers and operating systems).
+Your options with regard to fonts differ greatly depending on whether the application will be compiled to SWF or DHTML. In applications compiled to SWF, you have the option to include virtually whatever font you like within the application. Applications that are to be compiled to DHTML, on the other hand, are limited to those fonts that are commonly found in all runtime environments (that is, all supported browsers and operating systems).
 </para>
 <para condition="swf">
 OpenLaszlo supports all True Type Format (TTF) fonts. In applications compiled to SWF, embedded fonts ensure that the appearance of type within your application will be 

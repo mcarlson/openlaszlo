@@ -25,7 +25,7 @@ server. A great reference for cookie information is the Unofficial Cookie FAQ at
 <para>The OpenLaszlo Server proxies client request headers and backend server response
 headers. Because clients always talk to the server, only headers in the OpenLaszlo Server domain
 will be sent. If a client makes a request to a server that has a different
-domain than the servere, incorrect headers will be forwarded.</para>
+domain than the server, incorrect headers will be forwarded.</para>
 
 <para>For example, assume your OpenLaszlo Server is hosted in the myhost.com domain. If your
 application makes a request to a server that lives in myhost.com, then the right

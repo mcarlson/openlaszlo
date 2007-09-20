@@ -48,7 +48,7 @@ Each red, blue, or green dot can have a value from 0 to 255. If the red dot is f
 
 <para/></section><section><title>Hexadecimal Code</title>
 <para>
-Some web applications require that RGB be expresssed in hexadecimal (base 16 instead of base 10) values. OpenLaszlo much prefers hex values; for one thing, using hexadecimal values enables the use of stylesheets (see Cascading Style Sheets):
+Some web applications require that RGB be expressed in hexadecimal (base 16 instead of base 10) values. OpenLaszlo much prefers hex values; for one thing, using hexadecimal values enables the use of stylesheets (see Cascading Style Sheets):
 </para>
 
 <example role="live-example">

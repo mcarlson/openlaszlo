@@ -45,7 +45,7 @@ running on the client machine and any back-end services or resources located els
 </para>
 <figure><title>Proxied applications use services from provided by the OpenLaszlo Server</title><mediaobject><imageobject><imagedata fileref="images/OLServer_services.png"/></imageobject></mediaobject></figure>
 <para>
-In SOLO deployments, the OpenLaszlo server is not used to mediate between the OpenLaszlo client application and other services on the web.  Howver, as explained below, it is possible to use other services to proxy between the client application and web resources.
+In SOLO deployments, the OpenLaszlo server is not used to mediate between the OpenLaszlo client application and other services on the web.  However, as explained below, it is possible to use other services to proxy between the client application and web resources.
 </para>
 <figure><title>After they have been deployed, SOLO applications do not contact the OpenLaszlo Server</title><mediaobject><imageobject><imagedata fileref="images/solo_proxies.png"/></imageobject></mediaobject></figure>
 <para>
@@ -85,7 +85,7 @@ in the <indexterm><primary>canvas </primary></indexterm><sgmltag class="element"
 </para>
 <para>
 How do you decide whether to target proxied or SOLO deployment? Here is a heuristic:</para>
-<orderedlist spacing="compact"><listitem><para>Do you have the option of installing the OpenLaszlo Server on a deployment server? In particular, is there a Java Application Servere or servlet container available? If not, you must deploy SOLO.</para></listitem><listitem><para>Does your application require services available only in proxied applications? If yes, you must deploy with OpenLaszlo Server.</para></listitem><listitem><para>If your application can be deployed in either manner, which gives the best performance?</para></listitem></orderedlist>
+<orderedlist spacing="compact"><listitem><para>Do you have the option of installing the OpenLaszlo Server on a deployment server? In particular, is there a Java Application Server or servlet container available? If not, you must deploy SOLO.</para></listitem><listitem><para>Does your application require services available only in proxied applications? If yes, you must deploy with OpenLaszlo Server.</para></listitem><listitem><para>If your application can be deployed in either manner, which gives the best performance?</para></listitem></orderedlist>
 <para>
 Each of these considerations is described briefly below.
 </para>
@@ -267,7 +267,7 @@ Where "server" is the name of the directory in which the crossdomain file reside
 <para>
 Note also that some versions of browsers do not recognize the
 crossdomain.xml file when asked to do POST requests, but do recognize it for
-querystrings.  If this situation arises, the user will have to upgrade to an accomodating browser in order to make POSTs.
+querystrings.  If this situation arises, the user will have to upgrade to an accommodating browser in order to make POSTs.
 </para>
 <para/></section><section><title condition="dhtml">Restrictions on DHTML</title>
 <para>
@@ -645,7 +645,7 @@ Another service provided by the OpenLaszlo server is performing SOAP and XML/RPC
 </para>
 <para/></section><section><title>Example of Rest: Cooqy</title>
 <para>
-A great example of this philosophy in action is the Cooqy OpenLaszlo interface to eBay, which lets you browse eBay efficiently over a low-bandwidth dial-up line. The Cooqy server talks to the eBay web API, and boils it down to the essential results to display in the OpenLaszlo client, which downloads XML and images incrementally and starts displaying results immediately. So the client/server protocol between the client and Cooqy is extremely efficient, while the server/server protocol between Cooqy and eBay runs between fast servers over the internet backbone. 
+A great example of this philosophy in action is the Cooqy OpenLaszlo interface to eBay, which lets you browse eBay efficiently over a low-bandwidth dial-up line. The Cooqy server talks to the eBay web API, and boils it down to the essential results to display in the OpenLaszlo client, which downloads XML and images incrementally and starts displaying results immediately. So the client/server protocol between the client and Cooqy is extremely efficient, while the server/server protocol between Cooqy and eBay runs between fast servers over the Internet backbone. 
 </para>
 
 <para>

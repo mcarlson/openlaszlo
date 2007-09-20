@@ -7,8 +7,8 @@
 The term <indexterm significance="preferred"><primary>data</primary></indexterm><glossterm>data</glossterm> refers to numbers, characters, or text 
 in a form that can be displayed or manipulated by 
 a Laszlo application.  The specific form that data takes in a Laszlo application
-is either an XML document (or fragment) or a Javascript object.  This chapter
-contains a brief introduction to <indexterm significance="preferred"><primary>XML</primary></indexterm><glossterm>XML</glossterm> and the associated <indexterm significance="preferred"><primary>XPath syntax</primary></indexterm><glossterm>XPath syntax</glossterm>.  Javascript objects are 
+is either an XML document (or fragment) or a JavaScript object.  This chapter
+contains a brief introduction to <indexterm significance="preferred"><primary>XML</primary></indexterm><glossterm>XML</glossterm> and the associated <indexterm significance="preferred"><primary>XPath syntax</primary></indexterm><glossterm>XPath syntax</glossterm>.  JavaScript objects are 
 described in the section on Objects in the <xref linkend="language-preliminaries"/>.
 </para>
 

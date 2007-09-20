@@ -306,7 +306,7 @@
       with the following remapping</para>
       <programlisting>imap ^D &lt;ESC&gt;`[</programlisting>
       <para>Now, if you hit control-D in insert mode, you leave
-      where tou entered the insert mode.</para>
+      where you entered the insert mode.</para>
       <para>Even more useful is the ability to repeat a previous
       command without changing the cursor position. Since this is
       pretty much always the behavior you want, you can remap ".",

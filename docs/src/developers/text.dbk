@@ -54,7 +54,7 @@
   </section>
   <section>
     <title>Text as attribute and text as object</title>
-    <para>LZX is an XML language. By deffinition, in XML, whatever
+    <para>LZX is an XML language. By definition, in XML, whatever
     comes between an opening and closing tag is called text. As we
     have seen text in this context is implemented as HTML.</para>
     <para>In other words, despite being called text, in our
@@ -70,7 +70,7 @@
     subclasses, which include all components. For example,</para>
     <programlisting>&lt;button text="this is a fine kettle of
     fish"&gt;</programlisting>
-    <para>is equvalent to</para>
+    <para>is equivalent to</para>
     <programlisting>&lt;button&gt; this is a fine kettle of fish
     &lt;/button&gt;</programlisting>
     <para>LZX also includes a text object, 
@@ -88,7 +88,7 @@
     <para>Thus,</para>
     <programlisting>&lt;text id="sam" text="King Samuel was a fine
     hamster"&gt;</programlisting>
-    <para>is equvalent to</para>
+    <para>is equivalent to</para>
     <programlisting>&lt;text id="sam"&gt; King Samuel was a fine
     hamster &lt;/text&gt;</programlisting>
     <para>In each case we have defined an 
@@ -397,7 +397,7 @@
         to these functions set the pixel position of the top line
         of text relative to the text view bounding box, and should
         be less than or equal to zero. When the text is scrolled
-        horizontaly or vertically, an 
+        horizontally or vertically, an 
         <indexterm>
           <primary>onscrollx event</primary>
         </indexterm>
@@ -488,7 +488,7 @@
         <para>Take care when using text whose width must be
         calculated at run time. Because the compiler does not know
         what the text is (and the text field doesn't even know what
-        it is until the contraints evaluate), it can't really know
+        it is until the constraints evaluate), it can't really know
         at construct time how wide to make itself.</para>
         <para>If you add 
         <literal>resize=true</literal>, the field will expand to
@@ -503,7 +503,7 @@
             </textobject>
           </programlisting>
         </example>
-        <?example role="live-example"><title>non-resizing text does not concatentate</title><programlisting role="lzx-embednew"><filename>text-$6.lzx</filename><parameter/><code>
+        <?example role="live-example"><title>non-resizing text does not concatenate</title><programlisting role="lzx-embednew"><filename>text-$6.lzx</filename><parameter/><code>
         &lt;canvas height="50" &gt;
           &lt;simplelayout/&gt;
           &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
@@ -622,11 +622,11 @@
       <itemizedlist spacing="compact">
         <listitem><para>Unlike lz.views, lz.text elements do not
         auto-size to fit their contents. Use the resize or
-        multiline attributes to acheive this.</para></listitem>
+        multiline attributes to achieve this.</para></listitem>
         <listitem><para>Even though lz.text is a subclass of lz.view, you
         cannot nest views inside of it.</para></listitem>
         <listitem><para>Data-bound text fields will automatically display
-        the text theyare bound to.</para></listitem>
+        the text they are bound to.</para></listitem>
       </itemizedlist>
     </section>
        <!-- remove empty para tag LI LPP-4642 9/4/2007-->

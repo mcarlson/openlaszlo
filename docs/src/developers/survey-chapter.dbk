@@ -37,13 +37,13 @@ and display survey results.
 </para>
 <para>
 Please note that the methodology that we're using to explain how this application is constructed is not necessarily the best way to
-go about builing an application. It's simply a way of explaining how the application works from the inside out.
+go about building an application. It's simply a way of explaining how the application works from the inside out.
 </para>
 <para/></section><section><title>Building a Survey Tool</title>
 
 <para/><section><title>Starting with a radiogroup</title>
 <para>
-We begin constructing the questionaire at the heart of the survey:
+We begin constructing the questionnaire at the heart of the survey:
 </para>
 
 <example role="live-example">
@@ -88,7 +88,7 @@ We begin constructing the questionaire at the heart of the survey:
 As discussed above, the <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: form-->
  element provides a structure for grouping various related components. 
-By handling layout and common funtions, <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag> allows you to concentrate on behavior. In the code below, we've
+By handling layout and common functions, <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag> allows you to concentrate on behavior. In the code below, we've
 added a button and associated it with the form's <indexterm><primary><literal>submit()</literal></primary></indexterm><methodname>submit()</methodname>.
 </para>
 

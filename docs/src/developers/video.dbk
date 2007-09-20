@@ -178,7 +178,7 @@ The example below shows this component.
 <para>
 The <indexterm><primary>videoplayer</primary></indexterm><sgmltag class="element">&lt;videoplayer&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: videoplayer-->
- component provides the a graphical represnetation of the essential controls for handling video and audio: play, stop, pause, seek forward, seek in reverse, and control volume.
+ component provides the a graphical representation of the essential controls for handling video and audio: play, stop, pause, seek forward, seek in reverse, and control volume.
 </para>
 <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>
 We'll need to spruce this up, of course, when the real video player gets checked in.
@@ -189,7 +189,7 @@ We'll need to spruce this up, of course, when the real video player gets checked
 <para>
 An <indexterm><primary>rtmpconnection</primary></indexterm><sgmltag class="element">&lt;rtmpconnection&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: rtmpconnection-->
- represents a connection to an appllication running on an RTMP server, such as the Flash Media Server or Red5, enabling two-way streaming of audio and video. This allows you to broadcast and receive live audio and and or video, as well as recording video from a webcam or audio from a microphone to files on the server. Recorded files may be played back over HTTP (using <indexterm><primary>mediastream</primary></indexterm><sgmltag class="element">&lt;mediastream&gt;</sgmltag> and <indexterm><primary>videoview</primary></indexterm><sgmltag class="element">&lt;videoview&gt;</sgmltag> classes) or with RTMP to allow seeking within and playback of long files that are impractical to load into memory.
+ represents a connection to an application running on an RTMP server, such as the Flash Media Server or Red5, enabling two-way streaming of audio and video. This allows you to broadcast and receive live audio and and or video, as well as recording video from a webcam or audio from a microphone to files on the server. Recorded files may be played back over HTTP (using <indexterm><primary>mediastream</primary></indexterm><sgmltag class="element">&lt;mediastream&gt;</sgmltag> and <indexterm><primary>videoview</primary></indexterm><sgmltag class="element">&lt;videoview&gt;</sgmltag> classes) or with RTMP to allow seeking within and playback of long files that are impractical to load into memory.
 </para>
 
 <para/><section><title>Automatic connection to the RTMP service</title>
@@ -199,7 +199,7 @@ If there is only one rtmpconnection, the video object automatically hooks up to 
    &lt;rtmpconnection src="rtmp://mysite.com/myapp/" autoconnect="true"/&gt;
    &lt;videoview url="myvideo.flv" type="rtmp" autoplay="true"/&gt;
 </programlisting></example>
-<para/></section><section><title>Chosing between multiple connections</title>
+<para/></section><section><title>Choosing between multiple connections</title>
 <para>
 When an application has more than one rtmp connection active, you chose among them by specifying the URL passed to the <indexterm><primary>videoview</primary></indexterm><sgmltag class="element">&lt;videoview&gt;</sgmltag>.
 </para>
@@ -221,12 +221,12 @@ Note that it is not possible to allow permission on one device and not another. 
 <para>Here's an illustration of a representative security dialogue the first time the camera is requested:
 </para>
 
-<figure><title>Permission to record dialoge</title><mediaobject><imageobject><imagedata fileref="images/AdobeFlashPlayerSettings1.png"/></imageobject></mediaobject></figure>
+<figure><title>Permission to record dialog</title><mediaobject><imageobject><imagedata fileref="images/AdobeFlashPlayerSettings1.png"/></imageobject></mediaobject></figure>
 <para/><section><title>Changing permissions</title>
 <para>
 You can change the permissions of a running application by using the right-click context menu on the video. Note that the menu may show the name of device <emphasis role="i">drivers</emphasis>, not the actual devices. A typical right-click menu is shown below.
 </para>
-<figure><title>Permission to record dialoge</title><mediaobject><imageobject><imagedata fileref="images/AdobeFlashPlayerSettings2.png"/></imageobject></mediaobject></figure> 
+<figure><title>Permission to record dialogue</title><mediaobject><imageobject><imagedata fileref="images/AdobeFlashPlayerSettings2.png"/></imageobject></mediaobject></figure> 
 <para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>
 Explain record versus broadcast
 Explain privacy policy, capturing and allowed attributes.

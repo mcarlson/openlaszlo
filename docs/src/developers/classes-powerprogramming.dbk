@@ -409,7 +409,7 @@ as a short-cut to refer to the root of outer classes.</para>
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/class-inheritance-$7.lzx></example?>
 <para>
-At the risk of belaboring the topic, here's one more example that demostrates that top level instances of a class have no defined classroot. Notice that even though "bar" is a child of "foo", it does not have a defined classroot, because it is a toplevel instance of the bar class. </para>
+At the risk of belaboring the topic, here's one more example that demonstrates that top level instances of a class have no defined classroot. Notice that even though "bar" is a child of "foo", it does not have a defined classroot, because it is a toplevel instance of the bar class. </para>
 
 <example role="live-example">
    <title>Classroot and top level instance</title>
@@ -743,7 +743,7 @@ var myobject = new myclass(<replaceable>parent</replaceable>, <replaceable>attri
     encapsulates. The OpenLaszlo Runtime instantiator is responsible for passing in the
     children of this <literal>object</literal> based on the LZX hierarchy. You will
     generally set this to null.
-    </para></listitem><listitem><para><varname>instcall</varname> is a boolean value that determines
+    </para></listitem><listitem><para><varname>instcall</varname> is a Boolean value that determines
     when this object will be instantiated. If false, the instantiation
     of this object will be immediate, otherwise, its instantiation
     will be synchronized with the rest of the view system. See <xref linkend="initialization-and-instantiation"/>.
@@ -822,7 +822,7 @@ JavaScript counterpart; rather, the JavaScript name is <literal>lz.[tagname]</li
 <literal>new lz.view(...)</literal> (<emphasis role="b">not</emphasis> <literal>new view(...)</literal>). 
 </para>
 <note><para>
-In earlier versions of OpenLaszlo, there was an idosyncratic mapping between class names and tag names, and classes in the LFC were handled differently than user devfined classes. For example, the tagname <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> mapped to JavaScript class LzView. With OpenLaszlo 4.0, the <literal>lz.[tagname]</literal> mapping is universal, and the old mappings are deprecated. </para></note>
+In earlier versions of OpenLaszlo, there was an idiosyncratic mapping between class names and tag names, and classes in the LFC were handled differently than user defined classes. For example, the tagname <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> mapped to JavaScript class LzView. With OpenLaszlo 4.0, the <literal>lz.[tagname]</literal> mapping is universal, and the old mappings are deprecated. </para></note>
 
 
  

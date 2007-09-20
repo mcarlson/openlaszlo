@@ -71,7 +71,7 @@ refer to these function stubs and any remotecalls not pointing to a function
 stub that doesn't exist will generate an error or warning. In &lt;xmlrpc&gt;,
 function stubs are create based on remotecall declarations. Note that XML-RPC
 use dot notation for their operation names. Because that will conflict with the
-view system's notation, it's suggested that remotecalls be explictly named.</para>
+view system's notation, it's suggested that remotecalls be explicitly named.</para>
 
 <example role="live-example">
    <title>Creating a function stub</title>
@@ -82,7 +82,7 @@ view system's notation, it's suggested that remotecalls be explictly named.</par
 <?example role="live-example"><title>Creating a function stub</title><programlisting role="lzx-embednew"><filename>rpc-xmlrpc-$2.lzx</filename><parameter/><code>
 
 &lt;canvas debug="true" height="400"&gt;
-    &lt;!-- this isues one call of the freshmeat XML-RPC API --&gt;
+    &lt;!-- this issues one call of the freshmeat XML-RPC API --&gt;
     &lt;!-- Documented here: http://freshmeat.net/faq/view/49/ --&gt;
 
     &lt;debug x="10" y="40" width="450" height="350" /&gt;

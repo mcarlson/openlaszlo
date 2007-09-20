@@ -7,7 +7,7 @@
 In LZX, the concepts of methods, events, handlers and attributes are related to each other in a braid-like way. In this chapter we'll show you how they weave together.
 </para>
 <para>
-Attributes, events, methods and handlers are all properties of classes that define how instances of the class behave.  Attributes represent the state of the instance.  Events are signifiers that communicate with the rest of the application when something about the instance changes. Methods are blocks of Javascript that are executed when the method is invoked by name. Handlers are a special kind of method, each specifically tied to an event.
+Attributes, events, methods and handlers are all properties of classes that define how instances of the class behave.  Attributes represent the state of the instance.  Events are signifiers that communicate with the rest of the application when something about the instance changes. Methods are blocks of JavaScript that are executed when the method is invoked by name. Handlers are a special kind of method, each specifically tied to an event.
 </para>
 <para>
 When an event occurs, any handler associated with that event gets called.  Events may have any number of handlers, and handlers can be used to glue events from one instance to methods in another.
@@ -38,7 +38,7 @@ In the discussion below we'll assume a commonsense understanding of the meaning 
 <para>
 A <indexterm><primary>method</primary></indexterm><sgmltag class="element">&lt;method&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: method-->
- is an 'action', expressed in Javascript you can perform on an instance. You can call it from any script.
+ is an 'action', expressed in JavaScript you can perform on an instance. You can call it from any script.
 </para>
 <para>
 Methods may be defined inside any <indexterm><primary>node</primary></indexterm><sgmltag class="element">&lt;node&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -206,7 +206,7 @@ Events can be defined either implicitly or explicitly. Implicit events are assoc
  tag.
 </para>
 <para>
-In addition to the events that you define, there are also events that are built into the LFC but which are not associated with any attribute.  Examples includ <indexterm><primary>onclick</primary></indexterm><sgmltag class="attribute">onclick</sgmltag> and <indexterm><primary>onfocus</primary></indexterm><sgmltag class="attribute">onfocus</sgmltag>.
+In addition to the events that you define, there are also events that are built into the LFC but which are not associated with any attribute.  Examples include <indexterm><primary>onclick</primary></indexterm><sgmltag class="attribute">onclick</sgmltag> and <indexterm><primary>onfocus</primary></indexterm><sgmltag class="attribute">onfocus</sgmltag>.
 </para>
 <para>
 Unlike events in similar systems, OpenLaszlo's events are point-to-point, meaning that there is no general broadcast mechanism for events, and events do not trickle up or down the instance hierarchy.  Declaring an event that no handler (or delegate) is listening for has no effect. This allows objects to publish many more events than they actually need to create at runtime; this allows you flexibility in prototyping.
@@ -266,7 +266,7 @@ Note that there is virtually never any reason to create an event in script by cr
 </para>
 <para/></section></section><section><title>Event Handlers</title>
 <para>
-An event handler is the code that is executed when an event is recieved. An event can have zero or more handlers.
+An event handler is the code that is executed when an event is received. An event can have zero or more handlers.
 </para>
 <para>
 There are two syntaxes that you can use to define handlers:</para>
@@ -388,7 +388,7 @@ An event can have associated with it any number of handlers. When that event is 
 </programlisting><?lzx-edit programs/methods-events-attributes-$7.lzx></example?>
 <para/></section><section><title>Handlers that call methods</title>
 <para>
-A handler may include javascript code to be executed when the associated event occurs, or it may reference a method that contains the code to be executed.  To reference another method, use the <indexterm><primary>method</primary></indexterm><sgmltag class="attribute">method</sgmltag> attribute of the <indexterm><primary>handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag> tag.</para>
+A handler may include JavaScript code to be executed when the associated event occurs, or it may reference a method that contains the code to be executed.  To reference another method, use the <indexterm><primary>method</primary></indexterm><sgmltag class="attribute">method</sgmltag> attribute of the <indexterm><primary>handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag> tag.</para>
 
 <example role="live-example">
    <title>Calling a method from a handler</title>
@@ -709,7 +709,7 @@ As has been discussed above, you can cause an event to be sent explicitly, by de
 </programlisting><?lzx-edit programs/methods-events-attributes-$12.lzx></informalexample?>
 <para/></section><section><title>Testing for existence of events in "legacy" code</title>
 <para>
-As is explained in <xref linkend="delegates"/>, an event doesn't really exist unless and until there is a delegate registered to recieve it. In code that was written before the <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag> tag became part of the language,
+As is explained in <xref linkend="delegates"/>, an event doesn't really exist unless and until there is a delegate registered to receive it. In code that was written before the <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag> tag became part of the language,
 before sending an event it was necessary to test whether the receiving delegate existed; otherwise an error resulted. In order to create your own event, you needed to create an attribute like this:</para>
 <programlisting>
 &lt;attribute name="onsomeevent" value="null"/&gt;
@@ -762,7 +762,7 @@ You can define new attributes using the <indexterm><primary>attribute</primary><
 &lt;/view&gt;
 </programlisting>
 
-<para>Attributes can be an element of a tag or a property of a JavaSctipt
+<para>Attributes can be an element of a tag or a property of a JavaScript
   class. Attributes that are properties of t
 
 Attributes are usually declared and set in tags, but they can also
@@ -787,7 +787,7 @@ the tag whose attribute is being set:</para>
 
 
 <example role="live-example">
-   <title>Using the atrribute element to set an attribute value</title>
+   <title>Using the attribute element to set an attribute value</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/methods-events-attributes-$14.lzx"/></textobject> 
    </programlisting>
