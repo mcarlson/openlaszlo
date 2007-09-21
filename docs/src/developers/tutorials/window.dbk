@@ -240,7 +240,7 @@ Put in links to Peter's components guide
 
 <para>Since the center view is variable width, we needed to allow it to stretch its resource, by adding the <literal>stretches="width"</literal> attribute to the view. We won't see any results from this right now, but when we move on to resizing the window, the effect will become apparent.</para>
 
-<para>We also had to set its width to be dependant on the widths of its neigboring two views, and that of its parent. There is no need to specify the widths of <varname>topLeft</varname> or <varname>topRight</varname>, as they shall take on the widths of their resources.</para>
+<para>We also had to set its width to be dependant on the widths of its neighboring two views, and that of its parent. There is no need to specify the widths of <varname>topLeft</varname> or <varname>topRight</varname>, as they shall take on the widths of their resources.</para>
 
 <example role="live-example">
    <title>Stretchable widths</title>

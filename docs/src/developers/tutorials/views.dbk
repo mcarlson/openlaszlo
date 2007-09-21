@@ -429,7 +429,7 @@ color, that stretches from end to end?</para>
 <para>Now the view stretches across, but if you look at the toolbars you'll notice that they are a little bit taller than the buttons they contain. To make our buttons look the same, we could set an absolute height, but let's make it dependent on one of the buttons:</para>
 
 <example role="live-example">
-   <title>Constraining veiw to child's height</title>
+   <title>Constraining view to child's height</title>
    <programlistingco>
      <areaspec>
        <area units="other" otherunits="/canvas[1]/window[1]/view[1]/@height"/>

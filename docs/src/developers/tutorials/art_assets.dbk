@@ -29,7 +29,7 @@ In OpenLaszlo applications, <sgmltag class="element" role="LzView">view</sgmltag
 <!--unknown tag: view-->
 s are the fundamental visible entities, and resources
 are externally generated media to be incorporated in applications. Resources are made available by being
-attatched to views. Thus in OpenLaszlo applications you don't "insert an image" into a view; 
+attached to views. Thus in OpenLaszlo applications you don't "insert an image" into a view; 
 instead you insert a view whose <emphasis>resource</emphasis> is an image. 
 </para>
 

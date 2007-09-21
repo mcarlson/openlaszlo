@@ -86,9 +86,9 @@ scripting concepts.</para></note>
    &lt;/script&gt;
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/scripting-tutorial-$2.lzx></example?>
-<para/><section><title>Javascript gotchas</title>
+<para/><section><title>JavaScript gotchas</title>
 <para>
-If you've never worked with Javascript before, you may be surprised by some subtle features of the language.
+If you've never worked with JavaScript before, you may be surprised by some subtle features of the language.
 For example, consider this slight expansion of the preceding program:</para>
 
 <example role="live-example">
@@ -139,8 +139,8 @@ For example, consider this slight expansion of the preceding program:</para>
 the line immediately above it, right? What happened is that we concatenated numbers to strings 
 earlier on (<literal>4 + " plus " + 3</literal>), and that operation converted the numbers to strings.</para>
 <para>
-OpenLaszlo documentation is not intended to provide a complete reference for Javascript. Later chapters do explain some
-advanced topics in scripting, but we recommend that you have a Javascript reference handy while writing LZX.
+OpenLaszlo documentation is not intended to provide a complete reference for JavaScript. Later chapters do explain some
+advanced topics in scripting, but we recommend that you have a JavaScript reference handy while writing LZX.
 </para>
 <para/></section><section><title>XML characters in script</title>
 
@@ -201,7 +201,7 @@ and of course the particular application. The CDATA method is perhaps a little m
    <textobject><textdata fileref="programs/scripting-tutorial-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Javascript functions</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$7.lzx</filename><parameter/><code>
+<?example role="live-example"><title>JavaScript functions</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$7.lzx</filename><parameter/><code>
 &lt;canvas height="200" width="500" debug="true"&gt;
   &lt;script&gt;
     &lt;![CDATA[
@@ -291,7 +291,7 @@ this one takes JavaScript that will be run in the context of the object when the
 
 <programlisting>    this.parent</programlisting>
 
-<para>is a reference to an object. In Javascript, the scope is generally global unless you say otherwise. That means 
+<para>is a reference to an object. In JavaScript, the scope is generally global unless you say otherwise. That means 
 that any class or instance methods or variables must be preceded by the keyword <literal>this</literal>. As 
 for the 'parent' part: Let's  start by saying that the lzx viewsystem always assigns each view a variable 'parent' 
 which points to that view's hierarchical parent. View hierarchies are discussed in detail in <xref linkend="views"/>
@@ -782,7 +782,7 @@ Move the box left and right, perhaps? We might write another method to move the 
 <para/></section><section><title>Using attributes to reduce complexity</title>
 
 <para>Continuing from the same example as above, let's look at ways to reduce the number of arguments being passed. 
-Here we put the functionalilty into the button itself:</para>
+Here we put the functionality into the button itself:</para>
 
 <example role="live-example">
    <title>More on attributes</title>

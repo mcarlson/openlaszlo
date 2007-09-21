@@ -7,7 +7,7 @@
 <xref linkend="text"/> and <xref linkend="fonts"/>
 explain more advanced topics.</para>
 <para>
-Note that the behavior of LZX applications differs between applications compiled for the Flash Player (SWF format) and those compiled for DHTML. Certain APIs are available in only one or the other runtime. We'll call attention to these subjectst in the sections that follow.
+Note that the behavior of LZX applications differs between applications compiled for the Flash Player (SWF format) and those compiled for DHTML. Certain APIs are available in only one or the other runtime. We'll call attention to these subjects in the sections that follow.
 </para>
 <para/></section><section id="text-tutorial.basics"><title>The &lt;text&gt; tag</title>
 
@@ -335,7 +335,7 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
 
 <para>The font TTF files can be located in the current directory or another one and referenced relatively (<literal>src="../fonts/..."</literal>). Otherwise they are included in the LPS webapp directory of the installation under WEB-INF/lps/fonts. timonnsr is a font that comes packaged with the OpenLaszlo Server in this location.</para>
 
-<para>A truetype file is required for each style of font (e.g. italic, bold, regular), which is how fonts are actually packaged. So the following code will <emphasis role="b">not</emphasis> work:</para>
+<para>A TrueType file is required for each style of font (e.g. italic, bold, regular), which is how fonts are actually packaged. So the following code will <emphasis role="b">not</emphasis> work:</para>
 
 
 <informalexample role="live-example"><programlisting>
