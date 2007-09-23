@@ -5,6 +5,7 @@
 <!-- @LZX_VERSION@                                                         -->
 <library>
 
+<include href="base/basecomponent.lzx" />
 <include href="utils/states/dragstate.lzx"/>
 <include href="utils/states/resizestatemin.lzx"/>
 
@@ -109,9 +110,9 @@
         <method name="sendInFrontOf" args="v"> <![CDATA[
             var wlist = parent.options['windowlist'];
             if (this.visible) {
-                this._removeFromWindowlist();
-                for (var i in wlist) {
+                for (var i=0; i < wlist.length; ++i) {
                     if (wlist[i]==v) {
+                        this._removeFromWindowlist();
                         wlist.splice(i+1,0,this);
                         break;
                     }
@@ -127,9 +128,9 @@
         <method name="sendBehind" args="v"> <![CDATA[
             var wlist = parent.options['windowlist'];
             if (this.visible) {
-                this._removeFromWindowlist();
-                for (var i in wlist) {
+                for (var i=0; i < wlist.length; ++i) {
                     if (wlist[i]==v) {
+                        this._removeFromWindowlist();
                         wlist.splice(i,0,this);
                         break;
                     }
@@ -246,6 +247,21 @@
         <method name="setVisible" args="isVisible"> <![CDATA[
             super.setVisible(isVisible);
             if (isVisible) {
+                //need to add this window to the parent's windowlist
+                var foundMe = false;
+                var wlist = parent.options["windowlist"];
+                var len = wlist.length;
+                for (var i=0; i < len; ++i) {
+                    if (wlist[i] == this){
+                        foundMe = true;
+                        break;
+                    }
+                }
+                
+                if (!foundMe) {
+                    wlist[len] = this;
+                }
+                
                 this.setAttribute('haswindowfocus', true);
             } else {
                 this._removeFromWindowlist();
