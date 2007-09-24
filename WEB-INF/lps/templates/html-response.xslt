@@ -60,6 +60,8 @@ If you edit this file, please validate your work using http://validator.w3.org/
     <html>
       <head>
         <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico"/>
+        <!-- this tag helps laszlo apps look good on the iPhone. It prevents user scaling. [bshine] -->
+        <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
         <title>
           <xsl:value-of select="/canvas/@title"/>
         </title>
