@@ -1,0 +1,90 @@
+<canvas debug="true" width="800" height="600">
+    <debug x="0" y="100" width="800" height="500"/>
+    <include href="lzunit/lzunit.lzx" />
+    
+    <dataset name="testdata" src="http:multirequest.jsp" querytype="POST"
+        ondata="Debug.write('testdata got ondata')" datafromchild="true">
+        
+        <method name="doRequest" >
+            if (this.multirequest || this.dataRequest == null) {
+                this.dataRequest = new this.dataRequestClass(this);
+            }
+            var dReq = this.dataRequest;
+            dReq.setAttribute("method", this.querytype);
+            dReq.setAttribute("src", this.src);
+            // capitalization
+            dReq.setAttribute("queryparams", this.queryParams);
+            dReq.setAttribute("timeout", this.timeout);
+            dReq.setAttribute("requestor", this);
+            dReq.setAttribute("proxied", this.proxied);
+
+            Debug.info( 'in testdata.doRequest ', this.dataRequest);
+            
+            // NB: You had better set the onstatus event handler *before* issuing request
+            this.dsloadDel = new LzDelegate( this , "handleDataResponse", dReq, "onstatus");
+            this.dataprovider.doRequest( dReq );
+        </method>
+
+        // @param String key: query param key
+        // @param String|Array value: string for a single valued param, array for a
+        // multi-value param
+        <method name="setQueryParam" args="key,val">
+            this.queryParams.setValue( key,val);
+        </method>
+    </dataset>
+    
+    <class name="DataTestCase" extends="TestCase">
+        <method name="test1">
+            <![CDATA[
+            /* Make sure that if multirequest=false, we aren't receiving multiple
+            requests, and that only the most recent returns.  Since a new
+            LzHTTPDataRequest object is made for each request when multirequest is
+            true, we can just check to make sure it's not generating more.  For
+            a test on whether this is receiving the appropriate response, see
+            the accompanying file dataprovider-datacheck.lzx */
+            testdata.setAttribute('multirequest', false);
+        
+            /* Part one:  Ensure that only a single LzHTTPDataRequest object
+            is being generated. */
+            testdata.setAttribute('multirequest', false);
+            for(var i = 0; i <= 10; i++){
+                var rqcount = testdata.subnodes ? testdata.subnodes.length : 0;
+                testdata.queryParams = new LzParam();
+                testdata.setQueryParam("seq", i);
+                testdata.doRequest();
+                if(i > 1){
+                    assertEquals(testdata.subnodes.length, rqcount);
+                }
+            }
+            ]]>
+        </method>
+        <method name="test2">
+            <![CDATA[
+            /* Make sure that if multirequest=true, we're receiving responses for
+            all the requests we're making.  Using the same method as above, we
+            can count and make sure that every iteration results in an increase
+            in the number of LzHTTPDataRequests. */
+            testdata.setAttribute('multirequest', true);
+            for(var i = 0; i <= 10; i++){
+                var rqcount = testdata.subnodes ? testdata.subnodes.length : 0;
+                testdata.queryParams = new LzParam();
+                testdata.setQueryParam("seq", i);
+                testdata.doRequest();
+                this.t2del = new LzDelegate(this, 'test2');
+                if(i > 1){
+                    assertEquals(testdata.subnodes.length, rqcount + 1);
+                }
+            }
+            ]]>
+        </method>
+    </class>
+    
+    <TestSuite>
+        <DataTestCase/>
+    </TestSuite>
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

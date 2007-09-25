@@ -2,7 +2,7 @@
     <debug width="500" height="500"/>
     <include href="lzunit/lzunit.lzx" />
     <dataset name="ds">
-        <record a="1"> Some text.</record>
+        <record a="1">Some text.</record>
     </dataset>
 
     <script>

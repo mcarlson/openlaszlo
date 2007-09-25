@@ -1,6 +1,7 @@
 <canvas>
 
-    <include href="redmond" />
+    <!-- <include href="redmond" /> There is no redmond that I can find,
+        so this test doesn't run properly. -->
 
     <dataset name="messages" />
     <datapointer name="mptr" xpath="messages:/" />

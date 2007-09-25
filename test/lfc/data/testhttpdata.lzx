@@ -15,29 +15,29 @@
     <debug y="${tests.height}" height="${canvas.height - tests.height}" />
     <dataset name="data1" type="http" 
             querystring="'foo=bar&amp;plop=slop'"
-            src="http://localhost:8080/lps/test/lfc/data/httpecho.jsp">
+            src="http:httpecho.jsp">
     </dataset>
 
     <dataset name="data2" type="http" queuerequests="true"
-             src="http://localhost:8080/lps/test/lfc/data/httpecho.jsp"/>
+             src="http:httpecho.jsp"/>
 
     <dataset name="data3" acceptencodings="true" getresponseheaders="false"
-             src="http://localhost:8080/lps/test/lfc/data/httpecho.jsp"/>
+             src="http:httpecho.jsp"/>
 
     <dataset name="data4" cacheable="true" getresponseheaders="false"
-             src="http:../../resources/xml/swatch.xml"/>
+             src="http:../../data/swatch.xml"/>
 
     <dataset name="data5" cacheable="true" acceptencodings="true"
-             src="http:../../resources/xml/swatch.xml"/>
+             src="http:../../data/swatch.xml"/>
 
     <dataset name="data6" acceptencodings="true"
-             src="http://localhost:8080/lps/test/lfc/data/httpecho.jsp"/>
+             src="http:httpecho.jsp"/>
 
     <dataset name="data7" acceptencodings="true" cacheable="true"
-             src="file:../../resources/xml/swatch.xml"/>
+             src="file:../../data/swatch.xml"/>
 
     <dataset name="data8" 
-             src="http://localhost:8080/lps/test/lfc/data/httptimeout.jsp"/>
+             src="http:httptimeout.jsp"/>
 
     <dataset name="data9" src="http:httpredir.jsp"/>
 

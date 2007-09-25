@@ -19,6 +19,7 @@
            values[i] = values[i].split(';')[0];
 }
          values.sort();
+         // See: LPP-4707.
          assertEquals(expected, values);
       </method>
       <method name="testAcceptEncoding">

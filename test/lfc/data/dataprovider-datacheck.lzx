@@ -1,0 +1,92 @@
+<canvas debug="true" width="100%" height="600">
+    <debug x="0" y="100" width="800" height="500"/>
+    <include href="lzunit/lzunit.lzx" />
+    
+    <!-- Tests to make sure that the final request receives the
+        correct data when multirequest=false.  (Henry's test, expanded,
+        with some modifications.) -->
+
+    <!-- changed 'method' attr to 'querytype' -->
+    <dataset name="testdata" src="http:multirequest.jsp" querytype="POST"
+        ondata="Debug.write('testdata got ondata')" datafromchild="true">
+
+        <method name="doRequest" >
+            if (this.multirequest || this.dataRequest == null) {
+              this.dataRequest = new this.dataRequestClass(this);
+            }
+            var dReq = this.dataRequest;
+            dReq.setAttribute("method", this.querytype);
+            dReq.setAttribute("src", this.src);
+            // capitalization
+            dReq.setAttribute("queryparams", this.queryParams);
+            dReq.setAttribute("timeout", this.timeout);
+            dReq.setAttribute("requestor", this);
+            dReq.setAttribute("proxied", this.proxied);
+
+            // NB: You had better set the onstatus event handler *before* issuing request
+            this.dsloadDel = new LzDelegate( this , "handleDataResponse", dReq, "onstatus");
+
+            this.dataprovider.doRequest( dReq );
+        </method>
+
+        // @param String key: query param key
+        // @param String|Array value: string for a single valued param, array for a
+        // multi-value param
+        <method name="setQueryParam" args="key,val">
+            this.queryParams.setValue( key,val);
+        </method>
+    </dataset>
+    
+    <TestSuite>
+        <TestCase>
+            <datapointer name="dd" xpath="testdata:/response/text()">
+                <attribute name="datacheck" value="1"/>
+                <handler name="ondata">
+                    <![CDATA[
+                    if(testdata.multirequest == false){
+                        Debug.write('multirequest is false', this.data);
+                        parent.assertTrue(this.data, 10);
+                        if(this.data == 10 && testdata.multirequest == false){
+                            parent.doitagain();
+                        }
+                    }
+                    if(testdata.multirequest == true){
+                        Debug.write('multirequest is true', this.data);
+                        parent.assertTrue(this.data, this.datacheck);
+                        this.datacheck++;
+                    }
+                    ]]>
+                </handler>
+            </datapointer>
+
+            <method name="doit">
+                <![CDATA[
+                testdata.setAttribute('multirequest', false);
+                for(var i = 1; i <= 10; i++){
+                    testdata.queryParams = new LzParam();
+                    testdata.setQueryParam("seq", i);
+                    testdata.doRequest();
+                }
+                ]]>
+            </method>
+            <method name="doitagain">
+                <![CDATA[
+                testdata.setAttribute('multirequest', true);
+                for(var i = 1; i <= 10; i++){
+                    testdata.queryParams = new LzParam();
+                    testdata.setQueryParam("seq", i);
+                    testdata.doRequest();
+                }
+                ]]>
+            </method>
+            <handler name="oninit">
+                this.doit();
+            </handler>
+        </TestCase>
+    </TestSuite>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

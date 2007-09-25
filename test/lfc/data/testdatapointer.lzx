@@ -52,7 +52,7 @@
                             "/row[1]/key[2]/name()" , "key" ,
                              "/row[2]/key[3]" , null ];
                 for ( var i = 0; i < mya.length; i+=2 ){
-                    this.setXPath( mya[i] );
+                    this.setXPath( mya[i + 1] );
                     assert( this.data ==  mya[ i+ 1], mya[ i ] );
                 }
                     
@@ -62,7 +62,7 @@
     </button>
 
     <button>Anon dataset
-        <datapointer name="mydp" xpath="new:/">
+        <datapointer name="mydp" xpath="keys:/">
             <method event="onclick" reference="parent">
                 <![CDATA[
                 var mya = [ [ "a" , "text1" , { a : 1 , b: "a"} ],
@@ -98,7 +98,7 @@
                 assert( "text3" == this.getNodeText() , "selectParent" );
                 this.selectParent( );
 
-                Debug.write( this.Serialize() );
+                Debug.write( this.serialize() );
 
                 //delete
                 //add
@@ -151,7 +151,9 @@
             <method name="assert" args="label, result, shouldfail">
                 if (!result) {
                     if (shouldfail) return;
-                    Debug.write(label + ": " + result + " n: " + this.getName() + " o: " + this.getOffset());
+                    /* Removing getOffset() -- it doesn't exist, and what I think
+                    was intended -- getNodeOffset() -- is deprecated as well. */
+                    Debug.write(label + ": " + result + " n: " + this.getNodeName());
                     //Debug.write("    Warning - result returned false");
                 }
             </method>
