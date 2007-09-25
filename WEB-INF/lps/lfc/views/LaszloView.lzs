@@ -743,6 +743,10 @@ var resourceheight = null;
 /** @access private */ var __LZoutlieheight = null;
 /** @access private */ var __LZoutliewidth = null;
 /** @access private */ var __LZsubUniqueNum = null;
+/** @access private */ var _x = 0;
+/** @access private */ var _y = 0;
+/** @access private */ var _width = 0;
+/** @access private */ var _height = 0;
 
 /**
   * this creates a specific child layout for this view. When called a second time
@@ -1287,8 +1291,8 @@ function setOpacity ( v ){
   * Sets the <attribute>x</attribute> position of the view to the given value.
   * @param Number v: The new value for <attribute>x</attribute>.
   */
-function setX ( v ){
-    if (this._x != v) {
+function setX ( v, force ){
+    if (force || this._x != v) {
         this._x = v;
         this.x = v;
         if ( this.__LZhasoffset ){
@@ -1314,8 +1318,8 @@ function setX ( v ){
   * Sets the <attribute>y</attribute> position for the view to the given value.
   * @param Number v: The new value for <attribute>y</attribute>.
   */
-function setY ( v ){
-    if (this._y != v) {
+function setY ( v, force ){
+    if (force || this._y != v) {
         this._y = v;
         this.y = v;
         if ( this.__LZhasoffset ){
@@ -1353,8 +1357,8 @@ function setRotation ( v ){
     if (this.onrotation.ready) this.onrotation.sendEvent( v );
 
     if ( this.__LZhasoffset ){
-        this.setX( this.x );
-        this.setY( this.y );
+        this.setX( this.x, true );
+        this.setY( this.y, true );
     }
 
     if (this.immediateparent.__LZcheckwidth)
@@ -1396,8 +1400,8 @@ function setAlign ( align ){
 function setXOffset ( o ){
     this.__LZhasoffset = o != 0;
     this.xoffset = o;
-    this.setX( this.x );
-    this.setY( this.y );
+    this.setX( this.x, true );
+    this.setY( this.y, true );
     if (this.onxoffset.ready) this.onxoffset.sendEvent( o );
 }
 
@@ -1408,8 +1412,8 @@ function setXOffset ( o ){
 function setYOffset ( o ){
     this.__LZhasoffset = o != 0;
     this.yoffset = o;
-    this.setX( this.x );
-    this.setY( this.y );
+    this.setX( this.x, true );
+    this.setY( this.y, true );
     if (this.onyoffset.ready) this.onyoffset.sendEvent( o );
 }
 

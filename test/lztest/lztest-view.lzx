@@ -143,13 +143,12 @@
   </view>
 
 
-<!-- viewN: rotations, around the center -->
-<!-- leave for later
-  <view name="view5" bgcolor="yellow">
+<!-- view14: rotations, around the center -->
+  <view name="view14" bgcolor="yellow">
+    <simplelayout/>
     <view name="v1" bgcolor="green" width="20" height="10" xoffset="10" yoffset="5" rotation="45"/>
-    <simpleboundslayout name="layout" axis="x"/>
+    <view name="v2" bgcolor="red" width="20" height="10" xoffset="10" yoffset="5"/>
   </view>
--->
 
 
 
@@ -180,10 +179,10 @@ function ztest(msg,exp,act)
 // Inspect [x,y,width,height] and compare with the specified view
 function loctest(msg,view,exp)
 {
-  LzTestManager.assertEquals (exp[0], view.x, msg + ": x failure");  
-  LzTestManager.assertEquals (exp[1], view.y, msg + ": y failure");  
-  LzTestManager.assertEquals (exp[2], view.width, msg + ": width failure");  
-  LzTestManager.assertEquals (exp[3], view.height, msg + ": height failure");  
+  LzTestManager.assertWithin (exp[0], view.sprite.x, .1, msg + ": x failure");  
+  LzTestManager.assertWithin (exp[1], view.sprite.y, .1, msg + ": y failure");  
+  LzTestManager.assertWithin (exp[2], view.sprite.width, .1, msg + ": width failure");  
+  LzTestManager.assertWithin (exp[3], view.sprite.height, .1, msg + ": height failure");  
 }
 
 
@@ -463,6 +462,10 @@ suite.test13 = function() {
   // Built-into object view14
 }
 
+suite.test14 = function() {
+  if (view14.capabilities.rotation) loctest ('view14', view14.v1, [-3.53553390593274,-10.6066017177982,20,10]);
+  loctest ('view14', view14.v2, [-10,5,20,10]);
+}
 /* Leave for last
 suite.testN = function() {
   var b = view5.v1.getBounds();
@@ -484,6 +487,7 @@ suite.addTest(suite.test10);
 suite.addTest(suite.test11);
 suite.addTest(suite.test12);
 suite.addTest(suite.test13);
+suite.addTest(suite.test14);
 
 
 
