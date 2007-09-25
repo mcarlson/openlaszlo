@@ -103,8 +103,6 @@ public abstract class CommonGenerator implements ASTVisitor {
     this.options = options;
     this.runtime = ((String)options.get(Compiler.RUNTIME)).intern();
     setRuntime(this.runtime);
-    assert org.openlaszlo.compiler.Compiler.SWF_RUNTIMES.contains(runtime) : "unknown runtime " + runtime;
-    Instructions.setRuntime(runtime);
   }
 
   public InstructionCollector getCollector() {
