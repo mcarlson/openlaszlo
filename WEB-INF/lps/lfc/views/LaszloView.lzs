@@ -743,10 +743,6 @@ var resourceheight = null;
 /** @access private */ var __LZoutlieheight = null;
 /** @access private */ var __LZoutliewidth = null;
 /** @access private */ var __LZsubUniqueNum = null;
-/** @access private */ var _x = 0;
-/** @access private */ var _y = 0;
-/** @access private */ var _width = 0;
-/** @access private */ var _height = 0;
 
 /**
   * this creates a specific child layout for this view. When called a second time
