@@ -485,18 +485,18 @@
       <para />
       <section>
         <title>Resizable text fields</title>
+        <!-- changed to reflect the fact that resize is now true by default -->
         <para>Take care when using text whose width must be
         calculated at run time. Because the compiler does not know
         what the text is (and the text field doesn't even know what
         it is until the constraints evaluate), it can't really know
         at construct time how wide to make itself.</para>
-        <para>If you add 
-        <literal>resize=true</literal>, the field will expand to
-        fit the text. In the example below, notice how the last
-        concatenation is invisible and the last digit of the
-        numeric value from the slider gets cut off.</para>
+        <para>If you set 
+        <literal>resize=false</literal>, the field will not expand to
+        fit the text. In the example below, notice how the string is truncated as you move the slider.</para>
+      <!-- added resize attribute in text-$6.lzx, IORIO 21 sep 2007                  --> 
         <example role="live-example">
-          <title>Non-resizing text does not concatenate</title>
+          <title>Non-resizing text is truncated</title>
           <programlisting language="lzx">
             <textobject>
               <textdata fileref="programs/text-$6.lzx" />
@@ -518,12 +518,9 @@
           &lt;text text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
         &lt;/canvas&gt;
         </programlisting><?lzx-edit programs/text-$6.lzx></example?>
-        <para>The following shows the use of 
-        <indexterm>
-          <primary>resize="true"</primary>
-        </indexterm>
-        <sgmltag class="attribute">resize="true"</sgmltag>to get
-        the desired behavior.</para>
+<para>If you set 
+        <literal>resize=true</literal> (the default), the field will expand to
+        fit the text.</para>
         <example role="live-example">
           <title>Using the 'resize' attribute</title>
           <programlisting language="lzx">
@@ -532,7 +529,7 @@
             </textobject>
           </programlisting>
         </example>
-        <?example role="live-example"><title>Using the 'resize' attribute</title><programlisting role="lzx-embednew"><filename>text-$7.lzx</filename><parameter/><code>
+        <?example role="live-example"><title>Setting the 'resize' attribute to 'true'</title><programlisting role="lzx-embednew"><filename>text-$7.lzx</filename><parameter/><code>
 
         &lt;canvas height="50"&gt;
           &lt;simplelayout/&gt;
@@ -540,7 +537,8 @@
         keystep="1000"/&gt;
           &lt;text resize="true" text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
         &lt;/canvas&gt;
-        </code></programlisting><programlisting>
+        </code></programlisting>
+<programlisting>
 
         &lt;canvas height="50"&gt;
           &lt;simplelayout/&gt;
@@ -634,7 +632,7 @@
     <section id="text.multiline">
       <title>Single-line and multiline text</title>
       <para>A text field can be either a single line or multiple
-      lines. The 
+      lines. 
       <indexterm>
         <primary>multiline</primary>
       </indexterm>
