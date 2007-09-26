@@ -187,10 +187,10 @@ whitespace.
 </para>
 <para>
 The current defaults are:</para>
+<!-- LPP-984: trimwhitespace now defaults to true. IORIO 26 sep 2007 -->
 <programlisting>
 nsprefix = false (namespace prefixes are stripped)
-trimwhitespace = false (leading and trailing whitespace is preserved in text
-nodes)
+trimwhitespace = true (leading and trailing whitespace is removed from text nodes)
 </programlisting>
 <para/></section></section></section><section><title>Workflow</title>
 <para>

@@ -96,7 +96,12 @@ the full XML 1.0 specification with the following exceptions:</para>
   KBytes for the combined length of an element's attributes and the
   name of the element.</para></listitem></itemizedlist>
 <para/><section><title>Whitespace</title>
-<para>Handling of "whitespace" (spaces, tabs, linefeeds and carriage returns) is one of the reasons why XML can be problematic as an unambiguous data interchange format, because applications make different assumptions about how whitespace is to be handled.  In OpenLaszlo applications this problem is complicated by the fact that whitespace is handled differently on proxied and SOLO applications.</para>
+<para>Handling of "whitespace" (spaces, tabs, linefeeds and carriage returns) is one of the reasons why XML can be problematic as an unambiguous data interchange format, because applications make different assumptions about how whitespace is to be handled.  
+
+<!-- remove the following line, since proxied and SOLO apps are now handeled the same way -->
+<!-- LPP-984 IORIO 26 sep 2007 -->
+<!-- In OpenLaszlo applications this problem is complicated by the fact that whitespace is handled differently on proxied and SOLO applications. -->
+</para>
 <para>
 In OpenLaszlo applications, the runtime doesn't trim whitespace. Rather, it totally removes text
 nodes which have <emphasis role="em">all</emphasis> whitespace. Like, for example</para>
@@ -117,9 +122,13 @@ right thing either. </para>
 <para>
 The lesson here is that handling whitespace can be tricky and that you should pay careful attention to it if your data does not appear as you expect, especially if the behavior changes between SWF and DHTML implementations of the same program.
 </para>
+
 <para condition="dhtml">
 For apps running in DHTML, in SOLO mode, the web browser's XML parser is
-very picky about the data source. This may result in applications which run when compiled to SWF failing to run when compiled to SWF.
+very picky about the data source. This may result in applications which run when
+<!-- I'm guessing this is a mistake. IORIO 26 sep 2007 -->
+<!-- compiled to SWF failing to run when compiled to SWF. --> 
+compiled to SWF failing to run when compiled to DHTML.
 </para>
 <para>
 The server delivering the data must mark the HTTP content type header as
