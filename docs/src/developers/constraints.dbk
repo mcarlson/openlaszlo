@@ -356,7 +356,7 @@ For example, in the Laszlo application below, the <literal>y</literal> values of
 
 <para>
 How does it work?  When you drag
-the red view to change its on y position, it sends an <indexterm><primary>ony event</primary></indexterm><literal>ony</literal> event.  The blue view is listening for the
+the red view to change its own y position, it sends an <indexterm><primary>ony event</primary></indexterm><literal>ony</literal> event.  The blue view is listening for the
 red view's <indexterm><primary>ony event</primary></indexterm><literal>ony</literal> event and responds by updating its own y position.  The red view is listening
 for the blue view's <indexterm><primary>ony event</primary></indexterm><literal>ony</literal> event; however, it doesn't respond to that event because an event handler only gets 
 called one time on each event.</para>
@@ -515,7 +515,7 @@ stateless function works.)  However, many apparently simple functions do not wor
 </programlisting>
 <para>
 in which the value of a parameter is constrained to that returned by a serializing function. 
-Upon inspection, we see that he dependencies of </para>
+Upon inspection, we see that the dependencies of </para>
 
 <programlisting>
      value="escape(canvas.options.serialize())"

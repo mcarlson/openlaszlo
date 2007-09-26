@@ -259,9 +259,9 @@ Note that you need to do this within the <indexterm><primary>canvas</primary></i
 
     <para/></section><section><title>Syntax</title>
 <para>
-There are two ways to identify which font your application, or any element of it, should to use: the <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute on <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+There are two ways to identify which font your application, or any element of it, should use: the <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute on <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: view-->
-s and classes derived from views, ant the <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag>.
+s and classes derived from views, and the <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag>.
 </para>
 <para/><section><title>The "font" attribute in opening tags</title>
 <para>
@@ -431,7 +431,7 @@ This renders Hello World in a larger client font, with no jaggies.
 </para>
 <para/></section><section><title>Comparison to CSS</title>
 <para>
- The OpenLaszlo <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute is similar to the CSS 'font' and 'font-family' properties: http://www.w3.org/TR/2004/CR-CSS21-20040225/fonts.html#font-family-prop. 
+ The OpenLaszlo <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute is similar to the CSS 'font' and 'font-family' properties: <ulink url="http://www.w3.org/TR/2004/CR-CSS21-20040225/fonts.html#font-family-prop">here</ulink>. 
 The remaining differences are:
 </para>
 <itemizedlist spacing="compact"><listitem><para>LZX specifies the font as an XML attribute.    HTML+CSS specifies it is a CSS property.</para></listitem><listitem><para>An OpenLaszlo 'font' can only be a list of font names. This makes it more similar to the CSS 'font-family' than to the CSS 'font', which is a shorthand property that can also accept font size, style, variant, weight, and line-height values.</para></listitem><listitem><para>CSS defines the additional generic font families 'cursive' and 'fantasy' , as well as "system font" names 'caption', 'icon', 'menu', 'message-box', 'small-caption', and 'status-bar'. (Generic family name definitions, below, let the application or library developer define these system names.)</para></listitem><listitem><para>CSS allows multiword font names to be quoted, e.g. "Times New Roman" (where the quotes are part of the value). LZX does not allow this.</para></listitem></itemizedlist>
@@ -1040,7 +1040,7 @@ If you need to know the font attribute associated with a view that is not a text
 </para>
 <para/></section><section><title condition="swf">Performance considerations</title>
 <para>
-Embedded fonts (in applications compiled to SWF) increase the size the size of the application.
+Embedded fonts (in applications compiled to SWF) increase the size of the application.
 </para>
 <para>When deciding what embedded fonts to use, you may need to take into account how
 fonts affect the size, hence download time, of your application. Here are some heuristics to help you

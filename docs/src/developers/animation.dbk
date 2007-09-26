@@ -253,7 +253,7 @@ you can use the <indexterm><primary><literal>LzNode.animate()</literal></primary
 
 <para>The <indexterm><primary>indirect</primary></indexterm><sgmltag class="attribute">indirect</sgmltag> attribute allows you to reverse
 the direction in which an animation occurs while still arriving at the
-same result.  In the example below, setting the
+same result.  In the example below, the
 <indexterm><primary>indirect</primary></indexterm><sgmltag class="attribute">indirect</sgmltag> attribute is set to <literal>true</literal>
 for the animation on <varname>B23</varname>.  This causes the
 animation to go to the left, rather than the right, disappearing off

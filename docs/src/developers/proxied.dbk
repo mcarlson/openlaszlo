@@ -669,31 +669,34 @@ For example, the first version of <ulink url="http://www.donhopkins.com/drupal/n
 </para>
 
 <para>
-You can run the YouTube player here:
+You can run the YouTube player <ulink url="http://www.donhopkins.com/trunk/demos/youtube/youtube.lzx?lzt=swf">here</ulink>.
 </para>
 
-<para>
-http://www.donhopkins.com/trunk/demos/youtube/youtube.lzx?lzt=swf
-</para>
+
+
+
 
 <para>
 This is the youtubeplayer component source, and its supporting lzx files:
 </para>
 
 <para>
-http://www.donhopkins.com/trunk/demos/youtube/youtubeplayer.lzx?lzt=source
-http://www.donhopkins.com/trunk/demos/youtube/youtube.lzx?lzt=source
-http://www.donhopkins.com/trunk/demos/youtube/videolibraryicon.lzx?lzt=source
-http://www.donhopkins.com/trunk/demos/youtube/videolibrarypopup.lzx?lzt=source
+    <itemizedlist>
+        <listitem><para><ulink url="http://www.donhopkins.com/trunk/demos/youtube/youtubeplayer.lzx?lzt=source">youtubeplayer</ulink></para></listitem>
+                <listitem><para><ulink url="http://www.donhopkins.com/trunk/demos/youtube/youtube.lzx?lzt=source">youtube</ulink></para></listitem>
+                <listitem><para><ulink url="http://www.donhopkins.com/trunk/demos/youtube/videolibraryicon.lzx?lzt=source">videolibraryicon</ulink></para></listitem>
+                <listitem><para><ulink url="http://www.donhopkins.com/trunk/demos/youtube/videolibrarypopup.lzx?lzt=source">videolibrarypopup</ulink></para></listitem>
+  </itemizedlist>
+
+
+
+
 </para>
 
 <para>
-Here's the source of the YouTube proxy in Java, as a JSP. We've copied it to another file and added the .txt extension so you can look at the source instead of executing it. 
+Here's the <ulink url="http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp.txt">source</ulink> of the YouTube proxy in Java, as a JSP. We've copied it to another file and added the .txt extension so you can look at the source instead of executing it. 
 </para>
 
-<para>
-http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp.txt
-</para>
 
 <para>
 It performs a ReST call on the YouTube API to perform searches (which only returns the id of the video and the URL of the HTML web page the view the video, but not the actual url of the FLV video file). When the user plays the video, it performs another call to download the web pages of the video, and scrape out the URL of the FLV file from each one. 
@@ -701,26 +704,25 @@ It performs a ReST call on the YouTube API to perform searches (which only retur
 
 <para>
 The youtube proxy supports the following functions:
-</para>
 
-<para>
-videoGetFlvUrl(id)
-http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp?method=videoGetFlvUrl&amp;id=SRCux7wefH0
-</para>
+<itemizedlist>
+<listitem><para>
+<ulink url="http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp?method=videoGetFlvUrl&amp;id=SRCux7wefH0">videoGetFlvUrl(id)</ulink>
+</para></listitem>
 
-<para>
-videosListFeatured()
-http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp?method=videosListFeatured
-</para>
 
-<para>
-videosListByTag(tag) // comma separated tags
-http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp?method=videosListByTag&amp;tag=kitten,cute
-</para>
+<listitem><para>
+<ulink url="http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp?method=videosListFeatured">videosListFeatured()</ulink>
+</para></listitem>
 
-<para>
-videosListByUser(user)
-http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp?method=videosListByUser&amp;user=marccanter
+<listitem><para>
+<ulink url="http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp?method=videosListByTag&amp;tag=kitten,cute">videosListByTag(tag) // comma separated tags</ulink>
+</para></listitem>
+
+<listitem><para>
+<ulink url="http://www.DonHopkins.com/trunk/demos/youtube/youtube.jsp?method=videosListByUser&amp;user=marccanter">videosListByUser(user)</ulink>
+</para></listitem>
+</itemizedlist>
 </para>
 <para/><section><title>Another example of SOLO deployment: LaszloMail</title>
 <para>
