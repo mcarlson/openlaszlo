@@ -325,7 +325,63 @@ not change, create a local reference and use that instead.
     &lt;/script&gt;
   &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/performance-tuning-$3.lzx></example?>
-<para/></section></section><section><title>Arrays</title>
+<para/></section>
+<!-- added following section per LPP-1048, IDs vs Names IORIO 25 sep 2007 -->
+<section><title>Deep path references</title>
+<para>
+It's expensive to do a lot of a.b.c.d.e.f references, compared to just
+one global.a reference, especially if the JavaScript code repeats the
+path again and again. Avoid code that repeats paths like "foo.bar.baz.x
+= 1; foo.bar.baz.y = 2;". Scripting languages like JavaScript don't have
+smart optimizing compilers like C++, so if you have a lot of repeated
+references to the same path, it does exactly what you tell it to again
+and again and doesn't optimize the code. So
+it's a good practice to load any deep path references into temporary
+variables if you're going to reference them more than once in the same
+function. Temporary local variables are cheap (it's a stack based VM),
+so it's much better to put something in a local than repeatedly
+dereferencing the same path again and again.</para>
+<para>
+Use short local paths when you can to wire up references between close
+relatives (parent/child/sibling), but it's ok to use global ids (with
+long distinct descriptive names like gFunnyLookingWidget) when you need
+to reference an important widget from elsewhere in the application. It's
+worth using global ids when it makes code less brittle. There's a
+trade-off between making the code that references the widget dependent
+on the relative path, and using global ids for unique important objects,
+but as long as you give the global id a good name, it's ok to use a
+global id since it makes it a lot easier to rearrange the layout of the
+user interface in ways that would break the paths (and then you don't
+have to come up with names for all the uninteresting intermediate
+views).
+</para>
+<para>
+It's worth judiciously using global ids to avoid having to scramble all
+over the program chasing down and patching up relative paths, whenever
+you change the position of a widget in the view hierarchy (which can be
+often, when the GUI is in flux).
+</para>
+<para>
+Don't use global ids in class definitions or sub-objects of classes,
+because all instances of that class will end up trying to use the same
+conflicting id. A good middle ground is to give the top level instance
+of a class a global id if necessary (where the object is instantiated,
+not in the class definition), and have the class declare relative
+shortcuts into deep parts of its internal structure that need to be
+referenced from other parts of the code, by putting attributes on the
+class like
+happycheckbox="$once{this.toppanel.emotioneditor.moodcheckboxes.happyche
+ckbox}". Then objects outside can use the shortcut without knowing the
+internal structure of the class, and objects deeply nested inside the
+class can also go "classroot.happycheckbox" to get the checkbox
+independent of its position in the hierarchy, instead of
+"parent.parent.parent.parent.toppanel.emotioneditor.moodcheckboxes.happy
+checkbox". Then if you rearrange your class's view hierarchy, you only
+have to change the long relative path reference in one place (the $once
+attribute of the class lexically containing the view).
+</para>
+</section>
+</section><section><title>Arrays</title>
 <para>
 For an array <literal>A</literal>, <literal>A.push(b)</literal> is more expensive
 than <literal>A[A.length] = b</literal>, which in turn is more expensive
@@ -1164,7 +1220,9 @@ automatically.)</para></note>
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/performance-tuning-$10.lzx></informalexample?>
 
-<para/></section></section><section><title>Optimizing runtime performance with pooling</title>
+<para/></section>
+</section>
+<section><title>Optimizing runtime performance with pooling</title>
 
 
 
@@ -1312,7 +1370,8 @@ also be true.</para></note>
   &lt;/view&gt;
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/performance-tuning-$11.lzx></informalexample?>
-<title>Data optimization checklist</title>
+<!-- Added section tags to fix docbook error IORIO 25 sep 2007 -->
+<section><title>Data optimization checklist</title>
 <para>
 Data pooling gives you the key tool in optimizing performance issues related to XML data. The philosophy
 can be stated simply: </para>
@@ -1361,7 +1420,7 @@ For details, see Adam.
 </remark></para>
 
 
-<para/></section><section><title>Application Size</title>
+<para/></section></section><section><title>Application Size</title>
 
 <para/><section><title>Measuring Application Size</title>
 
@@ -1452,13 +1511,13 @@ For details, see Adam.
   &lt;/class&gt;
 &lt;/library&gt;
 </programlisting></example>
-<para/></section><section><title>Managing Memory</title>
+</section><section><title>Managing Memory</title>
 <para>
 In optimizing the performance of your application, it can be useful to look at the "memory footprint" of your application, and in particular, to see if that footprint grows over time.  (The way to determine memory usage by your application depends on the operating system on which it runs and is beyond the scope of this chapter.)
-<para>
+</para><para>
 If memory usage for a given application tends to go up over time, you may have a "memory leak."  See <xref linkend="debugging"/> for an explanation of how to use the debugger to detect leakage.
 </para>
-</para>
+
 <para/><section><title>Creating and Destroying Views</title>
 <para>
 In general, you do not have to worry about the resources consumed by creating views.  However,if you have an application that 
