@@ -137,19 +137,29 @@ class replicator extends LzNode {
       super.init.apply(this, arguments);
       if (this.dataset && this.xpath) {
         this._pointer = this.dataset.getPointer();
-        this._ondatadel = new LzDelegate(this, '_updateChildren', this._pointer.p, 'onDocumentChange')
+        this._ondatadel = new LzDelegate(this, '_updateChildren', this.dataset, 'onDocumentChange')
         this._updateChildren();
       }
     }
 
+    function destroy() {
+        if (this['_ondatadel']) this._ondatadel.unregisterAll();
+        this._pointer = null;
+        this.dataset = null;
+        super.destroy.apply(this, arguments);
+    }
+
     // @keywords private
-    function _updateChildren(c) {
+    function _updateChildren() {
         // TODO: use changepackage to do something smarter here
-        this.setNodes(this._pointer.xpathQuery(this.xpath))
+        var p = this._pointer.xpathQuery(this.xpath);
+        if (p && ! p['length']) p = [p]; 
+        this.setNodes(p)
     }
 
     //     @keywords private
     function createChildren (c) {
+        super.createChildren( [] ); 
         this.replicated = c.pop();
         
         //Debug.write( 'replicated', replicated );
@@ -300,7 +310,7 @@ class replicator extends LzNode {
 
     //  @keywords private
     function __adjustVisibleClones () {
-        var p = this.parent;
+        var p = this.container;
         for (var l in p.layouts) {
             p.layouts[l].lock();
         }
