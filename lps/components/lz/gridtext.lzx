@@ -10,6 +10,10 @@
         <!--- type of content's alignment. Default: left
               possible values are: left, center, right     -->
         <attribute name="textalign" type="string" value="left"/>
+        <!--- Whether one is able to select the text.  (Only applies
+            if the grid isn't editable, because when it's editable,
+            the text is automatically selectable.) -->
+        <attribute name="selectable" type="boolean" value="false"/>
 
         <!--- @keywords private -->
         <attribute name="rowdp" value="" type="string"/>
@@ -71,6 +75,7 @@
 
                 <method event="oninit">
                 <![CDATA[
+                    this.setAttribute('selectable', classroot.selectable);
                     var f = function() {
                                 this.setAttribute("x", this._calcX());
                             }
