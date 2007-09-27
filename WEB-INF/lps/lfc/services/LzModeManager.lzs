@@ -155,7 +155,7 @@ LzModeManager.handleMouseEvent= function ( view, eventStr ) {
         if ( eventStr == "onclick" ){
             if ( this.__LZlastclick == view  &&
                ('ondblclick' in view && view.ondblclick) && 
-               !view.ondblclick.hasNoDelegates &&
+               (view.ondblclick.getDelegateCount() > 0) &&
                 (getTimer() - this.__LZlastClickTime)< view.DOUBLE_CLICK_TIME ){
                     //this is a double-click
                     eventStr = "ondblclick";
