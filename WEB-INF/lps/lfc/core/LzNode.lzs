@@ -274,6 +274,8 @@ DeclareEvent(prototype, 'onconstruct' );
   * changes.
   */
 DeclareEvent(prototype, 'ondata' );
+/** If replicated, the index of this clone */
+var clonenumber = null;
 DeclareEvent(prototype, 'onclonenumber' );
 DeclareEvent(prototype, 'ondestroy' );
 
