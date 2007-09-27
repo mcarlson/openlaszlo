@@ -253,13 +253,16 @@ LzInputTextSprite.prototype.__textEvent = function ( e, eventname ){
 
     //Debug.info('__textEvent', eventname, keycode);
     if (this.owner) {
-        this.owner.inputtextevent(eventname, keycode);
+        // Generate the event. onkeyup/onkeydown sent by LzKeys.js
         if (eventname == 'onkeydown' || eventname == 'onkeyup') {
             var v = this.__LzInputDiv.value;
             if (v != this.text) {
                 this.text = v;
                 this.owner.inputtextevent('onchange', v);
             }
+        }
+        else {
+            this.owner.inputtextevent(eventname, keycode);
         }
     }
 }
