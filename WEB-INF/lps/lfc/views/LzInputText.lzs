@@ -247,6 +247,9 @@ function setHTML (htmlp) {
 function setText ( t ){
     // force to a string
     t += '';
+    if (this.maxlength != null && t.length > this.maxlength){
+        t = t.substring(0, this.maxlength);
+    }
     this.sprite.setText(t);
     this.text =  t;
     // [todo 2006-06 hqm] when should we send onwidth and onheight events?

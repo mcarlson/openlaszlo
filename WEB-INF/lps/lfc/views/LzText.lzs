@@ -199,8 +199,15 @@ function construct ( parent, args ) {
 
     this.resize = ('resize' in args) ? (args.resize == true) : this.resize;
     this.setResize(this.resize);
+    
+    if ('maxlength' in args && args.maxlength != null) {
+        this.setMaxLength(args.maxlength);
+    }
 
     this.text =  (!('text' in args) || args.text == null) ? "" : args.text;
+    if(this.maxlength != null && this.text.length > this.maxlength){
+        this.text = this.text.substring(0, this.maxlength);
+    }
 
     this.setMultiline( this.multiline );
 
@@ -242,10 +249,6 @@ function construct ( parent, args ) {
     }
     // Default the scrollheight to the visible height.
     this.scrollheight = this.height;
-
-    if ('maxlength' in args && args.maxlength != null) {
-        this.setMaxLength(args.maxlength);
-    }
 
     if ('pattern' in args && args.pattern != null) {
         this.setPattern(args.pattern);
@@ -663,6 +666,9 @@ function setText ( t, force ){
     t += '';
     if (force != true && t == this.text) return;
     if (this.visible) this.sprite.setVisible(this.visible);
+    if (this.maxlength != null && t.length > this.maxlength){
+        t = t.substring(0, this.maxlength);
+    }
     this.sprite.setText(t);
     this.text =  t;
 
