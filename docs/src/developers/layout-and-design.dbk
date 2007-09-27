@@ -136,7 +136,21 @@ can then specify coordinates on the parent view:</para>
   &lt;/view&gt;
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/layout-and-design-$3.lzx></example?>
-<para/></section><section><title>Horizontal and Vertical Boxes</title>
+<!-- added the following para and example to fix LPP-1030: IORIO 26 sep 2007 -->
+<para>There may be times when you would like to select between more than one 
+layout in which to display your view. Options are a good way to do this
+You then override addSubview in your layout as shown in the code below. To get
+a better idea of what's going on, run the program with the debugger on.</para>
+<example role="live-example">
+   <title>Choosing between layouts</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/layout-and-design-$19.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Choosing between layouts</title><programlisting role="lzx-embednew"><filename>layout-and-design-$19.lzx</filename><parameter/><code>
+
+</programlisting><?lzx-edit programs/layout-and-design-$19.lzx></example?>
+</section><section><title>Horizontal and Vertical Boxes</title>
 <para>
 In addition to layouts, LZX includes the <indexterm><primary>hbox</primary></indexterm><sgmltag class="element">&lt;hbox&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: hbox-->
