@@ -4,7 +4,7 @@
     <!-- ================================================================= -->
     <!-- The event class is a 9 part collection much like a window object  -->
     <!-- ================================================================= -->
-    <class name="eventSelectorbar" clip="true"
+    <class name="eventSelectorbar" clip="false"
            y="61"
            x="16"
            width="${parent.width}" height="$once{calgrid.height}"
