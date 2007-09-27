@@ -202,7 +202,7 @@
 
             <state name="non_editable_state" >
                 <text x="2" y="1" name="cbtext" width="${parent.width - 4}"
-                    clickable="true" focusable="true">
+                    clickable="true" focusable="true" resize="false">
                     <attribute name="text" type="string" />
 
                     <!-- arrow down and up, and spacebar all popup floatinglist, and pass the key event to it -->
