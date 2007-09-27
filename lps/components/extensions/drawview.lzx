@@ -287,6 +287,25 @@
                 if (drawview.prototype.uid == null) {
                     drawview.prototype.uid = 0;
                 }
+                this.beginPath();
+    
+                if (this.__LZcanvas) {
+                    this._lineWidth = null;
+                    this._lineCap = null;
+                    this._fillStyle = null;
+                    this._strokeStyle = null;
+                    this._globalAlpha = null;
+                    if (Lz.__BrowserDetect.isIE) {
+                        LzSprite.prototype.__discardElement(this.__LZcanvas);
+                    } else {
+                        this.__LZcanvas.setAttribute('width', width);
+                        this.__LZcanvas.setAttribute('height', height);
+                        this.__canvaswidth = width;
+                        this.__canvasheight = height;
+                        this.setAttribute('context', this.__LZcanvas.getContext("2d"));
+                        return;
+                    }
+                }
                 this.__id = 'canvas-' + drawview.prototype.uid++;
                 //Debug.write('_buildcanvas', this.__id, width, height);
     
@@ -298,7 +317,6 @@
                 this.__canvasheight = height;
                 var div = this.getMCRef();
                 div.appendChild(this.__LZcanvas);
-                this.beginPath();
     
                 if (Lz.__BrowserDetect.isIE) {
                     // IE can take a while to start up.
@@ -310,13 +328,13 @@
             }
             function setWidth(w) {
                 super.setWidth(w);
-                if (this['__id'] == null && this.height > 0) {
+                if (this.height > 0) {
                     this._buildcanvas(w, this.height);
                 }
             }
             function setHeight(h) {
                 super.setHeight(h);
-                if (this['__id'] == null && this.width > 0) {
+                if (this.width > 0) {
                     this._buildcanvas(this.width, h);
                 }
             }
