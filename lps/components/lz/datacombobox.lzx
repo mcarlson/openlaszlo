@@ -32,6 +32,10 @@
         <!--- Tell base class about our label view.
               @keywords private -->
         <attribute name="_cbtext" value="$once{this._text}" />
+        
+        <method name="getText">
+             return _text.getText();
+        </method>
 
         <!--- @access private -->
         <method name="_showEnabled">

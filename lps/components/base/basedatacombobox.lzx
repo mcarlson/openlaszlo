@@ -197,7 +197,7 @@
 
             var t = dp.xpathQuery(this.textdatapath);
             // if t is null, use default text (if it exists)
-            if( ( t == null || t.length == 0 ) && this.defaulttext && this.defaulttext['length'] > 0 )
+            if( ( t == null || t.length == 0 ) && this.defaulttext['length'] > 0 )
                t = this.defaulttext;
 
             if ( this._cbtext && (this.statictext == null) ) {
@@ -215,7 +215,7 @@
             if (this.ismenu) {
                 // Clear the selection
                 this._selectedIndex = -1;
-                if (this._cblist && this._cblist['_selector']) {
+                if (this._cblist['_selector']) {
                     this._cblist._selector.clearSelection();
                 }
             }
@@ -230,13 +230,12 @@
 
         <!--- @keywords private -->
         <method name="_setupcblist" args="force"> <![CDATA[
-
             if (this._cblist == null) {
-            
+
                 if (this.itemclassname == "") {
                     this.itemclassname = "basedatacombobox_item";
                 }
-    
+
                 var icn = this.itemclassname;
 
                 var flcn = this.menuclassname;
@@ -244,19 +243,19 @@
                     if (typeof global[flcn] == "undefined")
                         Debug.format("basedatacombobox floatinglist class (%w) is undefined", flcn);
                 }
-                
+
                 var cblist = new global[flcn](this,
-                                              { visible:false, 
-                                                attach: this.listattach, 
-                                                attachoffset: -2, 
+                                              { visible:false,
+                                                attach: this.listattach,
+                                                attachoffset: -2,
                                                 itemclassname: icn
                                               });
-                
+
                 // add in a white view to reduce the visual effect of the
                 // list items appearing as they are created
                 var tmp = new global[icn](cblist, { name:'item' });
                 new LzDatapath(tmp, { pooling: true });
-                
+
                 this._cblist = cblist;
 
                 // Make sure we deselect if we're acting like a menu
@@ -268,7 +267,16 @@
                 cblist.setWidth(w);
                 cblist.setAttachTarget(this);
                 cblist.setAttribute('shownitems', this.shownitems);
-                cblist.item.setDatapath(this.itemdatapath);
+
+                //local-dataset-modification by senshi
+                var itd = this.itemdatapath;
+                if (itd.indexOf( "local:" ) == 0) {
+                  itd = "local:" + "parent.owner." + itd.substring( 6 );
+                  if ($debug)
+                    Debug.write( "local-dataset-modification:" + itd );
+                }
+
+                cblist.item.setDatapath(itd);
 
                 cblist.setAttribute('attach', this.listattach);
                 if (this._selectdel == null) {
@@ -276,7 +284,7 @@
                 }
                 this._selectdel.register(cblist, 'onselect');
             }
-            
+
             if (! this.ismenu) {
                 // Set the item for _cblist
                 var item = _getItemAt(this._selectedIndex);
