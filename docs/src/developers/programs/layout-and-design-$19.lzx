@@ -1,0 +1,36 @@
+<canvas height="400">
+  <debug  fontsize="12"/>
+  <class name="box" width="50" height="30"  />
+  <view name="myview">
+    <simplelayout axis="x" spacing="4">
+      <method name="addSubview" args="sv">
+            if ( sv.getOption( 'goesInLayout1' ) ){
+                super.addSubview( sv );
+                Debug.write('adding ',sv,sv.name,'to layout1');
+            }          
+        </method>
+    </simplelayout>
+    <simplelayout axis="y" spacing="4">
+        <method name="addSubview" args="sv">
+            if ( sv.getOption( 'goesInLayout2' ) ){
+                super.addSubview( sv );
+                Debug.write('adding ',sv, sv.name,'to layout2');
+            }
+        </method>
+    </simplelayout>
+    <box bgcolor="red" options="goesInLayout1" name="red1"/>
+    <box bgcolor="red" options="goesInLayout1" name="red2"/>
+    <box bgcolor="red" options="goesInLayout1" name="red3"/>
+    <box bgcolor="blue" options="goesInLayout2" name="blue1"/>
+    <box bgcolor="blue" options="goesInLayout2" name="blue2"/>
+    <box bgcolor="blue" options="goesInLayout2" name="blue3"/>
+    <!-- both -->
+    <box bgcolor="yellow" options="goesInLayout2;goesInLayout1" name="yellow1"/>
+    <box bgcolor="yellow" options="goesInLayout2;goesInLayout1" name="yellow2"/>
+    <box bgcolor="yellow" options="goesInLayout2;goesInLayout1" name="yellow3"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
