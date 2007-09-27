@@ -839,16 +839,20 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         collector.emit(Instructions.EQUALS);
         collector.emit(Instructions.BranchIfTrue.make(l));
       }
-      collector.emit(Instructions.POP);
-      collector.emit(Instructions.BRANCH.make((defaultLabel != null) ? defaultLabel : finalLabel));
+      if (defaultLabel != null) {
+        collector.emit(Instructions.BRANCH.make(defaultLabel));
+      }
+      else {
+        collector.emit(Instructions.POP);
+        collector.emit(Instructions.BRANCH.make(finalLabel));
+      }
       String nextLabel = null;
       for (Iterator i = targets.keySet().iterator(); i.hasNext(); ) {
         String l = (String)i.next();
         SimpleNode stmt = (SimpleNode)targets.get(l);
         collector.emit(Instructions.LABEL.make(l));
-        if (! l.equals(defaultLabel)) {
-          collector.emit(Instructions.POP);
-        } else {
+        collector.emit(Instructions.POP);
+        if (l.equals(defaultLabel)) {
           defaultLabel = null;
         }
         if (nextLabel != null) {
@@ -862,13 +866,14 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           collector.emit(Instructions.BRANCH.make(nextLabel));
         }
       }
-      // Handle fall-though in last clause
-      if (nextLabel != null) {
-        collector.emit(Instructions.LABEL.make(nextLabel));
-      }
       // Handle empty default as last clause
       if (defaultLabel != null) {
         collector.emit(Instructions.LABEL.make(defaultLabel));
+        collector.emit(Instructions.POP);
+      }
+      // Handle fall-though in last clause
+      if (nextLabel != null) {
+        collector.emit(Instructions.LABEL.make(nextLabel));
       }
       collector.emit(Instructions.LABEL.make(finalLabel));
     }
