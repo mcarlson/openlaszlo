@@ -499,10 +499,6 @@ function __LZcallInit ( an ){
 
     this.init();
     this.sprite.init(true);
-    if ($dhtml) {
-    } else {
-        LzHistory.__restorehistory();
-    }
     if (this.oninit.ready) this.oninit.sendEvent( this );
     if (this.datapath && this.datapath.__LZApplyDataOnInit) {
         this.datapath.__LZApplyDataOnInit();

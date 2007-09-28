@@ -37,7 +37,6 @@ LzHistory.isReady = true;
 LzHistory.setHistory = function(s) {
     //Debug.write('setHistory', s);
     Lz.history.set(s);
-    this.__lzloading = true;
 }
 
 /**
@@ -54,12 +53,6 @@ LzHistory.__lzdirty = false;
 LzHistory.__lzhistq = [];
 /** @access private */
 LzHistory.__lzcurrstate = {};
-/** @access private */
-LzHistory.__lzloading = false;
-/** @access private */
-LzHistory.__lzloadcache = {};
-/** @access private */
-LzHistory.__loadcacheused = false;
 
 DeclareEvent(LzHistory, 'onoffset' );
 
@@ -81,23 +74,6 @@ LzHistory.receiveHistory = function(o){
         //Debug.write('restoring state ', global[o.c], o.c, o.n, o.v);
         global[o.c].setAttribute(o.n, o.v);
     }
-    
-    
-    // copy values cached during load
-    if (this.__loadcacheused) {
-        var out = this.__lzhistq[this.offset];
-        if (out == null) out = {};
-        var u;
-        for (u in this.__lzloadcache) {
-            //Debug.write('restoring', o, this.__lzloadcache[u]);
-            out[u] = this.__lzloadcache[u];
-        }
-        this.__lzhistq[this.offset] = out;
-        this.__lzloadcache = {};
-        this.__loadcacheused = false;
-    }
-    
-    this.__lzloading = false;
 }
 
 /**
@@ -137,16 +113,9 @@ LzHistory.callMethod = function(js) {
 LzHistory.save = function(who, prop, val) {
     // strip off __ so keys can be listed
     if (val == null) val = global[who][prop];
-    if (this.__lzloading) {
-        //Debug.write('caching');
-        // cache values until load finishes
-        this.__lzloadcache[who] = {c: who, n: prop, v: val};
-        this.__loadcacheused = true;
-    } else {
-        //Debug.write('set state of ',u,' to ', this.__lzcurrstate);
-        this.__lzcurrstate[who] = {c: who, n: prop, v: val};
-        this.__lzdirty = true;
-    }
+    //Debug.write('set state of ',u,' to ', this.__lzcurrstate);
+    this.__lzcurrstate[who] = {c: who, n: prop, v: val};
+    this.__lzdirty = true;
 }
 
 /**

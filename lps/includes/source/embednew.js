@@ -389,6 +389,7 @@ Lz = {
     ,/** @access private */
     _ready: function (cref) {
         this.loaded = true;
+        Lz.loaded = true;
         if (this._setCanvasAttributeQ) {
             this._setCanvasAttributeDequeue();
         }
@@ -551,10 +552,10 @@ Lz = {
         if (this.loaded) {
             return dojo.flash.comm.callMethod(js);
         } else {
-            this._lastjs = function() {
+            var f = function() {
                 dojo.flash.comm.callMethod(js);
             };
-            dojo.flash.addLoadedListener(this._lastjs);
+            dojo.flash.addLoadedListener(f);
         }
     }
     ,/** @access private */
@@ -567,17 +568,8 @@ Lz = {
         }
         return root;
     }
-    /* TODO max: look at this and see if there is a merge conflict,
-      from wafflecone. [bshine 2007.09.14] */
-    ,/** @access private */
-    _checkHistory: function() {
-        window.setInterval('Lz._checklocationhash()', 300)
-    }
-    /* TODO max: look at this and see if there is a merge conflict,
-      from wafflecone. [bshine 2007.09.14] */    
     ,/** @access private */
     _sendMouseWheel: function(d) {
         if (d != null) this.callMethod("LzKeys.__mousewheelEvent(" + d + ")"); 
     }
 };
-window.onload = Lz._checkHistory;

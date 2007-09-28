@@ -37,8 +37,7 @@ LzHistory.isReady = true;
 LzHistory.__setHistory = function(s) {
     //Debug.write('__setHistory', s);
     LzBrowser._jsreset();
-    LzBrowser.callJS('Lz.history.set', false, s);
-    this.__lzloading = true;
+    LzBrowser.callJS('Lz.history.set', null, s);
 }
 
 /**
@@ -58,50 +57,35 @@ LzHistory.__lzdirty = false;
 LzHistory.__lzhistq = [];
 /** @access private */
 LzHistory.__lzcurrstate = {};
-/** @access private */
-LzHistory.__lzloading = false;
-/** @access private */
-LzHistory.__lzloadcache = {};
-/** @access private */
-LzHistory.__loadcacheused = false;
 
 DeclareEvent(LzHistory, 'onoffset' );
-
 
 /**
   * @access private
   */
 LzHistory.receiveHistory = function(o){
-    //Debug.write('onhistory ', o, this.__lzhistq);
+    if (this.persist && ! this._persistso) {
+        this.__initPersist();
+    }
+    var l = this.__lzhistq.length;
     o *= 1;
-    if (! o) o = 0;
-    if (o > this.__lzhistq.length - 1) o = this.__lzhistq.length;
-    this.offset = o;
-    if (this.onoffset.ready) this.onoffset.sendEvent(o);
-    
+    if (! o) {
+        o = 0;
+    } else if (o > l - 1) {
+        o = l;
+    }
+
     var h = this.__lzhistq[o];
     for (var u in h) {
-        var o = h[u];
-        //Debug.write('restoring state ', global[o.c], o.c, o.n, o.v);
-        global[o.c].setAttribute(o.n, o.v);
+        var obj = h[u];
+        //Debug.write('restoring state ', global[obj], obj, obj.n, obj.v);
+        global[u].setAttribute(obj.n, obj.v);
     }
-    
-    
-    // copy values cached during load
-    if (this.__loadcacheused) {
-        var out = this.__lzhistq[this.offset];
-        if (out == null) out = {};
-        var u;
-        for (u in this.__lzloadcache) {
-            //Debug.write('restoring', o, this.__lzloadcache[u]);
-            out[u] = this.__lzloadcache[u];
-        }
-        this.__lzhistq[this.offset] = out;
-        this.__lzloadcache = {};
-        this.__loadcacheused = false;
-    }
-    
-    this.__lzloading = false;
+
+    this.offset = o;
+    //Debug.write('onhistory ', o, this.__lzhistq);
+    if (this.onoffset.ready) this.onoffset.sendEvent(o);
+    LzBrowser.callJS('Lz.history.__receivedhistory', false, o + '');
 }
 
 /**
@@ -197,16 +181,9 @@ LzHistory.save = function(who, prop, val) {
     }
     // strip off __ so keys can be listed
     if (val == null) val = global[who][prop];
-    if (this.__lzloading) {
-        //Debug.write('caching');
-        // cache values until load finishes
-        this.__lzloadcache[who] = {c: who, n: prop, v: val};
-        this.__loadcacheused = true;
-    } else {
-        this.__lzcurrstate[who] = {c: who, n: prop, v: val};
-        this.__lzdirty = true;
-        //Debug.write('set state of ',who,' to ', this.__lzcurrstate);
-    }
+    this.__lzcurrstate[who] = {n: prop, v: val};
+    this.__lzdirty = true;
+    //Debug.write('set state of ',who,' to ', this.__lzcurrstate);
 }
 
 /**
@@ -224,7 +201,7 @@ LzHistory.commit = function() {
     
     if (this.persist) {
         if (! this._persistso) {
-            this._persistso = this.getPersist('historystate');
+            this.__initPersist();
         }
         //Debug.write('_persistso: ', this._persistso);
         this._persistso.data[this.offset] = this.__lzcurrstate;
@@ -268,12 +245,6 @@ LzHistory.prev = function() {
     this.move(-1);
 }
 
-/** get history from local object
-  * @access private 
-  */
-LzHistory.__restorehistory = function() {
-    this.receiveHistory(this.offset);
-}
 /** @access private */
 LzHistory.__initPersist = function() {
     if (this.persist) {

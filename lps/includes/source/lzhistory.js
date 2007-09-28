@@ -9,27 +9,34 @@
 Lz.history = {
     _currentstate: null 
     ,init: function() {
+        var _this = Lz.history;
+        _this._title = top.document.title;
         Lz.__BrowserDetect.init();
-        Lz.history._currentstate = Lz.history.get();
+        var currstate = _this.get();
         if (Lz.__BrowserDetect.isSafari) {
             // must track state ourselves...
-            Lz.history._historylength = history.length;
-            Lz.history._history = [];
-            for (var i = 1; i < Lz.history._historylength; i++) {
-                Lz.history._history.push('');
+            _this._historylength = history.length;
+            _this._history = [];
+            for (var i = 1; i < _this._historylength; i++) {
+                _this._history.push('');
             }
-            Lz.history._history.push(Lz.history._currentstate);
+            _this._history.push(currstate);
             var form = document.createElement('form');
             form.method = 'get';
             document.body.appendChild(form);
-            Lz.history._form = form;
+            _this._form = form;
             if (! top.document.location.lzaddr) {
                 top.document.location.lzaddr = {};
             }
             if (top.document.location.lzaddr.history) {
-                Lz.history._history = top.document.location.lzaddr.history.split(',');
+                _this._history = top.document.location.lzaddr.history.split(',');
+            }
+            if (currstate != '') {
+                _this.set(currstate)
             }
         } else if (Lz.__BrowserDetect.isIE) {
+            var currstate = top.location.hash;
+            if (currstate) currstate = currstate.substring(1);
             // use an iframe;
             var i = document.createElement('iframe');
             Lz.__setAttr(i, 'id', 'lzHistory');
@@ -38,26 +45,24 @@ Lz.history = {
             i.style.position = 'absolute';
             i.style.display = 'none';
             i.style.left = '-1000px';
-            Lz.history._iframe = document.getElementById('lzHistory');
-            var doc = Lz.history._iframe.contentWindow.document;
+            _this._iframe = document.getElementById('lzHistory');
+            var doc = _this._iframe.contentDocument || _this._iframe.contentWindow.document;
             doc.open();
             doc.close();
-            if (Lz.history._currentstate != '') doc.location.hash = '#' + Lz.history._currentstate;
-        }
-        if (Lz.history._currentstate != '') Lz.history._parse(Lz.history._currentstate)
-        //alert('init');
-        setInterval('Lz.history._checklocationhash()', 100)
-    }
-
-    ,/** @access private */
-    _historyEvent: function (value) {
-        if (dojo.flash.ready) {
-            //alert(value);
-            dojo.flash.comm.receiveHistory(value + '');
-            return true;
+            //alert('currstate ' + currstate);
+            if (currstate != '') {
+                doc.location.hash = '#' + currstate;
+                _this._parse(currstate)
+                _this._currentstate = currstate;
+            }
         } else {
-            //alert('dojo.flash is not ready: _historyEvent' + value);
+            if (currstate != '') {
+                _this._parse(currstate)
+                _this._currentstate = currstate;
+            }
         }
+        //alert('init ' + currstate);
+        setInterval('Lz.history._checklocationhash()', 100)
     }
 
     ,/** @access private */
@@ -84,9 +89,12 @@ Lz.history = {
 
             if (Lz.__BrowserDetect.isIE) {
                 if (h != this._currentstate) {
-                    top.location.hash = '#' + h;
+                    top.location.hash = h == '0' ? '' : '#' + h;
                     this._currentstate = h;
                     this._parse(h);
+                }
+                if (top.document.title != this._title) {
+                    top.document.title = this._title;
                 }
             } else {
                 this._currentstate = h;
@@ -103,8 +111,8 @@ Lz.history = {
         var hash = '#' + s;
 
         if (Lz.__BrowserDetect.isIE) {
-            top.location.hash = hash;
-            var doc = Lz.history._iframe.contentWindow.document;
+            top.location.hash = hash == '#0' ? '' : hash;
+            var doc = Lz.history._iframe.contentDocument || Lz.history._iframe.contentWindow.document;
             doc.open();
             doc.close();
             doc.location.hash = hash;
@@ -144,12 +152,12 @@ Lz.history = {
     }
     ,/** @access private */
     _parse: function(h) {
+        var _this = Lz.history;
         // TODO: send events to all apps
-        if (h.length == 0 || h == this._lasthash) return;
-        //alert('_parse '+ h);
+        if (h.length == 0 || h == _this._lasthash) return;
         if (h.indexOf('_lz') != -1) {
             // TODO: use rison
-            this._lasthash = h;
+            _this._lasthash = h;
             h = h.substring(3);
             var a = h.split(',');
             for (var j = 0; j < a.length; j++) {
@@ -161,15 +169,13 @@ Lz.history = {
                 if (window['canvas']) canvas.setAttribute(name, val);
             }
         } else {
+            //alert('_parse test' + h + ', ' + _this._lasthash);
             //history id
-            if (Lz.history._historyEvent(h)) {
-                // if successful, don't send again 
-                this._lasthash = h;
-            }
+            if (Lz.callMethod && h != Lz.history._lasthash) Lz.callMethod("LzHistory.receiveHistory(" + h + ")");
             if (Lz.__dhtmlhistoryready && LzHistory && LzHistory['receiveHistory']) {
-                //alert(h);
+                //alert('dhtml ' + h);
                 LzHistory.receiveHistory(h);
-                this._lasthash = h;
+                _this._lasthash = h;
             }
         }
     }
@@ -186,6 +192,11 @@ Lz.history = {
         }
         this.set('_lz' + o);
         //window.frames['_lzhist'].location = newurl;
+    }
+    ,/** @access private called from flash */
+    __receivedhistory: function(h) {
+        Lz.history._lasthash = h + '';
+        //alert('__receivedhistory '+ Lz.history._lasthash);
     }
 };
 window.onload = Lz.history.init;

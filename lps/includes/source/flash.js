@@ -1012,17 +1012,19 @@ dojo.flash.Communicator.prototype = {
         // the method name has a dot in it, such as "dojo.flash.loaded", we
         // eval it so that the method gets run against an instance
         var runMe;
+        var scope = window;
         if(functionName.indexOf(".") == -1){ // global function
             runMe = window[functionName];
         }else{
             // instance function
             runMe = eval(functionName);
+            scope = eval(functionName.substring(0, functionName.lastIndexOf(".")));
         }
         
         // make the call and get the results
         var results = null;
         if(runMe != null){
-            results = runMe.apply(null, flashArgs);
+            results = runMe.apply(scope, flashArgs);
         }
         results += '';
         
