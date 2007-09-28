@@ -44,8 +44,8 @@
   *
   * @initarg public Boolean clip: A boolean indicating that the view is masked
   * if true, the view applies setClip(true) to itself
-  * @initarg public Boolean stretches: A string specifying whether or not the view
-  * should stretch its contents.  Values are <code>width</code>, <code>height</code> or <code>both</code>.
+  * @initarg public String stretches: A string specifying whether or not the view
+  * should stretch its contents.  Values are <code>"width"</code>, <code>"height"</code> or <code>"both"</code>.
   * When stretching, the coordinate system of the contents is modified
   * so that the whole view will fit in the given dimensions.
   * If <code>stretches</code> is applied, <code>clip</code> would not be necessary.
