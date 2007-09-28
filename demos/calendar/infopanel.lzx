@@ -280,7 +280,7 @@
         <animator start="false" name="slideopen1old" attribute="width" to="204"
             duration="500" relative="false"/>
         <animator start="false" name="slideopen1" attribute="x" to="602" from="830"
-            duration="500"/>
+            duration="500" onstop="LzFocus.setFocus(parent.summary.content.title);"/>
         <animator start="false" name="slideopen2" attribute="opacity" to="1" from="0"
             duration="500" relative="false"/>
             
@@ -319,7 +319,6 @@
             this.setOpacity(1);
             this.slideopen1.doStart();
             this.slideopen2.doStart();
-            LzFocus.setFocus(summary.content.title);
             this.opened = true;
 
         </method>
