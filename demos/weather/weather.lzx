@@ -8,8 +8,7 @@
 <!-- is subject to license terms.                                          -->
 <!--=======================================================================-->
 
-<!-- <canvas width="240" height="320" bgcolor="#EAEAEA" title="Laszlo Weather"> -->
-<canvas  bgcolor="#EAEAEA" title="Laszlo Weather">
+<canvas width="240" height="320" bgcolor="#EAEAEA" title="Laszlo Weather">
     <!-- the actual size of the app is:  width="240" height="320"
          this app is sized larger to appear consistent with other samples -->
     <splash/>
