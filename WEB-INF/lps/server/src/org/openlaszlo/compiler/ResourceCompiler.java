@@ -114,15 +114,17 @@ class ResourceCompiler extends ElementCompiler {
 , element);
 
                 Set resourceNames = mEnv.getResourceNames();
-                if (resourceNames.contains(name)) {
+                if (false) {
+                  if (resourceNames.contains(name)) {
                     mEnv.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="The resource name '" + p[0] + "' has already been defined"
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ResourceCompiler.class.getName(),"051018-124", new Object[] {name})
-, element);
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="The resource name '" + p[0] + "' has already been defined"
+                         */
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                            ResourceCompiler.class.getName(),"051018-124", new Object[] {name})
+                        , element);
+                  }
                 }
                 resourceNames.add(name);
 
