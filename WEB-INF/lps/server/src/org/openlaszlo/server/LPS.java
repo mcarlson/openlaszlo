@@ -48,6 +48,8 @@ public class LPS {
     
     public static String VERSION_FILE = "/org/openlaszlo/server/lps.xml";
 
+    public static String mDefaultRuntime = "swf8";
+
     private static String mBuildID;
     private static String mBuildDate;
     private static String mVersionID;
@@ -210,7 +212,7 @@ RuntimeException(
       String lfc = "LFC";
       String extension = "js";
       if (runtime == null) {
-        runtime = LPS.getProperty("compiler.runtime.default", "swf7");
+          runtime = getRuntimeDefault();
       }
 
       if (runtime.indexOf("swf") == 0) {
@@ -327,29 +329,19 @@ RuntimeException(
     /**
      * Set SWF version default.
      */
-    public static void setSWFVersionDefault(String swfversion) {
-        if (swfversion.equals("swf8")) {
+    public static void setRuntimeDefault(String runtime) {
+        mDefaultRuntime = runtime;
+        if (runtime.equals("swf8")) {
             mSWFVersionNumDefault = 8;
             mSWFVersionDefault = "swf8";
-        } else if (swfversion.equals("swf7")) {
+        } else if (runtime.equals("swf7")) {
             mSWFVersionNumDefault = 7;
             mSWFVersionDefault = "swf7";
-        } else if (swfversion.equals("swf6")) {
-            mSWFVersionNumDefault = 6;
-            mSWFVersionDefault = "swf6";
-        } else if (swfversion.equals("swf5")) {
-            mSWFVersionNumDefault = 5; 
-            mSWFVersionDefault = "swf5";
-        } else {
-            throw new RuntimeException(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Unknown SWF version: " + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                LPS.class.getName(),"051019-305", new Object[] {swfversion})
-            );
-        }
+        } 
+    }
+
+    public static String getRuntimeDefault() {
+        return LPS.getProperty("compiler.runtime.default", mDefaultRuntime);
     }
 
     /**

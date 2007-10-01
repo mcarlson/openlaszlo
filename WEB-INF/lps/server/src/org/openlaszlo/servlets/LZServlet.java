@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -250,7 +250,7 @@ mLogger.warn(
         //------------------------------------------------------------
         mProperties = LPS.getProperties();
 
-        LPS.setSWFVersionDefault(LPS.getProperty("compiler.runtime.default", "swf7"));
+        LPS.setRuntimeDefault(LPS.getRuntimeDefault());
 
         // Create responders that create caches (media, data, and compiler)
         String[] lzt = { "swf", "media", "data" };

@@ -129,7 +129,7 @@ public class CompilationEnvironment {
     private static int mDefaultTextWidth = 100;
 
     /** Default SWF version to compile to */
-    private String mDefaultRuntime = LPS.getProperty("compiler.runtime.default", "swf7");
+    private String mDefaultRuntime = LPS.getRuntimeDefault();
 
     /** Constructs an instance.
      * @param properties compilation properties

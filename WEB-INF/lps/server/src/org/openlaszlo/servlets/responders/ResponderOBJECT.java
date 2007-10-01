@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -22,6 +22,7 @@ import org.openlaszlo.media.MimeType;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.utils.LZHttpUtils;
 import org.openlaszlo.utils.StringUtils;
+import org.openlaszlo.server.LPS;
 import org.openlaszlo.compiler.CompilationError;
 
 import org.openlaszlo.utils.ChainedException;
@@ -68,14 +69,9 @@ public final class ResponderOBJECT extends ResponderCompile
 
             String runtime = req.getParameter("lzr");
             if (runtime == null) {
-                throw new ChainedException(
-                    /* (non-Javadoc)
-                     * @i18n.test
-                     * @org-mes="no runtime (lzr) query arg supplied"
-                     */
-                    org.openlaszlo.i18n.LaszloMessages.getMessage(Responder.class.getName(), "060211-100")
-                    );
+                runtime = LPS.getRuntimeDefault();
             }
+
             
             input = mCompMgr.getObjectStream(fileName, props);
 
