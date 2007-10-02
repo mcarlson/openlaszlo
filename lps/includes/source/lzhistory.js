@@ -53,7 +53,6 @@ Lz.history = {
             if (currstate != '') {
                 doc.location.hash = '#' + currstate;
                 _this._parse(currstate)
-                _this._currentstate = currstate;
             }
         } else {
             if (currstate != '') {
@@ -99,6 +98,18 @@ Lz.history = {
             } else {
                 this._currentstate = h;
                 this._parse(h);
+            }
+        }
+        if (dojo.flash.obj && Lz.loaded) {
+            var p = dojo.flash.obj.get();
+            if (p) {
+                var cid = p.GetVariable("_callbackID");
+                if (cid != 'null') return;
+                var val = p.GetVariable("_currenthistory");
+                if (val && val != 'null' && val != Lz.history._lasthash) {
+                    //alert('val ' + val);
+                    Lz.history._lasthash = val;
+                }
             }
         }
     }
@@ -171,7 +182,9 @@ Lz.history = {
         } else {
             //alert('_parse test' + h + ', ' + _this._lasthash);
             //history id
-            if (Lz.callMethod && h != Lz.history._lasthash) Lz.callMethod("LzHistory.receiveHistory(" + h + ")");
+            if (Lz.loaded && Lz.callMethod && h != Lz.history._lasthash) {
+                _this.__setFlash(h);
+            }
             if (Lz.__dhtmlhistoryready && LzHistory && LzHistory['receiveHistory']) {
                 //alert('dhtml ' + h);
                 LzHistory.receiveHistory(h);
@@ -197,6 +210,19 @@ Lz.history = {
     __receivedhistory: function(h) {
         Lz.history._lasthash = h + '';
         //alert('__receivedhistory '+ Lz.history._lasthash);
+    }
+    ,/** @access private called from flash */
+    __setFlash: function(h) {
+        var p = dojo.flash.obj.get();
+        if (p) {
+            var cid = p.GetVariable("_callbackID") + '';
+            if (cid == 'null') {
+                Lz.callMethod("LzHistory.receiveHistory(" + h + ")");
+            } else {
+                setTimeout('Lz.history.__setFlash(' + h + ')', 10);
+                //alert('busy');
+            }
+        }
     }
 };
 window.onload = Lz.history.init;

@@ -93,7 +93,7 @@ class DojoExternalInterfaceClass {
 		
 		_root._returnResult = undefined;
 		fscommand("call", methodName);
-		//getURL("javascript:alert('FLASH:call " + methodName + "')");
+		//Debug.write("call", methodName, resultsCallback);
 		
 		// immediately return if the caller is not waiting for return results
 		if(resultsCallback == undefined || resultsCallback == null){
@@ -101,10 +101,12 @@ class DojoExternalInterfaceClass {
 		}
 		
 		// check at regular intervals for return results	
-		var resultsChecker = function(){
+		var resultsChecker = function resultsChecker(){
 			if((typeof _root._returnResult != "undefined")&&
 				(_root._returnResult != "undefined")){
 				clearInterval(_root._callbackID);
+				_root._callbackID = null;
+				//Debug.write('resultsChecker clear', _root._callbackID);
 				resultsCallback.call(null, _root._returnResult);
 			}
 		};	

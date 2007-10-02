@@ -203,6 +203,7 @@ function initialize ( args ) {
     LzPlatform.initCanvas(this);
 
 
+    this.id = LzBrowser.getInitArg('id')
 }
 
 /**

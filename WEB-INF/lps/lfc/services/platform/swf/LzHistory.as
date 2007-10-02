@@ -85,7 +85,12 @@ LzHistory.receiveHistory = function(o){
     this.offset = o;
     //Debug.write('onhistory ', o, this.__lzhistq);
     if (this.onoffset.ready) this.onoffset.sendEvent(o);
-    LzBrowser.callJS('Lz.history.__receivedhistory', false, o + '');
+    if ($swf7) {
+        _root._currenthistory = o + '';
+    } else {
+        LzBrowser.callJS('Lz.history.__receivedhistory', false, o + '');
+    }
+    return true;
 }
 
 /**

@@ -87,6 +87,7 @@ Lz = {
         if (properties.accessible == 'true') {
             queryvals.flashvars += '&accessible=true';
         }
+        queryvals.flashvars += '&id=' + properties.id;
 
         var url = queryvals.url + '?' + queryvals.query;
 

@@ -13,27 +13,29 @@ Lz.iframemanager = {
 
         var id = '__lz' + Lz.iframemanager.__highestz++;
         Lz.iframemanager.__frames[id] = i;
-        Lz.__setAttr(i, 'id', id);
 
         if (name == null) name = '';
         if (name != "") Lz.__setAttr(i, 'name', name);
 
-        i.__gotload = Lz.iframemanager.__gotload;
-        Lz.__setAttr(i, 'onload', 'Lz.iframemanager.__gotload("' + id + '")');
         if (appendto == null || appendto == "undefined") {
             appendto = document.body;
         }
         appendto.appendChild(i);
+        Lz.__setAttr(i, 'id', id);
 
         var iframe = Lz.iframemanager.getFrame(id);
+        Lz.__setAttr(iframe, 'onload', 'Lz.iframemanager.__gotload("' + id + '")');
+        iframe.__gotload = Lz.iframemanager.__gotload;
+        iframe._defaultz = 99900 + Lz.iframemanager.__highestz;
+        iframe.style.zIndex = iframe._defaultz;
         if (document.getElementById && !(document.all) ) {
             iframe.style.border = '0';
         } else if (document.all) {
-            Lz.__setAttr(iframe, 'frameborder', '0');
+            Lz.__setAttr(iframe, 'border', '0');
             Lz.__setAttr(iframe, 'allowtransparency', 'true');
         }
         iframe.style.position = 'absolute';
-        return id;
+        return id + '';
     }
     ,getFrame: function(id) { 
         return Lz.iframemanager.__frames[id];
@@ -83,10 +85,18 @@ Lz.iframemanager = {
         iframe.style.zIndex = 100000 + Lz.iframemanager.__highestz;
         return true;
     }
+    ,sendToBack: function(id) { 
+        //console.log('sendToBack', id)
+        //Debug.write('bringToFront', id);
+        var iframe = Lz.iframemanager.getFrame(id);
+        if (! iframe) return;
+        iframe.style.zIndex = iframe._defaultz;
+        return true;
+    }
     ,__gotload: function(id) { 
         //Debug.write('__gotload', id);
-        //console.log('__gotload', id);
         var iframe = Lz.iframemanager.getFrame(id);
+        //console.log('__gotload', iframe, iframe.skiponload);
         if (! iframe) return;
         if (iframe.skiponload) {
             iframe.skiponload = false;
@@ -97,7 +107,7 @@ Lz.iframemanager = {
             iframe.owner.__gotload();
         } else {
             //console.log('calling method', 'Lz.iframemanager.__gotload(\'' + id + '\')');
-            Lz.callMethod('Lz.iframemanager.__gotload(\'' + id + '\')');
+            Lz[iframe.owner].callMethod('Lz.iframemanager.__gotload(\'' + id + '\')');
         }
     }
 }

@@ -47,13 +47,9 @@
         		border: 0 none;
         		overflow: hidden;
         	}
-        	
-        	body
-        	{
-        		height: 100%;
-        		width: 100%;
-        		background-color: #ffffff;
-        	}
+        	body {
+                background-color: #ffffff;
+            }
         	
         	img { border: 0 none; }
         </style></head>

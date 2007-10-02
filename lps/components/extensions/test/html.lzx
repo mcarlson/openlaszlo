@@ -7,7 +7,7 @@
 
     <class name="browser" extends="window" resizable="true" bgcolor="silver">
         <simplelayout axis="x"/>
-        <edittext name="txt" text="http://openlaszlo.org/" width="300"/> 
+        <edittext name="txt" text="http://w3.org/" width="300"/> 
         <button>Load
             <method event="onclick">
                 parent.main.setAttribute('src', parent.txt.getText()); 

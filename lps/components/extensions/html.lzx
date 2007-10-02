@@ -17,7 +17,7 @@ Lz.iframemanager = {
         LzBrowser.callJS('Lz.iframemanager.create', function (id) { 
                 Lz.iframemanager.owners[id] = owner;
                 owner.setiframeid(id); 
-            }, "", name, appendto);
+            }, canvas.id, name, appendto);
     }
     ,setPosition: function(id, x, y, width, height, v) {
         LzBrowser.callJS('Lz.iframemanager.setPosition', false, id, x, y, width, height, v);
@@ -30,6 +30,9 @@ Lz.iframemanager = {
     }
     ,bringToFront: function(id) {
         LzBrowser.callJS('Lz.iframemanager.bringToFront', null, id);
+    }
+    ,sendToBack: function(id) {
+        LzBrowser.callJS('Lz.iframemanager.sendToBack', null, id);
     }
     ,__gotload: function(id) {
         if (Lz.iframemanager.owners[id]) Lz.iframemanager.owners[id].__gotload();
@@ -109,15 +112,13 @@ Lz.iframemanager = {
         var height = this.target.getAttributeRelative("height", canvas) + this.heightoffset;
         if (this['iframeid']) {
             Lz.iframemanager.setPosition(this.iframeid, x, y, width, height, this.visible);
-        } else {
-            this.cachepos = true;
         }
     </method>
     <!--- @access private -->
     <method name="setiframeid" args="id">
         //Debug.write('setiframeid', id, this)
         this.iframeid = id;
-        if (this['cachepos']) this.__updatepos();
+        this.__updatepos();
         if (this['isfront']) this.bringToFront();
         if (this['srcset']) Lz.iframemanager.setSrc(id, this.srcset);
         this.setAttribute('ready', true);
@@ -128,8 +129,14 @@ Lz.iframemanager = {
         this.onload.sendEvent();
     </method>
     <method name="bringToFront">
+        if (this['isfront'] == true) return;
         this.isfront = true;
         if (this['iframeid']) Lz.iframemanager.bringToFront(this.iframeid);
+    </method>
+    <method name="sendToBack">
+        if (this['isfront'] == false) return;
+        this.isfront = false;
+        if (this['iframeid']) Lz.iframemanager.sendToBack(this.iframeid);
     </method>
 </class>
 </library>
