@@ -1,0 +1,550 @@
+<library>
+<!--
+ File: lfc.lzx
+
+ lfc.lzx specifies the interfaces for the LZX language and the for 
+ the base LFC runtime libraries.
+
+ Note: We are going to have to generate the lzx.dtd, lzx.rng, lzx.xsd, and lzxdoc.rng
+ from this file. 
+ * P_LZ_COPYRIGHT_BEGIN ******************************************************
+ * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
+ * Use is subject to license terms.                                          *
+ * P_LZ_COPYRIGHT_END ********************************************************
+-->
+
+<interface name="canvas" extends="Instance">
+  <attribute name="id" type="ID"/>
+  <!--   The oninit script is executed once, after the element's
+         children, if any, have been initialized. -->
+  <event name="oninit"/>
+  <!--  The width of the canvas. -->
+  <attribute name="width" type="sizeExpression" value="500"/>
+  <!--  The height of the canvas. -->
+  <attribute name="height" type="sizeExpression" value="400"/>
+  <!-- The background color of the canvas. -->
+  <attribute name="bgcolor" type="color" value="white"/>
+  <!-- The string that is used in the browser window. -->
+  <attribute name="title" type="string" value="OpenLaszlo Application"/>
+  <!-- The default font for views in this application. -->
+  <attribute name="font" type="string" value="lztahoe8"/>
+  <!-- The default size for views in this application. -->
+  <attribute name="fontsize" type="number" value="8"/>
+  <!-- The default font style for views in this application.  The empty string
+       is interpreted as 'plain'. -->
+  <attribute name="fontstyle" type="string" value="" enum="bold|italic|bold italic|plain||"/>
+  <attribute name="layout" type="css"/>
+  <!-- If false, disables validation against the schema during compilation -->
+  <attribute name="validate" type="boolean" value="true"/>
+  <!-- If true, media and data requests are proxied -->
+  <attribute name="proxied" type="inheritableBoolean" value="inherit"/>
+  <!-- If true, enable debugging in the application -->
+  <attribute name="debug" type="boolean" value="false"/>
+  <!-- If true, enable backtraces in debugger -->
+  <attribute name="backtrace" type="boolean" value="false"/>
+  <!-- The loader timeout on data requests -->
+  <attribute name="dataloadtimeout" type="numberExpression"/>
+  <!-- The loader timeout on media requests -->
+  <attribute name="medialoadtimeout" type="numberExpression"/>
+  <!-- A list of names for libraries that are included in the application. -->
+  <attribute name="libraries" type="string" value=""/>
+  <!-- If true, compiler will embed fonts into application -->
+  <attribute name="embedfonts" type="boolean"  value="true"/>
+  <attribute name="version" type="string" value="4.1"/>
+  <!-- If true, enable accessibility features -->
+  <attribute name="accessible" type="boolean" value="false"/>
+
+  <containsElements>
+    <element>view</element>
+    <element>script</element>
+    <element>stylesheet</element>
+    <element>audio</element>
+    <element>resource</element>
+    <element>font</element>
+    <element>datasource</element>
+    <element>datapointer</element>
+    <element>dataset</element>
+    <element>debugger</element>
+    <element>command</element>
+    <element>class</element>
+    <element>trait</element>
+    <element>include</element>
+    <element>library</element>
+    <element>layout</element>
+    <element>security</element>
+    <element>attribute</element>
+    <element>event</element>
+    <element>method</element>
+    <element>handler</element>
+    <element>doc</element>
+    <element>node</element>
+    <element>splash</element>
+    <!-- soon to be deprecated -->
+    <element>connectiondatasource</element>
+  </containsElements>
+</interface>
+
+
+<interface name="library" extends="canvas">
+  <attribute name="href" type="string"/>
+  <attribute name="includes" type="string"/>
+  <attribute name="proxied" type="inheritableBoolean" value="inherit"/>
+  <!-- @keywords deprecated -->
+  <attribute name="validate" type="boolean" value="true"/>
+</interface>
+
+
+
+<interface name="node" extends="Instance">
+  <attribute name="id" type="ID"/>
+  <!-- The path of a file that contains the source for this object. -->
+  <attribute name="src" type="string"/>
+  <!-- The name of a variable that will be set to this object when the
+       application is started.  If this element is directly within a @e{canvas}
+       or @e{library} element, the global variable and the canvas
+       property with this name will be set to this object.  If this
+       element is within another object, that object's property with
+       this name will be set to this object.
+  -->
+  <attribute name="name" type="token"/>
+  <!-- The oninit script is executed once, after the element's
+       children, if any, have been initialized. 
+  -->
+  <event name="oninit"/>
+  <event name="ondata"/>
+  <attribute name="initstage" type="string" value="normal" enum="early|normal|late|immediate|defer"/>
+  <attribute name="datapath" type="string"/>
+  <attribute name="placement" type="string"/>
+  <attribute name="ignoreplacement" type="expression"/>
+  <attribute name="defaultplacement" type="string"/>
+  <attribute name="options" type="css"/>
+
+  <containsElements>
+    <element>attribute</element>
+    <element>event</element>
+    <element>method</element>
+    <element>handler</element>
+    <element>doc</element>
+    <element>node</element>
+  </containsElements>
+</interface>
+
+<interface name="view" extends="node">
+  <attribute name="opacity" type="number"/>
+  <attribute name="bgcolor" type="color"/>
+  <attribute name="cursor" type="token"/>
+  <attribute name="clickable" type="boolean"/>
+  <attribute name="clickregion" type="string"/>
+  <attribute name="focustrap" type="boolean"/>
+  <attribute name="focusable" type="boolean"/>
+  <attribute name="frame" type="numberExpression" value="0"/>
+  <attribute name="fgcolor" type="color"/>
+  <attribute name="font" type="string"/>
+  <attribute name="fontstyle" type="string"/>
+  <attribute name="fontsize" type="sizeExpression"/>
+  <attribute name="resource" type="string"/>
+  <attribute name="source" type="expression" />
+  <attribute name="clip" type="boolean" value="false"/>
+  <attribute name="align" value="left"  type="string" enum="left|center|right|constraint" />
+  <attribute name="valign" type="string" value="top" enum="top|middle|bottom|constraint" />
+  <attribute name="layout" type="css"/>
+  <attribute name="pixellock" type="boolean" value="false"/>
+  <attribute name="rotation" type="numberExpression" value="0"/>
+  <attribute name="xoffset" type="numberExpression" value="0"/>
+  <attribute name="yoffset" type="numberExpression" value="0"/>
+  <attribute name="play" type="boolean" value="true"/>
+  <attribute name="selectiontype" type="string" enum="none|single|toggle|multi|range"/>
+  <attribute name="stretches" type="string" enum="width|height|both"/>
+  <attribute name="visible" type="expression" value="true"/>
+  <attribute name="visibility" type="string" value="visibility"/>
+  <attribute name="width" type="sizeExpression"/>
+  <attribute name="height" type="sizeExpression"/>
+  <attribute name="x" type="numberExpression" value="0"/>
+  <attribute name="y" type="numberExpression" value="0"/>
+  <attribute name="aaname" type="string"/>
+  <attribute name="aaactive" type="boolean"/>
+  <attribute name="aadescription" type="string"/>
+  <attribute name="aatabindex" type="number"/>
+  <attribute name="aasilent" type="boolean"/>
+  <attribute name="showhandcursor" type="boolean"/>
+  <event name="onclick"/>
+  <event name="ondblclick"/>
+  <event name="onmousedown"/>
+  <event name="onmouseup"/>
+  <event name="onmouseover"/>
+  <event name="onmouseout"/>
+  <event name="onfocus"/>
+  <event name="onblur"/>
+  <event name="onkeydown"/>
+  <event name="onkeyup"/>
+  <event name="onselect"/>
+  <containsElements>
+    <element>dataselectionmanager</element>
+    <element>selectionmanager</element>
+    <element>text</element>
+    <element>inputtext</element>
+    <element>node</element>
+  </containsElements>
+</interface>
+
+<interface name="class" extends="view">
+  <attribute name="extends" type="token" value="view"/>
+  <!-- The comma-separated list of mixins, applied in order -->
+  <attribute name="with" type="string"/>
+</interface>
+
+<interface name="interface" extends="view">
+  <attribute name="extends" type="token" value="view"/>
+  <!-- The comma-separated list of mixins, applied in order -->
+  <attribute name="with" type="string"/>
+</interface>
+
+<interface name="dataselectionmanager" extends="node">
+  <attribute name="extends" type="token" value="view"/>
+  <!-- The comma-separated list of mixins, applied in order -->
+  <attribute name="with" type="string"/>
+</interface>
+
+
+<interface name="selectionmanager" extends="node">
+  <attribute name="toggle" type="boolean"/>
+  <event name="onselect"/>
+</interface>
+
+
+<interface name="command" extends="node">
+  <event name="onselect"/>
+  <attribute name="active" type="boolean" value="true"/>
+  <attribute name="key" value="expression"/>
+</interface>
+
+<interface name="animatorgroup" extends="node">
+  <attribute name="process" type="string" enum="sequential|simultaneous" value="sequential"/>
+  <attribute name="attribute" type="token"/>
+  <attribute name="start" type="boolean" value="true"/>
+  <attribute name="from" type="number" />
+  <attribute name="to" type="number" />
+  <attribute name="duration" type="number" />
+  <attribute name="indirect" type="boolean" value="false"/>
+  <attribute name="relative" type="boolean" value="false"/>
+  <attribute name="motion" type="string" value="easeboth" enum="linear|easein|easeout|easeboth"/>
+  <attribute name="onstart" type="script" />
+  <attribute name="onstop" type="script" />
+  <attribute name="repeat" type="expression" />
+  <attribute name="paused" type="boolean" value="false"/>
+  <attribute name="target" type="reference"/>
+  <containsElements>
+    <element>animator</element>
+  </containsElements>
+</interface>
+
+<interface name="animator" extends="animatorgroup"/>
+
+<interface name="text">
+  <attribute name="multiline" type="boolean" value="false"/>
+  <attribute name="resize" type="boolean" />
+  <attribute name="resizable" type="boolean" />
+  <attribute name="selectable" type="boolean"           value="false"/>
+  <attribute name="maxlength" type="numberExpression"   value="null"/>
+  <attribute name="pattern" type="string" />
+  <attribute name="label" type="string" />
+  <attribute name="antiAliasType" type="string" enum="normal|advanced" value="advanced" />
+  <attribute name="gridFit" type="string" enum="none|pixel|subpixel" value="subpixel"  />
+  <attribute name="sharpness" type="numberExpression"      value="0"/>
+  <attribute name="thickness" type="numberExpression"     value="0"  />
+  <attribute name="text" type="string"/>
+  <attribute name="embedfonts" type="boolean" />
+  <containsElements>
+    <element>pre</element>
+    <element>a</element>
+    <element>b</element>
+    <element>li</element>
+    <element>img</element>
+    <element>font</element>
+    <element>i</element>
+    <element>p</element>
+    <element>br</element>
+    <element>u</element>
+  </containsElements>
+</interface>
+
+
+<interface name="inputtext" extends="text">
+      <!-- If true, the input text field acts like a password input
+           field; any text typed in appears as "****" characters in the
+           current font. -->
+      <attribute name="password" type="boolean" value="false"/>
+</interface>
+
+<!-- TODO [hqm 2007] We used to document the dialect of HTML we
+     support in <text> elements here, need to do that elsewhere.
+-->
+
+<interface name="audio" extends="Instance">
+  <!-- The path of a file that contains the source for this object. -->
+  <attribute name="src" type="string"/>
+  <attribute name="id" type="ID"/>
+  <attribute name="name" type="token"/>
+</interface>
+
+<interface name="resource" extends="Instance">
+  <attribute name="src" type="string"/>
+  <attribute name="name" type="token"/>
+  <containsElements>
+    <element>frame</element>
+  </containsElements>
+</interface>
+
+
+<interface name="dataset" extends="node">
+  <!-- If true, namespace prefixes are preserved in XML tag and
+       attribute names defaults to false in proxied apps, but SOLO
+       apps currently only support a value of 'true' (namespace
+       prefixes are always attached to element and attribute names)
+  -->
+  <attribute name="nsprefix" type="boolean" value="true"/>
+  <!-- If true, enable a response to be encoded via the clients
+       Accept-Encoding HTTP header.  This allows the server to gzip
+       the response.
+  -->
+  <attribute name="acceptencodings" type="boolean" value="false"/>
+  <!--  msecs to time out for load requests -->
+  <attribute name="timeout" type="number"  />
+  <!--  If true, proxy data requests through a server -->
+  <attribute name="proxied" type="inheritableBoolean" value="inherit" />
+  <!-- If this is a pathname, it specifies an XML file whose content
+       is compiled into the application as the value of the dataset.
+       If it is a URL, it specifies the location to request data from at runtime.
+  -->
+  <attribute name="src" type="string" />
+  <!--  If true, make a data request when this dataset initializes -->
+  <attribute name="request" type="boolean" value="false"/>
+  <!-- If true, doRequest will be called automatically on every call to setParam or setQueryString -->
+  <attribute name="autorequest" type="boolean" value="false"/>
+  <!-- If true, the client should ensure that each request is made,
+       rather than just making and reporting the last request. -->
+  <attribute name="queuerequests" type="boolean"  value="false"/>
+  <!-- This string is appended to the request. -->
+  <attribute name="querystring" type="string"  value="false"/>
+  <!-- If set to "http", then the dataset will interpret its src
+       attribute as an url from which to load its content, rather than
+       as a static xml file to inline. -->
+  <attribute name="type" type="string" />
+  <!-- If true, initial literal XML data is taken from <data> child node -->
+  <attribute name="datafromchild" type="boolean" />
+  <attribute name="namespace" type= "string" />
+  <!-- Specifies whether or not the app-LPS connection is secure -->
+  <attribute name="secure" type="boolean" value="false"/>
+  <!-- Sets the port number to use to connect to the LPS for a secure connection.  -->
+  <attribute name="secureport" type="number"  value="443"/>
+   
+  <!--If true, include response headers (This is specific to HTTP datasets). -->
+  <attribute name="getresponseheaders" type="boolean" value="false"/>
+   
+  <!-- If true, trim whitespace around XML text content -->
+  <attribute name="trimwhitespace" type="boolean" value="false"/>
+   
+  <!-- Enables caching of the data response on both the LPS server
+       and the client.  There are security issues with enabling this.
+       You usually want the getresponseheaders attribute to be false when
+       you set this to true. 
+  -->
+  <attribute name="cacheable" type="boolean"  value="false"/>
+  <!-- The ondata event is received when data arrives -->
+  <event name="ondata" />
+  <!--  The onerror event is recevied when an error occurs -->
+  <event name="onerror" />
+  <!-- The ontimeout event is recevied when a request times out -->
+  <event name="ontimeout" />
+  
+  <!-- HTTP request method = post | get -->
+  <attribute name="querytype" type="string" value="GET" enum="post|get|put|delete|POST|GET|PUT|DELETE" />
+</interface>
+
+<interface name="datapointer" extends="node">
+  <attribute name="rerunxpath" type="boolean" />
+  <attribute name="xpath" type="string" />
+  <!-- This controls the spacing between elements if <a
+       href="datapath.html#attr-replication">lazy replication</a> is
+       true -->
+  <attribute name="spacing" type="sizeExpression" value="0"/>
+  <attribute name="p" type="expression"/>
+</interface>
+
+
+<interface name="datapath" extends="datapointer">
+  <!--  If pooling is true, views that are data-bound to this datapath
+     are recycled if the dataset changes.  Otherwise, views are deleted
+     when the data nodes they are bound to disappear, and created
+     when new data nodes match the datapath. 
+     -->
+  <attribute name="pooling" type= "boolean" value="false" />
+  <attribute name="axis" type="string" enum="x|y" />
+  <attribute name="sortpath" type="string" />
+  <attribute name="sortorder" type= "string" />
+  <attribute name="replication" type="string" value="normal" enum="normal|lazy|resize" /> 
+</interface>
+
+
+<interface name="datasource" extends="node">
+  <attribute name="timeout" type="number"/>
+  <attribute name="secure" type="boolean"/> {booleanLiteral}?
+  <attribute name="proxied" type="inheritableBoolean" value="inherit"/>
+  <!-- A dataset element within a @e{datasource} element defines a set
+       of data that is retrieved from that datasource.  The name
+       of the dataset can be used in the datapath attribute of
+       a view.
+  -->
+  <containsElements>
+    <element>dataset</element>
+  </containsElements>
+</interface>
+
+<interface name="font" extends="Instance">
+  <attribute name="name" type="token"/>
+  <attribute  name="device" type="boolean" value="false"/>
+  <attribute name="src" type="string" />
+  <attribute name="style" type="string" value="plain" 
+             enum="bold|italic|bold italic|italic bold|plain"/>
+  <containsElements>
+    <element>face</element>
+  </containsElements>
+</interface>
+
+
+
+<!--
+TODO make sure NodeModel checks for these and only these attributes, and warns
+if any other is used
+
+element attribute " 
+        [lza:modifiers="final"]
+        attribute name "token" 
+      (attribute value "string" 
+            [lza:since="1.1"]
+             ([a:defaultValue="immediately"]
+               attribute when " "immediately" | "once" | "always" "
+             )
+       )
+      [a:defaultValue="expression"
+        lza:modifiers="final"]
+       attribute type ""boolean" | "color" | "expression" | "number" | "size" |
+                       "string" | "text" | "html""
+      [a:defaultValue="false"] 
+       attribute required "boolean" 
+      [lza:since="1.1"]
+       attribute setter "script"
+     "
+
+-->
+
+
+
+<interface name="import" extends="node">
+  <!-- A reference to a target file whose content is treated as a loadable module -->
+  <attribute name="href" type="string" />
+  <attribute name="stage" type="string" value="late" enum="late|defer" />
+  <event name="onload"/>
+  <attribute name="proxied" type="inheritableBoolean" value="inherit"/>
+  <event name="onerror"/>
+  <event name="ontimeout"/>
+</interface>
+
+<interface name="state" extends="node">
+  <attribute name="apply" type="boolean"/>
+  <!-- If pooling is true, views that are created by the state are not
+       destroyed when the state is removed - instead they just act as
+       if they were by sending the onremovesubview event and setting
+       their visibility to false.
+    -->
+  <attribute name="pooling" type="boolean" value="false"/>
+  <!--  Script that is executed when the state is applied to its parent.  -->
+  <event name="onapply"/>
+  <!-- Script that is executed when the state is removed from its parent. -->
+  <event name="onremove"/>
+</interface>
+
+<interface name="datarequest" extends="node"/>
+
+<interface name="layout" extends="node">
+  <attribute name="locked" type="boolean"/>
+</interface>
+
+<!--
+ Application Configuration
+-->
+
+<interface name="splash" extends="Instance">
+  <attribute name="hideafterinit" type= "boolean" />
+  <attribute name="persistent" type= "boolean" />
+  <containsElements>
+    <element>splashview</element>
+    <element>preloadresource</element>
+  </containsElements>
+</interface>
+
+<interface name="splashview" extends="Instance">
+  <attribute name="name" type="token" />
+  <attribute name="resource" type="string" />
+  <attribute name="ratio" type="string" />
+  <attribute name="x" type="number" value="0"/>
+  <attribute name="y" type="number" value="0"/>
+  <attribute name="center" type="boolean" value="false"/>
+</interface>
+
+<interface name="script" extends="Instance">
+  <!-- The pathname of a JavaScript file.  This pathname is resolved
+       relative to the file that contains the <tagname>script</tagname>
+       element.
+  -->
+  <attribute name="type" type="string" />
+  <attribute name="when" type="string" enum="normal|immediate" value="normal"/>
+  <attribute name="src" type="string"/>
+</interface>
+
+<interface name="include" extends="Instance">
+  <attribute name="href" type="string"/>
+  <attribute name="type" type="string" value="xml" enum="text|xml"/>
+</interface>
+
+
+
+<interface name="stylesheet" extends="Instance">
+  <!-- The pathname of a css file.  This pathname is resolved
+       relative to the file that contains the <tagname>stylesheet</tagname>
+       element.
+  -->
+  <attribute name="src" type="string" />
+</interface>
+
+
+
+<interface name="preloadresource" extends="view">
+  <attribute name="name" type="token" />
+  <attribute name="ratio" type="string" />
+  <attribute name="synctoload" type="boolean" />
+  <attribute name="hideafterinit" type="boolean" />
+  <attribute name="center" type="boolean" />
+  <attribute name="synchronized" type="boolean" />
+  <attribute name="lastframe" type="number"  />
+  <attribute name="resource" type="string" />
+  <attribute name="resourcename" type="string" />
+</interface>
+
+<!-- Security -->
+<interface name="security" extends="Instance">
+  <containsElements>
+    <element>allow</element>
+    <element>deny</element>
+  </containsElements>
+</interface>
+
+
+<!-- debugger -->
+<interface name="debug">
+  <attribute name="showInternalProperties" type="boolean" value="false"/>
+</interface>
+
+
+
+</library>
