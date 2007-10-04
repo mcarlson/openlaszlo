@@ -101,13 +101,6 @@ class SWFWriter extends ObjectWriter {
     public static final int DEFAULT_SIZE = 8;
 
 
-    /** Width of the "root" text output object. Defaults to canvas width. */
-    private int mMaxTextWidth = 0;
-
-    /** Height of the "root" text output object. Defaults to canvas height. */
-    private int mMaxTextHeight = 0;
-
-
     /** Logger for jgenerator */
     /**
      * Initializes a SWFWriter with an OutputStream to which a new SWF
@@ -280,18 +273,6 @@ class SWFWriter extends ObjectWriter {
         // Set width and height properties for preloader...
         mWidth = canvas.getWidth();
         mHeight = canvas.getHeight();
-
-        mMaxTextWidth = canvas.getMaxTextWidth();
-        // If zero, default to canvas width 
-        if (mMaxTextWidth == 0) {
-            mMaxTextWidth = mWidth;
-        }
-
-        mMaxTextHeight = canvas.getMaxTextHeight();
-        // If zero, default to canvas height 
-        if (mMaxTextHeight == 0) {
-            mMaxTextHeight = mHeight;
-        }
 
         // Get default font info 
         FontInfo fontInfo = canvas.getFontInfo();

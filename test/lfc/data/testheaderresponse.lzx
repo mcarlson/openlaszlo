@@ -3,7 +3,7 @@
 
   <dataset name="dsheaders" timeout="400000"
     src="http:testdata.xml"
-    proxied="true"
+    proxied="xlxinherit"
     getresponseheaders="true"
            onerror="Debug.write('testheaderresponse: dsheaders got onerror')" 
            ontimeout="Debug.write('testheaderresponse: dsheaders got ontimeout')" 

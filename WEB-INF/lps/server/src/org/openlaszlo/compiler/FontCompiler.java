@@ -45,6 +45,9 @@ class FontCompiler extends ElementCompiler {
             if (src != null) {
                 compileFont(name, element);
             }
+            // Check if children are valid tags to be contained 
+            mEnv.checkValidChildContainment(element);
+
             for (Iterator iter = element.getChildren("face", element.getNamespace()).iterator();
                  iter.hasNext(); ) {
                 compileFont(name, (Element) iter.next());

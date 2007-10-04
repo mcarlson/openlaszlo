@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -81,7 +81,7 @@ public class ViewSchema_Test extends TestCase {
 
         ViewSchema schema = new ViewSchema();
         try {
-            schema.loadSchema();
+            schema.loadSchema(new CompilationEnvironment());
         } catch (JDOMException e) {
             throw new RuntimeException(e.getMessage());
         } catch (IOException e) {

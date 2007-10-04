@@ -67,50 +67,6 @@
   * <tagname>inputtext</tagname> view can keep up with typing speed even
   * at large sizes or on a slow computer.</p>
   * 
-  * <p>A program can request an optimized <tagname>inputtext</tagname> by
-  * setting the <attribute>resizable</attribute> attribute to
-  * <code>false</code>, and supplying recognizable
-  * <attribute>width</attribute> and <attribute>height</attribute>
-  * dimension attributes.  A recognizable dimension attribute is an
-  * attribute that is defined as a numeric literal, such as
-  * <code>width="100"</code>, or that is defined as a simple
-  * <code>$once</code> expression that adds or subtracts a numeric literal
-  * to the <attribute>width</attribute> or <attribute>height</attribute>
-  * attribute of the view's parent, its parent's parent, or so on.  This
-  * final optimization allows the optimization to apply to
-  * <tagname>inputtext</tagname> tags within a class definition, as in the
-  * second example below.</p>
-  * 
-  * <example title="Optimized inputtext"><programlisting>
-  * &lt;canvas height="20"&gt;
-  *   &lt;inputtext resizable="false" width="150" height="20"&gt;
-  *     This text is editable.
-  *   &lt;/inputtext&gt;
-  * &lt;/canvas&gt;
-  * </programlisting></example>
-  * 
-  * <example title="Component with optimized inputtext"><programlisting>
-  * &lt;canvas height="20"&gt;
-  *   &lt;class name="mytext" width="150" height="20" bgcolor="gray"&gt;
-  *     &lt;attribute name="text" type="text"/&gt;
-  *     &lt;inputtext resizable="false" text="${parent.text}" bgcolor="white"
-  *       x="1" y="1"
-  *       width="$once{parent.width-2}" height="$once{parent.height-2}"/&gt;
-  *   &lt;/class&gt;
-  *   &lt;mytext&gt;This text is editable.&lt;/mytext&gt;
-  * &lt;/canvas&gt;
-  * </programlisting></example>
-  * 
-  * <p>The compiler can also infer the values of the
-  * <attribute>width</attribute> and <attribute>height</attribute>
-  * attributes if they are not supplied.  If supplied, the value of the
-  * <attribute>font</attribute> must be a constant string in order for the
-  * text field to be optimized.  If supplied, the value of the
-  * <attribute>fontsize</attribute> must be a constant in order to
-  * for the text field to be optimized. Generally these can be omitted and
-  * the inputtext will inherit the parent's font size and style by
-  * default.</p>
-  * 
   * @shortdesc The basic input-text element.
   * @lzxname inputtext
   */

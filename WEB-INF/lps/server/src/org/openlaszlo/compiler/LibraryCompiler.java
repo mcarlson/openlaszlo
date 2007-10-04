@@ -39,8 +39,7 @@ class LibraryCompiler extends ToplevelCompiler {
      */
     static Element resolveLibraryElement(File file,
                                          CompilationEnvironment env,
-                                         Set visited,
-                                         boolean validate)
+                                         Set visited)
     {
         try {
             File key = file.getCanonicalFile();
@@ -72,8 +71,6 @@ class LibraryCompiler extends ToplevelCompiler {
                 }
 
                 Document doc = env.getParser().parse(file, env);
-                if (validate)
-                    Parser.validate(doc, file.getPath(), env);
                 Element root = doc.getRootElement();
                 mLogger.debug("" + file + ": " + root + " attributes: " + root.getAttributes());
                 // Look for and add any includes from a binary library
@@ -106,29 +103,27 @@ class LibraryCompiler extends ToplevelCompiler {
      */
     static Element resolveLibraryElement(Element element,
                                          CompilationEnvironment env,
-                                         Set visited,
-                                         boolean validate)
+                                         Set visited)
     {
         String href = element.getAttributeValue(HREF_ANAME);
         if (href == null) {
             return element;
         }
         File file = env.resolveReference(element, HREF_ANAME, true);
-        return resolveLibraryElement(file, env, visited, validate);
+        return resolveLibraryElement(file, env, visited);
     }
     
     public void compile(Element element) throws CompilationError
     {
         element = resolveLibraryElement(
-            element, mEnv, mEnv.getImportedLibraryFiles(),
-            mEnv.getBooleanProperty(mEnv.VALIDATE_PROPERTY));
+            element, mEnv, mEnv.getImportedLibraryFiles());
         if (element != null) {
             super.compile(element);
         }
     }
 
     void updateSchema(Element element, ViewSchema schema, Set visited) {
-        element = resolveLibraryElement(element, mEnv, visited, false);
+        element = resolveLibraryElement(element, mEnv, visited);
         if (element != null) {
             super.updateSchema(element, schema, visited);
             // TODO [hqm 2005-02-09] can we compare any 'proxied' attribute here

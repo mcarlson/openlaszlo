@@ -102,14 +102,6 @@ public class Canvas implements java.io.Serializable {
 
     // Default to proxied deployment
     private boolean mProxied = true;
-
-    /** Width of the root output text object (Flash 5 limits us to
-     * setting this at compile time) */
-    private int mMaxTextWidth = 0;
-
-    /** Height of the root output text object (Flash 5 limits us to
-     * setting this at compile time) */
-    private int mMaxTextHeight = 0;
     
     /** FontInfo for the canvas. */
     private FontInfo mFontInfo = null;
@@ -267,28 +259,6 @@ public class Canvas implements java.io.Serializable {
     public void setHeightString(String h) {
         mHeightString = h;
     }
-
-
-    /** @return maxTextWidth */
-    public int getMaxTextWidth() {
-        return mMaxTextWidth;
-    }
-
-    /** @param h */
-    public void setMaxTextWidth(int h) {
-        mMaxTextWidth = h;
-    }
-
-    /** @return maxTextHeight */
-    public int getMaxTextHeight() {
-        return mMaxTextHeight;
-    }
-
-    /** @param h */
-    public void setMaxTextHeight(int h) {
-        mMaxTextHeight = h;
-    }
-
 
     /** @return Background color */
     public int getBGColor() {

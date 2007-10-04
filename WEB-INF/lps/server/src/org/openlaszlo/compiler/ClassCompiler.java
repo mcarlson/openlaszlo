@@ -76,7 +76,8 @@ class ClassCompiler extends ViewCompiler {
         String classname = elt.getAttributeValue("name");
         String superclass = elt.getAttributeValue("extends");
         
-        if (classname == null || !ScriptCompiler.isIdentifier(classname)) {
+        if (classname == null ||
+            (schema.enforceValidIdentifier && !ScriptCompiler.isIdentifier(classname))) {
             CompilationError cerr = new CompilationError(
 /* (non-Javadoc)
  * @i18n.test
@@ -105,7 +106,9 @@ class ClassCompiler extends ViewCompiler {
         }
         
         ClassModel superclassinfo = schema.getClassModel(superclass);
+
         if (superclassinfo == null) {
+
             throw new CompilationError(
 /* (non-Javadoc)
  * @i18n.test
@@ -125,20 +128,22 @@ class ClassCompiler extends ViewCompiler {
             if (o instanceof Element) {
                 Element child = (Element) o;
                 // Is this an element named ATTRIBUTE which is a
-                // direct child of a CLASS tag?
+                // direct child of this CLASS or INTERFACE tag?
                 if (child.getName().equals("attribute")) {
-                    String attrName;
-                    try {
-                        attrName = requireIdentifierAttributeValue(child, "name");
-                    } catch (MissingAttributeException e) {
-                        throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="'name' is a required attribute of <" + p[0] + "> and must be a valid identifier"
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ClassCompiler.class.getName(),"051018-131", new Object[] {child.getName()})
-, child);
+                    String attrName = child.getAttributeValue("name");
+                    if (schema.enforceValidIdentifier) {
+                        try {
+                            attrName = requireIdentifierAttributeValue(child, "name");
+                        } catch (MissingAttributeException e) {
+                            throw new CompilationError(
+                                /* (non-Javadoc)
+                                 * @i18n.test
+                                 * @org-mes="'name' is a required attribute of <" + p[0] + "> and must be a valid identifier"
+                                 */
+                                org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                    ClassCompiler.class.getName(),"051018-131", new Object[] {child.getName()})
+                                , child);
+                        }
                     }
                     
                     String attrTypeName = child.getAttributeValue("type");
@@ -159,6 +164,7 @@ class ClassCompiler extends ViewCompiler {
                         attrType = schema.getTypeForName(attrTypeName);
                     }
                     
+
                     if (attrType == null) {
                         throw new CompilationError(
 /* (non-Javadoc)
@@ -181,12 +187,14 @@ class ClassCompiler extends ViewCompiler {
                     }
                     attributeDefs.add(attrSpec);
                 } else if (child.getName().equals("event")) {
-                    String attrName;
-                    try {
-                        attrName = requireIdentifierAttributeValue(child, "name");
-                    } catch (MissingAttributeException e) {
-                        throw new CompilationError(
-                            "'name' is a required attribute of <" + child.getName() + "> and must be a valid identifier", child);
+                    String attrName = child.getAttributeValue("name");
+                    if (schema.enforceValidIdentifier) {
+                        try {
+                            attrName = requireIdentifierAttributeValue(child, "name");
+                        } catch (MissingAttributeException e) {
+                            throw new CompilationError(
+                                "'name' is a required attribute of <" + child.getName() + "> and must be a valid identifier", child);
+                        }
                     }
                     
                     ViewSchema.Type attrType = ViewSchema.EVENT_HANDLER_TYPE;
@@ -195,7 +203,7 @@ class ClassCompiler extends ViewCompiler {
                     attributeDefs.add(attrSpec);
                 } else if (child.getName().equals("doc")) {
                     // Ignore documentation nodes
-                }
+                } 
             }
         }
         
@@ -204,21 +212,24 @@ class ClassCompiler extends ViewCompiler {
     }
     
     public void compile(Element elt) {
-        String className;
-        try {
-            className = requireIdentifierAttributeValue(elt, "name");
-        } catch (MissingAttributeException e) {
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="'name' is a required attribute of <" + p[0] + "> and must be a valid identifier"
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ClassCompiler.class.getName(),"051018-193", new Object[] {elt.getName()})
-, elt);
+        String className = elt.getAttributeValue("name");
+        ViewSchema schema = mEnv.getSchema();
+        if (schema.enforceValidIdentifier) {
+            try {
+                className = requireIdentifierAttributeValue(elt, "name");
+            } catch (MissingAttributeException e) {
+                throw new CompilationError(
+                    /* (non-Javadoc)
+                     * @i18n.test
+                     * @org-mes="'name' is a required attribute of <" + p[0] + "> and must be a valid identifier"
+                     */
+                    org.openlaszlo.i18n.LaszloMessages.getMessage(
+                        ClassCompiler.class.getName(),"051018-193", new Object[] {elt.getName()})
+                    , elt);
+            }
         }
                 
-        ViewSchema schema = mEnv.getSchema();
+
         ClassModel classModel = schema.getClassModel(className);
         
         String linedir = CompilerUtils.sourceLocationDirective(elt, true);
@@ -237,9 +248,9 @@ class ClassCompiler extends ViewCompiler {
         viewMap.put("name", ScriptCompiler.quote(className));
         
         // TODO: [2007-01-29 ptw]  Someday write out real Javascript classes
-//         String superclass = XMLUtils.getAttributeValue(elt, "extends", DEFAULT_SUPERCLASS_NAME);
-//         org.openlaszlo.sc.ScriptClass scriptClass =
-//           new org.openlaszlo.sc.ScriptClass(className, superclass, (Map)viewMap.get("attrs"));
+        //         String superclass = XMLUtils.getAttributeValue(elt, "extends", DEFAULT_SUPERCLASS_NAME);
+        //         org.openlaszlo.sc.ScriptClass scriptClass =
+        //           new org.openlaszlo.sc.ScriptClass(className, superclass, (Map)viewMap.get("attrs"));
         
         // Construct a Javascript statement from the initobj map
         String initobj;

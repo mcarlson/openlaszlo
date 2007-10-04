@@ -36,9 +36,6 @@ public class CompilationEnvironment {
 
     public static final String PROFILE_PROPERTY           = "profile";
     public static final String LINK_PROPERTY              = "link";
-    public static final String VALIDATE_PROPERTY          = "validate";
-    // e_validate is defined if a user explicitly defined validate attribute
-    public static final String VALIDATE_EXPLICIT_PROPERTY = "e_validate";
     public static final String CSSFILE_PROPERTY           = "cssfile";
     // Log all debug.write messages back to the server
     public static final String LOGDEBUG_PROPERTY      = "logdebug";
@@ -638,4 +635,28 @@ public class CompilationEnvironment {
         throw new CompilationError(elt, e);
       }
     }
+
+    public boolean warnIfCannotContain(Element parentTag, Element childTag) {
+        if (!mSchema.canContainElement(parentTag.getName(), childTag.getName())) {
+            this.warn(
+                // TODO [2006-08-22 hqm] i18n this
+                "The tag '" + childTag.getName() +
+                "' cannot be used as a child of " + parentTag.getName(),
+                parentTag);
+            return false;
+        } else {
+            return true;
+        }
+        
+    }
+
+    /** Check if all children are allowed to be contained in this tags */
+    public void checkValidChildContainment(Element element) {
+        for (Iterator iter = element.getChildren().iterator();
+             iter.hasNext(); ) {
+            Element child = (Element) iter.next();
+            this.warnIfCannotContain(element, child);
+        }
+    }
+
 }

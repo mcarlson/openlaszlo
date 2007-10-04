@@ -170,8 +170,7 @@ class CanvasCompiler extends ToplevelCompiler {
         for (Iterator iter = getLibraries(element).iterator();
              iter.hasNext(); ) {
             File file = (File) iter.next();
-            Element library = LibraryCompiler.resolveLibraryElement(
-                file, mEnv, visited, false);
+            Element library = LibraryCompiler.resolveLibraryElement(file, mEnv, visited);
             if (library != null) {
                 collectObjectProperties(library, model, visited);
             }
@@ -316,29 +315,6 @@ class CanvasCompiler extends ToplevelCompiler {
         
         canvas.setFontInfo(new FontInfo(font, fontsize, fontstyle));
         
-        // The width of the "root" Flash output text resource. Since
-        // it's fixed at compile time, this gives the developer a way
-        // to specify it. Defaults to canvas width if not specified.
-        String maxtextwidth = elt.getAttributeValue("maxtextwidth");
-        if (maxtextwidth != null) {
-            try {
-                canvas.setMaxTextWidth(Integer.parseInt(maxtextwidth));
-            } catch (NumberFormatException e) {
-                throw new CompilationError(elt, "maxtextwidth", e);
-            }
-        }
-        
-        // The height of the "root" Flash output text resource. Since
-        // it's fixed at compile time, this gives the developer a way
-        // to specify it. Defaults to canvas height if not specified.
-        String maxtextheight = elt.getAttributeValue("maxtextheight");
-        if (maxtextheight != null) {
-            try {
-                canvas.setMaxTextHeight(Integer.parseInt(maxtextheight));
-            } catch (NumberFormatException e) {
-                throw new CompilationError(elt, "maxtextheight", e);
-            }
-        }
     }
     
     private void collectObjectProperties(Element element, NodeModel model,
@@ -350,7 +326,7 @@ class CanvasCompiler extends ToplevelCompiler {
                 model.addPropertyElement(child);
             } else if (LibraryCompiler.isElement(child)) {
                 Element libraryElement = LibraryCompiler.resolveLibraryElement(
-                    child, mEnv, visited, false);
+                    child, mEnv, visited);
                 if (libraryElement != null) {
                     collectObjectProperties(libraryElement, model, visited);
                 }

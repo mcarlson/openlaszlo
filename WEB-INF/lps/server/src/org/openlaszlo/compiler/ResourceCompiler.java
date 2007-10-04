@@ -128,6 +128,9 @@ class ResourceCompiler extends ElementCompiler {
                 }
                 resourceNames.add(name);
 
+                // Check if children are valid tags to be contained 
+                mEnv.checkValidChildContainment(element);
+
                 // N.B.: Resources are always imported into the main
                 // program for the Flash target, hence the use of
                 // getResourceGenerator below

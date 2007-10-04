@@ -10,7 +10,7 @@
     -->
     <class name="textstyle" extends="style">
         <attribute name="font" value="arial" type="string" />
-        <attribute name="fontsize" value="11" type="number" />
+        <attribute name="fontsize" value="11" />
         <attribute name="fontstyle" value="plain" type="string" />
     </class>    
 </library>

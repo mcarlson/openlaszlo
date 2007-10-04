@@ -17,6 +17,9 @@ class ClassModel implements Comparable {
     protected final Element definition;
     protected NodeModel nodeModel;
     
+    /** Set of tags that can legally be nested in this element */
+    protected Set mCanContainTags = new HashSet();
+
     /* If superclass is a predefined system class, just store its name. */
     protected String superclassName = null;
     protected boolean hasInputText = false;
@@ -110,7 +113,11 @@ class ClassModel implements Comparable {
     }
 
     ClassModel getSuperclassModel() {
-        return superclass;
+      return superclass;
+    }
+
+    String getClassName () {
+     return this.className;
     }
     
     String getSuperclassName() {
@@ -308,6 +315,17 @@ class ClassModel implements Comparable {
                 childDepth++;
             setChildrenClassRootDepth(child, childDepth);
         }
+    }
+
+
+      /** Add an entry to the table of legally containable tags for a
+     * given tag */
+    public void addContainsElement (String childtag) {
+      mCanContainTags.add(childtag);
+    }
+
+    public Set getContainsSet () {
+      return mCanContainTags;
     }
 }
 

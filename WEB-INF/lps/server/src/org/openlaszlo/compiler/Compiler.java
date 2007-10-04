@@ -308,11 +308,6 @@ public class Compiler {
             env.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, backtrace);
         }
 
-        String validate = props.getProperty(CompilationEnvironment.VALIDATE_PROPERTY,
-                                            LPS.getProperty("compiler.validate", "true"));
-        if (validate != null) {
-            env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, validate);
-        }
 
         String profile = props.getProperty(CompilationEnvironment.PROFILE_PROPERTY);
         if (profile != null) {
@@ -364,9 +359,9 @@ public class Compiler {
 
             mLogger.debug("Making a writer...");
 
-            // Initialize the schema from the base RELAX file
+            // Initialize the schema from the base LFC interface file
             try {
-                env.getSchema().loadSchema();
+                env.getSchema().loadSchema(env);
             } catch (org.jdom.JDOMException e) {
                 throw new ChainedException(e);
             }
@@ -376,20 +371,6 @@ public class Compiler {
             // files to have already been imported.
             if (! linking) { externalLibraries = env.getImportedLibraryFiles(); }
             Compiler.updateRootSchema(root, env, schema, externalLibraries);
-            if (SchemaLogger.isDebugEnabled()) {
-                org.jdom.output.XMLOutputter xmloutputter =
-                    new org.jdom.output.XMLOutputter();
-                try {
-                    SchemaLogger.debug(xmloutputter.outputString(schema.getSchemaDOM()));
-                } catch (org.jdom.JDOMException e) {
-                    throw new ChainedException(e);
-                }
-            }
-            
-            if (env.getBooleanProperty(CompilationEnvironment.VALIDATE_PROPERTY)) {
-                Parser.validate(doc, file.getPath(), env);
-            } 
-            
             Properties nprops = (Properties) env.getProperties().clone();
             Map compileTimeConstants = new HashMap();
             compileTimeConstants.put("$debug", new Boolean(
@@ -653,8 +634,7 @@ public class Compiler {
 
     static void importLibrary(File file, CompilationEnvironment env) {
         Element root = LibraryCompiler.resolveLibraryElement(
-            file, env, env.getImportedLibraryFiles(),
-            env.getBooleanProperty(CompilationEnvironment.VALIDATE_PROPERTY));
+            file, env, env.getImportedLibraryFiles());
         if (root != null) {
             compileElement(root, env);
         }
@@ -664,7 +644,7 @@ public class Compiler {
                                         ViewSchema schema, Set visited)
     {
         Element root = LibraryCompiler.resolveLibraryElement(
-            file, env, visited, false);
+            file, env, visited);
         if (root != null) {
             Compiler.updateSchema(root, env, schema, visited);
         }

@@ -51,8 +51,7 @@ class ImportCompiler extends ToplevelCompiler {
         String stage = XMLUtils.requireAttributeValue(element, "stage");
 
         Element module = LibraryCompiler.resolveLibraryElement(
-            element, mEnv, mEnv.getImportedLibraryFiles(),
-            mEnv.getBooleanProperty(mEnv.VALIDATE_PROPERTY));
+            element, mEnv, mEnv.getImportedLibraryFiles());
         if (module != null) {
             // check for conflict in the value of the "proxied"
             // attribute declared on the <import> tag vs the
@@ -124,7 +123,7 @@ class ImportCompiler extends ToplevelCompiler {
     }
 
     void updateSchema(Element element, ViewSchema schema, Set visited) {
-        element = LibraryCompiler.resolveLibraryElement(element, mEnv, visited, false);
+        element = LibraryCompiler.resolveLibraryElement(element, mEnv, visited);
         if (element != null) {
             super.updateSchema(element, schema, visited);
         }

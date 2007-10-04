@@ -98,17 +98,7 @@ class LibraryWriter extends DHTMLWriter {
     }
   }
 
-  private void exportAttributes() {
-      // Write out the validate attribute of the source library, but only if
-      // it was explicitly defined by the user
-      String property   = CompilationEnvironment.VALIDATE_PROPERTY;
-      String e_property = CompilationEnvironment.VALIDATE_EXPLICIT_PROPERTY;
-      String validate   = mEnv.getProperty(property, null);
-      String e_validate = mEnv.getProperty(e_property, null);
-      if (e_validate != null && validate != null) {
-        out.println("<attribute name='" + property + "' value='" + validate + "' />");
-      }
-  }
+  private void exportAttributes() {}
 
   private void exportResources() {
     for (Iterator i = resourceMap.entrySet().iterator(); i.hasNext(); ) {

@@ -38,6 +38,9 @@ abstract class ToplevelCompiler extends ElementCompiler {
     }
     
     public void compile(Element element) {
+        // Check if children are valid tags to be contained 
+        mEnv.checkValidChildContainment(element);
+
         for (Iterator iter = element.getChildren().iterator();
              iter.hasNext(); ) {
             Element child = (Element) iter.next();
@@ -54,15 +57,12 @@ abstract class ToplevelCompiler extends ElementCompiler {
      * look for elements named "class", find the "name" and "extends"
      * attributes, and enter them in the ViewSchema.
      *
-     * Also check for the "validate" attribute, to optionally disable validator.
-     *
      * @param visited {canonical filenames} for libraries whose
      * schemas have been visited; used to prevent recursive
      * processing.
      * 
      */
     void updateSchema(Element element, ViewSchema schema, Set visited) {
-        setValidateProperty(element, mEnv);
         Iterator iterator = element.getChildren().iterator();
         while (iterator.hasNext()) {
             Element child = (Element) iterator.next();
@@ -71,46 +71,6 @@ abstract class ToplevelCompiler extends ElementCompiler {
             }
         }
     }
-
-
-    /**
-     * Look for the "validate" attribute on canvas or at top level of imported libraries
-     *
-     * We look these places for the validate attribute:
-     *   <li>  canvas (root) element
-     *   <li>  direct child atttribute of canvas
-     * @param root source code document root
-     * @param env the CompilationEnvironment
-     */
-    void setValidateProperty(Element root , CompilationEnvironment env) {
-        String validate = CompilationEnvironment.VALIDATE_PROPERTY;
-        String e_validate = CompilationEnvironment.VALIDATE_EXPLICIT_PROPERTY;
-        // Look for canvas attribute
-        if (root.getAttributeValue(validate) != null) {
-            // Record that the user explicitly defined validate
-            env.setProperty(e_validate, true);
-            if ("false".equals(root.getAttributeValue("validate"))) {
-                env.setProperty(validate, false);
-            } else {
-                env.setProperty(validate, true);
-            }
-        }
-
-        // Look for direct canvas children <attribute name="validate" value="false">
-        for (Iterator iter = root.getChildren().iterator();
-             iter.hasNext(); ) {
-            Element child = (Element) iter.next();
-            if (child.getName().equals("attribute")
-                && validate.equals(child.getAttributeValue("name"))) {
-                // Record that the user explicitly defined validate
-                env.setProperty(e_validate, true);
-                if ("false".equals(child.getAttributeValue("value"))) {
-                    env.setProperty(validate, false);
-                }
-            }
-        }
-    }
-
 
     /** This also collects "attribute", "method", and HTML element
      * names, but that's okay since none of them has an autoinclude
@@ -129,7 +89,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
             if (compiler instanceof LibraryCompiler || compiler instanceof ImportCompiler) {
                 libStart = new LinkedHashSet(libsVisited.keySet());
                 libFound = new LinkedHashSet(libStart);
-                library = LibraryCompiler.resolveLibraryElement(element, env, libFound, false);
+                library = LibraryCompiler.resolveLibraryElement(element, env, libFound);
                 if (library == element) {
                     // Not an external library
                     library = null;

@@ -403,6 +403,14 @@ public class NodeModel implements Cloneable {
         this.parentClassModel = getParentClassModel();
     }
 
+    ViewSchema.Type getAttributeTypeInfoFromParent(
+        Element elt, String attrname)
+        throws UnknownAttributeException
+    {
+        Element parent = elt.getParentElement();
+        return schema.getAttributeType(parent, attrname);
+    }
+
     // Should only be called on a <class> definition element.
     ViewSchema.Type getAttributeTypeInfoFromSuperclass(
         Element classDefElement, String attrname)
@@ -614,14 +622,23 @@ public class NodeModel implements Cloneable {
                 }
             }
 
-            // Special case, if we are compiling a "class" tag,
-            // then get the type of attributes from the
-            // superclass.
+
             Schema.Type type;
             try {
                 if (className.equals("class")) {
+                    // Special case, if we are compiling a "class"
+                    // tag, then get the type of attributes from the
+                    // superclass.
                     type = getAttributeTypeInfoFromSuperclass(element, name);
-                }  else {
+                } else if (className.equals("state")) {
+                    // Special case for "state", it can have any attribute
+                    // which belongs to the parent. 
+                    try {
+                        type = schema.getAttributeType(element, name);
+                    } catch (UnknownAttributeException e) {
+                        type = getAttributeTypeInfoFromParent(element, name);
+                    }
+                } else {
                     // NOTE [2007-06-14 ptw]: Querying the classModel
                     // directly will NOT work, because the schema
                     // method has some special kludges in it for canvas
@@ -707,10 +724,7 @@ solution =
                       ComparisonMap references, ComparisonMap paths,
                       ComparisonMap styles) {
         if (cattr.type == cattr.ATTRIBUTE) {
-            // Ignore warnings for 'validate'
-            // FIXME [2007-08-31 pbr]: LPP-4620.
-            if (attrs.containsKey(name, caseSensitive) && 
-                !"validate".equalsIgnoreCase(name)) {
+            if (attrs.containsKey(name, caseSensitive)) {
                 env.warn(
 /* (non-Javadoc)
  * @i18n.test
@@ -866,12 +880,44 @@ solution =
         return (child.getName().equals("datapath"));
     }
 
+    void checkChildNameConflict(Element child, CompilationEnvironment env) {
+        String attrName = child.getAttributeValue("name");
+        if (attrName != null) {
+            ViewSchema.Type attrType = null;
+            try {
+                attrType = schema.getAttributeType(element,  attrName);
+            } catch (UnknownAttributeException e) {
+                    
+            }
+            if (attrType != null) {
+                // TODO [2007-09-26 hqm] i18n this
+                env.warn(
+                    "Child tag '" + child.getName() +
+                    "' with attribute '"+attrName +
+                    "' conflicts with attribute named '"+attrName+"' of type '" + attrType +
+                    "' on parent tag '"+element.getName()+"'.",
+                    element);
+            }
+        }
+    }
+
+
+
     void addChildren(CompilationEnvironment env) {
         // Encode the children
         for (Iterator iter = element.getChildren().iterator(); iter.hasNext(); ) {
             ElementWithLocationInfo child = (ElementWithLocationInfo) iter.next();
+            if (!schema.canContainElement(element.getName(), child.getName())) {
+                env.warn(
+                    // TODO [2007-09-26 hqm] i18n this
+                    "The tag '" + child.getName() +
+                    "' cannot be used as a child of " + element.getName(),
+                    element);
+            }
+
             try {
                 if (child.getName().equals("data")) {
+                    checkChildNameConflict(child, env);
                     // literal data
                     addLiteralDataElement(child);
                 } else if (isPropertyElement(child)) {
@@ -881,9 +927,11 @@ solution =
                 } else if (schema.isDocElement(child)) {
                     ; // ignore doc nodes.
                 } else if (isDatapathElement(child)) {
+                    checkChildNameConflict(child, env);
                     NodeModel dpnode = elementAsModel(child, schema, env);
                     this.datapath = dpnode;
                 } else {
+                    checkChildNameConflict(child, env);
                     NodeModel childModel = elementAsModel(child, schema, env);
                     children.add(childModel);
                     totalSubnodes += childModel.totalSubnodes();
@@ -1250,7 +1298,7 @@ solution =
                 if (when.equals(WHEN_IMMEDIATELY)) {
                     value = ScriptCompiler.quote(value);
                 }
-            } else if (type == ViewSchema.EXPRESSION_TYPE) {
+            } else if ((type == ViewSchema.EXPRESSION_TYPE) || (type == ViewSchema.BOOLEAN_TYPE)) {
                 // No change currently, possibly analyze expressions
                 // and default non-constant to when="once" in the
                 // future
@@ -1258,6 +1306,14 @@ solution =
                 // change "inherit" to null and pass true/false through as expression
                 if ("inherit".equals(value)) {
                     value = "null";
+                } else if ("true".equals(value)) {
+                    value = "true";
+                } else if ("false".equals(value)) {
+                    value = "false";
+                } else {
+                    // TODO [hqm 2007-0] i8nalize this message
+                    env.warn("attribute '"+name+"' must have the value 'true', 'false', or 'inherit'",
+                             element);
                 }
             } else if (type == ViewSchema.NUMBER_TYPE) {
                 // No change currently, possibly analyze expressions

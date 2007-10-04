@@ -408,7 +408,6 @@ public abstract class ResponderCompile extends Responder
      * <li> "logdebug"
      * <li> "lzbacktrace"
      * <li> "profile"
-     * <li> "validate"
      * <li> "sourcelocators"
      * <li> "lzr" (swf version := swf5 | swf6)
      * <li> "lzproxied" true|false
@@ -436,14 +435,6 @@ public abstract class ResponderCompile extends Responder
             String logdebug = req.getParameter(CompilationEnvironment.LOGDEBUG_PROPERTY);
             if (logdebug != null) {
                 props.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, logdebug);
-            }
-
-            // Look for "validate=boolean" flag, default to true
-            props.setProperty(CompilationEnvironment.VALIDATE_PROPERTY,
-                              LPS.getProperty("compiler.validate", "true"));
-            String validate = req.getParameter(CompilationEnvironment.VALIDATE_PROPERTY);
-            if (validate != null) {
-                props.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, validate);
             }
 
             // Look for "debug=true" flag
