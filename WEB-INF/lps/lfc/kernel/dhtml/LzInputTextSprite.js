@@ -76,6 +76,7 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
         this.__LZinputclickdiv.className = 'lzclickdiv';
         this.__LZinputclickdiv.owner = this;
         this.__LZinputclickdiv.onmouseover = function () {
+            if (this.owner.selectable != true) return;
             LzInputTextSprite.prototype.__setglobalclickable(false);
             this.owner.__show();
         }

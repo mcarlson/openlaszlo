@@ -146,7 +146,7 @@ LzModeManager.handleMouseEvent= function ( view, eventStr ) {
         if (view && view.childOf( mView ) ){
             break;
         } else if (mView) {
-            dosend = mView.passModeEvent( eventStr , view );
+            dosend = mView.passModeEvent ? mView.passModeEvent( eventStr , view ) : null;
         }
     }
 

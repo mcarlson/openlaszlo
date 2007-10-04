@@ -115,6 +115,10 @@
           field.setPattern(r);
         </method>
 
+        <method name="setSelection" args="start,end">
+            field.setSelection(start, end);
+        </method>
+
         <!--- @keywords private -->
         <method name="getFocusRect"  >
            var fx = this.getAttributeRelative('x',canvas);
@@ -194,7 +198,25 @@
 
         <!--- @keywords private -->
         <method name="applyData" args="d">
-            this.setText(d);
+            this.field.applyData( d );
+        </method>
+
+        <!--- @keywords private -->
+        <method name="updateData">
+            this.updateText();
+            return this.text;
+        </method>
+
+        <!-- Updates the text property of the component to the text that is
+             entered in its input field. -->
+        <method name="updateText">
+            this.setText( this.field.getText() );
+        </method>
+
+        <!--- Returns string displayed in this component, like getText().
+              @return String: the string displayed. -->
+        <method name="getValue">
+            return  this.field.getText();
         </method>
 
         <!--- @keywords private -->

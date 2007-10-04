@@ -790,9 +790,8 @@ function escapeText( ts ){
   * @param Boolean isSel: true if the text may be selected by the user
   */
 function setSelectable ( isSel ){
+    this.selectable = isSel;
     this.sprite.setSelectable(isSel);
-    //this.__LZtextclip.selectable = isSel;
-
 }
 
 /**

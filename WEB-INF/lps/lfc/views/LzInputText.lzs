@@ -105,6 +105,8 @@ function construct ( parent , args ){
                                             "onfocus" );
     this._onblurDel = new LzDelegate( this , "_gotBlurEvent" , this,
                                             "onblur" );
+    this._modemanagerDel = new LzDelegate( this, "_modechanged", LzModeManager,
+                                            "onmode" );
 }
 
 /**
@@ -228,6 +230,63 @@ function getText ( ){
 
 prototype.getText.dependencies = function(who, self) {
     return [ self, "text" ];
+}
+
+/** 
+  * this attribute control the LzText::selectable attribute trough its setter
+  * @access private
+  */
+var _allowselectable=true;
+
+/** 
+  * cache true value of selectable
+  * @access private
+  */
+var _selectable;
+
+/** 
+  * Catch all LzModeManager events
+  * @access private
+  */
+function _modechanged(modalview) {
+    // !modalview = "LzModeManager release a view" => so allowselectable
+    if ( !modalview ) {
+        this._setallowselectable(true);
+    } else {
+        // LzModeManager make modalview as modal
+        // (modalview.nodeLevel > this.nodeLevel) = "This cannot be a child of the setted modal view"
+        // so not allowselectable
+        if ( modalview.nodeLevel > this.nodeLevel ) {
+            this._setallowselectable( false );
+        } else {
+            // is this a child of the setted modal view
+            var parentSeeking = this;
+
+            do {
+                parentSeeking = parentSeeking.parent;
+            } while ( parentSeeking != canvas && parentSeeking != modalview );
+
+            this._setallowselectable(parentSeeking != canvas);
+        }
+    }
+}
+
+/** 
+  * update the selectable status based on cached value
+  * @access private
+  */
+function _setallowselectable(value) {
+    this._allowselectable = value;
+    this.setSelectable( this._selectable );
+}
+
+/** 
+  * @access private
+  */
+function setSelectable(value) {
+    this._selectable = value;
+    // depending on allowselectable : the setted value or false !
+    super.setSelectable( this._allowselectable ? value : false );
 }
 
 } // End of LzInputText

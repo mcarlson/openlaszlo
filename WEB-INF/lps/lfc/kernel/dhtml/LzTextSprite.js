@@ -53,6 +53,7 @@ LzTextSprite.prototype._whiteSpace = 'normal';
 LzTextSprite.prototype.__wpadding = 4;
 LzTextSprite.prototype.__hpadding = 4;
 LzTextSprite.prototype.__sizecacheupperbound = 1000;
+LzTextSprite.prototype.selectable = true;
 
 LzTextSprite.prototype.setFontSize = function (fsize) {
     if (fsize == null || fsize < 0) return;
@@ -340,6 +341,7 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
 }
 
 LzTextSprite.prototype.setSelectable = function (s) {
+    this.selectable = s;
     //Debug.write('setSelectable', s, this.__LZdiv.style);
     if (s) {
         this.__LZdiv.onselectstart = null;
