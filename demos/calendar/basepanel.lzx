@@ -5,7 +5,7 @@
     <!-- ============================================================== -->
     <class name="basepanel" height="100" width="100">
         <!-- VIEWS -->
-        <view name="frame" width="100%" height="100%">
+        <view name="myframe" width="100%" height="100%">
             <view name="top" width="${parent.width}" height="19" >
                 <view name="l" resource="tpLft" x="-1"  y="-1"/>
                 <view name="m" resource="tpMdl" stretches="width"
@@ -49,7 +49,7 @@
 
         <!-- this is currently unused, but allows for coloriation of panel -->
         <method name="transformto" args="tm">
-                frame.setColorTransform(tm);
+                myframe.setColorTransform(tm);
         </method>
         
         <method name="setWindowTitle" args="s">
@@ -59,7 +59,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

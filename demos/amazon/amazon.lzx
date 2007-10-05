@@ -506,7 +506,7 @@ Debug.write("Searching");
     <view name="dragsmall" visible="false">
         <attribute name="dragging" value="false"/>
         <view name="img" x="12" y="5" width="50" height="50" clip="true" opacity="0.7"/>
-        <view name="frame" resource="dragframe" x="${parent.img.x-12}" y="${parent.img.y-5}"/>
+        <view name="myframe" resource="dragframe" x="${parent.img.x-12}" y="${parent.img.y-5}"/>
 
         <dragstate name="drag"/>
 
