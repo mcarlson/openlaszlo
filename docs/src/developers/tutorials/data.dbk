@@ -236,7 +236,8 @@
 
 <para>So far we've been using embedded data; i.e. XML that is written into the document. This is fine for very small amounts of static data, but there are other methods better suited to larger (or dynamic) data.</para>
  
-<informaltable><tgroup cols="3"><thead><row><entry>How is it included?</entry><entry>When is it loaded?</entry><entry>Syntax</entry></row></thead><tbody><row><entry><link linkend="data-tutorial.embedded">Embedded</link></entry><entry>Compile-time</entry><entry>
+<informaltable><tgroup cols="3"><thead><row><entry>How is it included?</entry>
+<entry>When is it loaded?</entry><entry>Syntax</entry></row></thead><tbody><row><entry><link linkend="data-tutorial.embedded">Embedded</link></entry><entry>Compile-time</entry><entry>
 <informalexample role="live-example"><programlisting>
 &lt;dataset name="myData"&gt;
   &lt;myXML&gt;
@@ -340,4 +341,22 @@
 <!--unknown tag: datapointer-->
  <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal> and <indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal> event handlers to capture any problems. </para>
 
-<para/></section></chapter>
+<para/>
+<section>
+<title>Differential debugging SWF and DHTML</title>
+<para>When you query or manipulate an invalid datapointer, in the past,
+you got back `undefined`. In DHTML, this often led to disaster down
+the road, so the compiler added a warning when you did this, but still returned
+`undefined` for backwards compatibility. In SWF, which is very
+lenient about dealing with undefined values, manipulating an invalid
+datapointer appears to have no ill effects; but the compiler still issues the
+warning, because you may run into trouble if you compile your code
+for DHTML. </para>
+<para>When you define an LZX class whose name is the same as an
+underlying runtime global, in the past, the runtime clobbered the runtime
+global, to allow you to say `new &lt;tagname&gt;` to dynamically create
+instances of your LZX tag. This leads to disaster in any runtime, so
+the runtime no longer clobbers the global and it emits a warning telling you you
+will need to use `lz.&lt;tagname&gt;` to reference the class dynamically.</para>
+</section>
+</section></chapter>
