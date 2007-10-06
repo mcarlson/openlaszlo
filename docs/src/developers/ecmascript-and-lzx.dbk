@@ -114,11 +114,13 @@ following table in the SWF runtime.</para>
       </entry><entry>
         <simplelist><member type="vert"><para><literal role="unsupported">EvalError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">new EvalError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
       </entry></row><row><entry>
-        <para><literal role="unsupported">Function</literal></para>
+        <para><literal role="supported">Function</literal></para>
+      </entry>
+      <!-- fix LPP-4338: apply and call are now supported. IORIO 28 sep 2007 -->
+      <entry>
+        <simplelist><member type="vert"><para><literal role="supported">Function.prototype</literal></para></member><member type="vert"><para><literal role="supported">constructor</literal></para></member><member type="vert"><para><literal role="supported">length</literal></para></member></simplelist>
       </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">Function.prototype</literal></para></member><member type="vert"><para><literal role="unsupported">constructor</literal></para></member><member type="vert"><para><literal role="unsupported">length</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">Function(...)</literal></para></member><member type="vert"><para><literal role="unsupported">new Function(...)</literal></para></member><member type="vert"><para><literal role="unsupported">apply(this, args[])</literal></para></member><member type="vert"><para><literal role="unsupported">call(this, ...)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
+        <simplelist><member type="vert"><para><literal role="supported">Function(...)</literal></para></member><member type="vert"><para><literal role="supported">new Function(...)</literal></para></member><member type="vert"><para><literal role="supported">apply(this, args[])</literal></para></member><member type="vert"><para><literal role="supported">call(this, ...)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
       </entry></row><row><entry>
         <para><literal role="supported">Global</literal></para>
       </entry><entry>
