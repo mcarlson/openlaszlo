@@ -792,7 +792,7 @@ parameter:</para>
 <para>If the authentication was successful, the security server should return
 HTTPAuthentication a username, which, in turn, is returned to the OpenLaszlo Server. You can
 change the default authenticator with the
-<literal>connection.default.authenticator</literal> property. See the "Deployer's
+<literal>connection.default.authenticator</literal> property. See the "Administrator's
 Guide" for more on how to configure your server and <link linkend="persistent_connection.httpauthentication">HTTPAuthentication</link> for what the XML response
 format of authentication servers should look like.</para>
 

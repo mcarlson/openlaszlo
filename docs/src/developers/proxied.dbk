@@ -133,7 +133,7 @@ If either deployment manner is available to you, the decision may come down to w
 method and see which gives the faster performance.</para>
 <para/><section><title>GZipping DHTML Applications</title>
 <para>
-When compiling for DHTML, you should ensure that gzipping is turned on at the server. This is done automatically for DHTML files, but not for DHTML. See the Deployer's Guide for details.
+When compiling for DHTML, you should ensure that gzipping is turned on at the server. This is done automatically for DHTML files, but not for DHTML. See the Administrator's Guide for details.
 </para>
 <para>
 The data transfer size and run-time performance may  be bigger or smaller, faster or slower.  
