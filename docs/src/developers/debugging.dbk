@@ -273,7 +273,20 @@ then clicking on the object's representation.</para>
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/debugging-$5.lzx></example?>
 <calloutlist><callout arearefs="N10239"><para>The (only) argument to <indexterm><primary><literal>Debug.write()</literal> method</primary></indexterm><methodname>Debug.write()</methodname> is a string, so the value of <literal>canvas.subviews</literal> is not inspectable.</para></callout><callout arearefs="N10243"><para>The second argument to <indexterm><primary><literal>Debug.write()</literal> method</primary></indexterm><methodname>Debug.write()</methodname> is an non-string Object, so it is inspectable.</para></callout></calloutlist>
-<para/></section><section><title>Conditional Compilation of Debugging Code</title>
+<para/></section>
+<section>
+<title>Generating a bug report</title>
+<para>If you encounter a bug that prints a message in the debugger and you believe it is an OpenLaszlo bug, take the following steps to generate a bug report:</para>
+<orderedlist spacing="compact">
+<listitem><para>Enable Backtrace in the developer console</para></listitem>
+<listitem><para>Provoke the error</para></listitem>
+<listitem><para>Click on the debugger message to `inspect` it</para></listitem>
+<listitem><para>Invoke `Debug.bugReport()` in the debugger</para></listitem>
+<listitem><para>Copy and Paste the output into your bug report</para></listitem>
+</orderedlist>
+<para>The Bug Report gives details of the exact build of OpenLaszlo that you are reporting on, the detailed error message, backtrace, and the details of all objects involved.</para>
+</section>
+<section><title>Conditional Compilation of Debugging Code</title>
 <para>
 Sometimes you may have computations that you need to make only when you're debugging an application. For example, you may include some time stamps in order to measure performance of certain sections of code.
 </para>
