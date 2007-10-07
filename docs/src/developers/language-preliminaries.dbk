@@ -146,7 +146,8 @@ etc.);</para></listitem><listitem><para> the object model;</para></listitem><lis
 <para>and in both cases the background color of <literal>myview</literal> could be accessed by subsequent code as <literal>myview.bgcolor</literal> . The "dot" convention thus provides a convenient way of referring to objects regardless of how they came into existence — that is, whether by declarative tag or procedural code.</para> 
 <para/></section><section><title>Case Sensitivity</title>
 <para>
-OpenLaszlo entirely case-sensitive.  This means that whenever you use a variable it must be in the case in which it was defined.
+<!-- fix typo per LPP-4847 IORIO 7 oct 2007 -->
+OpenLaszlo is entirely case-sensitive.  This means that whenever you use a variable it must be in the case in which it was defined.
 </para>
 
 <para/></section><section><title>Implicit "this" and "with"</title>
@@ -540,8 +541,8 @@ program.</para>
 <para/></section></section><section><title>Data Access, Manipulation, and Binding</title> 
 
 <para>LZX is designed to make it easy to write data-driven applications in which the values of data sources define the appearance and actions of the program. It does this through tags and APIs that allow you to get access to data over http, manipulate XML data in memory, and, significantly, bind the data hierarchy to the view hierarchy.</para> 
-
-<para>The following paragraphs summarize these key features of the LZX data-handling architecture. <xref linkend="data"/> discusses this subject in depth.</para> 
+<!-- fix broken xref per LPP-4847 IORIO 7 oct 2007 -->
+<para>The following paragraphs summarize these key features of the LZX data-handling architecture. <xref linkend="data-structures"/> discusses this subject in depth.</para> 
 
 <para/><section><title>Data Access</title> 
 
@@ -568,7 +569,8 @@ program.</para>
 
 <para>where <varname>testdata</varname> refers to a dataset defined earlier in the program.</para> 
 
-<para>If this sounds a little abstract, well, it is. Therefore we'll keep the discussion short here and defer longer explanations to <xref linkend="data"/>; you may also want to examine some of the examples on <ulink url="http://www.laszlosystems.com/demos">http://www.laszlosystems.com/demos</ulink> to get a feel for what can be done when applications are truly data-driven.</para> 
+<!-- fix broken xref per LPP-4847 IORIO 7 oct 2007 -->
+<para>If this sounds a little abstract, well, it is. Therefore we'll keep the discussion short here and defer longer explanations to <xref linkend="databinding"/>; you may also want to examine some of the examples on <ulink url="http://www.laszlosystems.com/demos">http://www.laszlosystems.com/demos</ulink> to get a feel for what can be done when applications are truly data-driven.</para> 
 
 <para>The key thing to understand is that while other languages and technologies have implemented merge algorithms that may appear similar on the surface, LZX's data binding is novel in the creation of program objects that retain a live connection with the entities of the data source.</para> 
 
