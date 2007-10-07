@@ -470,7 +470,7 @@ Call <literal>__LzDebug.whyAlive()</literal>. This returns a ''leak list'', whic
 <para/></section><section><title condition="dhtml">Debugging in DHTML</title>
 <para/><section><title>Using the Firebug extension</title>
     <para>
-      For debugging the DHTML runtime, we recommend the <ulink url="http://getfirebug.com/">FireBug</ulink> extension to FireFox. If Firebug reports an error (with a little tiny red X in the bottom right hand corner of your FireFox window) then there is probably a bug in your code or an OpenLaszlo bug. The errors reported by FireBug can be very obscure, but they usually happen when you are dereferencing a null pointer.
+      For debugging the DHTML runtime, we recommend the <ulink url="http://getfirebug.com/">Firebug</ulink> extension to Firefox. If Firebug reports an error (with a little tiny red X in the bottom right hand corner of your Firefox window) then there is probably a bug in your code or an OpenLaszlo bug. The errors reported by Firebug can be very obscure, but they usually happen when you are dereferencing a null pointer.
     </para>
     <para>
       Firebug is more useful if you compile your DHTML application under debug mode (<literal>debug=true</literal>) so that method names show up in firebug stack traces. Dropping down the arrow next to an exception in firebug will show a complete stack trace - often helpful for tracking down the root cause.  Please file bugs with a stack trace if possible!
@@ -479,6 +479,12 @@ Call <literal>__LzDebug.whyAlive()</literal>. This returns a ''leak list'', whic
 When you're compiling to DHTML, you generally use a two-step/two debugger process. It is always a good practice for you to have Firebug, because the OpenLaszlo debugger does not catch _all_ errors (it would be too much overhead to do so). We try to make our code debuggable in Firebug, as much as possible, but there are several limitations:</para>
 <itemizedlist spacing="compact"><listitem><para>Firebug does not know about our class system, so it cannot display our objects as intelligently as our debugger, and </para></listitem><listitem><para>Firebug does not understand OpenLaszlo #file and #line declarations, so it cannot give as accurate error locations as our debugger does. </para></listitem></itemizedlist>
 
+<!-- added not about script running slowly error to fix JIRA-LPP-4846, IORIO 7 oct 2007 -->
+<note><para>If you have Firebug enabled in Firefox, the LZX debugger echos
+all messages to the Firebug console, preserving objects. The Firebug
+debugger will attempt to interpret an object with a `length` field as
+an array and try to print every array element. This may cause a
+'Script Running Slowly' error. Disabling Firebug will prevent that.</para></note>
 <para/></section><section><title>The &lt;debug&gt; tag</title>
 <para>
 In DHTML, the debugger appears as a separate HTML frame, rather than
