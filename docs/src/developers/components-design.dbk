@@ -647,4 +647,21 @@ code set.</para>
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/custom-components-$15.lzx></example?>
 
-<para/></section></section></chapter>
+<para/></section></section>
+<section>
+<title>Component auto-include</title>
+<para>You can auto-include a component so you can use the new tag anywhere without having to include it.</para>
+<orderedlist>
+<listitem><para>Copy your component somewhere under lps/components. Be sure to explicitly include all auto-included lzx files, for example, if you use simplelayout, be sure to add:</para>
+<para><literal>&lt;include href="util/layouts/simplelayout.lzx"/&gt;</literal></para>
+<para>Notice how the path is relative to the root of the components directory.</para>
+</listitem>
+<listitem><para>Add the tag name and component path to WEB-INF/lps/misc/lzx-autoincludes.properties. For example, to add an 
+image component under base/image.lzx, add this line to the properties file:</para>
+<para><literal>image: base/image.lzx</literal></para>
+<para>Once again, notice how the path is relative to the root of the components directory.</para>
+</listitem>
+<listitem><para>Restart LPS. You should now be able to use the new tag anywhere without having to include it. </para></listitem>
+</orderedlist>
+</section>
+</chapter>
