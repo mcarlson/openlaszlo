@@ -1,6 +1,6 @@
 <library>
 
-    <attribute name="urlprefix" value="../reference/index.html" type="string" />
+    <attribute name="urlprefix" value="../reference/" type="string" />
     <attribute name="lfccolor" value="0xDFD498" type="number" />
     <attribute name="basecolor" value="0xD1DCF1" type="number" />
     <attribute name="lcicolor" value="0xD5E6D2" type="number" />
@@ -68,7 +68,7 @@
         <attribute name="textselectedcolor" value="0xFFFFFF" type="number" />
         <method event="onclick">
             var file = (this.file != '' ? this.file : this.text + '.html');
-            var url = canvas.urlprefix + '?' + file;
+            var url = canvas.urlprefix + file;
             LzBrowser.loadURL('javascript: var wptr = window.open("' + url + '","laszlo-reference","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
         </method>
         <method event="onmouseup">
