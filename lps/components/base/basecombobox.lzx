@@ -202,7 +202,7 @@
 
             <state name="non_editable_state" >
                 <text x="2" y="1" name="cbtext" width="${parent.width - 4}"
-                    clickable="true" focusable="true" resize="false">
+                    clickable="true" focusable="true">
                     <attribute name="text" type="string" />
 
                     <!-- arrow down and up, and spacebar all popup floatinglist, and pass the key event to it -->
@@ -278,6 +278,16 @@
 
             <handler name="onconstruct">
                 this.dataoption = owner.dataoption;
+            </handler>
+            <handler name="oninit">
+                <![CDATA[
+                // Clips to the canvas, so it doesn't spill off down into
+                // forever and subsequently look all goofy.
+                if(this.owner.shownitems == -1){
+                    var ih = Math.floor((canvas.height - owner.y) / owner.height);
+                    this.setAttribute('shownitems', ih);
+                }
+                ]]>
             </handler>
 
             <method name="_dokeyup" args="kc"
