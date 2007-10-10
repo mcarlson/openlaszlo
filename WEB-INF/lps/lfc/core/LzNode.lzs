@@ -1044,7 +1044,7 @@ function makeChild ( e , async ){
     // TODO: [2005-03-24 ptw] Remove this if we ever enable
     // warnings in the LFC as this will be redundant
     if ($debug) {
-        if ((! x) || (! (x.make instanceof Function))) { Debug.error('Class for tag %s has not been defined yet', e.name); }
+        if ((! x) || (! (x instanceof Function))) { Debug.error('Class for tag %s has not been defined yet', e.name); }
     }
     // TODO: [2005-04-20 ptw] Don't know what this means, preserved
     // for posterity:

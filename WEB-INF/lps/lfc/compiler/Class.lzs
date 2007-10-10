@@ -136,8 +136,9 @@ Instance.prototype.addProperty('nextMethod', function nextMethod (currentMethod,
 /**
   * Instance initialize method
   *
-  * Called by Instance.make as the last operation on a new instance of a class.
-  * Arguments are the arguments that were passed to make.
+  * Called by Instance constructor as the last operation on a new
+  * instance of a class.  Arguments are the arguments that were passed
+  * to make.
   *
   * Can be overridden in subclasses, but must call superclass initialze
   * if so.
@@ -174,42 +175,6 @@ if ($debug) {
   Instance.initialize._dbg_typename = 'Instance static function';
 }
 
-
-/**
-  * Default Instance factory
-  *
-  * Make a new instance of a class.
-  *
-  * @access private
-  *
-  * @devnote This is just for coherence with the Class interface.
-  * Normally new instances will be created by `new _class_`.
-  */
-Instance.make = function make () {
-  // Should not be called in the new world...
-  if ($debug) {
-    Debug.info("`%w.%s` is deprecated.  Use `new %w` instead.", this, arguments.callee, this);
-  }
-  {
-    #pragma "passThrough=true"
-    if (arguments.length > 0) {
-      // We have to work hard to break a conventional constructor into a
-      // constructor and initializer when there are args, because
-      // Javascript does not support apply of new.
-      var constructor = this;
-      function xtor () { this.constructor = constructor; };
-      xtor.prototype = constructor.prototype;
-      var o = new xtor();
-      constructor.apply(o, arguments);
-      return o;
-    }
-    return new this();
-  }
-};
-
-if ($debug) {
-  Instance.make._dbg_typename = 'Instance static function';
-};
 
 if ($debug) {
   Instance.prototype.addProperty('validateClassStructure', function validateClassStructure () {
