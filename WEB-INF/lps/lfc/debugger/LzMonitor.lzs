@@ -16,7 +16,7 @@
   *
   * @access private
   */
-var LzMonitor = function(file, line, message) {
+function LzMonitor (file, line, message) {
   // super.apply(arguments);
   LzSourceMessage.apply(this, arguments);
 };

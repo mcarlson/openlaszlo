@@ -231,7 +231,9 @@ Debug.warnInternal = function (xtor, control, args) {
     var msg = xtor.format.apply(xtor, [null, null].concat(Array.prototype.slice.call(arguments, 1)));
     {
       var mls = this.messageLevels;
-      if (mls[xtor.prototype.type] >= mls[this.messageLevel]) {
+      var t = xtor.prototype.type;
+      // Default to printing any 'unknown' types
+      if ((t in mls) ? (mls[t] >= mls[this.messageLevel]) : true) {
         this.freshLine();
         this.__write(msg);
       }

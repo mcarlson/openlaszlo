@@ -16,7 +16,7 @@
   * A Trace is a warning with the tag 'TRACE'
   * @access private
   */
-var LzTrace = function(file, line, message) {
+function LzTrace (file, line, message) {
   // super.apply(arguments);
   LzSourceMessage.apply(this, arguments);
 }
