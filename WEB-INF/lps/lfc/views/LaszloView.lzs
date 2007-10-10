@@ -2582,5 +2582,19 @@ function __warnCapability(msg) {
     Debug.warn('The %s runtime does not support %s', lzr, msg); 
 }
 
+/**
+  * LzView.getNextSelection
+  * Override to specify the next view to be focused
+  * @access public
+  */
+function getNextSelection() {
+}
+/**
+  * LzView.getPrevSelection
+  * Override to specify the previous view to be focused
+  * @access public
+  */
+function getPrevSelection() {
+}
 } // End of LzView
 
