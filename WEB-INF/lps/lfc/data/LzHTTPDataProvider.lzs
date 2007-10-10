@@ -96,9 +96,6 @@ class LzHTTPDataProvider extends LzDataProvider {
         tloader.setOption('timeout',        dreq.timeout);
         tloader.setOption('trimwhitespace', dreq.trimwhitespace == true);
         tloader.setOption('nsprefix',       dreq.nsprefix == true);
-        Debug.info("setting option sendheaders to ",dreq.getresponseheaders == true);
-        Debug.info("dreq.proxied = ", proxied);
-        Debug.info(tloader);
         tloader.setOption('sendheaders',    dreq.getresponseheaders == true);
 
         if ( dreq.clientcacheable != null ){
@@ -258,8 +255,6 @@ class LzHTTPDataProvider extends LzDataProvider {
         dreq.xmldata = content;
         dreq.responseheaders = headers;
         dreq.rawdata = dreq.loader.getResponse();
-
-        Debug.info("loadResponse", this, dreq, data);
         dreq.onstatus.sendEvent( dreq );
 
     }
