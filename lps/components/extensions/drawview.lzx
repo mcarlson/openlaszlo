@@ -276,8 +276,8 @@
             }
 
             function _onconstruct(args) {
-                var w = args ? args['width'] : this.width;
-                var h = args ? args['height'] : this.height;
+                var w = Math.floor(args ? args['width'] : this.width);
+                var h = Math.floor(args ? args['height'] : this.height);
                 if (this['__id'] == null && w > 0 && h > 0) {
                     this._buildcanvas(w, h);
                 }
@@ -320,6 +320,7 @@
     
                 if (Lz.__BrowserDetect.isIE) {
                     // IE can take a while to start up.
+                    this._hidden = false;
                     this.maxTries = 10;
                     this.__initie();
                 } else {
@@ -328,14 +329,32 @@
             }
             function setWidth(w) {
                 super.setWidth(w);
-                if (this.height > 0) {
-                    this._buildcanvas(w, this.height);
+                w = Math.floor(w);
+                var h = Math.floor(this.height);
+                if (h > 0 && w > 0) {
+                    this._buildcanvas(w, h);
+                    if (this.__LZcanvas && this['_hidden']) {
+                        this._hidden = false;
+                        this.__LZcanvas.style.visibility = null;
+                    }
+                } else if (this.__LZcanvas && this['_hidden'] != true) {
+                    this._hidden = true;
+                    this.__LZcanvas.style.visibility = "hidden";
                 }
             }
             function setHeight(h) {
                 super.setHeight(h);
-                if (this.width > 0) {
-                    this._buildcanvas(this.width, h);
+                var w = Math.floor(this.width);
+                h = Math.floor(h);
+                if (w > 0 && h > 0) {
+                    this._buildcanvas(w, h);
+                    if (this.__LZcanvas && this['_hidden']) {
+                        this._hidden = false;
+                        this.__LZcanvas.style.visibility = null;
+                    }
+                } else if (this.__LZcanvas && this['_hidden'] != true) {
+                    this._hidden = true;
+                    this.__LZcanvas.style.visibility = "hidden";
                 }
             }
  
