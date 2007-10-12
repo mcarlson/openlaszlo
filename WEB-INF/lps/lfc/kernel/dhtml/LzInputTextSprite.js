@@ -119,6 +119,8 @@ LzInputTextSprite.prototype.__show = function() {
         this.__LZinputclickdiv.appendChild(this.__LzInputDiv);
     }
     //Debug.write('show');
+    // turn on selection in IE
+    document.onselectstart = null;
 }
 
 LzInputTextSprite.prototype.__hideIfNotFocused = function(eventname, target) {
@@ -179,6 +181,8 @@ LzInputTextSprite.prototype.__hide = function() {
     }
     this.__LZdiv.appendChild(this.__LzInputDiv);
     //Debug.write('hide');
+    // turn off selection in IE
+    document.onselectstart = LzTextSprite.prototype.__cancelhandler;
 }
 
 LzInputTextSprite.prototype.gotBlur = function() {
