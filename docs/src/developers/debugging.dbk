@@ -232,7 +232,14 @@ width.</para>
 <para>Evaluating <literal>Debug.write(<varname>object</varname>)</literal>, where
 <literal><varname>object</varname></literal> is an expression that evaluates to a
 JavaScript object, displays an <indexterm significance="preferred"><primary>inspectable representation</primary></indexterm><glossterm>inspectable representation</glossterm>
-of the object in the debugger.    Clicking on an
+of the object in the debugger (not the actual object). Long objects are abbreviated based on the value of <literal>Debug.printLength</literal> (see <xref linkend="configuring-debugger"/>). Abbreviated objects are shown enclosed in double angle quotes, with an ellipsis indicating abbreviation like this:
+</para>
+<literal><blockquote><para>«object...»</para></blockquote></literal>
+<para>If you inspect the abbreviated output, it will print the full object. </para>
+
+
+<para>
+Clicking on an
 inspectable object displays its non-private properties and their
 values.  Those values which are objects are also displayed as
 inspectable objects, so that they can be clicked on as well.</para>
@@ -301,7 +308,7 @@ if ($debug) {
 <para>
 The compiler will omit those statements when you compile without debugging.
 </para>
-<para/></section></section><section><title>Configuring the Debugger</title>
+<para/></section></section><section id="configuring-debugger"><title>Configuring the Debugger</title>
 <para/><section><title>Debugger Window Position</title>
 
 <para>By default, the debugger comes up over the top left corner of your
@@ -477,7 +484,9 @@ Call <literal>__LzDebug.whyAlive()</literal>. This returns a ''leak list'', whic
     </para>
 <para>
 When you're compiling to DHTML, you generally use a two-step/two debugger process. It is always a good practice for you to have Firebug, because the OpenLaszlo debugger does not catch _all_ errors (it would be too much overhead to do so). We try to make our code debuggable in Firebug, as much as possible, but there are several limitations:</para>
-<itemizedlist spacing="compact"><listitem><para>Firebug does not know about our class system, so it cannot display our objects as intelligently as our debugger, and </para></listitem><listitem><para>Firebug does not understand OpenLaszlo #file and #line declarations, so it cannot give as accurate error locations as our debugger does. </para></listitem></itemizedlist>
+<itemizedlist spacing="compact"><listitem><para>Firebug does not know about our class system, so it cannot display our 
+objects as intelligently as our debugger, and </para></listitem><listitem><para>Firebug does not understand 
+OpenLaszlo #file and #line declarations, so it cannot give as accurate error locations as our debugger does. </para></listitem></itemizedlist>
 
 <!-- added not about script running slowly error to fix JIRA-LPP-4846, IORIO 7 oct 2007 -->
 <note><para>If you have Firebug enabled in Firefox, the LZX debugger echos
@@ -498,8 +507,11 @@ in-line in the application. As a consequence the <indexterm><primary>debug</prim
     <para>
       In JavaScript you are allowed to ask for a non-existent slot, but not for a slot on something that is not an object. Therefore, don't say <literal>foo.bar</literal> unless you know that foo is an object. If you know foo is either an object or null, you can say <literal>if (foo)</literal> before you say <literal>foo.bar</literal>. If you don't even know that, you would need to say <literal>if (foo instanceof Object)</literal>.
     </para>
+    <!-- added "has no properties" error to fix JIRA-LPP-4861, IORIO 12 oct 2007 -->
     <para condition="dhtml">
-      Furthermore, in DHTML you cannot reference a non-existent variable. Therefore you should declare all your variables. In SWF, you could get by without declaring them, and they would just appear to be `undefined`, in DHTML, it is an error to refer to foo if you have not first said <literal>var foo</literal>.
+      Furthermore, in DHTML you cannot reference a non-existent variable. Therefore you should declare all your 
+      variables. In SWF, you could get by without declaring them, and they would just appear to be `undefined`, in 
+      DHTML, you will get a "has no properties" error if you refer to foo and you have not first said <literal>var foo</literal>.
     </para>
     <para>
       If you are trying to make some legacy code work, you can ask <literal>if ('foo' in global)</literal> to see if foo had been declared, but that's sloppy. It's better to inspect your code to make sure that all variables are initialized before they're referenced.  Even if you're not planning to compile to DHTML, you should use the more conservative style, as this will enhance maintainability and allow you to retarget for DHTML in the future if you decide to do so.

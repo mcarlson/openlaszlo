@@ -612,9 +612,10 @@ debugger, does not change, even as the view visibly shrinks.</para>
 </programlisting><?lzx-edit programs/views-$15.lzx></example?>
 
 <para/></section><section><title>Offsets</title>
+<!-- fix typo "registration pointthat" LPP-4769 IORIO 12 oct 2007-->
 <para>
  Every view 
-has an internal <glossterm>registration point</glossterm>that is at (0,0) by default, the upper left hand corner of the view. 
+has an internal <glossterm>registration point</glossterm> that is at (0,0) by default, the upper left hand corner of the view. 
 This point 
 can be changed using the <indexterm><primary>xoffset</primary></indexterm><sgmltag class="attribute">xoffset</sgmltag> and <indexterm><primary>yoffset</primary></indexterm><sgmltag class="attribute">yoffset</sgmltag>
  attributes. In short, the offset attributes are applied to the registration point of the view.
@@ -1038,10 +1039,10 @@ to interpret it however it wants.</para>
 <para>These concepts are explained in greater detail, and with several
 more examples, in <xref linkend="class-inheritance"/>.</para>
  <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>Creating an array of subviews</remark></para>
-
+<!-- fix typo "you when you need" LPP-4769 IORIO 12 oct 2007-->
 <para/></section></section><section><title>Views and Nodes</title>
-<para>In LZX, the fundamental objects are called nodes. Nodes are abstract entities and as such they have no visual representation. Views are the most common kind of node, and in most cases
-you when you need a container object, you should use a view even though a node would work. In fact, although 
+<para>In LZX, the fundamental objects are called nodes. Nodes are abstract entities and as such they have no visual 
+representation. Views are the most common kind of node, and in most cases when you need a container object, you should use a view even though a node would work. In fact, although 
 you can use <indexterm><primary>node</primary></indexterm><sgmltag class="element">&lt;node&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: node-->
 s for most of the abstract
