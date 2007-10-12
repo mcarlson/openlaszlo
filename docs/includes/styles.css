@@ -18,11 +18,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size : 18px;
+    font-size : 20px;
 }
 
 h2 {
-    font-size : 16px;
+    font-size : 18px;
+    margin-bottom: 20px;
 }
 
 h3 {
@@ -252,7 +253,7 @@ body.doc-index {
 
 /* Code ******************************************* */
 
-.code, .program, .fragment, tt {
+.code, .program, .fragment, tt, .varname {
     font-family : "Courier New", Courier, monospace;
     font-size : 13px;
     font-weight : bold;

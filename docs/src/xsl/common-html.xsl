@@ -38,7 +38,7 @@
   <!-- class of html body element -->
   <xsl:param name="html.body.class"/>
   <!-- Show fixmes if true -->
-  <xsl:param name="show.fixmes" select="0"/>
+  <xsl:param name="show.fixmes" select="1"/>
 
   <xsl:param name="textdata.default.encoding"/>
   

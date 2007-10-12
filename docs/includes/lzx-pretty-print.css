@@ -17,8 +17,20 @@
 .comment-markup {color: gray; }
 .constraint-markup {color: gray}
 .constraint-expression {color: red}
+.literal {
+    background-color: #eaeaea;
+    font-family: "Courier New",Courier,monospace;
+    font-size: 13;
+}
 
-/* Next two styles, .warningheader and .warningheader a, 
+.refpurpose {
+    margin-top: 20px;
+    font-style: italic;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* Next two styles, .warningheader and .warningheader a,
 are for the in-progress tag for the OL4.0.5 reference only. 
 After 4.0.5, these can be deleted. [bshine 2007.08.30] 
 Bug LPP-4539. */

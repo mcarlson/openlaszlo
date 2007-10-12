@@ -208,7 +208,7 @@ verbosity=1
     <java classname="com.icl.saxon.StyleSheet"
           fork="yes"
           failonerror="yes"
-          maxmemory="512m">
+          maxmemory="1024m">
       <classpath refid="saxon.processor.classpath"/>
       <jvmarg value="-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"/>
       <jvmarg value="-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl"/>
@@ -383,7 +383,7 @@ All Rights Reserved. Use is subject to license terms.</p>
           unless="lfc.js2doc.uptodate">
 
     <mkdir dir="${js2doc.build.dir}" />
-    <property name="js2doc.args" value="-v --dir ${js2doc.build.dir} ${lfc.src.dir}/LaszloLibrary.lzs" />
+    <property name="js2doc.args" value="--dir ${js2doc.build.dir} ${lfc.src.dir}/LaszloLibrary.lzs" />
     <ant dir="${lps.server.dir}" target="js2doc" />
 
   </target>
@@ -412,7 +412,7 @@ All Rights Reserved. Use is subject to license terms.</p>
   </target>
 
   <target name="lfc.js2doc.clean" depends="init">
-    <delete failonerror="false" file="${js2doc.build.dir}" />
+    <delete failonerror="false" dir="${js2doc.build.dir}" />
   </target>
 
   <target name="lzx2js2doc.transform" depends="init,docbook.catalog.generate">

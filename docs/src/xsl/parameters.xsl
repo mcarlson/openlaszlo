@@ -50,6 +50,12 @@
   <!-- Miscellaneous -->
   <xsl:param name="show.comments">1</xsl:param>
 
+   <!-- Reference appearance -->
+   <xsl:param name="navig.showtitles">0</xsl:param>
+   <xsl:param name="suppress.header.navigation">1</xsl:param>
+   <xsl:param name="suppress.navigation">1</xsl:param>    
+
+
   <xsl:param name="generate.toc">
     set       toc,title,index
     book      toc,title,figure,table,example,equation,refentry

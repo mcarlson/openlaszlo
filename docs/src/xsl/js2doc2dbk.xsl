@@ -21,8 +21,8 @@
 <!ENTITY privateslot    '(@name="prototype" or @name="__ivars__" or @name="dependencies" or @name="setters" or @name="tagname")'>
 
 ]>
-
-<xsl:stylesheet version="1.0" 
+        
+<xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <xsl:import href="js2doc-comment2dbk.xsl"/>
@@ -54,7 +54,7 @@
         <xsl:if test="count($decls) > 0">
           <reference id="{$topicid}" xreflabel="{$topicdesc}">
             <title><xsl:value-of select="$subtopic"/></title>
-            <xsl:message><xsl:value-of select="concat('found ', count($decls), ' visible items in ', $topicdesc)"/></xsl:message>
+            <!-- [bshine commenting out jgrandy code with unknown purpose 10.07.2007] <xsl:message><xsl:value-of select="concat('found ', count($decls), ' visible items in ', $topicdesc)"/></xsl:message> -->
             <xsl:for-each select="$decls">
               <xsl:sort select="translate(@id,'_$','  ')"/>
               <xsl:apply-templates select="." mode="refentry"/>
@@ -78,7 +78,7 @@
         </reference>
       </xsl:if>
     </xsl:template>
-        
+                                                      
     <xsl:template name="files-all">
       <reference><title>Files</title>
         <xsl:variable name="units" select="//unit"/>
@@ -100,7 +100,7 @@
       <xsl:variable name="desc">
         <xsl:apply-templates select="." mode="desc"/>
       </xsl:variable>
-      
+        
       <refentry id="{@id}" xreflabel="{$desc}">
         <xsl:if test="$lzxname"><anchor id="{concat('tag.',$lzxname)}"/></xsl:if>
         <refmeta>
@@ -120,21 +120,11 @@
           </xsl:if>
         </refnamediv>
         <refsynopsisdiv>
-          <xsl:call-template name="insert-refinfo"/>
+           <xsl:call-template name="insert-refinfo"/>
         </refsynopsisdiv>
-        <xsl:call-template name="declaration-description"/>
-        <xsl:if test="child::class">
-          <refsect1><title>Superclass Chain</title>
-            <xsl:call-template name="describe-superclass-chain">
-              <xsl:with-param name="class" select="child::class"/>
-            </xsl:call-template>
-          </refsect1>
-          <refsect1><title>Known Subclasses</title>
-            <xsl:call-template name="describe-known-subclasses"/>
-          </refsect1>
-        </xsl:if>
+        <xsl:call-template name="declaration-description"/>        
         <xsl:apply-templates select="." mode="refentry-details"/>
-        <xsl:apply-templates select="." mode="detailed-synopsis"/>
+        <xsl:apply-templates select="." mode="detailed-synopsis"/>                
       </refentry>
     </xsl:template>
     
@@ -188,7 +178,7 @@
         </refsect1>
       </xsl:if>
       <xsl:if test="doc/text">
-        <refsect1><title>Description</title>
+        <refsect1>
           <xsl:apply-templates select="doc/text" mode="doc2dbk"/>
         </refsect1>
       </xsl:if>
@@ -203,7 +193,7 @@
     
     <xsl:template match="property" mode="refentry-details">
       <refsect1>
-        <title>Details</title>
+        <title>Details</title> 
 
         <xsl:variable name="jsname" select="@name"/>
         <xsl:variable name="lzxname" select="&tagname;"/>
@@ -252,9 +242,14 @@
         <!-- Properties -->        
         <xsl:call-template name="describe-members">
           <xsl:with-param name="members" select="$ivars"/>
-          <xsl:with-param name="title" select="'Properties'"/>
+          <xsl:with-param name="title" select="'Attributes'"/>
         </xsl:call-template>
-
+        
+        <!-- Inherited Attributes --> 
+        <xsl:call-template name="describe-inherited-attributes">
+          <xsl:with-param name="class" select="class"></xsl:with-param>
+        </xsl:call-template>
+        
         <!-- Setters -->        
         <xsl:call-template name="describe-members">
           <xsl:with-param name="members" select="$svars"/>
@@ -271,12 +266,22 @@
           <xsl:with-param name="members" select="$pvars[child::function]"/>
           <xsl:with-param name="title" select="'Methods'"/>
         </xsl:call-template>
+        
+        <!-- Inherited Methods --> 
+        <xsl:call-template name="describe-inherited-methods">
+          <xsl:with-param name="class" select="class"></xsl:with-param>
+        </xsl:call-template>            
 
         <!-- (Prototype) Events -->        
         <xsl:call-template name="describe-members">
           <xsl:with-param name="members" select="$pvars[@type='LzEvent']"/>
           <xsl:with-param name="title" select="'Events'"/>
         </xsl:call-template>
+        
+        <!-- Inherited Events --> 
+        <xsl:call-template name="describe-inherited-events">
+          <xsl:with-param name="class" select="class"></xsl:with-param>
+        </xsl:call-template>    
 
         <!-- Prototype Properties -->
         <xsl:call-template name="describe-members">
@@ -536,11 +541,10 @@
     </xsl:template>
     
     <xsl:template name="describe-superclass-chain">
-      <xsl:param name="class"/>
+      <xsl:param name="class"/>       
       <xsl:call-template name="describe-superclass-chain-inner">
         <xsl:with-param name="class" select="$class"/>
-      </xsl:call-template>
-      <xsl:call-template name="classlabel"/>
+      </xsl:call-template>      
     </xsl:template>
     
     <xsl:template name="describe-superclass-chain-inner">
@@ -550,11 +554,11 @@
       <xsl:if test="$superclass">
         <xsl:choose>
           <xsl:when test="contains($visibility.filter, $superclass/@access)">
+            <xref linkend="{$superclass/@id}"/>
+            <xsl:text>&nbsp;&raquo; </xsl:text>            
             <xsl:call-template name="describe-superclass-chain-inner">
               <xsl:with-param name="class" select="$superclass/class"/>
-            </xsl:call-template>
-            <xref linkend="{$superclass/@id}"/>
-            <xsl:text>&nbsp;&raquo; </xsl:text>
+            </xsl:call-template>            
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="($superclass/@name | $superclass/doc/tag[@name='lzxname']/text)[1]"/>
@@ -689,51 +693,23 @@
     <xsl:template name="insert-refinfo">
       <variablelist>
       
-        <xsl:if test="&tagname;">
-          <varlistentry><term>LZX: <xsl:value-of select="&tagname;"/></term></varlistentry>
-        </xsl:if>
-        
         <xsl:if test="@name">
           <varlistentry><term>JavaScript: <xsl:value-of select="@name"/></term></varlistentry>
-        </xsl:if>
-
-        <xsl:variable name="decltype"><xsl:apply-templates select="." mode="type"/></xsl:variable>
-        <xsl:if test="$decltype and $decltype != ''">
-          <varlistentry><term>Type: <xsl:value-of select="$decltype"/></term></varlistentry>
-        </xsl:if>
-
-        <varlistentry><term>Access: <xsl:apply-templates select="." mode="access"/></term></varlistentry>
-
-        <xsl:if test="contains(@keywords, 'deprecated') or contains(@keywords, 'preliminary') or contains(@keywords, 'beta')">
-          <varlistentry><term>
-          <xsl:text>Status:</xsl:text>
-          <xsl:if test="contains(@keywords, 'deprecated')">&nbsp;Deprecated</xsl:if>
-          <xsl:if test="contains(@keywords, 'preliminary') or contains(@keywords, 'beta')">&nbsp;Preliminary</xsl:if>
-          </term></varlistentry>
         </xsl:if>
 
         <xsl:if test="@runtimes">
           <varlistentry><term>Runtimes: <xsl:value-of select="@runtimes"/></term></varlistentry>
         </xsl:if>
 
-        <xsl:if test="@includebuilds">
-          <varlistentry><term>Build Flags: <xsl:value-of select="@includebuilds"/></term></varlistentry>
+        <xsl:if test="child::class">
+          <refsect1>            
+            <xsl:text>Extends </xsl:text>
+            <xsl:call-template name="describe-superclass-chain">
+              <xsl:with-param name="class" select="child::class"/>
+            </xsl:call-template>
+          </refsect1>
         </xsl:if>
-
-        <xsl:variable name="topic" select="@topic"/>
-        <xsl:variable name="subtopic" select="@subtopic"/>
-        <xsl:if test="$topic">
-          <varlistentry><term>Topic: <xref linkend="{translate(concat('topic.',$topic,'.',$subtopic),' ','_')}"/></term></varlistentry>
-        </xsl:if>
-
-        <xsl:variable name="parentid" select="@unitid"/>
-        <xsl:if test="$parentid">
-          <xsl:variable name="visibility"><xsl:value-of select="key('id',$parentid)/@access"/></xsl:variable>
-          <xsl:if test="contains($visibility.filter, $visibility)">
-            <varlistentry><term>Declared in: <xref linkend="{$parentid}"/></term></varlistentry>
-          </xsl:if>
-        </xsl:if>
-
+        
 <?ignore
         <!-- need to turn path into webapp url, not sure how to do that -->
         <xsl:variable name="path" select="@path"/>
@@ -749,10 +725,9 @@
     <xsl:template name="classlabel">
       <xsl:choose>
         <xsl:when test="&tagname;">
+          <xsl:text>&lt;</xsl:text>
           <xsl:value-of select="&tagname;"/>
-          <xsl:if test="@name and not(starts-with(@name,'lz.'))">
-            <xsl:text>&nbsp;(</xsl:text><xsl:value-of select="@name"/><xsl:text>)</xsl:text>
-          </xsl:if>
+          <xsl:text>&gt;</xsl:text>
         </xsl:when>
         <xsl:when test="@name">
           <xsl:value-of select="@name"/>
@@ -763,5 +738,135 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>
+  
+  <xsl:template name="describe-inherited-attributes">
+    <xsl:param name="class"/>        
     
+    <xsl:variable name="jsname" select="@name"/>
+    <xsl:variable name="lzxname" select="&tagname;"/>
+    
+    <xsl:variable name="extends" select="$class/@extends"/>
+    <xsl:variable name="superclass" select="(key('id',$extends) | key('name-lzx',$extends))[1]"/>
+    <xsl:if test="$superclass">
+      <refsect2>
+        <title>
+          <xsl:text>Attributes inherited from&nbsp;</xsl:text>
+          <link linkend="{$superclass/@id}">
+            <xsl:text>&lt;</xsl:text>
+            <xsl:value-of select="$superclass/doc/tag[@name='lzxname']/text"/>
+            <xsl:text>&gt;</xsl:text>
+          </link>
+        </title>
+        <para>
+          <xsl:variable name="inheritedattrs" select="$superclass/class/property[@name='__ivars__']/object/property[@access='public']"></xsl:variable>
+          <xsl:variable name="initargs" select="$superclass/class/initarg[@access='public']"></xsl:variable>
+          <xsl:variable name="allinheritedattrs" select="$inheritedattrs | $initargs" />
+          <xsl:for-each select="$allinheritedattrs">
+            <xsl:sort select="@name"/>            
+            <link linkend="{@id}"><xsl:value-of select="@name"/></link>
+            <xsl:text>, </xsl:text>
+          </xsl:for-each>
+          <xsl:for-each select="$initargs">     
+            <xsl:sort select="@name"/>            
+            <link linkend="{@id}"><xsl:value-of select="@name"/></link>
+            <xsl:text>, </xsl:text>
+          </xsl:for-each>                               
+        </para>
+      </refsect2>                  
+      <xsl:choose>
+        <xsl:when test="contains($visibility.filter, $superclass/@access)">
+          <xsl:call-template name="describe-inherited-attributes">
+            <xsl:with-param name="class" select="$superclass/class"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="($superclass/@name | $superclass/doc/tag[@name='lzxname']/text)[1]"/>
+          <xsl:text>&nbsp;(private)&nbsp;&raquo; </xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>              
+  </xsl:template>  
+  
+  <xsl:template name="describe-inherited-methods">
+    <xsl:param name="class"/>        
+    
+    <xsl:variable name="jsname" select="@name"/>
+    <xsl:variable name="lzxname" select="&tagname;"/>
+    
+    <xsl:variable name="extends" select="$class/@extends"/>
+    <xsl:variable name="superclass" select="(key('id',$extends) | key('name-lzx',$extends))[1]"/>
+    <xsl:if test="$superclass">
+      <xsl:variable name="inheritedmethods" select="$superclass/class/property/object/property[@access='public']/function"></xsl:variable>
+      <refsect2>
+        <title>
+          <xsl:text>Methods inherited from&nbsp;</xsl:text>          
+          <link linkend="{$superclass/@id}">
+            <xsl:text>&lt;</xsl:text>            
+            <xsl:value-of select="$superclass/doc/tag[@name='lzxname']/text"/>
+            <xsl:text>&gt;</xsl:text>            
+          </link>
+        </title>
+        <para>
+          <xsl:for-each select="$inheritedmethods">
+            <xsl:sort select="../@name"/>            
+            <link linkend="{../@id}"><xsl:value-of select="../@name"/></link>
+            <xsl:text>, </xsl:text>
+          </xsl:for-each>
+        </para>
+      </refsect2>
+      <xsl:choose>
+        <xsl:when test="contains($visibility.filter, $superclass/@access)">
+          <xsl:call-template name="describe-inherited-methods">
+            <xsl:with-param name="class" select="$superclass/class"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="($superclass/@name | $superclass/doc/tag[@name='lzxname']/text)[1]"/>
+          <xsl:text>&nbsp;(private)&nbsp;&raquo; </xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>        
+  </xsl:template>  
+  
+  
+  <xsl:template name="describe-inherited-events">
+    <xsl:param name="class"/>        
+    
+    <xsl:variable name="jsname" select="@name"/>
+    <xsl:variable name="lzxname" select="&tagname;"/>
+    
+    <xsl:variable name="extends" select="$class/@extends"/>
+    <xsl:variable name="superclass" select="(key('id',$extends) | key('name-lzx',$extends))[1]"/>
+    <xsl:if test="$superclass">  
+      <xsl:variable name="inheritedevents" select="$superclass/class/property/object/property[@type='LzEvent' and &ispublic;]"></xsl:variable>
+      <refsect2>
+        <title>
+          <xsl:text>Events inherited from&nbsp;</xsl:text>
+          <link linkend="{$superclass/@id}">
+            <xsl:text>&lt;</xsl:text>            
+            <xsl:value-of select="$superclass/doc/tag[@name='lzxname']/text"/>
+            <xsl:text>&gt;</xsl:text>            
+          </link>
+        </title>
+        <para>
+          <xsl:for-each select="$inheritedevents">
+            <xsl:sort select="@name" />
+            <link linkend="{@id}"><xsl:value-of select="@name"/></link>
+            <xsl:text>, </xsl:text>
+          </xsl:for-each>
+        </para>
+      </refsect2>
+      <xsl:choose>
+        <xsl:when test="contains($visibility.filter, $superclass/@access)">
+          <xsl:call-template name="describe-inherited-events">
+            <xsl:with-param name="class" select="$superclass/class"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="($superclass/@name | $superclass/doc/tag[@name='lzxname']/text)[1]"/>
+          <xsl:text>&nbsp;(private)&nbsp;&raquo; </xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>        
+  </xsl:template>    
 </xsl:stylesheet>
