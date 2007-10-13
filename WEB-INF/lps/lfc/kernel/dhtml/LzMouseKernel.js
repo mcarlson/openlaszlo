@@ -92,6 +92,9 @@ var LzMouseKernel = {
         }
         var n = LzSprite.prototype.__defaultStyles.hyphenate(n);
         LzSprite.prototype.__setCSSClassProperty('.lzclickdiv', 'cursor', n);
+        LzSprite.prototype.__setCSSClassProperty('.lzdiv', 'cursor', n);
+        LzSprite.prototype.__setCSSClassProperty('.lzcanvasdiv', 'cursor', n);
+        LzSprite.prototype.__setCSSClassProperty('.lzcanvasclickdiv', 'cursor', n); 
     }
 
     /**
@@ -106,6 +109,9 @@ var LzMouseKernel = {
         }
         if ( LzMouseKernel.__amLocked ) return;
         LzSprite.prototype.__setCSSClassProperty('.lzclickdiv', 'cursor', LzMouseKernel.__showhand);
+        LzSprite.prototype.__setCSSClassProperty('.lzdiv', 'cursor', 'default');
+        LzSprite.prototype.__setCSSClassProperty('.lzcanvasdiv', 'cursor', 'default');
+        LzSprite.prototype.__setCSSClassProperty('.lzcanvasclickdiv', 'cursor', 'default'); 
     }
 
     /**
