@@ -1317,10 +1317,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
 
     List newBody = new ArrayList();
-    // FIXME: (LPP-2075) [2006-05-19 ptw] Wrap body in try and make
-    // suffix be a finally clause, so suffix will not be skipped by
-    // inner returns.
-    newBody.addAll(prefix);
 
     int activationObjectSize = 0;
     if (scriptElement) {
@@ -1343,6 +1339,13 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         newBody.add(parseFragment(code));
       }
     }
+
+    // Cf. LPP-4850: Prefix has to come after declarations (above).
+    // FIXME: (LPP-2075) [2006-05-19 ptw] Wrap body in try and make
+    // suffix be a finally clause, so suffix will not be skipped by
+    // inner returns.
+    newBody.addAll(prefix);
+
     // Now emit functions in the activation context
     // Note: variable has already been declared so assignment does the
     // right thing (either assigns to global or local
