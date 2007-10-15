@@ -66,14 +66,14 @@ transact.</para>
 with the concepts of object-oriented programming as implemented in
 languages such as Java, C++, or JavaScript, and with the fundamentals
 of XML data formats.</para>
-
+<!-- fix broken links per LPP-4897, IORIO 15 oct 2007 -->
 <para>We also hope that this guide will be accessible to web
 developers who know HTML and CSS but haven't yet worked with object
 oriented languages, and to developers and designers familiar with
 Flash or FlashMX. If this describes you, you may have a little
 homework to do outside the scope of this book, but in general you
 should have no trouble becoming a fluent LZX developer. A good place
-for you to start learning would be with the <ulink url="../guide/" type="laszlo-dguide">tutorials</ulink>.</para>
+for you to start learning would be with the <ulink url="../developers/" type="laszlo-dguide">tutorials</ulink>.</para>
 
 <para/></section><section><title>On Runtimes and Deployment Modes and the "Core" API</title>
 <para>
@@ -160,7 +160,9 @@ distributions.</remark></para>
 <itemizedlist spacing="compact"><listitem><para>The <ulink url="../reference/../reference/" type="laszlo-reference"><emphasis role="em">LZX Reference
   Manual</emphasis></ulink>. This online, hyperlinked, comprehensive reference
   for LZX contains entries for each LZX tag and API. Its format will
-  be familiar to users of JavaDoc(tm) and similar systems. </para></listitem><listitem><para>The <ulink url="../guide/" type="laszlo-dguide">online tutorials</ulink> and sample
+  be familiar to users of JavaDoc(tm) and similar systems. </para></listitem>
+  <!-- fix broken link per LPP-4897, IORIO 15 oct 2007 -->
+  <listitem><para>The <ulink url="../developers/" type="laszlo-dguide">online tutorials</ulink> and sample
   applications at <ulink url="http://www.laszlosystems.com/demos">http://www.laszlosystems.com/demos</ulink>
   provide a hands-on instructional overview of the LZX language.</para></listitem></itemizedlist>
 
@@ -181,15 +183,16 @@ the <ulink url="http://www.openlaszlo.org">OpenLaszlo</ulink> website and play a
 look up appropriate entries in the <emphasis role="em">Reference Manual.</emphasis> At that
 point you'll know what further reading you need to do in this
 guide.</para>
+<!-- fix broken link per LPP-4897, IORIO 15 oct 2007 -->
 <para><emphasis role="em">Web/Flash developers with no Object-Oriented experience:</emphasis>
-We suggest that you start with the <ulink url="../guide/" type="laszlo-dguide">tutorials</ulink> in order to get a general feel for
+We suggest that you start with the <ulink url="../developers/" type="laszlo-dguide">tutorials</ulink> in order to get a general feel for
 LZX programming. Don't worry about mastering the subjects they cover;
 your goal is to begin to get comfortable with the language.</para>
 
 <para>If you need to, learn the basics of 
 <ulink url="http://www.w3.org/XML/">XML</ulink>.</para>
-
-<para>Then read the rest of <xref linkend="overview"/>.</para>
+<!-- fix broken link per LPP-4897, IORIO 15 oct 2007 -->
+<para>Then read the rest of <xref linkend="program-development"/>.</para>
 
 <para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>Work your way through a JavaScript tutorial
 <remark role="todo">link</remark>. Caution: it makes sense to read the first four
