@@ -116,6 +116,7 @@
       <include name="WEB-INF/web.xml"/>
       <include name="WEB-INF/classes/**"/>
       <include name="${webapp-lps-home}/schema/lzx.rng" />
+      <include name="${webapp-lps-home}/schema/lfc.lzx" />      
       <include name="${webapp-lps-home}/schema/preprocess.xsl" />
       <include name="${webapp-lps-home}/templates/**" />
       <include name="${webapp-lps-home}/misc/**" />
