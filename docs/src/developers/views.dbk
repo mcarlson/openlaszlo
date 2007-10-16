@@ -864,7 +864,22 @@ but not to contain the red and silver squares, which have negative x and y value
   &lt;/view&gt;
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/views-$20.lzx></example?> 
-<para/></section></section><section><title>View Hierarchy</title>
+<para/></section>
+<section>
+<title>Pixel locking</title>
+<para>Subpixel positioning gets blurry lines and images, with more positioning possibilities. This makes it look worse 
+for static images, and better for animation, and for drawing 
+sets of evenly spaced images where the average spacing isn't an integral number of pixels. If you do something which causes a view 
+to end up at a non-integer x and y position, setting <indexterm><primary>pixellock</primary></indexterm> to "true" will snap it the nearest
+integer values.</para>
+<para>pixellock intercedes between the communication between
+Laszlo and the flash player. It's important to have setAttribute actually
+set the value you pass it, especially for animators. </para>
+<note><para>If you set pixellock to "true" for a view, you must also set pixellock to "true" for all of that view's 
+parents.</para></note>
+</section>
+</section>
+<section><title>View Hierarchy</title>
 <para>Each view has a position in the <emphasis role="i">view hierarchy</emphasis>, that is, the tree structure of objects in which each view has
 a parent, and, optionally, children and/or sibling views. In simple cases such as the following the relationship of 
 parents and children is obvious from their position in the code.</para>
