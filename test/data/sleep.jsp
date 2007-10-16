@@ -1,10 +1,4 @@
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<%@ page import="java.util.*,
-      org.jdom.output.*"%>
-
+<%@ page import="java.util.*,org.jdom.output.*"%>
 <%
     int sec = 8;
     String s = request.getParameter("s");
@@ -12,8 +6,6 @@
         sec = Integer.parseInt(s);
     }
 	int msec = sec * 1000;
-	out.println("<br><b>sleeping for " + sec + " seconds...</b></br>");
-	out.flush();
 	try {
 		Thread.sleep(msec);
 	} catch (Exception e) {
@@ -22,4 +14,11 @@
 	}
 	out.println("<br><b>done</b></br>");
 	out.flush();
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** 
+*/
+
+
 %>
