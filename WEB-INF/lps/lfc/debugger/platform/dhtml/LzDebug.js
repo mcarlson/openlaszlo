@@ -282,40 +282,13 @@ Debug.__String = function (thing, pretty, limit, unique) {
       else if (thing instanceof String) {
         // handled above, but don't fall into array
       }
-      // Print arrays (actually, anything with a numeric length
-      // property) in abbreviated format (what about arrays that have
-      // non-numeric props?)
-      else if ((typeof(thing.length) == 'number')) {
-        // No pretty for subclasses or non-arrays
-        if (thing.constructor !== Array) {
-          pretty = (! unique);
-        }
-        var ellip = true;
-        var tl = thing.length
-        // Don't accumulate beyond limit
-        for (var e = 0; (e < tl) && (s.length < limit); e++) {
-          // skip non-existent elements
-          if ((typeof(thing[e]) == 'undefined')) {
-            if (ellip) {
-              s += '..., ';
-              ellip = false;
-            }
-          } else {
-            ellip = true;
-            // TODO: [2005-06-22 ptw] Use __String in case element is huge
-            s += String(thing[e]) + ', ';
-          }
-        }
-        if (s != '')
-          s = s.substring(0, s.length - 2);
-        s = '[' + s + ']';
-      }
       // If it has a user-defined toString method, use that, but defend
       // against broken methods
       // TODO [2006-04-11 ptw] try/catch around user method calls
-      else if ((thing['toString']) &&
-               (this.toString instanceof Function) &&
+      else if (('toString' in thing) &&
+               (thing.toString instanceof Function) &&
                (thing.toString !== Object.prototype.toString) &&
+               (thing.toString !== Array.prototype.toString) &&
                (typeof(thing.toString()) != 'undefined') &&
                (thing.toString() != 'undefined')) {
         // No pretty for these, you don't know if the user toString is
@@ -323,42 +296,68 @@ Debug.__String = function (thing, pretty, limit, unique) {
         pretty = (! unique);
         s = String(thing);
       }
-      // Print unidentified objects as abbreviated list of props
+      // Print unidentified objects and arrays as abbreviated list of props
       else {
-        // No pretty for subclasses or non-objects
-        if ((! thing instanceof Object) || (thing.constructor !== Object)) {
+        var names = [];
+        // Treat any object with a non-negative integer length as an array
+        var indices = (('length' in thing) &&
+                       (Math.floor(thing.length) === thing.length) &&
+                       (thing.length >= 0)) ? [] : null;
+
+        this.objectOwnProperties(thing, names, indices, limit);
+        if (indices) { indices.sort(); }
+
+        // No pretty for subclasses or non-objects or array-like objects
+        // that are not Arrays.
+        if (! (indices ?
+               ((thing instanceof Array) && (thing.constructor === Array)) :
+               ((thing instanceof Object) && (thing.constructor === Object)))) {
           pretty = (! unique);
         }
-        var ellip = true;
-        for (var e in thing) {
-          var v = thing[e];
-          var tv = typeof(v);
-          var dtv = this.__typeof(v);
-          // Don't enumerate inherited props, unless you can't tell
-          // (i.e., __proto__ chain is broken
-          // Ignore "empty" properties and methods, ignore internal
-          // slots and slots that have an internal type
-          if (((! (thing instanceof Object)) || thing.hasOwnProperty(e)) &&
-              (tv != 'undefined') &&
-              (tv != 'function') &&
-              (('' + v) != '') &&
-              (! this.internalProperty(e)) &&
-              (! this.internalProperty(dtv))) {
-            ellip = true;
-            // TODO: [2005-06-22 ptw] Use __String in case element is huge
-            s += '' + e + ': ' + String(v) + ', ';
-          } else {
-            if (ellip) {
+        if (indices) {
+          // Present as an array, Don't accumulate beyond limit
+          var next = 0;
+          for (var i = 0; (i < indices.length) && (s.length < limit); i ++) {
+            var key = indices[i];
+            if (key != next) {
               s += '..., ';
-              ellip = false;
+            }
+            // TODO: [2005-06-22 ptw] Use __String in case element is huge
+            s += String(thing[key]) + ', ';
+            next = key + 1;
+          }
+          if (s != '')
+            s = s.substring(0, s.length - 2);
+          s = '[' + s + ']';
+        } else {
+          var ellip = true;
+          // Present as an object, Don't accumulate beyond limit
+          for (var i = 0; (i < names.length) && (s.length < limit); i ++) {
+            var e = names[i];
+            var v = thing[e];
+            var tv = typeof(v);
+            var dtv = this.__typeof(v);
+            // Ignore "empty" properties and methods, ignore internal
+            // slots and slots that have an internal type
+            if ((tv != 'undefined') &&
+                (tv != 'function') &&
+                (('' + v) != '') &&
+                (! this.internalProperty(e)) &&
+                (! this.internalProperty(dtv))) {
+              ellip = true;
+              // TODO: [2005-06-22 ptw] Use __String in case element is huge
+              s += '' + e + ': ' + String(v) + ', ';
+            } else {
+              if (ellip) {
+                s += '..., ';
+                ellip = false;
+              }
             }
           }
-          // Don't accumulate beyond limit
-          if (s.length > limit) break;
+          if (s != '')
+            s = s.substring(0, s.length - 2);
+          s = '{' + s + '}';
         }
-        if (s != '')
-          s = s.substring(0, s.length - 2);
-        s = '{' + s + '}';
       }
     } else {
       // Shouldn't ever get here
@@ -445,8 +444,12 @@ Debug.inspectInternal = function (obj, showInternalProperties) {
     // Print properties with abbreviated length
     this.printLength = this.inspect.printLength;
 
-    var keys = [];
-    var arraylen = typeof(obj.length) == 'number' ? obj.length : null;
+    var names = [];
+    // Treat any object with a non-negative integer length as an array
+    var indices = (('length' in obj) &&
+                   (Math.floor(obj.length) === obj.length) &&
+                   (obj.length >= 0)) ? [] : null;
+
     if (si) {
       // print unenumerable properties of ECMA objects
       // TODO: [2006-04-11 ptw] enumerate Global/Number/Math/Regexp
@@ -454,78 +457,59 @@ Debug.inspectInternal = function (obj, showInternalProperties) {
       for (var p in {callee: true, length: true, constructor: true, prototype: true}) {
         try {
           if (hasProto && obj.hasOwnProperty(p)) {
-            keys.push(p);
+            names.push(p);
           }
         } catch (e) {};
       }
     }
-    for (var key in obj) {
-      // Print only local slots
-      try {
-        if ((! hasProto) ||
-            obj.hasOwnProperty(key) ||
-            // or getter slots (this is a heuristic -- there is no way to
-            // ask if a property is a getter)
-            (function () { try { return obj[key] } catch (e) {} })() !== 
-            (function () { try { return obj.constructor.prototype[key] } catch (e) {} })()
-            ) {
-          // Print array slots later, in order
-          if (arraylen && (key >= 0) && (key < arraylen)) {
-          } else if (si ||
-                     ((! this.internalProperty(key)) &&
-                      // Only show slots with internal type if showing
-                      // internals
-                      (! this.internalProperty(this.__typeof(obj[key]))))) {
-            keys.push(key);
-          }
-        }
-      } catch (e) {};
-    }
 
-    keys.sort(function (a, b) {
-        var al = a.toLowerCase();
-        var bl = b.toLowerCase();
-        return (al > bl) - (al < bl);
-      });
+    this.objectOwnProperties(obj, names, indices);
+
+    names.sort(function (a, b) {
+      var al = a.toLowerCase();
+      var bl = b.toLowerCase();
+      return (al > bl) - (al < bl);
+    });
+    if (indices) { indices.sort(); }
     var description = "";
-    var kl = keys.length;
+    var nnames = names.length;
     var val;
     var wid = 0;
-    // Align all keys if annotating 'weight'
+    // Align all names if annotating 'weight'
     if (this.markGeneration > 0) {
-      for (var i = 0; i < kl; i++) {
-        var kil = keys[i].length;
-        if (kil > wid) { wid = kil; }
+      for (var i = 0; i < nnames; i++) {
+        var keywidth = names[i].length;
+        if (keywidth > wid) { wid = keywidth; }
       }
     }
-    if (arraylen) {
-      var kil = ('' + arraylen).length;
-      if (kil > wid) { wid = kil; }
+    if (indices) {
+      var keywidth = ('' + obj.length).length;
+      if (keywidth > wid) { wid = keywidth; }
     }
     var last;
-    for (var i = 0; i < kl; i++) {
-      var key = keys[i];
+    for (var i = 0; i < nnames; i++) {
+      var key = names[i];
       // Some runtimes duplicate inherited slots
       if (key != last) {
         last = key;
         val = obj[key];
-        description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
+        if (si ||
+            ((! this.internalProperty(key)) &&
+             // Only show slots with internal type if showing
+             // internals
+             (! this.internalProperty(this.__typeof(val))))) {
+               description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
+        }
       }
     }
 
-    if (arraylen &&
-        // Don't print the characters of a string
-        (! ((typeof obj == 'string') || (obj instanceof String)))) {
-      for (var key = 0; key < arraylen; key++) {
-        // Skip non-existent elements, but don't bother with ellipses,
-        // since we are displaying the key here
-        if ((! hasProto) ||
-            obj.hasOwnProperty(key)) {
-          val = obj[key];
-          if(typeof(val) != 'undefined') {
-            description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
-          }
-        }
+    if (indices) {
+      for (var i = 0; i < indices.length; i++) {
+        var key = indices[i];
+        val = obj[key];
+        // Don't bother with ellipses, since we are displaying the key
+        // here
+        description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
       }
     }
   } finally {

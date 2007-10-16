@@ -464,20 +464,23 @@ Debug.bugReport = function (error, verbose) {
 };
 
 /**
- * Fills two arrays with the object's own properties.  If the object has a
- * 'length' property (i.e., might be intended as an Array), numeric
- * names that fall between 0 and the value of length are added to the
- * `indices` array, otherwise they are added to the `names` array.  If
- * either array is null, those properties will be omitted altogether.
- * @param obj:Object the object to examine
- * @param names:Array the array to append names to
- * @param indices:Array the array to append indices to
- * @param limit:Number don't accumulate more than this many properties
- * (used to limit computation on large objects), default Infinity
+ * Fills two arrays with the object's own properties.  If the object
+ * has a non-negative integer 'length' property (i.e., might be
+ * intended as an Array), numeric names that fall between 0 and the
+ * value of length are added to the `indices` array, otherwise they
+ * are added to the `names` array.  If either array is null, those
+ * properties will be omitted altogether.  @param obj:Object the
+ * object to examine @param names:Array the array to append names to
+ * @param indices:Array the array to append indices to @param
+ * limit:Number don't accumulate more than this many properties (used
+ * to limit computation on large objects), default Infinity
  */
 Debug.objectOwnProperties = function (obj, names, indices, limit) {
   if (!limit) { limit = Infinity; };
-  var alen = (('length' in obj) && (! isNaN(obj.length)) && (obj.length >= 0)) ? obj.length : false;
+  // Check for 'array-ness'
+  var alen = (('length' in obj) &&
+              (Math.floor(obj.length) === obj.length) &&
+              (obj.length >= 0)) ? obj.length : false;
   var hopp = 'hasOwnProperty' in obj;
   var proto = (('__proto__' in obj) ? obj.__proto__ :
                (('constructor' in obj) ? obj.constructor.prototype : false));
@@ -487,7 +490,10 @@ Debug.objectOwnProperties = function (obj, names, indices, limit) {
         // Heuristic to find getter slots (there is no way to ask if a
         // property is a getter)
         (proto && (obj[key] !== proto[key]))) {
-      if ((alen != false) && (! isNaN(key)) && (0 <= key) && (key < alen)) {
+      if ((alen != false) &&
+          // Only `==` here because all keys are strings
+          (Math.floor(key) == key) &&
+          (0 <= key) && (key < alen)) {
         if (indices) {
           // Ensure indices are numbers, not strings
           indices.push(Number(key));
