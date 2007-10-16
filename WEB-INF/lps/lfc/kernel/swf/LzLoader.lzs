@@ -144,7 +144,7 @@ function returnData ( loadobj , data ){
     // object. This can happen if a serverless data load timed out in
     // the LFC, but eventually returned something via the
     // LoadVars.sendAndLoad() callback.
-    if (loadobj.loaded) {
+    if (loadobj.loaded && loadobj.valid) {
         if ($debug) {
             Debug.warn("%w.returnData: %w already loaded",
                        this, loadobj);
@@ -399,7 +399,7 @@ function doTimeOut ( loadobj ){
     }
     if (loadobj) {
         this.unload(loadobj);
-        if (this.ontimeout.ready) this.ontimeout.sendEvent( loadobj.reqobj);
+        if (this.ontimeout.ready) this.ontimeout.sendEvent();
     }
 }
 

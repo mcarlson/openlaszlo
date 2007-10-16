@@ -14,6 +14,8 @@ var LzHTTPLoader = function (owner, proxied) {
     this.options = {parsexml: true};
     this.requestheaders = {};
     this.requestmethod = LzHTTPLoader.GET_METHOD;
+    
+    this.__loaderid = LzHTTPLoader.loaderIDCounter++;
 }
 
 // Default callback handlers
@@ -61,8 +63,10 @@ LzHTTPLoader.prototype.setRequestHeader = function (key, val) {
 
 LzHTTPLoader.prototype.abort = function () {
     if (this.req) {
-        this.req.cancel();
-        // [todo hqm 2006-07 ] +++ abort timeout timer
+        this.__abort = true;
+        this.req.abort();
+        this.req = null;
+        this.removeTimeout(this);
     }
 }
 
@@ -113,10 +117,16 @@ LzHTTPLoader.DELETE_METHOD = "DELETE";
 // headers can be a hashtable or null
 
 LzHTTPLoader.prototype.open = function (method, url, username, password) {
-     {
+    if (this.req) {
+        Debug.warn("pending request for id=%s", this.__loaderid);
+    }
+    
+    {
         #pragma "passThrough=true" 
         this.req =  window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
     }
+    this.__abort = false;
+    this.__timeout = false;
     this.requesturl = url;
     this.requestmethod = method;
 
@@ -189,7 +199,9 @@ LzHTTPLoader.prototype.send = function (content) {
 
 
 // holds list of outstanding data requests, to handle timeouts
-LzHTTPLoader.activeRequests = [];
+//LzHTTPLoader.activeRequests = [];
+LzHTTPLoader.activeRequests = {};
+LzHTTPLoader.loaderIDCounter = 0;
 
 // Default infinite timeout
 LzHTTPLoader.prototype.timeout = Infinity;
@@ -199,49 +211,64 @@ LzHTTPLoader.prototype.setTimeout = function (timeout) {
     // [todo hqm 2006-07] Should we have  an API method for setting LzLoader timeout?
 }
 
-// Set up a pending timeout for a dataset.
+// Set up a pending timeout for a loader.
+/*
 LzHTTPLoader.prototype.setupTimeout = function (obj, duration) {
     var endtime = (new Date()).getTime() + duration;
     LzHTTPLoader.activeRequests.push(obj, endtime);
     setTimeout("LzHTTPLoader.__LZcheckXMLHTTPTimeouts()", duration);
 }
+*/
+LzHTTPLoader.prototype.setupTimeout = function (obj, duration) {
+    var endtime = (new Date()).getTime() + duration;
+    //obj.__loaderid = LzHTTPLoader.loaderIDCounter++;//uncomment to give LzHTTPLoader-instance a new loader-id
+    var lid = obj.__loaderid;
     
-// Remove a dataset from the timeouts list.
+    LzHTTPLoader.activeRequests[lid] = [obj, endtime];
+    var timeoutid = setTimeout("LzHTTPLoader.__LZcheckXMLHTTPTimeouts(" + lid + ")", duration);
+    LzHTTPLoader.activeRequests[lid][2] = timeoutid;
+}
+    
+// Remove a loader from the timeouts list.
 LzHTTPLoader.prototype.removeTimeout = function (target) {
-    var activeReqs = LzHTTPLoader.activeRequests;
-    LzHTTPLoader.activeRequests = [];
-    // copy every dataset in the list except for the target
-    for (var i = 0; i < activeReqs.length; i+=2) {
-        var dset = activeReqs[i];
-        var dstimeout = activeReqs[i+1];
-        if (dset != target) {
-            LzHTTPLoader.activeRequests.push(dset, dstimeout);
+    var lid = target.__loaderid;
+    //Debug.write("remove timeout for id=%s", lid);
+    if (lid != null) {
+        var reqarr = LzHTTPLoader.activeRequests[lid];
+        if (reqarr && reqarr[0] === target) {
+            clearTimeout(reqarr[2]);
+            delete LzHTTPLoader.activeRequests[lid];
         }
     }
 }
     
     
 // Check if any outstanding requests have timed out. 
-LzHTTPLoader.__LZcheckXMLHTTPTimeouts = function () {
-    var activeReqs = LzHTTPLoader.activeRequests;
-    LzHTTPLoader.activeRequests = [];
-    for (var i = 0; i < activeReqs.length; i+=2) {
-        var loader = activeReqs[i];
-        var dstimeout = activeReqs[i+1];
+LzHTTPLoader.__LZcheckXMLHTTPTimeouts = function (lid) {
+    var req = LzHTTPLoader.activeRequests[lid];
+    if (req) {
         var now = (new Date()).getTime();
-        if (now > dstimeout) {
+        var loader = req[0];
+        var dstimeout = req[1];
+        //Debug.write("diff %d", now - dstimeout);
+        if (now >= dstimeout) {
+            //Debug.write("timeout for %s", lid);
+            delete LzHTTPLoader.activeRequests[lid];
+            loader.__timeout = true;
             if (loader.req) {
                 loader.req.abort();
             }
-            this.req = null;
+            loader.req = null;
             loader.loadTimeout(loader, null);
         } else {
             // if it hasn't timed out, add it back to the list for the future
-            LzHTTPLoader.activeRequests.push(loader, dstimeout);
+            //Debug.write("recheck timeout");
+            var timeoutid = setTimeout("LzHTTPLoader.__LZcheckXMLHTTPTimeouts(" + lid + ")", now - dstimeout);
+            req[2] = timeoutid;
         }
     }
 }
-    
+
 LzHTTPLoader.prototype.getElapsedTime = function () {
     return  ((new Date()).getTime() - this.gstart);
 }
@@ -267,45 +294,58 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
         var __pthis__ = this;
         this.req.onreadystatechange = function () {
             if (__pthis__.req == null) { return; }
-
+            //Debug.write("readyState=%d", __pthis__.req.readyState);
             if (__pthis__.req.readyState == 4) {
-                // only if "OK"
-                if (__pthis__.req.status == 200 || __pthis__.req.status == 304) {
-                    var elt = null;
-                    var xml = __pthis__.req.responseXML;
-                    __pthis__.responseXML = xml;
-                    var lzxdata = null;
-                    if (xml != null && parsexml) {
-                        var nodes = __pthis__.req.responseXML.childNodes;
-                        // find first content (type == 1) child node
-                        for (var i = 0; i < nodes.length; i++) {
-                            var child = nodes.item(i);
-                            if (child.nodeType == 1) {
-                                elt = child;
-                                break;
-                            }
-                        }
-                        lzxdata = LzXMLTranslator.copyXML(elt,
-                                                    __pthis__.options.trimwhitespace,
-                                                    __pthis__.options.nsprefix);
-                    }
-
-                    __pthis__.responseText = __pthis__.req.responseText;
-                    __pthis__.removeTimeout(__pthis__);
-
-
-
-                    /**** DEBUGGING 
-                    var xmlSerializer = new XMLSerializer();
-                    var markup = xmlSerializer.serializeToString(elt);
-                    Debug.write("loadXMLDoc", elt, markup, d.serialize());
-                     *** /DEBUGGING
-                     */
-                    __pthis__.req = null;
-                    __pthis__.loadSuccess(__pthis__, lzxdata);
+                if (__pthis__.__timeout) {
+                    //Debug.write("timeout for id=%s, xhr=%w", __pthis__.__loaderid, __pthis__.req);
+                } else if (__pthis__.__abort) {
+                    //Debug.write("abort for id=%s, xhr=%w", __pthis__.__loaderid, __pthis__.req);
                 } else {
-                    __pthis__.req = null;
-                    __pthis__.loadError(__pthis__, null);
+                    try {
+                        // only if "OK"
+                        //Debug.write("status=%d", __pthis__.req.status);
+                        if (__pthis__.req.status == 200 || __pthis__.req.status == 304) {
+                            var elt = null;
+                            var xml = __pthis__.req.responseXML;
+                            __pthis__.responseXML = xml;
+                            var lzxdata = null;
+                            if (xml != null && parsexml) {
+                                var nodes = __pthis__.req.responseXML.childNodes;
+                                // find first content (type == 1) child node
+                                for (var i = 0; i < nodes.length; i++) {
+                                    var child = nodes.item(i);
+                                    if (child.nodeType == 1) {
+                                        elt = child;
+                                        break;
+                                    }
+                                }
+                                lzxdata = LzXMLTranslator.copyXML(elt,
+                                                            __pthis__.options.trimwhitespace,
+                                                            __pthis__.options.nsprefix);
+                            }
+                    
+                            __pthis__.responseText = __pthis__.req.responseText;
+                            __pthis__.removeTimeout(__pthis__);
+                    
+                    
+                    
+                            /**** DEBUGGING 
+                            var xmlSerializer = new XMLSerializer();
+                            var markup = xmlSerializer.serializeToString(elt);
+                            Debug.write("loadXMLDoc", elt, markup, d.serialize());
+                             *** /DEBUGGING
+                             */
+                            __pthis__.req = null;
+                            __pthis__.loadSuccess(__pthis__, lzxdata);
+                        } else {
+                            __pthis__.req = null;
+                            __pthis__.loadError(__pthis__, null);
+                        }
+                    } catch (e) {
+                        //if you abort a request, readyState will be set to 4, 
+                        //but reading status will result in an exception (at least in Firefox).
+                        //Debug.write("catched error: %s", e);
+                    }
                 }
             }
         };
@@ -319,6 +359,8 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
         this.req.send(postbody);
     }
     // Set up the timeout
-    this.setupTimeout(this, this.timeout);
+    if (isFinite(this.timeout)) {
+        this.setupTimeout(this, this.timeout);
+    }
 }
 

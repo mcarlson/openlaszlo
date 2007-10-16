@@ -201,7 +201,7 @@ class LzHTTPDataProvider extends LzDataProvider {
     function loadTimeout( loader, data ) { 
         var dreq = loader.dataRequest;
         dreq.status = LzDataRequest.TIMEOUT;
-        loader.owner.loadResponse( dreq, data );
+        dreq.onstatus.sendEvent( dreq );
     }
 
     function setRequestError (dreq, msg) {
@@ -219,6 +219,7 @@ class LzHTTPDataProvider extends LzDataProvider {
         // If the header is repeated, construct a list to hold
         // all its values.
         var content = null;
+
 
         if (data == null) {
             this.setRequestError(dreq, "client could not parse XML from server");

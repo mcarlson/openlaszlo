@@ -34,9 +34,9 @@ var LzHTTPLoader = function (owner, proxied) {
 
 // Default callback handlers
 
-LzHTTPLoader.prototype._loadSuccessHandler = function (data) {this.loadSuccess(this,data);}
-LzHTTPLoader.prototype._loadErrorHandler   = function (data) { this.loadError(this,data);}
-LzHTTPLoader.prototype._loadTimeoutHandler = function (data) { this.loadTimeout(this,data);}
+LzHTTPLoader.prototype._loadSuccessHandler = function (data) { this.loadSuccess(this,data); }
+LzHTTPLoader.prototype._loadErrorHandler   = function (data) { this.loadError  (this,data); }
+LzHTTPLoader.prototype._loadTimeoutHandler = function (data) { this.loadTimeout(this,data); }
 
 LzHTTPLoader.GET_METHOD    = "GET";
 LzHTTPLoader.POST_METHOD   = "POST";

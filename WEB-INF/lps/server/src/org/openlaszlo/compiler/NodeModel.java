@@ -334,8 +334,18 @@ public class NodeModel implements Cloneable {
         // <dataset> tags that are not top level datasets.
 
         if (elt.getName().equals("dataset")) {
+            boolean contentIsLiteralXMLData = true;
             String datafromchild = elt.getAttributeValue("datafromchild");
-            if  (! "true".equals(datafromchild)) {
+            String src = elt.getAttributeValue("src");
+            String type = elt.getAttributeValue("type");
+
+            if ((type != null && (type.equals("soap") || type.equals("http")))
+                || (src != null && XMLUtils.isURL(src))
+                || "true".equals(datafromchild)) {
+                contentIsLiteralXMLData = false;
+            }
+
+            if (contentIsLiteralXMLData) {
                 // Default to legacy behavior, treat all children as XML literal data.
                 attrs.put("initialdata", getDatasetContent(elt, env));
                 includeChildren = false;
