@@ -3,14 +3,14 @@
 * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-    <year2007>
+    <year2008>
         <month7>
             <day1>
                 <event>
                    <summary value="Canada Day"/>
                    <comment value="Canada Day"/>
-                   <start year="2007" month="7" day="1" hour="9"/>
-                   <end year="2007" month="7" day="1" hour="11"/>
+                   <start year="2008" month="7" day="1" hour="9"/>
+                   <end year="2008" month="7" day="1" hour="11"/>
                    <category value="holiday"/>
                    <notes value="Call Cousin Eddie in Toronto and wish him a happy Canada Day."/>
                 </event>
@@ -19,8 +19,8 @@
                 <event>
                    <summary value="U.S. Independence Day"/>
                    <comment value="The fourth of July"/>
-                   <start year="2007" month="7" day="4" hour="9"/>
-                   <end year="2007" month="7" day="4" hour="11"/>
+                   <start year="2008" month="7" day="4" hour="9"/>
+                   <end year="2008" month="7" day="4" hour="11"/>
                    <category value="holiday"/>
                    <notes value="Don't forget to buy some fireworks."/>
                 </event>
@@ -29,8 +29,8 @@
                 <event>
                    <summary value="Independence Day Observed"/>
                    <comment value="Not quite The fourth of July"/>
-                   <start year="2007" month="7" day="5" hour="9"/>
-                   <end year="2007" month="7" day="5" hour="11"/>
+                   <start year="2008" month="7" day="5" hour="9"/>
+                   <end year="2008" month="7" day="5" hour="11"/>
                    <category value="holiday"/>
                    <notes value="Symbolically throw some tea into the ocean in celebration."/>
                    <location value="Boston Harbor"/>
@@ -40,8 +40,8 @@
                 <event>
                    <summary value="'Dinner at Lulu's"/>
                    <comment value="Creating your own Blog."/>
-                   <start year="2007" month="7" day="9" hour="9"/>
-                   <end year="2007" month="7" day="9" hour="11"/>
+                   <start year="2008" month="7" day="9" hour="9"/>
+                   <end year="2008" month="7" day="9" hour="11"/>
                    <notes value="Get the fried Twinkie for dessert."/>
                    <location value="Lulu's"/>
                    <attendees value="Anyone who wants to come"/>
@@ -49,8 +49,8 @@
                 <event>
                    <summary value="Meeting"/>
                    <comment value="Schedule Review"/>
-                   <start year="2007" month="7" day="9" hour="1"/>
-                   <end year="2007" month="7" day="9" hour="2"/>
+                   <start year="2008" month="7" day="9" hour="1"/>
+                   <end year="2008" month="7" day="9" hour="2"/>
                    <notes value="Bring review worksheets"/>
                    <location value="Conference Room Delta"/>
                    <attendees value="Marketing Unit"/>
@@ -60,8 +60,8 @@
                 <event>
                    <summary value="Sarah's Birthday Party"/>
                    <comment value="Party!"/>
-                   <start year="2007" month="7" day="17" hour="2"/>
-                   <end year="2007" month="7" day="17" hour="4"/>
+                   <start year="2008" month="7" day="17" hour="2"/>
+                   <end year="2008" month="7" day="17" hour="4"/>
                    <notes value="Send Sarah that painting you bought her."/>
                    <location value="Sarah's place"/>
                    <attendees value="All of Sarah's friends"/>
@@ -69,8 +69,8 @@
                 <event>
                    <summary value="Dinner with Eric"/>
                    <comment value="Dinner at Aqua"/>
-                   <start year="2007" month="7" day="17" hour="7"/>
-                   <end year="2007" month="7" day="17" hour="10"/>
+                   <start year="2008" month="7" day="17" hour="7"/>
+                   <end year="2008" month="7" day="17" hour="10"/>
                    <notes value="Show Eric the watch you found."/>
                    <location value="Aqua"/>
                    <attendees value="Eric"/>
@@ -80,8 +80,8 @@
                 <event>
                    <summary value="Company Meeting"/>
                    <comment value="Overview of all Project Scedules"/>
-                   <start year="2007" month="7" day="21" hour="10"/>
-                   <end year="2007" month="7" day="21" hour="11"/>
+                   <start year="2008" month="7" day="21" hour="10"/>
+                   <end year="2008" month="7" day="21" hour="11"/>
                    <notes value="Bring schedule."/>
                    <location value="The big conference room"/>
                    <attendees value="Whole company"/>
@@ -89,8 +89,8 @@
                 <event>
                    <summary value="Project Review"/>
                    <comment value="End of Project Review"/>
-                   <start year="2007" month="7" day="21" hour="1"/>
-                   <end year="2007" month="7" day="21" hour="5"/>
+                   <start year="2008" month="7" day="21" hour="1"/>
+                   <end year="2008" month="7" day="21" hour="5"/>
                    <notes value="Bring project examples and summary."/>
                    <location value="Smaller conference room"/>
                    <attendees value="Project team"/>
@@ -100,13 +100,13 @@
                 <event>
                    <summary value="Pablo Celebration"/>
                    <comment value="Celebrating Pablo's Bday in the Kitchen"/>
-                   <start year="2007" month="7" day="23" hour="9"/>
-                   <end year="2007" month="7" day="23" hour="10"/>
+                   <start year="2008" month="7" day="23" hour="9"/>
+                   <end year="2008" month="7" day="23" hour="10"/>
                    <notes value="Don't forget Pablo's birthday present."/>
                    <location value="The kitchen"/>
                    <attendees value="Pablo et al"/>
                 </event>
            </day23>
        </month7>
-    </year2007>
+    </year2008>
 </vcalendar>

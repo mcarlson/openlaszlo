@@ -3,15 +3,15 @@
 * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-    <year2007>
+    <year2008>
         <month10>
             <day15>
 
                 <event>
                        <summary value="Send presentation slides"/>
                        <comment value="Send something"/>
-                       <start year="2007" month="10" day="15" hour="13" minute="2"/>
-                       <end year="2007" month="10" day="15" hour="14" minute="2"/>
+                       <start year="2008" month="10" day="15" hour="13" minute="2"/>
+                       <end year="2008" month="10" day="15" hour="14" minute="2"/>
                        <category/>
                        <uid/>
                        <notes value="Remember to bring Dana's briefcase."/>
@@ -21,8 +21,8 @@
                 <event>
                        <summary value="Call Arnold about fiscal plan"/>
                        <comment value="Call Arnold"/>
-                       <start year="2007" month="10" day="15" hour="9" minute="12"/>
-                       <end year="2007" month="10" day="15" hour="10" minute="12"/>
+                       <start year="2008" month="10" day="15" hour="9" minute="12"/>
+                       <end year="2008" month="10" day="15" hour="10" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="He had to leave the office last time, but promised he'd be back."/>
@@ -34,8 +34,8 @@
                 <event>
                        <summary value="Arrange flight to Shanghai"/>
                        <comment value="no comment"/>
-                       <start year="2007" month="10" day="2" hour="8" minute="30"/>
-                       <end year="2007" month="10" day="2" hour="10" minute="30"/>
+                       <start year="2008" month="10" day="2" hour="8" minute="30"/>
+                       <end year="2008" month="10" day="2" hour="10" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Don't forget your passport this time."/>
@@ -44,8 +44,8 @@
                 <event>
                        <summary value="Verify delivery of book order for book club"/>
                        <comment value="A longer event to show wrapping"/>
-                       <start year="2007" month="10" day="2" hour="14" minute="12"/>
-                       <end year="2007" month="10" day="2" hour="15" minute="12"/>
+                       <start year="2008" month="10" day="2" hour="14" minute="12"/>
+                       <end year="2008" month="10" day="2" hour="15" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Flow My Tears, the Policeman Said"/>
@@ -55,8 +55,8 @@
                 <event>
                        <summary value="Steering Committee meeting"/>
                        <comment value="Another meeting"/>
-                       <start year="2007" month="10" day="6" hour="3" minute="30"/>
-                       <end year="2007" month="10" day="6" hour="5" minute="30"/>
+                       <start year="2008" month="10" day="6" hour="3" minute="30"/>
+                       <end year="2008" month="10" day="6" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Stress the importance of ten and two."/>
@@ -66,8 +66,8 @@
                 <event>
                        <summary value="Pizza with Kids"/>
                        <comment value="Lunch with Kids"/>
-                       <start year="2007" month="10" day="6" hour="12" minute="12"/>
-                       <end year="2007" month="10" day="6" hour="13" minute="12"/>
+                       <start year="2008" month="10" day="6" hour="12" minute="12"/>
+                       <end year="2008" month="10" day="6" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Get them to try anchovies.  They're actually tasty."/>
@@ -79,8 +79,8 @@
                 <event>
                    <summary value="Columbus Day"/>
                    <comment value="Columbus Day"/>
-                   <start year="2007" month="10" day="11" hour="9"/>
-                   <end year="2007" month="10" day="11" hour="10"/>
+                   <start year="2008" month="10" day="11" hour="9"/>
+                   <end year="2008" month="10" day="11" hour="10"/>
                    <category value="holiday"/>
                    <notes value="Do I get today off?  I should call and check."/>
                    <location value="America"/>
@@ -90,8 +90,8 @@
                 <event>
                        <summary value="Car oil change"/>
                        <comment value="car maintenance"/>
-                       <start year="2007" month="10" day="12" hour="3" minute="30"/>
-                       <end year="2007" month="10" day="12" hour="5" minute="30"/>
+                       <start year="2008" month="10" day="12" hour="3" minute="30"/>
+                       <end year="2008" month="10" day="12" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Might want to get it washed, too."/>
@@ -100,8 +100,8 @@
                 <event>
                        <summary value="Write blog entry"/>
                        <comment value="Lunch with kids"/>
-                       <start year="2007" month="10" day="12" hour="12" minute="12"/>
-                       <end year="2007" month="10" day="12" hour="13" minute="12"/>
+                       <start year="2008" month="10" day="12" hour="12" minute="12"/>
+                       <end year="2008" month="10" day="12" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Remember to mention what Joe said.  It was hilarious."/>
@@ -111,8 +111,8 @@
                 <event>
                        <summary value="Noodles with neighbors"/>
                        <comment value="the nice ones"/>
-                       <start year="2007" month="10" day="21" hour="12" minute="12"/>
-                       <end year="2007" month="10" day="21" hour="13" minute="12"/>
+                       <start year="2008" month="10" day="21" hour="12" minute="12"/>
+                       <end year="2008" month="10" day="21" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Bring the shells and the rigatoni."/>
@@ -122,8 +122,8 @@
                 <event>
                        <summary value="Pick up car"/>
                        <comment value="Pick up car"/>
-                       <start year="2007" month="10" day="21" hour="12" minute="12"/>
-                       <end year="2007" month="10" day="21" hour="13" minute="12"/>
+                       <start year="2008" month="10" day="21" hour="12" minute="12"/>
+                       <end year="2008" month="10" day="21" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Hopefully it'll be fixed by five..."/>
@@ -134,8 +134,8 @@
                 <event>
                        <summary value="Happy birthday Dad!"/>
                        <comment value="Happy birthday Dad!"/>
-                       <start year="2007" month="10" day="30" hour="3" minute="30"/>
-                       <end year="2007" month="10" day="30" hour="5" minute="30"/>
+                       <start year="2008" month="10" day="30" hour="3" minute="30"/>
+                       <end year="2008" month="10" day="30" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="See if you can get him the coatamundi he always wanted."/>
@@ -145,8 +145,8 @@
                 <event>
                        <summary value="Surfs up"/>
                        <comment value="Another example event"/>
-                       <start year="2007" month="10" day="30" hour="12" minute="12"/>
-                       <end year="2007" month="10" day="30" hour="13" minute="12"/>
+                       <start year="2008" month="10" day="30" hour="12" minute="12"/>
+                       <end year="2008" month="10" day="30" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Remember to take your cell phone out of your pocket before you go swimming this time."/>
@@ -157,8 +157,8 @@
                 <event>
                    <summary value="Daylight Savings Ends"/>
                    <comment value="Daylight Savings Ends"/>
-                   <start year="2007" month="10" day="31" hour="9"/>
-                   <end year="2007" month="10" day="31" hour="10"/>
+                   <start year="2008" month="10" day="31" hour="9"/>
+                   <end year="2008" month="10" day="31" hour="10"/>
                    <category value="holiday"/>
                    <notes value="Remember the clock in the bathroom."/>
                    <attendees value="Nearly everyone in the U.S. except Arizona"/>
@@ -166,8 +166,8 @@
                 <event>
                    <summary value="Halloween"/>
                    <comment value="Halloween"/>
-                   <start year="2007" month="10" day="31" hour="9"/>
-                   <end year="2007" month="10" day="31" hour="10"/>
+                   <start year="2008" month="10" day="31" hour="9"/>
+                   <end year="2008" month="10" day="31" hour="10"/>
                    <category value="holiday"/>
                    <notes value="Dress up like a herring."/>
                    <location value="Party at Josephine's"/>
@@ -178,8 +178,8 @@
                 <event>
                        <summary value="Text wrapping for dummies class"/>
                        <comment value="Text wrapping for dummies class"/>
-                       <start year="2007" month="10" day="18" hour="12" minute="12"/>
-                       <end year="2007" month="10" day="18" hour="13" minute="12"/>
+                       <start year="2008" month="10" day="18" hour="12" minute="12"/>
+                       <end year="2008" month="10" day="18" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Time permitting, they will also teach us how to swaddle it."/>
@@ -188,8 +188,8 @@
                 <event>
                        <summary value="Walk the dog"/>
                        <comment value="Walk the dog"/>
-                       <start year="2007" month="10" day="18" hour="12" minute="12"/>
-                       <end year="2007" month="10" day="18" hour="13" minute="12"/>
+                       <start year="2008" month="10" day="18" hour="12" minute="12"/>
+                       <end year="2008" month="10" day="18" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="It's our yearly standing appointment."/>
@@ -198,5 +198,5 @@
                 </event>
             </day18>
         </month10>
-    </year2007>
+    </year2008>
 </vcalendar>

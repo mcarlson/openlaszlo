@@ -3,14 +3,14 @@
 * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-    <year2007>
+    <year2008>
         <month12>
             <day22>
                 <event>
                        <summary value="Presidential Motorcade"/>
                        <comment value="Lunch with the President"/>
-                       <start year="2007" month="12" day="22" hour="14" minute="1"/>
-                       <end year="2007" month="12" day="22" hour="16" minute="1"/>
+                       <start year="2008" month="12" day="22" hour="14" minute="1"/>
+                       <end year="2008" month="12" day="22" hour="16" minute="1"/>
                        <category/>
                        <uid/>
                        <notes value="Ask him about the imminent bee threat."/>
@@ -20,8 +20,8 @@
                 <event>
                        <summary value="Meeting with heads of state"/>
                        <comment value="Meeting"/>
-                       <start year="2007" month="12" day="22" hour="16" minute="30"/>
-                       <end year="2007" month="12" day="22" hour="17" minute="30"/>
+                       <start year="2008" month="12" day="22" hour="16" minute="30"/>
+                       <end year="2008" month="12" day="22" hour="17" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Ask them about the imminent bee threat."/>
@@ -30,8 +30,8 @@
                 <event>
                        <summary value="Pick up Nobel Prize"/>
                        <comment value="Pick up kids"/>
-                       <start year="2007" month="12" day="22" hour="17" minute="0"/>
-                       <end year="2007" month="12" day="22" hour="18" minute="0"/>
+                       <start year="2008" month="12" day="22" hour="17" minute="0"/>
+                       <end year="2008" month="12" day="22" hour="18" minute="0"/>
                        <category/>
                        <uid/>
                        <notes value="Make speech about the imminent bee threat."/>
@@ -41,8 +41,8 @@
                 <event>
                        <summary value="Endow new Medical Center"/>
                        <comment value="A test event"/>
-                       <start year="2007" month="12" day="5" hour="8" minute="30"/>
-                       <end year="2007" month="12" day="5" hour="10" minute="30"/>
+                       <start year="2008" month="12" day="5" hour="8" minute="30"/>
+                       <end year="2008" month="12" day="5" hour="10" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Talk about how they saved that child."/>
@@ -52,8 +52,8 @@
                 <event>
                        <summary value="Lead campaign to bring enduring world peace"/>
                        <comment value="A longer event to show wrapping"/>
-                       <start year="2007" month="12" day="5" hour="14" minute="12"/>
-                       <end year="2007" month="12" day="5" hour="15" minute="12"/>
+                       <start year="2008" month="12" day="5" hour="14" minute="12"/>
+                       <end year="2008" month="12" day="5" hour="15" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Solve the imminent bee threat."/>
@@ -65,8 +65,8 @@
                 <event>
                        <summary value="Holiday shopping for family"/>
                        <comment value="Lunch with kids"/>
-                       <start year="2007" month="12" day="14" hour="12" minute="12"/>
-                       <end year="2007" month="12" day="14" hour="13" minute="12"/>
+                       <start year="2008" month="12" day="14" hour="12" minute="12"/>
+                       <end year="2008" month="12" day="14" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Buy them things that they will enjoy."/>
@@ -77,8 +77,8 @@
                 <event>
                        <summary value="Write a song that makes the whole world sing"/>
                        <comment value="Happy birthday bob!"/>
-                       <start year="2007" month="12" day="10" hour="3" minute="30"/>
-                       <end year="2007" month="12" day="10" hour="5" minute="30"/>
+                       <start year="2008" month="12" day="10" hour="3" minute="30"/>
+                       <end year="2008" month="12" day="10" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="It has to be really catchy, and easy to remember."/>
@@ -87,8 +87,8 @@
                 <event>
                        <summary value="Host the Tonight Show"/>
                        <comment value="yeah right"/>
-                       <start year="2007" month="12" day="10" hour="12" minute="12"/>
-                       <end year="2007" month="12" day="10" hour="13" minute="12"/>
+                       <start year="2008" month="12" day="10" hour="12" minute="12"/>
+                       <end year="2008" month="12" day="10" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Make people aware of the imminent bee threat."/>
@@ -98,8 +98,8 @@
                 <event>
                        <summary value="Walk the dog"/>
                        <comment value="Another example event"/>
-                       <start year="2007" month="12" day="10" hour="12" minute="12"/>
-                       <end year="2007" month="12" day="10" hour="13" minute="12"/>
+                       <start year="2008" month="12" day="10" hour="12" minute="12"/>
+                       <end year="2008" month="12" day="10" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Walk him around the block a few times."/>
@@ -111,8 +111,8 @@
                 <event>
                        <summary value="Dinner at Chez Panisse"/>
                        <comment value="nice dinner"/>
-                       <start year="2007" month="12" day="31" hour="18" minute="0"/>
-                       <end year="2007" month="12" day="31" hour="20" minute="0"/>
+                       <start year="2008" month="12" day="31" hour="18" minute="0"/>
+                       <end year="2008" month="12" day="31" hour="20" minute="0"/>
                        <category/>
                        <uid/>
                        <notes value="Order the slow-cooked pork"/>
@@ -122,13 +122,13 @@
                 <event>
                        <summary value="Attend Masquerade Ball"/>
                        <comment value="How we do it back home"/>
-                       <start year="2007" month="12" day="31" hour="20" minute="0"/>
-                       <end year="2007" month="12" day="31" hour="23" minute="0"/>
+                       <start year="2008" month="12" day="31" hour="20" minute="0"/>
+                       <end year="2008" month="12" day="31" hour="23" minute="0"/>
                        <category/>
                        <uid/>
                        <notes value="Hide your face so the world will never find you."/>
                 </event>
             </day31>
         </month12>
-    </year2007>
+    </year2008>
 </vcalendar>

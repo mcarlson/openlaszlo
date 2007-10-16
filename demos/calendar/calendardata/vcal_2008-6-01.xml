@@ -3,14 +3,14 @@
 * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-    <year2007>
+    <year2008>
        <month6>
              <day2>
                 <event>
                    <summary value=" Mars Project Review"/>
                    <comment value="Discuss Agenda for next project."/>
-                   <start year="2007" month="6" day="2" hour="10"/>
-                   <end year="2007" month="6" day="2" hour="12"/>
+                   <start year="2008" month="6" day="2" hour="10"/>
+                   <end year="2008" month="6" day="2" hour="12"/>
                    <notes value="We should try sending something else to Mars."/>
                    <location value="Lunar Base 9"/>
                    <attendees value="Astronauts and essential NASA personnel"/>
@@ -18,8 +18,8 @@
                 <event>
                    <summary value="Online Conference"/>
                    <comment value="Demostrate Mars Rover to the President"/>
-                   <start year="2007" month="6" day="2" hour="3"/>
-                   <end year="2007" month="6" day="2" hour="4"/>
+                   <start year="2008" month="6" day="2" hour="3"/>
+                   <end year="2008" month="6" day="2" hour="4"/>
                    <notes value="Call about the sandwiches.  I'm sure the president will be hungry after his long trip to the moon."/>
                    <location value="Lunar Base 9, Conference room Clarke"/>
                    <attendees value="President, essential NASA personnel"/>
@@ -29,16 +29,16 @@
                 <event>
                    <summary value="Mars Mission Meeting"/>
                    <comment value="Discuss mission to Mars."/>
-                   <start year="2007" month="6" day="12" hour="10"/>
-                   <end year="2007" month="6" day="12" hour="12"/>
+                   <start year="2008" month="6" day="12" hour="10"/>
+                   <end year="2008" month="6" day="12" hour="12"/>
                    <notes value="Try to get Jake to greenlight deploying the Mars space station."/>
                    <location value="Lunar Base 9, Conference room Asimov"/>
                 </event>
                 <event>
                    <summary value="Product Demo"/>
                    <comment value="Demostrate Laszlo to new customers"/>
-                   <start year="2007" month="6" day="12" hour="2"/>
-                   <end year="2007" month="6" day="12" hour="5"/>
+                   <start year="2008" month="6" day="12" hour="2"/>
+                   <end year="2008" month="6" day="12" hour="5"/>
                    <notes value="Show off the LZPix demo."/>
                    <location value="Olive Martini conference room"/>
                    <attendees value="New customers, Antun, David"/>
@@ -48,8 +48,8 @@
                 <event>
                    <summary value="Flag Day"/>
                    <comment value="Flag Day"/>
-                   <start year="2007" month="6" day="14" hour="10"/>
-                   <end year="2007" month="6" day="14" hour="12"/>
+                   <start year="2008" month="6" day="14" hour="10"/>
+                   <end year="2008" month="6" day="14" hour="12"/>
                    <category value="holiday"/>
                    <notes value="Order flag from Amazon."/>
                 </event>
@@ -58,16 +58,16 @@
                 <event>
                    <summary value="Father's Day"/>
                    <comment value="Father's Day"/>
-                   <start year="2007" month="6" day="20" hour="10"/>
-                   <end year="2007" month="6" day="20" hour="12"/>
+                   <start year="2008" month="6" day="20" hour="10"/>
+                   <end year="2008" month="6" day="20" hour="12"/>
                    <category value="holiday"/>
                    <notes value="Ask dad if he got that thing you sent him."/>
                 </event>
                 <event>
                    <summary value="Summer Solstice"/>
                    <comment value="Summer Solstice"/>
-                   <start year="2007" month="6" day="20" hour="10"/>
-                   <end year="2007" month="6" day="20" hour="12"/>
+                   <start year="2008" month="6" day="20" hour="10"/>
+                   <end year="2008" month="6" day="20" hour="12"/>
                    <category value="astro"/>
                 </event>
             </day20>
@@ -75,12 +75,12 @@
                 <event>
                    <summary value="St. Jean-Baptiste Day"/>
                    <comment value="St. Jean-Baptiste Day"/>
-                   <start year="2007" month="6" day="24" hour="10"/>
-                   <end year="2007" month="6" day="24" hour="12"/>
+                   <start year="2008" month="6" day="24" hour="10"/>
+                   <end year="2008" month="6" day="24" hour="12"/>
                    <category value="holiday"/>
                    <notes value="Look up on Wikipedia how to celebrate this."/>
                 </event>
             </day24>
         </month6>
-    </year2007>
+    </year2008>
 </vcalendar>
