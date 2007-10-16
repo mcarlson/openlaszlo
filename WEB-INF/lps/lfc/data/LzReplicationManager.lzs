@@ -207,7 +207,7 @@ function construct ( odp , args ){
         hadxpathconstraint = true;
 
         this.__LZpreventXPathUpdate = true;
-        this.applyConstraint( 'xpath', cons, this._t() );
+        this.applyConstraint( 'xpath', cons, this._t != null ? this._t() : [] );
         this.__LZpreventXPathUpdate = false;
     } else if ( odp._instanceAttrs.$refs && odp._instanceAttrs.$refs.xpath ){
         //<view><datapath xpath="${ ... }"/>
