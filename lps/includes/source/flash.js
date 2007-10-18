@@ -1321,11 +1321,11 @@ dojo.flash.Install.prototype = {
                 url = url.substring(0, i + 3) + '8' + url.substring(i + 4, url.length);
                 dojo.flash.flash8_version = url;
             }
-            var installObj = new dojo.flash.Embed(true);
+            var installObj = new dojo.flash.Embed(true, '100%', '100%');
             installObj.write(8); // write out HTML for Flash 8 version+
         }else if(dojo.flash.info.isVersionOrAbove(6, 0, 65)){ // Express Install
             //dojo.debug("Express install");
-            var installObj = new dojo.flash.Embed(false);
+            var installObj = new dojo.flash.Embed(false, '100%', '100%');
             installObj.write(8, true); // write out HTML for Flash 8 version+
             installObj.setVisible(true);
             installObj.center();
