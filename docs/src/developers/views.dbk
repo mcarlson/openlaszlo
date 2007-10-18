@@ -866,6 +866,7 @@ but not to contain the red and silver squares, which have negative x and y value
 </programlisting><?lzx-edit programs/views-$20.lzx></example?> 
 <para/></section>
 <section>
+<!-- add sectin on pixel locking per LPP-992, IORIO 18 oct 2007 -->
 <title>Pixel locking</title>
 <para>Subpixel positioning gets blurry lines and images, with more positioning possibilities. This makes it look worse 
 for static images, and better for animation, and for drawing 
