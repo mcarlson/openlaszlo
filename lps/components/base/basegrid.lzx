@@ -485,10 +485,12 @@
             this.shownitems = s;
             if ( this.rowheight == null ) return;
 
-            if ( s != -1 ){
-                var bottompart = this.height - 
-                                    (this.content.y + this.content.height );
-                this.setHeight( bottompart + this.content.y + s * rowheight );
+            if(this.isinited){
+                if ( s != -1 ){
+                    var bottompart = this.height - 
+                                        (this.content.y + this.content.height );
+                    this.setHeight( bottompart + this.content.y + s * rowheight );
+                }
             }
 
             if ( this.onshownitems ){
