@@ -1,12 +1,10 @@
 <chapter id="debugging">
-
-
 <title>Debugging</title>
 <para>
 Openlaszlo provides a powerful debugger which you can use either embedded in the application or as a separate ("remote") process.  In addition, when you are compiling applications for deployment to DHTML, you may benefit from using tools for debugging in that environment.
 </para>
 
-<para/><section><title>Using the OpenLaszlo Debugger</title>
+<section><title>Using the OpenLaszlo Debugger</title>
 
 <para>When you run an application with debugging enabled, the application
 is compiled with instrumentation to detect runtime errors, and the
@@ -228,7 +226,7 @@ width.</para>
 <variablelist><varlistentry><term><literal>_</literal></term><listitem><para>The result of the previous expression with a non-undefined value.</para></listitem></varlistentry><varlistentry><term><literal>__</literal> [two underscore characters])</term><listitem><para>The result of the expression prior to the previous expression.</para></listitem></varlistentry><varlistentry><term><literal>___</literal> [three underscore characters]</term><listitem><para>The result of the expression prior to the <literal>__</literal> expression.</para></listitem></varlistentry></variablelist>
 
 <para/></section></section><section id="debugging.inspecting"><title>Inspecting Objects</title>
-
+<!-- clarified explanation of abbreviated inspectable representation per LPP-4211, IORIO 18 oct 2007  -->
 <para>Evaluating <literal>Debug.write(<varname>object</varname>)</literal>, where
 <literal><varname>object</varname></literal> is an expression that evaluates to a
 JavaScript object, displays an <indexterm significance="preferred"><primary>inspectable representation</primary></indexterm><glossterm>inspectable representation</glossterm>
@@ -489,7 +487,7 @@ When you're compiling to DHTML, you generally use a two-step/two debugger proces
 objects as intelligently as our debugger, and </para></listitem><listitem><para>Firebug does not understand 
 OpenLaszlo #file and #line declarations, so it cannot give as accurate error locations as our debugger does. </para></listitem></itemizedlist>
 
-<!-- added not about script running slowly error to fix JIRA-LPP-4846, IORIO 7 oct 2007 -->
+<!-- added note about script running slowly error to fix JIRA-LPP-4846, IORIO 7 oct 2007 -->
 <note><para>If you have Firebug enabled in Firefox, the LZX debugger echos
 all messages to the Firebug console, preserving objects. The Firebug
 debugger will attempt to interpret an object with a `length` field as
