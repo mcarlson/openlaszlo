@@ -506,7 +506,7 @@ in-line in the application. As a consequence the <indexterm><primary>debug</prim
     <para>
       In JavaScript you are allowed to ask for a non-existent slot, but not for a slot on something that is not an object. Therefore, don't say <literal>foo.bar</literal> unless you know that foo is an object. If you know foo is either an object or null, you can say <literal>if (foo)</literal> before you say <literal>foo.bar</literal>. If you don't even know that, you would need to say <literal>if (foo instanceof Object)</literal>.
     </para>
-    <!-- added "has no properties" error to fix JIRA-LPP-4861, IORIO 12 oct 2007 -->
+    <!-- added "has no properties" error to fix JIRA-LPP-4861, IORIO 18 oct 2007 -->
     <para condition="dhtml">
       Furthermore, in DHTML you cannot reference a non-existent variable. Therefore you should declare all your 
       variables. In SWF, you could get by without declaring them, and they would just appear to be `undefined`, in 
