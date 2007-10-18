@@ -6,7 +6,8 @@
 <!--DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
                  "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"-->
 <book xmlns:xi="http://www.w3.org/2003/XInclude">
-  <title>System Administrator's Guide to Deploying OpenLaszlo Applications</title>
+  <!-- change title per LPP-4804, IORIO 15 oct 2007 -->
+  <title>OpenLaszlo System Administrator's Guidee</title>
   <titleabbrev>Administrator's Guide</titleabbrev>
   <part id="preface">
   <xi:include href="deploy-preface.dbk"/>

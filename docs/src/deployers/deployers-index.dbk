@@ -8,7 +8,8 @@
 <book xmlns:xi="http://www.w3.org/2003/XInclude">
   <?dbhtml dir="deployers" ?>
   <?dbhtml filename="index.html" ?>
-  <title>System Administrator's Guide to Deploying OpenLaszlo Applications</title>
+  <!-- change title per LPP-4804, IORIO 14 oct 2007 -->
+  <title>OpenLaszlo System Administrator's Guide</title>
   <titleabbrev>Deployer Guide</titleabbrev>
   
   <preface id="deployers.preface">

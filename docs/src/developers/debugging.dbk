@@ -65,8 +65,8 @@ the <literal>debug=true</literal> <glossterm>query parameter</glossterm>.
 This is equivalent to pressing the "Debug" button in the developer
 console.</para>
 
-
-<para>See the<ulink url="../deploy/request-types.html" type="">System Administrator's Guide</ulink> for more information
+<!-- change title per LPP-4804, IORIO 15 oct 2007 -->
+<para>See the <ulink url="../deployers/request-types.html" type="">OpenLaszlo System Administrator's Guide</ulink> for more information
 about request types.</para></listitem></varlistentry></variablelist>
 
 <para/></section><section id="debugging.runtime-error-checking"><title>Runtime Error Checking</title>
@@ -367,8 +367,8 @@ When the debugger prints an object, if the type part of the description is enclo
 method.</para>
 
 <para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>Examples</remark></para>
-
-<para>See the <ulink url="../deploy/logging.html" type="">System Administrator's Guide to Delpoying OpenLaszlo Applications</ulink>  for information about configuration
+<!-- change title per LPP-4804, IORIO 15 oct 2007 -->
+<para>See the <ulink url="../deployers/logging.html" type="">OpenLaszlo System Administrator's Guide</ulink>  for information about configuration
 and reading the server log.</para>
 <para/></section><section><title>Formatting Output</title>
 <para>
@@ -432,8 +432,9 @@ When you invoke the <methodname role="LzDebug.prototype.trace">trace()</methodna
 <para>
 The configuration parameter <literal>compiler.debug.backtrace</literal>, when true, causes the compiler to instrument functions to maintain a call stack. You must recompile both the OpenLaszlo Runtime Library and your program if you change the setting of this parameter. It defaults to false because there is significant overhead introduced in enabling backtracing; in general it is only useful on small test cases.
 </para>
+<!-- change title per LPP-4804, IORIO 15 oct 2007 -->
 <para>
-The configuration parameter is set in the configuration file<literal> lps.config </literal>, as explained in the <ulink url="../deploy/deployers-guide.html#deployers-guide.lps.properties" type="">System Administrator's Guide</ulink>.</para>
+The configuration parameter is set in the configuration file<literal> lps.config </literal>, as explained in the <ulink url="../deployers/deployers-guide.html#deployers-guide.lps.properties" type="">OpenLaszlo System Administrator's Guide</ulink>.</para>
 
 <para>
 To create your own backtrace at any time:

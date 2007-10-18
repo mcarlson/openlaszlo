@@ -104,8 +104,9 @@ it is desirable to make them usable, without source modifications, in either kin
 Note that the default behavior is proxied. See below.
 </para></note>
 <para/><section><title>Availability of J2EE Server or Servlet Container</title>
+<!-- change title per LPP-4804, IORIO 15 oct 2007 -->
 <para>
-As explained in the <ulink url="../deploy/">System Administrator's Guide to Deploying OpenLaszlo Applications</ulink>, deploying proxied OpenLaszlo applications
+As explained in the <ulink url="../deployers/">OpenLaszlo System Administrator's Guide</ulink>, deploying proxied OpenLaszlo applications
 requires that you install a J2EE application server or servlet container.  OpenLaszlo comes with the Tomcat servlet container included,
 but, depending on how you have access to the web, it may not be practical or even possible for you to use this to make your applications
 generally available. So, before you decide to start development of an OpenLaszlo application for, say, a hobby website, you should find out
@@ -132,8 +133,9 @@ and http responses.  See below.</para>
 If either deployment manner is available to you, the decision may come down to which works better. You should do test deployments under each
 method and see which gives the faster performance.</para>
 <para/><section><title>GZipping DHTML Applications</title>
+<!-- change title per LPP-4804, IORIO 15 oct 2007 -->
 <para>
-When compiling for DHTML, you should ensure that gzipping is turned on at the server. This is done automatically for DHTML files, but not for DHTML. See the Administrator's Guide for details.
+When compiling for DHTML, you should ensure that gzipping is turned on at the server. This is done automatically for DHTML files, but not for DHTML. See the <ulink url="../deployers/">OpenLaszlo System Administrator's Guide</ulink> for details.
 </para>
 <para>
 The data transfer size and run-time performance may  be bigger or smaller, faster or slower.  
@@ -143,8 +145,9 @@ If gzipped data is desired, for SOLO deployment, the XML services will need to g
 It would be redundant to have the web server compress them as well.</para>
 
 <para/></section></section><section><title>Open Proxy by Default</title>
+<!-- change title per LPP-4804, IORIO 15 oct 2007 -->
 <para>
-By default, the OpenLaszlo proxy server ships "wide open", which can be a security hazard. See the <ulink url="../deploy/">System Administrator's Guide to Deploying OpenLaszlo Applications</ulink>, for a discussion of OpenLaszlo security management.</para>
+By default, the OpenLaszlo proxy server ships "wide open", which can be a security hazard. See the <ulink url="../deployers/">OpenLaszlo System Administrator's Guide</ulink>, for a discussion of OpenLaszlo security management.</para>
 <para/></section><section><title>Compile-time and run-time differences between proxied and SOLO applications</title>
 <para>
 If an application is compiled for proxied operation, all data and media requests are proxied  and the remote 

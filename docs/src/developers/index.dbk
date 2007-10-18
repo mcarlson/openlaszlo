@@ -8,7 +8,8 @@
 <book xmlns:xi="http://www.w3.org/2003/XInclude">
   <?dbhtml dir="developers" ?>
   <?dbhtml filename="index.html" ?>
-  <title>Software Engineer's Guide to Developing OpenLaszlo Applications</title>
+  <!-- change title per LPP-4804, IORIO 14 oct 2007 -->
+  <title>OpenLaszlo Application Developer's Guide</title>
   <titleabbrev>Developer Guide</titleabbrev>
 
   <preface id="developers.preface">

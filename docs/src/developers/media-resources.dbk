@@ -781,9 +781,9 @@
         <glossterm>Compiler Media Cache</glossterm>. In general,
         the Compiler Media Cache settings only affect the speed of
         the OpenLaszlo compiler. The settings for the Media Cache
-        can affect server performance. See 
-        <ulink url="../deploy/" type="">The Administrator's
-        Guide</ulink>for details.</para>
+        can affect server performance. See the 
+        <!-- change title per LPP-4804, IORIO 15 oct 2007 -->
+        <ulink url="../deployers/">OpenLaszlo System Administrator's Guide</ulink>for details.</para>
         <para>The example below provides a text input area for you
         to type in urls that you'd like to test. To run the
         example, copy it into your local environment and compile

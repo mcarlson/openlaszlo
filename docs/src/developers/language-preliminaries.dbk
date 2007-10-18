@@ -29,8 +29,13 @@ nothing inherent in LZX that marries it to Flash. In particular, LZX does not em
 different from its use in traditional web applications in which JavaScript is used to do things like communicate with the browser 
 or generate HTML pages. Those functions are basically irrelevant in LZX applications. Thus, although the language design is 
 rather traditional, the programming paradigm is fundamentally new.</para>
-
-<para>This chapter summarizes the traditional and innovative aspects of LZX. It's an overview, not a tutorial; after reading it you will be better able to decide how to go about learning the language. Depending on your background and experience, you may determine that you need to go learn some more about XML or object-oriented programming before addressing LZX. On the other hand, if you find these concepts accessible, you may want to jump right in and begin coding, in which case we suggest starting with the <ulink url="../guide/laszlo_basics.html" type="laszlo-dguide">OpenLaszlo Basics</ulink> tutorial.</para>
+<!-- change link for laszlo_basics per LPP-4923, IORIO 17 oct 2007 -->
+<para>This chapter summarizes the traditional and innovative aspects of LZX. It's an overview, not a tutorial; 
+after reading it you will be better able to decide how to go about learning the language. Depending on your 
+background and experience, you may determine that you need to go learn some more about XML or object-oriented 
+programming before addressing LZX. On the other hand, if you find these concepts accessible, you may want to 
+jump right in and begin coding, in which case we suggest starting with the 
+tutorial: <xref linkend="laszlo_basics" /></para>
 
 <para/><section><title>Overview of Syntax and Semantics</title>
 
@@ -704,8 +709,9 @@ OpenLaszlo applications can be compiled to run in any of several runtimes, and i
 Nevertheless, as a developer you have to decide whether to:
 </para>
 <orderedlist spacing="compact"><listitem><para>optimize for swf (employ swf-only APIs, (and maybe even touch Flash APIs))</para></listitem><listitem><para>optimize for dhtml (employ dhtml-only APIs)</para></listitem><listitem><para>code to lowest common denominator ("core" APIs only)</para></listitem><listitem><para>conditionalize (include both. An example would be including comma separated list of embedded and system fonts; when compiled to SWF you get embedded font, to DHTML you get system font).</para></listitem></orderedlist>
+<!-- change title per LPP-4804, IORIO 16 oct 2007 -->
 <para>
-The focus of the <emphasis role="i">Developer's Guide</emphasis> is (c), the lowest common denominator; runtime-specific APIs and engineering approaches are presented as adjuncts.  Graphic devices ("glyphs") in the margin call attention to non core/non SOLO information.
+The focus of the <emphasis role="i">OpenLaszlo Application Developer's Guide</emphasis> is (c), the lowest common denominator; runtime-specific APIs and engineering approaches are presented as adjuncts.  Graphic devices ("glyphs") in the margin call attention to non core/non SOLO information.
 </para>
 <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>illustrate the glyphs here when they're ready</remark></para>
 <para>

@@ -1,8 +1,7 @@
 <section>
-
+<!-- change title per LPP-4804, IORIO 16 oct 2007 -->
 <para>OpenLaszlo applications are written in the LZX language and compiled to .swf files that execute in the Flash Player. This 
-Guide explains how to make those applications available to users on the Web. The <ulink url="../guide">Software Developer's
-Guide to Laszlo Applications</ulink> explains how to construct and test applications before you deploy them for general use.</para>
+Guide explains how to make those applications available to users on the Web. The <ulink url="../developers/">OpenLaszlo Application Developer's Guide</ulink> explains how to construct and test applications before you deploy them for general use.</para>
 
 <para/><section><title>Audience and rationale for this book</title>
 
@@ -51,9 +50,11 @@ making changes to the application source code.</para>
 
   
   
-
-<para>In addition to this <emphasis role="em">Administrator's Guide</emphasis>, please see also</para>
-<itemizedlist spacing="compact"><listitem><para>The <ulink url="../guide"><emphasis role="em">Software Developer's Guide to Laszlo Applications</emphasis></ulink>, the comprehensive 
+<!-- change title per LPP-4804, IORIO 16 oct 2007 -->
+<para>In addition to this <emphasis role="em">OpenLaszlo System Administrator's Guide</emphasis>, please see also</para>
+<itemizedlist spacing="compact"><listitem>
+<!-- change title per LPP-4804, IORIO 16 oct 2007 -->
+<para>The <ulink url="../developers"><emphasis role="em">OpenLaszlo Application Developer's Guide</emphasis></ulink>, the comprehensive 
 explanation of how to write and test OpenLaszlo programs.</para></listitem><listitem><para>The <ulink url="../design"><emphasis role="em">User Interface Designer's Guide to Laszlo Applications</emphasis></ulink>, 
 which addresses aspects
 of the Laszlo platform that are of special interest to UI and graphic designers</para></listitem><listitem><para>The <ulink url="../reference/../reference/" type="laszlo-reference"><emphasis role="em">LZX Reference

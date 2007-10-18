@@ -10,12 +10,13 @@ However your team is set up, somebody is responsible for the aesthetic experienc
 We'll discuss OpenLaszlo's ability to support designers and engineers in building innovative Internet applications.
  </para>
 <para/><section><title>Leaning to Think Laszlorificly</title>
+<!-- change link for tutorials per LPP-4923, IORIO 17 oct 2007 -->
 <para>
 With OpenLaszlo technology, web application designers are freed from the familiar limitations of static, linear, page-based task flow. 
 Your visions of dynamic, data-driven, concise and intelligent UI can become a reality. But you may need to change your thinking
 a little bit, because things are possible with OpenLaszlo that aren't possible with most other technologies.  And while it is not necessary for you to learn to write code in order to be an effective designer on an OpenLaszlo project, 
 a familiarity with the basic structure and features of the LZX language will help you understand how to approach your task. 
-So we recommend that you at least work through a few of the <ulink url="../guide/" type="laszlo-dguide">tutorials</ulink>.
+So we recommend that you at least work through a few of the <ulink url="../developers/" type="laszlo-dguide">tutorials</ulink>.
 </para>
 
 <para>
@@ -131,9 +132,9 @@ Bitmap fonts such as Verity only render correctly when specified at 8pt. The Ver
 change size. Verity contains an unaccented subset of characters; for the full Windows Western Unicode font set, use VerityPlus,
  which includes accented European characters. The Bitstream font Vera was released as an open source font for the Gnome Project. 
 The Ultra Pixel font Verity was built by Christopher Lowery using technology produced by Truth in Design.</para>
-<para>
 <!-- fix broken link per LPP-4896, IORIO 15 oct 2007 -->
 <!-- change title per LPP-4804, IORIO 15 oct 2007 -->
+<para>
 For more on fonts, see <ulink url="../developers/fonts.html" type="laszlo-dguide">OpenLaszlo Application Developer's Guide</ulink>.</para>
  
 <para/></section><section><title>OpenLaszlo Components Design Guide</title>
