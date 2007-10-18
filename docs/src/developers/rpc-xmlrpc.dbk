@@ -1,10 +1,10 @@
 <chapter id="rpc-xmlrpc">
-
 <title condition="proxied">XML-RPC</title>
-
+<!-- change link rpc per LPP-4923, IORIO 17 oct 2007 -->
 <para>XML-RPC is simple spec that describes how to invoke a remote operation using
-XML over HTTP.  OpenLaszlo XML-RPC is part of <ulink url="../guide/rpc.html" type="laszlo-dguide"> OpenLaszlo
-RPC</ulink> and shares many of the same APIs and concepts. OpenLaszlo RPC includes <ulink url="../guide/rpc-soap.html" type="laszlo-dguide">SOAP</ulink> and <ulink url="../guide/rpc-javarpc.html" type="laszlo-dguide">JavaRPC</ulink>. For more information on XML-RPC,
+XML over HTTP.  OpenLaszlo XML-RPC is part of <xref linkend="rpc" endterm="rpcshort" />, and shares many of the 
+same APIs and concepts. OpenLaszlo RPC includes <xref linkend="rpc-soap" endterm="rpc-soapshort" /> and 
+<xref linkend="rpc-javarpc" endterm="rpc-javashort" />. For more information on XML-RPC,
 go to <ulink url="http://www.xmlrpc.com/">XML-RPC.com</ulink></para>
 
 <para/><section><title>&lt;xmlrpc&gt;</title>

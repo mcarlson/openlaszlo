@@ -1,6 +1,7 @@
 <chapter id="rpc">
-
 <title>OpenLaszlo RPC</title>
+<!-- add titleabbrev to use as target text per LPP-4923, IORIO 17 oct 2007 -->
+<titleabbrev id="rpcshort">OpenLaszlo RPC</titleabbrev>
 <warning><para>
 Remote procedure calls work in proxied applications only.  They do not work in SOLO applications.
 </para></warning>
@@ -471,7 +472,8 @@ seconds and can't be changed.</para>
 </programlisting><?lzx-edit programs/rpc-$11.lzx></example?>
 
 <warning><para>
-Remote procedure calls return native objects, not XML, and cannot be used with <ulink url="../guide/data-structures.html" type="laszlo-dguide">XPath</ulink>.
+Remote procedure calls return native objects, not XML, and cannot be used with 
+<xref linkend="xpath" endterm="xpathshort" />.
 </para></warning>
 
 

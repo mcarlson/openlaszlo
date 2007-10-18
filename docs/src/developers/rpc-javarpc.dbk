@@ -1,7 +1,8 @@
 <chapter id="rpc-javarpc">
 
 <title>JavaRPC</title>
-
+<!-- add titleabbrev to use as target text per LPP-4923, IORIO 17 oct 2007 -->
+<titleabbrev id="rpc-javashort">JavaRPC</titleabbrev>
 <para>JavaRPC is a feature that allows server-side Java objects and methods to be
 accessed from a client application. The &lt;javarpc&gt; element is used to
 declare a JavaRPC object in LZX. JavaRPC is part of the OpenLaszlo RPC family and

@@ -2,7 +2,7 @@
 
 <title>Data, XML, and XPath</title>
 
-
+<!-- change link for language-preliminaries per LPP-4923, IORIO 17 oct 2007 -->
 <para>
 The term <indexterm significance="preferred"><primary>data</primary></indexterm><glossterm>data</glossterm> refers to numbers, characters, or text 
 in a form that can be displayed or manipulated by 
@@ -19,7 +19,7 @@ LZX is designed to make it easy to manipulate data and tie that data to a user i
 <itemizedlist spacing="compact"><listitem><para>embedding data directly into an application</para></listitem><listitem><para>receiving data from or sending data to a remote data source at runtime</para></listitem><listitem><para>receiving data from or sending data to a web service</para></listitem><listitem><para>creating and manipulating data at runtime </para></listitem><listitem><para><emphasis role="i">binding</emphasis> data to the user-interface declaratively as well as with script</para></listitem></itemizedlist>
 
 <para>
-For a gentle introduction to databinding and manipulation in OpenLaszlo applications, you may start with the <ulink url="../guide/data-tutorial.html" type="laszlo-dguide">tutorials</ulink>
+For a gentle introduction to databinding and manipulation in OpenLaszlo applications, you may start with the tutorial: <xref linkend="data-tutorial" />.
 </para>
 
 <para/></section><section><title>What is XML?</title>
@@ -144,7 +144,11 @@ In a JSP file, you can do this at the top, to avoid whitespace:</para>
 contentType="text/xml; charset=UTF-8" %&gt;&lt;?xml version='1.0' encoding='UTF-8'
 standalone='yes' ?&gt;&lt;%@ page import="java.util.*,org.jdom.output.*"%&gt;
 </programlisting>
-<para/></section></section><section><title>XPath</title>
+<para/></section></section>
+<section id="xpath">
+<title>XPath</title>
+<!-- add titleabbrev to use as target text per LPP-4923, IORIO 17 oct 2007 -->
+<titleabbrev id="xpathshort">XPath</titleabbrev>
 
 <para>
 LZX data access and binding makes heavy use of the W3C <ulink url="http://www.w3.org/TR/xpath">XPath</ulink> standard

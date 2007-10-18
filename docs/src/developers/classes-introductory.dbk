@@ -17,10 +17,9 @@ programming in OpenLaszlo applications, and the <indexterm><primary>class</prima
 Classes are at the heart of LZX programming. Depending on your background, you may consult any of several
 discussions in the OpenLaszlo documentation to learn how to use classes effectively in your applications.
 </para>
-
+<!-- change link for classes-tutorial per LPP-4923, IORIO 17 oct 2007 -->
 <para>To get a feel for how to use classes in OpenLaszlo applications, you
-may want to start with the <ulink url="../guide/classes-tutorial.html" type="laszlo-dguide">Class
-tutorial</ulink>.  That's the best place to start learning, especially if
+may want to start with the tutorial: <xref linkend="classes-tutorial" /> .  That's the best place to start learning, especially if
 you've never done any <glossterm>object oriented</glossterm> ("OO")
 programming.</para>
 

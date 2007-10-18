@@ -3,10 +3,10 @@
 <title>Overview of OpenLaszlo Application Development</title>
 <para>
 This chapter summarizes information about OpenLaszlo application structure and mechanics that an experienced programmer will need in order to start playing with code.</para>
-
+<!-- change link for tutorials per LPP-4923, IORIO 17 oct 2007 -->
 <para>This discussion is necessarily abbreviated and incomplete; its
 purpose is merely to point you in the right direction. As you begin to
-write LZX applications, you should also work through the <ulink url="../guide/" type="laszlo-dguide">tutorials</ulink>.</para>
+write LZX applications, you should also work through the <ulink url="../developers/" type="laszlo-dguide">tutorials</ulink>.</para>
 
 <para/><section><title>The program development cycle in a nutshell</title>
 <para>

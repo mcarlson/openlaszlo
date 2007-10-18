@@ -1,10 +1,11 @@
 <chapter id="databinding">
  
 <title>Data Access and Binding</title>
+<!-- change link for data-tutorial per LPP-4923, IORIO 17 oct 2007 -->
 <para>This chapter describes various methods of tying XML data structures into your LZX application.  See 
 <xref linkend="data-structures"/> for discussion of some of the concepts used in this chapter.
 For a gentle introduction to databinding and manipulation in OpenLaszlo applications, you may start
- with the <ulink url="../guide/data-tutorial.html" type="laszlo-dguide">tutorials</ulink>.
+ with the tutorial: <xref linkend="data-tutorial" />
 </para>
 <para/><section><title>Preview of databinding</title>
 <para>By "databinding" we mean the automatic association of a value in an XML data structure with an element in the LZX view hierarchy of the application. This chapter explores various aspects of databinding and manipulation in OpenLaszlo applications. Before going into specific details, we'll start with a conceptual overview of how data is represented in LZX applications, and the APIs for manipulating it.</para>

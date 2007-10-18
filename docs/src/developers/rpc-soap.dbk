@@ -1,6 +1,8 @@
 <chapter id="rpc-soap">
     <!-- move title before warning to validate against DocBook dtd LI LPP-4641 9/4/2007 -->
 <title>SOAP</title>
+<!-- add titleabbrev to use as target text per LPP-4923, IORIO 17 oct 2007 -->
+<titleabbrev id="rpc-soapshort">SOAP</titleabbrev>
 <warning><para>
 This feature works in proxied applications only.  It does not work in SOLO applications.
 </para></warning>
