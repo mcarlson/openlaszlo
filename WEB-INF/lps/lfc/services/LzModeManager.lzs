@@ -52,8 +52,6 @@ var LzModeManager = new Object();
 /** Sent when the mode changes. */
 DeclareEvent(LzModeManager, 'onmode' );
 
-LzModeManager.onmode = null;
-
 /** @access private */
 LzModeManager.__LZlastclick = null;
 LzModeManager.willCall = false;
