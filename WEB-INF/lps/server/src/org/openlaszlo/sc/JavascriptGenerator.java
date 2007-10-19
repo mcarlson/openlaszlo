@@ -1012,22 +1012,23 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   }
 
   public SimpleNode visitAssignmentExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    SimpleNode lhs = children[0];
+    JavascriptReference lhs = translateReference(children[0]);
     int op = ((ASTOperator)children[1]).getOperator();
-    SimpleNode rhs = children[2];
+    SimpleNode rhs = visitExpression(children[2]);
     if (op != ParserConstants.ASSIGN &&
-        translateReference(lhs).isChecked()) {
+        lhs.isChecked()) {
       // The undefined reference checker needs to have this expanded
       // to work
       Map map = new HashMap();
-      map.put("_1", lhs);
+      map.put("_1", lhs.get());
       map.put("_2", rhs);
-      String pattern = "(function () { var $lzsc$tmp = _1; return _1 = $lzsc$tmp " + AssignOpTable.get(op) + " _2; })()";
+      map.put("_3", lhs.set());
+      String pattern = "(function () { var $lzsc$tmp = _1; return _3 = $lzsc$tmp " + AssignOpTable.get(op) + " _2; })()";
       SimpleNode n = (new Compiler.Parser()).substitute(pattern, map);
       return visitExpression(n);
     }
-    children[2] = visitExpression(rhs);
-    children[0] = translateReference(lhs).set();
+    children[2] = rhs;
+    children[0] = lhs.set();
     return node;
   }
 
