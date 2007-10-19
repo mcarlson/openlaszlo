@@ -50,7 +50,7 @@ making changes to the application source code.</para>
 
   
   
-<!-- change title per LPP-4804, IORIO 16 oct 2007 -->
+<!-- change title per LPP-2637, IORIO 19 oct 2007 -->
 <para>In addition to this <emphasis role="em">OpenLaszlo System Administrator's Guide</emphasis>, please see also</para>
 <itemizedlist spacing="compact"><listitem>
 <!-- change title per LPP-4804, IORIO 16 oct 2007 -->
@@ -65,11 +65,11 @@ of the Laszlo platform that are of special interest to UI and graphic designers<
   provide a hands-on instructional overview of the LZX language.</para></listitem></itemizedlist>
 
 <para/><section><title>Use the Forums</title>
-
+<!-- change link to forums per LPP-2637, IORIO 19 oct 2007 -->
 <para>The best way to learn any programming language is to draw upon the
 experience and goodwill of its development community (and to write
 code! as the saying goes, nobody learned to ride a bicycle by reading
-about it). The LZX developer community has a home at <ulink url="http://www.laszlosystems.com/developers/forums/">http://www.laszlosystems.com/developers/forums/</ulink>. There
+about it). The LZX developer community has a home at <ulink url="http://www.laszlosystems.com/developers/community/forums/">http://www.laszlosystems.com/developers/community/forums/</ulink>. There
 you will find an active discussion of all aspects of the language, and
 a place to ask questions of your own.</para>
 
