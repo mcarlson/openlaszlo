@@ -1,7 +1,7 @@
 
 <canvas debug="true" height="150">
   <handler name="oninit"><![CDATA[
-    for (var i = 0; i > 10; i ++) {
+    for (var i = 0; i < 10; i ++) {
       canvas.width();
     }
   ]]></handler>
