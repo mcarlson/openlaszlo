@@ -12,8 +12,8 @@
 /**
   * <p>This service helps tracking the mouse over a number of views, as in
   * common when implementing menus and drag-and-drop behaviors.  When the
-  * mouse is down, standard view events such as <event>ondragin</event>
-  * and <event>ondragout</event> are only sent to the view which received
+  * mouse is down, standard view events such as <event>onmousedragin</event>
+  * and <event>onmousedragout</event> are only sent to the view which received
   * the onmousedown events.  When views are registered using the
   * <classname>LzTrack</classname> service, they will receive events
   * independent of the mouse button state.

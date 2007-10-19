@@ -1,18 +1,76 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
-<canvas width="100%" height="80%">
+<canvas width="100%" height="400">
     <resource name="tabrsrc" >
-        <frame src="resc/wallpaper.jpg" />
         <frame src="resc/h_c_web2con.gif" />
+        <frame src="resc/wallpaper.jpg" />
     </resource>
 
     <resource name="logoanim" src="animation/"/>
 
-    <view name="foo" resource="tabrsrc" onmousedown="this.play()" onmouseup="this.stop()"/>
+    <class name="eventtester" width="150">
+        <attribute name="eventname" value="" type="text"/> 
+        <handler name="oninit">
+            if (eventname == '') Debug.warn('Must specify event name.')
+            this.evDel = new LzDelegate(this, 'update', parent, eventname); 
+        </handler>
+        <method name="update" args="d">
+            this.txt.setText(eventname + ': '+ d);
+            this.bg.setBGColor(green);
+        </method>
 
-    <view name="bar" resource="logoanim" x="300" oninit="this.play()"/>
+        <view name="bg" bgcolor="red" opacity=".5" width="100%" height="100%"/>
+        <text name="txt" text="${classroot.eventname}" width="150"/>
+    </class>
+
+    <view name="foo" resource="tabrsrc" onmousedown="this.play()" onmouseup="this.stop()" options="ignorelayout"/>
+
+    <class name="statusloader" width="150">
+        <attribute name="label" value="" type="text"/> 
+        <handler name="onlastframe">
+            this.stop();
+        </handler>
+        <handler name="onvisible">
+            this.setVisible(true);
+        </handler>
+
+        <simplelayout/>
+        <text text="${classroot.label}"/> 
+        <eventtester eventname="onframe"/>
+        <eventtester eventname="ontotalframes"/>
+        <eventtester eventname="onlastframe"/>
+        <eventtester eventname="onplay"/>
+        <eventtester eventname="onstop"/>
+        <eventtester eventname="onload"/>
+        <eventtester eventname="onloadperc"/>
+        <eventtester eventname="onerror"/>
+        <eventtester eventname="ontimeout"/>
+    </class>
+
+    <simplelayout axis="x" inset="200"/>
+
+    <view name="mousetester" clickable="true">
+        <simplelayout/>
+        <text text="mouse events turn green"/> 
+        <eventtester eventname="onmouseover"/>
+        <eventtester eventname="onmouseout"/>
+        <eventtester eventname="onmousedown"/>
+        <eventtester eventname="onmouseup"/>
+        <eventtester eventname="onclick"/>
+        <eventtester eventname="ondblclick"/>
+        <eventtester eventname="onmousedragin"/>
+        <eventtester eventname="onmousedragout"/>
+        <eventtester eventname="onmouseupoutside"/>
+    </view>
+
+    <statusloader resource="logoanim" label="local resource" onclick="this.play()"/>
+    <statusloader resource="logoanim" play="true" label="local resource play" onclick="this.play()"/>
+    <statusloader oninit="this.setSource('resc/wallpaper-thumb.jpg')" label="single frame"/>
+    <statusloader oninit="this.setSource('resc/logo.swf')" label="swf only multiframe" onclick="this.play()"/>
+    <statusloader resource="http:music.mp3" label="swf only mp3 audio" onclick="this.play()"/>
+    <statusloader oninit="this.setSource('bad.bar')" label="should fail"/>
 </canvas>

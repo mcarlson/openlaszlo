@@ -673,7 +673,17 @@ LzSprite.prototype.__mouseEvent = function ( e ){
     }
 
     //Debug.write('__mouseEvent', eventname, this.owner);
-    if (skipevent == false && this.owner.mouseevent && LzModeManager && LzModeManager['handleMouseButton']) LzModeManager.handleMouseButton(this.owner, eventname);
+    if (skipevent == false && this.owner.mouseevent && LzModeManager && LzModeManager['handleMouseButton']) {
+        LzModeManager.handleMouseButton(this.owner, eventname);
+
+        if (this.__mousedown) {
+            if (eventname == 'onmouseover') {
+                LzModeManager.handleMouseButton(this.owner, 'onmousedragin');
+            } else if (eventname == 'onmouseout') {
+                LzModeManager.handleMouseButton(this.owner, 'onmousedragout');
+            }
+        }
+    }
 }
 
 // called by LzMouseKernel when mouse goes up on another sprite
@@ -683,6 +693,7 @@ LzSprite.prototype.__mouseEvent = function ( e ){
 LzSprite.prototype.__globalmouseup = function ( e ){
     if (this.__mousedown) {
         this.__mouseEvent(e);
+        this.__mouseEvent({type: 'mouseupoutside'});
     }
 }
 
@@ -845,6 +856,7 @@ LzSprite.prototype.play = function(f) {
 
     if (this.frames && this.frames.length > 1) {
         this.playing = true;
+        this.owner.resourceevent('play', null, true);
         LzIdleKernel.addCallback(this, '__incrementFrame');
     }
 }
@@ -852,6 +864,7 @@ LzSprite.prototype.play = function(f) {
 LzSprite.prototype.stop = function(f) {
     if (this.playing == true) {
         this.playing = false;
+        this.owner.resourceevent('stop', null, true);
         LzIdleKernel.removeCallback(this, '__incrementFrame');
     }
 
@@ -879,10 +892,12 @@ LzSprite.prototype.__incrementFrame = function() {
 LzSprite.prototype.__updateFrame = function(force) {
     if (this.playing || force) {
         var url = this.frames[this.frame - 1];
-        //Debug.info('__updateFrame', this.frame, url);
+        //Debug.info('__updateFrame', this.frame, url, this.owner);
         this.setSource(url, true);
     }
-    if (this.owner.frame != this.frame - 1) this.owner.spriteAttribute('frame', this.frame);
+    this.owner.resourceevent('frame', this.frame);
+    if (this.frames.length == this.frame)
+        this.owner.resourceevent('lastframe', null, true);
 }
 
 if (LzSprite.prototype.quirks.preload_images_only_once) {
