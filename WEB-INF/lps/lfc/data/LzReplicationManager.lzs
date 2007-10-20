@@ -289,6 +289,18 @@ function constructWithArgs ( args ){
 /**
   * @access private
   */
+function setDataContext ( p , implicit ){
+    var args = arguments; 
+    if (p == null && this.immediateparent != null && 'datapath' in this.immediateparent && this.immediateparent.datapath != null){
+        args[0] = this.immediateparent.datapath;
+        args[1] = true;
+    }
+    super.setDataContext.apply(this, args);
+}
+
+/**
+  * @access private
+  */
 function getNodeOffset ( p ){
     if (this.nodes != null) {
         var l = this.nodes.length; 
