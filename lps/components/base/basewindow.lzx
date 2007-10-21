@@ -247,19 +247,21 @@
         <method name="setVisible" args="isVisible"> <![CDATA[
             super.setVisible(isVisible);
             if (isVisible) {
-                //need to add this window to the parent's windowlist
-                var foundMe = false;
-                var wlist = parent.options["windowlist"];
-                var len = wlist.length;
-                for (var i=0; i < len; ++i) {
-                    if (wlist[i] == this){
-                        foundMe = true;
-                        break;
+                if (this.isinited) {
+                    //need to add this window to the parent's windowlist
+                    var foundMe = false;
+                    var wlist = parent.options["windowlist"];
+                    var len = wlist.length;
+                    for (var i=0; i < len; ++i) {
+                        if (wlist[i] == this){
+                            foundMe = true;
+                            break;
+                        }
                     }
-                }
-                
-                if (!foundMe) {
-                    wlist[len] = this;
+                    
+                    if (!foundMe) {
+                        wlist[len] = this;
+                    }
                 }
                 
                 this.setAttribute('haswindowfocus', true);
