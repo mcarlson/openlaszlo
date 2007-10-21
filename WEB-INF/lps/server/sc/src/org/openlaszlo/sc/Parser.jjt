@@ -216,10 +216,13 @@ TOKEN: {
         )*
         "'"
   >
-|  // The Octal escapes are not in the spec, but rhino accepts them
+|   // any single char can be escaped although "n","t","b","r","f","v"
+    // have special meanings
+    // The Octal escapes are not in the spec, but rhino accepts them;
+    // the x and u specs ensure they are valid
   < #ESCAPE_SEQUENCE:
       "\\"
-        ( ["n","t","b","r","f","v","\\","'","\""]
+        ( (~["0"-"7","x","u"])
         | (["0"-"3"])? (["0"-"7"])? ["0"-"7"]
         | ["x"] ["0"-"9","a"-"f","A"-"F"] ["0"-"9","a"-"f","A"-"F"]
         | ["u"] ["0"-"9","a"-"f","A"-"F"] ["0"-"9","a"-"f","A"-"F"] ["0"-"9","a"-"f","A"-"F"] ["0"-"9","a"-"f","A"-"F"]
