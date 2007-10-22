@@ -992,13 +992,6 @@ function __LZforceScrollAttrs () {
 /**
   * 
   */
-function setScroll (s){
-    this.sprite.setScroll(s);
-}
-
-/**
-  * 
-  */
 function setHScroll (s){
     this.sprite.setHScroll(s);
 }

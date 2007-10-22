@@ -775,13 +775,6 @@ LzTextSprite.prototype.__updatefieldsize = function ( ){
 /**
   * 
   */
-LzTextSprite.prototype.setScroll = function (s){
-    this.__LZtextclip.scroll = s;
-}
-
-/**
-  * 
-  */
 LzTextSprite.prototype.setHScroll = function (s){
     this.__LZtextclip.hscroll = s;
 }
