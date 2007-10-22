@@ -113,7 +113,9 @@ function getLoadMovie ( ){
     } else {
         var lmname = "loadmc" + this.loadmcdepth;
         if (this.mc[lmname]) {
-            Debug.error("%w.mc[%s]: %w", this, lmname, this.mc[lmname]);
+            if ($debug) {
+                Debug.error("%w.mc[%s]: %w", this, lmname, this.mc[lmname]);
+            }
         }
         this.mc.attachMovie( "empty" , lmname , this.loadmcdepth );
         var newmc = this.mc[ lmname ];
@@ -200,9 +202,15 @@ function returnData ( loadobj , data ){
     }
 
     if ( err != null ){
-        Debug.error( err );
+        if ($debug) {
+            Debug.error( err );
+        }
         if (this.onerror.ready) {
-            this.onerror.sendEvent( err );
+            /* we need to pass the data-object if our owner is a LzHTTPLoader, 
+             * to conform to the new LzHTTPDataProvider class,
+             * also see "LzHTTPDataProvider#loadResponse(..)"
+             */
+            this.onerror.sendEvent( this.owner instanceof LzHTTPLoader ? data : err );
         }
         return;
     }
