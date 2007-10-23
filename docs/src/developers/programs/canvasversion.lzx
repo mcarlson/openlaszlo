@@ -1,0 +1,10 @@
+<canvas height="200" debug="true">
+<debug x="5" y="50" height="100" />
+    <handler name="oninit">
+        Debug.write('%s %s', 'LPS version', canvas.lpsversion)
+    </handler>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

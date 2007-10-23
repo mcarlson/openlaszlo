@@ -42,8 +42,6 @@ the debugger window is not visible.</para>
 
 <variablelist><varlistentry><term>The <indexterm><primary>debug</primary></indexterm><sgmltag class="attribute">debug</sgmltag> attribute</term><listitem><para>The debugger is enabled on if the canvas <indexterm><primary>debug</primary></indexterm><sgmltag class="attribute">debug</sgmltag> attribute is set to true:</para>
  
-
-
 <example role="live-example">
    <title>The canvas debug attribute</title>
    <programlisting language="lzx">
@@ -67,9 +65,11 @@ console.</para>
 <para>See the <ulink url="../deployers/request-types.html" type="">OpenLaszlo System Administrator's Guide</ulink> for more information
 about request types.</para></listitem></varlistentry></variablelist>
 
-<para/></section><section id="debugging.runtime-error-checking"><title>Runtime Error Checking</title>
+<para/></section>
 
-<para>Enabling the debugger <?ignore Using any of the first three methods in <xref linkend="debugging.enabling-the-debugger"/>?> has two effects:</para>
+<section id="debugging.runtime-error-checking"><title>Runtime Error Checking</title>
+
+<para>Enabling the debugger using one of the methods described in <xref linkend="debugging.enabling-the-debugger"/> has two effects:</para>
 <itemizedlist spacing="compact"><listitem><para>It includes the debugger visual component.  This displays debug messages, and has a command line interface for evaluating JavaScript statements.</para></listitem><listitem><para>It compiles the application with additional instrumentation to perform <indexterm significance="preferred"><primary>runtime error checking</primary></indexterm><glossterm>runtime error checking</glossterm>.  Certain classes of erroneous code (below) result in warnings that are logged to the debug window.</para></listitem></itemizedlist>
 
 <para>A program that is compiled with runtime error checking will contain code that checks for the following conditions:</para>
@@ -144,8 +144,33 @@ to the debugger log, separated by spaces.</para>
 <para>Some object are <glossterm baseform="inspect">inspectable</glossterm>.  See <xref linkend="debugging.inspecting"/> for more about the inspect feature of
 the debugger.  See <xref linkend="debugging.debug-tostring"/> to see
 how to customize the display of objects within the debugger.</para>
-
-<para/></section><section><title>Using the Evaluator</title>
+</section>
+<!-- added next section on getting version info to fix LPP-4822 and LPP-2658. IORIO 23 oct 2007 -->
+<!-- added two new examples, canvasversion.lzx and debuginfo.lzx. IORIO 23 oct 2007  -->
+<section>
+<title>Getting version information</title>
+<para>There simplest way to get LPS version information is to use <varname>canvas.lpsversion</varname>. </para>
+<example role="live-example">
+   <title>Using canvas.lpsversion</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/canvasversion.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using canvas.lpsversion</title><programlisting role="lzx-embednew"><filename>canvasversion.lzx</filename><parameter/><code>
+</programlisting><?lzx-edit programs/canvasversion.lzx></example?>
+<para>You can get more information, for example the build number and target runtime, by using <literal>Debug.versionInfo()</literal>.</para>
+<example role="live-example">
+   <title>Using Debug.versionInfo()</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/debuginfo.lzx"/></textobject> 
+   </programlisting>
+</example>
+<?example role="live-example"><title>Using Debug.versionInfo()</title><programlisting role="lzx-embednew"><filename>debuginfo.lzx</filename><parameter/><code>
+</programlisting><?lzx-edit programs/debuginfo.lzx></example?>
+<para>While the previous two methods give you version information, if you want to generat a full bug report, see <xref linkend="generate-bug-report" />.</para>
+</section>
+<!-- end of added section to fix LPP-4822 and LPP-2658. IORIO 23 oct 2007  -->
+<section><title>Using the Evaluator</title>
 
 <para>The bottom portion of the debugger window is the
 <indexterm significance="preferred"><primary>evaluator</primary></indexterm><glossterm>evaluator</glossterm>.  This is a command-line interface for evaluating
@@ -279,7 +304,7 @@ then clicking on the object's representation.</para>
 </programlisting><?lzx-edit programs/debugging-$5.lzx></example?>
 <calloutlist><callout arearefs="N10239"><para>The (only) argument to <indexterm><primary><literal>Debug.write()</literal> method</primary></indexterm><methodname>Debug.write()</methodname> is a string, so the value of <literal>canvas.subviews</literal> is not inspectable.</para></callout><callout arearefs="N10243"><para>The second argument to <indexterm><primary><literal>Debug.write()</literal> method</primary></indexterm><methodname>Debug.write()</methodname> is an non-string Object, so it is inspectable.</para></callout></calloutlist>
 <para/></section>
-<section>
+<section id="generate-bug-report">
 <title>Generating a bug report</title>
 <para>If you encounter a bug that prints a message in the debugger and you believe it is an OpenLaszlo bug, take the following steps to generate a bug report:</para>
 <orderedlist spacing="compact">
@@ -342,7 +367,7 @@ its properties, a function by its name (if available).</para>
 Debug.write, Debug.warn, Debug.info, Debug.format, there are utilities for determining client environment (Debug.versionInfo() and others)
     </para>
     <itemizedlist spacing="compact"><listitem><para>
-	    Canvas.versionInfoString(), Debug.versionInfo() which can be very helpful to record for bug reports.
+	    canvas.lpsversionInfoString(), Debug.versionInfo() which can be very helpful to record for bug reports.
 	  </para></listitem><listitem><para>
         Debug.debug, Debug.info—like Debug.warn and Debug.error, but with different colors and tags that match many popular Ajax runtimes.
       </para></listitem><listitem><para>
