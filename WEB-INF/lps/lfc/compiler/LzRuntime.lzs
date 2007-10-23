@@ -336,36 +336,34 @@ if ($debug) {
       }
     }
   }
-}
 
-if ($as2) {
-  /**
-   * Evaluate a closure in context, ignoring any errors
-   * @param closure:Function the closure to evaluate
-   * @param context:Object the context to evaluate the closure in
-   * @param errval:* the value to return if there is an error
-   * @access private
-   */
-  Debug.ignoringErrors = function ignoringErrors (closure, context, errval) {
-#pragma "warnUndefinedReferences=false"
-      return closure.call(context);
-  }
-} else {
-  /**
-   * Evaluate a closure in context, ignoring any errors
-   * @param closure:Function the closure to evaluate
-   * @param context:Object the context to evaluate the closure in
-   * @param errval:* the value to return if there is an error
-   * @access private
-   */
-  Debug.ignoringErrors = function ignoringErrors (closure, context, errval) {
-#pragma "warnUndefinedReferences=false"
-    try {
-      return closure.call(context);
-    } catch(e) {
-      return errval;
+  if ($as2) {
+    /**
+     * Evaluate a closure in context, ignoring any errors
+     * @param closure:Function the closure to evaluate
+     * @param context:Object the context to evaluate the closure in
+     * @param errval:* the value to return if there is an error
+     * @access private
+     */
+    Debug.ignoringErrors = function ignoringErrors (closure, context, errval) {
+  #pragma "warnUndefinedReferences=false"
+        return closure.call(context);
+    }
+  } else {
+    /**
+     * Evaluate a closure in context, ignoring any errors
+     * @param closure:Function the closure to evaluate
+     * @param context:Object the context to evaluate the closure in
+     * @param errval:* the value to return if there is an error
+     * @access private
+     */
+    Debug.ignoringErrors = function ignoringErrors (closure, context, errval) {
+  #pragma "warnUndefinedReferences=false"
+      try {
+        return closure.call(context);
+      } catch(e) {
+        return errval;
+      }
     }
   }
 }
-
-
