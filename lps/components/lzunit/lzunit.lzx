@@ -28,11 +28,6 @@
   of test cases run, the number of failures, and the number of
   errors.  If any error occurs, an obvious error message is presented.
 
-  [Future:
-    o allow inspection of error details.
-    o hook into debugger errors
-  ]
-
   Below is a simple example of the use of LZUnit:
 
   <canvas debug="true">
@@ -152,8 +147,10 @@ TestError.prototype.toString = function toString() {
   @keywords public
 
   @param Boolean debugWrite: Whether or not to emit debugging statements.
+
+  @devnote TODO: [2007-10-23 ptw] Use LzFormatter as a mixin instead of deriving from text
 -->
-<class name="DebugObject">
+<class name="DebugObject" extends="text">
     <!--- whether or not to emit debugging statements -->
     <attribute name="debugWrite" />
 
@@ -203,7 +200,7 @@ TestError.prototype.toString = function toString() {
 
     <!---
       Takes any number of arguments and outputs them using
-      Debug.write.  Strings are output literally, any other objects
+      Debug.debug.  Strings are output literally, any other objects
       are described in more detail using Debug.__String (which uses
       _dbg_typename and _dbg_name of objects that support it).
 
@@ -222,7 +219,7 @@ TestError.prototype.toString = function toString() {
                     s += Debug.__String(e);
                 }
             }
-            Debug.write(s);
+            Debug.debug(s);
         }
         ]]>
     </method>
@@ -342,7 +339,12 @@ TestError.prototype.toString = function toString() {
         if (this.result) {
           this.result.addFailure(message);
         } else {
-          Debug.write('result is null on fail call: "' + message + '"');
+          Debug.debug('result is null on fail call: "' + message + '"');
+        }
+        if ($debug) {
+          Debug.freshLine();
+          // create an error, which will include a backtrace, if applicable
+          Debug.__write(new LzError(null, null, message));
         }
     </method>
 
@@ -357,7 +359,12 @@ TestError.prototype.toString = function toString() {
         if (this.result) {
           this.result.addError(message);
         } else {
-          Debug.write('result is null on error call: "' + message + '"');
+          Debug.debug('result is null on error call: "' + message + '"');
+        }
+        if ($debug) {
+          Debug.freshLine();
+          // create an error, which will include a backtrace, if applicable
+          Debug.__write(new LzError(null, null, message));
         }
     </method>
     
@@ -373,15 +380,29 @@ TestError.prototype.toString = function toString() {
       @return String: the formatted failure message
     -->
     <method name="format" args="message, expected, actual">
-        var msg = Debug.formatToString(
+        return this.formatToString(
             '%s expected %#w got %#w',
             (jsTrue(message) ? message + ": " : ""), expected, actual);
-        if (Debug) {
+    </method>
+
+    <!---
+      Output a message on the result display
+
+      Outputs a message without affecting the success/failure state of the test
+
+      @param ...:* Any number of parameters will be formatted using
+      LzFormatter.formatToString and output to the display
+    -->
+    <method name="displayMessage">
+        var message = this.formatToString.apply(this, arguments);
+        if (this.result) {
+          this.result.addMessage(message);
+        }
+        if ($debug ) {
           Debug.freshLine();
           // create an error, which will include a backtrace, if applicable
-          Debug.__write(new LzError(null, null, msg));
+          Debug.__write(new LzInfo(null, null, message));
         }
-        return String(msg);
     </method>
 
     <!---
@@ -550,18 +571,14 @@ TestError.prototype.toString = function toString() {
     <method name="assertNotSame" args="expected, actual, message">
             if (expected === actual) {
                 // In-line Test.format so we can invert the sense
-                var msg = Debug.formatToString(
+                var msg = LzFormatter.prototype.formatToString(
                     '%s expected anything but %#w got %#w',
                     (jsTrue(message) ? message + ": " : "NotSame: "), expected, actual);
-                if (Debug) {
-                  Debug.freshLine();
-                  // create an error, which will include a backtrace, if applicable
-                  Debug.__write(new LzError(null, null, msg));
-                }
                 this.fail(msg);
             }
             canvas.setAttribute('runTests', canvas.runTests + 1)                            
     </method>
+
 </class>
 
 <!---
@@ -624,14 +641,18 @@ TestError.prototype.toString = function toString() {
             }
         }
         <!-- hand-crafted closure -->
-        wrapper.env = {inrsw: false, rsw: $reportSourceWarning, testcase: this};
-        var savedrsw = $reportSourceWarning;
-        if (catchErrors) {
-            $reportSourceWarning = wrapper;
+        if ($debug) {
+          wrapper.env = {inrsw: false, rsw: $reportSourceWarning, testcase: this};
+          var savedrsw = $reportSourceWarning;
+          if (catchErrors) {
+              $reportSourceWarning = wrapper;
+          }
         }
         runTest(theTestName);
-        if (catchErrors) {
-            $reportSourceWarning = savedrsw;
+        if ($debug) {
+          if (catchErrors) {
+              $reportSourceWarning = savedrsw;
+          }
         }
         <!-- end capture source warnings -->
         tearDown();
@@ -664,8 +685,7 @@ TestError.prototype.toString = function toString() {
             error("method '" + theTestName + "' not found", false);
         }
         else {
-            <!-- TODO: [2002-11-10 ptw] (apply) m.apply(this) -->
-            this[theTestName]();
+            m.call(this);
         }
     </method>
 
@@ -794,6 +814,7 @@ TestError.prototype.toString = function toString() {
         this.currentTest = null;
         this.failures = [];
         this.errors = [];
+        this.messages = [];
         super.construct(parent, args);
 
         dw("TestResult.construct(", args, ");");
@@ -853,14 +874,27 @@ TestError.prototype.toString = function toString() {
         update();
     </method>
 
+    <!---
+      Record a message
+
+      @keywords private
+      @param ...:* format args
+    -->
+    <method name="addMessage">
+        messages.push(readout.formatToString.apply(readout, arguments));
+        update();
+    </method>
+
     <method name="myToString">
         var s = "Tests: " + this.totalTests +
                  " Failures: " + failedTests +
                  " Errors: " + erroredTests;
-        for (var f in failures)
-            s += "\n" + failures[f];
-        for (var e in errors)
-            s += "\n" + errors[e];
+        for (var i in failures)
+            s += "\n" + failures[i];
+        for (var i in errors)
+            s += "\n" + errors[i];
+        for (var i in messages)
+            s += "\n" + messages[i];
         return s;
     </method>
 
@@ -984,7 +1018,7 @@ TestError.prototype.toString = function toString() {
 
         var query = "logfile="+escape(logfile)+"&msg="+escape(msg);
         var reqstr =  LzBrowser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
-        //Debug.write("sendServerLogCommand", reqobj, reqstr);
+        //Debug.debug("sendServerLogCommand", reqobj, reqstr);
         var tloader = new LzHTTPLoader(this, false, null);
         tloader.open ("GET" , reqstr, /* username */ null, /* password */ null);
         tloader.send (/* content */ null)        
@@ -1015,7 +1049,7 @@ TestError.prototype.toString = function toString() {
     <!--- @keywords private  
         event handler for test suite end  -->
     <method event="onsuitefinish">
-      //Debug.write("onsuitefinish");
+      //Debug.debug("onsuitefinish");
       //this.resultstring += ("failures: "+ this.result.numFailures()+ "\n");
       //this.resultstring += ("time: "+ (((new Date)['getTime']()) - this.starttime)+"\n");
       this.resultstring += "finish_testsuite: "+this.testpath + " failures: "+ this.result.numFailures()+ "\n";

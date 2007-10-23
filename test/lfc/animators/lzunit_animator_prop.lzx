@@ -32,13 +32,13 @@
             <method name="checkSimpleXAnim2">
                 assertEquals(200, bluebox.x);
                 bluebox.setX(0);
-                Debug.write('--- test complete ---');
+                displayMessage('--- test complete ---');
             </method>
         </TestCase>
     </TestSuite>
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
