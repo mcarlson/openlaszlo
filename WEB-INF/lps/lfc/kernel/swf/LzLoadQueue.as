@@ -104,6 +104,11 @@ LzLoadQueue.XMLOnDataHandler = function (src) {
         // cancel the timeout handler
         LzLoadQueue.unloadRequest(this);
   } else {
+        // If we timed out, and this response came in late, ignore it.
+        if (this.timedout) {
+            return;
+        }
+
       //Debug.write("LzLoadQueue.XMLOnDataHandler success", this, this.loader);
       // Create a queue containing one root node, myself, and convert it and all children to
       // LzDataNodes.

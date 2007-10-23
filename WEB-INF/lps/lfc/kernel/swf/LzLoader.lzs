@@ -146,7 +146,7 @@ function returnData ( loadobj , data ){
     // object. This can happen if a serverless data load timed out in
     // the LFC, but eventually returned something via the
     // LoadVars.sendAndLoad() callback.
-    if (loadobj.loaded && loadobj.valid) {
+    if (loadobj.loaded && loadobj.valid && loadobj.timedout && data == null) {
         if ($debug) {
             Debug.warn("%w.returnData: %w already loaded",
                        this, loadobj);
@@ -357,6 +357,9 @@ function setHeaders (headers) {
   * @access private
   */
 function requestDirectXML ( o ){
+    if ($debug) {
+        LzLoader.debugLoadObj(o);
+    }
     this.initializeRequestObj(o);
     LzLoadQueue.enqueueRequest( o );
     // We should probably be passing something other than the obj itself to
