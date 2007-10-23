@@ -154,11 +154,6 @@ LzSprite.prototype.FOREGROUND_DEPTH_OFFSET = 0;
 // when it has the focus. (see LzFocus for more details)
 LzSprite.prototype.focusable = false;
 
-LzSprite.prototype.width = null;
-LzSprite.prototype.height = null;
-LzSprite.prototype.x = 0;
-LzSprite.prototype.y = 0;
-
 LzSprite.prototype.visible =   true;
 
 LzSprite.prototype.opacity =   1;
@@ -460,9 +455,20 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
         }
         this.bgcolor = Number(bgc);
         this.applyBG();
+        if (this._bgcolorhidden) {
+            this.__LZbgRef._alpha = this.opacity * 100;
+            // overriding context menu color so opacity setting works
+            this._bgcolorshown = true;
+        }
     } else {
-        this.bgcolor = null;
-        this.removeBG();
+        if (this._bgcolorhidden) {
+            this.__LZbgRef._alpha = 0;
+            //opacity setting should not work
+            this._bgcolorshown = false;
+        } else {
+            this.bgcolor = null;
+            this.removeBG();
+        }
     }
 }
 
@@ -629,7 +635,8 @@ LzSprite.prototype.setOpacity = function ( v ){
     if (this.__LZmovieClipRef)
         this.__LZmovieClipRef._alpha = 100*v;
 
-    if (this.__LZbgRef)
+    // set the bgcolor alpha if not set by the context menu and overridden by the context menu
+    if (this.__LZbgRef && (this._bgcolorhidden != true && this._bgcolorshown != true))
          this.__LZbgRef._alpha = 100*v;
 
     //@event onopacity: Sent when a view changes its opacity
@@ -1139,9 +1146,9 @@ LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
     //Debug.write('got attachPoint', cVMv);
 
     var reback = cSprite.__LZisBackgrounded;
-    var menu = null;
     if (reback) {
-        menu = cSprite.__LZbgRef.menu;
+        var menu = cSprite.__LZbgRef.menu;
+        var al = cSprite.__LZbgRef._alpha;
     }
     cSprite.removeBG();
     while (cSprite.__LZdepth + next < dl.length  && cSprite.__LZdepth+next >= 0 ){
@@ -1169,15 +1176,18 @@ LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
 
         if ( nv.__LZisBackgrounded ){
             var menu2 = nv.__LZbgRef.menu;
+            var al2 = nv.__LZbgRef._alpha;
             nv.removeBG();
             nv.applyBG();
             nv.__LZbgRef.menu = menu2;
+            nv.__LZbgRef._alpha = al2;
         }
     }
 
     if ( reback ){
         cSprite.applyBG();
         cSprite.__LZbgRef.menu = menu;
+        cSprite.__LZbgRef._alpha = al;
     }
     return true;
 }
@@ -1548,16 +1558,15 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
       }
     }
 
-    var mc = this.getMCRef();
     // [todo hqm 01-24-07] SWF-specific 
     var mb = this.__LZbgRef;
-    // If there's no movieclip attached, use the background clip.
-    if (mc != null) {
-        mc.menu = cmenu;
+    if (mb == null) {
+        this.setBGColor(0xffffff);
+        var mb = this.__LZbgRef;
+        mb._alpha = 0;
     }
-    if (mb != null) {
-        mb.menu = cmenu;
-    }
+    this._bgcolorhidden = true;
+    mb.menu = cmenu;
 
     if (mb == null && mc == null) {
       if ($debug) Debug.warn("LzView.setContextMenu: cannot set menu on view %w, it has no foreground or background movieclip", this.owner);
