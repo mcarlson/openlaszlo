@@ -366,8 +366,10 @@ its properties, a function by its name (if available).</para>
 <para>In addition to 
 Debug.write, Debug.warn, Debug.info, Debug.format, there are utilities for determining client environment (Debug.versionInfo() and others)
     </para>
-    <itemizedlist spacing="compact"><listitem><para>
-	    canvas.lpsversionInfoString(), Debug.versionInfo() which can be very helpful to record for bug reports.
+    <itemizedlist spacing="compact">
+    <!-- fix typo: canvas.versionInfoString to lz.canvas.versionInfoString() IORIO 23 oct 2007-->
+    <listitem><para>
+	    lz.canvas.versionInfoString(), Debug.versionInfo() which can be very helpful to record for bug reports.
 	  </para></listitem><listitem><para>
         Debug.debug, Debug.info—like Debug.warn and Debug.error, but with different colors and tags that match many popular Ajax runtimes.
       </para></listitem><listitem><para>
