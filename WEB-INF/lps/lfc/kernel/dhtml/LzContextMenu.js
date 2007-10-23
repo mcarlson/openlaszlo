@@ -65,9 +65,22 @@ function __show () {
 
     var o = '';
     for (var i = 0; i < this.items.length; i++) {
-        var v = this.items[i].cmenuitem;
+        var cm = this.items[i];
+        var v = cm.cmenuitem;
         if (v.visible != true) continue; 
         if (v.separatorBefore) o += '<br/>';
+
+        // Don't display the same item twice (matches swf behavior)
+        var duplicate = false;
+        for (var j=0; j<i; j++) {
+            if (cm._equals(this.items[j])) {
+              duplicate = true;
+              break;
+            }
+        }
+        if (duplicate)
+            continue;
+
         if (v.enabled) {
             o += '<a onmousedown="javascript:LzMouseKernel.__showncontextmenu.__select(' + i + ');return false;"'
             o +='>' + v.caption + '</a>';
@@ -186,6 +199,13 @@ function __select() {
         }
     }
 }
+
+/** @access private */
+// Must match the behavior of swf (only the caption is matched)
+function _equals (cm) {
+  return (cm != null) && (this.cmenuitem.caption == cm.cmenuitem.caption);
+}
+
 
 /**
   * LzContextMenuItem.setCaption
