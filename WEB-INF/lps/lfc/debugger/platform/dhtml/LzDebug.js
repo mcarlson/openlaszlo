@@ -222,8 +222,9 @@ Debug.__String = function (thing, pretty, limit, unique) {
         s = this.functionName(thing, false);
         if (s == null) { s = ''; }
       }
-    } else if (! isNaN(Number(thing['nodeType']))) { // Doesn't work in Opera (thing instanceof Node) {
-      // tip o' the pin to osteele.com fot the notation format
+    } else if ((thing instanceof HTMLElement) &&
+               (! isNaN(Number(thing['nodeType'])))) {
+      // tip o' the pin to osteele.com for the notation format
       function nodeToString(node) {
         var tn = node.nodeName || '';
         var path = tn.toLowerCase();

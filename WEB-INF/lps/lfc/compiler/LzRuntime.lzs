@@ -222,9 +222,6 @@ if ($debug) {
     Debug.__write(warning);
   };
 
-  Debug.debug("Source warnings enabled");
-  $reportSourceWarning('testing', 0, 'Test source warning');
-
   // Each of the warnings that the compile may call maintains a flag to
   // avoid recursing (e.g., when the debugger has a bug).
 
@@ -340,4 +337,35 @@ if ($debug) {
     }
   }
 }
+
+if ($as2) {
+  /**
+   * Evaluate a closure in context, ignoring any errors
+   * @param closure:Function the closure to evaluate
+   * @param context:Object the context to evaluate the closure in
+   * @param errval:* the value to return if there is an error
+   * @access private
+   */
+  Debug.ignoringErrors = function ignoringErrors (closure, context, errval) {
+#pragma "warnUndefinedReferences=false"
+      return closure.call(context);
+  }
+} else {
+  /**
+   * Evaluate a closure in context, ignoring any errors
+   * @param closure:Function the closure to evaluate
+   * @param context:Object the context to evaluate the closure in
+   * @param errval:* the value to return if there is an error
+   * @access private
+   */
+  Debug.ignoringErrors = function ignoringErrors (closure, context, errval) {
+#pragma "warnUndefinedReferences=false"
+    try {
+      return closure.call(context);
+    } catch(e) {
+      return errval;
+    }
+  }
+}
+
 

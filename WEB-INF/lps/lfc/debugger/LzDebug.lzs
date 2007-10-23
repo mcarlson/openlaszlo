@@ -481,15 +481,19 @@ Debug.objectOwnProperties = function (obj, names, indices, limit) {
   var alen = (('length' in obj) &&
               (Math.floor(obj.length) === obj.length) &&
               (obj.length >= 0)) ? obj.length : false;
-  var hopp = 'hasOwnProperty' in obj;
-  var proto = (('__proto__' in obj) ? obj.__proto__ :
-               (('constructor' in obj) ? obj.constructor.prototype : false));
+  var hopp = 'hasOwnProperty' in obj && obj.hasOwnProperty instanceof Function;
+  // Use typeof == 'object' rather than instanceof Object for native prototypes
+  var proto = (('__proto__' in obj && (typeof obj.__proto__ == 'object')) ? obj.__proto__ :
+               (('constructor' in obj && (typeof obj.constructor.prototype == 'object')) ? obj.constructor.prototype : false));
   for (var key in obj) {
-    if ((! hopp) ||
-        obj.hasOwnProperty(key) ||
-        // Heuristic to find getter slots (there is no way to ask if a
-        // property is a getter)
-        (proto && (obj[key] !== proto[key]))) {
+    // Heuristic to find 'interesting' slots, by which we mean slots
+    // that have a non-inherited value.  This should find 'own' slots,
+    // getters, and funny 'native' slots like swf movieclips, etc.
+    if ((! proto) ||
+        this.ignoringErrors(function () { return obj.hasOwnProperty(key);}, this, (! (key in proto))) ||
+        // Be careful poking at prototypes (consider getters that may
+        // fail when called on the prototype)
+        (obj[key] !== this.ignoringErrors(function () { return proto[key];}, this, {}))) {
       if ((alen != false) &&
           // Only `==` here because all keys are strings
           (Math.floor(key) == key) &&
