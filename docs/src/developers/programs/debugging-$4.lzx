@@ -1,9 +1,7 @@
-
-<canvas debug="true" height="150">
-  <script>
-    Debug.write('user code');
-  </script>
-  <button onclick="Debug.write('click', getMouse('x'))"/>
+<canvas debug="true" height="350">
+  <script>Debug.write('user code\n');</script>
+  <button text="Get x, y" width="150" height="150"
+  onclick="Debug.format('click: x=%d, y=%d\n', getMouse('x'), getMouse('y'))" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
