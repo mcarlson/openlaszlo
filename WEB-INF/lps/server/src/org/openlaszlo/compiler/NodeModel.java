@@ -1103,6 +1103,7 @@ solution =
         String name = element.getAttributeValue("name");
         String event = element.getAttributeValue("event");
         String args = XMLUtils.getAttributeValue(element, "args", "");
+        String override = element.getAttributeValue("override");
 
         if ((name == null || !ScriptCompiler.isIdentifier(name)) &&
             (event == null || !ScriptCompiler.isIdentifier(event))) {
@@ -1199,10 +1200,16 @@ solution =
         }
 
 
-        /**
-           TODO [hqm 2007-10-21]
-           WARN if method attributespec has override=false
-        **/
+     
+        if (!("true".equals(override))) {
+            String classname = element.getParentElement().getName();
+            // Just check method declarations on regular node.
+            // Method declarations inside of class definitions will be already checked elsewhere,
+            // in the call from ClassCompiler.updateSchema to schema.addElement
+            if (!"class".equals(classname)) {
+                schema.checkMethodDeclaration(element, classname, name, env);
+            }
+        }
 
         attrs.put(name, fndef);
     }
