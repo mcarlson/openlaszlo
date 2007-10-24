@@ -83,7 +83,7 @@ suiteSubclasses.testSub = function() {
 
     LzTestManager.assertEquals("LzSubSub", LzSubSub.classname);
     
-    var sub2Inst = LzSubSub.make();
+    var sub2Inst = new LzSubSub();
 
     LzTestManager.assertTrue( sub2Inst instanceof LzSub);
     LzTestManager.assertTrue( sub2Inst instanceof LzSubSub);
@@ -104,7 +104,7 @@ suiteSubclasses.testClassNodeSub = function () {
     var LzNodeSub = Class.make( "LzNodeSub", LzNode );
     LzTestManager.assertEquals("LzNodeSub", LzNodeSub.classname);
 
-    var nodeSubInst = LzNodeSub.make();
+    var nodeSubInst = new LzNodeSub();
     LzTestManager.assertTrue( nodeSubInst instanceof LzNodeSub );
 
 }
