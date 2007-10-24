@@ -160,6 +160,14 @@ Lz = {
             var scripturl = lzOptions.ServerRoot+ '/lps/includes/excanvas.js';
             this.__dhtmlLoadScript(scripturl)
         }
+        if ((Lz.__BrowserDetect.isIE && Lz.__BrowserDetect.version < 7) || (Lz.__BrowserDetect.isSafari && Lz.__BrowserDetect.version <= 419.3)) {
+            // use the 'simple' version of the LFC: LFCdhtml-{debug,backtrace}-simple.js for Safari 2 and IE 6
+            var i = url.indexOf('debug.js') || url.indexOf('backtrace.js')
+            if (i != -1) {
+                var type = url.substring(i, url.length - 3);
+                url = url.substring(0, i) + type + '-simple.js';
+            }
+        }
 
         this.__dhtmlLoadScript(url)
     }
