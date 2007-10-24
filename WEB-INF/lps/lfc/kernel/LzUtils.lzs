@@ -99,7 +99,7 @@ var LzUtils = {
             }
 
             if (typeof c == 'number') {
-                var hex = LzUtils.dectohex(c, 6);
+                var hex = LzUtils.dectohex(c & 0xffffff, 6);
                 c = '#' + hex;
             }
             return c;
