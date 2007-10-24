@@ -1099,8 +1099,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       userFunctionName = functionName;
       if (! useName) {
         if ((! identifierPattern.matcher(functionName).matches())
-            // TODO: [2007-02-21 ptw] Remove after Leopard
-            || options.getBoolean("debugSafari")) {
+            // Some JS engines die if you name function expressions
+            || options.getBoolean(Compiler.DEBUG_SIMPLE)) {
           // This is a function-expression that has been annotated
           // with a non-legal function name, so remove that and put it
           // in _dbg_name (below)

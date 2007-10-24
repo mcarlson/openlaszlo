@@ -151,6 +151,7 @@
 
     var buildDebug = lfc.getProperty("build.lfc.runtime.debug");
     var buildProfile = lfc.getProperty("build.lfc.runtime.profile");
+    var buildDebugSimple = lfc.getProperty("build.lfc.runtime.debug.simple");
     var LFCdir = lfc.getProperty("LFCdir") + '/';
 
     importPackage(java.io);
@@ -161,21 +162,41 @@
         dobuild(plain, "dhtml", "");
       }
       if (buildDebug) {
-        var debug = LFCdir + "LFCdhtml-debug.js";
-        if (!(new File(debug)).exists()) {
+        var dest = LFCdir + "LFCdhtml-debug.js";
+        if (!(new File(dest)).exists()) {
           // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
           // warnings, the options can be changed to simply --debug
-          dobuild(debug,
+          dobuild(dest,
                   "dhtml",
                   "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
         }
-        var backtrace = LFCdir + "LFCdhtml-backtrace.js";
-        if (!(new File(backtrace)).exists()) {
+        if (buildDebugSimple) {
+          var dest = LFCdir + "LFCdhtml-debug-simple.js";
+          if (!(new File(dest)).exists()) {
+            // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
+            // warnings, the options can be changed to simply --debug
+            dobuild(dest,
+                    "dhtml",
+                    "--option debugSimple --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+          }
+        }
+        var dest = LFCdir + "LFCdhtml-backtrace.js";
+        if (!(new File(dest)).exists()) {
           // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
           // warnings, the options can be changed to simply -g3
-          dobuild(backtrace,
+          dobuild(dest,
                   "dhtml",
                   "--option debugBacktrace --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+        }
+        if (buildDebugSimple) {
+          var dest = LFCdir + "LFCdhtml-backtrace-simple.js";
+          if (!(new File(dest)).exists()) {
+            // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
+            // warnings, the options can be changed to simply -g3
+            dobuild(dest,
+                    "dhtml",
+                    "--option debugSimple --option debugBacktrace --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+          }
         }
       }
       if (buildProfile) {
@@ -199,19 +220,19 @@
           dobuild(plain, "swf" + v, "");
         }
         if (buildDebug) {
-          var debug = LFCdir + "LFC" + v + "-debug.lzl";
-          if (!(new File(debug)).exists()) {
+          var dest = LFCdir + "LFC" + v + "-debug.lzl";
+          if (!(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply --debug
-            dobuild(debug,
+            dobuild(dest,
                     "swf" + v,
                     "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
           }
-          var backtrace = LFCdir + "LFC" + v + "-backtrace.lzl";
-          if (!(new File(backtrace)).exists()) {
+          var dest = LFCdir + "LFC" + v + "-backtrace.lzl";
+          if (!(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply -g3
-            dobuild(backtrace,
+            dobuild(dest,
                     "swf" + v,
                     "--option debugBacktrace --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
           }

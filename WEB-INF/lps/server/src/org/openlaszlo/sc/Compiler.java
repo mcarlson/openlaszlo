@@ -285,10 +285,11 @@ public class Compiler {
     if (options.getBoolean(DEBUG) ||
         options.getBoolean(NAME_FUNCTIONS)) {
       if (! options.containsKey(DEBUG_BACKTRACE)) {
-        options.put(DEBUG_BACKTRACE, Boolean.valueOf("false"));
+        options.putBoolean(DEBUG_BACKTRACE, false);
       }
-      // TODO: [2007-02-21 ptw] Remove after Leopard
-      options.put("debugSafari", LPS.getProperty("compiler.debug.safari", "false"));
+      if (! options.containsKey(DEBUG_SIMPLE)) {
+        options.putBoolean(DEBUG_SIMPLE, false);
+      }
     }
     if (! options.containsKey(PROFILE)) {
       options.putBoolean(PROFILE, false);
@@ -394,6 +395,7 @@ public class Compiler {
   public static String CONSTRAINT_FUNCTION = "constraintFunction";
   public static String DEBUG = "debug";
   public static String DEBUG_BACKTRACE = "debugBacktrace";
+  public static String DEBUG_SIMPLE = "debugSimple";
   public static String DISABLE_CONSTANT_POOL = "disableConstantPool";
   public static String ELIMINATE_DEAD_EXPRESSIONS = "eliminateDeadExpressions";
   public static String FLASH_COMPILER_COMPATABILITY = "flashCompilerCompatability";
