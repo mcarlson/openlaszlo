@@ -411,12 +411,14 @@ String exampleURL = (request.getContextPath()+"/" + appUrl + "?lzr=dhtml&lzproxi
          }
 
         // Copy the DHTML LFC to lps/includes/LFC-dhtml.js
-         copyFileToZipFile(zout, basedir + "/lps/includes/lfc/LFCdhtml.js", "lps/includes/lfc/LFCdhtml.js", out);
-        // Copy blank.gif for IE
-         copyFileToZipFile(zout, basedir + "/lps/includes/blank.gif", "lps/resources/lps/includes/blank.gif", out);
-        // Copy excanvas.js for IE
-         copyFileToZipFile(zout, basedir + "/lps/includes/excanvas.js", "lps/resources/lps/includes/excanvas.js",out);
-         
+         ArrayList lfcfiles = new ArrayList();
+         listFiles(lfcfiles, new File(basedir + "/lps/includes/lfc"));
+         for (int i=0; i<lfcfiles.size(); i++) {
+             String fname = (String) lfcfiles.get(i);
+             if (!fname.matches(".*LFCdhtml.*.js")) { continue; }
+             String stripped = fname.substring(basedir.getCanonicalPath().length()+1);
+             copyFileToZipFile(zout, fname, stripped, out);
+         }
 
      // track how big the file is, check that we don't write more than some limit
      int contentSize = 0;
