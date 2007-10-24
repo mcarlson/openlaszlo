@@ -18,7 +18,7 @@ class AttributeSpec {
     /** The attribute name */
     String name;
     /** The default value */
-    String defaultValue;
+    String defaultValue = null;
     /** The setter function */
     String setter;
     /** The type of the attribute value*/ 
@@ -27,6 +27,12 @@ class AttributeSpec {
     boolean required = false;
     /** When does the initial value for this attribute get evaluated? */
     String when = NodeModel.WHEN_IMMEDIATELY;
+
+    /** If this is a method, the arglist */
+    String arglist = null;
+
+    /** Can this attribute be overridden without a warning? value is null, 'true' or 'false' */
+    String override = null;
 
     /** Is this attribute equivalent to element content of a given type? */
     int contentType = NO_CONTENT;
@@ -49,6 +55,10 @@ class AttributeSpec {
 
   public String toLZX(String indent, ClassModel superclass) {
     AttributeSpec superSpec = superclass.getAttribute(name);
+    if (ViewSchema.METHOD_TYPE.equals(type)) {
+      return indent + "  <method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " />";
+    }
+
     if (superSpec == null) {
       if (ViewSchema.EVENT_HANDLER_TYPE.equals(type)) {
         return indent + "<event name='" + name + "' />";
@@ -81,6 +91,21 @@ class AttributeSpec {
       }
     }
     return null;
+  }
+
+  public String toString() {
+    if (ViewSchema.METHOD_TYPE.equals(type)) {
+      return "[AttributeSpec: method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " override="+(override  == null ?  "null" : ("'"+override+"'"))+"]";
+    } 
+    if (ViewSchema.EVENT_HANDLER_TYPE.equals(type)) {
+      return "[AttributeSpec: event name='" + name + "' ]";
+    }
+    return "[AttributeSpec: attribute name='" + name + "'" +
+        ((defaultValue != null)?(" value='" + defaultValue + "'"):"") +
+        ((type != null)?(" type='" + typeToLZX() + "'"):"") +
+        ((when != NodeModel.WHEN_IMMEDIATELY)?(" when='" + when + "'"):"") + 
+        (required?(" required='true'"):"") +
+        " ";
   }
     
     AttributeSpec (String name, Type type, String defaultValue, String setter, Element source) {

@@ -13,15 +13,31 @@
  * P_LZ_COPYRIGHT_END ********************************************************
 -->
 
+
+<interface name="Instance" extends="Object">
+  <method name="validateClassStructure" override="false"/>
+  <method name="initialize" override="false"/>
+  <method name="nextMethod" override="false"/>
+  <method name="addProperty" override="false"/>
+  <method name="constructor" override="false"/>
+  <method name="hasOwnProperty" override="false"/>
+  <method name="isPropertyEnumerable" override="false"/>
+  <method name="isPrototypeOf" override="false"/>
+  <method name="toLocaleString" override="false"/>
+  <method name="prototype" override="false"/>
+  <method name="apply" override="false"/>
+  <method name="call" override="false"/>
+</interface>
+
 <interface name="canvas" extends="Instance">
   <attribute name="id" type="ID"/>
   <!--   The oninit script is executed once, after the element's
          children, if any, have been initialized. -->
   <event name="oninit"/>
   <!--  The width of the canvas. -->
-  <attribute name="width" type="sizeExpression" value="500"/>
+  <attribute name="width" type="size" value="500"/>
   <!--  The height of the canvas. -->
-  <attribute name="height" type="sizeExpression" value="400"/>
+  <attribute name="height" type="size" value="400"/>
   <!-- The background color of the canvas. -->
   <attribute name="bgcolor" type="color" value="white"/>
   <!-- The string that is used in the browser window. -->
@@ -112,6 +128,10 @@
   -->
   <event name="oninit"/>
   <event name="ondata"/>
+  <event name="onconstruct"/>
+  <event name="onclonenumber"/>
+  <event name="ondestroy"/>
+
   <attribute name="initstage" type="string" value="normal" enum="early|normal|late|immediate|defer"/>
   <attribute name="datapath" type="string"/>
   <attribute name="placement" type="string"/>
@@ -141,7 +161,7 @@
   <attribute name="fgcolor" type="color"/>
   <attribute name="font" type="string"/>
   <attribute name="fontstyle" type="string"/>
-  <attribute name="fontsize" type="sizeExpression"/>
+  <attribute name="fontsize" type="size"/>
   <attribute name="resource" type="string"/>
   <attribute name="source" type="expression" />
   <attribute name="clip" type="boolean" value="false"/>
@@ -157,8 +177,8 @@
   <attribute name="stretches" type="string" enum="width|height|both"/>
   <attribute name="visible" type="expression" value="true"/>
   <attribute name="visibility" type="string" value="visibility"/>
-  <attribute name="width" type="sizeExpression"/>
-  <attribute name="height" type="sizeExpression"/>
+  <attribute name="width" type="size"/>
+  <attribute name="height" type="size"/>
   <attribute name="x" type="numberExpression" value="0"/>
   <attribute name="y" type="numberExpression" value="0"/>
   <attribute name="aaname" type="string"/>
@@ -167,17 +187,49 @@
   <attribute name="aatabindex" type="number"/>
   <attribute name="aasilent" type="boolean"/>
   <attribute name="showhandcursor" type="boolean"/>
+  <event name="onaddsubresource"/>
+  <event name="onaddsubview"/>
+  <event name="onbgcolor"/>
+  <event name="onblur"/>
   <event name="onclick"/>
   <event name="ondblclick"/>
-  <event name="onmousedown"/>
-  <event name="onmouseup"/>
-  <event name="onmouseover"/>
-  <event name="onmouseout"/>
+  <event name="onerror"/>
   <event name="onfocus"/>
-  <event name="onblur"/>
+  <event name="onframe"/>
+  <event name="onheight"/>
+  <event name="onimload"/>
   <event name="onkeydown"/>
   <event name="onkeyup"/>
+  <event name="onlastframe"/>
+  <event name="onload"/>
+  <event name="onloadperc"/>
+  <event name="onmousedown"/>
+  <event name="onmouseout"/>
+  <event name="onmouseover"/>
+  <event name="onmousetrackover"/>
+  <event name="onmousetrackup"/>
+  <event name="onmouseup"/>
+  <event name="onopacity"/>
+  <event name="onplay"/>
+  <event name="onremovesubview"/>
+  <event name="onresource"/>
+  <event name="onresourceheight"/>
+  <event name="onresourcewidth"/>
+  <event name="onrotation"/>
   <event name="onselect"/>
+  <event name="onstop"/>
+  <event name="ontimeout"/>
+  <event name="ontotalframes"/>
+  <event name="onunstretchedheight"/>
+  <event name="onunstretchedwidth"/>
+  <event name="onvisibility"/>
+  <event name="onvisible"/>
+  <event name="onwidth"/>
+  <event name="onx"/>
+  <event name="onxoffset"/>
+  <event name="ony"/>
+  <event name="onyoffset"/>
+  
   <containsElements>
     <element>dataselectionmanager</element>
     <element>selectionmanager</element>
@@ -367,7 +419,7 @@
   <!-- This controls the spacing between elements if <a
        href="datapath.html#attr-replication">lazy replication</a> is
        true -->
-  <attribute name="spacing" type="sizeExpression" value="0"/>
+  <attribute name="spacing" type="size" value="0"/>
   <attribute name="p" type="expression"/>
 </interface>
 
@@ -451,7 +503,9 @@ element attribute "
 </interface>
 
 <interface name="state" extends="node">
-  <attribute name="apply" type="boolean"/>
+  <!-- This is unfortunately both a setter attribute AND a method. No
+       real nice way to represent that. -->
+  <method name="apply" override="true" />
   <!-- If pooling is true, views that are created by the state are not
        destroyed when the state is removed - instead they just act as
        if they were by sending the onremovesubview event and setting

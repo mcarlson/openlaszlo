@@ -29,8 +29,7 @@ class ClassModel implements Comparable {
     protected boolean supportsTextAttribute = false;
     /** Map attribute name to type */
     protected final Map attributeSpecs = new LinkedHashMap();
-    /** Map of method names to arglist */
-    protected final Map methods = new LinkedHashMap();
+
     protected boolean inline = false;
     protected String sortkey = null;
 
@@ -82,14 +81,7 @@ class ClassModel implements Comparable {
         lzx += specLZX;
       }
     }
-    for (Iterator i = methods.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry)i.next();
-      String name = (String)entry.getKey();
-      String arglist = (String)entry.getValue();
-      if (superclass.getMethod(name) == null) {
-        lzx += "\n" + indent + "  <method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " />";
-      }
-    }
+
     lzx += "\n" + indent + "</interface>";
     return lzx;
   }
@@ -130,6 +122,14 @@ class ClassModel implements Comparable {
         }
     }
     
+    /** Return the AttributeSpec for the attribute named attrName.
+        Only returns locally defined attribute, does not follow up the
+        class hierarchy.
+    */
+    AttributeSpec getLocalAttribute(String attrName) {
+      return (AttributeSpec) attributeSpecs.get(attrName);
+    }
+
     /** Return the AttributeSpec for the attribute named attrName.  If
      * the attribute is not defined on this class, look up the
      * superclass chain.
@@ -198,23 +198,6 @@ class ClassModel implements Comparable {
         return type;
     }
     
-    /** Return the 'MethodSpec' for the method named methName.  If
-     * the method is not defined on this class, look up the
-     * superclass chain.
-     * TODO: [2007-01-27 ptw] For now the MethodSpec is just the
-     * arglist String
-     */
-    String getMethod(String methName) {
-        String meth = (String) methods.get(methName);
-        if (meth != null) {
-            return meth;
-        } else if (superclass != null) {
-            return(superclass.getMethod(methName));
-        } else {
-            return null;
-        }
-    }
-
     void setNodeModel(NodeModel model) {
         this.nodeModel = model;
     }

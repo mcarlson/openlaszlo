@@ -1,0 +1,35 @@
+<!-- override attribute of superclass with a method, compiler should warn -->
+
+<canvas > 
+
+   <class name="mywindow">
+      <attribute name="foo" value="39" type="number" />
+
+      <attribute name="fluffy" value="birdie" type="string" />
+      <text>Basewindow Text</text>
+      <method name="supmethod">
+        Debug.write("this is 'supmethod', in superclass mywindow");
+      </method>
+
+   </class>
+
+
+   <class name="mysubwindow" extends="mywindow">
+     <!-- this attempts to override an attribute in superclass with a method, should warn -->
+     <method name="foo" args="a,b,c">
+       Debug.write('method foo', this, a,b,c);
+     </method>
+     <!-- this attempts to override a method in superclass with an attribute, should warn -->
+     <attribute name="supmethod" value="259"/>
+
+   </class>
+
+   <mywindow bgcolor="yellow" fluffy="parrot food" id="foo"/>
+   <mysubwindow x="100" y="100" bgcolor="green" fluffy="parrot food" id="bar"/>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

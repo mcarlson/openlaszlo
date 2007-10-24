@@ -127,9 +127,29 @@ class ClassCompiler extends ViewCompiler {
             Object o = iterator.next();
             if (o instanceof Element) {
                 Element child = (Element) o;
+                if (child.getName().equals("method")) {
+                    String attrName = child.getAttributeValue("name");
+                    String attrEvent = child.getAttributeValue("event");
+                    if (attrEvent == null) {
+                        if (schema.enforceValidIdentifier) {
+                            try {
+                                attrName = requireIdentifierAttributeValue(child, "name");
+                            } catch (MissingAttributeException e) {
+                                throw new CompilationError(
+                                    "'name' is a required attribute of <" + child.getName() + "> and must be a valid identifier", child);
+                            }
+                        }
+                        ViewSchema.Type attrType = ViewSchema.METHOD_TYPE;
+                        AttributeSpec attrSpec = 
+                            new AttributeSpec(attrName, attrType, null, null, child);
+                        attrSpec.override = child.getAttributeValue("override");
+                        attributeDefs.add(attrSpec);
+                    }
+                    
+                } else if (child.getName().equals("attribute")) {
                 // Is this an element named ATTRIBUTE which is a
                 // direct child of this CLASS or INTERFACE tag?
-                if (child.getName().equals("attribute")) {
+
                     String attrName = child.getAttributeValue("name");
                     if (schema.enforceValidIdentifier) {
                         try {
@@ -179,6 +199,7 @@ class ClassCompiler extends ViewCompiler {
                     AttributeSpec attrSpec = 
                         new AttributeSpec(attrName, attrType, attrDefault,
                                           attrSetter, child);
+                    attrSpec.override = child.getAttributeValue("override");
                     if (attrName.equals("text") && attrTypeName != null) {
                         if ("text".equals(attrTypeName))
                             attrSpec.contentType = attrSpec.TEXT_CONTENT;
@@ -208,7 +229,7 @@ class ClassCompiler extends ViewCompiler {
         }
         
         // Add this class to the schema
-        schema.addElement(element, classname, superclass, attributeDefs);
+        schema.addElement(element, classname, superclass, attributeDefs, mEnv);
     }
     
     public void compile(Element elt) {

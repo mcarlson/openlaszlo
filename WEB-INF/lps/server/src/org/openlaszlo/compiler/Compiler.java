@@ -370,6 +370,17 @@ public class Compiler {
             // If we are not linking, then we consider all external
             // files to have already been imported.
             if (! linking) { externalLibraries = env.getImportedLibraryFiles(); }
+            if (root.getName().intern() != 
+                (linking ? "canvas" :  "library")) {
+                throw new CompilationError(
+/* (non-Javadoc)
+ * @i18n.test
+ * @org-mes="invalid root element type: " + p[0]
+ */
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Compiler.class.getName(),"051018-357", new Object[] {root.getName()})
+                );
+            }
             Compiler.updateRootSchema(root, env, schema, externalLibraries);
             Properties nprops = (Properties) env.getProperties().clone();
             Map compileTimeConstants = new HashMap();
@@ -406,17 +417,6 @@ public class Compiler {
 
 
             mLogger.debug("new env..." + env.getProperties().toString());
-            if (root.getName().intern() != 
-                (linking ? "canvas" :  "library")) {
-                throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="invalid root element type: " + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                Compiler.class.getName(),"051018-357", new Object[] {root.getName()})
-                );
-            }
             
             processCompilerInstructions(root, env);
             compileElement(root, env);
@@ -613,17 +613,29 @@ public class Compiler {
     static void updateRootSchema(Element root, CompilationEnvironment env,
                                  ViewSchema schema, Set externalLibraries)
     {
-      ToplevelCompiler ec = (ToplevelCompiler)getElementCompiler(root, env);
-      Set visited = new HashSet();
-      // Update schema for auto-includes
-      // Note:  this call does _not_ share visited with the update
-      // calls intentionally.
-      for (Iterator iter = ec.getLibraries(env, root, null, externalLibraries, new HashSet()).iterator();
-           iter.hasNext(); ) {
-        File library = (File) iter.next();
-        Compiler.updateSchemaFromLibrary(library, env, schema, visited);
-      }
-      ec.updateSchema(root, schema, visited);
+        ElementCompiler ecompiler = getElementCompiler(root, env);
+        if (! (ecompiler  instanceof ToplevelCompiler)) {
+            throw new CompilationError(
+/* (non-Javadoc)
+ * @i18n.test
+ * @org-mes="invalid root element type: " + p[0]
+ */
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Compiler.class.getName(),"051018-357", new Object[] {root.getName()})
+                );
+            }
+        ToplevelCompiler tlc = (ToplevelCompiler) ecompiler;
+
+        Set visited = new HashSet();
+        // Update schema for auto-includes
+        // Note:  this call does _not_ share visited with the update
+        // calls intentionally.
+        for (Iterator iter = tlc.getLibraries(env, root, null, externalLibraries, new HashSet()).iterator();
+             iter.hasNext(); ) {
+            File library = (File) iter.next();
+            Compiler.updateSchemaFromLibrary(library, env, schema, visited);
+        }
+        tlc.updateSchema(root, schema, visited);
     }
 
     static void updateSchema(Element element, CompilationEnvironment env,

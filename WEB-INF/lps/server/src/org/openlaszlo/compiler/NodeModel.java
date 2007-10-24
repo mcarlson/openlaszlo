@@ -585,11 +585,6 @@ public class NodeModel implements Cloneable {
             // global there is "id='foo'" or if "name='foo'" at the
             // top level (immediate child of the canvas).
             //
-            // NB: since this finds class names via a lookup from
-            // elements in the schema, it will give some false
-            // positives on class-name collisions, such as tag names
-            // like "audio" which do not actually correspond to a LFC
-            // class at runtime.
             if ((name.equals("id")) ||
                 (name.equals("name") &&
                  topLevelDeclaration() && !className.equals("class"))) {
@@ -890,21 +885,19 @@ solution =
         return (child.getName().equals("datapath"));
     }
 
-    void checkChildNameConflict(Element child, CompilationEnvironment env) {
+    /** Warn if named child tag conflicts with a declared attribute in the parent class.
+     */
+    void checkChildNameConflict(String parentName, Element child, CompilationEnvironment env) {
         String attrName = child.getAttributeValue("name");
         if (attrName != null) {
-            ViewSchema.Type attrType = null;
-            try {
-                attrType = schema.getAttributeType(element,  attrName);
-            } catch (UnknownAttributeException e) {
-                    
-            }
-            if (attrType != null) {
+            AttributeSpec attrSpec = schema.getClassAttribute ( parentName, attrName) ;
+            // Only warn if the attribute we are shadowing has a declared initial value.
+            if (attrSpec != null && attrSpec.defaultValue != null) {
                 // TODO [2007-09-26 hqm] i18n this
                 env.warn(
                     "Child tag '" + child.getName() +
                     "' with attribute '"+attrName +
-                    "' conflicts with attribute named '"+attrName+"' of type '" + attrType +
+                    "' conflicts with attribute named '"+attrName+"' of type '" + attrSpec.type +
                     "' on parent tag '"+element.getName()+"'.",
                     element);
             }
@@ -927,7 +920,7 @@ solution =
 
             try {
                 if (child.getName().equals("data")) {
-                    checkChildNameConflict(child, env);
+                    checkChildNameConflict(element.getName(), child, env);
                     // literal data
                     addLiteralDataElement(child);
                 } else if (isPropertyElement(child)) {
@@ -937,11 +930,11 @@ solution =
                 } else if (schema.isDocElement(child)) {
                     ; // ignore doc nodes.
                 } else if (isDatapathElement(child)) {
-                    checkChildNameConflict(child, env);
+                    checkChildNameConflict(element.getName(), child, env);
                     NodeModel dpnode = elementAsModel(child, schema, env);
                     this.datapath = dpnode;
                 } else {
-                    checkChildNameConflict(child, env);
+                    checkChildNameConflict(element.getName(), child, env);
                     NodeModel childModel = elementAsModel(child, schema, env);
                     children.add(childModel);
                     totalSubnodes += childModel.totalSubnodes();
@@ -1110,6 +1103,7 @@ solution =
         String name = element.getAttributeValue("name");
         String event = element.getAttributeValue("event");
         String args = XMLUtils.getAttributeValue(element, "args", "");
+
         if ((name == null || !ScriptCompiler.isIdentifier(name)) &&
             (event == null || !ScriptCompiler.isIdentifier(event))) {
             env.warn(
@@ -1148,12 +1142,6 @@ solution =
                  CompilerUtils.attributeUniqueName(element, "event") :
                  CompilerUtils.attributeUniqueName(element, "name"));
         }
-        if (name != null && "class".equals(className)) {
-          schema.addMethodDeclaration(element,
-                                      element.getParentElement().getAttributeValue("name"),
-                                      name, args);
-        }
-
         if (event != null) {
             if (name == null) {
                 // Names have to be unique across binary libraries, so
@@ -1209,6 +1197,12 @@ solution =
                 NodeModel.class.getName(),"051018-922", new Object[] {name, getMessageName()})
                 ,element);
         }
+
+
+        /**
+           TODO [hqm 2007-10-21]
+           WARN if method attributespec has override=false
+        **/
 
         attrs.put(name, fndef);
     }
@@ -1385,6 +1379,8 @@ solution =
                 if (when.equals(WHEN_IMMEDIATELY)) {
                     when = WHEN_ONCE;
                 }
+            } else if (type == ViewSchema.METHOD_TYPE) {
+                // methods are emitted elsewhere
             } else {
                 throw new RuntimeException("unknown schema datatype " + type);
             }
@@ -1526,6 +1522,7 @@ solution =
                 parenttype = getAttributeTypeInfoFromSuperclass(parent, name);
             }  else {
                 parenttype = schema.getAttributeType(parent, name);
+
             }
         } catch (UnknownAttributeException e) {
             // If attribute type is not defined on parent, leave
@@ -1572,6 +1569,18 @@ solution =
                         )
                     );
             }
+        }
+
+        // Warn if we are overidding a method, handler, or other function
+        if (parenttype == schema.METHOD_TYPE ||
+            parenttype == schema.EVENT_HANDLER_TYPE ||
+            parenttype == schema.SETTER_TYPE ||
+            parenttype == schema.REFERENCE_TYPE) {
+            env.warn( "In element '" + parent.getName() 
+                      + "' attribute '" +  name 
+                      + "' is overriding parent class attribute which has the same name but type: "
+                      + parenttype.toString(),
+                      element);
         }
 
         // Don't initialize an attribute that is only declared.

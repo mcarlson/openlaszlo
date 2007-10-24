@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -53,6 +53,11 @@ public abstract class Schema {
         return newtype;
     }
     
+
+    public static void addTypeAlias(String typeName, Type type) {
+        typeNames.put(typeName, type);
+    }
+
     /** Look up the Type object from a Javascript type name */
     public Type getTypeForName (String typeName) {
         return (Type) typeNames.get(typeName);

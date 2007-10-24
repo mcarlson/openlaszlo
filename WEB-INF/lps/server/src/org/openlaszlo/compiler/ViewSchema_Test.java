@@ -80,8 +80,9 @@ public class ViewSchema_Test extends TestCase {
     public void testSetAttributes () {
 
         ViewSchema schema = new ViewSchema();
+        CompilationEnvironment env = new CompilationEnvironment();
         try {
-            schema.loadSchema(new CompilationEnvironment());
+            schema.loadSchema(env);
         } catch (JDOMException e) {
             throw new RuntimeException(e.getMessage());
         } catch (IOException e) {
@@ -94,11 +95,11 @@ public class ViewSchema_Test extends TestCase {
         Element elt1 = new Element("classdef1");
         Element elt2 = new Element("classdef2");
 
-        schema.addElement(elt1, "mynewclass", "view", new ArrayList());
-        schema.addElement(elt2, "mynewsubclass", "mynewclass", new ArrayList());
+        schema.addElement(elt1, "mynewclass", "view", new ArrayList(), env);
+        schema.addElement(elt2, "mynewsubclass", "mynewclass", new ArrayList(), env);
 
         assertEquals("undefined class superclass",
-                     null,
+                     "Object",
                      schema.getBaseClassname("view"));
 
         assertEquals(" superclass",
@@ -110,11 +111,11 @@ public class ViewSchema_Test extends TestCase {
                      schema.getSuperclassName("mynewsubclass"));
 
         assertEquals("mynewclass superclass",
-                     "view",
+                     "Object",
                      schema.getBaseClassname("mynewclass"));
 
         assertEquals("mynewsubclass superclass",
-                     "view",
+                     "Object",
                      schema.getBaseClassname("mynewsubclass"));
 
 

@@ -78,12 +78,14 @@ public class ViewSchema extends Schema {
     public static final Type TOKEN_TYPE = newType("token");
     public static final Type COLOR_TYPE = newType("color");
     public static final Type NUMBER_EXPRESSION_TYPE = newType("numberExpression");
-    public static final Type SIZE_EXPRESSION_TYPE = newType("sizeExpression");
+    public static final Type SIZE_EXPRESSION_TYPE = newType("size");
     public static final Type CSS_TYPE = newType("css");
     public static final Type INHERITABLE_BOOLEAN_TYPE = newType("inheritableBoolean");
     public static final Type XML_LITERAL = newType("xmlLiteral");
+    public static final Type METHOD_TYPE = newType("method");
     
     static {
+
         sHTMLContentElements.add("text");
         sInputTextElements.add("inputtext");
 
@@ -171,7 +173,13 @@ public class ViewSchema extends Schema {
         }
     }
 
-    public void addMethodDeclaration (Element elt, String classname, String methodName, String arglist) {
+    /** Checks to do when declaring a method on a class;
+     * Does the class exist?
+     * Is this a duplicate of another method declaration on this class?
+     * Does the superclass allow overriding of this method?
+     */
+    public void checkMethodDeclaration (Element elt, String classname, String methodName,
+                                        CompilationEnvironment env) {
         ClassModel classModel = getClassModel(classname);
         if (classModel == null) {
             throw new RuntimeException(
@@ -181,19 +189,31 @@ public class ViewSchema extends Schema {
  */
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 ViewSchema.class.getName(),"051018-168", new Object[] {classname})
-);
+                                       );
         }
-        if (classModel.methods.get(methodName) != null) {
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="duplicate definition of method " + p[0] + "." + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ViewSchema.class.getName(),"051018-207", new Object[] {classname, methodName})
-, elt);
+        AttributeSpec localAttr = classModel.getLocalAttribute(methodName);
+        if ( localAttr != null) {
+            if (localAttr.type == METHOD_TYPE) {
+                env.warn(
+                    /* (non-Javadoc)
+                     * @i18n.test
+                     * @org-mes="duplicate definition of method " + p[0] + "." + p[1]
+                     */
+                    org.openlaszlo.i18n.LaszloMessages.getMessage(
+                        ViewSchema.class.getName(),"051018-207", new Object[] {classname, methodName}),
+                    elt);
+            } else {
+                env.warn(
+                    "Method named "+methodName+" on class "+classname+
+                    " conflicts with attribute with named "+methodName+" and type "+localAttr.type,
+                    elt);
+            }
         }
-        classModel.methods.put(methodName, arglist);
+
+        if (!methodOverrideAllowed(classname, methodName)) {
+            env.warn("Method "+classname+"."+methodName+" is overriding a superclass method"
+                     + " of the same name which has been declared non-overridable" , elt);
+        }
     }
 
     public String getSuperclassName(String className) {
@@ -246,7 +266,8 @@ public class ViewSchema extends Schema {
      * @param attributeDefs list of attribute name/type defs
      */
     public void addElement (Element elt, String className,
-                            String superclassName, List attributeDefs)
+                            String superclassName, List attributeDefs,
+                            CompilationEnvironment env)
     {
         ClassModel superclass = getClassModel(superclassName);
 
@@ -312,7 +333,7 @@ public class ViewSchema extends Schema {
         }
 
         // Add in the attribute declarations
-        addAttributeDefs(elt, className, attributeDefs);
+        addAttributeDefs(elt, className, attributeDefs, env);
     }
 
     /**
@@ -323,7 +344,8 @@ public class ViewSchema extends Schema {
      * @param attributeDefs list of AttributeSpec attribute info to add to the Schema
      *
      */
-    void addAttributeDefs (Element sourceElement, String classname, List attributeDefs)
+    void addAttributeDefs (Element sourceElement, String classname, List attributeDefs,
+                           CompilationEnvironment env)
     {
         if (!attributeDefs.isEmpty()) {
             for (Iterator iter = attributeDefs.iterator(); iter.hasNext();) {
@@ -336,23 +358,24 @@ public class ViewSchema extends Schema {
                 // redefining an attribute of a parent class with a
                 // different type.
 
-                if (getClassAttribute(classname, attr.name) == null) {
-                    // Splice some XML into the Schema element
-                    String attrTypeName = attr.type.toString();
-                } else {
+                Type parentType = null;
+                if (getClassAttribute(classname, attr.name) != null) {
                     // Check that the overriding type is the same as the superclass' type
-                    Type parentType = getAttributeType(classname, attr.name);
+                    parentType = getAttributeType(classname, attr.name);
 
                     if (parentType != attr.type) {
-                        throw new CompilationError(sourceElement, attr.name, new Throwable(
-                                                       /* (non-Javadoc)
-                                                        * @i18n.test
-                                                        * @org-mes="In class '" + p[0] + "' attribute '" + p[1] + "' with type '" + p[2] + "' is overriding superclass attribute with same name but different type: " + p[3]
-                                                        */
-                                                       org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                                           ViewSchema.class.getName(),"051018-364", new Object[] {classname, attr.name, attr.type.toString(), parentType.toString()})
-                                                                                           ));
+                        env.warn(/* (non-Javadoc)
+                                  * @i18n.test
+                                  * @org-mes="In class '" + p[0] + "' attribute '" + p[1] + "' with type '" + p[2] + "' is overriding superclass attribute with same name but different type: " + p[3]
+                                  */
+                            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ViewSchema.class.getName(),"051018-364", new Object[] {classname, attr.name, attr.type.toString(), parentType.toString()}), 
+                            sourceElement);
                     }
+                }
+
+                if (attr.type == ViewSchema.METHOD_TYPE && !("true".equals(attr.override))) {
+                    checkMethodDeclaration(sourceElement, classname, attr.name, env);
                 }
 
                 // Update the in-memory attribute type table
@@ -446,6 +469,23 @@ public class ViewSchema extends Schema {
         return type;
     }
 
+
+    /**
+     * checks whether a method with a given method is allowed to be overridden
+     * @param elt an Element name
+     * @param methodName a method name
+     * @return boolean if the method exists on the class or superclass
+     */
+    public boolean methodOverrideAllowed(String classname, String methodName)
+    {
+        AttributeSpec methodspec = getClassAttribute(classname, methodName);
+        if (methodspec == null) {
+            return true;
+        } else {
+            return ! ("false".equals(methodspec.override));
+        }
+    }
+
     boolean isMouseEventAttribute(String name) {
         return sMouseEventAttributes.contains(name);
     }
@@ -485,7 +525,7 @@ public class ViewSchema extends Schema {
 
         // This is the base class from which all classes derive unless otherwise
         // specified. It has no attributes.
-        makeNewStaticClass("Instance");
+        makeNewStaticClass("Object");
 
         schemaDOM = (Document) sCachedSchemaDOM.clone();
         Element docroot = schemaDOM.getRootElement();
