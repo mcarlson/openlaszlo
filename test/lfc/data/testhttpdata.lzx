@@ -49,6 +49,8 @@
     <dataset name="data12" src="http:httpdate.jsp"
         getresponseheaders="false" cacheable="true" />
 
+    <dataset name="dataError" src="http:nosuchfile.xml"/>
+
     <class name="testdatapointer" extends="datapointer">
       <method event="ondata">
         Debug.format("%s: .ondata(%w)\n", parent.text, arguments[0]);
@@ -62,7 +64,6 @@
     </class>
 
     <view id="tests">
-      <simplelayout/>
       <view name="buttons" layout="class:wrappinglayout;axis:x;spacing:2" width="${canvas.width}">
         <button>
           Unqueued
@@ -171,6 +172,14 @@
             canvas.datasets.data11.doRequest();
           </method>
           <testdatapointer xpath="data11:/*" />
+        </button>
+        <button>
+          Do Error
+          <method event="onclick">
+            Debug.format("%s request\n", this.text);
+            canvas.datasets.dataError.doRequest();
+          </method>
+          <testdatapointer xpath="dataError:/*" />
         </button>
         <button>
           Date
