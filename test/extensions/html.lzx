@@ -8,7 +8,7 @@
     <class name="browser" extends="window" resizable="true" bgcolor="silver">
         <edittext name="txt" text="http://openlaszlo.org/" width="300"/> 
         <button x="310" onclick="parent.htmlview.setSrc(parent.txt.getText()); parent.htmlview.setAttribute('visible', true)">Load</button> 
-        <html name="htmlview" width="${parent.width - 19}" height="${parent.height - 74}" x="${parent.x + 7}" y="${parent.y + 53}"/>
+        <html name="htmlview"/>
     </class>
 
     <browser width="100%" height="100%"/>
