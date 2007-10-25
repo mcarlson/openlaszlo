@@ -1,7 +1,7 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
 
-    <class name="photo" width="77" height="77">
+    <class name="photo" width="77" height="77" visible="${!tls.waitforload}">
         <attribute name="defaultplacement" value="interior" type="text" />
         <attribute name="text" value="title" type="text" />   
 
@@ -137,7 +137,9 @@
             this.updateY( true );
             this.setAttribute( "loaded", true );
             intparent.interior.setAttribute("opacity", 0);
-            this.intparent.setVisible(true);
+            if(tls.waitforload != true){
+                this.intparent.setVisible(true);
+            }
             intparent.interior.animate('opacity', 1, 200);
         </method>
 
@@ -180,9 +182,11 @@
         
         <!-- title -->
         <text text="" width="100" fgcolor="0x1b1191" fontsize="10" 
-              name="txt">
-            <method event="ontext"  >
-                this.adjustDimensions()
+              name="txt" visible="false"><!-- Setting this initially to false
+              seems to fix a visual issue where these would cluster on the
+              upper left of the page in DHTML. -->
+            <method event="ontext">
+                this.adjustDimensions();
             </method>
             <method event="onvisible" >
                 this.adjustDimensions();
@@ -193,6 +197,9 @@
                var tx = (classroot.width - tw)/2;
                this.setX(tx);
                this.setY(classroot.height + 3);
+             </method>
+             <method name="makeVisible">
+                
              </method>
         </text>
 

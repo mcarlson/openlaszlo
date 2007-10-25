@@ -1,8 +1,8 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <class name="search" >
         <attribute name="sendsearch_del" 
                    value="$once{new LzDelegate( this, 'sendsearch') }"/>
+        <attribute name="lastsearchterm" value="${null}"/>
 
         <method name="doSearch">
             if ( !canvas.isopen ) {
@@ -27,6 +27,8 @@
             resource="transparent_rsc"
             width="${parent.width}" height="${parent.height}" >
             <method event="onclick">
+                photoscontainer.lyt.setAttribute('currentpage', 1);
+                tls.resetOnLoad();
                 classroot.doSearch(); 
             </method>
         </mybutton>
@@ -44,6 +46,8 @@
             <inputtext name="txt"  width="${parent.width}" height="${parent.height}" y="3">       
                 <method event="onkeyup" args="k" >
                     if ( k == 13 ) { //return key
+                        photoscontainer.lyt.setAttribute('currentpage', 1);
+                        tls.resetOnLoad();
                         classroot.doSearch();
                     }
                 </method>
@@ -53,7 +57,7 @@
         <!-- Only search for photos with a creative commons license:
             http://creativecommons.org/licenses/by/2.0/
         -->
-        <method name="sendsearch" >
+        <method name="sendsearch">
             var tags = this.getText();
             var argobj;
             if (tags == "interesting") {
@@ -77,8 +81,14 @@
                     {argname:"tag_mode", argvalue:"all"},
                     {argname:"sort", argvalue:"interestingness-desc"}
                 ]
-            } 
-            gDataMan.doFlickrRequest(photods, argobj);                    
+            }
+            if(this.getText() != this.lastsearchterm){
+                photoscontainer.lyt.setAttribute('currentpage', 1);
+                tls.resetOnLoad();
+            }
+            argobj.push({argname:"page", argvalue:Number(photoscontainer.lyt.currentpage)});
+            this.setAttribute('lastsearchterm', this.getText());
+            gDataMan.doFlickrRequest(photods, argobj);
             //info('sendsearch', tags);
             tls.displayPage();
         </method>
@@ -101,6 +111,6 @@
 </library>
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

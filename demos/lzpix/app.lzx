@@ -244,7 +244,13 @@
                 // create a method to be called when the last photo view is created
                 // find out how many images there are
                 if (! this.pagecounter_dp.p) return;
-                var c = this.pagecounter_dp.p.childNodes.length;               
+                var c = this.pagecounter_dp.p.childNodes.length;
+                var currentpage = this.pagecounter_dp.xpathQuery('@page');
+                var perpage = this.pagecounter_dp.xpathQuery('@perpage');
+                var totalpages = this.pagecounter_dp.xpathQuery('@pages');
+                photoscontainer.lyt.setAttribute('currentpage', currentpage);
+                photoscontainer.lyt.setAttribute('perpage', perpage);
+                photoscontainer.lyt.setAttribute('totalpages', totalpages);
                 tls.setpPagingParams( c );
                 gResultsCountLabel.setText( this.buildResultsString(c) );                 
                 this.watchforlast();

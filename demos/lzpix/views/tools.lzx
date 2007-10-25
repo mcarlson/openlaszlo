@@ -1,6 +1,6 @@
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
     <view id="tls" name="tools" 
@@ -19,12 +19,23 @@
         <attribute name="nextstartindex"     value="1"/>
         <attribute name="endindex"       value="18"/>
         <attribute name="nextendindex"     value="18"/>
+        
+        <attribute name="waitforload" type="boolean" value="false"/>
 
 
         <method name="reset">
            this.startindex = 1;
            this.endindex  = this.startindex + photoscontainer.lyt.pagesize -1;
            this.displayRange(this.startindex,this.endindex);
+        </method>
+        
+        <method name="resetOnLoad">
+            this.loadtext.setText('Loading...');
+            this.setAttribute('waitforload', true);
+            this.setAttribute('startindex', 1);
+            this.setAttribute('nextstartindex', 1);
+            this.setAttribute('endindex', 1 + photoscontainer.lyt.totalitems);
+            this.setAttribute('nextendindex', 1 + photoscontainer.lyt.totalitems);
         </method>
 
         <method name="enableZoom">
@@ -68,9 +79,14 @@
             showhandcursor="false" onclick="" bgcolor="0x7F7F7F" 
             x="0" y="13" width="130" height="30" />
 
-        <text name="firstphotoindex"  fgcolor="0x463e9D" y="7" x="152" fontsize="9"/>
-        <text text="-" fgcolor="0x463e9D" y="4" x="165" />        
-        <text name="lastphotoindex"  fgcolor="0x463e9D" y="7" x="172" fontsize="9" />
+        <text name="firstphotoindex"  fgcolor="0x463e9D" y="7" x="${152 - (this.width / 2)}" fontsize="9"
+            visible="${!parent.waitforload}"/>
+        <text text="-" fgcolor="0x463e9D" y="4" x="162" visible="${!parent.waitforload}"/>        
+        <text name="lastphotoindex"  fgcolor="0x463e9D" y="7" x="172" fontsize="9"
+            visible="${!parent.waitforload}"/>
+        
+        <text name="loadtext" fgcolor="0x463e9D" x="${170 - (this.width / 2)}" y="7" fontsize="9"
+            visible="${parent.waitforload}"/>
    
         <!-- Button for previous page -->
         <mybutton name="pageprev" 
@@ -91,11 +107,30 @@
         
        
         <method name="displayNextPage" >
+            <![CDATA[
             //get paging parameters at this point ( before layout is animated offscreen )
             this.nextstartindex = this.endindex + 1;
             this.nextendindex   = Math.min( this.nextstartindex + photoscontainer.lyt.pagesize - 1, this.numberofphotos );
-            photoscontainer.lyt.calcpageparams = false;
-            photoscontainer.lyt.pageNext.doStart();
+            if(this.nextstartindex <= this.numberofphotos){
+                if(nextendindex == this.numberofphotos){
+                    this.nextendindex = this.numberofphotos;
+                    this.nextstartindex = this.nextendindex - photoscontainer.lyt.totalitems + 1;
+                }
+                photoscontainer.lyt.calcpageparams = false;
+                photoscontainer.lyt.pageNext.doStart();
+            } else if(photoscontainer.lyt.currentpage < photoscontainer.lyt.totalpages){
+                /* Request the next set of data, if we've reached the limit.
+                Unfortunately, we have to go by sets of 100, because Flickr's
+                API breaks data up into single-request XML pages of 100 items
+                apiece. */
+                this.loadtext.setText('Next 100...');
+                this.setAttribute('waitforload', true);
+                this.nextstartindex = 1;
+                this.nextendindex = Math.min(this.nextstartindex + photoscontainer.lyt.pagesize - 1, this.numberofphotos );
+                photoscontainer.lyt.setAttribute('currentpage', Number(photoscontainer.lyt.currentpage) + 1);
+                gSearch.doSearch();
+            }
+            ]]>
         </method>
         
         <method event="onstop" reference="photoscontainer.lyt.pageNext" >
@@ -111,13 +146,26 @@
         </method>
 
         <method name="displayPrevPage" >
+            <![CDATA[
             if ( this.startindex > 1 ) {
                 this.nextendindex     = this.startindex - 1;
-                this.nextstartindex   = Math.max( this.nextendindex - photoscontainer.lyt.pagesize + 1, 1 );
-                if (  this.nextstartindex == 1  ) this.nextendindex =  photoscontainer.lyt.pagesize;
+                this.nextstartindex   = Math.max( this.nextendindex - photoscontainer.lyt.totalitems + 1, 1 );
+                if (  this.nextstartindex == 1  ) this.nextendindex =  photoscontainer.lyt.totalitems;
                 photoscontainer.lyt.calcpageparams = false;
                 photoscontainer.lyt.pagePrev.doStart();
+            } else if(photoscontainer.lyt.currentpage > 1){
+                /* Request the previous set of data, if we've reached the limit.
+                Unfortunately, we have to go by sets of 100, because Flickr's
+                API breaks data up into single-request XML pages of 100 items
+                apiece. */
+                this.loadtext.setText('Prev 100...');
+                this.setAttribute('waitforload', true);
+                this.nextendindex = this.numberofphotos;
+                this.nextstartindex = this.nextendindex - photoscontainer.lyt.totalitems + 1;
+                photoscontainer.lyt.setAttribute('currentpage', Number(photoscontainer.lyt.currentpage) - 1);
+                gSearch.doSearch();
             }
+            ]]>
         </method>
 
         <method event="onstop" reference="photoscontainer.lyt.pagePrev" >
@@ -150,8 +198,8 @@
         </method>
 
         <method name="displayRange"  args="s,e" >
-            this.firstphotoindex.setText( s);
-            this.lastphotoindex.setText( e );
+            this.firstphotoindex.setText( s + (photoscontainer.lyt.perpage * (photoscontainer.lyt.currentpage - 1)));
+            this.lastphotoindex.setText( e + (photoscontainer.lyt.perpage * (photoscontainer.lyt.currentpage - 1)));
         </method>
 
         <method name="setpPagingParams" args="n" >
@@ -162,6 +210,7 @@
         </method>
 
         <method event="ondata" reference="photods" >
+            this.setAttribute('waitforload', false);
             photoscontainer.lyt.calcparams = true;
         </method>
 

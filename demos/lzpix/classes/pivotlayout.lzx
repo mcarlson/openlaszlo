@@ -1,6 +1,6 @@
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
 <library>
@@ -69,6 +69,11 @@
         <attribute name="pagebegin"   value="-1" /> 
         <attribute name="pageend"     value="-1" />
         <attribute name="pagesize"    value="0" />
+        <attribute name="totalitems" value="0"/>
+        
+        <attribute name="currentpage" value="1"/>
+        <attribute name="perpage" value="0"/>
+        <attribute name="totalpages" value="0"/>
         
         <attribute name="duration"     value="0"/>
         <attribute name="calcpageparams"     value="true"/>
@@ -138,6 +143,12 @@
             // Now find out how many items can be rendered in a row;
             var numinrow = Math.floor( limitwidth/( itemwidth + this.xspacing ) );
             limitwidth = numinrow*( itemwidth + this.xspacing );
+            
+            var limitheight = this.immediateparent.height;
+            var numincol = Math.floor(limitheight/(itemwidth + this.xspacing));
+            
+            // Set the total number of items possible on the page.
+            this.setAttribute('totalitems', numinrow * numincol);
             
             // now we can calculate the row of the view that is subviews[pivotindex]
             var pivotrow = Math.floor( this.pivotindex/ numinrow );

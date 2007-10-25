@@ -169,8 +169,9 @@
             <view name="interior" height="${parent.height}">
                 <favoriteslayout name="lyt" spacing="15" inset="0" 
                                  mymask="parent.parent"/>
-                <photo datapath="favoritesds:/rsp/photos/photo">
+                <photo datapath="favoritesds:/rsp/photos/photo" visible="true">
                     <method event="onclick">
+                        photoscontainer.lyt.setAttribute('currentpage', 1);
                         var id = datapath.p.getAttr("id");
                         var tag = datapath.p.getAttr("favoritetag");   
                        classroot.loadSet( tag ); 
@@ -186,6 +187,6 @@
 </library>
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
