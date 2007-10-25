@@ -26,11 +26,6 @@ provides these features:</para>
    <textobject><textdata fileref="debugging-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>The Debugger window</title><programlisting role="lzx-embednew"><filename>debugging-$1.lzx</filename><parameter/><code>
-&lt;canvas height="150" debug="true"/&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="150" debug="true"/&gt;
-</programlisting><?lzx-edit programs/debugging-$1.lzx></example?>
 
 <para>Debugging may cause the application to run more slowly, even if
 the debugger window is not visible.</para>
@@ -48,11 +43,7 @@ the debugger window is not visible.</para>
    <textobject><textdata fileref="programs/debugging-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>The &lt;canvas&gt; debug attribute</title><programlisting role="lzx-embednew"><filename>debugging-$2.lzx</filename><parameter/><code>
-&lt;canvas height="150" debug="true"/&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="150" debug="true"/&gt;
-</programlisting><?lzx-edit programs/debugging-$2.lzx></example?>
+
 </listitem></varlistentry><varlistentry><term>The "Debug" button</term><listitem><para>Press the "Debug" button on the <glossterm>developer console</glossterm> to request a copy of the application with debugging enabled.  This is equivalent to recompiling the application with the <literal>debug="true"</literal>.</para>
 <!-- remove para tags; para is not a legal child of term LI LPP-4636 9/3/2007 -->
 <!-- <term><para>The <literal>debug</literal> query parameter</para></term> -->
@@ -86,23 +77,6 @@ about request types.</para></listitem></varlistentry></variablelist>
    <textobject><textdata fileref="programs/debugging-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?informalexample role="live-example"><programlisting role="lzx-embednew"><filename>debugging-$3.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="150"&gt;
-  &lt;handler name="oninit"&gt;&lt;![CDATA[
-    for (var i = 0; i &gt; 10; i ++) {
-      canvas.width();
-    }
-  ]]&gt;&lt;/handler&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="150"&gt;
-  &lt;handler name="oninit"&gt;&lt;![CDATA[
-    for (var i = 0; i &gt; 10; i ++) {
-      canvas.width();
-    }
-  ]]&gt;&lt;/handler&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/debugging-$3.lzx></informalexample?>
 
 <para>Turning on runtime error checking makes an application bigger
 and slower.  You should only perform size and speed optimization on
@@ -125,21 +99,6 @@ to the debugger log, separated by spaces.</para>
    <textobject><textdata fileref="programs/debugging-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Logging to the debugger</title><programlisting role="lzx-embednew"><filename>debugging-$4.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="150"&gt;
-  &lt;script&gt;
-    Debug.write('user code');
-  &lt;/script&gt;
-  &lt;button onclick="Debug.write('click', getMouse('x'))"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="150"&gt;
-  &lt;script&gt;
-    Debug.write('user code');
-  &lt;/script&gt;
-  &lt;button onclick="Debug.write('click', getMouse('x'))"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/debugging-$4.lzx></example?>
 
 <para>Some object are <glossterm baseform="inspect">inspectable</glossterm>.  See <xref linkend="debugging.inspecting"/> for more about the inspect feature of
 the debugger.  See <xref linkend="debugging.debug-tostring"/> to see
@@ -287,21 +246,7 @@ then clicking on the object's representation.</para>
    <textobject><textdata fileref="programs/debugging-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Two ways of calling Debug.write</title><programlisting role="lzx-embednew"><filename>debugging-$5.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="150"&gt;
-  &lt;handler name="oninit"&gt;
-    Debug.write('subviews: ' + canvas.subviews); 
-    Debug.write('subviews:',   canvas.subviews);  
-  &lt;/handler&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="150"&gt;
-  &lt;handler name="oninit"&gt;
-    Debug.write('subviews: ' + canvas.subviews); <co id="N10239"/>
-    Debug.write('subviews:',   canvas.subviews); <co id="N10243"/> 
-  &lt;/handler&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/debugging-$5.lzx></example?>
+
 <calloutlist><callout arearefs="N10239"><para>The (only) argument to <indexterm><primary><literal>Debug.write()</literal> method</primary></indexterm><methodname>Debug.write()</methodname> is a string, so the value of <literal>canvas.subviews</literal> is not inspectable.</para></callout><callout arearefs="N10243"><para>The second argument to <indexterm><primary><literal>Debug.write()</literal> method</primary></indexterm><methodname>Debug.write()</methodname> is an non-string Object, so it is inspectable.</para></callout></calloutlist>
 <para/></section>
 <section id="generate-bug-report">
@@ -331,7 +276,9 @@ if ($debug) {
 <para>
 The compiler will omit those statements when you compile without debugging.
 </para>
-<para/></section></section><section id="configuring-debugger"><title>Configuring the Debugger</title>
+<para/></section>
+
+<section id="configuring-debugger"><title>Configuring the Debugger</title>
 <para/><section><title>Debugger Window Position</title>
 
 <para>By default, the debugger comes up over the top left corner of your
@@ -427,7 +374,7 @@ The %d, %u, %i, %o, and %x directives (and their capital
 <para/></section></section><section><title>Inspecting Warnings and Errors</title>
 <para>Warnings and Errors are 'inspectable'.  If you click on them, you will inspect the warning or error object.  If backtracing is enabled, a backtrace will be one of the properties of the object that you can inspect.  Inspecting the backtrace will reveal the recorded stack frames which record:  the function called, <literal>this</literal> and the arguments to the function.</para>
 
-<para/></section></section><section><title>Monitoring object properties</title>
+<para/></section></section><section><title>Monitoring and tracing object properties</title>
 <para><literal>Debug.monitor(who, what)</literal>: Takes an object and property name
 and will emit a 'monitor message' each time that property is
 changed.
@@ -436,8 +383,15 @@ changed.
 <literal>Debug.unmonitor(who, what)</literal>: Turns that off.
 </para>
 <para>
-A monitor message consists of a timestamp, the function that caused the change, the object and property, and the old and new
-values.  E.g.:</para>
+A monitor message consists of the function that caused the change, a timestamp, the object and property, and the old and new
+values.  The following example uses <literal>Debug.monitor()</literal> and <literal>Debug.trace()</literal>:</para>
+<example role="live-example">
+   <title>Using Debug.monitor() and Debug.trace()</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/debug-mon-trace.lzx"/></textobject> 
+   </programlisting>
+</example>
+<!-- replaced with live example. IORIO 24 oct 2007
 <programlisting><literal>
     MONITOR: [69227.23] LzLoader.initializeRequestObj: «LoadMovie#0| __debugger.lzx (loaded)».valid: true -&gt; true
     MONITOR: [69265.36] LzLoader.initializeRequestObj: «LoadMovie#0| __debugger.lzx (loaded)».loaded: true -&gt; false
@@ -446,8 +400,27 @@ values.  E.g.:</para>
     MONITOR: [69436.51] LzLoadQueue.makeRequest: «LoadMovie#0| __debugger.lzx (initialized)».loading: false -&gt; true
     MONITOR: [69702.58] LzLoader.returnData: «LoadMovie#0| __debugger.lzx (loading)».loaded: false -&gt; true
 </literal>
-</programlisting>
-<para/></section><section><title>Tracing and Backtracing</title>
+</programlisting> -->
+<para/>
+<para>As shown in this example:</para>
+<itemizedlist><listitem><para>
+<literal>Debug.monitor()</literal> monitors attribute modification.  It gives a timestamp on attribute modification, 
+shows the function doing the modification and the old and new value.
+</para></listitem>
+<listitem><para>
+<literal>Debug.trace()</literal> traces method calls.  It gives a timestamp on function call, shows the call and arguments, 
+and a timestamp on function exit, shows the return value.
+</para></listitem>
+
+</itemizedlist>
+<para>If backtracing is enabled, the trace and monitor messages also capture a backtrace 
+(which you can see by inspecting the message).  Can be especially handy if 
+you are trying to figure out who/what/when is calling a method or clobbering a property.
+</para>
+
+</section>
+<!-- added id to section so we can link to here. IORIO 24 oct 2007 -->
+<section id="trace-backtrace"><title>Tracing and Backtracing</title>
 <para>The debugger provides methods that allow you to see interactions between parts of your application.</para>
 <para/><section><title>Tracing</title>
 <para>
