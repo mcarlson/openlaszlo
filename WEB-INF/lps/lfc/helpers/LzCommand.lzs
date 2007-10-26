@@ -47,9 +47,9 @@ var active = true;
 /** array of keys (strings) that, when pressed together,
   * cause the onselect event of the command to be sent. For example:
   * setAttribute('key', ['a', 'shift']) or setKeys(['j', 'control'])
-  * @type [String]
+  * @type [String]?
   */
-var keys;
+var keys = null;
 setters.key = "setKeys";
 
 /**
@@ -79,26 +79,34 @@ function execute ( d ){
 }
 
 /**
+ * Mapping from key names to display strings used by keysToString
+ */
+static var DisplayKeys = {control:"Ctrl", shift:"Shift", alt:"Alt"};
+
+/**
   * This is a utility method that returns a string that describes the key 
   * combination that causes this command to be invoked.
   * 
   * @return String: A string containing the key combination that causes this
   * command to be invoked.
   */
-function keysToString ( ){
-    var DisplayKeys = {control:"Ctrl", shift:"Shift", alt:"Alt"}
-    var s= ""
-    var k = ""
-    var l= this.keys.length;
-    for( var i=0; i<l-1; i++ ){
-        k = this.keys[i];
-        if (k=="Control") k="Ctrl";
+function keysToString ( ) {
+  var s= "";
+  var keys = this.keys;
+  if (keys) {
+    var dk = LzCommand.DisplayKeys;
+    var k = "";
+    var l= keys.length - 1;
+    for (var i = 0; i < l; i++) {
+        k = keys[i];
+        if (k in dk) k = dk[k];
         s = s + k + "+"
     }
-    k = this.keys[i];
-    if (k=="Control") k="Ctrl";
+    k = keys[i];
+    if (k in dk) k = dk[k];
     s = s + k;
-    return s;
+  }
+  return s;
 }
 
 }; // End of LzCommand
