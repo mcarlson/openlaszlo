@@ -490,6 +490,9 @@ Debug.objectOwnProperties = function (obj, names, indices, limit) {
     // that have a non-inherited value.  This should find 'own' slots,
     // getters, and funny 'native' slots like swf movieclips, etc.
     if ((! proto) ||
+        // Be careful calling hasOwnProperty (it could be a method in
+        // a native prototype that will fail when called on the
+        // prototype itself)
         this.ignoringErrors(function () { return obj.hasOwnProperty(key);}, this, (! (key in proto))) ||
         // Be careful poking at prototypes (consider getters that may
         // fail when called on the prototype)

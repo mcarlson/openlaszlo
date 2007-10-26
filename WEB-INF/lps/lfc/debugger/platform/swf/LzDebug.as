@@ -365,7 +365,11 @@ Debug.__String = function (thing, pretty, limit, unique) {
                      (thing.length >= 0)) ? [] : null;
 
       this.objectOwnProperties(thing, names, indices, limit);
-      if (indices) { indices.sort(); }
+      if (indices) { indices.sort(function (a, b) {
+            var al = Number(a);
+            var bl = Number(b);
+            return (al > bl) - (al < bl);
+          }); }
 
       // No pretty for subclasses or non-objects or array-like objects
       // that are not Arrays.
@@ -542,7 +546,11 @@ Debug.inspectInternal = function (obj, showInternalProperties) {
     var bl = b.toLowerCase();
     return (al > bl) - (al < bl);
   });
-  if (indices) { indices.sort(); }
+  if (indices) { indices.sort(function (a, b) {
+            var al = Number(a);
+            var bl = Number(b);
+            return (al > bl) - (al < bl);
+          }); }
   var description = "";
   var nnames = names.length;
   var val;
