@@ -1037,7 +1037,9 @@ You can also define new attributes. For these you must use the <indexterm><prima
 
 See the <xref linkend="constraints"/> for details.
 </para>
-<para/></section><section><title>Attribute types</title>
+<para/></section>
+<!-- add id to section so the reference can xref here. IORIO 22 0ct 2007 -->
+<section id="attribute-types"><title>Attribute types</title>
 <para>
 By default, attributes are of the JavaScript expression type, but in some cases the default declaration doesn't give enough instruction to achieve the desired result. In this example, no labels are displayed in the boxes:
 </para>
