@@ -156,7 +156,6 @@
       <include name="logo.gif" />
 
       <include name="includes/**" />
-      <include name="images/**" />
 
       <include name="developers/**" />
       <include name="deployers/**" />
@@ -166,6 +165,10 @@
       <include name="contributors/**" />
       <include name="contribref/**" />
 
+      <!-- Exclude images, because we don't want to replace VERSIONID inside images. --> 
+      <exclude name="**/*.png" />      
+      <exclude name="**/*.gif" />                          
+
       <include name="guide_fr/**" />
 
       <include name="installation/**" />
@@ -173,6 +176,36 @@
       <exclude name="installation/build/**" />
 
   </patternset>
+  
+  <patternset id="manifest.webapp.docs.images">
+      <!-- these are relative to the docs subdirectory, but only contain images -->
+      <include name="images/*.png" />
+      <include name="images/*.gif" />
+      
+      <include name="includes/**/*.png" />
+      <include name="developers/**/*.png" />
+      <include name="deployers/**/*.png" />
+      <include name="component-design/**/*.png" />
+      <include name="component-browser/**/*.png" />      
+      <include name="reference/**/*.png" />
+      <include name="contributors/**/*.png" />
+      <include name="contribref/**/*.png" />
+      <include name="guide_fr/**/*.png" />
+      <include name="installation/**/*.png" />
+
+      <include name="includes/**/*.gif" />
+      <include name="developers/**/*.gif" />
+      <include name="deployers/**/*.gif" />
+      <include name="component-design/**/*.gif" />
+      <include name="component-browser/**/*.gif" />      
+      <include name="reference/**/*.gif" />
+      <include name="contributors/**/*.gif" />
+      <include name="contribref/**/*.gif" />
+      <include name="guide_fr/**/*.gif" />
+      <include name="installation/**/*.gif" />
+
+      
+  </patternset> 
   
   <patternset id="manifest.test" >
       <include name="test/**" />
@@ -635,7 +668,7 @@
       depends="disable-tomcat,init" unless="done.build-dist-dir-dev" >
 
       <!-- Explicitly build the dtd when we're building a distribution --> 
-      <ant target="dtd" />      
+     <ant target="dtd" />
 
       <copy todir="${builddir-dev}" >
           <fileset dir="${builddir}">
@@ -653,12 +686,6 @@
               <filter token="BUILDID" value="${build.id}"/>
               <filter token="BUILDDATE" value="${BUILDDATE}"/>
               <filter token="RELEASEID" value="${release.id}"/>
-          </filterset>
-      </copy>
-
-      <copy todir="${builddir-dev}" file="docs/changelog.html">
-          <filterset>
-              <filter token="VERSIONID" value="${version.id}"/>
           </filterset>
       </copy>
 
@@ -979,11 +1006,6 @@
               <filter token="VERSIONID" value="${version.id}"/>
           </filterset>
       </copy>
-      <copy todir="${builddir}" file="docs/changelog.html">
-          <filterset>
-              <filter token="VERSIONID" value="${version.id}"/>
-          </filterset>
-      </copy>
 
       <copy todir="${builddir}" file="docs/logo.gif" />
 
@@ -1023,6 +1045,15 @@
               <filter token="VERSIONID" value="${version.id}"/>
           </filterset>
       </copy>
+      
+      <!-- Copy the images for the docs in, without doing VERSIONID substitution. 
+        Fixes LPP-4960 [bshine 24 oct 2007 --> 
+      <copy todir="${webapp}/docs">          
+          <fileset dir="./docs">
+              <patternset refid="manifest.webapp.docs.images" />
+          </fileset>
+      </copy>
+      
 
       <copy tofile="${webapp}/index.html" file="quick-index.html" >
           <filterset>
