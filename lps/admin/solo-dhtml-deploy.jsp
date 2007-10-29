@@ -55,6 +55,8 @@ int maxZipFileSize = 64000000; // 64MB max
 int warnZipFileSize = 10000000; // warn at 10MB of content (before compression)
 boolean warned = false;
 
+
+
 String zipfilename = "";
 
 String whatpage = request.getParameter("whatpage");
@@ -363,6 +365,10 @@ String exampleURL = (request.getContextPath()+"/" + appUrl + "?lzr=dhtml&lzproxi
      File appdir = new File(ctx.getRealPath(appUrl)).getParentFile();
      appdir = appdir.getCanonicalFile();
 
+     // Keep track of which files we have output to the zip archive, so we don't
+     // write any duplicate entries.
+     HashSet zippedfiles = new HashSet();
+
      // These are the files to include in the ZIP file
      ArrayList filenames = new ArrayList();
      // LPS includes, (originally copied from /lps/includes/*)
@@ -391,23 +397,15 @@ String exampleURL = (request.getContextPath()+"/" + appUrl + "?lzr=dhtml&lzproxi
 
          byte lbytes[] = wrapper.getBytes();
          //Write out a copy of the lzhistory wrapper as appname.lzx.html
-         zout.putNextEntry(new ZipEntry(fixSlashes(htmlfile)));
-         zout.write(lbytes, 0, lbytes.length);
-         zout.closeEntry();
+         out.println("<br>copyFileToZipFile dstfixed="+htmlfile+" lookup "+zippedfiles.contains(htmlfile));
+         copyByteArrayToZipFile(zout, lbytes, htmlfile, zippedfiles);
 
          // Compress the include files
          for (int i=0; i<filenames.size(); i++) {
-             FileInputStream in = new FileInputStream(basedir + "/" + (String) filenames.get(i));
+             String srcfile = basedir + "/" + (String) filenames.get(i);
              // Add ZIP entry to output stream.
-             zout.putNextEntry(new ZipEntry(fixSlashes((String) filenames.get(i))));
-             // Transfer bytes from the file to the ZIP file
-             int len;
-             while ((len = in.read(buf)) > 0) {
-                 zout.write(buf, 0, len);
-             }
-             // Complete the entry
-             zout.closeEntry();
-             in.close();
+             String dstfile = (String) filenames.get(i);
+             copyFileToZipFile(zout, srcfile, dstfile, zippedfiles);
          }
 
         // Copy the DHTML LFC to lps/includes/LFC-dhtml.js
@@ -417,53 +415,11 @@ String exampleURL = (request.getContextPath()+"/" + appUrl + "?lzr=dhtml&lzproxi
              String fname = (String) lfcfiles.get(i);
              if (!fname.matches(".*LFCdhtml.*.js")) { continue; }
              String stripped = fname.substring(basedir.getCanonicalPath().length()+1);
-             copyFileToZipFile(zout, fname, stripped, out);
+             copyFileToZipFile(zout, fname, stripped, zippedfiles);
          }
 
-     // track how big the file is, check that we don't write more than some limit
-     int contentSize = 0;
-
-         // Compress the app files
-         for (int i=0; i<appfiles.size(); i++) {
-             // skip the appname.lzx.html if it exists, since we just created a new
-             // one in the zip archive.
-             String fname = (String) appfiles.get(i);
-             if (fname.equals(htmlfile)) { continue; }
-
-             FileInputStream in = new FileInputStream((String) appfiles.get(i));
-             String zipname = fname.substring(appdir.getPath().length()+1);
-
-             // Add ZIP entry to output stream.
-             zout.putNextEntry(new ZipEntry(fixSlashes(zipname)));
-             // Transfer bytes from the file to the ZIP file
-             int len;
-             while ((len = in.read(buf)) > 0) {
-             contentSize += len;
-                 zout.write(buf, 0, len);
-             }
-             // Complete the entry
-             zout.closeEntry();
-             in.close();
-
-         if (contentSize > maxZipFileSize) {
-             throw new IOException("file length exceeds max of "+ (maxZipFileSize/1000000) +"MB");
-             }
-
-         if (contentSize > warnZipFileSize && !warned) {
-
-             warned = true;
-             %> 
-                <h3><font color="red">The zip file has had more than <%= warnZipFileSize / 1000000 %>MB of content added to it, perhaps this is what you intended, but remember that the SOLO deployment tool creates an
-archive of all files, recursively, from the directory that
-contains your specified application source file.  If your application source file
-is in a directory with other apps, this tool will create a zip that
-                     contains all those apps and their assets (and subdirectories) as well. 
-</h3>
-
-
-             <% }
-
-         }
+         // track how big the file is, check that we don't write more than some limit
+         int contentSize = 0;
 
          // Now make copies of all resources which live external to the app's home directory.
          // Look for <resolve> tags in stats:
@@ -473,24 +429,51 @@ is in a directory with other apps, this tool will create a zip that
 
          Element stats = getChild(canvasElt, "stats");
          NodeList elts = stats.getElementsByTagName("resolve");
-         // Remember which files we've zipped, to avoid dupes
-         HashMap paths = new HashMap();
          for (int i=0; i < elts.getLength(); i++) {
              Element res = (Element)elts.item(i);
              String src = res.getAttribute("src");
              String pathname = res.getAttribute("pathname");
-             if ("true".equals(paths.get(pathname))) { continue; }
+             String relativePathname = pathname.substring(basedir.getAbsolutePath().length() + 1);
+             String zip_pathname = "lps/resources/"+relativePathname;
+             if (zippedfiles.contains(zip_pathname)) { continue; }
              // compare the pathname that the resource resolved to with the app directory path 
              if (pathname.startsWith(appdir.getAbsolutePath())) {
                  // It's under the app directory, ignore, we copied it already in the appfiles
                  // code above.
              } else {
                  // Copy the resource file into lps/resources/serverroot-relative-pathname
-                 String relativePathname = pathname.substring(basedir.getAbsolutePath().length() + 1);
-                 copyFileToZipFile(zout, pathname, "lps/resources/"+relativePathname, out);
-                 paths.put(pathname, "true");
+                 copyFileToZipFile(zout, pathname, zip_pathname, zippedfiles);
              }
          }
+
+         // Compress the app files
+     for (int i=0; i<appfiles.size(); i++) {
+         String srcname = (String) appfiles.get(i);
+         String dstname = srcname.substring(appdir.getPath().length()+1);
+         // Add ZIP entry to output stream.
+         copyFileToZipFile(zout, srcname, dstname, zippedfiles);
+
+         if (contentSize > maxZipFileSize) {
+             throw new IOException("file length exceeds max of "+ (maxZipFileSize/1000000) +"MB");
+         }
+
+         if (contentSize > warnZipFileSize && !warned) {
+
+             warned = true;
+             %> 
+                 <h3><font color="red">The zip file has had more than <%= warnZipFileSize / 1000000 %>MB of content added to it, perhaps this is what you intended, but remember that the SOLO deployment tool creates an
+                      archive of all files, recursively, from the directory that
+                      contains your specified application source file.  If your application source file
+                      is in a directory with other apps, this tool will create a zip that
+                      contains all those apps and their assets (and subdirectories) as well. 
+                      </h3>
+
+
+                      <% }
+
+     }
+
+
 
          // Complete the ZIP file
          zout.close();
@@ -551,11 +534,32 @@ public void listFiles(ArrayList fnames, File dir) {
     }
 }
 
-public void copyFileToZipFile (ZipOutputStream zout, String srcfile, String dstfile, javax.servlet.jsp.JspWriter out)
+public void copyByteArrayToZipFile (ZipOutputStream zout,
+                               byte lbytes[],
+                               String dstfile,
+                               Set zipped)
+  throws java.io.IOException
+{
+    zout.putNextEntry(new ZipEntry(fixSlashes(dstfile)));
+    zout.write(lbytes, 0, lbytes.length);
+    zout.closeEntry();
+    zipped.add(fixSlashes(dstfile));
+}
+
+
+
+public void copyFileToZipFile (ZipOutputStream zout,
+                               String srcfile,
+                               String dstfile,
+                               Set zipped)
   throws java.io.IOException, java.io.FileNotFoundException {
+    String dstfixed = fixSlashes(dstfile);
+    if (zipped.contains(dstfixed)) {
+        return;
+    }
     FileInputStream in = new FileInputStream(srcfile);
     // Add ZIP entry to output stream.
-    zout.putNextEntry(new ZipEntry(fixSlashes(dstfile)));
+    zout.putNextEntry(new ZipEntry(dstfixed));
     // Transfer bytes from the file to the ZIP file
     int len;
     byte[] buf = new byte[1024];
@@ -565,6 +569,7 @@ public void copyFileToZipFile (ZipOutputStream zout, String srcfile, String dstf
     // Complete the entry
     zout.closeEntry();
     in.close();
+    zipped.add(dstfixed);
 }
 
 

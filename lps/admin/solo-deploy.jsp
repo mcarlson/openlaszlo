@@ -321,6 +321,12 @@ String soloURL = (request.getContextPath()+"/" + appUrl + ".lzr=swf7.swf?lzproxi
      // e.g., demos/amazon
      File appdir = new File(ctx.getRealPath(appUrl)).getParentFile();
 
+
+     // Keep track of which files we have output to the zip archive, so we don't
+     // write any duplicate entries.
+     HashSet zippedfiles = new HashSet();
+
+
      // These are the files to include in the ZIP file
      ArrayList filenames = new ArrayList();
      // LPS includes, (originally copied from /lps/includes/*)
@@ -345,24 +351,15 @@ String soloURL = (request.getContextPath()+"/" + appUrl + ".lzr=swf7.swf?lzproxi
          htmlfile = new File(appUrl).getName()+".html";
 
          byte lbytes[] = lzhistwrapper.getBytes();
-         //Write out a copy of the lzhistory wrapper as appname.lzx.html
-         zout.putNextEntry(new ZipEntry(htmlfile));
-         zout.write(lbytes, 0, lbytes.length);
-         zout.closeEntry();
+
+         copyByteArrayToZipFile(zout, lbytes, htmlfile, zippedfiles);
 
          // Compress the include files
          for (int i=0; i<filenames.size(); i++) {
-             FileInputStream in = new FileInputStream(basedir + "/" + (String) filenames.get(i));
+             String srcfile = basedir + "/" + (String) filenames.get(i);
              // Add ZIP entry to output stream.
-             zout.putNextEntry(new ZipEntry((String) filenames.get(i)));
-             // Transfer bytes from the file to the ZIP file
-             int len;
-             while ((len = in.read(buf)) > 0) {
-                 zout.write(buf, 0, len);
-             }
-             // Complete the entry
-             zout.closeEntry();
-             in.close();
+             String dstfile = (String) filenames.get(i);
+             copyFileToZipFile(zout, srcfile, dstfile, zippedfiles);
          }
 
      // track how big the file is, check that we don't write more than some limit
@@ -370,25 +367,10 @@ String soloURL = (request.getContextPath()+"/" + appUrl + ".lzr=swf7.swf?lzproxi
 
          // Compress the app files
          for (int i=0; i<appfiles.size(); i++) {
-             // skip the appname.lzx.html if it exists, since we just created a new
-             // one in the zip archive.
-             String fname = (String) appfiles.get(i);
-             if (fname.equals(htmlfile)) { continue; }
-
-             FileInputStream in = new FileInputStream((String) appfiles.get(i));
-             String zipname = fname.substring(appdir.getPath().length()+1);
-
+             String srcname = (String) appfiles.get(i);
+             String dstname = srcname.substring(appdir.getPath().length()+1);
              // Add ZIP entry to output stream.
-             zout.putNextEntry(new ZipEntry(zipname));
-             // Transfer bytes from the file to the ZIP file
-             int len;
-             while ((len = in.read(buf)) > 0) {
-             contentSize += len;
-                 zout.write(buf, 0, len);
-             }
-             // Complete the entry
-             zout.closeEntry();
-             in.close();
+             copyFileToZipFile(zout, srcname, dstname, zippedfiles);
 
              if (contentSize > maxZipFileSize) {
                  throw new IOException("file length exceeds max of "+ (maxZipFileSize/1000000) +"MB");
@@ -541,5 +523,50 @@ swin.document.write('</html>');
         fnames.add(dir.getPath());
     }
   }
+
+public void copyByteArrayToZipFile (ZipOutputStream zout,
+                               byte lbytes[],
+                               String dstfile,
+                               Set zipped)
+  throws java.io.IOException
+{
+    zout.putNextEntry(new ZipEntry(fixSlashes(dstfile)));
+    zout.write(lbytes, 0, lbytes.length);
+    zout.closeEntry();
+    zipped.add(fixSlashes(dstfile));
+}
+
+
+
+public void copyFileToZipFile (ZipOutputStream zout,
+                               String srcfile,
+                               String dstfile,
+                               Set zipped)
+  throws java.io.IOException, java.io.FileNotFoundException {
+    String dstfixed = fixSlashes(dstfile);
+    if (zipped.contains(dstfixed)) {
+        return;
+    }
+    FileInputStream in = new FileInputStream(srcfile);
+    // Add ZIP entry to output stream.
+    zout.putNextEntry(new ZipEntry(dstfixed));
+    // Transfer bytes from the file to the ZIP file
+    int len;
+    byte[] buf = new byte[1024];
+    while ((len = in.read(buf)) > 0) {
+        zout.write(buf, 0, len);
+    }
+    // Complete the entry
+    zout.closeEntry();
+    in.close();
+    zipped.add(dstfixed);
+}
+
+
+public String fixSlashes (String path) {
+       return(path.replace('\\', '/'));
+}
+
+
 
 %>
