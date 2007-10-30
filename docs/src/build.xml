@@ -445,7 +445,7 @@ All Rights Reserved. Use is subject to license terms.</p>
 
     <mkdir dir="${reference.build.dir}"/>
     <property name="server.dir" value="${lps.server.dir}"/>
-    <property name="js2doc.args" value="-v --dir ${reference.build.dir} ${LPS_HOME}/lps/includes/source/embednew.js" />
+    <property name="js2doc.args" value=" --dir ${reference.build.dir} ${LPS_HOME}/lps/includes/source/embednew.js" />
     <ant dir="${server.dir}" target="js2doc" />
 
     <jing rngfile="${server.dir}/lib/js2doc.rng">
@@ -465,7 +465,7 @@ All Rights Reserved. Use is subject to license terms.</p>
     </antcall>
 
     <ant dir="${lps.server.dir}" target="js2doc" inheritAll="false">
-      <property name="js2doc.args" value="-v --libraryid test --reprocess --out ${reference.build.dir}/components.xml ${reference.build.dir}/components-raw.xml"/>
+      <property name="js2doc.args" value=" --libraryid test --reprocess --out ${reference.build.dir}/components.xml ${reference.build.dir}/components-raw.xml"/>
     </ant>
 
   </target>
@@ -481,7 +481,7 @@ All Rights Reserved. Use is subject to license terms.</p>
     </antcall>
 
     <ant dir="${lps.server.dir}" target="js2doc" inheritAll="false">
-      <property name="js2doc.args" value="-v --libraryid test --reprocess --out ${reference.build.dir}/incubator.xml ${reference.build.dir}/incubator-raw.xml"/>
+      <property name="js2doc.args" value=" --libraryid test --reprocess --out ${reference.build.dir}/incubator.xml ${reference.build.dir}/incubator-raw.xml"/>
     </ant>
 
   </target>
@@ -706,14 +706,12 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="local.worksheet" value="xsl/refguide-html.xsl"/>
       <param name="localdir" value="docs/reference/"/>
     </antcall>
-
+    <antcall target="reference.frameset.generate" /> 
 
   </target>
 
   <target name="reference.resources" depends="init,reference.preprocess,components.resources.generate"
           unless="reference.skip">
-
-    <ant target="reference.frameset.generate" />
 
     <mkdir dir="${contribref.build.dir}"/>
     <antcall target="book.resources.generate" inheritAll="true">
@@ -726,7 +724,7 @@ All Rights Reserved. Use is subject to license terms.</p>
   </target>
 
   <target name="reference" description="Build the reference"
-          depends="init,reference.resources,reference.html.generate,reference.frameset.generate"
+          depends="init,reference.resources,reference.html.generate"
           unless="reference.skip">
   </target>
 
@@ -755,9 +753,22 @@ All Rights Reserved. Use is subject to license terms.</p>
       description="Copy a hand-generated html index for the reference into the output directory.">
       <echo message="***gonna copy in reference frameset ***" />      
       <!-- To actually build or update the index-generated.html, see navbuilder/navbuilder.rb -->
-      <copy todir="${reference.output.dir}">
-          <fileset dir="${reference.src.dir}/navbuilder" includes="index*.html"/>
+      <copy 
+          overwrite="true"         
+          file="${reference.src.dir}/navbuilder/index-generated.html" 
+          todir="${reference.output.dir}">
+      </copy>      
+      <copy 
+          overwrite="true"         
+          file="${reference.src.dir}/navbuilder/index-frames.html" 
+          tofile="${reference.output.dir}/index.html">
       </copy>
+      <!-- Copy the nav.lzx app and the generated xml contents into the output directory --> 
+      <copy todir="${reference.output.dir}">
+          <fileset dir="nav" includes="*.*"/>
+      </copy>
+      <copy todir="${reference.output.dir}" file="reference/welcome.html" />
+      
   </target>
   
   <!-- CONTRIBUTORS GUIDE -->
@@ -1041,35 +1052,39 @@ All Rights Reserved. Use is subject to license terms.</p>
   <target name="developers.resources" depends="developers.preprocess">
     <foreach target="book.resources.generate" list="developers" param="dir"
              inheritall="true">
-      <param name="local.input.dir" value="${developers.build.dir}"/>
+      <param name="local.input.dir" value="${developers.input.dir}"/>
       <param name="local.output.dir" value="${developers.output.dir}"/>
       <param name="local.build.dir" value="${developers.build.dir}"/>
     </foreach>
     <foreach target="book.resources.generate" list="tutorials" param="dir"
              inheritall="true">
-      <param name="local.input.dir" value="${developers.build.dir}/tutorials"/>
+      <param name="local.input.dir" value="${developers.input.dir}/tutorials"/>
       <param name="local.output.dir" value="${developers.output.dir}/tutorials"/>
       <param name="local.build.dir" value="${developers.build.dir}/tutorials"/>
     </foreach>
   </target>
   
+  <!-- This target seems to pull the example program's code into the docbook file, 
+    and format it for pretty printing. Earlier, in developers.preprocess, 
+    we copied the example code files into $LPS_HOME/docs/developers/programs.
+    [bshine 10.19.2007] --> 
   <target name="developers.examples.preprocess" depends="developers.preprocess">
     <antcall target="dbk.examples.preprocess" inheritAll="true">
-      <param name="local.input.dir" value="${docs.build.dir}"/>
+      <param name="local.input.dir" value="${docs.build.dir}"/> <!-- $LPS_HOME/docs/src/build --> 
       <param name="local.input.index" value="developers/${developers.input.index}"/>
-      <param name="local.output.dir" value="${docs.output.dir}"/>
-      <param name="local.output.index" value="developers/${developers.dbk.index}"/>
+      <param name="local.output.dir" value="${developers.output.dir}"/> <!-- $LPS_HOME/docs/developers -->
+      <param name="local.output.index" value="${developers.dbk.index}"/>
       <param name="local.worksheet" value="xsl/dbkpreprocessexamples.xsl"/>
     </antcall>
   </target>
   
   <target name="developers.html.generate" depends="developers.examples.preprocess">
     <antcall target="book.html.generate" inheritAll="true">
-      <param name="local.input.dir" value="${docs.output.dir}"/>
-      <param name="local.input.index" value="developers/${developers.dbk.index}"/>
+      <param name="local.input.dir" value="${developers.build.dir}"/>
+      <param name="local.input.index" value="${developers.dbk.index}"/>
       <param name="local.output.dir" value="${docs.output.dir}"/>
-      <param name="local.output.index" value="developers/${developers.html.index}"/>
-      <param name="local.output.depends.dir" value="${developers.output.dir}"/>
+      <param name="local.output.index" value="${developers.html.index}"/>
+      <param name="local.output.depends.dir" value="${docs.output.dir}"/>
       <param name="local.output.depends.set" value="*"/>
       <param name="local.worksheet" value="xsl/dguide.xsl"/>
     </antcall>
@@ -1302,8 +1317,9 @@ All Rights Reserved. Use is subject to license terms.</p>
     targets relating to both ref and tutorial docs:
   -->
 
+  <!-- don't build the contributor's guide, because I don't want to and it takes too long [bshine 10.17.2007] -->
   <target name="build" description="Make the documentation"
-          depends="users,contributors"
+          depends="users,reference.frameset.generate" 
           unless="skip.doc"/> 
 
   <target name="clean" description="clean up generated files"

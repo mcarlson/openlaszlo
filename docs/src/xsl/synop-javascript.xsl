@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -139,6 +139,7 @@
 </xsl:template>
 
 <xsl:template match="methodname" mode="javascript">
+  <xsl:variable name="class" select="ooclass[not(@role)]"/>  
   <span class="{name(.)}">
     <xsl:apply-templates mode="javascript"/>
   </span>
@@ -195,8 +196,6 @@
       <xsl:text>&nbsp;</xsl:text>
     </xsl:for-each>
   
-    <xsl:text>function </xsl:text>
-
     <xsl:apply-templates select="methodname" mode="javascript"/>
 
     <xsl:text>(</xsl:text>

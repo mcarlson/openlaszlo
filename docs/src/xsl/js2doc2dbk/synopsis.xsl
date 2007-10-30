@@ -159,7 +159,36 @@
       <xsl:param name="id" select="@id"/>
       <xsl:param name="static" select="false()" />
       <xsl:param name="prototype" select="false()"/>
+      <methodsynopsis language="{$language}"> 
+        <xsl:choose>
+          <xsl:when test="$add-link = true()">
+            <methodname><link linkend="{$id}"><xsl:value-of select="@name"/></link></methodname>
+          </xsl:when>
+          <xsl:otherwise>
+            <methodname><xsl:value-of select="@name"/></methodname>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:for-each select="function/parameter">
+          <methodparam>
+            <parameter><xsl:value-of select="@name"/></parameter>
+            <xsl:if test="@type"><type role="javascript"><xsl:value-of select="@type"/></type></xsl:if>
+          </methodparam>
+        </xsl:for-each>        
+      </methodsynopsis>
+    </xsl:template>
+  
+    <!-- Hide this template, without turning it off, by putting it into the mode
+      "jgrandy-synopsis". We don't want to delete the code because it's probably
+      very tasty, but we also don't want to execute it right now. 
+      [bshine 10.12.2007] --> 
+    <xsl:template match="property[child::function]" mode="jgrandy-synopsis">
+      <xsl:param name="add-link"/>
+      <xsl:param name="language"/>
+      <xsl:param name="id" select="@id"/>
+      <xsl:param name="static" select="false()" />
+      <xsl:param name="prototype" select="false()"/>
       <methodsynopsis language="{$language}">
+        <xsl:text></xsl:text>      
         <xsl:if test="$static"><modifier>static</modifier></xsl:if>
         <xsl:if test="$prototype"><modifier>prototype</modifier></xsl:if>
         <xsl:if test="@access"><modifier><xsl:value-of select="@access"/></modifier></xsl:if>
@@ -194,6 +223,7 @@
       <xsl:param name="id" select="@id"/>
       <xsl:param name="static" select="true()"/>
       <methodsynopsis language="{$language}">
+        <xsl:text></xsl:text>            
         <xsl:if test="returns"><type role="javascript"><xsl:value-of select="returns/@type"/></type></xsl:if>
         <xsl:choose>
           <xsl:when test="$add-link = true()">

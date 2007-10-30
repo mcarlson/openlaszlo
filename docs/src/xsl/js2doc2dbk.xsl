@@ -10,6 +10,8 @@
 
 <!ENTITY tagname        '(doc/tag[@name="lzxname"]/text)'>
 <!ENTITY shortdesc      '(doc/tag[@name="shortdesc"]/text)'>
+<!ENTITY lzxtype        '(doc/tag[@name="lzxtype"]/text)'>
+<!ENTITY lzxdefault     '(doc/tag[@name="lzxdefault"]/text)'>
 
 <!ENTITY commonname     '(self::node()/@name | self::node()/doc/tag[@name="lzxname"]/text)[1]'>
 
@@ -33,7 +35,22 @@
     <xsl:param name="visibility.filter" select="'public'"/>
     <xsl:param name="show.devnotes" select="contains($visibility.filter,'private')"/>
     <xsl:param name="show.fixmes" select="contains($visibility.filter,'private')"/>
-        
+  
+    <!-- These params control the presentation of attributes, methods, and events
+      using a javascript-oriented syntax and approach. -->
+    <xsl:param name="show.members.attributes" select="true()" />
+    <xsl:param name="show.properties.static" select="false()" />
+    <xsl:param name="show.methods.static" select="false()" />  
+    <xsl:param name="show.events.static" select="false()" />
+    <xsl:param name="show.inherited.attributes" select="true()" />
+    <xsl:param name="show.setters" select="false()" />    
+    <xsl:param name="show.prototype.methods" select="true()" />
+    <xsl:param name="show.prototype.events" select="true()" />
+    <xsl:param name="show.prototype.properties" select="false()" />
+    <xsl:param name="show.init.args" select="false()" />
+    <xsl:param name="show.lzx.synopsis" select="false()" />
+    <xsl:param name="show.js.synopsis" select="false()" />
+    
     <xsl:key name="id" match="*" use="@id"/>
     <xsl:key name="unitid" match="*" use="@unitid"/>
     <xsl:key name="topic" match="property" use="@topic"/>
@@ -203,91 +220,111 @@
         <xsl:variable name="ovars" select="&objectvalue;/property[not(&privateslot;) and &isvisible;]"/>
         
         <!-- Static Properties -->
-        <xsl:call-template name="describe-members">
-          <xsl:with-param name="members" select="$ovars[not(child::function) and not(@type='LzEvent')]"/>
-          <xsl:with-param name="static" select="true()"/>
-          <xsl:with-param name="title" select="'Static Properties'"/>
-        </xsl:call-template>
+        <xsl:if test="$show.properties.static">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="$ovars[not(child::function) and not(@type='LzEvent')]"/>
+            <xsl:with-param name="static" select="true()"/>
+            <xsl:with-param name="title" select="'Static Properties'"/>
+          </xsl:call-template>
+        </xsl:if>          
 
-        <!-- Static Methods -->        
+        <!-- Static Methods -->
+        <xsl:if test="$show.methods.static">
         <xsl:call-template name="describe-members">
           <xsl:with-param name="members" select="$ovars[child::function]"/>
           <xsl:with-param name="static" select="true()"/>
           <xsl:with-param name="title" select="'Static Methods'"/>
         </xsl:call-template>
+        </xsl:if>  
 
-        <!-- Static Events -->        
-        <xsl:call-template name="describe-members">
-          <xsl:with-param name="members" select="$ovars[@type='LzEvent']"/>
-          <xsl:with-param name="static" select="true()"/>
-          <xsl:with-param name="title" select="'Static Events'"/>
-        </xsl:call-template>
-
-        <!-- Initialization Arguments -->        
-        <xsl:call-template name="describe-members">
-          <xsl:with-param name="members" select="&classvalue;/initarg"/>
-          <xsl:with-param name="title">
-            <xsl:choose>
-              <xsl:when test="$lzxname"><xsl:value-of select="'Initial Attributes'"/></xsl:when>
-              <xsl:otherwise><xsl:value-of select="'Constructor Arguments'"/></xsl:otherwise>
-            </xsl:choose>
-          </xsl:with-param>
-          <xsl:with-param name="subtitle">
-            <xsl:choose>
-              <xsl:when test="$lzxname"><xsl:value-of select="'Initial Attributes are given as attributes in LZX but are not generally available as properties in JavaScript.'"/></xsl:when>
-            </xsl:choose>
-          </xsl:with-param>
-        </xsl:call-template>
-
-        <!-- Properties -->        
-        <xsl:call-template name="describe-members">
-          <xsl:with-param name="members" select="$ivars"/>
-          <xsl:with-param name="title" select="'Attributes'"/>
-        </xsl:call-template>
+        <!-- Static Events -->
+        <xsl:if test="$show.events.static">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="$ovars[@type='LzEvent']"/>
+            <xsl:with-param name="static" select="true()"/>
+            <xsl:with-param name="title" select="'Static Events'"/>
+          </xsl:call-template>
+        </xsl:if>  
         
-        <!-- Inherited Attributes --> 
-        <xsl:call-template name="describe-inherited-attributes">
-          <xsl:with-param name="class" select="class"></xsl:with-param>
-        </xsl:call-template>
-        
-        <!-- Setters -->        
-        <xsl:call-template name="describe-members">
-          <xsl:with-param name="members" select="$svars"/>
-          <xsl:with-param name="title" select="'Setters'"/>
-          <xsl:with-param name="subtitle">
-            <xsl:text>Setters for virtual properties, to be used with setAttribute. A setter may or may not have a corresponding getter method; consult the Methods list in this section.</xsl:text>
-          </xsl:with-param>
-          <xsl:with-param name="describe-js" select="false()"/>
-          <xsl:with-param name="describe-lzx" select="false()"/>
-        </xsl:call-template>
+        <!-- Initialization Arguments -->
+        <xsl:if test="$show.init.args">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="&classvalue;/initarg"/>
+            <xsl:with-param name="title">
+              <xsl:choose>
+                <xsl:when test="$lzxname"><xsl:value-of select="'Initial Attributes'"/></xsl:when>
+                <xsl:otherwise><xsl:value-of select="'Constructor Arguments'"/></xsl:otherwise>
+              </xsl:choose>
+            </xsl:with-param>
+            <xsl:with-param name="subtitle">
+              <xsl:choose>
+                <xsl:when test="$lzxname"><xsl:value-of select="'Initial Attributes are given as attributes in LZX but are not generally available as properties in JavaScript.'"/></xsl:when>
+              </xsl:choose>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:if>
 
-        <!-- (Prototype) Methods -->        
-        <xsl:call-template name="describe-members">
-          <xsl:with-param name="members" select="$pvars[child::function]"/>
-          <xsl:with-param name="title" select="'Methods'"/>
-        </xsl:call-template>
+        <!-- Properties -->    
+        <xsl:if test="$show.members.attributes">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="$ivars | &classvalue;/initarg"/>
+            <xsl:with-param name="title" select="'Attributes'"/>
+          </xsl:call-template>
+        </xsl:if>  
+        
+        <!-- Inherited Attributes -->
+        <xsl:if test="$show.inherited.attributes">
+          <xsl:call-template name="describe-inherited-attributes">
+            <xsl:with-param name="class" select="class"></xsl:with-param>
+          </xsl:call-template>
+        </xsl:if> 
+        
+        <!-- Setters -->
+        <xsl:if test="$show.setters">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="$svars"/>
+            <xsl:with-param name="title" select="'Setters'"/>
+            <xsl:with-param name="subtitle">
+              <xsl:text>Setters for virtual properties, to be used with setAttribute. A setter may or may not have a corresponding getter method; consult the Methods list in this section.</xsl:text>
+            </xsl:with-param>
+            <xsl:with-param name="describe-js" select="false()"/>
+            <xsl:with-param name="describe-lzx" select="false()"/>
+          </xsl:call-template>
+        </xsl:if>  
+        
+        <!-- (Prototype) Methods -->
+        <xsl:if test="$show.prototype.methods">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="$pvars[child::function]"/>
+            <xsl:with-param name="title" select="'Methods'"/>
+          </xsl:call-template>
+        </xsl:if>  
         
         <!-- Inherited Methods --> 
         <xsl:call-template name="describe-inherited-methods">
           <xsl:with-param name="class" select="class"></xsl:with-param>
         </xsl:call-template>            
-
-        <!-- (Prototype) Events -->        
-        <xsl:call-template name="describe-members">
-          <xsl:with-param name="members" select="$pvars[@type='LzEvent']"/>
-          <xsl:with-param name="title" select="'Events'"/>
-        </xsl:call-template>
+        
+        <!-- (Prototype) Events -->
+        <xsl:if test="$show.prototype.events">
+          <xsl:call-template name="describe-events">
+            <xsl:with-param name="members" select="$pvars[@type='LzEvent']"/>
+            <xsl:with-param name="title" select="'Events'"/>
+          </xsl:call-template>
+        </xsl:if>
         
         <!-- Inherited Events --> 
         <xsl:call-template name="describe-inherited-events">
           <xsl:with-param name="class" select="class"></xsl:with-param>
         </xsl:call-template>    
-
+        
         <!-- Prototype Properties -->
-        <xsl:call-template name="describe-members">
-          <xsl:with-param name="members" select="$pvars[not(child::function) and not(@type='LzEvent')]"/>
-          <xsl:with-param name="title" select="'Prototype Properties'"/>
-        </xsl:call-template>
+        <xsl:if test="$show.prototype.properties">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="$pvars[not(child::function) and not(@type='LzEvent')]"/>
+            <xsl:with-param name="title" select="'Prototype Properties'"/>
+          </xsl:call-template>
+        </xsl:if>  
         
       </refsect1>
     </xsl:template>
@@ -295,7 +332,7 @@
     <xsl:template match="property" mode="detailed-synopsis">
         <xsl:variable name="jsname" select="@name"/>
         <xsl:variable name="lzxname" select="&tagname;"/>
-        <xsl:if test="$lzxname">
+        <xsl:if test="$lzxname and $show.lzx.synopsis">
           <refsect1><title>LZX Synopsis</title>
             <xsl:apply-templates select="." mode="synopsis">
               <xsl:with-param name="add-link" select="false()"/>
@@ -305,7 +342,7 @@
             </xsl:apply-templates>
           </refsect1>
         </xsl:if>
-        <xsl:if test="$jsname">
+        <xsl:if test="$jsname and $show.js.synopsis">
           <refsect1><title>JavaScript Synopsis</title>
             <xsl:apply-templates select="." mode="synopsis">
               <xsl:with-param name="add-link" select="false()"/>
@@ -320,29 +357,162 @@
     <xsl:template match="*" mode="refentry-details">
     </xsl:template>
 
-    <xsl:template name="describe-members">
-      <xsl:param name="members"/>
-      <xsl:param name="static"/>
-      <xsl:param name="title"/>
-      <xsl:param name="subtitle"/>
-      <xsl:param name="describe-js" select="boolean(@name)"/>
-      <xsl:param name="describe-lzx" select="boolean(&tagname;)"/>
-      <xsl:variable name="visible-members" select="$members[contains($visibility.filter,@access)]"/>
-      <xsl:if test="count($visible-members) > 0">
-        <variablelist>
-          <title><xsl:value-of select="$title"/> (<xsl:value-of select="count($visible-members)"/>)</title>
-          <xsl:if test="$subtitle"><para><xsl:value-of select="$subtitle"/></para></xsl:if>
-          <xsl:for-each select="$visible-members">
-            <xsl:sort select="translate(@name,'_$','  ')"/>
-            <xsl:apply-templates select="." mode="describe-member">
-              <xsl:with-param name="static" select="$static"/>
-              <xsl:with-param name="describe-js" select="$describe-js"/>
-              <xsl:with-param name="describe-lzx" select="$describe-lzx"/>
-            </xsl:apply-templates>
-          </xsl:for-each>
-        </variablelist>
-      </xsl:if>
-    </xsl:template>
+  <xsl:template name="describe-members">
+    <xsl:param name="members"/>
+    <xsl:param name="static"/>
+    <xsl:param name="title"/>
+    <xsl:param name="subtitle"/>
+    <xsl:param name="describe-js" select="boolean(@name)"/>
+    <xsl:param name="describe-lzx" select="boolean(&tagname;)"/>
+    <xsl:choose>
+      <xsl:when test="$title = 'Attributes'">
+        <xsl:call-template name="describe-members-grid">
+          <xsl:with-param name="members" select="$members"/>
+          <xsl:with-param name="static" select="$static"/>
+          <xsl:with-param name="title" select="$title"/>
+          <xsl:with-param name="subtitle" select="$subtitle"/>
+          <xsl:with-param name="describe-js" select="$describe-js" />
+          <xsl:with-param name="describe-lzx" select="$describe-lzx" />          
+        </xsl:call-template>  
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="describe-members-list">
+          <xsl:with-param name="members" select="$members"/>
+          <xsl:with-param name="static" select="$static"/>
+          <xsl:with-param name="title" select="$title"/>
+          <xsl:with-param name="subtitle" select="$subtitle"/>
+          <xsl:with-param name="describe-js" select="$describe-js" />
+          <xsl:with-param name="describe-lzx" select="$describe-lzx" />                    
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>      
+  </xsl:template>
+  
+  <xsl:template name="describe-members-list">
+    <xsl:param name="members"/>
+    <xsl:param name="static"/>
+    <xsl:param name="title"/>
+    <xsl:param name="subtitle"/>
+    <xsl:param name="describe-js" select="boolean(@name)"/>
+    <xsl:param name="describe-lzx" select="boolean(&tagname;)"/>
+    <xsl:variable name="visible-members" select="$members[contains($visibility.filter,@access)]"/>
+    <xsl:if test="count($visible-members) > 0">
+      <variablelist>
+        <title><xsl:value-of select="$title"/></title>
+        <xsl:if test="$subtitle"><para><xsl:value-of select="$subtitle"/></para></xsl:if>
+        <xsl:for-each select="$visible-members">
+          <xsl:sort select="translate(@name,'_$','  ')"/>
+          <xsl:apply-templates select="." mode="describe-member">
+            <xsl:with-param name="static" select="$static"/>
+            <xsl:with-param name="describe-js" select="$describe-js"/>
+            <xsl:with-param name="describe-lzx" select="$describe-lzx"/>
+          </xsl:apply-templates>
+        </xsl:for-each>
+      </variablelist>
+    </xsl:if>
+  </xsl:template>
+  
+  <xsl:template name="describe-members-grid">
+    <xsl:param name="members"/>
+    <xsl:param name="static"/>
+    <xsl:param name="title"/>
+    <xsl:param name="subtitle"/>
+    <xsl:param name="describe-js" select="boolean(@name)"/>
+    <xsl:param name="describe-lzx" select="boolean(&tagname;)"/>
+    <xsl:variable name="visible-members" select="$members[contains($visibility.filter,@access)]"/>
+    <xsl:if test="count($visible-members) > 0">
+      <table frame="none" colsep="0" rowsep="0">
+        <title><xsl:value-of select="$title"/></title>
+        <tgroup cols="4">
+          <colspec colname="Name" />
+          <!-- <colspec colname="Usage" /> -->
+          <colspec colname="TypeTag" />
+          <colspec colname="TypeJS" />
+          <colspec colname="Default" />
+          <!-- <colspec colname="Category" /> -->          
+          <thead>
+            <row>
+              <entry align="left">Name</entry>
+              <!-- <entry align="left">Usage</entry> -->
+              <entry align="left">Type (tag)</entry>
+              <entry align="left">Type (js)</entry>
+              <entry align="left">Default</entry>
+              <!-- <entry align="left">Category</entry> -->
+            </row>
+          </thead>
+          <tbody>
+            <xsl:for-each select="$visible-members">
+              <xsl:sort select="translate(@name,'_$','  ')"/>
+              <xsl:call-template name="member-data-row"></xsl:call-template>
+            </xsl:for-each>
+          </tbody>
+        </tgroup>
+      </table>
+    </xsl:if>
+  </xsl:template>
+  
+  <xsl:template name="describe-events">
+    <xsl:param name="members"/>
+    <xsl:param name="title"/>
+    <xsl:param name="static" select="false()"/>
+    <xsl:param name="describe-js" select="true()"/>
+    <xsl:param name="describe-lzx" select="true()"/>    
+    <xsl:variable name="visible-members" select="$members[contains($visibility.filter,@access)]"/>
+    <xsl:variable name="desc">
+      <xsl:apply-templates select="." mode="desc"/>
+    </xsl:variable>
+    <xsl:variable name="xref">
+      <xsl:apply-templates select="." mode="xref"/>
+    </xsl:variable>
+    
+    <xsl:if test="count($visible-members) > 0">
+      <table frame="none" colsep="0" rowsep="0">
+        <title>Events</title>
+        <tgroup cols="2">
+          <colspec colname="Name" />
+          <colspec colname="Description" />
+          <thead>
+            <row>
+              <entry align="left">Name</entry>
+              <entry align="left">Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <xsl:for-each select="$visible-members">
+              <xsl:sort select="translate(@name,'_$','  ')"/>
+              <row>
+                <entry>
+                  <indexterm zone="{@id}" id="{@id}">
+                    <primary>
+                      <xsl:value-of select="@name"/>
+                    </primary>                    
+                  </indexterm>
+                  <xsl:value-of select="@name"/>
+                </entry>
+                <entry><xsl:value-of select="doc/text" /></entry>
+              </row>
+            </xsl:for-each>
+          </tbody>
+        </tgroup>
+      </table>
+      
+      <!-- Also list the event out the old way. This seems to be necessary
+      to get the xref in properly. [bshine 10.11.2007] -->
+      <!--
+      <xsl:for-each select="$visible-members">
+        <xsl:sort select="translate(@name,'_$','  ')"/>        
+        <xsl:apply-templates select="." mode="describe-member">
+          <xsl:with-param name="static" select="$static"/>
+          <xsl:with-param name="describe-js" select="$describe-js"/>
+          <xsl:with-param name="describe-lzx" select="$describe-lzx"/>
+        </xsl:apply-templates>
+      </xsl:for-each>
+      
+      -->
+    </xsl:if>
+    
+    
+  </xsl:template>
 
     <xsl:template match="initarg|property" mode="describe-member">
       <!-- TO DO: special format for setters (properties with ../object/../property[@name='setters'] structure) -->
@@ -376,16 +546,6 @@
           <xsl:value-of select="$desc"/>
         </term>
         <listitem>
-          <xsl:if test="$describe-lzx">
-            <refsect3>
-              <xsl:apply-templates select="." mode="synopsis">
-                <xsl:with-param name="add-link" select="false()"/>
-                <xsl:with-param name="static" select="$static"/>
-                <xsl:with-param name="language" select="'lzx'" />
-              </xsl:apply-templates>
-            </refsect3>
-          </xsl:if>
-          <xsl:if test="$describe-js and name()='property'">
             <refsect3>
               <xsl:apply-templates select="." mode="synopsis">
                 <xsl:with-param name="add-link" select="false()"/>
@@ -393,9 +553,38 @@
                 <xsl:with-param name="language" select="'javascript'" />
               </xsl:apply-templates>
             </refsect3>
-          </xsl:if>
           <xsl:if test="doc/text">
-            <refsect3><xsl:apply-templates select="doc/text" mode="doc2dbk"/></refsect3>
+            <refsect3>
+              <xsl:apply-templates select="doc/text" mode="doc2dbk"/>
+            </refsect3>
+          </xsl:if>
+          <xsl:if test="function/parameter">
+            <refsect3>              
+              <table frame="none" colsep="0" rowsep="0">
+                <title><xsl:text>Parameters</xsl:text></title>
+                <tgroup cols="3">
+                  <colspec colname="Name" />
+                  <colspec colname="Type" />
+                  <colspec colname="Description" />          
+                  <thead>
+                    <row>
+                      <entry align="left">Name</entry>
+                      <entry align="left">Type</entry>
+                      <entry align="left">Description</entry>
+                    </row>
+                  </thead>
+                  <tbody>
+                    <xsl:for-each select="function/parameter">
+                      <row>
+                        <entry><xsl:value-of select="@name"/></entry>
+                        <entry><xsl:value-of select="@type"/></entry>
+                        <entry><xsl:value-of select="doc/text"/></entry>
+                      </row>                      
+                    </xsl:for-each>
+                  </tbody>
+                </tgroup>
+              </table>              
+              </refsect3>
           </xsl:if>
         </listitem>
       </varlistentry>
@@ -747,6 +936,7 @@
     
     <xsl:variable name="extends" select="$class/@extends"/>
     <xsl:variable name="superclass" select="(key('id',$extends) | key('name-lzx',$extends))[1]"/>
+    
     <xsl:if test="$superclass">
       <refsect2>
         <title>
@@ -766,13 +956,8 @@
             <link linkend="{@id}"><xsl:value-of select="@name"/></link>
             <xsl:text>, </xsl:text>
           </xsl:for-each>
-          <xsl:for-each select="$initargs">     
-            <xsl:sort select="@name"/>            
-            <link linkend="{@id}"><xsl:value-of select="@name"/></link>
-            <xsl:text>, </xsl:text>
-          </xsl:for-each>                               
         </para>
-      </refsect2>                  
+      </refsect2>                       
       <xsl:choose>
         <xsl:when test="contains($visibility.filter, $superclass/@access)">
           <xsl:call-template name="describe-inherited-attributes">
@@ -784,7 +969,8 @@
           <xsl:text>&nbsp;(private)&nbsp;&raquo; </xsl:text>
         </xsl:otherwise>
       </xsl:choose>
-    </xsl:if>              
+    </xsl:if>
+     
   </xsl:template>  
   
   <xsl:template name="describe-inherited-methods">
@@ -795,9 +981,10 @@
     
     <xsl:variable name="extends" select="$class/@extends"/>
     <xsl:variable name="superclass" select="(key('id',$extends) | key('name-lzx',$extends))[1]"/>
+    
     <xsl:if test="$superclass">
-      <xsl:variable name="inheritedmethods" select="$superclass/class/property/object/property[@access='public']/function"></xsl:variable>
-      <refsect2>
+      <refsect2>              
+      <xsl:variable name="inheritedmethods" select="$superclass/class/property/object/property[@access='public']/function"></xsl:variable>      
         <title>
           <xsl:text>Methods inherited from&nbsp;</xsl:text>          
           <link linkend="{$superclass/@id}">
@@ -813,7 +1000,7 @@
             <xsl:text>, </xsl:text>
           </xsl:for-each>
         </para>
-      </refsect2>
+      </refsect2>  
       <xsl:choose>
         <xsl:when test="contains($visibility.filter, $superclass/@access)">
           <xsl:call-template name="describe-inherited-methods">
@@ -825,7 +1012,9 @@
           <xsl:text>&nbsp;(private)&nbsp;&raquo; </xsl:text>
         </xsl:otherwise>
       </xsl:choose>
-    </xsl:if>        
+              
+    </xsl:if>    
+        
   </xsl:template>  
   
   
@@ -868,5 +1057,67 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>        
-  </xsl:template>    
+  </xsl:template>
+  
+  <xsl:template name="member-data-row">
+    <xsl:param name="describe-js" select="true()"/>
+    <xsl:param name="describe-lzx" select="true()"/>
+    
+    <xsl:variable name="jsname" select="@name"/>
+    <xsl:variable name="lzxname" select="&tagname;"/>
+    <xsl:variable name="name" select="&commonname;"/>
+    <xsl:variable name="sortasname" select="translate($name,'_$','  ')"/>
+    <xsl:variable name="id" select="@id"/>
+    <xsl:variable name="desc">
+      <xsl:apply-templates select="." mode="desc"/>
+    </xsl:variable>
+    
+    <xsl:variable name="xref">
+      <xsl:apply-templates select="." mode="xref"/>
+    </xsl:variable>
+    
+    <term id="{@id}" xreflabel="{$xref}">
+      <!-- how to get the indexterm to use a different name than xreflabel? -->
+      <indexterm zone="{@id}">
+        <primary>
+          <xsl:if test="$name != $sortasname">
+            <xsl:attribute name="sortas"><xsl:value-of select="$sortasname"/></xsl:attribute>
+          </xsl:if>
+          <xsl:value-of select="$name"/>
+        </primary>
+      </indexterm>
+      <xsl:value-of select="$desc"/>
+    </term>    
+    <row>
+      <entry><xsl:value-of select="@name"/></entry>
+      <!-- "Usage" will go here <entry>(unknown)</entry> -->
+      <entry><xsl:value-of select="&lzxtype;" /> </entry>
+      <entry>
+        <xsl:call-template name="jstype">
+          <xsl:with-param name="tag" select="'type'"/>
+        </xsl:call-template>
+      </entry>
+      <entry><xsl:value-of select="&lzxdefault;" /></entry>
+      <!-- Category will go here 
+      <entry> 
+        <xsl:choose>
+          <xsl:when test="initarg">
+            <xsl:text>initarg</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+          </xsl:otherwise>
+        </xsl:choose>        
+      </entry>
+      -->
+    </row>
+    <xsl:if test="doc/text">  
+      <row>
+        <entry namest="TagType" nameend="Category">
+          <xsl:value-of select="doc/text" />
+        </entry>
+      </row>
+    </xsl:if>        
+    
+  </xsl:template>
+  
 </xsl:stylesheet>

@@ -1,0 +1,146 @@
+<!-- parameter 'target' is used to cause the links to open in a particular frame -->
+<!-- so call this with ?target=myframe to make the reference material load into  -->
+<!-- a frame named myframe --> 
+<canvas width="240" height="100%" title="LZX Reference Navigation">
+  <include href="lz/tree.lzx"/>
+
+  <dataset name="tocdata" src="toc.xml"/>
+  <dataset name="classesdata" src="classes.xml"/>
+  <dataset name="tagsdata" src="tags.xml"/>
+  
+  <class name="link" extends="text" resize="true"
+         onmouseover="setAttribute('fgcolor', blue)"
+         onmouseout="setAttribute('fgcolor', black)"
+         onclick="LzBrowser.loadURL(this.datapath.xpathQuery('@href'), target)"/>
+
+  <!-- Create linktree so we can keyboard navigate. -->
+  <class name="linktree" extends="basetree" isleaf="true" recurse="false" >
+      <method name="keySelect">
+          super.keySelect();
+          LzBrowser.loadURL(this.datapath.xpathQuery('@href'), target);
+      </method>
+      <text text="${parent.text}" placement="item" name="t" resize="true" 
+            onmouseover="setAttribute('fgcolor', classroot.style['texthilitecolor'])"
+            onmouseout="setAttribute('fgcolor',   classroot.selected 
+                                                ? blue
+                                                : (   classroot.focused 
+                                                    ? classroot.style['texthilitecolor']
+                                                    : classroot.style['textcolor'] ))"
+            fgcolor="${ classroot.selected ? blue
+                                           : (   classroot.focused 
+                                               ? classroot.style['texthilitecolor']
+                                               : classroot.style['textcolor'] ) }">
+          <handler name="onclick">
+              LzBrowser.loadURL(classroot.datapath.xpathQuery('@href'), target);
+              classroot.setAttribute('selected', true);
+              classroot.changeFocus(classroot);
+          </handler>
+      </text>
+  </class>
+
+  <simplelayout axis="y"/>
+  <tabs x="5" width="${canvas.width-10}" height="${canvas.height}">
+    <tabpane width="${parent.width}">
+      Contents
+      <view name="search" width="${parent.width}">
+        <simplelayout axis="x"/>
+        <edittext name="token" width="120" >
+            <handler name="onkeydown" args="k">
+                if ( k == 13 ) parent.find.doClick();
+            </handler>
+        </edittext>
+        <button height="${parent.token.height}" name="find">
+            Find
+            <method name="doClick" event="onclick">
+                parent.parent.treeparent.findNext( parent.token.getText() );
+            </method>
+        </button>
+      </view>
+      <link text="Welcome"
+            onclick="LzBrowser.loadURL('welcome.html', target)"/>
+      <view name="treeparent" clip="true" width="${parent.width - 20}"
+            height="${Math.max(0,parent.parent.height - parent.search.height - 80)}">
+        <attribute name="cgroup" value="0"/>
+        <attribute name="cleaf" value="0"/>
+        <attribute name="lastfound" value="null"/>
+        <method name="findNext" args="tok">
+            <![CDATA[ 
+            if ( tok == '' || tok == null ) return;
+            tok = tok.toLowerCase();
+            var sgroup = cgroup;
+            var sleaf = cleaf;
+            var canwrap = true;
+            this.lastfound.setAttribute( 'fgcolor', black );
+            this.lastfound = null;
+            while( !this.lastfound && 
+                    ( canwrap || ( sgroup > cgroup ) ||
+                      (sgroup == cgroup && sleaf > cleaf) ) ){
+
+                var cgs = top.children.subviews[ cgroup ];
+                var curr = cgs.children.subviews[ cleaf ];
+
+                if ( curr.text.toLowerCase().indexOf( tok )  > -1 ){
+                    //found one!
+                    cgs.setAttribute( "open", true );
+                    cgs.changeFocus();
+                    curr.setAttribute( "fgcolor", blue );
+                    curr.changeFocus( );
+                    this.lastfound = curr;
+                } 
+
+                if ( ++this.cleaf == cgs.children.subviews.length ){
+                    this.cleaf = 0;
+                    if ( ++this.cgroup == top.children.subviews.length ){
+                        canwrap = false;
+                        this.cleaf = this.cgroup = 0;
+                    }
+                }
+
+            }
+
+            ]]>
+        </method>
+
+        <tree datapath="tocdata:/toc" showroot="false" name="top" autoscroll="true"
+              text="$path{'@title'}">
+            <tree datapath="category" text="$path{'@title'}"
+                  xindent="20" yindent="18" closesiblings="true">
+                <linktree datapath="item" text="$path{'@title'}" />
+            </tree>
+        </tree>
+        <scrollbar/>
+      </view>
+      <simplelayout spacing="8"/>
+      
+      <button onclick="LzBrowser.loadURL('javascript:lzSetShowInlineExamples(true)')">Show Examples</button>
+      <button onclick="LzBrowser.loadURL('javascript:lzSetShowInlineExamples(false)')">Hide Examples</button>
+
+    </tabpane>
+    <tabpane width="${parent.width}">
+      Classes
+      <view clip="true" height="${parent.parent.height - 50}"
+            width="${parent.width-20}">
+          <view layout="y" width="${parent.width - 20}">
+            <link datapath="classesdata:/index/item" text="$path{'@title'}" />
+          </view>
+          <scrollbar />
+      </view>
+    </tabpane>
+    <tabpane width="${parent.width}">
+      Tags
+      <view clip="true" height="${parent.parent.height - 50}"
+            width="${parent.width-20}">
+          <view layout="y" width="${parent.width - 20}">
+            <link datapath="tagsdata:/index/item" text="$path{'@title'}" />
+          </view>
+          <scrollbar />
+      </view>
+    </tabpane>
+  </tabs>
+
+  
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

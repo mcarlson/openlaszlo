@@ -26,6 +26,7 @@
 
   <!-- Path to base directory on local disk of output files -->
   <xsl:param name="base.dir" />
+  
 
   <!-- Address of the servlet relative to the generated file -->
   <xsl:param name="root.relative.lps.includes" select="'../lps/includes/'"/>
@@ -44,32 +45,59 @@
   
   <xsl:param name="warn.no.programlisting.canvas.width" select="false()"/>
   
+  <xsl:template name="base.book.name">
+    <xsl:choose>
+      <xsl:when test="contains(ancestor::part/@id, 'developers.tutorials')">developers/tutorials</xsl:when>
+      <xsl:when test="contains(ancestor::part/@id, '.ref')">reference</xsl:when>
+      <xsl:when test="contains(ancestor::part/@id, 'deployers')">deployers</xsl:when>
+      <xsl:when test="contains(ancestor::part/@id, 'contributors')">contributors</xsl:when>
+      <xsl:when test="contains(ancestor::part/@id, 'contribref')">contribref</xsl:when>
+      <xsl:when test="contains(ancestor::part/@id, 'users')">users</xsl:when>
+      <xsl:when test="contains(ancestor::part/@id, 'developers')">developers</xsl:when>      
+      <xsl:otherwise>unknownbook <!-- This is an error -->
+        <xsl:message>ERROR: could not identify book from part/@id, for <xsl:value-of select="ancestor::part/@id"/></xsl:message>
+      </xsl:otherwise> 
+    </xsl:choose>    
+  </xsl:template>
+
+
+  <xsl:variable name="root.relative">
+    <xsl:call-template name="dbhtml-dir"/>
+  </xsl:variable>
+  
+  <xsl:variable name="depth.from.lpshome">
+    <xsl:value-of select="number(2)"/>  
+  </xsl:variable>
+  
+  <xsl:variable name="relative.path.to.lpshome">
+    <xsl:call-template name="copy-string">
+      <xsl:with-param name="string" select="'../'"/>
+      <xsl:with-param name="count" select="$depth.from.lpshome"/>
+    </xsl:call-template>
+  </xsl:variable>
+  
   <xsl:template name="local.lps.path">
-    
-    <xsl:variable name="root.relative">
-      <xsl:call-template name="dbhtml-dir"/>
-    </xsl:variable>
-
     <xsl:variable name="depth">
-      <xsl:call-template name="count.uri.path.depth">
-        <xsl:with-param name="filename" select="$root.relative"/>
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="contains(ancestor-or-self::part/@id, 'developers.tutorials')">
+          <xsl:value-of select="number(3)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="number(2)"/>
+        </xsl:otherwise>
+      </xsl:choose>    
     </xsl:variable>
-
-    <xsl:variable name="href">
-      <xsl:call-template name="copy-string">
-        <xsl:with-param name="string" select="'../'"/>
-        <xsl:with-param name="count" select="$depth"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:value-of select="$href" 
-    />
+    <xsl:value-of select="$root.relative" />
+    <xsl:call-template name="copy-string">
+      <xsl:with-param name="string" select="'../'"/>
+      <xsl:with-param name="count" select="$depth"/>
+    </xsl:call-template>
   </xsl:template>
   
   <xsl:template name="user.head.content">
     <xsl:variable name="rootpath">
       <xsl:call-template name="local.lps.path"/>
+      <xsl:text>docs/</xsl:text>
     </xsl:variable>
     <link rel="stylesheet" href="{$rootpath}includes/docbook.css" type="text/css"/>
     <link rel="stylesheet" href="{$rootpath}includes/lzx-pretty-print.css" type="text/css"/>
@@ -161,6 +189,8 @@
   </xsl:template>
   
   <xsl:template match="programlisting[@language='lzx' and textobject/textdata/@fileref]">
+    
+    
     <!-- extract necessary information from context -->
     <xsl:variable name="fname" select="textobject/textdata/@fileref"/>
     <xsl:variable name="query-parameters" select="parameter[@role='query']"/>
@@ -197,20 +227,36 @@
     
     <!-- throw in the edit button -->
     <xsl:if test="$live">
+      
       <xsl:variable name="edit-href">
-        <xsl:text>../../../laszlo-explorer/editor.jsp?src=</xsl:text>
-        <xsl:value-of select="$localdir"/>
-        <xsl:text>developers/</xsl:text> <!-- TODO: BUG LPP-4683 
-                                          This should not be hardcoded to developers. What about 
-                                          programs that are in contributors or deployers? This needs to 
-                                          be parameterized per-book [bshine 2007.09.07] -->
+        <xsl:value-of select="$relative.path.to.lpshome"/>
+        <xsl:text>laszlo-explorer/editor.jsp?src=docs/</xsl:text>         
+        <xsl:call-template name="base.book.name"/>
+        <xsl:text>/</xsl:text>
         <xsl:value-of select="$fname"/>
+      </xsl:variable>
+      <xsl:variable name="editbuttonimg">
+        <!-- TODO [bshine 10.19.2007]
+          If we're in the top-level directory, we only need to go ../includes to get to the edit button.
+          If we're in something/tutorial then we need to go up ../../includes -->
+        <xsl:value-of select="$relative.path.to.lpshome"/>
+        <xsl:text>docs/includes/d_t_editbutton.gif</xsl:text>
       </xsl:variable>
       <xsl:text>&#x0a;</xsl:text>
       <div class="edit-button">
-        <a href="{$edit-href}" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"/></a>
+        <a href="{$edit-href}" target="lzview">
+          <img src="{$editbuttonimg}" border="0" alt="edit" />           
+        </a>
       </div>
       <xsl:text>&#x0a;</xsl:text>
+      <pre>
+        localdir: <xsl:value-of select="$localdir"/>
+        basedir: <xsl:value-of select="$base.dir"/>
+        fname: <xsl:value-of select="$fname"/>
+        base.book.name: <xsl:call-template name="base.book.name"  />
+        root.relative: <xsl:value-of select="$root.relative"/>
+        relative.path.to.lpshome: <xsl:value-of select="$relative.path.to.lpshome"/>
+      </pre> 
     </xsl:if>
   </xsl:template>
 
@@ -295,10 +341,8 @@
     <xsl:param name="href">
       <xsl:text>../../laszlo-explorer/editor.jsp?src=</xsl:text>
       <xsl:value-of select="$localdir"/>
-      <xsl:text>developers/</xsl:text> <!-- TODO: BUG LPP-4683 
-                                          This should not be hardcoded to developers. What about 
-                                          programs that are in contributors or deployers? This needs to 
-                                          be parameterized per-book [bshine 2007.09.07] -->
+      <xsl:call-template name="base.book.name" />
+      <xsl:text>/</xsl:text>
       <xsl:value-of select="."/>
     </xsl:param>
     <xsl:text>&#x0a;</xsl:text>

@@ -7,14 +7,14 @@
 @import "styles.css";
 
 div.book, div.chapter, div.part, div.preface, div.appendix, div.index, div.glossary,  div.reference {
-    padding-left : 10;
-    padding-top : 20;
-    padding-right : 10;
+    padding-left : 10px;
+    padding-top : 20px;
+    padding-right : 10px;
 }
 
 div.refentry {
-    padding-left : 10;
-    padding-right : 10;
+    padding-left : 10px;
+    padding-right : 10px;
 }
 
 .toc .section {
@@ -24,7 +24,7 @@ div.refentry {
     line-height : 18px;
     font-weight : normal;
     color: #333399;
-    margin-left : 10;
+    margin-left : 10px;
 }
 
 .toc dl dd {
@@ -39,6 +39,7 @@ td {
     vertical-align: top;
 }
 
+
 .remark {
     background-color: yellow;
 }
@@ -47,6 +48,7 @@ td {
     clear: both;
     margin-top: -5px;
 }
+
 
 .refnamediv {
   margin-top: 20px;
@@ -80,7 +82,7 @@ td {
 
 /* This substitutes for turning on shade.verbatim in parameters.xsl */
 pre.programlisting {
-  background-color: #DDDDDD ;
+  background-color: #DDDDDD;
   border: 1px solid #7b839a ;
   padding: 1em;
 }
@@ -88,7 +90,7 @@ pre.programlisting {
 em.lineannotation {
   font-style: italic ;
   font-weight: normal ;
-  color: inherit ;
+  color: inherit;
 }
 
 /* Emphasis inside a program listing is bold blue, instead of italic */
@@ -140,6 +142,44 @@ code.fieldsynopsis {
 .refsect2 p {
   padding-left: 3px;
   padding-right: 3px;
+}
+
+/* Tables */ 
+.refentry .table {    
+    table-layout: fixed;
+    width: 100%;
+}
+
+.refentry .table thead {
+    color:#333333;
+    font-family:Verdana,Geneva,Arial,Helvetica,sans-serif;
+    font-size:10px;
+    font-weight:bold;    
+}
+
+.refentry .table td {
+    font-size: 10px;
+}
+
+.refentry .table thead tr {
+    background-color: #e6e6e6;
+    font-size: 10px;    
+}
+
+.refentry td {
+    border-bottom-width: 1px;
+}
+
+.refentry .table thead th {
+    background-color: #e6e6e6;
+    font-size: 10px;
+}
+
+
+.refentry .table .fieldsynopsis {
+    font-size: 12px;
+    line-height:16px;
+    color: purple;
 }
 
 /* Segmented Lists */
