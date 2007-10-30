@@ -124,6 +124,11 @@ suite.test1 = function() {
   text1.setText('12345678901234567890');
   LzTestManager.assertEquals ("1234567890", text1.getText(), "LPP-2208: text1 maxlength not working");  
 
+  // Now change the maxLength and try again
+  text1.setMaxLength (8);
+  LzTestManager.assertEquals (8, text1.maxlength, "text1.maxlength failure");
+  LzTestManager.assertEquals ("12345678", text1.getText(), "LPP-4775: text1 maxlength not working");  
+
   // Use invalid characters (not in the pattern)
   text1.setText('1abc23def4');
   LzTestManager.assertEquals ("abcdef", text1.getText(), "LPP-2209: text1 pattern not working");  

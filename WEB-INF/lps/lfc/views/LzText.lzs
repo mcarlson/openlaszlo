@@ -437,6 +437,10 @@ function setMaxLength ( val ){
     this.sprite.setMaxLength(val);
     this.maxlength = val;
     if (this.onmaxlength.ready) this.onmaxlength.sendEvent(val);
+
+    if(this.text && this.text.length > this.maxlength){
+        this.setText (this.text, true);
+    }
 }
 
 /**
