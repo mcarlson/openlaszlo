@@ -37,7 +37,8 @@ differences to be aware of, especially in the SWF runtime.</para>
     Exceptions 
   </term><listitem>
     <para>
-      There are no exceptions, and no exception handling in the SWF runtime. <literal>try</literal>/<literal>catch</literal>/<literal>finally</literal> is not supported. 
+    <!-- fix LPP-4996: Remove "try-catch" from list of unsupported javascript thingies. IORIO 30 oct 2007 -->
+      There are no exceptions, and no exception handling in the SWF runtime: the SWF runtime does not signal any runtime errors.
     </para>
     <para>
       Errors such as <literal>1/0</literal>, <literal><varname>u</varname>()</literal>, <literal><varname>k</varname>()</literal>, <literal><varname>u</varname>.<varname>p</varname></literal>, and <literal><varname>o</varname>.<varname>u</varname></literal> (where <literal><varname>u</varname></literal> is an undeclared variable, <literal><varname>k</varname></literal> is defined but isn't a function, and <literal><varname>o</varname></literal> is an object with property <literal><varname>p</varname></literal>) are silently ignored in the SWF runtime. (If debugging is enabled, all but the first of these will generate a warning message in the debugger window when evaluated.) 
