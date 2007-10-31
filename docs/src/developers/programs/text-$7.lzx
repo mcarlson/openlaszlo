@@ -1,10 +1,8 @@
-
-
 <canvas height="50">
   <simplelayout/>
   <slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
 keystep="1000"/>
-  <text resize="true" text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/>
+  <text resize="true" text="${'Slider Value is '+parent.down.value+' expands to contain text'}"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *

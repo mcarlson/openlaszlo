@@ -3,8 +3,7 @@
   <simplelayout/>
   <slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
 keystep="1000"/>
-<!-- added resize attribute IORIO 21 sep 2007                               -->
-  <text resize="false" text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/>
+  <text resize="false" text="${'Slider Value is '+parent.down.value+' unnicely truncated'}"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *

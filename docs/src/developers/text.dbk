@@ -1,5 +1,6 @@
 <chapter id="text">
   <title>Text Views</title>
+  <!-- removed commented out code examples that the build ignored. IORIO 31 oct 2007 -->
   <para>This section describes the 
   <indexterm>
     <primary>text</primary>
@@ -225,21 +226,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>setting font, fonstyle and fontsize</title><programlisting role="lzx-embednew"><filename>text-$1.lzx</filename><parameter/><code>
-      &lt;canvas height="50"&gt;
-        &lt;simplelayout axis="y"/&gt;
-        &lt;text fontstyle="bold"&gt;Default bold&lt;/text&gt;
-        &lt;text fontstyle="italic"&gt;Default italic&lt;/text&gt;
-        &lt;text fontstyle="bold italic"&gt;Default bold italic&lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="50"&gt;
-        &lt;simplelayout axis="y"/&gt;
-        &lt;text fontstyle="bold"&gt;Default bold&lt;/text&gt;
-        &lt;text fontstyle="italic"&gt;Default italic&lt;/text&gt;
-        &lt;text fontstyle="bold italic"&gt;Default bold italic&lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$1.lzx></example?>
       <para>Within the text content, HTML tags may also be
       used:</para>
       <example role="live-example">
@@ -250,21 +236,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>HTML tags within text</title><programlisting role="lzx-embednew"><filename>text-$2.lzx</filename><parameter/><code>
-      &lt;canvas height="50"&gt;
-        &lt;simplelayout axis="y"/&gt;
-        &lt;text&gt;&lt;b&gt;Default bold&lt;/b&gt;&lt;/text&gt;
-        &lt;text&gt;&lt;i&gt;Default italic&lt;/i&gt;&lt;/text&gt;
-        &lt;text fontstyle="bold"&gt;&lt;i&gt;Default bold italic&lt;/i&gt;&lt;/text&gt;
-      &lt;/canvas&gt;    
-      </code></programlisting><programlisting>
-      &lt;canvas height="50"&gt;
-        &lt;simplelayout axis="y"/&gt;
-        &lt;text&gt;&lt;b&gt;Default bold&lt;/b&gt;&lt;/text&gt;
-        &lt;text&gt;&lt;i&gt;Default italic&lt;/i&gt;&lt;/text&gt;
-        &lt;text fontstyle="bold"&gt;&lt;i&gt;Default bold italic&lt;/i&gt;&lt;/text&gt;
-      &lt;/canvas&gt;    
-      </programlisting><?lzx-edit programs/text-$2.lzx></example?>
       <para>Text can contain preformatted regions, where linebreaks
       and whitespace are preserved:</para>
       <example role="live-example">
@@ -275,31 +246,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Preformatted text</title><programlisting role="lzx-embednew"><filename>text-$3.lzx</filename><parameter/><code>
-      &lt;canvas height="80"&gt;
-        &lt;text id="ttext" multiline="true" height="300"&gt;
-          This text field contains some preformatted text
-          &lt;pre&gt;
-          This is a line of text.
-
-          here was a blank line before this line.
-          And another line of text.
-          &lt;/pre&gt;
-         &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="80"&gt;
-        &lt;text id="ttext" multiline="true" height="300"&gt;
-          This text field contains some preformatted text
-          &lt;pre&gt;
-          This is a line of text.
-
-          here was a blank line before this line.
-          And another line of text.
-          &lt;/pre&gt;
-         &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$3.lzx></example?>
       <para>Within a text element, the HTML 
       <emphasis role="i">font</emphasis>tag supports the 
       <indexterm>
@@ -325,35 +271,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Setting text colors using RGB strings</title><programlisting role="lzx-embednew"><filename>text-$4.lzx</filename><parameter/><code>
-      &lt;canvas height="60"&gt;
-        &lt;simplelayout axis="y"/&gt;
-
-        &lt;font name="Times Roman" src="bitstream-vera-1.10/vera.ttf"/&gt;
-        
-        &lt;text height="30"&gt;
-          &lt;font face="Times Roman" size="24"&gt;Times Roman&lt;/font&gt;
-        &lt;/text&gt;
-        &lt;text bgcolor="#ffcccc"&gt;
-          &lt;font color="#FF0000"&gt;C&lt;/font&gt;&lt;font color="#FFFF00"&gt;O&lt;/font&gt;&lt;font color="#00FFCC"&gt;L&lt;/font
-          &gt;&lt;font color="#CC00CC"&gt;O&lt;/font&gt;&lt;font color="#AABB00"&gt;R&lt;/font&gt;&lt;font color="#DDA00A"&gt;S&lt;/font&gt;
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="60"&gt;
-        &lt;simplelayout axis="y"/&gt;
-
-        &lt;font name="Times Roman" src="bitstream-vera-1.10/vera.ttf"/&gt;
-        
-        &lt;text height="30"&gt;
-          &lt;font face="Times Roman" size="24"&gt;Times Roman&lt;/font&gt;
-        &lt;/text&gt;
-        &lt;text bgcolor="#ffcccc"&gt;
-          &lt;font color="#FF0000"&gt;C&lt;/font&gt;&lt;font color="#FFFF00"&gt;O&lt;/font&gt;&lt;font color="#00FFCC"&gt;L&lt;/font
-          &gt;&lt;font color="#CC00CC"&gt;O&lt;/font&gt;&lt;font color="#AABB00"&gt;R&lt;/font&gt;&lt;font color="#DDA00A"&gt;S&lt;/font&gt;
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$4.lzx></example?>
       <para>If you wish to include HTML escape characters in the
       text value, you can use entity codes such as 
       <literal>&amp;amp;</literal>or 
@@ -369,15 +286,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Escaping HTML characters</title><programlisting role="lzx-embednew"><filename>text-$5.lzx</filename><parameter/><code>
-      &lt;canvas height="20"&gt;
-        &lt;text bgcolor="#ffcccc"&gt;&lt;![CDATA[&lt;b&gt;this text shouldn't be bold&lt;/b&gt;]]&gt;&lt;/text&gt; 
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="20"&gt;
-        &lt;text bgcolor="#ffcccc"&gt;&lt;![CDATA[&lt;b&gt;this text shouldn't be bold&lt;/b&gt;]]&gt;&lt;/text&gt; 
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$5.lzx></example?>
       <para />
       <section>
         <title>Text Scrolling</title>
@@ -482,7 +390,7 @@
       <!--unknown tag: inputtext-->
       is used for input fields where the user can type or edit text
       interactively.</para>
-      <para />
+   <!-- fix LPP-5000: minor clarification of examples -->
       <section>
         <title>Resizable text fields</title>
         <!-- changed to reflect the fact that resize is now true by default -->
@@ -503,50 +411,18 @@
             </textobject>
           </programlisting>
         </example>
-        <?example role="live-example"><title>non-resizing text does not concatenate</title><programlisting role="lzx-embednew"><filename>text-$6.lzx</filename><parameter/><code>
-        &lt;canvas height="50" &gt;
-          &lt;simplelayout/&gt;
-          &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
-        keystep="1000"/&gt;
-          &lt;text text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
-        &lt;/canvas&gt;
-        </code></programlisting><programlisting>
-        &lt;canvas height="50" &gt;
-          &lt;simplelayout/&gt;
-          &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
-        keystep="1000"/&gt;
-          &lt;text text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
-        &lt;/canvas&gt;
-        </programlisting><?lzx-edit programs/text-$6.lzx></example?>
+
 <para>If you set 
         <literal>resize=true</literal> (the default), the field will expand to
         fit the text.</para>
         <example role="live-example">
-          <title>Using the 'resize' attribute</title>
+          <title>Resizing text expands</title>
           <programlisting language="lzx">
             <textobject>
               <textdata fileref="programs/text-$7.lzx" />
             </textobject>
           </programlisting>
         </example>
-        <?example role="live-example"><title>Setting the 'resize' attribute to 'true'</title><programlisting role="lzx-embednew"><filename>text-$7.lzx</filename><parameter/><code>
-
-        &lt;canvas height="50"&gt;
-          &lt;simplelayout/&gt;
-          &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
-        keystep="1000"/&gt;
-          &lt;text resize="true" text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
-        &lt;/canvas&gt;
-        </code></programlisting>
-<programlisting>
-
-        &lt;canvas height="50"&gt;
-          &lt;simplelayout/&gt;
-          &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
-        keystep="1000"/&gt;
-          &lt;text <emphasis role="em">resize="true"</emphasis> text="${'Slider Value is '+parent.down.value+' nicely constrained'}"/&gt;
-        &lt;/canvas&gt;
-        </programlisting><?lzx-edit programs/text-$7.lzx></example?>
         <para />
       </section>
     </section>
@@ -587,19 +463,6 @@
         </textobject>
       </programlisting>
     </example>
-    <?example role="live-example"><title>Text views</title><programlisting role="lzx-embednew"><filename>text-$8.lzx</filename><parameter/><code>
-    &lt;canvas height="125"&gt;
-      &lt;simplelayout/&gt;
-      &lt;text&gt;Hello World!&lt;/text&gt;
-      &lt;text text="Hello World!"/&gt;
-    &lt;/canvas&gt;
-    </code></programlisting><programlisting>
-    &lt;canvas height="125"&gt;
-      &lt;simplelayout/&gt;
-      &lt;text&gt;Hello World!&lt;/text&gt;
-      &lt;text text="Hello World!"/&gt;
-    &lt;/canvas&gt;
-    </programlisting><?lzx-edit programs/text-$8.lzx></example?>
        <!-- remove empty para tag LI LPP-4642 9/4/2007-->
       <!-- <para /> -->
   <!-- duplicate section id; the other looks correct LI LPP-4642 9/4/2007-->
@@ -647,43 +510,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Multiline text</title><programlisting role="lzx-embednew"><filename>text-$9.lzx</filename><parameter/><code>
-      &lt;canvas height="125"&gt;
-        &lt;simplelayout spacing="5"/&gt;
-        &lt;!-- Single line text, the default --&gt;
-        &lt;text bgcolor="#ffcccc"&gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
-          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
-          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
-          &lt;/text&gt;
-
-          &lt;!-- Multiline text (without an explicit width, the width would be
-           sized to fit the entire string on a single line) --&gt;
-          &lt;text bgcolor="#ccccff" multiline="true" width="300" &gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
-          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
-          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="125"&gt;
-        &lt;simplelayout spacing="5"/&gt;
-        &lt;!-- Single line text, the default --&gt;
-        &lt;text bgcolor="#ffcccc"&gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
-          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
-          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
-          &lt;/text&gt;
-
-          &lt;!-- Multiline text (without an explicit width, the width would be
-           sized to fit the entire string on a single line) --&gt;
-          &lt;text bgcolor="#ccccff" multiline="true" width="300" &gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras
-          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,
-          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$9.lzx></example?>
       <para>With multiline text, the automatic wrapping is always
       enabled. You can disable wrapping by setting the 
       <indexterm>
@@ -704,25 +530,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Multiline text with explicit linebreaks</title><programlisting role="lzx-embednew"><filename>text-$10.lzx</filename><parameter/><code>
-      &lt;canvas height="125"&gt;
-        &lt;simplelayout spacing="5"/&gt;
-        &lt;text bgcolor="#ccccff" multiline="true" width="400" &gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit.&lt;br/&gt; Cras
-          nibh. Quisque justo. &lt;br/&gt;Donec porta, wisi quis vehicula interdum,
-          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="125"&gt;
-        &lt;simplelayout spacing="5"/&gt;
-        &lt;text bgcolor="#ccccff" multiline="true" width="400" &gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit.&lt;br/&gt; Cras
-          nibh. Quisque justo. &lt;br/&gt;Donec porta, wisi quis vehicula interdum,
-          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$10.lzx></example?>
       <para>Below is a non-wrapping text field with explicit line
       breaks.</para>
       <example role="live-example">
@@ -733,25 +540,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Non-wrapping text with breaks</title><programlisting role="lzx-embednew"><filename>text-$11.lzx</filename><parameter/><code>
-      &lt;canvas height="125"&gt;
-        &lt;simplelayout spacing="5"/&gt;
-        &lt;text bgcolor="#ccccff" multiline="false" width="500" height="100" &gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras&lt;br/&gt;
-          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,&lt;br/&gt;
-          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="125"&gt;
-        &lt;simplelayout spacing="5"/&gt;
-        &lt;text bgcolor="#ccccff" multiline="false" width="500" height="100" &gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras&lt;br/&gt;
-          nibh. Quisque justo. Donec porta, wisi quis vehicula interdum,&lt;br/&gt;
-          augue dui pharetra lectus, non adipiscing purus nibh vitae purus.
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$11.lzx></example?>
       <para />
     </section>
     <section id="text.width-height">
@@ -784,43 +572,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Resizing text</title><programlisting role="lzx-embednew"><filename>text-$12.lzx</filename><parameter/><code>
-      &lt;canvas height="125"&gt;
-        &lt;debug x="400"/&gt;
-        &lt;simplelayout/&gt;
-        &lt;!-- Single line text, the default --&gt;
-        &lt;text id="t1" bgcolor="#ffcccc" resize="false"&gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-        &lt;/text&gt;
-        &lt;text id="t2" bgcolor="#ccffcc" resize="true"&gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-        &lt;/text&gt;
-        &lt;button text="setText(...)"&gt;
-          &lt;handler name="onclick"&gt;
-            t1.setText('resize='+t1.resize);
-            t2.setText('resize='+t2.resize);
-          &lt;/handler&gt;
-        &lt;/button&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="125"&gt;
-        &lt;debug x="400"/&gt;
-        &lt;simplelayout/&gt;
-        &lt;!-- Single line text, the default --&gt;
-        &lt;text id="t1" bgcolor="#ffcccc" resize="false"&gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-        &lt;/text&gt;
-        &lt;text id="t2" bgcolor="#ccffcc" resize="true"&gt;
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-        &lt;/text&gt;
-        &lt;button text="setText(...)"&gt;
-          &lt;handler name="onclick"&gt;
-            t1.setText('resize='+t1.resize);
-            t2.setText('resize='+t2.resize);
-          &lt;/handler&gt;
-        &lt;/button&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$12.lzx></example?>
       <para />
     </section>
     <section id="text.selection">
@@ -844,29 +595,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Selectable text</title><programlisting role="lzx-embednew"><filename>text-$13.lzx</filename><parameter/><code>
-      &lt;canvas height="125"&gt;
-        &lt;simplelayout spacing="4"/&gt;
-        &lt;!-- Single line text, the default --&gt;
-        &lt;text id="t1" bgcolor="#ffcccc" selectable="true" resize="false"&gt;
-           I am selectable text. Select me!
-        &lt;/text&gt;
-        &lt;text id="t2" bgcolor="#ccffcc" resize="true"&gt;
-          I am not selectable text. Try to select me!
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="125"&gt;
-        &lt;simplelayout spacing="4"/&gt;
-        &lt;!-- Single line text, the default --&gt;
-        &lt;text id="t1" bgcolor="#ffcccc" selectable="true" resize="false"&gt;
-           I am selectable text. Select me!
-        &lt;/text&gt;
-        &lt;text id="t2" bgcolor="#ccffcc" resize="true"&gt;
-          I am not selectable text. Try to select me!
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$13.lzx></example?>
       <para />
     </section>
     <section>
@@ -1157,21 +885,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Basic use of &lt;img&gt; tag</title><programlisting role="lzx-embednew"><filename>text-$15.lzx</filename><parameter/><code>
-      &lt;canvas height="320" &gt;
-        &lt;text multiline="true" width="300" height="300"&gt;
-          Hello dear friends on the Red Planet! How is the Garden today?
-          &lt;img src="./images/horse-3.jpg"/&gt;
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="320" &gt;
-        &lt;text multiline="true" width="300" height="300"&gt;
-          Hello dear friends on the Red Planet! How is the Garden today?
-          &lt;img src="./images/horse-3.jpg"/&gt;
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$15.lzx></example?>
       <para>Notice that you cannot have an image in a text tag
       without also having text. Watch what happens when we comment
       out the text:</para>
@@ -1183,21 +896,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>You must include text with images</title><programlisting role="lzx-embednew"><filename>text-$16.lzx</filename><parameter/><code>
-      &lt;canvas height="220" &gt;
-        &lt;text multiline="true" width="200" height="200"&gt;
-          &lt;!--Hello dear friends on the Red Planet! How is the Garden today?--&gt;
-          &lt;img src="./images/horse-3.jpg"/&gt;
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="220" &gt;
-        &lt;text multiline="true" width="200" height="200"&gt;
-          <emphasis role="em">&lt;!--Hello dear friends on the Red Planet! How is the Garden today?--&gt;</emphasis>
-          &lt;img src="./images/horse-3.jpg"/&gt;
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$16.lzx></example?>
       <para>By giving values to the 
       <indexterm>
         <primary>height</primary>
@@ -1220,23 +918,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Scaling an image included in text</title><programlisting role="lzx-embednew"><filename>text-$17.lzx</filename><parameter/><code>
-      &lt;canvas height="100"&gt;  
-        &lt;text multiline="true" height="80"&gt;
-          Some text and
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
-          some more text
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="100"&gt;  
-        &lt;text multiline="true" height="80"&gt;
-          Some text and
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
-          some more text
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$17.lzx></example?>
       <para>You can position the included image by setting the 
       <indexterm>
         <primary>align</primary>
@@ -1250,23 +931,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Scaled and left-aligned image</title><programlisting role="lzx-embednew"><filename>text-$18.lzx</filename><parameter/><code>
-      &lt;canvas height="350"&gt;  
-        &lt;text multiline="true" height="300"&gt;
-          Some text and
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
-          some more text
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="350"&gt;  
-        &lt;text multiline="true" height="300"&gt;
-          Some text and
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
-          some more text
-        &lt;/text&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$18.lzx></example?>
       <para>You can include multiple 
       <indexterm>
         <primary>img</primary>
@@ -1288,59 +952,6 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Multiple images in text</title><programlisting role="lzx-embednew"><filename>text-$19.lzx</filename><parameter/><code>
-      &lt;canvas&gt;
-        &lt;text multiline="true" width="100%"&gt;
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. 
-          &lt;img src="./images/horse-3.jpg"/&gt;
-      Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. 
-          &lt;img src="./images/horse-3.jpg"/&gt;
-      Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. 
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
-      Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante. Suspendisse accumsan, mauris dapibus pretium laoreet, nibh purus imperdiet lectus, a euismod elit enim a mi. Morbi commodo lacus quis nisl. 
-          &lt;img src="./images/horse-3.jpg" align="left"/&gt;
-       Duis leo tortor, gravida eget, euismod non, ullamcorper quis, metus. Phasellus ornare facilisis metus. Aliquam at est.
-          &lt;img src="./images/horse-3.jpg" align="right"/&gt;
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. Phasellus eget massa sit amet lorem condimentum porta. Ut nec lorem. Pellentesque quam. Sed porttitor, elit vitae faucibus porta, enim nibh cursus augue, vitae iaculis enim lorem at eros. 
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" hspace="50"/&gt;
-      Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. 
-          &lt;img src="http:horse-3.jpg"/&gt;
-      Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. Nulla facilisi. Aenean metus. Nullam vitae sem id risus accumsan luctus. Nam sit amet velit. Mauris ut est. Proin id sem ullamcorper pede luctus tristique. Pellentesque dapibus, neque et pellentesque tincidunt, sapien diam imperdiet ipsum, nec porttitor turpis lectus nec libero. Praesent ut elit.
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
-      Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante.  Etiam adipiscing urna quis tellus. Nam aliquam vehicula arcu.
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
-      Nunc malesuada. Curabitur tortor metus, malesuada et, suscipit ut, convallis ac, magna. Nam venenatis viverra ipsum. Phasellus dignissim sagittis urna. Phasellus cursus. Cras pede arcu, tempus a, consectetuer vel, faucibus fermentum, diam. Donec lacus. 
-      &lt;img src="./images/horse-3.jpg"/&gt;Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. In suscipit congue dolor. 
-      &lt;/text&gt;
-      &lt;scrollbar/&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas&gt;
-        &lt;text multiline="true" width="100%"&gt;
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. 
-          &lt;img src="./images/horse-3.jpg"/&gt;
-      Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. 
-          &lt;img src="./images/horse-3.jpg"/&gt;
-      Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. 
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
-      Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante. Suspendisse accumsan, mauris dapibus pretium laoreet, nibh purus imperdiet lectus, a euismod elit enim a mi. Morbi commodo lacus quis nisl. 
-          &lt;img src="./images/horse-3.jpg" align="left"/&gt;
-       Duis leo tortor, gravida eget, euismod non, ullamcorper quis, metus. Phasellus ornare facilisis metus. Aliquam at est.
-          &lt;img src="./images/horse-3.jpg" align="right"/&gt;
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. Phasellus eget massa sit amet lorem condimentum porta. Ut nec lorem. Pellentesque quam. Sed porttitor, elit vitae faucibus porta, enim nibh cursus augue, vitae iaculis enim lorem at eros. 
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" hspace="50"/&gt;
-      Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. 
-          &lt;img src="http:horse-3.jpg"/&gt;
-      Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. Nulla facilisi. Aenean metus. Nullam vitae sem id risus accumsan luctus. Nam sit amet velit. Mauris ut est. Proin id sem ullamcorper pede luctus tristique. Pellentesque dapibus, neque et pellentesque tincidunt, sapien diam imperdiet ipsum, nec porttitor turpis lectus nec libero. Praesent ut elit.
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
-      Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante.  Etiam adipiscing urna quis tellus. Nam aliquam vehicula arcu.
-          &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
-      Nunc malesuada. Curabitur tortor metus, malesuada et, suscipit ut, convallis ac, magna. Nam venenatis viverra ipsum. Phasellus dignissim sagittis urna. Phasellus cursus. Cras pede arcu, tempus a, consectetuer vel, faucibus fermentum, diam. Donec lacus. 
-      &lt;img src="./images/horse-3.jpg"/&gt;Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. In suscipit congue dolor. 
-      &lt;/text&gt;
-      &lt;scrollbar/&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/text-$19.lzx></example?>
       <para />
     </section>
   </section>
