@@ -18,20 +18,17 @@ provides these features:</para>
   to explore the LZX API.</para></listitem><listitem><para>Warnings for runtime errors such as undefined variables and
   functions are detected, and printed to the debug console.</para></listitem></itemizedlist>
 
-<informalfigure><mediaobject><imageobject><imagedata fileref="images/debugger-new-console.png"/></imageobject></mediaobject></informalfigure>
+<para><informalfigure><mediaobject><imageobject><imagedata fileref="images/debugger-new-console.png"/></imageobject></mediaobject></informalfigure></para>
 
-<?example role="live-example">
-   <title>The Debugger window</title>
-   <programlisting language="lzx">
-   <textobject><textdata fileref="debugging-$1.lzx"/></textobject> 
-   </programlisting>
-</example>
+<!--  remove rather pointless (and broken) example. IORIO 30 oct 2007 -->
 
 <para>Debugging may cause the application to run more slowly, even if
 the debugger window is not visible.</para>
 
-
-<para/><section id="debugging.enabling-the-debugger"><title>Enabling the Debugger</title>
+<!-- fix broken id on section. IORIO 30 oct 2007 -->
+<para/>
+</section>
+<section id="enabling-the-debugger"><title>Enabling the Debugger</title>
 
 <para>There are three ways to turn on the debugger in your application:</para>
 
@@ -60,7 +57,7 @@ about request types.</para></listitem></varlistentry></variablelist>
 
 <section id="debugging.runtime-error-checking"><title>Runtime Error Checking</title>
 
-<para>Enabling the debugger using one of the methods described in <xref linkend="debugging.enabling-the-debugger"/> has two effects:</para>
+<para>Enabling the debugger using one of the methods described in <xref linkend="enabling-the-debugger"/> has two effects:</para>
 <itemizedlist spacing="compact"><listitem><para>It includes the debugger visual component.  This displays debug messages, and has a command line interface for evaluating JavaScript statements.</para></listitem><listitem><para>It compiles the application with additional instrumentation to perform <indexterm significance="preferred"><primary>runtime error checking</primary></indexterm><glossterm>runtime error checking</glossterm>.  Certain classes of erroneous code (below) result in warnings that are logged to the debug window.</para></listitem></itemizedlist>
 
 <para>A program that is compiled with runtime error checking will contain code that checks for the following conditions:</para>
@@ -115,8 +112,7 @@ how to customize the display of objects within the debugger.</para>
    <textobject><textdata fileref="programs/canvasversion.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using canvas.lpsversion</title><programlisting role="lzx-embednew"><filename>canvasversion.lzx</filename><parameter/><code>
-</programlisting><?lzx-edit programs/canvasversion.lzx></example?>
+
 <para>You can get more information, for example the build number and target runtime, by using <literal>Debug.versionInfo()</literal>.</para>
 <example role="live-example">
    <title>Using Debug.versionInfo()</title>
@@ -124,8 +120,7 @@ how to customize the display of objects within the debugger.</para>
    <textobject><textdata fileref="programs/debuginfo.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using Debug.versionInfo()</title><programlisting role="lzx-embednew"><filename>debuginfo.lzx</filename><parameter/><code>
-</programlisting><?lzx-edit programs/debuginfo.lzx></example?>
+
 <para>While the previous two methods give you version information, if you want to generat a full bug report, see <xref linkend="generate-bug-report" />.</para>
 </section>
 <!-- end of added section to fix LPP-4822 and LPP-2658. IORIO 23 oct 2007  -->
@@ -290,7 +285,7 @@ including the <indexterm><primary>debug</primary></indexterm><sgmltag class="ele
 
 <para>Note that this does not <emphasis role="em">enable</emphasis> the debugger; it merely
 configures its appearance when the debugger is enabled.  You still
-have use one of the methods in <xref linkend="debugging.enabling-the-debugger"/> to enable debugging.  The
+have use one of the methods in <xref linkend="enabling-the-debugger"/> to enable debugging.  The
 effect of this is that you can leave the <indexterm><primary>debug</primary></indexterm><sgmltag class="element">&lt;debug&gt;</sgmltag> in
 your program at all times (including in production code), and it will
 only have an effect when debugging is enabled.</para>

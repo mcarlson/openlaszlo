@@ -1,5 +1,5 @@
 <canvas height="300" debug="true">
-  <debug/>
+  <debug y="5" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
