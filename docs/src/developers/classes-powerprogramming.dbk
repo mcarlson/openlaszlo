@@ -54,47 +54,7 @@ attributes, and views inside a class are inherited down through each level.</par
    <textobject><textdata fileref="programs/class-inheritance-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Inheritance chain</title><programlisting role="lzx-embednew"><filename>class-inheritance-$1.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="125"&gt;
-  &lt;debug x="80" y="5" width="170" height="112"/&gt;
-
-  &lt;class name="top"&gt;
-    &lt;attribute name="myfoo" value="bar" type="string"/&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="middle" extends="top"&gt;
-    &lt;method name="doit"&gt;
-      Debug.write("myfoo is " + this.myfoo);
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="bottom" extends="middle"&gt;
-    &lt;button text="clickme" onclick="parent.doit()"/&gt;
-  &lt;/class&gt;
-  
-  &lt;bottom/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="125"&gt;
-  &lt;debug x="80" y="5" width="170" height="112"/&gt;
-
-  &lt;class name="top"&gt;
-    &lt;attribute name="myfoo" value="bar" type="string"/&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="middle" extends="top"&gt;
-    &lt;method name="doit"&gt;
-      Debug.write("myfoo is " + this.myfoo);
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="bottom" extends="middle"&gt;
-    &lt;button text="clickme" onclick="parent.doit()"/&gt;
-  &lt;/class&gt;
-  
-  &lt;bottom/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$1.lzx></example?>
+<!-- remove this and other commented out code which the build ignores. IORIO 31 oct 2007 -->
 
 <para>Class definitions can include default values for attributes. For example, a class that <emphasis role="i">extends</emphasis> view can have default
 <indexterm><primary>width</primary></indexterm><sgmltag class="attribute">width</sgmltag> and <indexterm><primary>height</primary></indexterm><sgmltag class="attribute">height</sgmltag>
@@ -138,49 +98,7 @@ an attribute in the <indexterm><primary>class</primary></indexterm><sgmltag clas
    <textobject><textdata fileref="programs/class-inheritance-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Inheriting Properties</title><programlisting role="lzx-embednew"><filename>class-inheritance-$3.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;!-- create a simplelayout so embedded views are laid out  --&gt;
-  &lt;!-- on top of each other.                                 --&gt;
-  &lt;class name="class1" layout="class: simplelayout; spacing: 2"&gt;
-    &lt;attribute name="label" value="class1 label" type="string"/&gt;
-    &lt;text&gt;from class1&lt;/text&gt;
-    &lt;button text="${classroot.label}"/&gt;
-  &lt;/class&gt;
 
-  &lt;!-- overrides class1's label; inherits text and button --&gt;
-  &lt;class name="class2" extends="class1" label="class2 label"&gt;
-    &lt;text&gt;from class2&lt;/text&gt;
-  &lt;/class&gt;
-
-  &lt;!-- inherit class1's text and button; inherit class2's text --&gt;
-  &lt;class name="class3" extends="class2"&gt;
-    &lt;text&gt;from class3&lt;/text&gt;
-  &lt;/class&gt;
-  &lt;class3/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;!-- create a simplelayout so embedded views are laid out  --&gt;
-  &lt;!-- on top of each other.                                 --&gt;
-  &lt;class name="class1" layout="class: simplelayout; spacing: 2"&gt;
-    &lt;attribute name="label" value="class1 label" type="string"/&gt;
-    &lt;text&gt;from class1&lt;/text&gt;
-    &lt;button text="${classroot.label}"/&gt;
-  &lt;/class&gt;
-
-  &lt;!-- overrides class1's label; inherits text and button --&gt;
-  &lt;class name="class2" extends="class1" label="class2 label"&gt;
-    &lt;text&gt;from class2&lt;/text&gt;
-  &lt;/class&gt;
-
-  &lt;!-- inherit class1's text and button; inherit class2's text --&gt;
-  &lt;class name="class3" extends="class2"&gt;
-    &lt;text&gt;from class3&lt;/text&gt;
-  &lt;/class&gt;
-  &lt;class3/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$3.lzx></example?>
 
 <para>You can use the <literal>super</literal> keyword to invoke a superclass's
 method. The <literal>super</literal> keyword is useful in instances where you want to
@@ -194,47 +112,6 @@ overrides.  That is, a subclass's <indexterm><primary><literal>myfunc()</literal
    <textobject><textdata fileref="programs/class-inheritance-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>The super keyword</title><programlisting role="lzx-embednew"><filename>class-inheritance-$4.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="140"&gt;
-  &lt;debug x="60"/&gt;
-
-  &lt;class name="foo"&gt;
-    &lt;method name="talk"&gt;
-      Debug.write("hello");
-    &lt;/method&gt;
-    &lt;button text="click" onclick="parent.talk()"/&gt;
-  &lt;/class&gt;
-
-  &lt;class name="bar" extends="foo"&gt;
-    &lt;method name="talk"&gt;
-      super.talk();
-      Debug.write("goodbye");
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;bar/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="140"&gt;
-  &lt;debug x="60"/&gt;
-
-  &lt;class name="foo"&gt;
-    &lt;method name="talk"&gt;
-      Debug.write("hello");
-    &lt;/method&gt;
-    &lt;button text="click" onclick="parent.talk()"/&gt;
-  &lt;/class&gt;
-
-  &lt;class name="bar" extends="foo"&gt;
-    &lt;method name="talk"&gt;
-      super.talk();
-      Debug.write("goodbye");
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;bar/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$4.lzx></example?>
 <para/><section><title>Handlers cannot be overridden</title>
 <para>
 In order to override the behavior of an event handler, you would have the handler call a method, and then override the method in the subclass or instance. For example, let's say that you wanted to write a handler for the <literal>onclick</literal> event that you could override in an instance. In your class definition, you would use this syntax:</para>
@@ -277,57 +154,6 @@ usually more readable.
    <textobject><textdata fileref="programs/class-inheritance-$6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Classroot example</title><programlisting role="lzx-embednew"><filename>class-inheritance-$6.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="160"&gt;
-  &lt;debug x="155" y="10"/&gt;
-    
-  &lt;!-- class deep --&gt;
-  &lt;class name="deep"&gt;
-    &lt;attribute name="mytext" value="hello, world" type="string"/&gt;
-    
-    &lt;view bgcolor="red" width="150" height="150"&gt;
-      &lt;view bgcolor="green" width="75%" height="75%"&gt;
-        &lt;button text="clickme" width="75%" height="75%"&gt;
-          &lt;!-- classroot is a convenient way to access mytext --&gt;
-          &lt;handler name="onclick"&gt;
-            Debug.write("classroot.mytext: " + classroot.mytext);
-            Debug.write("parent.parent.parent.mytext: " + 
-                        parent.parent.parent.mytext);
-          &lt;/handler&gt;
-        &lt;/button&gt;
-      &lt;/view&gt;
-    &lt;/view&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- instance of class deep --&gt;
-  &lt;deep/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="160"&gt;
-  &lt;debug x="155" y="10"/&gt;
-    
-  &lt;!-- class deep --&gt;
-  &lt;class name="deep"&gt;
-    &lt;attribute name="mytext" value="hello, world" type="string"/&gt;
-    
-    &lt;view bgcolor="red" width="150" height="150"&gt;
-      &lt;view bgcolor="green" width="75%" height="75%"&gt;
-        &lt;button text="clickme" width="75%" height="75%"&gt;
-          &lt;!-- classroot is a convenient way to access mytext --&gt;
-          &lt;handler name="onclick"&gt;
-            Debug.write("classroot.mytext: " + classroot.mytext);
-            Debug.write("parent.parent.parent.mytext: " + 
-                        parent.parent.parent.mytext);
-          &lt;/handler&gt;
-        &lt;/button&gt;
-      &lt;/view&gt;
-    &lt;/view&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- instance of class deep --&gt;
-  &lt;deep/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$6.lzx></example?>
 
 <para>Be careful when using <literal>classroot</literal> from the root of the
 class. If there is no surrounding class, <literal>classroot</literal> will
@@ -343,71 +169,6 @@ as a short-cut to refer to the root of outer classes.</para>
    <textobject><textdata fileref="programs/class-inheritance-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Referring to outer class's root using classroot</title><programlisting role="lzx-embednew"><filename>class-inheritance-$7.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug height="175"/&gt;
-  
-  &lt;class name="foo"&gt;
-    &lt;method name="doit"&gt;
-      Debug.write("foo: this is [" + this + "]");
-      Debug.write("foo: classroot is [" + classroot + "]");
-      Debug.write("foo: classroot.classroot is [" + classroot.classroot + "]");
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- boo contains a foo --&gt;
-  &lt;class name="boo"&gt;
-    &lt;foo name="myfoo"/&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- goo contains a boo --&gt;
-  &lt;class name="goo"&gt;
-    &lt;boo name="myboo"/&gt;
-    &lt;handler name="oninit"&gt;
-      myboo.myfoo.doit();
-      Debug.write("-----");
-      Debug.write("goo: this is [" + this + "]");
-      // warning will be displayed -- there is no classroot
-      Debug.write("goo: classroot is [" + classroot + "]");
-    &lt;/handler&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- Make an instance of goo --&gt;
-  &lt;goo name="mygoo"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug height="175"/&gt;
-  
-  &lt;class name="foo"&gt;
-    &lt;method name="doit"&gt;
-      Debug.write("foo: this is [" + this + "]");
-      Debug.write("foo: classroot is [" + classroot + "]");
-      Debug.write("foo: classroot.classroot is [" + classroot.classroot + "]");
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- boo contains a foo --&gt;
-  &lt;class name="boo"&gt;
-    &lt;foo name="myfoo"/&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- goo contains a boo --&gt;
-  &lt;class name="goo"&gt;
-    &lt;boo name="myboo"/&gt;
-    &lt;handler name="oninit"&gt;
-      myboo.myfoo.doit();
-      Debug.write("-----");
-      Debug.write("goo: this is [" + this + "]");
-      // warning will be displayed -- there is no classroot
-      Debug.write("goo: classroot is [" + classroot + "]");
-    &lt;/handler&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- Make an instance of goo --&gt;
-  &lt;goo name="mygoo"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$7.lzx></example?>
 <para>
 At the risk of belaboring the topic, here's one more example that demonstrates that top level instances of a class have no defined classroot. Notice that even though "bar" is a child of "foo", it does not have a defined classroot, because it is a toplevel instance of the bar class. </para>
 
@@ -417,66 +178,6 @@ At the risk of belaboring the topic, here's one more example that demonstrates t
    <textobject><textdata fileref="programs/class-inheritance-$8.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>classroots and toplevel instances</title><programlisting role="lzx-embednew"><filename>class-inheritance-$8.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-&lt;class name="myclass" height="40" bgcolor="blue"&gt;
-  &lt;attribute name="button_label" type="text" value="button"/&gt;
-  &lt;handler name="onclick"&gt;
-    this.handleclick()
-  &lt;/handler&gt;
-
-  &lt;method name="handleclick"&gt;
-    Debug.write("this = " + this + "and classroot is" + classroot);
-  &lt;/method&gt;
-  &lt;button name="b1" height="30" text="${parent.button_label}"
-onclick="Debug.write('classroot of this button is: ' + classroot); parent.handleclick()" /&gt;
-&lt;/class&gt;
-
-&lt;class name="another_class" extends="myclass"/&gt;
-
-&lt;!-- foo and bar views are top-level instances, so their classroots are null.
-== The buttons are children of the foo and bar views, respectively, so ==
-== their classroots are defined. --&gt;
-
-&lt;myclass id="foo"&gt;
-  &lt;another_class id="bar" bgcolor="red" button_label ="another button" y="25"&gt;
-     &lt;method name="handleclick"&gt;
-       Debug.write("this = " + this + "and classroot is " + classroot);
-     &lt;/method&gt;
- &lt;/another_class&gt;
-&lt;/myclass&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-&lt;class name="myclass" height="40" bgcolor="blue"&gt;
-  &lt;attribute name="button_label" type="text" value="button"/&gt;
-  &lt;handler name="onclick"&gt;
-    this.handleclick()
-  &lt;/handler&gt;
-
-  &lt;method name="handleclick"&gt;
-    Debug.write("this = " + this + "and classroot is" + classroot);
-  &lt;/method&gt;
-  &lt;button name="b1" height="30" text="${parent.button_label}"
-onclick="Debug.write('classroot of this button is: ' + classroot); parent.handleclick()" /&gt;
-&lt;/class&gt;
-
-&lt;class name="another_class" extends="myclass"/&gt;
-
-&lt;!-- foo and bar views are top-level instances, so their classroots are null.
-== The buttons are children of the foo and bar views, respectively, so ==
-== their classroots are defined. --&gt;
-
-&lt;myclass id="foo"&gt;
-  &lt;another_class id="bar" bgcolor="red" button_label ="another button" y="25"&gt;
-     &lt;method name="handleclick"&gt;
-       Debug.write("this = " + this + "and classroot is " + classroot);
-     &lt;/method&gt;
- &lt;/another_class&gt;
-&lt;/myclass&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$8.lzx></example?>
-
 <para/><section><title>Classroot not available in &lt;state&gt;</title>
 <para>
 The <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -523,21 +224,6 @@ such a class.</para>
    <textobject><textdata fileref="programs/class-inheritance-$10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Extending text classes</title><programlisting role="lzx-embednew"><filename>class-inheritance-$10.lzx</filename><parameter/><code>
-&lt;canvas height="50" layout="axis: y"&gt;
-  &lt;class name="mytext" extends="text"/&gt;
-  &lt;class name="myinputtext" extends="inputtext"/&gt;
-  &lt;myinputtext&gt;plain text&lt;/myinputtext&gt;
-  &lt;mytext&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/mytext&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50" layout="axis: y"&gt;
-  &lt;class name="mytext" extends="text"/&gt;
-  &lt;class name="myinputtext" extends="inputtext"/&gt;
-  &lt;myinputtext&gt;plain text&lt;/myinputtext&gt;
-  &lt;mytext&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/mytext&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$10.lzx></example?>
 
 <para>A user-defined class can also handle text content by defining an
 attribute named <indexterm><primary>text</primary></indexterm><sgmltag class="attribute">text</sgmltag> with a value of
@@ -592,36 +278,6 @@ attribute. The text may contain XHTML tags such as <indexterm><primary>b</primar
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Text type: html</title><programlisting role="lzx-embednew"><filename>class-inheritance-$12.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;class name="htmlText"&gt;
-    &lt;attribute name="text" type="html"/&gt;
-    &lt;text resize="true" text="${parent.text}"/&gt;
-  &lt;/class&gt;
-  
-  &lt;simplelayout/&gt;
-  &lt;htmlText&gt;
-    &lt;b&gt;bold&lt;/b&gt; text declared here with 
-    &lt;a href="http://www.openlaszlo.org"&gt;&lt;i&gt;anchor&lt;/i&gt;&lt;/a&gt;
-  &lt;/htmlText&gt;
-  &lt;htmlText text="&amp;lt;b&amp;gt;bold&amp;lt;/b&amp;gt; text set here"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;class name="htmlText"&gt;
-    &lt;attribute name="text" type="html"/&gt;
-    &lt;text resize="true" text="${parent.text}"/&gt;
-  &lt;/class&gt;
-  
-  &lt;simplelayout/&gt;
-  &lt;htmlText&gt;
-    &lt;b&gt;bold&lt;/b&gt; text declared here with 
-    &lt;a href="http://www.openlaszlo.org"&gt;&lt;i&gt;anchor&lt;/i&gt;&lt;/a&gt;
-  &lt;/htmlText&gt;
-  &lt;htmlText text="&amp;lt;b&amp;gt;bold&amp;lt;/b&amp;gt; text set here"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$12.lzx></example?>
-
 <para>Note that XHTML markup within a class that is declared with
 <literal>type="text"</literal>, instead of <literal>type="html"</literal>, is
 invalid:</para>
@@ -672,48 +328,6 @@ from there on will inherit that font.</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Inheriting fonts</title><programlisting role="lzx-embednew"><filename>class-inheritance-$16.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;font src="helmetr.ttf" name="Helvetica"/&gt;
-  &lt;font src="helmetb.ttf" name="Helvetica" style="bold"/&gt;
-  
-  &lt;class name="foo"&gt;
-    &lt;!-- view overrides inherited fontstyle to plain --&gt;
-    &lt;view fontstyle="plain" bgcolor="yellow"&gt;
-      &lt;!-- text overrides inherited fontsize to 12 --&gt;
-      &lt;text fontsize="12"&gt;hello&lt;/text&gt;
-    &lt;/view&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="bar" extends="foo" layout="axis: y"&gt;
-    &lt;text&gt;goodbye&lt;/text&gt;
-  &lt;/class&gt;
-  
-  &lt;bar font="Helvetica" fontstyle="bold" fontsize="12"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;font src="helmetr.ttf" name="Helvetica"/&gt;
-  &lt;font src="helmetb.ttf" name="Helvetica" style="bold"/&gt;
-  
-  &lt;class name="foo"&gt;
-    &lt;!-- view overrides inherited fontstyle to plain --&gt;
-    &lt;view fontstyle="plain" bgcolor="yellow"&gt;
-      &lt;!-- text overrides inherited fontsize to 12 --&gt;
-      &lt;text fontsize="12"&gt;hello&lt;/text&gt;
-    &lt;/view&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="bar" extends="foo" layout="axis: y"&gt;
-    &lt;text&gt;goodbye&lt;/text&gt;
-  &lt;/class&gt;
-  
-  &lt;bar font="Helvetica" fontstyle="bold" fontsize="12"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$16.lzx></example?>
-
- 
-
  
 <para/></section><section id="class-inheritance.instantiating_through_script"><title>Instantiating classes through script</title>
 
@@ -763,43 +377,6 @@ add it to another view.</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Script instantiation</title><programlisting role="lzx-embednew"><filename>class-inheritance-$17.lzx</filename><parameter/><code>
-&lt;canvas height="120"&gt;
-  &lt;class name="mybox"&gt;
-    &lt;view bgcolor="${parent.bgcolor}" width="50" height="50"/&gt;
-  &lt;/class&gt;
-  
-  &lt;view name="redbox" bgcolor="red" width="100" height="100"/&gt;
-  
-  &lt;!-- Create new mybox with cyan bgcolor and place it in canvas.redbox. --&gt;
-  &lt;button x="110" text="add cyan"
-            onclick="if (canvas.redbox['cyan'] == null) 
-                       new mybox(canvas.redbox, { name: 'cyan', bgcolor: 0x00ffff })"/&gt;
-
-  &lt;!-- Remove cyan view from redbox. --&gt;
-  &lt;button x="110" y="30" text="remove cyan"
-            onclick="if (canvas.redbox['cyan'] != null) canvas.redbox.cyan.destroy()"/&gt;
-
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="120"&gt;
-  &lt;class name="mybox"&gt;
-    &lt;view bgcolor="${parent.bgcolor}" width="50" height="50"/&gt;
-  &lt;/class&gt;
-  
-  &lt;view name="redbox" bgcolor="red" width="100" height="100"/&gt;
-  
-  &lt;!-- Create new mybox with cyan bgcolor and place it in canvas.redbox. --&gt;
-  &lt;button x="110" text="add cyan"
-            onclick="if (canvas.redbox['cyan'] == null) 
-                       new mybox(canvas.redbox, { name: 'cyan', bgcolor: 0x00ffff })"/&gt;
-
-  &lt;!-- Remove cyan view from redbox. --&gt;
-  &lt;button x="110" y="30" text="remove cyan"
-            onclick="if (canvas.redbox['cyan'] != null) canvas.redbox.cyan.destroy()"/&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$17.lzx></example?>
 
 <para/><section id="class-inheritance.procedural_and_replicated"><title>Be careful of mixing replication and classes declared procedurally</title>
 <para>
@@ -868,45 +445,6 @@ order. This can be verified by examining the subviews array.</para>
    <textobject><textdata fileref="programs/class-inheritance-$19.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Inheriting views</title><programlisting role="lzx-embednew"><filename>class-inheritance-$19.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;debug y="215" width="435"/&gt;
-  
-  &lt;class name="one"&gt;
-    &lt;view name="r" bgcolor="red" width="200" height="200"/&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="two" extends="one"&gt;
-    &lt;view name="g" bgcolor="green" width="100" height="100"/&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="three" extends="two"&gt;
-    &lt;view name="t" bgcolor="teal" width="50" height="50"/&gt;
-    &lt;view name="y" bgcolor="yellow" width="25" height="25"/&gt;
-  &lt;/class&gt;
-  
-  &lt;three id="mysubclass" oninit="Debug.write('subviews: ' + this.subviews)"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;debug y="215" width="435"/&gt;
-  
-  &lt;class name="one"&gt;
-    &lt;view name="r" bgcolor="red" width="200" height="200"/&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="two" extends="one"&gt;
-    &lt;view name="g" bgcolor="green" width="100" height="100"/&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="three" extends="two"&gt;
-    &lt;view name="t" bgcolor="teal" width="50" height="50"/&gt;
-    &lt;view name="y" bgcolor="yellow" width="25" height="25"/&gt;
-  &lt;/class&gt;
-  
-  &lt;three id="mysubclass" oninit="Debug.write('subviews: ' + this.subviews)"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$19.lzx></example?>
 
 <para>Views declared in an instance of a class will be placed in the
 top-level of the class unless otherwise declared with the
@@ -922,29 +460,6 @@ explained in more detail in the next section.</para>
    <textobject><textdata fileref="programs/class-inheritance-$20.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Inherited view order</title><programlisting role="lzx-embednew"><filename>class-inheritance-$20.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="250"&gt;
-  &lt;debug y="115" width="330"/&gt;
-  &lt;class name="foo"&gt;
-    &lt;view name="r" bgcolor="red" width="100" height="100"/&gt;
-  &lt;/class&gt;
-  
-  &lt;foo name="myfoo" oninit="Debug.write('subviews: ' + this.subviews)"&gt;
-    &lt;view name="y" bgcolor="yellow" width="50" height="50"/&gt;
-  &lt;/foo&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="250"&gt;
-  &lt;debug y="115" width="330"/&gt;
-  &lt;class name="foo"&gt;
-    &lt;view name="r" bgcolor="red" width="100" height="100"/&gt;
-  &lt;/class&gt;
-  
-  &lt;foo name="myfoo" oninit="Debug.write('subviews: ' + this.subviews)"&gt;
-    &lt;view name="y" bgcolor="yellow" width="50" height="50"/&gt;
-  &lt;/foo&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$20.lzx></example?>
 
 <para>Notice how view <varname>y</varname> follows view
 <varname>r</varname> in its subviews array. If a
@@ -960,36 +475,6 @@ explained in more detail in the next section.</para>
    <textobject><textdata fileref="programs/class-inheritance-$21.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Inherited view order with simplelayout</title><programlisting role="lzx-embednew"><filename>class-inheritance-$21.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="250"&gt;
-  &lt;debug x="75" y="115" width="330"/&gt;
-  
-  &lt;class name="foo"&gt;
-    &lt;view name="r" bgcolor="red" width="100" height="100"/&gt;
-  &lt;/class&gt;
-  
-  &lt;foo name="myfoo" oninit="Debug.write('subviews: ' + this.subviews)"&gt;
-    &lt;simplelayout/&gt;
-    &lt;view name="y" bgcolor="yellow" width="50" height="50"/&gt;
-  &lt;/foo&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="250"&gt;
-  &lt;debug x="75" y="115" width="330"/&gt;
-  
-  &lt;class name="foo"&gt;
-    &lt;view name="r" bgcolor="red" width="100" height="100"/&gt;
-  &lt;/class&gt;
-  
-  &lt;foo name="myfoo" oninit="Debug.write('subviews: ' + this.subviews)"&gt;
-    &lt;simplelayout/&gt;
-    &lt;view name="y" bgcolor="yellow" width="50" height="50"/&gt;
-  &lt;/foo&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$21.lzx></example?>
-
-
-
 
 <para/></section><section><title>Placement</title>
 
@@ -1004,35 +489,6 @@ desirable for container classes. For example:</para>
    <textobject><textdata fileref="programs/class-inheritance-$22.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Undesired placement</title><programlisting role="lzx-embednew"><filename>class-inheritance-$22.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    &lt;view x="5" y="5" width="${parent.width-10}"
-               height="${parent.height-10}"
-               bgcolor="#FFFFCC"/&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- make an instance of myframe with text inside it--&gt;
-  &lt;myframe width="220" height="20"&gt;
-    &lt;text&gt;This is some text&lt;/text&gt;
-  &lt;/myframe&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    &lt;view x="5" y="5" width="${parent.width-10}"
-               height="${parent.height-10}"
-               bgcolor="#FFFFCC"/&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- make an instance of myframe with text inside it--&gt;
-  &lt;myframe width="220" height="20"&gt;
-    &lt;text&gt;This is some text&lt;/text&gt;
-  &lt;/myframe&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$22.lzx></example?>
 
 <para>This behavior can be changed using the
 <indexterm><primary>defaultplacement</primary></indexterm><sgmltag class="attribute">defaultplacement</sgmltag> attribute or the
@@ -1054,43 +510,6 @@ should always be declared in an attribute with
    <textobject><textdata fileref="programs/class-inheritance-$23.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Placing a child in desired subview</title><programlisting role="lzx-embednew"><filename>class-inheritance-$23.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    
-    &lt;!-- child views of class instances will be placed in the first view
-            called insideview --&gt;
-    &lt;attribute name="defaultplacement" value="insideview" type="string"/&gt;
-    
-    &lt;view x="5" y="5" width="${parent.width-10}" name="insideview"
-                height="${parent.height-10}" 
-                bgcolor="#FFFFCC"/&gt;
-  &lt;/class&gt;
-  &lt;!-- make an instance of myframe with text inside it--&gt;
-  &lt;myframe width="220" height="50"&gt;
-    &lt;text&gt;This is some text&lt;/text&gt;
-  &lt;/myframe&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    
-    &lt;!-- child views of class instances will be placed in the first view
-            called insideview --&gt;
-    &lt;attribute name="defaultplacement" value="insideview" type="string"/&gt;
-    
-    &lt;view x="5" y="5" width="${parent.width-10}" name="insideview"
-                height="${parent.height-10}" 
-                bgcolor="#FFFFCC"/&gt;
-  &lt;/class&gt;
-  &lt;!-- make an instance of myframe with text inside it--&gt;
-  &lt;myframe width="220" height="50"&gt;
-    &lt;text&gt;This is some text&lt;/text&gt;
-  &lt;/myframe&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$23.lzx></example?>
 
 <para>Elements declared in a class are not considered for placement, but children in
 subclasses or class instances will be.</para>
@@ -1102,75 +521,6 @@ subclasses or class instances will be.</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Defaultplacement</title><programlisting role="lzx-embednew"><filename>class-inheritance-$24.lzx</filename><parameter/><code>
-&lt;canvas height="150"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-      &lt;attribute name="bgcolor" value="red"/&gt;
-
-      &lt;attribute name="defaultplacement" value="'insideview'"/&gt;
-
-      &lt;view x="5" y="5" width="${parent.width-10}" name="insideview"
-              height="${parent.height-10}" 
-              bgcolor="#FFFFCC"/&gt;
-
-      &lt;!-- this view is not affected by defaultplacement --&gt;
-      &lt;!-- because it's declared in the class.           --&gt; 
-      &lt;view x="5" y="${parent.height}" name="anotherview" 
-            width="${parent.width-10}" height="10"
-            bgcolor="blue"/&gt;
-  &lt;/class&gt;
-
-  &lt;class name="subframe" extends="myframe"&gt;
-    &lt;!-- the layout and text will be placed in insideview of myframe --&gt;
-    &lt;simplelayout axis="y"/&gt;
-    &lt;text bgcolor="teal"&gt;subframe text&lt;/text&gt;
-  &lt;/class&gt;
-
-
-  &lt;myframe width="220" height="50"&gt;
-    &lt;!-- this will be placed in insideview --&gt;
-    &lt;text&gt;This is some text&lt;/text&gt;
-  &lt;/myframe&gt;
-
-  &lt;subframe width="220" height="50" y="70"&gt;
-    &lt;text bgcolor="green"&gt;More subframe text&lt;/text&gt;
-  &lt;/subframe&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="150"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-      &lt;attribute name="bgcolor" value="red"/&gt;
-
-      &lt;attribute name="defaultplacement" value="'insideview'"/&gt;
-
-      &lt;view x="5" y="5" width="${parent.width-10}" name="insideview"
-              height="${parent.height-10}" 
-              bgcolor="#FFFFCC"/&gt;
-
-      &lt;!-- this view is not affected by defaultplacement --&gt;
-      &lt;!-- because it's declared in the class.           --&gt; 
-      &lt;view x="5" y="${parent.height}" name="anotherview" 
-            width="${parent.width-10}" height="10"
-            bgcolor="blue"/&gt;
-  &lt;/class&gt;
-
-  &lt;class name="subframe" extends="myframe"&gt;
-    &lt;!-- the layout and text will be placed in insideview of myframe --&gt;
-    &lt;simplelayout axis="y"/&gt;
-    &lt;text bgcolor="teal"&gt;subframe text&lt;/text&gt;
-  &lt;/class&gt;
-
-
-  &lt;myframe width="220" height="50"&gt;
-    &lt;!-- this will be placed in insideview --&gt;
-    &lt;text&gt;This is some text&lt;/text&gt;
-  &lt;/myframe&gt;
-
-  &lt;subframe width="220" height="50" y="70"&gt;
-    &lt;text bgcolor="green"&gt;More subframe text&lt;/text&gt;
-  &lt;/subframe&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$24.lzx></example?>
 
 <para/><section><title>Placing layouts</title>
 
@@ -1194,48 +544,6 @@ the class.</para>
    <textobject><textdata fileref="programs/class-inheritance-$25.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Layout placement</title><programlisting role="lzx-embednew"><filename>class-inheritance-$25.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;!-- the layout attribute will be placed in the red view --&gt;
-  &lt;class name="myplacement" defaultplacement="'red'" layout="axis: x; spacing: 5"&gt;
-    &lt;!-- this layout element applies to views inside of class --&gt;
-    &lt;simplelayout spacing="10"/&gt;
-    &lt;view name="red" bgcolor="red" width="150" height="150"/&gt;
-    &lt;view name="yellow" bgcolor="yellow" width="150" height="150"/&gt;
-  &lt;/class&gt;
-
-  &lt;myplacement&gt;
-    &lt;!-- placement overrides defaultplacement --&gt;
-    &lt;view name="blue" bgcolor="blue" width="50" height="50" placement="yellow"/&gt;
-
-    &lt;!-- green and teal will be placed in red --&gt;
-    &lt;view name="green" width="50" height="50" bgcolor="green"/&gt;
-    &lt;view name="teal" width="50" height="50" bgcolor="teal"/&gt;
-  &lt;/myplacement&gt;
-
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;!-- the layout attribute will be placed in the red view --&gt;
-  &lt;class name="myplacement" defaultplacement="'red'" layout="axis: x; spacing: 5"&gt;
-    &lt;!-- this layout element applies to views inside of class --&gt;
-    &lt;simplelayout spacing="10"/&gt;
-    &lt;view name="red" bgcolor="red" width="150" height="150"/&gt;
-    &lt;view name="yellow" bgcolor="yellow" width="150" height="150"/&gt;
-  &lt;/class&gt;
-
-  &lt;myplacement&gt;
-    &lt;!-- placement overrides defaultplacement --&gt;
-    &lt;view name="blue" bgcolor="blue" width="50" height="50" placement="yellow"/&gt;
-
-    &lt;!-- green and teal will be placed in red --&gt;
-    &lt;view name="green" width="50" height="50" bgcolor="green"/&gt;
-    &lt;view name="teal" width="50" height="50" bgcolor="teal"/&gt;
-  &lt;/myplacement&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$25.lzx></example?>
-
 
 
 
@@ -1260,46 +568,6 @@ child is actually placed at runtime. Its value will be the same as
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Parent vs. immediateparent</title><programlisting role="lzx-embednew"><filename>class-inheritance-$26.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="200"&gt;    
-  &lt;debug x="155"/&gt;
-
-  &lt;class name="container" defaultplacement="'red'"&gt;
-    &lt;view name="red" bgcolor="red" width="150" height="150"/&gt;
-  &lt;/class&gt;
-
-  &lt;!-- yellow's parent is top and its immediateparent   --&gt;
-  &lt;!-- is red, since that's where it's actually placed. --&gt;
-  &lt;container name="top"&gt;
-    &lt;view name="yellow" bgcolor="yellow" width="50" height="50"&gt;
-      &lt;handler name="oninit"&gt;
-        Debug.write('parent: ', this.parent);
-        Debug.write('immediateparent: ', this.immediateparent);
-      &lt;/handler&gt;
-    &lt;/view&gt;
-  &lt;/container&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="200"&gt;    
-  &lt;debug x="155"/&gt;
-
-  &lt;class name="container" defaultplacement="'red'"&gt;
-    &lt;view name="red" bgcolor="red" width="150" height="150"/&gt;
-  &lt;/class&gt;
-
-  &lt;!-- yellow's parent is top and its immediateparent   --&gt;
-  &lt;!-- is red, since that's where it's actually placed. --&gt;
-  &lt;container name="top"&gt;
-    &lt;view name="yellow" bgcolor="yellow" width="50" height="50"&gt;
-      &lt;handler name="oninit"&gt;
-        Debug.write('parent: ', this.parent);
-        Debug.write('immediateparent: ', this.immediateparent);
-      &lt;/handler&gt;
-    &lt;/view&gt;
-  &lt;/container&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$26.lzx></example?>
-
 <para/></section><section><title>Obtaining a reference to the defaultPlacement node</title>
 
 <para>There may be instances a class needs a reference to the default placement
@@ -1311,72 +579,6 @@ node. A good trick is to search the subnodes of the class until it's found.</par
    <textobject><textdata fileref="programs/class-inheritance-$27.lzx"/></textobject> 
    </programlisting>
 </example>
-
-<?example role="live-example"><title>Obtaining a reference to the defaultPlacement node</title><programlisting role="lzx-embednew"><filename>class-inheritance-$27.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug x="155"/&gt;
-
-  &lt;class name="container" defaultplacement="'red'"&gt;
-    &lt;attribute name="contentview" value="null" type="expression"/&gt;
-
-    &lt;method name="init"&gt;
-      super.init();
-
-      // get a reference to the content node
-      if ( this.contentview == null ) {
-        if ( this.defaultplacement != null ){
-          this.contentview = this.searchSubnodes( "name" , this.defaultplacement );
-        } else {
-          this.contentview = this;
-        }
-      }
-      
-      Debug.write("content view", this.contentview);
-    &lt;/method&gt;
-
-    &lt;view name="green" bgcolor="green" width="100" height="100"&gt;
-      &lt;view name="yellow" bgcolor="yellow" width="50%" height="50%"&gt;
-        &lt;view name="red" bgcolor="red" width="50%" height="50%"/&gt;
-      &lt;/view&gt;
-    &lt;/view&gt;
-  &lt;/class&gt;
-
-  &lt;container name="top"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug x="155"/&gt;
-
-  &lt;class name="container" defaultplacement="'red'"&gt;
-    &lt;attribute name="contentview" value="null" type="expression"/&gt;
-
-    &lt;method name="init"&gt;
-      super.init();
-
-      // get a reference to the content node
-      if ( this.contentview == null ) {
-        if ( this.defaultplacement != null ){
-          this.contentview = this.searchSubnodes( "name" , this.defaultplacement );
-        } else {
-          this.contentview = this;
-        }
-      }
-      
-      Debug.write("content view", this.contentview);
-    &lt;/method&gt;
-
-    &lt;view name="green" bgcolor="green" width="100" height="100"&gt;
-      &lt;view name="yellow" bgcolor="yellow" width="50%" height="50%"&gt;
-        &lt;view name="red" bgcolor="red" width="50%" height="50%"/&gt;
-      &lt;/view&gt;
-    &lt;/view&gt;
-  &lt;/class&gt;
-
-  &lt;container name="top"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$27.lzx></example?>
-
-
 
 
 <para/></section><section><title>Overriding placement behavior using <indexterm><primary><literal>determinePlacement()</literal></primary></indexterm><methodname>determinePlacement()</methodname></title>
@@ -1425,60 +627,6 @@ same.</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Overriding determinePlacement</title><programlisting role="lzx-embednew"><filename>class-inheritance-$29.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug x="155"/&gt;
-
-  &lt;class name="container" defaultplacement="'red'"&gt;
-    &lt;!-- setting subnode's parent to be the same as immediateparent --&gt;
-    &lt;method name="determinePlacement" args="subnode, place, args"&gt;
-      var p = super.determinePlacement(subnode, place, args);
-      subnode.parent = p;
-      return p;
-    &lt;/method&gt;
-
-    &lt;view name="blue" bgcolor="blue" width="100" height="100"&gt;
-      &lt;view name="red" bgcolor="red" width="150" height="150"/&gt;
-    &lt;/view&gt;
-  &lt;/class&gt;
-
-  &lt;container name="top"&gt;
-    &lt;view name="yellow" bgcolor="yellow" width="50" height="50"&gt;
-      &lt;handler name="oninit"&gt;
-        Debug.write('parent: ', this.parent);
-        Debug.write('immediateparent: ', this.immediateparent);
-      &lt;/handler&gt;
-    &lt;/view&gt;
-  &lt;/container&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug x="155"/&gt;
-
-  &lt;class name="container" defaultplacement="'red'"&gt;
-    &lt;!-- setting subnode's parent to be the same as immediateparent --&gt;
-    &lt;method name="determinePlacement" args="subnode, place, args"&gt;
-      var p = super.determinePlacement(subnode, place, args);
-      subnode.parent = p;
-      return p;
-    &lt;/method&gt;
-
-    &lt;view name="blue" bgcolor="blue" width="100" height="100"&gt;
-      &lt;view name="red" bgcolor="red" width="150" height="150"/&gt;
-    &lt;/view&gt;
-  &lt;/class&gt;
-
-  &lt;container name="top"&gt;
-    &lt;view name="yellow" bgcolor="yellow" width="50" height="50"&gt;
-      &lt;handler name="oninit"&gt;
-        Debug.write('parent: ', this.parent);
-        Debug.write('immediateparent: ', this.immediateparent);
-      &lt;/handler&gt;
-    &lt;/view&gt;
-  &lt;/container&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$29.lzx></example?>
-
 
 
 
@@ -1516,70 +664,6 @@ whereas initialization happens bottom-up (subviews to ancestor).</para>
    <textobject><textdata fileref="programs/class-inheritance-$30.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Construction and initialization</title><programlisting role="lzx-embednew"><filename>class-inheritance-$30.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="180"&gt;
-  &lt;debug height="160"/&gt;
-
-  &lt;class name="container"&gt;
-    &lt;!-- Don't forget to call super.construct(parent,args)!! --&gt;
-    &lt;method name="construct" args="parent,args"&gt;
-      Debug.write("container construct", parent, args);
-      super.construct(parent, args);
-    &lt;/method&gt;
-
-    &lt;!-- The onconstruct event --&gt;
-    &lt;handler name="onconstruct" args="v"&gt;
-      Debug.write("container onconstruct", v);
-    &lt;/handler&gt;
-
-    &lt;method name="init"&gt;
-      Debug.write("container init");
-    &lt;/method&gt;
-
-    &lt;handler name="oninit"&gt;
-      Debug.write("container oninit");
-    &lt;/handler&gt;
-  &lt;/class&gt;
-
-  &lt;container&gt;
-    &lt;view name="outside" oninit="Debug.write('outside oninit')"&gt;
-      &lt;view name="inside" oninit="Debug.write('inside oninit')"/&gt;
-    &lt;/view&gt;        
-  &lt;/container&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="180"&gt;
-  &lt;debug height="160"/&gt;
-
-  &lt;class name="container"&gt;
-    &lt;!-- Don't forget to call super.construct(parent,args)!! --&gt;
-    &lt;method name="construct" args="parent,args"&gt;
-      Debug.write("container construct", parent, args);
-      super.construct(parent, args);
-    &lt;/method&gt;
-
-    &lt;!-- The onconstruct event --&gt;
-    &lt;handler name="onconstruct" args="v"&gt;
-      Debug.write("container onconstruct", v);
-    &lt;/handler&gt;
-
-    &lt;method name="init"&gt;
-      Debug.write("container init");
-    &lt;/method&gt;
-
-    &lt;handler name="oninit"&gt;
-      Debug.write("container oninit");
-    &lt;/handler&gt;
-  &lt;/class&gt;
-
-  &lt;container&gt;
-    &lt;view name="outside" oninit="Debug.write('outside oninit')"&gt;
-      &lt;view name="inside" oninit="Debug.write('inside oninit')"/&gt;
-    &lt;/view&gt;        
-  &lt;/container&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$30.lzx></example?>
-
 <para>Following instantiation (i.e., after the <indexterm><primary>onconstruct event</primary></indexterm><literal>onconstruct</literal>
 is sent) and if there are child nodes, the
 <indexterm><primary><literal>createChildren()</literal></primary></indexterm><methodname>createChildren()</methodname> method is called. This method takes an
@@ -1596,55 +680,6 @@ properties:</para>
    <textobject><textdata fileref="programs/class-inheritance-$31.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>createChildren()</title><programlisting role="lzx-embednew"><filename>class-inheritance-$31.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="180"&gt;
-  &lt;debug height="160"/&gt;
-
-  &lt;class name="container"&gt;
-    &lt;handler name="onconstruct" args="v"&gt;
-      Debug.write("container onconstruct", v);
-    &lt;/handler&gt;
-
-    &lt;method name="createChildren" args="c"&gt;
-      Debug.write("container createChildren", c);
-      Debug.write("    c[0].name:", c[0].name);
-      Debug.write("    c[0].attrs:", c[0].attrs);
-      Debug.write("    c[0].children:", c[0].children);
-      super.createChildren(c);
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;container&gt;
-   &lt;view name="outside"&gt;
-     &lt;view name="inside"/&gt;
-   &lt;/view&gt;
-  &lt;/container&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="180"&gt;
-  &lt;debug height="160"/&gt;
-
-  &lt;class name="container"&gt;
-    &lt;handler name="onconstruct" args="v"&gt;
-      Debug.write("container onconstruct", v);
-    &lt;/handler&gt;
-
-    &lt;method name="createChildren" args="c"&gt;
-      Debug.write("container createChildren", c);
-      Debug.write("    c[0].name:", c[0].name);
-      Debug.write("    c[0].attrs:", c[0].attrs);
-      Debug.write("    c[0].children:", c[0].children);
-      super.createChildren(c);
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;container&gt;
-   &lt;view name="outside"&gt;
-     &lt;view name="inside"/&gt;
-   &lt;/view&gt;
-  &lt;/container&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-inheritance-$31.lzx></example?>
 
 <para>In summary, you can expect the basic timing order of method and event calls to look
 like:</para>

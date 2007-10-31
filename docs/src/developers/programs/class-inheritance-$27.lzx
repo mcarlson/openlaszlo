@@ -2,7 +2,7 @@
 <canvas debug="true" height="200">
   <debug x="155"/>
 
-  <class name="container" defaultplacement="'red'">
+  <class name="container" defaultplacement="red">
     <attribute name="contentview" value="null" type="expression"/>
 
     <method name="init">

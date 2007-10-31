@@ -1,7 +1,7 @@
 
 <canvas>
   <!-- the layout attribute will be placed in the red view -->
-  <class name="myplacement" defaultplacement="'red'" layout="axis: x; spacing: 5">
+  <class name="myplacement" defaultplacement="red" layout="axis: x; spacing: 5">
     <!-- this layout element applies to views inside of class -->
     <simplelayout spacing="10"/>
     <view name="red" bgcolor="red" width="150" height="150"/>

@@ -2,7 +2,7 @@
 <canvas debug="true" height="200">
   <debug x="155"/>
 
-  <class name="container" defaultplacement="'red'">
+  <class name="container" defaultplacement="red">
     <!-- setting subnode's parent to be the same as immediateparent -->
     <method name="determinePlacement" args="subnode, place, args">
       var p = super.determinePlacement(subnode, place, args);
