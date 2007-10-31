@@ -105,7 +105,7 @@
         <!-- Sets the maxmimum number of characters which can be entered. -->
         <method name="setMaxlength" args="n">
           this.setAttribute('maxlength', n);
-          field.setMaxlength(n);
+          this.field.setMaxLength(n);
         </method>
 
 
