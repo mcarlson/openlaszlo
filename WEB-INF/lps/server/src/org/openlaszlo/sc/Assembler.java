@@ -43,6 +43,12 @@ public class Assembler implements Emitter {
   private static byte[] backingStore;
   Hashtable constants;
 
+  public static class LabelReference {
+    int patchloc;
+    boolean relative;
+    boolean positive;
+  }
+
   public static class Label {
     Object name;
     int location;
@@ -69,9 +75,26 @@ public class Assembler implements Emitter {
       location = bytes.position();
       // Backpatch forward jumps
       for (Iterator i =  references.iterator(); i.hasNext(); ) {
-        int patchloc = ((Integer)i.next()).intValue();
-        int offset = location - patchloc - 2;
-        if (offset < MIN_OFFSET() || offset > MAX_OFFSET()) {
+        LabelReference lr = (LabelReference)i.next();
+        int patchloc = lr.patchloc;
+        int offset = location - (lr.relative ? (patchloc + 2) : 0);
+        if (!lr.positive)
+          offset = -offset;
+
+        boolean rangecheck = true;
+        if (!lr.relative) {
+          short curval = bytes.getShort(patchloc);
+          offset += curval;
+
+          // When we're in the middle of evaluating an expression like
+          // (label1 - label0), the offset may be temporarily out of range,
+          // so disable the check
+
+          if (curval == 0)
+            rangecheck = false;
+        }
+
+        if (rangecheck && (offset < MIN_OFFSET() || offset > MAX_OFFSET())) {
           throw new CompilerException((this instanceof Block?"Block":"Label") + " " +
                                       name + ": jump offset " + offset + " too large");
         }
@@ -92,8 +115,16 @@ public class Assembler implements Emitter {
     }
 
     public void addReference(int patchloc) {
+      addReference(patchloc, true, true);
+    }
+
+    public void addReference(int patchloc, boolean relative, boolean positive) {
       assert (! isResolved()) : "adding reference to resolved label";
-      references.add(new Integer(patchloc));
+      LabelReference lr = new LabelReference();
+      lr.patchloc = patchloc;
+      lr.relative = relative;
+      lr.positive = positive;
+      references.add(lr);
     }
 
     public String toString() {
@@ -170,6 +201,56 @@ public class Assembler implements Emitter {
     return (Label)labels.get(name);
   }
 
+  public void resolveTarget(TargetInstruction target, Label[] labels) {
+    if (labels.length > 1) {
+
+      // Multiple labels indicate that we are doing label arithmetic,
+      // each pair is a difference of values, used to compute the
+      // size of a code block.  This is needed for the try instruction.
+      // At the moment, we only implement this for forward references,
+      // which solves the only case we care about with the try instruction.
+
+      assert labels.length % 2 == 0 : "multiple target labels must be in pairs";
+
+      // Emit the instruction and then get the list of addresses
+      // to backpatch.
+
+      int origloc = bytes.position();
+      target.writeBytes(bytes, constants);
+
+      for (int i=0; i<labels.length; i+=2) {
+        Label labelpos = labels[i];
+        Label labelneg = labels[i+1];
+
+        assert (labelpos.location == -1 && labelneg.location == -1) :
+          "target arithmetic using backward refs not implemented";
+
+        int targetoff = target.targetOffset(i/2);
+        int patchloc = (targetoff < 0 ? bytes.position() : origloc) + targetoff;
+
+        labelpos.addReference(patchloc, false, true);  // add absolute pos value
+        labelneg.addReference(patchloc, false, false); // add absolute neg value
+      }
+    } else if (labels[0].location == -1) {
+      // Target location isn't yet available.  Use a null
+      // offset, and add the address to be patched to this
+      // label's list of backpatch locations.
+      int origloc = bytes.position();
+      target.writeBytes(bytes, constants);
+
+      int targetoff = target.targetOffset(0);
+      int patchloc = (targetoff < 0 ? bytes.position() : origloc) + targetoff;
+      labels[0].addReference(patchloc);
+    } else {
+      // Target computation requires that we write the instruction first!
+      target.targetOffset = 0;
+      target.writeBytes(bytes, constants);
+      short offset = labels[0].computeOffset(bytes);
+      assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
+      bytes.putShort(bytes.position() - 2, offset);
+    }
+  }
+
   public void emit(Instruction instr) {
     // Verify there is room for a maximal instruction (1<<16)
     if (! (bytes.remaining() > 1<<16)) {
@@ -199,23 +280,19 @@ public class Assembler implements Emitter {
       label.setLocation(bytes);
     } else if (instr instanceof TargetInstruction) {
       TargetInstruction target = (TargetInstruction)instr;
-      Label label = getLabel(target.getTarget(), instr instanceof BranchInstruction);
-      int loc = label.location;
-      if (loc == -1) {
-        // Target location isn't yet available.  Use a null
-        // offset, and add the address to be patched to this
-        // label's list of backpatch locations.
-        target.writeBytes(bytes, constants);
-        int patchloc = bytes.position() - 2;
-        label.addReference(patchloc);
-      } else {
-        // Target computation requires that we write the instruction first!
-        target.targetOffset = 0;
-        target.writeBytes(bytes, constants);
-        short offset = label.computeOffset(bytes);
-        assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
-        bytes.putShort(bytes.position() - 2, offset);
-        }
+      Object targetval = target.getTarget();
+      Label[] labels;
+      if (targetval instanceof Object[]) {
+        Object[] vals = (Object[])targetval;
+        labels = new Label[vals.length];
+        for (int i=0; i<vals.length; i++)
+          labels[i] = getLabel(vals[i], instr instanceof BranchInstruction);
+      }
+      else {
+        labels = new Label[1];
+        labels[0] = getLabel(targetval, instr instanceof BranchInstruction);
+      }
+      resolveTarget(target, labels);
     } else {
       instr.writeBytes(bytes, constants);
     }

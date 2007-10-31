@@ -1,0 +1,48 @@
+<canvas>
+  <simplelayout />
+  <text name="status0" />
+  <text name="status1" />
+  <text name="status2" />
+  <text name="status3" />
+  <text name="status4" />
+
+  <text name="flawed">
+    <method name="func" args="val">
+      var zero = 0;
+
+      status2.setText("about to die...");
+
+      // Do our best to create a runtime exception.
+      // unfortunately none of the obvious things, like
+      // divide by zero, ('x' instance of 3), etc.
+      // will cause the flash runtime to throw an exception.
+      //
+      throw "Hello";
+            
+      status0.setText("BAD: should not see this!");
+
+    </method>
+  </text>
+
+  <script>
+    status0.setText("The following four lines should read OKAY 1-4.");
+    status1.setText("before try");
+    try {
+        status1.setText("OKAY 1");
+        flawed.func();
+        status1.setText("after func, should not see!");
+    }
+    catch (ex) {
+        status2.setText("OKAY 2: exception text = " + ex);
+    }
+    finally {
+        status3.setText("OKAY 3");
+    }
+    status4.setText("OKAY 4");
+
+  </script>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

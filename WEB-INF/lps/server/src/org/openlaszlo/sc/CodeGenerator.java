@@ -453,11 +453,95 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   }
 
   public SimpleNode visitTryStatement(SimpleNode node, SimpleNode[] children) {
-    throw new CompilerImplementationError("cannot handle try statement " + node, node);
+    SimpleNode block = children[0];
+    int len = children.length;
+    assert len == 2 || len == 3;
+    SimpleNode catchNode = null;
+    SimpleNode finallyNode = null;
+    int flags = 0;
+
+    if (len == 2) {
+      // Could be catch or finally clause
+      if (children[1] instanceof ASTCatchClause) {
+        catchNode = children[1];
+      }
+      else {
+        finallyNode = children[1];
+      }
+    }
+    else {
+      catchNode = children[1];
+      finallyNode = children[2];
+    }
+
+    String catchVarName = "";
+
+    // For catch and finally, reach down to get
+    // the target node to visit.
+    //
+    if (catchNode != null) {
+      SimpleNode[] catchchildren = catchNode.getChildren();
+      SimpleNode id = catchchildren[0];
+      assert id instanceof ASTIdentifier;
+      catchVarName = ((ASTIdentifier)id).getName();
+      catchNode = catchchildren[1];
+      flags |= Instructions.TryInstruction.FLAGS_HAS_CATCH;
+    }
+    if (finallyNode != null) {
+      finallyNode = finallyNode.getChildren()[0];
+      flags |= Instructions.TryInstruction.FLAGS_HAS_FINALLY;
+    }
+
+    // Try statement code looks like this in the general case:
+    //
+    //       try size0, size1, size2, 'varname'
+    //     label0:
+    //       ...try-block...
+    //       branch label2:
+    //     label1:
+    //       ...catch-block...
+    //     label2:
+    //       ...finally-block...
+    //     label3:
+    //
+    // where sizeN is the size of the code block between labelN and labelN+1.
+    // either catch or finally blocks may be missing.  Whether or not
+    // they are missing, we push out all the labels, it just makes it
+    // easier to calculate the block sizes.
+
+    ArrayList code = new ArrayList();
+
+    // The first six args are 3 pairs of labels to represent the size of
+    // each code block, e.g. label1 - label0 => size0
+    Object[] tryargs = { new Integer(1), new Integer(0), // label1 - label0
+                         new Integer(2), new Integer(1), // label2 - label1
+                         new Integer(3), new Integer(2), // label3 - label2
+                         catchVarName, new Integer(flags)};
+    code.add(Instructions.TRY.make(tryargs));
+    code.add(new Integer(0));
+    code.add(block);
+    if (catchNode != null)  // if catch is missing, no need for branch.
+      code.add(Instructions.BRANCH.make(2));
+    code.add(new Integer(1));
+    if (catchNode != null)
+      code.add(catchNode);
+    code.add(new Integer(2));
+    if (finallyNode != null)
+      code.add(finallyNode);
+    code.add(new Integer(3));
+
+    translateControlStructure(node, code.toArray());
+                       
+    return node;
   }
 
   public SimpleNode visitThrowStatement(SimpleNode node, SimpleNode[] children) {
-    throw new CompilerImplementationError("cannot handle throw statement " + node, node);
+    assert children.length == 1 : "throw statement missing expression";
+    SimpleNode expr = children[0];
+
+    visitExpression(expr);
+    collector.emit(Instructions.THROW);
+    return node;
   }
 
   SimpleNode translateInclude(String userfname, String cpass) {
@@ -902,14 +986,26 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       return label;
     }
 
+    String[] lookupLabels(Object[] vals) {
+      String[] rets = new String[vals.length];
+      for (int i=0; i<vals.length; i++) {
+        rets[i] = lookupLabel(vals[i]);
+      }
+      return rets;
+    }
+
     Instruction resolveLocalLabel(Object instr) {
       if (instr instanceof Integer) {
         return Instructions.LABEL.make(lookupLabel(instr));
       }
       if (instr instanceof Instructions.TargetInstruction) {
         Instructions.TargetInstruction target = (Instructions.TargetInstruction)instr;
-        if (target.getTarget() instanceof Integer) {
-          return target.replaceTarget(lookupLabel(target.getTarget()));
+        Object targetval = target.getTarget();
+        if (targetval instanceof Object[]) {
+          return target.replaceTarget(lookupLabels((Object[])targetval));
+        }
+        if (targetval instanceof Integer) {
+          return target.replaceTarget(lookupLabel(targetval));
         }
       }
       return (Instruction)instr;

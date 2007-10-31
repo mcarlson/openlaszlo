@@ -158,6 +158,8 @@ public class Instructions {
         inst = new DefineFunction2Instruction(op);
       } else if (op == Actions.WITH) {
         inst = new WITHInstruction(op);
+      } else if (op == Actions.TRY) {
+        inst = new TryInstruction(op);
       } else if (BranchInstruction.OPCODES.contains(op)) {
         inst = new BranchInstruction(op);
       } else {
@@ -492,6 +494,16 @@ public class Instructions {
     public int argsBytes() {
       return 2;
     }
+
+    // The offset of the target part of the instruction.
+    // If positive, it is relative from the beginning of the instruction,
+    // If negative, it is relative from the end.
+    // Default version has branch target as last two bytes
+
+    public int targetOffset(int whichTarget) {
+      return -2;
+    }
+
   }
 
 
@@ -545,6 +557,101 @@ public class Instructions {
     }
   }
 
+  public static class TryInstruction extends TargetInstruction {
+
+    // inherited targetOffset is ignored
+
+    short blockStart;
+    short catchStart;
+    short finallyStart;
+    short blockEnd;
+    public static int FLAGS_HAS_CATCH = 0x1;
+    public static int FLAGS_HAS_FINALLY = 0x2;
+
+    protected TryInstruction(Action op) {
+      this(op, null);
+    }
+    
+    protected TryInstruction(Action op, List args) {
+      this(op, args, (short)0, (short)0, (short)0, (short)0);
+    }
+
+    protected TryInstruction(Action op, List args, short blockStart, short catchStart, short finallyStart, short blockEnd) {
+      super(op, args);
+      assert op == Actions.TRY;
+      this.blockStart = blockStart;
+      this.catchStart = catchStart;
+      this.finallyStart = finallyStart;
+      this.blockEnd = blockEnd;
+    }
+
+    // The args are 6 labels, a variable name for the exception, and flags.
+    // The labels are three pairs - each pair represents label arithmetic,
+    // e.g. label1 - label0 to represent the size of a code block.
+
+    public TargetInstruction makeTargetInstruction(List args) {
+      return new TryInstruction(this.op, args);
+    }
+
+    // multiple target  by returning an array
+    public Object getTarget() {
+      Object[] result = new Object[6];
+      for (int i=0; i<6; i++)
+        result[i] = this.args.get(i);
+      return result;
+    }
+
+    public TargetInstruction replaceTarget(Object target) {
+      TargetInstruction replace = makeTargetInstruction(this.args);
+      Object[] targetarr = (Object[])target;
+      for (int i=0; i<6; i++)
+        replace.args.set(i, targetarr[i]);
+      return replace;
+    }
+
+    public void writeArgs(ByteBuffer bytes, Map pool) {
+      assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
+      List args = this.args;
+      byte flags = (byte)((Integer)args.get(7)).intValue();
+      bytes.put(flags);
+      bytes.putShort(this.catchStart);
+      bytes.putShort(this.finallyStart);
+      bytes.putShort(this.blockEnd);
+      String varname = (String)args.get(6);
+      if (varname == null) varname = "";
+      try {
+        bytes.put(varname.getBytes("UTF-8"));
+      } catch (UnsupportedEncodingException e) {
+        assert false : "this can't happen";
+      }
+      bytes.put((byte)0);
+    }
+
+    public int argsBytes() {
+      List args = this.args;
+      String varname = (String)args.get(3);
+      if (varname == null) varname = "";
+      // size => 1 byte flag + three targets + string + null
+      int b = 1 + 6 + varname.length() + 1;
+      return b;
+    }
+
+    public int targetOffset(int whichTarget) {
+
+      // There are three targets to be filled,
+      // each is a two byte value, and they begin
+      // at byte 4 (after the flags)
+
+      return 4 + whichTarget*2;
+    }
+
+    public String toString() {
+      StringBuffer b = new StringBuffer();
+      b.append("try '" + (String)this.args.get(3) + "'");
+      return b.toString();
+    }
+
+  }
 
   public static class DefineFunctionInstruction extends TargetInstruction {
 
@@ -1269,6 +1376,8 @@ public class Instructions {
 
   // Flash 7
   public static Instruction DefineFunction2          = Instruction.curry(Actions.DefineFunction2);
+  public static Instruction TRY                      = Instruction.curry(Actions.TRY);
+  public static Instruction THROW                    = Instruction.curry(Actions.THROW);
 
   // Flash Lite 2
   public static Instruction FSCommand2          = Instruction.curry(Actions.FSCommand2);

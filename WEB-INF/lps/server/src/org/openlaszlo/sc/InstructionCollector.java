@@ -28,7 +28,7 @@
  */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -93,6 +93,17 @@ public class InstructionCollector extends ArrayList {
     }
   }
 
+  // Rename labels uniquely
+  private Object uniqueLabel(Map labels, Object label)
+  {
+    Object newLabel = labels.get(label);
+    if (newLabel == null) {
+      newLabel = newLabel();
+      labels.put(label, newLabel);
+    }
+    return newLabel;
+  }
+
   public void appendInstructions(List instrsList) {
     // TODO [2003-03-06 ptw] Why not relabel all instructions? (I.e.,
     // move this to emit)
@@ -101,26 +112,12 @@ public class InstructionCollector extends ArrayList {
     for (int i = 0; i < instrs.length; i++) {
       Instruction instr = instrs[i];
       if (instr instanceof LABELInstruction) {
-        // Rename labels uniquely
-        Object label = ((LABELInstruction)instr).name;
-        Object newLabel;
-        if (labels.containsKey(label)) {
-          newLabel = labels.get(label);
-        } else {
-          newLabel = newLabel();
-          labels.put(label, newLabel);
-        }
+
+        Object newLabel = uniqueLabel(labels, ((LABELInstruction)instr).name);
         instr = Instructions.LABEL.make(newLabel);
       } else if (instr instanceof TargetInstruction) {
         TargetInstruction target = (TargetInstruction)instr;
-        Object label = target.getTarget();
-        Object newLabel;
-        if (labels.containsKey(label)) {
-          newLabel = labels.get(label);
-        } else {
-          newLabel = newLabel();
-          labels.put(label, newLabel);
-        }
+        Object newLabel = uniqueLabel(labels, target.getTarget());
         instr = target.replaceTarget(newLabel);
       }
       emit(instr);

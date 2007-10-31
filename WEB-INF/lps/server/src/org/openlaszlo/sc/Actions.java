@@ -236,7 +236,7 @@ public class Actions {
     public static Action EXTENDS                  = new Action("EXTENDS", (byte)0x69);
     public static Action DefineFunction2          = new Action("DefineFunction2", (byte)0x8e);
     public static Action TRY                      = new Action("TRY", (byte)0x8f);
-    public static Action THROW                    = new Action("THROW", (byte)0x2a);
+    public static Action THROW                    = new Action("THROW", (byte)0x2a, 1, 0);
 
     /*
      * Flash Lite 2
