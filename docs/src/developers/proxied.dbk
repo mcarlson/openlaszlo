@@ -259,20 +259,24 @@ Using 'domain="*"' is very liberal; it gives access to this file to any program.
 <para>
 2. put this code in your OpenLaszlo application:
 </para>
+<!-- fix LPP-4927: Chapter 25 Section 3.1.1 misleading example url and minor error in following information. IORIO 31 oct 2007 -->
 <programlisting>
 &lt;script&gt;
-System.security.loadPolicyFile("http://localhost:8888/[server]/crossdomain.xml");
+System.security.loadPolicyFile("http://[server]/crossdomain.xml");
 &lt;/script&gt;
 </programlisting>
 <para>
 Where "server" is the name of the directory in which the crossdomain file resides.
 </para>
+<note>
 <para>
-Note also that some versions of browsers do not recognize the
+Older versions of the Flash player do not recognize the
 crossdomain.xml file when asked to do POST requests, but do recognize it for
-querystrings.  If this situation arises, the user will have to upgrade to an accommodating browser in order to make POSTs.
+querystrings.  If this situation arises, you will have to upgrade your Flash player to version 7,0,68,0 or higher in order to make POSTs.
 </para>
-<para/></section><section><title condition="dhtml">Restrictions on DHTML</title>
+<para/>
+</note>
+</section><section><title condition="dhtml">Restrictions on DHTML</title>
 <para>
 In SOLO applications compiled to DHTML, the application and the data do not originate at the same URL, the data load will fail. This is a consequence of the XMLHTTPRequest() object, which enforces this policy. There are browser-specific workarounds to this problem, but they are nonstandard and not recommended. 
 </para>
