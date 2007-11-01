@@ -301,50 +301,54 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
                 } else if (__pthis__.__abort) {
                     //Debug.write("abort for id=%s, xhr=%w", __pthis__.__loaderid, __pthis__.req);
                 } else {
+                    var status = -1;
                     try {
-                        // only if "OK"
-                        //Debug.write("status=%d", __pthis__.req.status);
-                        if (__pthis__.req.status == 200 || __pthis__.req.status == 304) {
-                            var elt = null;
-                            var xml = __pthis__.req.responseXML;
-                            __pthis__.responseXML = xml;
-                            var lzxdata = null;
-                            if (xml != null && parsexml) {
-                                var nodes = __pthis__.req.responseXML.childNodes;
-                                // find first content (type == 1) child node
-                                for (var i = 0; i < nodes.length; i++) {
-                                    var child = nodes.item(i);
-                                    if (child.nodeType == 1) {
-                                        elt = child;
-                                        break;
-                                    }
-                                }
-                                lzxdata = LzXMLTranslator.copyXML(elt,
-                                                            __pthis__.options.trimwhitespace,
-                                                            __pthis__.options.nsprefix);
-                            }
-                    
-                            __pthis__.responseText = __pthis__.req.responseText;
-                            __pthis__.removeTimeout(__pthis__);
-                    
-                    
-                    
-                            /**** DEBUGGING 
-                            var xmlSerializer = new XMLSerializer();
-                            var markup = xmlSerializer.serializeToString(elt);
-                            Debug.write("loadXMLDoc", elt, markup, d.serialize());
-                             *** /DEBUGGING
-                             */
-                            __pthis__.req = null;
-                            __pthis__.loadSuccess(__pthis__, lzxdata);
-                        } else {
-                            __pthis__.req = null;
-                            __pthis__.loadError(__pthis__, null);
-                        }
+                        status = __pthis__.req.status;
                     } catch (e) {
                         //if you abort a request, readyState will be set to 4, 
                         //but reading status will result in an exception (at least in Firefox).
                         //Debug.write("catched error: %s", e);
+                    }
+                    
+                    // only if "OK"
+                    //Debug.write("status=%d", status);
+                    if (status == 200 || status == 304) {
+                        var elt = null;
+                        var xml = __pthis__.req.responseXML;
+                        __pthis__.responseXML = xml;
+                        var lzxdata = null;
+                        if (xml != null && parsexml) {
+                            var nodes = __pthis__.req.responseXML.childNodes;
+                            // find first content (type == 1) child node
+                            for (var i = 0; i < nodes.length; i++) {
+                                var child = nodes.item(i);
+                                if (child.nodeType == 1) {
+                                    elt = child;
+                                    break;
+                                }
+                            }
+                            lzxdata = LzXMLTranslator.copyXML(elt,
+                                                        __pthis__.options.trimwhitespace,
+                                                        __pthis__.options.nsprefix);
+                        }
+                    
+                        __pthis__.responseText = __pthis__.req.responseText;
+                        __pthis__.removeTimeout(__pthis__);
+                    
+                    
+                    
+                        /**** DEBUGGING 
+                        var xmlSerializer = new XMLSerializer();
+                        var markup = xmlSerializer.serializeToString(elt);
+                        Debug.write("loadXMLDoc", elt, markup, d.serialize());
+                         *** /DEBUGGING
+                         */
+                        __pthis__.req = null;
+                        __pthis__.loadSuccess(__pthis__, lzxdata);
+                    } else {
+                        __pthis__.removeTimeout(__pthis__);
+                        __pthis__.req = null;
+                        __pthis__.loadError(__pthis__, null);
                     }
                 }
             }
