@@ -46,19 +46,7 @@ example defines a class square, and instantiates it twice.</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Defining a new tag</title><programlisting role="lzx-embednew"><filename>introductory-classes-$1.lzx</filename><parameter/><code>
-&lt;canvas height="20"&gt;
-  &lt;class name="square" width="20" height="20" bgcolor="red"/&gt;
-  &lt;square/&gt;
-  &lt;square x="30"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="20"&gt;
-  &lt;class name="square" width="20" height="20" bgcolor="red"/&gt;
-  &lt;square/&gt;
-  &lt;square x="30"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/introductory-classes-$1.lzx></example?>
+<!-- remove commented out sample code here and others that was ignored by the build. IORIO 31 oct 2007 -->
 
 <para>This program is equivalent to the following program, but is shorter
 and easier to maintain.</para>
@@ -70,13 +58,6 @@ and easier to maintain.</para>
    <textobject><textdata fileref="programs/introductory-classes-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Without the class tag</title><programlisting role="lzx-embednew"><filename>introductory-classes-$2.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;view width="20" height="20" bgcolor="red"/&gt;
-  &lt;view x="30" width="20" height="20" bgcolor="red"/&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;view width="20" height="20" bgcolor="red"/&gt;
-  &lt;view x="30" width="20" height="20" bgcolor="red"/&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/introductory-classes-$2.lzx></example?>
 
 <para>In addition, the class definition in the first program can be moved
 to a separate file, through the use of the <indexterm><primary>library</primary></indexterm><sgmltag class="element">&lt;library&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -92,19 +73,6 @@ to a separate file, through the use of the <indexterm><primary>library</primary>
    <textobject><textdata fileref="programs/introductory-classes-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Defining a tag in a library file</title><programlisting role="lzx-embednew"><filename>introductory-classes-$3.lzx</filename><parameter/><code>
-&lt;canvas height="20"&gt;
-  &lt;include href="square.lzx"/&gt;
-  &lt;square/&gt;
-  &lt;square x="30"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="20"&gt;
-  &lt;include href="square.lzx"/&gt;
-  &lt;square/&gt;
-  &lt;square x="30"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/introductory-classes-$3.lzx></example?>
 
 <informalexample role="live-example"><programlisting>
 &lt;library&gt;
@@ -123,16 +91,6 @@ to a separate file, through the use of the <indexterm><primary>library</primary>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Overriding a class attribute</title><programlisting role="lzx-embednew"><filename>introductory-classes-$5.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;include href="square.lzx"/&gt;
-  &lt;square/&gt;
-  &lt;square x="30" bgcolor="green"/&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;include href="square.lzx"/&gt;
-  &lt;square/&gt;
-  &lt;square x="30" bgcolor="green"/&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/introductory-classes-$5.lzx></example?>
-
 <para>A class can introduce a new attribute with the <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: attribute-->
  element:</para>
@@ -144,26 +102,11 @@ to a separate file, through the use of the <indexterm><primary>library</primary>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Defining an attribute</title><programlisting role="lzx-embednew"><filename>introductory-classes-$6.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;class name="square" width="${this.size}" height="${this.size}" bgcolor="red"&gt;
-    &lt;attribute name="size" value="20"/&gt;
-  &lt;/class&gt;
-  &lt;square/&gt;
-  &lt;square size="15" x="30"/&gt;
-  &lt;square size="10" x="50"/&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;class name="square" width="${this.size}" height="${this.size}" bgcolor="red"&gt;
-    &lt;attribute name="size" value="20"/&gt;
-  &lt;/class&gt;
-  &lt;square/&gt;
-  &lt;square size="15" x="30"/&gt;
-  &lt;square size="10" x="50"/&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/introductory-classes-$6.lzx></example?>
-
+<!-- fix LPP-4923: replace ulink with xref to fix broken link. IORIO 31 oct 2007 -->
 <para>For more information about attributes and class definitions, see
 the <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: attribute-->
- tag and the <ulink url="../guide/classes-tutorial.html" type="laszlo-dguide">Class tutorial</ulink>.</para>
+ tag and <xref linkend="classes-tutorial" />.</para>
 
 <para/></section><section><title>Children</title>
 <para>If a class definition contains children, these children are copied
@@ -176,24 +119,6 @@ for each instance:</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Class children</title><programlisting role="lzx-embednew"><filename>introductory-classes-$7.lzx</filename><parameter/><code>
-&lt;canvas height="20"&gt;
-  &lt;class name="myframe" width="20" height="20" bgcolor="red"&gt;
-    &lt;view x="2" y="2" width="16" height="16" bgcolor="blue"/&gt;
-  &lt;/class&gt;
-  &lt;myframe/&gt;
-  &lt;myframe x="30"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="20"&gt;
-  &lt;class name="myframe" width="20" height="20" bgcolor="red"&gt;
-    &lt;view x="2" y="2" width="16" height="16" bgcolor="blue"/&gt;
-  &lt;/class&gt;
-  &lt;myframe/&gt;
-  &lt;myframe x="30"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/introductory-classes-$7.lzx></example?>
-
 <example role="live-example">
    <title>Using attributes and class children together</title>
    <programlisting language="lzx">
@@ -201,29 +126,6 @@ for each instance:</para>
    </programlisting>
 </example>
 
-<?example role="live-example" id="class-1"><title>Using attributes and class children together</title><programlisting role="lzx-embednew"><filename>class-1.lzx</filename><parameter/><code>
-&lt;canvas height="40"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    &lt;view x="5" y="5" width="${parent.width-10}" 
-          height="${parent.height-10}" 
-          bgcolor="blue"/&gt;
-  &lt;/class&gt;
-  
-  &lt;myframe width="40" height="40"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="40"&gt;
-  &lt;class name="myframe" extends="view"<co id="N10086"/>&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    &lt;view x="5" y="5" width="${parent.width-10}" 
-          height="${parent.height-10}" 
-          bgcolor="blue"/&gt;
-  &lt;/class&gt;
-  
-  &lt;myframe width="40" height="40"/&gt;<co id="N10090"/>
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-1.lzx></example?>
 <calloutlist><callout arearefs="N10086"><para>
     The <indexterm><primary>extends</primary></indexterm><sgmltag class="attribute">extends</sgmltag> is optional here.  The default base class is <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname>.</para></callout><callout arearefs="N10090"><para>
     Create an instance of <indexterm><primary>myframe</primary></indexterm><classname>myframe</classname>.</para></callout></calloutlist>
@@ -253,16 +155,6 @@ classes in that they can hold textual content:</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Built-in text classes</title><programlisting role="lzx-embednew"><filename>introductory-classes-$9.lzx</filename><parameter/><code>
-&lt;canvas height="50" layout="y"&gt;
-  &lt;inputtext&gt;plain text&lt;/inputtext&gt;
-  &lt;text&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/text&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>
-&lt;canvas height="50" layout="y"&gt;
-  &lt;inputtext&gt;plain text&lt;/inputtext&gt;
-  &lt;text&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/text&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/introductory-classes-$9.lzx></example?>
-
 <para>The <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: text-->
  may contain character text,
@@ -287,21 +179,6 @@ plain text, respectively.  The text content is available as the
    <textobject><textdata fileref="programs/introductory-classes-$10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Extending the built-in text classes</title><programlisting role="lzx-embednew"><filename>introductory-classes-$10.lzx</filename><parameter/><code>
-&lt;canvas height="50" layout="y"&gt;
-  &lt;class name="mytext" extends="text"/&gt;
-  &lt;class name="myinputtext" extends="inputtext"/&gt;
-  &lt;myinputtext&gt;plain text&lt;/myinputtext&gt;
-  &lt;mytext&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/mytext&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50" layout="y"&gt;
-  &lt;class name="mytext" extends="text"/&gt;
-  &lt;class name="myinputtext" extends="inputtext"/&gt;
-  &lt;myinputtext&gt;plain text&lt;/myinputtext&gt;
-  &lt;mytext&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/mytext&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/introductory-classes-$10.lzx></example?>
 
 <para>A tag may also contain text if it defines an attribute named
 <indexterm><primary>text</primary></indexterm><sgmltag class="attribute">text</sgmltag> with a value of <literal>text</literal> (for
@@ -320,33 +197,6 @@ or <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&
    <textobject><textdata fileref="programs/introductory-classes-$11.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Defining new text classes</title><programlisting role="lzx-embednew"><filename>introductory-classes-$11.lzx</filename><parameter/><code>
-&lt;canvas height="50" layout="y"&gt;
-  &lt;class name="mytext"&gt;
-    &lt;attribute name="text" type="html"/&gt;
-    &lt;text text="${parent.text}"/&gt;
-  &lt;/class&gt;
-  &lt;class name="myinputtext"&gt;
-    &lt;attribute name="text" type="html"/&gt;
-    &lt;inputtext text="${parent.text}"/&gt;
-  &lt;/class&gt;
-  &lt;mytext&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/mytext&gt;
-  &lt;myinputtext&gt;plain text&lt;/myinputtext&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50" layout="y"&gt;
-  &lt;class name="mytext"&gt;
-    &lt;attribute name="text" type="html"/&gt;
-    &lt;text text="${parent.text}"/&gt;
-  &lt;/class&gt;
-  &lt;class name="myinputtext"&gt;
-    &lt;attribute name="text" type="html"/&gt;
-    &lt;inputtext text="${parent.text}"/&gt;
-  &lt;/class&gt;
-  &lt;mytext&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/mytext&gt;
-  &lt;myinputtext&gt;plain text&lt;/myinputtext&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/introductory-classes-$11.lzx></example?>
 
 <para/></section><section id="introductory-classes.placement"><title>Placement</title>
 
@@ -361,36 +211,6 @@ is generally not desirable for container classes. e.g.:</para>
    <textobject><textdata fileref="programs/class-2.lzx"/></textobject> 
    </programlisting>
 </example>
-
-<?example role="live-example" id="class-2"><title>Default placement of children in a class</title><programlisting role="lzx-embednew"><filename>class-2.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    &lt;view x="5" y="5" width="${parent.width-10}"
-          height="${parent.height-10}"
-          bgcolor="#FFFFCC" /&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- Create an instance of myframe with text inside it--&gt;
-  &lt;myframe width="220" height="20"&gt;
-    &lt;text&gt;This is some text&lt;/text&gt;
-  &lt;/myframe&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    &lt;view x="5" y="5" width="${parent.width-10}"
-          height="${parent.height-10}"
-          bgcolor="#FFFFCC" /&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- Create an instance of myframe with text inside it--&gt;
-  &lt;myframe width="220" height="20"&gt;
-    <emphasis role="b">&lt;text&gt;This is some text&lt;/text&gt;</emphasis>
-  &lt;/myframe&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-2.lzx></example?>
 
 <para>This behavior can be changed using the
 <indexterm><primary>node.defaultplacement</primary></indexterm><sgmltag class="attribute">node.defaultplacement</sgmltag> attribute or the
@@ -410,38 +230,6 @@ quoted.</para></warning>
    <textobject><textdata fileref="programs/class-3.lzx"/></textobject> 
    </programlisting>
 </example>
-
-<?example role="live-example" id="class-3"><title>Using placement within a class</title><programlisting role="lzx-embednew"><filename>class-3.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    &lt;attribute name="defaultplacement" value="'insideview'"/&gt;
-    &lt;view x="5" y="5" width="${parent.width-10}" name='insideview'
-          height="${parent.height-10}" 
-          bgcolor="#FFFFCC"/&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- Create an instance of myframe with text inside it--&gt;
-  &lt;myframe width="220" height="50"&gt;
-    &lt;text&gt;This is some text&lt;/text&gt;
-  &lt;/myframe&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;class name="myframe" extends="view"&gt;
-    &lt;attribute name="bgcolor" value="red"/&gt;
-    <emphasis role="em">&lt;attribute name="defaultplacement" value="'insideview'"/&gt;</emphasis>
-    &lt;view x="5" y="5" width="${parent.width-10}" <emphasis role="em">name='insideview'</emphasis>
-          height="${parent.height-10}" 
-          bgcolor="#FFFFCC"/&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- Create an instance of myframe with text inside it--&gt;
-  &lt;myframe width="220" height="50"&gt;
-    &lt;text&gt;This is some text&lt;/text&gt;
-  &lt;/myframe&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/class-3.lzx></example?>  
 <para/></section></section><section><title>Constraints in class definitions</title>
 <para>
 Constraints are a general mechanism for relating the value of one attribute to that of another, as explained in <xref linkend="constraints"/>.
@@ -554,40 +342,6 @@ You can also give a view a name no matter how you instantiate it (whether you us
    <textobject><textdata fileref="programs/introductory-classes-$17.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>accessing views by name</title><programlisting role="lzx-embednew"><filename>introductory-classes-$17.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;script&gt;
-    var foo = new LzView(canvas, {width: 50, height: 50, 
-                                  x: 50, y: 100,
-                                  bgcolor: 0,
-                                  name: "myview"});
-  &lt;/script&gt;
-  
-  &lt;button&gt;Make window red
-    &lt;handler name="onclick"&gt;
-      var nameOfView = "myview";
-      canvas[nameOfView].setAttribute('bgcolor', 0xff0000);
-    &lt;/handler&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt; 
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;script&gt;
-    var foo = new LzView(canvas, {width: 50, height: 50, 
-                                  x: 50, y: 100,
-                                  bgcolor: 0,
-                                  name: "myview"});
-  &lt;/script&gt;
-  
-  &lt;button&gt;Make window red
-    &lt;handler name="onclick"&gt;
-      var nameOfView = "myview";
-      canvas[nameOfView].setAttribute('bgcolor', 0xff0000);
-    &lt;/handler&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt; 
-</programlisting><?lzx-edit programs/introductory-classes-$17.lzx></example?>
-
 <para/></section></section><section><title>A Prototype-based language</title>
 
 <para>
