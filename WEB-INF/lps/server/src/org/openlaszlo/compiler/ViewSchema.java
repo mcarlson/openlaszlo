@@ -216,6 +216,39 @@ public class ViewSchema extends Schema {
         }
     }
 
+    /** Checks to do when declaring a method on an instance;
+     * Does the class exist?
+     * Does the superclass allow overriding of this method?
+     */
+    public void checkInstanceMethodDeclaration (Element elt, String classname, String methodName,
+                                        CompilationEnvironment env) {
+        ClassModel classModel = getClassModel(classname);
+        if (classModel == null) {
+            throw new RuntimeException(
+/* (non-Javadoc)
+ * @i18n.test
+ * @org-mes="undefined class: " + p[0]
+ */
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                ViewSchema.class.getName(),"051018-168", new Object[] {classname})
+                                       );
+        }
+        AttributeSpec attrspec = classModel.getAttribute(methodName);
+        if ( attrspec != null) {
+            if (attrspec.type != METHOD_TYPE) {
+                env.warn(
+                    "Method named "+methodName+" on class "+classname+
+                    " conflicts with attribute with named "+methodName+" and type "+attrspec.type,
+                    elt);
+            }
+        }
+
+        if (!methodOverrideAllowed(classname, methodName)) {
+            env.warn("Method "+classname+"."+methodName+" is overriding a superclass method"
+                     + " of the same name which has been declared non-overridable" , elt);
+        }
+    }
+
     public String getSuperclassName(String className) {
         ClassModel model = getClassModel(className);
         if (model == null)
@@ -401,7 +434,7 @@ public class ViewSchema extends Schema {
         if (mClassMap.get(classname) == null) {
             mClassMap.put(classname, info);
         } else {
-            throw new CompilationError("makeNewStaticClass: duplicate definition for static class " + classname);
+            throw new CompilationError("makeNewStaticClass: `duplicate definition for static class " + classname);
         }
     }
 

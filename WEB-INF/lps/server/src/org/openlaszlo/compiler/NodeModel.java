@@ -1207,7 +1207,7 @@ solution =
             // Method declarations inside of class definitions will be already checked elsewhere,
             // in the call from ClassCompiler.updateSchema to schema.addElement
             if (!"class".equals(classname)) {
-                schema.checkMethodDeclaration(element, classname, name, env);
+                schema.checkInstanceMethodDeclaration(element, classname, name, env);
             }
         }
 
