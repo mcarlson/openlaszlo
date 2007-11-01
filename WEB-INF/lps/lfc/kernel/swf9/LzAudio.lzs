@@ -1,5 +1,5 @@
 /**
-  * LzAudio.as
+  * LzAudio.lzx
   *
   * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -12,21 +12,19 @@
   * @shortdesc This service manages audio resource playback.
   * 
   */
-var LzAudio = new Object;
-{
-#pragma "passThrough=true"
-LzAudio.globalSound = new Sound();
-}
-LzAudio.globalSound.$xxx = "globsnd" ;
+class LzAudioClass {
+
+var globalSound = new Sound();
+//TODO
+//LzAudio.globalSound.$xxx = "globsnd" ;
 
 /**
   * Sets the current sound resource and starts playing it. 
   * @param String snd: Name of a sound resource to play
   */
-LzAudio.playSound = function ( snd , t ){
+function playSound ( snd , t ){
     // Intentionally undocumented 
     // @param Object t: MovieClip for sound to act upon
-    #pragma "passThrough=true"
     var s = new Sound(t); 
     s.attachSound(snd);  
     s.start(); 
@@ -35,10 +33,9 @@ LzAudio.playSound = function ( snd , t ){
 /**
   * Stop playing the current sound
   * */
-LzAudio.stopSound = function ( t ){
+function stopSound ( t ){
     // Intentionally undocumented 
     // @param Object t: MovieClip for sound to act upon
-    #pragma "passThrough=true"
     var s = new Sound(t); 
     s.stop(); 
 }
@@ -46,10 +43,9 @@ LzAudio.stopSound = function ( t ){
 /**
   * Start playing the current sound
   * */
-LzAudio.startSound = function (t) {
+function startSound (t) {
     // Intentionally undocumented 
     // @param Object t: MovieClip for sound to act upon
-    #pragma "passThrough=true"
     var s = new Sound(t);
     s.start(v);
 }
@@ -57,10 +53,9 @@ LzAudio.startSound = function (t) {
 /**
   * @access private
   */
-LzAudio.getSoundObject = function (t) {
+function getSoundObject (t) {
     if ( t == null ) return this.globalSound;
     if ( t.$snd == null ){
-        #pragma "passThrough=true"
         t.$snd = new Sound(t);
     }
     return t.$snd;
@@ -71,7 +66,7 @@ LzAudio.getSoundObject = function (t) {
   * @param Object t: MovieClip for sound to act upon
   * @return Number: volume from 0 to 100 (0 is silent).
   */
-LzAudio.getVolume = function (t) {
+function getVolume (t) {
     // Intentionally undocumented 
     return this.getSoundObject(t).getVolume();
 }
@@ -80,7 +75,7 @@ LzAudio.getVolume = function (t) {
   * Set the global volume.
   * @param Number v: linear volume from 0 to 100 (0 is silent).
   */
-LzAudio.setVolume = function (v, t) {
+function setVolume (v, t) {
     // Intentionally undocumented 
     // @param Object t: MovieClip for sound to act upon
     var s = this.getSoundObject( t );
@@ -96,7 +91,7 @@ LzAudio.setVolume = function (v, t) {
   * Get the global pan.
   * @return Number: linear pan from -100 to +100 (left to right)
   */
-LzAudio.getPan = function (t) {
+function getPan (t) {
     // Intentionally undocumented 
     // @param Object t: MovieClip for sound to act upon
     var s = this.getSoundObject( t );
@@ -107,7 +102,7 @@ LzAudio.getPan = function (t) {
   * Set the global pan.
   * @param Number p: linear pan from -100 to +100 (left to right)
   */
-LzAudio.setPan = function (p, t) {
+function setPan (p, t) {
     // Intentionally undocumented 
     // @param Object t: MovieClip for sound to act upon
     var s = this.getSoundObject( t );
@@ -118,3 +113,7 @@ LzAudio.setPan = function (p, t) {
         s.setPan(100);
     }
 }
+
+} // End of LzAudioClass
+
+var LzAudio = new LzAudioClass ();

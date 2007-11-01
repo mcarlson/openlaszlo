@@ -14,29 +14,39 @@ Stage.scaleMode = ('canvasscale' in global && global.canvasscale != null) ? glob
 
 // Receives mouse events from the runtime
 // Sent from org/openlaszlo/compiler/SWFFile.java
-var LzScreenKernel = {
-    width: null
-    ,height: null
-    ,__resizeEvent: function() {
-        LzScreenKernel.width = Stage.width;
-        LzScreenKernel.height = Stage.height;
+class LzScreenKernelClass {
+    var width  = null;
+    var height = null;
 
-        if (LzScreenKernel.__callback) LzScreenKernel.__scope[LzScreenKernel.__callback]({width: LzScreenKernel.width, height: LzScreenKernel.height});
-        //Debug.write('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});
+    function __resizeEvent() {
+        this.width  = Stage.width;
+        this.height = Stage.height;
+
+        if (this.__callback) this.__scope[this.__callback]({width: this.width, height: this.height});
+        //Debug.write('LzScreenKernel event', {width: this.width, height: this.height});
     }
-    ,__init: function() {
-        var listener = {
-            onResize: LzScreenKernel.__resizeEvent
+
+    static var __screenlistener = {
+        onResize: function () {
+            LzScreenKernel.__resizeEvent();
         }
-        Stage.addListener(listener);
     }
-    ,__callback: null
-    ,__scope: null
-    ,setCallback: function (scope, funcname) {
+
+    function __init() {
+        Stage.addListener(LzScreenKernelClass.__screenlistener);
+    }
+
+    var __callback = null;
+    var __scope = null;
+
+    function setCallback (scope, funcname) {
         //Debug.write('setCallback', scope, funcname);
         this.__scope = scope;
         this.__callback = funcname;
         this.__init();
-        LzScreenKernel.__resizeEvent();
+        this.__resizeEvent();
     }    
-}
+} // End of LzScreenKernelClass
+
+
+var LzScreenKernel = new LzScreenKernelClass;

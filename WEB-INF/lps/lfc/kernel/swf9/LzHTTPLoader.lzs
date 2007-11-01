@@ -1,5 +1,5 @@
 /**
-  * LzHTTPLoader.as
+  * LzHTTPLoader.lzs
   *
   * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -13,7 +13,9 @@
   */
 
 // We have an internal 'lzloader' property which points to an LzLoader (Flash-7-8-specific)
-var LzHTTPLoader = function (owner, proxied) {
+class LzHTTPLoader {
+
+function initialize (owner, proxied) {
     this.lzloader = this.makeLzLoader(proxied);
     this.owner = owner;
     this.options = {
@@ -34,68 +36,67 @@ var LzHTTPLoader = function (owner, proxied) {
 
 // Default callback handlers
 
-LzHTTPLoader.prototype._loadSuccessHandler = function (data) { this.loadSuccess(this,data); }
-LzHTTPLoader.prototype._loadErrorHandler   = function (data) { this.loadError  (this,data); }
-LzHTTPLoader.prototype._loadTimeoutHandler = function (data) { this.loadTimeout(this,data); }
+function _loadSuccessHandler (data) { this.loadSuccess(this,data); }
+function _loadErrorHandler (data) { this.loadError  (this,data); }
+function _loadTimeoutHandler (data) { this.loadTimeout(this,data); }
 
-LzHTTPLoader.GET_METHOD    = "GET";
-LzHTTPLoader.POST_METHOD   = "POST";
-LzHTTPLoader.PUT_METHOD    = "PUT";
-LzHTTPLoader.DELETE_METHOD = "DELETE";
+static var GET_METHOD    = "GET";
+static var POST_METHOD   = "POST";
+static var PUT_METHOD    = "PUT";
+static var DELETE_METHOD = "DELETE";
 
-LzHTTPLoader.prototype.lzloader = null;
-
+var lzloader = null;
 
 /* Returns the response as a string  */
-LzHTTPLoader.prototype.getResponse = function () {
+function getResponse () {
     return this.lzloader.rawtext;
 }
 
 /* Returns the parsed native XML DOM object, if any */
-LzHTTPLoader.prototype.getNativeXMLObject = function () {
+function getNativeXMLObject () {
     // nyi
 }
 
 /* Returns numeric status code (200, 404, 500, etc...) */
-LzHTTPLoader.prototype.getResponseStatus = function () {
+function getResponseStatus () {
     // nyi
 }
 
 /* Returns an array of response headers  */
-LzHTTPLoader.prototype.getResponseHeaders = function () {
+function getResponseHeaders () {
     // nyi
 }
 
-LzHTTPLoader.prototype.setRequestHeaders = function (obj) {
+function setRequestHeaders (obj) {
     this.requestheaders = obj;
 }
 
-LzHTTPLoader.prototype.setRequestHeader = function (key, val) {
+function setRequestHeader (key, val) {
     this.requestheaders[key] = val;
 }
 
-LzHTTPLoader.prototype.abort = function () {
+function abort () {
     this.lzloader.abort();
 }
 
-LzHTTPLoader.prototype.setOption = function (key, val) {
+function setOption (key, val) {
     this.options[key] = val;
 }
 
 /* @public */
-LzHTTPLoader.prototype.setProxied = function (proxied) {
+function setProxied (proxied) {
     this.setOption('proxied', proxied);
 }
 
 /* @public
  */
-LzHTTPLoader.prototype.setQueryParams = function (qparams) {
+function setQueryParams (qparams) {
     this.queryparams = qparams;
 }
 
 /* @public
  */
-LzHTTPLoader.prototype.setQueryString = function (qstring) {
+function setQueryString (qstring) {
     this.querystring = qstring;
 }
 
@@ -103,17 +104,17 @@ LzHTTPLoader.prototype.setQueryString = function (qstring) {
  If queueRequests is true, subsequent requests will made sequentially
  If queueRequests is false, subsequent requests will interrupt requests already in process
 */
-LzHTTPLoader.prototype.setQueueing = function (queuing) {
+function setQueueing (queuing) {
     this.lzloader.queuing = queuing;
     this.setOption('queuing', queuing);
 }
 
-LzHTTPLoader.prototype.getResponseHeader = function (key) {
+function getResponseHeader (key) {
 }
 
 
 // headers can be a hashtable or null
-LzHTTPLoader.prototype.open = function (method, url, username, password) {
+function open (method, url, username, password) {
     // set loadobj.reqtype to this
     this.requestmethod = method;
 
@@ -156,7 +157,7 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
     this.xmlrequestobj = xmlrequestobj;
 }
 
-LzHTTPLoader.prototype.send = function (content) {
+function send (content) {
     //Debug.write('LzHTTPLoader.prototype.send', this, this.lzloader);
     this.xmlrequestobj.rawpostbody = content;
     this.lzloader.setHeaders(this.requestheaders);
@@ -169,7 +170,7 @@ LzHTTPLoader.prototype.send = function (content) {
 //   @param  String reqtype: 'POST' or 'GET'
 //   @param  String lzt: LPS server Responder type, default is "xmldata"
 //   @param Object headers: hash table of HTTP request headers
-LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers) {
+function makeProxiedURL ( url,  reqtype, lzt, headers) {
     var proxyurl = LzBrowser.getBaseURL( );
     var qargs = {
         lzt: (lzt != null) ? lzt : "xmldata",
@@ -218,9 +219,9 @@ LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers) 
 }
 
 
-LzHTTPLoader.prototype.timeout = Infinity;
+var timeout = Infinity;
 
-LzHTTPLoader.prototype.setTimeout = function (timeout) {
+function setTimeout (timeout) {
     this.timeout = timeout;
     // [todo hqm 2006-07] Should we have  an API method for setting LzLoader timeout?
     this.lzloader.timeout = timeout;
@@ -234,7 +235,7 @@ LzHTTPLoader.prototype.setTimeout = function (timeout) {
   * @access private
   * @return LzLoader 
   */
-LzHTTPLoader.prototype.makeLzLoader = function (proxied){
+function makeLzLoader (proxied){
     if ( ! $dataloaders ){
         // SWF-specific
         _root.attachMovie("empty", "$dataloaders", 4242);
@@ -254,6 +255,8 @@ LzHTTPLoader.prototype.makeLzLoader = function (proxied){
                                        proxied: proxied} );
 }
 
-LzHTTPLoader.urlencode = function (str) {
+function urlencode (str) {
     return escape(str);
 }
+
+} // End of LzHTTPLoader

@@ -14,24 +14,27 @@
   * 
   * @access private
   */
-var SoundMC = function(mc) {
+class LzSoundMC {
+
+function initialize (mc) {
     this.init(mc);
     this._playdel = new LzDelegate( this , "testPlay" );
 }
 
-SoundMC.prototype = new MovieClip();
+//PBR TODO
+//SoundMC.prototype = new MovieClip();
 
-SoundMC.prototype._currentframe = 0;
-SoundMC.prototype._framesloaded = 0;
-SoundMC.prototype._totalframes = 0;
-SoundMC.prototype._fps = 30;
-SoundMC.prototype.isaudio = true;
-SoundMC.prototype.loadstate = 0;
+var _currentframe = 0;
+var _framesloaded = 0;
+var _totalframes = 0;
+var _fps = 30;
+var isaudio = true;
+var loadstate = 0;
 
 /**
   * @access private
   */
-SoundMC.prototype.play = function() {
+function play() {
     var t = this._currentframe / this._fps;
     if (t < 0) t = 0;
     this._sound.stop();
@@ -44,7 +47,7 @@ SoundMC.prototype.play = function() {
 /**
   * @access private
   */
-SoundMC.prototype.gotoAndPlay = function(f) {
+function gotoAndPlay(f) {
     this._currentframe = f;
     this.play();
 }
@@ -53,7 +56,7 @@ SoundMC.prototype.gotoAndPlay = function(f) {
 /**
   * @access private
   */
-SoundMC.prototype.stop = function() {
+function stop() {
     this._sound.stop();
     this._playdel.unregisterAll();
     this.testPlay();
@@ -62,7 +65,7 @@ SoundMC.prototype.stop = function() {
 /**
   * @access private
   */
-SoundMC.prototype.gotoAndStop = function(f) {
+function gotoAndStop(f) {
     this.stop();
     this._currentframe = f;
 }
@@ -71,7 +74,7 @@ SoundMC.prototype.gotoAndStop = function(f) {
 /**
   * @access private
   */
-SoundMC.prototype.loadMovie = function( reqstr ) {
+function loadMovie( reqstr ) {
     //Debug.warn('SoundMC loading mp3 %w', reqstr);
     this.init();
     this._sound.loadSound(reqstr, true);
@@ -85,7 +88,7 @@ SoundMC.prototype.loadMovie = function( reqstr ) {
 /**
   * @access private
   */
-SoundMC.prototype.getBytesLoaded = function( ) {
+function getBytesLoaded( ) {
     //Debug.warn('getBytesLoaded %w', this._sound.getBytesLoaded());
     this.testPlay();
     return this._sound.getBytesLoaded();
@@ -95,7 +98,7 @@ SoundMC.prototype.getBytesLoaded = function( ) {
 /**
   * @access private
   */
-SoundMC.prototype.getBytesTotal = function( ) {
+function getBytesTotal( ) {
     //Debug.warn('getBytesTotal %w', this._sound.getBytesTotal());
     this.testPlay();
     return this._sound.getBytesTotal();
@@ -104,7 +107,7 @@ SoundMC.prototype.getBytesTotal = function( ) {
 /**
   * @access private
   */
-SoundMC.prototype.unload = function( ) {
+function unload( ) {
     //Debug.warn('unload %w', this._sound.getBytesTotal());
     this.stop();
     delete this._sound;
@@ -114,7 +117,7 @@ SoundMC.prototype.unload = function( ) {
 /**
   * @access private
   */
-SoundMC.prototype.testPlay = function() {
+function testPlay() {
     this._totalframes = Math.floor(this._sound.duration * .001 * this._fps);
     this._currentframe = Math.floor(this._sound.position * .001 * this._fps);
     this._framesloaded = Math.floor((this._sound.getBytesLoaded() / this._sound.getBytesTotal()) * this._totalframes)
@@ -124,7 +127,7 @@ SoundMC.prototype.testPlay = function() {
 /**
   * @access private
   */
-SoundMC.prototype.setPan = function(p) {
+function setPan(p) {
     //Debug.write('setPan', p);
     this._sound.setPan(p);
 }
@@ -132,7 +135,7 @@ SoundMC.prototype.setPan = function(p) {
 /**
   * @access private
   */
-SoundMC.prototype.setVolume = function(v) {
+function setVolume(v) {
     //Debug.write('setVolume', v);
     this._sound.setVolume(v);
 }
@@ -140,21 +143,21 @@ SoundMC.prototype.setVolume = function(v) {
 /**
   * @access private
   */
-SoundMC.prototype.getPan = function(p) {
+function getPan(p) {
     return this._sound.getPan(p);
 }
 
 /**
   * @access private
   */
-SoundMC.prototype.getVolume = function(v) {
+function getVolume(v) {
     return this._sound.getVolume(v);
 }
 
 /**
   * @access private
   */
-SoundMC.prototype.loadDone = function(success) {
+function loadDone(success) {
     if (success != true) {
         if ($debug) {
             Debug.warn("failed to load %w", this.reqobj.url);
@@ -171,7 +174,7 @@ SoundMC.prototype.loadDone = function(success) {
 /**
   * @access private
   */
-SoundMC.prototype.init = function(mc) {
+function init(mc) {
     this._sound.stop();
     delete this._sound;
     if (mc != null) {
@@ -182,11 +185,11 @@ SoundMC.prototype.init = function(mc) {
     this._sound.checkPolicyFile = true;
     this._sound.mc = this;
 /** @access private */
-    this._sound.onLoad = function(success) {
+function onLoad(success) {
         this.mc.loadDone(success);
     }
 /** @access private */
-    this._sound.onSoundDone = function() {
+function onSoundDone() {
         this.mc.testPlay();
     }
 
@@ -200,21 +203,21 @@ SoundMC.prototype.init = function(mc) {
 /**
   * @access private
   */
-SoundMC.prototype.getTotalTime = function() {
+function getTotalTime() {
     return this._sound.duration * .001;
 }
 
 /**
   * @access private
   */
-SoundMC.prototype.getCurrentTime = function() {
+function getCurrentTime() {
     return this._sound.position * .001;
 }
 
 /**
   * @access private
   */
-SoundMC.prototype.seek = function(secs, playing) {
+function seek(secs, playing) {
     //Debug.write('seek', secs, playing);
     this._sound.stop();
     this._sound.start(this.getCurrentTime() + secs);
@@ -224,7 +227,9 @@ SoundMC.prototype.seek = function(secs, playing) {
 /**
   * @access private
   */
-SoundMC.prototype.getID3 = function() {
+function getID3() {
     //Debug.write('getID3', this._sound);
     return this._sound.id3;
 }
+
+} // End of LzSoundMC

@@ -70,7 +70,7 @@ function getLoadMovie ( ){
         this.mc = m;
     } else if (this.isaudio == true && this._oldmc == null) {
         this._oldmc = this.mc;
-        this.mc = new SoundMC(this.mc);
+        this.mc = new LzSoundMC(this.mc);
         this.initializeRequestObj(this.mc);
         if ($debug) {
             LzLoader.debugLoadObj(this.mc, 'MediaLoadObj');

@@ -1,5 +1,5 @@
 /**
-  * LzTextSprite.as
+  * LzTextSprite.lzs
   *
   * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -8,7 +8,14 @@
   * @subtopic AS2
   */
 
-var LzTextSprite = function(newowner, args) {
+class LzTextSprite extends LzSprite {
+
+function initialize(newowner, args) {
+    // [todo pbr 10-31-07]
+    // I'm not calling super.initialize because this appears to do what
+    // LzInputSprite ctor does 
+    // super.initialize.apply(this, arguments);
+
     if (newowner == null) return this;
     this.__LZdepth = newowner.immediateparent.sprite.__LZsvdepth++;
     this.__LZsvdepth = 0;
@@ -54,11 +61,9 @@ var LzTextSprite = function(newowner, args) {
     
 }
 
-LzTextSprite.prototype = new LzSprite(null);
+var colorstring = "#000000"; // black
 
-LzTextSprite.prototype.colorstring = "#000000"; // black
-
-LzTextSprite.prototype.__initTextProperties = function (args) {
+function __initTextProperties (args) {
     this.password = args.password  ? true : false;
     var textclip = this.__LZtextclip;
     textclip.password = this.password;
@@ -128,7 +133,7 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
   * Get a reference to the control mc
   * @access private
   */
-LzTextSprite.prototype.getMCRef = function () {
+function getMCRef () {
     return this.__LZtextclip;
 }
 
@@ -141,7 +146,7 @@ LzTextSprite.prototype.getMCRef = function () {
   * this transition.
   * @access private
   */
-TextField.prototype.__cacheSelection = function () {
+function __cacheSelection () {
     this.__cacheSelectionPos  = Selection.getBeginIndex();
     this.__cacheSelectionSize = Selection.getEndIndex() - Selection.getBeginIndex();
 }
@@ -150,68 +155,64 @@ TextField.prototype.__cacheSelection = function () {
 /**
   * @access private
   */
-LzTextSprite.prototype.scroll = 0;
+var scroll = 0;
 /**
   * @access private
   */
-LzTextSprite.prototype.maxscroll = 0;
+var maxscroll = 0;
 /**
   * @access private
   */
-LzTextSprite.prototype.hscroll = 0;
+var hscroll = 0;
 /**
   * @access private
   */
-LzTextSprite.prototype.maxhscroll = 0;
+var maxhscroll = 0;
 
 
 // [todo: 2004-3-29 hqm] lines seem to get the ends clipped off if you use the TextField.textWidth
 // from Flash, so I am adding a constant. Am I missing something here? 
-LzTextSprite.prototype.PAD_TEXTWIDTH = 4;
+static var PAD_TEXTWIDTH = 4;
 
-LzTextSprite.prototype.classname = "LzTextSprite";
-
-LzTextSprite.prototype.DEFAULT_SIZE = 8;
+static var DEFAULT_SIZE = 8;
 
 /**
   * setResize set behavior of text field width when new text is added.
   * LzTextSprite only (cannot be used with LzInputText).
   * @param Boolean val: if true, the textfield will recompute it's width after setText() is called
   */
-LzTextSprite.prototype.setResize = function ( val ){
+function setResize ( val ){
     this.resize = val;
 }
 
 /**
   * @access private
   */
-LzTextSprite.prototype.setWidth = function ( val ){
+function setWidth ( val ){
     this.__LZtextclip._width = val;
-    this._viewsetWidth( val );
+    super.setWidth.apply(this, arguments);
+
     // recalculate height
     if (this.sizeToHeight) {
         this.setHeight(this.__LZtextclip._height);
     }
 }
 
-LzTextSprite.prototype._viewsetWidth = LzSprite.prototype.setWidth;
-
 
 /**
   * @access private
   */
-LzTextSprite.prototype.setHeight = function ( val ){
+function setHeight ( val ){
     this.__LZtextclip._height = val;
-    this._viewsetHeight( val );
+    super.setHeight.apply(this, arguments);
 }
-LzTextSprite.prototype._viewsetHeight = LzSprite.prototype.setHeight;
 
 
 /**
   * @access private
   * Set the maximum number of chars a textfield can contain
   */
-LzTextSprite.prototype.setMaxLength = function ( val ){
+function setMaxLength ( val ){
     this.__LZtextclip.maxChars = val;
 }
 
@@ -219,7 +220,7 @@ LzTextSprite.prototype.setMaxLength = function ( val ){
   * @access private
   * Set the maximum number of chars a textfield can contain
   */
-LzTextSprite.prototype.setPattern = function ( val ){
+function setPattern ( val ){
     if (val == null || val == "") {
         this.__LZtextclip.restrict = null;
     } else if (val.substring(0,1) == "[" &&
@@ -233,13 +234,13 @@ LzTextSprite.prototype.setPattern = function ( val ){
 /**
   * Calculates the current width of the text held by the text field.
   */
-LzTextSprite.prototype.getTextWidth = function ( ){
+function getTextWidth ( ){
     var mc = this.__LZtextclip;
     var ml = mc.multiline;
     var mw = mc.wordWrap;
     mc.multiline = false;
     mc.wordWrap = false;
-    var twidth = (mc.textWidth == 0) ? 0 : mc.textWidth + this.PAD_TEXTWIDTH;
+    var twidth = (mc.textWidth == 0) ? 0 : mc.textWidth + LzTextSprite.PAD_TEXTWIDTH;
     mc.multiline = ml;
     mc.wordWrap = mw;
     return twidth;
@@ -249,11 +250,11 @@ LzTextSprite.prototype.getTextWidth = function ( ){
 /**
   * Calculates the current height of the text held by the text field.
   */
-LzTextSprite.prototype.getTextHeight = function ( ){
+function getTextHeight ( ){
     return this.__LZtextclip.textHeight;
 }
 
-LzTextSprite.prototype.getTextfieldHeight = function ( ){
+function getTextfieldHeight ( ){
     if (this.multiline) {
         return this.__LZtextclip._height
     } else {
@@ -280,14 +281,14 @@ LzTextSprite.prototype.getTextfieldHeight = function ( ){
 /**
   * @access private
   */
-LzTextSprite.prototype.setScroll = function ( h ){
+function setScroll ( h ){
     this.__LZtextclip.scroll = h;
 }
 
 /**
   * @access private
   */
-LzTextSprite.prototype.getScroll = function ( ){
+function getScroll ( ){
     return this.__LZtextclip.scroll;
 }
 
@@ -295,7 +296,7 @@ LzTextSprite.prototype.getScroll = function ( ){
 /**
   * @access private
   */
-LzTextSprite.prototype.getMaxScroll = function ( ){
+function getMaxScroll ( ){
     return this.__LZtextclip.maxscroll;
 }
 
@@ -303,7 +304,7 @@ LzTextSprite.prototype.getMaxScroll = function ( ){
 /**
   * @access private
   */
-LzTextSprite.prototype.getBottomScroll = function ( ){
+function getBottomScroll ( ){
     return this.__LZtextclip.bottomScroll;
 }
 
@@ -313,7 +314,7 @@ LzTextSprite.prototype.getBottomScroll = function ( ){
   * n pixels vertically
   * (n is always &lt; 0)
   */
-LzTextSprite.prototype.setXScroll = function ( n ){
+function setXScroll ( n ){
     this.__LZtextclip._x = Math.floor(Math.min(0, n));
     this.xscroll = this.__LZtextclip._x;
     if (this.onxscroll.ready) this.onxscroll.sendEvent(this.__LZtextclip._x);
@@ -324,7 +325,7 @@ LzTextSprite.prototype.setXScroll = function ( n ){
   * @param Number n: set the top line of the textfield to offset n pixels
   * vertically (n is always &lt; 0)
   */
-LzTextSprite.prototype.setYScroll = function ( n ){
+function setYScroll ( n ){
     // Implementation note: This uses both the simple mechanism of
     // offsetting the _y of the text field and also attempts to use
     // the scroll/maxscroll feature of Flash text, in order to scroll
@@ -367,7 +368,7 @@ LzTextSprite.prototype.setYScroll = function ( n ){
 /**
   * @access private
   */
-LzTextSprite.prototype.annotateAAimg = function (txt) {
+function annotateAAimg (txt) {
     if (typeof(txt) == "undefined") { return; }
     if (txt.length == 0) { return };
     
@@ -407,7 +408,7 @@ LzTextSprite.prototype.annotateAAimg = function (txt) {
 /**
   * @access private
   */
-LzTextSprite.prototype.parseImgAttributes = function(attrs, str) {
+function parseImgAttributes(attrs, str) {
     var i;
     var end = 0;
     var ATTNAME = 'attrname';
@@ -460,7 +461,7 @@ LzTextSprite.prototype.parseImgAttributes = function(attrs, str) {
   * setText sets the text of the field to display
   * @param String t: the string to which to set the text
   */
-LzTextSprite.prototype.setText = function ( t ){
+function setText ( t ){
     if (typeof(t) == 'undefined' || t == 'null') {
         t = "";
     } else if (typeof(t) != "string") {
@@ -521,7 +522,7 @@ LzTextSprite.prototype.setText = function ( t ){
   *
   * @access private
   */
-LzTextSprite.prototype.updateMaxLines = function (){
+function updateMaxLines (){
     var newlin = Math.floor( this.height / (  this.font.height -1 ) );
     if ( newlin != this.maxlines ){
         this.maxlines = newlin;
@@ -533,7 +534,7 @@ LzTextSprite.prototype.updateMaxLines = function (){
   * Sets the selectability (with Ibeam cursor) of the text field
   * @param Boolean isSel: true if the text may be selected by the user
   */
-LzTextSprite.prototype.setSelectable = function ( isSel ){
+function setSelectable ( isSel ){
     this.__LZtextclip.selectable = isSel;
 
 }
@@ -542,7 +543,7 @@ LzTextSprite.prototype.setSelectable = function ( isSel ){
   * Sets the format string for the text field.
   * @access private
   */
-LzTextSprite.prototype.__setFormat = function (){
+function __setFormat (){
     this.setFontInfo();
     var cfontname = LzFontManager.__fontnameCacheMap[this.fontname];
     if (cfontname == null) {
@@ -578,19 +579,19 @@ LzTextSprite.prototype.__setFormat = function (){
     }
 }
 
-LzTextSprite.prototype.setFontInfo = function () {
+function setFontInfo () {
     this.font = LzFontManager.getFont( this.fontname , this.fontstyle );
 
     if (this.font != null) {
         this.lineheight = this.font.leading + ( this.font.height *
-                                                this.fontsize/ LzText.DEFAULT_SIZE );
+                                                this.fontsize/ LzTextSprite.DEFAULT_SIZE );
     }
 }
 
 /**
   * @access private
   */
-LzTextSprite.prototype.setFontName = function ( fname ){
+function setFontName ( fname ){
     this.fontname = fname;
     this.__setFormat();
     // force recompute of height if needed
@@ -600,7 +601,7 @@ LzTextSprite.prototype.setFontName = function ( fname ){
 /**
   * @access private
   */
-LzTextSprite.prototype.setFontSize = function ( fsize ){
+function setFontSize ( fsize ){
     this.fontsize = fsize;
     this.__setFormat();
     // force recompute of height if needed
@@ -611,7 +612,7 @@ LzTextSprite.prototype.setFontSize = function ( fsize ){
 /**
   * @access private
   */
-LzTextSprite.prototype.setFontStyle = function ( fstyle ){
+function setFontStyle ( fstyle ){
     this.fontstyle = fstyle;
     this.__setFormat();
     // force recompute of height if needed
@@ -622,7 +623,7 @@ LzTextSprite.prototype.setFontStyle = function ( fstyle ){
   * Sets the color of all the text in the field to the given hex color.
   * @param Number c: The color for the text -- from 0x0 (black) to 0xFFFFFF (white)
   */
-LzTextSprite.prototype.setColor = function ( c ){
+function setColor ( c ){
     this.colorstring = "#" + c.toString( 16 );
     this.__setFormat();
     this.setText( this.text );
@@ -634,7 +635,7 @@ LzTextSprite.prototype.setColor = function ( c ){
   * multiple lines.
   * @param Boolean ml: true if the text field should allow multiple lines
   */
-LzTextSprite.prototype.setMultiline = function ( ml ){
+function setMultiline ( ml ){
     this.multiline = (ml == true);
     var mc = this.__LZtextclip;
     if (this.multiline) {
@@ -652,7 +653,7 @@ LzTextSprite.prototype.setMultiline = function ( ml ){
 /**
   * @access private
   */
-LzTextSprite.prototype.setBorder = function ( onroff ){
+function setBorder ( onroff ){
     this.__LZtextclip.border = (onroff == true);
 }
 
@@ -660,7 +661,7 @@ LzTextSprite.prototype.setBorder = function ( onroff ){
 /**
   * @access private
   */
-LzTextSprite.prototype.setWordWrap = function ( wrap ){
+function setWordWrap ( wrap ){
     var mc = this.__LZtextclip;
     mc.wordWrap = wrap;
 }
@@ -669,7 +670,7 @@ LzTextSprite.prototype.setWordWrap = function ( wrap ){
 /**
   * @access private
   */
-LzTextSprite.prototype.setEmbedFonts = function ( onroff ){
+function setEmbedFonts ( onroff ){
     this.__LZtextclip.embedFonts = (onroff == true);
 }
 
@@ -679,14 +680,14 @@ LzTextSprite.prototype.setEmbedFonts = function ( onroff ){
  * and higher. 
  * @param aliasType "normal" or "advanced"
  */
-LzTextSprite.prototype.setAntiAliasType = function( aliasType ){
+function setAntiAliasType( aliasType ){
     this.__LZtextclip.antiAliasType = aliasType;
 }
 
 /**
  * Gets the kind of antialiasing set on this text object
  */ 
-LzTextSprite.prototype.getAntiAliasType = function() {
+function getAntiAliasType() {
     return this.__LZtextclip.antiAliasType;
 }
 
@@ -695,14 +696,14 @@ LzTextSprite.prototype.getAntiAliasType = function() {
  * and higher. 
  * @param gridFit "none" "subpixel" or "pixel"
  */
-LzTextSprite.prototype.setGridFit = function( gridFit ){
+function setGridFit( gridFit ){
     this.__LZtextclip.gridFit = gridFit;
 }
 
 /**
  * Gets the kind of antialiasing set on this text object
  */ 
-LzTextSprite.prototype.getGridFit = function() {
+function getGridFit() {
     return this.__LZtextclip.gridFit; 
 }
 
@@ -713,14 +714,14 @@ LzTextSprite.prototype.getGridFit = function() {
  * Only works in swf8 and higher. 
  * @param sharpness -400 to 400
  */
-LzTextSprite.prototype.setSharpness = function( sharpness ){
+function setSharpness( sharpness ){
     this.__LZtextclip.sharpness = sharpness;
 }
 
 /**
 * Gets the sharpness rendering property of this text object
  */ 
-LzTextSprite.prototype.getSharpness = function() {
+function getSharpness() {
     return this.__LZtextclip.sharpness;
 }
 
@@ -729,21 +730,21 @@ LzTextSprite.prototype.getSharpness = function() {
  * Only works in swf8 and higher. 
  * @param thickness -200 to 200
  */
-LzTextSprite.prototype.setThickness = function( thickness ){
+function setThickness( thickness ){
      this.__LZtextclip.thickness = thickness;
 }
 
 /**
 * Gets the thickness rendering property of this text object
  */ 
-LzTextSprite.prototype.getThickness = function() {
+function getThickness() {
     return this.__LZtextclip.thickness;
 }
 
 /**
   * @access private
   */
-LzTextSprite.prototype.__LZforceScrollAttrs = function () {
+function __LZforceScrollAttrs () {
     this.__LZtextclip.onScroller();
 }
 
@@ -753,7 +754,7 @@ LzTextSprite.prototype.__LZforceScrollAttrs = function () {
   * object, not the LzTextSprite class, because this is called as a method on
   * __LZtextclip from __LZforceScrollAttrs
   */
-LzTextSprite.prototype.__updatefieldsize = function ( ){
+function __updatefieldsize ( ){
     if ( this.__lzview.scroll != this.scroll) {
         this.__lzview.scroll = this.scroll;
         if (this.__lzview.onscroll.ready) this.__lzview.onscroll.sendEvent(this.scroll)
@@ -775,7 +776,7 @@ LzTextSprite.prototype.__updatefieldsize = function ( ){
 /**
   * 
   */
-LzTextSprite.prototype.setHScroll = function (s){
+function setHScroll (s){
     this.__LZtextclip.hscroll = s;
 }
 
@@ -790,7 +791,7 @@ LzTextSprite.prototype.setHScroll = function (s){
   * then the text cursor is positioned at the start point, but no text is 
   * selected.
   */
-LzTextSprite.prototype.setSelection = function ( start , end ){
+function setSelection ( start , end ){
     var sf = targetPath( this.__LZtextclip);
     if( Selection.getFocus() != sf ) {
         Selection.setFocus( sf );
@@ -809,7 +810,7 @@ LzTextSprite.prototype.setSelection = function ( start , end ){
   * @return Number: The position of the text cursor within this textfield, 0
   * based. If the text cursor is not in the textfield, this method returns -1.
   */
-LzTextSprite.prototype.getSelectionPosition = function ( ){
+function getSelectionPosition ( ){
     var sf = targetPath( this.__LZtextclip) ;
     if( Selection.getFocus() != sf ) {
         var tc = this.__LZtextclip;
@@ -831,7 +832,7 @@ LzTextSprite.prototype.getSelectionPosition = function ( ){
   * @return Number: The length of the text selection within this textfield.
   * If the text cursor is not in the textfield, this method returns -1.
   */
-LzTextSprite.prototype.getSelectionSize = function ( ){
+function getSelectionSize ( ){
     var sf = targetPath( this.__LZtextclip);
     if( Selection.getFocus() != sf ) {
         var tc = this.__LZtextclip;
@@ -846,3 +847,5 @@ LzTextSprite.prototype.getSelectionSize = function ( ){
     var siz = Selection.getEndIndex() - Selection.getBeginIndex();
     return siz;
 }
+
+} // End of LzTextSprite

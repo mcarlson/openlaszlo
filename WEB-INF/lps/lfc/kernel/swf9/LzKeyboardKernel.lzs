@@ -1,5 +1,5 @@
 /**
-  * LzKeyboardKernel.as
+  * LzKeyboardKernel.lzs
   *
   * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -9,12 +9,14 @@
   */
 
 // Receives keyboard events from the runtime
-var LzKeyboardKernel = { 
-    __downKeysHash: {}
-    ,__keyboardEvent: function ( k, t ){   
+class LzKeyboardKernelClass
+{
+    var __downKeysHash = {};
+
+    function __keyboardEvent ( k, t ){   
         var delta = {};
         var s = String.fromCharCode(k).toLowerCase();
-        var dh = LzKeyboardKernel.__downKeysHash;
+        var dh = this.__downKeysHash;
         var dirty = false;
         if (t == 'onkeyup') {
             if (dh[s] != false) {
@@ -31,12 +33,16 @@ var LzKeyboardKernel = {
         }    
 
         //Debug.write('downKeysHash', t, k, dh, delta);
-        if (dirty && LzKeyboardKernel.__callback) LzKeyboardKernel.__scope[LzKeyboardKernel.__callback](delta, k, t);
+        if (dirty && this.__callback) this.__scope[this.__callback](delta, k, t);
     }
-    ,__callback: null
-    ,__scope: null
-    ,setCallback: function (scope, funcname) {
+
+    var __callback = null;
+    var __scope = null;
+
+    function setCallback (scope, funcname) {
         this.__scope = scope;
         this.__callback = funcname;
     }    
-}
+} // End of LzKeyboardKernelClass
+
+var LzKeyboardKernel = new LzKeyboardKernelClass ();

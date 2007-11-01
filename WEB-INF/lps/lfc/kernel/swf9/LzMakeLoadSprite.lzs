@@ -1,5 +1,5 @@
 /**
-  * LzMakeLoadSprite.as
+  * LzMakeLoadSprite.lzs
   *
   * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -11,17 +11,16 @@
 /**
   * @access private
   */
-function LzMakeLoadSprite(  ){
-    
-}
 
-LzMakeLoadSprite.transformerID = 0;
+class LzMakeLoadSpriteClass {
+
+var transformerID = 0;
 
 
 /**
   * Makes the given view able to load a remote resource
   */
-LzMakeLoadSprite.transform = function ( v , src , cache, headers ){
+function transform ( v , src , cache, headers ){
     //super.transform( v );
 
     for ( var k in this){
@@ -57,7 +56,7 @@ LzMakeLoadSprite.transform = function ( v , src , cache, headers ){
 /**
   * @access private
   */
-LzMakeLoadSprite.doReplaceResource = function (){
+function doReplaceResource (){
     //this gets called when a view applies the load transformer but it
     //already had a resource
 
@@ -71,7 +70,7 @@ LzMakeLoadSprite.doReplaceResource = function (){
 /**
   * @access private
   */
-LzMakeLoadSprite.createLoader = function (){
+function createLoader (){
     this.loader = new LzMediaLoader( this , {} );
     this.updateDel = new LzDelegate( this , "updateAfterLoad" );
     this.updateDel.register( this.loader , "onloaddone" );
@@ -97,7 +96,7 @@ LzMakeLoadSprite.createLoader = function (){
   * "none" , "clientonly" , "serveronly" , "both" -- where both is the default.
   * @param String headers: Headers to send with the request (if any.)
   */
-LzMakeLoadSprite.setSource = function ( newSrc , cache , headers ){
+function setSource ( newSrc , cache , headers ){
     if (this.loader.mc.loading == true) {
         LzLoadQueue.unloadRequest(this.loader.mc);
     }
@@ -127,7 +126,7 @@ LzMakeLoadSprite.setSource = function ( newSrc , cache , headers ){
   * load-transformed views and those that aren't
   * @access private
   */
-LzMakeLoadSprite.setResource = function ( nresc ){
+function setResource ( nresc ){
     // unload anything currently loading...
     if (this.loader.mc.loading == true) {
         LzLoadQueue.unloadRequest(this.loader.mc);
@@ -155,7 +154,7 @@ LzMakeLoadSprite.setResource = function ( nresc ){
   * Updates movieclip properties after the resource has loaded
   * @access private
   */
-LzMakeLoadSprite.updateAfterLoad = function (){
+function updateAfterLoad (){
 
     this.isloaded = true;
     var mc = this.getMCRef();
@@ -204,7 +203,7 @@ LzMakeLoadSprite.updateAfterLoad = function (){
   * Unloads the media
   * @access private
   */
-LzMakeLoadSprite.unload = function () {
+function unload () {
     this.loader.unload( this.loader.mc );
 }
 
@@ -212,7 +211,7 @@ LzMakeLoadSprite.unload = function () {
   * Get a reference to the control mc
   * @access private
   */
-LzMakeLoadSprite.getMCRef = function () {
+function getMCRef () {
     //return null if not loaded
     if (this.loader.isaudio) return this.loader.mc;
     return this.isloaded ? this.loader.getLoadMC() : null;
@@ -222,7 +221,7 @@ LzMakeLoadSprite.getMCRef = function () {
   * Get the number of bytes loaded so far
   * @return: A number that is the maximum offset for this resource
   */
-LzMakeLoadSprite.getLoadBytes = function (){
+function getLoadBytes (){
     return this.getMCRef().getBytesLoaded();
 }
 
@@ -230,14 +229,14 @@ LzMakeLoadSprite.getLoadBytes = function (){
   * Get the total number of bytes for the attached resource
   * @return: A number that is the maximum offset for this resource
   */
-LzMakeLoadSprite.getMaxBytes = function (){
+function getMaxBytes (){
     return this.getMCRef().getBytesTotal();
 }
 
 /**
   * @access private
   */
-LzMakeLoadSprite.__LZsendError = function ( e ){
+function __LZsendError ( e ){
     this.resourcewidth = 0;
     this.resourceheight = 0;
     if (this.owner) this.owner.resourceloaderror( e )
@@ -246,7 +245,7 @@ LzMakeLoadSprite.__LZsendError = function ( e ){
 /**
   * @access private
   */
-LzMakeLoadSprite.__LZsendTimeout = function ( e ){
+function __LZsendTimeout ( e ){
     this.resourcewidth = 0;
     this.resourceheight = 0;
     if (this.owner) this.owner.resourceloadtimeout( e )
@@ -255,7 +254,7 @@ LzMakeLoadSprite.__LZsendTimeout = function ( e ){
 /**
   * @access private
   */
-LzMakeLoadSprite.destroy = function (recur) {
+function destroy (recur) {
     if ('updateDel' in this)
          this.updateDel.unregisterAll();
     if ('errorDel' in this)
@@ -268,3 +267,7 @@ LzMakeLoadSprite.destroy = function (recur) {
     // call shadowed destroy()
     this.___destroy( recur ); 
 }
+
+} // End of LzMakeLoadSpriteClass
+
+var LzMakeLoadSprite  = new LzMakeLoadSpriteClass;

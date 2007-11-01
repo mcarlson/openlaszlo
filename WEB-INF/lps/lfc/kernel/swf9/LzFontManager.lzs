@@ -1,5 +1,5 @@
 /**
-  * LzFontManager.as
+  * LzFontManager.lzs
   *
   * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -17,7 +17,7 @@
   * Each font object contains slots for the styles that are available
   * (plain, bold, italic, and/or bolditalic).
   */
-var LzFontManager = new Object;
+class LzFontManagerClass {
 
 /** @devnote currently doesn't support sending variables...
   */
@@ -34,7 +34,7 @@ var LzFontManager = new Object;
   * @param Object bi: The bold italic style of the font.
   * @access private
   */
-LzFontManager.addFont = function (  fontname , n , b , i , bi ){
+function addFont (  fontname , n , b , i , bi ){
 
     var ff = new Object;
     ff.name = fontname;
@@ -66,7 +66,7 @@ LzFontManager.addFont = function (  fontname , n , b , i , bi ){
   * @return any: An <class>LzFont</class> object, or undefined if not found
   * 
   */
-LzFontManager.getFont = function ( fontname , style ){
+function getFont ( fontname , style ){
     if ( style == null ) { style = "plain" }
     var fns = fontname.split(',');
     if (fns.length > 0) {
@@ -97,7 +97,7 @@ LzFontManager.getFont = function ( fontname , style ){
   * @return LzFont:  The new <class>LzFont</class>.
   * @access private
   */
-LzFontManager.addStyle = function ( f , s ){
+function addStyle ( f , s ){
     //not pretty -- especially if the complexity of styles grows -- but works
     //for now
 
@@ -126,30 +126,30 @@ LzFontManager.addStyle = function ( f , s ){
 
 // Map {font-name -> true} of client font names.  convertFontList
 // initializes this.
-LzFontManager.__clientFontNames = null;
+var __clientFontNames = null;
 
 // A map from CSS generic font family names such as 'sans-serif' to
 // Flash names such as '_sans'.
-LzFontManager.__fontFamilyMap = {'monospace': '_typewriter', 'serif': '_serif', 'sans-serif': '_sans'};
+var __fontFamilyMap = {'monospace': '_typewriter', 'serif': '_serif', 'sans-serif': '_sans'};
 
 // A hashset of device font family names.
-LzFontManager.__genericClientFontFamilyNames = {'_typewriter': true, '_serif': true, '_sans': true};
+var __genericClientFontFamilyNames = {'_typewriter': true, '_serif': true, '_sans': true};
 
 if ($debug) {
     // The runtime warns about the use of Flash-specific names.
     // This is a list of names that have been warned about, to
     // eliminate duplicate warnings.
-    LzFontManager.__debugWarnedFonts = {};
+    var __debugWarnedFonts = {};
 }
 
-LzFontManager.__fontnameCacheMap = {};
+var __fontnameCacheMap = {};
 
 /**
   * Convert an LZX font name to one that the Flash runtime can render.
   * This involves removing whitespace, and changing CSS generic font family
   * names such as 'sans-serif' to Flash names such as '_sans'.
   */
-LzFontManager.__convertFontName = function (name) {
+function __convertFontName (name) {
     // FIXME [2004-11-29 ows]: trim other types of whitespace too
     while (name.charAt(0) == ' ') name = name.slice(1);
     while (name.charAt(name.length - 1) == ' ') name = name.slice(0, name.length-1);
@@ -172,7 +172,7 @@ LzFontManager.__convertFontName = function (name) {
   * none of the names can be rendered. str is a comma-separated list
   * of font names.
   */
-LzFontManager.__findMatchingFont = function (str) {
+function __findMatchingFont (str) {
     if (this.__clientFontNames == null) {
         this.__clientFontNames = {};
         var fonts = TextField.getFontList()
@@ -194,7 +194,7 @@ LzFontManager.__findMatchingFont = function (str) {
         name = this.__convertFontName(str);
     }
     if ($debug) {
-        if (!LzFontManager.__fontExists(name) && !this.__debugWarnedFonts[name]) {
+        if (!LzFontManagerClass.__fontExists(name) && !this.__debugWarnedFonts[name]) {
             this.__debugWarnedFonts[name] = true;
             Debug.warn("Undefined font %w", name);
         }
@@ -207,9 +207,13 @@ LzFontManager.__findMatchingFont = function (str) {
 /**
   * @access private
   */
-LzFontManager.__fontExists = function (str) {
+function __fontExists (str) {
     return (this.fonts[ str ] != null ||
             this.__clientFontNames[str] != null ||
             this.__genericClientFontFamilyNames[str] != null ||
             this.__fontFamilyMap[str] != null);
 }
+
+} // End of LzFontManager
+
+var LzFontManager = new LzFontManagerClass ();

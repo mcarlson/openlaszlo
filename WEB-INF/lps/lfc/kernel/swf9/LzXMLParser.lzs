@@ -1,5 +1,5 @@
 /**
-  * LzXMLParser.as
+  * LzXMLParser.lzs
   *
   * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -12,7 +12,7 @@
   * @shortdesc Utility for parsing text into native XML DOM object
   */
 
-var LzXMLParser = new Object;
+class LzXMLParser {
 
 /**
   * Converts string to platform-native XML data.
@@ -23,10 +23,11 @@ var LzXMLParser = new Object;
   * @param boolean trimwhitespace: if true, text nodes have whitespace trimmed from start and end.
   * @return nativeXMLObject: An XML DOM object native to the runtime platform
   */
-LzXMLParser.parseXML = function( str, trimwhitespace, nsprefix ){
+static function parseXML( str, trimwhitespace, nsprefix ){
         var xmlobj = new XML();
         xmlobj.ignoreWhite = true;
         xmlobj.parseXML( str );
         return xmlobj;
 }
 
+} // End of LzXMLParser

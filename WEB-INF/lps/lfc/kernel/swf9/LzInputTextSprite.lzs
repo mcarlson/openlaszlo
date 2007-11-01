@@ -1,5 +1,5 @@
 /**
-  * LzInputTextSprite.as
+  * LzInputTextSprite.lzs
   *
   * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -12,7 +12,14 @@
   * @shortdesc Used for input text.
   * 
   */
-var LzInputTextSprite = function(newowner, args) {
+class LzInputTextSprite extends LzTextSprite {
+
+function initialize(newowner, args) {
+    // [todo pbr 10-31-07]
+    // I'm not calling super.initialize because this appears to do what
+    // LzInputSprite ctor does 
+    // super.initialize.apply(this, arguments);
+
     this.__LZdepth = newowner.immediateparent.sprite.__LZsvdepth++;
     this.__LZsvdepth = 0;
 
@@ -49,27 +56,19 @@ var LzInputTextSprite = function(newowner, args) {
     
     this.password = args.password  ? true : false;
     textclip.password = this.password;
-
 }
 
-
-
-
-LzInputTextSprite.prototype = new LzTextSprite(null);
-
-LzInputTextSprite.prototype.defaultattrs.selectable = true;
-LzInputTextSprite.prototype.defaultattrs.enabled = true;
 
 
 /**
   * @access private
   */
-LzInputTextSprite.prototype.construct = function ( parent , args ){
+function construct ( parent , args ){
 }
 
-LzInputTextSprite.prototype.focusable = true;
+var focusable = true;
 
-LzInputTextSprite.prototype.__initTextProperties = function (args) {
+function __initTextProperties (args) {
     var textclip = this.__LZtextclip;
 
     // conditionalize this; set to false for inputtext for back compatibility with lps 2.1
@@ -180,14 +179,14 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
 /**
   * @access private
   */
-LzInputTextSprite.prototype.gotFocus = function (  ){
+function gotFocus (  ){
     //Debug.write('LzInputTextSprite.__handleOnFocus');
     if ( this.hasFocus ) { return; }
     this.select();
     this.hasFocus = true;
 }
 
-LzInputTextSprite.prototype.select = function (  ){
+function select (  ){
     var sf = targetPath(this.__LZtextclip);
 
     // calling setFocus() seems to bash the scroll value, so save it
@@ -202,7 +201,7 @@ LzInputTextSprite.prototype.select = function (  ){
 }
 
 
-LzInputTextSprite.prototype.deselect = function (  ){
+function deselect (  ){
     var sf =  targetPath(this.__LZtextclip);
     if( Selection.getFocus() == sf ) {
         Selection.setFocus( null );
@@ -212,7 +211,7 @@ LzInputTextSprite.prototype.deselect = function (  ){
 /**
   * @access private
   */
-LzInputTextSprite.prototype.gotBlur = function (  ){
+function gotBlur (  ){
     //Debug.write('LzInputTextSprite.__handleOnBlur');
     this.hasFocus = false;
     this.deselect();
@@ -225,7 +224,7 @@ LzInputTextSprite.prototype.gotBlur = function (  ){
   * 
   * @access private
   */
-TextField.prototype.__gotFocus = function ( oldfocus ){
+function __gotFocus ( oldfocus ){
     // scroll text fields horizontally back to start
     if (this.__lzview) this.__lzview.inputtextevent('onfocus');
 }
@@ -237,14 +236,14 @@ TextField.prototype.__gotFocus = function ( oldfocus ){
   * into a LFC ontext event. 
   * @access private
   */
-TextField.prototype.__onChanged = function ( ){
+function __onChanged ( ){
     if (this.__lzview) this.__lzview.inputtextevent('onchange', this.text);
 }
 
 /**
   * @access private
   */
-TextField.prototype.__lostFocus = function ( ){
+function __lostFocus ( ){
     if (this['__handlelostFocusdel'] == null) this.__handlelostFocusdel = new LzDelegate(this, "__handlelostFocus");
     LzIdle.callOnIdle(this.__handlelostFocusdel);
 }
@@ -255,7 +254,7 @@ TextField.prototype.__lostFocus = function ( ){
   * cleared, the button doesn't send mouse events.
   * @access private
   */
-TextField.prototype.__handlelostFocus = function ( ){
+function __handlelostFocus ( ){
     //Debug.write('lostfocus', this.__lzview.hasFocus, LzFocus.lastfocus, this, LzFocus.getFocus(), this.__lzview, this.__lzview.inputtextevent);
     if (this.__lzview == LzFocus.getFocus()) {
         LzFocus.clearFocus();
@@ -268,7 +267,7 @@ TextField.prototype.__handlelostFocus = function ( ){
   * <code>LzDatapath.updateData</code> for more on this.
   * @access protected
   */
-LzInputTextSprite.prototype.updateData = function (){
+function updateData (){
     return this.__LZtextclip.text;
 }
 
@@ -277,7 +276,7 @@ LzInputTextSprite.prototype.updateData = function (){
   * Sets whether user can modify input text field
   * @param Boolean enabled: true if the text field can be edited
   */
-LzInputTextSprite.prototype.setEnabled = function (enabled){
+function setEnabled (enabled){
     var mc = this.__LZtextclip;
     this.enabled = enabled;
     if (enabled) {
@@ -290,7 +289,7 @@ LzInputTextSprite.prototype.setEnabled = function (enabled){
 /**
   * Set the html flag on this text view
   */
-LzInputTextSprite.prototype.setHTML = function (htmlp) {
+function setHTML (htmlp) {
     this.__LZtextclip.html = htmlp;
 }
 
@@ -298,7 +297,7 @@ LzInputTextSprite.prototype.setHTML = function (htmlp) {
   * setText sets the text of the field to display
   * @param String t: the string to which to set the text
   */
-LzInputTextSprite.prototype.setText = function ( t ){
+function setText ( t ){
     //Debug.write('LzInputTextSprite.setText', this, t);
     if (typeof(t) == 'undefined' || t == null) {
         t = "";
@@ -335,10 +334,12 @@ LzInputTextSprite.prototype.setText = function ( t ){
     //@event ontext: Sent whenever the text in the field changes.
     //this.owner.ontext.sendEvent(t);
 }
-LzInputTextSprite.prototype.getTextfieldHeight = function ( ){
+function getTextfieldHeight ( ){
     return this.__LZtextclip._height
 }
 
-LzTextSprite.prototype.getText = function ( ){
+function getText ( ){
     return this.__LZtextclip.text;
 }
+
+} // End of LzInputTextSprite

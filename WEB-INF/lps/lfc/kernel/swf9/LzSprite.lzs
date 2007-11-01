@@ -1,5 +1,5 @@
 /**
-  * LzSprite.as
+  * LzSprite.lzs
   *
   * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -8,7 +8,10 @@
   * @subtopic AS2
   */
 
-var LzSprite = function(newowner, isroot, args) {
+class LzSprite {
+
+function initialize(newowner, isroot, args) {
+    super.initialize.apply(this, arguments);
     if (newowner == null) return this;
     this.owner = newowner;
     //Debug.write('---> New sprite', newowner, newowner.immediateparent, newowner.immediateparent.sprite);
@@ -32,7 +35,7 @@ var LzSprite = function(newowner, isroot, args) {
     }
 }
 
-LzSprite.prototype.capabilities = {
+var capabilities = {
     rotation: true
     // Avoid scaling canvas to percentage values - SWF already scales the viewport size, so take window size literally to avoid scaling twice
     ,scalecanvastopercentage: false
@@ -49,7 +52,7 @@ LzSprite.prototype.capabilities = {
 /**
   * @param Boolean accessible
   */
-LzSprite.prototype.setAccessible = function(accessible) {
+function setAccessible(accessible) {
     _root._focusrect = accessible == true ? true : 0;
 }
 
@@ -57,7 +60,7 @@ LzSprite.prototype.setAccessible = function(accessible) {
   * Activate/inactivate children for accessibility
   * @param Boolean s: If true, activate the current view and all of its children
   */
-LzSprite.prototype.setAAActive = function( s, mc ){
+function setAAActive( s, mc ){
     if (mc == null || mc == 'aaactive') mc = this.getMCRef();
     //Debug.write('setAAActive ', s + ' ' + mc);
     if (mc._accProps == null) mc._accProps = {};
@@ -77,7 +80,7 @@ LzSprite.prototype.setAAActive = function( s, mc ){
   * Set accessibility name
   * @param string s: Sets the accessibility name for this view
   */
-LzBrowser.prototype.setAAName = function( s, mc ){
+function setAAName( s, mc ){
     if (mc == null || mc == 'aaname') mc = this.getMCRef();
     //Debug.write('setAAName ', s + ' ' + mc);
     if (mc._accProps == null) mc._accProps = {};
@@ -94,7 +97,7 @@ LzBrowser.prototype.setAAName = function( s, mc ){
   * Set accessibility description
   * @param string s: Sets the accessibility name for this view
   */
-LzBrowser.prototype.setAADescription = function( s, mc ){
+function setAADescription( s, mc ){
     if (mc == null || mc == 'aadescription') mc = this.getMCRef();
     //Debug.write('setAADescription ', s + ' ' + mc);
     if (mc._accProps == null) mc._accProps = {};
@@ -111,7 +114,7 @@ LzBrowser.prototype.setAADescription = function( s, mc ){
   * Set accessibility tab order
   * @param number s: The tab order index for this view.  Must be a unique number.
   */
-LzBrowser.prototype.setAATabIndex = function( s, mc ){
+function setAATabIndex( s, mc ){
     if (mc == null || mc == 'aatabindex') mc = this.getMCRef();
     //Debug.write('setAATabIndex ', mc);
     mc.tabIndex = s;
@@ -123,7 +126,7 @@ LzBrowser.prototype.setAATabIndex = function( s, mc ){
   * @param string s: If true, this view is made silent to the screen reader.  
   * If false, it is active to the screen reader.
   */
-LzBrowser.prototype.setAASilent = function( s, mc ){
+function setAASilent( s, mc ){
     if (mc == null || mc == 'aasilent') mc = this.getMCRef();
     //Debug.write('setAASilent ', s + ' ' + mc);
     if (mc._accProps == null) mc._accProps = {};
@@ -139,75 +142,75 @@ LzBrowser.prototype.setAASilent = function( s, mc ){
 // FIRST_SUBVIEW_DEPTH: This is so that default objects (such as
 // buttons, and in swf6 masks) can be attached above the view's
 // subviews.  11 is an arbitrary number chosen by Adam
-LzSprite.prototype.FIRST_SUBVIEW_DEPTH = 11;
-LzSprite.prototype.BUTTON_DEPTH = 2;
-LzSprite.prototype.MASK_DEPTH = 3;
+static var FIRST_SUBVIEW_DEPTH = 11;
+static var BUTTON_DEPTH = 2;
+static var MASK_DEPTH = 3;
 // There can be up to two clips for each subview: background,
 // foreground.  We have to leave room for them in the depth stack
-LzSprite.prototype.CLIPS_PER_SUBVIEW = 2;
-LzSprite.prototype.BACKGROUND_DEPTH_OFFSET = -1;
-LzSprite.prototype.FOREGROUND_DEPTH_OFFSET = 0;
+static var CLIPS_PER_SUBVIEW = 2;
+static var BACKGROUND_DEPTH_OFFSET = -1;
+static var FOREGROUND_DEPTH_OFFSET = 0;
 
 
 //@field Boolean focusable: If true, this view will participate in keyboard
 // focus and will receive focus events and keyboard events
 // when it has the focus. (see LzFocus for more details)
-LzSprite.prototype.focusable = false;
+var focusable = false;
 
-LzSprite.prototype.visible =   true;
+var visible =   true;
 
-LzSprite.prototype.opacity =   1;
-LzSprite.prototype.bgcolor =   null;
-LzSprite.prototype.x =   0;
-LzSprite.prototype.y =   0;
-LzSprite.prototype.rotation =   0;
-LzSprite.prototype.width =   0;
-LzSprite.prototype.height =   0;
-LzSprite.prototype.__LZclickregion =  "LzMouseEvents";
+var opacity =   1;
+var bgcolor =   null;
+var x =   0;
+var y =   0;
+var rotation =   0;
+var width =   0;
+var height =   0;
+var __LZclickregion =  "LzMouseEvents";
 
-LzSprite.prototype._xscale =   1;
-LzSprite.prototype._yscale =   1;
+var _xscale =   1;
+var _yscale =   1;
 
 //@field Number totalframes: The total number of frames for this view's
 //resource.
-LzSprite.prototype.totalframes =   0;
-LzSprite.prototype.frame =   0;
+var totalframes =   0;
+var frame =   0;
 
 //deprecated
-LzSprite.prototype.loadperc =   0;
+var loadperc =   0;
 //@field Number framesloadratio: For views whose resource is loaded at runtime,
 //the ratio of the loaded frames to the total frames. This is a number between
 //zero and 1.
-LzSprite.prototype.framesloadratio =   0;
+var framesloadratio =   0;
 //@field Number loadratio: For views whose resource is loaded at runtime,
 //ratio of the loaded bytes to the total bytes. This is a number between 
 //zero and 1.
-LzSprite.prototype.loadratio =   0;
+var loadratio =   0;
 
 //@field Boolean hassetwidth: If true, then setWidth() has been called on this
 //view, and the view will not be sized to its contents. 
-LzSprite.prototype.hassetheight = false;
+var hassetheight = false;
 //@field Boolean hassetheight: If true, then setHeight() has been called on this
 //view, and the view will not be sized to its contents. 
-LzSprite.prototype.hassetwidth = false;
+var hassetwidth = false;
 
 //need quick check for viewness
-LzSprite.prototype.__LZisView = true;
+var __LZisView = true;
 
 // maximum number of frames to wait to load an mp3 audio
-LzSprite.prototype.__lzskipplaychecklimitmax = 20;
+var __lzskipplaychecklimitmax = 20;
 
 
 //@field Boolean _setrescwidth: If true, the view does not set its
 //resource to the width given in a call to
 //<method>setAttribute</method>. By default, views do not scale their
 //resource
-LzSprite.prototype._setrescwidth = false;
+var _setrescwidth = false;
 //@field Boolean _setrescheight: If true, the view does not set its
 //resource to the height given in a call to
 //<method>setAttribute</method>. By default, views do not scale their
 //resource
-LzSprite.prototype._setrescheight = false;
+var _setrescheight = false;
 
 /**
   * Called right before the view is shown. See <method
@@ -215,7 +218,7 @@ LzSprite.prototype._setrescheight = false;
   * 
   * @access protected
   */
-LzSprite.prototype.init = function( ) {
+function init( ) {
     this.__LZmovieClipRef._visible = this.visible;
     this.__LZbgRef._visible = this.visible;
 }
@@ -228,7 +231,7 @@ LzSprite.prototype.init = function( ) {
   * 
   * @param String resourceName: a string naming the id of the resource to attach
   */
-LzSprite.prototype.setResource = function ( resourceName ) {
+function setResource ( resourceName ) {
     /*
     if (LzLoader.__LZmonitorState) {
         Debug.monitor(this, 'isloaded');
@@ -266,7 +269,7 @@ LzSprite.prototype.setResource = function ( resourceName ) {
   * @access private
   * May be overridden by loader
   */
-LzSprite.prototype.doReplaceResource = function(resourceName) {
+function doReplaceResource(resourceName) {
     if ( this.owner.subviews.length ){
         if ( $debug ){
             Debug.error( "%w cannot set resource to %w because it already has subviews", this, resourceName );
@@ -295,7 +298,7 @@ LzSprite.prototype.doReplaceResource = function(resourceName) {
   * 
   * @access private
   */
-LzSprite.prototype.makeContainerResource = function ( ) {
+function makeContainerResource ( ) {
     //Debug.write('LzSprite.makeContainerResource');
     return this.setResource( "empty" );
 }
@@ -309,7 +312,7 @@ LzSprite.prototype.makeContainerResource = function ( ) {
   * 
   * @param String mc: a reference to the flash movie clip that the view controls
   */
-LzSprite.prototype.setMovieClip = function ( mc , mcID) {
+function setMovieClip ( mc , mcID) {
     this.__LZmovieClipRef = mc;
     //mc.tabIndex = tabindexcounter++;
     if (this.masked) {
@@ -367,7 +370,7 @@ LzSprite.prototype.setMovieClip = function ( mc , mcID) {
   * 
   * @return: a reference to the newly attached resource
   */
-LzSprite.prototype.attachResourceToChildView = function ( resourceName,
+function attachResourceToChildView ( resourceName,
                                                         childsprite, instName ){
     if (this.__LZmovieClipRef == null){
         this.makeContainerResource( );
@@ -385,10 +388,10 @@ LzSprite.prototype.attachResourceToChildView = function ( resourceName,
 
     //mc.tabIndex = tabindexcounter++;
 
-    //Debug.write('Sprite.depth', this.FIRST_SUBVIEW_DEPTH, childsprite.owner.sprite.__LZdepth, this.CLIPS_PER_SUBVIEW, this.FOREGROUND_DEPTH_OFFSET)
-    var depth = this.FIRST_SUBVIEW_DEPTH + 
-      (childsprite.__LZdepth * this.CLIPS_PER_SUBVIEW) + 
-      this.FOREGROUND_DEPTH_OFFSET;
+    //Debug.write('Sprite.depth', LzSprite.FIRST_SUBVIEW_DEPTH, childsprite.owner.sprite.__LZdepth, LzSprite.CLIPS_PER_SUBVIEW, LzSprite.FOREGROUND_DEPTH_OFFSET)
+    var depth = LzSprite.FIRST_SUBVIEW_DEPTH + 
+      (childsprite.__LZdepth * LzSprite.CLIPS_PER_SUBVIEW) + 
+      LzSprite.FOREGROUND_DEPTH_OFFSET;
     
     var newmc = this.__LZmovieClipRef.attachMovie( resourceName, instName, depth);
 
@@ -404,7 +407,7 @@ LzSprite.prototype.attachResourceToChildView = function ( resourceName,
 /**
   * @access private
   */
-LzSprite.prototype.attachBackgroundToChild = function ( childsprite ){
+function attachBackgroundToChild ( childsprite ){
 
     if (this.__LZmovieClipRef == null){
         this.makeContainerResource( );
@@ -416,9 +419,9 @@ LzSprite.prototype.attachBackgroundToChild = function ( childsprite ){
         this.__LZsubUniqueNum++;
     }
 
-    var depth = this.FIRST_SUBVIEW_DEPTH +
-      (childsprite.__LZdepth * this.CLIPS_PER_SUBVIEW) +
-      this.BACKGROUND_DEPTH_OFFSET;
+    var depth = LzSprite.FIRST_SUBVIEW_DEPTH +
+      (childsprite.__LZdepth * LzSprite.CLIPS_PER_SUBVIEW) +
+      LzSprite.BACKGROUND_DEPTH_OFFSET;
 
     var mc = this.__LZmovieClipRef.attachMovie( "swatch", "$b" + this.__LZsubUniqueNum, depth );
     childsprite.__LZbgRef = mc;
@@ -440,7 +443,7 @@ LzSprite.prototype.attachBackgroundToChild = function ( childsprite ){
   * Gives the view a bgcolor that is the same size as the view.
   * @param Integer bgc: The 0-FFFFFF number to be used for the new background color.
   */
-LzSprite.prototype.setBGColor = function ( bgc ) {
+function setBGColor ( bgc ) {
     //@field Number bgcolor: The color of background of this view. Null if there is
     //no bgcolor. A number from 0 - 0xFFFFFF.
     if (bgc != null) {
@@ -475,7 +478,7 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
 /**
   * @access private
   */
-LzSprite.prototype.removeBG = function () {
+function removeBG () {
     if (this.__LZisBackgrounded ) {
         this.__LZbgRef.removeMovieClip();
         this.__LZbgRef = null;
@@ -487,7 +490,7 @@ LzSprite.prototype.removeBG = function () {
 /**
   * @access private
   */
-LzSprite.prototype.applyBG = function () {
+function applyBG () {
     if (! this.__LZisBackgrounded ) {
         this.owner.immediateparent.sprite.attachBackgroundToChild( this );
         this.__LZisBackgrounded = true;
@@ -506,7 +509,7 @@ LzSprite.prototype.applyBG = function () {
   * Sets the <attribute>x</attribute> position of the view to the given value.
   * @param Number v: The new value for <attribute>x</attribute>.
   */
-LzSprite.prototype.setX = function ( v ){
+function setX ( v ){
     //Debug.warn('Sprite.setX');
     //@field Number x: The x position of the view
     this.x = v;
@@ -519,7 +522,7 @@ LzSprite.prototype.setX = function ( v ){
   * Sets the <attribute>y</attribute> position for the view to the given value.
   * @param Number v: The new value for <attribute>y</attribute>.
   */
-LzSprite.prototype.setY = function ( v ){
+function setY ( v ){
     //@field Number y: The y position for the view
     this.y = v;
     this.__LZmovieClipRef._y = v;
@@ -535,7 +538,7 @@ LzSprite.prototype.setY = function ( v ){
   * 
   * @param Boolean amVisible: boolean for visibility of view
   */
-LzSprite.prototype.setVisible = function( amVisible ) {
+function setVisible( amVisible ) {
     this.visible = amVisible;
     this.__LZmovieClipRef._visible = amVisible;
     this.__LZbgRef._visible = amVisible;
@@ -549,7 +552,7 @@ LzSprite.prototype.setVisible = function( amVisible ) {
   * the size of its contents.
   * @param Number v: The new value for the width
   */
-LzSprite.prototype.setWidth = function ( v ){
+function setWidth ( v ){
     //if (this.owner.id == 'photoscontainer') Debug.write('LzSprite.setWidth', this, v, this.hassetwidth);
 
     if ( v == null ){
@@ -593,7 +596,7 @@ LzSprite.prototype.setWidth = function ( v ){
   * of the view will be the size measured of its contents.
   * @param Number v: The new value for the height
   */
-LzSprite.prototype.setHeight = function ( v ){
+function setHeight ( v ){
     if ( v == null ){
         this.hassetheight = false;
         if ( this._setrescheight ){
@@ -628,7 +631,7 @@ LzSprite.prototype.setHeight = function ( v ){
         this.__LZbgRef._yscale = v;
 }
 
-LzSprite.prototype.setOpacity = function ( v ){
+function setOpacity ( v ){
     //@field Number opacity: The opacity value for the view,
     //a number between 0 and 1
     this.opacity = v;
@@ -655,7 +658,7 @@ LzSprite.prototype.setOpacity = function ( v ){
   * has loaded, this method is provided to force the view to update its size, 
   * taking into account the current size of its resource. 
   */
-LzSprite.prototype.updateResourceSize = function ( ){
+function updateResourceSize ( ){
     this.__LZmovieClipRef._xscale = 100;
     this.__LZmovieClipRef._yscale = 100;
     this.resourcewidth = this.__LZmovieClipRef._width;
@@ -674,7 +677,7 @@ LzSprite.prototype.updateResourceSize = function ( ){
   * @param String xory: If this is defined, set the resource to stretch only in the given axis ("width" or
   * "height").  Otherwise set the resource to stretch in both axes.
   */
-LzSprite.prototype.stretchResource = function ( xory ){
+function stretchResource ( xory ){
     //TODO: Remove null, x, y options from here when components are moved
     if ( xory == null || xory == "x" || xory=="width" || xory=="both" ){
         this._setrescwidth = true;
@@ -688,7 +691,7 @@ LzSprite.prototype.stretchResource = function ( xory ){
 /**
   * This function sets or removes the clip/mask
   */
-LzSprite.prototype.setClip = function (c){
+function setClip (c){
     if (c) {
         this.makeMasked();
     } else {
@@ -700,7 +703,7 @@ LzSprite.prototype.setClip = function (c){
   * This function applies the MakeMasked view transformer.
   * @access private
   */
-LzSprite.prototype.makeMasked = function ( ){
+function makeMasked ( ){
     this.masked = true;
     this.mask = this;
 }
@@ -708,7 +711,7 @@ LzSprite.prototype.makeMasked = function ( ){
 /**
   * @access private
   */
-LzSprite.prototype.removeMask = function () {
+function removeMask () {
     //Debug.write(this, '.removeMask');
     this.__LZmovieClipRef.setMask(null);
     var mask = this.__LZmaskClip;
@@ -721,7 +724,7 @@ LzSprite.prototype.removeMask = function () {
 /**
   * @access private
   */
-LzSprite.prototype.applyMask = function (s) {
+function applyMask (s) {
     if ( this.__LZmovieClipRef == null ){
         Debug.warn("Cannot apply mask before resource has been attached in",
                     this);
@@ -729,9 +732,9 @@ LzSprite.prototype.applyMask = function (s) {
     }
     var mc = this.__LZmovieClipRef;
     if (s) {
-        var mask = mc.createEmptyMovieClip("$mcM", this.MASK_DEPTH);
+        var mask = mc.createEmptyMovieClip("$mcM", LzSprite.MASK_DEPTH);
     } else {
-        var mask = mc.attachMovie( "swatch", "$mcM", this.MASK_DEPTH);
+        var mask = mc.attachMovie( "swatch", "$mcM", LzSprite.MASK_DEPTH);
     }
     //mask.tabIndex = tabindexcounter++;
     // The mask is attached as a child of the view clip, so we just
@@ -752,7 +755,7 @@ LzSprite.prototype.applyMask = function (s) {
 /**
   * @access private
   * */
-LzSprite.prototype.__LZsetClickRegion = function ( cr ){
+function __LZsetClickRegion ( cr ){
     this.__LZclickregion = cr;
 }
 
@@ -761,7 +764,7 @@ LzSprite.prototype.__LZsetClickRegion = function ( cr ){
   * Makes a view clickable or not clickable.
   * @param amclickable: Boolean indicating the view's clickability
   */
-LzSprite.prototype.setClickable = function ( amclickable ){
+function setClickable ( amclickable ){
     //@event onmousedown: Sent when the mouse button goes down over a view
     //onmousedown is only sent by views which are clickable
     //@event onmouseup:Sent when the mouse button comes up after going down over
@@ -796,7 +799,7 @@ LzSprite.prototype.setClickable = function ( amclickable ){
     }
 
     if ( amclickable != false && !this.__LZbuttonRef){
-        var mc = this.__LZmovieClipRef.attachMovie( this.__LZclickregion, "$mcB", this.BUTTON_DEPTH );
+        var mc = this.__LZmovieClipRef.attachMovie( this.__LZclickregion, "$mcB", LzSprite.BUTTON_DEPTH );
         mc._height = 0;
         mc._width = 0;
 
@@ -824,7 +827,7 @@ LzSprite.prototype.setClickable = function ( amclickable ){
 /**
   * @access private
   */
-LzSprite.prototype._setButtonSize = function ( axis , bsize ){
+function _setButtonSize ( axis , bsize ){
     var sc ="_" + ( axis =="width" ? "x" : "y" ) + "scale" ;
     if ( this[ "_setresc" + axis ] && this[ 'hasset' + axis ]){
         var resdim = this.__LZmovieClipRef[ "_" + axis ];
@@ -845,7 +848,7 @@ LzSprite.prototype._setButtonSize = function ( axis , bsize ){
   * <code>none</code> , <code>clientonly</code> , <code>serveronly</code> , <code>both</code> (the default).
   * @param String headers: Headers to send with the request, if any.
   */
-LzSprite.prototype.setSource = function ( source , cache, headers){
+function setSource ( source , cache, headers){
     //@event onerror: Sent when there is an error loading the view's resource.
     //The argument sent with the event is the error string sent by the server.
     //@event ontimeout: Sent when the request to load media for the view times
@@ -860,14 +863,14 @@ LzSprite.prototype.setSource = function ( source , cache, headers){
   * @access protected
   * @param LzSprite s: The new sprite
   */
-LzSprite.prototype.addChildSprite = function ( s ){
+function addChildSprite ( s ){
     if ( s.addedToParent ) return;
     if ( ! this.__LZmovieClipRef ) { this.makeContainerResource() };
 
     s.addedToParent = true;
 }
 
-LzSprite.prototype.predestroy = function(){
+function predestroy(){
     this.bringToFront();
 }
 
@@ -875,7 +878,7 @@ LzSprite.prototype.predestroy = function(){
   * Sets the <attribute>rotation</attribute> for the view to the given value.
   * @param Number v: The new value for <attribute>rotation</attribute>.
   */
-LzSprite.prototype.setRotation = function ( v ){
+function setRotation ( v ){
     //@field Number rotation: The rotation value for the view (in degrees)
     //Value may be less than zero or greater than 360.
     this.rotation = v;
@@ -884,11 +887,11 @@ LzSprite.prototype.setRotation = function ( v ){
     return true;
 }
 
-LzSprite.prototype.setFontName = function ( val ,prop ){
+function setFontName ( val ,prop ){
     this.fontname = val;
 }
 
-LzSprite.prototype.predestroy = function(){
+function predestroy(){
     this.bringToFront();
 }
 
@@ -897,7 +900,7 @@ LzSprite.prototype.predestroy = function(){
   * @access private
   * 
   */
-LzSprite.prototype.destroy = function(recursive){
+function destroy(recursive){
     if (recursive) {
         if (this.owner.subviews) {
             for (var i = 0; i < this.owner.subviews.length; i++) {
@@ -920,7 +923,7 @@ LzSprite.prototype.destroy = function(recursive){
 /**
   * @access private
   */
-LzSprite.prototype.__LZFinishDestroyOnIdle = function (){
+function __LZFinishDestroyOnIdle (){
     if ( this.__LZmovieClipRef != null ){
         //Debug.write( "remove movieclip" );
         removeMovieClip( this.__LZmovieClipRef );
@@ -938,7 +941,7 @@ LzSprite.prototype.__LZFinishDestroyOnIdle = function (){
   * 
   * @return Object: The x and y position of the mouse relative to this sprite.
   */
-LzSprite.prototype.getMouse = function() {
+function getMouse() {
     if ( ! this.__LZmovieClipRef ) { this.makeContainerResource() };
     return {x: Math.round(this.__LZmovieClipRef._xmouse), y: Math.round(this.__LZmovieClipRef._ymouse)}
 }
@@ -947,7 +950,7 @@ LzSprite.prototype.getMouse = function() {
   * Get a reference to the control mc - may be overridden by loader
   * @access private
   */
-LzSprite.prototype.getMCRef = function () {
+function getMCRef () {
     if (this.__LZmovieClipRef == null){
         this.makeContainerResource( );
     }
@@ -961,7 +964,7 @@ LzSprite.prototype.getMCRef = function () {
   * <method>setColorTransform</method> to tint a view.
   * @param Integer c: A color in rgb format; for example, 0xff0000 is red.
   */
-LzSprite.prototype.setColor = function ( c ){
+function setColor ( c ){
     this.fgcolor = c;
     this.getColorObj().setRGB( c );
 }
@@ -971,7 +974,7 @@ LzSprite.prototype.setColor = function ( c ){
   * as set with setColor().
   * Returns A color in rgb format; for example, 0xff0000 is red.
   */
-LzSprite.prototype.getColor = function (){
+function getColor (){
     return this.getColorObj().getRGB();
 }
 
@@ -990,7 +993,7 @@ LzSprite.prototype.getColor = function (){
   * o.aa: percentage overall alpha (-100 to 100);
   * o.ab: overall offset (-255 to 255);
   */
-LzSprite.prototype.setColorTransform = function ( o ){
+function setColorTransform ( o ){
     this.getColorObj().setTransform( o );
 }
 
@@ -1008,14 +1011,14 @@ LzSprite.prototype.setColorTransform = function ( o ){
   * o.aa: percentage overall alpha (-100 to 100);
   * o.ab: overall offset (-255 to 255);
   */
-LzSprite.prototype.getColorTransform = function (){
+function getColorTransform (){
     return this.getColorObj().getTransform( );
 }
 
 /**
   * @access private
   */
-LzSprite.prototype.getColorObj = function (){
+function getColorObj (){
     if ( this.__LZcolorobj == null ){
         if ( this.__LZmovieClipRef == null ){
             this.makeContainerResource();
@@ -1033,7 +1036,7 @@ LzSprite.prototype.getColorObj = function (){
   * @keywords protected 
   * @deprecated
   */
-LzSprite.prototype.getWidth = function (){
+function getWidth (){
     return this.width;
 }
 
@@ -1042,7 +1045,7 @@ LzSprite.prototype.getWidth = function (){
   * @keywords protected 
   * @deprecated
   */
-LzSprite.prototype.getHeight = function (){
+function getHeight (){
     return this.height;
 }
 
@@ -1050,7 +1053,7 @@ LzSprite.prototype.getHeight = function (){
 /**
   * This method makes this view the frontmost subview of this view's parent.
   * */
-LzSprite.prototype.bringToFront = function ( ){
+function bringToFront ( ){
     //Debug.write('bringToFront', this);
     //this is really a function of the parent view
     this.owner.immediateparent.sprite.changeOrder ( this , 1);
@@ -1059,7 +1062,7 @@ LzSprite.prototype.bringToFront = function ( ){
 /**
   * This method makes this view the hindmost subview of this view's parent.
   */
-LzSprite.prototype.sendToBack = function ( ){
+function sendToBack ( ){
     //Debug.write('sendToBack', this);
     //this is really a function of the parent view
     this.owner.immediateparent.sprite.changeOrder ( this , -1);
@@ -1071,7 +1074,7 @@ LzSprite.prototype.sendToBack = function ( ){
   * view is null or not a sibling, the method has no effect.
   * @return Boolean: Method returns true if the operation is successful.
   */
-LzSprite.prototype.sendBehind = function ( v ){
+function sendBehind ( v ){
     return this.owner.immediateparent.sprite.changeOrder( this, -1, v , false );
 }
 
@@ -1081,7 +1084,7 @@ LzSprite.prototype.sendBehind = function ( v ){
   * view is null or not a sibling, the method has no effect.
   * @return Boolean: Method returns true if the operation is successful.
   */
-LzSprite.prototype.sendInFrontOf = function ( v ){
+function sendInFrontOf ( v ){
     return this.owner.immediateparent.sprite.changeOrder( this, 1, v , true );
 }
 
@@ -1091,7 +1094,7 @@ LzSprite.prototype.sendInFrontOf = function ( v ){
   * 
   * @param cSprite: a reference to the child sprite to be moved to the front
   */
-LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
+function changeOrder (cSprite , dir , fv , inf ){
     var dl = this.getDepthList();
     var dll = dl.length;
     var sw;
@@ -1196,7 +1199,7 @@ LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
   * Returns an array of subviews in depth order
   * @return [LzSprite]: An array of this view's subviews in depth order
   */
-LzSprite.prototype.getDepthList = function (){
+function getDepthList (){
     var a = [];
     for ( var i = this.owner.subviews.length-1; i >= 0; i-- ){
         var sv = this.owner.subviews[ i ].sprite;
@@ -1208,7 +1211,7 @@ LzSprite.prototype.getDepthList = function (){
 /**
   * @access private
   */
-LzSprite.prototype.__LZfindNextNonNull = function ( arr, pos , dir ){
+function __LZfindNextNonNull ( arr, pos , dir ){
     for ( var i = pos + dir; i >= 0 && i < arr.length; i += dir ){
         if ( arr[ i ] != null ){
             return arr[ i ];
@@ -1221,7 +1224,7 @@ LzSprite.prototype.__LZfindNextNonNull = function ( arr, pos , dir ){
   * Gets the movieclip of childview which is the direct child of this view's movieclip
   * @access private
   */
-LzSprite.prototype.getAttachPoint = function ( cSprite ){
+function getAttachPoint ( cSprite ){
     //Debug.write('getAttachPoint', this, cSprite);
     if ( ! this.__LZmovieClipRef || ! cSprite.__LZmovieClipRef ) return;
     var mcr = cSprite.__LZmovieClipRef;
@@ -1242,7 +1245,7 @@ LzSprite.prototype.getAttachPoint = function ( cSprite ){
   * @param Boolean s: true shows the hand cursor for this view, false hides 
   * it
   */
-LzSprite.prototype.setShowHandCursor = function ( s ){
+function setShowHandCursor ( s ){
     if (this.__LZbuttonRef.but){
         this.__LZbuttonRef.but.useHandCursor = s;
     }
@@ -1254,7 +1257,7 @@ LzSprite.prototype.setShowHandCursor = function ( s ){
   * @param String cursor: The name of the resource to use as a cursor when it is over
   * this view.
   */
-LzSprite.prototype.setCursor = function( cursor ){
+function setCursor( cursor ){
     if (cursor == null) return;
 
     this._cures = cursor;
@@ -1271,14 +1274,14 @@ LzSprite.prototype.setCursor = function( cursor ){
 }
 
 /** @access private */
-LzSprite.prototype._cursorGotMouseover = function() {
+function _cursorGotMouseover() {
     LzMouseKernel.setCursorGlobal(this._cures);
 }
 
 /**
   * @access private
   */
-LzSprite.prototype.trackPlay = function() {
+function trackPlay() {
     if ( this.playing ) return;
     //Debug.write('trackPlay', this);
     this.playing = true;
@@ -1298,7 +1301,7 @@ LzSprite.prototype.trackPlay = function() {
 /**
   * @access private
   */
-LzSprite.prototype.stopTrackPlay = function() {
+function stopTrackPlay() {
     this.playing = false;
     this.owner.playing = false;
     this.updatePlayStatus();
@@ -1311,7 +1314,7 @@ LzSprite.prototype.stopTrackPlay = function() {
   * Updates the play percentage
   * @access private
   */
-LzSprite.prototype.updatePlayStatus = function (){
+function updatePlayStatus (){
     var c = this.getMCRef()._currentframe;
     //Debug.write('updatePlayStatus', c);
 
@@ -1345,7 +1348,7 @@ LzSprite.prototype.updatePlayStatus = function (){
   * Called to begin the process of checking if the frame number changed.  Calls
   * checkPlayStatus2 once after a frame.
   */
-LzSprite.prototype.checkPlayStatus = function (){
+function checkPlayStatus (){
     this.playing = false;
     this.updatePlayStatus();
     if ( this.checkPlayStatusDel == null ){
@@ -1356,7 +1359,7 @@ LzSprite.prototype.checkPlayStatus = function (){
     this.__lzskipplaycheck = 0;
     this.__lzskipplaychecklimit = 4;
     // skip more frames for mp3 audio resources to allow tracking to work correctly
-     if (('isaudio' in this.getMCRef()) && (this.getMCRef().isaudio == true)) this.__lzskipplaychecklimit = LzSprite.prototype.__lzskipplaychecklimitmax;
+     if (('isaudio' in this.getMCRef()) && (this.getMCRef().isaudio == true)) this.__lzskipplaychecklimit = this.__lzskipplaychecklimitmax;
     
     //Debug.warn('checkPlayStatus %w %w %w %w', this.__lzcheckframe, this.frame, this.totalframes, this.__lzskipplaychecklimit);
     LzIdle.callOnIdle( this.checkPlayStatusDel );
@@ -1367,7 +1370,7 @@ LzSprite.prototype.checkPlayStatus = function (){
   * Called after one frame by checkPlayStatus2 to see the frame number has 
   * changed.  May call itself
   */
-LzSprite.prototype.checkPlayStatus2 = function (){
+function checkPlayStatus2 (){
     //Debug.write('checkPlayStatus2 ', this);
     this.updatePlayStatus();
     this.__lzskipplaycheck++;
@@ -1400,7 +1403,7 @@ LzSprite.prototype.checkPlayStatus2 = function (){
   * begin playing at the current frame.
   * @param Boolean rel: If true, f is relative to the current frame.  Otherwise f is relative to the beginning of the resource.
   */
-LzSprite.prototype.play = function (f, rel){
+function play (f, rel){
     var m = this.getMCRef();
     if ( m == null ) {
         this.queuePlayAction( "play" , f , rel );
@@ -1425,7 +1428,7 @@ LzSprite.prototype.play = function (f, rel){
   * stop at the current frame.
   * @param Boolean rel: If true, f is relative to the current frame.  Otherwise it is relative to the start position of the resource.
   */
-LzSprite.prototype.stop = function (f, rel){
+function stop (f, rel){
     var m = this.getMCRef();
     if ( m == null ) {
         // always stop on the first frame
@@ -1450,7 +1453,7 @@ LzSprite.prototype.stop = function (f, rel){
 /**
   * @access private
   */
-LzSprite.prototype.queuePlayAction = function ( a , arg1 , arg2 ){
+function queuePlayAction ( a , arg1 , arg2 ){
     //Debug.write('queuePlayAction', a, arg1, arg2);
     if ( this.queuedplayaction == null ){
         this.queuedplayaction = [];
@@ -1465,7 +1468,7 @@ LzSprite.prototype.queuePlayAction = function ( a , arg1 , arg2 ){
 /**
   * @access private
   */
-LzSprite.prototype.doQueuedPlayAction = function (){
+function doQueuedPlayAction (){
     for (var i=0; i < this.queuedplayaction.length; i++) {
         var qa = this.queuedplayaction[i];
         //Debug.write('doQueuedPlayAction', qa);
@@ -1475,7 +1478,7 @@ LzSprite.prototype.doQueuedPlayAction = function (){
 }
 
 
-LzSprite.prototype.toString = function () {
+function toString () {
     return 'LzSprite for ' + this.owner;
 }
 
@@ -1483,7 +1486,7 @@ LzSprite.prototype.toString = function () {
   * Set the volume of the attached resource
   * @param Integer v: A number from 0 to 100 representing a volume level
   */
-LzSprite.prototype.setVolume = function (v) {
+function setVolume (v) {
     var m = this.getMCRef();
     //if null is passed to LzAudio.setVolume, it sets the global volume, which
     //is not what you want here.
@@ -1499,7 +1502,7 @@ LzSprite.prototype.setVolume = function (v) {
   * Get the volume of the attached resource
   * @return Integer: A number from 0 to 100 representing a volume level
   */
-LzSprite.prototype.getVolume = function() {
+function getVolume() {
     var m = this.getMCRef();
     if (m.isaudio == true) {
         return m.getVolume();
@@ -1512,7 +1515,7 @@ LzSprite.prototype.getVolume = function() {
   * Set the pan of the attached resource
   * @param Integer p: A number from -100 to 100 representing a pan level
   */
-LzSprite.prototype.setPan = function(p) {
+function setPan(p) {
     var m = this.getMCRef();
     if (m.isaudio == true) {
         m.setPan(p);
@@ -1525,7 +1528,7 @@ LzSprite.prototype.setPan = function(p) {
   * Get the pan of the attached resource
   * @return Integer: A number from -100 to 100 representing a pan level
   */
-LzSprite.prototype.getPan = function() {
+function getPan() {
     var m = this.getMCRef();
     if (m.isaudio == true) {
         return m.getPan();
@@ -1538,7 +1541,7 @@ LzSprite.prototype.getPan = function() {
   * Get the current z order of the sprite
   * @return Integer: A number representing z orderin
   */
-LzSprite.prototype.getZ = function() {
+function getZ() {
     return this.__LZdepth;
 }
 
@@ -1547,7 +1550,7 @@ LzSprite.prototype.getZ = function() {
   * Install menu items for the right-mouse-button 
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
-LzSprite.prototype.setContextMenu = function ( cmenu ){
+function setContextMenu ( cmenu ){
     // For back compatibility, we accept either LzContextMenu or (Flash primitive) ContextMenu
     if (! (cmenu instanceof ContextMenu)) {
         this.__contextmenu = cmenu;
@@ -1573,7 +1576,7 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
     }
 }
 
-LzSprite.prototype.setDefaultContextMenu = function ( cmenu ){
+function setDefaultContextMenu ( cmenu ){
     MovieClip.prototype.menu = cmenu.__LZcontextMenu();
 }
 
@@ -1581,7 +1584,7 @@ LzSprite.prototype.setDefaultContextMenu = function ( cmenu ){
   * LzView.getContextMenu
   * Return the current context menu
   */
-LzSprite.prototype.getContextMenu = function() {
+function getContextMenu() {
     return this.__contextmenu;
 }
 
@@ -1592,7 +1595,7 @@ LzSprite.prototype.getContextMenu = function() {
   * 
   * @access private
   */
-Button.prototype.__gotFocus = function ( oldfocus ){
+function __gotFocus ( oldfocus ){
   // SWF-specific
     if (_root._focusrect != true) return;
     //Debug.write('__gotFocus', oldfocus);
@@ -1605,9 +1608,11 @@ Button.prototype.__gotFocus = function ( oldfocus ){
 /**
   * @access private
   */
-Button.prototype.__lostFocus = function ( ){
+function __lostFocus ( ){
   // SWF-specific
     if (_root._focusrect != true) return;
     //Debug.write('__lostFocus');
     if (this.__lzview.hasFocus) LzFocus.clearFocus();
 }
+
+} // End of LzSprite
