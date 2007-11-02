@@ -172,6 +172,13 @@ probably not what you want.
 
         canvasElt = parse(canvasbuf.toString(), out);
 
+        String canvasdebug = canvasElt.getAttribute("debug");
+        if ("true".equals(canvasdebug)) {
+            %> <h2><font color="red">Note: your app has its canvas debug flag enabled, 
+                the Laszlo DHTML debugger curently does not work in a standalone SOLO deployment, continue?</h2>
+                <%
+        }
+        
         // load a copy of the HTML wrapper
         in = new BufferedReader(new InputStreamReader(wrapperUrl.openStream()));
         while ((str = in.readLine()) != null) 
