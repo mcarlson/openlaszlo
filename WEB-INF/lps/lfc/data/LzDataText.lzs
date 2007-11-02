@@ -38,6 +38,14 @@ DeclareEvent(LzDataText.prototype, 'onnodeName' );
   * and can raise a DOMException object on retrieval. */
 var nodeType = LzDataNode.TEXT_NODE;
 
+/** The name of this node.
+ * According to W3C-specs, nodeName for LzDataText should return
+ * "#text", see
+ * "http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-1841493061"
+  * @type String
+  */
+var nodeName        = '#text';
+
 setters.data = "setData";
 
 /** The data held by this node.
