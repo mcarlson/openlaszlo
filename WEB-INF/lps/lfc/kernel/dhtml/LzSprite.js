@@ -224,7 +224,6 @@ LzSprite.prototype.quirks = {
     ,inputtext_parents_cannot_contain_clip: false
     ,minimize_opacity_changes: false
     ,set_height_for_multiline_inputtext: false
-    ,ie_offset_position_by_2: false
     ,ie_opacity: false
     ,text_measurement_use_insertadjacenthtml: false
 }
@@ -284,11 +283,6 @@ LzSprite.prototype.__updateQuirks = function(){
 
             // multiline inputtext height must be set directly - height: 100% does not work.  See LPP-4119
             this.quirks['set_height_for_multiline_inputtext'] = true;
-
-            if (Lz.__BrowserDetect.version > 6) {
-                // IE 7 offsets div positions by 2 px.  See LPP-4176. 
-                this.quirks['ie_offset_position_by_2'] = true;
-            }
 
             // text size measurement uses insertAdjacentHTML()
             this.quirks['text_measurement_use_insertadjacenthtml'] = true;
@@ -1266,10 +1260,6 @@ LzSprite.prototype.__getPos = function() {
         box = el.getBoundingClientRect();
         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-        if (this.quirks['ie_offset_position_by_2']) {
-            scrollLeft -= 2;
-            scrollTop -= 2;
-        }
         return {x: box.left + scrollLeft, y: box.top + scrollTop};
     } else if (document.getBoxObjectFor) { // gecko
         box = document.getBoxObjectFor(el);
