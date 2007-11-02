@@ -802,7 +802,9 @@ function __LZdoSelect (selector, amnt) {
   amnt = amnt ? amnt : 1;
   var np = this.p;
   for (; np != null && amnt > 0; amnt--) {
-    np = np[selector]();
+      if (typeof (np[selector]) == 'function') {
+          np = np[selector]();
+      }
   }
   if (np != null) {
     this.setPointer( np );
