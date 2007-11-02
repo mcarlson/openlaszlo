@@ -57,9 +57,6 @@ var LzInputTextSprite = function(newowner, args) {
 
 LzInputTextSprite.prototype = new LzTextSprite(null);
 
-LzInputTextSprite.prototype.defaultattrs.selectable = true;
-LzInputTextSprite.prototype.defaultattrs.enabled = true;
-
 
 /**
   * @access private
