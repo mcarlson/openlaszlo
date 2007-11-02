@@ -1,0 +1,264 @@
+<h1>Introduction to Data and Data-Driven Applications</h1>
+
+Summary: In this chapter we introduce key concepts at a high level. There is little code, but a fair amount of diagramware to illustrate databinding and replication.
+
+We give a conceptual overview of the logical differences between the DOM-based and datapointer/datapath-based ways of manipulating data, with a preview of how these approaches will be reconciled in later chapters.
+
+Datareplication is introduced, and the difference between implicit and explicit replication.
+
+We then explain some useful design patterns involving datasets, both locally on the client, and between client and server.
+
+Finally, we introduce the abstract concept of the dataprovider.
+
+Outline:
+
+Data
+-- XML
+<ul>
+	<li>Definition and specification</li>
+	<li>White space</li>
+	<li>Character sets</li>
+	<li>Namespaces</li>
+</ul>
+
+-- Xpath
+------Notation
+------Supported subset in LZX
+Databinding -- conceptual overview
+-- Datasets - in-memory representation of XML data
+----- The LzDataNode type
+----- The LzDataElement type
+----- The LzDataText type
+-- Updating views by data (data determines behaviour of LZX object)
+-- Updating data by object (object updates dataset)
+Databinding APIs
+-- Datapointer (tag) APIs
+-- DOM (prodedural) APIs
+Replication
+-- Explicit Replication with <replicator> tag
+---Implicit replication without <replicator> tag
+Client-Server Data patterns
+--- REST & HTTP
+----- Query types
+----- Request and response headers
+----- Query Paremeters
+--- Ajax and the HttpRequest() object
+----- This is "syntactic sugar"; same functionality as with datasets
+--- Master-Detail
+--  Reconciling Server and Client data models (updating databases on server)
+The dataprovider object
+
+2) Databinding, part one: static databinding with tag APIs
+
+Summary: In this chapter we explain how to instantiate global and local datasets, populate them with "canned" data or from a remote source, and bind their contents to views using datapaths. Datapointers are explained as a way to position a logical cursor in a dataset.
+
+This is "static" databinding in the sense that datasets are identified at compile-time; you cannot create new datasets at runtime using the <dataset> tags.
+
+This chapter uses mostly small examples, reusing many from the current documentation. There will be many more examples, in order to illustrate most or all of the attributes and methods on <dataset>, <datapath> and <datapointer>
+
+Outline:
+
+Declaring data using <dataset>
+-- Creating Dataset relationships at compile time
+---Global datasets and class ("local") datasets
+-- The "src" attribute; inline data versus retreived data
+---Literal Data (the <data> tag)
+---When and how datasets are updated (autorequest, doRequest())
+---Dataset events: onerror, ondata, ontimeout
+---Data rules
+---- handling white space
+---- namespaces
+
+Databinding Introduction
+---Data Binding with XPath 
+---Data Binding and Attributes
+---Concatenating Attributes 
+Conditional logic with Paths 
+Binding data to objects 
+-- binding nodes using datapaths
+-- binding attributes using $path
+
+Changing a Datapath 
+--Setting the XPath Using a String 
+
+Updating datasets
+-- the updateData() method
+
+Moving through data with datapointers
+-- A datapointer is an object that represents a pointer to a node in an LzDataset. The datapointer can be repositioned using either:
+----- cursor movements calls such as selectNext(), 
+----- running an XPath request via setXPath()
+
+3) Databinding, part two: dynamic dataset creation with procedural (DOM) APIs
+
+Summary: The procedural (DOM) APIs for working with datasets allow you to build and manipulate datasets at runtime using DOM conventions. There are three kinds of objects: the absract class LzDataNode, and LzDataElement and LzTextNode which are derived from it. We look at the attributes and methods on each of these classes, and then look at short examples that show how to use them to create and manipulate dataset objects.  In this chapter we do NOT illustrate databinding, since that requires use of datapointers; that's in the next chapter. Here we just show how to build and manipulate data structures.
+
+Outline:
+Introduction and Philosphy of the DOM APIs
+
+The LzDataNode object
+-- attributes
+-- methods
+The LzDataElement object
+-- attributes
+-- methods
+The LzDataText object
+-- attributes
+-- methods
+
+4) Mixing static and dynamic databinding
+Summary:
+This chapter explains the "funhouse mirror" quasi-equivalence of the datapath/datapointer APIs. There are two goals for the chapter: 
+(1) at a minimum, make clear the distinction between the two kinds of approaches; that is, between moving nodes and moving pointers to nodes.
+(2) hopefully, give enough explanation and examples such that people can mix and match between the two approaches without getting hopelessly confused.
+
+Outline:
+A comparison of datapath/datapointer APIs and DOM APIs
+-- How to do equivalent action using either technique
+---A table showing equivalent and quasi-equivalent methods
+-- Explanation of actions that can be performed using only one or the other approach.
+The .p property -- the gateway between static and dynamic APIs
+-- Every datapath/datapointer has a .p property, which is the node to which it points.
+--- therefore, you can use the DOM APIs on the .p attribute of datapaths and datapointers
+
+Datapointer and DataElement
+
+-- Deleting a Node
+-- Creating a Node
+---Accessing a LzDataelement
+---Using a LzDataelement
+---Destroying a Node
+
+Changing Data Binding with Attribute p 
+Exploring Two-way Data Binding 
+
+The .data property
+-- .data is shorthand for datapath.p
+-- Objects like views have a .data property when they are databound and replicated. Otherwise .data is null.
+
+
+5) Data Replication
+Summary:
+Earlier chapters contain incidental examples of datareplication; this chapter goes into depth explaining how replicationmanagers are created, the mapping between "clones" and "nodes", lazy replication and pooled replication, etc. It discusses both explicit and replication. Explicit replication is now the recommended style, but it will take a while to phase out implicit replication, so for legacy purposes it must be explained.
+
+Outline:
+
+What is data replication?
+-- A way in which the OL runtime causes new objects to be created according to Xpath queries on a dataset.
+
+Explicit Replication
+-- The <replicator> tag
+-- <lazyreplicator>
+-- <resizereplicator>
+
+Implicit replication
+-- The replicationmanager; its automatic creation
+-- "lazy" replication
+-- pooling views
+
+Data Replication
+Simple Replication
+-- Referencing Clones
+---Sorting Clones
+-- Non-linear Replication
+
+Selection
+--setNodes()
+
+Checking for "Replication Done"
+
+Lazy Replication
+Lazy Replication Syntax
+Lazy Performance
+Referencing Lazy Clones
+
+6) Building Data Driven Applications, part 1: 
+
+Summary: This is basically the existing chapter of the Developer's Guide, updated as appropriate. It should use explicit instead of implicit replication, for example.
+
+Outline:
+
+Introduction
+Retrieving Data
+
+   Working with datasets
+   Working with XPath and the data binding API
+   Relative addressing
+   Working with multiple rows of data
+   Working with external XML documents
+
+Updating Datasets
+
+    Updating a dataset
+    Deleting a node in a dataset
+
+Working with Datapointers
+
+    Binding data to a new node
+    Using a datapointer
+
+Working with Classes
+Working with a Database
+
+   Database setup
+   Retrieving Data from a database
+
+Updating, Deleting, and Inserting Data
+
+    Creating the JSP
+    Modifying the client application
+    Using a datapointer to check for the success or failure of a request
+
+
+
+
+
+
+
+
+
+
+7) Building Data-Driven Applications, part 2
+
+Data design patterns and best practices
+Master Detail
+Buffer Dataset
+Data Polling
+Incremental Loading
+Server Side Paging
+
+Based on the LzProject/White paper -- if time permits.
+
+
+8)Under the hood: The dataprovider 
+
+Summary: This is an advanced topic for people who want to develop alternative protocols. It's used by Laszlo Webtop, for example.
+
+
+A DataProvider specifies the transport mechanism and policies for communicating data requests from the client to the server. For example, dataproviders may batch requests, whitelist/blacklist URIs.
+
+Datasets make data requests through dataproviders. The transport mechanism is abstracted away from the dataset. That is, a dataset could use a dataprovider that uses HTTP in one instance, and then swap out to another dataprovider that uses XMPP as its transport as long as the dataprovider can support the dataset's request.
+
+It provides a way for datasets to use data protocols other than HTTP. Enhancements provided by the dataprovider specification will allow clients to set differing data request policies--currently only supported through a server proxy like LPS--like security (e.g., blacklisting and whitelisting of URIs) and transport mechanims (e.g., batching of HTTP requests)
+
+Outline:
+
+Will cover these attributes:
+
+dataprovider --The dataprovider which will handle the dataset's request.
+
+multirequest -- True if multiple sequential requests can be made without override previous requests. Default is false for backward compatibility.
+
+datarequest -- The current datarequest instance to be used by the dataset to call the dataprovider with. Other methods like setQueryParam() and setSrc() set properties of dataRequest.
+
+datarequestclass'' The default datarequest class to be used by the dataset.
+
+New dataset methods: 
+
+** ''doRequest( DataRequest )'' behaves the same way as the previous doRequest except a DataRequest instance may be passed in. If passed in, the dataRequest param is used to call into the dataprovider, otherwise the dataset's dataRequest instance is used.
+
+** ''handleResponse( DataRequest )'' the callback handler for doRequest().
+
+Data Request Sequence  
+
+The request life cycle begins with the dataset.doRequest() method. In doRequest(), a DataRequest instance is generated to call into the dataprovider with. Before the dataprovider is invoked, the DataRequest is filled in with enough data for the dataprovider to handle the request. In turn, the dataprovider sets a data callback on the DataRequest instance and then, using request information provided by the DataRequest, makes a server data request. When the server responds, the callback handler of the DataRequest instance is invoked, which then calls the calling dataset's handleResponse method.
