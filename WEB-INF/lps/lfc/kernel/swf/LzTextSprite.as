@@ -583,7 +583,7 @@ LzTextSprite.prototype.setFontInfo = function () {
 
     if (this.font != null) {
         this.lineheight = this.font.leading + ( this.font.height *
-                                                this.fontsize/ LzText.DEFAULT_SIZE );
+                                                this.fontsize/ this.DEFAULT_SIZE );
     }
 }
 
