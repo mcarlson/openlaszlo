@@ -5,7 +5,7 @@
  *
  * The JGenerator Software License, Version 1.0
  *
- * Copyright (c) 2000 Dmitry Skavish (skavish@usa.net). All rights reserved.
+ * Copyright (c) 2000-2007 Dmitry Skavish (skavish@usa.net). All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -111,15 +111,6 @@ public abstract class IVUrl {
             }
         } else if( surl.startsWith("fgfilter:///") ) {
             return new FilterUrl( surl, flashFile );
-        } else if ( surl.startsWith("ftp://") || surl.startsWith("fgftp://") ) {
-            try {
-                return (IVUrl) Util.newInstance(
-                               "org.openlaszlo.iv.flash.url.FTPUrl",
-                                new Class[] { String.class, Boolean.class },
-                                new Object[] { surl, new Boolean(surl.startsWith("fgftp://")) });
-            } catch( Exception e ) {
-                throw new IVException(e);
-            }
         } else {
             try {
                 URL url = new URL(surl);

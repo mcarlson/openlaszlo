@@ -78,9 +78,6 @@ public class CompilationEnvironment {
      */
     private CompilerMediaCache mMediaCache = null;
 
-    /** A cache of a compiled validator */
-    private org.iso_relax.verifier.Verifier cachedVerifier = null;
-
     /** {canonical filenames} for libraries that have been imported;
      * used to prevent recursive processing and including the same
      * library more than once. */
@@ -499,16 +496,6 @@ public class CompilationEnvironment {
         } catch (org.openlaszlo.sc.CompilerException e) {
             throw new CompilationError(elt, e);
         }
-    }
-
-    /** Holds the cached schema verifier */
-    org.iso_relax.verifier.Verifier getCachedVerifier () {
-        return cachedVerifier;
-    }
-
-    /** Use this to cache the schema verifier (call with null to flush the cache) */
-    void setCachedVerifier (org.iso_relax.verifier.Verifier verifier) {
-        cachedVerifier = verifier;
     }
 
     /**

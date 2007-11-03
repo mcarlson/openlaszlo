@@ -80,55 +80,6 @@ public class JS2DocUtils {
         }
     }
 
-    public static boolean validateAndCompare(Document test, String result, SchemaValidator validator) throws RuntimeException {
-    
-        boolean status = true;
-        
-        boolean savedWhitespace = XMLUnit.getIgnoreWhitespace();
-        
-        try {
-            XMLUnit.setIgnoreWhitespace(true);
-            
-            Document control = XMLUnit.buildControlDocument(result);
-            
-            Diff diff = new Diff(control, test);
-            
-            String testString = JS2DocUtils.xmlToString(test);
-            
-            boolean testValid = validator.validates(testString),
-                    expectValid = validator.validates(result);
-
-            if (diff.similar() == false || testValid == false || expectValid == false) {
-                System.out.println("identical: " + diff.identical());
-                System.out.println("test valid: " + testValid);
-                System.out.println("expect valid: " + expectValid);
-                System.out.println("output: " + testString);
-                System.out.println("expect: " + result);
-            }
-
-            status = status && validator.validates(testString);
-            status = status && validator.validates(result);
-            
-            // use 'similar' rather than 'identical' here so we can put a copyright comment and line endings
-            // in the expected result file.
-            status = status && diff.similar();            
-
-        } catch (org.xml.sax.SAXException exc) {
-            exc.printStackTrace();
-            status = false;
-        } catch (java.io.IOException exc) {
-            exc.printStackTrace();
-            status = false;
-        } catch (javax.xml.parsers.ParserConfigurationException exc) {
-            exc.printStackTrace();
-            status = false;
-        } finally {
-            if (XMLUnit.getIgnoreWhitespace() != savedWhitespace)
-                 XMLUnit.setIgnoreWhitespace(savedWhitespace);
-        }
-        
-        return status;
-    }
 
     static public void setXMLContent(org.w3c.dom.Element node, String content) {
 

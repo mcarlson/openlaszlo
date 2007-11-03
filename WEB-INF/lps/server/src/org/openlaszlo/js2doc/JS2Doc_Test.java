@@ -22,14 +22,11 @@ import org.custommonkey.xmlunit.*;
 
 public class JS2Doc_Test extends XMLTestCase {
 
-    SchemaValidator validator;
-    
     public JS2Doc_Test (String name) {
         super(name);
     }
 
     public void setUp () {
-        validator = new SchemaValidator(System.getProperty("JS2DOC_RNG"));
     }
 
     public void testComments () {
@@ -741,22 +738,13 @@ public class JS2Doc_Test extends XMLTestCase {
                 
                 String testString = JS2DocUtils.xmlToString(test);
                 
-                boolean testValid = validator.validates(testString),
-                        expectValid = validator.validates(result);
-    
-                if (diff.identical() == false || testValid == false || expectValid == false) {
+                if (diff.identical() == false) {
                     System.out.println("identical: " + diff.identical());
-                    System.out.println("test valid: " + testValid);
-                    System.out.println("expect valid: " + expectValid);
                     System.out.println("input:  " + source);
                     System.out.println("output: " + testString);
                     System.out.println("expect: " + result);
                 }
 
-                assertTrue("JS2Doc.toXML(\"" + source + "\") valid", testValid);
-                
-                assertTrue("JS2Doc.toXML(\"" + result + "\") expect valid", expectValid);
-                
                 assertXMLIdentical(diff, true, "JS2Doc.toXML(\"" + source + "\")");
     
             } catch (org.xml.sax.SAXException exc) {

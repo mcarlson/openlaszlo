@@ -16,14 +16,11 @@ import org.custommonkey.xmlunit.*;
 
 public class Schema_Test extends XMLTestCase {
 
-    SchemaValidator validator;
-    
     public Schema_Test (String name) {
         super(name);
     }
 
     public void setUp () {
-        validator = new SchemaValidator(System.getProperty("JS2DOC_RNG"));
     }
 
     public void testSchema () {
@@ -64,8 +61,6 @@ public class Schema_Test extends XMLTestCase {
             String result = (String) iter.next();
             assertTrue(result == "true" || result == "false");
             boolean shouldPass = (result == "true") ? true : false;
-            boolean testValid = validator.validates(source);
-            assertEquals(source, shouldPass, testValid);
         }            
     }   
 

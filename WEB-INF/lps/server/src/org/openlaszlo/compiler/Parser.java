@@ -12,7 +12,6 @@ import java.io.*;
 import java.lang.*;
 import java.util.*;
 import org.apache.log4j.Logger;
-import org.iso_relax.verifier.*;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Content;

@@ -21,15 +21,12 @@ import org.custommonkey.xmlunit.*;
 
 public class WholeFile_Test extends XMLTestCase {
 
-    SchemaValidator validator;
-    
     public WholeFile_Test (String name) {
         super(name);
         XMLUnit.setIgnoreWhitespace(true);
     }
 
     public void setUp () {
-        validator = new SchemaValidator(System.getProperty("JS2DOC_RNG"));
     }
 
     private class FilenameSuffixFilter implements FilenameFilter {
@@ -89,21 +86,12 @@ public class WholeFile_Test extends XMLTestCase {
                 
                 String testString = JS2DocUtils.xmlToString(test);
                 
-                boolean testValid = validator.validates(testString),
-                        expectValid = validator.validates(result);
-    
-                if (diff.similar() == false || testValid == false || expectValid == false) {
+                if (diff.similar() == false ) {
                     System.out.println("identical: " + diff.identical());
-                    System.out.println("test valid: " + testValid);
-                    System.out.println("expect valid: " + expectValid);
                     System.out.println("output: " + testString);
                     System.out.println("expect: " + result);
                 }
 
-                assertTrue("JS2Doc.toXML(\"" + sourceFilename + "\") valid", testValid);
-                
-                assertTrue("JS2Doc.toXML(\"" + resultFile.getPath() + "\") expect valid", expectValid);
-                
                 // use 'similar' rather than 'identical' here so we can put a copyright comment and line endings
                 // in the expected result file.
                 assertXMLEqual(diff, true, "JS2Doc.toXML(\"" + sourceFilename + "\")");

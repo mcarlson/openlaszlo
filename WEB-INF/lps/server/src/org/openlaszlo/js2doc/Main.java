@@ -248,10 +248,6 @@ public class Main {
             File expectFile = new File(expectName);
             String expect = FileUtils.readFileString(expectFile);
             
-            SchemaValidator validator = new SchemaValidator(schemaName);
-    
-            result = JS2DocUtils.validateAndCompare(test, expect, validator);
-            
         } catch (java.io.IOException exc) {
             exc.printStackTrace();
         }
