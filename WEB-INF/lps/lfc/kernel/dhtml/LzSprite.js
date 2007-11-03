@@ -303,6 +303,9 @@ LzSprite.prototype.__updateQuirks = function(){
             this.quirks['safari_visibility_instead_of_display'] = true;
             this.quirks['absolute_position_accounts_for_offset'] = true;
             this.quirks['canvas_div_cannot_be_clipped'] = true;
+            if (Lz.__BrowserDetect.version > 523.10) {
+                this.capabilities['rotation'] = true;
+            }
         } else if (Lz.__BrowserDetect.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             this.quirks['invisible_parent_image_sizing_fix'] = true;
@@ -1558,6 +1561,9 @@ LzSprite.prototype.getContextMenu = function() {
     return this.__contextmenu;
 }
 
+LzSprite.prototype.setRotation = function(r) {
+    this.__LZdiv.style['-webkit-transform'] = 'rotate(' + r + 'deg)';
+}
 
 if (LzSprite.prototype.quirks.ie_leak_prevention) {
     LzSprite.prototype.__sprites = {};
