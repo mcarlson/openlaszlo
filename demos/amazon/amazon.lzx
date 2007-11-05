@@ -535,9 +535,9 @@ Debug.write("Searching");
 
         <method name="droppedInView" args="theView">
             <![CDATA[
-            // var absX = theView.getAttributeRelative( "x", canvas );
+            //var absX = theView.getAttributeRelative( "x", canvas );
             var mouseY = canvas.getMouse('y')-theView.getAttributeRelative('y',canvas);
-            var mouseX = canvas.getMouse('x')-theView.getAttributeRelative('x',canvas);
+            var mouseX = canvas.getMouse('x') - theView.getAttributeRelative('x',canvas);
             return theView.containsPt(mouseX, mouseY);
             ]]>
         </method>

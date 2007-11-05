@@ -81,13 +81,17 @@
                                                -classroot.getAttributeRelative('x', canvas))
                                            -classroot.width );
                     classroot.panelDragger.apply();
+                    if(classroot.container.content.visible != true){
+                        classroot.container.content.setVisible(true);
+                    }
                 </method>
                 <method event="onmouseup">
-                    if ( !classroot.opened ) classroot.opened = 'true';
+                    if(classroot.opened != true) classroot.opened = 'true';
                     if ( classroot.width == parent.width ) {
                         // User has just closed the tab by dragging the panel
                         // manually.
-                        classroot.opened = 'false'
+                        classroot.opened = 'false';
+                        classroot.container.content.setVisible(false);
                     }
                     parent.tabButton.setResourceNumber(classroot.opened=='true'?4:1);
                     classroot.panelDragger.remove();
@@ -107,8 +111,12 @@
         </method>
 
         <method name="close">
+            <![CDATA[
             var a = this.animate("width",tab.width,333,false);
-            if (! this.__closeDel) this.__closeDel = new LzDelegate(this, 'hidecontent', a, 'onstop');
+            if (typeof this.__closeDel != 'undefined' && ! this.__closeDel){
+                this.__closeDel = new LzDelegate(this, 'hidecontent', a, 'onstop');
+            }
+            ]]>
         </method>
 
         <method name="hidecontent">
