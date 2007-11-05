@@ -111,9 +111,9 @@ var clones;
 
 /** @access private */
 var __LZdataoffset = 0;
-DeclareEvent(prototype, 'onnodes' );
-DeclareEvent(prototype, 'onclones' );
-DeclareEvent(prototype, 'onvisible' );
+var onnodes = LzDeclaredEvent;
+var onclones = LzDeclaredEvent;
+var onvisible = LzDeclaredEvent;
 
 /**
   * @access private

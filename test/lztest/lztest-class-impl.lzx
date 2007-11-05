@@ -50,7 +50,7 @@ var suiteSubclasses = new LzTestSuite("Subclasses");
 suiteSubclasses.testSub = function() {
 
      var LzSub = Class.make( "LzSub", null, 
-                       {initialize: function (){this.testAttr = true; this.accum = ""; }} );
+                       ['initialize', function (){this.testAttr = true; this.accum = ""; }] );
 
     LzSub.addProperty('testAttr2', "foo");
      LzSub.addProperty('testMethod', function (a) { this.accum = this.accum + a; });
@@ -73,10 +73,9 @@ suiteSubclasses.testSub = function() {
 
     
     var LzSubSub = Class.make( "LzSubSub", LzSub, 
-                            {initialize: function () { 
-                                #pragma "methodName=initialize"
+                            ['initialize', function () { 
                                 super.initialize(); 
-                            }} );
+                            }] );
     LzSubSub.addProperty('testMethod', function (a) { 
         #pragma "methodName=testMethod"
       super.testMethod(a); });

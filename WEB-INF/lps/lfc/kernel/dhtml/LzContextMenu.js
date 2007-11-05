@@ -26,7 +26,7 @@ function initialize(del) {
     this.setDelegate(del);
 }
 
-DeclareEvent(prototype, 'onmenuopen' );
+var onmenuopen = LzDeclaredEvent;
 
 var showbuiltins = false;
 
@@ -170,7 +170,7 @@ function initialize (title, del) {
     this.setDelegate(del);
 }; // End of LzContextMenuItem
 
-DeclareEvent(prototype, 'onselect' );
+var onselect = LzDeclaredEvent;
 
 /**
   * LzContextMenuItem.setDelegate

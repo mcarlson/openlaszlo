@@ -58,7 +58,7 @@ LzHistory.__lzhistq = [];
 /** @access private */
 LzHistory.__lzcurrstate = {};
 
-DeclareEvent(LzHistory, 'onoffset' );
+LzHistory.onoffset = LzDeclaredEvent;
 
 /**
   * @access private

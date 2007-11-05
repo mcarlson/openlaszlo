@@ -73,11 +73,11 @@
 class LzInputText extends LzText {
 
 
-DeclareEvent(prototype, 'onenabled');
-DeclareEvent(prototype, 'onselect');
+var onenabled = LzDeclaredEvent;
+var onselect = LzDeclaredEvent;
 
 /**  whenever the text in the field changes. */
-DeclareEvent(prototype, 'ontext');
+var ontext = LzDeclaredEvent;
 
 /** @access private
   * @modifiers override 

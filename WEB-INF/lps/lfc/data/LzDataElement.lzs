@@ -32,12 +32,12 @@ trait LzDataElementTrait {
       }
     }
 
-DeclareEvent(prototype, 'onDocumentChange' );
-DeclareEvent(prototype, 'onparentNode' );
-DeclareEvent(prototype, 'onchildNode' );
-DeclareEvent(prototype, 'onchildNodes' );
-DeclareEvent(prototype, 'onattributes' );
-DeclareEvent(prototype, 'onnodeName' );
+var onDocumentChange = LzDeclaredEvent;
+var onparentNode = LzDeclaredEvent;
+var onchildNode = LzDeclaredEvent;
+var onchildNodes = LzDeclaredEvent;
+var onattributes = LzDeclaredEvent;
+var onnodeName = LzDeclaredEvent;
 
 /** @access private */
 var __LZo = -1;

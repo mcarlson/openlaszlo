@@ -93,14 +93,14 @@ var __LZtakeDPSlot = true;
 
 /** Sent when the datapath's data changes.
   */
-/* DeclareEvent(prototype, 'ondata'); */
+/* var ondata = LzDeclaredEvent; */
 /** Sent when the datapath's data results in an error.
   */
-/* DeclareEvent(prototype, 'onerror'); */
+/* var onerror = LzDeclaredEvent; */
 /** Sent when the datapath's data encounters a
   * timeout.
   */
-/* DeclareEvent(prototype, 'ontimeout'); */
+/* var ontimeout = LzDeclaredEvent; */
 
 /** This attribute applies to datapaths
   * which match multiple nodes and force replication. See the

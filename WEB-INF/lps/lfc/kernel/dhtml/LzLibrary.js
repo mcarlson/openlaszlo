@@ -51,7 +51,7 @@ static function findLibrary (libname){
 
 var loaded = false;
 var loading = false;
-DeclareEvent(prototype, 'onload');
+var onload = LzDeclaredEvent;
 
 function toString (){
     return "Library " + this.href + " named " + this.name;

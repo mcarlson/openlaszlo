@@ -79,13 +79,13 @@ class LzText extends LzView with LzFormatter {
 static var tagname = 'text';
 
 /** Sent whenever the text in the field changes. */
-DeclareEvent(prototype, 'ontext');
-DeclareEvent(prototype, 'onmaxlength');
-DeclareEvent(prototype, 'onpattern');
-DeclareEvent(prototype, 'onscroll');
-DeclareEvent(prototype, 'onmaxscroll');
-DeclareEvent(prototype, 'onhscroll');
-DeclareEvent(prototype, 'onmaxhscroll');
+var ontext = LzDeclaredEvent;
+var onmaxlength = LzDeclaredEvent;
+var onpattern = LzDeclaredEvent;
+var onscroll = LzDeclaredEvent;
+var onmaxscroll = LzDeclaredEvent;
+var onhscroll = LzDeclaredEvent;
+var onmaxhscroll = LzDeclaredEvent;
 
 /**
   * @access private
@@ -667,7 +667,7 @@ function parseImgAttributes(attrs, str) {
   */
 function setText ( t, force ){
     // force to a string
-    t += '';
+    t = '' + t;
     if (force != true && t == this.text) return;
     if (this.visible) this.sprite.setVisible(this.visible);
     if (this.maxlength != null && t.length > this.maxlength){

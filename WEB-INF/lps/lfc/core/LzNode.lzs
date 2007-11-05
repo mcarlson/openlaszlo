@@ -262,22 +262,22 @@ static function initialize (prototype) {
 /** This event is sent right before a node becomes active --
   * e.g. before a view displays, or before a layout affects its subviews.
   */
-DeclareEvent(prototype, 'oninit' );
+var oninit = LzDeclaredEvent;
 
 /** This is the first event a node sends, right
   * at the end of the instantiation process, but before any subnodes
   * have been created or references resolved
   */
-DeclareEvent(prototype, 'onconstruct' );
+var onconstruct = LzDeclaredEvent;
 
 /** The ondata script is executed when the data selected by a view's datapath
   * changes.
   */
-DeclareEvent(prototype, 'ondata' );
+var ondata = LzDeclaredEvent;
 /** If replicated, the index of this clone */
 var clonenumber = null;
-DeclareEvent(prototype, 'onclonenumber' );
-DeclareEvent(prototype, 'ondestroy' );
+var onclonenumber = LzDeclaredEvent;
+var ondestroy = LzDeclaredEvent;
 
 /** @access private */
 var __LZlateinit = null;

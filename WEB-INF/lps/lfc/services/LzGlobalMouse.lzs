@@ -74,9 +74,9 @@
   */
 var LzGlobalMouse = new Object;
 
-DeclareEvent(LzGlobalMouse, 'onmousemove' );
-DeclareEvent(LzGlobalMouse, 'onmouseup' );
-DeclareEvent(LzGlobalMouse, 'onmousedown' );
+LzGlobalMouse.onmousemove = LzDeclaredEvent;
+LzGlobalMouse.onmouseup = LzDeclaredEvent;
+LzGlobalMouse.onmousedown = LzDeclaredEvent;
 
 LzGlobalMouse.__movecounter = 0;
 

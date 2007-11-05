@@ -17,9 +17,9 @@
   */
 var LzKeys = {};
 LzKeys.downKeysHash = {};
-DeclareEvent(LzKeys, 'onkeydown' );
-DeclareEvent(LzKeys, 'onkeyup' );
-DeclareEvent(LzKeys, 'onmousewheeldelta' );
+LzKeys.onkeydown = LzDeclaredEvent;
+LzKeys.onkeyup = LzDeclaredEvent;
+LzKeys.onmousewheeldelta = LzDeclaredEvent;
 
 /**
   * @field Number mousewheeldelta: the amount the mouse wheel last moved.  Use

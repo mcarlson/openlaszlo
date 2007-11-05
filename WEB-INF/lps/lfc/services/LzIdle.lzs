@@ -76,7 +76,7 @@ function removeCallIdleDelegates ( t ){
 }
 
 /** This is the idle event for the system, sent by this service */
-DeclareEvent( prototype, 'onidle' );
+var onidle = LzDeclaredEvent;
 
 function toString () { return "LzIdle" }; // LzIdle in case somebody checks it
 

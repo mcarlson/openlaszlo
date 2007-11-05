@@ -184,28 +184,28 @@ class LzAnimatorGroup extends LzNode {
    */
   var isactive = false;
 
-DeclareEvent(prototype, 'ontarget' );
-DeclareEvent(prototype, 'onduration' );
-DeclareEvent(prototype, 'onstarted' );
+var ontarget = LzDeclaredEvent;
+var onduration = LzDeclaredEvent;
+var onstarted = LzDeclaredEvent;
 
 /** Executed when the animator starts.  This code is executed
   * multiple times if the animator repeats.
   */
-DeclareEvent(prototype, 'onstart' );
-DeclareEvent(prototype, 'onpaused' );
+var onstart = LzDeclaredEvent;
+var onpaused = LzDeclaredEvent;
 
 /** Use of 'onfinish' event
   * is deprecated. Use 'onstop' event instead.
   * @keywords deprecated
   */
-DeclareEvent(prototype, 'onfinish' );
+var onfinish = LzDeclaredEvent;
 
 /** Executed when the animator finishes.
   */
-DeclareEvent(prototype, 'onstop' );
+var onstop = LzDeclaredEvent;
 
 /** Event sent at the beginning of each new repeat. */
-DeclareEvent(prototype, 'onrepeat' );
+var onrepeat = LzDeclaredEvent;
 
 var animatorProps = { attribute : true, from : true ,
                       duration : true , to : true ,

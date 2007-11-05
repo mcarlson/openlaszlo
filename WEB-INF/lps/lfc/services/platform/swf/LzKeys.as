@@ -54,13 +54,13 @@ LzKeys.keycombos = {};
   * event sent when a key is pressed; sent with keycode 
   * for key that was pressed.
   */
-DeclareEvent(LzKeys, 'onkeydown' );
+LzKeys.onkeydown = LzDeclaredEvent;
 /**
   * event sent whenever a key goes up; sent with keycode
   * for key that was let go.
   */
-DeclareEvent(LzKeys, 'onkeyup' );
-DeclareEvent(LzKeys, 'onmousewheeldelta' );
+LzKeys.onkeyup = LzDeclaredEvent;
+LzKeys.onmousewheeldelta = LzDeclaredEvent;
 
 LzKeyboardKernel.setCallback(LzKeys, '__keyEvent');
 /** @access private */

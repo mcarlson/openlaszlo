@@ -43,7 +43,7 @@ class LzDataRequest extends LzNode {
     // Used by dataprovider to record error messages
     var error = null; 
 
-    DeclareEvent(prototype, 'onstatus' );
+    var onstatus = LzDeclaredEvent;
 
     function initialize (requestor) { 
         super.initialize.apply(this, arguments);

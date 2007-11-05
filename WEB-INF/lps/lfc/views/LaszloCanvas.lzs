@@ -244,13 +244,13 @@ function __makeSprite(args) {
 var initdelay = 0;
 
 /** Sent whenever the number of created nodes changes */
-DeclareEvent(prototype, 'onpercentcreated');
+var onpercentcreated = LzDeclaredEvent;
 /** Sent whenever the mouse button goes down*/
-DeclareEvent(prototype, 'onmousedown');
+var onmousedown = LzDeclaredEvent;
 /** Sent whenever the mouse button goes up*/
-DeclareEvent(prototype, 'onmouseup');
+var onmouseup = LzDeclaredEvent;
 /** Sent whenever the mouse moves */
-DeclareEvent(prototype, 'onmousemove');
+var onmousemove = LzDeclaredEvent;
 
 /** version number of the LPS that generated this application (for .lzo files,
   * this is the version number of the server that generated the optimized file, not the one 

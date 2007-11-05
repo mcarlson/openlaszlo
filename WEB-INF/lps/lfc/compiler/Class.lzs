@@ -273,8 +273,8 @@ var Class = {
   // are classname:String (required); traitsAndSuperclass:(Null ||
   // Class || Array) if Null defaults to Instance, if Array, the
   // elements of the array are the traits followed by the superclass;
-  // instanceProperties:Object is a hash of initial instance properties;
-  // staticProperties:Object is a hash of the inital class properties;
+  // instanceProperties:Array is a 'plist' of initial instance properties;
+  // staticProperties:Array is a 'plist' of the inital class properties;
   make: function make (classname, traitsAndSuperclass, instanceProperties, staticProperties) {
     // The constructor notes itself in every instance
     var nc = function constructor () {
@@ -323,8 +323,6 @@ var Class = {
       }
     }
     if (! superclass) { superclass = Instance; }
-    // Default factory
-    nc.addStaticProperty('make', superclass.make);
     // The prototype is an instance of our super, which causes us to
     // inherit our super's instanceProperties
     {
@@ -332,7 +330,6 @@ var Class = {
       // class instance initializer
       var xtor = function prototype () { this.constructor = superclass; };
       xtor.prototype = superclass.prototype;
-      #pragma "passThrough=true"
       var prototype = new xtor(); // --- superclass.make();
     }
     // Create any trait interstitials, following the pattern above
@@ -343,8 +340,12 @@ var Class = {
       }
     }
     // Install the staticProperties
-    for (var name in staticProperties) {
-      nc.addStaticProperty(name, staticProperties[name]);
+    if (staticProperties) {
+      while (staticProperties.length > 0) {
+        var value = staticProperties.pop();
+        var name = staticProperties.pop();
+        nc.addStaticProperty(name, value);
+      }
     }
     // Create super link
     nc.prototype = prototype;
@@ -355,8 +356,12 @@ var Class = {
       prototype._dbg_typename = classname
     }
     // Class.initialize:  Install initial values
-    for (var p in instanceProperties) {
-      nc.addProperty(p, instanceProperties[p]);
+    if (instanceProperties) {
+      while (instanceProperties.length > 0) {
+        var value = instanceProperties.pop();
+        var name = instanceProperties.pop();
+        nc.addProperty(name, value);
+      }
     }
     // Run class initializers from least to most specific
     (function classInit (prototype, constructor) {
@@ -389,8 +394,11 @@ var Trait = {
   _dbg_name: 'Trait',
   // Adds a property to the Trait, and to all implementations
   addProperty: function addProperty (name, value) {
-    // Save for future implementations
+    // Add to prototype
     this.prototype[name] = value;
+    // Save for future implementations
+    this.instanceProperties.push(name);
+    this.instanceProperties.push(value);
     // Add it to existing implementations
     var impls = this.implementations;
     for (var mash in impls) {
@@ -430,15 +438,18 @@ var Trait = {
       }
     }
     // Add the properties to the prototype (superclassInstance)
-    var prototype = this.prototype;
-    for (var name in prototype) {
+    var ip = this.instanceProperties;
+    var ipl = ip.length;
+    for (var i = 0; i < ipl; i += 2) {
 //       if ($debug) {
 //         if (name in superclassInstance) {
 //           Debug.debug("%s.%s overrides %s.%s", this.classname, name,
 //                       superclassInstance.constructor.classname, name);
 //         }
 //       }
-      superclassInstance.addProperty.call(superclassInstance, name, prototype[name]);
+      var name = ip[i];
+      var value = ip[i+1];
+      superclassInstance.addProperty.call(superclassInstance, name, value);
     }
     // Make the interstitial
     var xtor = function interstitial () { this.constructor = arguments.callee; };
@@ -471,6 +482,7 @@ var Trait = {
       _dbg_typename: this._dbg_name,
       _dbg_name: classname,
       prototype: superTrait ? superTrait.make() : new Object,
+      instanceProperties: superTrait ? superTrait.instanceProperties.slice(0) : new Array,
       // Remembers all implementations of the Trait
       implementations: {}
     };
@@ -478,12 +490,20 @@ var Trait = {
     nt.addStaticProperty('addProperty', this.addProperty);
     nt.addStaticProperty('makeInterstitial', this.makeInterstitial);
     // Install the staticProperties
-    for (var p in staticProperties) {
-      nt.addStaticProperty(p, staticProperties[p]);
+    if (staticProperties) {
+      while (staticProperties.length > 0) {
+        var value = staticProperties.pop();
+        var name = staticProperties.pop();
+        nt.addStaticProperty(name, value);
+      }
     }
     // Trait.initialize:  install initial values
-    for (var p in instanceProperties) {
-      nt.addProperty(p, instanceProperties[p]);
+    if (instanceProperties) {
+      while (instanceProperties.length > 0) {
+        var value = instanceProperties.pop();
+        var name = instanceProperties.pop();
+        nt.addProperty(name, value);
+      }
     }
     // Run the initializer if there is one
     if (nt.hasOwnProperty('initialize')) {

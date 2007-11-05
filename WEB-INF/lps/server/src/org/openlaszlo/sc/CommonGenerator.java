@@ -342,14 +342,14 @@ public abstract class CommonGenerator implements ASTVisitor {
     if (props.isEmpty()) {
       instanceProperties = new ASTLiteral(null);
     } else {
-      instanceProperties = new ASTObjectLiteral(0);
+      instanceProperties = new ASTArrayLiteral(0);
       instanceProperties.setChildren((SimpleNode[])(props.toArray(new SimpleNode[0])));
     }
     SimpleNode classProperties;
     if (classProps.isEmpty()) {
       classProperties = new ASTLiteral(null);
     } else {
-      classProperties = new ASTObjectLiteral(0);
+      classProperties = new ASTArrayLiteral(0);
       classProperties.setChildren((SimpleNode[])(classProps.toArray(new SimpleNode[0])));
     }
 
@@ -399,7 +399,7 @@ public abstract class CommonGenerator implements ASTVisitor {
         if (n instanceof ASTFunctionDeclaration) {
           SimpleNode[] c = n.getChildren();
           assert c.length == 3;
-          p.add(c[0]);
+          p.add(new ASTLiteral(((ASTIdentifier)c[0]).getName()));
           SimpleNode funexpr = new ASTFunctionExpression(0);
           funexpr.setBeginLocation(n.filename, n.beginLine, n.beginColumn);
           funexpr.setChildren(c);
@@ -409,7 +409,7 @@ public abstract class CommonGenerator implements ASTVisitor {
           for (int j = 0, len = c.length; j < len; j++) {
             SimpleNode v = c[j];
             assert v instanceof ASTVariableDeclaration : v.getClass();
-            p.add(v.get(0));
+            p.add(new ASTLiteral(((ASTIdentifier)v.get(0)).getName()));
             if (v.getChildren().length > 1) {
               p.add(v.get(1));
             } else {

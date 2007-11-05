@@ -117,7 +117,7 @@ function initialize (parent, args) {
       traitList ? traitList : sup,
       null,
       // LzNode.initialize installs the tagname in ConstructorMap
-      {tagname: classname}
+      ['tagname', classname]
       );
 
     // For backward compatibility, we also install the class as a

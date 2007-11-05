@@ -80,9 +80,9 @@ class LzState extends LzNode {
 static var tagname = 'state';
 
 /** Sent when the state is applied. */
-DeclareEvent(prototype, 'onapply' );
+var onapply = LzDeclaredEvent;
 /** Sent when the state is removed */
-DeclareEvent(prototype, 'onremove' );
+var onremove = LzDeclaredEvent;
 
 /** <code>setAttribute('apply', true)</code> will
   * apply the state.  <code>setAttribute('apply', false)</code> will

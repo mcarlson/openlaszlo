@@ -47,25 +47,6 @@ LzDeclaredEvent.toString = function ( ){
 LzDeclaredEvent.ready = false;
 
 /**
-  * @access private
-  */
-function DeclareEvent( who , what ){
-    //    Debug.debug('declare ' + who + ' what ' + what);
-    who[ what ] = LzDeclaredEvent;
-}
-
-/**
-  * @access private
-  */
-function DeclareEvents( who , what ){
-    //    Debug.debug('DeclareEvents', who, what);
-    for (var i in what) {
-        //Debug.info('what', what[i]);
-        who[what[i]] = LzDeclaredEvent;
-    }
-}
-
-/**
   * Used to efficiently clone hashtables using Object's
   * N.B. these tables incorrectly will appear to have entries for all
   * the properties of Object.prototype.  To avoid this (but pay the

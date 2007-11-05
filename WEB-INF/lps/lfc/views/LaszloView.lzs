@@ -77,32 +77,32 @@ class LzView extends LzNode {
 static var tagname = 'view';
 
 /** Event called when this view adds a subview */
-DeclareEvent(prototype, 'onaddsubview' );
-DeclareEvent(prototype, 'onbgcolor' );
+var onaddsubview = LzDeclaredEvent;
+var onbgcolor = LzDeclaredEvent;
 /** The onblur script is executed when an element loses focus either
   * by the pointing device or by tabbing navigation.
   */
-DeclareEvent(prototype, 'onblur' );
+var onblur = LzDeclaredEvent;
 /** The onclick script is executed when the pointing device button is
   * clicked over an element.
   */
-DeclareEvent(prototype, 'onclick' );
-DeclareEvent(prototype, 'onclickable' );
+var onclick = LzDeclaredEvent;
+var onclickable = LzDeclaredEvent;
 /** The onfocus script is executed when an element receives focus
   * either by the pointing device or by tabbing navigation.
   */
-DeclareEvent(prototype, 'onfocus');   // From LzFocus
-DeclareEvent(prototype, 'onframe');
+var onfocus = LzDeclaredEvent;   // From LzFocus
+var onframe = LzDeclaredEvent;
 
 /** Event for changes to view's <attribute>height</attribute> property */
-DeclareEvent(prototype, 'onheight' );
-DeclareEvent(prototype, 'onimload' );
+var onheight = LzDeclaredEvent;
+var onimload = LzDeclaredEvent;
 
 /** The onkeyup script is executed when this view has the focus and a
   * key is released. This event is sent with the keycode for the key that 
   * went up.
   */
-DeclareEvent(prototype, 'onkeyup' );   // From LzFocus
+var onkeyup = LzDeclaredEvent;   // From LzFocus
 
 /** The onkeydown script is executed when this view has the focus and
   * a key is pressed down.  Multiple key down events are sent for a
@@ -110,71 +110,71 @@ DeclareEvent(prototype, 'onkeyup' );   // From LzFocus
   * once, use onkeyup. This event is sent with the keycode for the key that is
   * down.
   */
-DeclareEvent(prototype, 'onkeydown' ); // From LzFocus
-DeclareEvent(prototype, 'onlastframe' );
-DeclareEvent(prototype, 'onload' );
-DeclareEvent(prototype, 'onloadperc' );
+var onkeydown = LzDeclaredEvent; // From LzFocus
+var onlastframe = LzDeclaredEvent;
+var onload = LzDeclaredEvent;
+var onloadperc = LzDeclaredEvent;
 
 /** <event>onerror</event>: Sent when there is an error loading the view's resource.
   * The argument sent with the event is the error string sent by the server.
   */
-DeclareEvent(prototype, 'onerror' );
+var onerror = LzDeclaredEvent;
 
 /**
   * <event>ontimeout</event>: Sent when the request to load media for the view times
   * out
   */
-DeclareEvent(prototype, 'ontimeout' );
+var ontimeout = LzDeclaredEvent;
 /** The onmousedown script is executed when the pointing device button is
   * pressed over an element.
   */
-DeclareEvent(prototype, 'onmousedown' );
+var onmousedown = LzDeclaredEvent;
 
 /** The onmouseout script is executed when the point device is moved
   * so that is is no longer over an element.
   */
-DeclareEvent(prototype, 'onmouseout' );
+var onmouseout = LzDeclaredEvent;
 /** The onmouseover script is executed when the pointing device is
   * moved onto an element.
   */
-DeclareEvent(prototype, 'onmouseover' );
-DeclareEvent(prototype, 'onmousetrackover');
-DeclareEvent(prototype, 'onmousetrackup');
+var onmouseover = LzDeclaredEvent;
+var onmousetrackover = LzDeclaredEvent;
+var onmousetrackup = LzDeclaredEvent;
 
 /** The onmouseup script is executed when the pointing device button is
   * released over an element.
   */
-DeclareEvent(prototype, 'onmouseup' );
+var onmouseup = LzDeclaredEvent;
 /** Sent when a view changes its opacity */
-DeclareEvent(prototype, 'onopacity' );
+var onopacity = LzDeclaredEvent;
 
-DeclareEvent(prototype, 'onplay' );
+var onplay = LzDeclaredEvent;
 
 /** Event called when this view removes a subview */
-DeclareEvent(prototype, 'onremovesubview' );
+var onremovesubview = LzDeclaredEvent;
 
-DeclareEvent(prototype, 'onresource' );
-DeclareEvent(prototype, 'onresourceheight');
-DeclareEvent(prototype, 'onresourcewidth');
-DeclareEvent(prototype, 'onrotation' );
-DeclareEvent(prototype, 'onstop' );
-DeclareEvent(prototype, 'ontotalframes' );
-DeclareEvent(prototype, 'onunstretchedheight' );
-DeclareEvent(prototype, 'onunstretchedwidth' );
-DeclareEvent(prototype, 'onvisible' );
+var onresource = LzDeclaredEvent;
+var onresourceheight = LzDeclaredEvent;
+var onresourcewidth = LzDeclaredEvent;
+var onrotation = LzDeclaredEvent;
+var onstop = LzDeclaredEvent;
+var ontotalframes = LzDeclaredEvent;
+var onunstretchedheight = LzDeclaredEvent;
+var onunstretchedwidth = LzDeclaredEvent;
+var onvisible = LzDeclaredEvent;
 /** @access private */
-DeclareEvent(prototype, 'onvisibility' );
+var onvisibility = LzDeclaredEvent;
 
 /** event for changes to view's <attribute>width</attribute> property */
-DeclareEvent(prototype, 'onwidth' );
+var onwidth = LzDeclaredEvent;
 
 /** event for changes to view's <attribute>x</attribute> property */
-DeclareEvent(prototype, 'onx' );
-DeclareEvent(prototype, 'onxoffset' );
+var onx = LzDeclaredEvent;
+var onxoffset = LzDeclaredEvent;
 
 /** event for changes to view's <attribute>y</attribute> property */
-DeclareEvent(prototype, 'ony' );
-DeclareEvent(prototype, 'onyoffset' );
+var ony = LzDeclaredEvent;
+var onyoffset = LzDeclaredEvent;
 
 /**
   * The ondblclick script is executed when the pointing device button
@@ -187,7 +187,7 @@ DeclareEvent(prototype, 'onyoffset' );
   * The view's doubleclick time can be adjusted by setting its
   * DOUBLE_CLICK_TIME attribute
   */
-DeclareEvent(prototype, 'ondblclick' );
+var ondblclick = LzDeclaredEvent;
 var DOUBLE_CLICK_TIME = 500;
 
 var capabilities = LzSprite.prototype.capabilities;

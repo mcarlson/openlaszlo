@@ -24,7 +24,7 @@ var LzFocus = new Object();
 /** Sent when the focus changes, with the argument being the view
   * that was just focused. If nothing is focussed, this event is sent with null.
   */
-DeclareEvent(LzFocus, 'onfocus' );
+LzFocus.onfocus = LzDeclaredEvent;
 
 /** A reference to the last view that held the focus
   * @type LzView

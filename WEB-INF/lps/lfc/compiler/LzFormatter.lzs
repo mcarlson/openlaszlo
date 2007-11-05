@@ -19,13 +19,17 @@
  */
 class LzMessage {
   var message = '';
+  var length = 0;
 
-  static function initialize (message) {
-    this.message = message;
+  function initialize (message) {
+    if (arguments.length > 0) {
+      this.appendInternal('' + message, message);
+    }
   }
 
   function appendInternal (str, obj) {
     this.message += str;
+    this.length = this.message.length;
   }
 
   function append (str) {

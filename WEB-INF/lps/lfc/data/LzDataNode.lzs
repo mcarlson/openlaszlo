@@ -66,7 +66,7 @@
   */
 trait LzDataNode {
 
-DeclareEvent(prototype, 'onownerDocument' );
+var onownerDocument = LzDeclaredEvent;
 
 
 /** The type of this node -- ELEMENT_NODE or TEXT_NODE

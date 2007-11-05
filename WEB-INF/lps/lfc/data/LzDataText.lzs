@@ -27,12 +27,12 @@ function initialize ( text ){
 }
 
 
-DeclareEvent(LzDataText.prototype, 'onDocumentChange' );
-DeclareEvent(LzDataText.prototype, 'onparentNode' );
-DeclareEvent(LzDataText.prototype, 'onchildNode' );
-DeclareEvent(LzDataText.prototype, 'onchildNodes' );
-DeclareEvent(LzDataText.prototype, 'onattributes' );
-DeclareEvent(LzDataText.prototype, 'onnodeName' );
+var onDocumentChange = LzDeclaredEvent;
+var onparentNode = LzDeclaredEvent;
+var onchildNode = LzDeclaredEvent;
+var onchildNodes = LzDeclaredEvent;
+var onattributes = LzDeclaredEvent;
+var onnodeName = LzDeclaredEvent;
 
 /** This property is of type String, can raise a DOMException object on setting
   * and can raise a DOMException object on retrieval. */
