@@ -197,7 +197,7 @@
 
             var t = dp.xpathQuery(this.textdatapath);
             // if t is null, use default text (if it exists)
-            if( ( t == null || t.length == 0 ) && this.defaulttext['length'] > 0 )
+            if( ( t == null || t.length == 0 ) && this.defaulttext && this.defaulttext['length'] > 0 )
                t = this.defaulttext;
 
             if ( this._cbtext && (this.statictext == null) ) {
