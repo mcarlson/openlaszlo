@@ -25,7 +25,12 @@
   <method name="isPrototypeOf" override="false"/>
   <method name="toLocaleString" override="false"/>
   <method name="prototype" override="false"/>
-  <method name="apply" override="false"/>
+  <!-- 
+   'apply' is ambiguous because <state> is
+   using it for both a method and an attribute. Just omit it from
+   the declarations for now.
+  <method name="apply" override="false"/> 
+  -->
   <method name="call" override="false"/>
 </interface>
 
@@ -504,8 +509,10 @@ element attribute "
 
 <interface name="state" extends="node">
   <!-- This is unfortunately both a setter attribute AND a method. No
-       real nice way to represent that. -->
-  <method name="apply" override="true" />
+       real nice way to represent that.
+   -->
+  <attribute name="apply" override="true" />
+
   <!-- If pooling is true, views that are created by the state are not
        destroyed when the state is removed - instead they just act as
        if they were by sending the onremovesubview event and setting
