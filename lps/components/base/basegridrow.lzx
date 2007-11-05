@@ -41,7 +41,10 @@
         </method>
 
         <method name="setRegularColor" >
-            var pos = this.datapath.xpathQuery( 'position()' );
+            var pos = 0;
+            if (this.datapath != null) {
+                pos = this.datapath.xpathQuery( 'position()' );
+            }
             var nextColor = null;
             if ( pos % 2 == 0 )  nextColor = ownerGrid.bgcolor0;
             if ( pos % 2 == 1 )  nextColor = ownerGrid.bgcolor1;
