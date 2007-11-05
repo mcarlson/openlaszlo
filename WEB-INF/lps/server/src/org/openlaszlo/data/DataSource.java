@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -169,7 +169,7 @@ abstract public class DataSource
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 DataSource.class.getName(),"051018-169", new Object[] {new Long(size)})
 );
-                res.setContentLength((int)size);
+                //res.setContentLength((int)size);
             }
 
             if (doClientCache) {

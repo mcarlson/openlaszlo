@@ -94,8 +94,10 @@ LzLoadQueue.enqueueRequest = function( loadmc ){
   */
 LzLoadQueue.XMLOnDataHandler = function (src) {
     if (src == undefined) {
-        Debug.warn("LzLoadQueue.XMLOnDataHandler load failed from URL %w, no data received.", this.url);
-        Debug.warn("Failure to load data in serverless apps may be caused by Flash player security policies. Check your data server crossdomain.xml file");
+        if (!this.proxied) {
+            Debug.warn("LzLoadQueue.XMLOnDataHandler load failed from URL %w, no data received.", this.url);
+            Debug.warn("Failure to load data in serverless apps may be caused by Flash player security policies. Check your data server crossdomain.xml file");
+        }
         this.onload(false);
         //Debug.write("this.loader.onerror.ready =", this.loader.onerror.ready);
         if (this.loader.onerror.ready) {

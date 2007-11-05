@@ -8,7 +8,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.*;
 
 import org.openlaszlo.utils.ContentEncoding;
+import org.openlaszlo.utils.LZHttpUtils;
 
 import org.openlaszlo.media.MimeType;
 import org.openlaszlo.server.LPS;
@@ -35,6 +36,13 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 
+import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.methods.*;
+import org.apache.commons.httpclient.util.*;
+
+import org.xmlpull.v1.*;
+
+
 
 /**
  * XML Converter
@@ -43,9 +51,32 @@ import org.jdom.output.XMLOutputter;
 public class XMLGrabber extends Converter {
     
     private static Logger mLogger  = Logger.getLogger(XMLGrabber.class);
+    private static XmlPullParserFactory factory = null;
+
+    private static XmlPullParserFactory getXPPFactory () {
+        if (factory == null) {
+            // Set up the XML Parser factory
+            try {
+                String sys = null; 
+                try {
+                    sys = System.getProperty(XmlPullParserFactory.PROPERTY_NAME);
+                } catch (SecurityException se) {
+                }
+                factory = XmlPullParserFactory.newInstance(sys, null);
+                factory.setNamespaceAware(false);
+                factory.setValidating(false);
+            } catch (XmlPullParserException e) {
+                throw new RuntimeException(e.getMessage());
+            } 
+        }
+        return factory;
+    }
 
     /**
      * Convert incoming XML to ... XML 
+     *
+     * This method is called convertToSWF for historical reasons, and nobody
+     * has changed the API call name yet. 
      *
      * A dataset will look like this:
      * <resultset>
@@ -61,63 +92,193 @@ public class XMLGrabber extends Converter {
      * </headers>
      * </resultset>
      */
+
     public InputStream convertToSWF(Data data, HttpServletRequest req,
                                     HttpServletResponse res)
        throws ConversionException, IOException {
 
-        String body = data.getAsString();
+        try {
+            PipedOutputStream pout = new PipedOutputStream();
+            PipedInputStream in = new PipedInputStream(pout);
 
-        // Get headers
-        String sendheaders = req.getParameter("sendheaders");
-        StringBuffer headerbuf = new StringBuffer();
-        headerbuf.append("<headers>\n");
-        if (sendheaders == null || sendheaders.equals("true") ) {
-            data.appendResponseHeadersAsXML(headerbuf);
+            XmlSerializer serializer;
+            XmlPullParser parser;
+            parser = getXPPFactory().newPullParser();
+            InputStream dstream = data.getInputStream();
+            parser.setInput( dstream, null );
+            serializer = factory.newSerializer();
+            serializer.setOutput(pout , "UTF-8");
+
+            HttpMethodBase request = ((HttpData) data).getRequest();
+
+            final String sendheaders = req.getParameter("sendheaders");
+
+            XMLCopyThread worker = new XMLCopyThread(pout, parser,serializer, request, sendheaders);
+            worker.start();
+
+            return in;
+
+        } catch (XmlPullParserException ex) {
+            throw new ConversionException("Parsing XML: " + ex.getMessage());
         }
-        headerbuf.append("</headers>");
-        String headers = headerbuf.toString();
+    }
 
-        if (mLogger.isDebugEnabled()) {
-            mLogger.info("Output:" + body.length());
-            mLogger.info("Output:\n" + body);
-            mLogger.info("Output Headers:" + headers.length());
-            mLogger.info("Output Headers:\n" + headers);
+    // Worker thread to parse XML (which serves to translate obscure
+    // charsets to UTF-8) and wrap it in <resultset>, possibly adding
+    // proxied HTTP headers from backedn response.
+    // This is written to the PipedOutputStream which we were passed.
+    class XMLCopyThread extends Thread implements Runnable {
+        OutputStream pout = null;    
+        XmlPullParser parser;
+        XmlSerializer serializer;
+        HttpMethodBase request;
+        String sendheaders = null;
+        
+        XMLCopyThread( OutputStream pout, XmlPullParser parser, XmlSerializer serializer,
+                       HttpMethodBase request,
+                       String sendheaders) {
+            this.pout = pout;
+            this.parser = parser;
+            this.serializer = serializer;
+            this.request = request;
+            this.sendheaders = sendheaders;
         }
 
-        // Default to true, for back compatibility (sigh)
-        boolean trimWhitespace = true;
-        String trimval = req.getParameter("trimwhitespace");
-        if ("false".equals(trimval)) {
-                trimWhitespace = false;
+        public void run() {
+            try {
+                writeXMLDataToOutputStream();
+                pout.flush();
+                pout.close();
+            } catch (XmlPullParserException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
-        boolean compress = "true".equals(req.getParameter("compress"));
-
-        // nsprefix now defaults to true
-        boolean nsprefix = true;
-        if ("false".equals(req.getParameter("nsprefix"))) {
-            nsprefix = false;
-        }
-
-        // Need to parse body into a DOM, and add the headers, then re-emit as XML
-        // of the form
+        // Generates an XML document with this structure
         // <resultset>
-        //   <body> ... </body>
+        //   <body> [PROXIED_XMLDOC] </body>
         //   <headers> ... </headers>
         // </resultset>
+        void writeXMLDataToOutputStream() throws XmlPullParserException, IOException {
+            //Run through XML PULL parser, to convert to UTF8, and
+            // wrap in <resultset> tag, plus optional headers 
 
-        StringBuffer xdata = new StringBuffer();
-        xdata.append("<resultset>\n");
-        xdata.append("<body>\n");
-        String xbody = body.replaceFirst("<[?]xml.*?[?]>","");
-        xdata.append(xbody);
-        xdata.append("</body>\n");
-        xdata.append(headers);
-        xdata.append("</resultset>\n");
+            // Start a standalone document;
+            //serializer.startDocument("UTF-8", Boolean.TRUE);
 
-        // generate inputstream from DOM
-        ByteArrayInputStream dis = new ByteArrayInputStream((xdata.toString()).getBytes("UTF-8"));
-        return dis;
+            serializer.startTag("", "resultset");
+            serializer.startTag("", "body");
+
+            parser.nextToken(); // read first token
+
+            while (parser.getEventType () != XmlPullParser.END_DOCUMENT) {
+                writeToken ( parser.getEventType () );
+                parser.nextToken ();
+            }
+
+            serializer.endTag("", "body");
+
+            //   <headers> ... </headers>
+            serializer.startTag("", "headers");
+
+            // Get headers
+            if (sendheaders == null || sendheaders.equals("true") ) {
+                Header[] hedz = request.getResponseHeaders();
+                for (int i = 0; i < hedz.length; i++) {
+                    String name = hedz[i].getName();
+                    if (LZHttpUtils.allowForward(name, null)) {
+                        serializer.startTag("", "header");                    
+
+                        serializer.attribute (null, "name", name);
+                        serializer.attribute (null, "value", hedz[i].getValue());
+                        serializer.endTag("", "header");                    
+                    }
+                }
+            }
+            serializer.endTag("", "headers");
+
+            serializer.endTag("", "resultset");
+            serializer.endDocument();
+        }
+
+        private void writeStartTag ()
+          throws XmlPullParserException, IOException {
+            if (!parser.getFeature (XmlPullParser.FEATURE_REPORT_NAMESPACE_ATTRIBUTES)) {
+                for (int i = parser.getNamespaceCount (parser.getDepth ()-1);
+                     i <= parser.getNamespaceCount (parser.getDepth ())-1; i++) {
+                    serializer.setPrefix
+                        (parser.getNamespacePrefix (i),
+                         parser.getNamespaceUri (i));
+                }
+            }
+            serializer.startTag(parser.getNamespace (), parser.getName ());
+        
+            for (int i = 0; i < parser.getAttributeCount (); i++) {
+                serializer.attribute
+                    (parser.getAttributeNamespace (i),
+                     parser.getAttributeName (i),
+                     parser.getAttributeValue (i));
+            }
+        }
+
+
+        private void writeToken (int eventType)
+          throws XmlPullParserException, IOException {
+            switch (eventType) {
+                
+              case XmlPullParser.START_TAG:
+                writeStartTag ();
+                break;
+                
+              case XmlPullParser.END_TAG:
+                serializer.endTag(parser.getNamespace (), parser.getName ());
+                break;
+                
+            case XmlPullParser.START_DOCUMENT:
+                //use Boolean.TRUE to make it standalone
+              //Boolean standalone = (Boolean) parser.getProperty(PROPERTY_XMLDECL_STANDALONE);
+              //serializer.startDocument(parser.getInputEncoding(), standalone);
+                break;
+
+              case XmlPullParser.END_DOCUMENT:
+              //serializer.endDocument();
+                break;
+
+              case XmlPullParser.IGNORABLE_WHITESPACE:
+                //comment it to remove ignorable whtespaces from XML infoset
+                String s = parser.getText ();
+                serializer.ignorableWhitespace (s);
+                break;
+                
+              case XmlPullParser.TEXT:
+                serializer.text (parser.getText ());
+                break;
+                
+              case XmlPullParser.ENTITY_REF:
+                serializer.entityRef (parser.getName ());
+                break;
+                
+              case XmlPullParser.CDSECT:
+                serializer.cdsect( parser.getText () );
+                break;
+                
+              case XmlPullParser.PROCESSING_INSTRUCTION:
+                // serializer.processingInstruction( parser.getText ());
+                break;
+                
+              case XmlPullParser.COMMENT:
+                //serializer.comment (parser.getText ());
+                break;
+                
+              case XmlPullParser.DOCDECL:
+                // serializer.docdecl (parser.getText ());
+                break;
+            }
+        }
+
+
     }
 
     /**
