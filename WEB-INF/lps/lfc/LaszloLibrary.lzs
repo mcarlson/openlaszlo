@@ -47,15 +47,6 @@ if ($profile) {
 if ($as2) {
     // Initialize the DojoExternalInterface class
     DojoExternalInterface = new DojoExternalInterfaceClass();
-
-    // Expose your methods
-    DojoExternalInterface.addCallback("getCanvasAttribute", LzHistory, LzHistory.getCanvasAttribute);
-    DojoExternalInterface.addCallback("setCanvasAttribute", LzHistory, LzHistory.setCanvasAttribute);
-    DojoExternalInterface.addCallback("callMethod", LzHistory, LzHistory.callMethod);
-    DojoExternalInterface.addCallback("receiveHistory", LzHistory, LzHistory.receiveHistory);
-
-    // Tell JavaScript that you are ready to have method calls
-    DojoExternalInterface.loaded();
 }
 
 if ($debug) {

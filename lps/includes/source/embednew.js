@@ -118,6 +118,7 @@ Lz = {
         // for callbacks onload
         Lz._swfid = properties.id;
         dojo.flash.addLoadedListener(Lz._loaded);
+        dojo.flash.addLoadedListener(Lz.history.init)
         if (! Lz['setCanvasAttribute']) {
             Lz.setCanvasAttribute = Lz[properties.id].setCanvasAttribute;
         }
@@ -348,7 +349,7 @@ Lz = {
      * @param hist:Boolean value - if true, add a history event.
      */
     _setCanvasAttributeSWF: function (name, value, hist) {
-        if (this.loaded) {
+        if (this.loaded && dojo.flash.comm['callMethod']) {
             if (hist) {
                 Lz.history._store(name, value);
             } else {

@@ -15,6 +15,7 @@ var LzSprite = function(newowner, isroot, args) {
 
 
     if (isroot) {
+        this.isroot = true;
         var is = _root.spriteroot;
         if (! is) {
             var is = _root.attachMovie('empty', 'spriteroot', 1000);
@@ -218,6 +219,16 @@ LzSprite.prototype._setrescheight = false;
 LzSprite.prototype.init = function( ) {
     this.__LZmovieClipRef._visible = this.visible;
     this.__LZbgRef._visible = this.visible;
+    if (this.isroot) {
+        // Expose your methods
+        DojoExternalInterface.addCallback("getCanvasAttribute", LzHistory, LzHistory.getCanvasAttribute);
+        DojoExternalInterface.addCallback("setCanvasAttribute", LzHistory, LzHistory.setCanvasAttribute);
+        DojoExternalInterface.addCallback("callMethod", LzHistory, LzHistory.callMethod);
+        DojoExternalInterface.addCallback("receiveHistory", LzHistory, LzHistory.receiveHistory);
+
+        // Tell JavaScript that you are ready to have method calls
+        DojoExternalInterface.loaded();
+    }
 }
 
 

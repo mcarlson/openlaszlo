@@ -170,7 +170,7 @@ Lz.history = {
         var _this = Lz.history;
         // TODO: send events to all apps
         if (h.length == 0 || h == _this._lasthash) return;
-        if (h.indexOf('_lz') != -1) {
+        if (Lz.loaded && h.indexOf('_lz') != -1) {
             // TODO: use rison
             _this._lasthash = h;
             h = h.substring(3);
@@ -229,4 +229,7 @@ Lz.history = {
         }
     }
 };
-window.onload = Lz.history.init;
+if (Lz.__BrowserDetect.isFirefox) {
+    // If this is present, then Firefox does not do its Javascript caching and onload will get fired when coming back to the page.  Thanks Jes! 
+    window.onunload = function() {};
+}
