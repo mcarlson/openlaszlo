@@ -4,9 +4,8 @@
     <frame src="resources/sourface.png"/>
     <frame src="resources/smiley.gif"/>
   </resource>
-  
   <view x="150" y="50" resource="face"
-         onclick="this.setResourceNumber(2);"/>
+         onclick="this.setAttribute('frame', 2);"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *

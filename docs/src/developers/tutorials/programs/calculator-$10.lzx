@@ -22,7 +22,7 @@
     <method name="initButton">
       this.buttonText.setAttribute('x', 
                                    this.getAttribute('labelX'));
-      this.buttonText.setText(this.getAttribute('buttLabel'));
+      this.buttonText.setAttribute('text', this.getAttribute('buttLabel'));
     </method>
         
     <text name="buttonText" font="obliqueText" fontsize="25" 
@@ -65,7 +65,7 @@
         this.oldValue = false;
         this.allOperators = new Array('+', '-', '/', '*');
         this.operator = '+';
-        this.screen.setText(this.valueX.toString());
+        this.screen.setAttribute('text', this.valueX.toString());
       </method>
       
       <method name="clear">
@@ -106,12 +106,12 @@
         if ((this.lastInput == 'none') 
             || (this.lastInput == 'operator')) {
           // clear display and rewrite
-          this.screen.setText(val);    
+          this.screen.setAttribute('text', val);    
         } else if (this.lastInput == 'digit') {
-          this.screen.setText(displ + val);
+          this.screen.setAttribute('text', displ + val);
         } else if (this.lastInput == 'equals') {
           this.clear();
-          this.screen.setText(val);
+          this.screen.setAttribute('text', val);
         }
         this.lastInput = 'digit';
         ]]>
@@ -152,7 +152,7 @@
           val = this.valueX / valFromDisp;
         }
         valFromDisp = val;
-        this.screen.setText(valFromDisp.toString());
+        this.screen.setAttribute('text', valFromDisp.toString());
         this.valueX = this.screen.getText();
       </method>
       
@@ -173,17 +173,17 @@
         if ((this.lastInput == 'none') 
              || (this.lastInput == 'operator')) {
           if (!this.isThereDecimal()) {
-            this.screen.setText("0.");
+            this.screen.setAttribute('text', "0.");
           }
         } else if (this.lastInput == 'digit') {
           if (!this.isThereDecimal()) {
             var newText = this.screen.getText();
             newText += ".";
-            this.screen.setText(newText);
+            this.screen.setAttribute('text', newText);
           }
         } else if (this.lastInput == 'equals') {
           this.clear(); 
-          this.screen.setText('0.');
+          this.screen.setAttribute('text', '0.');
         }
         this.lastInput = 'digit';
       </method>
@@ -192,7 +192,7 @@
         if ((this.lastInput == 'digit') ||
             (this.lastInput == 'equals')) {
           var newDisp = (this.screen.getText() - 0) * -1;
-          this.screen.setText(newDisp.toString()); 
+          this.screen.setAttribute('text', newDisp.toString()); 
         } else {
           clear();
         }            

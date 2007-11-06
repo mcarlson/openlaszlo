@@ -14,7 +14,7 @@
   <simplelayout axis="y"/>
   <view>
     <simplelayout axis="y"/>
-    <text onclick="parent.newContact.setVisible(!parent.newContact.visible);">New Entry...</text>
+    <text onclick="parent.newContact.setAttribute('visible', !parent.newContact.visible);">New Entry...</text>
     <contactview name="newContact" datapath="new:/contact">
       <button width="80" x="200" y="10">Add
         <handler name="onclick">
@@ -22,15 +22,15 @@
           var dp=canvas.datasets.dset.getPointer();
           dp.selectChild();
           dp.addNodeFromPointer( parent.datapath );
-          parent.setVisible(false);
-          parent.setDatapath("new:/contact");
+          parent.setAttribute('visible', false);
+          parent.setAttribute('datapath', "new:/contact");
         </handler>
       </button>
     </contactview>
   </view>
   <view datapath="dset:/phonebook/contact">
     <simplelayout axis="y"/>
-    <view name="list" onclick="parent.updateContact.setVisible(!parent.updateContact.visible);">
+    <view name="list" onclick="parent.updateContact.setAttribute('visible', !parent.updateContact.visible);">
       <simplelayout axis="x"/>
       <text datapath="@firstName"/>
       <text datapath="@lastName"/>

@@ -6,7 +6,7 @@
     <simplelayout axis="y"/>
     <!-- 1 -->
     <view name="list" 
-          onclick="parent.updateContact.setVisible(!parent.updateContact.visible);">
+          onclick="parent.updateContact.setAttribute('visible', !parent.updateContact.visible);">
       <simplelayout axis="x"/>
       <text datapath="@firstName"/>
       <text datapath="@lastName"/>

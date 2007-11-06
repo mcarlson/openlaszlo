@@ -5,7 +5,7 @@
   <view>
     <simplelayout axis="y"/>
     <!-- 1 -->
-    <text onclick="parent.newContact.setVisible(!parent.newContact.visible);">New Entry...</text>
+    <text onclick="parent.newContact.setAttribute('visible', !parent.newContact.visible);">New Entry...</text>
     <!-- 2 -->
     <view name="newContact" datapath="new:/contact" 
           visible="false" x="20" height="120">
@@ -28,7 +28,7 @@
   <view datapath="dset:/phonebook/contact">
     <simplelayout axis="y"/>
     <view name="list" 
-          onclick="parent.updateContact.setVisible(!parent.updateContact.visible);">
+          onclick="parent.updateContact.setAttribute('visible', !parent.updateContact.visible);">
       <simplelayout axis="x"/>
       <text datapath="@firstName"/>
       <text datapath="@lastName"/>

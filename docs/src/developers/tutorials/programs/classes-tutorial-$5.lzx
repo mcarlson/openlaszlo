@@ -17,10 +17,10 @@
       Debug.write('Dog');
     </method>
     <method name="doOver">
-      this.setResourceNumber(2);
+      this.setAttribute('frame', 2);
     </method>
     <method name="doOut">
-      this.setResourceNumber(1);
+      this.setAttribute('frame', 1);
     </method>
   </class>
   
