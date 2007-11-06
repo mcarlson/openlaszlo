@@ -32,12 +32,12 @@
   * <p><classname>LzView</classname> extends <classname>LzNode</classname>,
   * which is the fundamental abstract class of LZX.</p>
   * 
-  * <p>For more a gentle introduction to views please see the <a
+  * <p>For an introduction to views see the <a
   * href="${tutorials}">Laszlo tutorials</a>, particularly <a
-  * href="${tutorials}laszlo_basics.html">Laszlo Basics</a> and <a
-  * href="${tutorials}views.html">Understanding Views</a>.  For a more
-  * rigorous explanation of views see the<a href="${dguide}">Developer's Guide</a>, particularly the <a
-  * href="${dguide}views.html">views</a> chapter.</p>
+  * href="${tutorials}laszlo_basics.html">OpenLaszlo Basics</a> and <a
+  * href="${tutorials}views-tutorial.html">Introduction to Views</a>. For a more
+  * rigorous explanation of views see the <a href="${dguide}">Application Developer's Guide</a>, particularly the <a
+  * href="${dguide}views.html">Views</a> chapter.</p>
   * 
   * @shortdesc The most basic viewable element.
   * @lzxname view
