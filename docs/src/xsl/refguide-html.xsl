@@ -20,35 +20,34 @@
 
   <xsl:param name="linenumbering.extension.frag" select="0"/>
 
-    <xsl:template match="refnamediv">
-        <div class="{name(.)}">
-            <xsl:call-template name="dir">
-                <xsl:with-param name="inherit" select="1"/>
-            </xsl:call-template>
-            <xsl:call-template name="anchor"/>
-            <!-- Just show the name of the tag, not "Name: " -->
-            <h2><xsl:apply-templates/></h2>
-        </div>
-    </xsl:template>
-
-
-    <xsl:template match="refpurpose">
-        <xsl:if test="node()">
-            <div class="refpurpose">
-                <xsl:apply-templates/>
-            </div>
-        </xsl:if>
-    </xsl:template>
-
-    <xsl:template match="refsynopsisdiv">
-        <div class="{name(.)}">
-            <xsl:call-template name="dir">
-                <xsl:with-param name="inherit" select="1"/>
-            </xsl:call-template>
-            <xsl:call-template name="anchor"/>
-            <xsl:apply-templates/>
-        </div>
-    </xsl:template>
+     <xsl:template match="refnamediv">
+          <div class="{name(.)}">
+               <xsl:call-template name="dir">
+                    <xsl:with-param name="inherit" select="1"/>
+               </xsl:call-template>
+               <xsl:call-template name="anchor"/>
+               <!-- Just show the name of the tag, not "Name: " -->
+               <h2><xsl:apply-templates/></h2>
+          </div>
+     </xsl:template>
+     
+     <xsl:template match="refpurpose">
+          <xsl:if test="node()">
+               <div class="refpurpose">
+                    <xsl:apply-templates/>
+               </div>
+          </xsl:if>
+     </xsl:template>
+     
+     <xsl:template match="refsynopsisdiv">
+          <div class="{name(.)}">
+               <xsl:call-template name="dir">
+                    <xsl:with-param name="inherit" select="1"/>
+               </xsl:call-template>
+               <xsl:call-template name="anchor"/>
+               <xsl:apply-templates/>
+          </div>
+     </xsl:template>
 
 
 </xsl:stylesheet>

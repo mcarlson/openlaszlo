@@ -76,7 +76,7 @@
           </xsl:element>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>???</xsl:text>
+          <xsl:text>?jstype?</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>

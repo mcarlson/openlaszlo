@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylsheet [
@@ -40,16 +40,16 @@
           <xsl:value-of select="concat($lpsdir, 'demos/')"/>
         </xsl:when>
         <xsl:when test="$key = 'dguide'">
-          <xsl:value-of select="concat($docsdir, 'guide/')"/>
+          <xsl:value-of select="concat($docsdir, 'developers/')"/>
         </xsl:when>
         <xsl:when test="$key = 'deploy'">
-          <xsl:value-of select="concat($docsdir, 'deploy/')"/>
+          <xsl:value-of select="concat($docsdir, 'deployers/')"/>
         </xsl:when>
         <xsl:when test="$key = 'design'">
-          <xsl:value-of select="concat($docsdir, 'design/')"/>
+          <xsl:value-of select="concat($docsdir, 'designers/')"/>
         </xsl:when>
         <xsl:when test="$key = 'develop'">
-          <xsl:value-of select="concat($docsdir, 'guide/')"/>
+          <xsl:value-of select="concat($docsdir, 'developers/')"/>
         </xsl:when>
         <xsl:when test="$key = 'examples'">
           <xsl:value-of select="concat($lpsdir, 'examples/')"/>
@@ -58,7 +58,7 @@
           <xsl:value-of select="$reference.dir"/>
         </xsl:when>
         <xsl:when test="$key = 'tutorials'">
-          <xsl:value-of select="concat($docsdir, 'guide/')"/>
+          <xsl:value-of select="concat($docsdir, 'developers/tutorials/')"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:message terminate="yes">

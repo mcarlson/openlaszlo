@@ -754,12 +754,18 @@ All Rights Reserved. Use is subject to license terms.</p>
       <echo message="***gonna copy in reference frameset ***" />      
       <!-- To actually build or update the index-generated.html, see navbuilder/navbuilder.rb -->
       <copy 
+          verbose="true"
           overwrite="true"         
           file="${reference.src.dir}/navbuilder/index-generated.html" 
           todir="${reference.output.dir}">
       </copy>      
+      <!-- Tuck away the docbook-generated index, so we can examine it --> 
       <copy 
-          overwrite="true"         
+          file="${reference.output.dir}/index.html"
+          tofile="${reference.output.dir}/index-docbook.html">          
+      </copy>      
+      <copy 
+          overwrite="true"
           file="${reference.src.dir}/navbuilder/index-frames.html" 
           tofile="${reference.output.dir}/index.html">
       </copy>

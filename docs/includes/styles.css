@@ -194,6 +194,14 @@ body.doc-index {
     text-decoration: none;
 }
 
+.informaltable th {
+    background-color: #EEEEEE;
+    color: #1F1F1F;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 14px;
+}
+
 .chaptertoc {
     float: left;
 }
@@ -357,4 +365,13 @@ tt.varname {
     padding-right: 6pt;
     padding-top: 2pt;
     padding-bottom: 2pt;
+}
+
+/* Attributes List ****************** */
+td .literal {
+    font-size: 12px;
+    background-color: #FFFFFF;
+    font-weight: bold; 
+    line-height: 18px;
+    color: #333333;
 }

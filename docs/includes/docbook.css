@@ -46,7 +46,7 @@ td {
 
 .refsect1 {
     clear: both;
-    margin-top: -5px;
+    margin-top: 5px;
 }
 
 
@@ -167,6 +167,7 @@ code.fieldsynopsis {
 }
 
 .refentry td {
+    font-size: 10px;
     border-bottom-width: 1px;
 }
 
