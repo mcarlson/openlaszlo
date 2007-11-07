@@ -471,86 +471,86 @@ You can chose whether or not to make visible the source code to your application
 
 <para/></section></section></section><section><title>Examples</title>
 <para>Here are examples of applications that do not require the OpenLaszlo server at run time:</para>
-<example role="live-example"><title/><programlisting>
+<programlisting>
   &lt;canvas proxied="false"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
   &lt;/canvas&gt;
-</programlisting></example>
+</programlisting>
 
-<example role="live-example"><title/><programlisting>
+<programlisting>
   &lt;canvas proxied="false"&gt;
     &lt;include href="lib-ds-unproxied.lzx"/&gt;
   &lt;/canvas&gt;
-</programlisting></example>
+</programlisting>
 
-<example role="live-example"><title/><programlisting>  
+<programlisting>  
   &lt;canvas proxied="false"&gt;
     &lt;include href="lib-ds-default.lzx"/&gt;
   &lt;/canvas&gt;
-</programlisting></example>
+</programlisting>
 <para>
 with these support files:
 </para>
 <programlisting>
 lib-ds-proxied.lzx:
 </programlisting>
-<example role="live-example"><title/><programlisting> 
+<programlisting> 
   &lt;library proxied="true"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
   &lt;/library&gt;
-</programlisting></example>
+</programlisting>
 <programlisting>
 lib-ds-unproxied.lzx:
 </programlisting>
-<example role="live-example"><title/><programlisting> 
+<programlisting> 
   &lt;library proxied="false"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
   &lt;/library&gt;
-</programlisting></example>
+</programlisting>
 <programlisting>
 lib-ds-default.lzx:
 </programlisting>
-<example role="live-example"><title/><programlisting> 
+<programlisting> 
   &lt;library proxied="default"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
   &lt;/library&gt;
-</programlisting></example>
+</programlisting>
 <para/><section><title>Examples of Proxied applications</title>
 <para>
 These programs create applications that use the OpenLaszlo Server to proxy the dataset request:
 </para>
-<example role="live-example"><title/><programlisting> 
+<programlisting> 
   &lt;canvas proxied="true"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
   &lt;/canvas&gt;
-</programlisting></example>
-<example role="live-example"><title/><programlisting> 
+</programlisting>
+<programlisting> 
   &lt;canvas proxied="true"&gt;
     &lt;include href="lib-ds-proxied.lzx"/&gt;
   &lt;/canvas&gt;
-</programlisting></example>
-<example role="live-example"><title/><programlisting>   
+</programlisting>
+<programlisting>   
   &lt;canvas proxied="true"&gt;
     &lt;include href="lib-ds-default.lzx"/&gt;
   &lt;/canvas&gt;
-</programlisting></example>
+</programlisting>
 <para>
 Compiler errors are returned for these cases:
 </para>
 <para>
 A proxied canvas that includes an unproxied library:
 </para>
-<example role="live-example"><title/><programlisting>  
+<programlisting>  
   &lt;canvas proxied="true"&gt;
     &lt;!--Error:proxied canvas that includes an unproxied library:--&gt;
     &lt;include href="lib-ds-unproxied.lzx"/&gt;
   &lt;/canvas&gt;
-</programlisting></example>
+</programlisting>
 <para>
 A unproxied canvas that includes a proxied library:
 </para>
@@ -567,16 +567,16 @@ Media requests use the global canvas attribute.
 <para>
 These programs make media requests through the server:
 </para>
-<example role="live-example"><title/><programlisting>  
+<programlisting>  
   &lt;canvas proxied="true"&gt;
     &lt;view src="http:logo.jpg"/&gt;
   &lt;/canvas&gt;
-</programlisting></example>
-<example role="live-example"><title/><programlisting>  
+</programlisting>
+<programlisting>  
   &lt;canvas proxied="inherit"&gt;
     &lt;view src="http:logo.jpg"/&gt;
   &lt;/canvas&gt;
-</programlisting></example>
+</programlisting>
 <para>This example shows a data request that is mediated by the OpenLaszlo Server:</para>
 <example role="live-example"><title>Proxied</title><programlisting>  
   &lt;canvas&gt;
