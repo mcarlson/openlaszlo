@@ -7,9 +7,9 @@ trait cssable {
 function initialize () {
     if (this['_applyCSS']) this._applyCSS();
 }
-DeclareEvent(prototype, 'cssPropertyMap' );
-DeclareEvent(prototype, 'cssStyle' );
-DeclareEvent(prototype, 'fontcolor' );
+var cssPropertyMap = LzDeclaredEvent;
+var cssStyle = LzDeclaredEvent;
+var fontcolor = LzDeclaredEvent;
 
 var cssPropertyMap = null;
 var cssStyle = null;

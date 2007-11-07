@@ -268,7 +268,7 @@
             var cachebitmap = true;
             var _colorcache = {};
             
-            DeclareEvent(prototype, 'oncontext');
+            var oncontext = LzDeclarednEvent;
     
             function construct(parent,args) {
                 super.construct(parent, args);
@@ -561,7 +561,7 @@
             var __LINETO_OP = 1;
             var __QCURVE_OP = 2;
             
-            DeclareEvent(prototype, 'oncontext');
+            var oncontext = LzDeclaredEvent;
     
             function construct(parent,args) {
                 args['width'] = args['width'] > -1 ? args.width : null;

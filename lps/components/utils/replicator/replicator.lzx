@@ -171,7 +171,7 @@ class replicator extends LzNode {
         }
     }
 
-    DeclareEvent(prototype, 'onnodes');
+    var onnodes = LzDeclaredEvent;
 
     /**
      * @access private
