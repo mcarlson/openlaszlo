@@ -909,7 +909,9 @@ function setNodeName (name){
         }
         return;
     }
+    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
     this.p.setNodeName( name );
+}
 }
 
 /**
@@ -941,7 +943,9 @@ function getNodeAttribute (name){
         }
         return;
     }
+    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
     return this.p.attributes[ name ];
+}
 }
 
 /**
@@ -957,7 +961,9 @@ function setNodeAttribute (name, val) {
         }
         return;
     }
+    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
     this.p.setAttr( name, val );
+}
 }
 
 /**
@@ -971,7 +977,9 @@ function deleteNodeAttribute (name) {
         }
         return;
     }
+    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
     this.p.removeAttr( name );
+}
 }
 
 /**
@@ -988,7 +996,9 @@ function getNodeText (){
         }
         return;
     }
+    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
     return this.p.__LZgetText();
+}
 }
 
 /**
@@ -1035,6 +1045,7 @@ function setNodeText (val) {
         return;
     }
 
+    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
     // set the first text node you find; otherwise add one
     var foundit = false;
     for (var i = 0; i < this.p.childNodes.length; i++) {
@@ -1049,6 +1060,7 @@ function setNodeText (val) {
         this.p.appendChild( new LzDataText( val ) );
     }
 }
+}
 
 /**
   * Counts the number of element nodes that are children of the node that the
@@ -1056,7 +1068,7 @@ function setNodeText (val) {
   * @return Integer: The number of child nodes for the current node
   */
 function getNodeCount (){ 
-    if (! this.p) return 0;
+    if (! this.p || this.p.nodeType == LzDataNode.TEXT_NODE) return 0;
     return this.p.childNodes.length || 0;
 }
 
@@ -1083,7 +1095,10 @@ function addNode ( name, text , attrs ){
         nn.appendChild( new LzDataText( text ) );
     }
 
+    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
     this.p.appendChild( nn );
+    }
+    
     return nn;
 }
 
@@ -1158,7 +1173,11 @@ function addNodeFromPointer ( dp ){
     }
 
     var n = dp.p.cloneNode( true );
+    
+    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
     this.p.appendChild( n );
+    }
+    
     return new LzDatapointer( null , { pointer : n } );
 }
 
