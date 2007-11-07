@@ -38,8 +38,8 @@ class LzMediaLoader extends LzLoader {
         }
     }
 
-DeclareEvent(prototype, 'onstreamstart' );
-DeclareEvent(prototype, 'onloaddone' );
+var onstreamstart = LzDeclaredEvent;
+var onloaddone = LzDeclaredEvent;
 
 
 var LOADERDEPTH = 9;

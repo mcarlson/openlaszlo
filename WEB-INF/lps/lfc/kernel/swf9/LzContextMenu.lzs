@@ -27,8 +27,8 @@ function initialize(del) {
                                this.setDelegate(del);
                            }
 
-DeclareEvent(prototype, 'onmenuopen' );
-DeclareEvent(prototype, 'onselect' );
+var onmenuopen = LzDeclaredEvent; 
+var onselect = LzDeclaredEvent;
 
 
 /**

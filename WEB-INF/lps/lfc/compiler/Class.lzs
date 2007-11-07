@@ -334,16 +334,16 @@ var Class = {
     }
     // Create any trait interstitials, following the pattern above
     if (traitsAndSuperclass instanceof Array) {
-      while (traitsAndSuperclass.length) {
-        var t = traitsAndSuperclass.pop();
-        prototype = t.makeInterstitial(prototype, traitsAndSuperclass.length > 0);
+      for (var i = traitsAndSuperclass.length - 1; i >= 0; i--) {
+        var t = traitsAndSuperclass[i];
+        prototype = t.makeInterstitial(prototype, i > 0);
       }
     }
     // Install the staticProperties
     if (staticProperties) {
-      while (staticProperties.length > 0) {
-        var value = staticProperties.pop();
-        var name = staticProperties.pop();
+      for (var i = staticProperties.length - 1; i >= 1; i -= 2) {
+        var value = staticProperties[i];
+        var name = staticProperties[i - 1];
         nc.addStaticProperty(name, value);
       }
     }
@@ -357,9 +357,9 @@ var Class = {
     }
     // Class.initialize:  Install initial values
     if (instanceProperties) {
-      while (instanceProperties.length > 0) {
-        var value = instanceProperties.pop();
-        var name = instanceProperties.pop();
+      for (var i = instanceProperties.length - 1; i >= 1; i -= 2) {
+        var value = instanceProperties[i];
+        var name = instanceProperties[i - 1];
         nc.addProperty(name, value);
       }
     }
@@ -397,8 +397,7 @@ var Trait = {
     // Add to prototype
     this.prototype[name] = value;
     // Save for future implementations
-    this.instanceProperties.push(name);
-    this.instanceProperties.push(value);
+    this.instanceProperties.push(name, value);
     // Add it to existing implementations
     var impls = this.implementations;
     for (var mash in impls) {
@@ -439,16 +438,15 @@ var Trait = {
     }
     // Add the properties to the prototype (superclassInstance)
     var ip = this.instanceProperties;
-    var ipl = ip.length;
-    for (var i = 0; i < ipl; i += 2) {
+    for (var i = ip.length - 1; i >= 1; i -= 2) {
+      var value = ip[i];
+      var name = ip[i - 1];
 //       if ($debug) {
 //         if (name in superclassInstance) {
 //           Debug.debug("%s.%s overrides %s.%s", this.classname, name,
 //                       superclassInstance.constructor.classname, name);
 //         }
 //       }
-      var name = ip[i];
-      var value = ip[i+1];
       superclassInstance.addProperty.call(superclassInstance, name, value);
     }
     // Make the interstitial
@@ -491,17 +489,17 @@ var Trait = {
     nt.addStaticProperty('makeInterstitial', this.makeInterstitial);
     // Install the staticProperties
     if (staticProperties) {
-      while (staticProperties.length > 0) {
-        var value = staticProperties.pop();
-        var name = staticProperties.pop();
+      for (var i = staticProperties.length - 1; i >= 1; i -= 2) {
+        var value = staticProperties[i];
+        var name = staticProperties[i - 1];
         nt.addStaticProperty(name, value);
       }
     }
     // Trait.initialize:  install initial values
     if (instanceProperties) {
-      while (instanceProperties.length > 0) {
-        var value = instanceProperties.pop();
-        var name = instanceProperties.pop();
+      for (var i = instanceProperties.length - 1; i >= 1; i -= 2) {
+        var value = instanceProperties[i];
+        var name = instanceProperties[i - 1];
         nt.addProperty(name, value);
       }
     }

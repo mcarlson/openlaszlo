@@ -75,10 +75,10 @@ function removeCopyTask() {
 }
 
 
-DeclareEvent(prototype, 'onerror' );
-DeclareEvent(prototype, 'ondata' );
-DeclareEvent(prototype, 'onrequest' );
-DeclareEvent(prototype, 'ontimeout' );
+var onerror = LzDeclaredEvent;
+var ondata = LzDeclaredEvent;
+var onrequest = LzDeclaredEvent;
+var ontimeout = LzDeclaredEvent;
 
 var requestheaders = {};
 var timeout = 30000;
