@@ -132,6 +132,10 @@
               @keywords private -->
         <attribute name="_selectdel" value="null"/>
 
+        <!--- Data delegate.
+              @keywords private -->
+        <attribute name="_datacatchdel" value="null" />
+
         <!--- Called when combobox opens or closes -->
         <event name="onisopen"/>
         
@@ -140,11 +144,8 @@
             super.init();
             if ( this.value == null && this.defaulttext != null ) {
                 this._cbtext.setText(this.defaulttext);
-            } else if (this.value == null && selectfirst) {
-                // set first to be the initvalue
-                _updateSelectionByIndex(0,false,true);
             } else {
-                _updateSelectionByIndex(this._selectedIndex, true);
+                this._updateSelectionOnData();
             }
 
             if ( this.statictext != null ) {
@@ -152,6 +153,52 @@
             }
             ]]>
         </method>
+        
+        <!--- @keywords private -->
+        <method name="destroy" ><![CDATA[
+            if (this._datacatchdel != null) {
+                this._datacatchdel.unregisterAll();
+            }
+            
+            super.destroy.apply(this, arguments);
+        ]]></method>
+        
+        <!--- This catches the initial ondata, since there is no datapath
+              set for a basedatacombobox, and itemdatapath won't receive
+              an ondata event.  This fixes an issue with 'p is null' on
+              an init call to an xpathQuery(), which subsequently fixes
+              an issue where selectfirst="true" wasn't working for remote
+              data.
+              @keywords private -->
+        <method name="_updateSelectionOnData" ><![CDATA[
+            var dp = new LzDatapointer(this);
+            
+            var arr = dp.xpathQuery(this.itemdatapath);
+            if (arr != null) {
+                if (this._datacatchdel != null) {
+                    this._datacatchdel.unregisterAll();
+                }
+                
+                if (this.value == null && selectfirst) {
+                    // set first to be the initvalue
+                    this._updateSelectionByIndex(0,false,true);
+                } else {
+                    this._updateSelectionByIndex(this._selectedIndex, true);
+                }
+            } else {
+                if (this._datacatchdel == null) {
+                    var itmpath = this.itemdatapath;
+                    var iof = itmpath.indexOf( ":/" );
+                    if (iof > -1) {
+                        var dset = dp.xpathQuery( itmpath.substring(0, iof + 2) );
+                        if (dset != null) {
+                            this._datacatchdel = new LzDelegate(this, "_updateSelectionOnData", dset, "ondata");
+                        }
+                    }
+                }
+            }
+            dp.destroy();
+        ]]></method>
 
         <!--- @keywords private -->
         <handler name="ondata"> <![CDATA[
@@ -195,9 +242,14 @@
             if (! (nodes instanceof Array)) nodes = [nodes];
             dp.setPointer(nodes[index]);
 
-            var t = dp.xpathQuery(this.textdatapath);
+            var dpValid = dp.isValid();
+            if (dpValid) {
+                var t = dp.xpathQuery(this.textdatapath);
+            } else {
+                var t = null;
+            }
             // if t is null, use default text (if it exists)
-            if( ( t == null || t.length == 0 ) && this.defaulttext && this.defaulttext['length'] > 0 )
+            if( ( t == null || t.length == 0 ) && (this.defaulttext && this.defaulttext.length > 0) )
                t = this.defaulttext;
 
             if ( this._cbtext && (this.statictext == null) ) {
@@ -207,7 +259,11 @@
             if ( this.selected && dp['p'] == this.selected['p'] ) return;
 
             if (! (dontSetValue || this.ismenu)) {
-                var v = dp.xpathQuery(this.valuedatapath);
+                if (dpValid) {
+                    var v = dp.xpathQuery(this.valuedatapath);
+                } else {
+                    var v = null;
+                }
                 this.setValue(v,true, true);
             }
             this.setAttribute('text', t);
@@ -268,12 +324,9 @@
                 cblist.setAttachTarget(this);
                 cblist.setAttribute('shownitems', this.shownitems);
 
-                //local-dataset-modification by senshi
                 var itd = this.itemdatapath;
                 if (itd.indexOf( "local:" ) == 0) {
                   itd = "local:" + "parent.owner." + itd.substring( 6 );
-                  if ($debug)
-                    Debug.write( "local-dataset-modification:" + itd );
                 }
 
                 cblist.item.setDatapath(itd);
