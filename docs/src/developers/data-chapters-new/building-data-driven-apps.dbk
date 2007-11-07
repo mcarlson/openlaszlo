@@ -1,0 +1,41 @@
+<chapter id="data-driven">
+<title>Building Data Driven Applications</title>
+<para> 
+
+Summary: This is basically the existing chapter of the Developer's Guide, updated as appropriate. It should use explicit instead of implicit replication, for example.
+</para>
+<para>
+Outline:
+
+Introduction
+Retrieving Data
+
+   Working with datasets
+   Working with XPath and the data binding API
+   Relative addressing
+   Working with multiple rows of data
+   Working with external XML documents
+
+Updating Datasets
+
+    Updating a dataset
+    Deleting a node in a dataset
+
+Working with Datapointers
+
+    Binding data to a new node
+    Using a datapointer
+
+Working with Classes
+Working with a Database
+
+   Database setup
+   Retrieving Data from a database
+
+Updating, Deleting, and Inserting Data
+
+    Creating the JSP
+    Modifying the client application
+    Using a datapointer to check for the success or failure of a request
+</para>
+</chapter>

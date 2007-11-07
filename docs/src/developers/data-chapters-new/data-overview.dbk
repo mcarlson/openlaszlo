@@ -1,0 +1,57 @@
+<chapter id="data-overview">
+<title>Introduction to Data and Data-Driven Applications</title>
+<para>
+Summary: In this chapter we introduce key concepts at a high level. There is little code, but a fair amount of diagramware to illustrate databinding and replication.
+</para>
+<para>
+We give a conceptual overview of the logical differences between the DOM-based and datapointer/datapath-based ways of manipulating data, with a preview of how these approaches will be reconciled in later chapters.
+</para>
+<para>
+Datareplication is introduced, and the difference between implicit and explicit replication.
+</para>
+<para>
+We then explain some useful design patterns involving datasets, both locally on the client, and between client and server.
+</para>
+<para>
+Finally, we introduce the abstract concept of the dataprovider.
+</para>
+<para>
+Outline:
+
+Data
+-- XML
+<ul>
+	<li>Definition and specification</li>
+	<li>White space</li>
+	<li>Character sets</li>
+	<li>Namespaces</li>
+</ul>
+
+-- Xpath
+------Notation
+------Supported subset in LZX
+Databinding -- conceptual overview
+-- Datasets - in-memory representation of XML data
+----- The LzDataNode type
+----- The LzDataElement type
+----- The LzDataText type
+-- Updating views by data (data determines behaviour of LZX object)
+-- Updating data by object (object updates dataset)
+Databinding APIs
+-- Datapointer (tag) APIs
+-- DOM (prodedural) APIs
+Replication
+-- Explicit Replication with <replicator> tag
+---Implicit replication without <replicator> tag
+Client-Server Data patterns
+--- REST & HTTP
+----- Query types
+----- Request and response headers
+----- Query Paremeters
+--- Ajax and the HttpRequest() object
+----- This is "syntactic sugar"; same functionality as with datasets
+--- Master-Detail
+--  Reconciling Server and Client data models (updating databases on server)
+The dataprovider object
+</para>
+</chapter>

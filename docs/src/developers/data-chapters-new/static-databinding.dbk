@@ -1,0 +1,46 @@
+<chapter id="static-databinding">
+<title>Static Databinding with tag APIs</title>
+<para>
+Summary: In this chapter we explain how to instantiate global and local datasets, populate them with "canned" data or from a remote source, and bind their contents to views using datapaths. Datapointers are explained as a way to position a logical cursor in a dataset.
+</para>
+<para>
+This is "static" databinding in the sense that datasets are identified at compile-time; you cannot create new datasets at runtime using the &lt;dataset&gt; tags.
+</para>
+<para>
+This chapter uses mostly small examples, reusing many from the current documentation. There will be many more examples, in order to illustrate most or all of the attributes and methods on &lt;dataset&gt;, &lt;datapath&gt; and &lt;datapointer&gt;
+</para>
+<para>
+Outline:
+
+Declaring data using &lt;dataset&gt;
+-- Creating Dataset relationships at compile time
+---Global datasets and class ("local") datasets
+-- The "src" attribute; inline data versus retreived data
+---Literal Data (the &lt;data&gt; tag)
+---When and how datasets are updated (autorequest, doRequest())
+---Dataset events: onerror, ondata, ontimeout
+---Data rules
+---- handling white space
+---- namespaces
+
+Databinding Introduction
+---Data Binding with XPath 
+---Data Binding and Attributes
+---Concatenating Attributes 
+Conditional logic with Paths 
+Binding data to objects 
+-- binding nodes using datapaths
+-- binding attributes using $path
+
+Changing a Datapath 
+--Setting the XPath Using a String 
+
+Updating datasets
+-- the updateData() method
+
+Moving through data with datapointers
+-- A datapointer is an object that represents a pointer to a node in an LzDataset. The datapointer can be repositioned using either:
+----- cursor movements calls such as selectNext(), 
+----- running an XPath request via setXPath()
+</para>
+</chapter>

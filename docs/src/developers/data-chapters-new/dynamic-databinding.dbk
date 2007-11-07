@@ -1,0 +1,23 @@
+<chapter id="dynamic-databinding">
+<title>Dynamic Databinding</title>
+<para>
+Databinding, part two: dynamic dataset creation with procedural (DOM) APIs
+</para>
+<para>
+Summary: The procedural (DOM) APIs for working with datasets allow you to build and manipulate datasets at runtime using DOM conventions. There are three kinds of objects: the absract class LzDataNode, and LzDataElement and LzTextNode which are derived from it. We look at the attributes and methods on each of these classes, and then look at short examples that show how to use them to create and manipulate dataset objects.  In this chapter we do NOT illustrate databinding, since that requires use of datapointers; that's in the next chapter. Here we just show how to build and manipulate data structures.
+</para>
+<para>
+Outline:
+Introduction and Philosphy of the DOM APIs
+
+The LzDataNode object
+-- attributes
+-- methods
+The LzDataElement object
+-- attributes
+-- methods
+The LzDataText object
+-- attributes
+-- methods
+</para>
+</chapter>

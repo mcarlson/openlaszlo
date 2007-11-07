@@ -1,0 +1,39 @@
+<chapter id="two-way-databinding">
+<title>Two-way databinding</title>
+<para>
+Mixing static and dynamic databinding
+</para>
+<para>
+Summary:
+This chapter explains the "funhouse mirror" quasi-equivalence of the datapath/datapointer APIs. There are two goals for the chapter: 
+(1) at a minimum, make clear the distinction between the two kinds of approaches; that is, between moving nodes and moving pointers to nodes.
+(2) hopefully, give enough explanation and examples such that people can mix and match between the two approaches without getting hopelessly confused.
+</para>
+<para>
+Outline:
+A comparison of datapath/datapointer APIs and DOM APIs
+-- How to do equivalent action using either technique
+---A table showing equivalent and quasi-equivalent methods
+-- Explanation of actions that can be performed using only one or the other approach.
+The .p property -- the gateway between static and dynamic APIs
+-- Every datapath/datapointer has a .p property, which is the node to which it points.
+--- therefore, you can use the DOM APIs on the .p attribute of datapaths and datapointers
+</para>
+<para>
+Datapointer and DataElement
+
+-- Deleting a Node
+-- Creating a Node
+---Accessing a LzDataelement
+---Using a LzDataelement
+---Destroying a Node
+</para>
+<para>
+Changing Data Binding with Attribute p 
+Exploring Two-way Data Binding 
+
+The .data property
+-- .data is shorthand for datapath.p
+-- Objects like views have a .data property when they are databound and replicated. Otherwise .data is null.
+</para>
+</chapter>

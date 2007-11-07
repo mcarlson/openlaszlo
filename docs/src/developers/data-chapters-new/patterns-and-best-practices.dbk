@@ -1,0 +1,16 @@
+<chapter id="patterns-and-best-practices">
+<title>Data Patterns and Best Practices</title>
+<para>
+Building Data-Driven Applications, part 2
+</para>
+<para>
+Data design patterns and best practices
+Master Detail
+Buffer Dataset
+Data Polling
+Incremental Loading
+Server Side Paging
+
+Based on the LzProject/White paper -- if time permits.
+</para>
+</chapter>
