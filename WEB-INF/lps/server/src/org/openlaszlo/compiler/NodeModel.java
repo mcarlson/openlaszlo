@@ -911,13 +911,16 @@ solution =
         for (Iterator iter = element.getChildren().iterator(); iter.hasNext(); ) {
             ElementWithLocationInfo child = (ElementWithLocationInfo) iter.next();
             if (!schema.canContainElement(element.getName(), child.getName())) {
-                env.warn(
-                    // TODO [2007-09-26 hqm] i18n this
-                    "The tag '" + child.getName() +
-                    "' cannot be used as a child of " + element.getName(),
-                    element);
+                // If this element is allowed to contain  HTML content, then
+                // we don't want to warn about encountering an HTML child element.
+                if (!( schema.hasTextContent(element) && schema.isHTMLElement(child))) {
+                    env.warn(
+                        // TODO [2007-09-26 hqm] i18n this
+                        "The tag '" + child.getName() +
+                        "' cannot be used as a child of " + element.getName(),
+                        element);
+                }
             }
-
             try {
                 if (child.getName().equals("data")) {
                     checkChildNameConflict(element.getName(), child, env);
