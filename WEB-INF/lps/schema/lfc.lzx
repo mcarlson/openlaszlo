@@ -25,12 +25,7 @@
   <method name="isPrototypeOf" override="false"/>
   <method name="toLocaleString" override="false"/>
   <method name="prototype" override="false"/>
-  <!-- 
-   'apply' is ambiguous because <state> is
-   using it for both a method and an attribute. Just omit it from
-   the declarations for now.
   <method name="apply" override="false"/> 
-  -->
   <method name="call" override="false"/>
 </interface>
 
@@ -244,13 +239,13 @@
   </containsElements>
 </interface>
 
-<interface name="class" extends="view">
+<interface name="class" extends="node">
   <attribute name="extends" type="token" value="view"/>
   <!-- The comma-separated list of mixins, applied in order -->
   <attribute name="with" type="string"/>
 </interface>
 
-<interface name="interface" extends="view">
+<interface name="interface" extends="node">
   <attribute name="extends" type="token" value="view"/>
   <!-- The comma-separated list of mixins, applied in order -->
   <attribute name="with" type="string"/>

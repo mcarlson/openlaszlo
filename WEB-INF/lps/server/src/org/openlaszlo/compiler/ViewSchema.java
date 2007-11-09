@@ -396,7 +396,14 @@ public class ViewSchema extends Schema {
                     // Check that the overriding type is the same as the superclass' type
                     parentType = getAttributeType(classname, attr.name);
 
-                    if (parentType != attr.type) {
+                    // Does the parent attribute definition assert override=true?
+                    // If so, we're not going to warn if the types mismatch.
+                    AttributeSpec parentAttrSpec = getAttributeSpec(classname, attr.name);
+                    boolean forceOverride = parentAttrSpec != null && "true".equals(parentAttrSpec.override);
+
+                    if (!forceOverride &&  (parentType != attr.type)) {
+                        // get the parent attribute, so we can see if it says override is allowed
+
                         env.warn(/* (non-Javadoc)
                                   * @i18n.test
                                   * @org-mes="In class '" + p[0] + "' attribute '" + p[1] + "' with type '" + p[2] + "' is overriding superclass attribute with same name but different type: " + p[3]
@@ -502,6 +509,29 @@ public class ViewSchema extends Schema {
         return type;
     }
 
+
+
+    /**
+     * Finds the AttributeSpec definition of an attribute, on a class
+     * or by searching up it's parent class chain.
+     *
+     * @param elt an Element name
+     * @param attrName an attribute name
+     * @return the AttributeSpec or null
+     */
+    public AttributeSpec getAttributeSpec(String elt, String attrName)
+    {
+        String elementName = elt.intern();
+
+        // Look up attribute in type map for this element
+        ClassModel classModel = getClassModel(elementName);
+        
+        if (classModel != null) {
+            return classModel.getAttribute(attrName);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * checks whether a method with a given method is allowed to be overridden

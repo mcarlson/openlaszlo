@@ -1527,6 +1527,9 @@ solution =
         Schema.Type type = null;
         Schema.Type parenttype = null;
 
+        AttributeSpec parentAttrSpec = schema.getAttributeSpec(parent.getName(), name);
+        boolean forceOverride = parentAttrSpec != null && "true".equals(parentAttrSpec.override);
+
         try {
             if (parent.getName().equals("class")) {
                 parenttype = getAttributeTypeInfoFromSuperclass(parent, name);
@@ -1562,9 +1565,10 @@ solution =
                 NodeModel.class.getName(),"051018-1211", new Object[] {typestr})
 , element);
             }
+
             // If we are trying to declare the attribute with a
             // conflicting type to the parent, throw an error
-            if (parenttype != null && type != parenttype) {
+            if (!forceOverride && parenttype != null && type != parenttype) {
                 env.warn(
                     new CompilationError(
                         element,
@@ -1581,11 +1585,14 @@ solution =
             }
         }
 
+
+
         // Warn if we are overidding a method, handler, or other function
-        if (parenttype == schema.METHOD_TYPE ||
-            parenttype == schema.EVENT_HANDLER_TYPE ||
-            parenttype == schema.SETTER_TYPE ||
-            parenttype == schema.REFERENCE_TYPE) {
+        if (!forceOverride &&
+            (parenttype == schema.METHOD_TYPE ||
+             parenttype == schema.EVENT_HANDLER_TYPE ||
+             parenttype == schema.SETTER_TYPE ||
+             parenttype == schema.REFERENCE_TYPE)) {
             env.warn( "In element '" + parent.getName() 
                       + "' attribute '" +  name 
                       + "' is overriding parent class attribute which has the same name but type: "
