@@ -1,0 +1,77 @@
+<canvas debug="true">
+    <include href="lib/contact.lzx" />
+    <dataset name="ds" src="shareddata/contacts_full.xml" type="http"/>
+    <dataset name="dsbuffer">
+        <addressbook>
+            <contacts/>
+        </addressbook>
+    </dataset>
+
+    <class name="field">
+        <handler name="ondata">
+            this.setAttribute('value',this.data);
+        </handler>
+
+        <attribute name="label" value="label" type="string" />
+        <attribute name="value" value="value" type="string" />
+
+        <method name="updateData">
+            return val.getText();
+        </method>
+
+        <text name="lbl" text="${classroot.label}" />
+        <edittext name="val" text="${classroot.value}"
+                  x="120" width="150">
+                  
+            <handler name="onblur">
+                classroot.datapath.updateData();
+                Debug.write(classroot.datapath.p);
+            </handler>
+        </edittext>
+    </class>
+
+    <view name="master_container" height="200" clip="true">
+        <view id="master" datapath="ds:/addressbook/contacts">
+            <simplelayout />
+            <contact name="c" datapath="person" >
+                <handler name="onclick">
+                    var dp1 = new LzDatapointer();
+                    var dp2 = new LzDatapointer();
+
+                    //point to the node of this contact instance
+                    dp1.setPointer(this.datapath.p);
+
+                    //delete any previous data
+                    dp2.setXPath("dsbuffer:/addressbook/contacts/person[1]");
+                    if (dp2.p !=null) dp2.deleteNode();
+
+                    //copy the current node to the target location
+                    dp2.setXPath("dsbuffer:/addressbook/contacts");
+                    dp2.addNodeFromPointer(dp1);
+                    Debug.write(dp2.p);
+                </handler>
+            </contact>
+        </view>
+        <scrollbar />
+    </view>
+
+    <view name="detail_container" 
+          x="${canvas.master_container.width +10}" y="${canvas.master_container.y}">
+        <simplelayout />
+        <view id="details" datapath="dsbuffer:/addressbook/contacts/person[1]">
+            <simplelayout />
+            <field label="First name:" datapath="@firstname" />
+            <field label="Last name:" datapath="@lastname" />
+            <field label="Phone:" datapath="@phone" />
+            <field label="Email:" datapath="@email" />
+            <field label="Webpage:" datapath="@webpage" />
+        </view>
+        
+        <button text="Refresh Data" onclick="ds.doRequest()" />
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

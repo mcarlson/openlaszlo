@@ -1,0 +1,28 @@
+<canvas debug="true">
+    <dataset name="dset" src="../shareddata/contacts_full.xml"/>
+    <attribute name="idx" value="2" />
+    
+    <simplelayout axis="y" spacing="3" />
+     
+    <!--  Set this text field to the last name of the first contact -->
+    <view id="lastnameview" datapath="dset:/addressbook/contacts/person[1]">
+        <text resize="true" text="$path{'@lastname'}"/>
+    </view>
+    
+    <!--  Build a string that you can set the XPath to on the
+    lastnameview to the next name. Also write this string to the debug
+    output -->
+    <button name="nextname" text="Next Name">
+        <handler name="onclick">
+            var apath = "dset:/addressbook/contacts/person[" 
+                      + parent.idx++ +"]";
+            Debug.write("apath='" + apath + "'");
+            lastnameview.datapath.setXPath(apath);
+        </handler>
+    </button>
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

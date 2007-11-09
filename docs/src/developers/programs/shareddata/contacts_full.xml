@@ -1,0 +1,110 @@
+<addressbook>
+
+    <metainformation>
+        <addressbookowner firstname="Antun"
+                          lastname="Karlovac"
+                          email="antun@laszlosystems.com"
+                          company="Laszlo Systems, Inc.">
+            <address>2600 Campus Drive
+Suite 200
+San Mateo, CA 94403</address>
+        </addressbookowner>
+    </metainformation>
+    
+    <contacts>
+        <person firstname="Peter" lastname="Andrea" email="pandrea@msport.com"
+                city="Oakland" state="CA" zip="94611"
+                address="1040 Mariposa address"
+                webpage="www.laszlosystems.com"
+                phone="415-555-1210" thumbnail="pic_peter.jpg"
+                sex="male" />
+        <person firstname="Bret" lastname="Simister" email="bsimister@msport.com"
+                city="San Francisco" state="CA" zip="94103"
+                address="1040 Mariposa address"
+                webpage="www.laszlosystems.com"
+                phone="415-555-1212" thumbnail="pic_dan.jpg"
+                sex="male" />
+        <person firstname="Sarah" lastname="Allen" email="sallen@msport.com"
+                city="San Francisco" state="CA" zip="94107"
+                address="1040 Mariposa address"
+                webpage="www.laszlosystems.com"
+                phone="415-555-1000" thumbnail="pic_gretchen.jpg"
+                sex="female" />
+        <person phone="415.444.1234" 
+                lastname="Andrew" 
+                        address="1242 Illinois Street" 
+                        thumbnail="pic_dan.jpg" 
+                        firstname="Dan " state="GA" 
+                        email="ddboy@yahoo.com" zip="30301" webpage="http://www.dannyboy.com" city="Atlanta"/>
+        <person phone="415.211.4668" 
+                lastname="Curtis" 
+                        address="1040 Townsend Street" 
+                        thumbnail="pic_gretchen.jpg" 
+                        firstname="Gretchen " state="CA" 
+                        email="curtis@fletcher.com" zip="94119" webpage="http://www.fletcher.com" city="San Francisco"/>
+        <person 
+                lastname="Doughboy" 
+                        firstname="Peter " 
+                        thumbnail="pic_peter.jpg" 
+                        email="peter@palindrome.com" state="CA" zip="94604" city="Oakland" webpage="http://www.pillsbury.com"/>
+        <person phone="802.543.7763" 
+                lastname="Eprenum" 
+                        address="92 Adams street" 
+                        thumbnail="pic_todd.jpg" 
+                        firstname="Todd" state="VT" 
+                        email="todd@compuserve.com" zip="98333" webpage="http://www.vastness.com" city="Burlington"/>
+        <person 
+                lastname="Golden" phone="408.615.5523" 
+                        firstname="Laura" 
+                        thumbnail="pic_laura.jpg" 
+                        email="golden@redeem.com" state="CA" zip="93422" city="Palo Alto" webpage="http://www.therapy.com"/>
+        <person phone="415.231.9920" 
+                lastname="Grafitti" 
+                        address="4435 Bayshore Blvd" 
+                        thumbnail="pic_mark.jpg" 
+                        firstname="Mark" state="CA" 
+                        email="bomber@spraycan.com" zip="92333" webpage="http://www.tagit.com" city="San Francisco"/>
+        <person phone="415.632.1160" 
+                lastname="Hasten" 
+                        address="122 Korg Street" 
+                        thumbnail="pic_beck.jpg" 
+                        firstname="Rebecca" state="CA" 
+                        email="beck@gentles.com" zip="94114" webpage="http://www.rockon.com" city="San Francisco"/>
+        <person phone="510.666.2345" 
+                lastname="Hoffman" 
+                        address="122 Origami Avenue" 
+                        thumbnail="pic_carey.jpg" 
+                        firstname="Carey" state="CA" 
+                        email="decisive@satire.com" zip="92118" webpage="http://www.restless.com" city="Oakland"/>
+        <person phone="415.223.3329" 
+                lastname="ingles" 
+                        address="533 Bodega Lane" 
+                        thumbnail="pic_karen.jpg" 
+                        firstname="Karen" state="CA" 
+                        email="karkar@mensch.com" zip="93999" webpage="http://www.uberalles.com" city="Bolinas"/>
+        <person phone="804.552.1433" 
+                lastname="Leslie" 
+                        address="Mt. Washington Street" 
+                        thumbnail="pic_calder.jpg" 
+                        firstname="Calder" state="NH" 
+                        email="lilguy@leslie.com" zip="02231" webpage="http://www.tuckermans.com" city="Jackson"/>
+        <person phone="212.455.0888" 
+                lastname="Manzanita" 
+                        address="331 Avenue A" 
+                        thumbnail="pic_nicole.jpg" 
+                        firstname="Nicole" state="NY" 
+                        email="exec@eastvillage.com" zip="00201" webpage="http://www.tourguide.com" city="New York"/>
+        <person phone="408.122.7732" 
+                lastname="Protractor" 
+                        address="3211 Overland Drive" 
+                        thumbnail="pic_lisa.jpg" 
+                        firstname="Lisa" state="CA" 
+                        email="lisa@geometric.com" zip="94332" webpage="http://www.acute.com" city="Petaluma"/>
+
+    </contacts>
+
+</addressbook>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

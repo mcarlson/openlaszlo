@@ -1,0 +1,31 @@
+<canvas debug="true">
+    <dataset name="dset" src="../shareddata/contacts_full.xml"/>
+    
+    <simplelayout axis="y" spacing="3"/>
+    
+    <!--  Create two views; the first pointing to the last name of the
+          first contact; the second to the last name of the second
+          contact.  -->
+    <view name="firstview" 
+          datapath="dset:/addressbook/contacts/person[1]">
+        <text name="lastname" text="$path{'@lastname'}"/>
+    </view>
+    
+    <view name="secondview" 
+          datapath="dset:/addressbook/contacts/person[2]">
+        <text name="lastname" text="$path{'@lastname'}"/>
+    </view>
+    
+    <!--  Add a handler that rebinds the first view's datapath to that
+          of the second, by using the "p" attribute of both view's
+          datapaths -->
+    <button text="Rebind View">
+        <handler name="onclick">
+                parent.firstview.datapath.setAttribute("p", parent.secondview.datapath.p);
+        </handler>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

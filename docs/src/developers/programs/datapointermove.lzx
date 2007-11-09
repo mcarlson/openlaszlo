@@ -1,0 +1,24 @@
+<canvas debug="true">
+    <dataset name="dset" src="../shareddata/contacts_full.xml"/>
+    
+    <simplelayout axis="y" spacing="3" />
+
+    <!--  Display the first node of the datapointer as the initial value
+          of this text field -->
+    <view id="lastnameview" 
+          datapath="dset:/addressbook/contacts/person[1]">
+        <text resize="true" text="$path{'@lastname'}"/>
+    </view>
+    
+    <!--  Move the datapointer forward each click, updating the value of
+          the text field. -->
+    <button name="nextname" text="Next Name">
+        <handler name="onclick">
+            lastnameview.datapath.selectNext();
+        </handler>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

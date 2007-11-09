@@ -1,0 +1,17 @@
+<library>
+
+    <class name="contact" datapath=""
+           width="240" height="30" bgcolor="0xD7D2FF">
+        <text name="fName" datapath="@firstname"
+              resize="true" fgcolor="0x887CFF"
+              fontstyle="bold" x="15" valign="middle" />
+        <text name="lName" datapath="@lastname"
+              resize="true" fgcolor="0x887CFF"
+              fontstyle="bold" x="125" valign="middle" />
+    </class>
+    
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

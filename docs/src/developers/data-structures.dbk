@@ -3,6 +3,87 @@
 <title>Data, XML, and XPath</title>
 
 <!-- change link for language-preliminaries per LPP-4923, IORIO 17 oct 2007 -->
+<title>Introduction to Data and Data-Driven Applications</title>
+<para>
+Summary: In this chapter we introduce key concepts at a high level. There is little code, but a fair amount of diagramware to illustrate databinding and replication.
+</para>
+<para>
+            Databinding marries the content of an XML datastructure with the OpenLaszlo objects (such as nodes, or views).
+
+                Allows separation of content from presentation
+                Datapaths are objects that connect views to data.
+                Attribute values update automatically when the data changes.
+</para>
+<para>
+We give a conceptual overview of the logical differences between the DOM-based and datapointer/datapath-based ways of manipulating data, with a preview of how these approaches will be reconciled in later chapters.
+</para>
+<para>
+Datareplication is introduced, and the difference between implicit and explicit replication.
+</para>
+<para>
+We then explain some useful design patterns involving datasets, both locally on the client, and between client and server.
+</para>
+<para>
+Finally, we introduce the abstract concept of the dataprovider.
+</para>
+<para>
+Outline:
+
+Data
+-- XML
+<ul>
+	<li>Definition and specification</li>
+	<li>White space</li>
+	<li>Character sets</li>
+	<li>Namespaces</li>
+</ul>
+
+-- Xpath
+------Notation
+------Supported subset in LZX
+Databinding -- conceptual overview
+-- Datasets - in-memory representation of XML data
+----- The LzDataNode type
+----- The LzDataElement type
+----- The LzDataText type
+-- Updating views by data (data determines behaviour of LZX object)
+-- Updating data by object (object updates dataset)
+Databinding APIs
+-- Datapointer (tag) APIs
+-- DOM (prodedural) APIs
+Replication
+-- Explicit Replication with &lt;replicator&gt; tag
+---Implicit replication without &lt;replicator&gt; tag
+Client-Server Data patterns
+--- REST and HTTP
+----- Query types
+----- Request and response headers
+----- Query Paremeters
+--- Ajax and the HttpRequest() object
+----- This is "syntactic sugar"; same functionality as with datasets
+--- Master-Detail
+--  Reconciling Server and Client data models (updating databases on server)
+The dataprovider object
+</para>
+<para>
+                Any subclass of LzNode can be data-bound.
+                    All data-bound objects have a datapath.
+                    The XPath may be absolute or relative.
+                  &lt;view datapath="ds:/path/to/data/text()" /&gt;
+                Individual attributes of nodes can be data-bound.
+                    Attributes must be settable.
+                    The object must have a datapath.
+                    You must use relative XPaths for the attribute bindings.
+                    Multiple attributes of the same object can be databound to different locations.
+                   &lt;view datapath="ds:/path/to/data" 
+    x="$path{'@xposition'}" /&gt;
+               Datapaths cascade through the view hierarchy
+&lt;view datapath="ds:/path/to/data"&gt;
+    &lt;view name="unboundView"&gt;
+        &lt;text datapath="text()" /&gt;
+    &lt;/view&gt;
+&lt;/view&gt;
+</para>
 <para>
 The term <indexterm significance="preferred"><primary>data</primary></indexterm><glossterm>data</glossterm> refers to numbers, characters, or text 
 in a form that can be displayed or manipulated by 

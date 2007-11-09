@@ -1,17 +1,22 @@
-<example role="live-example">
+<?ignor example role="live-example">
    <title>Runtime constraintes with applyConstraint</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
    </programlisting>
-</example>
+</example?>
 
-<para>
-</para>
 
 <chapter id="data-overview">
 <title>Introduction to Data and Data-Driven Applications</title>
 <para>
 Summary: In this chapter we introduce key concepts at a high level. There is little code, but a fair amount of diagramware to illustrate databinding and replication.
+</para>
+<para>
+            Databinding marries the content of an XML datastructure with the OpenLaszlo objects (such as nodes, or views).
+
+                Allows separation of content from presentation
+                Datapaths are objects that connect views to data.
+                Attribute values update automatically when the data changes.
 </para>
 <para>
 We give a conceptual overview of the logical differences between the DOM-based and datapointer/datapath-based ways of manipulating data, with a preview of how these approaches will be reconciled in later chapters.

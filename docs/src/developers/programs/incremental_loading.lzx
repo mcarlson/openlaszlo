@@ -1,0 +1,82 @@
+<canvas debug="true">
+    <include href="lib/contact.lzx" />
+    <dataset name="ds1" src="getContactList.jsp" type="http" request="true" />
+    <dataset name="ds2" src="getContact.jsp" type="http" request="false" />
+
+    <class name="field">
+        <handler name="ondata">
+            this.setAttribute('value',this.data);
+        </handler>
+
+        <attribute name="label" value="label" type="string" />
+        <attribute name="value" value="value" type="string" />
+
+        <text name="lbl" text="${classroot.label}" />
+        <text name="val" text="${classroot.value}" 
+              x="120" resize="true" />
+    </class>
+
+    <simplelayout />
+    <view name="container" height="200" clip="true">
+        <view id="master" datapath="ds1:/contacts">
+            <simplelayout />
+            <contact name="c" 
+                     datapath="person"
+                     onclick="details.datapath.setAttribute('p', this.datapath.p)" />
+        </view>
+        <scrollbar />
+    </view>
+
+    <view id="details" datapath="ds1:/contacts/person[1]">
+        <handler name="ondata">
+            var emailParam = this.datapath.p.getAttr('email');
+            Debug.write(emailParam);
+            ds2.setQueryParam('email', emailParam)
+            ds2.doRequest();
+        </handler>
+        <handler name="ondata" reference="ds2">
+        <![CDATA[
+
+            var currentMasterNode = details.datapath.p;
+            var dp = new LzDatapointer();
+
+            Debug.write(ds2.data);
+
+            //point it to the details tag
+            dp.setAttribute("xpath","ds2:/details");
+
+            Debug.write("BEFORE ",currentMasterNode);
+            //check if this node already has address or not
+            for (var i=0; i < dp.p.childNodes.length; i++){
+                var currentDetailNode = dp.p.childNodes[i];
+                var dp2 = new LzDatapointer();
+                dp2.setPointer(currentDetailNode);
+
+                if (!currentMasterNode.hasAttr(currentDetailNode.nodeName)){
+                    Debug.write("Adding ... | currentDetailNode=",currentDetailNode,"\n ",currentDetailNode.nodeName,'=',dp2.xpathQuery('text()'));
+                    currentMasterNode.setAttr(currentDetailNode.nodeName,dp2.xpathQuery('text()'));
+                }
+            }
+            Debug.write("AFTER ",currentMasterNode);
+            dp.setAttribute("xpath","ds2:/details");
+        ]]>
+        </handler>
+
+        <simplelayout />
+        <field label="First name:" datapath="@firstname" />
+        <field label="Last name:" datapath="@lastname" />
+        <field label="Phone:" datapath="@phone" />
+        <field label="Email:" datapath="@email" />
+        <field label="Website:" datapath="@website" />
+        <field label="Street:" datapath="@street" />
+        <field label="City:" datapath="@city" />
+        <field label="Zip:" datapath="@zip" />
+        <field label="State:" datapath="@state" />
+    </view>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

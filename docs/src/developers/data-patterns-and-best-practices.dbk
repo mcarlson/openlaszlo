@@ -1,0 +1,113 @@
+<chapter id="data-patterns-and-best-practices">
+
+<title>Data Patterns and Best Practices</title>
+
+<para>
+Data design patterns and best practices
+</para>
+<section><title>Master Detail</title>
+<para>
+</para>
+
+
+</section>
+<section><title>Buffer Dataset</title>
+<example role="live-example">
+   <title>Buffer datasets</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/data-buffer_dataset.lzx"/></textobject> 
+   </programlisting>
+</example>
+<para>
+</para>
+</section>
+<section><title>Data Polling</title>
+<example role="live-example">
+   <title>Data Polling</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/data_polling.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+</section>
+<section><title>Incremental Loading</title>
+<example role="live-example">
+   <title>Incremental Loading</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/incremental_loading.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<para>This example shows the usage of incremental loading pattern to obtain additional information with different dataset. </para>
+
+<para>A second dataset acts as a buffer. We load into this buffer dataset the contact that was selected in the list. We then copy it over to the appropriate node in the master dataset. </para>
+<para>
+Inside the <em>details</em> view, there is an ondata event handler: 
+</para>
+<informalexample role="live-example"><programlisting>
+&lt;handler name=&quot;ondata&quot;&gt; 
+&lt;/handler&gt;
+</programlisting></informalexample>
+
+<para>
+Inside the ondata event handler, a local variable called emailParam is set  equal to the email attribute within the data that this view is databound to. The datapath.p.getArrt() method passes into it email as the only argument. The Debug window traces this value:</para>
+<informalexample role="live-example"><programlisting>
+var emailParam = this.datapath.p.getAttr('email');
+Debug.write(emailParam);
+</programlisting></informalexample>
+<para>
+This value (emailParam) is passed as a query parameter for the ds2 dataset and then doRequest makes the call to the server side script that ds2 uses as its src (getContact.jsp):
+</para>
+<informalexample role="live-example"><programlisting>
+
+ds2.setQueryParam('email', emailParam);  
+ds2.doRequest();
+</programlisting></informalexample>
+<para>
+Another ondata handler has a reference of ds2 has a local variable called currentMasterNode set equal to details.datapath.p (the actual data that this view is databound to). An LzDatapoiner called dp is created:
+</para>
+<informalexample role="live-example"><programlisting>
+var currentMasterNode = details.datapath.p;
+var dp = new LzDatapointer(); 
+</programlisting></informalexample>
+<para>
+The Debug window the data for ds2 (remember that we are in an ondata event handler):
+</para>
+<programlisting><informalexample>
+Debug.write(ds2.data); 
+</informalexample></programlisting>
+<para>
+The xpath of the dp datapointer to be ds2:/details, and a for loop that loops from 0 to the length of the dp.p.childNodes array getting a reference to the current detail node, which is stored in currentDetailNode
+</para>
+<programlisting><informalexample>
+var currentDetailNode = dp.p.childNodes[i];
+</informalexample></programlisting>
+<para>After this, an LzDatapointer called dp2 is pointed at the current detail </para>
+<programlisting><informalexample>
+dp2.setPointer(currentDetailNode);
+</informalexample></programlisting>
+<para>
+hasAttr() checks to see if the current master node does not have the attribute that is the node name of the current detail node:</para>
+<programlisting><informalexample>
+if (!currentMasterNode.hasAttr(currentDetailNode.nodeName)){
+
+}
+</informalexample></programlisting>
+<para>
+and writes to the debugger. Then, using setAttr() on currentMasterNode, dp2.xpathQuery('text()') is added to currentDetailNode.nodeName
+</para>
+<programlisting><informalexample>
+currentMasterNode.setAttr(currentDetailNode.nodeName,dp2.xpathQuery('text()')); </informalexample></programlisting>
+<para>Last, outside the for loop, but still inside the ondata event handler, the xpath of the dp datapointer is set back to ds2:/details.
+</para>
+
+
+
+
+</section>
+<section><title>Server Side Paging</title>
+
+</section>
+
+
+</chapter>

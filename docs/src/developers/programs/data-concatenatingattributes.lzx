@@ -1,0 +1,18 @@
+<canvas debug="true">
+    <dataset name="dset" src="../shareddata/contacts_full.xml"/>
+    
+    <!--  Create a view with a text field that concatenates the first and last name as the value of the text field -->
+    <view datapath="dset:/addressbook/contacts/person[1]">
+       
+        <attribute name="firstname" value="$path{'@firstname'}"/>
+        <attribute name="lastname" value="$path{'@lastname'}"/>
+    
+        <text text="${parent.firstname + ' ' + parent.lastname}"/>
+    
+    </view>
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

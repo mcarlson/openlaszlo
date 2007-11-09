@@ -1,12 +1,3 @@
-<example role="live-example">
-   <title>Runtime constraintes with applyConstraint</title>
-   <programlisting language="lzx">
-   <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
-   </programlisting>
-</example>
-<para>
-</para>
-
 <chapter id="dynamic-databinding">
 <title>Dynamic Databinding</title>
 <para>
@@ -18,28 +9,38 @@ Summary: The procedural (DOM) APIs for working with datasets allow you to build 
 <para>
 
 Introduction and Philosphy of the DOM APIs
-
+</para>
 <section>
 <title>The LzDataNode object</title>
 <para>
-</para>
 -- attributes
 -- methods
+</para>
+
 </section>
 
 <section>
 <title>The LzDataElement object</title>
 <para>
-</para>
 -- attributes
 -- methods
+</para>
+
 </section>
 <section>
 The LzDataText object
 <para>
-</para>
 -- attributes
 -- methods
-</section>
+</para>
 
+</section>
+<?example role="live-example">
+   <title>Runtime constraintes with applyConstraint</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
+   </programlisting>
+</example?>
+<para>
+</para>
 </chapter>
