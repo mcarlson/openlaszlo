@@ -180,15 +180,10 @@ function returnData ( loadobj , data ){
 
 
     if ( ! loadobj.valid ) {
-        this.doTimeOut(loadobj);
         return;
     }
 
-    // [2005-08-25 ptw] So, we don't want to mark the clip as loaded
-    // if this is a persistent connection?  Not sure what that means.
-    if ( ! this.doPersist ) {
-        LzLoadQueue.loadFinished( loadobj );
-    }
+    LzLoadQueue.loadFinished( loadobj );
 
     this.lastloadtime = getTimer() - loadobj.loadtime;
 
