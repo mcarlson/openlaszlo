@@ -1,5 +1,6 @@
 <chapter id="static-databinding">
-<title>Static Databinding with tag APIs</title>
+
+<section><title>Static Databinding with tag APIs</title></section>
 <para>
 Summary: In this chapter we explain how to instantiate global and local datasets, populate them with "canned" data or from a remote source, and bind their contents to views using datapaths. Datapointers are explained as a way to position a logical cursor in a dataset.
 </para>
@@ -9,38 +10,63 @@ This is "static" databinding in the sense that datasets are identified at compil
 <para>
 This chapter uses mostly small examples, reusing many from the current documentation. There will be many more examples, in order to illustrate most or all of the attributes and methods on &lt;dataset&gt;, &lt;datapath&gt; and &lt;datapointer&gt;
 </para>
-<para>
-Outline:
 
-Declaring data using &lt;dataset&gt;
+<section><title>Creating Static Datasets</title>
+   <para>
+    Declaring data using &lt;dataset&gt;
 -- Creating Dataset relationships at compile time
 ---Global datasets and class ("local") datasets
 -- The "src" attribute; inline data versus retreived data
 ---Literal Data (the &lt;data&gt; tag)
 ---When and how datasets are updated (autorequest, doRequest())
----Dataset events: onerror, ondata, ontimeout
----Data rules
----- handling white space
----- namespaces
+   </para>
+</section>
 
-Databinding Introduction
----Data Binding with XPath 
----Data Binding and Attributes
----Concatenating Attributes 
-Conditional logic with Paths 
-Binding data to objects 
--- binding nodes using datapaths
--- binding attributes using $path
+<section><title>Dataset events</title>
+   <para>Dataset events: onerror, ondata, ontimeout</para>
 
-Changing a Datapath 
---Setting the XPath Using a String 
+   <section><title>Data rules</title></section>
+   <section><title>handling white space</title></section>
+   <section><title>Namespaces</title></section>
 
-Updating datasets
--- the updateData() method
+</section>
 
-Moving through data with datapointers
--- A datapointer is an object that represents a pointer to a node in an LzDataset. The datapointer can be repositioned using either:
------ cursor movements calls such as selectNext(), 
------ running an XPath request via setXPath()
+<section><title>Introduction to Databinding</title></section>
+
+<section><title>Data Binding with XPath</title>
+   <section>
+    Conditional logic with Paths 
+    Binding data to objects 
+    -- binding nodes using datapaths
+    -- binding attributes using $path
+    ---Concatenating Attributes 
+    </section>
+    <section>
+    Changing a Datapath 
+    --Setting the XPath Using a String 
+
+    Updating datasets
+     -- the updateData() method
+    </section>
+</section>
+
+<section>
+
+<title>Moving through data with datapointers</title>
+<para>
+An object's datapath may be changed at run-time.
+
+The datapath must be declared in the LZX code.
+               datapath is a subclass of LzDatapointer.
+                LzDatapointer is capable of moving to a different location in the XML e.g.
+                   Use selectNext(), selectPrev() etc., to move around the dataset.
+                   Use setXPath() with a new string XPath to re-bind to a new location.
+                   Use setPointer() to bind to a specific LzDataElement.
 </para>
+   <para>
+   A datapointer is an object that represents a pointer to a node in an LzDataset. The datapointer can be repositioned using either:
+   ----- cursor movements calls such as selectNext(), 
+   ----- running an XPath request via setXPath()
+   </para>
+</section>
 </chapter>

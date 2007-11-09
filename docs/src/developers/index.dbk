@@ -76,6 +76,9 @@
     <xi:include href="data-structures.dbk"/>
     <xi:include href="databinding.dbk"/>
     <xi:include href="tutorials/data_app.dbk"/>
+    <xi:include href="static-databinding.dbk"/>
+    <xi:include href="data-patterns-and-best-practices.dbk"/>
+    <xi:include href="dataprovider.dbk"/>
   </part>
    
   <part id="developers.media">

@@ -1,3 +1,13 @@
+<example role="live-example">
+   <title>Runtime constraintes with applyConstraint</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+<para>
+</para>
+
 <chapter id="data-overview">
 <title>Introduction to Data and Data-Driven Applications</title>
 <para>

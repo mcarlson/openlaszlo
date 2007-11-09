@@ -1,3 +1,18 @@
+<example role="live-example">
+   <title>Runtime constraintes with applyConstraint</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<example role="live-example">
+   <title>Runtime constraintes with applyConstraint</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
+   </programlisting>
+</example>
+<para>
+</para>
+
 <chapter id="two-way-databinding">
 <title>Two-way databinding</title>
 <para>
@@ -8,6 +23,16 @@ Summary:
 This chapter explains the "funhouse mirror" quasi-equivalence of the datapath/datapointer APIs. There are two goals for the chapter: 
 (1) at a minimum, make clear the distinction between the two kinds of approaches; that is, between moving nodes and moving pointers to nodes.
 (2) hopefully, give enough explanation and examples such that people can mix and match between the two approaches without getting hopelessly confused.
+</para>
+<para>
+            
+                If the data changes, the data-bound object will update.
+              Sometimes, with input controls, you need to bind back into the data.
+              To trigger two-way databinding:
+                    Call datapath.updateData().
+                    Optionally, define an updateData() method at the root of the control.
+                   This method is called automatically.
+                    Returns the value to put back into the data.
 </para>
 <para>
 Outline:
