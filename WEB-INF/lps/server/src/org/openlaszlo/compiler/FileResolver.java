@@ -148,6 +148,7 @@ class DefaultFileResolver implements FileResolver {
         if (pathname.startsWith("/")) {
           // Try absolute
           v.add("");
+          v.add(LPS.getComponentsDirectory());
         }
         v.add(base);
         if (SWFtoPNG) {
