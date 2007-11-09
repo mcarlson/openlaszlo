@@ -94,7 +94,7 @@ img { border: 0 none; }
 /* The input window */
 #LaszloDebuggerInput
 {
-  width: 90%;
+  width: 83%;
   font-family: monospace;
   font-size: medium;
   /* simulate 11/13pt */

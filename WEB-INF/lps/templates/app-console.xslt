@@ -149,6 +149,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
                           <input id="LaszloDebuggerInput" type="text" />
                           <input type="button" value="eval" onclick="$modules.lz.Debug.doEval(document.getElementById('LaszloDebuggerInput').value); return false"/>
                           <input type="button" value="clear" onclick="$modules.lz.Debug.clear(); return false"/>
+                          <input type="button" value="bug report" onclick="$modules.lz.Debug.bugReport(); return false"/>
                         </div>
                       </form>
                   </div>
