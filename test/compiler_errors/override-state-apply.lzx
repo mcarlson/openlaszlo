@@ -1,0 +1,16 @@
+<canvas>
+  <class name="mystate" extends="state">
+    <method  name="apply">
+      Debug.write('mystate apply method');
+    </method>
+    <attribute  name="y" value="200"/>
+  </class>
+  
+  <mystate/>
+<!-- should NOT generate compiler warning that 'apply' method is overwriting
+     the 'apply' attribute on the parent -->
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
