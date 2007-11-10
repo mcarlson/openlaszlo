@@ -41,8 +41,9 @@
         </method>
 
         <method name="setRegularColor" >
+            <![CDATA[
             var pos = 0;
-            if (this.datapath != null) {
+            if (this.datapath != null && this.datapath.isValid()) {
                 pos = this.datapath.xpathQuery( 'position()' );
             }
             var nextColor = null;
@@ -53,6 +54,7 @@
                 this.regularColor = nextColor;
                 this.updateBGColor();
             }
+            ]]>
         </method>
 
         <handler name="ondata">
