@@ -1,0 +1,47 @@
+<canvas bgcolor="0xC9D8EB" debug="true">
+
+    <debug x="0" y="150" width="450" height="200" />
+
+    <dataset name="ds" src="../shareddata/contacts_full.xml" />
+
+    <list id="mylist" datapath="ds:/addressbook/contacts" 
+          height="145" width="150">
+        <textlistitem name="myitem" datapath="person" text="$path{'@email'}" value="$path{'position()'}" />
+    </list>
+
+    <window title="Controls" x="158">
+        <simplelayout axis="y" spacing="6" inset="10" />
+        <constantlayout axis="x" value="10" />
+        
+        <text fontstyle="bold">
+            Following LzDataElement refers to the "contacts" node
+        </text>
+
+        <button>Get LzDataElement via datapointer
+            <handler name="onclick">
+                var dp = new LzDatapointer();
+                dp.setAttribute("xpath","ds:/addressbook/contacts");
+                Debug.write(dp.p);
+            </handler>
+        </button>
+
+        <button>Get LzDataElement via datapath
+            <handler name="onclick">
+                Debug.write(mylist.datapath.p);
+            </handler>
+        </button>
+
+        <button>Create a new LzDataElement in JavaScript
+            <handler name="onclick">
+                var newNode = new LzDataElement('contacts', null, null);
+                Debug.write(newNode);
+            </handler>
+        </button>
+
+    </window>
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

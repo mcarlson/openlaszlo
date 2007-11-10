@@ -193,7 +193,7 @@ The datapath must be declared in the LZX code.
 <para>
 Changing a Datapath
 
-This walkthrough explores using the datapath API (specifically selectNext() and selectPrev()) to access and traverse through data in a dataset. 
+This example shows how to the datapath API (specifically selectNext() and selectPrev()) to access and traverse through data in a dataset. 
 
 
 Inside the onclick event handler inside the nextname button, invoke the selectNext() method on the datapath object of the lastnameview view: 

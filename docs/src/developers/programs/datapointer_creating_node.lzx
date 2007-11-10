@@ -1,0 +1,30 @@
+<canvas debug="true">
+    <include href="lz/datacombobox.lzx"/>
+    <dataset name="ds" src="../shareddata/contacts_full.xml" />
+    <datapointer name="dp" />
+
+    <simplelayout />
+
+    <list id="mylist" datapath="ds:/addressbook/contacts" height="100" width="150">
+        <textlistitem datapath="person" text="$path{'@email'}" value="$path{'position()'}" />
+    </list>
+
+    <button text="Print total person nodes">
+        <handler name="onclick">
+            dp.setAttribute("xpath","ds:/addressbook/contacts");
+            Debug.write("total child nodes "+dp.getNodeCount() );
+        </handler>
+    </button>
+    <button text="Add 'fflinestone@cartoon.com' item">
+        <handler name="onclick">
+            dp.setAttribute("xpath","ds:/addressbook/contacts");
+            var newnode = dp.addNode('person', 'Fred Flinestone', {'email':'fflinestone@cartoon.com'})
+            Debug.write("newnode="+newnode);
+
+        </handler>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

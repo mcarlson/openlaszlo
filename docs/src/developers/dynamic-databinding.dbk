@@ -4,14 +4,17 @@
 Databinding, part two: dynamic dataset creation with procedural (DOM) APIs
 </para>
 <para>
-Summary: The procedural (DOM) APIs for working with datasets allow you to build and manipulate datasets at runtime using DOM conventions. There are three kinds of objects: the absract class LzDataNode, and LzDataElement and LzTextNode which are derived from it. We look at the attributes and methods on each of these classes, and then look at short examples that show how to use them to create and manipulate dataset objects.  In this chapter we do NOT illustrate databinding, since that requires use of datapointers; that's in the next chapter. Here we just show how to build and manipulate data structures.
+Summary: The procedural (DOM) APIs for working with datasets allow you to build and manipulate datasets at runtime using DOM conventions. There are three kinds of objects: the absract class LzDataNode, and LzDataElement and LzTextNode which are derived from it.
+</para>
+<para>In this chapter, we look at the attributes and methods on each of these classes, and then look at short examples that show how to use them to create and manipulate dataset objects. 
 </para>
 <para>
-
 Introduction and Philosphy of the DOM APIs
 </para>
 <section>
 <title>The LzDataNode object</title>
+<para>
+</para>
 <para>
 -- attributes
 -- methods
@@ -21,6 +24,12 @@ Introduction and Philosphy of the DOM APIs
 
 <section>
 <title>The LzDataElement object</title>
+<para>An LzDataElement corresponds to a single XML node in a dataset. As such, the LzDataElement is a subclass of LzDataNode, and inherits all of that class's methods and attributes.
+</para>
+              
+               LzDataElements have properties and methods that let you:
+                  read and change the data
+                  refer to parent or child nodes
 <para>
 -- attributes
 -- methods
@@ -30,17 +39,291 @@ Introduction and Philosphy of the DOM APIs
 <section>
 The LzDataText object
 <para>
+LzDataText represents a text node in an XML node in a dataset. Recall that in XML, text is 
+</para>
+<para>
 -- attributes
 -- methods
 </para>
+Datapointer Basics
 
-</section>
-<?example role="live-example">
-   <title>Runtime constraintes with applyConstraint</title>
+This example shows the basic usage of the datapointer API. 
+
+Show Value Of The First Name Of The First Node 
+  Inside the onclick event handler for the first button, the setAttribute() method of the dp datapointer sets the xpath attribute to the first person node in the dataset, ds:/addressbook/contacts/person[1]: 
+
+&lt;button text="Show value of first name of the first &lt;person/&gt; node"&gt;
+&lt;handler name="onclick"&gt;
+dp.setAttribute("xpath","ds:/addressbook/contacts/person[1]");
+&lt;/handler&gt;
+&lt;/button&gt; 
+
+The onclick event handler next writes out to the Debug window the firstname attribute. It uses getAttr() and pass firstname as the one argument to this function, to retrieve the firstname attribute from the dataset: 
+
+Debug.write(dp.p.getAttr('firstname'));
+
+Show The Full Name Of The Owner Of the Address Book 
+
+Inside the onclick event handler for the second button, the setAttribute() method of the dp datapointer to set the xpath attribute to the owner of the addressbook in the dataset, 
+
+ds:/addressbook/metainformation/addressbookowner[1]/: 
+
+&lt;button text="Show the full name of the owner of the address book."&gt;
+&lt;handler name="onclick"&gt;
+ dp.setAttribute("xpath","ds:/addressbook/metainformation/addressbookowner[1]/");
+&lt;/handler&gt;
+&lt;/button&gt; 
+  
+The onlclick handler next traces out to the Debug window the full name (both firstname and lastname attributes) of the address book owner: 
+
+Debug.write(dp.p.getAttr('firstname'),dp.p.getAttr('lastname'));
+
+Show Total Number Of Nodes 
+
+To show the total number of nodes, he onclick event handler for the third button, uses the setAttribute() method of the dp datapointer to set the xpath attribute to the contacts array in the dataset, ds:/addressbook/contacts: 
+
+&lt;button text="Show total of &lt;person/&gt; nodes?"&gt;
+&lt;handler name="onclick"&gt;
+dp.setAttribute("xpath","ds:/addressbook/contacts");
+&lt;/handler&gt;
+&lt;/button&gt; 
+
+The onclick handler next traces out to the Debug window the length of this array. Note that in datasets, nodes have an array attribute called childNodes, that is an array of the child nodes for that given node. Note also that arrays have a length attribute: 
+
+      Debug.write(dp.p.childNodes.length);
+
+Show The Value Of The Last Name Of The 2nd Node 
+
+  To show the value of the last name of the 2nd node, the onclick event handler for the fourth button uses the setAttribute() method of the dp datapointer to set the xpath attribute to the 2nd person node within the dataset, ds:/addressbook/contacts/person[2]: 
+
+&lt;button text="Show the value of the lastname of the 2nd node"&gt;
+&lt;handler name="onclick"&gt;
+dp.setAttribute("xpath","ds:/addressbook/contacts/person[2]");
+&lt;/handler&gt;
+&lt;/button&gt; 
+
+The onclick event handler next writes to the Debug window the firstname attribute: 
+
+      Debug.write(dp.p.getAttr('firstname'));
+
+Capitalize The First Name Of The 2nd Node 
+
+To capitalize the first name of the of 2nd node, the onclick event handler for the fifth button, uses the setAttribute() method of the dp datapointer to set the xpath attribute to the second person node in the dataset, ds:/addressbook/contacts/person[2]: 
+
+&lt;button text="Capitalize the firstname of the 2nd node"&gt;
+&lt;handler name="onclick"&gt;
+dp.setAttribute("xpath","ds:/addressbook/contacts/person[2]");
+&lt;/handler&gt;
+&lt;/button&gt; 
+
+Next, let's capitalize the firstname attribute of the node that our datapointer is currently pointing at (from the previous step). Use setAttr() to change the data in the dataset. Use toUpperCase() (a method of the String class) to capitalize the string: 
+
+      dp.p.setAttr('firstname',dp.p.getAttr('firstname').toUpperCase()) ;
+
+Last, trace the firstname attribute to the Debug window, to verify that it has been capitalized: 
+
+      Debug.write("AFTER ",dp.p.getAttr('firstname'));
+<example role="live-example">
+   <title>Datapointer basics</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/datapointer_basics.lzx"/></textobject> 
    </programlisting>
-</example?>
+</example>
+
+
+Accessing LzDataElement
+This example shows the different ways to access an LzDataElement (data within a dataset). 
+
+Get LzDataElement using a Datapointer 
+  Inside the onclick event handler for the first button, instantiate a new LzDatapointer and name it dp: 
+
+&lt;button&gt;Get LzDataElement via datapointer
+&lt;handler name="onclick"&gt;
+ var dp = new LzDatapointer();
+
+&lt;/handler&gt;
+&lt;/button&gt; 
+  After instantiating the datapointer, using setAttribute(), set its xpath attribute to point at the contacts node within the ds dataset: 
+
+dp.setAttribute("xpath","ds:/addressbook/contacts");
+  Now that the dp datapointer is pointing at the appropriate node, trace the p attribute of the dp datapointer to the Debug window. Note that the p attribute is the attribute of the datapointer that points at the actual data, which is in this case, an array of contact nodes: 
+
+Debug.write(dp.p);
+Get LzDataElement  using a datapath 
+  Inside the onclick event handler for the second button, trace out to the Debug window the p attribute of the datapath object of the mylist list: 
+
+&lt;button&gt;Get LzDataElement via datapath
+&lt;handler name="onclick"&gt;
+Debug.write(mylist.datapath.p);
+&lt;/handler&gt;
+&lt;/button&gt; 
+Create A New LzDataElement In JavaScript 
+  The onclick event handler for the third button, instantiates a new LzDataElement and names it newNode.  This is passed into the constructor contacts as the first argument (what type of node to create), null as the second argument (the text for the node [text that is between the opening and closing tag]), and null as the third argument (node attributes): 
+
+&lt;button&gt;Create a new LzDataElement in JavaScript
+&lt;handler name="onclick"&gt;
+var newNode = new LzDataElement('contacts', null, null);
+
+&lt;/handler&gt;
+&lt;/button&gt; 
+  After instantiating the LzDataElement, on the next line of code (still inside the onclick event handler) it traces out newNode to the Debug window: 
+
+Debug.write(newNode); 
+
+<example role="live-example">
+   <title>Different techniques for accessing LzDataElements</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/data-accessing_lzdataelement.lzx"/></textobject> 
+   </programlisting>
+</example>
 <para>
 </para>
+</section>
+Creating a Node using a datapointer
+
+This example shows how to indirectly create a data-bound item by creating a new node in the source data using the datapointer API. 
+
+Print Total Person Nodes
+
+To print the total number of person nodes, the onclick event handler for the first button uses the setAttribute() method of the dp datapointer to set the xpath attribute to the contacts array in the dataset, ds:/addressbook/contacts: 
+
+&lt;button text="Print total person nodes"&gt;
+&lt;handler name="onclick"&gt;
+dp.setAttribute("xpath","ds:/addressbook/contacts");
+
+&lt;/handler&gt;
+&lt;/button&gt; 
+
+The onclick event handler next traces out to the Debug window the length of this array. Recall that in datasets, nodes have an array attribute called childNodes, that is an array of the child nodes for that given node. Arrays have a length property, so the length of the array is equal to the number of child nodes: 
+
+      Debug.write("total child nodes "+dp.p.childNodes.length);
+
+Inside the onclick event handler for the Add fflintstone@cartoon.com button, use setAttribute() to set the xpath to point at the contacts array node within the dataset: 
+
+&lt;button text="Add 'fflinestone@cartoon.com' item"&gt;
+&lt;handler name="onclick"&gt;
+dp.setAttribute("xpath","ds:/addressbook/contacts");
+
+&lt;/handler&gt;
+&lt;/button&gt; 
+
+The addNode() method on the dp datapointer add a new person node to the contacts array. The first argument to the addNode() method is the type of node to create (in this case, a person node). The second argument is the text for the node (the text contained between the opening and closing tag). The third argument is an array of node attributes: 
+
+dp.addNode('person', 'Fred Flinestone', {'email':'fflinestone@cartoon.com'});
+<example role="live-example">
+   <title>Datapointer basics</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/datapointer_creating_node.lzx"/></textobject> 
+   </programlisting>
+</example>
+
+Destroying a Node
+
+This example shows an approach of removing a replicated item by destroying the node (the data within the dataset) that it is pointing to. When you modify any data in a dataset, any UI components that are data bound to that data are automatically updated with the new data. So essentially, you work with the data layer and the UI layer will automatically be updated. 
+
+The onclick event handler for the Destroy the selected node button, instantiates an LzDatapointer and name it dp: 
+
+&lt;button text="Destroy the selected node"&gt;
+&lt;handler name="onclick"&gt;
+var dp = new LzDatapointer();
+
+Right after the instantiation of the LzDatapointer (still inside the onclick event handler) we create a variable called selectedIndex and set it equal to mylist.value -1 (mylist.value is the selected items offset/index within the list): 
+
+var selectedIndex = mylist.value - 1; //xpath is 1-based but scripts is 0-based
+
+On the next line, code out an if statement that checks to see if selectedIndex is a valid number (it might be undefined if there is nothing selected in the list). We use !isNaN() (not, not a number) to achieve this: 
+
+if (!isNaN(selectedIndex)){
+
+}
+Inside the if block, a local variable called selectedNode is crreated and, using the nodes array attribute of the mylist list, gets a reference to the item in the list (currently, we have the index of what item in the list is selected, so lets get the actual data at that index): 
+
+var selectedNode = mylist.myitem.nodes[selectedIndex];
+
+As the next line of code, we point the dp datapointer at the node that we now have a reference to (selectedNode). Use setPointer() to achieve this: 
+
+dp.setPointer(selectedNode);
+
+Now that the datapointer is pointing at the data that we want to destroy, lets remove that data from the dataset: 
+
+dp.deleteNode();
+
+Pretty Printer
+
+This example shows usage of the "pretty printer" utility class and usage of a datapointer to manipulate a dataset at runtime. The pretty printer is used for debugging. It provides a clean, visual representation of xml data. This can be very useful when adding and deleting nodes (especially when the xml data is very complex). 
+
+After the include tag at the top of the canvas, code out a datapointer tag with the name from and a datapath of template_uk:/address: 
+
+&lt;datapointer name="from" xpath="template_uk:/address" /&gt; 
+  Create another datapointer tag with the name to and a datapath of ds_complete:/contacts/contact[1]: 
+
+&lt;datapointer name="to" xpath="ds_complete:/contacts/contact[1]" /&gt; 
+  
+Next, create an addresscopier node: 
+
+&lt;node name="addresscopier"&gt;
+
+&lt;/node&gt; 
+  
+Inside this node, create three datapointers, with namesfrom_uk, from_us and to. Set their xpath atributes to template_uk:/address, template_us:/address, and ds_complete:/contacts, respectively: 
+
+&lt;datapointer name="from_uk" xpath="template_uk:/address" /&gt;
+&lt;datapointer name="from_us" xpath="template_us:/address" /&gt;
+&lt;datapointer name="to" xpath="ds_complete:/contacts" /&gt; 
+
+After the instantiation of the three datapointer, create a copyAddressNodes method: 
+
+&lt;method name="copyAddressNodes"&gt;
+&lt;/method&gt; 
+
+As the first line of code inside the method, call the selectChild() method on the to datapointer:
+
+to.selectChild(); 
+  Next, create a do-while loop and set the condition for the loop to to.selectNext(): 
+
+do {
+
+} while ( to.selectNext() ); 
+
+  Inside the do-while loop, code out an if statement and do an xpath query on the to datapointer and search for the string us: 
+
+if ( to.xpathQuery("@location") == "us" ) {
+to.addNodeFromPointer( from_us );
+} 
+
+  Code out an else-if statement and do an expath query on the to datapointer and search for the string  uk: 
+
+else if ( to.xpathQuery("@location") == " uk" ) {
+to.addNodeFromPointer( from_uk );
+} 
+  Inside the onclick event handler for the Write Dataset button, using the prettyPrint() method on the pp prettyprinter object, print to the Debug window the xml data: 
+
+&lt;button&gt;Write Dataset
+&lt;handler name="onclick"&gt;
+ pp.prettyPrint();
+ &lt;/handler&gt;
+&lt;/button&gt; 
+
+Inside the onclick event handler for the copy one button, make a call to the addNodeFromPointer method on the to datapointer and pass into it as its only argument to from datapointer: 
+
+&lt;button&gt;Copy one
+&lt;handler name="onclick"&gt;
+ to.addNodeFromPointer( from );
+ &lt;/handler&gt;
+&lt;/button&gt; 
+  Last, make a call to the copyAddressNodes() method in the addresscopier node, to make a copy of the address nodes: 
+
+&lt;button&gt;Copy all
+&lt;handler name="onclick"&gt;
+ addresscopier.copyAddressNodes();
+  &lt;/handler&gt;
+&lt;/button&gt;
+
+<example role="live-example">
+   <title>Datapointer basics</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/data-prettyprinter.lzx"/></textobject> 
+   </programlisting>
+</example>
+
 </chapter>
