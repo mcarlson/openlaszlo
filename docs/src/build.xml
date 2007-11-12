@@ -760,7 +760,7 @@ All Rights Reserved. Use is subject to license terms.</p>
           todir="${reference.output.dir}">
       </copy>      
       <!-- Tuck away the docbook-generated index, so we can examine it --> 
-      <copy 
+      <copy failonerror="false"
           file="${reference.output.dir}/index.html"
           tofile="${reference.output.dir}/index-docbook.html">          
       </copy>      
