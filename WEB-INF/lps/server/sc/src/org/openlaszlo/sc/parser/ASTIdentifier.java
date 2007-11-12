@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -11,8 +11,15 @@ package org.openlaszlo.sc.parser;
 
 public class ASTIdentifier extends SimpleNode {
     private String name = null;
+    private Type type = null;
     private int hash = 0;
-  
+
+    public static class Type {
+        public String typeName = null;
+        public boolean nullable = false; // has "?"
+        public boolean notnullable = false; // has "!"
+    }
+
     public ASTIdentifier(int id) {
         super(id);
     }
@@ -46,8 +53,25 @@ public class ASTIdentifier extends SimpleNode {
     public String getName() {
         return name;
     }
-  
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public String toString() {
-        return "ASTIdentifier(" + name + ")";
+        String typesuffix = "";
+        if (type != null) {
+            typesuffix = ": ";
+            if (type.nullable)
+                typesuffix += "?";
+            typesuffix += type.typeName;
+            if (type.notnullable)
+                typesuffix += "!";
+        }
+        return "ASTIdentifier(" + name + typesuffix + ")";
     }
 }

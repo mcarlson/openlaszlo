@@ -1,0 +1,89 @@
+<!--
+  A simple test to verify that typed vars are accepted by the compiler.
+  There is no type checking for SWF7/8 and DHTML, the type stuff is ignored.
+-->
+<canvas>
+  <simplelayout />
+  <text name="msg" />
+  <text name="estatus" />
+
+  <view name="tester">
+    <method name="func" args="val">
+      var v_plain;
+      var v_init = val;
+      var v_init_const = 4;
+      var v_typed:int;
+      var v_typed_init:int = val * 2;
+      var v_typed_q:?int = 123;
+      var v_typed_ex:int! = 234;
+
+      // These must be set before use
+      v_plain = 99;
+      v_typed = 999;
+
+      msg.setText("Test running...");
+      if (v_plain == 99) {
+         Debug.write("test1 passed");
+      } else {
+         Debug.write("FAIL: test1");
+         estatus.setText("FAIL 1");
+      }
+
+      if (v_init == 17) {
+         Debug.write("test2 passed");
+      } else {
+         Debug.write("FAIL: test2");
+         estatus.setText("FAIL 2");
+      }
+
+      if (v_init_const == 4) {
+         Debug.write("test3 passed");
+      } else {
+         Debug.write("FAIL: test3");
+         estatus.setText("FAIL 3");
+      }
+
+      if (v_typed == 999) {
+         Debug.write("test4 passed");
+      } else {
+         Debug.write("FAIL: test4");
+         estatus.setText("FAIL 4");
+      }
+
+      if (v_typed_init == 34) {
+         Debug.write("test5 passed");
+      } else {
+         Debug.write("FAIL: test5");
+         estatus.setText("FAIL 5");
+      }
+
+      if (v_typed_q == 123) {
+         Debug.write("test6 passed");
+      } else {
+         Debug.write("FAIL: test6");
+         estatus.setText("FAIL 6");
+      }
+
+      if (v_typed_ex == 234) {
+         Debug.write("test7 passed");
+      } else {
+         Debug.write("FAIL: test7");
+         estatus.setText("FAIL 7");
+      }
+
+    </method>
+  </view>
+
+  <script>
+
+    msg.setText("Setting up test...");
+    tester.func(17);
+    msg.setText("Test completed.");
+
+  </script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

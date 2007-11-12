@@ -348,10 +348,10 @@ void NumericLiteral() #Literal : {Token t;}
      {jjtThis.setFloatingPointValue(t.image);}
 }
 
-void Identifier() #Identifier : {Token t;}
+ASTIdentifier Identifier() #Identifier : {Token t;}
 {
   t=<IDENTIFIER>
-    {jjtThis.setName(t.image);}
+    {jjtThis.setName(t.image); return jjtThis;}
 }
 
 void IdentifierOrKeyword() #Identifier : {Token t;}
@@ -648,9 +648,42 @@ void VariableDeclarationList() #StatementList(>1) : {}
     VariableDeclaration() ("," VariableDeclaration())*
 }
 
-void VariableDeclaration() #VariableDeclaration : {}
+void VariableDeclaration() #VariableDeclaration : { ASTIdentifier id; ASTIdentifier.Type type; }
 {
-    Identifier() [Initializer()]
+    id = Identifier() [type = TypeAndInitializer() { id.setType(type); }]
+}
+
+ASTIdentifier.Type TypeAndInitializer() #void : { ASTIdentifier.Type type = null; }
+{
+  (
+    ":" type = TypeIdentifier() [Initializer()]
+  | Initializer()
+  ) {
+    return type;
+  }
+}
+
+ASTIdentifier.Type TypeIdentifier() #void : { Token t; ASTIdentifier.Type type = new ASTIdentifier.Type(); }
+{
+  (
+    Nullable() {type.nullable = true; }
+    t = <IDENTIFIER> {type.typeName = t.image;}
+  |
+    t = <IDENTIFIER> {type.typeName = t.image;}
+    [NotNullable() {type.notnullable = true; }]
+  ) {
+    return type;
+  }
+}
+
+void Nullable() #void : {}
+{
+   "?"
+}
+
+void NotNullable() #void : {}
+{
+   "!"
 }
 
 void Initializer() #void : {}
@@ -803,9 +836,11 @@ void FinallyClause() #FinallyClause : {}
 
 // Function declaration
 
-void FunctionDeclaration() #FunctionDeclaration : {}
+void FunctionDeclaration() #FunctionDeclaration : {ASTIdentifier id; ASTIdentifier.Type type;}
 {
-    "function" Identifier() ("(" [FormalParameterList()] ")") #FormalParameterList(jjtree.nodeArity()==0)
+    "function" id = Identifier() 
+    [":" type = TypeIdentifier() { id.setType(type); }]
+    ("(" [FormalParameterList()] ")") #FormalParameterList(jjtree.nodeArity()==0)
     Block()
 }
 
@@ -816,10 +851,14 @@ void FunctionExpression() #FunctionExpression : {}
 
 SimpleNode FormalParameterList() #FormalParameterList : {Token t;}
 {
-   Identifier() ("," Identifier())*
+   FormalParameter() ("," FormalParameter())*
      { return jjtThis; }
 }
 
+void FormalParameter() #void : {ASTIdentifier id; ASTIdentifier.Type type;}
+{
+    id = Identifier() [":" type = TypeIdentifier() { id.setType(type); }]
+}
 
 // Program structuring/
 
