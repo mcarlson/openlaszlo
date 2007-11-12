@@ -22,6 +22,12 @@
 <!ENTITY classvalue     '(class|function)'>
 <!ENTITY privateslot    '(@name="prototype" or @name="__ivars__" or @name="dependencies" or @name="setters" or @name="tagname")'>
 
+<!ENTITY readonly       '(@modifiers="readonly" or @modifiers="read-only" or @keywords="read-only" or @keywords="readonly")'>
+<!ENTITY final          '(@modifiers="final" or @keywords="final")'>
+<!ENTITY unwritable     '(@modifiers="readonly" or @modifiers="read-only" or @keywords="read-only" or @keywords="readonly" or @modifiers="final" or @keywords="final")'>
+
+<!ENTITY isevent          '((doc/tag[@name="lzxtype"]/text) = "event" or @type="LzEvent")'>
+
 ]>
         
 <xsl:stylesheet version="1.0"
@@ -41,7 +47,7 @@
     <xsl:param name="show.members.attributes" select="true()" />
     <xsl:param name="show.properties.static" select="false()" />
     <xsl:param name="show.methods.static" select="false()" />  
-    <xsl:param name="show.events.static" select="false()" />
+    <xsl:param name="show.events.static" select="true()" />
     <xsl:param name="show.inherited.attributes" select="true()" />
     <xsl:param name="show.setters" select="false()" />    
     <xsl:param name="show.prototype.methods" select="true()" />
@@ -237,12 +243,13 @@
         <xsl:variable name="svars" select="&objectvalue;/property[@name='setters']/object/property[&isvisible;]"/>
         <xsl:variable name="pvars" select="&objectvalue;/property[@name='prototype']/object/property[&isvisible;]"/>
         <xsl:variable name="ovars" select="&objectvalue;/property[not(&privateslot;) and &isvisible;]"/>
-        <xsl:variable name="initargs" select="class/initarg[not(contains(@access, 'private'))]" />
+        <xsl:variable name="events" select="&objectvalue;/property[@name='__ivars__']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &isvisible;]" />
+        <xsl:variable name="initargs" select="class/initarg[not(contains(@access, 'private'))]" />       
         
         <!-- Static Properties -->
         <xsl:if test="$show.properties.static">
           <xsl:call-template name="describe-members">
-            <xsl:with-param name="members" select="$ovars[not(child::function) and not(@type='LzEvent')]"/>
+            <xsl:with-param name="members" select="$ovars[not(child::function) and not(&isevent;)]"/>
             <xsl:with-param name="static" select="true()"/>
             <xsl:with-param name="title" select="'Static Properties'"/>
             <xsl:with-param name="initargs" select="$initargs" />
@@ -335,7 +342,7 @@
         <!-- (Prototype) Events -->
         <xsl:if test="$show.prototype.events">
           <xsl:call-template name="describe-events">
-            <xsl:with-param name="members" select="$pvars[@type='LzEvent']"/>
+            <xsl:with-param name="members" select="$events"/>
             <xsl:with-param name="title" select="'Events'"/>
           </xsl:call-template>
         </xsl:if>
@@ -540,6 +547,11 @@
       </refsect2>
     </xsl:if>
     
+    <xsl:if test="count($visible-members) = 0">
+      <refsect2><title>Events</title>
+        <para>(no events found)</para>
+      </refsect2>
+    </xsl:if>
     
   </xsl:template>
 
@@ -1083,7 +1095,7 @@
     <xsl:variable name="extends" select="$class/@extends"/>
     <xsl:variable name="superclass" select="(key('id',$extends) | key('name-lzx',$extends))[1]"/>
     <xsl:if test="$superclass">  
-      <xsl:variable name="inheritedevents" select="$superclass/class/property/object/property[@type='LzEvent' and &ispublic;]"></xsl:variable>
+      <xsl:variable name="inheritedevents" select="$superclass/class/property[@name='__ivars__']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &ispublic;]"></xsl:variable>
       <refsect2>
         <title>
           <xsl:text>Events inherited from&nbsp;</xsl:text>
@@ -1206,6 +1218,8 @@
       <xsl:apply-templates select="." mode="xref"/>
     </xsl:variable>
         
+    <!-- don't generate a term if this is an event -->
+    <xsl:if test="not(&isevent;)">
     <term id="{@id}" xreflabel="{$xref}">
       <!-- how to get the indexterm to use a different name than xreflabel? -->
       <indexterm zone="{@id}">
@@ -1217,7 +1231,8 @@
         </primary>
       </indexterm>
       <xsl:value-of select="$desc"/>
-    </term>    
+    </term>  
+    </xsl:if>
     <row>
       <xsl:if test="not (doc/text)">
         <xsl:attribute name="rowsep">0</xsl:attribute>
@@ -1245,13 +1260,16 @@
         -->
       <entry>
         <xsl:choose>
-          <xsl:when test="@modifiers = 'final'">initialize-only</xsl:when>
-          <xsl:when test="$isinstancevar and not(@modifiers = 'final')">read/write</xsl:when>
-          <xsl:when test="not($isinstancevar) and $issetter">(TODO: declare attribute)</xsl:when>          
-          <xsl:otherwise>(FIXME: otherwise)</xsl:otherwise>
-        </xsl:choose>
-        
-        <xsl:if test="$isinitarg"> (initarg) </xsl:if>                                     
+          <xsl:when test="&final; and ($isinstancevar or $isinitarg)">initialize-only</xsl:when>
+          <xsl:when test="&readonly;">readonly</xsl:when>          
+          <xsl:when test="not(&unwritable;) and $isinstancevar">read/write</xsl:when>
+          <xsl:when test="not(&unwritable;) and not($isinstancevar) and not($issetter)">(FIXME: declare attribute (non-setter))</xsl:when>
+          <xsl:when test="not(&unwritable;) and not($isinstancevar) and $issetter">(FIXME: declare attribute (setter))</xsl:when>          
+          <xsl:otherwise>(FIXME: otherwise) <xsl:if test="&final;">final</xsl:if> <xsl:if test="&readonly;">readonly</xsl:if></xsl:otherwise>
+        </xsl:choose>        
+        <xsl:if test="&isevent;">
+          event
+        </xsl:if>
       </entry>
     </row>
     <xsl:if test="doc/text">  

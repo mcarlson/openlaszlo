@@ -19,7 +19,7 @@
 <!ENTITY classvalue     '(class|function)'>
 <!ENTITY privateslot    '(@name="prototype" or @name="__ivars__" or @name="dependencies" or @name="setters" or @name="tagname")'>
 
-<!ENTITY isvisible      '(contains($visibility.filter, @access))'>
+<!ENTITY isvisible      '(contains("public", @access))'>
 
 <!ENTITY ispublic       '(@access="public")'>
 
@@ -42,10 +42,14 @@
         <xsl:variable name="setters" select="class/property[@name='setters']/object/property[not(contains(@access, 'private'))]" />
         <xsl:variable name="instancevariables" select="class/property[@name='__ivars__']/object/property[not(contains(@access, 'private'))]" />
         <xsl:variable name="initargs" select="class/initarg[not(contains(@access, 'private'))]" />
+        <xsl:variable name="events" select="class/property[@name='__ivars__']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &isvisible;]" />        
         
         
         property with name <xsl:value-of select="$classname"/>
         
+        events: <xsl:for-each select="$events">
+            <xsl:value-of select="@name"/>,             
+        </xsl:for-each>        
             
         <!-- things that are both instancevariables and setters are read/write attributes -->
         <xsl:variable name="setters-names" select="$setters/@name" />

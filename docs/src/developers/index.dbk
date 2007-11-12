@@ -29,7 +29,7 @@
   <part id="developers.tutorials">
     <title>Tutorial Introduction</title>
     <xi:include href="tutorials/laszlo_basics.dbk"/>
-    <xi:include href="comp-intro.dbk"/>
+    <xi:include href="tutorials/comp-intro.dbk"/>
     <xi:include href="tutorials/views.dbk"/>
     <xi:include href="tutorials/art_assets.dbk"/>
     <xi:include href="tutorials/text.dbk"/>

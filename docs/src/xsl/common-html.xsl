@@ -45,6 +45,8 @@
   
   <xsl:param name="warn.no.programlisting.canvas.width" select="false()"/>
   
+  <xsl:param name="show.examples.debuginfo" select="false()" />
+  
   <xsl:template name="base.book.name">
     <xsl:choose>
       <xsl:when test="contains(ancestor::part/@id, 'developers.tutorials')">developers/tutorials</xsl:when>
@@ -249,14 +251,16 @@
         </a>
       </div>
       <xsl:text>&#x0a;</xsl:text>
-      <pre>
-        localdir: <xsl:value-of select="$localdir"/>
-        basedir: <xsl:value-of select="$base.dir"/>
-        fname: <xsl:value-of select="$fname"/>
-        base.book.name: <xsl:call-template name="base.book.name"  />
-        root.relative: <xsl:value-of select="$root.relative"/>
-        relative.path.to.lpshome: <xsl:value-of select="$relative.path.to.lpshome"/>
-      </pre> 
+      <xsl:if test="$show.examples.debuginfo">
+        <pre>
+          localdir: <xsl:value-of select="$localdir"/>
+          basedir: <xsl:value-of select="$base.dir"/>
+          fname: <xsl:value-of select="$fname"/>
+          base.book.name: <xsl:call-template name="base.book.name"  />
+          root.relative: <xsl:value-of select="$root.relative"/>
+          relative.path.to.lpshome: <xsl:value-of select="$relative.path.to.lpshome"/>
+        </pre> 
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
