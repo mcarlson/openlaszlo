@@ -3,7 +3,7 @@
 <title>Data Patterns and Best Practices</title>
 
 <para>
-Data design patterns and best practices
+In this chapter we tak a look at some common data design patterns and best practices; that is, how to structure your applications to get the most out of OpenLaszlo's data manipulation capabilities.
 </para>
 <section><title>Master Detail</title>
 <para>

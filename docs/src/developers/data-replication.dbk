@@ -3,40 +3,51 @@
 <para>
 Summary:
 Earlier chapters contain incidental examples of datareplication; this chapter goes into depth explaining how replicationmanagers are created, the mapping between "clones" and "nodes", lazy replication and pooled replication, etc. It discusses both explicit and replication. Explicit replication is now the recommended style, but it will take a while to phase out implicit replication, so for legacy purposes it must be explained.
-
-Outline:
-
-What is data replication?
+</para>
+<section><title>
+What is data replication?</title>
+<para>
 -- A way in which the OL runtime causes new objects to be created according to Xpath queries on a dataset.
-
-Explicit Replication
+</para>
+</section>
+<section>
+<title>Explicit Replication</title>
 -- The &lt;replicator&gt; tag
 -- &lt;lazyreplicator&gt;
 -- &lt;resizereplicator&gt;
-
-Implicit replication
+</section>
+<section><title>Implicit replication</title>
 -- The replicationmanager; its automatic creation
 -- "lazy" replication
 -- pooling views
-
-Data Replication
+</section>
+<section><title>
+Data Replication</title>
 Simple Replication
 -- Referencing Clones
 ---Sorting Clones
 -- Non-linear Replication
-
-Selection
+</section>
+<section><title>
+Selection</title>
+<para>
 --setNodes()
 setNotes() and replication
 Normally, replication is started when a datapath xpath binding returns multiple nodes. The setNodes() method overides that behavior and forces replication, and replicates over the list of nodes supplied to this function. Note that once this function is called, the replication manager is no longer actively bound to the data it replicates over by its xpath (if it had one); henceforth the replication set can only be controlled by calling setNodes.
-
-Checking for "Replication Done"
-
-Lazy Replication
-Lazy Replication Syntax
-Lazy Performance
-Referencing Lazy Clones
 </para>
+</section>
+<section><title>
+Checking for "Replication Done"</title>
+</section>
+<section><title>Lazy Replication</title>
+</section>
+<section><title>Lazy Replication Syntax</title>
+</section>
+<section><title>Lazy Performance</title>
+</section>
+<section><title>Referencing Lazy Clones</title>
+</section>
+
 </chapter>
 
 
