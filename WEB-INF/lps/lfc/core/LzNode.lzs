@@ -261,22 +261,36 @@ static function initialize (prototype) {
 
 /** This event is sent right before a node becomes active --
   * e.g. before a view displays, or before a layout affects its subviews.
+  * @lzxtype event
   */
 var oninit = LzDeclaredEvent;
 
 /** This is the first event a node sends, right
   * at the end of the instantiation process, but before any subnodes
   * have been created or references resolved
+  * @lzxtype event
   */
 var onconstruct = LzDeclaredEvent;
 
 /** The ondata script is executed when the data selected by a view's datapath
   * changes.
+  * @lzxtype event  
   */
 var ondata = LzDeclaredEvent;
-/** If replicated, the index of this clone */
+/**
+  * If replicated, the index of this clone
+  * @lzxtype event
+  * @access private
+  */
 var clonenumber = null;
+/** 
+  * @access private 
+  * @lzxtype event
+  */ 
 var onclonenumber = LzDeclaredEvent;
+/** 
+  * @lzxtype event
+  */ 
 var ondestroy = LzDeclaredEvent;
 
 /** @access private */
@@ -292,6 +306,7 @@ var __LZUID = null;
 /** @access private */
 var __LZdelegates = null;
 
+/** @access private */
 var defaultattrs = { $hasdefaultattrs : true };
 
 /**
@@ -303,6 +318,7 @@ var defaultattrs = { $hasdefaultattrs : true };
  * @keywords read-only
  * @see initstage
  * @see oninit
+ * @access private
  */
 var isinited = false;
 
@@ -312,6 +328,7 @@ var isinited = false;
   * children.
   *
   * @type Array
+  * @keywords readonly
   */
 var subnodes = null;
 
@@ -325,6 +342,7 @@ var subnodes = null;
   *
   * @type String
   * @lzxtype string
+  * @keywords readonly
   */
 var datapath = null;
 
@@ -356,6 +374,7 @@ var datapath = null;
 var initstage = null;
 /** @access private */
 var $isstate = false;
+/** @access private */
 var doneClassRoot = false;
 
 /** Reference to the node that was passed as this
@@ -364,14 +383,17 @@ var doneClassRoot = false;
   * Its lexical parent is the tag that encloses it. Allow a null parent
   * so that nodes can be garbage collected when they are no longer needed.
   * See also, immediateparent.
+  * @keywords readonly
   */
 var parent;
 
+/** @access private */
 var children = null;
 
 /** If this node is replicated due to data
   * replication, the LzReplicationManager which controls this node.
   * @type LzNode
+  * @keywords readonly
   */
 var cloneManager = null;
 
@@ -388,7 +410,7 @@ var name = null;
   * variable name in JavaScript code.
   *
   * @type String
-  * @lzxtype xsd:ID
+  * @lzxtype ID
   * @keywords final
   * @lzxtype token
   */
@@ -407,6 +429,7 @@ var id = null;
   * determinePlacement method.
   * @type String
   * @lzxtype token
+  * @keywords final
   */
 var defaultplacement = null;
 
@@ -432,9 +455,11 @@ var __LZdeleted = false;
   * to get a mouse position in your views coordinate system.
   *
   * @type LzNode
+  * @keywords readonly
   */
 var immediateparent = null;
 
+/** @access private */ 
 var dependencies = null;
 
 /** A reference to the node that is an instance
@@ -447,16 +472,20 @@ var dependencies = null;
   * <code>parent.parent.parent.setAttribute(bgcolor, 0xFFFFFF)</code>
   * you can simply use <code>classroot.setAttribute(bgcolor, 0xFFFFFF)</code>.
   * @type LzNode
+  * @keywords readonly
   */
 var classroot;
 
 /** The depth of this node in the overall node hierarchy
   * @type Number
+  * @keywords readonly
   */
 var nodeLevel;
 
 if ($debug) {
-    // The source locator table maps source locations to nodes
+    /** The source locator table maps source locations to nodes
+      * @access private
+      */ 
     var sourceLocatorTable = {};
 
     /**
@@ -788,6 +817,16 @@ function completeInstantiation (){
   */
 static var _ignoreAttribute = {toString: function () {
                                         return '_ignoreAttribute'}};
+                                        
+/** 
+  * Overrides placement attribute (and defaultplacement in lexical parent). 
+  * See the LzNode.determinePlacement method. Defaults to false.
+  * @type Boolean
+  * @keywords final
+  * @lzxdefault "false"
+  */
+var ignoreplacement;  
+                                        
 
 /**
   * Applies a dictionary of args
@@ -1057,6 +1096,7 @@ function makeChild ( e , async ){
 }
 
 
+/** @access private */
 var setters ={
     name : "setName" ,
     id : "setID" ,

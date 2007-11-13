@@ -52,20 +52,7 @@
   * @initarg public String resource: A string denoting the library resource to use for
   * this view. The default is usually 'theEmptyResource'
   *
-  * In addition to any events documented in the section below, these events are also available:
-  *
-  * <event>onmouseupoutside</event>: Sent when the mouse button comes up outside a
-  * view This event is only sent by views which are clickable
-  * after it went down over the view. This event is only sent by views which
-  * are clickable
 
-  * <event>onmousedragin</event>: Sent when the mouse button went down over the view
-  * and the button is still down when mouse rolls back inside the view.
-  * This event is only sent by views which are clickable
-
-  * <event>onmousedragout</event>: Sent when the mouse button went down over the view
-  * and the button is still down when mouse rolls outside the view.
-  * This event is only sent by views which are clickable
   */
 class LzView extends LzNode {
 
@@ -76,31 +63,44 @@ class LzView extends LzNode {
   */
 static var tagname = 'view';
 
-/** Event called when this view adds a subview */
+/** Event called when this view adds a subview   
+  * @access private
+  * @lzxtype event
+  */
 var onaddsubview = LzDeclaredEvent;
+/** @access private */
 var onbgcolor = LzDeclaredEvent;
 /** The onblur script is executed when an element loses focus either
   * by the pointing device or by tabbing navigation.
+  * @lzxtype event
   */
 var onblur = LzDeclaredEvent;
 /** The onclick script is executed when the pointing device button is
   * clicked over an element.
+  * @lzxtype event  
   */
 var onclick = LzDeclaredEvent;
+/** @access private */
 var onclickable = LzDeclaredEvent;
 /** The onfocus script is executed when an element receives focus
   * either by the pointing device or by tabbing navigation.
+  * @lzxtype event  
   */
 var onfocus = LzDeclaredEvent;   // From LzFocus
+/** @lzxtype event */   
 var onframe = LzDeclaredEvent;
 
-/** Event for changes to view's <attribute>height</attribute> property */
+/** Event for changes to view's <attribute>height</attribute> property 
+  * @lzxtype event
+  */
 var onheight = LzDeclaredEvent;
+/** @lzxtype event */   
 var onimload = LzDeclaredEvent;
 
 /** The onkeyup script is executed when this view has the focus and a
   * key is released. This event is sent with the keycode for the key that 
   * went up.
+  * @lzxtype event
   */
 var onkeyup = LzDeclaredEvent;   // From LzFocus
 
@@ -109,71 +109,140 @@ var onkeyup = LzDeclaredEvent;   // From LzFocus
   * key that is held down.  If you want the script executed only
   * once, use onkeyup. This event is sent with the keycode for the key that is
   * down.
+  * @lzxtype event
   */
 var onkeydown = LzDeclaredEvent; // From LzFocus
+/** @lzxtype event */
 var onlastframe = LzDeclaredEvent;
+/** @lzxtype event */
 var onload = LzDeclaredEvent;
+/** @lzxtype event */
 var onloadperc = LzDeclaredEvent;
 
 /** <event>onerror</event>: Sent when there is an error loading the view's resource.
   * The argument sent with the event is the error string sent by the server.
+  * @access private
+  * @lzxtype event
   */
 var onerror = LzDeclaredEvent;
 
 /**
   * <event>ontimeout</event>: Sent when the request to load media for the view times
   * out
+  * @lzxtype event
   */
 var ontimeout = LzDeclaredEvent;
 /** The onmousedown script is executed when the pointing device button is
   * pressed over an element.
+  * @lzxtype event
   */
 var onmousedown = LzDeclaredEvent;
 
 /** The onmouseout script is executed when the point device is moved
   * so that is is no longer over an element.
+  * @lzxtype event
   */
 var onmouseout = LzDeclaredEvent;
+
 /** The onmouseover script is executed when the pointing device is
   * moved onto an element.
+  * @lzxtype event  
   */
 var onmouseover = LzDeclaredEvent;
+
+/** @access private 
+  * @lzxtype event 
+  */
 var onmousetrackover = LzDeclaredEvent;
+
+/** @access private 
+  * @lzxtype event 
+  */
 var onmousetrackup = LzDeclaredEvent;
 
 /** The onmouseup script is executed when the pointing device button is
   * released over an element.
+  * @lzxtype event
   */
 var onmouseup = LzDeclaredEvent;
-/** Sent when a view changes its opacity */
+
+/** 
+  * Sent when a view changes its opacity 
+  * @lzxtype event
+  */
 var onopacity = LzDeclaredEvent;
 
+/** @access private 
+  * @lzxtype event 
+  */
 var onplay = LzDeclaredEvent;
 
-/** Event called when this view removes a subview */
+/** 
+  * Event called when this view removes a subview 
+  * @lzxtype event
+  */ 
 var onremovesubview = LzDeclaredEvent;
 
+/** @access private 
+  * @lzxtype event 
+  */
 var onresource = LzDeclaredEvent;
+/** @access private 
+  * @lzxtype event 
+  */
 var onresourceheight = LzDeclaredEvent;
+/** @access private 
+  * @lzxtype event 
+  */
 var onresourcewidth = LzDeclaredEvent;
+/** @access private 
+  * @lzxtype event 
+  */
 var onrotation = LzDeclaredEvent;
+/** @access private 
+  * @lzxtype event 
+  */
 var onstop = LzDeclaredEvent;
+/** @access private 
+  * @lzxtype event 
+  */
 var ontotalframes = LzDeclaredEvent;
+/** @access private 
+  * @lzxtype event 
+  */
 var onunstretchedheight = LzDeclaredEvent;
+/** @access private 
+  * @lzxtype event 
+  */
 var onunstretchedwidth = LzDeclaredEvent;
+/** @lzxtype event */
 var onvisible = LzDeclaredEvent;
-/** @access private */
+/** @access private 
+  * @lzxtype event 
+  */
 var onvisibility = LzDeclaredEvent;
 
-/** event for changes to view's <attribute>width</attribute> property */
+/** event for changes to view's <attribute>width</attribute> property 
+ * @lzxtype event 
+ */
 var onwidth = LzDeclaredEvent;
 
-/** event for changes to view's <attribute>x</attribute> property */
+/** event for changes to view's <attribute>x</attribute> property 
+ * @lzxtype event
+ */
 var onx = LzDeclaredEvent;
+/** @access private 
+  * @lzxtype event 
+  */
 var onxoffset = LzDeclaredEvent;
 
-/** event for changes to view's <attribute>y</attribute> property */
+/** event for changes to view's <attribute>y</attribute> property 
+  * @lzxtype event
+  */
 var ony = LzDeclaredEvent;
+/** @access private 
+  * @lzxtype event 
+  */
 var onyoffset = LzDeclaredEvent;
 
 /**
@@ -186,10 +255,13 @@ var onyoffset = LzDeclaredEvent;
   * ondblclick event, will simply send two click events.
   * The view's doubleclick time can be adjusted by setting its
   * DOUBLE_CLICK_TIME attribute
+  * @lzxtype event
   */
 var ondblclick = LzDeclaredEvent;
+/** @access private */
 var DOUBLE_CLICK_TIME = 500;
 
+/** @access private */
 var capabilities = LzSprite.prototype.capabilities;
 
 /**
@@ -311,6 +383,7 @@ function __LZinstantiationDone (){
 /** Reference to closest masked view in the hierarchy at or above
   * this one
   * @type LzView
+  * @keywords readonly
   */
 var mask;
 
@@ -318,6 +391,7 @@ var mask;
   * See focus manager (LzFocus) for more details.
   * @type Boolean
   * @lzxtype boolean
+  * @keywords readonly
   */
 var focusable = false;
 
@@ -332,6 +406,7 @@ var focustrap;
   * @lzxdefault "false"
   * @keywords final
   */
+var clip = false;
 setters.clip =  -1;
 setters.x ="setX"
 setters.y =  "setY";
@@ -350,6 +425,7 @@ setters.visibility = "setVisibility"
   * @lzxdefault "left"
   * @keywords final
   */
+var align = "left"
 setters.align = "setAlign"
 
 /**
@@ -359,6 +435,7 @@ setters.align = "setAlign"
   * @lzxtype "top" | "middle" | "bottom" | constraint
   * @lzxdefault "top"
   */
+var valign = "top"
 setters.valign = "setValign"
 
 /** The URL from which to load the resource for this
@@ -368,6 +445,14 @@ setters.valign = "setValign"
   * @lzxtype expression
   * @access private
   */
+var source;
+/** 
+  * As a setter, this is private. It's not really a setter, because
+  * it talks to a private attribute, "source". 
+  * The method setSource, defined below, is public, but it's not
+  * a setter. [bshine 2007.11.07]
+  * @access private 
+  */ 
 setters.source = "setSource";
 /** The background color of the canvas. 
   * @lzxtype token
@@ -378,6 +463,7 @@ setters.bgcolor =  "setBGColor";
   * be loaded.
   * @type String
   */
+var resource;
 setters.resource =  "setResource";
 
 /** If true, this view intercepts click events; otherwise they are passed
@@ -387,9 +473,10 @@ setters.resource =  "setResource";
   */
 setters.clickable =  "setClickable";
 /** Setting clickRegion to a vector-based SWF turns the SWF shape into a clickable hotspot.
-  * @access private
+  * @access public
   * @lzxtype string
   */
+var clickregion;   
 setters.clickregion =  "__LZsetClickRegion";
 /** The cursor to display when the mouse is over this view. Any
   * resource can be used as a cursor. This attribute can be set for
@@ -397,12 +484,14 @@ setters.clickregion =  "__LZsetClickRegion";
   * clickable to true.
   * @lzxtype token
   */
+var cursor;  
 setters.cursor =  "setCursor";
 /** A color to use to render object that appears inside this view,
   * which includes any vector or bitmap art in the view's resource
   * and any contained views.
   * @lzxtype color
   */
+var fgcolor;   
 setters.fgcolor =  "setColor";
 /** The font to use for any @c{&lt;text>} or @c{&lt;inputtext>} elements that
   * appear inside this view. Like all the font properties
@@ -413,6 +502,7 @@ setters.fgcolor =  "setColor";
   * for any of its subviews.
   * @lzxtype string
   */
+var font;  
 setters.font = "setFontName" ;
 
 /** The style to use to render text fields that appear inside of
@@ -434,42 +524,51 @@ var fontsize;
   * default for this property is "none". This is used to resize a
   * view's contents by setting its width and/or height.
   * @lzxtype "width" | "height" | "both"
+  * @lzxdefault "none"
   */
+var stretches = "none"; 
 setters.stretches =   "stretchResource";
 /** If true, the resource attached to this view begins playing when
   * the view is instantiated.
   * @lzxtype boolean
   */
+var play;   
 setters.play =   "setPlay";
 /** Show or hide the handcursor for this view, if clickable */
 setters.showhandcursor =   "setShowHandCursor";
 
+var layout; 
 setters.layout =   "setLayout";
 
 /** Activate/inactivate children for accessibility
   * @type Boolean
   * @lzxtype boolean
   */
+var aaactive; 
 setters.aaactive =   "setAAActive";
 /** Set accessibility name
   * @type String
   * @lzxtype string
   */
+var aaname;
 setters.aaname =   "setAAName";
 /** Set accessibility description
   * @type String
   * @lzxtype string
   */
+var aadescription; 
 setters.aadescription =   "setAADescription";
 /** Set accessibility tab order
   * @type Number
   * @lzxtype number
   */
+var aatabindex;   
 setters.aatabindex =   "setAATabIndex";
 /** Set accessibility silencing/unsilencing
   * @type Boolean
   * @lzxtype boolean
   */
+var aasilent; 
 setters.aasilent =   "setAASilent";
 
 __LZdelayedSetters.layout = "setLayout";
@@ -492,6 +591,7 @@ setters.xoffset =  "setXOffset";
   */
 setters.yoffset = "setYOffset";
 
+/** @access private */
 var sprite = null;
 
 /** A value of true means that this view is shown. A
@@ -581,7 +681,7 @@ setters.height = "setHeight";
   * to scale a view by a percentage of its original size, or to determine the
   * aspect ratio for a view.
   * @type Number
-  * @modifiers readonly
+  * @keywords readonly
   */
 var unstretchedwidth =   0;
 /** If stretches is not set to none, the height
@@ -589,12 +689,12 @@ var unstretchedwidth =   0;
   * to scale a view by a percentage of its original size, or to determine the
   * aspect ratio for a view.
   * @type Number
-  * @modifiers readonly
+  * @keywords readonly
   */
 var unstretchedheight =   0;
 /** An array of the subviews that are children of this
   * view. This is initialized to an empty array for views that have no subviews.
-  * @modifiers readonly
+  * @keywords readonly
   */
 var subviews =   [];
 /** @access private */
@@ -630,7 +730,7 @@ var _yscale =   1;
 
 /** The total number of frames for this view's resource.
   * @type Number
-  * @modifiers readonly
+  * @keywords readonly
   */
 var totalframes =   0;
 /** If this view has a multi-frame resource, this allows setting which
@@ -649,30 +749,35 @@ var totalframes =   0;
 var frame =   0;
 setters.frame =   "setResourceNumber";
 
-/** @keywords deprecated */
+/** @keywords deprecated 
+  * @access private 
+  */
 var loadperc =   0;
 /** For views whose resource is loaded at runtime,
   * the ratio of the loaded frames to the total frames. This is a number between
   * zero and 1.
   * @type Number
-  * @modifiers readonly
+  * @keywords readonly
   */
 var framesloadratio =   0;
 /** For views whose resource is loaded at runtime,
   * ratio of the loaded bytes to the total bytes. This is a number between 
   * zero and 1.
   * @type Number
+  * @keywords readonly
   */
 var loadratio =   0;
 
 /** If true, then setWidth() has been called on this
   * view, and the view will not be sized to its contents. 
   * @type Boolean
+  * @keywords readonly  
   */
 var hassetheight = false;
 /** If true, then setHeight() has been called on this
   * view, and the view will not be sized to its contents. 
   * @type Boolean
+  * @keywords readonly  
   */
 var hassetwidth = false;
 
@@ -688,9 +793,11 @@ var __LZisView = true;
 // @access private
 //
 //============================================================================
-
+/** @access private */
 var addedToParent = null;
+/** @access private */
 var checkPlayStatusDel = null;
+/** @access private */
 var masked = false;
 
 /**
@@ -698,9 +805,10 @@ var masked = false;
   * animation. This may be turned off to make the view snap to a
   * pixel boundary by setting pixellock to true.
   * @lzxtype booleanLiteral
+  * @modifiers final
   */
 var pixellock = null;
-
+/** @access private */
 var setButtonSize = null;
 
 var clickable = false;
@@ -709,6 +817,7 @@ var clickable = false;
   * @lzxtype boolean
   */
 var showhandcursor = null;
+/** @access private */
 var updatePlayDel = null;
 /**
   * A resource that is presented in the background of this view.  The
@@ -722,11 +831,11 @@ var updatePlayDel = null;
 var resource = null;
 
 /**
-  * @modifiers readonly
+  * @keywords readonly
   */
 var resourcewidth = null;
 /**
-  * @modifiers readonly
+  * @keywords readonly
   */
 var resourceheight = null;
 
@@ -2513,6 +2622,7 @@ function shouldYieldFocus ( ){
 
 /** blurring is true if the view is in the process of losing focus.
   * @type Boolean
+  * @access private 
   */
 var blurring = false;
 
