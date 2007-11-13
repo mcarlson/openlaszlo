@@ -582,4 +582,59 @@ Lz = {
     _sendMouseWheel: function(d) {
         if (d != null) this.callMethod("LzKeys.__mousewheelEvent(" + d + ")"); 
     }
+    ,/**
+     * Utility method for attaching DOM events
+     *
+     * @param eventscope:Object Scope to register the event, e.g. window 
+     * @param eventname:String Event name to register in eventscope, e.g. 'load'
+     * @param callbackscope:Object Scope to receive the callback
+     * @param callbackname:String Method name to receive callback in callbackscope
+     */
+    attachEventHandler: function(eventscope, eventname, callbackscope, callbackname) {
+        if (! callbackscope || !callbackname || !callbackscope[callbackname]) {
+            return;
+        }
+        var s = eventscope + eventname + callbackscope + callbackname;
+        var handler = function() {
+            var a = window.event ? [window.event] : arguments;
+            callbackscope[callbackname].apply(callbackscope, a);
+        }
+        this._handlers[s] = handler;
+        //alert('add '+ s);
+        if(eventscope['addEventListener']) {
+            eventscope.addEventListener(eventname, handler, false);
+            return true;
+        } else if(eventscope['attachEvent']) {
+            return eventscope.attachEvent("on" + eventname, handler);
+        } 
+    }
+    ,/**
+     * Utility method for removing DOM events
+     *
+     * @param eventscope:Object Scope to register the event, e.g. window 
+     * @param eventname:String Event name to register in eventscope, e.g. 'load'
+     * @param callbackscope:Object Scope to receive the callback
+     * @param callbackname:String Method name to receive callback in callbackscope
+     */
+    removeEventHandler: function(eventscope, eventname, callbackscope, callbackname) {
+        var s = eventscope + eventname + callbackscope + callbackname;
+        var handler = this._handlers[s];
+        //console.log('remove', this._handlers);
+        this._handlers[s] = null;
+        if (! handler) return;
+        if(eventscope['removeEventListener']) {
+            eventscope.removeEventListener(eventname, handler, false);
+            return true;
+        } else if(eventscope['detachEvent']) {
+            return eventscope.detachEvent("on" + eventname, handler);
+        } 
+    }
+    ,/** @access private */
+    _handlers: {} 
+    ,/** @access private */
+    _cleanupHandlers: function() {
+        Lz._handlers = {};
+        //alert('_cleanupHandlers');
+    }
 };
+Lz.attachEventHandler(window, 'beforeunload', Lz, '_cleanupHandlers');
