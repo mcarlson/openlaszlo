@@ -76,6 +76,10 @@ class LzHTTPDataProvider extends LzDataProvider {
      * @access private
      */
     function doRequest ( dreq ) {
+        // dreq.src can be null if the dataset is loaded from initialdata
+        if (!dreq.src)
+            return;
+
         //build request
         var proxied = dreq.proxied;
         // Check for previously created loader, we can reuse it
