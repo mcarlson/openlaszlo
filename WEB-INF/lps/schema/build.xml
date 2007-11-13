@@ -56,14 +56,12 @@
   <target name="dtd" 
           description="Generate DTD" depends="rng"
           unless="schemas.uptodate" >
-          <?ignore BEN HATES THE DTD
       <exec executable="${python.exec}" taskname="rng2dtd" failonerror="true" >
         <arg value="rng2dtd.py"/>
         <arg value="${rng}"/>
         <arg value="-o"/>
         <arg value="${dtd}"/>
       </exec>
-      ?>
   </target>
 
   <target name="clean" 
