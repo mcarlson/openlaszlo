@@ -1,6 +1,9 @@
 <chapter id="scripting-tutorial">
 <?dbhtml dir="tutorials" ?>
 
+<!-- remove commented out code that the build ignored. IORIO 6 nov 2007 -->
+<!-- fix LPP-5041, IORIO 6 nov 2007 -->
+
 <title>Introduction to Scripting</title>
 
 <para/><section><title>Introduction</title>
@@ -11,11 +14,7 @@
 Within an LZX program, script can appear</para>
 <itemizedlist spacing="compact"><listitem><para>between &lt;script&gt; tags</para></listitem><listitem><para>between &lt;method&gt; tags</para></listitem><listitem><para>between &lt;handler&gt; tags</para></listitem><listitem><para>between quotation marks as an assigned value for an attribute</para></listitem></itemizedlist>
 
- 
-
-
-
-<para/></section><section><title>The &lt;script&gt; tag</title>
+ <para/></section><section><title>The &lt;script&gt; tag</title>
 
 <para>The quickest way to get a script running is to put it in
 <indexterm><primary>script</primary></indexterm><sgmltag class="element">&lt;script&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -37,20 +36,6 @@ scripting concepts.</para></note>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Using the debugger</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$1.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200" debug="true"&gt;
-  &lt;script&gt;
-    Debug.write("Hello, World!");
-  &lt;/script&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200" debug="true"&gt;
-  &lt;script&gt;
-    Debug.write("Hello, World!");
-  &lt;/script&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$1.lzx></example?>
-
 <para>We can now use our knowledge of JavaScript to build on this foundation:</para>
 
 <example role="live-example">
@@ -59,33 +44,6 @@ scripting concepts.</para></note>
    <textobject><textdata fileref="programs/scripting-tutorial-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Incorporating JavaScript</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$2.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200" debug="true"&gt;
-  &lt;script&gt;
-    // some random scripting
-    //
-    var someStr = "Hello, World!";
-    Debug.write(someStr);
-    var first = 4;
-    var second = 3;
-    var result = first + second;
-    Debug.write(result);
-   &lt;/script&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200" debug="true"&gt;
-  &lt;script&gt;
-    // some random scripting
-    //
-    var someStr = "Hello, World!";
-    Debug.write(someStr);
-    var first = 4;
-    var second = 3;
-    var result = first + second;
-    Debug.write(result);
-   &lt;/script&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$2.lzx></example?>
 <para/><section><title>JavaScript gotchas</title>
 <para>
 If you've never worked with JavaScript before, you may be surprised by some subtle features of the language.
@@ -97,43 +55,6 @@ For example, consider this slight expansion of the preceding program:</para>
    <textobject><textdata fileref="programs/scripting-tutorial-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>JavaScript subtleties</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$3.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200" debug="true"&gt;
-  &lt;script&gt;
-    // some random scripting
-    //
-    var someStr = "Hello, World!";
-    Debug.write(someStr);
-    var first = 4;
-    var second = 3;
-    var result = first + second;
-    Debug.write(result);
-    Debug.write(first + " plus " + second + " is " + first + second);
-    var two = 2;
-    if (2 == two) {
-      Debug.write("2 is two");
-    }
-  &lt;/script&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200" debug="true"&gt;
-  &lt;script&gt;
-    // some random scripting
-    //
-    var someStr = "Hello, World!";
-    Debug.write(someStr);
-    var first = 4;
-    var second = 3;
-    var result = first + second;
-    Debug.write(result);<emphasis role="em">
-    Debug.write(first + " plus " + second + " is " + first + second);
-    var two = 2;
-    if (2 == two) {
-      Debug.write("2 is two");
-    }</emphasis>
-  &lt;/script&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$3.lzx></example?>
 
 <para>Everything there is fine, except the "<literal>4 plus 3 is …</literal>" line. Four plus three should be 7, as in 
 the line immediately above it, right? What happened is that we concatenated numbers to strings 
@@ -201,35 +122,6 @@ and of course the particular application. The CDATA method is perhaps a little m
    <textobject><textdata fileref="programs/scripting-tutorial-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>JavaScript functions</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$7.lzx</filename><parameter/><code>
-&lt;canvas height="200" width="500" debug="true"&gt;
-  &lt;script&gt;
-    &lt;![CDATA[
-    // write a word to the debugger
-    //
-    function writeAWord(someWord) {
-      Debug.write(someWord);
-    }
-    
-    writeAWord("HELLO!");
-    ]]&gt;
-  &lt;/script&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="200" width="500" debug="true"&gt;
-  &lt;script&gt;
-    &lt;![CDATA[
-    // write a word to the debugger
-    //
-    <emphasis role="em">function writeAWord(someWord) {
-      Debug.write(someWord);
-    }
-    
-    writeAWord("HELLO!");</emphasis>
-    ]]&gt;
-  &lt;/script&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$7.lzx></example?>
 
 <para>Functions are global to the LZX document, and they follow the same scope rules as JavaScript.</para>
 
@@ -257,27 +149,10 @@ before. There are a few methods that apply to it. The
    <textobject><textdata fileref="programs/scripting-5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example" id="scripting-5"><title>a simple method</title><programlisting role="lzx-embednew"><filename>scripting-5.lzx</filename><parameter/><code>
-&lt;canvas height="200" width="500"&gt;
-  &lt;window x="20" y="20" width="150"
-          title="Simple Window" resizable="true"&gt;
-    &lt;button text="My button" 
-            onclick="this.parent.setAttribute('title', 'You clicked it');"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="200" width="500"&gt;
-  &lt;window x="20" y="20" width="150"
-          title="Simple Window" resizable="true"&gt;
-    &lt;button text="My button" 
-            onclick="this.parent.setAttribute('title', 'You clicked it');"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-5.lzx></example?>
 
 <para>Let's break this statement apart:</para>
 
-<programlisting>    onclick="this.parent.setTitle('You clicked it');"</programlisting>
+<programlisting>    onclick="this.parent.setAttribute('title', 'You clicked it');"</programlisting>
 
  
 <para>First, there's the </para>
@@ -299,7 +174,7 @@ which points to that view's hierarchical parent. View hierarchies are discussed 
 
 <para>Now we're going to call a method. With very few exceptions, tags in an lzx file correspond to run-time objects of the view system. 
 Using xml, we can configure those objects with attributes and child nodes. Using script, we can call their APIs.
- From the documentation, we know that the <indexterm><primary>window</primary></indexterm><sgmltag class="element">&lt;window&gt;</sgmltag> has a <indexterm><primary><literal>setTitle()</literal></primary></indexterm><methodname>setTitle()</methodname> method that will change the
+ From the documentation, we know that the <indexterm><primary>window</primary></indexterm><sgmltag class="element">&lt;window&gt;</sgmltag> has a <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method that will change the
  window title to whatever string you give it.
 </para> 
 <para>
@@ -317,31 +192,6 @@ all the attributes of a <indexterm><primary>view</primary></indexterm><sgmltag c
    <textobject><textdata fileref="programs/scripting-tutorial-$9.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Manipulating &lt;view&gt; attributes</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$9.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="30" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="150"
-          title="Simple Window"&gt;
-    &lt;button text="My button" 
-            onclick="this.parent.parent.windowTwo.setAttribute('x', 200)"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="30" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="150"
-          title="Simple Window"&gt;
-    &lt;button text="My button" 
-            onclick="this.parent.parent.windowTwo.setAttribute('x', 200)"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$9.lzx></example?>
 
 <para>We're just building on the previous example here. Instead of addressing the parent view of the button, we are going two up, then one down. 
 <literal>this.parent.parent</literal> refers to the canvas, and we point to Window 2 by using its <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> (windowTwo).</para>
@@ -361,33 +211,6 @@ Looking again at the API reference for the <indexterm><primary>LzView</primary><
    <textobject><textdata fileref="programs/scripting-tutorial-$10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>getting attributes</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$10.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="30" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="150"
-          title="Simple Window"&gt;
-    &lt;button text="My button" 
-            onclick="this.parent.parent.windowTwo.setAttribute('x',
-            this.parent.parent.windowTwo.getAttribute('x') + 20)"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="30" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="150"
-          title="Simple Window"&gt;
-    &lt;button text="My button" 
-            onclick="this.parent.parent.windowTwo.setAttribute('x',
-            this.parent.parent.windowTwo.getAttribute('x') + 20)"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$10.lzx></example?>
 
 <para>That works, but the code is getting pretty messy. It would be more elegant to encase all the code in a block and call 
 it whenever the button is clicked…. To do what, we could write a function:</para>
@@ -398,52 +221,6 @@ it whenever the button is clicked…. To do what, we could write a function:</pa
    <textobject><textdata fileref="programs/scripting-tutorial-$11.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Moving window by function call</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$11.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;script&gt;
-    // Moves the second window twenty pixels to the right
-    //
-    function moveWindow() {
-      var increment = 20;
-      var originalX = canvas.windowTwo.getAttribute('x');
-      var newX = originalX + increment;
-      canvas.windowTwo.setAttribute('x', newX);
-    }
-  &lt;/script&gt;
-  &lt;window x="100" y="30" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="150"
-          title="Simple Window"&gt;
-    &lt;button text="My button" 
-              onclick="moveWindow();"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;script&gt;
-    <emphasis role="em">// Moves the second window twenty pixels to the right
-    //
-    function moveWindow() {
-      var increment = 20;
-      var originalX = canvas.windowTwo.getAttribute('x');
-      var newX = originalX + increment;
-      canvas.windowTwo.setAttribute('x', newX);
-    }</emphasis>
-  &lt;/script&gt;
-  &lt;window x="100" y="30" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="150"
-          title="Simple Window"&gt;
-    &lt;button text="My button" 
-              onclick="<emphasis role="em">moveWindow();</emphasis>"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$11.lzx></example?>
-
 <para>Notice how we use the "<literal>canvas.</literal>" syntax for pointing to the second window. We have to address the view <emphasis role="em">absolutely</emphasis>. 
 The code is a lot easier to understand, because we can break it up over several lines, comment it and assign appropriately-named variables.</para>
 
@@ -456,48 +233,6 @@ a method <emphasis role="em">of the button</emphasis>.</para>
    <textobject><textdata fileref="programs/scripting-tutorial-$12.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>From function to method</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$12.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="30" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="200"
-          title="Simple Window"&gt;
-    &lt;button text="My button" onclick="this.moveWindow()"&gt;
-      &lt;!-- Moves the second window twenty pixels 
-           to the right --&gt;
-      &lt;method name="moveWindow"&gt;
-        var increment = 20;
-        var originalX = this.parent.parent.windowTwo.getAttribute('x');
-        var newX = originalX + increment;
-        this.parent.parent.windowTwo.setAttribute('x', newX);
-      &lt;/method&gt;
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="30" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="200"
-          title="Simple Window"&gt;
-    &lt;button text="My button" onclick="<emphasis role="em">this.moveWindow()</emphasis>"&gt;
-      <emphasis role="em">&lt;!-- Moves the second window twenty pixels 
-           to the right --&gt;
-      &lt;method name="moveWindow"&gt;
-        var increment = 20;
-        var originalX = this.parent.parent.windowTwo.getAttribute('x');
-        var newX = originalX + increment;
-        this.parent.parent.windowTwo.setAttribute('x', newX);
-      &lt;/method&gt;</emphasis>
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$12.lzx></example?>
-
 <para>Since methods are not not global, we have to call them relatively. In the case of the button, we use <literal>this.moveWindow()</literal>. 
 
 In theory we could have a second button that, when clicked, would call a method of the first button. The only difference would be the addressing. 
@@ -516,56 +251,6 @@ so there can be more than one view with the same name in a file (they just can't
    <textobject><textdata fileref="programs/scripting-tutorial-$13.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>One button calls another's method</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$13.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="210"
-          title="Simple Window"&gt;
-    &lt;simplelayout axis="x" spacing="4"/&gt;
-    &lt;button text="My button" name="button1" 
-            onclick="this.moveWindow()"&gt;
-      &lt;!-- Moves the second window twenty pixels 
-           to the right --&gt;
-      &lt;method name="moveWindow"&gt;
-        var increment = 20;
-        var originalX = this.parent.parent.windowTwo.getAttribute('x');
-        var newX = originalX + increment;
-        this.parent.parent.windowTwo.setAttribute('x', newX);
-      &lt;/method&gt;
-    &lt;/button&gt;
-    &lt;button text="Bigger Button" 
-            onclick="this.parent.button1.moveWindow()"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60" 
-          title="Window 2" name="windowTwo"&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="210"
-          title="Simple Window"&gt;
-    <emphasis role="em">&lt;simplelayout axis="x" spacing="4"/&gt;</emphasis>
-    &lt;button text="My button" <emphasis role="em">name="button1"</emphasis> 
-            onclick="this.moveWindow()"&gt;
-      &lt;!-- Moves the second window twenty pixels 
-           to the right --&gt;
-      &lt;method name="moveWindow"&gt;
-        var increment = 20;
-        var originalX = this.parent.parent.windowTwo.getAttribute('x');
-        var newX = originalX + increment;
-        this.parent.parent.windowTwo.setAttribute('x', newX);
-      &lt;/method&gt;
-    &lt;/button&gt;
-    <emphasis role="em">&lt;button text="Bigger Button" 
-            onclick="this.parent.button1.moveWindow()"/&gt;</emphasis>
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$13.lzx></example?>
-
 
 <para>Both buttons now cause the window to move. However, it's confusing that one button points to a method in another button. 
 Since windowTwo is doing the moving, why not make the method part of the window, and have both buttons point to that? 
@@ -578,53 +263,6 @@ access it globally:</para>
    <textobject><textdata fileref="programs/scripting-tutorial-$14.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using the &lt;ID&gt; tag</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$14.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60" 
-          title="Window 2" name="windowTwo" id="windowTwoId"&gt;
-    &lt;!-- Moves the second window twenty pixels 
-         to the right --&gt;
-    &lt;method name="moveWindow"&gt;
-      var increment = 20;
-      var originalX = this.getAttribute('x');
-      var newX = originalX + increment;
-      this.setAttribute('x', newX);
-    &lt;/method&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="210"
-      title="Simple Window"&gt;
-    &lt;simplelayout axis="x" spacing="4"/&gt;
-    &lt;button text="My button" name="button1" 
-            onclick="windowTwoId.moveWindow()"/&gt;
-    &lt;button text="Bigger Button" 
-            onclick="this.parent.parent.windowTwo.moveWindow()"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60" 
-          title="Window 2" name="windowTwo" id="windowTwoId"&gt;
-    &lt;!-- Moves the second window twenty pixels 
-         to the right --&gt;
-    <emphasis role="em">&lt;method name="moveWindow"&gt;
-      var increment = 20;
-      var originalX = this.getAttribute('x');
-      var newX = originalX + increment;
-      this.setAttribute('x', newX);
-    &lt;/method&gt;</emphasis>
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="210"
-      title="Simple Window"&gt;
-    &lt;simplelayout axis="x" spacing="4"/&gt;
-    &lt;button text="My button" name="button1" 
-            onclick="<emphasis role="em">windowTwoId.moveWindow()</emphasis>"/&gt;
-    &lt;button text="Bigger Button" 
-            onclick="<emphasis role="em">this.parent.parent.windowTwo.moveWindow()</emphasis>"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$14.lzx></example?>
 
 <para>Just to illustrate <indexterm><primary>id</primary></indexterm><sgmltag class="attribute">id</sgmltag>s and <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag>s, one button is addressing the window
  relatively using its <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag>, and the other globally, using its <indexterm><primary>id</primary></indexterm><sgmltag class="attribute">id</sgmltag>. 
@@ -646,64 +284,6 @@ Move the box left and right, perhaps? We might write another method to move the 
    <textobject><textdata fileref="programs/scripting-tutorial-$15.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>methods and arguments</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$15.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60" 
-          title="Window 2" name="windowTwo" id="windowTwoId"&gt;
-    &lt;!-- Moves the second window twenty pixels 
-         in specified direction --&gt;
-    &lt;method name="moveWindow" args="direction"&gt;
-      // decide which direction to go
-      if (direction == "left") {
-       var increment = -20;
-      } else if (direction == "right") {
-        var increment = 20;
-      }
-      var originalX = this.getAttribute('x');
-      var newX = originalX + increment;
-      this.setAttribute('x', newX);
-    &lt;/method&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="210"
-      title="Simple Window"&gt;
-    &lt;simplelayout axis="x" spacing="4"/&gt;
-    &lt;button text="Move Left" name="button1" 
-            onclick="windowTwoId.moveWindow('left')"/&gt;
-    &lt;button text="Move Right" 
-            onclick="windowTwoId.moveWindow('right')"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60" 
-          title="Window 2" name="windowTwo" id="windowTwoId"&gt;
-    &lt;!-- Moves the second window twenty pixels 
-         in specified direction --&gt;
-    &lt;method name="moveWindow" <emphasis role="em">args="direction"</emphasis>&gt;
-      // decide which direction to go
-      <emphasis role="em">if (direction == "left") {
-       var increment = -20;
-      } else if (direction == "right") {
-        var increment = 20;
-      }</emphasis>
-      var originalX = this.getAttribute('x');
-      var newX = originalX + increment;
-      this.setAttribute('x', newX);
-    &lt;/method&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="210"
-      title="Simple Window"&gt;
-    &lt;simplelayout axis="x" spacing="4"/&gt;
-    &lt;button text="Move Left" name="button1" 
-            onclick="<emphasis role="em">windowTwoId.moveWindow('left')</emphasis>"/&gt;
-    &lt;button text="Move Right" 
-            onclick="<emphasis role="em">windowTwoId.moveWindow('right')</emphasis>"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$15.lzx></example?>
-
 <para>We can pass more than one argument to a method, just as with a function:</para>
 
 <example role="live-example">
@@ -712,72 +292,6 @@ Move the box left and right, perhaps? We might write another method to move the 
    <textobject><textdata fileref="programs/scripting-tutorial-$16.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Passing multiple arguments to a method</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$16.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60"
-          title="Window 2" name="windowTwo" id="windowTwoId"&gt;
-    &lt;!-- Moves the second window twenty pixels 
-         in specified direction --&gt;
-    &lt;method name="moveWindow" args="direction, distance"&gt;
-      // decide which direction to go
-      if (direction == "left") {
-        var increment = -1 * distance;
-      } else if (direction == "right") {
-        var increment = distance;
-      }
-      var originalX = this.getAttribute('x');
-      var newX = originalX + increment;
-      this.setAttribute('x', newX);
-    &lt;/method&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="300"
-      title="Simple Window"&gt;
-      &lt;simplelayout axis="x" spacing="4"/&gt;
-      &lt;button text="Left 2" name="button1" 
-              onclick="windowTwoId.moveWindow('left', 2)"/&gt;
-      &lt;button text="Left 20" name="button2" 
-              onclick="windowTwoId.moveWindow('left', 20)"/&gt;
-      &lt;button text="Right 20" 
-              onclick="windowTwoId.moveWindow('right', 20)"/&gt;
-      &lt;button text="Right 2" 
-              onclick="windowTwoId.moveWindow('right', 2)"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60"
-          title="Window 2" name="windowTwo" id="windowTwoId"&gt;
-    &lt;!-- Moves the second window twenty pixels 
-         in specified direction --&gt;
-    &lt;method name="moveWindow" args="direction<emphasis role="em">, distance</emphasis>"&gt;
-      // decide which direction to go
-      if (direction == "left") {
-        <emphasis role="em">var increment = -1 * distance;</emphasis>
-      } else if (direction == "right") {
-        <emphasis role="em">var increment = distance;</emphasis>
-      }
-      var originalX = this.getAttribute('x');
-      var newX = originalX + increment;
-      this.setAttribute('x', newX);
-    &lt;/method&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="300"
-      title="Simple Window"&gt;
-      &lt;simplelayout axis="x" spacing="4"/&gt;
-      &lt;button text="Left 2" name="button1" 
-              onclick="windowTwoId.<emphasis role="em">moveWindow('left', 2)</emphasis>"/&gt;
-      &lt;button text="Left 20" name="button2" 
-              onclick="windowTwoId.<emphasis role="em">moveWindow('left', 20)</emphasis>"/&gt;
-      &lt;button text="Right 20" 
-              onclick="windowTwoId.<emphasis role="em">moveWindow('right', 20)</emphasis>"/&gt;
-      &lt;button text="Right 2" 
-              onclick="windowTwoId.<emphasis role="em">moveWindow('right', 2)</emphasis>"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$16.lzx></example?>
-
 
 <para/></section><section><title>Using attributes to reduce complexity</title>
 
@@ -790,91 +304,6 @@ Here we put the functionality into the button itself:</para>
    <textobject><textdata fileref="programs/scripting-tutorial-$17.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>More on attributes</title><programlisting role="lzx-embednew"><filename>scripting-tutorial-$17.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60"
-        title="Window 2" name="windowTwo" id="windowTwoId"&gt;
-    &lt;!-- Moves the second window specified number of pixels 
-         in specified direction --&gt;
-    &lt;method name="moveWindow" args="buttonObj"&gt;
-      direction = buttonObj.getAttribute("direction");
-      distance = parseInt(buttonObj.getAttribute("distance"));
-      // decide which direction to go
-      if (direction == "left") {
-       var increment = -1 * distance;
-      } else if (direction == "right") {
-        var increment = distance;
-      }
-      var originalX = this.getAttribute('x');
-      var newX = originalX + increment;
-      this.setAttribute('x', newX);
-    &lt;/method&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="300"
-      title="Simple Window"&gt;
-    &lt;simplelayout axis="x" spacing="4"/&gt;
-    &lt;button onclick="windowTwoId.moveWindow(this)"&gt;Left 2
-      &lt;attribute name="direction" value="'left'"/&gt;
-      &lt;attribute name="distance" value="'2'"/&gt;
-    &lt;/button&gt;
-    &lt;button onclick="windowTwoId.moveWindow(this)"&gt;Left 20
-      &lt;attribute name="direction" value="'left'"/&gt;
-      &lt;attribute name="distance" value="'20'"/&gt;
-    &lt;/button&gt;
-    &lt;button onclick="windowTwoId.moveWindow(this)"&gt;Right 20
-      &lt;attribute name="direction" value="'right'"/&gt;
-      &lt;attribute name="distance" value="'20'"/&gt;
-    &lt;/button&gt;
-    &lt;button onclick="windowTwoId.moveWindow(this)"&gt;Right 2
-      &lt;attribute name="direction" value="right" type="string"/&gt;
-      &lt;attribute name="distance" value="'2'"/&gt;
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;window x="100" y="60"
-        title="Window 2" name="windowTwo" id="windowTwoId"&gt;
-    &lt;!-- Moves the second window specified number of pixels 
-         in specified direction --&gt;
-    <emphasis role="em">&lt;method name="moveWindow" args="buttonObj"&gt;
-      direction = buttonObj.getAttribute("direction");
-      distance = parseInt(buttonObj.getAttribute("distance"));</emphasis>
-      // decide which direction to go
-      if (direction == "left") {
-       var increment = -1 * distance;
-      } else if (direction == "right") {
-        var increment = distance;
-      }
-      var originalX = this.getAttribute('x');
-      var newX = originalX + increment;
-      this.setAttribute('x', newX);
-    &lt;/method&gt;
-    &lt;text&gt;This is the second window.&lt;/text&gt;
-  &lt;/window&gt;
-  &lt;window x="20" y="20" width="300"
-      title="Simple Window"&gt;
-    &lt;simplelayout axis="x" spacing="4"/&gt;
-    &lt;button onclick="windowTwoId.moveWindow(<emphasis role="em">this</emphasis>)"&gt;Left 2
-      <emphasis role="em">&lt;attribute name="direction" value="'left'"/&gt;
-      &lt;attribute name="distance" value="'2'"/&gt;</emphasis>
-    &lt;/button&gt;
-    &lt;button onclick="windowTwoId.moveWindow(<emphasis role="em">this</emphasis>)"&gt;Left 20
-      <emphasis role="em">&lt;attribute name="direction" value="'left'"/&gt;
-      &lt;attribute name="distance" value="'20'"/&gt;</emphasis>
-    &lt;/button&gt;
-    &lt;button onclick="windowTwoId.moveWindow(<emphasis role="em">this</emphasis>)"&gt;Right 20
-      <emphasis role="em">&lt;attribute name="direction" value="'right'"/&gt;
-      &lt;attribute name="distance" value="'20'"/&gt;</emphasis>
-    &lt;/button&gt;
-    &lt;button onclick="windowTwoId.moveWindow(<emphasis role="em">this</emphasis>)"&gt;Right 2
-      <emphasis role="em">&lt;attribute name="direction" value="right" type="string"/&gt;
-      &lt;attribute name="distance" value="'2'"/&gt;</emphasis>
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/scripting-tutorial-$17.lzx></example?>
 
 <para>The buttons have attributes which we have named "distance" and "direction". 
 The values of those attributes need to be in <emphasis role="i">double quoted strings</emphasis>, because the value needs to be a JavaScript expression, 

@@ -1,6 +1,9 @@
 <chapter id="classes-tutorial">
 <?dbhtml dir="tutorials" ?>
 
+<!-- remove commented out code that the build ignored. IORIO 3 nov 2007 -->
+<!-- fix LPP-5041, IORIO 6 nov 2007 -->
+
 <title>Introduction to Classes and Object Oriented Programming</title>
 <para/><section id="classes-tutorial.basics"><title>Introduction</title>
 <para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>
@@ -19,23 +22,6 @@ The <indexterm><primary>class</primary></indexterm><sgmltag class="element">&lt;
    <textobject><textdata fileref="programs/classes-tutorial-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Simple Class Example</title><programlisting role="lzx-embednew"><filename>classes-tutorial-$1.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="80"&gt;
-  &lt;class name="MyClass" width="80" height="25" bgcolor="#CFD9AB"&gt;
-    &lt;text align="center" valign="middle"&gt;Hello, World!&lt;/text&gt;
-  &lt;/class&gt;
-  
-  &lt;MyClass name="myFirstInstance"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="80"&gt;
-  &lt;class name="MyClass" width="80" height="25" bgcolor="#CFD9AB"&gt;
-    &lt;text align="center" valign="middle"&gt;Hello, World!&lt;/text&gt;
-  &lt;/class&gt;
-  
-  &lt;MyClass name="myFirstInstance"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/classes-tutorial-$1.lzx></example?>
 
 <para>The <indexterm><primary>class</primary></indexterm><sgmltag class="element">&lt;class&gt;</sgmltag> tag defined the class, and the <indexterm><primary>MyClass</primary></indexterm><sgmltag class="element">&lt;MyClass&gt;</sgmltag> tag <emphasis role="i">instantiated</emphasis> it. 
 Everything that was in the definition of the class is <emphasis role="i">inherited</emphasis> by each instance of it that is created.
@@ -83,27 +69,6 @@ didn't specify <indexterm><primary>x</primary></indexterm><sgmltag class="attrib
    <textobject><textdata fileref="programs/classes-tutorial-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Extending the 'button' class</title><programlisting role="lzx-embednew"><filename>classes-tutorial-$2.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="80"&gt;
-  &lt;class name="SpecialButton" extends="button" onclick="changeLabel()"&gt;
-    &lt;method name="changeLabel"&gt;
-      this.setAttribute('text', 'Clicked! ');
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;SpecialButton&gt;Not clicked&lt;/SpecialButton&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="80"&gt;
-  &lt;class name="SpecialButton" extends="button" onclick="changeLabel()"&gt;
-    &lt;method name="changeLabel"&gt;
-      this.setAttribute('text', 'Clicked! ');
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;SpecialButton&gt;Not clicked&lt;/SpecialButton&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/classes-tutorial-$2.lzx></example?>
 
 <para>Since the <indexterm><primary>button</primary></indexterm><sgmltag class="element">&lt;button&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: button-->
@@ -118,41 +83,6 @@ that extends it can also take the text childnode. The method <indexterm><primary
    <textobject><textdata fileref="programs/classes-tutorial-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Overwriting methods</title><programlisting role="lzx-embednew"><filename>classes-tutorial-$3.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="80"&gt;
-  &lt;class name="SpecialButton" extends="button" onclick="changeLabel()"&gt;
-    &lt;method name="changeLabel"&gt;
-      this.setAttribute('text', 'Clicked!');
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;simplelayout axis="y" spacing="10"/&gt;
-  &lt;SpecialButton&gt;Not clicked&lt;/SpecialButton&gt;
-  &lt;SpecialButton&gt;
-    Click Me Now
-    &lt;method name="changeLabel"&gt;
-      this.setAttribute('text', 'Smashing!');
-    &lt;/method&gt;
-  &lt;/SpecialButton&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="80"&gt;
-  &lt;class name="SpecialButton" extends="button" onclick="changeLabel()"&gt;
-    &lt;method name="changeLabel"&gt;
-      this.setAttribute('text', 'Clicked!');
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;simplelayout axis="y" spacing="10"/&gt;
-  &lt;SpecialButton&gt;Not clicked&lt;/SpecialButton&gt;
-  &lt;SpecialButton&gt;
-    Click Me Now
-    <emphasis role="em">&lt;method name="changeLabel"&gt;
-      this.setAttribute('text', 'Smashing!');
-    &lt;/method&gt;</emphasis>
-  &lt;/SpecialButton&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/classes-tutorial-$3.lzx></example?>
 
 <para>Rewriting methods can be very handy when using both your own and pre-defined classes components, 
 but it's not practical for when you have a class for which every instance may need a particular argument. </para>
@@ -169,35 +99,7 @@ As mentioned above, it is useful to be able to pass an instance of a class an ar
    <textobject><textdata fileref="programs/classes-tutorial-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Passing an argument to class instance</title><programlisting role="lzx-embednew"><filename>classes-tutorial-$4.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="80"&gt;
-  &lt;class name="SpecialButton" extends="button" onclick="changeLabel()"&gt;
-    &lt;attribute name="changeToLabel" value="Clicked!" type="string"/&gt;
-    &lt;method name="changeLabel"&gt;
-      var newLabel = this.getAttribute('changeToLabel');
-      this.setAttribute('text', newLabel);
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;simplelayout axis="y" spacing="10"/&gt;
-  &lt;SpecialButton&gt;Not clicked&lt;/SpecialButton&gt;
-  &lt;SpecialButton changeToLabel="Thank You!"&gt;Please click me!&lt;/SpecialButton&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="80"&gt;
-  &lt;class name="SpecialButton" extends="button" onclick="changeLabel()"&gt;
-    &lt;attribute name="changeToLabel" value="Clicked!" type="string"/&gt;
-    &lt;method name="changeLabel"&gt;
-      var newLabel = this.getAttribute('changeToLabel');
-      this.setAttribute('text', newLabel);
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;simplelayout axis="y" spacing="10"/&gt;
-  &lt;SpecialButton&gt;Not clicked&lt;/SpecialButton&gt;
-  &lt;SpecialButton <emphasis role="em">changeToLabel="Thank You!"</emphasis>&gt;Please click me!&lt;/SpecialButton&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/classes-tutorial-$4.lzx></example?>
+
 
 <para>If we give the attribute a value, then that will be its default value, and will get assigned if we don't explicitly set it.</para>
 
@@ -213,87 +115,8 @@ As mentioned above, it is useful to be able to pass an instance of a class an ar
    <textobject><textdata fileref="programs/classes-tutorial-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Extending class more than once</title><programlisting role="lzx-embednew"><filename>classes-tutorial-$5.lzx</filename><parameter/><code>
-&lt;canvas width="800" height="300" debug="true"&gt;
-  &lt;debug x="175"/&gt;
-  &lt;resource name="standardButton"&gt;
-    &lt;frame src="../resources/button_blue.gif"/&gt;
-    &lt;frame src="../resources/button_green.gif"/&gt;
-  &lt;/resource&gt;
-  
-  &lt;resource name="specialButton"&gt;
-    &lt;frame src="../resources/button_blue.gif"/&gt;
-    &lt;frame src="../resources/button_red.gif"/&gt;
-  &lt;/resource&gt;
-  
-  &lt;class name="MyButton" resource="standardButton" 
-         onclick="doAction()" onmouseover="doOver()" onmouseout="doOut()"&gt;
-    &lt;method name="doAction"&gt;
-      Debug.write('Dog');
-    &lt;/method&gt;
-    &lt;method name="doOver"&gt;
-      this.setResourceNumber(2);
-    &lt;/method&gt;
-    &lt;method name="doOut"&gt;
-      this.setResourceNumber(1);
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="MySpecialButton" extends="MyButton" resource="specialButton"&gt;
-    &lt;method name="doAction"&gt;
-      Debug.write('Monday');
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;view name="buttons" x="125" y="5"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;MyButton/&gt;
-    &lt;MySpecialButton/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="800" height="300" debug="true"&gt;
-  &lt;debug x="175"/&gt;
-  &lt;resource name="standardButton"&gt;
-    &lt;frame src="../resources/button_blue.gif"/&gt;
-    &lt;frame src="../resources/button_green.gif"/&gt;
-  &lt;/resource&gt;
-  
-  &lt;resource name="specialButton"&gt;
-    &lt;frame src="../resources/button_blue.gif"/&gt;
-    &lt;frame src="../resources/button_red.gif"/&gt;
-  &lt;/resource&gt;
-  
-  &lt;class name="MyButton" resource="standardButton" 
-         onclick="doAction()" onmouseover="doOver()" onmouseout="doOut()"&gt;
-    &lt;method name="doAction"&gt;
-      Debug.write('Dog');
-    &lt;/method&gt;
-    &lt;method name="doOver"&gt;
-      this.setResourceNumber(2);
-    &lt;/method&gt;
-    &lt;method name="doOut"&gt;
-      this.setResourceNumber(1);
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;class name="MySpecialButton" <emphasis role="em">extends="MyButton"</emphasis> resource="specialButton"&gt;
-    &lt;method name="doAction"&gt;
-      Debug.write('Monday');
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;view name="buttons" x="125" y="5"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    <emphasis role="em">&lt;MyButton/&gt;
-    &lt;MySpecialButton/&gt;</emphasis>
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/classes-tutorial-$5.lzx></example?>
 
 <para>Here we only changed the <indexterm><primary><literal>doAction()</literal></primary></indexterm><methodname>doAction()</methodname> method and the resource. The <indexterm><primary><literal>doOver()</literal></primary></indexterm><methodname>doOver()</methodname> and <indexterm><primary><literal>doOut()</literal></primary></indexterm><methodname>doOut()</methodname> methods remained the same, so there was no need to redefine them in the MySpecialButton definition.</para>
-
-
 
 <para/></section><section id="classes-tutorial.placing"><title>Placing views inside of classes</title>
 
@@ -303,7 +126,6 @@ As mentioned above, it is useful to be able to pass an instance of a class an ar
 <para>If you had one view and you specifically wanted to place it in a particular subview of a class, you would use the <indexterm><primary>placement</primary></indexterm><sgmltag class="attribute">placement</sgmltag> attribute of that view. </para>
 
 <para>An example is the title bar of a window: It's unlikely that you would need to place several things in the title bar of a window, so it's OK to have to add the <indexterm><primary>placement</primary></indexterm><sgmltag class="attribute">placement</sgmltag> attribute to the subview of the class that you want to place in the title bar.</para>
-
 
 <para/></section><section><title>Placing views by defining class with a defaultplacement attribute</title>
 <para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>

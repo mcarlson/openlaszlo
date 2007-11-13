@@ -1,5 +1,7 @@
 <chapter id="text-tutorial">
 <?dbhtml dir="tutorials" ?>
+<!-- remove commented out code that the build ignored. IORIO 6 nov 2007 -->
+<!-- fix LPP-5041, IORIO 3 nov 2007 -->
 <title>Introduction to Text and Fonts</title>
 <para/><section><title>Introduction</title>
 
@@ -22,20 +24,6 @@ Note that the behavior of LZX applications differs between applications compiled
    </programlisting>
 </example>
 
-<?example role="live-example"><title>The simple &lt;text&gt; tag</title><programlisting role="lzx-embednew"><filename>text-tutorial-$1.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500" &gt;
-  &lt;text&gt;
-    Hello, World!
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500" &gt;
-  &lt;text&gt;
-    Hello, World!
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$1.lzx></example?>
-
 <para>Text that is between the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tags is normalized, meaning that preceding and trailing whitespace is ignored, as are multiple whitespace elements between words. i.e. if you put several spaces between words, the output will still be a single space. If you put a line break in the text, it will be rendered as a single whitespace element (i.e. a space), and text fields will stretch to fit their contents.</para>
 
 <para>The default OpenLaszlo font is used (LzTahoe), at its default size (10pt).</para>
@@ -55,23 +43,6 @@ Note that the behavior of LZX applications differs between applications compiled
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>&lt;text&gt; is a &lt;view&gt;</title><programlisting role="lzx-embednew"><filename>text-tutorial-$2.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-  &lt;text x="15" y="20" width="150"&gt;
-    Hello, World!
-    We would like to welcome you to the launch of the OpenLaszlo 
-    Server.
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-  &lt;text <emphasis role="em">x="15" y="20" width="150"</emphasis>&gt;
-    Hello, World!
-    We would like to welcome you to the launch of the OpenLaszlo 
-    Server.
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$2.lzx></example?>
 
 <para>Notice how the text gets cut off because we set the width attribute? </para>
 
@@ -86,24 +57,6 @@ Note that the behavior of LZX applications differs between applications compiled
    <textobject><textdata fileref="programs/text-tutorial-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Multiline text</title><programlisting role="lzx-embednew"><filename>text-tutorial-$3.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-  &lt;text x="15" y="20" width="150" multiline="true"&gt;
-    Hello, World!
-    We would like to welcome you to the launch of the OpenLaszlo 
-    Server.
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-  &lt;text x="15" y="20" width="150" <emphasis role="em">multiline="true"</emphasis>&gt;
-    Hello, World!
-    We would like to welcome you to the launch of the OpenLaszlo 
-    Server.
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$3.lzx></example?>
-
 <para>The text still follows the same normalization rules, so in this case the text wraps at 150px (because we explicitly set the width of the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tag to that), and stretches vertically as far as it needs to go.</para>
 
 <para>The line breaks are still being ignored, but we can fix that by entering them manually:</para>
@@ -114,21 +67,6 @@ Note that the behavior of LZX applications differs between applications compiled
    <textobject><textdata fileref="programs/text-tutorial-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Inserting line breaks</title><programlisting role="lzx-embednew"><filename>text-tutorial-$4.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-   &lt;text x="15" y="20" width="150" multiline="true"&gt;
-      Hello, World!&lt;br /&gt;&lt;br /&gt;
-      We would like to welcome you to OpenLaszlo 4.
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-   &lt;text x="15" y="20" width="150" multiline="true"&gt;
-      Hello, World!<emphasis role="em">&lt;br /&gt;&lt;br /&gt;</emphasis>
-      We would like to welcome you to OpenLaszlo 4.
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$4.lzx></example?>
 
 <para>The <indexterm><primary>br</primary></indexterm><sgmltag class="element">&lt;br&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: br-->
@@ -190,27 +128,6 @@ Note that the behavior of LZX applications differs between applications compiled
    <textobject><textdata fileref="programs/text-tutorial-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>specifying a font</title><programlisting role="lzx-embednew"><filename>text-tutorial-$5.lzx</filename><parameter/><code>
-&lt;canvas height="150" width="500"&gt;
-  &lt;font name="default" style="bold" /&gt;
-  &lt;text x="15" y="20" width="150" multiline="true"&gt;
-    &lt;b&gt;Hello, &lt;font color="#ff0000"&gt;World!&lt;/font&gt;&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
-&lt;font size="16"&gt;We&lt;/font&gt; would like to welcome &lt;u&gt;you&lt;/u&gt; to the 
-      launch of the &lt;a href="http://www.openlaszlo.org/" target="_blank"&gt;OpenLaszlo&lt;/a&gt; 
-      Server.
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="150" width="500"&gt;
-  &lt;font name="default" style="bold" /&gt;
-  &lt;text x="15" y="20" width="150" multiline="true"&gt;
-    &lt;b&gt;Hello, <emphasis role="em">&lt;font color="#ff0000"&gt;</emphasis>World!<emphasis role="em">&lt;/font&gt;</emphasis>&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
-<emphasis role="em">&lt;font size="16"&gt;</emphasis>We<emphasis role="em">&lt;/font&gt;</emphasis> would like to welcome <emphasis role="em">&lt;u&gt;</emphasis>you<emphasis role="em">&lt;/u&gt;</emphasis> to the 
-      launch of the <emphasis role="em">&lt;a href="http://www.openlaszlo.org/" target="_blank"&gt;</emphasis>OpenLaszlo<emphasis role="em">&lt;/a&gt; </emphasis>
-      Server.
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$5.lzx></example?>
 
 <para>The word "OpenLaszlo" becomes a hyperlink because of the <indexterm><primary>a</primary></indexterm><sgmltag class="element">&lt;a&gt;</sgmltag> tag. It does not get underlined as it might in a browser. We can do that ourselves by nesting a <indexterm><primary>u</primary></indexterm><sgmltag class="element">&lt;u&gt;</sgmltag> tag inside it. However, it is important to note that tags must be nested correctly:</para>
 
@@ -234,39 +151,6 @@ In applications compiled for DHTML, the <indexterm><primary>html</primary></inde
    <textobject><textdata fileref="programs/text-tutorial-$6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>The HTML tag</title><programlisting role="lzx-embednew"><filename>text-tutorial-$6.lzx</filename><parameter/><code>
-&lt;canvas &gt;
-   &lt;include href="extensions/html.lzx"/&gt;
-   &lt;class name="browser" extends="window" resizable="true" bgcolor="silver"&gt;
-      &lt;edittext name="txt" text="http://openlaszlo.org/" width="300"/&gt;
-      &lt;button x="310" onclick="parent.htmlview.setSrc(parent.txt.getText()); parent.htmlview.setAttribute(visible, true)"&gt;
-      Load
-      &lt;/button&gt;
-      &lt;html name="htmlview"
-            width="${parent.width - 19}" 
-            height="${parent.height - 74}"
-            x="${parent.x + 7}" 
-            y="${parent.y + 53}"/&gt;
-   &lt;/class&gt;
-   &lt;browser width="500" height="500" x="10" y="10"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas &gt;
-   &lt;include href="extensions/html.lzx"/&gt;
-   &lt;class name="browser" extends="window" resizable="true" bgcolor="silver"&gt;
-      &lt;edittext name="txt" text="http://openlaszlo.org/" width="300"/&gt;
-      &lt;button x="310" onclick="parent.htmlview.setSrc(parent.txt.getText()); parent.htmlview.setAttribute(visible, true)"&gt;
-      Load
-      &lt;/button&gt;
-      &lt;html name="htmlview"
-            width="${parent.width - 19}" 
-            height="${parent.height - 74}"
-            x="${parent.x + 7}" 
-            y="${parent.y + 53}"/&gt;
-   &lt;/class&gt;
-   &lt;browser width="500" height="500" x="10" y="10"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$6.lzx></example?>
 
 <para/></section></section><section id="text-tutorial.fonts"><title>Fonts</title>
 <para>
@@ -286,27 +170,7 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>specifying a font</title><programlisting role="lzx-embednew"><filename>text-tutorial-$7.lzx</filename><parameter/><code>
-&lt;canvas height="150" width="500"&gt;
-  &lt;font name="default" style="bold" src="lztahoe8b.ttf"/&gt;
-  &lt;text x="15" y="20" width="150" multiline="true"&gt;
-    &lt;b&gt;Hello, &lt;font color="#ff0000"&gt;World!&lt;/font&gt;&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
-&lt;font size="16"&gt;We&lt;/font&gt; would like to welcome &lt;u&gt;you&lt;/u&gt; to the 
-      launch of the &lt;a href="http://www.openlaszlo.org/" target="_blank"&gt;OpenLaszlo&lt;/a&gt; 
-      Server.
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="150" width="500"&gt;
-  &lt;font name="default" style="bold" src="lztahoe8b.ttf"/&gt;
-  &lt;text x="15" y="20" width="150" multiline="true"&gt;
-    &lt;b&gt;Hello, <emphasis role="em">&lt;font color="#ff0000"&gt;</emphasis>World!<emphasis role="em">&lt;/font&gt;</emphasis>&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
-<emphasis role="em">&lt;font size="16"&gt;</emphasis>We<emphasis role="em">&lt;/font&gt;</emphasis> would like to welcome <emphasis role="em">&lt;u&gt;</emphasis>you<emphasis role="em">&lt;/u&gt;</emphasis> to the 
-      launch of the <emphasis role="em">&lt;a href="http://www.openlaszlo.org/" target="_blank"&gt;</emphasis>OpenLaszlo<emphasis role="em">&lt;/a&gt; </emphasis>
-      Server.
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$7.lzx></example?>
+
 <para>OpenLaszlo supports TrueType fonts, and the simplest way to use one is as follows:</para>
 
 <example role="live-example">
@@ -315,21 +179,6 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$8.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Naming a font family</title><programlisting role="lzx-embednew"><filename>text-tutorial-$8.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-   &lt;font name="serifFont" src="timmonsr.ttf"/&gt;
-   &lt;text width="150" height="20"&gt;
-      &lt;font face="serifFont" size="14"&gt;Hello, World!&lt;/font&gt;
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-   &lt;font name="serifFont" src="timmonsr.ttf"/&gt;
-   &lt;text width="150" height="20"&gt;
-      &lt;font face="serifFont" size="14"&gt;Hello, World!&lt;/font&gt;
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$8.lzx></example?>
 
 <para>We called this font <emphasis role="i">serifFont</emphasis>, but we could call it whatever we wanted, and that is what will be used to declare its use elsewhere in the application.</para>
 
@@ -357,27 +206,6 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Including bold font</title><programlisting role="lzx-embednew"><filename>text-tutorial-$10.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-   &lt;font name="serifFont"&gt;
-      &lt;face src="timmonsr.ttf"/&gt;
-      &lt;face src="timmonsb.ttf" style="bold"/&gt;
-   &lt;/font&gt;
-   &lt;text width="150" height="20"&gt;
-      &lt;font face="serifFont" size="14"&gt;Hello, &lt;b&gt;World!&lt;/b&gt;&lt;/font&gt;
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-   <emphasis role="em">&lt;font name="serifFont"&gt;
-      &lt;face src="timmonsr.ttf"/&gt;
-      &lt;face src="timmonsb.ttf" style="bold"/&gt;
-   &lt;/font&gt;</emphasis>
-   &lt;text width="150" height="20"&gt;
-      &lt;font face="serifFont" size="14"&gt;Hello, &lt;b&gt;World!&lt;/b&gt;&lt;/font&gt;
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$10.lzx></example?>
 
 <para>The plain font style does not need to be explicitly set; <literal>style="plain"</literal> is implied. This method of markup is not always the best solution, because it depends on writing cumbersome <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag> tags. </para>
 <para>Instead we can tell the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tag what fonts and sizes to use:</para>
@@ -388,33 +216,6 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$11.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>assigning fonts to &lt;text&gt; tag</title><programlisting role="lzx-embednew"><filename>text-tutorial-$11.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-   &lt;font name="serifFont"&gt;
-      &lt;face src="timmonsr.ttf"/&gt;
-      &lt;face src="timmonsb.ttf" style="bold"/&gt;
-   &lt;/font&gt;
-
-   &lt;text width="150" height="150"
-   font="serifFont" fontsize="15" multiline="true"&gt;
-      Hello, &lt;b&gt;World!&lt;/b&gt;&lt;br /&gt;
-         Sometimes it is easier to avoid writing extra &lt;u&gt;font&lt;/u&gt; tags.
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-   &lt;font name="serifFont"&gt;
-      &lt;face src="timmonsr.ttf"/&gt;
-      &lt;face src="timmonsb.ttf" style="bold"/&gt;
-   &lt;/font&gt;
-
-   &lt;text width="150" height="150"
-   <emphasis role="em">font="serifFont" fontsize="15"</emphasis> multiline="true"&gt;
-      Hello, &lt;b&gt;World!&lt;/b&gt;&lt;br /&gt;
-         Sometimes it is easier to avoid writing extra &lt;u&gt;font&lt;/u&gt; tags.
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$11.lzx></example?>
 
 <para>In fact, we can do this with any view (including <indexterm><primary>window</primary></indexterm><sgmltag class="element">&lt;window&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: window-->
@@ -426,39 +227,6 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$12.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Views inherit font properties</title><programlisting role="lzx-embednew"><filename>text-tutorial-$12.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-   &lt;font name="serifFont"&gt;
-      &lt;face src="timmonsr.ttf"/&gt;
-      &lt;face src="timmonsb.ttf" style="bold"/&gt;
-   &lt;/font&gt;
-
-   &lt;view name="grandParent" font="serifFont" fontsize="15"&gt;
-      &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
-         &lt;text&gt;Hello&lt;/text&gt;
-      &lt;/view&gt;
-      &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
-         &lt;text&gt;World&lt;/text&gt;
-      &lt;/view&gt;
-   &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-   &lt;font name="serifFont"&gt;
-      &lt;face src="timmonsr.ttf"/&gt;
-      &lt;face src="timmonsb.ttf" style="bold"/&gt;
-   &lt;/font&gt;
-
-   &lt;view name="grandParent" <emphasis role="em">font="serifFont" fontsize="15"</emphasis>&gt;
-      &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
-         &lt;text&gt;Hello&lt;/text&gt;
-      &lt;/view&gt;
-      &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
-         &lt;text&gt;World&lt;/text&gt;
-      &lt;/view&gt;
-   &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$12.lzx></example?>
 
 <para>The font here is specified in the <emphasis role="i">grandParent</emphasis> view, and it is inherited by both text fields.</para>
 
@@ -470,57 +238,15 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$13.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Overwriting font specifications</title><programlisting role="lzx-embednew"><filename>text-tutorial-$13.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-  &lt;font name="serifFont"&gt;
-    &lt;face src="timmonsr.ttf"/&gt;
-    &lt;face src="timmonsb.ttf" style="bold"/&gt;
-  &lt;/font&gt;
-  
-  &lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;
-  
-  &lt;view name="grandParent" font="serifFont" fontsize="15"&gt;
-    &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
-      &lt;text&gt;
-        &lt;font color="#CC6600" size="12"&gt;Hello&lt;/font&gt;
-      &lt;/text&gt;
-    &lt;/view&gt;
-    &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
-      &lt;text font="sansSerifFont"&gt;World&lt;/text&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-  &lt;font name="serifFont"&gt;
-    &lt;face src="timmonsr.ttf"/&gt;
-    &lt;face src="timmonsb.ttf" style="bold"/&gt;
-  &lt;/font&gt;
-  
-  <emphasis role="em">&lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;</emphasis>
-  
-  &lt;view name="grandParent" font="serifFont" fontsize="15"&gt;
-    &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
-      &lt;text&gt;
-        <emphasis role="em">&lt;font color="#CC6600" size="12"&gt;</emphasis>Hello<emphasis role="em">&lt;/font&gt;</emphasis>
-      &lt;/text&gt;
-    &lt;/view&gt;
-    &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
-      &lt;text <emphasis role="em">font="sansSerifFont"</emphasis>&gt;World&lt;/text&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$13.lzx></example?>
-
 <para>Both the text fields here have overridden some of the font specs. The ones that aren't overridden (such as the face in the left example and the size in the right example) are inherited.</para>
 
 
 <para/></section></section></section><section id="text-tutorial.changing"><title>Changing Text</title>
 
 <para>The <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> element has two methods for reading and writing contents:</para>
-<itemizedlist spacing="compact"><listitem><para><indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname></para></listitem><listitem><para><indexterm><primary><literal>setText()</literal></primary></indexterm><methodname>setText()</methodname></para></listitem></itemizedlist>
+<itemizedlist spacing="compact"><listitem><para><indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname></para></listitem><listitem><para><indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname></para></listitem></itemizedlist>
 
-<para>The <indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname> method returns the contents of the text box, and the <indexterm><primary><literal>setText()</literal></primary></indexterm><methodname>setText()</methodname> method takes an argument of the string to put in the text field:</para>
+<para>The <indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname> method returns the contents of the text box, and the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method takes an argument of the string to put in the text field:</para>
 
 <example role="live-example">
    <title>Getting and setting text</title>
@@ -528,66 +254,6 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$14.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Getting and setting text</title><programlisting role="lzx-embednew"><filename>text-tutorial-$14.lzx</filename><parameter/><code>
-&lt;canvas height="135" width="700" debug="true"&gt;
-   &lt;debug x="200"/&gt;
-   &lt;button x="15" y="15"
-      onclick="Debug.write(canvas.theField.getText());"&gt;
-      Get Text 
-   &lt;/button&gt;
-
-   &lt;button x="100" y="15"
-      onclick="canvas.theField.setText('Hello, Laszlo!');"&gt;
-         Set Text
-   &lt;/button&gt;
-
-   &lt;button x="180" y="115"
-      onclick="addText();"&gt;
-         Add Text
-   &lt;/button&gt;
-
-   &lt;script&gt;
-      function addText() {
-      var origText = canvas.theField.getText();
-      var newText = origText + " And on.";
-           canvas.theField.setText(newText);
-      }
-   &lt;/script&gt;
-
-   &lt;text x="45" y="60" width="150" height="75" multiline="true"
-      name="theField"&gt;Some sample text.&lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="135" width="700" debug="true"&gt;
-   &lt;debug x="200"/&gt;
-   &lt;button x="15" y="15"
-      onclick="Debug.write(canvas.theField.getText());"&gt;
-      Get Text 
-   &lt;/button&gt;
-
-   &lt;button x="100" y="15"
-      onclick="canvas.theField.setText('Hello, Laszlo!');"&gt;
-         Set Text
-   &lt;/button&gt;
-
-   &lt;button x="180" y="115"
-      onclick="addText();"&gt;
-         Add Text
-   &lt;/button&gt;
-
-   &lt;script&gt;
-      function addText() {
-      var origText = canvas.theField.getText();
-      var newText = origText + " And on.";
-           canvas.theField.setText(newText);
-      }
-   &lt;/script&gt;
-
-   &lt;text x="45" y="60" width="150" height="75" multiline="true"
-      name="theField"&gt;Some sample text.&lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$14.lzx></example?>
-
 <para>Using these two methods it is possible to concatenate text and work with it as a string.</para>
 
 <para>An important thing to remember when working with text is that everything between the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tags is returned by <indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname>.</para>
@@ -598,55 +264,6 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$15.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>text returned</title><programlisting role="lzx-embednew"><filename>text-tutorial-$15.lzx</filename><parameter/><code>
-&lt;canvas height="135" width="700" debug="true"&gt;
-    &lt;debug x="200"/&gt;
-   &lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;
-
-   &lt;script&gt;
-      function writeOutBit() {
-      var myText = canvas.theField.getText();
-      Debug.write(myText);
-   }
-   &lt;/script&gt;
-
-   &lt;button x="15" y="15"
-      onclick="writeOutBit();"&gt;
-         Write part of line
-   &lt;/button&gt;
-  
-   &lt;text x="45" y="60" width="150" height="75" multiline="true"
-      name="theField"&gt;
-      &lt;font face="sansSerifFont" size="12"&gt;Some lovely sample 
-      text.
-      &lt;/font&gt;
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="135" width="700" debug="true"&gt;
-    &lt;debug x="200"/&gt;
-   &lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;
-
-   &lt;script&gt;
-      function writeOutBit() {
-      var myText = canvas.theField.getText();
-      <emphasis role="em">Debug.write(myText);</emphasis>
-   }
-   &lt;/script&gt;
-
-   &lt;button x="15" y="15"
-      onclick="writeOutBit();"&gt;
-         Write part of line
-   &lt;/button&gt;
-  
-   &lt;text x="45" y="60" width="150" height="75" multiline="true"
-      name="theField"&gt;
-      &lt;font face="sansSerifFont" size="12"&gt;Some lovely sample 
-      text.
-      &lt;/font&gt;
-   &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$15.lzx></example?>
 
 <para>This can be both useful and a nuisance. If we were to start parsing the string that is returned by the <indexterm><primary><literal>getText()</literal></primary></indexterm><methodname>getText()</methodname> method, then we would have to compensate for the markup tags. To avoid it, set the font in the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> tag.</para>
 
@@ -663,25 +280,6 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$16.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using &lt;inputtext&gt;</title><programlisting role="lzx-embednew"><filename>text-tutorial-$16.lzx</filename><parameter/><code>
-&lt;canvas height="135" width="700" debug="true"&gt;
-    &lt;debug x="200"/&gt;
-   &lt;inputtext name="myText" x="10" y="15"&gt;Enter text here&lt;/inputtext&gt;
-   &lt;button x="45" y="45"
-      onclick="Debug.write(canvas.myText.getText());"&gt;
-         Write out text 
-   &lt;/button&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="135" width="700" debug="true"&gt;
-    &lt;debug x="200"/&gt;
-   &lt;inputtext name="myText" x="10" y="15"&gt;Enter text here&lt;/inputtext&gt;
-   &lt;button x="45" y="45"
-      onclick="Debug.write(canvas.myText.getText());"&gt;
-         Write out text 
-   &lt;/button&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$16.lzx></example?>
 
 <para>The <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag> field gives no indication that the text can be selected and edited, other than an insert cursor when the user rolls over it. The <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag> element can accept all the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> attributes, as well as fonts:</para>
 
@@ -691,27 +289,8 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$17.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>&lt;inputtext&gt; accepts &lt;text&gt; attributes</title><programlisting role="lzx-embednew"><filename>text-tutorial-$17.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-  &lt;font name="Helmet" src="helmetr.ttf" /&gt;
-  &lt;inputtext name="myText" x="10" y="15"
-      font="Helmet" fontsize="12"
-      width="200" height="50" multiline="true"&gt;
-         Enter very large quantities of text here.
-  &lt;/inputtext&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-  &lt;font name="Helmet" src="helmetr.ttf" /&gt;
-  &lt;inputtext name="myText" x="10" y="15"
-      font="Helmet" fontsize="12"
-      width="200" height="50" multiline="true"&gt;
-         Enter very large quantities of text here.
-  &lt;/inputtext&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$17.lzx></example?>
 
-<para><literal>getText</literal> and <literal>setText</literal> methods will work on <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag> fields as well.</para>
+<para><literal>getText()</literal> and <literal>setAgrument()</literal> methods will work on <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag> fields as well.</para>
 
 <para>To overcome the problem of the text field not being recognizable, OpenLaszlo provides the <indexterm><primary>edittext</primary></indexterm><sgmltag class="element">&lt;edittext&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: edittext-->
@@ -723,25 +302,6 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    <textobject><textdata fileref="programs/text-tutorial-$18.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using &lt;edittext&gt;</title><programlisting role="lzx-embednew"><filename>text-tutorial-$18.lzx</filename><parameter/><code>
-&lt;canvas height="160" width="500"&gt;
-   &lt;edittext name="myText" x="10" y="15"&gt;Enter text here&lt;/edittext&gt;
-
-   &lt;edittext name="myBigText" x="10" y="45"
-      width="250" height="100" multiline="true"&gt;
-         Enter a lot more text here
-   &lt;/edittext&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="160" width="500"&gt;
-   &lt;edittext name="myText" x="10" y="15"&gt;Enter text here&lt;/edittext&gt;
-
-   &lt;edittext name="myBigText" x="10" y="45"
-      width="250" height="100" multiline="true"&gt;
-         Enter a lot more text here
-   &lt;/edittext&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/text-tutorial-$18.lzx></example?>
 
 <para>The <indexterm><primary>edittext</primary></indexterm><sgmltag class="element">&lt;edittext&gt;</sgmltag> tag can be multiline, and can be adjusted in size.</para>
 

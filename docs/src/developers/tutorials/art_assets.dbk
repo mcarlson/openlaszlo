@@ -1,6 +1,9 @@
 <chapter id="art_assets">
 <?dbhtml dir="tutorials" ?>
 
+<!-- remove commented out code that the build ignored. IORIO 3 nov 2007 -->
+<!-- fix LPP-5041, IORIO 6 nov 2007 -->
+
 <title>Introduction to Media and Art Assets</title>
 <para>This tutorial provides an informal overview of how to use media resources such
 as images, video and audio in OpenLaszlo applications. These topics are covered in greater depth in
@@ -16,11 +19,10 @@ In this tutorial we'll be talking about using resources attached to views, which
 </para>
 <para>
 When you insert an image into HTML text, you can only include images in the formats natively supported by the targeted runtime.  For a discussion of how to use the <sgmltag class="element" role="img">img</sgmltag>
-<!--unknown tag: img-->
+
  tag within HTML text, see <xref linkend="text"/>.
 </para>
 <para>Being able to bring in art assets is not just for pictures - you can create your own custom view system too.</para>
-
 
 </section><section id="art_assets.basics"><title>Resources</title>
 <para>
@@ -42,15 +44,6 @@ In this case, a GIF image:</para>
    <textobject><textdata fileref="programs/art_assets-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using 'resource'</title><programlisting role="lzx-embednew"><filename>art_assets-$1.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="80"&gt;
-  &lt;view resource="../resources/smiley.gif"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="80"&gt;
-  &lt;view resource="../resources/smiley.gif"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/art_assets-$1.lzx></example?>
 
 <para>This tiny OpenLaszlo application loads an image called <literal>smiley.gif</literal> 
 (which is located in <literal>resources</literal>, a subdirectory of the one that contains the application).</para>
@@ -62,21 +55,8 @@ In this case, a GIF image:</para>
    <textobject><textdata fileref="programs/art_assets-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>positioning images</title><programlisting role="lzx-embednew"><filename>art_assets-$2.lzx</filename><parameter/><code>
- &lt;canvas width="500" height="100"&gt;
-   &lt;view resource="../resources/smiley.gif"/&gt;
-   &lt;view x="50" y="50" resource="../resources/smiley.gif"/&gt;
- &lt;/canvas&gt;
-</code></programlisting><programlisting>
- &lt;canvas width="500" height="100"&gt;
-   &lt;view resource="../resources/smiley.gif"/&gt;
-   &lt;view <emphasis role="em">x="50" y="50"</emphasis> resource="../resources/smiley.gif"/&gt;
- &lt;/canvas&gt;
-</programlisting><?lzx-edit programs/art_assets-$2.lzx></example?>
 
 <para>We'll come to changing the size of an image later.</para>
-
-
 
 </section><section id="art_assets.including"><title>Ways to include resources</title>
 
@@ -127,29 +107,6 @@ In this case, a GIF image:</para>
    <textobject><textdata fileref="programs/art_assets-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Stretching resources</title><programlisting role="lzx-embednew"><filename>art_assets-$7.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="200"&gt;
-  &lt;resource name="sourFace" src="../resources/sourface.png"/&gt;
-  &lt;resource name="smileyFace" src="../resources/smiley.gif"/&gt;
-  
-  &lt;view resource="smileyFace" x="10" y="10"/&gt;
-  &lt;view resource="sourFace" x="50" y="10"/&gt;
-  
-  &lt;view x="10" y="50" width="363" height="242" 
-  stretches="both" resource="../resources/sunset.jpg"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="200"&gt;
-  &lt;resource name="sourFace" src="<emphasis role="em">../resources/sourface.png</emphasis>"/&gt;
-  &lt;resource name="smileyFace" src="../resources/smiley.gif"/&gt;
-  
-  &lt;view resource="smileyFace" x="10" y="10"/&gt;
-  &lt;view resource="sourFace" x="50" y="10"/&gt;
-  
-  &lt;view x="10" y="50" width="363" height="242" 
-  <emphasis role="em">stretches="both"</emphasis> resource="../resources/sunset.jpg"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/art_assets-$7.lzx></example?>
 
 <para> OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <indexterm><primary>stretches</primary></indexterm><sgmltag class="attribute">stretches</sgmltag> attribute of the view that contains the resource to <literal>both</literal>, <literal>width</literal> or <literal>height</literal>.</para>
 
@@ -165,27 +122,6 @@ In this case, a GIF image:</para>
    <textobject><textdata fileref="programs/art_assets-$8.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Multiframe Resources</title><programlisting role="lzx-embednew"><filename>art_assets-$8.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="100"&gt;
-  &lt;resource name="face"&gt;
-    &lt;frame src="../resources/sourface.png"/&gt;
-    &lt;frame src="../resources/smiley.gif"/&gt;
-  &lt;/resource&gt;
-  
-  &lt;view x="150" y="50" resource="face"
-         onclick="this.setResourceNumber(2);"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="100"&gt;
-  &lt;resource name="face"&gt;
-    &lt;frame src="../resources/sourface.png"/&gt;
-    &lt;frame src="../resources/smiley.gif"/&gt;
-  &lt;/resource&gt;
-  
-  &lt;view x="150" y="50" resource="face"
-         onclick="this.setResourceNumber(2);"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/art_assets-$8.lzx></example?>
 
 <para>The resources nested within the resource tag are numbered starting with 1.</para>
 <para>As you can see, OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <sgmltag class="attribute" role="LzView.stretches">stretches</sgmltag> attribute of the view that contains the resource to either <literal>both</literal>, <literal>width</literal> or <literal>height</literal>.</para>
@@ -222,11 +158,7 @@ the other
  attributes and methods of <sgmltag class="element" role="LzView">view</sgmltag>s that pertain to resources:</para>
 
 <variablelist>
-<?ignore no longer supported?
-  <varlistentry><term><sgmltag class="attribute" role="LzView.__ivars__.playing">playing</sgmltag></term>
-    <listitem><para>An attribute that is true if the SWF is currently playing; false if it is stopped.</para></listitem>
-  </varlistentry>
-?>
+
   <varlistentry><term><sgmltag class="attribute" role="LzView.__ivars__.frame">frame</sgmltag></term>
     <listitem><para>The number of the current frame.</para></listitem>
   </varlistentry>
