@@ -10,10 +10,10 @@
 <%@ page import="org.jdom.xpath.*" %>
 <%!
 
-    /* X_LZ_COPYRIGHT_BEGIN ****************************************************
-     * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.               *
-     * Use is subject to license terms.                                        *
-     * X_LZ_COPYRIGHT_END ******************************************************/
+/* X_LZ_COPYRIGHT_BEGIN ****************************************************
+ * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.               *
+ * Use is subject to license terms.                                        *
+ * X_LZ_COPYRIGHT_END ******************************************************/
 
 
     public String devId =
@@ -217,7 +217,8 @@
         Element resultEl =
             new Element("videoGetFlvUrlResult");
 
-		String videoId = "";
+        String videoId = "";
+        String tId = "";
         while (true) {
             String line = null;
 
@@ -236,22 +237,32 @@
             if (start == -1) {
                 continue;
             } else {
-            	// Extract the video_id from the args line
-				Pattern p = Pattern.compile("video_id:'[\\w\\d]+'?");
-				Matcher m = p.matcher(line);
-				if ( m.find() ) {
-				    videoId = (line.substring(m.start(), m.end()));
-				    videoId = videoId.substring(10, videoId.length()-1);
-				} else {
-					reportError("video_id argument not found in HTML page", result);
-					return;
-				}
+                // Extract the video_id from the args line
+                Pattern vidpat = Pattern.compile("video_id:'[\\w\\d]+'?");
+                Pattern tpat = Pattern.compile("t:'[\\w\\d]+'?");
+                Matcher vidmatcher = vidpat.matcher(line);
+                Matcher tmatcher = tpat.matcher(line);
+                if ( vidmatcher.find() ) {
+                    videoId = (line.substring(vidmatcher.start(), vidmatcher.end()));
+                    videoId = videoId.substring(10, videoId.length()-1);
+                } else {
+                    reportError("video_id argument not found in HTML page", result);
+                    return;
+                }
+                if ( tmatcher.find() ) {
+                    tId = (line.substring(tmatcher.start(), tmatcher.end()));
+                    tId = tId.substring(3, tId.length()-1);
+                } else {
+                    reportError("t argument not found in HTML page", result);
+                    return;
+                }
             }
 
             String url =
-                "http://cache.googlevideo.com/get_video?video_id=" + videoId;
-
+                "http://www.youtube.com/get_video?video_id=" + videoId + "&t=" + tId;
+            
             resultEl.setAttribute("id", videoId);
+            resultEl.setAttribute("t", tId);
             resultEl.setAttribute("url", url);
             result.setRootElement(resultEl);
 
