@@ -1,0 +1,40 @@
+<canvas debug="true">
+    <include href="lib/contact.lzx" />
+    <dataset name="ds" src="./shareddata/contacts_full.xml" />
+
+    <class name="field">
+        <handler name="ondata">
+            this.setAttribute('value',this.data);
+        </handler>
+
+        <attribute name="label" value="label" type="string" />
+        <attribute name="value" value="value" type="string" />
+
+        <text name="lbl" text="${classroot.label}" />
+        <text name="val" text="${classroot.value}" 
+              x="120" resize="true" />
+    </class>
+
+    <simplelayout />
+    <view name="container" height="200" clip="true">
+        <view id="master" datapath="ds:/addressbook/contacts">
+            <simplelayout />
+            <contact name="c" 
+                     datapath="person"
+                     onclick="details.datapath.setAttribute('p', this.datapath.p)" />
+        </view>
+        <scrollbar />
+    </view>
+
+    <view id="details" datapath="ds:/addressbook/contacts/person[1]">
+        <simplelayout />
+        <field label="First name:" datapath="@firstname" />
+        <field label="Last name:" datapath="@lastname" />
+        <field label="Phone:" datapath="@phone" />
+        <field label="Email:" datapath="@email" />
+        <field label="Webpage:" datapath="@webpage" />
+    </view>
+
+
+</canvas>
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->

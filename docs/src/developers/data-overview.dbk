@@ -324,7 +324,7 @@ In addition to LzDataNodes, which can only be manipulated in script, LZX include
 , which provide a convenient, tag-based
 mechanism for typical data manipulation. By using datapointers to move through the data, you control the behavior of views that are bound to that data.
 </para>
-<para/></section></section></section><section id="databinding.datasets"><title>OpenLaszlo datasets and data nodes</title>
+<para/></section></section></section><section> id="databinding.datasets"><title>OpenLaszlo datasets and data nodes</title>
 <para>
 Data in OpenLaszlo applications can be declared with a tag, or built up using procedural (script) APIs. The script APIs operate on <indexterm><primary>LzDataNode</primary></indexterm><classname>LzDataNode</classname>s.
 </para>
@@ -481,7 +481,7 @@ The child elements of <varname>rowOfData</varname> inherit this, so their datapa
 often as is necessary.</para>
 
 
-<para>Remember that datapaths bind themselves to a view, so if the data changes, so will the view. </para>
+<para>Remember that datapaths bind themselves to a view, so if the data changes, so does the view. </para>
 <para/></section></section></section><section id="databinding.including"><title>Ways to include data</title>
 
 <para>

@@ -1,5 +1,5 @@
 <canvas debug="true">
-    <dataset name="dset" src="../shareddata/contacts_full.xml"/>
+    <dataset name="dset" src="./shareddata/contacts_full.xml"/>
     
     <!--  Create a view with a text field that concatenates the first and last name as the value of the text field -->
     <view datapath="dset:/addressbook/contacts/person[1]">

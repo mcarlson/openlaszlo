@@ -90,7 +90,7 @@ The ondata event handler method sets the source for the view to the image that h
 </para>
 <para>
 &lt;handler name="ondata"&gt;
-var imagepath = "../sharedresources/headshots/" + this.imagefile;
+var imagepath = "./sharedresources/headshots/" + this.imagefile;
 Debug.write(imagepath);
 this.setSource(imagepath);
 &lt;/handler&gt;
@@ -107,7 +107,7 @@ Inside the view, we create an applyData() method. Inside the method, the source 
 </para>
 <para>
 &lt;method name="applyData"&gt;
-var imagepath = "../sharedresources/headshots/" + this.data;
+var imagepath = "./sharedresources/headshots/" + this.data;
 Debug.write(imagepath);
 this.setSource(imagepath);
 &lt;/method&gt; 

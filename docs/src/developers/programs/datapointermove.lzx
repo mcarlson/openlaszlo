@@ -1,5 +1,5 @@
 <canvas debug="true">
-    <dataset name="dset" src="../shareddata/contacts_full.xml"/>
+    <dataset name="dset" src="./shareddata/contacts_full.xml"/>
     
     <simplelayout axis="y" spacing="3" />
 

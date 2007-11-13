@@ -2,7 +2,7 @@
 
     <debug x="0" y="150" width="450" height="200" />
 
-    <dataset name="ds" src="../shareddata/contacts_full.xml" />
+    <dataset name="ds" src="./shareddata/contacts_full.xml" />
 
     <list id="mylist" datapath="ds:/addressbook/contacts" 
           height="145" width="150">

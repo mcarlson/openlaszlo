@@ -7,11 +7,83 @@ In this chapter we tak a look at some common data design patterns and best pract
 </para>
 <section><title>Master Detail</title>
 <para>
+This examples shows the concept of master-detail. The main list displays limited information (in this case, first name and last name). When the user selects something in the list, the details area displays all of the information about the item that is selected in the master list. 
 </para>
-
+<para>
+The details pane is driven (data bound) by the datapointer of the currently selected item in the list. Inside the c contact, inside the master view, an onclick event handler attribute sets the p attribute of the details views datapath to be the p attribute of the datapath of the currently selected item in the list. 
+</para>
+<para>
+&lt;contact name="c" datapath="person" 
+    onclick="details.datapath.setAttribute('p', this.datapath.p)"/&gt; 
+</para>
+<example role="live-example">
+   <title>The master-detail pattern</title>
+   <programlisting language="lzx">
+   <textobject><textdata fileref="programs/data-master-detail.lzx"/></textobject> 
+   </programlisting>
+</example>
 
 </section>
 <section><title>Buffer Dataset</title>
+<para>
+The buffer dataset is a fundamental pattern for reconciling data images on the client and the server, or between any two representations of the same data. Changes made to one dataset are then propagated to another, which serves as a "buffer". The contents of the buffer are then pushed to the ultimate destination. In this way the buffer can be concerned with things like error handling, timeouts, etc.
+</para>
+
+
+<section><title>Buffer Dataset Example</title>
+<para>
+
+This examnple shows a buffer dataset pattern that is a subset of a primary dataset. 
+<para>
+</para>
+Problem: Because of the "master" and "details" views are sharing a same dataset, clicking the "Refresh Data" button will reset the user edited information in the details view as well. So, we will create a buffer dataset and we will databind the details view to it. We refresh this dataset appropriately by populating it with the data node that data-replicates the selected contact instance in the list. 
+<para>
+</para>
+After the ds dataset declaration at the top of the canvas, notice the following  buffer  dataset: 
+<para>
+</para>
+&lt;dataset name="dsbuffer"&gt;
+     &lt;addressbook&gt;
+          &lt;contacts/&gt;
+     &lt;/addressbook&gt;
+&lt;/dataset&gt; 
+<para>
+</para>
+Locate the onclick event handler for the c contact tag. Notice the two LzDatapointers, dp1 and dp2. 
+<para>
+</para>
+&lt;handler name="onclick"&gt;
+     var dp1 = new LzDatapointer();
+     var dp2 = new LzDatapointer();
+&lt;/handler&gt; 
+<para>
+</para>
+Using setPointer(), the dp1 datapointer points at the contact instance, this.datapath.p: 
+<para>
+</para>
+dp1.setPointer(this.datapath.p); 
+<para>
+</para>
+  Next, using setXPath() and deleteNode(), any previous data  already in the dataset is deleted: 
+<para>
+</para>
+dp2.setXPath("dsbuffer:/addressbook/contacts/person[1]");
+dp2.deleteNode(); 
+  Then, using setXPath() and addNodeFromPointer, copy the current node to the target location: 
+<para>
+</para>
+dp2.setXPath("dsbuffer:/addressbook/contacts");
+dp2.addNodeFromPointer(dp1);
+<para>
+</para>
+The last line of code inside the onclick event handler traces out to the Debug window dp2.p: 
+<para>
+</para>
+Debug.write(dp2.p); 
+</para>
+</section>
+
+
 <example role="live-example">
    <title>Buffer datasets</title>
    <programlisting language="lzx">

@@ -1,5 +1,5 @@
 <canvas debug="true">
-    <dataset name="ds" src="../shareddata/contacts_full.xml" />
+    <dataset name="ds" src="./shareddata/contacts_full.xml" />
     <datapointer name="dp" />
 
     <window title="Datapointer usage">

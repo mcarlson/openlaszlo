@@ -1,6 +1,6 @@
 <canvas debug="true">
     <include href="lz/datacombobox.lzx"/>
-    <dataset name="ds" src="../shareddata/contacts_full.xml" />
+    <dataset name="ds" src="./shareddata/contacts_full.xml" />
     <datapointer name="dp" />
 
     <simplelayout />

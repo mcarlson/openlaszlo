@@ -1,5 +1,5 @@
 <canvas debug="true">
-    <dataset name="dset" src="../shareddata/contacts_full.xml"/>
+    <dataset name="dset" src="./shareddata/contacts_full.xml"/>
     
     <simplelayout axis="y" spacing="2" />
 
@@ -20,7 +20,7 @@
     <view name="myimage" datapath="dset:/addressbook/contacts/person[1]">
         <attribute name="imagefile" value="$path{'@thumbnail'}"/>
         <handler name="ondata">
-            var imagepath = "../sharedresources/headshots/" + this.imagefile;
+            var imagepath = "./sharedresources/headshots/" + this.imagefile;
             Debug.write(imagepath);
             this.setSource(imagepath);
         </handler>
@@ -31,7 +31,7 @@
     <view name="myimage2" 
           datapath="dset:/addressbook/contacts/person[2]/@thumbnail">
         <method name="applyData">
-            var imagepath = "../sharedresources/headshots/" + this.data;
+            var imagepath = "./sharedresources/headshots/" + this.data;
             Debug.write(imagepath);
             this.setSource(imagepath);
         </method>
