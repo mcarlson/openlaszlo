@@ -106,7 +106,7 @@
     <title>Server Integration</title>
     <!--xi:include href="integrating-existing.dbk"/-->
     <xi:include href="cookies.dbk"/>
-    <!-xi:include href="persistent_connection.dbk"/-->
+    <!--xi:include href="persistent_connection.dbk"/-->
     <!--xi:include href="logging.dbk"/-->
     <!--xi:include href="lps-request-types.dbk"/-->
     <!--xi:include href="soap-xmlrpc.dbk"/-->
