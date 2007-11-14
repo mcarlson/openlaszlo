@@ -40,6 +40,11 @@ var navigator = {userAgent: "lztest",
                 appVersion: "1.5R3",
                 vendor: "openlaszlo",
                 platform: "unknown"}; // This is expected to be in the top level namespace. 
+                
+
+Lz.attachEventHandler = function () {
+  // Just a stub
+}                
 
 // Load the LFC!
 load("lps/includes/lfc/LFCdhtml-debug.js"); 
