@@ -12,20 +12,7 @@
 
     <resource name="logoanim" src="animation/"/>
 
-    <class name="eventtester" width="150">
-        <attribute name="eventname" value="" type="text"/> 
-        <handler name="oninit">
-            if (eventname == '') Debug.warn('Must specify event name.')
-            this.evDel = new LzDelegate(this, 'update', parent, eventname); 
-        </handler>
-        <method name="update" args="d">
-            this.txt.setText(eventname + ': '+ d);
-            this.bg.setBGColor(green);
-        </method>
-
-        <view name="bg" bgcolor="red" opacity=".5" width="100%" height="100%"/>
-        <text name="txt" text="${classroot.eventname}" width="150"/>
-    </class>
+    <include href="eventtester.lzx"/>
 
     <view name="foo" resource="tabrsrc" onmousedown="this.play()" onmouseup="this.stop()" options="ignorelayout"/>
 
@@ -52,20 +39,6 @@
     </class>
 
     <simplelayout axis="x" inset="200"/>
-
-    <view name="mousetester" clickable="true">
-        <simplelayout/>
-        <text text="mouse events turn green"/> 
-        <eventtester eventname="onmouseover"/>
-        <eventtester eventname="onmouseout"/>
-        <eventtester eventname="onmousedown"/>
-        <eventtester eventname="onmouseup"/>
-        <eventtester eventname="onclick"/>
-        <eventtester eventname="ondblclick"/>
-        <eventtester eventname="onmousedragin"/>
-        <eventtester eventname="onmousedragout"/>
-        <eventtester eventname="onmouseupoutside"/>
-    </view>
 
     <statusloader resource="logoanim" label="local resource" onclick="this.play()"/>
     <statusloader resource="logoanim" play="true" label="local resource play" onclick="this.play()"/>

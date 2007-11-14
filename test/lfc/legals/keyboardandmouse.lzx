@@ -1,0 +1,37 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas width="100%" height="400">
+    <include href="eventtester.lzx"/>
+
+    <simplelayout axis="x"/>
+
+    <view name="mousetester" clickable="true">
+        <simplelayout/>
+        <text text="mouse events turn green"/> 
+        <eventtester eventname="onmouseover"/>
+        <eventtester eventname="onmouseout"/>
+        <eventtester eventname="onmousedown"/>
+        <eventtester eventname="onmouseup"/>
+        <eventtester eventname="onclick"/>
+        <eventtester eventname="ondblclick"/>
+        <eventtester eventname="onmousedragin"/>
+        <eventtester eventname="onmousedragout"/>
+        <eventtester eventname="onmouseupoutside"/>
+    </view>
+    <view>
+        <simplelayout/>
+        <text text="keyboard events turn green"/> 
+        <eventtester eventname="onkeydown" reference="LzKeys"/>
+        <eventtester eventname="onkeyup" reference="LzKeys"/>
+        <eventtester eventname="onmousewheeldelta" reference="LzKeys">
+            <handler name="onvalue" args="v">
+                if (v == null) return;
+                this.setX(this.x + v);
+            </handler>
+        </eventtester>
+    </view>
+</canvas>
