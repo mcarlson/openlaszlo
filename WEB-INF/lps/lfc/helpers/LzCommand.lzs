@@ -55,6 +55,7 @@ setters.key = "setKeys";
 /**
   * If the command is active, this event is sent
   * when the keys array are pressed simultaneously.
+  * @lzxtype event
   */
 var onselect = LzDeclaredEvent;
 

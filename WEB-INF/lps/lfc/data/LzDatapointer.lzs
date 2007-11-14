@@ -125,7 +125,9 @@ prototype.defaultattrs.ignoreplacement = true;
 var rerunxpath = false;
 setters.rerunxpath = "__LZsetRerunXPath";
 
+/** @lzxtype event */
 var onp = LzDeclaredEvent;
+/** @lzxtype event */
 var onDocumentChange = LzDeclaredEvent;
 /** Sent when the data selected by this datapointer's <attribute>xpath</attribute>
   * changes. For XPaths which select a datanode, this means that the
@@ -134,16 +136,20 @@ var onDocumentChange = LzDeclaredEvent;
   * text selected by the <attribute>xpath</attribute> has changed. Note that a datapointer mapped to
   * a data node will not receive <event>ondata</event> when the node, say, changes one of
   * its attributes.
+  * @lzxtype event
   */
 var ondata = LzDeclaredEvent;
 /** Sent when the dataset that the datapointer 
   * is pointing to generates an error.
+  * @lzxtype event
   */
 var onerror = LzDeclaredEvent;
 /** Sent when a request by the dataset that 
   * the datapointer is pointing to times out.
+  * @lzxtype event  
   */
 var ontimeout = LzDeclaredEvent;
+/** @lzxtype event */
 var onrerunxpath = LzDeclaredEvent;
 
 

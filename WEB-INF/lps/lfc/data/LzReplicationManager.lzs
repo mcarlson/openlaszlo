@@ -111,8 +111,11 @@ var clones;
 
 /** @access private */
 var __LZdataoffset = 0;
+/** @lzxtype event */
 var onnodes = LzDeclaredEvent;
+/** @lzxtype event */
 var onclones = LzDeclaredEvent;
+/** @lzxtype event */
 var onvisible = LzDeclaredEvent;
 
 /**

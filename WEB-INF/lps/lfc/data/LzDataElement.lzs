@@ -32,11 +32,17 @@ trait LzDataElementTrait {
       }
     }
 
+/** @lzxtype event */
 var onDocumentChange = LzDeclaredEvent;
+/** @lzxtype event */
 var onparentNode = LzDeclaredEvent;
+/** @lzxtype event */
 var onchildNode = LzDeclaredEvent;
+/** @lzxtype event */
 var onchildNodes = LzDeclaredEvent;
+/** @lzxtype event */
 var onattributes = LzDeclaredEvent;
+/** @lzxtype event */
 var onnodeName = LzDeclaredEvent;
 
 /** @access private */

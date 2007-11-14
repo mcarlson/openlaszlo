@@ -79,9 +79,14 @@ class LzState extends LzNode {
   */
 static var tagname = 'state';
 
-/** Sent when the state is applied. */
+/** Sent when the state is applied. 
+ * @lzxtype event
+ */
 var onapply = LzDeclaredEvent;
-/** Sent when the state is removed */
+
+/** Sent when the state is removed 
+ * @lzxtype event
+ */
 var onremove = LzDeclaredEvent;
 
 /** <code>setAttribute('apply', true)</code> will

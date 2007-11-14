@@ -103,10 +103,15 @@ var dataRequest = null;
 var dataRequestClass = LzHTTPDataRequest;
 var dsloadDel = null;
 
+/** @lzxtype event */
 var ondata = LzDeclaredEvent;
-/** Sent when the dataset's request results in an error. */
+/** Sent when the dataset's request results in an error. 
+ * @lzxtype event
+ */
 var onerror = LzDeclaredEvent;
-/** Sent when the request made by the dataset times out. */
+/** Sent when the request made by the dataset times out. 
+  * @lzxtype event
+  */
 var ontimeout = LzDeclaredEvent;
 
 var timeout = 60000;

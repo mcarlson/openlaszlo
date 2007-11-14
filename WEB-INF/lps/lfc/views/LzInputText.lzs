@@ -72,11 +72,15 @@
   */
 class LzInputText extends LzText {
 
-
+/** @lzxtype event */
 var onenabled = LzDeclaredEvent;
+
+/** @lzxtype event */
 var onselect = LzDeclaredEvent;
 
-/**  whenever the text in the field changes. */
+/**  whenever the text in the field changes. 
+  * @lzxtype event
+  */
 var ontext = LzDeclaredEvent;
 
 /** @access private

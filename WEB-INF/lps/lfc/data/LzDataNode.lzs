@@ -66,6 +66,7 @@
   */
 trait LzDataNode {
 
+/** @lzxtype event */
 var onownerDocument = LzDeclaredEvent;
 
 
