@@ -73,7 +73,7 @@ Lz.history = {
         if (dojo.flash && dojo.flash.info && dojo.flash.info.installing) return;
         if (Lz.__BrowserDetect.isSafari) {
             var h = this._history[this._historylength - 1];
-            if (h == '') h = '#0';
+            if (h == '' || h == '#') h = '#0';
             if (!this._skip && this._historylength != history.length) {
                 this._historylength = history.length;
                 if (typeof h != 'undefined') {
@@ -133,14 +133,24 @@ Lz.history = {
             doc.location.hash = hash;
             Lz.history._parse(s + '');
         } else if (Lz.__BrowserDetect.isSafari) {
-            // can't preserve query strings :(
-            Lz.history._form.action = hash;
-            top.document.location.lzaddr.history = Lz.history._history.toString();
-            Lz.history._skip = true;
             Lz.history._history[history.length] = hash;
             Lz.history._historylength = history.length + 1;
-            Lz.history._form.submit()
-            Lz.history._skip = false;
+            if (Lz.__BrowserDetect.version < 412) {
+                // can't preserve query strings :( do nothing if there is one.
+                if (top.location.search == '') {
+                    Lz.history._form.action = hash;
+                    top.document.location.lzaddr.history = Lz.history._history.toString();
+                    Lz.history._skip = true;
+                    Lz.history._form.submit()
+                    Lz.history._skip = false;
+                }
+            } else {
+                var evt = document.createEvent('MouseEvents');
+                evt.initEvent('click', true, true);
+                var anchor = document.createElement('a');
+                anchor.href = hash;
+                anchor.dispatchEvent(evt);
+            }
         } else {
             top.location.hash = hash;
             Lz.history._parse(s + '');
