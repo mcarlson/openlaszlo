@@ -1,11 +1,11 @@
 
 <canvas height="40">
   <view bgcolor="red"
-        onmouseover="txt.setText('onmouseover')"
-        onmouseout="txt.setText('onmouseout')"
-        onmousedown="txt.setText('onmousedown')"
-        onmouseup="txt.setText('onmouseup')"
-        onclick="txt.setText('onmouseup, onclick')"
+        onmouseover="txt.setAttribute('text', 'onmouseover')"
+        onmouseout="txt.setAttribute('text', 'onmouseout')"
+        onmousedown="txt.setAttribute('text', 'onmousedown')"
+        onmouseup="txt.setAttribute('text', 'onmouseup')"
+        onclick="txt.setAttribute('text', 'onmouseup, onclick')"
         x="10" y="10" width="20" height="20"/>
 
   <text id="txt"

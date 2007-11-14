@@ -7,7 +7,7 @@
    </button>
 
    <button x="100" y="15"
-      onclick="canvas.theField.setText('Hello, Laszlo!');">
+      onclick="canvas.theField.setAttribute('text', 'Hello, Laszlo!');">
          Set Text
    </button>
 
@@ -20,7 +20,7 @@
       function addText() {
       var origText = canvas.theField.getText();
       var newText = origText + " And on.";
-           canvas.theField.setText(newText);
+           canvas.theField.setAttribute('text', newText);
       }
    </script>
 

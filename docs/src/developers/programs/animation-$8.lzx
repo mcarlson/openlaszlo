@@ -29,9 +29,9 @@
       
       <!-- The TEST and RESET buttons -->
       <view x="50" y="150">
-        <richbutton label="Test" x="50" cap="rightsheer"
+        <button text="Test" x="50"
                     onclick="B7.anm.doStart();B8.anm.doStart()"/>
-        <richbutton label="Reset" cap="leftsheer"
+        <button text="Reset"
                     onclick="B7.setX(50);B8.setX(50);"/>
       <simplelayout axis="x"/>
     </view>

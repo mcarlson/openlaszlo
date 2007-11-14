@@ -46,13 +46,13 @@
   
   <!-- The TEST and RESET buttons -->
   <view x="50" y="350">
-    <richbutton label="Test" x="50" cap="rightsheer"
+    <button text="Test" x="50"
                 onclick="B15.ax1.doStart(); B15.ax2.doStart();
                          B16.ax1.doStart(); B16.ax2.doStart();
                          B17.bounce();  
                          B18.bounce();
                          B19.bounce();"/>
-    <richbutton label="Reset" cap="leftsheer"
+    <button text="Reset"
                 onclick="B15.setX(50);
                          B16.setX(50);
                          B17.setX(50);

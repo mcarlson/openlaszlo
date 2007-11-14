@@ -1,6 +1,6 @@
 
 <canvas height="180">
-  <view oninit="this.setSource('http:resources/logo.gif')"/>
+  <view oninit="this.setAttribute('source', 'http:resources/logo.gif')"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *

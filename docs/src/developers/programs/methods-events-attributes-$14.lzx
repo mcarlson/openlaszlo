@@ -1,7 +1,7 @@
 <canvas height="20">
   <view>
-    <attribute name="width" type="number" value="20"/>
-    <attribute name="height" type="number" value="20"/>
+    <attribute name="width" value="20"/>
+    <attribute name="height" value="20"/>
     <attribute name="bgcolor" type="color" value="red"/>
   </view>
 </canvas>

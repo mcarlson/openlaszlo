@@ -12,7 +12,7 @@
       <radiobutton selected="true">1</radiobutton>
       <radiobutton>2</radiobutton>
       <handler name="onvalue" args="v">
-        myview.setResourceNumber(Number(v));
+        myview.setAttribute('frame', Number(v));
       </handler>
     </radiogroup>
   </view>

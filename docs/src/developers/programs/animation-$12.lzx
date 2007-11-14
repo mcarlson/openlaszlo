@@ -25,9 +25,9 @@
 
   <!-- The TEST and RESET buttons -->
   <view x="50" y="250">
-    <richbutton label="Test" x="50" cap="rightsheer"
+    <button text="Test" x="50"
                onclick="B22.anm.doStart();B23.anm.doStart()"/>
-    <richbutton label="Reset" cap="leftsheer"
+    <button text="Reset"
                onclick="B22.setX(50);
                         B23.setX(50);
                         this.parent.P2.setDisplay(' ');"/>

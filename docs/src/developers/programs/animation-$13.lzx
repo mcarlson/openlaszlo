@@ -30,10 +30,10 @@
 
   <!-- The TEST and RESET buttons -->
   <view x="50" y="350">
-    <richbutton label="Test" x="50" cap="rightsheer"
+    <button text="Test" x="50"
                 onclick="B20.anm.doStart();
                          B21.anm.doStart()"/>
-    <richbutton label="Reset" cap="leftsheer"
+    <button text="Reset"
                 onclick="B20.setX(0);B20.setY(0);
                          B21.setX(0);B21.setY(0);
                          this.parent.P2.setDisplay(' ');"/>

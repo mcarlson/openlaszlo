@@ -1,4 +1,3 @@
-
 <canvas height="150">
   <dataset name="colors">
     <value>red</value>
@@ -13,8 +12,8 @@
   <view name="swatch" width="200" height="30" 
   datapath="colors:/value[1]/text()">
     <method name="applyData" args="v">
-      setBGColor(eval(v))
-      display.setText(v)
+      setAttribute('bgcolor', eval(v))
+      display.setAttribute('text', v)
     </method>
   </view>
   <text name="display" resize="true"/>
@@ -23,7 +22,7 @@
     <attribute name="ind" value="$once{1}"/>
     <handler name="onclick">
       if (++ind == 7) ind = 1
-      swatch.setDatapath('colors:/value[' + ind + ']/text()')
+      swatch.setAttribute('datapath', 'colors:/value[' + ind + ']/text()')
     </handler>
   </button>
 </canvas>

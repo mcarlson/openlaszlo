@@ -4,16 +4,16 @@
          x="10" y="10"
          width="20" height="20">
     <handler name="onmousedown">
-      this.setWidth(30);
-      this.setheight(30);
-      this.setX(5);
-      this.setY(5);
+      this.setAttribute('width', 30);
+      this.setAttribute('height', 30);
+      this.setAttribute('x', 5);
+      this.setAttribute('y', 5);
     </handler>
     <handler name="onmouseup">
-      this.setWidth(20);
-      this.setheight(20);
-      this.setX(10);
-      this.setY(10);
+      this.setAttribute('width', 20);
+      this.setAttribute('height', 20);
+      this.setAttribute('x', 10);
+      this.setAttribute('y', 10);
     </handler>
   </view>
 </canvas>

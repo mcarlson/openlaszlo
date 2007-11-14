@@ -2,7 +2,7 @@
 <canvas height="400" >
   <dataset name="menu" src="http://www.w3schools.com/xml/simple.xml" request="true"/>
   <simplelayout axis="y"/>
-  <button onclick="t.setText(menu.serialize())">Show XML data </button>
+  <button onclick="t.setAttribute('text', menu.serialize())">Show XML data </button>
   <inputtext multiline="true" width="${canvas.width}" bgcolor="0xa0a0a0" id="t" height="300"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

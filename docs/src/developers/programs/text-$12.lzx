@@ -9,10 +9,10 @@
   <text id="t2" bgcolor="#ccffcc" resize="true">
     Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   </text>
-  <button text="setText(...)">
+  <button text="setAttribute('text', ...)">
     <handler name="onclick">
-      t1.setText('resize='+t1.resize);
-      t2.setText('resize='+t2.resize);
+      t1.setAttribute('text', 'resize='+t1.resize);
+      t2.setAttribute('text', 'resize='+t2.resize);
     </handler>
   </button>
 </canvas>

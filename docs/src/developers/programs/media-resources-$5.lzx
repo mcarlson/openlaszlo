@@ -12,10 +12,10 @@
 
   <!-- attach the resource to a view with mouse events -->
   <view resource="mybutton_rsrc" 
-        onmouseover="setResourceNumber(2)"
-        onmouseout="setResourceNumber(1)"
-        onmousedown="setResourceNumber(3)"
-        onmouseup="setResourceNumber(2)"/>
+        onmouseover="setAttribute('frame', 2)"
+        onmouseout="setAttribute('frame', 1)"
+        onmousedown="setAttribute('frame', 3)"
+        onmouseup="setAttribute('frame', 2)"/>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
