@@ -568,7 +568,7 @@ All Rights Reserved. Use is subject to license terms.</p>
     <property name="ref.visibility.filter" value="public protected"/>
     <property name="ref.show.comments" value="${show.comments}"/>
     <property name="ref.show.fixmes" value="${show.fixmes}"/>
-    
+
     <antcall target="dbk.topic.generate" inheritAll="true">
       <param name="local.input.file" value="${ref.file.in}"/>
       <param name="local.output.file" value="${reference.build.dir}/embedref.dbk"/>
@@ -605,6 +605,7 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
     </antcall>
 
+<?skip for faster builds
     <antcall target="dbk.topic.generate" inheritAll="true">
       <param name="local.input.file" value="${ref.file.in}"/>
       <param name="local.output.file" value="${reference.build.dir}/chartref.dbk"/>
@@ -613,6 +614,7 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="dbk.show.comments" value="${ref.show.comments}"/>
       <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
     </antcall>
+?>    
 
     <antcall target="dbk.topic.generate" inheritAll="true">
       <param name="local.input.file" value="${ref.file.in}"/>
@@ -631,7 +633,7 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="dbk.show.comments" value="${ref.show.comments}"/>
       <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
     </antcall>
-
+    
     <antcall target="dbk.topic.generate" inheritAll="true">
       <param name="local.input.file" value="${ref.file.in}"/>
       <param name="local.output.file" value="${reference.build.dir}/devref.dbk"/>
@@ -641,6 +643,7 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
     </antcall>
 
+<?skip for faster builds
     <style style="xsl/js2doc2xref.xsl"
            in="${ref.file.in}"
            out="${reference.build.dir}/xref.dbk">
@@ -652,6 +655,7 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="show.fixmes" expression="${ref.show.fixmes}"/>
       <param name="build.general.index" expression="1"/>
     </style>
+?>    
   </target>
   
   <target name="reference.preprocess" depends="init,reference.dbk.build"

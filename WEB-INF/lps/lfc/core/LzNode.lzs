@@ -45,6 +45,7 @@ class LzNode {
   * this node.
   * @param Object children
   * @param Boolean instcall
+  * @access private
   */
 function initialize ( parent , attrs , children , instcall ){
         this.__LZUID = "__U" + ++LzNode.__UIDs;
@@ -290,6 +291,7 @@ var clonenumber = null;
 var onclonenumber = LzDeclaredEvent;
 /** 
   * @lzxtype event
+  * @access private
   */ 
 var ondestroy = LzDeclaredEvent;
 
@@ -697,7 +699,7 @@ function init ( ){
   * If this node's parent is inited, this method clears the queue of nodes
   * awaiting init.
   *
-  * @access protected
+  * @access private
   */
 function __LZinstantiationDone (){
     if ( !this.immediateparent ||  this.immediateparent.isinited ||

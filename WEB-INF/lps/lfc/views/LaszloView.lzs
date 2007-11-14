@@ -532,7 +532,6 @@ setters.stretches =   "stretchResource";
   * the view is instantiated.
   * @lzxtype boolean
   */
-var play;   
 setters.play =   "setPlay";
 /** Show or hide the handcursor for this view, if clickable */
 setters.showhandcursor =   "setShowHandCursor";
@@ -2439,6 +2438,7 @@ function getPan () {
 /**
   * Get the Z order of the view
   * @return Integer: A number representing z level relative to other siblings
+  * @access private
   */
 function getZ () {
     return this.sprite.getZ();
@@ -2697,6 +2697,7 @@ function getContextMenu ( ){
     return this.sprite.getContextMenu();
 }
 
+/** @access private */ 
 function __warnCapability(msg) {
     Debug.warn('The %s runtime does not support %s', lzr, msg); 
 }
@@ -2704,7 +2705,7 @@ function __warnCapability(msg) {
 /**
   * LzView.getNextSelection
   * Override to specify the next view to be focused
-  * @access public
+  * @access private
   */
 function getNextSelection() {
 }

@@ -297,7 +297,7 @@
         <!-- Properties -->    
         <xsl:if test="$show.members.attributes">
           <xsl:call-template name="describe-members">
-            <xsl:with-param name="members" select="$ivars | &classvalue;/initarg | $svars"/>
+            <xsl:with-param name="members" select="$ivars[not &isevent;] | $svars[not &isevent;]"/>
             <xsl:with-param name="title" select="'Attributes'"/>
             <xsl:with-param name="initargs" select="$initargs" />
             <xsl:with-param name="ivars" select="$ivars" />
@@ -1017,8 +1017,7 @@
         </title>
         <para>
           <xsl:variable name="inheritedattrs" select="$superclass/class/property[@name='__ivars__']/object/property[@access='public']"></xsl:variable>
-          <xsl:variable name="initargs" select="$superclass/class/initarg[@access='public']"></xsl:variable>
-          <xsl:variable name="allinheritedattrs" select="$inheritedattrs | $initargs" />
+          <xsl:variable name="allinheritedattrs" select="$inheritedattrs" />
           <xsl:for-each select="$allinheritedattrs">
             <xsl:sort select="@name"/>            
             <link linkend="{@id}"><xsl:value-of select="@name"/></link>

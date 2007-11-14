@@ -22,6 +22,7 @@
 <!ENTITY isvisible      '(contains("public", @access))'>
 
 <!ENTITY ispublic       '(@access="public")'>
+<!ENTITY isevent        '((doc/tag[@name="lzxtype"]/text) = "event" or @type="LzEvent")'>
 
 
 
@@ -82,8 +83,8 @@
         </xsl:for-each>
         
         
-        instancevariables: 
-        <xsl:for-each select="$instancevariables">
+        non-event instancevariables: 
+        <xsl:for-each select="$instancevariables[not &isevent;]">
             <xsl:sort select="@name" />            
             <xsl:value-of select="@name"/>,             
         </xsl:for-each>            
