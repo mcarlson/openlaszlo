@@ -1592,8 +1592,7 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
         document.onkeyup = null;
         document.onkeypress = null;
         document.onmousewheel = null;
-        window.onresize = null;
-        window.onunload = null;
+        Lz.removeEventHandler(window, 'resize', LzScreenKernel, '__resizeEvent');
     }
-    window.onbeforeunload = __cleanUpForIE;
+    Lz.attachEventHandler(window, 'beforeunload', window, '__cleanUpForIE');
 }

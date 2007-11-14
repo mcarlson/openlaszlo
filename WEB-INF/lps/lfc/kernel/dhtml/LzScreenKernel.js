@@ -24,12 +24,12 @@ var LzScreenKernel = {
         } else if (window.top.document.documentElement && window.top.document.documentElement.clientHeight) {
             // Explorer 6 Strict Mode
             var sc = window.top.document.documentElement;
-            LzScreenKernel.width = sc.scrollWidth;
-            LzScreenKernel.height = sc.scrollHeight;
+            LzScreenKernel.width = sc.clientWidth;
+            LzScreenKernel.height = sc.clientHeight;
         } else if (window.top.document.body) {
             // other Explorers
             var sc = window.top.document.body;
-            LzScreenKernel.width = window.top.document.body.scrollWidth;
+            LzScreenKernel.width = window.top.document.body.clientWidth;
             LzScreenKernel.height = window.top.document.body.clientHeight;
         }
 
@@ -51,7 +51,7 @@ var LzScreenKernel = {
         //Debug.write('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});
     }
     ,__init: function() {
-        window.onresize = LzScreenKernel.__resizeEvent;
+        Lz.attachEventHandler(window, 'resize', LzScreenKernel, '__resizeEvent');
     }
     ,__callback: null
     ,__scope: null
