@@ -45,7 +45,7 @@
   
   <xsl:param name="warn.no.programlisting.canvas.width" select="false()"/>
   
-  <xsl:param name="show.examples.debuginfo" select="false()" />
+  <xsl:param name="show.examples.debuginfo" select="true()" />
   
   <xsl:template name="base.book.name">
     <xsl:choose>
@@ -71,6 +71,13 @@
   <xsl:variable name="depth.from.lpshome">
     <xsl:value-of select="number(2)"/>  
   </xsl:variable>
+  
+  <xsl:template name="relative.path.to.lpshome">      
+      <xsl:choose>
+          <xsl:when test="contains(ancestor::part/@id, 'developers.tutorials')">../../../</xsl:when>
+          <xsl:otherwise>../../</xsl:otherwise>
+      </xsl:choose>
+  </xsl:template>
   
   <xsl:variable name="relative.path.to.lpshome">
     <xsl:call-template name="copy-string">
@@ -232,7 +239,7 @@
     <xsl:if test="$live">
       
       <xsl:variable name="edit-href">
-        <xsl:value-of select="$relative.path.to.lpshome"/>
+        <xsl:call-template name="relative.path.to.lpshome" />
         <xsl:text>laszlo-explorer/editor.jsp?src=docs/</xsl:text>         
         <xsl:call-template name="base.book.name"/>
         <xsl:text>/</xsl:text>
@@ -242,7 +249,7 @@
         <!-- TODO [bshine 10.19.2007]
           If we're in the top-level directory, we only need to go ../includes to get to the edit button.
           If we're in something/tutorial then we need to go up ../../includes -->
-        <xsl:value-of select="$relative.path.to.lpshome"/>
+        <xsl:call-template name="relative.path.to.lpshome"/>
         <xsl:text>docs/includes/d_t_editbutton.gif</xsl:text>
       </xsl:variable>
       <xsl:text>&#x0a;</xsl:text>
@@ -259,7 +266,7 @@
           fname: <xsl:value-of select="$fname"/>
           base.book.name: <xsl:call-template name="base.book.name"  />
           root.relative: <xsl:value-of select="$root.relative"/>
-          relative.path.to.lpshome: <xsl:value-of select="$relative.path.to.lpshome"/>
+          relative.path.to.lpshome: <xsl:call-template name="relative.path.to.lpshome"/>
         </pre> 
       </xsl:if>
     </xsl:if>
