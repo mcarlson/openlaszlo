@@ -2,18 +2,16 @@
 <chapter id="two-way-databinding">
 <title>Two-way databinding</title>
 <para>
-Mixing static and dynamic databinding
+Mixing static and dynamic databinding, and also updating datasets based on user action.
 </para>
 <para>
-Summary:
 This chapter explains the "funhouse mirror" quasi-equivalence of the datapath/datapointer APIs. There are two goals for the chapter: 
 (1) at a minimum, make clear the distinction between the two kinds of approaches; that is, between moving nodes and moving pointers to nodes.
 (2) hopefully, give enough explanation and examples such that people can mix and match between the two approaches without getting hopelessly confused.
 </para>
 <para>
-            
-                If the data changes, the data-bound object will update.
-              Sometimes, with input controls, you need to bind back into the data.
+If the data changes, the data-bound object will update.
+Sometimes, with input controls, you need to bind back into the data.
               To trigger two-way databinding:
                     Call datapath.updateData().
                     Optionally, define an updateData() method at the root of the control.
@@ -235,7 +233,7 @@ The .p property -- the gateway between static and dynamic APIs
       </tbody>
     </tgroup>
   </informaltable>
-  <para />
+
 </article>
 <para>
 Datapointer and DataElement
@@ -246,16 +244,18 @@ Datapointer and DataElement
 ---Using a LzDataelement
 ---Destroying a Node
 </para>
-<para>
-<section><title>
+<section>
+<title>
 Changing Data Binding with Attribute p</title>
-
+<para>
 This example shows how to change the datapath of an object using the p attribute.
-
-
-  Inside the onclick handler inside the button, set the p attribute of the firstview object to be the p attribute of the secondview object: 
-
+</para>
+<para>
+The onclick handler inside the button sets the p attribute of the firstview object to be the p attribute of the secondview object: 
+</para>
+<para>
       parent.firstview.datapath.setAttribute("p", parent.secondview.datapath.p);
+</para>
 <example role="live-example">
    <title>Changing Data Binding with Attribute p </title>
    <programlisting language="lzx">
@@ -263,29 +263,39 @@ This example shows how to change the datapath of an object using the p attribute
    </programlisting>
 </example>
 </section>
-
-Exploring Two-way Data Binding 
-
+<section>
+<title>
+Exploring Two-way Data Binding </title>
+<para>
 This example shows that when data in a dataset changes, any objects that are databound to that data automatically get updated (there is automatic synchronization between the data layer and the UI layer). 
-
+</para>
+<para>
 
 Using the datapath attribute, display the last name of the first contact in the first text object: 
-
+</para>
+<para>
 &lt;text resize="true" name="lastnameinitcaps" 
     datapath="dset:/addressbook/contacts/person[1]/@lastname" /&gt; 
-
+</para>
+<para>
 Using the datapath attribute, databind the edittext object to the same lastname attribute, as in Step 1: 
-
+</para>
+<para>
 &lt;edittext width="300" name="lastnameedit" 
     datapath="dset:/addressbook/contacts/person[1]/@lastname"&gt; 
-
+</para>
+<para>
 The above shows how the dataset controls the what is displayed. Now let's look at how the updateData() method works in the other direction, when the changes to the databound attributes can be propagated back to the dataset. Examine the
 onclick event handler for the button. When the button is clicked, it programmatically synchronizes the data and the UI layer of the lastnameedit using the updateData() method of its datpath object: 
-
+</para>
+<para>
       parent.lastnameedit.datapath.updateData();
-
-The .data property
+</para>
+</section><title>
+The .data property</title>
+<para>
 -- .data is shorthand for datapath.p
 -- Objects like views have a .data property when they are databound and replicated. Otherwise .data is null.
 </para>
+
 </chapter>
