@@ -55,8 +55,9 @@
       <xsl:when test="contains(ancestor::part/@id, 'contributors')">contributors</xsl:when>
       <xsl:when test="contains(ancestor::part/@id, 'contribref')">contribref</xsl:when>
       <xsl:when test="contains(ancestor::part/@id, 'users')">users</xsl:when>
-      <xsl:when test="contains(ancestor::part/@id, 'developers')">developers</xsl:when>      
-      <xsl:otherwise>unknownbook <!-- This is an error -->
+      <xsl:when test="contains(ancestor::part/@id, 'developers')">developers</xsl:when> 
+      <xsl:when test="contains(ancestor::preface/@id, 'developers')">developers</xsl:when> 
+      <xsl:otherwise>unknownbook<!-- This is an error -->
         <xsl:message>ERROR: could not identify book from part/@id, for <xsl:value-of select="ancestor::part/@id"/></xsl:message>
       </xsl:otherwise> 
     </xsl:choose>    
