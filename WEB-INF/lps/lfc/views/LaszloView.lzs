@@ -2288,6 +2288,7 @@ function setSource ( source , cache, headers){
   * Unloads media loaded with setSource or the source= attribute.
   * */
 function unload ( ){
+    this._resource = null;
     //this function formerly lived on the LzMakeLoad transformer
     this.sprite.unload();
 }

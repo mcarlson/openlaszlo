@@ -1509,6 +1509,7 @@ LzSprite.prototype.updateResourceSize = function () {
 }
 
 LzSprite.prototype.unload = function () {
+    this.resource = null;
     if (this.__ImgPool) {
         this.__ImgPool.destroy();
         this.__ImgPool = null;
