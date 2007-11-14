@@ -1,0 +1,26 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<contacts>
+
+<person firstname="Amy" lastname="Young" email="amy@young.com" address="565 Laurel Canyon" city="Chicago" state="IL" zip="23789" webpage="http://www.laszlosystems.com/" picture="/mydb/images/pic_todd.gif"/>
+
+<person firstname="Antun" lastname="Karlovac" email="antun@antunkarlovac.com" address="2321 Russell St #3G" city="Berkeley" state="CA" zip="94705" webpage="http://www.antunkarlovac.com" />
+
+<person firstname="Bret" lastname="Simister" email="bsimister@foo.com" address="1 Boynton Ct." city="Schnectady" state="NY" zip="12345" phone="555-1212"  webpage="http://www.mycoolsite.com/" />
+
+<person firstname="Cheryl" lastname="Erickson" work_address="991 Creed Road" email="chericks@foo.com" webpage="http://www.laszlosystems.com/" />
+
+<person firstname="Colleen" lastname="Forbes" work_address="13 Rucker Road" email="colfor@foo.com" phone="555-1212" webpage="http://www.laszlosystems.com/" />
+
+<person firstname="David" lastname="Temkin" displayname="David Temkin" work_address="33 Formation Way" email="temkin@foo.com" city="San Francisco" state="CA" zip="94113" phone="555-1212" webpage="http://www.laszlosystems.com/" />
+
+<person firstname="Tommy" lastname="Stewart" work_address="40 Simister Boulevard" email="docstu@foo.edu" webpage="http://www.laszlosystems.com/" />
+
+<person firstname="Xavier" lastname="Pruskin" work_address="6565 Nabakov Way" email="thabo_lephutha@foo.com" home_default="0" home_phone="(207) 555-1219" work_city="Durham" state="MA" zip="04555" webpage="http://www.laszlosystems.com/" />
+
+</contacts>
+
+
+
