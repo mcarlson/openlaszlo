@@ -57,7 +57,7 @@
         </button>
       </view>
       <link text="Welcome"
-            onclick="LzBrowser.loadURL('welcome.html', target)"/>
+            onclick="LzBrowser.loadURL('ref.preface.html', target)"/>
       <view name="treeparent" clip="true" width="${parent.width - 20}"
             height="${Math.max(0,parent.parent.height - parent.search.height - 80)}">
         <attribute name="cgroup" value="0"/>
