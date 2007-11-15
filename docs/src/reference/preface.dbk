@@ -1,145 +1,222 @@
 <?xml version="1.0"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
+  * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+  * Use is subject to license terms.                                            *
+  * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <preface id="ref.preface">
-  <title>Preface</title>
+  <title>OpenLaszlo Reference Guide</title>
   <para>The OpenLaszlo Reference describes all of the public XML
-  tags and JavaScript APIs in the LZX language. A companion
-  document, the Contributor's Guide, includes descriptions of all
-  private APIs, and other information of interest to contributors
-  to the OpenLaszlo platform.</para>
+    tags and JavaScript APIs in the LZX language.</para>
+  <sect1>
+    <title>Using the Reference</title>
+    <sect2>
+      <title>Section Organization</title>
+      <para>The Reference Guide is divided into chapters, each
+        describing a distinct category of programming interfaces.
+        Each chapter contains a number of sub-chapters, corresponding
+        to sub-categories of APIs, and each sub-chapter contains
+        entries for each of those APIs.</para>
+      <para>Each reference entry contains a title (with an optional
+        short description), a synopsis (floated to the right of the
+        page in HTML), an optional Usage section, a Description,
+        followed by a Details section. Each of these is pretty
+        self-explanatory except for the Details section, which is
+        described in the next section.</para>
+      <itemizedlist>
+        <listitem>Structure
+          <para>
+            These elements structure the code within an application, allowing you to break it into multiple files or to define custom elements.
+          </para>
+        </listitem>
+        <listitem>View Basics
+          <para>These are the elements that place a view on the canvas. A view controls the presentation of media and data, and responds to user events.        
+          </para>          
+        </listitem>
+        
+        <listitem>Components
+          <para>These are user-interface components in the OpenLaszlo components library. These tags can be used to build to web applications. See the Components Hierarchy for an interactive guide to these classes.            
+            An application can include the entire set of OpenLaszlo components by including the line &lt;include href="lz"/&gt;. An application can include individual OpenLaszlo components by including just the files that define those components. 
+          </para>          
+        </listitem>
+        
+        <listitem>Layouts
+          <para>These elements determine the position of views within a parent view. 
+          </para>          
+        </listitem>
+        
+        <listitem>Animation
+          <para>
+            These elements change the values of another element's attributes over time. 
+          </para>          
+        </listitem>
+        
+        <listitem>Events
+          <para>
+            These classes allow you to control the processing of user events, and to post application events. 
+          </para>          
+        </listitem>
+        
+        <listitem>HTML Markup
+          <para>
+            This secion contains tags that mark up HTML text.  These tags may be used within a
+            <tagname link="true">text</tagname> element, tags that extend this
+            tag, and tags whose definition includes a definition for
+            <code>&lt;attribute name="text" type="html"/&gt;</code>.  (See the
+            documentation on <a href="${dguide}introductory-classes.html#introductory-classes.text-classes">Text Classes</a>
+            for more information about this last category.)
+          </para>          
+        </listitem>
+        
+        <listitem>Media
+          <para>These are elements that import media objects into an application and control their use.
+          </para>          
+        </listitem>
+        
+        <listitem>Data
+          <para>The data elements and classes are for requesting data from a server and binding it to views.
+          </para>          
+        </listitem>
+        
+        <listitem>Scripting
+          <para>JavaScript APIs.
+          </para>          
+        </listitem>
+        
+        <listitem>States
+          <para>Visual states and behaviors can be attached to and removed from an object over the course of an execution.
+          </para>          
+        </listitem>
+        
+        <listitem>Base Classes
+          <para>Base classes are designed to be extended. The classes in the Components section extend these.
+          </para>          
+        </listitem>
+        
+        <listitem>Menus and Commands
+          <para>These elements are for creating menus and menu bars, and processing commands.
+          </para>          
+        </listitem>
+
+        <listitem>Development
+          <para>Elements and APIs that are used during development, for debugging and testing.
+          </para>          
+        </listitem>        
+      </itemizedlist>
+      
+    </sect2>
+    <sect2>
+      <title>Reference Entry Details Section</title>
+      <para>The Details section contains information about the
+        methods and properties of each LZX tag-class. Each method or
+        property is described using both LZX syntax and JavaScript
+        syntax.</para>
+      <para>Fully understanding a method or property entry requires
+        understanding a bit about how LZX tags correspond to
+        JavaScript classes. Almost every LZX tag in the language --
+        and every LZX class declared in your program -- is
+        implemented under the covers as a JavaScript class. An LZX
+        tag's methods and attributes correspond to JavaScript methods
+        and properties. LZX's events and handlers correspond to more
+        complex JavaScript constructs. How to combine JavaSaript and LZX
+        tags is described in more detail in <xref linkend="combine-tags-script" />.</para>
+      <para>Certain information about a class or its methods or
+        properties can only be described using JavaScript syntax. For
+        example, an item can be public, private, or protected
+        (meaning that it is only visible to a subclass); this
+        information is given as a modifier to the JavaScript item
+        declaration.</para>
+      <sect3>
+        <title>LZX and JavaScript Types</title>
+        <para>Certain parts of the LZX language are actually
+          written in JavaScript, so LZX type information given for
+          these entries in the Reference Guide must be inferred from
+          the original JavaScript type declaration. All other
+          portions of LZX -- including your application source -- are
+          of course written in LZX, so JavaScript type information
+          given in the Reference Guide for those portions (useful
+          when writing scripts) much be inferred from any typing
+          information given in the LZX source.</para>
+        <para>LZX types are mostly advisory, but can have an effect
+          on program execution. See the 
+          <xref linkend="attribute-types" /> in the OpenLaszlo Application Developer's Guide for
+          more information.</para>
+      </sect3>
+    </sect2>
+  </sect1>
   <sect1>
     <title>Other Sources of Information</title>
     <itemizedlist>
       <listitem>
         <para>
-        <ulink url="../guide/index.html" target="_blank">Developers
-        Guide</ulink>: targeted at software developers who have
-        familiarity with the concepts of object-oriented
-        programming as implemented in languages such as Java, C++,
-        or JavaScript, and with the fundamentals of XML data
-        formats, including scores of live, editable examples</para>
+          <ulink url="../guide/index.html" target="_blank">Developers
+            Guide</ulink>: targeted at software developers who have
+          familiarity with the concepts of object-oriented
+          programming as implemented in languages such as Java, C++,
+          or JavaScript, and with the fundamentals of XML data
+          formats, including scores of live, editable examples</para>
         <itemizedlist>
           <listitem>
             <para>
-            <ulink url="../developers/tutorials.html"
-            target="_blank">Tutorials</ulink>: part of the
-            OpenLaszlo Application Developer's Guide, the tutorials
-            present simple, live examples that you can edit and run
-            to help you become more familiar with OpenLaszlo
-            concepts.</para>
+              <ulink url="../developers/tutorials.html"
+                target="_blank">Tutorials</ulink>: part of the
+              OpenLaszlo Application Developer's Guide, the tutorials
+              present simple, live examples that you can edit and run
+              to help you become more familiar with OpenLaszlo
+              concepts.</para>
           </listitem>
         </itemizedlist>
       </listitem>
       <listitem>
         <para>
           <ulink url="../component-design/">OpenLaszlo Components
-          Guide</ulink>: a complete description of the core set of customizable user interface devices included with OpenLaszlo
+            Guide</ulink>: a complete description of the core set of customizable user interface devices included with OpenLaszlo
         </para>
       </listitem>
       <listitem>
         <para>
           <ulink url="../deployers/">OpenLaszlo System
-          Administrator's Guide</ulink>: how to put OpenLaszlo applications on the web
+            Administrator's Guide</ulink>: how to put OpenLaszlo applications on the web
         </para>
       </listitem>
       <listitem>
         <para>
           <ulink url="../../laszlo-explorer/" target="_blank">
-          Laszlo Explorer</ulink>: all the documentation listed above, and:
+            Laszlo Explorer</ulink>: all the documentation listed above, and:
         </para>
         <itemizedlist>
           <listitem>
             <para>Demos: rich internet applications that show unity
-            of design</para>
+              of design</para>
           </listitem>
           <listitem>
             <para>OpenLaszlo in Ten Minutes: an interactive guided
-            tour to get you started</para>
+              tour to get you started</para>
           </listitem>
           <listitem>
             <para>Small Applications: shorter programs that
-            illustrate specific aspects of OpenLaszlo
-            development</para>
+              illustrate specific aspects of OpenLaszlo
+              development</para>
           </listitem>
           <listitem>
             <para>Components: an illustrated compendium of
-            OpenLaszlo's prebuilt, user-extendable objects</para>
+              OpenLaszlo's prebuilt, user-extendable objects</para>
           </listitem>
-       </itemizedlist>
+        </itemizedlist>
       </listitem>
       <listitem>
         <para>
           <ulink url="http://www.openlaszlo.org/community"
-          target="_blank">OpenLaszlo Community</ulink>: a way for you to get involved in OpenLaszlo development and support
+            target="_blank">OpenLaszlo Community</ulink>: a way for you to get involved in OpenLaszlo development and support
         </para>
       </listitem>
       <listitem>
         <para>
           <ulink url="http://forum.openlaszlo.org" target="_blank">
-          Developer Forums</ulink>: discussion lists about all things OpenLaszlo
+            Developer Forums</ulink>: discussion lists about all things OpenLaszlo
         </para>
       </listitem>
     </itemizedlist>
-  </sect1>
-  <sect1>
-    <title>Using the Reference</title>
-    <sect2>
-      <title>Section Organization</title>
-      <para>The Reference Guide is divided into chapters, each
-      describing a distinct category of programming interfaces.
-      Each chapter contains a number of sub-chapters, corresponding
-      to sub-categories of APIs, and each sub-chapter contains
-      entries for each of those APIs.</para>
-      <para>Each reference entry contains a title (with an optional
-      short description), a synopsis (floated to the right of the
-      page in HTML), an optional Usage section, a Description,
-      followed by a Details section. Each of these is pretty
-      self-explanatory except for the Details section, which is
-      described in the next section.</para>
-      <para></para>
-    </sect2>
-    <sect2>
-      <title>Reference Entry Details Section</title>
-      <para>The Details section contains information about the
-      methods and properties of each LZX tag-class. Each method or
-      property is described using both LZX syntax and JavaScript
-      syntax.</para>
-      <para>Fully understanding a method or property entry requires
-      understanding a bit about how LZX tags correspond to
-      JavaScript classes. Almost every LZX tag in the language --
-      and every LZX class declared in your program -- is
-      implemented under the covers as a JavaScript class. An LZX
-      tag's methods and attributes correspond to JavaScript methods
-      and properties. LZX's events and handlers correspond to more
-      complex JavaScript constructs. How to combine JavaSaript and LZX
-      tags is described in more detail in <xref linkend="combine-tags-script" />.</para>
-      <para>Certain information about a class or its methods or
-      properties can only be described using JavaScript syntax. For
-      example, an item can be public, private, or protected
-      (meaning that it is only visible to a subclass); this
-      information is given as a modifier to the JavaScript item
-      declaration.</para>
-      <sect3>
-        <title>LZX and JavaScript Types</title>
-        <para>Certain parts of the LZX language are actually
-        written in JavaScript, so LZX type information given for
-        these entries in the Reference Guide must be inferred from
-        the original JavaScript type declaration. All other
-        portions of LZX -- including your application source -- are
-        of course written in LZX, so JavaScript type information
-        given in the Reference Guide for those portions (useful
-        when writing scripts) much be inferred from any typing
-        information given in the LZX source.</para>
-        <para>LZX types are mostly advisory, but can have an effect
-        on program execution. See the 
-        <xref linkend="attribute-types" /> in the OpenLaszlo Application Developer's Guide for
-        more information.</para>
-      </sect3>
-    </sect2>
-  </sect1>
+  </sect1>  
 </preface>

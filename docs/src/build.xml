@@ -777,7 +777,6 @@ All Rights Reserved. Use is subject to license terms.</p>
       <copy todir="${reference.output.dir}">
           <fileset dir="nav" includes="*.*"/>
       </copy>
-      <copy todir="${reference.output.dir}" file="reference/welcome.html" />
       
   </target>
   

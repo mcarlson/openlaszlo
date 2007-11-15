@@ -8,8 +8,8 @@
 <book xmlns:xi="http://www.w3.org/2003/XInclude">
   <?dbhtml dir="reference" ?>
   <?dbhtml filename="index.html" ?>
-  <title>OpenLaszlo 4.0 Reference</title>
-  <titleabbrev>OL4 Reference</titleabbrev>
+  <title>OpenLaszlo 4.1 Reference</title>
+  <titleabbrev>OL4.1 Reference</titleabbrev>
 
   <xi:include href="book-info.dbk"></xi:include>
   
