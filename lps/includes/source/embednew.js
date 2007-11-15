@@ -104,31 +104,36 @@ Lz = {
         };
 
         // Add entry for this application 
-        Lz[properties.id] = { 
+        var app = Lz[properties.id] = { 
             runtime: 'swf'
             ,_id: properties.id
             ,setCanvasAttribute: Lz._setCanvasAttributeSWF
             ,getCanvasAttribute: Lz._getCanvasAttributeSWF
             ,callMethod: Lz._callMethodSWF
             ,_ready: Lz._ready
+            // List of functions to call when the app is loaded
+            ,_onload: []
             ,loaded: false
             ,_sendMouseWheel: Lz._sendMouseWheel
             ,_setCanvasAttributeDequeue: Lz._setCanvasAttributeDequeue
         }
+        // listen for history unless properties.history == false
+        if (properties.history != false) {
+            app._onload.push(Lz.history.init);
+        }
         // for callbacks onload
         Lz._swfid = properties.id;
         dojo.flash.addLoadedListener(Lz._loaded);
-        dojo.flash.addLoadedListener(Lz.history.init)
         if (! Lz['setCanvasAttribute']) {
-            Lz.setCanvasAttribute = Lz[properties.id].setCanvasAttribute;
+            Lz.setCanvasAttribute = app.setCanvasAttribute;
         }
-        if (! Lz['getCanvasAttribute']) Lz.getCanvasAttribute = Lz[properties.id].getCanvasAttribute;
-        if (! Lz['callMethod']) Lz.callMethod = Lz[properties.id].callMethod;
+        if (! Lz['getCanvasAttribute']) Lz.getCanvasAttribute = app.getCanvasAttribute;
+        if (! Lz['callMethod']) Lz.callMethod = app.callMethod;
 
         dojo.flash.setSwf(swfargs, minimumVersion);
         Lz.__BrowserDetect.init();
         if (Lz.__BrowserDetect.OS == 'Mac') {
-            LzMousewheelKernel.setCallback(Lz[properties.id], '_sendMouseWheel');
+            LzMousewheelKernel.setCallback(app, '_sendMouseWheel');
         }
     }
 
@@ -205,16 +210,21 @@ Lz = {
         };
 
         // Add entry for this application 
-        Lz[properties.id] = { 
+        var app = Lz[properties.id] = { 
             runtime: 'dhtml'
             ,_id: properties.id
             ,_ready: Lz._ready
+            ,_onload: []
             ,loaded: false
             ,setCanvasAttribute: Lz._setCanvasAttributeDHTML
             ,getCanvasAttribute: Lz._getCanvasAttributeDHTML
         }
-        if (! Lz['setCanvasAttribute']) Lz.setCanvasAttribute = Lz[properties.id].setCanvasAttribute;
-        if (! Lz['getCanvasAttribute']) Lz.getCanvasAttribute = Lz[properties.id].getCanvasAttribute;
+        // listen for history unless properties.history == false
+        if (properties.history != false) {
+            app._onload.push(Lz.history.init);
+        }
+        if (! Lz['setCanvasAttribute']) Lz.setCanvasAttribute = app.setCanvasAttribute;
+        if (! Lz['getCanvasAttribute']) Lz.getCanvasAttribute = app.getCanvasAttribute;
 
         this.__dhtmlLoadScript(url)
     }
@@ -396,7 +406,7 @@ Lz = {
             this.setCanvasAttribute(a[0], a[1], a[2]);
         }
     }
-    ,/** @access private */
+    ,/** @access private called on canvas init */
     _ready: function (cref) {
         this.loaded = true;
         Lz.loaded = true;
@@ -404,6 +414,12 @@ Lz = {
             this._setCanvasAttributeDequeue();
         }
         if (cref) this.canvas = cref;
+        // call list of functions in _onload array
+        for (var i = 0; i < this._onload.length; i++) {
+            var f = this._onload[i];
+            if (typeof f == 'function') f(this);
+        }
+        // for backward compatibility and simplicity
         if (this.onload && typeof this.onload == 'function') {
             this.onload();
         }
