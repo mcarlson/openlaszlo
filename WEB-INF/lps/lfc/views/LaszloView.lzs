@@ -308,6 +308,14 @@ function construct ( parent , args) {
     if ( r  != null ){
         if (this.sprite) this.setResource( r );
     }
+    if($debug){
+        if( 'valign' in args && args['valign'] && 'y' in args && args['y']){
+            Debug.warn("y attribute ignored; superseded by valign constraint.");
+        }
+        if( 'align' in args && args['align'] && 'x' in args && args['x']){
+            Debug.warn("x attribute ignored; superseded by align constraint.");
+        }
+    }
 }
 
 /** Receive attribute/event change from sprite
