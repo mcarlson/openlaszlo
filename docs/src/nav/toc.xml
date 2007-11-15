@@ -220,10 +220,6 @@
         <item title="videoview" href="lz.videoview.html" />
     </category>
     
-    <category title="Persistent Connection">
-        <item title="connection (LzConnection)" href="LzConnection+swf7+swf8+swf9.html" />        
-        <item title="connectiondatasource (LzConnectionDataSource)" href="LzConnectionDatasource+swf7+swf8+swf9.html" />
-    </category>
     <category title="Development">
         <item title="debug (Debug) [LPP-4936]" href="Debug+debug.html"/>
         <item title="SyncTester" href="lz.SyncTester.html" />
