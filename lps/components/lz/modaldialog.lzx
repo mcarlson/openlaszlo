@@ -1,0 +1,77 @@
+<library>
+    <include href="lz/button.lzx" />
+    <include href="lz/windowpanel.lzx" />
+    <include href="utils/layouts/simplelayout.lzx"/>
+    <include href="utils/layouts/resizelayout.lzx"/>
+
+   <!--- A modal dialog window. -->
+    <class name="modaldialog" extends="windowpanel"
+        x="${(immediateparent.width - this.width)/2}"
+        y="${(immediateparent.height - this.height)/3}"
+        focustrap="true"
+        visible="false">
+
+        <!--- The left inset for the dialog contents from the edge of the
+              window inner frame. -->
+        <attribute name="content_inset_left" value="14"/>
+        <!--- The top inset for the dialog contents from the edge of the window
+              inner frame. -->
+        <attribute name="content_inset_top" value="10"/>
+        <!--- The right inset for the dialog contents from the edge of the
+              window inner frame -->
+        <attribute name="content_inset_right" value="14"/>
+        <!--- The bottom inset for the dialog contents from the edge of the
+              window inner frame. -->
+        <attribute name="content_inset_bottom" value="10"/>
+
+        <!--- @keywords private -->
+        <attribute name="defaultplacement" value="mdcontent" type="string"/>
+        <view name="mdpadding"
+            width="${mdcontent.width + parent.content_inset_left + parent.content_inset_right}"
+            height="${mdcontent.height + parent.content_inset_top + parent.content_inset_bottom}">
+            <view x="${classroot.content_inset_left}" y="${classroot.content_inset_top}"
+                name="mdcontent">
+            <state apply="${!classroot._usecontentwidth}">
+                <attribute name="width" value="${parent.immediateparent.width
+                     - classroot.content_inset_left- classroot.content_inset_right }"/>
+            </state>
+            <state apply="${!classroot._usecontentheight}">
+                <attribute name="height"
+                    value="${parent.immediateparent.height
+                            - classroot.content_inset_top- classroot.content_inset_bottom}"/>
+            </state>
+            <!-- this is the "defaultplacement" view -->
+            </view>
+        </view>
+
+        <!--- Opens the dialog (use this method, not setVisible). While the
+              dialog is open, the user will not be able to interact with other
+              windows or UI elements in the application. -->
+        <method name="open">
+            //need to show this before taking the mode, so that any default
+            //buttons contained by the this window will get hasdefault=true
+            this.setVisible( true );
+            LzModeManager.makeModal( this );
+            this.bringToFront();
+        </method>
+
+        <!--- Closes the dialog. -->
+        <method name="close">
+            this.setVisible( false );
+            LzFocus.clearFocus();
+            LzModeManager.release( this );
+        </method>
+
+        <!--- @keywords private -->
+        <method name="passModeEvent" args="event_name, view">
+            return false;
+        </method>
+   </class>
+
+   
+ </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

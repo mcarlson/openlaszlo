@@ -27,6 +27,8 @@
   <include href="hscrollbar.lzx"/>
   <include href="vscrollbar.lzx"/>
   <include href="window.lzx"/>
+  <include href="modaldialog.lzx"/>  
+  <include href="alert.lzx"/>    
   <include href="windowpanel.lzx"/>
 
   <include href="tabs.lzx"/>
