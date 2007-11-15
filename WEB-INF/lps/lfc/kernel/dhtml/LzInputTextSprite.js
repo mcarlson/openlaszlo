@@ -119,7 +119,8 @@ LzInputTextSprite.prototype.__show = function() {
         this.__LZinputclickdiv.appendChild(this.__LzInputDiv);
     }
     //Debug.write('show');
-    // turn on selection in IE
+    // turn on text selection in IE
+    // can't use Lz.attachEventHandler because we need to cancel events selectively
     document.onselectstart = null;
 }
 
@@ -181,7 +182,8 @@ LzInputTextSprite.prototype.__hide = function() {
     }
     this.__LZdiv.appendChild(this.__LzInputDiv);
     //Debug.write('hide');
-    // turn off selection in IE
+    // turn off text selection in IE
+    // can't use Lz.attachEventHandler because we need to cancel events selectively
     document.onselectstart = LzTextSprite.prototype.__cancelhandler;
 }
 
@@ -427,3 +429,8 @@ LzInputTextSprite.prototype.getTextHeight = function () {
     }    
     return h;
 }
+
+// prevent text selection in IE
+// can't use Lz.attachEventHandler because we need to cancel events
+document.onselectstart = LzTextSprite.prototype.__cancelhandler;
+document.ondrag =  LzTextSprite.prototype.__cancelhandler;

@@ -623,15 +623,16 @@ LzSprite.prototype.__setClickable = function(c, who) {
     if (who._clickable == c) return;
     who._clickable = c;
     if (c) {
+        var f = LzSprite.prototype.__clickDispatcher;
         // must capture the owner in a closure... this is bad for IE 6
-        who.onclick = function (e) { this.owner.__mouseEvent(e); return false;}
-        who.onmouseover = function (e) { this.owner.__mouseEvent(e); return false;}
-        who.onmouseout = function (e) { this.owner.__mouseEvent(e); return false;}
+        who.onclick = f;
+        who.onmouseover = f;
+        who.onmouseout = f;
         // Prevent context menus in Firefox 1.5 - see LPP-2678
-        who.onmousedown = function (e) { this.owner.__mouseEvent(e); return false;}
-        who.onmouseup = function (e) { this.owner.__mouseEvent(e); return false;}
+        who.onmousedown = f;
+        who.onmouseup = f;
         if (this.quirks.fix_ie_clickable) {
-            who.ondrag = function (e) { return false; }
+            who.ondrag = f;
         }
     } else {
         who.onclick = null;
@@ -647,9 +648,19 @@ LzSprite.prototype.__setClickable = function(c, who) {
 
 /**
   * @access private
+  * dispatches click events
+  */
+LzSprite.prototype.__clickDispatcher = function(e) {
+    // capture events in IE
+    if (!e) e = window.event;
+    this.owner.__mouseEvent(e);
+    return false;
+}
+
+/**
+  * @access private
   */
 LzSprite.prototype.__mouseEvent = function ( e ){
-    if (!e) e = window.event;
     if (LzKeyboardKernel && LzKeyboardKernel['__keyboardEvent']) LzKeyboardKernel.__keyboardEvent(e);
     var skipevent = false;
     var eventname = 'on' + e.type;
@@ -1584,16 +1595,6 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
             obj[i] = null;
         }
         LzSprite.prototype.__sprites = {};
-
-        document.onmousemove = null;
-        document.onmousedown = null;
-        document.onmouseup = null;
-        document.oncontextmenu = null;
-        document.onkeydown = null;
-        document.onkeyup = null;
-        document.onkeypress = null;
-        document.onmousewheel = null;
-        Lz.removeEventHandler(window, 'resize', LzScreenKernel, '__resizeEvent');
     }
     Lz.attachEventHandler(window, 'beforeunload', window, '__cleanUpForIE');
 }

@@ -80,6 +80,7 @@ var LzKeyboardKernel = {
         this.__scope = scope;
         this.__callback = keyboardcallback;
         if (lzOptions.dhtmlKeyboardControl != false) {
+            // can't use Lz.attachEventHandler because we need to cancel events selectively
             document.onkeydown = LzKeyboardKernel.__keyboardEvent;
             document.onkeyup = LzKeyboardKernel.__keyboardEvent;
             document.onkeypress = LzKeyboardKernel.__keyboardEvent;

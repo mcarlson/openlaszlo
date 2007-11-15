@@ -425,7 +425,3 @@ LzTextSprite.prototype.setHeight = function (h){
     this.__setHeight(h);
     if (this.multiline) this._styledirty = true;
 }
-
-// prevent text selection in IE
-document.onselectstart = function(){return false;}
-document.ondrag = function(){return false;}

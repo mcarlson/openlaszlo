@@ -26,9 +26,10 @@ LzMousewheelKernel = {
     ,setCallback: function (scope, mousewheelcallback) {
         if (LzMousewheelKernel.__callbacks.length == 0 && lzOptions.dhtmlKeyboardControl != false) {
             if (window.addEventListener) {
-                window.addEventListener('DOMMouseScroll', LzMousewheelKernel.__mousewheelEvent, false);
+                Lz.attachEventHandler(window, 'DOMMouseScroll', LzMousewheelKernel, '__mousewheelEvent');
+            } else {
+                Lz.attachEventHandler(document, 'mousewheel', LzMousewheelKernel, '__mousewheelEvent');
             }
-            document.onmousewheel = LzMousewheelKernel.__mousewheelEvent;
         }
         LzMousewheelKernel.__callbacks.push(scope, mousewheelcallback);
         //console.log('setCallback', LzMousewheelKernel.__callbacks);
