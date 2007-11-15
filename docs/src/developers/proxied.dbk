@@ -48,12 +48,13 @@ running on the client machine and any back-end services or resources located els
 In SOLO deployments, the OpenLaszlo server is not used to mediate between the OpenLaszlo client application and other services on the web.  However, as explained below, it is possible to use other services to proxy between the client application and web resources.
 </para>
 <figure><title>After they have been deployed, SOLO applications do not contact the OpenLaszlo Server</title><mediaobject><imageobject><imagedata fileref="images/solo_proxies.png"/></imageobject></mediaobject></figure>
+<!-- fix LPP-4978 IORIO 13 nov 2007 -->
 <para>
 With OpenLaszlo Server ("proxied") deployment, you place the LZX source (.lzx) file within the
 Web-apps directory of the OpenLaszlo Server. The first time you browse to that file it is dynamically compiled, and it is automatically recompiled whenever the source changes. (You refresh the page to force the recompilation.)
 OpenLaszlo Server deployment requires a Java Application Server or servlet
 container. It provides additional capabilities dependent on the server,
-including support for SOAP, XML-RPC, Java-RPC and persistent connections.
+including support for SOAP, XML-RPC, and Java-RPC.
 </para>
 <para condition="swf">
 In applications compiled to SWF, The OpenLaszlo Server is also required to transcode resources in media formats that are not
@@ -121,7 +122,9 @@ processing certain types of media files.
 </para>
 <para>
 Here is a list of features that require OpenLaszlo Server:</para>
-<itemizedlist spacing="compact"><listitem><para> media types other than SWF, JPG, or MP3  </para></listitem><listitem><para> Persistent Connection</para></listitem><listitem><para> SOAP</para></listitem><listitem><para>XML-RPC</para></listitem><listitem><para>http response headers in XML requests</para></listitem></itemizedlist>
+<itemizedlist spacing="compact"><listitem><para> media types other than SWF, JPG, or MP3  </para></listitem>
+<!-- fix LPP-4978 IORIO 13 nov 2007 -->
+<listitem><para> SOAP</para></listitem><listitem><para>XML-RPC</para></listitem><listitem><para>http response headers in XML requests</para></listitem></itemizedlist>
 <para>
 If your application relies on any of these features, you cannot deploy it SOLO.
 </para>

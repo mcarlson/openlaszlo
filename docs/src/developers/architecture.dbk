@@ -25,10 +25,11 @@ Later chapters explain in detail the differences between proxied and SOLO OpenLa
 
 <itemizedlist spacing="compact"><listitem><para><emphasis role="em">Proxied</emphasis> applications can do a few things that SOLO applications cannot do, but they are more trouble to deploy 
     and sometimes perform more slowly.</para></listitem><listitem><para><emphasis role="em">SOLO</emphasis> applications are easier to deploy and sometimes better-performing.</para></listitem></itemizedlist>
+<!-- fix LPP-4978 IORIO 13 nov 2007 -->
 <para>
 In many cases you don't need to decide which deployment mode to use until you're ready to deploy, and the default choice is usually SOLO. In reading the discussions below,
-keep in mind that when you deploy your applications statically, the run-time capabilities of OpenLaszlo Server (such as media transcoding and
-the persistent connection manager) will not be available.
+keep in mind that when you deploy your applications statically, the run-time capabilities of OpenLaszlo Server 
+(such as media transcoding) will not be available.
 </para>
 <para/></section><section><title>Client and Server: Synopsis</title>
 <para>        
@@ -70,7 +71,9 @@ supported by these server products. OpenLaszlo supports Windows, Solaris, Linux 
 
 <para>The OpenLaszlo Server consists of five main subsystems: </para>
 
-<itemizedlist spacing="compact"><listitem><para>the <glossterm>Interface Compiler</glossterm></para></listitem><listitem><para>the <glossterm>Media Transcoder</glossterm></para></listitem><listitem><para>the <glossterm>Data Manager</glossterm></para></listitem><listitem><para>the <glossterm>Persistent Connection Manager</glossterm></para></listitem><listitem><para>the <glossterm>Cache</glossterm></para></listitem></itemizedlist>
+<itemizedlist spacing="compact"><listitem><para>the <glossterm>Interface Compiler</glossterm></para></listitem><listitem><para>the <glossterm>Media Transcoder</glossterm></para></listitem><listitem><para>the <glossterm>Data Manager</glossterm></para></listitem>
+<!-- fix LPP-4978 IORIO 13 nov 2007 -->
+<listitem><para>the <glossterm>Cache</glossterm></para></listitem></itemizedlist>
 
 <figure><title>OpenLaszlo Server Architecture</title><mediaobject><imageobject><imagedata fileref="images/OLServer_services.png"/></imageobject></mediaobject></figure>
 
@@ -103,17 +106,10 @@ The Data Manager is comprised of a data compiler that converts all data into a c
 applications and a series of data connectors that enable OpenLaszlo applications to retrieve data via XML/HTTP. OpenLaszlo applications
  can thus interface across the network with databases, XML Web Services, and Web-server based files or executables.</para>
 
-<para/></section><section><title condition="swf">The Persistent Connection Manager</title>
+<para/></section>
+<!-- fix LPP-4978 IORIO 13 nov 2007 -->
 
-<para>        
-In applications compiled to SWF, the Persistent Connection Manager handles authentication and real-time messaging for OpenLaszlo applications which require them. 
-It provides real-time messaging and notification or data push over HTTP. This feature does not work in applications compiled to DHTML.</para>
-
-<note><para>This feature is provisional.  It works in limited capacity
-situations and is fine to develop with, but we do not recommend
-deployment (with the possible exception of low-capacity, non-mission
-critical deployment) with this feature.</para></note>
-<para/></section><section><title>The Cache</title>
+<section><title>The Cache</title>
 <para>The cache contains the most recently compiled version of any application. The first time an OpenLaszlo application is 
 requested, it is compiled and the resultant SWF file is sent to the client. A copy is also cached on the server, so that subsequent
 requests do not require waiting for the compilation.</para>
