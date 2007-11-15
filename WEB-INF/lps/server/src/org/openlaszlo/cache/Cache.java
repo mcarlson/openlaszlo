@@ -629,6 +629,20 @@ public abstract class Cache {
             buf.append("\" ");
             buf.append("mem-in-use=\"");
             buf.append(getMemSize());
+
+            buf.append("\" ");
+            buf.append("diskmap-entries=\"");
+            buf.append(mDiskMap.size());
+
+
+            buf.append("\" ");
+            buf.append("memmap-entries=\"");
+            buf.append(mMemMap.size());
+
+            buf.append("\" ");
+            buf.append("activemap-entries=\"");
+            buf.append(mActiveMap.size());
+
             buf.append("\" ");
         buf.append("    >\n");
         if (details) {
