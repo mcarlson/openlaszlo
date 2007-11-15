@@ -45,7 +45,7 @@
   
   <xsl:param name="warn.no.programlisting.canvas.width" select="false()"/>
   
-  <xsl:param name="show.examples.debuginfo" select="true()" />
+  <xsl:param name="show.examples.debuginfo" select="false()" />
   
   <xsl:template name="base.book.name">
     <xsl:choose>
