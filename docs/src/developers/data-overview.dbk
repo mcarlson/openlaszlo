@@ -4,7 +4,7 @@
 
 <section><title>Overview</title>
 <para>
-In this chapter we introduce key concepts about data and databinding at a high level. There is little code, but a fair amount of diagramware to illustrate databinding and replication.
+In this chapter we introduce key concepts about data and databinding at a high level. There is little code, but a fair amount of illustrations to illustrate databinding and replication.
 </para>
 <para>
 LZX is designed to make it easy to manipulate data and tie that data to a user interface.  In particular, LZX provides for:
@@ -18,18 +18,18 @@ For a gentle introduction to databinding and manipulation in OpenLaszlo applicat
 In OpenLaszlo, we work with data in XML format, and navigate through it using XPath syntax. So, this chapter goes over some fundamental concepts about XML and Xpath.
 </para>
 <para>
-Databinding marries the content of an XML datastructure with the OpenLaszlo objects (such as nodes, or views). Databinding allows separation of content from presentation, using datapaths which are objects that connect views to data. Attribute values of nodes and views update automatically when the data to which they are bound changes. There are two related "families" of APIs in LZX, a declarative one that uses the &lt;datapointer&gt;, &lt;datapath&gt; and &lt;dataset&gt; tags, a declarative API based on the LzDataNode, LzDataElement and LzDataText classes, which have methods based on the Document Object Model, or DOM.</para>
+Databinding marries the content of an XML datastructure with the OpenLaszlo objects (such as nodes, or views). Databinding allows separation of content from presentation, using datapaths, which are objects that connect views to data. Attribute values of nodes and views update automatically when the data to which they are bound changes. There are two related "families" of APIs in LZX, a declarative one that uses the &lt;datapointer&gt;, &lt;datapath&gt; and &lt;dataset&gt; tags, a declarative API based on the LzDataNode, LzDataElement and LzDataText classes, which have methods based on the Document Object Model, or DOM.</para>
 <para>
 In this chapter we give a conceptual overview of the logical differences between the DOM-based and datapointer/datapath-based ways of manipulating data, with a preview of how these approaches will be reconciled in later chapters.
 </para>
 <para>
-Datareplication is introduced, and the difference between implicit and explicit replication.
+Datareplication means the use of pattern matching to create zero, one, or more LZX objects according to the contents of a dataset. In this chapter datareplication is introduced, as is the difference between implicit and explicit replication.
 </para>
 <para>
 We then explain some useful design patterns involving datasets, both locally on the client, and between client and server.
 </para>
 <para>
-Finally, we introduce the abstract concept of the dataprovider.
+Finally, we introduce the concept of the dataprovider, which is an abstraction that allows advanced developers to implement protocols other than HTTP for client-server data exchange, while keeping intact the syntax of all other data operations. 
 </para>
 </section>
 <section><title>What is XML?</title>
@@ -40,7 +40,7 @@ number of systems that understand data encoded as XML to inter-operate.  (LZX it
 </para>
 
 <para>
-If you don't already know what the words
+A brief refresher follows, but if you don't already know what the words
 <glossterm>document</glossterm>, <glossterm>element</glossterm> and
 <glossterm>attribute</glossterm> mean in the context of XML, you
 should probably read one of the following decent introductions or grab
