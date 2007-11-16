@@ -530,7 +530,6 @@
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.rng" />
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.xsd" />
 
-      <echo message="benbenben: yo! in main build file target is build, gonna call server/ target build." />
       <ant dir="${webapp-lps-home}/server" target="build" />
       <copy todir="${LPS_HOME}/WEB-INF/lib" file="${webapp-lps-home}/server/lib/${lps.jar}" />
       <ant target="build-classes" />
@@ -593,11 +592,11 @@
   <!--================  Target [doc] ==============-->
   <target name="doc" 
       description="Build documentation"
-      depends="init" unless="doc.build.done">
+      depends="init" unless="skip.doc">
 
       <!-- Build the docs -->
       <ant dir="docs/src" />
-      <property name="doc.build.done" value="true" /> 
+      
   </target>
 
   <!--================  Target [test] ==============-->
