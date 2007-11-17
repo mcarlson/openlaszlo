@@ -1017,7 +1017,7 @@
         </title>
         <para>
           <xsl:variable name="inheritedattrs" select="$superclass/class/property[@name='__ivars__']/object/property[@access='public']"></xsl:variable>
-          <xsl:variable name="allinheritedattrs" select="$inheritedattrs" />
+          <xsl:variable name="allinheritedattrs" select="$inheritedattrs[not &isevent;]" />
           <xsl:for-each select="$allinheritedattrs">
             <xsl:sort select="@name"/>            
             <link linkend="{@id}"><xsl:value-of select="@name"/></link>
