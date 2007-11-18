@@ -15,6 +15,7 @@
             this.evDel = new LzDelegate(this, 'update', this.reference, eventname); 
         </handler>
         <method name="update" args="d">
+            if ($debug) Debug.write(eventname, d);
             this.setAttribute('value', d);
             this.txt.setText(eventname + ': '+ d);
             this.bg.setBGColor(green);
