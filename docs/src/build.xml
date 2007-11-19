@@ -565,7 +565,7 @@ All Rights Reserved. Use is subject to license terms.</p>
           unless="reference.skip">
 
     <property name="ref.file.in" value="${reference.build.dir}/LaszloLibrary-verbose.js2doc"/>
-    <property name="ref.visibility.filter" value="public protected"/>
+    <property name="ref.visibility.filter" value="public"/>
     <property name="ref.show.comments" value="${show.comments}"/>
     <property name="ref.show.fixmes" value="${show.fixmes}"/>
 
@@ -779,6 +779,73 @@ All Rights Reserved. Use is subject to license terms.</p>
       </copy>
       
   </target>
+  
+  <!-- TESTING TARGETS (SUBSETS OF REFERENCE GUIDE) --> 
+  <target name="components.ref.generate" depends="init">
+    
+    <!-- Transform lzx components code into js2doc -->
+    <antcall target="lzx2js2doc.transform" inheritAll="true">
+      <param name="local.input.file" value="${components.dir}/library.lzx"/>
+      <param name="local.output.file" value="${reference.build.dir}/components-raw.xml"/>
+      <param name="lzx.base.dir" value="${components.dir}"/>
+      <param name="lzx.root.path" value="lps/components/"/>
+    </antcall>
+    
+    <copy
+      file="${reference.src.dir}/components-index.dbk"
+      todir="${reference.output.dir}"
+    />
+    
+    <echo message="done making js2doc for components" />
+    <ant dir="${lps.server.dir}" target="js2doc" inheritAll="false">
+      <property name="js2doc.args" value=" --libraryid test --reprocess --out ${reference.build.dir}/components.xml ${reference.build.dir}/components-raw.xml"/>
+    </ant>
+
+    <!-- make certain information explicit to ease processing by js2doc2dbk.xsl -->
+    <style style="xsl/js2doc-verbose.xsl"
+      in="${reference.build.dir}/components-raw.xml"
+      out="${reference.build.dir}/components-verbose.js2doc">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+    </style>
+    
+    <!-- make components.dbk from js2doc -->
+    <property name="ref.file.in" value="${reference.build.dir}/components-verbose.js2doc"/>
+    <property name="ref.visibility.filter" value="public"/>
+    <property name="ref.show.comments" value="${show.comments}"/>
+    <property name="ref.show.fixmes" value="${show.fixmes}"/>
+    
+    
+    
+    <antcall target="dbk.topic.generate" inheritAll="true">
+      <param name="local.input.file" value="${ref.file.in}"/>
+      <param name="local.output.file" value="${reference.build.dir}/compref.dbk"/>
+      <param name="filter.topic" value="Components"/>
+      <param name="visibility.filter" value="${ref.visibility.filter}"/>
+      <param name="dbk.show.comments" value="${ref.show.comments}"/>
+      <param name="dbk.show.fixmes" value="${ref.show.fixmes}"/>
+    </antcall>
+    
+    <copy file="${reference.build.dir}/compref.dbk" 
+      todir="${reference.output.dir}" />
+    <echo message="done making dbk for components" />
+    
+    <!-- make components html from components.dbk --> 
+    
+    <antcall target="book.html.generate" inheritAll="true">
+      <param name="local.input.dir" value="${reference.output.dir}"/>
+      <param name="local.input.index" value="components-index.dbk"/>
+      <param name="local.output.dir" value="${docs.output.dir}"/>
+      <param name="local.output.index" value="reference/index.html"/>
+      <param name="local.output.depends.dir" value="${docs.output.dir}/reference"/>
+      <param name="local.output.depends.set" value="*"/>
+      <param name="local.worksheet" value="xsl/refguide-html.xsl"/>
+      <param name="localdir" value="docs/reference/"/>
+    </antcall>
+    
+    
+  </target>
+  
   
   <!-- CONTRIBUTORS GUIDE -->
   
