@@ -10,7 +10,6 @@
 
 <itemizedlist spacing="compact"><listitem><para>In the first part of this tutorial, you use a static XML document as the data source.</para></listitem><listitem><para>In the second part of this tutorial, you use a relational database as the data source.</para></listitem></itemizedlist>
 
-<informalfigure><mediaobject><imageobject><imagedata fileref="img/d_t_datapp_1.gif"/></imageobject></mediaobject></informalfigure>
 
 
 <para/></section><section><title>Retrieving Data</title>
