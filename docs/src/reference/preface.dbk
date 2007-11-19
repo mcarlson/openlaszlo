@@ -61,10 +61,10 @@
         <listitem>HTML Markup
           <para>
             This secion contains tags that mark up HTML text.  These tags may be used within a
-            <tagname link="true">text</tagname> element, tags that extend this
+            &lt;tagname link="true"&gt;text&lt;/tagname&gt; element, tags that extend this
             tag, and tags whose definition includes a definition for
             <code>&lt;attribute name="text" type="html"/&gt;</code>.  (See the
-            documentation on <a href="${dguide}introductory-classes.html#introductory-classes.text-classes">Text Classes</a>
+            documentation on <xref linkend="introductory-classes.text-classes" />
             for more information about this last category.)
           </para>          
         </listitem>
@@ -150,7 +150,7 @@
     <itemizedlist>
       <listitem>
         <para>
-          <ulink url="../guide/index.html" target="_blank">Developers
+          <ulink url="../developers/" target="_blank">Developer's
             Guide</ulink>: targeted at software developers who have
           familiarity with the concepts of object-oriented
           programming as implemented in languages such as Java, C++,
@@ -159,7 +159,7 @@
         <itemizedlist>
           <listitem>
             <para>
-              <ulink url="../developers/tutorials.html"
+              <ulink url="../developers/tutorials/"
                 target="_blank">Tutorials</ulink>: part of the
               OpenLaszlo Application Developer's Guide, the tutorials
               present simple, live examples that you can edit and run
