@@ -215,7 +215,6 @@ LzSprite.prototype.quirks = {
     ,alt_key_sends_control: false
     ,safari_textarea_subtract_scrollbar_height: false
     ,safari_avoid_clip_position_input_text: false
-    ,reverse_mouse_wheel: false
     ,no_cursor_colresize: false
     ,safari_visibility_instead_of_display: false
     ,preload_images_only_once: false
@@ -309,8 +308,6 @@ LzSprite.prototype.__updateQuirks = function(){
         } else if (Lz.__BrowserDetect.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             this.quirks['invisible_parent_image_sizing_fix'] = true;
-            // reverse mouse wheel
-            this.quirks['reverse_mouse_wheel'] = true;
             this.quirks['no_cursor_colresize'] = true;
             this.quirks['absolute_position_accounts_for_offset'] = true;
             this.quirks['canvas_div_cannot_be_clipped'] = true;

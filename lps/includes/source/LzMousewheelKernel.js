@@ -4,7 +4,7 @@ LzMousewheelKernel = {
         var delta = 0;
         if (e.wheelDelta) {
             delta = e.wheelDelta / 120;
-            if (LzSprite.prototype.quirks['reverse_mouse_wheel']) {
+            if (Lz.__BrowserDetect.isOpera) {
                 delta = -delta;
             }
         } else if (e.detail) {
@@ -27,9 +27,8 @@ LzMousewheelKernel = {
         if (LzMousewheelKernel.__callbacks.length == 0 && lzOptions.dhtmlKeyboardControl != false) {
             if (window.addEventListener) {
                 Lz.attachEventHandler(window, 'DOMMouseScroll', LzMousewheelKernel, '__mousewheelEvent');
-            } else {
-                Lz.attachEventHandler(document, 'mousewheel', LzMousewheelKernel, '__mousewheelEvent');
             }
+            Lz.attachEventHandler(document, 'mousewheel', LzMousewheelKernel, '__mousewheelEvent');
         }
         LzMousewheelKernel.__callbacks.push(scope, mousewheelcallback);
         //console.log('setCallback', LzMousewheelKernel.__callbacks);
