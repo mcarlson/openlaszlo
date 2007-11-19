@@ -16,7 +16,8 @@
               when disabled.-->
         <attribute name="enabled" value="true"/>
 
-        <!--- when true, the component can be focused. -->
+        <!--- when true, the component can be focused. 
+              @access private -->
         <attribute name="focusable" value="true" type="boolean" 
                    setter="_setFocusable(focusable)" />
 

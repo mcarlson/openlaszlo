@@ -11,7 +11,7 @@
 
 /**
   * <p>This class is used for non-editable text fields (as opposed to
-  * tagname <tagname>inputtext</tagname>.  A text field can be initalized
+  * <tagname>inputtext</tagname>.  A text field can be initalized
   * with text content at compile time.</p>
   * 
   * <example>
@@ -82,17 +82,23 @@ static var tagname = 'text';
   * @lzxtype event
   */
 var ontext = LzDeclaredEvent;
-/** @lzxtype event */
+/** @lzxtype event 
+  * @access private */
 var onmaxlength = LzDeclaredEvent;
-/** @lzxtype event */
+/** @lzxtype event 
+  * @access private */
 var onpattern = LzDeclaredEvent;
-/** @lzxtype event */
+/** @lzxtype event 
+  * @access private */
 var onscroll = LzDeclaredEvent;
-/** @lzxtype event */
+/** @lzxtype event 
+  * @access private */
 var onmaxscroll = LzDeclaredEvent;
-/** @lzxtype event */
+/** @lzxtype event 
+  * @access private */
 var onhscroll = LzDeclaredEvent;
-/** @lzxtype event */
+/** @lzxtype event 
+  * @access private */
 var onmaxhscroll = LzDeclaredEvent;
 
 /**
@@ -153,6 +159,7 @@ var multiline;
   * the width of the widest line.  Defaults to true. 
   *
   * @lzxtype booleanLiteral
+  * @modifiers read-only
   */
 var resize = true;
 
@@ -162,8 +169,10 @@ var resize = true;
   */
 var text;
 
+/** @access private */ 
 var colorstring = "#000000"; // black
 
+/** @access private */
 function init () {
     super.init.apply(this, arguments);
 
@@ -361,14 +370,18 @@ defaultattrs.selectable = false;
 
 /**
   * @lzxtype numberExpression
-  * @access private
+  * @modifiers read-only
   */
+var maxlength; 
+/** @access private */ 
 setters.maxlength = "setMaxLength";
 
 /**
   * @lzxtype string
-  * @access private
+  * @modifiers read-only
   */
+var pattern; 
+/** @access private */  
 setters.pattern = "setPattern";
 
 
