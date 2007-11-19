@@ -203,11 +203,20 @@ tr.segtitle > th {
 
 /* Synopsis */
 
+.methodname {
+    color: #333333;
+    font-size: 14px;
+}
+
+.methodparam {
+    font-size: 14px;
+}
+
 .classsynopsis, .methodsynopsis, .fieldsynopsis {
     font-family:"Courier New",Courier,monospace;
 }
 
-.classsynopsis .classname, .methodsynopsis .methodname, .fieldsynopsis .varname {
+.classsynopsis .classname, .methodsynopsis .fieldsynopsis .varname {
     font-weight:bold;
 }
 

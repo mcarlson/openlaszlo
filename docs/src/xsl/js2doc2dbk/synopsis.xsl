@@ -165,7 +165,7 @@
             <methodname><link linkend="{$id}"><xsl:value-of select="@name"/></link></methodname>
           </xsl:when>
           <xsl:otherwise>
-            <methodname><xsl:value-of select="@name"/></methodname>
+            <methodname><xsl:value-of select="ancestor::property/doc/tag[@name='lzxname']/text"/>.<xsl:value-of select="@name"/></methodname>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:for-each select="function/parameter">
@@ -235,7 +235,7 @@
         </xsl:choose>
         <xsl:for-each select="parameter">
           <methodparam>
-            <parameter><xsl:value-of select="@name"/></parameter>
+            <parameter>benhiparameterforfunction<xsl:value-of select="@name"/></parameter>
             <xsl:if test="@type"><type role="javascript"><xsl:value-of select="@type"/></type></xsl:if>
           </methodparam>
         </xsl:for-each>

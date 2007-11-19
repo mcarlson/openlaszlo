@@ -127,11 +127,9 @@
       <xsl:variable name="id-for-output">
         <xsl:choose>
           <xsl:when test="starts-with('lz', $jsname) and (string-length($jsname) = 2)">
-            <xsl:message>We found a thing with javascript name "lz" sweet!</xsl:message>
             <xsl:text>lz.pseudopackage</xsl:text>
           </xsl:when>
           <xsl:when test="starts-with('Lz', $jsname) and (string-length($jsname) = 2)">
-            <xsl:message>We found a thing with javascript name "Lz" sweet!</xsl:message>
             <xsl:text>library.Lz</xsl:text>
           </xsl:when>
           <xsl:otherwise><xsl:value-of select="@id"/></xsl:otherwise>
@@ -591,7 +589,8 @@
         </term>
         <listitem>
             <refsect3>
-              <xsl:apply-templates select="." mode="synopsis">
+              <!-- this prints the name and function parameters with types, ie, callMyMethod( doit: Boolean ) -->
+              <xsl:apply-templates select="." mode="synopsis">  
                 <xsl:with-param name="add-link" select="false()"/>
                 <xsl:with-param name="static" select="$static"/>
                 <xsl:with-param name="language" select="'javascript'" />
@@ -610,9 +609,8 @@
                   <colspec colname="Type" />
                   <colspec colname="Description" />          
                   <thead>
-                    <row><entry namest="Name" nameend="Description" align="left">Parameters</entry></row>
                     <row>
-                      <entry align="left">Name</entry>
+                      <entry align="left">Parameter Name</entry>
                       <entry align="left">Type</entry>
                       <entry align="left">Description</entry>
                     </row>
@@ -760,6 +758,7 @@
     
     <!-- REFENTRY HELPERS -->
     
+    <!-- This template is unused. [bshine 2007.11.16] -->
     <xsl:template name="describe-parameters">
       <segmentedlist>
         <title>Parameters</title>
