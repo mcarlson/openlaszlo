@@ -2,7 +2,7 @@
 
 
 <title>CSS -- Cascading Style Sheets</title>
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>Cascading Style Sheets (CSS) enable web designers to enhance the power
 of HTML tags. In old-fashioned HTML, an &lt;H1&gt; tag would make displayed
 text a little bigger and bolder, but font style, color, and size were
@@ -33,15 +33,7 @@ stylesheet.</para>
    <textobject><textdata fileref="programs/css-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Simplest view</title><programlisting role="lzx-embednew"><filename>css-$1.lzx</filename><parameter/><code>
-  &lt;canvas&gt;
-      &lt;view height="100" width="100" bgcolor="0x663399"/&gt;
-  &lt;/canvas&gt;
-</code></programlisting><programlisting>
-  &lt;canvas&gt;
-      &lt;view height="100" width="100" bgcolor="0x663399"/&gt;
-  &lt;/canvas&gt;
-</programlisting><?lzx-edit programs/css-$1.lzx></example?>
+
 
 <para>To generate that view with a cascading stylesheet:</para>
 
@@ -52,39 +44,7 @@ stylesheet.</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Simplest view with CSS</title><programlisting role="lzx-embednew"><filename>css-$2.lzx</filename><parameter/><code>
 
-&lt;canvas&gt;
-
-&lt;stylesheet&gt;
-    #gView {
-        height: "100";
-        width: "100";
-        bgcolor: "0x663399";
-    }
-&lt;/stylesheet&gt;
-
-&lt;view id="gView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
-
-&lt;/canvas&gt;
-
-</code></programlisting><programlisting>
-
-&lt;canvas&gt;
-
-&lt;stylesheet&gt;
-    #gView {
-        height: "100";
-        width: "100";
-        bgcolor: "0x663399";
-    }
-&lt;/stylesheet&gt;
-
-&lt;view id="gView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
-
-&lt;/canvas&gt;
-
-</programlisting><?lzx-edit programs/css-$2.lzx></example?>
 
 <para>The <literal>$style</literal> constraint tells the OpenLaszlo runtime to style an attribute according to the <literal>stylesheet</literal>. More than one stylesheet can be used in an LZX document; the application of a stylesheet is determined by selectors. </para>
 
@@ -124,71 +84,6 @@ background color.</para>
    <textobject><textdata fileref="programs/css-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Attribute selector</title><programlisting role="lzx-embednew"><filename>css-$5.lzx</filename><parameter/><code>
-
-&lt;canvas height="150" width="320"&gt;
-
-&lt;stylesheet&gt;
-
-[name="PurpleView"] {
-	width: "100";
-	height: "100";
-	bgcolor: "0x9900FF"
-}
-
-[width="200"] {
-	bgcolor: "0x0000FF";
-}
-
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="x" spacing="10"/&gt;
-
-&lt;class name="myPurpleView"&gt;
-	&lt;view name="PurpleView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;class name="myWiderView"&gt;
-	&lt;view name="hoo" height="100" width="200" bgcolor="$style{'bgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;myPurpleView/&gt;
-&lt;myWiderView/&gt;
-
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-
-&lt;canvas height="150" width="200"&gt;
-
-&lt;stylesheet&gt;
-
-[name="PurpleView"] {
-	width: "100";
-	height: "100";
-	bgcolor: "0x9900FF"
-}
-
-[width="200"] {
-	bgcolor: "0x0000FF";
-}
-
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="x" spacing="10"/&gt;
-
-&lt;class name="myPurpleView"&gt;
-	&lt;view name="PurpleView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;class name="myWiderView"&gt;
-	&lt;view name="hoo" height="100" width="200" bgcolor="$style{'bgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;myPurpleView/&gt;
-&lt;myWiderView/&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/css-$5.lzx></example?>
 
 <para>The class <literal>myPurpleView</literal> contains a view whose <literal>name</literal> corresponds to the
 stylesheet selector <literal>[name="PurpleView"]</literal>, so each of its <literal>$style</literal> rules is
@@ -211,39 +106,6 @@ applied. The class <literal>myWiderView</literal> contains a view whose <literal
    <textobject><textdata fileref="programs/css-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Element selector</title><programlisting role="lzx-embednew"><filename>css-$7.lzx</filename><parameter/><code>
-
-&lt;canvas height="200" width="200"&gt;
- 
-&lt;stylesheet&gt;
-        view {
-            nicebgcolor: "0x0000FF";
-            micebgcolor: "0xCCCCCC";
-        }
-&lt;/stylesheet&gt;
-
-&lt;view height="100" width="100" bgcolor="$style{'nicebgcolor'}"/&gt;
-&lt;view height="75" width="75" bgcolor="0xFFFFFF"/&gt;
-&lt;view height="50" width="50" bgcolor="$style{'micebgcolor'}"/&gt;
-
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-
-&lt;canvas height="200" width="200"&gt;
- 
-&lt;stylesheet&gt;
-        view {
-            nicebgcolor: "0x0000FF";
-            micebgcolor: "0xCCCCCC";
-        }
-&lt;/stylesheet&gt;
-
-&lt;view height="100" width="100" bgcolor="$style{'nicebgcolor'}"/&gt;
-&lt;view height="75" width="75" bgcolor="0xFFFFFF"/&gt;
-&lt;view height="50" width="50" bgcolor="$style{'micebgcolor'}"/&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/css-$7.lzx></example?>
 
 <para/></section><section><title>ID selectors</title>
 
@@ -262,65 +124,7 @@ when it matches a node's ID:</para>
    <textobject><textdata fileref="programs/css-$9.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>ID selector</title><programlisting role="lzx-embednew"><filename>css-$9.lzx</filename><parameter/><code>
 
-&lt;canvas height="200" width="200"&gt;
-
-&lt;stylesheet&gt;
-
-#red {
-    width: 100;
-    height: 100;
-	bgcolor: "0xFF3333";
-}
-
-#blue {
-    width: 150;
-    height: 150;
-	bgcolor: "0x3333FF";
-}
- 
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="x" spacing="5" /&gt;
-
-&lt;class name="gBox" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
-
-&lt;gBox id="red" /&gt;
-&lt;gBox id="blue" /&gt;
-
-&lt;/canvas&gt;
-
-</code></programlisting><programlisting>
-
-&lt;canvas height="200" width="200"&gt;
-
-&lt;stylesheet&gt;
-
-#red {
-    width: 100;
-    height: 100;
-	bgcolor: "0xFF3333";
-}
-
-#blue {
-    width: 150;
-    height: 150;
-	bgcolor: "0x3333FF";
-}
- 
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="x" spacing="5" /&gt;
-
-&lt;class name="gBox" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
-
-&lt;gBox id="red" /&gt;
-&lt;gBox id="blue" /&gt;
-
-&lt;/canvas&gt;
-
-</programlisting><?lzx-edit programs/css-$9.lzx></example?>
 
 <para/></section><section><title>Descendant selectors </title>
 
@@ -351,97 +155,6 @@ three ancestors "fee", "fi", and "foo".</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Descendant selector</title><programlisting role="lzx-embednew"><filename>css-$11.lzx</filename><parameter/><code>
-
-&lt;canvas width="400" height="400"&gt;
-
-&lt;stylesheet&gt;
-
-    styledbox {
-        stylebgcolor: "0xCCCCCC";
-        styleinnercolor: "0xFF0000";
-    }
-
-    styledbox styledbox2 {
-        stylebgcolor: "0x999999";
-        styleinnercolor: "0x0000FF";
-    }
-
-    styledbox styledbox2 styledbox3 {
-        stylebgcolor: "0x666666";
-        styleinnercolor: "0x00FF00";
-    }
-
-&lt;/stylesheet&gt;
-
-&lt;class name="styledbox" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
-	&lt;view name="snow" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;class name="styledbox2" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
-	&lt;view name="braxton" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;class name="styledbox3" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
-	&lt;view name="jackson" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;styledbox id="comet" x="200" y="0"&gt;
-			&lt;styledbox2 id="shock" x="-100" y="100"&gt;
-					&lt;styledbox3 id="storm" x="-100" y="100"/&gt;
-			&lt;/styledbox2&gt;
-&lt;/styledbox&gt;
-
-&lt;styledbox2/&gt;
-&lt;styledbox3/&gt;
-
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-
-&lt;canvas width="400" height="400"&gt;
-
-&lt;stylesheet&gt;
-
-    styledbox {
-        stylebgcolor: "0xCCCCCC";
-        styleinnercolor: "0xFF0000";
-    }
-
-    styledbox styledbox2 {
-        stylebgcolor: "0x999999";
-        styleinnercolor: "0x0000FF";
-    }
-
-    styledbox styledbox2 styledbox3 {
-        stylebgcolor: "0x666666";
-        styleinnercolor: "0x00FF00";
-    }
-
-&lt;/stylesheet&gt;
-
-&lt;class name="styledbox" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
-	&lt;view name="snow" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;class name="styledbox2" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
-	&lt;view name="braxton" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;class name="styledbox3" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
-	&lt;view name="jackson" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;styledbox id="comet" x="200" y="0"&gt;
-			&lt;styledbox2 id="shock" x="-100" y="100"&gt;
-					&lt;styledbox3 id="storm" x="-100" y="100"/&gt;
-			&lt;/styledbox2&gt;
-&lt;/styledbox&gt;
-
-&lt;styledbox2/&gt;
-&lt;styledbox3/&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/css-$11.lzx></example?>
 
 <para>In the example above, the instances of <literal>styledbox2</literal> and <literal>styledbox3</literal> at the
 end of the script don't appear on the canvas at all, because there's no
@@ -465,81 +178,7 @@ the resource(s) in the stylesheet:</para>
    <textobject><textdata fileref="programs/css-$12.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Nested view</title><programlisting role="lzx-embednew"><filename>css-$12.lzx</filename><parameter/><code>
 
-&lt;canvas height="350" width="700"&gt;
-
-&lt;stylesheet&gt;
-
-        #sun {
-          bgcolor: "0x16355E"; 
-          face: "../resources/smiley.gif";
-        }
-        
-        #monarchs {
-            bgcolor: "0xB2B9CB";
-            face: "../resources/sourface.png";
-        }
- 
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="x" spacing="10"/&gt;
-
-&lt;class name="bouncebox"&gt;
-        &lt;view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}"&gt;
-            &lt;view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-100}" height="${immediateparent.height-100}" /&gt;
-        	&lt;view name="gBounce" source="$style{'face'}" x="50" y="50"&gt;
-				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
-				&lt;animator attribute="y" from="50" to="150" duration="1000" motion="linear"/&gt;
-				&lt;animator attribute="y" from="50" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
-   	   			&lt;/animatorgroup&gt;
-   	   		&lt;/view&gt;
-		&lt;/view&gt;
-&lt;/class&gt;
-
-&lt;bouncebox id="monarchs" /&gt;
-&lt;bouncebox id="sun" /&gt;
-
-&lt;/canvas&gt;
-
-</code></programlisting><programlisting>
-
-&lt;canvas height="350" width="700"&gt;
-
-&lt;stylesheet&gt;
-
-        #sun {
-          bgcolor: "0x16355E"; 
-          face: "../resources/smiley.gif";
-        }
-        
-        #monarchs {
-            bgcolor: "0xB2B9CB";
-            face: "../resources/sourface.png";
-        }
- 
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="x" spacing="10"/&gt;
-
-&lt;class name="bouncebox"&gt;
-        &lt;view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}"&gt;
-            &lt;view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-100}" height="${immediateparent.height-100}" /&gt;
-        	&lt;view name="gBounce" source="$style{'face'}" x="50" y="50"&gt;
-				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
-				&lt;animator attribute="y" from="50" to="150" duration="1000" motion="linear"/&gt;
-				&lt;animator attribute="y" from="50" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
-   	   			&lt;/animatorgroup&gt;
-   	   		&lt;/view&gt;
-		&lt;/view&gt;
-&lt;/class&gt;
-
-&lt;bouncebox id="monarchs" /&gt;
-&lt;bouncebox id="sun" /&gt;
-
-&lt;/canvas&gt;
-
-</programlisting><?lzx-edit programs/css-$12.lzx></example?>
 
 <para/></section><section><title>Dynamically-Created Views</title>
 
@@ -551,115 +190,6 @@ the resource(s) in the stylesheet:</para>
    <textobject><textdata fileref="programs/css-$13.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Styled views created dynamically</title><programlisting role="lzx-embednew"><filename>css-$13.lzx</filename><parameter/><code>
-
-&lt;canvas debug="true"&gt;
-
-&lt;stylesheet&gt;
-mookie {
-height : 25;
-width : 25;
-bgcolor : #0000FF;
-}
-
-blaylock {
-title : "Blaylock";
-bgcolor : #FF0000;
-}
-
-wilson {
-height : 25;
-width : 200;
-fgcolor : #FF00FF;
-text : "Wilson";
-}
-&lt;/stylesheet&gt;
-
-&lt;class name="mookie" x="200" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
-
-&lt;class name="blaylock"&gt;
-&lt;window title="$style{'title'}" x="250" height="100" width="150" bgcolor="$style{'bgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;class name="wilson" &gt;
-&lt;text text="$style{'text'}" x="400" height="$style{'height'}" width="$style{'width'}" fgcolor="$style{'fgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;button text="Dynamically create Mookie"&gt;
-&lt;method event="onclick"&gt;
-canvas.mookieView=new mookie(canvas, {});
-&lt;/method&gt;
-&lt;/button&gt;
-
-&lt;button text="Dynamically create Blaylock" y="50"&gt;
-&lt;method event="onclick"&gt;
-canvas.blaylockWindow=new blaylock(canvas, {});
-&lt;/method&gt;
-&lt;/button&gt;
-
-&lt;button text="Dynamically create Wilson" y="100"&gt;
-&lt;method event="onclick"&gt;
-canvas.wilsonText=new wilson(canvas, {});
-&lt;/method&gt;
-&lt;/button&gt;
-
-&lt;/canvas&gt;
-
-</code></programlisting><programlisting>
-
-&lt;canvas debug="true"&gt;
-
-&lt;stylesheet&gt;
-mookie {
-height : 25;
-width : 25;
-bgcolor : #0000FF;
-}
-
-blaylock {
-title : "Blaylock";
-bgcolor : #FF0000;
-}
-
-wilson {
-height : 25;
-width : 200;
-fgcolor : #FF00FF;
-text : "Wilson";
-}
-&lt;/stylesheet&gt;
-
-&lt;class name="mookie" x="200" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
-
-&lt;class name="blaylock"&gt;
-&lt;window title="$style{'title'}" x="250" height="100" width="150" bgcolor="$style{'bgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;class name="wilson" &gt;
-&lt;text text="$style{'text'}" x="400" height="$style{'height'}" width="$style{'width'}" fgcolor="$style{'fgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;button text="Dynamically create Mookie"&gt;
-&lt;method event="onclick"&gt;
-canvas.mookieView=new mookie(canvas, {});
-&lt;/method&gt;
-&lt;/button&gt;
-
-&lt;button text="Dynamically create Blaylock" y="50"&gt;
-&lt;method event="onclick"&gt;
-canvas.blaylockWindow=new blaylock(canvas, {});
-&lt;/method&gt;
-&lt;/button&gt;
-
-&lt;button text="Dynamically create Wilson" y="100"&gt;
-&lt;method event="onclick"&gt;
-canvas.wilsonText=new wilson(canvas, {});
-&lt;/method&gt;
-&lt;/button&gt;
-
-&lt;/canvas&gt;
-
-</programlisting><?lzx-edit programs/css-$13.lzx></example?>
 
 
 <para/></section><section><title>Specificity</title>
@@ -685,75 +215,6 @@ ascending order):</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Specificity</title><programlisting role="lzx-embednew"><filename>css-$14.lzx</filename><parameter/><code>
-
-&lt;canvas width="350" height="150"&gt;
-
-&lt;stylesheet&gt;
-
-view {
-	height: "50";
-	width: "50";
-	bgcolor: "0xFF0000";
-	}
-	
-[name='blue'] {
-	height: "50";
-	width: "50";
-	bgcolor: "0x0000FF";
-	}
-
-#green {
-	height: "50";
-	width: "50";
-	bgcolor: "0x006600";
-	}
-
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="x" spacing="25"/&gt;
-
-	&lt;view id="red" name="red" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/&gt;
-	&lt;view id="blue" name="blue" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
-	&lt;view id="green" name="green" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
-
-&lt;/canvas&gt;
-
-</code></programlisting><programlisting>
-
-&lt;canvas width="350" height="150"&gt;
-
-&lt;stylesheet&gt;
-
-view {
-	height: "50";
-	width: "50";
-	bgcolor: "0xFF0000";
-	}
-	
-[name='blue'] {
-	height: "50";
-	width: "50";
-	bgcolor: "0x0000FF";
-	}
-
-#green {
-	height: "50";
-	width: "50";
-	bgcolor: "0x006600";
-	}
-
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="x" spacing="25"/&gt;
-
-	&lt;view id="red" name="red" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/&gt;
-	&lt;view id="blue" name="blue" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
-	&lt;view id="green" name="green" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
-
-&lt;/canvas&gt;
-
-</programlisting><?lzx-edit programs/css-$14.lzx></example?>
 
 <para>The first view -- <literal>red</literal> -- fires the element selector, because its ID is
 not "green", and its name is not "blue". It is an instance of a "view"
@@ -781,73 +242,6 @@ invoked. The selector closest to the bottom of the stylesheet prevails.</para>
    <textobject><textdata fileref="programs/css-$15.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Lexical order</title><programlisting role="lzx-embednew"><filename>css-$15.lzx</filename><parameter/><code>
-
-&lt;canvas height="200" width="345"&gt;
-
-&lt;stylesheet&gt;
-	
-	[height="50"] {
-	height: "50";
-	width: "100";
-	bgcolor: "0xFF0000";
-	}
-	
-	[width="100"] {
-	height: "50";
-	width: "100";
-	bgcolor: "0x0000FF";
-	}
-	
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="y" spacing="10"/&gt;
-
-&lt;view name="short" width="100" height="50" bgcolor="$style{'bgcolor'}"/&gt;
-
-&lt;view y="75"&gt;
-	&lt;text text="If I'm red, the first stylesheet was triggered."/&gt;
-&lt;/view&gt;
-
-&lt;view y="100"&gt;
-	&lt;text text="If I'm blue, the second stylesheet was triggered."/&gt;
-&lt;/view&gt;
-
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-
-&lt;canvas height="200" width="345"&gt;
-
-&lt;stylesheet&gt;
-	
-	[height="50"] {
-	height: "50";
-	width: "100";
-	bgcolor: "0xFF0000";
-	}
-	
-	[width="100"] {
-	height: "50";
-	width: "100";
-	bgcolor: "0x0000FF";
-	}
-	
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="y" spacing="10"/&gt;
-
-&lt;view name="short" width="100" height="50" bgcolor="$style{'bgcolor'}"/&gt;
-
-&lt;view y="75"&gt;
-	&lt;text text="If I'm red, the first stylesheet was triggered."/&gt;
-&lt;/view&gt;
-
-&lt;view y="100"&gt;
-	&lt;text text="If I'm blue, the second stylesheet was triggered."/&gt;
-&lt;/view&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/css-$15.lzx></example?>
 
 <para/></section></section><section><title>Importing an external stylesheet</title>
 

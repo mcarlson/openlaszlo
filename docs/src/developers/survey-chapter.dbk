@@ -2,7 +2,7 @@
 
 
 <title>A Components-based application</title>
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>OpenLaszlo components are high level objects that implement common user-interface functions. 
 They range from relatively simple objects like <indexterm><primary>button</primary></indexterm><sgmltag class="element">&lt;button&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: button-->
@@ -52,37 +52,7 @@ We begin constructing the questionnaire at the heart of the survey:
    <textobject><textdata fileref="programs/survey-chapter-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Survey Toolradiogroup</title><programlisting role="lzx-embednew"><filename>survey-chapter-$1.lzx</filename><parameter/><code>
-&lt;canvas height="200" &gt;
-        &lt;view&gt;
-          
-                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
-                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
-                &lt;/radiogroup&gt;
-                
-    
-        &lt;/view&gt;
-&lt;/canvas&gt;
 
-</code></programlisting><programlisting>
-&lt;canvas height="200" &gt;
-        &lt;view&gt;
-          
-                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
-                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
-                &lt;/radiogroup&gt;
-                
-    
-        &lt;/view&gt;
-&lt;/canvas&gt;
-
-</programlisting><?lzx-edit programs/survey-chapter-$1.lzx></example?>
 <para/></section><section><title>Putting components inside a &lt;form&gt;</title>
 <para>
 As discussed above, the <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -98,55 +68,7 @@ added a button and associated it with the form's <indexterm><primary><literal>su
    <textobject><textdata fileref="programs/survey-chapter-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Survey Tool—Simple Form</title><programlisting role="lzx-embednew"><filename>survey-chapter-$2.lzx</filename><parameter/><code>
-&lt;canvas height="200" &gt;
-        &lt;view&gt;
-            &lt;form name="myform" bgcolor="#c0c0c0" spacing="33"&gt;
-                &lt;submit id="surveysubmit" /&gt;
- 
-                &lt;view height="20"&gt;
-                    &lt;text&gt;What is your favorite vacation spot?&lt;/text&gt;
-                &lt;/view&gt; 
-                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
-                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
-                &lt;/radiogroup&gt;
-                &lt;button isdefault="true"&gt;Vote
-                    &lt;handler name="onclick"&gt;
-                        surveysubmit.submit();
-                    &lt;/handler&gt;
-                &lt;/button&gt;
-            &lt;/form&gt;
-        &lt;/view&gt;
-&lt;/canvas&gt;
 
-</code></programlisting><programlisting>
-&lt;canvas height="200" &gt;
-        &lt;view&gt;
-          <emphasis role="em">  &lt;form name="myform" bgcolor="#c0c0c0" spacing="33"&gt;</emphasis>
-                &lt;submit id="surveysubmit" /&gt;
- 
-                &lt;view height="20"&gt;
-                    &lt;text&gt;What is your favorite vacation spot?&lt;/text&gt;
-                &lt;/view&gt; 
-                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
-                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
-                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
-                &lt;/radiogroup&gt;
-              <emphasis role="em">  &lt;button isdefault="true"&gt;Vote
-                    &lt;handler name="onclick"&gt;
-                        surveysubmit.submit();
-                    &lt;/handler&gt;
-                &lt;/button&gt;
-            &lt;/form&gt;</emphasis>
-        &lt;/view&gt;
-&lt;/canvas&gt;
-
-</programlisting><?lzx-edit programs/survey-chapter-$2.lzx></example?>
 <para/></section><section><title>The Data Model</title>
 <para>
 As we've seen above, the <indexterm><primary><literal>submit()</literal></primary></indexterm><methodname>submit()</methodname> on the form causes user responses to be recorded.

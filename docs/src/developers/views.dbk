@@ -2,7 +2,7 @@
 
 <title>Views</title>
 
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <indexterm zone="views" significance="preferred"><primary>Views</primary></indexterm>
 <indexterm zone="views" significance="preferred"><primary>view</primary></indexterm>
 
@@ -32,15 +32,7 @@ an audio file.
    <textobject><textdata fileref="programs/views-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>simple view</title><programlisting role="lzx-embednew"><filename>views-$1.lzx</filename><parameter/><code>
-&lt;canvas height="50" width="500"&gt;
-  &lt;view width="50" height="50" bgcolor="red"/&gt; 
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50" width="500"&gt;
-  &lt;view width="50" height="50" bgcolor="red"/&gt; 
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$1.lzx></example?>
+
 
 
 <example role="live-example">
@@ -49,15 +41,7 @@ an audio file.
    <textobject><textdata fileref="programs/views-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>invisible view</title><programlisting role="lzx-embednew"><filename>views-$2.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;view height="20" width="20" clickable="true"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;view height="20" width="20" clickable="true"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$2.lzx></example?>
+
 
 <para>The following example shows that the view, although invisible, is
 indeed present.  To see that this is so, click in the upper left
@@ -70,17 +54,7 @@ corner, and then elsewhere on the canvas.</para>
    <textobject><textdata fileref="programs/views-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>clicking on invisible view</title><programlisting role="lzx-embednew"><filename>views-$3.lzx</filename><parameter/><code>
-&lt;canvas height="160" debug="true"&gt;
-  &lt;debug y="30"/&gt;
-  &lt;view height="20" width="20" onclick="Debug.write('howdy')"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="160" debug="true"&gt;
-  &lt;debug y="30"/&gt;
-  &lt;view height="20" width="20" onclick="Debug.write('howdy')"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$3.lzx></example?>
+
 <para/></section><section><title>view visibility</title>
 <para>A view is only visible if it has a color or an image assigned to it, and if the height and width are greater than zero.
  For example, the following code displays only two images even though four views are defined. The second and third views exist but
@@ -93,23 +67,7 @@ corner, and then elsewhere on the canvas.</para>
    <textobject><textdata fileref="programs/views-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>invisible views affect placement</title><programlisting role="lzx-embednew"><filename>views-$4.lzx</filename><parameter/><code>
-&lt;canvas height="60" width="500"&gt;
-  &lt;view width="50" height="50" bgcolor="red"/&gt;  
-  &lt;view width="50" height="50"/&gt;                
-  &lt;view width="0" height="50" bgcolor="blue"/&gt;  
-  &lt;view resource="../images/logo.png"/&gt;         
-  &lt;simplelayout axis="x" spacing="5"/&gt; 
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="60" width="500"&gt;
-  &lt;view width="50" height="50" bgcolor="red"/&gt;  <co id="N10058"/>
-  &lt;view width="50" height="50"/&gt;                <co id="N1005B"/>
-  &lt;view width="0" height="50" bgcolor="blue"/&gt;  <co id="N1005E"/>
-  &lt;view resource="../images/logo.png"/&gt;         <co id="N10061"/>
-  &lt;simplelayout axis="x" spacing="5"/&gt; 
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$4.lzx></example?>
+
     <!-- added para tags: callout can not contain CDATA LI LPP-4643 9.4.2007 -->
 <calloutlist><callout arearefs="N10058"><para>This view is a red square.</para></callout><callout arearefs="N1005B"><para>This view has no visual representation because it has no color, but it still exists and displaces other views.</para></callout><callout arearefs="N1005E"><para>This view has no visual representation because it has no width, but it still exists.</para></callout><callout arearefs="N10061"><para>This view displays the jpg image.</para></callout></calloutlist>
 
@@ -129,23 +87,7 @@ methods:</para>
    <textobject><textdata fileref="programs/views-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Simple Layout</title><programlisting role="lzx-embednew"><filename>views-$5.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;view bgcolor="red" width="50" height="50" 
-        onclick="this.bringToFront()"/&gt;
-  &lt;view bgcolor="blue" width="50" height="50" x="20" y="20"/&gt;
-  &lt;view bgcolor="green" width="50" height="50" x="40" y="40"
-        onclick="this.sendToBack()"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;view bgcolor="red" width="50" height="50" 
-        onclick="this.bringToFront()"/&gt;
-  &lt;view bgcolor="blue" width="50" height="50" x="20" y="20"/&gt;
-  &lt;view bgcolor="green" width="50" height="50" x="40" y="40"
-        onclick="this.sendToBack()"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$5.lzx></example?>
+
 
 <para>
 There are also methods such as <indexterm><primary><literal>sendBehind()</literal></primary></indexterm><methodname>sendBehind()</methodname> and <indexterm><primary><literal>sendInFrontOf()</literal></primary></indexterm><methodname>sendInFrontOf()</methodname>, that allow you to move a view in the z-axis more precisely, relative to a specified view:
@@ -157,25 +99,7 @@ There are also methods such as <indexterm><primary><literal>sendBehind()</litera
    <textobject><textdata fileref="programs/views-$6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>fixme5</title><programlisting role="lzx-embednew"><filename>views-$6.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;view bgcolor="red" id="red" width="50" height="50" 
-        onclick="this.sendInFrontOf(blue)"/&gt;
-  &lt;view bgcolor="blue" id="blue" width="50" height="50" x="20" y="20"
-        onclick="this.sendInFrontOf(green)"/&gt;
-  &lt;view bgcolor="green" id="green" width="50" height="50" x="40" y="40"
-        onclick="this.sendBehind(red)"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;view bgcolor="red" id="red" width="50" height="50" 
-        onclick="this.sendInFrontOf(blue)"/&gt;
-  &lt;view bgcolor="blue" id="blue" width="50" height="50" x="20" y="20"
-        onclick="this.sendInFrontOf(green)"/&gt;
-  &lt;view bgcolor="green" id="green" width="50" height="50" x="40" y="40"
-        onclick="this.sendBehind(red)"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$6.lzx></example?>
+
 <para/></section><section><title>Nesting views within views</title>
 <para>Views can also be contained within other views, allowing you to create 
   complex visual elements. Each <glossterm>parent view</glossterm> can have any number of children, and each <glossterm>child view</glossterm> is positioned relative 
@@ -187,25 +111,7 @@ There are also methods such as <indexterm><primary><literal>sendBehind()</litera
    <textobject><textdata fileref="programs/views-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>view containing other views</title><programlisting role="lzx-embednew"><filename>views-$7.lzx</filename><parameter/><code>
-&lt;canvas height="200" width="500"&gt;
-  &lt;view bgcolor="red" x="50" y="50" width="100" height="100"&gt;
-    &lt;view bgcolor="blue" width="50" height="50"/&gt;
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"&gt;
-       &lt;view width="50" height="50" bgcolor="green"/&gt;
-    &lt;/view&gt;
-   &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="200" width="500"&gt;
-  &lt;view bgcolor="red" x="50" y="50" width="100" height="100"&gt;
-    &lt;view bgcolor="blue" width="50" height="50"/&gt;
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"&gt;
-       &lt;view width="50" height="50" bgcolor="green"/&gt;
-    &lt;/view&gt;
-   &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$7.lzx></example?>
+
  <para>
 Each child view has one and only one parent view. The relationship between parent and child views is examined below 
 and in later chapters.
@@ -225,26 +131,7 @@ the attribute <literal>clip="true"</literal> can be added to the parent:</para>
    <textobject><textdata fileref="programs/views-$8.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>using the clip attribute</title><programlisting role="lzx-embednew"><filename>views-$8.lzx</filename><parameter/><code>
-&lt;canvas height="150" width="500"&gt;
-  &lt;view bgcolor="red" x="50" y="50" width="100" height="100" clip="true"&gt;
-    &lt;view bgcolor="blue" width="50" height="50"/&gt;
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"&gt;
-       &lt;view width="50" height="50" bgcolor="green"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="150" width="500"&gt;
-  &lt;view bgcolor="red" x="50" y="50" width="100" height="100" <emphasis role="em">clip="true"</emphasis>&gt;
-    &lt;view bgcolor="blue" width="50" height="50"/&gt;
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"&gt;
-       &lt;view width="50" height="50" bgcolor="green"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$8.lzx></example?>
- 
+
 <para>As stated above, views don't need to display an image or color to
 affect other views. These types of views are referred to as "blank
 views".  In fact, this technique of using blank views to group others
@@ -259,25 +146,7 @@ outermost view.</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>blank view</title><programlisting role="lzx-embednew"><filename>views-$9.lzx</filename><parameter/><code>
-&lt;canvas height="200" width="500"&gt;
-  &lt;view x="50" y="50" width="100" height="100"&gt;
-    &lt;view bgcolor="blue" width="50" height="50"/&gt;
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"&gt;
-       &lt;view width="50" height="50" bgcolor="green"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="200" width="500"&gt;
-  &lt;view x="50" y="50" width="100" height="100"&gt;
-    &lt;view bgcolor="blue" width="50" height="50"/&gt;
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"&gt;
-       &lt;view width="50" height="50" bgcolor="green"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$9.lzx></example?>
+
 <para/></section><section><title>views, constraints and layouts</title>
 <para>The fact that a view can be assigned  different dimensions than the
 bounding box of its subviews is taken advantage of by other
@@ -311,37 +180,7 @@ comes up in countless situations.
    <textobject><textdata fileref="programs/views-$10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>layouts and bounding box of subviews</title><programlisting role="lzx-embednew"><filename>views-$10.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="500"&gt;
-  &lt;view bgcolor="red" width="200" height="30"&gt;
-    &lt;view bgcolor="blue" width="30" height="30"/&gt;
-    &lt;view bgcolor="yellow" width="30" height="30"/&gt;
-    &lt;view bgcolor="blue" width="30" height="30"/&gt;
-    &lt;simplelayout axis="x" spacing="0"/&gt; 
-  &lt;/view&gt;
-  &lt;view bgcolor="red" width="200" height="30" y="50"&gt;
-    &lt;view bgcolor="blue" width="30" height="30"/&gt;
-    &lt;view bgcolor="yellow" width="30" height="30"/&gt;
-    &lt;view bgcolor="blue" width="30" height="30"/&gt;
-    &lt;stableborderlayout axis="x"/&gt; 
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="500"&gt;
-  &lt;view bgcolor="red" width="200" height="30"&gt;
-    &lt;view bgcolor="blue" width="30" height="30"/&gt;
-    &lt;view bgcolor="yellow" width="30" height="30"/&gt;
-    &lt;view bgcolor="blue" width="30" height="30"/&gt;
-    &lt;simplelayout axis="x" spacing="0"/&gt; 
-  &lt;/view&gt;
-  &lt;view bgcolor="red" width="200" height="30" y="50"&gt;
-    &lt;view bgcolor="blue" width="30" height="30"/&gt;
-    &lt;view bgcolor="yellow" width="30" height="30"/&gt;
-    &lt;view bgcolor="blue" width="30" height="30"/&gt;
-    &lt;stableborderlayout axis="x"/&gt; 
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$10.lzx></example?>
+
   
 
 <para/></section></section><section><title>The View Coordinate system</title>
@@ -373,25 +212,6 @@ parent. For example, consider the case below:</para>
    <textobject><textdata fileref="programs/views-$11.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>relative positions</title><programlisting role="lzx-embednew"><filename>views-$11.lzx</filename><parameter/><code>
-&lt;canvas height="350" debug="true"&gt;
-  &lt;debug y="60" /&gt;
-  &lt;view name="parentView" x="10" bgcolor="blue" height="40" width="40"
-   oninit="Debug.write('parentView x is', x)" &gt;
-    &lt;view name="childView" x="35" bgcolor="yellow" height="20" width="20"
-    oninit="Debug.write('childview x is', x)"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="350" debug="true"&gt;
-  &lt;debug y="60" /&gt;
-  &lt;view name="parentView" x="10" bgcolor="blue" height="40" width="40"
-   oninit="Debug.write('parentView x is', x)" &gt;
-    &lt;view name="childView" x="35" bgcolor="yellow" height="20" width="20"
-    oninit="Debug.write('childview x is', x)"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$11.lzx></example?>
 
 <para><varname>childView</varname>'s <indexterm><primary>x</primary></indexterm><sgmltag class="attribute">x</sgmltag> value is
 <literal>35</literal>, but its <indexterm><primary>x</primary></indexterm><sgmltag class="attribute">x</sgmltag> value <emphasis role="i">relative to
@@ -441,31 +261,6 @@ In the case above, the yellow view will resize as its contents resize and move. 
    <textobject><textdata fileref="programs/views-$13.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Resizing View</title><programlisting role="lzx-embednew"><filename>views-$13.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;class name="dragBox" onmousedown="dragger.apply()"
-           onmouseup="dragger.remove()" clickable="true" 
-           width="10" height="10" bgcolor="red"&gt;
-      &lt;dragstate name="dragger"/&gt;
-  &lt;/class&gt;
-
-  &lt;view bgcolor="yellow" y="10" x="10"&gt;
-    &lt;dragBox x="30" y="10"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;class name="dragBox" onmousedown="dragger.apply()"
-           onmouseup="dragger.remove()" clickable="true" 
-           width="10" height="10" bgcolor="red"&gt;
-      &lt;dragstate name="dragger"/&gt;
-  &lt;/class&gt;
-
-  &lt;view bgcolor="yellow" y="10" x="10"&gt;
-    &lt;dragBox x="30" y="10"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$13.lzx></example?>
 
 <para>To get around this problem (in the example of a view that is
 dragged), there are two solutions:</para>
@@ -544,31 +339,7 @@ The text is smaller relative to the canvas and to the computer screen, but not t
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Simple scaling with text</title><programlisting role="lzx-embednew"><filename>views-$14.lzx</filename><parameter/><code>
-&lt;canvas width="700" height="100"&gt;
-      &lt;font src="helmetb.ttf" name="helmet"/&gt;
-  &lt;view stretches="both" height="100" bgcolor="red" 
-           onclick="this.animate('height', -10, 1000 , true )"&gt;
-    &lt;attribute name="aspect" value="${unstretchedwidth/unstretchedheight}"/&gt;
-    &lt;attribute name="width" value="${ height * aspect}"/&gt;
-    &lt;text font="helmet" fontsize="22" resize="true"&gt;
-      This is some text
-    &lt;/text&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="700" height="100"&gt;
-      &lt;font src="helmetb.ttf" name="helmet"/&gt;
-  &lt;view stretches="both" height="100" bgcolor="red" 
-           onclick="this.animate('height', -10, 1000 , true )"&gt;
-    &lt;attribute name="aspect" value="${unstretchedwidth/unstretchedheight}"/&gt;
-    &lt;attribute name="width" value="${ height * aspect}"/&gt;
-    &lt;text font="helmet" fontsize="22" resize="true"&gt;
-      This is some text
-    &lt;/text&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$14.lzx></example?>
+
 <para>
 Here we have modified the example to further illustrate the same point.  Notice how the width of the green view, as reported by the
 debugger, does not change, even as the view visibly shrinks.</para>
@@ -579,37 +350,7 @@ debugger, does not change, even as the view visibly shrinks.</para>
    <textobject><textdata fileref="programs/views-$15.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Simple scaling with text and colored view</title><programlisting role="lzx-embednew"><filename>views-$15.lzx</filename><parameter/><code>
-&lt;canvas width="700" height="300" debug="true"&gt;
-      &lt;debug y="120"/&gt;
-      &lt;font src="helmetb.ttf" name="helmet"/&gt;
-  &lt;view stretches="both" height="100" bgcolor="red" 
-           onclick="this.animate('height', -10, 1000 , true );
-           Debug.write('greenview new width is', greenview.width)"&gt;
-    &lt;attribute name="aspect" value="${unstretchedwidth/unstretchedheight}"/&gt;
-    &lt;attribute name="width" value="${ height * aspect}"/&gt;
-    &lt;view name="greenview" height="100" width="80" bgcolor="green"/&gt;
-    &lt;text font="helmet" fontsize="22" resize="true"&gt;
-      This is some text
-    &lt;/text&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="700" height="300" debug="true"&gt;
-      &lt;debug y="120"/&gt;
-      &lt;font src="helmetb.ttf" name="helmet"/&gt;
-  &lt;view stretches="both" height="100" bgcolor="red" 
-           onclick="this.animate('height', -10, 1000 , true );
-           Debug.write('greenview new width is', greenview.width)"&gt;
-    &lt;attribute name="aspect" value="${unstretchedwidth/unstretchedheight}"/&gt;
-    &lt;attribute name="width" value="${ height * aspect}"/&gt;
-    &lt;view name="greenview" height="100" width="80" bgcolor="green"/&gt;
-    &lt;text font="helmet" fontsize="22" resize="true"&gt;
-      This is some text
-    &lt;/text&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$15.lzx></example?>
+
 
 <para/></section><section><title>Offsets</title>
 <!-- fix typo "registration pointthat" LPP-4769 IORIO 12 oct 2007-->
@@ -629,45 +370,7 @@ demonstrates this. See below for an explanation of what's going on in this progr
    <textobject><textdata fileref="programs/views-$16.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Offsets and registration point</title><programlisting role="lzx-embednew"><filename>views-$16.lzx</filename><parameter/><code>
-&lt;canvas height="250"&gt;
-    &lt;view x="100" y="100"
-          bgcolor="yellow" xoffset="20" yoffset="20"
-          width="100" height="100" &gt;
-        &lt;view x="${parent.xoffset}" 
-              width="1" height="100%" bgcolor="black" /&gt;
-        &lt;view y="${parent.yoffset}" 
-              width="100%" height="1" bgcolor="black" /&gt;
-         &lt;animatorgroup repeat="-1" &gt;
-            &lt;animator attribute="xoffset" duration="1000" to="70" /&gt;
-            &lt;animator attribute="xoffset" duration="1000" to="20" /&gt;
-         &lt;/animatorgroup&gt;
-         &lt;animatorgroup repeat="-1" &gt;
-            &lt;animator attribute="yoffset" duration="500" to="70" /&gt;
-            &lt;animator attribute="yoffset" duration="500" to="20" /&gt;
-         &lt;/animatorgroup&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="250"&gt;
-    &lt;view x="100" y="100"
-          bgcolor="yellow" xoffset="20" yoffset="20"
-          width="100" height="100" &gt;
-        &lt;view x="${parent.xoffset}" 
-              width="1" height="100%" bgcolor="black" /&gt;
-        &lt;view y="${parent.yoffset}" 
-              width="100%" height="1" bgcolor="black" /&gt;
-         &lt;animatorgroup repeat="-1" &gt;
-            &lt;animator attribute="xoffset" duration="1000" to="70" /&gt;
-            &lt;animator attribute="xoffset" duration="1000" to="20" /&gt;
-         &lt;/animatorgroup&gt;
-         &lt;animatorgroup repeat="-1" &gt;
-            &lt;animator attribute="yoffset" duration="500" to="70" /&gt;
-            &lt;animator attribute="yoffset" duration="500" to="20" /&gt;
-         &lt;/animatorgroup&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$16.lzx></example?>
+
 <para>
 The reason that the intersection point does not move is that the parent view (in this case the canvas) is 
 placing the colored view at that point, and that point does not change. it is only the <literal>xoffset</literal> and <literal>yoffset</literal>
@@ -686,33 +389,7 @@ the pivot point of the red square is the origin is its upper left corner; the pi
    <textobject><textdata fileref="programs/views-$17.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Simple Offsets</title><programlisting role="lzx-embednew"><filename>views-$17.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;view x="60" y="60" height="40" width="40" bgcolor="red"
-        onclick="this.rotate.doStart()"&gt;
-    &lt;animator name="rotate" attribute="rotation" to="45" duration="500"
-              start="false" relative="true"/&gt;
-  &lt;/view&gt;
-  &lt;view x="60" y="60" height="40" width="40" bgcolor="blue" xoffset="20" yoffset="20"
-        onclick="this.rotate.doStart()"&gt;
-    &lt;animator name="rotate" attribute="rotation" to="45" duration="500" start="false"
-              relative="true"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;view x="60" y="60" height="40" width="40" bgcolor="red"
-        onclick="this.rotate.doStart()"&gt;
-    &lt;animator name="rotate" attribute="rotation" to="45" duration="500"
-              start="false" relative="true"/&gt;
-  &lt;/view&gt;
-  &lt;view x="60" y="60" height="40" width="40" bgcolor="blue" <emphasis role="em">xoffset="20" yoffset="20"</emphasis>
-        onclick="this.rotate.doStart()"&gt;
-    &lt;animator name="rotate" attribute="rotation" to="45" duration="500" start="false"
-              relative="true"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$17.lzx></example?>
+
 
 <para>Offsets allow the view to be placed
 relative to the point (<indexterm><primary>xoffset</primary></indexterm><sgmltag class="attribute">xoffset</sgmltag>,
@@ -748,27 +425,6 @@ You can position views using absolute x and y coordinates, and the view will be 
    <textobject><textdata fileref="programs/views-$18.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>absolute positioning</title><programlisting role="lzx-embednew"><filename>views-$18.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;view bgcolor="yellow" width="300" height="300" x="15" y="20"&gt;
-    &lt;view bgcolor="red" width="20" height="20" x="25" y="75"/&gt;
-
-    &lt;view bgcolor="blue" width="20" height="20" x="75" y="200"/&gt;
-
-    &lt;view bgcolor="green" width="20" height="20" x="50" y="50"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;view bgcolor="yellow" width="300" height="300" x="15" y="20"&gt;
-    &lt;view bgcolor="red" width="20" height="20" x="<emphasis role="b">25</emphasis>" y="<emphasis role="b">75</emphasis>"/&gt;
-
-    &lt;view bgcolor="blue" width="20" height="20" x="<emphasis role="b">75</emphasis>" y="<emphasis role="b">200</emphasis>"/&gt;
-
-    &lt;view bgcolor="green" width="20" height="20" x="<emphasis role="b">50</emphasis>" y="<emphasis role="b">50</emphasis>"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$18.lzx></example?>
 
 
 <para/></section><section><title>Declarative positioning of views using constraints</title>
@@ -784,37 +440,7 @@ the blue view's x and y positions are constrained to a function of the red view'
    <textobject><textdata fileref="programs/views-$19.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using constraints to position views</title><programlisting role="lzx-embednew"><filename>views-$19.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;view bgcolor="yellow" width="300" height="300"&gt;
-    &lt;attribute name="someXValue" type="number" value="50"/&gt;
 
-    &lt;view bgcolor="red" name="red" width="20" height="20" 
-            x="$once{20 + 5}" y="$once{70 + 5}"/&gt;
-
-    &lt;view bgcolor="blue" width="20" height="20" 
-            x="${parent.red.y}" y="${parent.red.x}"/&gt;
-
-    &lt;view bgcolor="green" width="20" height="20" 
-            x="${parent.someXValue}" y="${this.x}"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;view bgcolor="yellow" width="300" height="300"&gt;
-    &lt;attribute name="someXValue" type="number" value="50"/&gt;
-
-    &lt;view bgcolor="red" name="red" width="20" height="20" 
-            x="<emphasis role="b">$once{20 + 5}</emphasis>" y="<emphasis role="b">$once{70 + 5}</emphasis>"/&gt;
-
-    &lt;view bgcolor="blue" width="20" height="20" 
-            x="<emphasis role="b">${parent.red.y}</emphasis>" y="<emphasis role="b">${parent.red.x}</emphasis>"/&gt;
-
-    &lt;view bgcolor="green" width="20" height="20" 
-            x="<emphasis role="b">${parent.someXValue}</emphasis>" y="<emphasis role="b">${this.x}</emphasis>"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$19.lzx></example?>
 <para>
 In the example above,
 </para>
@@ -837,33 +463,7 @@ but not to contain the red and silver squares, which have negative x and y value
    <textobject><textdata fileref="programs/views-$20.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Positive and negative offsets</title><programlisting role="lzx-embednew"><filename>views-$20.lzx</filename><parameter/><code>
-&lt;canvas height="250" bgcolor="gray"&gt;
-  &lt;view x="100" y="100" bgcolor="teal"&gt;
-    &lt;view bgcolor="red" width="20" height="20"
-            onclick="this.animate('y' , -50 , 1000, true)"/&gt;
-    &lt;view bgcolor="silver" width="20" height="20"
-            onclick="this.animate('x' , -50 , 1000, true)"/&gt;
-    &lt;view bgcolor="blue" width="20" height="20"
-            onclick="this.animate('y' , 50 , 1000, true)"/&gt;
-    &lt;view bgcolor="black" width="20" height="20"
-            onclick="this.animate('x' , 50 , 1000, true)"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="250" bgcolor="gray"&gt;
-  &lt;view x="100" y="100" bgcolor="teal"&gt;
-    &lt;view bgcolor="red" width="20" height="20"
-            onclick="this.animate('y' , -50 , 1000, true)"/&gt;
-    &lt;view bgcolor="silver" width="20" height="20"
-            onclick="this.animate('x' , -50 , 1000, true)"/&gt;
-    &lt;view bgcolor="blue" width="20" height="20"
-            onclick="this.animate('y' , 50 , 1000, true)"/&gt;
-    &lt;view bgcolor="black" width="20" height="20"
-            onclick="this.animate('x' , 50 , 1000, true)"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$20.lzx></example?> 
+
 <para/></section>
 <section>
 <!-- add sectin on pixel locking per LPP-992, IORIO 18 oct 2007 -->
@@ -891,23 +491,6 @@ parents and children is obvious from their position in the code.</para>
    <textobject><textdata fileref="programs/views-$21.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>simple view hierarchy</title><programlisting role="lzx-embednew"><filename>views-$21.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-   &lt;view height="100" width="100" name="grandparent" bgcolor="red"&gt;
-      &lt;view height="50" width="50" name="parent" bgcolor="green"&gt;
-        &lt;view height="30" width="30" name="child" bgcolor="blue"/&gt;
-      &lt;/view&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-   &lt;view height="100" width="100" name="grandparent" bgcolor="red"&gt;
-      &lt;view height="50" width="50" name="parent" bgcolor="green"&gt;
-        &lt;view height="30" width="30" name="child" bgcolor="blue"/&gt;
-      &lt;/view&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$21.lzx></example?>
 
 <para>However, things are usually more complicated, especially when views are created within classes. Views can be created or destroyed at runtime, and moreover a single
 line of code can cause the creation of an arbitrary number of views. In many cases there are, in effect, two hierarchies-
@@ -927,45 +510,6 @@ hierarchies.  These terms are explained in greater depth in later chapters, but 
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Parent and Immediate Parent</title><programlisting role="lzx-embednew"><filename>views-$22.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;class name="mywindow"
-        onmousedown="dragger.apply()" onmouseup="dragger.remove()"
-        bgcolor="blue"&gt;
-    &lt;dragstate name="dragger"/&gt;
-
-    &lt;attribute name="defaultplacement" value="mycontent" type="string"/&gt;
-
-    &lt;view name="mycontent" x="10" y="10" bgcolor="white"
-             width="${parent.width-20}" height="${parent.height-20}"&gt;
-      
-    &lt;/view&gt;
-  &lt;/class&gt;
-
-  &lt;mywindow id="w" width="100" height="100"&gt;
-    &lt;text&gt;hello&lt;/text&gt;
-  &lt;/mywindow&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;class name="mywindow"
-        onmousedown="dragger.apply()" onmouseup="dragger.remove()"
-        bgcolor="blue"&gt;
-    &lt;dragstate name="dragger"/&gt;
-
-    &lt;attribute name="defaultplacement" value="mycontent" type="string"/&gt;
-
-    &lt;view name="mycontent" x="10" y="10" bgcolor="white"
-             width="${parent.width-20}" height="${parent.height-20}"&gt;
-      <co id="N102AC"/>
-    &lt;/view&gt;
-  &lt;/class&gt;
-
-  &lt;mywindow id="w" width="100" height="100"&gt;
-    &lt;text&gt;hello&lt;/text&gt;
-  &lt;/mywindow&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$22.lzx></example?>
             <!-- added para tags: callout can not contain CDATA LI LPP-4643 9.4.2007 -->
 <calloutlist><callout arearefs="N102AC"><para>default placement view: instance or subclass children go here</para></callout></calloutlist>
 
@@ -992,32 +536,7 @@ XAML distinguishes between the logical tree and the visual tree.  The logical tr
    <textobject><textdata fileref="programs/views-$23.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Simple placement</title><programlisting role="lzx-embednew"><filename>views-$23.lzx</filename><parameter/><code>
-&lt;canvas height="60"&gt;
-  &lt;class name="myclass"&gt;
-    &lt;simplelayout/&gt;
-    &lt;view name="content"/&gt;
-    &lt;text&gt;label&lt;/text&gt;
-  &lt;/class&gt;
-    
-   &lt;myclass&gt;&lt;text placement="content"&gt;content1&lt;/text&gt;&lt;/myclass&gt;
-   &lt;myclass&gt;&lt;text placement="content"&gt;content2&lt;/text&gt;&lt;/myclass&gt;
-   &lt;simplelayout axis="y"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="60"&gt;
-  &lt;class name="myclass"&gt;
-    &lt;simplelayout/&gt;
-    &lt;view name="content"/&gt;
-    &lt;text&gt;label&lt;/text&gt;
-  &lt;/class&gt;
-    
-   &lt;myclass&gt;&lt;text placement="content"&gt;content1&lt;/text&gt;&lt;/myclass&gt;
-   &lt;myclass&gt;&lt;text placement="content"&gt;content2&lt;/text&gt;&lt;/myclass&gt;
-   &lt;simplelayout axis="y"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-$23.lzx></example?>
- 
+
 <para>this source fragment:</para>
 
 <informalexample role="live-example"><programlisting>

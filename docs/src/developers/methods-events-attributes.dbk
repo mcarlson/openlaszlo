@@ -1,6 +1,6 @@
 <chapter id="methods-events-attributes">
 <title>Methods, Events, Handlers, and Attributes</title>
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para/><section><title> Overview </title>
 
 <para>
@@ -62,31 +62,6 @@ In the following example, the <indexterm><primary><literal>myMethod()</literal><
    <textobject><textdata fileref="programs/methods-events-attributes-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Defining a method</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$1.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;debug /&gt; 
-  &lt;node id="myNode"&gt; 
-    &lt;method name="myMethod"&gt;
-      Debug.write('Nice day if it do not rain');          
-    &lt;/method&gt;
-  &lt;/node&gt; 
-  &lt;script&gt;
-   myNode.myMethod()
-  &lt;/script&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;debug /&gt; 
-  &lt;node id="myNode"&gt; 
-    &lt;method name="myMethod"&gt;
-      Debug.write('Nice day if it do not rain');          
-    &lt;/method&gt;
-  &lt;/node&gt; 
-  &lt;script&gt;
-   myNode.myMethod()
-  &lt;/script&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$1.lzx></example?>
 
 <para/><section><title>Naming methods</title>
 <para>
@@ -119,33 +94,6 @@ script to add the number 1 to the number 2, you would write <literal>myNode.add(
    <textobject><textdata fileref="programs/methods-events-attributes-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Defining a method with arguments</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$2.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;debug y="10"/&gt;
-  &lt;node id="myNode"&gt;
-    &lt;method name="add" args="a,b"&gt;
-      var sum = a + b;
-      Debug.write('a + b = ' + sum);          
-    &lt;/method&gt;
-  &lt;/node&gt;
-  &lt;script&gt;
-     myNode.add(4,9)
-   &lt;/script&gt;
-&lt;/canvas&gt; 
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;debug y="10"/&gt;
-  &lt;node id="myNode"&gt;
-    &lt;method name="add" args="a,b"&gt;
-      var sum = a + b;
-      Debug.write('a + b = ' + sum);          
-    &lt;/method&gt;
-  &lt;/node&gt;
-  &lt;script&gt;
-     myNode.add(4,9)
-   &lt;/script&gt;
-&lt;/canvas&gt; 
-</programlisting><?lzx-edit programs/methods-events-attributes-$2.lzx></example?>
 
 <para/></section><section><title> Return Values </title>
 
@@ -160,41 +108,7 @@ further processing.  In the following example, <literal>returnsum()</literal> me
    <textobject><textdata fileref="programs/methods-events-attributes-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Returning data from a method</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$3.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;debug y="10"/&gt;
-  &lt;node id="myNode"&gt;
-    &lt;method name="returnsum" args="a,b"&gt;
-      var sum = 3 + 4;
-      Debug.write('a + b = ' + sum);          
-      return sum;
-    &lt;/method&gt;
-  &lt;/node&gt;
-  &lt;script&gt;
-      var x = 5;
-      var y = myNode.returnsum();
-      var z = x + y;
-      Debug.write('z equals ' +  z)
-  &lt;/script&gt;
-&lt;/canvas&gt; 
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;debug y="10"/&gt;
-  &lt;node id="myNode"&gt;
-    &lt;method name="returnsum" args="a,b"&gt;
-      var sum = 3 + 4;
-      Debug.write('a + b = ' + sum);          
-      return sum;
-    &lt;/method&gt;
-  &lt;/node&gt;
-  &lt;script&gt;
-      var x = 5;
-      var y = myNode.returnsum();
-      var z = x + y;
-      Debug.write('z equals ' +  z)
-  &lt;/script&gt;
-&lt;/canvas&gt; 
-</programlisting><?lzx-edit programs/methods-events-attributes-$3.lzx></example?>
+
 
 <para/></section></section><section><title>Events</title>
 <para>
@@ -295,15 +209,7 @@ the views's color from red to blue.
    <textobject><textdata fileref="programs/methods-events-attributes-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Event handler defined in opening tag</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$5.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-   &lt;view height="30" width="30" bgcolor="red" onclick="setAttribute('bgcolor', blue)"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-   &lt;view height="30" width="30" bgcolor="red" onclick="setAttribute('bgcolor', blue)"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$5.lzx></example?>
+
 <para/></section><section><title>The &lt;handler&gt; tag</title>
 <para>The <indexterm><primary>handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: handler-->
@@ -325,23 +231,7 @@ The following example shows how you might handle a button click:
    <textobject><textdata fileref="programs/methods-events-attributes-$6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>A simple handler</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$6.lzx</filename><parameter/><code>
-&lt;canvas height="40"&gt;
-  &lt;button text="not clicked"&gt;
-    &lt;handler name="onclick"&gt;
-      this.setAttribute('text', 'clicked'); 
-    &lt;/handler&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;  
-</code></programlisting><programlisting>
-&lt;canvas height="40"&gt;
-  &lt;button text="not clicked"&gt;
-    &lt;handler name="onclick"&gt;
-      this.setAttribute('text', 'clicked'); 
-    &lt;/handler&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;  
-</programlisting><?lzx-edit programs/methods-events-attributes-$6.lzx></example?> 
+ 
 <para/></section></section><section><title>Multiple handlers for the same event</title>
 <para>
 An event can have associated with it any number of handlers. When that event is sent, all handlers associated with it are executed.
@@ -353,39 +243,7 @@ An event can have associated with it any number of handlers. When that event is 
    <textobject><textdata fileref="programs/methods-events-attributes-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Multiple handlers for one event</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$7.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;debug y=" 20"/&gt;
-  &lt;button&gt;
-   Howdy!
-   &lt;handler name="onclick"&gt;
-      Debug.write("handler one")
-   &lt;/handler&gt;
-     &lt;handler name="onclick"&gt;
-      Debug.write("handler two")
-   &lt;/handler&gt;
-  &lt;handler name="onclick"&gt;
-      Debug.write("handler three")
-   &lt;/handler&gt;
-   &lt;/button&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;debug y=" 20"/&gt;
-  &lt;button&gt;
-   Howdy!
-   &lt;handler name="onclick"&gt;
-      Debug.write("handler one")
-   &lt;/handler&gt;
-     &lt;handler name="onclick"&gt;
-      Debug.write("handler two")
-   &lt;/handler&gt;
-  &lt;handler name="onclick"&gt;
-      Debug.write("handler three")
-   &lt;/handler&gt;
-   &lt;/button&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$7.lzx></example?>
+
 <para/></section><section><title>Handlers that call methods</title>
 <para>
 A handler may include JavaScript code to be executed when the associated event occurs, or it may reference a method that contains the code to be executed.  To reference another method, use the <indexterm><primary>method</primary></indexterm><sgmltag class="attribute">method</sgmltag> attribute of the <indexterm><primary>handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag> tag.</para>
@@ -396,33 +254,7 @@ A handler may include JavaScript code to be executed when the associated event o
    <textobject><textdata fileref="programs/methods-events-attributes-$8.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Calling a method from a handler</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$8.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-   &lt;debug y="50"/&gt;
- &lt;simplelayout/&gt;
- &lt;view name="myview" height="30" width="30" bgcolor="blue"/&gt;
- &lt;button&gt;
-   Make red the blue box!
-  &lt;handler name="onclick" method="redify"/&gt;
-  &lt;method name="redify"&gt;
-     parent.myview.setAttribute("bgcolor", red)
-  &lt;/method&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-   &lt;debug y="50"/&gt;
- &lt;simplelayout/&gt;
- &lt;view name="myview" height="30" width="30" bgcolor="blue"/&gt;
- &lt;button&gt;
-   Make red the blue box!
-  &lt;handler name="onclick" method="redify"/&gt;
-  &lt;method name="redify"&gt;
-     parent.myview.setAttribute("bgcolor", red)
-  &lt;/method&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$8.lzx></example?>
+
 <para/></section><section><title>Handlers in class definitions</title>
 <para>
 A handler is not overridable in a subclass, so you can add as many handlers as you like to an event and they will all fire. 
@@ -454,57 +286,7 @@ If you want the superclass to define a handler that the subclass can override, y
    <textobject><textdata fileref="programs/methods-events-attributes-$9.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Overriding event-handler method in subclass</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$9.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;class name="base" extends="button"&gt;
-    &lt;handler name="onclick" method="handleonclick" /&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("base click");
-    &lt;/method&gt;
-  &lt;/class&gt;
 
-  &lt;class name="subaccumulate" extends="base"&gt;
-    &lt;handler name="onclick"&gt;
-      Debug.write("subaccumulate click");
-    &lt;/handler&gt;
-  &lt;/class&gt;
-
-  &lt;class name="suboverride" extends="base"&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("suboverride click");
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;subaccumulate&gt;accumulate&lt;/subaccumulate&gt;
-  &lt;suboverride&gt;override&lt;/suboverride&gt;
-  &lt;simplelayout /&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;class name="base" extends="button"&gt;
-    &lt;handler name="onclick" method="handleonclick" /&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("base click");
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;class name="subaccumulate" extends="base"&gt;
-    &lt;handler name="onclick"&gt;
-      Debug.write("subaccumulate click");
-    &lt;/handler&gt;
-  &lt;/class&gt;
-
-  &lt;class name="suboverride" extends="base"&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("suboverride click");
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;subaccumulate&gt;accumulate&lt;/subaccumulate&gt;
-  &lt;suboverride&gt;override&lt;/suboverride&gt;
-  &lt;simplelayout /&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$9.lzx></example?>
 <para>
 Here is the same example with instances:
 </para>
@@ -515,53 +297,7 @@ Here is the same example with instances:
    <textobject><textdata fileref="programs/methods-events-attributes-$10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Overriding event-handling method in an intance</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$10.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;class name="base" extends="button"&gt;
-    &lt;handler name="onclick" method="handleonclick" /&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("base click");
-    &lt;/method&gt;
-  &lt;/class&gt;
 
-  &lt;base text="Accumulate"&gt;
-    &lt;handler name="onclick"&gt;
-      Debug.write("subaccumulate click");
-    &lt;/handler&gt;
-  &lt;/base&gt;
-
-  &lt;base text="Override"&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("suboverride click");
-    &lt;/method&gt;
-  &lt;/base&gt;
-
-  &lt;simplelayout /&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;class name="base" extends="button"&gt;
-    &lt;handler name="onclick" method="handleonclick" /&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("base click");
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;base text="Accumulate"&gt;
-    &lt;handler name="onclick"&gt;
-      Debug.write("subaccumulate click");
-    &lt;/handler&gt;
-  &lt;/base&gt;
-
-  &lt;base text="Override"&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("suboverride click");
-    &lt;/method&gt;
-  &lt;/base&gt;
-
-  &lt;simplelayout /&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$10.lzx></example?>
 <para>
 Suppose you want to handle, in one class, an event from some other object?  In that case, you would use the <indexterm><primary>reference</primary></indexterm><sgmltag class="attribute">reference</sgmltag> attribute:
 </para>
@@ -579,59 +315,7 @@ Here's an example:</para>
    <textobject><textdata fileref="programs/methods-events-attributes-$11.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Referencing an event in another object</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$11.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;class name="base" extends="button"&gt;
-    &lt;handler name="onclick" method="handleonclick" /&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("base click");
-    &lt;/method&gt;
-  &lt;/class&gt;
 
-  &lt;base id="yours" text="Yours"&gt;
-    &lt;handler name="onclick"&gt;
-      Debug.write("Your click");
-    &lt;/handler&gt;
-  &lt;/base&gt;
-
-  &lt;base text="Mine"&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("My click");
-    &lt;/method&gt;
-    &lt;handler name="onclick" reference="yours"&gt;
-      Debug.write("Someone is pushing your buttons.");
-    &lt;/handler&gt;
-  &lt;/base&gt;
-
-  &lt;simplelayout /&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;class name="base" extends="button"&gt;
-    &lt;handler name="onclick" method="handleonclick" /&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("base click");
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;base id="yours" text="Yours"&gt;
-    &lt;handler name="onclick"&gt;
-      Debug.write("Your click");
-    &lt;/handler&gt;
-  &lt;/base&gt;
-
-  &lt;base text="Mine"&gt;
-    &lt;method name="handleonclick"&gt;
-      Debug.write("My click");
-    &lt;/method&gt;
-    &lt;handler name="onclick" reference="yours"&gt;
-      Debug.write("Someone is pushing your buttons.");
-    &lt;/handler&gt;
-  &lt;/base&gt;
-
-  &lt;simplelayout /&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$11.lzx></example?>
 <para>
 Note that Mine handles a click on Yours.  Even though the handler is in Mine, it only runs when you click Yours. 
 </para>
@@ -646,67 +330,7 @@ As has been discussed above, you can cause an event to be sent explicitly, by de
    <textobject><textdata fileref="programs/methods-events-attributes-$12.lzx"/></textobject> 
    </programlisting>
 </example>
-<?informalexample role="live-example"><programlisting role="lzx-embednew"><filename>methods-events-attributes-$12.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-     &lt;debug /&gt;
 
-    &lt;class name="myclass_with_handler"&gt;
-        &lt;event name="myevent"/&gt;
-        &lt;handler name="myevent" args="myargs"&gt;
-            Debug.write(this, 'handling myevent, myargs=', myargs);
-        &lt;/handler&gt;
-
-        &lt;attribute name="season" type="string" value="spring" /&gt;
-        &lt;event name="onseason" /&gt;
-        &lt;handler name="onseason" args="s"&gt;
-            Debug.write("got season of ", s, ", season is ", season);
-        &lt;/handler&gt;
-    &lt;/class&gt;
-
-  &lt;myclass_with_handler id="foo" /&gt;
-
-
-  &lt;button onclick="foo.myevent.sendEvent(12)" text="send the event" /&gt;
-  &lt;button onclick="foo.setAttribute('season', 'fall')" text="autumn" /&gt;
-
-  &lt;!-- Don't do this! Setting an attribute directly with '=' shortcuts around
-       the event system. This is not right; use setAttribute instead --&gt;
-  &lt;button onclick="foo.season='winter'" text="evil" /&gt;
-
-  &lt;simplelayout axis="x" spacing="5" /&gt;
-
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-     &lt;debug /&gt;
-
-    &lt;class name="myclass_with_handler"&gt;
-        &lt;event name="myevent"/&gt;
-        &lt;handler name="myevent" args="myargs"&gt;
-            Debug.write(this, 'handling myevent, myargs=', myargs);
-        &lt;/handler&gt;
-
-        &lt;attribute name="season" type="string" value="spring" /&gt;
-        &lt;event name="onseason" /&gt;
-        &lt;handler name="onseason" args="s"&gt;
-            Debug.write("got season of ", s, ", season is ", season);
-        &lt;/handler&gt;
-    &lt;/class&gt;
-
-  &lt;myclass_with_handler id="foo" /&gt;
-
-
-  &lt;button onclick="foo.myevent.sendEvent(12)" text="send the event" /&gt;
-  &lt;button onclick="foo.setAttribute('season', 'fall')" text="autumn" /&gt;
-
-  &lt;!-- Don't do this! Setting an attribute directly with '=' shortcuts around
-       the event system. This is not right; use setAttribute instead --&gt;
-  &lt;button onclick="foo.season='winter'" text="evil" /&gt;
-
-  &lt;simplelayout axis="x" spacing="5" /&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$12.lzx></informalexample?>
 <para/></section><section><title>Testing for existence of events in "legacy" code</title>
 <para>
 As is explained in <xref linkend="delegates"/>, an event doesn't really exist unless and until there is a delegate registered to receive it. In code that was written before the <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag> tag became part of the language,
@@ -792,19 +416,7 @@ the tag whose attribute is being set:</para>
    <textobject><textdata fileref="programs/methods-events-attributes-$14.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using the attribute element to set an attribute value</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$14.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;view&gt;
-    &lt;attribute name="width" type="number" value="20"/&gt;
-    &lt;attribute name="height" type="number" value="20"/&gt;
-    &lt;attribute name="bgcolor" type="color" value="red"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;view&gt;
-    &lt;attribute name="width" type="number" value="20"/&gt;
-    &lt;attribute name="height" type="number" value="20"/&gt;
-    &lt;attribute name="bgcolor" type="color" value="red"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/methods-events-attributes-$14.lzx></example?>
+
 
 <para>This second example is the same as saying &lt;view width="20" height="20" bgcolor="red"/&gt;. 
 The <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> tag is useful for writing classes as well as for performing complicated
@@ -819,21 +431,7 @@ dot syntax:</para>
    <textobject><textdata fileref="programs/methods-events-attributes-$15.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using dot syntax to retrieve an attribute value</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$15.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;view name="myView" width="20" height="20" bgcolor="red"/&gt;
 
-  &lt;script&gt;
-    var myAttributeValue = myView.x;
-    // myAttributeValue now has the value 20
-  &lt;/script&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;view name="myView" width="20" height="20" bgcolor="red"/&gt;
-
-  &lt;script&gt;
-    var myAttributeValue = myView.x;
-    // myAttributeValue now has the value 20
-  &lt;/script&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/methods-events-attributes-$15.lzx></example?>
 
 <para>Attributes can also be read using the
 <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname> method. This is unnecessary most of the
@@ -846,23 +444,7 @@ attribute, whose name is represented by a string.</para>
    <textobject><textdata fileref="programs/methods-events-attributes-$16.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using getAttribute to retrieve an attribute value</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$16.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;view name="myView" width="20" height="20" bgcolor="red"/&gt;
 
-  &lt;script&gt;
-    var myAttributeName = "x";
-    var myAttributeValue = myView.getAttribute(myAttributeName);
-    // myAttributeValue now has the value 20
-  &lt;/script&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;view name="myView" width="20" height="20" bgcolor="red"/&gt;
-
-  &lt;script&gt;
-    var myAttributeName = "x";
-    var myAttributeValue = myView.getAttribute(myAttributeName);
-    // myAttributeValue now has the value 20
-  &lt;/script&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/methods-events-attributes-$16.lzx></example?>
 
 <para>All attributes that are settable in script (see below) can be set
 using the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method:</para>
@@ -875,13 +457,7 @@ using the <indexterm><primary><literal>setAttribute()</literal></primary></index
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Using setAttribute to set an attribute value</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$17.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;view width="20" height="20" bgcolor="red"
-      oninit="this.setAttribute('width', 50);"/&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;view width="20" height="20" bgcolor="red"
-      oninit="this.setAttribute('width', 50);"/&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/methods-events-attributes-$17.lzx></example?>
+
 
 
 <para/><section><title>Categories of Attributes</title>
@@ -907,15 +483,7 @@ syntax, for example, <literal> myView.opacity</literal>. </para>
    <textobject><textdata fileref="programs/methods-events-attributes-$18.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using setAttribute to update a constraint</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$18.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;view id="myView" onclick="setAttribute('opacity', 1.5 - this.opacity)" bgcolor="red"&gt;
-    &lt;text text="${'My opacity is ' + myView.opacity + 'x  Click to change it.'}"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;view id="myView" onclick="setAttribute('opacity', 1.5 - this.opacity)" bgcolor="red"&gt;
-    &lt;text text="${'My opacity is ' + myView.opacity + 'x  Click to change it.'}"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/methods-events-attributes-$18.lzx></example?>
+
 
 
 <para/></section><section><title>Attributes (without setter)</title>
@@ -932,15 +500,6 @@ declared and set in tags too.</para>
    <textobject><textdata fileref="programs/methods-events-attributes-$19.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>An attribute without a setter method</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$19.lzx</filename><parameter/><code>
-&lt;canvas height="200" width="600" &gt;
-    &lt;window height="50" width="200" title="My Window" onclick="this.setAttribute('title', 'Hello World');"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="200" width="600" &gt;
-    &lt;window height="50" width="200" title="My Window" onclick="this.setAttribute('title', 'Hello World');"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$19.lzx></example?>
 
 
 <para/></section><section><title>Event Handler Attributes</title>
@@ -983,21 +542,7 @@ example:</para>
    <textobject><textdata fileref="programs/methods-events-attributes-$20.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Defining an attribute in a class</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$20.lzx</filename><parameter/><code>
-&lt;canvas height="36"&gt;
-  &lt;class name="diamond" width="${this.size}" height="${this.size}" rotation="45"&gt;
-    &lt;attribute name="size" type="number"/&gt;
-  &lt;/class&gt;
-  &lt;diamond size="25" x="36" bgcolor="red"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="36"&gt;
-  &lt;class name="diamond" width="${this.size}" height="${this.size}" rotation="45"&gt;
-    &lt;attribute name="size" type="number"/&gt;
-  &lt;/class&gt;
-  &lt;diamond size="25" x="36" bgcolor="red"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$20.lzx></example?>
+
 
 <para>In an instance, the <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> element sets the attribute of the object that it is attached to.  
 In this use, the <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> element is equivalent to the use of an attribute in a tag header.  
@@ -1011,19 +556,7 @@ its height.</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Defining an attribute in a view</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$21.lzx</filename><parameter/><code>
-&lt;canvas height="25"&gt;
-  &lt;view width="25" bgcolor="red"&gt;
-    &lt;attribute name="height" value="25"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="25"&gt;
-  &lt;view width="25" bgcolor="red"&gt;
-    &lt;attribute name="height" value="25"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$21.lzx></example?>
+
 <para>
 In the example above the width is set in the tag header and the height is set using the <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> tag.
 These syntaxes are functionally equivalent for attributes that are defined in the LZX schema—that is, attributes
@@ -1050,29 +583,7 @@ By default, attributes are of the JavaScript expression type, but in some cases 
    <textobject><textdata fileref="programs/methods-events-attributes-$22.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Incorrect: attribute has no effect</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$22.lzx</filename><parameter/><code>
-&lt;canvas height="300"&gt;
-    &lt;simplelayout spacing="5"/&gt;
-    &lt;class name="box" height="100" width="100" bgcolor="red"&gt;
-       &lt;attribute name="label" value="Label"/&gt;
-       &lt;text text="${parent.label}" /&gt;
-    &lt;/class&gt;
 
-    &lt;box label="Box1"/&gt;
-    &lt;box/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300"&gt;
-    &lt;simplelayout spacing="5"/&gt;
-    &lt;class name="box" height="100" width="100" bgcolor="red"&gt;
-       &lt;attribute name="label" value="Label"/&gt;
-       &lt;text text="${parent.label}" /&gt;
-    &lt;/class&gt;
-
-    &lt;box label="Box1"/&gt;
-    &lt;box/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$22.lzx></example?>
 <para>
 To make sure attributes do what you want them to do, assign a <literal>type</literal> to your attributes when you declare them:
 </para>
@@ -1083,29 +594,7 @@ To make sure attributes do what you want them to do, assign a <literal>type</lit
    <textobject><textdata fileref="programs/methods-events-attributes-$23.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Declaring attribute type</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$23.lzx</filename><parameter/><code>
-&lt;canvas height="300"&gt;
-    &lt;simplelayout spacing="5"/&gt;
-    &lt;class name="box" height="100" width="100" bgcolor="red"&gt;
-       &lt;attribute name="label" value="Label"  type="string"/&gt;
-       &lt;text text="${parent.label}" /&gt;
-    &lt;/class&gt;
 
-    &lt;box label="Box1"/&gt;
-    &lt;box/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300"&gt;
-    &lt;simplelayout spacing="5"/&gt;
-    &lt;class name="box" height="100" width="100" bgcolor="red"&gt;
-       &lt;attribute name="label" value="Label" <emphasis role="em"> type="string"</emphasis>/&gt;
-       &lt;text text="${parent.label}" /&gt;
-    &lt;/class&gt;
-
-    &lt;box label="Box1"/&gt;
-    &lt;box/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$23.lzx></example?>
 
 <para/><section><title>Using the <indexterm><primary>type</primary></indexterm><sgmltag class="element">&lt;type&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: type-->
@@ -1276,73 +765,7 @@ tied to the attribute will not be updated when the value of the attribute is cha
    <textobject><textdata fileref="programs/methods-events-attributes-$25.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Defining an explicit setter method</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$25.lzx</filename><parameter/><code>
-&lt;canvas height="40"&gt; 
-  &lt;button text="click me"&gt;
-    &lt;attribute name="time" setter="setTime(time)"/&gt; 
-    &lt;attribute name="ontime" value="null"/&gt; 
 
-    &lt;handler name="onclick"&gt; 
-      Debug.write('inited:' + this.isinited); 
-      var now = (new Date()).getTime();
-      this.setAttribute("time", now); 
-    &lt;/handler&gt; 
-
-    &lt;method name="setTime" args="t"&gt; 
-      if (!this.isinited) {                                          //catch the case where this.time is being 
-        this.time = t;                                               //initialized during object instantiation
-        return;
-      } 
-
-      if (typeof this.time == "undefined" || this.time == null) {    //handle first set of time
-        this.setAttribute("text", "first click registered");
-      } 
-      else {
-        var diff = t - this.time;                                    //handle any additional setting of time
-        this.setAttribute("text", diff + " milliseconds between clicks");             
-      } 
-      this.time = t;                                                 //as this is the declared setter for 
-                                                                     //this.time, we have to set it
-
-      if (ontime)                                                    //required to update constraints and 
-        this.ontime.sendEvent();                                     //fire ontime event 
-    &lt;/method&gt; 
-  &lt;/button&gt; 
-&lt;/canvas&gt; 
-</code></programlisting><programlisting>
-&lt;canvas height="40"&gt; 
-  &lt;button text="click me"&gt;
-    &lt;attribute name="time" setter="setTime(time)"/&gt; 
-    &lt;attribute name="ontime" value="null"/&gt; 
-
-    &lt;handler name="onclick"&gt; 
-      Debug.write('inited:' + this.isinited); 
-      var now = (new Date()).getTime();
-      this.setAttribute("time", now); 
-    &lt;/handler&gt; 
-
-    &lt;method name="setTime" args="t"&gt; 
-      if (!this.isinited) {                                          //catch the case where this.time is being 
-        this.time = t;                                               //initialized during object instantiation
-        return;
-      } 
-
-      if (typeof this.time == "undefined" || this.time == null) {    //handle first set of time
-        this.setAttribute("text", "first click registered");
-      } 
-      else {
-        var diff = t - this.time;                                    //handle any additional setting of time
-        this.setAttribute("text", diff + " milliseconds between clicks");             
-      } 
-      this.time = t;                                                 //as this is the declared setter for 
-                                                                     //this.time, we have to set it
-
-      if (ontime)                                                    //required to update constraints and 
-        this.ontime.sendEvent();                                     //fire ontime event 
-    &lt;/method&gt; 
-  &lt;/button&gt; 
-&lt;/canvas&gt; 
-</programlisting><?lzx-edit programs/methods-events-attributes-$25.lzx></example?>
 
 <para/></section><section><title>oninit event vs init method</title>
 
@@ -1373,37 +796,6 @@ button.  The <indexterm><primary><literal>init()</literal></primary></indexterm>
    <textobject><textdata fileref="programs/methods-events-attributes-$26.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>init() method vs oninit event </title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$26.lzx</filename><parameter/><code>
-&lt;canvas height="40"&gt;
-  &lt;button&gt;
-    &lt;method name="init"&gt;
-      super.init(); //best practice to always call super.init() when declaring 
-                    //an init method
-      //do some init code here
-    &lt;/method&gt;
-    
-    &lt;handler name="oninit"&gt;
-      //this isn't fired in any particular order 
-      //use the init method instead
-    &lt;/handler&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt; 
-</code></programlisting><programlisting>
-&lt;canvas height="40"&gt;
-  &lt;button&gt;
-    &lt;method name="init"&gt;
-      super.init(); //best practice to always call super.init() when declaring 
-                    //an init method
-      //do some init code here
-    &lt;/method&gt;
-    
-    &lt;handler name="oninit"&gt;
-      //this isn't fired in any particular order 
-      //use the init method instead
-    &lt;/handler&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt; 
-</programlisting><?lzx-edit programs/methods-events-attributes-$26.lzx></example?>
 
 
 <para/></section><section><title>The keyword <literal>this</literal> </title> 
@@ -1420,21 +812,7 @@ to those variables using the keyword <literal>this</literal>.
    <textobject><textdata fileref="programs/methods-events-attributes-$27.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using "this" keyword</title><programlisting role="lzx-embednew"><filename>methods-events-attributes-$27.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-   &lt;view x=" 10" height="30" width="30" bgcolor="red"
-   onclick="this.bringToFront()"/&gt;
-   &lt;view  height="30" width="30" bgcolor="blue"
-   onclick="this.bringToFront()"/&gt; 
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-   &lt;view x=" 10" height="30" width="30" bgcolor="red"
-   onclick="this.bringToFront()"/&gt;
-   &lt;view  height="30" width="30" bgcolor="blue"
-   onclick="this.bringToFront()"/&gt; 
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/methods-events-attributes-$27.lzx></example?>
+
 <para>
  Not using <literal>this</literal> can result in unpredictable results.  
 </para>

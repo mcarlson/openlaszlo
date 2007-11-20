@@ -1,7 +1,7 @@
 <chapter id="delegates">
 
 <title>Delegates</title>
- 
+ <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>This chapter explains the use of delegates, which are a part of the mechanism that different parts of an OpenLaszlo application use to communicate with each other when values of attributes change. </para>
 <para>
 You generally only need to be aware of delegates for objects that you create in script (that is, not with tags). For objects that you create with tags, for example &lt;view&gt;, you can manage communication using event handlers, as described in <xref linkend="methods-events-attributes"/>. When you use handlers, the OpenLaszlo runtime takes care of delegates for you.  Delegates are still there, behind the scenes, but the system manages them invisibly. However, it's helpful to understand the relationship between tag and script-based event syntax.</para>
@@ -162,85 +162,7 @@ all events from the delegate, and resets the message to nothing special.
    <textobject><textdata fileref="programs/delegates-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Registering an event at runtime</title><programlisting role="lzx-embednew"><filename>delegates-$1.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt; 
-    &lt;view width="80"&gt; 
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;wrappinglayout/&gt;
-    &lt;/view&gt; 
-    &lt;text id="statusText" bgcolor="green" resize="true"/&gt; 
-    &lt;button text="start over" onclick="canvas.startover()"/&gt;
-    &lt;simplelayout axis="y"/&gt;
 
-    &lt;method name="regbutton" args="b"&gt; 
-        if( typeof this.del == "undefined" )  {
-            this.del = new LzDelegate( this, "buttonclickedagain" ); 
-        }      
-
-        this.del.register( b, "onclick" );
-    &lt;/method&gt; 
-
-    &lt;method name="startover"&gt;
-        this.del.unregisterAll(); 
-        this.reset();
-    &lt;/method&gt;
-
-    &lt;method name="reset"&gt; 
-        statusText.setAttribute("text", "Nothing special");
-    &lt;/method&gt; 
-
-    &lt;method name="buttonclickedagain"&gt; 
-        statusText.setAttribute("text", "That button was clicked two or more times");
-    &lt;/method&gt; 
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt; 
-    &lt;view width="80"&gt; 
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
-        &lt;wrappinglayout/&gt;
-    &lt;/view&gt; 
-    &lt;text id="statusText" bgcolor="green" resize="true"/&gt; 
-    &lt;button text="start over" onclick="canvas.startover()"/&gt;
-    &lt;simplelayout axis="y"/&gt;
-
-    &lt;method name="regbutton" args="b"&gt; 
-        if( typeof this.del == "undefined" )  {
-            this.del = new LzDelegate( this, "buttonclickedagain" ); 
-        }      
-
-        this.del.register( b, "onclick" );
-    &lt;/method&gt; 
-
-    &lt;method name="startover"&gt;
-        this.del.unregisterAll(); 
-        this.reset();
-    &lt;/method&gt;
-
-    &lt;method name="reset"&gt; 
-        statusText.setAttribute("text", "Nothing special");
-    &lt;/method&gt; 
-
-    &lt;method name="buttonclickedagain"&gt; 
-        statusText.setAttribute("text", "That button was clicked two or more times");
-    &lt;/method&gt; 
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/delegates-$1.lzx></example?>
 <para/></section></section></section><section><title>Delegates and Memory Management</title>
 <para>
 When you destroy an object--for example, a view -- you free up the memory that was used to store it.  However, destroying the view does not destroy the delegates associated with it.  You should "clean up" the delegate manually to free up the memory used by it.
@@ -289,43 +211,6 @@ by the delegate, instead of creating a new timer (which would be inefficient) , 
    <textobject><textdata fileref="programs/delegates-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using LzTimer to create a second timer</title><programlisting role="lzx-embednew"><filename>delegates-$3.lzx</filename><parameter/><code>
-&lt;canvas height="20"&gt; 
-    &lt;text oninit="updateTimer()"&gt;
-        &lt;attribute name="secondsPassed" type="number" value="0"/&gt; 
-
-        &lt;method name="updateTimer"&gt;
-            this.setAttribute('text', this.secondsPassed );
-            this.secondsPassed++; 
-
-            if( typeof this.del == "undefined" ) { 
-                this.del = new LzDelegate( this, "updateTimer" );
-                LzTimer.addTimer( this.del, 1000 );
-            } else {
-                LzTimer.resetTimer( this.del, 1000 );
-            }
-        &lt;/method&gt;
-    &lt;/text&gt; 
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="20"&gt; 
-    &lt;text oninit="updateTimer()"&gt;
-        &lt;attribute name="secondsPassed" type="number" value="0"/&gt; 
-
-        &lt;method name="updateTimer"&gt;
-            this.setAttribute('text', this.secondsPassed );
-            this.secondsPassed++; 
-
-            if( typeof this.del == "undefined" ) { 
-                this.del = new LzDelegate( this, "updateTimer" );
-                LzTimer.addTimer( this.del, 1000 );
-            } else {
-                LzTimer.resetTimer( this.del, 1000 );
-            }
-        &lt;/method&gt;
-    &lt;/text&gt; 
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/delegates-$3.lzx></example?>
 
 <para/></section><section><title> Using <indexterm><primary>LzDelegate</primary></indexterm><classname>LzDelegate</classname> to determine initialization of the last replicated view </title>
 
@@ -351,93 +236,7 @@ resource by simply registering the <indexterm><primary>onload event</primary></i
    <textobject><textdata fileref="programs/delegates-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Registering an event for when the last view is replicated</title><programlisting role="lzx-embednew"><filename>delegates-$4.lzx</filename><parameter/><code>
-&lt;canvas height="125"&gt; 
-    &lt;dataset name="people"&gt;
-        &lt;people&gt; 
-            &lt;person name="John"/&gt; 
-            &lt;person name="Eric"/&gt; 
-            &lt;person name="Andrew"/&gt; 
-            &lt;person name="chrisk"/&gt; 
-            &lt;person name="Sarah"/&gt; 
-            &lt;person name="Pablo"/&gt; 
-            &lt;person name="Adam"/&gt; 
-        &lt;/people&gt;
-    &lt;/dataset&gt; 
 
-    &lt;view&gt;
-        &lt;text&gt;
-            &lt;datapath xpath="people:/people/person/@name"&gt;
-                &lt;handler name="onclones"&gt;
-                    var lastclone = this.clones[ this.clones.length - 1 ];
-
-                    if( typeof this.del == "undefined" ) {
-                        this.del = new LzDelegate( this, "replicationComplete") 
-                    } else {
-                        this.del.ungregisterAll();
-                    }
-
-                    this.del.register( lastclone, "oninit"); 
-                &lt;/handler&gt;
-
-                &lt;method name="replicationComplete"&gt;
-                    lastRepText.setText("The last view has been replicated"); 
-                &lt;/method&gt;
-            &lt;/datapath&gt;
-        &lt;/text&gt;
-        &lt;simplelayout axis="y"/&gt;
-    &lt;/view&gt;
-
-    &lt;text id="lastRepText" bgcolor="green" resize="true"&gt; 
-        Replication incomplete
-    &lt;/text&gt;
-   
-    &lt;simplelayout axis="y"/&gt; 
-&lt;/canvas&gt; 
-</code></programlisting><programlisting>
-&lt;canvas height="125"&gt; 
-    &lt;dataset name="people"&gt;
-        &lt;people&gt; 
-            &lt;person name="John"/&gt; 
-            &lt;person name="Eric"/&gt; 
-            &lt;person name="Andrew"/&gt; 
-            &lt;person name="chrisk"/&gt; 
-            &lt;person name="Sarah"/&gt; 
-            &lt;person name="Pablo"/&gt; 
-            &lt;person name="Adam"/&gt; 
-        &lt;/people&gt;
-    &lt;/dataset&gt; 
-
-    &lt;view&gt;
-        &lt;text&gt;
-            &lt;datapath xpath="people:/people/person/@name"&gt;
-                &lt;handler name="onclones"&gt;
-                    var lastclone = this.clones[ this.clones.length - 1 ];
-
-                    if( typeof this.del == "undefined" ) {
-                        this.del = new LzDelegate( this, "replicationComplete") 
-                    } else {
-                        this.del.ungregisterAll();
-                    }
-
-                    this.del.register( lastclone, "oninit"); 
-                &lt;/handler&gt;
-
-                &lt;method name="replicationComplete"&gt;
-                    lastRepText.setText("The last view has been replicated"); 
-                &lt;/method&gt;
-            &lt;/datapath&gt;
-        &lt;/text&gt;
-        &lt;simplelayout axis="y"/&gt;
-    &lt;/view&gt;
-
-    &lt;text id="lastRepText" bgcolor="green" resize="true"&gt; 
-        Replication incomplete
-    &lt;/text&gt;
-   
-    &lt;simplelayout axis="y"/&gt; 
-&lt;/canvas&gt; 
-</programlisting><?lzx-edit programs/delegates-$4.lzx></example?>
 <para/></section><section><title>Delegates as attributes</title>
 <para>
 A delegate is an object, and as such it can be an attribute of another object. For example, consider:</para>

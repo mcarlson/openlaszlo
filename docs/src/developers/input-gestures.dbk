@@ -2,10 +2,10 @@
 
 <title>Input Devices and Gestures</title>
 
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 
 
-
-<para/><section><title>Overview</title>
+<section><title>Overview</title>
 <para>
 This chapter explains how to incorporate mouse and keyboard input into an OpenLaszlo application. It covers the basic concepts
 as well as more advanced topics such as tracking the mouse across multiple views while the mouse is down, and how to implement the "right click" context menu in OpenLaszlo applications. 
@@ -31,33 +31,6 @@ some more advanced topics.
    <textobject><textdata fileref="programs/input-devices-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>The basic mouse events</title><programlisting role="lzx-embednew"><filename>input-devices-$1.lzx</filename><parameter/><code>
-&lt;canvas height="40"&gt;
-  &lt;view bgcolor="red"
-        onmouseover="txt.setText('onmouseover')"
-        onmouseout="txt.setText('onmouseout')"
-        onmousedown="txt.setText('onmousedown')"
-        onmouseup="txt.setText('onmouseup')"
-        onclick="txt.setText('onmouseup, onclick')"
-        x="10" y="10" width="20" height="20"/&gt;
-
-  &lt;text id="txt"
-        x="40" y="11" width="150"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="40"&gt;
-  &lt;view bgcolor="red"
-        onmouseover="txt.setText('onmouseover')"
-        onmouseout="txt.setText('onmouseout')"
-        onmousedown="txt.setText('onmousedown')"
-        onmouseup="txt.setText('onmouseup')"
-        onclick="txt.setText('onmouseup, onclick')"
-        x="10" y="10" width="20" height="20"/&gt;
-
-  &lt;text id="txt"
-        x="40" y="11" width="150"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/input-devices-$1.lzx></example?>
 
 <para/></section><section><title>Making Views Clickable</title>
 <para>
@@ -72,45 +45,6 @@ some more advanced topics.
    <textobject><textdata fileref="programs/input-devices-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Making views clickable</title><programlisting role="lzx-embednew"><filename>input-devices-$2.lzx</filename><parameter/><code>
-&lt;canvas height="40"&gt;
-  &lt;view bgcolor="red" clickable="true"
-         x="10" y="10"
-         width="20" height="20"&gt;
-    &lt;handler name="onmousedown"&gt;
-      this.setWidth(30);
-      this.setheight(30);
-      this.setX(5);
-      this.setY(5);
-    &lt;/handler&gt;
-    &lt;handler name="onmouseup"&gt;
-      this.setWidth(20);
-      this.setheight(20);
-      this.setX(10);
-      this.setY(10);
-    &lt;/handler&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="40"&gt;
-  &lt;view bgcolor="red" clickable="true"
-         x="10" y="10"
-         width="20" height="20"&gt;
-    &lt;handler name="onmousedown"&gt;
-      this.setWidth(30);
-      this.setheight(30);
-      this.setX(5);
-      this.setY(5);
-    &lt;/handler&gt;
-    &lt;handler name="onmouseup"&gt;
-      this.setWidth(20);
-      this.setheight(20);
-      this.setX(10);
-      this.setY(10);
-    &lt;/handler&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/input-devices-$2.lzx></example?>
 
 <para/></section><section><title>ClickRegion</title>
 <para>
@@ -124,11 +58,6 @@ Setting clickregion to a vector-based SWF turns the SWF shape into a clickable h
     </programlisting>
 </example>
 
-<?example role="live-example"><title>Setting a clickregion</title><programlisting role="lzx-embednew"><filename>clickregion.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="500" debug="true"&gt;
-  &lt;view height="150" width="100" bgcolor="red" clickable="true" resource="../resources/test_triangle.swf" stretches="both" clickregion="../resources/test_triangle.swf" onclick="Debug.write('click')" /&gt;
-&lt;/canvas&gt; 
-</code></programlisting><?lzx-edit programs/clickregion.lzx></example?>
 
 <para/></section><section><title>Cursor Management</title>
 <para>
@@ -142,31 +71,6 @@ this can be accomplished by defining a custom resource for the cursor and using 
    <textobject><textdata fileref="programs/input-devices-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Changing the cursor</title><programlisting role="lzx-embednew"><filename>input-devices-$3.lzx</filename><parameter/><code>
-&lt;canvas height="30"&gt;
-  &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
-  &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
-    &lt;method name="setCursor"&gt;
-      LzCursor.setCursorGlobal('waitcursor');
-      // call LzCursor.restoreCursor() after 1/2 second
-      var del= new LzDelegate(LzCursor, 'restoreCursor');
-      LzTimer.addTimer(del, 500);
-    &lt;/method&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="30"&gt;
-  &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
-  &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
-    &lt;method name="setCursor"&gt;
-      LzCursor.setCursorGlobal('waitcursor');
-      // call LzCursor.restoreCursor() after 1/2 second
-      var del= new LzDelegate(LzCursor, 'restoreCursor');
-      LzTimer.addTimer(del, 500);
-    &lt;/method&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/input-devices-$3.lzx></example?>
 
 <para/><section><title>Disabling the "hand" cursor</title>
 <para>By setting <indexterm><primary><literal>LzCursor.showHandCursor()</literal></primary></indexterm><methodname>LzCursor.showHandCursor()</methodname> to true or false, you show or hide the hand cursor for all clickable views.
@@ -180,49 +84,7 @@ through windows, without the hand cursor appearing.</para>
    <textobject><textdata fileref="programs/input-devices-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>enabling and disabling the hand cursor</title><programlisting role="lzx-embednew"><filename>input-devices-$4.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-    &lt;view width="100" height="100" bgcolor="green"&gt;
-        &lt;handler name="onclick"&gt;
-            LzCursor.showHandCursor(true);
-        &lt;/handler&gt;
-    &lt;/view&gt;
-    &lt;view x="110" width="100" height="100" bgcolor="yellow"&gt;
-        &lt;handler name="onmouseover"&gt;
-            LzCursor.showHandCursor(true);
-        &lt;/handler&gt;
-        &lt;handler name="onmouseout"&gt;
-            LzCursor.showHandCursor(false);
-        &lt;/handler&gt;
-    &lt;/view&gt;
-    &lt;view x="220" width="100" height="100" bgcolor="red"&gt;
-        &lt;handler name="onclick"&gt;
-            LzCursor.showHandCursor(false);
-        &lt;/handler&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-    &lt;view width="100" height="100" bgcolor="green"&gt;
-        &lt;handler name="onclick"&gt;
-            LzCursor.showHandCursor(true);
-        &lt;/handler&gt;
-    &lt;/view&gt;
-    &lt;view x="110" width="100" height="100" bgcolor="yellow"&gt;
-        &lt;handler name="onmouseover"&gt;
-            LzCursor.showHandCursor(true);
-        &lt;/handler&gt;
-        &lt;handler name="onmouseout"&gt;
-            LzCursor.showHandCursor(false);
-        &lt;/handler&gt;
-    &lt;/view&gt;
-    &lt;view x="220" width="100" height="100" bgcolor="red"&gt;
-        &lt;handler name="onclick"&gt;
-            LzCursor.showHandCursor(false);
-        &lt;/handler&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/input-devices-$4.lzx></example?>
+
 <para/></section></section><section><title>Custom Cursors for multiple runtimes</title>
 <para>
 With OpenLaszlo 4, you can set custom cursors in DHTML and SWF. If you plan to use custom cursors across DHTML and SWF, be sure you're using appropriate cursor IDs for DHTML (see http://www.quirksmode.org/css/cursor.html for more info), and make sure you've included resources named after those IDs for SWF. See test/cursors.lzx for an example. Also note that global cursors currently only work for clickable items in DHTML.
@@ -239,37 +101,6 @@ With OpenLaszlo 4, you can set custom cursors in DHTML and SWF. If you plan to u
    <textobject><textdata fileref="programs/input-devices-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Creating a custom button using basebutton</title><programlisting role="lzx-embednew"><filename>input-devices-$5.lzx</filename><parameter/><code>
-&lt;canvas height="150"&gt;
-  &lt;!-- first create the multi-frame resource and give it a name --&gt;
-  &lt;resource name="mybutton_rsrc"&gt;
-    &lt;!-- first frame MUST be the mouseup state of the button --&gt;     
-    &lt;frame src="resources/button-up.png"/&gt;
-    &lt;!-- second frame MUST be the mouseover state of the button --&gt;
-    &lt;frame src="resources/button-over.png"/&gt;
-    &lt;!-- third frame MUST be the mousedown state of the button --&gt;
-    &lt;frame src="resources/button-down.png"/&gt;
-  &lt;/resource&gt;
-  
-  &lt;!-- Second, assign the resource to a basebutton tag --&gt;
-  &lt;basebutton resource="mybutton_rsrc"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="150"&gt;
-  &lt;!-- first create the multi-frame resource and give it a name --&gt;
-  &lt;resource name="mybutton_rsrc"&gt;
-    &lt;!-- first frame MUST be the mouseup state of the button --&gt;     
-    &lt;frame src="resources/button-up.png"/&gt;
-    &lt;!-- second frame MUST be the mouseover state of the button --&gt;
-    &lt;frame src="resources/button-over.png"/&gt;
-    &lt;!-- third frame MUST be the mousedown state of the button --&gt;
-    &lt;frame src="resources/button-down.png"/&gt;
-  &lt;/resource&gt;
-  
-  &lt;!-- Second, assign the resource to a basebutton tag --&gt;
-  &lt;basebutton resource="mybutton_rsrc"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/input-devices-$5.lzx></example?>
 
 <para/></section><section><title>Dragging Views</title>
 <para>Dragging a view can be accomplished with the use of a dragstate. When a dragstate is applied, views
@@ -282,74 +113,7 @@ The example below shows the use of a dragstate with its max, min, and axis attri
    <textobject><textdata fileref="programs/input-devices-$6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>dragging a view</title><programlisting role="lzx-embednew"><filename>input-devices-$6.lzx</filename><parameter/><code>
-&lt;canvas height="120"&gt;
-  &lt;simplelayout spacing="3"/&gt;
-  
-  &lt;text&gt;dragging within a bounded area&lt;/text&gt;
-  &lt;view bgcolor="yellow" height="40" width="160"&gt;
-    &lt;view bgcolor="red" width="20" height="20" 
-          onmousedown="this.dragger.apply()"
-          onmouseup="this.dragger.remove()"&gt;
-      &lt;dragstate name="dragger"
-          drag_min_x="0"
-          drag_max_x="$once{parent.width - this.width}"
-          drag_min_y="0"
-          drag_max_y="$once{parent.height - this.height}"
-          drag_axis="both"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-  
-  &lt;text&gt;dragging along the x-axis&lt;/text&gt;
-  &lt;view bgcolor="yellow" height="40" width="160"&gt;
-    &lt;view bgcolor="red" width="20" height="20" 
-          onmousedown="this.dragger.apply()"
-          onmouseup="this.dragger.remove()"&gt;
-      &lt;dragstate name="dragger"
-          drag_min_x="0"
-          drag_max_x="$once{parent.width - this.width}"
-          drag_min_y="0"
-          drag_max_y="$once{parent.height - this.height}"
-          drag_axis="x"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
- &lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="120"&gt;
-  &lt;simplelayout spacing="3"/&gt;
-  
-  &lt;text&gt;dragging within a bounded area&lt;/text&gt;
-  &lt;view bgcolor="yellow" height="40" width="160"&gt;
-    &lt;view bgcolor="red" width="20" height="20" 
-          onmousedown="this.dragger.apply()"
-          onmouseup="this.dragger.remove()"&gt;
-      &lt;dragstate name="dragger"
-          drag_min_x="0"
-          drag_max_x="$once{parent.width - this.width}"
-          drag_min_y="0"
-          drag_max_y="$once{parent.height - this.height}"
-          drag_axis="both"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-  
-  &lt;text&gt;dragging along the x-axis&lt;/text&gt;
-  &lt;view bgcolor="yellow" height="40" width="160"&gt;
-    &lt;view bgcolor="red" width="20" height="20" 
-          onmousedown="this.dragger.apply()"
-          onmouseup="this.dragger.remove()"&gt;
-      &lt;dragstate name="dragger"
-          drag_min_x="0"
-          drag_max_x="$once{parent.width - this.width}"
-          drag_min_y="0"
-          drag_max_y="$once{parent.height - this.height}"
-          drag_axis="x"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
- &lt;/canvas&gt;
-</programlisting><?lzx-edit programs/input-devices-$6.lzx></example?>
-<?ignore <p>Having other views respond while a view is being dragged ... </p>
 
-?>
 <para/></section></section><section><title>Tracking the Mouse</title>
 <para/><section><title>Tracking the mouse within a single view</title>
 <para>
@@ -362,43 +126,7 @@ This simple program shows how to do basic mouse tracking in a view:
    <textobject><textdata fileref="programs/input-devices-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Simple mouse tracking</title><programlisting role="lzx-embednew"><filename>input-devices-$7.lzx</filename><parameter/><code>
-&lt;canvas height="500" width="500" debug="true"&gt;
-   &lt;debug y="300"/&gt;
-   &lt;view width="300" height="300" bgcolor="red" clickable="true" &gt;
-       &lt;attribute name="moustracker_del" value="$once{ new LzDelegate( this, 'trackmouse' )}" /&gt;
-         &lt;handler name="onmousedown" &gt;
-           moustracker_del.register(LzIdle,'onidle');
-       &lt;/handler&gt;
 
-       &lt;handler name="onmouseup" &gt;
-           moustracker_del.unregisterAll();
-       &lt;/handler&gt;
-
-       &lt;method name="trackmouse" &gt;
-           Debug.write("mousex,mousey =", this.getMouse('x'),this.getMouse('y'));
-       &lt;/method&gt;
-         &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="500" width="500" debug="true"&gt;
-   &lt;debug y="300"/&gt;
-   &lt;view width="300" height="300" bgcolor="red" clickable="true" &gt;
-       &lt;attribute name="moustracker_del" value="$once{ new LzDelegate( this, 'trackmouse' )}" /&gt;
-         &lt;handler name="onmousedown" &gt;
-           moustracker_del.register(LzIdle,'onidle');
-       &lt;/handler&gt;
-
-       &lt;handler name="onmouseup" &gt;
-           moustracker_del.unregisterAll();
-       &lt;/handler&gt;
-
-       &lt;method name="trackmouse" &gt;
-           Debug.write("mousex,mousey =", this.getMouse('x'),this.getMouse('y'));
-       &lt;/method&gt;
-         &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/input-devices-$7.lzx></example?>
 <para>
 This generates a lot of points, but you can decide how much data to filter or not in the trackmouse method.
 </para>
@@ -427,69 +155,7 @@ This generates a lot of points, but you can decide how much data to filter or no
    <textobject><textdata fileref="programs/input-devices-$8.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using basetrackgroup</title><programlisting role="lzx-embednew"><filename>input-devices-$8.lzx</filename><parameter/><code>
-&lt;canvas height="160"&gt;
-  &lt;class name="myTrackableView" bgcolor="red"
-         onmouseover="setWidth(70)" 
-         onmouseout="setWidth(60)"
-         onmouseup="setAttribute('bgcolor', 0xFF0000)"
-         width="60" height="30"&gt;
 
-    &lt;!-- Use methods for mouse-tracking events --&gt;
-    &lt;handler name="onmousetrackover"&gt;
-      setAttribute('bgcolor', 0x0000FF); //blue
-    &lt;/handler&gt;
-
-    &lt;handler name="onmousetrackout"&gt;
-      setAttribute('bgcolor', 0xFF0000); //red
-    &lt;/handler&gt;
-
-    &lt;handler name="onmousetrackup"&gt;
-      setAttribute('bgcolor', 0xFF0000); //red
-    &lt;/handler&gt;
-  &lt;/class&gt;
-
-  &lt;text&gt;Click on any red view and drag the mouse. &lt;/text&gt;
-  &lt;basetrackgroup bgcolor="yellow"
-                  x="20" y="40"&gt;
-    &lt;myTrackableView/&gt;
-    &lt;myTrackableView/&gt;
-    &lt;myTrackableView/&gt;
-    &lt;simplelayout axis="y" spacing="5"/&gt;
-  &lt;/basetrackgroup&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="160"&gt;
-  &lt;class name="myTrackableView" bgcolor="red"
-         onmouseover="setWidth(70)" 
-         onmouseout="setWidth(60)"
-         onmouseup="setAttribute('bgcolor', 0xFF0000)"
-         width="60" height="30"&gt;
-
-    &lt;!-- Use methods for mouse-tracking events --&gt;
-    &lt;handler name="onmousetrackover"&gt;
-      setAttribute('bgcolor', 0x0000FF); //blue
-    &lt;/handler&gt;
-
-    &lt;handler name="onmousetrackout"&gt;
-      setAttribute('bgcolor', 0xFF0000); //red
-    &lt;/handler&gt;
-
-    &lt;handler name="onmousetrackup"&gt;
-      setAttribute('bgcolor', 0xFF0000); //red
-    &lt;/handler&gt;
-  &lt;/class&gt;
-
-  &lt;text&gt;Click on any red view and drag the mouse. &lt;/text&gt;
-  &lt;basetrackgroup bgcolor="yellow"
-                  x="20" y="40"&gt;
-    &lt;myTrackableView/&gt;
-    &lt;myTrackableView/&gt;
-    &lt;myTrackableView/&gt;
-    &lt;simplelayout axis="y" spacing="5"/&gt;
-  &lt;/basetrackgroup&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/input-devices-$8.lzx></example?>
 <anchor id="input-devices.view_source"/>
 <para/></section></section><section><title>"View Source" right click menu item </title>
 <para>
@@ -516,28 +182,7 @@ To make a new menu, first you create the menu, then you create a menu item, and 
     </programlisting>
 </example>
 
-<?example role="live-example"><title>Creating a context menu</title><programlisting role="lzx-embednew"><filename>input-devices-$9.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
 
-&lt;view width="350" height="100" bgcolor="#cccccc"&gt;
-
-&lt;text text="For my context menu to work, I need to run in SWF8"/&gt;
-
-&lt;method event="oninit"&gt;
-	var cmenu = new LzContextMenu(); // create the menu
-    var item1 = cmenu.makeMenuItem('hello', new LzDelegate(this, "handlerightclick")); // create the menu item, and set up an LzDelegate as a callback
-    cmenu.addItem(item1); //add the item to the menu
-    this.setContextMenu(cmenu);
-&lt;/method&gt;
-
- &lt;method name="handlerightclick" args="val"&gt;
-    Debug.write("hello world");
-  &lt;/method&gt;
-&lt;/view&gt;
-
-&lt;/canvas&gt;
-
-</code></programlisting><?lzx-edit programs/input-devices-$9.lzx></example?>
 
 <para>
 There is no method to clear the menu (Settings and About Flash Player are always there), but you can erase one  with something
@@ -615,87 +260,5 @@ The example below illustrates use of <indexterm><primary>LzFocus</primary></inde
    <textobject><textdata fileref="programs/input-devices-$10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Reading Key Values</title><programlisting role="lzx-embednew"><filename>input-devices-$10.lzx</filename><parameter/><code>
-&lt;canvas  height="200" debug="true"&gt;
-    &lt;debug x="110" y="15" /&gt;
 
-    &lt;!-- NOTE: Even though the view below takes focus oninit,
-               in some browsers you might still need to click on the
-               application itself, to take the focus away from the 
-               browser itself and to the Flash Player. --&gt;
-
-    &lt;view width="100" height="100" bgcolor="0x333399"
-          focusable="true"
-          oninit="LzFocus.setFocus(this)"&gt;
-
-        &lt;handler name="oninit"&gt;
-            this.keyCodes = new Array()
-            this.keyCodes[65] = "A for Apple";
-            this.keyCodes[76] = "L for Laszlo";
-            this.keyCodes[79] = "O for Optometrist";
-            this.keyCodes[83] = "S for Sammy";
-            this.keyCodes[90] = "Z for Zebra";
-        &lt;/handler&gt;
-
-        &lt;handler name="onkeydown" args="akeycode"&gt;
-            // respond here    
-            Debug.write( "Key pressed: " + akeycode );
-            if ( this.keyCodes[akeycode] != undefined ) {
-                Debug.write( this.keyCodes[akeycode] );
-            } else {
-                Debug.write( "you pressed: " + String.fromCharCode(akeycode) );
-            }
-        &lt;/handler&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas  height="200" debug="true"&gt;
-    &lt;debug x="110" y="15" /&gt;
-
-    &lt;!-- NOTE: Even though the view below takes focus oninit,
-               in some browsers you might still need to click on the
-               application itself, to take the focus away from the 
-               browser itself and to the Flash Player. --&gt;
-
-    &lt;view width="100" height="100" bgcolor="0x333399"
-          focusable="true"
-          oninit="LzFocus.setFocus(this)"&gt;
-
-        &lt;handler name="oninit"&gt;
-            this.keyCodes = new Array()
-            this.keyCodes[65] = "A for Apple";
-            this.keyCodes[76] = "L for Laszlo";
-            this.keyCodes[79] = "O for Optometrist";
-            this.keyCodes[83] = "S for Sammy";
-            this.keyCodes[90] = "Z for Zebra";
-        &lt;/handler&gt;
-
-        &lt;handler name="onkeydown" args="akeycode"&gt;
-            // respond here    
-            Debug.write( "Key pressed: " + akeycode );
-            if ( this.keyCodes[akeycode] != undefined ) {
-                Debug.write( this.keyCodes[akeycode] );
-            } else {
-                Debug.write( "you pressed: " + String.fromCharCode(akeycode) );
-            }
-        &lt;/handler&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/input-devices-$10.lzx></example?>
-<?ignore <example title="Creating and using LzTrackgroups">
-
-</example>
-<!--
-<h4>Tracking APIs</h4>
--->
-
-<todo>
-<h2>The Keyboard ( section under construction )</h2>
-
-<h3>Focusing on a View</h3>
-<h3>Basic Keyboard Events</h3>
-<h3>While the Key is down...</h3>
-<h3>Using Modifier keys: Option, Shift, and Control</h3>
-</todo>
-?>
 <para/></section></section></chapter>

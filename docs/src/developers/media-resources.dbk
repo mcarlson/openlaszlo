@@ -1,5 +1,6 @@
 <chapter id="media-resources">
   <title>Media Resources</title>
+  <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
   <para>This chapter describes how to include external media
   resources (images, audio, animation, and video) into OpenLaszlo
   applications.</para>
@@ -207,15 +208,7 @@
         </textobject>
       </programlisting>
     </example>
-    <?example role="live-example"><title>Importing a resource</title><programlisting role="lzx-embednew"><filename>media-resources-$1.lzx</filename><parameter/><code>
-        &lt;canvas height="110"&gt;
-          &lt;view resource="../resources/logo.gif"/&gt;
-        &lt;/canvas&gt;
-        </code></programlisting><programlisting>
-        &lt;canvas height="110"&gt;
-          &lt;view resource="../resources/logo.gif"/&gt;
-        &lt;/canvas&gt;
-        </programlisting><?lzx-edit programs/media-resources-$1.lzx></example?>
+
     <para>Or they may be declared externally as first-class objects
     themselves:</para>
     <example role="live-example">
@@ -226,17 +219,7 @@
         </textobject>
       </programlisting>
     </example>
-    <?example role="live-example"><title>Declaring a resource</title><programlisting role="lzx-embednew"><filename>media-resources-$2.lzx</filename><parameter/><code>
-        &lt;canvas height="110"&gt;
-          &lt;resource name="myname" src="../resources/logo.gif"/&gt;
-          &lt;view resource="myname"/&gt;
-        &lt;/canvas&gt;
-        </code></programlisting><programlisting>
-        &lt;canvas height="110"&gt;
-          &lt;resource name="myname" src="../resources/logo.gif"/&gt;
-          &lt;view resource="myname"/&gt;
-        &lt;/canvas&gt;
-        </programlisting><?lzx-edit programs/media-resources-$2.lzx></example?>
+   
     <section>
       <title>Resources are not views</title>
       <para>Note that a 
@@ -270,10 +253,7 @@
               <sgmltag class="attribute"
               role="LzView.__ivars__.resourceheight">
               resourceheight</sgmltag>
-            </listitem><?ignore obsolete?
-                        <listitem><sgmltag class="attribute" role="LzView.__ivars__.xscale">xscale</sgmltag></listitem>
-                        <listitem><sgmltag class="attribute" role="LzView.__ivars__.yscale">yscale</sgmltag></listitem>
-            ?>
+            </listitem>
             <listitem>
               <property role="LzView.stretches">
               stretches</property>
@@ -467,45 +447,7 @@
         </textobject>
       </programlisting>
     </example>
-    <?example role="live-example"><title>Declaring a multi-frame resource</title><programlisting role="lzx-embednew"><filename>media-resources-$3.lzx</filename><parameter/><code>
-        &lt;canvas height="180"&gt;
-          &lt;resource name="myresource"&gt;
-            &lt;frame src="../resources/logo.gif"/&gt;
-            &lt;frame src="../resources/sky.jpg"/&gt;
-          &lt;/resource&gt;
-          &lt;simplelayout spacing="5"/&gt;
-          &lt;view id="myview" resource="myresource"/&gt;
-          &lt;view layout="axis: x; spacing: 3"&gt;
-            &lt;text&gt;Frame:&lt;/text&gt;
-            &lt;radiogroup&gt;
-              &lt;radiobutton selected="true"&gt;1&lt;/radiobutton&gt;
-              &lt;radiobutton&gt;2&lt;/radiobutton&gt;
-              &lt;handler name="onvalue" args="v"&gt;
-                myview.setResourceNumber(Number(v));
-              &lt;/handler&gt;
-            &lt;/radiogroup&gt;
-          &lt;/view&gt;
-        &lt;/canvas&gt;
-        </code></programlisting><programlisting>
-        &lt;canvas height="180"&gt;
-          &lt;resource name="myresource"&gt;
-            &lt;frame src="../resources/logo.gif"/&gt;
-            &lt;frame src="../resources/sky.jpg"/&gt;
-          &lt;/resource&gt;
-          &lt;simplelayout spacing="5"/&gt;
-          &lt;view id="myview" resource="myresource"/&gt;
-          &lt;view layout="axis: x; spacing: 3"&gt;
-            &lt;text&gt;Frame:&lt;/text&gt;
-            &lt;radiogroup&gt;
-              &lt;radiobutton selected="true"&gt;1&lt;/radiobutton&gt;
-              &lt;radiobutton&gt;2&lt;/radiobutton&gt;
-              &lt;handler name="onvalue" args="v"&gt;
-                myview.setResourceNumber(Number(v));
-              &lt;/handler&gt;
-            &lt;/radiogroup&gt;
-          &lt;/view&gt;
-        &lt;/canvas&gt;
-        </programlisting><?lzx-edit programs/media-resources-$3.lzx></example?>
+
     <para>You can use a multi-frame resource to construct an
     animation that moves between frames when you call the 
     <interface>LzView.play()</interface>method. Conversely, when
@@ -525,35 +467,7 @@
         </textobject>
       </programlisting>
     </example>
-    <?example role="live-example"><title>Importing an animation</title><programlisting role="lzx-embednew"><filename>media-resources-$4.lzx</filename><parameter/><code>
-        &lt;canvas height="220"&gt;
-          &lt;simplelayout spacing="5"/&gt;
-          &lt;resource name="myresource" src="resources/logo.swf"/&gt;
-          &lt;button onclick="me.stop()"&gt; Stop &lt;/button&gt;
-          &lt;button onclick="me.play()"&gt; Play &lt;/button&gt;
-          &lt;text text="${me.frame + ' out of ' + me.totalframes + ' frame(s)'}"/&gt;
-          &lt;view layout="axis: x; spacing: 4"&gt;
-            &lt;button isdefault="true" text="Set current frame: " 
-              onclick="me.setAttribute('frame', Number(tt.text))"/&gt;
-            &lt;edittext id="tt" width="50"/&gt;
-          &lt;/view&gt;
-          &lt;view id="me" resource="myresource"/&gt;
-        &lt;/canvas&gt;
-        </code></programlisting><programlisting>
-        &lt;canvas height="220"&gt;
-          &lt;simplelayout spacing="5"/&gt;
-          &lt;resource name="myresource" src="resources/logo.swf"/&gt;
-          &lt;button onclick="me.stop()"&gt; Stop &lt;/button&gt;
-          &lt;button onclick="me.play()"&gt; Play &lt;/button&gt;
-          &lt;text text="${me.frame + ' out of ' + me.totalframes + ' frame(s)'}"/&gt;
-          &lt;view layout="axis: x; spacing: 4"&gt;
-            &lt;button isdefault="true" text="Set current frame: " 
-              onclick="me.setAttribute('frame', Number(tt.text))"/&gt;
-            &lt;edittext id="tt" width="50"/&gt;
-          &lt;/view&gt;
-          &lt;view id="me" resource="myresource"/&gt;
-        &lt;/canvas&gt;
-        </programlisting><?lzx-edit programs/media-resources-$4.lzx></example?>
+
     <para>Multi-frame resources are also useful for structuring the
     display of a single visual element or component that takes on
     different appearances:</para>
@@ -565,47 +479,7 @@
         </textobject>
       </programlisting>
     </example>
-    <?example role="live-example"><title>Using multi-frame resources</title><programlisting role="lzx-embednew"><filename>media-resources-$5.lzx</filename><parameter/><code>
-        &lt;canvas height="120"&gt;
-          &lt;!-- create the multi-frame resource and give it a name --&gt;
-          &lt;resource name="mybutton_rsrc"&gt;
-            &lt;!-- first frame is the mouseup state of the button --&gt;     
-            &lt;frame src="../resources/button-up.png"/&gt;   
-            &lt;!-- second frame is the mouseover state of the button --&gt;     
-            &lt;frame src="../resources/button-over.png"/&gt; 
-            &lt;!-- third frame is the mousedown state of the button --&gt;     
-            &lt;frame src="../resources/button-down.png"/&gt; 
-          &lt;/resource&gt;
-        
-      &lt;!-- attach the resource to a view with mouse events --&gt;
-          &lt;view resource="mybutton_rsrc" 
-                onmouseover="setResourceNumber(2)"
-                onmouseout="setResourceNumber(1)"
-                onmousedown="setResourceNumber(3)"
-                onmouseup="setResourceNumber(2)"/&gt;
-        
-    &lt;/canvas&gt;
-        </code></programlisting><programlisting>
-        &lt;canvas height="120"&gt;
-          &lt;!-- create the multi-frame resource and give it a name --&gt;
-          &lt;resource name="mybutton_rsrc"&gt;
-            &lt;!-- first frame is the mouseup state of the button --&gt;     
-            &lt;frame src="../resources/button-up.png"/&gt;   
-            &lt;!-- second frame is the mouseover state of the button --&gt;     
-            &lt;frame src="../resources/button-over.png"/&gt; 
-            &lt;!-- third frame is the mousedown state of the button --&gt;     
-            &lt;frame src="../resources/button-down.png"/&gt; 
-          &lt;/resource&gt;
-        
-      &lt;!-- attach the resource to a view with mouse events --&gt;
-          &lt;view resource="mybutton_rsrc" 
-                onmouseover="setResourceNumber(2)"
-                onmouseout="setResourceNumber(1)"
-                onmousedown="setResourceNumber(3)"
-                onmouseup="setResourceNumber(2)"/&gt;
-        
-    &lt;/canvas&gt;
-        </programlisting><?lzx-edit programs/media-resources-$5.lzx></example?>
+
     <section>
       <title>Frame rates</title>
       <para>As of OpenLaszlo 3.1, all LZX applications are compiled
@@ -684,15 +558,7 @@
           </textobject>
         </programlisting>
       </example>
-      <?example role="live-example"><title>Loading a resource at runtime</title><programlisting role="lzx-embednew"><filename>media-resources-$7.lzx</filename><parameter/><code>
-            &lt;canvas height="180"&gt;
-              &lt;view resource="http:../resources/logo.gif"/&gt;
-            &lt;/canvas&gt;
-            </code></programlisting><programlisting>
-            &lt;canvas height="180"&gt;
-              &lt;view resource="http:../resources/logo.gif"/&gt;
-            &lt;/canvas&gt;
-            </programlisting><?lzx-edit programs/media-resources-$7.lzx></example?>
+
       <para>The second method is to use the 
       <methodname role="LzView.prototype.setSource">
       setSource()</methodname>method. The previous example is

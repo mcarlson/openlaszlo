@@ -2,7 +2,7 @@
 
 
 <title>Understanding Compilation</title>
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>You can compile your applications for any of several runtimes using any of several techniques. In this chapter we'll look at the various ways of invoking the compiler and its various options:</para>
 
 <itemizedlist spacing="compact"><listitem><para>Using the Developer's Console to invoke the OpenLaszlo Server</para></listitem><listitem><para>Using URLs to invoke the OpenLaszlo Server</para></listitem><listitem><para>Invoking the lzc compiler directly from the command line</para></listitem></itemizedlist>
@@ -154,29 +154,7 @@ You can enclose blocks of code within <indexterm><primary>switch</primary></inde
    <textobject><textdata fileref="programs/compiler-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>switch tag for conditional compilation</title><programlisting role="lzx-embednew"><filename>compiler-$2.lzx</filename><parameter/><code>
-&lt;canvas height="20"&gt;
-  &lt;switch&gt;
-    &lt;when runtime="dhtml"&gt;
-       &lt;text&gt;This program has been compiled for DHTML&lt;/text&gt;
-    &lt;/when&gt;
-    &lt;otherwise&gt;
-      &lt;text&gt;This program has been compiled for SWF&lt;/text&gt; 
-    &lt;/otherwise&gt;
-  &lt;/switch&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="20"&gt;
-  &lt;switch&gt;
-    &lt;when runtime="dhtml"&gt;
-       &lt;text&gt;This program has been compiled for DHTML&lt;/text&gt;
-    &lt;/when&gt;
-    &lt;otherwise&gt;
-      &lt;text&gt;This program has been compiled for SWF&lt;/text&gt; 
-    &lt;/otherwise&gt;
-  &lt;/switch&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/compiler-$2.lzx></example?>
+
 <para/></section><section><title>Font and Face</title>
 <para>
 The <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>

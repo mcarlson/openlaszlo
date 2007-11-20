@@ -1,7 +1,7 @@
 <chapter id="custom-components">
 
 <title>Designing Custom Components</title>
- 
+ <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>A component is a reusable class that is typically simple and easy to
 use. Examples of a few components that ship with OpenLaszlo are <indexterm><primary>button</primary></indexterm><classname>button</classname>, <indexterm><primary>window</primary></indexterm><classname>window</classname>, and
 <indexterm><primary>tabslider</primary></indexterm><classname>tabslider</classname>. The standard OpenLaszlo components can be found in the
@@ -88,59 +88,6 @@ subclasses of <indexterm><primary>basevaluecomponent</primary></indexterm><class
    <textobject><textdata fileref="programs/custom-components-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Basevaluecomponent example</title><programlisting role="lzx-embednew"><filename>custom-components-$1.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="260"&gt;
-  &lt;debug height="240"/&gt;
-  &lt;include href="base/basevaluecomponent.lzx"/&gt;
-
-  &lt;class name="myvaluecomponent" extends="basevaluecomponent"&gt;
-    &lt;handler name="oninit"&gt;
-      Debug.write(this.name + ' text: "' + this.text + '"');
-      Debug.write(this.name + ' value: "' + this.value + '"');
-      Debug.write(this.name + ' getValue(): "' + this.getValue() + '"');
-      Debug.write("");
-    &lt;/handler&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- Text is inherited from basecomponent, the superclass of --&gt;
-  &lt;!-- basevalue component.                                    --&gt;
-  &lt;myvaluecomponent name="one" text="this is the text"/&gt;
-
-  &lt;!-- Set the value this time. Note that value is an expression type. --&gt;
-  &lt;!-- Have to use quotes to set a string value.                       --&gt;
-  &lt;myvaluecomponent name="two" value="'this is the value'"/&gt;
-
-  &lt;!-- Set both text and value. --&gt;
-  &lt;myvaluecomponent name="three" text="this is the text" 
-                    value="'this is the value'"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="260"&gt;
-  &lt;debug height="240"/&gt;
-  &lt;include href="base/basevaluecomponent.lzx"/&gt;
-
-  &lt;class name="myvaluecomponent" extends="basevaluecomponent"&gt;
-    &lt;handler name="oninit"&gt;
-      Debug.write(this.name + ' text: "' + this.text + '"');
-      Debug.write(this.name + ' value: "' + this.value + '"');
-      Debug.write(this.name + ' getValue(): "' + this.getValue() + '"');
-      Debug.write("");
-    &lt;/handler&gt;
-  &lt;/class&gt;
-  
-  &lt;!-- Text is inherited from basecomponent, the superclass of --&gt;
-  &lt;!-- basevalue component.                                    --&gt;
-  &lt;myvaluecomponent name="one" text="this is the text"/&gt;
-
-  &lt;!-- Set the value this time. Note that value is an expression type. --&gt;
-  &lt;!-- Have to use quotes to set a string value.                       --&gt;
-  &lt;myvaluecomponent name="two" value="'this is the value'"/&gt;
-
-  &lt;!-- Set both text and value. --&gt;
-  &lt;myvaluecomponent name="three" text="this is the text" 
-                    value="'this is the value'"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/custom-components-$1.lzx></example?>
 
 <para/></section><section><title>Baseformitem</title>
 
@@ -635,17 +582,7 @@ code set.</para>
    <textobject><textdata fileref="programs/custom-components-$15.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using slider</title><programlisting role="lzx-embednew"><filename>custom-components-$15.lzx</filename><parameter/><code>
-&lt;canvas height="200"&gt;
-  &lt;include href="lz/slider.lzx"/&gt;
-  &lt;slider x="50" y="50" value="30"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="200"&gt;
-  &lt;include href="lz/slider.lzx"/&gt;
-  &lt;slider x="50" y="50" value="30"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/custom-components-$15.lzx></example?>
+
 
 <para/></section></section>
 <section>

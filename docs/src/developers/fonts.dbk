@@ -1,7 +1,7 @@
 <chapter id="fonts">
 
 <title condition="dhtml">Fonts</title>
- 
+ <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>This chapter describes how to use fonts in LZX applications.</para>
 
 <para/><section><title>What is a font?</title>
@@ -89,123 +89,7 @@ By default, OpenLaszlo applications use the device fonts.
    <textobject><textdata fileref="programs/fonts-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>using device fonts</title><programlisting role="lzx-embednew"><filename>fonts-$1.lzx</filename><parameter/><code>
-&lt;canvas&gt; 
-  &lt;window title="Fonts are fun!" width="400" height="400" resizable="true"&gt;
-  &lt;view width="500"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;view width="400" font="Arial" fontsize="14"&gt;
-      &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;text&gt;Arial&lt;/text&gt;
-      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
-      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./ ;?;':"[]{}\~`&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;Arial&lt;/b&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
-      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
-      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
-      &lt;inputtext&gt;Arial&lt;/inputtext&gt;
-      &lt;text&gt;
-        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
-        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
-    &lt;/view&gt;
-    
-    &lt;view width="400" font="Arial Narrow" fontsize="14"&gt;
-      &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;text&gt;Arial Narrow&lt;/text&gt;
-      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
-      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;Arial Narrow&lt;/b&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;u&gt;Arial Narrow&lt;/u&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
-      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
-      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
-      &lt;inputtext&gt;Arial Narrow&lt;/inputtext&gt;
-      &lt;text&gt;
-        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
-        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
-    &lt;/view&gt;
-    &lt;view width="400" font="Times New Roman" fontsize="14"&gt;
-      &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;text&gt;Times New Roman&lt;/text&gt;
-      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
-      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;Times New Roman&lt;/b&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;u&gt;Times New Roman&lt;/u&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
-      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
-      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
-      &lt;inputtext&gt;Times New Roman&lt;/inputtext&gt;
-      &lt;text&gt;
-        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold&lt;/b&gt;
-        &lt;i&gt;Italic&lt;/i &gt;&lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;
-      &lt;/text&gt;
-    &lt;/view&gt;
-    &lt;/view&gt;
-    &lt;scrollbar axis="y"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt; 
-  &lt;window title="Fonts are fun!" width="400" height="400" resizable="true"&gt;
-  &lt;view width="500"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;view width="400" font="Arial" fontsize="14"&gt;
-      &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;text&gt;Arial&lt;/text&gt;
-      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
-      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./ ;?;':"[]{}\~`&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;Arial&lt;/b&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
-      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
-      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
-      &lt;inputtext&gt;Arial&lt;/inputtext&gt;
-      &lt;text&gt;
-        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
-        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
-    &lt;/view&gt;
-    
-    &lt;view width="400" font="Arial Narrow" fontsize="14"&gt;
-      &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;text&gt;Arial Narrow&lt;/text&gt;
-      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
-      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;Arial Narrow&lt;/b&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;u&gt;Arial Narrow&lt;/u&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
-      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
-      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
-      &lt;inputtext&gt;Arial Narrow&lt;/inputtext&gt;
-      &lt;text&gt;
-        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
-        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
-    &lt;/view&gt;
-    &lt;view width="400" font="Times New Roman" fontsize="14"&gt;
-      &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;text&gt;Times New Roman&lt;/text&gt;
-      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
-      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;Times New Roman&lt;/b&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;u&gt;Times New Roman&lt;/u&gt;&lt;/text&gt;
-      &lt;text&gt;&lt;b&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
-      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
-      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
-      &lt;inputtext&gt;Times New Roman&lt;/inputtext&gt;
-      &lt;text&gt;
-        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold&lt;/b&gt;
-        &lt;i&gt;Italic&lt;/i &gt;&lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;
-      &lt;/text&gt;
-    &lt;/view&gt;
-    &lt;/view&gt;
-    &lt;scrollbar axis="y"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$1.lzx></example?>
+
 <para>  You can override the default font by redefining the default font on the <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">&lt;canvas&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: canvas-->
 .
@@ -220,23 +104,6 @@ Note that you need to do this within the <indexterm><primary>canvas</primary></i
    <textobject><textdata fileref="programs/fonts-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>setting default tag on the canvas</title><programlisting role="lzx-embednew"><filename>fonts-$2.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="100" bgcolor="gray" font="default" fontsize="8"&gt;
-     &lt;font name="default" src="verity/verityplus11.ttf"/&gt;
-     &lt;text &gt;default Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
-     &lt;text font="default" fontsize='8'&gt;Verity Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
-     &lt;text font="Verdana"&gt;Verdana Foobar the quick brown frotz jumped over the bad music&lt;/text&gt;
-     &lt;simplelayout /&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="100" bgcolor="gray" font="default" fontsize="8"&gt;
-     &lt;font name="default" src="verity/verityplus11.ttf"/&gt;
-     &lt;text &gt;default Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
-     &lt;text font="default" fontsize='8'&gt;Verity Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
-     &lt;text font="Verdana"&gt;Verdana Foobar the quick brown frotz jumped over the bad music&lt;/text&gt;
-     &lt;simplelayout /&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$2.lzx></example?>
 
 <para/></section></section><section><title condition="swf">OpenLaszlo "pseudo-pixel" fonts</title>
 
@@ -276,27 +143,7 @@ For example,
    <textobject><textdata fileref="programs/fonts-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using the font attribute</title><programlisting role="lzx-embednew"><filename>fonts-$3.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;simplelayout/&gt;
-  &lt;view font="helvetica"&gt;
-    &lt;text&gt;Howdy!&lt;/text&gt;
-  &lt;/view&gt;
-  &lt;view font="times"&gt;
-    &lt;text&gt;Howdy back!&lt;/text&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;simplelayout/&gt;
-  &lt;view font="helvetica"&gt;
-    &lt;text&gt;Howdy!&lt;/text&gt;
-  &lt;/view&gt;
-  &lt;view font="times"&gt;
-    &lt;text&gt;Howdy back!&lt;/text&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$3.lzx></example?>
+
 <para/><section><title>Specifying more than one font</title>
 <para>
 You can supply more than one font name as argument to the font attribute. At runtime, the system will try the font list from left to right and use the first one it finds. This can come in handy if you have an application that you would like to compile to both SWF and DHTML.
@@ -343,15 +190,7 @@ The behavior of <indexterm><primary>font</primary></indexterm><sgmltag class="at
    <textobject><textdata fileref="programs/fonts-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Default font</title><programlisting role="lzx-embednew"><filename>fonts-$4.lzx</filename><parameter/><code>
-&lt;canvas height="40"&gt;
-     &lt;text&gt;Hello World&lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="40"&gt;
-     &lt;text&gt;Hello World&lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$4.lzx></example?>
+
 <para>
  This renders Hello World in a client font.
 </para>
@@ -362,15 +201,7 @@ The behavior of <indexterm><primary>font</primary></indexterm><sgmltag class="at
    <textobject><textdata fileref="programs/fonts-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Default font with non-default font size</title><programlisting role="lzx-embednew"><filename>fonts-$5.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-   &lt;text fontsize="24"&gt;Hello World&lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-   &lt;text fontsize="24"&gt;Hello World&lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$5.lzx></example?>
+
 <para>
 This renders Hello World in a larger client font, with no jaggies.
 </para>
@@ -381,27 +212,7 @@ This renders Hello World in a larger client font, with no jaggies.
    <textobject><textdata fileref="programs/fonts-$6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Equivalence of generic and defite names</title><programlisting role="lzx-embednew"><filename>fonts-$6.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-   &lt;simplelayout axis="y"/&gt;
-   &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
-   &lt;text font="Helvetica"&gt;Some text&lt;/text&gt;
-   &lt;text font="Times"&gt;Some text&lt;/text&gt;
-   &lt;text font="serif"&gt;Some text&lt;/text&gt;
-   &lt;text font="Courier"&gt;Some text&lt;/text&gt;
-   &lt;text font="monospace"&gt;Some text&lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-   &lt;simplelayout axis="y"/&gt;
-   &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
-   &lt;text font="Helvetica"&gt;Some text&lt;/text&gt;
-   &lt;text font="Times"&gt;Some text&lt;/text&gt;
-   &lt;text font="serif"&gt;Some text&lt;/text&gt;
-   &lt;text font="Courier"&gt;Some text&lt;/text&gt;
-   &lt;text font="monospace"&gt;Some text&lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$6.lzx></example?>
+
 <para>
  This displays three pairs of items. The items in each pair may be rendered in the same font, depending on the default fonts on the client.
 </para>
@@ -411,21 +222,7 @@ This renders Hello World in a larger client font, with no jaggies.
    <textobject><textdata fileref="programs/fonts-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>"nofont" attribute</title><programlisting role="lzx-embednew"><filename>fonts-$7.lzx</filename><parameter/><code>
- &lt;canvas height="100"&gt;
-     &lt;simplelayout axis="y"/&gt;
-     &lt;text font="nofont, nofont, sans-serif"&gt;Some text&lt;/text&gt;
-     &lt;text font="nofont, sans-serif"&gt;Some text&lt;/text&gt;
-     &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
- &lt;/canvas&gt;
-</code></programlisting><programlisting>
- &lt;canvas height="100"&gt;
-     &lt;simplelayout axis="y"/&gt;
-     &lt;text font="nofont, nofont, sans-serif"&gt;Some text&lt;/text&gt;
-     &lt;text font="nofont, sans-serif"&gt;Some text&lt;/text&gt;
-     &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
- &lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$7.lzx></example?>
+
 <para>
  This displays three lines in the same font.
 </para>
@@ -541,17 +338,7 @@ The remaining differences are:
    <textobject><textdata fileref="programs/fonts-$11.lzx"/></textobject> 
    </programlisting>
 </example>       
-<?example role="live-example"><title>Using a font</title><programlisting role="lzx-embednew"><filename>fonts-$11.lzx</filename><parameter/><code>
-&lt;canvas height="70"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;text font="helmet" fontsize="20"&gt;Hello Helmet&lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="70"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;text font="helmet" fontsize="20"&gt;Hello Helmet&lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$11.lzx></example?>
+
         <para>
         As you can see below, The HTML text rendering tags, <indexterm><primary>b</primary></indexterm><sgmltag class="element">&lt;b&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: b-->
@@ -567,37 +354,6 @@ The remaining differences are:
    <textobject><textdata fileref="programs/fonts-$12.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using font styles and HTML text</title><programlisting role="lzx-embednew"><filename>fonts-$12.lzx</filename><parameter/><code>
-&lt;canvas height="70"&gt;
-  &lt;font name="myfont"&gt;
-    &lt;face src="helmetr.ttf" style="plain"        /&gt;
-    &lt;face src="helmetb.ttf" style="bold"         /&gt;
-    &lt;face src="helmeti.ttf" style="italic"       /&gt;
-    &lt;face src="helmetbi.ttf" style="bold italic" /&gt;
-  &lt;/font&gt;
-  &lt;text font="myfont" fontsize="20"&gt;
-    plain 
-    &lt;b&gt;bold&lt;/b&gt;
-    &lt;i&gt;italic&lt;/i&gt;
-    &lt;b&gt;&lt;i&gt;bold italic&lt;/i&gt;&lt;/b&gt;
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="70"&gt;
-  &lt;font name="myfont"&gt;
-    &lt;face src="helmetr.ttf" style="plain"        /&gt;
-    &lt;face src="helmetb.ttf" style="bold"         /&gt;
-    &lt;face src="helmeti.ttf" style="italic"       /&gt;
-    &lt;face src="helmetbi.ttf" style="bold italic" /&gt;
-  &lt;/font&gt;
-  &lt;text font="myfont" fontsize="20"&gt;
-    plain 
-    &lt;b&gt;bold&lt;/b&gt;
-    &lt;i&gt;italic&lt;/i&gt;
-    &lt;b&gt;&lt;i&gt;bold italic&lt;/i&gt;&lt;/b&gt;
-  &lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$12.lzx></example?>
 
     <para> In the example below, we use the HTML text <indexterm><primary>font</primary></indexterm><sgmltag class="element">&lt;font&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: font-->
@@ -610,25 +366,7 @@ The remaining differences are:
    <textobject><textdata fileref="programs/fonts-$13.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using mulitple fonts in HTML text</title><programlisting role="lzx-embednew"><filename>fonts-$13.lzx</filename><parameter/><code>
-&lt;canvas height="70"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;font name="arioso" src="ariosor.ttf"/&gt;
-  &lt;text fontsize="20"&gt;
-    &lt;font face="helmet"&gt;helmet&lt;/font&gt; 
-    &lt;font face="arioso"&gt;arioso&lt;/font&gt;
-  &lt;/text&gt;
-  &lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="70"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;font name="arioso" src="ariosor.ttf"/&gt;
-  &lt;text fontsize="20"&gt;
-    &lt;font face="helmet"&gt;helmet&lt;/font&gt; 
-    &lt;font face="arioso"&gt;arioso&lt;/font&gt;
-  &lt;/text&gt;
-  &lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$13.lzx></example?>
+
 
     <para>In the example below, you can see that setting the <indexterm><primary>fontsize</primary></indexterm><sgmltag class="attribute">fontsize</sgmltag>
     can get you very big text.</para>
@@ -639,17 +377,7 @@ The remaining differences are:
    <textobject><textdata fileref="programs/fonts-$14.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using the fontsize attribute</title><programlisting role="lzx-embednew"><filename>fonts-$14.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;text resize="true" fontsize="100" font="helmet"&gt;BIG&lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;text resize="true" fontsize="100" font="helmet"&gt;BIG&lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$14.lzx></example?>
+
 
         <para>Many of the fonts look too small at the default fontsize of 8.</para>
 
@@ -659,17 +387,7 @@ The remaining differences are:
    <textobject><textdata fileref="programs/fonts-$15.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Omitting the fontsize attribute.</title><programlisting role="lzx-embednew"><filename>fonts-$15.lzx</filename><parameter/><code>
-&lt;canvas height="70"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;text font="helmet"&gt;Helmet at default size(8) is very hard to read!&lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="70"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;text font="helmet"&gt;Helmet at default size(8) is very hard to read!&lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$15.lzx></example?>
+
 
     <para>You can specify the font for inputtext, too.</para>
 
@@ -679,17 +397,7 @@ The remaining differences are:
    <textobject><textdata fileref="programs/fonts-$16.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Specifying the font for inputtext.</title><programlisting role="lzx-embednew"><filename>fonts-$16.lzx</filename><parameter/><code>
-&lt;canvas fontsize="20" height="70"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;inputtext bgcolor="red" font="helmet"&gt;Type your text here&lt;/inputtext&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas fontsize="20" height="70"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;inputtext bgcolor="red" font="helmet"&gt;Type your text here&lt;/inputtext&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$16.lzx></example?>
+
 
 <para>Note that HTML text does <emphasis role="b"><emphasis role="i">not</emphasis></emphasis> work in <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: inputtext-->
@@ -717,39 +425,7 @@ These are described in turn below.
    <textobject><textdata fileref="programs/fonts-$17.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Using cascaded font attributes</title><programlisting role="lzx-embednew"><filename>fonts-$17.lzx</filename><parameter/><code>
-&lt;canvas height="250"&gt;
-  &lt;font name="conga" src="congar.ttf"/&gt;
-  &lt;font name="conga" src="congab.ttf" style="bold"/&gt;
-  &lt;view layout="axis: y; spacing: 2" font="conga"&gt;
-    &lt;text resize="true" fontsize="12" text="I will be in conga 12"/&gt;
-    &lt;text resize="true" fontsize="22" text="I will be in conga 22"/&gt;
-    &lt;text resize="true" fontsize="32" text="I will be in conga 32"/&gt;
-    &lt;view layout="axis: y; spacing: 2" fontsize="32" fontstyle="bold"&gt;
-      &lt;text resize="true" text="I will be bold"/&gt;
-      &lt;text resize="true" text="Me, too"/&gt;
-      &lt;text resize="true" fontsize="8" font="default" 
-            text="I will be in the default font"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="250"&gt;
-  &lt;font name="conga" src="congar.ttf"/&gt;
-  &lt;font name="conga" src="congab.ttf" style="bold"/&gt;
-  &lt;view layout="axis: y; spacing: 2" font="conga"&gt;
-    &lt;text resize="true" fontsize="12" text="I will be in conga 12"/&gt;
-    &lt;text resize="true" fontsize="22" text="I will be in conga 22"/&gt;
-    &lt;text resize="true" fontsize="32" text="I will be in conga 32"/&gt;
-    &lt;view layout="axis: y; spacing: 2" fontsize="32" fontstyle="bold"&gt;
-      &lt;text resize="true" text="I will be bold"/&gt;
-      &lt;text resize="true" text="Me, too"/&gt;
-      &lt;text resize="true" fontsize="8" font="default" 
-            text="I will be in the default font"/&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$17.lzx></example?>
+
 
         <para>You can even specify font attributes on the canvas:</para>
 
@@ -759,17 +435,7 @@ These are described in turn below.
    <textobject><textdata fileref="programs/fonts-$18.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Specifying a canvas font</title><programlisting role="lzx-embednew"><filename>fonts-$18.lzx</filename><parameter/><code>
-&lt;canvas font="tahoe" height="70" width="200"&gt;
-  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
-  &lt;text text="hello"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas font="tahoe" height="70" width="200"&gt;
-  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
-  &lt;text text="hello"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$18.lzx></example?>
+
 
         <para/></section><section><title>Font attributes and classes</title>
         <para>Specifying a font attribute on a class definition:</para>
@@ -793,37 +459,7 @@ These are described in turn below.
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Using font attributes in a class definition</title><programlisting role="lzx-embednew"><filename>fonts-$19.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
-  &lt;class name="myclass" fontsize="20" font="helmet"&gt;
-    &lt;attribute name="defaultplacement" value="'content'"/&gt;
-    &lt;text bgcolor="red" text="Uses the class font"/&gt;
-    &lt;view name="content"/&gt;
-  &lt;/class&gt;
-  
-  &lt;view layout="axis:y; spacing: 2" font="tahoe"&gt;
-    &lt;myclass/&gt;
-    &lt;text text="use cascaded font"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;font name="helmet" src="helmetr.ttf"/&gt;
-  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
-  &lt;class name="myclass" fontsize="20" font="helmet"&gt;
-    &lt;attribute name="defaultplacement" value="'content'"/&gt;
-    &lt;text bgcolor="red" text="Uses the class font"/&gt;
-    &lt;view name="content"/&gt;
-  &lt;/class&gt;
-  
-  &lt;view layout="axis:y; spacing: 2" font="tahoe"&gt;
-    &lt;myclass/&gt;
-    &lt;text text="use cascaded font"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$19.lzx></example?>
+
 
 <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>Note: sometime in these examples we set the text to be resizable.  Ask Adam or Sarah why</remark></para>
      
@@ -853,49 +489,7 @@ These are described in turn below.
    <textobject><textdata fileref="programs/fonts-$20.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Verity and vera fonts</title><programlisting role="lzx-embednew"><filename>fonts-$20.lzx</filename><parameter/><code>
-&lt;canvas height="120"&gt;
-  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
-  &lt;font name="verity9" src="verity/verity9.ttf"/&gt;
-  &lt;font name="verity11" src="verity/verity11.ttf"/&gt;
-  &lt;simplelayout axis="y" spacing="2"/&gt;
-  
-  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
-    &lt;text pixellock="true" fontsize="9" font="vera" text="vera 9 abcdefghi"/&gt;
-    &lt;text pixellock="true" fontsize="8" font="verity9" text="verity 9 abcdefghi"/&gt;
-  &lt;/view&gt;
-  &lt;text fontsize="10" font="vera" text="vera 10 abcdefghi"/&gt;
-  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
-    &lt;text pixellock="true" fontsize="11" font="vera" text="vera 11 abcdefghi"/&gt;
-    &lt;text pixellock="true" fontsize="8" font="verity11" text="verity 11 abcdefghi"/&gt;
-  &lt;/view&gt;
-  
-  &lt;text pixellock="true" fontsize="12" font="vera" text="vera 12 abcdefghi"/&gt;
-  &lt;text pixellock="true" fontsize="14" font="vera" text="vera 14 abcdefghi"/&gt;
-  &lt;text pixellock="true" fontsize="20" font="vera" text="vera 20 abcdefghi"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="120"&gt;
-  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
-  &lt;font name="verity9" src="verity/verity9.ttf"/&gt;
-  &lt;font name="verity11" src="verity/verity11.ttf"/&gt;
-  &lt;simplelayout axis="y" spacing="2"/&gt;
-  
-  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
-    &lt;text pixellock="true" fontsize="9" font="vera" text="vera 9 abcdefghi"/&gt;
-    &lt;text pixellock="true" fontsize="8" font="verity9" text="verity 9 abcdefghi"/&gt;
-  &lt;/view&gt;
-  &lt;text fontsize="10" font="vera" text="vera 10 abcdefghi"/&gt;
-  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
-    &lt;text pixellock="true" fontsize="11" font="vera" text="vera 11 abcdefghi"/&gt;
-    &lt;text pixellock="true" fontsize="8" font="verity11" text="verity 11 abcdefghi"/&gt;
-  &lt;/view&gt;
-  
-  &lt;text pixellock="true" fontsize="12" font="vera" text="vera 12 abcdefghi"/&gt;
-  &lt;text pixellock="true" fontsize="14" font="vera" text="vera 14 abcdefghi"/&gt;
-  &lt;text pixellock="true" fontsize="20" font="vera" text="vera 20 abcdefghi"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$20.lzx></example?>
+
 
         <para>
         The OpenLaszlo compiler also knows to automatically include the bold, italic, or bold italic
@@ -911,21 +505,6 @@ These are described in turn below.
    <textobject><textdata fileref="programs/fonts-$21.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Redefining the default font</title><programlisting role="lzx-embednew"><filename>fonts-$21.lzx</filename><parameter/><code>
-&lt;canvas height="70"&gt;
-  &lt;font name="default" src="bitstream-vera-1.10/vera.ttf"/&gt;
-  &lt;simplelayout axis="y" spacing="2"/&gt;
-  &lt;text text="vera"/&gt;
-  &lt;button text="vera button"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="70"&gt;
-  &lt;font name="default" src="bitstream-vera-1.10/vera.ttf"/&gt;
-  &lt;simplelayout axis="y" spacing="2"/&gt;
-  &lt;text text="vera"/&gt;
-  &lt;button text="vera button"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$21.lzx></example?>
 
         <para>Note that when you redefine the default font, the compiler no longer can automatically
         include the bold, italic, or bold italic styles for you.</para>
@@ -965,17 +544,7 @@ These are described in turn below.
    <textobject><textdata fileref="programs/fonts-$23.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Redefining the default font for Laszlo components</title><programlisting role="lzx-embednew"><filename>fonts-$23.lzx</filename><parameter/><code>
-&lt;canvas height="80"&gt;
-  &lt;font name="default" src="helmetr.ttf"/&gt;
-  &lt;button text="hello"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="80"&gt;
-  &lt;font name="default" src="helmetr.ttf"/&gt;
-  &lt;button text="hello"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/fonts-$23.lzx></example?>
+
 
 
     <para/></section><section><title>Fonts provided with the OpenLaszlo Server</title>

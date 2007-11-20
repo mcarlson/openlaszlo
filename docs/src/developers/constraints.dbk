@@ -1,7 +1,7 @@
 <chapter id="constraints">
  
 <title>Constraints</title>
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para/><section><title>Constraints defined</title>
 
 <para>In LZX, a <indexterm significance="preferred"><primary>constraint</primary></indexterm><glossterm>constraint</glossterm> is an attribute whose value is a
@@ -49,43 +49,7 @@ runtime. You'll see that the <literal>setConstraint</literal> method has the sam
    <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Runtime constraints with applyConstraint</title><programlisting role="lzx-embednew"><filename>constraints-$1.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;view x="250" width="20" height="20" bgcolor="red"
-        y="${m.y}"/&gt;
 
-  &lt;view x="300" width="20" height="20" bgcolor="blue"&gt;  
-    &lt;handler name="oninit"&gt;
-      var f = function () {   
-        this.setAttribute("y", m.y);       
-      }
-      var d = [m, "y"];
-      this.applyConstraint("y", f, d);
-    &lt;/handler&gt;
-  &lt;/view&gt;
-
-  &lt;window id="m" x="10" title="Drag me" width="160" height="20"/&gt;  
-&lt;/canvas&gt;
-
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;view x="250" width="20" height="20" bgcolor="red"
-        y="${m.y}"/&gt;
-
-  &lt;view x="300" width="20" height="20" bgcolor="blue"&gt;  
-    &lt;handler name="oninit"&gt;
-      var f = function () {   
-        this.setAttribute("y", m.y);       
-      }
-      var d = [m, "y"];
-      this.applyConstraint("y", f, d);
-    &lt;/handler&gt;
-  &lt;/view&gt;
-
-  &lt;window id="m" x="10" title="Drag me" width="160" height="20"/&gt;  
-&lt;/canvas&gt;
-
-</programlisting><?lzx-edit programs/constraints-$1.lzx></example?>
 
 <para><literal>f</literal> is a callback function that is required for the <indexterm><primary><literal>applyConstraint()</literal></primary></indexterm><methodname>applyConstraint()</methodname> method. <varname>d</varname> 
 is an array consisting of a pointer to a reference node, and the attribute to bind to.</para>
@@ -178,21 +142,7 @@ well.</para>
    <textobject><textdata fileref="programs/ex.constraints.1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example" id="ex.constraints.1"><title>An element appears when a checkbox is set</title><programlisting role="lzx-embednew"><filename>ex.constraints.1.lzx</filename><parameter/><code>
-&lt;canvas height="120"&gt;
-  &lt;checkbox id="cb" text="Show Blue Square"/&gt;
-  &lt;view visible="${cb.value}"
-        width="30" height="30" bgcolor="blue"/&gt;
-  &lt;simplelayout/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="120"&gt;
-  &lt;checkbox id="cb" text="Show Blue Square"/&gt;
-  &lt;view visible="${cb.value}"
-        width="30" height="30" bgcolor="blue"/&gt;
-  &lt;simplelayout/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/ex.constraints.1.lzx></example?>
+
 
 <para>In the example below, the position of the blue square is connected
 to the position of the mouse.  If you move the mouse inside the
@@ -207,19 +157,6 @@ simple attribute expression in <xref linkend="ex.constraints.1"/>.</para>
    <textobject><textdata fileref="programs/ex.constraints.2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example" id="ex.constraints.2"><title>Constrain to Mouse Position</title><programlisting role="lzx-embednew"><filename>ex.constraints.2.lzx</filename><parameter/><code>
-&lt;canvas height="120"&gt;
-  &lt;view bgcolor="blue" width="40" height="40"
-        x="${parent.getMouse('x')}"
-        y="${parent.getMouse('y')}"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="120"&gt;
-  &lt;view bgcolor="blue" width="40" height="40"
-        x="${parent.getMouse('x')}"
-        y="${parent.getMouse('y')}"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/ex.constraints.2.lzx></example?>
 
 <para>The constraint expression may be almost any Javascript expression.  For
 example, you could change the y value in example <xref linkend="ex.constraints.1"/> to
@@ -275,41 +212,7 @@ will resize the blue bar.  You can also move the slider to adjust the border siz
    <textobject><textdata fileref="programs/constraints-$10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Multiple Dependencies</title><programlisting role="lzx-embednew"><filename>constraints-$10.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="700"&gt;
-  &lt;window width="400" height="200" resizable="true"&gt;
-    &lt;attribute name="bordersize" value="${editor.bordersize.value}"/&gt;
-    &lt;view y="20" name="editor" layout="axis:x; spacing:10; inset:10"&gt;
-      &lt;text y="-4" resize="true"&gt;bordersize:&lt;/text&gt;
-      &lt;slider name="bordersize" value="10"/&gt;
-    &lt;/view&gt;
 
-    &lt;view bgcolor="0xFFC834" y="80"
-          width="${immediateparent.width}" height="10" /&gt;
-    &lt;view x="${parent.bordersize}" y="80"
-             width="${immediateparent.width - parent.bordersize * 2}"
-             height="10" bgcolor="blue" /&gt;
-    
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="700"&gt;
-  &lt;window width="400" height="200" resizable="true"&gt;
-    &lt;attribute name="bordersize" value="${editor.bordersize.value}"/&gt;
-    &lt;view y="20" name="editor" layout="axis:x; spacing:10; inset:10"&gt;
-      &lt;text y="-4" resize="true"&gt;bordersize:&lt;/text&gt;
-      &lt;slider name="bordersize" value="10"/&gt;
-    &lt;/view&gt;
-
-    &lt;view bgcolor="0xFFC834" y="80"
-          width="${immediateparent.width}" height="10" /&gt;
-    &lt;view x="${parent.bordersize}" y="80"
-             width="${immediateparent.width - parent.bordersize * 2}"
-             height="10" bgcolor="blue" /&gt;
-    
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/constraints-$10.lzx></example?>
 
 <para/></section><section><title>Circular Constraints</title> 
 
@@ -324,35 +227,7 @@ For example, in the Laszlo application below, the <literal>y</literal> values of
    <textobject><textdata fileref="programs/constraints-$11.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Circular Constraints</title><programlisting role="lzx-embednew"><filename>constraints-$11.lzx</filename><parameter/><code>
-&lt;canvas height="120"&gt;
-  &lt;view name="redview" bgcolor="red"
-        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
-        width="40" height="40" y="${blueview.y}"&gt;
-    &lt;dragstate name="gragger"/&gt;
-  &lt;/view&gt;
-  &lt;view name="blueview" bgcolor="blue"
-        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
-        width="40" height="40" y="${redview.y}"&gt;
-    &lt;dragstate name="gragger"/&gt;
-  &lt;/view&gt;
-  &lt;simplelayout spacing="40" axis="x"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="120"&gt;
-  &lt;view name="redview" bgcolor="red"
-        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
-        width="40" height="40" y="${blueview.y}"&gt;
-    &lt;dragstate name="gragger"/&gt;
-  &lt;/view&gt;
-  &lt;view name="blueview" bgcolor="blue"
-        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
-        width="40" height="40" y="${redview.y}"&gt;
-    &lt;dragstate name="gragger"/&gt;
-  &lt;/view&gt;
-  &lt;simplelayout spacing="40" axis="x"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/constraints-$11.lzx></example?>
+
 
 <para>
 How does it work?  When you drag

@@ -1,7 +1,7 @@
 <chapter id="persistent_connection">
 
 <title >The Persistent Connection</title>
- 
+ <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <note><para>This feature is provisional.  It works in limited capacity
 situations and is fine to develop with, but it is not recommend
 deployment (with the possible exception of low-capacity, non-mission
@@ -96,21 +96,6 @@ library). Once constructed, the connection manager can be accessed using
    <textobject><textdata fileref="programs/persistent_connection-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Simple connection manager</title><programlisting role="lzx-embednew"><filename>persistent_connection-$1.lzx</filename><parameter/><code>
-  &lt;canvas height="120" debug="true"&gt;
-      &lt;connection/&gt;
-      &lt;script&gt;
-          Debug.write('my connection manager: ' + canvas.connection);
-      &lt;/script&gt;
-  &lt;/canvas&gt;
-</code></programlisting><programlisting>
-  &lt;canvas height="120" debug="true"&gt;
-      &lt;connection/&gt;
-      &lt;script&gt;
-          Debug.write('my connection manager: ' + canvas.connection);
-      &lt;/script&gt;
-  &lt;/canvas&gt;
-</programlisting><?lzx-edit programs/persistent_connection-$1.lzx></example?>
 
 <para>To establish a persistent connection to the OpenLaszlo Server, use the
 <indexterm><primary><literal>LzConnection.connect()</literal></primary></indexterm><methodname>LzConnection.connect()</methodname> method.</para>
@@ -343,95 +328,6 @@ connection.disconnectDset dataset.</para>
    <textobject><textdata fileref="programs/persistent_connection-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Different ways to disconnect</title><programlisting role="lzx-embednew"><filename>persistent_connection-$3.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug y="60"/&gt;
-  &lt;connection authenticator="anonymous"&gt;
-    &lt;handler name="onconnect"&gt;
-      Debug.write('connected');
-    &lt;/handler&gt;
-    &lt;handler name="ondisconnect"&gt;
-      Debug.write('client disconnected');
-    &lt;/handler&gt;
-  &lt;/connection&gt;
-
-  &lt;datapointer xpath="connection:disconnectDset:/*[1]"&gt;
-    &lt;handler name="ondata"&gt;
-      Debug.write('server disconnected');
-    &lt;/handler&gt;
-    &lt;handler name="onerror"&gt;
-      Debug.write('disconnect call to server resulted in error');
-    &lt;/handler&gt;
-    &lt;handler name="ontimeout"&gt;
-      Debug.write('disconnect call to server timed out');
-    &lt;/handler&gt;
-  &lt;/datapointer&gt;
-
-  &lt;view&gt;
-    &lt;simplelayout axis="x" spacing="5"/&gt;
-    &lt;button&gt;connect
-      &lt;handler name="onclick"&gt;
-        canvas.connection.connect();
-      &lt;/handler&gt;
-    &lt;/button&gt;
-    &lt;button&gt;disconnect
-      &lt;handler name="onclick"&gt;
-        canvas.connection.disconnect();
-      &lt;/handler&gt;
-    &lt;/button&gt;
-    &lt;button&gt;client disconnect
-      &lt;handler name="onclick"&gt;
-        canvas.connection.clientDisconnect();
-      &lt;/handler&gt;
-    &lt;/button&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug y="60"/&gt;
-  &lt;connection authenticator="anonymous"&gt;
-    &lt;handler name="onconnect"&gt;
-      Debug.write('connected');
-    &lt;/handler&gt;
-    &lt;handler name="ondisconnect"&gt;
-      Debug.write('client disconnected');
-    &lt;/handler&gt;
-  &lt;/connection&gt;
-
-  &lt;datapointer xpath="connection:disconnectDset:/*[1]"&gt;
-    &lt;handler name="ondata"&gt;
-      Debug.write('server disconnected');
-    &lt;/handler&gt;
-    &lt;handler name="onerror"&gt;
-      Debug.write('disconnect call to server resulted in error');
-    &lt;/handler&gt;
-    &lt;handler name="ontimeout"&gt;
-      Debug.write('disconnect call to server timed out');
-    &lt;/handler&gt;
-  &lt;/datapointer&gt;
-
-  &lt;view&gt;
-    &lt;simplelayout axis="x" spacing="5"/&gt;
-    &lt;button&gt;connect
-      &lt;handler name="onclick"&gt;
-        canvas.connection.connect();
-      &lt;/handler&gt;
-    &lt;/button&gt;
-    &lt;button&gt;disconnect
-      &lt;handler name="onclick"&gt;
-        canvas.connection.disconnect();
-      &lt;/handler&gt;
-    &lt;/button&gt;
-    &lt;button&gt;client disconnect
-      &lt;handler name="onclick"&gt;
-        canvas.connection.clientDisconnect();
-      &lt;/handler&gt;
-    &lt;/button&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/persistent_connection-$3.lzx></example?>
-
-
 
 
 <para/></section></section></section></section><section id="persistent_connection.connection-datasource"><title>The connection datasource</title>
@@ -475,75 +371,7 @@ corresponding dataset. An example is shown below.</para>
    <textobject><textdata fileref="programs/persistent_connection-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Sending message over connection</title><programlisting role="lzx-embednew"><filename>persistent_connection-$4.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug y="60"/&gt;
-  &lt;connection authenticator="anonymous"/&gt;
 
-
-  &lt;script&gt;
-      connection.connect();
-  &lt;/script&gt;
-
-  &lt;connectiondatasource name="myconnection"&gt;
-      &lt;dataset name="messages"/&gt;
-  &lt;/connectiondatasource&gt;
-
-  &lt;datapointer xpath="myconnection:messages:/*[1]"&gt;
-    &lt;handler name="ondata"&gt;
-      var from = this.xpathQuery('/from[0]/@name');
-      var mesg = this.xpathQuery('/text()');
-      Debug.write('got data from ' + from +  ', mesg is ['+ mesg + ']!');
-    &lt;/handler&gt;
-  &lt;/datapointer&gt;
-  
-  &lt;datapointer xpath="myconnection:sendMessageDset:/*[1]"&gt;
-    &lt;handler name="ondata"&gt;
-      Debug.write("*** got result back ***");
-    &lt;/handler&gt;
-  &lt;/datapointer&gt;
-  
-  &lt;button&gt;send message
-    &lt;handler name="onclick"&gt;
-      myconnection.sendMessage('*', 'a message', 'messages');
-    &lt;/handler&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="200"&gt;
-  &lt;debug y="60"/&gt;
-  &lt;connection authenticator="anonymous"/&gt;
-
-
-  &lt;script&gt;
-      connection.connect();
-  &lt;/script&gt;
-
-  &lt;connectiondatasource name="myconnection"&gt;
-      &lt;dataset name="messages"/&gt;
-  &lt;/connectiondatasource&gt;
-
-  &lt;datapointer xpath="myconnection:messages:/*[1]"&gt;
-    &lt;handler name="ondata"&gt;
-      var from = this.xpathQuery('/from[0]/@name');
-      var mesg = this.xpathQuery('/text()');
-      Debug.write('got data from ' + from +  ', mesg is ['+ mesg + ']!');
-    &lt;/handler&gt;
-  &lt;/datapointer&gt;
-  
-  &lt;datapointer xpath="myconnection:sendMessageDset:/*[1]"&gt;
-    &lt;handler name="ondata"&gt;
-      Debug.write("*** got result back ***");
-    &lt;/handler&gt;
-  &lt;/datapointer&gt;
-  
-  &lt;button&gt;send message
-    &lt;handler name="onclick"&gt;
-      myconnection.sendMessage('*', 'a message', 'messages');
-    &lt;/handler&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/persistent_connection-$4.lzx></example?>
 
 <para/><section id="persistent_connection.sendmessage"><title>sendMessage() / sendXML()</title>
 

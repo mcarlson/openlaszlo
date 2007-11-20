@@ -2,6 +2,7 @@
 <chapter id="browser-integration">
 <!-- move title here for valid DocBook LI, LPP-4594 9/3/2007   -->
     <title>Browser Integration</title>
+    <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
     <para role="fixme">
         <remark role="fixme">
             <emphasis role="para-label">FIXME:</emphasis>- Need reverse
@@ -608,15 +609,7 @@
                     </textobject>
                 </programlisting>
             </example>
-            <?example role="live-example"><title>new Blank window</title><programlisting role="lzx-embednew"><filename>browser-integration-$8.lzx</filename><parameter/><code>
-      &lt;canvas height="27" &gt;
-        &lt;button onclick="LzBrowser.loadURL('http://www.laszlosystems.com','_blank');" text="Click Me!"/&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="27" &gt;
-        &lt;button onclick="LzBrowser.loadURL('http://www.laszlosystems.com','_blank');" text="Click Me!"/&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/browser-integration-$8.lzx></example?>
+         
             <para>This mechanism can also be used to name the window
       allowing subsequent loads to occur in the same window</para>
             <example role="live-example">
@@ -627,19 +620,7 @@
                     </textobject>
                 </programlisting>
             </example>
-            <?example role="live-example"><title>new Blank window</title><programlisting role="lzx-embednew"><filename>browser-integration-$9.lzx</filename><parameter/><code>
-      &lt;canvas height="56" &gt;
-        &lt;simplelayout/&gt;
-        &lt;button onclick="LzBrowser.loadURL('http://www.openlaszlo.org','newOpenLaszloWindow');" text="OpenLaszlo Homepage"/&gt;
-        &lt;button onclick="LzBrowser.loadURL('http://www.mylaszlo.com','newOpenLaszloWindow');" text="myLaszlo.com"/&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas height="56" &gt;
-        &lt;simplelayout/&gt;
-        &lt;button onclick="LzBrowser.loadURL('http://www.openlaszlo.org','newOpenLaszloWindow');" text="OpenLaszlo Homepage"/&gt;
-        &lt;button onclick="LzBrowser.loadURL('http://www.mylaszlo.com','newOpenLaszloWindow');" text="myLaszlo.com"/&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/browser-integration-$9.lzx></example?>
+        
             <para />
         </section>
     </section>
@@ -684,21 +665,7 @@
                     </textobject>
                 </programlisting>
             </example>
-            <?example role="live-example"><title>Setting defaults</title><programlisting role="lzx-embednew"><filename>browser-integration.setting-defaults.lzx</filename><parameter/><code>
-      &lt;canvas debug="true" width="200" height="200"&gt;
-        &lt;script&gt;
-          var innerVar = typeof(global.globalVar) != 'undefined' ? global.globalVar : 'bar';
-          Debug.write(global.innerVar);
-        &lt;/script&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas debug="true" width="200" height="200"&gt;
-        &lt;script&gt;
-          var innerVar = typeof(global.globalVar) != 'undefined' ? global.globalVar : 'bar';
-          Debug.write(global.innerVar);
-        &lt;/script&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/browser-integration.setting-defaults.lzx></example?>
+  
             <para>The above application is requested without a 
       <literal>globalVar</literal>query parameter. The debugger
       therefore displays the default value 
@@ -728,33 +695,7 @@
                     </textobject>
                 </programlisting>
             </example>
-            <?example role="live-example"><title>Restoring state</title><programlisting role="lzx-embednew"><filename>browser-integration.restoring-state.lzx</filename><parameter/><code>
-      &lt;canvas width="300" height="250"&gt;
-        &lt;script&gt;
-          var opened = typeof(global.tab) != 'undefined' ? global.tab : 'one';
-        &lt;/script&gt;
-        &lt;tabslider width="150" x="10" y="10"
-                   height="200"
-                   spacing="2" slideduration="300" oninit="this[global.opened].setAttribute('selected',true)"&gt;
-          &lt;tabelement name="one" text="Tabelement One"/&gt;
-          &lt;tabelement name="two" text="Tabelement Two"/&gt;
-          &lt;tabelement name="three" text="Tabelement Three"/&gt;
-        &lt;/tabslider&gt;
-      &lt;/canvas&gt;
-      </code></programlisting><programlisting>
-      &lt;canvas width="300" height="250"&gt;
-        &lt;script&gt;
-          var opened = typeof(global.tab) != 'undefined' ? global.tab : 'one';
-        &lt;/script&gt;
-        &lt;tabslider width="150" x="10" y="10"
-                   height="200"
-                   spacing="2" slideduration="300" oninit="this[global.opened].setAttribute('selected',true)"&gt;
-          &lt;tabelement name="one" text="Tabelement One"/&gt;
-          &lt;tabelement name="two" text="Tabelement Two"/&gt;
-          &lt;tabelement name="three" text="Tabelement Three"/&gt;
-        &lt;/tabslider&gt;
-      &lt;/canvas&gt;
-      </programlisting><?lzx-edit programs/browser-integration.restoring-state.lzx></example?>
+ 
             <para>Click 
       <ulink type="onclick"
                         url="javascript:window.open('programs/browser-integration.restoring-state.lzx?lzt=swf&amp;tab=two','example','resizable=0,width=200,height=250,menubar=0,location=0,status=0,scrollbars=0,toolbar=0,address=0')">
@@ -978,17 +919,7 @@
                 </textobject>
             </programlisting>
         </example>
-        <?informalexample role="live-example"><programlisting role="lzx-embednew"><filename>browser-integration-$19.lzx</filename><parameter/><code>
-    &lt;canvas height="130" debug="true"&gt;
-      &lt;command oninit="this.setKeys(['Control','n'])"
-               onselect="Debug.write('the [Ctrl-n] key combination was pressed');" /&gt;
-    &lt;/canvas&gt;
-    </code></programlisting><programlisting>
-    &lt;canvas height="130" debug="true"&gt;
-      &lt;command oninit="this.setKeys(['Control','n'])"
-               onselect="Debug.write('the [Ctrl-n] key combination was pressed');" /&gt;
-    &lt;/canvas&gt;
-    </programlisting><?lzx-edit programs/browser-integration-$19.lzx></informalexample?>
+
         <para role="fixme">
             <remark role="fixme">
                 <emphasis role="para-label">FIXME:</emphasis>Safari caching

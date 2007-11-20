@@ -1,10 +1,7 @@
 <chapter id="cookies">
 
 <title>Cookies and Sessions</title>
- 
-
- 
-
+ <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 
 <para/><section><title>Using cookies</title>
 
@@ -127,81 +124,7 @@ Explain how it works
    <textobject><textdata fileref="programs/cookies-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>combobox that creates cookie</title><programlisting role="lzx-embednew"><filename>cookies-$3.lzx</filename><parameter/><code>
-&lt;canvas height="100" &gt;
 
-    &lt;!-- dataset to set cookie with --&gt;
-    &lt;dataset name="dsSetCookie" type="http" src="../cookie.jsp" /&gt;
-
-    &lt;!-- Set previous set item during start --&gt;
-    &lt;dataset name="dsGetCookie" type="http" src="../cookie.jsp" 
-             querystring="name=mycookie&amp;amp;op=get" request="true" /&gt;
-    &lt;datapointer name="dpCookie" xpath="dsGetCookie:/info[1]/data[1]/item[1]/text()"&gt;
-        &lt;handler name="ondata" args="d"&gt;
-            if (d != '') cbox1.selectItem(d);
-        &lt;/handler&gt;        
-    &lt;/datapointer&gt;
-
-
-    &lt;!-- combobox items --&gt;
-    &lt;dataset name="items"&gt;
-        &lt;item value="item1" &gt;item one&lt;/item&gt;
-        &lt;item value="item2" &gt;item two&lt;/item&gt;
-        &lt;item value="item3" &gt;item three&lt;/item&gt;
-        &lt;item value="item4" &gt;item four&lt;/item&gt;
-    &lt;/dataset&gt;
-
-    &lt;combobox id="cbox1" x="20" y="20" width="130" defaulttext="choose one..."&gt;
-        &lt;textlistitem datapath="items:/item/" text="$path{'text()'}"
-                      value="$path{'@value'}"&gt;
-            &lt;!-- when item is selected, save choice in cookie by calling JSP --&gt;
-            &lt;handler name="onclick"&gt;
-            &lt;![CDATA[
-                dsSetCookie.setQueryString("name=mycookie&amp;op=set&amp;item=" + this.value);
-                dsSetCookie.doRequest();
-            ]]&gt;
-            &lt;/handler&gt;
-        &lt;/textlistitem&gt;
-    &lt;/combobox&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" &gt;
-
-    &lt;!-- dataset to set cookie with --&gt;
-    &lt;dataset name="dsSetCookie" type="http" <emphasis role="em">src="../cookie.jsp" </emphasis>/&gt;
-
-    &lt;!-- Set previous set item during start --&gt;
-    &lt;dataset name="dsGetCookie" type="http" <emphasis role="em">src="../cookie.jsp</emphasis>" 
-             querystring="name=mycookie&amp;amp;op=get" request="true" /&gt;
-    &lt;datapointer name="dpCookie" xpath="dsGetCookie:/info[1]/data[1]/item[1]/text()"&gt;
-        &lt;handler name="ondata" args="d"&gt;
-            if (d != '') cbox1.selectItem(d);
-        &lt;/handler&gt;        
-    &lt;/datapointer&gt;
-
-
-    &lt;!-- combobox items --&gt;
-    &lt;dataset name="items"&gt;
-        &lt;item value="item1" &gt;item one&lt;/item&gt;
-        &lt;item value="item2" &gt;item two&lt;/item&gt;
-        &lt;item value="item3" &gt;item three&lt;/item&gt;
-        &lt;item value="item4" &gt;item four&lt;/item&gt;
-    &lt;/dataset&gt;
-
-    &lt;combobox id="cbox1" x="20" y="20" width="130" defaulttext="choose one..."&gt;
-        &lt;textlistitem datapath="items:/item/" text="$path{'text()'}"
-                      value="$path{'@value'}"&gt;
-            &lt;!-- when item is selected, save choice in cookie by calling JSP --&gt;
-            &lt;handler name="onclick"&gt;
-            &lt;![CDATA[
-                dsSetCookie.setQueryString("name=mycookie&amp;op=set&amp;item=" + this.value);
-                dsSetCookie.doRequest();
-            ]]&gt;
-            &lt;/handler&gt;
-        &lt;/textlistitem&gt;
-    &lt;/combobox&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/cookies-$3.lzx></example?>
 <example role="live-example"><title>cookie.jsp</title><programlisting>
 
 

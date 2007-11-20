@@ -3,7 +3,7 @@
 
  
 <title> States </title>
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>This chapter discusses the general use of states and the built in states dragstate and resizestate.</para>
 
 <para/><section id="states.I"><title>Overview</title>
@@ -43,21 +43,6 @@ For instance, here's a small program where the blue box follows the mouse:
    <textobject><textdata fileref="programs/states-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>following mouse without states</title><programlisting role="lzx-embednew"><filename>states-$1.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;view bgcolor="blue" width="20" height="20"&gt;
-    &lt;attribute name="x" value="${parent.getMouse('x') - 10}"/&gt;
-    &lt;attribute name="y" value="${parent.getMouse('y') - 10}"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;view bgcolor="blue" width="20" height="20"&gt;
-    &lt;attribute name="x" value="${parent.getMouse('x') - 10}"/&gt;
-    &lt;attribute name="y" value="${parent.getMouse('y') - 10}"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/states-$1.lzx></example?>
 
 <para>
 While this is a nice way of expressing this kind of thing (made possible by Laszlo's constraint system), it's rarely useful in a program.
@@ -74,31 +59,7 @@ box drag only when the mouse is down:
    <textobject><textdata fileref="programs/states-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>using &lt;state&gt; to follow mouse</title><programlisting role="lzx-embednew"><filename>states-$2.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;view bgcolor="blue" width="20" height="20"
-        onmousedown="this.setAttribute('mouseIsDown', true )"
-        onmouseup="  this.setAttribute('mouseIsDown', false )"&gt;
-    &lt;attribute name="mouseIsDown" value="false"/&gt;
-    &lt;state apply="${parent.mouseIsDown}"&gt;
-      &lt;attribute name="x" value="${parent.getMouse('x') - 10}"/&gt;
-      &lt;attribute name="y" value="${parent.getMouse('y') - 10}"/&gt;
-    &lt;/state&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;view bgcolor="blue" width="20" height="20"
-        onmousedown="this.setAttribute('mouseIsDown', true )"
-        onmouseup="  this.setAttribute('mouseIsDown', false )"&gt;
-    &lt;attribute name="mouseIsDown" value="false"/&gt;
-    &lt;state apply="${parent.mouseIsDown}"&gt;
-      &lt;attribute name="x" value="${parent.getMouse('x') - 10}"/&gt;
-      &lt;attribute name="y" value="${parent.getMouse('y') - 10}"/&gt;
-    &lt;/state&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/states-$2.lzx></example?>
+
 
 <para>
 Note that the syntax of the constraints hasn't changed; they're just inside a <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag> tag. 
@@ -138,43 +99,7 @@ The answer is, the behavior is the latter: attributes apply to the state's conta
    <textobject><textdata fileref="programs/states-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>attributes pertain to container, not parent</title><programlisting role="lzx-embednew"><filename>states-$4.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;class name="constrainedDragState" extends="state"&gt;
-    &lt;attribute name="dragMin" value="100"/&gt;
-    &lt;attribute name="dragMax" value="300"/&gt;
-    &lt;attribute name="mousePos" value="${parent.getMouse( 'x' ) - 10}"/&gt;
-    &lt;attribute name="x" 
-               value="${Math.max(Math.min(this.dragMax, this.mousePos),
-                                 this.dragMin )}"/&gt;
-  &lt;/class&gt;
-  
-  &lt;view bgcolor="blue" width="20" height="20" x="100" y="50"
-        onmousedown="myDrag.apply()"
-        onmouseup="  myDrag.remove()"&gt;
-    &lt;attribute name="mouseIsDown" value="false"/&gt;
-    &lt;constrainedDragState name="myDrag"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;class name="constrainedDragState" extends="state"&gt;
-    &lt;attribute name="dragMin" value="100"/&gt;
-    &lt;attribute name="dragMax" value="300"/&gt;
-    &lt;attribute name="mousePos" value="${parent.getMouse( 'x' ) - 10}"/&gt;
-    &lt;attribute name="x" 
-               value="${Math.max(Math.min(this.dragMax, this.mousePos),
-                                 this.dragMin )}"/&gt;
-  &lt;/class&gt;
-  
-  &lt;view bgcolor="blue" width="20" height="20" x="100" y="50"
-        onmousedown="myDrag.apply()"
-        onmouseup="  myDrag.remove()"&gt;
-    &lt;attribute name="mouseIsDown" value="false"/&gt;
-    &lt;constrainedDragState name="myDrag"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/states-$4.lzx></example?>
+
 <para>
 Note that the references to <literal>dragMin</literal>, <literal>dragMax</literal> and such are all qualified by the keyword <literal>this</literal>.
 </para>
@@ -193,46 +118,7 @@ This how it  works in LZX. Here's a little program that proves that:</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>using setters in &lt;state&gt; attributes</title><programlisting role="lzx-embednew"><filename>states-$5.lzx</filename><parameter/><code>
-&lt;canvas debug="true"&gt;
-  &lt;class name="testState" extends="state"&gt;
-    &lt;attribute name="countApplies"  value="0"
-               setter="this.countApplies = countApplies"/&gt;
-    &lt;method name="apply"&gt;
-      this.setAttribute('countApplies', ++this.countApplies);
-      super.apply();
-    &lt;/method&gt;
-  &lt;/class&gt;
-  &lt;button &gt;Try it
-    &lt;handler name="onclick"&gt;
-      ts.apply();
-      Debug.write("applies:" + ts.countApplies);
-      ts.remove();
-    &lt;/handler&gt;
-    &lt;testState name="ts"/&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true"&gt;
-  &lt;class name="testState" extends="state"&gt;
-    &lt;attribute name="countApplies"  value="0"
-               setter="this.countApplies = countApplies"/&gt;
-    &lt;method name="apply"&gt;
-      this.setAttribute('countApplies', ++this.countApplies);
-      super.apply();
-    &lt;/method&gt;
-  &lt;/class&gt;
-  &lt;button &gt;Try it
-    &lt;handler name="onclick"&gt;
-      ts.apply();
-      Debug.write("applies:" + ts.countApplies);
-      ts.remove();
-    &lt;/handler&gt;
-    &lt;testState name="ts"/&gt;
-  &lt;/button&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/states-$5.lzx></example?>
- 
+
 <para/>
 </section>
 <section><title>The 'this' keyword in states</title>
@@ -259,69 +145,7 @@ this optimization.
    <textobject><textdata fileref="programs/states-$6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>using states to animate transitions</title><programlisting role="lzx-embednew"><filename>states-$6.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;window title="state demo" width="400" height="300"&gt;
-    &lt;state name="max" apply="true"&gt;
-      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
-        &lt;animator attribute="width" to="400"/&gt;
-        &lt;animator attribute="height" to="300"/&gt;
-        &lt;animator attribute="x" to="100"/&gt;
-        &lt;animator attribute="y" to="100"/&gt;
-      &lt;/animatorgroup&gt;
-      &lt;text align="center" y="20%"&gt;M a x i m i z e d&lt;/text&gt;
-    &lt;/state&gt;
-    &lt;state name="min" &gt;
-      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
-        &lt;animator attribute="width" to="170"/&gt;
-        &lt;animator attribute="height" to="100"/&gt;
-        &lt;animator attribute="x" to="0"/&gt;
-        &lt;animator attribute="y" to="0"/&gt;
-      &lt;/animatorgroup&gt;
-      &lt;text align="center" valign="middle"&gt;Minimized&lt;/text&gt;
-    &lt;/state&gt;
-    &lt;button placement="title_area" align="right" height="16"&gt; Toggle
-      &lt;attribute name="isMax" value="true"/&gt;
-      &lt;handler name="onclick"&gt;
-        if (this.isMax) {parent.max.remove(); parent.min.apply();}
-        else {parent.max.apply(); parent.min.remove();}
-        this.isMax = !this.isMax;
-      &lt;/handler&gt;
-    &lt;/button&gt;
-&lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;window title="state demo" width="400" height="300"&gt;
-    &lt;state name="max" apply="true"&gt;
-      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
-        &lt;animator attribute="width" to="400"/&gt;
-        &lt;animator attribute="height" to="300"/&gt;
-        &lt;animator attribute="x" to="100"/&gt;
-        &lt;animator attribute="y" to="100"/&gt;
-      &lt;/animatorgroup&gt;
-      &lt;text align="center" y="20%"&gt;M a x i m i z e d&lt;/text&gt;
-    &lt;/state&gt;
-    &lt;state name="min" &gt;
-      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
-        &lt;animator attribute="width" to="170"/&gt;
-        &lt;animator attribute="height" to="100"/&gt;
-        &lt;animator attribute="x" to="0"/&gt;
-        &lt;animator attribute="y" to="0"/&gt;
-      &lt;/animatorgroup&gt;
-      &lt;text align="center" valign="middle"&gt;Minimized&lt;/text&gt;
-    &lt;/state&gt;
-    &lt;button placement="title_area" align="right" height="16"&gt; Toggle
-      &lt;attribute name="isMax" value="true"/&gt;
-      &lt;handler name="onclick"&gt;
-        if (this.isMax) {parent.max.remove(); parent.min.apply();}
-        else {parent.max.apply(); parent.min.remove();}
-        this.isMax = !this.isMax;
-      &lt;/handler&gt;
-    &lt;/button&gt;
-&lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/states-$6.lzx></example?>
+
 <para>
    The state element is declared with the <indexterm><primary>apply</primary></indexterm><sgmltag class="attribute">apply</sgmltag>, <indexterm><primary>onapply</primary></indexterm><sgmltag class="attribute">onapply</sgmltag>, and
    <indexterm><primary>onremove</primary></indexterm><sgmltag class="attribute">onremove</sgmltag> attributes, and the <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -388,69 +212,6 @@ to solve common problems.</para>
    <textobject><textdata fileref="programs/states-$7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Dropshadow done using states</title><programlisting role="lzx-embednew"><filename>states-$7.lzx</filename><parameter/><code>
-&lt;canvas height="200"&gt;
-  &lt;class extends="dragstate" name="fadeDragger" pooling="true"&gt;
-    &lt;handler name="onapply"&gt;
-      parent.bringToFront();
-      parent.setAttribute('opacity', .5)
-    &lt;/handler&gt;
-    &lt;handler name="onremove"&gt;
-      parent.setAttribute('opacity', 1)
-    &lt;/handler&gt;
-    &lt;view name="hShadow" x="10" y="${parent.body.height}"
-          width="${parent.body.width}" height="10"
-          opacity=".2" bgcolor="black"/&gt;
-    &lt;view name="vShadow"  x="${parent.body.width}" y="10"
-          width="10" height="${parent.body.height - 10}"
-          opacity=".2" bgcolor="black"/&gt;
-  &lt;/class&gt;
-  
-  &lt;view
-        onmousedown="myFadeDragger.apply()"
-        onmouseup="myFadeDragger.remove()"&gt;
-    &lt;fadeDragger name="myFadeDragger"/&gt;
-    &lt;view name="body" width="40" height="40" bgcolor="blue"/&gt;
-  &lt;/view&gt;
-  &lt;view x="100" y="100"
-        onmousedown="myFadeDragger.apply()"
-        onmouseup="myFadeDragger.remove()"&gt;
-    &lt;fadeDragger name="myFadeDragger"/&gt;
-    &lt;view name="body" width="60" height="60" bgcolor="red"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="200"&gt;
-  &lt;class extends="dragstate" name="fadeDragger" pooling="true"&gt;
-    &lt;handler name="onapply"&gt;
-      parent.bringToFront();
-      parent.setAttribute('opacity', .5)
-    &lt;/handler&gt;
-    &lt;handler name="onremove"&gt;
-      parent.setAttribute('opacity', 1)
-    &lt;/handler&gt;
-    &lt;view name="hShadow" x="10" y="${parent.body.height}"
-          width="${parent.body.width}" height="10"
-          opacity=".2" bgcolor="black"/&gt;
-    &lt;view name="vShadow"  x="${parent.body.width}" y="10"
-          width="10" height="${parent.body.height - 10}"
-          opacity=".2" bgcolor="black"/&gt;
-  &lt;/class&gt;
-  
-  &lt;view
-        onmousedown="myFadeDragger.apply()"
-        onmouseup="myFadeDragger.remove()"&gt;
-    &lt;fadeDragger name="myFadeDragger"/&gt;
-    &lt;view name="body" width="40" height="40" bgcolor="blue"/&gt;
-  &lt;/view&gt;
-  &lt;view x="100" y="100"
-        onmousedown="myFadeDragger.apply()"
-        onmouseup="myFadeDragger.remove()"&gt;
-    &lt;fadeDragger name="myFadeDragger"/&gt;
-    &lt;view name="body" width="60" height="60" bgcolor="red"/&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/states-$7.lzx></example?>
 
  
 

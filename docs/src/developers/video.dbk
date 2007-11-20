@@ -2,6 +2,7 @@
 
 
 <title>Audio and Video</title>
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>
 This chapter discusses streaming audio and video in .flv and .mp3 formats that are rendered in the specialized <indexterm><primary>videoview</primary></indexterm><sgmltag class="element">&lt;videoview&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: videoview-->
@@ -161,19 +162,7 @@ The example below shows this component.
    <textobject><textdata fileref="programs/video-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Trivial rtmpstatus example</title><programlisting role="lzx-embednew"><filename>video-$1.lzx</filename><parameter/><code>
-&lt;canvas height="40"&gt;
-   &lt;simplelayout spacing="5"/&gt;
-   &lt;text text="The indidcator light is red because there is no rtmp connection."/&gt;
-   &lt;rtmpstatus/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="40"&gt;
-   &lt;simplelayout spacing="5"/&gt;
-   &lt;text text="The indidcator light is red because there is no rtmp connection."/&gt;
-   &lt;rtmpstatus/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/video-$1.lzx></example?>
+
 <para/></section><section><title>videoplayer</title>
 <para>
 The <indexterm><primary>videoplayer</primary></indexterm><sgmltag class="element">&lt;videoplayer&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>

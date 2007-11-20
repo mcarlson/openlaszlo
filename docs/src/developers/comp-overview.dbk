@@ -2,7 +2,7 @@
 
 
 <title>Getting More from Components</title>
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>OpenLaszlo components are high-level objects that implement common user-interface functions. 
 </para>
 
@@ -46,59 +46,7 @@ In the example below, section one and two of the tabslider and the checkboxes in
    <textobject><textdata fileref="programs/comp-overview-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>The &lt;style&gt; tag</title><programlisting role="lzx-embednew"><filename>comp-overview-$1.lzx</filename><parameter/><code>
-&lt;canvas height="250"&gt;
-  &lt;goldstyle name="defaultstyle" isdefault="true"/&gt;
-  &lt;greenstyle name="specialstyle"/&gt;
-  &lt;tabslider id="ts1" x="50" y="20"
-             width="300" height="180"&gt;
 
-    &lt;tabelement text="Section One" selected="true"&gt;
-      &lt;checkbox&gt;option one&lt;/checkbox&gt;
-    &lt;/tabelement&gt;
-
-    &lt;tabelement text="Section Two"&gt;
-      &lt;checkbox&gt;option two&lt;/checkbox&gt;
-    &lt;/tabelement&gt;
-
-    &lt;tabelement text="Section Three" style="$once{specialstyle}"&gt;
-      &lt;radiogroup&gt;
-        &lt;radiobutton&gt;Yes, I want to know more&lt;/radiobutton&gt;
-        &lt;radiobutton&gt;No, I prefer to remain blissfully unaware&lt;/radiobutton&gt;
-        &lt;radiobutton&gt;Please tell my neighbor, who may tell me&lt;/radiobutton&gt;
-      &lt;/radiogroup&gt;
-      &lt;button align="right"&gt;Submit&lt;/button&gt;
-      &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;/tabelement&gt;
-  &lt;/tabslider&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="250"&gt;
-  &lt;goldstyle name="defaultstyle" isdefault="true"/&gt;
-  &lt;greenstyle name="specialstyle"/&gt;
-  &lt;tabslider id="ts1" x="50" y="20"
-             width="300" height="180"&gt;
-
-    &lt;tabelement text="Section One" selected="true"&gt;
-      &lt;checkbox&gt;option one&lt;/checkbox&gt;
-    &lt;/tabelement&gt;
-
-    &lt;tabelement text="Section Two"&gt;
-      &lt;checkbox&gt;option two&lt;/checkbox&gt;
-    &lt;/tabelement&gt;
-
-    &lt;tabelement text="Section Three" style="$once{specialstyle}"&gt;
-      &lt;radiogroup&gt;
-        &lt;radiobutton&gt;Yes, I want to know more&lt;/radiobutton&gt;
-        &lt;radiobutton&gt;No, I prefer to remain blissfully unaware&lt;/radiobutton&gt;
-        &lt;radiobutton&gt;Please tell my neighbor, who may tell me&lt;/radiobutton&gt;
-      &lt;/radiogroup&gt;
-      &lt;button align="right"&gt;Submit&lt;/button&gt;
-      &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;/tabelement&gt;
-  &lt;/tabslider&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/comp-overview-$1.lzx></example?>
 <para>
 </para>
 <para/></section></section><section><title>Data-backed versus instance components</title>

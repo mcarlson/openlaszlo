@@ -1,7 +1,7 @@
 <chapter id="program-structure">
 
 <title>Program Structure</title>
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para/><section id="program-structure.canvas-tag"><title>The canvas tag</title>
 
 <para>An LZX application has exactly one canvas.  The canvas is the
@@ -17,15 +17,6 @@ configure and define the application.  For example,</para>
    <textobject><textdata fileref="programs/program-structure-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Hello World</title><programlisting role="lzx-embednew"><filename>program-structure-$1.lzx</filename><parameter/><code>
-&lt;canvas height="15"&gt;
-  &lt;text&gt;Hello, World&lt;/text&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="15"&gt;
-  &lt;text&gt;Hello, World&lt;/text&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/program-structure-$1.lzx></example?>
 
 <para>is a simple LZX application. The canvas has a height and width
 measured in pixels; if you do not specify values for these attributes
@@ -159,17 +150,7 @@ example:</para>
    <textobject><textdata fileref="programs/include-1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example" id="include-1"><title>Including a library file</title><programlisting role="lzx-embednew"><filename>include-1.lzx</filename><parameter/><code>
-&lt;canvas height="100" width="400"&gt;
-  &lt;include href="library.lzx"/&gt;
-  &lt;mywindow/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100" width="400"&gt;
-  &lt;include href="library.lzx"/&gt;
-  &lt;mywindow/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/include-1.lzx></example?>
+
 
 <informalexample role="live-example"><programlisting>
 &lt;library&gt;
@@ -194,21 +175,7 @@ example:</para>
    <textobject><textdata fileref="programs/include-3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example" id="include-3"><title>Including a node</title><programlisting role="lzx-embednew"><filename>include-3.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;window layout="axis: y"&gt;
-    &lt;include href="inner.lzx"/&gt;
-    &lt;include href="inner.lzx"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;window layout="axis: y"&gt;
-    &lt;include href="inner.lzx"/&gt;
-    &lt;include href="inner.lzx"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/include-3.lzx></example?>
+
 
 <example role="live-example"><title>inner.lzx</title><programlisting>
 &lt;button&gt;Click me!&lt;/button&gt;
@@ -227,23 +194,7 @@ include literal text from another file.</para>
    <textobject><textdata fileref="programs/include-5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example" id="include-5"><title>Including text</title><programlisting role="lzx-embednew"><filename>include-5.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;window&gt;
-    &lt;button&gt;
-      &lt;include href="mytext.txt" type="text"/&gt;
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;window&gt;
-    &lt;button&gt;
-      &lt;include href="mytext.txt" type="text"/&gt;
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/include-5.lzx></example?>
+
 
 <example role="live-example"><title>mytext.txt</title><programlisting>
 Click me!
@@ -311,17 +262,7 @@ component set.</para>
    <textobject><textdata fileref="programs/program-structure-$12.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Use button with explicit include</title><programlisting role="lzx-embednew"><filename>program-structure-$12.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;include href="lz/button.lzx"/&gt;
-  &lt;button&gt;Click me!&lt;/button&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;include href="lz/button.lzx"/&gt;
-  &lt;button&gt;Click me!&lt;/button&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/program-structure-$12.lzx></example?>
+
 
 <example role="live-example">
    <title>Use button with implicit include</title>
@@ -329,15 +270,7 @@ component set.</para>
    <textobject><textdata fileref="programs/program-structure-$13.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Use button with implicit include</title><programlisting role="lzx-embednew"><filename>program-structure-$13.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;button&gt;Click me!&lt;/button&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;button&gt;Click me!&lt;/button&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/program-structure-$13.lzx></example?>
+
 
 <example role="live-example">
    <title>Subclass button with explicit include</title>
@@ -345,19 +278,7 @@ component set.</para>
    <textobject><textdata fileref="programs/program-structure-$14.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Subclass button with explicit include</title><programlisting role="lzx-embednew"><filename>program-structure-$14.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;include href="lz/button.lzx"/&gt;
-  &lt;class name="mybutton" extends="button" fgcolor="red"/&gt;
-  &lt;mybutton&gt;Click me!&lt;/mybutton&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;include href="lz/button.lzx"/&gt;
-  &lt;class name="mybutton" extends="button" fgcolor="red"/&gt;
-  &lt;mybutton&gt;Click me!&lt;/mybutton&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/program-structure-$14.lzx></example?>
+
 
 <example role="live-example">
    <title>Subclass button with implicit include</title>
@@ -366,17 +287,7 @@ component set.</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Subclass button with implicit include</title><programlisting role="lzx-embednew"><filename>program-structure-$15.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;class name="mybutton" extends="button" fgcolor="red"/&gt;
-  &lt;mybutton&gt;Click me!&lt;/mybutton&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;class name="mybutton" extends="button" fgcolor="red"/&gt;
-  &lt;mybutton&gt;Click me!&lt;/mybutton&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/program-structure-$15.lzx></example?>
+
 
 <para>A file is only included if the application references a class that it does not define in its own sources.  The following two programs define their own <indexterm><primary>button</primary></indexterm><sgmltag class="element">&lt;button&gt;</sgmltag> tag, and therefore do not implicitly include the file that defines the OpenLaszlo <indexterm><primary>button</primary></indexterm><sgmltag class="element">&lt;button&gt;</sgmltag> tag.</para>
 
@@ -386,19 +297,6 @@ component set.</para>
    <textobject><textdata fileref="programs/program-structure-$16.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Define button</title><programlisting role="lzx-embednew"><filename>program-structure-$16.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;class name="button"&gt;
-    &lt;text&gt;Click me!&lt;/text&gt;
-  &lt;/class&gt;
-  &lt;button/&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;class name="button"&gt;
-    &lt;text&gt;Click me!&lt;/text&gt;
-  &lt;/class&gt;
-  &lt;button/&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/program-structure-$16.lzx></example?>
 
 
 <example role="live-example">
@@ -407,23 +305,7 @@ component set.</para>
    <textobject><textdata fileref="programs/program-structure-$17.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Define and subclass button</title><programlisting role="lzx-embednew"><filename>program-structure-$17.lzx</filename><parameter/><code>
-&lt;canvas height="50"&gt;
-  &lt;class name="button"&gt;
-    &lt;text&gt;Click me!&lt;/text&gt;
-  &lt;/class&gt;
-  &lt;class name="mybutton" extends="button" fgcolor="red"/&gt;
-  &lt;mybutton/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="50"&gt;
-  &lt;class name="button"&gt;
-    &lt;text&gt;Click me!&lt;/text&gt;
-  &lt;/class&gt;
-  &lt;class name="mybutton" extends="button" fgcolor="red"/&gt;
-  &lt;mybutton/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/program-structure-$17.lzx></example?>
+
 <para/></section><section><title>More on base components</title>
 <para>An application can include the entire set of Base components by
 including the line <literal>&lt;include
@@ -525,29 +407,7 @@ You can enclose blocks of code within <indexterm><primary>switch</primary></inde
    <textobject><textdata fileref="programs/program-structure-$18.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>switch tag for conditional compilation</title><programlisting role="lzx-embednew"><filename>program-structure-$18.lzx</filename><parameter/><code>
-&lt;canvas&gt;
-  &lt;switch&gt;
-    &lt;when runtime="dhtml"&gt;
-       &lt;text&gt;This program has been compiled for DHTML&lt;/text&gt;
-    &lt;/when&gt;
-    &lt;otherwise&gt;
-      &lt;text&gt;This program has been compiled for SWF&lt;/text&gt; 
-    &lt;/otherwise&gt;
-  &lt;/switch&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas&gt;
-  &lt;switch&gt;
-    &lt;when runtime="dhtml"&gt;
-       &lt;text&gt;This program has been compiled for DHTML&lt;/text&gt;
-    &lt;/when&gt;
-    &lt;otherwise&gt;
-      &lt;text&gt;This program has been compiled for SWF&lt;/text&gt; 
-    &lt;/otherwise&gt;
-  &lt;/switch&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/program-structure-$18.lzx></example?>
+
 <para>
 See <xref linkend="compiler"/> for a more in-depth discussion of these compiler directives.
 </para>
@@ -565,15 +425,6 @@ application be compiled in debug mode by setting the canvas's
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Compiling with the debugger</title><programlisting role="lzx-embednew"><filename>program-structure-$19.lzx</filename><parameter/><code>
-&lt;canvas height="140" debug="true"&gt;
-  &lt;!-- ... --&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="140" debug="true"&gt;
-  &lt;!-- ... --&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/program-structure-$19.lzx></example?>
 
 <para>This has the same effect as pressing the Debug button in the
 developer console. It is also possible to invoke the debugger by loading the

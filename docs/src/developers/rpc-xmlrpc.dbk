@@ -1,5 +1,6 @@
 <chapter id="rpc-xmlrpc">
 <title condition="proxied">XML-RPC</title>
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <!-- change link rpc per LPP-4923, IORIO 17 oct 2007 -->
 <para>XML-RPC is simple spec that describes how to invoke a remote operation using
 XML over HTTP.  OpenLaszlo XML-RPC is part of <xref linkend="rpc" endterm="rpcshort" />, and shares many of the 
@@ -79,79 +80,5 @@ view system's notation, it's suggested that remotecalls be explicitly named.</pa
    <textobject><textdata fileref="programs/rpc-xmlrpc-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Creating a function stub</title><programlisting role="lzx-embednew"><filename>rpc-xmlrpc-$2.lzx</filename><parameter/><code>
 
-&lt;canvas debug="true" height="400"&gt;
-    &lt;!-- this issues one call of the freshmeat XML-RPC API --&gt;
-    &lt;!-- Documented here: http://freshmeat.net/faq/view/49/ --&gt;
-
-    &lt;debug x="10" y="40" width="450" height="350" /&gt;
-
-    &lt;xmlrpc name="freshmeat"
-            service="http://freshmeat.net/xmlrpc/"&gt;
-
-        &lt;handler name="onload"&gt;
-            Debug.write('freshmeat XML-RPC service loaded');
-            Debug.write('proxy:');
-            Debug.inspect(this.proxy);
-        &lt;/handler&gt;
-
-        &lt;handler name="ondata" args="data"&gt;
-            Debug.write('got data:', data);
-        &lt;/handler&gt;
-
-        &lt;handler name="onerror" args="error"&gt;
-            Debug.write('onerror:', error);
-        &lt;/handler&gt;
-
-        &lt;remotecall name="fal" funcname="fetch_available_licenses" /&gt;
-
-    &lt;/xmlrpc&gt;
-
-    &lt;button text="fetch_available_licenses" x="10" y="10"&gt;
-        &lt;handler name="onclick"&gt;
-            Debug.write('getting licenses...');
-            freshmeat.fal.invoke()
-        &lt;/handler&gt;
-    &lt;/button&gt;
-
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-
-&lt;canvas debug="true" height="400"&gt;
-    &lt;!-- this isues one call of the freshmeat XML-RPC API --&gt;
-    &lt;!-- Documented here: http://freshmeat.net/faq/view/49/ --&gt;
-
-    &lt;debug x="10" y="40" width="450" height="350" /&gt;
-
-    &lt;xmlrpc name="freshmeat"
-            service="http://freshmeat.net/xmlrpc/"&gt;
-
-        &lt;handler name="onload"&gt;
-            Debug.write('freshmeat XML-RPC service loaded');
-            Debug.write('proxy:');
-            Debug.inspect(this.proxy);
-        &lt;/handler&gt;
-
-        &lt;handler name="ondata" args="data"&gt;
-            Debug.write('got data:', data);
-        &lt;/handler&gt;
-
-        &lt;handler name="onerror" args="error"&gt;
-            Debug.write('onerror:', error);
-        &lt;/handler&gt;
-
-        &lt;remotecall name="fal" funcname="fetch_available_licenses" /&gt;
-
-    &lt;/xmlrpc&gt;
-
-    &lt;button text="fetch_available_licenses" x="10" y="10"&gt;
-        &lt;handler name="onclick"&gt;
-            Debug.write('getting licenses...');
-            freshmeat.fal.invoke()
-        &lt;/handler&gt;
-    &lt;/button&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/rpc-xmlrpc-$2.lzx></example?>
 <para/></section></chapter>

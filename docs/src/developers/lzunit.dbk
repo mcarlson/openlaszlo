@@ -1,7 +1,7 @@
 <chapter id="lzunit">
  
 <title>Unit Testing</title>
-
+<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para><indexterm><primary>LzUnit</primary></indexterm><classname>LzUnit</classname> is OpenLaszlo's implementation of the xUnit testing framework, enabling automated unit testing of OpenLaszlo applications and libraries.</para>
 
 <para>The functionality provided by the LzUnit framework is essentially comprised of two public classes — 
@@ -35,51 +35,6 @@ Below is an example of typical usage of the LzUnit framework that shows a succes
    <textobject><textdata fileref="programs/lzunit-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>LzUnit example</title><programlisting role="lzx-embednew"><filename>lzunit-$1.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="600"&gt;
-  &lt;debug y="500"/&gt;
-  &lt;include href="lzunit"/&gt;
-
-  &lt;TestSuite&gt;
-    &lt;TestCase&gt;
-      &lt;attribute name="prop1" value="'foo'" when="once"/&gt;
-      &lt;text name="mytext" width="200" bgcolor="blue" text="LzUnit example"/&gt;
-
-      &lt;method name="testsuccess"&gt;
-        assertEquals(prop1, 'foo')
-      &lt;/method&gt;
-      &lt;method name="testfailure"&gt;
-        assertTrue(mytext.multiline, "This is not a multiline text field")
-      &lt;/method&gt;
-      &lt;method name="testerror"&gt;
-        callFoo()
-      &lt;/method&gt;
-    &lt;/TestCase&gt;
-  &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="600"&gt;
-  &lt;debug y="500"/&gt;
-  &lt;include href="lzunit"/&gt;
-
-  &lt;TestSuite&gt;
-    &lt;TestCase&gt;
-      &lt;attribute name="prop1" value="'foo'" when="once"/&gt;
-      &lt;text name="mytext" width="200" bgcolor="blue" text="LzUnit example"/&gt;
-
-      &lt;method name="testsuccess"&gt;
-        assertEquals(prop1, 'foo')
-      &lt;/method&gt;
-      &lt;method name="testfailure"&gt;
-        assertTrue(mytext.multiline, "This is not a multiline text field")
-      &lt;/method&gt;
-      &lt;method name="testerror"&gt;
-        callFoo()
-      &lt;/method&gt;
-    &lt;/TestCase&gt;
-  &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/lzunit-$1.lzx></example?>
 
 <para>In this example, as is the case with any tests that include visual elements, you do not see the text field because it was 
 positioned below the test status panel by the layout which controls them.</para>
@@ -108,63 +63,7 @@ as in the following example.</para>
    <textobject><textdata fileref="programs/lzunit-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Sequential execution of tests</title><programlisting role="lzx-embednew"><filename>lzunit-$2.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="400"&gt;
-  &lt;debug y="80"/&gt;
-  &lt;include href="lzunit"/&gt;
 
-  &lt;script&gt;
-    asynchronousTests = false
-  &lt;/script&gt;
-
-  &lt;class name="syncrun" extends="TestCase"&gt;
-    &lt;attribute name="counter" value="1" when="once"/&gt;
-    &lt;method name="testfirst"&gt;
-      assertEquals(1, counter++)
-    &lt;/method&gt;
-
-    &lt;method name="testsecond"&gt;
-      assertEquals(2, counter++)
-    &lt;/method&gt;
-
-    &lt;method name="testthird"&gt;
-      assertEquals(3, counter++)
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;TestSuite&gt;
-    &lt;syncrun/&gt;
-  &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="400"&gt;
-  &lt;debug y="80"/&gt;
-  &lt;include href="lzunit"/&gt;
-
-  &lt;script&gt;
-    asynchronousTests = false
-  &lt;/script&gt;
-
-  &lt;class name="syncrun" extends="TestCase"&gt;
-    &lt;attribute name="counter" value="1" when="once"/&gt;
-    &lt;method name="testfirst"&gt;
-      assertEquals(1, counter++)
-    &lt;/method&gt;
-
-    &lt;method name="testsecond"&gt;
-      assertEquals(2, counter++)
-    &lt;/method&gt;
-
-    &lt;method name="testthird"&gt;
-      assertEquals(3, counter++)
-    &lt;/method&gt;
-  &lt;/class&gt;
-
-  &lt;TestSuite&gt;
-    &lt;syncrun/&gt;
-  &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/lzunit-$2.lzx></example?>
 
 <para/></section><section id="lzunit.defertest"><title>Deferred test execution</title>
 <para>In many cases, you will encounter that the objects that your test case incorporates are not ready for 
@@ -179,48 +78,6 @@ action, and putting the checkpoint in the event handler method.</para>
    <textobject><textdata fileref="programs/lzunit-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Deferred execution of tests</title><programlisting role="lzx-embednew"><filename>lzunit-$3.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="800"&gt;
-    &lt;debug x="100" y="280"/&gt;
-    &lt;include href="lzunit"/&gt;
-    
-    &lt;TestSuite&gt;
-        &lt;TestCase&gt;
-            &lt;view name="redbox" bgcolor="red" width="50" height="50"&gt;
-                &lt;animator name="anm" attribute="y" from="200" to="-400" duration="1000" start="false" 
-                relative="false" onstop="parent.parent.checkStatus()"/&gt;
-            &lt;/view&gt;
-            &lt;method name="testanim"&gt;
-                redbox.anm.doStart()
-            &lt;/method&gt;
-            &lt;method name="checkStatus"&gt;
-                assertEquals(-400, redbox.y)
-            &lt;/method&gt;
-        &lt;/TestCase&gt;
-    &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="800"&gt;
-    &lt;debug x="100" y="280"/&gt;
-    &lt;include href="lzunit"/&gt;
-    
-    &lt;TestSuite&gt;
-        &lt;TestCase&gt;
-            &lt;view name="redbox" bgcolor="red" width="50" height="50"&gt;
-                &lt;animator name="anm" attribute="y" from="200" to="-400" duration="1000" start="false" 
-                relative="false" onstop="parent.parent.checkStatus()"/&gt;
-            &lt;/view&gt;
-            &lt;method name="testanim"&gt;
-                redbox.anm.doStart()
-            &lt;/method&gt;
-            &lt;method name="checkStatus"&gt;
-                assertEquals(-400, redbox.y)
-            &lt;/method&gt;
-        &lt;/TestCase&gt;
-    &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/lzunit-$3.lzx></example?>
-
 
 
 <para/></section><section id="lzunit.preposttest"><title>Test setup and cleanup</title>
@@ -236,125 +93,6 @@ invoked. Here's an example of their use.</para>
    <textobject><textdata fileref="programs/lzunit-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>setUp and tearDown</title><programlisting role="lzx-embednew"><filename>lzunit-$4.lzx</filename><parameter/><code>
-&lt;canvas debug="true" height="800"&gt;
- &lt;debug y="500" /&gt;
-  &lt;include href="lzunit"/&gt;
-
-  &lt;dataset name="places"&gt;
-    &lt;country name="U.S."&gt;
-      &lt;state code="CA" capitol="Sacramento"&gt;
-        &lt;city&gt;San Francisco&lt;/city&gt;
-        &lt;city&gt;Los Angeles&lt;/city&gt;
-        &lt;city&gt;San Diego&lt;/city&gt;
-      &lt;/state&gt;
-      &lt;state code="NJ" capitol="Trenton"&gt;
-        &lt;city&gt;Newark&lt;/city&gt;
-      &lt;/state&gt;
-      &lt;state code="NY" capitol="Albany"&gt;
-        &lt;city&gt;Buffalo&lt;/city&gt;
-        &lt;city&gt;New York City&lt;/city&gt;
-      &lt;/state&gt;
-    &lt;/country&gt;
-  &lt;/dataset&gt;
-    
-  &lt;TestSuite&gt;
-    &lt;TestCase&gt;
-      &lt;attribute name="start" value="'places:/country[1]'"/&gt;
-      &lt;datapointer name="nav" xpath="$once{parent.start}"/&gt;
-      &lt;method name="setUp"&gt;
-        // Move pointer to first state in selected country
-        nav.selectChild()
-      &lt;/method&gt;
-
-      &lt;method name="tearDown"&gt;
-        // Reset pointer to starting position
-        nav.setXPath(start)
-      &lt;/method&gt;
-
-      &lt;method name="testsettext"&gt;
-        assertTrue(nav.selectChild())
-        assertTrue(nav.selectNext())
-
-        var oldText = nav.getNodeText()
-        nav.setNodeText('Oakland')
-        assertEquals('Oakland', nav.xpathQuery('text()'))
-        nav.setNodeText(oldText)
-        assertEquals(oldText, nav.getNodeText())
-      &lt;/method&gt;
-
-      &lt;method name="testBumpChild"&gt;
-        assertTrue(nav.selectNext(2))
-        assertEquals(2, nav.getNodeCount())
-        assertTrue(nav.selectChild())
-        nav.deleteNode()
-        assertFalse('Buffalo'==nav.getNodeText())
-        assertTrue(nav.selectParent())
-        assertEquals(1, nav.getNodeCount())
-      &lt;/method&gt;
-    &lt;/TestCase&gt;
-  &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas debug="true" height="800"&gt;
- &lt;debug y="500" /&gt;
-  &lt;include href="lzunit"/&gt;
-
-  &lt;dataset name="places"&gt;
-    &lt;country name="U.S."&gt;
-      &lt;state code="CA" capitol="Sacramento"&gt;
-        &lt;city&gt;San Francisco&lt;/city&gt;
-        &lt;city&gt;Los Angeles&lt;/city&gt;
-        &lt;city&gt;San Diego&lt;/city&gt;
-      &lt;/state&gt;
-      &lt;state code="NJ" capitol="Trenton"&gt;
-        &lt;city&gt;Newark&lt;/city&gt;
-      &lt;/state&gt;
-      &lt;state code="NY" capitol="Albany"&gt;
-        &lt;city&gt;Buffalo&lt;/city&gt;
-        &lt;city&gt;New York City&lt;/city&gt;
-      &lt;/state&gt;
-    &lt;/country&gt;
-  &lt;/dataset&gt;
-    
-  &lt;TestSuite&gt;
-    &lt;TestCase&gt;
-      &lt;attribute name="start" value="'places:/country[1]'"/&gt;
-      &lt;datapointer name="nav" xpath="$once{parent.start}"/&gt;
-      &lt;<emphasis role="em">method name="setUp"</emphasis>&gt;
-        // Move pointer to first state in selected country
-        nav.selectChild()
-      &lt;/method&gt;
-
-      &lt;<emphasis role="em">method name="tearDown"</emphasis>&gt;
-        // Reset pointer to starting position
-        nav.setXPath(start)
-      &lt;/method&gt;
-
-      &lt;method name="testsettext"&gt;
-        assertTrue(nav.selectChild())
-        assertTrue(nav.selectNext())
-
-        var oldText = nav.getNodeText()
-        nav.setNodeText('Oakland')
-        assertEquals('Oakland', nav.xpathQuery('text()'))
-        nav.setNodeText(oldText)
-        assertEquals(oldText, nav.getNodeText())
-      &lt;/method&gt;
-
-      &lt;method name="testBumpChild"&gt;
-        assertTrue(nav.selectNext(2))
-        assertEquals(2, nav.getNodeCount())
-        assertTrue(nav.selectChild())
-        nav.deleteNode()
-        assertFalse('Buffalo'==nav.getNodeText())
-        assertTrue(nav.selectParent())
-        assertEquals(1, nav.getNodeCount())
-      &lt;/method&gt;
-    &lt;/TestCase&gt;
-  &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/lzunit-$4.lzx></example?>
 
    
 
@@ -373,67 +111,7 @@ If you declare a sequential animatorgroup around the animators, you can chain th
    <textobject><textdata fileref="programs/lzunit-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Chaining tests</title><programlisting role="lzx-embednew"><filename>lzunit-$5.lzx</filename><parameter/><code>
-&lt;canvas height ="300" width="400" debug="true"&gt;
-  &lt;debug y="80"/&gt;
- &lt;include href="lzunit"/&gt;
-  &lt;view&gt;
-    &lt;view id="bluebox" bgcolor="blue" width="30" height="30"&gt;
-      &lt;animatorgroup name="AG1" attribute="x" process="sequential" start="false" relative="false"&gt;
-        &lt;animator from="0" to="100" duration="2000"
-            onstop="canvas.animatorsuite.animatorcase.checkSimpleXAnim()"/&gt;
-        &lt;animator from="0" to="200" duration="3000"
-            onstop="canvas.animatorsuite.animatorcase.checkSimpleXAnim2()"/&gt;
-      &lt;/animatorgroup&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-  
-  &lt;TestSuite name="animatorsuite"&gt;
-   &lt;TestCase name="animatorcase"&gt;
-     &lt;method name="testSimpleXAnim"&gt;
-       bluebox.AG1.doStart()
-     &lt;/method&gt;
-     &lt;method name="checkSimpleXAnim"&gt;
-       assertEquals(100, bluebox.x);
-     &lt;/method&gt;
-     &lt;method name="checkSimpleXAnim2"&gt;
-       assertEquals(200, bluebox.x);
-       Debug.write('--- test complete ---');
-     &lt;/method&gt;
-   &lt;/TestCase&gt;
-  &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height ="300" width="400" debug="true"&gt;
-  &lt;debug y="80"/&gt;
- &lt;include href="lzunit"/&gt;
-  &lt;view&gt;
-    &lt;view id="bluebox" bgcolor="blue" width="30" height="30"&gt;
-      &lt;animatorgroup name="AG1" attribute="x" process="sequential" start="false" relative="false"&gt;
-        &lt;animator from="0" to="100" duration="2000"
-            onstop="canvas.animatorsuite.animatorcase.checkSimpleXAnim()"/&gt;
-        &lt;animator from="0" to="200" duration="3000"
-            onstop="canvas.animatorsuite.animatorcase.checkSimpleXAnim2()"/&gt;
-      &lt;/animatorgroup&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-  
-  &lt;TestSuite name="animatorsuite"&gt;
-   &lt;TestCase name="animatorcase"&gt;
-     &lt;method name="testSimpleXAnim"&gt;
-       bluebox.AG1.doStart()
-     &lt;/method&gt;
-     &lt;method name="checkSimpleXAnim"&gt;
-       assertEquals(100, bluebox.x);
-     &lt;/method&gt;
-     &lt;method name="checkSimpleXAnim2"&gt;
-       assertEquals(200, bluebox.x);
-       Debug.write('--- test complete ---');
-     &lt;/method&gt;
-   &lt;/TestCase&gt;
-  &lt;/TestSuite&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/lzunit-$5.lzx></example?>
+
 <para>
 Of course, running both animators simultaneously will superimpose the effect of each on the other and the tests will fail; this is true of any simultaneous animators applied to the same attribute of the same object.
 </para></section>
@@ -539,22 +217,6 @@ Of course, running both animators simultaneously will superimpose the effect of 
    </programlisting>
 </example>
 
-<?example role="live-example"><title>testGoButtonTrue</title><programlisting role="lzx-embednew"><filename>testdriven-1.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
-
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testGoButtonTrue"&gt;
-            assertTrue(goButton.go);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;   
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-1.lzx></example?>
 
 <para>When we compile and run that, it's red, of course, because there's no code to test, but the test-driven cycle of red-green-remove_duplication becomes an addiction; the programmer's confidence and courage is bolstered every time each small step goes from red to green.</para>
 
@@ -572,28 +234,6 @@ Of course, running both animators simultaneously will superimpose the effect of 
    </programlisting>
 </example>
 
-<?example role="live-example"><title>testGoButtonTrue</title><programlisting role="lzx-embednew"><filename>testdriven-2.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
-
-&lt;button name="goButton" width="100" text="Go"&gt;
-
-    &lt;attribute name="go" type="boolean" value="true"/&gt;
-
-&lt;/button&gt;
-
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testGoButtonTrue"&gt;
-            assertTrue(goButton.go);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;   
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-2.lzx></example?>
 
 <para>When this compiles, the test runs green, and that is an accomplishment.</para>
 
@@ -608,41 +248,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
    </programlisting>
 </example>
 
-<?example role="live-example"><title>testGoButtonTrueFalse</title><programlisting role="lzx-embednew"><filename>testdriven-3.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
 
-&lt;button name="goButton" width="100" text="Go"&gt;
-
-&lt;attribute name="go" type="boolean" value="true"/&gt;
-
-&lt;method event="onclick"&gt;
-    if (goButton.go==true) {
-        this.setAttribute('text', 'Stop');
-        this.setAttribute('go', false);
-        Debug.write(this.getAttribute('go'), "should be 'false'");
-        }
-    else {
-    this.setAttribute('text', 'Go');
-    this.setAttribute('go', true);
-    Debug.write(this.getAttribute('go'), "should be 'true'");
-    }
-&lt;/method&gt;
-
-&lt;/button&gt;
-
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testGoButtonTrue"&gt;
-            assertTrue(goButton.go);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;   
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-3.lzx></example?>
 
 <para>A while statement attached to (goButton.go==true) would loop infinitely, or until a buttonclick set the "go" attribute to false, but how to test for infinity? Maybe it's something the developer has to take on faith, but JavaScript does have its limit: <literal>Number.MAX_VALUE</literal> is the largest number JavaScript can represent. The while statement is <literal>while (goButton.counter &lt; Number.MAX_VALUE)</literal>.</para>
 
@@ -655,40 +261,6 @@ Of course, running both animators simultaneously will superimpose the effect of 
    </programlisting>
 </example>
 
-<?example role="live-example"><title>testGoButtonCounter</title><programlisting role="lzx-embednew"><filename>testdriven-4.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
-
-&lt;button name="goButton" width="100" text="Go"&gt;
-
-&lt;attribute name="go" type="boolean" value="true"/&gt;
-
-&lt;method event="onclick"&gt;
-    if (goButton.go==true) {
-        this.setAttribute('text', 'Stop');
-        this.setAttribute('go', false);
-        }
-    else {
-    this.setAttribute('text', 'Go');
-    this.setAttribute('go', true);
-    }
-&lt;/method&gt;
-
-&lt;/button&gt;
-
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testGoButtonTrue"&gt;
-            assertEquals(1, goButton.counter);
-            assertTrue(goButton.go);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;   
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-4.lzx></example?>
 
 <para>The test runs red because the counter attribute hasn't been written. (Also, the button's test for true/false was removed because it served its purpose).</para>
 
@@ -698,41 +270,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
    <textobject><textdata fileref="programs/testdriven-5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>testGoButtonTrueFalse</title><programlisting role="lzx-embednew"><filename>testdriven-5.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
 
-&lt;button name="goButton" width="100" text="Go"&gt;
-
-&lt;attribute name="go" type="boolean" value="true"/&gt;
-&lt;attribute name="counter" type="number" value="1" when="once"/&gt;
-
-&lt;method event="onclick"&gt;
-    if (goButton.go==true) {
-        this.setAttribute('text', 'Stop');
-        this.setAttribute('go', false);
-        }
-    else {
-    this.setAttribute('text', 'Go');
-    this.setAttribute('go', true);
-    }
-&lt;/method&gt;
-
-&lt;/button&gt;
-
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testGoButtonTrue"&gt;
-            assertEquals(1, goButton.counter);
-            assertTrue(goButton.go);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;   
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-5.lzx></example?>
 
 <para>That runs green. Here's the while loop:</para>
 
@@ -742,45 +280,6 @@ Of course, running both animators simultaneously will superimpose the effect of 
    <textobject><textdata fileref="programs/testdriven-6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>testGoButtonTrueFalse</title><programlisting role="lzx-embednew"><filename>testdriven-6.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
-
-&lt;button name="goButton" width="100" text="Go"&gt;
-
-&lt;attribute name="go" type="boolean" value="true"/&gt;
-&lt;attribute name="counter" type="number" value="1" when="once"/&gt;
-
-&lt;method event="onclick"&gt;
-    if (goButton.go==true) {
-        this.setAttribute('text', 'Stop');
-        this.setAttribute('go', false);
-        while (goButton.counter&lt;Number.MAX_VALUE) {
-            Debug.write(goButton.counter);
-            counter=counter+1;
-            }
-        }
-    else {
-    this.setAttribute('text', 'Go');
-    this.setAttribute('go', true);
-    }
-&lt;/method&gt;
-
-&lt;/button&gt;
-
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testGoButtonTrue"&gt;
-            assertEquals(1, goButton.counter);
-            assertTrue(goButton.go);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;   
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-6.lzx></example?>
 
 <para>One of the maxims of test-driven development is "do the simplest thing that works". This LZX script satisfies the programming problem "display numbers infinitely", but the compiled application does not work! An infinitely looping <literal>Debug.write</literal> statement fills up memory, and results in the browser choking. We need the script to Debug.write, pause for breath, Debug.write, pause for breath, and so on. The answer is in the global object LzIdle, which I have never used. The problem now presents a challenge to learn something new about the language!</para>
 
@@ -794,22 +293,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
    <textobject><textdata fileref="programs/testdriven-7.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>testGoButtonTrueFalse</title><programlisting role="lzx-embednew"><filename>testdriven-7.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
 
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testIdle"&gt;
-            assertTrue(this.idle);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-7.lzx></example?>
 
 <para>We expect a newly-written test to fail, but in this instance, I don't know if it'll ever pass, or how to make it pass in the red-green-refactor cycle.</para>
 
@@ -835,30 +319,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
    <textobject><textdata fileref="programs/testdriven-8.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>testGoButtonTrueFalse</title><programlisting role="lzx-embednew"><filename>testdriven-8.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
 
-    &lt;method name="wake" event="oninit"&gt;
-        foo = new LzDelegate(this, "sleep", LzIdle, "onidle");
-    &lt;/method&gt;
-    
-    &lt;method name="sleep"&gt;
-        Debug.write("Sleeping");
-    &lt;/method&gt;
-
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testIdle"&gt;
-            assertTrue(this.idle);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;   
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-8.lzx></example?>
 
 <para>I wasn't surprised to find that the assertion failed, but I was delighted to discover that after the TestSuite ran, the universe went to an idle state, causing the <literal>sleep</literal> method to write "Sleeping" repeatedly. The idle state itself is an "infinite loop"! </para>
 
@@ -872,50 +333,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
    <textobject><textdata fileref="programs/testdriven-9.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>testGoButtonTrueFalse</title><programlisting role="lzx-embednew"><filename>testdriven-9.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
 
-&lt;button name="goButton" width="100" text="Go"&gt;
-
-&lt;attribute name="go" type="boolean" value="true"/&gt;
-&lt;attribute name="counter" type="number" value="1" when="once"/&gt;
-
-&lt;method event="onclick"&gt;
-    if (goButton.go==true) {
-        if (goButton.counter&lt;Number.MAX_VALUE) {
-            foo = new LzDelegate(this, "count", LzIdle, "onidle");
-            this.setAttribute('text', 'Stop');
-            this.setAttribute('go', false);
-        }
-    }
-    else {
-        Debug.write("Paused");
-        this.setAttribute('text', 'Go');
-        this.setAttribute('go', true);
-    }
-&lt;/method&gt;
-
-&lt;method name="count"&gt;
-    Debug.write(counter);
-    counter=counter+1;
-&lt;/method&gt;
-
-&lt;/button&gt;
-
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testGoButtonTrue"&gt;
-          assertEquals(1, goButton.counter);
-          assertTrue(goButton.go);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;   
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-9.lzx></example?>
 
 <para>It almost works! The problem now is that even though the "Stop" button sets goButton.go to false, the LzIdle function is still active, and triggers the <literal>count</literal> method. </para>
 
@@ -937,51 +355,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
    <textobject><textdata fileref="programs/testdriven-10.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>testGoButtonTrueFalse</title><programlisting role="lzx-embednew"><filename>testdriven-10.lzx</filename><parameter/><literal>
-&lt;canvas debug="true"&gt;
-&lt;debug y="150"/&gt;
-&lt;include href="lzunit"/&gt;
-&lt;simplelayout axis="y" spacing="10"/&gt;
 
-&lt;button name="goButton" width="100" text="Go"&gt;
-
-&lt;attribute name="go" type="boolean" value="true"/&gt;
-&lt;attribute name="counter" type="number" value="1" when="once"/&gt;
-
-&lt;method event="onclick"&gt;
-    if (goButton.go==true) {
-        if (goButton.counter&lt;Number.MAX_VALUE) {
-            foo = new LzDelegate(this, "count", LzIdle, "onidle");
-            this.setAttribute('text', 'Stop');
-            this.setAttribute('go', false);
-        }
-    }
-    else {
-        foo.unregisterAll();
-        Debug.write("Paused");
-        this.setAttribute('text', 'Go');
-        this.setAttribute('go', true);
-    }
-&lt;/method&gt;
-
-&lt;method name="count"&gt;
-    Debug.write(counter);
-    counter=counter+1;
-&lt;/method&gt;
-
-&lt;/button&gt;
-
-&lt;TestSuite&gt;
-    &lt;TestCase&gt;
-        &lt;method name="testGoButtonTrue"&gt;
-            assertEquals(1, goButton.counter);
-            assertTrue(goButton.go);
-        &lt;/method&gt;
-    &lt;/TestCase&gt;   
-&lt;/TestSuite&gt;
-
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/testdriven-10.lzx></example?>
 
 <para>The application works! I won't call this a complete success, though, because the development was not wholly test-driven. Perhaps the next example will be.</para></section>
 </section></chapter>
