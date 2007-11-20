@@ -36,9 +36,9 @@ public class Compiler {
     public static Logger SchemaLogger = Logger.getLogger("schema");
     
     public static List KNOWN_RUNTIMES =
-        Arrays.asList(new String[] {"swf7", "swf8", "swf9", "dhtml", "j2me", "svg"});
+        Arrays.asList(new String[] {"swf7", "swf8", "swf9", "dhtml", "j2me", "svg", "null"});
     public static List SCRIPT_RUNTIMES =
-        Arrays.asList(new String[] {"swf9", "dhtml", "j2me", "svg"});
+        Arrays.asList(new String[] {"swf9", "dhtml", "j2me", "svg", "null"});
     public static List SWF_RUNTIMES =
         Arrays.asList(new String[] {"swf7", "swf8"});
     
@@ -215,7 +215,9 @@ public class Compiler {
 
         String runtime = props.getProperty(env.RUNTIME_PROPERTY);
         // Must be kept in sync with server/sc/lzsc.py compile
-        if (SCRIPT_RUNTIMES.contains(runtime)) {
+        if ("null".equals(runtime)) {
+            return new NullWriter(props, ostr, mMediaCache, true, env);
+        } else if (SCRIPT_RUNTIMES.contains(runtime)) {
             return new DHTMLWriter(props, ostr, mMediaCache, true, env);
         } else {
             return new SWFWriter(props, ostr, mMediaCache, true, env);
