@@ -288,6 +288,8 @@ function setName(name) {
   * @access private
   */
 function destroy ( recursiveCall ) {
+    this.setChildNodes([ ]);
+
     if (this.dsloadDel) {
         this.dsloadDel.unregisterAll();
     }
