@@ -124,6 +124,15 @@ var onvisible = LzDeclaredEvent;
 function construct ( odp , args ){
     //odp: original datapath
     var view = odp.immediateparent;
+    if (view == canvas) {
+        // Initialize vars to reduce dhtml errors
+        this.nodes = [];
+        this.clones = [];
+        this.clonePool = [];
+        Debug.error("LzReplicationManager constructed at canvas. A datapath cannot be defined on the canvas");
+        return;
+    }
+
 
     //this is so that when it looks like you're refering to the view in source
     //you can say view.datapath and you'll get what you want (which is this)
@@ -435,14 +444,17 @@ function __LZadjustVisibleClones( lastnodes , newnodes){
     //init in order
     LzInstantiator.enableDataReplicationQueuing( );
 
-    while ( this.nodes.length > this.clones.length ){
-        this.clones.push( this.getNewClone() );
+    while ( this.nodes && this.nodes.length > this.clones.length ){
+        var cl = this.getNewClone();
+        if (!cl)
+            break;
+        this.clones.push( cl );
     }
 
     LzInstantiator.clearDataReplicationQueue( );
 
 
-    while ( this.nodes.length < this.clones.length ){
+    while ( this.nodes && this.nodes.length < this.clones.length ){
         //this condition can only be reached if pooling is turned on
         this.poolClone();
     }
@@ -551,6 +563,9 @@ function setComparator( comparator ){
   * @access private
   */
 function getNewClone ( forceNew ){
+    if (!this.cloneParent) {
+        return null;
+    }
     if ( this.clonePool.length ){
         var v = this.reattachClone( this.clonePool.pop() );
     } else {
