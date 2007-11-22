@@ -287,8 +287,8 @@ function destroy ( ) {
   * state are args that have setters (which will be intercepted by
   * __LZstoreRefs, q.v.), hence we can just intercept
   * addProperty to capture the 'held args'.
-  */
-/* override */ function __LZapplyArgs ( args ){
+  *
+* override */ function __LZapplyArgs ( args ){
   var ap = this.addProperty;
   this.addProperty = function (prop, val) {
     this.heldArgs[prop] = val;
@@ -302,8 +302,7 @@ function destroy ( ) {
   * Capture setters that don't belong to the state for later
   * application to the parent (and pass the ones that do apply to the
   * state on to your superclass).
-  */
-/* override */ function __LZstoreRefs ( refs, prop ){
+* override */ function __LZstoreRefs ( refs, prop ){
     var parrefs = {};
     var myrefs = {};
 
@@ -333,8 +332,7 @@ function destroy ( ) {
   * Capture handlers that don't belong to the state for later
   * application to the parent (and pass the ones that do apply to the
   * state on to your superclass).
-  */
-/* override */ function __LZstoreDelegates ( delarr ){
+* override */ function __LZstoreDelegates ( delarr ){
     var pardels = [];
     var mydels = [];
 

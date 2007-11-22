@@ -57,7 +57,7 @@
           </xsl:element>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>???</xsl:text>
+          <xsl:text>?lzxtype?</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>
@@ -76,7 +76,8 @@
           </xsl:element>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>?jstype?</xsl:text>
+          <!-- We couldn't find a type for this. -->
+          <xsl:message>No type found for <xsl:value-of select="@name"/></xsl:message>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>

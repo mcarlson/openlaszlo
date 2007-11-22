@@ -45,9 +45,9 @@
     <!-- These params control the presentation of attributes, methods, and events
       using a javascript-oriented syntax and approach. -->
     <xsl:param name="show.members.attributes" select="true()" />
-    <xsl:param name="show.properties.static" select="false()" />
-    <xsl:param name="show.methods.static" select="false()" />  
-    <xsl:param name="show.events.static" select="true()" />
+    <xsl:param name="show.properties.static" select="true()" /> 
+    <xsl:param name="show.methods.static" select="true()" />    
+    <xsl:param name="show.events.static" select="true()" /> 
     <xsl:param name="show.inherited.attributes" select="true()" />
     <xsl:param name="show.setters" select="false()" />    
     <xsl:param name="show.prototype.methods" select="true()" />
@@ -56,6 +56,7 @@
     <xsl:param name="show.init.args" select="false()" />
     <xsl:param name="show.lzx.synopsis" select="false()" />
     <xsl:param name="show.js.synopsis" select="false()" />
+    <xsl:param name="show.known.subclasses" select="true()" />
     
     <xsl:key name="id" match="*" use="@id"/>
     <xsl:key name="unitid" match="*" use="@unitid"/>
@@ -77,7 +78,6 @@
         <xsl:if test="count($decls) > 0">
           <reference id="{$topicid}" xreflabel="{$topicdesc}">
             <title><xsl:value-of select="$subtopic"/></title>
-            <!-- [bshine commenting out jgrandy code with unknown purpose 10.07.2007] <xsl:message><xsl:value-of select="concat('found ', count($decls), ' visible items in ', $topicdesc)"/></xsl:message> -->
             <xsl:for-each select="$decls">
               <xsl:sort select="translate(@id,'_$','  ')"/>
               <xsl:apply-templates select="." mode="refentry"/>
@@ -116,6 +116,8 @@
 
     <!-- REFENTRY -->
     
+    <!-- This is the main template for generating the guts of the reference information
+      for each class. [bshine 11.21.2007] -->
     <xsl:template match="property" mode="refentry">
 
       <xsl:variable name="jsname" select="@name"/>
@@ -244,35 +246,8 @@
         <xsl:variable name="events" select="&objectvalue;/property[@name='__ivars__']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &isvisible;]" />
         <xsl:variable name="initargs" select="class/initarg[not(contains(@access, 'private'))]" />       
         
-        <!-- Static Properties -->
-        <xsl:if test="$show.properties.static">
-          <xsl:call-template name="describe-members">
-            <xsl:with-param name="members" select="$ovars[not(child::function) and not(&isevent;)]"/>
-            <xsl:with-param name="static" select="true()"/>
-            <xsl:with-param name="title" select="'Static Properties'"/>
-            <xsl:with-param name="initargs" select="$initargs" />
-            <xsl:with-param name="ivars" select="$ivars" />
-            <xsl:with-param name="setters" select="$svars" />
-          </xsl:call-template>
-        </xsl:if>          
+        
 
-        <!-- Static Methods -->
-        <xsl:if test="$show.methods.static">
-        <xsl:call-template name="describe-members">
-          <xsl:with-param name="members" select="$ovars[child::function]"/>
-          <xsl:with-param name="static" select="true()"/>
-          <xsl:with-param name="title" select="'Static Methods'"/>
-        </xsl:call-template>
-        </xsl:if>  
-
-        <!-- Static Events -->
-        <xsl:if test="$show.events.static">
-          <xsl:call-template name="describe-members">
-            <xsl:with-param name="members" select="$ovars[@type='LzEvent']"/>
-            <xsl:with-param name="static" select="true()"/>
-            <xsl:with-param name="title" select="'Static Events'"/>
-          </xsl:call-template>
-        </xsl:if>  
         
         <!-- Initialization Arguments -->
         <xsl:if test="$show.init.args">
@@ -302,7 +277,18 @@
             <xsl:with-param name="setters" select="$svars" />            
           </xsl:call-template>
         </xsl:if>  
-
+        
+        <!-- Static Properties -->
+        <xsl:if test="$show.properties.static">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="$ovars[not(child::function) and not(&isevent;)]"/>
+            <xsl:with-param name="static" select="true()"/>
+            <xsl:with-param name="title" select="'Class Attributes'"/>
+            <xsl:with-param name="initargs" select="$initargs" />
+            <xsl:with-param name="ivars" select="$ivars" />
+            <xsl:with-param name="setters" select="$svars" />
+          </xsl:call-template>
+        </xsl:if>                  
 
         <!-- Inherited Attributes -->
         <xsl:if test="$show.inherited.attributes">
@@ -332,6 +318,15 @@
           </xsl:call-template>
         </xsl:if>  
         
+        <!-- Static Methods -->
+        <xsl:if test="$show.methods.static">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="$ovars[child::function]"/>
+            <xsl:with-param name="static" select="true()"/>
+            <xsl:with-param name="title" select="'Class Methods'"/>
+          </xsl:call-template>
+        </xsl:if>  
+        
         <!-- Inherited Methods --> 
         <xsl:call-template name="describe-inherited-methods">
           <xsl:with-param name="class" select="class"></xsl:with-param>
@@ -350,6 +345,15 @@
           <xsl:with-param name="class" select="class"></xsl:with-param>
         </xsl:call-template>    
         
+        <!-- Static Events -->
+        <xsl:if test="$show.events.static">
+          <xsl:call-template name="describe-members">
+            <xsl:with-param name="members" select="$ovars[@type='LzEvent']"/>
+            <xsl:with-param name="static" select="true()"/>
+            <xsl:with-param name="title" select="'Class Events'"/>
+          </xsl:call-template>
+        </xsl:if>          
+        
         <!-- Prototype Properties -->
         <xsl:if test="$show.prototype.properties">
           <xsl:call-template name="describe-members">
@@ -359,6 +363,13 @@
         </xsl:if>  
         
       </refsect1>
+      
+      <xsl:if test="$show.known.subclasses">
+        <refsect1>
+          <xsl:call-template name="describe-known-subclasses" />
+        </refsect1>
+      </xsl:if>
+      
     </xsl:template>
         
     <xsl:template match="property" mode="detailed-synopsis">
@@ -554,10 +565,6 @@
   </xsl:template>
 
     <xsl:template match="initarg|property" mode="describe-member">
-      <!-- TO DO: special format for setters (properties with ../object/../property[@name='setters'] structure) -->
-      <!-- [bshine 11.2.2007] Now I understand what Jim meant with this comment! We need to describe
-        attributes specially (in some way) if they are listed as "setters" in the js2doc output. 
-        I do not yet understand exactly what to do here. -->
       <xsl:param name="static"/>
       <xsl:param name="describe-js" select="true()"/>
       <xsl:param name="describe-lzx" select="true()"/>
@@ -967,7 +974,7 @@
           </xsl:call-template>
         </refsect1>
       </xsl:if>
-      
+          
       <?ignore
         <!-- need to turn path into webapp url, not sure how to do that -->
         <xsl:variable name="path" select="@path"/>

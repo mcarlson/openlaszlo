@@ -159,13 +159,28 @@
       <xsl:param name="id" select="@id"/>
       <xsl:param name="static" select="false()" />
       <xsl:param name="prototype" select="false()"/>
-      <methodsynopsis language="{$language}"> 
-        <xsl:choose>
+      <methodsynopsis language="{$language}">
+        <xsl:choose>          
           <xsl:when test="$add-link = true()">
             <methodname><link linkend="{$id}"><xsl:value-of select="@name"/></link></methodname>
           </xsl:when>
           <xsl:otherwise>
-            <methodname><xsl:value-of select="ancestor::property/doc/tag[@name='lzxname']/text"/>.<xsl:value-of select="@name"/></methodname>
+            <methodname>
+              <xsl:choose>
+              <xsl:when test="$static">
+                <!-- For static methods, show the class name --> 
+                <xsl:value-of select="../../@name"/>.<xsl:value-of select="@name"/>
+              </xsl:when>
+              <xsl:when test="ancestor::property/doc/tag[@name='lzxname']/text">
+                <!-- For instance methods, show the name of the class --> 
+                <xsl:value-of select="ancestor::property/doc/tag[@name='lzxname']/text"/>.<xsl:value-of select="@name"/>
+              </xsl:when>
+               <xsl:otherwise>                 
+                 <xsl:message>No class name found for function synopsis: <xsl:value-of select="@id"/></xsl:message>
+                 <xsl:value-of select="@name"/>
+               </xsl:otherwise>
+              </xsl:choose>                
+            </methodname>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:for-each select="function/parameter">
@@ -235,7 +250,7 @@
         </xsl:choose>
         <xsl:for-each select="parameter">
           <methodparam>
-            <parameter>benhiparameterforfunction<xsl:value-of select="@name"/></parameter>
+            <parameter><xsl:value-of select="@name"/></parameter>
             <xsl:if test="@type"><type role="javascript"><xsl:value-of select="@type"/></type></xsl:if>
           </methodparam>
         </xsl:for-each>

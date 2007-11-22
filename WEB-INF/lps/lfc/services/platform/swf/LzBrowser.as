@@ -101,10 +101,14 @@ LzBrowser.callJS = function (js, callback) {
         this._dequeueJS();
     }
 }
+/** @access private */ 
 LzBrowser.__jscallback = null;
+/** @access private */ 
 LzBrowser.__jslocked = false;
+/** @access private */ 
 LzBrowser.__jscallq = [];
 
+/** @access private */ 
 LzBrowser.__jsready = function () {
     //Debug.write('jsready');
     LzBrowser.jsready=true;
@@ -118,6 +122,7 @@ LzBrowser.callJSReturn = function (a) {
     LzBrowser._dequeueJS();
 }
 
+/** @access private */ 
 LzBrowser._dequeueJS = function (a) {
     this.__jslocked = false;
     this.__jscallback = null;
@@ -128,6 +133,7 @@ LzBrowser._dequeueJS = function (a) {
     }
 }
 
+/** @access private */ 
 LzBrowser._jsreset = function () {
     this.__jslocked = false;
     this.__jscallback = null;

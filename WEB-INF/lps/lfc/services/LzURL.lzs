@@ -130,6 +130,7 @@ LzURL.prototype.parseURL = function(url)
     /foo/bar/baz/foo.html    := "/foo/bar/baz/", "foo.html"
     /foo/bar/                := "/foo/bar/", null
     foo.html                := null, "foo.html"
+    @access private
  */
 LzURL.prototype._splitPath = function(pathfile)
 {
@@ -153,7 +154,7 @@ LzURL.prototype._splitPath = function(pathfile)
 }
 
 
-// @keywords  private
+/** @access private */ 
 LzURL.prototype.dupe = function (){
     //make this function fast, because it is called by LzBrowser.toAbsoluteURL
     //which is called frequently by the loader
