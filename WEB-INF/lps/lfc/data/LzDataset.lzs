@@ -607,7 +607,7 @@ function doRequest() {
     // We try to reuse the old datarequest object, unless
     // multirequest is true. If multirequest is true, we need
     // a separate datarequest obj for each request.
-    if (this.multirequest || this.dataRequest == null) {
+    if (this.multirequest || this.dataRequest == null || this.queuerequests) {
         this.dataRequest = new this.dataRequestClass(this);
     }
 
