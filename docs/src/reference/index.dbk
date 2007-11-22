@@ -41,11 +41,9 @@
     <xi:fallback><para>Missing: Embedding Reference</para></xi:fallback>
   </xi:include>
 
-<?ignore skip for faster builds
   <xi:include href="chartref.dbk">
     <xi:fallback><para>Missing: Charting Reference</para></xi:fallback>
   </xi:include>
-?>  
 
   <xi:include href="incref.dbk">
     <xi:fallback><para>Missing: Incubator Reference</para></xi:fallback>

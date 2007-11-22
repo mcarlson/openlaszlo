@@ -3,12 +3,10 @@
       @subtopic Chart Types
   -->
 <library>
-  <include href="common/library.lzx" />
-  <include href="addon/library.lzx" />
-  <include href="barchart/barchart.lzx" />
-  <include href="columnchart/columnchart.lzx" />
-  <include href="linechart/linechart.lzx" />
-  <include href="piechart/piechart.lzx" />
+  <include href="shared/library.lzx"/>
+  <include href="barchart.lzx"/>
+  <include href="linechart.lzx"/>
+  <include href="piechart.lzx"/>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
