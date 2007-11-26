@@ -83,83 +83,87 @@ a complete discussion.
 </p>
     </text>
   </doc>
-<class>
-  <initarg name="name" modifiers="final" type="String">
-    <doc><text>The name of the attribute.</text></doc>
-  </initarg>
-  <initarg name="value" type="Object">
-    <doc><text>The initial value of the attribute.  The type of this value
-               is specified by the value of the type attribute; if that
-               attribute is not present, it's the type of this attribute
-               in this element's tag.  The attribute is given this value
-               when the element is created.
-    </text></doc>
-  </initarg>
-  <initarg name="when" modifiers="final">
-    <doc>
-      <tag name="since"><text>1.1</text></tag>
-      <tag name="lzxdefault"><text>"immediately"</text></tag>
-      <tag name="lzxtype"><text>"immediately" | "once" | "always"</text></tag>
-      <text> When the initial value expression is to be
-             evaluated.  One of:
-             <dl>
-               <dt>@c{immediately}</dt>
-               <dd>evaluate when the enclosing element is defined
-                   (must be a constant)</dd>
-               <dt>@c{once}</dt>
-               <dd>evaluate when the enclosing element is
-                   initialized</dd>
-               <dt>@c{always}</dt>
-               <dd>update whenever the value of the expression
-                   changes</dd>
-             </dl>
-             The default is @c{when="immediately"}.
-             
-             The setting for @c{when} can be overridden
-             when assigning a value to an attribute by using the
-             syntax <code><var>attribute
-             name</var>=$<var>when
-             value</var>{<var>expression</var>}</code>.  The
-             default for
-             <var>when value</var> is @c{always}, for
-             example: <code>&lt;view
-             title="$once{computeTitle()}" /&gt;</code> sets the
-             title of the view to a computed value and
-             <code>&lt;view title="${parent.subtitle}" \&gt;</code>
-             will cause the title of the view to
-             track @c{parent.subtitle}.
-      </text>
-    </doc>
-  </initarg>
-  <initarg name="type" type="String" modifiers="final">
-    <doc>
-      <tag name="lzxdefault"><text>"expression"</text></tag>
-      <tag name="lzxtype"><text>"boolean" | "color" | "expression" | "number" | "size" | "string" | "text" | "html"</text></tag>
-      <text>The type of the attribute.  This determines how the value is
-            parsed.  Attributes of type string are automatically quoted
-            if when="immediate", for any other value of when, a literal
-            string would have to be quoted to be used as a value.
-      </text>
-    </doc>
-  </initarg>
-  <initarg name="required" type="Boolean" modifiers="final">
-    <doc>
-      <tag name="lzxdefault"><text>"false"</text></tag>
-      <text>True if this is a required attribute.</text>
-    </doc>
-  </initarg>
-  <initarg name="setter" type="Object">
-    <doc>
-      <tag name="lzxtype"><text>script</text></tag>
-      <tag name="since"><text>1.1</text></tag>
-      <text>Code that is executed when setAttribute is used to set the value
-            of this attribute.  This code is executed within a context in
-            which the variable with this attribute's name is
-            bound to the value passed to setAttribute.
-      </text>
-    </doc>
-  </initarg>
-</class>
+  <class>
+    <property name="__ivars__" access="public">
+      <object>
+        <property name="name" id="attribute.__ivars__.name" modifiers="final" type="String">
+          <doc><text>The name of the attribute.</text></doc>
+        </property>
+        <property name="value" id="attribute.__ivars__.value" type="Object">
+          <doc><text>The initial value of the attribute.  The type of this value
+            is specified by the value of the type attribute; if that
+            attribute is not present, it's the type of this attribute
+            in this element's tag.  The attribute is given this value
+            when the element is created.
+          </text></doc>
+        </property>
+        <property name="when" modifiers="final" id="attribute.__ivars__.when">
+          <doc>
+            <tag name="since"><text>1.1</text></tag>
+            <tag name="lzxdefault"><text>"immediately"</text></tag>
+            <tag name="lzxtype"><text>"immediately" | "once" | "always"</text></tag>
+            <text> When the initial value expression is to be
+              evaluated.  One of:
+              <dl>
+                <dt>@c{immediately}</dt>
+                <dd>evaluate when the enclosing element is defined
+                  (must be a constant)</dd>
+                <dt>@c{once}</dt>
+                <dd>evaluate when the enclosing element is
+                  initialized</dd>
+                <dt>@c{always}</dt>
+                <dd>update whenever the value of the expression
+                  changes</dd>
+              </dl>
+              The default is @c{when="immediately"}.
+              
+              The setting for @c{when} can be overridden
+              when assigning a value to an attribute by using the
+              syntax <code><var>attribute
+                name</var>=$<var>when
+                  value</var>{<var>expression</var>}</code>.  The
+              default for
+              <var>when value</var> is @c{always}, for
+              example: <code>&lt;view
+                title="$once{computeTitle()}" /&gt;</code> sets the
+              title of the view to a computed value and
+              <code>&lt;view title="${parent.subtitle}" \&gt;</code>
+              will cause the title of the view to
+              track @c{parent.subtitle}.
+            </text>
+          </doc>
+        </property>
+        <property name="type" type="String" modifiers="final" id="attribute.__ivars__.type">
+          <doc>
+            <tag name="lzxdefault"><text>"expression"</text></tag>
+            <tag name="lzxtype"><text>"boolean" | "color" | "expression" | "number" | "size" | "string" | "text" | "html"</text></tag>
+            <text>The type of the attribute.  This determines how the value is
+              parsed.  Attributes of type string are automatically quoted
+              if when="immediate", for any other value of when, a literal
+              string would have to be quoted to be used as a value.
+            </text>
+          </doc>
+        </property>
+        <property name="required" type="Boolean" modifiers="final" id="attribute.__ivars__.required">
+          <doc>
+            <tag name="lzxdefault"><text>"false"</text></tag>
+            <text>True if this is a required attribute.</text>
+          </doc>
+        </property>
+        <property name="setter" type="Object" access="protected" id="attribute.__ivars__.setter">    
+          <doc>
+            <tag name="lzxtype"><text>script</text></tag>
+            <tag name="since"><text>1.1</text></tag>
+            <text>Code that is executed when setAttribute is used to set the value
+              of this attribute.  This code is executed within a context in
+              which the variable with this attribute's name is
+              bound to the value passed to setAttribute.
+            </text>
+          </doc>
+        </property>
+      </object>
+    </property>
+  </class>
 </property>
 
 <property id="tag.event" topic="LZX" subtopic="Basics" access="public">
@@ -310,40 +314,43 @@ If the @method attribute is given, a method body is unnecessary and the named me
 </text>
   </doc>
   <class>
-  <initarg name="name" modifiers="final">
-    <doc>
-      <tag name="lzxtype"><text>token</text></tag>
-      <text>The name of the event.</text>
-    </doc>
-  </initarg>
-  <initarg name="reference">
-    <doc>
-      <tag name="lzxdefault"><text>"this"</text></tag>
-      <text>If this attribute is present, it is a JavaScript expression
-            that evaluates to an object.  The code in this method executes
-            when this object sends the event named by the @a{event}
-            attribute.  This attribute may be present only if
-            the @a{event} attribute is present too.
-      </text>
-    </doc>
-  </initarg>
-  <initarg name="args" type="String" modifiers="final">
-    <doc>
-      <tag name="lzxtype"><text>string</text></tag>
-      <tag name="lzxdefault"><text>""</text></tag>
-      <text>The parameter names of this handler.  The value of this attribute
-            is a comma-separated list of JavaScript identifiers. Required if a
-            method body is given as the handler implementation.
-      </text>
-    </doc>
-  </initarg>
-  <initarg name="method" type="String">
-    <doc>
-      <tag name="lzxtype"><text>string</text></tag>
-      <text>A method to call when this handler is invoked.</text>
-    </doc>
-  </initarg>
-</class>
+    <property name="__ivars__" access="public"> 
+      <object>
+        <property name="name" modifiers="final">
+          <doc>
+            <tag name="lzxtype"><text>token</text></tag>
+            <text>The name of the event.</text>
+          </doc>
+        </property>
+        <property name="reference">
+          <doc>
+            <tag name="lzxdefault"><text>"this"</text></tag>
+            <text>If this attribute is present, it is a JavaScript expression
+              that evaluates to an object.  The code in this method executes
+              when this object sends the event named by the @a{event}
+              attribute.  This attribute may be present only if
+              the @a{event} attribute is present too.
+            </text>
+          </doc>
+        </property>
+        <property name="args" type="String" modifiers="final">
+          <doc>
+            <tag name="lzxtype"><text>string</text></tag>
+            <tag name="lzxdefault"><text>""</text></tag>
+            <text>The parameter names of this handler.  The value of this attribute
+              is a comma-separated list of JavaScript identifiers. Required if a
+              method body is given as the handler implementation.
+            </text>
+          </doc>
+        </property>
+        <property name="method" type="String">
+          <doc>
+            <tag name="lzxtype"><text>string</text></tag>
+            <text>A method to call when this handler is invoked.</text>
+          </doc>
+        </property>
+      </object></property>
+  </class>
 </property>
 
 <property id="tag.import" topic="LZX" subtopic="Basics" access="public">
@@ -351,39 +358,43 @@ If the @method attribute is given, a method body is unnecessary and the named me
     <tag name="lzxname"><text>import</text></tag>
   </doc>
   <class>
-  <initarg name="href" type="String">
-    <doc>
-      <tag name="lzxtype"><text>xsd:anyURI</text></tag>
-      <text>A reference to a target file whose content is treated as a loadable module</text>
-    </doc>
-  </initarg>
-  <initarg name="onload">
-    <doc>
-      <tag name="lzxtype"><text>script</text></tag>
-    </doc>
-  </initarg>
-  <initarg name="onerror">
-    <doc>
-      <tag name="lzxtype"><text>script</text></tag>
-    </doc>
-  </initarg>
-  <initarg name="ontimeout">
-    <doc>
-      <tag name="lzxtype"><text>script</text></tag>
-    </doc>
-  </initarg>
-  <initarg name="proxied">
-    <doc>
-      <tag name="lzxtype"><text>booleanLiteral | "inherit"</text></tag>
-      <tag name="lzxdefault"><text>"inherit"</text></tag>
-    </doc>
-  </initarg>
-  <initarg name="stage">
-    <doc>
-      <tag name="lzxtype"><text>"late" | "defer"</text></tag>
-    </doc>
-  </initarg>
-</class>
+    <property name="__ivars__" access="public">
+      <object> 
+        <property name="href" type="String">
+          <doc>
+            <tag name="lzxtype"><text>xsd:anyURI</text></tag>
+            <text>A reference to a target file whose content is treated as a loadable module</text>
+          </doc>
+        </property>
+        <property name="onload">
+          <doc>
+            <tag name="lzxtype"><text>script</text></tag>
+          </doc>
+        </property>
+        <property name="onerror">
+          <doc>
+            <tag name="lzxtype"><text>script</text></tag>
+          </doc>
+        </property>
+        <property name="ontimeout">
+          <doc>
+            <tag name="lzxtype"><text>script</text></tag>
+          </doc>
+        </property>
+        <property name="proxied">
+          <doc>
+            <tag name="lzxtype"><text>booleanLiteral | "inherit"</text></tag>
+            <tag name="lzxdefault"><text>"inherit"</text></tag>
+          </doc>
+        </property>
+        <property name="stage">
+          <doc>
+            <tag name="lzxtype"><text>"late" | "defer"</text></tag>
+          </doc>
+        </property>
+      </object>
+    </property>
+  </class>
 </property>
 
 <property id="tag.include" topic="LZX" subtopic="Basics" access="public">
@@ -391,31 +402,35 @@ If the @method attribute is given, a method body is unnecessary and the named me
     <tag name="shortdesc"><text>Includes code from other files.</text></tag>
     <tag name="lzxname"><text>include</text></tag>
     <text>
-<p>The <tagname>include</tagname> tag is used to include source code
-contained in another file.  See the <a
-href="${dguide}program-structure.html#program-structure.include-tag">Guide</a> for a complete
-discussion.  Also see the <tagname link="true">library</tagname>
-tag.</p>
+      <p>The <tagname>include</tagname> tag is used to include source code
+        contained in another file.  See the <a
+          href="${dguide}program-structure.html#program-structure.include-tag">Guide</a> for a complete
+        discussion.  Also see the <tagname link="true">library</tagname>
+        tag.</p>
     </text>
   </doc>
   <class>
-  <initarg name="href" type="String">
-    <doc>
-      <tag name="lzxtype"><text>xsd:anyURI</text></tag>
-      <text>A reference to a target file whose content is included in the
-            application that contains this include element.
-      </text>
-    </doc>
-  </initarg>
-  <initarg name="type" type="String">
-    <doc>
-      <tag name="lzxtype"><text>"text" | "xml"</text></tag>
-      <tag name="lzxdefault"><text>"xml"</text></tag>
-      <text>If this attribute has the value @c{text}, the content of the
-            target file is included as text.  Otherwise, it is read as XML.
-      </text>
-    </doc>
-  </initarg>
+    <property name="__ivars__" access="public">
+      <object> 
+        <property name="href" type="String">
+          <doc>
+            <tag name="lzxtype"><text>xsd:anyURI</text></tag>
+            <text>A reference to a target file whose content is included in the
+              application that contains this include element.
+            </text>
+          </doc>
+        </property>
+        <property name="type" type="String">
+          <doc>
+            <tag name="lzxtype"><text>"text" | "xml"</text></tag>
+            <tag name="lzxdefault"><text>"xml"</text></tag>
+            <text>If this attribute has the value @c{text}, the content of the
+              target file is included as text.  Otherwise, it is read as XML.
+            </text>
+          </doc>
+        </property>
+      </object>
+    </property>
   </class>
 </property>
 
@@ -434,26 +449,30 @@ link="true">include</tagname> tag.</p>
     </text>
   </doc>
   <class>
-  <initarg name="href" type="String" access="private">
-    <doc>
-      <tag name="lzxtype"><text>xsd:anyURI</text></tag>
-      <text>This attribute is used internally by the compiler.  It shouldn't
-            be used in user programs.
-      </text>
-    </doc>
-  </initarg>
-  <initarg name="proxied">
-    <doc>
-      <tag name="lzxtype"><text>booleanLiteral | "inherit"</text></tag>
-      <tag name="lzxdefault"><text>"inherit"</text></tag>
-    </doc>
-  </initarg>
-  <initarg name="validate">
-    <doc>
-      <tag name="lzxtype"><text>booleanLiteral</text></tag>
-      <tag name="lzxdefault"><text>"true"</text></tag>
-    </doc>
-  </initarg>
+    <property name="__ivars__" access="public">
+      <object>
+        <property name="href" id="library.__ivars__.href" type="String" access="private">
+          <doc>
+            <tag name="lzxtype"><text>xsd:anyURI</text></tag>
+            <text>This attribute is used internally by the compiler.  It shouldn't
+              be used in user programs.
+            </text>
+          </doc>
+        </property>
+        <property name="proxied" id="library.__ivars__.proxied" access="public">
+          <doc>
+            <tag name="lzxtype"><text>booleanLiteral | "inherit"</text></tag>
+            <tag name="lzxdefault"><text>"inherit"</text></tag>
+          </doc>
+        </property>
+        <property name="validate" id="library.__ivars__.validate" access="public">
+          <doc>
+            <tag name="lzxtype"><text>booleanLiteral</text></tag>
+            <tag name="lzxdefault"><text>"true"</text></tag>
+          </doc>
+        </property>
+      </object>
+    </property>
   </class>
 </property>
 
@@ -484,35 +503,39 @@ numbers.</p>
     </text>
   </doc>
   <class>
-  <initarg name="name" modifiers="final">
-    <doc>
-      <tag name="lzxtype"><text>token</text></tag>
-      <text>The name of the method.</text>
-    </doc>
-  </initarg>
-  <initarg name="event" type="String">
-    <doc>
-      <text>The name of the event that this method is invoked in response
-            to.</text>
-    </doc>
-  </initarg>
-  <initarg name="reference" type="Object">
-    <doc>
-      <tag name="lzxdefault"><text>"this"</text></tag>
-      <tag name="lzxtype"><text>reference</text></tag>
-      <text>If this attribute is present, it is a JavaScript expression
-            that evaluates to an object.  The code in this method executes
-            when this object sends the event named by the @a{event}
-            attribute.  This attribute may be present only if
-            the @a{event} attribute is present too.</text>
-    </doc>
-  </initarg>
-  <initarg name="args" type="String" modifiers="final">
-    <doc>
-      <text>The parameter names of this method.  The value of this attribute
-            is a comma-separated list of JavaScript identifiers.</text>
-    </doc>
-  </initarg>
+    <property name="__ivars__" access="public">
+      <object> 
+        <property name="name" modifiers="final">
+          <doc>
+            <tag name="lzxtype"><text>token</text></tag>
+            <text>The name of the method.</text>
+          </doc>
+        </property>
+        <property name="event" type="String">
+          <doc>
+            <text>The name of the event that this method is invoked in response
+              to.</text>
+          </doc>
+        </property>
+        <property name="reference" type="Object">
+          <doc>
+            <tag name="lzxdefault"><text>"this"</text></tag>
+            <tag name="lzxtype"><text>reference</text></tag>
+            <text>If this attribute is present, it is a JavaScript expression
+              that evaluates to an object.  The code in this method executes
+              when this object sends the event named by the @a{event}
+              attribute.  This attribute may be present only if
+              the @a{event} attribute is present too.</text>
+          </doc>
+        </property>
+        <property name="args" type="String" modifiers="final">
+          <doc>
+            <text>The parameter names of this method.  The value of this attribute
+              is a comma-separated list of JavaScript identifiers.</text>
+          </doc>
+        </property>
+      </object>
+    </property>
   </class>
 </property>
 
@@ -565,20 +588,23 @@ load process is complete.</p>
     </text>
   </doc>
   <class>
-  <initarg name="hideafterinit" type="Boolean" access="private">
-    <doc>
-      <tag name="lzxtype"><text>boolean</text></tag>
-    </doc>
-  </initarg>
-  <initarg name="persistent">
-    <doc>
-      <tag name="lzxtype"><text>xsd:boolean</text></tag>
-      <tag name="lzxdefault"><text>"false"</text></tag>
-      <text>If true, the splash views remain on the canvas after the
-            preload is complete.
-      </text>
-    </doc>
-  </initarg>
+    <property name="__ivars__" access="public">
+      <object>  
+        <property name="hideafterinit" type="Boolean" access="private">
+          <doc>
+            <tag name="lzxtype"><text>boolean</text></tag>
+          </doc>
+        </property>
+        <property name="persistent">
+          <doc>
+            <tag name="lzxtype"><text>xsd:boolean</text></tag>
+            <tag name="lzxdefault"><text>"false"</text></tag>
+            <text>If true, the splash views remain on the canvas after the
+              preload is complete.
+            </text>
+          </doc>
+        </property>
+      </object></property>
   </class>
 </property>
 
