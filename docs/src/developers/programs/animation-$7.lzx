@@ -51,13 +51,13 @@
                            B6.anm.doStart();
                            ">Test</button>
       <button
-                  onclick="B1.setOpacity(1);
-                           B2.setRotation(0);
-                           B3.setWidth(49);
-                           B4.setHeight(49);
-                           B5.setX(450);
-                           B6.setY(0);
-                           this.parent.P2.setDisplay(' ');
+                  onclick="B1.setAttribute('opacity', 1);
+                           B2.setAttribute('rotation', 0);
+                           B3.setAttribute('width', 49);
+                           B4.setAttribute('height', 49);
+                           B5.setAttribute('x', 450);
+                           B6.setAttribute('y', 0);
+                           this.parent.P2.setAttribute('display', ' ');
                            ">Reset</button>
       <simplelayout axis="x"/>
     </view>

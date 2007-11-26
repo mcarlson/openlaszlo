@@ -32,7 +32,10 @@
     <button text="Test" x="50"
                onclick="B9.anm.doStart();B10.anm.doStart()"/>
     <button text="Reset"
-               onclick="B9.setX(50);B10.setX(50);this.parent.P2.setDisplay(' ');"/>
+               onclick="
+               B9.setAttribute('x', 50);
+               B10.setAttribute('x', 50);
+               this.parent.P2.setAttribute('display', ' ');"/>
     <simplelayout axis="x"/>
   </view>
 </canvas>

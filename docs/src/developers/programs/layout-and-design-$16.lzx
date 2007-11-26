@@ -1,7 +1,7 @@
 
 <canvas height="140">
   <class name="coloredRect" width="20" height="80"
-         onclick="this.setWidth(this.width+2)"/>
+         onclick="this.setAttribute('width', this.width+2)" />
 
   <view x="10" y="10" name="container">
     <simplelayout name="slayout" axis="x" spacing="10"/>

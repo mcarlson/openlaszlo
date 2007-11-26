@@ -5,8 +5,8 @@
   
   <view name="contacts" height="150" width="100">
     <view bgcolor="0xe0e0e0" datapath="phonebook:/contacts/contact"
-          onmouseover="setBGColor(0xc0c0c0)" onmouseout="setBGColor(0xe0e0e0)"
-          onclick="details.datapath.setPointer(this.datapath.p)">
+          onmouseover="setAttribute('bgcolor', 0xc0c0c0)" onmouseout="setAttribute('bgcolor', 0xe0e0e0)"
+          onclick="details.datapath.setAttribute('p', this.datapath.p)">
       <simplelayout axis="x" spacing="5"/>
       <text datapath="@firstName" resize="true"/>
       <text datapath="@lastName" resize="true"/>

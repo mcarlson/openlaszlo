@@ -19,19 +19,19 @@
     
     <method name="showFloater" args="xpos, ypos, itemwidth, dataNode">
       myfloater.bringToFront();
-      this.setX(xpos);
-      this.setY(ypos);
-      this.setWidth(itemwidth);
-      this.datapath.setPointer(dataNode);
-      this.setVisible(true)
+      this.setAttribute("x", xpos);
+      this.setAttribute("y", ypos);
+      this.setAttribute("width", itemwidth);
+      this.datapath.setAttribute("p", dataNode);
+      this.setAttribute("visible", true)
       this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
-      this.setVisible(true);
+      this.setAttribute("visible", true);
       this.dragger.apply();
     </method>
     
     <method name="cancelFloater">
       this.dragger.remove();
-      this.setVisible(false);
+      this.setAttribute("visible", false);
     </method>
   </class>
   

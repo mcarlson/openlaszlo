@@ -22,9 +22,9 @@
   <method name="toggle" args="list">
     var xpath = list.datapath.xpath;
     if (xpath == "letters:/") {
-      list.setDatapath("numbers:/");
+      list.setAttribute("datapath", "numbers:/");
     } else {
-      list.setDatapath("letters:/");
+      list.setAttribute("datapath", "letters:/");
     }
   </method>
 

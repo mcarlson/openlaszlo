@@ -18,7 +18,7 @@
     <simplelayout spacing="5"/>
     <text bgcolor="white" fgcolor="blue" text="$once{parent.title}"/>
     <text bgcolor="0xe0e0e0" 
-          onmouseover="setBGColor(0xc0c0c0)" onmouseout="setBGColor(0xe0e0e0)">
+          onmouseover="setAttribute('bgcolor', 0xc0c0c0)" onmouseout="setAttribute('bgcolor', 0xe0e0e0)">
       <datapath xpath="*/name()" sortpath="@order" sortorder="ascending"/>
       <handler name="onclick">
         parent.target.datapath.addNodeFromPointer(this.datapath)

@@ -6,7 +6,7 @@
   <view id="floater" width="50" height="50" visible="false">
     <!-- Animate to the coordinates of a given view -->
     <method name="goTo" args="whichBox">
-      this.setVisible(true);
+      this.setAttribute("visible", true);
       this.bringToFront();
       var destX = whichBox.getAttributeRelative("x", canvas);
       var destY = whichBox.getAttributeRelative("y", canvas);

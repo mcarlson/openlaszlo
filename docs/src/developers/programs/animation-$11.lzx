@@ -53,12 +53,12 @@
                          B18.bounce();
                          B19.bounce();"/>
     <button text="Reset"
-                onclick="B15.setX(50);
-                         B16.setX(50);
-                         B17.setX(50);
-                         B18.setX(50);
-                         B19.setX(50);
-                  this.parent.P2.setDisplay(' ');"/>
+                onclick="B15.setAttribute('x', 50);
+                         B16.setAttribute('x', 50);
+                         B17.setAttribute('x', 50);
+                         B18.setAttribute('x', 50);
+                         B19.setAttribute('x', 50);
+                  this.parent.P2.setAttribute('display', ' ');"/>
     <simplelayout axis="x"/>
   </view>
 </canvas>

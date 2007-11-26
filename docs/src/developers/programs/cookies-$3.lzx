@@ -28,7 +28,7 @@
             <!-- when item is selected, save choice in cookie by calling JSP -->
             <handler name="onclick">
             <![CDATA[
-                dsSetCookie.setQueryString("name=mycookie&op=set&item=" + this.value);
+                dsSetCookie.setAttribute("querystring", "name=mycookie&op=set&item=" + this.value);
                 dsSetCookie.doRequest();
             ]]>
             </handler>

@@ -10,7 +10,7 @@
     <method name="v2e" args="v">
         Debug.write('setting', v, 'to mydataset');
         var de = LzDataElement.valueToElement(v);
-        myDataset.setChildNodes( de.childNodes )
+        myDataset.setAttribute("childNodes", de.childNodes )
         Debug.write(myDataset.serialize());
     </method>
 

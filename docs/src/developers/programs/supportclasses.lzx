@@ -1,5 +1,5 @@
 <library>
-    <class name="ruler_element" oninit="this.digit_display.setText(this.digit)" >
+    <class name="ruler_element" oninit="this.digit_display.setAttribute('text', this.digit)" >
         <attribute name="digit" value="100" type="string" />
         
         <view  bgcolor="0x1D2B64"  width="100%" height="1" />
@@ -43,8 +43,8 @@
         <!-- view bgcolor="red" x="-6" y="-6" stretches="both" /--> <!-- resource="box3.png" -->
         <text name="title" fgcolor="white" align="center" valign="middle" pixellock="true" >BBBB</text>
         <method name="setup" >
-            this.title.setText(this.id)
-            this.title.setX(Math.floor((this.width - this.title.getTextWidth())/2.0));
+            this.title.setAttribute("text", this.id)
+            this.title.setAttribute("x", Math.floor((this.width - this.title.getTextWidth())/2.0));
         </method>
     </class>
     
@@ -56,8 +56,8 @@
         <attribute name="label" type="string" />
         <text name="title" align="center" valign="middle" pixellock="true" >ROTATION</text>
         <handler name="oninit" >
-            this.title.setText(this.label)
-            this.title.setX(Math.floor((this.width - this.title.getTextWidth())/2.0));
+            this.title.setAttribute("text", this.label)
+            this.title.setAttribute("x", Math.floor((this.width - this.title.getTextWidth())/2.0));
         </handler>
     </class>
  
@@ -69,7 +69,7 @@
     </class>
 
   
-    <class name="header" height="20" width="100%" bgcolor="0x1D2B64" oninit="this.title.setText(this.label);" >
+    <class name="header" height="20" width="100%" bgcolor="0x1D2B64" oninit="this.title.setAttribute('text', this.label);" >
         <attribute name="label" type="string"/>
         <text name="title" x="5" y="3" width="100%" fgcolor="white"> Header</text>
     </class>
@@ -82,11 +82,11 @@
         </view>
         <simplelayout axis="x"/>
         <method name="setdisplay" args="t">
-            this.display.tx.setText(t)
+            this.display.tx.setAttribute("text", t)
         </method>
     </class>
 
-    <class name="descriptor" height="36" width="100%" oninit="this.title.setText(this.label); this.descript.setText(this.description); " >
+    <class name="descriptor" height="36" width="100%" oninit="this.title.setAttribute('text', this.label); this.descript.setAttribute('text', this.description); " >
         <attribute name="label" type="string"/>
         <attribute name="description" type="string"/>
         <view width="100%" height="100%" bgcolor="0xFFFFFF" opacity="0.3"/>

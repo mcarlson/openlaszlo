@@ -28,7 +28,7 @@
                 </handler>
 
                 <method name="replicationComplete">
-                    lastRepText.setText("The last view has been replicated"); 
+                    lastRepText.setAttribute("text", "The last view has been replicated"); 
                 </method>
             </datapath>
         </text>

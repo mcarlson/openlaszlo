@@ -31,7 +31,7 @@
 
       <method name="tearDown">
         // Reset pointer to starting position
-        nav.setXPath(start)
+        nav.setAttribute("xpath", start)
       </method>
 
       <method name="testsettext">

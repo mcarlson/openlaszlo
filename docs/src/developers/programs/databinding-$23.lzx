@@ -26,7 +26,7 @@
     <handler name="onclick">
       with (details.datapath) {
         selectNext()
-        setXPath('phonebook:/contacts/contact[' + getNodeOffset() + ']')
+        setAttribute('xpath', 'phonebook:/contacts/contact[' + getNodeOffset() + ']')
       }
     </handler>
   </button>

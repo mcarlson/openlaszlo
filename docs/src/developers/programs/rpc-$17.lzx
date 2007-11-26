@@ -40,16 +40,16 @@
 
             <method name="gotData">
                 this.setAttribute('clickable', false);
-                this.t.setText(this.text);
+                this.t.setAttribute("text", this.text);
             </method>
 
             <handler name="onclick">
                 if (text == "Region-A") {
-                    this.regions.setDatapath("element/i[1-6]");
+                    this.regions.setAttribute("datapath", "element/i[1-6]");
                 } else if (text == "Region-B") {
-                    this.regions.setDatapath("element/i[7-12]");
+                    this.regions.setAttribute("datapath", "element/i[7-12]");
                 } else {
-                    this.regions.setDatapath("element/i[12-]");
+                    this.regions.setsetAttribute("datapath", "element/i[12-]");
                 }
                 var myDel = new LzDelegate(this, "gotData");
                 myDel.dataobject = this.datapath.p;

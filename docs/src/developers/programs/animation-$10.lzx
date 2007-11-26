@@ -51,11 +51,11 @@
                           B13.anm.doStart();
                           B14.anm.doStart()"/>
     <button text="Reset" 
-                 onclick="B11.setX(50);
-                          B12.setX(50);
-                          B13.setX(50);
-                          B14.setX(50);
-                          this.parent.P2.setDisplay(' ');"/>
+                 onclick="B11.setAttribute('x', 50);
+                          B12.setAttribute('x', 50);
+                          B13.setAttribute('x', 50);
+                          B14.setAttribute('x', 50);
+                          this.parent.P2.setAttribute('display', ' ');"/>
     <simplelayout axis="x"/>
   </view>
 </canvas>

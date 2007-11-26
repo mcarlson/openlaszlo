@@ -9,8 +9,8 @@
   <simplelayout axis="x" spacing="25"/>
   <button text="Create tabs">
     <handler name="onclick">
-      gs.pane.setDatapath('tabnames:/title')
-      bs.pane.setDatapath('tabnames:/title')
+      gs.pane.setAttribute('datapath', 'tabnames:/title')
+      bs.pane.setAttribute('datapath', 'tabnames:/title')
     </handler>
   </button>
   

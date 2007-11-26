@@ -18,7 +18,7 @@
   <text width="200" oninit="checkSubviews()">
     <handler
             name="onaddsubview" reference="replicationParent">
-      this.setText('number of subviews: ' + 
+      this.setAttribute("text", 'number of subviews: ' + 
                    replicationParent.subviews.length);
     </handler>
   </text>

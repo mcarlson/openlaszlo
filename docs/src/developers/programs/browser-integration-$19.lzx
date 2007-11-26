@@ -1,6 +1,6 @@
 
 <canvas height="130" debug="true">
-  <command oninit="this.setKeys(['Control','n'])"
+  <command oninit="this.setAttribute('keys', ['Control','n'])"
            onselect="Debug.write('the [Ctrl-n] key combination was pressed');" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

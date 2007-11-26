@@ -4,7 +4,7 @@
   <view> 
     <simplelayout axis="x" spacing="2"/> 
     <text valign="middle">Type url:</text> 
-    <edittext width="500" id="url">http:../resources/logo.gif</edittext>
+    <edittext width="500" id="url">http:resources/logo.gif</edittext>
   </view>
   <text>(also try resources/logo.swf)</text> 
   <command onselect="butt.doit();" key="['Enter']" active="true"/> 
@@ -14,7 +14,7 @@
     Make request 
     <handler name="onclick"> this.doit(); </handler> 
     <method name="doit"> <![CDATA[ 
-      status.setText("Requesting: " + url.getText()); 
+      status.setAttribute("text", "Requesting: " + url.getText()); 
       // Determine caching from checkboxes 
       var caching = 'none';
       if (ccache.getValue() & scache.getValue()) { 
@@ -24,7 +24,7 @@
       } else if (scache.getValue()) { 
           caching = 'serveronly'; 
       } 
-      me.setSource(url.getText(), caching); 
+      me.setAttribute("source", url.getText(), caching); 
     ]]></method> 
   </button> 
   <button onclick="me.stop()"> Stop </button> 
@@ -33,13 +33,13 @@
   <text multiline="true" width="200" height="100" id="status"/> 
   <view id="me"> 
     <handler name="onload" args="e"> 
-      status.setText('loaded: ' + e); 
+      status.setAttribute("text", 'loaded: ' + e); 
     </handler> 
     <handler name="onerror" args="e"> 
-      status.setText('error: ' + e); 
+      status.setAttribute("text", 'error: ' + e); 
     </handler> 
     <handler name="ontimeout" args="e"> 
-      status.setText('timeout: ' + e); 
+      status.setAttribute("text", 'timeout: ' + e); 
     </handler> 
   </view> 
 </canvas>

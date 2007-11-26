@@ -11,13 +11,13 @@
   
   <button x="205" y="110">Increase width of container
     <handler name="onclick">
-      container.setWidth(container.width + 10);
+      container.setAttribute("width", container.width + 10);
     </handler>
   </button>
   
   <button x="10" y="110">Decrease width of container
     <handler name="onclick">
-      container.setWidth(container.width - 10);
+      container.setAttribute("width", container.width - 10);
     </handler>
   </button>
 </canvas>

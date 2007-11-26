@@ -36,7 +36,7 @@
 
         <handler name="ondata" args="value">
             Debug.write(value);
-            result.setText(value);
+            result.setAttribute("text", value);
         </handler>
 
         <remotecall funcname="Add">
