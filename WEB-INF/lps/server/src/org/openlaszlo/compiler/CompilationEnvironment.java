@@ -49,6 +49,9 @@ public class CompilationEnvironment {
     public static final String USER_DEBUG_WINDOW     = "userdebugwindow";
 
 
+    /** Cache for holding DOM tree from parsing library file */
+    public HashMap parsedLibraryCache = new HashMap();
+
     /** The root file being compiled.  This is used to resolve
      * relative pathnames. */
     protected File mApplicationFile = null;

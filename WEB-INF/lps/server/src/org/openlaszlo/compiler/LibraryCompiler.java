@@ -20,7 +20,7 @@ import org.apache.log4j.*;
 class LibraryCompiler extends ToplevelCompiler {
     final static String HREF_ANAME = "href";
     final static String INCLUDES_ANAME = "includes";
-
+  
     /** Logger
      */
     private static Logger mLogger  = Logger.getLogger(LibraryCompiler.class);
@@ -70,13 +70,19 @@ class LibraryCompiler extends ToplevelCompiler {
                     env.getLoadableImportedLibraryFiles().put(key, env.getApplicationFile());
                 }
 
-                Document doc = env.getParser().parse(file, env);
-                Element root = doc.getRootElement();
-                mLogger.debug("" + file + ": " + root + " attributes: " + root.getAttributes());
-                // Look for and add any includes from a binary library
-                String includesAttr = root.getAttributeValue(INCLUDES_ANAME);
-                File base = new File(Parser.getSourcePathname(root)).getParentFile();
-                if (includesAttr != null) {
+                Element root = null;
+
+                if (env.parsedLibraryCache.get(file) != null) {
+                  root = (Element) env.parsedLibraryCache.get(file);
+                } else {
+                  Document doc = env.getParser().parse(file, env);
+                  root = doc.getRootElement();
+                  env.parsedLibraryCache.put(file, root);
+                  mLogger.debug("" + file + ": " + root + " attributes: " + root.getAttributes());
+                  // Look for and add any includes from a binary library
+                  String includesAttr = root.getAttributeValue(INCLUDES_ANAME);
+                  File base = new File(Parser.getSourcePathname(root)).getParentFile();
+                  if (includesAttr != null) {
                     // This modularity sucks
                     Set binaryIncludes = env.getFileResolver().getBinaryIncludes();
                     for (StringTokenizer st = new StringTokenizer(includesAttr);
@@ -87,8 +93,8 @@ class LibraryCompiler extends ToplevelCompiler {
                       visited.add(canon);
                       binaryIncludes.add(canon);
                     }
+                  }
                 }
-
                 return root;
             } else {
                 return null;
