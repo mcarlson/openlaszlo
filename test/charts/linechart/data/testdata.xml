@@ -1,0 +1,14 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@ -->
+<linedata>
+    <item linterval="10" yline="43" bline="40" rline="40" gline="10"/>
+    <item linterval="20" yline="36" bline="45" rline="34" gline="24"/>
+    <item linterval="30" yline="20" bline="48" rline="39" gline="26"/>
+    <item linterval="40" yline="7" bline="26" rline="4" gline="21"/>
+    <item linterval="50" yline="26" bline="28" rline="6" gline="18"/>
+</linedata>
