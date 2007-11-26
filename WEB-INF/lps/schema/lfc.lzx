@@ -408,9 +408,14 @@
   <event name="onerror" />
   <!-- The ontimeout event is recevied when a request times out -->
   <event name="ontimeout" />
-  
+ 
   <!-- HTTP request method = post | get -->
   <attribute name="querytype" type="string" value="GET" enum="post|get|put|delete|POST|GET|PUT|DELETE" />
+
+  <containsElements>
+    <element>data</element>
+  </containsElements>
+
 </interface>
 
 <interface name="datapointer" extends="node">
