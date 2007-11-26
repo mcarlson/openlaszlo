@@ -1,0 +1,29 @@
+<canvas width="600" height="500">
+
+    <dataset name="dset" request="true" src="barchart_data_02.xml"/>
+
+    <barchart name="testchart" width="500" height="400" datapath="dset:/"
+        plotx="100" ploty="40" plotwidth="350" plotheight="300" bgcolor="#AF9B80"
+        minimum="-5" maximum="60" border="#550000" hgridbands="#EEEEEE"
+        hgridlines="#666666" hgridspacing="10" hgridwidth="2"
+        htick="#005500" hticklabel="#005500" baselabels="#FFEEDD"
+        vtick="#FFEEDD" vticklabel="#221100" drawzero="#002F0A"
+        belowzero="#CCBB88" belowzeroopacity="1">
+        <chartdata>
+            <dataseries ydatapath="salesdata/fy2005/month/@amount"
+                datacolor="salesdata/fy2005/month/@color" labeltextcolor="#FFEEDD"
+                label="salesdata/fy2005/month/@amount" labelcolor="#669988" labelborder="#44DD66"
+                baselabels="salesdata/fy2005/month/@month"/>
+            <dataseries ydatapath="salesdata/fy2006/month/@amount"
+                datacolor="salesdata/fy2006/month/@color" label="salesdata/fy2006/month/@amount"
+                labelcolor="#AA5577" labelborder="#DD3355" labelborderwidth="3"
+                labeltextcolor="#FFEEDD" baselabels="salesdata/fy2006/month/@month"/>
+        </chartdata>
+    </barchart>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,35 @@
+<salesdata>
+    <fy2005 year="2005">
+        <month month="Jan" amount="15" color="0x669988"/>
+        <month month="Feb" amount="7" color="0x669988"/>
+        <month month="Mar" amount="12" color="0x669988"/>
+        <month month="Apr" amount="24" color="0x44DD66"/>
+        <month month="May" amount="14" color="0x669988"/>
+        <month month="Jun" amount="6" color="0x669988"/>
+        <month month="Jul" amount="9" color="0x669988"/>
+        <month month="Aug" amount="4" color="0x669988"/>
+        <month month="Sep" amount="19" color="0x669988"/>
+        <month month="Oct" amount="17" color="0x669988"/>
+        <month month="Nov" amount="11" color="0x669988"/>
+        <month month="Dec" amount="3" color="0x669988"/>
+    </fy2005>
+    <fy2006 year="2006">
+        <month month="Jan" amount="1" color="0xAA5577"/>
+        <month month="Feb" amount="9" color="0xAA5577"/>
+        <month month="Mar" amount="35" color="0xAA5577"/>
+        <month month="Apr" amount="7" color="0xAA5577"/>
+        <month month="May" amount="19" color="0xAA5577"/>
+        <month month="Jun" amount="11" color="0xAA5577"/>
+        <month month="Jul" amount="8" color="0xAA5577"/>
+        <month month="Aug" amount="14" color="0xAA5577"/>
+        <month month="Sep" amount="29" color="0xAA5577"/>
+        <month month="Oct" amount="47" color="0xDD3355"/>
+        <month month="Nov" amount="18" color="0xAA5577"/>
+        <month month="Dec" amount="6" color="0xAA5577"/>
+    </fy2006>
+</salesdata>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->                                                   

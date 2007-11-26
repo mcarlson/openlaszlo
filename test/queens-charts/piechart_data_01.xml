@@ -1,0 +1,17 @@
+<data>
+    <show title="Mr. Show" hours="9" viewers="800" dvd="90" cost="40000" color="#66FF33"/>
+    <show title="Invader Zim" hours="3" viewers="1200" dvd="124" cost="83450" color="#9933CC"/>
+    <show title="House" hours="17" viewers="1660" dvd="132" cost="46981" color="#3311CC"/>
+    <show title="Stargate SG-1" hours="22" viewers="870" dvd="294" cost="129350" color="#CC9933"/>
+    <show title="Family Guy" hours="31" viewers="787" dvd="431" cost="19300" color="#3333FF"/>
+    <show title="Futurama" hours="19" viewers="679" dvd="121" cost="17450" color="#FFFF33"/>
+    <show title="3rd Rock" hours="11" viewers="438" dvd="41" cost="12673" color="#66CC66"/>
+    <show title="Arrested Development" hours="8" viewers="566" dvd="133" cost="18432" color="#FF9933"/>
+    <show title="Aqua Teen Hunger Force" hours="24" viewers="819" dvd="240" cost="8911" color="#DD4444"/>
+    <show title="The Twilight Zone" hours="18" viewers="693" dvd="143" cost="32331" color="#662299"/>
+</data>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

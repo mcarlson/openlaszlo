@@ -1,0 +1,31 @@
+<canvas width="800" height="600">
+
+    <dataset name="dset" request="true" src="linechart_data_01.xml"/>
+
+    <linechart name="testchart" width="600" height="400" datapath="dset:/"
+        plotx="100" ploty="40" plotwidth="480" plotheight="270"
+        minimum="-13" maximum="100" altmaximum="13" altminimum="0" bgresource="pics/meer.jpg"
+        border="#EEEEE0" bgcolor="#335F33" haxis="#CC6666" vaxis="#EEEEE0"
+        htick="#EEEEE0" vtick="#CC6666" hticklabel="#EEEEE0" vticklabel="#CC6666"
+        hgridlines="#666666" hgridbands="#EEEEEE" hbopacity=".5" hgridspacing="12" hgridwidth="1"
+        vgridlines="#EE00EE" vgridbands="#AAAAAA" vbopacity=".3" vgridspacing="7" vgridwidth="1"
+        belowzero="#FFFFFF" belowzeroopacity=".5" drawzero="#000000">
+        <chartdata>
+            <dataseries xdatapath="data/year[1]/month/@number" ydatapath="data/year[1]/month/@projected"
+                pointsvisible="data/year[1]/month/@point" pointshape="circle"
+                pointopacity="data/year[1]/month/@alph" pointborder="data/year[1]/month/@line"
+                pointdiameter="data/year[1]/month/@pdd" fillbelow="#EECC44" fbopacity=".4"
+                linesvisible="data/year[1]/month/@line" linethickness="1"
+                label="data/year[1]/month/@projected" labelcolor="#EEEEE0" labelborder="#FF9988"
+                labeltextcolor="0x002F0A"/>
+            <dataseries xdatapath="data/year[2]/month/@number" ydatapath="data/year[2]/month/@projected"
+                label="data/year[2]/month/@projected" labelcolor="#EEEEE0" labelborder="#8BB666"
+                labelborderwidth="2" pointsvisible="#8BB666" linesvisible="#B68B66" linethickness="3"/>
+        </chartdata>
+    </linechart>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

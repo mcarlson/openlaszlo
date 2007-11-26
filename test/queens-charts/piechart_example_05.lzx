@@ -1,0 +1,38 @@
+<canvas width="800" height="600">
+    <dataset name="dset" request="true" src="piechart_data_01.xml"/>
+
+    <piechart name="testchart" width="600" height="400" datapath="dset:/"
+        plotx="10" ploty="10" plotwidth="580" plotheight="380" bgcolor="#333345">
+        <chartdata>
+            <dataseries xdatapath="data/show/@hours" datacolor="data/show/@color"
+                explode="true" label="data/show/@title" piebgcolor="#BBBBCD"
+                legend="left" labelcolor="#000001" labelborder="#DDDDD9"
+                labeltextcolor="#EEEEE0" legendtitle="Hours" drawbg="#EEEEE0"
+                drawbgborder="#9999AB" legendbg="#9999AB" bgborderwidth="3"
+                legendhl="#DDDDEF"/>
+            <dataseries xdatapath="data/show/@viewers" datacolor="data/show/@color"
+                explode="true" label="data/show/@title" piebgcolor="#CDBBBB"
+                legend="right" labelcolor="#000001" labelborder="#DDDDD9"
+                labeltextcolor="#EEEEE0" legendtitle="Viewers" legendbg="#AB9999"
+                showlegendminimized="false" drawbg="#EEEEE0" drawbgborder="#AB9999"
+                legendhl="#EFDDDD"/>
+            <dataseries xdatapath="data/show/@dvd" datacolor="data/show/@color"
+                explode="true" label="data/show/@title" piebgcolor="#BBCDBB"
+                legend="bottom" labelcolor="#000001" labelborder="#DDDDD9"
+                labeltextcolor="#EEEEE0" showlegendminimized="false"
+                legendtitle="DVD" legendtitleposition="center" drawbg="#EEEEE0"
+                legendbg="#99AB99" legendhl="#DDEFDD"/>
+            <dataseries xdatapath="data/show/@cost" datacolor="data/show/@color"
+                explode="true" label="data/show/@title" piebgcolor="#CDBBCD"
+                labelcolor="#000001" labelborder="#DDDDD9" labeltextcolor="#EEEEE0"
+                legend="top" legendtitle="Cost" legendtitleposition="right"
+                legendhl="#EFDDEF" drawbg="#EEEEE0" drawbgborder="#AB99AB"
+                bgborderwidth="5" legendbg="#AB99AB"/>
+        </chartdata>
+    </piechart>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

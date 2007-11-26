@@ -1,0 +1,40 @@
+<canvas width="600" height="500">
+
+    <dataset name="dset" request="true" src="barchart_data_02.xml"/>
+
+    <barchart name="testchart" width="500" height="400" datapath="dset:/"
+        hgridlines="#666666" hgridspacing="10" hgridwidth="2" minimum="-5" maximum="60"
+        vgridlines="#EE00EE" vgridspacing="7" vgridwidth="2" border="#550000"
+        vgridbands="#AAAAAA" vbopacity=".3" bgresource="pics/gable.jpg"
+        hgridbands="#EEEEEE" hbopacity=".5" plotheight="300" ploty="40"
+        plotwidth="350" plotx="100" htick="#005500" vtick="#FFEEDD" vticklabel="#221100"
+        belowzero="#CCBB88" hticklabel="#005500" bgcolor="#AF9B80" drawaxis="x"
+        belowzeroopacity=".5" drawzero="#880000" baselabels="#FFEEDD"
+        haxis="#FFEEDD" vaxis="#005500">
+        <text x="5" y="5" text="Gable Sales, FY 2005-2006" fgcolor="#FFEEDD"
+            fontsize="14" fontstyle="bold"/>
+        <text x="5" y="190" text="Quantity" fontstyle="bold" fgcolor="#FFEEDD"
+            onclick="parent.setAttribute('zoomable', !parent.zoomable);
+                parent.setAttribute('draggable', !parent.draggable);"/>
+        <text x="250" y="375" text="Month" fontstyle="bold" fgcolor="#FFEEDD"/>
+        <chartdata>
+            <dataseries animationinit="rain" ydatapath="salesdata/fy2005/month/@amount"
+                datacolor="salesdata/fy2005/month/@color" tooltip="true" legenddatapath="salesdata/fy2005/@year"
+                label="salesdata/fy2005/month/@amount" labelcolor="#669988" labelborder="#44DD66"
+                labeltextcolor="#FFEEDD" baselabels="salesdata/fy2005/month/@month"/>
+            <dataseries ydatapath="salesdata/fy2006/month/@amount" legenddatapath="salesdata/fy2006/@year"
+                label="salesdata/fy2006/month/@amount" datacolor="salesdata/fy2006/month/@color" animationinit="rain"
+                labelcolor="#AA5577" labelborder="#DD3355" labelborderwidth="2"
+                baselabels="salesdata/fy2006/month/@month" labeltextcolor="#FFEEDD"/>
+        </chartdata>
+        <chartlegend ltitle="Fiscal Year" width="150" height="30" x="${parent.plotx + parent.plotwidth - this.width}"
+            y="${parent.ploty - this.height}" hlcolor="#DDCCBB" textcolor="#FFEEDD"
+            titlecolor="#FFEEDD" resizetodata="wide" backcolor="#BFAC91" border="#550000"/>
+    </barchart>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

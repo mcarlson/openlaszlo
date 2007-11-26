@@ -1,0 +1,23 @@
+<canvas width="800" height="600">
+
+    <dataset name="dset" request="true" src="linechart_data_01.xml"/>
+
+    <linechart name="testchart" width="600" height="400" datapath="dset:/"
+        minimum="-13" maximum="100" altminimum="0" altmaximum="13">
+        <chartdata>
+            <dataseries xdatapath="data/year[1]/month/@number"
+                ydatapath="data/year[1]/month/@projected"
+                pointsvisible="#FF9988" linesvisible="#FF9988"
+                label="data/year[1]/month/@projected"/>
+            <dataseries xdatapath="data/year[2]/month/@number"
+                ydatapath="data/year[2]/month/@projected"
+                pointsvisible="#B68B66" linesvisible="#B68B66"
+                label="data/year[2]/month/@projected"/>
+        </chartdata>
+    </linechart>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,49 @@
+<data>
+    <year year="2008">
+        <month number="1" projected="30" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="2" projected="10" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="3" projected="6" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="4" projected="11" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="5" projected="13" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="6" projected="33" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="7" projected="50" pdd="8" alph="1" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="8" projected="3" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="9" projected="42" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="10" projected="-6" pdd="2" alph="1" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="11" projected="43" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+        <month number="12" projected="88" pdd="4" alph=".8" point="#99FF88" pborder="#FF9988" line="#FF9988"/>
+    </year>
+    <year year="2009">
+        <month number="1" projected="4"/>
+        <month number="2" projected="81"/>
+        <month number="3" projected="73"/>
+        <month number="4" projected="-31"/>
+        <month number="5" projected="49"/>
+        <month number="6" projected="9"/>
+        <month number="7" projected="18"/>
+        <month number="8" projected="19"/>
+        <month number="9" projected="3"/>
+        <month number="10" projected="-6"/>
+        <month number="11" projected="9"/>
+        <month number="12" projected="68"/>
+    </year>
+    <year year="2984">
+        <month number="1" projected="17" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#B6B666"/>
+        <month number="2" projected="2" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#8BB68B"/>
+        <month number="3" projected="7" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#6B8B66"/>
+        <month number="4" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#B68B66"/>
+        <month number="5" projected="14" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#66B68B"/>
+        <month number="6" projected="33" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#8B8BB6"/>
+        <month number="7" pdd="8" alph="1" point="#002F0A" pborder="#B68B66" line="#68B68B"/>
+        <month number="8" projected="18" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#66B6B6"/>
+        <month number="9" projected="0" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#B68B8B"/>
+        <month number="10" projected="29" pdd="2" alph="1" point="#002F0A" pborder="#B68B66" line="#8BB666"/>
+        <month number="11" projected="17" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#B6668B"/>
+        <month number="12" projected="16" pdd="4" alph=".8" point="#002F0A" pborder="#B68B66" line="#B6B666"/>
+    </year>
+</data>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

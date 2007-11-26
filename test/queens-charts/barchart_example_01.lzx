@@ -1,0 +1,22 @@
+<canvas width="600" height="500">
+    <!-- This demonstrates a simplified chart with minimal specifications, and
+        what is required in order to draw an extremely basic barchart with minimal
+        customization. -->
+
+    <dataset name="dset" request="true" src="barchart_data_02.xml"/>
+
+    <barchart name="testchart" width="500" height="400" datapath="dset:/">
+        <chartdata>
+            <dataseries ydatapath="salesdata/fy2005/month/@amount"
+                datacolor="0xAABBDD" label="salesdata/fy2005/month/@amount"/>
+            <dataseries ydatapath="salesdata/fy2006/month/@amount"
+                label="salesdata/fy2006/month/@amount" datacolor="salesdata/fy2006/month/@color"/>
+        </chartdata>
+    </barchart>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
