@@ -591,12 +591,51 @@
 
   <!--================  Target [doc] ==============-->
   <target name="doc" 
-      description="Build documentation"
-      depends="init" unless="skip.doc">
-
-      <!-- Build the docs -->
-      <ant dir="docs/src" />
+      description="Build documentation">
       
+    <script language="javascript"><![CDATA[
+        // [bshine 2007.11.26] Fix for LPP-3720: Refguide is being built twice on build machines.
+        // Don't build the doc if we're on windows
+        // Don't build the doc if skip.doc is set
+        // Don't build the doc if we've already built the doc
+        
+        docBuildAlreadyDone = lps.getProperty("doc.build.done");
+        shouldSkipDoc = lps.getProperty("skip.doc"); 
+        buildPlatform = lps.getProperty("build.platform"); 
+        
+        msgTask = lps.createTask("echo"); 
+        
+        if (docBuildAlreadyDone) {
+            msgTask.setMessage("doc build already done; not going to do it again.");
+            msgTask.execute(); 
+        } else if (shouldSkipDoc) {
+            msgTask.setMessage("skip.doc flag set; skipping doc build.");        
+            msgTask.execute();             
+        } else if (buildPlatform == "windows") {
+            msgTask.setMessage("not going to build doc because the doc doesn't build well on windows");
+            msgTask.execute();             
+        } else {
+            msgTask.setMessage("going to attempt to build the doc."); 
+            msgTask.execute(); 
+            
+            // We passed all of the guard tests. Let's really build the doc!
+            var doctask = lps.createTask("ant"); 
+            doctask.setDir( new java.io.File("docs/src") );
+            doctask.setTarget( "developers" )
+            doctask.execute();                
+        }
+        
+      ]]> </script>
+      
+      <property name="doc.build.done" value="true" />        
+      <echo message="------------------set doc.build.done to ${doc.build.done} ----------" />     
+  </target> 
+  
+  <target name="doctwicetest">
+      <antcall target="doc"/>
+      <echo message="*******************************whoooop built it once!***************************" />
+      <antcall target="doc" />
+      <echo message="*******************************did I build it twice?!***************************" />      
   </target>
 
   <!--================  Target [test] ==============-->
