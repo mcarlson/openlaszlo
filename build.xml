@@ -593,6 +593,7 @@
   <target name="doc" 
       description="Build documentation">
       
+      <echo message="------- in main build.xml, about to run the script to build doc if appropriate, based on architecture and skip.doc and doc.build.done properties ----- "/>
     <script language="javascript"><![CDATA[
         // [bshine 2007.11.26] Fix for LPP-3720: Refguide is being built twice on build machines.
         // Don't build the doc if we're on windows
@@ -606,37 +607,34 @@
         msgTask = lps.createTask("echo"); 
         
         if (docBuildAlreadyDone) {
-            msgTask.setMessage("doc build already done; not going to do it again.");
+            msgTask.setMessage("------- doc build already done; not going to do it again ------- ");
             msgTask.execute(); 
         } else if (shouldSkipDoc) {
-            msgTask.setMessage("skip.doc flag set; skipping doc build.");        
+            msgTask.setMessage("------- skip.doc flag was set; skipping doc build ------- ");        
             msgTask.execute();             
         } else if (buildPlatform == "windows") {
-            msgTask.setMessage("not going to build doc because the doc doesn't build well on windows");
+            msgTask.setMessage("------- skipping doc build because the doc doesn't build well on windows ------- ");
             msgTask.execute();             
         } else {
-            msgTask.setMessage("going to attempt to build the doc."); 
+            msgTask.setMessage("-------  main build.xml is going to call docs/src/build.xml ------- "); 
             msgTask.execute(); 
             
             // We passed all of the guard tests. Let's really build the doc!
             var doctask = lps.createTask("ant"); 
             doctask.setDir( new java.io.File("docs/src") );
-            doctask.setTarget( "developers" )
-            doctask.execute();                
+            doctask.setTarget( "build" );
+            doctask.execute();       
+            
+            doneMsgTask = lps.createTask("echo");
+            doneMsgTask.setMessage( "------------ done building doc in main build.xml -----------" );
+            doneMsgTask.execute();
         }
         
       ]]> </script>
       
       <property name="doc.build.done" value="true" />        
-      <echo message="------------------set doc.build.done to ${doc.build.done} ----------" />     
+      <echo message="--------main build.xml just set the property doc.build.done to ${doc.build.done} ----------" />     
   </target> 
-  
-  <target name="doctwicetest">
-      <antcall target="doc"/>
-      <echo message="*******************************whoooop built it once!***************************" />
-      <antcall target="doc" />
-      <echo message="*******************************did I build it twice?!***************************" />      
-  </target>
 
   <!--================  Target [test] ==============-->
   <target name="test" 
