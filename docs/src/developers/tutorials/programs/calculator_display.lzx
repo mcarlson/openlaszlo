@@ -15,7 +15,7 @@
             this.valueX = 0;
             this.lastInput = 'none';
             this.oldValue = false;
-            this.allOperators = new array( '+', '-', '/', '*' );
+            this.allOperators = new Array( '+', '-', '/', '*' );
             this.operator = '+';
             this.screen.setAttribute('text',  this.valueX.toString() );
         </method>
