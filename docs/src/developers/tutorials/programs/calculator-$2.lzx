@@ -18,7 +18,7 @@
         <view id="display" resource="calc_display" x="20" y="31">
             <!-- the text in the display -->
             <text name="screen" height="30" width="165"
-                  font="displayText" fontsize="30"
+                  font="displayText" fontsize="25"
                   y="5" x="5">
                 0
             </text>
