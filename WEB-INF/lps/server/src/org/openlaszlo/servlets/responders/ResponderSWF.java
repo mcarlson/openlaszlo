@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -47,9 +47,6 @@ public final class ResponderSWF extends ResponderCompile
         ServletOutputStream output = null;
         InputStream input = null;
 
-        // Is this a request for an optimized file?
-        boolean opt = fileName.endsWith(".lzo");
-
         // Compile the file and send it out
         try {
             mLogger.info(
@@ -65,47 +62,7 @@ public final class ResponderSWF extends ResponderCompile
             Properties props = initCMgrProperties(req);
             String encoding = props.getProperty(LZHttpUtils.CONTENT_ENCODING);
 
-            if (opt) {
-                String objName = fileName;
-                File obj = new File(objName);
-                objName += ".gz";
-                File gz = new File(objName); 
-                // TODO: [2004-03-12 bloch] When we move to 1.4, we could use
-                // per-file locking (java.io.FileLock) to avoid the global lock here.
-                synchronized (mKrankEncodingLock) {
-                    if (encoding != null && encoding.equals("gzip")) {
-                        // Make sure gz is uptodate with obj
-                        if (!gz.exists() || gz.lastModified() < obj.lastModified()) {
-                            mLogger.info(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Encoding into " + p[0]
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                ResponderSWF.class.getName(),"051018-84", new Object[] {objName})
-);
-                            FileUtils.encode(obj, gz, "gzip");
-                        }
-                        input = new FileInputStream(objName);
-                    } else {
-                        // Simply make sure obj exists
-                        if (!obj.exists()) {
-                            mLogger.info(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Decoding into " + p[0]
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                ResponderSWF.class.getName(),"051018-98", new Object[] {objName})
-);
-                            FileUtils.decode(gz, obj, "gzip");
-                        }
-                        input = new FileInputStream(fileName);
-                    }
-                }
-            } else {
-                input = mCompMgr.getObjectStream(fileName, props);
-            }
+            input = mCompMgr.getObjectStream(fileName, props);
 
             long total = input.available();
             // Set length header before writing content.  WebSphere
