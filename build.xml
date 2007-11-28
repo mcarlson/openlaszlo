@@ -616,7 +616,7 @@
             msgTask.setMessage("------- skipping doc build because the doc doesn't build well on windows ------- ");
             msgTask.execute();             
         } else {
-            var docSourceDir = new java.io.File("docs/src"); 
+            var docSourceDir = new java.io.File(lps.getProperty("basedir") + "/docs/src"); 
             var docSourcePath = docSourceDir.getAbsolutePath();
             msgTask.setMessage("-------  main build.xml is going to call build in " + docSourcePath + "-----" );
             msgTask.execute(); 
