@@ -878,10 +878,6 @@ LzSprite.prototype.addChildSprite = function ( s ){
     s.addedToParent = true;
 }
 
-LzSprite.prototype.predestroy = function(){
-    this.bringToFront();
-}
-
 /**
   * Sets the <attribute>rotation</attribute> for the view to the given value.
   * @param Number v: The new value for <attribute>rotation</attribute>.
@@ -901,6 +897,16 @@ LzSprite.prototype.setFontName = function ( val ,prop ){
 
 LzSprite.prototype.predestroy = function(){
     this.bringToFront();
+    
+    if (this.updatePlayDel) {
+        this.updatePlayDel.unregisterAll();
+        delete this.updatePlayDel;
+    }
+    
+    if (this.doQueuedDel) {
+        this.doQueuedDel.unregisterAll();
+        delete this.doQueuedDel;
+    }
 }
 
 /**
@@ -909,21 +915,17 @@ LzSprite.prototype.predestroy = function(){
   * 
   */
 LzSprite.prototype.destroy = function(recursive){
-    if (recursive) {
+    /* This does not work!
+     * -> Every subview of this sprite's owner has already removed itself, see LzView#destroy(..). 
+     * Therefore "this.owner.subviews" will be an empty array at this stage!
+     */
+    /*if (recursive) {
         if (this.owner.subviews) {
             for (var i = 0; i < this.owner.subviews.length; i++) {
                 this.owner.subviews[i].sprite.destroy(recursive);
             }
         }
-    }
-    if (this.updatePlayDel) {
-        this.updatePlayDel.unregisterAll();
-        delete this.updatePlayDel;
-    }
-    if (this.doQueuedDel) {
-        this.doQueuedDel.unregisterAll();
-        delete this.doQueuedDel;
-    }
+    }*/
 
     this.__LZFinishDestroyOnIdle();
 }

@@ -360,7 +360,7 @@
                 this._styledel.unregisterAll();
                 delete this._styledel;
             }
-            super.destroy();
+            super.destroy.apply(this, arguments);
         </method>
 
         <!--- @access private -->

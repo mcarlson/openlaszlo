@@ -1567,20 +1567,6 @@ function __LZsetEvents ( eventNames ){
 }
 
 /**
-  * @access private
-  */
-function __LZsetDefaultHandler ( eName , func ){
-    var defHandleName = "_handle" + eName;
-    this[ defHandleName ] = func;
-    var d = new LzDelegate(this, defHandleName , this, eName  );
-    if ( !this.__LZhandlers ){
-        this.__LZhandlers = [ d ];
-    } else {
-        this.__LZhandlers.push( d );
-    }
-}
-
-/**
   * A list of CSS property names and values that configure the
   * behavior of objects, such as data binding and view layouts, that
   * operate on this view.

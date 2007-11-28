@@ -1159,7 +1159,7 @@ function destroy( recursiveCall ){
 
     if ( recursiveCall == true ) { return; }
 
-    if (this.sprite) { this.sprite.destroy(recursiveCall) }
+    if (this.sprite) { this.sprite.destroy(true) }
 
     //this.__LZFinishDestroyOnIdle();
 

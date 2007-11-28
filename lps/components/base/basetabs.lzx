@@ -63,7 +63,7 @@
                     }
                 }
             }
-            super.destroy();
+            super.destroy.apply(this, arguments);
         ]]>
         </method>
 

@@ -102,7 +102,7 @@
         <!--- @access private -->
         <method name="destroy">
             this._clearDels();
-            super.destroy();
+            super.destroy.apply(this, arguments);
         </method>
         
         <doc>

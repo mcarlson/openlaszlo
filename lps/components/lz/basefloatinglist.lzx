@@ -102,7 +102,7 @@
               break;
             }
           }
-          super.destroy(recursiveCall);
+          super.destroy.apply(this, arguments);
         </method>
 
         <!--- @keywords private -->

@@ -57,7 +57,7 @@
         <method name="destroy">
             if (this._parentform)
                 this._parentform.removeFormItem(this);
-            super.destroy();
+            super.destroy.apply(this, arguments);
         </method>
         
         <handler name="oninit"><![CDATA[

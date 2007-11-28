@@ -104,7 +104,7 @@
           if (this.mousedel) {
               this.mousedel.unregisterAll();
           }
-          super.destroy();
+          super.destroy.apply(this, arguments);
         </method>
         
         <method name="sendInFrontOf" args="v"> <![CDATA[
