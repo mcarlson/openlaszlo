@@ -814,6 +814,10 @@ public class Compiler {
       this.CLOSECURLY = NEWLINE + "}";
     }
 
+    public void print(SimpleNode node) {
+      print(node, System.out);
+    }
+
     public void print(SimpleNode node, OutputStream output) {
       PrintStream where = new PrintStream(output);
       print(node, where);
@@ -821,10 +825,6 @@ public class Compiler {
 
     public void print(SimpleNode node, PrintStream where) {
       where.println(visit(node));
-    }
-
-    public void print(SimpleNode node) {
-      print(node, System.out);
     }
 
     public String delimit(String phrase, boolean force) {
@@ -873,8 +873,7 @@ public class Compiler {
       if (node instanceof ASTProgram ||
           node instanceof ASTStatementList ||
           node instanceof ASTDirectiveBlock ||
-          node instanceof ASTStatement ||
-          node instanceof ASTVariableStatement) {
+          node instanceof ASTStatement) {
         // Conditional join
         StringBuffer sb = new StringBuffer();
         String sep = "";
@@ -1009,8 +1008,14 @@ public class Compiler {
       if (node instanceof ASTOperator) {
         return visitOperator(node, children);
       }
+      if (node instanceof ASTVariableStatement) {
+        return visitVariableStatement(node, children);
+      }
       if (node instanceof ASTVariableDeclaration) {
         return visitVariableDeclaration(node, children);
+      }
+      if (node instanceof ASTVariableDeclarationList) {
+        return visitVariableDeclarationList(node, children);
       }
       if (node instanceof ASTTryStatement) {
         return visitTryStatement(node, children);
@@ -1433,15 +1438,24 @@ public class Compiler {
       return OperatorNames[operator];
     }
 
+    public String visitVariableStatement(SimpleNode node, String[] children) {
+      assert children.length == 1;
+      return "var " + children[0];
+    }
+
     public String visitVariableDeclaration(SimpleNode node, String[] children) {
       if (children.length > 1) {
         int thisPrec = prec(Ops.ASSIGN, false);
         assert children.length == 2;
         children[1] = maybeAddParens(thisPrec, node.get(1), children[1], true);
-        return "var " + children[0] + ASSIGN + children[1];
+        return children[0] + ASSIGN + children[1];
       } else {
-        return "var " + children[0];
+        return children[0];
       }
+    }
+
+    public String visitVariableDeclarationList(SimpleNode node, String[] children) {
+      return join(COMMA, children);
     }
 
     public String visitTryStatement(SimpleNode node, String[] children) {

@@ -1059,18 +1059,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   // Expressions
   //
 
-  boolean isExpressionType(SimpleNode node) {
-    // There are several AST types that end with each of the names that
-    // endsWith tests for.
-    String name = node.getClass().getName();
-    return name.endsWith("Expression") ||
-      name.endsWith("ExpressionList") ||
-      name.endsWith("ExpressionSequence") ||
-      name.endsWith("Identifier") ||
-      name.endsWith("Literal") ||
-      name.endsWith("Reference");
-  }
-
   public SimpleNode visitExpression(SimpleNode node) {
     return visitExpression(node, true);
   }

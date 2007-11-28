@@ -643,7 +643,7 @@ void VariableStatement() #VariableStatement : {}
     "var" VariableDeclarationList() Sc()
 }
 
-void VariableDeclarationList() #StatementList(>1) : {}
+void VariableDeclarationList() #VariableDeclarationList(>1) : {}
 {
     VariableDeclaration() ("," VariableDeclaration())*
 }
@@ -755,7 +755,7 @@ void ForStatement() #ForStatement : {}
 
 void ForVarStatement() #ForVarStatement : {}
 {
-     "for" "(" "var"  { setAllowIn(false); } VariableDeclarationList() { setAllowIn(true); } ";"
+     "for" "(" "var"  ({ setAllowIn(false); } VariableDeclarationList() { setAllowIn(true); }) #VariableStatement ";"
                ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ";"
                ([Expression()]) #EmptyExpression(jjtree.nodeArity()==0) ")"
          Statement()

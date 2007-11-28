@@ -375,6 +375,18 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // Statements
   //
 
+  public SimpleNode visitVariableStatement(SimpleNode node, SimpleNode[] children) {
+    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
+    if (scriptElement) {
+      assert children.length == 1;
+      // In script, variables are declared at the top of the function
+      // so we convert the variableStatement into a Statement here.
+      node = new ASTStatement(0);
+      node.set(0, children[0]);
+    }
+    return visitChildren(node);
+  }
+
   public SimpleNode visitVariableDeclaration(SimpleNode node, SimpleNode[] children) {
     ASTIdentifier id = (ASTIdentifier)children[0];
     boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
@@ -636,18 +648,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     if (node instanceof Compiler.PassThroughNode) {
       node = ((Compiler.PassThroughNode)node).realNode;
     }
-    // There are several AST types that end with each of the names that
-    // endsWith tests for.
-    String name = node.getClass().getName();
-    return name.endsWith("Expression") ||
-      name.endsWith("FunctionCallParameters") ||
-      // TODO: [2006-01-11 ptw] Noone can explain this vestigial code, remove it
-      //         name.substring(5).equals("Identifier") ||
-      name.endsWith("ExpressionList") ||
-      name.endsWith("ExpressionSequence") ||
-      name.endsWith("Identifier") ||
-      name.endsWith("Literal") ||
-      name.endsWith("Reference");
+    return super.isExpressionType(node);
   }
 
   public SimpleNode visitExpression(SimpleNode node) {

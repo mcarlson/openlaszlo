@@ -68,6 +68,8 @@ public interface ASTVisitor {
   SimpleNode visitTryStatement(SimpleNode node, SimpleNode[] children);
   SimpleNode visitUnaryExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children);
   SimpleNode visitVariableDeclaration(SimpleNode node, SimpleNode[] children);
+  SimpleNode visitVariableDeclarationList(SimpleNode node, SimpleNode[] children);
+  SimpleNode visitVariableStatement(SimpleNode node, SimpleNode[] children);
   SimpleNode visitWhileStatement(SimpleNode node, SimpleNode[] children);
   SimpleNode visitWithStatement(SimpleNode node, SimpleNode[] children);
 }

@@ -491,6 +491,9 @@ public abstract class CommonGenerator implements ASTVisitor {
     else if (node instanceof ASTVariableDeclaration) {
       newNode = visitVariableDeclaration(node, children);
     }
+    else if (node instanceof ASTVariableDeclarationList) {
+      newNode = visitVariableDeclarationList(node, children);
+    }
     else if (node instanceof ASTVariableStatement) {
       newNode = visitVariableStatement(node, children);
     }
@@ -573,6 +576,13 @@ public abstract class CommonGenerator implements ASTVisitor {
     }
     finally {
       options = prevOptions;
+    }
+    return node;
+  }
+
+  public SimpleNode visitVariableDeclarationList(SimpleNode node, SimpleNode[] children) {
+    for (int i = 0, len = children.length ; i < len; i++) {
+      children[i] = visitStatement(children[i]);
     }
     return node;
   }
@@ -696,6 +706,19 @@ public abstract class CommonGenerator implements ASTVisitor {
 
   public SimpleNode visitVariableStatement(SimpleNode node, SimpleNode[] children) {
     return visitChildren(node);
+  }
+
+  boolean isExpressionType(SimpleNode node) {
+    // There are several AST types that end with each of the names that
+    // endsWith tests for.
+    String name = node.getClass().getName();
+    return name.endsWith("Expression") ||
+      name.endsWith("FunctionCallParameters") ||
+      name.endsWith("ExpressionList") ||
+      name.endsWith("ExpressionSequence") ||
+      name.endsWith("Identifier") ||
+      name.endsWith("Literal") ||
+      name.endsWith("Reference");
   }
 
   public SimpleNode dispatchExpression(SimpleNode node, boolean isReferenced) {
