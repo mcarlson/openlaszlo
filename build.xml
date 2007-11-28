@@ -600,11 +600,11 @@
         // Don't build the doc if skip.doc is set
         // Don't build the doc if we've already built the doc
         
-        docBuildAlreadyDone = lps.getProperty("doc.build.done");
-        shouldSkipDoc = lps.getProperty("skip.doc"); 
-        buildPlatform = lps.getProperty("build.platform"); 
+        var docBuildAlreadyDone = lps.getProperty("doc.build.done");
+        var shouldSkipDoc = lps.getProperty("skip.doc"); 
+        var buildPlatform = lps.getProperty("build.platform"); 
         
-        msgTask = lps.createTask("echo"); 
+        var msgTask = lps.createTask("echo"); 
         
         if (docBuildAlreadyDone) {
             msgTask.setMessage("------- doc build already done; not going to do it again ------- ");
@@ -616,16 +616,19 @@
             msgTask.setMessage("------- skipping doc build because the doc doesn't build well on windows ------- ");
             msgTask.execute();             
         } else {
-            msgTask.setMessage("-------  main build.xml is going to call docs/src/build.xml ------- "); 
+            var docSourceDir = new java.io.File("docs/src"); 
+            var docSourcePath = docSourceDir.getAbsolutePath();
+            msgTask.setMessage("-------  main build.xml is going to call build in " + docSourcePath + "-----" );
             msgTask.execute(); 
             
             // We passed all of the guard tests. Let's really build the doc!
             var doctask = lps.createTask("ant"); 
-            doctask.setDir( new java.io.File("docs/src") );
+            doctask.setDir( docSourceDir );
             doctask.setTarget( "build" );
+            doctask.setOutput( "docbuild-out.log" );
             doctask.execute();       
             
-            doneMsgTask = lps.createTask("echo");
+            var doneMsgTask = lps.createTask("echo");
             doneMsgTask.setMessage( "------------ done building doc in main build.xml -----------" );
             doneMsgTask.execute();
         }
