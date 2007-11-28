@@ -87,23 +87,25 @@
             <text>always appear in a visible location.</text>
             <text></text>
             <checkbox name="animate">animate
-                <method event="onclick">
-                    if (value==true) {
-                        canvas.content.b1.animate();
-                        canvas.content.b2.animate();
-                        canvas.content.b3.animate();
-                        canvas.content.b4.animate();
-                        canvas.content.b5.animate();
-                        canvas.content.b6.animate();
-                    } else {
-                        canvas.content.b1.stop();
-                        canvas.content.b2.stop();
-                        canvas.content.b3.stop();
-                        canvas.content.b4.stop();
-                        canvas.content.b5.stop();
-                        canvas.content.b6.stop();
+                <handler name="onvalue">
+                    if (this.isinited) {
+                        if (value==true) {
+                            canvas.content.b1.animate();
+                            canvas.content.b2.animate();
+                            canvas.content.b3.animate();
+                            canvas.content.b4.animate();
+                            canvas.content.b5.animate();
+                            canvas.content.b6.animate();
+                        } else {
+                            canvas.content.b1.stop();
+                            canvas.content.b2.stop();
+                            canvas.content.b3.stop();
+                            canvas.content.b4.stop();
+                            canvas.content.b5.stop();
+                            canvas.content.b6.stop();
+                        }
                     }
-                </method>
+                </handler>
             </checkbox>
         </view>
         
