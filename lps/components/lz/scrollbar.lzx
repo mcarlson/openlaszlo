@@ -65,7 +65,7 @@
                  <view resource="lzscrollbar_ythumbbottom_rsc"/>
                  <stableborderlayout axis="y"/>
                  <!-- note: stableborderlayout only acts on the first three views -->
-                 <view resource="lzscrollbar_ythumbgripper_rsc" y="4" x="1"
+                 <view resource="lzscrollbar_ythumbgripper_rsc" x="1"
                      height="${Math.min(200, parent.height-16)}" width="11"
                      clip="true" valign="middle"/>
             </basescrollthumb>
