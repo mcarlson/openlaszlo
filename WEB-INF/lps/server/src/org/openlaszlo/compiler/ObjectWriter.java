@@ -94,6 +94,9 @@ abstract class ObjectWriter {
     /** Canvas Width */
     protected int mWidth = 0;
 
+    protected int mRecursionLimit   = 0;
+    protected int mExecutionTimeout = 0;
+
     /**
      * Initialize jgenerator
      */
@@ -530,5 +533,12 @@ abstract class ObjectWriter {
     abstract void importFontStyle(String fileName, String face, String style,
                                   CompilationEnvironment env)
       throws FileNotFoundException, CompilationError;
+
+
+    public void setScriptLimits(int recursion, int timeout) { 
+        this.mRecursionLimit = recursion;
+        this.mExecutionTimeout = timeout;
+    }
+
 }
 

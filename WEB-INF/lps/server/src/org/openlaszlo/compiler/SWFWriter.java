@@ -825,6 +825,16 @@ class SWFWriter extends ObjectWriter {
         return s2;
     }
 
+    public void setScriptLimits(int recursion, int timeout) {
+        this.mRecursionLimit = recursion;
+        this.mExecutionTimeout = timeout;
+        // ScriptLimits tag, to set max recursion depth and timeout
+        Frame frame = mFlashFile.getMainScript().getFrameAt(0);
+        ScriptLimits slimit = new ScriptLimits(recursion, timeout);
+        frame.addFlashObject(slimit);
+    }
+        
+
     /** Writes the SWF to the <code>OutputStream</code> that was
      * supplied to the SWFWriter's constructor.
      * @throws IOException if an error occurs
@@ -834,7 +844,7 @@ class SWFWriter extends ObjectWriter {
         if (mCloseCalled) {
             throw new IllegalStateException("SWFWriter.close() called twice");
         }
-        
+
         // Add font information
         addFontTable();
 

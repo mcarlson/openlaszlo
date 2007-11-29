@@ -273,6 +273,12 @@ public class CompilationEnvironment {
         this.mMainObjectWriter = writer;
     }
     
+    public void setScriptLimits(int recursion, int timeout) {
+        if (this.mMainObjectWriter != null) {
+            this.mMainObjectWriter.setScriptLimits(recursion, timeout);
+        }
+    }
+
     public ViewSchema getSchema() {
         return mSchema;
     }

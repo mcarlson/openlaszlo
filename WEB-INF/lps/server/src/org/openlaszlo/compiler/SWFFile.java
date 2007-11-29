@@ -117,6 +117,7 @@ class SWFFile extends FlashFile {
             Frame frame = getMainScript().getFrameAt(0);
             Shape rectShape = rectangle();
 
+
             // 1. Button moved offscreen so that it's not vis. rectangle with actions
             but = new Button2();
             states = ButtonRecord.HitTest;

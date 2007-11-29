@@ -124,6 +124,7 @@ public final class Tag {
     public static final int DEFINEVIDEOSTEAM     = 60; // Flash 6
     //public static final int                      = 61;
     public static final int DEFINEFONTINFO2      = 62;  // Flash 6
+    public static final int SCRIPTLIMITS         = 65;  // Flash 8
     public static final int IMPORTASSETS2        = 71;  // Flash 8
 
 
@@ -193,7 +194,7 @@ public final class Tag {
         "DefineFontInfo2",
         "Unknown",
         "Unknown",
-        "Unknown",
+        "ScriptLimits",
         "Unknown",
         "Unknown",
         "Unknown",
