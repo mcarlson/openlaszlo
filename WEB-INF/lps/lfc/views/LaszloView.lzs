@@ -1163,7 +1163,7 @@ function destroy( recursiveCall ){
 
     //this.__LZFinishDestroyOnIdle();
 
-    this.setVisibility ( "hidden" );
+    this.setVisible ( false );
 
     if ( this.addedToParent ){
          if ( ('__LZoutliewidth' in this.immediateparent) && (this.immediateparent.__LZoutliewidth == this) ) {
