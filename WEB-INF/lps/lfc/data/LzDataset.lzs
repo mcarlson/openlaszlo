@@ -148,8 +148,9 @@ var getresponseheaders = false;
 
 
 /**  HTTP method */
-var querytype = "GET";
 
+var querytype = "GET";
+setters.querytype = "setQueryType";
 
 /** When true, the server will trim 
   * whitespace in the XML data (defaults to false).  
@@ -182,8 +183,9 @@ setters.data = "setData";
 /** The source for requests made by this dataset.
   * @type String
   */
+var src = null;
 setters.src = "setSrc";
-//defaultattrs.data = null;
+
 
 /** @access private */
 setters.autorequest = "setAutorequest";
@@ -217,16 +219,6 @@ function construct ( parent , args ){
     // bwcompat 1.0 support for port
     if (('port' in args && args.port) && !('secureport' in args && args.secureport)) {
         args.secureport = args.port;
-    }
-
-    if ('querytype' in args && args.querytype) {
-        this.setQueryType(args.querytype);
-    }
-
-    if ('src' in args && args.src) {
-        this.src = args.src;
-    } else {
-        this.src = null;
     }
 
     this.ownerDocument = this;
