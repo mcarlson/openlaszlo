@@ -808,10 +808,8 @@ public class Compiler {
       this.ALTERNATIVE = SPACE + ":" + SPACE;
       this.OPENPAREN = SPACE + "(";
       this.CLOSEPAREN = ")" + SPACE;
-      this.SEMI = ";" + (compress ? SPACE : NEWLINE);
+      this.SEMI = ";";
       this.OPTIONAL_SEMI = (compress && "\n".equals(NEWLINE)) ? NEWLINE : SEMI;
-      this.OPENCURLY = "{" + NEWLINE;
-      this.CLOSECURLY = NEWLINE + "}";
     }
 
     public void print(SimpleNode node) {
@@ -836,6 +834,20 @@ public class Compiler {
 
     public String delimit(String phrase) {
       return delimit(phrase, true);
+    }
+
+    public String elideSemi(String phrase) {
+      if (phrase.endsWith(SEMI)) {
+        return phrase.substring(0, phrase.length() - SEMI.length());
+      }
+      return phrase;
+    }
+
+    public String makeBlock(String body) {
+      body = elideSemi(body);
+      // NEWLINE is for debug/readability, so our code is not _all_ on
+      // one line
+      return "{" + NEWLINE + elideSemi(body) + (body.endsWith("}") ? "" : NEWLINE) + "}";
     }
 
     public static String join(String token, String[] strings) {
@@ -872,8 +884,7 @@ public class Compiler {
       // Are we doing OOP yet?
       if (node instanceof ASTProgram ||
           node instanceof ASTStatementList ||
-          node instanceof ASTDirectiveBlock ||
-          node instanceof ASTStatement) {
+          node instanceof ASTDirectiveBlock) {
         // Conditional join
         StringBuffer sb = new StringBuffer();
         String sep = "";
@@ -882,21 +893,28 @@ public class Compiler {
           String child = children[x];
           // Elide empty nodes
           if (! "".equals(child)) {
-            if (OPTIONAL_SEMI.equals(sep) && child.startsWith("(")) {
-              // Ensure a parenthesized expression is not mistaken for
-              // a function call
-              sep = SEMI;
-            }
             sb.append(sep);
             sb.append(child);
-            if (child.endsWith("}")) {
-              sep = NEWLINE.equals("\n") ? NEWLINE : OPTIONAL_SEMI;
+            if (! child.endsWith(SEMI)) {
+              sep = SEMI + (compress ? SPACE : NEWLINE);
             } else {
-              sep = OPTIONAL_SEMI;
+              sep = (compress ? SPACE : NEWLINE);
             }
           }
         }
-        return(sb.toString());
+        return sb.toString();
+      }
+      if (node instanceof ASTStatement) {
+        assert children.length == 1;
+        String child = children[0];
+        // Ensure an expression becomes a statement by appending an
+        // explicit semicolon
+        if ((! "".equals(child)) &&
+            (! child.endsWith(SEMI))) {
+          return child + SEMI;
+        } else {
+          return child;
+        }
       }
       if (node instanceof ASTAssignmentExpression) {
         return visitAssignmentExpression(node, children);
@@ -1123,20 +1141,21 @@ public class Compiler {
       return "";
     }
     public String visitForVarInStatement(SimpleNode node, String[] children) {
-      return "for" + OPENPAREN + "var " + children[0] + " in " + children[2] + CLOSEPAREN + OPENCURLY + children[3] + CLOSECURLY;
+      return "for" + OPENPAREN + "var " + children[0] + " in " + children[2] + CLOSEPAREN + makeBlock(children[3]);
     }
     public String visitForInStatement(SimpleNode node, String[] children) {
-      return "for" + OPENPAREN + children[0] + " in " + children[1] + CLOSEPAREN + OPENCURLY + children[2] + CLOSECURLY;
+      return "for" + OPENPAREN + children[0] + " in " + children[1] + CLOSEPAREN + makeBlock(children[2]);
     }
     public String visitForVarStatement(SimpleNode node, String[] children) {
-      return "for" + OPENPAREN + children[0] + SEMI + children[1] + SEMI + children[2] + CLOSEPAREN +OPENCURLY + children[3] + CLOSECURLY;
+      // Need explicit semi because init clause may be empty
+      return "for" + OPENPAREN + elideSemi(children[0]) + SEMI + children[1] + SEMI + children[2] + CLOSEPAREN + makeBlock(children[3]);
     }
     public String visitIfStatement(SimpleNode node, String[] children) {
       if (children.length == 2) {
-        return "if" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY;
+        return "if" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]);
       } else if (children.length == 3) {
-        return "if" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY +
-          SPACE + "else" + SPACE + OPENCURLY + children[2] + CLOSECURLY;
+        return "if" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]) +
+          SPACE + "else" + SPACE + makeBlock(children[2]);
       }
       return defaultVisitor(node, children);
     }
@@ -1190,13 +1209,13 @@ public class Compiler {
       return children[0] + (letter ? " " : "") + children[1];
     }
     public String visitWithStatement(SimpleNode node, String[] children) {
-      return "with" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY;
+      return "with" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]);
     }
     public String visitWhileStatement(SimpleNode node, String[] children) {
-      return "while" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY;
+      return "while" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]);
     }
     public String visitDoWhileStatement(SimpleNode node, String[] children) {
-      return "do" + OPENCURLY + children[0] + CLOSECURLY + SPACE + "while" + OPENPAREN + children[1] + ")";
+      return "do" + makeBlock(children[0]) + SPACE + "while" + OPENPAREN + children[1] + ")";
     }
 
     public String visitDefaultClause(SimpleNode node, String[] children) {
@@ -1207,12 +1226,11 @@ public class Compiler {
         (children.length > 1 ? (children[1] + OPTIONAL_SEMI) : "");
     }
     public String visitSwitchStatement(SimpleNode node, String[] children) {
-      String value = "switch" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY;
+      String body = "";
       for (int i = 1, len = children.length; i < len; i++) {
-        value += children[i];
+        body += children[i];
       }
-      value += CLOSECURLY;
-      return value;
+      return "switch" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(body);
     }
 
 
@@ -1376,7 +1394,7 @@ public class Compiler {
         loc = ("\n/* -*- file: " + getLocationString(node) + " -*- */\n" );
       }
       return
-        loc + "function" + (useName ? (" " + name) : "") + OPENPAREN + args + CLOSEPAREN + OPENCURLY + body + CLOSECURLY;
+        loc + "function" + (useName ? (" " + name) : "") + OPENPAREN + args + CLOSEPAREN + makeBlock(body);
     }
 
     public String visitIdentifier(SimpleNode node, String[] children) {
@@ -1440,7 +1458,9 @@ public class Compiler {
 
     public String visitVariableStatement(SimpleNode node, String[] children) {
       assert children.length == 1;
-      return "var " + children[0];
+      // Ensure an expression becomes a statement by appending an
+      // explicit semicolon
+      return "var " + children[0] + SEMI;
     }
 
     public String visitVariableDeclaration(SimpleNode node, String[] children) {
@@ -1460,17 +1480,17 @@ public class Compiler {
 
     public String visitTryStatement(SimpleNode node, String[] children) {
       if (children.length == 2) {
-        return "try" + SPACE + OPENCURLY + children[0] + CLOSECURLY + NEWLINE + children[1];
+        return "try" + SPACE + makeBlock(children[0]) + NEWLINE + children[1];
       } else if (children.length == 3) {
-        return "try" + SPACE + OPENCURLY + children[0] + CLOSECURLY + NEWLINE + children[1] + NEWLINE + children[2];
+        return "try" + SPACE + makeBlock(children[0]) + NEWLINE + children[1] + NEWLINE + children[2];
       }
       return defaultVisitor(node, children);
     }
     public String visitCatchClause(SimpleNode node, String[] children) {
-      return "catch" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY;
+      return "catch" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]);
     }
     public String visitFinallyClause(SimpleNode node, String[] children) {
-      return "finally" + SPACE + OPENCURLY + children[0] + CLOSECURLY;
+      return "finally" + SPACE + makeBlock(children[0]);
     }
     public String visitThrowStatement(SimpleNode node, String[] children) {
       return "throw" + delimit(children[0]);
