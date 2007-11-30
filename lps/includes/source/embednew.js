@@ -299,7 +299,7 @@ Lz = {
         if (s.indexOf('=') == -1) return;
         var p = s.split('&');
         var d = {};
-        for (i in p) {
+        for (var i = 0; i < p.length; i++) {
             var nv = p[i].split('=');
             if (nv.length == 1) continue;
             var n = nv[0];
