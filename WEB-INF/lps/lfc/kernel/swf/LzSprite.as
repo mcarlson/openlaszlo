@@ -915,17 +915,13 @@ LzSprite.prototype.predestroy = function(){
   * 
   */
 LzSprite.prototype.destroy = function(recursive){
-    /* This does not work!
-     * -> Every subview of this sprite's owner has already removed itself, see LzView#destroy(..). 
-     * Therefore "this.owner.subviews" will be an empty array at this stage!
-     */
-    /*if (recursive) {
+    if (recursive) {
         if (this.owner.subviews) {
             for (var i = 0; i < this.owner.subviews.length; i++) {
                 this.owner.subviews[i].sprite.destroy(recursive);
             }
         }
-    }*/
+    }
 
     this.__LZFinishDestroyOnIdle();
 }
