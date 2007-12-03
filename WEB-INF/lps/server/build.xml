@@ -416,6 +416,7 @@ javac (1.4);
   <!--===============  Target [js2doc.test]    =================-->
   <target name="js2doc.test" depends="build,js2doc.rng" if="hasdom3">
       <!-- first unit/integration tests -->
+      
       <junit haltonfailure="true" printsummary="withOutAndErr" showoutput="true" fork="yes">
           <formatter type="plain" usefile="false"/>
           <sysproperty key="LPS_HOME" value="${LPS_HOME}"/>
@@ -428,7 +429,9 @@ javac (1.4);
           </classpath> 
           <test name="org.openlaszlo.js2doc.Comment_Test"/>
           <test name="org.openlaszlo.js2doc.Schema_Test"/>
-          <test name="org.openlaszlo.js2doc.JS2Doc_Test"/>
+          <!-- 
+          <test name="org.openlaszlo.js2doc.JS2Doc_Test"/> [2007.12.03 bshine bug LPP-5184] 
+          -->
           <test name="org.openlaszlo.js2doc.WholeFile_Test"/>
       </junit>
 
