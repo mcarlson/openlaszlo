@@ -273,6 +273,7 @@ function __LZadjustVisibleClones(ln,nn){
   * @access private
   */
 function __LZHandleCloneResize ( cl , s){
+    if (! cl.datapath.p) return; 
     var osize = cl.datapath.p[ this.datasizevar ] || this.viewsize;
     if ( s != osize ){
         cl.datapath.p[ this.datasizevar ] = s;

@@ -316,12 +316,14 @@ function setChildNodes ( children ){
     this.childNodes = children;
     for ( var i = 0; i < children.length; i++ ){
         var c = children[ i ];
-        c.setOwnerDocument( this.ownerDocument );
-        c.parentNode = this;
-        if (c.onparentNode) {
-            if (c.onparentNode.ready) c.onparentNode.sendEvent( this );
+        if (c) {
+            c.setOwnerDocument( this.ownerDocument );
+            c.parentNode = this;
+            if (c.onparentNode) {
+                if (c.onparentNode.ready) c.onparentNode.sendEvent( this );
+            }
+            c.__LZo = i;
         }
-        c.__LZo = i;
     }
     this.__LZcoDirty = false;
     if (this.onchildNodes) {

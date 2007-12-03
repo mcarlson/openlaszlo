@@ -89,11 +89,13 @@ function construct ( odp , args ){
     }
 
     var firstcl = this.clones[ 0 ];
-    firstcl.setOption( 'ignorelayout', true );
-    var layo = firstcl.immediateparent.layouts;
-    if (layo != null) {
-        for ( var i = 0; i < layo.length; i++ ){
-            layo[ i ].removeSubview( firstcl );
+    if (firstcl) {
+        firstcl.setOption( 'ignorelayout', true );
+        var layo = firstcl.immediateparent.layouts;
+        if (layo != null) {
+            for ( var i = 0; i < layo.length; i++ ){
+                layo[ i ].removeSubview( firstcl );
+            }
         }
     }
 

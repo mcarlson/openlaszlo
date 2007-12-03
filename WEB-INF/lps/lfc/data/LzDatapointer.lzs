@@ -767,11 +767,12 @@ function nodeByName ( name, range , p) {
     
     if (p.childNodes) {
         for ( var i = 0; i < p.childNodes.length; i++ ){
-            if ( p.childNodes[ i ].nodeName == name ){
+            var cn = p.childNodes[i];
+            if ( cn && cn.nodeName == name ){
                 //match
                 cnt++;
                 if ( !range || cnt >= range[ 0 ] ){
-                    o.push( p.childNodes[ i ] );
+                    o.push( cn );
                 } 
                 if ( range && cnt == range[ 1 ] ){
                     break;
