@@ -1568,14 +1568,22 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
     }
 
     // [todo hqm 01-24-07] SWF-specific 
-    var mb = this.__LZbgRef;
-    if (mb == null) {
-        this.setBGColor(0xffffff);
+    if (this.owner == canvas) {
+        // if this is the canvas sprite
+        var mc = this.getMCRef();
+        if (mc != null) {
+            mc.menu = cmenu;
+        }
+    } else {
         var mb = this.__LZbgRef;
-        mb._alpha = 0;
+        if (mb == null) {
+            this.setBGColor(0xffffff);
+            var mb = this.__LZbgRef;
+            mb._alpha = 0;
+        }
+        this._bgcolorhidden = true;
+        mb.menu = cmenu;
     }
-    this._bgcolorhidden = true;
-    mb.menu = cmenu;
 
     if (mb == null && mc == null) {
       if ($debug) Debug.warn("LzView.setContextMenu: cannot set menu on view %w, it has no foreground or background movieclip", this.owner);
