@@ -312,10 +312,10 @@ LzSprite.prototype.__updateQuirks = function(){
             this.quirks['absolute_position_accounts_for_offset'] = true;
             this.quirks['canvas_div_cannot_be_clipped'] = true;
         } else if (Lz.__BrowserDetect.isFirefox && Lz.__BrowserDetect.version < 2) {
-            // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
-            this.quirks['firefox_autocomplete_bug'] = true;
+                // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
+                this.quirks['firefox_autocomplete_bug'] = true;
+            }
         }
-    }
 
     if (this.quirks['safari_avoid_clip_position_input_text']) {
         LzSprite.prototype.__defaultStyles.lzswfinputtext.marginTop = '-2px';
@@ -577,8 +577,9 @@ LzSprite.prototype.setClickable = function(c) {
         this.__setClickable(c, this.__LZclick);
         if (this.quirks.fix_clickable) {
             if (this.quirks.fix_ie_clickable) {
-                this.__LZclickdiv.style.display = c ? '' : 'none';
-                this.__LZclick.style.display = c ? '' : 'none';
+                //note: views with resources (__LZimg!) cannot have subviews (SWF-policy)
+                this.__LZclickdiv.style.display = c && this.visible ? '' : 'none';
+                this.__LZclick.style.display = c && this.visible ? '' : 'none';
             } else {
                 this.__LZclick.style.display = c ? 'block' : 'none';
             }
@@ -602,7 +603,7 @@ LzSprite.prototype.setClickable = function(c) {
             }
             this.__setClickable(c, this.__LZclick);
             if (this.quirks.fix_ie_clickable) {
-                this.__LZclick.style.display = c ? '' : 'none';
+                this.__LZclick.style.display = c && this.visible ? '' : 'none';
             } else {
                 this.__LZclick.style.display = c ? 'block' : 'none';
             }
@@ -793,11 +794,10 @@ LzSprite.prototype.setVisible = function ( v ){
     this.visible = v;
     this.__LZdiv.style.display = v ? 'block' : 'none';
     if (this.quirks.fix_clickable) {
-        if (this.__LZclick && this.quirks.fix_ie_clickable) {
-            this.__LZclick.style.display = v ? '' : 'none';
-        } else {
-            this.__LZclickdiv.style.display = v ? 'block' : 'none';
+        if (this.quirks.fix_ie_clickable && this.__LZclick) {
+            this.__LZclick.style.display = v && this.clickable ? '' : 'none';
         }
+        this.__LZclickdiv.style.display = v ? 'block' : 'none';
     }
 }
 
