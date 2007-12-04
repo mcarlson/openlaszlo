@@ -264,25 +264,33 @@ LzMessage.prototype.toHTML = function () {
 function LzSourceMessage (file, line, message) {
   switch (arguments.length) {
     case 0:
-    file = null;
+      file = null;
     case 1:
-    line = null;
+      line = null;
     case 2:
-    message = '';
+      message = '';
   }
   // Append a backtrace if there is one -- skip back to the
   // $reportSourceWarning or warnInternal frames.
   if ('backtraceStack' in Debug) {
-    var bts = Debug.backtraceStack;
-    var btsl = bts.length;
-    var skip = 3;
-    for (var i = btsl - 1; i > skip; i--) {
-      var callee = bts[i].callee;
-      if (callee === $reportSourceWarning ||
-          callee === Debug.warnInternal) {
-        // Skip the caller and the constructor frames too
-        skip = btsl - i + 3;
-        break;
+    var skip;
+    if ((message instanceof String) && ('$lzsc$b' in message)) {
+      // An uncaught error reported by the window.onerror handler will
+      // have a captured stack
+      Debug.backtraceStack = message.$lzsc$b;
+      skip = 2;
+    } else {
+      var bts = Debug.backtraceStack;
+      var btsl = bts.length;
+      skip = 3;
+      for (var i = btsl - 1; i > skip; i--) {
+        var callee = bts[i].callee;
+        if (callee === $reportSourceWarning ||
+            callee === Debug.warnInternal) {
+          // Skip the caller and the constructor frames too
+          skip = btsl - i + 3;
+          break;
+        }
       }
     }
     if (Debug.backtraceStack.length > skip) {

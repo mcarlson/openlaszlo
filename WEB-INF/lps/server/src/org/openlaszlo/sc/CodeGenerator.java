@@ -1260,6 +1260,23 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     return translateReference(node).get().node;
   }
 
+  void noteCallSite (SimpleNode node) {
+      // Note current call-site in a function context and backtracing
+    if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine != 0)) &&
+        (context.findFunctionContext() != null)) {
+      Map registers = (Map)context.get(TranslationContext.REGISTERS);
+      // We know arguments register will exist if we are doing
+      // bactraces because it will be referenced in the function
+      // prefix.
+      if (registers != null && registers.containsKey("arguments")) {
+        collector.push(Values.Register(((Instructions.Register)registers.get("arguments")).regno));
+        collector.push("lineno");
+        collector.push(node.beginLine);
+        collector.emit(Instructions.SetMember);
+      }
+    }
+  }
+
   public SimpleNode visitCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode fnexpr = children[0];
     SimpleNode[] args = children[1].getChildren();
@@ -1430,21 +1447,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       }
     }
 
-    // Note current call-site in a function context and backtracing
-    if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine != 0)) &&
-        (context.findFunctionContext() != null)) {
-      Map registers = (Map)context.get(TranslationContext.REGISTERS);
-      // We know arguments register will exist if we are doing
-      // bactraces because it will be referenced in the function
-      // prefix.
-      if (registers != null && registers.containsKey("arguments")) {
-        collector.push(Values.Register(((Instructions.Register)registers.get("arguments")).regno));
-        collector.push("lineno");
-        collector.push(node.beginLine);
-        collector.emit(Instructions.SetMember);
-      }
-    }
-
+    noteCallSite(node);
     // Okay, it is not going to be transformed.  Just do it!
     visitFunctionCallParameters(node, isReferenced, args);
     boolean isref = translateReferenceForCall(fnexpr, true, node);
@@ -1472,6 +1475,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   public SimpleNode visitNewExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode ref = children[0];
     SimpleNode[] args = children[1].getChildren();
+    noteCallSite(node);
     visitFunctionCallParameters(node, isReferenced, args);
     boolean isref = translateReferenceForCall(ref, true, node);
     if (isref) {

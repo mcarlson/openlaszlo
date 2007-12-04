@@ -809,6 +809,18 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
+  SimpleNode noteCallSite(SimpleNode node) {
+    // Note current call-site in a function context and backtracing
+    if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine != 0)) &&
+        (context.findFunctionContext() != null)) {
+      SimpleNode newNode = new ASTExpressionList(0);
+      newNode.set(0, (new Compiler.Parser()).parse("$lzsc$a.lineno = " + node.beginLine).get(0).get(0));
+      newNode.set(1, new Compiler.PassThroughNode(node));
+      return visitExpression(newNode);
+    }
+    return node;
+  }
+
   // Could do inline expansions here, like setAttribute
   public SimpleNode visitCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode fnexpr = children[0];
@@ -901,15 +913,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 //     if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
 //       return makeCheckedNode(node);
 //     }
-    // Note current call-site in a function context and backtracing
-    if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine != 0)) &&
-        (context.findFunctionContext() != null)) {
-      SimpleNode newNode = new ASTExpressionList(0);
-      newNode.set(0, (new Compiler.Parser()).parse("$lzsc$a.lineno = " + node.beginLine).get(0).get(0));
-      newNode.set(1, new Compiler.PassThroughNode(node));
-      return visitExpression(newNode);
-    }
-    return node;
+    return noteCallSite(node);
   }
 
   public SimpleNode visitSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
@@ -922,7 +926,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       SimpleNode child = children[i];
       children[i] = visitExpression(child, isReferenced);
     }
-    return node;
+    return noteCallSite(node);
   }
 
   public SimpleNode visitPrefixExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
@@ -1170,17 +1174,23 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       }
     }
     List prefix = new ArrayList();
+    List error = new ArrayList();
     List suffix = new ArrayList();
     if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
       prefix.add(parseFragment(
-                   "var $lzsc$s = Debug['backtraceStack'];" +
+                   "var $lzsc$d = Debug, $lzsc$s = $lzsc$d.backtraceStack;" +
                    "if ($lzsc$s) {" +
                    "  var $lzsc$a = Array.prototype.slice.call(arguments, 0);" +
                    "  $lzsc$a.callee = arguments.callee;" +
                    "  $lzsc$a['this'] = this;" +
                    "  $lzsc$s.push($lzsc$a);" +
-                   "  if ($lzsc$s.length > $lzsc$s.maxDepth) {Debug.stackOverflow()};" +
+                   "  if ($lzsc$s.length > $lzsc$s.maxDepth) {$lzsc$d.stackOverflow()};" +
                    "}"));
+      error.add(parseFragment(
+                  "if ($lzsc$s && (! $lzsc$d.uncaughtBacktraceStack)) {" +
+                  "  $lzsc$d.uncaughtBacktraceStack = $lzsc$s.slice(0);" +
+                  "}" +
+                  "throw($lzsc$e);"));
       suffix.add(parseFragment(
                     "if ($lzsc$s) {" +
                     "  $lzsc$s.pop();" +
@@ -1378,16 +1388,27 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // FIXME: (LPP-2075) [2006-05-19 ptw] Wrap body in try and make
     // suffix be a finally clause, so suffix will not be skipped by
     // inner returns.
-    if (! suffix.isEmpty()) {
+    if (! suffix.isEmpty() || ! error.isEmpty()) {
+      int i = 0;
       SimpleNode newStmts = new ASTStatementList(0);
       newStmts.setChildren((SimpleNode[])newBody.toArray(new SimpleNode[0]));
       SimpleNode tryNode = new ASTTryStatement(0);
-      tryNode.set(0, newStmts);
-      SimpleNode finallyNode = new ASTFinallyClause(0);
-      SimpleNode suffixStmts = new ASTStatementList(0);
-      suffixStmts.setChildren((SimpleNode[])suffix.toArray(new SimpleNode[0]));
-      finallyNode.set(0, suffixStmts);
-      tryNode.set(1, finallyNode);
+      tryNode.set(i++, newStmts);
+      if (! error.isEmpty()) {
+        SimpleNode catchNode = new ASTCatchClause(0);
+        SimpleNode catchStmts = new ASTStatementList(0);
+        catchStmts.setChildren((SimpleNode[])error.toArray(new SimpleNode[0]));
+        catchNode.set(0, new ASTIdentifier("$lzsc$e"));
+        catchNode.set(1, catchStmts);
+        tryNode.set(i++, catchNode);
+      }
+      if (! suffix.isEmpty()) {
+        SimpleNode finallyNode = new ASTFinallyClause(0);
+        SimpleNode suffixStmts = new ASTStatementList(0);
+        suffixStmts.setChildren((SimpleNode[])suffix.toArray(new SimpleNode[0]));
+        finallyNode.set(0, suffixStmts);
+        tryNode.set(i, finallyNode);
+      }
       newBody = new ArrayList();
       newBody.add(tryNode);
     }

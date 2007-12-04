@@ -105,6 +105,10 @@ if ($debug) {
     * @access private
     */
   Debug.backtraceStack.maxDepth = 100;
+  /** Backtrace for uncaught errors
+   * @access private
+   */
+  Debug.uncaughtBacktraceStack = null;
 
   /**
     * Doc'd on real definition
@@ -327,9 +331,18 @@ if ($debug) {
      * error handler
      */
     if (typeof window.addEventListener == 'function') {
-      // The DOM 1 interface is more useful than the DOM 2 interface.
+      // The DOM 1 interface is more useful than the DOM 2 interface
       window.onerror = function (errorString, fileName, lineNo) {
-#pragma "warnUndefinedReferences=false"
+        #pragma "warnUndefinedReferences=false"
+        if (Debug.uncaughtBacktraceStack) {
+          // If backtracing has caught our stack info, use that rather
+          // than browser info
+          errorString = new String(errorString);
+          errorString.$lzsc$b = Debug.uncaughtBacktraceStack;
+          Debug.uncaughtBacktraceStack = null;
+          fileName = null;
+          lineNo = null;
+        }
         $reportSourceWarning(fileName, lineNo, errorString, true);
         // pass through to browser debugger
         return false;
