@@ -110,7 +110,7 @@ public class Canvas implements java.io.Serializable {
     private String mTitle = DEFAULT_TITLE;
     
     /** Version of the flash player file format which we compile to **/
-    private String mRuntime = LPS.getProperty("compiler.runtime.default", "swf7");
+    private String mRuntime = LPS.getProperty("compiler.runtime.default", LPS.getRuntimeDefault() );
     
     /** computed debug flag, based on canvas 'debug' attribute + compilation request args **/
     private boolean mDebug = false;

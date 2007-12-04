@@ -66,7 +66,7 @@ public class Compiler {
       options.putBoolean(OBFUSCATE, false);
     }
     if (! options.containsKey(RUNTIME)) {
-      options.put(RUNTIME, LPS.getProperty("compiler.runtime.default", "swf7"));
+      options.put(RUNTIME, LPS.getProperty("compiler.runtime.default", LPS.getRuntimeDefault()));
     }
     defaultOptions();
     if (options.getBoolean(PRINT_COMPILER_OPTIONS)) {

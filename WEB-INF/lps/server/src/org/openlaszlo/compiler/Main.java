@@ -111,7 +111,9 @@ public class Main {
         String scacheDir = LPS.getWorkDirectory() + File.separator + "scache";
         ScriptCompiler.initScriptCompilerCache(new File(scacheDir), new Properties());
         // Set default runtime to compiler.runtime.default
-        compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, LPS.getProperty("compiler.runtime.default", "swf7"));
+        compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY,
+                             LPS.getProperty("compiler.runtime.default",
+                                             LPS.getRuntimeDefault()));
         boolean flushScriptCache = false;
 
         for (int i = 0; i < args.length; i++) {

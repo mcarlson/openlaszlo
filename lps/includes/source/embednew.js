@@ -56,7 +56,7 @@ Lz = {
         var i = url.indexOf('lzr=swf');
         if (i == -1) {
             // add default version if missing
-            url += '&lzr=swf7';
+            url += '&lzr=swf8';
             i = url.indexOf('lzr=swf');
             //alert('added version ' + url + ', ' + i);
         }    
