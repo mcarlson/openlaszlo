@@ -26,7 +26,7 @@ LzMonitor.prototype.constructor = LzMonitor;
 LzMonitor.format = LzSourceMessage.format;
 LzMonitor.prototype.type = 'MONITOR';
 // Same color as Debug.debug
-LzTrace.prototype.color = '#00cc00';
+LzMonitor.prototype.color = '#00cc00';
 
 /**
   * Create a monitor message from a format string

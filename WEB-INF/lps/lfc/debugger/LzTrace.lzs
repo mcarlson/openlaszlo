@@ -79,7 +79,7 @@ Debug.trace = function(who, what) {
       return r;
     };
     m._dbg_previous_definition = f;
-    who[what] = m;
+    who.addProperty(what, m);
   } else {
     Debug.error('%w.%s is not a function', who, what);
   }
@@ -98,8 +98,15 @@ Debug.untrace = function(who, what) {
   if (who[what] instanceof Function) {
     var f = who[what];
     var p = f['_dbg_previous_definition'];
-    if (p) { 
-      who[what] = p;
+    if (p) {
+      // Try just removing trace
+      if (who.hasOwnProperty(what)) {
+        delete who[what];
+      }
+      // If that didn't work, apply previous
+      if (who[what] !== p) {
+        who.addProperty(what, p);
+      }
     } else {
         Debug.error('%w.%s is not being traced', who, what);
     }
