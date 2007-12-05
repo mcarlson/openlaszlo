@@ -260,6 +260,14 @@ class SWFWriter extends ObjectWriter {
         SetBackgroundColor setbgc = new SetBackgroundColor(c);
         mFlashFile.getMainScript().setBackgroundColor(setbgc);
         
+        // Write scriptlimits tag if requested
+        if ((this.mRecursionLimit != 0) || (this.mExecutionTimeout != 0)) {
+          // ScriptLimits tag, to set max recursion depth and timeout
+          Frame frame = mFlashFile.getMainScript().getFrameAt(mLastFrame);
+          ScriptLimits slimit = new ScriptLimits(this.mRecursionLimit, this.mExecutionTimeout);
+          frame.addFlashObject(slimit);
+        }
+
         // NOTE: disable constant pool when compiling canvas constructor
         // so that build id etc... are easy for qa to pick out.
         Properties props = (Properties)mProperties.clone();
@@ -824,16 +832,6 @@ class SWFWriter extends ObjectWriter {
         s2 = s2.replaceAll("#file\\s[^ \t\"]*", "");
         return s2;
     }
-
-    public void setScriptLimits(int recursion, int timeout) {
-        this.mRecursionLimit = recursion;
-        this.mExecutionTimeout = timeout;
-        // ScriptLimits tag, to set max recursion depth and timeout
-        Frame frame = mFlashFile.getMainScript().getFrameAt(0);
-        ScriptLimits slimit = new ScriptLimits(recursion, timeout);
-        frame.addFlashObject(slimit);
-    }
-        
 
     /** Writes the SWF to the <code>OutputStream</code> that was
      * supplied to the SWFWriter's constructor.

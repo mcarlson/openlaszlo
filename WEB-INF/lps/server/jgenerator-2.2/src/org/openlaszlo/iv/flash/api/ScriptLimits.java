@@ -20,12 +20,13 @@ public class ScriptLimits extends FlashDef {
     int recursion = 0;
     int timeout = 0;
 
-    int DEFAULT_RECURSION = 1024; // pixels
-    int DEFAULT_TIMEOUT = 60;
+    // Determined empirically
+    public static int DEFAULT_RECURSION = 256;
+    public static int DEFAULT_TIMEOUT = 15;
 
-    public ScriptLimits(int recursion,int timeout) {
-        this.recursion = recursion;
-        this.timeout = timeout;
+    public ScriptLimits(int recursion, int timeout) {
+      this.recursion = (recursion == 0 ? DEFAULT_RECURSION : recursion);
+      this.timeout = (timeout == 0 ? DEFAULT_TIMEOUT : timeout);
     }
 
     public ScriptLimits() {

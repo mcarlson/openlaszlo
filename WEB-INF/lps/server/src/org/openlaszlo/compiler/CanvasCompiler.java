@@ -19,6 +19,7 @@ import org.openlaszlo.server.*;
 import org.openlaszlo.utils.*;
 import org.jdom.*;
 import org.apache.log4j.*;
+import org.openlaszlo.css.CSSParser;
 
 /** Compiler for the <code>canvas</code> element. */
 class CanvasCompiler extends ToplevelCompiler {
@@ -94,6 +95,24 @@ class CanvasCompiler extends ToplevelCompiler {
 , element);
             else
                 mEnv.warn(msg, element);
+        }
+
+        String scriptLimits = element.getAttributeValue("scriptlimits");
+        if (scriptLimits != null) {
+          try {
+            Map properties = new CSSParser(new AttributeStream(element, "scriptlimits")).Parse();
+            int recursion =
+              properties.containsKey("recursion") ?
+              ((Integer)properties.get("recursion")).intValue() : 0;
+            int timeout =
+              properties.containsKey("timeout") ?
+              ((Integer)properties.get("timeout")).intValue() : 0;
+            mEnv.setScriptLimits(recursion, timeout);
+          } catch (org.openlaszlo.css.ParseException e) {
+            throw new CompilationError(e);
+          } catch (org.openlaszlo.css.TokenMgrError e) {
+            throw new CompilationError(e);
+          }
         }
 
         if (mEnv.isSWF()) {

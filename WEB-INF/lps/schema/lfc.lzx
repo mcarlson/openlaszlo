@@ -69,6 +69,8 @@
   <attribute name="version" type="string" value="4.1"/>
   <!-- If true, enable accessibility features -->
   <attribute name="accessible" type="boolean" value="false"/>
+  <!-- Set recursion and timeout limits -->
+  <attribute name="scriptlimits" type="css" />
 
   <containsElements>
     <element>view</element>
