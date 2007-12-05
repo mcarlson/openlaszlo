@@ -51,9 +51,9 @@
   <xsl:param name="show.comments">1</xsl:param>
 
    <!-- Reference appearance -->
-   <xsl:param name="navig.showtitles">0</xsl:param>
-   <xsl:param name="suppress.header.navigation">1</xsl:param>
-   <xsl:param name="suppress.navigation">1</xsl:param>    
+   <xsl:param name="navig.showtitles">1</xsl:param>
+   <xsl:param name="suppress.header.navigation">0</xsl:param>
+   <xsl:param name="suppress.navigation">0</xsl:param>    
 
 
   <xsl:param name="generate.toc">
