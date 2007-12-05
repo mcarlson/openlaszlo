@@ -58,8 +58,8 @@
 
   <xsl:param name="generate.toc">
     set       toc,title,index
-    book      toc,title,figure,table,example,equation,refentry
-    part      toc,title,figure,table,example,equation,refentry
+    book      toc,title
+    part      toc,title
     chapter   toc,title
     preface   toc,title
     reference toc,title
