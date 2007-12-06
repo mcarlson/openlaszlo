@@ -11,7 +11,7 @@
          Set Text
    </button>
 
-   <button x="180" y="115"
+   <button x="180" y="15"
       onclick="addText();">
          Add Text
    </button>
