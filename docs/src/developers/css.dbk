@@ -1,7 +1,7 @@
 <chapter id="css">
 
 
-<title>CSS -- Cascading Style Sheets</title>
+<title>Cascading Style Sheets</title>
 <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 <para>Cascading Style Sheets (CSS) enable web designers to enhance the power
 of HTML tags. In old-fashioned HTML, an &lt;H1&gt; tag would make displayed
@@ -243,7 +243,7 @@ invoked. The selector closest to the bottom of the stylesheet prevails.</para>
    </programlisting>
 </example>
 
-<para/></section></section><section><title>Importing an external stylesheet</title>
+<para/></section><section><title>Importing an external stylesheet</title>
 
 <para>A stylesheet can be imported by using</para>
 
@@ -277,4 +277,4 @@ invoked. The selector closest to the bottom of the stylesheet prevails.</para>
 
 </programlisting></example>
 
-<para/></section></chapter>
+<para/></section></section></chapter>
