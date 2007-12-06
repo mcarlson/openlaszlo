@@ -987,13 +987,13 @@ void Modifiers(ASTModifiedDefinition mod): { Token t; }
     t = <IDENTIFIER>
      {mod.setToken(t).setNamespace(t.image); }
   | t = "public"
-     {mod.setToken(t).setAccess(ASTAccessModifier.PUBLIC_ACCESS);}
+     {mod.setToken(t).setAccess(ASTModifiedDefinition.PUBLIC_ACCESS);}
   | t = "protected"
-     {mod.setToken(t).setAccess(ASTAccessModifier.PROTECTED_ACCESS);}
+     {mod.setToken(t).setAccess(ASTModifiedDefinition.PROTECTED_ACCESS);}
   | t = "internal"
-     {mod.setToken(t).setAccess(ASTAccessModifier.INTERNAL_ACCESS);}
+     {mod.setToken(t).setAccess(ASTModifiedDefinition.INTERNAL_ACCESS);}
   | t = "private"
-     {mod.setToken(t).setAccess(ASTAccessModifier.PRIVATE_ACCESS);}
+     {mod.setToken(t).setAccess(ASTModifiedDefinition.PRIVATE_ACCESS);}
   | t = "static"
      {mod.setToken(t).setStatic(true);}
   | t = "final"
