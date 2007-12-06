@@ -22,7 +22,8 @@
     <text text="Storm"/>
   </fader>
   <script>
-    Debug.write("Click on a view to reduce its opacity. Mouse out to restore 100% opacity.");
+    Debug.write("Click on a view to reduce its opacity.");
+    Debug.write("Mouse out to restore 100% opacity.");
   </script>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
