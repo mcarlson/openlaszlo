@@ -540,7 +540,7 @@ function __LZapplyStyleMap( stylemap, initialArgs ){
         // This is a hack because people want to give color styles as
         // Ox... which is not valid CSS, so they pass it as a string.
         // They really should be using #...
-        if ((typeof v == 'string') && (! isNaN(v))) {
+        if ((typeof v == 'string') && (v.length > 2) && (v.indexOf('0x') == 0) && (! isNaN(v))) {
             if ($debug) {
                 Debug.warn("Invalid CSS value for %w.%s: `%#w`.  Use: `#%06x`.", this, k, v, Number(v));
             }
