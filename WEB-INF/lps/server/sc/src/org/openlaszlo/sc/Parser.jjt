@@ -173,6 +173,7 @@ TOKEN: {
 | < CLASS: "class" >
 | < CONST: "const" >
 | < DEBUGGER: "debugger" >
+| < DYNAMIC: "dynamic" >
 | < ENUM: "enum" >
 | < EXPORT: "export" >
 | < EXTENDS: "extends" >
@@ -181,6 +182,11 @@ TOKEN: {
 | < IMPORT: "import" >
 | < INHERITS: "inherits" >
 | < INTERFACE: "interface" >
+| < INTERNAL: "internal" >
+| < OVERRIDE: "override" >
+| < PRIVATE: "private" >
+| < PROTECTED: "protected" >
+| < PUBLIC: "public" >
 | < STATIC: "static" >
 | < SUPER: "super" >
 | < TRAIT: "trait" >
@@ -868,13 +874,17 @@ SimpleNode Program() #Program : {}
   { return jjtThis; }
 }
 
+void ModifiedDefinition() #ModifiedDefinition : {}
+{
+  Modifiers(jjtThis) (FunctionDeclaration() | ClassDefinition())
+}
+
 void Directive() #void : {}
 {
   // Lookahead so that 'function' begins a function declaration,
   // not a function expression.
-  LOOKAHEAD(1)
-  FunctionDeclaration()
-| ClassDefinition()
+  LOOKAHEAD(ModifiedDefinition())
+  ModifiedDefinition()
 | LOOKAHEAD("{") DirectiveBlock()
 | (ToplevelStatement()) #Statement
 | LOOKAHEAD(2) IncludeDirective() Sc()
@@ -889,7 +899,7 @@ void DirectiveBlock() #DirectiveBlock: {}
 
 SimpleNode StatementList() #StatementList : {Token t;}
 {
-    ( ClassDefinition() | LOOKAHEAD(1) FunctionDeclaration() | Statement() | PragmaDirective())+
+    ( LOOKAHEAD(ModifiedDefinition()) ModifiedDefinition() | Statement() | PragmaDirective())+
       { return jjtThis; }
 }
 
@@ -917,9 +927,9 @@ JAVACODE void NoLineBreak()
   // TBD: verify that the next token isn't a line break
 }
 
-SimpleNode ClassProperty() #ClassProperty : {Token t;}
+SimpleNode ClassProperty() #ModifiedDefinition : {}
 {
-  "static" (FunctionDeclaration() | VariableStatement())
+  Modifiers(jjtThis) (FunctionDeclaration() | VariableStatement())
   {return jjtThis; }
 }
 
@@ -938,9 +948,7 @@ void ClassOrTrait() #Identifier : {Token t;}
 
 void ClassDirective() #void : {}
 {
-   ClassProperty()
- | LOOKAHEAD(1) FunctionDeclaration()
- | LOOKAHEAD(1) VariableStatement()
+   LOOKAHEAD(ClassProperty()) ClassProperty()
  | LOOKAHEAD("{") ClassDirectiveBlock()
  | (ToplevelStatement()) #Statement
  | PragmaDirective() Sc()
@@ -969,4 +977,31 @@ SimpleNode ClassDefinition() #ClassDefinition : {Token t;}
         ClassDirective()
        )* "}"
   {return jjtThis;}
+}
+
+void Modifiers(ASTModifiedDefinition mod): { Token t; }
+{
+ (
+  LOOKAHEAD(2)
+  (
+    t = <IDENTIFIER>
+     {mod.setToken(t).setNamespace(t.image); }
+  | t = "public"
+     {mod.setToken(t).setAccess(ASTAccessModifier.PUBLIC_ACCESS);}
+  | t = "protected"
+     {mod.setToken(t).setAccess(ASTAccessModifier.PROTECTED_ACCESS);}
+  | t = "internal"
+     {mod.setToken(t).setAccess(ASTAccessModifier.INTERNAL_ACCESS);}
+  | t = "private"
+     {mod.setToken(t).setAccess(ASTAccessModifier.PRIVATE_ACCESS);}
+  | t = "static"
+     {mod.setToken(t).setStatic(true);}
+  | t = "final"
+     {mod.setToken(t).setFinal(true);}
+  | t = "dynamic"
+     {mod.setToken(t).setDynamic(true);}
+  | t = "override"
+     {mod.setToken(t).setOverride(true);}
+  )
+ )*
 }

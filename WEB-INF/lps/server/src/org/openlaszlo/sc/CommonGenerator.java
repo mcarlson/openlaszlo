@@ -392,9 +392,17 @@ public abstract class CommonGenerator implements ASTVisitor {
       for (int i = 0; i < dirs.length; i++) {
         SimpleNode n = dirs[i];
         List p = props;
-        if (n instanceof ASTClassProperty) {
+
+        // any modifiers, like 'static', 'final' are kept in mod.
+        ASTModifiedDefinition mod = null;
+        if (n instanceof ASTModifiedDefinition) {
+          assert (n.getChildren().length == 1);
+          mod = (ASTModifiedDefinition)n;
+          if (mod.isStatic()) {
+            p = classProps;
+          }
           n = n.get(0);
-          p = classProps;
+          mod.verifyClassLevel(n);
         }
         if (n instanceof ASTFunctionDeclaration) {
           SimpleNode[] c = n.getChildren();
@@ -542,6 +550,9 @@ public abstract class CommonGenerator implements ASTVisitor {
     else if (node instanceof ASTSwitchStatement) {
       newNode = visitSwitchStatement(node, children);
     }
+    else if (node instanceof ASTModifiedDefinition) {
+      newNode = visitModifiedDefinition(node, children);
+    }
     else if (node instanceof Compiler.PassThroughNode) {
       newNode = node;
     } else {
@@ -590,6 +601,18 @@ public abstract class CommonGenerator implements ASTVisitor {
   // for function prefix/suffix parsing
   public SimpleNode visitDirectiveBlock(SimpleNode node, SimpleNode[] children) {
     return visitStatementList(node, children);
+  }
+
+  public SimpleNode visitModifiedDefinition(SimpleNode node, SimpleNode[] children) {
+    // Modifiers, like 'final', are ignored unless this is handled
+    // by the runtime.
+
+    assert children.length == 1;
+    SimpleNode child = children[0];
+
+    ((ASTModifiedDefinition)node).verifyTopLevel(child);
+
+    return visitStatement(child);
   }
 
   public SimpleNode visitLabeledStatement(SimpleNode node, SimpleNode[] children) {

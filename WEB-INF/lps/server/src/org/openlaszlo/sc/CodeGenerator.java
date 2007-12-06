@@ -436,6 +436,8 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           visitStatement(directive);
         } else if (directive instanceof ASTClassDefinition) {
           visitClassDefinition(directive, directive.getChildren());
+        } else if (directive instanceof ASTModifiedDefinition) {
+          visitModifiedDefinition(directive, directive.getChildren());
         } else if (directive instanceof ASTStatement) {
           // Statements are processed in pass 1 for now
           visitStatement(directive);

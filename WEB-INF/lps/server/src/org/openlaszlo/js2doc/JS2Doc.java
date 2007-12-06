@@ -97,13 +97,15 @@ public class JS2Doc {
             } else if (parseNode instanceof ASTFunctionDeclaration) {
                 visitFunctionDeclaration(parseNode, docNode);
             } else if (parseNode instanceof ASTClassDefinition) {
-                visitClassDeclaration(parseNode, docNode);
+                visitClassDeclaration(parseNode, docNode, null);
             } else if (parseNode instanceof ASTIfDirective) {
                 visitTopLevelIfDirective(parseNode, docNode);
             } else if (parseNode instanceof ASTIncludeDirective) {
                 visitIncludeDirective(parseNode, docNode, true);
             } else if (parseNode instanceof ASTCallExpression) {
                 visitCallExpression(parseNode, docNode);
+            } else if (parseNode instanceof ASTModifiedDefinition) {
+                visitModifiedDefinition(parseNode, docNode);
             } else if (parseNode instanceof ASTPragmaDirective) {
                 // do nothing
             } else {
@@ -317,16 +319,18 @@ public class JS2Doc {
                 logger.warning("tried to redefine function but couldn't resolve function name");
         }
         
-        protected void visitClassDeclaration(SimpleNode parseNode, org.w3c.dom.Element docNode) {
+        protected void visitClassDeclaration(SimpleNode parseNode, org.w3c.dom.Element docNode, ASTModifiedDefinition moddef) {
             SimpleNode[] children = parseNode.getChildren();
             checkChildrenLowerBounds(parseNode, 2, 0, "visitClassDefinition");
             
             ASTIdentifier nameNode = (ASTIdentifier) children[1];
             String className = nameNode.getName();
 
+            SimpleNode parseNodeForDoc = (moddef != null) ? moddef : parseNode;
+
             PropertyReference propRef = new PropertyReference(docNode, className, this.currentState);
 
-            org.w3c.dom.Element property = propRef.redefineProperty(parseNode.getComment());
+            org.w3c.dom.Element property = propRef.redefineProperty(parseNodeForDoc.getComment());
 
             if (this.unitID != null)
                 property.setAttribute("unitid", unitID);
@@ -347,7 +351,7 @@ public class JS2Doc {
                     final int n = children.length;
                     for (int i=4; i<n; i++) {
                         SimpleNode decl = children[i];
-                        this.visitClassStatement(decl, classNode);
+                        this.visitClassStatement(decl, classNode, null);
                     }
                 } finally {
                     this.objectID = oldObjectID;
@@ -356,19 +360,17 @@ public class JS2Doc {
             }
         }
         
-        protected void visitClassStatement(SimpleNode parseNode, org.w3c.dom.Element docNode) {
+        protected void visitClassStatement(SimpleNode parseNode, org.w3c.dom.Element docNode, ASTModifiedDefinition moddef) {
             if (parseNode instanceof ASTStatement ||
                 parseNode instanceof ASTClassDirectiveBlock) {
                 SimpleNode[] children = parseNode.getChildren();
                 for (int i = 0; i < children.length; i++) {
-                    this.visitClassStatement(children[i], docNode);
+                    this.visitClassStatement(children[i], docNode, null);
                 }
             } else if (parseNode instanceof ASTVariableStatement) {
-                visitFieldStatement(parseNode, docNode, false, null);
+                visitFieldStatement(parseNode, docNode, moddef, null);
             } else if (parseNode instanceof ASTFunctionDeclaration) {
-                visitMethodDeclaration(parseNode, docNode, false, null);
-            } else if (parseNode instanceof ASTClassProperty) {
-                visitClassProperty(parseNode, docNode);
+                visitMethodDeclaration(parseNode, docNode, moddef, null);
             } else if (parseNode instanceof ASTCallExpression) {
                 visitCallExpression(parseNode, docNode);
             } else if (parseNode instanceof ASTAssignmentExpression) {
@@ -377,6 +379,8 @@ public class JS2Doc {
                 visitClassIfDirective(parseNode, docNode);
             } else if (parseNode instanceof ASTIncludeDirective) {
                 visitIncludeDirective(parseNode, docNode, false);
+            } else if (parseNode instanceof ASTModifiedDefinition) {
+                visitModifiedDefinition(parseNode, docNode);
             } else if (parseNode instanceof ASTPragmaDirective) {
                 // do nothing
             } else {
@@ -384,12 +388,12 @@ public class JS2Doc {
             }
         }
         
-        protected void visitFieldStatement(SimpleNode parseNode, org.w3c.dom.Element docNode, boolean isStatic, String commonComment) {
+        protected void visitFieldStatement(SimpleNode parseNode, org.w3c.dom.Element docNode, ASTModifiedDefinition moddef, String commonComment) {
             VariableDeclarationsInfo decls = collectVariableDeclarations(parseNode);
             String comment = (decls.commonComment != null) ? decls.commonComment : commonComment;
             SimpleNode[] vars = decls.variables;
             for (int i = 0; i < vars.length; i++) {
-                this.visitFieldDeclaration(vars[i], docNode, comment, isStatic);
+                this.visitFieldDeclaration(vars[i], docNode, comment, moddef.isStatic());
             }
         }
         
@@ -440,7 +444,7 @@ public class JS2Doc {
             }
         }
         
-        protected void visitMethodDeclaration(SimpleNode parseNode, org.w3c.dom.Element docNode, boolean isStatic, String comment) {
+        protected void visitMethodDeclaration(SimpleNode parseNode, org.w3c.dom.Element docNode, ASTModifiedDefinition moddef, String comment) {
             SimpleNode[] children = parseNode.getChildren();
             checkChildrenLowerBounds(parseNode, 3, 3, "visitMethodDeclaration");
             
@@ -449,7 +453,7 @@ public class JS2Doc {
 
             org.w3c.dom.Element targetNode = docNode;
 
-            if (isStatic == false)
+            if (moddef.isStatic() == false)
                 targetNode = this.ensurePrototypeNode(docNode);
 
             if (targetNode != null) {
@@ -468,17 +472,20 @@ public class JS2Doc {
             }
         }
         
-        protected void visitClassProperty(SimpleNode parseNode, org.w3c.dom.Element docNode) {
+        protected void visitModifiedDefinition(SimpleNode parseNode, org.w3c.dom.Element docNode) {
             SimpleNode[] children = parseNode.getChildren();
-            checkChildrenLowerBounds(parseNode, 1, 1, "visitClassProperty");
+            checkChildrenLowerBounds(parseNode, 1, 1, "visitModifiedDefinition");
 
             String comment = parseNode.getComment();
+            ASTModifiedDefinition moddef = (ASTModifiedDefinition)parseNode;
             
             SimpleNode child = children[0];
             if (child instanceof ASTVariableStatement)
-                this.visitFieldStatement(child, docNode, true, comment);
+                this.visitFieldStatement(child, docNode, moddef, comment);
             else if (child instanceof ASTFunctionDeclaration)
-                this.visitMethodDeclaration(child, docNode, true, comment);
+                this.visitMethodDeclaration(child, docNode, moddef, comment);
+            else if (child instanceof ASTClassDefinition)
+                this.visitClassDeclaration(child, docNode, moddef);
             else
                 throw new InternalError("Unexpected node type " + parseNode.getClass().getName(), parseNode);
         }
@@ -624,7 +631,7 @@ public class JS2Doc {
                     if (isTopLevel)
                         this.visitToplevelStatement(trueDirective, docNode);
                     else
-                        this.visitClassStatement(trueDirective, docNode);
+                        this.visitClassStatement(trueDirective, docNode, null);
                 } finally {
                     this.currentState = previousState;
                 }
@@ -647,7 +654,7 @@ public class JS2Doc {
                             if (isTopLevel)
                                 this.visitToplevelStatement(condChild, docNode);
                             else
-                                this.visitClassStatement(condChild, docNode);
+                                this.visitClassStatement(condChild, docNode, null);
                         }
                     } finally {
                         this.currentState = previousState;

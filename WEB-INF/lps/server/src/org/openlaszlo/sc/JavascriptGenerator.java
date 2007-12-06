@@ -279,6 +279,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
             newDirective = visitStatement(directive);
           } else if (directive instanceof ASTClassDefinition) {
             newDirective = visitStatement(directive);
+          } else if (directive instanceof ASTModifiedDefinition) {
+            newDirective = visitModifiedDefinition(directive, directive.getChildren());
           } else if (directive instanceof ASTStatement) {
             // Statements are processed in pass 1 for now
             newDirective = visitStatement(directive);
