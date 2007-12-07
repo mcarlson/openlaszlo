@@ -669,14 +669,23 @@ ASTIdentifier.Type TypeAndInitializer() #void : { ASTIdentifier.Type type = null
   }
 }
 
+ASTIdentifier.Type TypeIdentifierOrVoid() #void : { ASTIdentifier.Type type = null; }
+{
+  (
+    "void" {type = null;}
+  | type = TypeIdentifier()
+  ) {
+    return type;
+  }
+}
+
 ASTIdentifier.Type TypeIdentifier() #void : { Token t; ASTIdentifier.Type type = new ASTIdentifier.Type(); }
 {
   (
-    Nullable() {type.nullable = true; }
-    t = <IDENTIFIER> {type.typeName = t.image;}
-  |
-    t = <IDENTIFIER> {type.typeName = t.image;}
-    [NotNullable() {type.notnullable = true; }]
+    t = <IDENTIFIER>    {type.typeName = t.image;}
+      [ NotNullable()   {type.notnullable = true; }
+      | Nullable()      {type.nullable = true; }
+      ]
   ) {
     return type;
   }
@@ -842,23 +851,31 @@ void FinallyClause() #FinallyClause : {}
 
 // Function declaration
 
-void FunctionDeclaration() #FunctionDeclaration : {ASTIdentifier id; ASTIdentifier.Type type;}
+void FunctionDeclaration() #FunctionDeclaration : {ASTFormalParameterList formals; ASTIdentifier.Type type;}
 {
-    "function" id = Identifier() 
-    [":" type = TypeIdentifier() { id.setType(type); }]
-    ("(" [FormalParameterList()] ")") #FormalParameterList(jjtree.nodeArity()==0)
+    "function" Identifier()
+    formals = FormalParameterList()
+    [":" type = TypeIdentifierOrVoid() { formals.setReturnType(type); }]
     Block()
 }
 
-void FunctionExpression() #FunctionExpression : {}
+void FunctionExpression() #FunctionExpression : {ASTFormalParameterList formals; ASTIdentifier.Type type;}
 {
-    "function" (Identifier())?  ("(" [FormalParameterList()] ")") #FormalParameterList(jjtree.nodeArity()==0) Block()
+    "function" (Identifier())?
+    formals = FormalParameterList()
+    [":" type = TypeIdentifierOrVoid() { formals.setReturnType(type); }]
+    Block()
 }
 
-SimpleNode FormalParameterList() #FormalParameterList : {Token t;}
+ASTFormalParameterList FormalParameterList() #FormalParameterList : {}
+{
+     "(" [FormalParameters()] ")" 
+     { return jjtThis; }
+}
+
+void FormalParameters() : {}
 {
    FormalParameter() ("," FormalParameter())*
-     { return jjtThis; }
 }
 
 void FormalParameter() #void : {ASTIdentifier id; ASTIdentifier.Type type;}

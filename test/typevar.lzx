@@ -14,7 +14,7 @@
       var v_init_const = 4;
       var v_typed:int;
       var v_typed_init:int = val * 2;
-      var v_typed_q:?int = 123;
+      var v_typed_q:int? = 123;
       var v_typed_ex:int! = 234;
 
       // These must be set before use
