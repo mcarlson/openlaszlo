@@ -367,135 +367,148 @@ Debug.findNewObjects = function () {
     Debug.format('Finding new objects... ');
   } else {
     Debug.error('Call %w first', Debug.markObjects);
-}
-}
+  }
+};
+
+
+/**
+ * A leak descriptor
+ */
+class __LzLeak {
+  var obj = null;
+  var path = '';
+  var parent = null
+  var property = '';
+  var leaked = 0;
+
+  function initialize (o) {
+    var annotations = Debug.annotation;
+    var why = annotations.why;
+    var leaked = annotations.leaked;
+    this.obj = o;
+    if (o && (why in o) && (leaked in o)) {
+      var path = o[why];
+      var lastdot = path.lastIndexOf('.');
+      this.path = path.substring(0, lastdot);
+      this.parent = eval(this.path);
+      this.property = path.substring(lastdot + 1, path.length);
+      this.leaked = o[leaked];
+    }
+  }
+
+  /**
+   * Describe an individual leak
+   * @access private
+   */
+  function toString () {
+    if (this.obj) {
+      return Debug.formatToString("%=s.%s: (\xa3%d) %0.32#w", this.parent, this.path, this.property, this.leaked, this.obj);
+    } else {
+      return '' + this.obj;
+    }
+  }
+};
 
 /**
   * Snapshot of the current leaks
   * @access private
   */
-var __LzLeaks = function () {
-  var l = Debug.leaks;
-  var ll = l.length;
-  var annotations = Debug.annotation;
-  var why = annotations.why;
-  var size = annotations.size;
-  var leaked = '_dbg_check';
+class __LzLeaks /* extends Array */ {
+  // Act like an Array
+  var length = 0;
 
-  // Sort leaks according to path
-  l.sort(function (a, b) { 
-    var an = a[why];
-    var bn = b[why];
-    return (an > bn) - (an < bn);
-  });
+  var sort = Array.prototype.sort;
 
-  // Merge leaks under the same path
-  this.length = 0;
-  for (var i = 0; i < ll; i = j) {
-    var p = l[i];
-    p[leaked] = p[size];
-    var j = i + 1;
-    var pn = p[why];
-    if (typeof(pn) != 'undefined') {
-      while (j < ll) {
-        var c = l[j];
-        var cn = c[why];
-        if (typeof(cn) != 'undefined') {
-          if (cn.indexOf(pn) == 0) {
-            // Don't count loops
-            if (c !== p) {
-              p[leaked] += c[size];
-            } else {
-              if (Debug.debugTrace) {
-                Debug.format('%s is %s\n', pn, cn);
+  function initialize () {
+    var l = Debug.leaks;
+    var ll = l.length;
+    var annotations = Debug.annotation;
+    var why = annotations.why;
+    var size = annotations.size;
+    var leaked = '_dbg_check';
+
+    // Sort leaks according to path
+    l.sort(function (a, b) { 
+        var an = a[why];
+        var bn = b[why];
+        return (an > bn) - (an < bn);
+      });
+
+    // Merge leaks under the same path
+    this.length = 0;
+    for (var i = 0; i < ll; i = j) {
+      var p = l[i];
+      p[leaked] = p[size];
+      var j = i + 1;
+      var pn = p[why];
+      if (typeof(pn) != 'undefined') {
+        while (j < ll) {
+          var c = l[j];
+          var cn = c[why];
+          if (typeof(cn) != 'undefined') {
+            if (cn.indexOf(pn) == 0) {
+              // Don't count loops
+              if (c !== p) {
+                p[leaked] += c[size];
+              } else {
+                if (Debug.debugTrace) {
+                  Debug.format('%s is %s\n', pn, cn);
+                }
               }
+              j++;
+              continue;
             }
-            j++;
-            continue;
           }
+          break;
         }
-        break;
+      }
+      this[this.length++] = new __LzLeak(p);
+    }
+  }
+
+
+  function _dbg_name () {
+    var leakage = 0;
+    for (var i in this) {
+      var s = this[i].leaked;
+      if (! isNaN(s)) {
+        leakage += s;
       }
     }
-    this[this.length++] = p;
+    return leakage + ' smoots';
   }
 }
-
-// An __LzLeaks is an array
-__LzLeaks.prototype = new Array();
-// Work around Flash deficiency...
-__LzLeaks.prototype.constructor = __LzLeaks;
-
-/**
-  * Convert a leaks to a string
-  * @param printer:Function the function to print the leaks
-  * functions with.  Defaults to Debug.__String
-  * @param length:Number the length to abbreviate the string to
-  * 
-  * @access private
-  */
-__LzLeaks.prototype.toStringInternal = function(printer, length) {
-  switch (arguments.length) {
-    case 0:
-      printer = function (o) { return Debug.__String(o); };
-    case 1:
-      length = Debug.printLength;
-  }
-  var leaks = "";
-  var sep = "\n";
-  for (var i = this.length - 1; i >= 0 && leaks.length < length; i--) {
-    if (this[i]) {
-      leaks += printer(this[i]) + sep;
-    }
-  }
-  // Trim trailing sep
-  if (leaks != '') {
-    leaks = leaks.substring(0, leaks.length - sep.length);
-  }
-  leaks = Debug.abbreviate(leaks, length);
-  return leaks;
-}
-
-/**
-  * Leaks printer
-  * @access private
-  */
-__LzLeaks.prototype.toString = function () {
-  var annotations = Debug.annotation;
-  var why = annotations.why;
-  var leaked = annotations.leaked;
-  return this.toStringInternal(function (o) { return o[why] + ' (' + o[leaked] + '): ' + Debug.__String(o); });
-}
-
-/**
-  * Name for debug
-  * @access private
-  */
-__LzLeaks.prototype._dbg_name = function () {
-  var leaked = Debug.annotation.leaked;
-  var leakage = 0;
-  for (var i in this) {
-    var s = this[i][leaked];
-    if (! isNaN(s)) {
-      leakage += s;
-    }
-  }
-  return leakage + ' smoots';
-}
-
 
 /**
   * List new objects and why they are alive
+  *
+  * @param top Number: How many leaks to detail, default is 10
   * @access private
   */
-Debug.whyAlive = function () {
-  var leaked = this.annotation.leaked;
+Debug.whyAlive = function (top) {
+  switch (arguments.length) {
+    case 0:
+      top = 10;
+  }
   if (this['leaks']) {
     var l = new __LzLeaks();
 
     // Sort the largest to the top
-    l.sort(function (a, b) { return a[leaked] - b[leaked] });
+    l.sort(function (a, b) { 
+        var al = a.leaked;
+        var bl = b.leaked;
+        return (al < bl) - (al > bl); });
 
+    // Output the top leaks
+    if (top > l.length) { top = l.length; }
+    for (var i = 0; i < top; i++) {
+      Debug.format("%w\n", l[i].toString());
+    }
+    if (top < l.length) {
+      Debug.write('...');
+    }
+
+    // Return the data for inspection
     return l;
   } else {
     Debug.error('Call %w first', Debug.findNewObjects);

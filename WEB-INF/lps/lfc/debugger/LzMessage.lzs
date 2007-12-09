@@ -102,7 +102,7 @@ LzMessage.prototype.valueOf = function () { return this.message.valueOf(); }
   */
 LzMessage.prototype.concat = function () { 
   var msg = new LzMessage(this.message.concat.apply(this, arguments));
-  var offset = 0;
+  var offset = this.message.length;
   for (var i = 0; i < arguments.length; i++) {
     var arg = arguments[i];
     if (arg instanceof LzMessage) {
@@ -152,13 +152,22 @@ LzMessage.prototype.substring = function () { return this.message.substring.appl
   * @param Object obj: the object represented, or null
   */
 LzMessage.prototype.appendInternal = function (str, obj) {
- if (arguments.length < 2) {
+  if (arguments.length < 2) {
     var id = null;
   } else {
     var id = Debug.IDForObject(obj);
   }
   if (id == null) {
     this.message += str;
+  } else if (obj instanceof LzMessage) {
+    // If it is already a message, just concatenate it
+      var offset = this.message.length;
+      this.message += obj.message;
+      var ao = obj.objects;
+      for (var j = 0; j < ao.length; j++) {
+        var od = ao[j];
+        this.objects.push({id: od.id, start: od.start+offset, end: od.end+offset});
+      }
   } else {
     var start = this.message.length;
     this.message += str;

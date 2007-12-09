@@ -354,7 +354,7 @@ Debug.__String = function (thing, pretty, limit, unique) {
       // No pretty for these, you don't know if the user toString is
       // uniquifying
       pretty = (! unique);
-      s = String(thing);
+      s = thing.toString();
     }
     // Print unidentified objects and arrays as abbreviated list of props
     else {
@@ -429,7 +429,9 @@ Debug.__String = function (thing, pretty, limit, unique) {
     s = String(thing);
   }
 
-  if (pretty && (s != "") && (s.length < limit)) {
+  if (pretty &&
+      ((t != 'object') || (! unique))
+      && (s != "") && (s.length < limit)) {
     return s;
   }
   // Compute id; force if you couldn't print pretty due to

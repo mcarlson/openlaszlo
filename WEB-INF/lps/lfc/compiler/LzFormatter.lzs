@@ -171,7 +171,10 @@ mixin LzFormatter {
    * full `Debug.__String` format used by <xref
    * linkend="Debug+debug.write"/>.  `%w` format obeys <xref
    * linkend="Debug+debug.printLength"/>.  If a precision is specified,
-   * that is used as printLength.
+   * that is used as printLength.  There is an additional modifier
+   * (=) which will take the next argument as the object to be
+   * represented (i.e., linked to) by the formatted string; thus
+   * permitting custom representations.
    *
    * @param string control: A control string where % indicates a
    * subsequent argument is to be substituted.
@@ -241,6 +244,8 @@ mixin LzFormatter {
       var length = '';
       var precision = null;
       var directive = null;
+      // The object that is to be represented
+      var object = null;
 //       var extra = null;
       while ((start < limit) &&
              // swf7 (! directive)
@@ -283,6 +288,11 @@ mixin LzFormatter {
             break;
           case '.': precision = ''; break;
           case 'h': case 'l': break;
+          case '=':
+            // Take the next argument to be the object represented
+            object = getarg(argno);
+            argno++;
+            break;
 //           case '{':
 //             // Look for a match
 //             var close = ctrl.indexOf('}', start);
@@ -299,6 +309,7 @@ mixin LzFormatter {
         }
       }
       var value = getarg(argno);
+      if (object == null) { object = value; }
       // set decimals
       var decimals = null;
       var force = false;
@@ -359,7 +370,7 @@ mixin LzFormatter {
       switch (directive) {
         case 'D': case 'U': case 'I': case 'O': case 'X': case 'F': case 'E': case 'G':
           value = Number(value);
-          out.append(this.pad(value, length, decimals, pad, sign, radix, force).toUpperCase());
+          out.appendInternal(this.pad(value, length, decimals, pad, sign, radix, force).toUpperCase(), object);
           argno++;                  // consume value
           break;
         case 'c':
@@ -372,7 +383,7 @@ mixin LzFormatter {
             // We let __String abbreviate, for best legibility
             out.appendInternal(this.pad(Debug.__String(value, true, width, alternate),
                                         length, null, pad, sign, radix, force),
-                               value);
+                               object);
             argno++;                  // consume value
             break;
           }
@@ -394,12 +405,12 @@ mixin LzFormatter {
             str = '' + value;
           }
           out.appendInternal(this.pad(str, length, decimals, pad, sign, radix, force),
-                             value);
+                             object);
           argno++;                  // consume value
           break;
         case 'd': case 'u': case 'i': case 'o': case 'x': case 'f': case 'e': case 'g':
           value = Number(value);
-          out.append(this.pad(value, length, decimals, pad, sign, radix, force));
+          out.appendInternal(this.pad(value, length, decimals, pad, sign, radix, force), object);
           argno++;                  // consume value
           break;
         case '%':
