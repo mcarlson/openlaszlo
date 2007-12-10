@@ -55,12 +55,10 @@ making changes to the application source code.</para>
 <itemizedlist spacing="compact"><listitem>
 <!-- change title per LPP-4804, IORIO 16 oct 2007 -->
 <para>The <ulink url="../developers"><emphasis role="em">OpenLaszlo Application Developer's Guide</emphasis></ulink>, the comprehensive 
-explanation of how to write and test OpenLaszlo programs.</para></listitem><listitem><para>The <ulink url="../design"><emphasis role="em">User Interface Designer's Guide to Laszlo Applications</emphasis></ulink>, 
-which addresses aspects
-of the Laszlo platform that are of special interest to UI and graphic designers</para></listitem><listitem><para>The <ulink url="../reference/../reference/" type="laszlo-reference"><emphasis role="em">LZX Reference
+  explanation of how to write and test OpenLaszlo programs.</para></listitem><listitem><para>The <ulink url="../reference/"><emphasis role="em">LZX Reference
   Manual</emphasis></ulink>. This online, hyperlinked, comprehensive reference
   for LZX contains entries for each LZX tag and API. Its format will
-  be familiar to users of JavaDoc(tm) and similar systems. </para></listitem><listitem><para>The <ulink url="../guide/" type="laszlo-dguide">online tutorials</ulink> and sample
+  be familiar to users of JavaDoc(tm) and similar systems. </para></listitem><listitem><para>The <ulink url="../developers/" >online tutorials</ulink> and sample
   applications at <ulink url="http://www.laszlosystems.com/demos">http://www.laszlosystems.com/demos</ulink>
   provide a hands-on instructional overview of the LZX language.</para></listitem></itemizedlist>
 

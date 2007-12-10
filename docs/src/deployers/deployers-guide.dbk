@@ -647,9 +647,9 @@ is inside the web application's WEB-INF directory at
 <para>will leave the log in the default location inside the web applications's
 WEB-INF directory.  You can also modify the amount of logging done by
 changing the priority of your logger from <literal>info</literal> to
-<literal>debug</literal>. For more details on this file see the <ulink url="http://jakarta.apache.org/log4j/docs/manual.html">online manual</ulink> and
-the <ulink url="http://nagoya.apache.org/wiki/apachewiki.cgi?Log4JProjectPages/Log4JXmlFormat">xml
-configurator primer</ulink>. There's also the <ulink url="http://jakarta.apache.org/log4j/docs/api/org/apache/log4j/PatternLayout.html">detailed
+    <literal>debug</literal>. For more details on this file see the 
+    <ulink url="http://logging.apache.org/log4j/1.2/index.html">online manual</ulink> 
+    There's also the <ulink url="http://jakarta.apache.org/log4j/docs/api/org/apache/log4j/PatternLayout.html">detailed
 doc</ulink> about the pattern layout for controlling the format of each log
 statement. The default settings will keep 5 backup log files each with a maximum
 size of 10 MBytes. You can change them by using the MaxBackupIndex param and
@@ -812,9 +812,9 @@ The OpenLaszlo Source Viewer, which ships with the OpenLaszlo Server, allows any
 in your LPS directory by using a query such as, for example,
 <literal>http://127.0.0.1:8080/lps/lps/utils/viewer/viewer.jsp?file=/examples/tag-definition.lzx</literal>.</para>
 
-<para>To prevent this, remove or rename the <literal>viewer</literal> directory from the <literal>lps/lps/utils</literal> directory and set <literal>allowRequestSOURCE=false</literal> in the<ulink url="lps.properties"> file.</ulink> 
+<para>To prevent this, remove or rename the <literal>viewer</literal> directory from the <literal>lps/lps/utils</literal> directory and set <literal>allowRequestSOURCE=false</literal> in the <xref linkend="deployers-guide.lps.properties">lps.properties file</xref>. 
 </para>
-<para>Also note that source code to your applications may be made visible through the context ("right click") menu.  See <ulink url="../guide/input-devices.html#view_source" type="laszlo-dguide">this page</ulink> for a discussion about how to disable this programmatically.
+<para>Also note that source code to your applications may be made visible through the context ("right click") menu.  See <xref linkend="input-devices"/> for a discussion about how to disable this programmatically.
 </para>
 <?ignore <h2>Deployment Checklist</h2>
 

@@ -125,7 +125,7 @@ the animation code to be executed; the Reset button brings the
 examples back to their initial state. Use these examples to see how
 different animation techniques compare to each other.</para>
 
-<para>These applications rely on the support file <ulink url="animation_library.lzx?lzt=source">animation_library.lzx</ulink>.</para>
+<para>These applications rely on the support file <ulink url="programs/animation_library.lzx?lzt=source">animation_library.lzx</ulink>.</para>
 
 <para>The following example shows the effect of animating the
 <indexterm><primary>opacity</primary></indexterm><sgmltag class="attribute">opacity</sgmltag>, <indexterm><primary>rotation</primary></indexterm><sgmltag class="attribute">rotation</sgmltag>,
