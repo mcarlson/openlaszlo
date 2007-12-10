@@ -24,6 +24,9 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+    <xsl:param name="warn.unspecified.lzxtypes" select="0" />
+    <xsl:param name="warn.unspecified.jstypes" select="0" />
+  
     <xsl:key name="name-js" match="property" use="@name"/>
     <xsl:key name="name-lzx" match="property" use="&tagname;"/>
 
@@ -58,6 +61,9 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>?lzxtype?</xsl:text>
+          <xsl:if test="$warn.unspecified.lzxtypes">
+            <xsl:message>No lzxtype found for <xsl:value-of select="@name"/></xsl:message>
+          </xsl:if>  
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>
@@ -76,8 +82,10 @@
           </xsl:element>
         </xsl:when>
         <xsl:otherwise>
-          <!-- We couldn't find a type for this. -->
-          <xsl:message>No type found for <xsl:value-of select="@name"/></xsl:message>
+          <xsl:if test="$warn.unspecified.jstypes">
+            <!-- We couldn't find a type for this. -->
+            <xsl:message>No jstype found for <xsl:value-of select="@name"/></xsl:message>
+          </xsl:if>            
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>

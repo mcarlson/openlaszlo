@@ -275,10 +275,11 @@ public class JS2DocUtils {
 
     static void checkChildrenLowerBounds(SimpleNode node, int min, int expectedMax, String methodName) {
         SimpleNode[] children = node.getChildren();
+
         if (children.length < min) {
             logger.throwing("JS2Doc", methodName, new InternalError("Too few child nodes in " + node.getClass().getName(), node));
         } else if (expectedMax > 0 && children.length > expectedMax) {
-            logger.warning("Unexpected number of child nodes in " + node.getClass().getName());
+            logger.fine("Unexpected number of child nodes in " + node.getClass().getName());
         }
     }
 

@@ -27,6 +27,7 @@
     <xsl:import href="utilities.xsl"/>
 
     <xsl:param name="visibility.filter" select="'public'"/>
+    <xsl:param name="warn.classname.not.found" select="0" />  
 
     <!-- SYNOPSIS -->
 
@@ -175,9 +176,11 @@
                 <!-- For instance methods, show the name of the class --> 
                 <xsl:value-of select="ancestor::property/doc/tag[@name='lzxname']/text"/>.<xsl:value-of select="@name"/>
               </xsl:when>
-               <xsl:otherwise>                 
-                 <xsl:message>No class name found for function synopsis: <xsl:value-of select="@id"/></xsl:message>
-                 <xsl:value-of select="@name"/>
+               <xsl:otherwise>        
+                 <xsl:if test="$warn.classname.not.found">
+                   <xsl:message>No class name found for function synopsis: <xsl:value-of select="@id"/></xsl:message>
+                 </xsl:if>                   
+                 <xsl:value-of select="@name"/>                                    
                </xsl:otherwise>
               </xsl:choose>                
             </methodname>
