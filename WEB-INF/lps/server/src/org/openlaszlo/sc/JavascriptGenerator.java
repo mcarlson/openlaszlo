@@ -428,7 +428,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     SimpleNode a = children[1];
     SimpleNode b = (children.length > 2) ? children[2] : null;
     // Compile-time conditional evaluations
-//     System.err.println("visitIfStatement: " +  (new Compiler.ParseTreePrinter()).visit(node));
+//     System.err.println("visitIfStatement: " +  (new ParseTreePrinter()).visit(node));
     Boolean value = evaluateCompileTimeConditional(test);
     if (value != null) {
 //       System.err.println("" + test + " == " + value);
@@ -661,7 +661,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
      applied to any expression node, so it dispatches based on the
      node's class. */
   public SimpleNode visitExpression(SimpleNode node, boolean isReferenced) {
-    assert isExpressionType(node) : "" + node + ": " + (new Compiler.ParseTreePrinter()).visit(node) + " is not an expression";
+    assert isExpressionType(node) : "" + node + ": " + (new ParseTreePrinter()).visit(node) + " is not an expression";
 
     if (this.debugVisit) {
       System.err.println("visitExpression: " + node.getClass());
@@ -856,7 +856,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         String svar = "$lzsc$" + UUID().toString();
         String evtvar = "$lzsc$" + UUID().toString();
         String decls = "";
-        Compiler.ParseTreePrinter ptp = new Compiler.ParseTreePrinter();
+        ParseTreePrinter ptp = new ParseTreePrinter();
         if (scope instanceof ASTIdentifier || scope instanceof ASTThisReference) {
           thisvar = ptp.visit(scope);
         } else {
@@ -1172,7 +1172,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       }
       depExpr = dependencies.computeReferences(userFunctionName);
       if (options.getBoolean(Compiler.PRINT_CONSTRAINTS)) {
-        (new Compiler.ParseTreePrinter()).print(depExpr);
+        (new ParseTreePrinter()).print(depExpr);
       }
     }
     List prefix = new ArrayList();

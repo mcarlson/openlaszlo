@@ -133,7 +133,7 @@ class LibraryWriter extends DHTMLWriter {
     program = compressor.compress(program);
     boolean compress = (! mEnv.getProperty(org.openlaszlo.sc.Compiler.NAME_FUNCTIONS, "false").equals("true"));
     boolean obfuscate = compress || mEnv.getProperty(org.openlaszlo.sc.Compiler.OBFUSCATE, "false").equals("true");
-    (new org.openlaszlo.sc.Compiler.ParseTreePrinter(compress, obfuscate)).print(program, out);
+    (new org.openlaszlo.sc.ParseTreePrinter(compress, obfuscate)).print(program, out);
     out.println("\n]]>\n</script>");
   } 
   

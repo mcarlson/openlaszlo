@@ -311,7 +311,7 @@ public abstract class CommonGenerator implements ASTVisitor {
   }
 
   public SimpleNode visitClassDefinition(SimpleNode node, SimpleNode[] children) {
-//     System.err.println("enter visitClassDefinition: " +  (new Compiler.ParseTreePrinter()).visit(node));
+//     System.err.println("enter visitClassDefinition: " +  (new ParseTreePrinter()).visit(node));
     ASTIdentifier classortrait = (ASTIdentifier)children[0];
     ASTIdentifier classname = (ASTIdentifier)children[1];
     String classnameString = classname.getName();
@@ -378,7 +378,7 @@ public abstract class CommonGenerator implements ASTVisitor {
       replNode.set(0, varNode);
       replNode.set(1, stmtNode);
     }
-//     System.err.println("exit visitClassDefinition: " +  (new Compiler.ParseTreePrinter()).visit(replNode));
+//     System.err.println("exit visitClassDefinition: " +  (new ParseTreePrinter()).visit(replNode));
     return visitStatement(replNode);
   }
 

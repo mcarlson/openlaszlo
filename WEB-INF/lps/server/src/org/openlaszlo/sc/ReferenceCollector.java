@@ -1,7 +1,7 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -48,7 +48,7 @@ public class ReferenceCollector {
   private SimpleNode rsubst(Set r) {
     List l = new ArrayList();
     Set added = new HashSet();
-    Compiler.ParseTreePrinter ptp = new Compiler.ParseTreePrinter();
+    ParseTreePrinter ptp = new ParseTreePrinter();
     for (Iterator i = r.iterator(); i.hasNext(); ) {
       SimpleNode n = (SimpleNode)i.next();
       String s = ptp.visit(n);
@@ -94,7 +94,7 @@ public class ReferenceCollector {
     SimpleNode a = rsubst(references);
     Map map = new HashMap();
     Set added = new HashSet();
-    Compiler.ParseTreePrinter ptp = new Compiler.ParseTreePrinter();
+    ParseTreePrinter ptp = new ParseTreePrinter();
     for (Iterator i = functions.iterator(); i.hasNext(); ) {
       SimpleNode n = (SimpleNode)i.next();
       String s = ptp.visit(n);

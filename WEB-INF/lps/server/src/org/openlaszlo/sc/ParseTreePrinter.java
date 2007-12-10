@@ -7,15 +7,8 @@
 
 /***
  * ParseTreePrinter.java
- * Author: Oliver Steele, P T Withington, Don Anderson
+ * Author: Oliver Steele, P T Withington
  * Description: unparses the AST into Javascript.
- * Subclassed to handle Javascript variants.
- * This is a bottom up (depth-first) unparser.
- * To track line numbers from the source nodes, or
- * to separate the compilation units by classes,
- * 'annotations' are inserted into the result Strings,
- * which can be either stripped or used to collect
- * line number or class information.
  */
 
 package org.openlaszlo.sc;
@@ -43,9 +36,6 @@ import org.openlaszlo.sc.InstructionPrinter;
 // This class supports the Javascript translator
 public class ParseTreePrinter {
 
-  // For debugging
-  public static final boolean DEBUG_NODE_OUTPUT = false;
-
   boolean compress;
   String SPACE;
   String NEWLINE;
@@ -69,8 +59,6 @@ public class ParseTreePrinter {
     this(compress, false);
   }
 
-  // TODO: [2007-11-21 dda] if compress/obfuscate are on, probably
-  // can turn off generation of annotations.
   public ParseTreePrinter(boolean compress, boolean obfuscate) {
     this.compress = compress;
     // Set whitespace
@@ -139,7 +127,7 @@ public class ParseTreePrinter {
     return(sb.toString());
   }
   
-  private String visit(SimpleNode node) {
+  public String visit(SimpleNode node) {
     if (node instanceof PassThroughNode) {
       node = ((PassThroughNode)node).realNode;
     }
@@ -178,7 +166,7 @@ public class ParseTreePrinter {
           }
         }
       }
-      return(lnum(node, sb.toString()));
+      return sb.toString();
     }
     if (node instanceof ASTStatement) {
       assert children.length == 1;
@@ -187,150 +175,147 @@ public class ParseTreePrinter {
       // explicit semicolon
       if ((! "".equals(child)) &&
           (! child.endsWith(SEMI))) {
-        return lnum(node, child + SEMI);
+        return child + SEMI;
       } else {
-        return lnum(node, child);
+        return child;
       }
     }
     if (node instanceof ASTAssignmentExpression) {
-      return lnum(node, visitAssignmentExpression(node, children));
+      return visitAssignmentExpression(node, children);
     }
     if (node instanceof ASTCallExpression) {
-      return lnum(node, visitCallExpression(node, children));
+      return visitCallExpression(node, children);
     }
     if (node instanceof ASTSuperCallExpression) {
-      return lnum(node, visitSuperCallExpression(node, children));
+      return visitSuperCallExpression(node, children);
     }
     if (node instanceof ASTConditionalExpression) {
-      return lnum(node, visitConditionalExpression(node, children));
+      return visitConditionalExpression(node, children);
     }
     if (node instanceof ASTEmptyExpression) {
-      return lnum(node, visitEmptyExpression(node, children));
+      return visitEmptyExpression(node, children);
     }
     if (node instanceof ASTForVarInStatement) {
-      return lnum(node, visitForVarInStatement(node, children));
+      return visitForVarInStatement(node, children);
     }
     if (node instanceof ASTForInStatement) {
-      return lnum(node, visitForInStatement(node, children));
+      return visitForInStatement(node, children);
     }
     if (node instanceof ASTForVarStatement || node instanceof ASTForStatement) {
-      return lnum(node, visitForVarStatement(node, children));
+      return visitForVarStatement(node, children);
     }
     if (node instanceof ASTNewExpression) {
-      return lnum(node, visitNewExpression(node, children));
+      return visitNewExpression(node, children);
     }
     if (node instanceof ASTIfStatement || node instanceof ASTIfDirective) {
-      return lnum(node, visitIfStatement(node, children));
+      return visitIfStatement(node, children);
     }
     if (node instanceof ASTPragmaDirective) {
-      return lnum(node, visitPragmaDirective(node, children));
+      return visitPragmaDirective(node, children);
     }
     if (node instanceof ASTPostfixExpression) {
-      return lnum(node, visitPostfixExpression(node, children));
+      return visitPostfixExpression(node, children);
     }
     if (node instanceof ASTPropertyIdentifierReference) {
-      return lnum(node, visitPropertyIdentifierReference(node, children));
+      return visitPropertyIdentifierReference(node, children);
     }
     if (node instanceof ASTPropertyValueReference) {
-      return lnum(node, visitPropertyValueReference(node, children));
+      return visitPropertyValueReference(node, children);
     }
     if (node instanceof ASTReturnStatement) {
-      return lnum(node, visitReturnStatement(node, children));
+      return visitReturnStatement(node, children);
     }
     if (node instanceof ASTThisReference) {
-      return lnum(node, visitThisReference(node, children));
+      return visitThisReference(node, children);
     }
     if (node instanceof ASTContinueStatement) {
-      return lnum(node, visitContinueStatement(node, children));
+      return visitContinueStatement(node, children);
     }
     if (node instanceof ASTBreakStatement) {
-      return lnum(node, visitBreakStatement(node, children));
+      return visitBreakStatement(node, children);
     }
     if (node instanceof ASTUnaryExpression) {
-      return lnum(node, visitUnaryExpression(node, children));
+      return visitUnaryExpression(node, children);
     }
     if (node instanceof ASTWithStatement) {
-      return lnum(node, visitWithStatement(node, children));
+      return visitWithStatement(node, children);
     }
     if (node instanceof ASTDoWhileStatement) {
-      return lnum(node, visitDoWhileStatement(node, children));
+      return visitDoWhileStatement(node, children);
     }
     if (node instanceof ASTWhileStatement) {
-      return lnum(node, visitWhileStatement(node, children));
+      return visitWhileStatement(node, children);
     }
     if (node instanceof ASTSwitchStatement) {
-      return lnum(node, visitSwitchStatement(node, children));
+      return visitSwitchStatement(node, children);
     }
     if (node instanceof ASTCaseClause) {
-      return lnum(node, visitCaseClause(node, children));
+      return visitCaseClause(node, children);
     }
     if (node instanceof ASTDefaultClause) {
-      return lnum(node, visitDefaultClause(node, children));
+      return visitDefaultClause(node, children);
     }
     if (node instanceof ASTArrayLiteral) {
-      return lnum(node, visitArrayLiteral(node, children));
+      return visitArrayLiteral(node, children);
     }
     if (node instanceof ASTBinaryExpressionSequence) {
-      return lnum(node, visitBinaryExpressionSequence(node, children));
+      return visitBinaryExpressionSequence(node, children);
     }
     if (node instanceof ASTExpressionList ||
         node instanceof ASTFunctionCallParameters ||
         node instanceof ASTFormalParameterList) {
-      return lnum(node, visitExpressionList(node, children));
+      return visitExpressionList(node, children);
     }
     if (node instanceof ASTAndExpressionSequence) {
-      return lnum(node, visitAndOrExpressionSequence(true, node, children));
+      return visitAndOrExpressionSequence(true, node, children);
     }
     if (node instanceof ASTOrExpressionSequence) {
-      return lnum(node, visitAndOrExpressionSequence(false, node, children));
+      return visitAndOrExpressionSequence(false, node, children);
     }
     if (node instanceof ASTFunctionDeclaration) {
-      return lnum(node, visitFunctionDeclaration(node, children));
+      return visitFunctionDeclaration(node, children);
     }
     if (node instanceof ASTFunctionExpression) {
-      return lnum(node, visitFunctionExpression(node, children));
+      return visitFunctionExpression(node, children);
     }
     if (node instanceof ASTIdentifier) {
-      return lnum(node, visitIdentifier(node, children));
+      return visitIdentifier(node, children);
     }
     if (node instanceof ASTLiteral) {
-      return lnum(node, visitLiteral(node, children));
+      return visitLiteral(node, children);
     }
     if (node instanceof ASTObjectLiteral) {
-      return lnum(node, visitObjectLiteral(node, children));
+      return visitObjectLiteral(node, children);
     }
     if (node instanceof ASTOperator) {
-      return lnum(node, visitOperator(node, children));
+      return visitOperator(node, children);
     }
     if (node instanceof ASTVariableStatement) {
       return visitVariableStatement(node, children);
     }
     if (node instanceof ASTVariableDeclaration) {
-      return lnum(node, visitVariableDeclaration(node, children));
+      return visitVariableDeclaration(node, children);
     }
     if (node instanceof ASTVariableDeclarationList) {
       return visitVariableDeclarationList(node, children);
     }
     if (node instanceof ASTTryStatement) {
-      return lnum(node, visitTryStatement(node, children));
+      return visitTryStatement(node, children);
     }
     if (node instanceof ASTCatchClause) {
-      return lnum(node, visitCatchClause(node, children));
+      return visitCatchClause(node, children);
     }
     if (node instanceof ASTFinallyClause) {
-      return lnum(node, visitFinallyClause(node, children));
+      return visitFinallyClause(node, children);
     }
     if (node instanceof ASTThrowStatement) {
-      return lnum(node, visitThrowStatement(node, children));
+      return visitThrowStatement(node, children);
     }
-    if (node instanceof ASTClassDefinition) {
-      return lnum(node, visitClassDefinition(node, children));
-    }
-    return lnum(node, defaultVisitor(node, children));
+    return defaultVisitor(node, children);
   }
   
   public String defaultVisitor(SimpleNode node, String[] children) {
-    return lnum(node, "//\u00AB" + node.toString() + "(" + join(COMMA, children) + ")\u00BB");
+    return "//\u00AB" + node.toString() + "(" + join(COMMA, children) + ")\u00BB";
   }
   
   // Copied (and massaged) from Parser.jjt
@@ -676,11 +661,6 @@ public class ParseTreePrinter {
       loc + "function" + (useName ? (" " + name) : "") + OPENPAREN + args + CLOSEPAREN + makeBlock(body);
   }
 
-  public String visitClassDefinition(SimpleNode node, String[] children) {
-    // Should never be called for plain Javascript, these are stripped out
-    throw new CompilerException("ClassDefinition found in printing Javascript AST");
-  }
-  
   public String visitIdentifier(SimpleNode node, String[] children) {
     return ((ASTIdentifier)node).getName();
   }
@@ -779,185 +759,4 @@ public class ParseTreePrinter {
   public String visitThrowStatement(SimpleNode node, String[] children) {
     return "throw" + delimit(children[0]);
   }
-  
-  public List makeTranslationUnits(SimpleNode node)
-  {
-    return makeTranslationUnits(visit(node));
-  }
-
-  public String text(SimpleNode node) {
-    return unannotate(visit(node));
-  }
-  
-  public String annotatedText(SimpleNode node) {
-    return printableAnnotations(visit(node));
-  }
-  
-  public static final char ANNOTATE_MARKER = '\u0001';
-  public static final char ANNOTATE_OP_LINENUM = 'L';
-  public static final char ANNOTATE_OP_CLASSNAME = 'C';
-  public static final char ANNOTATE_OP_CLASSEND = 'c';
-  public static final char ANNOTATE_OP_NODENAME = 'N';
-  public static final char ANNOTATE_OP_NODEEND = 'n';
-  public static final char ANNOTATE_OP_TEXT = 'T';
-  
-  /**
-   * Prefix line number annotation to a string.
-   */
-  public String lnum(SimpleNode node, String str) {
-    int linenum = node.getLineNumber();
-    if (linenum < 0)
-      return str;
-    if (str.length() > 0 && str.charAt(0) == ANNOTATE_MARKER)
-      return str;
-
-    StringBuffer sb = new StringBuffer();
-    sb.append(makeAnnotation(ANNOTATE_OP_LINENUM, String.valueOf(linenum)));
-    sb.append(str);
-    String result = sb.toString();
-
-    if (DEBUG_NODE_OUTPUT)
-      result = annotateNode(node, result);
-
-    return result;
-  }
-
-  public String annotateClass(String classnm, String str) {
-    StringBuffer sb = new StringBuffer();
-    sb.append(makeAnnotation(ANNOTATE_OP_CLASSNAME, classnm));
-    sb.append(str);
-    sb.append(makeAnnotation(ANNOTATE_OP_CLASSEND, ""));
-    return sb.toString();
-  }
-
-  // This is only useful for debugging - we can annotate
-  // the output with information about the node that created it
-  public String annotateNode(SimpleNode node, String str) {
-    String nodenm = node.getClass().getName();
-    int dot;
-    if ((dot = nodenm.lastIndexOf('.')) >= 0)
-      nodenm = nodenm.substring(dot+1);
-    StringBuffer sb = new StringBuffer();
-    sb.append(makeAnnotation(ANNOTATE_OP_NODENAME, nodenm));
-    sb.append(str);
-    sb.append(makeAnnotation(ANNOTATE_OP_NODEEND, ""));
-    return sb.toString();
-  }
-
-  /**
-   * Add annotations, which look like \u0001 opchar operand \u0001
-   * opchar is a single character.
-   */
-  public String makeAnnotation(char op, String operand) {
-    return String.valueOf(ANNOTATE_MARKER) + op + operand + ANNOTATE_MARKER;
-  }
-  
-  public abstract static class AnnotationProcessor {
-    public abstract String notify(char op, String operand);
-    public String process(String annotated) {
-      int alen = annotated.length();
-      StringBuffer sb = new StringBuffer();
-      int endann = -1;
-      int startann = annotated.indexOf(ANNOTATE_MARKER);
-      while (startann >= 0) {
-        String outstr = annotated.substring(endann+1, startann);
-        sb.append(outstr);
-        notify(ANNOTATE_OP_TEXT, outstr);
-        // The minimum annotation has three chars: marker, op, marker
-        if (alen < startann + 3) {
-          throw new IllegalArgumentException("missing annotation marker");
-        }
-        char op = annotated.charAt(startann+1);
-        endann = annotated.indexOf(ANNOTATE_MARKER, startann+2);
-        if (endann < 0) {
-          // unbalanced annotations
-          throw new IllegalArgumentException("bad line number annotations");
-        }
-        sb.append(notify(op, annotated.substring(startann+2, endann)));
-        startann = annotated.indexOf(ANNOTATE_MARKER, endann+1);
-      }
-      String outstr = annotated.substring(endann+1);
-      sb.append(outstr);
-      notify(ANNOTATE_OP_TEXT, outstr);
-      return sb.toString();
-    }
-  }
-    
-  public String unannotate(String annotated) {
-    AnnotationProcessor ap = new AnnotationProcessor() {
-        public String notify(char op, String operand) {
-          switch (op) {
-          case ANNOTATE_OP_TEXT:
-            return operand;
-          }
-          return "";
-        }
-      };
-    return ap.process(annotated);
-  }
-  
-  public String printableAnnotations(String annotated) {
-    final LinkedList nodestack = new LinkedList();
-    AnnotationProcessor ap = new AnnotationProcessor() {
-        public String notify(char op, String operand) {
-          switch (op) {
-          case ANNOTATE_OP_TEXT:
-            return operand;
-          case ANNOTATE_OP_LINENUM:
-            return "#line " + operand + ": ";
-          case ANNOTATE_OP_CLASSNAME:
-            return "#class " + operand + ": ";
-          case ANNOTATE_OP_CLASSEND:
-            return "#endclass";
-          case ANNOTATE_OP_NODENAME:
-            nodestack.addLast(operand);
-            return "#node " + operand + ": ";
-          case ANNOTATE_OP_NODEEND:
-            String nodenm = (String)nodestack.removeLast();
-            return "#endnode " + nodenm;
-          }
-          return "";
-        }
-      };
-    return ap.process(annotated);
-  }
-
-  public List makeTranslationUnits(String annotated) {
-    final ArrayList tunits = new ArrayList();
-    final TranslationUnit defaulttu = new TranslationUnit(true);
-
-    tunits.add(defaulttu);
-
-    if (DEBUG_NODE_OUTPUT)
-      System.out.println("ANNOTATED OUTPUT:\n" + printableAnnotations(annotated));
-
-    AnnotationProcessor ap = new AnnotationProcessor() {
-        TranslationUnit curtu = defaulttu;
-
-        public String notify(char op, String operand) {
-          switch (op) {
-          case ANNOTATE_OP_TEXT:
-            curtu.addText(operand);
-            return "";
-          case ANNOTATE_OP_LINENUM:
-            curtu.setInputLineNumber(Integer.parseInt(operand));
-            return "";
-          case ANNOTATE_OP_CLASSNAME:
-            curtu = new TranslationUnit();
-            curtu.setName(operand);
-            tunits.add(curtu);
-            return "";
-          case ANNOTATE_OP_CLASSEND:
-            curtu = defaulttu;
-            return "";
-          }
-          return "";
-        }
-      };
-
-    ap.process(annotated);
-
-    return (tunits);
-  }
-
 }
