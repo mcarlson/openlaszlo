@@ -354,24 +354,39 @@ void NumericLiteral() #Literal : {Token t;}
      {jjtThis.setFloatingPointValue(t.image);}
 }
 
+Token IdentifierOrAS3Keyword() #void : {Token t;}
+{
+  // Newer AS3 keywords are allowed as identifiers, other
+  // keywords (like public, private, protected) apparently are not
+  ( t=<IDENTIFIER>
+  | t=<INTERNAL>
+  | t=<FINAL>
+  | t=<STATIC>
+  | t=<OVERRIDE>
+  | t=<DYNAMIC>
+  )
+    {return t;}
+}
+
 ASTIdentifier Identifier() #Identifier : {Token t;}
 {
-  t=<IDENTIFIER>
+  ( t=IdentifierOrAS3Keyword() )
     {jjtThis.setName(t.image); return jjtThis;}
 }
 
 void IdentifierOrKeyword() #Identifier : {Token t;}
 {
-  t=<IDENTIFIER>
+  ( t=IdentifierOrAS3Keyword()
+  | t=<CLASS>
+  | t=<EXTENDS>
+  | t=<IMPLEMENTS>
+  | t=<INHERITS>
+  | t=<WITH>
+  | t=<INTERFACE>
+  | t=<TRAIT>
+  | t=<MIXIN>
+  )
     {jjtThis.setName(t.image);}
-| "class" {jjtThis.setName("class");}
-| "extends" {jjtThis.setName("extends");}
-| "implements" {jjtThis.setName("implements");}
-| "inherits" {jjtThis.setName("inherits");}
-| "with" {jjtThis.setName("with");}
-| "interface" {jjtThis.setName("interface");}
-| "trait" {jjtThis.setName("trait");}
-| "mixin" {jjtThis.setName("mixin");}
 }
 
 
