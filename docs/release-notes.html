@@ -1,198 +1,42 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-<title>OpenLaszlo 4.0.5 Release Notes</title>
-
-
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <link rel="stylesheet" href="../lps/includes/explore.css" type="text/css" />
-  <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/images/laszlo.ico" />
-  </head>
-
-<body class="release-notes">
-
-<h1>Release Notes for OpenLaszlo 4.0.5</h1>
-
-
-<p class="bodytext">
-
-<b>OpenLaszlo 4.0.5 is the recommended platform for .swf development.</b> With OpenLaszlo 4.0.5, there is no longer any reason to continue application development using OpenLaszlo 3.4. Support for applications to DHTML remains at "beta" level; it will be fully supported with OL 4.1. This release has been tested by users world wide and vetted by the Laszlo Systems Quality Assurance team. Hundreds of improvements have been made since OpenLaszlo 4.0.</p>
-
-<p>
-For every release, we rely on the OpenLaszlo community to help ensure
-the quality of the platform release and to determine its future
-direction. To propose or participate in discussion of new features,
-see <a href="http://wiki.openlaszlo.org/Enhancement_Proposals">the wiki.</a>
-We encourage you to report any problems, and to make
-suggestions for enhancements, through our <a
-href="http://www.openlaszlo.org/jira/browse/LPP">JIRA bug tracking
-system.</a> </p>
-<p>
-Please see the <a href="http://download.openlaszlo.org/4.0.0/release-notes.html">OpenLaszlo 4.0 Release Notes</a> for an overview of significant changes since 3.x.
-</p>
-<p><i>What happened to version 4.0.4? We skipped a number. We don't like 404s.</i></p>
-<h1>New Features in 4.0.5</h1>
-<ul>
-    <li><b>Explicit Replication</b>. Please see <a href="http://wiki.openlaszlo.org/Explicit_Replication">the proposal for explicit replication on the wiki</a> for details. Expect more detailed documentation in upcoming releases. </li>
-</ul>
-<h1>Important Known Issues in 4.0.5</h1>
-<p>Some known bugs are present in this release; this is the way of the world. A few of these bugs deserve special attention:</p>
-<ul>
-    <li><a href="http://www.openlaszlo.org/jira/browse/LPP-4235">With jdk 1.6 and tomcat 5.5.23, changes to build.xml deploy task necessary</a> The bug description indicates a small change that must be made to the main build.xml file in order to use these recent versions of tomcat and java.</li>
-<li><a href="http://www.openlaszlo.org/jira/browse/LPP-3579"> Fix debugger in Safari</a> The dhtml debugger does not work in Safari 2 or Safari 3 or WebKit nightly as of r24285. If you need the Safari debugger to work, in lps.properties you can set compiler.debug.safari to true, do a clean build and flush your browser cache to allow debugging in Safari 2. This is not on by default because it makes debugging less useful in Firefox (backtaces will not see function names). WebKit and Safari 3 work correctly without any workaround. </li>
-</ul>
-
-<h1>Bugs Fixed in 4.0.5</h1>
-<ul>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4655" target="buggies">LPP-4655: History mechanism not working</a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4695" target="buggies">LPP-4695: Runtime-Exception in IE with Flash8</a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4699" target="buggies">LPP-4699: Explicit replicator displays warning when a clone's datapath is null</a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4660" target="buggies">LPP-4660:  Httpdatarequest has LzLoader value for xmldata when status is "error"   </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4610" target="buggies">LPP-4610: 'request' method is deprecated, causing trouble, needs to be removed for LzDataset </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4600" target="buggies">LPP-4600: Flash: navbar buttons in laszlo-explorer and examples have clipped text </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4584" target="buggies">LPP-4584: dataset fires multiple ondata-Events </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4583" target="buggies">LPP-4583: Improve compiler and caching performance </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4582" target="buggies">LPP-4582: YouTube demo not working due to changes of Youtube.com FLV url pattern </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4560" target="buggies">LPP-4560: lzc does not respect JAVA_OPTS on non-windows platforms </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4538" target="buggies">LPP-4538: richtexteditarea-test.lzx and richtexteditarea-driver.lzx have warnings and errors </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4535" target="buggies">LPP-4535: Memory leaks in "LzMakeLoadSprite" </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4532" target="buggies">LPP-4532: Two typos in "LzHTTPDatasource#doRequest(..)" </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4509" target="buggies">LPP-4509: internal index page has broken link to deployer's guide </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4505" target="buggies">LPP-4505: Eliminate several warnings in doc build </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4497" target="buggies">LPP-4497: Selecting Contributor's and Developer's Guide results in 404 error </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4462" target="buggies">LPP-4462: When running a SOLO SWF in an HTML file located in a different directory than the SWF, data requests are made relative to SWF, not HTML file </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4436" target="buggies">LPP-4436: window decrements its x and y coordinates when clicked </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4433" target="buggies">LPP-4433: Better performance for &lt;basetrackgroup&gt; </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4432" target="buggies">LPP-4432: Memory leaks in "basetabelement" </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4431" target="buggies">LPP-4431: &lt;list&gt; should disable "autoscrollbar" on destroy </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4418" target="buggies">LPP-4418: Wafflecone: LzDataElement.makeNodeList broken </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4370" target="buggies">LPP-4370: drawview doesn't respect visibility </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4352" target="buggies">LPP-4352: scrollrichedittext can't create scrollbar </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-3431" target="buggies">LPP-3431: Ensure richtext and richtexteditor work in OL4/SWF
-</a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4316" target="buggies">LPP-4316: "datalistselector#getItemByData(..)" and "datalistselector#getItemIndexByData(..)" should test against null </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4315" target="buggies">LPP-4315: "datalistselector#findIndex(..)" attempts to compare a "LzDataElement" against a "LzView" </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4269" target="buggies">LPP-4269: No event data in calendar demo for August 2007 </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4206" target="buggies">LPP-4206: Add support for flash 8 font smoothing APIs </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4120" target="buggies">LPP-4120: LzTrack interferes w/ window drag w/ FF DHTML </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4055" target="buggies">LPP-4055: constructWithArgs defined twice in LzNode.lzs </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-3907" target="buggies">LPP-3907: edittext and inputtext may fire onfocus resp. onblur twice </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-3560" target="buggies">LPP-3560: radiogroup and selecting an item </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-3521" target="buggies">LPP-3521: Debugger warnings when rich text editor is instantiated </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-1952" target="buggies">LPP-1952: destroy before resource is loaded leads to full load queue and hang </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4675" target="buggies">LPP-4675: Scrolling large text (100K) is very slow </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4665" target="buggies">LPP-4665: Compilation of some binary libraries fails </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4659" target="buggies">LPP-4659: DHTML: OS X: Cannot load laszlo-explorer in dhtml on OS X/FF2 </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4626" target="buggies">LPP-4626: Can only click into the first 10 to 20 pixels of inputtext </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4544" target="buggies">LPP-4544: Ability to override default container and mask views for explicit replicator </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4533" target="buggies">LPP-4533: Link to 3.4 docs on openlaszlo.org from laszlo explorer </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4414" target="buggies">LPP-4414: Improve startup performance </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4405" target="buggies">LPP-4405: Implement ExplicitReplication </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4404" target="buggies">LPP-4404: Implement DataProvider API </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4397" target="buggies">LPP-4397: rich text editor: cannot switch to the same font twice </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4396" target="buggies">LPP-4396: rich text editor: clicking bold moves insertion point </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4357" target="buggies">LPP-4357: getMouse returns absolute coordinates in DHTML + FF </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4332" target="buggies">LPP-4332: Merge release notes from 4.0.3 into legals </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4261" target="buggies">LPP-4261: Unable to load and unload resources repeatedly - DHTML </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4240" target="buggies">LPP-4240: View.updateResourceSize() generates error in DHTML </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4215" target="buggies">LPP-4215: wrappinglayout construct() method refers to args.spacing, which is undefined. should refer to this.spacing. </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4200" target="buggies">LPP-4200: Missing warnings in "LzBrowser.js" (DHTML) </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4015" target="buggies">LPP-4015: Text selection position and size should be available during onblur event </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-3726" target="buggies">LPP-3726: stretches breaks clickable in swf7/8 </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-2894" target="buggies">LPP-2894: CSS: subclasses and instances can't override style constraints set on superclass* </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-2111" target="buggies">LPP-2111: Horrendously inefficient looping in layout classes!! </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4676" target="buggies">LPP-4676: replicator xpath attribute -- double quotes is strange </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4671" target="buggies">LPP-4671: explicit lazyreplicator tag places it's first two views out of order </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4667" target="buggies">LPP-4667: replicatorselectionmanager: yet another replication manager is confusing </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4666" target="buggies">LPP-4666: explicit lazyreplication fails in test file test-replicator.lzx </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4661" target="buggies">LPP-4661: View with stretches="both" does not get onclick </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4657" target="buggies">LPP-4657: Input text does not obey font style directives in SWF7/8 </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4638" target="buggies">LPP-4638: selectionmanager test broken </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4631" target="buggies">LPP-4631: test/lfc/data/datanode.lzx fails </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4630" target="buggies">LPP-4630: Dataset subclasses doRequest oninit if autorequest="true" and request="false" </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4612" target="buggies">LPP-4612: Explicit replicator doesn't update when items are added or deleted </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4601" target="buggies">LPP-4601: Link to Deployer's Guide in Server Admin is broken </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4597" target="buggies">LPP-4597: turn debugger warnings for non-fatal issues into INFO </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4592" target="buggies">LPP-4592: basedatacombobox-based components with selectfirst="false" emits Debugger warnings </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4589" target="buggies">LPP-4589: Two messages highlighted on autocheck when one message is in inbox </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4585" target="buggies">LPP-4585: Two onmousetrackup events fired when only 1 should be fired. </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4571" target="buggies">LPP-4571: Text component not sized correctly when fontsize configured via a constraint </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4569" target="buggies">LPP-4569: Update nav_dhtml.xml whenever nav.xml for laszlo-explorer changes </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4565" target="buggies">LPP-4565: Selecting Contributor's Guide in navbar and quick index entry opens Comprehensive Reference </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4564" target="buggies">LPP-4564: Links to Contributor's Guide have (alpha), the guide has (beta) in the title </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4563" target="buggies">LPP-4563: LZX Reference gets 404 error from the quick index page </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4562" target="buggies">LPP-4562: LoadJS works differently in the dev console </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4561" target="buggies">LPP-4561: Multiple select is undone by mousedown </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4558" target="buggies">LPP-4558: test/wafflecone/test/components/incubator/richtexteditarea-driver.lzx needs to be deleted, no longer valid </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4556" target="buggies">LPP-4556: Rich text: Can't change font back to Verdana </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4553" target="buggies">LPP-4553: basefocusview warnings when canvas size changes </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4551" target="buggies">LPP-4551: debugger warnings emitted from a private LFC function </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4549" target="buggies">LPP-4549: runtime warnings should include file references, line #s </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4543" target="buggies">LPP-4543: setVisibility was not an approved API change </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4540" target="buggies">LPP-4540: Laszlo Explorer hierarchical menu does not display in dhtml/firefox/opera/safari </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4539" target="buggies">LPP-4539: Put in a header in each page of reference guide saying "this is an alpha; please look elsewhere(link) for better docs" </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4537" target="buggies">LPP-4537: Laszlo Explorer welcome page says "This is a fully-qualified release" -- but it's not </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4534" target="buggies">LPP-4534: Make a left-nav index navigator for OL 4 docs </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4530" target="buggies">LPP-4530: lzunit basedatacombobox test fails </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4521" target="buggies">LPP-4521: dhtml/flash: Clicking OK without a zip code no longer gives an error (regression) </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4520" target="buggies">LPP-4520: dhtml/swf: Window is missing in Date Picker component </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4513" target="buggies">LPP-4513: Compiler Improvements to address performance </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4510" target="buggies">LPP-4510: Quick Index page has broken doc links </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4502" target="buggies">LPP-4502: Investigate whether the docs build </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4495" target="buggies">LPP-4495: Richedittext: can't change font </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4489" target="buggies">LPP-4489: Richedittext: Can't change formatting before typing </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4487" target="buggies">LPP-4487: test/explicit-replicators/replicator.lzx not working </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4481" target="buggies">LPP-4481: Richedittext: Text size 18 doesn't seem to do anything. </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4479" target="buggies">LPP-4479: Richedittext: Successive changing of a text's properties shortens the selected text range by one character. </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4478" target="buggies">LPP-4478: Richedittext: WARNING: __LZgetNodes: p is null in LzDatapointer </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4477" target="buggies">LPP-4477: Selecting all of the text in a richedittext and then changing the text's properties doesn't change the final character. </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4474" target="buggies">LPP-4474: amazon soap fails in dhtml / wafflecone branch </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4464" target="buggies">LPP-4464: setVisible(null) warning, but it is never called </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4463" target="buggies">LPP-4463: ERROR:Class for tag include has not been defined yet </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4461" target="buggies">LPP-4461: In rich text editor, font color combo box does not update when cursor moves to different colored text </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4459" target="buggies">LPP-4459: Visible property not respected for replication </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4458" target="buggies">LPP-4458: Flash and dhtml: Cannot enter/edit text in Calendar demo (broke between r5934 and r5938) </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4456" target="buggies">LPP-4456: Idle/wait resource is out of position </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4453" target="buggies">LPP-4453: datapointer gets stuck on text elements </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4448" target="buggies">LPP-4448: fixes for dataprovider </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4428" target="buggies">LPP-4428: Make warning on CSS value is null more informative </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4427" target="buggies">LPP-4427: Clean-up for "basescrollbar" </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4425" target="buggies">LPP-4425: Source for Small applications, Demos, and Components can't be viewed </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4423" target="buggies">LPP-4423: Class hierarchy document is not found </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4421" target="buggies">LPP-4421: linkdialog driver can't make links </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4403" target="buggies">LPP-4403: 4.0 history system should warn if first argument to save() isn't a string </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4401" target="buggies">LPP-4401: Namespace separators are not recognized in datapaths - updated </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4400" target="buggies">LPP-4400: Editor for live code examples in dguide isn't working </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4394" target="buggies">LPP-4394: "LzGlobalMouse.onmousemove" is way to slow for "LzView.prototype.getMouse.dependencies" in SWF </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4356" target="buggies">LPP-4356: link dialog does not make links (regression from r5852) </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4347" target="buggies">LPP-4347: baserichedittext-test.lzx fails
-</a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-3988" target="buggies">LPP-3988: Redundant 'validate' warnings on binary library compiles </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-3738" target="buggies">LPP-3738: Remove DHTML startup warning message for IceWeasel browser </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-3431" target="buggies">LPP-3431: Ensure richtext and richtexteditor work in OL4/SWF </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-3024" target="buggies">LPP-3024: If a css'd resource is not found, an error or warning should be issued </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-2760" target="buggies">LPP-2760: Decide how the data API's should handle null values </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4663" target="buggies">LPP-4663: Class hierarchy doc not found in binary dist </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4504" target="buggies">LPP-4504: Calendar demo presents no sample data </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4496" target="buggies">LPP-4496: Links to demo apps in refguide are wrongly mapped </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4470" target="buggies">LPP-4470: Make a test/driver file for lzcombobox </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4443" target="buggies">LPP-4443: Don't warn on undefined style constraints when constant specified </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4375" target="buggies">LPP-4375: Fix lztest-text.lzx </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4374" target="buggies">LPP-4374: Fix lztest-stableborderlayout.lzx </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4351" target="buggies">LPP-4351: richtexteditarea-test has warnings and errors in debugger, but lzunit test passes
-</a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4350" target="buggies">LPP-4350: linkdialog-test fails </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4349" target="buggies">LPP-4349: test-baseedittext.lzx fails </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-4348" target="buggies">LPP-4348: rich-text: formatfontsize test fails
-</a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-1605" target="buggies">LPP-1605: ctor precedence is wrong </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-1417" target="buggies">LPP-1417: Allow backtracing to be invoked from the developer console </a></li>
-<li><a href="http://jira.openlaszlo.org/jira/browse/LPP-1635" target="buggies">LPP-1635: runtime warning on richtexteditarea test </a></li>
-</ul>
-
-
-</body>
+        <title>
+            OpenLaszlo 4.0.7 Release Notes
+        </title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="../lps/includes/explore.css" type="text/css" />
+        <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/images/laszlo.ico" />
+    </head>
+    <body class="release-notes">
+        <h1>
+            Release Notes for OpenLaszlo 4.1.x
+        </h1>
+        <p class="bodytext">
+            OpenLaszlo 4.1.x is a series of nightly builds from live development. For production, we recommend using OpenLaszlo 4.0.7.
+        </p>
+        <p>
+            For every release, we rely on the OpenLaszlo community to help ensure the quality of the platform release and to determine its future direction. To propose or participate in discussion of new features, see <a href="http://wiki.openlaszlo.org/Enhancement_Proposals">the wiki.</a> We encourage you to report any problems, and to make suggestions for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP">JIRA bug tracking system.</a>
+        </p>
+        <p>
+            Please see the <a href="http://download.openlaszlo.org/4.0.0/release-notes.html">OpenLaszlo 4.0 Release Notes</a> for an overview of significant changes since 3.x.
+        </p>
+        <h1>
+            New Features in 4.1.x
+        </h1>
+        <p>
+            TBD
+        </p>
+        <h1>
+            Bugs Fixed in 4.1.x
+        </h1>
+        <p>
+            TBD
+        </p>
+    </body>
 </html>
