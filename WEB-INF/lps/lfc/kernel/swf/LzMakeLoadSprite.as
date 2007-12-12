@@ -255,7 +255,7 @@ LzMakeLoadSprite.__LZsendTimeout = function ( e ){
 /**
   * @access private
   */
-LzMakeLoadSprite.destroy = function (recur) {
+LzMakeLoadSprite.destroy = function () {
     if ('updateDel' in this)
          this.updateDel.unregisterAll();
     if ('errorDel' in this)
@@ -266,5 +266,5 @@ LzMakeLoadSprite.destroy = function (recur) {
     this.loader.unload( this.loader.mc );
 
     // call shadowed destroy()
-    this.___destroy( recur ); 
+    this.___destroy(); 
 }

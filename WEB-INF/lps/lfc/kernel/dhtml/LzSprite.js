@@ -1178,16 +1178,22 @@ LzSprite.prototype.__updateStretches = function() {
 LzSprite.prototype.predestroy = function() {
 }
 
-LzSprite.prototype.destroy = function(recursive) {
-    if (this.destroyed == true) return;
-    //alert('destroy' + this + ', recursive ' + recursive);
-    if (recursive) {
-        if (this.__children) {
-            for (var i = 0; i < this.__children.length; i++) {
-                this.__children[i].destroy(recursive);
-            }
+LzSprite.prototype.destroy = function() {
+    if (this.__LZdeleted == true) return;
+    // To keep delegates from resurrecting us.  See LzDelegate#execute
+    this.__LZdeleted = true;
+
+    // Remove from parent if the parent is not going to be GC-ed
+    if (! this.__parent.__LZdeleted) {
+      var pc = this.__parent.__children;
+      for (var i = pc.length - 1; i >= 0; i--) {
+        if (pc[i] === this) {
+          pc.splice(i, 1);
+          break;
         }
+      }
     }
+
     if (this.__ImgPool) this.__ImgPool.destroy();
     if (this.__LZimg) this.__discardElement(this.__LZimg);
     if (this.__LZclick) {
@@ -1217,7 +1223,6 @@ LzSprite.prototype.destroy = function(recursive) {
         this.__discardElement(this.__LZcanvas);
     }
     this.__ImgPool = null;
-    this.destroyed = true;
 }
 
 /**

@@ -34,12 +34,14 @@
   */
 class LzIdleClass {
 
-var coi = [];
+  var coi;
 
 
 var removeCOI = null;
 function initialize () {
-this.removeCOI = new LzDelegate( this , "removeCallIdleDelegates" );
+  // Create array on instance, not prototype
+  this.coi = new Array;
+  this.removeCOI = new LzDelegate( this , "removeCallIdleDelegates" );
 }
 
 

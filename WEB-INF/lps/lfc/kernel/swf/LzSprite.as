@@ -897,7 +897,18 @@ LzSprite.prototype.setFontName = function ( val ,prop ){
 
 LzSprite.prototype.predestroy = function(){
     this.bringToFront();
-    
+}
+
+/**
+  * This method should remove a view, its media, and any of its subviews.
+  * @access private
+  * 
+  */
+LzSprite.prototype.destroy = function(){
+    if (this.__LZdeleted == true) return;
+    // To keep delegates from resurrecting us.  See LzDelegate#execute
+    this.__LZdeleted = true;
+
     if (this.updatePlayDel) {
         this.updatePlayDel.unregisterAll();
         delete this.updatePlayDel;
@@ -906,21 +917,6 @@ LzSprite.prototype.predestroy = function(){
     if (this.doQueuedDel) {
         this.doQueuedDel.unregisterAll();
         delete this.doQueuedDel;
-    }
-}
-
-/**
-  * This method should remove a view, its media, and any of its subviews.
-  * @access private
-  * 
-  */
-LzSprite.prototype.destroy = function(recursive){
-    if (recursive) {
-        if (this.owner.subviews) {
-            for (var i = 0; i < this.owner.subviews.length; i++) {
-                this.owner.subviews[i].sprite.destroy(recursive);
-            }
-        }
     }
 
     this.__LZFinishDestroyOnIdle();

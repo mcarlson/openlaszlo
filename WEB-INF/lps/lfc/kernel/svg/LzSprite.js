@@ -471,7 +471,7 @@ LzSprite.prototype.__updateStretches = function() {
     }
 }
 
-LzSprite.prototype.destroy = function(recursive) {
+LzSprite.prototype.destroy = function() {
 }
 
 LzSprite.prototype.getMouse = function(xy) {

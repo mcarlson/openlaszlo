@@ -3,7 +3,7 @@
 
  **************************************************************************-->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -281,7 +281,7 @@
     <view name="lower_right_corner" bgcolor="#888888" width="11" height="11"
       x="${parent.width-11}" y="${parent.height-11}"/>
 
-    <_dbg_horiz_scrollbar id="dhsb" y="${classroot.textpane.height}"  
+    <_dbg_horiz_scrollbar name="dhsb" y="${classroot.textpane.height}"  
                           width="${parent.width - 11}" 
                           bgcolor="#666666" height="13" />
 

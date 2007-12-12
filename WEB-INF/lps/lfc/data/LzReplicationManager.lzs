@@ -596,7 +596,6 @@ var handleModify = null;
   * @access private
   */
 function destroyClone ( v ) {
-    if (v.sprite) v.sprite.destroy(true);
     v.destroy();
 }
 

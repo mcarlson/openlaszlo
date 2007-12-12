@@ -1296,7 +1296,7 @@ function __LZevalPathExpr ($lzsc$rp) {
   * @access private
   */
 function __LZresolveRefs ( refs ){
-    //need to resolve init= before constraints...
+    // $once are applied before $always
     for ( var p in refs ){
         var rp = refs[ p ];
         var pp;
@@ -1321,18 +1321,17 @@ function __LZresolveRefs ( refs ){
                 }
             }
             this.dataBindAttribute( p , pp );
-        } else if ( !('dependencies' in rp && rp.dependencies) ){
-            if (rp instanceof Function) {
-              rp.call(this);
-            }
+        } else if ((rp instanceof Function) &&
+                   // A function with no or null dependencies is a $once
+                   (! ('dependencies' in rp && rp.dependencies))) {
+            rp.call(this);
         }
     }
 
-    // Now resolve the $always values
+    // Functions with dependencies are $always
     for ( var p in refs ){
-        // The string check prevents a dhtml error
         var rp = refs[ p ];
-        if (rp instanceof Function && ('dependencies' in rp)) {
+        if ((rp instanceof Function) && ('dependencies' in rp)) {
             this.applyConstraint( p , rp , rp.dependencies.call(this) );
         }
     }
@@ -1774,7 +1773,7 @@ function destroy( recursiveCall ){
     if (this.__LZdeleted == true) {
         return;
     }
-
+    // To keep delegates from resurrecting us.  See LzDelegate#execute
     this.__LZdeleted = true;
 
     if (this.ondestroy.ready) this.ondestroy.sendEvent( this );

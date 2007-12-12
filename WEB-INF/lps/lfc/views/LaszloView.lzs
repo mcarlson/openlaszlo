@@ -1157,9 +1157,9 @@ function destroy( recursiveCall ){
 
     super.destroy.apply(this, arguments);
 
-    if ( recursiveCall == true ) { return; }
+    if (this.sprite) { this.sprite.destroy() }
 
-    if (this.sprite) { this.sprite.destroy(true) }
+    if ( recursiveCall == true ) { return; }
 
     //this.__LZFinishDestroyOnIdle();
 

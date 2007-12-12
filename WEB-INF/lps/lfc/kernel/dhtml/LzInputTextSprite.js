@@ -231,7 +231,7 @@ LzInputTextSprite.prototype.__setTextEvents = function(c) {
 }
 
 LzInputTextSprite.prototype.__textEvent = function ( e, eventname ){
-    if (this.destroyed == true) return;
+    if (this.__LZdeleted == true) return;
     var keycode = e ? e.keyCode : event.keyCode;
     if (eventname == 'onfocus' || eventname == 'onmousedown') {
         if (eventname == 'onfocus') {
