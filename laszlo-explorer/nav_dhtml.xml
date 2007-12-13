@@ -300,12 +300,11 @@
 
   <section name="Documentation" title="Documentation" src="/laszlo-explorer/coverpages/documentation_cover.html" text="Tutorial, advanced, reference">
     <topic src="/docs/installation/index.html" name="Installation" />
-    <topic src="http://www.openlaszlo.org/lps3/docs/reference/index.html" name="LZX Reference" action="popupexternal" target="laszlolzxreference" />
+    <topic popup="/docs/reference/index.html" name="LZX Reference" action="popup" target="laszlolzxreference"/>    
     <topic popup="/docs/developers/index.html" name="Developer's Guide" action="popup" target="laszlodevguide" />
     <topic popup="/docs/deployers/index.html" name="Administrator's Guide" action="popup" target="laszloadminguide" />
     <!--topic popup="/docs/design/index.html" name="UI Designer's Guide" action="popup" target="laszlouiguide" /-->
     <topic popup="/docs/component-design/index.html" name="Components Guide" action="popup" target="laszlocomponentguide" />
-    <topic popup="/docs/contributors/index.html" name="Contributor's Guide" action="popup" target="laszlocontributorsguide" />
     <topic src="/docs/release-notes.html" name="Release Notes" />
     <topic src="/tools/index.html" name="Developer's Tools" title="Development Tools"  text="Tips for IDEs"/>
   </section>
