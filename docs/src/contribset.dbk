@@ -12,8 +12,10 @@
       <xi:fallback><para>Missing: Contributors Guide</para></xi:fallback>
     </xi:include>
 
+    <!-- don't include the reference 
     <xi:include href="contribref/index.dbk">
       <xi:fallback><para>Missing: Reference</para></xi:fallback>
     </xi:include>
+    -->
 
 </set>

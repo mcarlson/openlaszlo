@@ -1367,14 +1367,14 @@ All Rights Reserved. Use is subject to license terms.</p>
     </foreach>
   </target>
   
-  <target name="contributors" depends="contributors.preprocess,contribref.resources,contributors.resources">
+  <target name="contributors" depends="contributors.preprocess,contributors.resources">
     <antcall target="book.html.generate" inheritAll="true">
       <param name="local.input.dir" value="${docs.output.dir}"/>
       <param name="local.input.index" value="contribindex.dbk"/>
       <param name="local.output.dir" value="${docs.output.dir}"/>
       <param name="local.output.index" value="contribindex.html"/>
       <param name="local.output.depends.dir" value="${docs.output.dir}"/>
-      <param name="local.output.depends.set" value="contribindex.html contributors/*.html contribref/*.html"/>
+      <param name="local.output.depends.set" value="contribindex.html contributors/*.html"/>
       <param name="local.worksheet" value="xsl/refguide-html.xsl"/>
     </antcall>
   </target>
