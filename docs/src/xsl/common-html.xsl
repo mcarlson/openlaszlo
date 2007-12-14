@@ -16,14 +16,18 @@
                 xmlns:xi="http://www.w3.org/2003/XInclude"
                 xmlns:dbk="http://docbook.org/ns/docbook"
                 exclude-result-prefixes="exslt xi dbk dyn saxon"
+                xmlns="http://www.w3.org/1999/xhtml"
                 version="1.0">
   
-  <xsl:import href="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"/>
+  <xsl:import href="http://docbook.sourceforge.net/release/xsl/current/xhtml/chunk.xsl"/>
   <xsl:import href="parameters.xsl"/>
   <xsl:import href="synop-javascript.xsl"/>
   <xsl:import href="synop-lzx.xsl"/>
   <xsl:import href="lzx-pretty-print.xsl"/>
 
+  <!-- output xhtml with a doctype -->
+  <xsl:output method="saxon:xhtml" />
+  
   <!-- Path to base directory on local disk of output files -->
   <xsl:param name="base.dir" />
   
