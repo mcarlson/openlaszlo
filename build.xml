@@ -230,8 +230,8 @@
   </target>
   
   <!--============== Convenience Targets [simple] ==================-->
-  <target name="simple" depends="disable-tomcat,disable-dtd,build" 
-   description="Just do a simple build, without tomcat or a dtd or doc." />
+  <target name="simple" depends="disable-tomcat,build" 
+   description="Just do a simple build, without tomcat or doc." />
   
    <!--============== Convenience Targets [nightly] ==================-->
    <target name="nightly" depends="disable-tomcat"
@@ -259,11 +259,6 @@
       description="Call this before init to ensure that the nsi windows installer will not be run."
       >
       <property name="skip.nsi-dev" value="true" />
-  </target>
-
-  <target name="disable-dtd"
-    description="Don't want the endless dtd task to run? Just run this target first.">
-    <property name="skip.dtd" value="true" />
   </target>
 
   <!--===============  Target [init]  ===================-->
@@ -405,7 +400,6 @@
               <include name="*.sit"/>
               <include name="*.dmg"/>
               <include name="*.exe"/>
-              <include name="tools/lzx.dtd" />
               <include name="tools/lzx.rnc" />
               <include name="tools/lzx.rng" />
               <include name="tools/lzx.xsd" />
@@ -456,13 +450,7 @@
         unless="no.tomcat">
         <ant target="webapp.undeploy" />
     </target>
-  
-  <!--================  Target [dtd] ==============-->
-      <target name="dtd" depends="init"
-          description="build the dtd, only" >
-          <ant dir="${webapp-lps-home}/schema"  target="dtd" />          
-      </target>      
-  
+    
   <!--================  Target [build-source-distro] ==============-->
   <target name="build-source-distro"
       description="Build source distribution"
@@ -495,7 +483,7 @@
   </target>
 
   <target name="package-source-distro" 
-      description="Turn source dirs into packages"  depends="disable-tomcat,init,dtd">
+      description="Turn source dirs into packages"  depends="disable-tomcat,init">
       <echo message="packaging source distro into ${source-distro-gzfile}" />
       
       <!-- Create tar gz -->
@@ -706,10 +694,7 @@
   <target name="build-dist-dir-dev" 
       description="Prepares dev copy of dist directory" 
       depends="disable-tomcat,init" unless="done.build-dist-dir-dev" >
-
-      <!-- Explicitly build the dtd when we're building a distribution --> 
-     <ant target="dtd" />
-
+      
       <copy todir="${builddir-dev}" >
           <fileset dir="${builddir}">
               <patternset refid="manifest.top" />
@@ -810,8 +795,7 @@
   <!--================  Target [dist-dev] ==============-->
   <target name="dist-dev" depends="disable-tomcat,init,build-core" unless="done.dist.dev"
       description="Build 'developer' distributions" >
-      <!-- Explicitly build the dtd when we're building a distribution --> 
-      <ant dir="${webapp-lps-home}/schema"  target="dtd" />
+
       <ant target="build-dist-dir-dev" inheritrefs="true" />
 
       <ant target="prefetch" inheritrefs="true" />
@@ -1013,7 +997,7 @@
   <!--================  Target [build-dist-dir-core] ==============-->
   <target name="build-dist-dir-core" 
       description="Build lps core distribution directory for tgz (w/out precache)"
-      depends="disable-tomcat,init,build,doc,dtd" 
+      depends="disable-tomcat,init,build,doc" 
       unless="build-dist-dir-core.done">
 
       <property name="webapp"    value="${builddir}/lps-${version.id}" />

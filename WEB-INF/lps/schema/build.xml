@@ -18,10 +18,9 @@
     <property name="rnc" value="lzx.rnc"/>
     <property name="docrng" value="lzxdoc.rng"/>
     <property name="rng" value="lzx.rng"/>
-    <property name="dtd" value="lzx.dtd"/>
     <property name="xsd" value="lzx.xsd"/>
     <property name="html" value="lzx-reference.html"/>
-    <property name="python.exec" value="python" />
+
     <mkdir dir="build"/>
     <condition property="schemas.uptodate">
         <and>
@@ -30,8 +29,6 @@
                     <include name="strip-docs.xsl,strip-private.xsl"/>
                     <include name="lzx.rnc"/>
                 </srcfiles>
-            </uptodate>
-            <uptodate property="dtd.uptodate" value="false" srcfile="${rng}" targetfile="${dtd}">
             </uptodate>
             <uptodate property="xsd.uptodate" value="false" srcfile="${rnc}" targetfile="${xsd}"/>
         </and>
@@ -51,17 +48,6 @@
 
     <style in="build/lzx.direct.rng" out="${rng}" style="strip-docs.xsl"/>
     <style in="build/lzx.direct.rng" out="${docrng}" style="strip-private.xsl"/>
-  </target>
-
-  <target name="dtd" 
-          description="Generate DTD" depends="rng"
-          unless="schemas.uptodate" >
-      <exec executable="${python.exec}" taskname="rng2dtd" failonerror="true" >
-        <arg value="rng2dtd.py"/>
-        <arg value="${rng}"/>
-        <arg value="-o"/>
-        <arg value="${dtd}"/>
-      </exec>
   </target>
 
   <target name="clean" 
