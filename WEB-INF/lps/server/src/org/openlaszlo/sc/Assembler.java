@@ -43,6 +43,12 @@ public class Assembler implements Emitter {
   private static byte[] backingStore;
   Hashtable constants;
 
+   // relative indicates a normal relative reference if relative is
+   // false, this reference is part of label arithmetic, that is, a
+   // difference of two labels:
+   //    (label2 - label1)
+   // this produces two references, one with positive=true and one
+   // with positive=false.
   public static class LabelReference {
     int patchloc;
     boolean relative;
@@ -77,24 +83,31 @@ public class Assembler implements Emitter {
       for (Iterator i =  references.iterator(); i.hasNext(); ) {
         LabelReference lr = (LabelReference)i.next();
         int patchloc = lr.patchloc;
-        int offset = location - (lr.relative ? (patchloc + 2) : 0);
-        if (!lr.positive)
-          offset = -offset;
-
-        boolean rangecheck = true;
+        int offset = location - (patchloc + 2);
         if (!lr.relative) {
-          short curval = bytes.getShort(patchloc);
-          offset += curval;
-
-          // When we're in the middle of evaluating an expression like
-          // (label1 - label0), the offset may be temporarily out of range,
-          // so disable the check
-
-          if (curval == 0)
-            rangecheck = false;
+          // If we are doing label arithmetic, we store the relative
+          // offset of the first label we encounter, when the second
+          // label is encountered it will subtract its offset.  When
+          // the instruction is first written, it will write 0 offsets
+          // at the patchloc.  So, the test for curval == 0 is saying
+          // "is this the first label we have encountered for this
+          // location?"  And if so, it will not do any arithmetic, it
+          // will simply write the offset of that label into the
+          // patchloc.
+          // FIXME [2007-12-14 ptw] (LPP-5262) This will fail if the
+          // blocks in the try are maximal
+          // Fetch unsigned:
+          int curval = bytes.getShort(patchloc) & MAX_OFFSET();
+          if (curval == 0) {
+            ;
+          } else if (lr.positive) {
+            offset = offset - curval;
+          } else {
+            offset = curval - offset;
+          }
         }
 
-        if (rangecheck && (offset < MIN_OFFSET() || offset > MAX_OFFSET())) {
+        if (offset < MIN_OFFSET() || offset > MAX_OFFSET()) {
           throw new CompilerException((this instanceof Block?"Block":"Label") + " " +
                                       name + ": jump offset " + offset + " too large");
         }
