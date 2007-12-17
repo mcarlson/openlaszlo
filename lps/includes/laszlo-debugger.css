@@ -44,7 +44,12 @@ a.ERROR
 	background-color: white;
 }
 
+/* Debug.addText */
+span.OUTPUT
+{
+    white-space: pre;
+}
 /*
- * Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.
+ * Copyright 2006, 2007 Laszlo Systems, Inc.  All Rights Reserved.
  * Use is subject to license terms.
  */

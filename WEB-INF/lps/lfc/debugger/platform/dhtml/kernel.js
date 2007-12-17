@@ -11,12 +11,21 @@
   * @subtopic Debugging
   */
 
+/** The HTML debug window
+  * @access private
+  */
+Debug.DebugWindow = null;
+
 /**
   * @access private
   * Instantiates an instance of the user Debugger window
   * Called last thing by the compiler when the app is completely loaded.
   */
 Debug.makeDebugWindow = function () {
+  // The application and debugger are sibling iframes in the
+  // embedding.
+  this.DebugWindow = window.parent.frames['LaszloDebugger'];
+
   // Name all global singletons
   var module = $modules.lz;
   var idp = new RegExp('^[_$\\w\\d]+$');
@@ -50,43 +59,27 @@ Debug.makeDebugWindow = function () {
       }
     }
   }
-  // Nothing else to do for DHTML, since the Debugger window is done
-  // in HTML and is always available (see below).
 }
-
-/** The HTML debug window
-  * @access private
-  */
-Debug.DebugWindow = null;
 
 /**
   * @access private
   */
 Debug.clear = function () {
   var dw = this.DebugWindow;
-  if (! dw) {
-    // The application and debugger are sibling iframes in the
-    // embedding.
-    dw = this.DebugWindow = window.parent.frames['LaszloDebugger'];
-  }
   dw.document.body.innerHTML = '';
-}
+};
+
 
 /**
   * @access private
   */
 Debug.addHTMLText = function (str) {
   var dw = this.DebugWindow;
-  if (! dw) {
-    // The application and debugger are sibling iframes in the
-    // embedding.
-    dw = this.DebugWindow = window.parent.frames['LaszloDebugger'];
-  }
   var dwd = dw.document;
   var span = dwd.createElement('span');
   var dwdb = dwd.body;
   // IE does not display \n in white-space: pre, so we translate...
-  span.innerHTML = '<span style="white-space: pre">' + str.split('\n').join('<br />') + '</span>';
+  span.innerHTML = '<span class="OUTPUT">' + str.split('\n').join('<br />') + '</span>';
   dwdb.appendChild(span);
   // Duplicated from __write, for direct calls to this
   this.atFreshLine = (str.charAt(str.length-1) == '\n');

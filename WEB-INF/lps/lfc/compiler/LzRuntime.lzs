@@ -125,7 +125,7 @@ if ($debug) {
         var dwd = dw.document;
         var span = dwd.createElement('span');
         // IE does not display \n in white-space: pre, so we translate...
-        span.innerHTML = '<span style="white-space: pre">' + msg.split('\n').join('<br />') + '</span>';
+        span.innerHTML = '<span class="OUTPUT">' + msg.split('\n').join('<br />') + '</span>';
         dwd.body.appendChild(span);
         // Scroll to end
         span.scrollIntoView(false);
