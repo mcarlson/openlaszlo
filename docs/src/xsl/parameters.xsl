@@ -5,8 +5,11 @@
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
+  <!-- Specify a doctype. Fixes LPP-5207. [bshine 12.17.2007] -->
+  <xsl:param name="chunker.output.method" select="'html'"/>
+  <xsl:param name="chunker.output.doctype-public" select="'-//W3C//DTD HTML 4.01 Transitional//EN'"/>
+  <xsl:param name="chunker.output.doctype-system" select="'http://www.w3.org/TR/html4/loose.dtd'"/>  
   
-  <!-- todo: add doctype -->
   <!--xsl:param name="emphasis.propagates.style" select="0"/-->
   
   <!-- Adminitions -->
