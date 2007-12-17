@@ -154,14 +154,10 @@ verbosity=1
       <xmlcatalog id="docbook.local.xsl">
         <entity publicId="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"
              location="${docbook-xsl}/html/chunk.xsl"/>
-        <entity publicId="http://docbook.sourceforge.net/release/xsl/current/xhtml/chunk.xsl"
-             location="${docbook-xsl}/xhtml/chunk.xsl"/>             
         <entity publicId="http://docbook.sourceforge.net/release/xsl/current/htmlhelp/htmlhelp.xsl"
              location="${docbook-xsl}/htmlhelp/htmlhelp.xsl"/>
         <entity publicId="http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl"
-        location="${docbook-xsl}/html/docbook.xsl"/>
-        <entity publicId="http://docbook.sourceforge.net/release/xsl/current/xhtml/docbook.xsl"
-          location="${docbook-xsl}/xhtml/docbook.xsl"/>        
+             location="${docbook-xsl}/html/docbook.xsl"/>
         <entity publicId="http://docbook.sourceforge.net/release/xsl/current/fo/docbook.xsl"
              location="${docbook-xsl}/fo/docbook.xsl"/>
       </xmlcatalog>
