@@ -44,6 +44,7 @@ to the canvas. </para>
    <title>Empty Canvas</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/laszlo_basics-$1.lzx"/></textobject> 
+     <parameter role="canvas">height: 100, width: 500, bgcolor: 'green'</parameter>
    </programlisting>
 </example>
 
@@ -55,8 +56,6 @@ to the canvas. </para>
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/laszlo_basics-$1.lzx></example?>
 
-
-
 <para>For this simple example we have set the background color to green, just to show that it's there.  If you don't set a background color for the
 canvas, it will be rendered white.  (Throughout the rest of this tutorial no background color will be specified for the canvas.) Now let's
 put a window on a white canvas. 
@@ -65,7 +64,8 @@ put a window on a white canvas.
 <example role="live-example">
    <title>Simple_window</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/laszlo_basics-$2.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/laszlo_basics-$2.lzx"/></textobject>
+     <parameter role="canvas">height: 100, width: 500</parameter>
    </programlisting>
 </example>
 
