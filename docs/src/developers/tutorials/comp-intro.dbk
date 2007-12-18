@@ -46,7 +46,8 @@ The <ulink url="../reference/">LZX Reference</ulink> documents all the tags, att
 <example role="live-example">
    <title>Components miscellany</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/comp-intro-$1.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/comp-intro-$1.lzx"/></textobject>
+       <parameter role="canvas">height: 500, width: 800</parameter>
    </programlisting>
 </example>
 
@@ -303,7 +304,8 @@ what this looks like.
 <example role="live-example">
    <title>Components example-tags only</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/comp-intro-$2.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/comp-intro-$2.lzx"/></textobject>
+       <parameter role="canvas">height: 100</parameter>       
    </programlisting>
 </example>
 <?example role="live-example"><title>Components example-tags only</title><programlisting role="lzx-embednew"><filename>comp-intro-$2.lzx</filename><parameter/><code>
@@ -360,7 +362,8 @@ The following example shows how you can create buttons using tags and script.
 <example role="live-example">
    <title>Creating components from script</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/comp-intro-$3.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/comp-intro-$3.lzx"/></textobject>
+       <parameter role="canvas">height: 150</parameter>
    </programlisting>
 </example>
 <?example role="live-example"><title>Creating components from script</title><programlisting role="lzx-embednew"><filename>comp-intro-$3.lzx</filename><parameter/><code>
@@ -403,7 +406,8 @@ the <literal>onclick</literal> method procedurally adds an item to the <indexter
 <example role="live-example">
    <title>Component APIs</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/comp-intro-$4.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/comp-intro-$4.lzx"/></textobject>
+       <parameter role="canvas">height: 150</parameter>       
    </programlisting>
 </example>
 <?example role="live-example"><title>Component APIs</title><programlisting role="lzx-embednew"><filename>comp-intro-$4.lzx</filename><parameter/><code>
@@ -449,7 +453,8 @@ for each matching node in the "mydata" dataset.
 <example role="live-example">
    <title>Data-Driven Components</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/comp-intro-$5.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/comp-intro-$5.lzx"/></textobject>
+       <parameter role="canvas">height: 200, width:800</parameter>       
    </programlisting>
 </example>
 <?example role="live-example"><title>Data-Driven Components</title><programlisting role="lzx-embednew"><filename>comp-intro-$5.lzx</filename><parameter/><code>

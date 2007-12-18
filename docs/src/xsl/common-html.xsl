@@ -17,6 +17,7 @@
                 xmlns:dbk="http://docbook.org/ns/docbook"
                 exclude-result-prefixes="exslt xi dbk dyn saxon"
                 version="1.0">
+
   
   <xsl:import href="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"/>
   <xsl:import href="parameters.xsl"/>
@@ -198,14 +199,21 @@
     <xsl:apply-templates select="programlisting"/>
   </xsl:template>
   
-  <xsl:template match="programlisting[@language='lzx' and textobject/textdata/@fileref]">
-    
+    <xsl:template match="programlisting[@language='lzx' and textobject/textdata/@fileref]">
     
     <!-- extract necessary information from context -->
     <xsl:variable name="fname" select="textobject/textdata/@fileref"/>
     <xsl:variable name="query-parameters" select="parameter[@role='query']"/>
-    <xsl:variable name="canvas-parameters" select="parameter[@role='canvas']"/>
-
+    
+    <!--If no canvas parameters are specified, set height to 400px and width to 500.
+      This fixes     LPP-5207 change height of example code window from 200 to 400 pixels
+      [bshine 12.16.2007]
+    -->         
+    <xsl:variable name="canvas-parameters">
+      <xsl:if test="parameter[@role='canvas']"><xsl:value-of select="parameter[@role='canvas']"/></xsl:if>
+      <xsl:if test="count(parameter[@role='canvas']) = 0">height: 400, width: 500, bgcolor: '#FFFFFF'</xsl:if>      
+    </xsl:variable> 
+   
     <!-- format live example -->
     <xsl:variable name="live" select="ancestor::example[@role='live-example'] or ancestor::informalexample[@role='live-example']"/>
     <xsl:if test="$live">
@@ -246,9 +254,6 @@
         <xsl:value-of select="$fname"/>
       </xsl:variable>
       <xsl:variable name="editbuttonimg">
-        <!-- TODO [bshine 10.19.2007]
-          If we're in the top-level directory, we only need to go ../includes to get to the edit button.
-          If we're in something/tutorial then we need to go up ../../includes -->
         <xsl:call-template name="relative.path.to.lpshome"/>
         <xsl:text>docs/includes/d_t_editbutton.gif</xsl:text>
       </xsl:variable>
@@ -307,11 +312,30 @@
     </xsl:choose>
   </xsl:template>
   
+  <!-- Although this template is associated with role="lzx-embednew",
+    it does not in fact seem to be the currently favored way of 
+    setting up live examples. It seems, rather, that it was *once* new,
+    and is no longer new, but rather, it is now old. Preferred to
+    this structure is the template defined at line 201 of this file,
+    with the first line 
+    <xsl:template match="programlisting[@language='lzx' and textobject/textdata/@fileref]">
+    
+    An example of this favored usage can be found in, for instance, 
+    docs/src/developers/tutorials/comp-intro.dbk : 
+        <example role="live-example">
+        <title>Components miscellany</title>
+        <programlisting language="lzx">
+        <textobject><textdata fileref="programs/comp-intro-$1.lzx"/></textobject> 
+        </programlisting>
+        </example>
+        
+    [bshine 12.16.2007]
+    -->
   <xsl:template match="programlisting[@role='lzx-embednew']">
     <xsl:variable name="fname" select="filename/text()"/>
     <xsl:variable name="query-parameters" select="parameter/text()"/>
     <xsl:variable name="text" select="code/text()"/>
-    
+      <xsl:message>Aha! Using role='lzx-embednew' on file <xsl:value-of select="$fname"/> and parameters <xsl:value-of select="$query-parameters"/></xsl:message>
       <xsl:variable name="query-param">
         <xsl:if test="$query-parameters">&amp;<xsl:value-of select="$query-parameters"></xsl:value-of></xsl:if>
       </xsl:variable>
@@ -329,6 +353,7 @@
           <xsl:with-param name="default" select="'400'"/>
         </xsl:call-template>
       </xsl:variable>
+      <xsl:message>Got canvas-width of <xsl:value-of select="$canvas-width"/> and canvas-height of <xsl:value-of select="$canvas-height"/></xsl:message>
       <xsl:variable name="canvas-id" select="generate-id(.)"/>
       <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', width: '<xsl:copy-of select="$canvas-width"/>', height: '<xsl:copy-of select="$canvas-height"/>'}</xsl:variable>
       <xsl:variable name="dhtml-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=html&amp;lzr=dhtml', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'DHTML')"/>', width: '<xsl:copy-of select="$canvas-width"/>', height: '<xsl:copy-of select="$canvas-height"/>'}</xsl:variable>
