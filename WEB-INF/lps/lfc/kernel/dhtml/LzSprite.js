@@ -1184,7 +1184,7 @@ LzSprite.prototype.destroy = function() {
     this.__LZdeleted = true;
 
     // Remove from parent if the parent is not going to be GC-ed
-    if (! this.__parent.__LZdeleted) {
+    if ((this.__parent_) && (! this.__parent.__LZdeleted)) {
       var pc = this.__parent.__children;
       for (var i = pc.length - 1; i >= 0; i--) {
         if (pc[i] === this) {
