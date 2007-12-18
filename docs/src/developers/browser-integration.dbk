@@ -502,13 +502,29 @@
             <example role="live-example">
                 <title>Flash player version-detecting wrapper</title>
                 <programlisting>
-        <!-- remove para tags for valid DocBook LI, LPP-4594 9/3/2007   -->
-        <!-- para is not a legal child of programlisting -->
-          <!-- <para role="fixme"> -->
-                    <remark role="fixme">
-                        <emphasis role="para-label">FIXME:</emphasis>
-                    </remark>
-          <!-- </para> -->
+&lt;!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;
+&lt;html&gt;
+   &lt;head&gt;
+      &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+   
+      &lt;link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico"&gt;
+      &lt;title&gt;OpenLaszlo Application&lt;/title&gt;&lt;style type="text/css"&gt;
+      html, body { margin: 0; padding: 0; height: 100%; }
+      body { background-color: #ffffff; }
+    &lt;/style&gt;&lt;script language="JavaScript1.1" src="/lps-dev/lps/includes/vbembed.js" 
+    type="text/javascript"&gt;&lt;/script&gt;&lt;script src="/lps-dev/lps/includes/embed.js" type="text/javascript"&gt;&lt;/script&gt;&lt;/head&gt;
+   &lt;body&gt;&lt;script type="text/javascript"&gt;
+          actualVersion = detectFlash();
+          requiredVersion = 6;
+          if (isIE &amp;&amp; isWin || actualVersion &gt;= requiredVersion) {
+            lzEmbed({url: 'graceie.lzx?lzt=swf', bgcolor: '#ffffff', width: '500', height: '200'}, requiredVersion);
+          } else {
+            document.write('This application requires Flash player ' + requiredVersion + '. 
+            &lt;a href="http://www.macromedia.com/go/getflashplayer" target="fpupgrade"&gt;Click here&lt;/a&gt; to upgrade.');
+          }
+        &lt;/script&gt;&lt;/body&gt;
+&lt;/html&gt;
                 </programlisting>
             </example>
             <para>Depending on which version is running, you may wish to
@@ -631,17 +647,14 @@
     globals.</para>
         <example role="live-example">
             <title>Passing query parameters to LZX application</title>
-            <programlisting>
-        <!-- remove para tags for valid DocBook LI, LPP-4594 9/3/2007   -->
-        <!-- para is not a legal child of programlisting -->
-        <!-- <para role="fixme"> -->
-                <remark role="fixme">
-                    <emphasis role="para-label">FIXME:</emphasis>example
-          showing passing of parameters</remark>
-        <!-- </para> -->
-            </programlisting>
+              <programlisting>
+&lt;script type="text/javascript"&gt;
+   lzEmbed({url: 'mainApplication'+screenW+'.lzx?lzt=swf', bgcolor: '#394660', width: screenW, height: screenH});
+&lt;/script&gt;
+
+</programlisting>
         </example>
-        <para />
+  
         <section>
             <title>Query Parameters and Global Variables</title>
             <para>Once the data has been passed in you can simply access
