@@ -23,8 +23,12 @@ Debug.DebugWindow = null;
   */
 Debug.makeDebugWindow = function () {
   // The application and debugger are sibling iframes in the
-  // embedding.
-  this.DebugWindow = window.parent.frames['LaszloDebugger'];
+  // dhtml embedding.
+  try {
+    this.DebugWindow = window.parent.frames['LaszloDebugger'];
+  } catch (e) {
+    // But not in Rhino
+  };
 
   // Name all global singletons
   var module = $modules.lz;
