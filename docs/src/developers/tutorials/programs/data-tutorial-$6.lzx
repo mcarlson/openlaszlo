@@ -4,7 +4,7 @@
   
   <datapointer xpath="myData:/" ondata="processData()">
     <method name="processData">
-      this.selectChild(2); 
+      this.selectChild(1); 
       do {
         if (this.xpathQuery( '@show' ) == 'south park') {
             Debug.write(this.xpathQuery('firstName/text()'));
