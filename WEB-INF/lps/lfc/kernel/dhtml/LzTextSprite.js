@@ -267,7 +267,11 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
         this._styledirty = false;
     }
 
-    if (this._sizecache.counter > this.__sizecacheupperbound) this._sizecache = {counter: 0};
+    // Empty the cache when full, but do not reset the counter because
+    // IE holds onto the object.
+    if (this._sizecache.counter > 0 && this._sizecache.counter % this.__sizecacheupperbound == 0) {
+        this._sizecache = {counter: this._sizecache.counter};
+    }
     if (this._sizecache[style] == null) this._sizecache[style] = {};
 
     var root = document.getElementById('lzTextSizeCache');
