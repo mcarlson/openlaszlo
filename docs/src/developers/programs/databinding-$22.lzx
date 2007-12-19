@@ -6,7 +6,7 @@
           onclick="details.datapath.selectPrev()"/>
   
   <view name="details" options="releasetolayout" height="150">
-    <datapath xpath="phonebook:/contacts/contact[1]"/>
+    <datapath xpath="phonebook:/phonebook/contact[1]"/>
     <text datapath="@firstName"/>
     <text datapath="@lastName"/>
     <text datapath="@phone"/>

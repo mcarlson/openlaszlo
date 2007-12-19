@@ -6,13 +6,13 @@
     <handler name="onclick">
       with (details.datapath) {
         selectPrev()
-        setXPath('phonebook:/contacts/contact[' + getNodeOffset() + ']' )
+        setXPath('phonebook:/phonebook/contact[' + getNodeOffset() + ']' )
       }
     </handler>
   </button>
   
   <view name="details" options="releasetolayout" height="150">
-    <datapath xpath="phonebook:/contacts/contact[1]"/>
+    <datapath xpath="phonebook:/phonebook/contact[1]"/>
     <text datapath="@firstName"/>
     <text datapath="@lastName"/>
     <text datapath="@phone"/>
@@ -26,7 +26,7 @@
     <handler name="onclick">
       with (details.datapath) {
         selectNext()
-        setAttribute('xpath', 'phonebook:/contacts/contact[' + getNodeOffset() + ']')
+        setAttribute('xpath', 'phonebook:/phonebook/contact[' + getNodeOffset() + ']')
       }
     </handler>
   </button>

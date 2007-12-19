@@ -37,7 +37,7 @@
   </button>
   
   <view name="all">
-    <datapath xpath="phonebook:/contacts/contact" pooling="true"/>
+    <datapath xpath="phonebook:/phonebook/contact" pooling="true"/>
     <view>
       <simplelayout axis="x"/>
       <checkbox width="30" datapath="@checked">
