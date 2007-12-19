@@ -115,7 +115,6 @@
     <script type="text/javascript" language="JavaScript" src="{$rootpath}{$root.relative.lps.includes}embed-compressed.js"/>
     <script type="text/javascript" language="JavaScript" src="{$rootpath}includes/docs.js"/>
     <script type="text/javascript" language="JavaScript"><xsl:text>lzOptions = { ServerRoot: '</xsl:text><xsl:value-of select="$rootpath"/><xsl:text>', dhtmlKeyboardControl: false };</xsl:text></script>
-    <script type="text/javascript" language="JavaScript"><xsl:text>Lz.dhtmlEmbedLFC('</xsl:text><xsl:value-of select="$rootpath"/><xsl:text>/lps/includes/lfc/LFCdhtml.js');</xsl:text></script>
   </xsl:template>
   
   <xsl:template name="body.attributes">
@@ -222,7 +221,7 @@
           <xsl:if test="$query-parameters">&amp;<xsl:value-of select="$query-parameters[1]/text()"></xsl:value-of></xsl:if>
         </xsl:variable>
         <xsl:variable name="canvas-id" select="generate-id(.)"/>
-        <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
+        <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', history: false, <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
         <xsl:variable name="dhtml-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=html&amp;lzr=dhtml', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'DHTML')"/>', <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
         <!-- To test examples in DHTML, uncomment the second script block below.
              If you don't want to see the SWF version as well, comment out the 
@@ -355,7 +354,7 @@
       </xsl:variable>
       <xsl:message>Got canvas-width of <xsl:value-of select="$canvas-width"/> and canvas-height of <xsl:value-of select="$canvas-height"/></xsl:message>
       <xsl:variable name="canvas-id" select="generate-id(.)"/>
-      <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', width: '<xsl:copy-of select="$canvas-width"/>', height: '<xsl:copy-of select="$canvas-height"/>'}</xsl:variable>
+      <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', width: '<xsl:copy-of select="$canvas-width"/>', height: '<xsl:copy-of select="$canvas-height"/>', history: false}</xsl:variable>
       <xsl:variable name="dhtml-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=html&amp;lzr=dhtml', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'DHTML')"/>', width: '<xsl:copy-of select="$canvas-width"/>', height: '<xsl:copy-of select="$canvas-height"/>'}</xsl:variable>
 
     <div class="embedded-canvas">
