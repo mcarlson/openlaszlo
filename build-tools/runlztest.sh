@@ -80,7 +80,7 @@ for i in $paths; do
     echo "if (LzTestManager.failedsuites > 0) quit(3);" >> $outfile
 
     # load that file into rhino
-    $JAVA_EXEC -jar 3rd-party/jars/custom_rhino.jar $outfile
+    $JAVA_EXEC -jar 3rd-party/jars/custom_rhino.jar -opt -1 $outfile
     
     # Stop testing if we failed a test
     if [ $? != 0 ] ; then
