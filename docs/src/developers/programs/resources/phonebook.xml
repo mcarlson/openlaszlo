@@ -2,9 +2,9 @@
 * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-<contacts>
+<phonebook>
     <contact firstName="John" lastName="Smith" phone="617-555-7855" email="jsmith@mail.com"/> 
     <contact firstName="Karl" lastName="Oberschnautzer" phone="111-555-9713" email="kobe@mail.com"/> 
     <contact firstName="Lisa" lastName="Jones" phone="415-555-8743" email="ljones@mail.com"/> 
     <contact firstName="Mary" lastName="Brown" phone="212-555-5211" email="mbrown@mail.com"/>
-</contacts> 
+</phonebook> 
