@@ -4,7 +4,7 @@
   <simplelayout axis="x" spacing="20"/>
   
   <view name="contacts" height="150" width="100">
-    <view bgcolor="0xe0e0e0" datapath="phonebook:/contacts/contact"
+    <view bgcolor="0xe0e0e0" datapath="phonebook:/phonebook/contact"
           onmouseover="setAttribute('bgcolor', 0xc0c0c0)" onmouseout="setAttribute('bgcolor', 0xe0e0e0)"
           onclick="details.datapath.setAttribute('p', this.datapath.p)">
       <simplelayout axis="x" spacing="5"/>
