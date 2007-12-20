@@ -19,7 +19,8 @@
   <text name="text3" resize="false" y="20" bgcolor="0xaaaaaa"/>
 
 <!-- text4: simple text for checking selection methods -->
-  <text name="text4" resize="false" bgcolor="0xaaaaaa"/>
+  <inputtext name="text4" resize="false" bgcolor="0xaaaaaa"/>
+  <inputtext name="text4ml" width="100" multiline="true" bgcolor="0xaaaaaa"/>
 
 <!-- text5: simple text for checking scroll methods -->
   <view name="view5">
@@ -286,6 +287,21 @@ suite.test4 = function() {
   text4.setSelection (0, 2);
   LzTestManager.assertEquals (2, text4.getSelectionSize(),  "text4.getSelectionSize() failure (5)");    
   LzTestManager.assertEquals (0, text4.getSelectionPosition(),  "text4.getSelectionPosition() failure (5)");    
+
+  if ($dhtml) {
+      text4ml.setText('\r\n01234\r\n\r\n567890123456789\r\n')
+  } else {
+      text4ml.setText('\n01234\n\n567890123456789\n')
+  }
+  text4ml.setSelection(5, 14);
+  LzTestManager.assertEquals (9, text4ml.getSelectionSize(),  "text4ml.getSelectionSize() failure (6)");    
+  LzTestManager.assertEquals (5, text4ml.getSelectionPosition(),  "text4ml.getSelectionPosition() failure (6)");    
+  text4ml.setSelection(6, 9);
+  LzTestManager.assertEquals (3, text4ml.getSelectionSize(),  "text4ml.getSelectionSize() failure (7)");    
+  LzTestManager.assertEquals (6, text4ml.getSelectionPosition(),  "text4ml.getSelectionPosition() failure (7)");    
+  text4ml.setSelection(5, 8);
+  LzTestManager.assertEquals (3, text4ml.getSelectionSize(),  "text4ml.getSelectionSize() failure (8)");    
+  LzTestManager.assertEquals (5, text4ml.getSelectionPosition(),  "text4ml.getSelectionPosition() failure (8)");    
 
 /*
   text4.setText ("     ");  // Note: The user cannot select a string of spaces

@@ -225,6 +225,7 @@ LzSprite.prototype.quirks = {
     ,set_height_for_multiline_inputtext: false
     ,ie_opacity: false
     ,text_measurement_use_insertadjacenthtml: false
+    ,text_selection_use_range: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -243,89 +244,92 @@ LzSprite.prototype.capabilities = {
 LzSprite.prototype.__updateQuirks = function(){
     if (window['Lz'] && Lz.__BrowserDetect) {
         Lz.__BrowserDetect.init();
-        if (this.quirks['inner_html_strips_newlines'] == true) {
+        var quirks = this.quirks;
+
+        if (quirks['inner_html_strips_newlines'] == true) {
             LzSprite.prototype.inner_html_strips_newlines_re = RegExp('$', 'mg');
         }
 
         // Divs intercept clicks if physically placed on top of an element
         // that's not a parent. See LPP-2680.
         // off for now
-        //this.quirks['fix_clickable'] = true;
+        //quirks['fix_clickable'] = true;
         if (Lz.__BrowserDetect.isIE) {
             if (Lz.__BrowserDetect.version < 7) {
                 // Provide IE PNG/opacity support
-                this.quirks['ie_alpha_image_loader'] = true;
+                quirks['ie_alpha_image_loader'] = true;
             } else {
-                this.quirks['invisible_parent_image_sizing_fix'] = true;
+                quirks['invisible_parent_image_sizing_fix'] = true;
             }
 
-            this.quirks['ie_opacity'] = true;
+            quirks['ie_opacity'] = true;
 
             // IE DOM leak prevention
-            this.quirks['ie_leak_prevention'] = true;
+            quirks['ie_leak_prevention'] = true;
 
             // Use images to force click tree to work in IE
-            this.quirks['fix_ie_clickable'] = true;
+            quirks['fix_ie_clickable'] = true;
 
             // workaround for IE refusing to respect divs with small heights when
             // no image is attached
-            this.quirks['fix_ie_background_height'] = true;
+            quirks['fix_ie_background_height'] = true;
 
             // workaround for IE not supporting &apos; in innerHTML
-            this.quirks['inner_html_no_entity_apos'] = true;
+            quirks['inner_html_no_entity_apos'] = true;
 
             // workaround for IE not supporting clip in divs containing inputtext
-            this.quirks['inputtext_parents_cannot_contain_clip'] = true;
+            quirks['inputtext_parents_cannot_contain_clip'] = true;
 
             // flag for components (basefocusview for now) to minimize opacity changes
-            this.quirks['minimize_opacity_changes'] = true;
+            quirks['minimize_opacity_changes'] = true;
 
             // multiline inputtext height must be set directly - height: 100% does not work.  See LPP-4119
-            this.quirks['set_height_for_multiline_inputtext'] = true;
+            quirks['set_height_for_multiline_inputtext'] = true;
 
             // text size measurement uses insertAdjacentHTML()
-            this.quirks['text_measurement_use_insertadjacenthtml'] = true;
+            quirks['text_measurement_use_insertadjacenthtml'] = true;
+            quirks['text_selection_use_range'] = true;
         } else if (Lz.__BrowserDetect.isSafari) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             // TODO: Tucker claims this is fixed in the latest version of webkit
-            this.quirks['invisible_parent_image_sizing_fix'] = true;
+            quirks['invisible_parent_image_sizing_fix'] = true;
 
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
-            this.quirks['alt_key_sends_control'] = true;
+            quirks['alt_key_sends_control'] = true;
 
             // Safari scrollHeight needs to subtract scrollbar height
-            this.quirks['safari_textarea_subtract_scrollbar_height'] = true;
+            quirks['safari_textarea_subtract_scrollbar_height'] = true;
 
             // Safari doesn't like clipped or placed input text fields.
-            this.quirks['safari_avoid_clip_position_input_text'] = true;
+            quirks['safari_avoid_clip_position_input_text'] = true;
             // Safari won't show canvas tags whose parent is display: none
-            this.quirks['safari_visibility_instead_of_display'] = true;
-            this.quirks['absolute_position_accounts_for_offset'] = true;
-            this.quirks['canvas_div_cannot_be_clipped'] = true;
+            quirks['safari_visibility_instead_of_display'] = true;
+            quirks['absolute_position_accounts_for_offset'] = true;
+            quirks['canvas_div_cannot_be_clipped'] = true;
             if (Lz.__BrowserDetect.version > 523.10) {
                 this.capabilities['rotation'] = true;
             }
         } else if (Lz.__BrowserDetect.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
-            this.quirks['invisible_parent_image_sizing_fix'] = true;
-            this.quirks['no_cursor_colresize'] = true;
-            this.quirks['absolute_position_accounts_for_offset'] = true;
-            this.quirks['canvas_div_cannot_be_clipped'] = true;
+            quirks['invisible_parent_image_sizing_fix'] = true;
+            quirks['no_cursor_colresize'] = true;
+            quirks['absolute_position_accounts_for_offset'] = true;
+            quirks['canvas_div_cannot_be_clipped'] = true;
         } else if (Lz.__BrowserDetect.isFirefox && Lz.__BrowserDetect.version < 2) {
                 // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
-                this.quirks['firefox_autocomplete_bug'] = true;
+                quirks['firefox_autocomplete_bug'] = true;
             }
         }
 
-    if (this.quirks['safari_avoid_clip_position_input_text']) {
+    if (quirks['safari_avoid_clip_position_input_text']) {
         LzSprite.prototype.__defaultStyles.lzswfinputtext.marginTop = '-2px';
         LzSprite.prototype.__defaultStyles.lzswfinputtext.marginLeft = '-2px';
         LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.marginTop = '-2px';
         LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.marginLeft = '-2px';
     }
 
-    if (this.quirks['css_hide_canvas_during_init']) {
-        if (this.quirks['safari_visibility_instead_of_display']) {
+    if (quirks['css_hide_canvas_during_init']) {
+        if (quirks['safari_visibility_instead_of_display']) {
             LzSprite.prototype.__defaultStyles.lzcanvasdiv.visibility = 'hidden';
         } else {
             LzSprite.prototype.__defaultStyles.lzcanvasdiv.display = 'none';
@@ -333,7 +337,7 @@ LzSprite.prototype.__updateQuirks = function(){
         LzSprite.prototype.__defaultStyles.lzcanvasclickdiv.display = 'none';
     }
 
-    if (this.quirks['hand_pointer_for_clickable']) {
+    if (quirks['hand_pointer_for_clickable']) {
         LzSprite.prototype.__defaultStyles.lzclickdiv.cursor = 'pointer';
     }
 }

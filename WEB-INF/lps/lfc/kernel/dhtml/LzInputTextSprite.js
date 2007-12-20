@@ -284,7 +284,7 @@ LzInputTextSprite.prototype.setMaxLength = function ( val ){
     this.__LzInputDiv.maxLength = val;    
 }
 
-LzInputTextSprite.prototype.select = function (start, end){
+LzInputTextSprite.prototype.select = function (){
     this._cancelblur = true;
     this.__show();
     this.__LzInputDiv.focus();
@@ -295,7 +295,253 @@ LzInputTextSprite.prototype.select = function (start, end){
     //Debug.write('select', this.uid, LzKeyboardKernel.__cancelKeys);
 }
 
-LzInputTextSprite.prototype.setSelection = LzInputTextSprite.prototype.select;
+LzInputTextSprite.prototype.setSelection = function (start, end){
+    if (end == null) {
+        end = start;
+    }
+    this._cancelblur = true;
+    this.__show();
+    LzInputTextSprite.__lastfocus = this;
+
+    if (this.quirks['text_selection_use_range']) {
+        var range = this.__LzInputDiv.createTextRange(); 
+
+        // look for leading \r\n
+        var val = this.__LzInputDiv.value;
+
+        if (start > end){
+            var st = start;
+            start = end;
+            end = st;
+        }
+
+        if(this.multiline) { 
+            var offset = 0;
+            // account for leading \r\n
+            var startcounter = 0;
+            while (offset < start) {
+                offset = val.indexOf('\r\n', offset + 2); 
+                if (offset == -1) break;
+                startcounter++;
+            }
+            var midcounter = 0;
+            while (offset < end) {
+                offset = val.indexOf('\r\n', offset + 2); 
+                if (offset == -1) break;
+                midcounter++;
+            }
+            var endcounter = 0;
+            while (offset < val.length) {
+                offset = val.indexOf('\r\n', offset + 2); 
+                if (offset == -1) break;
+                endcounter++;
+            }
+
+            var tl = range.text.length;
+            var st = start;
+            var ed = end - val.length + startcounter + midcounter + endcounter + 1;
+
+            //if (endcounter) endcounter += startcounter;
+            //alert (startcounter + ', ' + midcounter + ', ' + endcounter + ', ' + st + ', ' + ed);
+        } else {
+            var st = start;
+            var ed = end - range.text.length;
+        }
+
+        range.moveStart("character", st);
+        range.moveEnd("character", ed);
+        range.select();
+        //this.__LzInputDiv.range = range;
+        //setTimeout('LzInputTextSprite.__lastfocus.__LzInputDiv.range.select()', 50);
+        //this.__LzInputDiv.focus(); 
+    } else {
+        this.__LzInputDiv.setSelectionRange(start, end);
+    }     
+    this.__LzInputDiv.focus();
+
+    if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = false;
+}
+
+LzInputTextSprite.prototype.getSelectionPosition = function (){
+    if (! this.__shown || this.disabled == true) return -1;
+    if (this.quirks['text_selection_use_range']) {
+        if (this.multiline) {
+            var p = this._getTextareaSelection();
+        } else {
+            var p = this._getTextSelection();
+        }
+
+        if (p) {
+            return p.start;
+        } else {
+            return -1;
+        }
+    } else {
+        return this.__LzInputDiv.selectionStart;
+    }
+}
+
+LzInputTextSprite.prototype.getSelectionSize = function (){
+    if (! this.__shown || this.disabled == true) return -1;
+    if (this.quirks['text_selection_use_range']) {
+        if (this.multiline) {
+            var p = this._getTextareaSelection();
+        } else {
+            var p = this._getTextSelection();
+        }
+        if (p) {
+            return p.end - p.start;
+        } else {
+            return -1;
+        }
+    } else {
+        return this.__LzInputDiv.selectionEnd - this.__LzInputDiv.selectionStart;
+    }
+}
+
+if (LzSprite.prototype.quirks['text_selection_use_range']) {
+LzInputTextSprite.prototype._getTextSelection = function (){
+    this.__LzInputDiv.focus();
+
+    var range = document.selection.createRange();
+    var bookmark = range.getBookmark();
+
+    var originalContents = contents = this.__LzInputDiv.value;
+    do {
+        var marker = "~~~" + Math.random() + "~~~";
+    } while (contents.indexOf(marker) != -1)
+
+    var parent = range.parentElement();
+    if (parent == null || ! (parent.type == "text" || parent.type == "textarea")) {
+        return;
+    }
+    range.text = marker + range.text + marker;
+    contents = this.__LzInputDiv.value;
+
+    var result = {};
+    result.start = contents.indexOf(marker);
+    contents = contents.replace(marker, "");
+    result.end = contents.indexOf(marker);
+
+    this.__LzInputDiv.value = originalContents;
+    range.moveToBookmark(bookmark);
+    range.select();
+
+    return result;
+}
+
+LzInputTextSprite.prototype._getTextareaSelection = function (){
+    var textarea = this.__LzInputDiv; 
+    var selection_range = document.selection.createRange().duplicate();
+
+    if (selection_range.parentElement() == textarea) {    // Check that the selection is actually in our textarea
+    // Create three ranges, one containing all the text before the selection,
+    // one containing all the text in the selection (this already exists), and one containing all
+    // the text after the selection.
+    var before_range = document.body.createTextRange();
+    before_range.moveToElementText(textarea);                    // Selects all the text
+    before_range.setEndPoint("EndToStart", selection_range);     // Moves the end where we need it
+
+    var after_range = document.body.createTextRange();
+    after_range.moveToElementText(textarea);                     // Selects all the text
+    after_range.setEndPoint("StartToEnd", selection_range);      // Moves the start where we need it
+
+    var before_finished = false, selection_finished = false, after_finished = false;
+    var before_text, untrimmed_before_text, selection_text, untrimmed_selection_text, after_text, untrimmed_after_text;
+
+    // Load the text values we need to compare
+    before_text = untrimmed_before_text = before_range.text;
+    selection_text = untrimmed_selection_text = selection_range.text;
+    after_text = untrimmed_after_text = after_range.text;
+
+    // Check each range for trimmed newlines by shrinking the range by 1 character and seeing
+    // if the text property has changed.  If it has not changed then we know that IE has trimmed
+    // a \r\n from the end.
+    do {
+    if (!before_finished) {
+        if (before_range.compareEndPoints("StartToEnd", before_range) == 0) {
+            before_finished = true;
+        } else {
+            before_range.moveEnd("character", -1)
+            if (before_range.text == before_text) {
+                untrimmed_before_text += "\r\n";
+            } else {
+                before_finished = true;
+            }
+        }
+    }
+    if (!selection_finished) {
+        if (selection_range.compareEndPoints("StartToEnd", selection_range) == 0) {
+            selection_finished = true;
+        } else {
+            selection_range.moveEnd("character", -1)
+            if (selection_range.text == selection_text) {
+                untrimmed_selection_text += "\r\n";
+            } else {
+                selection_finished = true;
+            }
+        }
+    }
+    if (!after_finished) {
+        if (after_range.compareEndPoints("StartToEnd", after_range) == 0) {
+            after_finished = true;
+        } else {
+            after_range.moveEnd("character", -1)
+            if (after_range.text == after_text) {
+                untrimmed_after_text += "\r\n";
+            } else {
+                after_finished = true;
+            }
+        }
+    }
+
+    } while ((!before_finished || !selection_finished || !after_finished));
+
+    // Untrimmed success test to make sure our results match what is actually in the textarea
+    // This can be removed once you're confident it's working correctly
+    var untrimmed_text = untrimmed_before_text + untrimmed_selection_text + untrimmed_after_text;
+    var untrimmed_successful = false;
+    if (textarea.value == untrimmed_text) {
+    untrimmed_successful = true;
+    }
+    // ** END Untrimmed success test
+
+    var startPoint = untrimmed_before_text.length;
+    var endPoint = startPoint + untrimmed_selection_text.length;
+    var selected_text = untrimmed_selection_text;
+
+    //alert("Start Index: " + startPoint + "\nEnd Index: " + endPoint + "\nSelected Text\n'" + selected_text + "'");
+
+    // account for leading \r\n
+    var val = this.__LzInputDiv.value;
+    var offset = 0;
+    var startcounter = 0;
+    while (offset < startPoint) {
+        offset = val.indexOf('\r\n', offset + 2); 
+        if (offset == -1) break;
+        startcounter++;
+    }
+    var midcounter = 0;
+    while (offset < endPoint) {
+        offset = val.indexOf('\r\n', offset + 2); 
+        if (offset == -1) break;
+        midcounter++;
+    }
+    var endcounter = 0;
+    while (offset < val.length) {
+        offset = val.indexOf('\r\n', offset + 2); 
+        if (offset == -1) break;
+        endcounter++;
+    }
+
+    startPoint -= startcounter;
+    endPoint -= (midcounter + startcounter);
+
+    //Debug.write(startcounter + ', ' + midcounter + ', ' + endcounter + ', ' + startPoint + ', ' + endPoint);
+    return {start: startPoint, end: endPoint};
+    }
+}
+}
 
 LzInputTextSprite.prototype.deselect = function (){
     this._cancelfocus = true;
