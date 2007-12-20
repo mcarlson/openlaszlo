@@ -279,12 +279,15 @@ verbosity=1
 
   </target> <!-- book.html.generate -->
 
-  <target name="book.resources.generate" depends="init">
-    <!--- @param local.input.dir
-          @param local.build.dir
-          @param local.output.dir
+  <!-- Copy resources (programs, images, data, resources) from the source directory to the output directory.
+    Note that this doesn't actively "generate" anything, it just copies stuff around. -->
+  <target name="book.resources.generate" depends="init"
+    description="Copy resources (programs, images, data, resources) from the source directory to the output directory.">
+    <!--- @param local.input.dir path to the source files on disk
+          @param local.build.dir where to put build intermediates
+          @param local.output.dir where to put the final product
        -->
-    <!-- Extract the lzx (and other) files from the *.in files. -->
+    <!-- Extract the lzx (and other) files from the input files. -->
     <mkdir dir="${local.output.dir}/programs"/>
     <copy todir="${local.output.dir}/programs">
       <fileset dir="${local.build.dir}/programs" includes="*.lzx"/>
@@ -1148,7 +1151,7 @@ All Rights Reserved. Use is subject to license terms.</p>
     <antcall target="dbk.examples.preprocess" inheritAll="true">
       <param name="local.input.dir" value="${docs.build.dir}"/> <!-- $LPS_HOME/docs/src/build --> 
       <param name="local.input.index" value="developers/${developers.input.index}"/>
-      <param name="local.output.dir" value="${developers.output.dir}"/> <!-- $LPS_HOME/docs/developers -->
+      <param name="local.output.dir" value="${developers.build.dir}"/> 
       <param name="local.output.index" value="${developers.dbk.index}"/>
       <param name="local.worksheet" value="xsl/dbkpreprocessexamples.xsl"/>
     </antcall>

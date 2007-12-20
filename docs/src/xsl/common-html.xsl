@@ -43,9 +43,7 @@
   <xsl:param name="show.fixmes" select="1"/>
 
   <xsl:param name="textdata.default.encoding"/>
-  
-  <xsl:param name="warn.no.programlisting.canvas.width" select="false()"/>
-  
+    
   <xsl:param name="show.examples.debuginfo" select="false()" />
   
   <xsl:template name="base.book.name">
@@ -209,10 +207,22 @@
       [bshine 12.16.2007]
     -->         
     <xsl:variable name="canvas-parameters">
-      <xsl:if test="parameter[@role='canvas']"><xsl:value-of select="parameter[@role='canvas']"/></xsl:if>
-      <xsl:if test="count(parameter[@role='canvas']) = 0">height: 400, width: 500, bgcolor: '#FFFFFF'</xsl:if>      
-    </xsl:variable> 
-   
+      <!-- The problem here! is that! if we do select="parameter[@role='canvas']" and there is
+        more than one parameter with role='canvas' then the value of the $canvas-parameters 
+        variable is *only* the text contents of the *first* result of the xpath query. 
+        We want to have a comma-separated list of the canvas parameters! The
+        bug LPP-5207 results from almost always discarding the canvas height, which is 
+        almost always the second canvas parameter listed. To demonstrate that this is
+        indeed the problem, in dbkpreprocessexamples.xsl switch the order of emitting
+        the canvas parameters. Notice that we now have nice canvas heights, but bad
+        canvas widths. 
+        The solution! Iterate over the result node set! -->
+      <xsl:for-each select="parameter[@role='canvas']">
+        <xsl:value-of select="."/>, 
+      </xsl:for-each>
+     </xsl:variable>
+      
+     
     <!-- format live example -->
     <xsl:variable name="live" select="ancestor::example[@role='live-example'] or ancestor::informalexample[@role='live-example']"/>
     <xsl:if test="$live">
