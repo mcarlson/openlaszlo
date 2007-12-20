@@ -206,17 +206,31 @@ function enable (){
     var evq = this.__LZdelegatesQueue;
     var n = evq.length;
     var i = pos;
-    while (i < n) {
-      var d = evq[i];
-      var sd = evq[i+1];
-      /*
-      if ($debug) {
-        Debug.debug("Deferred %w.execute(%w)", d, sd);
+    if (i < n) {
+      var calledDelegates = new Array;
+      var lockedEvents = new Array;
+      while (i < n) {
+        var e = evq[i];
+        var d = evq[i+1];
+        var sd = evq[i+2];
+        // Mimic sendEvent which prohibits events and delegates from
+        // recursing
+        e.locked = true;
+        lockedEvents.push(e);
+        if (! d.event_called) {
+          d.event_called = true; //this delegate has been called
+          calledDelegates.push( d );
+          // d.execute( sd ); inlined
+          if (d.c[d.f]) d.c[d.f]( sd );
+        }
+        i+=3;
       }
-      */
-      // d.execute( sd ); inlined
-      if (d.c[d.f]) d.c[d.f]( sd );
-      i+=2;
+      while (d = calledDelegates.pop()) {
+        d.event_called = false;
+      }
+      while (e = lockedEvents.pop()) {
+        e.locked = false;
+      }
     }
     evq.length = pos;
   }
@@ -431,7 +445,7 @@ function sendEvent ( sd ){
             // properly managed
             if (d.enabled && d.c) {
                 if (d.c.__LZdeferDelegates) {
-                    evq.push(d, sd);
+                  evq.push(this, d, sd);
                 } else {
                   // d.execute( sd ); inlined
                   if (d.c[d.f]) d.c[d.f]( sd );
