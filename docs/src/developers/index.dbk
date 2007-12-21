@@ -85,27 +85,19 @@
     <!-- xi:include href="dataprovider.dbk"/ -->
   </part>
    
-  <part id="developers.media">
-    <title>Media</title>
+  <part id="developers.advanced">
+    <title>Advanced Topics</title>
+    <xi:include href="survey-chapter.dbk"/>    
     <xi:include href="video.dbk"/>
-  </part>
-   
-  <part id="developers.application">
-    <title>Examining Applications</title>
-    <xi:include href="survey-chapter.dbk"/>
-  </part>
-   
-  <part id="developers.performance">
-    <title>Performance Monitoring and Tuning</title>
-    <!--xi:include href="data-pooling.dbk"/-->
     <xi:include href="performance.dbk"/>
-    <?ignore <chapter id="colors"><title>Color in Laszlo Applications</title></chapter>?>
+    <xi:include href="cookies.dbk"/>    
   </part>
-  
+   
+   
+  <?ignore 
   <part id="developers.server-integration">
     <title>Server Integration</title>
     <!--xi:include href="integrating-existing.dbk"/-->
-    <xi:include href="cookies.dbk"/>
     <!--xi:include href="persistent_connection.dbk"/-->
     <!--xi:include href="logging.dbk"/-->
     <!--xi:include href="lps-request-types.dbk"/-->
@@ -113,6 +105,7 @@
     <!--xi:include href="deployers-guide.dbk"/-->
     <!--xi:include href="caching.dbk"/-->
    </part>
+   ?>
 
   <?part id="developers.advanced">
     <title>Power Programming in LZX</title>
@@ -138,12 +131,39 @@
     <xi:include href="editing-lzx.dbk"/>
     <xi:include href="debugging.dbk"/>
     <xi:include href="lzunit.dbk"/>
+    <xi:include href="source-build.dbk">
+      <xi:fallback><para>Missing: Building from Source</para></xi:fallback>
+    </xi:include>    
+  </part>  
+  
+  <part id="developers.doctools">
+    <title>Documentation Tools and Guidelines</title>
+    
+    <xi:include href="doc-toolchain.dbk">
+      <xi:fallback><para>Missing: Doc Tool Chain</para></xi:fallback>
+    </xi:include>
+    
+    <xi:include href="docbook-local.dbk">
+      <xi:fallback><para>Missing: Docbook Local Style Guide</para></xi:fallback>
+    </xi:include>
+    
+    <xi:include href="docbook-code.dbk">
+      <xi:fallback><para>Missing: Docbook Code Comment Style Guide</para></xi:fallback>
+    </xi:include>
+    
+    <xi:include href="js2doc-ref.dbk">
+      <xi:fallback><para>Missing: JS2Doc Reference</para></xi:fallback>
+    </xi:include>
+    
   </part>
   
   <part id="developers.appendices">
     <title>Appendices</title>
     <xi:include href="initialization-and-instantiation.dbk"/>
     <xi:include href="ecmascript-and-lzx.dbk"/>
+    <xi:include href="licenses.dbk">
+      <xi:fallback><para>Missing: Licenses Reference</para></xi:fallback>
+    </xi:include>    
   </part>
 
   <!--index/-->

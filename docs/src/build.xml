@@ -1126,6 +1126,7 @@ All Rights Reserved. Use is subject to license terms.</p>
     <copy todir="${developers.build.dir}">
       <fileset dir="${developers.input.dir}"/>
     </copy>
+    <copy todir="${developers.build.dir}" file="${lps.server.dir}/lib/js2doc.rnc"/>    
   </target>
   
   <target name="developers.resources" depends="developers.preprocess">
