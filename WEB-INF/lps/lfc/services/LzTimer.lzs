@@ -75,7 +75,12 @@ function addTimer ( d , milisecs ){
         // User LzTimer explicitly below; "this" is not the outer function's
         // this here.
         LzTimer.removeTimerWithID(p.delegate, p.id); 
-        p.delegate.execute( (new Date()).getTime() );
+        var del = p.delegate;
+        // Inlining LzDelegate.execute()
+        if (del.enabled && del.c) {
+            //p.delegate.execute( (new Date()).getTime() ); inlined
+            if (! del.c.__LZdeleted && del.c[del.f]) del.c[del.f]( (new Date()).getTime() );
+        }
     }
     var id = setInterval(f, milisecs);
     if ($debug) {

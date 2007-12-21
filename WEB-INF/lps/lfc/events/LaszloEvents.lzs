@@ -87,8 +87,9 @@ function execute (sd){
     // 'resurrect' the deleted view, causing a memory leak
     // Usually this is because a deleted view has idle or timer events
     // still registered.
+    // inlined in LzDelegate.sendEvent(), __LZdrainDelegatesQueue(), and LzTimer.addTimer(); 
     var context = this.c;
-    if (context) {
+    if (this.enabled && context) {
         if (context['__LZdeleted']) { 
             return;
         }
@@ -221,7 +222,7 @@ function enable (){
           d.event_called = true; //this delegate has been called
           calledDelegates.push( d );
           // d.execute( sd ); inlined
-          if (d.c[d.f]) d.c[d.f]( sd );
+          if (d.c && ! d.c.__LZdeleted && d.c[d.f]) d.c[d.f]( sd );
         }
         i+=3;
       }
@@ -448,7 +449,7 @@ function sendEvent ( sd ){
                   evq.push(this, d, sd);
                 } else {
                   // d.execute( sd ); inlined
-                  if (d.c[d.f]) d.c[d.f]( sd );
+                  if (d.c && ! d.c.__LZdeleted && d.c[d.f]) d.c[d.f]( sd );
                 }
             }
         }
