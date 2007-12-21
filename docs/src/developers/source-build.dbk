@@ -7,16 +7,16 @@
 
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 
-<chapter language="en">
+<chapter language="en" id="source-build">
 <title>Building OpenLaszlo from Source</title>
 
 <section><title>Introduction</title>
 
-  <para>These are the instructions for building 4.0.0 and later from source. These instructions may also work for 3.4.x. See <ulink url="http://wiki.openlaszlo.org/3.x_Build_Instructions">3.x Build Instructions</ulink> for build instructions for 3.3.x and earlier.</para>
+  <para>These are the instructions for building 4.1.x and later from source. These instructions will not work for earlier versions. See <ulink url="http://wiki.openlaszlo.org/3.x_Build_Instructions">3.x Build Instructions</ulink> for build instructions for 3.3.x and earlier. See <ulink url="http://wiki.openlaszlo.org/SubversionBuildInstructions">Subversion Build Instructions</ulink> for information on building 3.4 - 4.0.x.</para>
 
   <para>These instructions are fairly well tested, but there may be issues with your particular setup. Please help us make it better by reporting your experience to the laszlo-dev mailing list laszlo-dev mailing list and the Laszlo developer forums.</para>
 
-  <note><para>This document has been modified from it's original (wiki) format. It has been reformatted to fit your screen.</para></note>
+  <note><para>This document has been modified from its original (wiki) format. It has been reformatted to fit your screen.</para></note>
 
 </section>
 
@@ -40,9 +40,8 @@
     <para>To build OpenLaszlo, you're going to need <ulink url="http://www.cygwin.com/">Cygwin</ulink>. You can almost build and run without Cygwin, but you will suffer, so perform a minimum Cygwin installation.When you install cygwin, be sure to select installation of gcc, subversion, and unzip.</para>
   </section>
   
-  <section><title>OS X: Developer Tools and bash</title>
-    <para>You'll need to install the developer tools in order to compile OpenLaszlo. They can be found on your Mac OS X installation CD, or at developer.apple.com.</para>
-    <para>All the shell scripts referenced here use the bash shell. That's the default on OS X.</para>
+  <section><title>OS X: Nothing special required!</title>
+    <para>All the shell scripts referenced here use the bash shell. That's the default on OS X. There are no other prerequisites.</para>
   </section>
   
   <section><title>Clean up Tomcat</title>
@@ -70,11 +69,7 @@
     
     <para>You must get the Java Development Kit (JDK), not the Java Runtime Environment (JRE).</para>
 
-    <para><ulink url="http://java.sun.com/j2se/1.4.2/download.html">JDK 1.4 Download Page</ulink></para>
-
     <para><ulink url="http://java.sun.com/javase/downloads/index_jdk5.jsp">JDK 1.5 Download Page</ulink></para>
-    
-    <para><ulink url="http://java.sun.com/javase/downloads/index.jsp">JDK 1.6 Download Page</ulink></para>
 
     <para>Windows: Install Java in a path with no spaces in the name. That is,</para>
     <informalexample><screen>C:\Java\jdk1.5.0_06</screen></informalexample>
@@ -83,8 +78,7 @@
 
     <para>Be sure to set <literal>JAVA_HOME</literal> appropriately.</para>
 
-    <para>Mac OS X (10.3 and 10.4) comes with Java 1.4.2 so there is no need to install it. Set <literal>JAVA_HOME</literal> to <literal>/Library/Java/Home</literal>. As of mid-April 2006, OS X includes and defaults to Java 5.0. If you have problems, see the Gotchas section at the end of this document.</para>
-    
+    <para>Mac OS X: Set <literal>JAVA_HOME</literal> to <literal>/Library/Java/Home</literal>. As of mid-April 2006, OS X includes and defaults to Java 5.0 (aka Java 1.5.0).</para>    
   </section>
   
   <section><title>Get the Subversion client</title>
@@ -100,7 +94,7 @@
     <variablelist>
       <varlistentry><term>Windows</term>
         <listitem>
-          <para>There are several options. You can get the <ulink url="http://subversion.tigris.org/downloads/svn-win32-1.4.3.zip">.exe binaries</ulink> directly from Tigris. For a nice GUI, we've had success with <ulink url="http://wiki.openlaszlo.org/TortoiseSVN">TortoiseSVN</ulink>. Alternatively, use the Cygwin installer: the Subversion package is inside the "Devel" group. Earlier builds of cygwin build of svn (version 1.2.3) might have a problem with properly checking out a source tree. See <ulink url="http://svn.haxx.se/users/archive-2005-08/1408.shtml">this posting</ulink> for details.</para>
+          <para>There are several options. You can get the <ulink url="http://subversion.tigris.org/downloads/svn-win32-1.4.3.zip">.exe binaries</ulink> directly from Tigris. For a nice GUI, we've had success with <ulink url="http://wiki.openlaszlo.org/TortoiseSVN">TortoiseSVN</ulink>. Note: if you are using Tortoise you need to make the command line tools available also, or the build system will not be able to query svn for version info. </para>
           <para>If you elect to use the native Windows svn command line client, and also have the cygwin Subversion package, make sure to put it in your bash shell path in front of the cygwin bin directories, so you don't inadvertently use the cygwin 'svn' command by mistake.</para>
         </listitem>
       </varlistentry>
@@ -200,81 +194,13 @@ export ANT_HOME=$LZ_INSTALLS_ROOT/apache-ant-1.6.5</programlisting></informalexa
   </section>
   
   <section><title>Install JavaCC</title>
-    <para>JavaCC is a compiler compiler, like yacc; we use it to help build the compiler. If you want to run the GUI installer:</para>
+    <para>JavaCC is a compiler compiler, like yacc; we use it to help build the compiler. </para>
 
-    <informalexample><programlisting>cd $LZ_VENDOR_ROOT
-java -cp . JavaCC2_1</programlisting></informalexample>
-
-    <para>It will ask you where to install to; we suggest <literal>$LZ_INSTALLS_ROOT/javacc2.1</literal>. It will also tell you to set <literal>~/lib/javacc2.1/bin</literal> on your path, but the <literal>setup-lps</literal> script has taken care of this for you.</para>
-
-    <para>If you would prefer the command line installer, add -c to the Java command.</para>
-    
     <informalexample><programlisting>cd $LZ_VENDOR_ROOT
 java -cp . JavaCC2_1 -c</programlisting></informalexample>
 
-  </section>
-  
-  <section><title>Install Jython (pre-4.1.0 only)</title>
-
-    <para>Jython is a Java application that executes Python scripts. Parts of the OpenLaszlo build pipeline are written in Python, but these have been phased out in 4.x.</para>
-
-    <informalexample><programlisting>cd $LZ_VENDOR_ROOT
-java -cp . jython-21</programlisting></informalexample>
-
-    <para>Make sure "use jre" is not checked. The GUI will prompt you for the Jython installation directory. We suggest <literal>$LZ_INSTALLS_ROOT/jython-21</literal>.</para>
-
-    <para>If you don't want to use the GUI installer, add <literal>-o dir-to-install-to</literal>:</para>
-    
-    <informalexample><programlisting>java -cp . jython-21 -o ~/lib/jython-2.1</programlisting></informalexample>
-
-    <para>Don't put jython in a system directory; the build will fail if the jython process does not have write access to the jython directory.</para>
-
-    <para><emphasis>NOTE: You can't use the command line installer on Windows_XP because the installer does not understand that XP is Windows. If you get an error about extra bytes at the end of your class file, it is because jython has their own class loader and your Java is puking trying to verify the non-standard class file. Downgrade your java to 1.5 and you will win.</emphasis></para>
-
-  </section>
-  
-  <section><title>Install Python</title>
-    <variablelist>
-      <varlistentry><term>Windows</term>
-        <listitem>
-          <para>Run the Python 2.2.2 installer, which is in <literal>$LZ_VENDOR_ROOT/Python-2.2.2.exe</literal>. Reportedly 2.4.4 and later do not work on Windows.</para>
-          <note><para>If you get a message from the 16 bit MS-DOS Subsystem telling you that <literal>C:\WINDOWS\system32\ntvdm.exe</literal> got an error "while setting up the environment for the application. Choose 'Close' to terminate the application.", it is likely because you are trying to use the Cygwin version of Python, which just won't do. You need to arrange for the Windows version of Python that you installed above to be found before the Cygwin version is, either by juggling your search path or perhaps uninstalling Cygwin Python.</para></note>
-        </listitem>
-      </varlistentry>
-      <varlistentry><term>OS X</term>
-        <listitem>OS X comes with Python installed to <literal>/usr/bin/python</literal>. We're using 2.3.5 successfully.</listitem>
-      </varlistentry>
-      <varlistentry><term>Linux</term>
-        <listitem>Most modern Linux distributions come with Python 2.2 or later. The python-devel package must be installed, too. We have been using Python 2.4.1 on Linux.</listitem>
-      </varlistentry>
-    </variablelist>
-  </section>
-  
-  <section><title>Install PyXML</title>
-    <variablelist>
-      <varlistentry><term>Windows</term>
-        <listitem>Run <literal>vendor/PyXML-0.8.win32-py2.2.exe</literal>.</listitem>
-      </varlistentry>
-      <varlistentry><term>Linux and OS X</term>
-        <listitem>
-          <informalexample><programlisting>cd $LZ_VENDOR_ROOT
-gunzip PyXML-0.8.3.tar.gz
-tar xvf PyXML-0.8.3.tar    
-cd PyXML-0.8.3
-python setup.py build
-sudo python setup.py install</programlisting></informalexample>
-          <para>Note: contrary to previous reports, this step is necessary.</para>
-          <note><title>ptw's notes</title>
-            <para>I install in a non-default place:</para>
-            <informalexample><programlisting>sudo python setup.py install --install-lib /usr/local/lib/python2.3/site-packages</programlisting></informalexample>
-            <para>I set the <literal>--install-lib</literal> option so that I won't lose my local extensions if OS X updates Python. I also put the following in my .bashrc so Python sees the local packages:</para>
-            <informalexample><programlisting># we use _xmlplus, which I put here to stay out of the /System dir
-export PYTHONPATH=/usr/local/lib/python2.3/site-packages</programlisting></informalexample>
-          </note>
-        </listitem>
-      </varlistentry>
-    </variablelist>
-  </section>
+    <para>It will ask you where to install to; we suggest <literal>$LZ_INSTALLS_ROOT/javacc2.1</literal>.</para>
+  </section>  
 
   <section><title>Install Tomcat 5.0.30</title>
     <para>The Tomcat 5.0.30 installer in our vendor directory is exactly the same as the official Tomcat 5.0.30 release.</para>
@@ -305,37 +231,29 @@ chmod ugo+x jakarta-tomcat-5.0.30/bin/*</programlisting></informalexample>
 
 <section><title>Set environment variables</title>
   <para>The rest of these instructions require that you set several environment variables. We've created a bash setup script in <ulink url="http://svn.openlaszlo.org/tools/trunk/env/setup-lps.sh">tools/trunk/env/setup-lps.sh</ulink>. You can source this script from your .bashrc, or call it interactively. If you don't use our script, your mileage may vary, but we require the following variables to be set:</para>
-  <informalexample><screen>ANT_HOME, JAVA_HOME, JAVACC_HOME, JYTHON_HOME, TOMCAT_HOME, CATALINA_HOME, LPS_HOME</screen></informalexample>
+  <informalexample><screen>ANT_HOME, JAVA_HOME, JAVACC_HOME, TOMCAT_HOME, CATALINA_HOME, LPS_HOME</screen></informalexample>
   <para>However you set these variables, you should make sure the directories exist and they're the right ones. If you can't CD to the directory you have a definite problem, and with all the version numbers you might get wrong you'll probably save yourself a lot of frustration if you run this script:</para>
   <informalexample><programlisting>cd $ANT_HOME
 cd $JAVA_HOME
 cd $JAVACC_HOME
-cd $JYTHON_HOME
 cd $TOMCAT_HOME
 cd $CATALINA_HOME
 cd $LPS_HOME</programlisting></informalexample>
   <variablelist>
     <varlistentry><term>Windows/Cygwin</term>
-      <listitem>For Cygwin, WindowsBuilderSetup shows how we set environment variables for a particular Windows machine; use it as a guide for creating your own Cygwin bash script. The number and direction of slashes and quotes is a source of difficulty, but can be fixed with a function called cygpath. As an alternative to WindowsBuilderSetup, here's a variant of the setup-lps.sh that uses cygpath to fix the slash issues and will work on cygwin: cygwin version of setup-lps.sh. Read the comments in the file and call it from your .bashrc.</listitem>
-    </varlistentry>
-    <varlistentry><term>OS X</term>
-      <listitem>
-        <para>Note that in certain circumstances it can be preferable to use Java 1.4.2 instead of Java 1.5, even on versions of OS X where Java 1.5 is the default. The preferred technique for doing this in bash is to set JAVA_HOME as follows:</para>
-        <informalexample><programlisting>export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.4.2/home/"</programlisting></informalexample>
-        <para>To return to Java 1.5, reset JAVA_HOME to its original value:</para>
-        <informalexample><programlisting>export JAVA_HOME="/Library/Java/Home"</programlisting></informalexample>
+      <listitem>For Cygwin, see <ulink url="http://wiki.openlaszlo.org/Cygwin_version_of_setup-lps.sh">a cygwin-version of setup-lps.sh</ulink>. You will probably need to modify this to fit your own particular environment. 
       </listitem>
-    </varlistentry>
+    </varlistentry>    
   </variablelist>
 </section>
 
 <section><title>Install a few libraries automatically</title>
-  <para>(You may need to do this step as root.)</para>
+  
   <informalexample><programlisting>cd $LZ_VENDOR_ROOT
 svn up 
 cd $LZ_TOOLS_ROOT/build-tools/install-libs
 ant</programlisting></informalexample>
-  
+  <para>(If you have permission-denied errors, you may need to do this step as root.)</para>
 </section>
 
 <section><title>Build and run!</title>
@@ -348,16 +266,12 @@ ant webapp.install</screen></informalexample>
   <variablelist>
     <varlistentry><term>OS X</term>
       <listitem>
-        <para>OS X 10.4.3 I found that I had to do the following:</para>
-        <informalexample><programlisting>bash // This loads the environment variables in setup-lps.sh
+        <informalexample><screen>
 cd $LPS_HOME
+ant tomcat.start
 ant build
-cd $TOMCAT_HOME
-chmod +x *
-$TOMCAT_HOME/bin/startup.sh
-bash // for some reason bash exited at the end of startup.sh
-cd $LPS_HOME
-ant webapp.install</programlisting></informalexample>
+ant webapp.deploy
+</screen></informalexample>
       </listitem>
     </varlistentry>
   </variablelist>
@@ -367,6 +281,18 @@ ant webapp.install</programlisting></informalexample>
 
 <section><title>Notes and gotchas</title>
   <note><para>This section still needs to be copied over from the <ulink url="http://wiki.openlaszlo.org/SubversionBuildInstructions">wiki</ulink>.</para></note>
+  <variablelist>
+    <varlistentry>
+      <term>Compile-time Subversion Access</term>
+      <listitem> Our build system wants to talk to subversion so that it can include the svn version in the binaries, which we find helpful for reporting bugs. You can get this information even in non-debug builds from <literal>LzCanvas.versionInfoString()</literal>. Alternatively, you can say
+    <informalexample><programlisting>
+    ant -Dbuild.id=mybuildid build
+    </programlisting></informalexample>
+    to cause the build system not to query svn; but you will lose the svn version information from <literal>versionInfoString</literal>.
+      </listitem>
+    </varlistentry>
+  </variablelist>
+  
 </section>
 
 <section><title>What if it doesn't work?</title>

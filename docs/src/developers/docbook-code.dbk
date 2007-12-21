@@ -7,7 +7,7 @@
 
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 
-<chapter language="en">
+<chapter language="en" id="docbook-code">
 <title>Documenting Your Code</title>
 
 <section><title>The Basics</title>
