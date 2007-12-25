@@ -196,7 +196,7 @@ var isdone = false,
 <section><title>To Do</title>
 </section>
 
-<section><title>JS2Doc Schema</title>
+<section id="js2doc-schema"><title>JS2Doc Schema</title>
     <para>This section gives the schema describing output of the <application>js2doc</application> tool, in Relax-NG Compact notation.</para>
     <programlisting>
       <textobject><textdata fileref="build/developers/js2doc.rnc"/></textobject>

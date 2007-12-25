@@ -8,69 +8,115 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 
 <chapter language="en" id="doc-toolchain">
-  
+
   <title>The Documentation Toolchain</title>
-  <para>The documentation for OpenLaszlo, including this chapter of the developer's guide, is built with a federation of tools and technologies based on Java and XML. To understand the doc toolchain at all, you'll need to be comfortable with the fundamental concepts employed in XSLT 1.0 and ant. The toolchain is too complicated to understand all at once, as you can see from the figure below. This chapter will break it down into two processes that are hopefully easier to grasp: how the developer's guide is built, as a fairly straightforward docbook, and then how the reference guide is built, with a much trickier process. This chapter will then look at the same process in reverse, to identify where the pieces of a reference page originate. Finally, this chapter will touch on the other parts of the doc toolchain, including the server API and the language reference.</para>
-  <para>Some vocabulary will simplify the discussion:</para>
-  <variablelist>
-    <varlistentry>
-      <term>js2doc</term>
-      <listitem>Think of this as the xml schema to describe JavaScript 2. The '2' in the term <literal>js2doc</literal> refers to the version of javascript, not to a transformation. "js2doc files" refers to a collection of xml files which follow the js2doc schema.</listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>LFC</term>
-      <listitem>Laszlo Foundation Classes. For the purposes of the documentation toolchain, the LFC consists of classes which are written in JavaScript.</listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>Developer's Guide</term>
-      <listitem>The Developer's Guide, which you are reading, is a text about developing with OpenLaszlo. It is mostly written as sentences and paragraphs by human technical writers. The developer's guide is where one would look when trying to figure out how to improve startup performance, how to debug a live application, or why to choose a SOLO deployment.</listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>Reference Guide</term>
-      <listitem>The Reference Guide is a detailed reference manual of all of the public API's in OpenLaszlo. It is where one would look to find out what methods are available on <literal>drawview</literal>, or what events a <literal>button</literal> might generate.</listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>doc-comment</term>
-      <listitem>The term doc-comment is shorthand to refer to to a special comment in a source file whose purpose is to document the nearby code. </listitem>
-    </varlistentry>
-    
-  </variablelist>
-  
+  <para>The documentation for OpenLaszlo, including this chapter of the developer's guide, is built
+    with a federation of tools and technologies based on Java and XML. To understand the doc
+    toolchain at all, you'll need to be comfortable with the fundamental concepts employed in XSLT
+    1.0 and ant. The toolchain is too complicated to understand all at once, as you can see from the
+    figure below. This chapter will break it down into two processes that are hopefully easier to
+    grasp: how the developer's guide is built, as a fairly straightforward docbook, and then how the
+    reference guide is built, with a much trickier process. This chapter will then look at the same
+    process in reverse, to identify where the pieces of a reference page originate. Finally, this
+    chapter will touch on the other parts of the doc toolchain, including the server API and the
+    language reference.</para>
+
   <figure>
     <title>Documentation Toolchain</title>
     <mediaobject>
-      <imageobject><imagedata fileref="images/doc-toolchain.png"/></imageobject>
+      <imageobject>
+        <imagedata fileref="images/doc-toolchain.png"/>
+      </imageobject>
     </mediaobject>
   </figure>
-  
-  <para>That's a rather intimidating diagram. Let's simplify it a bit:
-    <informalfigure><mediaobject><imageobject>
-      <imagedata fileref="images/doc_overview_simple.png"></imagedata>
-    </imageobject>
-    </mediaobject>
-    </informalfigure>Much better: two rows, unified in one final step. The top row is how we build the reference. The bottom row is how we build the developer's guide. The final transformation, labeled docbook-processing, turns intermediate files into the output html that you are probably reading right now. 
-  </para>
-  
-  <section>
-    <title>The Reference Toolchain</title>
-    <section>
-      <title>The Forwards Transformation: Source to Documentation</title>
-      <section>
-        
-        <title>Documentation in the Source</title>
-        <para>Let's look at that top row in more detail; it becomes three rows:
-          <informalfigure><mediaobject><imageobject>
-            <imagedata fileref="images/doc_reference_details.png"></imagedata>
+
+  <para>Some vocabulary will help you understand the diagram:</para>
+  <variablelist>
+    <varlistentry>
+      <term>js2doc</term>
+      <listitem>Think of this as the xml schema to describe JavaScript 2. The '2' in the term
+          <literal>js2doc</literal> refers to the version of javascript, not to a transformation.
+        "js2doc files" refers to a collection of xml files which follow the js2doc
+      schema.</listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>LFC</term>
+      <listitem>Laszlo Foundation Classes. For the purposes of the documentation toolchain, the LFC
+        consists of classes which are written in JavaScript.</listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Developer's Guide</term>
+      <listitem>The Developer's Guide, which you are reading, is a text about developing with
+        OpenLaszlo. It is mostly written as sentences and paragraphs by human technical writers. The
+        developer's guide is where one would look when trying to figure out how to improve startup
+        performance, how to debug a live application, or why to choose a SOLO deployment.</listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Reference Guide</term>
+      <listitem>The Reference Guide is a detailed reference manual of all of the public API's in
+        OpenLaszlo. It is where one would look to find out what methods are available on
+          <literal>drawview</literal>, or what events a <literal>button</literal> might
+      generate.</listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>doc-comment</term>
+      <listitem>The term doc-comment is shorthand to refer to to a special comment in a source file
+        whose purpose is to document the nearby code. </listitem>
+    </varlistentry>
+  </variablelist>
+
+  <para>With those definitions in mind, let's look at a simplified version of the rather
+    intimidating diagram above: <informalfigure>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/doc_overview_simple.png"/>
+        </imageobject>
+      </mediaobject>
+    </informalfigure>Much better: two rows, unified in one final step. The top row is how we build
+    the reference. The bottom row is how we build the developer's guide. The final transformation,
+    labeled docbook processing, turns intermediate files into the output html that you are probably
+    reading right now. </para>
+
+  <section id="reference-toolchain-source-to-doc">
+    <title>The Reference Toolchain: From Source to Documentation</title>
+    <para>How do we build the reference? We build it from the source, of course. (Documentation
+      that's not in the source will fall out of date as soon as it's written. Documentation
+        <emphasis>in</emphasis> the source also tends to decay, but at least it's in the developer's
+      field of view while he's editing the code.) This section will walk you through the processes
+      which discover the documentation in various source materials, to an intermediate XML format
+      which we call "js2doc", to the end project: the HTML reference manual.</para>
+    <para>The OpenLaszlo platform is heterogenous, so our reference toolchain must accept several
+      types of source as input: a basic language definition, JavaScript sources that implement the
+      Laszlo Foundation Classes, and lzx sources that implement the lion's share of the application
+      development classes. (For the purposes of this document, we'll ignore the Java API's for the
+      parser, compiler, and servlet. Those elements use a well-known javadoc workflow.)</para>
+    <para>Let's look at that top row of the diagram above. In more detail, it becomes three rows,
+      one for each variety of source code: <informalfigure>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/doc_reference_details.png"/>
           </imageobject>
-          </mediaobject></informalfigure>
-        </para>
-        <para>The next three sections walk through each of the three paths in the diagram above: from langref.xml, from javascript code, and from lzx source code, all to the js2doc intermediate format.</para>
-        
-        <section id="langref.xml">  
-          <title>Basic Language Constructs as js2doc</title>
-          <para><literal>langref.xml</literal> is an xml file which documents the lzx language itself: things like attribute tag, the class tag, the event and handler tags, and so on. Find it in the source distribution at <literal>$LPS_HOME/docs/src/reference/langref.xml</literal>.</para>
-          <para> <literal>langref.xml</literal> is itself a js2doc file, so it doesn't need any processing to go into the next phase (js2doc2dbk) of the reference toolchain. Here's the js2doc fragment describing the method tag:</para>
-          <programlisting>            
+        </mediaobject>
+      </informalfigure>
+    </para>
+    <para>This part of the toolchain unifies the various source material into js2doc format, then
+      joins them together into a massive XML file, <literal>LaszloLibrary-verbose.js2doc</literal>.
+      To understand those processes, please review <xref id="js2doc-schema"/> to grasp the kinds of
+      information that js2doc is trying to represent. The next three sections will walk through each
+      of the three paths in the diagram above: from langref.xml, from javascript code, and from lzx
+      source code, all to the js2doc intermediate format.</para>
+
+    <section id="langref.xml">
+      <title>Basic Language Constructs as js2doc</title>
+      <para><literal>langref.xml</literal> is an xml file which documents the lzx language itself:
+        things like attribute tag, the class tag, the event and handler tags, and so on. Find it in
+        the source distribution at <literal>$LPS_HOME/docs/src/reference/langref.xml</literal>.</para>
+      <para>
+        <literal>langref.xml</literal> is itself a js2doc file, so it doesn't need any processing to
+        go into the next phase (js2doc2dbk) of the reference toolchain. Consider the "method" tag. An example of a method tag would be the <literal>moveWindow</literal> method in the example in <xref linkend="tutorial-methods"/>. We're not talking about documenting an <emphasis>instance of the method tag</emphasis>; rather, we're talking about documenting <emphasis>the method tag itself:</emphasis> Here's the js2doc fragment
+        describing the method tag:</para>
+      <programlistingco>      
+      <programlisting language="lzx">            
             &lt;property id=&quot;tag.method&quot; topic=&quot;LZX&quot; subtopic=&quot;Basics&quot; access=&quot;public&quot;&gt;
               &lt;doc&gt;
                 &lt;tag name=&quot;shortdesc&quot;&gt;&lt;text&gt;Attaches a function or event handler to an object or class.&lt;/text&gt;&lt;/tag&gt;
@@ -133,14 +179,28 @@
                 &lt;/property&gt;
               &lt;/class&gt;
             &lt;/property&gt;            
-            </programlisting>
-          Later in this document, we'll see how this js2doc intermediate fragment becomes the reference page for the method tag. 
-        </section>
-        
-        <section id="LFC-to-js2doc">
-          <title>JavaScript to js2doc</title>
-          <para>The LFC (Laszlo Foundation Classes) are written in JavaScript, and their documentation is inline with their implementation. <xref linkend="LzView">LzView</xref> is an example of an LFC class. In javascript, comments are indicated with the javadoc-style comment, beginning with a slash followed by two asterisks. Here's an example, from LaszloView.lzs (<literal>$LPS_HOME/WEB-INF/lps/lfc/views/LaszloView.lzs</literal>):</para>
-          <programlisting>
+      </programlisting>
+        <areaspec> <!-- these callouts aren't working, but I'm not sure why bshine 12.25.2007 -->
+          <area units="other" otherunits="/property[1]/@name"/>
+        </areaspec>
+        <areaspec>
+        <area units="other" otherunits="/property[1]/doc/text"/>
+        </areaspec>
+        <areaspec>
+        <area units="other" otherunits="/property[1]/function/parameter"/>          
+        </areaspec>
+        </programlistingco>
+      Later in this document, we'll see how this js2doc intermediate fragment becomes the reference
+      page for the method tag. </section>
+
+    <section id="LFC-to-js2doc">
+      <title>JavaScript to js2doc</title>
+      <para>The LFC (Laszlo Foundation Classes) are written in JavaScript, and their documentation
+        is inline with their implementation. <xref linkend="LzView">LzView</xref> is an example of
+        an LFC class. In javascript, comments are indicated with the javadoc-style comment,
+        beginning with a slash followed by two asterisks. Here's an example, from LaszloView.lzs
+          (<literal>$LPS_HOME/WEB-INF/lps/lfc/views/LaszloView.lzs</literal>):</para>
+      <programlisting>
             /**
             * returns true if the point is contained within the view.
             * @param Number x: an x value relative to the this view&apos;s coordinates
@@ -148,13 +208,21 @@
             * @return Boolean: boolean indicating whether or not the point lies within the view
             */
             function containsPt( x,y ) {
-            return (((this.getAttribute(&quot;height&quot;)&gt;= y) &amp;&amp; (y &gt;= 0)) &amp;&amp;
-            ((this.getAttribute(&quot;width&quot;)&gt;= x) &amp;&amp; (x &gt;= 0)));
+                return (((this.getAttribute(&quot;height&quot;)&gt;= y) &amp;&amp; (y &gt;= 0)) &amp;&amp;
+                ((this.getAttribute(&quot;width&quot;)&gt;= x) &amp;&amp; (x &gt;= 0)));
             }            
           </programlisting>
-          <para>Turning those structured comments into the js2doc intermediate format is achieved by a java application called (not very helpfully) js2doc. This application is found in the source tree in <literal>WEB-INF/lps/server/src/org/openlaszlo/js2doc</literal>. <emphasis>It's really quite clever: the js2doc tool uses exactly the same parsing code as the OpenLaszlo script compiler.</emphasis> Instead of emitting swf bytecodes representing the class as defined in the parsed javascript, js2doc emits an xml description of the API defined in the parsed javascript -- <emphasis>complete with the comments embedded as documentation!</emphasis></para>
-          <para>This will make more sense when we look at the js2doc output from the containsPt code above:
-          <programlisting>
+      <para>Turning those structured comments into the js2doc intermediate format is achieved by a
+        java application called (not very helpfully) js2doc. This application is found in the source
+        tree in <literal>WEB-INF/lps/server/src/org/openlaszlo/js2doc</literal>. <emphasis>It's
+          really quite clever: the js2doc tool uses exactly the same parsing code as the OpenLaszlo
+          script compiler.</emphasis> Instead of emitting swf bytecodes representing the class as
+        defined in the parsed javascript, js2doc emits an xml description of the API defined in the
+        parsed javascript -- <emphasis>complete with the comments embedded as
+        documentation!</emphasis></para>
+      <para>This will make more sense when we look at the js2doc output from the containsPt code
+        above:
+        <programlisting>
             &lt;property id=&quot;LzView.prototype.containsPt&quot; name=&quot;containsPt&quot;&gt;
               &lt;doc&gt;
                 &lt;text&gt;returns true if the point is contained within the view.&lt;/text&gt;
@@ -178,21 +246,34 @@
               &lt;/function&gt;
             &lt;/property&gt;            
           </programlisting>
-          </para>
-        </section>              
-        <section id="lzx2js2doc">
-          <title>lzx2js2doc</title>
-          <para>Most code which application developers write, and which contributors will examine, is lzx code. lzx is the language in which all of the components are described, all of the extensions, all of the utilities, and so forth. When you think about developing an OpenLaszlo application, you are probably thinking about writing lzx code. </para>                   
-          <para>The source for <xref linkend="lz.basewindow">basewindow</xref> (<literal>lps/components/base/basewindow.lzx</literal>) is a typical lzx file for which the doctools generate documentation. In an lzx file, documentation comments are set apart by beginning an XML comment with three hyphens, instead of the customary two. <xref linkend="js2doc-reference"/> describes the available annotations within a doc comment in lzx.</para>          
-          <programlisting>&lt;!--- Brings the window to front when it has the
+      </para>
+    </section>
+    <section id="lzx2js2doc">
+      <title>lzx2js2doc</title>
+      <para>Most code which application developers write, and which contributors will examine, is
+        lzx code. lzx is the language in which all of the components are described, all of the
+        extensions, all of the utilities, and so forth. When you think about developing an
+        OpenLaszlo application, you are probably thinking about writing lzx code. </para>
+      <para>The source for <xref linkend="lz.basewindow">basewindow</xref>
+          (<literal>lps/components/base/basewindow.lzx</literal>) is a typical lzx file for which
+        the doctools generate documentation. In an lzx file, documentation comments are set apart by
+        beginning an XML comment with three hyphens, instead of the customary two. <xref
+          linkend="js2doc-reference"/> describes the available annotations within a doc comment in
+        lzx.</para>
+      <programlisting>&lt;!--- Brings the window to front when it has the
 windowfocus and sets the 'state' to 2, the selected state.
 Subclasses may override to create different behavior
 @param Boolean windowfocus: whether the window should be selected
 --&gt;
 &lt;method name="setWindowFocus" args="windowfocus"&gt;</programlisting>
-<para>This example shows the doc-comment for the method <literal>setWindowFocus</literal> of the <literal>basewindow</literal> class. It indicates that there is a single parameter, <literal>windowfocus</literal> which should be a Boolean.</para>                
-          <para>lzx2js2doc processes commented lzx source files into js2doc intermediate files. It is an xsl worksheet, <literal>$LPS_HOME/docs/src/xsl/lzx2js2doc.xsl</literal>, which discovers the doc comments in the lzx source, parses them, and outputs js2doc files. The js2doc output for the setWindowFocus method above looks like this:
-            <programlisting>&lt;property id=&quot;lz.basewindow.prototype.setWindowFocus&quot; name=&quot;setWindowFocus&quot; access=&quot;public&quot;&gt;
+      <para>This example shows the doc-comment for the method <literal>setWindowFocus</literal> of
+        the <literal>basewindow</literal> class. It indicates that there is a single parameter,
+          <literal>windowfocus</literal> which should be a Boolean.</para>
+      <para>lzx2js2doc processes commented lzx source files into js2doc intermediate files. It is an
+        xsl worksheet, <literal>$LPS_HOME/docs/src/xsl/lzx2js2doc.xsl</literal>, which discovers the
+        doc comments in the lzx source, parses them, and outputs js2doc files. The js2doc output for
+        the setWindowFocus method above looks like this:
+        <programlisting>&lt;property id=&quot;lz.basewindow.prototype.setWindowFocus&quot; name=&quot;setWindowFocus&quot; access=&quot;public&quot;&gt;
               &lt;function&gt;
                 &lt;parameter name=&quot;windowfocus&quot; type=&quot;Boolean&quot;&gt;
                   &lt;doc&gt;
@@ -210,46 +291,79 @@ Subclasses may override to create different behavior
               &lt;/doc&gt;
             &lt;/property&gt;
             </programlisting>
-            (This fragment is in $LPS_HOME/docs/src/build/reference/LaszloLibrary-verbose.js2doc, an intermediate file generated by the reference build.)  
-          </para>          
-        </section>        
-      </section>
-      
-      <section>
-        <title>js2doc files: the Intermediate Form</title>
-      </section>
-      
-      <section>
-        <title>Turning the API into the Reference: js2doc2dbk</title>
-      </section>
-      
-      <section>
-        <title>Docbook to Output, at Last!</title>
-      </section>
-      <para>the docbook customization layer</para>
+        (This fragment is in $LPS_HOME/docs/src/build/reference/LaszloLibrary-verbose.js2doc, an
+        intermediate file generated by the reference build.) </para>
     </section>
-    
+
+    <section>
+      <title>Turning the API into the Reference: js2doc2dbk</title>
+    </section>
+
+    <section>
+      <title>Docbook to Output, at Last!</title>
+    </section>
+    <para>the docbook customization layer. See stayton. </para>
+
     <section>
       <title>The Backwards Transformation: From Reference Page to Source</title>
-      <para>In this section, we will show where several elements on the end product reference page can be traced back to their origins in the sources.</para>      
+      <para>In this section, we will show where several elements on the end product reference page
+      can be traced back to their origins in the sources.</para>
+      <para>screengrab of a reference page with area highlighted, identified by A/B/C etc</para>
+      <para>for each highlighted area, show the xsl files in which it is created and the important templates </para>      
     </section>
   </section>
-  
+
   <section>
     <title>The Developer's Guide Toolchain</title>
   </section>
-  
+
   <section>
     <title>Workflow Details</title>
-    
+
     <section>
       <title>Directory Structure</title>
+      <itemizedlist>
+        <listitem>docs/src/
+          <itemizedlist>
+            <listitem>developers/
+              <itemizedlist>
+                <listitem>tutorials/
+                  <itemizedlist>
+                    <listitem>programs</listitem>
+                    <listitem>images</listitem>              
+                  </itemizedlist>                  
+                </listitem>
+                <listitem>programs</listitem>
+                <listitem>images</listitem>              
+              </itemizedlist>
+              
+            </listitem>
+            <listitem>reference/
+              <itemizedlist>
+                <listitem>images</listitem>
+                <listitem>resources</listitem>
+                <listitem>navbuilder/  command-line tool for building the left-nav in the reference</listitem>                
+              </itemizedlist>              
+            </listitem>
+            <listitem>build/  (temporary)
+              <itemizedlist>
+                <listitem>js2doc/ holds the initial js2doc output </listitem>
+                <listitem>developers/  where the processed developers guide docbook files go after they've had the examples and callouts inserted</listitem>
+                <listitem>reference/  where the js2doc output is joined together into LaszloLibrary-verbose.js2doc, and where the processed reference guide docbook files go after they've had the examples and callouts inserted</listitem>    
+              </itemizedlist>              
+            </listitem>
+          </itemizedlist>
+          
+        </listitem>
+      </itemizedlist>
+      
     </section>
-    
+
     <section>
       <title>How Ant Drives the Transformations</title>
     </section>
-    
+
   </section>
-  
+
+
 </chapter>

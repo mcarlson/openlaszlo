@@ -125,7 +125,7 @@ and of course the particular application. The CDATA method is perhaps a little m
 
 <para>Functions are global to the LZX document, and they follow the same scope rules as JavaScript.</para>
 
-<para/></section><section><title>Methods</title>
+<para/></section><section id="tutorial-methods"><title>Methods</title>
 
 <para>Methods are in some ways similar to functions. They contain blocks of code between <indexterm><primary>method</primary></indexterm><sgmltag class="element">&lt;method&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: method-->
