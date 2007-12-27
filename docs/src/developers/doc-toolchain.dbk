@@ -114,10 +114,9 @@
       <para>
         <literal>langref.xml</literal> is itself a js2doc file, so it doesn't need any processing to
         go into the next phase (js2doc2dbk) of the reference toolchain. Consider the "method" tag. An example of a method tag would be the <literal>moveWindow</literal> method in the example in <xref linkend="tutorial-methods"/>. We're not talking about documenting an <emphasis>instance of the method tag</emphasis>; rather, we're talking about documenting <emphasis>the method tag itself:</emphasis> Here's the js2doc fragment
-        describing the method tag:</para>
-      <programlistingco>      
+        describing the method tag:</para>      
       <programlisting language="lzx">            
-            &lt;property id=&quot;tag.method&quot; topic=&quot;LZX&quot; subtopic=&quot;Basics&quot; access=&quot;public&quot;&gt;
+            &lt;property<emphasis> id=&quot;tag.method&quot;</emphasis> topic=&quot;LZX&quot; subtopic=&quot;Basics&quot; access=&quot;public&quot;&gt;
               &lt;doc&gt;
                 &lt;tag name=&quot;shortdesc&quot;&gt;&lt;text&gt;Attaches a function or event handler to an object or class.&lt;/text&gt;&lt;/tag&gt;
                 &lt;tag name=&quot;lzxname&quot;&gt;&lt;text&gt;method&lt;/text&gt;&lt;/tag&gt;
@@ -180,16 +179,6 @@
               &lt;/class&gt;
             &lt;/property&gt;            
       </programlisting>
-        <areaspec> <!-- these callouts aren't working, but I'm not sure why bshine 12.25.2007 -->
-          <area units="other" otherunits="/property[1]/@name"/>
-        </areaspec>
-        <areaspec>
-        <area units="other" otherunits="/property[1]/doc/text"/>
-        </areaspec>
-        <areaspec>
-        <area units="other" otherunits="/property[1]/function/parameter"/>          
-        </areaspec>
-        </programlistingco>
       Later in this document, we'll see how this js2doc intermediate fragment becomes the reference
       page for the method tag. </section>
 
@@ -203,9 +192,9 @@
       <programlisting>
             /**
             * returns true if the point is contained within the view.
-            * @param Number x: an x value relative to the this view&apos;s coordinates
-            * @param Number y: an y value relative to the this view&apos;s coordinates
-            * @return Boolean: boolean indicating whether or not the point lies within the view
+            * <emphasis>@param Number x: an x value relative to the this view&apos;s coordinates</emphasis>
+            * <emphasis>@param Number y: an y value relative to the this view&apos;s coordinates</emphasis>
+            * <emphasis>@return Boolean: boolean indicating whether or not the point lies within the view</emphasis>
             */
             function containsPt( x,y ) {
                 return (((this.getAttribute(&quot;height&quot;)&gt;= y) &amp;&amp; (y &gt;= 0)) &amp;&amp;
@@ -228,19 +217,19 @@
                 &lt;text&gt;returns true if the point is contained within the view.&lt;/text&gt;
               &lt;/doc&gt;
               &lt;function&gt;
-                &lt;parameter name=&quot;x&quot; type=&quot;Number&quot;&gt;
+               <emphasis> &lt;parameter name=&quot;x&quot; type=&quot;Number&quot;&gt;</emphasis>
                   &lt;doc&gt;
-                    &lt;text&gt;an x value relative to the this view&apos;s coordinates&lt;/text&gt;
+                   <emphasis> &lt;text&gt;an x value relative to the this view&apos;s coordinates&lt;/text&gt;</emphasis>
                   &lt;/doc&gt;
                 &lt;/parameter&gt;
-                &lt;parameter name=&quot;y&quot; type=&quot;Number&quot;&gt;
+                <emphasis>&lt;parameter name=&quot;y&quot; type=&quot;Number&quot;&gt;</emphasis>
                   &lt;doc&gt;
-                    &lt;text&gt;an y value relative to the this view&apos;s coordinates&lt;/text&gt;
+                    <emphasis>&lt;text&gt;an y value relative to the this view&apos;s coordinates&lt;/text&gt;</emphasis>
                   &lt;/doc&gt;
                 &lt;/parameter&gt;
-                &lt;returns type=&quot;Boolean&quot;&gt;
+               <emphasis> &lt;returns type=&quot;Boolean&quot;&gt;</emphasis>
                   &lt;doc&gt;
-                    &lt;text&gt;boolean indicating whether or not the point lies within the view&lt;/text&gt;
+                    <emphasis>&lt;text&gt;boolean indicating whether or not the point lies within the view&lt;/text&gt;</emphasis>
                   &lt;/doc&gt;
                 &lt;/returns&gt;
               &lt;/function&gt;
@@ -263,7 +252,7 @@
       <programlisting>&lt;!--- Brings the window to front when it has the
 windowfocus and sets the 'state' to 2, the selected state.
 Subclasses may override to create different behavior
-@param Boolean windowfocus: whether the window should be selected
+<emphasis>@param Boolean windowfocus: whether the window should be selected</emphasis>
 --&gt;
 &lt;method name="setWindowFocus" args="windowfocus"&gt;</programlisting>
       <para>This example shows the doc-comment for the method <literal>setWindowFocus</literal> of
@@ -273,7 +262,7 @@ Subclasses may override to create different behavior
         xsl worksheet, <literal>$LPS_HOME/docs/src/xsl/lzx2js2doc.xsl</literal>, which discovers the
         doc comments in the lzx source, parses them, and outputs js2doc files. The js2doc output for
         the setWindowFocus method above looks like this:
-        <programlisting>&lt;property id=&quot;lz.basewindow.prototype.setWindowFocus&quot; name=&quot;setWindowFocus&quot; access=&quot;public&quot;&gt;
+        <programlisting>&lt;property <emphasis>id=&quot;lz.basewindow.prototype.setWindowFocus&quot;</emphasis> name=&quot;setWindowFocus&quot; access=&quot;public&quot;&gt;
               &lt;function&gt;
                 &lt;parameter name=&quot;windowfocus&quot; type=&quot;Boolean&quot;&gt;
                   &lt;doc&gt;
@@ -283,11 +272,11 @@ Subclasses may override to create different behavior
               &lt;/function&gt;
               &lt;doc&gt;
                 &lt;tag name=&quot;lzxname&quot;&gt;
-                  &lt;text&gt;setWindowFocus&lt;/text&gt;
+                  &lt;text&gt;<emphasis>setWindowFocus</emphasis>&lt;/text&gt;
                 &lt;/tag&gt;
-                &lt;text&gt;Brings the window to front when it has the
+                &lt;text&gt;<emphasis>Brings the window to front when it has the
                   windowfocus and sets the &apos;state&apos; to 2, the selected state.
-                  Subclasses may override to create different behavior&lt;/text&gt;
+                  Subclasses may override to create different behavior</emphasis>&lt;/text&gt;
               &lt;/doc&gt;
             &lt;/property&gt;
             </programlisting>
@@ -297,13 +286,192 @@ Subclasses may override to create different behavior
 
     <section>
       <title>Turning the API into the Reference: js2doc2dbk</title>
+      <para>So far, we've seen how the js2doc intermediate form is generated from various source files. The next step in the transformation is to build a docbook representation of the reference material. Let's look at the detailed diagram for this transformation:
+        <informalfigure>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/js2doc2dbk.png"/>
+            </imageobject>
+          </mediaobject>
+        </informalfigure>That looks simple and straightforward, with just one path through the transformation. Actually, this transformation is the most complicated part of the documentation toolchain. The complexity is all located within the js2doc2dbk XSL transformation.</para>
+      <para>Consider this step abstractly: <emphasis>From a large, structured set of information, construct another large, structured set of information.</emphasis> The linear order in which XSL transformations execute isn't really important, but it helps to think of this transformation procedurally. (XSL's functional programming style can be very intimidating; it helps to trace it through as if it were procedural.) </para>
+      <orderedlist>
+        <listitem>For each section of the reference, create a docbook file to contain the reference docbook content for that section.  (Sections are listed in <literal>docs/src/reference/index.dbk</literal>, and the section docbook files are generated in <literal>docs/src/build/reference/[lfcref.dbk|lzxref.dbk|compref.dbk|...]</literal>.)      
+        <orderedlist>
+          <listitem>Identify the pages in that section.</listitem>
+          <listitem>For each page in the reference:
+            <orderedlist>
+              <listitem>Describe the class by name, inheritance chain, and introductory text.</listitem>
+              <listitem>List all of the attributes for that class. Also list all of the inherited attributes for that class.</listitem>
+              <listitem>List all of the methods for that class. Also list all of the inherited methods for that class.</listitem>
+              <listitem>List all of the events for that class. Also list all of the inherited events for that class.</listitem>            
+            </orderedlist>          
+          </listitem>
+        </orderedlist>
+        </listitem>
+      </orderedlist>
+      <para>The docbook output at this step is a semantic representation of the content we'll see on the output reference HTML pages. It is almost but not quite a listing of the words that will appear in the output HTML, with lots of semantic markup. The markup will give the final stage in the transformation (docbook to html) information necessary to format the output nicely. For example, consider this fragment of <literal>docs/src/build/reference/lfcref.dbk</literal>, describing the &lt;view&gt; tag: </para>
+      <informalexample>
+     <programlisting>
+       &lt;refentry <emphasis>xreflabel=&quot;&amp;lt;view&amp;gt;&quot; id=&quot;LzView&quot;</emphasis>&gt;
+         &lt;anchor id=&quot;tag.view&quot;/&gt;
+         &lt;refmeta&gt;
+           &lt;refentrytitle&gt;&amp;lt;view&amp;gt;&lt;/refentrytitle&gt;
+         &lt;/refmeta&gt;
+         &lt;refnamediv&gt;
+           &lt;refdescriptor&gt;
+             &lt;indexterm zone=&quot;LzView&quot;&gt;
+               &lt;primary&gt;LzView&lt;/primary&gt;
+               &lt;secondary&gt;Described&lt;/secondary&gt;
+               &lt;seealso&gt;view&lt;/seealso&gt;
+             &lt;/indexterm&gt;
+             &lt;indexterm zone=&quot;LzView&quot;&gt;
+               &lt;primary&gt;view&lt;/primary&gt;
+               &lt;see&gt;LzView&lt;/see&gt;
+             &lt;/indexterm&gt;
+             &lt;indexterm zone=&quot;views.LaszloView.lzs&quot;&gt;
+               &lt;primary&gt;LzView&lt;/primary&gt;
+               &lt;secondary&gt;Declared in&lt;/secondary&gt;
+             &lt;/indexterm&gt;&amp;lt;view&amp;gt;&lt;/refdescriptor&gt;
+           &lt;refname role=&quot;javascript&quot;&gt;LzView&lt;/refname&gt;
+           &lt;refname role=&quot;lzx&quot;&gt;view&lt;/refname&gt;
+           &lt;refpurpose&gt;The most basic viewable element.&lt;/refpurpose&gt;
+         &lt;/refnamediv&gt;
+         &lt;refsynopsisdiv&gt;
+           &lt;refsect1&gt;JavaScript: LzView&lt;/refsect1&gt;
+           &lt;refsect1&gt;Extends &lt;xref linkend=&quot;LzNode&quot;/&gt; » &lt;/refsect1&gt;
+         &lt;/refsynopsisdiv&gt;           
+     </programlisting>
+      </informalexample>        
+      <para>Also consider this fragment of the same file, describing the <literal>containsPt</literal> method:</para>
+      <informalexample>
+      <programlisting>
+        &lt;varlistentry&gt;
+          &lt;term <emphasis>xreflabel=&quot;LzView.containsPt()&quot;</emphasis> id=&quot;LzView.prototype.containsPt&quot;&gt;
+            &lt;indexterm zone=&quot;LzView.prototype.containsPt&quot;&gt;
+              &lt;primary&gt;containsPt&lt;/primary&gt;
+            &lt;/indexterm&gt;containsPt()&lt;/term&gt;
+          &lt;listitem&gt;
+            &lt;refsect3&gt;
+              &lt;<emphasis>methodsynopsis</emphasis> language=&quot;javascript&quot;&gt;
+               &lt;methodname&gt;view.containsPt&lt;/methodname&gt;
+                &lt;methodparam&gt;
+                  <emphasis>&lt;parameter&gt;x&lt;/parameter&gt;</emphasis>
+                  <emphasis>&lt;type role=&quot;javascript&quot;&gt;Number&lt;/type&gt;</emphasis>
+                &lt;/methodparam&gt;
+                &lt;methodparam&gt;
+                  <emphasis>&lt;parameter&gt;y&lt;/parameter&gt;</emphasis>
+                  <emphasis>&lt;type role=&quot;javascript&quot;&gt;Number&lt;/type&gt;</emphasis>
+                &lt;/methodparam&gt;
+              &lt;/methodsynopsis&gt;
+            &lt;/refsect3&gt;
+            &lt;refsect3&gt;<emphasis>returns true if the point is contained within the view.</emphasis>&lt;/refsect3&gt;
+            &lt;refsect3&gt;
+              &lt;informaltable pgwide=&quot;1&quot; rowsep=&quot;0&quot; colsep=&quot;0&quot; frame=&quot;none&quot;&gt;
+                &lt;tgroup cols=&quot;3&quot;&gt;
+                  &lt;colspec colname=&quot;Name&quot;/&gt;
+                  &lt;colspec colname=&quot;Type&quot;/&gt;
+                  &lt;colspec colname=&quot;Description&quot;/&gt;
+                  &lt;thead&gt;
+                    &lt;row&gt;
+                      &lt;entry align=&quot;left&quot;&gt;Parameter Name&lt;/entry&gt;
+                      &lt;entry align=&quot;left&quot;&gt;Type&lt;/entry&gt;
+                      &lt;entry align=&quot;left&quot;&gt;Description&lt;/entry&gt;
+                    &lt;/row&gt;
+                  &lt;/thead&gt;
+                  &lt;tbody&gt;
+                    &lt;row&gt;
+<emphasis>                      &lt;entry class=&quot;parametername&quot;&gt;x&lt;/entry&gt;
+                      &lt;entry&gt;Number&lt;/entry&gt;
+                      &lt;entry&gt;an x value relative to the this view&apos;s coordinates&lt;/entry&gt;
+</emphasis>                    &lt;/row&gt;
+                    &lt;row&gt;
+<emphasis>                      &lt;entry class=&quot;parametername&quot;&gt;y&lt;/entry&gt;
+                      &lt;entry&gt;Number&lt;/entry&gt;
+                      &lt;entry&gt;an y value relative to the this view&apos;s coordinates&lt;/entry&gt;
+</emphasis>                    &lt;/row&gt;
+                  &lt;/tbody&gt;
+                &lt;/tgroup&gt;
+              &lt;/informaltable&gt;
+            &lt;/refsect3&gt;
+            &lt;refsect3&gt;
+              &lt;informaltable pgwide=&quot;1&quot; rowsep=&quot;0&quot; colsep=&quot;0&quot; frame=&quot;none&quot;&gt;
+                &lt;tgroup cols=&quot;2&quot;&gt;
+                  &lt;colspec colname=&quot;Type&quot;/&gt;
+                  &lt;colspec colname=&quot;Description&quot;/&gt;
+                  &lt;thead&gt;
+                    &lt;row&gt;
+                      &lt;entry align=&quot;left&quot; nameend=&quot;Description&quot; namest=&quot;Type&quot;&gt;Returns&lt;/entry&gt;
+                    &lt;/row&gt;
+                    &lt;row&gt;
+                      &lt;entry align=&quot;left&quot;&gt;Type&lt;/entry&gt;
+                      &lt;entry align=&quot;left&quot;&gt;Description&lt;/entry&gt;
+                    &lt;/row&gt;
+                  &lt;/thead&gt;
+                  &lt;tbody&gt;
+                    &lt;row&gt;
+                      &lt;entry&gt;Boolean&lt;/entry&gt;
+                      &lt;entry&gt;boolean indicating whether or not the point lies within the view&lt;/entry&gt;
+                    &lt;/row&gt;
+                  &lt;/tbody&gt;
+                &lt;/tgroup&gt;
+              &lt;/informaltable&gt;
+            &lt;/refsect3&gt;
+          &lt;/listitem&gt;
+        &lt;/varlistentry&gt;
+      </programlisting>
+      </informalexample>
+      <para>Each nugget of information in those two docbook fragments can be found in the js2doc output generated in the previous steps of the transformation pipeline. To understand how, a detailed walkthrough of the many stylesheets that make up the jsdoc2dbk transformation is necessary. A developer who wishes to understand this transformation must simply sit down and follow the code himself. (This writer does not know what all of the templates in docs/src/xsl do, or whether some of them are invoked at all.) This document will provide an overview map of what happens in which stylesheets, and which templates are important, as well as a guide to some of the idioms and OpenLaszlo-specific patterns employed herein. </para>
+      <para>The stylesheets in <literal>docs/src/xsl</literal> participate in all of the xsl transformations in the documentation toolchain: from lzx to js2doc, from js2doc to dbk, and from dbk to html (details on this later). When looking at a particular stylesheet, or looking <emphasis>for</emphasis> a particular template, it is useful to consider which stage of the transformation interests you. </para>
+      <section><title>Idioms and Entities</title>
+        <para>Each xsl stylesheet begins by declaring several entities. These are XPath macros which make the templates that follow more succinct and hopefully readable. Take the time to read these over and grasp their meaning. </para>
+       </section>
+      <section><title>Main Stylesheets and Templates in js2doc2dbk</title>
+        <para>The main transformation lives in <literal>docs/src/xsl/js2doc2dbk.xsl</literal>, and within that, the main template for generating a complete reference page is <literal>&lt;xsl:template match=&quot;property&quot; mode=&quot;refentry&quot;&gt;</literal></para>
+      </section>
+      <section><title>Utility Stylesheets and Templates in js2doc2dbk</title>
+        <itemizedlist>
+          <listitem>docs/src/xsl/js2doc2dbk/synopsis.xsl</listitem>
+          <listitem>docs/src/xsl/js2doc2dbk/utilities.xsl</listitem>          
+        </itemizedlist>
+        
+      </section>
+      <section><title>Modes and Roles</title>
+        <para>Modes and roles are attributes of xsl templates which provide another way to slice the same information, akin to double-dispatch: there are several ways to handle an element, and the appropriate one for a given moment depends both on the element (primary dispatch by XPath matching of the template) and on the current mode (secondary matching by mode). A single template may call other templates in various modes. This pattern is pervasive in the js2doc2dbk stylesheets, but it is not used much currently. It supports building <emphasis>multiple references from the same js2doc</emphasis>: different references for the swf runtime versus the dhtml runtime, different references for the public api's than for internal api's, and so on. In particular, the <literal>detailed-synopsis</literal> mode is unused.</para>
+      </section>
+      <section><title>Parameters for controlling the js2doc2dbk transformation</title>
+        <itemizedlist>
+          <listitem>generating warnings, errors, fixme's</listitem>
+        </itemizedlist>        
+      </section>
+      <section><title>Indicies, Appendices, Cross-references, etc</title>
+        </section>
+      <section><title>OpenLaszlo-specific docbook elements</title>
+        <itemizedlist>
+          <listitem>Embedded live examples</listitem>
+        </itemizedlist>        
+      </section>
+      <section>
+        <title>Very complex templates</title>
+        <itemizedlist>
+          <listitem>Subclass and superclass chains</listitem>
+          <listitem>Attributes list (with lzxtype, final, read-only, initialize-only)</listitem>          
+        </itemizedlist>        
+      </section>
     </section>
 
     <section>
       <title>Docbook to Output, at Last!</title>
+      <para>The docbook customization layer. See <ulink linkend="http://www.sagehill.net/docbookxsl/">DocBook XSL: The Complete Guide by Bob Stayton</ulink>. </para>      
+      <itemizedlist>
+        <listitem>common-html.xsl</listitem>
+        <listitem>conditional-html.xsl</listitem>
+        <listitem>styles.css</listitem>
+        <listitem>lzx-pretty-print.css</listitem>        
+      </itemizedlist>
+      
     </section>
-    <para>the docbook customization layer. See stayton. </para>
-
+    
     <section>
       <title>The Backwards Transformation: From Reference Page to Source</title>
       <para>In this section, we will show where several elements on the end product reference page
@@ -315,10 +483,23 @@ Subclasses may override to create different behavior
 
   <section>
     <title>The Developer's Guide Toolchain</title>
+    <section><title>Important Stylesheets</title>
+      <itemizedlist>
+        <listitem>dguide.xsl</listitem>
+        <listitem>dbkpreprocessexamples.xsl</listitem>
+        <listitem>lzx-pretty-print.xsl</listitem>
+      </itemizedlist>      
+    </section>
   </section>
 
   <section>
     <title>Workflow Details</title>
+    
+    <section><title>Figuring things out</title>
+      <para>The docbook toolchain is long and complicated, and the builds take upwards of ten minutes, as much as 40 minutes for a complete build. Do not allow this slow debug-edit-compile loop to dictate the pace of your progress! This author found that it was very effective to work on well-formed subsets of the data, and transform those subsets through a driver stylesheet containing only the templates of interest. With this technique, a debug-edit-compile iteration can take seconds, not hours. The source code includes a simple driver, aptly named <literal>docs/src/xsl/simple-driver.xsl</literal>, which is currently configured to investigate methods of <literal>LzBrowser</literal> when applied to <literal>LaszloLibrary-verbose.js2doc</literal>.</para>
+      <para>A simpler way of figuring things out is just to run XPath queries against <literal>LaszloLibrary-verbose.js2doc</literal> Various XML editors support live XPath queries, including <ulink linkend="http://www.oxygenxml.com/">Oxygen XML Editor</ulink></para>
+    </section>
+   
 
     <section>
       <title>Directory Structure</title>
@@ -352,6 +533,7 @@ Subclasses may override to create different behavior
                 <listitem>reference/  where the js2doc output is joined together into LaszloLibrary-verbose.js2doc, and where the processed reference guide docbook files go after they've had the examples and callouts inserted</listitem>    
               </itemizedlist>              
             </listitem>
+            <listitem>xsl/ (holds the xsl templates for both the conversion from lzx to js2doc, and from js2doc to docbook)</listitem>
           </itemizedlist>
           
         </listitem>
