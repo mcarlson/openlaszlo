@@ -542,47 +542,131 @@ Subclasses may override to create different behavior
     <title>Workflow Details</title>
     <section id="directory-structure">
       <title>Directory Structure</title>
-      <itemizedlist>
-        <listitem>docs/src/
-          <itemizedlist>
-            <listitem>developers/
-              <itemizedlist>
-                <listitem>tutorials/
-                  <itemizedlist>
-                    <listitem>programs</listitem>
-                    <listitem>images</listitem>              
-                  </itemizedlist>                  
-                </listitem>
-                <listitem>programs</listitem>
-                <listitem>images</listitem>              
-              </itemizedlist>
-              
-            </listitem>
-            <listitem>reference/
-              <itemizedlist>
-                <listitem>images</listitem>
-                <listitem>resources</listitem>
-                <listitem>navbuilder/  command-line tool for building the left-nav in the reference</listitem>                
-              </itemizedlist>              
-            </listitem>
-            <listitem>build/  (temporary)
-              <itemizedlist>
-                <listitem>js2doc/ holds the initial js2doc output </listitem>
-                <listitem>developers/  where the processed developers guide docbook files go after they've had the examples and callouts inserted</listitem>
-                <listitem>reference/  where the js2doc output is joined together into LaszloLibrary-verbose.js2doc, and where the processed reference guide docbook files go after they've had the examples and callouts inserted</listitem>    
-              </itemizedlist>              
-            </listitem>
-            <listitem>xsl/ (holds the xsl templates for both the conversion from lzx to js2doc, and from js2doc to docbook)</listitem>
-          </itemizedlist>
-          
-        </listitem>
-      </itemizedlist>
+      <para>There are several important directories for the documentation toolchain.</para>
+      <informaltable colsep="0" frame="none">
+        <tgroup cols="3">
+          <thead>
+            <row>
+              <entry align="left">Path</entry>
+              <entry align="left">Ant Property</entry>              
+              <entry align="left">Purpose</entry>     
+              <entry align="left">Ships in binary distros</entry>
+            </row>
+          </thead>      
+          <tbody>
+            <row>
+              <entry><literal>$LPS_HOME/docs/src/xsl</literal></entry>                            
+              <entry>(no associated property)</entry>
+              <entry>Holds the stylesheets that do the transformations</entry>
+              <entry>no</entry>
+            </row>                                
+            <row>
+              <entry><literal>$LPS_HOME/docs/src/developers</literal></entry>                            
+              <entry><literal>$developers.src.dir</literal></entry>
+              <entry>Holds the source for the developer's guide </entry>
+              <entry>no</entry>              
+            </row>                    
+            <row>
+              <entry><literal>$LPS_HOME/docs/src/build/developers</literal></entry>                            
+              <entry><literal>$developers.build.dir</literal></entry>
+              <entry>Holds intermediate files for the developer's guide build</entry>
+              <entry>no</entry>              
+            </row>        
+            <row>
+              <entry><literal>$LPS_HOME/docs/developers</literal></entry>                            
+              <entry><literal>$developers.output.dir</literal></entry>
+              <entry>Holds the output html for the developer's guide </entry>
+              <entry>yes</entry>              
+            </row>        
+            <row>
+              <entry><literal>$LPS_HOME/docs/src/reference</literal></entry>                            
+              <entry><literal>reference.src.dir</literal></entry>
+              <entry>Holds the source for the reference</entry>
+              <entry>no</entry>              
+            </row>                    
+            <row>
+              <entry><literal>$LPS_HOME/docs/src/build/reference</literal></entry>                            
+              <entry><literal>reference.build.dir</literal></entry>
+              <entry>Holds intermediate files for the reference build</entry>
+              <entry>no</entry>              
+            </row>        
+            <row>
+              <entry><literal>$LPS_HOME/docs/reference</literal></entry>                            
+              <entry><literal>reference.output.dir</literal></entry>
+              <entry>Holds the output html for reference</entry>
+              <entry>yes</entry>              
+            </row>                         
+            <row>
+              <entry><literal>$LPS_HOME/WEB-INF/lps/server/src/org/openlaszlo/js2doc</literal></entry>                            
+              <entry>(no associated property)</entry>
+              <entry>Contains the code for the js2doc java tool</entry>
+              <entry>no</entry>              
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
       
+      <para>Here's that same information, organized hierarchically:        
+        <itemizedlist>
+          <listitem>$LPS_HOME          
+            <itemizedlist>
+              <listitem>docs
+                <itemizedlist>
+                  <listitem>reference/ ($reference.output.dir)</listitem>
+                  <listitem>developers/ ($developers.output.dir)</listitem>
+                  <listitem>src/  ($docs.src.dir)
+                    <itemizedlist>
+                      <listitem>xsl/ (holds the xsl templates for both the conversion from lzx to js2doc, and from js2doc to docbook)</listitem>
+                      <listitem>developers/  ($developers.src.dir)
+                        <itemizedlist>
+                          <listitem>tutorials/
+                            <itemizedlist>
+                              <listitem>programs</listitem>
+                              <listitem>images</listitem>              
+                            </itemizedlist>                  
+                          </listitem>
+                          <listitem>programs</listitem>
+                          <listitem>images</listitem>              
+                        </itemizedlist>                      
+                      </listitem>
+                      <listitem>reference/   ($reference.src.dir)
+                        <itemizedlist>
+                          <listitem>images</listitem>
+                          <listitem>resources</listitem>
+                          <listitem>navbuilder/  command-line tool for building the left-nav in the reference</listitem>                
+                        </itemizedlist>              
+                      </listitem>
+                      <listitem>build/  (temporary) ($docs.build.dir)
+                        <itemizedlist>
+                          <listitem>js2doc/ (js2doc.build.dir) holds the initial js2doc output </listitem>
+                          <listitem>developers/  ($developers.build.dir) where the processed developers guide docbook files go after they've had the examples and callouts inserted</listitem>
+                          <listitem>reference/  ($reference.build.dir) where the js2doc output is joined together into LaszloLibrary-verbose.js2doc, and where the processed reference guide docbook files go after they've had the examples and callouts inserted</listitem>    
+                        </itemizedlist>
+                      </listitem>
+                    </itemizedlist>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </itemizedlist>  
+      </para>
     </section>
 
     <section id="how-ant-drives">
       <title>How Ant Drives the Transformations</title>
-      <para>The build file in <literal>docs/src/build.xml</literal> is arguably the most complicated build file in the entire OpenLaszlo platform. It has several layers of abstraction, which, when combined with the doc toolchain's complexities we've already explored, make following the build.xml nearly impossible. An additional problem is that tools for visualizing ant files break on this one, because it calls itself, and because it calls other ant files entirely. (In fact, it calls the second-most complicated ant file in the OpenLaszlo platform, <literal>WEB-INF/lps/server/build.xml</literal>.) The way to make sense of the build file is to think of what we already have learned the process is, as described in the rest of this chapter. In this discussion, we'll favor concepts over details, lest we drown in details. </para>
+      <para>The build file in <literal>docs/src/build.xml</literal> is arguably the most complicated build file in the entire OpenLaszlo platform. It has several layers of abstraction, which, when combined with the doc toolchain's complexities we've already explored, make following the ant file nearly impossible. The way to make sense of the build file is to think of what we already have learned the process is, as described in the rest of this chapter. In this discussion, we'll favor concepts over details, lest we drown in details. You may also wish to try <ulink url="http://www.yworks.com/en/products_antexplorer_about.htm">yWorks Ant Explorer</ulink> which provides a visualization of the build file.</para>
+      <para>The build file is composed of both specific targets and parameterized targets. The parameterized targets do most of the work, and the specific targets set up the right parameters with which to call the parameterized targets. In <xref linkend="directory-structure"/>, the ant properties corresponding to particular directories in the LPS tree are listed; understanding those mappings is crucial to being able to read and follow the build.</para> 
+        <para>In this diagram of the major targets in the reference build, parameterized targets are highlighted:
+        <informalfigure><mediaobject><imageobject>
+          <imagedata fileref="images/doc-ant-build.png"/>
+        </imageobject>
+        </mediaobject></informalfigure>
+      </para>
+      <para><literal>reference.js2doc.generate</literal> drives the creation of the js2doc intermediate file, <literal>LaszloLibrary-verbose.js2doc</literal>, from the several sources (langref.xml, lzx files, and js files).</para>
+      <para><literal>dbk.topic.generate</literal> drives the js2doc2dbk transformation. It says, "find all the elements in the input file ( <literal>LaszloLibrary-verbose.js2doc</literal> for the reference) that match the topic specified in the <literal>filter.topic</literal> parameter. Apply the transformations in <literal>js2doc2dbk.xsl</literal> to those elements, and output the results to the file specified in the <literal>local.output.file</literal>." </para>
+      <para><literal>book.html.generate</literal> drives the docbook to HTML transformation.</para>
+      <para><literal>dbk.examples.preprocess</literal> prepares the examples in the specified docbook for rendering and final output, by running the docbook through <literal>xsl/dbkpreprocessexamples.xsl</literal>.</para>
     </section>
 
   </section>
