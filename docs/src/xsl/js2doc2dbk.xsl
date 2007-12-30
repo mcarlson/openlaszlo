@@ -3,6 +3,19 @@
 * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- 
+  To understand the documentation toolchain, please consult the developer's guide, 
+  in Part XI, Documentation Tools and Guidelines, and especially in 
+  Chapter 52, The Documentation Toolchain. 
+  
+  In a source build of OpenLaszlo, those chapters can be found at
+  http://localhost:8080/trunk/docs/developers/developers.doctools.html
+  
+  Currently, those chapters can be found live at the following URL
+  http://labs.openlaszlo.org/trunk-nightly/docs/developers/developers.doctools.html
+  
+  [bshine 12.29.2007]
+-->
 <!DOCTYPE xsl:stylesheet [
 
 <!ENTITY nbsp  "&#160;">
