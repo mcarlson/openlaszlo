@@ -95,7 +95,7 @@ em.lineannotation {
 
 /* Emphasis inside a program listing is bold blue, instead of italic */
 pre em {
-    color: blue;
+    color: #111499;
     font-weight: bold;
     font-style: normal;
 }
