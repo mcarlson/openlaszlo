@@ -655,7 +655,7 @@ Subclasses may override to create different behavior
 
     <section id="how-ant-drives">
       <title>How Ant Drives the Transformations</title>
-      <para>The build file in <literal>docs/src/build.xml</literal> is arguably the most complicated build file in the entire OpenLaszlo platform. It has several layers of abstraction, which, when combined with the doc toolchain's complexities we've already explored, make following the ant file nearly impossible. The way to make sense of the build file is to think of what we already have learned the process is, as described in the rest of this chapter. In this discussion, we'll favor concepts over details, lest we drown in details. You may also wish to try <ulink url="http://www.yworks.com/en/products_antexplorer_about.htm">yWorks Ant Explorer</ulink> which provides a visualization of the build file.</para>
+      <para>The build file in <literal>docs/src/build.xml</literal> is arguably the most complicated build file in the entire OpenLaszlo platform. It has several layers of abstraction, which, when combined with the doc toolchain's complexities we've already explored, make following the ant file nearly impossible. The way to make sense of the build file is to think of what we already have learned the process is, as described in the rest of this chapter. In this discussion, we'll favor concepts over details, lest we drown in details. You may also wish to try <ulink url="http://www.yworks.com/en/products_antexplorer_about.htm">yWorks Ant Explorer</ulink> which provides a visualization of the build file.</para>      
       <para>The build file is composed of both specific targets and parameterized targets. The parameterized targets do most of the work, and the specific targets set up the right parameters with which to call the parameterized targets. In <xref linkend="directory-structure"/>, the ant properties corresponding to particular directories in the LPS tree are listed; understanding those mappings is crucial to being able to read and follow the build.</para> 
         <para>In this diagram of the major targets in the reference build, parameterized targets are highlighted:
         <informalfigure><mediaobject><imageobject>
@@ -667,7 +667,15 @@ Subclasses may override to create different behavior
       <para><literal>dbk.topic.generate</literal> drives the js2doc2dbk transformation. It says, "find all the elements in the input file ( <literal>LaszloLibrary-verbose.js2doc</literal> for the reference) that match the topic specified in the <literal>filter.topic</literal> parameter. Apply the transformations in <literal>js2doc2dbk.xsl</literal> to those elements, and output the results to the file specified in the <literal>local.output.file</literal>." </para>
       <para><literal>book.html.generate</literal> drives the docbook to HTML transformation.</para>
       <para><literal>dbk.examples.preprocess</literal> prepares the examples in the specified docbook for rendering and final output, by running the docbook through <literal>xsl/dbkpreprocessexamples.xsl</literal>.</para>
+      <para>This diagram shows the major targets in the developer's guide build. As before, parameterized targets are highlighted:
+        <informalfigure><mediaobject><imageobject>
+          <imagedata fileref="images/doc-ant-build-developers.png"/>
+        </imageobject>
+        </mediaobject></informalfigure>        
+      </para>
     </section>
+    
+    
 
   </section>
 
