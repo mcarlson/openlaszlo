@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter language="en" id="doc-backwards">
+  <title>The Backwards Transformation: From Reference Page to Source</title>
+  <para>In this chapter, we will show where several elements on the end product reference page
+      can be traced back to their origins in the sources.</para>
+  
+  <figure>
+    <title>Page Header</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/reference-header-explanation.png"/>
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <informaltable colsep="0" frame="none">
+    <tgroup cols="2">
+      <colspec colname="Region"/>
+      <colspec colname="Docbook Element"/>
+      <colspec colname="js2doc2dbk template"/>      
+      <colspec colname="js2doc Element"/>
+      <thead>
+        <row>
+          <entry align="left">Region</entry>
+          <entry align="left">Docbook Element</entry>
+          <entry align="left">Relevant Templates</entry>          
+          <entry align="left">js2doc Element</entry>              
+        </row>
+      </thead>      
+      <tbody>
+        <row>
+          <entry>A</entry>
+          <entry>header navigation</entry>
+          <entry>parameters.xsl: navig.showtitles, suppress.header.navigation </entry>
+          <entry>-</entry>
+        </row>
+        <row>
+          <entry>B</entry>
+          <entry>&lt;refentry xreflabel="&lt;text&gt;"  id="LzText" ...&gt;</entry>
+          <entry>&lt;xsl:template match=&quot;property&quot; mode=&quot;refentry&quot;&gt;</entry>
+          <entry>WORKHERENOW</entry>
+        </row>            
+      </tbody>
+    </tgroup>
+  </informaltable>
+  
+  <figure>
+    <title>A Live Example</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/reference-example-explanation.png"/>
+      </imageobject>
+    </mediaobject>
+  </figure>
+  
+  <informaltable colsep="0" frame="none">
+    <tgroup cols="2">
+      <colspec colname="Region"/>
+      <colspec colname="Docbook Element"/>
+      <colspec colname="js2doc2dbk template"/>      
+      <colspec colname="js2doc Element"/>
+      <thead>
+        <row>
+          <entry align="left">Region</entry>
+          <entry align="left">Docbook Element</entry>
+          <entry align="left">Relevant Templates</entry>          
+          <entry align="left">js2doc Element</entry>              
+        </row>
+      </thead>      
+      <tbody>
+        <row>
+          <entry>H</entry>
+          <entry>-</entry>
+        </row>
+        <row>
+          <entry>I</entry>
+        </row>
+        <row>
+          <entry>J</entry>
+        </row>                    
+      </tbody>
+    </tgroup>
+  </informaltable>  
+  
+  <figure>
+    <title>The Attributes Table</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/reference-attributes-explanation.png"/>
+      </imageobject>
+    </mediaobject>
+  </figure>
+  
+  <informaltable colsep="0" frame="none">
+    <tgroup cols="2">
+      <colspec colname="Region"/>
+      <colspec colname="Docbook Element"/>
+      <colspec colname="js2doc2dbk template"/>      
+      <colspec colname="js2doc Element"/>
+      <thead>
+        <row>
+          <entry align="left">Region</entry>
+          <entry align="left">Docbook Element</entry>
+          <entry align="left">Relevant Templates</entry>          
+          <entry align="left">js2doc Element</entry>              
+        </row>
+      </thead>      
+      <tbody>
+        <row>
+          <entry>K</entry>
+          <entry>-</entry>
+        </row>
+        <row>
+          <entry>L</entry>
+        </row>
+        <row>
+          <entry>M</entry>
+        </row>                    
+      </tbody>
+    </tgroup>
+  </informaltable> 
+  
+  <figure>
+    <title>Method Details</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/reference-methods-explanation.png"/>
+      </imageobject>
+    </mediaobject>
+  </figure>
+  
+  <informaltable colsep="0" frame="none">
+    <tgroup cols="2">
+      <colspec colname="Region"/>
+      <colspec colname="Docbook Element"/>
+      <colspec colname="js2doc2dbk template"/>      
+      <colspec colname="js2doc Element"/>
+      <thead>
+        <row>
+          <entry align="left">Region</entry>
+          <entry align="left">Docbook Element</entry>
+          <entry align="left">Relevant Templates</entry>          
+          <entry align="left">js2doc Element</entry>              
+        </row>
+      </thead>      
+      <tbody>
+        <row>
+          <entry>1</entry>         
+        </row>
+        <row>
+          <entry>2</entry>
+        </row>
+        <row>
+          <entry>3</entry>
+        </row>                    
+      </tbody>
+    </tgroup>
+  </informaltable> 
+     
+</chapter>

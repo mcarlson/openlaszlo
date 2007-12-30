@@ -529,13 +529,6 @@ Subclasses may override to create different behavior
     
   </section>
   
-  <section id="backwards-transformation">
-    <title>The Backwards Transformation: From Reference Page to Source</title>
-    <para>In this section, we will show where several elements on the end product reference page
-      can be traced back to their origins in the sources.</para>
-    <para>screengrab of a reference page with area highlighted, identified by A/B/C etc</para>
-    <para>for each highlighted area, show the xsl files in which it is created and the important templates </para>      
-  </section>
   
 
   <section id="workflow-details">

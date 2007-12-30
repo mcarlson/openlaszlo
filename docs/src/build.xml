@@ -54,7 +54,7 @@
         <property name="show.fixmes" value="0"/>
       </then>
       <else>
-        <property name="draft.mode" value="yes"/>
+        <property name="draft.mode" value="no"/> <!-- [bshine 12.30.2007] turn off draft bg because it bothers me ] -->
         <property name="show.comments" value="1"/>
         <if><equals arg1="${release}" arg2="Internal" casesensitive="true" trim="true"/>
         <then>

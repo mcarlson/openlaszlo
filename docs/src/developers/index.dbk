@@ -155,6 +155,11 @@
     <xi:include href="doc-toolchain.dbk">
       <xi:fallback><para>Missing: Doc Tool Chain</para></xi:fallback>
     </xi:include>
+
+    <xi:include href="doc-backwards-xform.dbk">
+      <xi:fallback><para>Missing: Doc Backwards Transformation</para></xi:fallback>
+    </xi:include>
+    
     
     <xi:include href="docbook-local.dbk">
       <xi:fallback><para>Missing: Docbook Local Style Guide</para></xi:fallback>

@@ -34,7 +34,7 @@
   <xsl:param name="index.number.separator" select="', '"/>
   <xsl:param name="index.range.separator" select="'-'"/>
   <!-- HTML -->
-  <xsl:param name="draft.mode" select="'yes'"/>
+  <xsl:param name="draft.mode" select="'no'"/> <!-- Set to 'yes' if you want a watermark -->
   <xsl:param name="draft.watermark.image" select="'./images/draft.png'"/>
   <xsl:param name="use.id.as.filename" select="1"/>
   <!-- Meta/*.info -->
