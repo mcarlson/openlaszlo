@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzidle
@@ -38,7 +38,7 @@ class LzIdleClass {
 
 
 var removeCOI = null;
-function initialize () {
+function LzIdleClass () {
   // Create array on instance, not prototype
   this.coi = new Array;
   this.removeCOI = new LzDelegate( this , "removeCallIdleDelegates" );

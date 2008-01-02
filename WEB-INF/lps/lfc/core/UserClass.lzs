@@ -2,7 +2,7 @@
   * UserClass.lzs 
   *
   * 
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LZX
@@ -74,10 +74,10 @@ class LzUserClass extends LzNode {
   */
 static var tagname = 'class';
 
-function initialize (parent, args) {
+function LzUserClass (parent, args) {
   #pragma "warnUndefinedReferences=true"
   // TODO: [2006-05-19 ptw] The original did not do this, should we?
-  // super.initialize.apply(this, arguments);
+  // super(parent, args);
   var classobj = args.initobj;
   var classname = classobj.name;
   var attrs = classobj.attrs;

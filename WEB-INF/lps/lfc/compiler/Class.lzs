@@ -1,7 +1,7 @@
 /***
  * Classes for Javascript with Mixins
  *
- * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
  * Use is subject to license terms.
  *
  * @access private
@@ -26,7 +26,7 @@
   */
 var Instance = function constructor () {
   this.constructor = arguments.callee
-  this.initialize.apply(this, arguments);
+  this.$lzsc$initialize.apply(this, arguments);
 };
 Instance.prototype.constructor = Instance; 
 Instance.prototype.__initialized = false;
@@ -134,7 +134,7 @@ Instance.prototype.addProperty('nextMethod', function nextMethod (currentMethod,
 });
 
 /**
-  * Instance initialize method
+  * Instance $lzsc$initialize method
   *
   * Called by Instance constructor as the last operation on a new
   * instance of a class.  Arguments are the arguments that were passed
@@ -149,7 +149,7 @@ Instance.prototype.addProperty('nextMethod', function nextMethod (currentMethod,
   *
   * @devnote The call to the default method is optimized away in class constructors
   */
-Instance.prototype.addProperty('initialize', function initialize () {});
+Instance.prototype.addProperty('$lzsc$initialize', function $lzsc$initialize () {});
 
 /**
   * Class initialize method
@@ -285,9 +285,9 @@ var Class = {
         this.validateClassStructure();
       }
       // Call the initializer if it is not the default
-      if (this.initialize !== Instance.prototype.initialize) {
+      if (this.$lzsc$initialize !== Instance.prototype.$lzsc$initialize) {
         // Debug.debug('Initializing', this);
-        this.initialize.apply(this, arguments);
+        this.$lzsc$initialize.apply(this, arguments);
       }
     };
     nc.constructor = this;

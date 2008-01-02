@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzcanvas
@@ -61,9 +61,9 @@ class LzCanvas extends LzView {
   */
 static var tagname = 'canvas';
 
-function initialize ( args ) {
+function LzCanvas ( args ) {
     // TODO: [2006-05-19 ptw] The original did not do this, should we?
-    // super.initialize.apply(this, arguments);
+    // super(null, args);
     // Note canvas start
     if ($profile) {
         Profiler.event('start: #canvas');

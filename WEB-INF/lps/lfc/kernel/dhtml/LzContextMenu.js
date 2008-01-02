@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -19,7 +19,7 @@
   */
 class LzContextMenu extends LzNode {
 
-function initialize(del) {
+function LzContextMenu (del) {
     // set callback for "oncontextmenu" event
     this.__LZmousedowndel = new LzDelegate( this , "__hide");
     this.items = [];
@@ -165,7 +165,7 @@ function makeMenuItem (title, callback) {
   */
 class LzContextMenuItem extends LzNode {
 
-function initialize (title, del) {
+function LzContextMenuItem (title, del) {
     this.cmenuitem = {visible: true, enabled: true, separatorBefore: false, caption: title};
     this.setDelegate(del);
 }; // End of LzContextMenuItem

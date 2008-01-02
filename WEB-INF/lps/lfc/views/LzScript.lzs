@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -68,8 +68,8 @@ class LzScript extends LzNode {
   */
 static var tagname = 'script';
 
-function initialize ( parent, args ) {
-    super.initialize.apply(this, arguments);
+function LzScript ( parent, args ) {
+    super(parent, args);
     args.script();
 }
 

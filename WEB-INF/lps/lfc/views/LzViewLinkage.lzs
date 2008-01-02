@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -38,7 +38,7 @@ class LzViewLinkage {
   * @param fromView: the view from which to originate the transformation
   * @param toView: the reference view
   */
-  function initialize ( fromView, toView ) {
+  function LzViewLinkage ( fromView, toView ) {
     //@field scale: An <b><i>LzPoint</b></i> representing the scale
     //transformation of this linkage. 1 is no transformation.
     this.scale = new Object ();

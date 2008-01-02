@@ -1,7 +1,7 @@
 /**
   * LzMediaLoader.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -12,8 +12,8 @@
   * @access private
   */
 class LzMediaLoader extends LzLoader {
-    function initialize( owner , args ) {
-        super.initialize.apply(this, arguments);
+    function LzMediaLoader ( owner , args ) {
+        super(owner, args);
 
         this.owner.owner.loadperc = 0;
 

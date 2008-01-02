@@ -1,7 +1,7 @@
 /* ****************************************************************************
  * Parser.jjt
  *
- * Copyright (c) 2002-2007 Laszlo Systems, Inc.
+ * Copyright (c) 2002-2008 Laszlo Systems, Inc.
  * All Rights Reserved.
  *
  * This software is the proprietary information of Laszlo Systems, Inc.
@@ -463,7 +463,9 @@ void CallExpression() #CallExpression(>1) : {}
 
 void SuperCallExpression() #SuperCallExpression : {}
 {
-  "super" "." Identifier()
+  "super" ([ LOOKAHEAD("." Identifier() ("." | "("))
+            "." Identifier()
+           ] #EmptyExpression(jjtree.nodeArity()==0))
           ([ LOOKAHEAD("." Identifier(), { "apply".equals(getToken(2).image) || "call".equals(getToken(2).image) })
             "." Identifier()
            ] #EmptyExpression(jjtree.nodeArity()==0))

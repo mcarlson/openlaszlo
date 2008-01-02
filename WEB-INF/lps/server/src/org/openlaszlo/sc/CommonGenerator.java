@@ -407,7 +407,13 @@ public abstract class CommonGenerator implements ASTVisitor {
         if (n instanceof ASTFunctionDeclaration) {
           SimpleNode[] c = n.getChildren();
           assert c.length == 3;
-          p.add(new ASTLiteral(((ASTIdentifier)c[0]).getName()));
+          String fname = ((ASTIdentifier)c[0]).getName();
+          // Transform constructor into '$lzsc$initialize' method
+          if (classnameString.equals(fname)) {
+            fname = "$lzsc$initialize";
+            c[0] = new ASTIdentifier(fname);
+          }
+          p.add(new ASTLiteral(fname));
           SimpleNode funexpr = new ASTFunctionExpression(0);
           funexpr.setBeginLocation(n.filename, n.beginLine, n.beginColumn);
           funexpr.setChildren(c);
@@ -697,7 +703,10 @@ public abstract class CommonGenerator implements ASTVisitor {
     String ca = null;
     String pattern = "(arguments.callee.superclass?arguments.callee.superclass.prototype[_1]:this.nextMethod(arguments.callee, _1)).call(this, _2)";
     if (fname instanceof ASTEmptyExpression) {
-      name = "constructor";
+      // super with no selector is the constructor, which will be
+      // renamed to $lzsc$initialize in translateClassDirective to
+      // mesh with lfc/compiler/Class.lzs framework
+      name = "$lzsc$initialize";
     } else {
       name = ((ASTIdentifier)fname).getName();
     }
@@ -877,6 +886,6 @@ public abstract class CommonGenerator implements ASTVisitor {
 }
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/

@@ -11,7 +11,7 @@ class DojoExternalInterfaceClass {
 	var _fscommandReady = false;
 	var _callbacks = [];
 
-	function initialize(){ 
+	function DojoExternalInterfaceClass(){ 
 		//getURL("javascript:alert('FLASH:DojoExternalInterface initialize')");
 		//Debug.write('DojoExternalInterface.initialize()');
 		// FIXME: Set available variable by testing for capabilities
@@ -220,7 +220,7 @@ class DojoExternalInterfaceClass {
 }
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 

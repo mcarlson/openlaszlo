@@ -2,7 +2,7 @@
   * LzNode.lzs
   *
   *   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LZX
@@ -47,11 +47,11 @@ class LzNode {
   * @param Boolean instcall
   * @access private
   */
-function initialize ( parent , attrs , children , instcall ){
+function LzNode ( parent , attrs , children , instcall ){
         this.__LZUID = "__U" + ++LzNode.__UIDs;
         this.__LZdeferDelegates = true;
         var qpos = LzDelegate.__LZdelegatesQueue.length;
-        super.initialize.apply(this, arguments);
+        super();
 
         // Node node start
         if ($profile) {

@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -21,8 +21,8 @@ class LzDataText extends LzMiniNode inherits LzDataNode {
 /**
   * @param String text: The text that this node holds.
   */
-function initialize ( text ){
-    super.initialize.apply(this, arguments);
+function LzDataText ( text ){
+    super();
     this.data = text;
 }
 

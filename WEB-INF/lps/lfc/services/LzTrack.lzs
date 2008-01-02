@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lztrack
@@ -122,8 +122,8 @@ var __LZoptimizeforaxis = 'x';
 /** @access private */
 var __LZmouseupDel = null;
 
-function initialize (){
-    super.initialize.apply(this, arguments);
+function LzTrackClass (){
+    super();
 
     this.__LZtrackDel = new LzDelegate( this, "__LZtrack" );// called on idle
     this.__LZmouseupDel = new LzDelegate( this, "__LZmouseup", LzGlobalMouse, 'onmouseup');// called on global mouseup

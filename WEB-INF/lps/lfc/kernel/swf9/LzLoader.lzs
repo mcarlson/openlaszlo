@@ -1,7 +1,7 @@
 /**
   * LzLoader.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -13,8 +13,8 @@
   */
 class LzLoader {
 
-function initialize ( owner , args ){
-    super.initialize.apply(this, arguments);
+function LzLoader ( owner , args ){
+    super(owner, args);
     //Debug.write("LzLoader initialize owner=",owner,'attachref=', args.attachRef, args);
     this.mc = args.attachRef == null ? owner.__LZmovieClipRef : args.attachRef;
     //this breaks media loading in swf: this.mc = args.attachRef == null ? owner.getMCRef() : args.attachRef;

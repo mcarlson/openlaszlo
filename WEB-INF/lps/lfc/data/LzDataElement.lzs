@@ -1,5 +1,5 @@
 /**
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -639,8 +639,8 @@ class LzMiniNode {
 class LzDataElement extends LzMiniNode inherits LzDataElementTrait, LzDataNode {
     // N.B.: LzDataElement is not an LzNode so has a different
     // initialize signature.
-    function initialize ( name , attributes , children ) {
-            super.initialize.apply(this, arguments);
+    function LzDataElement ( name , attributes , children ) {
+            super(name, attributes, children);
             this.nodeName = name;
             this.attributes = attributes;
             this.ownerDocument = this;

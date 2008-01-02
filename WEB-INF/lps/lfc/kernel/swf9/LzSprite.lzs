@@ -1,7 +1,7 @@
 /**
   * LzSprite.lzs
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -10,8 +10,8 @@
 
 class LzSprite {
 
-function initialize(newowner, isroot, args) {
-    super.initialize.apply(this, arguments);
+function LzSprite (newowner, isroot, args) {
+    super();
     if (newowner == null) return this;
     this.owner = newowner;
     //Debug.write('---> New sprite', newowner, newowner.immediateparent, newowner.immediateparent.sprite);

@@ -23,7 +23,7 @@ class DojoExternalInterfaceClass {
 	var argData = null;
 	var resultData = null;
 	
-	function initialize(){
+	function DojoExternalInterfaceClass(){
 		// extract the dojo base path
 		//Debug.write('initialize', flash.external.ExternalInterface.addCallback);
 		
@@ -227,7 +227,7 @@ class DojoExternalInterfaceClass {
 }
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 

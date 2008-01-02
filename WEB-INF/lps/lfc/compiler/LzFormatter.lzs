@@ -3,7 +3,7 @@
 /**
  * Formatted output
  *
- * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @access public
@@ -21,7 +21,7 @@ class LzMessage {
   var message = '';
   var length = 0;
 
-  function initialize (message) {
+  function LzMessage (message) {
     if (arguments.length > 0) {
       this.appendInternal('' + message, message);
     }

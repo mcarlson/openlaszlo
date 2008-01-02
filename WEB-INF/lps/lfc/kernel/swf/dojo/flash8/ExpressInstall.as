@@ -23,7 +23,7 @@ class ExpressInstall {
 	var updater = null
 	var hold = null
 	
-    function initialize(){
+    function ExpressInstall(){
 		// does the user need to update?
 		this.needsUpdate = (_root.MMplayerType == undefined) ? false : true;	
     }
@@ -75,6 +75,6 @@ class ExpressInstall {
 }
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/

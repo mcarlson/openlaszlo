@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzfont
@@ -362,8 +362,8 @@ var lsbtable;
   */
 var rsbtable;
 
-function initialize ( fontobject , attrs , style ){
-    super.initialize.apply(this, arguments);
+function LzFont ( fontobject , attrs , style ){
+    super();
     this.name = fontobject.name;
 
     this.style = style;

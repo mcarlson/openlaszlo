@@ -1,7 +1,7 @@
 /**
   * LzTextSprite.lzs
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -10,11 +10,11 @@
 
 class LzTextSprite extends LzSprite {
 
-function initialize(newowner, args) {
+function LzTextSprite (newowner, args) {
     // [todo pbr 10-31-07]
-    // I'm not calling super.initialize because this appears to do what
+    // I'm not calling super because this appears to do what
     // LzInputSprite ctor does 
-    // super.initialize.apply(this, arguments);
+    // super(newowner, args);
 
     if (newowner == null) return this;
     this.__LZdepth = newowner.immediateparent.sprite.__LZsvdepth++;

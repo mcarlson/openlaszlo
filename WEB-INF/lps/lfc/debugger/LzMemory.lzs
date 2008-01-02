@@ -2,7 +2,7 @@
 
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -497,7 +497,8 @@ class __LzLeak {
   var property = '';
   var leaked = 0;
 
-  function initialize (o) {
+  function __LzLeak (o) {
+    super();
     var annotations = Debug.annotation;
     var why = annotations.why;
     var leaked = annotations.leaked;
@@ -550,7 +551,8 @@ class __LzLeaks /* extends Array */ {
 
   var sort = Array.prototype.sort;
 
-  function initialize () {
+  function __LzLeaks () {
+    super();
     var l = Debug.leaks;
     var ll = l.length;
     var annotations = Debug.annotation;

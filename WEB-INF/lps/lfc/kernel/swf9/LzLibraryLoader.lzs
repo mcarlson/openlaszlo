@@ -1,7 +1,7 @@
 /**
   * LzLibraryLoader.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -14,8 +14,8 @@
 //* A_LZ_COPYRIGHT_END ********************************************************
 
 class LzLibraryLoader extends LzLoader {
-    function initialize ( owner , args ) {
-        super.initialize.apply(this, arguments);
+    function LzLibraryLoader ( owner , args ) {
+        super(owner, args);
         this.owner.loadperc = 0;
         //setup loadmovie stuff that never changes
         this.mc.loader = this;

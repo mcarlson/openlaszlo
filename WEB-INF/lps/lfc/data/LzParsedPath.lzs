@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -127,7 +127,7 @@ class LzParsedPath {
       return null;
   }
   
-  function initialize ( pa, node ){
+  function LzParsedPath ( pa, node ){
     //split context part
     this.path = pa;
     this.selectors = [];
@@ -375,7 +375,7 @@ class AnonDatasetGenerator {
 /**
   * @access private
   */
-function initialize  ( pp ){
+function AnonDatasetGenerator  ( pp ){
     this.pp = pp;
 }
 

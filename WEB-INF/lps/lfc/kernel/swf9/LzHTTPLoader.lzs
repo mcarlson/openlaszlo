@@ -1,7 +1,7 @@
 /**
   * LzHTTPLoader.lzs
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -15,7 +15,7 @@
 // We have an internal 'lzloader' property which points to an LzLoader (Flash-7-8-specific)
 class LzHTTPLoader {
 
-function initialize (owner, proxied) {
+function LzHTTPLoader (owner, proxied) {
     this.lzloader = this.makeLzLoader(proxied);
     this.owner = owner;
     this.options = {

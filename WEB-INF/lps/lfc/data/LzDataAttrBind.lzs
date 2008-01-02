@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -11,7 +11,7 @@
 /** @access private */
 class LzDataAttrBind extends LzDatapointer {
 
-function initialize ( ndpath , attr, path ){
+function LzDataAttrBind ( ndpath , attr, path ){
                             this.setAttr = attr;
                             this.pathparent = ndpath;
                             this.node = ndpath.immediateparent;

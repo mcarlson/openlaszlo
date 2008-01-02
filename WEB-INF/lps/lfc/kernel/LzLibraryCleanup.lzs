@@ -1,7 +1,7 @@
 /**
   * LzLibraryCleanup.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -19,9 +19,9 @@ class LzLibraryCleanup extends LzNode {
     static var tagname = '__libraryloadercomplete';
 
 
-    function initialize ( owner , args ) {
+    function LzLibraryCleanup ( owner , args ) {
         //this.callInherited( "constructor", arguments.callee ,owner ,args );
-        super.initialize.apply(this, arguments);
+        super(owner, args);
         var lib = LzLibrary.findLibrary(args.libname);
         lib.loading = false;
         if (lib.onload.ready) lib.onload.sendEvent(true);
