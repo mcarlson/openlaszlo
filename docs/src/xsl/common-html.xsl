@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -232,7 +232,7 @@
         canvas widths. 
         The solution! Iterate over the result node set! -->
       <xsl:for-each select="parameter[@role='canvas']">
-        <xsl:value-of select="."/>, 
+        , <xsl:value-of select="."/> <!-- do a leading comma so that we don't have a stray comma at the end -->
       </xsl:for-each>
      </xsl:variable>
       
@@ -245,8 +245,8 @@
           <xsl:if test="$query-parameters">&amp;<xsl:value-of select="$query-parameters[1]/text()"></xsl:value-of></xsl:if>
         </xsl:variable>
         <xsl:variable name="canvas-id" select="generate-id(.)"/>
-        <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', history: false, <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
-        <xsl:variable name="dhtml-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=html&amp;lzr=dhtml', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'DHTML')"/>', <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
+        <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', history: false <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
+        <xsl:variable name="dhtml-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=html&amp;lzr=dhtml', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'DHTML')"/>' <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
         <!-- To test examples in DHTML, uncomment the second script block below.
              If you don't want to see the SWF version as well, comment out the 
              first script block. -->
