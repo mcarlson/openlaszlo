@@ -306,6 +306,10 @@ var __LZsourceLocation = null;
 /** @access private */
 var __LZUID = null;
 /** @access private */
+var __LZPropertyCache = null;
+/** @access private */
+var __LZRuleCache = null;
+/** @access private */
 var __LZdelegates = null;
 
 /** @access private */

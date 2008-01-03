@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzcssstyle lzcssstylerule
@@ -80,11 +80,6 @@ LzCSSStyle.getComputedStyle = function ( node ){
     return csssd;
 }
 
-/** @access private */
-LzCSSStyle.__LZRuleCache = {};
-LzCSSStyle.__LZPropertyCache = {};
-
-
 //LzCSSStyle.time1 = 0;
 LzCSSStyle.getPropertyValueFor = function ( initialnode , pname ){
     //Debug.warn("node: %w, pname: %w, rules: %w\n", node, pname, this._rules);
@@ -94,11 +89,14 @@ LzCSSStyle.getPropertyValueFor = function ( initialnode , pname ){
 
     var node = initialnode;
     while (node != canvas) {
-        var uid = node.__LZUID;
-        var val = this.__LZPropertyCache[uid + pname];
-        if (val != null) return val;
+        if (! node.__LZPropertyCache) {
+            node.__LZPropertyCache = {};
+        } else {
+            var val = node.__LZPropertyCache[pname];
+            if (val != null) return val;
+        }
 
-        var rules = this.__LZRuleCache[ uid ];
+        var rules = node.__LZRuleCache;
         if ( !rules ) {
             rules = new Array();
             var r;
@@ -211,7 +209,7 @@ LzCSSStyle.getPropertyValueFor = function ( initialnode , pname ){
 
             rules.sort(this.__compareSpecificity); 
         
-            this.__LZRuleCache[ uid ] = rules;
+            node.__LZRuleCache = rules;
         }
 
         //Debug.write("About to print rule array.") 
@@ -223,7 +221,7 @@ LzCSSStyle.getPropertyValueFor = function ( initialnode , pname ){
             var props = rules[i++].properties;
             if (pname in props) { 
                 val = props[pname];
-                this.__LZPropertyCache[uid + pname] = val;
+                node.__LZPropertyCache[pname] = val;
                 break;
             }
         }
@@ -248,7 +246,7 @@ LzCSSStyle.getSelectorSpecificity = function ( parsedsel ){
     // Go through all the selectors in the selector, keeping a running
     // count of various kinds of selectors:
     /*
-    count 1 if the selector is a ’style’ attribute rather than a selector, 
+    count 1 if the selector is a `style` attribute rather than a selector, 
         0 otherwise (= a) 
     count the number of ID attributes in the selector (= b) 
     count the number of other attributes and pseudo-classes in the selector (= c) 
