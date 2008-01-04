@@ -89,6 +89,7 @@
     <xi:include href="data-structures.dbk"/>
     <!-- xi:include href="data-overview.dbk"/-->
     <xi:include href="databinding.dbk"/>
+    <xi:include href="datareplication.dbk"/>
     <xi:include href="data_app.dbk"/>
     <!-- xi:include href="static-databinding.dbk"/ -->
     <!-- xi:include href="dynamic-databinding.dbk"/ -->

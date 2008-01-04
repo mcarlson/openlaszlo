@@ -1,0 +1,623 @@
+<chapter id="datareplication">
+  <title>Data Replication</title>
+  <section>
+    <title>Introduction</title>
+    <para>There are two types of data replication, 
+    <emphasis>implicit</emphasis>and 
+    <emphasis>explicit</emphasis>.</para>
+    <para>Implicit replication is the earlier form, and while it
+    works well, it has some problems:</para>
+    <itemizedlist>
+      <listitem>
+        <para>It can make the code harder to read.</para>
+      </listitem>
+      <listitem>
+        <para>It can be inefficient.</para>
+      </listitem>
+      <listitem>
+        <para>It can sometimes be fragile.</para>
+      </listitem>
+    </itemizedlist>
+    <para>The newly introduced explicit replication solves these
+    problems by mirroring the (final) runtime view structure in the
+    replicating declaration. We recommend that you use explicit
+    replication in all new code that you write. You can change from 
+    implicit to explicit replication by changing this:</para>
+    <programlisting>
+    &lt;view ... datapath="..."&gt;
+     ...
+    &lt;/view&gt;
+    </programlisting>
+    <para>to this:</para>
+    <programlisting>
+   &lt;replicator datapath="..."&gt;
+     &lt;view ...&gt;
+       ...
+     &lt;/view&gt;
+   &lt;/replicator&gt;
+    </programlisting>
+    
+  </section>
+  <section>
+    <title>Implicit Replication</title>
+    <para>As shown in some of the examples above, datapaths that
+    match multiple nodes cause their nodes to be 
+    <indexterm significance="preferred">
+      <primary>replicated</primary>
+    </indexterm>
+    <glossterm>replicated</glossterm>. By "replicated", we mean
+    that for each match of the XPath expression one instance of the
+    mapped view is created. This is one of the most important
+    features of the databinding facilities in LZX.</para>
+    <para />
+    <section>
+      <title>Replication Manager</title>
+      <para>A 
+      <indexterm significance="preferred">
+        <primary>replication manager</primary>
+      </indexterm>
+      <glossterm>replication manager</glossterm>is a runtime object
+      that is created automatically whenever data replication
+      occurs as a result of a datapath matching more than once.
+      When that happens, the 
+      <indexterm>
+        <primary>name</primary>
+      </indexterm>
+      <sgmltag class="attribute">name</sgmltag>or 
+      <indexterm>
+        <primary>id</primary>
+      </indexterm>
+      <sgmltag class="attribute">id</sgmltag>attribute of the
+      replicated view (if the view is named) is taken over by the
+      replication manager, and from then on referring to that name
+      will access the replication manager object, and not the view.
+      In order to reference the replicated views, known as 
+      <indexterm significance="preferred">
+        <primary>clones</primary>
+      </indexterm>
+      <glossterm>clones</glossterm>, you should use the 
+      <indexterm>
+        <primary>LzReplicationManager</primary>
+      </indexterm>
+      <classname>LzReplicationManager</classname>API.</para>
+      <para />
+      <section>
+        <title>The 
+        <indexterm>
+          <primary>replication</primary>
+        </indexterm>
+        <sgmltag class="attribute">
+        replication</sgmltag>attribute</title>
+        <para>If a datapath matches multiple nodes, it will create
+        a replication manager. If 
+        <indexterm>
+          <primary>replication</primary>
+        </indexterm>
+        <sgmltag class="attribute">replication</sgmltag>is 
+        <literal>normal</literal>(the default), then the
+        replication manager will be a direct instance of 
+        <indexterm>
+          <primary>LzReplicationManager</primary>
+        </indexterm>
+        <classname>LzReplicationManager</classname>. If it is 
+        <literal>lazy</literal>, it will instead create a 
+        <indexterm>
+          <primary>LzLazyReplicationManager</primary>
+        </indexterm>
+        <classname>LzLazyReplicationManager</classname>.</para>
+        <para />
+      </section>
+      <section>
+        <title>Clones and the 
+        <indexterm>
+          <primary>onclones event</primary>
+        </indexterm>
+        <literal>onclones</literal>event</title>
+        <para>As mentioned above, when a view is replicated, its
+        copies are managed by the replication manager object. Once
+        clones are created, the instance of the replication manager
+        contains references to them in the 
+        <indexterm>
+          <primary>clones</primary>
+        </indexterm>
+        <sgmltag class="attribute">clones</sgmltag>property, which
+        is an array of views. Note that 
+        <indexterm>
+          <primary>LzReplicationManager</primary>
+        </indexterm>
+        <classname>LzReplicationManager</classname>extends 
+        <indexterm>
+          <primary>LzDatapath</primary>
+        </indexterm>
+        <classname>LzDatapath</classname>, and a cloned view along
+        with its datapath is replaced with the replication manager
+        object. Armed with this knowledge, we have a technique for
+        determining when a view is cloned. The example below
+        demonstrates the use of the clones property by declaring a
+        handler for the 
+        <indexterm>
+          <primary>onclones event</primary>
+        </indexterm>
+        <literal>onclones</literal>event on the view's
+        datapath.</para>
+        <example role="live-example">
+          <title>Using clones and the onclones event</title>
+          <programlisting language="lzx">
+            <textobject>
+              <textdata fileref="programs/databinding-$25.lzx" />
+            </textobject>
+          </programlisting>
+        </example>
+        <para>Because the 
+        <indexterm>
+          <primary>onclones event</primary>
+        </indexterm>
+        <literal>onclones</literal>event is sent when the 
+        <indexterm>
+          <primary>clones</primary>
+        </indexterm>
+        <sgmltag class="attribute">clones</sgmltag>attribute is
+        set, it only signals the start of view replication, but in
+        this example it is used to determine the exact moment when
+        replication is finished. Since replicated views are
+        initialized in the same order they are in inserted in the
+        clones array, we only need to wait for the oninit event for
+        the last clone in the list. This is necessary because
+        initialization of the 
+        <indexterm>
+          <primary>tab</primary>
+        </indexterm>
+        <classname>tab</classname>elements takes a non-zero amount
+        of time, and an attempt to perform an operation on their
+        container &#226;&#8364;&#8221; tab slider
+        &#226;&#8364;&#8221; before it is completed will leave the
+        component in an inconsistent state. For illustration
+        purposes, the second 
+        <indexterm>
+          <primary>tabslider</primary>
+        </indexterm>
+        <classname>tabslider</classname>has this problem, whereby
+        selecting the first 
+        <indexterm>
+          <primary>tab</primary>
+        </indexterm>
+        <classname>tab</classname>element too soon renders its
+        parent unusable (the other 
+        <indexterm>
+          <primary>tabelement</primary>
+        </indexterm>
+        <classname>tabelement</classname>s are gone).</para>
+        <para>This example also takes advantage of the fact that,
+        by default, views become visible when they consume data
+        (see section on visibility of datamapped views above).
+        Before the button is clicked, there is a single 
+        <indexterm>
+          <primary>tabelement</primary>
+        </indexterm>
+        <classname>tabelement</classname>object within the
+        tabslider. However, it is kept invisible until it receives
+        data, at which point its replication occurs, and its clones
+        are displayed.</para>
+        <para />
+      </section>
+      <section>
+        <title>Nodes and the 
+        <indexterm>
+          <primary>onnodes event</primary>
+        </indexterm>
+        <literal>onnodes</literal>event</title>
+        <para>Similarly to the 
+        <indexterm>
+          <primary>clones</primary>
+        </indexterm>
+        <sgmltag class="attribute">clones</sgmltag>property, 
+        <indexterm>
+          <primary>LzReplicationManager</primary>
+        </indexterm>
+        <classname>LzReplicationManager</classname>maintains a list
+        of matched data nodes in the 
+        <indexterm>
+          <primary>nodes</primary>
+        </indexterm>
+        <sgmltag class="attribute">nodes</sgmltag>property. It is
+        an array of 
+        <indexterm>
+          <primary>LzDataElement</primary>
+        </indexterm>
+        <classname>LzDataElement</classname>objects that are mapped
+        to the replicated views, and is available before any clones
+        are created. And as with the 
+        <indexterm>
+          <primary>onclones event</primary>
+        </indexterm>
+        <literal>onclones</literal>event, a handler for 
+        <indexterm>
+          <primary>onnodes event</primary>
+        </indexterm>
+        <literal>onnodes</literal>may be declared to respond to
+        data replication in a custom way. The code below qualifies
+        the value of 
+        <indexterm>
+          <primary>name</primary>
+        </indexterm>
+        <sgmltag class="attribute">name</sgmltag>attribute of each
+        replicated data node with the value of the text field, if
+        any.</para>
+        <example role="live-example">
+          <title>Using the nodes property</title>
+          <programlisting language="lzx">
+            <textobject>
+              <textdata fileref="programs/databinding-$26.lzx" />
+            </textobject>
+          </programlisting>
+        </example>
+        <para />
+      </section>
+    </section>
+    <section id="databinding.pooling">
+      <title>Pooling</title>
+      <para>If your application uses data replication and the data
+      backing replicated views changes at runtime, by default the
+      replication manager destroys and re-creates the replicated
+      views whose data has changed. The typical scenarios when this
+      will occur are a change in the datapath of the replicated
+      view, or deletion/addition of rows to the dataset. Because
+      the dataset may contain many data elements, this adjustment
+      is often an expensive operation that results in a noticeable
+      flicker of the user interface while view removal/creation
+      takes place.</para>
+      <para>In order to make updates to datamapped elements more
+      efficient, you can declare the datapath that will match
+      multiple nodes with the 
+      <indexterm>
+        <primary>pooling</primary>
+      </indexterm>
+      <sgmltag class="attribute">pooling</sgmltag>attribute set to 
+      <literal>true</literal>. The effect of this is that the views
+      that have already been created as a result of replication
+      will be reused internally, instead of re-created. Since the
+      replication manager only needs to remap the changed data to
+      the existing clones, data updates are reflected in UI much
+      faster than they would be if the runtime had to create new
+      views. Consider the following example.</para>
+      <example role="live-example">
+        <title>Using pooling to optimize data updates</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/databinding-$27.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <para>In the code above, we handle data removal by going
+      through the list of data nodes, and deleting the nodes whose 
+      <indexterm>
+        <primary>checked</primary>
+      </indexterm>
+      <sgmltag class="attribute">checked</sgmltag>attribute is set
+      to "true". Note how this attribute is controlled by and
+      mapped to the value of the corresponding checkbox. Any change
+      in the state of the checkbox results in an update to the data
+      node attribute, and vice versa &#226;&#8364;&#8221; when
+      views are created or reused (due to deletion), the appearance
+      of their checkboxes is unchecked because initially the
+      attribute is not set.</para>
+      <para>This kind of syncing to the underlying data is
+      generally required when pooling is in effect and the state of
+      the visual elements can be changed as a result of a user
+      interaction. In a simpler case, the UI would not be
+      modifiable by the user, so the data flow is one way only and
+      the views are completely data-driven, and therefore
+      consistency of data with its presentation would be maintained
+      automatically.</para>
+      <para />
+      <section>
+        <title>When not to use pooling</title>
+        <para>Pooling is generally a good optimization in cases
+        where the data completely informs the state of a replicated
+        view. If the view has additional state which can change
+        through user interaction or depends on setting attributes
+        at init time, then this option cannot usually be used. The
+        default value for the 
+        <indexterm>
+          <primary>pooling</primary>
+        </indexterm>
+        <sgmltag class="attribute">pooling</sgmltag>on 
+        <indexterm>
+          <primary>dataset</primary>
+        </indexterm>
+        <sgmltag class="element">&lt;dataset&gt;</sgmltag>is
+        "false", except when replication is set to 
+        <literal>lazy</literal>, in which case it must be true, as
+        described below.</para>
+        <para />
+      </section>
+    </section>
+    <section id="databinding.lazy-replication">
+      <title>Lazy replication</title><?ignore Needs work
+      ?>
+      <para>If a datapath's 
+      <indexterm>
+        <primary>replication</primary>
+      </indexterm>
+      <sgmltag class="attribute">replication</sgmltag>attribute is
+      set to 
+      <literal>lazy</literal>, then a match to multiple nodes will
+      create an 
+      <indexterm>
+        <primary>LzLazyReplicationManager</primary>
+      </indexterm>
+      <classname>LzLazyReplicationManager</classname>instead of an 
+      <indexterm>
+        <primary>LzReplicationManager</primary>
+      </indexterm>
+      <classname>LzReplicationManager</classname>. This kind of
+      replication manager is called "lazy" because it doesn't do
+      the work of creating a view until it has to, and it does the
+      bare minimum of work. The lazy replication manager creates
+      only enough replicated views necessary to display the data,
+      so there is not a view for each data node. This enables the
+      display of very large datasets.</para>
+      <para>Because the 
+      <indexterm>
+        <primary>LzLazyReplicationManager</primary>
+      </indexterm>
+      <classname>LzLazyReplicationManager</classname>is relatively
+      specialized, there are several restrictions on its
+      use:</para>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>The replicated views should be contained in a view
+          which is not the view that clips. The replicated views
+          can be positioned by moving this container. This
+          container will be sized to the size of the replicated
+          list.</para>
+        </listitem>
+        <listitem>
+          <para>The parent of the container must be a view that
+          clips (that is, its 
+          <indexterm>
+            <primary>clip</primary>
+          </indexterm>
+          <sgmltag class="attribute">clip</sgmltag>attribute is set
+          to "true".</para>
+        </listitem>
+        <listitem>
+          <para>The replicated view cannot change its size in the
+          replication axis, and the size cannot be a constraint. If
+          the replicated view is sized by its contents, then lazy
+          replication may not work in all cases.</para>
+        </listitem>
+        <listitem>
+          <para>The data should completely inform the display of
+          the view. Any attributes that are changed through
+          interaction with a replicated view should be stored in
+          the dataset.</para>
+        </listitem>
+        <listitem>
+          <para>Selection within the replicated views should be
+          controlled by a 
+          <indexterm>
+            <primary>LzDataSelectionManager</primary>
+          </indexterm>
+          <classname>LzDataSelectionManager</classname>.</para>
+        </listitem>
+      </itemizedlist>
+      <para>This example shows use of the lazy replication manager
+      to display a large dataset. The replication does not create a
+      view for each node in the dataset; rather it only creates
+      enough views to fill the clipping view that contains it. As
+      you click the "Make it bigger" button, you will see that more
+      items from the list are shown. Notice also that these views
+      are actually being created when you press the button, as you
+      can see by then "number of subviews" value at the top of the
+      canvas.</para>
+      <example role="live-example">
+        <title>Using a lazyreplicationmanager to display a large
+        dataset</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/databinding-$28.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <para>See the 
+      <ulink url="../../examples/paging.lzx" type="">paging.lzx
+      example</ulink>for another example of lazy
+      replication.</para>
+      <para />
+    </section>
+    <section>
+      <title>$path bindings and replication</title>
+      <para>Only a datapath can cause replication. Although it
+      might seem that $path might be used to implicitly force
+      replication, it will not. A $path expression will only yield
+      a single value. If it matches multiple values, it is an error
+      and it will act as if it matched none. In the example below,
+      note that The $path constraint does not update when the
+      enclosing datapath is set.</para>
+      <example role="live-example">
+        <title>$path does not replicate</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/databinding-$29.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <para />
+    </section>
+    <section>
+      <title>$path syntax to determine order of replicated
+      views</title>
+      <para>Sometimes you want to know the position of a view; for
+      example, say you wanted to alternate background colors. You
+      might think of checking for the position of the view in its 
+      <indexterm>
+        <primary>
+          <literal>oninit()</literal>
+        </primary>
+      </indexterm>
+      <methodname>oninit()</methodname>method.</para>
+      <para>However, if you're using datapath pooling (you'll
+      probably want to for long lists), the 
+      <literal>oninit</literal>events for views created by data
+      replication don't necessarily fire because the views may be
+      reused. In that case, the 
+      <literal>ondata</literal>event will fire, so you might
+      consider using the 
+      <indexterm>
+        <primary>
+          <literal>ondata()</literal>
+        </primary>
+      </indexterm>
+      <methodname>ondata()</methodname>handler. However,
+      incrementing a counter isn't the most reliable way to
+      determine order because views may not instantiate in linear
+      order.</para>
+      <para>That's why it's better to use a datapath expression.
+      Add attribute like this inside your replicated node:</para>
+      <programlisting>&lt;attribute name="pos"
+      value="$path{'position()'}"/&gt;</programlisting>
+      <para>This will tie the pos attribute to the physical
+      position in the data. You can then then tie the background
+      color like so:</para>
+      <programlisting>&lt;attribute name="bgcolor"
+      value="${this.pos % 2 == 0 ? 0x00EEEE :
+      0x00DDDD}"/&gt;</programlisting>
+      <para />
+    </section>
+    <section id="databinding.procedural_and_replicated">
+      <title>Be careful of mixing replication and classes declared
+      procedurally</title>
+      <para>Views that you create procedurally are not the same as
+      "clones" created by data replication. In fact, data
+      replication overrides procedurally created views. For
+      example:</para>
+      <orderedlist spacing="compact">
+        <listitem>
+          <para>Declare a view.</para>
+        </listitem>
+        <listitem>
+          <para>Add subviews to it (procedurally), and alter its
+          properties.</para>
+        </listitem>
+        <listitem>
+          <para>Set a datapath on the view (from step 1) that would
+          make it replicate.</para>
+        </listitem>
+      </orderedlist>
+      <para>Changes made in step 2 will be ignored after
+      replication.</para><?ignore <h4>Lazy replication gotchas</h4>
+      <todo>Sizing, required structure, attribute resetting</todo>
+
+      <h4>Using a dataselectionmanager</h4>
+
+              
+      <h2>Tags/APIs discussed in this chapter</h2>
+      <ul>
+          <li><classname link="true">LzDataElement</classname></li>
+          <li><classname link="true">LzDataNode</classname></li>
+          <li><classname link="true">LzDataText</classname></li>
+          <li><classname link="true">LzDatapointer</classname></li>
+          <li><classname link="true">LzDatapath</classname></li>
+          <li><classname link="true">LzReplicationManager</classname></li>
+          <li><classname link="true">LzLazyReplicationManager</classname></li>
+          <li><classname link="true">LzDataSelectionManager</classname></li>
+      </ul>
+
+      <fixme>
+      ..  Cleanup structure a bit and add nicer intro
+
+      ..  There should be a discussion early of LzNodes and LzDatanodes as well as the special 'datapath' attribute of LzNodes that takes an XPath expression and binds the LzDatanodes to LzNodes (and replicates the LzNodes if the XPath matches multiple LzDatanodes).  (edb: this is my defn of what Laszlo databinding *is*.)
+
+      ..  move/splice descrition of datasource/dataset with data transport chapter
+
+      .. Add description of '/', '.', and '..' in XPath
+
+      .. Possibly simplify examples where possible (avoid use of ?lzt=xml).
+      </fixme>
+      ?>
+      <para />
+    </section>
+  </section>
+  <section>
+    <title>Explicit Replication</title>
+    <para>Explicit replication improves upon implicit replication
+    by adding a 
+    <literal>replicator</literal> tag representing a replication
+    manager:</para>
+    <programlisting>&lt;view&gt; &lt;replicator
+    datapath="ds:/people/person/"&gt; &lt;view
+    name="$path{'@name'}"/&gt; &lt;/replicator&gt;
+    &lt;/view&gt;</programlisting>
+    <para>The <literal>replicator</literal> tag has the following legal tag attributes
+    (in addition to those inherited from datapath):</para>
+    <itemizedlist>
+      <listitem>
+        <para><literal>sortpath</literal>: xpath to the sort key</para>
+      </listitem>
+      <listitem>
+        <para><literal>sortorder</literal>: comparator function for sorting</para>
+      </listitem>
+      <listitem>
+        <para><literal>datapath</literal>: dataset:xpath</para>
+      </listitem>
+    </itemizedlist>
+    <para>`datapath` is a shorthand for
+    `data="${dataset.p.xpathQuery(xpath)}"` It constrains the
+    `data` attribute of the replicator to the result of the xpath
+    query on the dataset. Note that this meaning is different from
+    the meaning of `datapath` on a view, which implies old-style
+    implicit replication.</para>
+    <para>The single lexical subnode of the <literal>replicator</literal> tag is a
+    view that will be used as a template to be replicated zero or
+    more times, depending on the number of nodes the datapath
+    attribute matches. The <literal>replicator</literal> tag only permits a single
+    child node.</para>
+    <para>Note that inside a <literal>replicator</literal> tag, `${path}` constraints
+    are used to bind views to the data (`datapath` is not
+    used).</para>
+    <para>The replicator will be a child node of its parent view,
+    appearing in the parent's subnodes array (but not in the
+    parents subviews array). If named or given an identifier, it
+    can be queried and controlled via that name or
+    identifier.</para>
+    <para>For example, the code above might lead to the following
+    DOM structure at runtime:</para>
+    <programlisting>LzView { … }
+  LzReplicationManager { datapath: { ... }, ... }
+  LzView { name: 'Bob' }
+  ...
+  LzView { name: 'Edna' }
+  </programlisting>
+    <para>The replicator has additional attributes and methods that
+    are accessible to Javascript:</para>
+    <itemizedlist>
+      <listitem>
+        <para><literal>data</literal>: array of dataelements the datapath matches
+        (possibly empty)</para>
+      </listitem>
+      <listitem>
+        <para><literal>views</literal>: array of views bound to the nodes (possibly
+        empty)</para>
+      </listitem>
+    </itemizedlist>
+    <para>There is a one-to-one correspondence between data elements and
+    views.</para>
+    <para>Replicator variants:</para>
+    <para>replicator can be subclassed. Two subclasses are
+    pre-defined:</para>
+    <itemizedlist>
+      <listitem>
+        <para><literal>lazyreplicator</literal>: only creates views that will be
+        visible within the parent view.</para>
+      </listitem>
+      <listitem>
+        <para><literal>resizereplicator</literal>: a lazy replicator where each view
+        may be of a different size.</para>
+      </listitem>
+    </itemizedlist>
+    <para>lazy replication implies that the views will be `pooled`.
+    There is no separate pooling (<xref linkend="databinding.pooling" />) control in explicit
+    replication.</para>
+  </section>
+</chapter>
