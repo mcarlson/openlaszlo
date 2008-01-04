@@ -208,11 +208,6 @@ Debug.traceStep = function (steps, milliseconds) {
     var wasMarked = this.isMarked(o);
     var wasLeaked = (wasMarked === null);
 
-    if (o == global.NamedNodeMap.prototype) {
-      Debug.debug("wasMarked: %s, wasLeaked: %s", wasMarked, wasLeaked);
-      Debug.inspect(o);
-    }
-
     // Make sure we didn't already get here via another path
     if (wasMarked) {
       continue;
@@ -255,7 +250,6 @@ Debug.traceStep = function (steps, milliseconds) {
       this.leaks.push(o);
     }
 
-    // Annotate why this object is alive
     // Mark the object
     if (! this.mark(o)) {
       // Don't trace into objects we can't mark
