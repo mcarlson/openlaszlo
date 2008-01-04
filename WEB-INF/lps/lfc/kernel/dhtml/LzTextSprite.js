@@ -1,7 +1,7 @@
 /**
   * LzTextSprite.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -267,14 +267,17 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
         this._styledirty = false;
     }
 
+    var root = document.getElementById('lzTextSizeCache');
+
     // Empty the cache when full, but do not reset the counter because
     // IE holds onto the object.
     if (this._sizecache.counter > 0 && this._sizecache.counter % this.__sizecacheupperbound == 0) {
         this._sizecache = {counter: this._sizecache.counter};
+        if (root) {
+            root.innerHTML = '';
+        }
     }
     if (this._sizecache[style] == null) this._sizecache[style] = {};
-
-    var root = document.getElementById('lzTextSizeCache');
 
     if (! root) {
         root = document.createElement('div');
@@ -292,7 +295,7 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
                 string = string.replace(this.inner_html_strips_newlines_re, '<br />');
             }
             var tagname = 'span';
-            var mdiv = _textsizecache[tagname];
+            var mdiv = _textsizecache['lzdiv~~~' + tagname];
             if (mdiv == null) {
                 var html = '<' + tagname + ' id="testSpan' + this._sizecache.counter + '"';
                 html += ' style="' + style + '">';
@@ -301,7 +304,7 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
                 root.insertAdjacentHTML('beforeEnd', html);
 
                 mdiv = document.all['testSpan' + this._sizecache.counter];
-                _textsizecache[tagname] = mdiv;
+                _textsizecache['lzdiv~~~' + tagname] = mdiv;
             }
         } else {
             if (this.__LzInputDiv == null) {
@@ -310,16 +313,16 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
                 }
             }
             var tagname = this.multiline ? 'div' : 'span';
-            var mdiv = _textsizecache[tagname];
+            var mdiv = _textsizecache['lzdiv~~~' + tagname];
             if (mdiv == null) {
                 mdiv = document.createElement(tagname);
                 Lz.__setAttr(mdiv, 'style', style);
                 root.appendChild(mdiv);
-                _textsizecache[tagname] = mdiv;
+                _textsizecache['lzdiv~~~' + tagname] = mdiv;
             }
         } 
         if (this.quirks.ie_leak_prevention) {
-            LzTextSprite.prototype._sizedomcache[tagname + style] = mdiv;
+            LzTextSprite.prototype._sizedomcache['lzdiv~~~' + tagname + style] = mdiv;
         }
 
         mdiv.innerHTML = string;
