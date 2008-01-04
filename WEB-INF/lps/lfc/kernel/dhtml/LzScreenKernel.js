@@ -1,7 +1,7 @@
 /**
   * LzScreenKernel.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -16,21 +16,25 @@ var LzScreenKernel = {
     ,__resizeEvent: function() {
         // thanks quirksmode!  http://www.quirksmode.org/viewport/compatibility.html
 
-        if (window.top.innerHeight) {
+        var sc = window.top.document.body;
+        if (LzSprite.prototype.quirks.document_size_use_offsetheight) {
+            sc = window.document.body;
+            LzScreenKernel.width = sc.offsetWidth; 
+            LzScreenKernel.height = sc.offsetHeight; 
+        } else if (window.top.innerHeight) {
             // all except Explorer
-            var sc = window.top.document.body;
-            LzScreenKernel.width = sc.scrollWidth;
-            LzScreenKernel.height = sc.scrollHeight;
+            sc = window;
+            LzScreenKernel.width = sc.innerWidth;
+            LzScreenKernel.height = sc.innerHeight;
         } else if (window.top.document.documentElement && window.top.document.documentElement.clientHeight) {
             // Explorer 6 Strict Mode
-            var sc = window.top.document.documentElement;
+            sc = window.top.document.documentElement;
             LzScreenKernel.width = sc.clientWidth;
             LzScreenKernel.height = sc.clientHeight;
-        } else if (window.top.document.body) {
+        } else if (sc) {
             // other Explorers
-            var sc = window.top.document.body;
-            LzScreenKernel.width = window.top.document.body.clientWidth;
-            LzScreenKernel.height = window.top.document.body.clientHeight;
+            LzScreenKernel.width = sc.clientWidth;
+            LzScreenKernel.height = sc.clientHeight;
         }
 
         /*
@@ -51,7 +55,7 @@ var LzScreenKernel = {
         //Debug.write('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});
     }
     ,__init: function() {
-        Lz.attachEventHandler(window, 'resize', LzScreenKernel, '__resizeEvent');
+        Lz.attachEventHandler(window.top, 'resize', LzScreenKernel, '__resizeEvent');
     }
     ,__callback: null
     ,__scope: null

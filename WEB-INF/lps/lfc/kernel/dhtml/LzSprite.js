@@ -1,7 +1,7 @@
 /**
   * LzSprite.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -226,6 +226,7 @@ LzSprite.prototype.quirks = {
     ,ie_opacity: false
     ,text_measurement_use_insertadjacenthtml: false
     ,text_selection_use_range: false
+    ,document_size_use_offsetheight: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -306,6 +307,7 @@ LzSprite.prototype.__updateQuirks = function(){
             quirks['safari_visibility_instead_of_display'] = true;
             quirks['absolute_position_accounts_for_offset'] = true;
             quirks['canvas_div_cannot_be_clipped'] = true;
+            quirks['document_size_use_offsetheight'] = true;
             if (Lz.__BrowserDetect.version > 523.10) {
                 this.capabilities['rotation'] = true;
             }
@@ -315,6 +317,7 @@ LzSprite.prototype.__updateQuirks = function(){
             quirks['no_cursor_colresize'] = true;
             quirks['absolute_position_accounts_for_offset'] = true;
             quirks['canvas_div_cannot_be_clipped'] = true;
+            quirks['document_size_use_offsetheight'] = true;
         } else if (Lz.__BrowserDetect.isFirefox && Lz.__BrowserDetect.version < 2) {
                 // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
                 quirks['firefox_autocomplete_bug'] = true;
