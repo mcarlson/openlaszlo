@@ -6,22 +6,50 @@
     -->
 
 <script when="immediate"><![CDATA[
+  // Test basic classes
+  class LzSub {
+    var testAttr;
+    var accum;
 
-// Test mixin overrides and super calls.
+    function LzSub () {
+      super();
+      this.testAttr = true;
+      this.accum = "";
+    };
+
+    function testMethod (a) {
+      this.accum += a;
+    }
+  }
+
+  class LzSubSub extends LzSub {
+    function LzSubSub () {
+      super();
+    };
+
+    function testMethod (a) {
+      super.testMethod(a);
+    }
+  }
+
+  // Test subclassing node
+  class LzNodeSub extends LzNode {};
+
+  // Test mixin overrides and super calls.
   class Vanilla {
     var initorder = "";
-    function initialize() {
-      super.initialize.apply(this, arguments);
+    function Vanilla () {
+      super();
       this.initorder += "/vanilla";
     }
-    function test() {
+    function test () {
       return 'vanilla';
     }
   }
 
   trait Banana {
-    function initialize() {
-      super.initialize.apply(this, arguments);
+    function Banana () {
+      super();
       this.initorder += "/banana";
     }
     function test() {
@@ -29,9 +57,9 @@
     }
   }
 
-  class Sundae extends Vanilla inherits Banana {
-    function initialize() {
-      super.initialize.apply(this, arguments);
+  class Sundae extends Vanilla with Banana {
+    function Sundae () {
+      super();
       this.initorder += "/sundae"
     }
     function test() {
@@ -46,18 +74,12 @@
 
 var suiteSubclasses = new LzTestSuite("Subclasses"); 
 
-
 suiteSubclasses.testSub = function() {
 
-     var LzSub = Class.make( "LzSub", null, 
-                       ['initialize', function (){this.testAttr = true; this.accum = ""; }] );
-
+    // We can't easily support this in swf9, do we need to?
     LzSub.addProperty('testAttr2', "foo");
-     LzSub.addProperty('testMethod', function (a) { this.accum = this.accum + a; });
-    
+
     LzTestManager.assertEquals("LzSub", LzSub.classname);
-
-
 
     var subInst = new LzSub();
 
@@ -71,17 +93,8 @@ suiteSubclasses.testSub = function() {
     subInst.testMethod("baz");
     LzTestManager.assertEquals( "barbaz", subInst.accum );
 
-    
-    var LzSubSub = Class.make( "LzSubSub", LzSub, 
-                            ['initialize', function () { 
-                                super.initialize(); 
-                            }] );
-    LzSubSub.addProperty('testMethod', function (a) { 
-        #pragma "methodName=testMethod"
-      super.testMethod(a); });
-
     LzTestManager.assertEquals("LzSubSub", LzSubSub.classname);
-    
+
     var sub2Inst = new LzSubSub();
 
     LzTestManager.assertTrue( sub2Inst instanceof LzSub);
@@ -100,12 +113,10 @@ suiteSubclasses.testSub = function() {
 }
 
 suiteSubclasses.testClassNodeSub = function () {
-    var LzNodeSub = Class.make( "LzNodeSub", LzNode );
     LzTestManager.assertEquals("LzNodeSub", LzNodeSub.classname);
 
     var nodeSubInst = new LzNodeSub();
     LzTestManager.assertTrue( nodeSubInst instanceof LzNodeSub );
-
 }
 
 suiteSubclasses.testUserClass = function () {
@@ -174,7 +185,7 @@ suiteSubclasses.addTest(suiteSubclasses.testTraitSuper);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

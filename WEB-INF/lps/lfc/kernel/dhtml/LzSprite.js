@@ -1,3 +1,5 @@
+/* -*- mode: JavaScript; c-basic-offset: 4; -*- */
+
 /**
   * LzSprite.js
   *
@@ -242,7 +244,7 @@ LzSprite.prototype.capabilities = {
     ,advancedfonts: false
 }
 
-LzSprite.prototype.__updateQuirks = function(){
+LzSprite.prototype.__updateQuirks = function () {
     if (window['Lz'] && Lz.__BrowserDetect) {
         Lz.__BrowserDetect.init();
         var quirks = this.quirks;
@@ -319,31 +321,32 @@ LzSprite.prototype.__updateQuirks = function(){
             quirks['canvas_div_cannot_be_clipped'] = true;
             quirks['document_size_use_offsetheight'] = true;
         } else if (Lz.__BrowserDetect.isFirefox && Lz.__BrowserDetect.version < 2) {
-                // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
-                quirks['firefox_autocomplete_bug'] = true;
+            // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
+            quirks['firefox_autocomplete_bug'] = true;
+        }
+
+        if (quirks['safari_avoid_clip_position_input_text']) {
+            LzSprite.prototype.__defaultStyles.lzswfinputtext.marginTop = '-2px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtext.marginLeft = '-2px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.marginTop = '-2px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.marginLeft = '-2px';
+        }
+
+        if (quirks['css_hide_canvas_during_init']) {
+            if (quirks['safari_visibility_instead_of_display']) {
+                LzSprite.prototype.__defaultStyles.lzcanvasdiv.visibility = 'hidden';
+            } else {
+                LzSprite.prototype.__defaultStyles.lzcanvasdiv.display = 'none';
             }
+            LzSprite.prototype.__defaultStyles.lzcanvasclickdiv.display = 'none';
         }
 
-    if (quirks['safari_avoid_clip_position_input_text']) {
-        LzSprite.prototype.__defaultStyles.lzswfinputtext.marginTop = '-2px';
-        LzSprite.prototype.__defaultStyles.lzswfinputtext.marginLeft = '-2px';
-        LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.marginTop = '-2px';
-        LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.marginLeft = '-2px';
-    }
-
-    if (quirks['css_hide_canvas_during_init']) {
-        if (quirks['safari_visibility_instead_of_display']) {
-            LzSprite.prototype.__defaultStyles.lzcanvasdiv.visibility = 'hidden';
-        } else {
-            LzSprite.prototype.__defaultStyles.lzcanvasdiv.display = 'none';
+        if (quirks['hand_pointer_for_clickable']) {
+            LzSprite.prototype.__defaultStyles.lzclickdiv.cursor = 'pointer';
         }
-        LzSprite.prototype.__defaultStyles.lzcanvasclickdiv.display = 'none';
     }
+};
 
-    if (quirks['hand_pointer_for_clickable']) {
-        LzSprite.prototype.__defaultStyles.lzclickdiv.cursor = 'pointer';
-    }
-}
 LzSprite.prototype.__updateQuirks();
 LzSprite.prototype.__defaultStyles.writeCSS();
 
