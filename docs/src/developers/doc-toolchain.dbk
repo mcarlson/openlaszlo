@@ -526,7 +526,13 @@ Subclasses may override to create different behavior
       <listitem>dbkpreprocessexamples.xsl</listitem>
       <listitem>lzx-pretty-print.xsl</listitem>      
     </itemizedlist>
-    
+  <section>
+  <title>How the copyright gets generated</title>
+ <para>There is a copyright notice at the bottom of every dguide and reference page. This notice is generated
+ during the docbook transform by the template user.footer.content in the file common-html.xsl. To change
+ to copyright date for all generated documents, change the date in this template.</para>
+ <para>The copyright notice for files that are <emphasis>not generated</emphasis> is entered manually.</para>
+  </section>  
   </section>
   
   
