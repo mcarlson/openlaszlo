@@ -472,6 +472,16 @@ var Trait = {
     impls[mash] = t;
     return t;
   },
+  // Implements `is` operator for traits
+  $lzsc$isa: function $lzsc$isa (obj) {
+    var impls = this.implementations;
+    for (var mash in impls) {
+      if (obj instanceof impls[mash].constructor) {
+        return true;
+      }
+      return false;
+    }
+  },
   // How to make a Trait
   make: function make (classname, superTrait, instanceProperties, staticProperties) {
     var nt = {
@@ -487,6 +497,7 @@ var Trait = {
     this.addStaticProperty.call(nt, 'addStaticProperty', this.addStaticProperty);
     nt.addStaticProperty('addProperty', this.addProperty);
     nt.addStaticProperty('makeInterstitial', this.makeInterstitial);
+    nt.addStaticProperty('$lzsc$isa', this.$lzsc$isa);
     // Install the staticProperties
     if (staticProperties) {
       for (var i = staticProperties.length - 1; i >= 1; i -= 2) {

@@ -47,7 +47,7 @@
     }
   }
 
-  trait Banana {
+  mixin Banana {
     function Banana () {
       super();
       this.initorder += "/banana";
@@ -84,6 +84,9 @@ suiteSubclasses.testSub = function() {
     var subInst = new LzSub();
 
     LzTestManager.assertTrue( subInst instanceof LzSub );
+    LzTestManager.assertTrue( subInst is LzSub );
+    LzTestManager.assertFalse( subInst is Number );
+    LzTestManager.assertFalse( subInst is Banana );
     LzTestManager.assertEquals( true, subInst.testAttr );
     LzTestManager.assertEquals( "foo", subInst.testAttr2 );
 
@@ -98,7 +101,11 @@ suiteSubclasses.testSub = function() {
     var sub2Inst = new LzSubSub();
 
     LzTestManager.assertTrue( sub2Inst instanceof LzSub);
+    LzTestManager.assertTrue( sub2Inst is LzSub);
+    LzTestManager.assertFalse( sub2Inst is Number );
+    LzTestManager.assertFalse( sub2Inst is Banana );
     LzTestManager.assertTrue( sub2Inst instanceof LzSubSub);
+    LzTestManager.assertTrue( sub2Inst is LzSubSub);
 
     LzTestManager.assertEquals( true, sub2Inst.testAttr );
 
@@ -117,6 +124,9 @@ suiteSubclasses.testClassNodeSub = function () {
 
     var nodeSubInst = new LzNodeSub();
     LzTestManager.assertTrue( nodeSubInst instanceof LzNodeSub );
+    LzTestManager.assertTrue( nodeSubInst is LzNodeSub );
+    LzTestManager.assertFalse( nodeSubInst is Number );
+    LzTestManager.assertFalse( nodeSubInst is Banana );
 }
 
 suiteSubclasses.testUserClass = function () {
@@ -135,6 +145,9 @@ suiteSubclasses.testUserClass = function () {
     
     var insta = new suba(canvas, { name: "insta" }, [], false);
     LzTestManager.assertTrue( insta instanceof suba );
+    LzTestManager.assertTrue( insta is suba );
+    LzTestManager.assertFalse( insta is Number );
+    LzTestManager.assertFalse( insta is Banana );
     
     LzTestManager.assertEquals(0, insta.foocalls);
     insta.foo();
@@ -156,7 +169,11 @@ suiteSubclasses.testUserClass = function () {
 
     var instb = new subb(canvas, { name: "instb" }, [], false);
     LzTestManager.assertTrue( instb instanceof subb );
+    LzTestManager.assertTrue( instb is subb );
+    LzTestManager.assertFalse( instb is Number );
+    LzTestManager.assertFalse( instb is Banana );
     LzTestManager.assertTrue( instb instanceof suba );
+    LzTestManager.assertTrue( instb is suba );
     
     LzTestManager.assertEquals(0, instb.foocalls);
     LzTestManager.assertEquals(0, instb.foooverrides);
@@ -165,9 +182,14 @@ suiteSubclasses.testUserClass = function () {
     LzTestManager.assertEquals(1, instb.foooverrides);
 }
 
-suiteSubclasses.testTraitSuper = function() {
+suiteSubclasses.testMixinSuper = function() {
   var treat = new Sundae();
     
+  LzTestManager.assertTrue( treat is Sundae, "treat is Sundae" );
+  LzTestManager.assertTrue( treat is Vanilla, "treat is Vanilla" );
+  LzTestManager.assertFalse( treat is Number );
+  // Debug.debug(Testing is on mixins: "%w is %w", treat, Banana)
+  LzTestManager.assertTrue( treat is Banana, "treat is Banana" );
   LzTestManager.assertEquals("/vanilla/banana/sundae", treat.initorder);
   LzTestManager.assertEquals("sundae banana vanilla", treat.test());
 }
@@ -176,7 +198,7 @@ suiteSubclasses.testTraitSuper = function() {
 suiteSubclasses.addTest(suiteSubclasses.testSub); 
 //suiteSubclasses.addTest(suiteSubclasses.testClassNodeSub); 
 //suiteSubclasses.addTest(suiteSubclasses.testUserClass); 
-suiteSubclasses.addTest(suiteSubclasses.testTraitSuper);
+suiteSubclasses.addTest(suiteSubclasses.testMixinSuper);
 
 ]]>
 </script>

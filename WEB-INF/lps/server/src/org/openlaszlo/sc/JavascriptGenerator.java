@@ -144,7 +144,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // when called, otherwise expects the function object.
   // TODO: [2006-01-04 ptw] Rewrite as a source transform
   SimpleNode checkUndefinedFunction(SimpleNode node, JavascriptReference reference) {
-    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
+    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
       return parseFragment(
         "typeof " + reference.get() + " != 'function' ? " + 
         report("$reportNotFunction", node, reference.get()) + " : " +
@@ -156,7 +156,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // Emits code to check that an object method is defined.  Does a trial
   // fetch of methodName to verify that it is a function.
   SimpleNode checkUndefinedMethod(SimpleNode node, JavascriptReference reference, String methodName) {
-    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
+    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
       String o = newTemp();
       String om = newTemp();
       return parseFragment(
@@ -987,16 +987,27 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     SimpleNode a = children[0];
     SimpleNode op = children[1];
     SimpleNode b = children[2];
+    if (ParserConstants.IS ==  ((ASTOperator)op).getOperator()) {
+      // Approximate a is b as b['$lzsc$isa'] ? b.$lzsc$isa(a) : (a
+      // instanceof b)
+      Map map = new HashMap();
+      map.put("_1", a);
+      map.put("_2", b);
+      String pattern;
+      if ((a instanceof ASTIdentifier ||
+           a instanceof ASTPropertyValueReference ||
+           a instanceof ASTPropertyIdentifierReference) &&
+          (b instanceof ASTIdentifier ||
+           b instanceof ASTPropertyValueReference ||
+           b instanceof ASTPropertyIdentifierReference)) {
+        pattern = "(_2['$lzsc$isa'] ? _2.$lzsc$isa(_1) : (_1 instanceof _2))";
+      } else {
+        pattern = "(function (a, b) {return b['$lzsc$isa'] ? b.$lzsc$isa(a) : (a instanceof b)})(_1, _2))";
+      }
+      SimpleNode n = (new Compiler.Parser()).substitute(pattern, map);
+      return visitExpression(n);
+    }
     children[0] = visitExpression(a);
-    children[2] = visitExpression(b);
-    return node;
-  }
-
-  public SimpleNode visitBinaryExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    SimpleNode op = children[0];
-    SimpleNode a = children[1];
-    SimpleNode b = children[2];
-    children[1] = visitExpression(a);
     children[2] = visitExpression(b);
     return node;
   }
@@ -1700,7 +1711,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 }
 
 /**
- * @copyright Copyright 2006-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

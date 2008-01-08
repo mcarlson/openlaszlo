@@ -157,6 +157,7 @@ TOKEN: {
 | < IF: "if" >
 | < IN: "in" >
 | < INSTANCEOF: "instanceof" >
+| < IS: "is" >
 | < NEW: "new" >
 | < RETURN: "return" >
 | < SWITCH: "switch" >
@@ -364,6 +365,7 @@ Token IdentifierOrAS3Keyword() #void : {Token t;}
   | t=<STATIC>
   | t=<OVERRIDE>
   | t=<DYNAMIC>
+  | t=<IS>
   )
     {return t;}
 }
@@ -538,7 +540,7 @@ JAVACODE void setAllowIn(boolean newVal) {
 
 void RelOp() #Operator : {Token t;}
 {
-  ("<" | ">" | "<=" | ">=" | "instanceof" | LOOKAHEAD({getAllowIn()}) "in")
+  ("<" | ">" | "<=" | ">=" | "instanceof" | "is" | LOOKAHEAD({getAllowIn()}) "in")
     {jjtThis.setOperator(getToken(0).kind);}
 }
 

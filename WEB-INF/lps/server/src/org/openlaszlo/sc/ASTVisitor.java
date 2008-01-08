@@ -33,7 +33,6 @@ public interface ASTVisitor {
 
   SimpleNode visitArrayLiteral(SimpleNode node, boolean isReferenced, SimpleNode[] children);
   SimpleNode visitAssignmentExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children);
-  SimpleNode visitBinaryExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children);
   SimpleNode visitBinaryExpressionSequence(SimpleNode node, boolean isReferenced, SimpleNode[] children);
   SimpleNode visitCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children);
   SimpleNode visitConditionalExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children);
@@ -75,7 +74,7 @@ public interface ASTVisitor {
 }
 
 /**
- * @copyright Copyright 2006-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 
