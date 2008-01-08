@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
@@ -24,7 +24,7 @@
   <!-- change title per LPP-4804, IORIO 14 oct 2007 -->
   <title>OpenLaszlo Application Developer's Guide</title>
   <titleabbrev>Developer Guide</titleabbrev>
-
+  
   <preface id="developers.preface">
     <title>Preface</title>
     <xi:include href="developers_guide_preface.dbk"/>
@@ -90,6 +90,7 @@
     <!-- xi:include href="data-overview.dbk"/-->
     <xi:include href="databinding.dbk"/>
     <xi:include href="datareplication.dbk"/>
+    <xi:include href="dataprovider.dbk"/>
     <xi:include href="data_app.dbk"/>
     <!-- xi:include href="static-databinding.dbk"/ -->
     <!-- xi:include href="dynamic-databinding.dbk"/ -->

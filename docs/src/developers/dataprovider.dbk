@@ -1,0 +1,141 @@
+<chapter id="dataprovider">
+  <title>Data Provider</title>
+  <section>
+    <title>Introduction</title>
+    <para>A 
+    <emphasis>dataprovider</emphasis> (DataProvider) specifies the
+    transport mechanism and policies for communicating data
+    requests from the client to the server. For example,
+    dataproviders may batch requests, whitelist/blacklist
+    URIs.</para>
+    <para>Datasets make data requests through dataproviders. The
+    transport mechanism is abstracted away from the dataset. That
+    is, a dataset could use a dataprovider that uses HTTP in one
+    instance, and then swap out to another dataprovider that uses
+    XMPP as its transport as long as the dataprovider can support
+    the dataset's request.</para>
+  </section>
+  <section>
+    <title>DataProvider</title>
+    <para>A dataprovider must implement this interface:</para>
+    <programlisting>interface DataProvider { function doRequest(
+    dataRequest : DataRequest ); }</programlisting>
+    <para>Callers of the dataprovider invoke 
+    <literal>doRequest()</literal>with a DataRequest object. A
+    datarequest instance implements a DataRequest interface with
+    which a dataprovider can make a data request on behalf of the
+    caller.</para>
+  </section>
+  <section>
+    <title>DataRequest</title>
+    <para>The interface for DataRequest looks like this:</para>
+    <programlisting>interface DataRequest { var requestor : Object;
+    var src : String; var timeout : Number; var status : String;
+    var onstatus : Event; var error : String; var rawdata : String;
+    }</programlisting>
+    <section>
+      <title>Datarequest Properties</title>
+      <itemizedlist>
+        <listitem>
+          <para><literal>requestor</literal>: An optional property that's the object
+          using the DataRequest to pass into the dataprovider's
+          doRequest method.</para>
+        </listitem>
+        <listitem>
+          <para><literal>src</literal>: A URI, like
+          "http://host.com:80/path?query=value" or "ftp://". A
+          dataprovider may support only a certain set of
+          protocols.</para>
+        </listitem>
+        <listitem>
+          <para><literal>timeout</literal>: The length of time that the request should
+          be made before the request should be aborted.</para>
+        </listitem>
+        <listitem>
+          <para><literal>status</literal>: A read-only attribute which can be one of
+          "ready" (default), "success", "error", "timeout".</para>
+        </listitem>
+        <listitem>
+          <para><literal>onstatus</literal>: The event sent whenever the status
+          changes. The event SHOULD be sent with the DataRequest
+          instance.</para>
+        </listitem>
+        <listitem>
+          <para><literal>error</literal>: Error messages from the dataprovider are
+          stored here.</para>
+        </listitem>
+        <listitem>
+          <para><literal>rawdata</literal>: The raw data received from a server.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+  <section>
+    <title>Dataset</title>
+    <para>In addition to the current dataset API:</para>
+    <programlisting>class Dataset { var dataprovider :
+    DataProvider; var multirequest : Boolean; var datarequest :
+    DataRequest; var datarequestclass : String; function doRequest(
+    dataRequest : DataRequest ); function handleResponse(
+    dataRequest: DataRequest ); }</programlisting>
+    <section>
+      <title>New dataset properties</title>
+      <itemizedlist>
+        <listitem>
+          <para><literal>dataprovider</literal>: The dataprovider which will handle the
+          dataset's request.</para>
+        </listitem>
+        <listitem>
+          <para><literal>multirequest</literal>: True if multiple sequential requests
+          can be made without override previous requests. Default
+          is false for backward compatibility.</para>
+        </listitem>
+        <listitem>
+          <para><literal>datarequest</literal>: The current datarequest instance to be
+          used by the dataset to call the dataprovider with. Other
+          methods like setQueryParam() and setSrc() set properties
+          of dataRequest.</para>
+        </listitem>
+        <listitem>
+          <para><literal>datarequestclass</literal>: The default datarequest class to
+          be used by the dataset.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+    <section>
+      <title>New dataset methods</title>
+      <itemizedlist>
+        <listitem>
+          <para><literal>doRequest</literal>: (DataRequest) behaves the same way as
+          the previous doRequest except a DataRequest instance may
+          be passed in. If passed in, the dataRequest param is used
+          to call into the dataprovider, otherwise the dataset's
+          dataRequest instance is used.</para>
+        </listitem>
+        <listitem>
+          <para><literal>handleResponse</literal>: (DataRequest) the callback handler
+          for doRequest().</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+  <section>
+    <title>Data request sequence</title>
+    <para>The request life cycle begins with the
+    <literal>dataset.doRequest()</literal> method. In <literal>doRequest()</literal>, a DataRequest
+    instance is generated to call into the dataprovider with.
+    Before the dataprovider is invoked, the DataRequest is filled
+    in with enough data for the dataprovider to handle the request.
+    In turn, the dataprovider sets a data callback on the
+    DataRequest instance and then, using request information
+    provided by the DataRequest, makes a server data request. When
+    the server responds, the callback handler of the DataRequest
+    instance is invoked, which then calls the calling dataset's
+    handleResponse method.</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/datarequest.png" />
+      </imageobject>
+    </mediaobject>
+  </section>
+</chapter>
