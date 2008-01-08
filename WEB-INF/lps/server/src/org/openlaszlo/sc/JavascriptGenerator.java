@@ -144,7 +144,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // when called, otherwise expects the function object.
   // TODO: [2006-01-04 ptw] Rewrite as a source transform
   SimpleNode checkUndefinedFunction(SimpleNode node, JavascriptReference reference) {
-    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
+    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
       return parseFragment(
         "typeof " + reference.get() + " != 'function' ? " + 
         report("$reportNotFunction", node, reference.get()) + " : " +
@@ -156,7 +156,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // Emits code to check that an object method is defined.  Does a trial
   // fetch of methodName to verify that it is a function.
   SimpleNode checkUndefinedMethod(SimpleNode node, JavascriptReference reference, String methodName) {
-    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
+    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
       String o = newTemp();
       String om = newTemp();
       return parseFragment(
@@ -987,6 +987,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     SimpleNode a = children[0];
     SimpleNode op = children[1];
     SimpleNode b = children[2];
+    if (ParserConstants.CAST ==  ((ASTOperator)op).getOperator()) {
+      // Approximate a cast b as a
+      // TODO: [2008-01-08 ptw] We could typecheck and throw an error
+      // in debug mode
+      return visitExpression(a);
+    }
     if (ParserConstants.IS ==  ((ASTOperator)op).getOperator()) {
       // Approximate a is b as b['$lzsc$isa'] ? b.$lzsc$isa(a) : (a
       // instanceof b)
@@ -1002,7 +1008,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
            b instanceof ASTPropertyIdentifierReference)) {
         pattern = "(_2['$lzsc$isa'] ? _2.$lzsc$isa(_1) : (_1 instanceof _2))";
       } else {
-        pattern = "(function (a, b) {return b['$lzsc$isa'] ? b.$lzsc$isa(a) : (a instanceof b)})(_1, _2))";
+        pattern = "((function (a, b) {return b['$lzsc$isa'] ? b.$lzsc$isa(a) : (a instanceof b)})(_1, _2))";
       }
       SimpleNode n = (new Compiler.Parser()).substitute(pattern, map);
       return visitExpression(n);

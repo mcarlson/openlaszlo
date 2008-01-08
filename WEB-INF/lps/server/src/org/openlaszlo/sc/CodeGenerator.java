@@ -248,7 +248,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   void report(String reportMethod, SimpleNode node, Object message) {
     collector.push(message);
     collector.push(node.beginLine);
-    collector.push(node.filename != null ? node.filename : "unknown");
+    collector.push(node.filename);
     collector.push(3);
     collector.push(reportMethod);
     collector.emit(Instructions.CallFunction);
@@ -261,7 +261,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     assert Instructions.DUP.equals(inst);
     collector.push(message);
     collector.push(node.beginLine);
-    collector.push(node.filename != null ? node.filename : "unknown");
+    collector.push(node.filename);
     collector.push(4);
     collector.push(reportMethod);
     collector.emit(Instructions.CallFunction);
@@ -272,7 +272,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   // when called, otherwise expects the function object.
   // TODO: [2006-01-04 ptw] Rewrite as a source transform
   void checkUndefinedFunction(SimpleNode node, String reference) {
-    if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
+    if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
       String label = newLabel(node);
       collector.emit(Instructions.DUP);                // ref ref
       // Get the value of a function reference
@@ -297,7 +297,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   // left on the stack.
   // TODO: [2006-01-04 ptw] Rewrite as a source transform
   void checkUndefinedMethod(SimpleNode node, String methodName) {
-    if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
+    if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
       // Check that object is not undefined
       String isUndefined = newLabel(node); // stack: object
       collector.emit(Instructions.DUP); // stack: object, object
@@ -1596,6 +1596,13 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   }
 
   SimpleNode translateBinaryExpression(SimpleNode node, boolean isReferenced, ASTOperator op, SimpleNode a, SimpleNode b) {
+    if (ParserConstants.CAST ==  ((ASTOperator)op).getOperator()) {
+      // Approximate a cast b as a
+      // TODO: [2008-01-08 ptw] We could typecheck and throw an error
+      // in debug mode
+      visitExpression(a);
+      return node;
+    }
     visitExpression(a);
     visitExpression(b);
     if (ParserConstants.IS ==  ((ASTOperator)op).getOperator()) {
@@ -2288,7 +2295,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   //                          fname, lineno, propertyName);
         collector.push(message);
         collector.push(node.beginLine);
-        collector.push(node.filename != null ? node.filename : "unknown");
+        collector.push(node.filename);
         collector.push(3);
         collector.push(reportMethod);
         collector.emit(Instructions.CallFunction);
@@ -2352,7 +2359,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // property reference.  Expects the object to be at the top of stack
     // when called.
     protected void checkUndefinedObjectProperty(String propertyName) {
-      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
+      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
         String label = translator.newLabel(node);
         collector.emit(Instructions.DUP);
         collector.emit(Instructions.TypeOf);
@@ -2371,7 +2378,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // too, hence the '==undefined' test.  Expects the object member to
     // be at the top of stack when called.
     protected void checkUndefinedPropertySelector(String propertyName) {
-      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
+      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
         String label = translator.newLabel(node);
         collector.emit(Instructions.DUP); // s s
         collector.push(Values.Undefined); // s s UNDEF
@@ -2387,7 +2394,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // Expects the object member to be at the top of stack when
     // called.
     protected void checkUndefinedProperty(String propertyName) {
-      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
+      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
         String label = translator.newLabel(node);
         collector.emit(Instructions.DUP);
         collector.emit(Instructions.TypeOf);
@@ -2459,7 +2466,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // Expects the value of the variable to be at the top of stack when
     // called.
     private void checkUndefinedVariable(SimpleNode node, String variableName) {
-      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
+      if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
         String label = translator.newLabel(node);
         collector.emit(Instructions.DUP);
         collector.emit(Instructions.TypeOf);

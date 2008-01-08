@@ -157,7 +157,6 @@ TOKEN: {
 | < IF: "if" >
 | < IN: "in" >
 | < INSTANCEOF: "instanceof" >
-| < IS: "is" >
 | < NEW: "new" >
 | < RETURN: "return" >
 | < SWITCH: "switch" >
@@ -181,7 +180,6 @@ TOKEN: {
 | < FINAL: "final" >
 | < IMPLEMENTS: "implements" >
 | < IMPORT: "import" >
-| < INHERITS: "inherits" >
 | < INTERFACE: "interface" >
 | < INTERNAL: "internal" >
 | < OVERRIDE: "override" >
@@ -190,8 +188,16 @@ TOKEN: {
 | < PUBLIC: "public" >
 | < STATIC: "static" >
 | < SUPER: "super" >
+
+// JS2
+| < IS: "is" >
+| < CAST: "cast" >
+
+// Our extensions
+| < INHERITS: "inherits" >      // obsolete
+| < MIXIN: "mixin" >            // obsolete
 | < TRAIT: "trait" >
-| < MIXIN: "mixin" >
+
 
 // These are not supposed to be keywords
 | < TRUE: "true" >
@@ -366,6 +372,7 @@ Token IdentifierOrAS3Keyword() #void : {Token t;}
   | t=<OVERRIDE>
   | t=<DYNAMIC>
   | t=<IS>
+  | t=<CAST>
   )
     {return t;}
 }
@@ -540,7 +547,7 @@ JAVACODE void setAllowIn(boolean newVal) {
 
 void RelOp() #Operator : {Token t;}
 {
-  ("<" | ">" | "<=" | ">=" | "instanceof" | "is" | LOOKAHEAD({getAllowIn()}) "in")
+  ("<" | ">" | "<=" | ">=" | "instanceof" | "is" | "cast" | LOOKAHEAD({getAllowIn()}) "in")
     {jjtThis.setOperator(getToken(0).kind);}
 }
 

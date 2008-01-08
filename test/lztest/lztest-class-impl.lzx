@@ -192,6 +192,19 @@ suiteSubclasses.testMixinSuper = function() {
   LzTestManager.assertTrue( treat is Banana, "treat is Banana" );
   LzTestManager.assertEquals("/vanilla/banana/sundae", treat.initorder);
   LzTestManager.assertEquals("sundae banana vanilla", treat.test());
+
+  // Additional tests to verify `is` optimizations
+  LzTestManager.assertFalse( (new Sundae()) instanceof Number );
+  LzTestManager.assertTrue( (new Number()) instanceof Number );
+  LzTestManager.assertFalse( (new Sundae()) is Number );
+  LzTestManager.assertTrue( (new Number()) is Number );
+
+  // Additional tests to verify `cast`
+  LzTestManager.assertFalse( (new Sundae()) cast Vanilla instanceof Number );
+  LzTestManager.assertTrue( (new Number()) cast Object instanceof Number );
+  LzTestManager.assertFalse( (new Sundae()) cast Vanilla is Number );
+  LzTestManager.assertTrue( (new Number()) cast Object is Number );
+
 }
 
 
