@@ -675,8 +675,8 @@ static function debugLoadObj (loadobj, typename) {
             if (timedout) { state = "timedout"; }
             // TODO: [2005-08-11 ptw] LzURL should be able to
             // parse a relative URL
-            var url = (new LzURL(this.reqobj.url)).file;
-            if (! url) { url = this.reqobj.url; }
+            var url = (new LzURL(this.url)).file;
+            if (! url) { url = this.url; }
             return Debug.formatToString("%s (%s)", url, state);
         }
     };
