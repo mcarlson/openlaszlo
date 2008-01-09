@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzbrowser
@@ -264,7 +264,7 @@ LzBrowser.urlEscape = function (str) {
   * @return: An URL decoded string
   */
 LzBrowser.urlUnescape = function (str) {
-    return unescape( str );
+    return unescape( str.split('+').join(' ') );
 }
 
 
