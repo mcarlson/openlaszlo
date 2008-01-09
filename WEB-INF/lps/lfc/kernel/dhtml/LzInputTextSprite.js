@@ -1,7 +1,7 @@
 /**
   * LzInputTextSprite.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -34,6 +34,7 @@ LzInputTextSprite.prototype = new LzTextSprite(null);
 // Should reflect CSS defaults in LzSprite.js
 LzInputTextSprite.prototype.____hpadding = 2;
 LzInputTextSprite.prototype.____wpadding = 2;
+LzInputTextSprite.prototype.____crregexp = new RegExp('\\r\\n', 'g');
 
 LzInputTextSprite.prototype.__createInputText = function(t) {
     if (this.__LzInputDiv) return;
@@ -216,8 +217,12 @@ LzInputTextSprite.prototype.__setTextEvents = function(c) {
         this.__LzInputDiv.onclick = function (e) { this.owner.__textEvent(e, 'onclick') }
         this.__LzInputDiv.onkeyup = function (e) { this.owner.__textEvent(e, 'onkeyup') }
         this.__LzInputDiv.onkeydown = function (e) { this.owner.__textEvent(e, 'onkeydown') }
+        this.__LzInputDiv.onkeypress = function (e) { this.owner.__textEvent(e, 'onkeypress') }
         this.__LzInputDiv.onselect = function (e) { this.owner.__textEvent(e, 'onselect') }
         this.__LzInputDiv.onchange = function (e) { this.owner.__textEvent(e, 'onchange') }
+        if (this.quirks.ie_paste_event || this.quirks.safari_paste_event) {
+            this.__LzInputDiv.onpaste = function (e) { this.owner.__pasteHandlerEx(e) }
+        }
     } else {
         this.__LzInputDiv.onblur = null;
         this.__LzInputDiv.onmousedown = null;
@@ -225,9 +230,106 @@ LzInputTextSprite.prototype.__setTextEvents = function(c) {
         this.__LzInputDiv.onclick = null;
         this.__LzInputDiv.onkeyup = null;
         this.__LzInputDiv.onkeydown = null;
+        this.__LzInputDiv.onkeypress = null;
         this.__LzInputDiv.onselect = null;
         this.__LzInputDiv.onchange = null;
+        if (this.quirks.ie_paste_event || this.quirks.safari_paste_event) {
+            this.__LzInputDiv.onpaste = null;
+        }
     }
+}
+
+LzInputTextSprite.prototype.__pasteHandlerEx = function (evt) {
+    if (this.multiline && this.owner.maxlength > 0) {
+        evt = evt ? evt : window.event;
+        
+        if (this.quirks.safari_paste_event) {
+            var clipboardTxt = evt.clipboardData.getData("text/plain");
+        } else {
+            var clipboardTxt = window.clipboardData.getData("TEXT");
+            clipboardTxt = clipboardTxt.replace(this.____crregexp, '\n');
+        }
+        
+        if (this.quirks.text_ie_carriagereturn) {
+            var len = this.__LzInputDiv.value.replace(this.____crregexp, '\n').length;
+        } else {
+            var len = this.__LzInputDiv.value.length;
+        }
+        
+        var selsize = this.getSelectionSize();
+        if (selsize < 0) selsize = 0;//[TODO anba 2008-01-06] remove after LPP-5330
+        var max = this.owner.maxlength + selsize;
+        var stopPaste = false;
+        
+        var maxchars = max - len;
+        if (maxchars > 0) {
+            var txt = clipboardTxt;
+            var txtLen = txt.length;
+            
+            if (txtLen > maxchars) {
+                txt = txt.substring(0, maxchars);
+                stopPaste = true;
+            }
+        } else {
+            var txt = "";
+            stopPaste = true;
+        }
+        
+        if (stopPaste) {
+            evt.returnValue = false;
+            if (evt.preventDefault) {
+                evt.preventDefault();
+            }
+            
+            if (txt.length > 0) {
+                if (this.quirks.safari_paste_event) {
+                    var val = this.__LzInputDiv.value;
+                    var selpos = this.getSelectionPosition();
+                    
+                    //update value
+                    this.__LzInputDiv.value = val.substring(0, selpos) + txt + val.substring(selpos + selsize);
+                    
+                    //fix selection
+                    this.__LzInputDiv.setSelectionRange(selpos + txt.length, selpos + txt.length);
+                } else {
+                    var range = document.selection.createRange();
+                    //this updates value and ensures right selection
+                    range.text = txt;
+                }
+            }
+        }
+    }
+}
+
+LzInputTextSprite.prototype.__pasteHandler = function () {
+    var selpos = this.getSelectionPosition();
+    var selsize = this.getSelectionSize();
+    var val = this.__LzInputDiv.value;
+    var that = this;
+    
+    //use 1ms timeout to give UI enough time for updating
+    setTimeout(function() {
+        var newval = that.__LzInputDiv.value;
+        var newlen = newval.length;
+        var max = that.owner.maxlength;
+        
+        if (newlen > max) {
+            var len = val.length;
+            var maxchars = max + selsize - len;
+            
+            //this was pasted
+            var newc = newval.substr(selpos, newlen - len + selsize);
+            //but we can only take at max that many chars
+            newc = newc.substring(0, maxchars);
+            
+            //update value
+            that.__LzInputDiv.value = val.substring(0, selpos) + newc + val.substring(selpos + selsize);
+            
+            //fix selection
+            //note: we're in Firefox/Opera, so we can savely call "setSelectionRange"
+            that.__LzInputDiv.setSelectionRange(selpos + newc.length, selpos + newc.length);
+        }
+    }, 1);
 }
 
 LzInputTextSprite.prototype.__textEvent = function ( e, eventname ){
@@ -256,6 +358,70 @@ LzInputTextSprite.prototype.__textEvent = function ( e, eventname ){
         }
     } else if (eventname == 'onmouseout') {
         this.__setglobalclickable(true);
+    }
+
+    if (this.multiline && this.owner.maxlength > 0) {
+        if (eventname == 'onkeypress') {
+            var evt = e ? e : event;
+            var charcode = this.quirks.text_event_charcode ? evt.charCode : evt.keyCode;
+            
+            /* BUG:
+             * env: Safari - Win
+             * -> last char is \n, delete per backspace, notice Safari-UI did update, 
+             *      but __LzInputDiv.value still holds the \n!
+             *    blur inputtext, focus again -> \n is again there, also in UI!
+             * what about Safari - Mac?
+             */
+            
+            //Debug.write("charCode = %s, keyCode = %s, ctrlKey = %s, altKey = %s, shiftKey = %s", charcode, keycode, evt.ctrlKey, evt.altKey, evt.shiftKey);
+            
+            if (!(evt.ctrlKey || evt.altKey) && (charcode || keycode == 13) && keycode != 8) {
+                var selsize = this.getSelectionSize();
+                //[TODO anba 2008-01-06] use selsize==0 when LPP-5330 is fixed
+                if (selsize <= 0) {
+                    if (this.quirks.text_ie_carriagereturn) {
+                        var val = this.__LzInputDiv.value.replace(this.____crregexp, '\n');
+                    } else {
+                        var val = this.__LzInputDiv.value;
+                    }
+                    
+                    var len = val.length, max = this.owner.maxlength;
+                    if (len >= max) {
+                        evt.returnValue = false;
+                        if (evt.preventDefault) {
+                            evt.preventDefault();
+                        }
+                    }
+                }
+            } else {
+                /* IE and Safari do not send 'onkeypress' for function-keys, */
+                /* but Firefox and Opera! */
+                if (this.quirks.keypress_function_keys) {
+                    if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                        var c = String.fromCharCode(charcode);
+                        /* 'v' for Firefox and 'V' for Opera */
+                        if (c == 'v' || c == 'V') {
+                            //pasting per ctrl + v
+                            //[TODO anba 2008-01-06] how to detect paste per context-menu?
+                            var len = this.__LzInputDiv.value.length, max = this.owner.maxlength;
+                            if (len < max || this.getSelectionSize() > 0) {
+                                this.__pasteHandler();
+                            } else {
+                                evt.returnValue = false;
+                                if (evt.preventDefault) {
+                                    evt.preventDefault();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    if (eventname == 'onkeypress') {
+        /* we need to leave here, else LzInputText.inputtextevent(..) will freak out */
+        return;
     }
 
     //Debug.info('__textEvent', eventname, keycode);
@@ -623,7 +789,11 @@ LzInputTextSprite.prototype.setColor = function (c) {
 }
 
 LzInputTextSprite.prototype.getText = function () {
-    return this.__LzInputDiv.value;
+    if (this.multiline && this.quirks.text_ie_carriagereturn) {
+        return this.__LzInputDiv.value.replace(this.____crregexp, '\n');
+    } else {
+        return this.__LzInputDiv.value;
+    }
 }
 
 LzInputTextSprite.prototype.getTextfieldHeight = function () {

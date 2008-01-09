@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -459,8 +459,9 @@ function setMaxLength ( val ){
     this.maxlength = val;
     if (this.onmaxlength.ready) this.onmaxlength.sendEvent(val);
 
-    if(this.text && this.text.length > this.maxlength){
-        this.setText (this.text, true);
+    var t = this.getText();
+    if(t && t.length > this.maxlength){
+        this.setText (t, true);
     }
 }
 

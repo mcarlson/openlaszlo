@@ -229,6 +229,11 @@ LzSprite.prototype.quirks = {
     ,text_measurement_use_insertadjacenthtml: false
     ,text_selection_use_range: false
     ,document_size_use_offsetheight: false
+    ,text_ie_carriagereturn: false
+    ,ie_paste_event: false
+    ,safari_paste_event: false
+    ,text_event_charcode: true
+    ,keypress_function_keys: true
 }
 
 LzSprite.prototype.capabilities = {
@@ -292,6 +297,16 @@ LzSprite.prototype.__updateQuirks = function () {
             // text size measurement uses insertAdjacentHTML()
             quirks['text_measurement_use_insertadjacenthtml'] = true;
             quirks['text_selection_use_range'] = true;
+            
+            // IE uses "\r\n" for newlines, which gives different text-lengths compared to SWF and
+            // to other browsers
+            quirks['text_ie_carriagereturn'] = true;
+            // IE has got a special event for pasting
+            quirks['ie_paste_event'] = true;
+            // IE does not send onkeypress for function keys
+            quirks['keypress_function_keys'] = false;
+            // IE does not use charCode for onkeypress
+            quirks['text_event_charcode'] = false;
         } else if (Lz.__BrowserDetect.isSafari) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             // TODO: Tucker claims this is fixed in the latest version of webkit
@@ -313,6 +328,11 @@ LzSprite.prototype.__updateQuirks = function () {
             if (Lz.__BrowserDetect.version > 523.10) {
                 this.capabilities['rotation'] = true;
             }
+            
+            // Safari has got a special event for pasting
+            quirks['safari_paste_event'] = true;
+            // Safari does not send onkeypress for function keys
+            quirks['keypress_function_keys'] = false;
         } else if (Lz.__BrowserDetect.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
@@ -320,6 +340,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['absolute_position_accounts_for_offset'] = true;
             quirks['canvas_div_cannot_be_clipped'] = true;
             quirks['document_size_use_offsetheight'] = true;
+            // Opera does not use charCode for onkeypress
+            quirks['text_event_charcode'] = false;
         } else if (Lz.__BrowserDetect.isFirefox && Lz.__BrowserDetect.version < 2) {
             // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
             quirks['firefox_autocomplete_bug'] = true;
