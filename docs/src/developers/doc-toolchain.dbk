@@ -115,7 +115,7 @@
     </para>
     <para>This part of the toolchain unifies the various source material into js2doc format, then
       joins them together into a massive XML file, <literal>LaszloLibrary-verbose.js2doc</literal>.
-      To understand those processes, please review <xref id="js2doc-schema"/> to grasp the kinds of
+      To understand those processes, please review <xref linkend="js2doc-schema"/> to grasp the kinds of
       information that js2doc is trying to represent. The next three sections will walk through each
       of the three paths in the diagram above: from langref.xml, from javascript code, and from lzx
       source code, all to the js2doc intermediate format.</para>

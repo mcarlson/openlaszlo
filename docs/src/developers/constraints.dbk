@@ -149,7 +149,7 @@ to the position of the mouse.  If you move the mouse inside the
 canvas, the blue square will move as the mouse moves, floating
 relative to the position of the mouse.  In this case, the constraint
 expression includes a method call, but it works in the same way as the
-simple attribute expression in <xref linkend="ex.constraints.1"/>.</para>
+simple attribute expression in the previous example.</para>
 
 <example role="live-example">
    <title>Constrain to mouse position</title>
@@ -159,7 +159,7 @@ simple attribute expression in <xref linkend="ex.constraints.1"/>.</para>
 </example>
 
 <para>The constraint expression may be almost any Javascript expression.  For
-example, you could change the y value in example <xref linkend="ex.constraints.1"/> to
+example, you could change the y value in the previous example to
 <literal>y="${immediateparent.getMouse('y')+10}"</literal> and cause the
 blue square to float below the mouse.  If you centered the blue square
 at the mouse position by setting the y value with
