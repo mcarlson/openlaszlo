@@ -1,7 +1,7 @@
 /**
   * LzSprite.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -1309,6 +1309,7 @@ LzSprite.prototype.stopTrackPlay = function() {
     this.updatePlayStatus();
     this.__LZtracking = false;
     this.updatePlayDel.unregisterAll();
+    this.checkPlayStatusDel.unregisterAll();
 }
 
 
@@ -1364,7 +1365,7 @@ LzSprite.prototype.checkPlayStatus = function (){
      if (('isaudio' in this.getMCRef()) && (this.getMCRef().isaudio == true)) this.__lzskipplaychecklimit = LzSprite.prototype.__lzskipplaychecklimitmax;
     
     //Debug.warn('checkPlayStatus %w %w %w %w', this.__lzcheckframe, this.frame, this.totalframes, this.__lzskipplaychecklimit);
-    LzIdle.callOnIdle( this.checkPlayStatusDel );
+    this.checkPlayStatusDel.register( LzIdle, "onidle" );
 }
 
 /**
@@ -1377,10 +1378,9 @@ LzSprite.prototype.checkPlayStatus2 = function (){
     this.updatePlayStatus();
     this.__lzskipplaycheck++;
     if (this.__lzskipplaycheck < this.__lzskipplaychecklimit) {
-        LzIdle.callOnIdle( this.checkPlayStatusDel );
         return;
     }
-
+    this.checkPlayStatusDel.unregisterAll();
 
     if ( this.frame != this.__lzcheckframe || this.totalframes != this.__lzchecktotalframes){
         //Debug.write('checkPlayStatus2 tracking', this.frame, this.__lzcheckframe);
