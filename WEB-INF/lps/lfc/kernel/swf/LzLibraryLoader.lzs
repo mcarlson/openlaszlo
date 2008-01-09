@@ -33,8 +33,6 @@ function request( req ) {
     //Debug.write("LzLibraryLoader.request() this.proxied=", this.proxied);
     var o = { libpath: req, url: req , lzt: "lib", proxied: this.proxied};
     super.request( o );
-    this.owner.setAttribute( "framesloadratio" , 0 );
-    this.owner.setAttribute( "loadratio" , 0 ); 
 }
 
 /**
