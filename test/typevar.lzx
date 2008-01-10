@@ -16,6 +16,7 @@
       var v_typed_init:int = val * 2;
       var v_typed_q:int? = 123;
       var v_typed_ex:int! = 234;
+      var v_star:* = 345;
 
       // These must be set before use
       v_plain = 99;
@@ -71,6 +72,27 @@
          estatus.setText("FAIL 7");
       }
 
+      if (v_star == 345) {
+         Debug.write("test8 passed");
+      } else {
+         Debug.write("FAIL: test8");
+         estatus.setText("FAIL 8");
+      }
+
+      var arr = [0,1,2];
+      var s = "";
+      for (var fv_star:* in arr) {
+          s += fv_star;
+      }
+
+      // There is no guarantee about the ordering of for var in
+      if (s == "012" || s == "021" || s == "102" || s == "120" || s == "201" || s == "210") {
+         Debug.write("test9 passed");
+      } else {
+         Debug.write("FAIL: test9");
+         estatus.setText("FAIL 9, got: " + s);
+      }
+
     </method>
   </view>
 
@@ -84,6 +106,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

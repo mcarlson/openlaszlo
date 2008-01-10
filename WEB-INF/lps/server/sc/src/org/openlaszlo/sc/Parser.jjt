@@ -707,12 +707,13 @@ ASTIdentifier.Type TypeIdentifierOrVoid() #void : { ASTIdentifier.Type type = nu
 
 ASTIdentifier.Type TypeIdentifier() #void : { Token t; ASTIdentifier.Type type = new ASTIdentifier.Type(); }
 {
-  (
+ ("*"                   {type.typeName = "*"; type.untyped = true;}
+ |(
     t = <IDENTIFIER>    {type.typeName = t.image;}
       [ NotNullable()   {type.notnullable = true; }
       | Nullable()      {type.nullable = true; }
       ]
-  ) {
+  )) {
     return type;
   }
 }
@@ -807,9 +808,16 @@ void ForInStatement() #ForInStatement : {}
      "for" "(" { setAllowIn(false); } Expression() { setAllowIn(true); } "in" Expression() ")" Statement()
 }
 
-void ForVarInStatement() #ForVarInStatement : {}
+void ForVarInStatement() #ForVarInStatement : {ASTIdentifier id; ASTIdentifier.Type type;}
 {
-     "for" "(" "var" Identifier() ({ setAllowIn(false); } [Initializer()] { setAllowIn(true); }) #EmptyExpression(jjtree.nodeArity()==0) "in" Expression() ")" Statement()
+     "for" "(" "var" id = Identifier()
+     (
+        [ ":" type = TypeIdentifier() { id.setType(type); } ]
+        { setAllowIn(false); }
+        [Initializer()]
+        { setAllowIn(true); }
+     ) #EmptyExpression(jjtree.nodeArity()==0)
+     "in" Expression() ")" Statement()
 }
 
 void ContinueStatement() #ContinueStatement : {}

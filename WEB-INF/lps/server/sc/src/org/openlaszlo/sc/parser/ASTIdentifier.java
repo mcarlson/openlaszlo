@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -18,6 +18,7 @@ public class ASTIdentifier extends SimpleNode {
         public String typeName = null;
         public boolean nullable = false; // has "?"
         public boolean notnullable = false; // has "!"
+        public boolean untyped = false;     // is "*"
     }
 
     public ASTIdentifier(int id) {
