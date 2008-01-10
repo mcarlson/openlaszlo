@@ -3,7 +3,7 @@
  * ***************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -529,17 +529,6 @@ public class NodeModel implements Cloneable {
             if (name.equals(FONTSTYLE_ATTRIBUTE)) {
                 // "bold italic", "italic bold" -> "bolditalic"
                 value = FontInfo.normalizeStyleString(value, false);
-            }
-
-            if (name.toLowerCase().equals("datacontrolsvisibility")) {
-                env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="The attribute \"datacontrolsvisibility\" is deprecated. " + "Use visible=\"null\" instead. " + "For future compatibility you should make this change to your source code."
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-497")
-                         ,element);
             }
 
             if (name.toLowerCase().equals("defaultplacement")) {
