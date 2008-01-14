@@ -4,7 +4,7 @@
   
   <datapointer xpath="myData:/" ondata="processData()">
     <method name="processData">
-      this.selectChild(1); 
+      this.selectChild(2); 
       do {
         if (this.xpathQuery( '@show' ) == 'south park') {
             Debug.write(this.xpathQuery('lastName/text()'));
@@ -14,6 +14,6 @@
   </datapointer>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
