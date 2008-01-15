@@ -3,7 +3,7 @@
 /**
   * Support for tracing function calls in the debugger
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -79,10 +79,17 @@ Debug.trace = function(who, what) {
       return r;
     };
     m._dbg_previous_definition = f;
-    who.addProperty(what, m);
+    // Use addProperty for our classes, otherwise just jam it in
+    if (who is Instance) {
+      who.addProperty(what, m);
+    } else {
+      who[what] = m;
+    }
+    return who[what] === m;
   } else {
     Debug.error('%w.%s is not a function', who, what);
   }
+  return false;
 }
 
 /**
@@ -105,12 +112,19 @@ Debug.untrace = function(who, what) {
       }
       // If that didn't work, apply previous
       if (who[what] !== p) {
-        who.addProperty(what, p);
+        // Use addProperty for our classes, otherwise just jam it in
+        if (who is Instance) {
+          who.addProperty(what, p);
+        } else {
+          who[what] = p;
+        }
       }
+      return who[what] === p;
     } else {
         Debug.error('%w.%s is not being traced', who, what);
     }
   } else {
     Debug.error('%w.%s is not a function', who, what);
   }
+  return false;
 }
