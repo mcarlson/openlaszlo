@@ -574,7 +574,7 @@ document.</para>
 <example role="live-example">
    <title>Ondata event</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$16.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/databinding-$14.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -595,7 +595,7 @@ is true.</para>
 <example role="live-example">
    <title>Using rerunxpath attribute</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$17.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/databinding-$16.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -620,7 +620,7 @@ the view becomes visible. The blue square is declared with a matching datapath, 
 <example role="live-example">
    <title>Visibility of datamapped views</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$18.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/databinding-$17.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -643,7 +643,7 @@ have finished initializing. This result of this approach is that the call succee
 <example role="live-example">
    <title>Proper handling of data updates</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$19.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/databinding-$18.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -662,7 +662,7 @@ set to the top of the dataset, and adds a new node at each level.</para>
 <example role="live-example">
    <title>Using datapointer's iterator methods</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$20.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/databinding-$19.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -676,7 +676,7 @@ dataset.</para>
 <example role="live-example">
    <title>Using setPointer</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$21.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/databinding-$20.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -690,7 +690,7 @@ could be used to manipulate and add children nodes.</para>
 <example role="live-example">
    <title>Dereferencing datapaths</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$22.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/databinding-$21.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -701,7 +701,7 @@ data will not notify the datamapped UI element. Consider the following example.<
 <example role="live-example">
    <title>Datapath iteration</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$23.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/databinding-$22.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -715,7 +715,7 @@ by calling the <indexterm><primary><literal>setXPath()</literal></primary></inde
 <example role="live-example">
    <title>Datapath iteration workaround</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$24.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/databinding-$23.lzx"/></textobject> 
    </programlisting>
 </example>
 

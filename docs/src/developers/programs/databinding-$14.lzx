@@ -1,28 +1,53 @@
-
-<canvas height="150" debug="true">
-  <debug x="150"/>
-  <dataset name="onion">
-    <layer order="1"><layer><layer>core</layer></layer></layer>
-  </dataset>
-
-  <view datapath="onion:/layer">
-     <simplelayout spacing="5"/>
-     <view width="${100 / this.data}" height="${100 / this.data}" 
-           bgcolor="0x09d055" datapath="@order" 
-           opacity="${Math.min(1, this.data / 3)}"/>
-    
-    <button text="Peel next layer">
-      <handler name="onclick">
-        with (parent.datapath) {
-          Debug.write(data)
-          if (!selectChild()) this.setAttribute('enabled', false) 
-          else setNodeAttribute('order', Number(p.parentNode.attributes['order']) + 1)
-         }
+<canvas height="200" >
+  <dataset name="numbers"/>
+  <datapointer name="top" xpath="numbers:/"/>
+  
+  <datapointer name="numptr">
+    <handler name="ondata" args="d">
+      // d is LzDataElement object 
+      result.update(d.nodeName)
+    </handler>
+  </datapointer>
+  
+  <simplelayout spacing="5"/>
+  <text>Type in a number and press the button or the Enter key</text>
+  <view>
+    <simplelayout spacing="10" axis="x"/>
+    <edittext name="input">
+      <handler name="onkeyup" args="k">
+        if ( k == 13 ) {
+          parent.bSend.compute();
+        }
       </handler>
+    </edittext>
+    <button name="bSend" text="Add">
+      <handler name="onclick" method="compute"/>
+        <method name="compute">
+        top.addNode(parent.input.getText())
+        var end = top.xpathQuery('*/last()')
+        numptr.setXPath('numbers:/*[' + end + ']')
+        parent.input.clearText()
+      </method>
     </button>
+</view>
+<view height="100" >
+    <text bgcolor="0xcecece" datapath="numbers:/*/name()"/>
+    <wrappinglayout axis="y" spacing="3"/>
+  </view>
+  
+  <view>
+    <attribute name="sum" value="$once{0}"/>
+    <simplelayout axis="x"/>
+    <text><b>AVG: </b></text>
+    <text id="result" fgcolor="blue" fontstyle="bold">
+      <method name="update" args="v">
+        parent.sum += Number(v)
+        this.setText(parent.sum / top.p.childNodes.length)
+      </method>
+    </text>
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
