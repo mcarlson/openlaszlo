@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+<!ENTITY build_opt SYSTEM "file:../../build-tools/build-opt.xml">
+]>
+
+<project name="components" default="build">
+  <description>
+    This is the build file for the lps/components
+  </description>
+
+  &build_opt;
+
+  <target name="init" depends="build-opt">
+    <tstamp />
+
+    <property file="${LPS_HOME}/build.properties" />
+    <property file="${LPS_HOME}/WEB-INF/lps/config/lps.properties" />
+    <property name="autoincludes.file" value="lzx-autoincludes.properties" />
+    <property name="autoincludes.dir" value="${LPS_HOME}/WEB-INF/lps/misc" />
+    <property name="autoincludes.path" value="${autoincludes.dir}/${autoincludes.file}" />
+
+    <uptodate property="autoincludes.uptodate" targetfile="${autoincludes.path}">
+      <srcfiles dir="." includes="**/*.lzx" />
+      <srcfiles dir="${LPS_HOME}/build-tools/" includes="build-autoincludes.sh" />
+    </uptodate>
+  </target>
+
+  <target name="autoincludes"
+          depends="init">
+    <fail message="This task requires a platform that supports `bash`">
+      <condition>
+        <not>
+          <equals arg1="${sh}" arg2="sh" />
+        </not>
+      </condition>
+    </fail>
+    <exec executable="bash" failonerror="true">
+      <arg line="-c '${LPS_HOME}/build-tools/build-autoincludes.sh ${autoincludes.path}'" />
+    </exec>
+  </target>
+
+  <target name="clean" depends="build-opt">
+    <!-- nothing to do -->
+  </target>
+
+  <target name="build" description="Build all the components, unless they're already up to date"
+          depends="init">
+    <fail
+        message="${autoincludes.file} is out of date with respect to components:  run `ant autoincludes` in the lps/components directory and check in the new version"
+        unless="autoincludes.uptodate" />
+  </target>
+
+  <target name="all"
+          description="Clean, build, (no doc here)"
+          depends="clean,build">
+  </target>
+</project>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

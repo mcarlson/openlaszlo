@@ -6,7 +6,7 @@
 <!--  Author: Eric Bloch  / Benjamin Shine                                  -->
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -388,6 +388,7 @@
       <ant target="clean-classes" />
       <ant dir="${webapp-lps-home}/lfc"      target="clean" />
       <ant dir="lps/includes/source"         target="clean" />
+      <ant dir="lps/components"              target="clean" />
       <ant dir="${webapp-lps-home}/schema"   target="clean" />
       <ant dir="${webapp-lps-home}/server"   target="clean" />
       <ant dir="demos"          target="clean" />
@@ -528,6 +529,7 @@
       <ant dir="${webapp-lps-home}/lfc" target="build"/>
       <!-- Also uses server script compiler -->
       <ant dir="lps/includes/source"    target="build" />
+      <ant dir="lps/components"         target="build" />
       
       <property name="build.done" value="true" />
   </target>
