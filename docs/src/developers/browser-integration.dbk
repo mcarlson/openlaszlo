@@ -252,7 +252,7 @@
         <programlisting>
     lps/includes/source/embednew.js</programlisting>
         <para>The source for 
-    <literal>embednew.js</literal>isshipped compressed as</para>
+    <literal>embednew.js</literal> is shipped compressed as</para>
         <programlisting>
     lps/includes/embed-compressed.js.</programlisting>
         <para>The comments/API documentation are in the source file and

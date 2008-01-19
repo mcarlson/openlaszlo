@@ -21,11 +21,9 @@
     <indexterm>
       <primary>videoview</primary>
     </indexterm>
-    <sgmltag class="element">videoview</sgmltag>s. Please see 
-    <xref linkend="video" />for a discussion of streaming
+    <sgmltag class="element">videoview</sgmltag>s. See 
+    <xref linkend="video" /> for a discussion of streaming
     media.</para>
-    <para>For a discussion of streaming media, see 
-    <xref linkend="video" />.</para>
   </section>
   <section>
     <title>Supported media types</title>

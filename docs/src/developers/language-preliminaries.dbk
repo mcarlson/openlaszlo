@@ -582,7 +582,7 @@ program.</para>
 <para/></section></section>
 <!-- add id tag to section so we can link to here. IORIO 22 oct 2007 -->
 <section id="combine-tags-script">
-><title>Combining Tags and Script in LZX Programs</title> 
+<title>Combining Tags and Script in LZX Programs</title> 
 
 <para>As mentioned earlier, virtually all nontrivial LZX programs contain both (XML) tags and script. Tags are used declaratively, that is, to define objects and their attributes. Script is used procedurally, that is, to explicitly define a series of steps. Although the two kinds of code are liberally intermixed within LZX — for example, script can appear within tags — each syntax locally maintains its integrity.</para> 
 

@@ -11,10 +11,10 @@ This chapter discusses streaming audio and video in .flv and .mp3 formats that a
 s. For discussion of that topic, see <xref linkend="media-resources"/>. The video APIs described in this chapter work only in OpenLaszlo applications that are compiled for the Flash runtime target.
 </para>
 
-<para>OpenLaszlo video APIs give you access to the full functionality of media players such as the <ulink url="http://www.adobe.com/products/flashmediaserver/">Flash Media Server</ulink> and the <ulink url="http://www.osflash.org/red5">Red5</ulink> media player. When you OpenLaszlo program is connected to a media server over a Real Time Media Protocol connection, you can not only receive and play audio and video (in mp3 and flv formats), you can also record your own audio and video locally and send it to the server, where it can be stored or shared in real time with other client programs.
+<para>OpenLaszlo video APIs give you access to the full functionality of media players such as the <ulink url="http://www.adobe.com/products/flashmediaserver/">Flash Media Server</ulink> and the <ulink url="http://www.osflash.org/red5">Red5</ulink> media player. When your OpenLaszlo program is connected to a media server over a Real Time Media Protocol connection, you can not only receive and play audio and video (in mp3 and flv formats), you can also record your own audio and video locally and send it to the server, where it can be stored or shared in real time with other client programs.
 </para>
 <para>
-In contrast to RTMP, files that are streamed over an HTTP connection allow more limited limited functionality.</para>
+In contrast to RTMP, files that are streamed over an HTTP connection allow more limited functionality.</para>
 
 <para>This chapter explains the concepts of controlling streaming media over an HTTP connection and and bi-directional communication with a media server over an RTMP connection. </para>
 

@@ -17,7 +17,7 @@ Because LZX allows you to add properties to instances, you can add attributes, e
 </para>
 <para>
 In LZX you use  attributes, events, and handlers to describe how your application responds to user input or other changes.
-In general, and to a first approximation, when an<emphasis role="em">attribute</emphasis> changes value, it can generate an <emphasis role="em">event </emphasis>. (See below for an qualification of when setting an attribute's value does and does not cause and event to be sent.) You can additionally declare events with an <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+In general, and to a first approximation, when an <emphasis role="em">attribute</emphasis> changes value, it can generate an <emphasis role="em">event </emphasis>. (See below for an qualification of when setting an attribute's value does and does not cause and event to be sent.) You can additionally declare events with an <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: event-->
   tag.
 Your application's response to that event is determined by the associated<glossterm>event handler</glossterm>, which is
@@ -46,7 +46,7 @@ Methods may be defined inside any <indexterm><primary>node</primary></indexterm>
  or <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: view-->
  (or classes derived from them).   When defining a method, you must specify
-a value for the <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag>attribute. The value of the 
+a value for the <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> attribute. The value of the 
 <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> attribute represents the name by which you will call this method in script. When you call the method, you use its name followed by open and close parentheses -- any arguments to the method would be placed within the parentheses.
 </para>
 <para>
@@ -386,11 +386,9 @@ You can define new attributes using the <indexterm><primary>attribute</primary><
 &lt;/view&gt;
 </programlisting>
 
-<para>Attributes can be an element of a tag or a property of a JavaScript
-  class. Attributes that are properties of t
-
-Attributes are usually declared and set in tags, but they can also
-  be set and read in script.  However, not <emphasis role="em">all</emphasis> attributes can be set in script,
+<para>An attribute can be an element of a tag or a property of a JavaScript
+  class. Attributes that are properties of tags are usually declared and set in those tags, but they can also
+  be set and read in script. However, not <emphasis role="em">all</emphasis> attributes can be set in script,
   similarly not all attributes can be in tags. Attributes are
   characterized based on this behavior into five categories, as explained below.</para>
 
@@ -422,7 +420,7 @@ the tag whose attribute is being set:</para>
 The <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> tag is useful for writing classes as well as for performing complicated
  constraints of existing attributes.</para>
 
-<para>In script, the values of most attributes are can be retrieved using
+<para>In script, the values of most attributes can be retrieved using
 dot syntax:</para>
 
 <example role="live-example">

@@ -441,7 +441,7 @@ For details, see Adam.
 <para>The compiler directive has two forms.  The <indexterm><primary>class</primary></indexterm><sgmltag class="attribute">class</sgmltag> attribute is a single class.  The <indexterm><primary>classes</primary></indexterm><sgmltag class="attribute">classes</sgmltag> attribute is a list of class names, so that this</para>
 <programlisting>
 &lt;?lzc class="c1" inline-only="true"?&gt;
-&lt;?lzc class="c1" inline-only="true"?&gt;</programlisting>
+&lt;?lzc class="c2" inline-only="true"?&gt;</programlisting>
 <para>can be abbreviated as this:</para>
 <programlisting>
   &lt;?lzc classes="c1 c2" inline-only="true"?&gt;
