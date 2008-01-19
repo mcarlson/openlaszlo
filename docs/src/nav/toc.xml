@@ -228,8 +228,8 @@
         <item title="TestResult" href="lz.TestResult.html" />
         <item title="TestSuite" href="lz.TestSuite.html" />        
     </category>
-    <category title="Appendices">
+ <!--    <category title="Appendices">
         <item title="Reserved Words [TODO LPP-4937]" />
-    </category>
-    <!-- Copyright 2007 Laszlo Systems -->     
+    </category> -->
+    <!-- Copyright 2008 Laszlo Systems -->     
 </toc>
