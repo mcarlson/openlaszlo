@@ -1,0 +1,67 @@
+<canvas>
+ <dataset name="mydata">
+   <element>data</element>
+ </dataset>
+
+ <class name="light">
+   // Attributes passed down to bulb
+   <attribute name="bulbColor" />
+   <attribute name="bulbVisibility" type="string" />
+   <attribute name="bulbXpath" type="string" />
+
+   <simplelayout axis="x" spacing="5" />
+   // Button to explore visibility settings
+   <button onclick="parent.toggleVisibility()">Toggle Visibility</button>
+   // Display to show data/visibility/visible
+   <text name="display" />
+   <method name="updateDisplay">
+     display.format('data: %w + visibility: %w -> visible: %w', bulb.data, bulb.visibility, bulb.visible);
+   </method>
+   // "bulb" that will be visible or not according to data binding and visibility settings
+   <view name="bulb"
+         width="20" height="20"
+         bgcolor="${parent.bulbColor}"
+         visibility="${parent.bulbVisibility}"
+         datapath="${parent.bulbXpath}"
+         oninit="parent.updateDisplay()"
+         ondata="parent.updateDisplay()"
+   />
+   // Method to rotate through visibility choices
+   <method name="toggleVisibility">
+     switch (bulb.visibility) {
+       case 'visible':
+         bulb.setAttribute('visibility', 'collapse');
+         break;
+       case 'collapse':
+         bulb.setAttribute('visibility', 'hidden');
+         break;
+       case 'hidden':
+         bulb.setAttribute('visibility', 'visible');
+         break;
+     }
+     updateDisplay();
+   </method>
+ </class>
+
+ // Demo that shows three different visibility settings for the same xpath
+ <class name="demo">
+   <simplelayout axis="y" spacing="2"/>
+   <attribute name="lightXpath" type="string" />
+   <light bulbColor="red" bulbVisibility="hidden" bulbXpath="${parent.lightXpath}" />
+   <light bulbColor="yellow" bulbVisibility="collapse" bulbXpath="${parent.lightXpath}" />
+   <light bulbColor="green" bulbVisibility="visible" bulbXpath="${parent.lightXpath}" />
+ </class>
+
+ <simplelayout axis="y" spacing="5"/>
+ // Demo that shows three xpaths only the first of which matches (and hence has data)
+ <demo lightXpath="mydata:/element[1]/text()" />
+ <demo lightXpath="mydata:/element[2]/text()" />
+ <demo lightXpath="mydata:/element[3]/text()" />
+
+ // Button to add data so second and third xpaths above will get data
+ <button onclick="mydata.getPointer().addNode('element', 'newdata')">Add Data</button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

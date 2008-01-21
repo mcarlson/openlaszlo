@@ -606,27 +606,36 @@ the ondata event is sent by the datapointers intended to be bound to the first n
 first one is declared with <literal>rerunxpath="true"</literal>, and therefore it points to the actual first data node, while the 
 second one remembers the node it was referencing initially, and never gets updated.</para>
 <para/></section><section><title>Forcing visibility of datamapped views</title>
-<para>By default, any view whose datapath does not match any data will not be visible. However, sometimes it is 
-desirable to override this behavior, specifying that a datamapped view should be visible regardless of whether or 
-not it has data. A typical example of this is a panel containing placeholder views mapped to dynamically retrieved 
-data records, that need to be visible at all times. This is accomplished by defining the view's datapath with the 
-<indexterm><primary>datacontrolsvisibility</primary></indexterm><sgmltag class="attribute">datacontrolsvisibility</sgmltag> attribute and setting its value to <literal>false</literal>.</para>
+<para>By default, a view that is databound will have a <literal>visibility</literal> attribute of <literal>
+collapse</literal>, 
+which will cause it not to be visible when it has no data, that is, when the xpath does not match 
+any entries in the dataset.</para>
+<para>However, sometimes it is desirable to override this behavior, specifying that a datamapped 
+view should be visible regardless of whether or not it has data. A typical example of this is a panel 
+containing placeholder views mapped to dynamically retrieved data records, that need to be visible at 
+all times. You do this by setting the view's <literal>visibility</literal> attribute to <literal>visible</literal>.</para>
 
-<para>The following example illustrates the usage of this attribute. The green square view's datapath initially has 
-no data, but its datapath is declared with <indexterm><primary>datacontrolsvisibility</primary></indexterm><sgmltag class="attribute">datacontrolsvisibility</sgmltag> set to false, and thus it is always visible.
-The red square's datapath initially matches nothing, and <indexterm><primary>dataControlsVisibility</primary></indexterm><sgmltag class="attribute">dataControlsVisibility</sgmltag> is left at its default value of <literal>true</literal>,
-and as expected, the view is not shown. But after we add another node to the dataset, the datapath has a match, and
-the view becomes visible. The blue square is declared with a matching datapath, so it is made visible.</para>
+<para>The following example allows you to explore the effect of different settings of the <literal>
+visibility</literal> 
+attribute when the databinding of a view does and does not match. There are three 'stoplights', 
+the red bulb has <literal>visibility="hidden"</literal>, the yellow bulb has <literal>visibility="collapse"
+</literal> and the green bulb 
+has <literal>visibility="visible"</literal>. This means the green light will always be on, the yellow light will be 
+on when there is data and the red light will never be on. When initially loaded, there is only 
+data for the first stoplight, the second and third stoplights have no matching data. Clicking on 
+the Add Data button will add another entry to the <literal>dataset</literal> causing the second (and third if you 
+click again) stoplight to have data. The text describes the current state of each bulb's <literal>visibility</literal> 
+and <literal>visible</literal> attributes. You can see the <literal>visible</literal> attribute of the 
+second and third yellow lights change 
+when you Add Data. You can also press the Toggle Visibility on each light bulb to cycle through the 
+different <literal>visibility</literal> settings to see how they affect the <literal>visible</literal> attribute 
+depending on the presence or absence of data.</para>
 <example role="live-example">
    <title>Visibility of datamapped views</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/databinding-$17.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/viewvisibility.lzx"/></textobject> 
    </programlisting>
 </example>
-
-
-<para>Lastly, <indexterm><primary>datacontrolsvisibility</primary></indexterm><sgmltag class="attribute">datacontrolsvisibility</sgmltag> is read-only, which means that changing it at runtime has 
-no effect, and is expected to be declared as a separate attribute.</para>
 
 <para/></section><section><title>Update timing (order of data initialization)</title>
 <para>Because data contained by static datasets is compiled into the application, it is available immediately. 
