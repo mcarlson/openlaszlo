@@ -1,3 +1,4 @@
+/* -*- mode: Java; c-basic-offset: 4; -*- */
 /* ***************************************************************************
  * NodeModel.java
  * ***************************************************************************/
@@ -53,8 +54,10 @@ public class NodeModel implements Cloneable {
     /** A set {eventName: String -> True) of names of event handlers
      * declared with <method event="xxx"/>. */
     protected ComparisonMap delegates = new ComparisonMap();
+    /* Unused */
     protected ComparisonMap events = new ComparisonMap();
     protected ComparisonMap references = new ComparisonMap();
+    /* Unused */
     protected ComparisonMap paths = new ComparisonMap();
     protected ComparisonMap setters = new ComparisonMap();
     protected ComparisonMap styles = new ComparisonMap();
@@ -1476,10 +1479,10 @@ solution =
                 ,element);
         }
 
-
-        // We about just the event names, so the runtime can set them
-        // to the default event sentinel object.
-        events.put(name, "");
+        // An event is really just an attribute with an implicit
+        // default (sentinal) value
+        CompiledAttribute cattr = new CompiledAttribute(CompiledAttribute.EVENT, "LzDeclaredEvent");
+        addAttribute(cattr, name, attrs, events, references, paths, styles);
     }
 
     void addAttributeElement(Element element) {
@@ -1693,14 +1696,6 @@ solution =
         }
         if (!delegateList.isEmpty()) {
             attrs.put("$delegates", delegateList);
-        }
-        if (!events.isEmpty()) {
-            List eventsList = new ArrayList();
-            for (Iterator iter = events.keySet().iterator(); iter.hasNext();) {
-                String eventName = (String) iter.next();
-                eventsList.add(ScriptCompiler.quote(eventName));
-            }
-            attrs.put("$events", eventsList);
         }
         if (!references.isEmpty()) {
             attrs.put("$refs", references);

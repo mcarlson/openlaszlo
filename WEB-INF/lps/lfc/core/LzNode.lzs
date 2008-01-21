@@ -1106,7 +1106,6 @@ function makeChild ( e , async ){
 var setters ={
     name : "setName" ,
     id : "setID" ,
-    $events : "__LZsetEvents" ,
     $refs : "__LZstoreRefs" ,
     $delegates : "__LZstoreDelegates" ,
     options: "__LZsetOptions",
@@ -1556,17 +1555,6 @@ if ($debug) {
   */
 function applyData ( data ){
 }
-}
-
-/**
-  * @access private
-  */
-function __LZsetEvents ( eventNames ){
-    var n = eventNames.length;
-    for (var i = 0; i < n; i++) {
-        var ename = eventNames[i];
-        this[ename] = LzDeclaredEvent;
-    }
 }
 
 /**

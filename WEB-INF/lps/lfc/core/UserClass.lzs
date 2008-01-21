@@ -183,17 +183,6 @@ function LzUserClass (parent, args) {
 
 
     var haveone = false;
-    if ('$events' in attrs) {
-        var events = attrs.$events;
-        var classname = newproto.classname;
-        var elen = events.length;
-        for ( var k = 0; k < elen; k++ ){
-            var eventName = events[k];
-            newproto.addProperty(eventName, LzDeclaredEvent);
-        }
-
-        delete attrs.$events;
-    }
 
     var customsetters = '$setters' in attrs ? attrs.$setters : null;
     if (customsetters) {
