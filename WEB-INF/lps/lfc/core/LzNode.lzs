@@ -1141,12 +1141,22 @@ function __LZsetClassRoot ( d ) {
   * @access private
   */
 function __LZsetSetters ( o ) {
+  if (! this.hasOwnProperty('setters')) {
+    this.setters = new LzInheritedHash(this.setters);
+  }
+  if ('put' in this.setters) {
     for ( var s in o ){
-        var attrSet = "_anonSet" + s;
-        this.__LZaddSetter( s , attrSet );
-        this[ attrSet ] = o[ s ];
+      // inlined: this.__LZaddSetter( s , o[s] );
+      this.setters.put(s, o[s]);
     }
+  } else {
+    for ( var s in o ){
+      // inlined: this.__LZaddSetter( s , o[s] );
+      this.setters[s] = o[s];
+    }
+  }
 }
+
 
 /**
   * @access private

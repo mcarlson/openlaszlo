@@ -720,7 +720,7 @@ solution =
                       ComparisonMap attrs, ComparisonMap events,
                       ComparisonMap references, ComparisonMap paths,
                       ComparisonMap styles) {
-        if (cattr.type == cattr.ATTRIBUTE) {
+        if (cattr.type == cattr.ATTRIBUTE || cattr.type == cattr.EVENT) {
             if (attrs.containsKey(name, caseSensitive)) {
                 env.warn(
 /* (non-Javadoc)
@@ -1602,20 +1602,25 @@ solution =
 
         // Add entry for attribute setter function
         String setter = element.getAttributeValue("setter");
-        // Backward compatibility
-        if (setter == null) {
-            setter = element.getAttributeValue("onset");
-        }
+
         if (setter != null) {
             String srcloc =
                 CompilerUtils.sourceLocationDirective(element, true);
+            // By convention 'anonymous' setters are put in the 'lzc'
+            // namespace with the name set_<property name>
+            String settername = "$lzc$" + "set_" + name;
             // Maybe we need a new type for "function"?
-            String setterfn =
-                srcloc + "function " +
-                parent_name + "_" + name + "_onset" +
-                " (" + name + ") {" +
-                "\n#pragma 'withThis'\n" +
-                srcloc + setter + "\n}";
+            Function setterfn = new
+                Function(
+                    settername,
+                    // the lone argument to a setter is named after
+                    // the attribute
+                    name,
+                    "\n#beginContent\n" +
+                    "\n#pragma 'withThis'\n" +
+                    srcloc + 
+                    setter +  "\n#endContent",
+                    srcloc);
 
             if (setters.get(name) != null) {
                 env.warn(
@@ -1624,7 +1629,10 @@ solution =
                     element);
             }
 
-            setters.put(name, setterfn);
+            // TODO: [2008-01-21 ptw] some day this will be coalesed
+            // into just creating a method named `"set" + name`
+            attrs.put(settername, setterfn);
+            setters.put(name, ScriptCompiler.quote(settername));
         }
     }
 

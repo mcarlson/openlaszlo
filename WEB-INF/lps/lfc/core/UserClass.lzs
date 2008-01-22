@@ -186,13 +186,11 @@ function LzUserClass (parent, args) {
 
     var customsetters = '$setters' in attrs ? attrs.$setters : null;
     if (customsetters) {
-    delete attrs.$setters;
-    
-    for ( var s in customsetters ){
-        var attrSet = "_anonSet" + s;
-        newproto.addProperty(attrSet, customsetters[ s ]);
-        newproto.setters[ s ] = attrSet;
-    }
+      delete attrs.$setters;
+
+      for ( var s in customsetters ){
+          newproto.setters[ s ] = customsetters[ s ];
+      }
     }
 
     // TODO: [2006-05-25 ptw] Share this crud with LzNode
