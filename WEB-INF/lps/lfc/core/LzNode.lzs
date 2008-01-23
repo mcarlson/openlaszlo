@@ -893,7 +893,7 @@ function __LZapplyArgs ( args , constcall ){
   * LzNodes may override or extend this method to change the
   * meaning of attached subnodes.
   *
-  * @access protected
+  * @access public
   *
   * @param Array carr: an array of children where the structure of each child [c]
   * takes the form:
@@ -1645,7 +1645,7 @@ function setOption ( key , val ){
   * LzNode.construct. Do not expect to be able to 'place' a view properly after
   * it has been constructed.
   *
-  * @access protected
+  * @access private
   * @param LzNode aSub: The new subnode
   * @param String placement: The placement attribute for the new subnode
   * @param dictionary args: The initialization args for the new subnode
@@ -1722,6 +1722,7 @@ function searchSubnodes ( prop , val) {
   * @param String prop: named property
   * @return LzView: the first view which has a non-null value for <param>prop</param>
   * or <i>null</i> if none is found
+  * @access private
   */
 function searchParents ( prop ){
     var sview = this;

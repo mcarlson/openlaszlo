@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzview
@@ -64,7 +64,7 @@ class LzView extends LzNode {
 static var tagname = 'view';
 
 /** Event called when this view adds a subview   
-  * @access private
+  * @access public
   * @lzxtype event
   */
 var onaddsubview = LzDeclaredEvent;
@@ -73,11 +73,13 @@ var onbgcolor = LzDeclaredEvent;
 /** The onblur script is executed when an element loses focus either
   * by the pointing device or by tabbing navigation.
   * @lzxtype event
+  * @access public
   */
 var onblur = LzDeclaredEvent;
 /** The onclick script is executed when the pointing device button is
   * clicked over an element.
   * @lzxtype event  
+  * @access public
   */
 var onclick = LzDeclaredEvent;
 /** @access private */
@@ -85,21 +87,28 @@ var onclickable = LzDeclaredEvent;
 /** The onfocus script is executed when an element receives focus
   * either by the pointing device or by tabbing navigation.
   * @lzxtype event  
+  * @access public
   */
 var onfocus = LzDeclaredEvent;   // From LzFocus
-/** @lzxtype event */   
+/** @lzxtype event
+  * @access public
+  */   
 var onframe = LzDeclaredEvent;
 
 /** Event for changes to view's <attribute>height</attribute> property 
   * @lzxtype event
+  * @access public
   */
 var onheight = LzDeclaredEvent;
-/** @lzxtype event */   
+/** @lzxtype event
+  * @access private
+  */   
 var onimload = LzDeclaredEvent;
 
 /** The onkeyup script is executed when this view has the focus and a
   * key is released. This event is sent with the keycode for the key that 
   * went up.
+  * @access public
   * @lzxtype event
   */
 var onkeyup = LzDeclaredEvent;   // From LzFocus
@@ -109,19 +118,27 @@ var onkeyup = LzDeclaredEvent;   // From LzFocus
   * key that is held down.  If you want the script executed only
   * once, use onkeyup. This event is sent with the keycode for the key that is
   * down.
+  * @access public
   * @lzxtype event
   */
 var onkeydown = LzDeclaredEvent; // From LzFocus
-/** @lzxtype event */
+/** @lzxtype event
+  * @access public
+  */
 var onlastframe = LzDeclaredEvent;
-/** @lzxtype event */
+/** @lzxtype event
+  * @access public
+  */
 var onload = LzDeclaredEvent;
-/** @lzxtype event */
+
+/** @lzxtype event
+  * @access private
+  */
 var onloadperc = LzDeclaredEvent;
 
 /** <event>onerror</event>: Sent when there is an error loading the view's resource.
   * The argument sent with the event is the error string sent by the server.
-  * @access private
+  * @access public
   * @lzxtype event
   */
 var onerror = LzDeclaredEvent;
@@ -130,10 +147,12 @@ var onerror = LzDeclaredEvent;
   * <event>ontimeout</event>: Sent when the request to load media for the view times
   * out
   * @lzxtype event
+  * @access public
   */
 var ontimeout = LzDeclaredEvent;
 /** The onmousedown script is executed when the pointing device button is
   * pressed over an element.
+  * @access public
   * @lzxtype event
   */
 var onmousedown = LzDeclaredEvent;
@@ -141,12 +160,14 @@ var onmousedown = LzDeclaredEvent;
 /** The onmouseout script is executed when the point device is moved
   * so that is is no longer over an element.
   * @lzxtype event
+  * @access public
   */
 var onmouseout = LzDeclaredEvent;
 
 /** The onmouseover script is executed when the pointing device is
   * moved onto an element.
   * @lzxtype event  
+  * @access public
   */
 var onmouseover = LzDeclaredEvent;
 
@@ -163,23 +184,27 @@ var onmousetrackup = LzDeclaredEvent;
 /** The onmouseup script is executed when the pointing device button is
   * released over an element.
   * @lzxtype event
+  * @access public
   */
 var onmouseup = LzDeclaredEvent;
 
 /** 
   * Sent when a view changes its opacity 
   * @lzxtype event
+  * @access public
   */
 var onopacity = LzDeclaredEvent;
 
 /** @access private 
   * @lzxtype event 
+  * @access public
   */
 var onplay = LzDeclaredEvent;
 
 /** 
   * Event called when this view removes a subview 
   * @lzxtype event
+  * @access public
   */ 
 var onremovesubview = LzDeclaredEvent;
 
@@ -199,7 +224,7 @@ var onresourcewidth = LzDeclaredEvent;
   * @lzxtype event 
   */
 var onrotation = LzDeclaredEvent;
-/** @access private 
+/** @access public
   * @lzxtype event 
   */
 var onstop = LzDeclaredEvent;
@@ -215,8 +240,12 @@ var onunstretchedheight = LzDeclaredEvent;
   * @lzxtype event 
   */
 var onunstretchedwidth = LzDeclaredEvent;
-/** @lzxtype event */
+
+/** @lzxtype event
+  * @access private
+  */
 var onvisible = LzDeclaredEvent;
+
 /** @access private 
   * @lzxtype event 
   */
@@ -224,11 +253,13 @@ var onvisibility = LzDeclaredEvent;
 
 /** event for changes to view's <attribute>width</attribute> property 
  * @lzxtype event 
+ * @access public
  */
 var onwidth = LzDeclaredEvent;
 
 /** event for changes to view's <attribute>x</attribute> property 
  * @lzxtype event
+  * @access public
  */
 var onx = LzDeclaredEvent;
 /** @access private 
@@ -238,6 +269,7 @@ var onxoffset = LzDeclaredEvent;
 
 /** event for changes to view's <attribute>y</attribute> property 
   * @lzxtype event
+  * @access public
   */
 var ony = LzDeclaredEvent;
 /** @access private 
@@ -255,6 +287,7 @@ var onyoffset = LzDeclaredEvent;
   * ondblclick event, will simply send two click events.
   * The view's doubleclick time can be adjusted by setting its
   * DOUBLE_CLICK_TIME attribute
+  * @access public
   * @lzxtype event
   */
 var ondblclick = LzDeclaredEvent;
@@ -268,7 +301,7 @@ var capabilities = LzSprite.prototype.capabilities;
   * Base level constructor for views. See <method
   * classname="LzNode">construct</method> for more on this.
   * 
-  * @access protected
+  * @access public
   */
 function construct ( parent , args) {
     //Debug.write('LzView.construct', parent, args);
@@ -337,7 +370,7 @@ function __makeSprite(args) {
   * Called right before the view is shown. See <method
   * classname="LzNode">init</method> for more.
   * 
-  * @access protected
+  * @access public
   */
 function init( ) {
     //this.__LZmovieClipRef._visible = this.visible;
@@ -350,7 +383,7 @@ function init( ) {
 
 /**
   * Called when a subview is added to the view.
-  * @access protected
+  * @access private
   * @param LzView s: The new subview
   */
 function addSubview ( s ){
@@ -451,7 +484,7 @@ setters.valign = "setValign"
   * at runtime.
   * @type String
   * @lzxtype expression
-  * @access private
+  * @access public
   */
 var source;
 /** 
@@ -544,6 +577,17 @@ setters.play =   "setPlay";
 /** Show or hide the handcursor for this view, if clickable */
 setters.showhandcursor =   "setShowHandCursor";
 
+/** A CSS property when declared in the tag: value sequence of layout
+  * parameters, which are used to create a layout that is attached to
+  * this view. If there is a class property, it names the class of the
+  * layout; otherwise <tagname>simplelayout</tagname> is used.
+  * Examples: 
+  * <code>axis: x</code>, <code>class: constantlayout</code>; 
+  * <code>axis: y</code>; <code>axis: x; spacing: 5</code>.
+  * @type Object
+  * @lzxtype css
+  * @access public
+  */
 var layout; 
 setters.layout =   "setLayout";
 
@@ -838,10 +882,12 @@ var updatePlayDel = null;
 var resource = null;
 
 /**
+  * The width of the resource that this view attached
   * @keywords readonly
   */
 var resourcewidth = null;
 /**
+  * The height of the resource that this view attached
   * @keywords readonly
   */
 var resourceheight = null;
@@ -989,6 +1035,7 @@ function searchimmediateparents ( prop ){
   * <code>axis: y</code>; <code>axis: x; spacing: 5</code>.
   * @type Object
   * @lzxtype css
+  * @access public
   */
 var layouts = null;
 
@@ -1721,8 +1768,8 @@ function getColorTransform (){
 
 /**
   * Returns the width of the view.
-  * @keywords protected 
-  * @deprecated
+  * @keywords private
+  * @deprecated use the width attribute directly
   */
 function getWidth (){
     return this.width;
@@ -1730,8 +1777,8 @@ function getWidth (){
 
 /**
   * Returns the height of the view.
-  * @keywords protected 
-  * @deprecated
+  * @keywords private
+  * @deprecated use the height attribute directly
   */
 function getHeight (){
     return this.height;
@@ -2661,6 +2708,7 @@ static function __LZcheckProxyPolicy ( url ){
   * proxied by the LPS server; made directly to the URL; or should be passed to
   * the next policy function in the list. The default policy function returns
   * the value of canvas.proxied
+  * @access private
   */
 static function addProxyPolicy ( f ){
    LzView.__LZproxypolicies.push ( f );
@@ -2673,6 +2721,7 @@ static function addProxyPolicy ( f ){
   * @param Function f: The function to remove from the policy list
   * @return Boolean: Returns true if the function was found and removed, false
   * if not
+  * @access private
   */
 static function removeProxyPolicy ( f ){
     var pol = LzView.__LZproxypolicies;
@@ -2712,14 +2761,12 @@ function __warnCapability(msg) {
 }
 
 /**
-  * LzView.getNextSelection
   * Override to specify the next view to be focused
-  * @access private
+  * @access public
   */
 function getNextSelection() {
 }
 /**
-  * LzView.getPrevSelection
   * Override to specify the previous view to be focused
   * @access public
   */
