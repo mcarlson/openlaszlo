@@ -45,9 +45,10 @@
 
   <target name="build" description="Build all the components, unless they're already up to date"
           depends="init">
-    <fail
-        message="${autoincludes.file} is out of date with respect to components:  run `ant autoincludes` in the lps/components directory and check in the new version"
-        unless="autoincludes.uptodate" />
+<!-- TODO: [2008-01-24 ptw] This does not work at present because svn does not preserve file dates -->
+<!--     <fail -->
+<!--         message="${autoincludes.file} is out of date with respect to components:  run `ant autoincludes` in the lps/components directory and check in the new version" -->
+<!--         unless="autoincludes.uptodate" /> -->
   </target>
 
   <target name="all"
