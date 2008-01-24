@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -423,32 +423,31 @@ public class HTTPDataSource extends DataSource {
             boolean hasQuery = (query != null && query.length() > 0);
     
             if (isPost) {
-                if (hasQuery) {
-                    final String postbodyparam = "lzpostbody=";
-                    if (query.startsWith(postbodyparam)) {
-                        // Get the unescaped query string
-                        String v = uri.getQuery().substring(postbodyparam.length());
-                        ((EntityEnclosingMethod)request).setRequestBody(v);
-                    } else {
-                        StringTokenizer st = new StringTokenizer(query, "&");
-                        while (st.hasMoreTokens()) {
-                            String it = st.nextToken();
-                            int i = it.indexOf("=");
-                            if (i > 0) {
-                                String n = it.substring(0, i);
-                                String v = it.substring(i + 1, it.length());
-                                // POST encodes values during request
-                                ((PostMethod)request).addParameter(n, URLDecoder.decode(v, "UTF-8"));
-                            } else {
-                                mLogger.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="ignoring bad token (missing '=' char) in query string: " + p[0]
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                HTTPDataSource.class.getName(),"051018-429", new Object[] {it})
-);
-                            }
+                String postbody = req.getParameter("lzpostbody");
+                // If there is a lzpostbody arg, use it as the POST request body,
+                // and copy the query arg from the client-supplied URL to the proxy request URL
+                if (postbody != null) {
+                    ((EntityEnclosingMethod)request).setRequestBody(postbody);
+                    request.setQueryString(query);
+                } else if (hasQuery) {
+                    StringTokenizer st = new StringTokenizer(query, "&");
+                    while (st.hasMoreTokens()) {
+                        String it = st.nextToken();
+                        int i = it.indexOf("=");
+                        if (i > 0) {
+                            String n = it.substring(0, i);
+                            String v = it.substring(i + 1, it.length());
+                            // POST encodes values during request
+                            ((PostMethod)request).addParameter(n, URLDecoder.decode(v, "UTF-8"));
+                        } else {
+                            mLogger.warn(
+                                /* (non-Javadoc)
+                                 * @i18n.test
+                                 * @org-mes="ignoring bad token (missing '=' char) in query string: " + p[0]
+                                 */
+                                org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                    HTTPDataSource.class.getName(),"051018-429", new Object[] {it})
+                                         );
                         }
                     }
                 }

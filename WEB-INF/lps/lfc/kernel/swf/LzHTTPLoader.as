@@ -1,7 +1,7 @@
 /**
   * LzHTTPLoader.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -169,7 +169,8 @@ LzHTTPLoader.prototype.send = function (content) {
 //   @param  String reqtype: 'POST' or 'GET'
 //   @param  String lzt: LPS server Responder type, default is "xmldata"
 //   @param Object headers: hash table of HTTP request headers
-LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers) {
+//   @param String postbody: optional, post body content
+LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers, postbody) {
     var proxyurl = LzBrowser.getBaseURL( );
     var qargs = {
         lzt: (lzt != null) ? lzt : "xmldata",
@@ -182,6 +183,11 @@ LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers) 
         cache: this.options.cacheable,
         ccache: this.options.ccache
     };
+
+    //If a postbody string is supplied, pass it to the proxy server as 'lzpostbody' arg.
+    if (postbody != null) {
+        qargs.lzpostbody = postbody;
+    }
             
     // Set HTTP headers
     var hname;

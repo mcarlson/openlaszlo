@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LFC
@@ -117,6 +117,8 @@ var ontimeout = LzDeclaredEvent;
 var timeout = 60000;
 
 var postbody = null;
+
+var src = null;
 
 /** When true, the server will accept
   * encoded responses for this request.  
@@ -453,10 +455,7 @@ function setQueryString( s ) {
 
 /**
   * Sets the src attribute of the data request.
-  * Calling this method will cause any pre-existing query arguments to be discarded.
-  * If a query string is contained in the src argument, it will be used to
-  * set the query arguments of the current request.
-  * @param String src: A new src for data request.
+  * @param String src: A new src URL for data request.
 
   Need to handle these cases
   http:foo.html
@@ -467,12 +466,8 @@ function setQueryString( s ) {
   
   */
 
-
 function setSrc( src ) {
-    var url = new LzURL(src);
-    this.querystring = url.query;
-    url.query = null;
-    this.src = url.toString();
+    this.src = src;
     if ( this.autorequest ){
         this.doRequest() ;
     }
@@ -591,6 +586,38 @@ function isProxied ( ) {
 }
 
 /**
+   Produce a hash table of key-value pairs.
+   In the case of a duplicated key, creates an array of values.
+*/
+static function queryStringToTable ( query ) {
+  var queries = {};
+  var parameters = query.split('&');
+  for (var i in parameters) {
+    var key = parameters[i];
+    var value = '';
+    var n = key.indexOf('=');
+    if (n > 0) {
+      value = unescape(key.substring(n+1));
+      key = key.substring(0, n);
+    }
+    if (key in queries) {
+        var prev = queries[key];
+        if (prev instanceof Array) {
+            prev.push(value);
+        } else {
+            value = [prev, value];
+            queries[key] = value;
+        }
+    } else {
+        queries[key] = value;
+    }
+  }
+  return queries;
+}
+
+
+
+/**
   * Does a request immediately using the current values.  If autorequest is true,
   * this method is called automatically when values change.
   */
@@ -610,10 +637,21 @@ function doRequest() {
     dreq.status  = dreq.READY;
     dreq.method = this.querytype;
 
-    // For back compatibility with 'lzpostbody'
+    // If this.querystring is set, use it as the source of param
+    // values. Note, this is independent of the query portion of the
+    // this.src URL. 
+    if (this.querystring) {
+        dreq.queryparams = new LzParam(this);
+        dreq.queryparams.addObject(LzParam.parseQueryString(this.querystring));
+    } else {
+        // otherwise, use the this.params value
+        dreq.queryparams = this.params;
+    }
+
+    // Support for 'lzpostbody'
     var lzpostbody = null;
-    if (this.params) {
-        lzpostbody = this.params.getValue('lzpostbody');
+    if (dreq.queryparams) {
+        lzpostbody = dreq.queryparams.getValue('lzpostbody');
     }
     if (lzpostbody != null) { 
         dreq.postbody = lzpostbody;
@@ -623,13 +661,6 @@ function doRequest() {
 
     // TODO [hqm 2007-08] does this interact with 'multirequests' flag?
     dreq.queuerequests      = this.queuerequests;
-    
-    dreq.queryparams        = this.params;
-
-    // TODO [hqm 2007-08] We didn't put 'querystring' in the dataprovider spec, should
-    // it be merged into queryparams somehow? 
-    dreq.querystring        = this.querystring;
-
     dreq.requestheaders     = this.headers;
     dreq.getresponseheaders = this.getresponseheaders;
 

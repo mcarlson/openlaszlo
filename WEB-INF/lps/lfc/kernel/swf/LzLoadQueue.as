@@ -1,7 +1,7 @@
 /**
   * LzLoadQueue.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -428,78 +428,99 @@ LzLoadQueue.loadXML = function (loadobj) {
     
     //
     /*
-      We need to reparse the query string out of the url, in order to
-      set up a LoadVars object with attributes corresponding to the query args.
+      [1] If request is PROXIED, send the URL as given, with query string stripped off,
+      parsed, and each arg is set as a property on the LoadVar object.
 
-      If request is proxied, just send everything via POST
+      [2] If request is SOLO:
 
-      if SOLO,
-         check if loadobj.rawpostbody exists: 
-            if yes, send XML POST of raw data as TextNode
-         else
-             send LoadVars POST or GET request with base url 
+          [3] If it is a GET request, send URL as given with query string stripped off,
+          parsed, and each arg is set as a property on the LoadVar object.
+
+          [4] If it is a POST request, send to URL as given including query string.
+            take the rawpostbody property from loadobj, parse it, and set as properties
+            on the LoadVars object. This is as close as we can get to doing a POST.
+
+            We can't really post an arbitrary raw data string. The best we could do would
+            be to use XML sendAndLoad with a single  XML child text node, but that still
+            XML-escapes the text, so it isn't really much use.
 
     */
 
-    // We're loading an XML data object.
-    // Look for optional CGI query args string
-    // We are going to send the data up using LoadVars.sendAndLoad().
-    // We fill in this LoadVars object with any query args. 
-
     var url = loadobj.url;
+    var url_noquery = url;
     var lvar = new LoadVars();
-    //Fix up URL: [A] strip and parse out query args, add them as
-    //properties to LVAR (the LoadVars object)
+    var solo = !loadobj.proxied;
+
     var marker = url.indexOf('?');
     var uquery = "";
     
-    if (marker != -1) {
-        uquery = url.substring(marker+1, url.length);
-        url = url.substring(0,marker);
+    // If it's proxied, or a SOLO GET, strip the query args from URL and set them as
+    // properties on LoadVars obj
+    if (loadobj.proxied || !dopost) {
+        if (marker != -1) {
+            uquery = url.substring(marker+1, url.length);
+            url_noquery = url.substring(0,marker);
 
-        var uitems = LzParam.prototype.parseQueryString(uquery);
-        for ( var key in uitems) {
-            lvar[key] = uitems[key];
+            var uitems = LzParam.parseQueryString(uquery);
+            for ( var key in uitems) {
+                lvar[key] = uitems[key];
+            }
         }
     }
 
     // convert base url to absolute path, otherwise Flash is not happy
-    var reqstr = LzBrowser.toAbsoluteURL( url, loadobj.secure );
+    var reqstr;
 
-    // request methodcases:
-    // PROXIED: always POST to LPS server
-    // SOLO: GET, POST,  (and lzpostbody special case of POST with raw content)
+    if (solo && dopost) {
+        // For a SOLO POST, request the complete URL including query args
+        reqstr = LzBrowser.toAbsoluteURL( loadobj.url, loadobj.secure );
+    } else {
+        // otherwise, get the url with the query string trimmed off
+        reqstr = LzBrowser.toAbsoluteURL( url_noquery, loadobj.secure );
+    }
+
     if (loadobj.proxied) {
+        // PROXY request: proxy parameters have been stored on
+        // rawpostbody, get them out and attach them to the LoadVars
+        // obj, to POST to LPS proxy server.
+
+        var lzpostbody = loadobj.rawpostbody;
+        // Copy the postbody data onto the LoadVars, it will be POST'ed
+        var pdata = LzParam.parseQueryString(lzpostbody);
+        for ( var key in pdata) {
+            lvar[key] = pdata[key];
+        }
+
         lvar.sendAndLoad(reqstr , loadobj, "POST" );
     } else {
-        // get request headers from loader
+        // SOLO request:
+
+        // Set any specified request headers
         var header;
         var headers = loadobj.loader.requestheaders;
 
-        // SOLO load
-        if (dopost) {
-            //Debug.write("POST", reqstr);
-            var lzpostbody = loadobj.rawpostbody
-            if (lzpostbody != null) {
-                var xmlraw = new XML();
-                var tnode = xmlraw.createTextNode(lzpostbody);
-                xmlraw.appendChild(tnode);
-                for ( header in headers) {
-                    xmlraw.addRequestHeader(header, headers[header]);
-                }
-                xmlraw.sendAndLoad(reqstr, loadobj);
-            } else {
-                for ( header in headers) {
-                    lvar.addRequestHeader(header, headers[header]);
-                }
-                lvar.sendAndLoad(reqstr , loadobj, "POST" );
-            }
-        } else {
+        if (!dopost) {
+            // For a GET request, all query args have been placed on
+            // the lvar object already.
             for ( header in headers) {
                 lvar.addRequestHeader(header, headers[header]);
             }
             //Debug.write("GET", reqstr);
             lvar.sendAndLoad(reqstr , loadobj, "GET" );
+        } else {
+            //Debug.write("POST", reqstr);
+            var lzpostbody = loadobj.rawpostbody;
+            // Copy the postbody data onto the LoadVars, it will be POST'ed
+            var pdata = LzParam.parseQueryString(lzpostbody);
+            for ( var key in pdata) {
+                lvar[key] = pdata[key];
+            }
+            
+            for ( header in headers) {
+                lvar.addRequestHeader(header, headers[header]);
+            }
+            //Debug.write("POST", reqstr);
+            lvar.sendAndLoad(reqstr , loadobj , "POST");
         }
     }
 }

@@ -1,30 +1,31 @@
 <library>
   <include href="lzunit/lzunit.lzx" />
 
-  <dataset name="edata" src="http:echo.jsp"  proxied="false"
-           getresponseheaders="true" 
-           timeout="120000"/>
+  <dataset name="edata_solo" src="http:echo.jsp"  proxied="false"
+           getresponseheaders="true"  
+           timeout="5000"/>
 
-  <class name="TestSetHeadersSOLO" extends="TestCase">
+  <class name="TestSetHeadersSOLO" extends="TestCase" >
     <attribute name="dpready" value="false"/>
     <attribute name="t2del" value="false"/>
     <attribute name="waitcnt" value="0"/>
 
-    <datapointer xpath="edata:/echo" name="dp" 
-                 oninit="Debug.write('sending edata request'); parent.sendit()" />
+    <datapointer xpath="edata_solo:/echo" name="dp" 
+                 oninit="Debug.write('sending edata_solo request'); parent.sendit()" />
 
-    <handler reference="edata" name="ondata">
-       Debug.write('testcase got edata ondata');
+    <handler reference="edata_solo" name="ondata">
+       Debug.write('testcase got edata_solo ondata');
        this.dpready = true;
     </handler>
 
     <method name="sendit">
-      Debug.write("testsetheaders.lzx sending edata");
-      edata.setHeader("content-type", "pink-elephants/xml");
-      edata.setHeader("my-personal-header", "vanilla/with-chocolate-syrup");
-      edata.setHeader("my-other-personal-header", "milk chocolate with almonds");
-      edata.setQueryType("POST");
-      edata.doRequest();
+      Debug.write("testsetheaders.lzx sending edata_solo");
+      edata_solo.setHeader("content-type", "pink-elephants/xml");
+      edata_solo.setHeader("my-personal-header", "vanilla/with-chocolate-syrup");
+      edata_solo.setHeader("my-other-personal-header", "milk chocolate with almonds");
+      edata_solo.setQueryParam("flash", "has some bugs");
+      edata_solo.setQueryType("POST");
+      edata_solo.doRequest();
     </method>
 
     <method name="test1">
@@ -34,7 +35,7 @@
               this.t2del = new LzDelegate( this , 'test1' );
           }
 
-          if ( this.waitcnt++ > 1000 ){
+          if ( this.waitcnt++ > 100 ){
               fail( "testsetheaders: Didn't get async data" );
           } else {
               LzIdle.callOnIdle( this.t2del );
@@ -57,7 +58,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

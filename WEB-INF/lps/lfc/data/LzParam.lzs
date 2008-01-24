@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -59,7 +59,7 @@ function construct ( parent , args ){
   * Parse a URL query string, returns an object with key-value pairs
   * @return Object
   */
-function parseQueryString ( query ) {
+static function parseQueryString ( query ) {
   var parameters = query.split('&');
   var queries = {};
   for (var i in parameters) {

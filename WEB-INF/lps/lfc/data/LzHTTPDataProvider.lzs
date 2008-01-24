@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -125,69 +125,70 @@ class LzHTTPDataProvider extends LzDataProvider {
         }
 
         var qparams = dreq.queryparams;
-        var querystring = dreq.querystring;
 
-        // Append query params and query string into single query string
-        //Debug.debug('calling doRequest', this);
+        // Convert queryparams table into a URL-encoded query-style string
         var sep = '';
-        var q = '?';
+        var q = '';
         
-        var lzpostbody = dreq.postbody;
-
-
-        if (qparams != null) {
+        // If an explicit post body content arg wasn't supplied, make
+        // a url-form-encoded string from the queryparams data.
+        var postbody = dreq.postbody;
+        if (postbody == null && qparams != null) {
             var names = qparams.getNames();
             for ( var i in names ){
                 var name = names[i];
-                // Strip out special case key "lzpostbody", it declares a raw
-                // string content to post.
-                if (!proxied && name == 'lzpostbody') {
-                    lzpostbody = qparams.getValue(name);
-                } else {
-                    q += sep + name + '=' + encodeURIComponent(qparams.getValue(name));
-                    sep = '&';
-                }
+                q += sep + name + '=' + encodeURIComponent(qparams.getValue(name));
+                sep = '&';
             }
+            postbody = q;
         }
 
-        if (querystring != null && querystring.length > 0) {
-            q += sep + querystring;
-        }
-
-        var url = dreq.src
-            if (q == "?") {
-                // don't add empty args list
+        var lzurl = new LzURL(dreq.src);
+        
+        // For GET requests, merge in params data with URL query 
+        if (dreq.method == "GET") {
+            if (lzurl.query != null) {
+                lzurl.query = lzurl.query + "&" + postbody;
             } else {
-                // if there are already query args in the url, separate them with a '&'
-                if (url.indexOf('?') >= 0) {
-                    url = url + "&" + q.substring(1);
-                } else {
-                    url = url + q;
-                }
+                lzurl.query = postbody;
             }
+            postbody = null;
+        }
 
+        var cachebreak = "__lzbc__="+(new Date()).getTime();
+        // convert url back to string
+        url = lzurl.toString();
+        var url;
         if (proxied) {
             // TODO [hqm 2007-08-03] make the API for makeProxiedURL take an explicit host arg,
             // so we can set the proxy from user code
-            url = tloader.makeProxiedURL(url, dreq.method, "xmldata" , headers);
+            url = tloader.makeProxiedURL(url, dreq.method, "xmldata" , headers, postbody);
+            // We need to move the proxy string query data to the
+            // postbody, can't leave it in the URL string, it could be
+            // arbitrarily long.
+            var marker = url.indexOf('?');
+            var uquery = url.substring(marker+1, url.length);
+            var url_noquery = url.substring(0,marker);
+            url = url_noquery + '?' + cachebreak;
+            postbody = uquery;
+            //Debug.write("proxied req url: ", url, ', postbody: ',postbody)
         }  else {
-            // break the browser cache by creating an arg with a unique value
+            // break the browser cache by adding a unique string to the url
             if (!dreq.clientcacheable) {
-                var cachebreak = "__lzbc__="+(new Date()).getTime();
-                if (url.indexOf('?') >= 0) {
-                    url = url + "&" + cachebreak;
+                if (lzurl.query == null) {
+                    lzurl.query = cachebreak;
                 } else {
-                    url = url + "?" + cachebreak;
+                    lzurl.query += ("&" + cachebreak);
                 }
             }
+
+            url = lzurl.toString();
         }
-
-
    
         dreq.status =  "loading";
         //Debug.write("calling tloader.open", proxied ? "POST" : dreq.method, url, "dreq.method=", dreq.method);
         tloader.open ( proxied ? "POST" : dreq.method, url, /* username */ null, /* password */ null);
-        tloader.send (/* content */ lzpostbody);
+        tloader.send (/* content */ postbody);
     }
 
     function loadSuccess ( loader, data ) { 
@@ -283,16 +284,7 @@ class LzHTTPDataRequest extends LzDataRequest {
     var multirequest = false;
     var queuerequests = false;
 
-    // String value for single valued param.
-    // queryParams["aKey"] = "oneValue";
-    // Array value for a multi-value param
-    // queryParams["aKey"] = [ "value1", "value2", "value3" ]
-
     var queryparams = null; // : LzParam object
-
-    // TODO [hqm 2007-08] querystring should be merged with query params by the caller (lzdataset)
-    // I think..
-    var querystring = ''; // : String  
 
     var requestheaders = null; // : LzParam object
 

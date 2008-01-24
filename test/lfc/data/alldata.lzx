@@ -20,7 +20,7 @@
     <include href="testsetheaders-solo.lzx"/>
     <include href="testrawpost.lzx"/>
     <include href="testput.lzx"/>
-    <include href="testrawpost-solo.lzx"/>
+<!--     <include href="testrawpost-solo.lzx"/> -->
     <include href="testheaderresponse.lzx"/>
     <include href="testclientcachebreaker.lzx"/>
     <include href="sendheaders.lzx"/>
@@ -42,7 +42,10 @@
         <TestSetHeadersSOLO/>
         <TestRawPost/>
         <TestPut/>
+<!--
+    This just can't work in Flash 7/8 - the text will always be XML escaped
         <TestRawPostSOLO/>
+-->
         <TestResponseHeaders/>
 
         <TestClientCacheBreaker/>
@@ -51,6 +54,6 @@
     </TestSuite>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

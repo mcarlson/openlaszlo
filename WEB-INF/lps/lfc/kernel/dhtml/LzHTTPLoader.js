@@ -1,7 +1,7 @@
 /**
   * LzHTTPLoader.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -136,7 +136,7 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
 //   @param String url: url, including query args
 //   @param  String reqtype: 'POST' or 'GET'
 //   @param Object headers: hash table of HTTP request headers
-    LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers) {
+    LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers, postbody) {
     var proxyurl = LzBrowser.getBaseURL( );
 
     var qargs = {
@@ -150,6 +150,12 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
         cache: this.options.cacheable,
         ccache: this.options.ccache
     };
+
+    //If a postbody string is supplied, pass it to the proxy server as 'lzpostbody' arg.
+    if (postbody != null) {
+        qargs.lzpostbody = postbody;
+    }
+
 
     // Set HTTP headers
     var hname;
