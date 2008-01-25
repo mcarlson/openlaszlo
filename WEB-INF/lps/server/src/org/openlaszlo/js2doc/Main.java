@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -236,7 +236,7 @@ public class Main {
                                              Set runtimeOptions,
                                              List runtimeAliases,
                                              List buildOptions) {
-        boolean result = false;
+        boolean result = true;
         try {
             File sourceFile = new File(sourceName);
             String sourceContents = FileUtils.readFileString(sourceFile);
@@ -249,6 +249,7 @@ public class Main {
             String expect = FileUtils.readFileString(expectFile);
             
         } catch (java.io.IOException exc) {
+            result = false;
             exc.printStackTrace();
         }
 
