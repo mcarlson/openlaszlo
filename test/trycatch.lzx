@@ -32,7 +32,7 @@
         flawed.func();
         status1.setText("after func, should not see!");
     }
-    catch (ex) {
+    catch (ex:String) {
         status2.setText("OKAY 2: exception text = " + ex);
     }
     finally {
@@ -43,6 +43,6 @@
   </script>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

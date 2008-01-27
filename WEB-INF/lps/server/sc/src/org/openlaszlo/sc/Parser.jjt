@@ -875,7 +875,7 @@ void TryStatement() #TryStatement : {}
 
 void CatchClause() #CatchClause : {}
 {
-   "catch" "(" Identifier() ")" Block()
+   "catch" "(" FormalParameter() ")" Block()
 }
 
 void FinallyClause() #FinallyClause : {}
