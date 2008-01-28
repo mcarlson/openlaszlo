@@ -64,6 +64,7 @@ td {
     left:60%;
     max-width: 40%;
     margin-top: -80px;
+    min-height: 80px;
     padding: 5pt;
     text-align: right; 
 }

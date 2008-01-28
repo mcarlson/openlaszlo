@@ -101,12 +101,27 @@
     
     
     <category title="HTML Markup">
-        <item title="TODO [BUG LPP-4931]" />
         <item title="LzTextFormat" href="lz.LzTextFormat.html" />
+        <item title="a" href="tag-a.html"/>
+        <item title="b" href="tag-b.html"/>
+        <item title="br" href="tag-br.html"/>
+        <!-- TODO: [2008-01-28 dda] <item title="font" href="tag-font.html"/> -->
+        <item title="i" href="tag-i.html"/>
+        <item title="img" href="tag-img.html"/>
+        <item title="p" href="tag-p.html"/>
+        <item title="pre" href="tag-pre.html"/>
+        <item title="u" href="tag-u.html"/>
     </category>
     
     <category title="Media" >
-        <item title="TODO [BUG LPP-4932]" />
+        <item title="audio" href="tag-audio.html"/>
+        <!-- TODO: [2008-01-28 dda] <item title="font (LzFont)" href="lz.LzFont.html" /> -->
+        <item title="face" href="tag-face.html"/>
+        <item title="frame" href="tag-frame.html"/>
+        <item title="image" href="lz.image.html"/>
+        <!-- TODO: [2008-01-28 dda] <item title="LzAudio" href="lz.LzAudio.html" /> -->
+        <item title="resource" href="tag-resource.html"/>
+        <!-- LzFontManager ???  -->
     </category>
     
     <category title="Data">
