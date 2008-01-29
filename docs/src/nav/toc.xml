@@ -3,6 +3,7 @@
         <item title="attribute"  href="tag.attribute.html" />
         <item title="canvas (LzCanvas)" href="LzCanvas.html" />
         <item title="event"  href="tag.event.html" />
+        <item title="import" href="tag.import.html" />
         <item title="include" href="tag.include.html" />
         <item title="library" href="tag.library.html" />
         <!-- TODO handle changing this to dhtml-specific when this is run in dhtml runtime [bshine 10.17.2007] -->        
@@ -10,14 +11,13 @@
         <item title="LzContextMenuItem" href="LzContextMenuItem+swf7+swf8+swf9.html" />
         <item title="splash" href="tag.splash+as2.html" />
         <item title="view" href="LzView.html" />
-        <item title="import" href="tag.import.html" />
     </category>
     <category title="View Basics">
+        <item title="drawview (LzDrawView)" href="lz.drawview.html"/>
         <item title="inputtext" href="LzInputText.html" />
         <item title="LzCanvasGradient" href="LzCanvasGradient.html" />        
         <item title="text (LzText)" href="LzText.html" />
         <item title="view (LzView)" href="LzView.html"/>              
-        <item title="drawview (LzDrawView)" href="lz.drawview.html"/>
     </category>
     <category title="Components">       
         <item title="alert" href="lz.alert.html" />
@@ -35,6 +35,7 @@
         <item title="grid" href="lz.grid.html" />
         <item title="gridcolumn" href="lz.gridcolumn.html" />
         <item title="gridtext" href="lz.gridtext.html" />
+        <item title="hbox" href="lz.hbox.html" />                
         <item title="hscrollbar" href="lz.hscrollbar.html" />
         <item title="list" href="lz.list.html" />
         <item title="listitem" href="lz.listitem.html" />
@@ -61,10 +62,10 @@
         <item title="textlistitem" href="lz.textlistitem.html" />
         <item title="textstyle" href="lz.textstyle.html" />
         <item title="tree" href="lz.tree.html" />
+        <item title="vbox" href="lz.vbox.html" />                
         <item title="vscrollbar" href="lz.vscrollbar.html" />
         <item title="window" href="lz.window.html" />
         <item title="windowpanel" href="lz.windowpanel.html" />
-        <item title="hbox" href="lz.hbox.html" />                
     </category>
     
     <category title="Layouts">
@@ -126,22 +127,22 @@
     
     <category title="Data">
         <item title="TBD REVIEW" />
-        <item title="LzDataElement" href="LzDataElement.html" />
-        <item title="LzDataNode" href="LzDataNode.html" />
         <item title="datapath (LzDatapath)" href="LzDatapath.html" />
         <item title="datapointer (LzDatapointer)" href="LzDatapointer.html" />
-        <item title="LzDataProvider" href="LzDataProvider.html" />
-        <item title="LzDataRequest" href="LzDataRequest.html" />
         <item title="dataselectionmanager (LzDataSelectionManager)" href="LzDataSelectionManager.html" />
         <item title="dataset (LzDataset)" href="LzDataset.html" />
         <item title="datasource (LzDatasource)" href="LzDatasource.html" />
+        <item title="defaultdataprovider" href="defaultdataprovider.html" />        
+        <item title="httpdataprovider" href="httpdataprovider.html" />
+        <item title="LzConnectionDatasource+swf7+swf8+swf9" href="LzConnectionDatasource+swf7+swf8+swf9.html" />        
+        <item title="LzDataElement" href="LzDataElement.html" />
+        <item title="LzDataNode" href="LzDataNode.html" />
+        <item title="LzDataProvider" href="LzDataProvider.html" />
+        <item title="LzDataRequest" href="LzDataRequest.html" />
         <item title="LzDataText" href="LzDataText.html" />
         <item title="LzHTTPDataProvider" href="LzHTTPDataProvider.html" />
         <item title="LzHTTPDataRequest" href="LzHTTPDataRequest.html" />
         <item title="LzHTTPDatasource" href="LzHTTPDatasource.html" />        
-        <item title="defaultdataprovider" href="defaultdataprovider.html" />        
-        <item title="httpdataprovider" href="httpdataprovider.html" />
-        <item title="LzConnectionDatasource+swf7+swf8+swf9" href="LzConnectionDatasource+swf7+swf8+swf9.html" />        
     </category>
     
     <category title="Scripting">
@@ -155,9 +156,9 @@
         <item title="stylesheet (LzCSSStylesheet)" href="LzCSSStyleSheet.html" />
     </category>
     <category title="States">
-        <item title="state (LzState)" href="LzState.html" />
         <item title="dragstate" href="lz.dragstate.html" />
         <item title="resizestate" href="lz.resizestate.html" />
+        <item title="state (LzState)" href="LzState.html" />
     </category>
     
     <category title="Base Classes">
