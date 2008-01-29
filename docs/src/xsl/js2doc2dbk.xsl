@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- 
@@ -37,6 +37,7 @@
 
 <!ENTITY readonly       '(@modifiers="readonly" or @modifiers="read-only" or @keywords="read-only" or @keywords="readonly")'>
 <!ENTITY final          '(@modifiers="final" or @keywords="final")'>
+<!ENTITY virtual        '(@modifiers="virtual" or @keywords="virtual")'>
 <!ENTITY unwritable     '(@modifiers="readonly" or @modifiers="read-only" or @keywords="read-only" or @keywords="readonly" or @modifiers="final" or @keywords="final")'>
 
 <!ENTITY isevent          '((doc/tag[@name="lzxtype"]/text) = "event" or @type="LzEvent")'>
@@ -1281,9 +1282,28 @@
           <xsl:when test="&final; and ($isinstancevar or $isinitarg)">initialize-only</xsl:when>
           <xsl:when test="&readonly;">readonly</xsl:when>          
           <xsl:when test="not(&unwritable;) and $isinstancevar">read/write</xsl:when>
-          <xsl:when test="not(&unwritable;) and not($isinstancevar) and not($issetter)">(FIXME: declare attribute (non-setter))</xsl:when>
-          <xsl:when test="not(&unwritable;) and not($isinstancevar) and $issetter">(FIXME: declare attribute (setter))</xsl:when>          
-          <xsl:otherwise>(FIXME: otherwise) <xsl:if test="&final;">final</xsl:if> <xsl:if test="&readonly;">readonly</xsl:if></xsl:otherwise>
+          <xsl:when test="not(&unwritable;) and &virtual;">read/write (virtual)</xsl:when>
+          <xsl:when test="not(&unwritable;) and not($isinstancevar) and not($issetter)">
+            <!-- happens when an old style class is encountered -->
+            <xsl:message>
+              Unknown attribute category (no setter) for <xsl:value-of select="/ancestor-or-self::property//@id" /> : <xsl:value-of select="@name" />
+            </xsl:message>
+            unknown
+          </xsl:when>
+          <xsl:when test="not(&unwritable;) and not($isinstancevar) and $issetter">
+            <!-- usually happens when there is a setter with no declared var -->
+            <xsl:message>
+              Unknown attribute category (has setter with no var) for <xsl:value-of select="ancestor-or-self::property//@id" /> : <xsl:value-of select="@name" />
+            </xsl:message>
+            has setter
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:message>
+              Unknown attribute category (otherwise) for <xsl:value-of select="ancestor-or-self::property//@id" /> : <xsl:value-of select="@name" />
+            </xsl:message>
+            <xsl:if test="&final;">final</xsl:if>
+            <xsl:if test="&readonly;">readonly</xsl:if>
+          </xsl:otherwise>
         </xsl:choose>        
         <xsl:if test="&isevent;">
           event
