@@ -237,7 +237,7 @@
     </category>
     
     <category title="Development">
-        <item title="debug (Debug) [LPP-4936]" href="Debug+debug.html"/>
+        <item title="debug (Debug)" href="Debug+debug.html"/>
         <item title="SyncTester" href="lz.SyncTester.html" />
         <item title="Test" href="lz.Test.html" />
         <item title="TestCase" href="lz.TestCase.html" />

@@ -1,7 +1,7 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
 /**
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -80,10 +80,31 @@ if ($debug) {
   var Debug;
 
   /**
-    * Automatically created when an application is
-    * compiled in debug mode (requested by either using the
-    * <xref linkend="LzCanvas"/> <code>debug='true'</code> attribute or by loading the
-    * application using the <code>?debug=true</code> option).
+    * The <tagname>debug</tagname> tag controls the initial appearance
+    * and options of the debugger when debugging is enabled.  Debugging is
+    * enabled either by including the <code>debug="true"</code> option on
+    * the <xref linkend="LzCanvas"><tagname>canvas</tagname></xref> tag,
+    * or adding the <code>?debug=true</code> query argument to the
+    * application's URL.
+    *
+    * <example title="debug tag"><programlisting><![CDATA[
+    * <canvas debug="true" height="120">
+    *   <debug width="300" height="50" x="5" y="5" fontsize="8"/>
+    *   <script>
+    *   Debug.write("Hello world!");
+    *   Debug.warn('This is a hotlink: %w', {a: 1, b: 2});
+    *   </script>
+    * </canvas>]]>
+    * </programlisting></example>
+    *
+    *
+    * The debug tag controls the appearance of the debugger when
+    * debugging is on. It does not cause the application to be
+    * compiled with debugging mode enabled. Only the debug option on
+    * the canvas and the debug query parameter of the URL do this.
+    *
+    * For more information, see the
+    * <a href="${dguide}debugging.html">Debugging</a> chapter of the Guide.
     *
     * @shortdesc The Laszlo debugger
     * @keywords private_constructor
