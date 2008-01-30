@@ -90,7 +90,8 @@ var onclickable = LzDeclaredEvent;
   * @access public
   */
 var onfocus = LzDeclaredEvent;   // From LzFocus
-/** @lzxtype event
+/** Sent onidle while view is playing its resource
+  * @lzxtype event
   * @access public
   */   
 var onframe = LzDeclaredEvent;
@@ -122,7 +123,10 @@ var onkeyup = LzDeclaredEvent;   // From LzFocus
   * @lzxtype event
   */
 var onkeydown = LzDeclaredEvent; // From LzFocus
-/** @lzxtype event
+/** Sent when the view sets its frame (resource number) to the last
+  * frame. This can be used to find out when a streaming media clip is
+  * done playing.
+  * @lzxtype event
   * @access public
   */
 var onlastframe = LzDeclaredEvent;
@@ -132,19 +136,18 @@ var onlastframe = LzDeclaredEvent;
 var onload = LzDeclaredEvent;
 
 /** @lzxtype event
-  * @access private
+  * @access public
   */
 var onloadperc = LzDeclaredEvent;
 
-/** <event>onerror</event>: Sent when there is an error loading the view's resource.
+/** Sent when there is an error loading the view's resource.
   * The argument sent with the event is the error string sent by the server.
   * @access public
   * @lzxtype event
   */
 var onerror = LzDeclaredEvent;
 
-/**
-  * <event>ontimeout</event>: Sent when the request to load media for the view times
+/** Sent when the request to load media for the view times
   * out
   * @lzxtype event
   * @access public
@@ -195,7 +198,8 @@ var onmouseup = LzDeclaredEvent;
   */
 var onopacity = LzDeclaredEvent;
 
-/** @access private 
+/**
+ * Sent when a view begins playing its resource
   * @lzxtype event 
   * @access public
   */
@@ -224,7 +228,11 @@ var onresourcewidth = LzDeclaredEvent;
   * @lzxtype event 
   */
 var onrotation = LzDeclaredEvent;
-/** @access public
+/**
+  * Sent when a view's resource that is capable of playing is
+  * stopped. This is only called if stop is called directly; when a resource
+  * hits its last frame, the LzView event onlastframe is called.
+  * @access public
   * @lzxtype event 
   */
 var onstop = LzDeclaredEvent;
@@ -242,7 +250,7 @@ var onunstretchedheight = LzDeclaredEvent;
 var onunstretchedwidth = LzDeclaredEvent;
 
 /** @lzxtype event
-  * @access private
+  * @access public
   */
 var onvisible = LzDeclaredEvent;
 

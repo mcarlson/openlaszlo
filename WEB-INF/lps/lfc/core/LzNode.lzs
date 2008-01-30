@@ -1629,6 +1629,7 @@ function setOption ( key , val ){
     this.options[ key ] = val;
 }
 
+// The access for doc is public, since it is referred to several times in doc
 /**
   * Determines the immediateparent for a subnode whose parent is this node.
   * This method will only be called for subnodes which have a placement
@@ -1641,11 +1642,11 @@ function setOption ( key , val ){
   * A subclass might implement this method to cause the "placement" parameter
   * to have a different behavior or additional effects.
   *
-  * Note that this function is not currently designed to be called by anyone but
+  * <note>This function is not currently designed to be called by anyone but
   * LzNode.construct. Do not expect to be able to 'place' a view properly after
-  * it has been constructed.
+  * it has been constructed.</note>
   *
-  * @access private
+  * @access public
   * @param LzNode aSub: The new subnode
   * @param String placement: The placement attribute for the new subnode
   * @param dictionary args: The initialization args for the new subnode
