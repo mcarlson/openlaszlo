@@ -903,7 +903,7 @@ LzSprite.prototype.setClickable = function ( amclickable ){
   * 100px square) to the view, you would normally just set its scale
   * to the view dimension (see note at LzSprite#width), but you have
   * to also invert its parent's scale (which is a percent) hence the
-  * (100 / <parent scale>) factor.
+  * (100 / &lt;parent scale&gt;) factor.
   */
 LzSprite.prototype._setButtonSize = function ( axis , bsize ){
     var sc ="_" + ( axis =="width" ? "x" : "y" ) + "scale" ;

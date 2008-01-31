@@ -23,7 +23,7 @@ text containers such as <tagname>text</tagname>.</p>
   &lt;text&gt;A &lt;a href="http://www.openlaszlo.org" target="_blank"&gt;link&lt;/a&gt;&lt;/text&gt;
 &lt;/canvas&gt;
 </example>
->
+
 <p>Unlike HTML, the text in the link is not automatically styled.  To style the text, use the <tagname>u</tagname> and <tagname>font</tagname> tags:</p>
 
 <example>
@@ -122,12 +122,12 @@ XHTML text containers such as <tagname>text</tagname> and
 <tag name="lzxname"><text>&lt;p&gt;</text></tag>
 <text>
 
-<p>An HTML paragraph.  This tag only occur inside XHTML text such as
+<p>An HTML paragraph.  This tag only occurs inside XHTML text such as
 <tagname>text</tagname>.</p>
 
 <example>
 &lt;canvas height="30"&gt;
-  &lt;text&gt;
+  &lt;text multiline="true"&gt;
     &lt;p&gt;A pararaph.&lt;/p&gt;
     &lt;p&gt;Another one.&lt;/p&gt;
   &lt;/text&gt;
@@ -289,12 +289,20 @@ of a multi-frame <tagname>resource</tagname>.  A multi-frame resource
 contains several images which can be toggled among by script commands.
 For example:</p>
 
-<example extract="false" title="A resource with two frames">
+<!-- TODO: [2008-01-28 dda] handle <example extract="false"> in XSL.
+  This was: <example extract="false"><programlisting class="code">...
+  but that produces no output.  All such examples have been converted,
+  and <programlisting class="code"> has been added when it is missing.
+ -->
+
+<!--<example>-->
+<programlisting class="code">
 &lt;resource name="mfr"&gt;
   &lt;frame src="f1.jpg"/&gt;
   &lt;frame src="f2.jpg"/&gt;
 &lt;/resource&gt;
-</example>
+</programlisting>
+<!--</example-->
 
 <p>
 Multiple frame tags can be declared consecutively to produce a single

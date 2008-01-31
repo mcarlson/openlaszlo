@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <js2doc>
@@ -182,23 +182,29 @@ Because of the loose type requirements in LZX, calling an event that no delegate
 
 <p>To specify an event handler in an object-creation tag, simply include it like any other attribute.  For example,</p>
 
-<example extract="false"><programlisting class="code">
+<!-- TODO: [2008-01-28 dda] handle <example extract="false"> in XSL.
+  This was: <example extract="false"><programlisting class="code">...
+  but that produces no output.  All such examples have been converted,
+  and <programlisting class="code"> has been added when it is missing.
+ -->
+
+<!--<example extract="false">--><programlisting class="code">
 &lt;view onmouseover="doSomething()"&gt;
   &lt;method name="doSomething"&gt;
     // code to be executed when mouse is over the view
   &lt;/method&gt;
 &lt;/view&gt;
-</programlisting></example>
+</programlisting><!--</example>-->
 
 <p>If you use the <tagname link="true">handler</tagname> tag, you do not need to include the handler in the tag that creates the object.</p>
 
-<example extract="false"><programlisting class="code">
+<!--<example extract="false">--><programlisting class="code">
 &lt;view&gt;
  &lt;handler name="onmouseover"&gt;
    // code to be executed when the mouse is over the view
  &lt;/handler&gt;
 &lt;/view&gt;
-</programlisting></example>
+</programlisting><!--</example>-->
 
 <p> The above two examples are functionally equivalent.  Using the <tagname>handler</tagname> tag, however, can often lead to more readable code because it removes clutter from the object creation tag.</p> 
 
@@ -275,7 +281,7 @@ Events can be sent with a single argument, which usually conveys information abo
 
 <p>For example, if a handler is defined via:</p>
 
-<example extract="false">
+<!--<example extract="false">--><programlisting class="code">
 &lt;view id="obj"&gt;
   &lt;hander name="onkeydown" args="kc"&gt;
    if (kc == 13) this.doAction()
@@ -284,7 +290,8 @@ Events can be sent with a single argument, which usually conveys information abo
     Debug.write("action");
   &lt;/method&gt;
 &lt;/view&gt;
-</example>
+</programlisting>
+<!--</example>-->
 
 <p>
 then script code
@@ -300,7 +307,7 @@ received to any user-defined handler for that event.
 <p>
 If the @method attribute is given, a method body is unnecessary and the named method will be invoked instead. For example, the handler below has the same behavior as the earlier example.</p>
 
-<example extract="false">
+<!--<example extract="false">--><programlisting class="code">
 &lt;view id="obj"&gt;
   &lt;hander name="onkeydown" method="doAction"/&gt;
   &lt;method name="doAction" args="kc"&gt;
@@ -308,7 +315,8 @@ If the @method attribute is given, a method body is unnecessary and the named me
      Debug.write("action");
   &lt;/method&gt;
 &lt;/view&gt;
-</example>
+</programlisting>
+<!--</example>-->
 
 
 </text>
@@ -488,13 +496,14 @@ method must have a <attribute>name</attribute>.</p>
 allows the method to be invoked from JavaScript with this name.
 For example, if a method is defined via:</p>
 
-<example extract="false">
+<!--<example extract="false">--><programlisting class="code">
 &lt;view id="obj"&gt;
   &lt;method name="f" args="a, b"&gt;
     return a+b;
   &lt;/method&gt;
 &lt;/view&gt;
-</example>
+</programlisting>
+<!--</example>-->
 
 <p>
 then script code
@@ -544,6 +553,23 @@ numbers.</p>
     <tag name="shortdesc"><text>Controls the presentation while the application is loading.</text></tag>
     <tag name="lzxname"><text>splash</text></tag>
     <text>
+      <note>The <tagname>splash</tagname> tag does not work across
+        all platforms.  Consider instead the following technique:
+        <!-- Note: does not work as a live example -->
+        <programlisting><![CDATA[
+<div id="lzsplash" style="z-index: 10000000; top: 0; left: 0; width: 100%; height: 100%; position: fixed; display: table">
+  <p style="display: table-cell; vertical-align: middle;">
+    <img src="/trunk/lps/includes/spinner.gif" style="display: block; margin: 20% auto"/>
+  </p>
+</div>
+<script type="text/javascript"> 
+  Lz.dhtmlEmbed({url: 'copy-of-hello.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp'}); 
+  Lz.lzapp.onload = function loaded() { 
+  var s = document.getElementById('lzsplash'); 
+  if (s) LzSprite.prototype.__discardElement(s); 
+  } 
+</script>]]></programlisting>
+      </note>
 <p>The <tagname>splash</tagname> tag controls the presentation while
 the application is loading.</p>
 
@@ -551,11 +577,12 @@ the application is loading.</p>
 progress bar is displayed while the application is loading. For
 example:</p>
 
-<example extract="false">
+<!--<example extract="false">--><programlisting class="code">
 &lt;canvas&gt;
   &lt;splash/&gt;
 &lt;canvas&gt;
-</example>
+</programlisting>
+<!--</example>-->
 
 <p>The <tagname link="true">splash</tagname> element may contain
 <a href="tag.splash-view.html">"splash view"</a> elements to define the position and
@@ -565,13 +592,14 @@ these <a href="tag.splash-view.html">"splash view"</a> elements, although they a
 <p>
 For example, the following program positions an image on the canvas during the "splash" loading portion of the program's execution and removes it once the application has loaded. The example below executes too quickly to be demonsrate the splash view; try it in a larger application to see how it works.</p>
 
-<example extract="false" title="using 'splash view' tag">
+<!--<example extract="false" title="using 'splash view' tag">--><programlisting class="code">
 &lt;canvas height="100"&gt;
   &lt;splash&gt;
     &lt;view resource="../images/logo.png"/&gt;
   &lt;/splash&gt;
 &lt;/canvas&gt;
-</example>
+</programlisting>
+<!--</example>-->
 <p>
 You can position more than one image by specifying its coordinates. The <attribute>persistent</attribute> attribute  on <tagname>splash</tagname> tag causes the "splash" views contained within the spash element to remain on the canvas once the
 load process is complete.</p>
