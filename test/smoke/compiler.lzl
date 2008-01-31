@@ -2,7 +2,7 @@
     Compiler Tests
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-     * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
      * Use is subject to license terms.                                            *
      * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -33,8 +33,7 @@
              // Verify runtime matches requested
              var url = LzBrowser.getLoadURLAsLzURL();
              if (url.query != null) {
-               // TODO: [2005-11-22 ptw] This should be a class method
-               var query = LzParam.prototype.parseQueryString(url.query);
+               var query = LzParam.parseQueryString(url.query);
              }
              if (query.hasOwnProperty('lzr')) {
                  assertEquals($runtime, query.lzr, "$runtime matches query arg");
