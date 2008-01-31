@@ -2,7 +2,7 @@
   * @topic Browser
   * @subtopic Integration
   * @access public
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   * Use is subject to license terms.
   */
 
@@ -44,6 +44,7 @@ Lz.history = {
             Lz.__setAttr(i, 'scrolling', 'no');
             Lz.__setAttr(i, 'width', '0');
             Lz.__setAttr(i, 'height', '0');
+            Lz.__setAttr(i, 'src', 'blank.html');
             document.body.appendChild(i);
             i = document.getElementById('lzHistory');
             _this._iframe = i;
