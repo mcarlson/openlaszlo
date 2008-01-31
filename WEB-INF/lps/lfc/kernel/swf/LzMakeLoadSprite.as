@@ -1,7 +1,7 @@
 /**
   * LzMakeLoadSprite.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -36,6 +36,13 @@ LzMakeLoadSprite.transform = function ( v , src , cache, headers ){
         }
     }
 
+//     Debug.trace(v, 'setHeight');
+//     Debug.trace(v, 'setWidth');
+//     Debug.monitor(v, 'resourcewidth')
+//     Debug.monitor(v, 'resourceheight')
+//     Debug.monitor(v, '_xscale')
+//     Debug.monitor(v, '_yscale')
+    
     v.firstsrc = src;
     v.firstcache = cache;
     v.firstheaders = headers;
@@ -52,6 +59,12 @@ LzMakeLoadSprite.transform = function ( v , src , cache, headers ){
         v.makeContainerResource();
         if (! this.loader) v.createLoader();
     }
+
+//     var mc = v.__LZmovieClipRef;
+//     Debug.debug(mc, '_width', mc._width);
+//     Debug.debug(mc, '_height', mc._height);
+//     Debug.debug(mc, '_xscale', mc._xscale);
+//     Debug.debug(mc, '_yscale', mc._yscale);
 }
     
 /**
@@ -146,6 +159,12 @@ LzMakeLoadSprite.setResource = function ( nresc ){
         }
         //this.updateAfterLoad();
     }
+
+//     var mc = this.__LZmovieClipRef;
+//     Debug.debug(mc, '_width', mc._width);
+//     Debug.debug(mc, '_height', mc._height);
+//     Debug.debug(mc, '_xscale', mc._xscale);
+//     Debug.debug(mc, '_yscale', mc._yscale);
 }
 
 //handle error
@@ -174,21 +193,9 @@ LzMakeLoadSprite.updateAfterLoad = function (){
     if ( this.totalframes > 1 ){
         this.checkPlayStatus();
     }
-    this.updateResourceSize(); 
-    if ( this._setrescheight ){
-        var yscale = this.height/this.resourceheight;
-        this.__LZmovieClipRef._yscale = yscale * 100;
-    }
-    if ( this._setrescwidth ){
-        var xscale =this.width/this.resourcewidth;
-        this.__LZmovieClipRef._xscale = xscale * 100;
-    }
-    if (this.setButtonSize)
-        this.setButtonSize( "height" , this.height );
-    if (this.setButtonSize)
-        this.setButtonSize( "width" , this.width );
 
-    //Debug.write(xscale, yscale, this);
+    this.setHeight(this.hassetheight?this.height:null);
+    this.setWidth(this.hassetwidth?this.width:null);
 
     this.owner.__LZvizLoad = true; 
     this.owner.__LZupdateShown();

@@ -13,7 +13,29 @@ global._ = null;
 //
 // shut up the dumb doc tool
 /** @access private */
-MovieClip.prototype._dbg_name = function () { return String(this); };
+MovieClip.prototype._dbg_name = function () {
+  // clip scales are in percent
+  var xs = this._xscale/100;
+  var ys = this._yscale/100;
+  // Describe the clip's actual dimensions, and the 2d transform
+  // representing the x/y offset and scaling.  This is available
+  // directly in Flash 8 and above.
+  var m = this.transform.matrix;
+  if (m) {
+    return Debug.formatToString("%s [%0.2d x %0.2d]*[%0.2d %0.2d %0.2d, %0.2d %0.2d %0.2d, 0 0 1]",
+                                String(this),
+                                this._width/xs, this._height/ys,
+                                m.a, m.b, m.tx,
+                                m.c, m.d, m.ty);
+  } else {
+    // TODO: [2008-01-30 ptw] Rotation in swf7
+    return Debug.formatToString("%s [%0.2d x %0.2d]*[%0.2d 0 %0.2d, 0 %0.2d %0.2d, 0 0 1]",
+                                String(this),
+                                this._width/xs, this._height/ys,
+                                xs, this._x,
+                                ys, this._y)
+  }
+};
 
 (function () {
   // Make SWF player native prototypes print nicely
@@ -526,9 +548,8 @@ Debug.inspectInternal = function (obj, showInternalProperties) {
   if (si) {
     // print 'invisible' properties of MovieClip's
     if (obj instanceof MovieClip) {
-      for (var p in {_x: 0, _y: 0, _visible: true, _xscale: 100,
-                     _yscale: 100, _opacity: 100, _rotation: 0,
-                     _currentframe: 1}) {
+      for (var p in {_x: 0, _y: 0, _width: 0, _xscale: 100, _height: 0, _yscale: 100,
+            _visible: true, _opacity: 100, _rotation: 0, _currentframe: 1}) {
         names.push(p);
       }
     }
@@ -646,7 +667,7 @@ Debug.computeSlotDescription = function (obj, key, val, wid) {
 }
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 

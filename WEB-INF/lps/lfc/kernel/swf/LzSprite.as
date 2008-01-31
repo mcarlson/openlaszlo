@@ -1,3 +1,4 @@
+/* -*- mode: JavaScript; c-basic-offset: 4; -*- */
 /**
   * LzSprite.as
   *
@@ -7,6 +8,9 @@
   * @topic Kernel
   * @subtopic AS2
   */
+
+{
+#pragma "warnUndefinedReferences=false"
 
 var LzSprite = function(newowner, isroot, args) {
     if (newowner == null) return this;
@@ -32,6 +36,20 @@ var LzSprite = function(newowner, isroot, args) {
         this.__LZsvdepth = 0;
     }
 }
+
+/** @access private */
+LzSprite.prototype._dbg_name = function () {
+  var xs = this._xscale;
+  var ys = this._yscale;
+  // Describe the sprite's actual dimensions, and the 2d transform
+  // representing the x/y offset and scaling
+  // TODO: [2008-01-30 ptw] Factor rotation into transform
+  return Debug.formatToString("%s [%0.2d x %0.2d]*[%0.2d 0 %0.2d, 0 %0.2d %0.2d, 0 0 1]",
+                              String(this),
+                              this.width/xs, this.height/ys,
+                              xs, this.x,
+                              ys, this.y)
+};
 
 LzSprite.prototype.capabilities = {
     rotation: true
@@ -162,12 +180,27 @@ LzSprite.prototype.bgcolor =   null;
 LzSprite.prototype.x =   0;
 LzSprite.prototype.y =   0;
 LzSprite.prototype.rotation =   0;
+// @devnote The various built-in resources (the empty clip, the bg
+// clip, the button clip) are 100px square, so the clip scale (which
+// is a percentage) can be set directly to the dimension.  This is an
+// optimization of <scale in %> = ( <desired dim in px> / <resource
+// dim in px> ) * 100.  (Effectively, the built-in resources are
+// always 'stretched', but see LzSprite#_xscale).  When an explicit
+// resource is assigned, unless stretching is specified, the clip
+// takes it's dimensions from the resource and there is no scaling.
 LzSprite.prototype.width =   0;
 LzSprite.prototype.height =   0;
 LzSprite.prototype.__LZclickregion =  "LzMouseEvents";
 
+// @devnote Sprite scale is stored as a fraction, but the runtime clip
+// scale is a percentage.  Note: this scale is only maintained when
+// stretching is specified.  The scaling of the empty resource to
+// achieve the dimensions of the view is _not_ considered scaling,
+// unless stretches is specified.
 LzSprite.prototype._xscale =   1;
 LzSprite.prototype._yscale =   1;
+LzSprite.prototype.resourceheight = 0;
+LzSprite.prototype.resourcewidth = 0;
 
 //@field Number totalframes: The total number of frames for this view's
 //resource.
@@ -434,6 +467,7 @@ LzSprite.prototype.attachBackgroundToChild = function ( childsprite ){
     var mc = this.__LZmovieClipRef.attachMovie( "swatch", "$b" + this.__LZsubUniqueNum, depth );
     childsprite.__LZbgRef = mc;
 
+    // @devnote See note at LzSprite#width for why this is correct
     childsprite.__LZbgRef._xscale = childsprite.width;
     childsprite.__LZbgRef._yscale = childsprite.height;
 
@@ -561,13 +595,15 @@ LzSprite.prototype.setVisible = function( amVisible ) {
   * @param Number v: The new value for the width
   */
 LzSprite.prototype.setWidth = function ( v ){
-    //if (this.owner.id == 'photoscontainer') Debug.write('LzSprite.setWidth', this, v, this.hassetwidth);
-
+    if (this.__LZmovieClipRef == null){
+        this.makeContainerResource( );
+    }
     if ( v == null ){
         this.hassetwidth = false;
         if ( this._setrescwidth ){
             // defaults
             this._xscale = 1;
+            // clip scale is in percent
             this.__LZmovieClipRef._xscale =  100;
         }
         return;
@@ -576,12 +612,20 @@ LzSprite.prototype.setWidth = function ( v ){
 
     if ( this.owner.pixellock ) v = Math.floor( v );
     if ( this._setrescwidth ){
-        var xscale = this.resourcewidth == 0 ? 100 : v/this.resourcewidth;
+        // <scale as fraction> = ( <desired dim in px> / <resource dim
+        // in px> ) Note the empty resource is a 100x100px clip
+        var xscale = ((this.resourcewidth == 0) ? (v/100) : (v/this.resourcewidth));
         this._xscale = xscale;
+        // clip scale is in percent
         this.__LZmovieClipRef._xscale = xscale * 100;
         if (this.__LZrightmenuclip) this.__LZrightmenuclip._xscale = xscale * 100;
     } else {
         // If the view does not stretch, we have to resize the mask
+        // NOTE: [2008-01-24 ptw] This seems wrong.  If the view is
+        // masked, the mask is attached as a child of the resource so
+        // it will scale properly, and only its dimensions are set.
+        // BUT, I probably don't understand Flash movies. It seems
+        // that setting scale or dimension are interchangable?
         if ( this.masked ){
             this.__LZmaskClip._xscale = v;
         }
@@ -605,11 +649,15 @@ LzSprite.prototype.setWidth = function ( v ){
   * @param Number v: The new value for the height
   */
 LzSprite.prototype.setHeight = function ( v ){
+    if (this.__LZmovieClipRef == null){
+        this.makeContainerResource( );
+    }
     if ( v == null ){
         this.hassetheight = false;
         if ( this._setrescheight ){
             // defaults
             this._yscale = 1;
+            // clip scale is in percent
             this.__LZmovieClipRef._yscale =  100;
         }
         return;
@@ -618,15 +666,22 @@ LzSprite.prototype.setHeight = function ( v ){
 
     if ( this.owner.pixellock ) v = Math.floor( v );
     if ( this._setrescheight ){
-        var yscale = this.resourceheight == 0 ? 100 : v/this.resourceheight;
+        // <scale as fraction> = ( <desired dim in px> / <resource dim
+        // in px> ) Note the empty resource is a 100x100px clip
+        var yscale = ((this.resourceheight == 0) ? (v/100) : (v/this.resourceheight));
         this._yscale = yscale;
+        // clip scale is in percent
         this.__LZmovieClipRef._yscale = yscale * 100;
         if (this.__LZrightmenuclip) this.__LZrightmenuclip._yscale = yscale * 100;
     } else {
         // If the view does not stretch, we have to resize the mask
+        // NOTE: [2008-01-24 ptw] This seems wrong.  If the view is
+        // masked, the mask is attached as a child of the resource so
+        // it will scale properly, and only its dimensions are set.
+        // BUT, I probably don't understand Flash movies. It seems
+        // that setting scale or dimension are interchangable?
         if ( this.masked ){
-            if (this.__LZmaskClip && typeof(this.__LZmaskClip._yscale) != 'undefined')
-                this.__LZmaskClip._yscale = v;
+            this.__LZmaskClip._yscale = v;
         }
         if (this.__LZrightmenuclip) this.__LZrightmenuclip._yscale = v;
     }
@@ -665,14 +720,21 @@ LzSprite.prototype.setOpacity = function ( v ){
   * Since a view does not re-measure the size of its resource once that resource
   * has loaded, this method is provided to force the view to update its size, 
   * taking into account the current size of its resource. 
+  *
+  * @devnote [2008-01-25 ptw] I am not convinced that this works in
+  * all cases because I am not sure that the Sprite scale always
+  * tracks the clip scale (c.f., the implementtation of stretches), in
+  * particular, this does not work when called from
+  * LzMakeLoadSprite.updateAfterLoad because the Sprite scale will
+  * reflect the scale of the empty clip being sized to the view
+  * (before the load started) and what we really want is the size of
+  * the loaded resource.
   */
 LzSprite.prototype.updateResourceSize = function ( ){
-    this.__LZmovieClipRef._xscale = 100;
-    this.__LZmovieClipRef._yscale = 100;
-    this.resourcewidth = this.__LZmovieClipRef._width;
-    this.resourceheight = this.__LZmovieClipRef._height;
-    this.__LZmovieClipRef._xscale = this._xscale * 100;
-    this.__LZmovieClipRef._yscale = this._yscale * 100;
+    var mc = this.__LZmovieClipRef;
+    // Get the true size by unscaling. Note: clip scale is in percent
+    this.resourcewidth = mc._width/(mc._xscale/100);
+    this.resourceheight = mc._height/(mc._yscale/100);
     this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
 }
 
@@ -834,16 +896,18 @@ LzSprite.prototype.setClickable = function ( amclickable ){
 
 /**
   * @access private
+  *
+  * @devnote The button is a is a child of the view resource (either
+  * explicit or the empty resource), so will be scaled by any scale
+  * that the resource has.  To size the button resource (which is
+  * 100px square) to the view, you would normally just set its scale
+  * to the view dimension (see note at LzSprite#width), but you have
+  * to also invert its parent's scale (which is a percent) hence the
+  * (100 / <parent scale>) factor.
   */
 LzSprite.prototype._setButtonSize = function ( axis , bsize ){
     var sc ="_" + ( axis =="width" ? "x" : "y" ) + "scale" ;
-    if ( this[ "_setresc" + axis ] && this[ 'hasset' + axis ]){
-        var resdim = this.__LZmovieClipRef[ "_" + axis ];
-        if (resdim == 0) { resdim = 100; }
-        this.__LZbuttonRef[ sc ] = resdim / ( this.__LZmovieClipRef[ sc ] / 100 ) ;
-    } else {
-        this.__LZbuttonRef[ sc ] = ( 100 / this.__LZmovieClipRef[ sc ] ) * bsize;
-    }
+    this.__LZbuttonRef[ sc ] = ( 100 / this.__LZmovieClipRef[ sc ] ) * bsize;
 }
 
 /**
@@ -1623,4 +1687,5 @@ Button.prototype.__lostFocus = function ( ){
     if (_root._focusrect != true) return;
     //Debug.write('__lostFocus');
     if (this.__lzview.hasFocus) LzFocus.clearFocus();
+}
 }
