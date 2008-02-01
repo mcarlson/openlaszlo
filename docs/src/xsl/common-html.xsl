@@ -413,7 +413,7 @@
   <xsl:template name="user.footer.content">
     <hr/>
 <!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
-<p class="copyright">Copyright &#xA9; 2002-2007 <a target="_top"
+<p class="copyright">Copyright &#xA9; 2002-2008 <a target="_top"
 href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
 All Rights Reserved. Unauthorized use, duplication or
 distribution is strictly prohibited. This is the proprietary
