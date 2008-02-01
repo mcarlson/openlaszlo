@@ -491,7 +491,23 @@
       </itemizedlist>
     </section>
        <!-- remove empty para tag LI LPP-4642 9/4/2007-->
-      <!-- <para /> -->
+    <section id="textformat">
+    <title>Formated Text</title>
+    <para>You can format text the same way you use <literal>Debug.format()</literal>. The difference is
+    that you need the debugger to be running to use <literal>Debug.format()</literal>, but <literal>text.format()</literal> is
+    always availabe. Like <literal>Debug.format()</literal>, <literal>text.format()</literal> uses 
+    <ulink url="../reference/LzFormatter.html"><literal>LzFormatter</literal></ulink> to format text based
+    on a control string.</para>
+          <example role="live-example">
+        <title>Formated text</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/textformat.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+    </section> 
+  
     <section id="text.multiline">
       <title>Single-line and multiline text</title>
       <para>A text field can be either a single line or multiple
