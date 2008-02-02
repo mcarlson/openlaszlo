@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lztimer
@@ -92,11 +92,11 @@ function addTimer ( d , milisecs ){
             Debug.error("setInterval result type is unexpected; LzTimer will fail");
     }
     p.id = id;
-    var tle = this.timerList[d];
+    var tle = this.timerList[d.__delegateID];
     if (tle == null) {
-        this.timerList[d] = id;
+        this.timerList[d.__delegateID] = id;
     } else if (! (tle instanceof Array)) {
-        this.timerList[d] = [tle, id];
+        this.timerList[d.__delegateID] = [tle, id];
     } else {
         tle.push(id);
     }
@@ -110,18 +110,18 @@ function addTimer ( d , milisecs ){
   * order received.
   */
 function removeTimer ( d ){
-    var tle = this.timerList[d];
+    var tle = this.timerList[d.__delegateID];
     var id = null;
     if (tle != null) {
         if (tle instanceof Array) {
             id = tle.shift();
             clearInterval(id);
             if (tle.length == 0)
-                delete this.timerList[d];
+                delete this.timerList[d.__delegateID];
         } else {
             id = tle;
             clearInterval(id);
-            delete this.timerList[d];
+            delete this.timerList[d.__delegateID];
         }
         // Debug.format("cleared timer %w for delegate %w (2)\n", id, d);
     }
@@ -137,7 +137,7 @@ function removeTimer ( d ){
   * @access private
   */
 function removeTimerWithID ( d, id ){
-    var tle = this.timerList[d];
+    var tle = this.timerList[d.__delegateID];
     if (tle != null) {
         if (tle instanceof Array) {
             var i = 0;
@@ -150,10 +150,10 @@ function removeTimerWithID ( d, id ){
                 }
             }
             if (tle.length == 0)
-                delete this.timerList[d];
+                delete this.timerList[d.__delegateID];
         } else if (tle == id) {
             clearInterval(id);
-            delete this.timerList[d];
+            delete this.timerList[d.__delegateID];
         }
     }
 }
@@ -175,7 +175,7 @@ function resetTimer ( d  , milisecs ){
 
 if ($debug) {
   function countTimers ( d ){
-    var tle = this.timerList[d];
+    var tle = this.timerList[d.__delegateID];
     if (tle == null)
         return 0;
     else if (tle instanceof Array)
