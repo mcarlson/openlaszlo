@@ -479,8 +479,8 @@ var Trait = {
       if (obj instanceof impls[mash].constructor) {
         return true;
       }
-      return false;
     }
+    return false;
   },
   // How to make a Trait
   make: function make (classname, superTrait, instanceProperties, staticProperties) {
