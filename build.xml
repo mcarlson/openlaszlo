@@ -512,7 +512,7 @@
       unless="build.done"
       depends="init">
 
-      <ant target="quick-index" />
+      <ant target="laszlo-explorer" />
       <ant dir="${webapp-lps-home}/schema"  target="build" />
       <!-- Copy pieces of schema stuff to tools -->
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.rnc" />
@@ -1304,10 +1304,17 @@
          <antcall target="webapp.deploy" />
      </target>
 
-   <target name="quick-index" depends="init" 
-       description="Create quick index from laszlo explorer nav.xml file" >
-       <style style="quick-index.xslt" 
-              in="laszlo-explorer/nav.xml"
-              out="quick-index.html"/>
+   <target name="laszlo-explorer" depends="init"
+       description="Create supporting files for laszlo-explorer" >
+     <copy file="laszlo-explorer/coverpages/welcome/index.html.proto"
+           tofile="laszlo-explorer/coverpages/welcome/index.html" >
+       <filterset>
+         <filter token="VERSIONID" value="${version.id}"/>
+         </filterset>
+     </copy>
+
+     <style style="quick-index.xslt"
+            in="laszlo-explorer/nav.xml"
+            out="quick-index.html" />
    </target>
 </project>
