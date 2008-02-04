@@ -1220,7 +1220,7 @@ var getters ={};
   */
 function __LZstoreDelegates ( delarr ){
     //delarr is a sequence of triplets of the form
-    //... eventname, methodname, referenceFunction
+    //... eventname, methodname, referencemethodname
 
     var resarray = [];
     var l = delarr.length;
@@ -1360,8 +1360,8 @@ function __LZsetDelegates ( delarr ){
 
     var l = delarr.length;
     for ( var i = 0; i < l;i +=3 ){
-        var senderexp = delarr[i + 2];
-        var sender = (senderexp != null) ? senderexp.call(this): null;
+        var sendermethodname = delarr[i + 2];
+        var sender = (sendermethodname != null) ? this[sendermethodname]() : null;
         if ( sender == null ) sender = this;
         var meth = delarr[i + 1];
         this.__LZdelegates.push( new LzDelegate( this , meth ,sender , delarr[i] ) );

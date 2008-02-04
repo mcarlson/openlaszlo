@@ -962,10 +962,7 @@ solution =
      * This can do a compile time check to see if eventname is declared or
      * if there is an attribute FOO such that name="onFOO".
      */
-
     void addHandlerElement(Element element) {
-        String srcloc =
-            CompilerUtils.sourceLocationDirective(element, true);
         String method = element.getAttributeValue("method");
         // event name
         String event = element.getAttributeValue("name");
@@ -975,120 +972,105 @@ solution =
             env.warn("handler needs a non-null name attribute");
             return;
         }
-
         String parent_name =
             element.getParentElement().getAttributeValue("id");
-        String name_loc =
-            CompilerUtils.attributeLocationDirective(element, "event");
-        if (parent_name == null) {
-            parent_name =
-                CompilerUtils.attributeUniqueName(element, "event");
-        }
-        // Names have to be unique across binary libraries, so append
-        // parent name
-        String name = env.methodNameGenerator.next() + "_" + parent_name + "_reference";
         String reference = element.getAttributeValue("reference");
-        Object referencefn = "null";
         if (reference != null) {
-            String ref_loc =
-                CompilerUtils.attributeLocationDirective(element, "reference");
-            referencefn = new Function(
-                name,
-                args,
-                "\n#pragma 'withThis'\n" +
-                "return (" +
-                "#beginAttribute\n" + ref_loc +
-                reference + "\n#endAttribute\n)",
-                ref_loc);
+            reference = CompilerUtils.attributeLocationDirective(element, "reference") + reference;
         }
-         
+        String body = element.getText();
+        if (body.trim().length() == 0) { body = null; }
+        // If non-empty body AND method name are specified, flag an error
+        // If non-empty body, pack it up as a function definition
+        if (body != null) {
+            if (method != null) {
+                env.warn("you cannot declare both a 'method' attribute " +
+                         "*and* a function body on a handler element",
+                         element);
+            }
+            body = CompilerUtils.attributeLocationDirective(element, "text") + body;
+        }
+        addHandlerInternal(element, parent_name, event, method, args, body, reference);
+    }
+
+    /**
+     * An event handler defined in the open tag
+     */
+    void addHandlerFromAttribute(Element element, String event, String body) {
+        String parent_name = element.getAttributeValue("id");
+        addHandlerInternal(element, parent_name, event, null, "", body, null);
+    }
+
+    /**
+     * Adds a handler for `event` to be handled by `method`.  If
+     * `body` is non-null, adds the method too.  If `reference` is
+     * non-null, adds a method to compute the sender.
+     *
+     * @devnote: For backwards-compatibility, you are allowed to pass
+     * in both a `method` (name) and a `body`.  This supports the old
+     * method syntax where you were allowed to specify the event to be
+     * handled and the name of the method for the body of the handler.
+     */
+    void addHandlerInternal(Element element, String parent_name, String event,  String method, String args, String body, String reference) {
+        if (body == null && method == null) {
+            env.warn("Refusing to compile an empty handler, you should declare the event instead", element);
+            return;
+        }
+
+        String src_loc = CompilerUtils.sourceLocationDirective(element, true);
+        if (parent_name == null) {
+            parent_name = CompilerUtils.attributeUniqueName(element, "handler");
+        }
+        // Anonymous handler names have to be unique, so append a
+        // gensym; but they also have to be unique across binary
+        // libraries, so append parent (class) name
+        String unique = "$" + parent_name + "_"  + env.methodNameGenerator.next();
+        String referencename = null;
         // delegates is only used to determine whether to
         // default clickable to true.  Clickable should only
         // default to true if the event handler is attached to
         // this view.
         if (reference == null) {
             delegates.put(event, Boolean.TRUE);
-        }
-        delegateList.add(ScriptCompiler.quote(event));
-        if (method != null) {
-            delegateList.add(ScriptCompiler.quote(method));
-        } else {
-            delegateList.add(ScriptCompiler.quote(name));
-        }
-        delegateList.add(referencefn);
-
-        String body = element.getText();
-
-        String childcontentloc =
-            CompilerUtils.sourceLocationDirective(element, true);
-
-        if (attrs.containsKey(name, caseSensitive)) {
-            env.warn(
-                "an attribute or method named '"+name+
-                "' already is defined on "+getMessageName(),
-                element);
+        } else { 
+            referencename = "$lzc$" + "handle_" + event + "_reference" + unique;
+            Object referencefn = new Function(
+                referencename,
+                args,
+                "\n#pragma 'withThis'\n" +
+                "return (" +
+                "#beginAttribute\n" +
+                reference + "\n#endAttribute\n)");
+            // Add reference computation as a method (so it can have
+            // 'this' references work)
+            attrs.put(referencename, referencefn);
         }
 
-        // If non-empty body AND method name are specified, flag an error
-        // If non-empty body, pack it up as a function definition
-        if (body != null && body.trim().length() > 0) {
-            if (method != null) {
-                env.warn("you cannot declare both a 'method' attribute " +
-                         "*and* a function body on a handler element",
-                         element);
+        if (body != null) {
+            if (method == null) {
+                method = "$lzc$" + "handle_" + event + unique;
             }
+            Function fndef = new
+                Function(method,
+                         //"#beginAttribute\n" +
+                         args,
+                         "\n#beginContent\n" +
+                         "\n#pragma 'methodName=" + method + "'\n" +
+                         "\n#pragma 'withThis'\n" +
+                         body + "\n#endContent",
+                         src_loc);
+            // Add hander as a method
+            attrs.put(method, fndef);
         }
-        Function fndef = new
-            Function(name,
-                     //"#beginAttribute\n" +
-                     CompilerUtils.attributeLocationDirective(element, "args") + args,
-                     "\n#beginContent\n" +
-                     "\n#pragma 'methodName=" + name + "'\n" +
-                     "\n#pragma 'withThis'\n" +
-                     childcontentloc +
-                     body + "\n#endContent",
-                     name_loc);
 
-        attrs.put(name, fndef);
-    }
-
-    void addHandlerFromAttribute(Element element, String event, String body) {
-        String srcloc =
-            CompilerUtils.sourceLocationDirective(element, true);
-        String parent_name =
-            element.getAttributeValue("id");
-        if (parent_name == null) {
-            parent_name =
-                CompilerUtils.attributeUniqueName(element, "event");
-        }
-        String name = env.methodNameGenerator.next();
-        Object referencefn = "null";
-         
-        // delegates is only used to determine whether to
-        // default clickable to true.  Clickable should only
-        // default to true if the event handler is attached to
-        // this view.
-        delegates.put(event, Boolean.TRUE);
+        // Put everything into the delegate list
         delegateList.add(ScriptCompiler.quote(event));
-        delegateList.add(ScriptCompiler.quote(name));
-        delegateList.add(referencefn);
-
-        String childcontentloc =
-            CompilerUtils.sourceLocationDirective(element, true);
-
-        Function fndef = new
-            // Use "mangled" name, so it will be unique
-            Function(srcloc +
-                     parent_name + "_" + name,
-                     //"#beginAttribute\n" +
-                     "",
-                     "\n#beginContent\n" +
-                     "\n#pragma 'methodName=" + name + "'\n" +
-                     "\n#pragma 'withThis'\n" +
-                     childcontentloc +
-                     body + "\n#endContent");
-
-        attrs.put(name, fndef);
+        delegateList.add(ScriptCompiler.quote(method));
+        if (reference != null) {
+            delegateList.add(ScriptCompiler.quote(referencename));
+        } else {
+            delegateList.add("null");
+        }
     }
 
 
@@ -1097,7 +1079,10 @@ solution =
             CompilerUtils.sourceLocationDirective(element, true);
         String name = element.getAttributeValue("name");
         String event = element.getAttributeValue("event");
-        String args = XMLUtils.getAttributeValue(element, "args", "");
+        String args = CompilerUtils.attributeLocationDirective(element, "args") +
+            XMLUtils.getAttributeValue(element, "args", "");
+        String body = element.getText();
+        
         String override = element.getAttributeValue("override");
 
         if ((name == null || !ScriptCompiler.isIdentifier(name)) &&
@@ -1126,63 +1111,6 @@ solution =
                 ,element);
         }
 
-        String parent_name =
-            element.getParentElement().getAttributeValue("id");
-        String name_loc =
-            (name == null ?
-             CompilerUtils.attributeLocationDirective(element, "event") :
-             CompilerUtils.attributeLocationDirective(element, "name"));
-        if (parent_name == null) {
-            parent_name =
-                (name == null ?
-                 CompilerUtils.attributeUniqueName(element, "event") :
-                 CompilerUtils.attributeUniqueName(element, "name"));
-        }
-        if (event != null) {
-            if (name == null) {
-                // Names have to be unique across binary libraries, so
-                // append parent name
-                name = env.methodNameGenerator.next() + "_" + parent_name + "_reference";
-            }
-            String reference = element.getAttributeValue("reference");
-            Object referencefn = "null";
-            if (reference != null) {
-                String ref_loc =
-                    CompilerUtils.attributeLocationDirective(element, "reference");
-                referencefn = new Function(
-                    name,
-                    CompilerUtils.attributeLocationDirective(element, "args") + args,
-                    "\n#pragma 'withThis'\n" +
-                    "return (" +
-                    "#beginAttribute\n" + ref_loc +
-                    reference + "\n#endAttribute\n)",
-                    ref_loc);
-            }
-            // delegates is only used to determine whether to
-            // default clickable to true.  Clickable should only
-            // default to true if the event handler is attached to
-            // this view.
-            if (reference == null)
-                delegates.put(event, Boolean.TRUE);
-            delegateList.add(ScriptCompiler.quote(event));
-            delegateList.add(ScriptCompiler.quote(name));
-            delegateList.add(referencefn);
-        }
-        String body = element.getText();
-
-        String childcontentloc =
-            CompilerUtils.sourceLocationDirective(element, true);
-        Function fndef = new
-            Function(name,
-                     //"#beginAttribute\n" +
-                     CompilerUtils.attributeLocationDirective(element, "args") + args,
-                     "\n#beginContent\n" +
-                     "\n#pragma 'methodName=" + name + "'\n" +
-                     "\n#pragma 'withThis'\n" +
-                     childcontentloc +
-                     body + "\n#endContent",
-                     name_loc);
-
         if (attrs.containsKey(name, caseSensitive)) {
             env.warn(
 /* (non-Javadoc)
@@ -1194,8 +1122,6 @@ solution =
                 ,element);
         }
 
-
-     
         if (!("true".equals(override))) {
             String classname = element.getParentElement().getName();
             // Just check method declarations on regular node.
@@ -1205,6 +1131,40 @@ solution =
                 schema.checkInstanceMethodDeclaration(element, classname, name, env);
             }
         }
+
+        String parent_name =
+            element.getParentElement().getAttributeValue("id");
+        if (parent_name == null) {
+            parent_name =
+                (name == null ?
+                 CompilerUtils.attributeUniqueName(element, "handler") :
+                 CompilerUtils.attributeUniqueName(element, "name"));
+        }
+
+        if (event != null) {
+            env.warn("The `event` property of methods is deprecated.  Please update your source to use the `<handler>` tag.",
+                     element);
+            String reference = element.getAttributeValue("reference");
+            if (reference != null) {
+                reference = CompilerUtils.attributeLocationDirective(element, "reference") + reference;
+            }
+            addHandlerInternal(element, parent_name, event, name, args, body, reference);
+            return;
+        }
+
+        String name_loc =
+            (name == null ?
+             CompilerUtils.attributeLocationDirective(element, "handler") :
+             CompilerUtils.attributeLocationDirective(element, "name"));
+        Function fndef = new
+            Function(name,
+                     //"#beginAttribute\n" +
+                     args,
+                     "\n#beginContent\n" +
+                     "\n#pragma 'methodName=" + name + "'\n" +
+                     "\n#pragma 'withThis'\n" +
+                     body + "\n#endContent",
+                     name_loc);
 
         attrs.put(name, fndef);
     }
