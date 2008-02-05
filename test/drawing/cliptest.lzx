@@ -7,15 +7,15 @@
   <attribute name="isMax" value="false"/>
   <attribute name="position" type="number" />
   <attribute name="imageClip" value="false" />
-  <method event="onwidth">
-	redraw();
-  </method>
-   <method event="onheight">
-	redraw();
-  </method>
- <method event="oninit">
+  <handler name="onwidth">
+        redraw();
+  </handler>
+  <handler name="onheight">
+        redraw();
+  </handler>
+  <handler name="oninit">
      //this.setSource(this.image);
-  </method>
+  </handler>
     <method name="redraw">
         this.clear();
         this.beginPath();
@@ -79,3 +79,4 @@
  -->
 </view>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

@@ -4,11 +4,11 @@
         <simplelayout axis="y" spacing="5" />
         <attribute name="target" value="null" />
         <button>test get set. (hit me repeatedly. the text should not change.)
-            <method event="onclick">
+            <handler name="onclick">
                 var str = parent.target.getText();
                 Debug.write("got str for ", parent.target.id, ":", str);
                 parent.target.setText(str);
-            </method>
+            </handler>
         </button>
     </class>
 
@@ -36,3 +36,4 @@
 
 </view>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

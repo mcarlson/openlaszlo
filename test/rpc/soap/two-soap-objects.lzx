@@ -10,7 +10,7 @@
         <attribute name="myobject1" value="null" type="expression" />
         <attribute name="isloaded" value="false" />
 
-        <method event="onload">
+        <handler name="onload">
             this.setAttribute('isloaded', true);
 
             Debug.write('amazon soap service stub loaded');
@@ -23,26 +23,26 @@
             this.myobject1.devtag = 'your-dev-tag';
             this.myobject1.format = 'xml';
             this.myobject1.version = '1.0';
-        </method>
+        </handler>
 
         <!-- if error isn't handled by remotecall, the error is propogated up to
              soap -->
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('error:', error);
-        </method>
+        </handler>
     </soap>
 
     <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
         <attribute name="isloaded" value="false" />
 
-        <method event="onload">
+        <handler name="onload">
             this.setAttribute('isloaded', true);
             Debug.write('google soap service stub loaded');
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('error:', error);
-        </method>
+        </handler>
     </soap>
 
     <view layout="spacing: 5" visible="${amazon.isloaded &amp;&amp; google.isloaded}">
@@ -51,9 +51,9 @@
             <remotecall name="myKSR1" funcname="KeywordSearchRequest"
                         dataobject="$once{amazonDset1}" remotecontext="$once{amazon}">
                 <param value="${canvas.amazon.myobject1}" />
-                <method event="ondata" args="value">
+                <handler name="ondata" args="value">
                     Debug.write('amazon keyword search result:', value);
-                </method>
+                </handler>
             </remotecall>
         </button>
 
@@ -72,9 +72,9 @@
                 <param value="''" />
                 <param value="''" />
 
-                <method event="ondata" args="value">
+                <handler name="ondata" args="value">
                     Debug.write('google search result:', value);
-                </method>
+                </handler>
 
             </remotecall>
         </button>
@@ -86,13 +86,13 @@
                 <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
                 <param value="'check spelling'" />  
 
-                <method event="ondata" args="value">
+                <handler name="ondata" args="value">
                     Debug.write('spell check result:\n', value);
-                </method>
+                </handler>
 
-                <method event="onerror" args="error">
+                <handler name="onerror" args="error">
                     Debug.write('spell check error:\n', error);
-                </method>
+                </handler>
             </remotecall>
         </button>
 
@@ -112,6 +112,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

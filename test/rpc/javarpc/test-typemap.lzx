@@ -18,13 +18,13 @@
     <class name="inspector" extends="remotecall">
         <attribute name="exp_type" type="string"/>
         
-        <method event="ondata" args="d">
+        <handler name="ondata" args="d">
             parent.parent.assertEquals(this.exp_type, typeof(d))
-        </method>
+        </handler>
         
-        <method event="onerror" args="msg">
+        <handler name="onerror" args="msg">
             parent.onerror.sendEvent("in " + this.name + " >>> " + msg)
-        </method>
+        </handler>
     </class>
 
     <class name="TypeMapSyncTester" extends="SyncTester">
@@ -100,12 +100,12 @@
             <inspector funcname="callWithMap"     exp_type="boolean"/>
             <inspector funcname="callWithList"    exp_type="boolean"/>
 
-            <method event="onerror" args="err">
+            <handler name="onerror" args="err">
                 canvas.setAttribute('runTests', canvas.runTests + 1)
                 parent.error(err)
-            </method>
+            </handler>
 
-            <method event="onload">
+            <handler name="onload">
                 parent.assertTrue(this['proxy'])
                 var dp = parent.cur_meth.dupePointer()
                 do {
@@ -118,13 +118,13 @@
 
                 parent.setAttribute('tested_object', this.proxy);
                 parent.callNext();
-            </method>
+            </handler>
         </javarpc>
 
     </class>
 
 </library>      
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

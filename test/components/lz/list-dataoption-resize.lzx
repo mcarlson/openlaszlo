@@ -108,10 +108,10 @@
     </dataset>
     <inittimer/>
     <class name="resizelistitem" extends="textlistitem">
-        <method event="onselected">
+        <handler name="onselected">
             if (this.selected) this.setHeight(40);
             else this.setHeight(20);
-        </method>
+        </handler>
     </class>
     <view x="20" y="30" layout="axis:x;spacing:20">
         <view layout="axis:y; spacing:2">
@@ -131,15 +131,15 @@
             <view layout="axis:y">
                 <view layout="axis:x">
                     <button>Get Value
-                        <method event="onclick">
+                        <handler name="onclick">
                             var val = d2.getValue();
                             d2val.setText(typeof(val) + '\n' + val);
-                        </method>
+                        </handler>
                     </button>
                     <button>Clear
-                        <method event="onclick">
+                        <handler name="onclick">
                             var val = d2.clearSelection();
-                        </method>
+                        </handler>
                     </button>
                 </view>
                 <text multiline="true" id="d2val" width="200" height="60"/>
@@ -157,7 +157,7 @@
 
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

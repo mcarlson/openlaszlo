@@ -3,11 +3,11 @@
             - doesn't include scrollbar on text field 2.
       -->
     <attribute name="externalsig" value="null"/>
-    <method event="onexternalsig">
+    <handler name="onexternalsig">
         canvas.changeText();
         var ctDel = new LzDelegate(LzBrowser, 'updateAccessibility');
         LzTimer.addTimer(ctDel, 1000);
-    </method>
+    </handler>
     <simplelayout spacing="4"/>
     <handler name="oninit">
         var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
@@ -33,9 +33,9 @@
                 </text>
                 <button id="button1" aatabindex="5" focusable="true">
                     Button
-                    <method event="onclick">
+                    <handler name="onclick">
                         LzBrowser.loadJS('lzSetCanvasAttribute("externalsig", true)');
-                    </method>
+                    </handler>
                 </button>
             </vbox>
             <text aatabindex="3" aasilent="true" id="text3" width="200" height="200" bgcolor="0xdeadbf" multiline="true">
@@ -45,7 +45,7 @@
     </vbox>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

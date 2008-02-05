@@ -1,9 +1,9 @@
 <canvas debug="true">
     <inputtext name="inp">
-        <method event="ontext">
+        <handler name="ontext">
             Debug.write( inp.getSelectionPosition() , 
                                   inp.getSelectionSize())
-        </method>
+        </handler>
         This is a very long string that I've already typed into an input box.
     </inputtext>
     <simplelayout/>
@@ -22,10 +22,10 @@
     <view height="10" width="200" bgcolor="gray"/>
     <inputtext name="inr" multiline="true" width="100" resizable="true" 
                height="100">
-        <method event="ontext">
+        <handler name="ontext">
             Debug.write( inr.getSelectionPosition() , 
                                 inr.getSelectionSize())
-        </method>
+        </handler>
     This is also very long string that I've already typed into an input box.
     </inputtext>
     <button onclick="inr.setSelection( 1 , 10 );
@@ -40,6 +40,6 @@
         Debug.write( inr.getSelectionPosition() , inr.getSelectionSize() )"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

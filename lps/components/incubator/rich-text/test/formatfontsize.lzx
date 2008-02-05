@@ -86,7 +86,7 @@
 
          <!---  @keywords private -->
 
-         <method event="onselect"><![CDATA[
+         <handler name="onselect"><![CDATA[
                 this.setChanged(true); 
                 //------------------------------------------------------------
 
@@ -105,14 +105,14 @@
                 } 
                 ]]>
 
-         </method>
+         </handler>
 
          
          <!-- When we get an editor to hook up to, make this menu's value
             match up to the default font of the editor.  -->
-         <method event="oneditor" args="e">
+         <handler name="oneditor" args="e">
              this.setValue(this.editor.defaultfontsize, true);
-         </method>
+         </handler>
          
 
          <!--- method broadcast out by the toolbar for clearing tool's state -->
@@ -137,11 +137,11 @@
 
          <!-- Save the selection region before another widget gets focus. -->
 
-         <method event="onmouseover">
+         <handler name="onmouseover">
 
              this.editor.saveSelectionRegion();
 
-         </method>
+         </handler>
 
          
 
@@ -154,7 +154,7 @@
  
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2005-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

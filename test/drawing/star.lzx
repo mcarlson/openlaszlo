@@ -7,7 +7,7 @@
     <attribute name="startangle" type="number" value="0"/> 
     <attribute name="colors" value="[0x888888,0xaaaaaa]"/> 
     <attribute name="bordercolors" value="[0x000000,0x000000]"/> 
-    <method event="oninit">
+    <handler name="oninit">
       var a, i, x1, y1, length =0;
       var pi = Math.PI;
       for (i=0; i != 2 * vertices ; i++){
@@ -30,7 +30,7 @@
         this.lineWidth = border;
         this.stroke();
       }
-    </method>
+    </handler>
   </class>
   <star x="200" 
         y="200"
@@ -42,4 +42,4 @@
         bordercolors="[0xffffff,0xffffff]"
         startangle="$once{Math.PI}"/>
 </canvas>
-<!-- copyright 2006-2007 laszlo systems -->
+<!-- copyright 2006-2008 laszlo systems -->

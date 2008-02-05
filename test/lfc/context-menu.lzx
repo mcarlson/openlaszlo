@@ -1,7 +1,7 @@
 <canvas debug="true" width="1800" height="800">
-  <method event="oninit">
+  <handler name="oninit">
     Debug.showInternalProperties = true;
-  </method>
+  </handler>
 
   <debug x="200" fontsize="14" width="600" height="400"/>
 <script>
@@ -39,3 +39,4 @@ cm3.addItem(new ContextMenuItem("Text Custom Item 2", my_itemhandler));
       width="200" height="200" bgcolor="blue" 
       oninit="setContextMenu(cm2)"/>
 </canvas> 
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

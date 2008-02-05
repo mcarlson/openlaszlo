@@ -52,15 +52,15 @@
     <dataset name="dataError" src="http:nosuchfile.xml"/>
 
     <class name="testdatapointer" extends="datapointer">
-      <method event="ondata">
+      <handler name="ondata">
         Debug.format("%s: .ondata(%w)\n", parent.text, arguments[0]);
-      </method>
-      <method event="onerror">
+      </handler>
+      <handler name="onerror">
         Debug.format("%s: .onerror(%w)\n", parent.text, arguments[0]);
-      </method>
-      <method event="ontimeout">
+      </handler>
+      <handler name="ontimeout">
         Debug.format("%s: .ontimeout(%w)\n", parent.text, arguments[0]);
-      </method>
+      </handler>
     </class>
 
     <view id="tests">
@@ -68,131 +68,131 @@
         <button>
           Unqueued
           <attribute name="rnum" value="0"/>
-          <method event="onclick">
+          <handler name="onclick">
             canvas.datasets.data1.setQueryString( { rnum : this.rnum++, set: 1} );
             Debug.format("%s request: %d\n", this.text, this.rnum );
             canvas.datasets.data1.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data1:/*" />
         </button>
         <button>
           Queued
           <attribute name="rnum" value="0"/>
-          <method event="onclick">
+          <handler name="onclick">
             canvas.datasets.data2.setQueryString( { rnum : this.rnum++, set: 2} );
             Debug.format("%s request: %d\n", this.text, this.rnum );
             canvas.datasets.data2.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data2:/*" />
         </button>
         <button>
           No Response Headers
           <attribute name="rnum" value="0"/>
-          <method event="onclick">
+          <handler name="onclick">
             canvas.datasets.data3.setQueryString( { rnum : this.rnum++, set: 3} );
             Debug.format("%s request: %d\n", this.text, this.rnum );
             canvas.datasets.data3.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data3:/*" />
         </button>
         <button>
           XML
-          <method event="onclick">
+          <handler name="onclick">
             Debug.format("%s request\n", this.text);
             canvas.datasets.data4.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data4:/*" />
         </button>
         <button>
           XML with encodings
-          <method event="onclick">
+          <handler name="onclick">
             Debug.format("%s request\n", this.text);
             canvas.datasets.data5.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data5:/*" />
         </button>
         <button>
           Echo with encondings
-          <method event="onclick">
+          <handler name="onclick">
             var d6 = canvas.datasets.data6;
             d6.setHeader( "XFoo" , "i//%xBar" );
             d6.setHeader( "XPlop" , "x slop" );
             d6.setQueryString( "hi=there");
             Debug.format("%s request\n", this.text);
             d6.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data6:/*">
-            <method event="ondata">
+            <handler name="ondata">
               Debug.format("%s: .ondata(%w)\n", parent.text, arguments[0]);
               Debug.write( "got headers: " );
               Debug.write( this.getDataset().getAllResponseHeaders().serialize( ":" , "\n" ));
-            </method>
+            </handler>
           </testdatapointer>
         </button>
         <button>
           XML, cacheable, encodings
-          <method event="onclick">
+          <handler name="onclick">
             Debug.format("%s request\n", this.text);
             canvas.datasets.data7.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data7:/*" />
         </button>
         <button>
           Don't Timeout
-          <method event="onclick">
+          <handler name="onclick">
             var sl = "sleep=10000";
             canvas.datasets.data8.setQueryString( sl );
             Debug.format("%s request: %s\n", this.text, sl);
             canvas.datasets.data8.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data8:/*" />
         </button>
         <button>
           Redirect
-          <method event="onclick">
+          <handler name="onclick">
             Debug.format("%s request\n", this.text);
             canvas.datasets.data9.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data9:/*" />
         </button>
         <button>
           Do Timeout
-          <method event="onclick">
+          <handler name="onclick">
             canvas.datasets.data10.setQueryString("sleep=60000");
             Debug.format("%s request\n", this.text);
             canvas.datasets.data10.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data10:/*" />
         </button>
         <button>
           Do Timeout, cacheable
-          <method event="onclick">
+          <handler name="onclick">
             canvas.datasets.data11.setQueryString("sleep=60000");
             Debug.format("%s request\n", this.text);
             canvas.datasets.data11.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data11:/*" />
         </button>
         <button>
           Do Error
-          <method event="onclick">
+          <handler name="onclick">
             Debug.format("%s request\n", this.text);
             canvas.datasets.dataError.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="dataError:/*" />
         </button>
         <button>
           Date
-          <method event="onclick">
+          <handler name="onclick">
             Debug.format("%s request\n", this.text);
             canvas.datasets.data12.doRequest();
-          </method>
+          </handler>
           <testdatapointer xpath="data12:/*" />
         </button>
         <button>
           Switch Image
           <attribute name="nextImage" />
-          <method event="onclick">
+          <handler name="onclick">
             switch (this.nextImage) {
             case 1:
             parent.img.loadImg( "Beavis" , 
@@ -231,17 +231,17 @@
             this.nextImage = 1;
             break;
             } 
-          </method>
+          </handler>
         </button>
         <button>
           Abort Load
-          <method event="onclick">
+          <handler name="onclick">
 
             parent.img.loadImg( "matrix",
             "http:../../../sample-apps/dashboard/media/video/matrix.swf");
             var d = new LzDelegate( parent.img , "unload" );
             LzTimer.addTimer( d , 1000 );
-          </method>
+          </handler>
         </button>
         <checkbox name="ccheck">cache in client</checkbox>
         <checkbox name="scheck">cache in server</checkbox>
@@ -254,23 +254,23 @@
                            (parent.scheck.amChecked?"server":"none"));
             this.setSource(url, foo);
           </method>
-          <method event="onload">
+          <handler name="onload">
             Debug.format("%s: .ondata(%w)\n", this.imgname, arguments[0]);
-          </method>
-          <method event="ondata">
+          </handler>
+          <handler name="ondata">
             Debug.format("%s: .ondata(%w)\n", this.imgname, arguments[0]);
-          </method>
-          <method event="onerror">
+          </handler>
+          <handler name="onerror">
             Debug.format("%s: .onerror(%w)\n", this.imgname, arguments[0]);
-          </method>
-          <method event="ontimeout">
+          </handler>
+          <handler name="ontimeout">
             Debug.format("%s: .ontimeout(%w)\n", this.imgname, arguments[0]);
-          </method>
+          </handler>
         </view>
       </view>
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

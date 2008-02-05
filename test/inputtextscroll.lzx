@@ -12,21 +12,21 @@
             <attribute name="maxheight" value="${this.height + this.lineheight * (this.maxscroll - 1)}"/>
             <attribute name="onpos" value="null"/>
             <attribute name="pos" value="0" setter="setPos(pos);"/>
-            <method event="oninit">
+            <handler name="oninit">
                 Debug.write('oninit imp', this, this.maxscroll, this.scroll);
-            </method>
-            <method event="onmaxscroll">
+            </handler>
+            <handler name="onmaxscroll">
                 Debug.write('onmaxscroll');
-            </method>
+            </handler>
 
             <method name="setPos" args="p">
                 this.setScroll(1 - (p / this.lineheight));
                 this.pos = p;
                 if (this.onpos) this.onpos.sendEvent(p);
             </method>
-            <method event="onscroll">
+            <handler name="onscroll">
                 this.setPos(-this.lineheight * (this.scroll - 1), true);
-            </method>
+            </handler>
         </inputtext>
         <scrollbar axis="y" scrollattr="pos" scrollmax="${parent.inp.maxheight}"/>
     </class>
@@ -36,3 +36,4 @@
 
      <button>test</button>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

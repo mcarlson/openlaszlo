@@ -1,13 +1,13 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
 <canvas height="200">
     <text name="foo" visible="false">Add a variable named qs to the browser url and its value should appear below</text>
     <text name="bar" width="1000"/>
-    <method event="oninit"><![CDATA[
+    <handler name="oninit"><![CDATA[
         var i = 0;
         var L = 1000;
         var t = (new Date()).getTime();
@@ -18,5 +18,5 @@
         this.bar.setText('Took '+ t + ' ms to get width of ' + w +' ' + L +' times.');
         Debug.write('Took', t, 'ms to get width of',w,L,'times.');
     ]]>
-    </method>
+    </handler>
 </canvas>

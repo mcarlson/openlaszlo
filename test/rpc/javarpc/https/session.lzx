@@ -8,26 +8,26 @@
 
     <sessionrpc id="session" secure="true" secureport="8443">
 
-        <method event="onload">
+        <handler name="onload">
             Debug.write('session object loaded');
-        </method>        
+        </handler>
 
-        <method event="ondata" args="data">
+        <handler name="ondata" args="data">
             Debug.write("default ondata:", data);
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write("default onerror:", error);
-        </method>
+        </handler>
 
         <remotecall funcname="getId" />
 
         <remotecall name="getIdWithDset" funcname="getId" dataobject="$once{idDset}" />
 
         <remotecall funcname="getMaxInactiveInterval">
-          <method event="ondata" args="data">
+          <handler name="ondata" args="data">
             Debug.write("remotecall ondata handler data=", data);
-          </method>
+          </handler>
         </remotecall>
 
         <remotecall funcname="invalidate" />
@@ -87,9 +87,9 @@
 
             <attribute name="myDel" value="null" type="expression" />
 
-            <method event="oninit">
+            <handler name="oninit">
                 this.myDel = new LzDelegate(this, 'myhandler');
-            </method>
+            </handler>
 
             <method name="myhandler" args="data">
                 Debug.write('myhandler:', data);
@@ -106,9 +106,9 @@
             <button text="getmyattr (w/params)" onclick="session.getmyattr.invoke(['myattr'])" />
 
             <button text="getmyattr (w/params and delegate)">
-                <method event="onclick">
+                <handler name="onclick">
                     session.getmyattr.invoke(['myattr'], parent.mydel);
-                </method>
+                </handler>
             </button>
 
             <button text="getAttributeNames" onclick="session[this.text].invoke()" />
@@ -121,6 +121,6 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,9 +1,9 @@
 <canvas width="1200" >
 <debug x="200" fontsize="12"/>
-<method event="oninit">
+<handler name="oninit">
   Debug.setWrapLines(true);
   Debug.showInternalProperties = true;
-</method>
+</handler>
 
 
 
@@ -20,3 +20,4 @@
 
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

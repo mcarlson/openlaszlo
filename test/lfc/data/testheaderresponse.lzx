@@ -19,11 +19,11 @@
                  ondata="Debug.write('testheaderresponse: dpready = true'); parent.dpready = true"
                  />
 
-    <method event="oninit">
+    <handler name="oninit">
       dsheaders.setHeader("content-type", "application/xml");
       dsheaders.setQueryType("POST");
       dsheaders.doRequest();
-    </method>
+    </handler>
 
     <method name="test1">
       if ( ! this.dpready ){
@@ -57,7 +57,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

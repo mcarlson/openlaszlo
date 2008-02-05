@@ -41,15 +41,15 @@
         </text>
         <button id="bplain" text="plain" onclick="rte.setText('Underlying all questions of etiology is the fundamental query: who started it? And did they know what they were doing, at the time?');"/>
         <button id="bhtml" text="html">
-            <method name="doClick" event="onclick">
+            <handler name="onclick">
                 rte.setHTMLText('There once was a small fish in a small pond. The small pond was at the base of a little hill. Far, far away was the sea. The small fish found a stream leading away from  his small pond, and he swam into that stream. The stream flowed down the side of a big hill.');
-            </method>
+            </handler>
         </button>
         
         <button id="bhtmlparas" text="paragraphs">
-            <method name="doClick" event="onclick">
+            <handler name="onclick">
                 rte.setHTMLText('Aha!\nOmbudsman\n\n\ne e cummings\nReluctant Charging Buffalo');
-            </method>
+            </handler>
         </button>
         
         <button text="reset" onclick="rte.clearText()"/>
@@ -62,6 +62,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

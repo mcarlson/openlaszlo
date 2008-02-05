@@ -5,7 +5,7 @@
     <attribute name="y0" type="number" value="0"/>
     <attribute name="x1" type="number" value="75"/>
     <attribute name="y1" type="number" value="75"/>
-    <method event="oninit">
+    <handler name="oninit">
             this.beginPath();
             this.lineTo(150, 0);
             this.lineTo(150, 150);
@@ -32,7 +32,7 @@
             this.strokeStyle = 0;
             this.lineWidth = 2;
             this.stroke();
-        </method>
+    </handler>
     </class>
   <simplelayout/>
   <view layout="axis:x">
@@ -51,7 +51,7 @@
     <grad x0="50" y0="50" x1="100" y1="100"/>
 </view>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

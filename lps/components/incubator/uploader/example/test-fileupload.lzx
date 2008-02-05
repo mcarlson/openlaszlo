@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <canvas debug="true">
@@ -36,18 +36,18 @@
             <edittext x="10" y="10" width="200" name="txtFile" enabled="false"/>
 
             <button x="220" y="11" text="Browse...">
-                <method event="onclick"><![CDATA[
+                <handler name="onclick"><![CDATA[
                     parent.myFileUpload.browse();
                     canvas.main.progressBar.setValue(0);
                 ]]>
-                </method>
+                </handler>
             </button>
 
             <button name="upload" x="310" y="11" text="Upload" enabled="false">
-                <method event="onclick"><![CDATA[
+                <handler name="onclick"><![CDATA[
                     parent.myFileUpload.upload('upload.jsp');
                 ]]>
-                </method>
+                </handler>
             </button>
 
             <view name="progressBar" x="11" y="51" width="363" height="16" bgcolor="#666666">

@@ -149,7 +149,7 @@
         ]]> </method>
    
         <!--- @keywords private -->
-        <handler name="onstop" method="stopanim"/>
+        <handler name="onstop" method="stopanim" />
         <method name="stopanim" >  <![CDATA[
             this._animatorcounter -= 1;
             if ( this._animatorcounter < 1 ) {
@@ -257,7 +257,7 @@
         </method>
 
         <!--- @keywords private -->
-        <method args="v" event="onfocus" reference="LzFocus">
+        <handler args="v" name="onfocus" reference="LzFocus">
             this.setActive( LzFocus.focuswithkey );
             if ( v ) {
                 this.doFocus( v );
@@ -267,7 +267,7 @@
                      this.setActive(false);
                 }
             }
-        </method>
+        </handler>
 
     </class>
 
@@ -363,7 +363,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

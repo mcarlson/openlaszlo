@@ -15,9 +15,9 @@
   <node id="gvars">
     <attribute name="fpver" type="string"/>
     <attribute name="testCount" type="number" value="0"/>
-    <method event="oninit">
+    <handler name="oninit">
       this.setAttribute('fpver','fp'+parseInt(LzBrowser.getVersion()));
-    </method>
+    </handler>
   </node>
 
   <tabs>
@@ -164,13 +164,13 @@
   <datapointer xpath="dset:/tests/" ondata="gvars.setAttribute('testCount',this.getNodeCount())"/>
   <datapointer id="srcPointer" xpath="${'dset:/tests/*['+testPointer+']'}" >
     <attribute name="testPointer" value="0" type="number"/>
-    <method event="ondata">
+    <handler name="ondata">
       //func.popUpPage(this.xpathQuery('@src'));
-    </method>
+    </handler>
   </datapointer>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

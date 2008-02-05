@@ -65,7 +65,7 @@
 
 <!-- view10: resource -->
   <view name="view10" bgcolor="yellow">
-    <method event="onload"> 
+    <handler name="onload"> 
       var expwidth  = view10resources[view10index][0];
       var expheight = view10resources[view10index][1];
 
@@ -80,7 +80,7 @@
         view10index = view10index + 1;
         view10changed = true;
       }
-    </method>
+    </handler>
 
     <!-- Idle handler that will setup the next resource to load -->
     <handler name="onidle" reference="LzIdle">
@@ -102,13 +102,13 @@
     <view name="v1" bgcolor="green" width="10" height="20">
 
       <animator name="a1" attribute="x" from="0" to="100" duration="500" start="false">
-        <method event="onstop">
+        <handler name="onstop">
         <![CDATA[
           LzTestManager.assertEquals (110, view12.width, "view12.width failure (onstop)");
           LzTestManager.assertEquals (20, view12.height, "view12.height failure (onstop)");
           loctest ('view12.v1 (onstop)', view12.v1, [100,0,10,20]);
         ]]>
-        </method>
+        </handler>
 
       </animator>
 
@@ -118,27 +118,27 @@
 
 <!-- view13: Stretch/Clipping using a resource -->
   <view name="view13" bgcolor="yellow">
-    <method event="onload">
+    <handler name="onload">
       LzTestManager.assertEquals (30, view13.width, "view13.width failure");
       LzTestManager.assertEquals (40, view13.height, "view13.height failure");
-    </method>
+    </handler>
     <view name="v1" width="30" height="40" clip="true">
-      <method event="oninit">
+      <handler name="oninit">
         this.setSource( "pict5.jpg" );
-      </method>
-      <method event="onload">
+      </handler>
+      <handler name="onload">
         LzTestManager.assertEquals (30, view13.v1.width, "view13.v1.width failure");
         LzTestManager.assertEquals (40, view13.v1.height, "view13.v1.height failure");
-      </method>
+      </handler>
     </view>
     <view name="v2" width="30" height="40" stretches="both">
-      <method event="oninit">
+      <handler name="oninit">
         this.setSource( "pict5.jpg" );
-      </method>
-      <method event="onload">
+      </handler>
+      <handler name="onload">
         LzTestManager.assertEquals (30, view13.v2.width, "view13.v2.width failure");
         LzTestManager.assertEquals (40, view13.v2.height, "view13.v2.height failure");
-      </method>
+      </handler>
     </view>
   </view>
 
@@ -500,7 +500,7 @@ suite.addTest(suite.test14);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

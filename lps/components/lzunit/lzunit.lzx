@@ -835,9 +835,9 @@ TestError.prototype.toString = function toString() {
     <!---
         @keywords private
     -->
-    <method event="ontotalTests">
+    <handler name="ontotalTests">
         update()
-    </method>
+    </handler>
 
     <!---
       Record a failure.
@@ -1046,29 +1046,29 @@ TestError.prototype.toString = function toString() {
         ]]>
     </method>
 
-    <!--- @keywords private  
+    <!--- @keywords private
         event handler for test suite end  -->
-    <method event="onsuitefinish">
+    <handler name="onsuitefinish">
       //Debug.debug("onsuitefinish");
       //this.resultstring += ("failures: "+ this.result.numFailures()+ "\n");
       //this.resultstring += ("time: "+ (((new Date)['getTime']()) - this.starttime)+"\n");
       this.resultstring += "finish_testsuite: "+this.testpath + " failures: "+ this.result.numFailures()+ "\n";
       this.sendLogData(this.logfile, this.resultstring);
-    </method>
+    </handler>
 
-    <!--- @keywords private  
+    <!--- @keywords private
          event handler for test start  -->
-    <method event="onteststart" args="tc">
+    <handler name="onteststart" args="tc">
       this.testStartTime = ((new Date)['getTime']());
       var testcase = "testcase: "+tc+" "+((((new Date)['getTime']()) - this.testStartTime));
       //this.resultstring += (testcase+"\n");
-    </method>
+    </handler>
 
-    <!--- @keywords private  
+    <!--- @keywords private
          event handler for tets fail  -->
-    <method event="ontestfail" args="msg">
+    <handler name="ontestfail" args="msg">
        //this.resultstring += ("failure: "+msg+"\n");
-    </method>
+    </handler>
 
     <!--- @keywords private -->
     <method name="init">
@@ -1275,6 +1275,6 @@ function xmlequals(x1, x2) {
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

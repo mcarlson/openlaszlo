@@ -4,7 +4,7 @@
 
     <simplelayout axis="y"/>
     <edittext name="ed" >
-      <method event="onkeydown" reference="LzKeys" args="keycode">
+      <handler name="onkeydown" reference="LzKeys" args="keycode">
         <![CDATA[
             var han = "0123456789-";
             var zen = "０１２３４５６７８９ー";
@@ -20,7 +20,8 @@
             Debug.write( d + " -> " + str );
             ed2.setText( str );
         ]]>
-      </method>
+      </handler>
     </edittext>  
     <edittext name="ed2"/>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

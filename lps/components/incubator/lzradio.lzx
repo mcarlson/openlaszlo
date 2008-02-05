@@ -14,15 +14,15 @@
         <attribute name="text_y"
             value="$once{this._rb.height/2 - this._title.height/2}" type="number"/>
 
-        <method event="onselected">
+        <handler name="onselected">
             this._rb.setAttribute('statenum', this.selected ? 1 : 0);
-        </method>
-        <method event="onmouseover">
+        </handler>
+        <handler name="onmouseover">
            this._rb.onmouseover.sendEvent();
-        </method>
-        <method event="onmouseout">
+        </handler>
+        <handler name="onmouseout">
            this._rb.onmouseout.sendEvent();
-        </method>
+        </handler>
 
         <multistatebutton name="_rb" resource="lzradio_rsrc" text=""
                           statenum="${parent.selected ? 1 : 0}" 
@@ -47,7 +47,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

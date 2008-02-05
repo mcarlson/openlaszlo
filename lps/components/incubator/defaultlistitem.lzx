@@ -10,13 +10,13 @@
         <attribute name="default_y" 
             value="$once{this.height/2 - this.defaultlabel._default.height/2}" />
         
-       <method event="onisdefault">
+       <handler name="onisdefault">
             this.adjustDefault();
-       </method>
+       </handler>
         
-       <method event="ondefault_x">
+       <handler name="ondefault_x">
             this.adjustDefault();
-       </method>
+       </handler>
 
         <method name="adjustDefault">
             if (this.isdefault) this._title.setWidth(this.default_x);
@@ -36,7 +36,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -29,25 +29,26 @@
         </method>
 
         <!--- Sent if whenever the focus moves into _internalinputtext. -->
-        <method event="onfocus" args="s">
+        <handler name="onfocus" args="s">
             if (parent['onfocus']) parent.onfocus.sendEvent(s);
-        </method>
+        </handler>
         <!--- Sent if whenever the focus moves out of _internalinputtext. -->
-        <method event="onblur" args="s">
+        <handler name="onblur" args="s">
              if (parent['onblur']) parent.onblur.sendEvent(s);
-        </method>
+        </handler>
         <!--- Sent whenever a user keys up. -->
-        <method event="onkeyup" args="kc"> <![CDATA[
+        <handler name="onkeyup" args="kc"> <![CDATA[
               if (parent['onkeyup']) parent.onkeyup.sendEvent(kc);
               ]]>
-        </method>
+        </handler>
         <!--- Sent whenever a user keys down. -->
-        <method event="onkeydown" args="kc"> <![CDATA[
+        <handler name="onkeydown" args="kc"> <![CDATA[
               if (parent['onkeydown']) parent.onkeydown.sendEvent(kc);
               ]]>
-        </method>
+        </handler>
         <!--- Sent whenever a user enters a valid new character. -->
-        <method event="ontext" name="doOnText">
+        <handler name="ontext" method="doOnText" />
+        <method name="doOnText">
             if (! this.ignorecallup) {
                 parent.setValue(this.getText(),false,true);
             }
@@ -354,7 +355,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->

@@ -1,8 +1,8 @@
 <canvas bgcolor="#EAEAEA" width="640" height="460">
 
     <!--attribute name="defaultstyle" value="${greenstyle}"/-->
-	<dataset name="itemsdata" type="http" src="test-combobox-data.xml" 
-	         request="true" />
+        <dataset name="itemsdata" type="http" src="test-combobox-data.xml" 
+                 request="true" />
 
     <dataset name="items">
         <item value="item0" >item 0</item>
@@ -38,7 +38,7 @@
         <attribute name="text" value="test name" type="html" />
         <view bgcolor="0x979797" width="${this.title.getTextWidth() + 10}" height="20" >
            <text x="4" y="2" name="title" text="${classroot.text}" resize="true" fgcolor="0xFFFFFF" >
-                <method event="ontext">parent.setWidth(this.getTextwidth() + 10)</method>
+                <handler name="ontext">parent.setWidth(this.getTextwidth() + 10)</handler>
            </text>
         </view>
         <view bgcolor="0x979797" width="100%"  options="releaseToLayout" height="10" >
@@ -50,132 +50,132 @@
         <resizelayout axis="y" />
     </class>
 
-	<view x="20" y="20" >
-	    <simplelayout spacing="15"/>
-		<testborder width="550" height="250"> Combobox: datapath uses localdata
+        <view x="20" y="20" >
+            <simplelayout spacing="15"/>
+                <testborder width="550" height="250"> Combobox: datapath uses localdata
             <checkbox x="5" y="5" id="c" value="true">editable</checkbox>
             <text  x="5" y="23"> defaulttext="choose one.." </text>
-			<combobox  id="cbox1"
-					   x="5" y="45"
-					   width="130"  
+                        <combobox  id="cbox1"
+                                           x="5" y="45"
+                                           width="130"  
                        spacing="0" shownitems="6"
-					   defaulttext="Choose One..."
-					   editable="${c.value}">
-				<textlistitem  name="lineitem"
-							   datapath="items:/item" 
-							   text='$path{"text()"}'
+                                           defaulttext="Choose One..."
+                                           editable="${c.value}">
+                                <textlistitem  name="lineitem"
+                                                           datapath="items:/item" 
+                                                           text='$path{"text()"}'
                                value='$path{"@value"}'
                                >
                  </textlistitem>
-			</combobox>
+                        </combobox>
 
 
             <text  x="5" y="73"> defaultselection="3" </text>
-			<combobox  id="cbox2"
-					   x="5" y="95"
-					   width="130"  
+                        <combobox  id="cbox2"
+                                           x="5" y="95"
+                                           width="130"  
                        spacing="0" shownitems="6"
-					   defaultselection="3"
-					   editable="${c.value}" >
-				<textlistitem  name="lineitem"
-							   datapath="items:/item" 
-							   text='$path{"text()"}'
+                                           defaultselection="3"
+                                           editable="${c.value}" >
+                                <textlistitem  name="lineitem"
+                                                           datapath="items:/item" 
+                                                           text='$path{"text()"}'
                                value='$path{"@value"}'
                                >
                  </textlistitem>
-			</combobox>
+                        </combobox>
 
-			<view x="170" y="5" >
-				<view>
-					<button> add item 
-						<method event="onclick">
-							var txt = parent.fields.txt.getText();
-							var vle = parent.fields.vle.getText();
-							cbox1.additem(txt,vle);
-						</method>
-					</button>
-					<view name="fields" x="150">
-						<edittext width="100" name="txt" />
-						<edittext width="100" name="vle" />
-						<simplelayout axis="x" spacing="5" />
-					</view>
-				</view>
-				<view>
-					<button enabled="true" > remove item
-					    <method event="onclick">
-					        cbox1.removeItem(parent.inputfields.txt.getText());
-					    </method>
-					</button>
-					<view name="inputfields" x="150">
-						<edittext width="100" name="txt"/>
-						<edittext width="100" name="vle"/>
-						<simplelayout axis="x" spacing="5" />
-					</view>
-				</view>
-				<view>
-					<button onclick="this.parent.vle.setText(cbox1.getValue())" > get value </button>
-					<edittext x="150" width="100" name="vle" />
-			   </view>
-			   <view>
-					<button >set shownitems
-						<method event="onclick" >
-							cbox1.setAttribute('shownitems',number(parent.vle.getText()));
-						</method>
-					</button>
-					<edittext x="150" width="100" name="vle" />
-			   </view>
-			   <view>
-					<button >select item
-						<method event="onclick" >
-							cbox1.selectItem(parent.vle.getText());
-						</method>
-					</button>
-					<edittext x="150" width="100" name="vle" />
-			   </view>
-			   <view>
-					<button >select item at
-						<method event="onclick" >
-							cbox1.selectItemAt(number(parent.vle.getText()));
-						</method>
-					</button>
-					<edittext x="150" width="100" name="vle" />
-			   </view>
+                        <view x="170" y="5" >
+                                <view>
+                                        <button> add item 
+                                                <handler name="onclick">
+                                                        var txt = parent.fields.txt.getText();
+                                                        var vle = parent.fields.vle.getText();
+                                                        cbox1.additem(txt,vle);
+                                                </handler>
+                                        </button>
+                                        <view name="fields" x="150">
+                                                <edittext width="100" name="txt" />
+                                                <edittext width="100" name="vle" />
+                                                <simplelayout axis="x" spacing="5" />
+                                        </view>
+                                </view>
+                                <view>
+                                        <button enabled="true" > remove item
+                                            <handler name="onclick">
+                                                cbox1.removeItem(parent.inputfields.txt.getText());
+                                            </handler>
+                                        </button>
+                                        <view name="inputfields" x="150">
+                                                <edittext width="100" name="txt"/>
+                                                <edittext width="100" name="vle"/>
+                                                <simplelayout axis="x" spacing="5" />
+                                        </view>
+                                </view>
+                                <view>
+                                        <button onclick="this.parent.vle.setText(cbox1.getValue())" > get value </button>
+                                        <edittext x="150" width="100" name="vle" />
+                           </view>
+                           <view>
+                                        <button >set shownitems
+                                                <handler name="onclick" >
+                                                        cbox1.setAttribute('shownitems',number(parent.vle.getText()));
+                                                </handler>
+                                        </button>
+                                        <edittext x="150" width="100" name="vle" />
+                           </view>
+                           <view>
+                                        <button >select item
+                                                <handler name="onclick" >
+                                                        cbox1.selectItem(parent.vle.getText());
+                                                </handler>
+                                        </button>
+                                        <edittext x="150" width="100" name="vle" />
+                           </view>
+                           <view>
+                                        <button >select item at
+                                                <handler name="onclick" >
+                                                        cbox1.selectItemAt(number(parent.vle.getText()));
+                                                </handler>
+                                        </button>
+                                        <edittext x="150" width="100" name="vle" />
+                           </view>
 
                <button onclick="cbox1.clearselection()" >clear selection</button>
 
                <button onclick="cbox1.setAttribute('enabled',!cbox1.enabled)" >Toggle enabled</button>
 
-				<simplelayout axis="y" spacing="5" />
-			</view>
-		</testborder>
+                                <simplelayout axis="y" spacing="5" />
+                        </view>
+                </testborder>
 
-		<testborder width="550" height="80"> Combobox: datapath uses http data
+                <testborder width="550" height="80"> Combobox: datapath uses http data
             <checkbox x="5" y="5" id="c2" value="true">editable</checkbox>
-			<combobox  id="cbox3"
-					   x="5" y="25"
-					   width="130"  
+                        <combobox  id="cbox3"
+                                           x="5" y="25"
+                                           width="130"  
                        spacing="0" shownitems="6"
-					   defaultselection="5"
-					   editable="${c2.value}" >
-				<textlistitem  name="lineitem"
-							   text='$path{"text()"}'
+                                           defaultselection="5"
+                                           editable="${c2.value}" >
+                                <textlistitem  name="lineitem"
+                                                           text='$path{"text()"}'
                                value='$path{"@value"}'>
                  </textlistitem>
-			</combobox>
+                        </combobox>
 
-			<view x="150" y="5" >
-				<button y="15" >set datapath to http data
-					<method event="onclick" >
-						cbox3.lineitem.setDatapath('itemsdata:/ds/item');
-					</method>
-				</button>
-				<simplelayout axis="y" spacing="5" />
-			</view>
-		</testborder>
-	</view>
+                        <view x="150" y="5" >
+                                <button y="15" >set datapath to http data
+                                        <handler name="onclick" >
+                                                cbox3.lineitem.setDatapath('itemsdata:/ds/item');
+                                        </handler>
+                                </button>
+                                <simplelayout axis="y" spacing="5" />
+                        </view>
+                </testborder>
+        </view>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

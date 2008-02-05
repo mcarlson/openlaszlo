@@ -40,7 +40,8 @@
     onmouseout="this._mousein = false; setHilite(false)">
     <attribute name="mycolor" value="0xffff99"/>
 
-    <method event="onmouseover" name="setHilite" args="ishilited">
+    <handler name="onmouseover" method="setHilite" />
+    <method name="setHilite" args="ishilited">
         if (ishilited == undefined) {
             this._mousein = true;
             ishilited = this._mousein;
@@ -91,10 +92,10 @@
                 <simplelayout/>
                 <myitem datapath="listdata3:/item">
                     <text datapath="text()"/>
-                    <method event="onselected">
+                    <handler name="onselected">
                         if (this.selected) this.setHeight(40);
                         else this.setHeight(20);
-                    </method>
+                    </handler>
 
                 </myitem>
             </view>
@@ -107,7 +108,7 @@
 </view>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

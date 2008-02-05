@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@    -->   
@@ -46,18 +46,18 @@
 
   
 
-    <method event="onheight">
+    <handler name="onheight">
       <![CDATA[
       this.setAttribute('stretchHeight',this.height);
       this.draw();
       ]]>
-    </method>
-    <method event="onwidth">
+    </handler>
+    <handler name="onwidth">
       <![CDATA[
       this.setAttribute('stretchWidth',this.width);
       this.draw();
       ]]>
-    </method>
+    </handler>
 
     <method name="construct" args="parent,args">
       super.construct(parent, args);

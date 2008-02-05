@@ -48,9 +48,9 @@
       sl5.setAttribute ('axis', (sl5.axis == "x") ? "y" : "x");
     </method>
     <simplelayout id="sl5" axis="x" spacing="10">
-      <method event="onaxis" args="axis">
+      <handler name="onaxis" args="axis">
         view5.n_onaxis++;
-      </method>
+      </handler>
     </simplelayout>
     <view name="v1" bgcolor="blue" height="30" width="50"/>
     <view name="v2" bgcolor="blue" height="30" width="50"/>
@@ -430,7 +430,7 @@ suite.addTest(suite.test8);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

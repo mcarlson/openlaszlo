@@ -17,16 +17,16 @@
   <import name="lib" href="test-canvas-init-library.lzx" stage="late" onload="foo()"/>
 
 
-  <method event="oninit">
+  <handler name="oninit">
     _root.Debug.write("canvas got oninit event");
-  </method>
+  </handler>
 
   <view id="mainview" width="50" height="50" bgcolor="blue"/>
 
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

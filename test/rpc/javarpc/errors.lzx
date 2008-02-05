@@ -16,27 +16,27 @@
              remoteclassname="org.openlaszlo.test.xmlrpc.ServerErrors">
         
         <!-- handlers -->
-        <method event="onerror" args="errmsg">
+        <handler name="onerror" args="errmsg">
             Debug.write('onerror:', errmsg)
-        </method>
+        </handler>
         
-        <method event="onload">
+        <handler name="onload">
             Debug.write('onload:', this.proxy);
-        </method>        
+        </handler>
 
         <!-- declare remote calls -->
         <remotecall funcname="makeException"/>
 
         <remotecall funcname="forceTimeout">
-            <method event="ondata" args="msg">
+            <handler name="ondata" args="msg">
                 Debug.write("returned from forceTimeout: " + msg)
-            </method>
+            </handler>
         </remotecall>
         
         <remotecall funcname="invokeMe">
-            <method event="ondata" args="msg">
+            <handler name="ondata" args="msg">
                 Debug.write("invokeMe returned: " + msg)
-            </method>
+            </handler>
         </remotecall>        
         
         <remotecall funcname="noAccess"/>
@@ -64,7 +64,7 @@
     </view>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

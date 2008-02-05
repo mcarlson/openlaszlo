@@ -16,9 +16,9 @@ This app is currently using OpenLaszlo's api key -->
     <button onclick="gFlickr.getRecent(canvas.myapikey)">recent</button>
     <button onclick="gFlickr.getInteresting(canvas.myapikey)">interesting</button>
     <edittext name="tagQuery" text="special">
-        <method event="onkeyup" args="kc">
+        <handler name="onkeyup" args="kc">
             if (kc == 13) gFlickr.searchWithTags(this.getValue(),canvas.myapikey);
-        </method>
+        </handler>
     </edittext>
 </view> 
 
@@ -28,12 +28,12 @@ This app is currently using OpenLaszlo's api key -->
     <wrappinglayout axis="x" spacing="5" />
     
     <photo datapath="photods:/rsp/photos/photo[1-24]">
-        <method event="onmouseover">
+        <handler name="onmouseover">
             gFloater.animate("x", this.x + 10, 500);
             gFloater.animate("y", this.y + parent.y + this.height - 10, 500); 
             gFloater.titlelabel.setText(  "t: " + this.datapath.xpathQuery('@title')); 
             gFloater.ownerlabel.setText(  "o: " + this.datapath.xpathQuery('@ownername'));             
-        </method>
+        </handler>
     </photo>
     
 </view>
@@ -55,6 +55,6 @@ This app is currently using OpenLaszlo's api key -->
 
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

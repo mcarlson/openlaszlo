@@ -12,20 +12,20 @@
 
         <!--- shows the data tooltip on mouseover event 
             @keyword private-->
-        <method event="onmouseover">
+        <handler name="onmouseover">
         <![CDATA[ 
             if(tooltip != null && parent.parent.datatipEnabled){
                 parent.parent.datatooltip.style = this.style.tip;
                 parent.parent.datatooltip.show(tooltip);
             }            
         ]]>
-        </method> 
+        </handler>
 
         <!--- hides the data tooltip on mouseout event 
             @keyword private-->
-        <method event="onmouseout">
+        <handler name="onmouseout">
             parent.parent.datatooltip.hide();
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <text name="txt"/>
@@ -130,14 +130,14 @@
             this.strokeDataBar.renderStroke(endx, endy, startx, endy);
             this.strokeDataBar.renderStroke(startx, endy, startx, starty);
         </method>
-        <method event="onMouseDown">
+        <handler name="onMouseDown">
             parent.onMouseDown.sendEvent();
-        </method>
+        </handler>
     </class>    
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

@@ -5,11 +5,11 @@
     <view y="200" name="rpar">
         <button>
             AddOne
-            <method event="onclick">
+            <handler name="onclick">
                 Debug.write( 'hi' );
                 var fc = somedat.getFirstChild().getFirstChild();
                 somedat.getFirstChild().insertBefore( fc.cloneNode(true) , fc );
-            </method>
+            </handler>
         </button>
         <text datapath="somedat:/data/record[1]/position()"/>
         <text datapath="somedat:/data/record[1]/last()"/>
@@ -147,6 +147,6 @@
     </TestSuite>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

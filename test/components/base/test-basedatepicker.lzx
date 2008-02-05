@@ -4,13 +4,13 @@
            bgcolor="green"
            width="20"
            height="20">
-        <method event="onclick">
+        <handler name="onclick">
         <![CDATA[
             if( !this.disabled && this.selectable ) {
                 this.setAttribute('selected', true);    
             }
         ]]>
-        </method>
+        </handler>
 
         <text text="${parent.daynum}"
               visible="${!parent.disabled}" 
@@ -35,7 +35,7 @@
             this.display.year.setText( year );
         </method>
 
-        <method event="onselecteddate">
+        <handler name="onselecteddate">
             if( this.selecteddate != null ) {
                 this.selected.year.setText( this.selecteddate.getFullYear() );
                 this.selected.month.datapath.setXPath(
@@ -43,7 +43,7 @@
                         this.selecteddate.getMonth() + "']/@full" ); 
                 this.selected.date.setText( this.selecteddate.getDate() );
             }
-        </method>
+        </handler>
 
         <view options="ignorelayout">
             <text width="20" height="20" bgcolor="red" text="S"/>
@@ -80,6 +80,6 @@
     <mydatepicker/> 
 </canvas> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

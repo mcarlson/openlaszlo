@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 <!--
@@ -26,10 +26,10 @@
         <attribute name="drag_min" value="0" type="number" />
         <attribute name="showvalue" type="boolean" value="true" />
         <attribute name="drag_max" value="0" type="number" />
-        <method event="oninit">
+        <handler name="oninit">
                 //Setting the initVal
                 this.setY(getPosFromValue(this.parent.initvalue));
-        </method>
+        </handler>
         
         <method name="getValueFromPos">
                 var delta1 = this.parent.maxvalue-this.parent.minvalue;

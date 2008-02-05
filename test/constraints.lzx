@@ -5,7 +5,7 @@
     <view width="${parent.width/2}" height="${parent.height - parent.other.height - 10}" bgcolor="red"/>
     <view name="other" width="${parent.width}" height="20" bgcolor="green"/>
     <text>
-	Resize the window.  The red rectangle should stay half the width, and extend from the bottom of the green rectangle to the bottom of the content area of the rectangle.
+        Resize the window.  The red rectangle should stay half the width, and extend from the bottom of the green rectangle to the bottom of the content area of the rectangle.
     </text>
   </window>
 
@@ -26,9 +26,9 @@
       f.dependencies = function(t, c, x, y){return ["f.dependencies", x, y];};
       var test;
       test=function () {
-	  #pragma "constraintFunction"
-	  with (this)
-	      this.setAttribute('width', a.b+f(c.d, e));
+          #pragma "constraintFunction"
+          with (this)
+              this.setAttribute('width', a.b+f(c.d, e));
       };
       Debug.write("Expected '[object a],b,[object c],d,f.dependencies,12,14'");
       Debug.write("got: ", test.dependencies());
@@ -37,6 +37,6 @@
   </script>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

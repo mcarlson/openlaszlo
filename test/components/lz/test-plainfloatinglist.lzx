@@ -1,5 +1,5 @@
 <canvas >
-	<include href="/lz/library.lzx"/>
+        <include href="/lz/library.lzx"/>
 
     <!--attribute name="defaultstyle" value="${greenstyle}"/-->
     
@@ -9,95 +9,95 @@
         <item value="item3" >item three</item>
         <item value="item4" >item four</item>
     </dataset>
-	
-	<class name="sbutton" extends="button" width="40"/>
-	
-    <view bgcolor="0xdddddd" height="${canvas.height}" width="${canvas.width}">	
-	    
-	    <!-- middle -->
-		<sbutton x="${canvas.width/2-this.width/2}" y="${canvas.height/2-this.height/2-20}">
-			<plainfloatinglist name="middle" width="80" attach="right" shownitems="3">
-				<textlistitem datapath="items:/item"
+        
+        <class name="sbutton" extends="button" width="40"/>
+        
+    <view bgcolor="0xdddddd" height="${canvas.height}" width="${canvas.width}"> 
+            
+            <!-- middle -->
+                <sbutton x="${canvas.width/2-this.width/2}" y="${canvas.height/2-this.height/2-20}">
+                        <plainfloatinglist name="middle" width="80" attach="right" shownitems="3">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</plainfloatinglist>
-		</sbutton>
-		
-		<!-- top left -->
-		<sbutton x="20" y="20">
-			<plainfloatinglist name="topleft" width="80" attach="left">
-				<textlistitem datapath="items:/item"
+                        </plainfloatinglist>
+                </sbutton>
+                
+                <!-- top left -->
+                <sbutton x="20" y="20">
+                        <plainfloatinglist name="topleft" width="80" attach="left">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</plainfloatinglist>
-		</sbutton>
-		
-		<!-- top -->
-		<sbutton x="${canvas.width/2-this.width/2}" y="20">
-			<plainfloatinglist name="topmiddle"  width="80" attach="top">
-				<textlistitem datapath="items:/item"
+                        </plainfloatinglist>
+                </sbutton>
+                
+                <!-- top -->
+                <sbutton x="${canvas.width/2-this.width/2}" y="20">
+                        <plainfloatinglist name="topmiddle"  width="80" attach="top">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</plainfloatinglist>
-		</sbutton>
+                        </plainfloatinglist>
+                </sbutton>
 
-		<!-- top right -->
-		<sbutton x="${canvas.width-this.width-20}" y="20">
-			<plainfloatinglist name="topright"  width="80" attach="right">
-				<textlistitem datapath="items:/item"
+                <!-- top right -->
+                <sbutton x="${canvas.width-this.width-20}" y="20">
+                        <plainfloatinglist name="topright"  width="80" attach="right">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</plainfloatinglist>
-		</sbutton>
-		
-		<!-- right -->
-		<sbutton x="${canvas.width-this.width-20}" y="${canvas.height/2-this.height/2-20}">
-			<plainfloatinglist name="middleright"  width="80" attach="right">
-				<textlistitem datapath="items:/item"
+                        </plainfloatinglist>
+                </sbutton>
+                
+                <!-- right -->
+                <sbutton x="${canvas.width-this.width-20}" y="${canvas.height/2-this.height/2-20}">
+                        <plainfloatinglist name="middleright"  width="80" attach="right">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</plainfloatinglist>
-		</sbutton>
+                        </plainfloatinglist>
+                </sbutton>
 
-		<!-- bottom right -->
-		<sbutton x="${canvas.width-this.width-20}" y="${canvas.height-this.height-20}">
-			<plainfloatinglist name="bottomright" width="80" attach="right">
-				<textlistitem datapath="items:/item"
+                <!-- bottom right -->
+                <sbutton x="${canvas.width-this.width-20}" y="${canvas.height-this.height-20}">
+                        <plainfloatinglist name="bottomright" width="80" attach="right">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</plainfloatinglist>
-		</sbutton>
+                        </plainfloatinglist>
+                </sbutton>
 
-		<!-- bottom -->
-		<sbutton name="s-bottommiddle" x="${canvas.width/2-this.width/2}" y="${canvas.height-this.height-20}">
-			<plainfloatinglist name="bottommiddle" width="80" attach="bottom">
-				<textlistitem datapath="items:/item"
+                <!-- bottom -->
+                <sbutton name="s-bottommiddle" x="${canvas.width/2-this.width/2}" y="${canvas.height-this.height-20}">
+                        <plainfloatinglist name="bottommiddle" width="80" attach="bottom">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</plainfloatinglist>
-		</sbutton>
+                        </plainfloatinglist>
+                </sbutton>
 
-		<!-- bottom left -->
-		<sbutton name="s-bottomleft" x="20" y="${canvas.height-this.height-20}">
-			<plainfloatinglist name="bottomleft" width="80" attach="left">
-				<textlistitem datapath="items:/item"
+                <!-- bottom left -->
+                <sbutton name="s-bottomleft" x="20" y="${canvas.height-this.height-20}">
+                        <plainfloatinglist name="bottomleft" width="80" attach="left">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</plainfloatinglist>
-		</sbutton>
-		
-		<!-- left -->
-		<sbutton x="20" y="${canvas.height/2-this.height/2-20}">
-			<plainfloatinglist name="middleleft" width="80" attach="left">
-				<textlistitem datapath="items:/item"
+                        </plainfloatinglist>
+                </sbutton>
+                
+                <!-- left -->
+                <sbutton x="20" y="${canvas.height/2-this.height/2-20}">
+                        <plainfloatinglist name="middleleft" width="80" attach="left">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</plainfloatinglist>
-		</sbutton>
-				
-	</view>
+                        </plainfloatinglist>
+                </sbutton>
+                                
+        </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

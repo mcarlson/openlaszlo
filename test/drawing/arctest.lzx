@@ -134,30 +134,30 @@
     <view name="start">
         <text>Start Angle</text>
         <slider name="slider" x="80" minvalue="-360" maxvalue="360">
-            <method event="onvalue">
+            <handler name="onvalue">
                 canvas.dv.drawTestArc();
-            </method>
+            </handler>
         </slider>
     </view>
     <view name="end">
         <text>End Angle</text>
         <slider name="slider" x="80" minvalue="-360" maxvalue="360">                
-            <method event="onvalue">
+            <handler name="onvalue">
                 canvas.dv.drawTestArc();
-            </method>
+            </handler>
         </slider>
     </view>
     <view name="cw">
         <text>Clockwise</text>
         <checkbox name="cb" x="80">
-            <method event="onvalue">
+            <handler name="onvalue">
                 canvas.dv.drawTestArc();
-            </method>
+            </handler>
         </checkbox>
     </view>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

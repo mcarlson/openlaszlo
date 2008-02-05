@@ -43,9 +43,9 @@
                 <view name="c">
                    <text x="4" y="2" name="title" text="${classroot.text}" 
                          resize="true" fgcolor="0xFFFFFF" >
-                        <method event="ontext">
+                        <handler name="ontext">
                             parent.setWidth(this.getTextwidth() + 10)
-                         </method>
+                        </handler>
                    </text>
                 </view>
                 <view name="content" />
@@ -57,7 +57,7 @@
         <attribute name="text" value="test name" type="html" />
         <view bgcolor="0x979797" width="${this.title.getTextWidth() + 10}" height="20" >
            <text x="4" y="2" name="title" text="${classroot.text}" resize="true" fgcolor="0xFFFFFF" >
-                <method event="ontext">parent.setWidth(this.getTextwidth() + 10)</method>
+                <handler name="ontext">parent.setWidth(this.getTextwidth() + 10)</handler>
            </text>
         </view>
         <view bgcolor="0x979797" width="100%"  options="releaseToLayout" height="10" >
@@ -77,38 +77,38 @@
                 <textlistitem datapath="customtextandvalue:/item" 
                               text='$path{"text/text()"}'
                               value='$path{"value/text()"}'>
-                    <method event="onselected" args="isSelected">
+                    <handler name="onselected" args="isSelected">
                         if (isSelected) this.datapath.deleteNode();
-                    </method>
+                    </handler>
                 </textlistitem>
             </list>
         </view>
         <view name="add" y="5" datapath="blank:/item">
             <simplelayout axis="y" spacing="1" />
             <edittext width="${parent.add.width}" datapath="value/text()">
-                <method event="oninit">
+                <handler name="oninit">
                     if (! this.datapath.p) {
                         var el = new LzDataElement('value')
                         el.appendChild( new LzDataText() );
                         this.datapath.p = el;
                     }
-                </method>
+                </handler>
             </edittext>
             <edittext width="${parent.add.width}" datapath="text/text()" >
-                <method event="oninit">
+                <handler name="oninit">
                     if (! this.datapath.p) {
                         var el = new LzDataElement('value')
                         el.appendChild( new LzDataText() );
                         this.datapath.p = el;
                     }
-                </method>
+                </handler>
             </edittext>
             <button name="add" width="50">add
-                <method event="onclick">
+                <handler name="onclick">
                     this.parent.datapath.updateData();
                     var dp = canvas.datasets.customtextandvalue.getPointer();
                     dp.addNodeFromPointer( this.parent.datapath );
-                </method>
+                </handler>
             </button>
         </view>
     </viewer>
@@ -122,10 +122,10 @@
                 <radiobutton datapath="customtextandvalue:/item" 
                              text='$path{"text/text()"}'
                              value='$path{"value/text()"}'>
-                    <method event="onclick">
+                    <handler name="onclick">
                         parent.parent.status.setText
                             ('value: ' + parent.value);
-                    </method>
+                    </handler>
                 </radiobutton>
             </radiogroup>
         </view>
@@ -157,7 +157,7 @@
                 <textlistitem datapath="customtextandvalue:/item" 
                               text='$path{"text/text()"}'
                               value='$path{"value/text()"}' >
-                    <method event="onselected" args="isSelected">
+                    <handler name="onselected" args="isSelected">
                     <![CDATA[
                         if (isSelected) {
                             if (typeof(parent.value) == 'string') {
@@ -174,7 +174,7 @@
                             }                                   
                         }
                     ]]>
-                    </method>
+                    </handler>
                 </textlistitem>
             </list>
         </view>
@@ -187,11 +187,11 @@
                 <textlistitem datapath="customtextandvalue:/item"
                               text='$path{"text/text()"}'
                               value='$path{"value/text()"}' >
-                    <method event="onselected" args="isSelected">
+                    <handler name="onselected" args="isSelected">
                         if (isSelected) {
                             parent.parent.status.setText('value: ' + parent.value);
                         }
-                    </method>
+                    </handler>
                 </textlistitem>
             </combobox>
         </view>
@@ -230,6 +230,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

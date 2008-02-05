@@ -7,21 +7,21 @@
         width="80" height="40">
         <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
         <attribute name="mycolor" value="0x000099"/>
-        <method event="oninit">
+        <handler name="oninit">
              Debug.write("LzTrack.register(" + this, this.trackgroup + ")");
              LzTrack.register(this, this.trackgroup);
-        </method>
-        <method event="onmousetrackover">
+        </handler>
+        <handler name="onmousetrackover">
             setAttribute('bgcolor', 0x00dd00);
             Debug.write("onmousetrackover", this);
-        </method>
-        <method event="onmousetrackout">
+        </handler>
+        <handler name="onmousetrackout">
             setAttribute('bgcolor', this.mycolor);
             Debug.write("onmousetrackout", this);
-        </method>
-        <method event="onmousetrackup">
+        </handler>
+        <handler name="onmousetrackup">
             Debug.write("onmousetrackup", this);
-        </method>
+        </handler>
     </class>
 
     <text width="500" multiline="true">
@@ -38,7 +38,7 @@
         <simplelayout spacing="10"/>
 
         <checkbox text="${'group: ' + parent.trackgroup}">
-            <method event="onvalue" args="v">
+            <handler name="onvalue" args="v">
                 if (v) {
                     Debug.write('activate: '+parent.trackgroup);
                     LzTrack.activate(parent.trackgroup);
@@ -46,7 +46,7 @@
                     Debug.write('deactivate: '+parent.trackgroup);
                     LzTrack.deactivate(parent.trackgroup);
                 }
-            </method>
+            </handler>
         </checkbox>
         <trackview id="t1"/>
         <trackview id="t2"/>
@@ -59,7 +59,7 @@
         <simplelayout spacing="10"/>
 
         <checkbox text="${'groups: twoA and twoB'}">
-            <method event="onvalue" args="v">
+            <handler name="onvalue" args="v">
                 if (v) {
                     Debug.write('activate: twoA and twoB');
                     LzTrack.activate("twoA");
@@ -69,25 +69,25 @@
                     LzTrack.deactivate("twoA");
                     LzTrack.deactivate("twoB");
                 }
-            </method>
+            </handler>
         </checkbox>
         <view bgcolor="0xddddff" name="container" width="84">
             <attribute name="trackgroup" value="twoA" type="string"/>
-            <method event="oninit">
+            <handler name="oninit">
                  Debug.write("LzTrack.register(" + this, this.trackgroup + ")");
                  LzTrack.register(this, this.trackgroup);
-            </method>
-            <method event="onmousetrackover">
+            </handler>
+            <handler name="onmousetrackover">
                 setAttribute('bgcolor', 0xdddd00);
                 Debug.write("onmousetrackover", this);
-            </method>
-            <method event="onmousetrackout">
+            </handler>
+            <handler name="onmousetrackout">
                 setAttribute('bgcolor', 0xddddff);
                 Debug.write("onmousetrackout", this);
-            </method>
-            <method event="onmousetrackup">
+            </handler>
+            <handler name="onmousetrackup">
                 Debug.write("onmousetrackup", this);
-            </method>
+            </handler>
 
 
 
@@ -106,7 +106,7 @@
    </view>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

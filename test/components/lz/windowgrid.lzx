@@ -30,15 +30,15 @@
     
     <class name="eval_item" extends="menuitem" initstage="late">
         <attribute name="obj"/>
-        <method event="onselect">
+        <handler name="onselect">
             Debug.write(obj[this.text]())
-        </method>
+        </handler>
     </class>
     
     <class name="stylechooser" extends="menuitem">
-        <method event="onselect">
+        <handler name="onselect">
             tgrid.setStyle(canvas[this.text + 'colors'])
-        </method>
+        </handler>
     </class>
 
     <window title="dgTester" width="600" height="300" name="dgwin"
@@ -123,16 +123,17 @@
                     <attribute name="datasel" 
                                value="${ workdef == '1' ? 2 : 1 }"/>
 
-                    <method event="ondatasel" name="checkDataSel">
+                    <handler name="ondatasel" method="checkDataSel" />
+                    <method name="checkDataSel">
                         if ( !this._initcomplete ) return;
                         this.selectItem(  datasel );
                     </method>
 
-                    <method event="oninit">
+                    <handler name="oninit">
                         this.checkDataSel();
-                    </method>
+                    </handler>
 
-                    <method event="onselect">
+                    <handler name="onselect">
                         if ( this.value == 1 ){
                             this.workdef = 0;
                             this.homedef = 1;
@@ -141,7 +142,7 @@
                             this.homedef = 0;
                         }
                         this.datapath.updateData();
-                    </method>
+                    </handler>
 
                     <radiobutton value="1">home</radiobutton>
                     <radiobutton value="2">work</radiobutton>
@@ -150,10 +151,10 @@
             
             <gridtext datapath="@email" text="Email"/>
             
-        <method event="oninit">
+        <handler name="oninit">
             del = new LzDelegate(this, "deleteSel" );
             LzKeys.callOnKeyCombo(del, ["delete"]);
-        </method> 
+        </handler>
         
         <method name="deleteSel">
            var sel = getSelection()
@@ -166,9 +167,9 @@
 
     <window title="poke" layout="axis:'y'; spacing: 10" x="450" y="${dgwin.height+10}" resizable="true" minwidth="150">
         <button text="loadMoreData">
-            <method event="onclick">
+            <handler name="onclick">
                 contactsLoad.doRequest();
-            </method>
+            </handler>
         </button>
 
         <view layout="axis: x">
@@ -180,6 +181,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

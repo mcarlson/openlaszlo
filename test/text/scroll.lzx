@@ -28,9 +28,9 @@
         if (this.onpos) this.onpos.sendEvent(p);
         }
       </method>
-      <method event="onscroll">
+      <handler name="onscroll">
         this.setPos(-this.lineheight * (this.scroll - 1), true);
-      </method>
+      </handler>
     </inputtext>
     <scrollbar axis="y" scrollattr="pos"
                stepsize="${parent.inp.lineheight}"
@@ -62,9 +62,9 @@
            if (this.onpos) this.onpos.sendEvent(p);
         }
       </method>
-      <method event="onscroll">
+      <handler name="onscroll">
         this.setPos(-this.lineheight * (this.scroll - 1), true);
-      </method>
+      </handler>
     </text>
     <scrollbar axis="y" scrollattr="pos"
                stepsize="${parent.field.lineheight}"
@@ -102,3 +102,4 @@
   </scrolltext>
   
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

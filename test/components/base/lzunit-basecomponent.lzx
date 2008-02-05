@@ -11,9 +11,9 @@
 
   <class name="testcheckbox" extends="checkbox">
     <attribute name="c0" value="0"/>
-    <method event="on_enabled" args="v">
+    <handler name="on_enabled" args="v">
       this.c0++;
-    </method>
+    </handler>
     
     <attribute name="c1" value="0"/>
     <handler name="onfocusable">
@@ -181,7 +181,7 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2006, 2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->

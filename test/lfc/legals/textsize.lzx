@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -9,47 +9,47 @@
     <view>
         <simplelayout axis="x"/>
         <text>Foo!
-            <method event="oninit">
+            <handler name="oninit">
                 Debug.write(this.text, this.getTextWidth());
-            </method>
+            </handler>
         </text>
         <text fontstyle="bold">Bold Text
-            <method event="oninit">
+            <handler name="oninit">
                 Debug.write(this.text, this.getTextWidth());
-            </method>
+            </handler>
         </text>
         <text fontsize="14">14pt Text
-            <method event="oninit">
+            <handler name="oninit">
                 Debug.write(this.text, this.getTextWidth());
-            </method>
+            </handler>
         </text>
         <text font="Helvetica">Helvetica
-            <method event="oninit">
+            <handler name="oninit">
                 Debug.write(this.text, this.getTextWidth());
-            </method>
+            </handler>
         </text>
         <text>Longer text!
-            <method event="oninit">
+            <handler name="oninit">
                 Debug.write(this.text, this.getTextWidth());
-            </method>
+            </handler>
         </text>
     </view>
     <view>
         <simplelayout axis="y"/>
         <text>This text
-            <method event="oninit">
+            <handler name="oninit">
                 Debug.write(this.text, this.getTextHeight());
-            </method>
+            </handler>
         </text>
         <inputtext>And this inputtext
-            <method event="oninit">
+            <handler name="oninit">
                 Debug.write(this.text, this.getTextHeight());
-            </method>
+            </handler>
         </inputtext>
         <text>Should stack...
-            <method event="oninit">
+            <handler name="oninit">
                 Debug.write(this.text, this.getTextHeight());
-            </method>
+            </handler>
         </text>
     </view>
 </canvas>

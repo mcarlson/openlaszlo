@@ -37,9 +37,9 @@
         <text>(list1)</text> 
 
         <button name="toggle" text="toggle list1">
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.toggle(list1);
-            </method>
+            </handler>
         </button>
 
         <list id="list1" width="130" shownitems="6"
@@ -54,9 +54,9 @@
         <text>(list2) dataoption="pooling"</text> 
 
         <button name="toggle" text="toggle list2">
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.toggle(list2);
-            </method>
+            </handler>
         </button>
 
         <list id="list2" width="130" shownitems="6"
@@ -68,7 +68,7 @@
     </view>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

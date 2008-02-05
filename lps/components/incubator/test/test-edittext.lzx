@@ -19,33 +19,33 @@
     </dataset>
 
     <lzedittext id="et1" pattern="[0-9]*" maxlength="2" width="35">
-        <method event="onchanged">
+        <handler name="onchanged">
             Debug.write('onchanged', this, this.changed);
-        </method>
+        </handler>
     </lzedittext>
 
     <lzedittext id="et2">
-        <method event="onvalue">
+        <handler name="onvalue">
             Debug.write('onvalue', this, this.value);
-        </method>
-        <method event="onchanged">
+        </handler>
+        <handler name="onchanged">
             Debug.write('onchanged', this, this.changed);
-        </method>
+        </handler>
     </lzedittext>
 
     <lzedittext id="et3" password="true">
-        <method event="onchanged">
+        <handler name="onchanged">
             Debug.write('onchanged', this, this.changed);
-        </method>
+        </handler>
     </lzedittext>
 
     <lzedittext id="et4" datapath="mydset:/value/@text">
-        <method event="onvalue">
+        <handler name="onvalue">
             Debug.write('onvalue', this, this.value);
-        </method>
-        <method event="onchanged">
+        </handler>
+        <handler name="onchanged">
             Debug.write('onchanged', this, this.changed);
-        </method>
+        </handler>
     </lzedittext>
 
     <text>multiline lzedittext</text>
@@ -65,7 +65,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

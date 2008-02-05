@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -17,7 +17,7 @@
 
     <simplelayout axis="x" spacing="50"/>
     <view name="container" bgcolor="yellow">
-        <method event="oninit">
+        <handler name="oninit">
             //gUnit.assert( 1 == 1, "1 == 1" );
             gUnit.assert( width = 100 , "container width");
             gUnit.assert( height = 100 , "container height");
@@ -25,7 +25,7 @@
             gUnit.assert( width == 10 , "content visibility affects width");
             gUnit.assert( height == 20 , "content visibility affects height");
             this.setVisible( false );
-        </method>
+        </handler>
         <view name="holder" bgcolor="green" width="10" height="20"/>
         <view name="inside" bgcolor="red" x="90" y="80" 
               width="10" height="20"/>
@@ -42,10 +42,10 @@
 
     <view name="clippedstretches" clip="true" width="100" height="40">
         <view stretches="both">
-            <method event="oninit">
+            <handler name="oninit">
                 this.setSource( "pict5.jpg" );
-            </method>
-            <method event="onload">
+            </handler>
+            <handler name="onload">
                 gUnit.assert( this.resourcewidth > 0  , 
                               "resource size set before onload" );
                 gUnit.assert( this.width == this.resourcewidth,
@@ -54,7 +54,7 @@
                 this.setY( -200 );
                 this.setWidth( 400);
                 this.setHeight( 400);
-            </method>
+            </handler>
         </view>
     </view>
 
@@ -73,12 +73,12 @@
             gUnit.assert( width== 40 , "regular content size" );
         </method>
         <view width="40" height="40">
-            <method event="oninit">
+            <handler name="oninit">
                 this.setSource( "pict5.jpg" );
-            </method>
-            <method event="onload">
+            </handler>
+            <handler name="onload">
                 parent.test();
-            </method>
+            </handler>
         </view>
     </view>
 
@@ -87,12 +87,12 @@
             gUnit.assert( width== 40 , "stretched content size" );
         </method>
         <view stretches="both" width="40" height="40">
-            <method event="oninit">
+            <handler name="oninit">
                 this.setSource( "pict5.jpg" );
-            </method>
-            <method event="onload">
+            </handler>
+            <handler name="onload">
                 parent.test();
-            </method>
+            </handler>
         </view>
     </view>
 
@@ -101,12 +101,12 @@
             gUnit.assert( width== 40 , "clipped content size" );
         </method>
         <view clip="true" width="40" height="40">
-            <method event="oninit">
+            <handler name="oninit">
                 this.setSource( "pict5.jpg" );
-            </method>
-            <method event="onload">
+            </handler>
+            <handler name="onload">
                 parent.test();
-            </method>
+            </handler>
         </view>
     </view>
 

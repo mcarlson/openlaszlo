@@ -24,21 +24,21 @@
 
         <legend name="legendbox" legendborder="false" direction="vertical" fillColor="#99CCFF"
                 chart="${chart1}" x="${chart1.x + chart1.width + 20}" y="${(chart1.y + chart1.height)/2}">
-            <method event="onitemmouseover" args="item">
+            <handler name="onitemmouseover" args="item">
                 var piepiece = this.getChartInstance().plotarea.arrPiePieces[item.identifier];
                 piepiece.renderInnerWedge();
-            </method>
+            </handler>
 
-            <method event="onitemmouseout" args="item">
+            <handler name="onitemmouseout" args="item">
                 var piepiece = this.getChartInstance().plotarea.arrPiePieces[item.identifier];
                 piepiece.renderWedge();
-            </method>
+            </handler>
         </legend>
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.
 * Use is subject to license terms.
 * X_LZ_COPYRIGHT_END
 ****************************************************** -->

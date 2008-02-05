@@ -8,15 +8,15 @@
     
     
     <button>undo
-        <method event="onclick">
+        <handler name="onclick">
             chart1.undo(500);
-        </method>
+        </handler>
     </button>
     <button x="100"> show all points
-        <method event="onclick">
+        <handler name="onclick">
             chart1.changeBound(chart1.defaultminx, chart1.defaultminy, 
                  chart1.defaultmaxx,chart1.defaultmaxy, 1000, true);
-        </method>
+        </handler>
     </button>
     <view name="title" x="250" y="10" >
         <text font="serif" fontsize="15" fontstyle="bold" fgcolor="0x0000FF">
@@ -32,13 +32,13 @@
                 legendborder="false"
                 x="600"
                 y="350">
-          <method event="onitemmouseclick" args="item">
+          <handler name="onitemmouseclick" args="item">
               var topseries = this.getChartInstance().getDataSeries();
 
               topseries.getDataSeries(item.identifier).enabled = item.linevisible;
               this.getChartInstance().renderPlotArea();
               item.linevisible = !item.linevisible;
-          </method> 
+          </handler>
         </legend>
 
     <linechart id="chart1" y="60" width="600" height="500" style="chartstyle04" 
@@ -86,7 +86,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

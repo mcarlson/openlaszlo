@@ -140,9 +140,9 @@
                     </menu>
                 </menuitem>
             </menu>
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 this.foo.setOpen(true);
-            </method>
+            </handler>
         </button>
         
         <button text="openMenu right" >
@@ -150,9 +150,9 @@
                 <menuitem text="item 1" />
                 <menuitem text="item 2" />
             </menu>
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 this.foo.setOpen(true);
-            </method>
+            </handler>
         </button>
         
         <button text="openMenu top" >
@@ -160,9 +160,9 @@
                 <menuitem text="item 1" />
                 <menuitem text="item 2" />
             </menu>
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 this.foo.setOpen(true);
-            </method>
+            </handler>
         </button>
         
         <button text="openMenu left" >
@@ -170,16 +170,16 @@
                 <menuitem text="item 1" />
                 <menuitem text="item 2" />
             </menu>
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 this.foo.setOpen(true);
-            </method>
+            </handler>
         </button>
         <simplelayout spacing="50" axis="x" />
     </view>
 
  <inittimer/>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

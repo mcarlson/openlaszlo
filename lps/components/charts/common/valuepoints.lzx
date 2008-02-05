@@ -30,7 +30,7 @@
         
         <!--- shows the data tooltip and applied style
             @keyword private-->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             var ldata;
             if ( this.tip == '' ){
                 ldata = (this.label!=''?this.label+' : ':'') + this.datax + ','+this.datay ;
@@ -39,13 +39,13 @@
             }
             parent.datatooltip.style = parent.style.valuepointstyle.tip;
             parent.datatooltip.show(ldata); 
-        </method>
+        </handler>
         
         <!--- hides the data tooltip
             @keyword private-->
-        <method event="onmouseout">
+        <handler name="onmouseout">
             parent.datatooltip.hide();     
-        </method>
+        </handler>
 
         <!--- Render 
             @keyword private-->
@@ -103,7 +103,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -117,11 +117,11 @@
 
                   onclick="classroot.numberView.numericValue.increment()">
 
-                  <method event="onmousestilldown">
+                  <handler name="onmousestilldown">
 
                         classroot.numberView.numericValue.increment();
 
-                  </method>
+                  </handler>
 
             </basebuttonrepeater>
 
@@ -129,11 +129,11 @@
 
                   onclick="classroot.numberView.numericValue.decrement()">
 
-                  <method event="onmousestilldown">
+                  <handler name="onmousestilldown">
 
                         classroot.numberView.numericValue.decrement();
 
-                  </method>
+                  </handler>
 
             </basebuttonrepeater>
 

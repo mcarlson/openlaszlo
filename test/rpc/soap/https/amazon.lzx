@@ -11,7 +11,7 @@
         <attribute name="myobject1" value="null" type="expression" />
         <attribute name="myobject2" value="null" type="expression" />
 
-        <method event="onload">
+        <handler name="onload">
             Debug.write('amazon soap service stub loaded');
 
             this.setAttribute('myobject1', new amazon.proto.KeywordRequest());
@@ -33,30 +33,30 @@
             this.myobject2.devtag = 'your-dev-tag';
             this.myobject2.format = 'xml';
             this.myobject2.version = '1.0';
-        </method>
+        </handler>
 
         <!-- if error isn't handled by remotecall, the error is propogated up to
              soap -->
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('error:', error);
-        </method>
+        </handler>
 
         <remotecall name="myKSR1" funcname="KeywordSearchRequest"
                     dataobject="amazonDset1">
 
             <param value="${canvas.amazon.myobject1}" />
 
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('one:', value);
-            </method>
+            </handler>
 
         </remotecall>
 
         <remotecall name="myKSR2" funcname="KeywordSearchRequest">
             <param value="${canvas.amazon.myobject2}" />
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('two:', value);
-            </method>
+            </handler>
         </remotecall>
 
     </soap>
@@ -82,9 +82,9 @@
         <button text="myksr2 invoke w/params and delegate" 
                 onclick="amazon.myKSR2.invoke([ canvas.amazon.myobject2 ], canvas.mydel)" />
         <button text="invoke KeywordSearchRequest proxy function">
-            <method event="onclick">
+            <handler name="onclick">
                 amazon.proxy.KeywordSearchRequest([ canvas.amazon.myobject1 ], canvas.mydel);
-            </method>
+            </handler>
         </button>
         <view bgcolor="red" layout="axis: y" >
             <view>
@@ -104,6 +104,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

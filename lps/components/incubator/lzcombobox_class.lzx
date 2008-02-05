@@ -110,26 +110,26 @@
 
         <view name="bkgnd" width="100%" clickable="${parent._enabled}">
             <attribute name="frnum" value="1"/>
-            <method event="onclick">
+            <handler name="onclick">
                 classroot.toggle()
                 if (parent['onclick']) parent.onclick.sendEvent();
-            </method>
-            <method event="onmouseout">
+            </handler>
+            <handler name="onmouseout">
                 this.showState(1);
                 if (parent['onmouseout']) parent.onmouseout.sendEvent();
-            </method>
-            <method event="onmouseup">
+            </handler>
+            <handler name="onmouseup">
                 this.showState(1);
                 if (parent['onmouseup']) parent.onmouseup.sendEvent();
-            </method>
-            <method event="onmouseover">
+            </handler>
+            <handler name="onmouseover">
                 this.showState(2);
                 if (parent['onmouseover']) parent.onmouseover.sendEvent();
-            </method>
-            <method event="onmousedown">
+            </handler>
+            <handler name="onmousedown">
                 this.showState(3);
                 if (parent['onmousedown']) parent.onmousedown.sendEvent();
-            </method>
+            </handler>
             <view name="lft" resource="$style{'leftresource'}" />
             <view name="mid" resource="$style{'middleresource'}" stretches="width"/>
             <view name="rgt" resource="$style{'rightresource'}" />
@@ -141,9 +141,9 @@
             <tooltip text="${classroot.tooltip}"/>
             
             <!--- @keywords private -->
-            <method event="onisopen" reference="parent">
+            <handler name="onisopen" reference="parent">
                 this.showState(this.frnum);
-            </method>
+            </handler>
         
             <!-- Sets appearance of combobox by switching frame number of
                  resource, depending on mouse state, whether list is open, and
@@ -191,7 +191,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

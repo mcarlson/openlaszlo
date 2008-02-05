@@ -39,16 +39,16 @@
             defaultfontcolor="0x336699"
 
             border="10"  text="For reasons which many persons thought ridiculous, Mrs. Lightfoot Lee decided to pass the winter in Washington. She was in excellent health, but she said that the climate would do her good. In New York she had troops of friends, but she suddenly became eager to see again the very small number of those who lived on the Potomac. It was only to her closest intimates that she honestly acknowledged herself to be tortured by ennui. Since her husband's death, five years before, she had lost her taste for New York society; she had felt no interest in the price of stocks, and very little in the men who dealt in them; she had become serious. What was it all worth, this wilderness of men and women as monotonous as the brown stone houses they lived in? In her despair she had resorted to desperate measures. She had read philosophy in the original German, and the more she read, the more she was disheartened that so much culture should lead to nothing... nothing.">
-            <method event="oninit">
+            <handler name="oninit">
                 this.setLinkPanel(ldlg);
-            </method>
+            </handler>
         </richtexteditarea>
     </view> 
 </view>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2007, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

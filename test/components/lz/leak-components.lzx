@@ -6,15 +6,15 @@
         <attribute name="numitems" value="0"/>
         <attribute name="limit" value="60"/>
         <attribute name="itemclassname" value="" type="string"/>
-        <method event="oninit">
+        <handler name="oninit">
             this.itemlist = [];
-        </method>
+        </handler>
         <method name="dotest" args="whichclass">
             this.start = 1;
             this.numtimes = 0;
             this.itemclassname = whichclass;
         </method>
-        <method event="onidle" reference="LzIdle">  <![CDATA[
+        <handler name="onidle" reference="LzIdle">  <![CDATA[
             if (start && (this.numtimes < this.limit || this.numitems>0)) {
                 if (this.numitems == 0) {
                     for (var i=0; i < 10; i ++) {
@@ -32,7 +32,7 @@
                     this.numitems = 0;
                 }
             }
-        ]]> </method>
+        ]]> </handler>
     </class>
 
     <leaktest id="test"/>
@@ -53,7 +53,7 @@
     <text x="200" width="150" text="${test.numtimes +'/'+test.limit}"/>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

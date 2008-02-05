@@ -13,14 +13,14 @@
 
   <simplelayout/>
   <button text="clickme">
-    <method event="onclick">
+    <handler name="onclick">
       foo.setSrc(s1.value);
       foo.setQueryParam('j', "&#20844;"); 
       foo.setQueryType(r1.value);
       Debug.write("setQueryType", r1.value);
       Debug.write("calling foo.doRequest()", foo);
       foo.doRequest();
-    </method>
+    </handler>
   </button>
   <view layout="axis:x">
   <radiogroup id="s1" width="200">
@@ -49,3 +49,4 @@
 
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

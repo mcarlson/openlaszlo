@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -13,23 +13,23 @@
     </dataset>
 
     <datapointer name="myp" xpath="dsTest:/root/anode">
-        <method event="ondata" args="d">
+        <handler name="ondata" args="d">
             var ex = dsTest.getFirstChild().getFirstChild();
             Debug.write( 'expecting', ex );
             Debug.write( 'got', d );
             if ( d != ex ){
                 Debug.write( 'FAIL!' );
             }
-        </method>
+        </handler>
     </datapointer>
     <datapointer name="myp2" xpath="dsTest:/root/bnode/@y">
-        <method event="ondata" args="d">
+        <handler name="ondata" args="d">
             Debug.write( 'expecting 2' );
             Debug.write( 'got', d );
             if ( d != 2 ){
                 Debug.write( 'FAIL!' );
             }
-        </method>
+        </handler>
     </datapointer>
 
 </canvas>

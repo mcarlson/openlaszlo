@@ -1,11 +1,11 @@
 <library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-  <method event="oninit">
+  <handler name="oninit">
     canvas.canvas_oninit_run=true;
-  </method>
+  </handler>
   <attribute name="canvas_attr" value="'canvas_attr'"/>
   <method name="canvas_method">return 'canvas_method'</method>
 

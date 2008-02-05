@@ -141,14 +141,16 @@
             this.select();
         </handler>
 
-        <method name="domouseover" event="onmouseover">
+        <handler name="onmouseover" method="domouseover" />
+        <method name="domouseover">
             if ( !selectable ) return;
 
             parent.classroot._setHiliteview( this , true );
             this.setAttribute( 'focusable' , false );
         </method>
 
-        <method name="domouseout" event="onmouseout">
+        <handler  name="onmouseout" method="domouseout" />
+        <method name="domouseout">
             if ( !selectable ) return;
             this.setAttribute( "highlighted" , false );
             this.setAttribute( 'focusable' , true );
@@ -193,7 +195,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

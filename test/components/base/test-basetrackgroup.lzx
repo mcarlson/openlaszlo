@@ -9,21 +9,21 @@
         <attribute name="mycolor" value="0x000099"/>
 
         <!-- regular mouse events -->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             setAttribute('bgcolor', 0x009900);
-        </method>
-        <method event="onmouseout">
+        </handler>
+        <handler name="onmouseout">
             setAttribute('bgcolor', this.mycolor);
-        </method>
+        </handler>
 
         <!-- mouse tracking events -->
-        <method event="onmousetrackover">
+        <handler name="onmousetrackover">
             setAttribute('bgcolor', 0x00dd00);
-        </method>
+        </handler>
         
-        <method event="onmousetrackout">
+        <handler name="onmousetrackout">
             setAttribute('bgcolor', this.mycolor);
-        </method>
+        </handler>
 
     </class>
 
@@ -48,22 +48,22 @@
         </basetrackgroup>
         
         <button >activate both
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 btgtwo.setTracking(true);
                 btgone.setTracking(true);
-            </method>
+            </handler>
         </button>
         
         <button >deactivate both groups
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 btgtwo.setTracking(false);
                 btgone.setTracking(false);
-            </method>
+            </handler>
         </button>
         <simplelayout axis="x" spacing="20" />
     </view>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

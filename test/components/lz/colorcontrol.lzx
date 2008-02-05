@@ -12,7 +12,7 @@
         <attribute name="value" value="${Math.round(this.s.value)}" type="number"/>
         <text x="30" y="15" text="${parent.value}"/>
         <text x="${50-this.width}" resize="true" text="${parent.name + ':'}"/>
-	    <simpleslider name="s" y="5" x="54" width="200" oninit="setValue(0)"
+            <simpleslider name="s" y="5" x="54" width="200" oninit="setValue(0)"
             minlimit="-255" maxlimit="255"
             majordivision="20" minordivision="0"/>
 
@@ -21,7 +21,7 @@
         <attribute name="value" value="${Math.round(this.s.value)}" type="number"/>
         <text x="30" y="15" text="${parent.value}"/>
         <text x="${50-this.width}" resize="true" text="${parent.name + ':'}"/>
-	    <simpleslider name="s" y="5" x="54" width="200"
+            <simpleslider name="s" y="5" x="54" width="200"
             minlimit="0" maxlimit="100" oninit="setValue(100)"
             majordivision="20" minordivision="0"/>
     </class>
@@ -40,14 +40,14 @@
             sb.setTint(s1, mycolor, offset.value);
             ]]>
         </method>
-        <method event="oninit">
+        <handler name="oninit">
             var del = new LzDelegate(this, "docolortransform");
             del.register(this.red, 'onvalue');
             del.register(this.green, 'onvalue');
             del.register(this.blue, 'onvalue');
             del.register(this.offset, 'onvalue');
             docolortransform();
-        </method>
+        </handler>
         <simplelayout inset="10"/>
         <colorslider name="red" />
         <colorslider name="green" />
@@ -58,6 +58,6 @@
     </class>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

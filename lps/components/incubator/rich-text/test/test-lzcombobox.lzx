@@ -44,11 +44,11 @@
             <!--- When the user selects an item from the combo box, 
                  create an object representing just the change in format.
                  Give that object to the editor. -->
-             <method event="onselect"><![CDATA[
+             <handler name="onselect"><![CDATA[
                 var color  = this.value; 
                 this.csq.setColor(color);
                 ]]>
-             </method>
+             </handler>
          
              <colorsquare x="11" y="3" name="csq" drawsquare="true">
                      <method name="setColor" args="color">
@@ -159,4 +159,4 @@
         </TestCase>
     </TestSuite>
 </canvas>
-<!-- Copyright 2007 Laszlo Systems --> 
+<!-- Copyright 2007, 2008 Laszlo Systems --> 

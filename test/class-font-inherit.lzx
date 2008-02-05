@@ -10,8 +10,8 @@ as shown
 
 [1] Arioso bold 24 
 [2] Arioso bold 24 
-[3] Arioso bold 24    		{ red background} 
-[4] Times Roman bold 24		{ yellow background color}
+[3] Arioso bold 24              { red background} 
+[4] Times Roman bold 24         { yellow background color}
 [5] Times Roman bold size unset    { blue background color; should be size 30}
 
 
@@ -88,6 +88,6 @@ as shown
      
 </canvas> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

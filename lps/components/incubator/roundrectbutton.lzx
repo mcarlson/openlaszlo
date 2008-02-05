@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -45,11 +45,11 @@ Currently the best way to change them at runtime is to apply a &lt;style&gt;.
          text="${classroot.text}"
      />     
 
-    <method event="onmouseover">
+    <handler name="onmouseover">
         _rr.setAttribute("backgroundStartColor", this.overStartColor);
         _rr.setAttribute("backgroundStopColor", this.overStopColor);        
         _rr.drawStructure(); 
-    </method>
+    </handler>
 
     <!--- @keywords private -->
     <method name="_applystyle" args="s">
@@ -74,38 +74,38 @@ Currently the best way to change them at runtime is to apply a &lt;style&gt;.
         _rr.drawStructure(); 
     </method>
 
-    <method event="onmouseup">
+    <handler name="onmouseup">
         _rr.setAttribute("backgroundStartColor", this.overStartColor);
         _rr.setAttribute("backgroundStopColor", this.overStopColor);        
         _rr.drawStructure(); 
-    </method>
+    </handler>
     
     
-    <method event="onmouseout">
+    <handler name="onmouseout">
         _rr.setAttribute("backgroundStartColor", this.upStartColor);
         _rr.setAttribute("backgroundStopColor", this.upStopColor);        
         _rr.drawStructure(); 
-    </method>
+    </handler>
         
-    <method event="onmousedown">
+    <handler name="onmousedown">
         _rr.setAttribute("backgroundStartColor", this.downStartColor);
         _rr.setAttribute("backgroundStopColor", this.downStopColor);        
         _rr.drawStructure();        
-    </method>
+    </handler>
     
-    <method event="onwidth">
+    <handler name="onwidth">
         if (!this['_rr']) return;     // ignore these events if the roundrect 
                                       // itself hasn't been built yet
         _rr.setWidth(this.width);
         _rr.drawStructure();
-    </method>
+    </handler>
     
-    <method event="onheight">
+    <handler name="onheight">
         if (!this['_rr']) return;     // ignore these events if the roundrect 
                                       // itself hasn't been built yet
         _rr.setHeight(this.height);
         _rr.drawStructure();
-    </method>
+    </handler>
     
     
     

@@ -7,9 +7,9 @@
     </font>
 
     <font name="Chevara" src="chevarar.ttf">
-		<face src="chevaraor.ttf" style="bold" />
+                <face src="chevaraor.ttf" style="bold" />
     </font>
-	<view>
+        <view>
 <simplelayout axis="y" spacing="10" />
     <view width="400" font="Chevara" fontsize="14">
 <simplelayout axis="y" spacing="10" />
@@ -29,7 +29,7 @@
 </view>
 </view>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

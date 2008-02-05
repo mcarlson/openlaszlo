@@ -22,34 +22,34 @@
                 <text>Style:</text>
                 <combobox width="120" editable="false">
                     <textlistitem text="silver" >
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.silvercolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="green" >
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.greencolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="blue" selected="true">
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.bluecolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="gold" >
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.goldcolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="white">
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.whitecolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="purple" >
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.purplecolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                 </combobox>
 
@@ -129,9 +129,9 @@
                  </menu>
             </menubar>
 <view name="frosty">
-    <method event="oninit">
+    <handler name="oninit">
         //Debug.write("Frosty's parent: " + this.parent);
-    </method>  
+    </handler>  
 <text multiline="true" 
       x="6"
       height="450" width="420">
@@ -255,12 +255,12 @@ parent.parent.setAttribute('width','250');
             </button>
             
             <button name="clear">Clear messages
-                <method event="onclick">
+                <handler name="onclick">
                     var rt = viewChat.chatPtr.p
                     var c
                     while((c = rt.getFirstChild()) != null)
                         rt.removeChild(c)
-                </method>
+                </handler>
             </button>
             
             <simplelayout axis="x" spacing="5"/>
@@ -269,11 +269,11 @@ parent.parent.setAttribute('width','250');
 
     </view> <!-- viewChat -->
 
-    <method event="onkeyup" reference="LzKeys" args="k">
+    <handler name="onkeyup" reference="LzKeys" args="k">
         if ( k == 13 ) {
             bSend.handler();
         }
-    </method>
+    </handler>
 </window>
 
 
@@ -345,6 +345,6 @@ parent.parent.setAttribute('width','250');
 </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

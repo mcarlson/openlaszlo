@@ -1,16 +1,16 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
 <canvas width="100%" height="80%">
     <text>The green box should move to where you click the blue box.</text>
     <view width="3000" height="3000" x="100" y="100" bgcolor="0xccccff">
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.res.setX(this.getMouse('x'));
             this.res.setY(this.getMouse('y'));
-        </method>
+        </handler>
         <view name="res" bgcolor="green" width="20" height="20"/>
     </view>
 </canvas>

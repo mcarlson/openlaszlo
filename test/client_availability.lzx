@@ -20,15 +20,15 @@
             canvas.chatWindow.viewChat.chatPtr.addNode("message", null, { text: str, multiline: true } );
         </method>
 
-        <method event="onconnect">
+        <handler name="onconnect">
             this.print("...connected...");
             canvas.connected = true;
             this.sendMessage("*", "", "userconnect");
             canvas.chatWindow.viewPicker.setVisible(false);
             canvas.chatWindow.viewChat.setVisible(true);
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             if (canvas.connected) {
                 this.print("...connection error...");
             } else {
@@ -36,9 +36,9 @@
                 canvas.dialog.open();
             }
             canvas.connected = false;
-        </method>
+        </handler>
 
-        <method event="ontimeout">
+        <handler name="ontimeout">
             if (canvas.connected) {
                 this.print("...connection timed out...");
             } else {
@@ -46,18 +46,18 @@
                 canvas.dialog.open();
             }
             canvas.connected = false;
-        </method>
+        </handler>
 
-        <method event="ondisconnect">
+        <handler name="ondisconnect">
             canvas.connected = false;
             this.print("...disconnected...");
             canvas.connection.logout();
-        </method>
+        </handler>
 
-        <method event="onuserdisconnect" args="user">
+        <handler name="onuserdisconnect" args="user">
             this.getList('*');
             this.print("user " + user + " disconnected");
-        </method>
+        </handler>
 
         <dataset name="message" />
         <dataset name="userconnect" />
@@ -86,34 +86,34 @@
                 <text>Style:</text>
                 <combobox width="120" editable="false">
                     <textlistitem text="silver" >
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.silvercolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="green" >
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.greencolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="blue" selected="true">
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.bluecolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="gold" >
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.goldcolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="white">
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.whitecolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                     <textlistitem text="purple" >
-                        <method event="onselected">
+                        <handler name="onselected">
                             canvas.purplecolors.setAttribute("isdefault", true);
-                        </method>
+                        </handler>
                     </textlistitem>
                 </combobox>
 
@@ -193,9 +193,9 @@
                  </menu>
             </menubar>
 <view name="frosty">
-    <method event="oninit">
+    <handler name="oninit">
         //Debug.write("Frosty's parent: " + this.parent);
-    </method>  
+    </handler>  
 <text multiline="true" 
       x="6"
       height="450" width="420">
@@ -281,43 +281,43 @@ parent.parent.setAttribute('width','250');
         <datapointer name="chatPtr" xpath="chatDset:/" />
 
         <datapointer xpath="connection:logoutDset:/*" >
-            <method event="ondata">
+            <handler name="ondata">
                 canvas.myconnection.print("...logged out...");
                 canvas.chatWindow.viewPicker.setVisible(true);
                 canvas.chatWindow.viewChat.setVisible(false);
-            </method>
-            <method event="onerror">
+            </handler>
+            <handler name="onerror">
                 canvas.chatWindow.viewPicker.setVisible(true);
                 canvas.chatWindow.viewChat.setVisible(false);
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer xpath="myconnection:userconnect:/*">
-            <method event="ondata">
+            <handler name="ondata">
                 var from = this.xpathQuery('/from[0]/@name');
                 this.parent.chatPtr.addNode("message", null,
                     { text: "User " + from + " connected!" }
                 );
                 canvas.myconnection.getList('*');
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer xpath="myconnection:message:/*">
-            <method event="ondata">
+            <handler name="ondata">
                 var from = this.xpathQuery('/from[0]/@name');
                 var mesg = this.xpathQuery('/text()');
                 this.parent.chatPtr.addNode("message", null,
                     { text: from + ": " + mesg}
                 );
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer xpath="myconnection:sendMessageDset:/*[1]">
-            <method event="onerror">
+            <handler name="onerror">
                 this.parent.chatPtr.addNode("message", null, 
                     { text:  this.dataset.getErrorString() }
                 );
-            </method>
+            </handler>
         </datapointer>
 
         <view width="302" height="107" x="4" y="4" bgcolor="#000000" />
@@ -391,7 +391,7 @@ parent.parent.setAttribute('width','250');
     <view name="viewPicker" x="20" y="20">
 
         <datapointer xpath="connection:loginDset:/login[1]/authentication[1]/response[1]">
-            <method event="ondata">
+            <handler name="ondata">
 
                 var rt = this.getNodeAttribute('type');
                 var usr = this.getNodeAttribute('usr');
@@ -403,17 +403,17 @@ parent.parent.setAttribute('width','250');
                     canvas.dialog.setAttribute('text', "bad login status: " + status);
                     canvas.dialog.open();
                 }
-            </method>
+            </handler>
 
-            <method event="onerror">
+            <handler name="onerror">
                 canvas.dialog.setAttribute('text', "problems contacting authentication server");
                 canvas.dialog.open();
-            </method>
+            </handler>
 
-            <method event="ontimeout">
+            <handler name="ontimeout">
                 canvas.dialog.setAttribute('text', "authentication server time out");
                 canvas.dialog.open();
-            </method>
+            </handler>
 
         </datapointer>
 
@@ -443,11 +443,11 @@ parent.parent.setAttribute('width','250');
 
     </view> <!-- name=viewPicker -->
 
-    <method event="onkeyup" reference="LzKeys" args="k">
+    <handler name="onkeyup" reference="LzKeys" args="k">
         if ( k == 13 ) {
             bSend.handler();
         }
-    </method>
+    </handler>
 </window>
 <window height="150" title="Another Clock" x="0" y="${canvas.height - this.height}">
   <edittext width="112" text="${this.parent.time.textTime}"/>
@@ -516,6 +516,6 @@ parent.parent.setAttribute('width','250');
 </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

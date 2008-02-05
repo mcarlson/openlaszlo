@@ -1,10 +1,11 @@
 <canvas width="1200" height="800" debug='true' medialoadtimeout="1000">
   <debug x="200"/>
   <view x="0" y="0" id="v1"      resource="http:sleepjpeg.jsp?s=10" >
-    <method event="ontimeout">
+    <handler name="ontimeout">
       Debug.write('media load timed out '+this.resource);
-    </method>
+    </handler>
   </view>
 
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

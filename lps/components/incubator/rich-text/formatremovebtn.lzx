@@ -10,7 +10,8 @@
         Called when the user clicks the button. Asks the editor to reset the formatting
         of the selection.
         @keywords private -->
-    <method event="onclick" name="doClick">
+    <handler name="onclick" method="doClick" />
+    <method name="doClick">
         // Debug.write("unformat"); 
         if (this.toolbar._passthruchanges) {
         this.editor._resetFormatToDefaults();
@@ -20,13 +21,13 @@
     </method>
     
     <!--- @keywords private -->
-    <method event="onmouseover">          
+    <handler name="onmouseover">          
         this.editor.saveSelectionRegion();            
-    </method>
+    </handler>
     
 </stylishbutton>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

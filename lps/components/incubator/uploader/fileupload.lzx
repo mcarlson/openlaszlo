@@ -3,7 +3,7 @@
     @subtopic Components
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
@@ -22,11 +22,11 @@
         <!--- Enable upload. True to enable uploading, false to disable uploading. -->
         <attribute name="uploadenable" value="false" type="boolean"/>
         
-        <method event="oninit" args="invoker">
+        <handler name="oninit" args="invoker">
             <![CDATA[
                 fileref.addListener(invoker);
             ]]>
-        </method>
+        </handler>
         
         <method name="browse">
             <![CDATA[

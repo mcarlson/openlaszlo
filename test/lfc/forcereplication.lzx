@@ -13,7 +13,7 @@
     <view>
         <simplelayout/>
         <button> Switch to forced replication
-            <method event="onclick">
+            <handler name="onclick">
                 <![CDATA[  
                 var newnodes = [];
                 for ( var i = 0; i < 4; i++ ){
@@ -23,16 +23,16 @@
                 }
                 parent.replParent.repl.setNodes( newnodes );
                 ]]>
-            </method>
+            </handler>
         </button>
         <button> Poke replicated data
-            <method event="onclick">
+            <handler name="onclick">
                 var dp = new LzDatapointer( );
                 dp.setPointer( parent.replParent.subviews[ 1 ].datapath.p );
                 dp.setNodeText( dp.getNodeText() + "+" );
                 dp.setPointer( parent.replParent.subviews[ 3 ].datapath.p );
                 dp.setNodeText( dp.getNodeText() + "+" );
-            </method>
+            </handler>
         </button>
 
         <view name="replParent" datapath="dsO:/root">
@@ -43,7 +43,7 @@
     <view>
         <simplelayout/>
         <button> Force replication
-            <method event="onclick">
+            <handler name="onclick">
                 <![CDATA[  
                 var newnodes = [];
                 for ( var i = 0; i < 4; i++ ){
@@ -54,17 +54,17 @@
                 }
                 parent.replParent.repl.datapath.setNodes( newnodes );
                 ]]>
-            </method>
+            </handler>
         </button>
         <button> Poke replicated data
-            <method event="onclick">
+            <handler name="onclick">
                 var dp = new LzDatapointer( );
                 dp.setPointer( parent.replParent.subviews[ 0 ].datapath.p );
                 dp.setNodeText( dp.getNodeText() + "+" );
                 dp.setPointer( parent.replParent.subviews[ 1 ].datapath.p );
                 dp.setNodeAttribute( 'foo' , 
                                    Number( dp.getNodeAttribute( 'foo' ) * 2  ));
-            </method>
+            </handler>
         </button>
 
         <view name="replParent" datapath="dsO:/root">
@@ -81,7 +81,7 @@
     <view>
         <simplelayout/>
         <button> Force replication (shared parents)
-            <method event="onclick">
+            <handler name="onclick">
                 <![CDATA[  
                 var newnodes = [];
                 for ( var j = 0; j < 2; j++ ){
@@ -97,17 +97,17 @@
                 }
                 parent.replParent.repl.datapath.setNodes( newnodes );
                 ]]>
-            </method>
+            </handler>
         </button>
         <button> Poke replicated data
-            <method event="onclick">
+            <handler name="onclick">
                 var dp = new LzDatapointer( );
                 dp.setPointer( parent.replParent.subviews[ 0 ].datapath.p );
                 dp.setNodeText( dp.getNodeText() + "+" );
                 dp.setPointer( parent.replParent.subviews[ 1 ].datapath.p );
                 dp.setNodeAttribute( 'foo' , 
                                    Number( dp.getNodeAttribute( 'foo' ) * 2  ));
-            </method>
+            </handler>
         </button>
 
         <view name="replParent" datapath="dsO:/root">
@@ -122,3 +122,4 @@
         </view>
     </view>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

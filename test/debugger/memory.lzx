@@ -5,9 +5,9 @@
       <window x="40" y="40" title="foo"/>
     </state>
     <button text="apply">
-      <method event="onclick">
+      <handler name="onclick">
         parent.clickState.isapplied ? parent.clickState.remove() : parent.clickState.apply();
-      </method>
+      </handler>
     </button>
   </view>
   <text>To run this test, type  </text>
@@ -18,3 +18,4 @@
   <text>    See if there are lingering objects </text>
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

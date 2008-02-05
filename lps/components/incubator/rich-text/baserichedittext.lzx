@@ -23,21 +23,21 @@
 
         <!--- Sent if whenever the focus moves into _internalinputtext. 
             @param Object s: view that is losing focus -->
-        <method event="onfocus" args="s">
+        <handler name="onfocus" args="s">
             if (parent['onfocus']) parent.onfocus.sendEvent(s);
-        </method>
+        </handler>
         <!--- Sent if whenever the focus moves out of _internalinputtext. 
             @param Object s: view that is gaining focus -->
-        <method event="onblur" args="s">
+        <handler name="onblur" args="s">
             if (parent['onblur']) parent.onblur.sendEvent(s);
-        </method>
+        </handler>
         <!--- Sent whenever a user enters a valid new character. -->
-        <method event="ontext" name="doOnText">
+        <handler name="ontext" name="doOnText">
             if (! this.ignorecallup) {
                 parent.setValue(this.getText(),false,true);
             }
             this.ignorecallup = false;
-        </method>
+        </handler>
         <!--- Get focus bracket for _internalinputtext to be the dimensions of
               baseedittext.
               @keywords private -->
@@ -136,7 +136,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2007, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

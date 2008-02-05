@@ -5,13 +5,13 @@
     <dataset name="dictDset" />
 
     <soap name="dictionary" wsdl="http://services.aonaware.com/DictService/DictService.asmx?WSDL">
-        <method event="onload">
+        <handler name="onload">
             Debug.write('dictionary soap service stub loaded');
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('error:', error);
-        </method>
+        </handler>
 
         <remotecall name="define" funcname="Define" dataobject="$once{dictDset}">
             <param>
@@ -40,12 +40,12 @@
     <tabs id="definitions" x="20" y="85" height="300" width="550"
           datapath="dictDset:/item[1]/DefineResponse/DefineResult/Definitions" >
         <tabpane datapath="Definition">
-            <method event="ondata">
+            <handler name="ondata">
                 var pos = this.datapath.xpathQuery('position()');
                 var word = this.datapath.xpathQuery('Word/text()');
                 this.setAttribute('text', pos + '. ' + word.toLowerCase());
 
-            </method>
+            </handler>
             <view width="${parent.parent.width - 20}" 
                   height="$once{parent.parent.height - 50}" clip="true">
                 <text datapath="WordDefinition[1]/text()" multiline="true" 
@@ -58,7 +58,7 @@
 
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

@@ -62,7 +62,7 @@
             Called when the user clicks the button. Asks the editor to apply the 
             format.
             @keywords private -->
-        <method event="onclick" name="doClick">
+        <handler name="onclick" name="doClick">
 
             // toggle it
             this.setActive(!this.isactive);
@@ -74,13 +74,13 @@
         // Unlike the combo boxes, buttons aren't focusable, so we can just 
         // restore the selection in the same frame. No need for a delegate [ben 9.21.05]
            this.editor._restoreSelection();
-        </method>
+        </handler>
 
         <!--- @keywords private -->
-        <method event="onmouseover">          
+        <handler name="onmouseover">          
             this.editor.saveSelectionRegion();            
-        </method>
-        
+        </handler>
+
         <method name="getValue">
             return isactive;
         </method>
@@ -99,7 +99,7 @@
 
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

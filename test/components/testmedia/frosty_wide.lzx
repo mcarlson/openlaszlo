@@ -1,7 +1,7 @@
 <view name="frosty">
-    <method event="oninit">
+    <handler name="oninit">
         //Debug.write("Frosty's parent: " + this.parent);
-    </method>
+    </handler>
 <view width="50" height="100%" bgcolor="yellow"/>
 <text multiline="true"
       width="360">
@@ -24,6 +24,6 @@ just the same as you and me.
     <simplelayout spacing="10" axis="x"/>
 </view>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

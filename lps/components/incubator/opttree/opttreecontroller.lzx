@@ -16,14 +16,14 @@
                value="$once{ new LzDelegate( this, 'checkDocChange' ) }"/>
 
     <!--- @keywords private -->
-    <method event="ondata" reference="parent">
+    <handler name="ondata" reference="parent">
         //setup listener
         this.changeDel.unregisterAll();
         this.setAttribute( "rootnode", parent.data );
         this.changeDel.register( rootnode.ownerDocument , "onDocumentChange" );
 
         this.rebuildList();
-    </method>
+    </handler>
 
     <!--- This method is called whenever the data in the data structure that
           backs the opttree changes.
@@ -103,7 +103,7 @@
     </method>
 </node>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

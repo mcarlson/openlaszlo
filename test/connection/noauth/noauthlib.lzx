@@ -7,11 +7,11 @@
 
 <library>
 
-    <method event="onkeyup" reference="LzKeys" args="k">
+    <handler name="onkeyup" reference="LzKeys" args="k">
         if ( k == 13 ) {
             bSend.send();
         }
-    </method>
+    </handler>
 
     <dataset name="chatDset" />
 
@@ -21,24 +21,24 @@
             canvas.chatwindow.chatPtr.addNode("message", null, { text: str } );
         </method>
 
-        <method event="onconnect">
+        <handler name="onconnect">
             this.print("...connected...");
             canvas.myconnection.sendMessage("*", "", "userconnect");
             canvas.front.setVisible(false);
             canvas.chatwindow.setVisible(true);
-        </method>
+        </handler>
 
-        <method event="onerror">
+        <handler name="onerror">
             this.print("...connection error...");
-        </method>
+        </handler>
 
-        <method event="ontimeout">
+        <handler name="ontimeout">
             this.print("...connection timed out...");
-        </method>
+        </handler>
 
-        <method event="ondisconnect">
+        <handler name="ondisconnect">
             this.print("...disconnected...");
-        </method>
+        </handler>
 
         <dataset name="message" />
     </connectiondatasource>
@@ -46,9 +46,9 @@
 
     <view name="front" x="20" y="20">
         <button>go chat
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.myconnection.connect();
-            </method>
+            </handler>
         </button>
     </view>
 
@@ -58,21 +58,21 @@
         <datapointer name="chatPtr" xpath="chatDset:/" />
 
         <datapointer xpath="myconnection:message:/">
-            <method event="ondata">
+            <handler name="ondata">
                 var mesg = this.getXPath('text()');
                 this.parent.chatPtr.addNode("message", null,
                     { text: mesg}
                 );
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer xpath="myconnection:sendMessageDset:/">
-            <method event="onerror">
+            <handler name="onerror">
                 var message = this.parent.sendView.msg.getText();
                 this.parent.chatPtr.addNode("message", null, 
                     { text:  "error: " + this.dataset.getErrorString() }
                 );
-            </method>
+            </handler>
         </datapointer>
 
         <view width="387" height="287" x="29" y="39" bgcolor="#000000" />
@@ -113,11 +113,11 @@
                 </method>
             </button>
             <button width="50" height="24">Logout
-                <method event="onclick">
+                <handler name="onclick">
                     canvas.front.setVisible(true);
                     canvas.chatwindow.setVisible(false);
                     canvas.myconnection.disconnect();
-                </method>
+                </handler>
             </button>
 
             <simplelayout axis="x" spacing="5"/>
@@ -127,6 +127,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

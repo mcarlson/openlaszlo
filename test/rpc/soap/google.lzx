@@ -1,37 +1,37 @@
 <canvas debug="true" height="800" width="1000">
 
-  <method event="oninit">
+  <handler name="oninit">
     if (Debug['setWrapLines']) {
         Debug.setWrapLines(true);
     }
     Debug.showInternalProperties = true;
 
-  </method>
+  </handler>
     <debug x="280" width="470" height="370" />
 
     <dataset name="googleDset" />
 
     <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
-        <method event="onload">
+        <handler name="onload">
             Debug.write('google soap service stub loaded');
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('error:', error);
-        </method>
+        </handler>
 
         <remotecall name="spellcheck" funcname="doSpellingSuggestion">
 
             <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
             <param value="'check spelling'" />  
 
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('spell check result:\n', value);
-            </method>
+            </handler>
 
-            <method event="onerror" args="error">
+            <handler name="onerror" args="error">
                 Debug.write('spell check error:\n', error);
-            </method>
+            </handler>
         </remotecall>
 
         <remotecall name="search" funcname="doGoogleSearch" 
@@ -48,9 +48,9 @@
             <param value="''" />
             <param value="''" />
 
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('one:', value);
-            </method>
+            </handler>
 
         </remotecall>
     </soap>
@@ -66,7 +66,7 @@
         </view>
     </view>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

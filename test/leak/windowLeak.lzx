@@ -3,7 +3,7 @@
 
 <view layout="axis:y" y="${canvas.height - this.height}">
   <button>make 'em all
-    <method event="onclick">
+    <handler name="onclick">
       for ( var i=0; i!=30;++i){
         new foo( canvas,{ width : 200,
                           height : 200 ,
@@ -12,18 +12,18 @@
                           name: 'win'+i
                         }); 
         }
-    </method>
+    </handler>
   </button>
   <button>Kill 'em all
-    <method event="onclick">
+    <handler name="onclick">
       for ( var i=0; i!=30;++i){
         canvas['win'+i].destroy();
       }
-    </method>
+    </handler>
   </button>
 </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

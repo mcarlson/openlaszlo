@@ -11,10 +11,10 @@
 
     <class name="myremotecall" extends="remotecall">
         <param value="${maths.makedoc(this.parent.funcname, a.text, b.text)}" />
-        <method event="ondata" args="value">
+        <handler name="ondata" args="value">
             Debug.write(this.funcname, ": ", value);
             result.setText(value);
-        </method>
+        </handler>
     </class>
 
     <soap name="maths" 
@@ -32,18 +32,18 @@
             return s;
         ]]></method>
        
-        <method event="onload">
+        <handler name="onload">
             Debug.write(this.name + ' loaded');
             this.loaded = true;
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('error:', error);
-        </method>
+        </handler>
 
-        <method event="ontimeout" args="error">
+        <handler name="ontimeout" args="error">
             Debug.write('timeout:', error);
-        </method>
+        </handler>
 
         <myremotecall funcname="Add" />
         <myremotecall funcname="Subtract" />
@@ -58,7 +58,7 @@
         <textlistitem>Subtract</textlistitem>
         <textlistitem>Divide</textlistitem>
 
-        <method event="onselect"><![CDATA[
+        <handler name="onselect"><![CDATA[
             if (!canvas.maths.loaded) return;
             var del = new LzDelegate(this, 'handler');
             if (this.value != null) {
@@ -69,7 +69,7 @@
                     canvas.maths[this.value].invoke();
                 }
             }
-        ]]></method>
+        ]]></handler>
 
         <method name="handler" args="d">
             Debug.write('handle ', d);
@@ -80,6 +80,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

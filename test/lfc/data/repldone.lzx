@@ -42,15 +42,15 @@
         <view id="rman">
             <datapath id="checkdp">
                 <attribute name="doneDel" value="null"/>
-                <method event="onnodes" args="nodes">
+                <handler name="onnodes" args="nodes">
                     <![CDATA[
                     for ( var i = 0; i < nodes.length ; i++ ){
                         var tnode = nodes[i].getFirstChild();
                         tnode.setData( tnode.data + "x" );
                     }
                     ]]>
-                </method>
-                <method event="onclones" args="clones">
+                </handler>
+                <handler name="onclones" args="clones">
                     var lastclone = clones[ clones.length - 1 ];
                     if ( !this.doneDel ){
                         this.doneDel = new LzDelegate( this, 'replicationDone');
@@ -58,7 +58,7 @@
                         this.doneDel.unregisterAll();
                     }
                     this.doneDel.register( lastclone , "oninit" );
-                </method>
+                </handler>
                 <method name="replicationDone">
                     Debug.write( 'REPLICATION IS DONE!');
                 </method>
@@ -68,30 +68,30 @@
             <text datapath="text()"/>
             <attribute name="waittime" value="100"/>
             <node>
-                <method event="onconstruct">
+                <handler name="onconstruct">
                    <![CDATA[
                     var endtime = parent.waittime + getTimer();
                     while ( getTimer() < endtime ){
                         //nop
                     }
                     ]]>
-                </method>
+                </handler>
             </node>
         </view>
     </view>
     <button>
         <attribute name="toggle" value="false"/>
-        <method event="onclick">
+        <handler name="onclick">
             if ( toggle ){
                 rman.setDatapath( "ds1:/top/node" )
             } else {
                 rman.setDatapath( " ds2 :/ top  /  xnode " )
             }
             this.toggle = !this.toggle;
-        </method>
+        </handler>
     </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

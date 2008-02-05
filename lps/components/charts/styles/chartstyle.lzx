@@ -299,8 +299,7 @@
         //Debug.write("mark: " + obj);
         //Debug.write("mark: " + obj["styleversion"]);
     </method>
-     <method event="onversion">
-     </method>    
+     <event name="onversion" />
 </class>
 
 <!--- list of datastyle -->
@@ -317,7 +316,7 @@ bar and column chart: regionstyle. linestyle for the border
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

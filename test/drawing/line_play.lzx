@@ -4,7 +4,7 @@
     <attribute name="starty" type="number"/>
     <attribute name="length" type="number"/>
     <attribute name="angle" type="number"/>
-    <method event="oninit">
+    <handler name="oninit">
       var a = (angle -90 )* ((2*Math.PI)/360);
       var y1 = length * Math.sin(a);
       var x1 = length * Math.cos(a);
@@ -16,13 +16,14 @@
       this.lineWidth = 1;
       this.stroke();
 
-    </method>
+    </handler>
   </class>
 
-<method event="oninit"><![CDATA[
+<handler name="oninit"><![CDATA[
   for (var i=0; i != 360 ; i+=10){
     new doLine(canvas, {length: 100, startx: 100, starty:100, slope: i}); 
   }
 ]]>
-</method>
+</handler>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

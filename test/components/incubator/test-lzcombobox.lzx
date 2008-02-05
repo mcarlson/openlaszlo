@@ -11,25 +11,26 @@
     <class name="colorsquare" extends="drawview">
         <attribute name="swatchcolor" value="black"/>
         <attribute name="drawsquare" value="false"/>
-        <method event="oninit">
+        <handler name="oninit">
             this.redraw();
-        </method>
-        <method event="onswatchcolor" name="redraw">
+        </handler>
+        <handler name="onswatchcolor" method="redraw" />
+        <method name="redraw">
             this.clear();
             if (this.drawsquare) {
-	        	this.linewidth=0; this.beginPath(); 
+                        this.linewidth=0; this.beginPath(); 
                 this.fillStyle = 0x333333; this.moveTo(1,1); 
                 this.lineTo(15,1); this.lineTo(15,11); this.lineTo(1,11); 
                 this.lineTo(1,1); this.fill();
-	
-	            this.beginPath(); this.fillStyle = 0xFFFFFF; this.moveTo(0,0); 
+        
+                    this.beginPath(); this.fillStyle = 0xFFFFFF; this.moveTo(0,0); 
                 this.lineTo(14,0); this.lineTo(14,10); this.lineTo(0,10); 
                 this.lineTo(0,0); this.fill();
-	            
-	            this.beginPath(); this.fillStyle = swatchcolor; 
+                    
+                    this.beginPath(); this.fillStyle = swatchcolor; 
                 this.moveTo(1,1); this.lineTo(13,1); this.lineTo(13,9); 
                 this.lineTo(1,9); this.lineTo(1,1); this.fill();
-	       }
+               }
         </method>
     </class>
 
@@ -146,9 +147,9 @@
             <view layout="axis: x; spacing: 5">
                 <lzcombobox id="cb2" width="50" shownitems="3"
                     itemdatapath="dsHours:/item" value="2">
-                    <method event="onvalue" args="v">
+                    <handler name="onvalue" args="v">
                         Debug.write(this.id + ') value:', this.value, v);
-                    </method>
+                    </handler>
                 </lzcombobox>
                 <text text="${cb2.value}" resize="true"/>
             </view>
@@ -160,9 +161,9 @@
                 <lzcombobox id="cb3" width="100" shownitems="4"
                     itemdatapath="moredata:/fruit" textdatapath="@foo" valuedatapath="@val"
                     value="$once{ parent.testval }">
-                    <method event="onvalue" args="v">
+                    <handler name="onvalue" args="v">
                         Debug.write(this.id + ') value:', this.value, v);
-                    </method>
+                    </handler>
                 </lzcombobox>
                 <text text="${cb3.value}" resize="true"/>
             </view>
@@ -194,19 +195,19 @@
                 <lzcombobox id="cb6" itemdatapath="searchLang:/*" textdatapath="@name" 
                     value="$path{ 'dsFoo:/data[1]/@value' }" shownitems="10">
 
-                    <method event="onselect" args="dp">
+                    <handler name="onselect" args="dp">
                         Debug.write(this.id + ') select:', dp)
-                    </method>
+                    </handler>
 
-                    <method event="oninit">
+                    <handler name="oninit">
                         // Don't understand why I have to do this when value is data
                         // bound using datapath. Another way around this is to set 
                         // datacontrolsvisibility in datapath node for combobox. -pk
                         if (! this.visible) this.setVisible(true);
-                    </method>
+                    </handler>
 
     <!--
-                    <method event="oninit">
+                    <handler name="oninit">
                         // shownitems = -1 should work but it doesn't
                         this.shownitems = searchLang.childNodes.length;
                     </method>
@@ -294,12 +295,12 @@
             <view width="100" >
                 <lzcombobox id="cb15" width="100%" shownitems="8"
                             itemdatapath="dsHours:/item">
-                    <method event="oncombofocus">
+                    <handler name="oncombofocus">
                         Debug.write(this, ' got focus');
-                    </method>
-                    <method event="oncomboblur">
+                    </handler>
+                    <handler name="oncomboblur">
                         Debug.write(this, ' got blur');
-                    </method>
+                    </handler>
                 </lzcombobox>
             </view>
 
@@ -315,3 +316,4 @@
     </view> <!-- id='main' -->
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

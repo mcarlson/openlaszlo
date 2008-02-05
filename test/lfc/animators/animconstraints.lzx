@@ -18,10 +18,10 @@
         <attribute name="text" type="html"/>
         <inputtext name="t" text="$once{parent.attrval}"/>
         <button text="${parent.setAttr}" >
-            <method event="onclick">
+            <handler name="onclick">
                 var v = parent.t.getText();
                 parent.setAttribute( 'attrval'  , v );
-            </method>
+            </handler>
         </button>
         <simplelayout axis="x"/>
     </class>
@@ -52,6 +52,6 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,16 +1,16 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
 
 <canvas>
     <view width="20" height="20" bgcolor="red" clip="true">
-        <method event="oninit">
+        <handler name="oninit">
             this.animate('width', 100, 1000);
             this.animate('height', 100, 1000);
-        </method>
+        </handler>
         <view resource="resc/logo.png" x="-20" y="-20"/>
     </view>
 </canvas>

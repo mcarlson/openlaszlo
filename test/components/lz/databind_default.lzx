@@ -62,9 +62,9 @@
             <list x="5" y="5" width="130" shownitems="3" >
                 <textlistitem value='$path{"../value/text()"}'> 
                     <datapath pooling="true" xpath="ds:/item/text/text()" />
-                    <method event="onselected" args="isSelected">
+                    <handler name="onselected" args="isSelected">
                         if (isSelected) ds.removeChild( datapath.p.parentNode );
-                    </method>
+                    </handler>
                 </textlistitem>
             </list>
         </view>
@@ -81,11 +81,11 @@
                 <simplelayout axis="x"/>
             </view>
             <button name="add" width="50">add
-                <method event="onclick">
+                <handler name="onclick">
                     this.parent.datapath.updateData();
                     var dp = canvas.datasets.ds.getPointer();
                     dp.addNodeFromPointer( this.parent.datapath );
-                </method>
+                </handler>
             </button>
         </view>
     </testborder>
@@ -191,11 +191,11 @@
             <simplelayout axis="x"/>
             <text>Record Number</text>
             <edittext width="40" name="et">1
-                <method event="onkeyup" args="k">
+                <handler name="onkeyup" args="k">
                     if ( k == 13 ){
                         this.updateText();
                     }
-                </method>
+                </handler>
             </edittext>
         </view>
 
@@ -231,6 +231,6 @@
     </testborder>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

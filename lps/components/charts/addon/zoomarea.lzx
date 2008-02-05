@@ -82,7 +82,7 @@
         <!--- @private keyword
             start finish selection 
         -->
-        <method event="onmouseup" reference="LzGlobalMouse" args="who">
+        <handler name="onmouseup" reference="LzGlobalMouse" args="who">
         <![CDATA[
             if(!this.selecting) return;
             
@@ -116,7 +116,7 @@
             this.select(virtualStartX, virtualEndY, virtualEndX, virtualStartY, this.duration, true);
             
         ]]>
-        </method>
+        </handler>
         
         <!--- @keyword private -->
         <method name="adjustSize">
@@ -160,3 +160,5 @@
         </method>      
     </class>
 </library> 
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->
+

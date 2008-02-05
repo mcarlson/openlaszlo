@@ -2,7 +2,7 @@
    <class name="drawme"  extends="drawview">
       <attribute name="myx" type="number"/>
       <attribute name="myy" type="number"/>
-        <method event="oninit">
+        <handler name="oninit">
             this.moveTo(100*math.random(), 200*math.random());
             this.lineTo(100*math.random(), 200*math.random());
             this.quadraticCurveTo(150*math.random(), 250*math.random(), 200*math.random(), 200*math.random());
@@ -42,6 +42,7 @@
             g.addColorStop(1,  parseInt(0xffffff)*math.random());
             this.fillStyle = g;
             this.fill();
-        </method>
+        </handler>
     </class>
 </library>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

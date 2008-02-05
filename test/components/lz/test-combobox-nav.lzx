@@ -1,20 +1,20 @@
 <canvas>
-	<debug x="110" y="140"/>
-	<view x="15" y="15">
-		<simplelayout/>
-		<button/>
-		<combobox>
-			<textlistitem>stuff</textlistitem>
-		</combobox>
-		<button/>
-		<combobox editable="false">
-			<textlistitem>stay focussed</textlistitem>
+        <debug x="110" y="140"/>
+        <view x="15" y="15">
+                <simplelayout/>
+                <button/>
+                <combobox>
+                        <textlistitem>stuff</textlistitem>
+                </combobox>
+                <button/>
+                <combobox editable="false">
+                        <textlistitem>stay focussed</textlistitem>
             <textlistitem selected="true">select</textlistitem>
-		</combobox>
-		<button/>
-	</view>
+                </combobox>
+                <button/>
+        </view>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

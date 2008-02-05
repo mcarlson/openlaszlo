@@ -42,19 +42,19 @@
       logitem('constructorder', args['name']);
       logitem('sequence', 'construct' + args['name']);
     </method>
-    <method event="onconstruct">
+    <handler name="onconstruct">
       logitem('onconstructorder', this.name);
       logitem('sequence', 'onconstruct' + this.name);
-    </method>
+    </handler>
     <method name="init">
       super.init();
       logitem('initorder', this.name);
       logitem('sequence', 'init' + this.name);
     </method>
-    <method event="oninit">
+    <handler name="oninit">
       logitem('oninitorder', this.name);
       logitem('sequence', 'oninit' + this.name);
-    </method>
+    </handler>
   </class>
   
   <class name="ClassInitTestCase" extends="TestCase">
@@ -294,10 +294,10 @@
           sequenceorder = sequenceorder + ',' + 'construct';
         </method>
         
-        <method event="onconstruct">
+        <handler name="onconstruct">
           onconstructorder = onconstructorder + ',' + this.id;
           sequenceorder = sequenceorder + ',' + 'onconstruct';
-        </method>
+        </handler>
         
         <method name="init">
           super.init();
@@ -305,26 +305,26 @@
           sequenceorder = sequenceorder + ',' + 'init';
         </method>
         
-        <method event="oninit">
+        <handler name="oninit">
           oninitorder = oninitorder + ',' + this.id;
           sequenceorder = sequenceorder + ',' + 'oninit';
-        </method>
+        </handler>
         
         <node name="a">
           <method name="construct" args="parent,args">
             super.construct(parent,args);
             n2.constructorder = n2.constructorder + ',' + this.name;
           </method>
-          <method event="onconstruct">
+          <handler name="onconstruct">
             n2.onconstructorder = n2.onconstructorder + ',' + this.name;
-          </method>
+          </handler>
           <method name="init">
             super.init();
             n2.initorder = n2.initorder + ',' + this.name;
           </method>
-          <method event="oninit">
+          <handler name="oninit">
             n2.oninitorder = n2.oninitorder + ',' + this.name;
-          </method>
+          </handler>
         </node>
         
         <node name="b">
@@ -332,16 +332,16 @@
             super.construct(parent,args);
             n2.constructorder = n2.constructorder + ',' + this.name;
           </method>
-          <method event="onconstruct">
+          <handler name="onconstruct">
             n2.onconstructorder = n2.onconstructorder + ',' + this.name;
-          </method>
+          </handler>
            <method name="init">
             super.init();
             n2.initorder = n2.initorder + ',' + this.name;
           </method>
-         <method event="oninit">
+         <handler name="oninit">
             n2.oninitorder = n2.oninitorder + ',' + this.name;
-          </method>
+         </handler>
         </node>
       </node>
       
@@ -381,3 +381,4 @@
   </TestSuite>
   
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

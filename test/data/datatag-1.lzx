@@ -1,9 +1,9 @@
 <canvas width="100%" height="80%" >
   <simplelayout spacing="2"/>
   <view name="data0" layout="axis: y" bgcolor="#cccccc">
-    <method event="onclick">
+    <handler name="onclick">
         Debug.write(this.lds);
-    </method>
+    </handler>
     <dataset name="lds" datafromchild='true'>
       <data name="initialdata">
        <mydata>
@@ -15,7 +15,7 @@
     </dataset>
     <text>local dataset loaded with data tag initialdata</text>
     <text datapath="local:parent.lds:/mydata/foo/text()" onclick="Debug.write(this.datapath)"/>
-    <method reference="lds" event="oninit">
+    <handler name="oninit">
       <![CDATA[
       Debug.write("lds data tag test data oninit recv'd", this);
       if (this.lds.serialize() != '<lds><mydata><foo>bar</foo><foo>baz</foo><foo>kerchunk</foo></mydata></lds>') {
@@ -23,13 +23,13 @@
           Debug.write(this.lds.serialize());
       }
       ]]>
-    </method>
+    </handler>
   </view>
 
   <view name="data1" layout="axis: y" bgcolor="#cccccc">
-    <method event="onclick">
+    <handler name="onclick">
         Debug.write(this.lds);
-    </method>
+    </handler>
     <dataset name="lds" datafromchild="true">
      <!-- MULTIPLE root nodes... works for back compatibility -->
       <data >
@@ -44,14 +44,14 @@
     </dataset>
     <text>local dataset loaded with anonymous data tag </text>
     <text datapath="local:parent.lds:/foo/text()" onclick="Debug.write(this.datapath)"/>
-    <method reference="lds" event="oninit">
+    <handler name="oninit">
       <![CDATA[
       Debug.write("lds data tag test data loaded", this);
       if (this.lds.serialize() != '<lds><foo>bar</foo><foo>baz</foo><foo>kerchunk</foo></lds>') {
           Debug.error(" data1 serialized data does not match expected value");
       }
       ]]>
-    </method>
+    </handler>
     <!-- a plain old vanilla data node -->
     <data name="mydata">
       <flavors>
@@ -114,6 +114,6 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

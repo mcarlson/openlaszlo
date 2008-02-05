@@ -27,15 +27,15 @@
         <!-- have to use placeholder resources so that basebutton initializes correctly -->     
         <view name="left"   resource="iconradiotransparent_button_rsc" height="${parent.height}" 
             x="0"  >
-            <method event="onload">this.updateResourceSize();</method>
+            <handler name="onload">this.updateResourceSize();</handler>
         </view>
         <view name="middle" resource="iconradiotransparent_button_rsc" height="${parent.height}" 
             x="${parent.left.width}" width="${parent.width-parent.left.width-parent.right.width}" stretches="both">
-            <method event="onload">this.updateResourceSize();</method>
+            <handler name="onload">this.updateResourceSize();</handler>
         </view>
         <view name="right"  resource="iconradiotransparent_button_rsc" height="${parent.height}" 
             x="${parent.width-width}" stretches="height">
-            <method event="onload">this.updateResourceSize();</method>
+            <handler name="onload">this.updateResourceSize();</handler>
         </view>
         <view x="${parent.width-width}" name="line" bgcolor="black" width="1" height="${parent.height-1}" visible="false" />
          
@@ -76,23 +76,23 @@
         <!---  @keywords private -->
         <attribute name="_down" value="false" type="boolean"/>
         <!---  @keywords private -->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             this.setFrame((this.selected || this._down) ? 3 : 2);
-        </method>
+        </handler>
         <!---  @keywords private -->
-        <method event="onmouseout">
+        <handler name="onmouseout">
             this.setFrame(this.selected ? 3 : 1);
-        </method>
+        </handler>
         <!---  @keywords private -->
-        <method event="onmouseup">
+        <handler name="onmouseup">
             this.setFrame(this.selected ? 3 : 1);
             this._down = false;
-        </method>
+        </handler>
         <!---  @keywords private -->
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.setFrame(3);
             this._down = true;
-        </method>
+        </handler>
         <!--- Display hilite (handles key navigation) -->
         <!---  @keywords private -->
         <method name="setHilite" args="v" >
@@ -129,7 +129,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

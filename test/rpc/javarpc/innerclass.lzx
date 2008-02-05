@@ -12,29 +12,29 @@
              remoteclassname="org.openlaszlo.test.xmlrpc.TypeMap">
 
         <remotecall name="getObject" funcname="getObject">
-            <method event="ondata" args="res">
+            <handler name="ondata" args="res">
                 Debug.write("---");
                 Debug.write("method:", this.name, "type:", typeof(res))
                 Debug.write("returned:", res);
-            </method>
+            </handler>
         </remotecall>
 
-        <method event="onerror" args="err">
+        <handler name="onerror" args="err">
             Debug.write("---");
             Debug.write("onerror:", err)
-        </method>
+        </handler>
 
-        <method event="onload">
+        <handler name="onload">
             Debug.write("---");
             Debug.write("typemap created:");
             Debug.write(this.proxy);
             this.getObject.invoke()
-        </method>
+        </handler>
 
     </javarpc>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

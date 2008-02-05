@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -290,8 +290,8 @@
                 ]]>
             </handler>
 
-            <method name="_dokeyup" args="kc"
-                    event="onkeyup">
+            <handler name="onkeyup" method="_dokeyup" />
+            <method name="_dokeyup" args="kc">
                 if (kc == 27) {  // escape needs to close floating list
                     this.owner.setOpen(false);
                 }

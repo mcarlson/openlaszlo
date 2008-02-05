@@ -53,11 +53,11 @@
             _passthruchanges flag avoids an infinite loop
             @param textformat fmt: TextFormat object
             -->
-        <method event="oncurrentformat" reference="this.editor" args="fmt">
+        <handler name="oncurrentformat" reference="this.editor" args="fmt">
             this._passthruchanges = false; 
             this.matchformat(fmt); 
             this._passthruchanges = true;             
-        </method>
+        </handler>
 
         <!--- Update the GUI to match the format passed in 
             @param textformat spec: TextFormat object-->
@@ -108,7 +108,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->

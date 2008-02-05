@@ -107,9 +107,9 @@
                 }
             </method>
             
-            <method event="onscroll">
+            <handler name="onscroll">
                 this.setPos(-this.lineheight * (this.scroll - 1), true);
-            </method>
+            </handler>
         </_richinternalinputtext>
         
         <!--- Overrides a parent method which calculates y position for text
@@ -128,7 +128,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

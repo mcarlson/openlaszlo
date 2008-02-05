@@ -519,10 +519,8 @@
         <method name="undo" args="duration">
             actionhelper.undo(duration);
         </method>
-        <method event="onRenderStart">
-        </method>
-        <method event="onRenderStop">
-        </method>
+        <event name="onRenderStart" />
+        <event name="onRenderStop" />
 
         <doc>
           <tag name="shortdesc"><text>
@@ -545,12 +543,12 @@
         <attribute name="animateProgress" value="0" type="number" />
         
         <animator name="animatezoom" attribute="animateProgress" from="0" to="1" start="false" duration="500">
-            <method event="onstart">
+            <handler name="onstart">
                 parent.setAttribute("isdrawing", true);
-            </method>
-            <method event="onstop">
+            </handler>
+            <handler name="onstop">
                 parent.setAttribute("isdrawing", false);
-            </method>
+            </handler>
         </animator>
         
         <method name="changeBound" args="newminx, newminy, newmaxx, newmaxy,  duration, undoable">
@@ -622,7 +620,7 @@
             }
         </method>
         
-        <method event="onanimateProgress">
+        <handler name="onanimateProgress">
         <![CDATA[        
             //Debug.write("AnimateStep: " + chart.minx + " " + chart.miny + " " + chart.maxx + " "  + chart.maxy);
 
@@ -643,13 +641,13 @@
                 chart.onRenderStop.sendEvent();             
             }
         ]]>
-        </method>                 
+        </handler>
     </class>
 </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

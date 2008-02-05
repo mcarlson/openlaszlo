@@ -57,8 +57,8 @@
         <attribute name="_lastkeydown" value="0"/>
         <!--- @keywords private -->
         <attribute name="upkeydel" value="null"/>
-        <method name="dispatchKeyDown" args="key"
-                event="onkeydown" reference="LzKeys">
+        <handler name="onkeydown" reference="LzKeys" method="dispatchKeyDown" />
+        <method name="dispatchKeyDown" args="key">
             <![CDATA[
             var callupdel = false;
             if ( key == 32 ){
@@ -222,7 +222,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

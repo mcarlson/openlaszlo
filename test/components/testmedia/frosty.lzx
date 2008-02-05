@@ -1,7 +1,7 @@
 <view name="frosty">
-    <method event="oninit">
+    <handler name="oninit">
         //Debug.write("Frosty's parent: " + this.parent);
-    </method>  
+    </handler>
 <text multiline="true" 
       x="6"
     height="450" width="420">
@@ -34,6 +34,6 @@ But he waved goodbye, sayin' "Don't cry, I'll be back again some day."
 </text>
 </view>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -7,9 +7,9 @@
     <dataset name="dptest2" src="http:testdata.xml" type="http" request="true"/>
 
     <class name="dataEventReporter"> 
-        <method event="ondata" args="d">
+        <handler name="ondata" args="d">
             classroot.collect( this,  d , 'ondata' );
-        </method>
+        </handler>
         <method name="applyData" args="d">
             classroot.collect( this,  d , 'applyData' );
         </method>
@@ -145,6 +145,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

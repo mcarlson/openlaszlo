@@ -17,9 +17,9 @@
             been changed.  (Datacolumn itself can't have a datapath attribute or
             else it somehow changes how everything works.) -->
         <view name="dataview" visible="false">
-            <method event="ondata">
+            <handler name="ondata">
                 parent.getRootDataSeries().ondata.sendEvent();
-            </method>
+            </handler>
         </view>
         
         <!--- get the min value of the columns for the series -->      
@@ -165,9 +165,9 @@
         </method>
         
         <!--- @keyword private -->
-        <method event="ondata">
+        <handler name="ondata">
             //this.getRootDataseries().ondata.sendEvent();
-        </method>
+        </handler>
         
         <doc>
           <tag name="shortdesc"><text>
@@ -411,20 +411,20 @@
         </method>
         
         <!--- @keyword private -->
-        <method event="ondata">
+        <handler name="ondata">
             // Have to keep this from happening on linechart, or else it doesn't
             // draw it properly the first time.  This may need to be fixed.  -JC
             if(this.getRootDataSeries().parent.constructor.tagname != "linechart"){
                 this.clearCache();
                 this.setAttribute("datadone", true);
             }
-        </method>                       
+        </handler>
     </class>
 </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

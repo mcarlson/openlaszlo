@@ -16,10 +16,10 @@
         <!--- @keywords private : internal -->
         <attribute name="lasttime" value="0"/>
 
-        <method event="oninit">
+        <handler name="oninit">
             var d = new LzDelegate( this , "tellTime", LzIdle, "onidle" );
             this.bringToFront();
-        </method>
+        </handler>
         <method name="tellTime" args="t">
             this.numframes++;
             if (this.starttime = 0) this.starttime = t;
@@ -37,7 +37,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

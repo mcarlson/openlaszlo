@@ -7,9 +7,9 @@
   <class name="colorpot" width="13" height="13">
     <attribute name="mycolor" type="color" value="#000000"/>
     <attribute name="listener" type="expression"/>
-    <method event="onclick">
+    <handler name="onclick">
       listener.changeColor(this.getAttribute('mycolor'));
-    </method>
+    </handler>
     <view bgcolor="#444444" width="13" height="13">
       <view bgcolor="${classroot.mycolor}"  x="1" y="1" width="11" height="11"/>
     </view>
@@ -23,9 +23,9 @@
          extends="window" width="260" height="170" bgcolor="#cccccc">
     <attribute name="selectedColor" type="number" value="0x000000"/>
     
-    <method event="oninit">
+    <handler name="oninit">
       this.changeColor(0x000000);
-    </method>
+    </handler>
     
     <method name="RGBtoHLS" args="r,g,b">
       <![CDATA[
@@ -85,9 +85,9 @@
             trackheight="4"
             thumbheight="12"
             x="4" y="80" showrange="false" showvalue="false">
-      <method event="onvalue">
+      <handler name="onvalue">
         classroot.updateColor();
-      </method>
+      </handler>
     </slider>
     
     <text fontsize="8"
@@ -97,9 +97,9 @@
             trackheight="4"
             thumbheight="12"
             x="4" y="96" showrange="false"  showvalue="false">
-      <method event="onvalue">
+      <handler name="onvalue">
         classroot.updateColor();
-      </method>
+      </handler>
     </slider>
     
     <text fontsize="8"
@@ -109,9 +109,9 @@
             trackheight="4"
             thumbheight="12"
             x="4" y="112" showrange="false" showvalue="false">
-      <method event="onvalue" >
+      <handler name="onvalue" >
         classroot.updateColor();
-      </method>
+      </handler>
     </slider>
     
     <view name="c2" bgcolor="black" width="30" height="66" y="4" x="206">
@@ -240,7 +240,7 @@
   <colorpicker id="the_colorpicker"/>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

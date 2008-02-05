@@ -18,7 +18,7 @@
     <dataset name="searchdata" type="soap" src="http://api.google.com/search/beta2" namespace="urn:GoogleSearch" method="doGoogleSearch"/>
 
     <resource name="icon">
-	    <frame src="resources/jpg/logo.jpg" />
+            <frame src="resources/jpg/logo.jpg" />
         <frame src="resources/swf/logo.swf" />
     </resource>
 
@@ -89,6 +89,6 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

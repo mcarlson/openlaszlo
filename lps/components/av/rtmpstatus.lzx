@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -37,10 +37,10 @@
         ]]>
         </handler>
 
-        <method event="ondestroy"><![CDATA[
+        <handler name="ondestroy"><![CDATA[
         this._updateStageDelegate.unregisterAll();
         ]]>
-        </method>
+        </handler>
 
 
         <!--- @access private -->

@@ -24,77 +24,77 @@
   <simplelayout spacing="2"/>
 
   <view name="nodatanoname" layout="axis: y" bgcolor="#cccccc">
-    <method event="onclick">
+    <handler name="onclick">
         Debug.write(this.localdata);
-    </method>
+    </handler>
     <dataset/>
     <text>empty local dataset with no name</text>
   </view>
 
   <view name="nodata" layout="axis: y" bgcolor="#cccccc">
-    <method event="onclick">
+    <handler name="onclick">
         Debug.write(this.lds);
-    </method>
+    </handler>
     <dataset name="lds"/>
     <text>empty local dataset</text>
   </view>
 
   <view name="somedata" layout="axis: y" bgcolor="#cccccc">
-    <method event="onclick">
+    <handler name="onclick">
         Debug.write(this.lds);
-    </method>
+    </handler>
     <dataset name="lds">
         <foo>bar</foo>
     </dataset>
     <text>local dataset</text>
-    <method reference="lds" event="oninit">
+    <handler name="oninit">
       <![CDATA[
       Debug.write("somedata test data loaded", this);
       if (this.lds.serialize() != '<lds><foo>bar</foo></lds>') {
       Debug.error("somedata serialized data does not match expected value");
       }
       ]]>
-    </method>
+    </handler>
   </view>
 
   <view name="filedata" layout="axis: y" bgcolor="#cccccc">
-    <method event="onclick">
+    <handler name="onclick">
         Debug.write(this.lds);
-    </method>
+    </handler>
     <dataset name="lds" src="testdata.xml"/>
     <text>local dataset compiled in from external file</text>
-    <method reference="lds" event="oninit">
+    <handler name="oninit">
       <![CDATA[
       Debug.write("filedata test data loaded", this);
       if (this.lds.serialize() != '<lds><persons><person id="1"><firstName>Dan</firstName><lastName>McGowan</lastName><modifyDate>3/25/05</modifyDate><address code="ML" id="1"><line1>2210 North 184th Street</line1><line2/><city>Shoreline</city></address></person><person id="2"><firstName>Barry</firstName><lastName>Bonds</lastName><modifyDate>3/25/05</modifyDate></person><person id="3"><firstName>Jeff</firstName><lastName>Beck</lastName><modifyDate>3/25/05</modifyDate></person></persons></lds>') {
       Debug.error("filedata serialized data does not match expected value");
       }
       ]]>
-    </method>
+    </handler>
   </view>
 
   <view name="remotedata" layout="axis: y" bgcolor="#cccccc">
-    <method event="onclick">
+    <handler name="onclick">
         Debug.write(this.lds);
-    </method>
+    </handler>
     <dataset name="lds" src="testdata.xml" type="http" request="true"/>
     <text>local dataset loaded at runtime</text>
     <text datapath="local:parent.lds:/persons/person/firstName/text()" onclick="Debug.write(this.datapath)"/>
-    <method reference="lds" event="ondata">
+    <handler name="ondata">
       <![CDATA[
       Debug.write("remotedata test data loaded", this);
       if (this.lds.serialize() != '<lds><persons><person id="1"><firstName>Dan</firstName><lastName>McGowan</lastName><modifyDate>3/25/05</modifyDate><address id="1" code="ML"><line1>2210 North 184th Street</line1><line2/><city>Shoreline</city></address></person><person id="2"><firstName>Barry</firstName><lastName>Bonds</lastName><modifyDate>3/25/05</modifyDate></person><person id="3"><firstName>Jeff</firstName><lastName>Beck</lastName><modifyDate>3/25/05</modifyDate></person></persons></lds>') {
       Debug.error("remotedata serialized data does not match expected value");
       }
       ]]>
-    </method>
+    </handler>
   </view>
 
   <view name="remotedatarelative" layout="axis: y" bgcolor="#cccccc" datapath="local:lds:/persons/" visible="true">
-    <method event="onclick">
+    <handler name="onclick">
         Debug.write(this.lds);
         this.datapath.setXPath(this.datapath.xpath);
-    </method>
+    </handler>
     <dataset name="lds" src="testdata.xml" type="http" request="true"/>
     <text>local dataset loaded at runtime and relative datapath - datapath doesn't resolve because dataset doesn't exist yet.  click to reparse xpath</text>
     <text datapath="person/firstName/text()" onclick="Debug.write(this.datapath)"/>
@@ -104,9 +104,9 @@
     <dataset/>
     <view datapath="local:classroot:/">
       <simplelayout/>
-      <method event="onclick">
+      <handler name="onclick">
         this.datapath.addNode('child', 'Click to remove this node', {});
-      </method>
+      </handler>
       <text>Click to add a node to my local dataset</text>
       <text x="10" datapath="child/text()" onclick="this.datapath.deleteNode();"/>
     </view>
@@ -119,3 +119,4 @@
   <redlocaldatatest/>
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

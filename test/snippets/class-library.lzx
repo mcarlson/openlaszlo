@@ -1,14 +1,14 @@
 <library>
 
   <class name="myclass" bgcolor="#ffccff" 
-	 width="${this.textview.width}"
-	 height="${this.textview.height}" fontsize="20">
+         width="${this.textview.width}"
+         height="${this.textview.height}" fontsize="20">
     <attribute name="text" type="text"/>
     <text name="textview"  resize="true" text="${parent.text}"/>
   </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

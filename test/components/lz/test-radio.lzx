@@ -30,9 +30,9 @@
                 <inputtext bgcolor="white" name="itemname">name</inputtext>
                 <inputtext bgcolor="white" name="itemvalue">value</inputtext>
                 <button text="Add Item">
-                    <method event="onclick">
+                    <handler name="onclick">
                          mygroup.addItem(parent.itemname.getText(), parent.itemvalue.getText());
-                    </method>
+                    </handler>
                 </button>
                 <simplelayout axis="x"  spacing="6"/>
             </view>
@@ -97,6 +97,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

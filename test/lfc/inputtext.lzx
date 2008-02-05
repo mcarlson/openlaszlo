@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -8,79 +8,79 @@
     
     <inputtext name="foo" bgcolor="yellow">
         foo Some input text
-        <method event="onblur">
+        <handler name="onblur">
             bar.setText(this.getText());
             Debug.write('blur on foo');
-        </method>
-        <method event="onfocus">
+        </handler>
+        <handler name="onfocus">
             Debug.write('focus on foo')
-        </method>
-        <method event="onkeyup" args="k">
+        </handler>
+        <handler name="onkeyup" args="k">
             Debug.write('keyup', k)
-        </method>
-        <method event="onkeydown" args="k">
+        </handler>
+        <handler name="onkeydown" args="k">
             Debug.write('keydown', k)
-        </method>
-        <method event="onselect">
+        </handler>
+        <handler name="onselect">
             Debug.write('select')
-        </method>
+        </handler>
     </inputtext>
     <inputtext name="foo2" width="100" bgcolor="yellow">
         foo2 Some input text
-        <method event="onblur">
+        <handler name="onblur">
             bar.setText(this.getText());
             Debug.write('blur on foo2');
-        </method>
-        <method event="onfocus">
+        </handler>
+        <handler name="onfocus">
             Debug.write('focus on foo2')
-        </method>
-        <method event="onkeyup" args="k">
+        </handler>
+        <handler name="onkeyup" args="k">
             Debug.write('keyup', k)
-        </method>
-        <method event="onkeydown" args="k">
+        </handler>
+        <handler name="onkeydown" args="k">
             Debug.write('keydown', k)
-        </method>
-        <method event="onselect">
+        </handler>
+        <handler name="onselect">
             Debug.write('select')
-        </method>
+        </handler>
     </inputtext>
     
     <inputtext name="fubar" width="200" height="200" multiline="true" bgcolor="green">
         fubar Some input text
-        <method event="onblur">
+        <handler name="onblur">
             bar.setText(this.getText());
             Debug.write('blur');
-        </method>
-        <method event="onfocus">
+        </handler>
+        <handler name="onfocus">
             Debug.write('focus')
-        </method>
-        <method event="onkeyup" args="k">
+        </handler>
+        <handler name="onkeyup" args="k">
             Debug.write('keyup', k)
-        </method>
-        <method event="onkeydown" args="k">
+        </handler>
+        <handler name="onkeydown" args="k">
             Debug.write('keydown', k)
-        </method>
-        <method event="onselect">
+        </handler>
+        <handler name="onselect">
             Debug.write('select')
-        </method>
+        </handler>
     </inputtext>
 
     <view width="50" height="50" bgcolor="red">
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.setAttribute('bgcolor', 0xffff00);
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             this.setAttribute('bgcolor', 0xff9900);
-        </method>
-        <method event="onmouseover">
+        </handler>
+        <handler name="onmouseover">
             this.setAttribute('bgcolor', 0xff9900);
-        </method>
-        <method event="onmouseout">
+        </handler>
+        <handler name="onmouseout">
             this.setAttribute('bgcolor', 0xff0000);
-        </method>
-        <method event="onclick">
+        </handler>
+        <handler name="onclick">
             Debug.write('text is ' + canvas.foo.getText());
-        </method>
+        </handler>
     </view>
     
     <!-- See [LPP-434] 
@@ -89,8 +89,8 @@
        (This does not seem to be a problem anymore [bshine 10.13.06])
    -->
     <inputtext text="lpp-434" width="100">
-        <method event="onmouseup">
-        </method>
+        <handler name="onmouseup">
+        </handler>
     </inputtext>
     
     <simplelayout axis="x"/>

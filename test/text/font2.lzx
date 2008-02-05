@@ -6,7 +6,7 @@
     <simplelayout spacing="5" />
     <view name="a">
         <text name="t">
-		w 
+                w 
         </text>
         <!--red line is width from server -->
         <view width="1" height="10" x="${this.parent.t.width}" bgcolor="red"/>   
@@ -73,6 +73,6 @@
 </canvas>   
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

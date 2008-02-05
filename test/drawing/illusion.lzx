@@ -1,6 +1,6 @@
 <canvas width="220" height="220">
   <drawview>
-    <method event="oninit">
+    <handler name="oninit">
       var a = 0;
       var y1 = 0;
       var x1 = 0;
@@ -15,6 +15,7 @@
       this.strokeStyle = 0;
       this.lineWidth = 1;
       this.stroke();
-    </method>
+    </handler>
   </drawview>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

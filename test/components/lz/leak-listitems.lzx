@@ -6,15 +6,15 @@
         <attribute name="numitems" value="0"/>
         <attribute name="limit" value="100"/>
         <attribute name="itemclassname" value="" type="string"/>
-        <method event="oninit">
+        <handler name="oninit">
             this.itemlist = [];
-        </method>
+        </handler>
         <method name="dotest" args="whichclass">
             this.start = 1;
             this.numtimes = 0;
             this.itemclassname = whichclass;
         </method>
-        <method event="onidle" reference="LzIdle">  <![CDATA[
+        <handler name="onidle" reference="LzIdle">  <![CDATA[
             if (start && (this.numtimes < this.limit || this.numitems>0)) {
                 if (this.numitems == 0) {
                     for (var i=0; i < 10; i ++) {
@@ -34,24 +34,24 @@
                 }
                this.numitems = 0;
             }
-        ]]> </method>
+        ]]> </handler>
     </class>
 
-    <method event="oninit">
+    <handler name="oninit">
       this.wasteofspace = new Array();
       for (var i=0; i &lt; 10000; i++) this.wasteofspace[i] = 'waste of space #' + i;
-    </method>
+    </handler>
 
     <class name="bigbaselistitem" extends="baselistitem">
-      <method event="oninit">
+      <handler name="oninit">
         this.wos = canvas.wasteofspace.concat()
-      </method>
+      </handler>
     </class>
 
     <class name="bigtextlistitem" extends="textlistitem">
-      <method event="oninit">
+      <handler name="oninit">
         this.wos = canvas.wasteofspace.concat()
-      </method>
+      </handler>
     </class>
 
     <leaktest id="test"/>
@@ -67,22 +67,22 @@
             </combobox>
             <combobox id="listtype">
               <textlistitem>combobox
-              <method event="onselected" args="isselected">
+              <handler name="onselected" args="isselected">
                 if (isselected) {
                 combostate.apply();
                 } else {
                 combostate.remove();
                 }
-              </method>
+              </handler>
               </textlistitem>
               <textlistitem selected="true">list
-              <method event="onselected" args="isselected">
+              <handler name="onselected" args="isselected">
                 if (isselected) {
                 liststate.apply();
                 } else {
                 liststate.remove();
                 }
-              </method>
+              </handler>
               </textlistitem>
             </combobox>
           </view>
@@ -117,7 +117,7 @@
       </state>
     </view>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

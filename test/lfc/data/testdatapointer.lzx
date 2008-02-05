@@ -42,7 +42,7 @@
     <simplelayout axis="x" spacing="10" />
     <button>setXpath test
         <datapointer name="mydp" >
-            <method event="onclick" reference="parent">
+            <handler name="onclick" reference="parent">
                 <![CDATA[
                 var mya = [ "keys:/row[1]" , null ,
                             "key[1]" , null ,
@@ -57,13 +57,13 @@
                 }
                     
                 ]]>
-            </method>
+            </handler>
         </datapointer>
     </button>
 
     <button>Anon dataset
         <datapointer name="mydp" xpath="keys:/">
-            <method event="onclick" reference="parent">
+            <handler name="onclick" reference="parent">
                 <![CDATA[
                 var mya = [ [ "a" , "text1" , { a : 1 , b: "a"} ],
                             [ "b" , "text2" , { a : 2 , b: "b"} ],
@@ -105,7 +105,7 @@
                 //modify
 
                 ]]>
-            </method>
+            </handler>
         </datapointer>
     </button>
     <button>test selection
@@ -126,7 +126,7 @@
 
                 ]]>
             </method>
-            <method name="processData" event="onclick" reference="parent" >
+            <handler name="onclick" reference="parent" >
                 // Test next, prev, parent, child
                 Debug.write("Dataset is : " + this.getDataset());
                 Debug.write("Load time: " + this.getDataset().getLoadTime());
@@ -147,7 +147,7 @@
                 assert("Prev", this.selectPrev());
                 assert("Parent", this.selectParent());
                 assert("Parent", this.selectParent(), true);
-            </method>
+            </handler>
             <method name="assert" args="label, result, shouldfail">
                 if (!result) {
                     if (shouldfail) return;
@@ -161,6 +161,6 @@
     </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

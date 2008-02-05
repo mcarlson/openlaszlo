@@ -18,7 +18,7 @@
                 <simplelayout spacing="5"/>
                 <text>Visible</text>
                 <radiogroup name="rg" defaultselection="null">
-                    <method event="onvalue">
+                    <handler name="onvalue">
                         var v;
                         switch (value){
                             case "true":
@@ -32,31 +32,31 @@
                         }
 
                         parent.parent.elem.oa.setVisible( v);
-                    </method>
+                    </handler>
                     <radiobutton>true</radiobutton>
                     <radiobutton>false</radiobutton>
                     <radiobutton>null</radiobutton>
                 </radiogroup>
                 <button> fade in 
-                    <method event="onclick">
+                    <handler name="onclick">
                         parent.parent.elem.oa.animate( "opacity" , 1, 800 );
-                    </method>
+                    </handler>
                 </button>
             </view>
             <view valign="middle" name="elem">
                <simplelayout/>
                 <text>click to fade </text>
                 <view resource="ra" name="oa" bgcolor="yellow">
-                    <method event="onclick">
+                    <handler name="onclick">
                         if ( this.opacity == 0 ){
                             this.animate( "opacity" , 1, 800 );
                         } else {
                             this.animate( "opacity" , 0, 800 );
                         }
-                    </method>
-                    <method event="onvisible">
+                    </handler>
+                    <handler name="onvisible">
                         Debug.write( this, "visible: " + visible );
-                    </method>
+                    </handler>
                 </view>
             </view>
         </view>
@@ -70,7 +70,7 @@
                 <simplelayout spacing="5"/>
                 <text>Visible</text>
                 <radiogroup name="rg" defaultselection="null">
-                    <method event="onvalue">
+                    <handler name="onvalue">
                         var v;
                         switch (value){
                             case "true":
@@ -85,14 +85,14 @@
 
                         parent.parent.elem.da.setVisible( v);
                         parent.parent.elem.db.setVisible( v);
-                    </method>
+                    </handler>
                     <radiobutton>true</radiobutton>
                     <radiobutton>false</radiobutton>
                     <radiobutton>null</radiobutton>
                 </radiogroup>
 
                 <checkbox value="true"> have data
-                    <method event="onvalue">
+                    <handler name="onvalue">
                         var hasnode = dsTest.getFirstChild();
                         if ( value ){
                             if ( ! hasnode ) {
@@ -103,7 +103,7 @@
                                 dsTest.removeChild( hasnode );
                             }
                         }
-                    </method>
+                    </handler>
                 </checkbox>
             </view>
             <view valign="middle" name="elem" id="v1">
@@ -115,9 +115,9 @@
                     <text> no datacontrolsvisibility </text>
                     <view resource="rb" name="da" bgcolor="yellow"
                           align="center" datapath="dsTest:/node">
-                        <method event="onvisible">
+                        <handler name="onvisible">
                             Debug.write( this, "visible: " + visible );
-                        </method>
+                        </handler>
                     </view>
                 </view>
                 <view>
@@ -128,9 +128,9 @@
                         <datapath xpath="dsTest:/node">
                             <attribute name="datacontrolsvisibility" value="false"/>
                         </datapath>
-                        <method event="onvisible">
+                        <handler name="onvisible">
                             Debug.write( this, "visible: " + visible );
-                        </method>
+                        </handler>
                     </view>
                 </view>
             </view>
@@ -145,7 +145,7 @@
                 <simplelayout spacing="5"/>
                 <text>Visible</text>
                 <radiogroup name="rg" defaultselection="null">
-                    <method event="onvalue">
+                    <handler name="onvalue">
                         var v;
                         switch (value){
                             case "true":
@@ -159,30 +159,30 @@
                         }
 
                         parent.parent.elem.ra.setVisible( v);
-                    </method>
+                    </handler>
                     <radiobutton>true</radiobutton>
                     <radiobutton>false</radiobutton>
                     <radiobutton>null</radiobutton>
                 </radiogroup>
 
                 <button> Add node
-                    <method event="onclick">
+                    <handler name="onclick">
                         dsRepl.appendChild(new LzDataElement( "node" ));
-                    </method>
+                    </handler>
                 </button>
                 <button> Remove node
-                    <method event="onclick">
+                    <handler name="onclick">
                         dsRepl.removeChild( dsRepl.getFirstChild() );
-                    </method>
+                    </handler>
                 </button>
             </view>
             <view valign="middle" name="elem">
                 <simplelayout axis="x"/>
                 <view resource="ra" name="ra" bgcolor="yellow">
                     <datapath xpath="dsRepl:/node" pooling="true"/>
-                    <method event="onvisible">
+                    <handler name="onvisible">
                         Debug.write( this, "visible: " + visible );
-                    </method>
+                    </handler>
                 </view>
             </view>
         </view>
@@ -196,7 +196,7 @@
                 <simplelayout spacing="5"/>
                 <text>Visible</text>
                 <radiogroup name="rg" defaultselection="null">
-                    <method event="onvalue">
+                    <handler name="onvalue">
                         var v;
                         switch (value){
                             case "true":
@@ -210,7 +210,7 @@
                         }
 
                         parent.parent.elem.la.setVisible( v);
-                    </method>
+                    </handler>
                     <radiobutton>true</radiobutton>
                     <radiobutton>false</radiobutton>
                     <radiobutton>null</radiobutton>
@@ -219,35 +219,35 @@
             </view>
             <view name="elem">
                 <view name="la" bgcolor="yellow">
-                    <method event="onload">
+                    <handler name="onload">
                         Debug.write( this.__LZmovieClipRef == 
                                      this.__LZmovieClipRef.mc);
                         Debug.write( this.__LZmovieClipRef ,  
                                      this.__LZmovieClipRef._visible );
                         Debug.write( this.__LZmovieClipRef.lmc ,
                                      this.__LZmovieClipRef.lmc._visible );
-                    </method>
-                    <method event="onvisible">
+                    </handler>
+                    <handler name="onvisible">
                         Debug.write( this, "visible: " + visible );
-                    </method>
+                    </handler>
                 </view>
                 <view y="80">
                     <simplelayout/>
                     <button>load
-                        <method event="onclick">
+                        <handler name="onclick">
                             Debug.write( parent.parent )
                             parent.parent.la.setResource( "http:resc-a.swf" );
-                        </method>
+                        </handler>
                     </button>
                     <button>set resource
-                        <method event="onclick">
+                        <handler name="onclick">
                             parent.parent.la.setResource( "rb" );
-                        </method>
+                        </handler>
                     </button>
                     <button>error
-                        <method event="onclick">
+                        <handler name="onclick">
                             parent.parent.la.setResource( "http:fungdummy" );
-                        </method>
+                        </handler>
                     </button>
                 </view>
             </view>
@@ -255,6 +255,6 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

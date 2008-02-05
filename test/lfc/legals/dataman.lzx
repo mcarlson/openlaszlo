@@ -6,11 +6,11 @@
                    value="$once{new LzDelegate( this.txt, 'sendsearch') }"/>
  
         <inputtext name="txt">
-            <method event="onkeyup" args="k" >
+            <handler name="onkeyup" args="k" >
                 if ( k == 13 ) { //return key
                     this.sendsearch();
                 }
-            </method>
+            </handler>
             
             <method name="sendsearch" >
                 var argobj = [
@@ -103,16 +103,16 @@
     <!-- just for testing... -->
     <dataset name="testds" type="http"/>
 
-    <method event="oninit">
+    <handler name="oninit">
         var argobj = [ {argname:"method", argvalue:"flickr.photos.search"}, {argname:"tags", argvalue:"max"} ];
         gDataMan.doFlickrRequest(photods, argobj);
-    </method>
+    </handler>
 
     <view name="foo">
         <view name="bar">
-            <method event="ondata" reference="canvas.photods">
+            <handler name="ondata" reference="canvas.photods">
                 Debug.write('ondata', this);
-            </method>
+            </handler>
         </view>
     </view>
 
@@ -120,6 +120,6 @@
     <search/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

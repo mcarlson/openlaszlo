@@ -11,21 +11,21 @@
         <!---  @keywords private -->
         <attribute name="_inside" value="false" type="boolean"/>
         <!---  @keywords private -->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             this.setAttribute('frame', this.selected ? 3 : 2);
-        </method>
+        </handler>
         <!---  @keywords private -->
-        <method event="onmouseout">
+        <handler name="onmouseout">
             this.setAttribute('frame', this.selected ? 3 : 1);
-        </method>
+        </handler>
         <!---  @keywords private -->
-        <method event="onmousin">
+        <handler name="onmousin">
             this._inside = true;
-        </method>
+        </handler>
         <!---  @keywords private -->
-        <method event="onmouseup">
+        <handler name="onmouseup">
             this.setAttribute('frame', this.selected ? 3 : 1);
-        </method>
+        </handler>
         <!---  @keywords private -->
        <method name="setSelected" args="s">
             <![CDATA[
@@ -37,15 +37,15 @@
             ]]>
         </method>
         <!---  @keywords private -->
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.setAttribute('frame', 3);
-        </method>
+        </handler>
     </class>
 
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

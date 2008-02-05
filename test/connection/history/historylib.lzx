@@ -13,30 +13,30 @@
             canvas.chatwindow.chatPtr.addNode("message", null, { text: str } );
         </method>
 
-        <method event="onconnect">
+        <handler name="onconnect">
             this.print("...connected...");
             this.sendMessage("*", "", "userconnect");
             canvas.enterfocus = bSend;
             canvas.namepicker.setVisible(false);
             canvas.chatwindow.setVisible(true);
-        </method>
+        </handler>
 
-        <method event="onerror">
+        <handler name="onerror">
             this.print("...connection error...");
-        </method>
+        </handler>
 
-        <method event="ontimeout">
+        <handler name="ontimeout">
             this.print("...connection timed out...");
-        </method>
+        </handler>
 
-        <method event="ondisconnect">
+        <handler name="ondisconnect">
             this.print("...disconnected...");
-        </method>
+        </handler>
 
-        <method event="onuserdisconnect" args="user">
+        <handler name="onuserdisconnect" args="user">
             this.getList('*');
             this.print("user " + user + " disconnected");
-        </method>
+        </handler>
 
         <dataset name="message" />
         <dataset name="userconnect" />
@@ -50,27 +50,27 @@
         <datapointer name="chatPtr" xpath="chatDset:/" />
 
         <datapointer xpath="myconnection:userconnect:/*">
-            <method event="ondata">
+            <handler name="ondata">
                 var from = this.xpathQuery('/from[0]/@name');
                 this.parent.chatPtr.addNode("message", null,
                     { text: "User " + from + " connected!" }
                 );
                 canvas.myconnection.getList('*');
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer xpath="myconnection:message:/*">
-            <method event="ondata">
+            <handler name="ondata">
                 var from = this.xpathQuery('/from[0]/@name');
                 var mesg = this.xpathQuery('/text()');
                 this.parent.chatPtr.addNode("message", null,
                     { text: from + ": " + mesg}
                 );
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer id="foo" xpath="myconnection:history:/*[1]">
-            <method event="ondata">
+            <handler name="ondata">
             <![CDATA[
                 if (this.getNodeCount() == 0) {
                     this.parent.chatPtr.addNode("message", null,
@@ -85,16 +85,16 @@
                     }
                 }
             ]]>
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer xpath="myconnection:sendMessageDset:/*">
-            <method event="onerror">
+            <handler name="onerror">
                 var message = this.parent.sendView.msg.getText();
                 this.parent.chatPtr.addNode("message", null, 
                     { text:  "error: " + this.dataset.getErrorString() }
                 );
-            </method>
+            </handler>
         </datapointer>
 
         <view width="387" height="287" x="29" y="39" bgcolor="#000000" />
@@ -134,11 +134,11 @@
             </button>
             <button width="50" height="24">
                 History
-                <method event="onclick">
+                <handler name="onclick">
                 <![CDATA[
                     canvas.myconnection.sendAgentXML("*", "<history />");
                 ]]>
-                </method>
+                </handler>
             </button>
             <simplelayout axis="x" spacing="5"/>
         </view>
@@ -205,11 +205,11 @@
 
     </view>
 
-    <method event="onkeyup" reference="LzKeys" args="k">
+    <handler name="onkeyup" reference="LzKeys" args="k">
         if ( k == 13 ) {
             canvas.enterfocus.send();
         }
-    </method>
+    </handler>
 
     <script>
         canvas.enterfocus = gochat;
@@ -217,6 +217,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

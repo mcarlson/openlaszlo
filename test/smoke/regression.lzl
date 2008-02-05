@@ -1,6 +1,6 @@
 <library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
     <include href="lzunit/lzunit.lzx" />
@@ -631,17 +631,17 @@
             <method name="applyData" args="d">
                 parent.appliedTermData = d
             </method>
-            <method event="ondata" args="d">
+            <handler name="ondata" args="d">
                 parent.eventTermData = d
-            </method>
+            </handler>
         </view>
         <view datapath="bug1664:/node/@attribute">
             <method name="applyData" args="d">
                 parent.appliedData = d
             </method>
-            <method event="ondata" args="d">
+            <handler name="ondata" args="d">
                 parent.eventData = d
-            </method>
+            </handler>
         </view>
         <method name="testFoo">
             assertEquals('foo', appliedData)
@@ -717,7 +717,9 @@
         </class>
 
         <class name="bug_1767" extends="TestCase">
-                <method event="onmouseover"/>
+                <handler name="onmouseover">
+                   // Just to cause clickability
+                </handler>
                 <method name="testClickable">
                         assertTrue(this.clickable)
                 </method>
@@ -765,9 +767,9 @@
                 <attribute name="value" value="1"/>
                 <attribute name="gotinit" value="false"/>
 
-                <method event="oninit">
+                <handler name="oninit">
                         this.gotinit = true;
-                </method>
+                </handler>
 
                 <method name="applyData" args="d">
                         classroot.assertTrue(this.gotinit)
@@ -823,9 +825,9 @@
         </class>
         
     <class name="bug_2131"  extends="TestCase">
-        <method event="onfxindent">
+        <handler name="onfxindent">
             assertTrue(1 > 0)
-        </method>
+        </handler>
         
         <method name="testStateAttr">
                 mys.apply()
@@ -971,7 +973,9 @@
                         assertNotUndefined(inside.onwidth)
                 </method>
                 
-                <method event="onwidth" reference="inside"/>
+                <handler name="onwidth" reference="inside">
+                  // Just to create a delegate to look for
+                </handler>
         </class>
 
         <dataset name="bug3285">

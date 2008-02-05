@@ -20,36 +20,36 @@ value="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/DataServ
 
         <attribute name="loaded" type="boolean" value="false" />
 
-        <method event="onload">
+        <handler name="onload">
             Debug.write(this.name + ' loaded');
             this.loaded = true;
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             status.setText('error: ', error);
-        </method>
+        </handler>
 
-        <method event="ontimeout" args="error">
+        <handler name="ontimeout" args="error">
             status.setText('timeout');
-        </method>
+        </handler>
 
         <remotecall funcname="GetTitleAuthors" dataobject="$once{authors}" >
             <param value="'&lt;GetTitleAuthors/&gt;'" />
 
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 status.setText('');
-            </method>
+            </handler>
         </remotecall>
     </soap>
 
     <button name="op" >GetAuthors
 
-        <method event="onclick"><![CDATA[
+        <handler name="onclick"><![CDATA[
             if (!canvas.dataservice.loaded) return;
             var del = new LzDelegate(this, 'handler');
             canvas.dataservice.GetTitleAuthors.invoke();
             status.setText('Invoking...');
-        ]]></method>
+        ]]></handler>
 
     </button>
 
@@ -67,6 +67,6 @@ value="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/DataServ
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

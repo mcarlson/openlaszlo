@@ -1,5 +1,5 @@
 <canvas>
-	<include href="/lz/library.lzx"/>
+        <include href="/lz/library.lzx"/>
 
     <dataset name="items">
         <item value="item1" >item one</item>
@@ -7,122 +7,122 @@
         <item value="item3" >item three</item>
         <item value="item4" >item four</item>
     </dataset>
-	
-	<class name="sbutton" extends="button" width="40">
-		<attribute name="nextX" value="0"/>
-		<attribute name="nextY" value="0"/>
-		
-    	<method event="oninit">
-    		genwaypoint();
-    	</method>
-		
-		<method name="genwaypoint">
-			var randomx = math.Random();
-			var randomy = math.Random();
-			
-			this.setAttribute( 'nextX' , math.abs(canvas.width*randomx) );
-			this.setAttribute( 'nextY' , math.abs(canvas.height*randomy) );
-		</method>
-		
-		<animator attribute="x" to="${classroot.nextX}" duration="3000">
-			<method event="onstop">
-				classroot.genwaypoint();
-				this.doStart();
-			</method>
-		</animator>
-		<animator attribute="y" to="${classroot.nextY}" duration="3000">
-			<method event="onstop">
-				this.doStart();
-			</method>
-		</animator>
-	</class>
-	
+        
+        <class name="sbutton" extends="button" width="40">
+                <attribute name="nextX" value="0"/>
+                <attribute name="nextY" value="0"/>
+                
+        <handler name="oninit">
+                genwaypoint();
+        </handler>
+                
+                <method name="genwaypoint">
+                        var randomx = math.Random();
+                        var randomy = math.Random();
+                        
+                        this.setAttribute( 'nextX' , math.abs(canvas.width*randomx) );
+                        this.setAttribute( 'nextY' , math.abs(canvas.height*randomy) );
+                </method>
+                
+                <animator attribute="x" to="${classroot.nextX}" duration="3000">
+                        <handler name="onstop">
+                                classroot.genwaypoint();
+                                this.doStart();
+                        </handler>
+                </animator>
+                <animator attribute="y" to="${classroot.nextY}" duration="3000">
+                        <handler name="onstop">
+                                this.doStart();
+                        </handler>
+                </animator>
+        </class>
+        
     <view bgcolor="0xdddddd" height="${canvas.height}" width="${canvas.width}">
 
-	    <!-- middle -->
-		<sbutton x="${canvas.width/2-this.width/2}" y="${canvas.height/2-this.height/2-20}">
-			<floatinglist width="60" attach="right">
-				<textlistitem datapath="items:/item"
+            <!-- middle -->
+                <sbutton x="${canvas.width/2-this.width/2}" y="${canvas.height/2-this.height/2-20}">
+                        <floatinglist width="60" attach="right">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</floatinglist>
-		</sbutton>
-		
-		<!-- top left -->
-		<sbutton x="20" y="20">
-			<floatinglist width="60" attach="left">
-				<textlistitem datapath="items:/item"
+                        </floatinglist>
+                </sbutton>
+                
+                <!-- top left -->
+                <sbutton x="20" y="20">
+                        <floatinglist width="60" attach="left">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</floatinglist>
-		</sbutton>
-		
-		<!-- top -->
-		<sbutton x="${canvas.width/2-this.width/2}" y="20">
-			<floatinglist width="60" attach="top">
-				<textlistitem datapath="items:/item"
+                        </floatinglist>
+                </sbutton>
+                
+                <!-- top -->
+                <sbutton x="${canvas.width/2-this.width/2}" y="20">
+                        <floatinglist width="60" attach="top">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</floatinglist>
-		</sbutton>
+                        </floatinglist>
+                </sbutton>
 
-		<!-- top right -->
-		<sbutton x="${canvas.width-this.width-20}" y="20">
-			<floatinglist width="60" attach="right">
-				<textlistitem datapath="items:/item"
+                <!-- top right -->
+                <sbutton x="${canvas.width-this.width-20}" y="20">
+                        <floatinglist width="60" attach="right">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</floatinglist>
-		</sbutton>
-		
-		<!-- right -->
-		<sbutton x="${canvas.width-this.width-20}" y="${canvas.height/2-this.height/2-20}">
-			<floatinglist width="60" attach="right">
-				<textlistitem datapath="items:/item"
+                        </floatinglist>
+                </sbutton>
+                
+                <!-- right -->
+                <sbutton x="${canvas.width-this.width-20}" y="${canvas.height/2-this.height/2-20}">
+                        <floatinglist width="60" attach="right">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</floatinglist>
-		</sbutton>
+                        </floatinglist>
+                </sbutton>
 
-		<!-- bottom right -->
-		<sbutton x="${canvas.width-this.width-20}" y="${canvas.height-this.height-20}">
-			<floatinglist width="60" attach="right">
-				<textlistitem datapath="items:/item"
+                <!-- bottom right -->
+                <sbutton x="${canvas.width-this.width-20}" y="${canvas.height-this.height-20}">
+                        <floatinglist width="60" attach="right">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</floatinglist>
-		</sbutton>
+                        </floatinglist>
+                </sbutton>
 
-		<!-- bottom -->
-		<sbutton x="${canvas.width/2-this.width/2}" y="${canvas.height-this.height-20}">
-			<floatinglist width="60" attach="bottom">
-				<textlistitem datapath="items:/item"
+                <!-- bottom -->
+                <sbutton x="${canvas.width/2-this.width/2}" y="${canvas.height-this.height-20}">
+                        <floatinglist width="60" attach="bottom">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</floatinglist>
-		</sbutton>
+                        </floatinglist>
+                </sbutton>
 
-		<!-- bottom left -->
-		<sbutton x="20" y="${canvas.height-this.height-20}">
-			<floatinglist width="60" attach="left">
-				<textlistitem datapath="items:/item"
+                <!-- bottom left -->
+                <sbutton x="20" y="${canvas.height-this.height-20}">
+                        <floatinglist width="60" attach="left">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</floatinglist>
-		</sbutton>
-		
-		<!-- left -->
-		<sbutton x="20" y="${canvas.height/2-this.height/2-20}">
-			<floatinglist width="60" attach="left">
-				<textlistitem datapath="items:/item"
+                        </floatinglist>
+                </sbutton>
+                
+                <!-- left -->
+                <sbutton x="20" y="${canvas.height/2-this.height/2-20}">
+                        <floatinglist width="60" attach="left">
+                                <textlistitem datapath="items:/item"
                                text='$path{"text()"}'
                                value='$path{"@value"}'/>
-			</floatinglist>
-		</sbutton>
-				
-	</view>
+                        </floatinglist>
+                </sbutton>
+                                
+        </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

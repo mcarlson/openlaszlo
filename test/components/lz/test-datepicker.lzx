@@ -7,61 +7,61 @@
     <whitestyle name="whitecolors"/>
     <purplestyle name="purplecolors"/>
     <style name="altbluestyle"
-    	canvascolor="grayblue"
-    	basecolor="iceblue3"
-    	bgcolor="iceblue5"
-		textfieldcolor="palegreen5" textcolor="blue" texthilitecolor="palegreen1"
-		textselectedcolor="yellow"  textdisabledcolor="green"
+        canvascolor="grayblue"
+        basecolor="iceblue3"
+        bgcolor="iceblue5"
+                textfieldcolor="palegreen5" textcolor="blue" texthilitecolor="palegreen1"
+                textselectedcolor="yellow"  textdisabledcolor="green"
         hilitecolor="iceblue4" selectedcolor="iceblue2"
         bordercolor="green" bordersize="10"/>
 
 <!-- text size and color? -->
     <!--view valign="bottom">
-	    <inittimer/><frametimer/>
+            <inittimer/><frametimer/>
     </view-->
     <debug x="600" y="0" height="500"/>
-	<view id="s1" x="20" y="40">
-		<view name="tsliderview">
-		<view name="stylechooser">
-			<simplelayout spacing="4"/>
-			<text>Style:</text>
-			<combobox width="120" editable="false">
-				<textlistitem text="silver" >
-					<method event="onselected">
-						canvas.silvercolors.setAttribute("isdefault", true);
-					</method>
-				</textlistitem>
-				<textlistitem text="green" >
-					<method event="onselected">
+        <view id="s1" x="20" y="40">
+                <view name="tsliderview">
+                <view name="stylechooser">
+                        <simplelayout spacing="4"/>
+                        <text>Style:</text>
+                        <combobox width="120" editable="false">
+                                <textlistitem text="silver" >
+                                        <handler name="onselected">
+                                                canvas.silvercolors.setAttribute("isdefault", true);
+                                        </handler>
+                                </textlistitem>
+                                <textlistitem text="green" >
+                                        <handler name="onselected">
                         canvas.greencolors.setAttribute("isdefault", true);
-					</method>
-				</textlistitem>
-				<textlistitem text="blue">
-					<method event="onselected">
+                                        </handler>
+                                </textlistitem>
+                                <textlistitem text="blue">
+                                        <handler name="onselected">
                         canvas.bluecolors.setAttribute("isdefault", true);
-					</method>
-				</textlistitem>
-				<textlistitem text="gold" >
-					<method event="onselected">
+                                        </handler>
+                                </textlistitem>
+                                <textlistitem text="gold" >
+                                        <handler name="onselected">
                         canvas.goldcolors.setAttribute("isdefault", true);
-					</method>
-				</textlistitem>
-				<textlistitem text="white" selected="true">
-					<method event="onselected">
+                                        </handler>
+                                </textlistitem>
+                                <textlistitem text="white" selected="true">
+                                        <handler name="onselected">
                         canvas.whitecolors.setAttribute("isdefault", true);
-					</method>
-				</textlistitem>
-				<textlistitem text="purple" >
-					<method event="onselected">
+                                        </handler>
+                                </textlistitem>
+                                <textlistitem text="purple" >
+                                        <handler name="onselected">
                         canvas.purplecolors.setAttribute("isdefault", true);
-					</method>
-				</textlistitem>
-				<textlistitem text="alt blue" >
-					<method event="onselected">
+                                        </handler>
+                                </textlistitem>
+                                <textlistitem text="alt blue" >
+                                        <handler name="onselected">
                         canvas.altbluestyle.setAttribute("isdefault", true);
-					</method>
-				</textlistitem>
-			</combobox>
+                                        </handler>
+                                </textlistitem>
+                        </combobox>
 
 <!--            <view id="testcolor" width="22" height="22"-->
 <!--                bgcolor="${setBGColor(canvas.defaultstyle, canvas.defaultstyle.basecolor)}" >-->
@@ -69,7 +69,7 @@
 <!--                     super.setBGColor(canvas.defaultstyle.basecolor);-->
 <!--                </method>-->
 <!--            </view>-->
-		</view>
+                </view>
 
 
 
@@ -157,21 +157,21 @@
 
             <view>
 
-                <method event="onselecteddate" reference="dpone">
+                <handler name="onselecteddate" reference="dpone">
                     this.seldate.setAttribute('text', '  selecteddate:' + dpone.selecteddate.toLocaleString() );  
-                </method> 
+                </handler>
 
-                <method event="onshowingdate" reference="dpone">
+                <handler name="onshowingdate" reference="dpone">
                     this.showdate.setAttribute('text', '  showingdate:' + dpone.showingdate.toLocaleString() );  
-                </method> 
+                </handler>
 
-                <method event="onearliestdate" reference="dpone">
+                <handler name="onearliestdate" reference="dpone">
                     this.edate.setAttribute('text', '  earliestdate:' + dpone.earliestdate.toLocaleString() );  
-                </method> 
+                </handler>
 
-                <method event="onlatestdate" reference="dpone">
+                <handler name="onlatestdate" reference="dpone">
                     this.ldate.setAttribute('text', '  latestdate:' + dpone.latestdate.toLocaleString() );  
-                </method> 
+                </handler>
 
 
                 <method name="getDateString" args="d">
@@ -289,21 +289,21 @@
 
             <view>
 
-                <method event="onselecteddate" reference="dptwo">
+                <handler name="onselecteddate" reference="dptwo">
                     this.seldate.setAttribute('text', '  selecteddate:' + dptwo.selecteddate.toLocaleString() );  
-                </method> 
+                </handler>
 
-                <method event="onshowingdate" reference="dptwo">
+                <handler name="onshowingdate" reference="dptwo">
                     this.showdate.setAttribute('text', '  showingdate:' + dptwo.showingdate.toLocaleString() );  
-                </method> 
+                </handler>
 
-                <method event="onearliestdate" reference="dptwo">
+                <handler name="onearliestdate" reference="dptwo">
                     this.edate.setAttribute('text', '  earliestdate:' + dptwo.earliestdate.toLocaleString() );  
-                </method> 
+                </handler>
 
-                <method event="onlatestdate" reference="dptwo">
+                <handler name="onlatestdate" reference="dptwo">
                     this.ldate.setAttribute('text', '  latestdate:' + dptwo.latestdate.toLocaleString() );  
-                </method> 
+                </handler>
 
 
                 <method name="getDateString" args="d">
@@ -363,6 +363,6 @@
 
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

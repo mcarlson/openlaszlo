@@ -2,7 +2,7 @@
      Trying something with new constraints
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -21,34 +21,34 @@
 
     <class name="ConstraintTest" extends="TestCase">
 
-	<cereal name="post" brand="captain.crunch"/>
-	<cereal name="kellog" brand="${captain.crunch}"/>
+        <cereal name="post" brand="captain.crunch"/>
+        <cereal name="kellog" brand="${captain.crunch}"/>
 
-	<view name="honey">
- 	  <attribute name="comb" value="${captain.crunch}"/>
- 	  <attribute name="honey" value="captain.crunch" type="string"/>
-	</view>
+        <view name="honey">
+          <attribute name="comb" value="${captain.crunch}"/>
+          <attribute name="honey" value="captain.crunch" type="string"/>
+        </view>
 
-	<view name="comb">
- 	  <attribute name="honey" value="${crunch.captain}"/>
- 	  <attribute name="comb" value="${this.honey}"/>
-	</view>
+        <view name="comb">
+          <attribute name="honey" value="${crunch.captain}"/>
+          <attribute name="comb" value="${this.honey}"/>
+        </view>
 
-	<method name="testConstraintReference1">
-	    assertEquals( captain.crunch ,1);
-	    assertEquals( honey.comb, 1);
-	    assertEquals( honey.honey, "captain.crunch");
-	</method>
+        <method name="testConstraintReference1">
+            assertEquals( captain.crunch ,1);
+            assertEquals( honey.comb, 1);
+            assertEquals( honey.honey, "captain.crunch");
+        </method>
 
-	<method name="testConstraintReference2">
-	    crunch.setAttribute( "captain", 10);
- 	    assertEquals( comb.honey, 10 );
- 	    assertEquals( comb.comb, 10 );
-	</method>
-	<method name="testConstraintReference3">
- 	    assertEquals( post.brand, 'captain.crunch');
- 	    assertEquals( kellog.brand, '1' );
-	</method>
+        <method name="testConstraintReference2">
+            crunch.setAttribute( "captain", 10);
+            assertEquals( comb.honey, 10 );
+            assertEquals( comb.comb, 10 );
+        </method>
+        <method name="testConstraintReference3">
+            assertEquals( post.brand, 'captain.crunch');
+            assertEquals( kellog.brand, '1' );
+        </method>
 
     </class>
 </library>

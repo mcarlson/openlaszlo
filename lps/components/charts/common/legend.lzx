@@ -44,8 +44,8 @@
         <simplelayout axis="y"/>
         
                 
-        <!--- @keywords private -->
-        <method event="oninitdone" reference="this.chart">
+       <!--- @keywords private -->
+        <handler name="oninitdone" reference="this.chart">
             if(chart.initdone)
             {
                 var lChart = this.getChartInstance();
@@ -54,7 +54,7 @@
                     this.datapath.setFromPointer(lChart.getDataSeries().getLegend());
                 }   
             }
-        </method>        
+        </handler>
         
         <!-- Top Margin -->
         <view height="${parent.topmargin}" />
@@ -74,22 +74,22 @@
                 ]]>
             </method>    
             <legenditem name="containeritem" datapath="item">
-                <method event="ondata">
+                <handler name="ondata">
                     if( parent.parent.datapath.getNodeCount() == 1 ) {
                         if( parent.parent.legendborder ) 
                             parent.parent.border();
                         else
                             parent.parent.setBGColor(parent.parent.fillColor);
                     }    
-                </method>
+                </handler>
 
                 <datapath>
-                    <method event="onclones">
+                    <handler name="onclones">
                         if (!this['doneDel']) {
                             this.doneDel = new LzDelegate(this, 'doborder')
                             this.doneDel.register(clones[clones.length - 1], 'oninit')
                         }
-                    </method>
+                    </handler>
                     <method name="doborder">
                         if( parent.parent.legendborder ) 
                             parent.parent.border();
@@ -137,31 +137,26 @@
         ]]>
         </method>
 
-        <!--- abstract method that allow custom action for mouse over event
+        <!--- event that allows custom action for mouse over event
             @param Number item: The identifier legend item
          -->
-        <method event="onitemmouseover" args="item">
-        </method> 
-        <!--- abstract method that allow custom action for mouse out event
+        <event name="onitemmouseover" />
+        <!--- event that allows custom action for mouse out event
             @param Number item: The identifier legend item
          -->
-        <method event="onitemmouseout" args="item">
-        </method> 
-        <!--- abstract method that allow custom action for mouse down event
+        <event name="onitemmouseout" />
+        <!--- event that allows custom action for mouse down event
             @param Number item: The identifier legend item
          -->
-        <method event="onitemmousedown" args="item">
-        </method> 
-        <!--- abstract method that allow custom action for mouse up event
+        <event name="onitemmousedown" />
+        <!--- event that allows custom action for mouse up event
             @param Number item: The identifier legend item
          -->
-        <method event="onitemmouseup" args="item">
-        </method> 
-        <!--- abstract method that allow custom action for mouse click event
+        <event name="onitemmouseup" />
+        <!--- event that allows custom action for mouse click event
             @param Number item: The identifier legend item
          -->
-        <method event="onitemmouseclick" args="item">
-        </method> 
+        <event name="onitemmouseclick" />
         
         <doc>
           <tag name="shortdesc"><text>
@@ -254,29 +249,29 @@
         </method>
         <!--- calls the method that implements the acton
             @keyword private-->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             parent.classroot.onitemmouseover.sendEvent(this);
-        </method>        
+        </handler>
         <!--- calls the method that implements the acton
             @keyword private-->
-        <method event="onmouseout">
+        <handler name="onmouseout">
             parent.classroot.onitemmouseout.sendEvent(this);
-        </method>        
+        </handler>
         <!--- calls the method that implements the acton
             @keyword private-->
-        <method event="onmousedown">
+        <handler name="onmousedown">
             parent.classroot.onitemmousedown.sendEvent(this);
-        </method>        
+        </handler>
         <!--- calls the method that implements the acton
             @keyword private-->
-         <method event="onmouseup">
+        <handler name="onmouseup">
             parent.classroot.onitemmouseup.sendEvent(this);
-        </method>
+        </handler>
         <!--- calls the method that implements the acton
             @keyword private-->
-        <method event="onclick">
+        <handler name="onclick">
             parent.classroot.onitemmouseclick.sendEvent(this);
-        </method>        
+        </handler>
     </class>
     
 
@@ -284,7 +279,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

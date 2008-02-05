@@ -39,12 +39,12 @@
         <attribute name="bordersize" value="1" type="number"/>
         
         <!--- @keywords private -->
-        <method event="oninit">
+        <handler name="oninit">
             //have to adjust thumb once at start because
             //neither setValue nor onvalue is getting triggered
             //when value is set.
             _adjustThumb();
-        </method>
+        </handler>
         
         <!--- Get the minimum value of the slider.
                       @return Number: the minimum value. -->
@@ -116,13 +116,13 @@
         </method>
         
         <!--- @keywords private -->
-        <method event="onkeydown" args="k">
+        <handler name="onkeydown" args="k">
             //left arrow
             if (k==37) this.track.thumb.setX(this.track.thumb.x-keystep);
             else
             //right arrow
             if (k==39) this.track.thumb.setX(this.track.thumb.x+keystep);
-        </method>
+        </handler>
         
         <!--- @keywords private -->
         <method name="getFocusRect">
@@ -137,9 +137,9 @@
     <!--- Baseslidertrack expects to be within a baseslider (or its
           subclass). In other words, its "classroot" should be a slider. -->
     <class name="baseslidertrack" width="100%" height="${classroot.trackheight}" bgcolor="0x333333" >
-        <method event="oninit">
+        <handler name="oninit">
             classroot.track = this;
-        </method>
+        </handler>
     </class>
     
     <!--- Basesliderthumb expects to be within a baseslidertrack (or its
@@ -191,7 +191,7 @@
     </class><!-- end basesliderthumb class -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2005, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

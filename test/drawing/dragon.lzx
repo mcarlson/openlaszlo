@@ -24,14 +24,14 @@
         <attribute name="str" value="" type="string"/>
         <turtle name="trtl"/>
         <button x="10">Draw
-            <method event="onclick">
+            <handler name="onclick">
                 parent.axiom = "FX";
                 parent.rulemap = new Array();
                 parent.rulemap["X"] = "X+YF+";
                 parent.rulemap["Y"] = "-FX-Y";       
                 parent.trtl.init(parent.x_offset, parent.y_offset, parent.angle,3);
                 parent.go();
-            </method>
+            </handler>
         </button>
         <method name="go">
                 this.clear();
@@ -93,7 +93,7 @@
     <text> <font color="#0000FF">(<a target="_blank" href="http://www.student.cs.uwaterloo.ca/~rnsolank/fproject.html">Click here for more info</a>)</font></text> 
     <lsystem id="l" length="3" depth="14" angle="90" width="300" height="520"/>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

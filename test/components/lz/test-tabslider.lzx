@@ -2,13 +2,13 @@
 
     <attribute name="defaultstyle" value="${greenstyle}"/>
 
-	<view x="35" layout="class:simplelayout; axis:x; spacing:2">
-	    <button onclick="ts1.animate('height',100,1000,true)">grow tabslider</button>
-	    <button onclick="ts1.additem('a New Tab')">add item</button>
-	</view>
+        <view x="35" layout="class:simplelayout; axis:x; spacing:2">
+            <button onclick="ts1.animate('height',100,1000,true)">grow tabslider</button>
+            <button onclick="ts1.additem('a New Tab')">add item</button>
+        </view>
 
 
-	<text x="50" y="25">Test: growing &amp; adding to tabslider</text>
+        <text x="50" y="25">Test: growing &amp; adding to tabslider</text>
     <tabslider id="ts1" x="50" y="50"
                width="150" height="200" 
                bordersize="1"  >
@@ -43,7 +43,7 @@
 
     </tabslider>
 
-	<text x="250" y="25" >Test: spacing between tabs </text>
+        <text x="250" y="25" >Test: spacing between tabs </text>
     <tabslider id="ts2" x="250" y="50"
                width="150" height="200" 
                bordersize="1"  spacing="5" >
@@ -72,7 +72,7 @@
         </tabelement>
     </tabslider>
 
-	<text x="450" y="25" >Test: other elements in header </text>
+        <text x="450" y="25" >Test: other elements in header </text>
     <tabslider id="ts3" x="450" y="50" 
                width="150" height="200"
                bordersize="2"  bordercolor="0x5555FF" mintabheight="30" >
@@ -229,6 +229,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

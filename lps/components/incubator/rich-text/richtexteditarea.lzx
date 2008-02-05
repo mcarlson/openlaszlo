@@ -183,7 +183,7 @@
         <!--- When a cursor movement key is released, handle the caret motion.
             @param number kc: keycode
             -->
-        <method event="onkeyup" args="kc" reference="this._field">
+        <handler name="onkeyup" args="kc" reference="this._field">
             if (isHTML) {
                 switch (kc) {
                     case 8:  // backspace key
@@ -201,7 +201,7 @@
                         break;
                 }
             }
-        </method>
+        </handler>
         
 
         <!--- When the editor receives focus, we need to make both formats match: 
@@ -213,7 +213,7 @@
                  else (there is a selection)
                     Make the toolbar match the format of the selected text
         -->
-        <method event="onfocus"><![CDATA[
+        <handler name="onfocus"><![CDATA[
             this._fieldhasfocus = true; 
             if (this._containsOnlyWhitespace()) {
                 this.clearText(true); 
@@ -248,14 +248,14 @@
                     delegateInitSelection();
                 }
             }
-        ]]></method>
+        ]]></handler>
         
         <!--- If the mouse down is over me or any of my children, remember that,
             so we can listen for an onmouseup anywhere. A mouseup after a mousedown
             indicates that the selection has changed.
             @param view who: the element being moused down on
         -->
-        <method event="onmousedown" reference="LzGlobalMouse" args="who"><![CDATA[
+        <handler name="onmousedown" reference="LzGlobalMouse" args="who"><![CDATA[
             if ((who != null) && (this._containsView(who))) {
                 // the mouse went down on a child of me
                 // Debug.info("mousedown on child of me, this is %w, who is %#w", this, who); 
@@ -270,7 +270,7 @@
                 this._mousedownorigin = null;
             }
             ]]>
-        </method>
+        </handler>
         
 
         <!--- Listen for global mouse up. 
@@ -279,7 +279,7 @@
             is there a mousedown/mouseup pair in progress? 
             @param view who: the current mousedown element (ben shine)
         -->
-       <method event="onmouseup" reference="LzGlobalMouse" args="who"><![CDATA[
+       <handler name="onmouseup" reference="LzGlobalMouse" args="who"><![CDATA[
             if (this._fieldhasfocus) {
                 // Debug.write("onmouseup, field has focus, who is ", who); 
 
@@ -315,7 +315,7 @@
             // Clear the mousedown attribute; a mouseup means that whatever
             // the mousedown was, it's gone now. 
             this._mousedownorigin = null;          
-        ]]></method>
+        ]]></handler>
         
         
         <!--- Save selected region. -->
@@ -617,7 +617,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2005-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

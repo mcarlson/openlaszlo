@@ -1,7 +1,7 @@
 <canvas width="800" height="600">
 <view>
     <attribute name="i" value="0"/>
-<method event="onidle" reference="LzIdle">
+<handler name="onidle" reference="LzIdle">
       var myx=800*Math.random();
       var myy=20 + 580*Math.random();
       this.setAttribute("i", ++i);
@@ -18,7 +18,7 @@
                        });      
 del = new LzDelegate ( blah, "destroy");
    LzTimer.addTimer(del, 1000 ); 
-</method>
+</handler>
 </view>
 <text name="goo"/>
 <!-- 
@@ -78,6 +78,6 @@ del = new LzDelegate ( blah, "destroy");
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

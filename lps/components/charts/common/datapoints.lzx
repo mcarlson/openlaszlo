@@ -18,19 +18,19 @@
         
         <!--- shows the data tooltip on mouseover event 
             @keyword private-->
-        <method event="onmouseover">
+        <handler name="onmouseover">
         <![CDATA[
             if(parent.parent.datatipEnabled && tooltip != null){
                 parent.parent.datatooltip.style = style.tip;
                 parent.parent.datatooltip.show(tooltip);
             }            
              ]]> 
-        </method> 
+        </handler>
         <!--- hides the data tooltip on mouseout event 
             @keyword private-->
-        <method event="onmouseout">
+        <handler name="onmouseout">
             parent.parent.datatooltip.hide();
-        </method>
+        </handler>
     </class>
     
 
@@ -38,7 +38,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2005, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

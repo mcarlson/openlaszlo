@@ -13,8 +13,8 @@ Test passed if you see  "passed" in green at the top of the screen.
     <simplelayout axis="y" spacing="20" />
 
     <class name="mywindow" width="300">
-    	<attribute name="title" value="my" type="string" when="once"/>
-    	<simplelayout axis="y" />
+        <attribute name="title" value="my" type="string" when="once"/>
+        <simplelayout axis="y" />
         <attribute name="testprop" value="prop" type="string"/>
         <attribute name="testprop2" value="prop2" type="string"/>
         <attribute name="testprop3" value="prop3 is OK by me " type="string"/>
@@ -74,6 +74,6 @@ with type STRING
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -816,13 +816,13 @@
                      width="${parent.width}" multiline="false"
                      options="releasetolayout" />
 
-               <method event="onfocus" reference="this.input">
+               <handler name="onfocus" reference="this.input">
                    classroot.handleFocus();
-               </method>
+               </handler>
 
-               <method event="onblur" reference="this.input">
+               <handler name="onblur" reference="this.input">
                    classroot.handleBlur();
-               </method>
+               </handler>
 
               <view name="bottom" 
                     stretches="width" width="${parent.width}" options="releasetolayout"
@@ -988,9 +988,9 @@
       ]]>
   </method>
 
-  <method event="oninit" reference="canvas">
+  <handler name="oninit" reference="canvas">
     this.bringToFront();
-  </method>
+  </handler>
 
   <method name="setWrapLines" args="val">
     this.middle.content.setWrapLines(val);
@@ -1000,7 +1000,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -52,16 +52,17 @@
                     <attribute name="datasel" 
                                value="${ workdef == '1' ? 2 : 1 }"/>
 
-                    <method event="ondatasel" name="checkDataSel">
+                    <handler name="ondatasel" method="checkDataSel" />
+                    <method name="checkDataSel">
                         if ( !this._initcomplete ) return;
                         this.selectItem(  datasel );
                     </method>
 
-                    <method event="oninit">
+                    <handler name="oninit">
                         this.checkDataSel();
-                    </method>
+                    </handler>
 
-                    <method event="onselect">
+                    <handler name="onselect">
                         if ( this.value == 1 ){
                             this.workdef = 0;
                             this.homedef = 1;
@@ -70,7 +71,7 @@
                             this.homedef = 0;
                         }
                         this.datapath.updateData();
-                    </method>
+                    </handler>
 
                     <radiobutton value="1">home</radiobutton>
                     <radiobutton value="2">work</radiobutton>
@@ -82,80 +83,80 @@
 
     <window title="poke" layout="axis:'y'" x="${dgwin.width+10}">
         <button text="loadMoreData">
-            <method event="onclick">
+            <handler name="onclick">
                 contactsLoad.doRequest();
-            </method>
+            </handler>
         </button>
         <button text="getSelection">
-            <method event="onclick">
+            <handler name="onclick">
                 Debug.write( tgrid[ text ]() );
-            </method>
+            </handler>
         </button>
 
         <button text="selectNext">
-            <method event="onclick">
+            <handler name="onclick">
                 tgrid[ text ]();
-            </method>
+            </handler>
         </button>
         
         <button text="selectPrev">
-            <method event="onclick">
+            <handler name="onclick">
                 tgrid[ text ]();
-            </method>
+            </handler>
         </button>
 
         <button text="getNumItems">
-            <method event="onclick">
+            <handler name="onclick">
                 Debug.write( tgrid[ text ]() );
-            </method>
+            </handler>
         </button>
 
         <button text="getItemAt"  >
-            <method event="onclick">
+            <handler name="onclick">
                 Debug.write( tgrid[ text ]( 22 ) );
-            </method>
+            </handler>
         </button>
 
         <button text="getItem" >
-            <method event="onclick">
+            <handler name="onclick">
                 Debug.write( tgrid[ text ]( contactsData.getFirstChild().childnodes[ 44 ] ) );
-            </method>
+            </handler>
         </button>
 
         <button text="removeItemAt"  >
-            <method event="onclick">
+            <handler name="onclick">
                 tgrid[ text ]( 0 );
-            </method>
+            </handler>
         </button>
 
         <button text="selectItem"  >
-            <method event="onclick">
+            <handler name="onclick">
                 tgrid[ text ]( contactsData.getFirstChild().getFirstChild() );
-            </method>
+            </handler>
         </button>
 
         <button text="selectItemAt"  >
-            <method event="onclick">
+            <handler name="onclick">
                 tgrid[ text ]( 13);
-            </method>
+            </handler>
         </button>
 
         <button text="clearSelection" >
-            <method event="onclick">
+            <handler name="onclick">
                 tgrid[ text ]( );
-            </method>
+            </handler>
         </button>
 
         <button text="clearSort" >
-            <method event="onclick">
+            <handler name="onclick">
                 tgrid[ text ]( );
-            </method>
+            </handler>
         </button>
 
     </window>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

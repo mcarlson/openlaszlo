@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -19,30 +19,30 @@
             LzTrack.register(this, 'target');
        </method>
 
-       <method event="onmousetrackover">
+       <handler name="onmousetrackover">
            setAttribute('bgcolor', 0xffff00); // hilite
-       </method>
-       <method event="onmousetrackout">
+       </handler>
+       <handler name="onmousetrackout">
            setAttribute('bgcolor', null); // normal
-       </method>
-       <method event="onmousetrackup">
+       </handler>
+       <handler name="onmousetrackup">
            setAttribute('bgcolor', null); // normal
            canvas.dragimage.dropcomplete(this);
            Debug.write('dropped: '+dragimage.source.text);
-       </method>
+       </handler>
 </class>
 
 <class name="dragger" >
     <attribute name="text" type="text"/>
     <view width="10" height="10" bgcolor="green"/>
     <text x="15" text="${parent.text}" resize="true"/>
-    <method event="onmousedown">
+    <handler name="onmousedown">
         checkdrag.apply();
-    </method>
-    <method event="onmouseup">
+    </handler>
+    <handler name="onmouseup">
         canvas.dragimage.stopdrag(this);
         checkdrag.remove();
-    </method>
+    </handler>
 
     <checkdragstate name="checkdrag" draggername="dragimage"/>
 </class>

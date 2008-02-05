@@ -2,7 +2,7 @@
     <simplelayout axis="x"/>
     <drawview width="205" height="230" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()" bgcolor="green">
         <dragstate name="dragger"/>
-        <method event="oncontext">
+        <handler name="oncontext">
             this.moveTo(100, 100);
             this.lineTo(100, 200);
             this.quadraticCurveTo(150, 250, 200, 200);
@@ -42,12 +42,12 @@
             g.addColorStop(1, '#ffffff');
             this.fillStyle = g;
             this.fill();
-        </method>
+        </handler>
     </drawview>
 
 <!-- test new arc, rect and oval methods -->
     <drawview width="200" height="200">
-        <method event="oncontext">
+        <handler name="oncontext">
             this.beginPath();
             this.arc(100, 100, 50, 0, 90);
 
@@ -59,12 +59,12 @@
 
             this.stroke();
             this.closePath();
-        </method>
+        </handler>
     </drawview>
 
 <!-- test new bezierCurveTo method  - from http://developer.mozilla.org/samples/canvas-tutorial/2_6_canvas_beziercurveto.html -->
     <drawview width="200" height="200">
-        <method event="oncontext">
+        <handler name="oncontext">
             this.beginPath();
             this.moveTo(75,40);
             this.bezierCurveTo(75,37,70,25,50,25);
@@ -74,7 +74,7 @@
             this.bezierCurveTo(130,62.5,130,25,100,25);
             this.bezierCurveTo(85,25,75,37,75,40);
             this.fill();
-        </method>
+        </handler>
     </drawview>
     
     <!-- this snippet demonstrates LPP-4001. It gives an error in dhtml, 
@@ -91,7 +91,7 @@
     </drawview>
     
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

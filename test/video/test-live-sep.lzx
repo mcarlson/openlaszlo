@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -53,7 +53,7 @@
                     value="${(cam.show == false) ? 'broadcast' : 'stop'}"
                 />
 
-                <method event="onclick"><![CDATA[
+                <handler name="onclick"><![CDATA[
                     if (cam.show == false) {
                         live.stream.setAttribute('url', parent.username.text);
                         live.stream.broadcast();
@@ -63,7 +63,7 @@
                         cam.setAttribute('show', false);
                     }
                   ]]>
-                </method>
+                </handler>
 
             </button>
 

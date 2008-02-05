@@ -4,11 +4,11 @@
   <include href="base/basetabslider.lzx"/>
   <window id="wd" title="TabSlider with Toggle" x="100" y="0" width="200" height="300" resizable="true" >
     <basetabslider id="tslider"
-	       height="${immediateparent.height}"
-	       width="${immediateparent.width}" 
-	       spacing="2" 
-	       mintabheight="20" 
-	       slideduration="333" >
+               height="${immediateparent.height}"
+               width="${immediateparent.width}" 
+               spacing="2" 
+               mintabheight="20" 
+               slideduration="333" >
       <basetabelement clickable="true" id="t1_1" name="t1" bgcolor="red" selected="true"/>
       <basetabelement clickable="true" id="t1_2" bgcolor="blue" minheight="30"/>
       <basetabelement clickable="true" id="t1_3" bgcolor="green" minheight="60"/>
@@ -45,6 +45,6 @@
   <button text="Add Blue Tab"  onclick="new basetabelement(tslider2,{bgcolor:0x0000FF, clickable:'true'})"  y="50"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

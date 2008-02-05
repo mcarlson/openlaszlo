@@ -1,5 +1,5 @@
 <!---
-      @copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.
+      @copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.
                  Use is subject to license terms.
       @topic Incubator
       @subtopic Components
@@ -34,20 +34,20 @@
     <!--- Where the target opens.  See LzBrowser.loadURL for
     a list of values. -->
     <attribute name="target" type="string" value="_new"/>
-    
-    <method event="onmouseover">
+
+    <handler name="onmouseover">
       label.setAttribute('fgcolor', this.hoverColor);
       label.setText(makeTags(this.hoverTags)+this.text);
-    </method>
-    
+    </handler>
+
     <method event ="onmouseout">
       label.setAttribute('fgcolor', this.color);
       label.setText(this.text);
     </method>
-    
-    <method event="onclick">
+
+    <handler name="onclick">
       LzBrowser.loadURL(this.href, this.target)
-    </method>
+    </handler>
 
     <method name="makeTags" args="tags"><![CDATA[
       if (tags.split('<').length > 1) return tags;

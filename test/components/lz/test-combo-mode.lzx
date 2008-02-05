@@ -51,23 +51,23 @@ text="$path{'text()'}" value="$path{'@value'}"/>
 
         <!-- CANCEL BUTTON -->
         <button x="65" y="80">Cancel
-            <method event="onclick">
+            <handler name="onclick">
                 LzModeManager.release( this.parent );
                 this.parent.setBGColor(null);
-            </method>
+            </handler>
         </button>
 
         <!-- Save -->
         <button name="Save" x="145" y="80">Make Modal
-            <method event="onclick">
+            <handler name="onclick">
                 LzModeManager.makeModal( this.parent );
                 this.parent.setBGColor(yellow);
-            </method>
+            </handler>
         </button>
     </view>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

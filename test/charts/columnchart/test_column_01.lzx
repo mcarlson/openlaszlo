@@ -40,20 +40,20 @@
     </columnchart>
     
     <legend name="legendbox" legendFontsize="14" legendborder="true" chart="${chart1}" x="${chart1.x + chart1.width}" y="${(chart1.y + chart1.height)/2}" options="ignorelayout" fillColor="0x339933" borderWidth="3">
-          <method event="onitemmouseclick" args="item">
+          <handler name="onitemmouseclick" args="item">
               var topseries = this.chart.getDataSeries();
 
               topseries.getDataSeries(item.identifier).enabled = item.linevisible;
               this.chart.renderPlotArea();
               item.linevisible = !item.linevisible;
-          </method> 
+          </handler>
     </legend>
 </canvas>
 
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

@@ -29,16 +29,17 @@
 <view>
 <simplelayout/>
 <slider minvalue="1" value="10">
-    <method event="onvalue">
+    <handler name="onvalue">
        dv.setAttribute('it',this.value*10);
        dv.update();
-    </method>
+    </handler>
 </slider>
 <slider minvalue="1" value="10">
-    <method event="onvalue">
+    <handler name="onvalue">
        dv.setAttribute('iv',this.value);
        dv.update();
-    </method>
+    </handler>
 </slider>
 </view>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

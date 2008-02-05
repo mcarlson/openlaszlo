@@ -16,7 +16,7 @@
     <splash/>
 
     <font name="lztahoe8" src="lztahoe8.ttf">
-	    <face src="lztahoe8b.ttf" style="bold" />
+            <face src="lztahoe8b.ttf" style="bold" />
     </font>
 
     <!-- Import some fonts.  -->
@@ -25,7 +25,7 @@
     </font>
 
     <font name="Chevara" src="chevarar.ttf">
-	<face src="chevaraor.ttf" style="bold" />
+        <face src="chevaraor.ttf" style="bold" />
     </font>
 
     <font name="Conga" src="congar.ttf">
@@ -33,32 +33,32 @@
     </font>
 
     <font name="Helvetica-Condensed">
-	<face src="helmetcb.ttf"  style="bold" />
-	<face src="helmetcbi.ttf" style="bold italic" />
-	<face src="helmetci.ttf"  style="italic" />
-	<face src="helmetcr.ttf" />
+        <face src="helmetcb.ttf"  style="bold" />
+        <face src="helmetcbi.ttf" style="bold italic" />
+        <face src="helmetci.ttf"  style="italic" />
+        <face src="helmetcr.ttf" />
     </font>
 
     <font name="Helvetica">
-	<face src="helmetr.ttf"/>
-	<face src="helmetb.ttf"  style="bold" />
-	<face src="helmeti.ttf"  style="italic" />
-	<face src="helmetbi.ttf" style="bold italic" />
+        <face src="helmetr.ttf"/>
+        <face src="helmetb.ttf"  style="bold" />
+        <face src="helmeti.ttf"  style="italic" />
+        <face src="helmetbi.ttf" style="bold italic" />
     </font>
 
     <font name="Times Roman">
-	<face src="timmonsr.ttf" />
-	<face src="timmonsb.ttf"  style="bold" />
-	<face src="timmonsi.ttf"  style="italic" />
-	<face src="timmonsbi.ttf" style="bold italic" />
+        <face src="timmonsr.ttf" />
+        <face src="timmonsb.ttf"  style="bold" />
+        <face src="timmonsi.ttf"  style="italic" />
+        <face src="timmonsbi.ttf" style="bold italic" />
     </font>
 
     <!-- Fonts from the examples directory -->
     <font src="../resources/ttf/clawless.ttf" name="Clawless" >
-	<face src="../resources/ttf/clawless.ttf" style="bold" />
+        <face src="../resources/ttf/clawless.ttf" style="bold" />
     </font>
     <font src="../resources/ttf/kitchen.ttf"  name="Kitchen" >
-	<face src="../resources/ttf/kitchen.ttf" style="bold" />
+        <face src="../resources/ttf/kitchen.ttf" style="bold" />
     </font>
 
     <!-- Laszlo Pixel Font (8) -->
@@ -251,6 +251,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

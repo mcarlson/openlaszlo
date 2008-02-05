@@ -41,11 +41,11 @@
     <attribute name="tipalign" value="" type="string" />
     
     <!--- @keywords private -->
-    <method event="oninit">
+    <handler name="oninit">
         this.overdel = new LzDelegate(this, "startCheck",parent,"onmouseover");
         this.outdel = new LzDelegate(this, "hideTip",parent,"onmouseout");
         this.outdel.register(parent, "onclick");
-    </method>
+    </handler>
 
     <!--- @keywords private -->
     <method name="startCheck">
@@ -118,7 +118,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

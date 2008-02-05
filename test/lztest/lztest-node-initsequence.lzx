@@ -65,19 +65,19 @@
       logitem('constructorder', args['name']);
       logitem('sequence', 'construct' + args['name']);
     </method>
-    <method event="onconstruct">
+    <handler name="onconstruct">
       logitem('onconstructorder', this.name);
       logitem('sequence', 'onconstruct' + this.name);
-    </method>
+    </handler>
     <method name="init">
       super.init();
       logitem('initorder', this.name);
       logitem('sequence', 'init' + this.name);
     </method>
-    <method event="oninit">
+    <handler name="oninit">
       logitem('oninitorder', this.name);
       logitem('sequence', 'oninit' + this.name);
-    </method>
+    </handler>
   </class>
 
   <class name="ClassInitTestCase">
@@ -306,6 +306,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

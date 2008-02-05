@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
@@ -92,17 +92,17 @@
         <!---  Button for browsing file  -->
 
         <button name="browse" text="Browse...">
-            <method event="onclick"><![CDATA[
+            <handler name="onclick"><![CDATA[
                 parent.myFileUpload.browse();
                 parent.myFileUpload.setAttribute('uploadenable',true);
                 parent.remove.setAttribute('enabled',true);
             ]]>
-            </method>
+            </handler>
         </button>
 
         <!---  Button for clearing file list  -->
         <button name="remove" text="Clear" enabled="false">
-            <method event="onclick"><![CDATA[
+            <handler name="onclick"><![CDATA[
                 parent.myFileUpload.setAttribute('uploadenable',false);
                 this.setAttribute('enabled',false);
                 parent.txtFile.setText('');
@@ -110,7 +110,7 @@
                 parent.setAttribute('erroroccured', false);
                 parent.setAttribute('selected', false);
             ]]>
-            </method>
+            </handler>
         </button>
 
         <!---  progress bar  -->

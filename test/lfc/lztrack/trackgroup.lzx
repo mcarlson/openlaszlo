@@ -8,11 +8,11 @@
         width="80" height="40">
         <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
         <attribute name="mycolor" value="0x000099"/>
-        <method event="oninit">
+        <handler name="oninit">
              Debug.write("LzTrack.register(" + this, this.trackgroup + ")");
              LzTrack.register(this, this.trackgroup);
-        </method>
-        <method event="onmousedown">
+        </handler>
+        <handler name="onmousedown">
             if (canvas.myglobals.unregister) {
                 Debug.write("LzTrack.unregister(" + this.trackgroup, this + ")");
                  this.setAttribute('mycolor', 0xaa0000);
@@ -21,29 +21,29 @@
                 Debug.write("LzTrack.activate(" + this.trackgroup + ")");
                 LzTrack.activate(this.trackgroup);
             }
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             Debug.write("LzTrack.deactivate(" + this.trackgroup + ")");
             LzTrack.deactivate(this.trackgroup);
-        </method>
-        <method event="onmousetrackover">
+        </handler>
+        <handler name="onmousetrackover">
             setAttribute('bgcolor', 0x00dd00);
             Debug.write("onmousetrackover", this);
-        </method>
-        <method event="onmousetrackout">
+        </handler>
+        <handler name="onmousetrackout">
             setAttribute('bgcolor', this.mycolor);
             Debug.write("onmousetrackout", this);
-        </method>
-        <method event="onmousetrackup">
+        </handler>
+        <handler name="onmousetrackup">
             setAttribute('bgcolor', this.mycolor);
             Debug.write("onmousetrackup", this);
-        </method>
-        <method event="onmouseover">
+        </handler>
+        <handler name="onmouseover">
             setAttribute('bgcolor', 0x009900);
-        </method>
-        <method event="onmouseout">
+        </handler>
+        <handler name="onmouseout">
             setAttribute('bgcolor', this.mycolor);
-        </method>
+        </handler>
     </class>
 
     <view>
@@ -102,7 +102,7 @@
 
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

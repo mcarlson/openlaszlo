@@ -46,12 +46,12 @@
             parent.datatooltip.hide();               
         </method>
         <view name="hitarea" x="-2" y="-2" width="${parent.width + 5}" height="${parent.height + 5}" pixellock="true">
-            <method event="onmouseover">
+            <handler name="onmouseover">
                 parent.showtooltip();
-            </method>
-            <method event="onmouseout">
+            </handler>
+            <handler name="onmouseout">
                 parent.hidetooltip();
-            </method>
+            </handler>
         </view>
         
         <!--- render the line
@@ -124,7 +124,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

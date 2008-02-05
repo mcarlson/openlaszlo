@@ -3,31 +3,31 @@
     <debug x="280" width="470" height="370" />
 
     <soap name="accented" wsdl="http://localhost:8080/lps-dev/test/rpc/soap/java/AccentedTest.jws?wsdl">
-        <method event="onload">
+        <handler name="onload">
             Debug.write('accented test soap service stub loaded');
             stuff.setVisible(true);
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('error:', error);
-        </method>
+        </handler>
 
         <remotecall funcname="getJapaneseChars" >
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('japanese: "' +  value + '"');
-            </method>
+            </handler>
         </remotecall>
 
         <remotecall funcname="getAccentedChars" >
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('latin: "' +  value + '"');
-            </method>
+            </handler>
         </remotecall>
 
         <remotecall funcname="getArrayListOfString" >
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('array latin: "' + value + '"');
-            </method>
+            </handler>
         </remotecall>
 
     </soap>
@@ -40,6 +40,6 @@
     
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2005, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

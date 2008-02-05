@@ -10,10 +10,10 @@
     <scrollbar name="sb" height="${parent.height}" >
         <!--attribute name="scrolltarget" init="parent.content"/-->
         <!--attribute name="targetview" init="parent.content"/-->
-        <method event="oninit">
+        <handler name="oninit">
            // Debug.write("targetview ="+targetview);
            // Debug.write("targetview height="+targetview.height);
-        </method>
+        </handler>
     </scrollbar>
 
     <resizelayout axis="x"/>
@@ -97,6 +97,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -7,7 +7,7 @@
     <font name="vera_super_bold" src="verity/verity11bold.ttf"/>
 
     <dataset name="authdataset" type="http" src="http:authenticator.jsp">
-        <method event="ondata">
+        <handler name="ondata">
             var dptr = authdataset.getPointer();
             var code = dptr.xpathQuery('/authentication[1]/status[1]/@code');
             var rt = dptr.xpathQuery('/authentication[1]/status[1]/@rt');
@@ -53,10 +53,10 @@
 
             }
 
-        </method>
-        <method event="ontimeout">
+        </handler>
+        <handler name="ontimeout">
             Debug.write('request timed out');
-        </method>
+        </handler>
     </dataset>
 
     <class name="register">
@@ -151,7 +151,7 @@
                         <simplelayout axis="y" spacing="6"/>
                 </view>
                 <button id="regbut" isdefault="true" height="22" x="260" text="Submit">
-                    <method event="onclick">
+                    <handler name="onclick">
                     <![CDATA[
                         this.reset();
 
@@ -206,7 +206,7 @@
                         canvas.authdataset.setQueryParams(obj);
                         regsub.submit();
                     ]]>
-                    </method>
+                    </handler>
 
                     <method name="try_another_username" args="mesg">
                     <![CDATA[
@@ -275,11 +275,11 @@
                     <view x="${Math.round((parent.width-this.width)/2)}" pixellock="true">
                         <simplelayout axis="x" spacing="10"/>
                         <button isdefault="true" height="22" text="Log In">
-                            <method event="onclick">
+                            <handler name="onclick">
                                 canvas.authdataset.setQueryParams(null);
                                 canvas.authdataset.setQueryParams( { rt: 'login' } );
                                 loginsub.submit();
-                            </method>
+                            </handler>
                         </button>
                         <button onclick="ts.selectNext()" height="22" text="Register" />
                     </view>
@@ -347,7 +347,7 @@
 
             <button x="${Math.round((parent.width-this.width)/2)}">Logout
 
-                <method event="onclick">
+                <handler name="onclick">
                     logintab.setAttribute('selected', true);
 
                     aname.setText('');
@@ -368,7 +368,7 @@
                     screen2.a.doStart();
                     screen1.a.doStart();
                     
-                </method>
+                </handler>
             </button>
 
         </view>
@@ -390,18 +390,18 @@
             </text>
 
             <button x="${Math.round((parent.width-this.width)/2)}">Continue
-                <method event="onclick">
+                <handler name="onclick">
                     regsuccess.a.setTo(0);
                     regsuccess.a.doStart();
                     screen2.a.setTo(1);
                     screen2.a.doStart();
-                </method>
+                </handler>
             </button>
         </view>
     </view>    
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

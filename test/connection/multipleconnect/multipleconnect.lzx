@@ -3,25 +3,25 @@
     <connection authenticator="none" />
 
     <connectiondatasource name="mydatasource">
-        <method event="onconnect">
+        <handler name="onconnect">
             Debug.write("***connected***");
-        </method>
-        <method event="ondisconnect">
+        </handler>
+        <handler name="ondisconnect">
             Debug.write("***disconnected***");
-        </method>
+        </handler>
     </connectiondatasource>
 
     <view>
         <attribute name="counter" value="0" />
         <simplelayout axis="x" spacing="5"/>
         <button>connect
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.mydatasource.connect();
                 Debug.write('connect: counter is ' + (++parent.counter));
-            </method>
+            </handler>
         </button>
         <button>disconnect
-            <method event="onclick">
+            <handler name="onclick">
             <![CDATA[
                 if (0 < parent.counter) {
                   canvas.mydatasource.disconnect();
@@ -29,10 +29,10 @@
                 }
                 Debug.write('disconnect: counter is ' + parent.counter);
             ]]>
-            </method>
+            </handler>
         </button>
         <button>force disconnect
-            <method event="onclick">
+            <handler name="onclick">
             <![CDATA[
                 if (0 < parent.counter) {
                   canvas.mydatasource.clientDisconnect(true);
@@ -40,12 +40,12 @@
                 }
                 Debug.write('force disconnect');
             ]]>
-            </method>
+            </handler>
         </button>
     </view>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

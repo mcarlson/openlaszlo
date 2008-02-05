@@ -36,18 +36,18 @@
         <attribute name="t_start" value="0"/>
         <attribute name="t_elapsed" value="0"/>
 
-        <method event="onrepeat">
+        <handler name="onrepeat">
           n_onrepeat++;
-        </method>
+        </handler>
 
-        <method event="onstart" args="v">
+        <handler name="onstart" args="v">
           n_onstart++;
 
       var now = new Date();
       t_start = now.getTime();
-        </method>
+        </handler>
 
-        <method event="onstop">
+        <handler name="onstop">
         <![CDATA[
           n_onstop++;
 
@@ -68,7 +68,7 @@
           var errorx = 100 - view1.x;
       canvas.safeAssertEquals (100, view1.x, "view1.x final failure error=" + errorx);
         ]]>
-        </method>
+        </handler>
 
       <animator id="ag1_a1" attribute="x" from="50" to="100" repeat="2" duration="500" start="false">
 
@@ -84,18 +84,18 @@
         <attribute name="t_start" value="0"/>
         <attribute name="t_elapsed" value="0"/>
 
-        <method event="onrepeat">
+        <handler name="onrepeat">
           n_onrepeat++;
-        </method>
+        </handler>
 
-        <method event="onstart">
+        <handler name="onstart">
           n_onstart++;
 
       var now = new Date();
       t_start = now.getTime();
-        </method>
+        </handler>
 
-        <method event="onstop">
+        <handler name="onstop">
         <![CDATA[
           n_onstop++;
 
@@ -115,7 +115,7 @@
           var errorx = 100 - view1.x;
       canvas.safeAssertEquals (100, view1.x, "view1.x final failure error=" + errorx);
         ]]>
-        </method>
+        </handler>
       </animator>
 
 
@@ -133,18 +133,18 @@
         <attribute name="t_start" value="0"/>
         <attribute name="t_elapsed" value="0"/>
 
-        <method event="onrepeat">
+        <handler name="onrepeat">
           n_onrepeat++;
-        </method>
+        </handler>
 
-        <method event="onstart">
+        <handler name="onstart">
           n_onstart++;
 
       var now = new Date();
       t_start = now.getTime();
-        </method>
+        </handler>
 
-        <method event="onstop">
+        <handler name="onstop">
         <![CDATA[
           n_onstop++;
 
@@ -164,7 +164,7 @@
           var errory = 175 - view1.y;
       canvas.safeAssertEquals (175, view1.y, "view1.y final failure error=" + errory);
         ]]>
-        </method>
+        </handler>
       </animator>
 
     </animatorgroup>
@@ -192,14 +192,14 @@
       <attribute name="t_start" value="0"/>
       <attribute name="t_elapsed" value="0"/>
 
-      <method event="onstart">
+      <handler name="onstart">
         n_onstart++;
 
     var now = new Date();
     t_start = now.getTime();
-      </method>
+      </handler>
 
-      <method event="onstop">
+      <handler name="onstop">
       <![CDATA[
         n_onstop++;
 
@@ -227,7 +227,7 @@
     canvas.safeAssertEquals (100, view2.x, "view2.x final failure error=" + errorx);
     canvas.safeAssertEquals (175, view2.y, "view2.y final failure error=" + errory);
       ]]>
-      </method>
+      </handler>
 
 
       <animator id="ag2_a1" attribute="x" from="50" to="100" repeat="2" duration="500" start="false"/>
@@ -247,7 +247,7 @@
   <view id="view3" bgcolor="red" x="50" y="75" width="50" height="50">
     <animatorgroup id="ag3" process="simultaneous" attribute="x" from="50" to="200" repeat="2" duration="500" start="false">
 
-      <method event="onstop">
+      <handler name="onstop">
       <![CDATA[
     // The following test sometimes failed; especially if you rerun the
     // test by reloading the browser page. The error is small (1e-14).
@@ -257,7 +257,7 @@
     canvas.safeAssertEquals (250, view3.y, "view3.y final failure");
 
       ]]>
-      </method>
+      </handler>
 
       <animator id="ag3_a1">
         <method name="init">
@@ -337,7 +337,7 @@ suite.addTest(suite.test3);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

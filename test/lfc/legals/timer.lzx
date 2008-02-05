@@ -1,15 +1,15 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
 <canvas>
     <text>
-        <method event="oninit">
+        <handler name="oninit">
             this.updateDel = new LzDelegate(this, "update");
             this.update();
-        </method>
+        </handler>
         <method name="update">
             var t = new Date();
             info('update', t);

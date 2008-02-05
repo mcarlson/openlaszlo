@@ -7,23 +7,23 @@
 <!--    </method>-->
     <debug y="70"/>
     <class name="myinput" extends="inputtext">
-        <method event="onfocus">
+        <handler name="onfocus">
             Debug.write("name="+this.name);
             Debug.write('multiline='+this.multiline+"  resizable="
             + this.resizable + " fixedsize="+this.fixedsize);
-        </method>
-        <method event="onkeyup" args="k">
+        </handler>
+        <handler name="onkeyup" args="k">
           Debug.write('onkeyup '+ k  + " " +  this.name);
-        </method>
-        <method event="onkeydown" args="k">
+        </handler>
+        <handler name="onkeydown" args="k">
            // shiftDown = LzKeys.isKeyDown("shift");
             Debug.write('onkeydown '+ k + " " +  this.name);
             //_root.debug.write("...shiftDown="+shiftDown);
-        </method>
-            <method event="onkeypress" args="k">
+        </handler>
+        <handler name="onkeypress" args="k">
             //Debug.write('onkeypress '+ k + " " + this.name);
             //Debug.write('onkeypress '+ k + " " + this.name);
-        </method>
+        </handler>
     </class>
 
      <view>
@@ -157,7 +157,7 @@
     </view>
     <simplelayout />
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

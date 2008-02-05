@@ -7,9 +7,10 @@
   </view>
   <button y="200">Swap Text
     <attribute name="ind" value="$once{1}"/>
-    <method event="onclick">
+    <handler name="onclick">
       if (++ind == 3) ind = 1
       parent.fooText.setDatapath('ds:/data/message['+ind+']')
-    </method>
+    </handler>
   </button>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

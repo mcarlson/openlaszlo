@@ -5,9 +5,9 @@
     <include href="incubator/opttree/opttree.lzx"/>
     <include href="treenode.lzx"/>
 
-    <method event="oninit">
+    <handler name="oninit">
         gDataMan.loadAdditionalTreeData( dsTreeData.getFirstChild() );
-    </method>
+    </handler>
 
     <window title="fast tree" width="300" height="400" resizable="true">
         <simplelayout spacing="10"/>
@@ -37,7 +37,7 @@
     </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

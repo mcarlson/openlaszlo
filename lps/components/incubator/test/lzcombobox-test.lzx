@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2006, 2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->
@@ -23,17 +23,17 @@
     </dataset>
     
     <lzcombobox width="80" shownitems="3" itemdatapath="dsHours:/item">
-      <method event="onselect" args="dptr">
+      <handler name="onselect" args="dptr">
           Debug.write('value:', this.value);
           Debug.write('datapointer:', dptr);
-      </method>
+      </handler>
     </lzcombobox>
     
     <lzeditcombobox width="80" shownitems="3" itemdatapath="dsHours:/item">
-      <method event="onselect" args="dptr">
+      <handler name="onselect" args="dptr">
           Debug.write('value:', this.value);
           Debug.write('datapointer:', dptr);
-      </method>
+      </handler>
     </lzeditcombobox>
     
     <simplelayout axis="y" spacing="6"/>

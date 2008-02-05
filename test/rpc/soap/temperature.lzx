@@ -5,28 +5,28 @@
     <soap name="temperature" 
           wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter">
 
-        <method event="onload">
+        <handler name="onload">
             Debug.write('temperature soap service stub loaded');
-        </method>
+        </handler>
 
         <!-- if error isn't handled by remotecall, the error is propogated up to
              soap -->
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('error:', error);
-        </method>
+        </handler>
 
         <remotecall name="ftoc" funcname="FtoC" >
             <param value="100" />
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('f is 100, c is', value);
-            </method>
+            </handler>
         </remotecall>
 
         <remotecall name="ctof" funcname="CtoF" >
             <param value="0" />
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('c is 0, f is', value);
-            </method>
+            </handler>
         </remotecall>
 
     </soap>
@@ -38,6 +38,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

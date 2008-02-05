@@ -18,17 +18,17 @@
             loadparent.loadview.setSource( u );
         </method>
 
-        <method event="onerror" reference="loadparent.loadview">
+        <handler name="onerror" reference="loadparent.loadview">
             this.setAttribute( "status" , "error" );
-        </method>
+        </handler>
 
-        <method event="onload" reference="loadparent.loadview">
+        <handler name="onload" reference="loadparent.loadview">
             this.setAttribute( "status" , "loaded" );
-        </method>
+        </handler>
 
-        <method event="ontimeout" reference="loadparent.loadview">
+        <handler name="ontimeout" reference="loadparent.loadview">
             this.setAttribute( "status" , "timeout" );
-        </method>
+        </handler>
 
         <view>
             <simplelayout axis="x"/>
@@ -98,12 +98,12 @@
         </combobox>
         <button>
             Load
-            <method event="onclick">
+            <handler name="onclick">
                 targetParent[ parent.targparent.targ.value ].load( 
                                                         parent.src.value );
                 parent.targparent.targ.selectNext();
                 //parent.src.selectNext();
-            </method>
+            </handler>
         </button>
         <view y='-8' name="targparent">
             <text x="18">Target:</text>
@@ -124,3 +124,4 @@
         <loadtarget name="D"/>
     </view>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

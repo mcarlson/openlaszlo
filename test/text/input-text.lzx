@@ -7,10 +7,10 @@
 <canvas width="1000" height="800">
 
     <font name="Helvetica">
-	<face src="helmetcb.ttf"  style="bold" />
-	<face src="helmetcbi.ttf" style="bold italic" />
-	<face src="helmetci.ttf"  style="italic" />
-	<face src="helmetcr.ttf" />
+        <face src="helmetcb.ttf"  style="bold" />
+        <face src="helmetcbi.ttf" style="bold italic" />
+        <face src="helmetci.ttf"  style="italic" />
+        <face src="helmetcr.ttf" />
     </font>
 
 <view id="v1">
@@ -40,6 +40,6 @@ Vestibulum sodales wisi id turpis. Integer non velit vitae ipsum suscipit imperd
 </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -52,10 +52,10 @@
             Fixes LPP-4461: In rich text editor, font color combo box does 
             not update when cursor moves to different colored text 
             [bshine 08.09.2007] -->
-         <method event="oneditor" args="e">
+         <handler name="oneditor" args="e">
              this.setValue(this.editor.defaultfontcolor, true);
              this.csq.setColor(this.editor.defaultfontcolor);             
-         </method>
+         </handler>
          
          <!---  @keywords private
              apply state for late instantiation of local data -->
@@ -65,7 +65,7 @@
          <!--- When the user selects an item from the combo box, 
              create an object representing just the change in format.
              Give that object to the editor. -->
-         <method event="onselect"><![CDATA[
+         <handler name="onselect"><![CDATA[
                 var color  = this.value; 
                 
                 this.csq.setColor(color);
@@ -79,7 +79,7 @@
                     this.editor.delegateRestoreSelection(); 
                 }
                 ]]>
-         </method>
+         </handler>
          
          <!--- method broadcast out by the toolbar for clearing tool's state -->
          <method name="reset">
@@ -92,9 +92,9 @@
          </method>
          
          <!-- Save the selection region before another widget gets focus. -->
-         <method event="onmouseover">          
+         <handler name="onmouseover">          
              this.editor.saveSelectionRegion();
-         </method>
+         </handler>
          <colorsquare x="11" y="3" name="csq" drawsquare="true">
              <method name="setColor" args="color">
                  this.setVisible( color != null );
@@ -108,7 +108,7 @@
  </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         --> 

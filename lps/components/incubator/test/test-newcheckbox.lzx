@@ -13,50 +13,50 @@
     <baseform id="myform" x="20" y="20" layout="spacing:3">
 
         <newcheckbox id="c1" value="true">
-            <method event="onvalue">
+            <handler name="onvalue">
                 Debug.write('c1 value', this.value);
-            </method>
-            <method event="onchanged">
+            </handler>
+            <handler name="onchanged">
                 Debug.write('c1 changed', this.changed);
-            </method>
+            </handler>
         </newcheckbox>
 
         <newcheckbox id="c2" value="false">
-            <method event="onvalue">
+            <handler name="onvalue">
                 Debug.write('c2 value', this.value);
-            </method>
-            <method event="onchanged">
+            </handler>
+            <handler name="onchanged">
                 Debug.write('c2 changed', this.changed);
-            </method>
+            </handler>
         </newcheckbox>
 
         <newcheckbox id="c3" datapath="mydset:/value[1]/text()">
-            <method event="onvalue">
+            <handler name="onvalue">
                 Debug.write('c3 value', this.value);
-            </method>
-            <method event="onchanged">
+            </handler>
+            <handler name="onchanged">
                 Debug.write('c3 changed', this.changed);
-            </method>
+            </handler>
         </newcheckbox>
 
         <newcheckbox id="c4" datapath="mydset:/value[2]/text()">
-            <method event="onvalue">
+            <handler name="onvalue">
                 Debug.write('c4 value', this.value);
-            </method>
-            <method event="onchanged">
+            </handler>
+            <handler name="onchanged">
                 Debug.write('c4 changed', this.changed);
-            </method>
+            </handler>
         </newcheckbox>
 
-        <method event="onchanged" args="changed">
+        <handler name="onchanged" args="changed">
             Debug.write('myform changed', this.changed, changed);
-        </method>
+        </handler>
 
     </baseform>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

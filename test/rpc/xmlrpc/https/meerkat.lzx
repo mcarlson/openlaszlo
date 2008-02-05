@@ -11,21 +11,21 @@
     <xmlrpc name="meerkat" secure="true" secureport="8443"
             service="http://www.oreillynet.com/meerkat/xml-rpc/server.php">
 
-        <method event="onload">
+        <handler name="onload">
             canvas.meerkat.getCategories.invoke();
             status.setVisible(true);
-        </method>
+        </handler>
 
-        <method event="ondata" args="data">
+        <handler name="ondata" args="data">
             Debug.write('ondata:', data);
             status.setVisible(false);
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('onerror:', error);
             errormsg.setAttribute('text', 'Server error: ' + error + '\nPlease try again.')
             errormsg.open()
-        </method>
+        </handler>
 
         <remotecall name="getChannelsByCategory" 
                     funcname="meerkat.getChannelsByCategory" />
@@ -50,13 +50,13 @@
             placement="item" />
 
         <datapath>
-            <method event="onclones">
+            <handler name="onclones">
                 Debug.write('replicating')
                 if (!this['doneDel']) {
                    this.doneDel = new LzDelegate(this, 'openOH')
                    this.doneDel.register(clones[ clones.length - 1 ], 'oninit')
                 }
-            </method>
+            </handler>
             <method name="openOH">
                 Debug.write('clones done');
             </method>
@@ -84,7 +84,7 @@
             <!-- Category level -->
             <datatree datapath="item">
          
-                <method event="onclick">
+                <handler name="onclick">
                     // make remotecall only if we haven't made it before
                     if ( ! this.del ) {
 
@@ -97,12 +97,12 @@
                         return;
                     }
                     this.setAttribute('open', ! this.open)
-                </method>
+                </handler>
                 
                 <!-- Channels this category contains -->
                 <datatree datapath="element/item" bkg="0xe0e0e0" yindent="25">
                 
-                    <method event="onclick">
+                    <handler name="onclick">
                         // make remotecall only if we haven't made it before
                         if ( ! this.isloaded ) {
                             this.del = new LzDelegate(this, "gotData")
@@ -116,7 +116,7 @@
                             return;
                         }
                         this.setAttribute('open', ! this.open)
-                    </method>
+                    </handler>
 
                     <!-- And finally, list of articles in the channel. -->
                     <datatree name="articles" datapath="element/item" bkg="white">
@@ -153,15 +153,15 @@
 
 <!--
     <button name="browse" text="Browse" x="100" y="405">
-        <method event="onclick" >
+        <handler name="onclick" >
             canvas.meerkat.getCategories.invoke();
             status.setVisible(true);
-        </method>
+        </handler>
     </button>
 -->
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

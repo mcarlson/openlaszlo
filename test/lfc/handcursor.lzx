@@ -3,25 +3,25 @@
     <view width="100" height="100" bgcolor="green">
         <text width="100" align="center" valign="middle"
             multiline="true">show hand cursor onclick</text>
-        <method event="onclick">
+        <handler name="onclick">
             LzCursor.showHandCursor(true);
-        </method>
+        </handler>
     </view>
     <view width="100" height="100" bgcolor="red">
         <text width="100" align="center" valign="middle">hide hand cursor onclick</text>
-        <method event="onclick">
+        <handler name="onclick">
             LzCursor.showHandCursor(false);
-        </method>
+        </handler>
     </view>
     <view width="100" height="100" bgcolor="yellow">
         <text width="100" align="center" valign="middle"
             multiline="true">test mouseover bgcolor change</text>
-        <method event="onmouseover">
+        <handler name="onmouseover">
             setBGColor(blue);
-        </method>
-        <method event="onmouseout">
+        </handler>
+        <handler name="onmouseout">
             setBGColor(yellow);
-        </method>
+        </handler>
     </view>
 
     <view width="100" height="100" bgcolor="yellow"
@@ -31,3 +31,4 @@
     </view>
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

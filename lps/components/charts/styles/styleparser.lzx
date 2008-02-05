@@ -50,8 +50,9 @@ This class complete the chart style class in case the developer has not defined 
             }
         ]]>
         </method>
+        <handler name="onisleaf" method="readLeafNode" />
         <!--- @keyword private-->
-        <method name="readLeafNode" event="onisleaf">
+        <method name="readLeafNode">
         if( this.style != null )
             if( this.style.constructor.tagname == this.defaultstyle.constructor.tagname ) {
                 // continue;
@@ -70,7 +71,7 @@ This class complete the chart style class in case the developer has not defined 
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

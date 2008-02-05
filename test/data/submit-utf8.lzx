@@ -5,13 +5,13 @@
   <text id="t2" width="200" bgcolor="#ffcccc"/>
 
   <button>Submit
-    <method event="onclick">
+    <handler name="onclick">
         var d = canvas.datasets.mydata;
         var val = t1.getText();
         Debug.write("sending request for data.");
         d.setQueryString({foo : escape(val), bar : 'foobar', baz : 'bazbo'});
         d.doRequest(); 
-      </method>
+    </handler>
     </button>
 
   <view name="foo" datapath="mydata:/response/formcomponent">
@@ -20,3 +20,4 @@
   </view>
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

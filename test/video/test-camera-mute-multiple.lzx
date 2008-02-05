@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -30,11 +30,11 @@
             value="${parent.v.c.show}" 
         >
 
-            <method event="onvalue"><![CDATA[
+            <handler name="onvalue"><![CDATA[
                 //Debug.write("Setting camera show", this.value);
                 classroot.v.c.setAttribute("show", this.value);
               ]]>
-            </method>
+            </handler>
 
         </checkbox>
 

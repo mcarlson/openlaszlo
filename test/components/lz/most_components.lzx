@@ -3,55 +3,55 @@
 
     <inittimer width="150"/>
     <debug x="450" y="200" height="200"/>
-	<view id="s1" x="20" y="40">
-		<view>
-			<swatch/>
-			<swatch bgcolor="0xc0c0c0"/>
-			<swatch bgcolor="0x333333"/>
-			<swatch bgcolor="0x000000"/>
-			<simplelayout axis="y" spacing="10"/>
-		</view>
-		
-		<view name="tsliderview">
-		
-			<tabslider width="250" height="200">
-				<tabelement text="possesion">
-					<button text="hello"/>
-					<checkbox text="this should not be big"/>
-					<radiobutton text="this should also not be big"/>
-					<text resize="true">hello sarah how are you?</text>
-					<simplelayout axis="y" spacing="10"/>
-				</tabelement >
-				<tabelement text="housewares"/>
-				<tabelement text="isotope"/>
-				<tabelement text="delinquents"/>
-				<tabelement text="whale bones"/>
-			</tabslider>
-			
-			<!-- build padding into content area? allowheight specified in parent apply to panes?-->
-			<tabs>
-				<tabpane>Insecticides
-					<simplelayout spacing="10"/>
-					<button height="22">Remove</button>
-					<radiogroup>
-						<radiobutton>Yes, I want to know more</radiobutton>
-						<radiobutton>No, I prefer to remain blissfully unaware</radiobutton>
-						<radiobutton>Please tell my neighbor, who may tell me</radiobutton>
-					</radiogroup>
-				</tabpane>
-				<tabpane selected="true">Parcheesi
-					<text >On my honor I will do my best </text>
-					<button height="22">Testify</button>
-					<simplelayout spacing="10"/>
-				</tabpane>
-				<tabpane text="Subliminal">
-					<button height="22" >Submit</button>
-				</tabpane>
-			</tabs>
-			
+        <view id="s1" x="20" y="40">
+                <view>
+                        <swatch/>
+                        <swatch bgcolor="0xc0c0c0"/>
+                        <swatch bgcolor="0x333333"/>
+                        <swatch bgcolor="0x000000"/>
+                        <simplelayout axis="y" spacing="10"/>
+                </view>
+                
+                <view name="tsliderview">
+                
+                        <tabslider width="250" height="200">
+                                <tabelement text="possesion">
+                                        <button text="hello"/>
+                                        <checkbox text="this should not be big"/>
+                                        <radiobutton text="this should also not be big"/>
+                                        <text resize="true">hello sarah how are you?</text>
+                                        <simplelayout axis="y" spacing="10"/>
+                                </tabelement >
+                                <tabelement text="housewares"/>
+                                <tabelement text="isotope"/>
+                                <tabelement text="delinquents"/>
+                                <tabelement text="whale bones"/>
+                        </tabslider>
+                        
+                        <!-- build padding into content area? allowheight specified in parent apply to panes?-->
+                        <tabs>
+                                <tabpane>Insecticides
+                                        <simplelayout spacing="10"/>
+                                        <button height="22">Remove</button>
+                                        <radiogroup>
+                                                <radiobutton>Yes, I want to know more</radiobutton>
+                                                <radiobutton>No, I prefer to remain blissfully unaware</radiobutton>
+                                                <radiobutton>Please tell my neighbor, who may tell me</radiobutton>
+                                        </radiogroup>
+                                </tabpane>
+                                <tabpane selected="true">Parcheesi
+                                        <text >On my honor I will do my best </text>
+                                        <button height="22">Testify</button>
+                                        <simplelayout spacing="10"/>
+                                </tabpane>
+                                <tabpane text="Subliminal">
+                                        <button height="22" >Submit</button>
+                                </tabpane>
+                        </tabs>
+                        
 
-			<simplelayout axis="y" spacing="30"/>
-		</view>
+                        <simplelayout axis="y" spacing="30"/>
+                </view>
         <!-- gripper align w/ title.  stop before close btn. less title room.
             resize closer to edges. content border? performance?-->
         <window text="test winsdow" width="250" height="250"
@@ -63,27 +63,27 @@
             <scrollbar/>
         </window>
 
-		<!-- button height not correct (18 not 22) check view color and opacity in 5pc. -->
-		<view>
-			<button height="22">Submit</button>
-			<button height="22">Cancel</button>
-			<button height="22">OK</button>
-			<button height="22">Revert</button>
-			<!-- combobox menu wrong art (3D for scrolling list only) -->
-			<combobox text="varietal" width="120">
-				<textlistitem text="this one"/>
-				<textlistitem text="this one"/>
-				<textlistitem text="this one"/>
-				<textlistitem text="this one"/>
-			</combobox>
-			<!-- offset black dot in radiobtn art (dn state) -->
-			<radiogroup>
-				<radiobutton text="tension"/>
-				<radiobutton text="distance"/>
-				<radiobutton text="delerium"/>
-				<radiobutton text="froth"/>
-				<radiobutton text="persuasion"/>
-			</radiogroup>
+                <!-- button height not correct (18 not 22) check view color and opacity in 5pc. -->
+                <view>
+                        <button height="22">Submit</button>
+                        <button height="22">Cancel</button>
+                        <button height="22">OK</button>
+                        <button height="22">Revert</button>
+                        <!-- combobox menu wrong art (3D for scrolling list only) -->
+                        <combobox text="varietal" width="120">
+                                <textlistitem text="this one"/>
+                                <textlistitem text="this one"/>
+                                <textlistitem text="this one"/>
+                                <textlistitem text="this one"/>
+                        </combobox>
+                        <!-- offset black dot in radiobtn art (dn state) -->
+                        <radiogroup>
+                                <radiobutton text="tension"/>
+                                <radiobutton text="distance"/>
+                                <radiobutton text="delerium"/>
+                                <radiobutton text="froth"/>
+                                <radiobutton text="persuasion"/>
+                        </radiogroup>
 
             <list shownitems="4" width="140">
                 <textlistitem>tricycle</textlistitem>
@@ -93,40 +93,40 @@
                 <textlistitem>blimp</textlistitem>
                 <textlistitem>racecar</textlistitem>
             </list>
-	<simplelayout axis="y" spacing="14"/>
-	</view>
-		
-		<view height="200" width="40" clip="true">
-			<view height="500" width="40"/>
-			<!-- tab to scroll, then arrow -->	
-			<scrollbar id="sb"/>
-		</view>
-		
-		<!-- align text vertically against checkbox. increase check box size?	 -->	
-		<view name="checkbox_group">
-				<checkbox text="tension"/>
-				<checkbox text="distance"/>
-				<checkbox text="delerium"/>
-				<checkbox text="froth"/>
-				<checkbox text="persuasion"/>
-				<simplelayout axis="y" spacing="5"/>
-		</view>
-		
-		<!-- input text resize not working. text truncated.	
-			text from a dataset not resizing box-->
-		<view name="textfields"> 
-			<edittext text="this is a spiffy input box for text"/>
-			<edittext width="100"/>
-			<edittext width="100"/>
-			<edittext width="100"/>
-			<simplelayout axis="y" spacing="5"/>
-		</view>
+        <simplelayout axis="y" spacing="14"/>
+        </view>
+                
+                <view height="200" width="40" clip="true">
+                        <view height="500" width="40"/>
+                        <!-- tab to scroll, then arrow -->      
+                        <scrollbar id="sb"/>
+                </view>
+                
+                <!-- align text vertically against checkbox. increase check box size?    -->    
+                <view name="checkbox_group">
+                                <checkbox text="tension"/>
+                                <checkbox text="distance"/>
+                                <checkbox text="delerium"/>
+                                <checkbox text="froth"/>
+                                <checkbox text="persuasion"/>
+                                <simplelayout axis="y" spacing="5"/>
+                </view>
+                
+                <!-- input text resize not working. text truncated.     
+                        text from a dataset not resizing box-->
+                <view name="textfields"> 
+                        <edittext text="this is a spiffy input box for text"/>
+                        <edittext width="100"/>
+                        <edittext width="100"/>
+                        <edittext width="100"/>
+                        <simplelayout axis="y" spacing="5"/>
+                </view>
 
-		<simplelayout axis="x" spacing="30"/>
-	</view>
+                <simplelayout axis="x" spacing="30"/>
+        </view>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

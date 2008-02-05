@@ -46,7 +46,7 @@
         <attribute name="text" value="test name" type="html" />
         <view bgcolor="0x979797" width="${this.title.getTextWidth() + 10}" height="20" >
            <text x="4" y="2" name="title" text="${classroot.text}" resize="true" fgcolor="0xFFFFFF" >
-                <method event="ontext">parent.setWidth(this.getTextwidth() + 10)</method>
+                <handler name="ontext">parent.setWidth(this.getTextwidth() + 10)</handler>
            </text>
         </view>
         <view bgcolor="0x979797" width="100%"  options="releaseToLayout" height="10" >
@@ -62,13 +62,13 @@
        <attribute name="text" value="" type="string" />
        <view bgcolor="red" width="10" height="10" x="5" y="5" />
        <statictext text="${classroot.text}" fgcolor="0x4B4B4B" >
-            <method event="ontext">
+            <handler name="ontext">
                this.setX(parent.width - this.getTextWidth() - 25);
-            </method>
+            </handler>
        </statictext>
     </class>
 
-	<view x="20" y="20" >
+        <view x="20" y="20" >
         <testborder width="550" height="200" x="10" > List: dragging mouse past the boundary - autoscrolling
             <view layout="spacing:4">
                 <text>a1: multi-select</text>
@@ -83,15 +83,15 @@
                 </list>
                 <view layout="axis:x;spacing:10">
                     <button>Get Value
-                        <method event="onclick">
+                        <handler name="onclick">
                             var val = a1.getValue();
                             a1val.setText(typeof(val) + '\n' + val);
-                        </method>
+                        </handler>
                     </button>
                     <button>Clear
-                        <method event="onclick">
+                        <handler name="onclick">
                             var val = a1.clearSelection();
-                        </method>
+                        </handler>
                     </button>
                 </view>
                 <text multiline="true" id="a1val" width="200" height="60"/>
@@ -129,15 +129,15 @@
                 </list>
                 <view layout="axis:x;spacing:10">
                     <button>Get Value
-                        <method event="onclick">
+                        <handler name="onclick">
                             var val = b1.getValue();
                             b1val.setText(typeof(val) + '\n' + val);
-                        </method>
+                        </handler>
                     </button>
                     <button>Clear
-                        <method event="onclick">
+                        <handler name="onclick">
                             var val = b1.clearSelection();
-                        </method>
+                        </handler>
                     </button>
                 </view>
                 <text multiline="true" id="b1val" width="200" height="60"/>
@@ -267,12 +267,12 @@
                 <simplelayout axis="x" spacing="10"/>
         </testborder>
         
-		<simplelayout axis="y" spacing="10"/>
-	</view>
+                <simplelayout axis="y" spacing="10"/>
+        </view>
 
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

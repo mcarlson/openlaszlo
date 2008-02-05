@@ -1,6 +1,6 @@
 <!--
 ==============
- * Copyright (c) 2001, 2002 Laszlo Systems, Inc. 
+ * Copyright (c) 2001, 2002, 2008 Laszlo Systems, Inc. 
  * All Rights Reserved. 
  * 
  * This software is the proprietary information of Laszlo Systems, Inc. 
@@ -78,7 +78,7 @@
                
         <method name="openTab" args="tabelement,withAnimation" >
             <![CDATA[
-			if (this.opennedTab != tabelement) {
+                        if (this.opennedTab != tabelement) {
                 tabelement.open(this.availableWidth,this.slideDuration, withAnimation)
                 if (this.opennedTab != null) this.opennedTab.close(-this.opennedTab.width + this.opennedTab.minwidth, this.slideDuration);
                 this.opennedTab = tabelement;

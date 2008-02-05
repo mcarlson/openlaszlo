@@ -9,14 +9,14 @@
            fontsize="20" >
         <text name="a" bgcolor="white" visible="${canvas.a == parent}">A</text>
         <text name="b" bgcolor="white" visible="${canvas.b == parent}">B</text>
-        <method event="onclick">
+        <handler name="onclick">
             if ( !canvas.A || canvas.B ){
                 canvas.setAttribute( "a" , this );
                 canvas.setAttribute( "b" , null );
             } else {
                 canvas.setAttribute( "b" , this );
             }
-        </method>
+        </handler>
         <view align="right" width="20" height="20" bgcolor="black"
               onclick="parent.animate( 'y' , 100 , 1000 );"/>
             
@@ -31,34 +31,34 @@
     <logo name="lg" bgcolor="white"/>
     <view y="200" options="ignorelayout">
         <button >Toggle
-            <method event="onclick">
+            <handler name="onclick">
                 if (tlayout.spacing > -la.width ){
                     tlayout.animate( "spacing" , -la.width , 1000 );
                 } else {
                     tlayout.animate( "spacing" , -120 , 1000 );
                     blayout.update();
                 }
-            </method>
+            </handler>
         </button>
         <button>A infrontof B
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.a.sendInFrontOf( canvas.b );
-            </method>
+            </handler>
         </button>
         <button>A behind B
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.a.sendBehind( canvas.b );
-            </method>
+            </handler>
         </button>
         <button>A to front
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.a.bringToFront();
-            </method>
+            </handler>
         </button>
         <button>A to back
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.a.sendToBack();
-            </method>
+            </handler>
         </button>
         <simplelayout/>
     </view>
@@ -73,6 +73,6 @@
         
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -21,9 +21,9 @@
       sl1.update();
     </method>
     <simpleboundslayout id="sl1" axis="x" spacing="10">
-      <method event="onaxis" args="axis">
+      <handler name="onaxis" args="axis">
         n_onaxis++;
-      </method>
+      </handler>
     </simpleboundslayout>
     <view name="v1" bgcolor="blue" height="30" width="50"/>
     <view name="v2" bgcolor="blue" height="30" width="50"/>
@@ -101,7 +101,7 @@ suite.addTest(suite.test2);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

@@ -15,7 +15,7 @@
 
         <button name="btnok" text="OK" enabled="false" onclick="setAttribute('text', 'Form Valid!')" />
 
-        <method event="onerrorcount" args="val">
+        <handler name="onerrorcount" args="val">
         <![CDATA[
             Debug.write("error changed:" + val);
             if(0 < val)
@@ -23,11 +23,11 @@
             else
                 this.btnok.setAttribute("enabled", true);
         ]]>
-        </method>
+        </handler>
     </validatingForm>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

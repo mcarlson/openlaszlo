@@ -23,7 +23,7 @@
                 name="closeme"
                 resizable="true" closeable="true"
                 x="400" y="200">
-	<scrollbar/>
+        <scrollbar/>
 </window>
 
 <window name="cherry" title="size to content" x="200" y="200" resizable="true">
@@ -91,6 +91,6 @@ make it long and skinny.</alert>
 </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

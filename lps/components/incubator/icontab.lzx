@@ -50,11 +50,11 @@
             <text name="label" resize="true" x="${parent.icon.x + parent.icon.width + 4}" text="${classroot.text}" y="${classroot.label_y}" />
         </view>
         
-        <method event="oninit">
+        <handler name="oninit">
             if (!this.selected) {
                 this.setFrame(2);
             }
-        </method>    
+        </handler>
 
         <!--- @keywords private -->
         <method name="setHilite" args="h">
@@ -117,7 +117,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

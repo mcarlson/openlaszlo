@@ -36,9 +36,9 @@
         <attribute name="tooltip" value="${this.getAttribute('text')}" />
         
         
-        <method event="oninit">
+        <handler name="oninit">
             myTooltipManager.register(this);
-        </method>   
+        </handler>
 
         <view   resource="$once{parent.icon}" 
                 width="$once{parent.start_size}"
@@ -51,7 +51,7 @@
                 <attribute name="old_y" value="$once{canvas.getMouse('y')}" />
                 
 
-                <method event="onmousemove" reference="canvas"><![CDATA[
+                <handler name="onmousemove" reference="canvas"><![CDATA[
                     var global_x = canvas.getMouse("x");
                     var global_y = canvas.getMouse("y");
                     
@@ -99,12 +99,12 @@
                     this.lastamount = amount;
 
                     ]]>
-                </method>
+                </handler>
         </view>
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

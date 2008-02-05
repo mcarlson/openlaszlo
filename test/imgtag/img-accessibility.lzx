@@ -2,11 +2,11 @@
   <debug oninit="this.setWrapLines(true)"/>
   <resource name="horse3" src="horse-3.jpg"/>
 
-  <method event="oninit">
+  <handler name="oninit">
         //LzBrowser.setClipboard('foo!');
         var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
         LzTimer.addTimer(upddel, 500);
-  </method>
+  </handler>
 
   <text multiline="true" height="300" width="300" id="bar">
     This is a horse, you see on your right. <img align="right" src="horse-2.jpg" alt="A pretty horsey"/>
@@ -15,3 +15,4 @@
 
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

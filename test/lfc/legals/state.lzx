@@ -1,18 +1,18 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
 <canvas width="100%" height="80%">
     <view width="100" height="100" bgcolor="red"> 
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.wid.apply();
             this.foo();
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             this.wid.remove();
-        </method>
+        </handler>
         <state name="wid">
             <attribute name="width" value="200"/>
             <view width="10" height="10" bgcolor="yellow">
@@ -25,30 +25,30 @@
         </state>
     </view>
     <view width="100" height="100" x="200" bgcolor="blue"> 
-        <method event="onx" args="x">
+        <handler name="onx" args="x">
             if (this.xt) this.xt.setText(x + ', ' + this.y);
-        </method>
-        <method event="onmousedown">
+        </handler>
+        <handler name="onmousedown">
             this.dragger.apply();
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             this.dragger.remove();
-        </method>
+        </handler>
         <dragstate name="dragger"/>
         <text name="xt"/>
     </view>
 
     <view width="100" height="100" x="300" bgcolor="green"> 
         <view bgcolor="purple" width="50" height="50">
-            <method event="onx">
+            <handler name="onx">
                 if (this.xt) this.xt.setText(this.x + ', ' + this.y);
-            </method>
-            <method event="onmousedown">
+            </handler>
+            <handler name="onmousedown">
                 this.dragger.apply();
-            </method>
-            <method event="onmouseup">
+            </handler>
+            <handler name="onmouseup">
                 this.dragger.remove();
-            </method>
+            </handler>
             <dragstate name="dragger"/>
             <text name="xt"/>
         </view>
@@ -56,15 +56,15 @@
     <view width="100" height="100" x="400" bgcolor="0xffcc00"> 
         <view width="50" height="50" bgcolor="green"> 
             <view bgcolor="purple" width="20" height="20">
-                <method event="onx">
+                <handler name="onx">
                     if (this.xt1) this.xt1.setText(this.x + ', ' + this.y);
-                </method>
-                <method event="onmousedown">
+                </handler>
+                <handler name="onmousedown">
                     this.dragger1.apply();
-                </method>
-                <method event="onmouseup">
+                </handler>
+                <handler name="onmouseup">
                     this.dragger1.remove();
-                </method>
+                </handler>
                 <dragstate name="dragger1"/>
                 <text name="xt1"/>
             </view>
@@ -72,29 +72,29 @@
     </view>
 
     <view x="200" y="200" resource="resc/logo.png"> 
-        <method event="onx" args="x">
+        <handler name="onx" args="x">
             if (this.xt) this.xt.setText(x + ', ' + this.y);
-        </method>
-        <method event="onmousedown">
+        </handler>
+        <handler name="onmousedown">
             this.dragger.apply();
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             this.dragger.remove();
-        </method>
+        </handler>
         <dragstate name="dragger"/>
         <text name="xt"/>
     </view>
 
     <view x="400" y="200"> 
-        <method event="onx" args="x">
+        <handler name="onx" args="x">
             if (this.xt) this.xt.setText(x + ', ' + this.y);
-        </method>
-        <method event="onmousedown">
+        </handler>
+        <handler name="onmousedown">
             this.dragger.apply();
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             this.dragger.remove();
-        </method>
+        </handler>
         <dragstate name="dragger"/>
         <view resource="resc/logo.png"/>
         <text name="xt"/>
@@ -102,17 +102,17 @@
     </view>
 
     <view x="600" y="200"> 
-        <method event="onx" args="x">
+        <handler name="onx" args="x">
             if (this.xt) this.xt.setText(x + ', ' + this.y);
-        </method>
+        </handler>
         <dragstate name="dragger"/>
         <view resource="resc/logo.png">
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 this.parent.dragger.apply();
-            </method>
-            <method event="onmouseup">
+            </handler>
+            <handler name="onmouseup">
                 this.parent.dragger.remove();
-            </method>
+            </handler>
         </view>
         <text name="xt"/>
     </view>

@@ -281,9 +281,9 @@
             ]]>
         </method>
 
+        <handler name="onkeydown" method="_dokeydown" />
         <!--- @keywords private -->
-        <method name="_dokeydown" args="kc"
-                event="onkeydown">
+        <method name="_dokeydown" args="kc">
             <![CDATA[
             if ( !selectable ) return;
             /* select item on 'space' key */
@@ -325,8 +325,9 @@
             ]]>
         </method>
 
+        <handler name="onblur" method="_doblur" />
         <!--- @keywords private -->
-        <method name="_doblur" event="onblur">
+        <method name="_doblur">
             if (this.hilite) this.hilite.setAttribute( "highlighted" , false );
             this.setAttribute( "hilite" , null );
         </method>
@@ -560,7 +561,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

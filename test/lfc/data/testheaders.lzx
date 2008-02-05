@@ -1,29 +1,29 @@
 <canvas debug="true">
     <dataset name="ds" src="testheaders.lzx" type="http" querystring="lzt=xml">
-        <method event="ondata">
+        <handler name="ondata">
             Debug.write( "got data: " );
             Debug.write( this.getAllResponseHeaders().serialize( "=" , "\n" ) );
-        </method>
+        </handler>
     </dataset>
 
     <button>No Headers
-        <method event="onclick">
+        <handler name="onclick">
             ds.setAttribute( 'getresponseheaders' , false );
             ds.doRequest();
-        </method>
+        </handler>
     </button>
 
     <button>Yes Headers
-        <method event="onclick">
+        <handler name="onclick">
             ds.setAttribute( 'getresponseheaders' , true );
             ds.doRequest();
-        </method>
+        </handler>
     </button>
     <simplelayout/>
 
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

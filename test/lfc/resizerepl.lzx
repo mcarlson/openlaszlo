@@ -116,17 +116,17 @@
         <text valign="middle" datapath="@day" width="100"/>
         <view bgcolor="red" options="ignorelayout"
               align="right" width="30" height="10">
-            <method event="onclick">
+            <handler name="onclick">
                 if ( parent.height != 40 ){
                     parent.animate ( 'height', 40 , 500 );
                 } else {
                     parent.animate ( 'height', 15 , 500 );
                 }
-            </method>
+            </handler>
         </view>
-        <method event="ondblclick">
+        <handler name="ondblclick">
             parent.selman.select( this );
-        </method>
+        </handler>
 
         <method name="setSelected" args="s">
             if ( s ){
@@ -155,7 +155,7 @@
         <inputtext name="day">20</inputtext>
         <button>Show it
             <datapointer name="mydp" xpath="ds:/root"/>
-            <method event="onclick">
+            <handler name="onclick">
                 <![CDATA[ 
                 var mo = parent.mo.getText();
                 var day = parent.day.getText();
@@ -171,37 +171,37 @@
                     }
                 }
                 ]]>
-            </method>
+            </handler>
         </button>
         <simplelayout axis="x"/>
     </view>
     <view y="250">
         <simplelayout/>
         <button>scroll-and-select last
-             <method event="onclick">
+             <handler name="onclick">
                  var rm = repman;
                  var lastnode = rm.nodes[rm.nodes.length-1];
                  var ny = rm.getPositionByNode(lastnode);
                  repman.parent.setY(repman.parent.parent.height - ny - 20);
                  var cl = rm.getCloneForNode(lastnode);
                  repman.parent.selman.select(cl);
-             </method>
+             </handler>
          </button>
          <button>scroll-and-select first
-             <method event="onclick">
+             <handler name="onclick">
                  var rm = repman;
                  Debug.write('rm', rm);
                  var first = rm.nodes[0];
                  repman.parent.setY(0);
                  var cl = rm.getCloneForNode(first);
                  repman.parent.selman.select(cl);
-             </method>
+             </handler>
          </button>
     </view>
     <debug y="0" x="200" width="250" height="400"/>
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

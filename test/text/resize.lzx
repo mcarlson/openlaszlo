@@ -18,93 +18,93 @@ test runtime resizing of text
 <canvas width="1024" height="800"> 
 
     <window title="Text Resize Tests" width="400" height="200" resizable="true">
-	<text multiline="true" height="40" width="360" >Default text: Clicking the button sets the text string at runtime, but text will not resize its width automatically</text>
-	<view>
-	   <simplelayout axis="x" spacing="10" />
-	   <button text="test1" onclick="parent.parent.test1()" />
-	   <button text="test2" onclick="parent.parent.test2()" />
-	   <button text="test3" onclick="parent.parent.test3()" />
-	</view>
-	<simplelayout axis="y" spacing="10" />
-	<method name="test1">
-	   this.t1.setText("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	</method>
-	<method name="test2">
-	   this.t1.setText("1234");
-	</method>
-	<method name="test3">
-	   this.t1.setText("1234567890");
-	</method>
-	<text bgcolor="#ffcccc" name="t1">Initial text from server.</text> 
+        <text multiline="true" height="40" width="360" >Default text: Clicking the button sets the text string at runtime, but text will not resize its width automatically</text>
+        <view>
+           <simplelayout axis="x" spacing="10" />
+           <button text="test1" onclick="parent.parent.test1()" />
+           <button text="test2" onclick="parent.parent.test2()" />
+           <button text="test3" onclick="parent.parent.test3()" />
+        </view>
+        <simplelayout axis="y" spacing="10" />
+        <method name="test1">
+           this.t1.setText("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        </method>
+        <method name="test2">
+           this.t1.setText("1234");
+        </method>
+        <method name="test3">
+           this.t1.setText("1234567890");
+        </method>
+        <text bgcolor="#ffcccc" name="t1">Initial text from server.</text> 
     </window>
 
     <window title="Text Resize Tests" width="400" height="200" resizable="true" y="200" >
-	<text>resize="true": Text should resize automatically at runtime</text>
-	<view>
-	   <simplelayout axis="x" spacing="10" />
-	   <button text="test1" onclick="parent.parent.test1()" />
-	   <button text="test2" onclick="parent.parent.test2()" />
-	   <button text="test3" onclick="parent.parent.test3()" />
-	</view>
-	<simplelayout axis="y" spacing="10" />
-	<method name="test1">
-	   this.t1.setText("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	</method>
-	<method name="test2">
-	   this.t1.setText("1234");
-	</method>
-	<method name="test3">
-	   this.t1.setText("1234567890");
-	</method>
-	<text resize="true"  bgcolor="#ffcccc" name="t1">Initial text from server.</text> 
+        <text>resize="true": Text should resize automatically at runtime</text>
+        <view>
+           <simplelayout axis="x" spacing="10" />
+           <button text="test1" onclick="parent.parent.test1()" />
+           <button text="test2" onclick="parent.parent.test2()" />
+           <button text="test3" onclick="parent.parent.test3()" />
+        </view>
+        <simplelayout axis="y" spacing="10" />
+        <method name="test1">
+           this.t1.setText("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        </method>
+        <method name="test2">
+           this.t1.setText("1234");
+        </method>
+        <method name="test3">
+           this.t1.setText("1234567890");
+        </method>
+        <text resize="true"  bgcolor="#ffcccc" name="t1">Initial text from server.</text> 
     </window>
 
     <window title="Text Resize Tests" width="400" height="200" resizable="true" x="400" y="0">
-	<text>sizeToHeight="true": Clicking the button sets the text string at runtime</text>
-	<view>
-	   <simplelayout axis="x" spacing="10" />
-	   <button text="test1" onclick="parent.parent.test1()" />
-	   <button text="test2" onclick="parent.parent.test2()" />
-	   <button text="test3" onclick="parent.parent.test3()" />
-	</view>
-	<simplelayout axis="y" spacing="10" />
-	<method name="test1">
-	   this.t1.setText("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	</method>
-	<method name="test2">
+        <text>sizeToHeight="true": Clicking the button sets the text string at runtime</text>
+        <view>
+           <simplelayout axis="x" spacing="10" />
+           <button text="test1" onclick="parent.parent.test1()" />
+           <button text="test2" onclick="parent.parent.test2()" />
+           <button text="test3" onclick="parent.parent.test3()" />
+        </view>
+        <simplelayout axis="y" spacing="10" />
+        <method name="test1">
+           this.t1.setText("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        </method>
+        <method name="test2">
            <![CDATA[
-	   this.t1.sizeToHeight = true;
-	   this.t1.setText("1234\n<b>56</b>78\n9101112");
+           this.t1.sizeToHeight = true;
+           this.t1.setText("1234\n<b>56</b>78\n9101112");
           ]]>
-	</method>
-	<method name="test3">
-	   this.t1.setText("1234567890");
-	</method>
-	<text  multiline="true"  bgcolor="#ffcccc" name="t1">Initial <b>text</b> from server.</text> 
-	<inputtext bgcolor="#ffcccc" name="t2">Initial text from server.</inputtext> 
+        </method>
+        <method name="test3">
+           this.t1.setText("1234567890");
+        </method>
+        <text  multiline="true"  bgcolor="#ffcccc" name="t1">Initial <b>text</b> from server.</text> 
+        <inputtext bgcolor="#ffcccc" name="t2">Initial text from server.</inputtext> 
     </window>
 
     <dataset name="foo">
       <bar>
-	<blah>1. This is some text</blah>
-	<blah>2. This is some more text</blah>
-	<blah>3. This is even more and more text which is so very long</blah>
+        <blah>1. This is some text</blah>
+        <blah>2. This is some more text</blah>
+        <blah>3. This is even more and more text which is so very long</blah>
       </bar>
     </dataset>
 
 
 
     <window title="Text Resize Tests" width="400" height="200" resizable="true" x="400" y="200">
-	<simplelayout axis="y" />
-	<text>datapath test: text should size its width automatically, resize="true"</text>
+        <simplelayout axis="y" />
+        <text>datapath test: text should size its width automatically, resize="true"</text>
         <text resize="true" bgcolor="#ccffff"  name="key" width="30" datapath="foo:/bar/blah/text()" />
         <simplelayout axis="y" spacing="4"/>
     </window>
 
 
     <window title="Text Resize Tests" width="400" height="200" resizable="true" x="0" y="400">
-	<simplelayout axis="y" />
-	<text>datapath test: text will be fixed width, truncated</text>
+        <simplelayout axis="y" />
+        <text>datapath test: text will be fixed width, truncated</text>
         <text width="90" bgcolor="#ccffff"  name="key"  datapath="foo:/bar/blah/text()" />
         <simplelayout axis="y" spacing="4"/>
     </window>
@@ -115,6 +115,6 @@ test runtime resizing of text
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -30,21 +30,21 @@
     <view y="300" >
         <inputtext name="foo" width="170" onblur="this.parent.bar.setText('blur: ' + this.getText());" onfocus="this.parent.bar.setText('focus')" onkeyup="this.parent.bar.setText('keyup')" onkeydown="this.parent.bar.setText('keydown')" onselect="this.parent.bar.setText('select')">Some input text</inputtext>
         <view width="50" height="50" bgcolor="red">
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 this.setAttribute('bgcolor', 0xffff00);
-            </method>
-            <method event="onmouseup">
+            </handler>
+            <handler name="onmouseup">
                 this.setAttribute('bgcolor', 0xff9900);
-            </method>
-            <method event="onmouseover">
+            </handler>
+            <handler name="onmouseover">
                 this.setAttribute('bgcolor', 0xff9900);
-            </method>
-            <method event="onmouseout">
+            </handler>
+            <handler name="onmouseout">
                 this.setAttribute('bgcolor', 0xff0000);
-            </method>
-            <method event="onclick">
+            </handler>
+            <handler name="onclick">
                 this.parent.bar.setText('Text is: ' + this.parent.foo.getText());
-            </method>
+            </handler>
         </view>
         <simplelayout axis="x"/>
         <text name="bar" y="40" width="200"/>
@@ -53,18 +53,18 @@
 
 
     <view y="400" width="20" height="20" bgcolor="red" clip="true">
-        <method event="oninit">
+        <handler name="oninit">
             this.animate('width', 100, 5000);
             this.animate('height', 100, 5000);
-        </method>
+        </handler>
         <view resource="resc/logo.png" x="-20" y="-20"/>
     </view>
 
     <view resource="resc/logo.png" y="500" stretches="both">
-        <method event="oninit">
+        <handler name="oninit">
             this.animate('width', 200, 5000);
             this.animate('height', 200, 5000);
-        </method>
+        </handler>
     </view>
 
     <text y="200" name="datatext" width="500"/>

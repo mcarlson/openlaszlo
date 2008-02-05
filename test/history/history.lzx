@@ -3,17 +3,17 @@
     <text text="${LzHistory.offset}"/>
     <attribute name="foo" value="null"/>
     <attribute name="bar" value="null"/>
-    <method event="onfoo" args="f">
+    <handler name="onfoo" args="f">
         Debug.write('external call', f); 
-    </method>
-    <method event="oninit">
+    </handler>
+    <handler name="oninit">
         LzHistory.setPersist(true);
-    </method>
+    </handler>
 
     <class name="histinputtext" extends="inputtext">
-        <method event="onblur">
+        <handler name="onblur">
             LzHistory.save(this.id, 'text', this.getText())
-        </method>
+        </handler>
     </class>
     <histinputtext id="hist1">A value</histinputtext>
     <histinputtext id="hist2">Another value</histinputtext>
@@ -35,7 +35,7 @@
         <attribute name="__lzdirty" value="false"/>
         <attribute name="__lzhistq" value="[]"/>
         <attribute name="__lzcurrstate" value="{}"/>
-        <method event="oninit">
+        <handler name="oninit">
             if (this.persist) {
                 if (! this._persistso) {
                     var lu = LZBrowser.getLoadUrlAsLzUrl();
@@ -44,8 +44,8 @@
                 }
                 //this.__lzhistq = this._persistso.data;
             }
-        </method>
-        <method event="onhistory" args="o" reference="LzBrowser">
+        </handler>
+        <handler name="onhistory" args="o" reference="LzBrowser">
             //Debug.write('onhistory ', o); 
             o *= 1;
             if (! o) o = 0;
@@ -58,7 +58,7 @@
                 //Debug.write('restoring state ', o); 
                 o.c.setAttribute(o.n, o.v);
             }
-        </method>
+        </handler>
         <method name="register" args="who, prop, val">
             // strip off __ so keys can be listed
             var u = who.getUID().substr(2);
@@ -103,6 +103,6 @@
     </view-->
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

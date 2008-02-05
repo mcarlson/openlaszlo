@@ -5,23 +5,23 @@
     <soap name="version" secure="true" secureport="8443" 
           wsdl="https://localhost:8443/axis/services/Version?wsdl">
 
-        <method event="onload">
+        <handler name="onload">
             Debug.write('axis version soap service loaded');
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             debug.write('error:', error);
-        </method>
+        </handler>
 
         <remotecall funcname="getVersion">
 
-            <method event="ondata" args="version">
+            <handler name="ondata" args="version">
                 debug.write('version:', version);
-            </method>
+            </handler>
 
-            <method event="onerror" args="error">
+            <handler name="onerror" args="error">
                 debug.write('getVersion error:', error);
-            </method>
+            </handler>
         </remotecall>
 
     </soap>
@@ -43,3 +43,4 @@
     <button text="get axis version" onclick="version.getVersion.invoke()" />
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

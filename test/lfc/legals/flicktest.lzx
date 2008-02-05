@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -80,14 +80,14 @@ o   original image, either a jpg, gif or png, depending on source format
            />
 
     <class name="imgfader" opacity="0">
-        <method event="onload" args="i">
+        <handler name="onload" args="i">
     //        info('load', i);
             this.animate('opacity', 1, 1000);
-        </method>
-        <method event="onmouseover">
+        </handler>
+        <handler name="onmouseover">
             Debug.write( 'onmouseover', this, this.resource);
             big.load(this.resource);
-        </method>
+        </handler>
     </class>
 
     <method name="doSearch" args="key">
@@ -99,20 +99,21 @@ o   original image, either a jpg, gif or png, depending on source format
 
     <inputtext id="inp" width="300" name="inp">
         yellow
-        <method event="onkeyup" args="k">
+        <handler name="onkeyup" args="k">
             if (k == 13) submitbutton.doSearch();
-        </method>
+        </handler>
     </inputtext>
 
     <text id="submitbutton" x="300" height="30" width="100" bgcolor="#cccccc">
         Submit
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.setBGColor(0xffcccc);
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             this.setBGColor(0xcccccc);
-        </method>
-        <method event="onclick" name="doSearch">
+        </handler>
+        <handler name="onclick" method="doSearch" />
+        <method name="doSearch">
             this.setBGColor(0xffcccc);
             canvas.doSearch(inp.getText());
         </method>
@@ -126,10 +127,10 @@ o   original image, either a jpg, gif or png, depending on source format
             this.setSource(s);
             this.setAttribute('opacity', 0);
         </method>
-        <method event="onload">
+        <handler name="onload">
             //info('onload');
             this.animate('opacity', 1, 500);
-        </method>
+        </handler>
     </view>
 
 </canvas>

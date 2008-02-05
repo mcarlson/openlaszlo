@@ -31,7 +31,7 @@
   <!-- Subclassing a user-defined class, and adding an event
        to a class that doesn't have any. -->
   <class name="myotherwindow" extends="mywindow" title="Other window">
-	<attribute name="weight" type="number" setter="this.foo()"/>
+        <attribute name="weight" type="number" setter="this.foo()"/>
     <method name="foo">
       Debug.write('Got onset event');
     </method>
@@ -50,6 +50,6 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

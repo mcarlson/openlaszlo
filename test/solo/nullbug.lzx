@@ -1,6 +1,6 @@
 <canvas bgcolor="0xeaeaea" width="800" proxied="false">
 
-	<dataset name="ds_folders" src="config-laszlo.xml" request="true"/>
+        <dataset name="ds_folders" src="config-laszlo.xml" request="true"/>
         <debug height="500" width="600"/>
         <class name="configurator" extends="node" initstage="early">
             <!--- path to the config file -->
@@ -41,3 +41,4 @@
     
 </canvas>
 
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

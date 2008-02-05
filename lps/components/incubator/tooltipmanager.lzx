@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.              *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -33,7 +33,7 @@
         <!--- @access private -->
         <attribute name="messageMap" value="[]" />
     
-        <method event="ondata"><![CDATA[    
+        <handler name="ondata"><![CDATA[    
             var xpath = datapath.xpath+"/"+this.getAttribute("messages");   
             var messages = datapath.xpathQuery(xpath);         
             var dict = [];         
@@ -45,17 +45,17 @@
             }  
             this.setAttribute("messageMap",dict);  
            ]]> 
-        </method>
-    
-        <method event="oninit">
+        </handler>
+
+        <handler name="oninit">
              var tooltip = this.getAttribute("tooltip_obj");
              if(tooltip == undefined || tooltip == null) {
                 tooltip = new basetooltip(canvas);
                 this.setAttribute("tooltip_obj",tooltip);
              }
              tooltip.setAttribute("opacity",0);
-        </method>        
-     
+        </handler>
+
         <method name="createChildren" args="carr">
             canvas.createChildren(carr);
         </method>
@@ -157,9 +157,9 @@
             <view bgcolor="black" x="0"                        height="${parent.height}" width="1"/>
             <view bgcolor="black" x="${parent.width-1}"        height="${parent.height}" width="1"/>
             
-            <method event="ontext">
+            <handler name="ontext">
                 theText.setAttribute("text",this.getAttribute("text"));
-            </method>
+            </handler>
             <text name="theText" resize="true" text="${parent.getAttribute('text')}" x="1" y="1"/>
         </class>
 

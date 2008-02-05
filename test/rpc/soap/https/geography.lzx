@@ -6,19 +6,19 @@
           wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl"
           secure="true" secureport="8443">
 
-        <method event="onload">
+        <handler name="onload">
             Debug.write('geography soap service stub loaded');
-        </method>
+        </handler>
 
         <!-- if unhandled errors cascade up to soap service object. -->
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             Debug.write('error:', error);
-        </method>
+        </handler>
 
         <remotecall name="getTypes" funcname="getTypes" >
-            <method event="ondata" args="value">
+            <handler name="ondata" args="value">
                 Debug.write('geography types:', value);
-            </method>
+            </handler>
         </remotecall>
 
     </soap>
@@ -29,6 +29,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

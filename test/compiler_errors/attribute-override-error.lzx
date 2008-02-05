@@ -3,7 +3,7 @@
 <canvas width="300" height="200" bgcolor="red"> 
     <window title="Window 1" x="10" y="10" width="200" height="200" >
         <view>
-	<text>This is some
+        <text>This is some
 text with a couple
 of linebreaks in it.
 </text>
@@ -24,6 +24,6 @@ of linebreaks in it.
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

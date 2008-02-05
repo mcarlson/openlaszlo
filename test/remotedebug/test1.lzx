@@ -15,7 +15,8 @@
 
   <button id="debuggerbutton">Show Debugger</button>            
 
-  <method event="onclick" reference="debuggerbutton">
+  <handler name="onclick" reference="debuggerbutton">
     new LzDebugWindow();
-  </method>
+  </handler>
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

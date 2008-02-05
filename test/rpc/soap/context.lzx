@@ -7,22 +7,22 @@
     <!-- Amazon SOAP service object -->
     <soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl">
 
-        <method event="onload">
+        <handler name="onload">
             Debug.write('amazon soap service stub loaded');
             status.setVisible(false);
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             debug.write('amazon onerror:', error);
             status.setVisible(false);
             erralert.setAttribute('text', 'error loading amazon: ' + error);
             erralert.open();
-        </method>
+        </handler>
 
-        <method event="ondata" args="value">
+        <handler name="ondata" args="value">
             debug.write('amazon ondata:', value);
             status.setVisible(false);
-        </method>
+        </handler>
 
     </soap>
 
@@ -34,26 +34,26 @@
         <!-- search button -->
         <button text="search">
 
-            <method event="onclick">
+            <handler name="onclick">
                 status.setVisible(true);
                 if (! this.myKSR1.invoke() ) {
                     status.setVisible(false);
                 }
-            </method>
+            </handler>
 
             <!-- this can also be declared inside of myKSR1 -->
-            <method event="ondata" args="data">
+            <handler name="ondata" args="data">
                 status.setVisible(false);
                 Debug.write('got data:', data);
-            </method>
+            </handler>
 
             <!-- this can also be declared inside of myKSR1 -->
-            <method event="onerror" args="errmsg">
+            <handler name="onerror" args="errmsg">
                 status.setVisible(false);
                 Debug.write('got error:', errmsg);
                 erralert.setAttribute('text', 'error: ' + errmsg)
                 erralert.open();
-            </method>
+            </handler>
 
             <remotecall name="myKSR1" funcname="KeywordSearchRequest" 
                         remotecontext="$once{canvas.amazon}" 
@@ -96,6 +96,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

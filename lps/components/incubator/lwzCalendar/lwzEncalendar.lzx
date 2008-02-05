@@ -7,15 +7,15 @@
            height="20">
           
            
-        <method event="onclick"> 
+        <handler name="onclick"> 
         <![CDATA[
             if( !this.disabled ) {
                 this.setAttribute('selected', true);  
                
             } 
         ]]>
-        </method>
-        <method event="onselected"> 
+        </handler>
+        <handler name="onselected"> 
             if( this.selected ) { 
                
                 selectedview.setAttribute('visible', true );
@@ -23,21 +23,21 @@
               
                selectedview.setAttribute('visible', false );
             }
-        </method>
-         <method event="onmouseover"> 
+        </handler>
+         <handler name="onmouseover"> 
         <![CDATA[
             if( !this.disabled ) { 
                 dateview.setAttribute('visible', true ); 
             }
         ]]>
-        </method>
+         </handler>
 
-        <method event="onmouseout"> 
+        <handler name="onmouseout"> 
            <![CDATA[
             dateview.setAttribute('visible', false );
             
              ]]>
-        </method>
+        </handler>
         
         <view name="dateview" visible="false" width="${parent.width}" height="${parent.width}" bgcolor="#00ff00"/>
         <view name="selectedview" visible="false" width="${parent.width}" height="${parent.width}" bgcolor="#325693"/>
@@ -68,7 +68,7 @@
             this.disyear.year.setText( year);
         </method>
         
-        <method event="onselecteddate">
+        <handler name="onselecteddate">
             
             if( this.selecteddate != null ) {
                 this.selected.year.setText( this.selecteddate.getFullYear() );
@@ -84,7 +84,7 @@
                this.selected.datavalue.setText(this.selected.year.text+"-"+getmonvalue+"-"+judgeday(selected.mydate.text));
                 Debug.write(this.selected.datavalue.text);
             }
-        </method>
+        </handler>
          <method name="month2value" args="enmonth">
               <![CDATA[
              
@@ -163,24 +163,24 @@
         <view name="disyear" y="150"> 
             <button width="20" height="20">
                <![CDATA[<<]]>  
-               <method event="onclick">
+               <handler name="onclick">
                    <![CDATA[
                      for(var i=0; i<12; i++){
                         classroot.showPreviousMonth();                     
                      }
                    ]]>               
-               </method>
+               </handler>
             </button>
             <text name="year" resize="true" x="36"/>
             <button x="127" width="20" height="20">
                <![CDATA[>>]]>   
-               <method event="onclick">
+               <handler name="onclick">
                    <![CDATA[
                      for(var i=0; i<12; i++){
                        classroot.showNextMonth();                      
                      }
                    ]]>               
-               </method>          
+               </handler>
             </button>
             
         </view> 
@@ -221,6 +221,6 @@
     
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

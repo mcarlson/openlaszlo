@@ -28,19 +28,19 @@
         <view name="content">
         </view>
 
-        <method event="oninit">
+        <handler name="oninit">
             this.n = [];
             this.idel = new LzDelegate( this , "dispatch" );
             this.make = true;
-        </method>
+        </handler>
 
-        <method event="onrunning">
+        <handler name="onrunning">
             if ( this.running ){
                 this.idel.register( LzIdle, 'onidle' );
             } else {
                 this.idel.unregisterAll();
             }
-        </method>
+        </handler>
 
         <method name="dispatch">
             if ( this.make ){
@@ -178,24 +178,24 @@
         </state>
 
         <!-- METHODS -->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             this.setBGColor( this.hiColor );
-        </method>
+        </handler>
 
-        <method event="onmouseout">
+        <handler name="onmouseout">
             this.setBGColor( this.normalColor );
-        </method>
+        </handler>
 
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.mouseIsDown = true;
             calgrid.daySelectionMgr.select(this.classroot);
             eventselector.selectData( this );
-        </method>
+        </handler>
 
-        <method event="onmouseup">
+        <handler name="onmouseup">
             this.mouseIsDown = false;
             eventselector.domouseup();
-        </method>
+        </handler>
 
     </class>
         
@@ -235,14 +235,14 @@
 
         <attribute name="mouseIsDown" value="false"/>
 
-        <method event="ondata">
+        <handler name="ondata">
             // When a event is current it's selected node attribute is 'true'
             // This is the only way that an event becomes the current event,
             // which in turn selects the event selector bar
             this.selected = this.datapath.getNodeAttribute('selected') == true;
             if (this.selected)
                 eventselector.setSelectedEvent( this ,this.mouseIsDown );
-        </method>
+        </handler>
 
         <!-- VIEWS -->
         <view name="tl" bgcolor="#FFFFFF"
@@ -265,7 +265,7 @@
 
             <!--This is a little strange, but we have consolidated the
                 code that handles start times here -->
-            <method event="ondata"><![CDATA[
+            <handler name="ondata"><![CDATA[
                 var o = this.datapath.getNodeAttributes();
 
                 if ( classroot['startHour'] == o['hour'] &&
@@ -286,7 +286,7 @@
                 //if (classroot.classroot.opened)
                 //   classroot.parent.closedlayout.setAttribute('enabled',true);
                // classroot.parent.closedlayout.update(true);
-            ]]></method>
+            ]]></handler>
         </text>
 
         <text name="smalltitletext" fgcolor="#4B5D6C"
@@ -333,7 +333,7 @@
 
                 <!--This is a little strange, but we have consolidated the
                 code that handles end times here -->
-                <method event="ondata"><![CDATA[
+                <handler name="ondata"><![CDATA[
                     var o = this.datapath.getNodeAttributes();
 
                     if ( classroot['endHour'] == o['hour'] &&
@@ -354,30 +354,30 @@
                         classroot.setHeight(22);
                     }
 
-                ]]></method>
+                ]]></handler>
 
             </view>
         </state>
 
         <!-- METHODS -->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             this.setBGColor( this.hiColor );
-        </method>
+        </handler>
 
-        <method event="onmouseout">
+        <handler name="onmouseout">
             this.setBGColor( this.normalColor );
-        </method>
+        </handler>
 
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.mouseIsDown = true;
             calgrid.daySelectionMgr.select(this.classroot);
             eventselector.selectData( this );
-        </method>
+        </handler>
 
-        <method event="onmouseup">
+        <handler name="onmouseup">
             this.mouseIsDown = false;
             eventselector.domouseup();
-        </method>
+        </handler>
 
     </class>
     <view height="100">
@@ -609,6 +609,6 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

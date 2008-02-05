@@ -17,8 +17,10 @@
           the bgcolor of its closest parent that has a bgcolor defined.  -->
     <attribute name="disabledbgcolor" value="null"/>
 
+    <handler name="oninit" reference="canvas" method="_showEnabled" />
     <!--- @keywords private -->
-    <method name="_showEnabled" event="oninit" reference="canvas"> <![CDATA[
+    <method name="_showEnabled">
+        <![CDATA[
         if (!_enabled) {
             var newbgcolor = this.disabledbgcolor;
             if (newbgcolor == null) {
@@ -205,7 +207,7 @@
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

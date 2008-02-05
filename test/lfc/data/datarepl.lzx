@@ -57,9 +57,9 @@
           ondata="Debug.write( 'data!' ) ">
         <simplelayout spacing="2"  />
         <datatester name="encl" clickable="true">
-            <method event="onclick">
+            <handler name="onclick">
                 this.datapath.deleteNode();
-            </method>
+            </handler>
         </datatester>
     </view>
 
@@ -68,30 +68,30 @@
         <attribute name="dpaths" value="[ 'ds:/' , 'ds:/nodea[3]' , 
                                         'ds:/nodeb[2]','ds:/nodeb[1]']"/>
         <attribute name="onum" value="1"/>
-        <method event="onclick">
+        <handler name="onclick">
             Debug.write( 'set outer dpath to ' + this.dpaths[ this.onum ] );
             par.setDatapath( this.dpaths[ this.onum] );
             this.onum = ++this.onum &lt; 4 ? this.onum : 0;
-        </method>
+        </handler>
     </button>
 
     <button >
         Order
         <attribute name="orderpaths" value="[ '@prop' , '@color' , 'text()' ]"/>
         <attribute name="onum" value="0"/>
-        <method event="onclick">
+        <handler name="onclick">
             Debug.write( "sort: " + this.orderpaths[ this.onum ] );
             par.encl.setOrder( this.orderpaths[ this.onum] );
             this.onum = ++this.onum &lt; 3 ? this.onum : 0;
-        </method>
+        </handler>
     </button>
 
     <button >
         Pooling
-        <method event="onclick">
+        <handler name="onclick">
             par.encl.pooling = !par.encl.pooling;
             Debug.write( "pooling set to : " + par.encl.pooling );
-        </method>
+        </handler>
     </button>
        
             
@@ -101,6 +101,6 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

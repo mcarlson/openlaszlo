@@ -69,14 +69,14 @@
             <inputtext name="i4" text="${parent.p.toString()}" />
             <inputtext name="i5" text="${parent.l.toString()}" />
             <button>update
-                <method event="onclick">
+                <handler name="onclick">
                     parent.setAttribute( "n" , parent.i0.getText() );
                     parent.setAttribute( "w" , parent.i1.getText() );
                     parent.setAttribute( "h" , parent.i2.getText() );
                     parent.setAttribute( "m" , parent.i3.getText() );
                     parent.setAttribute( "p" , parent.i4.getText() );
                     parent.setAttribute( "l" , parent.i5.getText() );
-                </method>
+                </handler>
             </button>
 
             <simplelayout/>
@@ -140,6 +140,6 @@
     </TestSuite>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

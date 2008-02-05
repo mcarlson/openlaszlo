@@ -3,24 +3,24 @@
   <font name="Helvetica" src="helmetr.ttf" />
   <debug x="400" height="400" width="400"/>
     <text font="Helvetica" fontsize="18" resize="true">
-      <method event="oninit"> 
+      <handler name="oninit"> 
         if (canvas.runtime != 'swf6') {
             this.setText('canvas.runtime = '+canvas.runtime+', but this example must be run as flash6, make sure to put lzr=swf6 in the URL!');
         } else {
             this.setText('canvas.runtime is swf6, ahh what a great feeling');
         }
-      </method>
+      </handler>
     </text>
 
 
   <class name="swf6text">
-    <method event="onconstruct">
+    <handler name="onconstruct">
       this.makeContainerResource();
       Debug.write( 'mcref' , this.__LZmovieClipRef );
       this.__LZmovieClipRef.createTextField( "$swf6text" , 0, 0, this.height, this.width, 40 );
       this.__LZtext = this.__LZmovieClipRef['$swf6text'];
       Debug.write( 'swf6text' , this.__LZtext );
-    </method>
+    </handler>
     <method name="setTextFormat" args="tf">
       this.__LZText.setTextFormat(tf);
     </method>
@@ -39,7 +39,7 @@
 
 
   <swf6text name="bar" height="60" width="400">
-    <method event="oninit">
+    <handler name="oninit">
       var tf = this.__LZText;
       tf.border = true;
       tf.embedFonts = false;
@@ -54,11 +54,11 @@
       this.setText("Foobar is foo plus bar");
       this.__LZText.type = 'input';
       Debug.write(this.getNewTextFormat());
-    </method>
+    </handler>
   </swf6text>
 
   <swf6text name="baz" height="60" width="400">
-    <method event="oninit">
+    <handler name="oninit">
       var tf = this.__LZText;
       tf.border = true;
       tf.embedFonts = true;
@@ -70,13 +70,13 @@
 
       this.__LZText.type = 'input';
       Debug.write(this.getNewTextFormat());
-    </method>
+    </handler>
   </swf6text>
   <simplelayout/>
 
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

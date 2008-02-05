@@ -14,19 +14,19 @@
     <checkbox text="cache in client" id="ccache" />
     <checkbox text="cache in server" id="scache" />
     <view id="me" >
-        <method event="onerror" args="e">
+        <handler name="onerror" args="e">
             Debug.write('error: ' + e);
-        </method>
-        <method event="ontimeout" args="e">
+        </handler>
+        <handler name="ontimeout" args="e">
             Debug.write('timeout: ' + e);
-        </method>
+        </handler>
     </view>
 
     <button id="butt" >Make request
 
-        <method event="onclick">
+        <handler name="onclick">
             this.doit();
-        </method>
+        </handler>
 
         <method name="doit"><![CDATA[
             Debug.write("Requesting: " + url.getText()); 
@@ -52,6 +52,6 @@
             text="${'Jump to ' + fr.text}"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

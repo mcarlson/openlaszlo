@@ -8,25 +8,25 @@
     <text>Stop the server and then click this button.</text>
     <button>
         Indifferent
-        <method event="onclick">
+        <handler name="onclick">
             //uses private fields to muck this up
             target.setResource( 'http://broke' );
-        </method>
+        </handler>
     </button>
     <simplelayout/>
     <view name="target">
-        <method event="onerror" args="e">
+        <handler name="onerror" args="e">
             Debug.write( 'error: ' + e );
-        </method>
-        <method event="ontimeout" >
+        </handler>
+        <handler name="ontimeout" >
             Debug.write( 'timeout! ' );
-        </method>
-        <method event="onload" >
+        </handler>
+        <handler name="onload" >
             Debug.write( 'load: ' + this.resource );
-        </method>
+        </handler>
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

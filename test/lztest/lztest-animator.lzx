@@ -42,18 +42,18 @@
       <attribute name="t_start" value="0"/>
       <attribute name="t_elapsed" value="0"/>
 
-      <method event="onrepeat">
+      <handler name="onrepeat">
         n_onrepeat++;
-      </method>
+      </handler>
 
-      <method event="onstart">
+      <handler name="onstart">
         n_onstart++;
 
     var now = new Date();
     t_start = now.getTime();
-      </method>
+      </handler>
 
-      <method event="onstop">
+      <handler name="onstop">
       <![CDATA[
         n_onstop++;
 
@@ -73,7 +73,7 @@
     var xerror = 400 - view1.x;
     canvas.safeAssertEquals (400, view1.x, "view1.x final failure error=" + xerror + " ");
       ]]>
-      </method>
+      </handler>
 
     </animator>
   </view>
@@ -89,15 +89,15 @@
       <attribute name="n_onstop" value="0"/>
       <attribute name="n_onrepeat" value="0"/>
 
-      <method event="onrepeat">
+      <handler name="onrepeat">
         n_onrepeat++;
-      </method>
+      </handler>
 
-      <method event="onstart">
+      <handler name="onstart">
         n_onstart++;
-      </method>
+      </handler>
 
-      <method event="onstop">
+      <handler name="onstop">
       <![CDATA[
         n_onstop++;
 
@@ -107,7 +107,7 @@
     var xerror = 100 - view2.x;
     canvas.safeAssertEquals (100, view2.x, "LPP-1973: view2.x final failure error=" + xerror + " ");
       ]]>
-      </method>
+      </handler>
 
     </animator>
   </view>
@@ -248,7 +248,7 @@ suite.addTest(suite.test4);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

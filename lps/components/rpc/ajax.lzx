@@ -70,7 +70,7 @@
         <!--- @keywords private -->
         <attribute name="dataset" value="null" />
 
-        <method event="oninit">
+        <handler name="oninit">
             if (this.dataset == null) {
                  this.dataset = new LzDataset(this);
             }
@@ -82,7 +82,7 @@
                                                   this.dataset, "ondata" );
             this.onerrorDelegate = new LzDelegate( this , "onerrorHandler" , 
                                                   this.dataset, "onerror" );
-        </method>
+        </handler>
 
 
         <!--=================================================================-->
@@ -234,7 +234,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

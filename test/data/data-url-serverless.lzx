@@ -1,6 +1,6 @@
 <canvas debug="true" height="600"  width="1400">
   <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-       * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+       * Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
        * Use is subject to license terms.                                            *
        * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -31,9 +31,9 @@
     
     <button id="butt" >Make request
 
-        <method event="onclick">
+        <handler name="onclick">
             this.doit();
-        </method>
+        </handler>
 
         <method name="doit">
           <![CDATA[
@@ -70,11 +70,11 @@
             ]]>
         </method>
     </button>
-<method event="oninit">
+<handler name="oninit">
   Debug.setWrapLines(true);
   Debug.showInternalProperties = true;
 
-</method>
+</handler>
 
 
 </canvas>

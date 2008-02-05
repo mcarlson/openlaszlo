@@ -27,12 +27,12 @@
             <text datapath="modifyDate/text()" />
             <text datapath="@id" />
         </view>
-        <method event="oninit">
+        <handler name="oninit">
             var d = canvas.datasets[this.dpath];
             rowOfData.setDatapath(this.dpath+':/persons/person');
             Debug.write("sending request for person data.");
             d.doRequest();
-        </method>
+        </handler>
     </class>
 
     <view >
@@ -47,3 +47,4 @@
 
 
 </canvas>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

@@ -13,25 +13,25 @@
     <dataset name="infoDset" />
 
     <sessionrpc name="sessioninfo">
-        <method event="ondata" args="data">
+        <handler name="ondata" args="data">
             Debug.write('xxx data:', data);
-        </method>
+        </handler>
 
-        <method event="onerror" args="mesg">
+        <handler name="onerror" args="mesg">
             Debug.write('xxx error:', mesg);
-        </method>
+        </handler>
 
         <remotecall funcname="getAttributeNames" dataobject="$once{infoDset}" />
     </sessionrpc>
 
     <webapprpc name="webappinfo">
-        <method event="ondata" args="data">
+        <handler name="ondata" args="data">
             Debug.write('xxx data:', data);
-        </method>
+        </handler>
 
-        <method event="onerror" args="mesg">
+        <handler name="onerror" args="mesg">
             Debug.write('xxx error:', mesg);
-        </method>
+        </handler>
 
         <remotecall funcname="getAttributeNames" dataobject="$once{infoDset}" />
     </webapprpc>
@@ -39,21 +39,21 @@
     <class name="counter" loadoption="${settings.replace.loadoption}" autoload="false"
            remoteclassname="org.openlaszlo.test.xmlrpc.PeerCounter" extends="javarpc">
         
-        <method event="onerror" args="mesg">
+        <handler name="onerror" args="mesg">
             Debug.write(this.name, 'onerror:', mesg)
-        </method>
+        </handler>
         
-        <method event="ondata" args="data">
+        <handler name="ondata" args="data">
             Debug.write(this.name, 'ondata:', data)
-        </method>
+        </handler>
 
-        <method event="onload" >
+        <handler name="onload" >
             Debug.write(this.name, 'onload:', this.name)
-        </method>
+        </handler>
 
-        <method event="onunload" >
+        <handler name="onunload" >
             Debug.write(this.name, 'onunload:', this.name)
-        </method>
+        </handler>
 
         <remotecall funcname="getCount" />
         <remotecall funcname="getPeerNum" />
@@ -71,13 +71,13 @@
         <text><b>SETTINGS:</b></text>
         <checkbox text="replace on create" name="replace">
             <attribute name="loadoption" value="loadcreate" type="string" />
-            <method event="onvalue">
+            <handler name="onvalue">
                 if (this.value) {
                     this.setAttribute("loadoption", "create");
                 } else {
                     this.setAttribute("loadoption", "loadcreate"); 
                 }
-            </method>
+            </handler>
         </checkbox>
         <text>Scope:</text>
         <radiogroup text="scope" name="scope">
@@ -106,7 +106,7 @@
     </list>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

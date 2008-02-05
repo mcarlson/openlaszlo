@@ -15,15 +15,15 @@ debug.setheight(300);
     <text> Debugger hould display names of new views in order -- a, b , c , d, e
     </text>
     <button text="make em">
-        <method event="onclick">
+        <handler name="onclick">
             names =[ "a" , "b" , "c" , "d" , "e" ];
             for ( var i =0; i &lt; names.length; i++ ){
                 new slowinit( canvas , { name : names[ i ] } );
             }
-        </method>
+        </handler>
     </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

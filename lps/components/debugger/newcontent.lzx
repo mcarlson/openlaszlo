@@ -3,7 +3,7 @@
 
  **************************************************************************-->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -134,11 +134,11 @@
            </method> 
 
           <!-- this gets called every time the x value changes -->
-          <method event="onx" reference="this"> 
+          <handler name="onx" reference="this"> 
               if (parent.getAttribute("autoscroll")) {
                   this.handleThumbPosX(this.x);
               }
-          </method>
+          </handler>
 
           <method name="handleThumbPosX" args="x" > 
               var real_scroll_width = (parent.width - (parent.arrowbuttonwidth * 2))  - parent.thumbwidth + 2;
@@ -256,11 +256,11 @@
            </method> 
 
           <!-- this gets called every time the y value changes -->
-          <method event="ony" reference="this"> 
+          <handler name="ony" reference="this"> 
               if (parent.parent.getAttribute("autoscroll")) {
                   this.handleThumbPos(this.y);
               }
-          </method>
+          </handler>
 
       <!-- force the content pane to scroll to position corresponding to thumb y pos in bar -->
           <method name="handleThumbPos" args="y" > 

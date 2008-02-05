@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -9,13 +9,13 @@
     <text height="20">The red and green views should 
                       appear at the same time.</text>
 
-    <method event="oninit">
+    <handler name="oninit">
         <![CDATA[
         //wait a bit before we do the test
         var a = this.animate( "height", 10 , 500 );
         new LzDelegate( this , "doTest", a , "onstop" );
         ]]>
-    </method>
+    </handler>
     <method name="doTest">
         <![CDATA[
         var et = ( new Date() ).getTime() + 2000;

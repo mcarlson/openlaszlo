@@ -15,7 +15,7 @@
 <!--  The menus for the main window are found in menubar.lzx.              -->
 <!--                                                                       -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--=======================================================================-->
@@ -74,10 +74,10 @@
             Starting Laszlo Contacts
         </text>
         <text x="parent.message.width + 30" y="parent.message.y" width="40">
-            <method event="onpercentcreated" reference="canvas" args="p">
+            <handler name="onpercentcreated" reference="canvas" args="p">
                 pp = Math.floor( 100*p );
                 this.setText(  pp + "%" );
-            </method>
+            </handler>
         </text>
         <view resource="progress" name="progress" align="center" valign="middle"
               pixellock="true">
@@ -85,9 +85,9 @@
                   width="parent.width * canvas.percentcreated - 2" 
                   height="parent.height-2" bgcolor="#0A246A" />
         </view>
-        <method event="oninit" reference="canvas">
+        <handler name="oninit" reference="canvas">
             this.deleteView();
-        </method>
+        </handler>
     </window>   
 
 
