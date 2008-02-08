@@ -5,16 +5,16 @@
   * Use is subject to license terms.                                            *
   * X_LZ_COPYRIGHT_END ****************************************************** -->
 
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 
-<chapter language="en" id="doc-backwards">
+<chapter id="doc-backwards">
   <title>The Backwards Transformation: From Reference Page to Source</title>
   <para>In this chapter, we will show where several elements on the end product reference page
   can be traced back to their origins in the sources. </para>
-  <note>At this point we strongly, strongly encourage the reader 
+  <note><para>At this point we strongly, strongly encourage the reader 
     to undergo an investigation of XPath 1.0 and to find an XML editor which is capable of doing live
     XPath queries. (Oxygen XML Editor works.) Then, <emphasis>actually run some queries on a js2doc dataset</emphasis>.
-    Without this exercise, the remainder of this chapter will be utter gobbledygook. 
+    Without this exercise, the remainder of this chapter will be utter gobbledygook.</para> 
   </note>
   
   <section><title>Page Header</title>
@@ -182,7 +182,7 @@ Lz.swfEmbed({url: &apos;programs/LFC-$10.lzx?lzt=swf&apos;, id: &apos;d0e165236S
         &lt;xsl:variable name=&quot;svars&quot; select=&quot;&amp;objectvalue;/property[@name=&apos;setters&apos;]/object/property[&amp;isvisible;]&quot;/&gt;
       </programlisting>
       The value of these variables is a result tree fragment; it's not just the name of the variables. This becomes important when we descend into the <literal>describe-members</literal> template.</para>
-    <note>Review the table in <xref linkend="LFC-to-js2doc"/> to get a feel for why these XPath's return the desired result sets.</note>
+    <note><para>Review the table in <xref linkend="LFC-to-js2doc"/> to get a feel for why these XPath's return the desired result sets.</para></note>
     <para>This all ends up down in the <literal>member-data-row</literal> template in js2doc2dbk.xsl, which fill in columns K, L, M, N, and O in the diagram above. Turn to LzText.lzs, to find where these variables were declared:</para>
     <informalexample><programlisting>
       /**  
@@ -243,7 +243,7 @@ subsequent argument is to be substituted&lt;/text&gt;</emphasis>&lt;!-- region 1
       </programlisting></informalexample>
     </para>      
     
-    To carry this reasoning all the way back to the javascript code definining the method, in <literal>WEB-INF/lps/lfc/views/LzText.lzs</literal>:
+    <para>To carry this reasoning all the way back to the javascript code definining the method, in <literal>WEB-INF/lps/lfc/views/LzText.lzs</literal>:</para>
     <programlisting>
       <emphasis>/**</emphasis>
       * Formatted output.

@@ -1,36 +1,44 @@
 <?xml version="1.0"?>
-
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-
-<chapter language="en" id="docbook-code">
-<title>Documenting Your Code</title>
-
-<section><title>The Basics</title>
-</section>
-
-<section><title>Documenting LZX classes</title>
-  <section><title>Using comments</title>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="docbook-code">
+  <title>Documenting Your Code</title>
+  <para></para>
+  <section>
+    <title>The Basics</title>
+    <para></para>
   </section>
-  
-  <section><title>Using the <sgmltag>doc</sgmltag> tag</title>
+  <section>
+    <title>Documenting LZX classes</title>
+    <para></para>
+    <section>
+      <title>Using comments</title>
+      <para></para>
+    </section>
+    <section>
+      <title>Using the 
+      <sgmltag>doc</sgmltag>tag</title>
+      <para></para>
+    </section>
   </section>
-</section>
-
-<section><title>Documenting JavaScript files</title>
-
-  <section><title>JS2 class declarations</title>
+  <section>
+    <title>Documenting JavaScript files</title>
+    <para></para>
+    <section>
+      <title>JS2 class declarations</title>
+      <para></para>
+    </section>
+    <section>
+      <title>Function-as-class declarations</title>
+      <para></para>
+    </section>
+    <section>
+      <title>Object-as-singleton declarations</title>
+      <para></para>
+    </section>
   </section>
-  
-  <section><title>Function-as-class declarations</title>
-  </section>
-  
-  <section><title>Object-as-singleton declarations</title>
-  </section>
-  
-</section>
 </chapter>
