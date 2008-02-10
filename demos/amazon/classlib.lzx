@@ -64,7 +64,7 @@
                 onmousedown="setResourceNumber(classroot.opened=='true'?6:3)"
                 onmouseup="setResourceNumber(classroot.opened=='true'?4:1)">
                 <attribute name="resource" value="${classroot.tabresource}"/>
-                <method event="onclick">
+                <handler name="onclick">
                     if (classroot.opened=="true") {
                         classroot.close();
                         classroot.opened="false";
@@ -72,10 +72,10 @@
                         classroot.open();
                         classroot.opened="true";
                     }
-                </method>
+                </handler>
             </view>
             <vtabsliderbutton resource="slider_drag">
-                <method event="onmousedown">
+                <handler name="onmousedown">
                     classroot.xdoffset = this.getMouse("x")
                                            -( (canvas.width
                                                -classroot.getAttributeRelative('x', canvas))
@@ -84,8 +84,8 @@
                     if(classroot.container.content.visible != true){
                         classroot.container.content.setVisible(true);
                     }
-                </method>
-                <method event="onmouseup">
+                </handler>
+                <handler name="onmouseup">
                     if(classroot.opened != true) classroot.opened = 'true';
                     if ( classroot.width == parent.width ) {
                         // User has just closed the tab by dragging the panel
@@ -95,7 +95,7 @@
                     }
                     parent.tabButton.setResourceNumber(classroot.opened=='true'?4:1);
                     classroot.panelDragger.remove();
-                </method>
+                </handler>
 
             </vtabsliderbutton>
         </view>
@@ -221,7 +221,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

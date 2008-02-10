@@ -20,16 +20,16 @@
 <class name="basevscrollbar">
     <attribute name="targetview" when="always"/>
     <attribute name="stepsize" value="10"/>
-    <method event="oninit">
+    <handler name="oninit">
         this.initcomplete = true;
         this.onheight.sendEvent();
-    </method>
-    <method event="onheight" reference="this.targetview">
+    </handler>
+    <handler name="onheight" reference="this.targetview">
         if (this.initcomplete) {
           this.thumb.updateHeight();
         }
-    </method>
-    <method event="onheight">
+    </handler>
+    <handler name="onheight">
     <![CDATA[
        if (this['initcomplete']) {
             // should hide thumb if the target view is smaller than the scrollbar
@@ -49,7 +49,7 @@
             }
         }
     ]]>
-    </method>
+    </handler>
 
     <!-- set the targetView position                                    -->
     <!-- change: change in position, note: positive number scrolls down -->
@@ -100,12 +100,12 @@ Math.limit = function(value, min, max) {
     <!-- up arrow -->
     <view name="toparrow">
         <basebuttonrepeater x="1" y="1" resource="ScrollButton_rsc" >
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 classroot.step(-1);
-            </method>
-            <method event="onmousestilldown">
+            </handler>
+            <handler name="onmousestilldown">
                 classroot.step(-1);
-            </method>
+            </handler>
         </basebuttonrepeater>
         <view x="4" y="3" resource="ScrollArrowUp_rsc"/>
     </view>
@@ -116,7 +116,7 @@ Math.limit = function(value, min, max) {
             <!-- top of the scroll track -->
             <attribute name="height" value="parent.height" when="always"/>
             <attribute name="width" value="parent.width" when="always"/>
-            <method event="onmousedown">
+            <handler name="onmousedown">
             <![CDATA[
                 if (this.parent.getMouse( 'y' ) < parent.thumb.y) {
                     classroot.page(-1);
@@ -124,23 +124,23 @@ Math.limit = function(value, min, max) {
                     classroot.page(1);
                 }
             ]]>
-            </method>
+            </handler>
         </view>
 
          <view x="1" name="thumb" id="th"  
             onmousedown="thumbdrag.apply();" onmouseup="thumbdrag.remove()">
             <attribute name="inthumbdrag" value="false"/>
-            <method event="oninit">
+            <handler name="oninit">
                 classroot.thumb = this;
-            </method>
+            </handler>
 
-             <method event="ony" reference="classroot.targetview">
+             <handler name="ony" reference="classroot.targetview">
                 // when the y position of the target view changes then update
                 //  the thumb position, unless the thumb causes the change
                  if (!this.inthumbdrag) {
                     this.updateY();
                  }
-             </method>
+             </handler>
 
              <method name="updateY">
                if (classroot.targetview) {
@@ -206,21 +206,21 @@ Math.limit = function(value, min, max) {
             <attribute name="y" value="parent.thumb.y+parent.thumb.height" when="always"/>
             <attribute name="height" value= "parent.height - parent.thumb.y" when="always"/>
             <attribute name="width" value="parent.width" when="always"/>
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 classroot.page(1);
-            </method>
+            </handler>
         </view-->
     </view>
 
     <!-- down arrow -->
     <view name="bottomarrow" height="13">
         <basebuttonrepeater x="1" resource="ScrollButton_rsc">
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 classroot.step(1);
-            </method>
-            <method event="onmousestilldown">
+            </handler>
+            <handler name="onmousestilldown">
                 classroot.step(1);
-            </method>
+            </handler>
         </basebuttonrepeater>
         <view x="4" y="3" resource="ScrollArrowDown_rsc" />
     </view>
@@ -232,7 +232,7 @@ Math.limit = function(value, min, max) {
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

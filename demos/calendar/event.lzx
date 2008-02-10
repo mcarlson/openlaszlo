@@ -53,14 +53,14 @@
         <attribute name="endTime" 
                    value="${this.endHour * 60 + Number( this.endMin )}"/>
 
-        <method event="ondata">
+        <handler name="ondata">
           var dts =  this.defaultTimes;
           for (var f in dts) {
             if (! this[f]) {
               this.setAttribute(f, dts[f]);
             }
           }
-        </method>
+        </handler>
 
         <!-- VIEWS -->
         <view name="tl" bgcolor="#FFFFFF"
@@ -133,25 +133,25 @@
         </state>
 
         <!-- METHODS -->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             this.setBGColor( this.hiColor );
-        </method>
+        </handler>
 
-        <method event="onmouseout">
+        <handler name="onmouseout">
             this.setBGColor( this.normalColor );
-        </method>
+        </handler>
 
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.mouseIsDown = true;
             //The next line seems redundant.  See: eventselector.lzx
             //calgrid.daySelectionMgr.select(this.classroot);
             eventselector.selectData( this );
-        </method>
+        </handler>
 
-        <method event="onmouseup">
+        <handler name="onmouseup">
             this.mouseIsDown = false;
             eventselector.domouseup();
-        </method>
+        </handler>
 
     </class>
 
@@ -201,7 +201,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

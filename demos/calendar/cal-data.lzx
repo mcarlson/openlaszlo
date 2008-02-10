@@ -24,10 +24,10 @@
         </method>
 
         <!-- keep going if we get an error -->
-        <method event="onerror">
+        <handler name="onerror">
             this.requestrunning = false;
             this.doNextRequest();
-        </method>
+        </handler>
 
         <method name="loadData" args="mo, yr">
             if( !datatester.hasNode( mo , yr ) ){
@@ -461,7 +461,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -12,7 +12,7 @@
                     width="${parent.width - 22}" x="5"/>
                 <multistatebutton name="r" resource="tpRgt_multi" maxstate="1" statelength="3"
                     x="${parent.m.x + parent.m.width - 1}" y="-1">
-                    <method event="onclick">
+                    <handler name="onclick">
                         if (this.statenum ==0){
                             calgrid.openday(classroot.dayview,true)
                         }else{
@@ -23,7 +23,7 @@
                                 calgrid.showmonthview();
                             } else calgrid.gridlayout.setopenview(null,true);
                         }
-                    </method>
+                    </handler>
                 </multistatebutton>
             </view>
             <text name="day" fgcolor="#DAE3E8"
@@ -106,7 +106,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

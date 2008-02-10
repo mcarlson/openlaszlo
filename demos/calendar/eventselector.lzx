@@ -27,7 +27,7 @@
             <text name="timeArea" fgcolor="#4B5D6C"
                   datapath="start[1]" y="5" x="2" resize="true">
                   <attribute name="hour" value="$path{'@hour'}"/>
-                <method event="onhour">
+                <handler name="onhour">
                     <![CDATA[
                     if ( this.hour == null ) return;
                     h = Number( this.hour );
@@ -36,7 +36,7 @@
                     else if ( h==0 ) h='12';
                     this.setText( h + ap );
                     ]]>
-                </method>
+                </handler>
             </text>
 
             <view width="${parent.width}" height="${parent.height}" clip="true">
@@ -92,14 +92,14 @@
         <datapath p="${currenteventDP.p}"/>
 
         <!-- METHODS -->
-        <method event="oninit">
+        <handler name="oninit">
             //Debug.write("ONINIT: this =" + this);
             this.mdel = new LzDelegate(this,"trackmouse");
             this.clipdel = new LzDelegate(this,"checkClip");
             this.hidedel = new LzDelegate(this,"checkHide");
             this.startDragDel = new LzDelegate(this,"startDrag");
             //Debug.write("event selector.oninit");
-        </method>
+        </handler>
 
         <method name="hide">
             bar.setVisible(false);
@@ -204,7 +204,7 @@
             bar.gripper.button.bkgnd.setColorTransform(transColor);
         </method>
 
-        <method event="onfreedragging"><![CDATA[
+        <handler name="onfreedragging"><![CDATA[
             if ( !this.clipping && !this.freedragging ){
                 this.clipping = true;
 
@@ -217,7 +217,7 @@
                 this.setAttribute('y', this.getAttributeRelative('y', calgrid) );                
                 this.setAttribute( 'height' , calgrid.height);
             }]]>
-        </method>
+        </handler>
 
         <method name="checkClip"><![CDATA[
             if ( followview.classroot.opened && this.freedragging ){
@@ -231,13 +231,14 @@
             }]]>
         </method>
 
-        <method event="ondblclick">
+        <handler name="ondblclick">
             //Debug.write("eventselector doubleclick");
             infopanel.open();
             // OLD  cal_interior.showInfo(smallevent.event);
-        </method>
+        </handler>
 
-        <method name="domousedown" event="onmousedown">   <![CDATA[
+        <handler name="onmousedown" method="domousedown"/>
+        <method name="domousedown"><![CDATA[
             //wait 150ms before starting drag; prevents moving the 
             //event selector on a click -- 150ms is empirical
             this.origx = bar.x;
@@ -257,7 +258,8 @@
             calgrid.gridlayout.startTrack(); ]]>
         </method>
 
-        <method name="domouseup" event="onmouseup">   <![CDATA[
+        <handler name="onmouseup" method="domouseup"/>
+        <method name="domouseup"><![CDATA[
             if ( this.dragging ){
                 this.mdel.unregisterAll( );
                 this.setAttribute('dragging',false);
@@ -383,14 +385,14 @@
 
 
         <!-- MOUSEEVENT METHODS-->
-        <method event="onmousedown" >
+        <handler name="onmousedown" >
             this.mouseisdown = true;
             this.bkgnd.button.setResourceNumber( this.downRsrcNumber );
             this.i.setX(1);
             this.i.setY(1);
-        </method>
+        </handler>
 
-        <method event="onmouseup" >
+        <handler name="onmouseup" >
             this.mouseisdown = false;
             if (this.mouseisover) {
                 this.bkgnd.button.setResourceNumber( this.overRsrcNumber );
@@ -399,9 +401,9 @@
             }
             this.i.setX(0);
             this.i.setY(0);
-        </method>
+        </handler>
 
-        <method event="onmouseover" ><![CDATA[
+        <handler name="onmouseover" ><![CDATA[
             this.mouseisover = true;
             if (this.mouseisdown) {
                 this.bkgnd.button.setResourceNumber( this.downRsrcNumber );
@@ -413,20 +415,20 @@
                 this.i.setY(0);
             }
 
-         ]]> </method>
+         ]]> </handler>
 
-        <method event="onmouseout" > <![CDATA[
+        <handler name="onmouseout" > <![CDATA[
             this.mouseisover = false;
             this.bkgnd.button.setResourceNumber( this.normalRsrcNumber );
             this.i.setX(0);
             this.i.setY(0);
-        ]]> </method>
+        ]]> </handler>
 
    </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

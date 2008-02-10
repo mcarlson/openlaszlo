@@ -19,35 +19,35 @@
              src="http://xml.amazon.com/onca/xml3"/>
 
     <datapointer xpath="dsKeyword:/*">
-        <method event="ondata">
+        <handler name="ondata">
             searchLoader.hide();
-        </method>
-        <method event="onerror">
+        </handler>
+        <handler name="onerror">
             searchLoader.hide();
-        </method>
-        <method event="ontimeout">
+        </handler>
+        <handler name="ontimeout">
             Debug.write( "timeout in dataset: dsKeyword" );
             searchLoader.hide();
-        </method>
+        </handler>
     </datapointer>
 
     <!-- dataset to retrieve one item identified by its ASIN (ASIN = Amazon's unique identifier -->
     <dataset name="dsAsin" type="http" request="false" src="http://xml.amazon.com/onca/xml3" />
 
     <datapointer xpath="dsAsin:/*">
-        <method event="ondata">
+        <handler name="ondata">
             recommend.setVisible( false );
             cdinfo.setVisible( true );
             cdinfo.bringToFront();
             infoLoader.hide();
-        </method>
-        <method event="onerror">
+        </handler>
+        <handler name="onerror">
             infoLoader.hide();
-        </method>
-        <method event="ontimeout">
+        </handler>
+        <handler name="ontimeout">
             Debug.write( "timeout in dataset: dsAsin" );
             infoLoader.hide();
-        </method>
+        </handler>
     </datapointer>
 
     <!-- dataset to store cart items -->
@@ -105,9 +105,9 @@
             <view resource="laszlo_powered" x="276" y="13"
                 onmouseover="setResourceNumber(2)"
                 onmouseout="setResourceNumber(1)">
-                <method event="onclick">
+                <handler name="onclick">
                     LzBrowser.loadURL("http://laszlosystems.com", "_blank");
-                </method>
+                </handler>
             </view>
         </view>
 
@@ -136,7 +136,7 @@
                                 <text x="4" font="lztahoe8,Arial,Helvetica" datapath="Artists/Artist[1]/text()" width="${parent.width-6}" resize="false"/>
 
                                 <!-- When one item is clicked, a request is sent to Amazon for deatailed informations about the item -->
-                                <method event="onclick">
+                                <handler name="onclick">
                                     <![CDATA[
                                         var dsAsin=canvas.datasets.dsAsin;
                                         var qsAsin = "t=webservices&dev-t="+canvas.developerToken+"&AsinSearch="+parent.datapath.xpathQuery("Asin/text()")+"&mode=music&type=heavy&page=1&f=xml";
@@ -144,7 +144,7 @@
                                         dsAsin.setQueryString(qsAsin);
                                         dsAsin.doRequest();
                                     ]]>
-                                </method>
+                                </handler>
                             </view>
 
                         </view>
@@ -246,22 +246,22 @@
 
                             <view width="${parent.width}" height="${parent.height-20}"
                                   datapath="Tracks" clip="true">
-                                <method event="ondata">
+                                <handler name="ondata">
                                     var dp = this.datapath.dupePointer();
                                     dp.selectChild();
                                     var numberTracks = countNodesByName( dp, 'Track' );
                                     numberTracks = (numberTracks == 0) ? "-" : numberTracks;
                                     this.parent.setAnnotation( numberTracks );
-                                </method>
+                                </handler>
 
                                 <view y="8" x="8" width="${parent.width}">
                                     <simplelayout axis="y"/>
                                     <!-- Repeated view displaying the list of tracks -->
                                     <view width="${parent.width}">
                                         <attribute name="trackid" type="string" value=""/>
-                                        <method event="onclonenumber" args="n">
+                                        <handler name="onclonenumber" args="n">
                                             this.trackid = n+1 + '.';
-                                        </method>
+                                        </handler>
                                         <datapath xpath="Track" pooling="true" />
                                         <simplelayout axis="x" spacing="4"/>
                                         <text name="tid" label="${parent.trackid}" width="20"/>
@@ -282,12 +282,12 @@
                                         <datapath xpath="Reviews" pooling="true"/>
                                         <simplelayout axis="y" spacing="0"/>
 
-                                        <method event="ondata">
+                                        <handler name="ondata">
                                             var dp = this.datapath.dupePointer();
                                             dp.selectChild();
                                             var numberReviews = countNodesByName( dp, 'CustomerReview' );
                                             this.parent.parent.parent.setAnnotation( numberReviews );
-                                        </method>
+                                        </handler>
 
 
                                         <!-- Repeated view displaying the list of customer review -->
@@ -329,12 +329,12 @@
 
             <mouseview resource="search_butt" y="1" onclick="search()">
                 <inputtext name="searchKey" x="20" y="3" fontsize="11">
-                    <method event="onkeydown" args="k">
+                    <handler name="onkeydown" args="k">
                         if (k==13) {
 Debug.write("Searching");
                             parent.search();
                         }
-                    </method>
+                    </handler>
                 </inputtext>
                 <method name="search">
                     <![CDATA[
@@ -558,7 +558,7 @@ Debug.write("Searching");
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

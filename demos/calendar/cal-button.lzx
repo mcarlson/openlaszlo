@@ -115,9 +115,9 @@
                 <attribute name="text" value="parent.label" when="always" />
             </text>
 
-            <method event="ontext" reference="this.title">
+            <handler name="ontext" reference="this.title">
                 this.update();
-            </method>
+            </handler>
 
             <method name="update" >
                 if (this.keepinitialwidth) {
@@ -198,7 +198,7 @@
         </state>
       
       
-    <method event="oninit" >
+    <handler name="oninit" >
         this.setEnabled(this.enabled);
         this.update();
         
@@ -211,7 +211,7 @@
         // appears like a bug.
         
         this.ocd = new LzDelegate(this,"safeclick");
-   </method>
+   </handler>
 
     <!-- OTHER METHODS -->
     <method name="safeclick" >
@@ -228,7 +228,7 @@
     </method>
 
     <!-- MOUSE EVENTS -->
-    <method event="onmousedown" >
+    <handler name="onmousedown" >
         if ( this.enabled) {
             this.mouseisdown = true;
             this.domousedown();
@@ -236,9 +236,9 @@
             this.bkgnd.mid.setResourceNumber( this.downRsrcNumber );
             this.bkgnd.rgt.setResourceNumber( this.downRsrcNumber );
         }
-    </method>
+    </handler>
 
-    <method event="onmouseup" >
+    <handler name="onmouseup" >
         this.mouseisdown = false;
         if (this.enabled) {
             this.domouseup();
@@ -252,9 +252,9 @@
                 this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
             }
         }
-    </method>
+    </handler>
 
-    <method event="onmouseover" ><![CDATA[
+    <handler name="onmouseover" ><![CDATA[
         if ( this.enabled) {
             this.mouseisover = true;
             if (this.mouseisdown) {
@@ -269,19 +269,19 @@
                 this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );
             }
         }
-     ]]> </method>
+     ]]> </handler>
 
-    <method event="onmouseout" > <![CDATA[
+    <handler name="onmouseout" > <![CDATA[
         this.mouseisover = false;
         this.domouseup();
         this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
         this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );
         this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
-    ]]> </method>
+    ]]> </handler>
 
-    <method event="onclick" >
+    <handler name="onclick" >
         this.ocd.register(LzIdle,"onidle");
-    </method>
+    </handler>
 
 
 
@@ -293,7 +293,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

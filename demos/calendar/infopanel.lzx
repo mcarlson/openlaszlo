@@ -42,25 +42,25 @@
             <resizelayout axis="y"/>
             
         <!-- METHODS -->
-        <method event="onopenstart" >
+        <handler name="onopenstart" >
             // tab is about to open
             this.interior.setVisible(true);
             this.top.setBGColor(0xE2E4DF);
             this.top.tline.setBGColor(0xB8B9B5)
             this.top.bline.setBGColor(0xFDFFFF)
-        </method>
+        </handler>
 
-        <method event="onclosestart" >
+        <handler name="onclosestart" >
             //tab is about to close
             this.top.setBGColor(0xEEF0EB);
             this.top.tline.setBGColor(0xFDFFFF)
             this.top.bline.setBGColor(0xC6C7C4)
-        </method>
+        </handler>
 
-        <method event="onclosestop" >
+        <handler name="onclosestop" >
             //tab is closed
             this.interior.setVisible(false);
-        </method>
+        </handler>
 
         <method name="toggle">
             // ugh - tabslider doesn't support closing tabs yet
@@ -102,7 +102,7 @@
                         </method>
                     </textbox>
                     <basebutton x="149" width="14" resource="info_larrow">
-                        <method event="onclick">
+                        <handler name="onclick">
                             calgrid.keepinfoopen = true;
                             var thiscell = calgrid.open_day.id;
                             thiscell = Number(thiscell.substr(4));
@@ -121,10 +121,10 @@
                                 calgrid.showweekview();
                             }
                             calgrid.keepinfoopen = false;
-                        </method>
+                        </handler>
                     </basebutton>
                     <basebutton x="163" width="14" resource="info_rarrow">
-                        <method event="onclick">
+                        <handler name="onclick">
                             calgrid.keepinfoopen = true;
                             var thiscell = calgrid.open_day.id;
                             thiscell = Number(thiscell.substr(4));
@@ -149,7 +149,7 @@
                                 calgrid.showweekview();
                             }
                             calgrid.keepinfoopen = false;
-                        </method>
+                        </handler>
                     </basebutton>
                             
                 </view>
@@ -264,12 +264,12 @@
                 bgcolor="0xFDFFFF"/>
 
             <calButton label="Apply" x="15" y="13">
-                <method event="onclick">
+                <handler name="onclick">
                     eventDataMgr.changeTitle(sitbox.getText());
                     eventDataMgr.changeNotes(classroot.tabs.notes.txt.getText());
                     eventDataMgr.changeLocation(classroot.tabs.location.txt.getText());
                     eventDataMgr.changeAttendees(classroot.tabs.attendees.txt.getText());
-                </method>
+                </handler>
             </calButton>
                 
             <calButton label="Delete" x="${parent.width - width - 15}" y="13"
@@ -295,10 +295,10 @@
 
         <!-- METHODS -->
 
-        <method event="oninit">
+        <handler name="oninit">
             this.setWindowTitle( "Event Info" );
             this.closeDel = new LzDelegate( this , "close" );
-        </method>
+        </handler>
         
         <method name="open">
             this.completeInstantiation();
@@ -346,7 +346,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
