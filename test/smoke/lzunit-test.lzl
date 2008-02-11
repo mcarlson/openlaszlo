@@ -341,7 +341,10 @@
       super.construct(parent, args);
     </method>
 
-    <!-- Override fail for testing purposes -->
+    <!-- Override fail for testing purposes.  We intercept the fail
+         call before it outputs an error to the debugger, so we don't
+         have to output any info message saying that an error output
+         was expected. -->
     <method name="fail" args="message">
       <![CDATA[
         if (typeof(expectedFailure) == "null") {
@@ -349,12 +352,10 @@
         } else if (typeof(expectedFailure) == "function") {
             if (expectedFailure(message)) {
                 expectedFailures++;
-                Debug.info("Testing test system: '%0.24s' (above) is expected as part of this test", message);
                 return;
             }
         } else if (expectedFailure == message) {
             expectedFailures++;
-            Debug.info("Testing test system: '%0.24s' (above) is expected as part of this test", message);
             return;
         }
         super.fail(format("Wrong failure", expectedFailure,
@@ -373,9 +374,12 @@
       expectedFailure = null;
     </method>
 
+    <!-- NOTE: [2008-02-11 ptw] Since we do _not_ intercept a
+         successful test, we have to test that the expected number of
+         errors have occured to determine if one of the intentional
+         failures is not occuring. -->
     <method name="testFailure">
       expectedFailure = "This is an intentional failure"
-      Debug.debug("Testing test system: '%0.24s' will NOT be output as an error (even though you will get a message saying it is expected)", expectedFailure);
       fail(expectedFailure);
       assertEquals(expectedFailures, 1, "Total number of expected failures");
     </method>
@@ -618,7 +622,7 @@
   </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
