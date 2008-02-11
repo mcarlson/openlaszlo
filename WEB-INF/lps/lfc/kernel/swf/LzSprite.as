@@ -982,6 +982,13 @@ LzSprite.prototype.destroy = function(){
         this.doQueuedDel.unregisterAll();
         delete this.doQueuedDel;
     }
+    
+    if (this._moDel) {
+        this._moDel.unregisterAll();
+        delete this._moDel;
+        this._muDel.unregisterAll();
+        delete this._muDel;
+    }
 
     this.__LZFinishDestroyOnIdle();
 }
