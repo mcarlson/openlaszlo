@@ -744,16 +744,15 @@ LzSprite.prototype.updateResourceSize = function ( ){
   * the coordinate system for all children of this view, so use this method
   * with care.
   * 
-  * @param String xory: If this is defined, set the resource to stretch only in the given axis ("width" or
-  * "height").  Otherwise set the resource to stretch in both axes.
+  * @param String stretch: Set the resource to stretch only in the given axis ("width" or
+  * "height") or in both axes ("both"). 
   */
-LzSprite.prototype.stretchResource = function ( xory ){
-    //TODO: Remove null, x, y options from here when components are moved
-    if ( xory == null || xory == "x" || xory=="width" || xory=="both" ){
+LzSprite.prototype.stretchResource = function ( stretch ){
+    if (stretch == "width" || stretch == "both") {
         this._setrescwidth = true;
     }
 
-    if ( xory == null || xory == "y"|| xory=="height" || xory=="both" ){
+    if (stretch == "height" || stretch == "both") {
         this._setrescheight = true;
     }
 }

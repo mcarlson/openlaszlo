@@ -1179,8 +1179,8 @@ LzSprite.prototype.__updateClip = function() {
   * none (any other value).
   */
 LzSprite.prototype.stretchResource = function(s) {
+    s = (s != "none" ? s : null);//convert "none" to null
     if (this.stretches == s) return;
-    //Debug.info('setStretches', s);
     this.stretches = s;
     this.__updateStretches();
 }

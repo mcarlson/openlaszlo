@@ -2304,19 +2304,30 @@ function setResourceNumber( n ) {
   * the coordinate system for all children of this view, so use this method
   * with care.
   * 
-  * @param String xory: If this is defined, set the resource to stretch only in the given axis ("width" or
-  * "height").  Otherwise set the resource to stretch in both axes.
+  * @param String stretch: Set the resource to stretch only in the given axis ("width" or
+  * "height") or in both axes ("both"). 
   */
-function stretchResource ( xory ){
-    this.sprite.stretchResource(xory);
-    //TODO: Remove null, x, y options from here when components are moved
-    if ( xory == null || xory == "x" || xory=="width" || xory=="both" ){
+function stretchResource ( stretch ){
+    if (!(stretch == "none" || stretch == "both" || stretch == "width" || stretch == "height")) {
+        //TODO: Remove null, x, y options from here when components are moved
+        var newstretch = (stretch == null ? "both" : stretch == "x" ? "width" : stretch == "y" ? "height" : "none");
+        if ($debug && newstretch != "none") {
+            Debug.info("%w.%s(%w) is deprecated.  Use %w.%s(%w) instead.",
+                this, arguments.callee, stretch, this, arguments.callee, newstretch);
+        }
+        stretch = newstretch;
+    }
+    
+    this.stretches = stretch;
+    this.sprite.stretchResource(stretch);
+    
+    if (stretch == "width" || stretch == "both") {
         this._setrescwidth = true;
         this.__LZcheckwidth = true;
         this.reevaluateSize( "width" );
     }
 
-    if ( xory == null || xory == "y"|| xory=="height" || xory=="both" ){
+    if (stretch == "height" || stretch == "both") {
         this._setrescheight = true;
         this.__LZcheckheight = true;
         this.reevaluateSize( "height" );
