@@ -38,26 +38,22 @@ function request( req ) {
 /**
   * @access private
   */
-
-/**
-  * @access private
-  */
 function getLoadMC (){
     return this.mc.lmc;
 }
-
-
 
 /**
   * @access private
   */
 // This is the callback when a library module has finished loading
 function snippetLoaded ( loadmc, err ){
-    Debug.write("snippetLoaded", 'loadmc=', loadmc, this);
+    // our 'owner' is a sprite, and the sprite's owner is the LzLibrary
+    var lib = this.owner.owner;
+    
     LzLoadQueue.loadFinished( loadmc );
     if ( ! loadmc.valid ) {
-        this.owner.loaded = false;
-        this.owner.loading = false;
+        lib.loaded = false;
+        lib.loading = false;
         return;
     }
 
@@ -70,23 +66,20 @@ function snippetLoaded ( loadmc, err ){
     // this snippetLoaded method with an error arg.
 
     if ( err != null ){
-      //Debug.write( err );
-        this.owner.loaded = true;
-        this.owner.loading = false;
-        if (this.owner.onerror.ready) this.owner.onerror.sendEvent( err );
+        lib.loaded = true;
+        lib.loading = false;
+        if (lib.onerror.ready) lib.onerror.sendEvent( err );
         return;
     }
 
     if ( loadmc.timedout ){
         this.doTimeOut();
+        if (lib.ontimeout.ready) lib.ontimeout.sendEvent();
     } else {
-        // this.owner.onload.sendEvent( err );
-        this.owner.loaded = true;
+        lib.loaded = true;
     }
 
-    // our 'owner' is a sprite, and the sprite's owner is the LzLibrary
-    var libname = this.owner.owner.name
-    LzInstantiateView({attrs: {libname: libname}, name: "__libraryloadercomplete"}, 1);
+    LzInstantiateView({attrs: {libname: lib.name}, name: "__libraryloadercomplete"}, 1);
     
     // Run the queue to instantiate all pending LzInstantiateView calls.
     canvas.initDone();

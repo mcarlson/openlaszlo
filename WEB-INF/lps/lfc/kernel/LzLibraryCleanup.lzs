@@ -18,13 +18,10 @@ class LzLibraryCleanup extends LzNode {
   */
     static var tagname = '__libraryloadercomplete';
 
-
     function LzLibraryCleanup ( owner , args ) {
-        //this.callInherited( "constructor", arguments.callee ,owner ,args );
         super(owner, args);
         var lib = LzLibrary.findLibrary(args.libname);
-        lib.loading = false;
-        if (lib.onload.ready) lib.onload.sendEvent(true);
+        lib.loadfinished();
     }
 
 }; // End of LzLibraryCleanup
