@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzmodemanager
@@ -69,11 +69,13 @@ LzModeManager.toString = function (){
   * @param LzView view: The view intending to have modal iteraction
   */
 LzModeManager.makeModal = function ( view ) {
-    this.modeArray.push( view );
-    if (this.onmode.ready) this.onmode.sendEvent( view );
-    var f = LzFocus.getFocus();
-    if ( f && ! f.childOf( view ) ){
-        LzFocus.clearFocus();
+    if (this.modeArray.length == 0 || !this.hasMode( view )) {
+        this.modeArray.push( view );
+        if (this.onmode.ready) this.onmode.sendEvent( view );
+        var f = LzFocus.getFocus();
+        if ( f && ! f.childOf( view ) ){
+            LzFocus.clearFocus();
+        }
     }
 }
 
