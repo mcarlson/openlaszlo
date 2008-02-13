@@ -130,12 +130,14 @@ var onkeydown = LzDeclaredEvent; // From LzFocus
   * @access public
   */
 var onlastframe = LzDeclaredEvent;
-/** @lzxtype event
+/** Send when the view finishes loading media.
+  * @lzxtype event
   * @access public
   */
 var onload = LzDeclaredEvent;
 
-/** @lzxtype event
+/** Sends a percentage (0-1) reflecting the amount of a media file that's been downloaded.
+* @lzxtype event
   * @access public
   */
 var onloadperc = LzDeclaredEvent;
@@ -249,7 +251,8 @@ var onunstretchedheight = LzDeclaredEvent;
   */
 var onunstretchedwidth = LzDeclaredEvent;
 
-/** @lzxtype event
+/** Sent when the view changes visibility (true/false)
+  * @lzxtype event
   * @access public
   */
 var onvisible = LzDeclaredEvent;
