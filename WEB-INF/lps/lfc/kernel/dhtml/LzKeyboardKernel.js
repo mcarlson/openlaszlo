@@ -1,7 +1,7 @@
 /**
   * LzKeyboardKernel.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007,2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -18,7 +18,9 @@ var LzKeyboardKernel = {
         var dirty = false;
         var k = e['keyCode'];
         var dh = LzKeyboardKernel.__downKeysHash;
-        if (k >= 0) {
+        // skip shift, ctrl, option keys to prevent duplicate sending - see LPP-4267
+        // really, all control characters should be skipped...
+        if (k >= 0 && k != 16 && k != 17 && k != 18) {
             // TODO: add mapping to flash character codes?
             var s = String.fromCharCode(k).toLowerCase();
             var t = e.type; 
