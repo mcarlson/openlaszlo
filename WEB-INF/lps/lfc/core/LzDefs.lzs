@@ -1,7 +1,7 @@
 /**
   * LzDefs.lzs
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   * @todo 2006-04-07 hqm This machinery could be removed if all
   * callers to sendEvent can be guaranteed to check if the event slot
@@ -10,41 +10,68 @@
   * @subtopic Runtime
   */
 
-/** no op
+/** Sentinel value for events
   * @access private
   */
-var LzDeclaredEvent = {};
-/**
-  * @access private
-  */
-LzDeclaredEvent.sendEvent = function ( ){ };
+class LzDeclaredEventClass /* implements LzEvent */ {
+  /**
+   * @access private
+   */
+  /* const */ var ready = false;
 
-/**
-  * @access private
-  */
-LzDeclaredEvent.clearDelegates = function ( ){ };
+  /**
+   * @access private
+   */
+  function sendEvent() {};
 
-/**
-  * @access private
-  */
-LzDeclaredEvent.removeDelegate = function ( ){ };
+  /**
+   * @access private
+   */
+  function clearDelegates() {};
 
-/**
-  * @access private
-  */
-LzDeclaredEvent.getDelegateCount = function ( ){return 0};
+  /**
+   * @access private
+   */
+  function removeDelegate() {};
 
-/**
-  * @access private
-  */
-LzDeclaredEvent.toString = function ( ){
+  /**
+   * @access private
+   */
+  function getDelegateCount () {return 0};
+
+  /**
+   * @access private
+   */
+  function toString() {
     return "LzDeclaredEvent";
+  }
+}
+
+  var LzDeclaredEvent = new LzDeclaredEventClass;
+
+/**
+ * Private class used to distinguish an init expression from an
+ * initial value in node attributes
+ * @access private
+ */
+class LzInitExpr {
+  var methodName:String;
+  function LzInitExpr(initMethod:String) {
+    this.methodName = initMethod;
+  }
 }
 
 /**
-  * @access private
-  */
-LzDeclaredEvent.ready = false;
+ * Private class used to distinguish an constraint expression from an
+ * initial value in node attributes
+ * @access private
+ */
+class LzConstraintExpr extends LzInitExpr {
+  function LzConstraintExpr(constraintMethod:String) {
+    super(constraintMethod);
+  }
+}
+
 
 /**
   * Used to efficiently clone hashtables using Object's

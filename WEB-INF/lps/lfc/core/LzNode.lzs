@@ -1,3 +1,4 @@
+/* -*- mode: JavaScript; c-basic-offset: 4; -*- */
 /**
   * LzNode.lzs
   *
@@ -81,55 +82,40 @@ function LzNode ( parent , attrs , children , instcall ){
           // Otherwise we create a new hash that inherits the defaults
           iargs = new LzInheritedHash(this.defaultattrs);
           // And merge in our attrs (if any).  Taking care to merge
-          // Array and Object attrs correctly, and noting constraints
-          // that have been overridden so we can clean up $refs when
-          // done.
+          // Array and Object attrs (for back-compatibility).  No
+          // special magic is needed to compute attributes overriding
+          // constraints, because they all come as attrs now and
+          // overriding will be automatic from the InheritedHash
+          // (except for the bizarre merging of arrays and hashes!)
           if (attrs) {
             var dattrs = this.defaultattrs;
-            var dattr$refs = '$refs' in dattrs && dattrs.$refs;
-            var cleanup = null;
-            for ( var k in attrs ){
-              var attrk = attrs[ k ];
-              // Check for literal overriding a constraint
-              if ( dattr$refs && dattr$refs[ k ] ){
-                if (! cleanup) { cleanup = {} };
-                cleanup[k] = true;
-              }
-              // Check for object and array merges
-              if ( attrk instanceof Object ) {
-                var dattrk = dattrs[ k ];
-                if ( dattrk instanceof Object ) {
-                  if ( attrk instanceof Array ) {
-//                     Debug.debug("%w: LzNode.initialize: merging Array %s", this, k);
-                    iargs[ k ] = attrk.concat( dattrk );
-                    continue;
-                  } else if (typeof attrk == 'object') {
-//                     Debug.debug("%w: LzNode.initialize: merging Object %s", this, k);
-                    var tmp = new LzInheritedHash(dattrk);
-                    for (var j in attrk) {
-                      tmp[j] = attrk[j];
+            // Check for object and array merges
+            // NOTE: [2008-01-22 ptw] This is just whacky, but it is
+            // required for back-compatibility.  IWBNI this were
+            // handled at compile-time
+            for ( var k in attrs ) {
+                var attrk = attrs[ k ];
+                if ( attrk instanceof Object && (! (attrk instanceof LzInitExpr))) {
+                    var dattrk = dattrs[ k ];
+                    if ( dattrk instanceof Object && (! (dattrk instanceof LzInitExpr))) {
+                        if ( attrk instanceof Array ) {
+//                             Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
+                            iargs[ k ] = attrk.concat( dattrk );
+                            continue;
+                        } else if (typeof attrk == 'object') {
+//                             Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
+                            var tmp = new LzInheritedHash(dattrk);
+                            for (var j in attrk) {
+                                tmp[j] = attrk[j];
+                            }
+                            iargs[ k ] = tmp;
+                            continue;
+                        }
                     }
-                    iargs[ k ] = tmp;
-                    continue;
-                  }
                 }
-              }
-              // Just a normal value, install it
-              iargs[ k ] = attrk;
-            }
-            // Finish literal over constraint processing
-            if (cleanup) {
-              // We are going to shadow some defaults, so create a
-              // clean hash to do that in if we don't already have
-              // one.
-              if (! iargs.hasOwnProperty('$refs')) {
-                //we know the defaultattrs has $refs, so attach it
-                iargs.$refs = new LzInheritedHash(dattr$refs);
-              }
-              var ia = LzNode._ignoreAttribute;
-              for (var k in cleanup) {
-                iargs.$refs[ k ] = ia;
-              }
+//                 Debug.debug("%w.%s: NOT merging %s (%w)", this, arguments.callee, k, attrk);
+                // Just a normal value (or LzInitExpr), install it
+                iargs[ k ] = attrk;
             }
           }
         }
@@ -169,6 +155,10 @@ function LzNode ( parent , attrs , children , instcall ){
         }
 
         this.construct(  parent , maskedargs );
+
+        // Construct may, through many tangled webs of replication and
+        // placement, actually end up deleting us!  Bail out.
+        if (this.__LZdeleted) { return; }
 
         //        this.setClassEvents( this.constructor );
 
@@ -634,8 +624,14 @@ function __LZapplyStyleConstraints() {
   * @param Object args: A dictionary of initialization arguments that should
   * be applied
   * to the instance. This contains any arguments that are default arguments
-  * written in the class definition.
-  *
+  * written in the class definition.  Note that initial value
+  * expressions (`$once{...}`) and constraints (`${...}`), are in this
+  * list also, they can be differentiated from initial values by their
+  * type: `LzInitExpr` for the former, and `LzConstraintExpr` for the
+  * latter.  If you handle the installation of any instance attributes
+  * in your construct method, you are responsible for dealing with
+  * these "binders" as well.  Normally, they will be processed by
+  * LzNode.
   */
 function construct ( parent , args ){
 
@@ -746,7 +742,9 @@ function __LZcallInit ( ){
     //do this now, so that others know that they're too late
     this.isinited = true;
 
+    // Install computed initializations
     this.__LZresolveReferences();
+
     if (this.__LZstyleConstraints) this.__LZapplyStyleConstraints();
     var sl = this.subnodes;
     if (sl) {
@@ -783,7 +781,7 @@ function __LZcallInit ( ){
         this.datapath.__LZApplyDataOnInit();
     }
 
-    // Node node end
+    // Note node end
     if ($profile) {
         var nm = this['_profile_name'];
         if (nm) {
@@ -840,52 +838,87 @@ var ignoreplacement;
   */
 function __LZapplyArgs ( args , constcall ){
       var oset = {};
-      var hasset = [];
+      var hasset = null;
       var hasearly = null;
       if ( '$setters' in args && args.$setters ){
           this.__LZsetSetters( args.$setters );
       }
 
       var setrs = this.setters;
+      var inits = null;
+      var constraints = null;
 
       for ( var a in args ){
+          var val = args[a];
           //handle flash bug where objects slots are enumerated multiple times
           if ( oset[a] || args[a] === LzNode._ignoreAttribute ) continue;
           oset[ a ] = true;
 
-          if (setrs &&  setrs[ a ] == null ){
-              this.addProperty( a, args[ a ]);
-              if ( !constcall ){
-                  //then we need to notify the rest of the system that this
-                  //value changed.
-                  var evt = ("on" + a);
-                  if (evt in this) {
-                      if (this[evt].ready) this[ evt ].sendEvent( args[ a ] );
-                  } 
-              }
-          } else if (setrs &&  setrs[ a ] != -1 ){
-              if ( this.earlySetters && this.earlySetters[ a ]){
-                  if ( hasearly == null){
-                      hasearly = [];
-                  }
-                  hasearly[ this.earlySetters[ a ] ] = a;
-              } else{
-                  hasset.push( a );
+          if (val instanceof LzInitExpr) {
+            if (val instanceof LzConstraintExpr) {
+              if (constraints == null) { constraints = []; }
+              constraints.push(val);
+            } else {
+              if (inits == null) { inits = []; }
+              inits.push(val);
+            }
+            // NOTE: [2007-05-16 ptw] This check ensures that each
+            // constrained attribute exists in the new instance.
+            // Necessary because of 'implicit this', which will make a
+            // free reference (error in Javascript) otherwise.  We
+            // have to not shadow inherited values because in some
+            // cases (e.g., lz.state), we actually have a method and
+            // an attribute of the same name!  The attribute is
+            // implemented by a setter, so it never clobbers the
+            // method... er, unless you set the attribute to a
+            // function.  YOW!
+            if (! (a in this)) {this[a] = null;}
+          } else if (! (a in setrs)) {
+            // TODO: should already be declared, so we should just be
+            // able to set it
+            this.addProperty( a, val);
+            if (! constcall) {
+              //then we need to notify the rest of the system that this
+              //value changed.
+              var evt = ("on" + a);
+              if (evt in this) {
+                if (this[evt].ready) this[ evt ].sendEvent( args[ a ] );
+              } 
+            }
+          } else if (setrs[ a ] != -1) {
+              if (a in this.earlySetters) {
+                  if (hasearly == null) { hasearly = []; }
+                  hasearly[this.earlySetters[a]] = a;
+              } else {
+                  if (hasset == null) { hasset = []; }
+                  hasset.push(a);
               }
           }
       }
 
       if (hasearly) {
-          for (var i = 1; i < hasearly.length; i++) {
+          for (var i = 1, l = hasearly.length; i < l; i++) {
+            if (i in hasearly) {
               var a = hasearly[i];
-              if (this[setrs[a]]) this[ setrs[a] ]( args[ a ] , a );
+              this[setrs[a]]( args[a], a);
+            }
           }
       }
 
-      while(  hasset.length ){
-          var a = hasset.pop();
-          this[ setrs[a] ]( args[ a ] , a );
+      if (hasset) {
+        for (var i = hasset.length - 1; i >= 0; i--) {
+          var a = hasset[i];
+          this[setrs[a]]( args[a], a);
+        }
       }
+
+      // process inits and constraints
+      // TODO: [2008-02-06 ptw] This can be much more efficient.  For
+      // now, we just collect the inits and constraints (once their
+      // inheritance has been computed correctly above) and use the
+      // existing $refs-like mechanism to install them.
+      this.__LZstoreAttr(inits, '$inits');
+      this.__LZstoreAttr(constraints, '$constraints');
 }
 
 /**
@@ -1243,26 +1276,14 @@ function __LZstoreDelegates ( delarr ){
 
 }
 
-
+// TODO: [2008-02-14 ptw] Remove at 4.1 or later
+if ($debug) {
 /**
   * @access private
   */
 function __LZstoreRefs ( val , prop ){
-    //Debug.write('__LZstoreRefs', this, prop, val);
-    // NOTE: [2007-05-16 ptw]
-    // This loop ensures that each constrained attribute exists in the
-    // new instance.  Necessary because of 'implicit this', which will
-    // make a free reference (error in Javascript) otherwise.  We have
-    // to not shadow inherited values because in some cases (e.g.,
-    // lz.state), we actually have a method and an attribute of the
-    // same name!  The attribute is implemented by a setter, so it
-    // never clobbers the method... er, unless you set the attribute
-    // to a function.  YOW!
-    for ( var i in val){
-        if (! (i in this)) {this[i] = null;}
-    }
-
-    this.__LZstoreAttr( val , prop );
+        Debug.error("%w.%s is no longer supported", this, arguments.callee);
+}
 }
 
 /**
@@ -1274,80 +1295,66 @@ function __LZstoreAttr ( val , prop ){
     }
 
     this.__LZresolveDict[ prop ] = val;
-}
+};
 
 /**
   * @access private
   */
-function __LZresolveReferences (){
+function __LZresolveReferences () {
     var rdict = this.__LZresolveDict;
-    this.__LZresolveDict = null;
-    for ( var r in rdict ){
-        if ( r == "$delegates" ) continue;
-        this[  this.__LZdelayedSetters[ r ] ] ( rdict[ r ] );
-    }
-    // $delegates : "__LZsetDelegates"
-    if ( rdict && rdict.$delegates ) this.__LZsetDelegates( rdict.$delegates );
-}
-
-/**
-  * Take care to evaluate a path expression in the proper environment
-  * $lzsc$ is the compiler convention for internal variables we resort
-  * to this in hopes that it is not shadowed in the with contexts
-  * because the compiler is not smart enough to use a register
-  * @access private
-  */
-function __LZevalPathExpr ($lzsc$rp) {
-    with (global){
-        with( this ){
-            return eval( $lzsc$rp );
+    if (rdict != null) {
+        this.__LZresolveDict = null;
+        var inits = rdict['$inits'];
+        if (inits != null) {
+            for (var i = 0, l = inits.length; i < l; i++) {
+                // invoke the init method
+                this[inits[i].methodName]();
+            }
         }
+        // Install constraints
+        // NOTE: [2008-02-13 ptw] Keep in sync with LzState#remove
+        var constraints = rdict['$constraints'];
+        if (constraints != null) {
+            for (var i = 0, l = constraints.length; i < l; i++) {
+                var c = constraints[i];
+                // Apply the constraint method
+                var constraintMethodName = c.methodName;
+                // TODO: [2008-02-06 ptw] the dependency computation needs
+                // to be a method also, probably stored in the
+                // LzConstraintExpr object
+                var cm = this[constraintMethodName];
+                if ($debug) {
+                    if (!(cm && cm instanceof Function)) {
+                        Debug.debug("Bad constraint %w on %w", c, this);
+                    }
+                }
+                var dependencyMethod = cm.dependencies;
+                this.applyConstraintMethod(constraintMethodName , dependencyMethod.call(this));
+            }
+        }
+        // Backward compatibility -- are there any other delayed setters?
+        for ( var r in rdict ){
+            if ( r == "$inits" || r == "$constraints" || r == "$delegates" ) continue;
+            if (r in this.__LZdelayedSetters) {
+                this[  this.__LZdelayedSetters[ r ] ] ( rdict[ r ] );
+            } else if ($debug) {
+                Debug.warn("No delayed setter for %s", r);
+            }
+        }
+        // Install delegates
+        // $delegates : "__LZsetDelegates"
+        if (rdict['$delegates']) this.__LZsetDelegates( rdict.$delegates );
     }
 }
 
+// TODO: [2008-02-14 ptw] Remove at 4.1 or later
+if ($debug) {
 /**
   * @access private
   */
 function __LZresolveRefs ( refs ){
-    // $once are applied before $always
-    for ( var p in refs ){
-        var rp = refs[ p ];
-        var pp;
-        if ( "string" == typeof( rp ) ){
-            rp = LzParsedPath.trim( rp );
-            var qc = rp.charAt( 0 );
-            if ( qc =="'" || qc == '"' ){
-                //check, and remove quotes
-                if ( $debug ){
-                    if ( qc != rp.charAt( rp.length -1 ) ){
-                        Debug.warn( "Bad quoting for $path %w in %w", rp, this );
-                    }
-                }
-                pp = rp.substring( 1 , rp.length-1 );
-            } else {
-                pp = this.__LZevalPathExpr(rp);
-                if ( $debug ){
-                    if ( pp == null ){
-                        Debug.warn( "No value for $path reference %w in %w",
-                                    rp, this );
-                    }
-                }
-            }
-            this.dataBindAttribute( p , pp );
-        } else if ((rp instanceof Function) &&
-                   // A function with no or null dependencies is a $once
-                   (! ('dependencies' in rp && rp.dependencies))) {
-            rp.call(this);
-        }
-    }
-
-    // Functions with dependencies are $always
-    for ( var p in refs ){
-        var rp = refs[ p ];
-        if ((rp instanceof Function) && ('dependencies' in rp)) {
-            this.applyConstraint( p , rp , rp.dependencies.call(this) );
-        }
-    }
+    Debug.error("$refs: %s is no longer supported", refs);
+}
 }
 
 /**
@@ -1367,27 +1374,62 @@ function __LZsetDelegates ( delarr ){
         this.__LZdelegates.push( new LzDelegate( this , meth ,sender , delarr[i] ) );
     }
 
-}
+};
+
+    // TODO: [2008-02-12 ptw] Backwards compatibility, remove in next
+    // release
+    /**
+     * Applies a function as a constraint.
+     *
+     * @deprecated: Constraints should be methods and should be applied
+     * using applyConstraintMethod
+     *
+     * @param String attribute: Putatively the attribute being
+     * constrained, but actually ignored
+     * @param Function constraint: A function that will be `call`-ed on
+     * `this` when any of the dependencies change
+     * @param Array dependencies: A property list of (reference,
+     * attribute) that should cause the constraint function to be invoked.
+     */
+    function applyConstraint(attribute, constraint, dependencies) {
+        if ($debug) {
+            Debug.deprecated(this, arguments.callee, this.applyConstraintMethod);
+        }
+        var constraintMethodName = "$cf" + this.$cfn++;
+        this.addProperty(constraintMethodName, constraint);
+        return this.applyConstraintMethod(constraintMethodName, dependencies);
+    }
 
 /**
-  * Applies a constraint for the given attribute.
-  * @param String prop: The attribute to be constrained to the value of the
-  * expression
-  * @param Function cfunc: The function that sets the attribute to the value.
-  * E.g. function () { this.setAttribute( 'foo' , someOtherFunction() ) }
-  * @param Array dep: An array of (reference, attribute) pairs that the
-  * constraint depends on. For instance, if the constraint depends on my x
-  * and my friend's width, the dependencies array would look like this:
-  * [ this, "x" , myfriend, "width" ]
+  * Applies a method as a constraint.
+  *
+  * @param String constraintMethodName: The name of the method that
+  * will be invoked when any of the dependencies changes.  Typically
+  * this method 'constrains' an attribute to a computation on the
+  * dependent attributes.  E.g. `function constrain_foo () {
+  * this.setAttribute( 'foo' , this.x + myfriend.width ) }`.  This
+  * method _must_ be a method on the instance to which you are
+  * applying the constraint.
+  *
+  * @param Array dependencies: An array of (reference, attribute)
+  * pairs that the constraint depends on. For instance, if the
+  * constraint depends on my x and my friend's width, the dependencies
+  * array would look like this: `[ this, "x" , myfriend, "width" ]`
   */
-function applyConstraint ( prop , cfunc, dep ){
-    var l = dep.length;
+function applyConstraintMethod ( constraintMethodName, dependencies ){
+    if ($debug) {
+        if (! ((arguments.length == 2) &&
+               (typeof constraintMethodName == 'string') &&
+               (this[constraintMethodName] instanceof Function) &&
+               (dependencies instanceof Array))) {
+            Debug.error("%w.%s: invalid arguments %w", this, arguments.callee, arguments);
+        }
+    }
+    var l = dependencies.length;
     if (l){
         if ( !this.__LZdelegates ){
             this.__LZdelegates = [];
         }
-        var refF = "$cf" + this.$cfn++;
-        this[ refF ] = cfunc;
 
         // NOTE: [2006-05-30 ptw] You may think to yourself 'this is
         // not my large automobile', I can move that `new LzDelegate`
@@ -1401,32 +1443,45 @@ function applyConstraint ( prop , cfunc, dep ){
         // a separate delegate for each dependency, and people have
         // written code that only works because of this loophole...
         var dp;
-        for ( var i = 0 ; i < l ; i+=2 ){
-            var d = new LzDelegate( this , refF );
-            this.__LZdelegates.push( d );
-            dp = dep[ i ];
+        for (var i = 0; i < l; i += 2) {
+            dp = dependencies[i];
             if (dp) {
-                d.register( dp, "on" + dep[ i + 1 ] );
+                var d = new LzDelegate(this, constraintMethodName, dp, "on" + dependencies[i + 1]);
+                this.__LZdelegates.push(d);
             }
         }
     }
     // Whether there are dependencies or not, we need to invoke the
     // constraint function (since the dependencies may have 'fired'
     // before the constraint was installed).
-    cfunc.call(this);
+    this[constraintMethodName]();
 }
 
 /**
-  * Release the constraint on the named property
-  * This function doesn't seem to work.  Marking private to remove from docs. -sa
-  * @access private
-  * @param prop: The property with the constraint to release.
+  * Release a constraint method
+  *
+  * @param String constraintMethodName: the constraint to release
+  *
+  * @devnote TODO: [2008-02-07 ptw] This could probably be made more
+  * efficient, but at least it should work now.  The previous
+  * implementation was nonesense.
   */
-function releaseConstraint ( prop ){
-
-    var refF = "_SetCons" + prop;
-    if (refF in this)
-        this[ refF ].delegate.unregisterAll();
+function releaseConstraintMethod (constraintMethodName) {
+    var result = false;
+    var dels = this.__LZdelegates;
+    if (dels) {
+        for (var i = 0; i < dels.length; ) {
+            var del = dels[i];
+            if (del.c === this && del.f == constraintMethodName) {
+                del.unregisterAll();
+                dels.splice(i, 1);
+                result = true;
+            } else {
+                i++;
+            }
+        }
+    }
+    return result;
 }
 
 /**

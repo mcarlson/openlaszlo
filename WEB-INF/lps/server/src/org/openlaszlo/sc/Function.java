@@ -8,7 +8,7 @@
 package org.openlaszlo.sc;
 
 public class Function {
-  private String name;
+  public String name;
   private final String args;
   private final String body;
   private final String sourceLocation;
@@ -43,6 +43,6 @@ public class Function {
 }
 
 /**
- * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

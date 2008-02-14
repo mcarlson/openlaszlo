@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzstate
@@ -107,7 +107,7 @@ var onremove = LzDeclaredEvent;
   */
 setters.apply = "setApply";
 setters.$setters = null;
-static var staterefs = { apply : true };
+static var stateprops = { apply : true };
 static var stateevents = { onremove : true , onapply : true };
 prototype.$isstate = true; // Defined in LzNode
 var asyncnew = false;
@@ -187,32 +187,42 @@ function apply ( ){
         return;
     }
 
+    var parent = this.parent;
     this.isapplied = true;
 
-    //capture delegates created by process of applying state
-    var od = this.parent.__LZdelegates;
-    this.parent.__LZdelegates = null;
+    // release any constraints you are about to override
+    var pia = parent._instanceAttrs;
+    for (var key in this.heldArgs) {
+      if (key in pia && pia[key] instanceof LzConstraintExpr) {
+        var constraintMethodName = pia[key].methodName;
+        parent.releaseConstraintMethod(constraintMethodName);
+      }
+    }
 
-    this.parent.__LZapplyArgs( this.heldArgs );
+    //capture delegates created by process of applying state
+    var od = parent.__LZdelegates;
+    parent.__LZdelegates = null;
+
+    parent.__LZapplyArgs( this.heldArgs );
 
     if (this.subh) var shl = this.subh.length;
-    this.parent.__LZsetPreventInit();
+    parent.__LZsetPreventInit();
 
     for ( var i = 0 ; i < shl;  i++ ){
         if ( this.__LZpool && this.__LZpool[ i ] ){
             this.appliedChildren.push( this.__LZretach( this.__LZpool[ i ] ) );
         } else {
-            this.appliedChildren.push( this.parent.makeChild( this.subh[ i ] ,
+            this.appliedChildren.push( parent.makeChild( this.subh[ i ] ,
                                                             this.asyncnew));
         }
     }
 
-    this.parent.__LZclearPreventInit();
+    parent.__LZclearPreventInit();
 
-    this.parent.__LZresolveReferences();
-    this.__LZstatedelegates = this.parent.__LZdelegates;
+    parent.__LZresolveReferences();
+    this.__LZstatedelegates = parent.__LZdelegates;
 
-    this.parent.__LZdelegates = od;
+    parent.__LZdelegates = od;
 
     if (this.onapply.ready) this.onapply.sendEvent( this );
 }
@@ -254,9 +264,29 @@ function remove () {
             ac.destroy();
         }
     }
-    
+
     this.appliedChildren = [];
 
+    // re-apply any constraints you released
+    var parent = this.parent;
+    // NOTE: [2008-02-13 ptw] Keep in sync with LzNode#__LZresolveReferences
+    var pia = parent._instanceAttrs;
+    for (var key in this.heldArgs) {
+      if (key in pia && pia[key] instanceof LzConstraintExpr) {
+        var constraintMethodName = pia[key].methodName;
+        // TODO: [2008-02-06 ptw] the dependency computation needs
+        // to be a method also, probably stored in the
+        // LzConstraintExpr object
+        var cm = parent[constraintMethodName];
+        if ($debug) {
+          if (!(cm && cm instanceof Function)) {
+            Debug.debug("Bad constraint %w on %w", c, this);
+          }
+        }
+        var dependencyMethod = cm.dependencies;
+        parent.applyConstraintMethod(constraintMethodName , dependencyMethod.call(parent));
+      }
+    }
 }
 
 /**
@@ -274,57 +304,69 @@ function destroy ( ) {
 
 /**
  * @devnote We override some methods of LzNode to filter out
- * attributes, setters, and handlers that belong to the state,
- * capturing those that do not for later application/removal to the
- * parent node
+ * attributes, and handlers that belong to the state, capturing those
+ * that do not for later application/removal to the parent node
  */
 
 /**
   * @access private
-  * Capture attributes that don't belong to the state for later
+  * Filter out attributes that don't belong to the state for later
   * application to parent.
-  * @devnote NOTE: [2006-12-09 ptw] Currently the only args that apply to the
-  * state are args that have setters (which will be intercepted by
-  * __LZstoreRefs, q.v.), hence we can just intercept
-  * addProperty to capture the 'held args'.
   *
-* override */ function __LZapplyArgs ( args ){
-  var ap = this.addProperty;
-  this.addProperty = function (prop, val) {
-    this.heldArgs[prop] = val;
+  * @devnote NOTE: [2006-12-09 ptw] Currently the only args that apply to the
+  * state are args that have setters
+  */
+/* override */ function __LZapplyArgs ( args ){
+  var stateArgs = {};
+  var held = this.heldArgs;
+  for (var key in args) {
+    var val = args[key];
+    if (key in this.setters) {
+      stateArgs[key] = val;
+    } else {
+      held[key] = val;
+    }
   }
-  super.__LZapplyArgs(args);
-  this.addProperty = ap;
-}
-
-/**
-  * @access private
-  * Capture setters that don't belong to the state for later
-  * application to the parent (and pass the ones that do apply to the
-  * state on to your superclass).
-* override */ function __LZstoreRefs ( refs, prop ){
-    var parrefs = {};
-    var myrefs = {};
-
-    for ( var p in refs ){
-        // Does this belong to the state?
-        if ( LzState.staterefs[ p ] ){
-            myrefs[ p ] = refs[ p ]
-            var havemyrefs = true;
-        } else {
-            parrefs[ p ] = refs[ p ];
-            var haveparrefs = true;
-        }
+  // If any stateArgs are LzInitExpr's, we need to move the
+  // methods they call from held to stateArgs
+  for (var key in stateArgs) {
+    var val = stateArgs[key];
+    if (val instanceof LzInitExpr) {
+      var methodName = val.methodName;
+      if (methodName in held) {
+        stateArgs[methodName] = held[methodName];
+        delete held[methodName];
+      }
     }
+  }
 
-    if ( havemyrefs ){
-        // Install state setters
-        super.__LZstoreRefs( myrefs , prop );
+  // If any held args are LzInitExprs, we need to rename their methods
+  // so they do not clober the parent's methods
+  // TODO: [2008-02-13 ptw] This should take place at compile time.
+  var rename = null;
+  for (var key in held) {
+    var val = held[key];
+    if (val instanceof LzInitExpr) {
+      var methodName = val.methodName;
+      if (methodName in held) {
+        if (rename == null) { rename = []; }
+        rename.push(key);
+      }
     }
+  }
+  if (rename != null) {
+    for (var i = 0, l = rename.length; i < l; i++) {
+      var key = rename[i];
+      var val = held[key];
+      var methodName = val.methodName;
+      var newMethodName = methodName + this.__LZUID;
+      held[key] = new (val instanceof LzConstraintExpr?LzConstraintExpr:LzInitExpr)(newMethodName);
+      held[newMethodName] = held[methodName];
+      delete held[methodName];
+    }
+  }
 
-    if ( haveparrefs ){
-        this.heldArgs[prop] = parrefs;
-    }
+  super.__LZapplyArgs(stateArgs);
 }
 
 /**
@@ -332,7 +374,8 @@ function destroy ( ) {
   * Capture handlers that don't belong to the state for later
   * application to the parent (and pass the ones that do apply to the
   * state on to your superclass).
-* override */ function __LZstoreDelegates ( delarr ){
+  */
+/* override */ function __LZstoreDelegates ( delarr ){
     var pardels = [];
     var mydels = [];
 

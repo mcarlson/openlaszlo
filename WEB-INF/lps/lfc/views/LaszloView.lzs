@@ -329,17 +329,17 @@ function construct ( parent , args) {
 
     this.__makeSprite(args);
 
-    if ( 'width' in args || (('$refs' in args) && ('width' in args.$refs) && args.$refs.width) ){
+    if ( 'width' in args ){
         this.hassetwidth = true;
         this.__LZcheckwidth = false;
     }
-    if ( 'height' in args || (('$refs' in args) && ('height' in args.$refs) && args.$refs.height) ){
+    if ( 'height' in args ){
         this.hassetheight = true;
         this.__LZcheckheight = false;
     }
 
     var r =null;
-    if ('resource' in args && args['resource'] != null ){
+    if ('resource' in args && args['resource'] != null && (! (args.resource instanceof LzInitExpr)) ){
         r = args.resource;
         args.resource = LzNode._ignoreAttribute;
     }
@@ -1547,30 +1547,55 @@ function setRotation ( v ){
 }
 
 /**
-  * Sets the <attribute>alignment</attribute> for the view to the given
-  * value. The alignment is based on the size of this view as compared
-  * to the size of the view's immediate parenbgRef.
-  * @param String align : The <attribute>alignment</attribute> for the view. This is one of "left",
-  * "center", and "right"
+  * Sets the <attribute>alignment</attribute> for the view to the
+  * given value. The alignment is based on the size of this view as
+  * compared to the size of the view's immediate parenbgRef.
+  *
+  * @param String align: The <attribute>alignment</attribute> for the
+  * view. This is one of "left", "center", and "right"
+  *
+  * @devnote TODO: [2008-02-07 ptw] Apparently we never supported
+  * 'onalign', should we?
   */
 function setAlign ( align ){
-    if ( align == "left" ) {
-        this.releaseConstraint('x');
-        this.setAttribute('x', 0);
-    } else if ( align == "center" ){
-        var f = function (){
-            this.setAttribute( "x" , this.immediateparent.width /2
-                                - this.width /2);
+  if (this.align == align) return;
+  function map (align) {
+    switch (align) {
+      case "center": return "__LZalignCenter";
+      case "right": return "__LZalignRight";
+      case "left": return null;
+      default:
+        if ($debug) {
+          Debug.error("%w.%s(%w): Invalid argument.  Valid choices are: 'left', 'center', or 'right'.",
+                      this, arguments.callee, align);
         }
-        this.setPosConstraint( this.immediateparent , f , "width" );
-    } else if ( align == "right" ){
-        var f = function (){
-            this.setAttribute( "x" , this.immediateparent.width
-                                 - this.width );
-        }
-        this.setPosConstraint( this.immediateparent , f , "width" );
     }
+  }
+  var from = map(this.align);
+  var to = map(align);
+  if (from != null) {
+    this.releaseConstraintMethod(from);
+  }
+  if (to != null) {
+    this.applyConstraintMethod(to, [this.immediateparent, "width", this, "width"]);
+  } else {
+    this.setAttribute('x', 0);
+  }
+  this.align = align;
 }
+
+/** @access private */
+function __LZalignCenter () {
+  this.setAttribute( "x" , this.immediateparent.width /2
+                     - this.width /2);
+}
+
+/** @access private */
+function __LZalignRight () {
+  this.setAttribute( "x" , this.immediateparent.width
+                     - this.width);
+}
+
 
 /**
   * Sets the x offset  
@@ -1674,35 +1699,53 @@ prototype.getBounds.dependencies = function ( who , self ){
 }
 
 /**
-  * Sets the vertical alignment for the view to the given value. The alignment
-  * is based on the height of this view as compared to the height of the view's
-  * <attribute>immediateparent</attribute>.
-  * @param String valign : The vertical alignment for the view. This is one of "top",
-  * "middle", and "bottom"
+  * Sets the vertical alignment for the view to the given value. The
+  * alignment is based on the height of this view as compared to the
+  * height of the view's <attribute>immediateparent</attribute>.
+  *
+  * @param String valign: The vertical alignment for the view. This is
+  * one of "top", "middle", and "bottom"
+  *
+  * @devnote TODO: [2008-02-07 ptw] Apparently we never supported
+  * 'onvalign', should we?
   */
 function setValign ( valign ){
-    if ( valign == "top" ) {
-        this.releaseConstraint('y');
-        this.setAttribute('y', 0);
-    } else if ( valign == "middle" ){
-        var f = function (){
-            this.setAttribute( "y" , this.immediateparent.height /2
-                                - this.height /2);
+  if (this.valign == valign) return;
+  function map (align) {
+    switch (align) {
+      case "middle": return "__LZvalignMiddle";
+      case "bottom": return "__LZvalignBottom";
+      case "top": return null;
+      default:
+        if ($debug) {
+          Debug.error("%w.%s(%w): Invalid argument.  Valid choices are: 'top', 'middle', or 'bottom'.",
+                      this, arguments.callee, valign);
         }
-        this.setPosConstraint( this.immediateparent , f ,"height" );
-    } else if ( valign == "bottom" ){
-        var f = function (){
-            this.setAttribute( "y" , this.immediateparent.height
-                                - this.height);
-        }
-        this.setPosConstraint( this.immediateparent , f , "height" );
     }
+  }
+  var from = map(this.valign);
+  var to = map(valign);
+  if (from != null) {
+    this.releaseConstraintMethod(from);
+  }
+  if (to != null) {
+    this.applyConstraintMethod(to, [this.immediateparent, "height", this, "height"]);
+  } else {
+    this.setAttribute('y', 0);
+  }
+  this.valign = valign;
 }
 
 /** @access private */
-function setPosConstraint ( v , f , widthorheight ){
-    var d = [ v , widthorheight  , this , widthorheight ];
-    this.applyConstraint( widthorheight == "width" ? "x" : "y" , f , d );
+function __LZvalignMiddle () {
+  this.setAttribute( "y" , this.immediateparent.height /2
+                     - this.height /2);
+}
+
+/** @access private */
+function __LZvalignBottom () {
+  this.setAttribute( "y" , this.immediateparent.height
+                     - this.height);
 }
 
 /**

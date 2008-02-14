@@ -196,64 +196,59 @@ function LzUserClass (parent, args) {
     // TODO: [2006-05-25 ptw] Share this crud with LzNode
     // LzNode class initializer assures that we already have a
     // defaultattrs property that is an LzInheritedHash
-    var dattrs = newproto.defaultattrs;
     if (attrs) {
-      var dattr$refs = '$refs' in dattrs && dattrs.$refs;
-      var cleanup = null;
+      var dattrs = newproto.defaultattrs;
       var setters = newproto.setters;
       // Could this test be an instanceof test?
       var isstate = (('$isstate' in newproto) && (newproto.$isstate));
       for ( var k in attrs ) {
         var attrk = attrs[k];
-        // Check for literal overriding a constraint
-        if ( dattr$refs && dattr$refs[ k ] ){
-          if (! cleanup ) { cleanup = {} };
-          cleanup[k] = true;
-        }
-        // --- this is different from LzNode, why?
-        // if there's no setter, then attach this to the prototype
-        if (setters[k] == null && (! isstate)) {
-          if ((attrk instanceof Object) && (! (attrk instanceof Function))) {
-//             Debug.debug("%w: LzUserClass.initialize: NOT merging %s", this, k);
+
+        if (! (attrk instanceof LzInitExpr)) {
+          // if there's no setter, then attach this to the prototype
+          // TODO: [2008-02-11 ptw] this is different from LzNode, why?
+          // It means things without setters won't get the magic merge
+          // treatment (which is a hack, but it seems wrong to not merge
+          // just because you don't have a setter).  I guess the
+          // intent here is to save setting constant values in each
+          // instance so this is a micro-optimization, somewhat
+          // broken.
+          if (setters[k] == null && (! isstate)) {
+            newproto.addProperty( k, attrk );
+            // If there is a property that would have been shadowed,
+            // you have to hide that from applyArgs, or you will get
+            // clobbered!
+            if (k in dattrs) {
+              dattrs[k] = LzNode._ignoreAttribute;
+            }
+            continue;
           }
-          newproto.addProperty( k, attrk );
-          continue;
-        }
-        // Check for object and array merges
-        if (attrk instanceof Object) {
-          var dattrk = dattrs[k];
-          if (dattrk instanceof Object) {
-            if ( attrk instanceof Array ) {
-//               Debug.debug("%w: LzUserClass.initialize: merging Array %s", this, k);
-              dattrs[ k ] = attrk.concat( dattrk );
-              continue;
-            } else if (typeof attrk == 'object') {
-//               Debug.debug("%w: LzUserClass.initialize: merging Object %s", this, k);
-              var tmp = new LzInheritedHash(dattrk);
-              for (var j in attrk) {
-                tmp[j] = attrk[j];
+          // Check for object and array merges
+          // NOTE: [2008-01-22 ptw] This is just whacky, but it is
+          // required for back-compatibility.  IWBNI this were
+          // handled at compile-time
+          if (attrk instanceof Object) {
+            var dattrk = dattrs[k];
+            if (dattrk instanceof Object && (! (dattrk instanceof LzInitExpr))) {
+              if ( attrk instanceof Array ) {
+//                 Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
+                dattrs[ k ] = attrk.concat( dattrk );
+                continue;
+              } else if (typeof attrk == 'object') {
+//                 Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
+                var tmp = new LzInheritedHash(dattrk);
+                for (var j in attrk) {
+                  tmp[j] = attrk[j];
+                }
+                dattrs[ k ] = tmp;
+                continue;
               }
-              dattrs[ k ] = tmp;
-              continue;
             }
           }
         }
-        // Just a normal value, install it
+//         Debug.debug("%w.%s: NOT merging %s (%w)", this, arguments.callee, k, attrk);
+        // Just a normal value (or LzInitExpr), install it
         dattrs[k] = attrk;
-      }
-      // Finish literal over constraint processing
-      if (cleanup) {
-        // We are going to shadow some defaults, so create a
-        // clean hash to do that in if we don't already have
-        // one.
-        if (! dattrs.hasOwnProperty('$refs')) {
-          //we know the defaultattrs has $refs, so attach it
-          dattrs.$refs = new LzInheritedHash(dattr$refs);
-        }
-        var ia = LzNode._ignoreAttribute;
-        for (var k in cleanup) {
-          dattrs.$refs[ k ] = ia;
-        }
       }
     }
 }

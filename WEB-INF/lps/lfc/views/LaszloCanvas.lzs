@@ -475,12 +475,14 @@ function initiatorAddNode ( e , n ){
   * @devnote N.B.: replaces LzNode.__LZcallInit, so must be kept in sync with that
   */
 function __LZcallInit ( an ){
+    // Canvas-only:  Don't bother with preventSubInit
     if (this.isinited) return;
 
     //do this now, so that others know that they're too late
     this.isinited = true;
 
     this.__LZresolveReferences();
+    if (this.__LZstyleConstraints) this.__LZapplyStyleConstraints();
     var sl = this.subnodes;
     if (sl) {
         var i = 0;
@@ -503,14 +505,22 @@ function __LZcallInit ( an ){
         }
     }
 
+    // Register in the source locator table, if debugging
+    if ($debug) {
+        if (this.__LZsourceLocation) {
+            LzNode.sourceLocatorTable[this.__LZsourceLocation] = this;
+        }
+    }
+
     this.init();
+    // Canvas-only: Why? TODO: [2008-02-01 ptw] Ask max
     this.sprite.init(true);
     if (this.oninit.ready) this.oninit.sendEvent( this );
     if (this.datapath && this.datapath.__LZApplyDataOnInit) {
         this.datapath.__LZApplyDataOnInit();
     }
     
-    // Note canvas end
+    // Canvas-only: Note _canvas_ end, stop startup profiler
     if ($profile) {
         Profiler.event('done: #canvas');
         // Default is to start the Profiler ASAP, and stop it in

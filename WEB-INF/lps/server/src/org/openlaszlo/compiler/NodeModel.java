@@ -720,7 +720,8 @@ solution =
                       ComparisonMap attrs, ComparisonMap events,
                       ComparisonMap references, ComparisonMap paths,
                       ComparisonMap styles) {
-        if (cattr.type == cattr.ATTRIBUTE || cattr.type == cattr.EVENT) {
+        if (cattr.type == cattr.ATTRIBUTE || cattr.type == cattr.EVENT ||
+            (cattr.type == cattr.REFERENCE) || (cattr.type == cattr.PATH)) {
             if (attrs.containsKey(name, caseSensitive)) {
                 env.warn(
 /* (non-Javadoc)
@@ -732,18 +733,6 @@ solution =
                     ,element);
             }
             attrs.put(name, cattr.value);
-        } else if ((cattr.type == cattr.REFERENCE) || (cattr.type == cattr.PATH)) {
-            if (references.containsKey(name, caseSensitive)) {
-                env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="redefining reference '" + p[0] + "' which has already been defined on " + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-706", new Object[] {name, getMessageName()})
-                    ,element);
-            }
-            references.put(name, cattr.value);
         } else if (cattr.type == cattr.STYLE) {
             if (styles.containsKey(name, caseSensitive)) {
                 env.warn(
@@ -752,6 +741,8 @@ solution =
                     element);
             }
             styles.put(name, cattr.value);
+        } else {
+            assert false: "Unknown cattr.type: " + cattr.type;
         }
     }
 
@@ -1353,40 +1344,45 @@ solution =
             // Handle when cases
             // N.B., $path and $style are not really when values, but
             // there you go...
-            if (when.equals(WHEN_PATH)) {
-                return new CompiledAttribute(
-                    CompiledAttribute.PATH,
-                    srcloc + ScriptCompiler.quote(value) + "\n");
+            if (when.equals(WHEN_PATH) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+                String installer = "setAttribute";
+                String pragmas = "";
+                String kind = "LzInitExpr";
+                if (when.equals(WHEN_PATH)) {
+                    installer = "dataBindAttribute";
+                    pragmas =
+                        // Should be unnecessary for JS2 methods
+                        "\n#pragma 'withThis'\n";
+                } else if (when.equals(WHEN_ONCE)) {
+                    pragmas =
+                        // Should be unnecessary for JS2 methods
+                        "\n#pragma 'withThis'\n";
+                } else if (when.equals(WHEN_ALWAYS)) {
+                    pragmas =
+                        "\n#pragma 'constraintFunction'\n" +
+                        // Should be unnecessary for JS2 methods
+                        "\n#pragma 'withThis'\n";
+                    kind = "LzConstraintExpr";
+                } else {
+                    assert false : "Unhandled when value: " + when;
+                }
+                String bindername = "$lzc$bind_" + name;
+                Function binder = new Function(
+                    bindername,
+                    "",
+                    pragmas +
+                    "this." + installer + "(" +
+                    ScriptCompiler.quote(name) + "," +
+                    "\n#beginAttribute\n" + srcloc + canonicalValue + "\n#endAttribute\n)",
+                    srcloc);
+                // Add the binder as a method
+                attrs.put(bindername, binder);
+                // Return an initExpr as the 'value' of the attribute
+                return new CompiledAttribute("new " + kind + "(" + ScriptCompiler.quote(bindername) +")");
             } else if (when.equals(WHEN_STYLE)) {
                 return new CompiledAttribute(
                     CompiledAttribute.STYLE,
                     srcloc + value + "\n");
-            } else if (when.equals(WHEN_ONCE)) {
-                return new CompiledAttribute(
-                    CompiledAttribute.REFERENCE,
-                    "function " +
-                    parent_name + "_" + name + "_once" +
-                    " () {" +
-                    "\n#pragma 'withThis'\n" +
-                    // Use this.setAttribute so that the compiler
-                    // will recognize it for inlining.
-                    "this.setAttribute(" +
-                    ScriptCompiler.quote(name) + " , " +
-                    "\n#beginAttribute\n" + srcloc + canonicalValue + "\n#endAttribute\n)}");
-            } else if (when.equals(WHEN_ALWAYS)) {
-                return new CompiledAttribute(
-                    CompiledAttribute.REFERENCE,
-                    "function " +
-                    parent_name + "_" + name + "_always" +
-                    " () {" +
-                    "\n#pragma 'constraintFunction'\n" +
-                    "\n#pragma 'withThis'\n" +
-                    // Use this.setAttribute so that the compiler
-                    // will recognize it for inlining.
-                    "this.setAttribute(" +
-                    ScriptCompiler.quote(name) + ", " +
-                    "\n#beginAttribute\n" + srcloc + canonicalValue +
-                    "\n#endAttribute\n)}");
             } else if (when.equals(WHEN_IMMEDIATELY)) {
                 if ((CanvasCompiler.isElement(source) &&
                      ("width".equals(name) || "height".equals(name))) ||

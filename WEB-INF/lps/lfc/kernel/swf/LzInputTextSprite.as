@@ -1,7 +1,7 @@
 /**
   * LzInputTextSprite.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -96,8 +96,10 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     //        if empty text content was supplied, use DEFAULT_WIDTH
 
 
-    //(args.width == null && typeof(args.$refs.width) != "function")
-
+    //(args.width == null || args.width instanceof LzInitExpr)
+    // NOTE: [2008-02-13 ptw] No one will fess up to understanding why
+    // we treat the presence of a constraint on width differently than
+    // height.
     if (args.width == null) {
         // if there's text content, measure it's width
         if (this.text != null && this.text.length > 0) {
@@ -114,7 +116,7 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight 
     // 
-    if (args.height == null && typeof(args.$refs.height) != "function") {
+    if (args.height == null || args.height instanceof LzInitExpr) {
         this.sizeToHeight = true;
         // set autoSize to get text measured
         textclip.autoSize = true;
