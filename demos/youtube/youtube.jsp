@@ -11,7 +11,7 @@
 <%!
 
 /* X_LZ_COPYRIGHT_BEGIN ****************************************************
- * Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.               *
+ * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.         *
  * Use is subject to license terms.                                        *
  * X_LZ_COPYRIGHT_END ******************************************************/
 
@@ -199,18 +199,22 @@
         Document result)
     {
         String pageUrl =
-            "http://www.YouTube.com/watch?v=";
-        pageUrl += id;
+            "http://www.youtube.com/v/" + id;
 
-        BufferedReader inputFile = null;
+        // Based on http://www.jeroenwijering.com/?thread=5484#msg50818
+        // Get Location header and parse strings from that...
+        String redirURL = null;
         try {
             URL u = new URL(pageUrl);
-            inputFile =
-                new BufferedReader(
-                    new InputStreamReader(
-                        u.openStream()));
+            HttpURLConnection redir = (java.net.HttpURLConnection)u.openConnection();
+            redir.setFollowRedirects(false);
+            redir.connect();
+            redirURL = redir.getHeaderField("Location");
+            if (redirURL == null) {
+                throw new Exception("No Location header found");
+            }
         } catch (Exception e) {
-            reportError("Could not load url.", result);
+            reportError("Could not load url " + redirURL + ": " + e.toString(), result);
             return;
         } // try
 
@@ -219,57 +223,34 @@
 
         String videoId = "";
         String tId = "";
-        while (true) {
-            String line = null;
 
-            try {
-                line = inputFile.readLine();
-            } catch (IOException e) {
-                line = null;
-            }
-
-            if (line == null) {
-                break;
-            }
-
-            int start =
-                line.indexOf("swfArgs");
-            if (start == -1) {
-                continue;
-            } else {
-                // Extract the video_id from the args line
-                Pattern vidpat = Pattern.compile("video_id:'[\\w\\d]+'?");
-                Pattern tpat = Pattern.compile("t:'[\\w\\d]+'?");
-                Matcher vidmatcher = vidpat.matcher(line);
-                Matcher tmatcher = tpat.matcher(line);
-                if ( vidmatcher.find() ) {
-                    videoId = (line.substring(vidmatcher.start(), vidmatcher.end()));
-                    videoId = videoId.substring(10, videoId.length()-1);
-                } else {
-                    reportError("video_id argument not found in HTML page", result);
-                    return;
-                }
-                if ( tmatcher.find() ) {
-                    tId = (line.substring(tmatcher.start(), tmatcher.end()));
-                    tId = tId.substring(3, tId.length()-1);
-                } else {
-                    reportError("t argument not found in HTML page", result);
-                    return;
-                }
-            }
-
-            String url =
-                "http://www.youtube.com/get_video?video_id=" + videoId + "&t=" + tId;
-            
-            resultEl.setAttribute("id", videoId);
-            resultEl.setAttribute("t", tId);
-            resultEl.setAttribute("url", url);
-            result.setRootElement(resultEl);
-
+        // Extract the video_id and t fields from 
+        Pattern vidpat = Pattern.compile("video_id=[\\w\\d]+'?");
+        Pattern tpat = Pattern.compile("t=[\\w\\d\\-]+'?");
+        Matcher vidmatcher = vidpat.matcher(redirURL);
+        Matcher tmatcher = tpat.matcher(redirURL);
+        if ( vidmatcher.find() ) {
+            videoId = (redirURL.substring(vidmatcher.start(), vidmatcher.end()));
+            videoId = videoId.substring(9, videoId.length());
+        } else {
+            reportError("video_id argument not found in HTML page", result);
+            return;
+        }
+        if ( tmatcher.find() ) {
+            tId = (redirURL.substring(tmatcher.start(), tmatcher.end()));
+            tId = tId.substring(2, tId.length());
+        } else {
+            reportError("t argument not found in URL", result);
             return;
         }
 
-        reportError("Could not find SWFObject at url " + pageUrl, result);
+        String url =
+            "http://www.youtube.com/get_video?video_id=" + videoId + "&t=" + tId;
+
+        resultEl.setAttribute("id", videoId);
+        resultEl.setAttribute("t", tId);
+        resultEl.setAttribute("url", url);
+        result.setRootElement(resultEl);
     }
 
 
