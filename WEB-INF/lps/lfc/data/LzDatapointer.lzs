@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LFC
@@ -889,6 +889,23 @@ function getNodeOffset (){
     }
     this.p.parentNode.__LZupdateCO();
     return this.p.__LZo + 1;
+}
+
+/**
+  * Gets the nodeType of the node that the datapointer is pointing to.
+  * @return Integer: one of LzDataNode.ELEMENT_NODE, LzDataNode.TEXT_NODE, 
+  * LzDataNode.DOCUMENT_NODE or <code>undefined</code> if this datapointer 
+  * does not point to a valid node
+  */
+function getNodeType (){
+    if ( ! this.p ) {
+        if ( $debug ) {
+            Debug.info("%s: p is null in %s", arguments.callee, this);
+        }
+        return;
+    }
+    
+    return this.p.nodeType;
 }
 
 /**
