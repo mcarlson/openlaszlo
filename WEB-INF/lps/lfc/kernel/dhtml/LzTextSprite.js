@@ -271,13 +271,13 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
 
     // Empty the cache when full, but do not reset the counter because
     // IE holds onto the object.
-    if (this._sizecache.counter > 0 && this._sizecache.counter % this.__sizecacheupperbound == 0) {
-        this._sizecache = {counter: this._sizecache.counter};
+    if (LzTextSprite.prototype._sizecache.counter > 0 && LzTextSprite.prototype._sizecache.counter % LzTextSprite.prototype.__sizecacheupperbound == 0) {
+        LzTextSprite.prototype._sizecache = {counter: LzTextSprite.prototype._sizecache.counter};
         if (root) {
             root.innerHTML = '';
         }
     }
-    if (this._sizecache[style] == null) this._sizecache[style] = {};
+    if (LzTextSprite.prototype._sizecache[style] == null) LzTextSprite.prototype._sizecache[style] = {};
 
     if (! root) {
         root = document.createElement('div');
@@ -286,7 +286,7 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
         document.body.appendChild(root);
     }
 
-    var _textsizecache = this._sizecache[style];
+    var _textsizecache = LzTextSprite.prototype._sizecache[style];
     if (! _textsizecache[string]) {
         var size = {};
 
@@ -297,13 +297,13 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
             var tagname = 'span';
             var mdiv = _textsizecache['lzdiv~~~' + tagname];
             if (mdiv == null) {
-                var html = '<' + tagname + ' id="testSpan' + this._sizecache.counter + '"';
+                var html = '<' + tagname + ' id="testSpan' + LzTextSprite.prototype._sizecache.counter + '"';
                 html += ' style="' + style + '">';
                 html += string;
                 html += '</' + tagname + '>';
                 root.insertAdjacentHTML('beforeEnd', html);
 
-                mdiv = document.all['testSpan' + this._sizecache.counter];
+                mdiv = document.all['testSpan' + LzTextSprite.prototype._sizecache.counter];
                 _textsizecache['lzdiv~~~' + tagname] = mdiv;
             }
         } else {
@@ -342,7 +342,7 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
             }
         }    
         _textsizecache[string] = size;
-        this._sizecache.counter++;
+        LzTextSprite.prototype._sizecache.counter++;
     }
     return _textsizecache[string];
 }
