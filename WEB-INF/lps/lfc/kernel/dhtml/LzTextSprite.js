@@ -41,7 +41,6 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
     this.setFontName(args.font);
     this.setFontStyle(args.fontstyle);
     this.setFontSize(args.fontsize);
-    this.text = args.text;
 }
 
 // Should reflect CSS defaults in LzSprite.js

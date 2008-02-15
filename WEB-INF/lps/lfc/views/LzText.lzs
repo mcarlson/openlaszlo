@@ -221,7 +221,7 @@ function construct ( parent, args ) {
         this.setMaxLength(args.maxlength);
     }
 
-    this.text =  (!('text' in args) || args.text == null) ? "" : args.text;
+    this.text =  (!('text' in args) || args.text == null || args.text instanceof LzConstraintExpr || args.text instanceof LzInitExpr) ? "" : args.text;
     if(this.maxlength != null && this.text.length > this.maxlength){
         this.text = this.text.substring(0, this.maxlength);
     }

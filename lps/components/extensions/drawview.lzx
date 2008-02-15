@@ -1,6 +1,6 @@
 <!---
    
-    @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+    @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
                Use is subject to license terms.
    
     @access public
@@ -564,9 +564,6 @@
             var oncontext = LzDeclaredEvent;
     
             function construct(parent,args) {
-                args['width'] = args['width'] > -1 ? args.width : null;
-                args['height'] = args['height'] > -1 ? args.height : null;
-                args['clip'] = args['clip'] == true ? args.clip : null;
                 super.construct(parent, args);
                 this.context = this.getMCRef();
                 this.context.cacheAsBitmap = args['cachebitmap'] != null ? args['cachebitmap'] : this.cachebitmap;

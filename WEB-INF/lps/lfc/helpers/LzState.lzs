@@ -193,7 +193,7 @@ function apply ( ){
     // release any constraints you are about to override
     var pia = parent._instanceAttrs;
     for (var key in this.heldArgs) {
-      if (key in pia && pia[key] instanceof LzConstraintExpr) {
+      if (pia && key in pia && pia[key] instanceof LzConstraintExpr) {
         var constraintMethodName = pia[key].methodName;
         parent.releaseConstraintMethod(constraintMethodName);
       }
@@ -272,7 +272,7 @@ function remove () {
     // NOTE: [2008-02-13 ptw] Keep in sync with LzNode#__LZresolveReferences
     var pia = parent._instanceAttrs;
     for (var key in this.heldArgs) {
-      if (key in pia && pia[key] instanceof LzConstraintExpr) {
+      if (pia && key in pia && pia[key] instanceof LzConstraintExpr) {
         var constraintMethodName = pia[key].methodName;
         // TODO: [2008-02-06 ptw] the dependency computation needs
         // to be a method also, probably stored in the
