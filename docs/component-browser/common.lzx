@@ -67,9 +67,9 @@
         <attribute name="textcolor" value="0x000000" type="number" />
         <attribute name="textselectedcolor" value="0xFFFFFF" type="number" />
         <method event="onclick">
-            var file = (this.file != '' ? this.file : this.text + '.html');
+            var file = (this.file != '' ? this.file : 'lz.' + this.text + '.html');
             var url = canvas.urlprefix + file;
-            LzBrowser.loadURL('javascript: var wptr = window.open("' + url + '","laszlo-reference","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
+            LzBrowser.loadURL('javascript: var wptr = window.open("' + url + '","laszlo_reference","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
         </method>
         <method event="onmouseup">
             setAttribute('fgcolor', this.texthilitecolor)
@@ -85,6 +85,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

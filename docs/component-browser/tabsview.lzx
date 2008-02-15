@@ -5,10 +5,10 @@
     <class name="tabsbarview1" layout="axis: y">
         <view width="50%" layout="axis: x">
             <border width="${parent.width}" height="20" cbgcolor="${canvas.lcdcolor}">
-                <textlink file="lz-tabsbar.html">tabsbar</textlink>
+                <textlink>tabsbar</textlink>
             </border>
             <border width="${parent.width}" height="20" cbgcolor="${canvas.lcdcolor}">
-                <textlink file="lz-tabsbar.html">tab</textlink>
+                <textlink>tab</textlink>
             </border>
         </view>
         <view width="50%" layout="axis: x">
@@ -54,7 +54,7 @@
     <class name="tabsview1" layout="axis: x">
         <view width="25%" layout="axis: y">
             <border width="${parent.width}" height="20" cbgcolor="${canvas.lcdcolor}">
-                <textlink file="lz-tabs.html">tabs</textlink>
+                <textlink>tabs</textlink>
             </border>
             <border width="${parent.width}" height="80" cbgcolor="${canvas.basecolor}">
                 <textlink>basetabs</textlink>
@@ -62,7 +62,7 @@
         </view>
         <view width="25%" layout="axis: y">
             <border width="${parent.width}" height="20" cbgcolor="${canvas.lcdcolor}">
-                <textlink file="lz-tabpane.html">tabpane</textlink>
+                <textlink>tabpane</textlink>
             </border>
             <border width="${parent.width}" height="80" cbgcolor="${canvas.basecolor}">
                 <textlink>basetabpane</textlink>
@@ -81,6 +81,6 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
