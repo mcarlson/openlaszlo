@@ -1527,19 +1527,22 @@ LzSprite.prototype.__discardElement = function (element) {
     if (LzSprite.prototype.quirks.ie_leak_prevention) {
         // Used instead of node.removeChild to eliminate 'pseudo-leaks' in IE - see http://outofhanwell.com/ieleak/index.php?title=Fixing_Leaks
         //alert('__discardElement' + element);
-        if (element.owner) element.owner = null;
-        var garbageBin = document.getElementById('__LZIELeakGarbageBin');
-        if (!garbageBin) {
-            garbageBin = document.createElement('DIV');
-            garbageBin.id = '__LZIELeakGarbageBin';
-            garbageBin.style.display = 'none';
-            document.body.appendChild(garbageBin);
-        }
+        if( ( element.nodeType >= 1 ) && ( element.nodeType < 13 ) )  {
+            // ensures element is valid node 
+            if (element.owner) element.owner = null;
+            var garbageBin = document.getElementById('__LZIELeakGarbageBin');
+            if (!garbageBin) {
+                garbageBin = document.createElement('DIV');
+                garbageBin.id = '__LZIELeakGarbageBin';
+                garbageBin.style.display = 'none';
+                document.body.appendChild(garbageBin);
+            }
 
-        // move the element to the garbage bin
-        garbageBin.appendChild(element);
-        garbageBin.innerHTML = '';
-        //garbageBin.outerHTML = '';
+            // move the element to the garbage bin
+            garbageBin.appendChild(element);
+            garbageBin.innerHTML = '';
+            //garbageBin.outerHTML = '';
+        }
     } else {
         if (element.parentNode) element.parentNode.removeChild(element);
     }
