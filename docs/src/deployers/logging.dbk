@@ -39,8 +39,8 @@ include:</para>
 The Jakarta Tomcat 5.0 container, by default, keeps its logs 
 in <literal>$TOMCAT_HOME/logs</literal>.   Depending on how tomcat was started, it may also display some of its
 logs in a console or terminal window as well.
-The <ulink url="http://jakarta.apache.org/tomcat/tomcat-5.0-doc/config/index.html">Tomcat 5.0 configuration guide</ulink> 
-has details on its <ulink url="http://jakarta.apache.org/tomcat/tomcat-5.0-doc/config/logger.html">Logger</ulink> configuration.  
+See the <ulink url="http://tomcat.apache.org/">Tomcat web site</ulink> 
+for more information.  
 In general, see the documentation on your container for details on how to locate and configure these logs.
 </para>
 
