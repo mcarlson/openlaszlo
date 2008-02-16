@@ -1,6 +1,6 @@
   
 <canvas height="200" proxied="false">
-      <drawview>
+      <drawview height="200" width="200">
         <handler name="oninit">
          this.moveTo(100,100);
          this.lineTo(200,100);
@@ -17,6 +17,6 @@
       </drawview>
     </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

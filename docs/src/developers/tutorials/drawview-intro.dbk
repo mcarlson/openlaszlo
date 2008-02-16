@@ -30,20 +30,11 @@ glance a view seems like just another view:</para>
    <textobject><textdata fileref="programs/drawview-intro-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>view and drawview</title><programlisting role="lzx-embednew"><filename>drawview-intro-$1.lzx</filename><parameter/><code>
-    &lt;canvas height="75" proxied="false"&gt;
-      &lt;simplelayout spacing="5" axis="x"/&gt;
-      &lt;view height="50" width="50" bgcolor="red"/&gt;
-      &lt;drawview height="50" width="50" bgcolor="blue"/&gt;
-    &lt;/canvas&gt;
-</code></programlisting><programlisting>
-    &lt;canvas height="75" proxied="false"&gt;
-      &lt;simplelayout spacing="5" axis="x"/&gt;
-      &lt;view height="50" width="50" bgcolor="red"/&gt;
-      &lt;drawview height="50" width="50" bgcolor="blue"/&gt;
-    &lt;/canvas&gt;
-</programlisting><?lzx-edit programs/drawview-intro-$1.lzx></example?>
+
 <para>
+<note>
+  <para>Previously, <literal>&lt;drawview&gt;</literal> auto-sized when OpenLaszlo only supported Flash. To make this work in DHTML and Flash consistently, the size must now be explicitly set, because DHTML doesn't support autosize.</para>
+</note>
 There are no additional tag attributes in the <literal>drawview</literal> class beyond those of <literal>view</literal>.  However, <literal>drawview</literal> has four attributes in addition to those it inherits:
 </para>
 <itemizedlist spacing="compact"><listitem><para>fillStyle</para></listitem><listitem><para>globalAlpha</para></listitem><listitem><para>lineWidth</para></listitem><listitem><para>strokeStyle</para></listitem></itemizedlist>
@@ -61,7 +52,7 @@ making it visible.
 For example, this code produces nothing visible:</para>
 <example role="live-example"><title>invisble drawing</title><programlisting>
     &lt;canvas height="200" proxied="false"&gt;
-      &lt;drawview&gt;
+      &lt;drawview height="50" width="50"&gt;
         &lt;handler name="oninit"&gt;
          this.moveTo(100,100)
          this.lineTo(200,100)
