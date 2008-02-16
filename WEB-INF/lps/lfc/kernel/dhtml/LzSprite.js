@@ -1255,6 +1255,10 @@ LzSprite.prototype.destroy = function() {
         this.__discardElement(this.__LZcanvas);
     }
     this.__ImgPool = null;
+
+    if (this.quirks.ie_leak_prevention) {
+        delete this.__sprites[this.uid];
+    }
 }
 
 /**

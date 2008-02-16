@@ -268,10 +268,16 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
 
     var root = document.getElementById('lzTextSizeCache');
 
-    // Empty the cache when full, but do not reset the counter because
-    // IE holds onto the object.
     if (LzTextSprite.prototype._sizecache.counter > 0 && LzTextSprite.prototype._sizecache.counter % LzTextSprite.prototype.__sizecacheupperbound == 0) {
-        LzTextSprite.prototype._sizecache = {counter: LzTextSprite.prototype._sizecache.counter};
+        LzTextSprite.prototype._sizecache = {counter: 0};
+        if (LzSprite.prototype.quirks.ie_leak_prevention) {
+            var obj = LzTextSprite.prototype._sizedomcache;
+            var f = LzSprite.prototype.__discardElement;
+            for( var i in obj ) {
+                f( obj[i] );
+            }
+            LzTextSprite.prototype._sizedomcache = {}
+        }
         if (root) {
             root.innerHTML = '';
         }
