@@ -8,7 +8,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -147,12 +147,13 @@ public class XMLGrabber extends Converter {
         public void run() {
             try {
                 writeXMLDataToOutputStream();
-                pout.flush();
-                pout.close();
-            } catch (XmlPullParserException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+            } catch (Exception e) {
+            } finally {
+                try {
+                    pout.flush();
+                    pout.close();
+                } catch (Exception e) {
+                }
             }
         }
 
