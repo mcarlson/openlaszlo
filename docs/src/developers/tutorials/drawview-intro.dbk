@@ -33,7 +33,7 @@ glance a view seems like just another view:</para>
 
 <para>
 <note>
-  <para>Previously, <literal>&lt;drawview&gt;</literal> auto-sized when OpenLaszlo only supported Flash. To make this work in DHTML and Flash consistently, the size must now be explicitly set, because DHTML doesn't support autosize.</para>
+  <para>Previously, <literal>&lt;drawview&gt;</literal> auto-sized when OpenLaszlo only supported Flash. To make this work in DHTML and Flash consistently, <literal>size</literal> must now be explicitly set, because DHTML doesn't support autosize. <literal>size</literal> can be changed at runtime, but it may clear the canvas, in which case a new <literal>oncontext</literal> event is sent to signal a redraw is needed.  <literal>size</literal> need not be a fixed value; it can also be set to percentage values or constraint values.</para>
 </note>
 There are no additional tag attributes in the <literal>drawview</literal> class beyond those of <literal>view</literal>.  However, <literal>drawview</literal> has four attributes in addition to those it inherits:
 </para>
