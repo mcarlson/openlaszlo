@@ -148,7 +148,7 @@
     </method>
 
     <method name="openSequence" args="seq">
-        if (seq[0] == this.name) {
+        if (seq[0] == this.title) {
             // first, open self
             this.header.open();
             if (seq.length > 1) {
@@ -181,7 +181,7 @@
         </simplelayout>
     </view>
     <itembutton name="header" level="$once{classroot.level}"
-       text="$once{classroot.name}" width="${classroot.width}"/>
+       text="$once{classroot.title}" width="${classroot.width}"/>
   </class>
 
   <!-- ItemButton class the visible portion of navButtons -->
@@ -265,7 +265,7 @@
                 
               } else {
                 if (title ==null){
-                   title = classroot.name;
+                   title = classroot.title;
                 }
                 LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
                                   '&title=' + title + '&action=' + action + '&lzr=' + runtime, 
@@ -312,7 +312,7 @@
   </class>
 
   <class name="navbutton" extends="menubutton" width="${immediateparent.width}">
-      <attribute name="name" value="$path{'@name'}"/>
+      <attribute name="title" value="$path{'@name'}"/>
   </class>
 
   <!-- APPLICATION -->
@@ -357,7 +357,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
