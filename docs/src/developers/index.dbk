@@ -167,9 +167,9 @@
       <xi:fallback><para>Missing: Docbook Local Style Guide</para></xi:fallback>
     </xi:include>
     
-    <xi:include href="docbook-code.dbk">
+<!--    <xi:include href="docbook-code.dbk">
       <xi:fallback><para>Missing: Docbook Code Comment Style Guide</para></xi:fallback>
-    </xi:include>
+    </xi:include>-->
     
     <xi:include href="js2doc-ref.dbk">
       <xi:fallback><para>Missing: JS2Doc Reference</para></xi:fallback>
