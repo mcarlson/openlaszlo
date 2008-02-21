@@ -83,6 +83,15 @@ var onselect = LzDeclaredEvent;
   */
 var ontext = LzDeclaredEvent;
 
+/** @access private */
+var _onfocusDel = null;
+
+/** @access private */
+var _onblurDel = null;
+
+/** @access private */
+var _modemanagerDel = null;
+
 /** @access private
   * @modifiers override 
   */
@@ -111,6 +120,28 @@ function construct ( parent , args ){
                                             "onblur" );
     this._modemanagerDel = new LzDelegate( this, "_modechanged", LzModeManager,
                                             "onmode" );
+}
+
+/**
+  * @access private
+  */
+function destroy (recursiveCall) {
+    if (this._onfocusDel) {
+        this._onfocusDel.unregisterAll();
+        this._onfocusDel = null;
+    }
+    
+    if (this._onblurDel) {
+        this._onblurDel.unregisterAll();
+        this._onblurDel = null;
+    }
+    
+    if (this._modemanagerDel) {
+        this._modemanagerDel.unregisterAll();
+        this._modemanagerDel = null;
+    }
+    
+    super.destroy.apply(this, arguments);
 }
 
 /**
