@@ -1,0 +1,72 @@
+<canvas>
+  <include href="utils/performance" />
+  <script>
+    <![CDATA[
+    var iterations = 2000;
+    var txt = new lz.text(canvas);
+    function empty () {
+      for (var i = 0; i < iterations; i++) {}
+    }
+
+    function instanceOf() {
+        for (var i = 0; i < iterations; i++) {
+            txt instanceof LzText;
+        }
+    }
+
+    function typeOf() {
+        for (var i = 0; i < iterations; i++) {
+            typeof txt == 'object';
+        }
+    }
+
+    function typeOfInstanceOf() {
+        for (var i = 0; i < iterations; i++) {
+            typeof txt == 'object' && txt instanceof LzText;
+        }
+    }
+
+    function propertyLookup() {
+        for (var i = 0; i < iterations; i++) {
+            txt['tagname'] == 'text';
+        }
+    }
+
+    txt = '';
+    function typeOfInstanceOfFail() {
+        for (var i = 0; i < iterations; i++) {
+            typeof txt == 'object' && txt instanceof LzText;
+        }
+    }
+
+    var f = function() {}
+    var o = {};
+    var ar = [];
+
+    function typeOfFunction() {
+        for (var i = 0; i < iterations; i++) {
+            typeof f == 'function';
+        }
+    }
+
+    function instanceOfFunction() {
+        for (var i = 0; i < iterations; i++) {
+            f instanceof Function;
+        }
+    }
+
+    (new Measurement({'instanceof': instanceOf,
+                        'typeof': typeOf,
+                        'typeof with instanceof': typeOfInstanceOf,
+                        'property lookup': propertyLookup,
+                        'typeof with instanceof with short circuit': typeOfInstanceOfFail,
+                        'typeof function': typeOfFunction,
+                        'instanceof function': instanceOfFunction,
+                        'empty': empty})).run();
+    ]]>
+  </script>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>
