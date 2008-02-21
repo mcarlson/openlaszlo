@@ -32,10 +32,10 @@
         }
     }
 
-    txt = '';
+    bar = '';
     function typeOfInstanceOfFail() {
         for (var i = 0; i < iterations; i++) {
-            typeof txt == 'object' && txt instanceof LzText;
+            typeof bar == 'object' && bar instanceof LzText;
         }
     }
 
