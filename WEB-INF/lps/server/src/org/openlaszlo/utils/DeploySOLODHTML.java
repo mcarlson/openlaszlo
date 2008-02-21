@@ -49,11 +49,38 @@ public class DeploySOLODHTML {
     public static void main(String args[])
       throws IOException
     {
-        deploy("/Users/hqm/openlaszlo/trunk/test/deploy/hello.lzx", "/tmp/solo.zip", "FOO", null, null);
+        File tmpdir = File.createTempFile("foo", "bar").getParentFile();
+        deploy(true,
+               null,
+               null,
+               null,
+               "/Users/hqm/openlaszlo/trunk/test/deploy/hello.lzx",
+               new FileOutputStream("/tmp/solo.zip"),
+               tmpdir,
+               null);
     }
 
 
-    public static void deploy(String sourcepath, String outputpath, String title, String appwidth, String appheight)
+    /**
+     * Create SOLO deploy archive or wrapper page for app
+     *
+     * @param wrapperonly if true, write only the wrapper html file to the output stream. If false, write entire zipfile archive.
+     * @param canvas If canvas is null, compile the app, and write an entire SOLO zip archive to outstream. Otherwise, use the supplied canvas.
+     * @param lpspath optional, if non-null, use as path to LPS root.
+     * @param url optional, if non-null, use as URL to application in the wrapper html file.
+     * @param sourcepath pathname to application source file
+     * @param outstream stream to write output to
+     * @param tmpdir temporary file to hold compiler output, can be null
+     * @param  title optional, if non-null, use as app title in wrapper html file
+     */
+    public static void deploy(boolean wrapperonly,
+                              Canvas canvas,
+                              String lpspath,
+                              String url,
+                              String sourcepath,
+                              FileOutputStream outstream,
+                              File tmpdir,
+                              String title)
       throws IOException
     {
         // Set this to make a limit on the size of zip file that is created
@@ -61,17 +88,27 @@ public class DeploySOLODHTML {
         int warnZipFileSize = 10000000; // warn at 10MB of content (before compression)
         boolean warned = false;
 
-        if (title == null) {  title = ""; }
 
-        // Compile the app to get the canvas and the 'binary'
         File sourcefile = new File(sourcepath);
-        File tempFile = File.createTempFile(sourcefile.getName(), null);
-        Properties compilationProperties = new Properties();
-        // Compile a SOLO app with DHTML runtime.
-        compilationProperties.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, "dhtml");
-        compilationProperties.setProperty(CompilationEnvironment.PROXIED_PROPERTY, "false");
-        org.openlaszlo.compiler.Compiler compiler = new org.openlaszlo.compiler.Compiler();
-        Canvas canvas = compiler.compile(sourcefile, tempFile, compilationProperties);
+
+        // If no canvas is supplied, compile the app to get the canvas and the 'binary'
+        if (canvas == null)  {
+
+            // Create tmp dir if needed
+            if (tmpdir == null) {
+                tmpdir = File.createTempFile("solo_output", "js").getParentFile();
+            }
+
+            File tempFile = File.createTempFile(sourcefile.getName(), null, tmpdir);
+            Properties compilationProperties = new Properties();
+            // Compile a SOLO app with DHTML runtime.
+            compilationProperties.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, "dhtml");
+            compilationProperties.setProperty(CompilationEnvironment.PROXIED_PROPERTY, "false");
+            org.openlaszlo.compiler.Compiler compiler = new org.openlaszlo.compiler.Compiler();
+            canvas = compiler.compile(sourcefile, tempFile, compilationProperties);
+        }
+
+        if (title == null) {  title = sourcefile.getName(); }
 
         // Get the HTML wrapper by applying the html-response XSLT template
         ByteArrayOutputStream wrapperbuf = new ByteArrayOutputStream();
@@ -81,15 +118,36 @@ public class DeploySOLODHTML {
 
         String appname = sourcefile.getName();
         String DUMMY_LPS_PATH = "__DUMMY_LPS_ROOT_PATH__";
+        if (lpspath == null) {
+            lpspath = DUMMY_LPS_PATH;
+        }
+        if (url == null) {
+            url = appname;
+        }
+
+
         String request = "<request " +
-            "lps=\"" + DUMMY_LPS_PATH + "\" " +
-            "url=\"" + appname + "\" " +
+            "lps=\"" + lpspath + "\" " +
+            "url=\"" + url + "\" " +
             "/>";
         
         String canvasXML = canvas.getXML(request);
         Properties properties = new Properties();
         TransformUtils.applyTransform(styleSheetPathname, properties, canvasXML, wrapperbuf);
         String wrapper = wrapperbuf.toString();
+
+        if (wrapperonly) {
+            // write wrapper to outputstream
+            try {
+                byte wbytes[] = wrapper.getBytes();
+                outstream.write(wbytes);
+            } finally {
+                if (outstream != null) {
+                    outstream.close();
+                }
+            }            
+            return;
+        }
 
         /* Create a DOM for the Canvas XML descriptor  */
         Element canvasElt = parse(canvasXML);
@@ -99,7 +157,7 @@ public class DeploySOLODHTML {
         
         // remove the servlet prefix and leading slash
         //  src="/legals/lps/includes/embed-dhtml.js"
-        wrapper = wrapper.replaceAll(DUMMY_LPS_PATH + "/", "");
+        wrapper = wrapper.replaceAll(lpspath + "/", "");
         
         // Replace object file URL with SOLO filename
         // Lz.dhtmlEmbedLFC({url: 'animation.lzx?lzt=object&lzproxied=false&lzr=dhtml'
@@ -118,12 +176,6 @@ public class DeploySOLODHTML {
         // replace title
         // wrapper = wrapper.replaceFirst("<title>.*</title>", "<title>"+title+"</title>\n");
         // extract width and height with regexp
-
-        appwidth = canvasElt.getAttribute("width");
-        appheight = canvasElt.getAttribute("height");
-
-        int nwidth = 640;
-        int nheight = 400;
 
         String htmlfile = "";
 
@@ -173,7 +225,7 @@ public class DeploySOLODHTML {
             // Create the ZIP file
             SimpleDateFormat format = 
                 new SimpleDateFormat("EEE_MMM_dd_yyyy_HH_mm_ss");
-            ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(outputpath));
+            ZipOutputStream zout = new ZipOutputStream(outstream);
 
             // create a byte array from lzhistory wrapper text
             htmlfile = new File(appname).getName()+".html";
