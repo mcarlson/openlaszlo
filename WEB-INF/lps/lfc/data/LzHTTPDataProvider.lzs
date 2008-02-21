@@ -234,7 +234,7 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         var proxied = dreq.proxied;
 
-        if (data.childNodes[0].nodeName == "error") {
+        if (proxied && data.childNodes[0].nodeName == "error") {
             this.setRequestError(dreq, data.childNodes[0].attributes['msg']);
             dreq.onstatus.sendEvent( dreq );
             return;
