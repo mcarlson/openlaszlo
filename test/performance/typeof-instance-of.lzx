@@ -33,6 +33,11 @@
     }
 
     bar = '';
+    function instanceOfFail() {
+        for (var i = 0; i < iterations; i++) {
+            bar instanceof LzText;
+        }
+    }
     function typeOfInstanceOfFail() {
         for (var i = 0; i < iterations; i++) {
             typeof bar == 'object' && bar instanceof LzText;
@@ -60,6 +65,7 @@
                         'typeof with instanceof': typeOfInstanceOf,
                         'property lookup': propertyLookup,
                         'typeof with instanceof with short circuit': typeOfInstanceOfFail,
+                        'instanceof that fails': instanceOfFail,
                         'typeof function': typeOfFunction,
                         'instanceof function': instanceOfFunction,
                         'empty': empty})).run();
