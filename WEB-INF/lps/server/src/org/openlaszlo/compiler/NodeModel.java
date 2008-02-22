@@ -721,7 +721,8 @@ solution =
                       ComparisonMap references, ComparisonMap paths,
                       ComparisonMap styles) {
         if (cattr.type == cattr.ATTRIBUTE || cattr.type == cattr.EVENT ||
-            (cattr.type == cattr.REFERENCE) || (cattr.type == cattr.PATH)) {
+            (cattr.type == cattr.REFERENCE) || (cattr.type == cattr.PATH) ||
+            (cattr.type == cattr.STYLE)) {
             if (attrs.containsKey(name, caseSensitive)) {
                 env.warn(
 /* (non-Javadoc)
@@ -733,14 +734,6 @@ solution =
                     ,element);
             }
             attrs.put(name, cattr.value);
-        } else if (cattr.type == cattr.STYLE) {
-            if (styles.containsKey(name, caseSensitive)) {
-                env.warn(
-                    // TODO [2006-08-22 ptw] i18n this
-                    "duplicate $style binding for '" + name + "' in " + getMessageName(),
-                    element);
-            }
-            styles.put(name, cattr.value);
         } else {
             assert false: "Unknown cattr.type: " + cattr.type;
         }
@@ -1344,19 +1337,25 @@ solution =
             // Handle when cases
             // N.B., $path and $style are not really when values, but
             // there you go...
-            if (when.equals(WHEN_PATH) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+            if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
                 String installer = "setAttribute";
-                String pragmas = "";
-                String kind = "LzInitExpr";
-                if (when.equals(WHEN_PATH)) {
+                String body = "\n#beginAttribute\n" + srcloc + canonicalValue + "\n#endAttribute\n)";
+                String pragmas =
+                        // Should be unnecessary for JS2 methods
+                        "\n#pragma 'withThis'\n";
+                String kind = "LzOnceExpr";
+                if (when.equals(WHEN_ONCE)) {
+                    // default
+                } else if (when.equals(WHEN_PATH)) {
                     installer = "dataBindAttribute";
-                    pragmas =
-                        // Should be unnecessary for JS2 methods
-                        "\n#pragma 'withThis'\n";
-                } else if (when.equals(WHEN_ONCE)) {
-                    pragmas =
-                        // Should be unnecessary for JS2 methods
-                        "\n#pragma 'withThis'\n";
+                } else if (when.equals(WHEN_STYLE)) {
+                    // Styles are processed as constraints, although
+                    // they are not compiled as constraints.  Whether
+                    // a style results in a constraint or not cannot
+                    // be determined until the style property value is
+                    // derived (at run time)
+                    kind = "LzConstraintExpr";
+                    installer = "__LZstyleBindAttribute";
                 } else if (when.equals(WHEN_ALWAYS)) {
                     pragmas =
                         "\n#pragma 'constraintFunction'\n" +
@@ -1373,16 +1372,12 @@ solution =
                     pragmas +
                     "this." + installer + "(" +
                     ScriptCompiler.quote(name) + "," +
-                    "\n#beginAttribute\n" + srcloc + canonicalValue + "\n#endAttribute\n)",
+                    body,
                     srcloc);
                 // Add the binder as a method
                 attrs.put(bindername, binder);
                 // Return an initExpr as the 'value' of the attribute
                 return new CompiledAttribute("new " + kind + "(" + ScriptCompiler.quote(bindername) +")");
-            } else if (when.equals(WHEN_STYLE)) {
-                return new CompiledAttribute(
-                    CompiledAttribute.STYLE,
-                    srcloc + value + "\n");
             } else if (when.equals(WHEN_IMMEDIATELY)) {
                 if ((CanvasCompiler.isElement(source) &&
                      ("width".equals(name) || "height".equals(name))) ||
@@ -1662,10 +1657,10 @@ solution =
             attrs.put("$delegates", delegateList);
         }
         if (!references.isEmpty()) {
-            attrs.put("$refs", references);
+            assert false : "There should not be any $refs";
         }
         if (!paths.isEmpty()) {
-            attrs.put("$paths", paths);
+            assert false : "There should not be any $paths";
         }
         if (datapath != null) {
             attrs.put("$datapath", datapath.asMap());
@@ -1675,34 +1670,8 @@ solution =
             // overridden by an inherited value from the class.
             attrs.put("datapath", "LzNode._ignoreAttribute");
         }
-
         if (!styles.isEmpty()) {
-            String styleMap;
-            try {
-                java.io.Writer writer = new java.io.StringWriter();
-                ScriptCompiler.writeObject(styles, writer);
-                styleMap = writer.toString();
-            } catch (java.io.IOException e) {
-                throw new ChainedException(e);
-            }
-            // NOTE: [2006-09-04 ptw] The $styles method _must_ create
-            // a new map each time, because the sub-class or instance
-            // may modify it.
-            attrs.put("$styles",
-                      new
-                      Function(
-                          "",
-                          "",
-                          "\n#beginContent" +
-                          "\n#pragma 'withThis'" +
-                          "\n#pragma 'methodName=$styles'" +
-                          "\nvar map = super.$styles() || (new Object);" +
-                          "\nvar s = " + styleMap + ";" +
-                          "\nfor (var k in s) { map[k] = s[k]; };" +
-                          "\nreturn map;" +
-                          "\n#endContent" +
-                          "\n")
-                      );
+            assert false : "There should not be any $styles";
         }
     }
 

@@ -127,6 +127,11 @@ setters.pooling = "__LZsetProperty";
   */
 setters.__LZsourceLocation = "__LZsetProperty";
 
+var heldargs;
+var releasedconstraints;
+var appliedchildren;
+var isapplied = false;
+
 /**
   * @access private
   */
@@ -134,7 +139,6 @@ function construct ( parent , args ){
     super.construct.apply(this, arguments);
     this.heldArgs = {};
     this.appliedChildren = [];
-    this.isapplied = false;
 }
 
 /**
@@ -194,8 +198,11 @@ function apply ( ){
     var pia = parent._instanceAttrs;
     for (var key in this.heldArgs) {
       if (pia && key in pia && pia[key] instanceof LzConstraintExpr) {
+        if (this.releasedconstraints == null) { this.releasedconstraints = []; }
         var constraintMethodName = pia[key].methodName;
-        parent.releaseConstraintMethod(constraintMethodName);
+        if (parent.releaseConstraintMethod(constraintMethodName)) {
+          this.releasedconstraints.push(constraintMethodName);
+        }
       }
     }
 
@@ -267,25 +274,29 @@ function remove () {
 
     this.appliedChildren = [];
 
-    // re-apply any constraints you released
-    var parent = this.parent;
-    // NOTE: [2008-02-13 ptw] Keep in sync with LzNode#__LZresolveReferences
-    var pia = parent._instanceAttrs;
-    for (var key in this.heldArgs) {
-      if (pia && key in pia && pia[key] instanceof LzConstraintExpr) {
-        var constraintMethodName = pia[key].methodName;
-        // TODO: [2008-02-06 ptw] the dependency computation needs
-        // to be a method also, probably stored in the
-        // LzConstraintExpr object
-        var cm = parent[constraintMethodName];
-        if ($debug) {
-          if (!(cm && cm instanceof Function)) {
-            Debug.debug("Bad constraint %w on %w", c, this);
-          }
-        }
-        var dependencyMethod = cm.dependencies;
-        parent.applyConstraintMethod(constraintMethodName , dependencyMethod.call(parent));
-      }
+    // This sounds good in theory, but breaks dragstate and
+    // resizestate which expect their effect to stick when they are
+    // removed.
+    if (this.releasedconstraints != null) {
+//       // re-apply any constraints you released
+//       var parent = this.parent;
+//       // NOTE: [2008-02-13 ptw] Keep in sync with LzNode#__LZresolveReferences
+//       var rc = this.releasedconstraints;
+//       for (var i = 0, l = rc.length; i < l; i++) {
+//         var constraintMethodName = rc[i];
+//         // TODO: [2008-02-06 ptw] the dependency computation needs
+//         // to be a method also, probably stored in the
+//         // LzConstraintExpr object
+//         var cm = parent[constraintMethodName];
+//         if ($debug) {
+//           if (!(cm && cm instanceof Function)) {
+//             Debug.debug("Bad constraint %w on %w", c, this);
+//           }
+//         }
+//         var dependencyMethod = cm.dependencies;
+//         parent.applyConstraintMethod(constraintMethodName , dependencyMethod.call(parent));
+//       }
+      this.releasedconstraints = null;
     }
 }
 
@@ -360,7 +371,8 @@ function destroy ( ) {
       var val = held[key];
       var methodName = val.methodName;
       var newMethodName = methodName + this.__LZUID;
-      held[key] = new (val instanceof LzConstraintExpr?LzConstraintExpr:LzInitExpr)(newMethodName);
+      // Clone the init expr with the new name
+      held[key] = new (val.constructor)(newMethodName);
       held[newMethodName] = held[methodName];
       delete held[methodName];
     }

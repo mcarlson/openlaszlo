@@ -117,7 +117,11 @@ mixin LzFormatter {
         } else {
           var decimals = strlen - (decimal + 1);
         }
-        for (var i = decimals; i < decMax; i++) value += '0';
+        if (decimals > decMax) {
+          value = value.substring(0, strlen - (decimals - decMax));
+        } else {
+          for (var i = decimals; i < decMax; i++) value += '0';
+        }
       } else {
         value = value.substring(0, decMax);
       }

@@ -1,4 +1,4 @@
-<!-- Copyright 2007 Laszlo Systems -->
+<!-- Copyright 2007, 2008 Laszlo Systems -->
 <library>
 
     <!-- [bshine 10.06.2006] This test validates (LPP-2894) The
@@ -14,8 +14,6 @@
             styleinnercolor : attr(myInnerColor);
         }
     </stylesheet>
-
-    <simplelayout axis="y" spacing="5" />
 
     <!-- This class has a bgcolor defined by a style and an inner view
          whose bgcolor is defined by a style that references an
@@ -46,41 +44,45 @@
     </class>
 
     <class name="lpp_4451" extends="happystyledbox" width="${parent.width/2}" />
+    <class name="lpp_4451_inverse" extends="happystyledbox" width="$style{'stylewidth'}" />
 
-    <happystyledbox id="sb0" />
+    <view id="testing" width="400" layout="axis: y; spacing: 5">
 
-    <!-- This box is maroon with an inner view of red -->
-    <happystyledbox id="sb1" bgcolor="maroon" innerColor="red" />
+      <happystyledbox id="sb0" />
 
-    <subclassbox id="sb2" />
-    <otherlassbox id="sb3" width="$style{'stylewidth'}"/>
+      <!-- This box is maroon with an inner view of red -->
+      <happystyledbox id="sb1" bgcolor="maroon" innerColor="red" />
 
-    <subclassbox id="sb4" />
+      <subclassbox id="sb2" />
+      <otherlassbox id="sb3" width="$style{'stylewidth'}"/>
 
-    <lpp_4451 id="sb5" width="$style{'stylewidth'}"/>
+      <subclassbox id="sb4" />
 
+      <lpp_4451 id="sb5" width="$style{'stylewidth'}"/>
+      <lpp_4451_inverse id="sb6" width="${parent.width/2}"/>
+    </view>
     <class name="CSSSubclassingTestCase" extends="TestCase" >
 
          <method name="testClassConstraint">
-             this.assertEquals(purple, sb0.getAttribute("bgcolor"));
-             this.assertEquals(fuchsia, sb0.inner.getAttribute("bgcolor"));
+             this.assertEquals(purple, sb0.getAttribute("bgcolor"), "Class CSS value");
+             this.assertEquals(fuchsia, sb0.inner.getAttribute("bgcolor"), "Class CSS attr");
          </method>
 
          <method name="testInstanceOverrideConstraint">
-             this.assertEquals(maroon, sb1.getAttribute("bgcolor"));
-             this.assertEquals(red, sb1.inner.getAttribute("bgcolor"));
+             this.assertEquals(maroon, sb1.getAttribute("bgcolor"), "Instance override CSS value");
+             this.assertEquals(red, sb1.inner.getAttribute("bgcolor"), "Instance override CSS attr");
          </method>
 
          <method name="testSubclassOverrideConstraint">
              <![CDATA[
-             this.assertEquals("150", sb2.getAttribute("width"));
-             this.assertEquals(navy, sb2.getAttribute("bgcolor")); // fails! [2007.05.28 bshine]
-             this.assertEquals(blue, sb2.inner.getAttribute("bgcolor"));
-             this.assertEquals(green, sb3.getAttribute("bgcolor")); // fails! [2007.05.28 bshine]
-             this.assertEquals(999, sb3.getAttribute("width"));
-             this.assertEquals(lime, sb3.inner.getAttribute("bgcolor"));
-             // FIXME: [2007-08-08 ptw] (LPP-4451) Uncomment when fixed
-             // this.assertEquals(999, sb5.width, "LPP-4451");
+             this.assertEquals("150", sb2.getAttribute("width"), "Subclass override attribute");
+             this.assertEquals(navy, sb2.getAttribute("bgcolor"), "Subclass override CSS value");
+             this.assertEquals(blue, sb2.inner.getAttribute("bgcolor"), "Subclass override CSS attr");
+             this.assertEquals(green, sb3.getAttribute("bgcolor"), "Subclass override CSS value");
+             this.assertEquals(999, sb3.getAttribute("width"), "Subclass CSS value override");
+             this.assertEquals(lime, sb3.inner.getAttribute("bgcolor"), "Subclass override CSS attr attribute");
+             this.assertEquals(999, sb5.width, "LPP-4451");
+             this.assertEquals(testing.width/2, sb6.width, "LPP-4451-inverse");
              ]]>
          </method>
      </class>

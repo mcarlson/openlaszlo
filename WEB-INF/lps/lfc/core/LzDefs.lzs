@@ -51,27 +51,90 @@ class LzDeclaredEventClass /* implements LzEvent */ {
 
 /**
  * Private class used to distinguish an init expression from an
- * initial value in node attributes
+ * initial value in node attributes.  All forms of 'constraints' are a
+ * subclass of this class
  * @access private
  */
 class LzInitExpr {
+}
+
+/**
+ * Private class used to define a 'once' or 'path' constraint
+ * @access private
+ */
+class LzOnceExpr extends LzInitExpr {
   var methodName:String;
-  function LzInitExpr(initMethod:String) {
+  function LzOnceExpr(initMethod:String) {
     this.methodName = initMethod;
   }
 }
 
 /**
- * Private class used to distinguish an constraint expression from an
- * initial value in node attributes
+ * Private class used to define an 'always' constraint
  * @access private
  */
-class LzConstraintExpr extends LzInitExpr {
+class LzConstraintExpr extends LzOnceExpr {
   function LzConstraintExpr(constraintMethod:String) {
     super(constraintMethod);
   }
 }
 
+/**
+ * Private class used to define a constraint in a style value
+ * @access private
+ */
+class LzStyleExpr extends LzInitExpr {
+  var sourceAttributeName:String;
+  function LzStyleExpr(sourceAttributeName:String) {
+    this.sourceAttributeName = sourceAttributeName;
+  }
+}
+
+/**
+ * Private class used to define an 'attr()' constraint
+ * @access private
+ */
+class LzStyleAttr extends LzStyleExpr {
+  function LzStyleAttr(sourceAttributeName:String) {
+    super(sourceAttributeName);
+  }
+};
+
+/**
+ * Private class used to create the binder for `LzStyleAttr` bindings.
+ *
+ * @param lz.node target: The target node
+ * @param String dest: The destination attribute
+ * @param String source: The source attribute
+ *
+ *@access private
+ */
+class LzStyleAttrBinder {
+  var target:LzNode;
+  var dest:String;
+  var source:String;
+
+  function LzStyleAttrBinder (target:LzNode, dest:String, source:String) {
+    this.target = target;
+    this.dest = dest;
+    this.source = source;
+  }
+
+  function bind() {
+    var target = this.target;
+    target.setAttribute(this.dest, target[this.source]);
+  }
+}
+
+/**
+ * Private class used to define an identifier constraint
+ * @access private
+ */
+class LzStyleIdent extends LzStyleExpr {
+  function LzStyleIdent(sourceAttributeName:String) {
+    super(sourceAttributeName);
+  }
+}
 
 /**
   * Used to efficiently clone hashtables using Object's

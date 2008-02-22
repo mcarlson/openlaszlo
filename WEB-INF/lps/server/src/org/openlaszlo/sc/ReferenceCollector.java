@@ -1,7 +1,7 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -64,8 +64,8 @@ public class ReferenceCollector {
     return s;
   }
 
-  // f(args...) -> f["dependencies"](undefined, args...)
-  // a.f(args...) -> f["dependencies"](a, args...)
+  // f(args...) -> f["dependencies"](this, undefined, args...)
+  // a.f(args...) -> f["dependencies"](this, a, args...)
   private SimpleNode fsubst(SimpleNode node) {
     SimpleNode fn = node.get(0);
     SimpleNode callee;

@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -298,11 +298,11 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
          switch (lu.getLexicalUnitType()) {
 
          case LexicalUnit.SAC_ATTR:
-             str = "function () { return this['" + processEscapes(lu.getStringValue()) + "']; }";
+             str = "new LzStyleAttr('" + processEscapes(lu.getStringValue()) + "')";
            break;
 
          case LexicalUnit.SAC_IDENT:
-             str = "function () { return global['" + processEscapes(lu.getStringValue()) + "']; }";
+             str = "new LzStyleIdent('" + processEscapes(lu.getStringValue()) + "')";
            break;
 
          case LexicalUnit.SAC_STRING_VALUE:

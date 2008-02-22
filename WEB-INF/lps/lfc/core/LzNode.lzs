@@ -167,11 +167,6 @@ function LzNode ( parent , attrs , children , instcall ){
         // If a replicator was made, we're deleted, if pooling is off.
         if (this.__LZdeleted) { return; }
 
-        var styleMap = this.$styles();
-        if ( styleMap ) {
-            this.__LZstyleConstraints = this.__LZapplyStyleMap( styleMap, attrs );
-        }
-
         /**
           * @todo 2006-05-24 ptw Adam says this is a hack that we should get
           * rid of.
@@ -495,88 +490,52 @@ if ($debug) {
     }
 }
 
-
-/**
-  * Default style map.  Will be overridden for classes that have $style
-  * constraints.
-  *
-  * @access private
-  */
-function $styles() {
-  return null;
-}
-
-/**
-  * Process the style map.
-  * For each style-constrained attribute, if it does not have an
-  * explicit value defined by the instance, lookup the css value that
-  * it should be constrained to.  If it is a simple value, set it
-  * directly, otherwise save it to be applied after the instance is
-  * fully inited (since the constraint may depend on other attributes).
-  *
-  * @param Object stylemap: a map of attribute names to the css style
-  * they are to be constrained to.
-  * @param Object initialArgs: the attributes specified explicitly for
-  * this instance (which may override style constraints).
-  * @access private
-  */
-function __LZapplyStyleMap( stylemap, initialArgs ){
-    var styleConstraints = {};    
-    for ( var k in stylemap ){
-        //we are going to bypass the CSS API and call the underlying
-        //implementation because we're concerned about speed
-        if (initialArgs[k] != null) {
-            // Don't get CSS value if it would be overridden by a instance/class attribute later
-            continue;
-        }
-        var v = LzCSSStyle.getPropertyValueFor( this , stylemap[ k ] );
-
-        // This is a hack because people want to give color styles as
-        // Ox... which is not valid CSS, so they pass it as a string.
-        // They really should be using #...
-        if ((typeof v == 'string') && (v.length > 2) && (v.indexOf('0x') == 0) && (! isNaN(v))) {
-            if ($debug) {
-                Debug.warn("Invalid CSS value for %w.%s: `%#w`.  Use: `#%06x`.", this, k, v, Number(v));
-            }
-            v = Number(v);
-        }
-
-        // A style does not override an explicit attribute
-        if (! (k in initialArgs)) {
-            // A style that is a function is a constraint
-            if (v instanceof Function) {
-                //Only set styleConstraints[k] if this[k] is null.  See LPP-2894 - CSS: subclasses and instances can't override style constraints set on superclass* 
-                if (this[k] == null) {
-//                    Debug.warn("setting %w[%w] to %w, was %w", this, k, v, this[k]);
-                    styleConstraints[k] = v;
-                }
-            } else {
-//                 Debug.format("%w[%s] (%#w) %#w -> %#w", this, k, stylemap[k], this.k, v);
-                if (v != null) this.setAttribute(k, v);
-            }
-        }
+  /**
+   * Bind an attribute to a (CSS) style property
+   *
+   * @param String attr: The name of the attribute to bind
+   * @param String prop: The name of the CSS property whose value the
+   * attribute will be bound to
+   *
+   * @access private
+   */
+  function __LZstyleBindAttribute(attr, prop) {
+    // we are going to bypass the CSS API and call the underlying
+    // implementation because we're concerned about speed
+    var val = LzCSSStyle.getPropertyValueFor(this, prop);
+    // This is a hack because people want to give color styles as
+    // Ox... which is not valid CSS, so they pass it as a string.
+    // They really should be using #...
+    if ((typeof styleValue == 'string') && (styleValue.length > 2) && (styleValue.indexOf('0x') == 0) && (! isNaN(styleValue))) {
+      if ($debug) {
+        Debug.warn("Invalid CSS value for %w.%s: `%#w`.  Use: `#%06x`.", this, k, styleValue, Number(styleValue));
+      }
+      styleValue = Number(styleValue);
     }
-    return styleConstraints;
-}
-
-
-/**
-  * Process style constraints
-  *
-  * Compute each of the style constraints that were saved above and
-  * apply them
-  *
-  * @keywords private
-  */
-function __LZapplyStyleConstraints() {
-    var styleConstraints = this.__LZstyleConstraints;
-    for ( var k in styleConstraints ) {
-        var fn = styleConstraints[ k ];
-        var v = fn.call(this);
-//             Debug.format("%w[%s] (%#w) %#w -> %#w", this, k, stylemap[k], this.k, v);
-        this.setAttribute(k, v);
+    // Style expressions are constraints
+    if (val instanceof LzStyleExpr) {
+      var source = val.sourceAttributeName;
+      if (val instanceof LzStyleAttr) {
+        // Create a new binder to update the destination attribute,
+        var binder = new LzStyleAttrBinder(this, attr, source);
+        // register it on the source attribute,
+        if (! this.__LZdelegates) { this.__LZdelegates = []; }
+        // TODO: [2008-02-20 ptw] The delegate and binder could be
+        // collapsed into a single object, a custom delegate with the
+        // bind method as its execute method, but I don't think these
+        // are common enough to warrant optimization at this time.
+        this.__LZdelegates.push(new LzDelegate(binder, 'bind', this, 'on' + source));
+        // bind it
+        binder.bind();
+      } else if (val instanceof LzStyleIdent) {
+        this.setAttribute(attr, global[source]);
+      } else if ($debug) {
+        Debug.error("Unknown style expression %w", val);
+      }
+    } else {
+      this.setAttribute(attr, val);
     }
-}
+  };
 
 
 /**
@@ -745,7 +704,6 @@ function __LZcallInit ( ){
     // Install computed initializations
     this.__LZresolveReferences();
 
-    if (this.__LZstyleConstraints) this.__LZapplyStyleConstraints();
     var sl = this.subnodes;
     if (sl) {
         var i = 0;
@@ -858,9 +816,11 @@ function __LZapplyArgs ( args , constcall ){
             if (val instanceof LzConstraintExpr) {
               if (constraints == null) { constraints = []; }
               constraints.push(val);
-            } else {
+            } else if (val instanceof LzOnceExpr) {
               if (inits == null) { inits = []; }
               inits.push(val);
+            } else if ($debug) {
+              Debug.debug("Unknown init expr: %w", val);
             }
             // NOTE: [2007-05-16 ptw] This check ensures that each
             // constrained attribute exists in the new instance.
@@ -1218,6 +1178,12 @@ function __LZaddSetter ( key , val ) {
   * bind the attribute.
   */
 function dataBindAttribute ( attr , path  ) {
+    if ( $debug ){
+      if ( path == null ){
+        Debug.warn( 'No value for %w.%s="$path{%w}"', this, attr, path );
+      }
+    }
+
     if ( !this.datapath ){
         this.setDatapath( "." );
     }
@@ -1328,8 +1294,11 @@ function __LZresolveReferences () {
                         Debug.debug("Bad constraint %w on %w", c, this);
                     }
                 }
-                var dependencyMethod = cm.dependencies;
-                this.applyConstraintMethod(constraintMethodName , dependencyMethod.call(this));
+                var dependencies = null;
+                if ('dependencies' in cm) {
+                  dependencies = cm.dependencies.call(this);
+                }
+                this.applyConstraintMethod(constraintMethodName , dependencies);
             }
         }
         // Backward compatibility -- are there any other delayed setters?
@@ -1421,12 +1390,11 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
         if (! ((arguments.length == 2) &&
                (typeof constraintMethodName == 'string') &&
                (this[constraintMethodName] instanceof Function) &&
-               (dependencies instanceof Array))) {
+               (dependencies == null || (dependencies instanceof Array)))) {
             Debug.error("%w.%s: invalid arguments %w", this, arguments.callee, arguments);
         }
     }
-    var l = dependencies.length;
-    if (l){
+    if (dependencies && dependencies.length > 0){
         if ( !this.__LZdelegates ){
             this.__LZdelegates = [];
         }
@@ -1443,7 +1411,7 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
         // a separate delegate for each dependency, and people have
         // written code that only works because of this loophole...
         var dp;
-        for (var i = 0; i < l; i += 2) {
+        for (var i = 0, l = dependencies.length; i < l; i += 2) {
             dp = dependencies[i];
             if (dp) {
                 var d = new LzDelegate(this, constraintMethodName, dp, "on" + dependencies[i + 1]);
@@ -1456,6 +1424,25 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
     // before the constraint was installed).
     this[constraintMethodName]();
 }
+
+  /**
+   * Release a constraint on an attribute
+   *
+   * Only works for initial constraints.  Constraints applied at
+   * runtime should be applied and released with
+   * `applyConstraintMethod` and `releaseConstraintMethod`.
+   *
+   * @param String attr: The name of the attribute to release the
+   * constraint from
+   */
+  function releaseConstraint(attr:String) {
+    var c = this._instanceAttrs[attr];
+    if (c instanceof LzConstraintExpr) {
+      var m = c.methodName;
+      return this.releaseConstraintMethod(m);
+    }
+    return false;
+  }
 
 /**
   * Release a constraint method

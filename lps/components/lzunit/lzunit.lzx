@@ -342,9 +342,17 @@ TestError.prototype.toString = function toString() {
           Debug.debug('result is null on fail call: "' + message + '"');
         }
         if ($debug) {
+          var file = null, line = null;
+          // Find the failing test, which is four frames up
+          var bt = Debug.backtrace(4);
+          if (bt != null) {
+            var sf = bt[bt.length - 1];
+            file = sf.filename();
+            line = sf.lineno();
+          }
           Debug.freshLine();
           // create an error, which will include a backtrace, if applicable
-          Debug.__write(new LzError(null, null, message));
+          Debug.__write(new LzError(file, line, message));
         }
     </method>
 
