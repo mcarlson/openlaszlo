@@ -1,22 +1,18 @@
-
-<canvas>
-  <view x="250" width="20" height="20" bgcolor="red"
-        y="${m.y}"/>
-
-  <view x="300" width="20" height="20" bgcolor="blue">  
-    <handler name="oninit">
-      var f = function () {   
-        this.setAttribute("y", m.y);       
-      }
-      var d = [m, "y"];
-      this.applyConstraint("y", f, d);
-    </handler>
-  </view>
-
-  <window id="m" x="10" title="Drag me" width="160" height="20"/>  
+<canvas> 
+  <view x="250" width="20" height="20" bgcolor="red" y="${m.y}"/> 
+  <view x="300" width="20" height="20" bgcolor="blue"> 
+    <handler name="oninit"> 
+      var d = [m, "y"]; 
+      this.applyConstraintMethod("myConstraintMethod", d); 
+    </handler> 
+    <method name="myConstraintMethod" > 
+      this.setAttribute("y", m.y); 
+    </method> 
+  </view> 
+  <window id="m" x="10" title="Drag me" width="160" height="20"/> 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

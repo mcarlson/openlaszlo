@@ -15,8 +15,8 @@ simple expression. Constraints may be used for non-visual attributes
 as well.</para>
 
 <para/></section><section><title>Syntax for creating and removing constraints</title>
-<para>Constraints may be created in either of two ways:</para>
-<itemizedlist spacing="compact"><listitem><para>in a tag, using the ${} syntax to tie the value of one attribute to that of another</para></listitem><listitem><para>in script, using the <indexterm><primary><literal>applyConstraint()</literal></primary></indexterm><methodname>applyConstraint()</methodname> method</para></listitem><listitem><para>in script, using delegates</para></listitem></itemizedlist>
+<para>Constraints may be created as follows:</para>
+<itemizedlist spacing="compact"><listitem><para>in a tag, using the ${} syntax to tie the value of one attribute to that of another</para></listitem><listitem><para>in script, using the <indexterm><primary><literal>applyConstraintMethod()</literal></primary></indexterm><methodname>applyConstraintMethod()</methodname> method</para></listitem><listitem><para>in script, using delegates</para></listitem></itemizedlist>
 <para>These are described in turn below.</para>
 <para>There is no method for removing constraints.  Therefore if you have a constraint that you wish to sometimes be in force and other times not be in force, you should use <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: state-->
@@ -38,20 +38,20 @@ s.</para>
 
 <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis> note the lousy explanation below </remark></para>
 
-<para>The following example uses the <indexterm><primary><literal>applyConstraint()</literal></primary></indexterm><methodname>applyConstraint()</methodname> method inherited from <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> in order to create a constraint at
+<para>The following example uses the <indexterm><primary><literal>applyConstraintMethod()</literal></primary></indexterm><methodname>applyConstraintMethod()</methodname> method inherited from <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> in order to create a constraint at
 runtime. You'll see that the <literal>setConstraint</literal> method has the same effect as the simple expression <literal>y=${m.y}</literal>
 </para>
 
 
 <example role="live-example">
-   <title>Runtime constraintes with applyConstraint</title>
+   <title>Runtime constraintes with applyConstraintMethod</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
    </programlisting>
 </example>
 
 
-<para><literal>f</literal> is a callback function that is required for the <indexterm><primary><literal>applyConstraint()</literal></primary></indexterm><methodname>applyConstraint()</methodname> method. <varname>d</varname> 
+<para><literal>f</literal> is a callback function that is required for the <indexterm><primary><literal>applyConstraintMethod()</literal></primary></indexterm><methodname>applyConstraintMethod()</methodname> method. <varname>d</varname> 
 is an array consisting of a pointer to a reference node, and the attribute to bind to.</para>
 <para/></section><section><title>Delegates and constraints</title> 
 <para>Laszlo applications can use something called a <glossterm>delegate</glossterm> in script to associate a 
