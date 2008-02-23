@@ -502,7 +502,7 @@ if ($debug) {
   function __LZstyleBindAttribute(attr, prop) {
     // we are going to bypass the CSS API and call the underlying
     // implementation because we're concerned about speed
-    var val = LzCSSStyle.getPropertyValueFor(this, prop);
+    var styleValue = LzCSSStyle.getPropertyValueFor(this, prop);
     // This is a hack because people want to give color styles as
     // Ox... which is not valid CSS, so they pass it as a string.
     // They really should be using #...
@@ -513,9 +513,9 @@ if ($debug) {
       styleValue = Number(styleValue);
     }
     // Style expressions are constraints
-    if (val instanceof LzStyleExpr) {
-      var source = val.sourceAttributeName;
-      if (val instanceof LzStyleAttr) {
+    if (styleValue instanceof LzStyleExpr) {
+      var source = styleValue.sourceAttributeName;
+      if (styleValue instanceof LzStyleAttr) {
         // Create a new binder to update the destination attribute,
         var binder = new LzStyleAttrBinder(this, attr, source);
         // register it on the source attribute,
@@ -527,13 +527,13 @@ if ($debug) {
         this.__LZdelegates.push(new LzDelegate(binder, 'bind', this, 'on' + source));
         // bind it
         binder.bind();
-      } else if (val instanceof LzStyleIdent) {
+      } else if (styleValue instanceof LzStyleIdent) {
         this.setAttribute(attr, global[source]);
       } else if ($debug) {
-        Debug.error("Unknown style expression %w", val);
+        Debug.error("Unknown style expression %w", styleValue);
       }
     } else {
-      this.setAttribute(attr, val);
+      this.setAttribute(attr, styleValue);
     }
   };
 
