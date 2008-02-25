@@ -132,6 +132,9 @@ class LzHTTPDataProvider extends LzDataProvider {
         
         // If an explicit post body content arg wasn't supplied, make
         // a url-form-encoded string from the queryparams data.
+
+        var cachebreak = "__lzbc__="+(new Date()).getTime();
+
         var postbody = dreq.postbody;
         if (postbody == null && qparams != null) {
             var names = qparams.getNames();
@@ -140,6 +143,15 @@ class LzHTTPDataProvider extends LzDataProvider {
                 q += sep + name + '=' + encodeURIComponent(qparams.getValue(name));
                 sep = '&';
             }
+
+            // [LPP-5368] If this is a SOLO POST request, put the
+            // 'cache-breaking' arg into this post body. This prevents
+            // the case of an empty POST body, which would cause the
+            // Flash player to turn it into a GET request.
+            if (!proxied && (dreq.method == "POST") &&  !dreq.clientcacheable) {
+                q += cachebreak;
+            }
+
             postbody = q;
         }
 
@@ -155,7 +167,6 @@ class LzHTTPDataProvider extends LzDataProvider {
             postbody = null;
         }
 
-        var cachebreak = "__lzbc__="+(new Date()).getTime();
         // convert url back to string
         url = lzurl.toString();
         var url;
@@ -175,10 +186,16 @@ class LzHTTPDataProvider extends LzDataProvider {
         }  else {
             // break the browser cache by adding a unique string to the url
             if (!dreq.clientcacheable) {
-                if (lzurl.query == null) {
-                    lzurl.query = cachebreak;
+                if (dreq.method == "POST") {
+                    //POST case:
+                    // cache break arg already added to post body
                 } else {
-                    lzurl.query += ("&" + cachebreak);
+                    // GET case: add to url query portion
+                    if (lzurl.query == null) {
+                        lzurl.query = cachebreak;
+                    } else {
+                        lzurl.query += ("&" + cachebreak);
+                    }
                 }
             }
 
