@@ -655,6 +655,17 @@
             should be placed in <varname>item</varname>. You can use
             <code>placement="item"</code>. The <varname>children</varname> view is
             the defaultplacement for basetree.</p>
+              
+              <p>Note that a data replicated tree passes its XPath
+                  <!--link--> down to its subtrees, so avoid specifying an absolute XPath
+                  such as "<code>mydataset:/*</code>" or your tree will infinite
+                  loop. Instead, use a relative XPath:</p>
+              
+              <programlisting>
+                  &lt;tree datapath="mydataset:/" showroot="false"&gt;
+                  &lt;tree datapath="*" /&gt;
+                  &lt;/tree&gt;
+              </programlisting>
             
             <p>The following diagram demonstrates how <varname>item</varname> and
             <varname>children</varname> are associated in tree. Since
@@ -708,7 +719,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
