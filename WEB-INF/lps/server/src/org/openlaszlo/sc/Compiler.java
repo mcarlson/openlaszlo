@@ -380,6 +380,49 @@ public class Compiler {
     }
   }
 
+  /**
+   * @param source javascript source for a function (including function keyword, etc.)
+   * @param name name, will get name_dependencies as name of function
+   */
+  public String dependenciesForExpression(String estr) {
+    String fname = "$lsc$dependencies";
+    String source = "function " + fname + " () {" +
+      "\n#pragma 'constraintFunction'\n" +
+      "\n#pragma 'withThis'\n" +
+      // Use this.setAttribute so that the compiler
+      // will recognize it for inlining.
+      "this.setAttribute(\"x\", " +
+                    "\n#beginAttribute\n" + estr +
+                    "\n#endAttribute\n)}";
+
+    return dependenciesForFunction(source);
+  }
+
+  /**
+   * @param source javascript source for a function
+   */
+  private String dependenciesForFunction(String source) {
+    SimpleNode node = new Parser().parse(source);
+    // Expect ASTProgram -> ASTModifiedDefinition -> ASTFunctionDeclaration
+    SimpleNode fcn = node.get(0).get(0);
+    if (!(fcn instanceof ASTFunctionDeclaration))
+      throw new CompilerError("Internal error: bad AST for constraints");
+
+    ReferenceCollector dependencies = new ReferenceCollector(options.getBoolean(Compiler.COMPUTE_METAREFERENCES));
+
+    SimpleNode[] children = fcn.getChildren();
+    int stmtpos = (children.length - 1);
+    for (;stmtpos < children.length; stmtpos++) {
+      dependencies.visit(children[stmtpos]);
+    }
+    SimpleNode depExpr = dependencies.computeReferencesAsExpression();
+    String result = new ParseTreePrinter().visit(depExpr);
+    if (options.getBoolean(Compiler.PRINT_CONSTRAINTS)) {
+      System.out.println(result);
+    }
+    return result;
+  }
+
   //
   // Compiler Options
   //
@@ -849,6 +892,6 @@ public class Compiler {
 }
 
 /**
- * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

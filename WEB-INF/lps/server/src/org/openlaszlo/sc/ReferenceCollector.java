@@ -27,6 +27,7 @@ public class ReferenceCollector {
   Set metareferences;
   Set metafunctions;
   String depth = "";
+  Compiler.Parser parser = new Compiler.Parser();
 
   public ReferenceCollector() {
     this(false);
@@ -64,9 +65,13 @@ public class ReferenceCollector {
     return s;
   }
 
+  // TODO: [2006-02-22 dda] Remove this 'subfunction' version soon.
+  //    'subfunction' naming (Class.f() and Class.f.dependencies())
+  //     does not work in SWF9.
+
   // f(args...) -> f["dependencies"](this, undefined, args...)
   // a.f(args...) -> f["dependencies"](this, a, args...)
-  private SimpleNode fsubst(SimpleNode node) {
+  private SimpleNode fsubst_using_subfunction(SimpleNode node) {
     SimpleNode fn = node.get(0);
     SimpleNode callee;
     if (fn instanceof ASTPropertyIdentifierReference) {
@@ -84,8 +89,62 @@ public class ReferenceCollector {
     map.put("_1", fn);
     map.put("_2", callee);
     map.put("_3", new Compiler.Splice(node.get(1).getChildren()));
-    // TODO: [2006-01-03 ptw] Do we really need a new Parser each time?
-    return (new Compiler.Parser()).substitute("_1.hasOwnProperty('dependencies') ? _1.dependencies(this, _2, _3) : []", map);
+    return parser.substitute("_1.hasOwnProperty('dependencies') ? _1.dependencies(this, _2, _3) : []", map);
+  }
+
+  // callee.fn(args...) ->
+  //    callee.hasOwnProperty('$lsc$fn_dependencies') ?
+  //      (callee cast Object).$lsc$fn_dependencies(args...) : []
+  // If callee doesn't exist (i.e. original expression is just fn()),
+  // then 'this' is assumed for callee.  If we don't downcast the callee
+  // at the point of the call, on SWF9 we'd get compile errors
+  // when the dependency function doesn't exist.
+  // The cast is a no-op for runtimes that don't need them.
+  private SimpleNode fsubst(SimpleNode node) {
+    SimpleNode fn = node.get(0);
+    SimpleNode callee;
+    if (fn instanceof ASTPropertyIdentifierReference) {
+      callee = fn.get(0);
+      fn = fn.get(1);
+    } else {
+      callee = new ASTThisReference(0);
+    }
+    String depnm = "$lsc$" + ((ASTIdentifier)fn).getName() + "_dependencies";
+
+    // the function uses #pragma "warnUndefinedReferences=false"
+    // to avoid warnings for non-existent dependencies
+    Map map = new HashMap();
+    map.put("_1", callee);
+    map.put("_2", new Compiler.Splice(node.get(1).getChildren()));
+
+    return parser.substitute("_1.hasOwnProperty('" + depnm + "') ? (_1 cast Object)." + depnm + "(this, _1, _2) : []", map);
+  }
+
+  // TODO: [2006-02-22 dda] Remove this 'subfunction' version soon.
+  //    'subfunction' naming (Class.f() and Class.f.dependencies())
+  //     does not work in SWF9.
+
+  // Concatenate references array with any results from dependeny
+  // functions
+  private SimpleNode build_using_subfunction(Set references, Set functions) {
+    SimpleNode a = rsubst(references);
+    Map map = new HashMap();
+    Set added = new HashSet();
+    ParseTreePrinter ptp = new ParseTreePrinter();
+    for (Iterator i = functions.iterator(); i.hasNext(); ) {
+      SimpleNode n = (SimpleNode)i.next();
+      String s = ptp.visit(n);
+      // Eliminate redundant constraints
+      if (! added.contains(s)) {
+        added.add(s);
+        SimpleNode b = fsubst_using_subfunction(n);
+
+        map.put("_1", a);
+        map.put("_2", b);
+        a = parser.substitute("_1.concat(_2)", map);
+      }
+    }
+    return a;
   }
 
   // Concatenate references array with any results from dependeny
@@ -105,17 +164,30 @@ public class ReferenceCollector {
 
         map.put("_1", a);
         map.put("_2", b);
-        // TODO: [2006-01-03 ptw] Do we really need a new Parser each time?
-        a = (new Compiler.Parser()).substitute("_1.concat(_2)", map);
+        a = parser.substitute("_1.concat(_2)", map);
       }
     }
     return a;
   }
 
+  // TODO: [2006-02-22 dda] Do we want to keep computeMetaReferences?
+  // ptw says it's a failed experiment.  It's hard to test any
+  // new code that keeps it alive.
+
+  public SimpleNode computeReferencesAsExpression() {
+    return build(references, functions);
+  }
+
+  // TODO: [2006-02-22 dda] Remove this 'subfunction' version soon.
+  //    'subfunction' naming (Class.f() and Class.f.dependencies())
+  //     does not work in SWF9.
+  //     Migrate callers to new implementation in
+  //     computeReferencesAsExpression().
+
   public SimpleNode computeReferences(String name) {
     // Sanitize the name
     name = name.replace('#', '_').replace(' ', '_').replace('/', '_').replace('.', '_');
-    SimpleNode d = build(references, functions);
+    SimpleNode d = build_using_subfunction(references, functions);
     if (computeMetaReferences) {
       for (Iterator i = metareferences.iterator(); i.hasNext(); ) {
         SimpleNode r = (SimpleNode)i.next();
@@ -125,13 +197,12 @@ public class ReferenceCollector {
           metareferences.remove(r);
         }
       }
-      SimpleNode md = build(metareferences, metafunctions);
+      SimpleNode md = build_using_subfunction(metareferences, metafunctions);
       // store metadependencies as a property of deps
       Map map = new HashMap();
       map.put("_1", d);
       map.put("_2", md);
-      // TODO: [2006-01-03 ptw] Do we really need a new Parser each time?
-      return (new Compiler.Parser()).substitute(
+      return parser.substitute(
         // TODO: [2003-06-19 ptw] (krank) Have to use sanitized
         // name here, so that substitute does not try to name
         // the function "x"
@@ -144,8 +215,7 @@ public class ReferenceCollector {
     } else {
       Map map = new HashMap();
       map.put("_1", d);
-      // TODO: [2006-01-03 ptw] Do we really need a new Parser each time?
-      return (new Compiler.Parser()).substitute(
+      return parser.substitute(
         // TODO: [2003-06-19 ptw] (krank) Have to use sanitized
         // name here, so that substitute does not try to name
         // the function "x"
