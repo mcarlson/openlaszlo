@@ -144,15 +144,15 @@ class LzHTTPDataProvider extends LzDataProvider {
                 sep = '&';
             }
 
-            // [LPP-5368] If this is a SOLO POST request, put the
-            // 'cache-breaking' arg into this post body. This prevents
-            // the case of an empty POST body, which would cause the
-            // Flash player to turn it into a GET request.
-            if (!proxied && (dreq.method == "POST") &&  !dreq.clientcacheable) {
-                q += cachebreak;
-            }
-
             postbody = q;
+        }
+
+        // [LPP-5368] If this is a SOLO POST request, with an empty
+        // POST body, put the 'cache-breaking' arg into this post
+        // body. This prevents the case of an empty POST body, which
+        // would cause the Flash player to turn it into a GET request.
+        if (!proxied && (dreq.method == "POST") && (postbody == null || postbody == ''))  {
+            postbody = cachebreak;
         }
 
         var lzurl = new LzURL(dreq.src);
