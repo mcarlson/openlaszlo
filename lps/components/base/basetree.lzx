@@ -675,6 +675,38 @@
             
             <img src="images/basetree/basetree-diagram.png"/>
             
+            <p>
+              When the basetree expands recursively, the datapath must be
+              a relative reference to the dataset. If an absolute
+              refrence is used, the same nodes would be selected over
+              and over forever, resulting in and endless loop.
+
+              For example, this will hang in an endless loop: 
+
+              <programlisting>
+              &lt;dataset name="navdata"&gt;
+                &lt;navmenu&gt;
+                  &lt;section /&gt;
+                &lt;/navmenu&gt;
+              &lt;/dataset&gt;
+
+
+              &lt;view x="10" y="10" layout="axis: x; spacing: 10"&gt;
+                &lt;basetree width="160" height="20" bgcolor="#FFFFFF" datapath="navdata:/navmenu" /&gt;
+              &lt;/view&gt;
+              </programlisting>
+
+              It needs to be rewritten to have a relative datapath in the recursively expanding
+              tree node. 
+
+              <programlisting>
+                &lt;basetree width="160" height="20" bgcolor="#FFFFFF" datapath="navdata:/navmenu"&gt;
+                  &lt;basetree width="160" height="20" bgcolor="#FFFFFF" datapath="*" /&gt;
+                &lt;/basetree&gt;
+              </programlisting>
+            </p>
+
+
             <example title="Basetree subclass with echoed text node">
             &lt;canvas width="200" height="200"&gt;
               &lt;include href="base/basetree.lzx"/&gt;
