@@ -477,7 +477,7 @@ if ($debug) {
     /** The source locator table maps source locations to nodes
       * @access private
       */ 
-    var sourceLocatorTable = {};
+    static var sourceLocatorTable = {};
 
     /**
       * Translate a source locator to the corresponding node
@@ -486,7 +486,7 @@ if ($debug) {
       * the source locator is unknown
       */
     function lookupSourceLocator (sourceLocator) {
-        return this.sourceLocatorTable[sourceLocator];
+        return LzNode.sourceLocatorTable[sourceLocator];
     }
 }
 
