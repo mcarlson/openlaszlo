@@ -378,11 +378,16 @@
         
       </refsect1>
       
+      <!-- TODO [dda 2008-02-28] commented out 'known direct subclasses'.
+           It can produce broken links and sometimes is shown when there
+           none.  This section was not shown in 3.4 docs.
+           
       <xsl:if test="$show.known.subclasses">
         <refsect1>
           <xsl:call-template name="describe-known-subclasses" />
         </refsect1>
       </xsl:if>
+      -->
       
     </xsl:template>
         
