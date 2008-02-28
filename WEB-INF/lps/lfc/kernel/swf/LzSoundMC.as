@@ -1,7 +1,7 @@
 /**
   * LzSoundMC.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -156,6 +156,7 @@ SoundMC.prototype.getVolume = function(v) {
   */
 SoundMC.prototype.loadDone = function(success) {
     if (success != true) {
+        this.loader.owner.owner.resourceloaderror();
         if ($debug) {
             Debug.warn("failed to load %w", this.reqobj.url);
         }
