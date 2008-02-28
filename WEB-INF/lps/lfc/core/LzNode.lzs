@@ -1819,10 +1819,14 @@ function destroy( recursiveCall ){
     if (this.__LZdeleted == true) {
         return;
     }
+
+    // Must be sent _before_ we mark ourself as deleted, or no
+    // delegates will be executed.  This is our last and final act
+    // before we actually will be destroyed.
+    if (this.ondestroy.ready) this.ondestroy.sendEvent( this );
+
     // To keep delegates from resurrecting us.  See LzDelegate#execute
     this.__LZdeleted = true;
-
-    if (this.ondestroy.ready) this.ondestroy.sendEvent( this );
 
     //don't allow a call on this method if I'm deleted
     this.__LZinstantiationDone = null;
