@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- 
@@ -232,9 +232,14 @@
         <xsl:if test="@value">
           <tag name="lzxdefault"><text><xsl:value-of select="@value"/></text></tag>
         </xsl:if>
-        <xsl:if test="@type">
-          <tag name="lzxtype"><text><xsl:value-of select="@type"/></text></tag>
-        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="@type">
+            <tag name="lzxtype"><text><xsl:value-of select="@type"/></text></tag>
+          </xsl:when>
+          <xsl:otherwise>
+            <tag name="lzxtype"><text>expression</text></tag>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="doc">
           <xsl:copy-of select="doc/*"/>
         </xsl:if>

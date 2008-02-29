@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -97,7 +97,9 @@
           <xsl:text>Object</xsl:text>
         </xsl:when>
         <xsl:when test="$lzxtype = 'expression'">
-          <xsl:text>Object</xsl:text>
+          <!-- TODO [dda 2008-02-28] using 'Object' would be more correct,
+               but we are matching the 3.4 doc output for the moment -->
+          <xsl:text>any</xsl:text>
         </xsl:when>
         <xsl:when test="$lzxtype = 'boolean'">
           <!-- Either 'boolean' or 'Boolean' might be correct. Putting this rule in to document that we're making a choice -->
