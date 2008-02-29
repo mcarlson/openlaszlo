@@ -143,16 +143,36 @@
               specified lexically or through data replication
               <!--link-->.</p>
 
-              <p>Note that a data replicated tree passes its XPath
-                  <!--link--> down to its subtrees, so avoid specifying an absolute XPath
-                  such as "<code>mydataset:/*</code>" or your tree will infinite
-                  loop. Instead, use a relative XPath:</p>
-              
-              <programlisting>
-                  &lt;tree datapath="mydataset:/" showroot="false"&gt;
-                  &lt;tree datapath="*" /&gt;
-                  &lt;/tree&gt;
-              </programlisting>
+              <p>
+                  When the <classname>tree</classname> expands recursively, the datapath must be
+                  a relative reference to the dataset. If an absolute
+                  refrence is used, the same nodes would be selected over
+                  and over forever, resulting in and endless loop.
+                  
+                  For example, this will hang in an endless loop: 
+                  
+                  <programlisting>
+                      &lt;dataset name="navdata"&gt;
+                      &lt;navmenu&gt;
+                      &lt;section /&gt;
+                      &lt;/navmenu&gt;
+                      &lt;/dataset&gt;
+                      
+                      
+                      &lt;view x="10" y="10" layout="axis: x; spacing: 10"&gt;
+                      &lt;tree width="160" height="20" datapath="navdata:/navmenu" /&gt;
+                      &lt;/view&gt;
+                  </programlisting>
+                  
+                  It needs to be rewritten to have a relative datapath in the recursively expanding
+                  tree node. 
+                  
+                  <programlisting>
+                      &lt;tree width="160" height="20" datapath="navdata:/navmenu"&gt;
+                      &lt;tree width="160" height="20" datapath="*" /&gt;
+                      &lt;/tree&gt;
+                  </programlisting>
+              </p>
 
             <p>Each resource, if specified, should have three states. The expander resource
               should have an open (frame 1), closed (frame 2), and transparent (frame 3)

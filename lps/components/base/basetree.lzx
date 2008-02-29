@@ -655,17 +655,6 @@
             should be placed in <varname>item</varname>. You can use
             <code>placement="item"</code>. The <varname>children</varname> view is
             the defaultplacement for basetree.</p>
-              
-              <p>Note that a data replicated tree passes its XPath
-                  <!--link--> down to its subtrees, so avoid specifying an absolute XPath
-                  such as "<code>mydataset:/*</code>" or your tree will infinite
-                  loop. Instead, use a relative XPath:</p>
-              
-              <programlisting>
-                  &lt;tree datapath="mydataset:/" showroot="false"&gt;
-                  &lt;tree datapath="*" /&gt;
-                  &lt;/tree&gt;
-              </programlisting>
             
             <p>The following diagram demonstrates how <varname>item</varname> and
             <varname>children</varname> are associated in tree. Since
@@ -676,7 +665,7 @@
             <img src="images/basetree/basetree-diagram.png"/>
             
             <p>
-              When the basetree expands recursively, the datapath must be
+              When the <classname>basetree</classname> expands recursively, the datapath must be
               a relative reference to the dataset. If an absolute
               refrence is used, the same nodes would be selected over
               and over forever, resulting in and endless loop.
@@ -692,7 +681,7 @@
 
 
               &lt;view x="10" y="10" layout="axis: x; spacing: 10"&gt;
-                &lt;basetree width="160" height="20" bgcolor="#FFFFFF" datapath="navdata:/navmenu" /&gt;
+                &lt;basetree width="160" height="20" datapath="navdata:/navmenu" /&gt;
               &lt;/view&gt;
               </programlisting>
 
@@ -700,12 +689,11 @@
               tree node. 
 
               <programlisting>
-                &lt;basetree width="160" height="20" bgcolor="#FFFFFF" datapath="navdata:/navmenu"&gt;
-                  &lt;basetree width="160" height="20" bgcolor="#FFFFFF" datapath="*" /&gt;
+                &lt;basetree width="160" height="20" datapath="navdata:/navmenu"&gt;
+                  &lt;basetree width="160" height="20" datapath="*" /&gt;
                 &lt;/basetree&gt;
               </programlisting>
             </p>
-
 
             <example title="Basetree subclass with echoed text node">
             &lt;canvas width="200" height="200"&gt;
