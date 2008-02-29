@@ -394,8 +394,7 @@ All Rights Reserved. Use is subject to license terms.</p>
 
   <!-- JS2DOC-RELATED TARGETS -->
   
-  <target name="js2doc.rng"
-          unless="reference.skip">
+  <target name="js2doc.rng">
     <ant dir="${lps.server.dir}" target="js2doc.rng" inheritAll="false"/>
   </target>
 
@@ -1149,7 +1148,7 @@ All Rights Reserved. Use is subject to license terms.</p>
   
   <!-- developer's guide -->
 
-  <target name="developers.preprocess" depends="init">
+  <target name="developers.preprocess" depends="init,js2doc.rng">
     <copy todir="${developers.build.dir}">
       <fileset dir="${developers.input.dir}"/>
     </copy>
