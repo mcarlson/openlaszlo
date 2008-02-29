@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -41,5 +41,10 @@ public class ASTOperator extends SimpleNode {
     //todo  public String toString() {
     //      return "<" + tokenImage[operatorCode] + ">";
     //  }
+
+  /** Accept the visitor */
+  public Object jjtAccept(ParserVisitor visitor, Object data) {
+      return visitor.visit(this, data);
+  }
 
 }

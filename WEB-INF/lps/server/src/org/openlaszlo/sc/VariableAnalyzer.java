@@ -1,7 +1,7 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -35,7 +35,13 @@ public class VariableAnalyzer {
     // Parameter order is significant
     this.parameters = new LinkedHashSet();
     for (int i = 0, len = params.size(); i < len; i++) {
-      parameters.add(((ASTIdentifier)params.get(i)).getName());
+      SimpleNode param = params.get(i);
+      // might also be an initializer
+      // TODO: [2007-12-20 dda] if it is an default parameter initializer,
+      // should call visit() on the initializer expression?
+      if (param instanceof ASTIdentifier) {
+        parameters.add(((ASTIdentifier)param).getName());
+      }
     }
     this.locals = new LinkedHashSet(parameters);
     closed = new HashSet();

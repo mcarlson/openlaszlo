@@ -749,6 +749,13 @@ public class Compiler {
       SimpleNode node = parse("x = \n#file Compiler.substitute\n#line 0\n" + str).get(0).get(0).get(2);
       return visit(node, keys);
     }
+
+    // Input is one or more statements, returns the nodes
+    // that correspond to those statements
+    public SimpleNode[] substituteStmts(String str, Map keys) {
+      SimpleNode fexpr = substitute("(function () {" + str + "})()", keys);
+      return fexpr.get(0).get(1).getChildren();
+    }
   }
 
   // Visitor -- only works for ParseTreePrinter so far

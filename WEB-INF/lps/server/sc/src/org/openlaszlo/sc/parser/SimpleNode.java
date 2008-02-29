@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -161,4 +161,10 @@ public abstract class SimpleNode implements Node, Serializable {
     public String getComment() {
         return this.comment;
     }
+
+    /** Accept the visitor */
+    public Object jjtAccept(ParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
+
 }

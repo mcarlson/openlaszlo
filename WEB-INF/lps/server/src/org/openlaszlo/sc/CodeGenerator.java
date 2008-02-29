@@ -1702,6 +1702,8 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     try {
       options = options.copy();
       context = new TranslationContext(ASTFunctionExpression.class, context, label);
+      node = formalArgumentsTransformations(node);
+      children = node.getChildren();
       dependencies = translateFunctionInternal(node, useName, children);
     }
     finally {
@@ -1764,11 +1766,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // global name (this allows us to name closures more
     // mnemonically at runtime
     String meterFunctionName = functionName;
-    Set pnames = new LinkedHashSet();
-    SimpleNode[] paramIds = params.getChildren();
-    for (int i = 0, len = paramIds.length; i < len; i++) {
-      pnames.add(((ASTIdentifier)paramIds[i]).getName());
-    }
     // Pull all the pragmas from the beginning of the
     // statement list: process them, and remove them
     assert stmts instanceof ASTStatementList;

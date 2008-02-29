@@ -10,7 +10,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -23,7 +23,7 @@ options {
   NODE_DEFAULT_VOID=true;
   NODE_PACKAGE = "org.openlaszlo.sc.parser";
   NODE_SCOPE_HOOK=true;
-  VISITOR=false;
+  VISITOR=true;
   UNICODE_INPUT = true;
 }
 
@@ -66,6 +66,31 @@ public class Parser {
         //    SimpleNode sn = (SimpleNode) n;
         //    sn.setEndLocation(t.endLine, t.endColumn);
         //}
+    }
+
+    public static class FormalParameterState {
+        private boolean hasRest = false;
+        private boolean hasInit = false;
+        private Token token;
+        public void setToken(Token t) {
+            token = t;
+        }
+        public void checkRestParameter() {
+            if (hasRest)
+                throw new ParseException(token, "multiple ...rest parameters not allowed");
+            hasRest = true;
+        }
+        public void checkInitParameter() {
+            if (hasRest)
+                throw new ParseException(token, "...rest parameter must be last");
+            hasInit = true;
+        }
+        public void checkRegularParameter() {
+            if (hasRest)
+                throw new ParseException(token, "...rest parameter must be last");
+            if (hasInit)
+                throw new ParseException(token, "regular parameters not allowed after optional parameters");
+        }
     }
 }
 PARSER_END(Parser)
@@ -275,6 +300,7 @@ TOKEN: {
 | < SEMICOLON: ";" >
 | < COMMA: "," >
 | < DOT: "." >
+| < ELLIPSIS: "..." >
 }
 
 /* operators */
@@ -672,7 +698,8 @@ void Block() #void : {}
 
 void VariableStatement() #VariableStatement : {}
 {
-    "var" VariableDeclarationList() Sc()
+    // TODO: [2007-12-19 dda] pass const info through
+    ( "var" | "const" ) VariableDeclarationList() Sc()
 }
 
 void VariableDeclarationList() #VariableDeclarationList(>1) : {}
@@ -875,7 +902,7 @@ void TryStatement() #TryStatement : {}
 
 void CatchClause() #CatchClause : {}
 {
-   "catch" "(" FormalParameter() ")" Block()
+   "catch" "(" FormalParameterIdentifier() ")" Block()
 }
 
 void FinallyClause() #FinallyClause : {}
@@ -901,20 +928,49 @@ void FunctionExpression() #FunctionExpression : {ASTFormalParameterList formals;
     Block()
 }
 
-ASTFormalParameterList FormalParameterList() #FormalParameterList : {}
+ASTFormalParameterList FormalParameterList() #FormalParameterList : {FormalParameterState fstate = new FormalParameterState(); Token t;}
 {
-     "(" [FormalParameters()] ")" 
+     t="(" {fstate.setToken(t);}
+       [ FormalParameter(fstate) ( "," FormalParameter(fstate) )* ] ")" 
      { return jjtThis; }
 }
 
-void FormalParameters() : {}
+void FormalParameter(FormalParameterState fstate) #void : {ASTIdentifier id; boolean hasRest = false; boolean hasInit = false;}
 {
-   FormalParameter() ("," FormalParameter())*
+  (
+    "..." id = FormalParameterIdentifier()
+    {
+        fstate.setToken(getToken(0));
+        id.setEllipsis(true);
+        hasRest = true;
+    }
+  | FormalParameterIdentifier()
+    [ "=" FormalInitializer()
+      {
+          fstate.setToken(getToken(0));
+          hasInit = true;
+      }
+    ]
+  )
+  {
+    if (hasRest)
+      fstate.checkRestParameter();
+    else if (hasInit)
+      fstate.checkInitParameter();
+    else
+      fstate.checkRegularParameter();
+  }
 }
 
-void FormalParameter() #void : {ASTIdentifier id; ASTIdentifier.Type type;}
+void FormalInitializer() #FormalInitializer : {}
 {
-    id = Identifier() [":" type = TypeIdentifier() { id.setType(type); }]
+     AssignmentExpression()
+}
+
+ASTIdentifier FormalParameterIdentifier() #void : {ASTIdentifier id; ASTIdentifier.Type type;}
+{
+    (id = Identifier() [":" type = TypeIdentifier() { id.setType(type); }])
+    { return id; }
 }
 
 // Program structuring/

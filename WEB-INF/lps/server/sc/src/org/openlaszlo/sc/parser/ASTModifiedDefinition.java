@@ -69,7 +69,7 @@ public class ASTModifiedDefinition extends SimpleNode {
     }
 
     public void setStatic(boolean value) {
-        isStatic = true;
+        isStatic = value;
     }
 
     public boolean isStatic() {
@@ -77,7 +77,7 @@ public class ASTModifiedDefinition extends SimpleNode {
     }
 
     public void setFinal(boolean value) {
-        isFinal = true;
+        isFinal = value;
     }
 
     public boolean isFinal() {
@@ -85,7 +85,7 @@ public class ASTModifiedDefinition extends SimpleNode {
     }
 
     public void setDynamic(boolean value) {
-        isDynamic = true;
+        isDynamic = value;
     }
 
     public boolean isDynamic() {
@@ -93,7 +93,7 @@ public class ASTModifiedDefinition extends SimpleNode {
     }
 
     public void setOverride(boolean value) {
-        isOverride = true;
+        isOverride = value;
     }
 
     public boolean isOverride() {
@@ -179,7 +179,7 @@ public class ASTModifiedDefinition extends SimpleNode {
 }
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 

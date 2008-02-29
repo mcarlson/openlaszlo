@@ -13,12 +13,23 @@ public class ASTIdentifier extends SimpleNode {
     private String name = null;
     private Type type = null;
     private int hash = 0;
+    private boolean ellipsis = false;
+    private boolean isconstructor = false;
 
     public static class Type {
         public String typeName = null;
         public boolean nullable = false; // has "?"
         public boolean notnullable = false; // has "!"
         public boolean untyped = false;     // is "*"
+
+        public String toString() {
+            String result = typeName;
+            if (nullable)
+                result += "?";
+            if (notnullable)
+                result += "!";
+            return result;
+        }
     }
 
     public ASTIdentifier(int id) {
@@ -63,16 +74,33 @@ public class ASTIdentifier extends SimpleNode {
         this.type = type;
     }
 
+    public boolean getEllipsis() {
+        return ellipsis;
+    }
+
+    public void setEllipsis(boolean ellipsis) {
+        this.ellipsis = ellipsis;
+    }
+
+    public boolean isConstructor() {
+        return isconstructor;
+    }
+
+    public void setIsConstructor(boolean value) {
+        this.isconstructor = value;
+    }
+
     public String toString() {
+        String dots = ellipsis ? "..." : "";
         String typesuffix = "";
         if (type != null) {
-            typesuffix = ": ";
-            if (type.nullable)
-                typesuffix += "?";
-            typesuffix += type.typeName;
-            if (type.notnullable)
-                typesuffix += "!";
+            typesuffix = ": " + type.toString();
         }
-        return "ASTIdentifier(" + name + typesuffix + ")";
+        return "ASTIdentifier(" + dots + name + typesuffix + ")";
+    }
+
+    /** Accept the visitor */
+    public Object jjtAccept(ParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
     }
 }

@@ -22,7 +22,7 @@ import org.openlaszlo.sc.parser.*;
 
 public class JavascriptGenerator extends CommonGenerator implements Translator {
 
-  protected void setRuntime(String runtiem) {
+  protected void setRuntime(String runtime) {
     assert org.openlaszlo.compiler.Compiler.SCRIPT_RUNTIMES.contains(runtime) : "unknown runtime " + runtime;
   }
 
@@ -1065,6 +1065,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     try {
       options = options.copy();
       context = new TranslationContext(ASTFunctionExpression.class, context);
+      node = formalArgumentsTransformations(node);
+      children = node.getChildren();
       result = translateFunctionInternal(node, useName, children);
     }
     finally {

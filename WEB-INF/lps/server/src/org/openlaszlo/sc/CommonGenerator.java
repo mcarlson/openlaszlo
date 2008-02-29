@@ -382,6 +382,104 @@ public abstract class CommonGenerator implements ASTVisitor {
     return visitStatement(replNode);
   }
 
+  /**
+   * If there are formal args that have initializers or indicate variable
+   * arguments, add a preamble to the function to perform any needed
+   * initialization to simulate the initialization.
+   * For example:
+   * <pre>
+   *   function foo(w, x = null, y = null, ...z) {
+   *       some statements
+   *   }
+   * </pre>
+   * is rewritten as:
+   * <pre>
+   *   function foo(w, x, y) { 
+   *      if (arguments.length < 2) { x = null; }
+   *      if (arguments.length < 3) { y = null; }
+   *      var z = new Array();
+   *      for (__i=3; __i<arguments.length; __i++) {
+   *          z.push(arguments[i]);
+   *      }
+   *      some statements
+   *   }
+   * </pre>
+   * @param n function definition node
+   * @return modified function definition node
+   */
+  public SimpleNode formalArgumentsTransformations(SimpleNode n) {
+    // children are:
+    //   (*) ASTIdentifier (name)      (*) may be omitted
+    //       ASTFormalParameterList
+    //       ASTStatement (or statement list)
+    SimpleNode[] children = n.getChildren();
+    int formalPos = 0;
+    if (children.length > 0 && children[0] instanceof ASTIdentifier) {
+      formalPos++;
+    }
+    assert (children.length == formalPos+2 && children[formalPos] instanceof ASTFormalParameterList)
+      : "function has unexpected children";
+
+    SimpleNode[] args = children[formalPos].getChildren();
+    ASTIdentifier curid = null;
+    List stmts = new ArrayList();
+    List newargs = new ArrayList();
+    
+    // The argument list is a list of ASTIdentifiers and ASTFormalInitializer.
+    // When a ASTFormalInitializer appears, it contains an initialization expression
+    // that applies to the previous argument.  An ASTIdentifier can be marked
+    // with an ellipsis, the grammar should enforce it is the last one.
+    int argno = 0;
+    for (int i=0; i<args.length; i++) {
+      if (args[i] instanceof ASTIdentifier) {
+        curid = (ASTIdentifier)args[i];
+        if (curid.getEllipsis()) {
+          Map map = new HashMap();
+          String indexvar = "$lzsc$" + UUID().toString();
+          map.put("_1", new ASTIdentifier(curid.getName()));
+          map.put("_2", new ASTIdentifier(indexvar));
+          String pattern =
+            "var _1=new Array;" +
+            " for (var _2=" + argno + ";_2<arguments.length;_2++) {" +
+            "_1.push(arguments[_2]); }";
+          SimpleNode[] newNodes = (new Compiler.Parser()).substituteStmts(pattern, map);
+          stmts.addAll(flatten(newNodes));
+        }
+        else {
+          newargs.add(args[i]);
+        }
+        argno++;
+      }
+      else if (args[i] instanceof ASTFormalInitializer) {
+        assert curid != null : "ASTFormalInitializer appears first in list";
+        SimpleNode initialValue = args[i].get(0);
+        Map map = new HashMap();
+        map.put("_1", curid);
+        map.put("_2", initialValue);
+        String pattern = "if (arguments.length<" + argno + "){_1=(_2); }";
+        stmts.addAll(flatten((new Compiler.Parser()).substituteStmts(pattern, map)));
+      }
+      else {
+        throw new IllegalArgumentException("Unexpected item in argument list: " + args[i]);
+      }
+    }
+
+    // any alterations needed?
+    if (stmts.size() > 0) {
+      // newargs contains arguments without initializers
+      children[formalPos].setChildren((SimpleNode[])newargs.toArray(new SimpleNode[0]));
+      
+      // Build a new statement list, consisting of new stmts for formal
+      // initializations, followed by original statements.
+      SimpleNode oldstmt = children[formalPos+1];
+      SimpleNode newstmt = new ASTStatementList(0);
+      newstmt.setChildren((SimpleNode[])stmts.toArray(new SimpleNode[0]));
+      newstmt.set(stmts.size(), oldstmt);
+      children[formalPos+1] = newstmt;
+    }
+    return n;
+  }
+
   public void translateClassDirectivesBlock(SimpleNode[] dirs, String classnameString, List props, List classProps, List stmts) {
     dirs = (SimpleNode[])(flatten(dirs).toArray(new SimpleNode[0]));
 
