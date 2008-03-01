@@ -2,7 +2,7 @@
   * @topic Browser
   * @subtopic Integration
   * @access public
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   * Use is subject to license terms.
   */
   
@@ -113,6 +113,7 @@ Lz = {
             ,_ready: Lz._ready
             // List of functions to call when the app is loaded
             ,_onload: []
+            ,_getSWFDiv: Lz._getSWFDiv
             ,loaded: false
             ,_sendMouseWheel: Lz._sendMouseWheel
             ,_setCanvasAttributeDequeue: Lz._setCanvasAttributeDequeue
@@ -593,6 +594,10 @@ Lz = {
             root = document.getElementById(divid);
         }
         return root;
+    }
+    ,/** @access private */
+    _getSWFDiv: function() {
+        return dojo.flash.obj.get();
     }
     ,/** @access private */
     _sendMouseWheel: function(d) {

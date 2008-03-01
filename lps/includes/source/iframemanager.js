@@ -1,5 +1,5 @@
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 Lz.iframemanager = {
@@ -28,11 +28,21 @@ Lz.iframemanager = {
         iframe.__gotload = Lz.iframemanager.__gotload;
         iframe._defaultz = 99900 + Lz.iframemanager.__highestz;
         iframe.style.zIndex = iframe._defaultz;
+
+        Lz.iframemanager.__topiframe = id;
         if (document.getElementById && !(document.all) ) {
             iframe.style.border = '0';
         } else if (document.all) {
+            // IE
             Lz.__setAttr(iframe, 'border', '0');
             Lz.__setAttr(iframe, 'allowtransparency', 'true');
+
+            var metadata = Lz[iframe.owner]
+            if (metadata.runtime == 'swf') { 
+                // register for onfocus event for swf movies - see LPP-5482 
+                var div = metadata._getSWFDiv();
+                div.onfocus = Lz.iframemanager.__refresh;
+            }
         }
         iframe.style.position = 'absolute';
         return id + '';
@@ -74,7 +84,6 @@ Lz.iframemanager = {
         var iframe = Lz.iframemanager.getFrame(id);
         if (! iframe) return;
         iframe.style.display = v ? 'block' : 'none';
-        this._visible = v;
         return true;
     }
     ,bringToFront: function(id) { 
@@ -83,6 +92,7 @@ Lz.iframemanager = {
         var iframe = Lz.iframemanager.getFrame(id);
         if (! iframe) return;
         iframe.style.zIndex = 100000 + Lz.iframemanager.__highestz;
+        Lz.iframemanager.__topiframe = id;
         return true;
     }
     ,sendToBack: function(id) { 
@@ -108,6 +118,16 @@ Lz.iframemanager = {
         } else {
             //console.log('calling method', 'Lz.iframemanager.__gotload(\'' + id + '\')');
             Lz[iframe.owner].callMethod('Lz.iframemanager.__gotload(\'' + id + '\')');
+        }
+    }
+    ,__refresh: function() { 
+        // called in IE for onfocus event in swf - see LPP-5482 
+        if (Lz.iframemanager.__topiframe) {
+            var iframe = Lz.iframemanager.getFrame(Lz.iframemanager.__topiframe);
+            if (iframe.style.display == 'block') {
+                iframe.style.display = 'none';
+                iframe.style.display = 'block'; 
+            }
         }
     }
 }
