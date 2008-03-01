@@ -44,7 +44,7 @@ Lz.history = {
             Lz.__setAttr(i, 'scrolling', 'no');
             Lz.__setAttr(i, 'width', '0');
             Lz.__setAttr(i, 'height', '0');
-            Lz.__setAttr(i, 'src', 'blank.html');
+            Lz.__setAttr(i, 'src', 'javascript:""');
             document.body.appendChild(i);
             i = document.getElementById('lzHistory');
             _this._iframe = i;

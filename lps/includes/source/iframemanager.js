@@ -19,6 +19,8 @@ Lz.iframemanager = {
         if (name != "") Lz.__setAttr(i, 'name', name);
         this.__namebyid[id] = name;
 
+        Lz.__setAttr(iframe, 'src', 'javascript:""');
+
         if (appendto == null || appendto == "undefined") {
             appendto = document.body;
         }
