@@ -21,7 +21,7 @@
             </handler>
         </button> 
         <text name="status" y="3" fontstyle="bold" visible="${parent.main.loading}">Loading...</text>
-        <html name="main" heightoffset="-74" widthoffset="-19" xoffset="7" yoffset="50">
+        <html name="main" heightoffset="-74" widthoffset="-19" xoffset="7" yoffset="50" history="true">
             <handler name="oninit">
                 this.bringToFront();
             </handler>

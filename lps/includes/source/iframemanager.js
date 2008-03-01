@@ -5,6 +5,7 @@
 Lz.iframemanager = {
     __highestz: 0
     ,__frames: {}
+    ,__namebyid: {}
     ,create: function(owner, name, appendto) {
         //alert(owner + ', ' + name + ', ' + appendto)
         var i = document.createElement('iframe');
@@ -14,8 +15,9 @@ Lz.iframemanager = {
         var id = '__lz' + Lz.iframemanager.__highestz++;
         Lz.iframemanager.__frames[id] = i;
 
-        if (name == null) name = '';
+        if (name == null || name == 'null') name = id;
         if (name != "") Lz.__setAttr(i, 'name', name);
+        this.__namebyid[id] = name;
 
         if (appendto == null || appendto == "undefined") {
             appendto = document.body;
@@ -50,12 +52,20 @@ Lz.iframemanager = {
     ,getFrame: function(id) { 
         return Lz.iframemanager.__frames[id];
     }
-    ,setSrc: function(id, s) { 
+    ,setSrc: function(id, s, history) { 
         //console.log('setSrc', id, s)
-        var iframe = Lz.iframemanager.getFrame(id);
-        if (! iframe) return;
-        Lz.__setAttr(iframe, 'src', s);
-        return true;
+        if (history) {
+            var iframe = Lz.iframemanager.getFrame(id);
+            if (! iframe) return;
+            Lz.__setAttr(iframe, 'src', s);
+            return true;
+        } else {
+            var id = Lz.iframemanager.__namebyid[id];
+            var iframe = window[id];
+            if (! iframe) return;
+            iframe.location.replace(s);
+            return true;
+        }
     }
     ,setPosition: function(id, x, y, width, height, visible) { 
         //Debug.write('setPosition', id);

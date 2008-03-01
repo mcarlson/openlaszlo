@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -22,8 +22,8 @@ Lz.iframemanager = {
     ,setPosition: function(id, x, y, width, height, v) {
         LzBrowser.callJS('Lz.iframemanager.setPosition', false, id, x, y, width, height, v);
     }
-    ,setSrc: function(id, src) {
-        LzBrowser.callJS('Lz.iframemanager.setSrc', null, id, src);
+    ,setSrc: function(id, src, history) {
+        LzBrowser.callJS('Lz.iframemanager.setSrc', null, id, src, history);
     }
     ,setVisible: function(id, v) {
         LzBrowser.callJS('Lz.iframemanager.setVisible', false, id, v);
@@ -49,8 +49,8 @@ Lz.iframemanager = {
     <attribute name="heightoffset" type="number" value="0"/>
     <attribute name="loading" type="boolean" value="false"/>
     <attribute name="appendto" value="null"/>
-    <attribute name="iframe" value="null"/>
     <attribute name="ready" value="false"/>
+    <attribute name="history" value="true"/>
 
     <attribute name="target" value="null" setter="this.setTarget(target)"/>
     <attribute name="framename" value="" type="string"/>
@@ -86,7 +86,7 @@ Lz.iframemanager = {
         this.src = s;
         this.setAttribute('loading', true);
         if (this['iframeid']) {
-            Lz.iframemanager.setSrc(this.iframeid, s);
+            Lz.iframemanager.setSrc(this.iframeid, s, this.history);
         } else {
             this.srcset = s;
         }
@@ -120,7 +120,7 @@ Lz.iframemanager = {
         this.iframeid = id;
         this.__updatepos();
         if (this['isfront']) this.bringToFront();
-        if (this['srcset']) Lz.iframemanager.setSrc(id, this.srcset);
+        if (this['srcset']) Lz.iframemanager.setSrc(id, this.srcset, this.history);
         this.setAttribute('ready', true);
     </method>
     <method name="__gotload">
