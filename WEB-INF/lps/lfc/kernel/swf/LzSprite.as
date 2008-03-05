@@ -1634,9 +1634,13 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
     }
 
     // [todo hqm 01-24-07] SWF-specific 
-    if (this.owner == canvas) {
-        // if this is the canvas sprite
+    if (this.owner == canvas || this instanceof LzTextSprite) {
+        // check canvas for LPP-4214, instanceof LzTextSprite for LPP-5533
         var mc = this.getMCRef();
+        if (this.owner == canvas) {
+            // must use _root if canvas
+            var mc = _root;
+        } 
         if (mc != null) {
             mc.menu = cmenu;
         }
@@ -1651,8 +1655,10 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
         mb.menu = cmenu;
     }
 
-    if (mb == null && mc == null) {
-      if ($debug) Debug.warn("LzView.setContextMenu: cannot set menu on view %w, it has no foreground or background movieclip", this.owner);
+    if ($debug) {
+        if (mb == null && mc == null) {
+        Debug.warn("LzView.setContextMenu: cannot set menu on view %w, it has no foreground or background movieclip", this.owner);
+        }
     }
 }
 
