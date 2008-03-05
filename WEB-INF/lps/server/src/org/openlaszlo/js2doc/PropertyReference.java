@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -141,6 +141,9 @@ public class PropertyReference {
     }
     
     private static void addFunctionParameter(SimpleNode parseNode, org.w3c.dom.Element docNode) {
+        if (parseNode instanceof ASTFormalInitializer)
+            return;
+
         org.w3c.dom.Element paramNode = docNode.getOwnerDocument().createElement("parameter");
         docNode.appendChild(paramNode);
         

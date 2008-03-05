@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -253,7 +253,7 @@ public class JS2DocUtils {
         if (parseNode instanceof ASTIdentifier) {
             return ((ASTIdentifier) parseNode).getName();
         } else if (parseNode instanceof ASTLiteral) {
-            return ((ASTLiteral) parseNode).getValue().toString();
+            return String.valueOf(((ASTLiteral) parseNode).getValue());
         } else
             return "";
     }
