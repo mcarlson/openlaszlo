@@ -404,6 +404,9 @@
        you set this to true. 
   -->
   <attribute name="cacheable" type="boolean"  value="false"/>
+  <!-- When true, an argument will be added to the request string, e.g. __lzbc__=1204685840777.  This is to prevent client caching.
+  -->
+  <attribute name="clientcacheable" type="boolean"  value="false"/>
   <!-- The ondata event is received when data arrives -->
   <event name="ondata" />
   <!--  The onerror event is recevied when an error occurs -->

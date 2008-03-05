@@ -171,6 +171,12 @@ var nodeType = LzDataNode.DOCUMENT_NODE;
   */
 var cacheable = false;
 
+/** When true, an argument will be added to the request string in the format 
+  * '__lzbc__=1204685840777'.  This is to prevent client caching.
+  * @type Boolean
+  */
+var clientcacheable = true;
+
 /** A string to be appended to the request that
   * the dataset makes. 
   * @type String

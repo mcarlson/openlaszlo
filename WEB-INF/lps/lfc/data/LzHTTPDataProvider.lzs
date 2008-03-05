@@ -159,12 +159,14 @@ class LzHTTPDataProvider extends LzDataProvider {
         
         // For GET requests, merge in params data with URL query 
         if (dreq.method == "GET") {
-            if (lzurl.query != null) {
-                lzurl.query = lzurl.query + "&" + postbody;
-            } else {
-                lzurl.query = postbody;
+            if (postbody != null) {
+                if (lzurl.query != null) {
+                    lzurl.query = lzurl.query + "&" + postbody;
+                } else {
+                    lzurl.query = postbody;
+                }
+                postbody = null;
             }
-            postbody = null;
         }
 
         // convert url back to string
