@@ -93,8 +93,8 @@ public class ReferenceCollector {
   }
 
   // callee.fn(args...) ->
-  //    callee.hasOwnProperty('$lsc$fn_dependencies') ?
-  //      (callee cast Object).$lsc$fn_dependencies(args...) : []
+  //    ('$lsc$fn_dependencies' in callee) ?
+  //      callee['$lsc$fn_dependencies'](args...) : []
   // If callee doesn't exist (i.e. original expression is just fn()),
   // then 'this' is assumed for callee.  If we don't downcast the callee
   // at the point of the call, on SWF9 we'd get compile errors
@@ -117,7 +117,7 @@ public class ReferenceCollector {
     map.put("_1", callee);
     map.put("_2", new Compiler.Splice(node.get(1).getChildren()));
 
-    return parser.substitute("_1.hasOwnProperty('" + depnm + "') ? (_1 cast Object)." + depnm + "(this, _1, _2) : []", map);
+    return parser.substitute("('" + depnm + "' in _1) ? _1['" + depnm + "'](this, _1, _2) : []", map);
   }
 
   // TODO: [2006-02-22 dda] Remove this 'subfunction' version soon.
