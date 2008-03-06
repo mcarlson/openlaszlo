@@ -32,7 +32,7 @@
             if (parent['onblur']) parent.onblur.sendEvent(s);
         </handler>
         <!--- Sent whenever a user enters a valid new character. -->
-        <handler name="ontext" name="doOnText">
+        <handler name="ontext">
             if (! this.ignorecallup) {
                 parent.setValue(this.getText(),false,true);
             }

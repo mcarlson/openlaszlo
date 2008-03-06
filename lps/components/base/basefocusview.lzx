@@ -82,7 +82,7 @@
             if ( this.target ) this.setTarget( null )
 
             // Make sure this focusview is visible if it is active
-               this.setVisible( this.active );
+               this.setVisibility( this.active?'visible':'hidden' );
 
             // store the target that the focusview will be constrained to when
             // it stops animating.
@@ -115,7 +115,7 @@
                 
                 // fade in the brackets to balance out the fade out
                 if (this.sprite && this.sprite['quirks'] && this.sprite.quirks['minimize_opacity_changes']) {
-                    this.setVisible(true);
+                    this.setVisibility( 'visible' );
                 } else {
                     this.animate('opacity', 1, 500);
                 }
@@ -149,7 +149,7 @@
         ]]> </method>
    
         <!--- @keywords private -->
-        <handler name="onstop" method="stopanim" />
+        <handler name="onstop" method="stopanim"/>
         <method name="stopanim" >  <![CDATA[
             this._animatorcounter -= 1;
             if ( this._animatorcounter < 1 ) {
@@ -171,7 +171,7 @@
         <method name="fadeout" >
             if (_dofadeout) {
                 if (this.sprite &amp;&amp; this.sprite['quirks'] &amp;&amp; this.sprite.quirks['minimize_opacity_changes']) {
-                    this.setVisible(false);
+                    this.setVisibility( 'hidden' );
                 } else {
                     this.animate( 'opacity' ,0 , 500);
                 }
@@ -257,7 +257,7 @@
         </method>
 
         <!--- @keywords private -->
-        <handler args="v" name="onfocus" reference="LzFocus">
+        <method args="v" event="onfocus" reference="LzFocus">
             this.setActive( LzFocus.focuswithkey );
             if ( v ) {
                 this.doFocus( v );
@@ -267,7 +267,7 @@
                      this.setActive(false);
                 }
             }
-        </handler>
+        </method>
 
     </class>
 
