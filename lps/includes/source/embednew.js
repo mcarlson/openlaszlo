@@ -133,7 +133,9 @@ Lz = {
 
         dojo.flash.setSwf(swfargs, minimumVersion);
         Lz.__BrowserDetect.init();
-        if (Lz.__BrowserDetect.OS == 'Mac') {
+        if (Lz.__BrowserDetect.OS == 'Mac' || 
+            // fix for LPP-5393
+            ( swfargs.wmode == 'transparent' && Lz.__BrowserDetect.OS == 'Windows' && (Lz.__BrowserDetect.isOpera || Lz.__BrowserDetect.isFirefox))) {
             LzMousewheelKernel.setCallback(app, '_sendMouseWheel');
         }
     }
