@@ -1,7 +1,7 @@
 /**
   * LzTextSprite.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -461,6 +461,7 @@ LzTextSprite.prototype.parseImgAttributes = function(attrs, str) {
   * @param String t: the string to which to set the text
   */
 LzTextSprite.prototype.setText = function ( t ){
+    // Keep in sync with LzTextSprite.setText()
     if (typeof(t) == 'undefined' || t == 'null') {
         t = "";
     } else if (typeof(t) != "string") {
@@ -494,6 +495,12 @@ LzTextSprite.prototype.setText = function ( t ){
     if (this.multiline && this.scroll == 0 ) {
         var scrolldel = new LzDelegate(this, "__LZforceScrollAttrs");
         LzIdle.callOnIdle(scrolldel);
+    }
+
+    // Fix for lpp-5449
+    var l = t.length;
+    if (this._selectionstart > l || this._selectionend > l) {
+        this.setSelection(l);
     }
 
     //@event ontext: Sent whenever the text in the field changes.
@@ -799,6 +806,10 @@ LzTextSprite.prototype.setSelection = function ( start , end ){
     if ( typeof( end ) == 'undefined' ){
         end = start;
     }
+
+    // Fix for lpp-5449
+    this._selectionstart = start;
+    this._selectionend = end;
 
     Selection.setSelection( start , end );
 }

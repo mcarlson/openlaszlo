@@ -298,6 +298,7 @@ LzInputTextSprite.prototype.setHTML = function (htmlp) {
   * @param String t: the string to which to set the text
   */
 LzInputTextSprite.prototype.setText = function ( t ){
+    // Keep in sync with LzTextSprite.setText()
     //Debug.write('LzInputTextSprite.setText', this, t);
     if (typeof(t) == 'undefined' || t == null) {
         t = "";
@@ -329,6 +330,12 @@ LzInputTextSprite.prototype.setText = function ( t ){
     if (this.multiline && this.scroll == 0 ) {
         var scrolldel = new LzDelegate(this, "__LZforceScrollAttrs");
         LzIdle.callOnIdle(scrolldel);
+    }
+
+    // Fix for lpp-5449
+    var l = t.length;
+    if (this._selectionstart > l || this._selectionend > l) {
+        this.setSelection(l);
     }
 
     //@event ontext: Sent whenever the text in the field changes.
