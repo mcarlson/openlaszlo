@@ -1,5 +1,6 @@
 # Special-purpose ruby script to generate index-generated.html, a simple left-nav 
 # for OL4 reference.
+#
 # usage: ruby navbuilder.rb > index-generated.html
 # docs/src/reference/navbuilder/index-generated.html is managed by subversion.
 # When you want to update the left-nav, tweak this script, navbuilder.rb, 
@@ -8,7 +9,14 @@
 # author: benjamin shine ben@laszlosystems.com
 # created: 2007.08.29
 # built on OSX 10.4 with ruby 1.8.6
-# Copyright 2007 Laszlo Systems. Use according to license terms. 
+# Copyright 2007-2008 Laszlo Systems. Use according to license terms. 
+
+################################################################
+# Note: it appears this script is no longer used, as navigation
+# is now driven by xml files produced by navxmlbuilder.rb .
+# TODO [2008-02-20 dda] remove this script, index-generated.html, etc. from svn
+################################################################
+$stderr.puts("Use navxmlbuilder.rb - navbuilder.rb is not needed");
 
 def generate_index ( prefix, comment ) 
   # generate a list of the lz stuff 
@@ -29,6 +37,48 @@ def generate_index ( prefix, comment )
   puts "</ul></div>"
 end
 
+
+# search for <title>&lt;tagname&gt;</title>,
+# if present, it's a tag that should appear in the index.
+# This works, though it's not elegant.
+def generate_index_tags ( prefix, comment ) 
+  # generate a list of the lz stuff 
+  puts "<div id=\"tags#{prefix}\">";     
+  puts "<h1>" + prefix + "</h1>";
+  puts "<p>" + comment + "</p>"; 
+  puts "<ul>";
+  file_filter = '../../../reference/*.html';
+
+  tags = Hash::new()
+  Dir.glob(file_filter).each{ |file|
+      open(file) {|f|
+          filebase = file.sub(/..\/..\/..\/reference\//, '');
+          f.each_line { |line|
+              line.chomp!
+              if (line =~ /<title>.*<\/title>/) then
+                  if (line =~ /<title>&lt;.*&gt;<\/title>/) then
+                      t = line.sub(/.*<title>&lt;/, '').sub(/&gt;<\/title>.*/, '');
+                      tags[t] = filebase;
+                  end
+                  break;
+              end
+          }
+      }
+  }
+  # sort ignoring case
+  hash_sort_nocase(tags) { |tag,file|
+      puts "<li><a href=\"" + file + "\" target=\"content\">";
+      yield tag;
+      puts "</a></li>" ; 
+  }
+  puts "</ul></div>"
+end
+
+def hash_sort_nocase (h)
+  lowerkey = Hash::new()
+  h.each_pair { |k,v| lowerkey[k.downcase] = k; }
+  lowerkey.sort.each { |low,key| yield key, h[key] }
+end
 
 def generate_topic_index 
   puts "<div id=\"topics\">";   
@@ -79,7 +129,7 @@ end
 
 puts "<html><body>";
 generate_top
-generate_index("lz", "lzx tags") { | elem | puts "&lt;" + elem + "&gt;" }
+generate_index_tags("lz", "lzx tags") { | elem | puts "&lt;" + elem + "&gt;" }
 generate_class_index;
 generate_topic_index; 
 generate_index("tag", "lzx xml language elements") { | elem | puts "&lt;" + elem + "&gt;" }
