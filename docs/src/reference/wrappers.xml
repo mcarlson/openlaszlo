@@ -11,7 +11,7 @@
 
 <property id="tag-a" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
-<tag name="lzxname"><text>&lt;a&gt;</text></tag>
+<tag name="lzxname"><text>a</text></tag>
 <tag name="shortdesc"><text>HTML hypertext link.</text></tag>
 <text>
 <p/>
@@ -34,9 +34,47 @@ text containers such as <tagname>text</tagname>.</p>
   &lt;/text&gt;
 &lt;/canvas&gt;
 </example>
+<p/>The user agent will interpret the <tagname>a</tagname> tag depending on the following value of the target attribute:
+<ul>
+  <li>_blank<p/>
+    The user agent should load the designated document in a new, unnamed window.
+  </li>
+  <li>_parent<p/>
+    The user agent should load the document into the full, original window (thus canceling all other frames). This value is equivalent to _self if the current frame has no parent.
+  </li>
+  <li>_self<p/>
+    The user agent should load the document in the same frame as the element that refers to this target.
+  </li>
+  <li>_top<p/>
+    The user agent should load the document into the immediate FRAMESET parent of the current frame. This value is equivalent to _self if the current frame has no parent.
+  </li>
+</ul>
 </text>
 </doc>
+
+<class>
+  <property name="__ivars__">
+    <attribute name="id" select="$attrs-id"/>
+    <object>
+      <property id="tag-a.__ivars__.href" name="href" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>URL</text></tag>
+          <text>The link target</text>
+        </doc>
+      </property>
+      <property id="tag-a.__ivars__.target" name="target" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>_blank | _parent | _self | _top</text></tag>
+          <text>
+            The value of this attribute determines where the link target will be displayed. The interpretation is the same as in HTML, where the "current frame" is the frame containing the LZX application. The value must be a name beginning with an alphabetic character, or one of: "_blank", "_parent", "_self", "_top"
+          </text>
+        </doc>
+      </property>
+    </object>
+  </property>
+</class>
 </property>
+
 
 <property id="tag-b" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
@@ -104,7 +142,7 @@ XHTML text containers such as <tagname>text</tagname> and
 <property id="tag-img" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
 <tag name="shortdesc"><text>A way to import images into html</text></tag>
-<tag name="lzxname"><text>&lt;img&gt;</text></tag>
+<tag name="lzxname"><text>img</text></tag>
 <text>
 <p>
  The compiler supports the &lt;img&gt; tag in HTML text content, for 
@@ -114,6 +152,49 @@ XHTML text containers such as <tagname>text</tagname> and
 </p>
 </text>
 </doc>
+<class>
+  <property name="__ivars__">
+    <attribute name="id" select="$attrs-id"/>
+    <object>
+      <property id="tag-img.__ivars__.align" name="align" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>String</text></tag>
+          <text></text>
+        </doc>
+      </property>
+      <property id="tag-img.__ivars__.height" name="height" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>String</text></tag>
+          <text></text>
+        </doc>
+      </property>
+      <property id="tag-img.__ivars__.hspace" name="hspace" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>String</text></tag>
+          <text></text>
+        </doc>
+      </property>
+      <property id="tag-img.__ivars__.src" name="src" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>String</text></tag>
+          <text></text>
+        </doc>
+      </property>
+      <property id="tag-img.__ivars__.vspace" name="vspace" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>String</text></tag>
+          <text></text>
+        </doc>
+      </property>
+      <property id="tag-img.__ivars__.width" name="width" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>String</text></tag>
+          <text></text>
+        </doc>
+      </property>
+    </object>
+  </property>
+</class>
 </property>
 
 <property id="tag-p" topic="LZX" subtopic="HTML Markup" access="public">
@@ -185,6 +266,7 @@ XHTML text containers such as <tagname>text</tagname> and
 </doc>
 </property>
 
+
 <!-- ================================================================ -->
 <property id="tag-audio" topic="LZX" subtopic="Media" access="public">
 <doc>
@@ -234,7 +316,7 @@ rates: 11.025 khz, 22.5 khz, and 44.1 khz, and encoded at no more than
 <property id="tag-face" topic="LZX" subtopic="Media" access="public">
 <doc>
 <tag name="shortdesc"><text></text></tag>
-<tag name="lzxname"><text>&lt;face&gt;</text></tag>
+<tag name="lzxname"><text>face</text></tag>
 <text>
 <p>Defines a font face or style within the font family that the
 outer element defines.</p>
@@ -243,6 +325,25 @@ See the <a href="font.html">font</a> element for details.
 </p>
 </text>
 </doc>
+<class>
+  <property name="__ivars__">
+    <attribute name="id" select="$attrs-id"/>
+    <object>
+      <property id="tag-face.__ivars__.src" name="src" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>URL</text></tag>
+          <text>The path of a file that contains the source for this object.</text>
+        </doc>
+      </property>
+      <property id="tag-face.__ivars__.style" name="style" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>bold | italic | bold italic | italic bold | plain </text></tag>
+          <text>Corresponds to the fontstyle attribute of a view.</text>
+        </doc>
+      </property>
+    </object>
+  </property>
+</class>
 </property>
 
 <property id="tag-resource" topic="LZX" subtopic="Media" access="public">
@@ -282,7 +383,7 @@ For details on multi-frame resources, see <a href="frame.html">frame</a>.
 <property id="tag-frame" topic="LZX" subtopic="Media" access="public">
 <doc>
 <tag name="shortdesc"><text>A frame of a multi-frame resource.</text></tag>
-<tag name="lzxname"><text>&lt;frame&gt;</text></tag>
+<tag name="lzxname"><text>frame</text></tag>
 <text>
 <p>The <tagname>frame</tagname> tag is used to define a single frame
 of a multi-frame <tagname>resource</tagname>.  A multi-frame resource
@@ -345,6 +446,25 @@ mouse rollover and down state behavior:</p>
 
 </text>
 </doc>
+<class>
+  <property name="__ivars__">
+    <attribute name="id" select="$attrs-id"/>
+    <object>
+      <property id="tag-frame.__ivars__.name" name="name" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>token</text></tag>
+          <text>The name of a variable that will be set to this object when the application is started. If this element is directly within a <tagname>canvas</tagname> or <tagname>library</tagname> element, the global variable and the canvas property with this name will be set to this object. If this element is within another object, that object's property with this name will be set to this object.</text>
+        </doc>
+      </property>
+      <property id="tag-frame.__ivars__.src" name="src" type="" modifiers="final">
+        <doc>
+          <tag name="lzxtype"><text>URL</text></tag>
+          <text>The path of a file that contains the source for this object.</text>
+        </doc>
+      </property>
+    </object>
+  </property>
+</class>
 </property>
 
 </js2doc>

@@ -574,13 +574,7 @@
       </informaltable>      
       </refsect2>
     </xsl:if>
-    
-    <xsl:if test="count($visible-members) = 0">
-      <refsect2><title>Events</title>
-        <para>(no events found)</para>
-      </refsect2>
-    </xsl:if>
-    
+
   </xsl:template>
 
     <xsl:template match="initarg|property" mode="describe-member">
@@ -985,7 +979,7 @@
         </refsect1>              
       </xsl:if>
       
-      <xsl:if test="child::class">
+      <xsl:if test="child::class[@extends]">
         <refsect1>
           <xsl:text>Extends </xsl:text>
           <xsl:call-template name="describe-superclass-chain">
