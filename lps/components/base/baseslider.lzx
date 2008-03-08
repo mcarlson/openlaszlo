@@ -229,6 +229,7 @@
         onmousedown="thedragstate.apply();"
         onmouseup="thedragstate.remove();"
         focusable="false"
+        x="0"
         y="${(parent.height-height)/2}"
     >
         
@@ -288,7 +289,7 @@
     </class><!-- end basesliderthumb class -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
