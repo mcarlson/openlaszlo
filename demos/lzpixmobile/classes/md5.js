@@ -286,8 +286,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-<!--
+/*
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
-* X_LZ_COPYRIGHT_END ******************************************************-->
+* X_LZ_COPYRIGHT_END ******************************************************/
