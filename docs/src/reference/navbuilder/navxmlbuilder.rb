@@ -58,14 +58,20 @@ def hash_sort_ignorecase (h)
   lowerkey.sort.each { |low,key| yield key, h[key] }
 end
 
+# If the title of this document has a tag name, return it.
+# We look for &lt;.....&gt;  (e.g. <canvas>), but we
+# also allow that the title may contain platform information,
+# like <splash> (as2).  We return the title without brackets,
+# e.g. "canvas", or "splash (as2)" as that is how it appears
+# in the index.
 def tagname_for(filename)
   tag = nil;
   open(filename) {|f|
       f.each_line { |line|
           line.chomp!
           if (line =~ /<title>.*<\/title>/) then
-              if (line =~ /<title>&lt;.*&gt;<\/title>/) then
-                  tag = line.sub(/.*<title>&lt;/, '').sub(/&gt;<\/title>.*/, '')
+              if (line =~ /<title>&lt;.*&gt;.*<\/title>/) then
+                  tag = line.sub(/.*<title>&lt;/, '').sub(/&gt;/, '').sub(/<\/title>.*/, '')
               end
           end
           if (line =~ /<link.*\.Incubator\./) then
@@ -80,8 +86,6 @@ end
 # Filenames are like lz.alert, LzAnimator.html, tag.attribute.html, tag-br.html
 # The file pattern for Lz/lz should work around any file case issues
 # on Windows vs. Unix/Linux.
-
-$stderr.puts "This version of navxmlbuilder has not resolved the issue of pruning out things from incubator"
 
 generate_index("{[Ll]z,tag}*.html", "tags.xml", "index") { | file,fullname |
     tagname_for(fullname);
