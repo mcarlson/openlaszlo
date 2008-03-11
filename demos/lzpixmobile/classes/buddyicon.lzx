@@ -1,0 +1,24 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<class name="buddyicon" width="24" height="24" stretches="both" >
+
+    <handler name="ondata" args="d">
+        if (!d) return; 
+        var dp = this.datapath;
+        var iconserver = dp.xpathQuery('@iconserver');
+        var userid = dp.xpathQuery('@id');            
+        this.setSource( this.getBuddyIconUrl(userid, iconserver) ); 
+    </handler>
+
+    <!-- Get buddy icon from http://static.flickr.com/{icon-server}/buddyicons/{nsid}.jpg
+        ie  http://static.flickr.com/27/buddyicons/49503086499@N01.jpg -->        
+    <method name="getBuddyIconUrl" args="userid,iconserver">
+        <![CDATA[
+        var s="http://static.flickr.com/" + iconserver + "/buddyicons/" + userid + ".jpg";
+        return s;            
+        ]]>
+    </method>
+</class>

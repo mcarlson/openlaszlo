@@ -1,0 +1,134 @@
+<library>
+    
+    <class name="clipboardlayout" extends="layout" >
+        <method event="oninit" >
+            this.updateDelegate.register( parent,  "onheight" );
+            this.updateDelegate.register( parent,  "onwidth" );
+        </method>
+        
+        <method name="update" >
+            if ( this.locked ) return;
+            this.locked = true;
+            parent.update();
+            this.locked = false;
+        </method>
+    </class>
+
+    <include href="photocollection.lzx" />    
+    <class name="clipboardphoto" extends="photo" border="1"
+           width="30" height="30" clipfactor="1">
+        <method event="oninit">
+            shadow.setVisible( false );
+        </method>
+        <!-- Clicking on a photo in the clipboard brings that photo into
+        details view. The animation is a bit odd, because the photo thumbnail
+        is probably not visible in the album layout. -->
+        <method event="onclick">            
+            canvas.details.setImage( this.getImageURL('t'), this.getImageURL('') );            
+            if (photoscontainer.lyt.isgrid) {
+                photoscontainer.transitionToDetails(this);
+            } else {
+                photoscontainer.showPhotoDetails( true, this );
+            }
+            photoscontainer.detailphoto = this;
+        </method>
+    </class>
+    
+    <class name="clipboard"  oninit="this.update()" >
+        <attribute name="initialheight" value="45" />        
+        <attribute name="raiseheight" value="80" />        
+        <attribute name="height" value="$once{ this.initialheight }" />        
+        <attribute name="defaultplacement" value="interior" type="text" />
+        <attribute name="isopen" value="false" type="boolean" />
+        <animator name="anm_open"  attribute="height" to="300" duration="700" start="false"/>
+        <animator name="anm_close" attribute="height" to="$once{ parent.initialheight }"  
+                  duration="700" start="false"/>
+        <animator name="anm_slightraise" attribute="height" to="$once{ parent.raiseheight }"  
+                  duration="400" start="false"/>
+        <animator name="anm_slightlower" attribute="height" to="$once{ parent.initialheight }"  
+                  duration="400" start="false"/>
+       
+        <clipboardlayout/>
+        
+        <attribute name="raisedel" 
+                   value="$once{ new LzDelegate( this, 'setRaise' ) }"/>
+        <method name="dragStarted">
+            LzTimer.addTimer( raisedel, 250 );
+        </method>
+
+        <method name="dragFinished" args="sel">
+            //info('dragFinished', sel);
+            var wasover =this.interior.amtrackedover; 
+
+            if ( wasover ){
+                this.interior.addSelection( sel );
+            }
+
+            this.interior.setAttribute( "amtrackedover" , false );
+            this.setRaise( true );
+            return wasover;
+        </method>
+        <include href="clipboardinterior.lzx"/>
+
+        <view name="tplft" resource="../assets/clipboard/tplft.png" />
+        <view name="tp"    resource="../assets/clipboard/tp.png" stretches="width" />
+        <view name="tprgt" resource="../assets/clipboard/tprgt.png" >
+           <mybutton name="icon_grow"    x="9" y="4" resource="icon_plus_rsc"  onclick="classroot.toggle()" visible="${!classroot.isopen}"/>
+           <mybutton name="icon_shrink"  x="9" y="4" resource="icon_minus_rsc"  onclick="classroot.toggle()" visible="${classroot.isopen}" />
+        </view>
+        <view name="lft"   resource="../assets/clipboard/lft.png" stretches="height"  />
+        <view name="rgt"   resource="../assets/clipboard/rgt.png" stretches="height" />
+        
+
+        <text x="26" y="19" opacity=".5" fgcolor="0xffffff" fontstyle="bold" fontsize="11">Clips</text>
+        <text x="25" y="18" fgcolor="0x463e9D" fontstyle="bold" fontsize="11">Clips</text>
+
+
+        <!-- this is called by the draggedphotos so the user knows this panel
+             is the drop target. true means lower so that the delegate for this
+             method can be called by the timer -->
+        <method name="setRaise" args="dolower">
+            if ( dolower != true ) anm_slightraise.doStart();
+            else anm_slightlower.doStart();
+        </method>
+        
+        <method name="update" >
+            this.tp.setX( this.tplft.width );
+            this.tprgt.setX( width - this.tprgt.width );
+            this.tp.setWidth( width - this.tplft.width - this.tprgt.width );
+            
+            this.lft.setY( this.tplft.height );
+            this.lft.setHeight( this.height - this.tplft.height );
+            this.rgt.setX( width - this.rgt.width );
+            this.rgt.setY( this.tprgt.height );
+            this.rgt.setHeight( height - this.tprgt.height );
+            this.interior.setX( this.lft.width - 4 );
+            this.interior.setY( this.tp.height - 4 );
+            this.interior.setWidth( width - this.interior.x - this.rgt.width + 4);
+            this.interior.setHeight( height - this.interior.y );
+            this.setY( canvas.height - height);
+        </method>
+       
+       <method name="toggle"  >
+            if ( isopen ) {
+                this.anm_close.doStart();
+            } else {
+                this.anm_open.doStart();
+                scrn.setVisible(true);
+                this.bringToFront();
+                gDragged.bringToFront();
+            }
+            this.setAttribute('isopen', !this.isopen);
+       </method>
+
+       <method event="onstop" reference="anm_close" >
+            scrn.setVisible(false);
+       </method>
+       
+    </class>
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->

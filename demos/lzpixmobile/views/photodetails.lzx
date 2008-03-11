@@ -1,0 +1,142 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<view id="photodetails" opacity="0" width="${parent.width}" y="${parent.header.height}" clip="true" visible="false">
+        
+    <animator name="showanim" attribute="opacity" to="1" duration="300"  start="false" onstart="parent.setVisible(true)"/>
+    <animator name="hideanim" attribute="opacity" to="0" duration="300"  start="false" onstop="parent.setVisible(false)"/>
+
+    <method name="setPhoto" args="p" >
+        fullview.setImage( p.getPhotoURL() );
+        headerphoto.setImage( p.getThumbnailURL() );
+        var photoid = p.datapath.p.getAttr("id"); 
+
+        gDataMan.loadPhotoDetails( photoid ); 
+        gDataMan.loadUserInfo( p.datapath.p.getAttr("owner") );
+    </method>
+    
+    
+    <view name="container" >
+        <animator name="slideup"   attribute="y" to="-256" duration="300"  start="false" onstop="parent.setFocus()"/>
+        <animator name="slidedown" attribute="y" to="0" duration="300"  start="false" onstop="parent.setFocus()"/>
+
+        <method name="setFocus" ><![CDATA[
+            if ( y < 0 ) navmanager.focus( mobilepage1 )
+            else navmanager.focus( fullview )
+        ]]></method>
+        
+        <simplelayout spacing="0" inset="6" />
+        <photo id="fullview" x="8" 
+                y="53" 
+                visible="true" 
+                width="224"  height="228"  >
+
+            <method name="handlekeydown" args="k" >
+                <![CDATA[
+                var offset = container.lastphoto.clonenumber
+                switch( k ) {
+                    case 38: // up arrow
+                        container.hideDetails()
+                        return true;
+                    case 40: // down arrow
+                        parent.slideup.doStart();
+                        return true;
+                    case 37: // left arrow
+                        offset -= 1;
+                        if (offset < 0) offset = 0;
+                        container.lastphoto = gContent.repl.getCloneForOffset( offset );
+                        photodetails.setPhoto(container.lastphoto);
+                        return true;
+                    case 39: // right arrow
+                        offset += 1;
+                        if (offset > gContent.pagesize - 1) offset = gContent.pagesize - 1;
+                        container.lastphoto = gContent.repl.getCloneForOffset( offset );
+                        photodetails.setPhoto(container.lastphoto);
+                        return true;
+                    default:
+                        return false;    
+                }
+                ]]>
+            </method>
+            <handler name="onmouseup" >
+                container.hideDetails();
+            </handler>
+            <handler name="onfocused" >
+                <![CDATA[
+                if (parent.y < 0) {
+                    navmanager.focus(null);
+                    parent.slidedown.doStart();
+                }
+                ]]>
+            </handler>
+        </photo>
+        
+        <view height="24" width="10" /> <!-- visual buffer -->
+            
+        <view name="header" id="detailshdr" width="${parent.width}" height="65" datapath="userds:/rsp/person" >
+             <!-- gray line -->
+            <view bgcolor="0x3e3e3e" height="1" x="8" y="64" width="250" />
+
+            <photo id="headerphoto" x="8" y="8"  width="57" height="57" focusable="false"  /> <!-- v -->
+            
+
+            <view name="inner" x="69" y="8" visible="true" fontsize="9" >
+                <text fgcolor="0xa1a1a1">updated on </text>
+                <text name="formattedDate" x="70" fgcolor="white" >
+                    10/21/08
+                </text>
+                <text y="14" fgcolor="0xa1a1a1" visible="${parent.userlabel.text != ''}">by </text>
+                <text name="userlabel" datapath="realname/text()" x="20" y="14" fgcolor="white" multiline="true" />
+            </view>
+
+            <buddyicon id="gBud" x="207" y="8" bgcolor="0xa1a1a1" datapath="userds:/rsp/person"/>
+            
+        </view>
+        
+        <mobilescroller width="${parent.width}" height="168"
+                        datapath="infods:/rsp/photo"  >
+                        
+            <simplelayout axis="y" spacing="5" />
+                                                
+            <text fgcolor="0xe3e3e3" fontstyle="bold" fontsize="11" visible="${parent.desc.text != ''}">Description</text>
+            
+            <text name="desc" 
+                    fgcolor="0xa1a1a1"
+                    multiline="true"
+                    width="${parent.width - 25 }" datapath="description/text()"/>
+
+            <text fgcolor="white" fontstyle="bold" fontsize="11" height="23" >Tags</text>
+
+            <view x="5"  width="${parent.width}">
+                <handler name="ondata" reference="infods">
+                    this.tl.setDatapath('infods:/rsp/photo/tags/tag[1-19]/text()');
+                </handler>
+                <wrappinglayout spacing="3" />      
+                <taglink name="tl" clickable="true" >
+                    <handler name="onclick">
+                        var t = this.txt.getText();
+                        sbox.setText( t );
+                        sbox.load();
+                    </handler>
+                </taglink>
+            </view>
+        </mobilescroller>
+    </view>
+
+
+    <method name="showDetails" args="screen">
+    
+        if ( screen == 'photo' ) {
+            this.container.setY( 0 );
+            navmanager.focus( fullview );       
+        } else if ( screen == 'info' ) {
+            this.container.setY( -256 );
+            navmanager.focus( mobilepage1 );         
+        }
+
+    </method>
+
+    
+</view> <!-- END photodetails -->

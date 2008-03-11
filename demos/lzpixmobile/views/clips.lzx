@@ -1,0 +1,42 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<view id="clips" bgcolor="black" 
+       width="240"  y="${parent.height - height - 22}" height="53" visible="false"   >
+    <animator name="open_anm"  attribute="height" to="210"  duration="300"  />
+    <animator name="close_anm" attribute="height" to="53"  duration="300"  />
+    
+    <method name="addPhoto" args="photo">
+        this.content.repl.nodes.push( photo.data );
+        this.content.repl.setNodes( this.content.repl.nodes );
+    </method>
+    
+    <footerbutton  name="btn" text="Clips" width="${parent.width}" xtext="13" onmouseup="parent.close_anm.doStart(); highlight.hide()" >
+        <handler name="onstop" reference="parent.close_anm" >
+            parent.setVisible( false );
+            navmanager.focus( clipsmainbtn );
+        </handler>
+        <handler name="onstop" reference="parent.open_anm" >
+            navmanager.focus( this );
+        </handler>
+     </footerbutton>
+     
+    <view name="content" 
+          x="10" 
+          y="${parent.btn.height + 10}"
+          width="${parent.width - 20}" 
+          height="${parent.height - y - 30}"  
+          clip="true" bgcolor="black" >
+        <hintedlayout xspacing="28" yspacing="20"/>
+        <replicator name="repl" nodes="[]">
+            <photo width="${54}">
+                <handler name="onmouseup" >
+                    container.showDetails( 'photo' )
+                </handler>
+            </photo>
+        </replicator>
+    </view>
+
+</view>

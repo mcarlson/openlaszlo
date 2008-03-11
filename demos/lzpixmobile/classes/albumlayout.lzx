@@ -1,0 +1,142 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+    <class name="albumlayout" extends="layout" >
+        <!--- The primary axis for wrapping. -->
+        <attribute name="axis" value="x" setter="this.setAxis( axis )"
+                   type="string" />
+        <!--- A pixel amount to use between the views controlled by the layout in
+              both axes. By default, both xspacing and yspacing are set to this
+              value. -->
+        <attribute name="spacing" value="1"/>
+        <!--- A pixel amount to offset the first view controlled by the layout in x
+              axis -->
+        <attribute name="xinset" value="0"/>
+        <!--- A pixel amount to offset the first view controlled by the layout in y
+              axis -->
+        <attribute name="yinset" value="0"/>
+        <!--- A pixel amount to use between the views controlled by the layout in
+              the x axis. -->
+        <attribute name="xspacing" value="${this.spacing}" />
+        <!--- A pixel amount to use between the views controlled by the layout in
+              the y axis. -->
+        <attribute name="yspacing" value="${this.spacing}" />
+        <!--- If given, a number of miliseconds to use to animate the views in to
+              place.-->
+              
+        <attribute name="photoscale" value="1" />
+        <attribute name="photodimension" value="70" />
+
+        <attribute name="skew" value="0" />
+        <attribute name="skewindex" value="1" />
+
+        <attribute name="isgrid" value="true" />
+
+
+        <attribute name="duration"     value="0"/>
+        <!--- @keywords private -->
+        <method name="setAxis" args="a" >
+            <!-- CURRENTLY THIS METHOD IS NOT USED -->
+            this.axis = a;
+            this.otherAxis =  a == "x" ? "y" : "x"
+            this.sizeAxis = a == "x" ? "width" : "height"
+            this.otherSizeAxis = a == "x" ? "height" : "width"
+        </method>
+    
+        <!--- @keywords private -->
+        <method name="addSubview" args="newsub">
+            this.updateDelegate.register( newsub,  'onwidth');
+            this.updateDelegate.register( newsub,  'onheight');
+            this.updateDelegate.register( this.immediateparent,  'onwidth');
+            this.updateDelegate.register( this,  'onphotoscale');
+            this.updateDelegate.register( this,  'onyspacing');
+            this.updateDelegate.register( this,  'onxspacing');
+            this.updateDelegate.register( this,  'onskew');
+            super.addSubview( newsub );
+            this.update();
+       </method>
+    
+        <!--- This method is usually called automatically when any of the views
+              controlled by the layout change their size , or when the size of
+              layout's immediateparent changes. However it can be called directly
+              to force the layout to update -->
+       <method name="update">
+            <![CDATA[
+            if ( this.locked ) return;
+            this.locked = true;
+            //Debug.write("layout update");
+  
+
+            var l = this.subviews.length;
+            var limit = this.immediateparent[this.sizeAxis];
+            var rowindex = 0;
+            var leftlimit = (rowindex - skewindex)*skew*limit;
+            var rightlimit = leftlimit + limit;
+    
+            // position along this.axis
+            var pos = this[this.axis + 'inset'] + leftlimit;
+            // position along this.otherAxis
+            var otherpos = this[this.otherAxis + 'inset'];
+            var maxdimension = 0;
+            var space = this[this.axis + 'spacing'];    // spacing in axis dimension
+            var otherspace = this[this.otherAxis + 'spacing'];    // spacing in other axis dimension
+    
+            
+            for(var i=0; i < l; i++) {
+                // get subview
+                var s = this.subviews[i]; // get subview
+                
+                // set position of subview
+                s.setAttribute(this.axis,pos); // set position
+                s.setAttribute(this.otherAxis,otherpos);
+                
+                // set width and height of subview
+                s.setWidth(Math.round(photodimension*photoscale));
+                s.setHeight(Math.round(photodimension*photoscale));
+                
+                // adjust next position by dimension of previous subview
+                pos += s[this.sizeAxis];
+                if ( i < (l - 1)) {
+                    pos += space; //add spacing between last subview
+                    
+                    maxdimension = Math.max(maxdimension,s[this.otherSizeAxis]);
+                    
+                    if (( pos > rightlimit) ||
+                        (pos + this.subviews[i+1][this.sizeAxis] >  rightlimit)) {
+                        // need to create a new row so ...
+                        rowindex += 1;
+                        leftlimit = (rowindex - skewindex)*skew*limit;
+                        rightlimit = leftlimit + limit;
+                        pos = this[this.axis + 'inset'] + (rowindex - skewindex)*skew*limit;
+                        otherpos += maxdimension + otherspace;
+                        maxdimension = 0;   // Reset the height/width after every row/column                    
+                    }
+                }
+    
+    
+            }
+            this.locked = false;
+            ]]>
+        </method>
+        <!--- @keywords private -->
+        <method name="toString">
+             return 'wrappinglayout for ' + this.immediateparent;
+        </method>
+        
+        <method name="reset">
+            this.photoscale = 1;
+            this.photodimension = 70;
+            this.skew = 0;
+            this.skewindex = 1;
+            this.spacing = 52;
+            this.xspacing = this.spacing;
+            this.yspacing = this.spacing
+            this.yinset = 35;
+         </method>
+
+    </class>
+
+</library>

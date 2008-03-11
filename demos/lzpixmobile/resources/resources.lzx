@@ -1,0 +1,43 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+
+    <resource name="hdr_bkgnd_rsc"      src="hdr-bkgnd.png" />
+    <resource name="logo_rsc"           src="logo.png" />
+    
+    
+    <resource name="icon_header_rsc"    src="icon-header.png" />
+    <resource name="icon_grid4_rsc"     src="icon-grid4.png" />
+    <resource name="icon_grid9_rsc"     src="icon-grid9.png" />
+
+    <resource name="icon_pageleft_rsc"     src="icon-pageleft.png" />
+    <resource name="icon_pageright_rsc"    src="icon-pageright.png" />
+
+    <resource name="icon_taglink_rsc"    src="taglink_icon2.gif" />
+
+    <resource name="arrowhelp_rsc"    src="arrowhelp.png" />
+    
+    <resource name="header_button_rsc" >
+        <frame src="header-button-mup.png" />
+        <frame src="header-button-mup.png" />
+        <frame src="header-button-mup.png" />    
+    </resource>
+
+    <resource name="option_button_rsc" >
+        <frame src="option-button-mup.png" />
+        <frame src="option-button-mover.png" />
+        <frame src="option-button-mdown.png" />    
+    </resource>
+    
+    <resource name="option_button_separator_rsc"  src="logo.png" />    
+    
+    <resource name="footer_button_rsc" >
+        <frame src="footer-button-mup.png" />
+        <frame src="footer-button-mover.png" />
+        <frame src="footer-button-mdown.png" />
+    </resource>
+    
+</library>

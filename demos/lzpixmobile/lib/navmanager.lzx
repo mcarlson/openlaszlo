@@ -1,0 +1,205 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library> 
+    <script when="immediate">
+    <![CDATA[
+        mixin Spatialnav {
+            function construct(parent, args) {
+                this.focusable = true;
+                super.construct(parent, args);
+                if (navmanager) navmanager.add(this);
+            }
+            function findnext() {
+                if (this['next'] && this['next'].visible) { 
+                    return this.next;
+                }
+            }
+            function findprev() {
+                if (this['prev']) { 
+                    return this.prev;
+                }
+            }
+            function handlekeydown(k) {
+                if (k == 13) {
+                    this.onmousedown.sendEvent();
+                }
+            }
+            function handlekeyup(k) {
+                if (k == 13) {
+                    this.onmouseup.sendEvent();
+                    this.onclick.sendEvent();
+                }
+            }
+        }
+        ]]>
+    </script>
+
+    <node name="navmanager">
+        <attribute name="views" value="{}"/>
+        <attribute name="focused" value="null"/>
+        <attribute name="focustrap" value="null"/>
+        
+        <method name="add" args="v">
+            var uid = v.getUID();
+            this.views[uid] = v;
+        </method>
+        
+        <method name="distance" args="dx, dy">
+            return Math.sqrt((dx*dx) + (dy*dy));
+        </method>
+        
+        <method name="angle" args="dx, dy">
+            return (Math.atan2(dy, dx) / Math.PI) + 1;
+        </method>
+        
+        <method name="focus" args="v">
+            <![CDATA[
+            if (v == this.focused) return;
+            //Debug.warn("focus on", v);
+            this.setAttribute('focused', v);
+            if (v && v['onfocused'] ) v.onfocused.sendEvent();
+            ]]>
+        </method>
+        
+        <handler name="onwidth" reference="canvas" method="refocus"/>
+        <handler name="onheight" reference="canvas" method="refocus"/>
+        <method name="refocus">
+            if (this.focused) this.setAttribute('focused', this.focused);
+        </method>
+        
+        <handler name="onkeyup" reference="LzKeys" args="k">
+            <![CDATA[
+            if (this.focused && this.focused['handlekeyup']) {
+                var skip = this.focused.handlekeyup(k);
+                if (skip) return;
+            }
+            ]]>
+        </handler>
+        
+        <handler name="onkeydown" reference="LzKeys" args="k">
+            <![CDATA[
+            var skip;
+            
+            // let the canvas take first crack at processing the key press
+            if ( canvas['handlekeydown'] ) {
+                skip = canvas.handlekeydown( k );
+                if ( skip ) return;
+            }
+            var show;
+            if (this.focused) {
+                // now let the focused view process the key press
+                if ( this.focused['handlekeydown'] ) {
+                    skip = this.focused.handlekeydown( k );
+                    if (skip) return;
+                }
+
+                if (k == 37 && this.focused['findprev']) {
+                    show = this.focused.findprev();
+                } else if (k == 39 && this.focused['findnext']) {
+                    show = this.focused.findnext();
+                }
+            }
+            if (show) {
+                this.focus(show);
+            } else {
+                this.move(k);
+            }
+            ]]>
+        </handler>
+        
+        <method name="move" args="k">
+            <![CDATA[
+            var up,down,left,right;
+            switch(k) {
+                case 38: 
+                    up = true;
+                    targetangle = .5;
+                    break;
+                case 40: 
+                    down = true;
+                    var targetangle = 1.5;
+                    break;
+                case 37: 
+                    left = true;
+                    targetangle = 0;
+                    break;
+                case 39: 
+                    right = true;
+                    targetangle = 1;
+                    break;
+                default:
+                    return;    
+            }
+
+            var closest = null;
+            var f = this.focused;
+            var fx = f.width * .5;
+            var fy = f.height * .5;
+            if (f) {
+                while (f != canvas) {
+                    fx += f.x; //INLINE getAttributeRelative('x', canvas);
+                    fy += f.y; //INLINE getAttributeRelative('y', canvas);
+                    f = f.immediateparent;
+                }
+            }
+
+
+            var maxdistance = this.distance(canvas.width, canvas.height);
+            var mindistance = Infinity;
+
+            for (var uid in this.views) {
+                var v = this.views[uid]
+                if (v == this.focused) continue;
+                if (v.focusable != true) continue;
+
+                // all parents are visible
+                var vis = true;
+                // always valid if there is no focustrap
+                var valid = this.focustrap == null;
+                var f = v;
+                var x = f.width * .5;
+                var y = f.height * .5;
+                while (f != canvas) {
+                    if (! f.visible) {
+                        vis = false;
+                        break;
+                    }
+                    if (this.focustrap && this.focustrap == f) {
+                        // if there is a focustrap and it's a parent, validate
+                        valid = true;
+                    }
+                    x += f.x; //INLINE getAttributeRelative('x', canvas);
+                    y += f.y; //INLINE getAttributeRelative('y', canvas);
+                    f = f.immediateparent;
+                }
+                if (! vis) continue;
+                if (! valid) continue;
+                if (up && y >= fy) continue;
+                if (down && fy >= y) continue;
+                if (left && x >= fx) continue;
+                if (right && fx >= x) continue;
+
+                // find closest
+                var dx = x - fx;
+                var dy = y - fy;
+                var dist = Math.sqrt((dx*dx) + (dy*dy)) / maxdistance; // INLINE this.distance(dx, dy);
+                var angle = (Math.atan2(dy, dx) / Math.PI) + 1; // INLINE this.angle(dx, dy);
+                var angledelta = Math.abs(targetangle - angle);
+                if (angledelta > 1) angledelta = 2 - angledelta; 
+
+                var weighted = ((dist + (angledelta * .5)) * .5);
+                //v.setAttribute('opacity', 1 - (weighted * 5));
+                if (weighted < mindistance) {
+                    mindistance = weighted;
+                    closest = v;
+                }
+            }
+
+            if (closest) this.focus(closest);
+            ]]>
+        </method>
+    </node>
+</library>

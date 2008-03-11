@@ -1,0 +1,63 @@
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+    <class name="search" extends="inputtext" with="Spatialnav" bgcolor="white" text="interesting" y="-5" visible="false">
+    
+        <attribute name="opened" value="false"  />
+        <animator name="open"  attribute="y" to="25" duration="200" start="false"/>
+        <animator name="close" attribute="y" to="-5" duration="200" start="false" />
+
+        <handler name="onfocus">
+            //if (this.opened) navmanager.focus(this);
+        </handler>
+
+        <handler name="onfocused" reference="navmanager" args="f">
+            if (f != this) {
+                this.onblur.sendEvent();
+                if (this.opened) this.toggle()
+            } else {
+                this.onfocus.sendEvent();
+                this.setSelection(0, this.text.length);
+            }
+        </handler>
+            
+        <method name="handlekeydown" args="k" >
+            if ( k == 13 ) { //return key
+                this.load()
+                this.toggle();
+            }
+        </method>
+
+        <handler name="onstop" reference="this.close" >
+            this.setVisible( false );
+        </handler>
+
+        <handler name="onstart" reference="this.open" >
+            this.setVisible( true );
+        </handler>
+        
+        <handler name="onstop" reference="this.open" >
+            navmanager.focus( this );
+        </handler>
+
+        <handler name="oninit" method="load"/>
+        <method name="load">
+            gDataMan.loadPhotosByTag(this.getText());
+            container.hideDetails();
+        </method>
+        
+        <method name="toggle" >
+            if ( this.opened ) {
+                this.close.doStart()
+            } else {
+                this.open.doStart();
+            }
+            this.opened = !this.opened;
+        </method >
+
+    </class>
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->

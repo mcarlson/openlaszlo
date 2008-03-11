@@ -1,0 +1,25 @@
+<library>
+
+<include href="../views/mybutton.lzx" />
+
+<class name="linkbutton" height="20">
+    <attribute name="label" type="string" value="linkbutton" />
+    <attribute name="url" type="string" value="http://www.openlaszlo.org" />
+    <attribute name="targetframe" type="string" value="_blank" />
+    <attribute name="windowopts" type="string" value="toolbar=yes" />
+    <text fgcolor="#324FDB" text="${classroot.label}" width="${parent.width}" />
+    <mybutton 
+        resource="transparent_rsc"
+        width="${parent.width}" height="${parent.height}" >
+        <method event="onclick">
+            LzBrowser.loadURL( parent.url, parent.targetframe, parent.windowopts);
+        </method>
+    </mybutton>
+</class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

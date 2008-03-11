@@ -1,0 +1,78 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+    <class name="mobilepage" width="4" height="4" bgcolor="0x5e5e5e" with="Spatialnav" >
+    
+        <method name="getCanvasFocusRect">
+            var rect = [ this.getAttributeRelative('x', canvas) - 3,
+                         this.getAttributeRelative('y', canvas) - 3,
+                         this.getAttributeRelative('width', canvas) + 6,
+                         this.getAttributeRelative('height', canvas) + 6];
+            return rect;
+        </method>
+        
+        <handler name="onfocused" >
+            var pg = Math.round(this.y/10.0); // 10 = 4 + 6 = width + layout spacing
+            parent.parent.scrollToPage( pg );
+        </handler>
+        
+    </class>
+    
+    <class name="mobilescroller" width="240"  clip="true"  >
+        <attribute name="defaultplacement" value="content" type="string" />
+ 
+        <view name="content" x="8" width="${parent.width - parent.controller.width - x}" >
+            <handler name="onheight" >
+                parent.controller.update();
+            </handler>
+        </view>
+
+        <view name="controller" width="10" x="${parent.width - width}" y="3" >
+            <attribute name="pages" value="0" />
+            <simplelayout axis="y" spacing="6" />
+            
+            <!-- first mobilepage requires special handling -->
+            <mobilepage id="mobilepage1" >
+            
+                 <method name="handlekeydown" args="k" >
+                    <![CDATA[
+                    switch( k ) {
+                        case 38: // up arrow
+                            var container = parent.parent.parent;
+                            container.slidedown.doStart();
+                            return true;
+                        default:
+                            return false;    
+                    }
+                    ]]>
+                </method>
+            </mobilepage>
+            <mobilepage/>
+            <mobilepage/>
+            <mobilepage/>
+            <mobilepage/>
+            <mobilepage/>
+            <mobilepage/>
+            <mobilepage/>
+            <mobilepage/>
+            <mobilepage/>
+            <mobilepage/>
+
+            <method name="update" > <![CDATA[
+                var np = Math.round( parent.content.height/parent.height ) + 1;
+                for (var i = 0; i < this.subviews.length; i++) {
+                    this.subviews[i].setVisible( i < np );
+                }            
+            ]]></method>   
+        </view>
+        
+       
+        <method name="scrollToPage" args="n" >
+            this.content.animate('y',-n*height,300);
+        </method>
+        
+    </class>
+</library>

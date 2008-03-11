@@ -1,0 +1,20 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+    <resource name="spinner_rsc" src="../assets/spinner/"/>
+   
+   <class name="spinner" resource="spinner_rsc" onclick="this.play()" visible="false" >
+        <attribute name="counter" value="1" />
+        <method event="onidle" reference="LzIdle" >
+            if (! this.visible ) return;
+            this.setAttribute('counter', ( this.counter + 1)%6);
+            if ( this.counter == 0 ) {
+                var f = (this.frame + 1)%6;
+                this.setAttribute('frame', f == 0 ? 6 : f);
+            }
+        </method>
+   </class>
+</library>

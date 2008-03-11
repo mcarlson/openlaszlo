@@ -1,0 +1,17 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+    <include href="mobilescroller.lzx" />    
+    <include href="photo.lzx" />    
+    <include href="buddyicon.lzx" />   
+    <include href="taglink.lzx" />   
+    <include href="pivotlayout.lzx" />
+    <include href="footerbutton.lzx" />
+    <include href="optionsbutton.lzx" />
+    <include href="optionsmenuitem.lzx" />
+    <include href="search.lzx" />
+    <include href="dataman.lzx" />
+</library>

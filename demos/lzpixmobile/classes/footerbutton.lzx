@@ -1,0 +1,41 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+    <class name="footerbutton" clickable="true" with="Spatialnav"  >
+        <attribute name="text" type="string" value="" />
+        <attribute name="xtext" value="-1" />
+        <attribute name="iconresource" type="string"/>
+        <attribute name="defaultplacement" value="iconandtext" type="string" />
+        
+        <basebutton resource="footer_button_rsc" stretches="width" width="100%"  >
+            <handler name="onmousedown" reference="classroot">
+                this.onmouseover.sendEvent();
+                this.onmousedown.sendEvent();
+            </handler>
+            <handler name="onmouseup" reference="classroot">
+                this.onmouseup.sendEvent();
+            </handler>
+            <handler name="onmousedown">
+                classroot.onmousedown.sendEvent();
+            </handler>
+            <handler name="onmouseup">
+                classroot.onmouseup.sendEvent();
+            </handler>
+        </basebutton>
+        <view height="${parent.height}" width="1" bgcolor="white" />
+        <view height="${parent.height}" width="1" x="${parent.width - 1}" bgcolor="0x9d9feb" />
+        <view height="${parent.height}" width="${parent.width}" name="content" />
+        <view name="icon" 
+              x="${Math.round((parent.width - width)/2.0)}" 
+              y="${Math.round((parent.height - height)/2.0)}"/>
+        <text text="${classroot.text}" fgcolor="0x1f13b1"
+              x="${ classroot.xtext > 0 ? classroot.xtext : Math.round((parent.width - this.getTextWidth())/2.0) }" y="5" fontstyle="bold"/>
+        <handler name="oninit" >
+            if (this['iconresource']) this.icon.setResource( this.iconresource );
+        </handler>
+    </class>
+</library>
+

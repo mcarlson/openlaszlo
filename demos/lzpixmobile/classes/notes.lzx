@@ -1,0 +1,137 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+
+    <class name="box" >
+        <view bgcolor="0xffffff" width="${parent.width}" height="1" />
+        <view bgcolor="0xffffff" width="${parent.width}" height="1" y="${parent.height - 1}" />
+        <view bgcolor="0xffffff" height="${parent.height}" width="1" />
+        <view bgcolor="0xffffff" height="${parent.height}" width="1" x="${parent.width - 1}" />
+    </class>
+    
+    
+    <!-- Notes are positioned on a coordinate system such that the maximum dimension of the 
+        photo is 500 pixels. A portrait photo will be treated as 500 pixels in height. A 
+        landscape photo will be treated as 500 pixels in width. So the scale factor 
+        for a portrait photo:
+        
+        scalefactor_portrait: height_of_original_image / 500 pixels
+        scalefactor_landscape: width_of_original_image / 500 pixels
+        
+        and the y position of a note will be 
+        y_show = y_note * scalefactor;
+    -->
+    <class name="note" extends="box" 
+        onmouseover="showNote(true)" 
+        onmouseout="showNote(false)"
+        bgcolor="0xFFFFFF"
+        opacity="0.01"
+        >
+        
+        <!-- Decent defaults. See note in class comment on coordinate systems for notes. --> 
+        <attribute name="originalwidth" value="500" />
+        <attribute name="originalheight" value="300" />        
+        <attribute name="scalefactor" value="1" />
+        <attribute name="islandscape" value="true" />
+        
+        <method name="showNote" args="show">
+            if (show) {
+                this.setOpacity(0.3);
+                txtborder.setOpacity(1)                
+                authorlabel.setOpacity(1);
+                notelabel.setOpacity(1);
+            } else {
+                this.setOpacity(0.01);                
+                txtborder.setOpacity(0.5)
+                authorlabel.setOpacity(0);
+                notelabel.setOpacity(0);            
+            }
+        </method>
+        
+        <box name="txtborder" y="${parent.height - 1}" width="${parent.width}" height="20">
+            <view bgcolor="white" 
+                opacity=".7" 
+                x="1" y="1" width="${parent.width - 2}" height="${parent.height - 2}" />
+            <view bgcolor="black" width="${parent.width - 2}" height="1" x="1" y="1" opacity=".5" />
+            <view bgcolor="black" width="1" height="${parent.height - 3}" x="1" y="2" opacity=".5" />
+            
+        </box>
+
+        <text name="authorlabel" datapath="@authorname" 
+            x="5"
+            fgcolor="0xFFFF00"
+            fontstyle="bold"
+            opacity="0"
+            />
+        <text name="notelabel" datapath="text()" 
+            fgcolor="0xFFFF00"
+            multiline="true" 
+            y="14"
+            x="5"
+            width="${parent.parent.width-10}"
+            opacity="0"
+            />            
+        
+        <!-- Sets the note's view position and dimensions to match the flickr note. 
+            Scale these to match the scale of the image -->
+        <method event="ondata" args="d" > <![CDATA[
+            if ( !d ) return;      
+            updateDimensions(); 
+        ]]></method>
+        
+        
+         
+        <datapointer name="size_dp" />
+        <method event="ondata" reference="sizeds" args="d"><![CDATA[
+            var dpw = size_dp.setXPath("sizeds:/rsp/sizes/size[1]"); 
+            var nname = size_dp.getNodeAttribute("label");
+            // Debug.write("got size info: ", d);
+            while (dpw && (nname != "Original") && (nname != "Medium")) {
+                size_dp.selectNext();
+                nname = size_dp.getNodeAttribute("label");                
+            }
+            // Debug.write("dpw: ", dpw, ", nname: ", nname);             
+            if (dpw) {
+                var ow = size_dp.getNodeAttribute("width"); 
+                this.originalwidth = ow; 
+                // Debug.write("originalwidth: ", originalwidth); 
+                var oh = size_dp.getNodeAttribute("height");
+                // Debug.write("originalheight: ", originalheight);
+                this.originalheight = oh;
+                this.updateDimensions(); 
+            }
+
+        ]]></method>
+        
+        <method event="onheight" reference="gPhV">
+            // Debug.write("onheight");             
+            updateDimensions();             
+        </method>
+        
+        <method name="updateDimensions"><![CDATA[
+            if ( originalwidth <= 0 ) return; 
+            this.islandscape = (this.originalwidth >= this.originalheight); 
+            
+            this.scalefactor = (islandscape ? 
+                                ( gPhV.width / this.originalwidth) 
+                                : (gPhV.height / this.originalheight)); 
+            // Debug.write("scalefactor: ", scalefactor); 
+            var dp = this.datapath;
+            var datax = dp.xpathQuery('@x');
+            this.setAttribute('x',datax * scalefactor);
+            var datay = dp.xpathQuery('@y');
+            this.setAttribute('y',datay * scalefactor);
+            var dataw = dp.xpathQuery('@w');
+            this.setAttribute('width',dataw * scalefactor);
+            var datah = dp.xpathQuery('@h');
+            this.setAttribute('height',datah * scalefactor); 
+
+        ]]></method>
+
+        
+     </class>
+
+</library>

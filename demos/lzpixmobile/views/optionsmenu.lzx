@@ -1,0 +1,138 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<view name="optionsmenu" height="100" clickable="true" visible="false"  >
+   <attribute name="anm_delegate" value="$once{ new LzDelegate(this,'endshowmenu')}" />
+   <attribute name="lastfocus" value="null" />
+   <attribute name="restoretools" value="false" />
+
+   <view name="bkgnd" bgcolor="0x0000000"  width="100%" height="${253 - footer.tools.height}" opacity=".8"  />
+    
+   <view name="list" id="optionslist" y="10" fontsize="12" 
+         width="100%" >
+        <!-- simplelayout axis="y" spacing="10" -->
+        <!-- view bgcolor="white" width="100" height="20" with="Spatialnav"/ --> 
+        <photo name="image" width="100" height="100" y="0" 
+               x="70"  >
+            <animatorgroup name="addtoclips_anm" duration="1000" start="false" process="simultaneous"  >
+                <animator attribute="x" to="20" motion="easeout" />
+                <animator attribute="y" to="220" />
+                <animator attribute="width" to="20" />          
+            </animatorgroup>
+            <method name="reset" >
+                this.setX( 70 );
+                this.setY( 0 );
+                this.setWidth( 100 );
+            </method>
+        </photo>
+        
+        <optionmenuitem name="op1" text="Show Image"  y="110" >
+            <method name="handlekeyup" args="k" >
+                if ( k == 13 ) { // returnkey
+                    canvas.optionsmenu.toggle( ); //close optionsmenu
+                    if ( photodetails.visible ) photodetails.showDetails( 'photo' )
+                    else container.showDetails( 'photo' );
+                    return true;
+                }
+                return false;
+           </method>
+        </optionmenuitem>
+        
+        <optionmenuitem name="op2" text="Show Info"  y="139" >
+           <method name="handlekeyup" args="k" >
+                if ( k == 13 ) { // returnkey
+                    canvas.optionsmenu.toggle( ); //close optionsmenu
+                    if ( photodetails.visible ) photodetails.showDetails( 'info' ); 
+                    else container.showDetails( 'info' );
+                    return true;
+                } else
+               
+               return false;
+            </method>
+         </optionmenuitem>
+       
+        <optionmenuitem name="op3" text="Add to Clips" y="168" >
+           <method name="handlekeyup" args="k" >
+                if ( k == 13 ) { // returnkey
+                    /*
+                    canvas.optionsmenu.toggle( ); //close optionsmenu
+                    clips.addPhoto(container.lastphoto);
+                    */
+                    parent.parent.addToClips( );
+                    return true;
+                    
+                }                
+                return false;
+            </method>
+        
+        </optionmenuitem>
+        
+        <method name="showMenu" args="vis" >
+            this.op1.setVisible( vis );
+            this.op2.setVisible( vis );
+            this.op3.setVisible( vis );
+        </method>
+    </view>
+
+    <method name="addToClips" >
+        canvas.highlight.hide();
+        this.list.showMenu( false );
+        this.list.image.addtoclips_anm.doStart();
+        if ( footer.tools.height == 0 ) {
+            this.restoretools = true;
+            footer.showTools( true );
+        } 
+    </method>
+ 
+    <handler name="onstop" reference="list.image.addtoclips_anm"  >
+        clips.addPhoto( container.lastphoto );
+        this.show( false );
+        this.list.image.reset( );
+        this.list.showMenu( true );
+        if ( restoretools ) footer.showTools( false );
+        this.restoretools = false;
+    </handler>
+ 
+    
+    <method name="show" args="b" >            
+        this.setY( parent.container.header.height );
+        this.setWidth( parent.container.width );
+        this.setHeight( container.height - 67 );
+        this.setOpacity( 0 );
+        this.setVisible( b );
+       
+        if ( b ) {
+            this.lastfocus = navmanager.focused;
+            navmanager.focustrap = this;
+            var photoview = null;
+
+
+            //this.list.image.setImage( photoview.getThumbnailURL() );
+            canvas.highlight.setVisible( true );
+            navmanager.focus( this.list.op1 ) 
+            var anm = this.animate('opacity',1,300);
+            anm_delegate.unregisterAll();
+            anm_delegate.register(anm,'onstop');                
+       }  else  {
+            navmanager.focustrap = null;
+            navmanager.focus( this.lastfocus );
+       }
+
+    </method>
+ 
+    <method name="endshowmenu" >
+    </method>
+
+    <method name="setPhoto" args="p" >
+        list.image.setImage( p.getThumbnailURL() );
+    </method>
+
+    <!-- called by id="button_options" -->
+    <method name="toggle" >
+        <![CDATA[
+        this.show( !this.visible );
+        ]]>
+    </method>
+</view>

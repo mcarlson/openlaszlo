@@ -1,0 +1,80 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<canvas> 
+    <include href="../lib/"/>
+
+    <class name="randombox" width="20" height="20" with="Spatialnav">
+        <handler name="oninit">
+            this.setWidth((Math.random() * 60) + 10);
+            this.setHeight((Math.random() * 60) + 10);
+            this.setX(Math.random() * (canvas.width - this.width));
+            this.setY(Math.random() * (canvas.height - this.height));
+            this.setBGColor(Math.random() * 0xffffff);
+        </handler>
+    </class>
+    
+    <view width="100" height="100" bgcolor="red">
+        <handler name="oninit">
+            // instances must register
+            navmanager.add(this);
+        </handler>
+    </view>
+
+    <view name="container" y="200" width="100%" height="${canvas.height - this.y}">
+        <replicator name="repl">
+            <randombox/>
+        </replicator>
+        <handler name="oninit">
+            var i = 100;
+            var o = [];
+            while (i > 0) {
+                i--;
+                o.push('');
+            }
+            this.repl.setNodes(o);
+        </handler>
+        <hintedlayout/>
+    </view>
+
+    <view name="tools" align="right" valign="bottom">
+        <simplelayout axis="x"/>
+        <view width="100" height="100" bgcolor="red">
+            <handler name="oninit">
+                // instances must register
+                navmanager.add(this);
+            </handler>
+        </view>
+        <view width="100" height="100" bgcolor="green">
+            <handler name="oninit">
+                // instances must register
+                navmanager.add(this);
+            </handler>
+        </view>
+    </view>
+
+    <drawview name="highlight">
+        <handler name="oncontext" method="redraw"/>
+        <handler name="onwidth" method="redraw"/>
+        <handler name="onheight" method="redraw"/>
+        <method name="redraw">
+            if (! this.context) return;
+            this.strokeStyle = 0xffcc00;
+            this.lineWidth = 4;
+            this.clear();
+            this.beginPath()
+            this.rect(0, 0, this.width, this.height); 
+            this.stroke();
+        </method>
+        <handler name="onfocused" reference="navmanager" method="show"/>
+        <method name="show" args="v, speed">
+            if (speed == null) speed = 300
+            this.animate('x', v.getAttributeRelative('x', canvas), speed);
+            this.animate('y', v.getAttributeRelative('y', canvas), speed);
+            this.animate('width', v.width, speed);
+            this.animate('height', v.height, speed);
+        </method>
+    </drawview>
+</canvas>

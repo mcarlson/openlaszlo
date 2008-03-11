@@ -1,0 +1,35 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+
+    <class name="optionmenuitem" extends="text"  fgcolor="white"
+           with="Spatialnav" resize="true" x="${Math.round((parent.width - width)/2.0)}" >
+        <method name="getCanvasFocusRect">
+            var rect = [ this.getAttributeRelative('x', canvas) -4,
+                         this.getAttributeRelative('y', canvas) - 4,
+                         this.getAttributeRelative('width', canvas) + 8,
+                         this.getAttributeRelative('height', canvas) + 8];
+            return rect;
+        </method>
+        
+        <method name="handlekeydown" args="k" >
+            <![CDATA[
+            switch( k ) {
+                case 32: //spacebar key
+                    button_options.onclick.sendEvent();
+                    return true;
+                case 27: //esc key
+                    button_exit.onclick.sendEvent();
+                    return true;
+                default:
+                    return false;    
+            }
+            ]]>
+        </method>
+        
+    </class>
+
+</library>

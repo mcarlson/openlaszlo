@@ -1,0 +1,146 @@
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+
+
+    <class name="photoother" bgcolor="white" width="77" height="${width}" >
+        <attribute name="defaultplacement" value="interior" type="text" />
+        
+        <!-- shadow -->
+        <view x="2" y="2" bgcolor="black" opacity=".5" 
+             width="${parent.width}" 
+             height="${parent.height}" />
+             
+        <!-- border -->
+        <view bgcolor="white" 
+              width="${parent.width}" 
+              height="${parent.height}" />
+        
+        <!-- -->
+        <view name="interior" x="2" y="2" bgcolor="black" clip="true" 
+              width="${parent.width - 4}" 
+              height="${parent.height - 4}" />
+    </class>
+
+
+    <class name="albumlayout2" extends="layout" >
+        <!--- The primary axis for wrapping. -->
+        <attribute name="axis" value="x" setter="this.setAxis( axis )"
+                   type="string" />
+        <!--- A pixel amount to use between the views controlled by the layout in
+              both axes. By default, both xspacing and yspacing are set to this
+              value. -->
+        <attribute name="spacing" value="59"/>
+        <!--- A pixel amount to offset the first view controlled by the layout in x
+              axis -->
+        <attribute name="xinset" value="0"/>
+        <!--- A pixel amount to offset the first view controlled by the layout in y
+              axis -->
+        <attribute name="yinset" value="0"/>
+        <!--- A pixel amount to use between the views controlled by the layout in
+              the x axis. -->
+        <attribute name="skew" value="1" setter="this.setSkew( skew )"/>
+        <attribute name="skewStep" value="1000" />
+        
+        <attribute name="xspacing" value="${this.spacing}" />
+        <!--- A pixel amount to use between the views controlled by the layout in
+              the y axis. -->
+        <attribute name="yspacing" value="${this.spacing}" />
+        <!--- If given, a number of miliseconds to use to animate the views in to
+              place.-->
+        <attribute name="duration"     value="0"/>
+        
+        <!--- @keywords private -->
+        <method name="setAxis" args="a" >
+            <!-- CURRENTLY THIS METHOD IS NOT USED -->
+            this.axis = a;
+            this.otherAxis =  a == "x" ? "y" : "x"
+            this.sizeAxis = a == "x" ? "width" : "height"
+            this.otherSizeAxis = a == "x" ? "height" : "width"
+        </method>
+
+        <method name="setSkew" args="s" >
+            <!-- save the past values of the animated skew values -->
+            if ( !this.skewarray ) this.skewarray = [s];
+            else this.skewarray.push( this.skew );
+            this.skew = s;
+            this['onskew'].sendEvent();
+        </method>
+     
+        <!--- @keywords private -->
+        <method name="addSubview" args="newsub">
+            this.updateDelegate.register( newsub,  'onwidth');
+            this.updateDelegate.register( newsub,  'onheight');
+            this.updateDelegate.register( this.immediateparent,  'onwidth');
+            this.updateDelegate.register( this,  'onskew');
+            super.addSubview( newsub );
+            this.update();
+       </method>
+    
+        <!--- This method is usually called automatically when any of the views
+              controlled by the layout change their size , or when the size of
+              layout's immediateparent changes. However it can be called directly
+              to force the layout to update -->
+       <method name="update">
+            <![CDATA[
+            if ( this.locked ) return;
+            this.locked = true;
+            var l = 0
+            if (this.subviews) l = this.subviews.length;
+            var limit = this.immediateparent[this.sizeAxis];
+            var rowinset = 1000;
+            var skewindex = this.skewarray.length - 1;
+            
+            //Debug.write("array =", this.skewarray);
+    
+            // position along this.axis
+            var pos = this[this.axis + 'inset'];
+            
+            // position along this.otherAxis
+            var otherpos = this[this.otherAxis + 'inset'];
+            var maxdimension = 0;
+            var space = this[this.axis + 'spacing'];    // spacing in axis dimension
+            var otherspace = this[this.otherAxis + 'spacing'];    // spacing in other axis dimension
+    
+            for(var i=0; i < l; i++) {
+            
+                //selecte the view
+                var s = this.subviews[i];
+                
+                // set its's poistion
+                s.setAttribute(this.axis,pos);
+                s.setAttribute(this.otherAxis,otherpos);
+                s.setAttribute('opacity',1 - this.skewarray[skewindex]);
+                
+                // update values for next view
+                pos += s[this.sizeAxis]; //start the next postion at the postion of the current view
+                if ( i < (l - 1)) {
+                
+                    // add the spacing
+                    pos += space;
+                    
+                    // what is this?
+                    maxdimension = Math.max(maxdimension,s[this.otherSizeAxis]);
+                    
+                    
+                    if (( pos > limit + rowinset) ||
+                        (pos + this.subviews[i+1][this.sizeAxis] >  limit)) {
+                        Debug.write("skewindex, skewarray[skewindex], rowinset",skewindex, this.skewarray[skewindex],rowinset);
+                        pos = this[this.axis + 'inset']  + this.skewarray[skewindex]*rowinset;
+                        otherpos += maxdimension + otherspace;
+                        maxdimension = 0;   // Reset the height/width after every row/column  
+                        skewindex -= 2;
+                        skewindex = Math.max(skewindex,0);
+                    }
+                }
+    
+    
+            }
+            this.locked = false;
+            ]]>
+        </method>
+        <!--- @keywords private -->
+        <method name="toString">
+             return 'wrappinglayout for ' + this.immediateparent;
+        </method>
+    </class>
+</library>

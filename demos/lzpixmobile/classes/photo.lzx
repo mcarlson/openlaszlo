@@ -1,0 +1,257 @@
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+
+    <class name="photo" width="54" height="54"  with="Spatialnav">
+        <attribute name="defaultplacement" value="interior" type="text" />
+        <attribute name="text" value="title" type="text" />   
+        <attribute name="imagelink"  value="" type="text" />   
+        <attribute name="clipfactor" value="0"
+                   setter="this.setClipFactor( clipfactor )"/>
+
+
+        <attribute name="loaded" value="false"/>
+        <attribute name="aspect" value="1"/>
+
+        <attribute name="_wmult" value="0"/>
+        <attribute name="_hmult" value="0"/>
+        <attribute name="_iwmult" value="0"/>
+        <attribute name="_ihmult" value="0"/>
+        <attribute name="_diwmult" value="0"/>
+        <attribute name="_dihmult" value="0"/>
+
+        <attribute name="intwidth" value="${ this._wmult * this.width }"/>
+        <attribute name="intheight" value="${ this._hmult * this.height }"/>
+
+        <attribute name="border" value="1"/>
+
+        <event name="onfocused"/>
+        <event name="lasturl" value="null"/>
+        <method name="getThumbnailURL">
+            return gDataMan.getPhotoURL(this.datapath, 't');
+        </method>
+        <method name="getPhotoURL">
+            return gDataMan.getPhotoURL(this.datapath, 'm');
+        </method>
+        
+        <handler name="ondata" args="d" >
+            <![CDATA[
+            // set last photo
+            //Debug.write("photo; ondata........");
+            if ( !d ) return;
+            var dp = this.datapath;
+            //Debug.write("this.text",this.text);
+            var url = this.getThumbnailURL();
+            if (url != this.lasturl) {
+                this.lasturl = url;
+                this.setAttribute('text', dp.xpathQuery('@title') );
+                this.setImage(url);
+            }
+            ]]>
+        </handler>
+        <handler name="onloaded" args="l">
+            if (l) {
+                if (navmanager.focused == this) navmanager.refocus();
+            }
+        </handler>
+
+        
+        <method name="setImage" args="s">
+             //Debug.write("set source s=",s);
+             // TODO: [mc 7-31-2006] Reversing these two lines causes IE image loading bugs - see lps/includes/lfc/test/resourceload.lzx.  Fix here for now. 
+             this.intparent.setVisible(false);
+             this.intparent.interior.setSource(s);
+        </method>
+   
+        <attribute name="_lastw" value="null"/>
+        <handler name="onwidth" method="updateX"/>
+        <method name="updateX" args="force">
+            <![CDATA[
+            //Debug.write("updateX called");
+            if ( !this.isinited ) return;
+            if ( height != width ) this.setHeight( width );
+            if ( _lastw == width && force != true ) {
+                return;
+            } 
+            this._lastw = width;
+            var wm = _wmult + clipfactor * ( _diwmult );
+            var iwidth = wm * ( this.width - 2*this.border );
+            var ix = this.width/2 - iwidth/2;
+
+            var ipwidth = iwidth + clipfactor * ( width - iwidth - 2*border);
+            var ipx = this.width/2 - ipwidth/2;
+            intparent.setX( ipx);
+            intparent.setWidth( ipwidth);
+            borderbg.setX( ipx  - this.border );
+            borderbg.setWidth( ipwidth  + 2*this.border );
+            intparent.interior.setX( ix - ipx );
+            intparent.interior.setWidth( iwidth );
+            //shadow.setX( border + ipx );
+            //shadow.setWidth( ipwidth + this.border );
+            ]]>
+        </method>
+
+        <attribute name="_lasth" value="null"/>
+        <handler name="onheight" method="updateY"/>
+        <method name="updateY" args="force">
+            <![CDATA[
+            if ( !this.isinited ) return;
+            if ( width != height ) this.setWidth( height );
+            if ( _lasth == height && force != true ) {
+                return;
+            } 
+            this._lasth = height;
+            var hm = _hmult + clipfactor * ( _dihmult );
+            var iheight = hm * ( this.height - 2*this.border );
+            var iy = this.height/2 - iheight/2;
+
+            var ipheight = iheight + clipfactor * ( height - iheight - 2*border);
+            var ipy = this.height/2 - ipheight/2;
+
+            intparent.setY( ipy);
+            intparent.setHeight( ipheight );
+            borderbg.setY( ipy  - this.border );
+            borderbg.setHeight( ipheight  + 2*this.border );
+            intparent.interior.setHeight( iheight );
+            intparent.interior.setY( iy - ipy );
+            //shadow.setY( border + ipy );
+            //shadow.setHeight( ipheight + this.border );
+            ]]>
+        </method>
+
+        <handler name="onload" reference="intparent.interior">
+            //Debug.write("onload");
+            var irw = intparent.interior.resourcewidth;
+            var irh = intparent.interior.resourceheight;
+            if ( irw > irh ){
+                this.setAttribute( "_wmult" , 1 );
+                this.setAttribute( "_hmult" , irh/ irw );
+                this.setAttribute( "_iwmult" , irw/irh);
+                this.setAttribute( "_ihmult" , 1);
+            } else {
+                this.setAttribute( "_wmult" , irw/ irh );
+                this.setAttribute( "_hmult" , 1 );
+                this.setAttribute( "_iwmult" , 1);
+                this.setAttribute( "_ihmult" , irh/irw);
+            }
+            this.setAttribute( "_diwmult" , _iwmult - _wmult );
+            this.setAttribute( "_dihmult" , _ihmult - _hmult );
+            this.updateX( true );
+            this.updateY( true );
+            this.setAttribute( "loaded", true );
+            intparent.interior.setAttribute("opacity", 0);
+            this.intparent.setVisible(true);
+            intparent.interior.animate('opacity', 1, 200);
+        </handler>
+
+        
+        <!-- use this event to figure out if the view just got clicked 
+             (and not dragged -->
+        <attribute name="onplainclick" value="null"/>
+        
+        <!-- shadow -->
+        <!--
+        <view name="shadow" bgcolor="black" opacity=".5" />
+        -->
+             
+        <!-- border -->
+        <view name="borderbg" bgcolor="white" />
+        
+        <!-- interior -->
+        <view name="intparent" 
+              x="$once{ classroot.border }" 
+              y="$once{ classroot.border }" 
+              width="${parent.width - 2*classroot.border}"
+              height="${parent.height - 2*classroot.border}" >             
+
+            <view name="interior" stretches="both"> <!-- 0xd9d9d9 -->
+                <state apply="${classroot.doesdrag}">
+                    <handler name="onmousedown">
+                        classroot.onmousedown.sendEvent();
+                    </handler>
+                    <handler name="onmouseup">
+                        classroot.onmouseup.sendEvent();
+                    </handler>
+                </state>
+            </view>
+
+        </view>
+ 
+
+        <handler name="onmousedown">
+            if ( this.doesdrag ) this.startDragCheck();
+        </handler>
+
+        <method name="getCanvasFocusRect">
+            var rect = [ this.intparent.getAttributeRelative('x', canvas) -4,
+                         this.intparent.getAttributeRelative('y', canvas) - 4,
+                         this.intparent.getAttributeRelative('width', canvas) + 8,
+                         this.intparent.getAttributeRelative('height', canvas) + 8];
+            return rect;
+        </method>
+
+        <handler name="onmouseup">
+            if ( this.draginitiator ){
+                this.stopDrag();
+            } else {
+                this.ddcdel.unregisterAll();
+                if ( this.onplainclick ) this.onplainclick.sendEvent( this );
+             }
+        </handler>
+        
+        <attribute name="doesdrag" value="false"/>
+        
+        <method name="startDragCheck">
+            //info('startDragCheck');
+            _mdtime = new Date();
+            this.ddcdel.register( LzIdle, "onidle" );
+            this._ddcxp = this.getMouse( "x" );
+            this._ddcyp = this.getMouse( "y" );
+        </method>
+
+        <attribute name="draginitiator" value="false"/>
+
+        <attribute name="ddcdel"
+                   value="$once{ new LzDelegate( this, 'doDragCheck' ) }"/>
+
+        <method name="doDragCheck">
+            <![CDATA[
+            var dx = this.getMouse( "x" ) - _ddcxp;
+            var dy =  this.getMouse( "y" ) - _ddcyp;
+            if ( ( ( new Date() ) - _mdtime > mousedownBeforeDrag ) ||
+                 ( 5 < ( Math.abs( dx ) + Math.abs( dy ) ) ) ){
+                this.startDrag( dx, dy );
+            }
+            ]]>
+        </method>
+
+        <attribute name="mousedownBeforeDrag" value="300"/>
+        <method name="startDrag">
+            this.ddcdel.unregisterAll();
+            this.setAttribute ( "draginitiator" , true );
+        </method>
+
+        <method name="stopDrag">
+            this.setAttribute ( "draginitiator" , false );
+        </method>
+
+        <method name="setClipFactor" args="cf">
+            this.clipfactor = cf;
+            this.updateX( true );
+            this.updateY( true );
+        </method>
+
+        <method name="handlekeydown" args="k">
+            <![CDATA[
+            if (this['lastview'] && k == 39) {
+                container.content.forward();
+                // cancel spatial navigation
+                return true;
+            } else if (this['firstview'] && k == 37 && container.content.start > 0) {
+                container.content.back();
+                // cancel spatial navigation
+                return true;
+            }
+            ]]>
+        </method>
+    </class>
+</library>

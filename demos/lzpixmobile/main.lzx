@@ -1,0 +1,302 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+
+<canvas  width="1000" height="320" proxied="true" title="LzPix Mobile">
+
+    <!-- resources -->
+    <include href="resources/resources.lzx" />
+    
+    <!-- classes -->
+    <include href="lib/" />    
+    <include href="classes/" />    
+    
+    <!-- attributes -->
+    <attribute name="ismobile"  value="true" />
+    
+    <!-- a flag used to restrict access only to local files -->
+    <attribute name="isoffline" value="false" />
+
+    
+    <!-- VIEWS -->
+    
+    <!-- container: this view is setup to match the canvas size
+                    unless the canvas size is smaller than 240x320 -->
+    <view name="container" id="container" bgcolor="0x000000" 
+          width="${Math.min(parent.width,240)}" 
+          height="${Math.max(parent.height,320)}" clip="true">
+
+        <attribute name="lastphoto" value="null" />
+        <attribute name="details" value="false" />
+    
+        <method name="showDetails" args="screen">
+            if ( this.details ) {
+                this.hideDetails();
+            } else {
+                // assign lastphoto to details screen
+                photodetails.setPhoto( this.lastphoto );
+
+                // animate to details screen
+                footer.showTools( false );
+                this.content.hideanim.doStart();
+                photodetails.showDetails( screen );             
+                if ( !photodetails.visible ) photodetails.showanim.doStart()
+            }
+            this.details = true;
+        </method>
+        
+        <method name="hideDetails">
+            if (! this.details) return;
+            this.content.showanim.doStart();
+            photodetails.hideanim.doStart();
+            footer.showTools( true );
+            navmanager.focus( this.lastphoto ) ;
+            this.details = false;
+        </method>
+
+        <!-- content: only contains the collection of photos from a flickr serach -->
+        <view name="content" id="gContent" x="10" 
+              width="${parent.width - 20}" 
+              height="${parent.height - 120}" 
+              y="${parent.header.height + 10}"  
+              datapath="photods:/rsp/photos">  
+              
+            <attribute name="start" value="0" type="number" />
+            <attribute name="pagesize" value="9" type="number" />
+            <attribute name="length" value="0" type="number" />
+            <attribute name="scale" value="100" type="number"/>
+            <animator name="showanim" attribute="opacity" to="1" duration="300" start="false" onstart="parent.setVisible(true)"/>
+            <animator name="hideanim" attribute="opacity" to="0" duration="300" start="false" onstop="parent.setVisible(false)"/>
+            <animator name="zoominanim" attribute="scale" to="170" duration="300" start="false" onstop="parent.update()"/>
+            <animator name="zoomoutanim" attribute="scale" to="100" duration="300" start="false" onstop="parent.update()"/>
+            <animator name="leftanim" attribute="x" to="${- this.parent.width}" duration="300" start="false" onstop="parent.update()"/>
+            <animator name="rightanim" attribute="x" to="${this.parent.width}" duration="300" start="false" onstop="parent.update()"/>
+            <hintedlayout name="lay" xspacing="28" yspacing="20"/>
+            <replicator name="repl">
+                <photo width="${54 * gContent.scale * .01}">
+                    <handler name="onfocused" >
+                        container.setAttribute('lastphoto', this);
+                        header_txt.setText( this.text );
+                    </handler>
+                    <handler name="onmouseup" >
+                        container.showDetails( 'photo' )
+                    </handler>
+                </photo>
+            </replicator>
+
+            <method name="zoomin">
+                this.pagesize = 4;
+                this.zoominanim.doStart()
+            </method>
+            <method name="zoomout">
+                this.pagesize = 9;
+                this.zoomoutanim.doStart()
+            </method>
+            <method name="forward">
+                var s = this.start + this.pagesize;
+                if (s > this.length - 1) s = this.length - 1;
+                if (s != this.start) {
+                    this.start = s;
+                    this.leftanim.doStart();
+                }
+            </method>
+            
+            <method name="back">
+                <![CDATA[
+                var s = this.start - this.pagesize;
+                if (s < 0) s = 0;
+                if (s != this.start) {
+                    this.start = s;
+                    this.rightanim.doStart();
+                }
+                ]]>
+            </method>
+
+            <handler name="ondata">
+                // listen for photos from gdataman
+                this.start = 0;
+                this.update();
+                navmanager.focus(lay.first);
+            </handler>
+
+            <method name="update" args="start">
+                <![CDATA[
+                this.setX(10);
+                c = this.datapath.xpathQuery('photo');
+                this.length = c.length;
+                if (this.length) {
+                    c = c.splice(this.start, this.pagesize);
+                    this.repl.setNodes(c);
+                }
+                header_txt.setText('loading page ' + (Math.floor(this.start / this.pagesize) + 1) + ' of ' + (Math.floor(this.length / this.pagesize) + 1))
+                lay.update();
+                ]]>
+            </method>
+        </view>  
+        
+        <include href="views/photodetails.lzx" />
+        
+        <!-- header -->
+        <view name="header" width="${parent.width}"  >
+            <view name="label" id="header_label" bgcolor="0xbac0f8" width="100%" height="44"  />
+            <text name="txt" id="header_txt" width="100%" x="4" y="26"/>
+            
+            <search name="searchbox" id="sbox" width="100%" height="20" x="0">
+            </search>
+
+            <view name="bkgnd" resource="hdr_bkgnd_rsc" stretches="width" width="100%" />
+            <view name="logo"  resource="logo_rsc" x="4" y="3" /> 
+            <optionsbutton name="searchbtn" text="Search Flickr" x="${parent.width - width}" width="90" y="2" onclick="parent.searchbox.toggle()"/>
+            
+        </view>
+            
+        <!-- footer -->
+        <view name="footer" id="footer" width="100%" y="${parent.height - height}"  >
+            <attribute name="toolsheight" value="31" />
+            <attribute name="istools" value="true" />
+            
+            <view name="arrowhelp" bgcolor="0xbac0f8" height="18" width="${parent.width}" >
+                <view resource="arrowhelp_rsc" x="${parent.width - width}" />
+            </view>
+            
+            <view name="tools" width="100%" clip="true" height="$once{parent.toolsheight}"  >
+                <animator name="showanim" attribute="height" to="${footer.toolsheight}" duration="300" start="false" onstart="parent.setVisible(true)"/>
+                <animator name="hideanim" attribute="height" to="0" duration="300" start="false" onstop="parent.setVisible(false)"/>
+                <simplelayout  axis="x" />
+                <footerbutton  text="Clips" width="60" id="clipsmainbtn" 
+                               onmouseup="clips.setVisible( true ); 
+                                          clips.open_anm.doStart();
+                                          highlight.hide()" />
+                <footerbutton  width="60" iconresource="icon_grid4_rsc"     onmouseup="gContent.zoomin()"/>
+                <footerbutton  width="60" iconresource="icon_grid9_rsc"     onmouseup="gContent.zoomout()"/>
+                <footerbutton  width="30" iconresource="icon_pageleft_rsc"  onmouseup="gContent.back()"/>
+                <footerbutton  width="30" iconresource="icon_pageright_rsc" onmouseup="gContent.forward()"/>
+            </view>
+            
+            <view width="100%" y="${Math.max(parent.tools.height,18)}" >
+                <simplelayout axis="x" />
+                <optionsbutton id="button_options" text="OPTIONS" width="${parent.width/2.0}" >
+                    <handler name="onclick" > <![CDATA[
+                        var isopen =  optionsmenu.visible;
+                        if ( isopen )  {
+                             optionsmenu.toggle( ); //close optionsmenu;
+                        } else {
+                            // now only show the optionsmenu if a photo is the focus or if the photodetails panel is already opened
+                            var fv = navmanager.focused;
+                            var photoISfocus =  fv instanceof lz.photo;
+                            var showoptionsmenu = true;                           
+                            
+                            if (  photodetails.visible )  {
+                                // assign the photo associated with the photodetails to the optionsMenu
+                                optionsmenu.setPhoto( container.lastphoto );
+                            } else if ( photoISfocus ) {
+                                // assign photo to optionsmenu AND photodetails
+                                optionsmenu.setPhoto( fv );
+                                photodetails.setPhoto( fv );
+                            
+                            } else {
+                                showoptionsmenu = false;
+                            }
+                                              
+                            // show the optionsmenu if allowed               
+                            if ( showoptionsmenu ) {
+                                optionsmenu.toggle( );
+                            }
+                         }
+                    ]]></handler>
+                </optionsbutton>
+                <optionsbutton id="button_exit" text="EXIT"  width="${parent.width/2.0}"  >
+                    <handler name="onclick" >
+                         Debug.write("button_exit","onclick");
+                    </handler>
+                </optionsbutton>
+            </view>
+            
+            <method name="showTools" args="show" >
+                if ( show ) {
+                    this.tools.showanim.doStart()
+                } else {
+                    this.tools.hideanim.doStart();
+                }
+            </method>
+        </view>
+    
+    </view>
+
+    <include href="views/clips.lzx" />
+
+    <!-- the options menu is actiavted by the spacebar when demoing on a PC -->
+    <include href="views/optionsmenu.lzx" />
+    
+    
+    <!-- HANDLERS AND METHODS -->
+    
+    <!-- canvas.setAttribute('ismobile',1) -->    
+    <handler name="onwidth" >
+        <![CDATA[
+        if ( width  <= 240 ) this.setAttribute('ismobile', true)
+        else this.setAttribute('ismobile', false);
+        ]]>
+    </handler>
+
+
+    <method name="handlekeydown" args="k" >
+        <![CDATA[
+        switch( k ) {
+            case 32: //spacebar key
+                button_options.onclick.sendEvent();
+                return true;
+            case 27: //esc key
+                button_exit.onclick.sendEvent();
+                return true;
+            default:
+                return false;    
+        }
+        ]]>
+    </method>
+
+
+    <!-- hilite managed by navmanager -->
+    <drawview name="highlight" visible="false">
+        <handler name="oncontext" method="redraw"/>
+        <handler name="onwidth" method="redraw"/>
+        <handler name="onheight" method="redraw"/>
+        <method name="redraw">
+            if (! this.context) return;
+            this.strokeStyle = 0xffcc00;
+            this.lineWidth = 4;
+            this.clear();
+            this.beginPath()
+            this.rect(0, 0, this.width, this.height); 
+            this.stroke();
+        </method>
+        <handler name="onfocused" reference="navmanager" method="show"/>
+        <method name="hide">
+            this.setVisible(false);
+        </method>
+        <method name="show" args="v, speed">
+            if (v == null) {
+                this.hide();
+            } else {
+                if (speed == null) speed = 300
+                this.setVisible(true);
+                if ( v['getCanvasFocusRect'] ) f_rect = v.getCanvasFocusRect();
+                else  {
+                    f_rect = [ v.getAttributeRelative('x', canvas),
+                            v.getAttributeRelative('y', canvas),
+                            v.getAttributeRelative('width',canvas),
+                            v.getAttributeRelative('height',canvas) ]
+                }
+
+                this.animate('x', f_rect[0] , speed);
+                this.animate('y', f_rect[1], speed);
+                this.animate('width', f_rect[2], speed);
+                this.animate('height', f_rect[3], speed);
+            }
+        </method>
+    </drawview>
+    
+    
+</canvas>

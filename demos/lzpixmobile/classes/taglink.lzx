@@ -1,0 +1,25 @@
+<!--
+* X_LZ_COPYRIGHT_BEGIN ****************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************-->
+<library>
+    <class name="taglink" width="100" clickable="true" with="Spatialnav">
+        <view resource="icon_taglink_rsc" />
+        <text name="txt" x="13" y="-4" text="tag title" width="87" fgcolor="0xa1a1a1" fontsize="10"  />
+        
+        <handler name="ondata" args="t" >
+            if ( t == null || t == undefined ) t = "";                
+            this.txt.setText(t);            
+        </handler>
+
+        <method name="getCanvasFocusRect">
+            var rect = [ this.getAttributeRelative('x', canvas) -4,
+                         this.getAttributeRelative('y', canvas) - 4,
+                         this.getAttributeRelative('width', canvas) + 8,
+                         this.getAttributeRelative('height', canvas) + 6];
+            return rect;
+        </method>
+
+    </class>
+</library>
