@@ -135,7 +135,7 @@ Lz = {
         Lz.__BrowserDetect.init();
         if (Lz.__BrowserDetect.OS == 'Mac' || 
             // fix for LPP-5393
-            ( swfargs.wmode == 'transparent' && Lz.__BrowserDetect.OS == 'Windows' && (Lz.__BrowserDetect.isOpera || Lz.__BrowserDetect.isFirefox))) {
+            ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && Lz.__BrowserDetect.OS == 'Windows' && (Lz.__BrowserDetect.isOpera || Lz.__BrowserDetect.isFirefox))) {
             LzMousewheelKernel.setCallback(app, '_sendMouseWheel');
         }
     }
