@@ -37,8 +37,8 @@ public class Function {
   }
 
   public String toString() {
-    return (sourceLocation != null?(sourceLocation + "\n"):"") +
-      "function " + name + "\n(" + args + "\n) {" + body + "\n}";
+    return "function " + name + "\n(" + args + "\n) {" +
+      "\n" + (sourceLocation != null?(sourceLocation + "\n"):"") + body + "\n}";
   }
 }
 
