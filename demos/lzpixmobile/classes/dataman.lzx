@@ -268,8 +268,7 @@
     <dataset name="userds" ondata="if (global['debugdata']) Debug.write('got user', this)" clientcacheable="true" />
 
     <!-- information about the favorites -->
-    <dataset name="favoritesds" ondata="if (global['debugdata']) Debug.write('got favorites', this)" 
-        src="../data/canned_favorites.xml" />
+    <dataset name="favoritesds" ondata="if (global['debugdata']) Debug.write('got favorites', this)" />
 
     <!-- auth... -->
     <dataset name="frobds" type="http" ondata="gDataMan._handleFrob()" />
