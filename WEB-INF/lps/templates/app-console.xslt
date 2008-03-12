@@ -214,7 +214,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
         <xsl:otherwise>
             <iframe id="dhtml-application"
                     src="{$lps}/lps/admin/dev-console.html?lzappuid={$appuid}&amp;appinfo={$appinfo}"
-                    style="width: 100%; height: {$consoleheight}px" width="100%" height="70"/>
+                    style="width: 100%; height: {$consoleheight}px" width="100%" height="{$consoleheight}"/>
         </xsl:otherwise>
       </xsl:choose>
 
@@ -346,7 +346,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
 </xsl:stylesheet>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

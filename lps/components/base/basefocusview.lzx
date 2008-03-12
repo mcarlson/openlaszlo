@@ -257,7 +257,7 @@
         </method>
 
         <!--- @keywords private -->
-        <method args="v" event="onfocus" reference="LzFocus">
+        <handler args="v" name="onfocus" reference="LzFocus">
             this.setActive( LzFocus.focuswithkey );
             if ( v ) {
                 this.doFocus( v );
@@ -267,7 +267,7 @@
                      this.setActive(false);
                 }
             }
-        </method>
+        </handler>
 
     </class>
 
