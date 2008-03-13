@@ -80,31 +80,24 @@ if ($debug) {
   var Debug;
 
   /**
-    * The <tagname>debug</tagname> tag controls the initial appearance
-    * and options of the debugger when debugging is enabled.  Debugging is
-    * enabled either by including the <code>debug="true"</code> option on
-    * the <xref linkend="LzCanvas"><tagname>canvas</tagname></xref> tag,
-    * or adding the <code>?debug=true</code> query argument to the
-    * application's URL.
+    * <p>The optional <tagname>debug</tagname> tag controls the appearance of the debugger when
+    * debugging is on. It does not cause the application to be
+    * compiled with debugging mode enabled. There are three ways to
+    * enable the debugger, as described in the
+    * <a href="${dguide}debugging.html#enabling-the-debugger">Debugging</a> chapter of the Developer's Guide.</p>
+    *
+    * <p>By default, the debug window will be sized to fit the lower 1/2 of the canvas, and can be 
+    * resized as necessary.</p>
     *
     * <example title="debug tag"><programlisting><![CDATA[
     * <canvas debug="true" height="120">
     *   <debug width="300" height="50" x="5" y="5" fontsize="8"/>
     *   <script>
     *   Debug.write("Hello world!");
-    *   Debug.warn('This is a hotlink: %w', {a: 1, b: 2});
+    *   Debug.warn('This is an inspectable object: %w', {a: 1, b: 2});
     *   </script>
     * </canvas>]]>
     * </programlisting></example>
-    *
-    *
-    * The debug tag controls the appearance of the debugger when
-    * debugging is on. It does not cause the application to be
-    * compiled with debugging mode enabled. Only the debug option on
-    * the canvas and the debug query parameter of the URL do this.
-    *
-    * For more information, see the
-    * <a href="${dguide}debugging.html">Debugging</a> chapter of the Guide.
     *
     * @shortdesc The Laszlo debugger
     * @keywords private_constructor
