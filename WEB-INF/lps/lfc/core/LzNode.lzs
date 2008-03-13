@@ -556,13 +556,13 @@ if ($debug) {
   * skipped. </li>
   * 
   * <li>Second, the placement view name is determined from the first of the 
-  * following that matches:</li>
+  * following that matches:
   * <ul><li>the view's <attribute>placement</attribute> attribute, if that 
   * exists; or</li>
   * <li>the lexical parent's <attribute>defaultplacement</attribute> attribute, 
   * if that exists; or</li>
   * <li>nil.</li></ul>
-  * 
+  * </li>
   * <li>Third, if there is no placement view name, the subview is placed within 
   * its lexical parent (that is, 
   * <code>view.immediateparent = view.parent</code>), 
@@ -1600,7 +1600,7 @@ if ($debug) {
 /**
   * Called on any node that is declared with a datapath that matches a
   * terminal selector, such as <code>text()</code> or
-  * <code>@<var>attribute</var></code> when the data it matches is
+  * <code>@attribute</code> when the data it matches is
   * changed.
   * @access public
   * @param String data: a string representing the matching data
