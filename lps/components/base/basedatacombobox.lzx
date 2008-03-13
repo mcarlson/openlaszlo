@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -236,6 +236,7 @@
               @keywords private -->
         <method name="_updateSelectionByIndex" 
                 args="index,dontSetValue,isinitvalue"> <![CDATA[
+            if (index < 0) return;    
             var dp = new LzDatapointer(this);
 
             var nodes = dp.xpathQuery(this.itemdatapath);
