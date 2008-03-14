@@ -1,5 +1,5 @@
 <photocollection name="interior" bgcolor="0xf0f0f0" clip="true"
-                 photoclass="clipboardphoto" clickable="true">
+                 photoclass="lz.clipboardphoto" clickable="true">
     <method event="oninit">
         LzTrack.register( this , 'photos' );
     </method>
@@ -28,6 +28,6 @@
 </photocollection>
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

@@ -91,7 +91,7 @@
         this.setAttribute("isleaf", !this.datapath.p.hasChildNodes());
         if( !this['clonenumber'] || this.clonenumber == 0) {
             var mb = this.parent;
-            if (mb instanceof menubutton) {
+            if (mb instanceof lz.menubutton) {
                 mb.dataBound();
             }
         }
@@ -107,7 +107,7 @@
 
         if (o && this.children.itemlist.subviews.length == 0) {
             this.deferOpen = true;
-            new navbutton(this, { level: this.level + 1 });
+            new lz.navbutton(this, { level: this.level + 1 });
         }
         else
             super._setOpen(o);
@@ -163,14 +163,14 @@
 
             <method name="doOpen">
                 if (this.animateOpen == null) {
-                    this.animateOpen = new openanimator(this, { item: classroot });
+                    this.animateOpen = new lz.openanimator(this, { item: classroot });
                 }
                 this.animateOpen.doStart();
             </method>
             
             <method name="doClose">
                 if (this.animateClose == null) {
-                    this.animateClose = new closeanimator(this, { item: classroot });
+                    this.animateClose = new lz.closeanimator(this, { item: classroot });
                 }
                 this.animateClose.doStart();
             </method>
@@ -345,7 +345,7 @@
         if (typeof(global.bookmark) != 'undefined'){
           var restore = global.bookmark.split('|');
           if (restore.length > 0) {
-              this[restore[0]].openSequence(restore);
+              if (this[restore[0]]) this[restore[0]].openSequence(restore);
           }
         }
       </method>

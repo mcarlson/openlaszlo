@@ -1,7 +1,7 @@
 <library>
     <class name="photocollection">
 
-        <attribute name="photoclass" value="photo" when="once"/>
+        <attribute name="photoclass" value="lz.photo" when="once"/>
 
         <attribute name="activephotos" value="$once{ [] }"/>
 
@@ -55,6 +55,6 @@
 </library>
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

@@ -141,12 +141,12 @@
                     this.children.setAttribute("x", 0);
                     this.children.setAttribute("y", 0);
                     var sv = this.children.subviews;
-                    if (sv && (sv[0])  instanceof basetree) {
+                    if (sv && (sv[0])  instanceof lz.basetree) {
                         focusItem = sv[0].item;
                     }
                 }
 
-                this._selector = new treeselector(this,
+                this._selector = new lz.treeselector(this,
                     { multiselect: this.multiselect,
                       toggle: this.toggleselected });
 
@@ -212,7 +212,7 @@
 
             var c = this.getChildClass();
             if (c != null) {
-                new global[c](this, args, null, true);
+                new lz[c](this, args, null, true);
             }
         ]]>
         </method>
@@ -333,7 +333,7 @@
               @return Boolean: true if this tree is the root, otherwise
               false. -->
         <method name="isRoot">
-            return ! (parent instanceof basetree);
+            return ! (parent instanceof lz.basetree);
         </method>
 
         <!--- Get the root of this tree. 
@@ -341,7 +341,7 @@
         <method name="getRoot">
             var v = this;
             var p = v.parent;
-            while (p instanceof basetree) {
+            while (p instanceof lz.basetree) {
                 v = v.parent;
                 p = v.parent;
             }
@@ -498,7 +498,7 @@
         <![CDATA[
             var n = 0;
             if (children.subviews && 
-                (children.subviews[n]) instanceof basetree) {
+                (children.subviews[n]) instanceof lz.basetree) {
                 this.setAttribute("_currentChild", n);
                 this.changeFocus(children.subviews[n]);
             }
@@ -512,11 +512,11 @@
         <![CDATA[
             var n = children.subviews.length - 1;
             if (children.subviews &&
-                (children.subviews[n]) instanceof basetree) {
+                (children.subviews[n]) instanceof lz.basetree) {
                 var last = children.subviews[n];
                 if (last.open && last.children.subviews) {
                     var next = last.children.subviews.length -1;
-                    if ((last.children.subviews[next]) instanceof basetree) {
+                    if ((last.children.subviews[next]) instanceof lz.basetree) {
                         last._focusLastChild();
                         return;
                     }
@@ -548,7 +548,7 @@
             // If previous sibling is open, select last child of that sibling
             var sibling = parent.children.subviews[prev]
             if (sibling.open && sibling.children.subviews && 
-                (sibling.children.subviews[0]) instanceof basetree) {
+                (sibling.children.subviews[0]) instanceof lz.basetree) {
                 sibling._focusLastChild();
             } else {
                 this.changeFocus(sibling);
@@ -603,7 +603,7 @@
             } else if (kc == 40) { // down
                 if (this.open && 
                     this.children.subviews &&
-                    (this.children.subviews[0]) instanceof basetree) {
+                    (this.children.subviews[0]) instanceof lz.basetree) {
                     this._focusFirstChild();
                 } else {
                     this._focusNextSibling();
