@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -362,6 +362,19 @@ public class ViewSchema extends Schema {
                             "containsElement block must only contain <element> tags", etag);
                     }
                 } 
+            } else if (child.getName().equals("forbiddenElements")) {
+                    // look for <element>tagname</element> 
+                Iterator iter1 = child.getChildren().iterator();
+                while (iter1.hasNext()) {
+                    Element etag = (Element) iter1.next();
+                    if (etag.getName().equals("element")) {
+                        String tagname = etag.getText();
+                        info.addForbiddenElement(tagname);
+                    } else {
+                        throw new CompilationError(
+                            "containsElement block must only contain <element> tags", etag);
+                    }
+                } 
             }
         }
 
@@ -622,6 +635,12 @@ public class ViewSchema extends Schema {
         // TODO [hqm 2007-09]: CHECK FOR NULL HERE 
 
         Set tagset = parent.getContainsSet();
+        Set forbidden = parent.getForbiddenSet();
+
+        if (forbidden.contains(childTag)) {
+            return false;
+        }
+
         if (tagset.contains(childTag)) {
             return true;
         }

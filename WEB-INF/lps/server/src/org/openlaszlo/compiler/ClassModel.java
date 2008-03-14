@@ -20,6 +20,9 @@ class ClassModel implements Comparable {
     /** Set of tags that can legally be nested in this element */
     protected Set mCanContainTags = new HashSet();
 
+      /** Set of forbidden child tags of this element */
+    protected Set mForbiddenTags = new HashSet();
+
     /* If superclass is a predefined system class, just store its name. */
     protected String superclassName = null;
     protected boolean hasInputText = false;
@@ -310,9 +313,20 @@ class ClassModel implements Comparable {
     public Set getContainsSet () {
       return mCanContainTags;
     }
+
+      /** Add an entry to the table of forbidden tags for a
+       * given tag */
+    public void addForbiddenElement (String childtag) {
+      mForbiddenTags.add(childtag);
+    }
+
+    public Set getForbiddenSet () {
+      return mForbiddenTags;
+    }
+
 }
 
 /**
- * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
