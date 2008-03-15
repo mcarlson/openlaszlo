@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -55,15 +55,17 @@
                        value="${setDragPos('y', this.immediateparent.getMouse( 'y' ))}"/>
             <attribute name="x"
                        value="${setDragPos('x', this.immediateparent.getMouse( 'x' ))}"/>
-            <method name="setDragPos" args="xory, mousepos">   <![CDATA[
-                var newpos = mousepos - this[xory + 'doffset'];
-                var diff = this[xory] - this['start' + xory];
-                if (Math.abs(diff) > 3) {
-                    setAttribute('state', 3);
-                }
-                return newpos;
-            ]]> </method>
         </state>
+
+        <method name="setDragPos" args="xory, mousepos">   <![CDATA[
+            var newpos = mousepos - this[xory + 'doffset'];
+            var diff = this[xory] - this['start' + xory];
+            if (Math.abs(diff) > 3) {
+                setAttribute('state', 3);
+            }
+            return newpos;
+            ]]>
+        </method> 
 
         <!-- resizestatemin uses minwidth and minheight attribute-->
         <resizestatemin name="_windowResize" onapply="parent.setAttribute('haswindowfocus', true)"/>
