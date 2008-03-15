@@ -65,7 +65,7 @@
 
             <text visible="${!parent.editing}" width="${parent.width}" 
                   resize="false"
-                  y="$once{ parent.height /2 - this.height/2}"
+                  y="${ parent.height /2 - this.height/2}"
                   fgcolor="${ parent.immediateparent.selected ? 
                                     classroot._textselectedcolor:
                                     (parent.immediateparent.highlighted ?
