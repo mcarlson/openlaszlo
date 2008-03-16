@@ -133,7 +133,7 @@
         <item title="datasource (LzDatasource)" href="LzDatasource.html" />
         <item title="defaultdataprovider" href="defaultdataprovider.html" />        
         <item title="httpdataprovider" href="httpdataprovider.html" />
-        <item title="LzConnectionDatasource+swf7+swf8+swf9" href="LzConnectionDatasource+swf7+swf8+swf9.html" />        
+   <!--     <item title="LzConnectionDatasource+swf7+swf8+swf9" href="LzConnectionDatasource+swf7+swf8+swf9.html" />     -->
         <item title="LzDataElement" href="LzDataElement.html" />
         <item title="LzDataNode" href="LzDataNode.html" />
         <item title="LzDataProvider" href="LzDataProvider.html" />
