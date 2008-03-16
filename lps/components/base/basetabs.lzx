@@ -35,7 +35,7 @@
 
             // If I'm selected, tell my parent to select me. Basetabs cannot exist
             // w/o basetabpanes, so not necessary to check for existence.
-            if (parent instanceof basetabsbar && tabpane.selected) {
+            if (parent instanceof lz.basetabsbar && tabpane.selected) {
                 parent.select(this);
             }
 
@@ -47,7 +47,7 @@
         <!--- @keywords private -->
         <method name="destroy">
         <![CDATA[
-            if (parent instanceof basetabsbar && parent._initcomplete) {
+            if (parent instanceof lz.basetabsbar && parent._initcomplete) {
                 // We need to move selected to another tab
                 if (parent._selector.selected[0] == this) {
                     if (parent.subviews.length == 1) {
@@ -460,7 +460,7 @@
         <method name="determinePlacement" args="v,p">
         <![CDATA[
 
-            if (v instanceof basetabpane) {
+            if (v instanceof lz.basetabpane) {
                 // reassign parent of view to basetabs
                 v.parent = this.parent;
                 p = this.defaultplacement;
@@ -602,21 +602,21 @@
         <handler name="onconstruct">
             // Create tabsbar
             if (this.barclass != "") {
-                if (typeof(global[this.barclass]) != "undefined") {
-                    this.bar = new global[this.barclass](this, {}, null, true);
+                if (typeof(lz[this.barclass]) != "undefined") {
+                    this.bar = new lz[this.barclass](this, {}, null, true);
                 } else {
                     Debug.write('barclass ' + this.barclass + ' is undefined');
                 }
             }
             if (this.bar == null) {
-                this.bar = new basetabsbar(this, {}, null, true);
+                this.bar = new lz.basetabsbar(this, {}, null, true);
                 Debug.write('Using basetabsbar for tab bar');
             }
 
             // Create tabscontent, if it hasn't been already created
             if (this.contentclass != "") {
-                if (typeof(global[this.contentclass]) != "undefined") {
-                    this.content = new global[this.contentclass](this, {}, null, true);
+                if (typeof(lz[this.contentclass]) != "undefined") {
+                    this.content = new lz[this.contentclass](this, {}, null, true);
                 } else {
                     Debug.write('contentclass ' + this.contentclass + 
                                 ' is undefined');
@@ -651,8 +651,8 @@
                     }
                   }
                 }
-                if (typeof(global[tc]) != "undefined") {
-                    v.tab = new global[tc](this.bar, { tabpane: v }, null, true);
+                if (typeof(lz[tc]) != "undefined") {
+                    v.tab = new lz[tc](this.bar, { tabpane: v }, null, true);
                 } else {
                   if ($debug) {
                     Debug.write('tabclass \'' + tc + '\' is undefined');
@@ -823,7 +823,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

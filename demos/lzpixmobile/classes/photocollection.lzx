@@ -31,7 +31,7 @@
             if ( photopool.length ) {
                 r = photopool.pop();
             } else {
-                r = new photoclass( this , { visible : false } );
+                r = new lz.photoclass( this , { visible : false } );
                 new LzDatapath( r );
                 r.txt.setVisible( false )
             }

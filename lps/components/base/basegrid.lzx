@@ -46,10 +46,10 @@
         <!--- The class to use to construct columns, if the
               columns are inferred by the basegrid. 
               @access protected -->
-        <attribute name="_columnclass" value="basegridcolumn" when="once"/>
+        <attribute name="_columnclass" value="lz.basegridcolumn" when="once"/>
         <!--- The class to use to construct rows.
               @access protected -->
-        <attribute name="_rowclass" value="basegridrow" when="once"/>
+        <attribute name="_rowclass" value="lz.basegridrow" when="once"/>
 
         <!--- A boolean. If true, the grid will keep its width set to the size
               of the header. This is automatically set to true for grids that
@@ -393,7 +393,7 @@
             var cells = [];
             if ( svl ){
                 for ( var i = 0; i< svl.length; i++ ){
-                    if ( svl[ i ] instanceof basegridcolumn ) {
+                    if ( svl[ i ] instanceof lz.basegridcolumn ) {
                         this.columns.push( svl[ i ] );
                         cells.push( svl[ i ]._getCellForColumn() );
                     }
