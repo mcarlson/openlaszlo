@@ -527,9 +527,6 @@ element attribute "
   <event name="onapply"/>
   <!-- Script that is executed when the state is removed from its parent. -->
   <event name="onremove"/>
-  <forbiddenElements>
-    <element>method</element>
-  </forbiddenElements>
 </interface>
 
 <interface name="datarequest" extends="node"/>
