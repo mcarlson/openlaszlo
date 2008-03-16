@@ -13,28 +13,34 @@
             // be constrained to that height, otherwise they will be sized
             // to the height of their resource
             if (hassetheight) {
-                var f = function (){
-                    this.setAttribute( "height" , this.immediateparent.height);
-                }
                 var d = [  this , 'height' ];
-                leftview.applyConstraint( 'height' , f , d );
-                middleview.applyConstraint( 'height' , f , d );
-                rightview.applyConstraint( 'height' , f , d );
+                leftview.applyConstraintMethod('adjheight' , d );
+                middleview.applyConstraintMethod('adjheight' , d );
+                rightview.applyConstraintMethod( 'adjheight' , d );
             }
         </handler>
         <view name="leftview" stretches="height">
+            <method name="adjheight">
+                 this.setAttribute('height', this.immediateparent.height);
+            </method>
             <attribute name="frame" value="${parent.frame}"/>
             <handler name="onconstruct">
                 this.setResource(parent.left);
             </handler>
         </view>
         <view name="middleview" stretches="both">
+            <method name="adjheight">
+                 this.setAttribute('height', this.immediateparent.height);
+            </method>
             <attribute name="frame" value="${parent.frame}"/>
             <handler name="onconstruct">
                 this.setResource(parent.middle);
             </handler>
         </view>
         <view name="rightview" stretches="height">
+            <method name="adjheight">
+                 this.setAttribute('height', this.immediateparent.height);
+            </method>
             <attribute name="frame" value="${parent.frame}"/>
             <handler name="onconstruct">
                 this.setResource(parent.right);
@@ -87,7 +93,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
