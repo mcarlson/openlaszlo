@@ -39,7 +39,7 @@
               @keywords private -->
         <method name="findRadioGroupAncestor" args="rb"><![CDATA[
             var p = rb.parent;
-            while (p != canvas && ! (p instanceof baseradiogroup)) {
+            while (p != canvas && ! (p instanceof lz.baseradiogroup)) {
                 p = p.parent;
             }
             return (p != canvas ? p : null);

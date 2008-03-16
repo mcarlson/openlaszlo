@@ -135,7 +135,7 @@
 
           <!-- this gets called every time the x value changes -->
           <handler name="onx" reference="this"> 
-              if (parent.getAttribute("autoscroll")) {
+              if (parent.autoscroll) {
                   this.handleThumbPosX(this.x);
               }
           </handler>
@@ -257,7 +257,7 @@
 
           <!-- this gets called every time the y value changes -->
           <handler name="ony" reference="this"> 
-              if (parent.parent.getAttribute("autoscroll")) {
+              if (parent.parent.autoscroll) {
                   this.handleThumbPos(this.y);
               }
           </handler>

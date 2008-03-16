@@ -51,7 +51,7 @@
 
         <!--- @keywords private -->
         <method name="setNodeInst" args="nc">
-            this.nodeclass = global[ nc ];
+            this.nodeclass = lz[ nc ];
             new nodeclass( this , { name : "nodeinst" } ); 
         </method>
 

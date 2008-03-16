@@ -271,7 +271,7 @@
             var objs = [];                       
             for (var i = this.subnodes.length - 1; i >= 0; i--)
             {
-                if((className == "dataseries" || className == "datacolumn") && this.subnodes[i] instanceof dataseries){
+                if((className == "dataseries" || className == "datacolumn") && this.subnodes[i] instanceof lz.dataseries){
                     return this.subnodes[i];
                 }
                 if(this.subnodes[i].constructor.tagname == className)

@@ -29,7 +29,7 @@
                     Debug.write("----------  check select  -----------");
                     var count=0;
                     for(var i=0; i<mul.content.subnodes.length;i++ ){
-                     if(mul.content.subnodes[i] instanceof fileuploadlist){
+                     if(mul.content.subnodes[i] instanceof lz.fileuploadlist){
                          if(mul.content.subnodes[i].selected ==true){
                              count++;
                              mul.content.subnodes[i].onselect.sendEvent(mul.content.subnodes[i].myFileUpload.fileref.name+' has been selected in field #' + i );
@@ -51,7 +51,7 @@
                         mul.onincomplete.sendEvent();
                         var count=0;
                         for(var i=0; i<mul.content.subnodes.length;i++ ){
-                         if(mul.content.subnodes[i] instanceof fileuploadlist){
+                         if(mul.content.subnodes[i] instanceof lz.fileuploadlist){
                              if(mul.content.subnodes[i].erroroccured ==true){
                                  count++;
                                  mul.content.subnodes[i].onerror.sendEvent(mul.content.subnodes[i].myFileUpload.fileref.name+' encountered an error in field #' + i);

@@ -50,8 +50,8 @@
         </method>
 
         <method name="addevents" args="obj">
-            if(typeof obj.getAttribute("isformvalidator") != "undefined"){
-                if(obj.getAttribute("isformvalidator") == true){
+            if(typeof obj.isformvalidator != "undefined"){
+                if(obj.isformvalidator == true){
                     new LzDelegate( this, "iserrorchanged", obj, "oniserror");
                     this.validators.push(obj);
                 }

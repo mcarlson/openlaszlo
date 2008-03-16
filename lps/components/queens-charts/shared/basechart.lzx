@@ -269,7 +269,7 @@
         <method name="findData">
             <![CDATA[
             for(var i = 0; i <= this.subnodes.length; i++){
-                if(subnodes[i] instanceof chartdata){
+                if(subnodes[i] instanceof lz.chartdata){
                     return i;
                 }
             }
@@ -280,7 +280,7 @@
         <method name="findLegend">
             <![CDATA[
             for(var i = 0; i <= this.subnodes.length; i++){
-                if(subnodes[i] instanceof chartlegend){
+                if(subnodes[i] instanceof lz.chartlegend){
                     return i;
                 }
             }
@@ -331,7 +331,7 @@
             this.setAttribute('minimum', this.lowesty);
             this.datazoom.setAttribute('origmaximum', this.highesty);
             this.datazoom.setAttribute('origminimum', this.lowesty);
-            if(typeof linechart != 'undefined' && this instanceof linechart){
+            if(typeof linechart != 'undefined' && this instanceof lz.linechart){
                 this.setAttribute('altmaximum', this.highestx);
                 this.setAttribute('altminimum', this.lowestx);
                 this.datazoom.setAttribute('origaltmaximum', this.highestx);
@@ -351,7 +351,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

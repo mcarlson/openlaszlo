@@ -36,12 +36,12 @@
         </handler>
         
         <method name="showAll">
-            var isShowing = myFloatBox.getAttribute("visible");
+            var isShowing = myFloatBox.visible;
             if(isShowing) {
                 myFloatBox.setAttribute("visible",false);
             } else {
             
-                var theDictionary = this.getAttribute("__component_contents");
+                var theDictionary = this.__component_contents;
                 for(item in theDictionary) {
                     var the_object = theDictionary[item];
                    
@@ -54,7 +54,7 @@
         
         <simplelayout axis="x" spacing="0"/>
         <view name="theeditor"  width="${classroot.width - classroot.rgt.width}">
-            <inputtext name="actual" width="100%" text="$once{classroot.getAttribute('defaulttext')}">
+            <inputtext name="actual" width="100%" text="$once{classroot.defaulttext}">
                 <handler name="onfocus">
                     Debug.write("focused..");
                     this.setSelection(0,this.getText().length);
@@ -83,7 +83,7 @@
                             }
                         }
                     } else if(k == 8) {
-                        var actualTyped = this.getAttribute("actuallyTyped");
+                        var actualTyped = this.actuallyTyped;
                         Debug.write("Actual = "+actualTyped);
                         var oneMinus = actualTyped.substr(0,actualTyped.length-1);
                         
@@ -110,7 +110,7 @@
                         
                         var theInput = this.getText();
                         this.setAttribute("actuallyTyped",theInput);
-                        Debug.write( "What was actually typed... "+this.getAttribute("actuallyTyped"));
+                        Debug.write( "What was actually typed... "+this.actuallyTyped);
                         
                         computeBox(theInput);
 
@@ -122,7 +122,7 @@
                 
                 <method name="computeBox" args="theInput">
                     <![CDATA[
-                    var theDictionary = classroot.getAttribute("__component_contents");
+                    var theDictionary = classroot.__component_contents;
                         for(item in theDictionary) {
                             var the_object = theDictionary[item];
                             if(item.indexOf(theInput) == 0) {
@@ -138,7 +138,7 @@
                         var numberOfItems = classroot.myFloatBox.getNumItems();
                         for(var i=0; i<numberOfItems; i++) {
                             theFirst = classroot.myFloatBox.getItemAt(i);
-                            if(theFirst.getAttribute("visible")) break;
+                            if(theFirst.visible) break;
                             theFirst = null;
                         }
                         
@@ -182,12 +182,12 @@
             
           <textlistitem name="replicated_textitem" datapath="">
                 <handler name="ondata">
-                    parent.owner.getAttribute("__component_contents")[this.data] = this;
+                    parent.owner.__component_contents[this.data] = this;
                 </handler>
                 <handler name="onselect">
                     Debug.write("onselect ",this.data);
                     parent.owner.theeditor.actual.setText(this.data);
-                    var actualTyped = parent.owner.theeditor.actual.getAttribute("actuallyTyped");
+                    var actualTyped = parent.owner.theeditor.actual.actuallyTyped;
                     parent.owner.theeditor.actual.setSelection(actualTyped.length,this.data.length);
                 </handler>
                 <handler name="onclick">

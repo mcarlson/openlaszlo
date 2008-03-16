@@ -70,10 +70,10 @@
                 }
             }
             if (this.dataoption == "lazy" || this.dataoption == "resize") {
-                this._selector = new datalistselector(this,
+                this._selector = new lz.datalistselector(this,
                     {multiselect:this.multiselect, toggle:toggleselected});
             } else {
-                this._selector = new listselector(this,
+                this._selector = new lz.listselector(this,
                     {multiselect:this.multiselect, toggle:toggleselected});
             }
 
@@ -296,11 +296,11 @@
                 }
             } else {
                 if ($debug) {
-                  if (typeof(global[this.itemclassname]) == "undefined") {
+                  if (typeof(lz[this.itemclassname]) == "undefined") {
                     Debug.write("itemclassname undefined", this);
                   }
                 }
-                new global[this.itemclassname](this, {text:text, value:value});
+                new lz[this.itemclassname](this, {text:text, value:value});
             }
         </method>
 

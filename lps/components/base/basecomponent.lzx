@@ -107,7 +107,7 @@
             // initialize internal _parentcomponent attribute
             var p = this.immediateparent;
             while (p != canvas) {
-                if (p instanceof basecomponent) {
+                if (p instanceof lz.basecomponent) {
                     this._parentcomponent = p;
                     break;
                 }
@@ -168,9 +168,9 @@
             if ( this.isdefault == def ) return;
 
             if ( def ){
-                _componentmanager.service.makeDefault( this );
+                lz._componentmanager.service.makeDefault( this );
             } else {
-                _componentmanager.service.unmakeDefault( this );
+                lz._componentmanager.service.unmakeDefault( this );
             }
 
             this.isdefault = def;
@@ -183,14 +183,14 @@
         <method name="_setDoesEnter" args="doe">
             this.doesenter = doe;
             if ( LzFocus.getFocus()  == this ){
-                _componentmanager.service.checkDefault( this );
+                lz._componentmanager.service.checkDefault( this );
             }
         </method>
 
         <!--- this method can be called to force the default 
               button to update -->
         <method name="updateDefault">
-            _componentmanager.service.checkDefault( LzFocus.getFocus() );
+            lz._componentmanager.service.checkDefault( LzFocus.getFocus() );
         </method>
 
         <!---  if null, the style is set to the inherited style from the parent
@@ -224,7 +224,7 @@
                 var old_style = this._style;
                 if (!old_style) {
                     if (this._parentcomponent) old_style = this._parentcomponent.style;
-                    else old_style = _componentmanager.service.getDefaultStyle();
+                    else old_style = lz._componentmanager.service.getDefaultStyle();
                 }
                 s = old_style.extend(s);
             }
@@ -242,9 +242,9 @@
                                                         'onstyle');
                     s = this._parentcomponent.style;
                 } else {   // constrain to canvas defaultstyle
-                    this._otherstyledel.register(_componentmanager.service,
+                    this._otherstyledel.register(lz._componentmanager.service,
                                                     'ondefaultstyle');
-                    s = _componentmanager.service.getDefaultStyle();
+                    s = lz._componentmanager.service.getDefaultStyle();
                 }
             } else if (this._otherstyledel) {
                 this._otherstyledel.unregisterAll();
@@ -388,7 +388,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

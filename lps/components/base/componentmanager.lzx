@@ -1,7 +1,7 @@
 <library>
 <!-- style.lzx is not included here, even thought it is required.
-    _componentmanager needs style to be defined before it is used, but style
-    has script in it that needs _componentmanager, so don't include it here.
+    lz._componentmanager needs style to be defined before it is used, but style
+    has script in it that needs lz._componentmanager, so don't include it here.
     Instead, style is always included before component manager is used.  -->
 
     <!-- This class handles global issues for components. It's more efficient
@@ -47,7 +47,7 @@
             } 
                 
             if ( fclass != null ){
-                canvas.__focus = new global[ fclass ](canvas);
+                canvas.__focus = new lz[ fclass ](canvas);
                 canvas.__focus.reset();
             }
             super.init();
@@ -64,7 +64,7 @@
             if ( key == 32 ){
                 this.lastsdown = null;
                 var foc = LzFocus.getFocus();
-                if ( foc instanceof ( basecomponent ) ){
+                if ( foc instanceof lz.basecomponent ){
                     foc.doSpaceDown();
                     this.lastsdown = foc;
                 }
@@ -167,7 +167,7 @@
         <method name="checkDefault" args="who">
             <![CDATA[ 
 
-            if ( ! ( who instanceof basecomponent ) ||
+            if ( ! ( who instanceof lz.basecomponent ) ||
                  ! who.doesenter ){
 
                 if ( ( who instanceof LzInputText )  &&
@@ -209,7 +209,7 @@
 
         <method name="getDefaultStyle">
             if (this.defaultstyle == null) {
-                this.defaultstyle = new global.style(canvas, {isdefault:true});
+                this.defaultstyle = new lz.style(canvas, {isdefault:true});
             }
             return this.defaultstyle
         </method>

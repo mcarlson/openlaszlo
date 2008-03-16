@@ -149,7 +149,7 @@
         <method name="findData">
             <![CDATA[
             for(var i = 0; i <= this.subnodes.length; i++){
-                if(subnodes[i] instanceof chartdata){
+                if(subnodes[i] instanceof lz.chartdata){
                     return i;
                 }
             }
@@ -205,7 +205,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -315,16 +315,16 @@
                 }
 
                 case "rtmp": {
-                    if (global['rtmpconnection'] == undefined) {
+                    if (lz['rtmpconnection'] == undefined) {
                         Debug.warn("rtmpconnection must be included");
                     } 
 
                     // If we don't define our own connection, then use
                     // the default one (the first rtmpconnection created).
-                    //Debug.write("_findnc type rtmp, rtmpconnection", this.rtmpconnection, "_nc", global.rtmpconnection.prototype._default._nc);
+                    //Debug.write("_findnc type rtmp, rtmpconnection", this.rtmpconnection, "_nc", lz.rtmpconnection.prototype._default._nc);
                     this._nc = 
                         this.rtmp ||
-                        global.rtmpconnection.prototype._default._nc;
+                        lz.rtmpconnection.prototype._default._nc;
                     break;
                 }
 

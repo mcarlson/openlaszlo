@@ -121,7 +121,7 @@
                 for (var i = 0; i < subcount; i++) {
                    var s = immediateparent.subviews[i];
                    if (s instanceof LzView) {
-                      if (! (s instanceof basescrollbar )){
+                      if (! (s instanceof lz.basescrollbar )){
                         // first non-scrollbar view is the scrolltarget
                         if (!this.scrolltarget) this.scrolltarget = s;
                       } else {
@@ -638,7 +638,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

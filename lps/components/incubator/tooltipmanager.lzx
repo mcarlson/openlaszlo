@@ -34,7 +34,7 @@
         <attribute name="messageMap" value="[]" />
     
         <handler name="ondata"><![CDATA[    
-            var xpath = datapath.xpath+"/"+this.getAttribute("messages");   
+            var xpath = datapath.xpath+"/"+this.messages;   
             var messages = datapath.xpathQuery(xpath);         
             var dict = [];         
             for(var i=0; i<messages.length; i++) {
@@ -48,7 +48,7 @@
         </handler>
 
         <handler name="oninit">
-             var tooltip = this.getAttribute("tooltip_obj");
+             var tooltip = this.tooltip_obj");
              if(tooltip == undefined || tooltip == null) {
                 tooltip = new basetooltip(canvas);
                 this.setAttribute("tooltip_obj",tooltip);
@@ -65,12 +65,12 @@
             <![CDATA[
               { //register mouse over delegate
                 var over_delegate = new LzDelegate(this,"doMouseover");
-                this.getAttribute("onMouseOverDelegateArray").push(over_delegate);
+                this.onMouseOverDelegateArray.push(over_delegate);
                 over_delegate.register(component,"onmouseover");
               }
               {    //register mouse out delegate
                 var out_delegate = new LzDelegate(this,"doMouseout");
-                this.getAttribute("onMouseOutDelegateArray").push(out_delegate);
+                this.onMouseOutDelegateArray.push(out_delegate);
                 out_delegate.register(component,"onmouseout");
               }
               //Debug.write("Component registered",component);
@@ -82,12 +82,12 @@
       var timerDelegate = new LzDelegate( this, "showTooltip",component,"name");
       this.setAttribute("__timerDelegate",timerDelegate);
       this.setAttribute("__currentComponent",component);
-      LzTimer.addTimer( timerDelegate, this.getAttribute("delay") );
+      LzTimer.addTimer( timerDelegate, this.delay );
     </method>
     
     <method name="doMouseout" args="component">
       this.setAttribute("__currentComponent",[]);
-      var timerDelegate = this.getAttribute("__timerDelegate");
+      var timerDelegate = this.__timerDelegate;
       LzTimer.removeTimer(timerDelegate);
       this.setAttribute("__timerDelegate",[]);
       this.destroyTooltip(component);
@@ -95,15 +95,15 @@
     
     <method name="showTooltip" >
       <![CDATA[
-      var component = this.getAttribute("__currentComponent");
+      var component = this.__currentComponent;
       
-      var keyID = component.getAttribute(this.getAttribute("component_identifier"));
-      var msg = this.getAttribute("messageMap")[keyID];
+      var keyID = component[this["component_identifier"]];
+      var msg = this.messageMap[keyID];
 
       
-      var tooltip = this.getAttribute("tooltip_obj");
+      var tooltip = this.tooltip_obj;
       
-      var override = component.getAttribute("tooltip");
+      var override = component.tooltip;
       if(override == undefined || override == null) {
         tooltip.setAttribute("text",msg);
       } else {
@@ -111,7 +111,7 @@
       }      
       
       
-      var tooltipWidth = tooltip.getAttribute("width");
+      var tooltipWidth = tooltip.width;
 
       var xPos = canvas.getMouse("x");
       var xDelta = xPos - tooltipWidth/2;
@@ -142,7 +142,7 @@
     </method>
     
     <method name="destroyTooltip" args="component">
-        var tooltip = this.getAttribute("tooltip_obj");
+        var tooltip = this.tooltip_obj;
         tooltip.setAttribute("opacity",0);
     </method>
     
@@ -158,9 +158,9 @@
             <view bgcolor="black" x="${parent.width-1}"        height="${parent.height}" width="1"/>
             
             <handler name="ontext">
-                theText.setAttribute("text",this.getAttribute("text"));
+                theText.setAttribute("text",this.text);
             </handler>
-            <text name="theText" resize="true" text="${parent.getAttribute('text')}" x="1" y="1"/>
+            <text name="theText" resize="true" text="${parent.text}" x="1" y="1"/>
         </class>
 
   

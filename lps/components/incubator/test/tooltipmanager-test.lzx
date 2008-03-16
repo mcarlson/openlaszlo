@@ -42,9 +42,9 @@
             <view bgcolor="black" x="${parent.width-1}"        height="${parent.height}" width="1"/>
             
             <handler name="ontext">
-                theText.setAttribute("text",this.getAttribute("text"));
+                theText.setAttribute("text",this.text);
             </handler>
-            <text name="theText" resize="true" text="${parent.getAttribute('text')}" x="1" y="1"/>
+            <text name="theText" resize="true" text="${parent.text}" x="1" y="1"/>
         </view>
      
     </tooltipManager>

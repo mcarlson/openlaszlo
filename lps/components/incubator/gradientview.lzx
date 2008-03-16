@@ -71,12 +71,12 @@
     <method name="draw">
       <![CDATA[
           
-        if (this.getAttribute('stretchHeight') == null) {
+        if (this.stretchHeight == null) {
           this.stretchHeight = this.height;
           if (this.measureHeight() > this.height) { this.stretchHeight = this.measureHeight(); } 
         }
         
-        if (this.getAttribute('stretchWidth') == null) {
+        if (this.stretchWidth == null) {
           this.stretchWidth = this.width;
           if (this.measureWidth() > this.width) { this.stretchWidth = this.measureWidth(); }
         }
@@ -110,17 +110,17 @@
           g = this.createRadialGradient(0-(this.stretchWidth*.5),-(this.stretchHeight*.5),0,this.stretchWidth*1.5,this.stretchHeight*1.5,0);
         }
         
-        if ((g != null) && (this.getAttribute('colorFrom') != null)) {
+        if ((g != null) && (this.colorFrom != null)) {
 
           this.globalAlpha = 1;
           g.addColorStop(0, this.colorFrom);
-          g.addColorStop(1, this.getAttribute('colorTo') != null ? this.colorTo : this.colorFrom);
+          g.addColorStop(1, this.colorTo != null ? this.colorTo : this.colorFrom);
           this.fillStyle = g;
           this.fill();
         }
         
         if ((this.borderSize > 0) || (this.borderSizeTop > 0)) {
-          if (this.getAttribute('borderColorTop') == null) {
+          if (this.borderColorTop == null) {
             this.borderColorTop = this.borderColor;
           }
                     
@@ -140,7 +140,7 @@
         }
                 
         if ((this.borderSize > 0) || (this.borderSizeBottom > 0)) {
-          if (this.getAttribute('borderColorBottom') == null) {
+          if (this.borderColorBottom == null) {
             this.borderColorBottom = this.borderColor;
           }
           // create bottom border
@@ -158,7 +158,7 @@
         }        
 
         if ((this.borderSize > 0) || (this.borderSizeLeft > 0)) {  
-          if (this.getAttribute('borderColorLeft') == null) {
+          if (this.borderColorLeft == null) {
             this.borderColorLeft= this.borderColor;
           }
         
@@ -178,7 +178,7 @@
         }
 
         if ((this.borderSize > 0) || (this.borderSizeRight > 0)) {  
-          if (this.getAttribute('borderColorRight') == null) {
+          if (this.borderColorRight == null) {
             this.borderColorRight= this.borderColor;
           }
         

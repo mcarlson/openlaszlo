@@ -86,7 +86,7 @@
     <method name="_setdefault" args="def"> <![CDATA[
         this.isdefault = def;
         if (isdefault) {
-            global._componentmanager.service.setDefaultStyle(this);
+            lz._componentmanager.service.setDefaultStyle(this);
             if (this['canvascolor'] != null) {
                  canvas.setBGColor(this.canvascolor);
             }
@@ -225,13 +225,13 @@
  -->
 <script>
 
-   _componentmanager.service = new _componentmanager( canvas , null,
+   lz._componentmanager.service = new lz._componentmanager( canvas , null,
                                                         null, true );
 </script>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

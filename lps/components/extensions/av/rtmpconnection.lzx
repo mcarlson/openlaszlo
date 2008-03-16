@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -300,9 +300,9 @@
                 return -1;
             }
             var rtmpObject = null;
-            if (this.parent instanceof rtmpconnection){
+            if (this.parent instanceof lz.rtmpconnection){
                 rtmpObject = this.parent;
-            } else if(this.remotecontext  instanceof rtmpconnection){
+            } else if(this.remotecontext  instanceof lz.rtmpconnection){
                 rtmpObject = this.remotecontext;
             } else {
                 Debug.write("ERROR: no remotecontext availible abort call");

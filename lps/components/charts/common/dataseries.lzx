@@ -154,8 +154,8 @@
         
         <method name="getRootDataSeries">
             var objectplace = this;
-            while(objectplace.parent instanceof dataseries){
-                if(parent instanceof dataseries){
+            while(objectplace.parent instanceof lz.dataseries){
+                if(parent instanceof lz.dataseries){
                     objectplace = objectplace.parent;
                 } else {
                     break;
@@ -208,7 +208,7 @@
             {
                 return this[attName];
             }
-            else if(parent instanceof dataseries)
+            else if(parent instanceof lz.dataseries)
             {         
                 return parent.getNestedAttribute(attName);
             }
@@ -235,7 +235,7 @@
                 for(var i = 0; i < this.subnodes.length; i++)
                 {
                     //Debug.write("subnodename: " + this.subnodes[i].name);
-                    if((this.subnodes[i] instanceof datacolumn) && (this.subnodes[i].name == name))
+                    if((this.subnodes[i] instanceof lz.datacolumn) && (this.subnodes[i].name == name))
                     {
                     
                         datacolumnsmap[name] = this.subnodes[i];
@@ -244,7 +244,7 @@
                     }
                 }               
     
-                if(parent instanceof dataseries)
+                if(parent instanceof lz.dataseries)
                 {
                     
                     return parent.getDataColumn(name);
@@ -278,7 +278,7 @@
                 for(var i = 0; i < this.subnodes.length; i++){
                     var childDataSeries = this.subnodes[i];
                     
-                    if(childDataSeries instanceof dataseries){
+                    if(childDataSeries instanceof lz.dataseries){
                         this.dataseriesleafs = this.dataseriesleafs.concat(childDataSeries.getDataSeriesLeafs());                                                                                                
                     }
                 }                       
@@ -353,8 +353,8 @@
         <!--- get the top level -->
         <method name="getRootDataSeries">
             var objectplace = this;
-            while(objectplace.parent instanceof dataseries){
-                if(parent instanceof dataseries){
+            while(objectplace.parent instanceof lz.dataseries){
+                if(parent instanceof lz.dataseries){
                     objectplace = objectplace.parent;
                 } else {
                     break;

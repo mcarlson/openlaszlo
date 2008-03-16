@@ -110,21 +110,21 @@
         
         <method name="testNoIndent"><![CDATA[
             var fmt = grte.getTextFormat(5,10);
-            assertTrue( (fmt.getAttribute("indent") == null) || (fmt.indent==0));
+            assertTrue( (fmt.indent == null) || (fmt.indent==0));
         ]]></method>
         
         <method name="testNoBlockIndent"><![CDATA[
             var fmt = grte.getTextFormat(5,10);
-            assertTrue( (fmt.getAttribute("blockIndent") == null) || (!fmt.blockIndent));
+            assertTrue( (fmt.blockIndent == null) || (!fmt.blockIndent));
         ]]></method>
         
         <method name="testNoAlign"><![CDATA[
             var fmt = grte.getTextFormat(5,10);
-            assertTrue( (fmt.getAttribute("align") == null) || (fmt.align == "left"));
+            assertTrue( (fmt.align == null) || (fmt.align == "left"));
         ]]></method>
         <method name="testNoBullet"><![CDATA[
             var fmt = grte.getTextFormat(5,10);
-            assertTrue( (fmt.getAttribute("bullet") == null) || (fmt.bullet == false));
+            assertTrue( (fmt.bullet == null) || (fmt.bullet == false));
         ]]></method>        
     </TestCase>
     
@@ -157,7 +157,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-    * Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.                    *
+    * Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.                    *
     * Use is subject to license terms.                                            *
     * X_LZ_COPYRIGHT_END ****************************************************** -->
     <!-- @LZX_VERSION@                                                         -->

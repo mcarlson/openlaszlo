@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
@@ -110,7 +110,7 @@
             //Debug.write("videoview init found stream", this, stream);
             if (!stream) {
                stream = 
-                    new global.mediastream(
+                    new lz.mediastream(
                         this, 
                         {debug:this.debug}, 
                         null, 

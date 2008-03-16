@@ -351,16 +351,16 @@
                     <![CDATA[
                     var killviews = 0;
                     for(var i = 0; i <= this.subviews.length; i++){
-                        if(this.subviews[i] instanceof databar ||
-                            this.subviews[i] instanceof label){
+                        if(this.subviews[i] instanceof lz.databar ||
+                            this.subviews[i] instanceof lz.label){
                             killviews++;
                         }
                     }
                     var remainviews = this.subviews.length - killviews;
                     while(this.subviews.length != remainviews){
                         for(var j = 0; j <= this.subviews.length; j++){
-                            if(this.subviews[j] instanceof databar ||
-                                this.subviews[j] instanceof label){
+                            if(this.subviews[j] instanceof lz.databar ||
+                                this.subviews[j] instanceof lz.label){
                                 this.subviews[j].destroy();
                             }
                         }
@@ -411,7 +411,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

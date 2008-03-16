@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <canvas debug="true">
@@ -45,7 +45,7 @@
                 <button name="upload" text="Upload" x="430" enabled="false">
                     <handler name="onclick"><![CDATA[
                         for(var i=0; i<main.upview.subnodes.length;i++ ){
-                            if(main.upview.subnodes[i] instanceof fileuploadlist && main.upview.subnodes[i].selected==true){
+                            if(main.upview.subnodes[i] instanceof lz.fileuploadlist && main.upview.subnodes[i].selected==true){
                                 main.upview.subnodes[i].myFileUpload.upload('upload.jsp');
                             }
                         }
@@ -54,7 +54,7 @@
                     <method name="checkupload"><![CDATA[
                        this.setAttribute('enabled',false);
                        for(var i=0; i<main.upview.subnodes.length;i++ ){
-                            if(main.upview.subnodes[i] instanceof fileuploadlist){
+                            if(main.upview.subnodes[i] instanceof lz.fileuploadlist){
                                 if(main.upview.subnodes[i].myFileUpload.uploadenable==true){
                                     this.setAttribute('enabled',true);
                                 }

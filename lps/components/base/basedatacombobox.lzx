@@ -297,11 +297,11 @@
 
                 var flcn = this.menuclassname;
                 if ($debug) {
-                    if (typeof global[flcn] == "undefined")
+                    if (typeof lz[flcn] == "undefined")
                         Debug.format("basedatacombobox floatinglist class (%w) is undefined", flcn);
                 }
 
-                var cblist = new global[flcn](this,
+                var cblist = new lz[flcn](this,
                                               { visible:false,
                                                 attach: this.listattach,
                                                 attachoffset: -2,
@@ -310,7 +310,7 @@
 
                 // add in a white view to reduce the visual effect of the
                 // list items appearing as they are created
-                var tmp = new global[icn](cblist, { name:'item' });
+                var tmp = new lz[icn](cblist, { name:'item' });
                 new LzDatapath(tmp, { pooling: true });
 
                 this._cblist = cblist;
@@ -485,7 +485,7 @@
               @keywords private -->
         <method name="_getItemAt" args="index"> <![CDATA[
             var item = null;
-            if (this._cblist._selector instanceof datalistselector) {
+            if (this._cblist._selector instanceof lz.datalistselector) {
                 this._cblist._selector._ensureItemInViewByIndex( index );
             }
             var svs = this._cblist._selector.immediateparent.subviews;

@@ -153,7 +153,7 @@
             if ( typeof(v.minheight) == "undefined" ) {
                 // no minheight was defined so assign the parent
                 // value before calling calcAvailableHeight
-                if ( v instanceof basetabelement ) v.setAttribute('minheight', this.mintabheight);
+                if ( v instanceof lz.basetabelement ) v.setAttribute('minheight', this.mintabheight);
             }
             // v.setHeight(v.minheight);
 
@@ -203,7 +203,7 @@
               tabelement.
               @param String txt: The name of the tabelement. -->
         <method name="addItem" args="txt" > <![CDATA[
-            var v = new global[this.itemclassname](this,{text:txt});
+            var v = new lz[this.itemclassname](this,{text:txt});
             this.onheight.sendEvent(); // force an update
         ]]> </method>
 
@@ -221,7 +221,7 @@
                 var tmh = 0;
                 for( var m=0; m < cv.subviews.length; m++ ) {
                     var sv = cv.subviews[m]
-                    if ( sv.visible && sv instanceof basetabelement ) {
+                    if ( sv.visible && sv instanceof lz.basetabelement ) {
                         tmh += sv['minheight'] + spacing;
                     }
                 }
@@ -230,7 +230,7 @@
 
                 // set the corresponding height of the attributes
                 this.setAttribute('availableheight',
-                  Math.max(0,cv.getAttribute("height") - tmh));
+                  Math.max(0,cv.height - tmh));
                 this.setAttribute('totalminheight',tmh);
             }
         ]]> </method>
@@ -286,7 +286,7 @@
    </class> <!-- END: basetabslider -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

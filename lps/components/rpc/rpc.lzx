@@ -146,7 +146,7 @@
 
             for (var k in this.subnodes) {
                 var c = this.subnodes[k];
-                if ( ! (c instanceof remotecall) ) continue;
+                if ( ! (c instanceof lz.remotecall) ) continue;
 
                 // funcname is required
                 var fn = c['funcname'];
@@ -342,7 +342,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

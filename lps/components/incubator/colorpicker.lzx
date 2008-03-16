@@ -8,7 +8,7 @@
     <attribute name="mycolor" type="color" value="#000000"/>
     <attribute name="listener" type="expression"/>
     <handler name="onclick">
-      listener.changeColor(this.getAttribute('mycolor'));
+      listener.changeColor(this.mycolor);
     </handler>
     <view bgcolor="#444444" width="13" height="13">
       <view bgcolor="${classroot.mycolor}"  x="1" y="1" width="11" height="11"/>

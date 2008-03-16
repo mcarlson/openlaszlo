@@ -33,7 +33,7 @@
         <attribute name="halo_size"     value="${parent.halo_size}" />
         
         <attribute name="myTooltipManager"     value="$once{parent.tooltipmanager}" />
-        <attribute name="tooltip" value="${this.getAttribute('text')}" />
+        <attribute name="tooltip" value="${this.text}" />
         
         
         <handler name="oninit">
@@ -62,8 +62,8 @@
                     var my_x = this.getAttributeRelative( "x", canvas );
                     var my_y = this.getAttributeRelative( "y", canvas );
                 
-                    var center_x = my_x + this.getAttribute("width")/2;
-                    var center_y = my_y + this.getAttribute("height")/2;
+                    var center_x = my_x + this.width/2;
+                    var center_y = my_y + this.height/2;
                 
                     var dist_from_center = 
                         (global_x-center_x)*(global_x-center_x) +
