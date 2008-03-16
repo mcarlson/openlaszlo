@@ -35,55 +35,55 @@
             // tester.setAttribute("yscale",1);
 
             <!-- do all the tests -->
-            //assertEquals(tester.getAttribute("clip"), tester.clip);
-            assertEquals(tester.getAttribute("x"), tester.x);
-            assertEquals(tester.getAttribute("y"), tester.y);
-            //assertEquals(tester.getAttribute("width"), tester.width);
-            //assertEquals(tester.getAttribute("height"), tester.height);
-            assertEquals(tester.getAttribute("rotation"), tester.rotation);
-            assertEquals(tester.getAttribute("opacity"), tester.opacity);
-            //assertEquals(tester.getAttribute("alpha"), tester.alpha);
-            assertEquals(tester.getAttribute("visible"), tester.visible);
-            //assertEquals(tester.getAttribute("align"), tester.align);
-            //assertEquals(tester.getAttribute("valign"), tester.valign);
-            //assertEquals(tester.getAttribute("source"), tester.source);
-            assertEquals(tester.getAttribute("bgcolor"), tester.bgcolor);
-            //assertEquals(tester.getAttribute("resource"), tester.resource);
-            //assertEquals(tester.getAttribute("clickable"), tester.clickable);
-            //assertEquals(tester.getAttribute("pixellock"), tester.pixellock);
-            //assertEquals(tester.getAttribute("cursor"), tester.cursor);
-            //assertEquals(tester.getAttribute("fgcolor"), tester.fgcolor);
-            //assertEquals(tester.getAttribute("font"), tester.font);
-            //assertEquals(tester.getAttribute("stretches"), tester.stretches);
-            assertEquals(tester.getAttribute("play"), tester.play);
-            //assertEquals(tester.getAttribute("selected"), tester.selected); 
+            //assertEquals(tester["clip"], tester.clip);
+            assertEquals(tester["x"], tester.x);
+            assertEquals(tester["y"], tester.y);
+            //assertEquals(tester["width"], tester.width);
+            //assertEquals(tester["height"], tester.height);
+            assertEquals(tester["rotation"], tester.rotation);
+            assertEquals(tester["opacity"], tester.opacity);
+            //assertEquals(tester["alpha"], tester.alpha);
+            assertEquals(tester["visible"], tester.visible);
+            //assertEquals(tester["align"], tester.align);
+            //assertEquals(tester["valign"], tester.valign);
+            //assertEquals(tester["source"], tester.source);
+            assertEquals(tester["bgcolor"], tester.bgcolor);
+            //assertEquals(tester["resource"], tester.resource);
+            //assertEquals(tester["clickable"], tester.clickable);
+            //assertEquals(tester["pixellock"], tester.pixellock);
+            //assertEquals(tester["cursor"], tester.cursor);
+            //assertEquals(tester["fgcolor"], tester.fgcolor);
+            //assertEquals(tester["font"], tester.font);
+            //assertEquals(tester["stretches"], tester.stretches);
+            assertEquals(tester["play"], tester.play);
+            //assertEquals(tester["selected"], tester.selected); 
 
             <!-- do it again with hardcoding -->
 
-            //assertEquals(1, tester.getAttribute("clip"),"clip");
-            assertEquals(1, tester.getAttribute("x"),"x");
-            assertEquals(1, tester.getAttribute("y"),"y");
-            // assertEquals(1, tester.getAttribute("width"),"width");
-            // assertEquals(1, tester.getAttribute("height"),"height");
-            assertEquals(1, tester.getAttribute("rotation"),"rotation");
-            assertEquals(1, tester.getAttribute("opacity"),"opacity");
-            // assertEquals(1, tester.getAttribute("alpha"),"alpha");
-            assertEquals(1, tester.getAttribute("visible"),"visible");
-            // assertEquals(1, tester.getAttribute("align"),"align");
-            // assertEquals(1, tester.getAttribute("valign"),"valign");
-            // assertEquals(1, tester.getAttribute("source"),"source");
-            assertEquals(1, tester.getAttribute("bgcolor"),"bgcolor");
-            // assertEquals(1, tester.getAttribute("resource"),"resource");
-            // assertEquals(true, tester.getAttribute("clickable"),"clickable");
-            // assertEquals(1, tester.getAttribute("pixellock"),"pixellock");
-            // assertEquals(1, tester.getAttribute("cursor"),"cursor");
-            // assertEquals(1, tester.getAttribute("fgcolor"),"fgcolor");
-            // assertEquals(1, tester.getAttribute("font"),"font");
-            // assertEquals(true, tester.getAttribute("stretches"),"stretches");
-            // assertEquals(1, tester.getAttribute("play"),"play");
-            // assertEquals(1, tester.getAttribute("selected"),"selected");
-            // assertEquals(1, tester.getAttribute("xscale"),"xscale");
-            // assertEquals(1, tester.getAttribute("yscale"),"yscale");
+            //assertEquals(1, tester["clip"],"clip");
+            assertEquals(1, tester["x"],"x");
+            assertEquals(1, tester["y"],"y");
+            // assertEquals(1, tester["width"],"width");
+            // assertEquals(1, tester["height"],"height");
+            assertEquals(1, tester["rotation"],"rotation");
+            assertEquals(1, tester["opacity"],"opacity");
+            // assertEquals(1, tester["alpha"],"alpha");
+            assertEquals(1, tester["visible"],"visible");
+            // assertEquals(1, tester["align"],"align");
+            // assertEquals(1, tester["valign"],"valign");
+            // assertEquals(1, tester["source"],"source");
+            assertEquals(1, tester["bgcolor"],"bgcolor");
+            // assertEquals(1, tester["resource"],"resource");
+            // assertEquals(true, tester["clickable"],"clickable");
+            // assertEquals(1, tester["pixellock"],"pixellock");
+            // assertEquals(1, tester["cursor"],"cursor");
+            // assertEquals(1, tester["fgcolor"],"fgcolor");
+            // assertEquals(1, tester["font"],"font");
+            // assertEquals(true, tester["stretches"],"stretches");
+            // assertEquals(1, tester["play"],"play");
+            // assertEquals(1, tester["selected"],"selected");
+            // assertEquals(1, tester["xscale"],"xscale");
+            // assertEquals(1, tester["yscale"],"yscale");
 
         </method>
     </class>
@@ -103,29 +103,29 @@
             // tester.setAttribute("selectable",1);
             tester.setAttribute("bgcolor",1);
 
-            //assertEquals(tester.getAttribute("label"),tester.label);
-            assertEquals(tester.getAttribute("text"),tester.text);
-            //assertEquals(tester.getAttribute("fgcolor"),tester.fgcolor);
-            //assertEquals(tester.getAttribute("font"),tester.font);
-            assertEquals(tester.getAttribute("fontsize"),tester.fontsize);
-            assertEquals(tester.getAttribute("fontstyle"),tester.fontstyle);
-            assertEquals(tester.getAttribute("resize"),tester.resize);
-            assertEquals(tester.getAttribute("yscroll"),tester.yscroll);
-            assertEquals(tester.getAttribute("xscroll"),tester.xscroll);
-            //assertEquals(tester.getAttribute("selectable"),tester.selectable);
-            assertEquals(tester.getAttribute("bgcolor"),tester.bgcolor);
+            //assertEquals(tester["label"],tester.label);
+            assertEquals(tester["text"],tester.text);
+            //assertEquals(tester["fgcolor"],tester.fgcolor);
+            //assertEquals(tester["font"],tester.font);
+            assertEquals(tester["fontsize"],tester.fontsize);
+            assertEquals(tester["fontstyle"],tester.fontstyle);
+            assertEquals(tester["resize"],tester.resize);
+            assertEquals(tester["yscroll"],tester.yscroll);
+            assertEquals(tester["xscroll"],tester.xscroll);
+            //assertEquals(tester["selectable"],tester.selectable);
+            assertEquals(tester["bgcolor"],tester.bgcolor);
 
-            // assertEquals(1, tester.getAttribute("label"),"label");
-            // assertEquals("newText", mdtester.getAttribute("text"),"text");
-            // assertEquals(1, tester.getAttribute("fgcolor"),"fgcolor");
-            // assertEquals(1, tester.getAttribute("font"),"font");
-            // assertEquals(1, tester.getAttribute("fontsize"),"fontsize");
-            // assertEquals("bold", tester.getAttribute("fontstyle"),"fontstyle");
-            // assertEquals(1, tester.getAttribute("resize"),"resize");
-            // assertEquals(1, tester.getAttribute("yscroll"),"yscroll");
-            // assertEquals(1, tester.getAttribute("xscroll"),"xscroll");
-            // assertEquals(1, tester.getAttribute("selectable"),"selectable");
-            assertEquals(1, tester.getAttribute("bgcolor"),"bgcolor");
+            // assertEquals(1, tester["label"],"label");
+            // assertEquals("newText", mdtester["text"],"text");
+            // assertEquals(1, tester["fgcolor"],"fgcolor");
+            // assertEquals(1, tester["font"],"font");
+            // assertEquals(1, tester["fontsize"],"fontsize");
+            // assertEquals("bold", tester["fontstyle"],"fontstyle");
+            // assertEquals(1, tester["resize"],"resize");
+            // assertEquals(1, tester["yscroll"],"yscroll");
+            // assertEquals(1, tester["xscroll"],"xscroll");
+            // assertEquals(1, tester["selectable"],"selectable");
+            assertEquals(1, tester["bgcolor"],"bgcolor");
     </method>
     </class>
 </library>

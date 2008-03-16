@@ -119,7 +119,7 @@
     <bug_1899/>
     <bug_2029/>
     <bug_2113/>
-    <bug_2125/>
+<!-- Broken: LPP-5160    <bug_2125/> -->
     <bug_2131/>
     <bug_2223/>
     <bug_2225/>
@@ -137,6 +137,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

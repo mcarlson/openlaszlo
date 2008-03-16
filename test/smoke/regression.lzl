@@ -144,7 +144,7 @@
         <method name="testInitOrder">
             this.names = [ 'a' , 'b' , 'c' , 'd' , 'e' ]
             for ( var i =0; i &lt; names.length; i++ ){
-                new slowinit( this, { name : names[ i ] } );
+                new lz.slowinit( this, { name : names[ i ] } );
             }
         </method>
         <method name="tearDown">
@@ -276,7 +276,7 @@
     <dataset name="bug577" src="../resources/xml/http.xml"/>
     <class name="bug_577" extends="TestCase">
         <method name="testLocalDS">
-            assertUndefined(canvas.datasets.bug577.getAttribute('type'))
+            assertUndefined(canvas.datasets.bug577['type'])
         </method>
     </class>
 
@@ -285,8 +285,13 @@
   <class name="class_623">
     <attribute name="bar"/>
     <method name="setBar" args="newValue">
-      // uncommenting this line fixes the next one: this.bar = 1234;
-      bar = newValue;
+      // Because of lossage in swf runtime with implicit-this and LHS,
+      // we can't reference bar without this:
+      if ($as2) {
+        this.bar = newValue;
+      } else {
+        bar = newValue;
+      }
     </method>
     <method name="getBar">
       return bar;
@@ -296,8 +301,10 @@
   <class name="bug_623" extends="TestCase">
     <class_623 id="obj"/>
     <method name="testSetGet">
-      obj.setBar(1);
-      assertEquals(1, obj.getBar());
+      var unique = {}
+      obj.setBar(unique);
+      assertSame(unique, obj.getBar());
+      assertUndefined(global['bar']);
     </method>
   </class>
 
@@ -385,7 +392,7 @@
         <mynode name="myinstance"/>
 
         <method name="testNode">
-            assertTrue(myinstance instanceof mynode);
+            assertTrue(myinstance instanceof lz.mynode);
             assertTrue(myinstance instanceof LzNode);
             assertFalse(myinstance instanceof LzView);
         </method>
@@ -738,7 +745,7 @@
     <class name="bug_1843" extends="TestCase">
         <view name="cv" bgcolor="teal" width="100" height="50" clickable="true"/>
         <method name="testClickability">
-            assertTrue(cv.getAttribute("clickable"))
+            assertTrue(cv["clickable"])
         </method>
     </class>
     
@@ -772,7 +779,7 @@
                 </handler>
 
                 <method name="applyData" args="d">
-                        classroot.assertTrue(this.gotinit)
+                        classroot.assertTrue(this.gotinit, "applyData called before oninit")
                         this.setAttribute('value', d);
                 </method>
         </class>
@@ -798,11 +805,11 @@
                                 fdel = new LzDelegate(this, "fail", tr, "oninit")
                                 return
                         }
-                        else delete fdel
+                        else delete this.fdel
                         
                         setResult(tr)
                         result.currentTest = "bug_2029"
-                        super.fail(msg)
+                        super.fail.apply(this, arguments)
                 </method>
                 <toggle name="local" datapath="localdata:/value/text()"/>
                 <toggle name="remote" datapath="remotedata:/mydata/value/text()"/>
@@ -820,7 +827,7 @@
                 <view name="lview"/>
                 <method name="testSrc">
                         lview.setSource('http:../resources/swf/logo.swf')
-                        assertNotUndefined(lview.getAttribute('resource'), 'Source attribute undefined!')
+                        assertNotUndefined(lview['resource'], 'Source attribute undefined!')
                 </method>
         </class>
         
@@ -878,7 +885,7 @@
         <simplelayout spacing="5"/>
         <inputtext datapath="bug2239:/item/text()" name="tbox" width="200"/>
         <method name="testWidth">
-                assertEquals(200, tbox.getCloneNumber(0).getAttribute('width'))
+                assertEquals(200, tbox.getCloneNumber(0)['width'])
         </method>
     </class>
     

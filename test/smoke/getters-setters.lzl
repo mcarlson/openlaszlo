@@ -4,7 +4,7 @@
     .setters for those attributes.
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -32,10 +32,10 @@
         </view>
 
         <method name="testGettersOnView">
-            assertEquals(tester.getAttribute("x"), tester.x);
-            assertEquals(tester.getAttribute("y"), tester.y);
-            assertEquals(tester.getAttribute("width"), tester.width);    
-            assertEquals(tester.getAttribute("height"), tester.height);    
+            assertEquals(tester["x"], tester.x);
+            assertEquals(tester["y"], tester.y);
+            assertEquals(tester["width"], tester.width);    
+            assertEquals(tester["height"], tester.height);    
         </method>
 
         <method name="testSettersOnView">
@@ -43,10 +43,10 @@
             tester.setAttribute("y", tester.y+152);
             tester.setAttribute('height', 314);
             tester.setAttribute("width", 159);
-            assertEquals(tester.getAttribute("x"), tester.x);
-            assertEquals(tester.getAttribute("y"), tester.y);
-            assertEquals(tester.getAttribute("width"), tester.width);    
-            assertEquals(tester.getAttribute("height"), tester.height);    
+            assertEquals(tester["x"], tester.x);
+            assertEquals(tester["y"], tester.y);
+            assertEquals(tester["width"], tester.width);    
+            assertEquals(tester["height"], tester.height);    
         </method>
     </class>
 
