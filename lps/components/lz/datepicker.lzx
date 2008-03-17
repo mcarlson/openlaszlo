@@ -202,9 +202,9 @@
         <!--- @keywords private -->
         <attribute name="firstDaySelected" type="boolean" value="false"/> 
         <!--- @keywords private -->
-        <attribute name="weekclass" value="datepickerweek"/> 
+        <attribute name="weekclass" value="lz.datepickerweek"/> 
         <!--- @keywords private --> 
-        <attribute name="dayclass" value="datepickerday"/> 
+        <attribute name="dayclass" value="lz.datepickerday"/> 
     <!--- @keywords public -->
     <attribute name="allowdrag" type="boolean" value="true"/>
 
