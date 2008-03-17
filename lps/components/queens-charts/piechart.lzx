@@ -95,8 +95,8 @@
                     } else {
                         popac = subnodes[dnode].subviews[j].dataopacity;
                     }
-                    new wrappinglayout(this.datapane, {spacing:this.piespacing});
-                    new wholepie(this.datapane, {name:'pie'+j, width:piespacewidth, height:piespaceheight,
+                    new lz.wrappinglayout(this.datapane, {spacing:this.piespacing});
+                    new lz.wholepie(this.datapane, {name:'pie'+j, width:piespacewidth, height:piespaceheight,
                         pienumber:j, allpies:snum, pievalue:pievalue,
                         piecevalues:subnodes[dnode].subviews[j].xdata,
                         colorvalues:bcolor, borderwidths:borderw, opacvalues:popac,

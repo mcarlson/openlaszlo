@@ -207,7 +207,7 @@ class richinputtext extends LzInputText {
 
   function getTextFormat(beginindex, endindex) {
     var flashformat = this.sprite.__LZtextclip.getTextFormat(beginindex, endindex);
-    var fmt = new textformat(this);
+    var fmt = new lz.textformat(this);
 
     for (var i in flashformat) {
       fmt[i] = flashformat[i];
@@ -298,7 +298,7 @@ class richinputtext extends LzInputText {
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->

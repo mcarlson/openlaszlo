@@ -15,7 +15,7 @@
             var pool = this.pools[className];
             if(!pool)
             {
-                pool =  new viewspool(parent); 
+                pool =  new lz.viewspool(parent); 
                 //debug.write(pool);
                 pool.parentview = parent;  
                 pool.viewclass = className;
@@ -52,7 +52,7 @@
             }
             else
             {
-                marker =  new global[viewclass](parentview, args);                               
+                marker =  new lz[viewclass](parentview, args);                               
             }
             this.used.push(marker);
             marker.setVisible(true);
@@ -99,7 +99,7 @@
             var pool = this.pools[listName];
             if(!pool)
             {
-                pool =  new viewslist(parent);                 
+                pool =  new lz.viewslist(parent);                 
                 pool.parentview = parent;  
                 pool.viewclass = className;
                 this.pools[listName] = pool;                                                                                
@@ -130,7 +130,7 @@
         <method name="getViewAt" args="index, args">            
             if(this.vlist[index] == null)
             {
-                this.vlist[index] = new global[viewclass](parentview, args);                 
+                this.vlist[index] = new lz[viewclass](parentview, args);                 
             }
             else
             {
@@ -155,7 +155,7 @@
 </library>   
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

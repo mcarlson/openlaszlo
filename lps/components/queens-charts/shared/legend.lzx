@@ -132,7 +132,7 @@
                 var litemwidth = parent.expanded ? 80 : 30;
                 var litemheight = parent.expanded ? 14 : 8;
                 if(this.ltitle != null){
-                    new legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
+                    new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:(parent.expanded ? this.titletextsize : 10), tcolor:this.titlecolor});
                 }
                 this.setWidth(litemwidth * numcols);
@@ -153,7 +153,7 @@
                 var litemwidth = parent.expanded ? 80 : 30;
                 var litemheight = parent.expanded ? 14 : 8;
                 if(this.ltitle != null){
-                    new legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
+                    new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:(parent.expanded ? this.titletextsize : 10), tcolor:this.titlecolor});
                 }
                 this.setWidth(litemwidth * numcols);
@@ -185,7 +185,7 @@
                     var numrows = Math.ceil(this.itemnums / numcols);
                 }
                 if(this.ltitle != null){
-                    new legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
+                    new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:(parent.expanded ? this.titletextsize : 10), tcolor:this.titlecolor});
                 }
                 var litemwidth = (this.width / numcols);
@@ -194,7 +194,7 @@
             
             for(var i = 0; i < this.piepieces.length; i++){
                 var pclink = this.piepieces[i];
-                new legenditem(this, {itemvalue:parent[pclink]['piecevalue'],
+                new lz.legenditem(this, {itemvalue:parent[pclink]['piecevalue'],
                     lpiece:this.piepieces[i], width:litemwidth,
                     hlcolor:(this.hlcolor == null ? this.backcolor : this.hlcolor),
                     height:litemheight, iconcolor:this.piececolors[i],
@@ -256,7 +256,7 @@
                 var litemwidth = (this.width / numcols);
                 var litemheight = (this.height / numrows);
                 if(this.ltitle != null){
-                    new legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
+                    new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:this.titletextsize, tcolor:this.titlecolor});
                 }
 
@@ -286,7 +286,7 @@
                         //itemlabel = ll.legenddatapath;
                     }
                     if(itemlabel != null){
-                        new legenditem(this, {itemvalue:itemlabel,
+                        new lz.legenditem(this, {itemvalue:itemlabel,
                             width:litemwidth, height:litemheight, dlink:ll,
                             hlcolor:(this.hlcolor == null ? this.backcolor : this.hlcolor),
                             height:this.height, iconcolor:iconcolor, textcolor:this.textcolor,
@@ -302,7 +302,7 @@
                 var litemwidth = 80;
                 var litemheight = 14;
                 if(this.ltitle != null){
-                    new legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
+                    new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:this.titletextsize, tcolor:this.titlecolor});
                 }
                 this.setWidth(litemwidth * numcols);
@@ -334,7 +334,7 @@
                         //itemlabel = ll.legenddatapath;
                     }
                     if(itemlabel != null){
-                        new legenditem(this, {itemvalue:itemlabel,
+                        new lz.legenditem(this, {itemvalue:itemlabel,
                             width:litemwidth, height:litemheight, dlink:ll,
                             hlcolor:(this.hlcolor == null ? this.backcolor : this.hlcolor),
                             height:this.height, iconcolor:iconcolor, textcolor:this.textcolor,
@@ -350,7 +350,7 @@
                 var litemwidth = 80;
                 var litemheight = 14;
                 if(this.ltitle != null){
-                    new legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
+                    new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:this.titletextsize, tcolor:this.titlecolor});
                 }
                 this.setWidth(litemwidth * numcols);
@@ -382,7 +382,7 @@
                         //itemlabel = ll.legenddatapath;
                     }
                     if(itemlabel != null){
-                        new legenditem(this, {itemvalue:itemlabel,
+                        new lz.legenditem(this, {itemvalue:itemlabel,
                             width:litemwidth, height:litemheight, dlink:ll,
                             hlcolor:(this.hlcolor == null ? this.backcolor : this.hlcolor),
                             height:this.height, iconcolor:iconcolor, textcolor:this.textcolor,

@@ -382,7 +382,7 @@
             @param object args: args to pass in to create dataseries. it is ok to be null -->
         <method name="addDataSeries" args="args">
             this.clearCache();
-            var childNode = new dataseries(this, args);
+            var childNode = new lz.dataseries(this, args);
             this.clearCache();            
             return childNode;
         </method>
@@ -399,7 +399,7 @@
              @param object args: args to pass in to create. It is ok to be null -->
         <method name="addDataColumn" args="args">
             this.clearCache();
-            var childNode = new datacolumn(this, args);            
+            var childNode = new lz.datacolumn(this, args);            
             return childNode;
         </method>
         

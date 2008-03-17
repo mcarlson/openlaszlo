@@ -333,7 +333,7 @@
                 }
             }
             if(this.drawbg != null){
-                new backcircle(this, {name:'bgcircle', drawbg:this.drawbg,
+                new lz.backcircle(this, {name:'bgcircle', drawbg:this.drawbg,
                     drawbgborder:this.drawbgborder, bgborderwidth:this.bgborderwidth,
                     ctrx:ctrx, ctry:ctry, pieradius:pieradius})
             }
@@ -348,7 +348,7 @@
                     var piecestart = (totaltonow / this.pievalue);
                 }
                 var adjradius = pieradius + (pieradius * (this.corrrad[k] / 100));
-                new piepiece(this, {centerx:ctrx, centery:ctry, piececolor:this.corrcolors[k],
+                new lz.piepiece(this, {centerx:ctrx, centery:ctry, piececolor:this.corrcolors[k],
                     bordercolor:this.corrborder[k], pieceradius:adjradius, piecepercent:pieceperc, startpercent:piecestart,
                     borderwidth:this.corrbwidth[k], pieceopacity:this.corropac[k], explode:this.explode, name:'pp'+k,
                     piecevalue:corrvalues[k]});
@@ -358,7 +358,7 @@
                     var eposit = sposit + ((2 * Math.PI) * (pieceperc / 2));
                     var sx = ctrx - (adjradius * .7) * Math.cos(((2 * Math.PI) / 2) - eposit);
                     var sy = ctry - (adjradius * .7) * Math.sin(eposit);
-                    new label(this, {height:16,
+                    new lz.label(this, {height:16,
                         y:sy, x:sx, bgcolor:this.corrlabelcolor[k],
                         ltext:this.corrlabel[k], labelnumber:k,
                         ltextsize:(this.expanded ? this.corrlabeltsize[k] : 10),
@@ -387,7 +387,7 @@
                             ppccount++;
                         }
                     }
-                    new chartlegend(this, {border:this.lborder, borderwidth:this.lborderwidth, backcolor:this.lbgcolor,
+                    new lz.chartlegend(this, {border:this.lborder, borderwidth:this.lborderwidth, backcolor:this.lbgcolor,
                         hlcolor:this.lhlcolor, itemnums:litems, charttype:'pie', posit:this.legend, piepieces:ppc,
                         ltitle:this.ltitle, pieradius:pieradius, centerx:ctrx, centery:ctry, piececolors:corrcolors,
                         legendvalues:this.corrlegend, legendx:this.legendx, legendy:this.legendy,
@@ -416,7 +416,7 @@
                         lx = (ctrx + pieradius) + (this.width - ctrx - pieradius - lwid) / 2;
                         lholder = 'manualright';
                     }
-                    new chartlegend(this, {border:this.lborder, borderwidth:this.lborderwidth, backcolor:this.lbgcolor,
+                    new lz.chartlegend(this, {border:this.lborder, borderwidth:this.lborderwidth, backcolor:this.lbgcolor,
                         itemnums:0, charttype:'pie', posit:lholder, ltitle:this.ltitle, pieradius:pieradius,
                         centerx:ctrx, centery:ctry, legendvalues:this.corrlegend, legendx:lx,
                         legendy:ly, legendwidth:lwid, legendheight:lhigh, titleposition:this.legendtitleposition})

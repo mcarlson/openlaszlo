@@ -38,15 +38,15 @@ This class complete the chart style class in case the developer has not defined 
         <method name="readChildrenNode" >
         <![CDATA[
             if( this.style.constructor.tagname == this.defaultstyle.constructor.tagname ) {
-                lParser = new styleparser(this, {defaultstyle:this.defaultstyle.subnodes[this.increment], style:this.style});
+                lParser = new lz.styleparser(this, {defaultstyle:this.defaultstyle.subnodes[this.increment], style:this.style});
             } else if( this.style[this.defaultstyle.name] ) {
-                lParser = new styleparser(this, {defaultstyle:this.defaultstyle.subnodes[this.increment], style:this.style[this.defaultstyle.name]});
+                lParser = new lz.styleparser(this, {defaultstyle:this.defaultstyle.subnodes[this.increment], style:this.style[this.defaultstyle.name]});
             }
             else {
                 this.style[this.defaultstyle.name] = this.defaultstyle;
                 this.style.subnodes.push(this.defaultstyle);
                 this.style.subviews.push(this.defaultstyle);
-                lParser = new styleparser(this, {defaultstyle:this.defaultstyle.subnodes[this.increment], style:this.style[this.defaultstyle.subnodes[this.increment].name]});
+                lParser = new lz.styleparser(this, {defaultstyle:this.defaultstyle.subnodes[this.increment], style:this.style[this.defaultstyle.subnodes[this.increment].name]});
             }
         ]]>
         </method>

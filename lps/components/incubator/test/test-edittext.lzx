@@ -57,7 +57,7 @@
                     width="100" height="75" 
                     bgcolor="black" border="1" />
 
-    <text>scrolledittext (new vscrollbar)</text>
+    <text>scrolledittext (new lz.vscrollbar)</text>
     <scrolledittext id="et7" datapath="mydset2:/value/@text"
                     width="100" height="75" 
                     bgcolor="black" border="1" 

@@ -623,7 +623,7 @@
                 }
             } 
             if (this.content == null) {
-                this.content = new basetabscontent(this, {}, null, true);
+                this.content = new lz.basetabscontent(this, {}, null, true);
                 Debug.write('Using basetabscontent for tabs content area');
             }
         </handler>

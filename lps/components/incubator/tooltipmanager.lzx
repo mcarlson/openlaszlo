@@ -50,7 +50,7 @@
         <handler name="oninit">
              var tooltip = this.tooltip_obj");
              if(tooltip == undefined || tooltip == null) {
-                tooltip = new basetooltip(canvas);
+                tooltip = new lz.basetooltip(canvas);
                 this.setAttribute("tooltip_obj",tooltip);
              }
              tooltip.setAttribute("opacity",0);

@@ -78,7 +78,7 @@
                 this.style = this.defaultstyle;
             } else {
             // Check for a complete style definition.
-                var parser = new styleparser(this, {style:this.style, defaultstyle:this.defaultstyle});
+                var parser = new lz.styleparser(this, {style:this.style, defaultstyle:this.defaultstyle});
             this.style = parser.style;
             }
         
@@ -171,7 +171,7 @@
         
         <!--- @keyword private -->
         <method name="createLabelViewspool">
-            return new viewspool(this, {parentview:this.plotarea, viewclass:'datalabel'})
+            return new lz.viewspool(this, {parentview:this.plotarea, viewclass:'datalabel'})
         </method>
         
         <!--- @keyword private -->

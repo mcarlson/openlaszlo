@@ -207,7 +207,7 @@
             if ( this.style.vaxisstyle!=null ) {
                 vaxis.style = this.style.vaxisstyle;
             } else {
-                vaxis.style = new axisstyle();
+                vaxis.style = new lz.axisstyle();
             }
             
             vaxis.setX( (this.plotarea[x] != null ? this.plotarea.x : this.x) );
@@ -222,7 +222,7 @@
             if ( this.style.haxisstyle!=null ) {
                 haxis.style = this.style.haxisstyle;
             } else {
-                haxis.style = new axisstyle();
+                haxis.style = new lz.axisstyle();
             }
             
             haxis.setX( (this.plotarea[x] != null ? this.plotarea.x : this.x) );

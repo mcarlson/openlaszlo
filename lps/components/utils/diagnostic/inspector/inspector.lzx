@@ -139,7 +139,7 @@
                             show = false;
                        }
                     }
-                    if (show) new item(this.children, {reference: nodes[i], root:this.root});
+                    if (show) new lz.item(this.children, {reference: nodes[i], root:this.root});
                 }
                 setAttribute('open', true);
             } else {

@@ -120,7 +120,7 @@
                             Debug.write("scrollbarclassname undefined", this);
                         }
                     }
-                    this._sbar = new global[classname](this, { stepsize: "20" });
+                    this._sbar = new lz[classname](this, { stepsize: "20" });
                 }
             </method>
             
@@ -363,7 +363,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

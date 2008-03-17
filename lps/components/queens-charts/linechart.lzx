@@ -364,7 +364,7 @@
                                 var labelheight = 15;
                                 if(ld.labeldata[i] != null){
                                     var ltext = ld.labeldata[i];
-                                    new label(dataclip.datapane, {height:labelheight,
+                                    new lz.label(dataclip.datapane, {height:labelheight,
                                         x:xposit, labelnumber:i, y:yposit - labelheight - 3,
                                         bgcolor:lbcolor, name:"label"+j+i, fadein:false,
                                         ltext:ltext, labelset:j, ltextsize:ltxtsize,

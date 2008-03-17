@@ -140,7 +140,7 @@
             // Create a currentformat object, and initialize it to the format
             // specified by the various defaultfontsize/defaultfontcolor/defaultfontname
             // attributes. 
-            this.currentformat = new textformat();
+            this.currentformat = new lz.textformat();
             this._resetFormatToDefaults();
             this.startformat = this.currentformat;
             this.inp.setDefaultFormat(this.currentformat);

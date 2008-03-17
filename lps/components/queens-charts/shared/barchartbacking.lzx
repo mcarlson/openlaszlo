@@ -253,7 +253,7 @@
                             } else {
                                 offsetter = Math.abs(parent.minimum % parent.hgridspacing) * -1;
                             }
-                            new ticklabel(this.vtickclip.vtickpane,
+                            new lz.ticklabel(this.vtickclip.vtickpane,
                                 {y:this.height + parent.vticklength + 2,
                                 x:maxoffset, charttype:'bar',
                                 ltext:parent.minimum + (parent.hgridspacing * i) + offsetter,
@@ -350,7 +350,7 @@
                             } else {
                                 offsetter = Math.abs(parent.minimum % parent.hgridspacing) * -1;
                             }
-                            new ticklabel(this.htickclip.htickpane,
+                            new lz.ticklabel(this.htickclip.htickpane,
                                 {x:this.htickclip.width,
                                 y:this.height + maxoffset,
                                 ltext:parent.minimum + (parent.hgridspacing * i) + offsetter,
@@ -470,7 +470,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

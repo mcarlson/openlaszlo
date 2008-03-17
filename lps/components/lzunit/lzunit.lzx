@@ -295,7 +295,7 @@ TestError.prototype.toString = function toString() {
      -->
     <method name="setResult" args="theTestResult">
         if (typeof(theTestResult) == "undefined") {
-            theTestResult = new TestResult();
+            theTestResult = new lz.TestResult();
         } else {
           this.result = theTestResult;
         }

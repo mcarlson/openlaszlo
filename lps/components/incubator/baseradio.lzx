@@ -25,7 +25,7 @@
         <method name="createGroup" args="groupname,rb"><![CDATA[
             var groupPlacement = rb.findForm();
             if (groupPlacement == null) groupPlacement = this;
-            var group = new baseradiogroup(groupPlacement, 
+            var group = new lz.baseradiogroup(groupPlacement, 
                            { name: groupname, 
                              submitname: rb.submitname,
                              submit: rb.submit, 

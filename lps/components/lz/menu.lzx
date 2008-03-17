@@ -508,7 +508,7 @@
                 // of the menubutton by default ( the floating list is 
                 // canvas-aware and will try to display itself below the menubutton ).
                 // if this does not work, then it will try above it.
-                this.flist = new menufloatinglist(this,
+                this.flist = new lz.menufloatinglist(this,
                              { attach:'bottom',
                                attachoffset:-2,
                                width:w,
@@ -518,7 +518,7 @@
                 // menu's parent is a menuitem so attach the floatinglist to 
                 // the right ( again canvas-aware will try right but display left
                 // if necessary )
-                this.flist = new menufloatinglist(this,
+                this.flist = new lz.menufloatinglist(this,
                              { attach:'right',
                                width:w,
                                issubmenu:true, 
@@ -527,7 +527,7 @@
                 // menu's parent is some other type of view so attach the 
                 // floatinglist to the value of 'attach' attribute
                 var atch = this.attach; 
-                this.flist = new menufloatinglist(this,
+                this.flist = new lz.menufloatinglist(this,
                              { attach:atch,
                                width:w, 
                                shadowcrn:1 }, this._menuitems);
@@ -541,7 +541,7 @@
                 // Since the parent is a menubar ...
                           
                 // Create a menubutton and have the menu keep a reference to it.
-                this._menubutton = new menubutton( parent,{text:this.text}, null, false);
+                this._menubutton = new lz.menubutton( parent,{text:this.text}, null, false);
                 
                 //Likewise, have the menubutton keep a reference to this menu
                 this._menubutton._menuref = this;
@@ -561,7 +561,7 @@
                                 
             } else if ( parent instanceof  lz.menuitem ) {
                 // insert an arrow into the target
-                new menuarrow( this._flisttarget, { name:'_menuarrow' } );
+                new lz.menuarrow( this._flisttarget, { name:'_menuarrow' } );
                 
                 // have the menuitem keep a reference to its submenu
                 this.parent._submenu = this;
@@ -797,7 +797,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
