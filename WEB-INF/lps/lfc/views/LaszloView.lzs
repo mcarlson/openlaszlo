@@ -62,6 +62,12 @@ class LzView extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'view';
+  static var attributes = new LzInheritedHash(LzNode.attributes);
+  // We add some more kludges to those in LzNode.  See #construct
+  // where we override the LzNode setting
+  static var __LZdelayedSetters = new LzInheritedHash(LzNode.__LZdelayedSetters);
+  static var earlySetters = new LzInheritedHash(LzNode.earlySetters);
+
 
 /** Event called when this view adds a subview   
   * @access public
@@ -320,6 +326,10 @@ function construct ( parent , args) {
     //this.callInherited( "construct" , arguments.callee , parent ,args );
     super.construct( (parent ? parent : canvas), args );
 
+    // Set applyArgs ordering kludges.  Overriding those of LzNode
+    this.__LZdelayedSetters = LzView.__LZdelayedSetters;
+    this.earlySetters = LzView.earlySetters;
+
     var ip = this.immediateparent;
     
     this.mask = ip.mask;
@@ -459,26 +469,26 @@ var focustrap;
   * @keywords final
   */
 var clip = false;
-setters.clip =  -1;
-setters.x ="setX"
-setters.y =  "setY";
+var $lzc$set_clip =  -1;
+function $lzc$set_x(v) { this.setX(v) }
+function $lzc$set_y(v) { this.setY(v) }
 
 
-setters.rotation= "setRotation";
-setters.opacity = "setOpacity";
+function $lzc$set_rotation(v) { this.setRotation(v); }
+function $lzc$set_opacity(v) { this.setOpacity(v); }
 /** @access private */
-setters.alpha = "setOpacity";
-setters.visible = "setVisible"
+function $lzc$set_alpha(v) { this.setOpacity(v); }
+function $lzc$set_visible(v) { this.setVisible(v) }
 /** @access private */
-setters.visibility = "setVisibility"
+function $lzc$set_visibility(v) { this.setVisibility(v) }
 
 /**
   * @lzxtype "left" | "center" | "right" | constraint
   * @lzxdefault "left"
   * @keywords final
   */
-var align = "left"
-setters.align = "setAlign"
+var align = "left";
+function $lzc$set_align(v) { this.setAlign(v) }
 
 /**
   * Creates a constraint on the view's y position which is a function
@@ -487,8 +497,8 @@ setters.align = "setAlign"
   * @lzxtype "top" | "middle" | "bottom" | constraint
   * @lzxdefault "top"
   */
-var valign = "top"
-setters.valign = "setValign"
+var valign = "top";
+function $lzc$set_valign(v) { this.setValign(v) }
 
 /** The URL from which to load the resource for this
   * view.  If this attribute is set, the media for the view is loaded
@@ -505,31 +515,31 @@ var source;
   * a setter. [bshine 2007.11.07]
   * @access private 
   */ 
-setters.source = "setSource";
+function $lzc$set_source(v) { this.setSource(v); }
 /** The background color of the canvas. 
   * @lzxtype token
   */
-setters.bgcolor =  "setBGColor";
+function $lzc$set_bgcolor(v) { this.setBGColor(v) }
 
 /** Sets the name of this views resource, or the URL from which it should
   * be loaded.
   * @type String
   */
 var resource;
-setters.resource =  "setResource";
+function $lzc$set_resource(v) { this.setResource(v) }
 
 /** If true, this view intercepts click events; otherwise they are passed
   * to its container.  This defaults to true if the view defines a mouse
   * event handler or a cursor.
   * @lzxtype boolean
   */
-setters.clickable =  "setClickable";
+function $lzc$set_clickable(v) { this.setClickable(v); }
 /** Setting clickRegion to a vector-based SWF turns the SWF shape into a clickable hotspot.
   * @access public
   * @lzxtype string
   */
 var clickregion;   
-setters.clickregion =  "__LZsetClickRegion";
+function $lzc$set_clickregion(v) { this.__LZsetClickRegion(v); }
 /** The cursor to display when the mouse is over this view. Any
   * resource can be used as a cursor. This attribute can be set for
   * any view with clickable=true, or any view whose class defaults
@@ -537,14 +547,14 @@ setters.clickregion =  "__LZsetClickRegion";
   * @lzxtype token
   */
 var cursor;  
-setters.cursor =  "setCursor";
+function $lzc$set_cursor(v) { this.setCursor(v); }
 /** A color to use to render object that appears inside this view,
   * which includes any vector or bitmap art in the view's resource
   * and any contained views.
   * @lzxtype color
   */
 var fgcolor;   
-setters.fgcolor =  "setColor";
+function $lzc$set_fgcolor(v) { this.setColor(v); }
 /** The font to use for any @c{&lt;text>} or @c{&lt;inputtext>} elements that
   * appear inside this view. Like all the font properties
   * (<code>fontstyle</code> and <code>fontsize</code> too) these
@@ -555,7 +565,7 @@ setters.fgcolor =  "setColor";
   * @lzxtype string
   */
 var font;  
-setters.font = "setFontName" ;
+function $lzc$set_font(v) { this.setFontName(v) ; }
 
 /** The style to use to render text fields that appear inside of
   * this view. One of "plain", "bold" , "italic" or "bolditalic".
@@ -579,14 +589,14 @@ var fontsize;
   * @lzxdefault "none"
   */
 var stretches = "none"; 
-setters.stretches =   "stretchResource";
+function $lzc$set_stretches(v) { this.stretchResource(v); }
 /** If true, the resource attached to this view begins playing when
   * the view is instantiated.
   * @lzxtype boolean
   */
-setters.play =   "setPlay";
+function $lzc$set_play(v) { this.setPlay(v); }
 /** Show or hide the handcursor for this view, if clickable */
-setters.showhandcursor =   "setShowHandCursor";
+function $lzc$set_showhandcursor(v) { this.setShowHandCursor(v); }
 
 /** A CSS property when declared in the tag: value sequence of layout
   * parameters, which are used to create a layout that is attached to
@@ -600,42 +610,42 @@ setters.showhandcursor =   "setShowHandCursor";
   * @access public
   */
 var layout; 
-setters.layout =   "setLayout";
+function $lzc$set_layout(v) { this.setLayout(v); }
 
 /** Activate/inactivate children for accessibility
   * @type Boolean
   * @lzxtype boolean
   */
 var aaactive; 
-setters.aaactive =   "setAAActive";
+function $lzc$set_aaactive(v) { this.setAAActive(v); }
 /** Set accessibility name
   * @type String
   * @lzxtype string
   */
 var aaname;
-setters.aaname =   "setAAName";
+function $lzc$set_aaname(v) { this.setAAName(v); }
 /** Set accessibility description
   * @type String
   * @lzxtype string
   */
 var aadescription; 
-setters.aadescription =   "setAADescription";
+function $lzc$set_aadescription(v) { this.setAADescription(v); }
 /** Set accessibility tab order
   * @type Number
   * @lzxtype number
   */
 var aatabindex;   
-setters.aatabindex =   "setAATabIndex";
+function $lzc$set_aatabindex(v) { this.setAATabIndex(v); }
 /** Set accessibility silencing/unsilencing
   * @type Boolean
   * @lzxtype boolean
   */
 var aasilent; 
-setters.aasilent =   "setAASilent";
+function $lzc$set_aasilent(v) { this.setAASilent(v); }
 
-__LZdelayedSetters.layout = "setLayout";
-earlySetters.clickregion = 7;
-earlySetters.stretches = 8;
+LzView.__LZdelayedSetters.layout = "$lzc$set_layout";
+LzView.earlySetters.clickregion = 7;
+LzView.earlySetters.stretches = 8;
 
 /** A value to be added to the
   * <attribute>x</attribute> position of this view before drawing
@@ -644,14 +654,14 @@ earlySetters.stretches = 8;
   * internal coordinate system.
   * @type Number
   */
-setters.xoffset =  "setXOffset";
+function $lzc$set_xoffset(v) { this.setXOffset(v); }
 /** A value to be added to the <attribute>y</attribute> position of this view
   * before drawing it. This affects the apparent rotation point of the view, as
   * well as its apparent <attribute>y</attribute> position. It does not affect the view's width or its
   * internal coordinate system.
   * @type Number
   */
-setters.yoffset = "setYOffset";
+function $lzc$set_yoffset(v) { this.setYOffset(v); }
 
 /** @access private */
 var sprite = null;
@@ -727,7 +737,7 @@ var rotation =   0;
   * @lzxtype sizeExpression
   */
 var width =   0;
-setters.width = "setWidth";
+function $lzc$set_width(v) { this.setWidth(v); }
 
 /**
   * The height of the view
@@ -736,7 +746,7 @@ setters.width = "setWidth";
   * @lzxtype sizeExpression
   */
 var height =   0;
-setters.height = "setHeight";
+function $lzc$set_height(v) { this.setHeight(v); }
 
 /** If stretches is not set to none, the width
   * that this view would be if it weren't stretched. This attribute can be used
@@ -809,7 +819,7 @@ var totalframes =   0;
   * know what frame the resource is showing while it is playing.
   */
 var frame =   0;
-setters.frame =   "setResourceNumber";
+function $lzc$set_frame(v) { this.setResourceNumber(v); }
 
 /** @keywords deprecated 
   * @access private 
@@ -2133,11 +2143,11 @@ function getAttributeRelative(prop, refView ) {
 
     if (prop == "x" || prop =="y" ){
         tLink.update ( prop );
-        return tLink.offset[prop] + tLink.scale[prop] * this.getProp( prop );
+        return tLink.offset[prop] + tLink.scale[prop] * this[ prop ];
     }else if ( prop == "width" || prop == "height" ){
         var axis = prop == "width" ? "x" : "y"
         tLink.update ( axis )
-        return tLink.scale[axis] * this.getProp( prop );
+        return tLink.scale[axis] * this[ prop ];
 
     }else{
         //not yet implemented: rotation, alpha...

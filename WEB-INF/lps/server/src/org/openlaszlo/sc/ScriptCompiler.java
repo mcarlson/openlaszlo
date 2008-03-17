@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -239,6 +239,17 @@ public class ScriptCompiler extends Cache {
 
 
 
+    public static String objectAsJavascript(Object object) {
+        try {
+            java.io.Writer writer = new java.io.StringWriter();
+            writeObject(object, writer);
+            return writer.toString();
+        } catch (java.io.IOException e) {
+            throw new ChainedException(e);
+        }
+    }
+
+
     /** Writes a LaszloScript expression that evaluates to a
      * LaszloScript representation of the object.
      *
@@ -253,8 +264,11 @@ public class ScriptCompiler extends Cache {
             writeMap((Map) object, writer);
         } else if (object instanceof List) {
             writeList((List) object, writer);
-        } else {
+        } else if (object != null) {
             writer.write(object.toString());
+        } else {
+          // A declared property with no intial value
+          writer.write("void 0");
         }
     }
 

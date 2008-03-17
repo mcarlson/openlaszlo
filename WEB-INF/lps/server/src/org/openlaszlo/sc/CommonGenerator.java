@@ -480,6 +480,8 @@ public abstract class CommonGenerator implements ASTVisitor {
     return n;
   }
 
+  static SimpleNode undefined = parseFragment("void 0").get(1).get(0);
+
   public void translateClassDirectivesBlock(SimpleNode[] dirs, String classnameString, List props, List classProps, List stmts) {
     dirs = (SimpleNode[])(flatten(dirs).toArray(new SimpleNode[0]));
 
@@ -525,7 +527,7 @@ public abstract class CommonGenerator implements ASTVisitor {
             if (v.getChildren().length > 1) {
               p.add(v.get(1));
             } else {
-              p.add(new ASTLiteral(null));
+              p.add(undefined);
             }
           }
         } else if (n instanceof ASTClassDirectiveBlock) {

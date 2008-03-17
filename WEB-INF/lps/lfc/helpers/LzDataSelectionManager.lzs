@@ -72,6 +72,7 @@ class LzDataSelectionManager extends LzSelectionManager {
   * @modifiers override 
   */
 static var tagname = 'dataselectionmanager';
+  static var attributes = new LzInheritedHash(LzSelectionManager.attributes);
 
 /**
   * Makes the given view selected
@@ -236,4 +237,4 @@ function __LZsetSelected ( p, val ){
     }
 }
 
-} // End of LzDataSelectionManager
+} // End of LzDataselectionmanager

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -45,12 +45,15 @@ public abstract class Schema {
     }
     
     /** Returns a unique type.
-     * @return a unique type
+     * @return a unique type corresponding to typeName
      */
     public static Type newType(String typeName) {
-        Type newtype = new Type(typeName);
-        typeNames.put(typeName, newtype);
-        return newtype;
+      if (typeNames.containsKey(typeName)) {
+        return (Type)typeNames.get(typeName);
+      }
+      Type newtype = new Type(typeName);
+      typeNames.put(typeName, newtype);
+      return newtype;
     }
     
 

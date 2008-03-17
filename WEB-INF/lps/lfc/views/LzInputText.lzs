@@ -72,6 +72,14 @@
   */
 class LzInputText extends LzText {
 
+/** @access private
+  * @modifiers override 
+  */
+static var tagname = 'inputtext';
+  static var attributes = new LzInheritedHash(LzText.attributes);
+  LzNode.mergeAttributes({selectable: true, enabled: true}, LzInputText.attributes);
+
+
 /** @lzxtype event */
 var onenabled = LzDeclaredEvent;
 
@@ -92,11 +100,6 @@ var _onblurDel = null;
 /** @access private */
 var _modemanagerDel = null;
 
-/** @access private
-  * @modifiers override 
-  */
-static var tagname = 'inputtext';
-
 /** 
   * Width to use for text field if none is specified
   * @access private
@@ -104,9 +107,6 @@ static var tagname = 'inputtext';
 function getDefaultWidth () {
     return 100;
 }
-
-defaultattrs.selectable = true;
-defaultattrs.enabled = true;
 
 
 /**
@@ -220,7 +220,7 @@ function setEnabled (enabled){
 /**
   * @access private
   */
-setters.enabled = "setEnabled";
+function $lzc$set_enabled(v) { this.setEnabled(v); }
 
 /**
   * Set the html flag on this text view

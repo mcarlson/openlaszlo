@@ -1,5 +1,5 @@
 /**
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects animation lzanimatorgroup
@@ -47,6 +47,7 @@ class LzAnimatorGroup extends LzNode {
   * @modifiers override 
   */
   static var tagname = 'animatorgroup';
+  static var attributes = new LzInheritedHash(LzNode.attributes);
 
   /** The name of the attribute whose value is animated.  This
     * attribute is required on an animator, unless the animator is
@@ -65,8 +66,7 @@ class LzAnimatorGroup extends LzNode {
     * @lzxdefault "true"
     */
   var start = true;
-  setters.start = "setStart";
-  defaultattrs.start = true;
+  LzAnimatorGroup.attributes.start = true;
   
   /** The start value for the animation.  Defaults to the
     * targeted attribute's current value.
@@ -88,7 +88,6 @@ class LzAnimatorGroup extends LzNode {
     * @lzxtype xsd:float {minInclusive="0"} | constraint
     */
   var duration;
-  setters.duration = "setDuration";
   
   /** 
     * @type Boolean
@@ -121,7 +120,6 @@ class LzAnimatorGroup extends LzNode {
     * @since 1.1
     */
   var repeat;
-  // setters.repeat = "defaultSet";
   
   /** The paused state of the animator. If true, the animator will stop. When
     * changed to false, the animator will resume from its current location.
@@ -131,6 +129,13 @@ class LzAnimatorGroup extends LzNode {
     * @lzxdefault "false"
     */
   var paused = false;
+  /**
+   * Setter for paused
+   * @access private
+   */
+  function $lzc$set_paused (val) {
+    this.pause(val);
+  }
 
   /** Value of the animator's start attribute.
     *
@@ -156,24 +161,13 @@ class LzAnimatorGroup extends LzNode {
     * @type string
     */
   var process = "sequential";
-  // setters.process = "defaultSet";
   
   /** The object to animate 
     *
     * @type string
+    * @devnote see $lzc$set_target below
     */
   var target;
-  setters.target = "setTarget";
-
-  /** If true, the running animator will pause. If false
-    * it will resume
-    *
-    * @type boolean 
-    */
-  var paused;
-  setters.paused = "pause";
-
-//setters.view = "defaultSet";
 
 /** The active-state of the animator. If true, the animator is currently processing its animation.
    * This field is read-only.
@@ -223,7 +217,7 @@ var animatorProps = { attribute : true, from : true ,
   *
   * @modifiers override
   */
-defaultattrs.ignoreplacement = true;
+LzAnimatorGroup.attributes.ignoreplacement = true;
 
 
 /**
@@ -264,25 +258,36 @@ function init ( ) {
 
 /**
   * setter for the target attribute
+  * @access private
   */
-function setTarget ( new_target ){
+function $lzc$set_target ( new_target ){
     this.target = new_target;
     var nodes = this.subnodes;
     if (nodes) {
         for (var i=0; i < nodes.length; i++) {
             if ((nodes[i]) instanceof ( LzAnimatorGroup )) {
-                nodes[i].setTarget(new_target);
+                nodes[i].$lzc$set_target(new_target);
             }
         }
     }
     if (this.ontarget.ready) this.ontarget.sendEvent( new_target );
 }
 
+/** Remove after 4.1
+ * @access private */
+function setTarget (n) {
+  if ($debug) {
+    Debug.deprecated(this, arguments.callee, this.setAttribute);
+  }
+  this.$lzc$set_target(n);
+}
+
+
 /**
   * setter for the start attribute
   * @access private
   */
-function setStart ( start ){
+function $lzc$set_start ( start ){
     this.started = start;
     if (this.onstarted.ready) this.onstarted.sendEvent( start );
     if ( !this.isinited ){
@@ -454,7 +459,15 @@ function stop( ) {
     this.__LZhalt();
 }
 
+
 function setDuration(duration){
+  if ($debug) {
+    Debug.deprecated(this, arguments.callee, this.setAttribute);
+  }
+  this.$lzc$set_duration(duration);
+}
+/** @access private */
+function $lzc$set_duration (duration) {
     if(isNaN(duration) || duration == null){
         duration = 0;
     } else if(typeof(duration) == "string"){

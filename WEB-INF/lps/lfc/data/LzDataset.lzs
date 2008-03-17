@@ -96,6 +96,7 @@ class LzDataset extends LzNode inherits LzDataElementTrait, LzDataNode {
   * @modifiers override 
   */
 static var tagname = 'dataset';
+  static var attributes = new LzInheritedHash(LzNode.attributes);
  
 var dataprovider = defaultdataprovider;
 var multirequest = false;
@@ -152,7 +153,7 @@ var getresponseheaders = false;
 /**  HTTP method */
 
 var querytype = "GET";
-setters.querytype = "setQueryType";
+function $lzc$set_querytype (v) { this.setQueryType(v); }
 
 /** When true, the server will trim 
   * whitespace in the XML data (defaults to false).  
@@ -186,32 +187,32 @@ var querystring = null;
 /**
   * @access private
   */
-setters.data = "setData";
+function $lzc$set_data(v) { this.setData(v); }
 
 /** The source for requests made by this dataset.
   * @type String
   */
 var src = null;
-setters.src = "setSrc";
+function $lzc$set_src(v) { this.setSrc(v); }
 
 
+var autorequest = false;
 /** @access private */
-setters.autorequest = "setAutorequest";
+function $lzc$set_autorequest(v) { this.setAutorequest(v); }
 
 /** If true, the datset will make a request when it
   * inits. The default for this is false.
   * @type Boolean
   */
 var request = false;
-setters.request = "setRequest";
+function $lzc$set_request(v) { this.setRequest(v); }
 
-var autorequest = false;
 var headers = null;
 var proxied = null;
 var responseheaders = null;
 
 /** @access private */
-setters.initialdata = "setInitialData";
+function $lzc$set_initialdata(v) { this.setInitialData(v); }
 
 /** @access private */
 
@@ -246,8 +247,8 @@ function construct ( parent , args ){
   * Sets the name of this datasource - used only by initializer
   * @access private
   */
-function setName(name) {
-    super.setName.apply(this, arguments);
+function $lzc$set_name(name) {
+    super.$lzc$set_name.apply(this, arguments);
 
     //for compatibility with dataNode API
     this.nodeName = name;

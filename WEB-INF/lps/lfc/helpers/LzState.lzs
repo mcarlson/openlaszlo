@@ -78,6 +78,7 @@ class LzState extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'state';
+  static var attributes = new LzInheritedHash(LzNode.attributes);
 
 /** Sent when the state is applied. 
  * @lzxtype event
@@ -105,29 +106,30 @@ var onremove = LzDeclaredEvent;
   * the state, rather than the state itself.
   * @type Boolean
   */
-setters.apply = "setApply";
-setters.$setters = null;
-static var stateprops = { apply : true };
-static var stateevents = { onremove : true , onapply : true };
+function $lzc$set_apply(v) { this.setApply(v); }
+
+static var props = { apply : true }; // unused?
+static var events = { onremove : true , onapply : true };
 prototype.$isstate = true; // Defined in LzNode
 var asyncnew = false;
 var subh = null;
 var pooling = false;
-setters.asyncnew = "__LZsetProperty";
+function $lzc$set_asyncnew(v) { this.__LZsetProperty(v, 'asyncnew'); }
 
 /** If true, the state will merely hide any views it has created 
   * when it is removed, instead of destroying them. 
   * @type Boolean
   */
-setters.pooling = "__LZsetProperty";
+function $lzc$set_pooling(v) { this.__LZsetProperty(v, 'pooling'); }
 
 /** When __LZsourceLocation is set, it should only apply to the state,
   * not the parent
   * @access private
   */
-setters.__LZsourceLocation = "__LZsetProperty";
+function $lzc$set___LZsourceLocation(v) { this.__LZsetProperty(v, '__LZsourceLocation'); }
 
 var heldargs;
+var handlerMethodNames;
 var releasedconstraints;
 var appliedchildren;
 var isapplied = false;
@@ -138,6 +140,7 @@ var isapplied = false;
 function construct ( parent , args ){
     super.construct.apply(this, arguments);
     this.heldArgs = {};
+    this.handlerMethodNames = {};
     this.appliedChildren = [];
 }
 
@@ -197,7 +200,7 @@ function apply ( ){
     // release any constraints you are about to override
     var pia = parent._instanceAttrs;
     for (var key in this.heldArgs) {
-      if (pia && key in pia && pia[key] instanceof LzConstraintExpr) {
+      if (pia && pia[key] instanceof LzConstraintExpr) {
         if (this.releasedconstraints == null) { this.releasedconstraints = []; }
         var constraintMethodName = pia[key].methodName;
         if (parent.releaseConstraintMethod(constraintMethodName)) {
@@ -325,14 +328,16 @@ function destroy ( ) {
   * application to parent.
   *
   * @devnote NOTE: [2006-12-09 ptw] Currently the only args that apply to the
-  * state are args that have setters
+  * state are args that have setters or handlers for state events
   */
 /* override */ function __LZapplyArgs ( args ){
   var stateArgs = {};
   var held = this.heldArgs;
+  var handlers = this.handlerMethodNames;
   for (var key in args) {
     var val = args[key];
-    if (key in this.setters) {
+    var setr = '$lzc$set_' + key;
+    if (this[setr] is Function || key in handlers) {
       stateArgs[key] = val;
     } else {
       held[key] = val;
@@ -344,10 +349,12 @@ function destroy ( ) {
     var val = stateArgs[key];
     if (val instanceof LzInitExpr) {
       var methodName = val.methodName;
+      // Method could be in held args
       if (methodName in held) {
         stateArgs[methodName] = held[methodName];
         delete held[methodName];
       }
+      // If it is already a method on the state, nothing to do
     }
   }
 
@@ -359,21 +366,31 @@ function destroy ( ) {
     var val = held[key];
     if (val instanceof LzInitExpr) {
       var methodName = val.methodName;
-      if (methodName in held) {
+      // Method could be in held args
+      if (held[methodName] is Function) {
         if (rename == null) { rename = []; }
-        rename.push(key);
+        rename.push(key, held[methodName]);
+      }
+      // Or it could be a method on the state, in which case we have
+      // to re-tach it to the parent
+      if (this[methodName] is Function) {
+        if (rename == null) { rename = []; }
+        rename.push(key, this[methodName]);
       }
     }
   }
   if (rename != null) {
-    for (var i = 0, l = rename.length; i < l; i++) {
+    for (var i = 0, l = rename.length; i < l; i += 2) {
       var key = rename[i];
-      var val = held[key];
-      var methodName = val.methodName;
+      var val = rename[i + 1];
+      var expr = held[key];
+      var methodName = expr.methodName;
       var newMethodName = methodName + this.__LZUID;
       // Clone the init expr with the new name
-      held[key] = new (val.constructor)(newMethodName);
-      held[newMethodName] = held[methodName];
+      held[key] = new (expr.constructor)(newMethodName);
+      // Promote the binding method to held
+      held[newMethodName] = val;
+      // If the binding method was in held, remove it
       delete held[methodName];
     }
   }
@@ -387,7 +404,7 @@ function destroy ( ) {
   * application to the parent (and pass the ones that do apply to the
   * state on to your superclass).
   */
-/* override */ function __LZstoreDelegates ( delarr ){
+/* override */ function $lzc$set_$delegates ( delarr ){
     var pardels = [];
     var mydels = [];
 
@@ -395,7 +412,7 @@ function destroy ( ) {
         //does this go with the state or the state's owner?
         //goes with the state ONLY IF the event is an event that the state 
         //sends, and a reference isn't given.
-        if ( LzState.stateevents[ delarr[ i ] ] && ! delarr[ i + 2 ] ){
+        if ( LzState.events[ delarr[ i ] ] && ! delarr[ i + 2 ] ){
             var arrtopush = mydels;
 
             //now, capture the method that this calls
@@ -404,13 +421,13 @@ function destroy ( ) {
             //check to see if we already processed this method 
             //in __LZapplyArgs
             if ( this.heldArgs[ mname ] ){
-                this[ mname ] = this.heldArgs[ mname ];
+                this.addProperty(mname, this.heldArgs[ mname ]);
                 delete this.heldArgs[ mname ];
             }
 
             //create a setter for this method; by definition attributes that
             //the state has a setter for are handled by the state
-            this.__LZaddSetter(  mname , '__LZsetProperty' );
+            this.handlerMethodNames[mname] = true;
         } else {
             var arrtopush = pardels;
         }
@@ -420,7 +437,7 @@ function destroy ( ) {
 
     if ( mydels.length ){
         // Install state handlers
-        super.__LZstoreDelegates( mydels );
+        super.$lzc$set_$delegates( mydels );
     }
 
     if ( pardels.length ){

@@ -42,9 +42,11 @@ class LzParam extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'params';
+  static var attributes = new LzInheritedHash(LzNode.attributes);
 
+  // FIXME: [2008-03-12 ptw] WTF is this supposed to be doing?
 //undefine all setters but name and id
-setters.$hasdefaultattrs = -1;
+//setters.$hasdefaultattrs = -1;
 
 
 /**

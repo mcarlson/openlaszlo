@@ -23,7 +23,6 @@ import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.server.*;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.ListFormat;
-import org.openlaszlo.utils.ComparisonMap;
 import org.openlaszlo.xml.internal.MissingAttributeException;
 import org.openlaszlo.xml.internal.Schema;
 import org.openlaszlo.xml.internal.XMLUtils;
@@ -43,33 +42,34 @@ public class NodeModel implements Cloneable {
     public static final String WHEN_ALWAYS = "always";
     public static final String WHEN_PATH = "path";
     public static final String WHEN_STYLE = "style";
+    public static final String ALLOCATION_INSTANCE = "instance";
+    public static final String ALLOCATION_CLASS = "class";
     private static final String SOURCE_LOCATION_ATTRIBUTE_NAME = "__LZsourceLocation";
 
-    protected final ViewSchema schema;
-    protected final Element element;
-    protected String className;
-    protected String id = null;
-    protected ComparisonMap attrs = new ComparisonMap();
-    protected List children = new Vector();
+    final ViewSchema schema;
+    final Element element;
+    String className;
+    String id = null;
+    LinkedHashMap attrs = new LinkedHashMap();
+    List children = new Vector();
     /** A set {eventName: String -> True) of names of event handlers
      * declared with <method event="xxx"/>. */
-    protected ComparisonMap delegates = new ComparisonMap();
+    LinkedHashMap delegates = new LinkedHashMap();
     /* Unused */
-    protected ComparisonMap events = new ComparisonMap();
-    protected ComparisonMap references = new ComparisonMap();
-    /* Unused */
-    protected ComparisonMap paths = new ComparisonMap();
-    protected ComparisonMap setters = new ComparisonMap();
-    protected ComparisonMap styles = new ComparisonMap();
+    LinkedHashMap events = new LinkedHashMap();
+    LinkedHashMap references = new LinkedHashMap();
+    LinkedHashMap classAttrs = new LinkedHashMap();
+    LinkedHashMap setters = new LinkedHashMap();
+    LinkedHashMap styles = new LinkedHashMap();
 
-    protected NodeModel     datapath = null;
+    NodeModel     datapath = null;
 
     /** [eventName: String, methodName: String, Function] */
-    protected List delegateList = new Vector();
-    protected ClassModel parentClassModel;
-    protected String initstage = null;
-    protected int totalSubnodes = 1;
-    protected final CompilationEnvironment env;
+    List delegateList = new Vector();
+    ClassModel parentClassModel;
+    String initstage = null;
+    int totalSubnodes = 1;
+    final CompilationEnvironment env;
 
     public Object clone() {
         NodeModel copy;
@@ -78,13 +78,13 @@ public class NodeModel implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
-        copy.attrs = new ComparisonMap(copy.attrs);
-        copy.delegates = new ComparisonMap(copy.delegates);
-        copy.events = new ComparisonMap(copy.events);
-        copy.references = new ComparisonMap(copy.references);
-        copy.paths = new ComparisonMap(copy.paths);
-        copy.setters = new ComparisonMap(copy.setters);
-        copy.styles = new ComparisonMap(copy.styles);
+        copy.attrs = new LinkedHashMap(copy.attrs);
+        copy.delegates = new LinkedHashMap(copy.delegates);
+        copy.events = new LinkedHashMap(copy.events);
+        copy.references = new LinkedHashMap(copy.references);
+        copy.classAttrs = new LinkedHashMap(copy.classAttrs);
+        copy.setters = new LinkedHashMap(copy.setters);
+        copy.styles = new LinkedHashMap(copy.styles);
         copy.delegateList = new Vector(copy.delegateList);
         copy.children = new Vector();
         for (Iterator iter = children.iterator(); iter.hasNext(); ) {
@@ -93,16 +93,11 @@ public class NodeModel implements Cloneable {
         return copy;
     }
 
-    private boolean caseSensitive = true;
-
     NodeModel(Element element, ViewSchema schema, CompilationEnvironment env) {
         this.element = element;
         this.schema = schema;
         this.env = env;
 
-        if ("swf6".equals(env.getRuntime())) {
-            this.caseSensitive = false;
-        }
         this.className = element.getName();
         // Cache ClassModel for parent
         this.parentClassModel = this.getParentClassModel();
@@ -190,24 +185,111 @@ public class NodeModel implements Cloneable {
         }
     }
 
-    static class CompiledAttribute {
-        static final int ATTRIBUTE = 0;
-        static final int EVENT = 1;
-        static final int REFERENCE = 2;
-        static final int PATH = 3;
-        static final int STYLE = 4;
+  static class BindingExpr {
+    String expr;
+    BindingExpr(String expr) { this.expr = expr; }
+    String getExpr() { return this.expr; }
+  }
 
-        final int type;
-        final Object value;
+  static class CompiledAttribute {
+    String name;
+    Schema.Type type;
+    private String value;
+    String when;
+    Element source;
+    String srcloc;
+    String bindername;
 
-        CompiledAttribute(int type, Object value) {
-            this.type = type;
-            this.value = value;
-        }
-        CompiledAttribute(Object value) {
-            this(ATTRIBUTE, value);
-        }
+    public CompiledAttribute (String name, Schema.Type type, String value, String when, Element source) {
+      this.name = name;
+      this.type = type;
+      this.value = value;
+      this.when = when;
+      this.source = source;
+      this.srcloc = CompilerUtils.sourceLocationDirective(source, true);
+      if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+        this.bindername = "$lzc$bind_" + name;
+      }
     }
+
+    public Function getBinderMethod() {
+      if (! (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS))) {
+        return null;
+      }
+      String installer = "setAttribute";
+      String body = "\n#beginAttribute\n" + srcloc + value + "\n#endAttribute\n)";
+      String pragmas =
+        // Should be unnecessary for JS2 methods
+        "\n#pragma 'withThis'\n";
+      if (when.equals(WHEN_ONCE)) {
+        // default
+      } else if (when.equals(WHEN_PATH)) {
+        installer = "dataBindAttribute";
+      } else if (when.equals(WHEN_STYLE)) {
+        // Styles are processed as constraints, although
+        // they are not compiled as constraints.  Whether
+        // a style results in a constraint or not cannot
+        // be determined until the style property value is
+        // derived (at run time)
+        installer = "__LZstyleBindAttribute";
+      } else if (when.equals(WHEN_ALWAYS)) {
+        pragmas =
+          "\n#pragma 'constraintFunction'\n" +
+          // Should be unnecessary for JS2 methods
+          "\n#pragma 'withThis'\n";
+      }
+      Function binder = new Function(
+        bindername,
+        "",
+        pragmas +
+        "this." + installer + "(" +
+        ScriptCompiler.quote(name) + "," +
+        body,
+        srcloc);
+      return binder;
+    }
+
+    public Object getInitialValue () {
+      // A null value indicates an attribute that was declared only
+      if (value == null) { return null; }
+      // Handle when cases
+      // N.B., $path and $style are not really when values, but
+      // there you go...
+      if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+        String kind = "LzOnceExpr";
+        if (when.equals(WHEN_ONCE) || when.equals(WHEN_PATH)) {
+          // default
+        } else if (when.equals(WHEN_STYLE)) {
+          // Styles are processed as constraints, although
+          // they are not compiled as constraints.  Whether
+          // a style results in a constraint or not cannot
+          // be determined until the style property value is
+          // derived (at run time)
+          kind = "LzConstraintExpr";
+        } else if (when.equals(WHEN_ALWAYS)) {
+          kind = "LzConstraintExpr";
+        }
+        // Return an initExpr as the 'value' of the attribute
+        return new BindingExpr("new " + kind + "(" + ScriptCompiler.quote(bindername) +")");
+      } else if (when.equals(WHEN_IMMEDIATELY)) {
+        if (CanvasCompiler.isElement(source) &&
+            ("width".equals(name) || "height".equals(name))) {
+          // The Canvas compiler depends on seeing width/height
+          // unadulterated <sigh />.
+          // TODO: [2007-05-05 ptw] (LPP-3949) The
+          // #beginAttribute directives for the parser should
+          // be added when the attribute is written, not
+          // here...
+          return value;
+        } else {
+          return "\n#beginAttribute\n" + srcloc + value + "\n#endAttribute\n";
+        }
+      } else {
+        throw new CompilationError("invalid when value '" +
+                                   when + "'", source);
+      }
+    }
+  }
 
     public String toString() {
         StringBuffer buffer = new StringBuffer();
@@ -220,8 +302,8 @@ public class NodeModel implements Cloneable {
             buffer.append(" events=" + events.keySet());
         if (!references.isEmpty())
             buffer.append(" references=" + references.keySet());
-        if (!paths.isEmpty())
-            buffer.append(" paths=" + paths.keySet());
+        if (!classAttrs.isEmpty())
+            buffer.append(" classAttrs=" + classAttrs.keySet());
         if (!setters.isEmpty())
             buffer.append(" setters=" + setters.keySet());
         if (!styles.isEmpty())
@@ -328,7 +410,7 @@ public class NodeModel implements Cloneable {
         boolean includeChildren, CompilationEnvironment env)
     {
         NodeModel model = new NodeModel(elt, schema, env);
-        ComparisonMap attrs = model.attrs;
+        LinkedHashMap attrs = model.attrs;
         Map events = model.events;
         Map delegates = model.delegates;
         model.addAttributes(env);
@@ -501,7 +583,7 @@ public class NodeModel implements Cloneable {
                 location, ViewSchema.STRING_TYPE,
                 WHEN_IMMEDIATELY);
             addAttribute(cattr, SOURCE_LOCATION_ATTRIBUTE_NAME, 
-                         attrs, events, references, paths, styles);
+                         attrs, events, references, classAttrs, styles);
         }
 
         // Add file/line information if debugging
@@ -511,11 +593,11 @@ public class NodeModel implements Cloneable {
           String filename = Parser.getSourceMessagePathname(element);
           CompiledAttribute cattr =
             compileAttribute(element, name, filename, ViewSchema.STRING_TYPE, WHEN_IMMEDIATELY);
-          addAttribute(cattr, name, attrs, events, references, paths, styles);
+          addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
           name = "_dbg_lineno";
           Integer lineno = Parser.getSourceLocation(element, Parser.LINENO);
           cattr = compileAttribute(element, name, lineno.toString(), ViewSchema.NUMBER_TYPE, WHEN_IMMEDIATELY);
-          addAttribute(cattr, name, attrs, events, references, paths, styles);
+          addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
         }
 
         ClassModel classModel = getClassModel();
@@ -680,11 +762,14 @@ solution =
             } else {
                 String when = this.getAttributeValueDefault(
                     name, "when", WHEN_IMMEDIATELY);
+                // NYI
+                String allocation = this.getAttributeValueDefault(
+                    name, "allocation", ALLOCATION_INSTANCE);
                 try {
                     CompiledAttribute cattr = compileAttribute(
                         element, name, value, type, when);
                     addAttribute(cattr, name, attrs, events,
-                                 references, paths, styles);
+                                 references, classAttrs, styles);
                     // Check if we are aliasing another 'name'
                     // attribute of a sibling
                     if (name.equals("name")) {
@@ -717,26 +802,23 @@ solution =
     }
 
     void addAttribute(CompiledAttribute cattr, String name,
-                      ComparisonMap attrs, ComparisonMap events,
-                      ComparisonMap references, ComparisonMap paths,
-                      ComparisonMap styles) {
-        if (cattr.type == cattr.ATTRIBUTE || cattr.type == cattr.EVENT ||
-            (cattr.type == cattr.REFERENCE) || (cattr.type == cattr.PATH) ||
-            (cattr.type == cattr.STYLE)) {
-            if (attrs.containsKey(name, caseSensitive)) {
-                env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="an attribute or method named '" + p[0] + "' already is defined on " + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-682", new Object[] {name, getMessageName()})
-                    ,element);
-            }
-            attrs.put(name, cattr.value);
-        } else {
-            assert false: "Unknown cattr.type: " + cattr.type;
+                      LinkedHashMap attrs, LinkedHashMap events,
+                      LinkedHashMap references, LinkedHashMap classAttrs,
+                      LinkedHashMap styles) {
+        if (attrs.containsKey(name)) {
+            env.warn(
+                /* (non-Javadoc)
+                 * @i18n.test
+                 * @org-mes="an attribute or method named '" + p[0] + "' already is defined on " + p[1]
+                 */
+                org.openlaszlo.i18n.LaszloMessages.getMessage(
+                    NodeModel.class.getName(),"051018-682", new Object[] {name, getMessageName()})
+                ,element);
         }
+        if (cattr.bindername != null) {
+            attrs.put(cattr.bindername, cattr.getBinderMethod());
+        }
+        attrs.put(name, cattr.getInitialValue());
     }
 
     static String getDatasetContent(Element element, CompilationEnvironment env) {
@@ -1095,7 +1177,7 @@ solution =
                 ,element);
         }
 
-        if (attrs.containsKey(name, caseSensitive)) {
+        if (attrs.containsKey(name)) {
             env.warn(
 /* (non-Javadoc)
  * @i18n.test
@@ -1163,14 +1245,11 @@ solution =
         String value, Schema.Type type,
         String when)
         {
-
-            String srcloc = CompilerUtils.sourceLocationDirective(source, true);
             String parent_name = source.getAttributeValue("id");
             if (parent_name == null) {
                 parent_name =  CompilerUtils.attributeUniqueName(source, name);
             }
-            // Some values are not canonicalized to String
-            Object canonicalValue = null;
+            String canonicalValue = null;
             boolean warnOnDeprecatedConstraints = true;
 
             if (value == null) {
@@ -1227,7 +1306,7 @@ solution =
                                 entry.setValue(ScriptCompiler.quote((String) mv));
                             }
                         }
-                        canonicalValue = cssProperties;
+                        canonicalValue = ScriptCompiler.objectAsJavascript(cssProperties);
                     } catch (org.openlaszlo.css.ParseException e) {
                         // Or just set when to WHEN_ONCE and fall
                         // through to TODO?
@@ -1334,72 +1413,10 @@ solution =
             if (canonicalValue == null)
                 canonicalValue = value;
 
-            // Handle when cases
-            // N.B., $path and $style are not really when values, but
-            // there you go...
-            if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
-                String installer = "setAttribute";
-                String body = "\n#beginAttribute\n" + srcloc + canonicalValue + "\n#endAttribute\n)";
-                String pragmas =
-                        // Should be unnecessary for JS2 methods
-                        "\n#pragma 'withThis'\n";
-                String kind = "LzOnceExpr";
-                if (when.equals(WHEN_ONCE)) {
-                    // default
-                } else if (when.equals(WHEN_PATH)) {
-                    installer = "dataBindAttribute";
-                } else if (when.equals(WHEN_STYLE)) {
-                    // Styles are processed as constraints, although
-                    // they are not compiled as constraints.  Whether
-                    // a style results in a constraint or not cannot
-                    // be determined until the style property value is
-                    // derived (at run time)
-                    kind = "LzConstraintExpr";
-                    installer = "__LZstyleBindAttribute";
-                } else if (when.equals(WHEN_ALWAYS)) {
-                    pragmas =
-                        "\n#pragma 'constraintFunction'\n" +
-                        // Should be unnecessary for JS2 methods
-                        "\n#pragma 'withThis'\n";
-                    kind = "LzConstraintExpr";
-                } else {
-                    assert false : "Unhandled when value: " + when;
-                }
-                String bindername = "$lzc$bind_" + name;
-                Function binder = new Function(
-                    bindername,
-                    "",
-                    pragmas +
-                    "this." + installer + "(" +
-                    ScriptCompiler.quote(name) + "," +
-                    body,
-                    srcloc);
-                // Add the binder as a method
-                attrs.put(bindername, binder);
-                // Return an initExpr as the 'value' of the attribute
-                return new CompiledAttribute("new " + kind + "(" + ScriptCompiler.quote(bindername) +")");
-            } else if (when.equals(WHEN_IMMEDIATELY)) {
-                if ((CanvasCompiler.isElement(source) &&
-                     ("width".equals(name) || "height".equals(name))) ||
-                    canonicalValue instanceof Map) {
-                    // The Canvas compiler depends on seeing width/height
-                    // unadulterated <sigh />.  Or, if it's already an
-                    // object, e.g., compiled from a CSS list, we
-                    // don't want to mess it up.
-                    //
-                    // TODO: [2007-05-05 ptw] (LPP-3949) The
-                    // #beginAttribute directives for the parser should
-                    // be added when the attribute is written, not
-                    // here...
-                    return new CompiledAttribute(canonicalValue);
-                } else {
-                    return new CompiledAttribute("\n#beginAttribute\n" + srcloc + canonicalValue + "\n#endAttribute\n");
-                }
-            } else {
-                throw new CompilationError("invalid when value '" +
-                                           when + "'", source);
-            }
+            return new CompiledAttribute(name, type, canonicalValue, when, source);
         }
+
+    static final Schema.Type EVENT_TYPE = Schema.newType("LzEvent");
 
     /* Handle the <event> tag
      * example: <event name="onfoobar"/>
@@ -1419,7 +1436,7 @@ solution =
                 , element);
         }
 
-        if (events.containsKey(name, caseSensitive)) {
+        if (events.containsKey(name)) {
             env.warn(
                 /* (non-Javadoc)
                  * @i18n.test
@@ -1432,8 +1449,9 @@ solution =
 
         // An event is really just an attribute with an implicit
         // default (sentinal) value
-        CompiledAttribute cattr = new CompiledAttribute(CompiledAttribute.EVENT, "LzDeclaredEvent");
-        addAttribute(cattr, name, attrs, events, references, paths, styles);
+        CompiledAttribute cattr =
+            new CompiledAttribute(name, EVENT_TYPE, "LzDeclaredEvent", WHEN_IMMEDIATELY, element);
+        addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
     }
 
     void addAttributeElement(Element element) {
@@ -1543,13 +1561,15 @@ solution =
                       element);
         }
 
-        // Don't initialize an attribute that is only declared.
+        CompiledAttribute cattr;
+        // Value may be null if attribute is only declared
         if (value != null) {
-            CompiledAttribute cattr = compileAttribute(element, name,
-                                                       value, type,
-                                                       when);
-            addAttribute(cattr, name, attrs, events, references, paths, styles);
+          cattr = compileAttribute(element, name, value, type, when);
+        } else {
+            String srcloc = CompilerUtils.sourceLocationDirective(element, true);
+            cattr = new CompiledAttribute(name, type, null, WHEN_IMMEDIATELY, element);
         }
+        addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
 
         // Add entry for attribute setter function
         String setter = element.getAttributeValue("setter");
@@ -1559,6 +1579,8 @@ solution =
                 CompilerUtils.sourceLocationDirective(element, true);
             // By convention 'anonymous' setters are put in the 'lzc'
             // namespace with the name set_<property name>
+            // NOTE: LzNode#applyArgs and #setAttribute depend on this
+            // convention to find setters
             String settername = "$lzc$" + "set_" + name;
             // Maybe we need a new type for "function"?
             Function setterfn = new
@@ -1610,7 +1632,7 @@ solution =
                                                    ViewSchema.XML_LITERAL,
                                                    WHEN_IMMEDIATELY);
 
-        addAttribute(cattr, name, attrs, events, references, paths, styles);
+        addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
     }
 
         
@@ -1625,6 +1647,18 @@ solution =
 
     void setAttribute(String name, Object value) {
         attrs.put(name, value);
+    }
+
+    boolean hasClassAttribute(String name) {
+        return classAttrs.containsKey(name);
+    }
+
+    void removeClassAttribute(String name) {
+        classAttrs.remove(name);
+    }
+
+    void setClassAttribute(String name, Object value) {
+        classAttrs.put(name, value);
     }
 
     void addText() {
@@ -1650,17 +1684,15 @@ solution =
     }
 
     void updateAttrs() {
-        if (!setters.isEmpty()) {
-            attrs.put("$setters", setters);
-        }
+        // Only used for checking multiple definitions now
+//         if (!setters.isEmpty()) {
+//             attrs.put("$setters", setters);
+//         }
         if (!delegateList.isEmpty()) {
             attrs.put("$delegates", delegateList);
         }
         if (!references.isEmpty()) {
             assert false : "There should not be any $refs";
-        }
-        if (!paths.isEmpty()) {
-            assert false : "There should not be any $paths";
         }
         if (datapath != null) {
             attrs.put("$datapath", datapath.asMap());
@@ -1675,22 +1707,68 @@ solution =
         }
     }
 
+    Map getAttrs() {
+      updateAttrs();
+      return attrs;
+    }
+
+    Map getSetters() {
+        return setters;
+    }
+
     Map asMap() {
         Map map = new LinkedHashMap();
         updateAttrs();
         map.put("name", ScriptCompiler.quote(className));
-        map.put("attrs", attrs);
+        Map inits = new LinkedHashMap();
+        // Node as map just wants to see all the attrs, so clean out
+        // the binding markers
+        for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
+          Map.Entry entry = (Map.Entry) i.next();
+          String key = (String) entry.getKey();
+          Object value = entry.getValue();
+          if (! (value instanceof NodeModel.BindingExpr)) {
+            inits.put(key, value);
+          } else {
+            inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
+          }
+        }
+        map.put("attrs", inits);
+        if (!classAttrs.isEmpty()) {
+            map.put("classAttrs", classAttrs);
+        }
         if (id != null) {
             map.put("id", ScriptCompiler.quote(id));
-            attrs.put("id", ScriptCompiler.quote(id));
+            inits.put("id", ScriptCompiler.quote(id));
         }
         if (!children.isEmpty()) {
-            List childMaps = new Vector(children.size());
-            for (Iterator iter = children.iterator(); iter.hasNext(); )
-                childMaps.add(((NodeModel) iter.next()).asMap());
-            map.put("children", childMaps);
+            map.put("children", childrenMaps());
         }
         return map;
+    }
+
+    List childrenMaps() {
+        List childMaps = new Vector(children.size());
+        for (Iterator iter = children.iterator(); iter.hasNext(); )
+            childMaps.add(((NodeModel) iter.next()).asMap());
+
+        // TODO: [2006-09-28 ptw] There must be a better way.  See
+        // comment in LFC where __LZUserClassPlacementObject is
+        // inserted in ConstructorMap regarding the wart this is.  You
+        // need some way to not set defaultplacement until the
+        // class-defined children are instantiated, only the
+        // instance-defined children should get default placement.
+        // For now this is done by inserting this sentinel in the
+        // child nodes...
+        if (className.equals("class") && hasAttribute("defaultplacement")) {
+            LinkedHashMap dummy = new LinkedHashMap();
+            dummy.put("name", ScriptCompiler.quote("__LZUserClassPlacementObject"));
+            dummy.put("attrs", attrs.get("defaultplacement"));
+            removeAttribute("defaultplacement");
+            childMaps.add(dummy);
+        }
+
+        return childMaps;
     }
 
     /** Expand eligible instances by replacing the instance by the
@@ -1734,9 +1812,9 @@ solution =
 
         // FIXME [2004-06-04]: only compare events with the same reference
         if (CollectionUtils.containsAny(
-                events.normalizedKeySet(), source.events.normalizedKeySet())) {
+                events.keySet(), source.events.keySet())) {
             Collection sharedEvents = CollectionUtils.intersection(
-                events.normalizedKeySet(), source.events.normalizedKeySet());
+                events.keySet(), source.events.keySet());
             throw new CompilationError(
 /* (non-Javadoc)
  * @i18n.test
@@ -1751,7 +1829,7 @@ solution =
         // Check for duplicate methods.  Collect all the keys that name
         // a Function in both the source and target.
         List sharedMethods = new Vector();
-        for (Iterator iter = attrs.normalizedKeySet().iterator();
+        for (Iterator iter = attrs.keySet().iterator();
              iter.hasNext(); ) {
             String key = (String) iter.next();
             if (attrs.get(key) instanceof Function &&
@@ -1771,7 +1849,7 @@ solution =
         // Check for attributes that have a value in this and
         // a setter in the source.  These can't be merged.
         Collection overriddenAttributes = CollectionUtils.intersection(
-            attrs.normalizedKeySet(), source.setters.normalizedKeySet());
+            attrs.keySet(), source.setters.keySet());
         if (!overriddenAttributes.isEmpty())
             throw new CompilationError(
 /* (non-Javadoc)
@@ -1799,7 +1877,7 @@ solution =
         delegates.putAll(source.delegates);
         events.putAll(source.events);
         references.putAll(source.references);
-        paths.putAll(source.paths);
+        classAttrs.putAll(source.classAttrs);
         setters.putAll(source.setters);
         styles.putAll(source.styles);
         delegateList.addAll(source.delegateList);

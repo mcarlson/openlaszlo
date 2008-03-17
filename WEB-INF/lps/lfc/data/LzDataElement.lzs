@@ -15,22 +15,17 @@ trait LzDataElementTrait {
     // _if_ it were to have an initialize method, it would have to
     // match LzNode.initialize's signature.
 
-    static function initialize (prototype) {
-//       Debug.debug('LzDataElementTraitInitialize')
-      // There will be no setters property in the trait prototype,
-      // (and you don't want one there! as it would shadow the one
-      // from LzNode) but it will be there after LzNode.initialize
-      // runs
-      if (prototype.hasOwnProperty('setters')) {
-        // since you can't assign directly to these slots...
-        // until LzNode.initialize has run
-        prototype.setters.attributes = "setAttrs";
-        prototype.setters.childNodes = "setChildNodes";
-        prototype.setters.nodeName = "setNodeName";
-        // Shouldn't be directly settable
-        prototype.setters.ownerDocument = "setOwnerDocument";
-      }
-    }
+  /**
+   * @devnote These are the setters that this trait creates
+   */
+  /** @access private */
+  function $lzc$set_attributes(v) { this.setAttrs(v); }
+  /** @access private */
+  function $lzc$set_childNodes(v) { this.setChildNodes(v); }
+  /** @access private */
+  function $lzc$set_nodeName(v) { this.setNodeName(v); }
+  /** @access private */
+  function $lzc$set_ownerDocument(v) { this.setOwnerDocument(v); }
 
 /** @lzxtype event */
 var onDocumentChange = LzDeclaredEvent;
@@ -618,12 +613,6 @@ static function __LZv2E ( o ) {
   * in LZX.Runtime to semi-sorta obscure it.
   */
 class LzMiniNode {
-  static function initialize (prototype) {
-    if (! prototype.hasOwnProperty('setters')) {
-      prototype['setters'] = new LzInheritedHash(prototype['setters']);
-    }
-  }
-
   var setAttribute = LzNode.prototype.setAttribute;
 }
 

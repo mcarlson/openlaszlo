@@ -7,6 +7,7 @@
 package org.openlaszlo.compiler;
 import java.util.*;
 import org.jdom.Element;
+import org.openlaszlo.sc.Function;
 
 class ClassModel implements Comparable {
     protected final ViewSchema schema;
@@ -110,6 +111,36 @@ class ClassModel implements Comparable {
     ClassModel getSuperclassModel() {
       return superclass;
     }
+
+  Map getMergedAttributes() {
+    if (nodeModel == null) { return new LinkedHashMap(); }
+    Map merged = superclass.getMergedAttributes();
+    // Merge in the our attributes, omitting methods
+    for (Iterator i = nodeModel.getAttrs().entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String key = (String) entry.getKey();
+      Object value = entry.getValue();
+      if ("LzNode._ignoreAttribute".equals(value)) {
+        merged.remove(key);
+      } else if (! (value instanceof Function)) {
+        merged.put(key, value);
+      }
+    }
+    return merged;
+  }
+
+  Map getMergedSetters() {
+    if (nodeModel == null) { return new LinkedHashMap(); }
+    Map merged = superclass.getMergedSetters();
+    // Merge in the our setters
+    for (Iterator i = nodeModel.getSetters().entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String key = (String) entry.getKey();
+      Object value = entry.getValue();
+      merged.put(key, value);
+    }
+    return merged;
+  }
 
     String getClassName () {
      return this.className;

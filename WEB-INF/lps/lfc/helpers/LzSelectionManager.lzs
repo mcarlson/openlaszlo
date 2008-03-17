@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzselectionmanager
@@ -92,6 +92,7 @@ class LzSelectionManager extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'selectionmanager';
+  static var attributes = new LzInheritedHash(LzNode.attributes);
 
 /** The name of the method to call on an object
   * when an object's selectedness changes.  The method is called with a single Boolean argument.  The default value for this 

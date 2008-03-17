@@ -77,6 +77,7 @@ class LzText extends LzView with LzFormatter {
   * @modifiers override 
   */
 static var tagname = 'text';
+static var attributes = new LzInheritedHash(LzView.attributes);
 
 /** Sent whenever the text in the field changes. 
   * @lzxtype event
@@ -126,7 +127,7 @@ function getDefaultWidth () {
     return 0;
 }
 
-defaultattrs.pixellock = true;
+LzText.attributes.pixellock = true;
 
 /**
   * If true, the lines of text are wrapped to fit within the text
@@ -296,23 +297,24 @@ function construct ( parent, args ) {
         } else {
             this.setThickness(0);
         }
-        if (! LzText.prototype.setters.antiAliasType) {
+        // ---+++--- WTF? ---+++---
+        if (! LzText.setters.antiAliasType) {
             /**
             * @lzxtype string
             * @modifiers virtual
             */
             // no var decl since this is a virtual field
-            LzText.prototype.setters.antiAliasType = "setAntiAliasType";
-            LzText.prototype.defaultattrs.antiAliasType = "normal";
+            LzText.setters.antiAliasType = "setAntiAliasType";
+            LzText.attributes.antiAliasType = "normal";
 
-            LzText.prototype.setters.gridFit = "setGridFit";
-            LzText.prototype.defaultattrs.gridfit = "subpixel";
+            LzText.setters.gridFit = "setGridFit";
+            LzText.attributes.gridfit = "subpixel";
 
-            LzText.prototype.setters.sharpness = "setSharpness";
-            LzText.prototype.defaultattrs.sharpness = 0;
+            LzText.setters.sharpness = "setSharpness";
+            LzText.attributes.sharpness = 0;
 
-            LzText.prototype.setters.thickness = "setThickness";
-            LzText.prototype.defaultattrs.thickness = 0;
+            LzText.setters.thickness = "setThickness";
+            LzText.attributes.thickness = 0;
         }
     }
 }
@@ -340,23 +342,23 @@ function getMCRef () {
 /**
   * @access private
   */
-setters.text = "setText";
+function $lzc$set_text(v) { this.setText(v); }
 /**
   * @access private
   */
-setters.resize = "setResize";
+function $lzc$set_resize(v) { this.setResize(v); }
 /**
   * @access private
   */
-setters.multiline = -1;
+var $lzc$set_multiline = -1;
 /**
   * @access private
   */
-setters.yscroll = "setYScroll";
+function $lzc$set_yscroll(v) { this.setYScroll(v); }
 /**
   * @access private
   */
-setters.xscroll = "setXScroll";
+function $lzc$set_xscroll(v) { this.setXScroll(v); }
 
 /**
   * If true, the text is selectable
@@ -365,8 +367,8 @@ setters.xscroll = "setXScroll";
   * @modifiers virtual
   */
 // no var decl since this is a virtual field
-setters.selectable = "setSelectable";
-defaultattrs.selectable = false;
+function $lzc$set_selectable(v) { this.setSelectable(v); }
+LzText.attributes.selectable = false;
 
 /**
   * @lzxtype numberExpression
@@ -374,7 +376,7 @@ defaultattrs.selectable = false;
   */
 var maxlength; 
 /** @access private */ 
-setters.maxlength = "setMaxLength";
+function $lzc$set_maxlength(v) { this.setMaxLength(v); }
 
 /**
   * @lzxtype string
@@ -382,10 +384,10 @@ setters.maxlength = "setMaxLength";
   */
 var pattern; 
 /** @access private */  
-setters.pattern = "setPattern";
+function $lzc$set_pattern(v) { this.setPattern(v); }
 
 
-defaultattrs.clip = true;
+LzText.attributes.clip = true;
 
 
 
@@ -581,15 +583,15 @@ function setYScroll ( n ){
 /**
   * @access private
   */
-setters.font = "setFontName";
+function $lzc$set_font(v) { this.setFontName(v); }
 /**
   * @access private
   */
-setters.fontsize = "setFontSize";
+function $lzc$set_fontsize(v) { this.setFontSize(v); }
 /**
   * @access private
   */
-setters.fontstyle = "setFontStyle";
+function $lzc$set_fontstyle(v) { this.setFontStyle(v); }
 
 /**
   * @access private

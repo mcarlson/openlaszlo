@@ -14,6 +14,12 @@
   * @access private
   */
 class LzDeclaredEventClass /* implements LzEvent */ {
+
+  function LzDeclaredEventClass () {
+    Debug.debug("%w.%s(%w)", this, arguments.callee, arguments);
+    super();
+  }
+
   /**
    * @access private
    */
@@ -145,20 +151,8 @@ class LzStyleIdent extends LzStyleExpr {
   */
 function LzInheritedHash (parent)  {
   if (parent) {
-    // NOTE: [2007-08-31 ptw] AS2 does not allow returning an
-    // alternate object from a constructor, so we have to resort to
-    // platform-specific code to implement inheritance.
-    if ($as2) {
-      this.__proto__ = parent;
-    } else {
-      // NOTE: [2007-08-30 ptw/hqm/max] We tried to set the
-      // constructor property for this object to LzInheritedHash for
-      // the debugger, but that does not work (in at least Firefox and
-      // Opera).  Apparently there is something we don't fully
-      // understand about the constructor property in Javascript.
-      function xtor() {};
-      xtor.prototype = parent;
-      return new xtor();
+    for (var key in parent) {
+      this[key] = parent[key];
     }
   }
 }

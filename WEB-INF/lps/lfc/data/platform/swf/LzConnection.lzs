@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -177,6 +177,7 @@ class LzConnection extends LzHTTPDatasource {
   * @modifiers override 
   */
 static var tagname = 'connection';
+  static var attributes = new LzInheritedHash(LzHTTPDatasource.attributes);
 
 /**
   * LzAgent is a placeholder to silence warnings about undefined
@@ -189,7 +190,7 @@ var LzAgent = function () {};
 /**
   * @access private
   */
-setters.authparam = "setAuthParam";
+function $lzc$set_authparam(v) { this.setAuthParam(v); }
 
 
 /**

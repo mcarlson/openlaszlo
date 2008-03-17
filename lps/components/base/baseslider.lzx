@@ -229,7 +229,6 @@
         onmousedown="thedragstate.apply();"
         onmouseup="thedragstate.remove();"
         focusable="false"
-        x="0"
         y="${(parent.height-height)/2}"
     >
         

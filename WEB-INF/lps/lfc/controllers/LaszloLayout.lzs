@@ -1,7 +1,7 @@
 /**
   * LaszloLayout.lzs 
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LFC
@@ -65,6 +65,7 @@ class LzLayout extends LzNode {
   * @modifiers override 
   */
   static var tagname = 'layout';
+  static var attributes = new LzInheritedHash(LzNode.attributes);
 
   /**
     * Set to true if layout is locked from updates.
@@ -72,7 +73,21 @@ class LzLayout extends LzNode {
     */
   //locked is set to 2 in the prototype of the layout. This is a special signal that the layout is locked temporarily until it resolves its references
   var locked = 2;
-  setters.locked = "__LZsetLocked";
+  /**
+   * Setter for locked
+   * Unlock the layout once update is done.
+   *
+   * @access private
+   */
+  function $lzc$set_locked ( locked ) {
+      if ( this.locked == locked ) return;
+      if ( locked ){
+          this.lock();
+      } else {
+          this.unlock();
+      }
+  }
+
 
   /** Array holding the views under this layout's control.
     *
@@ -256,20 +271,6 @@ function lock ( ) {
 function unlock ( ) {
     this.locked = false;
     this.reset()
-}
-
-/**
-  * Unlock the layout once update is done.
-  *
-  * @access private
-  */
-function __LZsetLocked ( locked ) {
-    if ( this.locked == locked ) return;
-    if ( locked ){
-        this.lock();
-    } else {
-        this.unlock();
-    }
 }
 
 /**

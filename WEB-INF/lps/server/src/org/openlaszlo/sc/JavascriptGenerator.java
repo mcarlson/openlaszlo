@@ -796,7 +796,9 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   }
 
   public SimpleNode makeCheckedNode(SimpleNode node) {
-    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
+    if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)
+        // Only check this where 'this' is available
+        && (context.findFunctionContext() != null)) {
       String file = "null";
       String line = "null";
       if (node.filename != null) {
@@ -844,7 +846,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       String name = ((ASTIdentifier)fnchildren[1]).getName();
       // We can't expand this if an expression value is expected,
       // since we don't have 'let'
-      if (name.equals("setAttribute") && (! isReferenced)) {
+      if (false && name.equals("setAttribute") && (! isReferenced)) {
         SimpleNode scope = fnchildren[0];
         SimpleNode property = args[0];
         SimpleNode value = args[1];

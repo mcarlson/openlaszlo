@@ -79,13 +79,20 @@ class LzDatapointer extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'datapointer';
+// static var attributes = new LzInheritedHash(LzNode.attributes);
+// [2006-07-25 pbr] This clears out what is defined in LzNode. Is this
+// ok?
+  static var attributes  = {ignoreplacement: true};
 
-setters.xpath = "setXPath";
-setters.context = "setDataContext";
+  /** @access private */
+  function $lzc$set_xpath (v) { this.setXPath(v); }
+  /** @access private */
+  function $lzc$set_context (v) { this.setDataContext(v); }
 
-/** @access private */
-setters.pointer = "setPointer";
-setters.p = "setPointer";
+  /** @access private */
+  function $lzc$set_pointer (v) { this.setPointer(v); }
+  /** @access private */
+  function $lzc$set_p (v) { this.setPointer(v); }
 
 /** The LzDataNode that the datapointer is pointing
   * to. Calling <method>setAttribute</method> on attribute calls
@@ -104,9 +111,6 @@ var __LZtracking = null;
 /** @access private */
 var __LZtrackDel = null;
 
-// [2006-07-25 pbr] This clears out what is defined in LzNode. Is this ok?
-prototype.defaultattrs = {};
-prototype.defaultattrs.ignoreplacement = true;
 
 /** This determines the behavior of the
   * datapointer in response to notification that the dataset the
@@ -123,7 +127,6 @@ prototype.defaultattrs.ignoreplacement = true;
   * @type Boolean
   */
 var rerunxpath = false;
-setters.rerunxpath = "__LZsetRerunXPath";
 
 /** @lzxtype event */
 var onp = LzDeclaredEvent;
@@ -785,7 +788,7 @@ function nodeByName ( name, range , p) {
 }
 
 /** @access private */
-function __LZsetRerunXPath ( rrx ){
+function $lzc$set_rerunxpath ( rrx ){
     this.rerunxpath = rrx;
 
     if (this.onrerunxpath.ready) this.onrerunxpath.sendEvent( rrx );

@@ -26,6 +26,7 @@ class LzDataRequest extends LzNode {
      * @modifiers override 
      */
     static var tagname = 'datarequest';
+    static var attributes = new LzInheritedHash(LzNode.attributes);
     
     /* Status value constants */
     static var SUCCESS = 'success';

@@ -1382,7 +1382,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       String name = ((ASTIdentifier)fnchildren[1]).getName();
       // We can't expand this if an expression value is expected,
       // since we don't have 'let'
-      if (name.equals("setAttribute") && (! isReferenced)) {
+      if (false && name.equals("setAttribute") && (! isReferenced)) {
         SimpleNode scope = fnchildren[0];
         SimpleNode property = args[0];
         SimpleNode value = args[1];

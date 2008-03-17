@@ -1,7 +1,7 @@
 /**
   * LaszloAnimations.as 
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   * @affects animation lzanimator
   * @access public
@@ -37,6 +37,7 @@ class LzAnimator extends LzAnimatorGroup {
   * @modifiers override 
   */
 static var tagname = 'animator';
+static var attributes = new LzInheritedHash(LzAnimatorGroup.attributes);
 
 var beginPoleDelta = .25;
 var endPoleDelta = .25;
@@ -48,12 +49,6 @@ var endPoleDelta = .25;
   */
 var attribute;
 
-//setters.from = "defaultSet";
-//setters.to = "defaultSet";
-//setters.duration = "defaultSet";
-//setters.attribute = "defaultSet";
-//setters.relative = "defaultSet";
-
 /**
   * The style of motion to use for the animator. This
   * is one of "linear", "easin" , "easeout" , and "easeboth". The default
@@ -61,14 +56,14 @@ var attribute;
   *
   * @type String
   */
-setters.motion = "setMotion";
+var motion;
 
 /**
   * The destination value for the animator.
   *
   * @type Number
   */
-setters.to = "setTo";
+var to;
 
 
 /**
@@ -84,8 +79,10 @@ function construct ( parent , args ){
   * @param String eparam: One of "easein", "easeout" , "linear" or "easeboth"
   * to describe how the animator accelerates and decelerates. The default is
   * "easeboth".
+  * @access private
   */
-function setMotion ( eparam ){
+function $lzc$set_motion ( eparam ){
+    this.motion = eparam
     //easin, easeout , linear , easeboth (default)
     if ( eparam == "linear" ){
         this.calcNextValue = this.calcNextValueLinear;
@@ -98,13 +95,35 @@ function setMotion ( eparam ){
         }
     }
 }
+/**
+ * @deprecated in 4.1
+ * @access private
+ */
+function setMotion (eparam) {
+  if ($debug) {
+    Debug.deprecated(this, arguments.callee, this.setAttribute);
+  }
+  this.$lzc$set_motion(eparam);
+}
+
 
 /**
   * Sets the destination value for the animator
   * @param Number eparam: The destination value for the animator.
+  * @access private
   */
-function setTo ( eparam ){
+function $lzc$set_to ( eparam ) {
     this.origto = Number(eparam);
+}
+/**
+ * @deprecated in 4.1
+ * @access private
+ */
+function setTo (eparam) {
+  if ($debug) {
+    Debug.deprecated(this, arguments.callee, this.setAttribute);
+  }
+  this.$lzc$set_to(eparam);
 }
 
 
@@ -339,7 +358,7 @@ function calcNextValue( timeDifference ) {
 
 
 /**
-  * This method replaces the nonlinear calcNextValue when motion is set to linear
+ * This method replaces the nonlinear calcNextValue when motion is set to linear
   *
   * @access private
   */

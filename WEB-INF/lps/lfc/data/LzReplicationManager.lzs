@@ -84,9 +84,9 @@ class LzReplicationManager extends LzDatapath {
   * create new ones.
   */
 var pooling = false;
-setters.sortpath = "setOrder";
-setters.sortorder = "setComparator";
-setters.datapath = "setXPath";
+function $lzc$set_sortpath(v) { this.setOrder(v); }
+function $lzc$set_sortorder(v) { this.setComparator(v); }
+function $lzc$set_datapath(v) { this.setXPath(v); }
 var asyncnew = true;
 
 // FIXME [2006-10-23 pbr] (LPP-2397) Uncomment 'override' when implemented
@@ -142,7 +142,7 @@ function construct ( odp , args ){
     var name =  view._instanceAttrs.name;
 
     args.name = name;
-    // remove view we replace to avoid warning in LzNode.setName
+    // remove view we replace to avoid warning in LzNode.$lzc$set_name
     delete view.immediateparent[name];
     delete view.parent[name];
 
@@ -274,7 +274,7 @@ function construct ( odp , args ){
     this.clonePool = [ ];
 
     if ( this.pooling ){
-        odp.__LZsetCloneManager( this );
+        odp.$lzc$set___LZmanager( this );
         //make sure that the original view and datapath don't get their xpath 
         //set by a constraint..
         if ( hadxpathconstraint ){

@@ -67,6 +67,7 @@ class LzScript extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'script';
+static var attributes = new LzInheritedHash(LzNode.attributes);
 
 function LzScript ( parent, args ) {
     super(parent, args);

@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzcommand
@@ -36,6 +36,7 @@ class LzCommand extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'command';
+  static var attributes = new LzInheritedHash(LzNode.attributes);
 
 /**
   * true if the command is currently active.
@@ -50,7 +51,7 @@ var active = true;
   * @type [String]?
   */
 var keys = null;
-setters.key = "setKeys";
+function $lzc$set_key(v) { this.setKeys(v); }
 
 /**
   * If the command is active, this event is sent

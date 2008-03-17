@@ -34,10 +34,82 @@
   */
 class LzNode {
 
-/** @access private
-  * @modifiers override 
-  */
-  static var tagname = 'node';
+    /** @access private
+     * @modifiers override 
+     */
+    static var tagname = 'node';
+    /** @access private */
+    static var attributes = { $hasdefaultattrs : true };
+
+
+    /**
+     * Helper function to merge an class or instance's attributes with
+     * those of its superclass.  Broken out because it is called by
+     * user classes.
+     *
+     * @param LzInheritedHash dattrs: A copy of the attributes that
+     * are inherited from the parent (and into which the resulting
+     * merge will be made)..
+     * @param Object attrs: The new attributes to be merged in
+     * @access private
+     */
+    static function mergeAttributes (attrs, dattrs) {
+        // Check for object and array merges, 'ignored' attributes
+        // (i.e., binders that have been overridden by a constant),
+        // and decls that the compiler could not detect because it
+        // does not know the built-in setters (see ClassCompiler).
+        for ( var k in attrs ) {
+            var attrk = attrs[ k ];
+            if ( attrk === LzNode._ignoreAttribute ) {
+                delete dattrs[k];
+            } else if (attrk is LzInitExpr) {
+                dattrs[k] = attrk;
+            } else {
+                // NOTE: [2008-01-22 ptw] This is just whacky, but it
+                // is required for back-compatibility.  IWBNI this
+                // were handled at compile-time
+                if ( attrk is Object ) {
+                    var dattrk = dattrs[ k ];
+                    if ( dattrk is Object && (! (dattrk is LzInitExpr))) {
+                        if ( attrk is Array ) {
+                            // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
+                            dattrs[ k ] = attrk.concat( dattrk );
+                            continue;
+                        } else {
+                            // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
+                            var tmp = new LzInheritedHash(dattrk);
+                            for (var j in attrk) {
+                                tmp[j] = attrk[j];
+                            }
+                            dattrs[ k ] = tmp;
+                            continue;
+                        }
+                    }
+                }
+                // Debug.debug("%w.%s: NOT merging %s (%w)", this, arguments.callee, k, attrk);
+                // Just a normal value (or LzInitExpr), install it
+                dattrs[k] = attrk;
+            }
+        }
+    }
+
+    /**
+     * Helper function to merge a class or instance's children with
+     * those of its superclass.  Used by user classes
+     *
+     * @param Array? children: the children of this class or instance
+     * @param Array? superclasschildren: the children of the
+     * superclass
+     * @return Array?: the merged result
+     * @access private
+     */
+    static function  mergeChildren(children, superclasschildren) {
+        if (superclasschildren is Array) {
+            children = superclasschildren.concat(children is Array ? children : []);
+        }
+        return children;
+    }
+
 
 /**
   * @param LzNode parent: a node above this one in the hierarchy -- not
@@ -80,43 +152,36 @@ function LzNode ( parent , attrs , children , instcall ){
           iargs = attrs;
         } else {
           // Otherwise we create a new hash that inherits the defaults
-          iargs = new LzInheritedHash(this.defaultattrs);
-          // And merge in our attrs (if any).  Taking care to merge
-          // Array and Object attrs (for back-compatibility).  No
-          // special magic is needed to compute attributes overriding
-          // constraints, because they all come as attrs now and
-          // overriding will be automatic from the InheritedHash
-          // (except for the bizarre merging of arrays and hashes!)
+          iargs = new LzInheritedHash(this['constructor'].attributes);
+          // Now install any decls that the tag compiler could't
+          // figure out (because it does not know the built-in class
+          // setters (c.f., ClassCompiler.java)
+          if (! (this is LzState)) {
+              for (var key in iargs) {
+                  var val = iargs[key];
+                  if (! (val is LzInitExpr)) {
+                      // If there is no setter for this attr the value
+                      // should just be installed as a declaration
+                      var setr = '$lzc$set_' + key;
+                      if (! this[setr]) {
+                          if (val is Function) {
+                              Debug.debug("%s[%w] = %s", this, key, val);
+                          }
+                          this.addProperty(key, val);
+                          delete iargs[key];
+                      }
+                  }
+              }
+          }
+          // And merge in our instantiation attrs (if any).  Taking
+          // care to merge Array and Object attrs (for
+          // back-compatibility).  No special magic is needed to
+          // compute attributes overriding constraints, because they
+          // all come as attrs now and overriding will be automatic
+          // from the InheritedHash (except for the bizarre merging of
+          // arrays and hashes!)
           if (attrs) {
-            var dattrs = this.defaultattrs;
-            // Check for object and array merges
-            // NOTE: [2008-01-22 ptw] This is just whacky, but it is
-            // required for back-compatibility.  IWBNI this were
-            // handled at compile-time
-            for ( var k in attrs ) {
-                var attrk = attrs[ k ];
-                if ( attrk instanceof Object && (! (attrk instanceof LzInitExpr))) {
-                    var dattrk = dattrs[ k ];
-                    if ( dattrk instanceof Object && (! (dattrk instanceof LzInitExpr))) {
-                        if ( attrk instanceof Array ) {
-//                             Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
-                            iargs[ k ] = attrk.concat( dattrk );
-                            continue;
-                        } else if (typeof attrk == 'object') {
-//                             Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
-                            var tmp = new LzInheritedHash(dattrk);
-                            for (var j in attrk) {
-                                tmp[j] = attrk[j];
-                            }
-                            iargs[ k ] = tmp;
-                            continue;
-                        }
-                    }
-                }
-//                 Debug.debug("%w.%s: NOT merging %s (%w)", this, arguments.callee, k, attrk);
-                // Just a normal value (or LzInitExpr), install it
-                iargs[ k ] = attrk;
-            }
+              LzNode.mergeAttributes(attrs, iargs);
           }
         }
 
@@ -130,28 +195,18 @@ function LzNode ( parent , attrs , children , instcall ){
         //Flag if this was newed by the instantiator
         this.__LZisnew = !instcall;
 
-        var c = ('classChildren' in this.constructor.prototype) ? this.constructor.prototype.classChildren : null;
-        if ( c && c.length ){
+        var classChildren = this['constructor']['children'];
+        if ( classChildren is Array ){
             // classroot will not be defined for members of a state
             // class, this is hard because the classroot is not a
             // parent of its lexical children
-            if (!('doneClassRoot' in c && c.doneClassRoot) && !this.$isstate) {
-                c.doneClassRoot=true;
-                this.__LZassignClassRoot(c, 1);
+            // TODO: [2008-03-11 ptw] This should be computed at
+            // compile time
+            if (!classChildren['doneClassRoot'] && ! this.$isstate) {
+                classChildren.doneClassRoot=true;
+                this.__LZassignClassRoot(classChildren, 1);
             }
-            if ( children && children.length ) {
-                children = c.concat( children );
-            } else {
-                // TODO: [2006-05-25 hqm] If we are copying the array in the
-                // case above, should we be copying the classChildren array here??
-                children = c;
-            }
-        } else {
-            //this is just for parity with the flasm loop
-            //the children are pushed before the method call
-            if ( children && children.length ) {
-                children = children.concat();
-            }
+            children = LzNode.mergeChildren(children, classChildren);
         }
 
         this.construct(  parent , maskedargs );
@@ -223,6 +278,8 @@ static function initialize (prototype) {
 //           Debug.debug("ConstructorMap[%s] = %s", tagname, this);
         }
         ConstructorMap[tagname] = this;
+        // Install global alias for userclass compiler
+        global['$lzc$class_' + tagname] = this;
       }
       if ($debug) {
         // Use the package tag name as the typename
@@ -234,15 +291,6 @@ static function initialize (prototype) {
 //       Debug.debug("No tag for node class %w", this);
 //     }
   }
-
-  // Ensure you have your own private dictionaries, not one
-  // inherited from your superclass
-  for (var hash in {setters: true, getters: true, defaultattrs: true, options: true, __LZdelayedSetters: true, earlySetters: true} ) {
-    if (! prototype.hasOwnProperty(hash)) {
-      prototype[hash] = new LzInheritedHash(prototype[hash]);
-    }
-  }
-
 }
 
 /** This event is sent right before a node becomes active --
@@ -296,9 +344,6 @@ var __LZPropertyCache = null;
 var __LZRuleCache = null;
 /** @access private */
 var __LZdelegates = null;
-
-/** @access private */
-var defaultattrs = { $hasdefaultattrs : true };
 
 /**
  * Indicates that a <varname>node</varname>'s <method>init</method> method has been
@@ -593,7 +638,10 @@ if ($debug) {
   * LzNode.
   */
 function construct ( parent , args ){
-
+  // Set applyArgs ordering kludges.  LzView overrides these
+  this.__LZdelayedSetters = LzNode.__LZdelayedSetters;
+  this.earlySetters = LzNode.earlySetters;
+  
   var lp = parent; // lp == lexical parent
   this.parent = lp;
 
@@ -623,7 +671,6 @@ function construct ( parent , args ){
             ip = pp;
         }
     }
-    
     var ip_subnodes = ip.subnodes;
     if (ip_subnodes == null) {
       ip_subnodes = new Array;
@@ -798,16 +845,14 @@ function __LZapplyArgs ( args , constcall ){
       var oset = {};
       var hasset = null;
       var hasearly = null;
-      if ( '$setters' in args && args.$setters ){
-          this.__LZsetSetters( args.$setters );
-      }
 
-      var setrs = this.setters;
       var inits = null;
       var constraints = null;
 
       for ( var a in args ){
           var val = args[a];
+          /* To see if it has a setter.  Cf., setAttribute */
+          var setr = '$lzc$set_' + a;
           //handle flash bug where objects slots are enumerated multiple times
           if ( oset[a] || args[a] === LzNode._ignoreAttribute ) continue;
           oset[ a ] = true;
@@ -833,19 +878,20 @@ function __LZapplyArgs ( args , constcall ){
             // method... er, unless you set the attribute to a
             // function.  YOW!
             if (! (a in this)) {this[a] = null;}
-          } else if (! (a in setrs)) {
+          } else if (! this[setr]) {
             // TODO: should already be declared, so we should just be
-            // able to set it
-            this.addProperty( a, val);
+            // able to set it, but that doesn't work if this is a
+            // method
+            this.addProperty(a, val);
             if (! constcall) {
               //then we need to notify the rest of the system that this
               //value changed.
               var evt = ("on" + a);
-              if (evt in this) {
+              if (this[evt] is LzEvent) {
                 if (this[evt].ready) this[ evt ].sendEvent( args[ a ] );
               } 
             }
-          } else if (setrs[ a ] != -1) {
+          } else if (this[setr] is Function) {
               if (a in this.earlySetters) {
                   if (hasearly == null) { hasearly = []; }
                   hasearly[this.earlySetters[a]] = a;
@@ -860,7 +906,8 @@ function __LZapplyArgs ( args , constcall ){
           for (var i = 1, l = hasearly.length; i < l; i++) {
             if (i in hasearly) {
               var a = hasearly[i];
-              this[setrs[a]]( args[a], a);
+              var setr = '$lzc$set_' + a;
+              this[setr]( args[a] );
             }
           }
       }
@@ -868,7 +915,8 @@ function __LZapplyArgs ( args , constcall ){
       if (hasset) {
         for (var i = hasset.length - 1; i >= 0; i--) {
           var a = hasset[i];
-          this[setrs[a]]( args[a], a);
+          var setr = '$lzc$set_' + a;
+          this[setr]( args[a] );
         }
       }
 
@@ -918,20 +966,12 @@ function createChildren ( carr  ){
   *
   * @param String prop: a string specifying the key of attribute to return.
   * @return any: value of named property
+  * @deprecated
   */
 function getAttribute(prop) {
-    if ( null == this.getters[ prop ] ){
-        return this[ prop ];
-    } else {
-        return this[ this.getters[ prop ] ] ();
-    }
-
+    Debug.info("%w.%s(%#w) is deprecated.  Use %w[%#w] instead.", this, arguments.callee, prop, this, prop);
+    return this[ prop ];
 }
-
-/**
-  * @access private
-  */
-prototype.getProp = getAttribute;
 
 /**
   * Sets the named attribute to the given value. If there is no setter for the
@@ -942,26 +982,24 @@ prototype.getProp = getAttribute;
   * @param any val: The value for that attribute
   * @param Boolean ifchanged: If true, only set the attribute if the value 
   * changed
+  *
+  * @devnote Note: this is inlined by the script compiler, so that
+  * must be updated if you change this function
   */
 function setAttribute(prop, val, ifchanged) {
     if (this.__LZdeleted || (ifchanged && (this[prop] == val))) return;
 
-    var s = this.setters;
-    if (s && (prop in s)) {
-        this[s[prop]](val);
+    // Must agree with NodeModel in tag compiler
+    var s = ('$lzc$set_' + prop);
+    if (this[s] is Function) {
+        this[s](val);
     } else {
-        if (s == null) {
-            if ($debug) {
-                Debug.warn('null setters on', this, prop, val);
-            }
-        }
         this[ prop ] = val;
         var evt = ("on" + prop);
-        if (evt in this) {
+        if (this[evt] is LzEvent) {
             if (this[evt].ready) this[ evt ].sendEvent( val );
         }
     }
-
 }
 
 /**
@@ -1094,33 +1132,21 @@ function makeChild ( e , async ){
     return w;
 }
 
-
-/** @access private */
-var setters ={
-    name : "setName" ,
-    id : "setID" ,
-    $refs : "__LZstoreRefs" ,
-    $delegates : "__LZstoreDelegates" ,
-    options: "__LZsetOptions",
-    placement : -1 ,
-    datapath : "setDatapath",
-    $setters : -1,
-    $classrootdepth : "__LZsetClassRoot",
-    $datapath : "__LZmakeDatapath"
-};
-
-/* this is for the doc generator:
-setters.name = "setName"
-setters.id = "setID"
-setters.placement = -1
-setters.datapath = "setDatapath"
-setters.data = "setData"
-*/
+    /**
+     * @access private
+     * @devnote kludge for applyArgs
+     */
+    var $lzc$set_placement = -1;
+    /**
+     * @access private
+     * @devnote kludge for applyArgs
+     */
+    var $lzc$set_$setters = -1;
 
 /**
   * @access private
   */
-function __LZsetClassRoot ( d ) {
+function $lzc$set_$classrootdepth ( d ) {
 
     if (!d) return;
 
@@ -1130,42 +1156,26 @@ function __LZsetClassRoot ( d ) {
     this.classroot = p;
 }
 
+if ($debug) {
 /**
-  * @access private
-  */
+ * @deprecated
+ * @devnote remove after 4.1
+ * @access private
+ */
 function __LZsetSetters ( o ) {
-  if (! this.hasOwnProperty('setters')) {
-    this.setters = new LzInheritedHash(this.setters);
-  }
-  if ('put' in this.setters) {
-    for ( var s in o ){
-      // inlined: this.__LZaddSetter( s , o[s] );
-      this.setters.put(s, o[s]);
-    }
-  } else {
-    for ( var s in o ){
-      // inlined: this.__LZaddSetter( s , o[s] );
-      this.setters[s] = o[s];
-    }
-  }
+    Debug.error("%w.%s is no longer supported", this, arguments.callee);
+}
 }
 
-
+if ($debug) {
 /**
-  * @access private
-  */
+ * @deprecated
+ * @devnote remove after 4.1
+ * @access private
+ */
 function __LZaddSetter ( key , val ) {
-  // Ensure you have your own private setters dictionary, not one
-  // inherited from your superclass
-  if (! this.hasOwnProperty('setters')) {
-//     Debug.debug('__LZaddSetter: creating setters dictionary');
-    this.setters = new LzInheritedHash(this.setters);
-  }
-  if ('put' in this.setters) {
-      this.setters.put(key, val);
-  } else {
-      this.setters[key] = val;
-  }
+    Debug.error("%w.%s is no longer supported", this, arguments.callee);
+}
 }
 
 /**
@@ -1196,28 +1206,27 @@ function dataBindAttribute ( attr , path  ) {
 }
 
 /** @access private */
-var __LZdelayedSetters ={
-    $refs : "__LZresolveRefs"
-};
+static var __LZdelayedSetters = new LzInheritedHash({
+    $refs : "$lzc$set_$refs"
+        });
+var __LZdelayedSetters;
+
 
 /** @access private */
-var earlySetters ={
+static var earlySetters = new LzInheritedHash({
     name            : 1 ,
     id              : 2 ,
     $events         : 3 ,
     $delegates      : 4 ,
     $classrootdepth : 5 ,
     $datapath       : 6
-};
-
-/** @access private */
-var getters ={};
-
+        });
+var earlySetters;
 
 /**
   * @access private
   */
-function __LZstoreDelegates ( delarr ){
+function $lzc$set_$delegates ( delarr ){
     //delarr is a sequence of triplets of the form
     //... eventname, methodname, referencemethodname
 
@@ -1242,13 +1251,14 @@ function __LZstoreDelegates ( delarr ){
 
 }
 
-// TODO: [2008-02-14 ptw] Remove at 4.1 or later
 if ($debug) {
 /**
-  * @access private
-  */
+ * @deprecated
+ * @devnote remove after 4.1
+ * @access private
+ */
 function __LZstoreRefs ( val , prop ){
-        Debug.error("%w.%s is no longer supported", this, arguments.callee);
+    Debug.error("%w.%s is no longer supported", this, arguments.callee);
 }
 }
 
@@ -1324,6 +1334,7 @@ if ($debug) {
 function __LZresolveRefs ( refs ){
     Debug.error("$refs: %s is no longer supported", refs);
 }
+function $lzc$set_$refs(v) { this.__LZresolveRefs(v); }
 }
 
 /**
@@ -1476,7 +1487,7 @@ function releaseConstraintMethod (constraintMethodName) {
   * @access protected
   * @param String name: A string to use for the name of this node.
   */
-function setName ( name ){
+function $lzc$set_name ( name ){
     if ((typeof(name) == 'string') && name.length) {
         if ($debug) {
             if (this.parent && this.parent[name] && this.parent[name] !== this) {
@@ -1540,7 +1551,7 @@ function defaultSet ( val ,prop ){
   * @access protected
   * @param String id: The id to use for this node.
   */
-function setID ( id ){
+function $lzc$set_id ( id ){
     //support for current system
     if ((typeof(id) == 'string') && id.length) {
         if ($debug) {
@@ -1580,6 +1591,13 @@ function setDatapath ( dp ) {
         new LzDatapath ( this, { xpath : dp } );
     }
 }
+    /**
+     * Setter for datapath
+     * @access private
+     */
+    function $lzc$set_datapath (dp) {
+        this.setDatapath(dp);
+    }
 
   /**
    * Sets the datacontext for the node to the data element given as an
@@ -1629,11 +1647,11 @@ var options = {};
     *
     * @access private
     */
-  function __LZsetOptions(hash) {
+  function $lzc$set_options(hash) {
     // Ensure you have your own private options dictionary, not the one
     // inherited from your class, nor the default empty one inherited
     // from LzNode!
-    if (! this.hasOwnProperty('options')) {
+    if (this.options === this['constructor'].prototype.options) {
       this.options = new LzInheritedHash(this.options);
     }
     for (var key in hash) {
@@ -1665,7 +1683,7 @@ function setOption ( key , val ){
     // Ensure you have your own private options dictionary, not the one
     // inherited from your class, nor the default empty one inherited
     // from LzNode!
-    if (! this.hasOwnProperty('options')) {
+    if (this.options === this['constructor'].prototype.options) {
       this.options = new LzInheritedHash(this.options);
     }
     this.options[ key ] = val;
@@ -1830,10 +1848,6 @@ function destroy( recursiveCall ){
 
     //don't allow a call on this method if I'm deleted
     this.__LZinstantiationDone = null;
-
-    //clear setters object -- this way if we're in applyArgs, we won't run
-    //extra code
-    this.setters = null;
 
     //remove this and all subnodes
     if (this.subnodes != null) {
@@ -2054,11 +2068,12 @@ function __LZassignClassRoot( arr , depth){
 
 /**
   * @access private
+  * setter for $datapath
   */
-function __LZmakeDatapath( dpobj ){
+function $lzc$set_$datapath( dpobj ){
   if (! (dpobj instanceof Object)) {
     if ($debug) {
-        Debug.debug('__LZmakeDatapath on non-object %w?', dpobj)
+        Debug.debug('%s on non-object %w?', arguments.callee, dpobj)
     }
   }
   this.makeChild( dpobj , true);

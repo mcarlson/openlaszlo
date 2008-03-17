@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -125,6 +125,7 @@ class LzConnectionDatasource extends LzDatasource {
   * @modifiers override 
   */
 static var tagname = 'connectiondatasource';
+  static var attributes = new LzInheritedHash(LzDatasource.attributes);
 
 /**
   * @access private

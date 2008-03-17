@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -15,7 +15,6 @@ import org.jdom.Element;
 import org.apache.log4j.*;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.ChainedException;
-import org.openlaszlo.utils.ComparisonMap;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.xml.internal.XMLUtils;
 
@@ -101,11 +100,7 @@ public class CompilationEnvironment {
 
     /** Keep a list of assigned global id's, so we can warn when one
      * is redefined */
-    // TODO: [07-18-03 hqm] We will compare all id's case
-    // insensitively (using ComparisonMap), because actionscript is
-    // not case sensitive.  But in the future, we should preserve
-    // case.
-    private final Map idTable = new ComparisonMap();
+    private final Map idTable = new LinkedHashMap();
 
     /** Holds a set of unresolved references to resources, so we can
         check for undefined (possibly forward) references after all

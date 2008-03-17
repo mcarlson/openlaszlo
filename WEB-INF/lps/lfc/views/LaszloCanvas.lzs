@@ -60,10 +60,16 @@ class LzCanvas extends LzView {
   * @modifiers override
   */
 static var tagname = 'canvas';
+  static var attributes = new LzInheritedHash(LzView.attributes);
 
 function LzCanvas ( args ) {
     // TODO: [2006-05-19 ptw] The original did not do this, should we?
     // super(null, args);
+    // No, we can't.  But you have to be aware that if you futz with
+    // LzNode or LzView, you have to consider whether you will have to
+    // change the canvas constructor too, since it _pretends_ to be a
+    // view!
+    
     // Note canvas start
     if ($profile) {
         Profiler.event('start: #canvas');
@@ -175,6 +181,9 @@ function LzCanvas ( args ) {
     this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;
     delete args.lpsversion;
 
+    // Set applyArgs ordering kludges.
+    this.__LZdelayedSetters = LzView.__LZdelayedSetters;
+    this.earlySetters = LzView.earlySetters;
     this.__LZapplyArgs( args );
 
     if (!('version' in this && this.version)){

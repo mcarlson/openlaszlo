@@ -1,7 +1,7 @@
 /**
   * LzDatapath.lzs
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LFC
@@ -73,6 +73,7 @@ class LzDatapath extends LzDatapointer {
   * @modifiers override 
   */
 static var tagname = 'datapath';
+  static var attributes = new LzInheritedHash(LzDatapointer.attributes);
 
 /** By default, this is false for instances
   * of <classname>datapointer</classname>, and true for instances of
@@ -359,7 +360,7 @@ function setDataContext ( p , implicit ){
   * @access private
   */
 function destroy( recur ){
-    this.setName = null; //so this can't be assigned
+    this.$lzc$set_name = null; //so this can't be assigned
     this.__LZupdateLocked = true; //so won't set data
 
     if ( this.context && !this.context.__LZdeleted && 
@@ -553,14 +554,13 @@ function __LZsetTracking ( who, additive, needscheck ) {
 }
 
 /** @access private */
-setters.__LZmanager = "__LZsetCloneManager";
-/** @access private */
 var __LZisclone = false;
 
 /**
   * @access private
+  * @devnote Setter for __LZmanager
   */
-function __LZsetCloneManager( m ) {
+function $lzc$set___LZmanager ( m ) {
     this.__LZisclone = true;
     this.immediateparent.cloneManager = m;
     this.parsedPath = m.parsedPath;

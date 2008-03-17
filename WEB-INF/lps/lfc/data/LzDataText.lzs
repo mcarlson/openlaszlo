@@ -51,11 +51,11 @@ var nodeType = LzDataNode.TEXT_NODE;
   */
 var nodeName        = '#text';
 
-setters.data = "setData";
-
 /** The data held by this node.
   * @type String */
 var data = "";
+/** @access private */
+function $lzc$set_data(v) { this.setData(v); }
 
 /** read-only property
   * @type Number */
