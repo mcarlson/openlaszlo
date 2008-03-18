@@ -82,6 +82,7 @@ static var tagname = 'datapointer';
 // static var attributes = new LzInheritedHash(LzNode.attributes);
 // [2006-07-25 pbr] This clears out what is defined in LzNode. Is this
 // ok?
+/** @access private */
   static var attributes  = {ignoreplacement: true};
 
   /** @access private */

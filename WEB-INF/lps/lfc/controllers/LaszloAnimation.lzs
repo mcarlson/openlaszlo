@@ -37,6 +37,7 @@ class LzAnimator extends LzAnimatorGroup {
   * @modifiers override 
   */
 static var tagname = 'animator';
+/** @access private */
 static var attributes = new LzInheritedHash(LzAnimatorGroup.attributes);
 
 var beginPoleDelta = .25;

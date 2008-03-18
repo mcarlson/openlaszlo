@@ -174,15 +174,8 @@ function LzNode ( parent , attrs , children , instcall ){
                           if (val is Function) {
                               Debug.debug("%s[%w] = %s", this, key, val);
                           }
-                          // TODO: [2008-03-17 ptw] The compiler needs
-                          // to filter out redeclarations that do not
-                          // specify an init value
-                          if ((val !== void 0) || (! (key in this))) {
-                              this.addProperty(key, val);
-                              delete iargs[key];
-                          } else if ($debug) {
-                              Debug.debug("Useless init arg: %w.%s = %w", this, key, val);
-                          }
+                          this.addProperty(key, val);
+                          delete iargs[key];
                       }
                   }
               }

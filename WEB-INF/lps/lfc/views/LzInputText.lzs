@@ -76,6 +76,7 @@ class LzInputText extends LzText {
   * @modifiers override 
   */
 static var tagname = 'inputtext';
+/** @access private */
   static var attributes = new LzInheritedHash(LzText.attributes);
   LzNode.mergeAttributes({selectable: true, enabled: true}, LzInputText.attributes);
 

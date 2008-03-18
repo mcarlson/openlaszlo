@@ -18,6 +18,7 @@ class LzLibrary extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'import';
+/** @access private */
 static var attributes = new LzInheritedHash(LzNode.attributes);
 
 /** @access private */

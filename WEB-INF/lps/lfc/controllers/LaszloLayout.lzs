@@ -65,6 +65,7 @@ class LzLayout extends LzNode {
   * @modifiers override 
   */
   static var tagname = 'layout';
+/** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
   /**

@@ -29,6 +29,7 @@ class LzHTTPDatasource extends LzDatasource {
   * @modifiers override 
   */
 static var tagname = 'datasource';
+/** @access private */
   static var attributes = new LzInheritedHash(LzDatasource.attributes);
 
 var reqtype = "GET";

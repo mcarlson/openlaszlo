@@ -125,6 +125,7 @@ class LzConnectionDatasource extends LzDatasource {
   * @modifiers override 
   */
 static var tagname = 'connectiondatasource';
+/** @access private */
   static var attributes = new LzInheritedHash(LzDatasource.attributes);
 
 /**

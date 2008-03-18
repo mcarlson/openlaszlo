@@ -73,6 +73,7 @@ class LzDatapath extends LzDatapointer {
   * @modifiers override 
   */
 static var tagname = 'datapath';
+/** @access private */
   static var attributes = new LzInheritedHash(LzDatapointer.attributes);
 
 /** By default, this is false for instances

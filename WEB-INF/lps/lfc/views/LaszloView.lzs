@@ -62,6 +62,7 @@ class LzView extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'view';
+/** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
   // We add some more kludges to those in LzNode.  See #construct
   // where we override the LzNode setting

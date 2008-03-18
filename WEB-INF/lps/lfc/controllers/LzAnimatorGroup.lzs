@@ -47,6 +47,7 @@ class LzAnimatorGroup extends LzNode {
   * @modifiers override 
   */
   static var tagname = 'animatorgroup';
+/** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
   /** The name of the attribute whose value is animated.  This

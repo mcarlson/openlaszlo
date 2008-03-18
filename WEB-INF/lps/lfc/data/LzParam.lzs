@@ -42,6 +42,7 @@ class LzParam extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'params';
+/** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
   // FIXME: [2008-03-12 ptw] WTF is this supposed to be doing?

@@ -23,6 +23,7 @@ class LzDataProvider extends LzNode {
      * @modifiers override 
      */
     static var tagname = 'dataprovider';
+/** @access private */
     static var attributes = new LzInheritedHash(LzNode.attributes);
 
     /**

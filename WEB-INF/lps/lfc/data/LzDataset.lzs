@@ -96,6 +96,7 @@ class LzDataset extends LzNode inherits LzDataElementTrait, LzDataNode {
   * @modifiers override 
   */
 static var tagname = 'dataset';
+/** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
  
 var dataprovider = defaultdataprovider;

@@ -77,6 +77,7 @@ class LzText extends LzView with LzFormatter {
   * @modifiers override 
   */
 static var tagname = 'text';
+/** @access private */
 static var attributes = new LzInheritedHash(LzView.attributes);
 
 /** Sent whenever the text in the field changes. 

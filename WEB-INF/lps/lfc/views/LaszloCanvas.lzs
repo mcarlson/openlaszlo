@@ -60,6 +60,7 @@ class LzCanvas extends LzView {
   * @modifiers override
   */
 static var tagname = 'canvas';
+/** @access private */
   static var attributes = new LzInheritedHash(LzView.attributes);
 
 function LzCanvas ( args ) {

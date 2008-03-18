@@ -92,6 +92,7 @@ class LzSelectionManager extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'selectionmanager';
+/** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
 /** The name of the method to call on an object

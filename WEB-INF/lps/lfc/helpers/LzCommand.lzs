@@ -36,6 +36,7 @@ class LzCommand extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'command';
+/** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
 /**

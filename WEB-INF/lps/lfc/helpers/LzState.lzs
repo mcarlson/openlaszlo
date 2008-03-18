@@ -78,6 +78,7 @@ class LzState extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'state';
+/** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
 /** Sent when the state is applied. 
