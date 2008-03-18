@@ -189,14 +189,15 @@ LzInputTextSprite.prototype.gotFocus = function (  ){
 LzInputTextSprite.prototype.select = function (  ){
     var sf = targetPath(this.__LZtextclip);
 
-    // calling setFocus() seems to bash the scroll value, so save it
+    // calling setFocus() bashes the scroll and hscroll values, so save them
     var myscroll = this.__LZtextclip.scroll;
+    var myhscroll = this.__LZtextclip.hscroll;
     if( Selection.getFocus() != sf ) {
         Selection.setFocus( sf );
     }
-    this.__LZtextclip.hscroll = 0;
-    // restore the scroll value
+    // restore the scroll and hscroll values
     this.__LZtextclip.scroll = myscroll;
+    this.__LZtextclip.hscroll = myhscroll;
     this.__LZtextclip.background = false;
 }
 
