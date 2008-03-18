@@ -2,7 +2,7 @@
 
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -359,7 +359,7 @@ LzSourceMessage.format = function (file, line, control, args) {
   if (file == null) {
     for (var i = 3; i < arguments.length; i++) {
       var arg = arguments[i];
-      if (arg instanceof lz.node && '_dbg_filename' in arg) {
+      if (global['lz'] && arg is lz['node'] && '_dbg_filename' in arg) {
         file = arg._dbg_filename;
         line = arg._dbg_lineno;
       }

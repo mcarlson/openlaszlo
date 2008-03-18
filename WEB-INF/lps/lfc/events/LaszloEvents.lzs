@@ -116,7 +116,12 @@ function register ( eventSender , eventName){
 
     var anEvent = eventSender[ eventName ];
 
-    if ( anEvent == LzDeclaredEvent || !anEvent ){
+    if (! (anEvent is LzEvent)){
+        if ($debug) {
+          if (anEvent && (! (anEvent is LzDeclaredEventClass))) {
+            Debug.debug("Bad event: %w.%s => %w", eventSender, eventName, anEvent);
+          }
+        }
         // The call used to be unrolled here for swf. I removed it since it
         // was done during the swf5 days
         anEvent = new LzEvent( eventSender, eventName , this );
@@ -357,6 +362,11 @@ class LzEvent {
   */
 function LzEvent ( eventSender , eventName , d ){
     super();
+    // If debugging, add an informative name
+    if ($debug) {
+      this._dbg_eventSender = eventSender;
+      this._dbg_eventName = eventName;
+    }
 
     var _evs = eventSender._events;
     if (_evs == null ){
@@ -372,11 +382,6 @@ function LzEvent ( eventSender , eventName , d ){
         this.delegateList = [];
     }
 
-    // If debugging, add an informative name
-    if ($debug) {
-      this._dbg_eventSender = eventSender;
-      this._dbg_eventName = eventName;
-    }
     if ($profile) {
       this._dbg_profileName = eventName;
     }

@@ -524,7 +524,10 @@ function _dbg_name ( ){
   if (id != this.toString()) {
     return id;
   } else {
-    return Debug.stringEscape(this.getText(), true);
+    var contents = this.getText();
+    if (contents) {
+      return Debug.stringEscape(contents, true);
+    }
   }
 }
 }

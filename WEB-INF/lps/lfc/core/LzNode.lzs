@@ -68,14 +68,21 @@ class LzNode {
                 // NOTE: [2008-01-22 ptw] This is just whacky, but it
                 // is required for back-compatibility.  IWBNI this
                 // were handled at compile-time
-                if ( attrk is Object ) {
+                //
+                // NOTE: [2008-03-17 ptw] We have to make sure the
+                // 'objects' we merge are just hash tables.  We should
+                // _use_ hash tables, not Objects and then there would
+                // not be any confusion!  Hence the check for the
+                // constructor.
+                if (attrk is Object) {
                     var dattrk = dattrs[ k ];
-                    if ( dattrk is Object && (! (dattrk is LzInitExpr))) {
-                        if ( attrk is Array ) {
+                    if (dattrk is Object) {
+                        if ( attrk is Array && dattrk is Array) {
                             // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
                             dattrs[ k ] = attrk.concat( dattrk );
                             continue;
-                        } else {
+                        } else if ((attrk.constructor == Object || attrk is LzInheritedHash) &&
+                                   (dattrk.constructor == Object || dattrk is LzInheritedHash)) {
                             // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
                             var tmp = new LzInheritedHash(dattrk);
                             for (var j in attrk) {
@@ -167,8 +174,15 @@ function LzNode ( parent , attrs , children , instcall ){
                           if (val is Function) {
                               Debug.debug("%s[%w] = %s", this, key, val);
                           }
-                          this.addProperty(key, val);
-                          delete iargs[key];
+                          // TODO: [2008-03-17 ptw] The compiler needs
+                          // to filter out redeclarations that do not
+                          // specify an init value
+                          if ((val !== void 0) || (! (key in this))) {
+                              this.addProperty(key, val);
+                              delete iargs[key];
+                          } else if ($debug) {
+                              Debug.debug("Useless init arg: %w.%s = %w", this, key, val);
+                          }
                       }
                   }
               }

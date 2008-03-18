@@ -51,7 +51,14 @@ if ($debug) {
   */
 (function () {
   var addProperty = function AddProperty (name, value) {
-    this[name] = value;
+    if ((value !== void 0) || (! (name in this))) {
+      this[name] = value;
+//     } else if ($debug) {
+//       for (var s = this.constructor; s !== Instance; s = s.prototype.constructor) {
+//         if (s.prototype.hasOwnProperty(name)) { break; }
+//       }
+//       Debug.debug("Attempt to override %w.%s, already defined in %w", this, name, s);
+    }
     if (value instanceof Function) {
       var xtor = this.constructor;
       if (value.hasOwnProperty('superclasses')) {
