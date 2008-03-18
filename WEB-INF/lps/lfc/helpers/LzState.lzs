@@ -113,6 +113,7 @@ static var props = { apply : true }; // unused?
 static var events = { onremove : true , onapply : true };
 prototype.$isstate = true; // Defined in LzNode
 var asyncnew = false;
+/** @access private */
 var subh = null;
 var pooling = false;
 function $lzc$set_asyncnew(v) { this.__LZsetProperty(v, 'asyncnew'); }
@@ -128,9 +129,10 @@ function $lzc$set_pooling(v) { this.__LZsetProperty(v, 'pooling'); }
   * @access private
   */
 function $lzc$set___LZsourceLocation(v) { this.__LZsetProperty(v, '__LZsourceLocation'); }
-
+/** @access private */
 var heldargs;
 var handlerMethodNames;
+/** @access private */
 var releasedconstraints;
 var appliedchildren;
 var isapplied = false;
