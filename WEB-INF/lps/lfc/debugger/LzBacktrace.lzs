@@ -2,7 +2,7 @@
 
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzbacktrace
@@ -20,27 +20,15 @@
 #pragma "debugBacktrace=false"
   /** @access private */
   Debug.stackOverflow = function () {
-#pragma "passThrough=true"
     var bs = this.backtraceStack;
-    if ($js1) {
-      try {
-        var old = bs.maxDepth;
-        // Auto grow the stack.  If error handling does not work,
-        // eventually the runtime will blow you away...
-        bs.maxDepth *= 1.25;
-        throw new Error(Debug.error("Stack overflow"));
-      } finally {
-        bs.maxDepth = old;
-      }
-    } else if ($as2) {
-      // FIXME: [2006-06-06 ptw] When the swf compiler understands try
-      // and throw.
+    try {
       var old = bs.maxDepth;
+      // Auto grow the stack.  If error handling does not work,
+      // eventually the runtime will blow you away...
       bs.maxDepth *= 1.25;
-      (Debug.error("Stack overflow"));
+      throw new Error(Debug.error("Stack overflow: %s", Debug.backtrace(bs.length - 50)));
+    } finally {
       bs.maxDepth = old;
-    } else {
-      Debug.error('LzBacktrace, unsupported runtime %s', $runtime);
     }
   };
 }

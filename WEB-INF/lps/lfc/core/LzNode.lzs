@@ -81,8 +81,8 @@ class LzNode {
                             // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
                             dattrs[ k ] = attrk.concat( dattrk );
                             continue;
-                        } else if ((attrk.constructor == Object || attrk is LzInheritedHash) &&
-                                   (dattrk.constructor == Object || dattrk is LzInheritedHash)) {
+                        } else if ((attrk.constructor === Object || attrk is LzInheritedHash) &&
+                                   (dattrk.constructor === Object || dattrk is LzInheritedHash)) {
                             // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
                             var tmp = new LzInheritedHash(dattrk);
                             for (var j in attrk) {
@@ -176,6 +176,14 @@ function LzNode ( parent , attrs , children , instcall ){
                           }
                           this.addProperty(key, val);
                           delete iargs[key];
+                      } else {
+                          // NOTE: [2008-03-18 ptw] this is for
+                          // back-compatibility: it appears that an
+                          // attribute with a setter is expected to be
+                          // initially `null` not undefined
+                          if (this[key] === void 0) {
+                              this.addProperty(key, null);
+                          }
                       }
                   }
               }
