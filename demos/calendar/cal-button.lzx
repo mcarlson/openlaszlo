@@ -108,7 +108,7 @@
                 <attribute name="x"    value="parent.bkgnd.lft.leftinset - 1" when="always" />
                 <attribute name="text" value="parent.label" when="always" />
             </text>
-            <text name="title" y="2" fgcolor="white" 
+            <text name="title" fgcolor="white" 
                  pixellock="true" width="200" >
                 <attribute name="y"    value="parent.yadjust" when="once"/>
                 <attribute name="x"    value="parent.bkgnd.lft.leftinset" when="always" />
