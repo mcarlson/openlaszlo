@@ -16,7 +16,7 @@
 class LzDeclaredEventClass /* implements LzEvent */ {
 
   function LzDeclaredEventClass () {
-    Debug.debug("%w.%s(%w)", this, arguments.callee, arguments);
+      // Debug.debug("%w.%s(%w)", this, arguments.callee, arguments);
     super();
   }
 
