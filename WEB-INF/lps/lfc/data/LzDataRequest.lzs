@@ -16,6 +16,7 @@
   * </p>
   * <event>onstatus</event>: Sent as data or other conditions occur during the execution of this request.
   *
+  *
   * @shortdesc An abstract class to represent data requests.
   * @lzxname datarequest
   */
@@ -26,7 +27,7 @@ class LzDataRequest extends LzNode {
      * @modifiers override 
      */
     static var tagname = 'datarequest';
-/** @access private */
+    /** @access private */
     static var attributes = new LzInheritedHash(LzNode.attributes);
     
     /* Status value constants */
@@ -37,12 +38,22 @@ class LzDataRequest extends LzNode {
 
 
     var requestor = null; 
+    /** An object which holds the protocol-specific source to load data from
+    @type Object
+    */
     var src       = null; 
+    /** The timeout in milliseconds
+    @type Number
+    */
     var timeout   = Infinity;
+    /** The status, one of 'success', 'timeout', 'error', or 'ready'
+     @type String
+    */
     var status    = null; 
+    /** Raw data returned by request */
     var rawdata   = null; 
 
-    // Used by dataprovider to record error messages
+    /**  Used by dataprovider to record error messages */
     var error = null; 
     
     /** @lzxtype event */

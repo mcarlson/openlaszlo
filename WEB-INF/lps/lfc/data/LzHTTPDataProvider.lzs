@@ -13,8 +13,17 @@
   * <p>
   * <class>LzHTTPDataProvider</class> implements the DataProvider interface, to support HTTP data requests.
   * </p>  
+  * <p>
+  * Requests are submitted using the <method>doRequest</method>, passing a  request
+  * object of type <class>LzHTTPDataRequest</class>. And instance of <class>LzHTTPDataProvider</class> is the default
+  * data provider for the runtime, and is what is used by <class>LzDataset</class> to load data.
+  * </p>
+  * <p>
+  * <event>onstatus</event>: Sent to a datarequest to update the status of the request.</p>
+  *
   * @shortdesc DataProvider which implements HTTP request transport
   * @lzxname httpdataprovider
+  *
   */
 
 
@@ -290,6 +299,7 @@ class LzHTTPDataProvider extends LzDataProvider {
   * <p>
   * <class>LzHTTPDataRequest</class> implements the DataProvider interface, to support HTTP data requests.
   * </p>
+  *
   * @shortdesc A class to represent HTTP data requests.
   * @lzxname httpdatarequest
   */
@@ -303,23 +313,49 @@ class LzHTTPDataRequest extends LzDataRequest {
     var multirequest = false;
     var queuerequests = false;
 
+    /** An LzParams object which holds query key-value pairs.
+        @type LzParam
+    */
     var queryparams = null; // : LzParam object
 
+    /** An LzParams object which holds HTTP request headers as key-value pairs.
+        @type LzParam
+    */
     var requestheaders = null; // : LzParam object
 
+    /** Flag to say whether proxied server should return with HTTP response metadata added. 
+        @type Boolean
+    */
     var getresponsheaders = false;
-    var responseheaders = null; // : LzParam object, returned by dataprovider
+    /** An LzParams object which holds HTTP response headers
+        @type LzParam
+    */
+    var responseheaders = null; 
 
 
+    /** Flag to say whether data is cacheable at the server
+        @type Boolean
+    */
     var  cacheable         = false;
+    /** Flag to say whether data is cacheable at the client (browser)
+        @type Boolean
+    */
     var  clientcacheable   = null;
+    /** Flag to say whether whitespace should be trimmed from text element data in returned XML data
+        @type Boolean
+    */
     var  trimwhitespace    = false;
+    /** Flag to say whether namespace prefixes on element and attribute names is preserved in XML data
+        @type Boolean
+    */
     var  nsprefix          = false;
 
 
     /** The LZX DOM element containing the loaded data */
     var xmldata = null;
-    // time it took to load 
+    /** Time taken by load, in milliseconds
+        @type Number
+    */
     var loadtime = 0;
 
     var secure = false;
@@ -327,6 +363,7 @@ class LzHTTPDataRequest extends LzDataRequest {
 
 
     // private, pointer to our lzhttploader
+    /** @access private */
     var loader = null;
 
 }
