@@ -39,7 +39,7 @@ class LzNode {
      */
     static var tagname = 'node';
     /** @access private */
-    static var attributes = { $hasdefaultattrs : true };
+    static var attributes = new LzInheritedHash();
 
 
     /**
@@ -118,6 +118,13 @@ class LzNode {
     }
 
 
+    /** @access private
+     * @devnote Used by replication to clone instances */
+    var _instanceAttrs;
+    /** @access private
+     * @devnote Used by replication to clone instances */
+    var _instanceChildren;
+
 /**
   * @param LzNode parent: a node above this one in the hierarchy -- not
   * necessarily the immediate parent -- that will decide where this node goes
@@ -152,56 +159,73 @@ function LzNode ( parent , attrs , children , instcall ){
                 Profiler.event(nm, 'calls');
             }
         }
-        var iargs;
-        if (attrs && attrs['$hasdefaultattrs']) {
-          // Cloning, just use the clone attributes, they are already
-          // defaulted properly
-          iargs = attrs;
-        } else {
-          // Otherwise we create a new hash that inherits the defaults
-          iargs = new LzInheritedHash(this['constructor'].attributes);
-          // Now install any decls that the tag compiler could't
-          // figure out (because it does not know the built-in class
-          // setters (c.f., ClassCompiler.java)
-          if (! (this is LzState)) {
-              for (var key in iargs) {
-                  var val = iargs[key];
-                  if (! (val is LzInitExpr)) {
-                      // If there is no setter for this attr the value
-                      // should just be installed as a declaration
-                      var setr = '$lzc$set_' + key;
-                      if (! this[setr]) {
-                          if (val is Function) {
-                              Debug.debug("%s[%w] = %s", this, key, val);
-                          }
-                          this.addProperty(key, val);
-                          delete iargs[key];
-                      } else {
-                          // NOTE: [2008-03-18 ptw] this is for
-                          // back-compatibility: it appears that an
-                          // attribute with a setter is expected to be
-                          // initially `null` not undefined
-                          if (this[key] === void 0) {
-                              this.addProperty(key, null);
-                          }
-                      }
-                  }
-              }
-          }
-          // And merge in our instantiation attrs (if any).  Taking
-          // care to merge Array and Object attrs (for
-          // back-compatibility).  No special magic is needed to
-          // compute attributes overriding constraints, because they
-          // all come as attrs now and overriding will be automatic
-          // from the InheritedHash (except for the bizarre merging of
-          // arrays and hashes!)
-          if (attrs) {
-              LzNode.mergeAttributes(attrs, iargs);
-          }
-        }
 
-        this._instanceAttrs = iargs;
+        // Squirrel away instance attributes and children for cloning...
+        this._instanceAttrs = attrs;
         this._instanceChildren = children;
+
+        // Get our inherited class attributes
+        var iargs = new LzInheritedHash(this['constructor'].attributes);
+        // And merge in our instantiation attrs (if any).  Taking
+        // care to merge Array and Object attrs (for
+        // back-compatibility).  No special magic is needed to
+        // compute attributes overriding constraints, because they
+        // all come as attrs now and overriding will be automatic
+        // from the InheritedHash (except for the bizarre merging of
+        // arrays and hashes!)
+        if (attrs) {
+            LzNode.mergeAttributes(attrs, iargs);
+        }
+        var todelete;
+        // Now install any decls that the tag compiler could't
+        // figure out (because it does not know the built-in class
+        // setters (c.f., ClassCompiler.java) and any other constant
+        // initial values
+        if (! (this is LzState)) {
+            for (var key in iargs) {
+                var val = iargs[key];
+                if (! (val is LzInitExpr)) {
+                    // If there is no setter for this attr the value
+                    // should just be installed as a declaration
+                    var setr = '$lzc$set_' + key;
+                    if (! this[setr]) {
+                        if ($debug) {
+                            // Methods should only be added in
+                            // instance attributes (for now:
+                            // eventually instances with methods
+                            // should be instantiations of singleton
+                            // classes and then you should never be
+                            // adding methods at instantiation
+                            // time).
+                            if (val is Function && val != attrs[key]) {
+                                Debug.debug("Dynamic method? %s[%w] = %s", this, key, val);
+                            }
+                        }
+                        this.addProperty(key, val);
+                        // TODO: [2008-03-19 ptw] Leave these args in
+                        // iargs, so constructors can see them.
+                        // Eventually, you should be able to update
+                        // constructors to use the instance attribute
+                        // for attributes that do not have setters and
+                        // are not constrained...
+//                         delete iargs[key];
+                        // But we have to not leave them for applyArgs
+                        // to see, as that could clobber the work of a
+                        // constructor!
+                        if (! todelete) { todelete = []; }
+                        todelete.push(key);
+                    } else {
+                        // NOTE: [2008-03-18 ptw] this is for
+                        // back-compatibility: it appears that an
+                        // attribute with a setter is expected to be
+                        // initially `null` not undefined
+                        if (this[key] === void 0) {
+                            this.addProperty(key, null);
+                        }
+                    }
+                }
+            }
+        }
 
         // TODO: [2006-05-22 ptw] What is the purpose of this copy?
         // construct or constructWithArgs destructively modify args?
@@ -225,6 +249,8 @@ function LzNode ( parent , attrs , children , instcall ){
         }
 
         this.construct(  parent , maskedargs );
+
+        if (todelete) { while (todelete.length) { delete maskedargs[todelete.pop()]; }; };
 
         // Construct may, through many tangled webs of replication and
         // placement, actually end up deleting us!  Bail out.
@@ -597,80 +623,80 @@ if ($debug) {
     }
   };
 
-
 /**
-  * The construct() method of a node is called as early as possible --
-  * before any arguments have been applied. This is the method to override in
-  * lieu of writing a class constructor for your LZX class. If you override this
-  * method, you must call the superclass method or your results will be
-  * extremely unpredictable. Note that construct can only be overriden within
+  * The <code>construct</code> method of a node is called as part of
+  * the process of constructing a node.  It is called <i>after</i>
+  * attributes with constant initial values have been filled in, but
+  * before any attributes that have setters or have been constrained
+  * have been applied.
+  *
+  * This is the method to override if you need to initialize instances
+  * of an LZX class as they are constructed.  If you override this
+  * method, you <b>must</b> call the superclass method (the simplest
+  * way to do this is to say <code>super.construct.apply(this,
+  * arguments)</code>. Note that construct can only be overriden within
   * a subclass definition, not within a customized instance.
-  * 
-  * The construct method is also responsible for placing the newly-built view 
-  * into the appropriate place within its lexical parent's view hierarchy. The 
+  *
+  * The construct method is also responsible for placing the newly-built view
+  * into the appropriate place within its lexical parent's view hierarchy. The
   * process for this is as follows:
-  * 
-  * <ul><li>First, if the view has an <attribute>ignoreplacement</attribute> 
-  * attribute with a <code>true</code> value, then the view will be placed 
-  * directly under its lexical parent in all cases. The next steps are 
+  *
+  * <ul><li>First, if the view has an <attribute>ignoreplacement</attribute>
+  * attribute with a <code>true</code> value, then the view will be placed
+  * directly under its lexical parent in all cases. The next steps are
   * skipped. </li>
-  * 
-  * <li>Second, the placement view name is determined from the first of the 
+  *
+  * <li>Second, the placement view name is determined from the first of the
   * following that matches:
-  * <ul><li>the view's <attribute>placement</attribute> attribute, if that 
+  * <ul><li>the view's <attribute>placement</attribute> attribute, if that
   * exists; or</li>
-  * <li>the lexical parent's <attribute>defaultplacement</attribute> attribute, 
+  * <li>the lexical parent's <attribute>defaultplacement</attribute> attribute,
   * if that exists; or</li>
-  * <li>nil.</li></ul>
-  * </li>
-  * <li>Third, if there is no placement view name, the subview is placed within 
-  * its lexical parent (that is, 
-  * <code>view.immediateparent = view.parent</code>), 
+  * <li>nil.</li></ul></li>
+  *
+  * <li>Third, if there is no placement view name, the subview is placed within
+  * its lexical parent (that is,
+  * <code>view.immediateparent = view.parent</code>),
   * and the next steps are skipped.</li>
-  * 
-  * <li>Fourth, the placement view name is looked up within the lexical parent by 
-  * calling <code>determinePlacement</code>, and the result is taken as the 
+  *
+  * <li>Fourth, the placement view name is looked up within the lexical parent by
+  * calling <code>determinePlacement</code>, and the result is taken as the
   * view's placement view.</li>
-  * 
-  * <li>If this new placement view is a subview and it has a 
-  * <attribute>defaultplacement</attribute> attribute, 
-  * <code>determinePlacement</code> is called again. This process is repeated 
-  * until no defaultplacement attribute is found to ensure that all placement 
+  *
+  * <li>If this new placement view is a subview and it has a
+  * <attribute>defaultplacement</attribute> attribute,
+  * <code>determinePlacement</code> is called again. This process is repeated
+  * until no defaultplacement attribute is found to ensure that all placement
   * directives are correctly followed.</li></ul>
   *
   * @param LzNode parent: The node that encloses this node in source,
   * or the node to which to attach this node.
-  * @param Object args: A dictionary of initialization arguments that should
-  * be applied
-  * to the instance. This contains any arguments that are default arguments
-  * written in the class definition.  Note that initial value
-  * expressions (`$once{...}`) and constraints (`${...}`), are in this
-  * list also, they can be differentiated from initial values by their
-  * type: `LzInitExpr` for the former, and `LzConstraintExpr` for the
-  * latter.  If you handle the installation of any instance attributes
-  * in your construct method, you are responsible for dealing with
-  * these "binders" as well.  Normally, they will be processed by
-  * LzNode.
+  * @param Object args: A dictionary of attribute initializations for
+  * attributes that have setters or that have been constrained.  In
+  * general, your constructor should not modify this dictionary.  It
+  * may verify that an attribute is named in the dictionary to
+  * determine if the attribute will be modified by a setter or
+  * constraint.
+  *
   */
 function construct ( parent , args ){
   // Set applyArgs ordering kludges.  LzView overrides these
   this.__LZdelayedSetters = LzNode.__LZdelayedSetters;
   this.earlySetters = LzNode.earlySetters;
-  
+
   var lp = parent; // lp == lexical parent
   this.parent = lp;
 
   if (lp) {
     var ip = lp; // ip == immediate parent
 
-    var a = args; // a == args
-    if (! ('ignoreplacement' in a)) {
-        var thisplacement = ('placement' in a) ? a.placement : null;
-        if (thisplacement == null) {
-            thisplacement = lp.defaultplacement;
-        } else {
-            this.placement = thisplacement;
-        }    
+    // But decide based on our ignoreplacement property, which may
+    // have been set in a subclass
+    if (this.ignoreplacement) {
+        this.placement = null;
+    } else {
+        // Default to parent's placement
+        var thisplacement = this.placement || lp.defaultplacement;
         while (thisplacement != null) {
             if (ip.determinePlacement == LzNode.prototype.determinePlacement) {
                 // this is the fast path -- basically inline the relevant part
@@ -685,6 +711,7 @@ function construct ( parent , args ){
             thisplacement = (pp != ip) ? pp.defaultplacement : null;
             ip = pp;
         }
+        this.placement = thisplacement;
     }
     var ip_subnodes = ip.subnodes;
     if (ip_subnodes == null) {
@@ -849,7 +876,7 @@ static var _ignoreAttribute = {toString: function () {
   * @keywords final
   * @lzxdefault "false"
   */
-var ignoreplacement;  
+var ignoreplacement = false;  
                                         
 
 /**
@@ -1150,11 +1177,7 @@ function makeChild ( e , async ){
     /**
      * @access private
      * @devnote kludge for applyArgs
-     */
-    var $lzc$set_placement = -1;
-    /**
-     * @access private
-     * @devnote kludge for applyArgs
+     * TODO: [2008-03-18 ptw] _Are_ there $setters any more?
      */
     var $lzc$set_$setters = -1;
 
