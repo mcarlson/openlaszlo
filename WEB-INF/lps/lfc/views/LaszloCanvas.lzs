@@ -492,7 +492,8 @@ function __LZcallInit ( an ){
     this.isinited = true;
 
     this.__LZresolveReferences();
-    if (this.__LZstyleConstraints) this.__LZapplyStyleConstraints();
+
+    // Install computed initializations
     var sl = this.subnodes;
     if (sl) {
         var i = 0;
@@ -523,7 +524,7 @@ function __LZcallInit ( an ){
     }
 
     this.init();
-    // Canvas-only: Why? TODO: [2008-02-01 ptw] Ask max
+    // Canvas-only: This is so the canvas sprite knows when to show its children
     this.sprite.init(true);
     if (this.oninit.ready) this.oninit.sendEvent( this );
     if (this.datapath && this.datapath.__LZApplyDataOnInit) {

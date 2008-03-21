@@ -349,19 +349,16 @@ function construct ( parent , args) {
         this.__LZcheckheight = false;
     }
 
-    var r =null;
+    if ('clip' in args && args['clip'] && (! (args.clip instanceof LzInitExpr)) ){
+        this.makeMasked();
+    }
+    if ('stretches' in args && args['stretches'] != null && (! (args.stretches instanceof LzInitExpr)) ){
+        this.$lzc$set_stretches(args.stretches);
+        args.stretches = LzNode._ignoreAttribute;
+    }
     if ('resource' in args && args['resource'] != null && (! (args.resource instanceof LzInitExpr)) ){
-        r = args.resource;
+        this.$lzc$set_resource( args.resource );
         args.resource = LzNode._ignoreAttribute;
-    }
-    if ('clip' in args && args['clip']){
-        if (this.sprite) this.makeMasked();
-    }
-    if (args['stretches']){
-        if (this.sprite) this.stretchResource(args.stretches);
-    }
-    if ( r  != null ){
-        if (this.sprite) this.setResource( r );
     }
     if($debug){
         if( 'valign' in args && args['valign'] && 'y' in args && args['y']){
@@ -479,7 +476,6 @@ function $lzc$set_rotation(v) { this.setRotation(v); }
 function $lzc$set_opacity(v) { this.setOpacity(v); }
 /** @access private */
 function $lzc$set_alpha(v) { this.setOpacity(v); }
-function $lzc$set_visible(v) { this.setVisible(v) }
 /** @access private */
 function $lzc$set_visibility(v) { this.setVisibility(v) }
 
@@ -527,7 +523,6 @@ function $lzc$set_bgcolor(v) { this.setBGColor(v) }
   * @type String
   */
 var resource;
-function $lzc$set_resource(v) { this.setResource(v) }
 
 /** If true, this view intercepts click events; otherwise they are passed
   * to its container.  This defaults to true if the view defines a mouse
@@ -590,7 +585,6 @@ var fontsize;
   * @lzxdefault "none"
   */
 var stretches = "none"; 
-function $lzc$set_stretches(v) { this.stretchResource(v); }
 /** If true, the resource attached to this view begins playing when
   * the view is instantiated.
   * @lzxtype boolean
@@ -1067,6 +1061,7 @@ var layouts = null;
   * @deprecated
   */
 function releaseLayouts( ) {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     if (this.layouts) {
         for ( var i = this.layouts.length - 1; i >= 0; i-- ){
             this.layouts[ i ].releaseLayout();
@@ -1079,9 +1074,15 @@ function releaseLayouts( ) {
   * view's <attribute>isVisible</attribute> property is true, the
   * resource will be displayed when it is attached
   * 
+  * @deprecated Use setAttribute('stretches', ...) instead.
   * @param String resourceName: a string naming the id of the resource to attach
   */
-function setResource ( resourceName ) {
+function setResource(v) {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_resource(v);    
+}
+
+function $lzc$set_resource( resourceName ) {
     if (resourceName == null || resourceName == this._resource) return;
     /*if (LzLoader.__LZmonitorState) {
         Debug.monitor(this, 'isloaded');
@@ -1232,7 +1233,7 @@ function destroy( recursiveCall ){
 
     //this.__LZFinishDestroyOnIdle();
 
-    this.setVisible ( false );
+    this.$lzc$set_visible ( false );
 
     if ( this.addedToParent ){
          if ( ('__LZoutliewidth' in this.immediateparent) && (this.immediateparent.__LZoutliewidth == this) ) {
@@ -1280,8 +1281,14 @@ function __LZFinishDestroyOnIdle (){
   * @param Boolean|Null amVisible: Controls the visibility of a view.
   * `true` makes the view visible, `false` makes the view hidden,
   * `null` will make the view visible only if it has a data binding.
+  * @deprecated Use setAttribute('visible', ...) instead.
   */
-function setVisible( amVisible ) {
+function setVisible(v) { 
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_visible(v)
+}
+
+function $lzc$set_visible( amVisible ) {
     if (this._visible == amVisible) return;
     this._visible = amVisible;
 
@@ -1837,6 +1844,7 @@ function getColorTransform (){
   * @deprecated use the width attribute directly
   */
 function getWidth (){
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     return this.width;
 }
 
@@ -1846,6 +1854,7 @@ function getWidth (){
   * @deprecated use the height attribute directly
   */
 function getHeight (){
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     return this.height;
 }
 
@@ -2361,10 +2370,16 @@ function setResourceNumber( n ) {
   * the coordinate system for all children of this view, so use this method
   * with care.
   * 
+  * @deprecated Use setAttribute('stretches', ...) instead.
   * @param String stretch: Set the resource to stretch only in the given axis ("width" or
   * "height") or in both axes ("both"). 
   */
-function stretchResource ( stretch ){
+function stretchResource(v) { 
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_stretches(v); 
+}
+
+function $lzc$set_stretches( stretch ){
     if (!(stretch == "none" || stretch == "both" || stretch == "width" || stretch == "height")) {
         //TODO: Remove null, x, y options from here when components are moved
         var newstretch = (stretch == null ? "both" : stretch == "x" ? "width" : stretch == "y" ? "height" : "none");
@@ -2373,6 +2388,8 @@ function stretchResource ( stretch ){
                 this, arguments.callee, stretch, this, arguments.callee, newstretch);
         }
         stretch = newstretch;
+    } else if (this.stretches == stretch) {
+        return;
     }
     
     this.stretches = stretch;
@@ -2430,14 +2447,14 @@ function unload ( ){
   * @access private
   */
 function makeMasked ( ){
-    if (this.sprite) this.sprite.setClip(true);
+    this.sprite.setClip(true);
     this.masked = true;
     this.mask = this;
 }
 
 /** @access private */
 function removeMask () {
-    if (this.sprite) this.sprite.setClip(false);
+    this.sprite.setClip(false);
     this.masked = false;
     this.mask = null;
 }

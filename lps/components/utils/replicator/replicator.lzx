@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
   <!--- This is a declared replicator for visual elements. Unlike
       OpenLaszlo''s data-replication feature, a replicator can take an
@@ -160,10 +160,9 @@ class replicator extends LzNode {
     //     @keywords private
     function createChildren (c) {
         super.createChildren( [] ); 
-        this.replicated = c.pop();
+        this.replicated = c[0];
         
-        //Debug.write( 'replicated', replicated );
-        if ( c.length ) {
+        if ( c.length > 1 ) {
           Debug.warn("%s: only a single child view is replicated", this);
           this.container.createChildren( c );
         } else {
@@ -176,7 +175,7 @@ class replicator extends LzNode {
     /**
      * @access private
      */
-    setters.nodes = "setNodes";
+    function $lzc$set_nodes(n) { this.setNodes(n) }
 
     // Replicate over the given list of elements
     // @param Array n: The list of elements over which to replicate
@@ -274,7 +273,6 @@ class replicator extends LzNode {
 
     //  @keywords private
     function _makeClone () {
-
         var v = this.container.makeChild( this.replicated );
         v.setAttribute( "clonenumber", null );
         // emulate datapath behavior
