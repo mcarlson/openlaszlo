@@ -395,7 +395,6 @@ LzSprite.prototype.frame = 1;
 LzSprite.prototype.frames = null;
 LzSprite.prototype.blankimage = lzOptions.ServerRoot + '/lps/includes/blank.gif';
 LzSprite.prototype.resource = null;
-LzSprite.prototype.source = null;
 LzSprite.prototype.visible = null;
 LzSprite.prototype.text = null;
 LzSprite.prototype.clip = null;
@@ -463,7 +462,6 @@ LzSprite.prototype.setResource = function ( r ){
     if ( r.indexOf('http:') == 0 || r.indexOf('https:') == 0){
         this.skiponload = false;
         this.setSource( r );
-        this.resource = r;
         return;
     }
 
@@ -522,7 +520,7 @@ LzSprite.prototype.setSource = function (url, indirect){
 
     //Debug.info('setSource ' + url)
     this.loading = true;
-    this.source = url;
+    this.resource = url;
     if (! this.__ImgPool) {
         this.__ImgPool = new LzPool(LzSprite.prototype.__getImage, LzSprite.prototype.__gotImage, LzSprite.prototype.__destroyImage, this);
     }

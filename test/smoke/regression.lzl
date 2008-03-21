@@ -824,10 +824,15 @@
         </class>
 
         <class name="bug_2125" extends="TestCase">
-                <view name="lview"/>
+                <view name="lview">
+                    <handler name="onload">
+                        parent.assertNotNull(this['resource'], 'resource attribute undefined!');
+                        parent.assertEquals(this['resource'], 'http:../resources/gif/logo.gif');
+                    </handler>
+                </view>
+                        
                 <method name="testSrc">
-                        lview.setSource('http:../resources/swf/logo.swf')
-                        assertNotUndefined(lview['resource'], 'Source attribute undefined!')
+                    lview.setSource('http:../resources/gif/logo.gif')
                 </method>
         </class>
         
