@@ -32,7 +32,9 @@ var LzTextSprite = function(newowner, args) {
     ////////////////////////////////////////////////////////////////
 
     this.masked = true;
-    var mc = this.makeContainerResource();
+    this.makeContainerResource();
+    var mc = this.__LZmovieClipRef;
+
     // create the textfield on container movieclip - give it a unique name
     var txtname = '$LzText';
     mc.createTextField( txtname, 1, 0, 0, 100, 12 );

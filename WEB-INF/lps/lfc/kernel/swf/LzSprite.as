@@ -299,9 +299,6 @@ LzSprite.prototype.setResource = function ( resourceName ) {
     }
 
     this.resource = resourceName;
-
-    // button appears to require this return value!!!
-    return this.__LZmovieClipRef;
 }
 
 
@@ -341,7 +338,7 @@ LzSprite.prototype.doReplaceResource = function(resourceName) {
   */
 LzSprite.prototype.makeContainerResource = function ( ) {
     //Debug.write('LzSprite.makeContainerResource');
-    return this.setResource( "empty" );
+    this.setResource( "empty" );
 }
 
 /**
