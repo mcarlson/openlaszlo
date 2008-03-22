@@ -4,12 +4,12 @@
 
 <text text="For my context menu to work, I need to run in SWF8"/>
 
-<method event="oninit">
+<handler name="oninit">
     var cmenu = new LzContextMenu(); // create the menu
     var item1 = cmenu.makeMenuItem('hello', new LzDelegate(this, "handlerightclick")); // create the menu item, and set up an LzDelegate as a callback
     cmenu.addItem(item1); //add the item to the menu
     this.setContextMenu(cmenu);
-</method>
+</handler>
 
  <method name="handlerightclick" args="val">
     Debug.write("hello world");
@@ -18,6 +18,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

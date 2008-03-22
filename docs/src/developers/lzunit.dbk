@@ -252,7 +252,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
 
 <para>A while statement attached to (goButton.go==true) would loop infinitely, or until a buttonclick set the "go" attribute to false, but how to test for infinity? Maybe it's something the developer has to take on faith, but JavaScript does have its limit: <literal>Number.MAX_VALUE</literal> is the largest number JavaScript can represent. The while statement is <literal>while (goButton.counter &lt; Number.MAX_VALUE)</literal>.</para>
 
-<para>I am not sure if it is good style to declare "counter" as a button attribute, but I think that must be better than initializing the counter variable on the canvas (with the script <literal>&lt;method event="oninit"&gt;var goButton.counter=1;&lt;/method&gt;</literal>). Before adding the code for the while loop and the code for the button attribute, there's a test to write: Does the goButton have a attribute "displayed" that equals 1?</para>
+<para>I am not sure if it is good style to declare "counter" as a button attribute, but I think that must be better than initializing the counter variable on the canvas (with the script <literal>&lt;handler name="oninit"&gt;var goButton.counter=1;&lt;/handler&gt;</literal>). Before adding the code for the while loop and the code for the button attribute, there's a test to write: Does the goButton have a attribute "displayed" that equals 1?</para>
 
 <example role="live-example">
    <title>testGoButtonCounter</title>

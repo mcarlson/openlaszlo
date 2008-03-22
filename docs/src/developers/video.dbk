@@ -437,7 +437,7 @@ In the example below, two videoviews are communicating with each other through a
                     name="text" 
                     value="${(s1.broadcasting == false) ? 'broadcast' : 'stop broadcasting'}"
                 /&gt;
-                &lt;method event="onclick"&gt;&lt;![CDATA[
+                &lt;handler name="onclick"&gt;&lt;![CDATA[
                     if (cam.show == false) {
                         live.stream.setAttribute('url', parent.username.text);
                         live.stream.broadcast();
@@ -447,7 +447,7 @@ In the example below, two videoviews are communicating with each other through a
                         cam.setAttribute('show', false);
                     }
                   ]]&gt;
-                &lt;/method&gt;
+                &lt;/handler&gt;
             &lt;/button&gt;
             
             &lt;checkbox onvalue="s1.setAttribute('muteaudio', value)"&gt;Mute Audio&lt;/checkbox&gt;

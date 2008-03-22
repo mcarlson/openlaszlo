@@ -7,7 +7,7 @@
 
 <attribute name="go" type="boolean" value="true"/>
 
-<method event="onclick">
+<handler name="onclick">
     if (goButton.go==true) {
         this.setAttribute('text', 'Stop');
         this.setAttribute('go', false);
@@ -16,7 +16,7 @@
     this.setAttribute('text', 'Go');
     this.setAttribute('go', true);
     }
-</method>
+</handler>
 
 </button>
 
@@ -30,4 +30,7 @@
 </TestSuite>
 
 </canvas>
-<!-- Copyright 2001-2007 Laszlo Systems, Inc. -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

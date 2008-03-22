@@ -24,10 +24,10 @@
             <keyview width="${parent.parent.width - 40 - parent.tv.width - this.boxsize}" />
         </view>
         <button name="other" text="See Related Components">
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.treehier.setAttribute('visible', false);
                 canvas.related.setAttribute('visible', true);
-            </method>
+            </handler>
         </button>
     </view>
 
@@ -107,16 +107,16 @@
         </tabs>
 
         <button name="back" text="See Components Hierarchy">
-            <method event="onclick">
+            <handler name="onclick">
                 canvas.treehier.setAttribute('visible', true);
                 canvas.related.setAttribute('visible', false);
-            </method>
+            </handler>
         </button>
 
     </view>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

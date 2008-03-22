@@ -560,9 +560,9 @@ this.dotty.setAttribute( thingy.width - 10 );
 &lt;/method&gt;
 
 &lt;!-- Update positioning whenever thingy's width changes --&gt;
-&lt;method event="onwidth" target="thingy"&gt;
+&lt;handler name="onwidth" target="thingy"&gt;
 this.update();
-&lt;/method&gt;
+&lt;/handler&gt;
 ....
 &lt;/view&gt;
 </programlisting></example>
@@ -578,7 +578,7 @@ Compare the above to:
 &lt;/view&gt;
 </programlisting>
 <para>
-The second form is much more compact and readable, but the first form uses zero constraints. The call <literal>&lt;method event="onwidth" target="thingy"&gt;</literal> is nearly a constraint on <literal>thingy.width</literal>, but: in the explicit-update form, one <literal>thingy.onwidth</literal> event can trigger a single call to update which, which will end up doing the repositioning that otherwise would require at least a handful of constraints. Like constraints, method calls are expensive. So, fewer constraints, fewer method calls, faster performance.</para>
+The second form is much more compact and readable, but the first form uses zero constraints. The call <literal>&lt;handler name="onwidth" target="thingy"&gt;</literal> is nearly a constraint on <literal>thingy.width</literal>, but: in the explicit-update form, one <literal>thingy.onwidth</literal> event can trigger a single call to update which, which will end up doing the repositioning that otherwise would require at least a handful of constraints. Like constraints, method calls are expensive. So, fewer constraints, fewer method calls, faster performance.</para>
 <para/></section><section><title>Tuning attribute assignments</title>
 <para>
 You may, in some limited circumstances, gain a performance boost by assigning attribute values instead of setting them using a setter, (preferably, the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method). In general, using <literal>object.setAttribute('attr', value); </literal> to set an attribute is the best way to set attributes, as explained in <xref linkend="methods-events-attributes"/>. </para>

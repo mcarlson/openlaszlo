@@ -33,26 +33,26 @@ text : "Wilson";
 </class>
 
 <button text="Dynamically create Mookie">
-<method event="onclick">
+<handler name="onclick">
 canvas.mookieView=new mookie(canvas, {});
-</method>
+</handler>
 </button>
 
 <button text="Dynamically create Blaylock" y="50">
-<method event="onclick">
+<handler name="onclick">
 canvas.blaylockWindow=new blaylock(canvas, {});
-</method>
+</handler>
 </button>
 
 <button text="Dynamically create Wilson" y="100">
-<method event="onclick">
+<handler name="onclick">
 canvas.wilsonText=new wilson(canvas, {});
-</method>
+</handler>
 </button>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

@@ -66,14 +66,14 @@
         <attribute name="texthilitecolor" value="0x325693" type="number" />
         <attribute name="textcolor" value="0x000000" type="number" />
         <attribute name="textselectedcolor" value="0xFFFFFF" type="number" />
-        <method event="onclick">
+        <handler name="onclick">
             var file = (this.file != '' ? this.file : 'lz.' + this.text + '.html');
             var url = canvas.urlprefix + file;
             LzBrowser.loadURL('javascript: var wptr = window.open("' + url + '","laszlo_reference","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             setAttribute('fgcolor', this.texthilitecolor)
-        </method>
+        </handler>
     </class>
 
     <class name="border" defaultplacement="content" bgcolor="0x404040">

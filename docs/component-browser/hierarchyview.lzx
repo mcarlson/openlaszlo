@@ -47,11 +47,11 @@
             <!-- Do this to get around resource and frame (constrained) onclick 
                  view problem. (b 3466) -->
             <view name="expander">
-                <method event="onclick">
+                <handler name="onclick">
                     if (! classroot.isleaf) {
                         classroot.setAttribute("open", ! classroot.open);
                     }
-                </method>
+                </handler>
                 <view name="expander"
                       resource="$once{classroot.expander}"  
                       frame="${classroot.isleaf ? 3
@@ -61,14 +61,14 @@
                   onmouseover="setAttribute('fgcolor', classroot.style.texthilitecolor)"
                   onmouseout="setAttribute('fgcolor', classroot.style.textcolor)"
                   onmousedown="setAttribute('fgcolor', classroot.style.textselectedcolor)">
-                <method event="onclick">
+                <handler name="onclick">
                     var file = (classroot.file != '' ? classroot.file : classroot.text + '.html');
                     var url = canvas.urlprefix + file;
                     LzBrowser.loadURL('javascript: var wptr = window.open("' + url + '","test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
-                </method>
-                <method event="onmouseup">
+                </handler>
+                <handler name="onmouseup">
                     setAttribute('fgcolor', classroot.style.texthilitecolor)
-                </method>
+                </handler>
             </text>
         </view>
 
@@ -89,9 +89,9 @@
                                     <linktree text="combobox" isleaf="true" file="lz.combobox.html" />
                                     <linktree text="datepickercombobox" isleaf="true">
                                         <!-- there's no doc for datepickerday -->
-                                        <method event="oninit">
+                                        <handler name="oninit">
                                             this.treeitem.text.setAttribute('clickable', false);
-                                        </method>
+                                        </handler>
                                     </linktree>
                                 </linktree>
                                 <linktree text="basedatacombobox" key="base" file="lz.basedatacombobox.html">
@@ -128,9 +128,9 @@
                                                   isleaf="true" />
                                         <linktree text="datepickerlistitem" isleaf="true">
                                             <!-- there's no doc for datepickerday -->
-                                            <method event="oninit">
+                                            <handler name="oninit">
                                                 this.treeitem.text.setAttribute('clickable', false);
-                                            </method>
+                                            </handler>
                                         </linktree>
                                     </linktree>
                                 </linktree>                            
@@ -178,17 +178,17 @@
                     <linktree text="basedatepickerday" key="base" file="lz.basedatepickerday.html">
                         <linktree text="datepickerday" isleaf="true">
                             <!-- there's no doc for datepickerday -->
-                            <method event="oninit">
+                            <handler name="oninit">
                                 this.treeitem.text.setAttribute('clickable', false);
-                            </method>
+                            </handler>
                         </linktree>
                     </linktree>
                     <linktree text="basedatepickerweek" key="base" file="lz.basedatepickerweek.html">
                         <linktree text="datepickerweek" isleaf="true">
                             <!-- there's no doc for datepickerweek -->
-                            <method event="oninit">
+                            <handler name="oninit">
                                 this.treeitem.text.setAttribute('clickable', false);
-                            </method>
+                            </handler>
                         </linktree>
                     </linktree>
                 </linktree> <!-- view -->
@@ -199,6 +199,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

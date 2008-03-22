@@ -360,9 +360,9 @@ using classes as a divider.</para>
     
     &lt;text name="buttonText" font="obliqueText" fontsize="25" 
               fgcolor="#ffffff" x="13" valign="middle"&gt;
-      &lt;method event="ontext"&gt;
+      &lt;handler name="ontext"&gt;
         this.setAttribute('width', this.getTextWidth() + 5);
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/text&gt;
   &lt;/class&gt;
 <emphasis role="em">&lt;/library&gt;</emphasis>
