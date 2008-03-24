@@ -48,6 +48,12 @@
         </nc1>
         
     </TestCaseWrapper>
+
+    <TestCaseWrapper name="statePlacement" id="statePlacementWrapper">
+        <nc1 name="nci1">
+            <state name="n1state" placement="n1"/>
+        </nc1>
+    </TestCaseWrapper>
     
 
 <script><![CDATA[
@@ -59,7 +65,12 @@ suiteNodePlacement.basicPlacement = function () {
     LzTestManager.assertEquals(basicPlacementWrapper.nci2.n2, basicPlacementWrapper.nci2.n1.searchImmediateSubnodes("name", "n2"));    
 }
 
+suiteNodePlacement.statePlacement = function () {
+    LzTestManager.assertEquals(statePlacementWrapper.nci1.n1state, statePlacementWrapper.nci1.n1.searchImmediateSubnodes("name", "n1state"));
+}
+
 suiteNodePlacement.addTest(suiteNodePlacement.basicPlacement); 
+suiteNodePlacement.addTest(suiteNodePlacement.statePlacement); 
 suiteNodePlacement.addTest( function() { 
     LzTestManager.assertTrue("false", "TODO: port the rest of test/lzunit/lzunit-node-placement.lzx (bshine 4.24.06)");
 }
@@ -72,7 +83,7 @@ suiteNodePlacement.addTest( function() {
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
