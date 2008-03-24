@@ -184,54 +184,119 @@
                     rpc passes in an empty array.</p>
                 
                 <example title="Invoking remote function using proxy function stub">
-  &lt;canvas debug="true" height="280"&gt;
-      
-      &lt;debug x="10" y="40" width="470" height="230" /&gt;
-      
-      &lt;soap name="temperature" autoload="false"
-          wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter"&gt;
-          
-          &lt;method name="init"&gt;
-              super.init();
-              Debug.write('soap service loading...');
-              this.load();
-          &lt;/method&gt;
-          
-          &lt;handler name="onload"&gt;
-              Debug.write('temperature service loaded!');
-              Debug.write('---');
-              
-              // don't allow others to call RPC object until proxy is loaded.
-              canvas.convert.setVisible(true);
-          &lt;/handler&gt;
-          
-      &lt;/soap&gt;
-      
-      &lt;button name="convert" text="convert" x="10" y="10" visible="false"&gt;
-          
-          &lt;attribute name="myDel" 
-              value="$once{new LzDelegate(this, 'myhandler')}" /&gt;
-          
-          &lt;handler name="onclick"&gt;
-              var f = 100;
-              canvas.temperature.proxy.FtoC([ f ], this.myDel)
-              Debug.write('Invoking FtoC...');
-          &lt;/handler&gt;
-          
-          &lt;method name="myhandler" args="data"&gt;
-              Debug.write('got data:', data);
-          &lt;/method&gt;
-          
-      &lt;/button&gt;
-      
-  &lt;/canvas&gt; 
+    &lt;canvas debug="true" height="280"&gt;
+    
+        &lt;debug x="10" y="40" width="470" height="230" /&gt;
+    
+        &lt;soap name="temperature" autoload="false"
+            wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter"&gt;
+            &lt;method name="init"&gt;
+                super.init();
+                Debug.write('soap service loading...');
+                this.load();
+            &lt;/method&gt;
+        &lt;handler name="onload"&gt;
+            Debug.write('temperature service loaded!');
+            Debug.write('---');
+    
+            // don't allow others to call RPC object until proxy is loaded.
+            canvas.convert.setAttribute('visible', true);
+            &lt;/handler&gt;   
+            &lt;/soap&gt; 
+            &lt;button name="convert" text="convert" x="10" y="10" visible="false"&gt;      
+            &lt;attribute name="myDel" value="$once{new LzDelegate(this, 'myhandler')}" /&gt;       
+            &lt;handler name="onclick"&gt;
+            var f = 100;
+            canvas.temperature.proxy.FtoC([ f ], this.myDel)
+            Debug.write('Invoking FtoC...');
+        &lt;/handler&gt;
+        &lt;method name="myhandler" args="data"&gt;
+            Debug.write('got data:', data);
+        &lt;/method&gt;
+    
+        &lt;/button&gt;
+    
+    &lt;/canvas&gt;
                 </example>
+                <p>Alternatively, you can use remotecall for a more declarative approach to invoking functions. 
+                    See the remotecall reference or the RPC chapter of the Developer's Guide for more information.</p>
+                <example title="Invoking remote function using remotecall">
+    &lt;canvas debug="true" height="280"&gt;
+    
+        &lt;debug x="10" y="40" width="470" height="230" /&gt;
+    
+        &lt;soap name="temperature" autoload="false"
+            wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter"&gt;
+    
+        &lt;method name="init"&gt;
+            super.init();
+            Debug.write('soap service loading...');
+            this.load();
+        &lt;/method&gt;
+    
+        &lt;handler name="onload"&gt;
+            Debug.write('temperature service loaded!');
+            Debug.write('---');
+    
+            // don't allow others to call RPC object until proxy is loaded.
+            canvas.convert.setAttribute('visible', true);
+        &lt;/handler&gt;
+    
+        &lt;remotecall funcname="FtoC"&gt;
+        &lt;param value="100" /&gt;
+    
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('got data:', value);
+                &lt;/handler&gt;
+                &lt;handler name="onerror" args="errmsg"&gt;
+                Debug.write('error:', errmsg);
+            &lt;/handler&gt;
+    
+        &lt;/remotecall&gt;
+    
+    &lt;/soap&gt;
+    
+    &lt;button name="convert" text="convert" x="10" y="10" visible="false"&gt;
+        &lt;handler name="onclick"&gt;
+            canvas.temperature.FtoC.invoke();
+        Debug.write('Invoking FtoC...');
+        &lt;/handler&gt;
+    &lt;/button&gt;
+    
+    &lt;/canvas&gt;
+                </example>
+                <p><b>See Also:</b></p>
+                    <ul>
+                        <li>
+                            <a href="../reference/javarpc.html"><code class="classname">javarpc</code></a>
+                        </li>
+                        <li>
+                            <a href="../reference/soap.html"><code class="classname">soap</code></a>
+                        </li>
+                        <li>
+                            <a href="../reference/xmlrpc.html"><code class="classname">xmlrpc</code></a>
+                        </li>
+                        <li>
+                            <a href="../reference/remotecall.html"><code class="classname">remotecall</code></a>
+                        </li>
+                        <li>
+                            <a href="../guide/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a>
+                        </li>
+                        <li>
+                            <a href="../guide/rpc-javarpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: JavaRPC chapter</a>
+                        </li>
+                        <li>
+                            <a href="../guide/rpc-soap.html" target="laszlo-dguide" shape="rect">Developer's Guide: SOAP chapter</a>
+                        </li>
+                        <li>
+                            <a href="../guide/rpc-xmlrpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: XML-RPC chapter</a>
+                        </li>
+                    </ul>
+                    
             </text>
         </doc>
     </class>
 
-
-    <!--- A class to invoke rpc methods more declaratively. -->
     <class name="remotecall" extends="node">
         <!--- Name of remotecall. Default is value of funcname attribute. -->
         <attribute name="name" value="$once{null}" />
@@ -276,7 +341,7 @@
               LzDelegate passed in contains a property called 'dataobject', the
               return value will be mapped to it. The dataobject property can be
               a dataset or a LzDataElement object.
-              @return Number the unique sequence request number associated with
+              @return Number: the unique sequence request number associated with
               this call, or -1 if there was a problem invoking this method. -->
         <method name="invoke" args="params, delegate">
         <![CDATA[
@@ -390,6 +455,237 @@
             }
         ]]>
         </method>
+        <doc>
+            <tag name="shortdesc"><text>A class to use rpc methods declaratively</text></tag><text>
+            <p>The &lt;remotecall&gt; element allows for a more declarative style approach to using RPC functions. Calling 
+            function stubs will generally result in your code looking very scripty.</p>
+            <p>Remotecall requires the funcname attribute to be set. Funcname refers to the remote function name. By default, 
+                the name of the remotecall is the same as funcname unless explicitly set to something else. Multiple remotecalls 
+                can refer to the same funcname, but remotecall names must be unique within the same element context.</p>
+            <p>&lt;param&gt; elements declared in the remotecall body are used when invoking the remote function. The declaration order of 
+            &lt;param&gt;s should match what the remote function expects.</p>
+                <example title="Using RPC methods">
+    &lt;canvas debug="true" height="280"&gt;
+    
+        &lt;debug x="10" y="40" width="470" height="230" /&gt;
+        
+        &lt;soap name="temperature" autoload="false"
+        wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter"&gt;
+        
+            &lt;method name="init"&gt;
+                super.init();
+                Debug.write('soap service loading...');
+                this.load();
+            &lt;/method&gt;
+            
+            &lt;handler name="onload"&gt;
+            Debug.write('temperature service loaded!');
+            Debug.write('---');
+            
+            // don't allow others to call RPC object until proxy is loaded.
+            canvas.convert.setAttribute('visible', true);
+            &lt;/handler&gt;
+            
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('soap object parent ondata:', value);
+            &lt;/handler&gt;
+            
+            &lt;remotecall <em>name="ftoc1" funcname="FtoC"</em>&gt;
+                &lt;param value="100" /&gt;
+            &lt;/remotecall&gt;
+            
+            &lt;remotecall <em>name="ftoc2" funcname="FtoC"</em>&gt;
+                &lt;param value="200" /&gt;
+                &lt;handler name="ondata" args="value"&gt;
+                    Debug.write('ftoc ondata:', value);
+                &lt;/handler&gt;
+            &lt;/remotecall&gt;
+        
+        &lt;/soap&gt;
+        
+        &lt;view name="convert" x="10" y="10" visible="false" 
+                layout="axis: x; spacing: 5"&gt;
+            &lt;button text="convert 100F to C"&gt;
+                &lt;handler name="onclick"&gt;
+                canvas.temperature.ftoc1.invoke()
+                Debug.write('Invoking FtoC 1...');
+                &lt;/handler&gt;
+            &lt;/button&gt;
+                &lt;button text="convert 200F to C"&gt;
+                &lt;handler name="onclick"&gt;
+                    canvas.temperature.ftoc2.invoke()
+                    Debug.write('Invoking FtoC 2...');
+                &lt;/handler&gt;
+            &lt;/button&gt;
+        &lt;/view&gt;
+    
+    &lt;/canvas&gt;
+                </example>
+                    <p>Any events not handled by remotecall can be handled by a remotecall's parent. A remotecall element can be 
+                        declared anywhere in the view hierarchy. However, if it's not within an RPC object 
+                        (like &lt;soap&gt;, &lt;javarpc, &lt;xmlrpc&gt;), the remotecontext attribute must be set. The remotecontext tells the 
+                        remotemethod which RPC object t&gt;o refer to when invoking the remote method.</p>
+
+                <example>
+    &lt;canvas debug="true" height="280"&gt;
+    
+        &lt;debug x="10" y="40" width="470" height="230" /&gt;
+        
+        &lt;soap name="temperature" autoload="false"
+                wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter"&gt;
+        
+            &lt;method name="init"&gt;
+                super.init();
+                Debug.write('soap service loading...');
+                this.load();
+            &lt;/method&gt;
+            
+            &lt;handler name="onload"&gt;
+                Debug.write('temperature service loaded!');
+                Debug.write('---');
+                
+                // don't allow others to call RPC object until proxy is loaded.
+                canvas.convert.setAttribute('visible', true);
+            &lt;/handler&gt;
+            
+            &lt;handler name="ondata" args="value"&gt;
+                Debug.write('soap object ondata:', value);
+                &lt;/handler&gt;
+                
+                &lt;handler name="onerror" args="errmsg"&gt;
+                Debug.write('error:', errmsg);
+            &lt;/handler&gt;
+        
+        &lt;/soap&gt;
+        
+        &lt;view name="convert" x="10" y="10" visible="false" 
+                layout="axis: x; spacing: 5"&gt;
+        
+            &lt;button text="convert 100F to C"&gt;
+            
+                &lt;handler name="onclick"&gt;
+                    this.FtoC.invoke()
+                    Debug.write('Converting 100F to Celsius...');
+                &lt;/handler&gt;
+                
+                &lt;remotecall funcname="FtoC" 
+                    remotecontext="$once{canvas.temperature}"&gt;
+                    &lt;param value="100" /&gt;
+                &lt;/remotecall&gt;
+            
+            &lt;/button&gt;
+            
+            &lt;button text="convert 200F to C"&gt;
+            
+                &lt;handler name="onclick"&gt;
+                this.FtoC.invoke()
+                    Debug.write('Converting 200F to Celsius...');
+                &lt;/handler&gt;
+                
+                &lt;remotecall funcname="FtoC"
+                    remotecontext="$once{canvas.temperature}"&gt;
+                    &lt;param value="200" /&gt;
+                    &lt;handler name="ondata" args="value"&gt;
+                        Debug.write('200F in Celsius is', value);
+                    &lt;/handler&gt;
+                &lt;/remotecall&gt;
+            &lt;/button&gt;
+        &lt;/view&gt;
+        
+    &lt;/canvas&gt;
+</example>
+<p>The order in which events (ondata, onerror) are handled are as follow:</p>
+<ol>
+    
+    <li>Use event handler defined in remotecall.</li>
+    
+    <li>Else use event handler defined in parent.</li>
+    
+    <li>Else if remotecall is defined outside of RPC object (i.e. remotecontext
+        attribute is set) use event handler defined in RPC object (i.e. remotecontext
+        value).</li>
+    
+    <li>Otherwise event is not handled.</li> 
+    
+</ol>
+<p>To databind to a successful return value, you can set the dataobject
+    attribute to a dataset. For more information on databinding with RPC, see the 
+    <a href="../guide/rpc.html" target="laszlo-dguide" shape="rect">RPC chapter</a></p>
+<example>
+    &lt;canvas debug="true" height="300" width="680"&gt;
+    
+        &lt;debug x="225" width="450" height="280" /&gt;
+        
+        &lt;dataset name="googleDset" /&gt;
+        
+        &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
+            &lt;handler name="onload"&gt;
+                Debug.write('google soap service stub loaded');
+            &lt;/handler&gt;
+            
+            &lt;handler name="onerror" args="error"&gt;
+                Debug.write('error:', error);
+            &lt;/handler&gt;
+            
+            &lt;remotecall name="search" funcname="doGoogleSearch" 
+                dataobject="googleDset"&gt;
+                
+                &lt;param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" /&gt;
+                &lt;param value="'sweet'" /&gt;
+                &lt;param value="1" /&gt;
+                &lt;param value="10" /&gt;
+                &lt;param value="true" /&gt;
+                &lt;param value="''" /&gt;
+                &lt;param value="true" /&gt;
+                &lt;param value="''" /&gt;
+                &lt;param value="''" /&gt;
+                &lt;param value="''" /&gt;
+                
+                &lt;handler name="ondata" args="value"&gt;
+                    Debug.write('got result');
+                    Debug.inspect(value);
+                &lt;/handler&gt;
+            
+            &lt;/remotecall&gt;
+        &lt;/soap&gt;
+        
+        &lt;view layout="spacing: 5" &gt;
+            &lt;button text="search" onclick="google.search.invoke()" /&gt;
+            &lt;view bgcolor="yellow" layout="axis: y" &gt;
+                &lt;view&gt;
+                &lt;datapath xpath="googleDset:/resultElements/item" pooling="true" /&gt;
+                &lt;text datapath="URL/text()" resize="true"/&gt;
+                &lt;/view&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+    &lt;/canvas&gt;
+                </example>
+               
+            
+                <p><b>See Also:</b></p>
+     
+                    <ul>
+                        <li>
+                            <a href="../reference/param.html"><code class="classname">param</code></a>
+                        </li>
+                        <li>
+                            <a href="../reference/rpc.html"><code class="classname">rpc</code></a>
+                        </li>
+                        <li>
+                            <a href="../reference/javarpc.html"><code class="classname">javarpc</code></a>
+                        </li>
+                        <li>
+                            <a href="../reference/soap.html"><code class="classname">soap</code></a>
+                        </li>
+                        <li>
+                            <a href="../reference/xmlrpc.html"><code class="classname">xmlrpc</code></a>
+                        </li>
+                        <li>
+                            <a href="../guide/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a>
+                        </li>
+                    </ul>
+            </text>
+        </doc>
 
     </class>
 
@@ -401,6 +697,44 @@
               value attribute and getValue method are declared, param will use
               getValue(). -->
         <attribute name="value" value="null" type="expression" />
+        <doc>
+            <tag name="shortdesc"><text>param tag for remotecall</text></tag>
+            <text>
+                <p>Tag to declaratively set parameter values for &lt;remotecall&gt;. If a 
+                    getValue method is declared in the body of remotecall, use its return as 
+                    value for paramter. If both getValue method and value attribute are set in 
+                    param, getValue wins.</p>
+                <programlisting title="Usage example">
+    &lt;remotecall name="func1" funcname="someFunc"&gt;
+        &lt;param value="'some string value'" /&gt;
+    &lt;/remotecall&gt;
+    
+    &lt;remotecall name="func2" funcname="someFunc"&gt;
+        &lt;param&gt;
+            &lt;method name="getValue"&gt;
+            return 'some string value';
+            &lt;/method&gt;
+        &lt;/param&gt;
+    &lt;/remotecall&gt; 
+    
+    &lt;remotecall name="func2" funcname="someFunc"&gt;
+        &lt;!-- param will use getValue's return value. --&gt;
+        &lt;param value="'a value'"&gt;
+            &lt;method name="getValue"&gt;
+            return 'some string value';
+            &lt;/method&gt;
+        &lt;/param&gt;
+    &lt;/remotecall&gt; 
+                </programlisting>
+               <p> <b>See Also:</b></p>
+                    <ul>
+                        <li>
+                            <a href="../reference/remotecall.html"><code class="classname">remotecall</code></a>
+                        </li>
+                    </ul>
+                    
+            </text>
+        </doc>
     </class>
 
 </library>
