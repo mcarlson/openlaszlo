@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
 
     <class name="photo" width="77" height="77" visible="${!tls.waitforload}">
@@ -24,7 +24,7 @@
 
         <attribute name="border" value="2"/>
         
-         <method event="ondata" args="d" > <![CDATA[
+         <handler name="ondata" args="d" > <![CDATA[
             if ( !d ) return;
             var dp = this.datapath;
             // var txt = dp.xpathQuery('@title');
@@ -32,7 +32,7 @@
             //this.setAttribute('text',txt);
             this.setImage(this.getImageURL('t'));
         
-        ]]></method>
+        ]]></handler>
       
         <method name="getImageURL" args="suffix" >
             <![CDATA[
@@ -65,7 +65,8 @@
         </method>
    
         <attribute name="_lastw" value="null"/>
-        <method name="updateX" args="force" event="onwidth">
+        <handler name="onwidth" method="updateX"/>
+        <method name="updateX" args="force">
             <![CDATA[
             if ( !this.isinited ) return;
             if ( height != width ) this.setHeight( width );
@@ -91,7 +92,8 @@
         </method>
 
         <attribute name="_lasth" value="null"/>
-        <method name="updateY" args="force" event="onheight">
+        <handler name="onheight" method="updateY"/>
+        <method name="updateY" args="force">
             <![CDATA[
             if ( !this.isinited ) return;
             if ( width != height ) this.setWidth( height );
@@ -117,7 +119,7 @@
             ]]>
         </method>
 
-        <method event="onload" reference="intparent.interior">
+        <handler name="onload" reference="intparent.interior">
             var irw = intparent.interior.resourcewidth;
             var irh = intparent.interior.resourceheight;
             if ( irw > irh ){
@@ -141,7 +143,7 @@
                 this.intparent.setVisible(true);
             }
             intparent.interior.animate('opacity', 1, 200);
-        </method>
+        </handler>
 
         
         <!-- use this event to figure out if the view just got clicked 
@@ -159,38 +161,38 @@
               y="$once{ classroot.border }">
             <view name="interior" bgcolor="0xd9d9d9" stretches="both">
                 <state apply="${classroot.doesdrag}">
-                    <method event="onmousedown">
+                    <handler name="onmousedown">
                         classroot.onmousedown.sendEvent();
-                    </method>
-                    <method event="onmouseup">
+                    </handler>
+                    <handler name="onmouseup">
                         classroot.onmouseup.sendEvent();
-                    </method>
+                    </handler>
                 </state>
             </view>
         </view>
-        <method event="onmousedown">
+        <handler name="onmousedown">
             if ( this.doesdrag ) this.startDragCheck();
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             if ( this.draginitiator ){
                 this.stopDrag();
             } else {
                 this.ddcdel.unregisterAll();
                 if ( this.onplainclick ) this.onplainclick.sendEvent( this );
             }
-        </method>
+        </handler>
         
         <!-- title -->
         <text text="" width="100" fgcolor="0x1b1191" fontsize="10" 
               name="txt" visible="false"><!-- Setting this initially to false
               seems to fix a visual issue where these would cluster on the
               upper left of the page in DHTML. -->
-            <method event="ontext">
+            <handler name="ontext">
                 this.adjustDimensions();
-            </method>
-            <method event="onvisible" >
+            </handler>
+            <handler name="onvisible" >
                 this.adjustDimensions();
-            </method>
+            </handler>
             <method name="adjustDimensions" >
                this.setWidth(classroot.width + 20);
                var tw = Math.min(this.getTextWidth(),width);
@@ -205,11 +207,11 @@
 
         <attribute name="doesdrag" value="false"/>
         
-        <method event="onwidth" >
+        <handler name="onwidth" >
            if ( this['txt'] ) {
                 if ( this.txt.visible ) this.txt.adjustDimensions();
            }
-        </method>
+        </handler>
 
         <method name="startDragCheck">
             //info('startDragCheck');

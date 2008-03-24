@@ -66,10 +66,10 @@
     <view name="stylechooser" layout="axis:x; spacing:4">
         <text>Style:</text>
         <datacombobox width="120" itemdatapath="styles:/item/">
-            <method event="onselect">
+            <handler name="onselect">
                 var colorchoice = this.getValue();
                 canvas[colorchoice].setAttribute("isdefault", true);
-            </method>
+            </handler>
         </datacombobox>
 
     </view>
@@ -99,7 +99,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -69,10 +69,10 @@
     <view name="progressBar" resource="splash_init_bar" 
           oninit="canvas.initdelay=400" pixellock="true" initstage="early">
 
-        <method event="onpercentcreated" reference="canvas" args="p">
+        <handler name="onpercentcreated" reference="canvas" args="p">
             var pp = Math.floor( 90*p );
             canvas.splash_anim.stop( pp );
-        </method>
+        </handler>
 
         <attribute name="hasSplash" value="true" />
 
@@ -94,9 +94,9 @@
             <view resource="laszlo_powered" x="276" y="13"
                 onmouseover="setResourceNumber(2)"
                 onmouseout="setResourceNumber(1)">
-                <method event="onclick">
+                <handler name="onclick">
                     LzBrowser.loadURL("http://laszlosystems.com", "_blank");
-                </method>
+                </handler>
             </view>
         </view>
 
@@ -129,25 +129,25 @@
                 <remotecall name="userAsinSearch" funcname="AsinSearchRequest" 
                             remotecontext="$once{canvas.amazon}" dataobject="$once{dsCDInfo}"/>
 
-                <method event="ondata" args="mydata">
+                <handler name="ondata" args="mydata">
                     recommend.setVisible( false );
                     cdinfo.setVisible( true );
                     cdinfo.bringToFront();
                     infoLoader.hide();
-                </method>
-                <method event="onerror" args="error">
+                </handler>
+                <handler name="onerror" args="error">
                     // two ways at getting data
                     Debug.write('ERROR:', error);
                     infoLoader.hide();
-                </method>
-                <method event="ontimeout">
+                </handler>
+                <handler name="ontimeout">
                     Debug.write( "timeout in dataset: dsCDInfo" );
                     infoLoader.hide();
-                </method>
+                </handler>
 
                                 <!-- When one item is clicked, a request is sent to Amazon for
                      deatailed informations about the item -->
-                                <method event="onclick">
+                                <handler name="onclick">
                                     <![CDATA[
                     infoLoader.show();
                     var obj = new canvas.amazon.proto.AsinRequest();
@@ -161,7 +161,7 @@
                     //amazon.proxy.AsinSearchRequest([ obj ], canvas.cdinfodelegate);
 
                                     ]]>
-                                </method>
+                                </handler>
                             </view>
                         </view>
 
@@ -262,11 +262,11 @@
 
                             <view width="${parent.width}" height="${parent.height-20}"
                                   datapath="Tracks" clip="true">
-                                <method event="ondata">
+                                <handler name="ondata">
                                     var dp = this.datapath;
                                     var track = dp.xpathQuery('Track');
                                     this.parent.setAnnotation( track.length );
-                                </method>
+                                </handler>
 
                                 <view y="8" x="8" width="${parent.width}">
                                     <simplelayout axis="y"/>
@@ -292,11 +292,11 @@
                                         <datapath xpath="Reviews[1]/CustomerReviews" pooling="true"/>
                                         <simplelayout axis="y" spacing="0"/>
 
-                                        <method event="ondata">
+                                        <handler name="ondata">
                                             var dp = this.datapath;
                                             var cr = dp.xpathQuery('CustomerReview'); // array of customer reviews
                                             this.parent.parent.parent.setAnnotation( cr.length );
-                                        </method>
+                                        </handler>
 
 
                                         <!-- Repeated view displaying the list of customer review -->
@@ -338,11 +338,11 @@
 
             <mouseview resource="search_butt" y="1" onclick="SOAPsearch()">
                 <inputtext id="searchKey" x="20" y="3" fontsize="11">
-                    <method event="onkeydown" args="k">
+                    <handler name="onkeydown" args="k">
                         if (k==13) {
                             parent.SOAPsearch();
                         }
-                    </method>
+                    </handler>
                 </inputtext>
 
         <remotecall name="myKSR1" funcname="KeywordSearchRequest" 
@@ -372,20 +372,20 @@
             ]]>
                 </method>
 
-        <method event="ondata" args="data">
+        <handler name="ondata" args="data">
           Debug.write('[1] dsKeyword got data:', data);
           searchLoader.hide();
-        </method>
+        </handler>
 
-        <method event="onerror">
+        <handler name="onerror">
           Debug.write( "onerror in dataset: dsKeyword" );
           searchLoader.hide();
-        </method>
+        </handler>
 
-        <method event="ontimeout">
+        <handler name="ontimeout">
           Debug.write( "ontimeout in dataset: dsKeyword" );
           searchLoader.hide();
-        </method>
+        </handler>
 
             </mouseview>
 
@@ -599,7 +599,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

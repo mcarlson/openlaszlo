@@ -23,9 +23,9 @@
     
         <attribute name="mymask" when="once"/>
 
-        <method event="oninit">
+        <handler name="oninit">
             this.updateDelegate.register( parent,  "onx" );
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <method name="setAxis" args="a" >
@@ -104,7 +104,7 @@
        </method>
 
        <!--- @keywords private -->
-        <method event="onmousedown">
+        <handler name="onmousedown">
             var now = new Date();
             this._lasttime = now.getTime();
             this.isMouseDown = true;
@@ -112,12 +112,12 @@
                this.stillDownDelegate = new LzDelegate( this, "stillDownEventGenerator");
            }
             LzTimer.addTimer( this.stillDownDelegate, 500 );
-        </method>
+        </handler>
         <!--- @keywords private -->
-        <method event= "onmouseup">
+        <handler name= "onmouseup">
             this.isMouseDown=false;
             LzTimer.removeTimer( this.stillDownDelegate );
-        </method>
+        </handler>
     </class>
 ?>    
 
@@ -141,23 +141,23 @@
 <?ignore // Take out buttons to scroll favorites. Should be temporary. [ben 3.2.2006]
         <buttonrepeater name="scrollright" resource="../assets/favorites/arrow-left.png" 
                         x="${-width-5}" y="${Math.round((parent.photos.height - this.height)/2) + parent.photos.y}">
-            <method event="onmousestilldown" >
+            <handler name="onmousestilldown" >
                 parent.photos.interior.animate( 'x', Math.min(parent.photos.interior.x + 30,0), 300 )
-            </method>
-            <method event="onmouseup" >
+            </handler>
+            <handler name="onmouseup" >
                 parent.photos.interior.animate( 'x', Math.min(parent.photos.interior.x + 30,0), 100 )
-            </method>
+            </handler>
             
         </buttonrepeater>
         
         <buttonrepeater name="scrollleft" resource="../assets/favorites/arrow-right.png" 
                         x="${parent.width + 5}"  y="${Math.round((parent.photos.height - this.height)/2) + parent.photos.y}" >
-            <method event="onmousestilldown" >
+            <handler name="onmousestilldown" >
                 parent.photos.interior.animate( 'x', parent.photos.interior.x - 30 , 300 )
-            </method>
-            <method event="onmouseup" >
+            </handler>
+            <handler name="onmouseup" >
                 parent.photos.interior.animate( 'x', parent.photos.interior.x - 30 , 100 )
-            </method>            
+            </handler>            
         </buttonrepeater>
 ?>        
               
@@ -170,11 +170,11 @@
                 <favoriteslayout name="lyt" spacing="15" inset="0" 
                                  mymask="parent.parent"/>
                 <photo datapath="favoritesds:/rsp/photos/photo">
-                    <method event="onclick">
+                    <handler name="onclick">
                         var id = datapath.p.getAttr("id");
                         var tag = datapath.p.getAttr("favoritetag");   
                        classroot.loadSet( tag ); 
-                    </method>
+                    </handler>
                 </photo>
             </view>
         </view>

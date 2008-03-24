@@ -7,7 +7,7 @@
 <edittext name="idtext">153387</edittext>
 <edittext name="tagtext">lzpixtest4</edittext>
 <button>tag it
-    <method event="onclick">
+    <handler name="onclick">
             var argobj = [
                 {argname:"method", 
                 argvalue:"flickr.photos.addTags"},
@@ -17,10 +17,15 @@
                 argvalue: tagtext.getText()}                
                 ];
             gDataMan.doAuthFlickrRequest(canvas.infods, argobj);                                                                
-    </method>
+    </handler>
 </button>
 
 <text datapath="infods:/rsp/@stat">
 </text>
 
 </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@     

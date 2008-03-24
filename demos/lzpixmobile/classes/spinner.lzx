@@ -8,13 +8,13 @@
    
    <class name="spinner" resource="spinner_rsc" onclick="this.play()" visible="false" >
         <attribute name="counter" value="1" />
-        <method event="onidle" reference="LzIdle" >
+        <handler name="onidle" reference="LzIdle" >
             if (! this.visible ) return;
             this.setAttribute('counter', ( this.counter + 1)%6);
             if ( this.counter == 0 ) {
                 var f = (this.frame + 1)%6;
                 this.setAttribute('frame', f == 0 ? 6 : f);
             }
-        </method>
+        </handler>
    </class>
 </library>

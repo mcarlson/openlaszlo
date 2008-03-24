@@ -1,10 +1,10 @@
 <library>
     
     <class name="clipboardlayout" extends="layout" >
-        <method event="oninit" >
+        <handler name="oninit" >
             this.updateDelegate.register( parent,  "onheight" );
             this.updateDelegate.register( parent,  "onwidth" );
-        </method>
+        </handler>
         
         <method name="update" >
             if ( this.locked ) return;
@@ -17,13 +17,13 @@
     <include href="photocollection.lzx" />    
     <class name="clipboardphoto" extends="photo" border="1"
            width="30" height="30" clipfactor="1">
-        <method event="oninit">
+        <handler name="oninit">
             shadow.setVisible( false );
-        </method>
+        </handler>
         <!-- Clicking on a photo in the clipboard brings that photo into
         details view. The animation is a bit odd, because the photo thumbnail
         is probably not visible in the album layout. -->
-        <method event="onclick">            
+        <handler name="onclick">            
             canvas.details.setImage( this.getImageURL('t'), this.getImageURL('') );            
             if (photoscontainer.lyt.isgrid) {
                 photoscontainer.transitionToDetails(this);
@@ -31,7 +31,7 @@
                 photoscontainer.showPhotoDetails( true, this );
             }
             photoscontainer.detailphoto = this;
-        </method>
+        </handler>
     </class>
     
     <class name="clipboard"  oninit="this.update()" >
@@ -121,14 +121,14 @@
             this.setAttribute('isopen', !this.isopen);
        </method>
 
-       <method event="onstop" reference="anm_close" >
+       <handler name="onstop" reference="anm_close" >
             scrn.setVisible(false);
-       </method>
+       </handler>
        
     </class>
 </library>
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

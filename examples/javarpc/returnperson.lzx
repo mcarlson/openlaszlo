@@ -17,25 +17,25 @@
     </security>
 
     <javarpc name="returnperson" scope="none" remoteclassname="examples.ReturnPersonExample">
-        <method event="onload">
+        <handler name="onload">
             Debug.write('proxy:');
             Debug.inspect(this.proxy);
-        </method>
+        </handler>
 
         <remotecall funcname="getPerson">
-            <method event="ondata" args="person">
+            <handler name="ondata" args="person">
                 Debug.write('-------------------');
                 Debug.write('getPerson response:');
                 Debug.inspect(person);
-            </method>
+            </handler>
         </remotecall>
 
         <remotecall funcname="getArrayListOfPerson">
-            <method event="ondata" args="list">
+            <handler name="ondata" args="list">
                 Debug.write('------------------------------');
                 Debug.write('getArrayListOfPerson response:');
                 Debug.write(list);
-            </method>
+            </handler>
         </remotecall>
 
     </javarpc>
@@ -50,7 +50,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

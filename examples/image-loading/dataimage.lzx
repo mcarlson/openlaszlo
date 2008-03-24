@@ -31,9 +31,9 @@
               text="${classroot.text}"
               font="Helvetica" fontsize="12" fontstyle="bold"
               fgcolor="#FFFFFF" oninit="setVisible(false)" >
-            <method event="ontext" >
+            <handler name="ontext" >
                 this.setX(-this.getTextWidth() - 2 );
-            </method>
+            </handler>
         </text> 
         
         <view bgcolor="#FFFFFF" x="2" y="2" 
@@ -52,27 +52,27 @@
             this.rsc.setResource(this.subresource);
         </method>
            
-        <method event="onmouseover" >
+        <handler name="onmouseover" >
             var anm = this.animate('height',20,200,true);
             if (!mo_del) this.mo_del = new LzDelegate ( this , "showText" );           
             this.mo_del.register ( anm , "onstop" );
             this.hilite = true;
-        </method>
+        </handler>
         
-        <method event="onmouseout" >
+        <handler name="onmouseout" >
             this.animate('height',-20,200,true);
             this.hideText();
             this.hilite = false;
-        </method>
+        </handler>
         
-        <method event="onmousedown" >
+        <handler name="onmousedown" >
             this.setBGColor(0xFFC600);
-        </method>
+        </handler>
         
-        <method event="onmouseup" >
+        <handler name="onmouseup" >
             this.setBGColor(0x00769E);
             container.showSection(this.section);
-        </method>
+        </handler>
  
         <method name="showText" >
             if ( this.hilite == true ) {
@@ -228,7 +228,7 @@
 
 </canvas>    
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

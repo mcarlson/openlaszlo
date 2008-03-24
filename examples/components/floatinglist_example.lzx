@@ -19,9 +19,9 @@
         
         <fflist name="flist" />
         
-        <method event="onclick">
+        <handler name="onclick">
             flist.setVisible(!flist.visible);
-        </method>
+        </handler>
 
         <method name="animate">
             genwaypoint();
@@ -47,20 +47,20 @@
         
         <animator name="xanim" start="false" attribute="x" to="${classroot.nextX}" duration="3000">
             <attribute name="cycle" value="true"/>
-            <method event="onstop">
+            <handler name="onstop">
                 classroot.genwaypoint();
                 if (cycle) {
                     this.doStart();
                 }
-            </method>
+            </handler>
         </animator>
         <animator name="yanim" start="false" attribute="y" to="${classroot.nextY}" duration="3000">
             <attribute name="cycle" value="true"/>
-            <method event="onstop">
+            <handler name="onstop">
                 if (cycle) {
                     this.doStart();
                 }
-            </method>
+            </handler>
         </animator>
     </class>
     
@@ -68,13 +68,13 @@
         <textlistitem datapath="items:/item"
                        text='$path{"text()"}'
                        value='$path{"@value"}'/>
-        <method event="onx" reference="owner">
+        <handler name="onx" reference="owner">
             updateAttachLocation();
             if (!visible) setVisible(true);
-        </method>
-        <method event="ony" reference="owner">
+        </handler>
+        <handler name="ony" reference="owner">
             updateAttachLocation();
-        </method>
+        </handler>
     </class>
     
     <view name="content" height="${canvas.height}" width="${canvas.width}">
@@ -133,7 +133,7 @@
         height="${canvas.height-40}" width="1"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

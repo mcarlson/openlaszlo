@@ -15,7 +15,7 @@
         DATA MANAGER
     -->
     <node name="gDataMan">
-        <method event="oninit">
+        <handler name="oninit">
             this.errdel = new LzDelegate( this, "dsError" );
             errdel.register( photods , "onerror" );
             errdel.register( infods , "onerror" );
@@ -37,7 +37,7 @@
             // Default is YES, we do connect
             var noFlickr = LzBrowser.getInitArg("noconnect");
             if (noFlickr == 'true') gGlobals.setAttribute("SHOULDCONNECT", false); 
-        </method>
+        </handler>
 
         <method name="dsError">
             gError.show();
@@ -226,6 +226,6 @@
 
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

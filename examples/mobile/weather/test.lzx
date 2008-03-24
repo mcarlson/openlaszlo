@@ -25,25 +25,25 @@
         Mouseover is subtle and should probably be more pronounced.
      -->
     <view x="116" y="177" resource="zip_ok_btn_rsc">
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.setAttribute('frame', 2);
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             this.setAttribute('frame', 0);
-        </method>        
-        <method event="onmouseover">
+        </handler>        
+        <handler name="onmouseover">
             this.setAttribute('frame', 1);
-        </method>
-        <method event="onmouseout">
+        </handler>
+        <handler name="onmouseout">
             this.setAttribute('frame', 0);
-        </method>
+        </handler>
 
     </view>
     <view bgcolor="0xFFFFFF" x="50" y="181" width="66" height="12" />
     <inputtext id="zipcode" x="52" y="179" width="60" fontsize="10">94403</inputtext>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->

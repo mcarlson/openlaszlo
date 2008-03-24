@@ -34,16 +34,16 @@
                         <attribute name="datasel"
                                     value="${ workdef == '1' ? 2 : 1 }"/>
 
-                        <method event="ondatasel" name="checkDataSel">
+                        <handler name="ondatasel" name="checkDataSel">
                             if ( !this._initcomplete ) return;
                             this.selectItem(  datasel );
-                        </method>
+                        </handler>
 
-                        <method event="oninit">
+                        <handler name="oninit">
                             this.checkDataSel();
-                        </method>
+                        </handler>
 
-                        <method event="onselect">
+                        <handler name="onselect">
                             if ( this.value == 1 ){
                                 this.workdef = 0;
                                 this.homedef = 1;
@@ -52,7 +52,7 @@
                                 this.homedef = 0;
                             }
                             this.datapath.updateData();
-                        </method>
+                        </handler>
 
                         <radiobutton value="1"
                             onmouseover="parent.immediateparent.domouseover()"
@@ -81,7 +81,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

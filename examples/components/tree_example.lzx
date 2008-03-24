@@ -62,7 +62,7 @@
             <tree style="goldcolors" datapath="mydata:/basket" open="$path{'@isopen'}" 
                   text="$path{'@name'}" multiselect="true">
                 <tree id="xxx" style="goldcolors" datapath="*" text="$path{'@name'}" isleaf="$path{'@isleaf'}" >
-                    <method event="onactivate">
+                    <handler name="onactivate">
                         if (this.isleaf) {
                             var url = this.datapath.xpathQuery('@url');
                             if (url != null) {
@@ -71,7 +71,7 @@
                                 this.viewInWindow('http://www.google.com/search?q=' + this.text);
                             }
                         }
-                    </method>
+                    </handler>
                     <method name="viewInWindow" args="url">
                         LzBrowser.loadURL('javascript: var wptr = window.open("' + url + '","test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
                     </method>
@@ -149,7 +149,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

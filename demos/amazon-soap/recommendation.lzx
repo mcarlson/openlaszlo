@@ -56,20 +56,20 @@
     <remotecall name="userAsinSearchDetailed" funcname="AsinSearchRequest" 
                 remotecontext="$once{canvas.amazon}" dataobject="$once{dsCDInfo}">
 
-      <method event="ondata" args="mydata">
+      <handler name="ondata" args="mydata">
         recommend.setVisible( false );
         cdinfo.setVisible( true );
         cdinfo.bringtofront();
         infoLoader.hide();
-      </method>
-      <method event="onerror" args="error">
+      </handler>
+      <handler name="onerror" args="error">
         Debug.write('ERROR:', error);
         infoLoader.hide();
-      </method>
-      <method event="ontimeout">
+      </handler>
+      <handler name="ontimeout">
         Debug.write( "timeout in dataset: dsCDInfo" );
         infoLoader.hide();
-      </method>
+      </handler>
     </remotecall>
 
         <method name="getInfo">
@@ -93,22 +93,22 @@
     <remotecall name="userAsinSearchLite" funcname="AsinSearchRequest" 
                     remotecontext="$once{canvas.amazon}" dataobject="$once{dsRecommend}">
 
-      <method event="ondata" args="mydata">
+      <handler name="ondata" args="mydata">
         infoLoader.hide();
-      </method>
-      <method event="onerror" args="error">
+      </handler>
+      <handler name="onerror" args="error">
         Debug.write('ERROR:', error);
         infoLoader.hide();
-      </method>
-      <method event="ontimeout">
+      </handler>
+      <handler name="ontimeout">
         Debug.write( "timeout in dataset: dsCDInfo" );
         infoLoader.hide();
-      </method>
+      </handler>
     </remotecall>
 
 
 
-      <method event="onload" reference="canvas.amazon">
+      <handler name="onload" reference="canvas.amazon">
             <![CDATA[
         Debug.write("recommendations asin setup ");
         var obj = new canvas.amazon.proto.AsinRequest();
@@ -122,7 +122,7 @@
         Debug.write("recommendations asin search for "+obj.asin);
         this.userAsinSearchLite.invoke([ obj ]);
         ]]>
-        </method>
+        </handler>
 
         <text y="20" x="10" fontstyle="bold" fontsize="16" 
               fgcolor="#666699">Your Recommendations:</text>
@@ -145,7 +145,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -17,41 +17,41 @@
     </security>
 
     <javarpc name="accented" scope="none" remoteclassname="examples.AccentedTextExample">
-        <method event="onload">
+        <handler name="onload">
             Debug.write('proxy:');
             Debug.inspect(this.proxy);
-        </method>
+        </handler>
 
         <remotecall funcname="getJapaneseChars">
-            <method event="ondata" args="str">
+            <handler name="ondata" args="str">
                 Debug.write('--------------------------');
                 Debug.write('getJapaneseChars response:');
                 Debug.write(str);
                 accText.setText(str);
-            </method>
+            </handler>
         </remotecall>
 
         <remotecall funcname="getAccentedChars">
-            <method event="ondata" args="str">
+            <handler name="ondata" args="str">
                 Debug.write('--------------------------');
                 Debug.write('getAccentedChars response:');
                 Debug.write(str);
                 accText.setText(str);
-            </method>
+            </handler>
         </remotecall>
 
         <remotecall funcname="getArrayListOfString">
-            <method event="ondata" args="list">
+            <handler name="ondata" args="list">
                 Debug.write('getArrayListOfString response:');
                 Debug.inspect(list);
-            </method>
+            </handler>
         </remotecall>
 
         <remotecall funcname="getVoid">
-            <method event="ondata" args="data">
+            <handler name="ondata" args="data">
                 Debug.write('getVoid response:');
                 Debug.inspect(data);
-            </method>
+            </handler>
         </remotecall>
 
     </javarpc>
@@ -72,7 +72,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

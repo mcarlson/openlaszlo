@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
 
     <class name="verticalindent" >
@@ -31,7 +31,7 @@
        </method>
 
        <!--- @keywords private -->
-        <method event="onmousedown">
+        <handler name="onmousedown">
             var now = new Date();
             this._lasttime = now.getTime();
             this.isMouseDown = true;
@@ -39,12 +39,12 @@
                this.stillDownDelegate = new LzDelegate( this, "stillDownEventGenerator");
            }
             LzTimer.addTimer( this.stillDownDelegate, 500 );
-        </method>
+        </handler>
         <!--- @keywords private -->
-        <method event= "onmouseup">
+        <handler name= "onmouseup">
             this.isMouseDown=false;
             LzTimer.removeTimer( this.stillDownDelegate );
-        </method>
+        </handler>
     </class>
     
     

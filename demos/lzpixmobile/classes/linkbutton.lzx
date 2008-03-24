@@ -11,9 +11,9 @@
     <mybutton 
         resource="transparent_rsc"
         width="${parent.width}" height="${parent.height}" >
-        <method event="onclick">
+        <handler name="onclick">
             LzBrowser.loadURL( parent.url, parent.targetframe, parent.windowopts);
-        </method>
+        </handler>
     </mybutton>
 </class>
 

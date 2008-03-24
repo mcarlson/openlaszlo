@@ -1,17 +1,17 @@
 <photocollection name="interior" bgcolor="0xf0f0f0" clip="true"
                  photoclass="clipboardphoto" clickable="true">
-    <method event="oninit">
+    <handler name="oninit">
         LzTrack.register( this , 'photos' );
-    </method>
+    </handler>
 
     <attribute name="amtrackedover" value="false"/>
 
-    <method event="onmousetrackover">
+    <handler name="onmousetrackover">
         this.setAttribute( "amtrackedover", true );
-    </method>
-    <method event="onmousetrackout">
+    </handler>
+    <handler name="onmousetrackout">
         this.setAttribute( "amtrackedover", false );
-    </method>
+    </handler>
 
     <wrappinglayout axis="x" yinset="3" xinset="3" spacing="3"/>
 

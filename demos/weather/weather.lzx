@@ -4,7 +4,7 @@
 <!--                                                                       -->
 <!-- Laszlo Application Language (LZX) Example                             -->
 <!--                                                                       -->
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.  Use   -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.  Use   -->
 <!-- is subject to license terms.                                          -->
 <!--=======================================================================-->
 
@@ -95,17 +95,17 @@
         <!-- the 'onopenstart' event is sent by the tabelement class' -->
         <!-- there is also an 'onopenstop' that is not used in this weather -->
         <!-- example -->
-        <method event="onopenstart">
+        <handler name="onopenstart">
             this.top.bg.animate("opacity",.33,333,false);
             this.top.titlebox.setColor(0xFFFFFF);
-        </method>
+        </handler>
 
         <!-- the 'onclosestart' event is sent by the tabelement class' there -->
         <!-- is also an 'onclosestop' that is not used in this example -->
-        <method event="onclosestart">
+        <handler name="onclosestart">
             this.top.bg.animate("opacity",1,333,false);
             this.top.titlebox.setColor(0xCAD0EC);
-        </method>
+        </handler>
     </class>
 
     <!-- CLASS: weatherSummary -->
@@ -146,11 +146,11 @@
                           x="15" y="7"><b>Enter Zip Code:</b></text>
                     <edittext id="zipcode" fontstyle="bold" font="Tahoma,Geneva,sans-serif"
                         width="80" x="120" y="5" height="20">
-                        <method event="onkeydown" args="key">
+                        <handler name="onkeydown" args="key">
                             if (key == 13) {
                                 weatherApp.loadWeather();
                             }
-                        </method>
+                        </handler>
                     </edittext>
                     <text width="240" fgcolor="#222222" x="206" y="7">
                         <b>OK</b>
@@ -286,10 +286,10 @@
                 </view>
             </weathertab>
 
-            <method event="oninit">
+            <handler name="oninit">
                 // open "Tab1" as the default
                 this.openTab(tab1,true)
-            </method>
+            </handler>
 
             <datapointer xpath="weatherdata:/*" ondata="processData();"
                 onerror="showError();"

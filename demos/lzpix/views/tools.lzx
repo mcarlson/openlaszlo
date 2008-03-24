@@ -1,6 +1,6 @@
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
     <view id="tls" name="tools" 
@@ -133,7 +133,7 @@
             ]]>
         </method>
         
-        <method event="onstop" reference="photoscontainer.lyt.pageNext" >
+        <handler name="onstop" reference="photoscontainer.lyt.pageNext" >
             //photoscontainer.lyt.dim( true );
             //this.setAttribute('pageindex',Math.min( this.pageindex + 1, this.pagemax));
             this.displayPage();
@@ -143,7 +143,7 @@
                 photoscontainer.lyt.setAttribute('pivot_x',10);
                 photoscontainer.lyt.setAttribute('pivotindex',0);
             }
-        </method>
+        </handler>
 
         <method name="displayPrevPage" >
             <![CDATA[
@@ -168,7 +168,7 @@
             ]]>
         </method>
 
-        <method event="onstop" reference="photoscontainer.lyt.pagePrev" >
+        <handler name="onstop" reference="photoscontainer.lyt.pagePrev" >
             this.displayPage();
             photoscontainer.lyt.calcpageparams = true;
             if ( photoscontainer.lyt.isgrid ) photoscontainer.lyt.setAttribute('pivot_x',50)
@@ -176,7 +176,7 @@
                 photoscontainer.lyt.setAttribute('pivot_x',10);
                 photoscontainer.lyt.setAttribute('pivotindex',0);
             }
-       </method>
+       </handler>
 
         <method name="displayPage"  >
             var bufferamount = 23;
@@ -190,12 +190,12 @@
         </method>
 
         <!-- if photos are zoomed then page end will change -->
-        <method event="onpageend"  reference="photoscontainer.lyt" >
+        <handler name="onpageend"  reference="photoscontainer.lyt" >
             //Debug.write("onpageend: this.startindex, this.endindex",this.startindex, this.endindex);
             
             this.endindex  = this.startindex + photoscontainer.lyt.pagesize -1;
             this.displayRange( this.startindex, this.endindex );
-        </method>
+        </handler>
 
         <method name="displayRange"  args="s,e" >
             this.firstphotoindex.setText( s + (photoscontainer.lyt.perpage * (photoscontainer.lyt.currentpage - 1)));
@@ -209,9 +209,9 @@
            this.ondataflag = true;
         </method>
 
-        <method event="ondata" reference="photods" >
+        <handler name="ondata" reference="photods" >
             this.setAttribute('waitforload', false);
             photoscontainer.lyt.calcparams = true;
-        </method>
+        </handler>
 
     </view>

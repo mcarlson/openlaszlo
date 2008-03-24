@@ -71,15 +71,15 @@
            <animator name="yspacing_anm" attribute="yspacing" to="10" duration="500" start="false" />
            <animator name="skew_anm" attribute="skew" from="1" to="0" duration="500" start="false" />
 
-           <method event="onstop" reference="this.transitiontogrid" >
+           <handler name="onstop" reference="this.transitiontogrid" >
                 this.animate("pivot_y", this.pivotview.gridy, 500 );
                 this.animate("pivot_x", this.pivotview.gridx, 500 );
                 this.yspacing_anm.doStart();
-           </method>
+           </handler>
 
-           <method event="onstop" reference="this.yspacing_anm" >
+           <handler name="onstop" reference="this.yspacing_anm" >
                 this.skew_anm.doStart();
-           </method>
+           </handler>
 
            <method name="myreset" >
                 this.photodimension=50 ;
@@ -129,3 +129,8 @@
         <button text="animate pivot_y" onclick="canvas.vw.lyt.animate('pivot_y',100,300)" />
     </view>
 </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@     

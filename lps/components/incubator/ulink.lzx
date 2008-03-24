@@ -40,10 +40,10 @@
       label.setText(makeTags(this.hoverTags)+this.text);
     </handler>
 
-    <method event ="onmouseout">
+    <handler name="onmouseout">
       label.setAttribute('fgcolor', this.color);
       label.setText(this.text);
-    </method>
+    </handler>
 
     <handler name="onclick">
       LzBrowser.loadURL(this.href, this.target)

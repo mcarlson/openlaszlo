@@ -13,7 +13,7 @@
     <class name="serverinfo">
 
         <datapointer xpath="stds:/*[1]">
-            <method event="ondata">
+            <handler name="ondata">
                 var nn = this.getNodeName();
                 if (nn == "stat") {
                     parent.mt.setVisible(false);
@@ -28,7 +28,7 @@
                     parent.servertab.setVisible(false);
                     parent.mt.setText('error: server info request node is ' + nn);
                 }
-            </method>
+            </handler>
             <method name="handleData">
                 var stat = this.dupePointer();
                 var info = this.dupePointer();
@@ -43,16 +43,16 @@
                     parent.mt.setText(err);
                 }
             </method>
-            <method event="onerror" args="ds">
+            <handler name="onerror" args="ds">
                 parent.mt.setVisible(true);
                 parent.servertab.setVisible(false);
                 parent.mt.setText(ds.getErrorString());
-            </method>
-            <method event="ontimeout" >
+            </handler>
+            <handler name="ontimeout" >
                 parent.mt.setVisible(true);
                 parent.servertab.setVisible(false);
                 parent.mt.setText("Server info request timed out.");
-            </method>
+            </handler>
         </datapointer>
 
         <method name="request">
@@ -198,7 +198,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1,6 +1,6 @@
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
 <library>
@@ -8,21 +8,21 @@
     <class name="taglink" width="100"  clickable="true" >
         <view resource="../assets/details/taglink_icon.gif" />
         <text name="txt" x="15" y="-4" text="tag title" width="100" fgcolor="0x5c5c5c" fontsize="10"/>
-        <method event="ondata" args="t" >
+        <handler name="ondata" args="t" >
             if ( t == null || t == undefined ) t = "";                
             this.txt.setText(t);            
-        </method>
+        </handler>
 
     </class>
 
     <class name="buddyicon" width="24" height="24" stretches="both" >
-        <method event="ondata" args="d">
+        <handler name="ondata" args="d">
             if (!d) return; 
             var dp = this.datapath;
             var iconserver = dp.xpathQuery('@iconserver');
             var userid = dp.xpathQuery('@id');            
             this.setSource(this.getBuddyIconUrl(userid, iconserver)); 
-        </method>
+        </handler>
 
         <!-- Get buddy icon from http://static.flickr.com/{icon-server}/buddyicons/{nsid}.jpg
             ie  http://static.flickr.com/27/buddyicons/49503086499@N01.jpg -->        
@@ -47,11 +47,11 @@
               height="${this.parent.height - 2}"
               stretches="both"/>
 
-        <method event="onload" reference="interior">
+        <handler name="onload" reference="interior">
             this.setDimensions();
             this.setVisible( true );
             this.anm_opacity.doStart();
-        </method>
+        </handler>
         
         <method name="setDimensions" ><![CDATA[
             //Debug.write(this.name, "setDimensions");
@@ -165,10 +165,10 @@
             </animatorgroup>
 
             <naturalimgview name="intparent" id="gPhV">
-                <method event="onstart" reference="anm_opacity" >
+                <handler name="onstart" reference="anm_opacity" >
                     var m = classroot.photosource_m;
                     if (m) this.parent.intparent2.interior.setSource(m);
-                </method>
+                </handler>
             </naturalimgview>
             
             <naturalimgview name="intparent2" fadein="250"/>
@@ -200,13 +200,13 @@
             <view bgcolor="0x5b5b5b" width="26" height="26" /> <!-- buddyicon background -->
             <buddyicon id="gBud" x="1" y="1" datapath="userds:/rsp/person"/>
             
-            <method event="ondata" args="d" >
+            <handler name="ondata" args="d" >
                 // change text to reflect the correct formatting of the date and time 
                 if ( !d ) return;
                 var str = classroot.toDateString( datapath.xpathQuery( "dates/@posted" ) );
                 inner.formattedDate.setText(str); 
                 inner.userlabel.setText( datapath.xpathQuery( "owner/@username" ) );
-            </method>
+            </handler>
 
             <view name="inner" x="30" y="-3" visible="true">
                 <text fgcolor="0x5c5c5c">Updated on </text>
@@ -233,10 +233,10 @@
             <view height="4" />
 
             <view datapath="infods:/rsp/photo"> 
-                <method event="onclick">
+                <handler name="onclick">
                     var s = this.datapath.xpathQuery("urls/url/text()"); 
                     LzBrowser.loadURL( s, "_blank", "toolbar=yes"); 
-                </method>
+                </handler>
                 <text fgcolor="#324FDB">view on flickr</text>
             </view>
             
@@ -244,17 +244,17 @@
 
             <text fgcolor="0x5c5c5c" fontstyle="bold" fontsize="12" height="23" >Tags</text>
             <view x="5"  width="${parent.width}">
-                <method event="ondata" reference="infods">
+                <handler name="ondata" reference="infods">
                     this.tl.setDatapath('infods:/rsp/photo/tags/tag[1-19]/text()');
-                </method>
+                </handler>
                 <wrappinglayout spacing="3" />      
                 <!-- Only display first 20 tags --> 
                 <taglink name="tl" clickable="true" >
-                     <method event="onclick"  >
+                     <handler name="onclick"  >
                         var t = this.txt.getText();
                         canvas.srch.setText( t );
                         canvas.srch.sendsearch();
-                    </method>
+                    </handler>
                 </taglink>
             </view>
         </view>

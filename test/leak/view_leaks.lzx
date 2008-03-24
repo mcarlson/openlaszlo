@@ -23,9 +23,9 @@ del = new LzDelegate ( blah, "destroy");
 <text name="goo"/>
 <!-- 
   <class name="goo" extends="view">
-     <method event="onclick">
+     <handler name="onclick">
         this.deleteNode()
-     </method>
+     </handler>
   </class>
 
   <view visible="true"  name="1">

@@ -19,21 +19,21 @@
     <!-- Java source and class file can be found in WEB-INF/class/examples -->
     <javarpc name="returnjavabean" scope="none" objectreturntype="javabean"
              remoteclassname="examples.ReturnJavaBeanExample">
-        <method event="onload">
+        <handler name="onload">
             Debug.write('proxy:');
             Debug.inspect(this.proxy);
-        </method>
+        </handler>
 
         <remotecall funcname="getJavaBean">
             <param value="'laszlo'"/>
             <param value="'san francisco'"/>
             <param value="'ca'"/>
             <param value="'this is a secret (do not return value)'"/>
-            <method event="ondata" args="bean">
+            <handler name="ondata" args="bean">
                 Debug.write('------------------------------');
                 Debug.write('got bean object (secret is not returned):');
                 Debug.inspect(bean);
-            </method>
+            </handler>
         </remotecall>
 
     </javarpc>
@@ -43,7 +43,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

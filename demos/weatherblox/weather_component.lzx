@@ -1,6 +1,6 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->
@@ -60,9 +60,9 @@
             <view name="headlogo" resource="assets/laszlo_weather_logo.png"
         x="5" stretches="both" width="${resourcewidth / 2}" 
         height="${resourceheight / 2}">
-        <method event="onclick">
+        <handler name="onclick">
             LzBrowser.loadURL('http://www.laszlosystems.com', '_blank');
-        </method>
+        </handler>
         </view>
 
         <view width="1" height="${parent.headlogo.height}"
@@ -76,11 +76,11 @@
             <view x="${parent.enterzip.x + 5}" y="${parent.headlogo.height - this.height - 5}">
                 <simplelayout spacing="6" axis="x"/>
                 <edittext id="zipcode" width="55" height="22">
-                    <method event="onkeydown" args="key">
+                    <handler name="onkeydown" args="key">
                         if(key == 13){
                 weatherApp.loadWeather();
                         }
-                    </method>
+                    </handler>
                 </edittext>
                 <multistatebutton name="okButton" resource="okeydokey" statenum="0" 
                     statelength="3" maxstate="1" y="3"
@@ -100,11 +100,11 @@
                         text_x="20" 
                         fontstyle="bold" 
                         contentopacity=".8">
-            <method event="onselect">
+            <handler name="onselect">
                 weatherContent.tab1.arrow.animate("rotation", 0, 500, false);
                 weatherContent.tab2.arrow.animate("rotation", -90, 250, false);
                 weatherContent.tab3.arrow.animate("rotation", -90, 250, false);
-            </method>
+            </handler>
             <view name="arrow" resource="assets/arrow_open.png"
                 placement="header" x="${this.xoffset + 5}" y="${this.yoffset + 5}" opacity="1"
                 xoffset="${this.width / 2}" yoffset="${this.width / 2}"/>
@@ -169,11 +169,11 @@
                 </tabelement>
                 
                 <tabelement name="tab2" text="Radar Maps" text_x="20"  fontstyle="bold">
-            <method event="onselect">
+            <handler name="onselect">
             weatherContent.tab1.arrow.animate("rotation", -90, 250, false);
             weatherContent.tab2.arrow.animate("rotation", 0, 500, false);
             weatherContent.tab3.arrow.animate("rotation", -90, 250, false);
-            </method>
+            </handler>
             <view name="arrow" resource="assets/arrow_open.png"
             placement="header" x="${this.xoffset + 5}" y="${this.yoffset + 5}" opacity="1"
             xoffset="${this.width / 2}" yoffset="${this.width / 2}" rotation="-90"/>
@@ -195,11 +195,11 @@
                 </tabelement>
                 
                 <tabelement name="tab3" text="Forecast" text_x="20" fontstyle="bold">
-            <method event="onselect">
+            <handler name="onselect">
             weatherContent.tab1.arrow.animate("rotation", -90, 250, false);
             weatherContent.tab2.arrow.animate("rotation", -90, 250, false);
             weatherContent.tab3.arrow.animate("rotation", 0, 500, false);
-            </method>
+            </handler>
             <view name="arrow" resource="assets/arrow_open.png"
             placement="header" x="${this.xoffset + 5}" y="${this.yoffset + 5}" opacity="1"
             xoffset="${this.width / 2}" yoffset="${this.width / 2}"/>
@@ -224,9 +224,9 @@
     </view>
     <view resource="assets/poweredby.swf" x="${(parent.width - this.width) / 2}"
     y="${canvas.height - this.height - 5}">
-    <method event="onclick">
+    <handler name="onclick">
         LzBrowser.loadURL('http://www.blogbox.com', '_blank');
-    </method>
+    </handler>
     </view>
 
 </class>

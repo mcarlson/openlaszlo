@@ -77,15 +77,15 @@
         
         <!-- Sets the note's view position and dimensions to match the flickr note. 
             Scale these to match the scale of the image -->
-        <method event="ondata" args="d" > <![CDATA[
+        <handler name="ondata" args="d" > <![CDATA[
             if ( !d ) return;      
             updateDimensions(); 
-        ]]></method>
+        ]]></handler>
         
         
          
         <datapointer name="size_dp" />
-        <method event="ondata" reference="sizeds" args="d"><![CDATA[
+        <handler name="ondata" reference="sizeds" args="d"><![CDATA[
             var dpw = size_dp.setXPath("sizeds:/rsp/sizes/size[1]"); 
             var nname = size_dp.getNodeAttribute("label");
             // Debug.write("got size info: ", d);
@@ -104,12 +104,12 @@
                 this.updateDimensions(); 
             }
 
-        ]]></method>
+        ]]></handler>
         
-        <method event="onheight" reference="gPhV">
+        <handler name="onheight" reference="gPhV">
             // Debug.write("onheight");             
             updateDimensions();             
-        </method>
+        </handler>
         
         <method name="updateDimensions"><![CDATA[
             if ( originalwidth <= 0 ) return; 

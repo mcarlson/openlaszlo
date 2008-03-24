@@ -14,23 +14,23 @@
             <simplelayout/>
             <text>minValue</text>
             <edittext name="minValueField" text="${theslider.minvalue}">
-                <method event="onblur">
+                <handler name="onblur">
                     canvas.theslider.setMinValue(getText());
-                </method>
+                </handler>
             </edittext>
             
             <text>maxValue</text>
             <edittext name="maxValueField" text="${theslider.maxvalue}">
-                <method event="onblur">
+                <handler name="onblur">
                     canvas.theslider.setMaxValue(getText());
-                </method>
+                </handler>
             </edittext>
             
             <text>Value</text>
             <edittext name="valueField" text="${theslider.value}">
-                <method event="onblur">
+                <handler name="onblur">
                     canvas.theslider.setValue(getText());
-                </method>
+                </handler>
             </edittext>
         </view>
         <view x="150" y="20">
@@ -42,7 +42,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

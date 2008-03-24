@@ -97,22 +97,22 @@
             
             <checkbox text="cache in client"  id="ccache" />
             <checkbox text="cache in server"  id="scache">
-                <method event="onvalue">
+                <handler name="onvalue">
                     if (this.value) {
                         if (typeof(resphead) != "undefined") {
                             resphead.setAttribute('value', false);
                         }
                     }
-                </method>
+                </handler>
             </checkbox>
             <checkbox text="resp headers"     id="resphead">
-                <method event="onvalue">
+                <handler name="onvalue">
                     if (this.value) {
                         if (typeof(scache) != "undefined") {
                             scache.setAttribute('value', false);
                         }
                     }
-                </method>
+                </handler>
             </checkbox>
             <checkbox text="accept encodings" id="accenc" />
             <checkbox text="POST"             id="post" />
@@ -195,7 +195,7 @@
 
 </canvas>    
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

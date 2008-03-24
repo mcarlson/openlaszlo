@@ -130,12 +130,12 @@
 
                 <!-- When the transition is done, load in the medium image to the
                     details view. -->
-               <method event="onstop" reference="transitiontolinear_anm" >
+               <handler name="onstop" reference="transitiontolinear_anm" >
                     this.animate('dimmer',1,500);
                     //canvas.details.ph.posme.doStart(); 
                     //canvas.details.loadMediumImage();
                     this.updateOnIdle( false );
-               </method>
+               </handler>
 
 
 
@@ -195,7 +195,7 @@
                 this.lyt.transitiontogrid_anm.doStart();
             </method>
             
-            <method event="onstop" reference="this.lyt.transitiontogrid_anm" >
+            <handler name="onstop" reference="this.lyt.transitiontogrid_anm" >
                 //Debug.write("TOOLS back onclick", photoscontainer.detailphoto);
                 canvas.interior.details_bkgnd.setHeight(0);
                 canvas.interior.details_bkgnd.setVisible( false );
@@ -204,7 +204,7 @@
                 this.lyt.setAttribute('textvisible',true); this.lyt.update();
                 this.showPhotoDetails( false );   
                 tls.enableZoom();
-            </method>
+            </handler>
 
             <method name="showPhotoDetails"  args="show,ph_arg" ><![CDATA[
                 if ( show ) {
@@ -225,10 +225,10 @@
 
             <!-- end of animation back to photo grid -->
             <!--
-            <method event="onstop" reference="anm_closephotodetails" >
+            <handler name="onstop" reference="anm_closephotodetails" >
                 photoscontainer.lyt.setAttribute('textvisible',true);
                 photoscontainer.lyt.setAttribute('isgrid',true);
-            </method>
+            </handler>
             -->
 
 
@@ -237,7 +237,7 @@
                        value="$once{ new LzDelegate( this, 'initialReplicationDone' ) }"/>
             
             <!-- once that data has loaded set the datapath on the photo -->
-            <method event="ondata" reference="photods" >
+            <handler name="ondata" reference="photods" >
                 //Debug.write('ondata');
                 //Debug.write(this.pagecounter_dp);
                 this.initialReplicationDone();
@@ -255,7 +255,7 @@
                 gResultsCountLabel.setText( this.buildResultsString(c) );                 
                 this.watchforlast();
                 photoscontainer.lyt.calcpageparams = true;
-            </method>
+            </handler>
             
             <method name="watchforlast" >
                 //info('watchforlast');
@@ -332,7 +332,7 @@
                 <datapath xpath="photods:/rsp/photos/photo[1-18]" />
                 <!-- this is what should trigger photo editing -->
                 
-                <method event="onplainclick">
+                <handler name="onplainclick">
                     if ( parent.selman.isMultiSelect() ){
                         // Debug.write( this , " other click." );
                         parent.selman.select( this );
@@ -362,7 +362,7 @@
                         }
                         photoscontainer.detailphoto = this;
                     }
-                </method>
+                </handler>
  
 
                 <attribute name="selected" value="false"/>
@@ -442,12 +442,12 @@
             </view>
 
             <attribute name="showhandcursor" value="false"/>
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 if ( lyt.isgrid ) rubberband.start();
-            </method>
-            <method event="onmouseup">
+            </handler>
+            <handler name="onmouseup">
                 rubberband.stop();
-            </method>
+            </handler>
 
         </view> <!-- end photos -->
         
@@ -503,10 +503,10 @@
 
         <view bgcolor="0xffffff" width="${parent.width}" height="1" y="${parent.height - 1}" />
         
-        <method event="onstop" reference="this.anm" >
+        <handler name="onstop" reference="this.anm" >
             this.parent.large_cam.setVisible( false );
             this.parent.little_cam.setVisible( true );
-        </method>
+        </handler>
     </view>
 
         

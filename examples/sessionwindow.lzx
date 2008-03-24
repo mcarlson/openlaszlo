@@ -5,28 +5,28 @@
     <sessionrpc name="session" />
 
     <class name="sessionwindow" extends="window" visible="false" >
-        <method event="onload" reference="canvas.session">
+        <handler name="onload" reference="canvas.session">
             this.getAttrRPC.invoke();
-        </method>
-        <method event="onmouseup">
+        </handler>
+        <handler name="onmouseup">
             this.setAttrRPC.invoke();
-        </method>
+        </handler>
 
-        <method event="onerror" args="mesg">
+        <handler name="onerror" args="mesg">
             this.setAttribute('visible', true);
             Debug.write('error:', mesg);
-        </method>
+        </handler>
 
         <remotecall name="getAttrRPC" funcname="getAttribute"
                     remotecontext="$once{canvas.session}">
             <param><method name="getValue">
                 return classroot.name + '-pos';
             </method></param>
-            <method event="ondata" args="pos">
+            <handler name="ondata" args="pos">
                 classroot.setAttribute('x', pos[0]);
                 classroot.setAttribute('y', pos[1]);
                 classroot.setAttribute('visible', true);
-            </method>
+            </handler>
         </remotecall>
 
         <remotecall name="setAttrRPC" funcname="setAttribute" 
@@ -52,7 +52,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

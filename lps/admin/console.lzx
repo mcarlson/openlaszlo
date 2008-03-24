@@ -13,14 +13,14 @@
 
     <class name="mytabpane" extends="tabpane">
         <attribute name="requested" value="false" type="boolean" />
-        <method event="onvisible" args="v">
+        <handler name="onvisible" args="v">
         <![CDATA[
             if (v && ! this.requested) {
                 this.setAttribute("requested", true);
                 info.request();
             }
         ]]>
-        </method>
+        </handler>
     </class>
 
         <simplelayout axis="y" spacing="10" />
@@ -31,11 +31,11 @@
             <text font="mono" >Admin password:</text>
             <inputtext id="pwd" password="true" font="monob" bgcolor="#fafafa" 
                        width="100">
-                <method event="oninit">
+                <handler name="oninit">
                     if (typeof(global.password) != "undefined") {
                         this.setText(global.password);
                     }
-                </method>
+                </handler>
             </inputtext>
         </view>
 
@@ -62,7 +62,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

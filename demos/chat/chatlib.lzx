@@ -21,15 +21,15 @@
             canvas.viewChat.chatPtr.addNode("message", null, { text: str, multiline: true } );
         </method>
 
-        <method event="onconnect">
+        <handler name="onconnect">
             this.print("...connected...");
             canvas.connected = true;
             this.sendMessage("*", "", "userconnect");
             canvas.viewPicker.setVisible(false);
             canvas.viewChat.setVisible(true);
-        </method>
+        </handler>
 
-        <method event="onerror" args="error">
+        <handler name="onerror" args="error">
             if (canvas.connected) {
                 this.print("...connection error...");
             } else {
@@ -37,9 +37,9 @@
                 canvas.dialog.open();
             }
             canvas.connected = false;
-        </method>
+        </handler>
 
-        <method event="ontimeout">
+        <handler name="ontimeout">
             if (canvas.connected) {
                 this.print("...connection timed out...");
             } else {
@@ -47,18 +47,18 @@
                 canvas.dialog.open();
             }
             canvas.connected = false;
-        </method>
+        </handler>
 
-        <method event="ondisconnect">
+        <handler name="ondisconnect">
             canvas.connected = false;
             this.print("...disconnected...");
             canvas.connection.logout();
-        </method>
+        </handler>
 
-        <method event="onuserdisconnect" args="user">
+        <handler name="onuserdisconnect" args="user">
             this.getList('*');
             this.print("user " + user + " disconnected");
-        </method>
+        </handler>
 
         <dataset name="message" />
         <dataset name="userconnect" />
@@ -80,43 +80,43 @@
         <datapointer name="chatPtr" xpath="chatDset:/" />
 
         <datapointer xpath="connection:logoutDset:/*" >
-            <method event="ondata">
+            <handler name="ondata">
                 canvas.myconnection.print("...logged out...");
                 canvas.viewPicker.setVisible(true);
                 canvas.viewChat.setVisible(false);
-            </method>
-            <method event="onerror">
+            </handler>
+            <handler name="onerror">
                 canvas.viewPicker.setVisible(true);
                 canvas.viewChat.setVisible(false);
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer xpath="myconnection:userconnect:/*">
-            <method event="ondata">
+            <handler name="ondata">
                 var from = this.xpathQuery('/from[0]/@name');
                 this.parent.chatPtr.addNode("message", null,
                     { text: "User " + from + " connected!" }
                 );
                 canvas.myconnection.getList('*');
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer xpath="myconnection:message:/*">
-            <method event="ondata">
+            <handler name="ondata">
                 var from = this.xpathQuery('/from[0]/@name');
                 var mesg = this.xpathQuery('/text()');
                 this.parent.chatPtr.addNode("message", null,
                     { text: from + ": " + mesg}
                 );
-            </method>
+            </handler>
         </datapointer>
 
         <datapointer xpath="myconnection:sendMessageDset:/*[1]">
-            <method event="onerror">
+            <handler name="onerror">
                 this.parent.chatPtr.addNode("message", null, 
                     { text:  this.dataset.getErrorString() }
                 );
-            </method>
+            </handler>
         </datapointer>
 
         <view width="387" height="287" x="29" y="39" bgcolor="#000000" />
@@ -190,7 +190,7 @@
     <view name="viewPicker" x="20" y="20">
 
         <datapointer xpath="connection:loginDset:/login[1]/authentication[1]/response[1]">
-            <method event="ondata">
+            <handler name="ondata">
 
                 var rt = this.getNodeAttribute('type');
                 var usr = this.getNodeAttribute('usr');
@@ -202,17 +202,17 @@
                     canvas.dialog.setAttribute('text', "bad login status: " + status);
                     canvas.dialog.open();
                 }
-            </method>
+            </handler>
 
-            <method event="onerror">
+            <handler name="onerror">
                 canvas.dialog.setAttribute('text', "problems contacting authentication server");
                 canvas.dialog.open();
-            </method>
+            </handler>
 
-            <method event="ontimeout">
+            <handler name="ontimeout">
                 canvas.dialog.setAttribute('text', "authentication server time out");
                 canvas.dialog.open();
-            </method>
+            </handler>
 
         </datapointer>
 
@@ -245,14 +245,14 @@
             <text width="400" height="200" selectable="true" 
                 multiline="true" >
                 <datapointer xpath="dsetHost:/info[1]/host[1]">
-                    <method event="ondata">
+                    <handler name="ondata">
                         var surl = LzBrowser.getLoadURL();
                         var url = new LzURL(surl);
                         url.host = this.getNodeAttribute('name');
                         url.query = null;
                         parent.setText("Chat with other users by having them browse to:\n\n  "
                                        + url.toString() );
-                    </method>
+                    </handler>
                 </datapointer>
             </text>
             <simplelayout axis="y" spacing="3" />
@@ -260,15 +260,15 @@
 
     </view> <!-- name=viewPicker -->
 
-    <method event="onkeyup" reference="LzKeys" args="k">
+    <handler name="onkeyup" reference="LzKeys" args="k">
         if ( k == 13 ) {
             bSend.inputhandler();
         }
-    </method>
+    </handler>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

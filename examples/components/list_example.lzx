@@ -47,15 +47,15 @@
 
                 </list>
                 <button height="20">Clear Selection
-                    <method event="onclick">
+                    <handler name="onclick">
                         var val = a3.clearSelection();
-                    </method>
+                    </handler>
                 </button>
                 <button height="20">Get Value
-                    <method event="onclick">
+                    <handler name="onclick">
                         var val = a3.getValue();
                         a1val.setText(val);
-                    </method>
+                    </handler>
                 </button>
                 <text multiline="true" id="a1val" width="200" height="60"/>
             </view>
@@ -109,7 +109,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

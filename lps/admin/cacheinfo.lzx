@@ -25,7 +25,7 @@
                     <simplelayout axis="y" spacing="5" />
                     <view clickable="true">
                         <datapath xpath="item" replication="lazy" />
-                        <method event="onclick">
+                        <handler name="onclick">
                         <![CDATA[
                             if (typeof(classroot.parent.parent.mt) == "undefined") {
                                 Debug.write('itemlist: no parent.parent.mt')
@@ -61,19 +61,19 @@
 
                             classroot.parent.parent.mt.setText(str);
                         ]]>
-                        </method>
-                        <method event="onmouseup">
+                        </handler>
+                        <handler name="onmouseup">
                             this.setAttribute("bgcolor",0xcacaca);
-                        </method>
-                        <method event="onmousedown">
+                        </handler>
+                        <handler name="onmousedown">
                             this.setAttribute("bgcolor",0xbababa);
-                        </method>  
-                        <method event="onmouseover">
+                        </handler>  
+                        <handler name="onmouseover">
                             this.setAttribute("bgcolor",0xcacaca);
-                        </method>                      
-                        <method event="onmouseout">
+                        </handler>                      
+                        <handler name="onmouseout">
                             this.setAttribute("bgcolor",0xeaeaea);
-                        </method>                       
+                        </handler>                       
                         <text width="${canvas.maxtextwidth}" datapath="@key" />
                     </view>
                 </view>
@@ -123,7 +123,7 @@
 
 
         <datapointer xpath="cids:/*[1]">
-            <method event="ondata">
+            <handler name="ondata">
                 var nn = this.getNodeName();
                 if (nn == "lps-cacheinfo") {
                     parent.mt.setVisible(false);
@@ -138,7 +138,7 @@
                     parent.info.setVisible(false);
                     parent.mt.setText('error: cache info request node is ' + nn);
                 }
-            </method>
+            </handler>
             <method name="handleData">
             <![CDATA[
                 var str;
@@ -204,15 +204,15 @@
                     parent.mt.setText(err);
                 }
             </method>
-            <method event="onerror" args="ds">
+            <handler name="onerror" args="ds">
                 parent.mt.setText(ds.getErrorString());
-            </method>
-            <method event="ontimeout" >
+            </handler>
+            <handler name="ontimeout" >
                 parent.mt.setText("Cache info request timed out.");
-            </method>
+            </handler>
         </datapointer>
         <datapointer xpath="ccds:/*[1]">
-            <method event="ondata">
+            <handler name="ondata">
                 var nn = this.getNodeName();
                 if (nn == "lps") {
                     parent.mt.setVisible(false);
@@ -227,7 +227,7 @@
                     parent.info.setVisible(false);
                     parent.mt.setText('error: clear cache request node is ' + nn);
                 }
-            </method>
+            </handler>
             <method name="handleData" >
                 var cleared = this.xpathQuery('clearcache[1]/@cleared');
                 if (cleared == 'true') {
@@ -251,12 +251,12 @@
                     parent.info.mt.setText(err);
                 }
             </method>
-            <method event="onerror" args="ds" >
+            <handler name="onerror" args="ds" >
                 parent.mt.setText(ds.getErrorString());
-            </method>
-            <method event="ontimeout" >
+            </handler>
+            <handler name="ontimeout" >
                 parent.mt.setText("Clear cache request timed out.");
-            </method>
+            </handler>
         </datapointer>
 
         <method name="request">
@@ -273,18 +273,18 @@
             <simplelayout axis="x" spacing="5" />
             <button onclick="parent.parent.request()">Refresh</button>
             <button>View Details
-                <method event="onclick" >
+                <handler name="onclick" >
                     LzBrowser.loadURL("javascript: var wptr = window.open('console.lzx?lzt=cacheinfo&amp;details=1&amp;pwd=" + escape(escape(pwd.getText())) + "', 'test', 'resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address'); wptr.focus(); void(0);")
-                </method>
+                </handler>
             </button>
             <button>Clear Cache
-                <method event="onclick" >
+                <handler name="onclick" >
                     classroot.mt.setVisible(true);
                     classroot.info.setVisible(false);
                     this.mt.setText('Clearing...');            
                     ccds.setQueryParams( { lzt: "clearcache", pwd: pwd.getText() } );
                     ccds.doRequest();
-                </method>
+                </handler>
             </button>
         </view>
 
@@ -304,7 +304,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -25,7 +25,7 @@
         <datapointer name="cdptr" xpath="config:/*[1]" >
             <attribute name="xml"   value="" type="string" />
             <attribute name="lines" value="0" />
-            <method event="ondata">
+            <handler name="ondata">
                 var nn = this.getNodeName();
                 if (nn == "configuration") {
                     this.handleData();
@@ -34,7 +34,7 @@
                 } else {
                     parent.mt.setText('error: log config request node is ' + nn);
                 }
-            </method>
+            </handler>
             <method name="handleData">
             <![CDATA[
                 // LPS strips out namespace prefix from <log4j:configuration>.
@@ -65,14 +65,14 @@
                 }
                 classroot.level0.level1.update.updateable(false);
             </method>
-            <method event="onerror" args="ds">
+            <handler name="onerror" args="ds">
                 classroot.a.input.setText(ds.getErrorString());
                 classroot.level0.level1.update.updateable(false);
-            </method>
-            <method event="ontimeout">
+            </handler>
+            <handler name="ontimeout">
                 classroot.a.input.setText("Log config request timed out.");
                 classroot.level0.level1.update.updateable(false);
-            </method>
+            </handler>
 
             <method name="parseXML" args="indent">
             <![CDATA[
@@ -119,15 +119,15 @@
             <view name="level1">
                 <simplelayout axis="x" spacing="5" />
                 <button>Refresh
-                    <method event="onclick">
+                    <handler name="onclick">
                     <![CDATA[
                         classroot.a.input.setText('Requesting...');
                         classroot.request();
                     ]]>
-                    </method>
+                    </handler>
                 </button>
                 <button name="update">Update
-                    <method event="onclick">
+                    <handler name="onclick">
                     <![CDATA[
                         var xml = classroot.a.input.getText();
                         var query = "lzt=logconfig&xml=" + escape(xml) +
@@ -142,7 +142,7 @@
                         dset.setQueryString(query);
                         dset.doRequest();
                     ]]>
-                    </method>
+                    </handler>
                     <method name="updateable" args="isOk">
                         if (isOk) {
                             this.setAttribute('clickable', true);
@@ -161,9 +161,9 @@
             </view>
 
             <button>View Log
-                <method event="onclick" >
+                <handler name="onclick" >
                     LzBrowser.loadURL('javascript: var wptr = window.open("console.lzx?lzt=log&amp;pwd=' + escape(escape(pwd.getText())) + '", "test", "resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);')
-                </method>
+                </handler>
             </button>
 
         </view>
@@ -178,7 +178,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

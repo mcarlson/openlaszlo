@@ -79,21 +79,21 @@
                         text="moreinfo"/>
                     <text x="6" y="52" multiline="true">more information about how to fill<br/>
                         out this field could go into this expanded area</text>
-                    <method event="onvisible" args="isvisible">
+                    <handler name="onvisible" args="isvisible">
                         if (isvisible) {
                             more.setVisible(true);
                             this.setHeight(50);
                         }
-                    </method>
+                    </handler>
                 </view>
 
                 <view name="frame" x="4" y="4" width="200" bgcolor="black" height="${input.height+2}">
                     <inputtext x="1" y="1" bgcolor="white" width="198" name="input">type something here</inputtext>
                 </view>
-                <method event="onfocus" reference="frame.input">
+                <handler name="onfocus" reference="frame.input">
                     //Debug.write('onfocus', this);
                     this.open();
-                </method>
+                </handler>
                 <method name="open">
                     if (!this.isopen) {
                         this.isopen=true;
@@ -115,9 +115,9 @@
                         this.tabDel.unregisterAll();
                     }
                 </method>
-                <method event="onblur"  reference="frame.input">
+                <handler name="onblur"  reference="frame.input">
                     this.clickDel.unregisterAll();
-                </method>
+                </handler>
                 <method name="checkForClick"> <![CDATA[
                     xpos = this.getMouse('x');
                     ypos = this.getMouse('y');
@@ -163,12 +163,12 @@
                     <simplelayout/>
                     <text>focusable view</text>
                     <text>yellow=has focus</text>
-                    <method event="onfocus">
+                    <handler name="onfocus">
                         setBGColor(0xffff00);
-                    </method>
-                    <method event="onblur">
+                    </handler>
+                    <handler name="onblur">
                         setBGColor(0xffffff);
-                    </method>
+                    </handler>
                 </view>
             </view>
             <view name="event_tester"
@@ -308,7 +308,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -3,7 +3,7 @@
 <!--                                                                       -->
 <!-- library classes for the world clocks class                            -->
 <!--                                                                       -->
-<!-- Copyright 2002-2004 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Copyright 2002-2008 Laszlo Systems, Inc.  All Rights Reserved.        -->
 <!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
 <!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
 <!-- Use is subject to license terms.                                      -->
@@ -39,10 +39,10 @@
 
         <!-- AM or PM -->
         <text font="Helmet" fontsize="14" name="dayandampm" x="130" y="132" visible="false" >SUN  AM
-            <method event="ontext" >
+            <handler name="ontext" >
                 this.setX(100 - Math.floor(this.getTextWidth()/2.0));
                 this.setVisible(true);
-            </method>
+            </handler>
         </text>
 
         <!-- HOUR HAND -->
@@ -119,9 +119,9 @@
 
         <!-- This method is called everytime the global object 'secondtimer'(see below) -->
         <!-- sends an onsecond event -->
-        <method event="onsecond" reference="secondtimer" >
+        <handler name="onsecond" reference="secondtimer" >
             this.setCurrentTime();
-        </method>
+        </handler>
 
 
         <method name="setTimeZone" args="tzo" >

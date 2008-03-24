@@ -12,29 +12,29 @@
         <method name="panRight">
             this.setPan( this.getPan() + 10)
         </method>
-        <method event="onlastframe">
+        <handler name="onlastframe">
             //Debug.write("Got lastframe");
             //LzBrowser.callJS('setCanAttr', null, 'lastframe'); 
-        </method>
-        <method event="onstop">
+        </handler>
+        <handler name="onstop">
             //Debug.write("Got stop");
-        </method>
-        <method event="onloadperc" args="l">
+        </handler>
+        <handler name="onloadperc" args="l">
             //Debug.write("Got loadperc", l);
             LzBrowser.callJS('setCanAttr', null, 'loadperc', l); 
-        </method>
-        <method event="onframe" args="f">
+        </handler>
+        <handler name="onframe" args="f">
             //Debug.write("Got frame", f);
             LzBrowser.callJS('setCanAttr', null, 'frame', f); 
-        </method>
-        <method event="ontotalframes" args="t">
+        </handler>
+        <handler name="ontotalframes" args="t">
             //Debug.write("Got totalframes", t);
             LzBrowser.callJS('setCanAttr', null, 'totalframes', t); 
-        </method>
+        </handler>
     </view>
 </canvas>    
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

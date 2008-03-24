@@ -90,7 +90,7 @@
         <view>
             <simplelayout axis="x" spacing="4"/>
             <mouseview resource="ok_butt">
-                <method event="onclick">
+                <handler name="onclick">
                     parent.parent.form.datapath.retrieveData();
                     if (parent.parent.mode=="new") {
                         Debug.write("new");
@@ -99,7 +99,7 @@
                         dp.addNodeFromPointer( parent.parent.form.datapath );
                     }
                     parent.parent.done();
-                </method>
+                </handler>
             </mouseview>
             <mouseview resource="cancel_butt" onclick="parent.parent.done();"/>
         </view>
@@ -107,7 +107,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

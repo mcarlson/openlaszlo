@@ -28,10 +28,10 @@
                     <view name="stylechooser" layout="axis:x; spacing:4">
                         <text>Style:</text>
                         <combobox width="120" editable="false">
-                            <method event="onselect">
+                            <handler name="onselect">
                                 var colorchoice = this.getText();
                                 canvas[colorchoice+'colors'].setAttribute("isdefault", true);
-                            </method>
+                            </handler>
 
                             <textlistitem text="silver" />
                             <textlistitem text="green" />
@@ -184,7 +184,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
