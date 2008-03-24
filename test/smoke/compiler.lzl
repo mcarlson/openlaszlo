@@ -13,8 +13,87 @@
     
     <method name="tearDown">
     </method>
-    
-    
+
+    <!-- methods to help test optional and variable arguments -->
+    <method name="restToString" args="arr">
+      var result = new String("");
+      for (var i=0; i&lt;arr.length; i++) {
+         if (result.length != 0) {
+            result += ',';
+         }
+         result += arr[i];
+      }
+      return result;
+    </method>
+    <method name="opt_f0" args="">
+          return 'opt_f0()';
+    </method>
+    <method name="opt_f00" args="...rest">
+      return 'opt_f00(' + this.restToString(rest) + ')';
+    </method>
+    <method name="opt_f000" args="x=null">
+      return 'opt_f000(' + x + ')';
+    </method>
+    <method name="opt_f0000" args="x=null, ...rest">
+      var restcomma = rest.length > 0 ? ',' : '';
+      return 'opt_f0000(' + x + restcomma + this.restToString(rest) + ')';
+    </method>
+    <method name="opt_f1" args="x">
+      return 'opt_f1(' + x + ')';
+    </method>
+    <method name="opt_f11" args="x, ...rest">
+      var r = this.restToString(rest);
+      var restcomma = rest.length > 0 ? ',' : '';
+      return 'opt_f11(' + x + restcomma + r + ')';
+    </method>
+    <method name="opt_f2" args="x=null, y=null">
+      return 'opt_f2(' + x + ',' + y + ')';
+    </method>
+    <method name="opt_f22" args="x, y=null">
+      return 'opt_f22(' + x + ',' + y + ')';
+    </method>
+    <method name="opt_f4" args="w, x, y=null, z=null">
+      return 'opt_f4(' + w + ',' + x + ',' + y + ',' + z + ')';
+    </method>
+    <method name="opt_f5" args="w, x, y=null, z=null, ...rest">
+      var restcomma = rest.length > 0 ? ',' : '';
+      return 'opt_f5(' + w + ',' + x + ',' + y + ',' + z + restcomma + this.restToString(rest) + ')';
+    </method>
+    <method name="opt_f6" args="x=1,y=2">
+      return x+y;
+    </method>
+
+    <method name="testOptionalArguments">
+      assertEquals(opt_f0(), 'opt_f0()', 'optional args test f0')
+      assertEquals(opt_f00(), 'opt_f00()', 'optional args test f00')
+      assertEquals(opt_f00(0), 'opt_f00(0)', 'optional args test f00')
+      assertEquals(opt_f00(2,3,4), 'opt_f00(2,3,4)', 'optional args test f00')
+      assertEquals(opt_f000(), 'opt_f000(null)', 'optional args test f000')
+      assertEquals(opt_f000(3), 'opt_f000(3)', 'optional args test f000')
+      assertEquals(opt_f0000(), 'opt_f0000(null)', 'optional args test f0000')
+      assertEquals(opt_f0000(7), 'opt_f0000(7)', 'optional args test f0000')
+      assertEquals(opt_f0000(7,11), 'opt_f0000(7,11)', 'optional args test f0000')
+      assertEquals(opt_f1(1), 'opt_f1(1)', 'optional args test f1')
+      assertEquals(opt_f11(11), 'opt_f11(11)', 'optional args test f11')
+      assertEquals(opt_f11(11,12), 'opt_f11(11,12)', 'optional args test f11')
+      assertEquals(opt_f2(), 'opt_f2(null,null)', 'optional args test f2')
+      assertEquals(opt_f2(2), 'opt_f2(2,null)', 'optional args test f2')
+      assertEquals(opt_f2(2,3), 'opt_f2(2,3)', 'optional args test f2')
+      assertEquals(opt_f22(2), 'opt_f22(2,null)', 'optional args test f22')
+      assertEquals(opt_f22(2,3), 'opt_f22(2,3)', 'optional args test f22')
+      assertEquals(opt_f4(4,5), 'opt_f4(4,5,null,null)', 'optional args test f4')
+      assertEquals(opt_f4(4,5,6), 'opt_f4(4,5,6,null)', 'optional args test f4')
+      assertEquals(opt_f4(4,5,6,7), 'opt_f4(4,5,6,7)', 'optional args test f4')
+      assertEquals(opt_f5(5,6), 'opt_f5(5,6,null,null)', 'optional args test f5')
+      assertEquals(opt_f5(5,6,7), 'opt_f5(5,6,7,null)', 'optional args test f5')
+      assertEquals(opt_f5(5,6,7,8), 'opt_f5(5,6,7,8)', 'optional args test f5')
+      assertEquals(opt_f5(5,6,7,8,9), 'opt_f5(5,6,7,8,9)', 'optional args test f5')
+      assertEquals(opt_f6(), 3, 'optional args test f6')
+      assertEquals(opt_f6(2), 4, 'optional args test f6')
+      assertEquals(opt_f6(2,3), 5, 'optional args test f6')
+      assertEquals(opt_f6(2,3,4), 5, 'optional args test f6')
+    </method>
+
     <method name="testConditionalCompilation">
       <![CDATA[
              // Verify compile-time conditionals are consistent
