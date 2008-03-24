@@ -1,8 +1,16 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="label.lzx"/>
     <include href="datamarker.lzx"/>
         
-    <!--- Represents a value point in the chart -->
+    <!---
+       Represents a value point in the chart
+       @access public
+       -->
     <class name="valuepoints">     
         <!--- the x point will be draw -->
         <attribute name="datax" type="expression" />

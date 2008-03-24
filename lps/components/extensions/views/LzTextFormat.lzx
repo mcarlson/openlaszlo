@@ -1,9 +1,9 @@
 <library>
  
-<!--- @keyword deprecated
-    An object to specify the format of a text object. Used only in 
-    Javascript by richinputtext.setTextFormat 
-    (deprecating 5/17/2007 - use textformat instead, per LPP-3406)
+<!---
+    An object to specify the format of a text object.  Used only in 
+    Javascript by richinputtext.setTextFormat.
+    @shortdesc Formats rich text
 --> 
 <class name="textformat" extends="node">
     
@@ -51,12 +51,16 @@
     </method>
 </class>
 
+<!---
+    LzTextFormat is deprecated.  Use 'textformat' instead.
+    @keyword deprecated
+-->
 <class name="LzTextFormat" extends="textformat"
     oninit="Debug.warn('`LzTextFormat` is deprecated.  Use `textformat`.')"/>
     
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

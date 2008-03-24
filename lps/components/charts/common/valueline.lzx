@@ -1,8 +1,16 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="../common/label.lzx"/>
     <include href="extensions/drawview.lzx"/>
         
-    <!--- Represents a line in the chart -->
+    <!---
+       Represents a line in the chart
+       @access public
+       -->
     <class name="valueline" extends="drawview">       
         <!--- the value will be draw -->
         <attribute name="data" type="string" value=""/>

@@ -1,3 +1,8 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="datatip.lzx"/>
     <include href="charts/styles/styleparser.lzx"/>
@@ -13,6 +18,7 @@
         the relevant dataseries to each axis. Relevent dataseries 
         for the chart must have columns for each of the axes 
         that the chart cares about.  
+        @access public
     -->    
     <class name="chart" extends="basecomponent">
         <!--- @keywords private -->

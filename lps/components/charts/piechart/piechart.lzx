@@ -1,3 +1,8 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="../styles/chartstyle.lzx"/>
     <include href="../common/dataseries.lzx"/>
@@ -5,13 +10,16 @@
     <include href="../common/virtualdrawview.lzx"/>
     <include href="../common/datalabel.lzx"/>
     <include href="../common/chart.lzx"/>
-    <include href="charts/common/legend.lzx"/>
+    <include href="../common/legend.lzx"/>
     <include href="piepiece.lzx"/>
     <include href="piechartplotarea.lzx"/>
     
-    <!--- A pie chart represents a chart that is displayed in the 2D
+    <!---
+          A pie chart represents a chart that is displayed in the 2D
           polar plane. This class inherits immediately from chart class
-          and can be instantiated directly. (Warning: Of beta quality.)-->
+          and can be instantiated directly. (Warning: Of beta quality.)
+          @access public
+          -->
     <class name="piechart" extends="chart">
 
         <!--- @keywords private -->
@@ -150,7 +158,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

@@ -1,3 +1,8 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="../styles/chartstyle.lzx"/>
     <include href="../common/dataseries.lzx"/>
@@ -10,7 +15,10 @@
     <include href="barchartplotarea.lzx"/>
     <include href="../common/datalabel.lzx"/>
     
-    <!--- A chart class that renders horizontal bars.  Inherits from the chart class.  (Warning: Of beta quality.) -->
+    <!--- A chart class that renders horizontal bars.
+      Inherits from the chart class.  (Warning: Of beta quality.)
+      @access public
+      -->
     <class name="barchart" extends="rectangularchart">
         <!--- @keyword private -->
         <method name="init">
@@ -178,7 +186,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

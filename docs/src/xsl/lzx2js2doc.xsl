@@ -68,6 +68,12 @@
       <xsl:param name="path"/>
       <xsl:param name="unitid"/>
       <xsl:if test="contains($path,'library.lzx')">  
+        <!-- TODO [dda 2008-03-24] handle include href="../xxx/name.lzx"
+             To do that, need to create a URI for the parent directory,
+             and pass that as a second arg to document().
+             For now, we require (for doc) that there be at least one
+             'straight' include of each doc without ..
+          -->
         <xsl:variable name="doc" select="document(@href)"/>
         <xsl:variable name="newpath" select="concat(substring-before($path,'library.lzx'),@href)"/>
         <xsl:apply-templates select="$doc" mode="nested">

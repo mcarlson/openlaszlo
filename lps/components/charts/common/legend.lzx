@@ -1,10 +1,18 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="../styles/strokestyle.lzx"/>
     <include href="../piechart/piepiece.lzx"/>
     <include href="utils/layouts/simplelayout.lzx"/>
     <include href="extensions/drawview.lzx"/>
 
-    <!--- simple legend class -->
+    <!---
+     simple legend class
+     @access public
+      -->
     <class name="legend" extends="drawview" datapath="">
         <!--- @keyword private -->
         <attribute name="topmargin" type="number" value="5"/>

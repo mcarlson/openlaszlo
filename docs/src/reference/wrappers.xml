@@ -207,9 +207,9 @@ XHTML text containers such as <tagname>text</tagname> and
 <tagname>text</tagname>.</p>
 
 <example>
-&lt;canvas height="30"&gt;
+&lt;canvas height="100"&gt;
   &lt;text multiline="true"&gt;
-    &lt;p&gt;A pararaph.&lt;/p&gt;
+    &lt;p&gt;A paragraph.&lt;/p&gt;
     &lt;p&gt;Another one.&lt;/p&gt;
   &lt;/text&gt;
 &lt;/canvas&gt;

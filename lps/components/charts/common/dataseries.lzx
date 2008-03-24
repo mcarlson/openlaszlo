@@ -1,6 +1,12 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <!--- datacolumn contain a list of values of a series. List of values typically are data for x series,
         y series, tooltip series and datalabel series.
+        @access public
     -->
     <class name="datacolumn">
         <!--- the name of the column in the datapath for the series -->
@@ -182,7 +188,9 @@
     </class>
           
     <!---          
-        A  dataseries in a container for dataseries and datacolumn. dataseries can be nested. 
+        A dataseries in a container for dataseries and datacolumn.
+        dataseries can be nested.
+        @access public
     -->               
     <class name="dataseries">
         <!--- enable the dataseries -->       

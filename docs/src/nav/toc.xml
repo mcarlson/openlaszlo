@@ -102,7 +102,6 @@
     
     
     <category title="HTML Markup">
-        <item title="LzTextFormat" href="lz.LzTextFormat.html" />
         <item title="a" href="tag-a.html"/>
         <item title="b" href="tag-b.html"/>
         <item title="br" href="tag-br.html"/>
@@ -111,12 +110,13 @@
         <item title="img" href="tag-img.html"/>
         <item title="p" href="tag-p.html"/>
         <item title="pre" href="tag-pre.html"/>
+        <item title="textformat" href="lz.textformat.html" />
         <item title="u" href="tag-u.html"/>
     </category>
     
     <category title="Media" >
         <item title="audio" href="tag-audio.html"/>
-        <!-- TODO: [2008-01-28 dda] <item title="font (LzFont)" href="lz.LzFont.html" /> -->
+        <item title="font" href="LzFont.html" />
         <item title="face" href="tag-face.html"/>
         <item title="frame" href="tag-frame.html"/>
         <item title="image" href="lz.image.html"/>
@@ -222,7 +222,42 @@
     </category>
     
     <category title="Charts and Graphs">
-        <item title="TODO [LPP-4935]" />
+      <item title="axisstyle" href="lz.axisstyle.html"/>
+      <item title="barchart" href="lz.barchart.html"/>
+      <item title="basestyle" href="lz.basestyle.html"/>
+      <item title="chart" href="lz.chart.html"/>
+      <item title="chartbgstyle" href="lz.chartbgstyle.html"/>
+      <item title="chartstyle" href="lz.chartstyle.html"/>
+      <item title="axis" href="lz.axis.html"/>
+      <item title="columnchart" href="lz.columnchart.html"/>
+      <item title="datacolumn" href="lz.datacolumn.html"/>
+      <item title="datamarker" href="lz.datamarker.html"/>
+      <item title="datalabel" href="lz.datalabel.html"/>
+      <item title="dataseries" href="lz.dataseries.html"/>
+      <item title="datastyle" href="lz.datastyle.html"/>
+      <item title="datastylelist" href="lz.datastylelist.html"/>
+      <item title="datatip" href="lz.datatip.html"/>
+      <item title="horizontalaxis" href="lz.horizontalaxis.html"/>
+      <item title="label" href="lz.label.html"/>
+      <item title="labelstyle" href="lz.labelstyle.html"/>
+      <item title="legend" href="lz.legend.html"/>
+      <item title="linechart" href="lz.linechart.html"/>
+      <item title="linestyle" href="lz.linestyle.html"/>
+      <item title="piechart" href="lz.piechart.html"/>
+      <item title="piechartplotarea" href="lz.piechartplotarea.html"/>
+      <item title="plotstyle" href="lz.plotstyle.html"/>
+      <item title="pointstyle" href="lz.pointstyle.html"/>
+      <item title="rectangularchart" href="lz.rectangularchart.html"/>
+      <item title="regionstyle" href="lz.regionstyle.html"/>
+      <item title="tickstyle" href="lz.tickstyle.html"/>
+      <item title="valueline" href="lz.valueline.html"/>
+      <item title="valuelinestyle" href="lz.valuelinestyle.html"/>
+      <item title="valuepoints" href="lz.valuepoints.html"/>
+      <item title="valuepointstyle" href="lz.valuepointstyle.html"/>
+      <item title="valueregion" href="lz.valueregion.html"/>
+      <item title="valueregionstyle" href="lz.valueregionstyle.html"/>
+      <item title="verticalaxis" href="lz.verticalaxis.html"/>
+      <item title="zoomarea" href="lz.zoomarea.html"/>
     </category>
     
     <category title="Audio Video">

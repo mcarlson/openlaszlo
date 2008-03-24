@@ -1,9 +1,16 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="../styles/chartstyle.lzx"/>
     <include href="extensions/drawview.lzx"/>
     <!-- Begin Data Label Class -->
-     <!--- An abstract class that applies all features label.
-    -->     
+     <!---
+      An abstract class that applies all features label.
+      @access public
+      -->     
     <class name="label" extends="drawview">
 
         <!--- @keyword private -->
@@ -138,7 +145,7 @@
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

@@ -4,7 +4,7 @@
   *            Use is subject to license terms.
   *
   * @affects lzfont
-  * @access private
+  * @access public
   * @topic LFC
   * @subtopic Helpers
   */

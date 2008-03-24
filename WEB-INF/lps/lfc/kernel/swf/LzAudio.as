@@ -1,7 +1,7 @@
 /**
   * LzAudio.as
   *
-  * @copyright Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -10,6 +10,7 @@
 
 /**
   * @shortdesc This service manages audio resource playback.
+  * @access public
   * 
   */
 var LzAudio = new Object;

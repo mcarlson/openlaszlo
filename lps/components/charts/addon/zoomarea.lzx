@@ -1,7 +1,13 @@
-﻿<library>
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
+<library>
     <!--- An abstract class that provide basic zooming ability. 
         Allow subclasses to modify the look and feel
         and action to be taken
+        @access public
     -->     
     <class name="basezoomarea" visible="false">
         <!--- the chart instance -->

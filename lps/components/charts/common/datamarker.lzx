@@ -1,6 +1,14 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="extensions/drawview.lzx"/>
-    <!--- datamarker for the chart -->
+    <!---
+      datamarker for the chart
+      @access public
+      -->
     <class name="datamarker" extends="drawview">
         <!--- @keywords private -->
         <attribute name="locationx" type="number" value="0"/>
@@ -135,7 +143,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

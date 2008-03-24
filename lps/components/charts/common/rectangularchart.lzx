@@ -1,8 +1,16 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="chart.lzx"/>
     <include href="horizontalaxis.lzx"/>
     <include href="verticalaxis.lzx"/>
-    <!--- class that provides all common features for the rectangular charts like line, bar and column -->
+    <!---
+       class that provides all common features for the rectangular charts like line, bar and column
+       @access public
+       -->
     <class name="rectangularchart" extends="chart" clip="true">
         
         <!--- The minimum virtual value to be rendered in the 'x' axis -->

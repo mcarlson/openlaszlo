@@ -1,6 +1,14 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="extensions/drawview.lzx"/>
-    <!--- Represents a region of values in the chart -->
+    <!---
+        Represents a region of values in the chart
+        @access public
+        -->
     <class name="valueregion" extends="drawview">
         <!--- enable the rendering of the value region in the chart -->
         <attribute name="regionEnabled" value="true"/>

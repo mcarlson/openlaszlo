@@ -1,3 +1,8 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="../styles/strokestyle.lzx"/>
     <include href="../common/label.lzx"/>
@@ -5,6 +10,7 @@
     <include href="extensions/drawview.lzx"/>
 
      <!--- A abstract class that represents one of the axes of a rectangular chart. In general, axis isn't instantiated directly     
+    @access public
     -->     
     <class name="axis" extends="drawview">
     <!--- Data Column that is used to override the values of Tic Marks labels   -->
@@ -555,7 +561,7 @@
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

@@ -1,9 +1,17 @@
+<!---
+    @access public
+    @topic Components
+    @subtopic Charts
+  -->
 <library>
     <include href="../styles/strokestyle.lzx"/>
     <include href="../common/label.lzx"/>
     <include href="axis.lzx"/>
     <!-- Begin Horizontal Axis Class -->
-    <!--- Represents the X-axis on the rectangular chart extends from Axis class-->
+    <!---
+     Represents the X-axis on the rectangular chart extends from Axis class
+     @access public
+     -->
     <class name="horizontalaxis" extends="axis">
     <!--- @keyword private-->
     <attribute name="datacolumn" type="string" value="x" />
@@ -223,7 +231,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->
