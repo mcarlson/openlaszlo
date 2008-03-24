@@ -5,7 +5,7 @@
 
 /* LZ_COPYRIGHT_BEGIN */
 /****************************************************************************
- * Copyright (c) 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.       *
+ * Copyright (c) 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.       *
  * Use is subject to license terms                                          *
  ****************************************************************************/
 /* LZ_COPYRIGHT_END */
@@ -42,10 +42,6 @@ static var __LZseqnum = 0;
 function __LZloaderReturnData (loadmc, data, responseheaders) {
 
     // FIXME [2005-06-28 pkang]: would be nice to fix this in the platform.
-
-    Debug.write('__LZloaderReturnData', 'data=', data);
-    Debug.write('... loadmc=', loadmc);
-    Debug.write('...responseheaders=', responseheaders);
 
     _root.LzLoadQueue.loadFinished( loadmc );
 
