@@ -72,9 +72,12 @@ class ClassCompiler extends ViewCompiler {
      */
     void updateSchema(Element element, ViewSchema schema, Set visited) {
         Element elt = element;
-        
+        // Get meta attributes
         String classname = elt.getAttributeValue("name");
         String superclass = elt.getAttributeValue("extends");
+        // TODO: [2008-03-22 ptw] Need to add all elements of all
+        // mixins to the schema for this class
+        String mixins = elt.getAttributeValue("with");
         
         if (classname == null ||
             (schema.enforceValidIdentifier && !ScriptCompiler.isIdentifier(classname))) {
@@ -255,6 +258,8 @@ class ClassCompiler extends ViewCompiler {
             }
         }
         String className = tagToClass(tagName);
+        // className will be a global
+        mEnv.addId(className, elt);
 
         ClassModel classModel = schema.getClassModel(tagName);
         
@@ -266,13 +271,11 @@ class ClassCompiler extends ViewCompiler {
         // the runtime wants.
         NodeModel model = NodeModel.elementAsModel(elt, schema, mEnv);
         model = model.expandClassDefinitions();
-        model.removeAttribute("name");
         classModel.setNodeModel(model);
         // Should the package prefix be in the model?  Should the
         // model store class and tagname separately?
         String supertagname = classModel.getSuperclassName();
         String superclassname = tagToClass(supertagname);
-        model.removeAttribute("extends");
 
         // Build the constructor
         String body = "";

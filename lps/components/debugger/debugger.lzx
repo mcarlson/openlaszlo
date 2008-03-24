@@ -383,7 +383,7 @@
           }
       } else {
           if (!this.consoleRemote && !this['visible']) {
-              this.setVisible(true);
+              this.setAttribute('visible', true);
               this.bringToFront();
           }
           // Call the primitive method
@@ -638,8 +638,8 @@
             this.bottom.left.doSingleLine();
         }
         this.adjustMultiline();
-        this.top.controls.min.setVisible(!this.minimized);
-        this.top.controls.exp.setVisible(this.minimized);
+        this.top.controls.min.setAttribute('visible', !this.minimized);
+        this.top.controls.exp.setAttribute('visible', this.minimized);
     </method>
 
     <dragstate name="drag" />
@@ -671,7 +671,7 @@
          <basebutton name="close"  pixellock="true"
                   x="${parent.width - this.width - 7}"
                   resource="closeBtn_rsc"
-                  onclick="classroot.setVisible(false)" />
+                  onclick="classroot.setAttribute('visible', false)" />
           <basebutton name="min" pixellock="true"
                   x="${parent.close.x - this.width}"
                   resource="minBtn_rsc"
@@ -766,16 +766,16 @@
          <view name="left" height="${parent.height}" >
 
            <method name="doSingleLine">
-             this.upButton.setVisible(true); 
-             this.downButton.setVisible(false)
+             this.upButton.setAttribute('visible', true); 
+             this.downButton.setAttribute('visible', false)
              this.parent.center.input.setMultiline(false);
              classroot.savedInputAreaHeight = Math.max(53, this.parent.height);
              this.parent.animate("height",classroot.smallInputAreaHeight,333,false);
            </method>
 
            <method name="doMultiLine">
-             this.downButton.setVisible(true); 
-             this.upButton.setVisible(false)
+             this.downButton.setAttribute('visible', true); 
+             this.upButton.setAttribute('visible', false)
              // Check if we have room to grow the input area
              var delta = classroot.savedInputAreaHeight - parent.height;
              delta = Math.min(classroot.middle.height - (classroot.lineheight * 2) , delta);
@@ -932,14 +932,14 @@
 
         if (typeof(global.lzconsoledebug) != 'undefined') {
            this.consoleRemote = true;
-           this.setVisible(false);
+           this.setAttribute('visible',false);
             // Open the remote debugger socket 
             __LzDebug.startupConsoleRemote();
         } else if (typeof(global.remotedebug) != 'undefined') {
            // This case mismatch here is intentional: "remotedebug" is the query arg, 
            // "Debug.remoteDebug" is the attribute on the Debugger window.
             this.remoteDebug = true;
-            this.setVisible( false );
+            this.setAttribute('visible', false );
             // Open the remote debugger socket 
             this.startupRemote();
 
@@ -969,7 +969,7 @@
             for (var i = 0; i < this.saved_msgs.length; i++) {
                 this.__write(this.saved_msgs[i]);
             }
-            this.setVisible( true );
+            this.setAttribute('visible', true );
             this.bringToFront();
         }
 

@@ -489,7 +489,7 @@ public class NodeModel implements Cloneable {
         String parentName = this.className;
         return
             parentName.equals("class")?
-            schema.getClassModel(element.getAttributeValue("extends")):
+            schema.getClassModel(element.getAttributeValue("extends", ClassCompiler.DEFAULT_SUPERCLASS_NAME)):
             schema.getClassModel(parentName);
     }
 
@@ -633,7 +633,20 @@ public class NodeModel implements Cloneable {
                 }
             }
 
-            
+            // Special case for compiling a class, the class
+            // attributes are really 'meta' attributes, not
+            // attributes of the class -- they will be processed by
+            // the ClassModel or ClassCompiler
+            if ("class".equals(className)) {
+                // TODO: [2008-03-22 ptw] This should somehow be
+                // derived from the schema, but this does not work, so
+                // we hard-code the meta-attributes here
+//                 if (superclassModel.getAttribute(name) != null) {
+                if ("name".equals(name) || "extends".equals(name) || "with".equals(name)) {
+                    System.err.println("Skipping meta-attribute: " + name);
+                    continue;
+                }
+            }
 
             // Warn for redefine of a flash builtin
             // TODO: [2006-01-23 ptw] What about colliding with DHTML globals?
@@ -662,45 +675,31 @@ public class NodeModel implements Cloneable {
             if ((name.equals("id")) ||
                 (name.equals("name") &&
                  topLevelDeclaration() && !className.equals("class"))) {
-
-                ClassModel superclassModel = schema.getClassModel(value);
-                if (superclassModel != null && !superclassModel.isBuiltin()) {
+                ElementWithLocationInfo dup =
+                    (ElementWithLocationInfo) env.getId(value);
+                // we don't want to give a warning in the case
+                // where the id and name are on the same element,
+                // i.e., <view id="foo" name="foo"/>
+                if (dup != null && dup != element) {
+                    String locstring =
+                        CompilerUtils.sourceLocationPrettyString(dup);
                     env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="You have given the " + p[0] + " an attribute " + p[1] + "=\"" + p[2] + "\", " + "which may overwrite the class \"" + p[3] + "\"."
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-559", new Object[] {getMessageName(), name, value, value})
-                        ,element);
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="Duplicate id attribute \"" + p[0] + "\" at " + p[1]
+                         */
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                            NodeModel.class.getName(),"051018-576", new Object[] {value, locstring})
+                        ,
+                        element);
                 } else {
-                    ElementWithLocationInfo dup =
-                        (ElementWithLocationInfo) env.getId(value);
-                    // we don't want to give a warning in the case
-                    // where the id and name are on the same element,
-                    // i.e., <view id="foo" name="foo"/>
-                    if (dup != null && dup != element) {
-                        String locstring =
-                            CompilerUtils.sourceLocationPrettyString(dup);
-                        env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Duplicate id attribute \"" + p[0] + "\" at " + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-576", new Object[] {value, locstring})
-,
-                            element);
-                    } else {
-                        // TODO: [07-18-03 hqm] We will canonicalize
-                        // all id's to lowercase, because actionscript
-                        // is not case sensitive.  but in the future,
-                        // we should preserve case.
-                        env.addId(value, element);
-                    }
+                    // TODO: [07-18-03 hqm] We will canonicalize
+                    // all id's to lowercase, because actionscript
+                    // is not case sensitive.  but in the future,
+                    // we should preserve case.
+                    env.addId(value, element);
                 }
             }
-
 
             Schema.Type type;
             try {
@@ -775,8 +774,7 @@ solution =
                     if (name.equals("name")) {
                         Element parent = element.getParentElement();
                         if (parent != null) {
-                            for (Iterator iter2 = parent.getChildren().iterator(); iter2.hasNext();
-                                 ) {
+                            for (Iterator iter2 = parent.getChildren().iterator(); iter2.hasNext(); ) {
                                 Element e = (Element) iter2.next();
                                 if (!e.getName().equals("resource") && !e.getName().equals("font")
                                     && e != element && value.equals(e.getAttributeValue("name"))) {
