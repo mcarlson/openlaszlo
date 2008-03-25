@@ -6,7 +6,7 @@
 <library>
     <class name="photocollection">
 
-        <attribute name="photoclass" value="photo" when="once"/>
+        <attribute name="photoclass" value="lz.photo" when="once"/>
 
         <attribute name="activephotos" value="$once{ [] }"/>
 

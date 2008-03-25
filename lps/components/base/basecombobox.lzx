@@ -381,7 +381,7 @@
 
             // reassign classname now that the instance is inited
             this.setItemclassname(this.itemclassname);
-            cblist.setVisible(false);
+            cblist.setAttribute('visible', false);
          </method>
 
         <!--- @keywords private -->
@@ -509,7 +509,7 @@
                 LzModeManager.makeModal( this );
 
                 this.cblist.bringToFront();
-                this.cblist.setVisible(true);
+                this.cblist.setAttribute('visible', true);
                 LzFocus.setFocus(this.cblist, withkey);
 
                 this.isopen = true;
@@ -519,7 +519,7 @@
                 this.isopen = false;
 
                 LzModeManager.release( this );
-                this.cblist.setVisible(false);
+                this.cblist.setAttribute('visible', false);
                 if (this['onisopen']) this.onisopen.sendEvent(false);
                 if ( LzFocus.getFocus() == this.cblist ) {
                     if (!editable) {
@@ -649,7 +649,7 @@
 
         <!--- @keywords private -->
         <method name="_showEnabled">
-           interior.cbtext.setVisible(this._enabled);
+           interior.cbtext.setAttribute('visible', this._enabled);
             if (!this._enabled) {
                 if (interior._dsblfield == null) {
                     var t = new LzText(interior,
@@ -657,11 +657,11 @@
                           width:interior.width, height:interior.height,
                             fgcolor:this['style'] ? this.style.textdisabledcolor : null});
                 } else {
-                   interior._dsblfield.setVisible(true);
+                   interior._dsblfield.setAttribute('visible', true);
                 }
                 interior._dsblfield.setText(this.getText());
             } else {
-                if (interior._dsblfield) interior._dsblfield.setVisible(false);
+                if (interior._dsblfield) interior._dsblfield.setAttribute('visible', false);
             }
         </method>
 

@@ -2249,8 +2249,8 @@ prototype.getMouse.dependencies = function( ) {
   * @return Boolean: boolean indicating whether or not the point lies within the view
   */
 function containsPt( x,y ) {
-   return (((this.getAttribute("height")>= y) && (y >= 0)) &&
-                ((this.getAttribute("width")>= x) && (x >= 0)));
+   return (((this.height>= y) && (y >= 0)) &&
+                ((this.width>= x) && (x >= 0)));
 }
 
 /**

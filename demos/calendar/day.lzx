@@ -105,7 +105,9 @@
                     </view>
                 </view>
 
-                <scrollbar visible="${scrollable}"/>
+                <state apply="${classroot.opened}">
+                    <scrollbar visible="${scrollable}"/>
+                </state>
                 <view name="scrollview" visible="false">
                     <state name="scrollState" apply="false" 
                            onapply="parent.bringToFront()">

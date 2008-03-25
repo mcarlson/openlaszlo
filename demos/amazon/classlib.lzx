@@ -82,7 +82,7 @@
                                            -classroot.width );
                     classroot.panelDragger.apply();
                     if(classroot.container.content.visible != true){
-                        classroot.container.content.setVisible(true);
+                        classroot.container.content.setAttribute('visible', true);
                     }
                 </handler>
                 <handler name="onmouseup">
@@ -91,7 +91,7 @@
                         // User has just closed the tab by dragging the panel
                         // manually.
                         classroot.opened = 'false';
-                        classroot.container.content.setVisible(false);
+                        classroot.container.content.setAttribute('visible', false);
                     }
                     parent.tabButton.setResourceNumber(classroot.opened=='true'?4:1);
                     classroot.panelDragger.remove();
@@ -106,7 +106,7 @@
         </view>
 
         <method name="open">
-            this.container.content.setVisible(true);
+            this.container.content.setAttribute('visible', true);
             this.animate("width",openingsize,333,false);
         </method>
 
@@ -120,7 +120,7 @@
         </method>
 
         <method name="hidecontent">
-            this.container.content.setVisible(false);
+            this.container.content.setAttribute('visible', false);
         </method>
 
         <!-- Nudge the tab left then right to give feedback that something's
@@ -203,10 +203,10 @@
            options="ignorelayout">
         <method name="show">
             this.bringToFront();
-            this.setVisible( true );
+            this.setAttribute('visible',  true );
         </method>
         <method name="hide">
-            this.setVisible( false );
+            this.setAttribute('visible',  false );
         </method>
     </class>
 

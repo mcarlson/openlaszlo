@@ -3,7 +3,7 @@
     <class name="cdview" width="${parent.width}" height="82">
 
         <resizelayout axis="x" spacing="8"/>
-        <view name="cover" datapath="ImageUrlSmall/text()" y="7" width="50" height="50" clip="true"
+        <view name="cover" datapath="SmallImage/URL/text()" y="7" width="50" height="50" clip="true"
             onmouseover="dragsmall.display(this, this.datapath.xpathQuery('text()'))"
             onmouseout="dragsmall.hide()"
             onmousedown="dragsmall.start()"
@@ -21,11 +21,11 @@
 
         <view  y="7" options="releasetolayout" name="info">
             <simplelayout axis="y" spacing="-3"/>
-            <text fontsize="12" fontstyle="bold" datapath="ProductName/text()"
+            <text fontsize="12" fontstyle="bold" datapath="ItemAttributes/Title/text()"
                   visible="${ width &gt; 40 }"
                   multiline="true" name="title"
                   width="${parent.width - 15}" fgcolor="#666699"/>
-            <text datapath="Artists/Artist[1]/text()" 
+            <text datapath="ItemAttributes/Artist[1]/text()" 
                   visible="${ width &lt; parent.width - 5 &amp;&amp;
                               parent.title.height &lt;40 }"
                   resize="true"
@@ -36,7 +36,7 @@
                   fgcolor="#666699">
                 <simplelayout axis="x" spacing="4"/>
                 <text>Our Price:</text>
-                <text datapath="OurPrice/text()" width="50"/>
+                <text datapath="OfferSummary/LowestNewPrice/FormattedPrice/text()" width="50"/>
             </view>
         </view>
         <view y="${classroot.cover.height + 8}" 
@@ -57,9 +57,9 @@
             // Get more information about the current CD.
             <![CDATA[
                 infoLoader.show();
-                var dsAsin=canvas.datasets.dsAsin;
-                var qsAsin = "t=webservices&dev-t="+canvas.developerToken+"&AsinSearch="+this.datapath.xpathQuery("Asin/text()")+"&mode=music&type=heavy&page=1&f=xml";
-                dsAsin.setQueryString(qsAsin);
+                var asin = this.datapath.xpathQuery("ASIN/text()");
+                var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=" + asin + "&ResponseGroup=ItemAttributes,OfferSummary,Images,Tracks,Reviews,EditorialReview";
+                dsAsin.setSrc(url);
                 dsAsin.doRequest();
             ]]>
 
@@ -74,9 +74,8 @@
 
         <method name="getRecommendations">
             <![CDATA[
-                var dsRecommend=canvas.datasets.dsRecommend;
-                var qsRecommend = "t=webservices&dev-t="+canvas.developerToken+"&AsinSearch=B00005YW4H,B00006IX86,B000005J56,B00006AAJF,B0002RUPH4,B00006IX6E,B000069HKH,B00006JP29,B000000QFU,B000002L2Z&mode=music&type=lite&page=1&f=xml";
-                dsRecommend.setQueryString(qsRecommend);
+                var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=B00005YW4H,B00006IX86,B000005J56,B00006AAJF,B0002RUPH4,B00006IX6E,B000069HKH,B00006JP29,B000000QFU,B000002L2Z&ResponseGroup=ItemAttributes,OfferSummary,Images";
+                dsRecommend.setSrc(url);
                 dsRecommend.doRequest();
             ]]>
         </method>
@@ -89,12 +88,12 @@
             <view options="releasetolayout">
                 <simplelayout axis="y" spacing="1"/>
                 <!-- Repeated view displaying the list of items matching the keyword search -->
-                <cdview datapath="dsRecommend:/ProductInfo/Details[1-5]"/>
+                <cdview datapath="dsRecommend:/ItemLookupResponse/Items/Item[1-5]"/>
             </view>
             <view options="releasetolayout">
                 <simplelayout axis="y" spacing="1"/>
                 <!-- Repeated view displaying the list of items matching the keyword search -->
-                <cdview datapath="dsRecommend:/ProductInfo/Details[6-10]"/>
+                <cdview datapath="dsRecommend:/ItemLookupResponse/Items/Item[6-10]"/>
             </view>
         </view>
 
@@ -102,7 +101,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

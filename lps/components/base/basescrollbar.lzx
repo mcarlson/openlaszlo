@@ -341,7 +341,7 @@
         <method name="_showEnabled">
                 if (!_enabled) this.thumb.setAttribute(sizeAxis, 0);
                 else updateThumbSize();
-                this.thumb.setVisible(_enabled);
+                this.thumb.setAttribute('visible', _enabled);
                 if (scrolltarget) this.scrolltarget.setAttribute(scrollattr, 0);
         </method>
 

@@ -81,10 +81,10 @@
             var newFocusable = (this._enabled && this._focusable);
             if (newFocusable != this.focusable) {
                 this.focusable = newFocusable;
-                if (this.onfocusable) this.onfocusable.sendEvent();
+                if (this.onfocusable.ready) this.onfocusable.sendEvent();
             }
             if (_initcomplete) _showEnabled();
-            if (this.on_enabled) this.on_enabled.sendEvent();
+            if (this.on_enabled.ready) this.on_enabled.sendEvent();
         ]]>
         </method>
 
@@ -93,7 +93,7 @@
             this._focusable = isFocusable;
             if (this.enabled) {
                 this.focusable = this._focusable;
-                if (this.onfocusable) this.onfocusable.sendEvent();
+                if (this.onfocusable.ready) this.onfocusable.sendEvent();
             } else {
                 this.focusable = false;
             }
@@ -174,7 +174,7 @@
             }
 
             this.isdefault = def;
-            if ( this.onisdefault ){
+            if ( this.onisdefault.ready ){
                 this.onisdefault.sendEvent( def );
             }
         </method>
@@ -280,7 +280,7 @@
 
             this.style = s;
             _usestyle();
-            if (this.onstyle) this.onstyle.sendEvent(this.style);
+            if (this.onstyle.ready) this.onstyle.sendEvent(this.style);
             ]]>
         </method>
 

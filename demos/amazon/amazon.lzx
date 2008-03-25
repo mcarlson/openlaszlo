@@ -9,14 +9,13 @@
     <include href="address.lzx"/>
     <include href="creditcard.lzx"/>
     <include href="recommendation.lzx"/>
-    <attribute name="developerToken" value="D3VSV378UEERZB" type="string" />
+    <attribute name="baseURL" value="http://webservices.amazon.com/onca/xml?Service=AWSECommerceService&amp;SubscriptionId=1ZJXY3M2VMFG0W1ZF1R2&amp;AssociateTag=webservices" type="string" />
 
     <!-- dataset holding customer's recommendations -->
-    <dataset name="dsRecommend" request="false" type="http" src="http://xml.amazon.com/onca/xml3"/>
+    <dataset name="dsRecommend" request="false" type="http"/>
 
     <!-- dataset to search items by keywoard -->
-    <dataset name="dsKeyword" type="http" request="false" 
-             src="http://xml.amazon.com/onca/xml3"/>
+    <dataset name="dsKeyword" type="http" request="false"/>
 
     <datapointer xpath="dsKeyword:/*">
         <handler name="ondata">
@@ -36,8 +35,8 @@
 
     <datapointer xpath="dsAsin:/*">
         <handler name="ondata">
-            recommend.setVisible( false );
-            cdinfo.setVisible( true );
+            recommend.setAttribute('visible', false );
+            cdinfo.setAttribute('visible', true );
             cdinfo.bringToFront();
             infoLoader.hide();
         </handler>
@@ -127,21 +126,21 @@
                              matching the keyword search -->
                         <view name="searchResults" 
                               width="${parent.width}">
-                            <datapath xpath="dsKeyword:/ProductInfo/Details" pooling="true" />
+                            <datapath xpath="dsKeyword:/ItemSearchResponse/Items/Item" pooling="true" />
                             <view width="${parent.width}" clickable="true"
                                 onmouseover="setBGColor(0xFFFFFF)"
                                 onmouseout="setBGColor(0xCAD0EC)">
                                 <simplelayout axis="y"/>
-                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="ProductName/text()" width="${parent.width-6}" resize="false"/>
-                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="Artists/Artist[1]/text()" width="${parent.width-6}" resize="false"/>
+                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="ItemAttributes/Title/text()" width="${parent.width-6}" resize="false"/>
+                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="ItemAttributes/Artist[1]/text()" width="${parent.width-6}" resize="false"/>
 
                                 <!-- When one item is clicked, a request is sent to Amazon for deatailed informations about the item -->
                                 <handler name="onclick">
                                     <![CDATA[
-                                        var dsAsin=canvas.datasets.dsAsin;
-                                        var qsAsin = "t=webservices&dev-t="+canvas.developerToken+"&AsinSearch="+parent.datapath.xpathQuery("Asin/text()")+"&mode=music&type=heavy&page=1&f=xml";
                                         infoLoader.show();
-                                        dsAsin.setQueryString(qsAsin);
+                                        var asin = parent.datapath.xpathQuery("ASIN/text()");
+                                        var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=" + asin + "&ResponseGroup=ItemAttributes,OfferSummary,Images,Tracks,Reviews,EditorialReview";
+                                        dsAsin.setSrc(url);
                                         dsAsin.doRequest();
                                     ]]>
                                 </handler>
@@ -177,7 +176,7 @@
 
                 <view id="cdinfo" x="223" y="10" width="${parent.width-2*x}" 
                       height="${parent.height-y}" 
-                      datapath="dsAsin:/ProductInfo/Details" 
+                      datapath="dsAsin:/ItemLookupResponse/Items/Item" 
                       bgcolor="#CAD0EC" font="Arial,Helvetica" fontsize="11">
 
                     <simplelayout axis="y" spacing="16"/>
@@ -186,15 +185,15 @@
                         onmouseover="setResourceNumber(2);"
                         onmouseout="setResourceNumber(1);"
                         onmouseup="setResourceNumber(1);"
-                        onclick="recommend.setVisible( true); cdinfo.setVisible( false ); recommend.bringToFront();"/>
+                        onclick="recommend.setAttribute('visible', true); cdinfo.setAttribute('visible', false ); recommend.bringToFront();"/>
 
 
                     <view name="info" width="${parent.width}" height="136">
 
                         <simplelayout axis="x" spacing="10"/>
                         <!-- Display CD cover: Image is draggable into either the shopping cart or the wish list -->
-                        <view id="cover" datapath="ImageUrlMedium/text()"
-                            onmousedown="dragger.start(parent.parent.datapath.xpathQuery('ImageUrlSmall/text()'))"
+                        <view id="cover" datapath="SmallImage/URL/text()"
+                            onmousedown="dragger.start(parent.parent.datapath.xpathQuery('SmallImage/URL/text()'))"
                             onmouseup="dragger.stop(); itemDropped(parent.parent.datapath);"
                             ondblclick="cart.addItem(parent.parent.datapath)">
                             <attribute name="source" value="${this.data}"/>
@@ -208,13 +207,13 @@
                         </view>
 
                         <view width="${parent.width-cover.width}">
-                            <text datapath="ProductName/text()" width="${parent.width}" fontstyle="bold" fontsize="18" fgcolor="#666699"/>
-                            <text y="20" datapath="Artists/Artist[1]/text()" width="${parent.width}" fontstyle="bold" fontsize="12" fgcolor="#666699"/>
-                            <text y="40" fgcolor="#666699">Label:</text><text x="90" y="40" datapath="Manufacturer/text()" width="${parent.width}" fgcolor="#666699"/>
-                            <text y="55" fgcolor="#666699">Realease Date:</text><text x="90" y="55" datapath="ReleaseDate/text()" width="${parent.width}" fgcolor="#666699"/>
+                            <text datapath="ItemAttributes/Title/text()" width="${parent.width}" fontstyle="bold" fontsize="18" fgcolor="#666699"/>
+                            <text y="20" datapath="ItemAttributes/Artist[1]/text()" width="${parent.width}" fontstyle="bold" fontsize="12" fgcolor="#666699"/>
+                            <text y="40" fgcolor="#666699">Label:</text><text x="90" y="40" datapath="ItemAttributes/Manufacturer/text()" width="${parent.width}" fgcolor="#666699"/>
+                            <text y="55" fgcolor="#666699">Release Date:</text><text x="90" y="55" datapath="ItemAttributes/ReleaseDate/text()" width="${parent.width}" fgcolor="#666699"/>
                             <text y="70" fgcolor="#666699">Availability:</text><text x="90" y="70" datapath="Availability/text()" width="${parent.width}" fgcolor="#666699"/>
-                            <text y="87" fgcolor="#666699" fontsize="14">List Price:</text><text x="90" y="87" datapath="ListPrice/text()" width="${parent.width}" fontsize="14" fgcolor="#666699"/>
-                            <text y="105" fgcolor="#666699" fontstyle="bold" fontsize="16">Our Price:</text><text x="90" y="105" datapath="OurPrice/text()" width="${parent.width}" fontstyle="bold" fontsize="16" fgcolor="#666699"/>
+                            <text y="87" fgcolor="#666699" fontsize="14">List Price:</text><text x="90" y="87" datapath="ItemAttributes/ListPrice/FormattedPrice/text()" width="${parent.width}" fontsize="14" fgcolor="#666699"/>
+                            <text y="105" fgcolor="#666699" fontstyle="bold" fontsize="16">Our Price:</text><text x="90" y="105" datapath="OfferSummary/LowestNewPrice/FormattedPrice/text()" width="${parent.width}" fontstyle="bold" fontsize="16" fgcolor="#666699"/>
                             <mouseview resource="cart_butt" x="214" y="105" width="54" height="18"
                                 onclick="cart.addItem(parent.parent.parent.datapath)"/>
                             <mouseview resource="wish_butt" x="270" y="105"  width="54" height="18"
@@ -228,7 +227,7 @@
 
                         <tabpanel name="editorialTab" label="Editorial Review" oninit="this.setAnnotation( '-' );">
                             <text x="8" y="8"  id="pokeme"
-                                  datapath="ProductDescription/text()" 
+                                  datapath="EditorialReviews/EditorialReview[1]/Content/text()" 
                                   multiline="true" width="${parent.width-16}">
                                 <method name="applyData" args="t">
                                     <![CDATA[
@@ -245,27 +244,36 @@
                         <tabpanel label="Tracks">
 
                             <view width="${parent.width}" height="${parent.height-20}"
-                                  datapath="Tracks" clip="true">
-                                <handler name="ondata">
-                                    var dp = this.datapath.dupePointer();
-                                    dp.selectChild();
-                                    var numberTracks = countNodesByName( dp, 'Track' );
-                                    numberTracks = (numberTracks == 0) ? "-" : numberTracks;
-                                    this.parent.setAnnotation( numberTracks );
-                                </handler>
-
-                                <view y="8" x="8" width="${parent.width}">
-                                    <simplelayout axis="y"/>
-                                    <!-- Repeated view displaying the list of tracks -->
-                                    <view width="${parent.width}">
-                                        <attribute name="trackid" type="string" value=""/>
-                                        <handler name="onclonenumber" args="n">
-                                            this.trackid = n+1 + '.';
+                                  clip="true">
+                                <view datapath="Tracks" width="100%">
+                                    <handler name="ondata">
+                                        <![CDATA[
+                                        var discs = this.datapath.xpathQuery('Disc')
+                                        if (! discs) return;
+                                        if (! discs.length) discs = [ discs ];
+                                        var tracks = 0;
+                                        for (i in discs) {
+                                            var n = discs[i];
+                                            if (n && n.childNodes) tracks += n.childNodes.length;
+                                        }
+                                        parent.parent.setAnnotation(tracks);
+                                        ]]>
+                                    </handler>
+                                    <simplelayout/>  
+                                    <view datapath="Disc" width="100%">
+                                        <simplelayout/>
+                                        <text name="discnum"/>
+                                        <handler name="ondata">
+                                            this.discnum.setText('Disc ' + this.datapath.xpathQuery('@Number'));
                                         </handler>
-                                        <datapath xpath="Track" pooling="true" />
-                                        <simplelayout axis="x" spacing="4"/>
-                                        <text name="tid" label="${parent.trackid}" width="20"/>
-                                        <text datapath="text()" width="${parent.width}"/>
+
+                                        <!-- Repeated view displaying the list of tracks -->
+                                        <view width="${parent.width}">
+                                            <datapath xpath="Track" pooling="true" />
+                                            <simplelayout axis="x" spacing="4"/>
+                                            <text name="tid" datapath="@Number" width="20"/>
+                                            <text datapath="text()" width="${parent.width}"/>
+                                        </view>
                                     </view>
                                 </view>
                                 <scrollbar/>
@@ -279,19 +287,19 @@
                                 <view width="${parent.width}">
                                     <view x="8" y="8" width="${parent.width-50}"
                                             id="customerReviewsContainer">
-                                        <datapath xpath="Reviews" pooling="true"/>
+                                        <datapath xpath="CustomerReviews" pooling="true"/>
                                         <simplelayout axis="y" spacing="0"/>
 
                                         <handler name="ondata">
                                             var dp = this.datapath.dupePointer();
                                             dp.selectChild();
-                                            var numberReviews = countNodesByName( dp, 'CustomerReview' );
+                                            var numberReviews = countNodesByName( dp, 'Review' );
                                             this.parent.parent.parent.setAnnotation( numberReviews );
                                         </handler>
 
 
                                         <!-- Repeated view displaying the list of customer review -->
-                                        <view datapath="CustomerReview" width="${parent.width}"
+                                        <view datapath="Review" width="${parent.width}"
                                                 name="replicatedReviews">
                                             <simplelayout axis="y" spacing="4"/>
                                             <view width="${parent.width}" 
@@ -307,7 +315,7 @@
                                             <!-- View displaying the body of the review when its title is clicked !-->
                                             <view name="detail" height="0" width="${parent.width}" clip="true">
                                             <view name="comment" width="${parent.width}">
-                                                <text x="10" datapath="Comment/text()" multiline="true" width="${parent.width}"/>
+                                                <text x="10" datapath="Content/text()" multiline="true" width="${parent.width}"/>
                                             </view>
                                             </view>
                                         </view>
@@ -331,7 +339,6 @@
                 <inputtext name="searchKey" x="20" y="3" fontsize="11">
                     <handler name="onkeydown" args="k">
                         if (k==13) {
-Debug.write("Searching");
                             parent.search();
                         }
                     </handler>
@@ -340,9 +347,9 @@ Debug.write("Searching");
                     <![CDATA[
                     searchLoader.show();
                     main.animate("x", main.open_posX, 0, false);
-                    var dsKeyword=canvas.datasets.dsKeyword;
-                    var qsKeyword = "t=webservices&dev-t="+canvas.developerToken+"&KeywordSearch="+escape(searchKey.getText())+"&mode=music&type=lite&page=1&f=xml";
-                    dsKeyword.setQueryString(qsKeyword);
+                    var search = escape(searchKey.getText());
+                    var url = canvas.baseURL + "&Operation=ItemSearch&Keywords=" + search + "&SearchIndex=Music&ResponseGroup=ItemAttributes";
+                    dsKeyword.setSrc(url);
                     dsKeyword.doRequest();
                     ]]>
                 </method>

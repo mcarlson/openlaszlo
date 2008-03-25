@@ -1,5 +1,5 @@
 <photocollection name="interior" bgcolor="0xf0f0f0" clip="true"
-                 photoclass="clipboardphoto" clickable="true">
+                 photoclass="lz.clipboardphoto" clickable="true">
     <handler name="oninit">
         LzTrack.register( this , 'photos' );
     </handler>
