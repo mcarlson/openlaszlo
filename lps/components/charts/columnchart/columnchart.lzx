@@ -158,13 +158,13 @@
                             chart="${chart1}" x="${chart1.x + chart1.width}" y="${(chart1.y +
                             chart1.height)/2}" options="ignorelayout" fillColor="0x339933"
                             borderWidth="3"&gt;
-                              &lt;method event="onitemmouseclick" args="item"&gt;
+                              &lt;handler name="onitemmouseclick" args="item"&gt;
                                   var topseries = this.chart.getDataSeries();
 
                                   topseries.getDataSeries(item.identifier).enabled = item.linevisible;
                                   this.chart.renderPlotArea();
                                   item.linevisible = !item.linevisible;
-                              &lt;/method&gt; 
+                              &lt;/handler&gt; 
                         &lt;/legend&gt;
                     &lt;/canvas&gt;
                 </example>

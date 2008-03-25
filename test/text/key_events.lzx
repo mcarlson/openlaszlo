@@ -1,10 +1,10 @@
 <canvas debug="true">
-<!--    <method event="onkeydown" reference="LzKeys" args="k">-->
+<!--    <handler name="onkeydown" reference="LzKeys" args="k">-->
 <!--        Debug.write("LzKeys onkeydown " + k  );-->
-<!--    </method>-->
-<!--    <method event="onkeyup" reference="LzKeys" args="k">-->
+<!--    </handler>-->
+<!--    <handler name="onkeyup" reference="LzKeys" args="k">-->
 <!--        Debug.write("LzKeys onkeyup " + k  );-->
-<!--    </method>-->
+<!--    </handler>-->
     <debug y="70"/>
     <class name="myinput" extends="inputtext">
         <handler name="onfocus">
@@ -157,7 +157,7 @@
     </view>
     <simplelayout />
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

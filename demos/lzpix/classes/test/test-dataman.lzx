@@ -6,7 +6,7 @@
     -->
     <include href="../dataman.lzx" />
 
-    <!--method event="oninit">
+    <!--handler name="oninit">
         /// 
         // CHANGE user_id HERE TO GET DIFFERENT USER'S PUBLIC PHOTOS
 
@@ -17,7 +17,7 @@
                argvalue:"27412496@N00"}
         ]
         gDataMan.doFlickrRequest(photods, argobj);
-    </method-->
+    </handler-->
 
     <class name="photolist">
         <text datapath="@title" resize="true"/>
@@ -154,3 +154,4 @@
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@     
+   -->

@@ -1,4 +1,4 @@
-<!--- @copyright 2005-2007 Laszlo Systems, Inc. All Rights Reserved.
+<!--- @copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.
                  Use is subject to license terms.
   -->
 <library>
@@ -9,13 +9,13 @@
         <example executable="false">
         &lt;class name="dragger" &gt;
             ...
-            &lt;method event="onmousedown"&gt;
+            &lt;handler name="onmousedown"&gt;
                 checkdrag.apply();
-            &lt;/method>
-            &lt;method event="onmouseup"&gt;
+            &lt;/handler>
+            &lt;handler name="onmouseup"&gt;
                 canvas.dragimage.stopdrag(this);
                 checkdrag.remove();
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
             &lt;checkdragstate name="checkdrag" draggername="dragimage"/&gt;
         &lt;/class&gt;
@@ -32,17 +32,17 @@
                 LzTrack.register(this, 'target');
             &lt;/method&gt;
 
-            &lt;method event="onmousetrackover"&gt;
+            &lt;handler name="onmousetrackover"&gt;
                setAttribute('bgcolor', 0xffff00); // hilite
-            &lt;/method&gt;
-            &lt;method event="onmousetrackout"&gt;
+            &lt;/handler&gt;
+            &lt;handler name="onmousetrackout"&gt;
                setAttribute('bgcolor', null); // normal
-            &lt;/method&gt;
-            &lt;method event="onmousetrackup"&gt;
+            &lt;/handler&gt;
+            &lt;handler name="onmousetrackup"&gt;
                setAttribute('bgcolor', null); // normal
                canvas.dragimage.dropcomplete(this);
                Debug.write('dropped: '+dragimage.source.text);
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/class>
         </example>
         

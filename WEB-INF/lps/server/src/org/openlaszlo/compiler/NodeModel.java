@@ -53,7 +53,7 @@ public class NodeModel implements Cloneable {
     LinkedHashMap attrs = new LinkedHashMap();
     List children = new Vector();
     /** A set {eventName: String -> True) of names of event handlers
-     * declared with <method event="xxx"/>. */
+     * declared with <handler name="xxx"/>. */
     LinkedHashMap delegates = new LinkedHashMap();
     /* Unused */
     LinkedHashMap events = new LinkedHashMap();

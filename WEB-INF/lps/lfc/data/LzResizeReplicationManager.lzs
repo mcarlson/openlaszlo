@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -39,8 +39,10 @@
   * 
   *     &lt;simplelayout spacing="10" /&gt;
   *     &lt;text width="200" oninit="checkSubviews()"&gt;
-  *         &lt;method name="checkSubviews"
-  *                 event="onaddsubview" reference="replicationParent"&gt;
+  *         &lt;handler name="onaddsubview" reference="replicationParent"
+  *                 method="checkSubviews"&gt;
+  *         &lt;/handler&gt;
+  *         &lt;method name="checkSubviews"&gt;
   *             this.setText( 'number of subviews: ' + 
   *                           replicationParent.subviews.length );
   *         &lt;/method&gt;
@@ -53,7 +55,9 @@
   *                 &lt;datapath xpath="vegetables:/* /name()" <span class="redText">spacing="5" replication="resize"</span>/&gt;
   * 
   *                 &lt;text datapath="name()" valign="middle"/&gt;
-  *                 &lt;method name="toggleSize" event="onclick"&gt;
+  *                 &lt;handler name="onclick" method="toggleSize"&gt;
+  *                 &lt;handler&gt;
+  *                 &lt;method name="toggleSize"&gt;
   *                     if ( this.height != 40 ){
   *                         this.animate ( 'height', 40 , 500 );
   *                     } else {

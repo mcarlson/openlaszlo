@@ -19,7 +19,7 @@
   <dataset name="ping" type="http"/>
 
  
-  <method reference="svars" event="ondata">
+  <handler name="ondata" reference="svars">
       global.ping_interval = Number(svars.getPointer().xpathQuery("/params/@ping_interval"));
       global.ping_timeout =  Number(svars.getPointer().xpathQuery("/params/@timeout"));
       global.ping_url = svars.getPointer().xpathQuery("/params/@ping_url");
@@ -36,20 +36,20 @@
     ping.setSrc(ping_url);
     ping.doRequest();
 
-  </method>
+  </handler>
 
 
-  <method reference="ping" event="ondata">
+  <handler name="ondata" reference="ping">
       Debug.write('SUCCESS: LzBrowser.loadURL(',succ_url,');');
       LzBrowser.loadURL(succ_url);
-  </method>
+  </handler>
 
-  <method reference="ping" event="ontimeout">
+  <handler name="ontimeout" reference="ping">
       Debug.write('ping.ontimeout');
       canvas.checkloaded();
-  </method>
+  </handler>
 
-  <method reference="ping" event="onerror">
+  <handler name="onerror" reference="ping">
     <![CDATA[
       Debug.write('ping.onerror, elapsed ', (getTimer() - appstart));
       if ( (getTimer() - appstart)  > ping_timeout) {
@@ -59,7 +59,7 @@
           LzTimer.addTimer(global.pdel, ping_interval);
       }
     ]]>
-  </method>
+  </handler>
 
 
   <method name="checkloaded">
@@ -87,7 +87,7 @@
   -->
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
