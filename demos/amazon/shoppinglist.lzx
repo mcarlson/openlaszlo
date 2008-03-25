@@ -27,7 +27,7 @@
                     <view fontsize="12" fontstyle="bold">
                         <simplelayout axis="x" spacing="4"/>
                         <text>Our Price:</text>
-                        <text datapath="OfferSummary/LowestNewPrice/FormattedPrice/text()" width="${parent.width}"/>
+                        <text datapath="ItemAttributes/ListPrice/FormattedPrice/text()" width="${parent.width}"/>
                     </view>
                 </view>
 
@@ -51,12 +51,12 @@
         <method name="addItem" args="dpath">
             this.panel_to_nudge.nudge();
 
-            this.setAttribute("total", total+parseFloat(dpath.xpathQuery("OfferSummary/LowestNewPrice/FormattedPrice/text()").substring(1)));
+            this.setAttribute("total", total+parseFloat(dpath.xpathQuery("ItemAttributes/ListPrice/FormattedPrice/text()").substring(1)));
             datapath.addNodeFromPointer(dpath);
         </method>
 
         <method name="removeItem" args="dpath">
-            this.setAttribute("total", total-parseFloat(dpath.xpathQuery("OfferSummary/LowestNewPrice/FormattedPrice/text()").substring(1)));
+            this.setAttribute("total", total-parseFloat(dpath.xpathQuery("ItemAttributes/ListPrice/FormattedPrice/text()").substring(1)));
             dpath.deleteNode();
         </method>
 
