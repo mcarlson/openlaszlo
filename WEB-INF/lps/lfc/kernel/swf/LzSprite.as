@@ -296,6 +296,10 @@ LzSprite.prototype.setResource = function ( resourceName ) {
         //from this context, but it's not necessary.
         var mc = this.owner.immediateparent.sprite.attachResourceToChildView( resourceName, this );
         this.setMovieClip( mc , resourceName );
+        // Copy previous right-click context menu if there is one,
+        // from background-color movieclip.
+        var oldmenu = this.__LZbgRef.menu;
+        mv.menu = oldmenu;
     }
 
     this.resource = resourceName;
@@ -318,10 +322,15 @@ LzSprite.prototype.doReplaceResource = function(resourceName) {
     var reclick = this.__LZbuttonRef._visible;
     this.__LZbuttonRef = null;
 
+    var oldmenu = this.__LZmovieClipRef.menu;
+    if (oldmenu == null) {
+        oldmenu = this.__LZbgRef.menu;
+    }
     var oldname = this.__LZmovieClipRef._name;
     var mc = this.owner.immediateparent.sprite.attachResourceToChildView( resourceName, this, oldname);
 
     this.setMovieClip( mc , resourceName );
+    mc.menu = oldmenu;
 
     if ( reclick ){
         this.setClickable( true );
@@ -540,6 +549,10 @@ LzSprite.prototype.applyBG = function () {
             this.__LZbgColorO = new Color( this.__LZbgRef );
         }
         this.__LZbgColorO.setRGB( bgc );
+    }
+    // Reapply context menu if needed
+    if (this.__contextmenu) {
+        this.setContextMenu(this.__contextmenu);
     }
 }
 
@@ -1650,6 +1663,12 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
         }
         this._bgcolorhidden = true;
         mb.menu = cmenu;
+
+        // Install menu on foreground resource clip if there is one
+        var mc = this.getMCRef();
+        if (mc != null) {
+            mc.menu = cmenu;
+        }
     }
 
     if ($debug) {

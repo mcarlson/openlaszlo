@@ -197,6 +197,11 @@ LzMakeLoadSprite.updateAfterLoad = function (){
     this.setHeight(this.hassetheight?this.height:null);
     this.setWidth(this.hassetwidth?this.width:null);
 
+    if (this.__contextmenu) {
+        this.setContextMenu(this.__contextmenu);
+    }
+
+
     this.owner.__LZvizLoad = true; 
     this.owner.__LZupdateShown();
     this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: false});
