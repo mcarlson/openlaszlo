@@ -21,7 +21,7 @@
   * @shortdesc The receiver in Laszlo's point-to-point event system.
   * @see LzEvent
   */
-class LzDelegate {
+final class LzDelegate {
 
 /**
   *
@@ -32,7 +32,7 @@ class LzDelegate {
   * @param String eventName: Optional, but required if eventSender is used; The name
   * of the event to register the new delegate for.
   */  
-function LzDelegate (context, functionName, eventSender, eventName) {
+public function LzDelegate (context, functionName, eventSender, eventName) {
   super();
   // too expensive to leave on all the time
 //     if ($debug) {
@@ -60,29 +60,32 @@ function LzDelegate (context, functionName, eventSender, eventName) {
 static var __nextID = 1;
 
 /** The context in which to call the method
-  * @type Object
-  */
+ * @access private
+ * @type Object
+ */
 var c;
 
 /** The name of the method to call
-  * @type String
-  */
+ * @access private
+ * @type String
+ */
 var f;
 
+/** @access private */
 var lastevent = 0;
+/** @access private */
 var enabled = true;
+/** @access private */
 var event_called = false;
 
 /**
   * Executes the named method in the given context with the given data. Returns
-  * the result of the call. In rare cases, this method may be overriden by a
-  * subclass, and so it is marked 'protected' instead of 'private'.
-  * 
+  * the result of the call.
+  *
   * @param sd: The data with which to call the method.
   * @return: The value returned by the method call.
-  * @access protected
   */
-function execute (sd){
+public function execute (sd){
     // Don't execute if context has been deleted, as that could
     // 'resurrect' the deleted view, causing a memory leak
     // Usually this is because a deleted view has idle or timer events
@@ -93,7 +96,7 @@ function execute (sd){
         if (context['__LZdeleted']) { 
             return;
         }
-        return context[this.f]( sd );
+        return context[this.f](sd);
     }
 }
 
@@ -106,7 +109,7 @@ function execute (sd){
   * @param Object eventSender: The object which publishes the event.
   * @param String eventName: The name (string) of the event to register for.
   */
-function register ( eventSender , eventName){
+public function register ( eventSender , eventName){
     if (! eventSender) {
         if ($debug) {
             Debug.error('No eventSender (%w) for %s', eventSender, eventName);
@@ -152,7 +155,7 @@ function register ( eventSender , eventName){
 /**
   *  Unregisters the delegate for all of the events it is registered for.
   */
-function unregisterAll ( ){
+public function unregisterAll ( ){
     for (var i = 0; i< this.lastevent ; i++){
         this[ i ].removeDelegate( this );
         this[ i ] = null;
@@ -165,7 +168,7 @@ function unregisterAll ( ){
   *  @param LzEvent event: The event to unregister the delegate from.
   *                       (e.g.  myview.onmouseup)
   */
-function unregisterFrom ( event ){
+public function unregisterFrom ( event ){
     var keep = [];
     for (var i = 0; i< this.lastevent ; i++){
         var ev = this[ i ]; 
@@ -187,14 +190,14 @@ function unregisterFrom ( event ){
 /**
   *  Disables the delegate until enable method is called.
   */
-function disable (){
+public function disable (){
     this.enabled = false;
 }
 
 /**
   *  Enables a delegate that has been disabled
   */
-function enable (){
+public function enable (){
     this.enabled = true;
 }
 
@@ -354,13 +357,13 @@ function _dbg_name (){
   * @see LzDelegate
   */
 
-class LzEvent {
+final class LzEvent {
 
 /**
   *  @param Object eventSender: The owner of this event
   *  @param String eventName: The name of this event.
   */
-function LzEvent ( eventSender , eventName , d ){
+public function LzEvent ( eventSender , eventName , d ){
     super();
     // If debugging, add an informative name
     if ($debug) {
@@ -387,16 +390,17 @@ function LzEvent ( eventSender , eventName , d ){
     }
 }
 
-// Because this is not created with Class
-//prototype.classname = "LzEvent";
-
 /** True when event is being sent.
   * @type Boolean
+  * @access private
   */
 var locked = false;
 
 /** True when event is ready to be sent.
-  * 
+  * @type Boolean
+  * @keywords readonly
+  * @devnote TODO: [2008-03-20 ptw] This really should just be:
+  * function get ready() { return this.delegateList.length > 0; }
   */
 var ready = false;
 
@@ -407,7 +411,7 @@ var ready = false;
   * 
   *  @param LzDelegate d: The delegate to add to the list of delegates called by the event.
   */
-function addDelegate (d){
+public function addDelegate (d){
     this.ready = true;
     this.delegateList.push(d);
 }
@@ -420,7 +424,7 @@ function addDelegate (d){
   * 
   *  @param sd: The data to send with the event.
   */
-function sendEvent ( sd ){
+public function sendEvent (sd){
     if ( this.locked ) { return; } //don't allow for multiple calls
 
     var dll = this.delegateList.length;
@@ -443,18 +447,20 @@ function sendEvent ( sd ){
     for (var i = dll; i >= 0; i--){
         d = this.delegateList[ i ];
         //pointer may be bad due to deletions
-        if ( d && ! d.event_called){
+        if ( d && d.enabled && (! d.event_called)){
             d.event_called = true; //this delegate has been called
             calledDelegates.push( d );
             // We don't worry about deleted contexts here, because
             // we assume that delegates registered on events are
             // properly managed
-            if (d.enabled && d.c) {
-                if (d.c.__LZdeferDelegates) {
+            var c = d.c;
+            if (c && (! c.__LZdeleted)) {
+                if (c.__LZdeferDelegates) {
                   evq.push(this, d, sd);
                 } else {
                   // d.execute( sd ); inlined
-                  if (d.c && ! d.c.__LZdeleted && d.c[d.f]) d.c[d.f]( sd );
+                  var f = d.f;
+                  if (c[f]) c[f](sd);
                 }
             }
         }
@@ -484,10 +490,10 @@ function sendEvent ( sd ){
   * 
   *  @param LzDelegate d: The delegate to remove from the delegateList.
 */
-function removeDelegate ( d ){
+public function removeDelegate ( d ){
     var dll = this.delegateList.length;
     for (var i = 0; i < dll; i++){
-        if (this.delegateList[i] == d){
+        if (this.delegateList[i] === d){
             this.delegateList.splice(i, 1);
             break;
         }
@@ -500,7 +506,7 @@ function removeDelegate ( d ){
 /**
   *  Removes all delegates from call list
   */
-function clearDelegates (){
+public function clearDelegates (){
     while (this.delegateList.length ){
         this.delegateList[ 0 ].unregisterFrom( this );
     }
@@ -512,10 +518,11 @@ function clearDelegates (){
   *  Returns the number of delegates registered for the event
   *  @return Number: The number of delegates registered for the event.
   */
-function getDelegateCount ( ){
+public function getDelegateCount ( ){
     return this.delegateList.length;
 }
 
+/** @access private */
 function toString (){
     return ( "LzEvent");
 }
