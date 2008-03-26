@@ -199,6 +199,14 @@ public class NodeModel implements Cloneable {
     Element source;
     String srcloc;
     String bindername;
+    String dependenciesname;
+
+    static org.openlaszlo.sc.Compiler compiler;
+
+    org.openlaszlo.sc.Compiler getCompiler() {
+      if (compiler != null) { return compiler; }
+      return compiler = new org.openlaszlo.sc.Compiler();
+    }
 
     public CompiledAttribute (String name, Schema.Type type, String value, String when, Element source) {
       this.name = name;
@@ -210,6 +218,9 @@ public class NodeModel implements Cloneable {
       if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
         this.bindername = "$lzc$bind_" + name;
       }
+      if (when.equals(WHEN_ALWAYS)) {
+        this.dependenciesname = "$lzc$dependencies_" + name;
+      }
     }
 
     public Function getBinderMethod() {
@@ -219,9 +230,8 @@ public class NodeModel implements Cloneable {
       String installer = "setAttribute";
       String body = "\n#beginAttribute\n" + srcloc + value + "\n#endAttribute\n)";
       String pragmas =
-        // Should be unnecessary for JS2 methods
         "\n#pragma 'withThis'\n";
-      if (when.equals(WHEN_ONCE)) {
+      if (when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
         // default
       } else if (when.equals(WHEN_PATH)) {
         installer = "dataBindAttribute";
@@ -232,11 +242,6 @@ public class NodeModel implements Cloneable {
         // be determined until the style property value is
         // derived (at run time)
         installer = "__LZstyleBindAttribute";
-      } else if (when.equals(WHEN_ALWAYS)) {
-        pragmas =
-          "\n#pragma 'constraintFunction'\n" +
-          // Should be unnecessary for JS2 methods
-          "\n#pragma 'withThis'\n";
       }
       Function binder = new Function(
         bindername,
@@ -247,6 +252,20 @@ public class NodeModel implements Cloneable {
         body,
         srcloc);
       return binder;
+    }
+
+    public Function getDependenciesMethod() {
+      if (! when.equals(WHEN_ALWAYS)) {
+        return null;
+      }
+      String body = "\n#pragma 'withThis'\n" +
+        "return " + getCompiler().dependenciesForExpression(value);
+      Function dependencies = new Function(
+        dependenciesname,
+        "",
+        body,
+        srcloc);
+      return dependencies;
     }
 
     public Object getInitialValue () {
@@ -268,6 +287,10 @@ public class NodeModel implements Cloneable {
           kind = "LzConstraintExpr";
         } else if (when.equals(WHEN_ALWAYS)) {
           kind = "LzConstraintExpr";
+          // Always constraints have a second value, the dependencies method
+          return new BindingExpr("new " + kind + "(" + 
+                                 ScriptCompiler.quote(bindername) + ", " +
+                                 ScriptCompiler.quote(dependenciesname) + ")");
         }
         // Return an initExpr as the 'value' of the attribute
         return new BindingExpr("new " + kind + "(" + ScriptCompiler.quote(bindername) +")");
@@ -488,9 +511,35 @@ public class NodeModel implements Cloneable {
     ClassModel getParentClassModel() {
         String parentName = this.className;
         return
-            parentName.equals("class")?
+            ("class".equals(parentName) || "interface".equals(parentName))?
             schema.getClassModel(element.getAttributeValue("extends", ClassCompiler.DEFAULT_SUPERCLASS_NAME)):
             schema.getClassModel(parentName);
+    }
+
+    // TODO: [2008-03-26 ptw] Need to integrate mixins into the search
+    // for inherited attributes
+    ClassModel[] mixinModels;
+
+    ClassModel[] getMixinModels() {
+        String parentName = this.className;
+        if (! "class".equals(parentName)) { return null; }
+        if (mixinModels != null) { return mixinModels; }
+        String mixinSpec = element.getAttributeValue("with");
+        String mixins[];
+        if (mixinSpec != null) {
+            mixins = mixinSpec.split("\\s+,\\s+");
+            mixinModels = new ClassModel[mixins.length];
+            for (int i = 0; i < mixins.length; i++) {
+                ClassModel mm =  schema.getClassModel(mixins[i]);
+                if (mm == null) {
+                     throw new CompilationError(
+                         "No model for mixin: " + mixins[i],
+                         element);
+                }
+                mixinModels[i] = mm;
+            }
+        }
+        return mixinModels;
     }
 
     void setClassName(String name) {
@@ -506,7 +555,7 @@ public class NodeModel implements Cloneable {
         return schema.getAttributeType(parent, attrname);
     }
 
-    // Should only be called on a <class> definition element.
+    // Should only be called on a <class> or <interface> definition element.
     ViewSchema.Type getAttributeTypeInfoFromSuperclass(
         Element classDefElement, String attrname)
         throws UnknownAttributeException
@@ -532,7 +581,7 @@ public class NodeModel implements Cloneable {
             return attr.type;
         }
         // Otherwise, check if it's defined on the "class" element
-        // (e.g., 'name' or 'extends')
+        // (e.g., 'name', 'extends', or 'with')
         superclassModel = schema.getClassModel("class");
         return superclassModel.getAttributeTypeOrException(attrname);
     }
@@ -637,13 +686,12 @@ public class NodeModel implements Cloneable {
             // attributes are really 'meta' attributes, not
             // attributes of the class -- they will be processed by
             // the ClassModel or ClassCompiler
-            if ("class".equals(className)) {
+            if ("class".equals(className) || "interface".equals(className) || "mixin".equals(className)) {
                 // TODO: [2008-03-22 ptw] This should somehow be
                 // derived from the schema, but this does not work, so
                 // we hard-code the meta-attributes here
 //                 if (superclassModel.getAttribute(name) != null) {
                 if ("name".equals(name) || "extends".equals(name) || "with".equals(name)) {
-                    System.err.println("Skipping meta-attribute: " + name);
                     continue;
                 }
             }
@@ -674,7 +722,8 @@ public class NodeModel implements Cloneable {
             //
             if ((name.equals("id")) ||
                 (name.equals("name") &&
-                 topLevelDeclaration() && !className.equals("class"))) {
+                 topLevelDeclaration() &&
+                 (! ("class".equals(className) || "interface".equals(className) || "mixin".equals(className))))) {
                 ElementWithLocationInfo dup =
                     (ElementWithLocationInfo) env.getId(value);
                 // we don't want to give a warning in the case
@@ -703,7 +752,7 @@ public class NodeModel implements Cloneable {
 
             Schema.Type type;
             try {
-                if (className.equals("class")) {
+                if ("class".equals(className) || "interface".equals(className) || "mixin".equals(className)) {
                     // Special case, if we are compiling a "class"
                     // tag, then get the type of attributes from the
                     // superclass.
@@ -815,6 +864,9 @@ solution =
         }
         if (cattr.bindername != null) {
             attrs.put(cattr.bindername, cattr.getBinderMethod());
+        }
+        if (cattr.dependenciesname != null) {
+            attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod());
         }
         attrs.put(name, cattr.getInitialValue());
     }
@@ -1191,7 +1243,7 @@ solution =
             // Just check method declarations on regular node.
             // Method declarations inside of class definitions will be already checked elsewhere,
             // in the call from ClassCompiler.updateSchema to schema.addElement
-            if (!"class".equals(classname)) {
+            if (!("class".equals(className) || "interface".equals(className) || "mixin".equals(className))) {
                 schema.checkInstanceMethodDeclaration(element, classname, name, env);
             }
         }
@@ -1490,7 +1542,7 @@ solution =
         boolean forceOverride = parentAttrSpec != null && "true".equals(parentAttrSpec.override);
 
         try {
-            if (parent.getName().equals("class")) {
+            if ("class".equals(className) || "interface".equals(className)) {
                 parenttype = getAttributeTypeInfoFromSuperclass(parent, name);
             }  else {
                 parenttype = schema.getAttributeType(parent, name);

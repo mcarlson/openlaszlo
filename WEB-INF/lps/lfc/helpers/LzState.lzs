@@ -350,14 +350,25 @@ function destroy ( ) {
   // methods they call from held to stateArgs
   for (var key in stateArgs) {
     var val = stateArgs[key];
-    if (val instanceof LzInitExpr) {
+    if (val is LzInitExpr) {
       var methodName = val.methodName;
       // Method could be in held args
       if (methodName in held) {
         stateArgs[methodName] = held[methodName];
         delete held[methodName];
+      } else {
+        // If it is already a method on the state, nothing to do
       }
-      // If it is already a method on the state, nothing to do
+      if (val is LzConstraintExpr) {
+        var dependenciesName = val.dependenciesName;
+        // Method could be in held args
+        if (dependenciesName in held) {
+          stateArgs[dependenciesName] = held[dependenciesName];
+          delete held[dependenciesName];
+        } else {
+          // If it is already a method on the state, nothing to do
+        }
+      }
     }
   }
 
@@ -367,34 +378,47 @@ function destroy ( ) {
   var rename = null;
   for (var key in held) {
     var val = held[key];
-    if (val instanceof LzInitExpr) {
-      var methodName = val.methodName;
-      // Method could be in held args
-      if (held[methodName] is Function) {
-        if (rename == null) { rename = []; }
-        rename.push(key, held[methodName]);
-      }
-      // Or it could be a method on the state, in which case we have
-      // to re-tach it to the parent
-      if (this[methodName] is Function) {
-        if (rename == null) { rename = []; }
-        rename.push(key, this[methodName]);
-      }
+    if (val is LzInitExpr) {
+      if (rename == null) { rename = []; }
+      rename.push(key, val);
     }
   }
+
   if (rename != null) {
     for (var i = 0, l = rename.length; i < l; i += 2) {
       var key = rename[i];
-      var val = rename[i + 1];
-      var expr = held[key];
+      var expr = rename[i + 1];
       var methodName = expr.methodName;
       var newMethodName = methodName + this.__LZUID;
-      // Clone the init expr with the new name
-      held[key] = new (expr.constructor)(newMethodName);
-      // Promote the binding method to held
-      held[newMethodName] = val;
-      // If the binding method was in held, remove it
-      delete held[methodName];
+      if (held[methodName] is Function) {
+        // Method could be in held args, in which case we just rename
+        // it
+        held[newMethodName] = held[methodName];
+        delete held[methodName];
+      } else if (this[methodName] is Function) {
+        // It could be a method on the state, in which case we have to
+        // attach it to the parent
+        held[newMethodName] = this[methodName];
+      }
+      if (expr is LzConstraintExpr) {
+        var dependenciesName = expr.dependenciesName;
+        var newDependenciesName = dependenciesName + this.__LZUID;
+        if (held[dependenciesName] is Function) {
+          // Method could be in held args, in which case we just rename
+          // it
+          held[newDependenciesName] = held[dependenciesName];
+          delete held[dependenciesName];
+        } else if (this[dependenciesName] is Function) {
+          // It could be a method on the state, in which case we have to
+          // attach it to the parent
+          held[newDependenciesName] = this[dependenciesName];
+        }
+        // Clone the init expr with the new nameS
+        held[key] = new (expr.constructor)(newMethodName, newDependenciesName);
+      } else {
+        // Clone the init expr with the new name
+        held[key] = new (expr.constructor)(newMethodName);
+      }
     }
   }
 

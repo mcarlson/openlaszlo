@@ -1330,23 +1330,7 @@ function __LZresolveReferences () {
         var constraints = rdict['$constraints'];
         if (constraints != null) {
             for (var i = 0, l = constraints.length; i < l; i++) {
-                var c = constraints[i];
-                // Apply the constraint method
-                var constraintMethodName = c.methodName;
-                // TODO: [2008-02-06 ptw] the dependency computation needs
-                // to be a method also, probably stored in the
-                // LzConstraintExpr object
-                var cm = this[constraintMethodName];
-                if ($debug) {
-                    if (!(cm && cm instanceof Function)) {
-                        Debug.debug("Bad constraint %w on %w", c, this);
-                    }
-                }
-                var dependencies = null;
-                if ('dependencies' in cm) {
-                  dependencies = cm.dependencies.call(this);
-                }
-                this.applyConstraintMethod(constraintMethodName , dependencies);
+                this.applyConstraintExpr(constraints[i]);
             }
         }
         // Backward compatibility -- are there any other delayed setters?
@@ -1473,6 +1457,30 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
     // before the constraint was installed).
     this[constraintMethodName]();
 }
+
+    /** @access private */
+    function applyConstraintExpr(expr:LzOnceExpr) {
+        // Apply the constraint method
+        var constraintMethodName = expr.methodName;
+        if ($debug) {
+            if (!(this[constraintMethodName] is Function)) {
+                Debug.debug("Bad constraint %w on %w", expr, this);
+            }
+        }
+        var dependencies = null;
+        // TODO: [2008-03-24 ptw] Use `switch type`...
+        if (expr instanceof LzConstraintExpr) {
+            var c:LzConstraintExpr = expr;
+            var dependenciesMethodName = expr.dependenciesName;
+            if ($debug) {
+                if (!(this[dependenciesMethodName] is Function)) {
+                    Debug.debug("Bad constraint dependencies %w on %w", expr, this);
+                }
+            }
+            dependencies = this[dependenciesMethodName]();
+        }
+        this.applyConstraintMethod(constraintMethodName , dependencies);
+    }
 
   /**
    * Release a constraint on an attribute
@@ -1678,7 +1686,7 @@ function applyData ( data ){
   * @keywords final
   * @access private
   */
-var options = {};
+prototype.options = {};
 
   /**
     * Setter to install options on a class or instance
@@ -1706,7 +1714,7 @@ var options = {};
   * @return any: The value for that option (or undefined, if the option
   * has not been set)
   */
-function getOption ( key ){
+public function getOption ( key ){
     return this.options[ key ];
 }
 
@@ -1717,7 +1725,7 @@ function getOption ( key ){
   * @param String key: The option to set
   * @param any val: The value for the option.
   */
-function setOption ( key , val ){
+public function setOption ( key , val ){
     // Ensure you have your own private options dictionary, not the one
     // inherited from your class, nor the default empty one inherited
     // from LzNode!

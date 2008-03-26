@@ -190,47 +190,6 @@ function gotTimeout ( msg ){
 
 /**
   * Returns the result of an XPath query without changing the pointer. 
-  * The result can be:
-  * <ul>
-  * <li>a string -- the result of an operator such as name or attribute</li>
-  * <li>a single datapointer -- if the query resolves to a single node</li>
-  * <li>an array of datapointers -- if the query resolves to multiple nodes</li>
-  * </ul>
-  * @param Object p: the XPath
-  * @deprecated Use <code>LzDatapointer.xpathQuery()</code> or a
-  * <code>$path{}</code> instead.
-  */
-function getXPath ( p ){ 
-    if ( $debug ){
-        if ( !this.didGetXPathWarn ){
-          Debug.info("%w.%s is deprecated.  Use %w.%s or a $path{} constraint instead.",
-                     this, arguments.callee, this, this.xpathQuery);
-        }
-        this.didGetXPathWarn = true;
-    }
-    var r = this.xpathQuery( p );
-    var nr
-    //testing for nodeType is the best way I can think of to check if the
-    //return value is a node
-
-    if ( r[0].nodeType ){
-        //it's an array of dataNodes
-        nr = [];
-        for ( var i = 0; i < r.length; i++ ){
-            nr[i] = new LzDatapointer( null, { p : r[ i ] } );
-        }
-    } else if ( r.nodeType ){
-        nr = new LzDatapointer( null, { p : r } );
-    } else {
-        nr = r;
-    }
-
-    return nr;
-
-}
-
-/**
-  * Returns the result of an XPath query without changing the pointer. 
   * @param Object p: the xpath
   * @return any: <dl class="compact">
   * <dt><code>null</code></dt><dd>if the
@@ -274,9 +233,8 @@ function xpathQuery ( p ){
         return nodes;
     }
 }
-
 /** @access private */
-xpathQuery.dependencies = function ( who , self , p ){
+function $lzc$xpathQuery_dependencies ( who , self , p ){
     if (this.parsePath) {
         var pp  = this.parsePath( p );
         return [ pp.hasDotDot ? self.context.getContext().ownerDocument : self , 
@@ -287,8 +245,49 @@ xpathQuery.dependencies = function ( who , self , p ){
 }
 
 
+/**
+  * Returns the result of an XPath query without changing the pointer. 
+  * The result can be:
+  * <ul>
+  * <li>a string -- the result of an operator such as name or attribute</li>
+  * <li>a single datapointer -- if the query resolves to a single node</li>
+  * <li>an array of datapointers -- if the query resolves to multiple nodes</li>
+  * </ul>
+  * @param Object p: the XPath
+  * @deprecated Use <code>LzDatapointer.xpathQuery()</code> or a
+  * <code>$path{}</code> instead.
+  */
+function getXPath ( p ){ 
+    if ( $debug ){
+        if ( !this.didGetXPathWarn ){
+          Debug.info("%w.%s is deprecated.  Use %w.%s or a $path{} constraint instead.",
+                     this, arguments.callee, this, this.xpathQuery);
+        }
+        this.didGetXPathWarn = true;
+    }
+    var r = this.xpathQuery( p );
+    var nr
+    //testing for nodeType is the best way I can think of to check if the
+    //return value is a node
+
+    if ( r[0].nodeType ){
+        //it's an array of dataNodes
+        nr = [];
+        for ( var i = 0; i < r.length; i++ ){
+            nr[i] = new LzDatapointer( null, { p : r[ i ] } );
+        }
+    } else if ( r.nodeType ){
+        nr = new LzDatapointer( null, { p : r } );
+    } else {
+        nr = r;
+    }
+
+    return nr;
+
+}
 /** @access private */
-getXPath.dependencies = xpathQuery.dependencies;
+var $lzc$getXPath_dependencies;
+$lzc$getXPath_dependencies = $lzc$xpathQuery_dependencies;
 
 
 /**

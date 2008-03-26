@@ -1,9 +1,9 @@
 <canvas width="640" height="480"  debug="true">
     <class name="foo1" oninit="debug.write('oninit foo1')">
         <method name="init">
-            Debug.write("about to send oninit for " + this.class.classname );
+            Debug.write("about to send oninit for " + this.constructor.tagname );
             super.init();
-            Debug.write("just sent for " + this.class.classname );
+            Debug.write("just sent for " + this.constructor.tagname );
         </method>
     </class>
     <class name="foo2" extends="foo1" />
@@ -14,6 +14,6 @@
     <simplelayout/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

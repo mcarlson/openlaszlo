@@ -288,7 +288,7 @@ class ClassCompiler extends ViewCompiler {
                 className,
                 // All nodes get these args when constructed
 //                 "parent:LzNode, attrs:Object, children:Object? = null, async:boolean = false",
-                "parent:LzNode, attrs:Object, children:Object?, async:boolean",
+                "parent:LzNode, attrs:Object, children:Object?=null, async:boolean=null",
                 body,
                 null));
 

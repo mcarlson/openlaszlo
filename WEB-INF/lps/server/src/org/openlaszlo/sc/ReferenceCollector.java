@@ -109,7 +109,7 @@ public class ReferenceCollector {
     } else {
       callee = new ASTThisReference(0);
     }
-    String depnm = "$lsc$" + ((ASTIdentifier)fn).getName() + "_dependencies";
+    String depnm = "$lzc$" + ((ASTIdentifier)fn).getName() + "_dependencies";
 
     // the function uses #pragma "warnUndefinedReferences=false"
     // to avoid warnings for non-existent dependencies
@@ -117,7 +117,7 @@ public class ReferenceCollector {
     map.put("_1", callee);
     map.put("_2", new Compiler.Splice(node.get(1).getChildren()));
 
-    return parser.substitute("('" + depnm + "' in _1) ? _1['" + depnm + "'](this, _1, _2) : []", map);
+    return parser.substitute("_1['" + depnm + "'] ? _1['" + depnm + "'](this, _1, _2) : []", map);
   }
 
   // TODO: [2006-02-22 dda] Remove this 'subfunction' version soon.

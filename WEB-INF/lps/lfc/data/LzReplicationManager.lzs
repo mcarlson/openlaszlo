@@ -218,33 +218,21 @@ function construct ( odp , args ){
         this.cloneAttrs = new LzInheritedHash(this.cloneAttrs);
         this.cloneAttrs.datapath = LzNode._ignoreAttribute;
         // but, we want the constraint to apply to this object instead
-        var constraintMethodName = ia.datapath.methodName;
-        // TODO: [2008-02-06 ptw] the dependency computation needs
-        // to be a method also, probably stored in the
-        // LzConstraintExpr object
-        var dependencyMethod = view[constraintMethodName].dependencies;
-
         this.__LZpreventXPathUpdate = true;
         // NOTE: [2008-02-07 ptw] The method had better be available
         // on the clone (which means we really want a clone class here
         // to instantiate, rather than an instance to clone).
-        this.applyConstraintMethod(constraintMethodName, dependencyMethod != null ? dependencyMethod.call(this) : []);
+        this.applyConstraintExpr(ia.datapath);
         this.__LZpreventXPathUpdate = false;
     } else if (oa && 'xpath' in oa && oa.xpath instanceof LzConstraintExpr){
         //<view><datapath xpath="${ ... }"/>
         hadxpathconstraint = true;
         //we want the constraint to apply to this object instead
-        var constraintMethodName = oa.xpath.methodName;
-        // TODO: [2008-02-06 ptw] the dependency computation needs
-        // to be a method also, probably stored in the
-        // LzConstraintExpr object
-        var dependencyMethod = odp[constraintMethodName].dependencies;
-
         this.__LZpreventXPathUpdate = true;
         // NOTE: [2008-02-07 ptw] The method had better be available
         // on the clone (which means the compiler really has to move
         // it from the datapath subnode to the clone class).
-        this.applyConstraintMethod(constraintMethodName, dependencyMethod != null ? dependencyMethod.call(this) : []);
+        this.applyConstraintExpr(oa.xpath);
         this.__LZpreventXPathUpdate = false;
     }
 

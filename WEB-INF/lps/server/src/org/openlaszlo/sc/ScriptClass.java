@@ -26,7 +26,8 @@ public class ScriptClass {
   }
 
   public String toString() {
-    String str = "class " + name + (superclass != null?(" extends " + superclass + " "):"") + "{\n";
+    // For now we make all user classes dynamic
+    String str = "dynamic class " + name + (superclass != null?(" extends " + superclass + " "):"") + "{\n";
     int n = 1; Map attrs = classAttributes; String prefix = "static ";
     for (; n <= 2; n++, attrs = attributes, prefix = "") {
       for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {

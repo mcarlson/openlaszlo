@@ -182,11 +182,8 @@ function cloneNode ( deep ){
 function getAttr (name){
     if (this.attributes) return this.attributes[ name ];
 }
-
-/**
-  * @access private
-  */
-prototype.getAttr.dependencies = function (who , self){
+/** @access private */
+function $lzc$getAttr_dependencies (who , self){
     return [ self, 'attributes' ];
 }
 
@@ -239,6 +236,10 @@ function removeAttr (name){
 function hasAttr (name){
     return this.attributes[ name ] != null;
 }
+/** @access private */
+function $lzc$hasAttr_dependencies (who , self){
+    return [ self, 'attributes' ];
+}
 
 /**
   * Returns the first child of this node.
@@ -247,10 +248,8 @@ function hasAttr (name){
 function getFirstChild (){
     return this.childNodes[ 0 ];
 }
-/**
-  * @access private
-  */
-prototype.getFirstChild.dependencies = function( who, self ){
+/** @access private */
+function $lzc$getFirstChild_dependencies( who, self ){
     return [ this , "childNodes" ];
 }
 
@@ -261,10 +260,8 @@ prototype.getFirstChild.dependencies = function( who, self ){
 function getLastChild (){
     return this.childNodes[ this.childNodes.length-1 ];
 }
-/**
-  * @access private
-  */
-prototype.getLastChild.dependencies = function( who, self ){
+/** @access private */
+function $lzc$getLastChild_dependencies( who, self ){
     return [ this , "childNodes" ];
 }
 
@@ -279,13 +276,6 @@ function __LZupdateCO (){
     this.__LZcoDirty = false;
 }
 
-
-/**
-  * @access private
-  */
-prototype.hasAttr.dependencies = function (who , self){
-    return [ self, 'attributes' ];
-}
 
 /**
   * Sets the attributes of this node to the given Object.

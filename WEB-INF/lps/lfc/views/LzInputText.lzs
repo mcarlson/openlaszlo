@@ -263,8 +263,8 @@ function setText ( t ){
 function getText ( ){
     return this.sprite.getText();    
 }
-
-prototype.getText.dependencies = function(who, self) {
+/** @access private */
+function $lzc$getText_dependencies(who, self) {
     return [ self, "text" ];
 }
 

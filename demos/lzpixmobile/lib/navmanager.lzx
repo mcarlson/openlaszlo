@@ -4,6 +4,12 @@
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
 <library> 
+    <interface name="Spatialnav">
+      <method name="findnext" />
+      <method name="findprev" />
+      <method name="handlekeydown" args="k" />
+      <method name="handlekeyup" args="k" />
+    </interface>
     <script when="immediate">
     <![CDATA[
         mixin Spatialnav {

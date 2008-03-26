@@ -53,7 +53,7 @@
             scbox._updateSelectionByIndex( -1, false, false); 
             // Changing the selection to -1 should make the value become undefined, or null,
             // but it shouldn't just keep the same value as before. 
-            assertFalse( 2 == scbox.getValue() ); 
+            assertNotSame( 2, scbox.getValue() ); 
         </method>
         
         <method name="testSelectItemAt">
@@ -76,7 +76,7 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

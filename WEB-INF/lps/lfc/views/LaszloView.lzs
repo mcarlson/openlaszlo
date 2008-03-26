@@ -1697,9 +1697,8 @@ function getBounds (  ){
 
     return o;
 }
-
 /** @access private */
-prototype.getBounds.dependencies = function ( who , self ){
+function $lzc$getBounds_dependencies ( who , self ){
     return [ self, 'rotation' , self, 'x' , self , 'y' , self , 'width' ,
              self , 'height' ];
 }
@@ -2082,11 +2081,12 @@ function setAttributeRelative(prop, refView) {
 }
 
 
-/** @devnote This routine is unused.
-  * getAttributeRelative is the routine that is used in dependencies.
-  * "who" below should refer to "self"
-  */
-prototype.setAttributeRelative.dependencies = function ( who,self, prop ,
+/** @access private
+ * @devnote This routine is unused.
+ * getAttributeRelative is the routine that is used in dependencies.
+ * "who" below should refer to "self"
+ */
+function $lzc$setAttributeRelative_dependencies ( who,self, prop ,
                                                          refView ){
     // Debug.write("here i am, about to call getLinkage");
     var tLink = who.getLinkage( refView );
@@ -2151,8 +2151,8 @@ function getAttributeRelative(prop, refView ) {
         //not yet implemented: rotation, alpha...
     }
 }
-
-prototype.getAttributeRelative.dependencies = function( who,self, prop ,
+/** @access private */
+function $lzc$getAttributeRelative_dependencies( who,self, prop ,
                                                         refView ){
     var tLink = self.getLinkage( refView );
     var pass = 2;
@@ -2237,8 +2237,8 @@ function getMouse( xory ) {
     if (xory == null) return this.__mousecache;
     return this.__mousecache[xory];
 }
-
-prototype.getMouse.dependencies = function( ) {
+/** @access private */
+function $lzc$getMouse_dependencies( ) {
     return [ LzIdle, "idle" ];
 }
 
@@ -2615,8 +2615,8 @@ function getCurrentTime ( ){
         return this.frame / canvas.framerate;
     }
 }
-
-prototype.getCurrentTime.dependencies = function ( who, self ){
+/** @access private */
+function $lzc$getCurrentTime_dependencies ( who, self ){
     return [ self , "frame" ];
 }
 
@@ -2632,6 +2632,10 @@ function getTotalTime ( ){
         return this.totalframes / canvas.framerate;
     }
 }
+/** @access private */
+function $lzc$getTotalTime_dependencies ( who, self ){
+    return [ self , "load" ];
+}
 
 /**
   * Returns an object containing the media's id3 tag, assuming it's mp3 loaded 
@@ -2646,10 +2650,6 @@ function getID3 ( ){
 }
 
 
-prototype.getTotalTime.dependencies = function ( who, self ){
-    return [ self , "load" ];
-}
-
 /** @access private */
 function getPlayPerc ( ){
     if ( $debug ){
@@ -2661,8 +2661,8 @@ function getPlayPerc ( ){
     }
     return this.frame/this.totalframes;
 }
-
-prototype.getPlayPerc.dependencies = function ( who , self ){
+/** @access private */
+function $lzc$getPlayPerc_dependencies ( who , self ){
     return [ self, "frame" ];
 }
 

@@ -80,8 +80,10 @@ class LzOnceExpr extends LzInitExpr {
  * @access private
  */
 class LzConstraintExpr extends LzOnceExpr {
-  function LzConstraintExpr(constraintMethod:String) {
+  var dependenciesName:String;
+  function LzConstraintExpr(constraintMethod:String, dependenciesMethod:String) {
     super(constraintMethod);
+    this.dependenciesName = dependenciesMethod;
   }
 }
 

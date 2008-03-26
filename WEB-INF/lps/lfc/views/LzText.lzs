@@ -485,7 +485,10 @@ function setPattern ( val ){
 function getTextWidth ( ){
     return this.sprite.getTextWidth();
 }
-
+/** @access private */
+function $lzc$getTextWidth_dependencies ( who , self){
+      return [ self , "text" ];
+}
 
 /**
   * Calculates the current height of the text held by the text field.
@@ -494,8 +497,10 @@ function getTextHeight ( ){
     return this.sprite.getTextHeight();
     //return this.__LZtextclip.textHeight;
 }
-
-
+/** @access private */
+function $lzc$getTextHeight_dependencies ( who , self){
+      return [ self , "text" ];
+}
 
 /**
   * @access private
@@ -553,6 +558,10 @@ function getScroll ( ){
   */
 function getMaxScroll ( ){
     return this.sprite.getMaxScroll();
+}
+/** @access private */
+function $lzc$getMaxScroll_dependencies ( who , self){
+      return [ self , "maxscroll" ];
 }
 
 
@@ -753,40 +762,14 @@ function updateMaxLines (){
 }
 
 /**
-  * @access private
-  */
-prototype.getTextWidth.dependencies = function ( who , self){
-      return [ self , "text" ];
-}
-
-/**
-  * @access private
-  */
-
-prototype.getTextHeight.dependencies = function ( who , self){
-      return [ self , "text" ];
-}
-
-/**
-  * @access private
-  */
-prototype.getMaxScroll.dependencies = function ( who , self){
-      return [ self , "maxscroll" ];
-}
-
-
-/**
   * Returns the string represented in the text field
   * @return: The string in the text field
   */
 function getText ( ){
     return this.text;
 }
-
-/**
-  * @access private
-  */
-prototype.getText.dependencies = function ( who , self){
+/** @access private */
+function $lzc$getText_dependencies ( who , self){
       return [ self , "text" ];
 }
 

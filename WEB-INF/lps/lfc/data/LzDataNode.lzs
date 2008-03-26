@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -90,6 +90,10 @@ function getPreviousSibling (){
     if ( this.parentNode.__LZcoDirty ) this.parentNode.__LZupdateCO();
     return this.parentNode.childNodes[ this.__LZo - 1 ];
 }
+/** @access private */
+function $lzc$getPreviousSibling_dependencies( who, self ){
+    return [ this.parentNode , "childNodes" , this , "parentNode" ];
+}
 
 /**
  * Returns the parent of this node
@@ -111,13 +115,6 @@ function getOffset (){
 }
 
 /**
-  * @access private
-  */
-prototype.getPreviousSibling.dependencies = function( who, self ){
-    return [ this.parentNode , "childNodes" , this , "parentNode" ];
-}
-
-/**
   * Returns the sibling after this one this node's parentNodes List of children
   * @return LzDataNode: The node succeeding this one in this node's childNodes
   */
@@ -126,11 +123,8 @@ function getNextSibling (){
     if ( this.parentNode.__LZcoDirty ) this.parentNode.__LZupdateCO();
     return this.parentNode.childNodes[ this.__LZo + 1 ];
 }
-
-/**
-  * @access private
-  */
-prototype.getNextSibling.dependencies = function( who, self ){
+/** @access private */
+function $lzc$getNextSibling_dependencies( who, self ){
     return [ this.parentNode , "childNodes" , this , "parentNode" ];
 }
 
