@@ -10,7 +10,7 @@
 /**
   * @access private
   */
-trait LzDataElementTrait {
+mixin LzDataElementMixin {
     // N.B.: LzDataElementTrait may or may not be an LzNode, so
     // _if_ it were to have an initialize method, it would have to
     // match LzNode.initialize's signature.
@@ -420,22 +420,19 @@ var __LZgt = ">";
   * @return String: The string serialization of this node.
   */
 function serialize (){
-    return this.serializeInternal(Infinity);
+    return this.serializeInternal();
 }
 
 /**
   * Implementation of serialize with option to limit string length
   * @access private
   */
-function serializeInternal (len) {
-    if (arguments.length < 1) {
-        len = Infinity;
-    }
+function serializeInternal (len=Infinity) {
     var s = this.__LZlt + this.nodeName;
 
     //Debug.info('k', this.attributes);
     for ( var k in this.attributes ){
-        s += " " + k + '="' + this.__LZXMLescape( this.attributes[ k ] ) + '"';
+        s += " " + k + '="' + LzDataNode.__LZXMLescape( this.attributes[ k ] ) + '"';
         if (s.length > len) { break; }
     }
 
@@ -615,7 +612,8 @@ class LzMiniNode {
   * @see LzDataNode LzDataText LzDataPointer
   * @access public
   */
-class LzDataElement extends LzMiniNode_DataNode_DOM {
+class LzDataElement extends LzMiniNode with LzDataElementMixin, LzDataNodeMixin
+{
     // N.B.: LzDataElement is not an LzNode so has a different
     // initialize signature.
     function LzDataElement ( name , attributes , children ) {

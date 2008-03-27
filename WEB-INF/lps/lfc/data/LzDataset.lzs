@@ -91,9 +91,8 @@
   * @initarg src
   * @initarg timeout
   */
-// See LzMiniNode.lzs for LzNode_DataNode_DOM
-class LzDataset extends LzNode_DataNode_DOM {
-
+// [2008-03-18 pbr] dynamic is a temp fix to allow runtime property creation
+dynamic class LzDataset extends LzNode with LzDataElementMixin, LzDataNodeMixin {
 /** @access private
   * @modifiers override 
   */
