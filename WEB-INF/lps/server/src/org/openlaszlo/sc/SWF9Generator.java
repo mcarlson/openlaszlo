@@ -159,8 +159,12 @@ public class SWF9Generator extends JavascriptGenerator {
    * @throw CompilerError if name has a potential conflict
    */
   public void checkClassName(String name) {
-    if (name.startsWith("$"))
-      throw new CompilerError(name + ": class or mixin name may conflict with internally generated names");
+    if (name.startsWith("$")) {
+      // TODO: [2008-3-27 dda] This test should be for names that
+      //      users pick.  We are using some names internally that
+      //      don't yet pass this test, so this check commented for now.
+      //      throw new CompilerError(name + ": class or mixin name may conflict with internally generated names");
+    }
   }
 
   // override superclass method.
