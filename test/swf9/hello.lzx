@@ -87,7 +87,7 @@
     <text fontsize="11">aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</text>
   </view>
 
-<!-- 
+
   <view id="mystate"  x="650" y="80" onclick="this.mystate.apply()" >
     <state name="mystate">
       <view width="50" height="50" x="50" y="40" bgcolor="#ccccff"
@@ -98,7 +98,7 @@
     <view width="50" height="50" bgcolor="#ffcccc"/>
     <text name="t1">Click me to apply state</text>
   </view>
--->
+
 
   <text fontsize="11" width="200" x="500" y="160"  id="multi" resize="true"
         multiline="true"
