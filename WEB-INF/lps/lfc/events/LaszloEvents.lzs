@@ -21,7 +21,7 @@
   * @shortdesc The receiver in Laszlo's point-to-point event system.
   * @see LzEvent
   */
-final class LzDelegate {
+dynamic final class LzDelegate {
 
     var __delegateID:int = 0;
 

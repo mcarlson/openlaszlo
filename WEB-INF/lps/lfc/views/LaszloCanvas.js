@@ -69,7 +69,7 @@ dynamic class LzCanvas extends LzView {
   static var attributes = new LzInheritedHash(LzView.attributes);
 
 var resourcetable:*;
-var _lzinitialsubviews:*;
+var _lzinitialsubviews:Array = [];
 var totalnodes:*;
 var framerate:*;
 var creatednodes:*;
@@ -86,17 +86,9 @@ var __LZmousedownDel:LzDelegate;
 var __LZmousemoveDel:LzDelegate;    
 
 
-
 function LzCanvas ( args ) {
     super(null, args);
 
-    // TODO: [2006-05-19 ptw] The original did not do this, should we?
-    // super(null, args);
-    // No, we can't.  But you have to be aware that if you futz with
-    // LzNode or LzView, you have to consider whether you will have to
-    // change the canvas constructor too, since it _pretends_ to be a
-    // view!
-    
     // Note canvas start
     if ($profile) {
         Profiler.event('start: #canvas');
@@ -104,10 +96,7 @@ function LzCanvas ( args ) {
     // TODO [hqm 2008-01] nobody seems to reference this
     //    this.hasdatapath = true;
 
-
-
     this.datapath = {};
-
     this.immediateparent = this;
 
     this.mask = null;
@@ -122,13 +111,6 @@ function LzCanvas ( args ) {
 
     this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;
     delete args.lpsversion;
-
-    this.sprite = new LzSprite(this, true);
-
-    this.__LZapplyArgs( args );
-
-    this.isinited = false;
-    this._lzinitialsubviews = [];
 
     this.datasets = {};
     global.canvas = this;
@@ -352,7 +334,6 @@ function initDone (){
   */
 override function init (){
     trace("LzCanvas.init called");
-
     // cheapo debugger printing
     sprite.addChild(lzconsole.consoletext);
     sprite.addChild(lzconsole.consoleinputtext);
@@ -465,15 +446,6 @@ override function __LZcallInit ( an = null ){
 /**
   * @access private
   */
-override function setWidth (v){
-    if ( $debug ){
-        Debug.error( "setWidth cannot be called on the canvas." );
-    }
-}
-
-/**
-  * @access private
-  */
 function isProxied ( ){
     return this.proxied;
 }
@@ -487,14 +459,6 @@ override function setX ( v, force = null){
     }
 }
 
-/**
-  * @access private
-  */
-override function setHeight (v ){
-    if ( $debug ){
-        Debug.error( "setHeight cannot be called on the canvas." );
-    }
-}
 
 /**
   * @access private

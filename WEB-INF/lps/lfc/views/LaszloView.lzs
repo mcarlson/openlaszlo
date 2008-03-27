@@ -365,12 +365,6 @@ if ($swf9) {
   * @access public
   */
 override function construct ( parent , args) {
-    // TODO [hqm 2008-03] Needed to move this up earlier for swf9, better verify that is OK in swf8/dhtml,
-    // but args won't be munged by applyArgs properly yet? 
-    if ($swf9) {
-        this.__makeSprite(args);
-    }
-
     //this.callInherited( "construct" , arguments.callee , parent ,args );
     super.construct( (parent ? parent : canvas), args );
 
@@ -389,11 +383,7 @@ override function construct ( parent , args) {
         this.mask = ip.mask;
     }    
 
-    if ($swf9) {
-        // can we make swf9 support __makeSprite call here?
-    } else {
-        this.__makeSprite(args);
-    }
+    this.__makeSprite(args);
 
     //this.__LZdepth = ip.__LZsvdepth++;
     //this.__LZsvdepth = 0;
@@ -1434,7 +1424,6 @@ function __LZupdateShown( ) {
 function setWidth ( v ){
     if (this._width != v) {
         this._width = v;
-        //Debug.write('LzView.setWidth', this, v, this.sprite);
         this.sprite.setWidth(v);
 
         if ( v == null ){

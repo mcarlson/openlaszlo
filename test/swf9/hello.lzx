@@ -4,16 +4,19 @@
   <!--    <text bgcolor="#ccffcc">Hello OpenLaszlo!</text> -->
   <text oninit="this.setText('runtime='+canvas.runtime)"/>
 
+<!--
   <text y="20" name="mytimer">
     <method name="tellTime" args="tt">
       this.setText("time = "+tt+" msecs");
     </method>
   </text>
 
-  <handler event="oninit" >
+
+  <handler name="oninit" >
     var d = new LzDelegate( canvas.mytimer , "tellTime" );
     LzIdle.callOnIdle( d );
   </handler>
+-->
 
   <view x="200" y="10" resource="testmedia/cherry.png" 
         onclick="this.animate('rotation', 45, 1000, true)">
