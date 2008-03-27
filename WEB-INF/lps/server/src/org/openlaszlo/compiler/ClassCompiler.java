@@ -307,7 +307,7 @@ class ClassCompiler extends ViewCompiler {
                 // Apparently AS3 does not allow defaulting of
                 // primitive args
 //                 "parent:LzNode, attrs:Object, children:Object? = null, async:boolean = false",
-                "parent:LzNode, attrs:Object, children:Object?=null, async:Boolean=null",
+                "parent:LzNode, attrs:Object, children:Object?=null, async:Boolean=false",
                 body,
                 null));
 
