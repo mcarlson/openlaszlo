@@ -70,7 +70,12 @@
   * @shortdesc The basic input-text element.
   * @lzxname inputtext
   */
-class LzInputText extends LzText {
+dynamic public class LzInputText extends LzText {
+
+  function LzInputText ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+    super(parent,attrs,children,instcall);
+  }
+
 
 /** @access private
   * @modifiers override 
@@ -87,33 +92,27 @@ var onenabled = LzDeclaredEvent;
 /** @lzxtype event */
 var onselect = LzDeclaredEvent;
 
-/**  whenever the text in the field changes. 
-  * @lzxtype event
-  */
-var ontext = LzDeclaredEvent;
-
-/** @access private */
-var _onfocusDel = null;
-
-/** @access private */
-var _onblurDel = null;
-
-/** @access private */
-var _modemanagerDel = null;
-
 /** 
   * Width to use for text field if none is specified
   * @access private
   */
-function getDefaultWidth () {
+override function getDefaultWidth () {
     return 100;
 }
 
 
+/** @access private */
+var _onfocusDel = null;
+/** @access private */
+var _onblurDel = null;
+/** @access private */
+var _modemanagerDel = null;
+
 /**
   * @access private
   */
-function construct ( parent , args ){
+override function construct ( parent , args ){
+    this.focusable = true;
     super.construct.apply(this, arguments);
     this._onfocusDel = new LzDelegate( this , "_gotFocusEvent" , this,
                                             "onfocus" );
@@ -126,7 +125,7 @@ function construct ( parent , args ){
 /**
   * @access private
   */
-function destroy (recursiveCall) {
+override function destroy( recursiveCall = null){
     if (this._onfocusDel) {
         this._onfocusDel.unregisterAll();
         this._onfocusDel = null;
@@ -150,24 +149,28 @@ function destroy (recursiveCall) {
   * version, e.g. LzTextSprite();
   * @access private
   */
-function __makeSprite(args) {
+override function __makeSprite(args) {
     this.sprite = new LzInputTextSprite(this, args);
 }
+
+var _focused = false;
 
 /** @access private */
 function _gotFocusEvent(){
     this._focused = true;
-    this.sprite.gotFocus();
+    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
+    isprite.gotFocus();
 }
 
 /** @access private */
 function _gotBlurEvent(){
     this._focused = false;
-    this.sprite.gotBlur();
+    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
+    isprite.gotBlur();
 }
 
 // Receive input text events from sprite
-function inputtextevent (eventname, value){
+function inputtextevent (eventname, value = null) {
     //Debug.warn('inputtextevent', eventname, value);
     if (eventname == 'onfocus' && this._focused) return;
     if (eventname == 'onblur' && ! this._focused) return;
@@ -180,10 +183,11 @@ function inputtextevent (eventname, value){
         }
     } else if (eventname == 'onchange') {
         //multiline resizable fields adjust their height
+        var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
         if ( this.multiline && 
              this.sizeToHeight && 
-             this.height != this.sprite.getTextHeight() ) {
-                this.setHeight(this.sprite.getTextfieldHeight());
+             this.height != isprite.getTextHeight() ) {
+            this.setHeight(isprite.getTextfieldHeight());
         }
         if (this.ontext.ready) this.ontext.sendEvent(value);
         return;
@@ -193,18 +197,17 @@ function inputtextevent (eventname, value){
     if (this[eventname].ready) this[eventname].sendEvent(value);
 }
 
-// FIXME [2006-09-27 pbr] (LPP-2397) Uncomment 'override' when implemented
-/* override */ var focusable = true;  // Defined in LzView
-
-
 /**
   * Retrieves the contents of the text field for use by a datapath. See
   * <code>LzDatapath.updateData</code> for more on this.
   * @access protected
   */
 function updateData (){
-    return this.sprite.getText();
+    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
+    return isprite.getText();
 }
+
+    public var enabled = true;
 
 
 /**
@@ -214,7 +217,8 @@ function updateData (){
 function setEnabled (enabled){
     this.setAttribute('focusable', enabled);
     this.enabled = enabled;
-    this.sprite.setEnabled(enabled);
+    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
+    isprite.setEnabled(enabled);
     if (this.onenabled.ready) this.onenabled.sendEvent(enabled);
 }
 
@@ -228,7 +232,8 @@ function $lzc$set_enabled(v) { this.setEnabled(v); }
   */
 function setHTML (htmlp) {
     if (this.capabilities['htmlinputtext']) {
-        this.sprite.setHTML(htmlp);
+        var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
+        isprite.setHTML(htmlp);
     } else if ($debug) {
         this.__warnCapability('inputtext.setHTML()'); 
     }
@@ -238,7 +243,7 @@ function setHTML (htmlp) {
   * setText sets the text of the field to display
   * @param String t: the string to which to set the text
   */
-function setText ( t ){
+override function setText ( t, force = null){
     // force to a string
     t += '';
     if (this.maxlength != null && t.length > this.maxlength){
@@ -260,12 +265,8 @@ function setText ( t ){
     if (this.ontext.ready) this.ontext.sendEvent(t);
 }
 
-function getText ( ){
+override function getText ( ){
     return this.sprite.getText();    
-}
-/** @access private */
-function $lzc$getText_dependencies(who, self) {
-    return [ self, "text" ];
 }
 
 /** 
@@ -319,10 +320,14 @@ function _setallowselectable(value) {
 /** 
   * @access private
   */
-function setSelectable(value) {
+override function setSelectable(value) {
     this._selectable = value;
     // depending on allowselectable : the setted value or false !
     super.setSelectable( this._allowselectable ? value : false );
 }
 
 } // End of LzInputText
+
+ConstructorMap[LzInputText.tagname] = LzInputText;
+
+

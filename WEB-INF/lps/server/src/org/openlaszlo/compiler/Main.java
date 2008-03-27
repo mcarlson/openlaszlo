@@ -114,7 +114,9 @@ public class Main {
         compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY,
                              LPS.getProperty("compiler.runtime.default",
                                              LPS.getRuntimeDefault()));
-        boolean flushScriptCache = false;
+        // TODO [hqm 2008-01] I set this to true because when working on
+        // the LFC, I frequently get screwed by using cached script.
+        boolean flushScriptCache = true;
 
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].intern();
@@ -293,7 +295,7 @@ public class Main {
 }
 
 /**
- * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

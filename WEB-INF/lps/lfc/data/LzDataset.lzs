@@ -8,6 +8,7 @@
   * @access public
   */
 
+
 /**
   * 
   * <p> A <tagname>dataset</tagname> tag defines a
@@ -90,7 +91,8 @@
   * @initarg src
   * @initarg timeout
   */
-class LzDataset extends LzNode inherits LzDataElementTrait, LzDataNode {
+// See LzMiniNode.lzs for LzNode_DataNode_DOM
+class LzDataset extends LzNode_DataNode_DOM {
 
 /** @access private
   * @modifiers override 

@@ -71,7 +71,32 @@
   * supplied, the text field will by default be sized to fit the width of
   * the initial text value. 
   */
-class LzText extends LzView with LzFormatter {
+dynamic class LzText extends LzView with LzFormatter {
+
+    var maxlines = 1;
+    var selectable = false;
+    var antiAliasType = "normal";
+    var gridFit = "subpixel";
+    var sharpness = 0;
+    var thickness = 0;
+    function LzText ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+    }
+
+
+
+
+    
+
+    var password;
+    var sizeToHeight;
+
+    var yscroll;
+    var xscroll;
+
+    var scrollheight;
+
+
 
 /** @access private
   * @modifiers override 
@@ -175,13 +200,16 @@ var text;
 var colorstring = "#000000"; // black
 
 /** @access private */
-function init () {
+override function init () {
     super.init.apply(this, arguments);
 
     // [max] had to do this because text fields don't have a height until they're attached into the DOM.
     // multiline resizable fields adjust their height
     if (this.sizeToHeight) {
-        var h = this.sprite.getTextfieldHeight();
+
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+
+    var h = tsprite.getTextfieldHeight();
         if (h > 0) {
             this.setHeight(h);
         }
@@ -191,7 +219,8 @@ function init () {
 /**
   * @access private
   */
-function construct ( parent, args ) {
+override function construct ( parent, args ) {
+
     this.password = ('password' in args && args.password)  ? true : false;
     this.multiline = ('multiline' in args) ? args.multiline : null;
 
@@ -206,7 +235,8 @@ function construct ( parent, args ) {
     args.font = this.fontname;
     args.fontsize = this.fontsize;
     args.fontstyle = this.fontstyle;
-    this.sprite.__initTextProperties(args);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.__initTextProperties(args);
 
     args.font      = LzNode._ignoreAttribute;
     args.fontsize  = LzNode._ignoreAttribute;
@@ -230,7 +260,7 @@ function construct ( parent, args ) {
 
     this.setMultiline( this.multiline );
 
-    this.sprite.setText( this.text );
+    tsprite.setText( this.text );
 
     // To compute our width:
     // + if text is multiline:
@@ -298,6 +328,9 @@ function construct ( parent, args ) {
         } else {
             this.setThickness(0);
         }
+        if ($swf9) {
+            // TODO [hqm 2008-03] what should we be doing in swf9 here?? 
+        } else {
         // ---+++--- WTF? ---+++---
         if (! LzText.setters.antiAliasType) {
             /**
@@ -317,6 +350,7 @@ function construct ( parent, args ) {
             LzText.setters.thickness = "setThickness";
             LzText.attributes.thickness = 0;
         }
+        }
     }
 }
 
@@ -325,7 +359,7 @@ function construct ( parent, args ) {
   * version, e.g. LzTextSprite();
   * @access private
   */
-function __makeSprite(args) {
+override function __makeSprite(args) {
     //Debug.write('__makeSprite', args);
     this.sprite = new LzTextSprite(this, args);
 }
@@ -335,8 +369,9 @@ function __makeSprite(args) {
   * Get a reference to the control mc (overridden from LzView)
   * @access private
   */
-function getMCRef () {
-    return this.sprite.getMCRef();
+override function getMCRef () {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    return tsprite.getMCRef();
 //    return this.__LZtextclip;
 }
 
@@ -400,7 +435,8 @@ LzText.attributes.clip = true;
   * @param Boolean val: if true, the textfield will recompute it's width after setText() is called
   */
 function setResize ( val ){
-    this.sprite.setResize(val);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setResize(val);
     this.resize = val;
 }
 
@@ -408,12 +444,13 @@ function setResize ( val ){
 /**
   * @access private
   */
-function setWidth ( val ){
-    this.sprite.setWidth(val);
+override function setWidth ( val ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setWidth(val);
     super.setWidth.apply(this, arguments);
     // recalculate height
     if (this.sizeToHeight) {
-        var h = this.sprite.getTextfieldHeight();
+    var h = tsprite.getTextfieldHeight();
         if (h > 0) {
             this.setHeight(h);
         }
@@ -442,7 +479,15 @@ function updateMaxLines (){
   * @param String t: The string to add
   */
 function addText ( t ){
-    this.setText( this.getText() + t );
+    // TODO [hqm 2008-02] this could be done more efficiently (in swf9
+    // anyway) with appendText. I think it needs to invoke the part of
+    // setText that recomputes the dimensions if needed.  But we want
+    // to omit the call to sprite.setText(). I don't want to refactor
+    // setText to introduce a new level of function call there though.
+    //tsprite.appendText( t );
+    //this.text = tsprite.getText();
+ 
+   this.setText( this.getText() + t );
 }
 
 /**
@@ -458,7 +503,8 @@ function clearText ( ){
   */
 function setMaxLength ( val ){
     if (val == null || val == '') return;
-    this.sprite.setMaxLength(val);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setMaxLength(val);
     this.maxlength = val;
     if (this.onmaxlength.ready) this.onmaxlength.sendEvent(val);
 
@@ -474,7 +520,8 @@ function setMaxLength ( val ){
   */
 function setPattern ( val ){
     if (val == null || val == '') return;
-    this.sprite.setPattern(val);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setPattern(val);
     this.pattern = val;
     if (this.onpattern.ready) this.onpattern.sendEvent(val);
 }
@@ -483,7 +530,8 @@ function setPattern ( val ){
   * Calculates the current width of the text held by the text field.
   */
 function getTextWidth ( ){
-    return this.sprite.getTextWidth();
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    return tsprite.getTextWidth();
 }
 /** @access private */
 function $lzc$getTextWidth_dependencies ( who , self){
@@ -494,7 +542,8 @@ function $lzc$getTextWidth_dependencies ( who , self){
   * Calculates the current height of the text held by the text field.
   */
 function getTextHeight ( ){
-    return this.sprite.getTextHeight();
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    return tsprite.getTextHeight();
     //return this.__LZtextclip.textHeight;
 }
 /** @access private */
@@ -516,7 +565,7 @@ function applyData ( d ){
 /**
   * @access private
   */
-function toString ( ){
+override function toString ( ){
     return "LzText: " + this.getText();
 }
 
@@ -542,14 +591,16 @@ function _dbg_name ( ){
   * @access private
   */
 function setScroll ( h ){
-    this.sprite.setScroll(h);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setScroll(h);
 }
 
 /**
   * @access private
   */
 function getScroll ( ){
-    return this.sprite.getScroll();
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    return tsprite.getScroll();
 }
 
 
@@ -557,7 +608,8 @@ function getScroll ( ){
   * @access private
   */
 function getMaxScroll ( ){
-    return this.sprite.getMaxScroll();
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    return tsprite.getMaxScroll();
 }
 /** @access private */
 function $lzc$getMaxScroll_dependencies ( who , self){
@@ -569,7 +621,8 @@ function $lzc$getMaxScroll_dependencies ( who , self){
   * @access private
   */
 function getBottomScroll ( ){
-    return this.sprite.getBottomScroll();
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    return tsprite.getBottomScroll();
 }
 
 /**
@@ -579,7 +632,8 @@ function getBottomScroll ( ){
   * (n is always &lt; 0)
   */
 function setXScroll ( n ){
-    this.sprite.setXScroll(n);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setXScroll(n);
     //this.onxscroll.sendEvent(??);
 }
 
@@ -589,14 +643,15 @@ function setXScroll ( n ){
   * vertically (n is always &lt; 0)
   */
 function setYScroll ( n ){
-    this.sprite.setYScroll(n);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setYScroll(n);
     //this.onyscroll.sendEvent(this.yscroll);
 }
 
 /**
   * @access private
   */
-function $lzc$set_font(v) { this.setFontName(v); }
+override function $lzc$set_font(v) { this.setFontName(v); }
 /**
   * @access private
   */
@@ -702,15 +757,16 @@ function parseImgAttributes(attrs, str) {
   * setText sets the text of the field to display
   * @param String t: the string to which to set the text
   */
-function setText ( t, force ){
+function setText ( t, force = null){
     // force to a string
     t = '' + t;
     if (force != true && t == this.text) return;
-    if (this.visible) this.sprite.setVisible(this.visible);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    if (this.visible) tsprite.setVisible(this.visible);
     if (this.maxlength != null && t.length > this.maxlength){
         t = t.substring(0, this.maxlength);
     }
-    this.sprite.setText(t);
+    tsprite.setText(t);
     this.text =  t;
 
     if (this.width == 0 || (this.resize && this.multiline == false)) {
@@ -724,7 +780,7 @@ function setText ( t, force ){
 
     //resizable fields adjust their height
     if (this.sizeToHeight) {
-        var h = this.sprite.getTextfieldHeight();
+    var h = tsprite.getTextfieldHeight();
         if (h > 0) {
             this.setHeight(h);
         }
@@ -768,11 +824,11 @@ function updateMaxLines (){
 function getText ( ){
     return this.text;
 }
+
 /** @access private */
 function $lzc$getText_dependencies ( who , self){
       return [ self , "text" ];
 }
-
 
 static var escapeChars = { '>': '&gt;', '<': '&lt;'};
 
@@ -806,14 +862,16 @@ function escapeText( ts ){
   */
 function setSelectable ( isSel ){
     this.selectable = isSel;
-    this.sprite.setSelectable(isSel);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setSelectable(isSel);
 }
 
 /**
   * @access private
   */
-function setFontName ( fname ){
-    this.sprite.setFontName(fname);
+override function setFontName ( fname ,prop = null){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setFontName(fname);
     this.fontname = fname;
     // force recompute of height if needed
     this.setText( this.getText(), true);
@@ -823,7 +881,8 @@ function setFontName ( fname ){
   * @access private
   */
 function setFontSize ( fsize ){
-    this.sprite.setFontSize(fsize);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setFontSize(fsize);
     this.fontsize = fsize;
     // force recompute of height if needed
     this.setText( this.getText(), true);
@@ -833,7 +892,8 @@ function setFontSize ( fsize ){
   * @access private
   */
 function setFontStyle ( fstyle ){
-    this.sprite.setFontStyle(fstyle);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setFontStyle(fstyle);
     this.fontstyle = fstyle;
  }
 
@@ -845,7 +905,8 @@ function setFontStyle ( fstyle ){
   * @param Boolean ml: true if the text field should allow multiple lines
   */
 function setMultiline ( ml ){
-    this.sprite.setMultiline(ml);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setMultiline(ml);
     this.multiline = (ml == true);
 }
 
@@ -855,7 +916,8 @@ function setMultiline ( ml ){
   * @access private
   */
 function setBorder ( onroff ){
-    this.sprite.setBorder(onroff);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setBorder(onroff);
 }
 
 /**
@@ -863,7 +925,8 @@ function setBorder ( onroff ){
   * @todo should wrapping be made orthogonal to the multiline flag?
   */
 function setWordWrap ( wrap ){
-    this.sprite.setWordWrap(wrap);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setWordWrap(wrap);
 }
 
 
@@ -871,7 +934,8 @@ function setWordWrap ( wrap ){
   * @access private
   */
 function setEmbedFonts ( onroff ){
-    this.sprite.setEmbedFonts(onroff);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setEmbedFonts(onroff);
 }
 
 /***
@@ -883,7 +947,8 @@ function setAntiAliasType( aliasType ){
     if (this.capabilities.advancedfonts) {    
         if ((aliasType == "normal") || (aliasType == "advanced")) {
             this.antiAliasType = aliasType; 
-            this.sprite.setAntiAliasType(aliasType);
+            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+            tsprite.setAntiAliasType(aliasType);
         } else if ($debug) {
             Debug.warn("antiAliasType invalid, must be 'normal' or 'advanced', but you said '" + aliasType + "'");
         }        
@@ -912,7 +977,8 @@ function setGridFit( gridFit ){
     if (this.capabilities.advancedfonts) {    
         if ((gridFit == "none") || (gridFit == "pixel") || (gridFit == "subpixel")) {
             this.gridFit = gridFit; 
-            this.sprite.setGridFit(gridFit);
+            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+            tsprite.setGridFit(gridFit);
         } else if ($debug) {
             Debug.warn("gridFit invalid, must be 'none', 'pixel', or 'subpixel' but you said '" + gridFit + "'");
         }
@@ -942,7 +1008,8 @@ function setSharpness( sharpness ){
     if (this.capabilities.advancedfonts) {
         if  ((sharpness >= -400) && (sharpness <= 400)) {
             this.sharpness = sharpness; 
-            this.sprite.setSharpness(sharpness);
+            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+            tsprite.setSharpness(sharpness);
         } else if ($debug) {
             Debug.warn("sharpness out of range, must be -400 to 400");
         }        
@@ -972,7 +1039,8 @@ function setThickness( thickness ){
     if (this.capabilities.advancedfonts) {
         if  ((thickness >= -200) && (thickness <= 200)) {
             this.thickness = thickness;
-            this.sprite.setThickness(thickness); 
+            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+            tsprite.setThickness(thickness); 
         } else if ($debug) {
             Debug.warn("thickness out of range, must be -200 to 200");
         }
@@ -1008,7 +1076,8 @@ function __LZforceScrollAttrs () {
   * 
   */
 function setHScroll (s){
-    this.sprite.setHScroll(s);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setHScroll(s);
 }
 
 
@@ -1023,7 +1092,8 @@ function setHScroll (s){
   * selected.
   */
 function setSelection ( start , end ){
-    this.sprite.setSelection(start, end);
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+     tsprite.setSelection(start, end);
     /*
     var sf = targetPath( this.__LZtextclip);
     if( Selection.getFocus() != sf ) {
@@ -1045,7 +1115,8 @@ function setSelection ( start , end ){
   * based. If the text cursor is not in the textfield, this method returns -1.
   */
 function getSelectionPosition ( ){
-    return this.sprite.getSelectionPosition();
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    return  tsprite.getSelectionPosition();
     /*
     var sf = targetPath( this.__LZtextclip) ;
     if( Selection.getFocus() != sf ) {
@@ -1062,7 +1133,8 @@ function getSelectionPosition ( ){
   * If the text cursor is not in the textfield, this method returns -1.
   */
 function getSelectionSize ( ){
-    return this.sprite.getSelectionSize();
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    return tsprite.getSelectionSize();
     /*
     var sf = targetPath( this.__LZtextclip);
     if( Selection.getFocus() != sf ) {
@@ -1074,3 +1146,6 @@ function getSelectionSize ( ){
 }
 
 } // End of LzText
+
+ConstructorMap[LzText.tagname] = LzText;
+

@@ -1,7 +1,7 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -9,5 +9,14 @@
 
 #include "core/LzConstants.lzs"
 #include "core/LzDefs.lzs"
+
+if ($swf9) {
+    #include "core/dummyclasses.js"
+}
 #include "core/LzNode.lzs"
-#include "core/UserClass.lzs"
+
+
+if ($swf9) {
+} else {
+    #include "core/UserClass.lzs"
+}

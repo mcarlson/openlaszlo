@@ -89,6 +89,10 @@ public abstract class CommonGenerator implements ASTVisitor {
   boolean debugVisit = false;
   InstructionCollector collector = null;
 
+  public CommonGenerator() {
+    setGeneratorOptions();
+  }
+
   public Compiler.OptionMap getOptions() {
     return options;
   }
@@ -103,6 +107,19 @@ public abstract class CommonGenerator implements ASTVisitor {
     this.options = options;
     this.runtime = ((String)options.get(Compiler.RUNTIME)).intern();
     setRuntime(this.runtime);
+    setGeneratorOptions();
+  }
+
+  // does nothing here - may be overridden to set options
+  public void setGeneratorOptions() {
+  }
+
+
+  // Give the generators an option to save the original
+  // input source for debugging.
+
+  public void setOriginalSource(String source) {
+    // no action by default
   }
 
   public InstructionCollector getCollector() {
@@ -177,6 +194,14 @@ public abstract class CommonGenerator implements ASTVisitor {
     else {
       return new Integer(rand.nextInt(Integer.MAX_VALUE));
     }
+  }
+
+  //skip any passthrough nodes
+  SimpleNode passThrough(SimpleNode node)
+  {
+    if (node instanceof Compiler.PassThroughNode)
+      node = ((Compiler.PassThroughNode)node).realNode;
+    return node;
   }
 
   Boolean evaluateCompileTimeConditional(SimpleNode node) {
@@ -296,6 +321,31 @@ public abstract class CommonGenerator implements ASTVisitor {
     return new ASTEmptyExpression(0);
   }
 
+  public void errPassthroughProperty(SimpleNode node, String key, Object value, String errorType) {
+    throw new ParseException(key + ": " + errorType +
+                             " for #passthrough property in " +
+                             node.filename + " (" + node.beginLine + ")");
+  }
+
+  public void checkPassthroughProperty(SimpleNode node, String key, Object value) {
+    // by default, no parameters are allowed
+    // this can be overridden by the various runtime generators
+    errPassthroughProperty(node, key, value, "unknown key");
+  }
+
+  public SimpleNode visitPassthroughDirective(SimpleNode node, SimpleNode[] children) {
+    // just check parameters here.
+    assert node instanceof ASTPassthroughDirective;
+    Map props = ((ASTPassthroughDirective)node).getProperties();
+    for (Iterator iter = props.keySet().iterator(); iter.hasNext(); ) {
+      String key = (String)iter.next();
+      Object value = props.get(key);
+
+      checkPassthroughProperty(node, key, value);
+    }
+    return node;
+  }
+
   // Flatten nested StatementList structures
   private List flatten(SimpleNode[] src) {
     List dst = new ArrayList();
@@ -311,7 +361,7 @@ public abstract class CommonGenerator implements ASTVisitor {
   }
 
   public SimpleNode visitClassDefinition(SimpleNode node, SimpleNode[] children) {
-//     System.err.println("enter visitClassDefinition: " +  (new ParseTreePrinter()).visit(node));
+//     System.err.println("enter visitClassDefinition: " +  (new ParseTreePrinter()).text(node));
     ASTIdentifier classortrait = (ASTIdentifier)children[0];
     ASTIdentifier classname = (ASTIdentifier)children[1];
     String classnameString = classname.getName();
@@ -336,7 +386,7 @@ public abstract class CommonGenerator implements ASTVisitor {
     List props = new ArrayList();
     List classProps = new ArrayList();
     List stmts = new ArrayList();
-    translateClassDirectivesBlock(dirs, classnameString, props, classProps, stmts);
+    translateClassDirectivesBlock(dirs, classnameString, props, classProps, stmts, TranslateHow.AS_PROPERTY_LIST);
 
     SimpleNode instanceProperties;
     if (props.isEmpty()) {
@@ -378,7 +428,7 @@ public abstract class CommonGenerator implements ASTVisitor {
       replNode.set(0, varNode);
       replNode.set(1, stmtNode);
     }
-//     System.err.println("exit visitClassDefinition: " +  (new ParseTreePrinter()).visit(replNode));
+//     System.err.println("exit visitClassDefinition: " +  (new ParseTreePrinter()).text(replNode));
     return visitStatement(replNode);
   }
 
@@ -480,11 +530,33 @@ public abstract class CommonGenerator implements ASTVisitor {
     return n;
   }
 
+  /*enum*/
+  public static class TranslateHow {
+    /** Runtime initialization of properties and methods */
+    public static final TranslateHow AS_PROPERTY_LIST = new TranslateHow();
+  
+    /** Static definition of properties and methods */
+    public static final TranslateHow AS_CLASS = new TranslateHow();
+    
+    /** Only keep public methods, and omit the method implementation */
+    public static final TranslateHow AS_INTERFACE = new TranslateHow();
+  
+    private TranslateHow() {}
+  }
+
+  
   static SimpleNode undefined = parseFragment("void 0").get(1).get(0);
 
-  public void translateClassDirectivesBlock(SimpleNode[] dirs, String classnameString, List props, List classProps, List stmts) {
-    dirs = (SimpleNode[])(flatten(dirs).toArray(new SimpleNode[0]));
+  // translate the class directives according to the 'how' argument.
+  // If how is AS_PROPERTY_LIST, function name/values and variable
+  // name/initvalues are added to either classProps (for statics)
+  // or props (for non-statics).  For AS_CLASS, these
+  // are added to stmts, for AS_INTERFACE, the public ones are added
+  // to stmts.  Any other thing in the directive list is added
+  // to stmts, no matter what 'how' is.
+  public void translateClassDirectivesBlock(SimpleNode[] dirs, String classnameString, List props, List classProps, List stmts, TranslateHow how) {
 
+    dirs = (SimpleNode[])(flatten(dirs).toArray(new SimpleNode[0]));
     // Scope #pragma directives to block
     Compiler.OptionMap savedOptions = options;
     try {
@@ -495,30 +567,52 @@ public abstract class CommonGenerator implements ASTVisitor {
 
         // any modifiers, like 'static', 'final' are kept in mod.
         ASTModifiedDefinition mod = null;
+        boolean ispublic = false;
+        boolean isconstructor = false;
+
         if (n instanceof ASTModifiedDefinition) {
           assert (n.getChildren().length == 1);
           mod = (ASTModifiedDefinition)n;
           if (mod.isStatic()) {
             p = classProps;
           }
+          ispublic = "public".equals(mod.getAccess());
           n = n.get(0);
           mod.verifyClassLevel(n);
         }
         if (n instanceof ASTFunctionDeclaration) {
           SimpleNode[] c = n.getChildren();
           assert c.length == 3;
-          String fname = ((ASTIdentifier)c[0]).getName();
-          // Transform constructor into '$lzsc$initialize' method
-          if (classnameString.equals(fname)) {
-            fname = "$lzsc$initialize";
-            c[0] = new ASTIdentifier(fname);
+          ASTIdentifier fid = (ASTIdentifier)c[0];
+          String fname = fid.getName();
+          isconstructor = classnameString.equals(fname);
+          fid.setIsConstructor(isconstructor);
+
+          if (how == TranslateHow.AS_PROPERTY_LIST) {
+            // Transform constructor into '$lzsc$initialize' method
+            if (isconstructor) {
+              fname = "$lzsc$initialize";
+              c[0] = new ASTIdentifier(fname);
+            }
+            p.add(new ASTLiteral(fname));
+            SimpleNode funexpr = new ASTFunctionExpression(0);
+            funexpr.setBeginLocation(n.filename, n.beginLine, n.beginColumn);
+            funexpr.setChildren(c);
+            p.add(funexpr);
+          } else if (how == TranslateHow.AS_INTERFACE) {
+            if (!isconstructor && ispublic) {
+              stmts.add(n);
+            }
           }
-          p.add(new ASTLiteral(fname));
-          SimpleNode funexpr = new ASTFunctionExpression(0);
-          funexpr.setBeginLocation(n.filename, n.beginLine, n.beginColumn);
-          funexpr.setChildren(c);
-          p.add(funexpr);
-        } else if (n instanceof ASTVariableStatement) {
+          else {
+            assert how == TranslateHow.AS_CLASS;
+            if (mod != null) {
+              stmts.add(mod);
+            } else {
+              stmts.add(n);
+            }
+          }
+        } else if (n instanceof ASTVariableStatement && how == TranslateHow.AS_PROPERTY_LIST) {
           SimpleNode [] c = n.getChildren();
           for (int j = 0, len = c.length; j < len; j++) {
             SimpleNode v = c[j];
@@ -531,27 +625,65 @@ public abstract class CommonGenerator implements ASTVisitor {
             }
           }
         } else if (n instanceof ASTClassDirectiveBlock) {
-          translateClassDirectivesBlock(n.getChildren(), classnameString, props, classProps, stmts);
+          translateClassDirectivesBlock(n.getChildren(), classnameString, props, classProps, stmts, how);
         } else if (n instanceof ASTClassIfDirective) {
           Boolean value = evaluateCompileTimeConditional(n.get(0));
           if (value == null) {
             stmts.add(n);
           } else if (value.booleanValue()) {
             SimpleNode clause = n.get(1);
-            translateClassDirectivesBlock(clause.getChildren(), classnameString, props, classProps, stmts);
+            translateClassDirectivesBlock(clause.getChildren(), classnameString, props, classProps, stmts, how);
           } else if (n.size() > 2) {
             SimpleNode clause = n.get(2);
-            translateClassDirectivesBlock(clause.getChildren(), classnameString, props, classProps, stmts);
+            translateClassDirectivesBlock(clause.getChildren(), classnameString, props, classProps, stmts, how);
           }
         } else if (n instanceof ASTPragmaDirective) {
           visitPragmaDirective(n, n.getChildren());
-        } else {
+        } else if (n instanceof ASTPassthroughDirective) {
+          visitPassthroughDirective(n, n.getChildren());
           stmts.add(n);
+        } else {
+          if (how == TranslateHow.AS_CLASS && mod != null) {
+            stmts.add(mod);
+          } else if (how != TranslateHow.AS_INTERFACE) {
+            // interfaces can only have functions, those are handled above
+            stmts.add(n);
+          }
         }
       }
     }
     finally {
       options = savedOptions;
+    }
+  }
+
+  public void translateFormalParameters(SimpleNode params)
+  {
+    // Warn about any formal param initializers that are not '= null'
+    int paramCount = 0;
+    for (int i = 0, len = params.size(); i < len; i++) {
+      SimpleNode param = passThrough(params.get(i));
+      SimpleNode child;
+      if (param instanceof ASTIdentifier) {
+        paramCount++;
+      }
+      else if (!(param instanceof ASTFormalInitializer) || param.size() != 1) {
+        System.err.println("Warning: unknown formal parameter in " +
+                           param.filename + " (" + param.beginLine + ")");
+      }
+    }
+
+    if (!options.getBoolean(Compiler.PASSTHROUGH_FORMAL_INITIALIZERS)) {
+      // Remove any initializers seen.
+      SimpleNode[] newParams = new SimpleNode[paramCount];
+      paramCount = 0;
+      for (int i = 0, len = params.size(); i < len; i++) {
+        SimpleNode param = passThrough(params.get(i));
+        if (param instanceof ASTIdentifier) {
+          newParams[paramCount++] = param;
+        }
+      }
+      params.setChildren(newParams);
     }
   }
 
@@ -578,6 +710,9 @@ public abstract class CommonGenerator implements ASTVisitor {
     // Are we doing OO programming yet?
     if (node instanceof ASTPragmaDirective) {
       newNode = visitPragmaDirective(node, children);
+    }
+    else if (node instanceof ASTPassthroughDirective) {
+      newNode = visitPassthroughDirective(node, children);
     }
     else if (node instanceof ASTClassDefinition) {
       newNode = visitClassDefinition(node, children);

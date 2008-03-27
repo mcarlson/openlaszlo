@@ -188,6 +188,20 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // No implementation to collect stats for Javascript
   }
 
+  public String preProcess(String source) {
+    return source;
+  }
+
+  public List makeTranslationUnits(SimpleNode translatedNode, boolean compress, boolean obfuscate)
+  {
+    return (new ParseTreePrinter(compress, obfuscate)).makeTranslationUnits(translatedNode);
+  }
+
+  public byte[] postProcess(List tunits) {
+    assert (tunits.size() == 1);
+    return ((TranslationUnit)tunits.get(0)).getContents().getBytes();
+  }
+
   public SimpleNode visitProgram(SimpleNode node, SimpleNode[] directives, String cpass) {
     return visitProgram(node, directives, cpass, false);
   }
@@ -272,6 +286,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         newDirective = visitProgram(directive, children, cpass);
       } else if (directive instanceof ASTPragmaDirective) {
         newDirective = visitPragmaDirective(directive, directive.getChildren());
+      } else if (directive instanceof ASTPassthroughDirective) {
+        newDirective = visitPassthroughDirective(directive, directive.getChildren());
       } else {
         if ("1".equals(cpass)) {
           // Function, class, and top-level expressions are processed in pass 1
@@ -428,7 +444,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     SimpleNode a = children[1];
     SimpleNode b = (children.length > 2) ? children[2] : null;
     // Compile-time conditional evaluations
-//     System.err.println("visitIfStatement: " +  (new ParseTreePrinter()).visit(node));
+//     System.err.println("visitIfStatement: " +  (new ParseTreePrinter()).text(node));
     Boolean value = evaluateCompileTimeConditional(test);
     if (value != null) {
 //       System.err.println("" + test + " == " + value);
@@ -661,7 +677,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
      applied to any expression node, so it dispatches based on the
      node's class. */
   public SimpleNode visitExpression(SimpleNode node, boolean isReferenced) {
-    assert isExpressionType(node) : "" + node + ": " + (new ParseTreePrinter()).visit(node) + " is not an expression";
+    assert isExpressionType(node) : "" + node + ": " + (new ParseTreePrinter()).text(node) + " is not an expression";
 
     if (this.debugVisit) {
       System.err.println("visitExpression: " + node.getClass());
@@ -860,30 +876,30 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         String decls = "";
         ParseTreePrinter ptp = new ParseTreePrinter();
         if (scope instanceof ASTIdentifier || scope instanceof ASTThisReference) {
-          thisvar = ptp.visit(scope);
+          thisvar = ptp.text(scope);
         } else {
-          decls += "var " + thisvar + " = " + ptp.visit(scope) + ";";
+          decls += "var " + thisvar + " = " + ptp.text(scope) + ";";
         }
         if (property instanceof ASTLiteral || property instanceof ASTIdentifier) {
-          propvar = ptp.visit(property);
+          propvar = ptp.text(property);
           if (property instanceof ASTLiteral) {
             assert propvar.startsWith("\"") || propvar.startsWith("'");
             evtvar = propvar.substring(0,1) + "on" + propvar.substring(1);
           }
         } else {
-          decls += "var " + propvar + " = " + ptp.visit(property) + ";";
+          decls += "var " + propvar + " = " + ptp.text(property) + ";";
         }
         if (value instanceof ASTLiteral || value instanceof ASTIdentifier) {
-          valvar = ptp.visit(value);
+          valvar = ptp.text(value);
         } else {
-          decls += "var " + valvar + " = " + ptp.visit(value) + ";";
+          decls += "var " + valvar + " = " + ptp.text(value) + ";";
         }
         if (arglen > 2) {
           SimpleNode ifchanged = args[2];
           if (ifchanged instanceof ASTLiteral || ifchanged instanceof ASTIdentifier) {
-            changedvar = ptp.visit(ifchanged);
+            changedvar = ptp.text(ifchanged);
           } else {
-            decls += "var " + changedvar + " = " + ptp.visit(ifchanged) + ";";
+            decls += "var " + changedvar + " = " + ptp.text(ifchanged) + ";";
           }
         }
         newBody.add(parseFragment(decls));
@@ -1106,10 +1122,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     int stmtsIndex;
     ASTIdentifier functionNameIdentifier = null;
     if (children.length == 3) {
-      functionNameIdentifier = (ASTIdentifier)children[0];
+      if (children[0] instanceof ASTIdentifier) {
+        functionNameIdentifier = (ASTIdentifier)children[0];
+        functionName = functionNameIdentifier.getName();
+      }
       params = children[1];
       stmts = children[stmtsIndex = 2];
-      functionName = functionNameIdentifier.getName();
     } else {
       params = children[0];
       stmts = children[stmtsIndex = 1];
@@ -1143,11 +1161,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // global name (this allows us to name closures more
     // mnemonically at runtime
     String meterFunctionName = useName ? functionName : null;
-    Set pnames = new LinkedHashSet();
     SimpleNode[] paramIds = params.getChildren();
-    for (int i = 0, len = paramIds.length; i < len; i++) {
-      pnames.add(((ASTIdentifier)paramIds[i]).getName());
-    }
     // Pull all the pragmas from the beginning of the
     // statement list: process them, and remove them
     assert stmts instanceof ASTStatementList;
@@ -1305,7 +1319,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // Look for #pragma
     boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
     Map registerMap = new HashMap();
-    if (! scriptElement) {
+    if (remapLocals()) {
       // All parameters and locals are remapped to 'registers' of the
       // form `$n`.  This prevents them from colliding with member
       // slots due to implicit `with (this)` added below, and also makes
@@ -1345,11 +1359,13 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
     // Replace params
     for (int i = 0, len = paramIds.length; i < len; i++) {
-      ASTIdentifier oldParam = (ASTIdentifier)paramIds[i];
-      SimpleNode newParam = translateReference(oldParam).declare();
-      params.set(i, newParam);
+      if (paramIds[i] instanceof ASTIdentifier) {
+        ASTIdentifier oldParam = (ASTIdentifier)paramIds[i];
+        SimpleNode newParam = translateReference(oldParam).declare();
+        params.set(i, newParam);
+      }
     }
-
+    translateFormalParameters(params);
 
     List newBody = new ArrayList();
 
@@ -1717,6 +1733,19 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
 
     return new JavascriptReference(this, node, referenceCount);
+  }
+
+  /**
+   * Returns true if local variables and parameters
+   * should have remapped names (like $1, $2, ...) to prevent
+   * them from colliding with member names that may be exposed
+   * by implicit insertion of with(this).
+   *
+   * This method can be overridden when subclassed.
+   */
+  public boolean remapLocals() {
+    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
+    return !scriptElement;
   }
 }
 

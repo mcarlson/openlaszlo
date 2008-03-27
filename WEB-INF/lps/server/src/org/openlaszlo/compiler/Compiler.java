@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -136,7 +136,12 @@ public class Compiler {
     }
 
     public static String getObjectFileExtensionForRuntime (String runtime) {
-        String ext = SCRIPT_RUNTIMES.contains(runtime) ? ".js" : ".lzr=" + runtime + ".swf";
+        String ext;
+        if ("swf9".equals(runtime)) {
+            ext = ".lzr=" + runtime + ".swf";
+        } else {
+            ext = SCRIPT_RUNTIMES.contains(runtime) ? ".js" : ".lzr=" + runtime + ".swf";
+        }
         return ext;
     }
 
@@ -217,6 +222,8 @@ public class Compiler {
         // Must be kept in sync with server/sc/lzsc.py compile
         if ("null".equals(runtime)) {
             return new NullWriter(props, ostr, mMediaCache, true, env);
+        } else if ("swf9".equals(runtime)) {
+            return new SWF9Writer(props, ostr, mMediaCache, true, env);            
         } else if (SCRIPT_RUNTIMES.contains(runtime)) {
             return new DHTMLWriter(props, ostr, mMediaCache, true, env);
         } else {
@@ -399,7 +406,7 @@ public class Compiler {
             compileTimeConstants.put("$runtime", runtime);
             compileTimeConstants.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
             compileTimeConstants.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
-            compileTimeConstants.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8", "swf9"}).contains(runtime)));
+            compileTimeConstants.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
             compileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
             compileTimeConstants.put("$as3", Boolean.valueOf(Arrays.asList(new String[] {"swf9"}).contains(runtime)));
             compileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
@@ -533,6 +540,60 @@ public class Compiler {
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 Compiler.class.getName(),"051018-458", new Object[] {script, e})
 );
+        }
+    }
+
+
+    public void compileAndWriteToSWF9 (String script, String seqnum, OutputStream out) {
+        try {
+            Properties props = new Properties();
+            props.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, "swf9");
+            props.setProperty("canvasWidth", "1000");
+            props.setProperty("canvasHeight", "600");
+            Map compileTimeConstants = new HashMap();
+            compileTimeConstants.put("$debug", new Boolean(false));
+            compileTimeConstants.put("$profile", new Boolean(false));
+            compileTimeConstants.put("$backtrace", new Boolean(false));
+            compileTimeConstants.put("$runtime", "swf9");
+            compileTimeConstants.put("$swf7", Boolean.valueOf(false));
+            compileTimeConstants.put("$swf8", Boolean.valueOf(false));
+            compileTimeConstants.put("$as2", Boolean.valueOf(false));
+            compileTimeConstants.put("$swf9", Boolean.valueOf(true));
+            compileTimeConstants.put("$as3", Boolean.valueOf(true));
+            compileTimeConstants.put("$dhtml", Boolean.valueOf(false));
+            compileTimeConstants.put("$j2me", Boolean.valueOf(false));
+            compileTimeConstants.put("$svg", Boolean.valueOf(false));
+            compileTimeConstants.put("$js1", Boolean.valueOf(false));
+            props.put("compileTimeConstants", compileTimeConstants);
+            props.setProperty(CompilationEnvironment.DEBUG_EVAL_PROPERTY, "true");
+            byte[] objcode;
+            String prog = "";
+
+
+            // Try compiling as an expression first.  If that fails,
+            // compile as sequence of statements.  If that fails too,
+            // report the parse error.
+            try {
+                prog += "(function () { with(global) { lzconsole.write("+script +")} })();";
+                objcode = ScriptCompiler.compileToByteArray(prog, props);
+            } catch (org.openlaszlo.sc.parser.ParseException e) {
+                try {
+                    prog += "var mycode = (function () {\n"+
+                        "with (global) { " + script  +" }\n});\n"+"mycode();\n";
+                    objcode = ScriptCompiler.compileToByteArray(prog, props);
+                } catch (Exception e2) {
+                    mLogger.info("error compiling/writing script: " + e2.getMessage());
+                    objcode = ScriptCompiler.compileToByteArray(
+                        "lzconsole.write(" + ScriptCompiler.quote("Parse error: "+ e2.getMessage()) + ")",
+                        props);
+                }
+            }
+
+            int total = FileUtils.sendToStream(new ByteArrayInputStream(objcode), out);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            mLogger.info("error compiling/writing script: " + script);
         }
     }
 

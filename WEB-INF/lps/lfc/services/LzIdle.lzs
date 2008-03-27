@@ -34,6 +34,13 @@
   */
 class LzIdleClass {
 
+  var __LZdeferDelegates:Boolean = false;
+
+/** This is the idle event for the system, sent by this service 
+ * @lzxtype event
+ */
+var onidle = LzDeclaredEvent;
+
   var coi;
 
 
@@ -76,11 +83,6 @@ function removeCallIdleDelegates ( t ){
         this.regNext = false;
     }
 }
-
-/** This is the idle event for the system, sent by this service 
- * @lzxtype event
- */
-var onidle = LzDeclaredEvent;
 
 function toString () { return "LzIdle" }; // LzIdle in case somebody checks it
 

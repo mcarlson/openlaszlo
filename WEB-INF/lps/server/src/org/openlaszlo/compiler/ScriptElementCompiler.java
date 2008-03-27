@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -30,6 +30,18 @@ class ScriptElementCompiler extends ElementCompiler {
      */
     static boolean isElement(Element element) {
         return element.getName().intern() == "script";
+    }
+
+    /** Create any optional 'with' clauses.
+     */
+    String withBegin() {
+        return emitClassDecl ? "with (this) {\n" : "";
+    }
+
+    /** Close any optional 'with' clauses.
+     */
+    String withEnd() {
+        return emitClassDecl ? "}\n" : "";
     }
 
     public void compile(Element element) {
@@ -66,11 +78,13 @@ class ScriptElementCompiler extends ElementCompiler {
                     VIEW_INSTANTIATION_FNAME + 
                     "({name: 'script', attrs: " +
                     "{script: function () {\n" +
+                    withBegin() +
                     "#beginContent\n" +
                     "#pragma 'scriptElement'\n" +
                     CompilerUtils.sourceLocationDirective(element, true) +
                     script +
                     "\n#endContent\n" +
+                    withEnd() +
                     // Scripts have no children
                     "}}}, 1)",
                     element);

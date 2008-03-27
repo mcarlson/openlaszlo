@@ -16,6 +16,7 @@ import java.util.*;
 
 import org.jdom.Element;
 
+import org.openlaszlo.sc.ParseTreePrinter;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.JavascriptCompressor;
 import org.openlaszlo.utils.*;
@@ -133,7 +134,7 @@ class LibraryWriter extends DHTMLWriter {
     program = compressor.compress(program);
     boolean compress = (! mEnv.getProperty(org.openlaszlo.sc.Compiler.NAME_FUNCTIONS, "false").equals("true"));
     boolean obfuscate = compress || mEnv.getProperty(org.openlaszlo.sc.Compiler.OBFUSCATE, "false").equals("true");
-    (new org.openlaszlo.sc.ParseTreePrinter(compress, obfuscate)).print(program, out);
+    (new ParseTreePrinter(compress, obfuscate)).print(program, out);
     out.println("\n]]>\n</script>");
   } 
   
@@ -211,6 +212,6 @@ class LibraryWriter extends DHTMLWriter {
 }
 
 /**
- * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

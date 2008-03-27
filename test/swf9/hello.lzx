@@ -1,0 +1,132 @@
+<canvas width="1000" height="600" bgcolor="#eeeeff"> 
+  <font name="chev" src="chevaraor.ttf"/> 
+
+  <!--    <text bgcolor="#ccffcc">Hello OpenLaszlo!</text> -->
+  <text oninit="this.setText('runtime='+canvas.runtime)"/>
+
+  <text y="20" name="mytimer">
+    <method name="tellTime" args="tt">
+      this.setText("time = "+tt+" msecs");
+    </method>
+  </text>
+
+  <handler event="oninit" >
+    var d = new LzDelegate( canvas.mytimer , "tellTime" );
+    LzIdle.callOnIdle( d );
+  </handler>
+
+  <view x="200" y="10" resource="testmedia/cherry.png" 
+        onclick="this.animate('rotation', 45, 1000, true)">
+    <handler name="oninit">
+      Debug.write('embed view oninit handler!');
+    </handler>
+  </view>
+
+
+  <attribute name="somey" value="500"/>
+
+  <method name="showText" args="msg">
+    new LzText(canvas, {x: 200, y: canvas.somey, text: msg});
+    canvas.somey += 20;
+  </method>
+
+  <view x="200" y="150" resource="http://www.beartronics.com/swf9/logo.swf" 
+        onclick="this.animate('rotation', 45, 1000, true)">
+    <handler name="onerror" args="arg">
+      Debug.write("resource onerror event", arg);
+    </handler>
+    <handler name="ontimeout" args="arg">
+      lzconsole.write("resource ontimeout event", arg);
+    </handler>
+
+    <handler name="onclick">
+      canvas.showText("You clicked me!");
+    </handler>
+  </view>
+
+
+
+
+  <view name="bar" x="100" y="200" >
+    <view id="foo" bgcolor="0xcccccc" x="-100" y="-100"  height="200" width="200"
+          onclick="this.parent.animate('rotation', 90, 1000, true)" >
+
+
+      <text font="chev" embedfonts="true">This is <b><i>some</i></b> text</text>
+
+    <view bgcolor="blue" width="40" height="40" 
+          x="59" y="59"
+          onclick="this.animate('x', 10, 1000);
+                   this.animate('y', 10, 1000)"/>
+
+    <view bgcolor="red" width="40" height="40"
+          x="101" y="59"
+          onclick="this.animate('x', 150, 1000); 
+                   this.animate('y', 10, 1000)"/>
+
+    <view bgcolor="green" width="40" height="40" 
+          x="59" y="101"
+          onclick="this.animate('x', 10, 1000);
+                   this.animate('y', 150, 1000)"/>
+
+    <view bgcolor="yellow" width="40" height="40" 
+          x="101" y="101"
+          onclick="this.animate('x', 150, 1000);
+                   this.animate('y', 150, 1000)"/>
+  </view>
+  </view>
+
+  <view id="v1" bgcolor="#cccccc" x="500" y="20"  height="40" width="200">
+    <text fontsize="11">aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</text>
+  </view>
+
+  <view id="v2" bgcolor="#cccccc" x="500" y="80"  height="60" width="100" clip="true">
+    <text fontsize="11">aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</text>
+  </view>
+
+<!-- 
+  <view id="mystate"  x="650" y="80" onclick="this.mystate.apply()" >
+    <state name="mystate">
+      <view width="50" height="50" x="50" y="40" bgcolor="#ccccff"
+            onclick="parent.mystate.remove()">
+              <text>xxx Click me to remove state</text>
+      </view>
+    </state>
+    <view width="50" height="50" bgcolor="#ffcccc"/>
+    <text name="t1">Click me to apply state</text>
+  </view>
+-->
+
+  <text fontsize="11" width="200" x="500" y="160"  id="multi" resize="true"
+        multiline="true"
+        bgcolor="#cccccc">Multiline text Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Suspendisse porta orci vel urna. Nulla posuere. Phasellus vehicula ante ac leo. Nulla vitae metus. In vitae sapien non magna nonummy bibendum. Mauris facilisis gravida metus. Quisque lorem metus, tempor eget, ullamcorper at, dapibus eget, sapien. </text>
+
+  <text fontsize="11" x="500" y="240" selectable="true"
+        width="100" bgcolor="#ffcccc" clip="true">I am selectable bbb ccc ddd eee fff ggg hhh iii jjj kkk lll</text>
+
+
+  <text fontsize="11" x="650" y="240" onclick="canvas.showText('clicked on clickable text')"
+        width="100" bgcolor="#ffccaa">I am clickable text</text>
+
+
+  <inputtext fontsize="11" x="500" y="270"
+        width="250" bgcolor="#cccccc" >this is input text aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</inputtext>
+
+
+  <inputtext fontsize="11" x="500" y="300" 
+       bgcolor="#cccccc" >this is input text no set width  aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</inputtext>
+
+  <inputtext fontsize="11" x="500" y="330" resize="true"
+       bgcolor="#cccccc" >this is input text ,set width, resize = true aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</inputtext>
+
+
+
+
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

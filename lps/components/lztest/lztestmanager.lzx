@@ -1,23 +1,12 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
 
-<script><![CDATA[
+<script when="immediate"><![CDATA[
 
-var LzTestManager = {
-    totalsuites: 0,
-    passedsuites: 0,
-    failedsuites: 0,
-    suites: [],
-    cursuite: 0,
-    results: [],
-    global: this,
-    logfile: "lztest.log",
-    resultstring: ""
-}; 
 
 var LzTestSuite = function ( nm ) {
     this.name = nm; 
@@ -50,21 +39,30 @@ LzTestSuite.prototype.printResults = function() {
     }
 }
 
-LzTestManager.findTestSuites = function() {
+class LzTestManager {
+public var totalsuites = 0;
+public var passedsuites = 0;
+public var failedsuites = 0;
+public var suites = [];
+public var cursuite = 0;
+public var results = [];
+public var global = this;
+public var logfile = "lztest.log";
+public var resultstring = "";
+
+function findTestSuites() {
     // Debug.write("findTests..."); 
     for (var n in global) {
         var ts = global[n];
         if (ts && ts instanceof LzTestSuite) {
             // Debug.write("found test suite: ", n, " and it's really ", ts); 
-            LzTestManager.suites.push(ts); 
-            LzTestManager.totalsuites += 1;             
+            this.suites.push(ts); 
+            this.totalsuites += 1;             
         }
     }
 }       
 
-
-
-LzTestManager.setupServerLogging = function () {
+function setupServerLogging() {
     var lzurl = LzBrowser.getLoadURLAsLzURL();
     // strip initial "/legals/" from path, to make it relative to LPS servlet base
     if (lzurl.path) {
@@ -77,7 +75,7 @@ LzTestManager.setupServerLogging = function () {
     //this.resultstring = "start testsuite: "+this.testpath +"\n";
 }
 
-LzTestManager.sendLogData = function (logfile, msg) {
+function sendLogData(logfile, msg) {
     if (!this.loggingEnabled) {
         return;
     }
@@ -95,7 +93,7 @@ LzTestManager.sendLogData = function (logfile, msg) {
     tloader.send (/* content */ null)        
 }
 
-LzTestManager.printSummary = function () {
+function printSummary () {
     var failedsuitenames = [];
     var passedsuitenames = [];
     var countedfailedsuites = 0; 
@@ -140,7 +138,7 @@ LzTestManager.printSummary = function () {
     this.sendLogData(this.logfile, this.resultstring);
 }
 
-LzTestManager.runTestSuites = function() {
+function runTestSuites() {
     this.setupServerLogging();
     for (var suite in this.suites) {
         this.results[suite] = "pre"; 
@@ -172,7 +170,7 @@ LzTestManager.runTestSuites = function() {
 }
 
 
-LzTestManager.failAssertion = function( msg ) {    
+function failAssertion ( msg ) {    
     var ste = this.suites[this.cursuite]; 
     if (ste) {
         var tst = ste.curtest;     
@@ -186,7 +184,7 @@ LzTestManager.failAssertion = function( msg ) {
     }
 }
 
-LzTestManager.assertTrue = function(condition, assertion) {
+function assertTrue (condition, assertion) {
     if (!condition)  {
         var errmsg = "FAIL: assertTrue('" + condition + "') failed"
                     + (assertion ? ': ' + assertion : '');      
@@ -195,7 +193,7 @@ LzTestManager.assertTrue = function(condition, assertion) {
 }
 
 
-LzTestManager.assertFalse = function(condition, assertion) {
+function assertFalse (condition, assertion) {
     if (condition)  {
         var errmsg = "FAIL: assertFalse('" + condition + "') failed"
                     + (assertion ? ': ' + assertion : '');      
@@ -203,26 +201,26 @@ LzTestManager.assertFalse = function(condition, assertion) {
     }
 }
 
-LzTestManager.assertEquals = function(expected, actual, message) {
+function assertEquals (expected, actual, message) {
     if (! (expected == actual)) {
         var errmsg = "FAIL: " + message + "Equals expected " + expected + ", got " + actual; 
         LzTestManager.failAssertion(errmsg); 
     }
 }
 
-LzTestManager.assertNull = function(object, message) {
+function assertNull (object, message) {
     if (object !== null) {
        LzTestManager.failAssertion(message + " Null " + null + object);
     }
 }
 
-LzTestManager.assertNotNull = function(object, message) {
+function assertNotNull (object, message) {
     if (object === null) {
        LzTestManager.failAssertion(message + " NotNull " + "non-null value: " + object);
     }
 }
 
-LzTestManager.assertSame = function(expected, actual, message) {
+function assertSame (expected, actual, message) {
     if (typeof(expected) == "undefined" && typeof(actual) == "undefined") {
         return;
     }
@@ -232,26 +230,26 @@ LzTestManager.assertSame = function(expected, actual, message) {
     }
 }
 
-LzTestManager.assertNotSame = function(expected, actual, message) {
+function assertNotSame (expected, actual, message) {
     if (expected === actual) {
         var msg = "NotSame " + msg + " expected anything but " + expected + ", got ", actual; 
         LzTestManager.failAssertion(msg);
     }
 }
 
-LzTestManager.assertUndefined = function(object, message) {
+function assertUndefined (object, message) {
     if (typeof(object) != "undefined") {
        LzTestManager.failAssertion(message + " undefined value  " + object);
     }
 }
 
-LzTestManager.assertNotUndefined = function(object, message) {
+function assertNotUndefined (object, message) {
     if (typeof(object) == "undefined") {
         LzTestManager.failAssertion(message + " undefined value  " + object); // 
     }
 }
 
-LzTestManager.assertWithin = function(expected, actual, delta, message) {
+function assertWithin (expected, actual, delta, message) {
     // handle infinite expected
     if (expected == actual) return;
 
@@ -261,16 +259,20 @@ LzTestManager.assertWithin = function(expected, actual, delta, message) {
         LzTestManager.failAssertion(message + "Within" + "" + expected + "\u00B1" + delta + " " + actual);
     }
 }
+}
+var LzTestManager:LzTestManager = new LzTestManager();
 
 var startTestsDelegate = new LzDelegate(canvas, "startTests");
 startTestsDelegate.register(canvas, "oninit"); 
 
 canvas.startTests = function() {
+  with (this) {
     // Debug.info("LzTestManager is starting tests from canvas.oninit");
     LzTestManager.findTestSuites(); 
     LzTestManager.runTestSuites();     
     LzTestManager.printSummary(); 
     // Debug.info("LzTestManager is done with tests from canvas.oninit");
+  }
 }
 
 

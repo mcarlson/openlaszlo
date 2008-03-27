@@ -21,13 +21,13 @@ class LzMessage {
   var message = '';
   var length = 0;
 
-  function LzMessage (message) {
-    if (arguments.length > 0) {
+  function LzMessage (message = null) {
+    if (message != null) {
       this.appendInternal('' + message, message);
     }
   }
 
-  function appendInternal (str, obj) {
+  function appendInternal (str, obj = null) {
     this.message += str;
     this.length = this.message.length;
   }
@@ -53,6 +53,7 @@ class LzMessage {
  * Formatted output support
  */
 mixin LzFormatter {
+
 
   /**
    * pad or trim a string to a specified length

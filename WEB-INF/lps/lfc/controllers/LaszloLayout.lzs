@@ -59,7 +59,17 @@
   * @lzxname layout
   */
 
-class LzLayout extends LzNode {
+dynamic class LzLayout extends LzNode {
+
+
+/** @access private
+ * Just used to effect a type cast of immediateparent to LzView 
+ */
+    var vip:LzView = null;
+
+  function LzLayout ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+      super(parent,attrs,children,instcall);
+  }  
 
 /** @access private
   * @modifiers override 
@@ -67,6 +77,9 @@ class LzLayout extends LzNode {
   static var tagname = 'layout';
 /** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
+
+  /** @access private */
+  var initDelegate;
 
   /**
     * Set to true if layout is locked from updates.
@@ -115,17 +128,27 @@ class LzLayout extends LzNode {
   *
   * @access private
   */
-function construct ( view , args) {
+override  function construct ( view , args) {
     super.construct.apply(this, arguments);
     this.subviews = new Array;
+
+    // TODO [hqm 2008-03] this is a hack to cast to type LzView for
+    // the SWF9 compiler, until the compiler is taught to understand
+    // type casting DHTML/SWF8
+    if ($swf9) {
+        this.vip = LzView(this.immediateparent);
+    } else {
+        this.vip = this.immediateparent;
+    }
+    
 
     // view.layouts: If it doesn't already exist, layouts create an array
     //in the view that it attaches to that hold the list of layouts attached
     //to the view.
-    if ( this.immediateparent.layouts == null ){
-        this.immediateparent.layouts = [ this ];
+    if ( this.vip.layouts == null ){
+        this.vip.layouts = [ this ];
     } else {
-        this.immediateparent.layouts.push( this );
+        this.vip.layouts.push( this );
     }
 
     this.updateDelegate = new LzDelegate( this , "update" );
@@ -145,7 +168,7 @@ function construct ( view , args) {
 /**
   * @access private
   */
-function constructWithArgs ( args ) {
+override function constructWithArgs ( args ) {
     //all layouts need to know when their view adds/deletes a subview
     this.delegates.push( new LzDelegate (  this, "gotNewSubview",
                                         this.immediateparent,"onaddsubview" ));
@@ -153,10 +176,10 @@ function constructWithArgs ( args ) {
     this.delegates.push( new LzDelegate (  this, "removeSubview",
                                     this.immediateparent, "onremovesubview" ));
 
-    var vsl = this.immediateparent.subviews.length;
+    var vsl = this.vip.subviews.length;
 
     for (var i = 0; i < vsl; i++){
-        this.gotNewSubview( this.immediateparent.subviews[i] );
+        this.gotNewSubview( this.vip.subviews[i] );
     }
 
 }
@@ -165,7 +188,7 @@ function constructWithArgs ( args ) {
 /**
   * @access private
   */
-function destroy ( ) {
+override function destroy ( recursiveCall = null) {
     this.releaseLayout();
     super.destroy.apply(this, arguments);
 }
@@ -181,7 +204,7 @@ function destroy ( ) {
   * funciton. This is usually unused, since more than one type of delegate can
   * call reset.
   */
-function reset( e ) {
+function reset( e = null ) {
     if ( this.locked ) { return; }
     //defalt behavior on reset is to update
     this.update( e );
@@ -297,10 +320,10 @@ function releaseLayout ( ) {
             this.delegates[ i ] .unregisterAll();
         }
     }
-    if (this.immediateparent && this.immediateparent.layouts) {
-        for ( var i = this.immediateparent.layouts.length -1 ; i >= 0 ; i-- ){
-            if ( this.immediateparent.layouts[ i ] == this ){
-                this.immediateparent.layouts.splice( i , 1 );
+    if (this.immediateparent && this.vip.layouts) {
+        for ( var i = this.vip.layouts.length -1 ; i >= 0 ; i-- ){
+            if ( this.vip.layouts[ i ] == this ){
+                this.vip.layouts.splice( i , 1 );
             }
         }
     }
@@ -401,9 +424,11 @@ function update() {
 /**
   * @access private
   */
-function toString (){
+override function toString (){
     return "LzLayout for view " + this.immediateparent;
 }
 
 }
 
+
+ConstructorMap[LzLayout.tagname] = LzLayout;

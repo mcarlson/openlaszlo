@@ -1,0 +1,31 @@
+<canvas width="800" height="600"> 
+    <handler name="oninit">
+      trace('foo oninit handler!');
+    </handler>
+
+    <font name="Arioso" src="ariosor.ttf" />
+
+
+  <view id="foo" bgcolor="#cccccc" x="20" y="20"  height="40" width="200">
+    <text fontsize="18">aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</text>
+  </view>
+
+  <view id="foo" bgcolor="#cccccc" x="20" y="80"  height="60" width="100" clip="true">
+    <text fontsize="18">aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</text>
+  </view>
+
+  <text fontsize="18" x="20" y="200" bgcolor="#cccccc">aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</text>
+
+  <text fontsize="18" x="20" y="240"
+        width="100" bgcolor="#ffcccc" clip="true">aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</text>
+
+
+
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,93 @@
+<!-- Simple compiler test for default function initializers, and ...rest notation -->
+<canvas debug="true">
+  <simplelayout />
+  <text name="t" bgcolor="#ccffcc">Hello OpenLaszlo!</text>
+<script>
+function f0() {
+  return 'f0()';
+}
+
+function f00(...rest) {
+  return 'f00(' + rest + ')';
+}
+
+function f000(x=null) {
+  return 'f000(' + x + ')';
+}
+
+function f0000(x=null, ...rest) {
+  return 'f0000(' + x + ',' + rest + ')';
+}
+
+function f1(x) {
+  return 'f1(' + x + ')';
+}
+
+function f11(x, ...rest) {
+  return 'f11(' + x + ',' + rest + ')';
+}
+
+function f2(x=null, y=null) {
+  return 'f2(' + x + ',' + y + ')';
+}
+
+function f22(x, y=null) {
+  return 'f22(' + x + ',' + y + ')';
+}
+
+function f4(w, x, y=null, z=null) {
+  return 'f4(' + w + ',' + x + ',' + y + ',' + z + ')';
+}
+
+function f5(w, x, y=null, z=null, ...rest) {
+  return 'f4(' + w + ',' + x + ',' + y + ',' + z + ',' + rest + ')';
+}
+
+// These can be uncommented to check error cases.
+//function xx1(...x, y) { }
+//function xx2(...x, ...y) { }
+//function xx3(...x, y = null) { }
+//function xx4(x = null, ...y, z) { }
+//function xx5(x = null, z) { }
+// function xx6(x = null, z, w = null) { }
+
+function show(x) {
+   Debug.write(x);
+}
+
+function testit() {
+t.setText("Run this test in debug mode to see output");
+show("hello there");
+show(f0())
+show(f00())
+show(f00(0))
+show(f000())
+show(f000(0))
+show(f0000())
+show(f0000(0))
+show(f0000(0,0))
+show(f1(1))
+show(f11(11))
+show(f11(11,12))
+show(f2())
+show(f2(2))
+show(f2(2,3))
+show(f22(2))
+show(f22(2,3))
+show(f4(4,5))
+show(f4(4,5,6))
+show(f4(4,5,6,7))
+show(f5(5,6))
+show(f5(5,6,7))
+show(f5(5,6,7,8))
+show(f5(5,6,7,8,9))
+}
+
+testit()
+
+</script>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

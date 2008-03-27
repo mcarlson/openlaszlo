@@ -23,6 +23,8 @@
   */
 final class LzDelegate {
 
+    var __delegateID:int = 0;
+
 /**
   *
   * @param Object context: reference to object which will be called
@@ -32,7 +34,7 @@ final class LzDelegate {
   * @param String eventName: Optional, but required if eventSender is used; The name
   * of the event to register the new delegate for.
   */  
-public function LzDelegate (context, functionName, eventSender, eventName) {
+public function LzDelegate (context, functionName, eventSender = null, eventName = null) {
   super();
   // too expensive to leave on all the time
 //     if ($debug) {
@@ -57,7 +59,7 @@ public function LzDelegate (context, functionName, eventSender, eventName) {
 }
 
 /** @access private */
-static var __nextID = 1;
+    static var __nextID:int = 1;
 
 /** The context in which to call the method
  * @access private
@@ -90,7 +92,6 @@ public function execute (sd){
     // 'resurrect' the deleted view, causing a memory leak
     // Usually this is because a deleted view has idle or timer events
     // still registered.
-    // inlined in LzDelegate.sendEvent(), __LZdrainDelegatesQueue(), and LzTimer.addTimer(); 
     var context = this.c;
     if (this.enabled && context) {
         if (context['__LZdeleted']) { 
@@ -212,7 +213,7 @@ public function enable (){
    * @access private
    */
   static function  __LZdrainDelegatesQueue (pos) {
-    var evq = this.__LZdelegatesQueue;
+    var evq = LzDelegate.__LZdelegatesQueue;
     var n = evq.length;
     var i = pos;
     if (i < n) {
@@ -357,13 +358,14 @@ function _dbg_name (){
   * @see LzDelegate
   */
 
-final class LzEvent {
+public class LzEvent extends LzDeclaredEventClass {
+    var delegateList:Array = null;
 
 /**
   *  @param Object eventSender: The owner of this event
   *  @param String eventName: The name of this event.
   */
-public function LzEvent ( eventSender , eventName , d ){
+    function LzEvent ( eventSender:* , eventName:* , d:*  = null){
     super();
     // If debugging, add an informative name
     if ($debug) {
@@ -394,15 +396,10 @@ public function LzEvent ( eventSender , eventName , d ){
   * @type Boolean
   * @access private
   */
-var locked = false;
+    var locked:Boolean = false;
 
-/** True when event is ready to be sent.
-  * @type Boolean
-  * @keywords readonly
-  * @devnote TODO: [2008-03-20 ptw] This really should just be:
-  * function get ready() { return this.delegateList.length > 0; }
-  */
-var ready = false;
+// public var ready:Boolean = false;
+
 
 /**
   *  Adds the given delegate to the event's delegate list. Although this listed
@@ -417,14 +414,7 @@ public function addDelegate (d){
 }
 
 
-
-/**
-  *  Sends the event, passing its argument as the data to all the called
-  *  delegates
-  * 
-  *  @param sd: The data to send with the event.
-  */
-public function sendEvent (sd){
+public override function sendEvent ( sd = null ){
     if ( this.locked ) { return; } //don't allow for multiple calls
 
     var dll = this.delegateList.length;
@@ -490,7 +480,8 @@ public function sendEvent (sd){
   * 
   *  @param LzDelegate d: The delegate to remove from the delegateList.
 */
-public function removeDelegate ( d ){
+
+public override function removeDelegate ( d = null ){
     var dll = this.delegateList.length;
     for (var i = 0; i < dll; i++){
         if (this.delegateList[i] === d){
@@ -506,7 +497,7 @@ public function removeDelegate ( d ){
 /**
   *  Removes all delegates from call list
   */
-public function clearDelegates (){
+public override function clearDelegates (){
     while (this.delegateList.length ){
         this.delegateList[ 0 ].unregisterFrom( this );
     }
@@ -518,12 +509,12 @@ public function clearDelegates (){
   *  Returns the number of delegates registered for the event
   *  @return Number: The number of delegates registered for the event.
   */
-public function getDelegateCount ( ){
+override public function getDelegateCount ( ){
     return this.delegateList.length;
 }
 
 /** @access private */
-function toString (){
+public override function toString (){
     return ( "LzEvent");
 }
 
@@ -532,7 +523,7 @@ if ($debug) {
   *  If debugging, add an informative name
   *  @access private
   */
-function _dbg_name (){
+override function _dbg_name (){
     return Debug.formatToString("%0.48w.%s", this._dbg_eventSender, this._dbg_eventName);
 }
 }

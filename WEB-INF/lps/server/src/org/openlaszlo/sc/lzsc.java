@@ -178,7 +178,7 @@ public class lzsc  {
     compileTimeConstants.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
     compileTimeConstants.put(
       "$as2",
-      Boolean.valueOf("swf7".equals(runtime) || "swf8".equals(runtime) || "swf9".equals(runtime)));
+      Boolean.valueOf("swf7".equals(runtime) || "swf8".equals(runtime) ));
     compileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
     compileTimeConstants.put("$as3", Boolean.valueOf("swf9".equals(runtime)));
     compileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
@@ -363,6 +363,6 @@ public class lzsc  {
 }
 
 /**
- * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

@@ -41,7 +41,11 @@
   * @see LzAnimator
   *
   */
-class LzAnimatorGroup extends LzNode {
+dynamic class LzAnimatorGroup extends LzNode {
+
+    function LzAnimatorGroup ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+    }  
 
 /** @access private
   * @modifiers override 
@@ -58,7 +62,14 @@ class LzAnimatorGroup extends LzNode {
     * @lzxtype token
     */
   var attribute;
-  
+
+    var updateDel;
+    var crepeat;
+    var startTime;
+    var __LZpauseTime;
+    var actAnim;
+
+
   /** Whether to start the animation instantly (the default),
     * or wait for a script command.
     *
@@ -163,12 +174,6 @@ class LzAnimatorGroup extends LzNode {
     */
   var process = "sequential";
   
-  /** The object to animate 
-    *
-    * @type string
-    * @devnote see $lzc$set_target below
-    */
-  var target;
 
 /** The active-state of the animator. If true, the animator is currently processing its animation.
    * This field is read-only.
@@ -221,14 +226,23 @@ var animatorProps = { attribute : true, from : true ,
 LzAnimatorGroup.attributes.ignoreplacement = true;
 
 
+    var vip:LzView = null;
+
 /**
   * @access private
   */
-function construct ( parent, args ) {
+override function construct ( parent, args ) {
 
     super.construct.apply(this, arguments);
 
-    if ( (this.immediateparent) instanceof ( LzAnimatorGroup ) ){
+    if ($swf9) {
+        this.vip = LzView(this.immediateparent);
+    } else {
+        this.vip = this.immediateparent;
+    }
+
+
+    if ( (this.immediateparent) is ( LzAnimatorGroup ) ){
         for ( var k in this.animatorProps ){
             if ( args[ k ] == null ){
                 args[ k ] = this.immediateparent[ k ] ;
@@ -237,7 +251,7 @@ function construct ( parent, args ) {
         if ( this.immediateparent.animators == null ){
             this.immediateparent.animators = [ this ];
         } else {
-            this.immediateparent.animators.push( this );
+           this.immediateparent.animators.push( this );
         }
         args.start = LzNode._ignoreAttribute;
     } else {
@@ -251,7 +265,7 @@ function construct ( parent, args ) {
 /**
   * @access private
   */
-function init ( ) {
+override function init ( ) {
     if (! this.target) this.target = this.immediateparent;
     if ( this.started ) this.doStart();
     super.init.apply(this, arguments);
@@ -266,7 +280,7 @@ function $lzc$set_target ( new_target ){
     var nodes = this.subnodes;
     if (nodes) {
         for (var i=0; i < nodes.length; i++) {
-            if ((nodes[i]) instanceof ( LzAnimatorGroup )) {
+            if ((nodes[i]) is ( LzAnimatorGroup )) {
                 nodes[i].$lzc$set_target(new_target);
             }
         }
@@ -330,16 +344,6 @@ function doStart (){
 /**
   * @access private
   */
-function start ( ){
-    if ( $debug ){
-      Debug.deprecated(this, arguments.callee, this.doStart);
-    }
-    this.doStart();
-}
-
-/**
-  * @access private
-  */
 function prepareStart ( ){
     for ( var i = this.animators.length-1; i >=0 ; i-- ){
         this.animators[ i ].notstarted = true;
@@ -375,7 +379,7 @@ function resetAnimator ( ){
   * @return a boolean indicating if all of the animations within
   * this group are done.
   */
-function update( time ) {
+public function update( time ) {
     var animend = this.actAnim.length -1;
     if (animend > 0 && this.process == "sequential")
         animend = 0;
@@ -415,7 +419,7 @@ function update( time ) {
   * @param Boolean dop: If true, pauses the animator. If false, unpauses the
   * animator. If null, toggles the paused state of the animator.
   */
-function pause ( dop ){
+function pause ( dop = null){
     if ( dop == null ){
         dop = !this.paused;
     }
@@ -475,11 +479,11 @@ function $lzc$set_duration (duration) {
         duration = Number(duration);
     }
     this.duration = duration;
-    if(!(this instanceof LzAnimator)){
+    if(!(this is LzAnimator)){
         var sn = this.subnodes;
         if(sn){
             for(var i = 0; i < sn.length; ++i){
-                if(sn[i] instanceof LzAnimatorGroup){
+                if(sn[i] is LzAnimatorGroup){
                     sn[i].setDuration(duration);
                 }
             }
@@ -526,24 +530,24 @@ function checkRepeat (){
 /**
   * @access private
   */
-function destroy(  ) {
+override function destroy(  recursiveCall = null) {
     this.stop();
     this.updateDel.unregisterAll();
     this.animators = null;
     this.actAnim = null;
 
-    if ( this.parent.animators && this.parent.animators.length ){
-        for ( var i = 0 ; i < this.parent.animators.length ; i++ ){
-            if ( this.parent.animators[ i ] == this ){
-                this.parent.animators.splice( i , 1 );
-                break
+    if ( this.parent.animators && this.parent.animators.length){
+            for ( var i = 0 ; i < this.parent.animators.length ; i++ ){
+                if ( this.parent.animators[ i ] == this ){
+                    this.parent.animators.splice( i , 1 );
+                    break;
+                }
             }
-        }
 
-        for ( var i = 0 ; i < this.parent.actAnim.length ; i++ ){
-            if ( this.parent.actAnim[ i ] == this ){
-                this.parent.actAnim.splice( i , 1 );
-                break
+    for ( var i = 0 ; i < LzAnimatorGroup(this.parent).actAnim.length ; i++ ){
+        if ( LzAnimatorGroup(this.parent).actAnim[ i ] == this ){
+            LzAnimatorGroup(this.parent).actAnim.splice( i , 1 );
+                break;
             }
         }
     }
@@ -554,9 +558,10 @@ function destroy(  ) {
 /**
   * @access private
   */
-function toString(  ) {
+override function toString(  ) {
     return "GroupAnimator length = " + this.animators.length;
 }
 
 } // End of LzAnimatorGroup
 
+ConstructorMap[LzAnimatorGroup.tagname] = LzAnimatorGroup;

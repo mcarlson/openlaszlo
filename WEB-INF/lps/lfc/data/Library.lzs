@@ -1,13 +1,39 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
   */
 
+if ($swf9) {
+    /*
+      #include "data/LzDataNode.js"
+#include "data/LzMiniNode.js"
+#include "data/LzDataElement.js"
+#include "data/LzDataText.js"
+
+#include "data/LzDataRequest.js"
+#include "data/LzDataProvider.js"
+#include "data/LzHTTPDataProvider.js"
+
+#include "data/LzDataset.js"
+#include "data/LzDatapointer.js"
+#include "data/LzParam.js"
+#include "data/LzParsedPath.js"
+#include "data/LzDatapath.js"
+#include "data/LzReplicationManager.js"
+#include "data/LzDatasource.js"
+#include "data/LzHTTPDatasource.js"
+#include "data/LzDataAttrBind.js"
+
+#include "data/LzLazyReplicationManager.js"
+#include "data/LzResizeReplicationManager.js"
+    */
+} else {
 #include "data/LzDataNode.lzs"
+#include "data/LzMiniNode.lzs"
 #include "data/LzDataElement.lzs"
 #include "data/LzDataText.lzs"
 
@@ -29,6 +55,7 @@
 
 #include "data/LzLazyReplicationManager.lzs"
 #include "data/LzResizeReplicationManager.lzs"
+}
 
 if ($as2) {
     #include "data/platform/swf/LzConnection.lzs"

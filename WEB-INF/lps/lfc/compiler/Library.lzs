@@ -3,7 +3,7 @@
 /**
   * Compiler runtime support
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -14,9 +14,20 @@
  * you understand why they are the way they are.
  */
 
+if ($swf9) {
+
+// Debugger requires this, so must be loaded very early
+#include "compiler/LzFormatter.lzs"
+
+
+} else {
+
 // Basic runtime and stubs
 #include "compiler/LzRuntime.lzs"
-// Class runtime
+// Class runtime for js1 runtimes
+// TODO [2007-12-17 ptw] Move to platform/js1
 #include "compiler/Class.lzs"
 // Debugger requires this, so must be loaded very early
 #include "compiler/LzFormatter.lzs"
+
+}

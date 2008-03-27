@@ -615,7 +615,7 @@ class LzMiniNode {
   * @see LzDataNode LzDataText LzDataPointer
   * @access public
   */
-class LzDataElement extends LzMiniNode inherits LzDataElementTrait, LzDataNode {
+class LzDataElement extends LzMiniNode_DataNode_DOM {
     // N.B.: LzDataElement is not an LzNode so has a different
     // initialize signature.
     function LzDataElement ( name , attributes , children ) {
@@ -634,8 +634,8 @@ class LzDataElement extends LzMiniNode inherits LzDataElementTrait, LzDataNode {
   */
 var nodeName        = null;
 //var nodeValue       = null;
-var nodeType = LzDataNode.ELEMENT_NODE;
-
+var nodeType = LzDataNode.ELEMENT_NODE
+;
 /** An array of children of this node
   * @type LzDataNode
   */
@@ -660,5 +660,8 @@ static function makeNodeList(count, name) {
     return a;
 }
 
-static var valueToElement = LzDataElementTrait.valueToElement;
+static function valueToElement ( o ) {
+  return LzNode_DataNode_DOM.prototype.valueToElement(o);
 }
+
+} // End of LzDataElement

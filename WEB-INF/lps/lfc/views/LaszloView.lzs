@@ -54,7 +54,11 @@
   *
 
   */
-class LzView extends LzNode {
+dynamic class LzView extends LzNode {
+
+    function LzView ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+    }
 
 //static var tabindexcounter = 1000;
 
@@ -68,6 +72,40 @@ static var tagname = 'view';
   // where we override the LzNode setting
   static var __LZdelayedSetters = new LzInheritedHash(LzNode.__LZdelayedSetters);
   static var earlySetters = new LzInheritedHash(LzNode.earlySetters);
+
+
+/** @access private
+ * Just used to effect a type cast of immediateparent to LzView 
+ */
+    /** @access private */
+    var _height:Number;
+    /** @access private */
+    var _width:Number;
+    /** @access private */
+    var _y:Number;
+    /** @access private */
+    var _x:Number;
+    /** @access private */
+    var __LZhaser;
+    /** @access private */
+    var __LZlayout
+
+    /** @access private */
+    var fontname;
+    /** @access private */
+    var _visible;
+    /** @access private */
+    var __LZstoredbounds;
+
+    /** @access private */
+    var __movecounter;
+    /** @access private */
+    var __mousecache;
+
+    var __lzcheckframe;
+
+    var playing = false;
+    
 
 
 /** Event called when this view adds a subview   
@@ -313,7 +351,12 @@ var ondblclick = LzDeclaredEvent;
 var DOUBLE_CLICK_TIME = 500;
 
 /** @access private */
-var capabilities = LzSprite.prototype.capabilities;
+// TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
+if ($swf9) {
+    var capabilities = LzSprite.capabilities;
+} else {
+    var capabilities = LzSprite.prototype.capabilities;
+}
 
 /**
   * Base level constructor for views. See <method
@@ -321,8 +364,12 @@ var capabilities = LzSprite.prototype.capabilities;
   * 
   * @access public
   */
-function construct ( parent , args) {
-    //Debug.write('LzView.construct', parent, args);
+override function construct ( parent , args) {
+    // TODO [hqm 2008-03] Needed to move this up earlier for swf9, better verify that is OK in swf8/dhtml,
+    // but args won't be munged by applyArgs properly yet? 
+    if ($swf9) {
+        this.__makeSprite(args);
+    }
 
     //this.callInherited( "construct" , arguments.callee , parent ,args );
     super.construct( (parent ? parent : canvas), args );
@@ -331,14 +378,25 @@ function construct ( parent , args) {
     this.__LZdelayedSetters = LzView.__LZdelayedSetters;
     this.earlySetters = LzView.earlySetters;
 
+  
     var ip = this.immediateparent;
-    
-    this.mask = ip.mask;
+
+    var vip:LzView = (this.immediateparent cast LzView);
+
+    // TODO [hqm 2008-03] this was not needed in dhtml/swf8, in what
+    // case is immediateparent coming up null in swf9?
+    if (ip) {
+        this.mask = ip.mask;
+    }    
+
+    if ($swf9) {
+        // can we make swf9 support __makeSprite call here?
+    } else {
+        this.__makeSprite(args);
+    }
 
     //this.__LZdepth = ip.__LZsvdepth++;
     //this.__LZsvdepth = 0;
-
-    this.__makeSprite(args);
 
     if ( 'width' in args ){
         this.hassetwidth = true;
@@ -356,15 +414,15 @@ function construct ( parent , args) {
         this.$lzc$set_stretches(args.stretches);
         args.stretches = LzNode._ignoreAttribute;
     }
-    if ('resource' in args && args['resource'] != null && (! (args.resource instanceof LzInitExpr)) ){
+    if (args['resource'] != null && (! (args.resource instanceof LzInitExpr)) ){
         this.$lzc$set_resource( args.resource );
         args.resource = LzNode._ignoreAttribute;
     }
     if($debug){
-        if( 'valign' in args && args['valign'] && 'y' in args && args['y']){
+        if(args['valign'] && args['y']){
             Debug.warn("y attribute ignored; superseded by valign constraint.");
         }
-        if( 'align' in args && args['align'] && 'x' in args && args['x']){
+        if(args['align'] && args['x']){
             Debug.warn("x attribute ignored; superseded by align constraint.");
         }
     }
@@ -391,12 +449,14 @@ function __makeSprite(args) {
   * 
   * @access public
   */
-function init( ) {
-    //this.__LZmovieClipRef._visible = this.visible;
-    //this.__LZbgRef._visible = this.visible;
-    this.sprite.init(this.visible);
-
-    //this.reevaluateSize();
+override function init( ) {
+    if (this.sprite) {
+        this.sprite.init(this.visible);
+    } else {
+        // TODO [hqm 2008-03] I put this in for a bug I was seeing
+        // swf9, need to see if it is still happening
+        Debug.warn("LzView init method called and this.sprite is null", this);
+    }
 }
 
 
@@ -406,7 +466,13 @@ function init( ) {
   * @param LzView s: The new subview
   */
 function addSubview ( s ){
-    this.sprite.addChildSprite(s.sprite);
+      if (this.sprite) {
+          this.sprite.addChildSprite(s.sprite);
+      } else {
+          // TODO [hqm 2008-03] I put this in for a bug I was seeing
+          // swf9, need to see if it is still happening
+          Debug.warn("LzView.addSubview called when this.sprite is null", this);
+      }
 
     if ( s.addedToParent ) return;
 
@@ -434,8 +500,15 @@ function addSubview ( s ){
   * instantiating.
   * @access private
   */
-function __LZinstantiationDone (){
-    this.immediateparent.addSubview( this );
+override function __LZinstantiationDone (){
+    var vip:LzView = (this.immediateparent cast LzView);
+    if (vip) {
+        (vip).addSubview( this );
+    } else {
+        // TODO [hqm 2008-03] This is to trace a bug of null immediateparent seen in swf9 initialize
+        Debug.warn("LaszloView.__LZinstantiationDone immediateparent = null", this);
+    }
+
     //this.callInherited( '__LZinstantiationDone' , arguments.callee );
     super.__LZinstantiationDone.apply(this, arguments);
 }
@@ -517,12 +590,6 @@ function $lzc$set_source(v) { this.setSource(v); }
   * @lzxtype token
   */
 function $lzc$set_bgcolor(v) { this.setBGColor(v) }
-
-/** Sets the name of this views resource, or the URL from which it should
-  * be loaded.
-  * @type String
-  */
-var resource;
 
 /** If true, this view intercepts click events; otherwise they are passed
   * to its container.  This defaults to true if the view defines a mouse
@@ -686,8 +753,7 @@ var visibility = "collapse";
 
 /** @access private */
 var __LZvizO = true;
-/** @access private */
-var __LZvizDat = true;
+
 /** @access private */
 var __LZvizLoad= true;
 
@@ -895,7 +961,7 @@ var updatePlayDel = null;
   * application, and attached to this view.
   * @lzxtype string
   */
-var resource = null;
+var resource:String = null;
 
 /**
   * The width of the resource that this view attached
@@ -977,7 +1043,7 @@ function setLayout ( layoutobj ){
   * @access private
   * @param String val: The value for the new font name
   */
-function setFontName ( val ,prop ){
+function setFontName ( val ,prop = null){
     this.fontname = val ;
     // Canvas has no sprite
     if (! this.sprite) {
@@ -1196,13 +1262,14 @@ function setTotalFrames (n) {
   * @access private
   * 
   */
-function destroy( recursiveCall ){
+override function destroy( recursiveCall = null){
     if ( this.__LZdeleted ) return;
     
     if (this.sprite) this.sprite.predestroy();
 
+    var vip:LzView = (this.immediateparent cast LzView);
     if ( this.addedToParent ){
-        var svs =  this.immediateparent.subviews;
+        var svs =  vip.subviews;
         if (svs != null) {
             for( var i = svs.length - 1; i >= 0; i-- ){
                 if ( svs[ i ] == this ){
@@ -1223,17 +1290,21 @@ function destroy( recursiveCall ){
 
     this.$lzc$set_visible ( false );
 
-    if ( this.addedToParent ){
-         if ( ('__LZoutliewidth' in this.immediateparent) && (this.immediateparent.__LZoutliewidth == this) ) {
-            this.immediateparent.__LZoutliewidth=null;
+    var vip:LzView = (this.immediateparent cast LzView);
+    if ( this.addedToParent ) {
+        if ( vip['__LZoutliewidth'] == this) {
+            vip.__LZoutliewidth = null;
         }
 
-        if ( ('__LZoutlieheight' in this.immediateparent) && (this.immediateparent.__LZoutlieheight == this) ) {
-         this.immediateparent.__LZoutlieheight=null;
+        if ( vip['__LZoutlieheight'] == this) {
+            vip.__LZoutlieheight=null;
         }
 
-        if ('onremovesubview' in this.immediateparent)
-            if (this.immediateparent.onremovesubview.ready) this.immediateparent.onremovesubview.sendEvent( this );
+        if ('onremovesubview' in vip) {
+            if (vip.onremovesubview.ready) {
+                vip.onremovesubview.sendEvent( this );
+            }
+        }
     }
 }
 
@@ -1343,11 +1414,11 @@ function __LZupdateShown( ) {
             this.sprite.setVisible(shown);
         }
 
-        var ip = this.immediateparent;
-        if (ip && ip.__LZcheckwidth)
-            ip.__LZcheckwidthFunction( this );
-        if (ip && ip.__LZcheckheight)
-            ip.__LZcheckheightFunction( this );
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip && vip.__LZcheckwidth)
+            vip.__LZcheckwidthFunction( this );
+        if (vip && vip.__LZcheckheight)
+            vip.__LZcheckheightFunction( this );
 
         if (this.onvisible.ready) this.onvisible.sendEvent( shown );
     }
@@ -1394,8 +1465,9 @@ function setWidth ( v ){
         
         //this.__LZbgRef._xscale = v;
 
-        if (this.immediateparent.__LZcheckwidth)
-            this.immediateparent.__LZcheckwidthFunction( this );
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip && vip.__LZcheckwidth)
+            vip.__LZcheckwidthFunction( this );
 
 
         if (this.onwidth.ready) this.onwidth.sendEvent( v );
@@ -1440,8 +1512,9 @@ function setHeight ( v ){
         }
         this.hassetheight = true;
         
-        if (this.immediateparent.__LZcheckheight)
-            this.immediateparent.__LZcheckheightFunction( this );
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip && vip.__LZcheckheight)
+            vip.__LZcheckheightFunction( this );
 
 
         if (this.onheight.ready) this.onheight.sendEvent( v );
@@ -1476,7 +1549,7 @@ function setOpacity ( v ){
   * Sets the <attribute>x</attribute> position of the view to the given value.
   * @param Number v: The new value for <attribute>x</attribute>.
   */
-function setX ( v, force ){
+function setX ( v, force = null){
     if (force || this._x != v) {
         this._x = v;
         this.x = v;
@@ -1492,8 +1565,9 @@ function setX ( v, force ){
         if ( this.pixellock ) v = Math.floor( v );
         this.sprite.setX(v)
         
-        if (this.immediateparent.__LZcheckwidth)
-            this.immediateparent.__LZcheckwidthFunction( this );
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip.__LZcheckwidth)
+            vip.__LZcheckwidthFunction( this );
         if (this.onx.ready) this.onx.sendEvent( this.x );
     }
 }
@@ -1503,7 +1577,7 @@ function setX ( v, force ){
   * Sets the <attribute>y</attribute> position for the view to the given value.
   * @param Number v: The new value for <attribute>y</attribute>.
   */
-function setY ( v, force ){
+function setY ( v, force = null){
     if (force || this._y != v) {
         this._y = v;
         this.y = v;
@@ -1518,8 +1592,9 @@ function setY ( v, force ){
         
         if ( this.pixellock ) v = Math.floor( v );
         this.sprite.setY(v)
-        if (this.immediateparent.__LZcheckheight)
-            this.immediateparent.__LZcheckheightFunction( this );
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip.__LZcheckheight)
+            vip.__LZcheckheightFunction( this );
         if (this.ony.ready) this.ony.sendEvent( this.y );
     }
 }
@@ -1546,10 +1621,11 @@ function setRotation ( v ){
         this.setY( this.y, true );
     }
 
-    if (this.immediateparent.__LZcheckwidth)
-        this.immediateparent.__LZcheckwidthFunction( this );
-    if (this.immediateparent.__LZcheckheight)
-        this.immediateparent.__LZcheckheightFunction( this );
+    var vip:LzView = (this.immediateparent cast LzView);
+    if (vip.__LZcheckwidth)
+        vip.__LZcheckwidthFunction( this );
+    if (vip.__LZcheckheight)
+        vip.__LZcheckheightFunction( this );
 }
 
 /**
@@ -1592,13 +1668,15 @@ function setAlign ( align ){
 
 /** @access private */
 function __LZalignCenter () {
-  this.setAttribute( "x" , this.immediateparent.width /2
+  var vip:LzView = (this.immediateparent cast LzView);
+  this.setAttribute( "x" , vip.width /2
                      - this.width /2);
 }
 
 /** @access private */
 function __LZalignRight () {
-  this.setAttribute( "x" , this.immediateparent.width
+  var vip:LzView = (this.immediateparent cast LzView);
+  this.setAttribute( "x" , vip.width
                      - this.width);
 }
 
@@ -1631,7 +1709,7 @@ function setYOffset ( o ){
 /** @access private
   * @devnote Initial value required to make interpreter happy
   */
-LzView.prototype.__LZlastmtrix = [ 0,0,0,0,0,0,0,0,0,0,0 ];
+static var __LZlastmtrix = [ 0,0,0,0,0,0,0,0,0,0,0 ];
 
 
 /**
@@ -1657,7 +1735,7 @@ function getBounds (  ){
                    //last three entries are just to track staleness
 
     var i = mtrix.length - 1;
-    while ( mtrix[ i ] == this.__LZlastmtrix[ i ] ){
+    while ( mtrix[ i ] == LzView.__LZlastmtrix[ i ] ){
         if ( i-- == 0 ) {
             return this.__LZstoredbounds;
         }
@@ -1693,7 +1771,7 @@ function getBounds (  ){
     o.y = this.y + o.yoffset;
 
     this.__LZstoredbounds = o;
-    this.__LZlastmtrix = mtrix;
+    LzView.__LZlastmtrix = mtrix;
 
     return o;
 }
@@ -1702,7 +1780,6 @@ function $lzc$getBounds_dependencies ( who , self ){
     return [ self, 'rotation' , self, 'x' , self , 'y' , self , 'width' ,
              self , 'height' ];
 }
-
 /**
   * Sets the vertical alignment for the view to the given value. The
   * alignment is based on the height of this view as compared to the
@@ -1743,13 +1820,15 @@ function setValign ( valign ){
 
 /** @access private */
 function __LZvalignMiddle () {
-  this.setAttribute( "y" , this.immediateparent.height /2
+  var vip:LzView = (this.immediateparent cast LzView);
+  this.setAttribute( "y" , vip.height /2
                      - this.height /2);
 }
 
 /** @access private */
 function __LZvalignBottom () {
-  this.setAttribute( "y" , this.immediateparent.height
+  var vip:LzView = (this.immediateparent cast LzView);
+  this.setAttribute( "y" , vip.height
                      - this.height);
 }
 
@@ -1967,8 +2046,9 @@ function updateWidth ( newsize ){
         this.sprite.setWidth(newsize);
         if (this.onwidth.ready) this.onwidth.sendEvent( newsize );
 
-        if (this.immediateparent.__LZcheckwidth)
-            this.immediateparent.__LZcheckwidthFunction( this );
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip.__LZcheckwidth)
+            vip.__LZcheckwidthFunction( this );
     }
 
 }
@@ -1992,14 +2072,15 @@ function updateHeight ( newsize ){
         this.sprite.setHeight(newsize);
         if (this.onheight.ready) this.onheight.sendEvent( newsize );
 
-        if (this.immediateparent.__LZcheckheight) 
-            this.immediateparent.__LZcheckheightFunction( this );
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip.__LZcheckheight) 
+            vip.__LZcheckheightFunction( this );
 
     }
 }
 
 /** @access private */
-function reevaluateSize ( ia ){
+function reevaluateSize ( ia = null){
     //if called with no args, check both
     if ( ia == null ){
         var axis = "height";
@@ -2122,6 +2203,7 @@ function $lzc$setAttributeRelative_dependencies ( who,self, prop ,
 }
 
 
+
 /**
   * Transform the specified attribute (width/height/x/y) from the existing
   * coordinate space to the reference view's coordinate space. This 
@@ -2146,11 +2228,11 @@ function getAttributeRelative(prop, refView ) {
         var axis = prop == "width" ? "x" : "y"
         tLink.update ( axis )
         return tLink.scale[axis] * this[ prop ];
-
     }else{
         //not yet implemented: rotation, alpha...
     }
 }
+
 /** @access private */
 function $lzc$getAttributeRelative_dependencies( who,self, prop ,
                                                         refView ){
@@ -2187,6 +2269,7 @@ function $lzc$getAttributeRelative_dependencies( who,self, prop ,
 
     return d;
 }
+
 
 /** @access private */
 var __LZviewLinks = null;
@@ -2237,10 +2320,12 @@ function getMouse( xory ) {
     if (xory == null) return this.__mousecache;
     return this.__mousecache[xory];
 }
+
 /** @access private */
 function $lzc$getMouse_dependencies( ) {
     return [ LzIdle, "idle" ];
 }
+
 
 /**
   * returns true if the point is contained within the view.
@@ -2249,8 +2334,8 @@ function $lzc$getMouse_dependencies( ) {
   * @return Boolean: boolean indicating whether or not the point lies within the view
   */
 function containsPt( x,y ) {
-   return (((this.height>= y) && (y >= 0)) &&
-                ((this.width>= x) && (x >= 0)));
+   return (((this.height >= y) && (y >= 0)) &&
+                ((this.width >= x) && (x >= 0)));
 }
 
 /**
@@ -2416,7 +2501,7 @@ function setBGColor ( bgc ) {
   * <code>none</code> , <code>clientonly</code> , <code>serveronly</code> , <code>both</code> (the default).
   * @param String headers: Headers to send with the request, if any.
   */
-function setSource ( source , cache, headers){
+function setSource ( source , cache = null, headers = null){
     this.sprite.setSource(source, cache, headers);
 }
 
@@ -2510,7 +2595,7 @@ function getMCRef () {
   * begin playing at the current frame.
   * @param Boolean rel: If true, f is relative to the current frame.  Otherwise f is relative to the beginning of the resource.
   */
-function play (f, rel){
+function play (f = null, rel = null){
     this.sprite.play(f, rel);
 }
 
@@ -2520,7 +2605,7 @@ function play (f, rel){
   * stop at the current frame.
   * @param Boolean rel: If true, f is relative to the current frame.  Otherwise it is relative to the start position of the resource.
   */
-function stop (f, rel){
+function stop (f = null, rel = null){
     this.sprite.stop(f, rel);
 }
 
@@ -2615,10 +2700,12 @@ function getCurrentTime ( ){
         return this.frame / canvas.framerate;
     }
 }
+
 /** @access private */
 function $lzc$getCurrentTime_dependencies ( who, self ){
     return [ self , "frame" ];
 }
+
 
 /**
   * Returns the total amount of time the resource would take to play.
@@ -2650,6 +2737,8 @@ function getID3 ( ){
 }
 
 
+var __LZdidPPwarn = false;
+
 /** @access private */
 function getPlayPerc ( ){
     if ( $debug ){
@@ -2661,6 +2750,7 @@ function getPlayPerc ( ){
     }
     return this.frame/this.totalframes;
 }
+
 /** @access private */
 function $lzc$getPlayPerc_dependencies ( who , self ){
     return [ self, "frame" ];
@@ -2690,7 +2780,7 @@ function setAccessible (accessible) {
   * Activate/inactivate children for accessibility
   * @param Boolean s: If true, activate the current view and all of its children
   */
-function setAAActive ( s, mc ){
+function setAAActive ( s, mc = null){
     if (this.capabilities.accessibility) {
         this.sprite.setAAActive(s, mc);
     } else if ($debug) {
@@ -2703,7 +2793,7 @@ function setAAActive ( s, mc ){
   * Set accessibility name
   * @param string s: Sets the accessibility name for this view
   */
-function setAAName ( s, mc ){
+function setAAName ( s, mc = null){
     if (this.capabilities.accessibility) {
         this.sprite.setAAName(s, mc);
     } else if ($debug) {
@@ -2715,7 +2805,7 @@ function setAAName ( s, mc ){
   * Set accessibility description
   * @param string s: Sets the accessibility name for this view
   */
-function setAADescription ( s, mc ){
+function setAADescription ( s, mc = null){
     if (this.capabilities.accessibility) {
         this.sprite.setAADescription(s, mc);
     } else if ($debug) {
@@ -2727,7 +2817,7 @@ function setAADescription ( s, mc ){
   * Set accessibility tab order
   * @param number s: The tab order index for this view.  Must be a unique number.
   */
-function setAATabIndex ( s, mc ){
+function setAATabIndex ( s, mc = null){
     if (this.capabilities.accessibility) {
         this.sprite.setAATabIndex(s, mc);
     } else if ($debug) {
@@ -2740,7 +2830,7 @@ function setAATabIndex ( s, mc ){
   * @param string s: If true, this view is made silent to the screen reader.  
   * If false, it is active to the screen reader.
   */
-function setAASilent ( s, mc ){
+function setAASilent ( s, mc = null){
     if (this.capabilities.accessibility) {
         this.sprite.setAASilent(s, mc);
     } else if ($debug) {
@@ -2838,7 +2928,7 @@ function getContextMenu ( ){
 
 /** @access private */ 
 function __warnCapability(msg) {
-    Debug.warn('The %s runtime does not support %s', lzr, msg); 
+    Debug.warn('The %s runtime does not support %s', canvas['runtime'], msg); 
 }
 
 /**
@@ -2855,3 +2945,4 @@ function getPrevSelection() {
 }
 } // End of LzView
 
+ConstructorMap[LzView.tagname] = LzView;

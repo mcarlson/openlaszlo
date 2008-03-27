@@ -362,6 +362,9 @@ var lsbtable;
   */
 var rsbtable;
 
+var fontobject;
+
+
 function LzFont ( fontobject , attrs , style ){
     super();
     this.name = fontobject.name;

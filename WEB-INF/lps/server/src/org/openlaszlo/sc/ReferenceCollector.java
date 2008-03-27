@@ -52,7 +52,7 @@ public class ReferenceCollector {
     ParseTreePrinter ptp = new ParseTreePrinter();
     for (Iterator i = r.iterator(); i.hasNext(); ) {
       SimpleNode n = (SimpleNode)i.next();
-      String s = ptp.visit(n);
+      String s = ptp.text(n);
       // Eliminate redundant constraints
       if (! added.contains(s)) {
         added.add(s);
@@ -133,7 +133,7 @@ public class ReferenceCollector {
     ParseTreePrinter ptp = new ParseTreePrinter();
     for (Iterator i = functions.iterator(); i.hasNext(); ) {
       SimpleNode n = (SimpleNode)i.next();
-      String s = ptp.visit(n);
+      String s = ptp.text(n);
       // Eliminate redundant constraints
       if (! added.contains(s)) {
         added.add(s);
@@ -156,7 +156,7 @@ public class ReferenceCollector {
     ParseTreePrinter ptp = new ParseTreePrinter();
     for (Iterator i = functions.iterator(); i.hasNext(); ) {
       SimpleNode n = (SimpleNode)i.next();
-      String s = ptp.visit(n);
+      String s = ptp.text(n);
       // Eliminate redundant constraints
       if (! added.contains(s)) {
         added.add(s);

@@ -1,0 +1,34 @@
+<canvas width="800" height="600"> 
+
+  <view id="bar" x="200" y="200" >
+    <view id="foo" bgcolor="0xcccccc" x="-100" y="-100"  height="200" width="200"
+          onclick="this.parent.animate('rotation', 90, 1000, true)" >
+
+      <text>This is <b><i>some</i></b> text</text>
+
+    <view bgcolor="blue" width="40" height="40" 
+          x="59" y="59"
+          onclick="this.animate('x', 10, 1000);
+                   this.animate('y', 10, 1000)"/>
+
+    <view bgcolor="red" width="40" height="40"
+          x="101" y="59"
+          onclick="this.animate('x', 150, 1000); 
+                   this.animate('y', 10, 1000)"/>
+
+    <view bgcolor="green" width="40" height="40" 
+          x="59" y="101"
+          onclick="this.animate('x', 10, 1000);
+                   this.animate('y', 150, 1000)"/>
+
+    <view bgcolor="yellow" width="40" height="40" 
+          x="101" y="101"
+          onclick="this.animate('x', 150, 1000);
+                   this.animate('y', 150, 1000)"/>
+  </view>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

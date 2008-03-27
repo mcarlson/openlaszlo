@@ -6,7 +6,7 @@
 <!--  build.xml                                                             -->
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -116,7 +116,7 @@
       <srcfileset dir="." includes="**/*" excludes="*.lzl" />
       <srcfileset dir="${sc.dir}" includes="**/*" />
       <srcfileset dir="${LPS_HOME}/WEB-INF/lps/server/src/org/openlaszlo/sc" includes="**/*" />
-      <targetfileset dir="${LFCdir}" includes="*.js,*.lzl" excludes="lzpreloader.lzl"/>
+      <targetfileset dir="${LFCdir}" includes="*.js,*.lzl,*.swc" excludes="lzpreloader.lzl"/>
     </dependset>
 
     <script language="javascript">
@@ -207,40 +207,45 @@
       }
     }
 
-    var swfruntimes = [7, 8];
+    var swfruntimes = [7, 8, 9];
 
     for (var s in swfruntimes) {
       var v = swfruntimes[s];
 
+      var ext = (v == 9) ? ".swc" : ".lzl";
+      var shlibopt = "--option buildSharedLibrary=true ";
+
       // Check whether the options tell us to build this runtime at all
       var buildThisRuntime = lfc.getProperty("build.lfc.runtime.swf" + v);
       if (buildThisRuntime != null) {
-        var plain = LFCdir + "LFC" + v + ".lzl";
+        var plain = LFCdir + "LFC" + v + ext;
         if (!(new File(plain)).exists()) {
-          dobuild(plain, "swf" + v, "");
+          dobuild(plain, "swf" + v, shlibopt);
         }
-        if (buildDebug) {
-          var dest = LFCdir + "LFC" + v + "-debug.lzl";
+        // TODO: [2008-01-11 dda] when ready, add extra builds for SWF9
+        if (buildDebug && v != 9) {
+          var dest = LFCdir + "LFC" + v + "-debug" + ext;
           if (!(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply --debug
             dobuild(dest,
                     "swf" + v,
-                    "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+                    shlibopt + "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
           }
-          var dest = LFCdir + "LFC" + v + "-backtrace.lzl";
+          var dest = LFCdir + "LFC" + v + "-backtrace" + ext;
           if (!(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply -g3
             dobuild(dest,
                     "swf" + v,
-                    "--option debugBacktrace --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+                    shlibopt + "--option debugBacktrace --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
           }
         }
-        if (buildProfile) {
-          var profile = LFCdir + "LFC" + v + "-profile.lzl";
+        // TODO: [2008-01-11 dda] when ready, add extra builds for SWF9
+        if (buildProfile && v != 9) {
+          var profile = LFCdir + "LFC" + v + "-profile" + ext;
           if (!(new File(profile)).exists()) {
-            dobuild(profile, "swf" + v, "--profile");
+            dobuild(profile, "swf" + v, shlibopt + "--profile");
           }
         }
       }
@@ -258,9 +263,6 @@
 
   <target name="clean" depends="init,doc.clean">
     <delete failonerror="false">
-      <!-- TODO: [2006-11-30 ptw] Remove next 2 lines after Legals Beta 1 -->
-      <fileset dir="." includes="*.lzl" />
-      <fileset dir="." includes="LFC*.js" />
       <fileset dir="${LFCdir}" includes="*" excludes="defaultpreloader.swf" />
     </delete>
   </target>

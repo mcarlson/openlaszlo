@@ -72,12 +72,22 @@
   * @shortdesc A description of an instance hierarchy that can be applied and removed at runtime.
   * @lzxname state
   */
-class LzState extends LzNode {
+dynamic class LzState extends LzNode {
 
-/** @access private
-  * @modifiers override 
-  */
-static var tagname = 'state';
+    public function LzState ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+    }
+
+     var __LZpool = [];
+     var __LZstatedelegates;
+     var collectArgs:Boolean = true;
+
+    
+
+        /** @access private
+      * @modifiers override 
+      */
+    static var tagname = 'state';
 /** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
@@ -130,17 +140,17 @@ function $lzc$set_pooling(v) { this.__LZsetProperty(v, 'pooling'); }
   */
 function $lzc$set___LZsourceLocation(v) { this.__LZsetProperty(v, '__LZsourceLocation'); }
 /** @access private */
-var heldargs;
+var heldArgs;
 var handlerMethodNames;
 /** @access private */
 var releasedconstraints;
-var appliedchildren;
+var appliedChildren;
 var isapplied = false;
 
 /**
   * @access private
   */
-function construct ( parent , args ){
+override function construct ( parent , args ){
     super.construct.apply(this, arguments);
     this.heldArgs = {};
     this.handlerMethodNames = {};
@@ -150,7 +160,7 @@ function construct ( parent , args ){
 /**
   * @access private
   */
-function createChildren ( carr ){
+override function createChildren ( carr ){
     this.subh = carr;
     this.__LZinstantiationDone();
 }
@@ -310,7 +320,7 @@ function remove () {
   * Clean up after yourself
   * @access private
   */
-function destroy ( ) {
+override function destroy (  recursiveCall = null ) {
     // stop pooling
     this.pooling = false;
     // clean up delegates and views
@@ -333,7 +343,7 @@ function destroy ( ) {
   * @devnote NOTE: [2006-12-09 ptw] Currently the only args that apply to the
   * state are args that have setters or handlers for state events
   */
-/* override */ function __LZapplyArgs ( args ){
+override function __LZapplyArgs ( args , constcall = null){
   var stateArgs = {};
   var held = this.heldArgs;
   var handlers = this.handlerMethodNames;
@@ -431,7 +441,7 @@ function destroy ( ) {
   * application to the parent (and pass the ones that do apply to the
   * state on to your superclass).
   */
-/* override */ function $lzc$set_$delegates ( delarr ){
+ override function $lzc$set_$delegates ( delarr ){
     var pardels = [];
     var mydels = [];
 
@@ -497,3 +507,5 @@ function __LZretach ( aview ){
 }
 
 } // End of LzState
+
+ConstructorMap[LzState.tagname] = LzState;

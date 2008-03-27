@@ -13,47 +13,74 @@
 /** Sentinel value for events
   * @access private
   */
-class LzDeclaredEventClass /* implements LzEvent */ {
+public class LzDeclaredEventClass /* implements LzEvent */ {
 
-  function LzDeclaredEventClass () {
+    public function LzDeclaredEventClass () {
       // Debug.debug("%w.%s(%w)", this, arguments.callee, arguments);
     super();
   }
 
-  /**
-   * @access private
-   */
-  /* const */ var ready = false;
+/** True when event is ready to be sent.
+  * @type Boolean
+  * @keywords readonly
+  * @devnote TODO: [2008-03-20 ptw] This really should just be:
+  * function get ready() { return this.delegateList.length > 0; }
+  */
 
-  /**
-   * @access private
-   */
-  function sendEvent() {};
+public var ready:Boolean = false;
 
-  /**
-   * @access private
-   */
-  function clearDelegates() {};
 
-  /**
-   * @access private
-   */
-  function removeDelegate() {};
+/**
+  *  Sends the event, passing its argument as the data to all the called
+  *  delegates
+  * 
+  *  @param sd: The data to send with the event.
+  */
 
-  /**
-   * @access private
-   */
-  function getDelegateCount () {return 0};
+public function  sendEvent (sd = null ){};
 
-  /**
-   * @access private
-   */
-  function toString() {
+/**
+  * @access private
+  */
+public function clearDelegates ( ){ };
+
+/**
+  * @access private
+  */
+public function removeDelegate (d = null){ };
+
+/**
+  * @access private
+  */
+public function getDelegateCount ( ){return 0};
+
+/**
+  * @access private
+  */
+public function toString ( ){
     return "LzDeclaredEvent";
+}
+
+}
+
+public class LzNullEvent extends LzDeclaredEventClass {
+    public function LzNullEvent () {
+    }
+
+    public override function sendEvent (sd = null) {
+        // TODO [hqm 2008-03] This would be useful debugging info to see
+        // when apps call sendEvent on null events.
+        /*
+          if ($debug) {
+          Debug.debug('Inefficient call to %s', arguments.callee);
+          }
+        */
   }
 }
 
-  var LzDeclaredEvent = new LzDeclaredEventClass;
+
+var LzDeclaredEvent:LzNullEvent = new LzNullEvent();
+
 
 /**
  * Private class used to distinguish an init expression from an
@@ -151,6 +178,23 @@ class LzStyleIdent extends LzStyleExpr {
   * overhead of a slower implementation, use LzDictionary).
   * @access private
   */
+if ($swf9) {
+dynamic class LzInheritedHash extends Dictionary {
+    #passthrough (toplevel:true) {
+import flash.utils.Dictionary;
+}#
+
+    function LzInheritedHash (sup:Object = null) {
+        if(sup) {
+            for (var k in sup) {
+                this[k] = sup[k];
+            }
+        }
+    }
+}
+
+} else {
+
 function LzInheritedHash (parent)  {
   if (parent) {
     for (var key in parent) {
@@ -159,6 +203,7 @@ function LzInheritedHash (parent)  {
   }
 }
 
+}
 /** A map of element names, to functions that create instances of the
   * appropriate type.
   * Each built-in class that defines the implementation of a tag adds

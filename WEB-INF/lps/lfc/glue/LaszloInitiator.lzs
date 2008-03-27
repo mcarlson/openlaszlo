@@ -24,7 +24,7 @@
   *   children: An array of child elements.
   *
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects laszloinitiator
@@ -56,18 +56,23 @@ ConstructorMapDocs = {
   * org.openlaszlo.ic.CompilationEnvironment.VIEW_INSTANTIATION_FNAME. 
   */
 
-function LzInstantiateView(e, tn)
+function LzInstantiateView(e, tn = null)
 {
     //LzInstantiateSubviews(canvas, e);
 
     // For now, intercept traits and directly construct an LzTrait object with
     // the given attributes
     if ( e.name == "trait" ){
+if ($swf9) {
+    Debug.error("LaszloInitiator.lzx. LzInstantiateView. Add trait support");
+}
+else {
         new LzTrait( e );
+}
         return;
     }
 
-    if ( typeof(tn) == "undefined" ){
+    if (tn == null ){
         tn = 1;
     }
     canvas.initiatorAddNode( e , tn );

@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzbrowser
@@ -317,7 +317,7 @@ LzBrowser.showMenu = function(truefalse) {
   * Escape special characters in message: &amp; and &lt;.
   */
 LzBrowser.xmlEscape = function (str) {
-    return LzDataNode.prototype.__LZXMLescape( str );
+    return LzDataNode.__LZXMLescape( str );
 }
 
 /**

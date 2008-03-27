@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -68,12 +68,11 @@ public final class ResponderEVAL extends Responder
                 res.setContentType(MimeType.SWF);
                 Compiler compiler = new Compiler();
                 String swfversion = req.getParameter("lzr");
-                // For back compatibility, should an older app that doesn't pass "lzr" arg
-                // be running somehow.
-                if (swfversion == null) {
-                    swfversion = "swf6";
+                if ("swf9".equals(swfversion)) {
+                    compiler.compileAndWriteToSWF9(script, seqnum, out);
+                } else {
+                    compiler.compileAndWriteToSWF(script, seqnum, out, swfversion);
                 }
-                compiler.compileAndWriteToSWF(script, seqnum, out, swfversion);
             } catch (Exception e) {
                 mLogger.info(
 /* (non-Javadoc)

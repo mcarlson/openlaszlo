@@ -384,7 +384,7 @@ class ClassCompiler extends ViewCompiler {
                           classBody);
         mEnv.compileScript(scriptClass.toString(), elt);
         // Install in constructor map ??
-        
+
     }
 
   protected void compileClass(Element elt, ClassModel classModel, String initobj) {
@@ -392,16 +392,22 @@ class ClassCompiler extends ViewCompiler {
     String extendsName = XMLUtils.getAttributeValue(
       elt, "extends", DEFAULT_SUPERCLASS_NAME);
     StringBuffer buffer = new StringBuffer();
-    buffer.append(VIEW_INSTANTIATION_FNAME + 
-                  "({name: 'class', attrs: " +
-                  "{parent: " +
-                  ScriptCompiler.quote(extendsName) +
-                  ", initobj: " + initobj +
-                  "}}" +
-                  ", " + ((ElementWithLocationInfo)elt).model.totalSubnodes() +
-                  ");\n");
+
+    if (emitClassDecl) {
+        buffer.append("class " + classModel.className +
+                      " extends " + extendsName + " {\n" + initobj + "\n}\n");
+    }
+    else {
+        buffer.append(VIEW_INSTANTIATION_FNAME + 
+                      "({name: 'class', attrs: " +
+                      "{parent: " +
+                      ScriptCompiler.quote(extendsName) +
+                      ", initobj: " + initobj +
+                      "}}" +
+                      ", " + ((ElementWithLocationInfo)elt).model.totalSubnodes() +
+                      ");\n");
+    }
     if (!classModel.getInline()) {
-      ClassModel superclassModel = classModel.getSuperclassModel();
       mEnv.compileScript(buffer.toString(), elt);
     }
     // TODO: [12-27-2002 ows] use the log4j API instead of this property

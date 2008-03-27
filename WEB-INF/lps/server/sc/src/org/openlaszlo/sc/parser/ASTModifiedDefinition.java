@@ -110,6 +110,15 @@ public class ASTModifiedDefinition extends SimpleNode {
         if (isDynamic)
             throw new ParseException("cannot use dynamic on variable: " + subnode);
     }
+    // A function is nested if it is declared within another function
+    private void verifyNestedFunction(SimpleNode subnode) {
+        if (isStatic || isFinal || isDynamic || isOverride || !access.equals(DEFAULT_ACCESS)) {
+            throw new ParseException("cannot use keywords: " + toJavascriptString() + " on nested function");
+        }
+        if (namespace != null) {
+            throw new ParseException("cannot use namespace (" + namespace + ") on nested function");
+        }
+    }
     private void verifyClass(SimpleNode subnode) {
         if (isOverride)
             throw new ParseException("cannot use override on class: " + subnode);
@@ -121,6 +130,9 @@ public class ASTModifiedDefinition extends SimpleNode {
             verifyFunction(subnode);
         else if (subnode instanceof ASTClassDefinition)
             verifyClass(subnode);
+        // A nested function leaves behind an empty expression
+        else if (subnode instanceof ASTEmptyExpression)
+            verifyNestedFunction(subnode);
         else
             throw new ParseException("unexpected type at top level: " + subnode);
     }

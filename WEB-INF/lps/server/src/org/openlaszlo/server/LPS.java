@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -215,7 +215,10 @@ RuntimeException(
           runtime = getRuntimeDefault();
       }
 
-      if (runtime.indexOf("swf") == 0) {
+      if (runtime.equals("swf9")) {
+          runtime = "9";
+          extension = "swc";
+      } else if (runtime.indexOf("swf") == 0) {
         runtime = runtime.substring("swf".length());
         extension = "lzl";
       }

@@ -1,7 +1,7 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -9,14 +9,29 @@
 
 #include "services/LzInstantiator.lzs"
 #include "services/LzGlobalMouse.lzs"
-#include "services/LzModeManager.lzs"
+
+if ($swf9) {
+    #include "services/LzModeManager.js"
+} else {
+    #include "services/LzModeManager.lzs"
+}
+
+if ($swf9) {
+#include "services/LzURL.js"
+} else {
+
 #include "services/LzCursor.lzs"
 #include "services/LzURL.lzs"
+}
+
 if ($js1) {
     #include "services/platform/dhtml/LzModeManager.js"
     #include "services/platform/dhtml/LzBrowser.js"
     #include "services/platform/dhtml/LzKeys.js"
     #include "services/platform/dhtml/LzHistory.js"
+} else if ($swf9) {
+    #include "services/platform/swf9/LzKeys.js"
+//    #include "services/platform/dhtml/LzModeManager.js"
 } else if ($as2) {
     #include "services/platform/swf/LzModeManager.as"
     #include "services/platform/swf/LzKeys.as"
@@ -25,6 +40,10 @@ if ($js1) {
 } else {
     Debug.error('services/Library.lzs unsupported runtime %s', $runtime);
 }
+
+if ($swf9) {
+#include "services/LzIdle.js"
+} else {
 #include "services/LzCSSStyle.js"
 #include "services/LzStyleSheet.js"
 #include "services/LzCSSStyleSheet.js"
@@ -32,3 +51,5 @@ if ($js1) {
 #include "services/LzFocus.lzs"
 #include "services/LzIdle.lzs"
 #include "services/LzTimer.lzs"
+
+}

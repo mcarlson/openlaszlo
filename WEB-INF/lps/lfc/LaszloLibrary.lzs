@@ -3,7 +3,7 @@
 /**
   * Definition of the basic LFC Library 
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -14,6 +14,29 @@ var _Copyright = "Portions of this file are copyright (c) 2001-2007 by Laszlo Sy
 
 // Compiler runtime support first
 #include "compiler/Library.lzs"
+
+if ($swf9) {
+
+#include "core/Library.lzs"
+#include "events/Library.lzs"
+
+#include "kernel/Library.lzs"
+#include "views/Library.lzs"
+#include "controllers/Library.lzs"
+
+#include "helpers/Library.lzs"
+#include "data/Library.lzs"
+#include "services/Library.lzs"
+#include "glue/Library.lzs"
+
+
+
+
+
+  //Debugger placeholder
+#include "debugger/swf9stubs.lzs"
+
+} else {
 
 if ($debug) {
   // Must be loaded second
@@ -58,3 +81,4 @@ if ($debug) {
   }
 }
 
+}

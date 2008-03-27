@@ -1,0 +1,40 @@
+<view name="frosty">
+    <method event="oninit">
+        //Debug.write("Frosty's parent: " + this.parent);
+    </method>  
+<text multiline="true" 
+      x="6"
+      height="450" width="420">
+<pre>
+Frosty the Snowman, was a jolly happy soul,
+With a corncob pipe and a button nose, and two eyes made of coal.
+Frosty the Snowman, is a fairytale, they say.
+He was made of snow, but the children know he came to life one day.
+There must have been some magic in that old silk hat they found,
+For when they placed it on his head, he began to dance around!
+Ohhhhhhh, Frosty, the Snowman, was a live as he could be;
+and the children say he could laugh and play,
+just the same as you and me.
+
+Thumpety thump, thump, thumpety thump, thump,
+look at Frosty go.
+Thumpety thump, thump, thumpety thump, thump,
+over the hills of snow.
+
+Frosty the Snowman, knew the sun was hot that day,
+so he said, "Let's run, and we'll have some fun now, before I melt away."
+Down to the village, with a brooomstick in his hand,
+Running here and there, all around the square,
+sayin', "Catch me if you can."
+He led them down the streets of town, right to the traffic cop;
+and only paused a moment, when he heard him holler, "Stop!"
+For Frosty, the Snowman, had to hurry on his way,
+But he waved goodbye, sayin' "Don't cry, I'll be back again some day." 
+</pre>
+</text>
+</view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -31,7 +31,13 @@
   * @shortdesc Changes the value of another object's attribute over time.
   * @see animatorgroup
   */
-class LzAnimator extends LzAnimatorGroup {
+dynamic class LzAnimator extends LzAnimatorGroup {
+
+  function LzAnimator ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+      super(parent,attrs,children,instcall);
+      this.calcMethod = this.calcNextValue;
+   }
+
 
 /** @access private
   * @modifiers override 
@@ -40,37 +46,22 @@ static var tagname = 'animator';
 /** @access private */
 static var attributes = new LzInheritedHash(LzAnimatorGroup.attributes);
 
-var beginPoleDelta = .25;
-var endPoleDelta = .25;
+var calcMethod:Function;
 
-/** The name of the attribute whose value is animated.  This
-  * attribute is required on an animator, unless the animator is
-  * inside an animatorgroup that specifies an attribute.
-  * @lzxtype token
-  */
-var attribute;
+var lastIterationTime:Number;
+var currentValue:Number;
+var doBegin:Boolean;
 
-/**
-  * The style of motion to use for the animator. This
-  * is one of "linear", "easin" , "easeout" , and "easeboth". The default
-  * is "easeboth"
-  *
-  * @type String
-  */
-var motion;
+var beginPoleDelta:Number = .25;
+var endPoleDelta:Number = .25;
 
-/**
-  * The destination value for the animator.
-  *
-  * @type Number
-  */
-var to;
-
+var primary_K:Number;
+var origto:Number;
 
 /**
   * @access private
   */
-function construct ( parent , args ){
+override function construct ( parent , args ){
     super.construct.apply(this, arguments);
     this.primary_K          = 1.0;
 }
@@ -86,9 +77,9 @@ function $lzc$set_motion ( eparam ){
     this.motion = eparam
     //easin, easeout , linear , easeboth (default)
     if ( eparam == "linear" ){
-        this.calcNextValue = this.calcNextValueLinear;
+        this.calcMethod = this.calcNextValueLinear;
     } else {
-        delete this.calcNextValue;
+        this.calcMethod =  this.calcNextValue;
         if ( eparam == "easeout" ){
             this.beginPoleDelta = 100;
         } else if ( eparam == "easein" ){
@@ -134,7 +125,7 @@ function setTo (eparam) {
   *
   * @access private
   */
-function calcControlValues ( cval ){
+function calcControlValues ( cval  = null){
     // reset currentValue
     this.currentValue = cval || 0;
 
@@ -180,7 +171,7 @@ function calcControlValues ( cval ){
   *
   * @access private
   */
-function doStart (){
+override function doStart (){
     if ( this.isactive ) return;
     this.isactive = true;
 
@@ -194,7 +185,7 @@ function doStart (){
 /**
   * @access private
   */
-function prepareStart ( ){
+override function prepareStart ( ){
     // create a "repeat" counter to be decremented each time after the
     // animator finishes a cycle.
     this.crepeat = this.repeat;
@@ -239,7 +230,7 @@ function prepareStart ( ){
   * reset the time variables and currentValue
   * @access private
   */
-function resetAnimator() {
+override function resetAnimator() {
     // Set the attribute of the view to its "from" value but make sure
     // expectedAttribute is updated.
     if ( this.from != null ){
@@ -291,7 +282,7 @@ function beginAnimator( time ) {
 /**
   * @access private
   */
-function stop( ) {
+override function stop( ) {
     if ( !this.isactive ) return;
 
     var e_prop = "e_" +  this.attribute;
@@ -310,7 +301,7 @@ function stop( ) {
 /**
   * @access private
   */
-function __LZfinalizeAnim( ) {
+override function __LZfinalizeAnim( ) {
     var e_prop = "e_" +  this.attribute;
     if (!this.target[e_prop].c) { this.target[e_prop].c = 0; }
     this.target[e_prop].c -= 1; //decrement animation counter for prop
@@ -381,7 +372,7 @@ function calcNextValueLinear( timeDifference ) {
   * value.
   * @return animatorIsDone: a boolean indicating if the animation is complete
   */
-function update( time ) {
+public override function update( time ) {
     var animatorIsDone = false;
 
     // If this is its first iteration then calc the necessary paramters.
@@ -394,7 +385,7 @@ function update( time ) {
         if ( !this.paused ) {
             var aTotalTimeDifference = time - this.startTime;
             if ( aTotalTimeDifference < this.duration ) {
-                this.setValue( this.calcNextValue( aTotalTimeDifference ));
+                this.setValue( this.calcMethod( aTotalTimeDifference ));
                 this.lastIterationTime = time;
             } else {
                 this.setValue( this.to );
@@ -426,9 +417,11 @@ function setValue( value ) {
 /**
   * @access private
   */
-function toString(){
+override function toString(){
     return "Animator for " + this.target + " attribute:" + this.attribute + " to:" + this.to;
 }
 
 } // End of LzAnimator
 
+
+ConstructorMap[LzAnimator.tagname] = LzAnimator;

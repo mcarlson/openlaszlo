@@ -435,6 +435,8 @@ function initDone (){
   * (By the root resolver in LaszloLibrary).
   */
 function init (){
+    // Debug.write("LzCanvas.init called");
+    // new LzText(canvas, {x: 600, y:0, text: 'elapsed time '+getTimer()+' msec'});
 }
 
 /**

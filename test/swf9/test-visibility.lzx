@@ -1,0 +1,19 @@
+<canvas width="800" height="600"> 
+
+  <view id="bar" x="200" y="200" bgcolor="#cccccc" width="200" height="200">
+    <view name="v1" bgcolor="green" width="40" height="40" 
+          x="59" y="101"/>
+
+    <attribute name="toggle" value="true" type="expression"/>
+
+    <handler name="onclick">
+      this.toggle = !this.toggle;
+      this.v1.setVisible(toggle);
+    </handler>
+
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

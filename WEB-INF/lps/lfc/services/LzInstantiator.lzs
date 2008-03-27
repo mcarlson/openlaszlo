@@ -16,7 +16,8 @@
   *
   * @shortdesc Handles application instantiation.
   */
-class LzInstantiatorClass {
+
+dynamic public class LzInstantiatorClass {
 
 var checkQDel = null;
 function LzInstantiatorClass () {
@@ -40,7 +41,7 @@ var timeout = 500;
 var makeQ = [];
 var trickleQ = [];
 var tricklingQ = [];
-var syncNew = true;
+public var syncNew = true;
 /**
   * The length of time to spend creating initstage=
   * "late" nodes before allowing an idle event to pass. By default this
@@ -49,6 +50,7 @@ var syncNew = true;
   */
 var trickletime = 10;
 
+var datareplq:Array;
 
 /**
   * @access private
@@ -131,8 +133,10 @@ function checkUpdate (){
 
 /**
   * @access private
+  *
+  * N.B.: [hqm 2008-03] This gets an event timer arg from the onidle event, which we ignore
   */
-function checkQ ( ){
+function checkQ ( ignoreme = null){
     if ( ! this.makeQ.length ) {
         if (! this.tricklingQ.length ){
             if ( !this.trickleQ.length ){
@@ -316,4 +320,6 @@ function drainQ (limit) {
 
 } // End of LzInstantiatorClass
 
-var LzInstantiator = new LzInstantiatorClass ();
+
+var LzInstantiator:LzInstantiatorClass = new LzInstantiatorClass ();
+

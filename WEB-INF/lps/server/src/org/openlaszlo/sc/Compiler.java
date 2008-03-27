@@ -80,15 +80,15 @@ public class Compiler {
 
   // Map for options
   public static class OptionMap extends HashMap {
-    OptionMap () {
+    public OptionMap () {
       super();
     }
 
-    OptionMap (Map m) {
+    public OptionMap (Map m) {
       super(m);
     }
 
-    OptionMap (List pairs) {
+    public OptionMap (List pairs) {
       for (Iterator i = pairs.iterator(); i.hasNext(); ) {
         List pair = (List)i.next();
         put(pair.get(0), pair.get(1));
@@ -327,25 +327,36 @@ public class Compiler {
   public byte[] compile(String source) {
     try {
       Profiler profiler = new Profiler();
-      profiler.enter("parse");
-      SimpleNode program = new Parser().parse(source);
-      profiler.phase("generate");
-      Translator cg;
       byte[] bytes;
       String runtime = (String)options.get(RUNTIME);
       boolean compress = (! options.getBoolean(NAME_FUNCTIONS));
       boolean obfuscate = options.getBoolean(OBFUSCATE);
-      if (org.openlaszlo.compiler.Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
+      boolean isScript = org.openlaszlo.compiler.Compiler.SCRIPT_RUNTIMES.contains(runtime);
+      Translator cg;
+      if (runtime.equals("swf9")) {
+        cg = new SWF9Generator();
+      }
+      else if (isScript) {
         cg = new JavascriptGenerator();
-        cg.setOptions(options);
-        SimpleNode translated = cg.translate(program);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        (new ParseTreePrinter(compress, obfuscate)).print(translated, stream);
-        bytes = stream.toByteArray();
-      } else {
+      }
+      else {
         cg = new CodeGenerator();
-        cg.setOptions(options);
-        cg.translate(program);
+      }
+      cg.setOptions(options);
+      cg.setOriginalSource(source);
+
+      profiler.enter("parse");
+      source = cg.preProcess(source);
+      SimpleNode program = new Parser().parse(source);
+      profiler.phase("generate");
+      SimpleNode translated = cg.translate(program);
+
+      if (isScript) {
+
+        List tunits = cg.makeTranslationUnits(translated, compress, obfuscate);
+        bytes = cg.postProcess(tunits);
+
+      } else {
         if (options.getBoolean(PROGRESS)) {
           System.err.println("Assembling...");
         }
@@ -416,7 +427,7 @@ public class Compiler {
       dependencies.visit(children[stmtpos]);
     }
     SimpleNode depExpr = dependencies.computeReferencesAsExpression();
-    String result = new ParseTreePrinter().visit(depExpr);
+    String result = new ParseTreePrinter().text(depExpr);
     if (options.getBoolean(Compiler.PRINT_CONSTRAINTS)) {
       System.out.println(result);
     }
@@ -428,7 +439,10 @@ public class Compiler {
   //
 
   // TODO [2004-03-11 ptw] share with CompilationEnvironment.java
+  public static String CANVAS_WIDTH = "canvasWidth";
+  public static String CANVAS_HEIGHT = "canvasHeight";
   public static String ACTIVATION_OBJECT = "createActivationObject";
+  public static String BUILD_SHARED_LIBRARY = "buildSharedLibrary";
   public static String COMPUTE_METAREFERENCES = "computeMetaReferences";
   public static String CONDITIONAL_COMPILATION = "conditionalCompilation";
   public static String ALLOW_ROOT = "allowRoot";
@@ -439,6 +453,7 @@ public class Compiler {
   public static String DEBUG = "debug";
   public static String DEBUG_BACKTRACE = "debugBacktrace";
   public static String DEBUG_SIMPLE = "debugSimple";
+  public static String DEBUG_EVAL = "debugEval";
   public static String DISABLE_CONSTANT_POOL = "disableConstantPool";
   public static String ELIMINATE_DEAD_EXPRESSIONS = "eliminateDeadExpressions";
   public static String FLASH_COMPILER_COMPATABILITY = "flashCompilerCompatability";
@@ -452,6 +467,7 @@ public class Compiler {
   public static String METHOD_NAME = "methodName";
   public static String NAME_FUNCTIONS = "nameFunctions";
   public static String OBFUSCATE = "obfuscate";
+  public static String PASSTHROUGH_FORMAL_INITIALIZERS = "passthroughFormalInitializers";
   public static String PROFILE = "profile";
   public static String PROFILE_COMPILER = "profileCompiler";
   public static String PROGRESS = "progress";
@@ -653,7 +669,7 @@ public class Compiler {
           SimpleNode prop = node.get(1);
           assert ((prop instanceof ASTPropertyIdentifierReference ||
                    prop instanceof ASTPropertyValueReference) &&
-                  prop.size() > 0 ): (new ParseTreePrinter()).visit(prop);
+                  prop.size() > 0 ): (new ParseTreePrinter()).text(prop);
           int size = node.size();
           SimpleNode children[] = new SimpleNode[2];
           children[0] = node.get(0);
@@ -676,7 +692,7 @@ public class Compiler {
         if (rhs instanceof ASTFunctionExpression) {
           // fn children are [(name), arglist, body]
           if (rhs.size() == 2) {
-            String name = ptp.visit(node.get(0));
+            String name = ptp.text(node.get(0));
             SimpleNode child = rhs;
             int size = child.size();
             SimpleNode children[] = new SimpleNode[size + 1];
@@ -756,7 +772,11 @@ public class Compiler {
       SimpleNode fexpr = substitute("(function () {" + str + "})()", keys);
       return fexpr.get(0).get(1).getChildren();
     }
-  }
+
+    public SimpleNode substituteStmt(String str, Map keys) {
+      SimpleNode node = parse("#file Compiler.substitute\n#line 0\n" + str).get(0);
+      return visit(node, keys);
+    }
 
   // Visitor -- only works for ParseTreePrinter so far
 //   public abstract static class Visitor {
@@ -791,6 +811,8 @@ public class Compiler {
 
 //     public abstract Object defaultVisitor(Object o, Object[] children);
 //   }
+
+  }
 
   // ASTNode -> fname, lineno
   public static class SourceLocation {
@@ -892,10 +914,10 @@ public class Compiler {
   }
 
   private static ParseTreePrinter ptp = new ParseTreePrinter();
-  public static String nodeString(SimpleNode node) {
-    return ptp.visit(node);
-  }
 
+  public static String nodeString(SimpleNode node) {
+    return ptp.text(node);
+  }
 }
 
 /**

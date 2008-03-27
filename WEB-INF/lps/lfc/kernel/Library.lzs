@@ -1,15 +1,26 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
   */
 
-#include "kernel/LzIdleKernel.lzs"
-#include "kernel/LzUtils.lzs"
-#include "kernel/LzLibraryCleanup.lzs"
+if ($swf9) {
+    #include "kernel/LzUtils.js"
+
+    #include "kernel/swf9/Library.lzs"
+    // TODO [hqm 01 2008] Note: we should be able to merge
+    // the LzIdleKernel swf9 version with the default version
+
+} else {
+    #include "kernel/LzIdleKernel.lzs"
+    #include "kernel/LzUtils.lzs"
+    #include "kernel/LzLibraryCleanup.lzs"
+}
+
+
 //#include "kernel/LzRequires.lzs"
 if ($dhtml) {
     #include "kernel/dhtml/Library.lzs"
@@ -17,6 +28,8 @@ if ($dhtml) {
     #include "kernel/svg/Library.lzs"
 } else if ($as2) {
     #include "kernel/swf/Library.lzs"
+} else if ($as3) {
+    //    #include "kernel/swf9/Library.lzs"
 } else if ($debug) {
     Debug.error('kernel/Library.lzs unsupported runtime %s', $runtime);
 }

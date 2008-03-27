@@ -70,9 +70,13 @@ static var tagname = 'script';
 /** @access private */
 static var attributes = new LzInheritedHash(LzNode.attributes);
 
-function LzScript ( parent, args ) {
-    super(parent, args);
-    args.script();
-}
+    public function LzScript ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+        attrs.script();
+    }
+
 
 }; // End of LzScript
+
+
+ConstructorMap[LzScript.tagname] = LzScript;

@@ -1,0 +1,166 @@
+/* -*- mode: Java; c-basic-offset: 2; -*- */
+
+/***
+ * TranslationUnit.java
+ * Author: Don Anderson
+ * Description: A collector for the part of the Javascript
+ * output that corresponds to a single class definition,
+ * and thus as an input file to the third party compiler.
+ * Line numbers from the original source file are tracked and
+ * related to line numbers in the translation unit so that any compile
+ * errors from the third party compiler can be translated back
+ * to the original source line numbers.
+ */
+
+package org.openlaszlo.sc;
+
+import java.util.*;
+
+public class TranslationUnit
+{
+  private String name;                  // name of class
+  private StringBuffer text = new StringBuffer();
+  private SortedMap lnums = new TreeMap();
+  private int linenum = 1;
+  private String srcFilename;   // name of associated source file, if applicable
+  private boolean isDefault = false; // stuff not within a class goes to default
+  private boolean isMain = false;    // designated classes, like LFCApplication
+  private Map streams = new HashMap(); // alternate streams, indexed by number
+  private int maxInserts = 0;          // bound the number of stream insert replacements
+
+  // When these appear in the contents they will be replaced
+  // by the indicated stream whenever contents is retrieved.
+  public static final String INSERT_STREAM_MARK = "#insertStream(";
+  public static final String INSERT_END_MARK = ")";
+
+  public String getName() {
+    return name;
+  }
+
+  public TranslationUnit() {
+    this(false);
+  }
+
+  public TranslationUnit(boolean isDefaultTranslationUnit) {
+    this.isDefault = isDefaultTranslationUnit;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getSourceFileName() {
+    return srcFilename;
+  }
+
+  public void setSourceFileName(String srcname) {
+    this.srcFilename = srcname;
+  }
+
+  /** Get text with any insertions resolved */
+  public String getContents() {
+    String result = text.toString();
+    for (int i=1; i<=maxInserts; i++) {
+      String mark = INSERT_STREAM_MARK + i + INSERT_END_MARK;
+      int markPos = result.indexOf(mark);
+      if (markPos >= 0) {
+        result = result.substring(0, markPos) + getStreamText(i) +
+          result.substring(markPos + mark.length());
+      }
+    }
+    return result;
+  }
+
+  public boolean isDefaultTranslationUnit() {
+    return isDefault;
+  }
+
+  public boolean isMainTranslationUnit() {
+    return isMain;
+  }
+
+  public void setMainTranslationUnit(boolean value) {
+    isMain = value;
+  }
+
+  public void addText(String s) {
+    text.append(s);
+    linenum += countOccurence(s, '\n');
+  }
+
+  public void addInsertStreamMarker(int streamNum) {
+    text.append(INSERT_STREAM_MARK + streamNum + INSERT_END_MARK);
+    if (streamNum > maxInserts)
+      maxInserts = streamNum;
+  }
+
+  public void addStreamText(int streamNum, String s) {
+    Integer key = new Integer(streamNum);
+    String cur = (String)streams.get(key);
+    if (cur == null)
+      cur = "";
+    cur += s;
+    streams.put(key, cur);
+  }
+
+  public String getStreamText(int streamNum) {
+    Integer key = new Integer(streamNum);
+    String cur = (String)streams.get(key);
+    if (cur == null)
+      cur = "";
+    return cur;
+  }
+
+  public void setInputLineNumber(int inputLinenum) {
+    Integer key = new Integer(linenum);
+    // we want the least value in the mapping
+    Integer cur = (Integer)lnums.get(key);
+    if (cur == null || inputLinenum < cur.intValue())
+      lnums.put(key, new Integer(inputLinenum));
+  }
+
+  public static int countOccurence(String s, char c) {
+    int count = 0;
+    int pos = s.indexOf(c);
+    while (pos >= 0) {
+      count++;
+      pos = s.indexOf(c, pos+1);
+    }
+    return count;
+  }
+
+  public String toString() {
+    String shortText = text.toString();
+    if (shortText.length() > 10) {
+      shortText = shortText.substring(0, 10) + "...";
+    }
+    return "TranslationUnit[" + name + ", line " +
+      linenum + "] = \"" + shortText + "\"";
+  }
+
+  public void dump() {
+    System.out.println("TranslationUnit[" + name + ", line " + linenum + "]");
+    System.out.println("  text=" + text);
+    System.out.println("  linemap=");
+    for (Iterator iter=lnums.keySet().iterator(); iter.hasNext(); ) {
+      Object key = iter.next();
+      Object val = lnums.get(key);
+      System.out.println("    " + key + " => " + val);
+    }
+  }
+
+  public int originalLineNumber(int num) {
+    SortedMap nextLineNumber = lnums.tailMap(new Integer(num));
+    if (nextLineNumber.size() == 0)
+      return -1;
+    Object key = nextLineNumber.firstKey();
+    if (key == null)
+      return -1;
+    return ((Integer)lnums.get(key)).intValue();
+  }
+}
+
+/**
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ * Reserved.  Use is subject to license terms.
+ */

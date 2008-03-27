@@ -1,0 +1,31 @@
+<canvas height="800" width="800" >
+  <dataset name="myData">
+    <myXML>
+      <person show="simpsons">
+        <firstName>Homer</firstName>
+        <lastName>Simpson</lastName>
+      </person>
+      <person show="simpsons">
+        <firstName>Marge</firstName>
+        <lastName>Simpson</lastName>
+      </person>
+      <person show="simpsons">
+        <firstName>Montgomery</firstName>
+        <lastName>Burns</lastName>
+      </person>
+    </myXML>
+  </dataset>
+  
+  <text datapath="myData:/myXML[1]/person[1]/firstName[1]/text()">
+    <handler name="ondata">
+      //trace("ondata running: " + this.getText());
+    </handler>
+    <handler name="oninit">
+      //trace("oninit running: " + this.getText());
+    </handler>
+  </text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

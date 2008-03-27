@@ -142,8 +142,8 @@
       <view name="controls" x="70">
         <view name="firstrow" y="4">
             <text fontsize="11" x="8" y="7"><b>Compile Options:</b></text>
-            <view x="125" width="410" height="32" bgcolor="black">
-                <view x="1" y="1" width="408" height="30" bgcolor="#9494ad"/>
+            <view x="125" width="475" height="32" bgcolor="black">
+                <view x="1" y="1" width="473" height="30" bgcolor="#9494ad"/>
             </view>
             <view x="125" name="compilecontrols">
                 <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:4" x="6" y="8.75">
@@ -151,16 +151,18 @@
                     selected="${app_runtime == 'swf7'}">swf7</radiobutton >
                     <radiobutton id="rb8" value="'swf8'"
                     selected="${app_runtime == 'swf8'}">swf8</radiobutton >
+                    <radiobutton id="rb9" value="'swf9'"
+                    selected="${app_runtime == 'swf9'}">swf9</radiobutton >
                     <radiobutton id="rbdhtml" value="'dhtml'"
                     selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
 
                 </radiogroup>
-                <view height="14" width="1" bgcolor="black" x="173" y="9.5"/>
+                <view height="14" width="1" bgcolor="black" x="225" y="9.5"/>
                 <checkbox id="cb_debug" value="${app_debug == 'true'}"
-                          x="181" y="8.25">Debug</checkbox>
+                          x="236" y="8.25">Debug</checkbox>
                 <checkbox id="cb_backtrace" 
-                          value="${app_backtrace == 'true'}" x="250" y="8.25">Backtrace</checkbox>
-                <button onclick="canvas.gotoApp()" x="334" y="4">Compile</button>
+                          value="${app_backtrace == 'true'}" x="305" y="8.25">Backtrace</checkbox>
+                <button onclick="canvas.gotoApp()" x="390" y="3">Compile</button>
                 <handler name="onvalue" reference="cb_backtrace">
                   if (cb_backtrace.value) {
                      cb_debug.setAttribute('value', true);
@@ -173,7 +175,7 @@
                 </handler>
             </view>
             <view width="22" x="450"/>
-            <button onclick="canvas.viewSource()" x="580" y="3">View Source</button>
+            <button onclick="canvas.viewSource()" x="635" y="3">View Source</button>
         </view>
 
         <view bgcolor="black" width="${canvas.width - 70}" height="1" y="39"/>

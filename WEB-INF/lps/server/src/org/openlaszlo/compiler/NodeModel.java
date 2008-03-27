@@ -70,6 +70,7 @@ public class NodeModel implements Cloneable {
     String initstage = null;
     int totalSubnodes = 1;
     final CompilationEnvironment env;
+    protected boolean emitClassDecl = false;
 
     public Object clone() {
         NodeModel copy;

@@ -1,0 +1,23 @@
+/******************************************************************************
+ * stubs.lzs
+ *****************************************************************************/
+
+//* A_LZ_COPYRIGHT_BEGIN ******************************************************
+//* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Use is subject to license terms.                                          *
+//* A_LZ_COPYRIGHT_END ********************************************************
+
+// This file implements the debugger stubs, so that DHTML apps can make refernces to
+// Debug.write, etc, when the full debugger is not compiled/linked in.
+
+dynamic class Debug {
+    static public function write(...args):void {
+        trace.apply(Debug, args);
+    }
+
+    static var monitor = Debug.write;
+    static var warn = Debug.write;
+    static var error = Debug.write;
+    static var info = Debug.write;
+    static var debug = Debug.write;
+}

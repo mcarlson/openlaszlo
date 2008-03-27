@@ -1,0 +1,13 @@
+<canvas width="800" height="600"> 
+
+  <view resource="testmedia/cherry.png">
+    <handler name="oninit">
+      trace('embed view oninit handler!');
+    </handler>
+  </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

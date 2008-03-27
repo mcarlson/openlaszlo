@@ -29,12 +29,15 @@ public class CompilationEnvironment {
     public static final String RUNTIME_PROPERTY = "runtime";
     public static final String PROXIED_PROPERTY           = "lzproxied";
     public static final String DEBUG_PROPERTY             = "debug";
+    public static final String DEBUG_EVAL_PROPERTY        = "debugEval";
 
     // matches the value of sc.Compiler.DEBUG_BACKTRACE
     public static final String BACKTRACE_PROPERTY         = "debugBacktrace";
 
     public static final String PROFILE_PROPERTY           = "profile";
     public static final String LINK_PROPERTY              = "link";
+    // e_validate is defined if a user explicitly defined validate attribute
+    public static final String VALIDATE_EXPLICIT_PROPERTY = "e_validate";
     public static final String CSSFILE_PROPERTY           = "cssfile";
     // Log all debug.write messages back to the server
     public static final String LOGDEBUG_PROPERTY      = "logdebug";
@@ -348,6 +351,10 @@ public class CompilationEnvironment {
         return (Element) idTable.get(name);
     }
 
+    public Map getIds () {
+        return idTable;
+    }
+
     public void addResourceReference(String name, Element elt) {
         resourceReferences.put(name, elt);
     }
@@ -600,6 +607,11 @@ public class CompilationEnvironment {
     // [TODO hqm 01/06] this should be keyed off of the 'lzr' runtime
     // arg, it should return true for lzr=dhtml
     public boolean isDHTML() {
+
+        if (this.getRuntime().equals("swf9")) {
+            return false;
+        }
+        
         return Compiler.SCRIPT_RUNTIMES.contains(this.getRuntime());
     }
 

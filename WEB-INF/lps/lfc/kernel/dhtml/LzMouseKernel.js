@@ -1,7 +1,7 @@
 /**
   * LzMouseKernel.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -42,6 +42,7 @@ var LzMouseKernel = {
                 LzMouseKernel.__y = e.clientY;
             }
         }    
+
         if (LzMouseKernel.__callback) {
             if (e.button == 2 && eventname != 'oncontextmenu') return;
             if (eventname == 'oncontextmenu') {

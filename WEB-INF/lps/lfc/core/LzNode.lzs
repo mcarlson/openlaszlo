@@ -32,7 +32,7 @@
   * defaultplacement in lexical parent). See the 
   * <method>LzNode.determinePlacement</method> method. Defaults to false.
   */
-class LzNode {
+public dynamic class LzNode {
 
     /** @access private
      * @modifiers override 
@@ -40,6 +40,27 @@ class LzNode {
     static var tagname = 'node';
     /** @access private */
     static var attributes = new LzInheritedHash();
+    
+     var __LZdeferDelegates:Boolean = false;
+     var __LZisnew:Boolean = false;
+     var __LZstyleConstraints:* = null;
+     //     var  syncNew:Boolean = null;
+     var __LZdeferredcarr:Array = null;
+     var _events:Array = null;
+     var data:* = null;
+     var classChildren:Array = null;
+     var __LZvizDat:Boolean = true;
+     var animators:Array = null;
+
+
+    if ($swf9) {
+    ///////////////////////////////////////////////////////////////////
+    // TODO [hqm 2008-01]  This won't work for adding methods that
+    // call super(). Need to make those real compile time methods (and setters).
+    function addProperty(key:*,val:*):void {
+        this[key] = val;
+    }
+    }
 
 
     /**
@@ -120,10 +141,12 @@ class LzNode {
 
     /** @access private
      * @devnote Used by replication to clone instances */
-    var _instanceAttrs;
+     var _instanceAttrs:* = null;
+
     /** @access private
      * @devnote Used by replication to clone instances */
-    var _instanceChildren;
+     var _instanceChildren:Array = null;
+
 
 /**
   * @param LzNode parent: a node above this one in the hierarchy -- not
@@ -134,11 +157,14 @@ class LzNode {
   * @param Boolean instcall
   * @access private
   */
-function LzNode ( parent , attrs , children , instcall ){
+function LzNode ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null){
         this.__LZUID = "__U" + ++LzNode.__UIDs;
         this.__LZdeferDelegates = true;
         var qpos = LzDelegate.__LZdelegatesQueue.length;
-        super();
+        if ($swf9) {
+        } else {
+            super();
+        }
 
         // Node node start
         if ($profile) {
@@ -267,9 +293,9 @@ function LzNode ( parent , attrs , children , instcall ){
           * @todo 2006-05-24 ptw Adam says this is a hack that we should get
           * rid of.
           */
-        if (this.constructWithArgs) this.constructWithArgs( maskedargs );
+        this.constructWithArgs( maskedargs );
 
-        delete this.__LZdeferDelegates;
+        this.__LZdeferDelegates = null;
         if (qpos != LzDelegate.__LZdelegatesQueue.length) {
             // Drain the events queue back to where we started
             LzDelegate.__LZdrainDelegatesQueue(qpos);
@@ -292,18 +318,28 @@ function LzNode ( parent , attrs , children , instcall ){
             // Set _profile_instantiator_name to constructor._dbg_name for
             // annotation in LzInstantiator.makeSomeViews
             else {
-                this._profile_instantiator_name = this.constructor._dbg_name;
+                this._profile_instantiator_name = this['constructor']._dbg_name;
             }
         }
 }
+
+/**
+  * @access private
+  */
+function constructWithArgs(args:*) { }
+    
 
 /**
   * Link up the getter/setter/defaultattr inheritance
   * @access private
   * @param Object prototype: the class prototype
   */
+
 // class initializer
-static function initialize (prototype) {
+if ($swf9) {
+
+} else {
+  static function initialize (prototype) {
 
   // Install in constructor map
   // this in a class initializer, is the class
@@ -332,6 +368,7 @@ static function initialize (prototype) {
 //       Debug.debug("No tag for node class %w", this);
 //     }
   }
+}
 }
 
 /** This event is sent right before a node becomes active --
@@ -557,7 +594,7 @@ var classroot;
   * @type Number
   * @keywords readonly
   */
-var nodeLevel;
+var nodeLevel = 0;
 
 if ($debug) {
     /** The source locator table maps source locations to nodes
@@ -770,7 +807,7 @@ function __LZsetPreventInit ( ){
   */
 function __LZclearPreventInit ( ){
     var lzp = this.__LZpreventSubInit;
-    delete this.__LZpreventSubInit;
+    this.__LZpreventSubInit = null;
     var l = lzp.length;
     for ( var i = 0; i < l; i++ ){
         lzp[ i ].__LZcallInit();
@@ -781,7 +818,7 @@ function __LZclearPreventInit ( ){
   * @access private
   * @devnote LzCanvas replaces this method, so must be kept in sync
   */
-function __LZcallInit ( ){
+function __LZcallInit (an:* = null ){
     if ( this.parent && this.parent.__LZpreventSubInit ){
         this.parent.__LZpreventSubInit.push( this );
         return;
@@ -883,7 +920,7 @@ var ignoreplacement = false;
   * Applies a dictionary of args
   * @access private
   */
-function __LZapplyArgs ( args , constcall ){
+function __LZapplyArgs ( args , constcall = null ){
       var oset = {};
       var hasset = null;
       var hasearly = null;
@@ -1015,6 +1052,7 @@ function getAttribute(prop) {
     return this[ prop ];
 }
 
+
 /**
   * Sets the named attribute to the given value. If there is no setter for the
   * property, this[ prop ] is set to the value, and the event this [ "on"+prop ]
@@ -1028,7 +1066,7 @@ function getAttribute(prop) {
   * @devnote Note: this is inlined by the script compiler, so that
   * must be updated if you change this function
   */
-function setAttribute(prop, val, ifchanged) {
+function setAttribute(prop, val, ifchanged = null) {
     if (this.__LZdeleted || (ifchanged && (this[prop] == val))) return;
 
     // Must agree with NodeModel in tag compiler
@@ -1057,7 +1095,7 @@ function setProp ( prop , val ){
 /**
   * @access private
   */
-prototype._setProp = setProp;
+    //prototype._setProp = setProp;
 
 /**
   * returns the expected value for the specified property, which is the value of
@@ -1161,8 +1199,16 @@ function makeChild ( e , async ){
     var x = ConstructorMap[ e.name ];
     // TODO: [2005-03-24 ptw] Remove this if we ever enable
     // warnings in the LFC as this will be redundant
-    if ($debug) {
-        if ((! x) || (! (x instanceof Function))) { Debug.error('Class for tag %s has not been defined yet', e.name); }
+    if ($swf9) {
+    // TODO [hqm 2008-01] enable this warning unconditionally for now for swf9 debugging
+    //    if ($debug) {
+        if ((! x) || (! (x is Class))) {
+            Debug.error('Class for tag ', e.name, ' has not been defined yet', x);
+        }
+    } else {
+        if ($debug) {
+            if ((! x) || (! (x instanceof Function))) { Debug.error('Class for tag %s has not been defined yet', e.name); }
+        }
     }
     // TODO: [2005-04-20 ptw] Don't know what this means, preserved
     // for posterity:
@@ -1470,8 +1516,8 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
         var dependencies = null;
         // TODO: [2008-03-24 ptw] Use `switch type`...
         if (expr instanceof LzConstraintExpr) {
-            var c:LzConstraintExpr = expr;
-            var dependenciesMethodName = expr.dependenciesName;
+            var c:LzConstraintExpr = (expr cast LzConstraintExpr);
+            var dependenciesMethodName = c.dependenciesName;
             if ($debug) {
                 if (!(this[dependenciesMethodName] is Function)) {
                     Debug.debug("Bad constraint dependencies %w on %w", expr, this);
@@ -1729,6 +1775,8 @@ public function setOption ( key , val ){
     // Ensure you have your own private options dictionary, not the one
     // inherited from your class, nor the default empty one inherited
     // from LzNode!
+
+    // TODO [hqm 2008-03] Will this work in swf9???? 
     if (this.options === this['constructor'].prototype.options) {
       this.options = new LzInheritedHash(this.options);
     }
@@ -1835,6 +1883,15 @@ function searchParents ( prop ){
     var sview = this;
     do{
         sview = sview.immediateparent;
+
+    if ($debug) {
+        // TODO [hqm 2008-02] put this check in a $debug, when that is working for swf9
+        if (sview == null) {
+            Debug.error('searchParents got null immediateparent', this);
+            return;
+        }
+    }
+
         if (sview[ prop ] != null ){
             return sview;
         }
@@ -1879,7 +1936,7 @@ function childOf( node ){
   * Deletes the node and all the subnodes.
   * @param Boolean recursiveCall: internal use only
   */
-function destroy( recursiveCall ){
+function destroy( recursiveCall = null){
     if (this.__LZdeleted == true) {
         return;
     }
@@ -1893,7 +1950,12 @@ function destroy( recursiveCall ){
     this.__LZdeleted = true;
 
     //don't allow a call on this method if I'm deleted
-    this.__LZinstantiationDone = null;
+    if ($swf9) {
+        // TODO [hqm 2008-03]
+        // flex compiler gives error if you assign a function to null, what do we do here?
+    } else {
+        this.__LZinstantiationDone = null;
+    }
 
     //remove this and all subnodes
     if (this.subnodes != null) {
@@ -1950,7 +2012,7 @@ function destroy( recursiveCall ){
             this.__LZdelegates[ i ].unregisterAll();
         }
     }
-    delete this.__LZdelegates;
+    this.__LZdelegates = null;
 
     //remove events
     if (('_events' in this) &&  (this._events != null)) {
@@ -1958,7 +2020,7 @@ function destroy( recursiveCall ){
             this._events[i].clearDelegates();
         }
     }
-    delete this._events;
+    this._events = null;
 
     if (this.immediateparent && this.immediateparent.subnodes) {
         for( var i = this.immediateparent.subnodes.length - 1; i >= 0; i-- ){
@@ -1969,7 +2031,7 @@ function destroy( recursiveCall ){
         }
     }
 
-    delete this.data;
+    this.data = null;
 
     if ($profile) {
         var nm = this['_profile_name'];
@@ -1983,7 +2045,7 @@ function destroy( recursiveCall ){
 /**
   * @access private
   */
-function deleteNode( recursiveCall ){
+function deleteNode( recursiveCall = null){
     if ( $debug ){
       Debug.deprecated(this, arguments.callee, this.destroy);
     }
@@ -2013,7 +2075,7 @@ function deleteNode( recursiveCall ){
   * @return LzAnimator: a reference to the animator that was added
   */
 
-function animate( prop, to, duration, isRelative, moreargs ) {
+function animate( prop, to, duration, isRelative = null, moreargs = null ) {
 
     if ( duration == 0 ){
         var val = isRelative ? this[ prop ] + to : to;
@@ -2036,7 +2098,7 @@ function animate( prop, to, duration, isRelative, moreargs ) {
   * @access private
   */
 function toString (){
-    return this.constructor.classname + " "  + this.getDebugIdentification();
+    return this['constructor'].classname + " "  + this.getDebugIdentification();
 }
 
 /**
@@ -2062,6 +2124,8 @@ function _dbg_name (){
     return '.' + this.name;
   } else {
       // Don't use LzNode.toString, which is lame
+
+    // TODO [hqm 2008-03] Does asking for LzNode.prototype.toString work in swf9?
       if (this.toString !== LzNode.prototype.toString) {
           return String(this);
       } else {
@@ -2112,6 +2176,16 @@ function __LZassignClassRoot( arr , depth){
     }
 }
 
+if ($swf9) {     // TODO [hqm 2008-03] This is just a debugging print utility function for swf9
+public static function objAsString(obj) {
+    var s = "";
+        for (var k in obj) {
+            s+= k +": "+obj[k];
+            s+=", ";
+        }
+        return s;
+    }
+}
 /**
   * @access private
   * setter for $datapath
@@ -2126,3 +2200,5 @@ function $lzc$set_$datapath( dpobj ){
 }
 
 } // End of LzNode
+
+ConstructorMap[LzNode.tagname] = LzNode;

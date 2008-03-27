@@ -41,7 +41,7 @@
             LzTimer.addTimer( this.stillDownDelegate, 500 );
         </handler>
         <!--- @keywords private -->
-        <handler name= "onmouseup">
+        <handler name="onmouseup">
             this.isMouseDown=false;
             LzTimer.removeTimer( this.stillDownDelegate );
         </handler>

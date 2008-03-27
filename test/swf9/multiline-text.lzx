@@ -1,0 +1,10 @@
+<canvas width="800" height="600"> 
+
+  <text id="foo" multiline="true" width="200" height="300" bgcolor="#cccccc"  fontsize="18">aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq rrr sss tuvwxyz ABCDE FGHIJKL MNOPQRSTUVWXYZ </text>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

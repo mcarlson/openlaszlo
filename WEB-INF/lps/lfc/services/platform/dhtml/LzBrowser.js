@@ -247,7 +247,7 @@ LzBrowser.showMenu = function(truefalse) {
   * Escape special characters in message: &amp; and &lt;.
   */
 LzBrowser.xmlEscape = function (str) {
-    return LzDataNode.prototype.__LZXMLescape( str );
+    return LzDataNode.__LZXMLescape( str );
 }
 
 /**

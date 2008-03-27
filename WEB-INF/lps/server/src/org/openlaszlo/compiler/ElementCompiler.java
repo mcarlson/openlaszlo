@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -29,8 +29,13 @@ abstract class ElementCompiler {
     protected static final String VIEW_INSTANTIATION_FNAME = "LzInstantiateView";
     protected final CompilationEnvironment mEnv;
 
+    protected boolean emitClassDecl = false;
+
     ElementCompiler(CompilationEnvironment env) {
         mEnv = env;
+        if ("swf9".equals(env.getRuntime())) {
+            this.emitClassDecl = true;
+        }
     }
 
     /** Compiles this element within the compilation environment.

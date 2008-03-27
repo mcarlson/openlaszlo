@@ -16,7 +16,7 @@
   * @fixme [2006-07-26] (LPP-2412) The Instance reference is required for lzpix
   *                                to run.
   */
-class LzDataText extends LzMiniNode inherits LzDataNode {
+class LzDataText extends LzMiniNode_DataNode {
 
 /**
   * @param String text: The text that this node holds.
@@ -87,7 +87,7 @@ function cloneNode ( ){
   * @access private
   */
 function serialize (){
-    return this.__LZXMLescape( this.data );
+    return LzDataNode.__LZXMLescape( this.data );
 }
 
 /**

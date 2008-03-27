@@ -1,0 +1,21 @@
+<canvas width="800" height="800">
+
+<text name="message" width="600" height="300" multiline="true"/>
+
+  <dataset name="myData" type="http" src="data.xml">
+    <handler name="ondata">
+       canvas.message.setText(LzDataNode.__LZXMLescape(this.serialize()));
+
+       trace("got data " + this.serialize());
+    </handler>
+  </dataset>
+
+  <handler name="oninit">
+    myData.doRequest();
+  </handler>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

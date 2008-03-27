@@ -226,6 +226,10 @@
 
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
+<<<<<<< .working
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+=======
 * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+>>>>>>> .merge-right.r8400
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

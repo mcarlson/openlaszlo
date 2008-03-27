@@ -280,6 +280,19 @@ TOKEN: {
   >
 }
 
+/* passthrough */
+MORE: {
+  "#passthrough" : IN_PASSTHROUGH
+}
+
+<IN_PASSTHROUGH> TOKEN : {
+  <PASSTHROUGH: "}#" > : DEFAULT
+}
+
+<IN_PASSTHROUGH> MORE: {
+  < ~[] >
+}
+
 /* identifiers */
 
 TOKEN: {
@@ -347,8 +360,9 @@ TOKEN: {
 | < RUNSIGNEDSHIFTASSIGN: ">>>=" >
 }
 
-void Literal() #Literal : {Token t;}
-{  t = <DECIMAL_LITERAL>
+ASTLiteral Literal() #Literal : {Token t;}
+{
+(  t = <DECIMAL_LITERAL>
      {jjtThis.setDecimalValue(t.image);}
 |  t = <OCTAL_LITERAL>
      {jjtThis.setOctalValue(t.image);}
@@ -366,6 +380,7 @@ void Literal() #Literal : {Token t;}
      {jjtThis.setNullValue();}
 |  t = <UNTERMINATED_STRING_LITERAL>
      { throw new ParseException(t, "unterminated string: " + t.image.substring(0, t.image.length()-1)); }
+) { return jjtThis; }
 }
 
 void StringLiteral() #Literal : {Token t;}
@@ -676,6 +691,7 @@ void ToplevelStatement() #void : {}
  |  SwitchStatement()
  |  ThrowStatement()
  |  TryStatement()
+ |  PassthroughDirective()
 }
 
 void Statement() #Statement : {}
@@ -1020,6 +1036,44 @@ SimpleNode PragmaDirective() #PragmaDirective : {Token t;}
 {
   "#pragma" /*NoLineBreak()*/ StringLiteral()
   {return jjtThis;}
+}
+
+// #passthrough [ (property1:value1, property2:value2, ...) ] { ... }#
+//  
+void PassthroughDirective() #PassthroughDirective : {Token t;}
+{
+  /*
+   * The passthrough contents may contain lots of otherwise recognized
+   * tokens which can confuse the parser if we attempt to collect the
+   * the passthrough directive with properties using 'straightforward'
+   * parsing techniques.  Also the presence of '{' as the beginning of
+   * the passthrough text can lead to grammar ambiguities.  So, we
+   * collect everything between #passthrough and }# into the PASSTHROUGH
+   * token and reparse the stuff before "{" to get the properties.
+   */
+  t = <PASSTHROUGH>
+  {
+    // skip the #passthrough and }# tokens
+    String raw = t.image.substring("#passthrough".length(),t.image.length()-2);
+    int beginBrace = raw.indexOf('{');
+    if (beginBrace < 0)
+        throw new ParseException("#passthrough property: missing {");
+    jjtThis.setText(raw.substring(beginBrace+1));
+
+    Parser p = new Parser(new java.io.StringReader(raw.substring(0, beginBrace)));
+    p.PassthroughProperties(jjtThis);
+  }
+}
+
+void PassthroughProperties(ASTPassthroughDirective pt) #void : {}
+{
+    [ "(" [PassthroughProperty(pt) ("," PassthroughProperty(pt))*] ")" ]
+}
+
+void PassthroughProperty(ASTPassthroughDirective pt) : {SimpleNode key; SimpleNode value;}
+{
+    key = Identifier() ":" value = Literal()
+    { pt.set(key, value); }
 }
 
 SimpleNode IfDirective() #IfDirective : { Token t;}

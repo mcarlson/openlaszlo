@@ -91,6 +91,23 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     return program;
   }
 
+  public String preProcess(String source) {
+    return source;
+  }
+
+  // TODO: [2007-11-20 dda] Consider supporting TranslationUnits
+  // within this runtime code generator, so we can have a unified
+  // way of calling all generators.
+
+  public List makeTranslationUnits(SimpleNode translatedNode, boolean compress, boolean obfuscate)
+  {
+    throw new UnsupportedOperationException("this operation is not supported");
+  }
+
+  public byte[] postProcess(List tunits) {
+    throw new UnsupportedOperationException("this operation is not supported");
+  }
+
   public String newLabel(SimpleNode node) {
     return newLabel(node, null);
   }
@@ -428,6 +445,9 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         continue;
       } else if (directive instanceof ASTPragmaDirective) {
         visitPragmaDirective(directive, directive.getChildren());
+        continue;
+      } else if (directive instanceof ASTPassthroughDirective) {
+        visitPassthroughDirective(directive, directive.getChildren());
         continue;
       }
       if ("1".equals(cpass)) {
@@ -1069,7 +1089,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
      applied to any expression node, so it dispatches based on the
      node's class. */
   public SimpleNode visitExpression(SimpleNode node, boolean isReferenced) {
-    assert isExpressionType(node) : "" + node + ": " + (new ParseTreePrinter()).visit(node) + " is not an expression";
+    assert isExpressionType(node) : "" + node + ": " + (new ParseTreePrinter()).text(node) + " is not an expression";
 
     if (this.debugVisit) {
       System.err.println("visitExpression: " + node.getClass());
@@ -1396,30 +1416,30 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         String decls = "";
         ParseTreePrinter ptp = new ParseTreePrinter();
         if (scope instanceof ASTIdentifier || scope instanceof ASTThisReference) {
-          thisvar = ptp.visit(scope);
+          thisvar = ptp.text(scope);
         } else {
-          decls += "var " + thisvar + " = " + ptp.visit(scope) + ";";
+          decls += "var " + thisvar + " = " + ptp.text(scope) + ";";
         }
         if (property instanceof ASTLiteral || property instanceof ASTIdentifier) {
-          propvar = ptp.visit(property);
+          propvar = ptp.text(property);
           if (property instanceof ASTLiteral) {
             assert propvar.startsWith("\"") || propvar.startsWith("'");
             evtvar = propvar.substring(0,1) + "on" + propvar.substring(1);
           }
         } else {
-          decls += "var " + propvar + " = " + ptp.visit(property) + ";";
+          decls += "var " + propvar + " = " + ptp.text(property) + ";";
         }
         if (value instanceof ASTLiteral || value instanceof ASTIdentifier) {
-          valvar = ptp.visit(value);
+          valvar = ptp.text(value);
         } else {
-          decls += "var " + valvar + " = " + ptp.visit(value) + ";";
+          decls += "var " + valvar + " = " + ptp.text(value) + ";";
         }
         if (arglen > 2) {
           SimpleNode ifchanged = args[2];
           if (ifchanged instanceof ASTLiteral || ifchanged instanceof ASTIdentifier) {
-            changedvar = ptp.visit(ifchanged);
+            changedvar = ptp.text(ifchanged);
           } else {
-            decls += "var " + changedvar + " = " + ptp.visit(ifchanged) + ";";
+            decls += "var " + changedvar + " = " + ptp.text(ifchanged) + ";";
           }
         }
         newBody.add(parseFragment(decls));
@@ -1903,6 +1923,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
                            " unused in " + filename + "(" + lineno + ")");
       }
     }
+    translateFormalParameters(params);
     // auto-declared locals
     Set auto = new LinkedHashSet(Instructions.Register.AUTO_REG);
     auto.retainAll(used.keySet());
@@ -2664,4 +2685,3 @@ public class CodeGenerator extends CommonGenerator implements Translator {
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
-
