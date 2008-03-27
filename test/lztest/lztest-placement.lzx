@@ -61,12 +61,12 @@
 var suiteNodePlacement = new LzTestSuite("Node Placement"); 
 
 suiteNodePlacement.basicPlacement = function () {
-    LzTestManager.assertEquals(basicPlacementWrapper.nci1.n2, basicPlacementWrapper.nci1.n1.searchImmediateSubnodes("name", "n2"));
-    LzTestManager.assertEquals(basicPlacementWrapper.nci2.n2, basicPlacementWrapper.nci2.n1.searchImmediateSubnodes("name", "n2"));    
+    LzTestManager.assertEquals(basicPlacementWrapper.nci1.n2, basicPlacementWrapper.nci1.n1.searchImmediateSubnodes("name", "n2"), "Basic");
+    LzTestManager.assertEquals(basicPlacementWrapper.nci2.n2, basicPlacementWrapper.nci2.n1.searchImmediateSubnodes("name", "n2"), "Determined");    
 }
 
 suiteNodePlacement.statePlacement = function () {
-    LzTestManager.assertEquals(statePlacementWrapper.nci1.n1state, statePlacementWrapper.nci1.n1.searchImmediateSubnodes("name", "n1state"));
+    LzTestManager.assertEquals(statePlacementWrapper.nci1.n1state, statePlacementWrapper.nci1.n1.searchImmediateSubnodes("name", "n1state"), "State");
 }
 
 suiteNodePlacement.addTest(suiteNodePlacement.basicPlacement); 

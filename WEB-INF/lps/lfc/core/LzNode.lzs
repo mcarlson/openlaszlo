@@ -555,6 +555,12 @@ var defaultplacement = null;
   * @keywords final
   */
 var placement = null;
+    /** @access private
+     * Kludge for LzState
+     * @devnote States rely on setters to identify which attributes
+     * belong to them vs. their parent
+     */
+    var $lzc$set_placement = -1;
 
 // Initial values
 /** @access private */
@@ -733,7 +739,7 @@ function construct ( parent , args ){
         this.placement = null;
     } else {
         // Default to parent's placement
-        var thisplacement = this.placement || lp.defaultplacement;
+        var thisplacement = args['placement'] || lp.defaultplacement;
         while (thisplacement != null) {
             if (ip.determinePlacement == LzNode.prototype.determinePlacement) {
                 // this is the fast path -- basically inline the relevant part
