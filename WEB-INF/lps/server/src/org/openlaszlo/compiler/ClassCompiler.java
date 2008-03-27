@@ -235,9 +235,27 @@ class ClassCompiler extends ViewCompiler {
         schema.addElement(element, classname, superclass, attributeDefs, mEnv);
     }
     
+    // Map of LFC tag names
+    static HashMap LFCTagTable = new HashMap();
+    static {
+      LFCTagTable.put("node", "LzNode");
+      LFCTagTable.put("view", "LzView");
+      LFCTagTable.put("text", "LzText");
+      LFCTagTable.put("inputtext", "LzInputText");
+      LFCTagTable.put("canvas", "LzCanvas");
+      LFCTagTable.put("script", "LzScript");
+      LFCTagTable.put("animatorgroup", "LzAnimatorGroup");
+      LFCTagTable.put("animator", "LzAnimator");
+      LFCTagTable.put("layout", "LzLayout");
+      LFCTagTable.put("state", "LzState");
+    }
+
     public static String tagToClass(String s) {
-        String lzcPackagePrefix = "$lzc$class_";
-        return lzcPackagePrefix + s;
+      if (LFCTagTable.containsKey(s)) {
+        return (String)(LFCTagTable.get(s));
+      }
+      String lzcPackagePrefix = "$lzc$class_";
+      return lzcPackagePrefix + s;
     }    
 
     public void compile(Element elt) {
@@ -281,17 +299,20 @@ class ClassCompiler extends ViewCompiler {
         String body = "";
         body += "super(parent, attrs, children, async);\n";
 
-
         model.setAttribute(
           className,
           new Function(
                 className,
                 // All nodes get these args when constructed
+                // Apparently AS3 does not allow defaulting of
+                // primitive args
 //                 "parent:LzNode, attrs:Object, children:Object? = null, async:boolean = false",
-                "parent:LzNode, attrs:Object, children:Object?=null, async:boolean=null",
+                "parent:LzNode, attrs:Object, children:Object?=null, async:Boolean=null",
                 body,
                 null));
 
+        // Build the class body
+        String classBody = "";
         // Set the tag name
         model.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
 
@@ -300,8 +321,6 @@ class ClassCompiler extends ViewCompiler {
         // class#classChildren now class.children
         model.setClassAttribute("children", "LzNode.mergeChildren(" + children + ", " + superclassname + "['children'])");
 
-        // Build the class body
-        String classBody = "";
         // Declare all instance vars and methods, save initialization
         // in <class>.attributes
         Map attrs = model.getAttrs(); // classModel.getMergedAttributes();
@@ -383,8 +402,8 @@ class ClassCompiler extends ViewCompiler {
                           (Map)viewMap.get("classAttrs"),
                           classBody);
         mEnv.compileScript(scriptClass.toString(), elt);
-        // Install in constructor map ??
-
+        // Install in constructor map
+        mEnv.compileScript("ConstructorMap[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");
     }
 
   protected void compileClass(Element elt, ClassModel classModel, String initobj) {

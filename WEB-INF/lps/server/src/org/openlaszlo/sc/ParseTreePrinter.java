@@ -564,7 +564,8 @@ public class ParseTreePrinter {
       {"<<", ">>", ">>>"},
       // TODO: [2007-12-13 dda] "in" moved below to compensate for SWF9 3rd party compiler precedence bug.
       //{"<", "<=", ">", ">=", "instanceof", "in", "is", "cast"},
-      {"<", "<=", ">", ">=", "instanceof", "is", "cast"},
+      // TODO: [2008-03-27 ptw] Flex compiler wants "cast" to be named "as"
+      {"<", "<=", ">", ">=", "instanceof", "is", "cast", "as"},
       {"==", "!=", "===", "!=="},
       {"&"}, {"^"}, {"|"}, {"&&"}, {"||"}, {"?", ":"},
       {"in", "=", "*=", "/=", "%=", "+=", "-=", "<<=", ">>=", ">>>=", "&=", "^=", "|="},
