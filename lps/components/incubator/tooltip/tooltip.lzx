@@ -39,6 +39,11 @@
           attribute to align a tooltip 'right' so that it's right edge is flush 
           with it's parent's right edge ( minus 10 pixel inset ).   -->
     <attribute name="tipalign" value="" type="string" />
+    <!--- values = "'above','below',''"     
+          attribute to control if the tooltip shows up above or below the
+          mouse position. Leaving this value empty indicates a best guess
+          will be made by the component. '-->
+    <attribute name="tipvalign" value="" type="string"/>
     
     <!--- @keywords private -->
     <handler name="oninit">
@@ -87,7 +92,6 @@
         canvas.tooltipview.setText(this.text);
         
         var py = parent.getAttributeRelative( 'y', canvas )
-        var tipy = this._lastmousey + 25;
         var tipx = canvas.width;
         if ( tipalign == 'right' ) {
             tipx = parent.getAttributeRelative( 'x', canvas ) + parent.width;
@@ -95,11 +99,28 @@
 
         tipx = Math.min(tipx - canvas.tooltipview.width - 10, this._lastmousex - 5);
 
+        var tipy = this._lastmousey + 25;
+        var pointerontop;
+        switch (this.tipvalign) {
+          case "above":
+            tipy = this._lastmousey - 25;
+            pointerontop = false;
+            break;
 
-        var pointerontop = true;
-        if (tipy > canvas.height - 30) {
-          tipy = this._lastmousey - 25;
-          pointerontop = false;
+          case "below":
+            tipy = this._lastmousey + 25;
+            pointerontop = true;
+            break;
+
+          default:
+            if (tipy > canvas.height - 30) {
+                tipy = this._lastmousey - 25;
+                pointerontop = false;
+            } else {
+                tipy = this._lastmousey + 25;
+                pointerontop = true;
+            }
+
         }
 
         canvas.tooltipview.setX( tipx );
