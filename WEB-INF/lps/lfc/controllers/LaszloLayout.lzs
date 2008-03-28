@@ -300,7 +300,7 @@ function unlock ( ) {
 /**
   * @access private
   */
-function __parentInit (){
+function __parentInit (v=null){
     if ( this.locked == 2){
         if (this.isinited) {
             this.unlock();

@@ -986,6 +986,19 @@ element attribute "
 
 <interface name="layout" extends="node">
   <attribute name="locked" type="boolean"/>
+  <method name="$lzc$set_locked"/>
+  <method name="__LZinsertAfter"/>
+  <method name="__parentInit"/>
+  <method name="addSubview"/>
+  <method name="gotNewSubview"/>
+  <method name="ignore"/>
+  <method name="lock"/>
+  <method name="releaseLayout"/>
+  <method name="removeSubview"/>
+  <method name="reset"/>
+  <method name="setLayoutOrder"/>
+  <method name="swapSubviewOrder"/>
+  <method name="unlock"/>
 </interface>
 
 <!--

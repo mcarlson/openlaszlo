@@ -58,7 +58,7 @@
           controlled by the layout change their size in the layout axis, or
           their visibility. However it can be called directly to force the
           layout to update -->
-    <method name="update">
+    <method name="update" args="...rest">
         <![CDATA[
         if ( this.locked ) return;
         var l = this.subviews.length;
