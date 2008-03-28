@@ -61,7 +61,7 @@
   * @lzxname script
   */
 
-class LzScript extends LzNode {
+dynamic class LzScript extends LzNode {
 
 /** @access private
   * @modifiers override 

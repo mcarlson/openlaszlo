@@ -212,7 +212,7 @@ public class ViewSchema extends Schema {
 
         if (!methodOverrideAllowed(classname, methodName)) {
             env.warn("Method "+classname+"."+methodName+" is overriding a superclass method"
-                     + " of the same name which has been declared non-overridable" , elt);
+                     + " of the same name which has been declared final" , elt);
         }
     }
 
@@ -245,7 +245,7 @@ public class ViewSchema extends Schema {
 
         if (!methodOverrideAllowed(classname, methodName)) {
             env.warn("Method "+classname+"."+methodName+" is overriding a superclass method"
-                     + " of the same name which has been declared non-overridable" , elt);
+                     + " of the same name which has been declared final" , elt);
         }
     }
 
@@ -409,10 +409,10 @@ public class ViewSchema extends Schema {
                     // Check that the overriding type is the same as the superclass' type
                     parentType = getAttributeType(classname, attr.name);
 
-                    // Does the parent attribute definition assert override=true?
-                    // If so, we're not going to warn if the types mismatch.
+                    // Does the parent attribute definition have final=false or final=null?
+                    // If not, we're not going to warn if the types mismatch.
                     AttributeSpec parentAttrSpec = getAttributeSpec(classname, attr.name);
-                    boolean forceOverride = parentAttrSpec != null && "true".equals(parentAttrSpec.override);
+                    boolean forceOverride = parentAttrSpec != null && (! "true".equals(parentAttrSpec.isfinal));
 
                     if (!forceOverride &&  (parentType != attr.type)) {
                         // get the parent attribute, so we can see if it says override is allowed
@@ -427,7 +427,7 @@ public class ViewSchema extends Schema {
                     }
                 }
 
-                if (attr.type == ViewSchema.METHOD_TYPE && !("true".equals(attr.override))) {
+                if (attr.type == ViewSchema.METHOD_TYPE && !("false".equals(attr.isfinal))) {
                     checkMethodDeclaration(sourceElement, classname, attr.name, env);
                 }
 
@@ -555,10 +555,11 @@ public class ViewSchema extends Schema {
     public boolean methodOverrideAllowed(String classname, String methodName)
     {
         AttributeSpec methodspec = getClassAttribute(classname, methodName);
+
         if (methodspec == null) {
             return true;
         } else {
-            return ! ("false".equals(methodspec.override));
+            return ! ("true".equals(methodspec.isfinal));
         }
     }
 

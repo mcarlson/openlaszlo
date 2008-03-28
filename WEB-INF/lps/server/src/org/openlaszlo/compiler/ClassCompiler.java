@@ -145,7 +145,7 @@ class ClassCompiler extends ViewCompiler {
                         ViewSchema.Type attrType = ViewSchema.METHOD_TYPE;
                         AttributeSpec attrSpec = 
                             new AttributeSpec(attrName, attrType, null, null, child);
-                        attrSpec.override = child.getAttributeValue("override");
+                        attrSpec.isfinal = child.getAttributeValue("final");
                         attributeDefs.add(attrSpec);
                     }
                     
@@ -202,7 +202,7 @@ class ClassCompiler extends ViewCompiler {
                     AttributeSpec attrSpec = 
                         new AttributeSpec(attrName, attrType, attrDefault,
                                           attrSetter, child);
-                    attrSpec.override = child.getAttributeValue("override");
+                    attrSpec.isfinal = child.getAttributeValue("final");
                     if (attrName.equals("text") && attrTypeName != null) {
                         if ("text".equals(attrTypeName))
                             attrSpec.contentType = attrSpec.TEXT_CONTENT;
@@ -248,6 +248,15 @@ class ClassCompiler extends ViewCompiler {
       LFCTagTable.put("animator", "LzAnimator");
       LFCTagTable.put("layout", "LzLayout");
       LFCTagTable.put("state", "LzState");
+      LFCTagTable.put("command", "LzCommand");
+      LFCTagTable.put("selectionmanager", "LzSelectionManager");
+      LFCTagTable.put("dataselectionmanager", "LzDataSelectionManager");
+      LFCTagTable.put("datapointer", "LzDataPointer");
+      LFCTagTable.put("dataprovider", "LzDataProvider");
+      LFCTagTable.put("datapath", "LzDatapath");
+      LFCTagTable.put("dataset", "LzDataset");
+      LFCTagTable.put("datasource", "LzDatasource");
+      LFCTagTable.put("lzhttpdataprovider", "LzHTTPDataProvider");
     }
 
     public static String tagToClass(String s) {
@@ -294,6 +303,8 @@ class ClassCompiler extends ViewCompiler {
         // model store class and tagname separately?
         String supertagname = classModel.getSuperclassName();
         String superclassname = tagToClass(supertagname);
+        ClassModel superclassModel = schema.getClassModel(supertagname);
+
 
         // Build the constructor
         String body = "";
@@ -346,6 +357,11 @@ class ClassCompiler extends ViewCompiler {
             // constructor!
             decls.put(key, value);
           } else if (value != null) {
+            // If this is a re-declared attribute, we just init it,
+            // don't re-declare it
+            if (superclassModel.getAttribute(key) != null) {
+                inits.put(key, value);
+            }
             // If there is a setter for this attribute, or this is a
             // state, or this is an Array or Map argument that needs
             // magic merging, the value has to be installed as an init,
@@ -356,7 +372,7 @@ class ClassCompiler extends ViewCompiler {
             // classes, so we install as an init for now and this is
             // fixed up in LzNode by installing inits that have no
             // setters when the arguments are merged
-            if (true) { // (! (value instanceof String))  || setters.containsKey(key) || isstate) {
+            else if (true) { // (! (value instanceof String)) || setters.containsKey(key) || isstate) {
               decls.put(key, null);
               inits.put(key, value);
             } else {

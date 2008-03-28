@@ -1,0 +1,44 @@
+<canvas width="1000" height="600" bgcolor="#eeeeff"> 
+  <class name="foobar" >
+    <handler name="onclick">
+      this.b1.animate("x", -50, 1000, true);
+      this.b3.animate("x", 50, 1000, true);
+    </handler>
+    <view name="b1" width="50" height="50" bgcolor='red'/>
+    <view name="b2" x="60" width="50" height="50" bgcolor='yellow'/>
+    <view name="b3" x="120" width="50" height="50" bgcolor='blue'/>
+    <method name="doit">
+      return "foobar";
+    </method>
+  </class>
+
+  <text>3 &lt;foobar&gt;</text>
+  <foobar id="f1" x="100"/>
+  <foobar id="f2" x="200" y="60"/>
+  <foobar x="300" y="120"/>
+
+  <class name="baz" extends="foobar">
+    <method name="doit">
+      return("baz");
+    </method>
+    
+  </class>
+
+  <text y="200" >3 &lt;baz&gt;</text>
+  <baz id="b1" x="100" y="200"/>
+  <baz x="200" y="260"/>
+  <baz x="300" y="320"/>
+
+  <script>
+    with (global) {
+    lzconsole.write  ((f1.doit() == "foobar") ? "Base method test passed" : "Base method test failed");
+    lzconsole.write  ((b1.doit() == "baz") ? "Subclass method test passed" : "Subclass method test failed");
+   }
+  </script>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -15,18 +15,18 @@
 
 
 <interface name="Instance" extends="Object">
-  <method name="validateClassStructure" override="false"/>
-  <method name="initialize" override="false"/>
-  <method name="nextMethod" override="false"/>
-  <method name="addProperty" override="false"/>
-  <method name="constructor" override="false"/>
-  <method name="hasOwnProperty" override="false"/>
-  <method name="isPropertyEnumerable" override="false"/>
-  <method name="isPrototypeOf" override="false"/>
-  <method name="toLocaleString" override="false"/>
-  <method name="prototype" override="false"/>
-  <method name="apply" override="false"/> 
-  <method name="call" override="false"/>
+  <method name="validateClassStructure" final="true"/>
+  <method name="initialize" />
+  <method name="nextMethod" final="true"/>
+  <method name="addProperty" final="true"/>
+  <method name="constructor" final="true"/>
+  <method name="hasOwnProperty" final="true"/>
+  <method name="isPropertyEnumerable" final="true"/>
+  <method name="isPrototypeOf" final="true"/>
+  <method name="toLocaleString" final="true"/>
+  <method name="prototype" final="true"/>
+  <method name="apply" final="true"/> 
+  <method name="call" final="true"/>
 </interface>
 
 <interface name="canvas" extends="Instance">
@@ -149,6 +149,69 @@
     <element>doc</element>
     <element>node</element>
   </containsElements>
+
+  <method name="$lzc$set_$classrootdepth"/>
+  <method name="$lzc$set_$datapath"/>
+  <method name="$lzc$set_$delegates"/>
+  <method name="$lzc$set_$refs"/>
+  <method name="$lzc$set_datapath"/>
+  <method name="$lzc$set_id"/>
+  <method name="$lzc$set_name"/>
+  <method name="$lzc$set_options"/>
+  <method name="__LZaddSetter"/>
+  <method name="__LZapplyArgs"/>
+  <method name="__LZassignClassRoot"/>
+  <method name="__LZcallInit"/>
+  <method name="__LZclearPreventInit"/>
+  <method name="__LZincrementCounter"/>
+  <method name="__LZinstantiationDone"/>
+  <method name="__LZresolveReferences"/>
+  <method name="__LZresolveRefs"/>
+  <method name="__LZsetDelegates"/>
+  <method name="__LZsetPreventInit"/>
+  <method name="__LZsetSetters"/>
+  <method name="__LZstoreAttr"/>
+  <method name="__LZstoreRefs"/>
+  <method name="__LZstyleBindAttribute"/>
+  <method name="_dbg_name"/>
+  <method name="addToExpectedAttribute"/>
+  <method name="animate"/>
+  <method name="applyConstraint"/>
+  <method name="applyConstraintExpr"/>
+  <method name="applyConstraintMethod"/>
+  <method name="applyData"/>
+  <method name="childOf"/>
+  <method name="completeInstantiation"/>
+  <method name="construct"/>
+  <method name="constructWithArgs"/>
+  <method name="createChildren"/>
+  <method name="dataBindAttribute"/>
+  <method name="defaultSet"/>
+  <method name="deleteNode"/>
+  <method name="destroy"/>
+  <method name="determinePlacement"/>
+  <method name="getAttribute"/>
+  <method name="getDebugIdentification"/>
+  <method name="getExpectedAttribute"/>
+  <method name="getOption"/>
+  <method name="getUID"/>
+  <method name="init"/>
+  <method name="initialize"/>
+  <method name="lookupSourceLocator"/>
+  <method name="makeChild"/>
+  <method name="releaseConstraint"/>
+  <method name="releaseConstraintMethod"/>
+  <method name="searchImmediateSubnodes"/>
+  <method name="searchParents"/>
+  <method name="searchSubnodes"/>
+  <method name="setAttribute"/>
+  <method name="setData"/>
+  <method name="setDatapath"/>
+  <method name="setExpectedAttribute"/>
+  <method name="setOption"/>
+  <method name="setProp"/>
+  <method name="toString"/>
+
 </interface>
 
 <interface name="view" extends="node">
@@ -239,6 +302,153 @@
     <element>inputtext</element>
     <element>node</element>
   </containsElements>
+
+  <method name="$lzc$getAttributeRelative_dependencies"/>
+  <method name="$lzc$getBounds_dependencies"/>
+  <method name="$lzc$getCurrentTime_dependencies"/>
+  <method name="$lzc$getMouse_dependencies"/>
+  <method name="$lzc$getPlayPerc_dependencies"/>
+  <method name="$lzc$getTotalTime_dependencies"/>
+  <method name="$lzc$setAttributeRelative_dependencies"/>
+  <method name="$lzc$set_aaactive"/>
+  <method name="$lzc$set_aadescription"/>
+  <method name="$lzc$set_aaname"/>
+  <method name="$lzc$set_aasilent"/>
+  <method name="$lzc$set_aatabindex"/>
+  <method name="$lzc$set_align"/>
+  <method name="$lzc$set_alpha"/>
+  <method name="$lzc$set_bgcolor"/>
+  <method name="$lzc$set_clickable"/>
+  <method name="$lzc$set_clickregion"/>
+  <method name="$lzc$set_cursor"/>
+  <method name="$lzc$set_fgcolor"/>
+  <method name="$lzc$set_font"/>
+  <method name="$lzc$set_frame"/>
+  <method name="$lzc$set_height"/>
+  <method name="$lzc$set_layout"/>
+  <method name="$lzc$set_opacity"/>
+  <method name="$lzc$set_play"/>
+  <method name="$lzc$set_resource"/>
+  <method name="$lzc$set_rotation"/>
+  <method name="$lzc$set_showhandcursor"/>
+  <method name="$lzc$set_source"/>
+  <method name="$lzc$set_stretches"/>
+  <method name="$lzc$set_valign"/>
+  <method name="$lzc$set_visibility"/>
+  <method name="$lzc$set_visible"/>
+  <method name="$lzc$set_width"/>
+  <method name="$lzc$set_x"/>
+  <method name="$lzc$set_xoffset"/>
+  <method name="$lzc$set_y"/>
+  <method name="$lzc$set_yoffset"/>
+  <method name="__LZFinishDestroyOnIdle"/>
+  <method name="__LZalignCenter"/>
+  <method name="__LZalignRight"/>
+  <method name="__LZcheckProxyPolicy"/>
+  <method name="__LZcheckSize"/>
+  <method name="__LZcheckheightFunction"/>
+  <method name="__LZcheckwidthFunction"/>
+  <method name="__LZinstantiationDone"/>
+  <method name="__LZsetClickRegion"/>
+  <method name="__LZupdateShown"/>
+  <method name="__LZvalignBottom"/>
+  <method name="__LZvalignMiddle"/>
+  <method name="__makeSprite"/>
+  <method name="__warnCapability"/>
+  <method name="__zCompare"/>
+  <method name="addProxyPolicy"/>
+  <method name="addSubview"/>
+  <method name="bringToFront"/>
+  <method name="construct"/>
+  <method name="containsPt"/>
+  <method name="deleteView"/>
+  <method name="destroy"/>
+  <method name="getAttributeRelative"/>
+  <method name="getBounds"/>
+  <method name="getColor"/>
+  <method name="getColorTransform"/>
+  <method name="getContextMenu"/>
+  <method name="getCurrentTime"/>
+  <method name="getDepthList"/>
+  <method name="getHeight"/>
+  <method name="getID3"/>
+  <method name="getLinkage"/>
+  <method name="getMCRef"/>
+  <method name="getMouse"/>
+  <method name="getNextSelection"/>
+  <method name="getPan"/>
+  <method name="getPlayPerc"/>
+  <method name="getPrevSelection"/>
+  <method name="getTotalTime"/>
+  <method name="getVolume"/>
+  <method name="getWidth"/>
+  <method name="getZ"/>
+  <method name="init"/>
+  <method name="makeMasked"/>
+  <method name="measureHeight"/>
+  <method name="measureSize"/>
+  <method name="measureWidth"/>
+  <method name="mouseevent"/>
+<!--  <method name="play"/> -->
+  <method name="reevaluateSize"/>
+  <method name="releaseLayouts"/>
+  <method name="removeMask"/>
+  <method name="removeProxyPolicy"/>
+  <method name="resourceevent"/>
+  <method name="resourceload"/>
+  <method name="resourceloaderror"/>
+  <method name="resourceloadtimeout"/>
+  <method name="searchSubviews"/>
+  <method name="searchimmediateparents"/>
+  <method name="seek"/>
+  <method name="sendBehind"/>
+  <method name="sendInFrontOf"/>
+  <method name="sendToBack"/>
+  <method name="setAAActive"/>
+  <method name="setAADescription"/>
+  <method name="setAAName"/>
+  <method name="setAASilent"/>
+  <method name="setAATabIndex"/>
+  <method name="setAccessible"/>
+  <method name="setAlign"/>
+  <method name="setAttributeRelative"/>
+  <method name="setBGColor"/>
+  <method name="setClickable"/>
+  <method name="setColor"/>
+  <method name="setColorTransform"/>
+  <method name="setContextMenu"/>
+  <method name="setCursor"/>
+  <method name="setFontName"/>
+  <method name="setHeight"/>
+  <method name="setLayout"/>
+  <method name="setOpacity"/>
+  <method name="setPan"/>
+  <method name="setPlay"/>
+  <method name="setResource"/>
+  <method name="setResourceNumber"/>
+  <method name="setRotation"/>
+  <method name="setShowHandCursor"/>
+  <method name="setSource"/>
+  <method name="setTotalFrames"/>
+  <method name="setValign"/>
+  <method name="setVisibility"/>
+  <method name="setVisible"/>
+  <method name="setVolume"/>
+  <method name="setWidth"/>
+  <method name="setX"/>
+  <method name="setXOffset"/>
+  <method name="setY"/>
+  <method name="setYOffset"/>
+  <method name="shouldYieldFocus"/>
+  <method name="spriteAttribute"/>
+  <method name="stop"/>
+  <method name="stretchResource"/>
+  <method name="unload"/>
+  <method name="updateHeight"/>
+  <method name="updateResourceSize"/>
+  <method name="updateSize"/>
+  <method name="updateWidth"/>
+
 </interface>
 
 <interface name="class" extends="node">
@@ -257,12 +467,34 @@
   <attribute name="extends" type="token" value="view"/>
   <!-- The comma-separated list of mixins, applied in order -->
   <attribute name="with" type="string"/>
+
+  <method name="makeSelected"/>
+  <method name="unselect"/>
+  <method name="selectRange"/>
+  <method name="getSelection"/>
+  <method name="clearSelection"/>
+  <method name="isSelected"/>
+  <method name="__LZsetSelected"/>
+
 </interface>
 
 
 <interface name="selectionmanager" extends="node">
   <attribute name="toggle" type="boolean"/>
   <event name="onselect"/>
+
+  <method name="clearSelection"/>
+  <method name="construct"/>
+  <method name="getSelection"/>
+  <method name="isMultiSelect"/>
+  <method name="isRangeSelect"/>
+  <method name="isSelected"/>
+  <method name="makeSelected"/>
+  <method name="select"/>
+  <method name="selectRange"/>
+  <method name="toString"/>
+  <method name="unselect"/>
+
 </interface>
 
 
@@ -290,9 +522,37 @@
   <containsElements>
     <element>animator</element>
   </containsElements>
+
+  <method name="$lzc$set_duration"/>
+  <method name="$lzc$set_paused"/>
+  <method name="$lzc$set_start"/>
+  <method name="$lzc$set_target"/>
+  <method name="__LZaddToStartTime"/>
+  <method name="__LZfinalizeAnim"/>
+  <method name="__LZhalt"/>
+  <method name="checkRepeat"/>
+  <method name="doStart"/>
+  <method name="pause"/>
+  <method name="prepareStart"/>
+  <method name="resetAnimator"/>
+  <method name="setDuration"/>
+  <method name="setTarget"/>
+  <method name="stop"/>
+  <method name="update"/>
+
 </interface>
 
-<interface name="animator" extends="animatorgroup"/>
+<interface name="animator" extends="animatorgroup">
+  <method name="$lzc$set_motion"/>
+  <method name="$lzc$set_to"/>
+  <method name="beginAnimator"/>
+  <method name="calcControlValues"/>
+  <method name="calcNextValue"/>
+  <method name="calcNextValueLinear"/>
+  <method name="setMotion"/>
+  <method name="setTo"/>
+  <method name="setValue"/>
+</interface>
 
 <interface name="text">
   <attribute name="multiline" type="boolean" value="false"/>
@@ -320,6 +580,63 @@
     <element>br</element>
     <element>u</element>
   </containsElements>
+
+  <method name="$lzc$getMaxScroll_dependencies"/>
+  <method name="$lzc$getTextHeight_dependencies"/>
+  <method name="$lzc$getTextWidth_dependencies"/>
+  <method name="$lzc$getText_dependencies"/>
+  <method name="$lzc$set_fontsize"/>
+  <method name="$lzc$set_fontstyle"/>
+  <method name="$lzc$set_maxlength"/>
+  <method name="$lzc$set_pattern"/>
+  <method name="$lzc$set_resize"/>
+  <method name="$lzc$set_selectable"/>
+  <method name="$lzc$set_text"/>
+  <method name="$lzc$set_xscroll"/>
+  <method name="$lzc$set_yscroll"/>
+  <method name="__LZforceScrollAttrs"/>
+  <method name="_dbg_name"/>
+  <method name="addText"/>
+  <method name="annotateAAimg"/>
+  <method name="applyData"/>
+  <method name="clearText"/>
+  <method name="escapeText"/>
+  <method name="format"/>
+  <method name="getAntiAliasType"/>
+  <method name="getBottomScroll"/>
+  <method name="getDefaultWidth"/>
+  <method name="getGridFit"/>
+  <method name="getMaxScroll"/>
+  <method name="getScroll"/>
+  <method name="getSelectionPosition"/>
+  <method name="getSelectionSize"/>
+  <method name="getSharpness"/>
+  <method name="getText"/>
+  <method name="getTextHeight"/>
+  <method name="getTextWidth"/>
+  <method name="getThickness"/>
+  <method name="parseImgAttributes"/>
+  <method name="setAntiAliasType"/>
+  <method name="setBorder"/>
+  <method name="setEmbedFonts"/>
+  <method name="setFontSize"/>
+  <method name="setFontStyle"/>
+  <method name="setGridFit"/>
+  <method name="setHScroll"/>
+  <method name="setMaxLength"/>
+  <method name="setMultiline"/>
+  <method name="setPattern"/>
+  <method name="setResize"/>
+  <method name="setScroll"/>
+  <method name="setSelectable"/>
+  <method name="setSelection"/>
+  <method name="setSharpness"/>
+  <method name="setText"/>
+  <method name="setThickness"/>
+  <method name="setWordWrap"/>
+  <method name="setXScroll"/>
+  <method name="setYScroll"/>
+  <method name="updateMaxLines"/>
 </interface>
 
 
@@ -328,6 +645,17 @@
            field; any text typed in appears as "****" characters in the
            current font. -->
       <attribute name="password" type="boolean" value="false"/>
+
+      <method name="$lzc$set_enabled"/>
+      <method name="_gotBlurEvent"/>
+      <method name="_gotFocusEvent"/>
+      <method name="_modechanged"/>
+      <method name="_setallowselectable"/>
+      <method name="inputtextevent"/>
+      <method name="setEnabled"/>
+      <method name="setHTML"/>
+      <method name="updateData"/>
+
 </interface>
 
 <!-- TODO [hqm 2007] We used to document the dialect of HTML we
@@ -421,6 +749,50 @@
     <element>data</element>
   </containsElements>
 
+  <method name="$lzc$set_autorequest"/>
+  <method name="$lzc$set_data"/>
+  <method name="$lzc$set_initialdata"/>
+  <method name="$lzc$set_name"/>
+  <method name="$lzc$set_querytype"/>
+  <method name="$lzc$set_request"/>
+  <method name="$lzc$set_src"/>
+  <method name="abort"/>
+  <method name="clearRequestHeaderParams"/>
+  <method name="construct"/>
+  <method name="destroy"/>
+  <method name="doRequest"/>
+  <method name="get"/>
+  <method name="getAllResponseHeaders"/>
+  <method name="getContext"/>
+  <method name="getDataset"/>
+  <method name="getErrorString"/>
+  <method name="getLoadTime"/>
+  <method name="getParams"/>
+  <method name="getPointer"/>
+  <method name="getQueryString"/>
+  <method name="getRequestHeaderParams"/>
+  <method name="getResponseHeader"/>
+  <method name="getSrc"/>
+  <method name="getStatusCode"/>
+  <method name="gotError"/>
+  <method name="gotTimeout"/>
+  <method name="handleDataResponse"/>
+  <method name="isProxied"/>
+  <method name="queryStringToTable"/>
+  <method name="recycle"/>
+  <method name="setAutorequest"/>
+  <method name="setData"/>
+  <method name="setHeader"/>
+  <method name="setInitialData"/>
+  <method name="setPostBody"/>
+  <method name="setProxyRequests"/>
+  <method name="setQueryParam"/>
+  <method name="setQueryParams"/>
+  <method name="setQueryString"/>
+  <method name="setQueryType"/>
+  <method name="setRequest"/>
+  <method name="setSrc"/>
+  <method name="toString"/>
 </interface>
 
 <interface name="datapointer" extends="node">
@@ -431,6 +803,76 @@
        true -->
   <attribute name="spacing" type="size" value="0"/>
   <attribute name="p" type="expression"/>
+
+  <method name="$lzc$set_context"/>
+  <method name="$lzc$set_p"/>
+  <method name="$lzc$set_pointer"/>
+  <method name="$lzc$set_rerunxpath"/>
+  <method name="$lzc$set_xpath"/>
+  <method name="$lzc$xpathQuery_dependencies"/>
+  <method name="__LZHandleDocChange"/>
+  <method name="__LZHandleMultiNodes"/>
+  <method name="__LZHandleNoNodes"/>
+  <method name="__LZHandleSingleNode"/>
+  <method name="__LZcheckChange"/>
+  <method name="__LZcheckDotDot"/>
+  <method name="__LZdoSelect"/>
+  <method name="__LZgetLast"/>
+  <method name="__LZgetNodes"/>
+  <method name="__LZgetPosition"/>
+  <method name="__LZneedsOpUpdate"/>
+  <method name="__LZprocessOperator"/>
+  <method name="__LZsendUpdate"/>
+  <method name="__LZsetData"/>
+  <method name="__LZsetTracking"/>
+  <method name="__LZsetupDotDot"/>
+  <method name="__LZsimpleOperatorUpdate"/>
+  <method name="_dbg_name"/>
+  <method name="addNode"/>
+  <method name="addNodeFromPointer"/>
+  <method name="childOrSelf"/>
+  <method name="comparePointer"/>
+  <method name="deleteNode"/>
+  <method name="deleteNodeAttribute"/>
+  <method name="destroy"/>
+  <method name="dupePointer"/>
+  <method name="finishRootNode"/>
+  <method name="getContext"/>
+  <method name="getDataset"/>
+  <method name="getLocalDataContext"/>
+  <method name="getNodeAttribute"/>
+  <method name="getNodeAttributes"/>
+  <method name="getNodeCount"/>
+  <method name="getNodeName"/>
+  <method name="getNodeOffset"/>
+  <method name="getNodeText"/>
+  <method name="getNodeType"/>
+  <method name="getOtherNodeText"/>
+  <method name="getXPath"/>
+  <method name="gotError"/>
+  <method name="gotTimeout"/>
+  <method name="isValid"/>
+  <method name="makeElementNode"/>
+  <method name="makeRootNode"/>
+  <method name="makeTextNode"/>
+  <method name="nodeByName"/>
+  <method name="parsePath"/>
+  <method name="runXPath"/>
+  <method name="selectChild"/>
+  <method name="selectNext"/>
+  <method name="selectNextParent"/>
+  <method name="selectParent"/>
+  <method name="selectPrev"/>
+  <method name="sendDataChange"/>
+  <method name="serialize"/>
+  <method name="setDataContext"/>
+  <method name="setFromPointer"/>
+  <method name="setNodeAttribute"/>
+  <method name="setNodeName"/>
+  <method name="setNodeText"/>
+  <method name="setPointer"/>
+  <method name="setXPath"/>
+  <method name="xpathQuery"/>
 </interface>
 
 
@@ -445,6 +887,17 @@
   <attribute name="sortpath" type="string" />
   <attribute name="sortorder" type= "string" />
   <attribute name="replication" type="string" value="normal" enum="normal|lazy|resize" /> 
+
+  <method name="__LZApplyData"/>
+  <method name="__LZApplyDataOnInit"/>
+  <method name="__LZsetCloneManager"/>
+  <method name="retrieveData"/>
+  <method name="setClonePointer"/>
+  <method name="setComparator"/>
+  <method name="setNodes"/>
+  <method name="setOrder"/>
+  <method name="setSelected"/>
+  <method name="updateData"/>
 </interface>
 
 
@@ -515,7 +968,7 @@ element attribute "
   <!-- This is unfortunately both a setter attribute AND a method. No
        real nice way to represent that.
    -->
-  <attribute name="apply" override="true" />
+  <attribute name="apply" final="false" />
 
   <!-- If pooling is true, views that are created by the state are not
        destroyed when the state is removed - instead they just act as

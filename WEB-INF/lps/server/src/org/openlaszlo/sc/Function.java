@@ -12,6 +12,7 @@ public class Function {
   private final String args;
   private final String body;
   private final String sourceLocation;
+  private final String adjectives;
 
   public Function(String body) {
     this("", body);
@@ -26,10 +27,15 @@ public class Function {
   }
 
   public Function(String name, String args, String body, String loc) {
+    this(name, args, body, loc, null);
+  }
+
+  public Function(String name, String args, String body, String loc, String adjectives) {
     this.name = name;
     this.args = args;
     this.body = body;
     this.sourceLocation = loc;
+    this.adjectives = adjectives;
   }
 
   public void setName(String name) {
@@ -37,8 +43,11 @@ public class Function {
   }
 
   public String toString() {
-    return "function " + name + "\n(" + args + "\n) {" +
-      "\n" + (sourceLocation != null?(sourceLocation + "\n"):"") + body + "\n}";
+    return (adjectives != null?(adjectives + " "):"") + 
+      "function " + name + "(" + args + ") {\n" + 
+      (sourceLocation != null?(sourceLocation + "\n"):"") + 
+      body + 
+      "\n}";
   }
 }
 

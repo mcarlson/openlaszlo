@@ -1199,8 +1199,13 @@ solution =
         String args = CompilerUtils.attributeLocationDirective(element, "args") +
             XMLUtils.getAttributeValue(element, "args", "");
         String body = element.getText();
-        
-        String override = element.getAttributeValue("override");
+        ClassModel superclassModel = getParentClassModel();
+
+        // Override will be required if there is an inherited method
+        // of the same name
+        boolean override = superclassModel.getAttribute(name) != null ||
+            "true".equals(element.getAttributeValue("override"));
+        boolean isfinal = "true".equals(element.getAttributeValue("final"));
 
         if ((name == null || !ScriptCompiler.isIdentifier(name)) &&
             (event == null || !ScriptCompiler.isIdentifier(event))) {
@@ -1239,13 +1244,14 @@ solution =
                 ,element);
         }
 
-        if (!("true".equals(override))) {
-            String classname = element.getParentElement().getName();
+        boolean isclassdecl  = ("class".equals(className) || "interface".equals(className) || "mixin".equals(className));
+
+        if (!override) {
             // Just check method declarations on regular node.
             // Method declarations inside of class definitions will be already checked elsewhere,
             // in the call from ClassCompiler.updateSchema to schema.addElement
-            if (!("class".equals(className) || "interface".equals(className) || "mixin".equals(className))) {
-                schema.checkInstanceMethodDeclaration(element, classname, name, env);
+            if (!isclassdecl) {
+                schema.checkInstanceMethodDeclaration(element, className, name, env);
             }
         }
 
@@ -1273,6 +1279,20 @@ solution =
             (name == null ?
              CompilerUtils.attributeLocationDirective(element, "handler") :
              CompilerUtils.attributeLocationDirective(element, "name"));
+        String adjectives = "";
+
+        // TODO [hqm 2008-03] we currently cannot put "override" or
+        // "final" on methods unless they are in a class
+        // declaration. We don't want to put them on instance method
+        // function expressions, because that is illegal syntax.
+        if (override && isclassdecl) {
+            adjectives += " override";
+        }
+
+        if (isfinal  && isclassdecl) {
+            adjectives += " final";
+        }
+
         Function fndef = new
             Function(name,
                      //"#beginAttribute\n" +
@@ -1281,8 +1301,8 @@ solution =
                      "\n#pragma 'methodName=" + name + "'\n" +
                      "\n#pragma 'withThis'\n" +
                      body + "\n#endContent",
-                     name_loc);
-
+                     name_loc,
+                     adjectives);
         attrs.put(name, fndef);
     }
 
@@ -1540,7 +1560,7 @@ solution =
         Schema.Type parenttype = null;
 
         AttributeSpec parentAttrSpec = schema.getAttributeSpec(parent.getName(), name);
-        boolean forceOverride = parentAttrSpec != null && "true".equals(parentAttrSpec.override);
+        boolean forceOverride = parentAttrSpec != null && "false".equals(parentAttrSpec.isfinal);
 
         try {
             if ("class".equals(className) || "interface".equals(className)) {

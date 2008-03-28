@@ -32,7 +32,7 @@ class AttributeSpec {
     String arglist = null;
 
     /** Can this attribute be overridden without a warning? value is null, 'true' or 'false' */
-    String override = null;
+    String isfinal = null;
 
     /** Is this attribute equivalent to element content of a given type? */
     int contentType = NO_CONTENT;
@@ -95,7 +95,7 @@ class AttributeSpec {
 
   public String toString() {
     if (ViewSchema.METHOD_TYPE.equals(type)) {
-      return "[AttributeSpec: method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " override="+(override  == null ?  "null" : ("'"+override+"'"))+"]";
+      return "[AttributeSpec: method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " isfinal="+(isfinal  == null ?  "null" : ("'"+isfinal+"'"))+"]";
     } 
     if (ViewSchema.EVENT_HANDLER_TYPE.equals(type)) {
       return "[AttributeSpec: event name='" + name + "' ]";
@@ -144,6 +144,6 @@ class AttributeSpec {
 }
 
 /**
- * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
