@@ -1,7 +1,8 @@
 <toc>
     <category title="Structure">
         <item title="attribute"  href="tag.attribute.html" />
-        <item title="canvas (LzCanvas)" href="LzCanvas.html" />
+        <item title="canvas (LzCanvas)" href="LzCanvas+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="canvas (LzCanvas) (swf9)" href="LzCanvas+swf9.html" />
         <item title="event"  href="tag.event.html" />
         <item title="import" href="tag.import.html" />
         <item title="include" href="tag.include.html" />
@@ -15,7 +16,7 @@
     <category title="View Basics">
         <item title="drawview (LzDrawView)" href="lz.drawview.html"/>
         <item title="inputtext" href="LzInputText.html" />
-        <item title="LzCanvasGradient" href="LzCanvasGradient.html" />        
+<!-- TODO [dda 3.29.2008] is this defined in includes/source/excanvas.js?      <item title="LzCanvasGradient" href="LzCanvasGradient.html" />         -->
         <item title="text (LzText)" href="LzText.html" />
         <item title="view (LzView)" href="LzView.html"/>              
     </category>
@@ -90,12 +91,14 @@
         <item title="LzDelegate" href="LzDelegate.html" />
         <item title="LzEvent" href="LzEvent.html" />
         <item title="LzGlobalMouse" href="LzGlobalMouse.html" />
-        <item title="LzIdleClass" href="LzIdleClass.html" />
+        <item title="LzIdleClass (!swf9)" href="LzIdleClass+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzIdleClass (swf9)" href="LzIdleClass+swf9.html" />
         <item title="LzKeys (dhtml)" href="LzKeys+dhtml.html" />
         <item title="LzKeys (swf7+swf8+swf9)" href="LzKeys+swf7+swf8+swf9.html" />
-        <item title="LzModeManager" href="LzModeManager.html" />
-        <item title="LzTimer" href="LzTimer.html" />
-        <item title="LzTrackClass" href="LzTrackClass.html" />
+        <item title="LzModeManager (!swf9)" href="LzModeManager+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzModeManager (swf9)" href="LzModeManager+swf9.html" />
+        <item title="LzTimer" href="LzTimer+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzTrackClass" href="LzTrackClass+dhtml+j2me+svg+swf7+swf8.html" />
         <item title="LzHistory (dhtml)" href="LzHistory+dhtml.html" />
         <item title="LzHistory (swf7+swf8+swf9)" href="LzHistory+swf7+swf8+swf9.html" />        
     </category>
@@ -126,22 +129,22 @@
     </category>
     
     <category title="Data">
-        <item title="datapath (LzDatapath)" href="LzDatapath.html" />
-        <item title="datapointer (LzDatapointer)" href="LzDatapointer.html" />
-        <item title="dataselectionmanager (LzDataSelectionManager)" href="LzDataSelectionManager.html" />
-        <item title="dataset (LzDataset)" href="LzDataset.html" />
-        <item title="datasource (LzDatasource)" href="LzDatasource.html" />
-        <item title="defaultdataprovider" href="defaultdataprovider.html" />        
-        <item title="httpdataprovider" href="httpdataprovider.html" />
-   <!--     <item title="LzConnectionDatasource+swf7+swf8+swf9" href="LzConnectionDatasource+swf7+swf8+swf9.html" />     -->
-        <item title="LzDataElement" href="LzDataElement.html" />
-        <item title="LzDataNode" href="LzDataNode.html" />
-        <item title="LzDataProvider" href="LzDataProvider.html" />
-        <item title="LzDataRequest" href="LzDataRequest.html" />
-        <item title="LzDataText" href="LzDataText.html" />
-        <item title="LzHTTPDataProvider" href="LzHTTPDataProvider.html" />
-        <item title="LzHTTPDataRequest" href="LzHTTPDataRequest.html" />
-        <item title="LzHTTPDatasource" href="LzHTTPDatasource.html" />        
+        <item title="datapath (LzDatapath)" href="LzDatapath+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="datapointer (LzDatapointer)" href="LzDatapointer+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="dataselectionmanager (LzDataSelectionManager)" href="LzDataSelectionManager+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="dataset (LzDataset)" href="LzDataset+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="datasource (LzDatasource)" href="LzDatasource+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="defaultdataprovider" href="defaultdataprovider+dhtml+j2me+svg+swf7+swf8.html" />        
+        <item title="httpdataprovider" href="httpdataprovider+dhtml+j2me+svg+swf7+swf8.html" />
+   <!--     <item title="LzConnectionDatasource" href="LzConnectionDatasource.html" />     -->
+        <item title="LzDataElement" href="LzDataElement+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzDataNode" href="LzDataNode+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzDataProvider" href="LzDataProvider+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzDataRequest" href="LzDataRequest+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzDataText" href="LzDataText+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzHTTPDataProvider" href="LzHTTPDataProvider+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzHTTPDataRequest" href="LzHTTPDataRequest+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzHTTPDatasource" href="LzHTTPDatasource+dhtml+j2me+svg+swf7+swf8.html" />        
     </category>
     
     <category title="Scripting">
@@ -152,7 +155,7 @@
         <item title="method" href="tag.method.html" />
         <item title="node (LzNode)" href="LzNode.html" />
         <item title="script" href="LzScript.html" />
-        <item title="stylesheet (LzCSSStylesheet)" href="LzCSSStyleSheet.html" />
+<!-- TODO [dda 3.29.2008] defined in lfc/services/LzCSSStyleSheet.js, but not as class       <item title="stylesheet (LzCSSStylesheet)" href="LzCSSStyleSheet.html" /> -->
     </category>
     <category title="States">
         <item title="dragstate" href="lz.dragstate.html" />
@@ -200,9 +203,9 @@
     </category>
     
     <category title="Menus and Commands">
-        <item title="command (LzCommand)" href="LzCommand.html" />
-        <item title="LzCursor" href="LzCursor.html" />
-        <item title="selectionmanager" href="LzSelectionManager.html" />        
+        <item title="command (LzCommand)" href="LzCommand+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzCursor" href="LzCursor+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="selectionmanager" href="LzSelectionManager+dhtml+j2me+svg+swf7+swf8.html" />
     </category>
     <category title="RPC">
         <item title="javarpc" href="lz.javarpc.html" />
@@ -218,7 +221,7 @@
     </category>
     
     <category title="Services">
-        <item title="LzFocus" href="LzFocus.html" />    
+        <item title="LzFocus" href="LzFocus+dhtml+j2me+svg+swf7+swf8.html" />    
     </category>
     
     <category title="Charts and Graphs">

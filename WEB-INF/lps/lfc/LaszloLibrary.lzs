@@ -15,70 +15,57 @@ var _Copyright = "Portions of this file are copyright (c) 2001-2007 by Laszlo Sy
 // Compiler runtime support first
 #include "compiler/Library.lzs"
 
-if ($swf9) {
-
-#include "core/Library.lzs"
-#include "events/Library.lzs"
-
-#include "kernel/Library.lzs"
-#include "views/Library.lzs"
-#include "controllers/Library.lzs"
-
-#include "helpers/Library.lzs"
-#include "data/Library.lzs"
-#include "services/Library.lzs"
-#include "glue/Library.lzs"
-
-
-
-
-
-  //Debugger placeholder
-#include "debugger/swf9stubs.lzs"
-
-} else {
-
 if ($debug) {
-  // Must be loaded second
-  #include "debugger/Library.lzs"
- } else {
+  if ($swf9) {
+  } else {
+    // Must be loaded second
+    #include "debugger/Library.lzs"
+  }
+} else {
   if ($dhtml) {
     #include "debugger/stubs.lzs"
   }
 }
 
 if ($profile) {
+  if ($swf9) {
+  } else {
 #include "profiler/LzProfile.lzs"
   // Default is to start the Profiler ASAP, and stop it in
   // canvas.init, so you can profile startup time.  If that is not
   // what you want, you can start/stop/pause/resume in your app around
   // things you want to profile.
   Profiler.start();
-
+  }
 }
 
 #include "core/Library.lzs"
 #include "events/Library.lzs"
+
 #include "kernel/Library.lzs"
 #include "views/Library.lzs"
 #include "controllers/Library.lzs"
+
 #include "helpers/Library.lzs"
 #include "data/Library.lzs"
 #include "services/Library.lzs"
 #include "glue/Library.lzs"
 
-if ($as2) {
+if ($swf9) {
+  //Debugger placeholder
+#include "debugger/swf9stubs.lzs"
+
+} else {
+  if ($as2) {
     // Initialize the DojoExternalInterface class
     DojoExternalInterface = new DojoExternalInterfaceClass();
-}
-
-if ($debug) {
-  // Must be loaded last -- tells the core debugger loading is done
-  if ($dhtml) {
-#include "debugger/platform/dhtml/LzInit.js"
-  } else {
-#include "debugger/platform/swf/LzInit.as"
   }
-}
-
+  if ($debug) {
+    // Must be loaded last -- tells the core debugger loading is done
+    if ($dhtml) {
+#include "debugger/platform/dhtml/LzInit.js"
+    } else {
+#include "debugger/platform/swf/LzInit.as"
+    }
+  }
 }
