@@ -1252,7 +1252,7 @@ function setTotalFrames (n) {
   * @access private
   * 
   */
-override function destroy( recursiveCall = null){
+override function destroy( ){
     if ( this.__LZdeleted ) return;
     
     if (this.sprite) this.sprite.predestroy();
@@ -1273,8 +1273,6 @@ override function destroy( recursiveCall = null){
     super.destroy.apply(this, arguments);
 
     if (this.sprite) { this.sprite.destroy() }
-
-    if ( recursiveCall == true ) { return; }
 
     //this.__LZFinishDestroyOnIdle();
 

@@ -530,7 +530,7 @@ function checkRepeat (){
 /**
   * @access private
   */
-override function destroy(  recursiveCall = null) {
+override function destroy( ) {
     this.stop();
     this.updateDel.unregisterAll();
     this.animators = null;
@@ -552,7 +552,7 @@ override function destroy(  recursiveCall = null) {
         }
     }
 
-    super.destroy.apply(this, arguments);
+    super.destroy();
 }
 
 /**

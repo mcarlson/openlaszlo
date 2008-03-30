@@ -1710,7 +1710,6 @@ function setDatapath ( dp ) {
 
 
 // hack to create an 'abstract' method to hang the doc off of
-if ($debug) {
 /**
   * Called on any node that is declared with a datapath that matches a
   * terminal selector, such as <code>text()</code> or
@@ -1721,7 +1720,7 @@ if ($debug) {
   */
 function applyData ( data ){
 }
-}
+
 
 /**
   * A list of CSS property names and values that configure the
@@ -1940,7 +1939,7 @@ function childOf( node ){
   * Deletes the node and all the subnodes.
   * @param Boolean recursiveCall: internal use only
   */
-function destroy( recursiveCall = null){
+function destroy( ){
     if (this.__LZdeleted == true) {
         return;
     }
@@ -2053,7 +2052,7 @@ function deleteNode( recursiveCall = null){
     if ( $debug ){
       Debug.deprecated(this, arguments.callee, this.destroy);
     }
-    this.destroy( recursiveCall );
+    this.destroy( );
 }
 //+++++ Debug stuff
 

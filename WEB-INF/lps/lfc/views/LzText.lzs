@@ -554,7 +554,7 @@ function $lzc$getTextHeight_dependencies ( who , self){
 /**
   * @access private
   */
-function applyData ( d ){
+override function applyData ( d ){
     if ( null == d ){
         this.clearText();
     } else {

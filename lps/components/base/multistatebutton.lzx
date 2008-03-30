@@ -17,12 +17,12 @@
         <!--- @keywords private -->
         <event name="onstatelength"/>
         <!--- @keywords private -->
-        <method name="showDown" args="sd">
+        <method name="showDown" args="sd=null">
             this.setAttribute('lastres', this.downResourceNumber);
         </method>
         <!--- @keywords private -->
-        <method name="showUp" args="sd">  <![CDATA[
-            if (!_enabled &&  this.disabledResourceNumber) {
+        <method name="showUp" args="sd=null">  <![CDATA[
+            if (!this._enabled &&  this.disabledResourceNumber) {
                 this.setAttribute('lastres', this.disabledResourceNumber);
             } else {
                 this.setAttribute('lastres', this.normalResourceNumber);
@@ -30,7 +30,7 @@
         ]]>
         </method>
         <!--- @keywords private -->
-        <method name="showOver" args="sd">
+        <method name="showOver" args="sd=null">
             this.setAttribute('lastres', this.overResourceNumber);
         </method>
 
@@ -60,7 +60,7 @@
 
         <!--- @keywords private -->
         <method name="_showEnabled"> <![CDATA[
-            reference.setAttribute('clickable', _enabled);
+            reference.setAttribute('clickable', this._enabled);
             this.showUp();
         ]]> </method>
 
@@ -152,7 +152,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

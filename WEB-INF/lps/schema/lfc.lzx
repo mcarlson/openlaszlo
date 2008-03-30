@@ -124,6 +124,7 @@
        element is within another object, that object's property with
        this name will be set to this object.
   -->
+  <attribute name="$delegates" type="expression"/>
   <attribute name="name" type="token"/>
   <!-- The oninit script is executed once, after the element's
        children, if any, have been initialized. 
@@ -999,6 +1000,7 @@ element attribute "
   <method name="setLayoutOrder"/>
   <method name="swapSubviewOrder"/>
   <method name="unlock"/>
+  <method name="update"/>
 </interface>
 
 <!--

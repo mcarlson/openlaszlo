@@ -343,12 +343,13 @@ class ClassCompiler extends ViewCompiler {
           Map.Entry entry = (Map.Entry) i.next();
           String key = (String) entry.getKey();
           Object value = entry.getValue();
+          boolean redeclared = (superclassModel.getAttribute(key) != null);
           if ((value instanceof NodeModel.BindingExpr)) {
-            // Bindings always have to be installed as an init
-            // A null value indicates that the var was only
-            // declared, not initialized
-            decls.put(key, null);
-            inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
+              // Bindings always have to be installed as an init
+              if (! redeclared) {
+                  decls.put(key, null);
+              }
+              inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
           } else if (value instanceof Function &&
                      ((! isstate) ||
                       className.equals(key))) {
@@ -372,24 +373,28 @@ class ClassCompiler extends ViewCompiler {
             // classes, so we install as an init for now and this is
             // fixed up in LzNode by installing inits that have no
             // setters when the arguments are merged
-            else if (true) { // (! (value instanceof String)) || setters.containsKey(key) || isstate) {
-              decls.put(key, null);
+
+            if (true) { // (! (value instanceof String))  || setters.containsKey(key) || isstate) {
+              if (! redeclared) {
+                decls.put(key, null);
+              }
               inits.put(key, value);
             } else {
-              decls.put(key, value);
-              // If there is a property that would have been shadowed,
-              // you have to hide that from applyArgs, or you will get
-              // clobbered!
-              inits.put(key, "LzNode._ignoreAttribute");
+              if (! redeclared) {
+                decls.put(key, value);
+                // If there is a property that would have been shadowed,
+                // you have to hide that from applyArgs, or you will get
+                // clobbered!
+                inits.put(key, "LzNode._ignoreAttribute");
+              } else {
+                inits.put(key, value);
+              }
             }
           } else {
             // Just a declaration
-            decls.put(key, value);
-//             if (mEnv.isSWF()) {
-//               // Work around LHS implicit-this bug in SWF by making
-//               // sure each instance has slots defined on it
-//               inits.put(key, value);
-//             }
+              if (! redeclared) {
+                decls.put(key, value);
+            }
           }
         }
         // mergedAttrs does not deal with our methods
@@ -417,6 +422,7 @@ class ClassCompiler extends ViewCompiler {
                           decls,
                           (Map)viewMap.get("classAttrs"),
                           classBody);
+
         mEnv.compileScript(scriptClass.toString(), elt);
         // Install in constructor map
         mEnv.compileScript("ConstructorMap[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");

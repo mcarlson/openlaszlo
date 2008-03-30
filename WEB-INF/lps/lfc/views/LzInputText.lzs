@@ -125,7 +125,7 @@ override function construct ( parent , args ){
 /**
   * @access private
   */
-override function destroy( recursiveCall = null){
+override function destroy(){
     if (this._onfocusDel) {
         this._onfocusDel.unregisterAll();
         this._onfocusDel = null;
@@ -141,7 +141,7 @@ override function destroy( recursiveCall = null){
         this._modemanagerDel = null;
     }
     
-    super.destroy.apply(this, arguments);
+    super.destroy();
 }
 
 /**

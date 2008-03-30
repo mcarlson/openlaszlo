@@ -188,9 +188,9 @@ override function constructWithArgs ( args ) {
 /**
   * @access private
   */
-override function destroy ( recursiveCall = null) {
+override function destroy () {
     this.releaseLayout();
-    super.destroy.apply(this, arguments);
+    super.destroy();
 }
 
 
@@ -406,7 +406,7 @@ function __LZinsertAfter ( newsub , oldsub ){
 }
 
 /**
-  * Update is called whenever the layout needs to be updated. By defualt, it
+  * Update is called whenever the layout needs to be updated. By default, it
   * is called by <b> reset</b>. This is an abstract function in the class,
   * but this is the main routine where the layout does its work.
   *
@@ -415,10 +415,10 @@ function __LZinsertAfter ( newsub , oldsub ){
   *
   * @access protected
   */
-/*
-function update() {
+
+function update(...rest) {
 }
-*/
+
 
 
 /**

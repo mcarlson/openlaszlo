@@ -34,10 +34,12 @@
                         <attribute name="datasel"
                                     value="${ workdef == '1' ? 2 : 1 }"/>
 
-                        <handler name="ondatasel" name="checkDataSel">
+                        <method name="checkDataSel">
                             if ( !this._initcomplete ) return;
                             this.selectItem(  datasel );
-                        </handler>
+                        </method>
+
+                        <handler name="ondatasel" method="checkDataSel"/>
 
                         <handler name="oninit">
                             this.checkDataSel();

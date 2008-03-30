@@ -320,13 +320,13 @@ function remove () {
   * Clean up after yourself
   * @access private
   */
-override function destroy (  recursiveCall = null ) {
+override function destroy ( ) {
     // stop pooling
     this.pooling = false;
     // clean up delegates and views
     this.remove();
     // continue
-    super.destroy.apply(this, arguments);
+    super.destroy();
 }
 
 /**
