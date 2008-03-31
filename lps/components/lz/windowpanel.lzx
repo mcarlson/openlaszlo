@@ -204,7 +204,7 @@
                     }
                     super.addSubview( newsub );
                 </method>
-                <method name="update">
+                <method name="update" args="v=null">
                     <![CDATA[
                     if ( this.locked ) return;
                     var gripper_left = 15, gripper_right = 15;
@@ -333,7 +333,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

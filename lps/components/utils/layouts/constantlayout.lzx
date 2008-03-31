@@ -10,7 +10,7 @@
 
     <!--- This method is called automatically by the layout. However it can be called directly to force the
           layout to update -->
-    <method name="update">
+    <method name="update" args="v=null">
         <![CDATA[
         var l = this.subviews.length;
             
@@ -23,7 +23,7 @@
 </library>
 <!-- This file will be obsoleted, isnteal use: /utrils/layouts/library,lzx -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

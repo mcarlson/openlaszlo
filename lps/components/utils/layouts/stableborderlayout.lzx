@@ -19,7 +19,7 @@
           layout changes after init time. However, this method may be called
           directly to force the layout to update. 
           @param Number n: unknown - check in review -->
-    <method name="update" args="n">
+    <method name="update" args="n=null">
         if ( this.locked || this.dontupdate ) { return; }
         var newsize = n > 0 ? n : this.immediateparent[( this.sizeAxis )];
         //this is the function for when the parent size changes
@@ -58,7 +58,7 @@
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

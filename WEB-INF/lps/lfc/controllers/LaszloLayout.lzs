@@ -416,7 +416,7 @@ function __LZinsertAfter ( newsub , oldsub ){
   * @access protected
   */
 
-function update(...rest) {
+function update(v=null) {
 }
 
 
