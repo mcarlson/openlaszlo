@@ -26,7 +26,7 @@
 
         <!--- The value of the baseformitem. Default is null. -->
         <attribute name="value" value="null" 
-                   setter="this.setValue(value, false)" />
+                   setter="this.setValue(value,false)" />
 
         <!--- Event sent when baseformitem is changed. Only sent once when true
               or once when false. -->
@@ -129,7 +129,7 @@
         <!--- Set the value for the baseformitem.
               @param Any v: the value of the baseformitem. 
               @param Boolean isinitvalue: if true, the rollbackvalue is set. -->
-        <method name="setValue" args="v,isinitvalue"><![CDATA[
+        <method name="setValue" args="v,isinitvalue=null"><![CDATA[
             var didchange = (this.value != v);
             this.value = v;
             if (isinitvalue || ! this._initcomplete) {

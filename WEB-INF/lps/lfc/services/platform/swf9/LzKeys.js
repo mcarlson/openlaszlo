@@ -34,7 +34,7 @@
   *
   * @shortdesc Keyboard input service.
   */
-public class LzKeysClass {
+dynamic public class LzKeysClass {
 
     /**
      * A hash where each of the keys that is currently 

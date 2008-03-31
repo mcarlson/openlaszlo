@@ -373,7 +373,7 @@ public class LzEvent extends LzDeclaredEventClass {
       this._dbg_eventName = eventName;
     }
 
-    var _evs = eventSender._events;
+    var _evs = eventSender['_events'];
     if (_evs == null ){
         eventSender._events = [ this ];
     } else {

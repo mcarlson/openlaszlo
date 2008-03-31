@@ -1153,7 +1153,7 @@ solution =
             referencename = "$lzc$" + "handle_" + event + "_reference" + unique;
             Object referencefn = new Function(
                 referencename,
-                args,
+                "",
                 "\n#pragma 'withThis'\n" +
                 "return (" +
                 "#beginAttribute\n" +

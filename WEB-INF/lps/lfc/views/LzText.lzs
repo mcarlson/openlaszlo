@@ -79,13 +79,9 @@ dynamic class LzText extends LzView with LzFormatter {
     var gridFit = "subpixel";
     var sharpness = 0;
     var thickness = 0;
-    function LzText ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+    function LzText ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
         super(parent,attrs,children,instcall);
     }
-
-
-
-
     
 
     var password;

@@ -56,7 +56,7 @@
   */
 dynamic class LzView extends LzNode {
 
-    function LzView ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+    function LzView ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
         super(parent,attrs,children,instcall);
     }
 

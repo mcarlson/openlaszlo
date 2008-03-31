@@ -157,7 +157,7 @@ public dynamic class LzNode {
   * @param Boolean instcall
   * @access private
   */
-function LzNode ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null){
+function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
         this.__LZUID = "__U" + ++LzNode.__UIDs;
         this.__LZdeferDelegates = true;
         var qpos = LzDelegate.__LZdelegatesQueue.length;
