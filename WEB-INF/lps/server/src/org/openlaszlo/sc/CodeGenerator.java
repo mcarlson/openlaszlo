@@ -1786,17 +1786,17 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // global name (this allows us to name closures more
     // mnemonically at runtime
     String meterFunctionName = functionName;
-    // Pull all the pragmas from the beginning of the
-    // statement list: process them, and remove them
+    // Pull all the pragmas from the statement list: process them, and
+    // remove them
     assert stmts instanceof ASTStatementList;
     List stmtList = new ArrayList(Arrays.asList(stmts.getChildren()));
-    while (stmtList.size() > 0) {
-      SimpleNode stmt = (SimpleNode)stmtList.get(0);
+    for (int i = 0, len = stmtList.size(); i < len; i++) {
+      SimpleNode stmt = (SimpleNode)stmtList.get(i);
       if (stmt instanceof ASTPragmaDirective) {
-        visitStatement(stmt);
-        stmtList.remove(0);
-      } else {
-        break;
+        SimpleNode newNode = visitStatement(stmt);
+        if (! newNode.equals(stmt)) {
+          stmtList.set(i, newNode);
+        }
       }
     }
     if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {

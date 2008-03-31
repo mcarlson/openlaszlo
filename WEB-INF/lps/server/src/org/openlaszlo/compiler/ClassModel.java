@@ -112,9 +112,12 @@ class ClassModel implements Comparable {
       return superclass;
     }
 
+  private Map mergedAttributes;
+
   Map getMergedAttributes() {
-    if (nodeModel == null) { return new LinkedHashMap(); }
-    Map merged = superclass.getMergedAttributes();
+    if (mergedAttributes != null) { return mergedAttributes; }
+    if (nodeModel == null) { return mergedAttributes = new LinkedHashMap(); }
+    Map merged = mergedAttributes = superclass.getMergedAttributes();
     // Merge in the our attributes, omitting methods
     for (Iterator i = nodeModel.getAttrs().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
@@ -123,6 +126,24 @@ class ClassModel implements Comparable {
       if ("LzNode._ignoreAttribute".equals(value)) {
         merged.remove(key);
       } else if (! (value instanceof Function)) {
+        merged.put(key, value);
+      }
+    }
+    return merged;
+  }
+
+  private Map mergedMethods;
+
+  Map getMergedMethods() {
+    if (mergedMethods != null) { return mergedMethods; }
+    if (nodeModel == null) { return mergedMethods = new LinkedHashMap(); }
+    Map merged = mergedMethods = superclass.getMergedMethods();
+    // Merge in the our methods
+    for (Iterator i = nodeModel.getAttrs().entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String key = (String) entry.getKey();
+      Object value = entry.getValue();
+      if (value instanceof Function) {
         merged.put(key, value);
       }
     }

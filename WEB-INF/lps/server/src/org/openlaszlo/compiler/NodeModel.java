@@ -198,6 +198,7 @@ public class NodeModel implements Cloneable {
     private String value;
     String when;
     Element source;
+    CompilationEnvironment env;
     String srcloc;
     String bindername;
     String dependenciesname;
@@ -209,18 +210,26 @@ public class NodeModel implements Cloneable {
       return compiler = new org.openlaszlo.sc.Compiler();
     }
 
-    public CompiledAttribute (String name, Schema.Type type, String value, String when, Element source) {
+      public CompiledAttribute (String name, Schema.Type type, String value, String when, Element source, CompilationEnvironment env) {
       this.name = name;
       this.type = type;
       this.value = value;
       this.when = when;
       this.source = source;
+      this.env = env;
       this.srcloc = CompilerUtils.sourceLocationDirective(source, true);
+      // --- Temp solution for overriding binders in subclasses or
+      // --- instances, we just make all binders have unique names
+      String parent_name = source.getAttributeValue("id");
+      if (parent_name == null) {
+          parent_name = CompilerUtils.attributeUniqueName(source, "binder");
+      }
+      String unique = "$" + parent_name + "_"  + env.methodNameGenerator.next();
       if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
-        this.bindername = "$lzc$bind_" + name;
+          this.bindername = "$lzc$bind_" + name + unique;
       }
       if (when.equals(WHEN_ALWAYS)) {
-        this.dependenciesname = "$lzc$dependencies_" + name;
+          this.dependenciesname = "$lzc$dependencies_" + name + unique;
       }
     }
 
@@ -246,7 +255,10 @@ public class NodeModel implements Cloneable {
       }
       Function binder = new Function(
         bindername,
-        "",
+        // Binders are called by LzDelegate.execute, which passes the
+        // value sent by sendEvent, so we have to accept it, but we
+        // ignore it
+        "$lzc$ignore=null",
         pragmas +
         "this." + installer + "(" +
         ScriptCompiler.quote(name) + "," +
@@ -1084,7 +1096,9 @@ solution =
         // event name
         String event = element.getAttributeValue("name");
         String args = CompilerUtils.attributeLocationDirective(element, "args") +
-            XMLUtils.getAttributeValue(element, "args", "");
+            // Handlers get called with one argument, default to
+            // ignoring that
+            XMLUtils.getAttributeValue(element, "args", "$lzc$ignore=null");
         if ((event == null || !ScriptCompiler.isIdentifier(event))) {
             env.warn("handler needs a non-null name attribute");
             return;
@@ -1115,7 +1129,9 @@ solution =
      */
     void addHandlerFromAttribute(Element element, String event, String body) {
         String parent_name = element.getAttributeValue("id");
-        addHandlerInternal(element, parent_name, event, null, "", body, null);
+        // Handlers get called with one argument, default to ignoring
+        // that
+        addHandlerInternal(element, parent_name, event, null, "$lzc$ignore=null", body, null);
     }
 
     /**
@@ -1192,20 +1208,11 @@ solution =
 
 
     void addMethodElement(Element element) {
-        String srcloc =
-            CompilerUtils.sourceLocationDirective(element, true);
         String name = element.getAttributeValue("name");
         String event = element.getAttributeValue("event");
         String args = CompilerUtils.attributeLocationDirective(element, "args") +
             XMLUtils.getAttributeValue(element, "args", "");
         String body = element.getText();
-        ClassModel superclassModel = getParentClassModel();
-
-        // Override will be required if there is an inherited method
-        // of the same name
-        boolean override = superclassModel.getAttribute(name) != null ||
-            "true".equals(element.getAttributeValue("override"));
-        boolean isfinal = "true".equals(element.getAttributeValue("final"));
 
         if ((name == null || !ScriptCompiler.isIdentifier(name)) &&
             (event == null || !ScriptCompiler.isIdentifier(event))) {
@@ -1233,6 +1240,46 @@ solution =
                 ,element);
         }
 
+        // TODO: Remove after 4.2
+        if (event != null) {
+            env.warn("The `event` property of methods is deprecated.  Please update your source to use the `<handler>` tag.",
+                     element);
+            String parent_name =
+                element.getParentElement().getAttributeValue("id");
+            if (parent_name == null) {
+                parent_name =
+                    (name == null ?
+                     CompilerUtils.attributeUniqueName(element, "handler") :
+                     CompilerUtils.attributeUniqueName(element, "name"));
+            }
+
+            String reference = element.getAttributeValue("reference");
+            if (reference != null) {
+                reference = CompilerUtils.attributeLocationDirective(element, "reference") + reference;
+            }
+            addHandlerInternal(element, parent_name, event, name, args, body, reference);
+            return;
+        }
+
+        addMethodInternal(name, args, body, element);
+    }
+
+    void addMethodInternal(String name, String args, String body, Element element) {
+        String srcloc = CompilerUtils.sourceLocationDirective(element, true);
+        ClassModel superclassModel = getParentClassModel();
+        // Override will be required if there is an inherited method
+        // of the same name
+        boolean override = 
+            // This gets methods from the schema, in particular, the
+            // LFC interface
+            superclassModel.getAttribute(name) != null ||
+            // This gets methods the compiler has added, in
+            // particular, setter methods
+            superclassModel.getMergedMethods().containsKey(name) ||
+            // And the user may know better than any of us
+            "true".equals(element.getAttributeValue("override"));
+        boolean isfinal = "true".equals(element.getAttributeValue("final"));
+
         if (attrs.containsKey(name)) {
             env.warn(
 /* (non-Javadoc)
@@ -1255,26 +1302,6 @@ solution =
             }
         }
 
-        String parent_name =
-            element.getParentElement().getAttributeValue("id");
-        if (parent_name == null) {
-            parent_name =
-                (name == null ?
-                 CompilerUtils.attributeUniqueName(element, "handler") :
-                 CompilerUtils.attributeUniqueName(element, "name"));
-        }
-
-        if (event != null) {
-            env.warn("The `event` property of methods is deprecated.  Please update your source to use the `<handler>` tag.",
-                     element);
-            String reference = element.getAttributeValue("reference");
-            if (reference != null) {
-                reference = CompilerUtils.attributeLocationDirective(element, "reference") + reference;
-            }
-            addHandlerInternal(element, parent_name, event, name, args, body, reference);
-            return;
-        }
-
         String name_loc =
             (name == null ?
              CompilerUtils.attributeLocationDirective(element, "handler") :
@@ -1289,7 +1316,7 @@ solution =
             adjectives += " override";
         }
 
-        if (isfinal  && isclassdecl) {
+        if (isfinal && isclassdecl) {
             adjectives += " final";
         }
 
@@ -1484,7 +1511,7 @@ solution =
             if (canonicalValue == null)
                 canonicalValue = value;
 
-            return new CompiledAttribute(name, type, canonicalValue, when, source);
+            return new CompiledAttribute(name, type, canonicalValue, when, source, env);
         }
 
     static final Schema.Type EVENT_TYPE = Schema.newType("LzEvent");
@@ -1521,7 +1548,7 @@ solution =
         // An event is really just an attribute with an implicit
         // default (sentinal) value
         CompiledAttribute cattr =
-            new CompiledAttribute(name, EVENT_TYPE, "LzDeclaredEvent", WHEN_IMMEDIATELY, element);
+            new CompiledAttribute(name, EVENT_TYPE, "LzDeclaredEvent", WHEN_IMMEDIATELY, element, env);
         addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
     }
 
@@ -1638,44 +1665,34 @@ solution =
           cattr = compileAttribute(element, name, value, type, when);
         } else {
             String srcloc = CompilerUtils.sourceLocationDirective(element, true);
-            cattr = new CompiledAttribute(name, type, null, WHEN_IMMEDIATELY, element);
+            cattr = new CompiledAttribute(name, type, null, WHEN_IMMEDIATELY, element, env);
         }
         addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
 
         // Add entry for attribute setter function
         String setter = element.getAttributeValue("setter");
-
         if (setter != null) {
-            String srcloc =
-                CompilerUtils.sourceLocationDirective(element, true);
             // By convention 'anonymous' setters are put in the 'lzc'
             // namespace with the name set_<property name>
             // NOTE: LzNode#applyArgs and #setAttribute depend on this
             // convention to find setters
             String settername = "$lzc$" + "set_" + name;
-            // Maybe we need a new type for "function"?
-            Function setterfn = new
-                Function(
-                    settername,
-                    // the lone argument to a setter is named after
-                    // the attribute
-                    name,
-                    "\n#beginContent\n" +
-                    "\n#pragma 'withThis'\n" +
-                    srcloc + 
-                    setter +  "\n#endContent",
-                    srcloc);
+            addMethodInternal(
+                settername,
+                // the lone argument to a setter is named after the
+                // attribute
+                name,
+                // The body of the setter method
+                setter,
+                element);
 
+            // This is just for nice error messages
             if (setters.get(name) != null) {
                 env.warn(
                     "a setter for attribute named '"+name+
                     "' is already defined on "+getMessageName(),
                     element);
             }
-
-            // TODO: [2008-01-21 ptw] some day this will be coalesed
-            // into just creating a method named `"set" + name`
-            attrs.put(settername, setterfn);
             setters.put(name, ScriptCompiler.quote(settername));
         }
     }

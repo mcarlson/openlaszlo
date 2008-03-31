@@ -520,11 +520,13 @@ public abstract class CommonGenerator implements ASTVisitor {
       children[formalPos].setChildren((SimpleNode[])newargs.toArray(new SimpleNode[0]));
       
       // Build a new statement list, consisting of new stmts for formal
-      // initializations, followed by original statements.
-      SimpleNode oldstmt = children[formalPos+1];
+      // initializations, followed by original statements.  Have to
+      // keep original statments at the same level, in case there are
+      // pragmas that apply to the function body!
+      ASTStatementList oldstmt = (ASTStatementList)children[formalPos+1];
+      stmts.addAll(Arrays.asList(oldstmt.getChildren()));
       SimpleNode newstmt = new ASTStatementList(0);
       newstmt.setChildren((SimpleNode[])stmts.toArray(new SimpleNode[0]));
-      newstmt.set(stmts.size(), oldstmt);
       children[formalPos+1] = newstmt;
     }
     return n;

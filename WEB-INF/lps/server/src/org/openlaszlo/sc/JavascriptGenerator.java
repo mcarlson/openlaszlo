@@ -1162,8 +1162,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // mnemonically at runtime
     String meterFunctionName = useName ? functionName : null;
     SimpleNode[] paramIds = params.getChildren();
-    // Pull all the pragmas from the beginning of the
-    // statement list: process them, and remove them
+    // Pull all the pragmas from the list: process them, and remove
+    // them
     assert stmts instanceof ASTStatementList;
     List stmtList = new ArrayList(Arrays.asList(stmts.getChildren()));
     for (int i = 0, len = stmtList.size(); i < len; i++) {
@@ -1173,8 +1173,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         if (! newNode.equals(stmt)) {
           stmtList.set(i, newNode);
         }
-      } else {
-        break;
       }
     }
     String methodName = (String)options.get(Compiler.METHOD_NAME);
