@@ -1,42 +1,240 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Mac OS X (vers 1st December 2004), see www.w3.org" />
+  <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-        <title>
-            OpenLaszlo 4.0.7 Release Notes
-        </title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" href="../lps/includes/explore.css" type="text/css" />
-        <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/images/laszlo.ico" />
-    </head>
-    <body class="release-notes">
-        <h1>
-            Release Notes for OpenLaszlo 4.1.x
-        </h1>
-        <p class="bodytext">
-            OpenLaszlo 4.1.x is a series of nightly builds from live development. For production, we recommend using OpenLaszlo 4.0.7.
-        </p>
-        <p>
-            For every release, we rely on the OpenLaszlo community to help ensure the quality of the platform release and to determine its future direction. To propose or participate in discussion of new features, see <a href="http://wiki.openlaszlo.org/Enhancement_Proposals">the wiki.</a> We encourage you to report any problems, and to make suggestions for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP">JIRA bug tracking system.</a>
-        </p>
-        <p>
-            Please see the <a href="http://download.openlaszlo.org/4.0.0/release-notes.html">OpenLaszlo 4.0 Release Notes</a> for an overview of significant changes since 3.x.
-        </p>
-        <h1>
-            New Features in 4.1.x
-        </h1>
-        <p>
-            TBD
-        </p>
-        <h1>
-            Bugs Fixed in 4.1.x
-        </h1>
-        <p>
-            TBD
-        </p>
-    </body>
+
+  <title>OpenLaszlo 4.0.7 Release Notes</title>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=us-ascii" />
+  <link rel="stylesheet" href="../lps/includes/explore.css" type=
+  "text/css" />
+  <link rel="SHORTCUT ICON" href=
+  "http://www.laszlosystems.com/images/laszlo.ico" />
+</head>
+
+<body class="release-notes">
+  <h1>Release Notes for OpenLaszlo 4.2a1</h1>
+
+  <p class="bodytext">OpenLaszlo 4.2a1 is the first step in
+  OpenLaszlo's development effort to support the SWF9 runtime.
+  There will be frequent iterations, as this branch is under heavy
+  development. In this initial release, 4.2a1 provides
+  preliminary support for classes, user-defined classes, layouts,
+  constraints, views, and text (with the exception of multi-line
+  text, which is partially implemented ). 4.2a1 also supports
+  optional argument syntax, as defined by AS3. This was added
+  because SWF9 requires you to either exactly match the function
+  signature's number of arguments or use the AS3 optional argument
+  syntax. Other low-level changes to support SWF9 include a new
+  SWF9 sprite, as well as many changes to the compiler.</p>
+
+  <p>You can find and add specific SWF9 test cases in the test/swf9
+  directory. We rely on these test cases to detect SWF9-specific
+  regressions so that they can be swiftly resolved during the
+  incremental development process. In addition, there is a JIRA
+  project, DevilDog, for tracking SWF9-specific issues found here:
+  <a href=
+  "http://www.openlaszlo.org/jira/browse/lpp">http://www.openlaszlo.org/jira/browse/lpp</a>.
+  Because development is also being merged to trunk, other bug
+  reports more generally related to adding another runtime are
+  included in RingDing.</p>
+
+  <p>For every release, we rely on the OpenLaszlo community to help
+  ensure the quality of the platform release and to determine its
+  future direction. To propose or participate in discussion of new
+  features, see <a href=
+  "http://wiki.openlaszlo.org/Enhancement_Proposals">the wiki.</a>
+  We encourage you to report any problems, and to make suggestions
+  for enhancements, through our <a href=
+  "http://www.openlaszlo.org/jira/browse/LPP">JIRA bug tracking
+  system.</a></p>
+
+  <p>Please see the <a href=
+  "http://download.openlaszlo.org/4.0.0/release-notes.html">OpenLaszlo
+  4.0 Release Notes</a> for an overview of significant changes
+  since 3.x.</p>
+
+  <h1>New Features in 4.2a1</h1>
+
+  <p>User-defined classes and layouts basically work in SWF9.</p>
+
+  <p>There are some new test cases in test/swf9: one for
+  user-defined classes to test adding of override declarations and
+  one to test <code>&lt;simplelayout&gt;</code>.</p>
+
+  <h1>Application Changes Needed Before Using 4.2a1</h1>
+
+  <p>This section contains changes you should make to ensure that
+  your code runs faster and without errors in SWF9. For
+  instructions on setting up a SWF9 build environment see <a href=
+  "http://wiki.openlaszlo.org/BuildingSWF9">BuildingSWF9</a></p>
+  <!-- The following (up to the next comment) is from Tucker's email "Changes coming..." -->
+
+  <h2><code>&lt;method event="eventname"&gt;</code> is
+  deprecated</h2>
+
+  <p>The syntax <code>&lt;method event="eventname"&gt;</code> is
+  now deprecated and will trigger a compiler warning. You should
+  update your code to use <code>&lt;handler
+  name="eventname"&gt;</code>;. In the case where the method is
+  named (<code>&lt;method event="eventname"
+  name="methodname"&gt;</code>) you will have to split the
+  declaration into a handler (<code>&lt;handler name="eventname"
+  method="methodname" /&gt;</code>) and a method (<code>&lt;method
+  name="methodname"&gt;</code>). [This syntax allows subclasses to
+  override the method that will be handling the event. See the
+  documentation for <code>handler</code> for further details and
+  examples.</p>
+
+  <h2>Using <code>&lt;class name="name"&gt;</code></h2>
+
+  <p>Classes defined using the <code>&lt;class
+  name="name"&gt;</code> <em>must</em> be referenced in script as
+  <code>&lt;lz.name&gt;</code>, there will no longer be a global
+  alias <code>name</code> that refers to the class implementing the
+  tag.</p>
+
+  <h2>LZX-defined classes now have an internal name</h2>
+
+  <p>The classes that represent LZX-defined classes now have an
+  internal name. If you want to know the name of the tag that
+  defined an object, you should ask
+  <code>&lt;object&gt;.constructor.tagname</code>, not
+  <code>&lt;object&gt;.constructor.classname&gt;</code>.</p>
+
+  <h2>Method <code>getattribute()</code> deprecated</h2>
+
+  <p><code>getAttribute</code> is deprecated. You should just
+  reference the attribute directly; getters are no longer
+  supported.</p>
+
+  <h2>Change should <em>not</em> affect user code</h2>
+
+  <p>Initial values, initial expressions ($once, $path, $style, and
+  $always), are now created as a unified list in the tag compiler
+  solving several issues with overriding/inheritance of attribute
+  values and constraints and enabling the solution to an issue with
+  states and constraints. As a result, if you override
+  <code>LzNode#construct</code>, and attempt to manipulate the
+  <code>args</code> list, you must be aware that some values in
+  that list will be <code>LzInitExpr</code>`s and cannot be
+  directly inspected. These value represent consraints that will be
+  applied by <code>LzNode#__LZapplyArgs</code>.</p>
+
+  <p>If you <em>do</em> have classes that override
+  <code>construct</code> <em>and</em> expect to manipulate the args
+  to that method, you will have to update your code when moving to
+  revision 4.2a1.</p>
+  <!-- The following is from the wiki page at http://wiki.openlaszlo.org/SWF9_Conversion -->
+
+  <h2>You cannot delete "fixtures" (declared instance vars) of an
+  instance</h2>
+
+  <p>We have code in the LFC that deletes var in order to free up
+  memory or null them out. These have to be checked, and in most
+  cases converted to just set the value to null when possible. For
+  cases where the property really has to be deleted to remove
+  shadowing of an instance var, we need to rewrite that code to use
+  some other approach.</p>
+
+  <h2>Need to put call to add tagname to constructor map *outside*
+  of the class def</h2>
+  <pre>
+        class LzNode { 
+        ...
+        }
+        
+        ConstructorMap['node'] = LzNode;
+    
+</pre>
+
+  <h2>If you override a superclass method, you must use the
+  override keyword</h2>
+  <pre>
+public override function setWidth (...) { ... }
+</pre>
+
+  <h2>All setter methods need to accept a second optional arg</h2>
+
+  <p>For now, declare them like this:</p>
+  <pre>
+function setResize ( val, ignore = null ){
+</pre>
+
+  <p>We will fix this soon so you don't need to add the second
+  arg.</p>
+
+  <h2>Dependency functions don't work yet</h2>
+
+  <p>Code that declares constraint dependencies by annotating the
+  method will not work in swf9.</p>
+  <pre>
+prototype.getText.dependencies = function(who, self) {
+        return [ self, "text" ];
+        }
+</pre>
+
+  <p>or</p>
+  <pre>
+prototype.getAttributeRelative.dependencies = function( who,self, prop ,
+        refView ){
+    
+</pre>
+
+  <p>for now rename these to have a well-known name by appending
+  <code>$dependencies$</code> to the method name, like
+  <code>$lzc$dependencies_getAttributeRelative</code>.</p>
+
+  <h2>Overriding variable definitions</h2>
+
+  <p>You cannot initialize a variable that is already defined in a
+  base class using this syntax:</p>
+  <pre>
+var nodeType = LzDataNode.TEXT_NODE;  // Done in the derived class
+</pre>
+
+  <p>Instead, initialize the value in the constructor:</p>
+  <pre>
+   function LzDataText(text) {
+        super();
+        ....
+        this.nodeType = LzDataNode.TEXT_NODE;
+    
+</pre>
+
+  <h2>Be careful using the <code>in</code> operator</h2>
+
+  <p>Using <code>in</code> to see if an object contains a method
+  only works in swf9 if that method is labeled public.</p>
+
+  <p>For example:</p>
+  <pre>
+ if (this.context &amp;&amp; 'getContext' in this.context)
+</pre>
+
+  <p>will fail. One solution is to make sure the base class has a
+  definition for <code>getContext()</code>.</p>
+
+  <h2>Use <code>is</code> operator instead of looking for a
+  property</h2>
+
+  <p>This line of code:</p>
+  <pre>
+ }else if (n.length) {
+</pre>
+
+  <p>fails in swf9 if n does not have a property named
+  <code>length</code>. This check is trying to determine if the
+  object is an Array. This can be rewritten as:</p>
+  <pre>
+}else if (n is Array) {
+</pre>
+</body>
 </html>
