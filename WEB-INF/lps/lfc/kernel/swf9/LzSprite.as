@@ -459,7 +459,7 @@ public function setResource (r:String):void {
           o Plays a multiframe resource starting at the specified framenumber
           o Plays from the current frame if framenumber is null 
       */
-      public function play( framenumber:int ):void {
+      public function play( framenumber:* ):void {
       }
 
 
@@ -467,7 +467,7 @@ public function setResource (r:String):void {
           o Stops a multiframe resource at the specified framenumber
           o Stops at the current frame if framenumber is null 
       */
-      public function stop( framenumber:int ):void {
+      public function stop( framenumber:*, rel:* = null ):void {
       }
 
 
@@ -554,8 +554,8 @@ public function setResource (r:String):void {
           o if recursive is true, the sprite destroys all its children as well 
       */
       public function destroy( ):void {
-	//PBR
-	if (parent)
+    //PBR
+    if (parent)
           parent.removeChild(this);
       }
 
