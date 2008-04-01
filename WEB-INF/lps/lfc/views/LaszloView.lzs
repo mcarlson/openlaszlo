@@ -1270,7 +1270,7 @@ override function destroy( ){
         }
     }
 
-    super.destroy.apply(this, arguments);
+    super.destroy.apply(this);
 
     if (this.sprite) { this.sprite.destroy() }
 
