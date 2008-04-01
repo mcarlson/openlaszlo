@@ -1411,7 +1411,9 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         newBody.add((new Compiler.Parser()).substitute(name + " = _1;", map));
       }
     }
-    if ((! free.isEmpty()) && options.getBoolean(Compiler.WITH_THIS)) {
+    // If the locals are not remapped, we assume we are in a runtime
+    // that already does implicit this in methods...
+    if ((! free.isEmpty()) && options.getBoolean(Compiler.WITH_THIS) && remapLocals()) {
       SimpleNode newStmts = new ASTStatementList(0);
       newStmts.setChildren((SimpleNode[])stmtList.toArray(new SimpleNode[0]));
       SimpleNode withNode = new ASTWithStatement(0);
