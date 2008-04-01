@@ -48,7 +48,11 @@ if ($swf9) {
 #include "services/LzStyleSheet.js"
 #include "services/LzCSSStyleSheet.js"
 #include "services/LzTrack.lzs"
+    }
 #include "services/LzFocus.lzs"
+    
+if ($swf9) {
+} else {
 #include "services/LzIdle.lzs"
 #include "services/LzTimer.lzs"
 

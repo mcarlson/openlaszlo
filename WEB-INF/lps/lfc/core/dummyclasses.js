@@ -63,21 +63,17 @@ public class LzBrowser {
         return null;
     }
 
+    #passthrough (toplevel:true) {
+        import flash.xml.*;
+    }#
 
-}
+    static var xd:XMLDocument = new XMLDocument();
 
-public class LzFocus {
-    static function getFocus() {
+    public static function xmlEscape (str) {
+        var tnode = xd.createTextNode(str);
+        return tnode.toString();
     }
-    static function setFocus(...rest) {
-    }
 
-
-
-    static function clearFocus() {
-    }
-    static function __LZcheckFocusChange(...rest) {
-    }
 
 }
 

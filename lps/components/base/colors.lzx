@@ -19,7 +19,7 @@
     aqua = 0x00FFFF -->
 
 
-<script>
+<script when="immediate">
     var offwhite = 0xf2f2f2;
     var gray10 = 0x1a1a1a;
     var gray20 = 0x333333;
@@ -69,7 +69,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
