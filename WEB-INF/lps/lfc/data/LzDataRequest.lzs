@@ -10,17 +10,12 @@
   */
 
 /**
-  * <p>
   * <class>LzDataRequest</class> is an abstract class that can be extended to create new kinds 
   * of data requests, which are passed to a <class>DataProvider</class> when making a request.
-  * </p>
-  * <event>onstatus</event>: Sent as data or other conditions occur during the execution of this request.
-  *
   *
   * @shortdesc An abstract class to represent data requests.
   * @lzxname datarequest
   */
-
 class LzDataRequest extends LzNode {
 
     /** @access private
@@ -31,15 +26,32 @@ class LzDataRequest extends LzNode {
     static var attributes = new LzInheritedHash(LzNode.attributes);
     
     /* Status value constants */
+    /**
+    * @type String
+    * @lzxdefault "success"
+    */
     static var SUCCESS = 'success';
+    /**
+    * @type String
+    * @lzxdefault "timeout"
+    */
     static var TIMEOUT = 'timeout';
+    /**
+    * @type String
+    * @lzxdefault "error"
+    */
     static var ERROR   = 'error';
+    /**
+    * @type String
+    * @lzxdefault "ready"
+    */
     static var READY   = 'ready';
 
-
+    /** An optional property that's the object using the DataRequest to pass into the dataprovider's doRequest method.
+    * @type Object
     var requestor = null; 
     /** An object which holds the protocol-specific source to load data from
-    @type Object
+    * @type Object
     */
     var src       = null; 
     /** The timeout in milliseconds
@@ -50,15 +62,25 @@ class LzDataRequest extends LzNode {
      @type String
     */
     var status    = null; 
-    /** Raw data returned by request */
+    /** Raw data returned by request 
+    * @type String
+    */
     var rawdata   = null; 
 
-    /**  Used by dataprovider to record error messages */
+    /**  Used by dataprovider to record error messages 
+    * @type String
+    */
     var error = null; 
     
-    /** @lzxtype event */
+    /** Sent as data or other conditions occur during the execution of this request.
+    * @lzxtype event 
+    */
     var onstatus = LzDeclaredEvent;
-
+    
+    /** 
+    * The object using the DataRequest to pass into the dataprovider's doRequest method.
+    * @param Object requestor: The object using the DataRequest to pass into the dataprovider's doRequest method.
+    */
     function LzDataRequest (requestor) { 
         super(requestor);
         this.requestor = requestor; 
