@@ -262,15 +262,6 @@ function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? =
 
         var classChildren = this['constructor']['children'];
         if ( classChildren is Array ){
-            // classroot will not be defined for members of a state
-            // class, this is hard because the classroot is not a
-            // parent of its lexical children
-            // TODO: [2008-03-11 ptw] This should be computed at
-            // compile time
-            if (!classChildren['doneClassRoot'] && ! this.$isstate) {
-                classChildren.doneClassRoot=true;
-                this.__LZassignClassRoot(classChildren, 1);
-            }
             children = LzNode.mergeChildren(children, classChildren);
         }
 
@@ -1543,10 +1534,12 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
    * constraint from
    */
   function releaseConstraint(attr:String) {
-    var c = this._instanceAttrs[attr];
-    if (c instanceof LzConstraintExpr) {
-      var m = c.methodName;
-      return this.releaseConstraintMethod(m);
+    if (this._instanceAttrs != null) {
+      var c = this._instanceAttrs[attr];
+      if (c instanceof LzConstraintExpr) {
+        var m = c.methodName;
+        return this.releaseConstraintMethod(m);
+      }
     }
     return false;
   }
@@ -2153,31 +2146,6 @@ function getDebugIdentification (){
 }
 
 //+++++ Wacky class stuff
-
-
-/**
-  * called when the first instance of the class is instantiated
-  * must be called only once for each class
-  * @param arr: classChildren
-  * @param depth: call with depth=1 (recursive function)
-  * @access private
-  */
-function __LZassignClassRoot( arr , depth){
-    if (arr != null) {
-        var l = arr.length;
-        for ( var i = 0; i < l ; i++ ){
-            arr[ i ].attrs.$classrootdepth = depth;
-            var a = ('children' in arr[i]) ? arr[i].children : null;
-            if ( a && ('length' in a) ){
-                var cl = ConstructorMap[arr[i].name];
-                // note: when states are applied, they add their children as
-                // siblings therefore classChildren that appear within a state
-                // do not gain a level of depth
-                this.__LZassignClassRoot( a , (('$isstate' in cl.prototype) && (cl.prototype.$isstate)) ? depth : depth+1);
-            }
-        }
-    }
-}
 
 if ($swf9) {     // TODO [hqm 2008-03] This is just a debugging print utility function for swf9
 public static function objAsString(obj) {

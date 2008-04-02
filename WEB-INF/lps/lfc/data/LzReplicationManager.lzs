@@ -133,24 +133,26 @@ function construct ( odp , args ){
         return;
     }
 
-
     //this is so that when it looks like you're refering to the view in source
     //you can say view.datapath and you'll get what you want (which is this)
     this.datapath = this;
 
     //null, or name of view that was replicated
-    var name =  view._instanceAttrs.name;
-
-    args.name = name;
-    // remove view we replace to avoid warning in LzNode.$lzc$set_name
-    delete view.immediateparent[name];
-    delete view.parent[name];
+    var name =  view.name;
+    if (name != null) {
+      args.name = name;
+      // remove view we replace to avoid warning in LzNode.$lzc$set_name
+      delete view.immediateparent[name];
+      delete view.parent[name];
+    }
 
     //same deal for id
-    var id =  view._instanceAttrs.id;
-    args.id = id;
-    // remove any LzNode with this id
-    if (global[id] instanceof LzNode) global[id] = null;
+    var id =  view.id;
+    if (id != null) {
+      args.id = id;
+      // remove any LzNode with this id
+      if (global[id] instanceof LzNode) global[id] = null;
+    }
 
     //don't want to rerunxpath
     args.xpath = LzNode._ignoreAttribute;
@@ -249,7 +251,7 @@ function construct ( odp , args ){
 
     this.visible = odp.datacontrolsvisibility ||
         (!view.isinited &&
-            ('visible' in view._instanceAttrs) ? view._instanceAttrs.visible : view.visible);
+            (view._instanceAttrs != null && 'visible' in view._instanceAttrs) ? view._instanceAttrs.visible : view.visible);
 
     if ( args.pooling != null ){
         this.pooling = args.pooling;

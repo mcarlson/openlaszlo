@@ -23,7 +23,7 @@ import org.openlaszlo.css.CSSParser;
 
 /** Compiler for <code>class</code> class elements.
  */
-class ClassCompiler extends ViewCompiler {
+class ClassCompiler extends ViewCompiler  {
     /**
        For a declaration of a class named "foobar"
        
@@ -235,38 +235,6 @@ class ClassCompiler extends ViewCompiler {
         schema.addElement(element, classname, superclass, attributeDefs, mEnv);
     }
     
-    // Map of LFC tag names
-    static HashMap LFCTagTable = new HashMap();
-    static {
-      LFCTagTable.put("node", "LzNode");
-      LFCTagTable.put("view", "LzView");
-      LFCTagTable.put("text", "LzText");
-      LFCTagTable.put("inputtext", "LzInputText");
-      LFCTagTable.put("canvas", "LzCanvas");
-      LFCTagTable.put("script", "LzScript");
-      LFCTagTable.put("animatorgroup", "LzAnimatorGroup");
-      LFCTagTable.put("animator", "LzAnimator");
-      LFCTagTable.put("layout", "LzLayout");
-      LFCTagTable.put("state", "LzState");
-      LFCTagTable.put("command", "LzCommand");
-      LFCTagTable.put("selectionmanager", "LzSelectionManager");
-      LFCTagTable.put("dataselectionmanager", "LzDataSelectionManager");
-      LFCTagTable.put("datapointer", "LzDataPointer");
-      LFCTagTable.put("dataprovider", "LzDataProvider");
-      LFCTagTable.put("datapath", "LzDatapath");
-      LFCTagTable.put("dataset", "LzDataset");
-      LFCTagTable.put("datasource", "LzDatasource");
-      LFCTagTable.put("lzhttpdataprovider", "LzHTTPDataProvider");
-    }
-
-    public static String tagToClass(String s) {
-      if (LFCTagTable.containsKey(s)) {
-        return (String)(LFCTagTable.get(s));
-      }
-      String lzcPackagePrefix = "$lzc$class_";
-      return lzcPackagePrefix + s;
-    }    
-
     public void compile(Element elt) {
         String tagName = elt.getAttributeValue("name");
         ViewSchema schema = mEnv.getSchema();
@@ -284,148 +252,17 @@ class ClassCompiler extends ViewCompiler {
                     , elt);
             }
         }
-        String className = tagToClass(tagName);
-        // className will be a global
-        mEnv.addId(className, elt);
-
-        ClassModel classModel = schema.getClassModel(tagName);
-        
-        String linedir = CompilerUtils.sourceLocationDirective(elt, true);
-        ViewCompiler.preprocess(elt, mEnv);
-        
         // We compile a class declaration just like a view, and then
         // add attribute declarations and perhaps some other stuff that
         // the runtime wants.
+        ClassModel classModel = schema.getClassModel(tagName);
+        ViewCompiler.preprocess(elt, mEnv);
         NodeModel model = NodeModel.elementAsModel(elt, schema, mEnv);
         model = model.expandClassDefinitions();
+        // Establish class root
+        model.assignClassRoot(0);
         classModel.setNodeModel(model);
-        // Should the package prefix be in the model?  Should the
-        // model store class and tagname separately?
-        String supertagname = classModel.getSuperclassName();
-        String superclassname = tagToClass(supertagname);
-        ClassModel superclassModel = schema.getClassModel(supertagname);
-
-
-        // Build the constructor
-        String body = "";
-        body += "super(parent, attrs, children, async);\n";
-
-        model.setAttribute(
-          className,
-          new Function(
-                className,
-                // All nodes get these args when constructed
-                // Apparently AS3 does not allow defaulting of
-                // primitive args
-//                 "parent:LzNode, attrs:Object, children:Object? = null, async:boolean = false",
-                "parent:LzNode? = null, attrs:Object? = null, children:Object? = null, async:Boolean = false",
-                body,
-                null));
-
-        // Build the class body
-        String classBody = "";
-        // Set the tag name
-        model.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
-
-        // --- This should only be for subclasses of Node
-        String children = ScriptCompiler.objectAsJavascript(model.childrenMaps());
-        // class#classChildren now class.children
-        model.setClassAttribute("children", "LzNode.mergeChildren(" + children + ", " + superclassname + "['children'])");
-
-        // Declare all instance vars and methods, save initialization
-        // in <class>.attributes
-        Map attrs = model.getAttrs(); // classModel.getMergedAttributes();
-        Map setters = classModel.getMergedSetters();
-        Map decls = new LinkedHashMap();
-        Map inits = new LinkedHashMap();
-        boolean isstate = classModel.isSubclassOf(schema.getClassModel("state"));
-        for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
-          Map.Entry entry = (Map.Entry) i.next();
-          String key = (String) entry.getKey();
-          Object value = entry.getValue();
-          boolean redeclared = (superclassModel.getAttribute(key) != null);
-          if ((value instanceof NodeModel.BindingExpr)) {
-              // Bindings always have to be installed as an init
-              if (! redeclared) {
-                  decls.put(key, null);
-              }
-              inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
-          } else if (value instanceof Function &&
-                     ((! isstate) ||
-                      className.equals(key))) {
-            // Methods are just decls.  Except in states, because they
-            // have to be applied to the parent, except for the
-            // constructor!
-            decls.put(key, value);
-          } else if (value != null) {
-            // If this is a re-declared attribute, we just init it,
-            // don't re-declare it
-            if (superclassModel.getAttribute(key) != null) {
-                inits.put(key, value);
-            }
-            // If there is a setter for this attribute, or this is a
-            // state, or this is an Array or Map argument that needs
-            // magic merging, the value has to be installed as an init,
-            // otherwise it should be installed as a decl
-            //
-            // TODO: [2008-03-15 ptw] This won't work until we know
-            // (in the classModel) the setters for the built-in
-            // classes, so we install as an init for now and this is
-            // fixed up in LzNode by installing inits that have no
-            // setters when the arguments are merged
-
-            if (true) { // (! (value instanceof String))  || setters.containsKey(key) || isstate) {
-              if (! redeclared) {
-                decls.put(key, null);
-              }
-              inits.put(key, value);
-            } else {
-              if (! redeclared) {
-                decls.put(key, value);
-                // If there is a property that would have been shadowed,
-                // you have to hide that from applyArgs, or you will get
-                // clobbered!
-                inits.put(key, "LzNode._ignoreAttribute");
-              } else {
-                inits.put(key, value);
-              }
-            }
-          } else {
-            // Just a declaration
-              if (! redeclared) {
-                decls.put(key, value);
-            }
-          }
-        }
-        // mergedAttrs does not deal with our methods
-//         Map methods = model.getAttrs();
-//         for (Iterator i = methods.entrySet().iterator(); i.hasNext(); ) {
-//           Map.Entry entry = (Map.Entry) i.next();
-//           String key = (String) entry.getKey();
-//           Object value = entry.getValue();
-//           if ((value instanceof Function)) {
-//             decls.put(key, value);
-//           }
-//         }
-        model.setClassAttribute("attributes", "new LzInheritedHash(" + superclassname + ".attributes)");
-        classBody += "LzNode.mergeAttributes(" +
-          ScriptCompiler.objectAsJavascript(inits) +
-          ", " + className + ".attributes);\n";
-
-        Map viewMap = model.asMap();
-        // Put in the class name, not "class"
-        viewMap.put("name", ScriptCompiler.quote(className));
-
-        ScriptClass scriptClass =
-          new ScriptClass(className,
-                          superclassname,
-                          decls,
-                          (Map)viewMap.get("classAttrs"),
-                          classBody);
-
-        mEnv.compileScript(scriptClass.toString(), elt);
-        // Install in constructor map
-        mEnv.compileScript("ConstructorMap[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");
+        classModel.emitClassDeclaration(mEnv);
     }
 
   protected void compileClass(Element elt, ClassModel classModel, String initobj) {

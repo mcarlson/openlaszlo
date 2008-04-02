@@ -816,11 +816,13 @@ solution =
                 type = ViewSchema.EXPRESSION_TYPE;
             }
 
-            if (type == schema.ID_TYPE) {
-                this.id = value;
-            } else if (type == schema.EVENT_HANDLER_TYPE) {
+            if (type == schema.EVENT_HANDLER_TYPE) {
                 addHandlerFromAttribute(element, name, value);
             } else {
+                // NOTE: [2008-04-01 ptw] May be obsolete?
+                if (type == schema.ID_TYPE) {
+                    this.id = value;
+                }
                 String when = this.getAttributeValueDefault(
                     name, "when", WHEN_IMMEDIATELY);
                 // NYI
@@ -1061,6 +1063,13 @@ solution =
                     checkChildNameConflict(element.getName(), child, env);
                     NodeModel childModel = elementAsModel(child, schema, env);
                     children.add(childModel);
+                    // Declare the child name (if any) as a property
+                    // of the node so that references to it from
+                    // methods can be resolved at compile-time
+                    String childName = child.getAttributeValue("name");
+                    if (childName != null) {
+                        attrs.put(childName, null);
+                    }
                     totalSubnodes += childModel.totalSubnodes();
                 }
             } catch (CompilationError e) {
@@ -1800,39 +1809,81 @@ solution =
       return attrs;
     }
 
+    boolean hasMethods() {
+        for (Iterator i = attrs.values().iterator(); i.hasNext(); ) {
+            if (i.next() instanceof Function) { return true; }
+        }
+        return false;
+    }
+
+    Map getClassAttrs() {
+      return classAttrs;
+    }
+
     Map getSetters() {
         return setters;
     }
 
     Map asMap() {
-        Map map = new LinkedHashMap();
         updateAttrs();
-        map.put("name", ScriptCompiler.quote(className));
-        Map inits = new LinkedHashMap();
-        // Node as map just wants to see all the attrs, so clean out
-        // the binding markers
-        for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
-          Map.Entry entry = (Map.Entry) i.next();
-          String key = (String) entry.getKey();
-          Object value = entry.getValue();
-          if (! (value instanceof NodeModel.BindingExpr)) {
-            inits.put(key, value);
-          } else {
-            inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
-          }
+        Map map = new LinkedHashMap();
+        String tagName = className;
+        if (hasMethods()) {
+            // Emit a class declaration to hold the methods
+            String name = id;
+            if (name == null) {
+                name = CompilerUtils.attributeUniqueName(element, "class");
+            }
+            tagName = className + "_" + name;
+            ClassModel classModel = new ClassModel(tagName, parentClassModel, schema, element);
+            classModel.setNodeModel(this);
+            classModel.emitClassDeclaration(env);
+        } else {
+            Map inits = new LinkedHashMap();
+            // Node as map just wants to see all the attrs, so clean out
+            // the binding markers
+            for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
+                Map.Entry entry = (Map.Entry) i.next();
+                String key = (String) entry.getKey();
+                Object value = entry.getValue();
+                if (! (value instanceof NodeModel.BindingExpr)) {
+                    inits.put(key, value);
+                } else {
+                    inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
+                }
+            }
+            if (!attrs.isEmpty()) {
+                map.put("attrs", inits);
+            }
+            if (!classAttrs.isEmpty()) {
+                map.put("classAttrs", classAttrs);
+            }
+            if (!children.isEmpty()) {
+                map.put("children", childrenMaps());
+            }
         }
-        map.put("attrs", inits);
-        if (!classAttrs.isEmpty()) {
-            map.put("classAttrs", classAttrs);
-        }
+
+        // The tag to instantiate
+        // TODO: [2008-04-01 ptw] we could have a flag day and put the
+        // class here, eliminating having to go through the
+        // constructor map...
+        map.put("name", ScriptCompiler.quote(tagName));
         if (id != null) {
+            // NOTE: [2008-04-01 ptw] May be obsolete?
             map.put("id", ScriptCompiler.quote(id));
-            inits.put("id", ScriptCompiler.quote(id));
         }
-        if (!children.isEmpty()) {
-            map.put("children", childrenMaps());
-        }
+
         return map;
+    }
+
+    void assignClassRoot(int depth) {
+        if (! parentClassModel.isSubclassOf(schema.getClassModel("state"))) { depth++; }
+        Integer d = new Integer(depth);
+        for (Iterator i = children.iterator(); i.hasNext(); ) {
+            NodeModel child = (NodeModel)i.next();
+            child.attrs.put("$classrootdepth", d);
+            child.assignClassRoot(depth);
+        }
     }
 
     List childrenMaps() {

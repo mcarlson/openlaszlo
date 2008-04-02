@@ -299,11 +299,10 @@
                    0xddddff) 
               <br/>param Number brightness: -255 to 255, optional parameter
                    will lighten or darken everything that is colorized -->
-        <method name="setTint" args="v, color, brightness">
+        <method name="setTint" args="v, color, brightness=0">
             <![CDATA[
             if (v.capabilities.colortransform) {
             if (color != "" && color != null){
-                if (brightness == null) { brightness = 0; }
                 var rgb = color;
                 var red=(rgb >> 16) & 0xFF;
                 var green=(rgb >> 8) & 0xFF;

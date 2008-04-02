@@ -25,7 +25,11 @@ var $modules = {};
 /**
  * Define runtime module
  */
+if ($swf9) {
+$modules.runtime = global;
+} else {
 $modules.runtime = this;
+}
 
 /**
  * Define LZ module
@@ -45,7 +49,10 @@ $modules.user = $modules.lz;
  * Define global
  * TODO [2006-03-12 ptw] if the LFC is shared this needs to be multiplexed
  */
+if ($swf9) {
+} else {
 var global = $modules.user;
+}
 
 if ($debug) {
   /**
