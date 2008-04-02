@@ -36,7 +36,7 @@
         </multistatebutton>
 
         <!--- toggles the value when the space bar is pressed while focused -->
-        <method name="doSpaceUp">
+        <method name="doSpaceUp"  args="e=null">
             <![CDATA[
             if ( this._enabled ) {
                this.setAttribute('value', !this.value);

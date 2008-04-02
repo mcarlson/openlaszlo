@@ -302,18 +302,19 @@ override function toString (){
 function initDone (){
     //reorder initial subviews so preloaded stuff is first
     var sva = new Array;
+    var isv = this._lzinitialsubviews;
 
-    for ( var i = 0; i < this._lzinitialsubviews.length; i++ ){
-        if ( 'initimmediate' in this._lzinitialsubviews[ i ].attrs && 
-             this._lzinitialsubviews[ i ].attrs.initimmediate ){
-            sva.push( this._lzinitialsubviews[ i ] );
+    for ( var i = 0; i < isv.length; i++ ){
+        var isi = isv[i];
+        if ( isi['attrs'] && isi.attrs['initimmediate'] ){
+            sva.push( isi );
         }
     }
 
-    for ( var i = 0; i < this._lzinitialsubviews.length; i++ ){
-        if ( !('initimmediate' in this._lzinitialsubviews[ i ].attrs && 
-             this._lzinitialsubviews[ i ].attrs.initimmediate) ){
-            sva.push( this._lzinitialsubviews[ i ] );
+    for ( var i = 0; i < isv.length; i++ ){
+        var isi = isv[i];
+        if ( ! ( isi['attrs'] && isi.attrs['initimmediate'] ) ){
+            sva.push( isi );
         }
     }
 

@@ -1,5 +1,14 @@
-<canvas width="800" height="600"> 
-  <checkbox id="foo">check me</checkbox>
+<canvas width="800" height="600" debug="false"> 
+  <checkbox name="foo"  >check me</checkbox>
+  <view y="100" width="20" height="20" bgcolor="green">
+    <attribute name="enable" value="true"/>
+  <handler name="onclick">
+    this.enable = !this.enable;
+    trace('enable = ', this.enable, 'foo.setEnabled(',this.enable,')');
+    parent.foo.setAttribute('enabled', this.enable);
+    setBGColor(this.enable ? 0x00ff00 : 0xff0000);
+  </handler>
+  </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *

@@ -34,37 +34,37 @@
   *
   * @shortdesc Keyboard input service.
   */
-dynamic public class LzKeysClass {
+dynamic public class LzKeys {
 
     /**
      * A hash where each of the keys that is currently 
      * down on the keyboard is set to true.
      * @type Object
      */
-    var downKeysHash = {};
+    static var downKeysHash = {};
 
     /**
      * An array of currently pressed key codes.
      * @type [Number]
      */
-    var downKeysArray = [];
-    var keycombos = {};
+    static var downKeysArray = [];
+    static var keycombos = {};
 
     /**
      * event sent when a key is pressed; sent with keycode 
      * for key that was pressed.
      */
-    var onkeydown = LzDeclaredEvent;
+    static var onkeydown = LzDeclaredEvent;
     /**
      * event sent whenever a key goes up; sent with keycode
      * for key that was let go.
      */
-    var onkeyup = LzDeclaredEvent;
-    var onmousewheeldelta = LzDeclaredEvent;
+    static var onkeyup = LzDeclaredEvent;
+    static var onmousewheeldelta = LzDeclaredEvent;
 
 
     /** @access private */
-    function __keyEvent ( delta, k, type ){
+    static static function __keyEvent ( delta, k, type ){
         //Debug.write('LzKeys.__keyEvent', delta, k, type);
         if (type == 'onkeydown') {
             gotKeyDown(k);
@@ -81,7 +81,7 @@ dynamic public class LzKeysClass {
      * @param Number kC: The Flash keycode for the key that is down.
      * @param string info: if "extra" then ignore if you already got one
      */
-    function gotKeyDown ( kC, info = null ){
+    static function gotKeyDown ( kC, info = null ){
         if ( downKeysArray.length > 0 ){
             var badkeys = null;
 
@@ -135,7 +135,7 @@ dynamic public class LzKeysClass {
      * @access private
      * @param Number kC: The Flash keycode for the key that was released.
      */
-    function gotKeyUp ( kC ){
+    static function gotKeyUp ( kC ){
 
         if (!downKeysHash[ kC ]) {
             // Debug.write("derived keyDown", kC);
@@ -161,7 +161,7 @@ dynamic public class LzKeysClass {
      * @param String k: The name of the key to check for downness or an array of
      * key names (e.g. ['shift', 'tab']
      */
-    function isKeyDown ( k ){
+    static function isKeyDown ( k ){
         if (typeof(k) == "string") {
             return (downKeysHash[ keyCodes[ k.toLowerCase() ] ] == true);
         } else {
@@ -273,7 +273,7 @@ dynamic public class LzKeysClass {
      * @param [String] kCArr: Array of strings indicating which keys constitute the
      * keycombo. This array may be in any order.
      */
-    function callOnKeyCombo ( d , kCArr ){
+    static function callOnKeyCombo ( d , kCArr ){
 
         var kcSorted = [];
         for (var i = 0; i < kCArr.length; i++ ){
@@ -301,7 +301,7 @@ dynamic public class LzKeysClass {
      * @param [String] kCArr: An array of strings indicating which keys 
      * constituted the keycombo.
      */
-    function removeKeyComboCall ( d , kCArr ){
+    static function removeKeyComboCall ( d , kCArr ){
         var kcSorted = [];
         for (var i = 0; i < kCArr.length; i++ ){
             kcSorted.push( keyCodes[ kCArr[ i ].toLowerCase() ] );
@@ -325,7 +325,7 @@ dynamic public class LzKeysClass {
     /**
      * @access private
      */
-    function enableEnter ( onroff ){
+    static function enableEnter ( onroff ){
         //Debug.write("enableEnter: "+onroff);
         // SWF-specific
         Debug.write('LzKeys.enableEnter not yet defined in swf9');
@@ -475,15 +475,13 @@ dynamic public class LzKeysClass {
      * @field Number mousewheeldelta: the amount the mouse wheel last moved.  Use
      * onmousewheeldelta to learn when this value changes.
      */
-    var mousewheeldelta = 0;
+    static var mousewheeldelta = 0;
 
     /** @access private */
-    function __mousewheelEvent (d) {
+    static function __mousewheelEvent (d) {
         mousewheeldelta = d;
         if (onmousewheeldelta.ready) onmousewheeldelta.sendEvent(d);
     }
 
 }
 
-
-var LzKeys = new LzKeysClass ();

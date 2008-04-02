@@ -112,7 +112,7 @@
        ]]> </method>
 
         <!--- When the space bar is down, basebutton shows its down state. -->
-        <method name="doSpaceDown">
+        <method name="doSpaceDown"  args="e=null">
             <![CDATA[
             if ( this._enabled) {
                 this.showDown();
@@ -121,7 +121,7 @@
         </method>
 
         <!--- When the space bar is up, basebutton shows its up state. -->
-        <method name="doSpaceUp">
+        <method name="doSpaceUp"  args="e=null">
             <![CDATA[
             if ( this._enabled) {
                 this.onclick.sendEvent();
@@ -131,14 +131,14 @@
         </method>
 
         <!--- Called by the button manager when this button is the default-->
-        <method name="doEnterDown">
+        <method name="doEnterDown"  args="e=null">
             if ( this._enabled ){
                 this.showDown( );
             }
         </method>
     
         <!--- Called by the button manager when this button is the default-->
-        <method name="doEnterUp">
+        <method name="doEnterUp"  args="e=null">
             if ( this._enabled ){
                 if ( this.onclick ){
                     this.onclick.sendEvent();

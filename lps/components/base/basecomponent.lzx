@@ -131,30 +131,30 @@
         </method>
 
         <!--- @access private -->
-        <method name="_doMousedown"> 
+        <method name="_doMousedown" args="e=null"> 
         </method>
 
         <!--- Called if this component has the focus and the space bar goes 
               down -->
-        <method name="doSpaceDown">
+        <method name="doSpaceDown"  args="e=null">
             return false;
         </method>
 
         <!--- Called if this component has the focus and the space bar goes 
               up -->
-        <method name="doSpaceUp">
+        <method name="doSpaceUp"  args="e=null">
             return false;
         </method>
 
         <!--- Called if this component has the focus and the component
               has doesenter set to true and the enter key goes down -->
-        <method name="doEnterDown">
+        <method name="doEnterDown"  args="e=null">
             return false;
         </method>
 
         <!--- Called if this component has the focus and the component
               has doesenter set to true and the enter key goes up -->
-        <method name="doEnterUp">
+        <method name="doEnterUp"  args="e=null">
             return false;
         </method>
 
@@ -255,7 +255,7 @@
         </method>
 
         <!--- @access private -->
-        <method name="_usestyle">  
+        <method name="_usestyle" args="e=null">  
             <![CDATA[
             if (this._initcomplete && this['style'] && this.style.isinited) {
                 // note: in the case of lazy replication or if a component

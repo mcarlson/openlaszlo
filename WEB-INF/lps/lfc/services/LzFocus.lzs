@@ -19,7 +19,7 @@
   * 
   * @shortdesc Handles keyboard focus.
   */
-class LzFocusClass {
+dynamic class LzFocusClass {
 
     /** Sent when the focus changes, with the argument being the view
      * that was just focused. If nothing is focussed, this event is sent with null.

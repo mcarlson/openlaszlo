@@ -44,6 +44,8 @@ public class LzSprite extends Sprite {
       public var resourceheight:Number = 0;
       public var isroot:Boolean = false;
 
+      var resourceObj:DisplayObject = null;
+
       public var resourceLoaded:Boolean = false;
       public var resourceURL:String = null;
 
@@ -121,67 +123,85 @@ public class LzSprite extends Sprite {
           o Calls setSource to load media if resource is an URL
           o Uses the resourceload callback method when the resource finishes loading 
       */
-public function setResource (r:String):void {
-    if (this.resource == r) return;
-    if ( r.indexOf('http:') == 0 || r.indexOf('https:') == 0){
-        this.skiponload = false;
-        this.setSource( r );
-        this.resource = r;
-        return;
-    }
+      public function setResource (r:String):void {
+          if (this.resource == r) return;
+          if ( r.indexOf('http:') == 0 || r.indexOf('https:') == 0){
+              this.skiponload = false;
+              this.setSource( r );
+              this.resource = r;
+              return;
+          }
+          // LzResourceLibrary.lzcheckbox_rsrc =
+          //  {frames: [__embed_lzasset_lzcheckbox_rsrc_0,
+          //           __embed_lzasset_lzcheckbox_rsrc_1, ....], width: 15, height: 14};
 
-    this.resource = r;
-
-    // look up resource name in LzResourceLibrary
-    // LzResourceLibrary is in the format:
-    // LzResourceLibrary.lzscrollbar_xthumbleft_rsc={ptype:"ar"||"sr",frames:["lps/components/lz/resources/scrollbar/scrollthumb_x_lft.png"],width:1.0,height:12.0}
-
-    var res = LzResourceLibrary[r];
-    if (! res) {
-        if ($debug) {
-            Debug.warn('Could not find resource', r);
-        }
-        return;
-    }
-
-    // TODO [hqm 2008-01] How do we deal with multiframe embedded resources??
-    if ('assetclass' in res) {
-        var assetclass = res['assetclass'];
-        var asset:DisplayObject = new assetclass();
-        addChild(asset);
-        return;
-    }
+          // or
+          // LzResourceLibrary.lzfocusbracket_bottomright_shdw =
+          // {ptype: ("sr" || "ar" ),
+          //  assetclass: __embed_lzasset_lzfocusbracket_bottomright_shdw,
+          // frames: ["lps/components/lz/resources/focus/focus_bot_rt_shdw.png"], width: 9, height: 9};
 
 
-    var urls = res.frames;
+          this.resource = r;
 
-    //this.owner.onimload.sendEvent({width: res.width, height: res.height});
-    this.resourceWidth = res.width;
-    this.resourceHeight = res.height;
-    this.skiponload = true;
+          var res = LzResourceLibrary[r];
+          if (! res) {
+              if ($debug) {
+                  Debug.warn('Could not find resource', r);
+              }
+              return;
+          }
 
-    //Update the view's totalframes
-    this.owner.setTotalFrames (urls.length);
+          this.resourceWidth = res.width;
+          this.resourceHeight = res.height;
+          this.skiponload = true;
 
-    // It could be a multi-frame resource. Take first frame.
-    var url = urls[0];
-    if (url) {
-        this.baseurl = '';
-        if (res.ptype) {
-            if (res.ptype == 'sr') {
-                this.baseurl = lzOptions.ServerRoot + '/';
-            }
-            //Debug.write('ptype', res.ptype, this.baseurl);
-        }
+          // TODO [hqm 2008-01] How do we deal with multiframe embedded resources??
+          if ('assetclass' in res) {
+              var assetclass = res['assetclass'];
+              var asset:DisplayObject = new assetclass();
 
-        this.frames = urls;
-        this.__preloadFrames();
-        this.setSource(url, true);
-    } else {
-        this.setSource(r, true);
-    }
-    //Debug.info('setResource ', r, this.frames)
-}
+              // remove previous asset, and display new one
+              if (this.resourceObj != null) {
+                  removeChild(this.resourceObj);
+              }
+              this.resourceObj = asset;
+
+              addChild(asset);
+              return;
+          }
+
+          var urls = res.frames;
+
+          //Update the view's totalframes
+          this.owner.setTotalFrames (urls.length);
+
+          // It could be a multi-frame resource. Take first frame.
+          var url = urls[0];
+          if (url is Class) {
+              // resource is an embedded asset class
+              var asset:DisplayObject = new url();
+              // remove previous asset, and display new one
+              if (this.resourceObj != null) {
+                  removeChild(this.resourceObj);
+              }
+              this.resourceObj = asset;
+              addChild(asset);
+          } else {
+              // resource is a string, so it's an URL
+              this.baseurl = '';
+              if (res.ptype) {
+                  if (res.ptype == 'sr') {
+                      this.baseurl = lzOptions.ServerRoot + '/';
+                  }
+                  //Debug.write('ptype', res.ptype, this.baseurl);
+              }
+
+              this.frames = urls;
+              this.__preloadFrames();
+              this.setSource(url, true);
+          }
+      }
 
 
       public var imgLoader:Loader;
@@ -194,6 +214,7 @@ public function setResource (r:String):void {
       public function setSource (url:String, cache = null, headers = null):void {
           this.resourceURL = url;
           imgLoader = new Loader();
+          this.resourceObj = imgLoader;
           this.addChildAt(imgLoader, IMGDEPTH);
           var info:LoaderInfo = imgLoader.contentLoaderInfo;
           info.addEventListener(Event.INIT,       loaderInitHandler);
@@ -433,7 +454,9 @@ public function setResource (r:String):void {
           trace('LzSprite.getColor not yet implemented');
       }
 
-
+      public function setColorTransform(o=null) {
+          trace('LzSrpite.setColorTransform not yet implemented');
+      }
 
       /** setBGColor( String/Number:color )
           o Sets the background color of the sprite
@@ -460,6 +483,8 @@ public function setResource (r:String):void {
           o Plays from the current frame if framenumber is null 
       */
       public function play( framenumber:* ):void {
+          // TODO [hqm 2008-04] what to do about playing movies? 
+          stop(framenumber);
       }
 
 
@@ -468,6 +493,28 @@ public function setResource (r:String):void {
           o Stops at the current frame if framenumber is null 
       */
       public function stop( framenumber:*, rel:* = null ):void {
+          // TODO [hqm 2008-04-02] This discards the current asset and
+          // instantiates a new asset from the multiframe asset
+          // list. It seems wasteful to do this, we ought to keep a
+          // table of the instantiated DisplayObject for each
+          // frameframe, and just add and remove them from the display list
+          // with addChild and removeChild.
+
+          var res = LzResourceLibrary[this.resource];
+          var frames = res.frames;
+
+          trace('stop ',framenumber);
+          trace('   rel=', rel);
+          trace('   this.resource', this.resource, res, res.frames[framenumber]);
+          // remove previous asset, and display new one
+          if (this.resourceObj != null) {
+              removeChild(this.resourceObj);
+          }
+
+          var assetclass = frames[framenumber];
+          var asset:DisplayObject = new assetclass();
+          this.resourceObj = asset;
+          addChild(asset);
       }
 
 
