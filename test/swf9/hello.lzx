@@ -123,6 +123,58 @@
        bgcolor="#cccccc" >this is input text ,set width, resize = true aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm nnn ooo ppp qqq</inputtext>
 
 
+  <class name="foobar" >
+    <handler name="onclick">
+      this.b2.animate("x", 20, 1000, true);
+      this.b3.animate("x", 40, 1000, true);
+    </handler>
+    <simplelayout axis="x"/>
+    <view name="b1" width="20" height="20" bgcolor='red'/>
+    <view name="b2"  width="20" height="20" bgcolor='yellow'/>
+    <view name="b3"  width="20" height="20" bgcolor='blue'/>
+    <method name="doit">
+      return "foobar";
+    </method>
+  </class>
+
+
+
+  <class name="baz" extends="foobar">
+    <method name="doit">
+      return("baz");
+    </method>
+    
+  </class>
+
+
+  <view y="300" >
+
+    <simplelayout axis="x" spacing="20"/>
+
+    <view layout="axis:y;spacing:2">
+      <text>3 &lt;foobar&gt;</text>
+      <foobar id="f1" />
+      <foobar id="f2" />
+      <foobar />
+    </view>
+  
+    <view layout="axis:y;spacing:2">
+      <text y="200" >3 &lt;baz&gt;</text>
+      <baz id="b1" />
+      <baz/>
+      <baz/>
+    </view>
+
+  </view>
+
+  <script>
+    with (global) {
+    lzconsole.write  ((f1.doit() == "foobar") ? "Base method test passed" : "Base method test failed");
+    lzconsole.write  ((b1.doit() == "baz") ? "Subclass method test passed" : "Subclass method test failed");
+   }
+  </script>
+
+
 
 
 
