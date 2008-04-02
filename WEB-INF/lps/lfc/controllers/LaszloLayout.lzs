@@ -292,7 +292,7 @@ function lock ( ) {
   * Unlock the layout once update is done.
   *
   */
-function unlock ( ) {
+function unlock (e=null ) {
     this.locked = false;
     this.reset()
 }

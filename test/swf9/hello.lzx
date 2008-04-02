@@ -152,14 +152,14 @@
     <simplelayout axis="x" spacing="20"/>
 
     <view layout="axis:y;spacing:2">
-      <text>3 &lt;foobar&gt;</text>
+      <text height="20" >3 &lt;foobar&gt;</text>
       <foobar id="f1" />
       <foobar id="f2" />
       <foobar />
     </view>
   
     <view layout="axis:y;spacing:2">
-      <text y="200" >3 &lt;baz&gt;</text>
+      <text height="20" >3 &lt;baz&gt;</text>
       <baz id="b1" />
       <baz/>
       <baz/>
