@@ -303,8 +303,6 @@ the <attribute>name</attribute> attribute of an
 
 <p>Also see the <a href="${examples}audio.lzx">audio</a> example.</p>
 
-<todo>Move the following information into the Guide</todo>
-
 <p>The audio clip must be an MP3 file at one of the following sample
 rates: 11.025 khz, 22.5 khz, and 44.1 khz, and encoded at no more than
 160kbps.</p>
