@@ -37,8 +37,8 @@ dynamic class LzFocusClass {
     }
 
     function initialize () {
-        upDel = new LzDelegate( LzFocus , "gotKeyUp", LzKeys, "onkeyup");
-        downDel = new LzDelegate( LzFocus , "gotKeyDown", LzKeys, "onkeydown");
+        this.upDel = new LzDelegate( LzFocus , "gotKeyUp", LzKeys, "onkeyup");
+        this.downDel = new LzDelegate( LzFocus , "gotKeyDown", LzKeys, "onkeydown");
     }
 
 
