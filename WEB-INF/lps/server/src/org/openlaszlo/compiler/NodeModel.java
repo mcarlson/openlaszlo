@@ -763,6 +763,14 @@ public class NodeModel implements Cloneable {
                 }
             }
 
+            // Check that the view name is a valid javascript identifier
+            if ((name.equals("name") || name.equals("id")) &&
+                (value == null || !ScriptCompiler.isIdentifier(value))) {
+                CompilationError cerr = new CompilationError(
+                    "The "+name+" attribute of this node,  "+ "\"" + value + "\", is not a valid javascript identifier " , element);
+                throw(cerr);
+            }
+
             Schema.Type type;
             try {
                 if ("class".equals(className) || "interface".equals(className) || "mixin".equals(className)) {
