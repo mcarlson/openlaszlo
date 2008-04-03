@@ -240,7 +240,8 @@ class LzParsedPath {
                         this.operator = "serialize";
                         this.operatorArgs = 0;
                     } else {
-                        this.gotError( "Unknown operator: " + cnode );
+// [2008-03-18 pbr] no gotError in this class
+//                        this.gotError( "Unknown operator: " + cnode );
                     }
                     continue;
                 } else if ( cnode == "" ){
@@ -371,6 +372,8 @@ function debugWrite (  ){
   * @access private
   */
 class AnonDatasetGenerator {
+
+var pp;
 
 /**
   * @access private

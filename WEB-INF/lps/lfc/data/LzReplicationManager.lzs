@@ -83,19 +83,32 @@ class LzReplicationManager extends LzDatapath {
   * replication manager will always destroy views whose data has changed and
   * create new ones.
   */
-var pooling = false;
-function $lzc$set_sortpath(v) { this.setOrder(v); }
-function $lzc$set_sortorder(v) { this.setComparator(v); }
-function $lzc$set_datapath(v) { this.setXPath(v); }
-var asyncnew = true;
+// var pooling = false;
 
-// FIXME [2006-10-23 pbr] (LPP-2397) Uncomment 'override' when implemented
-/** @modifiers override */ var datacontrolsvisibility = false; // Defined in LzDatapath
+function $lzc$set_sortpath(v) { this.setOrder(v, 'sortpath'); }
+function $lzc$set_sortorder(v) { this.setComparator(v); }
+override function $lzc$set_datapath(v) { this.setXPath(v); }
+
+var asyncnew = true;
+var initialnodes;
+var clonePool;
+var cloneClass;
+var cloneParent;
+var cloneAttrs;
+var cloneChildren;
+var hasdata;
+var _t;
+var orderpath;
+
+var comp_orderf;  // Was this.orderf.comp
+var op_orderf;    // Was this.orderf.op
+
+// var datacontrolsvisibility = false; // Defined in LzDatapath
 /** 
   * @modifiers override
   * @access private
   */ 
-var __LZtakeDPSlot = false;
+// var __LZtakeDPSlot = false;
 
 var visible = true;
 /** @access private */
@@ -121,7 +134,18 @@ var onvisible = LzDeclaredEvent;
 /**
   * @access private
   */
-function construct ( odp , args ){
+function LzReplicationManager ( odp , args, children:* = null, instcall:* = null ){
+    //the real parent for this is datapaths view's (immediateparent) parent
+    super(odp, args, children, instcall);
+}
+
+override function construct ( odp , args ){
+    this.__LZtakeDPSlot = false; // Defined in LzDatapath
+    this.datacontrolsvisibility = false; // Defined in LzDatapath
+
+    if (this.pooling == null)
+        this.pooling = false; // Defined in LzDatapath
+
     //odp: original datapath
     var view = odp.immediateparent;
     if (view == canvas) {
@@ -151,7 +175,7 @@ function construct ( odp , args ){
     if (id != null) {
       args.id = id;
       // remove any LzNode with this id
-      if (global[id] instanceof LzNode) global[id] = null;
+      if (global[id] is LzNode) global[id] = null;
     }
 
     //don't want to rerunxpath
@@ -173,7 +197,7 @@ function construct ( odp , args ){
         if ( odp.__LZdotdotCheckDel ){
             odp.__LZdotdotCheckDel.unregisterAll();
         }
-        delete odp.__LZspecialDotDot;
+        odp.__LZspecialDotDot = null;
     }
         
 
@@ -238,9 +262,7 @@ function construct ( odp , args ){
         this.__LZpreventXPathUpdate = false;
     }
 
-    if (this.__LZsetCloneAttrs) {
-        this.__LZsetCloneAttrs();
-    }
+    this.__LZsetCloneAttrs();
 
 
     if ( view._instanceChildren ){
@@ -286,6 +308,12 @@ function construct ( odp , args ){
 /**
   * @access private
   */
+// See subclasses for definition
+function __LZsetCloneAttrs () {}
+
+/**
+  * @access private
+  */
 static function __LZemptyFuntion ( ){
     return;
 }
@@ -293,9 +321,9 @@ static function __LZemptyFuntion ( ){
 /**
   * @access private
   */
-function constructWithArgs ( args ){
+override function constructWithArgs ( args ){
     this.__LZHandleMultiNodes( this.initialnodes );
-    delete this.initialnodes;
+    this.initialnodes = null;
     if ( this.visible == false ){
         this.setVisible( false );
     }
@@ -304,7 +332,7 @@ function constructWithArgs ( args ){
 /**
   * @access private
   */
-function setDataContext ( p , implicit ){
+override function setDataContext ( p , implicit = null ){
     var args = arguments; 
     if (p == null && this.immediateparent != null && 'datapath' in this.immediateparent && this.immediateparent.datapath != null){
         args[0] = this.immediateparent.datapath;
@@ -316,7 +344,8 @@ function setDataContext ( p , implicit ){
 /**
   * @access private
   */
-function getNodeOffset ( p ){
+// [2008-02-08 pbr] Renamed to avoid conflict with LzDatapointer
+function _getNodeOffset ( p ){
     if (this.nodes != null) {
         var l = this.nodes.length; 
         for ( var i = 0; i < l; i++ ){
@@ -339,7 +368,7 @@ function getCloneNumber ( n ){
 /**
   * @access private
   */
-function __LZHandleNoNodes( n ) {
+override function __LZHandleNoNodes() {
     this.nodes = [];
     while ( this.clones.length ){
         if ( this.pooling ){
@@ -354,7 +383,7 @@ function __LZHandleNoNodes( n ) {
 /**
   * @access private
   */
-function __LZHandleSingleNode ( n ){ 
+override function __LZHandleSingleNode ( n ){ 
     this.__LZHandleMultiNodes( [n] );
 }
 
@@ -395,7 +424,7 @@ function mergesort ( arr , l , h ) {
 /**
   * @access private
   */
-function __LZHandleMultiNodes ( n ){
+override function __LZHandleMultiNodes ( n ){
     var layouts = this.parent && this.parent.layouts ? this.parent.layouts : [];
     for (var i in layouts) {
         layouts[i].lock();
@@ -466,24 +495,25 @@ function __LZadjustVisibleClones( lastnodes , newnodes){
 /**
   * @access private
   */
+//PBR TODO
 function orderf ( a , b ){
     //a and b are dataset nodes
 
 
-    var op = arguments.callee.op;
+    var op = this.op_orderf;
 
     this.p = a;
     var aa = this.xpathQuery( op );
     this.p = b;
     var bb = this.xpathQuery( op );
-    delete this.p;
+    this.p = null;
 
     //this is lame, but comparison with null and "" doens't work right
     //so use newline
     if ( aa == null || aa == "" ) aa ="\n";
     if ( bb == null || bb == "" ) bb ="\n";
 
-    return arguments.callee.comp( aa , bb )
+    return this.comp_orderf( aa , bb )
 }
 
 
@@ -510,7 +540,7 @@ function descDict ( a , b ){
   * @param Function|String comparator: See the <code>comparator</code> paramater
   * of <code>setComparator</code> for details.
   */
-function setOrder( xpath , comparator ) {
+override function setOrder( xpath , comparator ) {
     this.orderpath = null;
 
     //handle case where this was called by a setter, in which case second
@@ -521,13 +551,13 @@ function setOrder( xpath , comparator ) {
     //both null and as a boolean
     if ( comparator ||
          comparator != null || 
-         typeof( this.orderf.comp ) != "function" ){
+         typeof( this.comp_orderf ) != "function" ){
         this.setComparator( comparator );
     }
 
     this.orderpath = xpath;
 
-    this.orderf.op = this.orderpath;
+    this.op_orderf = this.orderpath;
 
     if ( this.nodes.length ){
         //reset nodes in order now
@@ -545,7 +575,7 @@ function setOrder( xpath , comparator ) {
   * first, -1 if the first argument should follow the second, and 0 if the two
   * arguments are equivalent
   */
-function setComparator( comparator ){
+override function setComparator( comparator ){
     if ( typeof( comparator ) != "function" ){
         if ( comparator == "descending" ){
             comparator = this.descDict;
@@ -554,7 +584,7 @@ function setComparator( comparator ){
         }
     }
 
-    this.orderf.comp = comparator;
+    this.comp_orderf = comparator;
 
     if ( this.orderpath != null && this.nodes.length ){
         //reset nodes in order now
@@ -565,7 +595,7 @@ function setComparator( comparator ){
 /**
   * @access private
   */
-function getNewClone ( forceNew ){
+function getNewClone ( forceNew = null ){
     if (!this.cloneParent) {
         return null;
     }
@@ -609,14 +639,14 @@ function destroyClone ( v ) {
   * comment on the class as a whole, above.)
   * @param String xp: An xpath.
   */
-function setDatapath ( xp ){
+override function setDatapath ( xp ){
     this.setXPath( xp );
 }
 
 /**
   * @access private
   */
-function setXPath ( xp ){
+override function setXPath ( xp ){
     if ( this.__LZpreventXPathUpdate ) return;
     super.setXPath.apply(this, arguments); 
 }
@@ -641,7 +671,7 @@ function handleDeletedNode ( c ){
   * @param LzDataElement p: The data node for which to return the clone.
   * @return LzView: A clone mapped to the given data.
   */
-function getCloneForNode ( p ){
+function getCloneForNode ( p, dontmake=null ){
     var l = this.clones.length; 
     for ( var i = 0; i < l; i++ ){
         if ( this.clones[ i ].datapath.p == p ){
@@ -653,7 +683,7 @@ function getCloneForNode ( p ){
 /**
   * @access private
   */
-function toString (){
+override function toString (){
     return "ReplicationManager in " + this.immediateparent;
 }
 
@@ -673,20 +703,20 @@ function setVisible ( vis ){
 /**
   * @access private
   */
-function __LZHandleDocChange ( who ){
+override function __LZHandleDocChange ( who ){
     //this enables the old ondata test
     this.p = this.context.getContext();
     super.__LZHandleDocChange.apply(this, arguments);
-    delete this.p;
+    this.p = null;
 }
 
 /**
   * @access private
   */
-function __LZcheckChange ( chgpkg ){
+override function __LZcheckChange ( chgpkg ){
     this.p = this.nodes[ 0 ];
     var didrun = super.__LZcheckChange.apply(this, arguments);
-    delete this.p;
+    this.p = null;
 
     if ( !didrun ){
         var who = chgpkg.who;
@@ -696,7 +726,7 @@ function __LZcheckChange ( chgpkg ){
             if ( cl.datapath.__LZneedsOpUpdate( chgpkg ) ){
                 cl.datapath.__LZsetData();
             }
-            if ( who.childOf( cl.datapath.p , true ) ){
+            if ( who.childOfNode( cl.datapath.p , true ) ){
                 if (cl.datapath.onDocumentChange.ready) cl.datapath.onDocumentChange.sendEvent( chgpkg ) ;
             }
         }
@@ -705,12 +735,12 @@ function __LZcheckChange ( chgpkg ){
 
 
 /** @access private */
-function __LZneedsOpUpdate (){ return false }
+override function __LZneedsOpUpdate ( chgpkg = null ){ return false }
 
 /**
   * @access private
   */
-function getContext ( chgpkg ){
+override function getContext ( chgpkg = null ){
     return this.nodes[ 0 ];
 }
 
@@ -773,7 +803,7 @@ function __LZdiffArrays ( a , b ){
 /**
   * @access private
   */
-function updateData ( a , b ){
+override function updateData () {
     var l = this.clones.length; 
     for ( var i = 0; i < l; i++ ){
         this.clones[ i ].datapath.updateData( );

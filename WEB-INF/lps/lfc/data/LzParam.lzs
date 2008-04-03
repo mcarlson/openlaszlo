@@ -49,11 +49,17 @@ static var tagname = 'params';
 //undefine all setters but name and id
 //setters.$hasdefaultattrs = -1;
 
+var d:* = null;
+
 
 /**
   * @access private
   */
-function construct ( parent , args ){
+    function LzParam ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+    }  
+
+override function construct ( parent , args ){
     super.construct.apply(this, arguments);
     this.d = {};
 }
@@ -81,7 +87,7 @@ static function parseQueryString ( query ) {
 /**
   * @access private
   */
-function createChildren ( children ){
+override function createChildren ( children ){
     //Debug.write( "got children: " + children );
 }
 
@@ -135,7 +141,7 @@ function remove( name ) {
   * @param String val: The value to set
   * @param Boolean enc: If true, URI-encodes the value
   */
-function setValue(name, val, enc) {
+function setValue(name, val, enc = null) {
     if (enc) val = encodeURIComponent(val);
     var a = this.d[ name ];
     if ( a == null ) {
@@ -274,7 +280,7 @@ function setSeparator(s) {
   * Returns a string representation using the current separator and delimiter 
   * @return String : All names and values for this object
   */
-function toString() {
+override function toString() {
     return this.serialize();
 }
 
@@ -285,7 +291,7 @@ function toString() {
   * @param Boolean uriencode: If true, uri-encode values
   * @return: String representation of parameters
   */
-function serialize( sep , delim , uriencode ){
+function serialize( sep = null, delim = null, uriencode = null ){
     var sep = sep == null ? this.sep : sep;
     var dlm = delim == null ? this.dlm : delim;
 
@@ -310,4 +316,5 @@ function serialize( sep , delim , uriencode ){
 } // End of LzParam
 
 // Fixes LPP-3030 toString() in IE 6+ - the function declaration doesn't work...
+// FIXME: [2008-03-31 pbr] Is this needed?
 LzParam.prototype.toString = LzParam.prototype.serialize;

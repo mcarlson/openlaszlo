@@ -23,6 +23,7 @@ class LzDataText extends LzMiniNode with LzDataNodeMixin {
   */
 function LzDataText ( text ){
     super();
+    this.nodeType = LzDataNode.TEXT_NODE;
     this.data = text;
 }
 
@@ -39,9 +40,12 @@ var onattributes = LzDeclaredEvent;
 /** @lzxtype event */
 var onnodeName = LzDeclaredEvent;
 
+/** @lzxtype event */
+var ondata = LzDeclaredEvent;
+
 /** This property is of type String, can raise a DOMException object on setting
   * and can raise a DOMException object on retrieval. */
-var nodeType = LzDataNode.TEXT_NODE;
+//var nodeType = LzDataNode.TEXT_NODE;
 
 /** The name of this node.
  * According to W3C-specs, nodeName for LzDataText should return
@@ -93,7 +97,7 @@ function serialize (){
 /**
   * @access private
   */
-function toString (){
+override function toString (){
     //return this.serialize();
     return this.data;
 }

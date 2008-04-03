@@ -77,7 +77,20 @@ var onownerDocument = LzDeclaredEvent;
   * @type Number
   * @keywords abstract
   */
-var nodeType; // This is undefined. Set elsewhere
+var nodeType:*; // This is undefined. Set elsewhere
+
+var parentNode:* = null;
+var ownerDocument:*;
+var __LZo:* = -1;
+
+/** An array of children of this node
+  * @type LzDataNode
+  */
+var childNodes:* = null;
+
+/** @access private */
+var __LZcoDirty = true;
+
 
 /**
   * Returns the sibling before this one this node's parentNodes List of children
@@ -137,7 +150,8 @@ function $lzc$getNextSibling_dependencies( who, self ){
   * @param Boolean allowself: If true, this function returns true if the given
   * node is the same as this node.
   */
-function childOf ( el , allowself ) {
+// Renamed from childOf to avoid conflict with LzNode.childOf
+function childOfNode ( el , allowself ) {
     var p = allowself ? this : this.parentNode
     while ( p ){
         if ( p == el ) return true;

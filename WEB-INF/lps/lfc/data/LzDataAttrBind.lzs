@@ -12,11 +12,13 @@
 class LzDataAttrBind extends LzDatapointer {
 
 function LzDataAttrBind ( ndpath , attr, path ){
+                            super (ndpath, attr)
                             this.setAttr = attr;
                             this.pathparent = ndpath;
                             this.node = ndpath.immediateparent;
                             this.setXPath( path );
 
+                            this.rerunxpath = true; // From LzDatapointer
                             if ( ndpath.__LZdepChildren == null ){
                                 ndpath.__LZdepChildren = [ this ];
                             } else {
@@ -25,10 +27,13 @@ function LzDataAttrBind ( ndpath , attr, path ){
 }
 
 
-prototype.rerunxpath = true; // Override value defined in LzDatapointer
+// prototype.rerunxpath = true; // Override value defined in LzDatapointer
 var $pathbinding = true;
+var setAttr;
+var pathparent;
+var node;
 
-function __LZsendUpdate ( a , b ){ 
+override function __LZsendUpdate ( a = null , b = null ){ 
     var pchg = this.__LZpchanged;
     if ( ! super.__LZsendUpdate.apply(this, arguments) ) return;
     if ( pchg ||
@@ -63,8 +68,8 @@ function unregisterAll ( ){
 }
 
 
-function setDataContext ( dc ){
-    super.setDataContext( dc || this.pathparent );
+override function setDataContext ( dc, implicit = null ){
+    super.setDataContext( dc || this.pathparent, implicit );
 }
 
 
@@ -88,7 +93,7 @@ function updateData (){
     }
 }
 
-function toString ( ){ 
+override function toString ( ){ 
     return 'binder ' + this.xpath;
 }
 

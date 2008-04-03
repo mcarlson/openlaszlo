@@ -49,6 +49,7 @@ class LzDataRequest extends LzNode {
 
     /** An optional property that's the object using the DataRequest to pass into the dataprovider's doRequest method.
     * @type Object
+    */
     var requestor = null; 
     /** An object which holds the protocol-specific source to load data from
     * @type Object
@@ -81,7 +82,7 @@ class LzDataRequest extends LzNode {
     * The object using the DataRequest to pass into the dataprovider's doRequest method.
     * @param Object requestor: The object using the DataRequest to pass into the dataprovider's doRequest method.
     */
-    function LzDataRequest (requestor) { 
+    function LzDataRequest (requestor = null) { 
         super(requestor);
         this.requestor = requestor; 
     } 

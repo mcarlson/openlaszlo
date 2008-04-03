@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -45,11 +45,19 @@
   */
 class LzDatasource extends LzNode {
 
+/** @access private */
+static var attributes = new LzInheritedHash(LzNode.attributes);
+
 /**
   * @lzxtype booleanLiteral | "inherit"
   * @lzxdefault inherit
   */
 var proxied = null;
+var src;
+
+    function LzDatasource ( parent:* = null , attrs:* = null, children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+    }
 
 function loadSuccess (loader, data) { loader.dataset.gotRawData(data); }
 function loadError   (loader, data) { loader.dataset.gotError(data);   }
@@ -69,7 +77,7 @@ function getLoaderForDataset ( dataset, proxied ){
     // If there is no loader, or if the loader changed it's proxied
     // flag, make a new loader.
     if ( !tloader){
-        tloader = new LzHTTPLoader(this, proxied, dataset);
+        tloader = new LzHTTPLoader(this, proxied);
         dataset.setOption( 'dsloader' , tloader );
         tloader.setQueueing(dataset.queuerequests);
         tloader.loadSuccess = this.loadSuccess;
@@ -127,7 +135,7 @@ function getLoadTimeForDataset ( forset ){
   * @access private
   * @return: String representation of this object
   */
-function toString() {
+override function toString() {
     return "LzDatasource '" + this.name + "'";
 }
 

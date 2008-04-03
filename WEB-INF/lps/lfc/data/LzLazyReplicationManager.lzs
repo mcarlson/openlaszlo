@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -49,10 +49,15 @@
   */
 class LzLazyReplicationManager extends LzReplicationManager {
 
-prototype.pooling = true; // Defined in LzReplicationManager
+// prototype.pooling = true; // Defined in LzReplicationManager
 
 /** The axis for layout of replicated views */
-var axis = "y";
+var axis = "y"
+var sizeAxis;
+var cloneimmediateparent;
+var updateDel;
+var __LZoldnodelen;
+var cloneimmediateparnt;
 
 /** The spacing between replicated views */
 var spacing = 0;
@@ -61,8 +66,14 @@ var mask = null;
 /**
   * @access private
   */
-function construct ( odp , args ){
+function LzLazyReplicationManager ( odp , args, children:* = null, instcall:* = null ){
+    super(odp, args, children, instcall);
+}
+
+override function construct ( odp , args ){
     //replication argument needs to control pooling
+    this.pooling = true; // Defined in LzReplicationManager
+
     if ( args.pooling != null ){
         args.pooling = true;
         if ( $debug ){
@@ -136,7 +147,7 @@ var totalsize = 0;
 /**
   * @access private
   */
-function __LZsetCloneAttrs (){
+override function __LZsetCloneAttrs (){
     var cloneopt = { ignorelayout : true };
     if ( this.cloneAttrs.options != null ){
         cloneopt = new LzInheritedHash(this.cloneAttrs.options);
@@ -147,7 +158,7 @@ function __LZsetCloneAttrs (){
 /**
   * @access private
   */
-function __LZHandleNoNodes( ) {
+override function __LZHandleNoNodes( ) {
     this.__LZHandleMultiNodes( [ ] );
 }
 
@@ -174,7 +185,7 @@ function __LZHandleNoNodes( ) {
   * the immediate parent of the replicated views  
   * @access private
   */
-function __LZadjustVisibleClones (ln,nn){
+override function __LZadjustVisibleClones (ln,nn){
     var nodelen = null;
     if (this.nodes) {
         nodelen = this.nodes.length;
@@ -283,14 +294,14 @@ function __LZadjustVisibleClones (ln,nn){
 /**
   * @access private
   */
-function toString (){
+override function toString (){
     return "Lazy clone manager in " + this.cloneimmediateparent;
 }
 
 /**
   * @access private
   */
-function getCloneForNode ( p , dontmake ){
+override function getCloneForNode ( p , dontmake = null ){
     var cl = super.getCloneForNode( p ) ||
              null;
     if ( !cl && !dontmake ){
@@ -312,7 +323,7 @@ function getCloneForNode ( p , dontmake ){
   * @param Number n: The zero-based offset of the clone to retrieve
   * @return LzView: A pointer to the nth clone
   */
-function getCloneNumber ( n ){
+override function getCloneNumber ( n ){
     return this.getCloneForNode(this.nodes[n]);
 }
 

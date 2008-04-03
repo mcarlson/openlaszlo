@@ -85,6 +85,10 @@ static var tagname = 'datapointer';
 /** @access private */
   static var attributes  = {ignoreplacement: true};
 
+  // swf9 issues a runtime error without this
+  /** @access private */
+  function $lzc$set_ignoreplacement (v) {this.ignoreplacement = v;}
+
   /** @access private */
   function $lzc$set_xpath (v) { this.setXPath(v); }
   /** @access private */
@@ -101,7 +105,7 @@ static var tagname = 'datapointer';
   * @type LzDataNode
   */
 var p = null;
-var data = null;
+// var data = null;
 
 /** The reference to a clonemanager from a clone.
     @modifiers readonly */ 
@@ -111,6 +115,17 @@ var context = null;
 var __LZtracking = null;
 /** @access private */
 var __LZtrackDel = null;
+
+var xpath = null;
+var parsedPath = null;
+var __LZlastdotdot = null;
+var __LZspecialDotDot = false;
+var __LZspecialOndata = false;
+var __LZdotdotCheckDel;
+var __LZoldDataDel;
+var __LZoldOndataWarn;
+var errorDel;
+var timeoutDel;
 
 
 /** This determines the behavior of the
@@ -142,7 +157,7 @@ var onDocumentChange = LzDeclaredEvent;
   * its attributes.
   * @lzxtype event
   */
-var ondata = LzDeclaredEvent;
+// var ondata = LzDeclaredEvent;
 /** Sent when the dataset that the datapointer 
   * is pointing to generates an error.
   * @lzxtype event
@@ -156,6 +171,9 @@ var ontimeout = LzDeclaredEvent;
 /** @lzxtype event */
 var onrerunxpath = LzDeclaredEvent;
 
+    function LzDatapointer ( parent:* = null , attrs:* = null, children:* = null, instcall:*  = null) {
+      super (parent, attrs, children, instcall);
+    }
 
 //to set datapointer to datasource:dataset
 //<datapointer xpath="foo:bar/">
@@ -266,7 +284,7 @@ function getXPath ( p ){
         this.didGetXPathWarn = true;
     }
     var r = this.xpathQuery( p );
-    var nr
+    var nr;
     //testing for nodeType is the best way I can think of to check if the
     //return value is a node
 
@@ -286,8 +304,9 @@ function getXPath ( p ){
 
 }
 /** @access private */
-var $lzc$getXPath_dependencies;
-$lzc$getXPath_dependencies = $lzc$xpathQuery_dependencies;
+function $lzc$getXPath_dependencies ( who , self , p ){
+    $lzc$xpathQuery_dependencies (who, self, p);
+}
 
 
 /**
@@ -371,7 +390,7 @@ function setXPath ( p ){
             !this.rerunxpath ){
             this.__LZspecialOndata = true;
         } else if ( this.__LZspecialOndata ){
-            delete this.__LZspecialOndata;
+            this.__LZspecialOndata = null;;
         }
     }
 
@@ -387,7 +406,9 @@ function runXPath ( ){
     }
 
     var newc = null;
-    if ( this.context && 'getContext' in this.context ){
+// [2008-03-12 pbr] Can't use 'in' in swf9
+//    if ( this.context && 'getContext' in this.context ){
+    if ( this.context && (this.context is LzDatapointer || this.context is LzDataset)) {
         newc = this.context.getContext();
     }
 
@@ -401,7 +422,9 @@ function runXPath ( ){
         //no node found
         this.__LZHandleNoNodes();
         return false;
-    }else if ( n.length ) {
+// [2008-03-12 pbr] Use 'is' to see if it's an array, not n.length
+//    }else if ( n.length ) {
+    }else if ( n is Array ) {
         this.__LZHandleMultiNodes( n );
         return false;
     } else {
@@ -528,7 +551,7 @@ var __LZpchanged = false;
 var __LZdchanged = false;
 
 /** @access private */
-function __LZsendUpdate ( upd , upp ){ 
+function __LZsendUpdate ( upd = null, upp = null ){ 
 
     this.__LZdchanged = upd || this.__LZdchanged;
     this.__LZpchanged = upp || this.__LZpchanged;
@@ -630,8 +653,7 @@ var pathSymbols= { '/': 1, '..': 2, '*': 3, '.': 4};
 
 
 /** @access private */
-function __LZgetNodes ( pathobj , p , startpoint ){
-
+function __LZgetNodes ( pathobj , p , startpoint = null ){
   var np;
 
   if ( p == null ){
@@ -662,7 +684,8 @@ function __LZgetNodes ( pathobj , p , startpoint ){
 
       np = null;
 
-      if ( null != cp.pred ){
+// [2008-04-01 pbr] Make sure cp is an Object (ie. hash)
+      if ( cp is Object && 'pred' in cp && null != cp.pred ){
         if ( cp.pred == "hasattr" ){
           p = p.hasAttr( cp.attr ) ? p : false;
         } else if ( cp.pred == "attrval" ){
@@ -748,7 +771,7 @@ function __LZgetNodes ( pathobj , p , startpoint ){
   * one datapointer to function as the datacontext for another
   * @access private
   */
-function getContext ( ){
+function getContext ( chgpkg = null ){
     return this.p;
 }
 
@@ -830,7 +853,7 @@ function __LZdoSelect (selector, amnt) {
   * <param>amnt</param> is <code>1</code>.
   * @return Boolean: True if the pointer was able to move forward <param>amnt</param> nodes.
   */
-function selectNext ( amnt ) {
+function selectNext ( amnt = null ) {
   return this.__LZdoSelect('getNextSibling', amnt);
 }
 
@@ -864,7 +887,7 @@ function selectChild ( amnt ) {
   * @return Boolean: A Boolean indicating if the pointer was able to move up
   * <param>amnt</param> nodes.
   */
-function selectParent ( amnt ){
+function selectParent ( amnt = null ){
   return this.__LZdoSelect('getParent', amnt);
 }
 
@@ -1136,7 +1159,7 @@ function addNode ( name, text , attrs ){
   * has a following sibling, the pointer is repositioned at that sibling.
   * Otherwise the pointer is set to <code>null</code>.
   */
-function deleteNode ( ){
+override function deleteNode( recursiveCall = null){
     if ( ! this.p ) {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
@@ -1219,7 +1242,7 @@ function setFromPointer ( dp ){
 
 
 /** @access private */
-function __LZprocessOperator ( p , pp , depends ){
+function __LZprocessOperator ( p , pp , depends = null ){
     if (p == null) {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
@@ -1243,9 +1266,12 @@ function __LZprocessOperator ( p , pp , depends ){
     }
 
     var val = p;
+    // TODO: [2008-3-12 pbr] Verify this works for all cases
+    //  I found that val can be an LzDataElement or a hash (from LzDataElement)
     for (var i = 0; i < parts.length; i++) {
         var pathElt = parts[i];
-        if (val == null || !(pathElt in val)) {
+//        if (val == null || !(pathElt in val)) {
+        if (val == null || (!(val is LzDataElement) && !(pathElt in val))) {
             // TODO: [2007-3-16 hqm] I'll do what Ben did, return undefined
             return;
         } else {
@@ -1329,7 +1355,8 @@ function _dbg_name () {
 
 
 /** @access private */
-function setDataContext ( dc ){
+// The optional argument is used by LzDatapath
+function setDataContext ( dc, ignore = null ){
     if ( dc == null ){
         this.context = this;
         if (this.p) {
@@ -1390,7 +1417,7 @@ function __LZcheckChange ( chgpkg ){
              && 
              ( this.parsedPath && this.parsedPath.hasDotDot  ||
                 this.p == null            || 
-                this.p.childOf(chgpkg.who)   ) )
+                this.p.childOfNode(chgpkg.who)   ) )
             ){
             this.runXPath();
             return true;
@@ -1402,7 +1429,7 @@ function __LZcheckChange ( chgpkg ){
 }
 
 /** @access private */
-function __LZneedsOpUpdate ( chgpkg ){
+function __LZneedsOpUpdate ( chgpkg = null ){
 
     //case 1 -- normal operator and node changed
     //case 2 -- this node is mapped to text()
@@ -1458,7 +1485,7 @@ function __LZcheckDotDot ( chgpkg ){
     if (   ( chgpkg.type == 0          || 
            ( chgpkg.type == 1  && this.parsedPath.hasOpSelector ) ) 
           && 
-           ( this.context.getContext().childOf( who ) )
+           ( this.context.getContext().childOfNode( who ) )
         ){
         this.runXPath();
 
@@ -1466,7 +1493,7 @@ function __LZcheckDotDot ( chgpkg ){
 }
 
 /** @access private */
-function destroy ( recur ){
+override function destroy () {
     this.__LZsetTracking( null );
     if ( this.errorDel ) this.errorDel.unregisterAll();
     if ( this.timeoutDel ) this.timeoutDel.unregisterAll();
@@ -1476,11 +1503,11 @@ function destroy ( recur ){
     if ( this.__LZdotdotCheckDel ) {
         this.__LZdotdotCheckDel.unregisterAll();
     }
-    delete this.p;
-    delete this.data;
-    delete this.__LZlastdotdot;
-    delete this.context;
-    delete this.__LZtracking;
+    this.p = null;
+    this.data = null;
+    this.__LZlastdotdot = null;
+    this.context = null;
+    this.__LZtracking = null;
 
     super.destroy.apply(this, arguments);
 }
@@ -1496,7 +1523,7 @@ function destroy ( recur ){
   * 
   * @access private
   */
-function __LZsetTracking ( who, force ){
+function __LZsetTracking ( who, force = null, needscheck = null ){
 #pragma 'warnUndefinedReferences=true'
     var tracking = this.__LZtracking;
     var trackDel = this.__LZtrackDel;

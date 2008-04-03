@@ -100,14 +100,19 @@ static var tagname = 'dataset';
 /** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
  
+static var slashPat = "/";
+
 var dataprovider = defaultdataprovider;
 var multirequest = false;
 var dataRequest = null; 
 var dataRequestClass = LzHTTPDataRequest;
 var dsloadDel = null;
+var errorstring;
+var reqOnInitDel;
+var secureport;
 
 /** @lzxtype event */
-var ondata = LzDeclaredEvent;
+// var ondata = LzDeclaredEvent;
 /** Sent when the dataset's request results in an error. 
  * @lzxtype event
  */
@@ -121,7 +126,7 @@ var timeout = 60000;
 
 var postbody = null;
 
-var src = null;
+// var src = null;
 
 /** When true, the server will accept
   * encoded responses for this request.  
@@ -152,6 +157,10 @@ var nsprefix = false;
 var getresponseheaders = false;
 
 
+    function LzDataset ( parent:* = null, args:* = null, children:* = null, instcall:*  = null) {
+        super(parent,args,children,instcall);
+    }
+
 /**  HTTP method */
 
 var querytype = "GET";
@@ -164,7 +173,7 @@ function $lzc$set_querytype (v) { this.setQueryType(v); }
   */
 var trimwhitespace = false;
 
-var nodeType = LzDataNode.DOCUMENT_NODE;
+// var nodeType = LzDataNode.DOCUMENT_NODE;
 
 /** When true, the server will attempt to cache 
   * response (defaults to false).  There are security concerns 
@@ -212,13 +221,17 @@ function $lzc$set_request(v) { this.setRequest(v); }
 var headers = null;
 var proxied = null;
 var responseheaders = null;
+var queuerequests = false;
+var oncanvas;
+
 
 /** @access private */
 function $lzc$set_initialdata(v) { this.setInitialData(v); }
 
 /** @access private */
 
-function construct ( parent , args ){
+override function construct ( parent , args ){
+    this.nodeType = LzDataNode.DOCUMENT_NODE;
     this.queuerequests = false; // default to false, to emulate browser default
 
     this.oncanvas = parent == canvas || parent == null;
@@ -249,7 +262,7 @@ function construct ( parent , args ){
   * Sets the name of this datasource - used only by initializer
   * @access private
   */
-function $lzc$set_name(name) {
+override function $lzc$set_name(name) {
     super.$lzc$set_name.apply(this, arguments);
 
     //for compatibility with dataNode API
@@ -290,7 +303,7 @@ function $lzc$set_name(name) {
   * destroy your datasource node if you made one for yourself.
   * @access private
   */
-function destroy ( recursiveCall ) {
+override function destroy () {
     this.setChildNodes([ ]);
     this.dataRequest = null;
 
@@ -369,7 +382,7 @@ function getStatusCode (){
   * @param headers optional HTTP response headers
   * @access private
   */
-function setData( data , headers ) {
+override function setData( data , headers = null ) {
     if ( data == null ) return;
     if (data instanceof Array) {
         this.setChildNodes( data );
@@ -410,7 +423,7 @@ function gotTimeout (){
   * This is the shared interface with datapointer
   * @access private
   */
-function getContext (){
+function getContext ( chgpkg = null){
     return this;
 }
 
@@ -630,7 +643,7 @@ static function queryStringToTable ( query ) {
   * Does a request immediately using the current values.  If autorequest is true,
   * this method is called automatically when values change.
   */
-function doRequest() {
+function doRequest(ignore=null) {
 
     // We try to reuse the old datarequest object, unless
     // multirequest is true. If multirequest is true, we need
@@ -643,7 +656,7 @@ function doRequest() {
 
     dreq.src     = this.src;
     dreq.timeout = this.timeout;
-    dreq.status  = dreq.READY;
+    dreq.status  = LzDataRequest.READY;
     dreq.method = this.querytype;
 
     // If this.querystring is set, use it as the source of param
@@ -823,7 +836,8 @@ function setHeader ( k , val ){
 function setInitialData ( d ){
     if (d != null) {
         var e = LzDataNode.stringToLzData(d, this.trimwhitespace, this.nsprefix);
-        this.setData(e.childNodes);
+        if (e != null)
+            this.setData(e.childNodes);
     }
 }
 
@@ -834,7 +848,7 @@ function setInitialData ( d ){
   * @access private
   * @return: String representation of this object
   */
-function toString () {
+override function toString () {
     return "LzDataset " + ":" + this.name;
 }
 

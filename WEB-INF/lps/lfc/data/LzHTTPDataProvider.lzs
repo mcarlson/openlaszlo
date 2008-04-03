@@ -84,7 +84,7 @@ class LzHTTPDataProvider extends LzDataProvider {
     /**
      * @access private
      */
-    function doRequest ( dreq ) {
+    override function doRequest ( dreq ) {
         // dreq.src can be null if the dataset is loaded from initialdata
         if (!dreq.src)
             return;

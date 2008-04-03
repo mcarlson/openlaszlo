@@ -80,7 +80,7 @@ static var tagname = 'datapath';
   * of <classname>datapointer</classname>, and true for instances of
   * <classname>datapath</classname>.
   */
-prototype.rerunxpath = true; // Defined in LzDatapointer
+// prototype.rerunxpath = true; // Defined in LzDatapointer
 
 /** This attribute is deprecated, and should not be used. Developers should use
   * a view's <attribute>visible</attribute> property to control visibility.
@@ -91,6 +91,10 @@ var datacontrolsvisibility = true;
 
 /** @access private */
 var __LZtakeDPSlot = true;
+var storednodes;
+var __LZneedsUpdateAfterInit;
+var __LZdepChildren;
+var sel;
 
 
 /** Sent when the datapath's data changes.
@@ -146,7 +150,13 @@ var sortorder;
 /**
   * @access private
   */
-function construct ( v , args ){
+function LzDatapath ( v , args:* = null, children:* = null, instcall:* = null ){
+    super(v, args, children, instcall);
+}
+
+override function construct ( v , args ){
+    this.rerunxpath = true; // Defined in LzDatapointer
+
     super.construct.apply(this, arguments);
 
     // construct this to prevent undefined property error
@@ -162,11 +172,12 @@ function construct ( v , args ){
         this.immediateparent.datapath = this;
         var pdp = null;
         var tarr = null;
-        if ('searchParents' in this.immediateparent) {
+// [2008-03-12 pbr] Removed the 'in' test. not needed
+//        if ('searchParents' in this.immediateparent) {
             pdp = this.immediateparent.searchParents( "datapath" ).datapath;
 
             tarr = pdp.__LZdepChildren;
-        }
+//        }
 
         //set it early, so that it's right when xpath first runs
         if ( tarr != null ){
@@ -175,7 +186,9 @@ function construct ( v , args ){
             for ( var i =  tarr.length - 1 ; i >= 0 ; i-- ){
                 var c = tarr[ i ];
                 if ( c != this &&
-                    !c.$pathbinding &&
+                      !(c is LzDataAttrBind) &&
+// [2008-03-12 pbr] Changed check because swf9 doesn't like it
+//                    !c.$pathbinding &&
                     c.immediateparent != this.immediateparent &&
                     c.immediateparent.childOf( this.immediateparent )){
                     c.setDataContext( this ,true );
@@ -192,7 +205,7 @@ function construct ( v , args ){
 /**
   * @access private
   */
-function __LZHandleMultiNodes ( nodes ){
+override function __LZHandleMultiNodes ( nodes ){
     //uhoh! this should be a clone
 
     //Because we're about to start making siblings to this view,
@@ -217,7 +230,7 @@ function __LZHandleMultiNodes ( nodes ){
 
     this.storednodes = nodes;
     var rman = new clonetype( this, this._instanceAttrs);
-    delete this.storednodes;
+    this.storednodes = null;
 
     return rman;
 
@@ -261,7 +274,7 @@ function setNodes ( nodes ){
 /**
   * @access private
   */
-function __LZsendUpdate( upd , upp ) {
+override function __LZsendUpdate( upd = null, upp = null ) {
     var pchg = this.__LZpchanged;
     if ( !super.__LZsendUpdate.apply(this, arguments) ){
         return false;
@@ -283,20 +296,23 @@ function __LZsendUpdate( upd , upp ) {
 function __LZApplyDataOnInit( ) {
     if ( this.__LZneedsUpdateAfterInit ){
         this.__LZApplyData();
-        delete this.__LZneedsUpdateAfterInit;
+        this.__LZneedsUpdateAfterInit = null;
     }
 }
 
 /**
   * @access private
   */
-function __LZApplyData( force ) {
+function __LZApplyData( force = null) {
 
     var ip = this.immediateparent;
 
     if ( this.datacontrolsvisibility ){
         this.immediateparent.__LZvizDat = this.p != null; 
-        if ('__LZupdateShown' in this.immediateparent)
+          // [2008-03-12 pbr] Removed because swf9 doesn't like it. It can
+          // also be a LZMiniNode but it's a null def.
+          if (this.immediateparent is LzView)
+//        if ('__LZupdateShown' in this.immediateparent)
             this.immediateparent.__LZupdateShown();
     }
 
@@ -322,8 +338,8 @@ function __LZApplyData( force ) {
 /**
   * @access private
   */
-function setDataContext ( p , implicit ){
-    if ( p == null && this.immediateparent != null && 'searchParents' in this.immediateparent){
+override function setDataContext ( p , implicit = null ){
+    if (p == null && this.immediateparent != null) {
         p = this.immediateparent.searchParents( "datapath" ).datapath;
         implicit = true;
     }
@@ -360,12 +376,16 @@ function setDataContext ( p , implicit ){
   * Removes the datapath from its parent
   * @access private
   */
-function destroy( recur ){
+override function destroy(){
+if ($swf9) {}
+else {
     this.$lzc$set_name = null; //so this can't be assigned
+}
     this.__LZupdateLocked = true; //so won't set data
 
     if ( this.context && !this.context.__LZdeleted && 
-         this.context.__LZdepChildren ){
+         this.context is LzDatapath ){
+//         this.context.__LZdepChildren ){
         //remove self from __LZdepChildren
         var dca = this.context.__LZdepChildren;
 
@@ -397,7 +417,7 @@ function destroy( recur ){
     }
 
     if ( this.immediateparent.datapath == this ){
-        delete this.immediateparent.datapath;
+        this.immediateparent.datapath = null;
     }
 
     super.destroy.apply(this, arguments);
@@ -429,8 +449,8 @@ function updateData( ){
     }
 
     var ppdo = this.parsedPath ? this.parsedPath.operator : null;
-    if ( this.immediateparent.updateData && ppdo != null){
-        var dat = this.immediateparent.updateData();
+    if ( this.immediateparent is LzDatapath && ppdo != null){
+        var dat = LzDatapath(this.immediateparent).updateData();
         if ( ppdo =="nodeName" ){
             this.setNodeName( dat );
         } else  if ( ppdo =="__LZgetText" ){
@@ -469,7 +489,7 @@ function retrieveData( ){
 /**
   * @access private
   */
-function __LZHandleDocChange ( who ){
+override function __LZHandleDocChange ( who ){
     if ( super.__LZHandleDocChange.apply(this, arguments) ){
         if (this.immediateparent.ondata.ready) this.immediateparent.ondata.sendEvent( this.data );
         if (this.onDocumentChange.ready) this.onDocumentChange.sendEvent( who );
@@ -480,7 +500,7 @@ function __LZHandleDocChange ( who ){
 /**
   * @access private
   */
-function toString( ){
+override function toString( ){
     return "Datapath for " + this.immediateparent;
 }
 
@@ -496,9 +516,9 @@ var _dpevents = [ 'ondata' , 'onerror' , 'ontimeout' ];
 /**
   * @access private
   */
-function __LZcheckChange ( chgpkg ){
+override function __LZcheckChange ( chgpkg ){
     if ( !super.__LZcheckChange.apply(this, arguments) ){
-        if ( chgpkg.who.childOf( this.p , true ) && this.onDocumentChange.ready){
+        if ( chgpkg.who.childOfNode( this.p , true ) && this.onDocumentChange.ready){
             this.onDocumentChange.sendEvent( chgpkg );
         }
     }
@@ -516,7 +536,7 @@ function __LZcheckChange ( chgpkg ){
   *
   * @access private
   */
-function __LZsetTracking ( who, additive, needscheck ) {
+override function __LZsetTracking ( who, additive = null, needscheck = null ) {
 #pragma 'warnUndefinedReferences=true'
     var tracking;
     var trackDel;
@@ -581,7 +601,9 @@ function setClonePointer( p ) {
 
         if ( p && this.sel != p.sel ){
             this.sel = p.sel || false;
-            this.immediateparent.setSelected( this.sel );
+            if ( this.immediateparent is LzDatapath){
+                LzDatapath(this.immediateparent).setSelected( this.sel );
+            }
         }
 
         this.__LZpchanged = true;
@@ -632,13 +654,16 @@ function setComparator( comparator ) {
 function setSelected( torf ){
     this.p.sel =  torf;
     this.sel = torf;
-    this.immediateparent.setSelected( torf );
+
+    if ( this.immediateparent is LzDatapath){
+        LzDatapath(this.immediateparent).setSelected( torf );
+    }
 }
 
 /**
   * @access private
   */
-function __LZgetLast( ){
+override function __LZgetLast( ){
     if ( this.__LZisclone ) return this.context.nodes.length;
 
     else if ( this.p == this.context.getContext() &&
@@ -652,7 +677,7 @@ function __LZgetLast( ){
 /**
   * @access private
   */
-function __LZgetPosition( ){
+override function __LZgetPosition( ){
     if ( this.__LZisclone ) return this.immediateparent.clonenumber + 1;
 
     else if ( this.p == this.context.getContext() &&

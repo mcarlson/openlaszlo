@@ -41,13 +41,23 @@ var onattributes = LzDeclaredEvent;
 var onnodeName = LzDeclaredEvent;
 
 /** @access private */
-var __LZo = -1;
+//var __LZo = -1;
 /** @access private */
-var __LZcoDirty = true;
+//var __LZcoDirty = true;
 /** @access private */
 var __LZchangeQ = null;
 /** @access private */
 var __LZlocker = null;
+
+/** The name of this node.
+  * @type String
+  */
+var nodeName:* = null;
+
+/** The dictionary of attributes for this node.
+  * @type Object
+  */
+var attributes:* = null;
 
 
 /** Inserts the given LzDataNode before another node in this node's childNodes
@@ -338,7 +348,8 @@ function setNodeName ( name ){
 /**
   * @access private
   */
-function __LZgetText ( ){
+// dummyarg needed for calls from LzDatapointer.__LZprocessOperator
+function __LZgetText ( dummyarg = null ){
     var s= "";
     for ( var i = 0; i < this.childNodes.length; i++ ){
         var c = this.childNodes[ i ]
@@ -446,7 +457,8 @@ function serializeInternal (len=Infinity) {
     } else {
         s += "/" + this.__LZgt;
     }
-    if (s.length > len) { s = Debug.abbreviate(s, len); }
+//PBR DEBUG Make Debug when it's ported
+    if (s.length > len) { s = LzDataElement.abbreviate(s, len); }
     return s;
 }
 
@@ -454,8 +466,9 @@ function serializeInternal (len=Infinity) {
   * For debugging.  Same as serialize, but will abbreviate at printLength.
   * @access private
   */
-function _dbg_name () {
-    return this.serializeInternal(Debug.printLength);
+override function _dbg_name () {
+//PBR DEBUG Make Debug when it's ported
+    return this.serializeInternal(LzDataElement.printLength);
 }
 
 /**
@@ -466,7 +479,7 @@ function _dbg_name () {
   * @param LzDataNode who: The node that changed.
   * @param Number type: private
   */
-function handleDocumentChange ( what , who , type, cobj ){
+function handleDocumentChange ( what , who , type, cobj=null ){
     var o = { who:  who , what: what , type : type};
     if (cobj) o.cobj = cobj;
     if ( this.__LZchangeQ ){
@@ -479,7 +492,7 @@ function handleDocumentChange ( what , who , type, cobj ){
 /**
   * @access private
   */
-function toString (){
+override function toString (){
     //this.__LZlt = "&lt;";
     //this.__LZgt = "&gt;";
     var r = this.serialize();
@@ -530,15 +543,70 @@ function __LZdoUnlock ( locker ){
             }
         }
     }
-    
+  
 
 }
+
+} // End of LzDataElementMixin
+
+
+/**
+  * <p>
+  * An LzDataElement represents a node a in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or <classname>LzDataText</classname>, which represents a text node. See the example on <classname>LzDataNode</classname>. 
+  * </p>
+  *
+  * @shortdesc A node of hierarchical data.
+  * @see LzDataNode LzDataText LzDataPointer
+  * @access public
+  */
+class LzDataElement extends LzMiniNode with LzDataElementMixin, LzDataNodeMixin
+{
+    // N.B.: LzDataElement is not an LzNode so has a different
+    // initialize signature.
+    function LzDataElement ( name , attributes = null, children = null) {
+            super(name, attributes, children);
+            this.nodeName = name;
+            this.nodeType = LzDataNode.ELEMENT_NODE;
+            this.attributes = attributes;
+            this.ownerDocument = this;
+            if (children == null) {
+                this.setChildNodes ( [] );
+            } else {
+                this.setChildNodes( children );
+            }
+        }
+
+/**
+  * Returns a list of empty nodes, each named 'name'.
+  * @param Number count: how many nodes to create.
+  * @param String name: the name for each node
+  * @return Array: list of new nodes.
+  */
+static function makeNodeList(count, name) {
+    var a = [];
+    for (var i=0; i < count; i++) {
+        a[i] = new LzDataElement(name, {}, null);
+    }
+    return a;
+}
+
+//TODO Used instead of Debug.abbreviate. You can remove this when Debug is
+// moved to swf9
+static var printLength = 1024;
+static function abbreviate (s, l) {
+  var ellipsis = '...'; // '\u2026' doesn't work, wah.
+  if (s.length > (l - ellipsis.length)) {
+    s = s.substring(0, l - ellipsis.length) + ellipsis;
+  }
+  return s;
+}
+
 
 /**
   * Get LzDataElement representation of primitive type, array, or object value.
   */
 static function valueToElement ( o ) {
-    var n = new LzDataElement("element", { }, LzDataElementTrait.__LZv2E(o));
+    var n = new LzDataElement("element", { }, LzDataElement.__LZv2E(o));
     return n; 
 }
 
@@ -566,7 +634,7 @@ static function __LZv2E ( o ) {
             type = "array";
             var tag = (o.__LZtag != null ? o.__LZtag : 'item');
             for (var i=0; i < o.length; i++) {
-                var tmpC = this.__LZv2E( o[i] );
+                var tmpC = LzDataElement.__LZv2E( o[i] );
                 c[i] = new LzDataElement(tag, null, tmpC ); 
             }
         } else {
@@ -575,7 +643,7 @@ static function __LZv2E ( o ) {
             for (var k in o) {
                 // skip any properties that start with __LZ
                 if (k.indexOf('__LZ') == 0) continue;
-                c[i++] = new LzDataElement(k, null, this.__LZv2E(o[k]));
+                c[i++] = new LzDataElement(k, null, LzDataElement.__LZv2E(o[k]));
             }
         }
     } else if (o != null) {
@@ -585,81 +653,6 @@ static function __LZv2E ( o ) {
     if (c.length == 0) c = null;
 
     return c;
-}
-
-} // End LzDataElementTrait
-
-/**
-  * Just enough of LzNode to make setters work for DataElements
-  * @access public
-  * @topic LZX
-  * @subtopic Runtime
-  * @todo [2006-08-23 ptw] Fix this modularity.  Is it really too
-  * expensive to have this above LzNode?
-  * @devnote this is public because public classes inherit from it. Put it
-  * in LZX.Runtime to semi-sorta obscure it.
-  */
-class LzMiniNode {
-  var setAttribute = LzNode.prototype.setAttribute;
-}
-
-/**
-  * <p>
-  * An LzDataElement represents a node a in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or <classname>LzDataText</classname>, which represents a text node. See the example on <classname>LzDataNode</classname>. 
-  * </p>
-  *
-  * @shortdesc A node of hierarchical data.
-  * @see LzDataNode LzDataText LzDataPointer
-  * @access public
-  */
-class LzDataElement extends LzMiniNode with LzDataElementMixin, LzDataNodeMixin
-{
-    // N.B.: LzDataElement is not an LzNode so has a different
-    // initialize signature.
-    function LzDataElement ( name , attributes , children ) {
-            super(name, attributes, children);
-            this.nodeName = name;
-            this.attributes = attributes;
-            this.ownerDocument = this;
-            if (children == null) {
-                this.setChildNodes ( [] );
-            } else {
-                this.setChildNodes( children );
-            }
-        }
-/** The name of this node.
-  * @type String
-  */
-var nodeName        = null;
-//var nodeValue       = null;
-var nodeType = LzDataNode.ELEMENT_NODE
-;
-/** An array of children of this node
-  * @type LzDataNode
-  */
-var childNodes      = null;
-
-/** The dictionary of attributes for this node.
-  * @type Object
-  */
-var attributes      = null;
-
-/**
-  * Returns a list of empty nodes, each named 'name'.
-  * @param Number count: how many nodes to create.
-  * @param String name: the name for each node
-  * @return Array: list of new nodes.
-  */
-static function makeNodeList(count, name) {
-    var a = [];
-    for (var i=0; i < count; i++) {
-        a[i] = new LzDataElement(name, {}, null);
-    }
-    return a;
-}
-
-static function valueToElement ( o ) {
-  return LzNode_DataNode_DOM.prototype.valueToElement(o);
 }
 
 } // End of LzDataElement

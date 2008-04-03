@@ -79,11 +79,21 @@
 class LzResizeReplicationManager extends LzLazyReplicationManager {
 //need to destroy the original clone for resize in order to insert the 
 //appropriate setHeight call
-prototype.pooling = false; // Defined in LzReplicationManager
+
+var datasizevar;
+var __LZresizeupdating;
+
+// prototype.pooling = false; // Defined in LzReplicationManager
+
 /**
   * @access private
   */
-function construct ( odp , args ){
+function LzResizeReplicationManager ( odp , args, children:* = null, instcall:* = null ){
+    super(odp, args, children, instcall);
+}
+
+override function construct ( odp , args ){
+    this.pooling = false; // Defined in LzReplicationManager
     //Debug.write( 'making resize repl' );
 
     super.construct.apply(this, arguments);
@@ -95,9 +105,14 @@ function construct ( odp , args ){
 /**
   * @access private
   */
-function __LZsetCloneAttrs (){
+override function __LZsetCloneAttrs (){
+// FIXME [2008-02-11 pbr] How does this work in swf9
+if ($swf9) {
+    super.__LZsetCloneAttrs();
+} else {
     super.__LZsetCloneAttrs.apply(this, arguments);
     this.cloneAttrs.setHeight = LzResizeReplicationManager.__LZResizeSetSize;
+}
 }
 
 /**
@@ -136,7 +151,7 @@ function __LZreleaseClone ( v ){
   * (as opposed to, for example, when
   * the mask changes its height or item changes size
   */
-function __LZadjustVisibleClones(ln,nn){
+override function __LZadjustVisibleClones(ln,nn){
     //if the mask doesn't have a set size in the replication axis, don't affect
     //it
 
@@ -281,7 +296,7 @@ function __LZHandleCloneResize ( cl , s){
     var osize = cl.datapath.p[ this.datasizevar ] || this.viewsize;
     if ( s != osize ){
         cl.datapath.p[ this.datasizevar ] = s;
-        this.__LZadjustVisibleClones();
+        this.__LZadjustVisibleClones(null, null);
     }
 }
 
@@ -290,8 +305,9 @@ function __LZHandleCloneResize ( cl , s){
   * This is a funtion that is attached to each clone, which talks to the resize
   * replication manager 
   */
-LzResizeReplicationManager.__LZResizeSetSize = function ( h , k ){
-    super.setHeight( h );
+function __LZResizeSetSize ( h , k ){
+    // TODO [2008-02-11 pbr] setHeight is defined in a view, not a node
+    //super.setHeight( h );
     if ( k != true ){
         this.cloneManager.__LZHandleCloneResize( this , h);
     }
@@ -299,7 +315,7 @@ LzResizeReplicationManager.__LZResizeSetSize = function ( h , k ){
 
 /*
  * @access private
-function toString (){
+override function toString (){
     return "Resize clone manager in " + this.immediateparent;
 }
 */

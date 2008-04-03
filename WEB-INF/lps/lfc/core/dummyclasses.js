@@ -29,7 +29,7 @@ var canvas:LzCanvas;
 */
 
 
-#include "core/dummydata.js"
+// #include "core/dummydata.js"
 
 
 public class LzCSSStyle {

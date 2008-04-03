@@ -931,7 +931,7 @@ function __LZapplyArgs ( args , constcall = null ){
           if ( oset[a] || args[a] === LzNode._ignoreAttribute ) continue;
           oset[ a ] = true;
 
-          if (val instanceof LzInitExpr) {
+          if (val is LzInitExpr) {
             if (val instanceof LzConstraintExpr) {
               if (constraints == null) { constraints = []; }
               constraints.push(val);
@@ -1690,11 +1690,12 @@ function setDatapath ( dp ) {
 
   /**
    * Sets the datacontext for the node to the data element given as an
-   * argument
+   * argument.
    * @access public
    * @param LzDataElement data: The dataelement to use as the context
+   * @param ignore: This parameter is only used in LzDataset
    */
-  function setData(data) {
+  function setData(data, ignore=null) {
     this.data = data;
     var dp = (this.datapath != null) ? this.datapath : new LzDatapath(this);
     dp.setPointer(data);

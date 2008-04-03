@@ -548,7 +548,8 @@ function queuedCopyFlashXML_internal () {
             if (trimwhitespace == true) {
                 nv = LzDataNode.trim(nv);
             }
-            lfcnode = {__proto__: LzDataText.prototype, data: nv, parentNode: lfcparent};
+            // FIXME: [2008-3-31 pbr] This bypasses initialization
+            lfcnode = {__proto__: LzDataText.prototype, data: nv, parentNode: lfcparent, nodeType: LzDataNode.TEXT_NODE};
         } else {
             // Do we need to copy attributes list as well?
             // After this works, try bashing the __proto__
@@ -588,7 +589,9 @@ function queuedCopyFlashXML_internal () {
                 }
             }
 
+            // FIXME: [2008-3-31 pbr] This bypasses initialization
             lfcnode = { __proto__: LzDataElement.prototype,
+                        nodeType: LzDataNode.ELEMENT_NODE,
                         nodeName: nodename,
                         attributes: cattrs,
                         ownerDocument: lfcparent.ownerDocument,
