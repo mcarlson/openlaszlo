@@ -15,9 +15,10 @@ class ClassModel implements Comparable {
     protected final ViewSchema schema;
     /** This is really the LZX tag name */
     protected final String className;
-    // This is null for builtin classes
+    protected boolean builtin = false;
+    // This is null for the root class
     protected final ClassModel superclass;
-    // This is null for builtin classes
+    // This is null for the root class
     protected final Element definition;
     protected NodeModel nodeModel;
     
@@ -60,11 +61,6 @@ class ClassModel implements Comparable {
         if (superclass != null) {
           this.sortkey = superclass.sortkey + "." + this.sortkey;
         }
-    }
-
-    // Construct a builtin class
-    ClassModel(String className, ViewSchema schema) {
-        this(className, null, schema, null);
     }
 
   public int compareTo(Object other) throws ClassCastException {
@@ -139,6 +135,10 @@ class ClassModel implements Comparable {
     // model store class and tagname separately?
     ClassModel superclassModel = getSuperclassModel();
     String superTagName = superclassModel.getClassName();
+    // Allow forward references
+    if (! superclassModel.isCompiled()) {
+      superclassModel.compile(env);
+    }
     String superclassName = LZXTag2JSClass(superTagName);
 
     // Build the constructor
@@ -246,6 +246,25 @@ class ClassModel implements Comparable {
     env.compileScript("ConstructorMap[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");
   }
 
+  /**
+   * Output a class.  Called after schema processing, but may be
+   * compiled out of order, so that forward references to classes work
+   */
+  public void compile(CompilationEnvironment env) {
+    if (! isBuiltin()) {
+      // We compile a class declaration just like a view, and then
+      // add attribute declarations and perhaps some other stuff that
+      // the runtime wants.
+      ViewCompiler.preprocess(definition, env);
+      NodeModel model = NodeModel.elementAsModel(definition, schema, env);
+      model = model.expandClassDefinitions();
+      // Establish class root
+      model.assignClassRoot(0);
+      setNodeModel(model);
+      emitClassDeclaration(env);
+    }
+  }
+
     /** Returns true if this is equal to or a subclass of
      * superclass. */
     boolean isSubclassOf(ClassModel superclass) {
@@ -254,14 +273,23 @@ class ClassModel implements Comparable {
         return this.superclass.isSubclassOf(superclass);
     }
     
+  void setIsBuiltin(boolean value) {
+    builtin = value;
+  }
+
     boolean isBuiltin() {
-        return superclass == null;
+      return builtin;
     }
     
     boolean hasNodeModel() {
         // Classes that have generated code will have a nodeModel
         return nodeModel != null;
     }
+
+  boolean isCompiled() {
+    // Classes that are builtin or have been compiled
+    return isBuiltin() || hasNodeModel();
+  }
 
     ClassModel getSuperclassModel() {
       return superclass;

@@ -446,7 +446,7 @@ public class ViewSchema extends Schema {
 
     /** Adds a ClassModel entry into the class table for CLASSNAME. */
     private void makeNewStaticClass (String classname) {
-        ClassModel info = new ClassModel(classname, this);
+        ClassModel info = new ClassModel(classname, null, this, null);
         if (sInputTextElements.contains(classname)) {
             info.isInputText = true;
             info.hasInputText = true;
@@ -611,6 +611,10 @@ public class ViewSchema extends Schema {
         ec.updateSchema(docroot, this, visited);
         /** From here on, user-defined classes must not use reserved javascript identifiers */
         this.enforceValidIdentifier = true;
+        // Note that these classes are all built in
+        for (Iterator i = mClassMap.values().iterator(); i.hasNext(); ) {
+          ((ClassModel)i.next()).setIsBuiltin(true);
+        }
     }
     
 

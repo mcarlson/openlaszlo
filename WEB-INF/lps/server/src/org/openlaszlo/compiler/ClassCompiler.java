@@ -236,33 +236,12 @@ class ClassCompiler extends ViewCompiler  {
     }
     
     public void compile(Element elt) {
-        String tagName = elt.getAttributeValue("name");
-        ViewSchema schema = mEnv.getSchema();
-        if (schema.enforceValidIdentifier) {
-            try {
-                tagName = requireIdentifierAttributeValue(elt, "name");
-            } catch (MissingAttributeException e) {
-                throw new CompilationError(
-                    /* (non-Javadoc)
-                     * @i18n.test
-                     * @org-mes="'name' is a required attribute of <" + p[0] + "> and must be a valid identifier"
-                     */
-                    org.openlaszlo.i18n.LaszloMessages.getMessage(
-                        ClassCompiler.class.getName(),"051018-193", new Object[] {elt.getName()})
-                    , elt);
-            }
-        }
-        // We compile a class declaration just like a view, and then
-        // add attribute declarations and perhaps some other stuff that
-        // the runtime wants.
-        ClassModel classModel = schema.getClassModel(tagName);
-        ViewCompiler.preprocess(elt, mEnv);
-        NodeModel model = NodeModel.elementAsModel(elt, schema, mEnv);
-        model = model.expandClassDefinitions();
-        // Establish class root
-        model.assignClassRoot(0);
-        classModel.setNodeModel(model);
-        classModel.emitClassDeclaration(mEnv);
+      String tagName = elt.getAttributeValue("name");
+      ClassModel classModel = mEnv.getSchema().getClassModel(tagName);
+      // May have already been compiled by a forward reference
+      if (! classModel.isCompiled()) {
+        classModel.compile(mEnv);
+      }
     }
 
   protected void compileClass(Element elt, ClassModel classModel, String initobj) {

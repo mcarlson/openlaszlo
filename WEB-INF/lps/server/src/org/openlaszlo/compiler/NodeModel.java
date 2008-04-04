@@ -1835,41 +1835,60 @@ solution =
 
     Map asMap() {
         updateAttrs();
+        assert classAttrs.isEmpty();
         Map map = new LinkedHashMap();
         String tagName = className;
-        if (hasMethods()) {
-            // Emit a class declaration to hold the methods
+        // Emit a class declaration to hold the methods, but for
+        // compatibility with many construct methods, leave all
+        // the non-methods in the attrs list...
+        // TODO: [2008-04-02 ptw] Someday clean this up so that we
+        // don't have to send so damn many Object's just to cons
+        // up a view.
+        boolean hasMethods = false;
+        Map inits = new LinkedHashMap();
+        // Node as map just wants to see all the attrs, so clean out
+        // the binding markers
+        for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry entry = (Map.Entry) i.next();
+            String key = (String) entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof NodeModel.BindingExpr) {
+                inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
+            } else if (! (value instanceof Function)) {
+                inits.put(key, value);
+            } else {
+                hasMethods = true;
+            }
+        }
+        if (hasMethods) {
+            // We have to remove the attributes that have been
+            // converted to inits so things like constraints don't get
+            // installed twice.
+            // TODO: [2008-04-03 ptw] This is a descructive operation
+            // on the model, so the model is invalid after this.  This
+            // should be ok, since it should not be consulted once the
+            // code is generated; but it would be safer to make this
+            // non-destructive.
+            for (Iterator i = inits.keySet().iterator(); i.hasNext(); ) {
+                attrs.remove(i.next());
+            }
             String name = id;
             if (name == null) {
                 name = CompilerUtils.attributeUniqueName(element, "class");
             }
+            // Update tagname to our custom class
             tagName = className + "_" + name;
             ClassModel classModel = new ClassModel(tagName, parentClassModel, schema, element);
             classModel.setNodeModel(this);
             classModel.emitClassDeclaration(env);
         } else {
-            Map inits = new LinkedHashMap();
-            // Node as map just wants to see all the attrs, so clean out
-            // the binding markers
-            for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
-                Map.Entry entry = (Map.Entry) i.next();
-                String key = (String) entry.getKey();
-                Object value = entry.getValue();
-                if (! (value instanceof NodeModel.BindingExpr)) {
-                    inits.put(key, value);
-                } else {
-                    inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
-                }
-            }
-            if (!attrs.isEmpty()) {
-                map.put("attrs", inits);
-            }
-            if (!classAttrs.isEmpty()) {
-                map.put("classAttrs", classAttrs);
-            }
             if (!children.isEmpty()) {
                 map.put("children", childrenMaps());
             }
+        }
+
+        if (!attrs.isEmpty()) {
+            map.put("attrs", inits);
         }
 
         // The tag to instantiate
