@@ -1,6 +1,6 @@
 /* Stylesheet for LPS docs                                            */
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -377,8 +377,6 @@ tt.varname {
 /* Attributes List ****************** */
 td .literal {
     font-size: 12px;
-    background-color: #FFFFFF;
     font-weight: bold; 
     line-height: 18px;
-    color: #333333;
 }
