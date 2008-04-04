@@ -26,7 +26,7 @@ import org.openlaszlo.server.LPS;
  *
  * It is expected that a new SWF9External object
  * be created for each chunk of compilation.  Each
- * new SWF9External gets a new temporary directory
+ * new SWF9External gets a new temporary 'work' directory
  * for compilation, and verifies classname uniqueness
  * within that space.
  */
@@ -41,7 +41,22 @@ public class SWF9External {
    */
   public static final boolean USE_COMPILER_DEBUG_FLAG = true;
 
-  private File tempdir = createCompilationTempDir();
+  /**
+   * A directory we create under the Java runtime's temp dir,
+   * that contains our compilation work directories, one for each compilation.
+   */
+  public static final String WORK_DIR_PARENT = "lzswf9";
+
+  /**
+   * The prefix for naming the work directories, which appear
+   * under the WORK_DIR_PARENT in the Java runtime's temp dir.
+   * For example, /tmp/lzswf9/lzgen...., although /tmp
+   * may be replaced by something else when running within
+   * tomcat or another application server.
+   */
+  public static final String WORK_DIR_PREFIX = "lzgen";
+
+  private File workdir = createCompilationWorkDir();
   private Compiler.OptionMap options;
 
   /**
@@ -95,11 +110,11 @@ public class SWF9External {
   }
 
   /**
-   * Create a temporary directory for compilation
+   * Create a temporary work directory for compilation
    * and return a File for it.
    * @throw CompilerError when directory creation fails
    */
-  private File createCompilationTempDir()
+  private File createCompilationWorkDir()
   {
     // TODO: [2007-11-20 dda] Need some provisions for file
     // cleanup on error, and on success too.
@@ -107,17 +122,17 @@ public class SWF9External {
     File f = null;
     try {
       String tmpdirstr = System.getProperty("java.io.tmpdir");
-      String swf9tmpdirstr = tmpdirstr + File.separator + "lzswf9";
+      String swf9tmpdirstr = tmpdirstr + File.separator + WORK_DIR_PARENT;
       (new File(swf9tmpdirstr)).mkdirs();
         
-      f = File.createTempFile("lzgen", "", new File(swf9tmpdirstr));
+      f = File.createTempFile(WORK_DIR_PREFIX, "", new File(swf9tmpdirstr));
       if (!f.delete())
-        throw new CompilerError("getCompilationTempDir: temp file does not exist");
+        throw new CompilerError("getCompilationWorkDir: temp file does not exist");
       if (!f.mkdir())
-        throw new CompilerError("getCompilationTempDir: cannot make tempdir");
+        throw new CompilerError("getCompilationWorkDir: cannot make workdir");
     }
     catch (IOException ioe) {
-      throw new CompilerError("getCompilationTempDir: cannot get temp directory: " + ioe);
+      throw new CompilerError("getCompilationWorkDir: cannot get temp directory: " + ioe);
     }
     return f;
   }
@@ -131,7 +146,7 @@ public class SWF9External {
     if (new File(file).isAbsolute()) {
       throw new IllegalArgumentException("workDirectoryName: file name must be relative");
     }
-    return tempdir.getPath() + File.separator + file;
+    return workdir.getPath() + File.separator + file;
   }
 
 
@@ -230,6 +245,7 @@ public class SWF9External {
       this.linenum = linenum;
       this.colnum = colnum;
       this.error = error;
+      this.orig = orig;
     }
 
     public String toString() {
@@ -248,12 +264,9 @@ public class SWF9External {
       return error;
     }
 
-    // returns the complete the compiler error: e.g.
-    //   Error: variable 'x' undefined
-    //       result = x + 4;
-    //                ^
+    // returns the original untouched compiler error message
     public String originalErrorString() {
-      return orig + "\n" + code;
+      return orig;
     }
 
     // returns the complete the compiler error,
@@ -262,11 +275,11 @@ public class SWF9External {
     // other than just a newline.  This is
     // meant to be read in the browser.
     //   Error: variable 'x' undefined, in line: result = x + 4;
-    // Compare this with originalErrorString().
     public String cleanedErrorString() {
-      String result = orig.trim();
-      if (result.endsWith("."))
-        result = result.substring(0, orig.length() - 1);
+      String result = error.trim();
+      while (result.endsWith("\n") || result.endsWith(".")) {
+        result = result.substring(0, result.length() - 1);
+      }
       result += ", in line: " + cleanedCode;
       return result;
     }
@@ -322,7 +335,6 @@ public class SWF9External {
    */
   public class ExternalCompilerErrorCollector extends OutputCollector {
 
-    private String relativeDir;
     private String inputFilename;
     private Pattern errPattern;
     private List errors = new ArrayList();
@@ -332,30 +344,20 @@ public class SWF9External {
     // we don't expect this to be terribly big, can fit in memory
     StringBuffer sb = new StringBuffer();
 
-
-    public ExternalCompilerErrorCollector(InputStream is, List tunits, String relativeDir) {
+    public ExternalCompilerErrorCollector(InputStream is, List tunits) {
       super(is);
-      this.relativeDir = relativeDir;
       this.inputFilename = inputFilename;
       this.tunits = (TranslationUnit[])tunits.toArray(new TranslationUnit[0]);
 
       // Expect errors to look like File.as(48): col: 1 Error: some message
 
-      String pat = "([^.]+)\\.as\\(([0-9]+)\\): *col: *([0-9]*) *(.*)";
+      String pat = "([^\\/]+)\\.as\\(([0-9]+)\\): *col: *([0-9]*) *(.*)";
       errPattern = Pattern.compile(pat);
       //System.out.println("Using error pattern: " + pat);
     }
 
     public TranslationUnit locateTranslationUnit(String nm)
     {
-      // remove temporary directory from path
-      int pos;
-      if ((pos = nm.indexOf(relativeDir)) >= 0) {
-        nm = nm.substring(pos + relativeDir.length());
-        while (nm.length() > 0 && nm.charAt(0) == '/')
-          nm = nm.substring(1);
-      }
-
       for (int i=0; i<tunits.length; i++) {
         if (nm.equals(tunits[i].getName()))
           return tunits[i];
@@ -457,7 +459,7 @@ public class SWF9External {
     try {
       OutputStream os = proc.getOutputStream();
       OutputCollector outcollect = new OutputCollector(proc.getInputStream());
-      ExternalCompilerErrorCollector errcollect = new ExternalCompilerErrorCollector(proc.getErrorStream(), tunits, dir);
+      ExternalCompilerErrorCollector errcollect = new ExternalCompilerErrorCollector(proc.getErrorStream(), tunits);
       os.close();
       outcollect.start();
       errcollect.start();
@@ -498,31 +500,29 @@ public class SWF9External {
             if (actualSrcFile == null)
               actualSrcFile = "(" + tunit.getName() + ")";
           }
-          String actualSrcLine = actualSrcFile + ": " + err.getLineNumber();
-          if (tunit == null || 
+
+          String actualSrcLine = "[" + actualSrcFile + ": " + err.getLineNumber() + "] ";
+
+          if (tunit == null ||
               ((srcLine = tunit.originalLineNumber(err.getLineNumber())) <= 0)) {
-            srcLineStr = "[" + actualSrcLine + "]";
+            srcLineStr = "line unknown: ";
           }
           else {
-            // For now, we also show the actual source file/line
-            srcLineStr = String.valueOf(srcLine) +
-              " [" + actualSrcLine + "]";
+            srcLineStr = "line " + String.valueOf(srcLine) + ": ";
           }
-          String errorSummary = srcLineStr +
-            ": " + err.getErrorString() +
-            "\n   " + err.originalErrorString();
-          System.err.println("Compiler error: at " + srcLineStr + ": " +
-                             err.getErrorString() + "\n   " +
-                             err.originalErrorString());
+          System.err.println(actualSrcLine + srcLineStr + err.getErrorString());
+
+          // bigErrorString will be passed as an exception.
+          if (bigErrorString.length() > 0) {
+            bigErrorString += "\n";
+          }
           bigErrorCount++;
           if (bigErrorCount < MAX_ERRORS_SHOWN) {
-            bigErrorString += srcLineStr + ": " +
-              err.getErrorString() + "\n   " +
-              err.cleanedErrorString();
+            bigErrorString += srcLineStr + err.cleanedErrorString();
           }
           else if (bigErrorCount == 50) {
             bigErrorString += ".... more than " + MAX_ERRORS_SHOWN +
-              " errors, additional errors not shown.\n";
+              " errors, additional errors not shown.";
           }
         }
       }
@@ -537,10 +537,6 @@ public class SWF9External {
     System.err.println("Done executing compiler");
     if (!new File(outfileName).exists()) {
       System.err.println("Intermediate file " + outfileName + ": does not exist");
-      // TODO: [2008-1-17 dda] remove this transitional code in a couple months
-      if (((String)cmd.get(0)).indexOf("mxmlc") >= 0) {
-        throw new CompilerError("Errors from compiler - change compiler.swf9.lib.builder property in lps.properties to use compc rather than mxmlc?");
-      }
       if (bigErrorString.length() > 0) {
         throw new CompilerError(bigErrorString);
       }
@@ -606,14 +602,14 @@ public class SWF9External {
       cmd.add(getFlexPathname("bin/mxmlc" + exeSuffix));
     }
 
-    String outfilename = tempdir.getPath() + File.separator + outfilebase;
+    String outfilename = workdir.getPath() + File.separator + outfilebase;
     boolean swf9Warnings = getLPSBoolean("compiler.swf9.warnings", true);
     
     if (!swf9Warnings) {
       cmd.add("-compiler.show-actionscript-warnings=false");
     }
     
-    cmd.add("-compiler.source-path+=" + tempdir.getPath());
+    cmd.add("-compiler.source-path+=" + workdir.getPath());
     if (USE_COMPILER_DEBUG_FLAG) {
       cmd.add("-debug=true");
     }
@@ -638,7 +634,7 @@ public class SWF9External {
       // For a library, we list all the classes.
       if (!buildSharedLibrary) {
         if (tunit.isMainTranslationUnit()) {
-          cmd.add(tempdir.getPath() + File.separator + tunit.getName()+".as");
+          cmd.add(workdir.getPath() + File.separator + tunit.getName()+".as");
         }
       }
       else {
@@ -646,7 +642,7 @@ public class SWF9External {
       }
     }
     
-    execCompileCommand(cmd, tempdir.getPath(), tunits, outfilename);
+    execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
     return getBytes(outfilename);
   }
 
@@ -671,6 +667,18 @@ public class SWF9External {
   }
 
   /**
+   * Return the number of newlines in the string.
+   */
+  public static int countLines(String str) {
+    int count = 0;
+    int pos = -1;
+    while ((pos = str.indexOf('\n', pos+1)) > 0) {
+      count++;
+    }
+    return count;
+  }
+
+  /**
    * Write a file given by the translation unit, and using the
    * given pre and post text.
    * @throw CompilerError for any write errors, or class name conflicts
@@ -679,8 +687,9 @@ public class SWF9External {
     String name = tunit.getName();
     String body = tunit.getContents();
     checkFileNameForClassName(name);
-    String infilename = tempdir.getPath() + File.separator + name + ".as";
+    String infilename = workdir.getPath() + File.separator + name + ".as";
     tunit.setSourceFileName(infilename);
+    tunit.setLineOffset(countLines(pre));
 
     if (options.getBoolean(Compiler.PROGRESS)) {
       System.err.println("Creating: " + infilename);
@@ -716,7 +725,7 @@ public class SWF9External {
   }
 
   /**
-   * Emit a file relative to the temp directory,
+   * Emit a file relative to the work directory,
    * using the TextEmitter as a source for the file text.
    */
   public static void emitFile(String filename, TextEmitter tw) {
@@ -746,7 +755,7 @@ public class SWF9External {
   }
 
   /**
-   * emit a file relative to the temp directory with the given String text
+   * emit a file relative to the work directory with the given String text
    */
   public static void emitFile(String filename, final String txt) {
     emitFile(filename, new TextEmitter() {
@@ -758,7 +767,7 @@ public class SWF9External {
   }
 
   /**
-   * emit a file relative to the temp directory with the given node
+   * emit a file relative to the work directory with the given node
    * (to be dumped) as the text.
    */
   public static void emitFile(String filename, final SimpleNode node) {

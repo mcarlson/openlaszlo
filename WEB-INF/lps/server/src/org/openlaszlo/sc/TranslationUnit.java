@@ -22,6 +22,7 @@ public class TranslationUnit
   private StringBuffer text = new StringBuffer();
   private SortedMap lnums = new TreeMap();
   private int linenum = 1;
+  private int lineOffset = 0;   // size of preamble, that otherwise messes with our line mapping
   private String srcFilename;   // name of associated source file, if applicable
   private boolean isDefault = false; // stuff not within a class goes to default
   private boolean isMain = false;    // designated classes, like LFCApplication
@@ -55,6 +56,10 @@ public class TranslationUnit
 
   public void setSourceFileName(String srcname) {
     this.srcFilename = srcname;
+  }
+
+  public void setLineOffset(int lineOffset) {
+    this.lineOffset = lineOffset;
   }
 
   /** Get text with any insertions resolved */
@@ -141,6 +146,7 @@ public class TranslationUnit
   public void dump() {
     System.out.println("TranslationUnit[" + name + ", line " + linenum + "]");
     System.out.println("  text=" + text);
+    System.out.println("  preamble line offset=" + lineOffset);
     System.out.println("  linemap=");
     for (Iterator iter=lnums.keySet().iterator(); iter.hasNext(); ) {
       Object key = iter.next();
@@ -150,6 +156,7 @@ public class TranslationUnit
   }
 
   public int originalLineNumber(int num) {
+    num -= lineOffset;
     SortedMap nextLineNumber = lnums.tailMap(new Integer(num));
     if (nextLineNumber.size() == 0)
       return -1;

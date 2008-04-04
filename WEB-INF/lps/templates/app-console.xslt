@@ -318,6 +318,14 @@ If you edit this file, please validate your work using http://validator.w3.org/
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="error">
+    <xsl:call-template name="str.subst">
+      <xsl:with-param name="str" select="." />
+      <xsl:with-param name="from" select="'&#xA;'" />
+      <xsl:with-param name="to"><br/></xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
   <xsl:template match="/errors">
     <div style="border-top: 1px solid; border-bottom: 1px solid; background-color: #fcc; padding: 1pt; padding-left: 2pt">
       The application could not be compiled due to the following errors:
@@ -341,6 +349,26 @@ If you edit this file, please validate your work using http://validator.w3.org/
     </xsl:if>
 
     <xsl:call-template name="footer"/>
+  </xsl:template>
+
+  <xsl:template name="str.subst">
+    <xsl:param name="str" />
+    <xsl:param name="from" />
+    <xsl:param name="to"><br /></xsl:param>
+    <xsl:choose>
+      <xsl:when test="contains($str, $from)">
+        <xsl:value-of select="substring-before($str, $from)" />
+        <xsl:copy-of select="$to" />
+        <xsl:call-template name="str.subst">
+          <xsl:with-param name="str" select="substring-after($str, $from)" />
+          <xsl:with-param name="from" select="$from" />
+          <xsl:with-param name="to" select="$to" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$str" />
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>

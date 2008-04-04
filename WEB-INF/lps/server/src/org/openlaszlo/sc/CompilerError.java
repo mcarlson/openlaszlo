@@ -3,8 +3,9 @@
 package org.openlaszlo.sc;
 
 import org.openlaszlo.sc.parser.SimpleNode;
+import org.openlaszlo.compiler.CompilationError;
 
-public class CompilerError extends RuntimeException {
+public class CompilerError extends CompilationError {
   public SimpleNode node;
 
   public CompilerError (String message) {
@@ -14,20 +15,27 @@ public class CompilerError extends RuntimeException {
 
   public CompilerError (String message, SimpleNode node) {
     super(message);
-    this.node = node;
+    attachNode(node);
   }
 
   public void attachNode(SimpleNode node) {
     assert this.node == null;
     this.node = node;
+    if (node != null) {
+      initPathname(node.filename);
+      initLineNumber(node.beginLine);
+      initColumnNumber(node.beginColumn);
+    }
   }
 
   public String toString() {
-    return Compiler.getLocationString(node) + ": " + super.toString();
+    String loc = (node == null) ? "" :
+      (Compiler.getLocationString(node) + ": ");
+    return loc + super.toString();
   }
 }
 
 /**
- * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

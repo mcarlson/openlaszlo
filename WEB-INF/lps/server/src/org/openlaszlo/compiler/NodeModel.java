@@ -259,7 +259,7 @@ public class NodeModel implements Cloneable {
         // value sent by sendEvent, so we have to accept it, but we
         // ignore it
         "$lzc$ignore=null",
-        pragmas +
+        pragmas,
         "this." + installer + "(" +
         ScriptCompiler.quote(name) + "," +
         body,
@@ -271,11 +271,12 @@ public class NodeModel implements Cloneable {
       if (! when.equals(WHEN_ALWAYS)) {
         return null;
       }
-      String body = "\n#pragma 'withThis'\n" +
-        "return " + getCompiler().dependenciesForExpression(value);
+      String preface = "\n#pragma 'withThis'\n";
+      String body = "return " + getCompiler().dependenciesForExpression(value);
       Function dependencies = new Function(
         dependenciesname,
         "",
+        preface,
         body,
         srcloc);
       return dependencies;
@@ -1206,7 +1207,7 @@ solution =
                          args,
                          "\n#beginContent\n" +
                          "\n#pragma 'methodName=" + method + "'\n" +
-                         "\n#pragma 'withThis'\n" +
+                         "\n#pragma 'withThis'\n",
                          body + "\n#endContent",
                          src_loc);
             // Add hander as a method
@@ -1343,7 +1344,7 @@ solution =
                      args,
                      "\n#beginContent\n" +
                      "\n#pragma 'methodName=" + name + "'\n" +
-                     "\n#pragma 'withThis'\n" +
+                     "\n#pragma 'withThis'\n",
                      body + "\n#endContent",
                      name_loc,
                      adjectives);

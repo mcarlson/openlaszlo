@@ -152,8 +152,7 @@ class ClassModel implements Comparable {
         // Apparently AS3 does not allow defaulting of
         // primitive args
         "$lzc$parent:LzNode? = null, $lzc$attrs:Object? = null, $lzc$children:Array? = null, $lzc$async:Boolean = false",
-        body,
-        null));
+        body));
 
     // Build the class body
     String classBody = "";
