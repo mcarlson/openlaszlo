@@ -53,7 +53,7 @@
             <view width="800" height="1" y="89" bgcolor="0xFFFFFF" /-->
         </view>
 
-        <view name="beveled-divider"  y="${parent.tools.height}" resource="assets/beveled-divider.gif" 
+        <view name="beveled_divider"  y="${parent.tools.height}" resource="assets/beveled-divider.gif" 
               stretches="width" width="${parent.width}" />
         
         <view id="photoscontainer" name="photos" visible="false" width="${parent.width}"  height="460" y="93"  >
