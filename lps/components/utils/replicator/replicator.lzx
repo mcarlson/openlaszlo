@@ -96,9 +96,12 @@
   <script when="immediate">
     <![CDATA[
 
-class replicator extends LzNode {
-
+// Classes that implement an interface must obey the LZX
+// tag->class mapping convention
+class $lzc$class_replicator extends LzNode {
+    // Next two are part of the required LFC tag class protocol
     static var tagname = 'replicator';
+    static var attributes = new LzInheritedHash(LzNode.attributes);
 
     var pool = true;
 

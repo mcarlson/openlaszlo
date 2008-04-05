@@ -20,6 +20,7 @@ class ClassModel implements Comparable {
     protected final ClassModel superclass;
     // This is null for the root class
     protected final Element definition;
+    protected String kind;
     protected NodeModel nodeModel;
     
     /** Set of tags that can legally be nested in this element */
@@ -56,6 +57,10 @@ class ClassModel implements Comparable {
         this.className = className;
         this.superclass = superclass;
         this.definition = definition;
+        if (definition != null) {
+          // class, interface, mixin
+          this.kind = definition.getName();
+        }
         this.schema = schema;
         this.sortkey = className;
         if (superclass != null) {
@@ -288,7 +293,9 @@ class ClassModel implements Comparable {
 
   boolean isCompiled() {
     // Classes that are builtin or have been compiled
-    return isBuiltin() || hasNodeModel();
+    // Or and interface:  for now, we generate nothing for an LZX
+    // interface
+    return isBuiltin() || hasNodeModel() || "interface".equals(kind);
   }
 
     ClassModel getSuperclassModel() {

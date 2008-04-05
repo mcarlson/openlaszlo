@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <include href="replicator.lzx"/>
     <!-- A replicator which creates as many clones as are necessary to fill in
@@ -14,9 +14,12 @@
   <script when="immediate">
     <![CDATA[
 
-class lazyreplicator extends replicator {
-
+// Classes that implement an interface must obey the LZX
+// tag->class mapping convention
+class $lzc$class_lazyreplicator extends $lzc$class_replicator {
+    // Next two are part of the required LFC tag class protocol
     static var tagname = 'lazyreplicator';
+    static var attributes = new LzInheritedHash($lzc$class_replicator.attributes);
 
     // mostly copied from LzLazyReplicationManager
     // @keywords private

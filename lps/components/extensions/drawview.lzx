@@ -256,9 +256,14 @@
     <when runtime="dhtml">
       <script when="immediate"><![CDATA[
       
-        class drawview extends LzView {
+        // Classes that implement an interface must obey the LZX
+        // tag->class mapping convention
+        class $lzc$class_drawview extends LzView {
+            // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
-            
+            static var attributes = new LzInheritedHash(LzView.attributes);
+            static var uid = 0;
+
             var globalAlpha = 1;
             var lineWidth = 1;
             var lineCap = 'round';
@@ -284,8 +289,8 @@
             }
     
             function _buildcanvas(width, height) {
-                if (drawview.prototype.uid == null) {
-                    drawview.prototype.uid = 0;
+                if ($lzc$class_drawview.uid == null) {
+                    $lzc$class_drawview.uid = 0;
                 }
                 this.beginPath();
     
@@ -306,7 +311,7 @@
                         return;
                     }
                 }
-                this.__id = 'canvas-' + drawview.prototype.uid++;
+                this.__id = 'canvas-' + $lzc$class_drawview.uid++;
                 //Debug.write('_buildcanvas', this.__id, width, height);
     
                 this.__LZcanvas = document.createElement('canvas');
@@ -546,9 +551,12 @@
       <!-- TODO [jgrandy 6/1/2007] <otherwise> should be <when runtime="as2"> but that isn't currently supported -->
       <script when="immediate"><![CDATA[
 
-        class drawview extends LzView {
-
+        // Classes that implement an interface must obey the LZX
+        // tag->class mapping convention
+        class $lzc$class_drawview extends LzView {
+            // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
+            static var attributes = new LzInheritedHash(LzView.attributes);
             
             var globalAlpha = 1;
             var lineWidth = 1;

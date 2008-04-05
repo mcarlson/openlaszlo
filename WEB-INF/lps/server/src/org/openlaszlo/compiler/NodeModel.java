@@ -525,8 +525,8 @@ public class NodeModel implements Cloneable {
     ClassModel getParentClassModel() {
         String parentName = this.className;
         return
-            ("class".equals(parentName) || "interface".equals(parentName))?
-            schema.getClassModel(element.getAttributeValue("extends", ClassCompiler.DEFAULT_SUPERCLASS_NAME)):
+            ("class".equals(parentName) || "interface".equals(parentName) || "mixin".equals(parentName)) ?
+            schema.getClassModel(element.getAttributeValue("extends", ClassCompiler.DEFAULT_SUPERCLASS_NAME)) :
             schema.getClassModel(parentName);
     }
 

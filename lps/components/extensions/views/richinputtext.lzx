@@ -22,9 +22,13 @@
 <script when='immediate'>
 <![CDATA[
 
-class richinputtext extends LzInputText {
-
+// Classes that implement an interface must obey the LZX
+// tag->class mapping convention
+class $lzc$class_richinputtext extends LzInputText {
+  // Next two are part of the required LFC tag class protocol
   static var tagname = 'richinputtext';
+  static var attributes = new LzInheritedHash(LzInputText.attributes);
+
   var defaultformat = null;
 
   //-----------------------------------------------------------------------------
