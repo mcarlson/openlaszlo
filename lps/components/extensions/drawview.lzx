@@ -263,6 +263,7 @@
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
             static var uid = 0;
+            static var _colorcache = {};
 
             var globalAlpha = 1;
             var lineWidth = 1;
@@ -271,7 +272,6 @@
             var fillStyle = '#000000';
             var context = null;
             var cachebitmap = true;
-            var _colorcache = {};
             
             var oncontext = LzDeclaredEvent;
     
@@ -289,9 +289,6 @@
             }
     
             function _buildcanvas(width, height) {
-                if ($lzc$class_drawview.uid == null) {
-                    $lzc$class_drawview.uid = 0;
-                }
                 this.beginPath();
     
                 if (this.__LZcanvas) {
@@ -311,7 +308,7 @@
                         return;
                     }
                 }
-                this.__id = 'canvas-' + $lzc$class_drawview.uid++;
+                this.__id = 'canvas-' + (lz.drawview.uid++);
                 //Debug.write('_buildcanvas', this.__id, width, height);
     
                 this.__LZcanvas = document.createElement('canvas');
@@ -444,19 +441,25 @@
                         //Debug.write('before apply');
                         this.fillStyle.__applyTo(this.context);
                     } else {
-                        if (! this._colorcache[this.fillStyle]) {
-                            this._colorcache[this.fillStyle] = LzUtils.color.torgb(this.fillStyle);
+                        var ccache = lz.drawview._colorcache;
+                        var fillStyleColor = ccache[this.fillStyle];
+                        if (fillStyleColor == null) {
+                            fillStyleColor = LzUtils.color.torgb(this.fillStyle);
+                            ccache[this.fillStyle] = fillStyleColor;
                         }
-                        this.context.fillStyle = this._colorcache[this.fillStyle];
+                        this.context.fillStyle = fillStyleColor;
                     }
                     this._fillStyle = this.fillStyle;
                 }
     
                 if (this._strokeStyle != this.strokeStyle) {
-                    if (! this._colorcache[this.strokeStyle]) {
-                        this._colorcache[this.strokeStyle] = LzUtils.color.torgb(this.strokeStyle);
+                    var ccache = lz.drawview._colorcache;
+                    var strokeStyleColor = ccache[this.strokeStyle];
+                    if (strokeStyleColor == null) {
+                        strokeStyleColor = LzUtils.color.torgb(this.strokeStyle);
+                        ccache[this.strokeStyle] = strokeStyleColor;
                     }
-                    this.context.strokeStyle = this._colorcache[this.strokeStyle];
+                    this.context.strokeStyle = strokeStyleColor;
                     this._strokeStyle = this.strokeStyle;
                 }
 
@@ -535,10 +538,13 @@
           * @param Number c: The color to be used at this color.  A hexadecimal value, e.g. 0xffffff
           */
         LzCanvasGradient.prototype.addColorStop = function(o, c) {
-            if (! lz.drawview.prototype._colorcache[c]) {
-                lz.drawview.prototype._colorcache[c] = LzUtils.color.torgb(c);
+            var ccache = lz.drawview._colorcache;
+            var cstopColor = ccache[c];
+            if (cstopColor == null) {
+                cstopColor = LzUtils.color.torgb(c);
+                ccache[c] = cstopColor;
             }
-            this._g.addColorStop(o, lz.drawview.prototype._colorcache[c])
+            this._g.addColorStop(o, cstopColor);
         }
 
         LzCanvasGradient.prototype.__applyTo = function(scope) {
@@ -557,6 +563,7 @@
             // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
+            static var _colorcache = {};
             
             var globalAlpha = 1;
             var lineWidth = 1;
@@ -564,7 +571,6 @@
             var fillStyle = '#000000';
             var context = null;
             var cachebitmap = true;
-            var _colorcache = {}
             var __MOVETO_OP = 0;
             var __LINETO_OP = 1;
             var __QCURVE_OP = 2;
@@ -743,14 +749,15 @@
     
             function fill() {
                 if (this.fillStyle instanceof LzCanvasGradient) {
-                    //Debug.write('before apply');
                     this.fillStyle.__applyTo(this.context);
                 } else {
-                    if (! this._colorcache[this.fillStyle]) {
-                        this._colorcache[this.fillStyle] = LzUtils.color.hextoint(this.fillStyle);
+                    var ccache = lz.drawview._colorcache;
+                    var fillStyleColor = ccache[this.fillStyle];
+                    if (fillStyleColor == null) {
+                        fillStyleColor = LzUtils.color.hextoint(this.fillStyle);
+                        ccache[this.fillStyle] = fillStyleColor;
                     }
-                    //Debug.write('fill', this.context, this.fillStyle, this.globalAlpha * 100);
-                    this.context.beginFill(this._colorcache[this.fillStyle], this.globalAlpha * 100);
+                    this.context.beginFill(fillStyleColor, this.globalAlpha * 100);
                 }
                 this.closePath();
                 this.__playPath(this.context);
@@ -796,11 +803,13 @@
                     }
                     return;
                 }
-                if (! this._colorcache[this.strokeStyle]) {
-                    this._colorcache[this.strokeStyle] = LzUtils.color.hextoint(this.strokeStyle);
+                var ccache = lz.drawview._colorcache;
+                var strokeStyleColor = ccache[this.strokeStyle];
+                if (strokeStyleColor == null) {
+                    strokeStyleColor = LzUtils.color.hextoint(this.strokeStyle);
+                    ccache[this.strokeStyle] = strokeStyleColor;
                 }
-                this.context.lineStyle(this.lineWidth, this._colorcache[this.strokeStyle], this.globalAlpha * 100);
-                //Debug.write(this.context, 'stroke',this.lineWidth, this._colorcache[this.strokeStyle], this.globalAlpha * 100);
+                this.context.lineStyle(this.lineWidth, strokeStyleColor, this.globalAlpha * 100);
                 this.__playPath(this.context);
                 this.context.lineStyle(undefined);
                 this.sprite.updateResourceSize();
@@ -873,10 +882,13 @@
           */
         LzCanvasGradient.prototype.addColorStop = function(o, c) {
             this._o[this._o.length] = o * 255;
-            if (! this._context._colorcache[c]) {
-                this._context._colorcache[c] = LzUtils.color.hextoint(c);
+            var ccache = lz.drawview._colorcache;
+            var cstopColor = ccache[c];
+            if (cstopColor == null) {
+                cstopColor = LzUtils.color.hextoint(c);
+                ccache[c] = cstopColor;
             }
-            this._c[this._c.length] = this._context._colorcache[c];
+            this._c[this._c.length] = cstopColor;
             this._a[this._a.length] = this._context.globalAlpha * 100;
         }
 
