@@ -98,7 +98,9 @@ dynamic class LzDataset extends LzNode with LzDataElementMixin, LzDataNodeMixin 
   */
 static var tagname = 'dataset';
 /** @access private */
-  static var attributes = new LzInheritedHash(LzNode.attributes);
+static var attributes = new LzInheritedHash(LzNode.attributes);
+/** @access private */
+LzDataset.attributes.name = 'localdata';
  
 static var slashPat = "/";
 
@@ -236,24 +238,18 @@ override function construct ( parent , args ){
 
     this.oncanvas = parent == canvas || parent == null;
 
-    if (this._instanceAttrs['name'] == null) {
-        this._instanceAttrs['name'] = 'localdata';
-    }
-
     // bwcompat 1.0 support for port
     if (('port' in args && args.port) && !('secureport' in args && args.secureport)) {
         args.secureport = args.port;
     }
 
     this.ownerDocument = this;
-
     
     if ('timeout' in args && args.timeout) {
         this.timeout = args.timeout;
     } else {
         this.timeout = canvas.dataloadtimeout;
     }
-
 
     super.construct.apply(this, arguments);
 }
@@ -265,36 +261,42 @@ override function construct ( parent , args ){
 override function $lzc$set_name(name) {
     super.$lzc$set_name.apply(this, arguments);
 
-    //for compatibility with dataNode API
-    this.nodeName = name;
-
-    if (!('datasets' in canvas) || null == canvas.datasets ) {
-        canvas.datasets = {};
-    }
-
-    //support "name is global identifier on canvas" behavior
-    if ( this.oncanvas ){
-        if ($debug) {
-          if (global[name] && global[name] !== this) {
-            Debug.warn('Redefining #%s from %w to %w', 
-                       name, global[name], this);
-          }
+    // @devnote: Name is permitted to be null or undefined, meaning
+    // "don't name me", see LzNode#$lzc$set_name(..).
+    // But name shouldn't be set explictly to null for a dataset, 
+    // unless you know what you're doing, see AnonDatasetGenerator#getContext(..)!
+    if (name != null) {
+        //for compatibility with dataNode API
+        this.nodeName = name;
+        
+        if (!('datasets' in canvas) || null == canvas.datasets ) {
+            canvas.datasets = {};
         }
-        global[ name ] = this;
-        canvas[ name ] = this;
-    } else {
-        // it's local - add the parent's UID
-        name = this.parent.getUID() + '.' + name;
-    }
-
-    if (null != canvas.datasets[name]) {
-        if ($debug) {
-            Debug.warn("A dataset already exists with the name '%s': %w",
-                       name, canvas.datasets[name]);
+        
+        //support "name is global identifier on canvas" behavior
+        if ( this.oncanvas ){
+            if ($debug) {
+              if (global[name] && global[name] !== this) {
+                Debug.warn('Redefining #%s from %w to %w', 
+                           name, global[name], this);
+              }
+            }
+            global[ name ] = this;
+            canvas[ name ] = this;
+        } else {
+            // it's local - add the parent's UID
+            name = this.parent.getUID() + '.' + name;
         }
+        
+        if (null != canvas.datasets[name]) {
+            if ($debug) {
+                Debug.warn("A dataset already exists with the name '%s': %w",
+                           name, canvas.datasets[name]);
+            }
+        }
+        
+        canvas.datasets[name] = this;
     }
-
-    canvas.datasets[name] = this;
 }
 
 /**
