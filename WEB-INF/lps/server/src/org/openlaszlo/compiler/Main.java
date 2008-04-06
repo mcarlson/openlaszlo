@@ -17,7 +17,7 @@ import org.apache.log4j.spi.*;
 import org.apache.log4j.varia.NullAppender;
 
 public class Main {
-    private static String[] USAGE = {
+    private static final String[] USAGE = {
         "Usage: lzc [OPTION]... FILE...",
         "",
         "Options:",
@@ -35,6 +35,10 @@ public class Main {
         "  Prints this message.",
         "--flush-script-cache",
         "  Doesn't flush script cache before compiling.",
+        "--script-cache-dir directory",
+        "  Location of script cache directory (default <lps>/work/scache)",
+        "--media-cache-dir directory",
+        "  Location of media cache directory (default <lps>/work/cache/cmcache)",
         "",
         "Output options:",
         "--runtime=[swf7|swf8|swf9|dhtml|j2me|svg|null]",
@@ -47,6 +51,8 @@ public class Main {
         "  Add debugging support into the output object.",
         "-g | -g2 | --backtrace",
         "  Add debugging and backtrace support into the output object.",
+        "-o <file> | --output <file>",
+        "  Put output into given filename.",
         "-p | --profile",
         "  Add profiling information into the output object.",
         "",
@@ -64,6 +70,10 @@ public class Main {
         "--script",
         "  Writes JavaScript to standard output."
     };
+
+    private final static String MORE_HELP =
+        "Try `lzc --help' for more information.";
+
 
     /** Compiles each file base.ext to the output file base.swf (or .js),
      * writing progress information to standard output.  This method
@@ -100,16 +110,8 @@ public class Main {
         }
     
         Compiler compiler = new Compiler();
-        CompilerMediaCache cache;
-        String cacheDir = LPS.getWorkDirectory() + File.separator + "cache" + File.separator + "cmcache";
-        cache = new CompilerMediaCache(new File(cacheDir), new Properties());
-
-        // Make sure we always retranscode media
-        //cache.setProperty("forcetranscode", "true");
-        compiler.setMediaCache(cache);
-
-        String scacheDir = LPS.getWorkDirectory() + File.separator + "scache";
-        ScriptCompiler.initScriptCompilerCache(new File(scacheDir), new Properties());
+        String mediaCacheDir = LPS.getWorkDirectory() + File.separator + "cache" + File.separator + "cmcache";
+        String scriptCacheDir = LPS.getWorkDirectory() + File.separator + "scache";
         // Set default runtime to compiler.runtime.default
         compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY,
                              LPS.getProperty("compiler.runtime.default",
@@ -117,6 +119,8 @@ public class Main {
         // TODO [hqm 2008-01] I set this to true because when working on
         // the LFC, I frequently get screwed by using cached script.
         boolean flushScriptCache = true;
+        Boolean forceTransCode = null;
+        String outFileArg = null;
 
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].intern();
@@ -124,7 +128,11 @@ public class Main {
                 if (arg == "-v") {
                     logger.setLevel(Level.ALL);
                 } else if (arg == "-lp") {
-                    PropertyConfigurator.configure(args[++i]);
+                    String value = safeArg("-lp", args, ++i);
+                    if (value == null) {
+                        return 1;
+                    }
+                    PropertyConfigurator.configure(value);
                     String lhome = System.getProperty("LPS_HOME");
                     if (lhome == null || lhome.equals("")) {
                         lhome = System.getenv("LPS_HOME");
@@ -137,8 +145,16 @@ public class Main {
                     System.err.println("--keepscriptcache is deprecated.  This is now the default behavior.");
                 } else if (arg == "--flush-script-cache") {
                     flushScriptCache = true;
+                } else if (arg == "-o" || arg == "--output") {
+                    outFileArg = safeArg("-o or --output", args, ++i);
+                    if (outFileArg == null) {
+                        return 1;
+                    }
                 } else if (arg == "--onerror") {
-                    String value = args[++i];
+                    String value = safeArg("--onerror", args, ++i);
+                    if (value == null) {
+                        return 1;
+                    }
                     CompilationError.ThrowCompilationErrors =
                         "throw".equals(value);
                 } else if (arg.startsWith("--runtime=")) {
@@ -147,25 +163,54 @@ public class Main {
                       compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, value);
                     } else {
                       System.err.println("Invalid value for --runtime");
+                      System.err.println(MORE_HELP);
                       return 1;
                     }
                 } else if (arg == "-S" || arg == "--script") {
                     // TODO: [2007-05-25 ptw] This is bogus -- should write out a .lzs file
                     Logger.getLogger(org.openlaszlo.sc.ScriptCompiler.class)
                         .setLevel(Level.ALL);
+                } else if (arg == "--script-cache-dir") {
+                    scriptCacheDir = safeArg("--script-cache-dir", args, ++i);
+                    if (scriptCacheDir == null) {
+                        return 1;
+                    } else if (!(new File(scriptCacheDir)).isDirectory()) {
+                        System.err.println("lzc: --script-cache-dir " + scriptCacheDir + ": directory must exist");
+                        return 1;
+                    }
+                } else if (arg == "--media-cache-dir") {
+                    mediaCacheDir = safeArg("--media-cache-dir", args, ++i);
+                    if (mediaCacheDir == null) {
+                        return 1;
+                    } else if (!(new File(mediaCacheDir)).isDirectory()) {
+                        System.err.println("lzc: --media-cache-dir " + mediaCacheDir + ": directory must exist");
+                        return 1;
+                    }
                 } else if (arg == "-mcache" || arg == "--mcache") {
-                    String value = args[++i];
-                    if (value.equals("on")) {
-                        cache.getProperties().setProperty("forcetranscode", "false");
+                    String value = safeArg("-mcache", args, ++i);
+                    if (value == null) {
+                        return 1;
+                    } else if (value.equals("on")) {
+                        forceTransCode = Boolean.FALSE;
                     } else if (value.equals("off")) {
-                        cache.getProperties().setProperty("forcetranscode", "true");
+                        forceTransCode = Boolean.TRUE;
+                    } else {
+                        System.out.println("Invalid value for --mcache");
+                        System.err.println(MORE_HELP);
+                        return 1;
                     }
                 } else if (arg == "-log" || arg == "--log") {
-                    String log = args[++i];
+                    String log = safeArg("-log or --log", args, ++i);
+                    if (log == null) {
+                        return 1;
+                    }
                     logger.removeAllAppenders();
                     logger.addAppender(new FileAppender(layout, log, false));
                 } else if (arg == "-dir" || arg == "--dir") {
-                    outDir = args[++i];
+                    outDir = safeArg("-dir or --dir", args, ++i);
+                    if (outDir == null) {
+                        return 1;
+                    }
                 } else if (arg.startsWith("-D")) {
                     String key = arg.substring(2);
                     String value = "true";
@@ -203,7 +248,7 @@ public class Main {
                     return 0;
                 } else {
                     System.err.println("Usage: lzc [OPTION]... file...");
-                    System.err.println("Try `lzc --help' for more information.");
+                    System.err.println(MORE_HELP);
                     return 1;
                 }
                 continue;
@@ -212,12 +257,33 @@ public class Main {
             files.add(sourceName);
         }
 
+        CompilerMediaCache cache = new CompilerMediaCache(new File(mediaCacheDir), new Properties());
+        if (forceTransCode != null) {
+            cache.getProperties().setProperty("forcetranscode", forceTransCode.toString());
+        }
+        compiler.setMediaCache(cache);
+
+        ScriptCompiler.initScriptCompilerCache(new File(scriptCacheDir), new Properties());
+
         if (flushScriptCache) {
             ScriptCompiler.clearCacheStatic();
         }
 
         LPS.initialize();
 
+        if (files.size() == 0) {
+            System.err.println("lzc: no input files");
+            System.err.println(MORE_HELP);
+            return 1;
+        }
+        if (outFileArg != null) {
+            outFileName = outFileArg;
+            if (files.size() > 1) {
+                System.err.println("lzc: -o or --output can only be used with one input file");
+                System.err.println(MORE_HELP);
+                return 1;
+            }
+        }
         int status = 0;
         for (Iterator iter = files.iterator(); iter.hasNext(); ) {
             String sourceName = (String) iter.next();
@@ -226,6 +292,26 @@ public class Main {
             status += compile(compiler, logger, sourceName, outFileName, outDir);
         }
         return status;
+    }
+
+    /**
+     * Utility function to produce a reasonable message for incorrect
+     * invocations that end with a arg expecting more, like "lzc -mcache".
+     * @return the next arg if available, and null not.
+     *      When null is returned, an error message already produced
+     * @param argname the name of the argument, e.g. "-mcache"
+     * @param the args array
+     * @param offset the offset into the args array.
+     */
+    public static String safeArg(String argname, String args[], int offset)
+    {
+        if (offset >= args.length) {
+            System.err.println("lzc: expected argument for " + argname);
+            System.err.println(MORE_HELP);
+            return null;
+        } else {
+            return args[offset];
+        }
     }
 
     static private int compile(Compiler compiler,
