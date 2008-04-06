@@ -808,7 +808,18 @@ All Rights Reserved. Use is subject to license terms.</p>
       <copy todir="${reference.output.dir}">
           <fileset dir="nav" includes="*.*"/>
       </copy>
-      
+      <exec executable="ruby" failonerror="true">
+        <arg value="${reference.src.dir}/navbuilder/navxmlbuilder.rb" />
+        <arg value="--inputdir" />
+        <arg value="${reference.output.dir}" />
+        <arg value="--outputdir" />
+        <arg value="${reference.output.dir}" />
+      </exec>
+      <exec executable="ruby" failonerror="true">
+        <arg value="${reference.src.dir}/navbuilder/toccheck.rb" />
+        <arg value="--inputdir" />
+        <arg value="${reference.output.dir}" />
+      </exec>
   </target>
   
   <target name="reference.html.disclaimer" depends="init"

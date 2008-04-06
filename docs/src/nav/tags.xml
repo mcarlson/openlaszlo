@@ -62,13 +62,13 @@
     <item href="lz.datacombobox.html" title="datacombobox" />
     <item href="lz.datalabel.html" title="datalabel" />
     <item href="lz.datamarker.html" title="datamarker" />
-    <item href="LzDatapath+dhtml+j2me+svg+swf7+swf8.html" title="datapath (dhtml j2me svg swf7 swf8)" />
-    <item href="LzDatapointer+dhtml+j2me+svg+swf7+swf8.html" title="datapointer (dhtml j2me svg swf7 swf8)" />
-    <item href="LzDataProvider+dhtml+j2me+svg+swf7+swf8.html" title="dataprovider (dhtml j2me svg swf7 swf8)" />
-    <item href="LzDataRequest+dhtml+j2me+svg+swf7+swf8.html" title="datarequest (dhtml j2me svg swf7 swf8)" />
+    <item href="LzDatapath.html" title="datapath" />
+    <item href="LzDatapointer.html" title="datapointer" />
+    <item href="LzDataProvider.html" title="dataprovider" />
+    <item href="LzDataRequest.html" title="datarequest" />
     <item href="lz.dataseries.html" title="dataseries" />
-    <item href="LzDataset+dhtml+j2me+svg+swf7+swf8.html" title="dataset (dhtml j2me svg swf7 swf8)" />
-    <item href="LzHTTPDatasource+dhtml+j2me+svg+swf7+swf8.html" title="datasource (dhtml j2me svg swf7 swf8)" />
+    <item href="LzDataset.html" title="dataset" />
+    <item href="LzHTTPDatasource.html" title="datasource" />
     <item href="lz.datastyle.html" title="datastyle" />
     <item href="lz.datastylelist.html" title="datastylelist" />
     <item href="lz.datatip.html" title="datatip" />
@@ -93,8 +93,8 @@
     <item href="lz.horizontalaxis.html" title="horizontalaxis" />
     <item href="lz.hscrollbar.html" title="hscrollbar" />
     <item href="lz.html.html" title="html" />
-    <item href="LzHTTPDataProvider+dhtml+j2me+svg+swf7+swf8.html" title="httpdataprovider (dhtml j2me svg swf7 swf8)" />
-    <item href="LzHTTPDataRequest+dhtml+j2me+svg+swf7+swf8.html" title="httpdatarequest (dhtml j2me svg swf7 swf8)" />
+    <item href="LzHTTPDataProvider.html" title="httpdataprovider" />
+    <item href="LzHTTPDataRequest.html" title="httpdatarequest" />
     <item href="tag-i.html" title="i" />
     <item href="lz.image.html" title="image" />
     <item href="tag-img.html" title="img" />
@@ -131,7 +131,7 @@
     <item href="LzNode.html" title="node" />
     <item href="tag-p.html" title="p" />
     <item href="lz.param.html" title="param" />
-    <item href="LzParam+dhtml+j2me+svg+swf7+swf8.html" title="params (dhtml j2me svg swf7 swf8)" />
+    <item href="LzParam.html" title="params" />
     <item href="lz.piechart.html" title="piechart" />
     <item href="lz.piechartplotarea.html" title="piechartplotarea" />
     <item href="lz.plainfloatinglist.html" title="plainfloatinglist" />

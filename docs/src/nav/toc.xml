@@ -129,22 +129,22 @@
     </category>
     
     <category title="Data">
-        <item title="datapath (LzDatapath)" href="LzDatapath+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="datapointer (LzDatapointer)" href="LzDatapointer+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="datapath (LzDatapath)" href="LzDatapath.html" />
+        <item title="datapointer (LzDatapointer)" href="LzDatapointer.html" />
         <item title="dataselectionmanager (LzDataSelectionManager)" href="LzDataSelectionManager+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="dataset (LzDataset)" href="LzDataset+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="datasource (LzDatasource)" href="LzDatasource+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="defaultdataprovider" href="defaultdataprovider+dhtml+j2me+svg+swf7+swf8.html" />        
-        <item title="httpdataprovider" href="httpdataprovider+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="dataset (LzDataset)" href="LzDataset.html" />
+        <item title="datasource (LzDatasource)" href="LzDatasource.html" />
+        <item title="defaultdataprovider" href="defaultdataprovider.html" />        
+        <item title="httpdataprovider" href="httpdataprovider.html" />
    <!--     <item title="LzConnectionDatasource" href="LzConnectionDatasource.html" />     -->
-        <item title="LzDataElement" href="LzDataElement+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="LzDataNode" href="LzDataNode+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="LzDataProvider" href="LzDataProvider+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="LzDataRequest" href="LzDataRequest+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="LzDataText" href="LzDataText+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="LzHTTPDataProvider" href="LzHTTPDataProvider+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="LzHTTPDataRequest" href="LzHTTPDataRequest+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="LzHTTPDatasource" href="LzHTTPDatasource+dhtml+j2me+svg+swf7+swf8.html" />        
+        <item title="LzDataElement" href="LzDataElement.html" />
+        <item title="LzDataNode" href="LzDataNode.html" />
+        <item title="LzDataProvider" href="LzDataProvider.html" />
+        <item title="LzDataRequest" href="LzDataRequest.html" />
+        <item title="LzDataText" href="LzDataText.html" />
+        <item title="LzHTTPDataProvider" href="LzHTTPDataProvider.html" />
+        <item title="LzHTTPDataRequest" href="LzHTTPDataRequest.html" />
+        <item title="LzHTTPDatasource" href="LzHTTPDatasource.html" />        
     </category>
     
     <category title="Scripting">
@@ -221,7 +221,7 @@
     </category>
     
     <category title="Services">
-        <item title="LzFocus" href="LzFocus+dhtml+j2me+svg+swf7+swf8.html" />    
+        <item title="LzFocus" href="LzFocus.html" />    
     </category>
     
     <category title="Charts and Graphs">
