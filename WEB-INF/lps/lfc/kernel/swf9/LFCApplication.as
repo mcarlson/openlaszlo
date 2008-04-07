@@ -43,6 +43,15 @@ public class LFCApplication extends Sprite {
         stage.addEventListener(KeyboardEvent.KEY_DOWN,reportKeyDown);
         stage.addEventListener(KeyboardEvent.KEY_UP,reportKeyUp);
 
+
+        // necessary for consistent behavior - in netscape browsers HTML is ignored
+        stage.align = StageAlign.TOP_LEFT;
+        stage.scaleMode = StageScaleMode.NO_SCALE;
+        //Stage.align = ('canvassalign' in global && global.canvassalign != null) ? global.canvassalign : "LT";
+        //Stage.scaleMode = ('canvasscale' in global && global.canvasscale != null) ? global.canvasscale : "noScale";
+
+        stage.addEventListener(Event.RESIZE, resizeHandler);
+
         
         /* TODO [hqm 2008-01] Do we want to do anything with other
          * events, like click, or mousewheel ?
@@ -166,6 +175,11 @@ public class LFCApplication extends Sprite {
               event.localX + "," + event.localY + "] Stage coords [" + 
               event.stageX + "," + event.stageY + "]");
         */
+    }
+
+    function resizeHandler(event:Event):void {
+        // event.target is a  pointer to the stage
+        LzScreenKernel.handleResizeEvent(event.target);
     }
 
     function reportKeyUp(event:KeyboardEvent):void {
