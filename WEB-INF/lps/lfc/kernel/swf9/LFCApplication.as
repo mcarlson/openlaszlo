@@ -179,7 +179,7 @@ public class LFCApplication extends Sprite {
 
     function resizeHandler(event:Event):void {
         // event.target is a  pointer to the stage
-        LzScreenKernel.handleResizeEvent(event.target);
+        //LzScreenKernel.handleResizeEvent(event.target);
     }
 
     function reportKeyUp(event:KeyboardEvent):void {
