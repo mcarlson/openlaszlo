@@ -46,20 +46,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class DeploySOLODHTML {
 
-    public static void main(String args[])
-      throws IOException
-    {
-        File tmpdir = File.createTempFile("foo", "bar").getParentFile();
-        deploy(true,
-               null,
-               null,
-               null,
-               "/Users/hqm/openlaszlo/trunk/test/deploy/hello.lzx",
-               new FileOutputStream("/tmp/solo.zip"),
-               tmpdir,
-               null);
-    }
-
 
     /**
      * Create SOLO deploy archive or wrapper page for app
@@ -73,14 +59,30 @@ public class DeploySOLODHTML {
      * @param tmpdir temporary file to hold compiler output, can be null
      * @param  title optional, if non-null, use as app title in wrapper html file
      */
-    public static void deploy(boolean wrapperonly,
+
+    public static int deploy(boolean wrapperonly,
                               Canvas canvas,
                               String lpspath,
                               String url,
                               String sourcepath,
                               FileOutputStream outstream,
                               File tmpdir,
-                              String title)
+                             String title)
+      throws IOException
+    {
+        return deploy(wrapperonly, canvas, lpspath, url, sourcepath, outstream, tmpdir, title, null, null);
+    }
+        
+    public static int deploy(boolean wrapperonly,
+                              Canvas canvas,
+                              String lpspath,
+                              String url,
+                              String sourcepath,
+                              FileOutputStream outstream,
+                              File tmpdir,
+                             String title,
+                             Properties props,
+                             HashMap skipfiles)
       throws IOException
     {
         // Set this to make a limit on the size of zip file that is created
@@ -100,11 +102,19 @@ public class DeploySOLODHTML {
             }
 
             File tempFile = File.createTempFile(sourcefile.getName(), null, tmpdir);
-            Properties compilationProperties = new Properties();
+            Properties compilationProperties = (props == null) ? new Properties() : props;
             // Compile a SOLO app with DHTML runtime.
             compilationProperties.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, "dhtml");
             compilationProperties.setProperty(CompilationEnvironment.PROXIED_PROPERTY, "false");
             org.openlaszlo.compiler.Compiler compiler = new org.openlaszlo.compiler.Compiler();
+
+            String mediaCacheDir = LPS.getWorkDirectory() + File.separator + "cache" + File.separator + "cmcache";
+            String scriptCacheDir = LPS.getWorkDirectory() + File.separator + "scache";
+
+            CompilerMediaCache cache = new CompilerMediaCache(new File(mediaCacheDir), new Properties());
+            compiler.setMediaCache(cache);
+            LPS.initialize();
+
             canvas = compiler.compile(sourcefile, tempFile, compilationProperties);
         }
 
@@ -146,7 +156,7 @@ public class DeploySOLODHTML {
                     outstream.close();
                 }
             }            
-            return;
+            return 0;
         }
 
         /* Create a DOM for the Canvas XML descriptor  */
@@ -285,18 +295,24 @@ public class DeploySOLODHTML {
             for (int i=0; i<appfiles.size(); i++) {
                 String srcname = (String) appfiles.get(i);
                 String dstname = srcname.substring(appdir.getPath().length()+1);
-                // Add ZIP entry to output stream.
-                copyFileToZipFile(zout, srcname, dstname, zippedfiles);
-
-                if (contentSize > maxZipFileSize) {
-                    throw new IOException("file length exceeds max of "+ (maxZipFileSize/1000000) +"MB");
+                if (skipfiles != null && !skipfiles.containsKey(srcname)) {
+                    // Add ZIP entry to output stream.
+                    copyFileToZipFile(zout, srcname, dstname, zippedfiles);
+                    if (contentSize > maxZipFileSize) {
+                        throw new IOException("file length exceeds max of "+ (maxZipFileSize/1000000) +"MB");
+                    }
                 }
             }
 
             // Complete the ZIP file
             zout.close();
         } catch (IOException e) {
+            // Unix error return code
+            return 1;
         }
+
+        // OK
+        return 0;
 
     }
 
