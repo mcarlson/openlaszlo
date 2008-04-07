@@ -63,6 +63,7 @@ public class DeployMain {
         String outfile = null;
         String sourcepath = null;
         String title = null;;
+        String runtime = "dhtml";
 
         Properties compilationProperties =  new Properties();
         for (int i = 0; i < args.length; i++) {
@@ -70,8 +71,9 @@ public class DeployMain {
             if (arg.startsWith("-")) {
                 if (arg.startsWith("--runtime=")) {
                     String value = arg.substring("--runtime=".length());
+                    runtime = value;
                     if ((new HashSet(org.openlaszlo.compiler.Compiler.KNOWN_RUNTIMES)).contains(value)) {
-                   compilationProperties.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, value);
+                        compilationProperties.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, value);
                     } else {
                         System.err.println("Invalid value for --runtime");
                         System.exit(1);
@@ -145,16 +147,33 @@ public class DeployMain {
         skipfiles.put(new File(outfile).getCanonicalPath(), "true");
 
         try {
-            System.exit(DeploySOLODHTML.deploy(wrapperonly,
-                                               null,
-                                               null,
-                                               null,
-                                               sourcepath,
-                                               new FileOutputStream(outfile),
-                                               tmpdir,
-                                               title,
-                                               compilationProperties,
-                                               skipfiles));
+            if ("dhtml".equals(runtime)) {
+                System.exit(DeploySOLODHTML.deploy(wrapperonly,
+                                                   null,
+                                                   null,
+                                                   null,
+                                                   sourcepath,
+                                                   new FileOutputStream(outfile),
+                                                   tmpdir,
+                                                   title,
+                                                   compilationProperties,
+                                                   skipfiles));
+            } else if ("swf8".equals(runtime) || "swf7".equals(runtime)) {
+                System.exit(DeploySOLOSWF.deploy(runtime,
+                                                 wrapperonly,
+                                                   null,
+                                                   null,
+                                                   null,
+                                                   sourcepath,
+                                                   new FileOutputStream(outfile),
+                                                   tmpdir,
+                                                   title,
+                                                   compilationProperties,
+                                                   skipfiles));
+            } else {
+                System.err.println("SOLO deployment for runtime "+runtime+" is not yet supported.");
+                System.exit(1);
+            }
         } catch (IOException e) {
             System.err.println(e);
             System.exit(1);
