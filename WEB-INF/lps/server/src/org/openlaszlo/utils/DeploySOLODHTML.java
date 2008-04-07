@@ -9,22 +9,32 @@
 
 package org.openlaszlo.utils;
 
-import java.net.*;
-import java.util.*;
-import java.util.regex.*;
-import java.util.zip.*;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import java.text.SimpleDateFormat;
-import org.openlaszlo.utils.FileUtils.*;
-import org.openlaszlo.xml.internal.XMLUtils.*;
-import org.openlaszlo.compiler.*;
-import org.openlaszlo.server.LPS;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
+import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
-import org.w3c.dom.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.openlaszlo.compiler.Canvas;
+import org.openlaszlo.compiler.CompilationEnvironment;
+import org.openlaszlo.compiler.CompilerMediaCache;
+import org.openlaszlo.server.LPS;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /*
       We want an option to deploy an app and it's entire directory.
@@ -85,6 +95,11 @@ public class DeploySOLODHTML {
                              HashMap skipfiles)
       throws IOException
     {
+
+        lpspath = lpspath!=null?lpspath.replaceAll("\\\\", "\\/"):null;
+        url = url!=null?url = url.replaceAll("\\\\", "\\/"):null;
+        sourcepath = sourcepath!=null? sourcepath.replaceAll("\\\\", "\\/"):null;
+
         // Set this to make a limit on the size of zip file that is created
         int maxZipFileSize = 64000000; // 64MB max
         int warnZipFileSize = 10000000; // warn at 10MB of content (before compression)
@@ -108,9 +123,8 @@ public class DeploySOLODHTML {
             compilationProperties.setProperty(CompilationEnvironment.PROXIED_PROPERTY, "false");
             org.openlaszlo.compiler.Compiler compiler = new org.openlaszlo.compiler.Compiler();
 
+            //FIXME: this may create temp file anywhere
             String mediaCacheDir = LPS.getWorkDirectory() + File.separator + "cache" + File.separator + "cmcache";
-            String scriptCacheDir = LPS.getWorkDirectory() + File.separator + "scache";
-
             CompilerMediaCache cache = new CompilerMediaCache(new File(mediaCacheDir), new Properties());
             compiler.setMediaCache(cache);
             LPS.initialize();
@@ -146,6 +160,10 @@ public class DeploySOLODHTML {
         TransformUtils.applyTransform(styleSheetPathname, properties, canvasXML, wrapperbuf);
         String wrapper = wrapperbuf.toString();
 
+        //wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*'", ".lzx.js'");
+        //TODO This regex is not converting correctly
+        wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*?'", ".lzx.js'");
+
         if (wrapperonly) {
             // write wrapper to outputstream
             try {
@@ -174,13 +192,13 @@ public class DeploySOLODHTML {
         // Lz.dhtmlEmbed({url: 'animation.lzx?lzt=object&lzr=dhtml&_canvas_debug=false',
         //                 bgcolor: '#eaeaea', width: '800', height: '300', id: 'lzapp'});
 
-        //wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*'", ".lzx.js'");
-        wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*?'", ".lzx.js'");
 
         // Replace the ServerRoot with a relative path
         // lzOptions = { ServerRoot: '/legals', splashhtml: '<img src="lps/includes/spinner.gif">', appendDivID: 'lzdhtmlappdiv'};
 
-        wrapper = wrapper.replaceFirst("ServerRoot:\\s*'_.*?'", "ServerRoot: 'lps/resources'");
+        wrapper = wrapper.replaceFirst("ServerRoot:\\s*'_.*?'", "ServerRoot: 'lps"+File.separator+"resources'");
+
+
 
         
         // replace title
@@ -200,7 +218,7 @@ public class DeploySOLODHTML {
 
         // destination to output the zip file, will be the current jsp directory
 
-        // The absolute path to the base directory of the server web root 
+        // The absolute path to the base directory of the server web root
         //canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
 
         File basedir = new File(LPS.HOME());
@@ -218,9 +236,9 @@ public class DeploySOLODHTML {
         // These are the files to include in the ZIP file
         ArrayList filenames = new ArrayList();
         // LPS includes, (originally copied from /lps/includes/*)
-        filenames.add("lps/includes/embed-compressed.js");
-        filenames.add("lps/includes/blank.gif");
-        filenames.add("lps/includes/spinner.gif");
+        filenames.add("lps"+File.separator+"includes"+File.separator+"embed-compressed.js");
+        filenames.add("lps"+File.separator+"includes"+File.separator+"blank.gif");
+        filenames.add("lps"+File.separator+"includes"+File.separator+"spinner.gif");
 
 
         ArrayList appfiles = new ArrayList();
@@ -255,7 +273,7 @@ public class DeploySOLODHTML {
 
             // Copy the DHTML LFC to lps/includes/LFC-dhtml.js
             ArrayList lfcfiles = new ArrayList();
-            listFiles(lfcfiles, new File(basedir + "/lps/includes/lfc"));
+            listFiles(lfcfiles, new File(basedir + ""+File.separator+"lps"+File.separator+"includes"+File.separator+"lfc"));
             for (int i=0; i<lfcfiles.size(); i++) {
                 String fname = (String) lfcfiles.get(i);
                 if (!fname.matches(".*LFCdhtml.*.js")) { continue; }
@@ -279,7 +297,7 @@ public class DeploySOLODHTML {
                 String src = res.getAttribute("src");
                 String pathname = res.getAttribute("pathname");
                 String relativePathname = pathname.substring(basedir.getAbsolutePath().length() + 1);
-                String zip_pathname = "lps/resources/"+relativePathname;
+                String zip_pathname = "lps"+File.separator+"resources"+File.separator+relativePathname;
                 if (zippedfiles.contains(zip_pathname)) { continue; }
                 // compare the pathname that the resource resolved to with the app directory path 
                 if (pathname.startsWith(appdir.getAbsolutePath())) {

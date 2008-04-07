@@ -9,24 +9,34 @@
 
 package org.openlaszlo.utils;
 
-import java.net.*;
-import java.util.*;
-import java.util.regex.*;
-import java.util.zip.*;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import java.text.SimpleDateFormat;
-import org.openlaszlo.utils.FileUtils.*;
-import org.openlaszlo.xml.internal.XMLUtils.*;
-import org.openlaszlo.compiler.*;
-import org.openlaszlo.server.LPS;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
+import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
-import org.w3c.dom.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-    /*
+import org.openlaszlo.compiler.Canvas;
+import org.openlaszlo.compiler.CompilationEnvironment;
+import org.openlaszlo.compiler.CompilerMediaCache;
+import org.openlaszlo.server.LPS;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+/*
       We want an option to deploy an app and it's entire directory.
 
       So, for an app with is at /foo/bar/baz.lzx
@@ -80,6 +90,11 @@ public class DeploySOLOSWF {
                              HashMap skipfiles)
       throws IOException
     {
+
+        lpspath = lpspath!=null?lpspath.replaceAll("\\\\", "\\/"):null;
+        url = url!=null?url = url.replaceAll("\\\\", "\\/"):null;
+        sourcepath = sourcepath!=null? sourcepath.replaceAll("\\\\", "\\/"):null;
+
         // Set this to make a limit on the size of zip file that is created
         int maxZipFileSize = 64000000; // 64MB max
         int warnZipFileSize = 10000000; // warn at 10MB of content (before compression)
@@ -104,8 +119,6 @@ public class DeploySOLOSWF {
             org.openlaszlo.compiler.Compiler compiler = new org.openlaszlo.compiler.Compiler();
 
             String mediaCacheDir = LPS.getWorkDirectory() + File.separator + "cache" + File.separator + "cmcache";
-            String scriptCacheDir = LPS.getWorkDirectory() + File.separator + "scache";
-
             CompilerMediaCache cache = new CompilerMediaCache(new File(mediaCacheDir), new Properties());
             compiler.setMediaCache(cache);
             LPS.initialize();
@@ -141,6 +154,8 @@ public class DeploySOLOSWF {
         TransformUtils.applyTransform(styleSheetPathname, properties, canvasXML, wrapperbuf);
         String wrapper = wrapperbuf.toString();
 
+        wrapper = wrapper.replaceAll("[.]lzx[?]lzt=swf'", ".lzx.lzr="+runtime+".swf?lzproxied=false'");
+
         if (wrapperonly) {
             // write wrapper to outputstream
             try {
@@ -169,13 +184,13 @@ public class DeploySOLOSWF {
         // Lz.dhtmlEmbed({url: 'animation.lzx?lzt=object&lzr=dhtml&_canvas_debug=false',
         //                 bgcolor: '#eaeaea', width: '800', height: '300', id: 'lzapp'});
 
-        //wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*'", ".lzx.js'");
-        wrapper = wrapper.replaceAll("[.]lzx[?]lzt=swf'", ".lzx.lzr="+runtime+".swf?lzproxied=false'");
 
         // Replace the ServerRoot with a relative path
         // lzOptions = { ServerRoot: '/legals', splashhtml: '<img src="lps/includes/spinner.gif">', appendDivID: 'lzdhtmlappdiv'};
 
-        wrapper = wrapper.replaceFirst("ServerRoot:\\s*'_.*?'", "ServerRoot: 'lps/resources'");
+        wrapper = wrapper.replaceFirst("ServerRoot:\\s*'_.*?'", "ServerRoot: 'lps"+File.separator+"resources'");
+
+
 
         
         // replace title
@@ -213,9 +228,9 @@ public class DeploySOLOSWF {
         // These are the files to include in the ZIP file
         ArrayList filenames = new ArrayList();
         // LPS includes, (originally copied from /lps/includes/*)
-        filenames.add("lps/includes/embed-compressed.js");
-        filenames.add("lps/includes/blank.gif");
-        filenames.add("lps/includes/spinner.gif");
+        filenames.add("lps"+File.separator+"includes"+File.separator+"embed-compressed.js");
+        filenames.add("lps"+File.separator+"includes"+File.separator+"blank.gif");
+        filenames.add("lps"+File.separator+"includes"+File.separator+"spinner.gif");
 
 
         ArrayList appfiles = new ArrayList();
