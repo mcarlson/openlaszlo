@@ -192,21 +192,19 @@ function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? =
 
         // Get our inherited class attributes
         var iargs = new LzInheritedHash(this['constructor'].attributes);
-        // And merge in our instantiation attrs (if any).  Taking
-        // care to merge Array and Object attrs (for
-        // back-compatibility).  No special magic is needed to
-        // compute attributes overriding constraints, because they
-        // all come as attrs now and overriding will be automatic
-        // from the InheritedHash (except for the bizarre merging of
-        // arrays and hashes!)
+        // Merge in our instantiation attrs (if any).  Taking care to
+        // merge Array and Object attrs (for back-compatibility).  No
+        // special magic is needed to compute attributes overriding
+        // constraints, because they all come as attrs now and
+        // overriding will be automatic from the InheritedHash (except
+        // for the bizarre merging of arrays and hashes!)
         if (attrs) {
             LzNode.mergeAttributes(attrs, iargs);
         }
         var todelete;
-        // Now install any decls that the tag compiler could't
-        // figure out (because it does not know the built-in class
-        // setters (c.f., ClassCompiler.java) and any other constant
-        // initial values
+        // Install any decls that the tag compiler could't figure out
+        // (because it does not know the built-in class setters (c.f.,
+        // ClassCompiler.java) and any other constant initial values
         if (! (this is LzState)) {
             for (var key in iargs) {
                 var val = iargs[key];
@@ -228,18 +226,7 @@ function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? =
                             }
                         }
                         this.addProperty(key, val);
-                        // TODO: [2008-03-19 ptw] Leave these args in
-                        // iargs, so constructors can see them.
-                        // Eventually, you should be able to update
-                        // constructors to use the instance attribute
-                        // for attributes that do not have setters and
-                        // are not constrained...
-//                         delete iargs[key];
-                        // But we have to not leave them for applyArgs
-                        // to see, as that could clobber the work of a
-                        // constructor!
-                        if (! todelete) { todelete = []; }
-                        todelete.push(key);
+                        delete iargs[key];
                     } else {
                         // NOTE: [2008-03-18 ptw] this is for
                         // back-compatibility: it appears that an
@@ -266,8 +253,6 @@ function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? =
         }
 
         this.construct(  parent , maskedargs );
-
-        if (todelete) { while (todelete.length) { delete maskedargs[todelete.pop()]; }; };
 
         // Construct may, through many tangled webs of replication and
         // placement, actually end up deleting us!  Bail out.

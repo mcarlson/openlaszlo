@@ -148,7 +148,7 @@
         <handler name="onaddsubview" method="doAddSubview"/>
         <method name="doAddSubview" args="v" >
             if ( this.itemclassname == "" ){
-                this.itemclassname = v.constructor.classname;
+                this.itemclassname = v.constructor.tagname;
             }
             if ( typeof(v.minheight) == "undefined" ) {
                 // no minheight was defined so assign the parent

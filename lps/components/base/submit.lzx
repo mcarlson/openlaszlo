@@ -46,14 +46,14 @@
 
         <!--- @access private -->
         <method name="_recverror" >
-            Debug.write('form submission error', this.data);
+            Debug.error('form submission error: %s', this.data);
             this.setAttribute('status', 'error');
             this.setAttribute('error', this.data.getErrorString());
         </method>
 
         <!--- @access private -->
         <method name="_recvtimeout" >
-            Debug.write('form submission timeout');
+            Debug.error('form submission timeout');
             this.setAttribute('status', 'timeout');
             this.setAttribute('error', this.data.getErrorString());
         </method>
@@ -121,6 +121,6 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

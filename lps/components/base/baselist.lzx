@@ -290,18 +290,11 @@
               @param String text: the text for the item.
               @param Object value: the value for the item. -->
         <method name="addItem" args="text, value" >
-            if (this.itemclassname == "") {
-                if ($debug) {
-                  Debug.write("itemclassname empty", this);
-                }
-            } else {
-                if ($debug) {
-                  if (typeof(lz[this.itemclassname]) == "undefined") {
-                    Debug.write("itemclassname undefined", this);
-                  }
-                }
+            if (this['itemclassname'] &amp;&amp; lz[this.itemclassname]) {
                 new lz[this.itemclassname](this, {text:text, value:value});
-            }
+            } else if ($debug) {
+               Debug.error("%s.itemclassname invalid: %s", this, this.itemclassname);
+           }
         </method>
 
         <!--- Find the first item with the specified value and remove it from
@@ -313,7 +306,7 @@
             var item = getItem(value);
             if ($debug) {
               if (item == null) {
-                  Debug.write("item not found for value",value, this);
+                  Debug.error("%s.item not found for %s", this, value);
               }
             }
             _removeitem(item);

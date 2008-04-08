@@ -1897,7 +1897,7 @@ function getColorTransform (){
   * @deprecated use the width attribute directly
   */
 function getWidth (){
-    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    if ($debug) Debug.deprecated(this, arguments.callee, 'width');
     return this.width;
 }
 
@@ -1907,7 +1907,7 @@ function getWidth (){
   * @deprecated use the height attribute directly
   */
 function getHeight (){
-    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    if ($debug) Debug.deprecated(this, arguments.callee, 'height');
     return this.height;
 }
 

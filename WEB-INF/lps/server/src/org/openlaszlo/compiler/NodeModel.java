@@ -71,6 +71,8 @@ public class NodeModel implements Cloneable {
     int totalSubnodes = 1;
     final CompilationEnvironment env;
     protected boolean emitClassDecl = false;
+    // Used to freeze the definition for generation
+    protected boolean frozen = false;
 
     public Object clone() {
         NodeModel copy;
@@ -1790,6 +1792,7 @@ solution =
     }
 
     void updateAttrs() {
+        if (frozen) return;
         // Only used for checking multiple definitions now
 //         if (!setters.isEmpty()) {
 //             attrs.put("$setters", setters);
@@ -1835,10 +1838,37 @@ solution =
 
     Map asMap() {
         updateAttrs();
+        // Ok, freeze them now, so our manipulations below are not
+        // thwarted
+        frozen = true;
         assert classAttrs.isEmpty();
         Map map = new LinkedHashMap();
         String tagName = className;
-        if (hasMethods()) {
+        Map inits = new LinkedHashMap();
+        boolean hasMethods = false;
+        // Whether we make a class to hold the methods or not,
+        // implicit replication relies on non-method properties coming
+        // in as instance attributes, so we have to pluck them out
+        // here (and turn the attributes into just declarations, by
+        // setting their value to null).
+        //
+        // Node as map just wants to see all the attrs, so clean out
+        // the binding markers
+        for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry entry = (Map.Entry) i.next();
+            String key = (String) entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof Function) {
+                hasMethods = true;
+            } else if (! (value instanceof NodeModel.BindingExpr)) {
+                inits.put(key, value);
+                attrs.put(key, null);
+            } else {
+                inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
+                attrs.put(key, null);
+            }
+        }
+        if (hasMethods) {
             // If there are methods, make a class
             String name = id;
             if (name == null) {
@@ -1850,27 +1880,16 @@ solution =
             classModel.setNodeModel(this);
             classModel.emitClassDeclaration(env);
         } else {
-            // Node as map just wants to see all the attrs, so clean out
-            // the binding markers
-            Map inits = new LinkedHashMap();
-            for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
-                Map.Entry entry = (Map.Entry) i.next();
-                String key = (String) entry.getKey();
-                Object value = entry.getValue();
-                if (! (value instanceof NodeModel.BindingExpr)) {
-                    inits.put(key, value);
-                } else {
-                    inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
-                }
-            }
-            if (!inits.isEmpty()) {
-                map.put("attrs", inits);
-            }
+            // If no class needed, Put children into map
             if (!children.isEmpty()) {
                 map.put("children", childrenMaps());
             }
         }
 
+        // Non-method attributes
+        if (!inits.isEmpty()) {
+            map.put("attrs", inits);
+        }
         // The tag to instantiate
         // TODO: [2008-04-01 ptw] we could have a flag day and put the
         // class here, eliminating having to go through the

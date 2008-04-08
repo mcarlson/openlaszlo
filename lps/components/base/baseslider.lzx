@@ -172,7 +172,11 @@
         <!--- Get the percentage of the range selected by the value.
                       @return Number: the percentage selected. -->
         <method name="getPercentage">
-            if (this.maxvalue-this.minvalue == 0) Debug.write("zero percentage");
+            if (this.maxvalue-this.minvalue == 0) {
+              if ($debug) {
+                Debug.error("%s.%s can not be computed, range is empty", this, arguments.callee);
+              }
+            }
             return (this.value-this.minvalue) / (this.maxvalue-this.minvalue);
         </method>
         
@@ -271,8 +275,8 @@
               @keywords private -->
         <method name="setX" args="x">
             var boundedx = x;
-            if ( x > parent.getWidth()-getWidth() ) {
-              var constrainX = parent.getWidth()-getWidth();
+            if ( x > parent.width-width ) {
+              var constrainX = parent.width-width;
               boundedx = constrainX;
             } else
             if (parent.x > x) {

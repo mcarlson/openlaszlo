@@ -91,7 +91,7 @@
 
                <handler name="onaddsubview" args="v"> <![CDATA[
                     if ( classroot.itemclassname == "" ){
-                        classroot.itemclassname = v.constructor.classname;
+                        classroot.itemclassname = v.constructor.tagname;
                     }
                     if ( ( classroot.dataoption == "lazy" ||
                            classroot.dataoption == "resize" ) &&
@@ -115,12 +115,11 @@
                     if (classname == "") {
                         classname = "vscrollbar";
                     }
-                    if ($debug) {
-                        if (typeof(global[classname]) == "undefined") {
-                            Debug.write("scrollbarclassname undefined", this);
-                        }
+                    if (classname &amp;&amp; lz[classname]) {
+                      this._sbar = new lz[classname](this, { stepsize: "20" });
+                    } else if ($debug) {
+                      Debug.error("%s.scrollbarclassname invalid: %s", classroot, classname)
                     }
-                    this._sbar = new lz[classname](this, { stepsize: "20" });
                 }
             </method>
             

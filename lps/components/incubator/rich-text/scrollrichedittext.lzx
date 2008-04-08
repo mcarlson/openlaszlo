@@ -37,7 +37,7 @@
                 }
                 if ($debug) {
                     if (typeof(lz[classname]) == "undefined") {
-                        Debug.write("scrollbarclassname undefined", this);
+                        Debug.error("%s.scrollbarclassname invalid: %s", this, classname);
                     }
                 }
                 var vsinit = function () {

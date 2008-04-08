@@ -601,30 +601,29 @@
         <!--- @keywords private -->
         <handler name="onconstruct">
             // Create tabsbar
-            if (this.barclass != "") {
-                if (typeof(lz[this.barclass]) != "undefined") {
-                    this.bar = new lz[this.barclass](this, {}, null, true);
-                } else {
-                    Debug.write('barclass ' + this.barclass + ' is undefined');
-                }
+            if (this['barclass'] &amp;&amp; lz[this.barclass]) {
+              this.bar = new lz[this.barclass](this, {}, null, true);
+            } else if ($debug) {
+              Debug.error('%s.%s invalid: %s', this, 'barclass', this['barclass']);
             }
             if (this.bar == null) {
                 this.bar = new lz.basetabsbar(this, {}, null, true);
-                Debug.write('Using basetabsbar for tab bar');
+                if ($debug) {
+                  Debug.warn('%s.barclass defaulted to %s', this, this.bar.constructor.tagname);
+                }
             }
 
             // Create tabscontent, if it hasn't been already created
-            if (this.contentclass != "") {
-                if (typeof(lz[this.contentclass]) != "undefined") {
-                    this.content = new lz[this.contentclass](this, {}, null, true);
-                } else {
-                    Debug.write('contentclass ' + this.contentclass + 
-                                ' is undefined');
-                }
+            if (this['contentclass'] &amp;&amp; lz[this.contentclass]) {
+               this.content = new lz[this.contentclass](this, {}, null, true);
+            } else if ($debug) {
+              Debug.error('%s.%s invalid: %s', this, 'contentclass', this['contentclass']);
             } 
             if (this.content == null) {
                 this.content = new lz.basetabscontent(this, {}, null, true);
-                Debug.write('Using basetabscontent for tabs content area');
+                if ($debug) {
+                  Debug.warn('%s.contentclass defaulted to %s', this, this.content.constructor.tagname);
+                }
             }
         </handler>
 
@@ -639,24 +638,11 @@
             if (p == "_tabscontent") {
 
                 // only create new tabs if there's a place to put them
-                var tc = args['tabclass'];
-                if (typeof(tc) == "undefined") {
-                  tc = v['tabclass'];
-                  if (typeof(tc) == "undefined") {
-                    tc = this.tabclass;
-                    if ($debug) {
-                      if (typeof(tc) == "undefined") {
-                        Debug.write('no tabclass given');
-                      }
-                    }
-                  }
-                }
-                if (typeof(lz[tc]) != "undefined") {
+                var tc = args['tabclass'] || v['tabclass'] || this.tabclass;
+                if (tc && lz[tc]) {
                     v.tab = new lz[tc](this.bar, { tabpane: v }, null, true);
-                } else {
-                  if ($debug) {
-                    Debug.write('tabclass \'' + tc + '\' is undefined');
-                  }
+                } else if ($debug) {
+                    Debug.error("%s.tabclass invalid: %s", this, tc);
                 }
 
                 return this.content.determinePlacement(v, p);

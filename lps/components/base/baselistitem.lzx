@@ -101,7 +101,7 @@
                 if (s) {
                     if ($debug) {
                       if (s == "false") {
-                        Debug.write("Warning: attempt to set baselistitem.selected to 'false', interpreted as true");
+                        Debug.warn("attempt to set %s.selected to %#w, interpreted as true", this, s);
                       }
                     }
                     parent.select(this);
@@ -123,7 +123,7 @@
 </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

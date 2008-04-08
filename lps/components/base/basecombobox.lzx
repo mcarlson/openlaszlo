@@ -306,8 +306,11 @@
             this.defaultselection = ds;
             if ( ds == null ) return;
             if ( defaulttext != "" ) {
-                this.defaulttext = "";
-                Debug.write("defaultselection overrides defaulttext",this);
+              if ($debug){
+                Debug.warn("%s.defaultselection (%s) overrides defaulttext (%s)",
+                           this, ds, defaulttext);
+              }
+              this.defaulttext = "";
             }
             if ( this.ondefaultselection ) this.ondefaultselection.sendEvent();
         </method>

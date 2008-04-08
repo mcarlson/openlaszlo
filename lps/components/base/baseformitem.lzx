@@ -47,7 +47,7 @@
             if (this.submitname == "") this.submitname = this.name;
             if (this.submitname == "") {
                 if ($debug) {
-                    Debug.write('name required for form submit', this);
+                    Debug.error('name required for form submit', this);
                 }
                 return;
             }
