@@ -156,14 +156,14 @@ override function __makeSprite(args) {
 var _focused = false;
 
 /** @access private */
-function _gotFocusEvent(){
+function _gotFocusEvent(e=null){
     this._focused = true;
     var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
     isprite.gotFocus();
 }
 
 /** @access private */
-function _gotBlurEvent(){
+function _gotBlurEvent(e=null){
     this._focused = false;
     var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
     isprite.gotBlur();
