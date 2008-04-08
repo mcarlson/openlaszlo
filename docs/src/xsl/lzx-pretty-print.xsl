@@ -7,7 +7,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
 <!-- 
   To understand the documentation toolchain, please consult the developer's guide, 
   in Part XI, Documentation Tools and Guidelines, and especially in 
-  Chapter 52, The Documentation Toolchain. 
+  the chapter, The Documentation Toolchain. 
   
   In a source build of OpenLaszlo, those chapters can be found at
   http://localhost:8080/trunk/docs/developers/developers.doctools.html
@@ -193,6 +193,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
 
 </xsl:stylesheet>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -6,7 +6,7 @@
 <!-- 
   To understand the documentation toolchain, please consult the developer's guide, 
   in Part XI, Documentation Tools and Guidelines, and especially in 
-  Chapter 52, The Documentation Toolchain. 
+  the chapter, The Documentation Toolchain. 
   
   In a source build of OpenLaszlo, those chapters can be found at
   http://localhost:8080/trunk/docs/developers/developers.doctools.html
