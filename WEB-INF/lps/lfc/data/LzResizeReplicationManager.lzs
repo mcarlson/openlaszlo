@@ -80,7 +80,9 @@ class LzResizeReplicationManager extends LzLazyReplicationManager {
 //need to destroy the original clone for resize in order to insert the 
 //appropriate setHeight call
 
+/** @access private */
 var datasizevar;
+/** @access private */
 var __LZresizeupdating;
 
 // prototype.pooling = false; // Defined in LzReplicationManager

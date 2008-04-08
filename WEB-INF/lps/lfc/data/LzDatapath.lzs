@@ -91,9 +91,13 @@ var datacontrolsvisibility = true;
 
 /** @access private */
 var __LZtakeDPSlot = true;
+/** @access private */
 var storednodes;
+/** @access private */
 var __LZneedsUpdateAfterInit;
+/** @access private */
 var __LZdepChildren;
+/** @access private */
 var sel;
 
 
@@ -450,7 +454,7 @@ function updateData( ){
 
     var ppdo = this.parsedPath ? this.parsedPath.operator : null;
     if ( this.immediateparent is LzDatapath && ppdo != null){
-        var dat = LzDatapath(this.immediateparent).updateData();
+        var dat = (this.immediateparent cast LzDatapath).updateData();
         if ( ppdo =="nodeName" ){
             this.setNodeName( dat );
         } else  if ( ppdo =="__LZgetText" ){
@@ -579,9 +583,18 @@ var __LZisclone = false;
 
 /**
   * @access private
+  * @devnote Setter for datacontrolsvisiblity
+  */
+function $lzc$set_datacontrolsvisibility (v)
+{ this.datacontrolsvisibility = v;}
+
+/**
+  * @access private
   * @devnote Setter for __LZmanager
   */
-function $lzc$set___LZmanager ( m ) {
+function $lzc$set___LZmanager (m) { this.__LZmanager(m); }
+
+function __LZmanager ( m ) {
     this.__LZisclone = true;
     this.immediateparent.cloneManager = m;
     this.parsedPath = m.parsedPath;
@@ -602,7 +615,7 @@ function setClonePointer( p ) {
         if ( p && this.sel != p.sel ){
             this.sel = p.sel || false;
             if ( this.immediateparent is LzDatapath){
-                LzDatapath(this.immediateparent).setSelected( this.sel );
+                (this.immediateparent cast LzDatapath).setSelected( this.sel );
             }
         }
 
@@ -690,3 +703,4 @@ override function __LZgetPosition( ){
 
 } // End of LzDatapth
 
+ConstructorMap[LzDatapath.tagname] = LzDatapath;

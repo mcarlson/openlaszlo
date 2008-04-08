@@ -102,15 +102,24 @@ static var attributes = new LzInheritedHash(LzNode.attributes);
 /** @access private */
 LzDataset.attributes.name = 'localdata';
  
+/** @access private */
 static var slashPat = "/";
 
+/** @access private */
 var dataprovider = defaultdataprovider;
+/** @access private */
 var multirequest = false;
+/** @access private */
 var dataRequest = null; 
+/** @access private */
 var dataRequestClass = LzHTTPDataRequest;
+/** @access private */
 var dsloadDel = null;
+/** @access private */
 var errorstring;
+/** @access private */
 var reqOnInitDel;
+/** @access private */
 var secureport;
 
 /** @lzxtype event */
@@ -124,8 +133,10 @@ var onerror = LzDeclaredEvent;
   */
 var ontimeout = LzDeclaredEvent;
 
+/** @access private */
 var timeout = 60000;
 
+/** @access private */
 var postbody = null;
 
 // var src = null;
@@ -856,6 +867,7 @@ override function toString () {
 
 } // End of LzDataset
 
+ConstructorMap[LzDataset.tagname] = LzDataset;
 
 
 

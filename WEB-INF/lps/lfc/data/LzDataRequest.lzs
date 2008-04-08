@@ -89,3 +89,5 @@ class LzDataRequest extends LzNode {
 
 
 }
+
+ConstructorMap[LzDataRequest.tagname] = LzDataRequest;

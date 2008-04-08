@@ -53,6 +53,7 @@ static var attributes = new LzInheritedHash(LzNode.attributes);
   * @lzxdefault inherit
   */
 var proxied = null;
+/** @access private */
 var src;
 
     function LzDatasource ( parent:* = null , attrs:* = null, children:* = null, instcall:*  = null) {

@@ -1,4 +1,5 @@
-<canvas height="80" width="500" proxied="false">
+<!-- proxied version -->
+<canvas height="80" width="500" proxied="true">
 
   <dataset name="myData" request="true" type="http" src="data.xml"/>
   <attribute name="yvalue" value="0"/>

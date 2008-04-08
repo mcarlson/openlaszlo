@@ -25,10 +25,14 @@ class LzMiniNode {
   function LzMiniNode ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null){
   }
 
+/** @access private */
   var children:Array = [];
+/** @access private */
   var __LZdeleted:Boolean = false;
+/** @access private */
   var sel; // Also defined in LzDatapath
 
+/** @access private */
   var setAttribute = LzNode.prototype.setAttribute;
 
   function _dbg_name () {}

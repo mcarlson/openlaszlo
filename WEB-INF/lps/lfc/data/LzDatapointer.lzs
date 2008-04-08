@@ -116,15 +116,25 @@ var __LZtracking = null;
 /** @access private */
 var __LZtrackDel = null;
 
+/** @access private */
 var xpath = null;
+/** @access private */
 var parsedPath = null;
+/** @access private */
 var __LZlastdotdot = null;
+/** @access private */
 var __LZspecialDotDot = false;
+/** @access private */
 var __LZspecialOndata = false;
+/** @access private */
 var __LZdotdotCheckDel;
+/** @access private */
 var __LZoldDataDel;
+/** @access private */
 var __LZoldOndataWarn;
+/** @access private */
 var errorDel;
+/** @access private */
 var timeoutDel;
 
 
@@ -406,9 +416,9 @@ function runXPath ( ){
     }
 
     var newc = null;
-// [2008-03-12 pbr] Can't use 'in' in swf9
+// [2008-04-03 pbr] Find a simpler way to represent this
 //    if ( this.context && 'getContext' in this.context ){
-    if ( this.context && (this.context is LzDatapointer || this.context is LzDataset)) {
+    if ( this.context && (this.context is LzDatapointer || this.context is LzDataset || this.context is AnonDatasetGenerator)) {
         newc = this.context.getContext();
     }
 
@@ -1566,3 +1576,5 @@ function __LZsetTracking ( who, force = null, needscheck = null ){
 }
 
 } // End of LzDatapointer
+
+ConstructorMap[LzDatapointer.tagname] = LzDatapointer;

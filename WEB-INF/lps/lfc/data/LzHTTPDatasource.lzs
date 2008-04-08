@@ -34,6 +34,10 @@ static var tagname = 'datasource';
 
 var reqtype = "GET";
 
+    function LzHTTPDatasource ( parent:* = null , attrs:* = null, children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+    }
+
 /**
   * Compute the boolean value for 'proxied', using inheritance if needed
   * @access private

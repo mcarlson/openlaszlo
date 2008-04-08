@@ -31,6 +31,10 @@
 
 class LzHTTPDataProvider extends LzDataProvider {
 
+    function LzHTTPDataProvider ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+    }  
+
     /** @access private
      * @param LzHTTPDataRequest dreq: The data request
      */
@@ -179,8 +183,7 @@ class LzHTTPDataProvider extends LzDataProvider {
         }
 
         // convert url back to string
-        url = lzurl.toString();
-        var url;
+        var url = lzurl.toString();
         if (proxied) {
             // TODO [hqm 2007-08-03] make the API for makeProxiedURL take an explicit host arg,
             // so we can set the proxy from user code
@@ -306,6 +309,11 @@ class LzHTTPDataProvider extends LzDataProvider {
 
 
 class LzHTTPDataRequest extends LzDataRequest {
+
+    function LzHTTPDataRequest (requestor = null) { 
+        super(requestor);
+    } 
+
     var method = "GET"; //  : String; // GET, POST, PUT, DELETE
     var postbody; // : String
     var proxied;  // : boolean
@@ -332,6 +340,7 @@ class LzHTTPDataRequest extends LzDataRequest {
     */
     var responseheaders = null; 
 
+    var getresponseheaders = null;
 
     /** Flag to say whether data is cacheable at the server
         @type Boolean
@@ -370,3 +379,4 @@ class LzHTTPDataRequest extends LzDataRequest {
 
 var httpdataprovider = new LzHTTPDataProvider();
 var defaultdataprovider = httpdataprovider;
+

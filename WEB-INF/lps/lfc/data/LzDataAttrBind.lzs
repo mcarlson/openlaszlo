@@ -28,9 +28,13 @@ function LzDataAttrBind ( ndpath , attr, path ){
 
 
 // prototype.rerunxpath = true; // Override value defined in LzDatapointer
+/** @access private */
 var $pathbinding = true;
+/** @access private */
 var setAttr;
+/** @access private */
 var pathparent;
+/** @access private */
 var node;
 
 override function __LZsendUpdate ( a = null , b = null ){ 

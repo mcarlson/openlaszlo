@@ -49,6 +49,7 @@ static var tagname = 'params';
 //undefine all setters but name and id
 //setters.$hasdefaultattrs = -1;
 
+/** @access private */
 var d:* = null;
 
 
@@ -92,7 +93,9 @@ override function createChildren ( children ){
 }
 
 // default separator and delimiter
+/** @access private */
 var dlm = "&";
+/** @access private */
 var sep = "=";
 
 /**

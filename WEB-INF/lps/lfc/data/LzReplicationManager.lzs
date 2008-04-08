@@ -89,18 +89,30 @@ function $lzc$set_sortpath(v) { this.setOrder(v, 'sortpath'); }
 function $lzc$set_sortorder(v) { this.setComparator(v); }
 override function $lzc$set_datapath(v) { this.setXPath(v); }
 
+/** @access private */
 var asyncnew = true;
+/** @access private */
 var initialnodes;
+/** @access private */
 var clonePool;
+/** @access private */
 var cloneClass;
+/** @access private */
 var cloneParent;
+/** @access private */
 var cloneAttrs;
+/** @access private */
 var cloneChildren;
+/** @access private */
 var hasdata;
+/** @access private */
 var _t;
+/** @access private */
 var orderpath;
 
+/** @access private */
 var comp_orderf;  // Was this.orderf.comp
+/** @access private */
 var op_orderf;    // Was this.orderf.op
 
 // var datacontrolsvisibility = false; // Defined in LzDatapath
@@ -448,6 +460,7 @@ override function __LZHandleMultiNodes ( n ){
         var cl = this.clones[ i ] ;
         var iplusoffset = i + this.__LZdataoffset; 
         cl.clonenumber = iplusoffset ;
+
         if (this.nodes) {
             cl.datapath.setClonePointer( this.nodes[ iplusoffset ] );
         }

@@ -52,15 +52,23 @@ class LzLazyReplicationManager extends LzReplicationManager {
 // prototype.pooling = true; // Defined in LzReplicationManager
 
 /** The axis for layout of replicated views */
+/** @access private */
 var axis = "y"
+/** @access private */
 var sizeAxis;
+/** @access private */
 var cloneimmediateparent;
+/** @access private */
 var updateDel;
+/** @access private */
 var __LZoldnodelen;
+/** @access private */
 var cloneimmediateparnt;
 
 /** The spacing between replicated views */
+/** @access private */
 var spacing = 0;
+/** @access private */
 var mask = null;
 
 /**

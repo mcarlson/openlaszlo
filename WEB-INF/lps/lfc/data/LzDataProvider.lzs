@@ -36,6 +36,10 @@
 
 class LzDataProvider extends LzNode {
 
+    function LzDataProvider ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null) {
+        super(parent,attrs,children,instcall);
+    }  
+
     /** @access private
      * @modifiers override 
      */
@@ -52,3 +56,5 @@ class LzDataProvider extends LzNode {
 
     }
 }
+
+ConstructorMap[LzDataProvider.tagname] = LzDataProvider;

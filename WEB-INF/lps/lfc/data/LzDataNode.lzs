@@ -67,8 +67,6 @@
 
 mixin LzDataNodeMixin
 {
-// #include "data/LzDataNode.lzs"
-// Manual copy of LzDataNode.lzx
 /** @lzxtype event */
 var onownerDocument = LzDeclaredEvent;
 
@@ -79,8 +77,11 @@ var onownerDocument = LzDeclaredEvent;
   */
 var nodeType:*; // This is undefined. Set elsewhere
 
+/** @access private */
 var parentNode:* = null;
+/** @access private */
 var ownerDocument:*;
+/** @access private */
 var __LZo:* = -1;
 
 /** An array of children of this node
