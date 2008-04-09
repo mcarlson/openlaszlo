@@ -52,7 +52,7 @@ public var cursuite = 0;
 public var results = [];
 public var global = this;
 public var logfile = "lztest.log";
-public var loggingEnabled = true;
+public var loggingEnabled = false;
 public var testpath = "";
 public var resultstring = "";
 
