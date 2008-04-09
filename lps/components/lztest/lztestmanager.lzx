@@ -8,22 +8,25 @@
 <script when="immediate"><![CDATA[
 
 
-var LzTestSuite = function ( nm ) {
-    this.name = nm; 
-    this.curtest = 0;     
-    this.totaltests = 0; 
-    this.passedtests = 0;
-    this.failedtests = 0; 
-    this.tests = [];
-    this.results = []; 
+class LzTestSuite {
+public var name = "Default Name"; 
+public var curtest = 0;     
+public var totaltests = 0; 
+public var passedtests = 0;
+public var failedtests = 0; 
+public var tests = [];
+public var results = []; 
+
+public function LzTestSuite ( nm:String? = ""){
+    this.name = nm;
 }
 
-LzTestSuite.prototype.addTest = function( t ) {
+function addTest( t ) {
     this.tests.push( t ); 
     this.totaltests = this.totaltests + 1; 
 }
 
-LzTestSuite.prototype.printResults = function() {  
+function printResults() {  
     var countedfailedtests = 0; 
     var countedpassedtests = 0; 
     for (var tc in this.tests) {
@@ -38,8 +41,9 @@ LzTestSuite.prototype.printResults = function() {
             Debug.error("oh nooooo countedpassedtests != this.passedtests OR countedfailedtests != this.failedtests don't match"); 
     }
 }
+}
 
-class LzTestManager {
+class LzTestManagerClass {
 public var totalsuites = 0;
 public var passedsuites = 0;
 public var failedsuites = 0;
@@ -48,6 +52,8 @@ public var cursuite = 0;
 public var results = [];
 public var global = this;
 public var logfile = "lztest.log";
+public var loggingEnabled = true;
+public var testpath = "";
 public var resultstring = "";
 
 function findTestSuites() {
@@ -62,8 +68,10 @@ function findTestSuites() {
     }
 }       
 
+// TODO: enable this once LzBrowser is working in swf9
 function setupServerLogging() {
-    var lzurl = LzBrowser.getLoadURLAsLzURL();
+    return;
+    //var lzurl = LzBrowser.getLoadURLAsLzURL();
     // strip initial "/legals/" from path, to make it relative to LPS servlet base
     if (lzurl.path) {
         this.testpath = lzurl.path.substring(lzurl.path.substring(1).indexOf("/")+2) + lzurl.file; 
@@ -88,7 +96,7 @@ function sendLogData(logfile, msg) {
     var query = "logfile="+escape(logfile)+"&msg="+escape(msg);
     var reqstr =  LzBrowser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
     //Debug.write("sendServerLogCommand", reqobj, reqstr);
-    var tloader = new LzHTTPLoader(this, false, null);
+    var tloader = new LzHTTPLoader(this, false);
     tloader.open ("GET" , reqstr, /* username */ null, /* password */ null);
     tloader.send (/* content */ null)        
 }
@@ -260,7 +268,7 @@ function assertWithin (expected, actual, delta, message) {
     }
 }
 }
-var LzTestManager:LzTestManager = new LzTestManager();
+var LzTestManager:LzTestManagerClass = new LzTestManagerClass();
 
 var startTestsDelegate = new LzDelegate(canvas, "startTests");
 startTestsDelegate.register(canvas, "oninit"); 
