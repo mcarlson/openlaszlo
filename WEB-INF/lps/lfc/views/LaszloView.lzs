@@ -398,6 +398,7 @@ override function construct ( parent , args) {
     }
 
     if ('clip' in args && args['clip'] && (! (args.clip instanceof LzInitExpr)) ){
+        this.clip = args.clip;
         this.makeMasked();
     }
     if ('stretches' in args && args['stretches'] != null && (! (args.stretches instanceof LzInitExpr)) ){
@@ -1136,7 +1137,7 @@ var _resource = null;
   * view's <attribute>isVisible</attribute> property is true, the
   * resource will be displayed when it is attached
   * 
-  * @deprecated Use setAttribute('stretches', ...) instead.
+  * @deprecated Use setAttribute('resource', ...) instead.
   * @param String resourceName: a string naming the id of the resource to attach
   */
 function setResource(v) {

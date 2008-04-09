@@ -232,6 +232,8 @@ override function __LZHandleMultiNodes ( nodes ){
             break;
     }
 
+    //TODO: [20080327 anba] "storednodes" should be passed directly 
+    // to the ReplicationManager, instead of doing this kludge 
     this.storednodes = nodes;
     var rman = new clonetype( this, this._instanceAttrs);
     this.storednodes = null;
@@ -404,7 +406,7 @@ else {
 
     }
 
-    //if immediate parent was deleted, don't worry about the datpaths dependent
+    //if immediate parent was deleted, don't worry about the datapaths dependent
     //on this one -- they'll be deleted too
     if ( ! this.immediateparent.__LZdeleted ){
         if ( this.__LZdepChildren != null &&
@@ -476,30 +478,7 @@ function updateData( ){
     if ( !arguments[ 0 ] && this.p){
         this.p.__LZunlockFromUpdate( this );
     }
-
-
 }
-
-/**
-  * @access private
-  */
-function retrieveData( ){
-    if ( $debug ){
-      Debug.deprecated(this, arguments.callee, this.updateData);
-    }
-    return this.updateData( );
-}
-
-/**
-  * @access private
-  */
-override function __LZHandleDocChange ( who ){
-    if ( super.__LZHandleDocChange.apply(this, arguments) ){
-        if (this.immediateparent.ondata.ready) this.immediateparent.ondata.sendEvent( this.data );
-        if (this.onDocumentChange.ready) this.onDocumentChange.sendEvent( who );
-    }
-}
-
 
 /**
   * @access private
@@ -607,9 +586,12 @@ function __LZmanager ( m ) {
   * @access private
   */
 function setClonePointer( p ) {
+    //Debug.write("%s: for %w, was %w (dp.sel=%w, p.sel=%w)", arguments.callee, p, this.p, this.sel, p.sel);
     var pc = this.p !=p;
     this.p = p;
 
+    //FIXME: [20080327 anba] LPP-5328
+    //if ( pc || true ) {
     if ( pc ) {
 
         if ( p && this.sel != p.sel ){
@@ -669,7 +651,7 @@ function setSelected( torf ){
     this.sel = torf;
 
     if ( this.immediateparent is LzDatapath){
-        LzDatapath(this.immediateparent).setSelected( torf );
+        (this.immediateparent cast LzDatapath).setSelected( torf );
     }
 }
 

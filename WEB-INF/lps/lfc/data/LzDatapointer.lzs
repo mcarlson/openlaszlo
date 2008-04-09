@@ -272,66 +272,16 @@ function $lzc$xpathQuery_dependencies ( who , self , p ){
     }
 }
 
-
-/**
-  * Returns the result of an XPath query without changing the pointer. 
-  * The result can be:
-  * <ul>
-  * <li>a string -- the result of an operator such as name or attribute</li>
-  * <li>a single datapointer -- if the query resolves to a single node</li>
-  * <li>an array of datapointers -- if the query resolves to multiple nodes</li>
-  * </ul>
-  * @param Object p: the XPath
-  * @deprecated Use <code>LzDatapointer.xpathQuery()</code> or a
-  * <code>$path{}</code> instead.
-  */
-function getXPath ( p ){ 
-    if ( $debug ){
-        if ( !this.didGetXPathWarn ){
-          Debug.info("%w.%s is deprecated.  Use %w.%s or a $path{} constraint instead.",
-                     this, arguments.callee, this, this.xpathQuery);
-        }
-        this.didGetXPathWarn = true;
-    }
-    var r = this.xpathQuery( p );
-    var nr;
-    //testing for nodeType is the best way I can think of to check if the
-    //return value is a node
-
-    if ( r[0].nodeType ){
-        //it's an array of dataNodes
-        nr = [];
-        for ( var i = 0; i < r.length; i++ ){
-            nr[i] = new LzDatapointer( null, { p : r[ i ] } );
-        }
-    } else if ( r.nodeType ){
-        nr = new LzDatapointer( null, { p : r } );
-    } else {
-        nr = r;
-    }
-
-    return nr;
-
-}
-/** @access private */
-function $lzc$getXPath_dependencies ( who , self , p ){
-    $lzc$xpathQuery_dependencies (who, self, p);
-}
-
-
 /**
   * Points this datapointer at p.
   * @param LzDataNode p: The new target for this datapointer.
   */
 function setPointer ( p ) {
-
-    if ( !canvas.__LZoldOnData ){
-        this.setXPath( null );
-        if ( p != null ){
-            this.setDataContext( p.ownerDocument );
-        } else {
-            this.__LZsetTracking( null );
-        }
+    this.setXPath( null );
+    if ( p != null ){
+        this.setDataContext( p.ownerDocument );
+    } else {
+        this.__LZsetTracking( null );
     }
 
     var dc = this.data != p;
@@ -392,15 +342,6 @@ function setXPath ( p ){
     } else {
         if ( this.__LZdotdotCheckDel ){
             this.__LZdotdotCheckDel.unregisterAll();
-        }
-    }
-
-    if ( canvas.__LZoldOnData ){
-        if ( ppcontext && ! this.parsedPath.selectors.length &&
-            !this.rerunxpath ){
-            this.__LZspecialOndata = true;
-        } else if ( this.__LZspecialOndata ){
-            this.__LZspecialOndata = null;;
         }
     }
 
@@ -475,29 +416,6 @@ function __LZHandleSingleNode ( n ){
     this.__LZsetData( );
 
     this.__LZupdateLocked = false;
-
-    //this prevents the datapointer from sending the ondata event when it is
-    //bound solely to the root node of a dataset. This enables backwards 
-    //compatibility with the old semantics of ondata
-    if ( this.__LZspecialOndata ){
-        if ( n.childNodes.length ){
-            if ( this.ondata && !this.__LZoldOndataWarn ){
-                if ($debug) {
-                Debug.info( "Datapointer pointing to %w," +
-                    ' relies on the ondata event from' +
-                    " a datapointer bound to the root node of a dataset."+
-                    " \n    This behavior is deprecated." +
-                    " Point the dataponter the first child " +
-                    " of the dataset, or use the dataset's ondata event.", this.context);
-                }
-                this.__LZoldOndataWarn = true;
-            }
-
-            this.p = this.context;
-            if (this.ondata.ready) this.ondata.sendEvent( this.p );
-        }
-        return;
-    }
 
     this.__LZsendUpdate();
 }
@@ -606,7 +524,7 @@ function __LZsimpleOperatorUpdate ( ){
     this.__LZsendUpdate( dchanged );
 }
 
-var ppcache = {};
+static var ppcache = {};
 
 /**
   * Parses a fully qualified XPath and yields an object with the components
@@ -621,11 +539,14 @@ var ppcache = {};
   */
 function parsePath ( pa ){
     if (pa instanceof LzDatapath) pa = pa.xpath;
-    var q = this.ppcache[ pa ];
+    
+    var ppc = LzDatapointer.ppcache;
+    var q = ppc[ pa ];
     if (q == null) {
         q = new LzParsedPath(pa, this);
-        this.ppcache[ pa ] = q;
+        ppc[ pa ] = q;
     }
+    
     return q;
 }
 
@@ -913,21 +834,6 @@ function selectNextParent ( ){
 }
 
 /**
-  * Returns the number of the node that the datapointer is pointing to.
-  * Note that XPath indices are 1-based.
-  * @return Number: The offset of the node
-  * @deprecated Use <code>position()</code> xpath instead
-  */
-function getNodeOffset (){ 
-    if ( $debug ) {
-      Debug.info("%w.%s is deprecated.  Use XPath `position()` operator instead.",
-                 this, arguments.callee);
-    }
-    this.p.parentNode.__LZupdateCO();
-    return this.p.__LZo + 1;
-}
-
-/**
   * Gets the nodeType of the node that the datapointer is pointing to.
   * @return Integer: one of LzDataNode.ELEMENT_NODE, LzDataNode.TEXT_NODE, 
   * LzDataNode.DOCUMENT_NODE or <code>undefined</code> if this datapointer 
@@ -1004,8 +910,8 @@ function getNodeAttribute (name){
         return;
     }
     if (this.p.nodeType != LzDataNode.TEXT_NODE) {
-    return this.p.attributes[ name ];
-}
+        return this.p.attributes[ name ];
+    }
 }
 
 /**
@@ -1022,8 +928,8 @@ function setNodeAttribute (name, val) {
         return;
     }
     if (this.p.nodeType != LzDataNode.TEXT_NODE) {
-    this.p.setAttr( name, val );
-}
+        this.p.setAttr( name, val );
+    }
 }
 
 /**
@@ -1038,8 +944,8 @@ function deleteNodeAttribute (name) {
         return;
     }
     if (this.p.nodeType != LzDataNode.TEXT_NODE) {
-    this.p.removeAttr( name );
-}
+        this.p.removeAttr( name );
+    }
 }
 
 /**
@@ -1057,35 +963,8 @@ function getNodeText (){
         return;
     }
     if (this.p.nodeType != LzDataNode.TEXT_NODE) {
-    return this.p.__LZgetText();
-}
-}
-
-/**
-  * Returns a string that represents a concatenation of the text nodes
-  * beneath the node <param>n</param>.  This is currently the only way
-  * to access non-element data nodes.
-  * @deprecated Use <code>LzDatapointer.getNodeText()</code> instead.
-  * @param LzDataNode n: the node to find the text of
-  * @return String: The text of the node 
-  */
-
-function getOtherNodeText (n){ 
-    if ( $debug ) {
-      Debug.deprecated(this, arguments.callee, this.getNodeText);
+        return this.p.__LZgetText();
     }
-    var s = "";
-    if (n.c != null) {
-        var nc = n.c.length;
-        // append content of children which are text nodes
-        for (var i = 0; i < nc; i++) {
-            var node = n.c[i];
-            if (node.t != undefined) {
-                s += node.t;
-            }
-        }
-    }
-    return s;
 }
 
 /**
@@ -1106,20 +985,20 @@ function setNodeText (val) {
     }
 
     if (this.p.nodeType != LzDataNode.TEXT_NODE) {
-    // set the first text node you find; otherwise add one
-    var foundit = false;
-    for (var i = 0; i < this.p.childNodes.length; i++) {
-        if ( this.p.childNodes[i].nodeType == LzDataNode.TEXT_NODE ) {
-            this.p.childNodes[i].setData( val );
-            foundit = true;
-            break;
+        // set the first text node you find; otherwise add one
+        var foundit = false;
+        for (var i = 0; i < this.p.childNodes.length; i++) {
+            if ( this.p.childNodes[i].nodeType == LzDataNode.TEXT_NODE ) {
+                this.p.childNodes[i].setData( val );
+                foundit = true;
+                break;
+            }
+        }
+        if ( !foundit ){
+            //there wasn't a text node previously
+            this.p.appendChild( new LzDataText( val ) );
         }
     }
-    if ( !foundit ){
-        //there wasn't a text node previously
-        this.p.appendChild( new LzDataText( val ) );
-    }
-}
 }
 
 /**
@@ -1156,7 +1035,7 @@ function addNode ( name, text , attrs ){
     }
 
     if (this.p.nodeType != LzDataNode.TEXT_NODE) {
-    this.p.appendChild( nn );
+        this.p.appendChild( nn );
     }
     
     return nn;
@@ -1198,15 +1077,6 @@ function sendDataChange ( chgpkg ){
     //chgpkg.p(ointer))
     this.getDataset().sendDataChange( chgpkg );
 }
-
-// These are the strings used for nodes when serializing...
-// [2006-07-25 pbr] These don't appear to be used anywhere
-/** @access private */
-var _openNode = "<";
-/** @access private */
-var _closeNode = ">";
-/** @access private */
-var _closeChar = "/";
 
 /**
   * Determines whether this pointer is pointing to the same node as <param>ptr</param>.
@@ -1382,17 +1252,6 @@ function setDataContext ( dc, ignore = null ){
         }
         
         this.__LZsetTracking( dc );
-        //bwcompat olddata
-        if ( canvas.__LZoldOnData && ! this.__LZspecialOndata ){
-            if ( this.__LZoldDataDel ){
-                this.__LZoldDataDel.unregisterAll();
-            } else {
-                this.__LZoldDataDel= new LzDelegate( this , 
-                                                    "__LZHandleDocChange" );
-            }
-
-            this.__LZoldDataDel.register( this.context , 'onDocumentChange');
-        }
 
         // When you have an xpath, register on the new context
         var hasxpath = this.xpath
@@ -1464,26 +1323,6 @@ function __LZneedsOpUpdate ( chgpkg = null ){
 }
 
 /** @access private */
-function __LZHandleDocChange ( chgpkg ){
-    var who = chgpkg.who;
-    if ( !this.p ) return false;
-    var meorbelowme = false;
-    var track = who;
-    var i = 0;
-    var sn = this.p;
-    do { 
-        if ( track == sn ){
-            meorbelowme = true;
-            break;
-        }
-        track = track.parentNode;
-    } while( track && track != who.ownerDocument );
-
-    if ( meorbelowme && this.ondata.ready) this.ondata.sendEvent( this.data );
-    return meorbelowme;
-}
-
-/** @access private */
 function __LZcheckDotDot ( chgpkg ){
     //the case where I need a special update is the one where the 
     //change is above me, but my parent quelled it
@@ -1507,9 +1346,7 @@ override function destroy () {
     this.__LZsetTracking( null );
     if ( this.errorDel ) this.errorDel.unregisterAll();
     if ( this.timeoutDel ) this.timeoutDel.unregisterAll();
-    if ( this.__LZoldDataDel ) {
-        this.__LZoldDataDel.unregisterAll();
-    }
+
     if ( this.__LZdotdotCheckDel ) {
         this.__LZdotdotCheckDel.unregisterAll();
     }

@@ -160,12 +160,14 @@ override function construct ( odp , args ){
 
     //odp: original datapath
     var view = odp.immediateparent;
-    if (view == canvas) {
+    if (view === canvas) {
         // Initialize vars to reduce dhtml errors
         this.nodes = [];
         this.clones = [];
         this.clonePool = [];
-        Debug.error("LzReplicationManager constructed at canvas. A datapath cannot be defined on the canvas");
+        if ($debug) {
+            Debug.error("LzReplicationManager constructed at canvas. A datapath cannot be defined on the canvas");
+        }
         return;
     }
 
@@ -356,8 +358,7 @@ override function setDataContext ( p , implicit = null ){
 /**
   * @access private
   */
-// [2008-02-08 pbr] Renamed to avoid conflict with LzDatapointer
-function _getNodeOffset ( p ){
+function getNodeOffset ( p ){
     if (this.nodes != null) {
         var l = this.nodes.length; 
         for ( var i = 0; i < l; i++ ){
@@ -632,12 +633,6 @@ function poolClone ( ){
     this.clonePool.push ( v );
 }
 
-
-// [ 07-25-2006 pbr] These two variables don't appear to be used
-var checkDependentContexts = null;
-//The clone manager doesn't have a view to update
-var handleModify = null;
-
 /**
   * @access private
   */
@@ -711,16 +706,6 @@ function setVisible ( vis ){
         this.clones[ i ].setVisible( vis );
     }
     if (this.onvisible.ready) this.onvisible.sendEvent( vis );
-}
-
-/**
-  * @access private
-  */
-override function __LZHandleDocChange ( who ){
-    //this enables the old ondata test
-    this.p = this.context.getContext();
-    super.__LZHandleDocChange.apply(this, arguments);
-    this.p = null;
 }
 
 /**
