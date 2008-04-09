@@ -1297,15 +1297,6 @@ override function destroy( ){
     }
 }
 
-/** @access private */
-function deleteView( recursiveCall ){
-    if ( $debug ){
-      Debug.deprecated(this, arguments.callee, this.destroy);
-    }
-    this.destroy();
-}
-
-
 /*
 // @access private
 function __LZFinishDestroyOnIdle (){

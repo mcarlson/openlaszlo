@@ -1063,21 +1063,6 @@ function setAttribute(prop, val, ifchanged = null) {
 }
 
 /**
-  * @access private
-  */
-function setProp ( prop , val ){
-    if ( $debug ){
-      Debug.deprecated(this, arguments.callee, this.setAttribute);
-    }
-    this.setAttribute( prop , val );
-}
-
-/**
-  * @access private
-  */
-    //prototype._setProp = setProp;
-
-/**
   * returns the expected value for the specified property, which is the value of
   * the property after all executing animators are complete.
   *
@@ -2024,15 +2009,6 @@ function destroy( ){
 
 }
 
-/**
-  * @access private
-  */
-function deleteNode( recursiveCall = null){
-    if ( $debug ){
-      Debug.deprecated(this, arguments.callee, this.destroy);
-    }
-    this.destroy( );
-}
 //+++++ Debug stuff
 
 /**

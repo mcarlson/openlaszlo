@@ -1048,7 +1048,7 @@ function addNode ( name, text , attrs ){
   * has a following sibling, the pointer is repositioned at that sibling.
   * Otherwise the pointer is set to <code>null</code>.
   */
-override function deleteNode( recursiveCall = null){
+function deleteNode(){
     if ( ! this.p ) {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
