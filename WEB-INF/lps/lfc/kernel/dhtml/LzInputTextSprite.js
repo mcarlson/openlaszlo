@@ -785,7 +785,7 @@ LzInputTextSprite.prototype.setHeight = function (h) {
 LzInputTextSprite.prototype.setColor = function (c) {
     if (this.color == c) return;
     this.color = c;
-    this.__LzInputDiv.style.color = LzUtils.color.inttohex(c);
+    this.__LzInputDiv.style.color = LzUtils.inttohex(c);
 }
 
 LzInputTextSprite.prototype.getText = function () {

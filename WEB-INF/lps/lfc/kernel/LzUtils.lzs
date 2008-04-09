@@ -1,7 +1,7 @@
 /**
-  * LzUtils.js
+  * LzUtils.lzs
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -9,53 +9,59 @@
   * @author Max Carlson &lt;max@openlaszlo.org&gt;
   */
 
-var LzUtils = {
+class LzUtils {
+    // ***** callback *****
     // Provides weak links for global callbacks
-    callback: {
-        __scopeid: 0
-        ,__scopes: []
+    static var __scopeid:* = 0;
+    static var __scopes:* = [];
+
         /**
         * Returns a callback as a string, suitable for setTimeout
         */
-        ,getcallbackstr: function(scope, name) {
-            var sc = LzUtils.callback.__scopeid++;
+        public static function getcallbackstr(scope:*, name:*) {
+            var sc = LzUtils.__scopeid++;
             if (scope.__callbacks == null) {
                 scope.__callbacks = {sc: sc}
             } else {
                 scope.__callbacks[sc] = sc;
             }
-            LzUtils.callback.__scopes[sc] = scope;
-            return 'if (LzUtils.callback.__scopes[' + sc + ']) LzUtils.callback.__scopes[' + sc + '].' + name + '.apply(LzUtils.callback.__scopes[' + sc + '], [])';
+            LzUtils.__scopes[sc] = scope;
+            return 'if (LzUtils.__scopes[' + sc + ']) LzUtils.__scopes[' + sc + '].' + name + '.apply(LzUtils.__scopes[' + sc + '], [])';
         }
 
         /**
         * Returns a callback function
         */
-        ,getcallbackfunc: function(scope, name, args) {
-            var sc = LzUtils.callback.__scopeid++;
+        public static function getcallbackfunc(scope, name, args) {
+            var sc = LzUtils.__scopeid++;
             if (scope.__callbacks == null) {
                 scope.__callbacks = {sc: sc}
             } else {
                 scope.__callbacks[sc] = sc;
             }
-            LzUtils.callback.__scopes[sc] = scope;
+            LzUtils.__scopes[sc] = scope;
+//TODO pbr
+           return null;
+/*
             return function () {
-                var s = LzUtils.callback.__scopes[sc];
+                var s = LzUtils.__scopes[sc];
                 if (s) return s[name].apply(s, args);
             }
+*/
         }
-        ,remove: function(scope) {
+        public static function removecallback(scope) {
             if (scope.__callbacks != null) {
                 for (var i in scope.__callbacks) {
                     var sc = scope.__callbacks[i]
                     //Debug.write('removing', sc);
-                    delete LzUtils.callback.__scopes[sc];
+                    delete LzUtils.__scopes[sc];
                 }
                 delete scope.__callbacks;
             }
         }
-    }
-    ,dectohex: function(c, p) {
+
+
+    public static function dectohex(c:*, p:*) {
         if (typeof c == 'number') {
             // convert from decimal to hex
             var hex = c.toString(16);
@@ -69,8 +75,9 @@ var LzUtils = {
             return c;
         }
     }
-    ,color: {
-        hextoint: function(value) {
+
+    // ***** color *****
+        public static function hextoint(value:*) {
             if (typeof value != 'string') return value;
             if (value.charAt(0) == '#') {
                 var n = parseInt(value.slice(1), 16);
@@ -85,15 +92,16 @@ var LzUtils = {
                     }
                 }
             }
-            if (typeof eval(value) == 'number') {
-                return eval(value);
-            }
+            //TODO pbr Need a workaround for eval
+//            if (typeof eval(value) == 'number') {
+//                return eval(value);
+//            }
             if ($debug) {
                 Debug.warn('unknown color format: ' + value);
             }
             return 0;
         }
-        ,inttohex: function(c) {
+        public static function inttohex(c:*) {
             if (typeof c == 'string') {
                 c = c * 1;
             }
@@ -104,8 +112,8 @@ var LzUtils = {
             }
             return c;
         }
-        ,torgb: function(s) {
-            if (typeof s == 'number') s = this.inttohex(s); 
+        public static function torgb(s:*) {
+            if (typeof s == 'number') s = LzUtils.inttohex(s); 
             if (typeof s != 'string') return s; 
             if (s.length < 6) {
                 // expand #036 or #0369
@@ -121,5 +129,4 @@ var LzUtils = {
                 (s.length > 7 ? ',' + parseInt(s.substring(7, 9), 16) : '') +
             ')';
         }
-    }
 }

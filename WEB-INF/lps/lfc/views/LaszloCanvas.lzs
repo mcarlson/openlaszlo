@@ -173,7 +173,7 @@ function LzCanvas ( args ) {
     }
 
     if (this.sprite.capabilities.readcanvassizefromsprite == true) {
-        this.bgcolor = LzUtils.color.hextoint(args.bgcolor);
+        this.bgcolor = LzUtils.hextoint(args.bgcolor);
     } else {
         this.bgcolor = args.bgcolor;
     }

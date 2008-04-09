@@ -367,12 +367,12 @@
                         if (this.tId) clearTimeout(this.tId);
                         this.setAttribute('context', this.__LZcanvas.getContext("2d"));
                     } else {
-                        var callback = LzUtils.callback.getcallbackstr(this, '__initie');
+                        var callback = LzUtils.getcallbackstr(this, '__initie');
                         this.tId = setTimeout(callback, 50);
                     }
                 } catch (e) {
                     if (this.maxTries-- > 0) {
-                        var callback = LzUtils.callback.getcallbackstr(this, '__initie');
+                        var callback = LzUtils.getcallbackstr(this, '__initie');
                         this.tId = setTimeout(callback, 50);
                     }
                 }
@@ -444,7 +444,7 @@
                         var ccache = lz.drawview._colorcache;
                         var fillStyleColor = ccache[this.fillStyle];
                         if (fillStyleColor == null) {
-                            fillStyleColor = LzUtils.color.torgb(this.fillStyle);
+                            fillStyleColor = LzUtils.torgb(this.fillStyle);
                             ccache[this.fillStyle] = fillStyleColor;
                         }
                         this.context.fillStyle = fillStyleColor;
@@ -456,7 +456,7 @@
                     var ccache = lz.drawview._colorcache;
                     var strokeStyleColor = ccache[this.strokeStyle];
                     if (strokeStyleColor == null) {
-                        strokeStyleColor = LzUtils.color.torgb(this.strokeStyle);
+                        strokeStyleColor = LzUtils.torgb(this.strokeStyle);
                         ccache[this.strokeStyle] = strokeStyleColor;
                     }
                     this.context.strokeStyle = strokeStyleColor;
@@ -541,7 +541,7 @@
             var ccache = lz.drawview._colorcache;
             var cstopColor = ccache[c];
             if (cstopColor == null) {
-                cstopColor = LzUtils.color.torgb(c);
+                cstopColor = LzUtils.torgb(c);
                 ccache[c] = cstopColor;
             }
             this._g.addColorStop(o, cstopColor);
@@ -754,7 +754,7 @@
                     var ccache = lz.drawview._colorcache;
                     var fillStyleColor = ccache[this.fillStyle];
                     if (fillStyleColor == null) {
-                        fillStyleColor = LzUtils.color.hextoint(this.fillStyle);
+                        fillStyleColor = LzUtils.hextoint(this.fillStyle);
                         ccache[this.fillStyle] = fillStyleColor;
                     }
                     this.context.beginFill(fillStyleColor, this.globalAlpha * 100);
@@ -806,7 +806,7 @@
                 var ccache = lz.drawview._colorcache;
                 var strokeStyleColor = ccache[this.strokeStyle];
                 if (strokeStyleColor == null) {
-                    strokeStyleColor = LzUtils.color.hextoint(this.strokeStyle);
+                    strokeStyleColor = LzUtils.hextoint(this.strokeStyle);
                     ccache[this.strokeStyle] = strokeStyleColor;
                 }
                 this.context.lineStyle(this.lineWidth, strokeStyleColor, this.globalAlpha * 100);
@@ -885,7 +885,7 @@
             var ccache = lz.drawview._colorcache;
             var cstopColor = ccache[c];
             if (cstopColor == null) {
-                cstopColor = LzUtils.color.hextoint(c);
+                cstopColor = LzUtils.hextoint(c);
                 ccache[c] = cstopColor;
             }
             this._c[this._c.length] = cstopColor;

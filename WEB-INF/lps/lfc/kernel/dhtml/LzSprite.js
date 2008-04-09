@@ -834,13 +834,13 @@ LzSprite.prototype.setVisible = function ( v ){
 LzSprite.prototype.setColor = function ( c ){
     if (this.color == c) return;
     this.color = c;
-    this.__LZdiv.style.color = LzUtils.color.inttohex(c);
+    this.__LZdiv.style.color = LzUtils.inttohex(c);
 }
 
 LzSprite.prototype.setBGColor = function ( c ){
     if (this.bgcolor == c) return;
     this.bgcolor = c;
-    this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzUtils.color.inttohex(c);
+    this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzUtils.inttohex(c);
     if (this.quirks.fix_ie_background_height) {
         if (this.height != null && this.height < 2) {
             this.setSource(LzSprite.prototype.blankimage, true);
@@ -1056,7 +1056,7 @@ LzSprite.prototype.__destroyImage = function (url, img) {
             clearTimeout(img.owner.__imgtimoutid);
             img.owner.__imgtimoutid = null;
         }
-        LzUtils.callback.remove(img.owner);
+        LzUtils.removecallback(img.owner);
     }
     if (LzSprite.prototype.quirks.ie_alpha_image_loader && img.sizer) {
         if (img.sizer.tId) clearTimeout(img.sizer.tId);
@@ -1113,7 +1113,7 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
             im.sizer.onloadforeal = function() {
                 im.owner.__imgonload(im.sizer);
             }
-            var callback = LzUtils.callback.getcallbackstr(this.owner, '__imgontimeout');
+            var callback = LzUtils.getcallbackstr(this.owner, '__imgontimeout');
             this.owner.__imgtimoutid = setTimeout(callback, canvas.medialoadtimeout);
             im.sizer.src = url;
         }
@@ -1128,9 +1128,9 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
         if (this.owner && skiploader  + '' != 'true') {
             //Debug.info('sizer', skiploader == true, skiploader != true, skiploader);
             im.owner = this.owner;
-            im.onload = LzUtils.callback.getcallbackfunc(this.owner, '__imgonload', [im]);
-            im.onerror = LzUtils.callback.getcallbackfunc(this.owner, '__imgonerror', [im]);
-            var callback = LzUtils.callback.getcallbackstr(this.owner, '__imgontimeout');
+            im.onload = LzUtils.getcallbackfunc(this.owner, '__imgonload', [im]);
+            im.onerror = LzUtils.getcallbackfunc(this.owner, '__imgonerror', [im]);
+            var callback = LzUtils.getcallbackstr(this.owner, '__imgontimeout');
             this.owner.__imgtimoutid = setTimeout(callback, canvas.medialoadtimeout);
 
         }
