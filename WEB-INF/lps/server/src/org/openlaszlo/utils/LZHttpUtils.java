@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -408,7 +408,9 @@ mLogger.warn(
                 LZHttpUtils.class.getName(),"051018-408")
             );
         } 
-        res.setHeader(CACHE_CONTROL, NO_STORE);
+        res.setHeader("Cache-Control", "cache, must-revalidate");
+        res.setHeader("Pragma", "public");
+        //        res.setHeader(CACHE_CONTROL, NO_STORE);
     }
 
 
