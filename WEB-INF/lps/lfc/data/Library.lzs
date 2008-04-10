@@ -8,7 +8,6 @@
   */
 
 #include "data/LzDataNode.lzs"
-#include "data/LzMiniNode.lzs"
 #include "data/LzDataElement.lzs"
 #include "data/LzDataText.lzs"
 

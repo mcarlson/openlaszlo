@@ -98,7 +98,7 @@ var __LZneedsUpdateAfterInit;
 /** @access private */
 var __LZdepChildren;
 /** @access private */
-var sel;
+// var sel; // Defined in LzMiniNode
 
 
 /** Sent when the datapath's data changes.

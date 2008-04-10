@@ -1,0 +1,73 @@
+/**
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @topic LFC
+  * @subtopic Data
+  */
+
+/**
+  * LzNode superclass containing just enough of LzNode to make setters work
+  * for DataElements.
+  * @access public
+  * @topic LZX
+  * @subtopic Runtime
+  * @devnote this is public because public classes inherit from it. Put it
+  * in LZX.Runtime to semi-sorta obscure it.
+  */
+
+class LzMiniNode {
+
+  function LzMiniNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
+  }
+
+/** @access private */
+  var children:Array = [];
+/** @access private */
+  var __LZdeleted:Boolean = false;
+/** @access private */
+  var sel; // Was also defined in LzDatapath
+
+/**
+  * Sets the named attribute to the given value. If there is no setter for the
+  * property, this[ prop ] is set to the value, and the event this [ "on"+prop ]
+  * is sent.
+  *
+  * @param String prop: A string naming the key of attribute to set
+  * @param any val: The value for that attribute
+  * @param Boolean ifchanged: If true, only set the attribute if the value 
+  * changed
+  *
+  * @devnote Note: this is inlined by the script compiler, so that
+  * must be updated if you change this function
+  */
+function setAttribute(prop, val, ifchanged = null) {
+    if (this.__LZdeleted || (ifchanged && (this[prop] == val))) return;
+
+    // Must agree with NodeModel in tag compiler
+    var s = ('$lzc$set_' + prop);
+    if (this[s] is Function) {
+        this[s](val);
+    } else {
+        this[ prop ] = val;
+        var evt = ("on" + prop);
+        if (this[evt] is LzEvent) {
+            if (this[evt].ready) this[ evt ].sendEvent( val );
+        }
+    }
+}
+
+
+/** @access private */
+function _dbg_name ()
+{ return "LzMiniNode";}
+
+/** @access private */
+function toString ()
+{ return _dbg_name();}
+
+/** @access private */
+function __LZupdateShown( ) {}
+
+} // End of LzMiniNode

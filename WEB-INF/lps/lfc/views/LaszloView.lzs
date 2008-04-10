@@ -1379,7 +1379,7 @@ function setVisibility( amVisible ) {
   * TODO: max : should be made private, api call from replication should be cleaner
   * @access private
   */
-function __LZupdateShown( ) {
+override function __LZupdateShown( ) {
     if ( this.visibility == "collapse" ){
         var shown = this.__LZvizO && this.__LZvizDat && this.__LZvizLoad;
     } else {

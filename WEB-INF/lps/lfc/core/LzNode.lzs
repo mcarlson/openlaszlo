@@ -32,7 +32,7 @@
   * defaultplacement in lexical parent). See the 
   * <method>LzNode.determinePlacement</method> method. Defaults to false.
   */
-public dynamic class LzNode {
+public dynamic class LzNode extends LzMiniNode{
 
     /** @access private
      * @modifiers override 
@@ -476,7 +476,7 @@ var doneClassRoot = false;
 var parent;
 
 /** @access private */
-var children = null;
+// var children = null; // Moved to LzMiniNode
 
 /** If this node is replicated due to data
   * replication, the LzReplicationManager which controls this node.
@@ -540,7 +540,7 @@ var placement = null;
 /** @access private */
 var $cfn = 0;
 /** @access private */
-var __LZdeleted = false;
+// var __LZdeleted = false;  // Moved to LzMiniNode
 
 /** Reference to this nodes's parent
   * in the node hierarchy.  This will be different from "parent"
@@ -1033,34 +1033,10 @@ function getAttribute(prop) {
 }
 
 
-/**
-  * Sets the named attribute to the given value. If there is no setter for the
-  * property, this[ prop ] is set to the value, and the event this [ "on"+prop ]
-  * is sent.
-  *
-  * @param String prop: A string naming the key of attribute to set
-  * @param any val: The value for that attribute
-  * @param Boolean ifchanged: If true, only set the attribute if the value 
-  * changed
-  *
-  * @devnote Note: this is inlined by the script compiler, so that
-  * must be updated if you change this function
-  */
-function setAttribute(prop, val, ifchanged = null) {
-    if (this.__LZdeleted || (ifchanged && (this[prop] == val))) return;
-
-    // Must agree with NodeModel in tag compiler
-    var s = ('$lzc$set_' + prop);
-    if (this[s] is Function) {
-        this[s](val);
-    } else {
-        this[ prop ] = val;
-        var evt = ("on" + prop);
-        if (this[evt] is LzEvent) {
-            if (this[evt].ready) this[ evt ].sendEvent( val );
-        }
-    }
-}
+/*
+setAttribute moved to LzMiniNode.lzs
+function setAttribute(prop, val, ifchanged = null)
+*/
 
 /**
   * returns the expected value for the specified property, which is the value of
@@ -2055,7 +2031,7 @@ function animate( prop, to, duration, isRelative = null, moreargs = null ) {
 /**
   * @access private
   */
-function toString (){
+override function toString (){
     return this['constructor'].classname + " "  + this.getDebugIdentification();
 }
 
@@ -2073,7 +2049,7 @@ function toString (){
   *
   * @access private
   */
-function _dbg_name (){
+override function _dbg_name (){
   if ((typeof(this.id) == 'string') && 
       (global[this.id] === this)) {
     return "#" + this.id;
