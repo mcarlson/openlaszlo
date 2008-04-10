@@ -8,7 +8,7 @@
   * @access private
   * @topic Kernel
   * @subtopic AS2
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   */
 
@@ -70,7 +70,7 @@ Debug.cdSendMsg = function (data) {
   */
 Debug.cdEvalExpression = function (expr) {
     Debug.inEvalRequest = true;
-    var req = "foo.lzx?lzt=eval&lz_script="+escape("#file evalString\n#line 0\n" + expr);
+    var req = "foo.lzx?lzr=swf8&lzt=eval&lz_script="+escape("#file evalString\n#line 0\n" + expr);
     Debug.crdbloader.loadMovie( req );
 }
 

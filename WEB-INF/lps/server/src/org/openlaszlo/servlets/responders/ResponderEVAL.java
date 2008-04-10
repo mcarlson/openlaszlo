@@ -68,6 +68,9 @@ public final class ResponderEVAL extends Responder
                 res.setContentType(MimeType.SWF);
                 Compiler compiler = new Compiler();
                 String swfversion = req.getParameter("lzr");
+                if (swfversion == null) {
+                    swfversion = "swf8";
+                }
                 if ("swf9".equals(swfversion)) {
                     compiler.compileAndWriteToSWF9(script, seqnum, out);
                 } else {
