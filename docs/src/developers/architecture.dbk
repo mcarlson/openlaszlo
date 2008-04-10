@@ -15,7 +15,7 @@ OpenLaszlo applications can be made available on the web, or <emphasis role="i">
 </para>
 <itemizedlist spacing="compact"><listitem><para><emphasis role="em">Proxied.</emphasis> The OpenLaszlo Server runs on your machine and 
      <itemizedlist spacing="compact"><listitem><para>Compiles source programs as necessary and sends the resultant file to be executed on the client; and</para></listitem><listitem><para>Proxies interactions between the client and other servers on the Internet, performing data manipulation as necessary</para></listitem></itemizedlist>
-   </para></listitem><listitem><para><emphasis role="em">SOLO</emphasis> You use the OpenLaszlo compiler to "precompile" programs and make the resulting file (in SWF or JavaScript) available on your sever. When executed on the
+   </para></listitem><listitem><para><emphasis role="em">SOLO</emphasis> You use the OpenLaszlo compiler to "precompile" programs and make the resulting file (in SWF or JavaScript) available on your server. When executed on the
         client, the application contacts other servers directly, without mediation by the OpenLaszlo Server. This "serverless", or
 <emphasis role="i">Standalone OpenLaszlo Output</emphasis> deployment is called SOLO.</para></listitem></itemizedlist>
 <figure><title>Applications may be deployed either SOLO or proxied by the OpenLaszlo Server</title><mediaobject><imageobject><imagedata fileref="images/deploy_options.png"/></imageobject></mediaobject></figure>
