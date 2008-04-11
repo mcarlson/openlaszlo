@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
@@ -122,7 +122,7 @@ for path in $paths; do
     testurl=http://localhost:8080/${lps_dir}/${path}?lzr=${runtime}
     echo "loading ${testurl} at ${path}"
     if [ "${build_os}" = "osx" ]; then
-	`open -a "${browser}" "${testurl}"`
+	`open -g -a "${browser}" "${testurl}"`
     else
 	`"${browser}" "${testurl}"` &
     fi

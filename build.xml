@@ -902,16 +902,16 @@
   <!--================  Target [runlzunit] ==============-->
   <target name="runlzunit" depends="init" description="Run lzunit test apps" unless="skip.runlzunit">
     <ant target="lztest" />  
-    <ant target="runbrowserlzunit-swf7" />
-    <ant target="runbrowserlztest-swf7" />
+    <ant target="runbrowserlzunit-swf8" />
+    <ant target="runbrowserlztest-swf8" />
     <ant target="runbrowserlzunit-dhtml" />
     <ant target="runbrowserlztest-dhtml" />
   </target>
 
-  <target name="runbrowserlzunit-swf7" depends="init" description="Run lzunit test apps in swf7 runtime" 
+  <target name="runbrowserlzunit-swf8" depends="init" description="Run lzunit test apps in swf8 runtime" 
           unless="headless">   
     <exec executable="bash" failonerror="true">
-      <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt swf7 smoketest'" />
+      <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt swf8 smoketest'" />
     </exec>
   </target>
 
@@ -924,11 +924,11 @@
   </target>
 
 
-  <target name="runbrowserlztest-swf7"   
-          depends="init" description="Run lztest test apps in swf7 runtime" 
+  <target name="runbrowserlztest-swf8"   
+          depends="init" description="Run lztest test apps in swf8 runtime" 
           unless="headless" >   
     <exec executable="bash" failonerror="true">
-      <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/rhino.txt swf7 smoketest'" />
+      <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/rhino.txt swf8 smoketest'" />
     </exec>
   </target>
 
@@ -958,10 +958,10 @@
         </exec>
     </target>
 
-   <target name="findlztestsbrowser-swf7" depends="init,lztest.clean" 
+   <target name="findlztestsbrowser-swf8" depends="init,lztest.clean" 
            description="Use svn status to get list of modified files, find corresponding tests, and run them in browser" >   
         <exec executable="bash" failonerror="true">
-            <arg line="-c 'build-tools/findtestsbrowser.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/browser.txt swf7'" />
+            <arg line="-c 'build-tools/findtestsbrowser.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/browser.txt swf8'" />
         </exec>
     </target>
 

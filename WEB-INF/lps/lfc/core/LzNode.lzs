@@ -192,19 +192,13 @@ function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? =
 
         // Get our inherited class attributes
         var iargs = new LzInheritedHash(this['constructor'].attributes);
-        // Merge in our instantiation attrs (if any).  Taking care to
-        // merge Array and Object attrs (for back-compatibility).  No
-        // special magic is needed to compute attributes overriding
-        // constraints, because they all come as attrs now and
-        // overriding will be automatic from the InheritedHash (except
-        // for the bizarre merging of arrays and hashes!)
-        if (attrs) {
-            LzNode.mergeAttributes(attrs, iargs);
-        }
-        var todelete;
-        // Install any decls that the tag compiler could't figure out
-        // (because it does not know the built-in class setters (c.f.,
-        // ClassCompiler.java) and any other constant initial values
+        // Install any class decls that the tag compiler could't
+        // figure out (because it does not know the built-in class
+        // setters, c.f., ClassCompiler.java)
+        // NOTE: [2008-04-11 ptw] This loop _only_ runs on the class
+        // initial values, not on the instance initial values, which
+        // many constructors expect to see, whether there are setters
+        // or not
         if (! (this is LzState)) {
             for (var key in iargs) {
                 var val = iargs[key];
@@ -222,7 +216,7 @@ function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? =
                             // adding methods at instantiation
                             // time).
                             if (val is Function && val != attrs[key]) {
-                                Debug.debug("Dynamic method? %s[%w] = %s", this, key, val);
+                                Debug.debug("Dynamic method? %s[%#w] = %s", this, key, val);
                             }
                         }
                         this.addProperty(key, val);
@@ -238,6 +232,15 @@ function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? =
                     }
                 }
             }
+        }
+        // Merge in our instantiation attrs (if any).  Taking care to
+        // merge Array and Object attrs (for back-compatibility).  No
+        // special magic is needed to compute attributes overriding
+        // constraints, because they all come as attrs now and
+        // overriding will be automatic from the InheritedHash (except
+        // for the bizarre merging of arrays and hashes!)
+        if (attrs) {
+            LzNode.mergeAttributes(attrs, iargs);
         }
 
         // TODO: [2006-05-22 ptw] What is the purpose of this copy?
@@ -707,12 +710,16 @@ function construct ( parent , args ){
   if (lp) {
     var ip = lp; // ip == immediate parent
 
-    // But decide based on our ignoreplacement property, which may
-    // have been set in a subclass
-    if (this.ignoreplacement) {
+    // Obey ignoreplacement
+    // TODO: [2008-04-11 ptw] Is this only ever allowed as an instance
+    // attribute, or could I set it on a class to cause instances of
+    // the class to ignore placement, in which case, I need to look at
+    // this.ignoreplacement too
+    if (args['ignoreplacement'] || this.ignoreplacement) {
         this.placement = null;
     } else {
-        // Default to parent's placement
+        // Placement has a fake setter, so we know it will be in
+        // args.  Default to parent's placement
         var thisplacement = args['placement'] || lp.defaultplacement;
         while (thisplacement != null) {
             if (ip.determinePlacement == LzNode.prototype.determinePlacement) {
@@ -2032,7 +2039,23 @@ function animate( prop, to, duration, isRelative = null, moreargs = null ) {
   * @access private
   */
 override function toString (){
-    return this['constructor'].classname + " "  + this.getDebugIdentification();
+    return this.getDebugIdentification();
+}
+
+/**
+  * @access private
+  * The old way of identifying nodes.  Not so useful with the modern
+  * debugger.
+  */
+function getDebugIdentification (){
+    var s = this['constructor'].tagname + " ";
+    if ( this.name != null ){
+        s += " name: " + this.name + " ";
+    }
+    if ( this.id != null ){
+        s += " id: " + this.id + " ";
+    }
+    return s;
 }
 
 /**
@@ -2058,30 +2081,17 @@ override function _dbg_name (){
     return '.' + this.name;
   } else {
       // Don't use LzNode.toString, which is lame
-
-    // TODO [hqm 2008-03] Does asking for LzNode.prototype.toString work in swf9?
-      if (this.toString !== LzNode.prototype.toString) {
-          return String(this);
-      } else {
-          // Return empty string so __String does not call toString
+      var ts = this.toString();
+      if (ts == this.getDebugIdentification()) {
+          // Return empty string so __String does not call
+          // LzNode#toString, which won't add any information
           return "";
+      } else {
+          return ts;
       }
   }
 }
 
-/**
-  * @access private
-  */
-function getDebugIdentification (){
-    var s = "";
-    if ( this.name != null ){
-        s += " name: " + this.name + " ";
-    }
-    if ( this.id != null ){
-        s += " id: " + this.id + " ";
-    }
-    return s;
-}
 
 //+++++ Wacky class stuff
 

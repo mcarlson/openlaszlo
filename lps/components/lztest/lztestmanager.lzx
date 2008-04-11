@@ -68,10 +68,12 @@ function findTestSuites() {
     }
 }       
 
-// TODO: enable this once LzBrowser is working in swf9
 function setupServerLogging() {
-    return;
-    //var lzurl = LzBrowser.getLoadURLAsLzURL();
+    // TODO: enable this once LzBrowser is working in swf9
+    if ($swf9) {
+        return;
+    }
+    var lzurl = LzBrowser.getLoadURLAsLzURL();
     // strip initial "/legals/" from path, to make it relative to LPS servlet base
     if (lzurl.path) {
         this.testpath = lzurl.path.substring(lzurl.path.substring(1).indexOf("/")+2) + lzurl.file; 

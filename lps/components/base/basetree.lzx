@@ -210,9 +210,10 @@
                 return;
             }
 
+            // This is a class, not a tagname
             var c = this.getChildClass();
             if (c != null) {
-                new lz[c](this, args, null, true);
+                new c(this, args, null, true);
             }
         ]]>
         </method>
