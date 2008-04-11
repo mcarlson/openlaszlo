@@ -9,16 +9,34 @@
   * @author Max Carlson &lt;max@openlaszlo.org&gt;
   */
 
-class LzUtils {
+class ColorUtilsClass {
+
+    function hextoint (value) {
+        Debug.info("LzUtils.color.hextoint is deprecated, use Lzutils.hextoint");
+        return LzUtils.hextoint(value);
+    }
+
+    function inttohex (c) {
+        Debug.info("LzUtils.color.inttohex is deprecated, use Lzutils.inttohex");
+        return LzUtils.inttohex(c);
+    }
+
+    function torgb (s) {
+        Debug.info("LzUtils.color.torgb is deprecated, use Lzutils.torgb");
+        return LzUtils.torgb(s);
+    }
+}
+
+class LzUtilsClass {
     // ***** callback *****
     // Provides weak links for global callbacks
-    static var __scopeid:* = 0;
-    static var __scopes:* = [];
+     var __scopeid:* = 0;
+     var __scopes:* = [];
 
         /**
         * Returns a callback as a string, suitable for setTimeout
         */
-        public static function getcallbackstr(scope:*, name:*) {
+        public  function getcallbackstr(scope:*, name:*) {
             var sc = LzUtils.__scopeid++;
             if (scope.__callbacks == null) {
                 scope.__callbacks = {sc: sc}
@@ -32,7 +50,7 @@ class LzUtils {
         /**
         * Returns a callback function
         */
-        public static function getcallbackfunc(scope, name, args) {
+        public  function getcallbackfunc(scope, name, args) {
             var sc = LzUtils.__scopeid++;
             if (scope.__callbacks == null) {
                 scope.__callbacks = {sc: sc}
@@ -40,16 +58,14 @@ class LzUtils {
                 scope.__callbacks[sc] = sc;
             }
             LzUtils.__scopes[sc] = scope;
-//TODO pbr
-           return null;
-/*
-            return function () {
+            var val = function  () {
                 var s = LzUtils.__scopes[sc];
                 if (s) return s[name].apply(s, args);
-            }
-*/
+            };
+            return val;
+            
         }
-        public static function removecallback(scope) {
+        public  function removecallback(scope) {
             if (scope.__callbacks != null) {
                 for (var i in scope.__callbacks) {
                     var sc = scope.__callbacks[i]
@@ -61,7 +77,7 @@ class LzUtils {
         }
 
 
-    public static function dectohex(c:*, p:*) {
+    public  function dectohex(c:*, p:*) {
         if (typeof c == 'number') {
             // convert from decimal to hex
             var hex = c.toString(16);
@@ -76,8 +92,11 @@ class LzUtils {
         }
     }
 
+    // For back compatibility
+    var color = new ColorUtilsClass();
+
     // ***** color *****
-        public static function hextoint(value:*) {
+        public  function hextoint(value:*) {
             if (typeof value != 'string') return value;
             if (value.charAt(0) == '#') {
                 var n = parseInt(value.slice(1), 16);
@@ -101,7 +120,7 @@ class LzUtils {
             }
             return 0;
         }
-        public static function inttohex(c:*) {
+        public  function inttohex(c:*) {
             if (typeof c == 'string') {
                 c = c * 1;
             }
@@ -112,7 +131,7 @@ class LzUtils {
             }
             return c;
         }
-        public static function torgb(s:*) {
+        public  function torgb(s:*) {
             if (typeof s == 'number') s = LzUtils.inttohex(s); 
             if (typeof s != 'string') return s; 
             if (s.length < 6) {
@@ -130,3 +149,6 @@ class LzUtils {
             ')';
         }
 }
+
+var LzUtils:LzUtilsClass = new LzUtilsClass();
+

@@ -7,22 +7,20 @@
   * @access private
   */
 
+ #include "kernel/LzUtils.lzs"
+
+
 if ($swf9) {
-    #include "kernel/LzUtils.js"
-
-    #include "kernel/swf9/Library.lzs"
-    // TODO [hqm 01 2008] Note: we should be able to merge
-    // the LzIdleKernel swf9 version with the default version
-
 } else {
     #include "kernel/LzIdleKernel.lzs"
-    #include "kernel/LzUtils.lzs"
     #include "kernel/LzLibraryCleanup.lzs"
 }
 
 
 //#include "kernel/LzRequires.lzs"
-if ($dhtml) {
+if ($swf9) {
+    #include "kernel/swf9/Library.lzs"
+} else if ($dhtml) {
     #include "kernel/dhtml/Library.lzs"
 } else if ($svg) {
     #include "kernel/svg/Library.lzs"
