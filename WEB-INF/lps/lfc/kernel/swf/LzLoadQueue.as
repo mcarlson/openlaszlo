@@ -111,7 +111,6 @@ LzLoadQueue.XMLOnDataHandler = function (src) {
             return;
         }
 
-      //Debug.write("LzLoadQueue.XMLOnDataHandler success", this, this.loader);
       // Create a queue containing one root node, myself, and convert it and all children to
       // LzDataNodes.
 
@@ -424,9 +423,9 @@ LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
 LzLoadQueue.loadXML = function (loadobj) {
     // Set the onData handler to intercept returning data
     loadobj.onData = LzLoadQueue.XMLOnDataHandler;
+
     var dopost = (loadobj.reqtype.toUpperCase() == 'POST');
-    
-    //
+
     /*
       [1] If request is PROXIED, send the URL as given, with query string stripped off,
       parsed, and each arg is set as a property on the LoadVar object.
@@ -481,15 +480,16 @@ LzLoadQueue.loadXML = function (loadobj) {
 
     if (loadobj.proxied) {
         // PROXY request: proxy parameters have been stored on
-        // rawpostbody, get them out and attach them to the LoadVars
+        // rawpostbody, get them out and append them to the LoadVars
         // obj, to POST to LPS proxy server.
 
-        var lzpostbody = loadobj.rawpostbody;
+        var content = loadobj.rawpostbody;
         // Copy the postbody data onto the LoadVars, it will be POST'ed
-        var pdata = LzParam.parseQueryString(lzpostbody);
+        var pdata = LzParam.parseQueryString(content);
         for ( var key in pdata) {
             lvar[key] = pdata[key];
         }
+
 
         lvar.sendAndLoad(reqstr , loadobj, "POST" );
     } else {
@@ -499,28 +499,26 @@ LzLoadQueue.loadXML = function (loadobj) {
         var header;
         var headers = loadobj.loader.requestheaders;
 
-        if (!dopost) {
-            // For a GET request, all query args have been placed on
-            // the lvar object already.
+        if (dopost) {
             for ( header in headers) {
                 lvar.addRequestHeader(header, headers[header]);
             }
-            //Debug.write("GET", reqstr);
-            lvar.sendAndLoad(reqstr , loadobj, "GET" );
-        } else {
-            //Debug.write("POST", reqstr);
+
             var lzpostbody = loadobj.rawpostbody;
             // Copy the postbody data onto the LoadVars, it will be POST'ed
             var pdata = LzParam.parseQueryString(lzpostbody);
             for ( var key in pdata) {
                 lvar[key] = pdata[key];
             }
-            
+
+            lvar.sendAndLoad(reqstr , loadobj , "POST");
+        } else {
+            // For a GET request, all query args have been placed on
+            // the lvar object already.
             for ( header in headers) {
                 lvar.addRequestHeader(header, headers[header]);
             }
-            //Debug.write("POST", reqstr);
-            lvar.sendAndLoad(reqstr , loadobj , "POST");
+            lvar.sendAndLoad(reqstr , loadobj, "GET" );
         }
     }
 }

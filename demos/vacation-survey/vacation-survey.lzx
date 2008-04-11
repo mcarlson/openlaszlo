@@ -1,6 +1,6 @@
 <!-- vacation-survey.lzx -->
 
-<canvas width="457" height="206" bgcolor="0xeaeaea" title="Vacation Survey" proxied="true">
+<canvas width="457" height="206" bgcolor="0xeaeaea" title="Vacation Survey" >
 
     <!-- [2006-9-25 jgrandy] (LPP-2755) commented out  <splash/> -->
 
@@ -8,7 +8,7 @@
 
     <debug x="250"/>
 
-    <dataset name="surveydataset" type="http" src="http:survey.jsp"/>
+    <dataset name="surveydataset" type="http" src="http:survey.jsp" querytype="post"/>
 
     <node id="resultdata">
         <attribute name="hawaii" 

@@ -160,26 +160,30 @@ class LzHTTPDataProvider extends LzDataProvider {
             postbody = q;
         }
 
+        var lzurl = new LzURL(dreq.src);
+
+        // For GET requests, merge in params data with URL query 
+        if (dreq.method == "GET") {
+            if (lzurl.query != null) {
+                lzurl.query = lzurl.query + "&" + postbody;
+            } else {
+                lzurl.query = postbody;
+            }
+            postbody = null;
+        }
+
+
         // [LPP-5368] If this is a SOLO POST request, with an empty
         // POST body, put the 'cache-breaking' arg into this post
         // body. This prevents the case of an empty POST body, which
         // would cause the Flash player to turn it into a GET request.
+        //
+        // We are going to go ahead and do this for all platforms, not
+        // just SWF, in order to make things more consistent for the
+        // app developer; they will get this magic arg added across
+        // all platforms.
         if (!proxied && (dreq.method == "POST") && (postbody == null || postbody == ''))  {
             postbody = cachebreak;
-        }
-
-        var lzurl = new LzURL(dreq.src);
-        
-        // For GET requests, merge in params data with URL query 
-        if (dreq.method == "GET") {
-            if (postbody != null) {
-                if (lzurl.query != null) {
-                    lzurl.query = lzurl.query + "&" + postbody;
-                } else {
-                    lzurl.query = postbody;
-                }
-                postbody = null;
-            }
         }
 
         // convert url back to string
@@ -188,22 +192,20 @@ class LzHTTPDataProvider extends LzDataProvider {
             // TODO [hqm 2007-08-03] make the API for makeProxiedURL take an explicit host arg,
             // so we can set the proxy from user code
             url = tloader.makeProxiedURL(url, dreq.method, "xmldata" , headers, postbody);
+
             // We need to move the proxy string query data to the
-            // postbody, can't leave it in the URL string, it could be
-            // arbitrarily long.
+            // postbody; can't leave it in the URL string since it
+            // could be arbitrarily long.
             var marker = url.indexOf('?');
             var uquery = url.substring(marker+1, url.length);
             var url_noquery = url.substring(0,marker);
             url = url_noquery + '?' + cachebreak;
             postbody = uquery;
-            //Debug.write("proxied req url: ", url, ', postbody: ',postbody)
+
         }  else {
             // break the browser cache by adding a unique string to the url
             if (!dreq.clientcacheable) {
-                if (dreq.method == "POST") {
-                    //POST case:
-                    // cache break arg already added to post body
-                } else {
+                if (dreq.method == "GET") {
                     // GET case: add to url query portion
                     if (lzurl.query == null) {
                         lzurl.query = cachebreak;
@@ -217,7 +219,6 @@ class LzHTTPDataProvider extends LzDataProvider {
         }
    
         dreq.status =  "loading";
-        //Debug.write("calling tloader.open", proxied ? "POST" : dreq.method, url, "dreq.method=", dreq.method);
         tloader.open ( proxied ? "POST" : dreq.method, url, /* username */ null, /* password */ null);
         tloader.send (/* content */ postbody);
     }

@@ -16,6 +16,10 @@
     <include href="namespace.lzx"/>
     <include href="namespace-solo.lzx"/>
     <include href="whitespace.lzx"/>
+    <include href="testgetmethod.lzx"/>
+    <include href="testgetmethodsolo.lzx"/>
+    <include href="testpostmethod.lzx"/>
+    <include href="testpostmethodsolo.lzx"/>
     <include href="testsetheaders.lzx"/>
     <include href="testsetheaders-solo.lzx"/>
     <include href="testrawpost.lzx"/>
@@ -38,6 +42,10 @@
         <TestNamespaceSOLO/>
         <TestTrimWhitespace/>
         <TestSendHeaders/>
+        <TestGetMethod/>
+        <TestPOSTMethod/>
+        <TestGetMethodSOLO/>
+        <TestPOSTMethodSOLO/>
         <TestSetHeaders/>
         <TestSetHeadersSOLO/>
         <TestRawPost/>

@@ -502,8 +502,11 @@ function queuedCopyFlashXML(xmlnode) {
     this.copyQueue = {ptr: 0, q: queue, xmlobj: xmlnode};
     this.trimwhitespace = xmlnode.trimwhitespace;
     this.nsprefix       = xmlnode.nsprefix; 
-    this.queuedCopyFlashXML_internal();
-    this.startCopyTask();
+    var done = this.queuedCopyFlashXML_internal();
+    // If the copy wasn't completed in this quanta, start a task to finish it.
+    if (!done) {
+        this.startCopyTask();
+    }
 }
 
 var copyLoopsPerFrame = 1000;
@@ -520,7 +523,6 @@ function queuedCopyFlashXML_internal () {
     var nsprefix = this.nsprefix;
     var trimwhitespace = this.trimwhitespace;
     var ptr = this.copyQueue.ptr;
-    //    Debug.write("enter queuedCopyFlashXML_internal", ptr);
     var q = this.copyQueue.q;
     var iter = 0;
     var maxiter = this.copyLoopsPerFrame;
@@ -619,14 +621,16 @@ function queuedCopyFlashXML_internal () {
     this.copyQueue.ptr = ptr;
     //Debug.write("leaving queuedCopyFlashXML_internal main loop", ptr, iter);
     if (ptr >= q.length) {
-        //Debug.write("entering queuedCopyFlashXML_internal post-copy cleanup", ptr, q.length);
         // If we get here, we're finished with the tree copy.
         // Unregister the idle loop handler
         var xmlobj = this.copyQueue.xmlobj;
         this.removeCopyTask();
         // Proceed with getting this dataset returned to the customer
-        //Debug.write("calling loader.returnData root node");
         xmlobj.loader.returnData(xmlobj, this.lfcrootnode.childNodes[0].childNodes[0]);
+        // Indicate that we finished it all in one go, no need to queue more copy tasks
+        return true;
+    } else {
+        return false;
     }
 }
 

@@ -1,14 +1,12 @@
 <canvas debug="true" height="600" >
-    <font src="helmetr.ttf" name="helvet" />
-    <debug y="130" height="400" width="400" fontsize="14" font="helvet" />
+    <debug y="130" height="460" width="1200" fontsize="14" />
     <simplelayout/>
-    <datasource timeout="3000" >
-        <dataset name="myds"
-            ontimeout="Debug.write(this.name + ': timed out')"
-            onerror="Debug.write(this.name + ': error')"
-            ondata="Debug.write('Response: ' + this.getPointer().serialize())" >
-        </dataset>
-    </datasource>
+
+    <dataset name="myds" type="http"
+             ontimeout="Debug.write(this.name + ': timed out')"
+             onerror="Debug.write(this.name + ': error')"
+             ondata="Debug.write('Response: ' + this.getPointer().serialize())" >
+    </dataset>
 
     <view>
         <simplelayout axis="x" spacing="2"/>
@@ -32,7 +30,7 @@
 
         <method name="doit">
             Debug.write("Requesting: " + url.getText()); 
-            var ds = canvas.datasets['myds'];
+            var ds = myds;
 
             ds.setSrc(url.getText());
 

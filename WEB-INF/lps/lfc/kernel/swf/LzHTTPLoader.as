@@ -157,7 +157,6 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
 }
 
 LzHTTPLoader.prototype.send = function (content) {
-    //Debug.write('LzHTTPLoader.prototype.send', this, this.lzloader);
     this.xmlrequestobj.rawpostbody = content;
     this.lzloader.setHeaders(this.requestheaders);
     this.lzloader.requestDirectXML( this.xmlrequestobj );
@@ -219,7 +218,6 @@ LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers, 
         sep = "&";
     }
 
-    //Debug.write('makeProxiedURL url:',url, 'reqtype:', reqtype,' proxyurl:', proxyurl);
     return proxyurl;
 }
 

@@ -1,0 +1,65 @@
+<library>
+  <include href="lzunit/lzunit.lzx" />
+
+  <dataset name="dsget_post_prox" src="http:echo.jsp" 
+           getresponseheaders="true"  proxied="false"
+           timeout="120000"/>
+
+  <class name="TestPOSTMethod" extends="TestCase">
+    <attribute name="dpready" value="false"/>
+    <attribute name="t2del" value="false"/>
+    <attribute name="waitcnt" value="0"/>
+
+    <datapointer xpath="dsget_post_prox:/echo" name="dp" 
+                 oninit="Debug.write('sending dsget_post_prox request'); parent.sendit()" />
+
+    <handler reference="dsget_post_prox" name="ondata">
+       Debug.write('testcase got dsget_post_prox ondata');
+       this.dpready = true;
+    </handler>
+
+    <method name="sendit">
+      dsget_post_prox.setQueryParam("address", "67 Clyde Street");
+      dsget_post_prox.setQueryParam("phone", "617-987-1234");
+      dsget_post_prox.setQueryType("GET");
+      dsget_post_prox.doRequest();
+    </method>
+
+    <method name="test1">
+          Debug.write("this.dpready = ",this.dpready);
+      if ( ! this.dpready ){
+          if ( ! this.t2del ){
+              Debug.write( "test isn't done until async test runs" );
+              this.t2del = new LzDelegate( this , 'test1' );
+          }
+
+          if ( this.waitcnt++ > 1000 ){
+              fail( "testgetmethodsolo: Didn't get async data" );
+          } else {
+              LzIdle.callOnIdle( this.t2del );
+          }
+
+          return;
+      } 
+      Debug.write( 'running testsetheaders test on loaded data' );
+      this.doIt(dp);
+    </method>
+
+        <method name="doIt" args="dp">
+            <![CDATA[
+                     var resp = dp.xpathQuery( '/echo/data/text()');
+                     assertTrue( resp.indexOf("617-987-1234") > 0);
+                     assertTrue( resp.indexOf("67 Clyde Street") > 0);
+            ]]>
+        </method>
+    </class>
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+

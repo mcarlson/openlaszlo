@@ -422,34 +422,41 @@ public class HTTPDataSource extends DataSource {
     
             boolean hasQuery = (query != null && query.length() > 0);
     
-            if (isPost) {
-                String postbody = req.getParameter("lzpostbody");
-                // If there is a lzpostbody arg, use it as the POST request body,
-                // and copy the query arg from the client-supplied URL to the proxy request URL
-                if (postbody != null) {
-                    ((EntityEnclosingMethod)request).setRequestBody(postbody);
-                    request.setQueryString(query);
-                } else if (hasQuery) {
-                    StringTokenizer st = new StringTokenizer(query, "&");
-                    while (st.hasMoreTokens()) {
-                        String it = st.nextToken();
-                        int i = it.indexOf("=");
-                        if (i > 0) {
-                            String n = it.substring(0, i);
-                            String v = it.substring(i + 1, it.length());
-                            // POST encodes values during request
-                            ((PostMethod)request).addParameter(n, URLDecoder.decode(v, "UTF-8"));
-                        } else {
-                            mLogger.warn(
-                                /* (non-Javadoc)
-                                 * @i18n.test
-                                 * @org-mes="ignoring bad token (missing '=' char) in query string: " + p[0]
-                                 */
-                                org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                    HTTPDataSource.class.getName(),"051018-429", new Object[] {it})
-                                         );
-                        }
+            String rawcontent = null; 
+            // Newer rawpost protocol puts lzpostbody as a separate
+            // top level query arg in the request.
+            rawcontent = req.getParameter("lzpostbody");
+
+             if (isPost) {
+                    // Older rawpost protocol put the "lzpostbody" arg
+                    // embedded in the "url" args's query args
+                    if (rawcontent == null && hasQuery) {
+                        rawcontent = findQueryArg ("lzpostbody", query);
                     }
+                    if (rawcontent != null) {
+                        // Get the unescaped query string
+                        ((EntityEnclosingMethod)request).setRequestBody(rawcontent);
+                    } else if (hasQuery) {
+                        StringTokenizer st = new StringTokenizer(query, "&");
+                        while (st.hasMoreTokens()) {
+                            String it = st.nextToken();
+                            int i = it.indexOf("=");
+                            if (i > 0) {
+                                String n = it.substring(0, i);
+                                String v = it.substring(i + 1, it.length());
+                                // POST encodes values during request
+                                ((PostMethod)request).addParameter(n, URLDecoder.decode(v, "UTF-8"));
+                            } else {
+                                mLogger.warn(
+                                    /* (non-Javadoc)
+                                     * @i18n.test
+                                     * @org-mes="ignoring bad token (missing '=' char) in query string: " + p[0]
+                                     */
+                                    org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                        HTTPDataSource.class.getName(),"051018-429", new Object[] {it})
+                                             );
+                            }
+                        }
                 }
             } else {   
                 // This call takes an encoded (escaped) query string
@@ -627,6 +634,23 @@ public class HTTPDataSource extends DataSource {
         return mMaxConnectionsPerHost;
     }
 
+    // Extract a urlencoded query arg value
+    static String findQueryArg (String argname, String query) throws UnsupportedEncodingException {
+        StringTokenizer st = new StringTokenizer(query, "&");
+        while (st.hasMoreTokens()) {
+            String it = st.nextToken();
+            int i = it.indexOf("=");
+            if (i > 0) {
+                String n = it.substring(0, i);
+                String v = it.substring(i + 1, it.length());
+                if (argname.equals(n)) {
+                    return URLDecoder.decode(v, "UTF-8");
+                }
+            }
+        }
+        return null;
+    }
+
     public static void main(String args[]) {
 
         HTTPDataSource ds = new HTTPDataSource();
@@ -663,4 +687,7 @@ public class HTTPDataSource extends DataSource {
             e.printStackTrace();
         }
     }
+
+
+
 }

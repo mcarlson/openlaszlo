@@ -1,0 +1,65 @@
+<library>
+  <include href="lzunit/lzunit.lzx" />
+
+  <dataset name="dsget" src="http:echo.jsp" 
+           getresponseheaders="true" 
+           timeout="120000"/>
+
+  <class name="TestGetMethod" extends="TestCase">
+    <attribute name="dpready" value="false"/>
+    <attribute name="t2del" value="false"/>
+    <attribute name="waitcnt" value="0"/>
+
+    <datapointer xpath="dsget:/echo" name="dp" 
+                 oninit="Debug.write('sending dsget request'); parent.sendit()" />
+
+    <handler reference="dsget" name="ondata">
+       Debug.write('testcase got dsget ondata');
+       this.dpready = true;
+    </handler>
+
+    <method name="sendit">
+      dsget.setQueryParam("address", "67 Clyde Street");
+      dsget.setQueryParam("phone", "617-987-1234");
+      dsget.setQueryType("GET");
+      dsget.doRequest();
+    </method>
+
+    <method name="test1">
+          Debug.write("this.dpready = ",this.dpready);
+      if ( ! this.dpready ){
+          if ( ! this.t2del ){
+              Debug.write( "test isn't done until async test runs" );
+              this.t2del = new LzDelegate( this , 'test1' );
+          }
+
+          if ( this.waitcnt++ > 1000 ){
+              fail( "testgetmethod: Didn't get async data" );
+          } else {
+              LzIdle.callOnIdle( this.t2del );
+          }
+
+          return;
+      } 
+      Debug.write( 'running testsetheaders test on loaded data' );
+      this.doIt(dp);
+    </method>
+
+        <method name="doIt" args="dp">
+            <![CDATA[
+                     var resp = dp.xpathQuery( '/echo/data/text()');
+                     assertTrue( resp.indexOf("617-987-1234") > 0);
+                     assertTrue( resp.indexOf("67 Clyde Street") > 0);
+            ]]>
+        </method>
+    </class>
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+

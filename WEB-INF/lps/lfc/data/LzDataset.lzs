@@ -200,7 +200,7 @@ var cacheable = false;
   * '__lzbc__=1204685840777'.  This is to prevent client caching.
   * @type Boolean
   */
-var clientcacheable = true;
+var clientcacheable = false;
 
 /** A string to be appended to the request that
   * the dataset makes. 
@@ -683,13 +683,27 @@ function doRequest(ignore=null) {
         dreq.queryparams = this.params;
     }
 
-    // Support for 'lzpostbody'
-    var lzpostbody = null;
-    if (dreq.queryparams) {
-        lzpostbody = dreq.queryparams.getValue('lzpostbody');
-    }
-    if (lzpostbody != null) { 
-        dreq.postbody = lzpostbody;
+    // Support for 'lzpostbody'.  If this is a POST, set
+    // the DataRequest.postbody field to the lzpostbody value.
+    // 
+    if (this.querytype.toUpperCase() == "POST") {
+        var lzpostbody = null;
+        if (dreq.queryparams) {
+            lzpostbody = dreq.queryparams.getValue('lzpostbody');
+        }
+        // If there is a lzpostbody query arg, we are going to remove
+        // it from the query args, and set it as the dreq.postbody
+        // arg.  Note: In SOLO mode, the DHTML runtime can actually
+        // support raw POST via the XMLHTTPRequest API.
+        //
+        // The Flash swf8 native API has no way to support POST of
+        // arbitrary raw data in SOLO mode; the best we can do is to
+        // send a list of url-encoded key=value pairs.
+        // 
+        if (lzpostbody != null) { 
+            dreq.postbody = lzpostbody;
+            dreq.queryparams.remove('lzpostbody');
+        }
     }
 
     dreq.proxied            = this.isProxied();
