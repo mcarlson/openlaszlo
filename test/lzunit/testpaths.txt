@@ -13,8 +13,8 @@ test/lfc/lzunit-timer.lzx
 # test/lfc/lzunit-lzutils.lzx [BROKEN see LPP-4732 dectohex fails unit test lzunit-lzutils]
 test/components/base/lzunit-basecomponent.lzx
 test/components/base/lzunit-baseform.lzx
-test/components/base/lzunit-baseslider.lzx
+# See LPP-5710 test/components/base/lzunit-baseslider.lzx
 test/components/base/lzunit-baselist.lzx
 test/components/base/lzunit-basetabs.lzx
-test/components/base/lzunit-basedatacombobox.lzx
+# See LPP-5645 test/components/base/lzunit-basedatacombobox.lzx
 test/components/lz/lzunit-components.lzx
