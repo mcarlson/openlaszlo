@@ -131,8 +131,8 @@ There is also a <a href='{canvas/request/@lps}/lps/admin/solo-deploy.jsp?appurl=
 
       <h2>More Information</h2>
       <ul>
-        <li><a href="{/canvas/request/@lps}/docs/deploy/">System Administrator's Guide to Deploying OpenLaszlo Applications</a></li>
-        <li><a href="{/canvas/request/@lps}/docs/guide/">Software Engineer's Guide to Developing OpenLaszlo Applications</a></li>
+        <li><a href="{/canvas/request/@lps}/docs/deployers/">System Administrator's Guide to Deploying OpenLaszlo Applications</a></li>
+        <li><a href="{/canvas/request/@lps}/docs/developers/">Software Engineer's Guide to Developing OpenLaszlo Applications</a></li>
         <li><a href="http://forum.openlaszlo.org/">Developer Forums</a></li>
       </ul>
   </body>
