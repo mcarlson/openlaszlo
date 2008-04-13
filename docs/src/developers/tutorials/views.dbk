@@ -547,7 +547,7 @@ color, that stretches from end to end?</para>
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/views-tutorial-$10.lzx></example?>
 
-<para>The <indexterm><primary>valign</primary></indexterm><sgmltag class="attribute">valign</sgmltag> attribute aligns the view to the center of its parent's height. It can take a value of <literal>top</literal>, <literal>center</literal> or <literal>bottom</literal>. There is an <indexterm><primary>align</primary></indexterm><sgmltag class="attribute">align</sgmltag> attribute that aligns views to the x-axis. The only problem with using that here is that we'd have to give each button an <indexterm><primary>align</primary></indexterm><sgmltag class="attribute">align</sgmltag> attribute.</para>
+<para>The <indexterm><primary>valign</primary></indexterm><sgmltag class="attribute">valign</sgmltag> attribute aligns the view to the middle of its parent's height. It can take a value of <literal>top</literal>, <literal>middle</literal> or <literal>bottom</literal>. There is an <indexterm><primary>align</primary></indexterm><sgmltag class="attribute">align</sgmltag> attribute that aligns views to the x-axis. The only problem with using that here is that we'd have to give each button an <indexterm><primary>align</primary></indexterm><sgmltag class="attribute">align</sgmltag> attribute.</para>
 
 <para>The solution is to wrap all of our buttons in a view. Then we could apply a <indexterm><primary>valign</primary></indexterm><sgmltag class="attribute">valign</sgmltag> attribute to all of them at once.</para>
 
