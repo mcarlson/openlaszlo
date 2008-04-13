@@ -61,18 +61,155 @@ $LPS_HOME/laszlo-explorer/basics/assets/background.jpg. It might contain the fol
 <para>
 Running LZC from other than LPS_HOME will result in a file not found error. 
 </para>
-<para/></section><section><title>Command Line Options</title>
-<para>
-Here are the options available for compilation:
-</para>
-<para><emphasis role="b">Options:</emphasis></para>
-<variablelist><varlistentry><term>-D&lt;name&gt;=&lt;value&gt;</term><listitem><para> Set the name/var property to value (See Compiler.getProperties).</para></listitem></varlistentry><varlistentry><term>-D&lt;name&gt;</term><listitem><para> Short for -Dname=true.</para></listitem></varlistentry><varlistentry><term>-v</term><listitem><para>Write progress information to standard output.</para></listitem></varlistentry><varlistentry><term>--mcache on|off</term><listitem><para>Turns on/off media cache.  Default is off.</para></listitem></varlistentry><varlistentry><term>--onerror [throw|warn]</term><listitem><para>Action to take on compilation errors.  Defaults to warn.</para></listitem></varlistentry><varlistentry><term>--help</term><listitem><para>lists all options.</para></listitem></varlistentry><varlistentry><term>--flush-script-cache</term><listitem><para>Doesn't flush script cache before compiling.</para></listitem></varlistentry></variablelist>
-<para><emphasis role="b">Output options:</emphasis></para>
-<variablelist><varlistentry><term>--runtime=[swf7|swf8|dhtml]</term><listitem><para> Compile to swf7, swf8, or dhtml.</para></listitem></varlistentry><varlistentry><term>--dir outputdir</term><listitem><para>Output directory.</para></listitem></varlistentry><varlistentry><term>-g | --debug</term><listitem><para> Add debugging information into the output object.</para></listitem></varlistentry><varlistentry><term>-p | --profile</term><listitem><para> Add profiling information into the output object.</para></listitem></varlistentry></variablelist>
+<para/></section>
+    <section>
+      <title>Command Line Options</title>
+      <para> Here are the options available for compilation: </para>
+      <para>
+        <emphasis role="b">Options:</emphasis>
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>--help</term>
+          <listitem>
+            <para>lists all options.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-D&lt;name&gt;=&lt;value&gt;</term>
+          <listitem>
+            <para> Set the name/var property to value (See Compiler.getProperties).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-D&lt;name&gt;</term>
+          <listitem>
+            <para> Short for -Dname=true.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-v</term>
+          <listitem>
+            <para>Write progress information to standard output.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>--mcache on|off</term>
+          <listitem>
+            <para>Turns on/off media cache. Default is off.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>--onerror [throw|warn]</term>
+          <listitem>
+            <para>Action to take on compilation errors. Defaults to warn.</para>
+          </listitem>
+        </varlistentry>
+       <varlistentry>
+         <term>--script-cache-dir &lt;directory&gt;</term>
+         <listitem>
+           <para>
+             Location of script cache directory (default &lt;lps&gt;/work/scache).
+           </para>
+         </listitem>
+       </varlistentry>
+        <varlistentry>
+          <term>--media-cache-dir &lt;directory&gt;</term>
+          <listitem>
+           <para>
+             Location of media cache directory (default &lt;lps&gt;/work/cache/cmcache).
+           </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>--flush-script-cache</term>
+          <listitem>
+            <para>Doesn't flush script cache before compiling.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+        <emphasis role="b">Output options:</emphasis>
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>--runtime=[swf7|swf8|dhtml]</term>
+          <listitem>
+            <para> Compile to swf7, swf8, or dhtml.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>
+            --output &lt;file&gt; (or -o &lt;file&gt;)
+          </term>
+          <listitem>
+            <para>The name of the output file. This option is only valid when there is one input file.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>--dir outputdir</term>
+          <listitem>
+            <para>Output directory.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-g | --debug</term>
+          <listitem>
+            <para>Add debugging information into the output object.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-p | --profile</term>
+          <listitem>
+            <para> Add profiling information into the output object.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
 
-<para><emphasis role="b">Logging options:</emphasis></para>
-<variablelist><varlistentry><term>-l&lt;loglevel&gt;</term><listitem><para>Logging level (See org.apache.log4j.Level)</para></listitem></varlistentry><varlistentry><term>-l&lt;loggerName&gt;=&lt;loglevel&gt;</term><listitem><para>Logging level (See org.apache.log4j.Level)</para></listitem></varlistentry><varlistentry><term>-lp file</term><listitem><para>Log4j properties files</para></listitem></varlistentry><varlistentry><term>--log logfile</term><listitem><para>Specify logfile (output still goes to console as well)</para></listitem></varlistentry><varlistentry><term>--schema</term><listitem><para> Writes the schema to standard output.</para></listitem></varlistentry><varlistentry><term>--script</term><listitem><para>Writes JavaScript to standard output.</para></listitem></varlistentry></variablelist>
-<para/></section><section><title>Compile-time constants</title>
+      <para>
+        <emphasis role="b">Logging options:</emphasis>
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>-l&lt;loglevel&gt;</term>
+          <listitem>
+            <para>Logging level (See org.apache.log4j.Level)</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-l&lt;loggerName&gt;=&lt;loglevel&gt;</term>
+          <listitem>
+            <para>Logging level (See org.apache.log4j.Level)</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-lp file</term>
+          <listitem>
+            <para>Log4j properties files</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>--log logfile</term>
+          <listitem>
+            <para>Specify logfile (output still goes to console as well)</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>--schema</term>
+          <listitem>
+            <para> Writes the schema to standard output.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>--script</term>
+          <listitem>
+            <para>Writes JavaScript to standard output.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para/>
+    </section><section><title>Compile-time constants</title>
 <para>
 You can define compile-time constants to `lzc` by using `-D_name_=_value_`, where _value_ should be either `true` or `false`. By convention, we use `$` as the first character of _name_, but nothing enforces that.
 </para>
