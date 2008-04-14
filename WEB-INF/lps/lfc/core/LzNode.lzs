@@ -158,13 +158,10 @@ public dynamic class LzNode extends LzMiniNode{
   * @access private
   */
 function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
+        super();
         this.__LZUID = "__U" + ++LzNode.__UIDs;
         this.__LZdeferDelegates = true;
         var qpos = LzDelegate.__LZdelegatesQueue.length;
-        if ($swf9) {
-        } else {
-            super();
-        }
 
         // Node node start
         if ($profile) {

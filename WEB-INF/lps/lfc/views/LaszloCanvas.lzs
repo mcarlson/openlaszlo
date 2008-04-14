@@ -53,174 +53,209 @@
   * See the <a href="${dguide}debugging.html">Debugging</a> chapter of
   * the Guide for more information about debugging.
   */
-class LzCanvas extends LzView {
+dynamic class LzCanvas extends LzView {
+
+  static var tagname = 'canvas';
+
 
 /**
   * @access private
   * @modifiers override
   */
-static var tagname = 'canvas';
 /** @access private */
   static var attributes = new LzInheritedHash(LzView.attributes);
 
-function LzCanvas ( args ) {
-    // TODO: [2006-05-19 ptw] The original did not do this, should we?
-    // super(null, args);
-    // No, we can't.  But you have to be aware that if you futz with
-    // LzNode or LzView, you have to consider whether you will have to
-    // change the canvas constructor too, since it _pretends_ to be a
-    // view!
+    var updatePercentCreatedEnabled:Boolean = true;
+
+    var resourcetable:*;
+    var _lzinitialsubviews:Array = [];
+    var totalnodes:*;
+    var framerate:*;
+    var creatednodes:*;
+
+    /* These are passed in by the compiler as attributes */
+    var __LZproxied;
+    var embedfonts;
+    var lpsbuild;
+    var lpsbuilddate;
+    var runtime;
+
+    var __LZmouseupDel:LzDelegate;
+    var __LZmousedownDel:LzDelegate;
+    var __LZmousemoveDel:LzDelegate;    
+
+    function LzCanvas ( args = null) {
+        super(null,args);
+    }
+
+    override function construct (parent , args) {
+        var capabilities;
+
+        this.__makeSprite(args);
+
+        // TODO [hqm 2008-04] how can we make this consistent across runtimes ? 
+        if ($swf9) {
+            capabilities = LzSprite.capabilities;
+        } else {
+            capabilities = LzSprite.prototype.capabilities;
+        }
+
+        // TODO: [2006-05-19 ptw] The original did not do this, should we?
+        // super(null, args);
+        // No, we can't.  But you have to be aware that if you futz with
+        // LzNode or LzView, you have to consider whether you will have to
+        // change the canvas constructor too, since it _pretends_ to be a
+        // view!
     
-    // Note canvas start
-    if ($profile) {
-        Profiler.event('start: #canvas');
-    }
-    this.hasdatapath = true;
-    this.datapath = {};
-    this.immediateparent = this;
-
-    // *** SWF-specific
-    this.__LZmovieClipRef = _root;
-    // depth 0 is reserved for the preloader, if any
-    this.__LZsvdepth = 1;
-
-    this.__LZrightmenuclip = null;
-
-    // turn on focusrect if canvas.accessible is true
-    // SWF-specific
-    if ('accessible' in args)
-        this.sprite.setAccessible(args.accessible);
-    // *** SWF-specific END
-
-    this.mask = null;
-    this.viewLevel = 0;
-    this.resourcetable = {};
-
-    // percentcreated support
-    this.totalnodes = 0;
-    this.creatednodes = 0;
-    this.percentcreated = 0;
-
-    this.framerate = 30;
-
-    if ((typeof(args.proxied) == "undefined") || args.proxied == null) {
-        // Default to the 'baked in' value set by the compiler
-        var lzproxied_query_arg = (args.__LZproxied == "true");
-        // Override with the lzproxied query arg supplied at runtime, if present.
-        if (LzBrowser.getInitArg('lzproxied') != null) {
-            lzproxied_query_arg = (LzBrowser.getInitArg('lzproxied') == "true"); // convert string to boolean
+        // Note canvas start
+        if ($profile) {
+            Profiler.event('start: #canvas');
         }
-        this.proxied = lzproxied_query_arg;
-    } else {
-        this.proxied = (args.proxied == true);
-    }
-    delete args.proxied;
+        this.datapath = {};
+        this.immediateparent = this;
 
-    this.sprite = new LzSprite(this, true);
-    if (this.sprite.capabilities.readcanvassizefromsprite == true) {
-        if (this.sprite.width) {
-            args.width = this.sprite.width;
-        }
-        if (this.sprite.height) {
-            args.height = this.sprite.height;
-        }
-        if (this.sprite.bgcolor) {
-            args.bgcolor = this.sprite.bgcolor;
-        }
-    }
+        this.mask = null;
 
-    this.__canvaswidthratio = null;
-    this.width = Number(args.width);
-    if (isNaN(this.width)) {
-        if (args.width.charAt(args.width.length-1) == '%') {
-            var percent = Number(args.width.substr(0, args.width.length-1));
-            this.__canvaswidthratio = percent/100;
-            if (this.capabilities.scalecanvastopercentage != true) {
-                // some runtimes already scale the viewport size, so take the reported size literally to avoid scaling twice
-                this.__canvaswidthratio = 1;
+        // turn on focusrect if canvas.accessible is true
+        // SWF-specific
+        if ('accessible' in args)
+            this.sprite.setAccessible(args.accessible);
+        // *** SWF-specific END
+
+        this.viewLevel = 0;
+        this.resourcetable = {};
+
+        // percentcreated support
+        this.totalnodes = 0;
+        this.creatednodes = 0;
+        this.percentcreated = 0;
+
+        this.framerate = 30;
+
+        if ((typeof(args.proxied) == "undefined") || args.proxied == null) {
+            // Default to the 'baked in' value set by the compiler
+            var lzproxied_query_arg = (args.__LZproxied == "true");
+            // Override with the lzproxied query arg supplied at runtime, if present.
+            if (LzBrowser.getInitArg('lzproxied') != null) {
+                lzproxied_query_arg = (LzBrowser.getInitArg('lzproxied') == "true"); // convert string to boolean
             }
+            this.proxied = lzproxied_query_arg;
         } else {
-            if ( $debug ){
-                Debug.warn('ignored bad value %#w for canvas width', args.width);
-            }
-            this.width = 400;
+            this.proxied = (args.proxied == true);
         }
-    }
-    delete args.width;
+        delete args.proxied;
 
-    this.__canvasheightratio = null;
-    this.height = Number(args.height);
-    if (isNaN(this.height)) {
-        if (args.height.charAt(args.height.length-1) == '%') {
-            var percent = Number(args.height.substr(0, args.height.length-1));
-            this.__canvasheightratio = percent/100;
-            if (this.capabilities.scalecanvastopercentage != true) {
-                // some runtimes already scale the viewport size, so take the reported size literally to avoid scaling twice
-                this.__canvasheightratio = 1;
+        if (capabilities.readcanvassizefromsprite == true) {
+            if (this.sprite.width) {
+                args.width = this.sprite.width;
             }
+            if (this.sprite.height) {
+                args.height = this.sprite.height;
+            }
+            if (this.sprite.bgcolor) {
+                args.bgcolor = this.sprite.bgcolor;
+            }
+        }
+
+        this.__canvaswidthratio = null;
+        this.width = Number(args.width);
+        if (isNaN(this.width)) {
+            if (args.width.charAt(args.width.length-1) == '%') {
+                var percent = Number(args.width.substr(0, args.width.length-1));
+                this.__canvaswidthratio = percent/100;
+                if (capabilities.scalecanvastopercentage != true) {
+                    // some runtimes already scale the viewport size, so take the reported size literally to avoid scaling twice
+                    this.__canvaswidthratio = 1;
+                }
+            } else {
+                if ( $debug ){
+                    Debug.warn('ignored bad value %#w for canvas width', args.width);
+                }
+                this.width = 400;
+            }
+        }
+        delete args.width;
+
+        this.__canvasheightratio = null;
+        this.height = Number(args.height);
+        if (isNaN(this.height)) {
+            if (args.height.charAt(args.height.length-1) == '%') {
+                var percent = Number(args.height.substr(0, args.height.length-1));
+                this.__canvasheightratio = percent/100;
+                if (capabilities.scalecanvastopercentage != true) {
+                    // some runtimes already scale the viewport size, so take the reported size literally to avoid scaling twice
+                    this.__canvasheightratio = 1;
+                }
+            } else {
+                if ( $debug ){
+                    Debug.warn('ignored bad value %#w for canvas height', args.height);
+                }
+                this.height = 400;
+            }
+        }
+        delete args.height;
+
+        if (this.__canvasheightratio != null || this.__canvaswidthratio != null) {
+            // register for window resize events
+            LzScreenKernel.setCallback(this, '__windowResize');
+        }
+
+        if (capabilities.readcanvassizefromsprite == true) {
+            this.bgcolor = LzUtils.hextoint(args.bgcolor);
         } else {
+            this.bgcolor = args.bgcolor;
+        }
+        delete args.bgcolor;
+
+        this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;
+        delete args.lpsversion;
+
+        // Set applyArgs ordering kludges.
+        this.__LZdelayedSetters = LzView.__LZdelayedSetters;
+        this.earlySetters = LzView.earlySetters;
+        this.__LZapplyArgs( args );
+
+        if (!('version' in this && this.version)){
+            this.version = this.lpsversion;
+        } if ( this.compareVersion( this.version ) == -1 ){
             if ( $debug ){
-                Debug.warn('ignored bad value %#w for canvas height', args.height);
+                Debug.warn( "Enabling old ondata behavior because app uses "+
+                            "version %w.", this.version );
             }
-            this.height = 400;
+            this.__LZoldOnData = true;
+        }
+
+
+        this.isinited = false;
+        this._lzinitialsubviews = [];
+
+        this.datasets = {};
+        global.canvas = this;
+        this.parent = this;
+        this.makeMasked();
+
+        this.__LZmouseupDel = new LzDelegate( this , "__LZmouseup", LzGlobalMouse, 'onmouseup');// called on global mouseup
+        this.__LZmousedownDel = new LzDelegate( this , "__LZmousedown", LzGlobalMouse, 'onmousedown');// called on global mousedown
+        this.__LZmousemoveDel = new LzDelegate( this , "__LZmousemove", LzGlobalMouse, 'onmousemove');// called on global mousemove
+
+        LzPlatform.initCanvas(this);
+
+        this.id = LzBrowser.getInitArg('id');
+
+        if ($swf9) {
+            ////////////////////////////////////////////////////////////////
+            //DEBUG
+            ////////////////////////////////////////////////////////////////
+            //trace('canvas.sprite.width = ', this.sprite.width, this.sprite);
+            //trace('canvas.sprite.height = ', this.sprite.height);
         }
     }
-    delete args.height;
-
-    if (this.__canvasheightratio != null || this.__canvaswidthratio != null) {
-        // register for window resize events
-        LzScreenKernel.setCallback(this, '__windowResize')
-    }
-
-    if (this.sprite.capabilities.readcanvassizefromsprite == true) {
-        this.bgcolor = LzUtils.hextoint(args.bgcolor);
-    } else {
-        this.bgcolor = args.bgcolor;
-    }
-    delete args.bgcolor;
-
-    this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;
-    delete args.lpsversion;
-
-    // Set applyArgs ordering kludges.
-    this.__LZdelayedSetters = LzView.__LZdelayedSetters;
-    this.earlySetters = LzView.earlySetters;
-    this.__LZapplyArgs( args );
-
-    if (!('version' in this && this.version)){
-        this.version = this.lpsversion;
-    } if ( this.compareVersion( this.version ) == -1 ){
-        if ( $debug ){
-            Debug.warn( "Enabling old ondata behavior because app uses "+
-                        "version %w.", this.version );
-        }
-        this.__LZoldOnData = true;
-    }
-
-
-    this.isinited = false;
-    this._lzinitialsubviews = [];
-
-    this.datasets = {};
-    global.canvas = this;
-    this.parent = this;
-    this.makeMasked();
-
-    this.__LZmouseupDel = new LzDelegate( this , "__LZmouseup", LzGlobalMouse, 'onmouseup');// called on global mouseup
-    this.__LZmousedownDel = new LzDelegate( this , "__LZmousedown", LzGlobalMouse, 'onmousedown');// called on global mousedown
-    this.__LZmousemoveDel = new LzDelegate( this , "__LZmousemove", LzGlobalMouse, 'onmousemove');// called on global mousemove
-
-    LzPlatform.initCanvas(this);
-
-
-    this.id = LzBrowser.getInitArg('id')
-}
 
 /**
   * Sends onmouseup event
   * @access private
   */
-function __LZmouseup() {
+function __LZmouseup(e) {
     if (this.onmouseup.ready) this.onmouseup.sendEvent()
 }
 
@@ -228,7 +263,7 @@ function __LZmouseup() {
   * Sends onmousemove event
   * @access private
   */
-function __LZmousemove() {
+function __LZmousemove(e) {
     if (this.onmousemove.ready) this.onmousemove.sendEvent()
 }
 
@@ -236,7 +271,7 @@ function __LZmousemove() {
   * Sends onmousedown event
   * @access private
   */
-function __LZmousedown() {
+function __LZmousedown(e) {
     if (this.onmousedown.ready) this.onmousedown.sendEvent()
 }
 
@@ -244,25 +279,20 @@ function __LZmousedown() {
   * Overridden to pass true for "isroot" to LzSprite constructor
   * @access private
   */
-function __makeSprite(args) {
+override function __makeSprite(args) {
+    if ($swf9) {
+        //trace('canvas.__makeSprite making canvas sprite, sprite is already', this.sprite, 'args', args);
+    }
     this.sprite = new LzSprite(this, true, args);
-    if ($debug) {
+   if ($debug) {
         Debug.write("making canvas sprite", this.sprite);
     }
 }
-
-var initdelay = 0;
 
 /** Sent whenever the number of created nodes changes 
   * @lzxtype event
   */
 var onpercentcreated = LzDeclaredEvent;
-/** Sent whenever the mouse button goes down
-  * @lzxtype event */
-var onmousedown = LzDeclaredEvent;
-/** Sent whenever the mouse button goes up
-  * @lzxtype event */
-var onmouseup = LzDeclaredEvent;
 /** Sent whenever the mouse moves 
   * @lzxtype event */
 var onmousemove = LzDeclaredEvent;
@@ -295,8 +325,6 @@ var version;
 /** @access private */
 var __LZlfcversion = "0";
 
-var nodeLevel = 0;
-
 /** If true, requests for data and media are proxied through LPS server.
   * if false, requests are made directly to target URLs. 
   * if inherit, inherit from lzproxied query arg.
@@ -328,15 +356,6 @@ var percentcreated;
   */
 var datasets;
 
-/** If true, requests for data and media are proxied through LPS server.
-  * if false, requests are made directly to target URLs. 
-  * if inherit, inherit from lzproxied query arg.
-  *  
-  * @type Boolean
-  * @lzxtype inheritableBooleanLiteral
-  * @lzxdefault "inherit"
-  */
-var proxied;
 
 /**
   * Compares two version strings.
@@ -346,7 +365,7 @@ var proxied;
   * @return: -1, 0 , 1 to indicate whether the ver parameter preceeds, matches,
   * or succeeds the second parameter (respectively)
   */
-function compareVersion ( ver , over ){ 
+function compareVersion ( ver , over = null ){ 
 
     if ( over ==null ){
         over = this.lpsversion;
@@ -375,15 +394,19 @@ function compareVersion ( ver , over ){
   * called.
   * @access private
   */
-function setResource ( ) {
-    Object.error("You can't set a resource for the canvas.");
+override function setResource (v ) {
+    if ($swf9) {
+        //
+    } else {
+        Object.error("You can't set a resource for the canvas.");
+    }
 }
 
 
 /**
   * @access private
   */
-function toString (){
+override function toString (){
     return "This is the canvas";
 }
 
@@ -404,17 +427,17 @@ function toString (){
 function initDone (){
     //reorder initial subviews so preloaded stuff is first
     var sva = new Array;
-    var is = this._lzinitialsubviews;
+    var isv = this._lzinitialsubviews;
 
-    for ( var i = 0; i < is.length; i++ ){
-        var isi = is[i];
+    for ( var i = 0; i < isv.length; i++ ){
+        var isi = isv[i];
         if ( isi['attrs'] && isi.attrs['initimmediate'] ){
             sva.push( isi );
         }
     }
 
-    for ( var i = 0; i < is.length; i++ ){
-        var isi = is[i];
+    for ( var i = 0; i < isv.length; i++ ){
+        var isi = isv[i];
         if ( ! ( isi['attrs'] && isi.attrs['initimmediate'] ) ){
             sva.push( isi );
         }
@@ -435,32 +458,31 @@ function initDone (){
   * loaded should go here, so they will be invoked in kranked apps too.
   * (By the root resolver in LaszloLibrary).
   */
-function init (){
-    // Debug.write("LzCanvas.init called");
-    // new LzText(canvas, {x: 600, y:0, text: 'elapsed time '+getTimer()+' msec'});
-}
-
-/**
-  * @access private
-  */
-function __LZinstantiationDone (){
-    this.percentcreated = 1;
-    this.updatePercentCreated = null;
-    if (this.onpercentcreated.ready) this.onpercentcreated.sendEvent( this.percentcreated );
-
-    if ( this.initdelay > 0 ){
-        LzInstantiator.halt();
-        this.initokdel = new LzDelegate ( this , "okToInit" );
-        LzTimer.addTimer( this.initokdel , this.initdelay );
-    } else {
-        this.okToInit();
+override function init (){
+    if ($swf9) {
+        //trace("LzCanvas.init called");
+        // cheapo debugger printing
+        sprite.addChild(lzconsole.consoletext);
+        sprite.addChild(lzconsole.consoleinputtext);
+        //lzconsole.write("elapsed time "+getTimer()+" msec");
     }
 }
 
+var deferInit = true;
+
 /**
   * @access private
   */
-function okToInit (){
+override function __LZinstantiationDone (){
+
+    if (this.deferInit) {
+        this.deferInit = false;
+        return;
+    }
+
+    this.percentcreated = 1;
+    this.updatePercentCreatedEnabled = false;
+    if (this.onpercentcreated.ready) this.onpercentcreated.sendEvent( this.percentcreated );
     LzInstantiator.resume();
     this.__LZcallInit();
 }
@@ -487,7 +509,8 @@ function initiatorAddNode ( e , n ){
   * @access private
   * @devnote N.B.: replaces LzNode.__LZcallInit, so must be kept in sync with that
   */
-function __LZcallInit ( an ){
+override function __LZcallInit ( an = null ){
+    trace("lzcancas __LZcallinit isinited", this.isinited);
     // Canvas-only:  Don't bother with preventSubInit
     if (this.isinited) return;
 
@@ -550,7 +573,7 @@ function __LZcallInit ( an ){
 /**
   * @access private
   */
-function setWidth ( ){
+override function setWidth (v ){
     if ( $debug ){
         Debug.error( "setWidth cannot be called on the canvas." );
     }
@@ -566,7 +589,7 @@ function isProxied ( ){
 /**
   * @access private
   */
-function setX ( ){
+override function setX ( v, force = null){
     if ( $debug ){
         Debug.error( "setX cannot be called on the canvas." );
     }
@@ -575,7 +598,7 @@ function setX ( ){
 /**
   * @access private
   */
-function setHeight ( ){
+override function setHeight (v ){
     if ( $debug ){
         Debug.error( "setHeight cannot be called on the canvas." );
     }
@@ -584,7 +607,7 @@ function setHeight ( ){
 /**
   * @access private
   */
-function setY ( ){
+override function setY ( v, force = null){
     if ( $debug ){
         Debug.error( "setY cannot be called on the canvas." );
     }
@@ -634,3 +657,7 @@ function __windowResize(size) {
 }
 
 } // End of LzCanvas
+ConstructorMap[LzCanvas.tagname] = LzCanvas;
+
+
+

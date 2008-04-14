@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -19,3 +19,5 @@ Debug.error = function (args) { }
 Debug.info = function (args) { }
 Debug.debug = function (args) { }
 
+// To catch swf9 'trace()' calls
+trace = function () { console.info.apply(console,arguments);}

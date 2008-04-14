@@ -1,4 +1,6 @@
-<canvas width="1000" height="600" bgcolor="#eeeeff"> 
+<canvas
+
+    bgcolor="#eeeeff"> 
   <font name="chev" src="chevaraor.ttf"/> 
 
   <!--    <text bgcolor="#ccffcc">Hello OpenLaszlo!</text> -->

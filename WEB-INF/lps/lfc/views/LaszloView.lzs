@@ -431,6 +431,7 @@ function spriteAttribute(attrname, value){
   * @access private
   */
 function __makeSprite(args) {
+    //trace('LzView.__makeSprite', args);
     this.sprite = new LzSprite(this, false, args);
 }
 
@@ -2465,6 +2466,7 @@ function $lzc$set_stretches( stretch ){
   * @param Integer bgc: The 0-FFFFFF number to be used for the new background color.
   */
 function setBGColor ( bgc ) {
+    //trace('setting bgcolor ',bgc, this, this.sprite);
     this.sprite.setBGColor(bgc);
     if (bgc != null) this.bgcolor = Number(bgc);
     if (this.onbgcolor.ready) this.onbgcolor.sendEvent( bgc );

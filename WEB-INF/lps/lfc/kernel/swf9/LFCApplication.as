@@ -50,6 +50,8 @@ public class LFCApplication extends Sprite {
         //Stage.align = ('canvassalign' in global && global.canvassalign != null) ? global.canvassalign : "LT";
         //Stage.scaleMode = ('canvasscale' in global && global.canvasscale != null) ? global.canvasscale : "noScale";
 
+        // Give LzScreenKernel a pointer to the Stage
+        LzScreenKernel.stage = stage;
         stage.addEventListener(Event.RESIZE, resizeHandler);
 
         
@@ -178,8 +180,8 @@ public class LFCApplication extends Sprite {
     }
 
     function resizeHandler(event:Event):void {
-        // event.target is a  pointer to the stage
-        //LzScreenKernel.handleResizeEvent(event.target);
+        trace('LFCApplication.resizeHandler stage width/height = ', stage.stageWidth, stage.stageHeight);
+        LzScreenKernel.handleResizeEvent();
     }
 
     function reportKeyUp(event:KeyboardEvent):void {

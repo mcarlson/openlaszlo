@@ -15,6 +15,7 @@ public class LzSprite extends Sprite {
 
   import flash.display.*;
   import flash.events.*;
+  import flash.ui.*;
   import mx.controls.Button;
   import flash.net.URLRequest;  
 }#
@@ -683,6 +684,45 @@ public class LzSprite extends Sprite {
       public function getMCRef () {
           trace("LzSprite.getMCRef not implemented in this runtime");
       }
+
+
+      var __contextmenu;
+
+      /* LzSprite.setContextMenu
+       * Install menu items for the right-mouse-button 
+       * @param LzContextMenu cmenu: LzContextMenu to install on this view
+       */
+      function  setContextMenu ( lzmenu ){
+          if (lzmenu == null) {
+              this.__contextmenu = null;
+          } else {
+              // For back compatibility, we accept either LzContextMenu or (Flash primitive) ContextMenu
+              this.__contextmenu = lzmenu;
+              var cmenu:ContextMenu = lzmenu.__LZcontextMenu();
+
+              // TODO [hqm 2008-04] make this do the more complex stuff that swf8 LzSprite does now,
+              // where it checks for a resource or bgcolor sprite, in order to make the clickable region
+              // match what the user expects.
+
+              // "contextMenu" is a swf9 property on flash.display.Sprite
+              this.contextMenu = cmenu;
+          }
+      }
+
+      function setDefaultContextMenu ( cmenu ){
+          if (cmenu != null) {
+              // stage.contextMenu = cmenu.__LZcontextMenu();
+          }
+      }
+
+      /**
+       * LzView.getContextMenu
+       * Return the current context menu
+       */
+      function getContextMenu() {
+          return this.__contextmenu;
+      }
+
 
 
   }#

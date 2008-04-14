@@ -35,8 +35,8 @@
     //#include "kernel/swf/LzMouseKernel.as"
 #include "kernel/swf9/LzKeyboardKernel.as"
     //#include "kernel/swf/LzAudio.as"
-    //#include "kernel/swf9/LzScreenKernel.as"
-    //#include "kernel/swf/LzContextMenu.lzs"
+#include "kernel/swf9/LzScreenKernel.as"
+#include "kernel/swf9/LzContextMenu.lzs"
     //#include "kernel/swf/dojo/Library.lzs"
 
 

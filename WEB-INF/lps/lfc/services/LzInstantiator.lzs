@@ -155,7 +155,7 @@ function checkQ ( ignoreme = null){
     } else {
         canvas.creatednodes += this.makeSomeViews( this.makeQ , 
                                                    this.timeout );
-        if (canvas.updatePercentCreated) {
+        if (canvas.updatePercentCreatedEnabled) {
             canvas.updatePercentCreated();
         }
     }

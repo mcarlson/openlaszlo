@@ -37,8 +37,6 @@ public class LzCSSStyle {
     public static  function  getPropertyValueFor(a:*, b:*):* { return null;}
 }
 
-
-
 public class LzBrowser {
     public static var defaultPortNums = { http: 80, https: 443 };
 
@@ -51,11 +49,15 @@ public class LzBrowser {
         return null;
     }
 
-    public static function toAbsoluteURL(url, secure) {
+    public static function toAbsoluteURL(url, secure = null) {
         return null;
     }
 
-    public static function getLoadURL() {
+    public static function getLoadURL(...ignore) {
+        return null;
+    }
+
+    public static function loadURL(...ignore) {
         return null;
     }
 
