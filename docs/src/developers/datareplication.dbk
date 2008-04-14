@@ -144,7 +144,7 @@
           <title>Using clones and the onclones event</title>
           <programlisting language="lzx">
             <textobject>
-              <textdata fileref="programs/databinding-$25.lzx" />
+              <textdata fileref="programs/databinding-$24.lzx" />
             </textobject>
           </programlisting>
         </example>
@@ -247,7 +247,7 @@
           <title>Using the nodes property</title>
           <programlisting language="lzx">
             <textobject>
-              <textdata fileref="programs/databinding-$26.lzx" />
+              <textdata fileref="programs/databinding-$25.lzx" />
             </textobject>
           </programlisting>
         </example>
@@ -284,7 +284,7 @@
         <title>Using pooling to optimize data updates</title>
         <programlisting language="lzx">
           <textobject>
-            <textdata fileref="programs/databinding-$27.lzx" />
+            <textdata fileref="programs/databinding-$26.lzx" />
           </textobject>
         </programlisting>
       </example>
@@ -416,7 +416,7 @@
         dataset</title>
         <programlisting language="lzx">
           <textobject>
-            <textdata fileref="programs/databinding-$28.lzx" />
+            <textdata fileref="programs/databinding-$27.lzx" />
           </textobject>
         </programlisting>
       </example>
@@ -439,7 +439,7 @@
         <title>$path does not replicate</title>
         <programlisting language="lzx">
           <textobject>
-            <textdata fileref="programs/databinding-$29.lzx" />
+            <textdata fileref="programs/databinding-$28.lzx" />
           </textobject>
         </programlisting>
       </example>
