@@ -860,7 +860,7 @@
 
                 <method name="testAnimDelete">
                         theview.theanim.destroy()
-                        assertEquals("undefined", typeof(theview.theanim))
+                        assertNull(theview['theanim'])
                 </method>
         </class>
         

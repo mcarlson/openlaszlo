@@ -115,6 +115,7 @@
 
 <interface name="node" extends="Instance">
   <attribute name="id" type="ID"/>
+  <attribute name="$lzc$bind_id" type="expression" />
   <!-- The path of a file that contains the source for this object. -->
   <attribute name="src" type="string"/>
   <!-- The name of a variable that will be set to this object when the
@@ -126,6 +127,7 @@
   -->
   <attribute name="$delegates" type="expression"/>
   <attribute name="name" type="token"/>
+  <attribute name="$lzc$bind_name" type="expression" />
   <!-- The oninit script is executed once, after the element's
        children, if any, have been initialized. 
   -->

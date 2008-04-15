@@ -146,7 +146,7 @@ function LzParsedPath (pa:String, node:*) {
                 //we have a datasource and a dataset
                 if ($debug) {
                     if ((canvas[ dsrc ])[ dset ] == null) {
-                        Debug.error( "couldn't find dataset for %w", pa );
+                      Debug.error( "couldn't find dataset for %w (canvas[%#w][%#w])", pa, dsrc, dset );
                     }
                 }
                 this.dsrcname = dsrc;
@@ -165,7 +165,7 @@ function LzParsedPath (pa:String, node:*) {
             } else {
                 if ($debug) {
                     if (canvas.datasets[ name ] == null) {
-                        Debug.error( "couldn't find dataset for %w", pa );
+                      Debug.error( "couldn't find dataset for %w (canvas.datasets[%#w])", pa, name );
                     }
                 }
                 this.dsetname = name;

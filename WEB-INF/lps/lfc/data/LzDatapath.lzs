@@ -383,10 +383,6 @@ override function setDataContext ( p , implicit = null ){
   * @access private
   */
 override function destroy(){
-if ($swf9) {}
-else {
-    this.$lzc$set_name = null; //so this can't be assigned
-}
     this.__LZupdateLocked = true; //so won't set data
 
     if ( this.context && !this.context.__LZdeleted && 

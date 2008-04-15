@@ -162,6 +162,32 @@ function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? =
         this.__LZUID = "__U" + ++LzNode.__UIDs;
         this.__LZdeferDelegates = true;
         var qpos = LzDelegate.__LZdelegatesQueue.length;
+        // These have to be called really early on, we can't wait for
+        // setters.  Someday they can just be in-lined in the custom
+        // constructor the tag compiler writes...
+        if (attrs) {
+            if (attrs['$lzc$bind_id']) {
+                this.$lzc$bind_id = attrs.$lzc$bind_id;
+                delete attrs.$lzc$bind_id;
+            }
+            if (attrs['$lzc$bind_name']) {
+                this.$lzc$bind_name = attrs.$lzc$bind_name;
+                delete attrs.$lzc$bind_name;
+            }
+        }
+        // The binders are intentionally called with this as a
+        // parameter, not as the value of `this` so they will be
+        // evaluated in the global scope
+        var bindid = this.$lzc$bind_id;
+        if (bindid) { bindid.call(null, this) };
+        // This will only exist if you were lexically on the canvas,
+        // in which case your name is also an it
+        var bindname = this.$lzc$bind_name;
+        if (bindname) { bindname.call(null, this) };
+
+        this.__LZUID = "__U" + ++LzNode.__UIDs;
+        this.__LZdeferDelegates = true;
+        var qpos = LzDelegate.__LZdelegatesQueue.length;
 
         // Node node start
         if ($profile) {
@@ -493,6 +519,12 @@ var cloneManager = null;
   * @lzxtype token
   */
 var name = null;
+    /** @access private
+     * If you are lexically on the canvas and have a name, the
+     * compiler will generate a binder that will be called by the
+     * constructor
+     */
+    var $lzc$bind_name = null;
 
 /** A unique identifier for this element.  Can be used as a global
   * variable name in JavaScript code.
@@ -503,6 +535,15 @@ var name = null;
   * @lzxtype token
   */
 var id = null;
+    /** @access private
+     * You can't set id
+     */
+    var $lzc$set_id = -1;
+    /** @access private
+     * If you have a name, the compiler will generate a binder that
+     * will be called by the constructor
+     */
+    var $lzc$bind_id = null;
 
 /** An attribute used in container classes. If
   * set to a non-null value, this forces this node to run its determinePlacement
@@ -1244,11 +1285,10 @@ var __LZdelayedSetters;
 /** @access private */
 static var earlySetters = new LzInheritedHash({
     name            : 1 ,
-    id              : 2 ,
-    $events         : 3 ,
-    $delegates      : 4 ,
-    $classrootdepth : 5 ,
-    $datapath       : 6
+    $events         : 2 ,
+    $delegates      : 3 ,
+    $classrootdepth : 4 ,
+    $datapath       : 5
         });
 var earlySetters;
 
@@ -1583,41 +1623,6 @@ function defaultSet ( val ,prop ){
 
 
 /**
-  * Sets the id of the given to the string given. Nodes that have an id can be
-  * referred to using just the id.  The id is in the global namespace, unlike
-  * names which need to be references in a specific context (e.g. 'parent.myname'
-  * or 'this.myname', vs. simply using 'myid')
-  * @access protected
-  * @param String id: The id to use for this node.
-  */
-function $lzc$set_id ( id ){
-    //support for current system
-    if ((typeof(id) == 'string') && id.length) {
-        if ($debug) {
-            if (global[id] && global[id] !== this) {
-                Debug.warn('Redefining #%s from %w to %w',
-                           id, global[id], this);
-            }
-        }
-        this.id = id;
-        // TODO: [2006-03-22 ptw] Should id's really go in the user/canvas module?
-        global[ id ] = this;
-    } else {
-        if ($debug) {
-            // id is permitted to be null or undefined, meaning
-            // "don't id me"
-            if (id) {
-                Debug.error('Invalid id %w for %w', id, this);
-            }
-        }
-     }
-    //namespace system
-    //app[ id ] = this;
-    //local reference
-
-}
-
-/**
   * Sets the datacontext for the node to the xpath given as an argument
   * @access public
   * @param String dp: The string to use as the datapath.
@@ -1911,45 +1916,19 @@ function destroy( ){
         }
     }
 
+    // unbind the id, if any
+    if (this.$lzc$bind_id) { this.$lzc$bind_id.call(null, this, false); }
+    // ditto for the name
+    if (this.$lzc$bind_name) { this.$lzc$bind_name.call(null, this, false); }
     //remove name
-    if ( this.name != null ){
-        if ( this.parent[ this.name ] == this ){
-            delete this.parent[ this.name ];
+    var parent = this.parent;
+    var name = this.name;
+    if ((parent != null) && (name != null)) {
+        if (parent[ name ] === this) {
+            parent[ name ] = null;
         }
-        if ( this.immediateparent[ this.name ] == this ){
-            delete this.immediateparent[  this.name ];
-        }
-        if ( this.parent === canvas &&  global[ this.name ] === this ){
-            // FIXME [2006-10-05 pbr] (LPP-1871) Revert to deleting from global when modules are implemented.
-            // TODO [2006-10-05 pbr] remove $dhtml by moving to a kernel API or when SWF backend supports try/cath.
-            if ($js1) {
-                try {
-                    delete global[this.name];
-                } catch (e) {
-                    // If you can't delete, set to undefined
-                    global[this.name] = void 0;
-                }
-            } else {
-                delete global[this.name];
-            }
-        }
-    }
-
-    //remove id
-    if ( this.id != null ){
-        if ( global[ this.id ] === this ){
-            // FIXME [2006-10-05 pbr] (LPP-1871) Revert to deleting from global when modules are implemented.
-            // TODO [2006-10-05 pbr] remove $dhtml by moving to a kernel API or when SWF backend supports try/cath.
-            if ($js1) {
-                try {
-                    delete global[this.id];
-                } catch (e) {
-                    // If you can't delete, set to undefined
-                    global[this.id] = void 0;
-                }
-            } else {
-                delete global[this.id];
-            }
+        if (this.immediateparent[ name ] === this) {
+            this.immediateparent[ name ] == null;
         }
     }
 

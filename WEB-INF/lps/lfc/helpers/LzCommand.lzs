@@ -61,6 +61,11 @@ function $lzc$set_key(v) { this.setKeys(v); }
   */
 var onselect = LzDeclaredEvent;
 
+/** @access private */
+function LzCommand ( parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
+  super(parent, attrs, children, instcall);
+}
+
 /**
   * This registers the given key array so that the command is executed when the
   * key array is pressed.

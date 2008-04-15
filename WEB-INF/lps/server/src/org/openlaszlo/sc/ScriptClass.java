@@ -34,8 +34,8 @@ public class ScriptClass {
         Map.Entry entry = (Map.Entry)i.next();
         String name = (String)entry.getKey();
         Object value = entry.getValue();
-        if (value instanceof Function) {
-          Function fn = (Function)value;
+        if (value instanceof Method) {
+          Method fn = (Method)value;
           fn.setName(name);
           str += prefix + value.toString();
           str += "\n";

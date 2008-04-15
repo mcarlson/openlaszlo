@@ -19,6 +19,7 @@ import java.util.regex.*;
 import org.openlaszlo.compiler.ViewSchema.ColorFormatException;
 import org.openlaszlo.css.CSSParser;
 import org.openlaszlo.sc.Function;
+import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.server.*;
 import org.openlaszlo.utils.ChainedException;
@@ -50,6 +51,7 @@ public class NodeModel implements Cloneable {
     final Element element;
     String className;
     String id = null;
+    String globalName = null;
     LinkedHashMap attrs = new LinkedHashMap();
     List children = new Vector();
     /** A set {eventName: String -> True) of names of event handlers
@@ -235,7 +237,7 @@ public class NodeModel implements Cloneable {
       }
     }
 
-    public Function getBinderMethod() {
+    public Method getBinderMethod() {
       if (! (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS))) {
         return null;
       }
@@ -255,7 +257,7 @@ public class NodeModel implements Cloneable {
         // derived (at run time)
         installer = "__LZstyleBindAttribute";
       }
-      Function binder = new Function(
+      Method binder = new Method(
         bindername,
         // Binders are called by LzDelegate.execute, which passes the
         // value sent by sendEvent, so we have to accept it, but we
@@ -269,13 +271,13 @@ public class NodeModel implements Cloneable {
       return binder;
     }
 
-    public Function getDependenciesMethod() {
+    public Method getDependenciesMethod() {
       if (! when.equals(WHEN_ALWAYS)) {
         return null;
       }
       String preface = "\n#pragma 'withThis'\n";
       String body = "return " + getCompiler().dependenciesForExpression(value);
-      Function dependencies = new Function(
+      Method dependencies = new Method(
         dependenciesname,
         "",
         preface,
@@ -635,6 +637,40 @@ public class NodeModel implements Cloneable {
         return ("canvas".equals(parent.getName()));
     }
 
+    // Not used at present
+//     private static String buildNameBinderBody (String symbol) {
+//         return
+//             "var $lzc$old = $lzc$parent." + symbol + ";\n" +
+//             "if ($lzc$bind) {\n" +
+//             "  if ($debug) {\n" +
+//             "    if ($lzc$old && ($lzc$old !== $lzc$node)) {\n" +
+//             "      Debug.warn('Redefining %w." + symbol + " from %w to %w', \n" +
+//             "        $lzc$parent, $lzc$old, $lzc$node);\n" +
+//             "    }\n" +
+//             "  }\n" +
+//             "  $lzc$parent." + symbol + " = $lzc$node;\n" +
+//             "} else if ($lzc$old === $lzc$node) {\n" +
+//             "  $lzc$parent." + symbol + " = null;\n" +
+//             "}\n";
+//     }
+
+    private static String buildIdBinderBody (String symbol, boolean setId) {
+        return
+            "if ($lzc$bind) {\n" +
+            "  if ($debug) {\n" +
+            "    if (" + symbol + " && (" + symbol + " !== $lzc$node)) {\n" +
+            "      Debug.warn('Redefining #" + symbol + " from %w to %w', \n" +
+            "        " + symbol + ", $lzc$node);\n" +
+            "    }\n" +
+            "  }\n" +
+            (setId ? ("  $lzc$node.id = " + ScriptCompiler.quote(symbol) + ";\n") : "") +
+            "  " + symbol + " = $lzc$node;\n" +
+            "} else if (" + symbol + " === $lzc$node) {\n" +
+            "  " + symbol + " = null;\n" +
+            (setId ? ("  $lzc$node.id = null;\n") : "") +
+            "}\n";
+    }
+
     void addAttributes(CompilationEnvironment env) {
         // Add source locators, if requested.  Added here because it
         // is not in the schema
@@ -740,6 +776,9 @@ public class NodeModel implements Cloneable {
                 (name.equals("name") &&
                  topLevelDeclaration() &&
                  (! ("class".equals(className) || "interface".equals(className) || "mixin".equals(className))))) {
+                if ("name".equals(name)) {
+                    this.globalName = value;
+                }
                 ElementWithLocationInfo dup =
                     (ElementWithLocationInfo) env.getId(value);
                 // we don't want to give a warning in the case
@@ -830,7 +869,6 @@ solution =
             if (type == schema.EVENT_HANDLER_TYPE) {
                 addHandlerFromAttribute(element, name, value);
             } else {
-                // NOTE: [2008-04-01 ptw] May be obsolete?
                 if (type == schema.ID_TYPE) {
                     this.id = value;
                 }
@@ -844,6 +882,30 @@ solution =
                         element, name, value, type, when);
                     addAttribute(cattr, name, attrs, events,
                                  references, classAttrs, styles);
+                    // If this attribute is "id", you need to bind the
+                    // id
+                    if ("id".equals(name)) {
+                        String symbol = value;
+                        Function idbinder = new Function(
+                            "$lzc$node:LzNode, $lzc$bind:Boolean=true",
+                            buildIdBinderBody(symbol, true));
+                        attrs.put("$lzc$bind_id", idbinder);
+                    }
+                    // Ditto for top-level name "name"
+                    if (topLevelDeclaration() && "name".equals(name)) {
+                        String symbol = value;
+                        // A top-level name is also an ID, for
+                        // hysterical reasons
+                        // TODO: [2008-04-10 ptw] We should really
+                        // just change the name element to an id
+                        // element in any top-level node and be
+                        // done with it.
+                        Function namebinder = new Function (
+                            "$lzc$node:LzNode, $lzc$bind:Boolean=true",
+                            buildIdBinderBody(symbol, false));
+                        attrs.put("$lzc$bind_name", namebinder);
+                    }
+
                     // Check if we are aliasing another 'name'
                     // attribute of a sibling
                     if (name.equals("name")) {
@@ -1187,7 +1249,7 @@ solution =
             delegates.put(event, Boolean.TRUE);
         } else { 
             referencename = "$lzc$" + "handle_" + event + "_reference" + unique;
-            Object referencefn = new Function(
+            Object referencefn = new Method(
                 referencename,
                 "",
                 "\n#pragma 'withThis'\n" +
@@ -1203,8 +1265,8 @@ solution =
             if (method == null) {
                 method = "$lzc$" + "handle_" + event + unique;
             }
-            Function fndef = new
-                Function(method,
+            Method fndef = new
+                Method(method,
                          //"#beginAttribute\n" +
                          args,
                          "\n#beginContent\n" +
@@ -1340,8 +1402,8 @@ solution =
             adjectives += " final";
         }
 
-        Function fndef = new
-            Function(name,
+        Method fndef = new
+            Method(name,
                      //"#beginAttribute\n" +
                      args,
                      "\n#beginContent\n" +
@@ -1823,7 +1885,7 @@ solution =
 
     boolean hasMethods() {
         for (Iterator i = attrs.values().iterator(); i.hasNext(); ) {
-            if (i.next() instanceof Function) { return true; }
+            if (i.next() instanceof Method) { return true; }
         }
         return false;
     }
@@ -1858,7 +1920,7 @@ solution =
             Map.Entry entry = (Map.Entry) i.next();
             String key = (String) entry.getKey();
             Object value = entry.getValue();
-            if (value instanceof Function) {
+            if (value instanceof Method) {
                 hasMethods = true;
             } else if (! (value instanceof NodeModel.BindingExpr)) {
                 inits.put(key, value);
@@ -1896,8 +1958,14 @@ solution =
         // constructor map...
         map.put("name", ScriptCompiler.quote(tagName));
         if (id != null) {
-            // NOTE: [2008-04-01 ptw] May be obsolete?
-            map.put("id", ScriptCompiler.quote(id));
+            // Declare node id (if any) as a global
+            // property so that references to it from methods
+            // can be resolved at compile time
+            env.compileScript("var " + id + ";", element);
+        }
+        if (globalName != null) {
+            // Ditto for a named top-level element
+            env.compileScript("var " + globalName + ";", element);
         }
 
         return map;
@@ -1993,13 +2061,13 @@ solution =
         }
 
         // Check for duplicate methods.  Collect all the keys that name
-        // a Function in both the source and target.
+        // a Method in both the source and target.
         List sharedMethods = new Vector();
         for (Iterator iter = attrs.keySet().iterator();
              iter.hasNext(); ) {
             String key = (String) iter.next();
-            if (attrs.get(key) instanceof Function &&
-                source.attrs.get(key) instanceof Function)
+            if (attrs.get(key) instanceof Method &&
+                source.attrs.get(key) instanceof Method)
                 sharedMethods.add(key);
         }
         if (!sharedMethods.isEmpty())

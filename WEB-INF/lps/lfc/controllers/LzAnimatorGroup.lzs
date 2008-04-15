@@ -559,7 +559,10 @@ override function destroy( ) {
   * @access private
   */
 override function toString(  ) {
-    return "GroupAnimator length = " + this.animators.length;
+  if (this.animators) {
+    return "Group of " + this.animators.length;
+  }
+  return "Empty group";
 }
 
 } // End of LzAnimatorGroup

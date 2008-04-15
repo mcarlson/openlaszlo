@@ -320,7 +320,7 @@ public class ScriptCompiler extends Cache {
                 // Only emit functions, not properties of the class
                 // TODO: [2007-11-20 dda] handle other properties, like final
 
-                if (value instanceof Function || value instanceof Map) {
+                if (value instanceof Method || value instanceof Map) {
                     writeObject(value, writer, emitClassDecl);
                 }
                 if (iter.hasNext())

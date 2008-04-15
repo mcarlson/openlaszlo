@@ -1229,8 +1229,10 @@ function serialize ( ){
 if ($debug) {
 /** @access private */
 function _dbg_name () {
-        return this.p._dbg_name();
-    };
+  if (this.p) {
+    return this.p._dbg_name();
+  }
+}
 }
 
 

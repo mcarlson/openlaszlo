@@ -284,15 +284,7 @@ override function $lzc$set_name(name) {
             canvas.datasets = {};
         }
         
-        //support "name is global identifier on canvas" behavior
         if ( this.oncanvas ){
-            if ($debug) {
-              if (global[name] && global[name] !== this) {
-                Debug.warn('Redefining #%s from %w to %w', 
-                           name, global[name], this);
-              }
-            }
-            global[ name ] = this;
             canvas[ name ] = this;
         } else {
             // it's local - add the parent's UID
@@ -328,9 +320,6 @@ override function destroy () {
     if (this.oncanvas) {
         if (canvas[ name ] === this) {
             delete canvas [ name ];
-        }
-        if (global[ name ] === this) {
-            delete global [ name ];
         }
     }    else {
         name = this.parent.getUID() + '.' + name;

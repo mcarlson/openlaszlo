@@ -7,7 +7,7 @@
 package org.openlaszlo.compiler;
 import java.util.*;
 import org.jdom.Element;
-import org.openlaszlo.sc.Function;
+import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.ScriptClass;
 
@@ -151,7 +151,7 @@ class ClassModel implements Comparable {
     body += "super($lzc$parent, $lzc$attrs, $lzc$children, $lzc$async);\n";
     nodeModel.setAttribute(
       className,
-      new Function(
+      new Method(
         className,
         // All nodes get these args when constructed
         // Apparently AS3 does not allow defaulting of
@@ -187,7 +187,7 @@ class ClassModel implements Comparable {
           decls.put(key, null);
         }
         inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
-      } else if (value instanceof Function &&
+      } else if (value instanceof Method &&
                  ((! isstate) ||
                   className.equals(key))) {
         // Methods are just decls.  Except in states, because they
@@ -315,7 +315,7 @@ class ClassModel implements Comparable {
       Object value = entry.getValue();
       if ("LzNode._ignoreAttribute".equals(value)) {
         merged.remove(key);
-      } else if (! (value instanceof Function)) {
+      } else if (! (value instanceof Method)) {
         merged.put(key, value);
       }
     }
@@ -333,7 +333,7 @@ class ClassModel implements Comparable {
       Map.Entry entry = (Map.Entry) i.next();
       String key = (String) entry.getKey();
       Object value = entry.getValue();
-      if (value instanceof Function) {
+      if (value instanceof Method) {
         merged.put(key, value);
       }
     }

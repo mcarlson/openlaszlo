@@ -175,21 +175,31 @@ override function construct ( odp , args ){
     //you can say view.datapath and you'll get what you want (which is this)
     this.datapath = this;
 
-    //null, or name of view that was replicated
+    // replace the view with us,
+    // fixing up any name or id
     var name =  view.name;
     if (name != null) {
       args.name = name;
       // remove view we replace to avoid warning in LzNode.$lzc$set_name
-      delete view.immediateparent[name];
-      delete view.parent[name];
+      view.immediateparent[name] = null;
+      view.parent[name] = null;
     }
-
-    //same deal for id
-    var id =  view.id;
-    if (id != null) {
-      args.id = id;
-      // remove any LzNode with this id
-      if (global[id] is LzNode) global[id] = null;
+    // ditto with global binders
+    var idbinder =  view.$lzc$bind_id;
+    if (idbinder != null) {
+      // remove view binding
+      idbinder.call(null, view, false);
+      view.$lzc$bind_id = null;
+      this.$lzc$bind_id = idbinder;
+      idbinder.call(null, this);
+    }
+    var namebinder =  view.$lzc$bind_name;
+    if (namebinder != null) {
+      // remove view binding
+      namebinder.call(null, view, false);
+      view.$lzc$bind_name = null;
+      this.$lzc$bind_name = namebinder;
+      namebinder.call(null, this);
     }
 
     //don't want to rerunxpath
@@ -238,8 +248,10 @@ override function construct ( odp , args ){
     this.cloneAttrs.$datapath.attrs = { datacontrolsvisibility: odp.datacontrolsvisibility, 
                                         __LZmanager : this }
 
-    this.cloneAttrs.id = LzNode._ignoreAttribute;
-    this.cloneAttrs.name = LzNode._ignoreAttribute;
+    this.cloneAttrs.id = null;
+    this.cloneAttrs.name = null;
+    this.cloneAttrs.$lzc$bind_id = null;
+    this.cloneAttrs.$lzc$bind_name = null;
     if ($profile) {
       if (view._profile_name) {
         this.cloneAttrs._profile_name = 'clone of ' + view._profile_name;
