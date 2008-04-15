@@ -164,14 +164,15 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         // For GET requests, merge in params data with URL query 
         if (dreq.method == "GET") {
-            if (lzurl.query != null) {
-                lzurl.query = lzurl.query + "&" + postbody;
-            } else {
+            if (lzurl.query == null) {
                 lzurl.query = postbody;
+            } else {
+                if (postbody != null) {
+                    lzurl.query += ("&" + postbody);
+                }
             }
             postbody = null;
         }
-
 
         // [LPP-5368] If this is a SOLO POST request, with an empty
         // POST body, put the 'cache-breaking' arg into this post
@@ -187,11 +188,11 @@ class LzHTTPDataProvider extends LzDataProvider {
         }
 
         // convert url back to string
-        var url = lzurl.toString();
+        var url;
         if (proxied) {
             // TODO [hqm 2007-08-03] make the API for makeProxiedURL take an explicit host arg,
             // so we can set the proxy from user code
-            url = tloader.makeProxiedURL(url, dreq.method, "xmldata" , headers, postbody);
+            url = tloader.makeProxiedURL(lzurl.toString(), dreq.method, "xmldata" , headers, postbody);
 
             // We need to move the proxy string query data to the
             // postbody; can't leave it in the URL string since it

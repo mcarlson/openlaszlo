@@ -200,7 +200,7 @@ var cacheable = false;
   * '__lzbc__=1204685840777'.  This is to prevent client caching.
   * @type Boolean
   */
-var clientcacheable = false;
+var clientcacheable = true;
 
 /** A string to be appended to the request that
   * the dataset makes. 
@@ -660,6 +660,7 @@ function doRequest(ignore=null) {
     dreq.timeout = this.timeout;
     dreq.status  = LzDataRequest.READY;
     dreq.method = this.querytype;
+    dreq.postbody = null;
 
     // If this.querystring is set, use it as the source of param
     // values. Note, this is independent of the query portion of the
