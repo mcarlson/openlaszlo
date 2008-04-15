@@ -222,6 +222,12 @@ if ($debug) {
     this.__write('INFO: ' + Array.prototype.slice.call(arguments, 0).join(' '));
   };
   /**
+   * @access private
+   * To catch swf 'trace()' calls
+   */
+  trace = function () { Debug.info.apply(Debug, arguments); }
+
+  /**
     * Doc'd on real definition
     * Bootstrap version
     * @access private
