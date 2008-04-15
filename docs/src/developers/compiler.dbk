@@ -27,6 +27,13 @@ In OpenLaszlo, 'the compiler' consists (currently) of two phases: 1) 'the view c
 <para>
 The Debugger needs an OL server to be able to evaluate forms (it calls the server to compile the form and then loads and runs the result). It will try to talk to OL server (using the url the application was loaded from), so it should 'just work', so long as you are running a server, even if you don't use the server for compiling your application. 
 </para>
+  <note>
+    <para>
+      If you use the command-line compiler to compile a SOLO application, you won't be able to use <literal>Debug.trace()</literal>, 
+      <literal>Debug.monitor()</literal> or evaluate any expression that requires the Debugger to send code to the 
+      server for compilation.
+    </para>
+  </note>
 
 <para/><section><title>Running the Command Line Compiler</title>
 <para>
