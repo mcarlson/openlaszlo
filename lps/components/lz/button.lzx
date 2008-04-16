@@ -79,7 +79,7 @@
     <attribute name="doesenter" value="true"/>
 
     <!--- @keywords private -->
-    <method name="showDown" args="sd">
+    <method name="showDown" args="sd=null">
         if (this.hasdefault) {
             this._outerbezel.setResourceNumber( 5 );
         } else {
@@ -92,7 +92,7 @@
     </method>
 
     <!--- @keywords private -->
-    <method name="showUp" args="sd">
+    <method name="showUp" args="sd=null">
         if (_enabled) {
             if (this.hasdefault) {
                 this._outerbezel.setResourceNumber( 5 );
@@ -113,7 +113,7 @@
     </method>
 
     <!--- @keywords private -->
-    <method name="showOver" args="sd">
+    <method name="showOver" args="sd=null">
         if (this.hasdefault) {
             this._outerbezel.setResourceNumber( 5 );
         } else {
@@ -226,7 +226,7 @@ object tags such as <tagname>attribute</tagname> and
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
