@@ -1,8 +1,7 @@
 <toc>
     <category title="Structure">
         <item title="attribute"  href="tag.attribute.html" />
-        <item title="canvas (LzCanvas)" href="LzCanvas+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="canvas (LzCanvas) (swf9)" href="LzCanvas+swf9.html" />
+        <item title="canvas (LzCanvas)" href="LzCanvas.html" />
         <item title="event"  href="tag.event.html" />
         <item title="import" href="tag.import.html" />
         <item title="include" href="tag.include.html" />
@@ -131,7 +130,7 @@
     <category title="Data">
         <item title="datapath (LzDatapath)" href="LzDatapath.html" />
         <item title="datapointer (LzDatapointer)" href="LzDatapointer.html" />
-        <item title="dataselectionmanager (LzDataSelectionManager)" href="LzDataSelectionManager+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="dataselectionmanager (LzDataSelectionManager)" href="LzDataSelectionManager.html" />
         <item title="dataset (LzDataset)" href="LzDataset.html" />
         <item title="datasource (LzDatasource)" href="LzDatasource.html" />
         <item title="defaultdataprovider" href="defaultdataprovider.html" />        
@@ -205,7 +204,7 @@
     <category title="Menus and Commands">
         <item title="command (LzCommand)" href="LzCommand+dhtml+j2me+svg+swf7+swf8.html" />
         <item title="LzCursor" href="LzCursor+dhtml+j2me+svg+swf7+swf8.html" />
-        <item title="selectionmanager" href="LzSelectionManager+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="selectionmanager" href="LzSelectionManager.html" />
     </category>
     <category title="RPC">
         <item title="javarpc" href="lz.javarpc.html" />
