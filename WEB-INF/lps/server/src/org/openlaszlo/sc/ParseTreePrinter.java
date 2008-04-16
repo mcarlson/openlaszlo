@@ -47,6 +47,7 @@ public class ParseTreePrinter {
   public static final boolean DEBUG_NODE_OUTPUT = false;
 
   boolean compress;
+  boolean trackLines;
   String SPACE;
   String NEWLINE;
   String COMMA;
@@ -71,10 +72,15 @@ public class ParseTreePrinter {
     this(compress, false);
   }
 
+  public ParseTreePrinter(boolean compress, boolean obfuscate) {
+    this(compress, obfuscate, false);
+  }
+
   // TODO: [2007-11-21 dda] if compress/obfuscate are on, probably
   // can turn off generation of annotations.
-  public ParseTreePrinter(boolean compress, boolean obfuscate) {
+  public ParseTreePrinter(boolean compress, boolean obfuscate, boolean trackLines) {
     this.compress = compress;
+    this.trackLines = trackLines;
     // Set whitespace
     this.SPACE = compress ? "" : " ";
     this.NEWLINE = obfuscate ? "" : "\n";
@@ -1032,14 +1038,32 @@ public class ParseTreePrinter {
 
     AnnotationProcessor ap = new AnnotationProcessor() {
         TranslationUnit curtu = defaulttu;
+        boolean atBol = true;
+        int linenumDiff = 0;
 
         public String notify(char op, String operand) {
           switch (op) {
           case ANNOTATE_OP_TEXT:
             curtu.addText(operand);
+            if (trackLines) {
+              if (operand.endsWith("\n")) {
+                atBol = true;
+              }
+              else if (operand.length() > 0) {
+                atBol = false;
+              }
+            }
             return "";
           case ANNOTATE_OP_LINENUM:
-            curtu.setInputLineNumber(Integer.parseInt(operand));
+            int linenum = Integer.parseInt(operand);
+            if (trackLines && atBol && linenum != 0) {
+              int newdiff = curtu.getTextLineNumber() - linenum;
+              if (newdiff != linenumDiff) {
+                curtu.addText("/* -*- file: #" + linenum + " -*- */\n");
+                linenumDiff = newdiff + 1;  // account for the line just added
+              }
+            }
+            curtu.setInputLineNumber(linenum);
             return "";
           case ANNOTATE_OP_CLASSNAME:
             curtu = new TranslationUnit();

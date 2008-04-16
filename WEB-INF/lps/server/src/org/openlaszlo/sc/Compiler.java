@@ -348,8 +348,19 @@ public class Compiler {
       profiler.enter("parse");
       source = cg.preProcess(source);
       SimpleNode program = new Parser().parse(source);
+
+      String astInputFile = (String)options.get(DUMP_AST_INPUT);
+      if (astInputFile != null) {
+        emitFile(astInputFile, program);
+        System.err.println("Created " + astInputFile);
+      }
       profiler.phase("generate");
       SimpleNode translated = cg.translate(program);
+      String astOutputFile = (String)options.get(DUMP_AST_OUTPUT);
+      if (astOutputFile != null) {
+        emitFile(astOutputFile, translated);
+        System.err.println("Created " + astOutputFile);
+      }
 
       if (isScript) {
 
@@ -454,6 +465,8 @@ public class Compiler {
   public static String DEBUG_BACKTRACE = "debugBacktrace";
   public static String DEBUG_SIMPLE = "debugSimple";
   public static String DEBUG_EVAL = "debugEval";
+  public static String DUMP_AST_INPUT = "dumpASTInput";
+  public static String DUMP_AST_OUTPUT = "dumpASTOutput";
   public static String DISABLE_CONSTANT_POOL = "disableConstantPool";
   public static String ELIMINATE_DEAD_EXPRESSIONS = "eliminateDeadExpressions";
   public static String FLASH_COMPILER_COMPATABILITY = "flashCompilerCompatability";
@@ -476,6 +489,7 @@ public class Compiler {
   public static String PRINT_INSTRUCTIONS = "printInstructions";
   public static String RESOLVER = "resolver";
   public static String SCRIPT_ELEMENT = "scriptElement";
+  public static String TRACK_LINES = "trackLines";
   public static String VALIDATE_CACHES = "validateCaches";
   public static String WARN_UNDEFINED_REFERENCES = "warnUndefinedReferences";
   public static String WARN_GLOBAL_ASSIGNMENTS = "warnGlobalAssignments";
@@ -918,6 +932,86 @@ public class Compiler {
   public static String nodeString(SimpleNode node) {
     return ptp.text(node);
   }
+
+  // TextEmitter and associated methods are used to create
+  // files useful for debugging the compiler only, so errors are ignored.
+
+  /**
+   * A source of text data.
+   */
+  public interface TextEmitter {
+    void emit(Writer writer)
+      throws IOException;
+  }
+
+  /**
+   * Emit a file using the TextEmitter as a source for the file text.
+   */
+  public static void emitFile(String filename, TextEmitter tw) {
+    FileWriter writer = null;
+    try {
+      File f = new File(filename);
+      f.delete();
+      writer = new FileWriter(f);
+      tw.emit(writer);
+      writer.close();
+      writer = null;
+    }
+    catch (IOException ioe) {
+      System.err.println("Cannot write to " + filename);
+      if (writer != null) {
+        try {
+          writer.close();
+        }
+        catch (IOException ioe2) {
+          // ignored.
+        }
+      }
+    }
+  }
+
+  /**
+   * emit a file with the given String text
+   */
+  public static void emitFile(String filename, final String txt) {
+    emitFile(filename, new TextEmitter() {
+        public void emit(Writer writer)
+          throws IOException {
+          writer.write(txt);
+        }
+      });
+  }
+
+  /**
+   * emit a file with the given node (to be dumped) as the text.
+   */
+  public static void emitFile(String filename, final SimpleNode node) {
+    emitFile(filename, new TextEmitter() {
+        public void emit(Writer writer)
+          throws IOException {
+          nodeFileDump(writer, "", node);
+        }
+      });
+  }
+
+  /**
+   * Helper method to dump a node into a file.
+   */
+  public static void nodeFileDump(Writer writer, String prefix, SimpleNode node)
+    throws IOException
+  {
+    writer.write(node.toString(prefix) + "\n");
+    SimpleNode[] children = node.getChildren();
+    if (children != null) {
+      for (int i = 0; i < children.length; ++i) {
+        SimpleNode n = (SimpleNode)children[i];
+        if (n != null) {
+          nodeFileDump(writer, prefix + " ", n);
+        }
+      }
+    }
+  }
+
 }
 
 /**

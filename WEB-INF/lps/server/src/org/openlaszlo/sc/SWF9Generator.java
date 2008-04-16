@@ -34,12 +34,6 @@ public class SWF9Generator extends JavascriptGenerator {
 
   public static final String PASSTHROUGH_TOPLEVEL = "toplevel";
 
-  // TODO: [2007-12-12 dda] make DEBUG_OUTPUT a compiler option.
-  /**
-   * When set, some extra debugging files are saved.
-   */
-  public static final boolean DEBUG_OUTPUT = true;
-
   /** The user 'main' class, which extends LFCApplication */
   public final static String MAIN_APP_CLASSNAME = "LzApplication";
 
@@ -642,6 +636,7 @@ public class SWF9Generator extends JavascriptGenerator {
   {
     boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
     boolean debugEval = options.getBoolean(Compiler.DEBUG_EVAL);
+    boolean trackLines = options.getBoolean(Compiler.TRACK_LINES);
 
     String mainClass;
     if (buildSharedLibrary) {
@@ -650,7 +645,7 @@ public class SWF9Generator extends JavascriptGenerator {
       mainClass = debugEval ? SWF9Generator.DEBUG_EVAL_CLASSNAME : SWF9Generator.MAIN_APP_CLASSNAME;
     }
 
-    return (new SWF9ParseTreePrinter(compress, obfuscate, mainClass, buildSharedLibrary)).makeTranslationUnits(translatedNode);
+    return (new SWF9ParseTreePrinter(compress, obfuscate, mainClass, buildSharedLibrary, trackLines)).makeTranslationUnits(translatedNode);
   }
 
   /** Implements CodeGenerator.
@@ -661,12 +656,6 @@ public class SWF9Generator extends JavascriptGenerator {
     boolean hasErrors = false;
     boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
     SWF9External ex = new SWF9External(options);
-
-    if (DEBUG_OUTPUT) {
-      ex.emitFile(ex.workDirectoryName("source.txt"), savedSource);
-      ex.emitFile(ex.workDirectoryName("program.txt"), (new SWF9ParseTreePrinter()).text(savedProgram));
-      ex.emitFile(ex.workDirectoryName("progdump.txt"), savedProgram);
-    }
 
     for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
       TranslationUnit tunit = (TranslationUnit)iter.next();

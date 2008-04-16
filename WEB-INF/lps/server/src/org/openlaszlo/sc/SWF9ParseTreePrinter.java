@@ -66,20 +66,20 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
   }
   
   public SWF9ParseTreePrinter() {
-    this(false, false, null, false);
+    this(false, false, null, false, false);
   }
   
   public SWF9ParseTreePrinter(boolean compress) {
-    this(compress, false, null, false);
+    this(compress, false, null, false, false);
   }
   
   public SWF9ParseTreePrinter(boolean compress, boolean obfuscate) {
-    this(compress, obfuscate, null, false);
+    this(compress, obfuscate, null, false, false);
   }
 
-  public SWF9ParseTreePrinter(boolean compress, boolean obfuscate, String mainClassName, boolean sharedLibrary) {
+  public SWF9ParseTreePrinter(boolean compress, boolean obfuscate, String mainClassName, boolean sharedLibrary, boolean trackLines) {
     // never compress or obfuscate
-    super(false, false);
+    super(false, false, trackLines);
     this.mainClassName = mainClassName;
     this.islib = sharedLibrary;
   }

@@ -448,12 +448,12 @@ public class SWF9External {
     String bigErrorString = "";
     int bigErrorCount = 0;
 
-    if (SWF9Generator.DEBUG_OUTPUT) {
-      String buildsh = "#!/bin/sh\n";
-      buildsh += "cd " + dir + "\n";
-      buildsh += prettycmd + "\n";
-      emitFile(workDirectoryName("build.sh"), buildsh);
-    }
+    // Generate a small script (unix style) to document how
+    // to build this batch of files.
+    String buildsh = "#!/bin/sh\n";
+    buildsh += "cd " + dir + "\n";
+    buildsh += prettycmd + "\n";
+    Compiler.emitFile(workDirectoryName("build.sh"), buildsh);
 
     Process proc = Runtime.getRuntime().exec(cmdstr, null, null);
     try {
@@ -710,90 +710,6 @@ public class SWF9External {
     }
     finally {
       closeit(fos);
-    }
-  }
-
-  // TextEmitter and associated methods are used to create
-  // files useful for debugging only, so errors are ignored.
-
-  /**
-   * A source of text data.
-   */
-  public interface TextEmitter {
-    void emit(Writer writer)
-      throws IOException;
-  }
-
-  /**
-   * Emit a file relative to the work directory,
-   * using the TextEmitter as a source for the file text.
-   */
-  public static void emitFile(String filename, TextEmitter tw) {
-    FileWriter writer = null;
-    try {
-      File f = new File(filename);
-      if (!f.isAbsolute()) {
-        throw new IllegalArgumentException("emitFile: file name cannot be relative");
-      }
-      f.delete();
-      writer = new FileWriter(f);
-      tw.emit(writer);
-      writer.close();
-      writer = null;
-    }
-    catch (IOException ioe) {
-      System.err.println("Cannot write to " + filename);
-      if (writer != null) {
-        try {
-          writer.close();
-        }
-        catch (IOException ioe2) {
-          // ignored.
-        }
-      }
-    }
-  }
-
-  /**
-   * emit a file relative to the work directory with the given String text
-   */
-  public static void emitFile(String filename, final String txt) {
-    emitFile(filename, new TextEmitter() {
-        public void emit(Writer writer)
-          throws IOException {
-          writer.write(txt);
-        }
-      });
-  }
-
-  /**
-   * emit a file relative to the work directory with the given node
-   * (to be dumped) as the text.
-   */
-  public static void emitFile(String filename, final SimpleNode node) {
-    emitFile(filename, new TextEmitter() {
-        public void emit(Writer writer)
-          throws IOException {
-          nodeFileDump(writer, "", node);
-        }
-      });
-  }
-
-  /**
-   * Helper method to dump a node into a file.
-   */
-  public static void nodeFileDump(Writer writer, String prefix, SimpleNode node)
-    throws IOException
-  {
-    writer.write(node.toString(prefix) + "\n");
-    SimpleNode[] children = node.getChildren();
-    if (children != null) {
-      for (int i = 0; i < children.length; ++i) {
-        SimpleNode n = (SimpleNode)children[i];
-        if (n != null) {
-          nodeFileDump(writer, prefix + " ", n);
-        }
-      }
     }
   }
 }

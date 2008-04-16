@@ -93,6 +93,10 @@ public class TranslationUnit
     linenum += countOccurence(s, '\n');
   }
 
+  public int getTextLineNumber() {
+    return linenum;
+  }
+
   public void addInsertStreamMarker(int streamNum) {
     text.append(INSERT_STREAM_MARK + streamNum + INSERT_END_MARK);
     if (streamNum > maxInserts)
