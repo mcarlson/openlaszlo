@@ -1,14 +1,20 @@
-<canvas width="800" height="600" debug="false"> 
-  <checkbox name="foo"  >check me</checkbox>
-  <view y="100" width="20" height="20" bgcolor="green">
+<canvas> 
+
+
+  <checkbox name="cb1"  >checkbox cb1</checkbox>
+  <checkbox y="20" name="cb2"  >checkbox cb2 disables cb1
     <attribute name="enable" value="true"/>
-  <handler name="onclick">
-    this.enable = !this.enable;
-    trace('enable = ', this.enable, 'foo.setEnabled(',this.enable,')');
-    parent.foo.setAttribute('enabled', this.enable);
-    setBGColor(this.enable ? 0x00ff00 : 0xff0000);
-  </handler>
-  </view>
+    <handler name="onclick">
+      this.enable = !this.enable;
+      trace('enable = ', this.enable, 'cb1.setEnabled(',this.enable,')');
+      canvas.cb1.setAttribute('enabled', this.enable);
+      setBGColor(this.enable ? 0x00ff00 : 0xff0000);
+    </handler>
+  </checkbox>
+
+  <button x="200" height="40" width="100">Cancel</button>
+
+
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *

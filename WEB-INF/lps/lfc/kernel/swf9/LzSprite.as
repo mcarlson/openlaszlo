@@ -46,6 +46,8 @@ public class LzSprite extends Sprite {
       public var isroot:Boolean = false;
 
       var resourceObj:DisplayObject = null;
+      // Cache for instantiated assets in a multiframe resource set
+      var resourceCache:Array = null;
 
       public var resourceLoaded:Boolean = false;
       public var resourceURL:String = null;
@@ -157,18 +159,20 @@ public class LzSprite extends Sprite {
           this.resourceHeight = res.height;
           this.skiponload = true;
 
+          var asset:DisplayObject = null;
+          var prev_resource:DisplayObject;
+
           // TODO [hqm 2008-01] How do we deal with multiframe embedded resources??
           if ('assetclass' in res) {
               var assetclass = res['assetclass'];
-              var asset:DisplayObject = new assetclass();
-
-              // remove previous asset, and display new one
-              if (this.resourceObj != null) {
-                  removeChild(this.resourceObj);
-              }
+              asset = new assetclass();
+              prev_resource = this.resourceObj;
               this.resourceObj = asset;
-
               addChild(asset);
+              // remove previous asset, and display new one
+              if (prev_resource != null) {
+                  removeChild(prev_resource);
+              }
               return;
           }
 
@@ -181,13 +185,14 @@ public class LzSprite extends Sprite {
           var url = urls[0];
           if (url is Class) {
               // resource is an embedded asset class
-              var asset:DisplayObject = new url();
-              // remove previous asset, and display new one
-              if (this.resourceObj != null) {
-                  removeChild(this.resourceObj);
-              }
+              asset = new url();
+              prev_resource = this.resourceObj;
               this.resourceObj = asset;
               addChild(asset);
+              // remove previous asset, and display new one
+              if (prev_resource != null) {
+                  removeChild(prev_resource);
+              }
           } else {
               // resource is a string, so it's an URL
               this.baseurl = '';
@@ -358,6 +363,7 @@ public class LzSprite extends Sprite {
               if (cb) {
                   removeMouseEvents(cb);
                   removeChild(cb);
+                  this.clickbutton = null;
               }
 
           }
@@ -493,29 +499,59 @@ public class LzSprite extends Sprite {
           o Stops a multiframe resource at the specified framenumber
           o Stops at the current frame if framenumber is null 
       */
-      public function stop( framenumber:*, rel:* = null ):void {
-          // TODO [hqm 2008-04-02] This discards the current asset and
-          // instantiates a new asset from the multiframe asset
-          // list. It seems wasteful to do this, we ought to keep a
-          // table of the instantiated DisplayObject for each
-          // frameframe, and just add and remove them from the display list
-          // with addChild and removeChild.
-
+      public function stop( fn:*, rel:* = null ):void {
+          // So frames are one based, not zero based? 
+          var framenumber = fn - 1;
+          if (this.resource == null) {
+              //trace("LzSprite.stop(",framenumber,") resource is null", this.owner, this.owner.name);
+              return;
+          }
           var res = LzResourceLibrary[this.resource];
           var frames = res.frames;
 
-          trace('stop ',framenumber);
-          trace('   rel=', rel);
-          trace('   this.resource', this.resource, res, res.frames[framenumber]);
-          // remove previous asset, and display new one
-          if (this.resourceObj != null) {
-              removeChild(this.resourceObj);
+          //trace('stop(', framenumber, ')  this.resource', this.resource, res, res.frames[framenumber]);
+
+          var prev_resource  = this.resourceObj;
+          var assetclass = frames[framenumber];
+
+          if (this.resourceCache == null) {
+              this.resourceCache = [];
+          }
+          var asset:DisplayObject = this.resourceCache[framenumber];
+
+          if (asset == null) {
+              //trace('CACHE MISS, new ',assetclass);
+              asset = new assetclass();
+              this.resourceCache[framenumber] = asset;
           }
 
-          var assetclass = frames[framenumber];
-          var asset:DisplayObject = new assetclass();
           this.resourceObj = asset;
           addChild(asset);
+          if (prev_resource != null && prev_resource != asset) {
+              removeChild(prev_resource);
+          }
+          this.applyStretchResourceLoaded();
+      }
+
+      public function applyStretchResourceLoaded():void {
+          if (this.resourceObj) {
+              if (this._setrescwidth) {
+                  this.resourcewidth = this.resourceObj.width;
+                  this.scaleX =  this.lzwidth / this.resourcewidth;
+                  //trace("scaleX = ", this.scaleX, this.lzwidth, '/', this.resourcewidth);
+              } else {
+                  //trace("scaleX = 1.0");
+                  this.scaleX = 1.0;
+              }
+              if (this._setrescheight) {
+                  this.resourceheight = this.resourceObj.height;
+                  this.scaleY =  this.lzheight / this.resourceheight;
+                  //trace("scaleY = ", this.scaleY, this.lzheight, '/', this.resourceheight);
+              } else {
+                  //trace("scaleY = 1.0");
+                  this.scaleY = 1.0;
+              }
+          }
       }
 
 
