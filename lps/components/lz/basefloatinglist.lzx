@@ -5,6 +5,8 @@
            options="ignorelayout" x="-1000" y="-1000">
         <!--- @keywords private -->
         <attribute name="owner" />
+        <!--- @keywords private -->
+        <attribute name="wouldbename" value="" type="string" />
 
         <!--- Where this floatinglist should attach to its owner. Possible
               values: bottom, top, left, right.  In the event of a canvas
@@ -353,7 +355,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
