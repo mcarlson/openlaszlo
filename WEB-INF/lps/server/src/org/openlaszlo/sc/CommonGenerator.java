@@ -977,6 +977,11 @@ public abstract class CommonGenerator implements ASTVisitor {
     return visitChildren(node);
   }
 
+  // Hook for any special processing of globals, like noting them in
+  // the known list, or emitting a declaration
+  void addGlobalVar(String name, String type, String initializer) {
+  }
+
   boolean isExpressionType(SimpleNode node) {
     // There are several AST types that end with each of the names that
     // endsWith tests for.

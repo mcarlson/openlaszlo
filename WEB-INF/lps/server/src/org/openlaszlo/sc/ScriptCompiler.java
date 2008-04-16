@@ -260,24 +260,10 @@ public class ScriptCompiler extends Cache {
     public static void writeObject(Object object, java.io.Writer writer)
         throws java.io.IOException
     {
-        writeObject(object, writer, false);
-    }
-
-    /** Writes a LaszloScript expression that evaluates to a
-     * LaszloScript representation of the object.
-     *
-     * @param elt an element
-     * @param writer a writer
-     * @param emitClassDecl format output for use in class declarations
-     * @throws java.io.IOException if an error occurs
-     */
-    public static void writeObject(Object object, java.io.Writer writer, boolean emitClassDecl)
-        throws java.io.IOException
-    {
         if (object instanceof Map) {
-            writeMap((Map) object, writer, emitClassDecl);
+            writeMap((Map) object, writer);
         } else if (object instanceof List) {
-            writeList((List) object, writer, emitClassDecl);
+            writeList((List) object, writer);
         } else if (object != null) {
             writer.write(object.toString());
         } else {
@@ -297,14 +283,12 @@ public class ScriptCompiler extends Cache {
      *
      * @param map String -> Object
      * @param writer a writer
-     * @param emitClassDecl format output for use in class declarations
      * @return a string
      */
-    private static void writeMap(Map map, java.io.Writer writer, boolean emitClassDecl)
+    private static void writeMap(Map map, java.io.Writer writer)
         throws java.io.IOException
     {
-        if (!emitClassDecl)
-            writer.write("{");
+        writer.write("{");
         // Sort the keys, so that regression tests aren't sensitive to
         // the undefined order of iterating a (non-TreeMap) Map.
         SortedMap smap = new TreeMap(map);
@@ -314,27 +298,13 @@ public class ScriptCompiler extends Cache {
             Object value = entry.getValue();
             if (!isIdentifier(key))
                 key = quote(key);
-
-            if (emitClassDecl) {
-
-                // Only emit functions, not properties of the class
-                // TODO: [2007-11-20 dda] handle other properties, like final
-
-                if (value instanceof Method || value instanceof Map) {
-                    writeObject(value, writer, emitClassDecl);
-                }
-                if (iter.hasNext())
-                    writer.write("\n");
-            }
-            else {
-                writer.write(key + ": ");
-                writeObject(value, writer, emitClassDecl);
-                if (iter.hasNext())
-                    writer.write(", ");
+            writer.write(key + ": ");
+            writeObject(value, writer);
+            if (iter.hasNext()) {
+                writer.write(", ");
             }
         }
-        if (!emitClassDecl)
-            writer.write("}");
+        writer.write("}");
     }
     
     /** Writes a LaszloScript array literal that evaluates to a
@@ -348,18 +318,15 @@ public class ScriptCompiler extends Cache {
      *
      * @param list a list
      * @param writer a writer
-     * @param emitClassDecl format output for use in class declarations
      * @return a string
      */
-    private static void writeList(List list, java.io.Writer writer, boolean emitClassDecl)
+    private static void writeList(List list, java.io.Writer writer)
         throws java.io.IOException
     {
-        // TODO: [2007-11-20 dda] Probably need different output when
-        // emitClassDecl is true.
         writer.write("[");
         for (java.util.Iterator iter = list.iterator();
              iter.hasNext(); ) {
-            writeObject(iter.next(), writer, emitClassDecl);
+            writeObject(iter.next(), writer);
             if (iter.hasNext()) {
                 writer.write(", ");
             }

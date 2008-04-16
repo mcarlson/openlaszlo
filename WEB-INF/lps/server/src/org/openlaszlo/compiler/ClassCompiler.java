@@ -243,41 +243,4 @@ class ClassCompiler extends ViewCompiler  {
         classModel.compile(mEnv);
       }
     }
-
-  protected void compileClass(Element elt, ClassModel classModel, String initobj) {
-    // Generate a call to queue instantiation
-    String extendsName = XMLUtils.getAttributeValue(
-      elt, "extends", DEFAULT_SUPERCLASS_NAME);
-    StringBuffer buffer = new StringBuffer();
-
-    if (emitClassDecl) {
-        buffer.append("class " + classModel.className +
-                      " extends " + extendsName + " {\n" + initobj + "\n}\n");
-    }
-    else {
-        buffer.append(VIEW_INSTANTIATION_FNAME + 
-                      "({name: 'class', attrs: " +
-                      "{parent: " +
-                      ScriptCompiler.quote(extendsName) +
-                      ", initobj: " + initobj +
-                      "}}" +
-                      ", " + ((ElementWithLocationInfo)elt).model.totalSubnodes() +
-                      ");\n");
-    }
-    if (!classModel.getInline()) {
-      mEnv.compileScript(buffer.toString(), elt);
-    }
-    // TODO: [12-27-2002 ows] use the log4j API instead of this property
-    boolean tracexml =
-      mEnv.getProperties().getProperty("trace.xml", "false") == "true";
-    if (tracexml) {
-      Logger mXMLLogger = Logger.getLogger("trace.xml");
-      mXMLLogger.info("compiling class definition:");
-      org.jdom.output.XMLOutputter outputter =
-        new org.jdom.output.XMLOutputter();
-      outputter.getFormat().setTextMode(TextMode.NORMALIZE);
-      mXMLLogger.info(outputter.outputString(elt));
-      mXMLLogger.info("compiled to:\n" + buffer.toString() + "\n");
-    }
-  }
 }

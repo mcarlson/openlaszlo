@@ -8,7 +8,7 @@
 <script when="immediate"><![CDATA[
 
 
-class LzTestSuite {
+dynamic class LzTestSuite {
 public var name = "Default Name"; 
 public var curtest = 0;     
 public var totaltests = 0; 
@@ -43,7 +43,7 @@ function printResults() {
 }
 }
 
-class LzTestManagerClass {
+dynamic class LzTestManagerClass {
 public var totalsuites = 0;
 public var passedsuites = 0;
 public var failedsuites = 0;

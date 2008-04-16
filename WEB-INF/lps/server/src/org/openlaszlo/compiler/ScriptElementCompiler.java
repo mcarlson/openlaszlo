@@ -32,18 +32,6 @@ class ScriptElementCompiler extends ElementCompiler {
         return element.getName().intern() == "script";
     }
 
-    /** Create any optional 'with' clauses.
-     */
-    String withBegin() {
-        return emitClassDecl ? "with (this) {\n" : "";
-    }
-
-    /** Close any optional 'with' clauses.
-     */
-    String withEnd() {
-        return emitClassDecl ? "}\n" : "";
-    }
-
     public void compile(Element element) {
         if (!element.getChildren().isEmpty()) {
             throw new CompilationError("<script> elements can't have children",
@@ -78,13 +66,11 @@ class ScriptElementCompiler extends ElementCompiler {
                     VIEW_INSTANTIATION_FNAME + 
                     "({name: 'script', attrs: " +
                     "{script: function () {\n" +
-                    withBegin() +
                     "#beginContent\n" +
                     "#pragma 'scriptElement'\n" +
                     CompilerUtils.sourceLocationDirective(element, true) +
                     script +
                     "\n#endContent\n" +
-                    withEnd() +
                     // Scripts have no children
                     "}}}, 1)",
                     element);

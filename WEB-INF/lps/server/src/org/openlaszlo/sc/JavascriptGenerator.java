@@ -1374,7 +1374,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       if (! variables.isEmpty()) {
         String code = "";
         for (Iterator i = variables.iterator(); i.hasNext(); ) {
-          code += "_root." + (String)i.next() + "= void 0;";
+          String name = (String)i.next();
+          // TODO: [2008-04-16 ptw] Retain type information through
+          // analyzer so it can be passed on here
+          addGlobalVar(name, null, "void 0");
+          code +=  name + "= void 0;";
         }
         newBody.add(parseFragment(code));
       }

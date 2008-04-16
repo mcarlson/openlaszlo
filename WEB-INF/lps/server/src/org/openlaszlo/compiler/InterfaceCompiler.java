@@ -29,13 +29,9 @@ class InterfaceCompiler extends ClassCompiler {
   static boolean isElement(Element element) {
     return element.getName().equals("interface");
   }
-
-  protected void compileClass(Element elt, ClassModel classModel, String initobj) {
-    // Interface generates no code
-  }
 }
 
 /**
- * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

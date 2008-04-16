@@ -146,12 +146,6 @@ public class ViewCompiler extends ElementCompiler {
         }
     }
 
-    static int instanceNumber = 1;
-    static String createInstanceName()
-    {
-      return "lz$viewInstance$" + (instanceNumber++);
-    }
-
     /** Compile a XML element and generate code that binds it to a
      * runtime data structure named _lzViewTemplate.
      *
@@ -181,30 +175,9 @@ public class ViewCompiler extends ElementCompiler {
         NodeModel model = NodeModel.elementAsModel(element, mSchema, mEnv);
         model = model.expandClassDefinitions();
 
-        String script;
-        //        if (emitClassDecl) { 
-        // TODO [2008-01 hqm] Comment this out for now, but eventually we may
-        // make the constructor for an LzNode be capable of queuing for
-        // deferred full instantiation, and can get rid of LzInstantiateView.
-        if (false) {
-          String classnm = element.getName();
-          String instancenm = element.getAttributeValue("name");
-
-          if (instancenm == null) {
-            // create a variable name to hold the class instance.
-            // A simple case like "<simplelayout />" can trigger this need.
-
-            // TODO: [2007-11-20 dda] is there a way to create the instance
-            //     without a variable name?
-            instancenm = createInstanceName();
-          }
-          script = "var " + instancenm + ":" + classnm + " = new " + classnm + "();";
-        }
-        else {
-          script = VIEW_INSTANTIATION_FNAME + "(" +
-            model.asJavascript() + ", " + model.totalSubnodes() +
-            ");";
-        }
+        String script = VIEW_INSTANTIATION_FNAME + "(" +
+          model.asJavascript() + ", " + model.totalSubnodes() +
+          ");";
         
         // Don't keep non-class models around
         if (!element.getName().equals("class")) {

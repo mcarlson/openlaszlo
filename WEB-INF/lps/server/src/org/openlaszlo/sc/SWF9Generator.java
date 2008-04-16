@@ -613,7 +613,7 @@ public class SWF9Generator extends JavascriptGenerator {
   /**
    * Add this global variable to our private list.
    */
-  private void addGlobalVar(String name, String type, String initializer)
+  void addGlobalVar(String name, String type, String initializer)
   {
     GlobalVariable glovar = (GlobalVariable)programVars.get(name);
     if (glovar == null) {
