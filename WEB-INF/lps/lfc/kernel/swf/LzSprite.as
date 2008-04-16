@@ -1328,6 +1328,10 @@ LzSprite.prototype.getAttachPoint = function ( cSprite ){
   * it
   */
 LzSprite.prototype.setShowHandCursor = function ( s ){
+    if (!this.__LZbuttonRef) {
+        this.setClickable( true );
+    }
+    
     if (this.__LZbuttonRef.but){
         this.__LZbuttonRef.but.useHandCursor = s;
     }
@@ -1337,21 +1341,33 @@ LzSprite.prototype.setShowHandCursor = function ( s ){
 /**
   * Sets the cursor to the given resource when the mouse is over this view
   * @param String cursor: The name of the resource to use as a cursor when it is over
-  * this view.
+  * this view. Or '' for default cursor.
   */
 LzSprite.prototype.setCursor = function( cursor ){
     if (cursor == null) return;
 
-    this._cures = cursor;
-    if (! this._moDel) {
-        this._moDel = new LzDelegate( this , '_cursorGotMouseover',
-                                            this.owner , 'onmouseover');
-        this._muDel = new LzDelegate( LzMouseKernel , 'unlock',
-                                            this.owner , 'onmouseout');
-    }
-
-    if (!this.__LZbuttonRef) {
-        this.setClickable( true );
+    if (cursor != '') {
+        this._cures = cursor;
+        if (! this._moDel) {
+            this._moDel = new LzDelegate( this , '_cursorGotMouseover',
+                                                this.owner , 'onmouseover');
+            this._muDel = new LzDelegate( LzMouseKernel , 'restoreCursor',
+                                                this.owner , 'onmouseout');
+        }
+        
+        if (!this.__LZbuttonRef) {
+            this.setClickable( true );
+        }
+    } else {
+        LzMouseKernel.restoreCursor();
+        
+        delete this._cures;
+        if (this._moDel) {
+            this._moDel.unregisterAll();
+            delete this._moDel;
+            this._muDel.unregisterAll();
+            delete this._muDel;
+        }
     }
 }
 
