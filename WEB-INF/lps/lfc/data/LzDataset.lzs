@@ -231,10 +231,15 @@ function $lzc$set_autorequest(v) { this.setAutorequest(v); }
 var request = false;
 function $lzc$set_request(v) { this.setRequest(v); }
 
+/** @access private */
 var headers = null;
+/** @access private */
 var proxied = null;
+/** @access private */
 var responseheaders = null;
+/** @access private */
 var queuerequests = false;
+/** @access private */
 var oncanvas;
 
 

@@ -32,6 +32,7 @@ static var tagname = 'datasource';
 /** @access private */
   static var attributes = new LzInheritedHash(LzDatasource.attributes);
 
+/** @access private */
 var reqtype = "GET";
 
     function LzHTTPDatasource ( parent:* = null , attrs:* = null, children:* = null, instcall:*  = null) {
