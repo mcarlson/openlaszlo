@@ -20,6 +20,9 @@
          <clr value="0x00CC00"/>         
      </dataset>
 
+    <whitestyle name="combobox_style" />
+    <whitestyle name="comboboxitem_style" />
+
      <view y="200">
          <simplelayout axis="x" spacing="10" /> 
         <text>hell</text>
@@ -36,10 +39,6 @@
                  this.setValue(0x339966, true);
                  this.csq.setColor(0x339966);
              </method>
-
-             <method name="construct" args="parent, args">
-                 super.construct(parent, args);
-             </method>    
          
             <!--- When the user selects an item from the combo box, 
                  create an object representing just the change in format.
@@ -96,21 +95,20 @@
         <state name="odelay" id="odelay">
             <text>allan</text>            
             <lzcombobox  id="allan"
-                width="48"   itemclassname="colorswatch" itemdatapath="sweetcolors:/clr"
+                width="48"   itemclassname="colorswatch" itemdatapath="local:parent.sweetcolors:/clr"
                 focusable="false">
             </lzcombobox>
         </state>
         
         <text>beijing</text>
         <lzcombobox id="beijing"
-            width="48"   itemclassname="colorswatch" itemdatapath="glitzcolors:/clr"
+            width="48"   itemclassname="colorswatch" itemdatapath="local:parent.glitzcolors:/clr"
             focusable="false">
                 <!---  @keywords private
                 apply state for late instantiation of local data -->
-                <method name="construct" args="parent, args">
-                    super.construct(parent, args);
-                    laterState.apply();
-                </method>                
+                <handler name="onconstruct" >
+                    this.parent.laterState.apply();
+                </handler>                
         </lzcombobox>
         
     </view>
