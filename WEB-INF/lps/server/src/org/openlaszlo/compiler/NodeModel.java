@@ -1372,13 +1372,11 @@ solution =
                 ,element);
         }
 
-        boolean isclassdecl  = ("class".equals(className) || "interface".equals(className) || "mixin".equals(className));
-
         if (!override) {
             // Just check method declarations on regular node.
             // Method declarations inside of class definitions will be already checked elsewhere,
             // in the call from ClassCompiler.updateSchema to schema.addElement
-            if (!isclassdecl) {
+            if ("class".equals(className) || "interface".equals(className) || "mixin".equals(className)) {
                 schema.checkInstanceMethodDeclaration(element, className, name, env);
             }
         }
@@ -1389,28 +1387,34 @@ solution =
              CompilerUtils.attributeLocationDirective(element, "name"));
         String adjectives = "";
 
-        // TODO [hqm 2008-03] we currently cannot put "override" or
-        // "final" on methods unless they are in a class
-        // declaration. We don't want to put them on instance method
-        // function expressions, because that is illegal syntax.
-        if (override && isclassdecl) {
-            adjectives += " override";
+        Function fndef;
+        // States 'methods' are only closures that will be attached to
+        // their dynamic parent, so they will not be override or final
+        if (parentClassModel.isSubclassOf(schema.getClassModel("state"))) {
+            fndef = new
+                Function(name,
+                         //"#beginAttribute\n" +
+                         args,
+                         "\n#beginContent\n" +
+                         "\n#pragma 'methodName=" + name + "'\n" +
+                         "\n#pragma 'withThis'\n",
+                         body + "\n#endContent",
+                         name_loc,
+                         "");
+        } else {
+            if (override) { adjectives += " override"; }
+            if (isfinal) { adjectives += " final"; }
+            fndef = new
+                Method(name,
+                       //"#beginAttribute\n" +
+                       args,
+                       "\n#beginContent\n" +
+                       "\n#pragma 'methodName=" + name + "'\n" +
+                       "\n#pragma 'withThis'\n",
+                       body + "\n#endContent",
+                       name_loc,
+                       adjectives);
         }
-
-        if (isfinal && isclassdecl) {
-            adjectives += " final";
-        }
-
-        Method fndef = new
-            Method(name,
-                     //"#beginAttribute\n" +
-                     args,
-                     "\n#beginContent\n" +
-                     "\n#pragma 'methodName=" + name + "'\n" +
-                     "\n#pragma 'withThis'\n",
-                     body + "\n#endContent",
-                     name_loc,
-                     adjectives);
         attrs.put(name, fndef);
     }
 
