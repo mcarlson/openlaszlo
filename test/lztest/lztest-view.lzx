@@ -1,4 +1,4 @@
-<canvas debug="true">
+<canvas>
   <include href="lztest/lztestmanager.lzx" /> 
   <include href="utils/layouts/simpleboundslayout.lzx" /> 
 
@@ -285,12 +285,12 @@ suite.test3 = function() {
   LzTestManager.assertEquals (1, view3.v1.unstretchedwidth, "view3.v1.unstretchedwidth failure");
   LzTestManager.assertEquals (1, view3.v1.unstretchedheight, "view3.v1.unstretchedheight failure");
 
-  view3.v1.stretchResource ('x');
+  view3.v1.stretchResource ('width');
   loctest("view3.v1 (2)", view3.v1, [0,0,10,20]);
   LzTestManager.assertEquals (1, view3.v1.unstretchedwidth, "view3.v1.unstretchedwidth failure (2)");
   LzTestManager.assertEquals (0, view3.v1.unstretchedheight, "(BUG: LPP-2161) view3.v1.unstretchedheight failure (2)");
 
-  view3.v1.stretchResource ('y');
+  view3.v1.stretchResource ('height');
   loctest("view3.v1 (3)", view3.v1, [0,0,10,20]);
   LzTestManager.assertEquals (0, view3.v1.unstretchedwidth, "(BUG: LPP-2161) view3.v1.unstretchedwidth failure (3)");
   LzTestManager.assertEquals (1, view3.v1.unstretchedheight, "view3.v1.unstretchedheight failure (3)");
@@ -308,7 +308,7 @@ suite.test4 = function() {
   var expw = 20 + 10 + 30.0 / Math.sqrt(2.0);
   var exph = 30.0 / Math.sqrt(2.0);
   LzTestManager.assertWithin (expw, view4.width, 1.0e-10, "view4.width failure");
-  LzTestManager.assertWithin (exph, view4.height, 1.0e-10, "view4.width failure");
+  LzTestManager.assertWithin (exph, view4.height, 1.0e-10, "view4.height failure");
 }
 
 
