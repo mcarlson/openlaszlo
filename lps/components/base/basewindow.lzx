@@ -246,8 +246,7 @@
               front.
               @param Boolean isVisible: whether the window should be made
               visible. -->
-        <method name="setVisible" args="isVisible"> <![CDATA[
-            super.setVisible(isVisible);
+        <handler name="onvisible" args="isVisible"> <![CDATA[
             if (isVisible) {
                 if (this.isinited) {
                     //need to add this window to the parent's windowlist
@@ -275,7 +274,7 @@
                 }
             }
             ]]>
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <attribute name="mousedel" value="null"/>

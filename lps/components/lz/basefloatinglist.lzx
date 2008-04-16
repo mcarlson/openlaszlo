@@ -311,15 +311,14 @@
         <handler name="onheight" method="updateAttachLocation"/>
         
         <!--- @keywords private -->
-        <method name="setVisible" args="v">
+        <handler name="onvisible" args="v">
             if (v) {
                 updateAttachLocation();
             } else {
                 this.setX(-1000);
                 this.setY(-1000);
             }
-            super.setVisible(v);
-        </method>
+        </handler>
         
         <!--- @keywords private -->
         <method name="toString">
