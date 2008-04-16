@@ -72,7 +72,6 @@ public class NodeModel implements Cloneable {
     String initstage = null;
     int totalSubnodes = 1;
     final CompilationEnvironment env;
-    protected boolean emitClassDecl = false;
     // Used to freeze the definition for generation
     protected boolean frozen = false;
 
@@ -1957,15 +1956,16 @@ solution =
         // class here, eliminating having to go through the
         // constructor map...
         map.put("name", ScriptCompiler.quote(tagName));
+        // TODO: [2008-04-16 ptw] The '= null' is to silence the swf8 debugger
         if (id != null) {
             // Declare node id (if any) as a global
             // property so that references to it from methods
             // can be resolved at compile time
-            env.compileScript("var " + id + ";", element);
+            env.compileScript("var " + id + " = null;", element);
         }
         if (globalName != null) {
             // Ditto for a named top-level element
-            env.compileScript("var " + globalName + ";", element);
+            env.compileScript("var " + globalName + " = null;", element);
         }
 
         return map;
