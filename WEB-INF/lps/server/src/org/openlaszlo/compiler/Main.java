@@ -110,14 +110,17 @@ public class Main {
         }
     
         Compiler compiler = new Compiler();
-        String mediaCacheDir = LPS.getWorkDirectory() + File.separator + "cache" + File.separator + "cmcache";
-        String scriptCacheDir = LPS.getWorkDirectory() + File.separator + "scache";
+
+        String tmpdirstr = System.getProperty("java.io.tmpdir");
+        String cachetmpdirstr = tmpdirstr + File.separator + "lzccache";
+        (new File(cachetmpdirstr)).mkdirs();
+
+        String mediaCacheDir = cachetmpdirstr + File.separator + "cmcache";
+        String scriptCacheDir = cachetmpdirstr + File.separator + "scache";
         // Set default runtime to compiler.runtime.default
         compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY,
                              LPS.getProperty("compiler.runtime.default",
                                              LPS.getRuntimeDefault()));
-        // TODO [hqm 2008-01] I set this to true because when working on
-        // the LFC, I frequently get screwed by using cached script.
         boolean flushScriptCache = true;
         Boolean forceTransCode = null;
         String outFileArg = null;
