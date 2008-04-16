@@ -113,6 +113,17 @@ var selectedHash;
   */
 var selected;
 
+/** If true, a re-selected element will lose the selection
+  * @type Boolean
+  */
+var toggle;
+
+/** If true, a re-selected element will lose the selection
+  * @type Boolean
+  * @access private
+  */
+var lastRange;
+
 /**
   * @param LzView view: A view above this one in the hierarchy that will determine
   * the placement of the selection manager.
@@ -120,7 +131,7 @@ var selected;
   * 
   * @access private
   */
-function construct ( view , args ) {
+override function construct ( view , args ) {
     super.construct.apply(this, arguments);
 
     this.toggle = args.toggle == true;
@@ -139,12 +150,12 @@ function construct ( view , args ) {
   */
 function select ( o ){
     if (  this.isSelected( o ) && ( this.toggle ||
-                                                this.isMultiSelect( o ) ) ) {
+                                                this.isMultiSelect() ) ) {
         this.unselect( o );
         return;
     }
 
-    if (this.selected.length > 0 && this.isRangeSelect( o ) ){
+    if (this.selected.length > 0 && this.isRangeSelect() ){
         var s = this.lastRange != null ? this.lastRange : this.selected[ 0 ];
         if ( s != o ){
             this.selectRange( s , o );
@@ -152,7 +163,7 @@ function select ( o ){
         return;
     }
 
-    if ( ! this.isMultiSelect( o ) ){
+    if ( ! this.isMultiSelect() ){
         this.clearSelection();
     }
     this.makeSelected( o );
@@ -265,7 +276,7 @@ function isRangeSelect(  ){
     return LzKeys.isKeyDown( "shift" );
 }
 
-function toString (){
+override function toString (){
     return "LzSelectionManager";
 }
 

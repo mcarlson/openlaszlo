@@ -466,20 +466,6 @@
   <attribute name="with" type="string"/>
 </interface>
 
-<interface name="dataselectionmanager" extends="node">
-  <attribute name="extends" type="token" value="view"/>
-  <!-- The comma-separated list of mixins, applied in order -->
-  <attribute name="with" type="string"/>
-
-  <method name="makeSelected"/>
-  <method name="unselect"/>
-  <method name="selectRange"/>
-  <method name="getSelection"/>
-  <method name="clearSelection"/>
-  <method name="isSelected"/>
-  <method name="__LZsetSelected"/>
-
-</interface>
 
 
 <interface name="selectionmanager" extends="node">
@@ -499,6 +485,17 @@
   <method name="unselect"/>
 
 </interface>
+
+<interface name="dataselectionmanager" extends="selectionmanager">
+  <method name="makeSelected"/>
+  <method name="unselect"/>
+  <method name="selectRange"/>
+  <method name="getSelection"/>
+  <method name="clearSelection"/>
+  <method name="isSelected"/>
+  <method name="__LZsetSelected"/>
+</interface>
+
 
 
 <interface name="command" extends="node">

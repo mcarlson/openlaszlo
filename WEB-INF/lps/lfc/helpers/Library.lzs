@@ -9,13 +9,11 @@
 
 
 #include "helpers/LzFont.lzs"
-
-if ($swf9) {
-
-} else {
-
 #include "helpers/LzSelectionManager.lzs"
 #include "helpers/LzDataSelectionManager.lzs"
+
+if ($swf9) {
+} else {
 #include "helpers/LzCommand.lzs"
 }
 

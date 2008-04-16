@@ -75,12 +75,20 @@ static var tagname = 'dataselectionmanager';
 /** @access private */
   static var attributes = new LzInheritedHash(LzSelectionManager.attributes);
 
+/** @access private
+  */
+var manager;
+
+/** @access private
+  */
+var singleClone;
+
 /**
   * Makes the given view selected
   * @access protected
   * @param LzView o: The view to be selected
   */
-function makeSelected ( o ){
+override function makeSelected ( o ){
     var so = o.datapath.p;
     if ( this.manager == null ) this.manager = o.cloneManager; 
     if ( so.sel ) return; 
@@ -98,7 +106,7 @@ function makeSelected ( o ){
   * Unselect the given view
   * @param LzView o: The view to be unselected
   */
-function unselect ( o ){
+override function unselect ( o ){
     if ( this.manager == null ) this.manager = o.cloneManager;//try to get a cloneManager  
 
     var so = o.datapath.p;
@@ -121,7 +129,7 @@ function unselect ( o ){
   * @param LzDataPath s: The datapath that was at top of the selection stack
   * @param LzView e: The newly selected view
   */
-function selectRange ( s , e ){
+override function selectRange ( s , e ){
     if ( this.manager == null ){        
         this.manager = e.cloneManager;
         
@@ -176,7 +184,7 @@ function selectRange ( s , e ){
   * Returns a list of datapointers, which point to the selected records
   * @return Array: A list of datapointers
   */
-function getSelection (){
+override function getSelection (){
     var r = [];
     for ( var i = 0; i < this.selected.length ; i++ ){
         r.push( new LzDatapointer( null , {pointer : this.selected[i] }));
@@ -189,7 +197,7 @@ function getSelection (){
   * list
   * 
   */
-function clearSelection ( ){
+override function clearSelection ( ){
     while ( this.selected.length ){
         var p  = this.selected.pop();
         p.sel = false;
@@ -203,7 +211,7 @@ function clearSelection ( ){
   * @param LzView o: The view to test for selectedness
   * @return Boolean: The selectedness of the input object.
   */
-function isSelected ( o){
+override function isSelected ( o){
     if ( this.manager == null ) this.manager = o.cloneManager;//try to get a cloneManager
 
     return o.datapath.p.sel;

@@ -98,7 +98,7 @@ var __LZneedsUpdateAfterInit;
 /** @access private */
 var __LZdepChildren;
 /** @access private */
-// var sel; // Defined in LzMiniNode
+// var _selstate; // Defined in LzMiniNode
 
 
 /** Sent when the datapath's data changes.
@@ -582,7 +582,7 @@ function __LZmanager ( m ) {
   * @access private
   */
 function setClonePointer( p ) {
-    //Debug.write("%s: for %w, was %w (dp.sel=%w, p.sel=%w)", arguments.callee, p, this.p, this.sel, p.sel);
+    //Debug.write("%s: for %w, was %w (dp._selstate=%w, p._selstate=%w)", arguments.callee, p, this.p, this._selstate, p._selstate);
     var pc = this.p !=p;
     this.p = p;
 
@@ -590,10 +590,10 @@ function setClonePointer( p ) {
     //if ( pc || true ) {
     if ( pc ) {
 
-        if ( p && this.sel != p.sel ){
-            this.sel = p.sel || false;
+        if ( p && this._selstate != p._selstate ){
+            this._selstate = p._selstate || false;
             if ( this.immediateparent is LzDatapath){
-                (this.immediateparent cast LzDatapath).setSelected( this.sel );
+                (this.immediateparent cast LzDatapath).setSelected( this._selstate );
             }
         }
 
@@ -643,8 +643,8 @@ function setComparator( comparator ) {
   * @access private
   */
 function setSelected( torf ){
-    this.p.sel =  torf;
-    this.sel = torf;
+    this.p._selstate =  torf;
+    this._selstate = torf;
 
     if ( this.immediateparent is LzDatapath){
         (this.immediateparent cast LzDatapath).setSelected( torf );
