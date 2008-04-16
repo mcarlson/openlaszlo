@@ -1,0 +1,14 @@
+<canvas>
+  <dataset name="foo" src="http:test.xml"/>
+  <dataset name="bar" src="test.xml"/>
+  <class name="mydata" extends="dataset">
+    <handler name="ondata" args="d">
+      Debug.write('got new data', d);
+    </handler>
+  </class>
+  <mydata name="yahoo" src="http:test.xml"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

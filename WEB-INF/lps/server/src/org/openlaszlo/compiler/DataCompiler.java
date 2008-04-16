@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -60,7 +60,7 @@ class DataCompiler extends ElementCompiler {
         String dsetname = XMLUtils.requireAttributeValue(element, "name");
         boolean trimwhitespace = "true".equals(element.getAttributeValue("trimwhitespace"));
         String content = NodeModel.getDatasetContent(element, mEnv, trimwhitespace);
-        mEnv.compileScript(LOCAL_DATA_FNAME+"("+ScriptCompiler.quote(dsetname) + ", " +content+
+        mEnv.compileScript("var "+dsetname + "= "+LOCAL_DATA_FNAME+"("+ScriptCompiler.quote(dsetname) + ", " +content+
                            "," + trimwhitespace+");\n");
     }
 
