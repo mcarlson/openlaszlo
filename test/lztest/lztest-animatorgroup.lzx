@@ -4,7 +4,7 @@
   covers-tags: animation
 -->
 
-<canvas debug="true">
+<canvas>
   <include href="lztest/lztestmanager.lzx" /> 
 
   <method name="safeAssertEquals" args="exp,act,msg">

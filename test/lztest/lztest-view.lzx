@@ -29,7 +29,7 @@
     <view name="v1" bgcolor="green" width="20" height="10" rotation="0"/>
     <view name="v2" bgcolor="green" width="20" height="10" rotation="45"/>
     <view name="v3" bgcolor="green" width="20" height="10" rotation="90"/>
-    <simpleboundslayout name="layout" axis="x"/>
+    <simpleboundslayout name="thelayout" axis="x"/>
   </view>
 
 <!-- view5: z-order -->

@@ -19,6 +19,7 @@ public var results = [];
 
 public function LzTestSuite ( nm:String? = ""){
     this.name = nm;
+    LzTestManager.addSuite(this);
 }
 
 function addTest( t ) {
@@ -56,17 +57,10 @@ public var loggingEnabled = false;
 public var testpath = "";
 public var resultstring = "";
 
-function findTestSuites() {
-    // Debug.write("findTests..."); 
-    for (var n in global) {
-        var ts = global[n];
-        if (ts && ts instanceof LzTestSuite) {
-            // Debug.write("found test suite: ", n, " and it's really ", ts); 
-            this.suites.push(ts); 
-            this.totalsuites += 1;             
-        }
-    }
-}       
+function addSuite( s ) {
+    this.suites.push( s ); 
+    this.totalsuites += 1;             
+}
 
 function setupServerLogging() {
     // TODO: enable this once LzBrowser is working in swf9
@@ -272,13 +266,11 @@ function assertWithin (expected, actual, delta, message) {
 }
 var LzTestManager:LzTestManagerClass = new LzTestManagerClass();
 
-var startTestsDelegate = new LzDelegate(canvas, "startTests");
-startTestsDelegate.register(canvas, "oninit"); 
+new LzDelegate(canvas, "startTests", canvas, "oninit"); 
 
 canvas.startTests = function() {
   with (this) {
     // Debug.info("LzTestManager is starting tests from canvas.oninit");
-    LzTestManager.findTestSuites(); 
     LzTestManager.runTestSuites();     
     LzTestManager.printSummary(); 
     // Debug.info("LzTestManager is done with tests from canvas.oninit");
