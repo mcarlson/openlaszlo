@@ -125,13 +125,7 @@ var __LZlastdotdot = null;
 /** @access private */
 var __LZspecialDotDot = false;
 /** @access private */
-var __LZspecialOndata = false;
-/** @access private */
 var __LZdotdotCheckDel;
-/** @access private */
-var __LZoldDataDel;
-/** @access private */
-var __LZoldOndataWarn;
 /** @access private */
 var errorDel;
 /** @access private */

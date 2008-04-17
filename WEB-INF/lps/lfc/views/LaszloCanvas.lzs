@@ -222,14 +222,7 @@ dynamic class LzCanvas extends LzView {
 
         if (!('version' in this && this.version)){
             this.version = this.lpsversion;
-        } if ( this.compareVersion( this.version ) == -1 ){
-            if ( $debug ){
-                Debug.warn( "Enabling old ondata behavior because app uses "+
-                            "version %w.", this.version );
-            }
-            this.__LZoldOnData = true;
         }
-
 
         this.isinited = false;
         this._lzinitialsubviews = [];
