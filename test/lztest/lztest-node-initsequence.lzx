@@ -1,4 +1,4 @@
-<canvas width="100%" height="80%" debug="true">
+<canvas>
 <!--
   covers-tags : lznode smoketest
 -->
@@ -19,12 +19,12 @@
   
   <script>
     <![CDATA[ 
-      global.suite = new LzTestSuite("LFC Node Init Sequence");  
-      global.testList = [];
+      var suite = new LzTestSuite("LFC Node Init Sequence");  
+      var testList = [];
 
 
       // compare two array element by element for equality
-      arrayequal = function (a,b) {
+      function arrayequal (a,b) {
           if (a.length != b.length) return false;
           for (var i = 0; i < a.length; i++) {
               if (a[i] != b[i]) return false;
@@ -33,7 +33,7 @@
       }
 // {testname: {casename1: [item, item, ...], casename2: [item, item, ...]}}
 
-      addlogitem = function (testresult, testname, casename, item) {
+      function addlogitem(testresult, testname, casename, item) {
           var mytest = testresult[testname];
           if (mytest == null) {
               mytest = {};
@@ -109,7 +109,7 @@
             LzTestManager.assertTrue(me.compareCase('oninitorder'), "testOnInit");
             LzTestManager.assertTrue(me.compareCase('sequence'), "testInitializationSequence");
          }
-        global.testList.push(myclosure);
+        testList.push(myclosure);
       </handler>
       
   </class>
@@ -288,14 +288,14 @@
   <handler name="oninit">
      // have to do wait to run tests until after all the late inits have happened
 <![CDATA[
-       startTestsDelegate.unregisterAll();
+       LzTestManager.startTestsDelegate.unregisterAll();
 
-       for (var i = 0; i < global.testList.length; i++) {
-       var mytest = global.testList[i];
-       global.suite.addTest(mytest); 
+       for (var i = 0; i < testList.length; i++) {
+       var mytest = testList[i];
+       suite.addTest(mytest); 
   }
 
-       LzTimer.addTimer(startTestsDelegate, 2500);
+       LzTimer.addTimer(LzTestManager.startTestsDelegate, 2500);
 
 ]]>
 </handler>

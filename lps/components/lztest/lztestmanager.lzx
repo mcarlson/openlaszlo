@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
@@ -9,13 +9,13 @@
 
 
 dynamic class LzTestSuite {
-public var name = "Default Name"; 
-public var curtest = 0;     
-public var totaltests = 0; 
+public var name = "Default Name";
+public var curtest = 0;
+public var totaltests = 0;
 public var passedtests = 0;
-public var failedtests = 0; 
+public var failedtests = 0;
 public var tests = [];
-public var results = []; 
+public var results = [];
 
 public function LzTestSuite ( nm:String? = ""){
     this.name = nm;
@@ -23,23 +23,23 @@ public function LzTestSuite ( nm:String? = ""){
 }
 
 function addTest( t ) {
-    this.tests.push( t ); 
-    this.totaltests = this.totaltests + 1; 
+    this.tests.push( t );
+    this.totaltests = this.totaltests + 1;
 }
 
-function printResults() {  
-    var countedfailedtests = 0; 
-    var countedpassedtests = 0; 
+function printResults() {
+    var countedfailedtests = 0;
+    var countedpassedtests = 0;
     for (var tc in this.tests) {
         if (this.results[tc] != "pass") {
-            countedfailedtests += 1; 
+            countedfailedtests += 1;
         } else {
-            countedpassedtests += 1;         
+            countedpassedtests += 1;
         }
     }
-    if ( (countedfailedtests != this.failedtests) 
+    if ( (countedfailedtests != this.failedtests)
         || (countedpassedtests != this.passedtests)) {
-            Debug.error("oh nooooo countedpassedtests != this.passedtests OR countedfailedtests != this.failedtests don't match"); 
+            Debug.error("oh nooooo countedpassedtests != this.passedtests OR countedfailedtests != this.failedtests don't match");
     }
 }
 }
@@ -57,9 +57,24 @@ public var loggingEnabled = false;
 public var testpath = "";
 public var resultstring = "";
 
+public var startTestsDelegate;
+
+function LzTestManagerClass () {
+  this.startTestsDelegate = new LzDelegate(this, "startTests", canvas, "oninit");
+}
+
+function startTests () {
+  with (this) {
+    // Debug.info("LzTestManager is starting tests from canvas.oninit");
+    LzTestManager.runTestSuites();
+    LzTestManager.printSummary();
+    // Debug.info("LzTestManager is done with tests from canvas.oninit");
+  }
+}
+
 function addSuite( s ) {
-    this.suites.push( s ); 
-    this.totalsuites += 1;             
+    this.suites.push( s );
+    this.totalsuites += 1;
 }
 
 function setupServerLogging() {
@@ -70,7 +85,7 @@ function setupServerLogging() {
     var lzurl = LzBrowser.getLoadURLAsLzURL();
     // strip initial "/legals/" from path, to make it relative to LPS servlet base
     if (lzurl.path) {
-        this.testpath = lzurl.path.substring(lzurl.path.substring(1).indexOf("/")+2) + lzurl.file; 
+        this.testpath = lzurl.path.substring(lzurl.path.substring(1).indexOf("/")+2) + lzurl.file;
         this.loggingEnabled = true;
     } else {
         this.testpath = "";
@@ -94,49 +109,49 @@ function sendLogData(logfile, msg) {
     //Debug.write("sendServerLogCommand", reqobj, reqstr);
     var tloader = new LzHTTPLoader(this, false);
     tloader.open ("GET" , reqstr, /* username */ null, /* password */ null);
-    tloader.send (/* content */ null)        
+    tloader.send (/* content */ null)
 }
 
 function printSummary () {
     var failedsuitenames = [];
     var passedsuitenames = [];
-    var countedfailedsuites = 0; 
-    var countedpassedsuites = 0; 
+    var countedfailedsuites = 0;
+    var countedpassedsuites = 0;
     for (var suite in this.suites) {
         if (this.results[suite] != "pass") {
-            this.suites[suite].printResults(); 
+            this.suites[suite].printResults();
             countedfailedsuites += 1;
-            failedsuitenames.push(this.suites[suite].name); 
+            failedsuitenames.push(this.suites[suite].name);
         } else {
-            passedsuitenames.push(this.suites[suite].name); 
+            passedsuitenames.push(this.suites[suite].name);
             countedpassedsuites += 1;
         }
     }
     if (countedfailedsuites > 0) {
         var msg = "Failed " + countedfailedsuites + " suites";
         for (var s in failedsuitenames) {
-            msg = msg + ", " + failedsuitenames[s]; 
+            msg = msg + ", " + failedsuitenames[s];
         }
-        Debug.error(msg);  
-    } 
-    
+        Debug.error(msg);
+    }
+
     if (countedfailedsuites != this.failedsuites) {
-        Debug.error("oh noooo countedfailedsuites != this.failedsuites"); 
+        Debug.error("oh noooo countedfailedsuites != this.failedsuites");
     }
     if (countedpassedsuites != this.passedsuites) {
-        Debug.error("countedpassedsuites: " + countedpassedsuites); 
-        Debug.error("this.passedsuites: " + this.passedsuites);         
-        Debug.error("oh noooo countedpassedsuites != this.passedsuites");         
+        Debug.error("countedpassedsuites: " + countedpassedsuites);
+        Debug.error("this.passedsuites: " + this.passedsuites);
+        Debug.error("oh noooo countedpassedsuites != this.passedsuites");
     }
-    
+
     if ( this.passedsuites == this.totalsuites ) {
-        Debug.info("Passed all suites."); 
+        Debug.info("Passed all suites.");
     }
 
     //this.resultstring += ("failures: "+ countedfailedsuites + "\n");
     //this.resultstring += ("passed: "+ countedpassedsuites + "\n");
     ///if ( this.passedsuites == this.totalsuites ) {
-    //   this.resultstring += "status: Passed all suites.\n"; 
+    //   this.resultstring += "status: Passed all suites.\n";
     //}
     this.resultstring += "finish_testsuite: "+this.testpath + " failures: "+ countedfailedsuites+ "\n";
     this.sendLogData(this.logfile, this.resultstring);
@@ -145,23 +160,23 @@ function printSummary () {
 function runTestSuites() {
     this.setupServerLogging();
     for (var suite in this.suites) {
-        this.results[suite] = "pre"; 
+        this.results[suite] = "pre";
         this.cursuite = suite;
-        var suiteObj = this.suites[suite]; 
+        var suiteObj = this.suites[suite];
         //Debug.write('******* order of tests:');
         //for (var item in suiteObj.tests) Debug.write(item);
         //Debug.write('*******');
         for (var testcase = 0; testcase < suiteObj.tests.length; testcase++) {
             //Debug.write('running test: ',testcase);
-            suiteObj.curtest = testcase; 
-            var testcaseObj = suiteObj.tests[testcase];     
+            suiteObj.curtest = testcase;
+            var testcaseObj = suiteObj.tests[testcase];
             suiteObj.results[testcase] = "pre";
             testcaseObj.apply(suiteObj);
             if (suiteObj.results[testcase] == "pre") {
                 suiteObj.results[testcase] = "pass";
-                suiteObj.passedtests += 1; 
+                suiteObj.passedtests += 1;
             } else {
-                suiteObj.failedtests += 1; 
+                suiteObj.failedtests += 1;
             }
         }
         if (this.results[suite] == "pre") {
@@ -174,25 +189,25 @@ function runTestSuites() {
 }
 
 
-function failAssertion ( msg ) {    
-    var ste = this.suites[this.cursuite]; 
+function failAssertion ( msg ) {
+    var ste = this.suites[this.cursuite];
     if (ste) {
-        var tst = ste.curtest;     
-        Debug.error("In suite " + ste.name + ", test " + tst + ", failed assertion: " + msg ); 
+        var tst = ste.curtest;
+        Debug.error("In suite " + ste.name + ", test " + tst + ", failed assertion: " + msg );
         // Mark this test case as having failed
-        this.results[this.cursuite] = "fail"; 
-        // Mark this test suite as having failed 
-        this.suites[this.cursuite].results[tst] = "fail"; 
+        this.results[this.cursuite] = "fail";
+        // Mark this test suite as having failed
+        this.suites[this.cursuite].results[tst] = "fail";
     } else {
-        Debug.error("Failed assertion: ", msg); 
+        Debug.error("Failed assertion: ", msg);
     }
 }
 
 function assertTrue (condition, assertion) {
     if (!condition)  {
         var errmsg = "FAIL: assertTrue('" + condition + "') failed"
-                    + (assertion ? ': ' + assertion : '');      
-        LzTestManager.failAssertion(errmsg); 
+                    + (assertion ? ': ' + assertion : '');
+        LzTestManager.failAssertion(errmsg);
     }
 }
 
@@ -200,60 +215,60 @@ function assertTrue (condition, assertion) {
 function assertFalse (condition, assertion) {
     if (condition)  {
         var errmsg = "FAIL: assertFalse('" + condition + "') failed"
-                    + (assertion ? ': ' + assertion : '');      
-        this.failAssertion(errmsg); 
+                    + (assertion ? ': ' + assertion : '');
+        this.failAssertion(errmsg);
     }
 }
 
-function assertEquals (expected, actual, message) {
+function assertEquals (expected, actual, message="") {
     if (! (expected == actual)) {
-        var errmsg = "FAIL: " + message + "Equals expected " + expected + ", got " + actual; 
-        LzTestManager.failAssertion(errmsg); 
+        var errmsg = "FAIL: " + message + "Equals expected " + expected + ", got " + actual;
+        LzTestManager.failAssertion(errmsg);
     }
 }
 
-function assertNull (object, message) {
+function assertNull (object, message="") {
     if (object !== null) {
        LzTestManager.failAssertion(message + " Null " + null + object);
     }
 }
 
-function assertNotNull (object, message) {
+function assertNotNull (object, message="") {
     if (object === null) {
        LzTestManager.failAssertion(message + " NotNull " + "non-null value: " + object);
     }
 }
 
-function assertSame (expected, actual, message) {
+function assertSame (expected, actual, message="") {
     if (typeof(expected) == "undefined" && typeof(actual) == "undefined") {
         return;
     }
-    
+
     if (expected !== actual) {
         LzTestManager.failAssertion(message + " Same: expected " + expected + ", got " + actual);
     }
 }
 
-function assertNotSame (expected, actual, message) {
+function assertNotSame (expected, actual, message="") {
     if (expected === actual) {
-        var msg = "NotSame " + msg + " expected anything but " + expected + ", got ", actual; 
+        var msg = "NotSame " + msg + " expected anything but " + expected + ", got ", actual;
         LzTestManager.failAssertion(msg);
     }
 }
 
-function assertUndefined (object, message) {
+function assertUndefined (object, message="") {
     if (typeof(object) != "undefined") {
        LzTestManager.failAssertion(message + " undefined value  " + object);
     }
 }
 
-function assertNotUndefined (object, message) {
+function assertNotUndefined (object, message="") {
     if (typeof(object) == "undefined") {
-        LzTestManager.failAssertion(message + " undefined value  " + object); // 
+        LzTestManager.failAssertion(message + " undefined value  " + object); //
     }
 }
 
-function assertWithin (expected, actual, delta, message) {
+function assertWithin (expected, actual, delta, message="") {
     // handle infinite expected
     if (expected == actual) return;
 
@@ -265,17 +280,6 @@ function assertWithin (expected, actual, delta, message) {
 }
 }
 var LzTestManager:LzTestManagerClass = new LzTestManagerClass();
-
-new LzDelegate(canvas, "startTests", canvas, "oninit"); 
-
-canvas.startTests = function() {
-  with (this) {
-    // Debug.info("LzTestManager is starting tests from canvas.oninit");
-    LzTestManager.runTestSuites();     
-    LzTestManager.printSummary(); 
-    // Debug.info("LzTestManager is done with tests from canvas.oninit");
-  }
-}
 
 
 
