@@ -154,7 +154,6 @@ public class LzTextSprite extends LzSprite {
         }
 
         override public function setBGColor( c:* ):void {
-            //trace("LzTextSprite. setBGColor  ", c);
             if (c == null) {
                 this.textfield.background = false; }
             else {

@@ -172,10 +172,9 @@ public class LzFontManager {
     public static function __findMatchingFont (str) {
         if (LzFontManager.__clientFontNames == null) {
             LzFontManager.__clientFontNames = {};
-            // only enumerate embedded fonts
-            var fonts = Font.enumerateFonts(false);
+            var fonts = Font.enumerateFonts(true);
                 for (var i in fonts) {
-                    LzFontManager.__clientFontNames[fonts[i]] = true;
+                    LzFontManager.__clientFontNames[fonts[i].fontName] = true;
                 }
         }
     
