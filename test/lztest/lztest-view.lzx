@@ -317,31 +317,31 @@ suite.test5 = function() {
   
   LzTestManager.assertEquals (1, (view3.getDepthList()).length, "view3.getDepthList() should have a length of 1");
 
-  ztest ("ztest", view5.getDepthList(), [view5.v1, view5.v2, view5.v3]);
+  ztest ("ztest initial", view5.getDepthList(), [view5.v1, view5.v2, view5.v3]);
 
   view5.v2.bringToFront();
-  ztest ("ztest", [view5.v1, view5.v3, view5.v2], view5.getDepthList());
+  ztest ("ztest v2 to front", [view5.v1, view5.v3, view5.v2], view5.getDepthList());
  
   view5.v2.sendToBack();
-  ztest ("ztest", [view5.v2, view5.v1, view5.v3], view5.getDepthList());
+  ztest ("ztest v2 to back", [view5.v2, view5.v1, view5.v3], view5.getDepthList());
 
   view5.v3.sendBehind(view5.v1);
-  ztest ("ztest", [view5.v2, view5.v3, view5.v1], view5.getDepthList());
+  ztest ("ztest v3 behind v1", [view5.v2, view5.v3, view5.v1], view5.getDepthList());
 
   view5.v2.sendInFrontOf(view5.v3);
-  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+  ztest ("ztest v2 front of v3", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
 
   view5.v3.sendBehind(view5.v3);  // nop
-  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+  ztest ("ztest v3 send behind v3 nop", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
 
   view5.v1.sendInFrontOf(view5.v1); // nop
-  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+  ztest ("ztest v1 front of v1 nop", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
 
   view5.v3.sendToBack(); // nop
-  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+  ztest ("ztest v3 to back nop", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
 
   view5.v1.bringToFront(); // nop
-  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+  ztest ("ztest v1 to front nop", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
 }
 
 // sizing
