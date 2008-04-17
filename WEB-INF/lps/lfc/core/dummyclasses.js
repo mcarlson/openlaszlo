@@ -41,7 +41,7 @@ public class LzBrowser {
     public static var defaultPortNums = { http: 80, https: 443 };
 
     public static function getInitArg(key:*) {
-        trace('dummy LzBrowser getInitArg declared in core/dummyclasses.js');
+        trace('dummy LzBrowser getInitArg declared in core/dummyclasses.js', key);
         return null;
     }
 

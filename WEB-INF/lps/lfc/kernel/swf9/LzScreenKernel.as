@@ -25,7 +25,7 @@ public class LzScreenKernel {
         LzScreenKernel.height = stage.stageHeight;
         if (LzScreenKernel.__callback) {
             LzScreenKernel.__scope[LzScreenKernel.__callback]({width: LzScreenKernel.width, height: LzScreenKernel.height});
-            trace('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});
+            //trace('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});
         }
     }
 

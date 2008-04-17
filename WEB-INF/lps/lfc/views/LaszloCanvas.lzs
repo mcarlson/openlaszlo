@@ -195,6 +195,12 @@ dynamic class LzCanvas extends LzView {
         }
         delete args.height;
 
+        if ($swf9) {
+            // Set the canvas width/height to good initial values.
+            // TODO: ensure these can be read correctly from the embed tag
+            this.sprite.setWidth(this.width);
+            this.sprite.setHeight(this.height);
+        }
         if (this.__canvasheightratio != null || this.__canvaswidthratio != null) {
             // register for window resize events
             LzScreenKernel.setCallback(this, '__windowResize');
@@ -646,12 +652,14 @@ function __windowResize(size) {
         this.width = Math.floor(size.width * this.__canvaswidthratio);
         if (this.onwidth.ready) this.onwidth.sendEvent(this.width);
         this.sprite.setWidth(this.width);
+        //trace('new width', this.width, 'height', this.height);
     }
 
     if (this.__canvasheightratio != null) {
         this.height = Math.floor(size.height * this.__canvasheightratio);
         if (this.onheight.ready) this.onheight.sendEvent(this.height);
         this.sprite.setHeight(this.height);
+        //trace('new height', this.height, 'width', this.width);
     }
 }
 

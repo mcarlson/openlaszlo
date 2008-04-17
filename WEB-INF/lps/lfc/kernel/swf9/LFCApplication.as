@@ -180,7 +180,7 @@ public class LFCApplication extends Sprite {
     }
 
     function resizeHandler(event:Event):void {
-        trace('LFCApplication.resizeHandler stage width/height = ', stage.stageWidth, stage.stageHeight);
+        //trace('LFCApplication.resizeHandler stage width/height = ', stage.stageWidth, stage.stageHeight);
         LzScreenKernel.handleResizeEvent();
     }
 
