@@ -289,8 +289,8 @@ override function __makeSprite(args) {
         //trace('canvas.__makeSprite making canvas sprite, sprite is already', this.sprite, 'args', args);
     }
     this.sprite = new LzSprite(this, true, args);
-   if ($debug) {
-        Debug.write("making canvas sprite", this.sprite);
+    if ($debug) {
+        //Debug.write("making canvas sprite", this.sprite);
     }
 }
 
@@ -515,7 +515,7 @@ function initiatorAddNode ( e , n ){
   * @devnote N.B.: replaces LzNode.__LZcallInit, so must be kept in sync with that
   */
 override function __LZcallInit ( an = null ){
-    trace("lzcancas __LZcallinit isinited", this.isinited);
+    //trace("lzcancas __LZcallinit isinited", this.isinited);
     // Canvas-only:  Don't bother with preventSubInit
     if (this.isinited) return;
 

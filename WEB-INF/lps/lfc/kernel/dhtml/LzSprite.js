@@ -1550,6 +1550,10 @@ LzSprite.prototype.__discardElement = function (element) {
     }
 }
 
+/**
+  * Get the current z order of the sprite
+  * @return Integer: A number representing z orderin
+  */
 LzSprite.prototype.getZ = function () {
     return this.__z;
 }

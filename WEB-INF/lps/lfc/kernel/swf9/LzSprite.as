@@ -679,7 +679,7 @@ public class LzSprite extends Sprite {
 
 
       /** sendToBack()
-          o Sends this sprite to the back of its siblings 
+        * Sends this sprite to the back of its siblings 
       */
       public function sendToBack():void {
           if (!this.isroot) {
@@ -687,11 +687,33 @@ public class LzSprite extends Sprite {
           }
       }
 
+/**
+  * Puts this sprite in front of one of its siblings.
+  * @param LzSprite v: The sprite this sprite should go in front of. If the passed sprite is null or not a sibling, the method has no effect.
+  */
+      public function sendInFrontOf( sprite ){
+          if (!this.isroot) {
+              var i = parent.getChildIndex(sprite);
+              parent.setChildIndex(this, i);
+          }
+      }
+
+      /** sendBehind()
+        * Puts this sprite behind one of its siblings.
+        * @param LzSprite sprite: The sprite this sprite should go in front of. If the sprite is null or not a sibling, the method has no effect.
+      */
+      public function sendBehind( sprite ){
+          if (!this.isroot) {
+              var i = parent.getChildIndex(sprite);
+              parent.setChildIndex(this, i);
+          }
+      }
+
       /** setStyleObject( Object:style )
           o Sets the style object of the sprite 
       */
       public function setStyleObject( style:Object ):void {
-          // NYI
+          trace('LzSprite.setStyleObject not yet implemented');
       }
 
 
@@ -699,7 +721,7 @@ public class LzSprite extends Sprite {
           o Gets the style object of the sprite 
       */
       public function getStyleObject():Object {
-          // NYI
+          trace('LzSprite.getStyleObject not yet implemented');
           return null;
       }
 
@@ -721,6 +743,13 @@ public class LzSprite extends Sprite {
           trace("LzSprite.getMCRef not implemented in this runtime");
       }
 
+      /**
+        * Get the current z order of the sprite
+        * @return Integer: A number representing z orderin
+        */
+      public function getZ():int {
+           return parent.getChildIndex(this);
+      }
 
       var __contextmenu;
 

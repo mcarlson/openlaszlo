@@ -63,7 +63,7 @@ function LzTestManagerClass () {
   this.startTestsDelegate = new LzDelegate(this, "startTests", canvas, "oninit");
 }
 
-function startTests () {
+function startTests ( args ) {
   with (this) {
     // Debug.info("LzTestManager is starting tests from canvas.oninit");
     LzTestManager.runTestSuites();

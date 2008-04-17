@@ -29,10 +29,15 @@ public class LFCApplication extends Sprite {
     // Allow anyone access to the stage object (see ctor below)
     public static var stage:Stage;
 
+    // Allow anyone access to write to the debugger
+    public static var write:Function;
+
     public function LFCApplication () {
 
         // Allow anyone to access the stage object
         LFCApplication.stage = this.stage;
+        LFCApplication.write = this.write;
+
         // trace("LFCApplication.stage = " + LFCApplication.stage);
         // trace("  loaderInfo.loaderURL = " + LFCApplication.stage.loaderInfo.loaderURL);
 
@@ -44,7 +49,7 @@ public class LFCApplication extends Sprite {
         var idleTimerPeriod = 14; // msecs
         //var idleTimerPeriod = 31; // msecs
 
-        trace('idle timer period = ', idleTimerPeriod , 'msecs');
+        //trace('idle timer period = ', idleTimerPeriod , 'msecs');
         LzIdleKernel.startTimer( idleTimerPeriod );
 
 

@@ -13,11 +13,26 @@
 dynamic class Debug {
     static public function write(...args):void {
         trace.apply(Debug, args);
+        LFCApplication.write.apply(LFCApplication, args);
     }
-
-    static var monitor = Debug.write;
-    static var warn = Debug.write;
-    static var error = Debug.write;
-    static var info = Debug.write;
-    static var debug = Debug.write;
+    static public function info(...args):void {
+        args.unshift('Info: ');
+        write.apply(Debug, args);
+    }
+    static public function warn(...args):void {
+        args.unshift('Warn: ');
+        write.apply(Debug, args);
+    }
+    static public function error(...args):void {
+        args.unshift('Error: ');
+        write.apply(Debug, args);
+    }
+    static public function debug(...args):void {
+        args.unshift('Debug: ');
+        write.apply(Debug, args);
+    }
+    static public function monitor(...args):void {
+        args.unshift('Monitor: ');
+        write.apply(Debug, args);
+    }
 }
