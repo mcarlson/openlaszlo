@@ -60,7 +60,8 @@ class DataCompiler extends ElementCompiler {
         String dsetname = XMLUtils.requireAttributeValue(element, "name");
         boolean trimwhitespace = "true".equals(element.getAttributeValue("trimwhitespace"));
         String content = NodeModel.getDatasetContent(element, mEnv, trimwhitespace);
-        mEnv.compileScript("var "+dsetname + "= "+LOCAL_DATA_FNAME+"("+ScriptCompiler.quote(dsetname) + ", " +content+
+        mEnv.compileScript("var "+dsetname+";");
+        mEnv.compileScript(dsetname + "= "+LOCAL_DATA_FNAME+"("+ScriptCompiler.quote(dsetname) + ", " +content+
                            "," + trimwhitespace+");\n");
     }
 

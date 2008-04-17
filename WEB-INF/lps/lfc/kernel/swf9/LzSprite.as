@@ -159,6 +159,13 @@ public class LzSprite extends Sprite {
           this.resourceHeight = res.height;
           this.skiponload = true;
 
+          this.owner.resourceload({
+              width:  this.resourceWidth,
+                      height: this.resourceHeight,
+                      sprite: this,
+                      resource: r,
+                      skiponload: true});
+
           var asset:DisplayObject = null;
           var prev_resource:DisplayObject;
 

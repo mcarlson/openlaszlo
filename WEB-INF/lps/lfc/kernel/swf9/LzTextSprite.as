@@ -355,6 +355,7 @@ public class LzTextSprite extends LzSprite {
 
 
         public function getTextfieldHeight ( ) {
+            return this.textfield.height;
         }
 
 
