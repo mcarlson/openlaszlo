@@ -501,9 +501,6 @@ var doneClassRoot = false;
   */
 var parent;
 
-/** @access private */
-// var children = null; // Moved to LzMiniNode
-
 /** If this node is replicated due to data
   * replication, the LzReplicationManager which controls this node.
   * @type LzNode

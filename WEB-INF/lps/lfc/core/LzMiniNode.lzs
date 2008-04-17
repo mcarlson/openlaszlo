@@ -23,8 +23,6 @@ class LzMiniNode {
   }
 
 /** @access private */
-  var children:Array = [];
-/** @access private */
   var __LZdeleted:Boolean = false;
 /** @access private */
   var _selstate; // Was also defined in LzDatapath
