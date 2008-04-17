@@ -37,47 +37,6 @@ public class LzCSSStyle {
     public static  function  getPropertyValueFor(a:*, b:*):* { return null;}
 }
 
-public class LzBrowser {
-    public static var defaultPortNums = { http: 80, https: 443 };
-
-    public static function getInitArg(key:*) {
-        trace('dummy LzBrowser getInitArg declared in core/dummyclasses.js', key);
-        return null;
-    }
-
-    public static function getBaseURL(secure=null, port=null) {
-        return null;
-    }
-
-    public static function toAbsoluteURL(url, secure = null) {
-        return null;
-    }
-
-    public static function getLoadURL(...ignore) {
-        return null;
-    }
-
-    public static function loadURL(...ignore) {
-        return null;
-    }
-
-    public static function getVersion() {
-        return null;
-    }
-
-    #passthrough (toplevel:true) {
-        import flash.xml.*;
-    }#
-
-    static var xd:XMLDocument = new XMLDocument();
-
-    public static function xmlEscape (str) {
-        var tnode = xd.createTextNode(str);
-        return tnode.toString();
-    }
-
-
-}
 
 public class LzTrack {
     static function __LZmouseup() {

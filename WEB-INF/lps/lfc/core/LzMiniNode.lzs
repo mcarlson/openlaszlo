@@ -19,7 +19,7 @@
 
 class LzMiniNode {
 
-  function LzMiniNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
+  function LzMiniNode ( parent:* = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
   }
 
 /** @access private */

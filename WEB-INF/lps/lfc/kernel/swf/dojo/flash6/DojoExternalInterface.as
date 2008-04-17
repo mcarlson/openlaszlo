@@ -184,7 +184,7 @@ class DojoExternalInterfaceClass {
 			//Debug.write('addCallback', DojoExternalInterface._callbacks[i]);
 		}
 		DojoExternalInterface.call("dojo.flash.loaded");
-		LzBrowser.__jsready();
+		LzBrowserKernel.__jsready();
 	}
 	
 	/** 

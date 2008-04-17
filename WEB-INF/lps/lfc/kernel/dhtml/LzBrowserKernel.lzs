@@ -1,0 +1,161 @@
+/**
+  *
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @affects lzbrowserkernel
+  * @topic LFC
+  * @subtopic Views
+  */
+
+/**
+  * @access private
+  */
+class LzBrowserKernel {
+
+/**
+  * Loads a URL in the browser, optionally in a target
+  * 
+  * @param String url: URL to load
+  * @param String target: Optionally specifies a named frame to display the contents of the URL.
+  * The document specified by URL is loaded into the current browser frame by default.
+  */
+static function loadURL ( url, target=null, features=null ){
+    if (target != null) {
+        window.open(url, target, features);
+    } else {
+        window.location = url;
+    }
+}
+
+
+/**
+  * Runs Javascript in the browser using a javascript: url, optionally in a
+  * target
+  * 
+  * @param String js: Javascrit string to execute
+  * @param String target: Optionally specifies a named frame to display the contents of the URL.
+  * By default, the javascript specified in 'js' is executed in the current
+  * browser frame .
+  */
+static function loadJS ( js, target ){
+    this.loadURL('javascript:' + js + ';void(0);', target);
+}
+
+
+/**
+  * Runs a Javascript method in the browser, returning the result  
+  * @keywords flashspecific
+  * 
+  * @param String js: Browser javascript to execute
+  */
+static function callJS (js, callback, args) {
+    return eval(js);
+}
+
+/**
+  * Returns version information about the browser
+  */
+static function getVersion () {
+  return navigator.userAgent;
+}
+
+/**
+  * Returns the URL from which the application was loaded.
+  * @return String : the URL the swf was loaded from
+  * 
+  */
+static function getLoadURL () {
+    // get url app was loaded from
+    var url = Lz.__propcache.url;
+    if (! url) url = new String(window.location);
+    var colon = url.indexOf(':');
+    var slash = url.indexOf('/');
+    if (colon > -1) {
+        if (url.indexOf('://') == colon){
+            // absolute URL  http://foo.lzx with protocol - do nothing
+            return url;
+        } else if (url.charAt(colon + 1) == '/') {
+            // absolute URL  http:/foo.lzx with protocol - add a slash
+            url = url.substring(0, colon + 1) + '/' + url.substring(colon + 1);
+            return url;
+        } else {
+            // relative URL - http:foo.lzx - add path from window.location
+            var lzu = new LzURL(new String(window.location));
+            url = url.substring(0, colon + 1) + '/' + lzu.path + url.substring(colon + 1)
+            return url;
+        }
+    } else {
+        if ( slash == 0) {
+            // absolute URL begins with slash - do nothing
+            return url;
+        } else {
+            // url is relative (to request url)
+            var loc = new String(window.location);
+            var lastslash = loc.lastIndexOf('/');
+            loc = loc.substring(0, lastslash + 1);
+            return loc + url;
+        }
+    }
+}
+
+
+/**
+  * This function returns the value of a key in the request string that 
+  * requested the the lzx app. This can be used to communicate server to an lzx
+  * app without forcing the app to make a request
+  * 
+  * @return String: The value for a key that appears in the request to the lps
+  * server
+  */
+static function getInitArg (name) {
+    return global[name];
+}
+
+/**
+  * Turns the flash context menu on or off
+  * @keywords flashspecific private
+  * @param Boolean truefalse: boolean value - true for on, false for off.
+  */
+static function showMenu (truefalse) {
+  //TODO Not implemented
+  Debug.warn("showMenu not implemented");
+}
+
+
+/**
+  * Sets the system clipboard to the specified string
+  * @keywords flashspecific
+  * 
+  * @param String str: String to set the system clipboard to
+  */
+static function setClipboard (str){
+  //TODO Not implemented
+  Debug.warn("setClipboard not implemented");
+}
+
+/**
+  * Determines if the a screen reader is active and the Flash player is focused
+  * @keywords flashspecific
+  * 
+  * @return: True if a screen reader is active and the Flash player is focused
+  */
+static function isAAActive (){
+  //TODO Not implemented
+  Debug.warn("isAAActive not implemented");
+  return false;
+}
+
+/**
+  * Updates accessibility data
+  * @keywords flashspecific
+  * @access private
+  */
+static function updateAccessibility () {
+  //TODO Not implemented
+  Debug.warn("updateAccessibility not implemented");
+}
+
+
+} // End of LzBrowserKernel

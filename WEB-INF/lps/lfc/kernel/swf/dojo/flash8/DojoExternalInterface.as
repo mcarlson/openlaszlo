@@ -87,7 +87,7 @@ class DojoExternalInterfaceClass {
 	*/
 	function loaded(){
 		DojoExternalInterface.call("dojo.flash.loaded");
-		LzBrowser.__jsready();
+		LzBrowserKernel.__jsready();
 	}
 	
 	function startExec(){ 

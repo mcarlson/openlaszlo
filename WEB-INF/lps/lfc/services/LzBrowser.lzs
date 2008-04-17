@@ -9,9 +9,12 @@
   * @subtopic Services
   */
 
-var LzBrowser = new Object;
 
-LzBrowser.postToLps = true;
+/**
+ * Interface to the kernel browser
+ */
+
+class LzBrowserInterface {
 
 /**
   * Loads a URL in the browser, optionally in a target
@@ -20,13 +23,7 @@ LzBrowser.postToLps = true;
   * @param String target: Optionally specifies a named frame to display the contents of the URL.
   * The document specified by URL is loaded into the current browser frame by default.
   */
-LzBrowser.loadURL = function ( url, target, features ){
-    if (target != null) {
-        window.open(url, target, features);
-    } else {
-        window.location = url;
-    }
-}
+function loadURL ( url, target=null, features=null ) {}
 
 /**
   * Runs Javascript in the browser using a javascript: url, optionally in a
@@ -37,66 +34,28 @@ LzBrowser.loadURL = function ( url, target, features ){
   * By default, the javascript specified in 'js' is executed in the current
   * browser frame .
   */
-LzBrowser.loadJS= function ( js, target ){
-    this.loadURL('javascript:' + js + ';void(0);', target);
-}
+function loadJS ( js, target=null ) {}
 
 /**
-  * Runs a Javascript method in the browser, returning the result  
-  * @keywords flashspecific
+  * Runs a Javascript method in the browser, optionally returning the result  
   * 
-  * @param String js: Browser javascript to execute
+  * @param String js: Browser javascript method name to execute
+  * @param Function callback: Optionall callback function to get the return value of the javascript call
+  * @param Optional arguments to call
   */
-LzBrowser.callJS= function ( js ){
-    return eval(js);
-}
+function callJS ( js, callback=null, args=null ) {}
 
 /**
   * Returns version information about the browser
   */
-LzBrowser.getVersion = function() {
-  return navigator.userAgent;
-}
+function getVersion () {}
 
 /**
   * Returns the URL from which the application was loaded.
   * @return String : the URL the swf was loaded from
   * 
   */
-LzBrowser.getLoadURL = function() {
-    // get url app was loaded from
-    var url = Lz.__propcache.url;
-    if (! url) url = new String(window.location);
-    var colon = url.indexOf(':');
-    var slash = url.indexOf('/');
-    if (colon > -1) {
-        if (url.indexOf('://') == colon){
-            // absolute URL  http://foo.lzx with protocol - do nothing
-            return url;
-        } else if (url.charAt(colon + 1) == '/') {
-            // absolute URL  http:/foo.lzx with protocol - add a slash
-            url = url.substring(0, colon + 1) + '/' + url.substring(colon + 1);
-            return url;
-        } else {
-            // relative URL - http:foo.lzx - add path from window.location
-            var lzu = new LzURL(new String(window.location));
-            url = url.substring(0, colon + 1) + '/' + lzu.path + url.substring(colon + 1)
-            return url;
-        }
-    } else {
-        if ( slash == 0) {
-            // absolute URL begins with slash - do nothing
-            return url;
-        } else {
-            // url is relative (to request url)
-            var loc = new String(window.location);
-            var lastslash = loc.lastIndexOf('/');
-            loc = loc.substring(0, lastslash + 1);
-            return loc + url;
-        }
-    }
-}
-
+function getLoadURL () {}
 
 /**
   * This function returns the value of a key in the request string that 
@@ -106,17 +65,116 @@ LzBrowser.getLoadURL = function() {
   * @return String: The value for a key that appears in the request to the lps
   * server
   */
-LzBrowser.getInitArg = function(name) {
-    return global[name];
-}
+function getInitArg (name) {}
 
-LzBrowser.defaultPortNums = { http: 80, https: 443 };
+/**
+  * Turns the flash context menu on or off
+  * @keywords flashspecific private
+  * @param Boolean truefalse: boolean value - true for on, false for off.
+  */
+function showMenu (truefalse) {}
+
+
+/**
+  * Sets the system clipboard to the specified string
+  * @keywords flashspecific
+  * 
+  * @param String str: String to set the system clipboard to
+  */
+function setClipboard (str) {}
+
+/**
+  * Determines if the a screen reader is active and the Flash player is focused
+  * @keywords flashspecific
+  * 
+  * @return: True if a screen reader is active and the Flash player is focused
+  */
+function isAAActive () {}
+
+/**
+  * Updates accessibility data
+  * @keywords flashspecific
+  * @access private
+  */
+function updateAccessibility () {}
+
+
+} // End of LzBrowserInterface
+
+
+
+class LzBrowserService extends LzBrowserInterface {
+  /** The browser service.  Also available as the global
+   * <code>LzBrowser</code>.
+   *
+   * @type LzBrowserService
+   * @keywords readonly
+   * @devnote this should be a public getter to enforce readonly
+   */
+  static var LzBrowser:LzBrowserService;
+
+  /** @access private 
+   * @devnote AS3 does not allow private constructors, so we need the
+   * error
+   */
+  function LzBrowserService() {
+//    if (LzBrowserService.LzBrowser) {
+//      throw new Error("There can be only one LzBrowser");
+//    }
+  }
+
+  LzBrowserService.LzBrowser = new LzBrowserService;
+
+override function loadURL ( url, target=null, features=null )
+{ LzBrowserKernel.loadURL (url, target, features);}
+
+override function loadJS ( js, target=null )
+{ LzBrowserKernel.loadJS (js, target)}
+
+// apply() is used to make sure all optional arguments are passed
+override function callJS ( js, callback=null, args=null )
+{ LzBrowserKernel.callJS.apply (null, arguments);}
+
+override function getVersion ()
+{ return LzBrowserKernel.getVersion ();}
+
+override function getLoadURL ()
+{ return LzBrowserKernel.getLoadURL ();}
+
+override function getInitArg (name)
+{ return LzBrowserKernel.getInitArg (name);}
+
+override function showMenu (truefalse)
+{ LzBrowserKernel.showMenu (truefalse);}
+
+override function setClipboard (str)
+{ LzBrowserKernel.setClipboard (str);}
+
+override function isAAActive ()
+{ return LzBrowserKernel.isAAActive ();}
+
+override function updateAccessibility ()
+{ LzBrowserKernel.updateAccessibility ();}
+
+
+
+
+/** @access private */
+var postToLps = true;
+
+/** @access private */
+var parsedloadurl = false;
+
+
+
+/** @access private */
+var defaultPortNums = { http: 80, https: 443 };
 
 /**
   * Returns the base URL the lzx was loaded from
   * @keywords private
   */
-LzBrowser.getBaseURL = function(secure, port) {
+function getBaseURL (secure=null, port=null) {
     var url = this.getLoadURLAsLzURL(); 
 
     if (secure) {
@@ -128,13 +186,13 @@ LzBrowser.getBaseURL = function(secure, port) {
     } 
 
     if (secure && port == null) {
-        url.port = LzBrowser.defaultPortNums[url.protocol]; 
+        url.port = this.defaultPortNums[url.protocol]; 
     }
     //Debug.write('port', port);
     //Debug.write('secure', secure);
     //Debug.write('url.port', url.port);
 
-    delete url.query;
+    url.query = null;
 
     //Debug.write('base url' + url.toString());
     return url;
@@ -143,7 +201,7 @@ LzBrowser.getBaseURL = function(secure, port) {
 /**
   * Returns the loadUrl as a new LzURL
   * */
-LzBrowser.getLoadURLAsLzURL = function(){
+function getLoadURLAsLzURL (){
     if ( !this.parsedloadurl ){
         this.parsedloadurl = new LzURL( this.getLoadURL() );
     }
@@ -157,7 +215,7 @@ LzBrowser.getLoadURLAsLzURL = function(){
   * @param Boolean secure: true if relative http is really https
   * @return: an absolute URL
   */
-LzBrowser.toAbsoluteURL = function(url, secure) {
+function toAbsoluteURL (url, secure) {
     // If it begins with "/@WEBAPP@/", server will handle URL.
     // or If it begins with "file:", server will handle URL.
     // or do we have an absolute url?
@@ -198,7 +256,7 @@ LzBrowser.toAbsoluteURL = function(url, secure) {
         // is URL of the form http:/zot/foo.bar?
         if (path.charAt(0) == '/') {
             u.path = url.substring( colon + 1 );
-            delete u.file;
+            u.file = null;
         } else {
             u.file = url.substring( colon + 1 );
         }
@@ -224,9 +282,9 @@ LzBrowser.toAbsoluteURL = function(url, secure) {
     /*
     if ( url.indexOf("http") != 0 ) {
         var u = new LzURL( this.getLoadURL() );
-        if ( url.indexOf("/") == 0 ) delete u.path;
-        delete u.file;
-        delete u.query;
+        if ( url.indexOf("/") == 0 ) u.path = null;
+        u.file = null;
+        u.query = null;
         url = u.toString() + url;
         Debug.write("Converting toAbsoluteURL: " + url + " to " + u.toString() + url) 
     }
@@ -235,18 +293,9 @@ LzBrowser.toAbsoluteURL = function(url, secure) {
 }
 
 /**
-  * Turns the flash context menu on or off
-  * @keywords flashspecific private
-  * @param Boolean truefalse: boolean value - true for on, false for off.
-  */
-LzBrowser.showMenu = function(truefalse) {
-    fscommand("showmenu", truefalse);
-}
-
-/**
   * Escape special characters in message: &amp; and &lt;.
   */
-LzBrowser.xmlEscape = function (str) {
+function xmlEscape (str) {
     return LzDataNode.__LZXMLescape( str );
 }
 
@@ -255,7 +304,7 @@ LzBrowser.xmlEscape = function (str) {
   * @param str: The string to escape
   * @return: An URL escaped string
   */
-LzBrowser.urlEscape = function (str) {
+function urlEscape (str) {
     return escape( str );
 }
 /**
@@ -263,48 +312,37 @@ LzBrowser.urlEscape = function (str) {
   * @param str: The string to unescape
   * @return: An URL decoded string
   */
-LzBrowser.urlUnescape = function (str) {
+function urlUnescape (str) {
     return unescape( str.split('+').join(' ') );
 }
 
 
 /** @access private */
-LzBrowser.usePost = function (){
+function usePost (){
     return this.postToLps && this.supportsPost();
 }
 
 /** @access private */
-LzBrowser.supportsPost = function (){
+function supportsPost (){
     return true;
 }
 
-/**
-  * Sets the system clipboard to the specified string
-  * @keywords flashspecific
-  * 
-  * @param String str: String to set the system clipboard to
-  */
-LzBrowser.setClipboard = function (str){
-    System.setClipboard(str);
+
+} // End of LzBrowserService
+
+
+var LzBrowser = LzBrowserService.LzBrowser;
+
+
+
+if ($as2){
+// proxy object for browser Lz
+Lz = {
+    setCanvasAttribute: function (name, value, hist) {
+        LzBrowser.callJS('Lz.setCanvasAttribute', false, name, value, hist); 
+    }
+}
 }
 
-/**
-  * Determines if the a screen reader is active and the Flash player is focused
-  * @keywords flashspecific
-  * 
-  * @return: True if a screen reader is active and the Flash player is focused
-  */
-LzBrowser.isAAActive = function (){
-    var a = Accessibility.isActive();
-    return a;
-}
 
-/**
-  * Updates accessibility data
-  * @keywords flashspecific
-  * @access private
-  */
-LzBrowser.updateAccessibility = function () {
-    Accessibility.updateProperties();
-}
 

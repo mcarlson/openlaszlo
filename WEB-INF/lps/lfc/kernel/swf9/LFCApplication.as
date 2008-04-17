@@ -26,7 +26,15 @@ public class LFCApplication extends Sprite {
     }#
 
 
+    // Allow anyone access to the stage object (see ctor below)
+    public static var stage:Stage;
+
     public function LFCApplication () {
+
+        // Allow anyone to access the stage object
+        LFCApplication.stage = this.stage;
+        // trace("LFCApplication.stage = " + LFCApplication.stage);
+        // trace("  loaderInfo.loaderURL = " + LFCApplication.stage.loaderInfo.loaderURL);
 
         // Start up idle service timer. LzIdle is a global
         LzIdle = new LzIdleClass ();

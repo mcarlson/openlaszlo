@@ -9,6 +9,7 @@
 
 #include "services/LzInstantiator.lzs"
 #include "services/LzGlobalMouse.lzs"
+#include "services/LzBrowser.lzs"
 
 if ($swf9) {
     #include "services/LzModeManager.js"
@@ -26,7 +27,6 @@ if ($swf9) {
 
 if ($js1) {
     #include "services/platform/dhtml/LzModeManager.js"
-    #include "services/platform/dhtml/LzBrowser.js"
     #include "services/platform/dhtml/LzKeys.js"
     #include "services/platform/dhtml/LzHistory.js"
 } else if ($swf9) {
@@ -35,7 +35,6 @@ if ($js1) {
 } else if ($as2) {
     #include "services/platform/swf/LzModeManager.as"
     #include "services/platform/swf/LzKeys.as"
-    #include "services/platform/swf/LzBrowser.as"
     #include "services/platform/swf/LzHistory.as"
 } else {
     Debug.error('services/Library.lzs unsupported runtime %s', $runtime);

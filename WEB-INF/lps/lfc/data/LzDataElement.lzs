@@ -430,8 +430,8 @@ var __LZgt = ">";
   * Returns this node as a string of xml.
   * @return String: The string serialization of this node.
   */
-function serialize (){
-    return this.serializeInternal();
+function serialize (len=Infinity){
+    return this.serializeInternal(len);
 }
 
 /**

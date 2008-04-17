@@ -1,0 +1,209 @@
+/**
+  *
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @affects lzbrowserkernel
+  * @topic LFC
+  * @subtopic Views
+  */
+
+/**
+  * @access private
+  */
+class LzBrowserKernel {
+
+/**
+  * Loads a URL in the browser, optionally in a target
+  * 
+  * @param String url: URL to load
+  * @param String target: Optionally specifies a named frame to display the contents of the URL.
+  * The document specified by URL is loaded into the current browser frame by default.
+  */
+static function loadURL ( url, target=null, features=null ){
+  _root.getURL(url, target);
+}
+
+
+/**
+  * Runs Javascript in the browser using a javascript: url, optionally in a
+  * target
+  * 
+  * @param String js: Javascrit string to execute
+  * @param String target: Optionally specifies a named frame to display the contents of the URL.
+  * By default, the javascript specified in 'js' is executed in the current
+  * browser frame .
+  */
+static function loadJS ( js, target ){
+  _root.getURL('javascript:' + js + ';void(0);', target);
+}
+
+
+/**
+  * Runs a Javascript method in the browser, optionally returning the result  
+  * 
+  * @param String js: Browser javascript method name to execute
+  * @param Function callback: Optionall callback function to get the return value of the javascript call
+  * @param Optional arguments to call
+  */
+
+static function callJS (js, callback) {
+    if (LzBrowserKernel.jsready != true) {
+        LzBrowserKernel.__jslocked = true;
+    }
+    if (LzBrowserKernel.__jslocked == true) {
+        if (callback != false) {
+            var o = [];
+            for (var i = 0; i< arguments.length; i++) {
+                o[i] = arguments[i];
+            }
+            LzBrowserKernel.__jscallq.push(o);
+            //Debug.write('queued', LzBrowserKernel.__jscallq.length, o); 
+        }
+        return;
+    }
+
+    if (callback instanceof Function) {
+        LzBrowserKernel.__jscallback = callback;
+    } else {
+        LzBrowserKernel.__jscallback = null;
+    }
+    var args = [].slice.call(arguments, 2);
+    args.unshift(js, LzBrowserKernel.callJSReturn);
+
+    LzBrowserKernel.__jslocked = true;
+    //Debug.write('calling with args real', arguments);
+    DojoExternalInterface.call.apply(this, args);
+
+    if (callback == false) {
+        LzBrowserKernel._dequeueJS();
+    }
+}
+
+/** @access private */ 
+static var jsready = false;
+/** @access private */ 
+static var __jscallback = null;
+/** @access private */ 
+static var __jslocked = false;
+/** @access private */ 
+static var __jscallq = [];
+
+// called from DojoExternalInterface
+/** @access private */ 
+static function __jsready () { 
+    //Debug.write('jsready');
+    LzBrowserKernel.jsready=true;
+    LzBrowserKernel._dequeueJS();
+}
+
+static function callJSReturn (a) {
+    //Debug.write('callJSReturn', a);
+    if (LzBrowserKernel.__jscallback) {
+        LzBrowserKernel.__jscallback(a);
+    }
+    LzBrowserKernel._dequeueJS();
+}
+
+/** @access private */ 
+static function _dequeueJS (a) {
+    LzBrowserKernel.__jslocked = false;
+    LzBrowserKernel.__jscallback = null;
+    if (LzBrowserKernel.__jscallq.length > 0) {
+        var a = LzBrowserKernel.__jscallq.pop();
+        //Debug.write('calling with args q', a);
+        LzBrowserKernel.callJS.apply(this, a);
+    }
+}
+
+/** @access private */ 
+static function _jsreset () {
+    LzBrowserKernel.__jslocked = false;
+    LzBrowserKernel.__jscallback = null;
+    LzBrowserKernel.__jscallq = [];
+}
+
+
+
+static var _os = null;
+static var _ver = null;
+
+/**
+  * Returns version information about the browser
+  */
+static function getVersion () {
+    if (!LzBrowserKernel._ver) {
+        var o = getVersion().split(' ');
+        LzBrowserKernel._os = o[0]; 
+        o = o[1].split(',');
+        LzBrowserKernel._ver = (o[0] + '.' + o[2]) * 1;
+    }
+    return LzBrowserKernel._ver;
+}
+
+/**
+  * Returns the URL from which the application was loaded.
+  * @return String : the URL the swf was loaded from
+  * 
+  */
+static function getLoadURL () {
+  return _root._url;
+}
+
+
+/**
+  * This function returns the value of a key in the request string that 
+  * requested the the lzx app. This can be used to communicate server to an lzx
+  * app without forcing the app to make a request
+  * 
+  * @return String: The value for a key that appears in the request to the lps
+  * server
+  */
+static function getInitArg (name) {
+  return _root[name];
+}
+
+/**
+  * Turns the flash context menu on or off
+  * @keywords flashspecific private
+  * @param Boolean truefalse: boolean value - true for on, false for off.
+  */
+static function showMenu (truefalse) {
+    fscommand("showmenu", truefalse);
+}
+
+
+/**
+  * Sets the system clipboard to the specified string
+  * @keywords flashspecific
+  * 
+  * @param String str: String to set the system clipboard to
+  */
+static function setClipboard (str){
+    System.setClipboard(str);
+}
+
+/**
+  * Determines if the a screen reader is active and the Flash player is focused
+  * @keywords flashspecific
+  * 
+  * @return: True if a screen reader is active and the Flash player is focused
+  */
+static function isAAActive (){
+    var a = Accessibility.isActive();
+    return a;
+}
+
+/**
+  * Updates accessibility data
+  * @keywords flashspecific
+  * @access private
+  */
+static function updateAccessibility () {
+    Accessibility.updateProperties();
+}
+
+
+} // End of LzBrowserKernel
+

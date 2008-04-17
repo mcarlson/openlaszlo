@@ -90,7 +90,7 @@ function cloneNode ( ){
 /**
   * @access private
   */
-function serialize (){
+function serialize (len=null){
     return LzDataNode.__LZXMLescape( this.data );
 }
 

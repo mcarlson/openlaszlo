@@ -1,7 +1,7 @@
 /**
   * Library.js
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -25,6 +25,7 @@
 #include "kernel/swf/LzXMLTranslator.as"
 #include "kernel/swf/LzHTTPLoader.as"
 #include "kernel/swf/LzMouseKernel.as"
+#include "kernel/swf/LzBrowserKernel.lzs"
 #include "kernel/swf/LzKeyboardKernel.as"
 #include "kernel/swf/LzAudio.as"
 #include "kernel/swf/LzScreenKernel.as"

@@ -1,7 +1,7 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   */
@@ -11,6 +11,7 @@
 #include "kernel/dhtml/LzPool.js"
 #include "kernel/dhtml/LzKeyboardKernel.js"
 #include "kernel/dhtml/LzMouseKernel.js"
+#include "kernel/dhtml/LzBrowserKernel.lzs"
 #include "kernel/dhtml/LzSprite.js"
 #include "kernel/dhtml/LzLibrary.js"
 #include "kernel/dhtml/LzTextSprite.js"

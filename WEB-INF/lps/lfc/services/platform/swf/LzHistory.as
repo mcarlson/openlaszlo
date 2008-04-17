@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzhistory
@@ -36,8 +36,8 @@ LzHistory.isReady = true;
   */
 LzHistory.__setHistory = function(s) {
     //Debug.write('__setHistory', s);
-    LzBrowser._jsreset();
-    LzBrowser.callJS('Lz.history.set', null, s);
+    LzBrowserKernel._jsreset();
+    LzBrowserKernel.callJS('Lz.history.set', null, s);
 }
 
 /**
@@ -88,7 +88,7 @@ LzHistory.receiveHistory = function(o){
     if ($swf7) {
         _root._currenthistory = o + '';
     } else {
-        LzBrowser.callJS('Lz.history.__receivedhistory', false, o + '');
+        LzBrowserKernel.callJS('Lz.history.__receivedhistory', false, o + '');
     }
     return true;
 }
@@ -118,7 +118,7 @@ LzHistory.setCanvasAttribute = LzHistory.receiveEvent;
   * @access private
   */
 LzHistory.callMethod = function(js) { 
-    if (LzBrowser.__jslocked) LzBrowser._jsreset();
+    if (LzBrowserKernel.__jslocked) LzBrowserKernel._jsreset();
     var scope = canvas;
     //Debug.write('callMethod', js);
     var s = js.indexOf('(')

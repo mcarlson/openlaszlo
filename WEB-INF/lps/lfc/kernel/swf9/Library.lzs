@@ -33,6 +33,7 @@
 #include "kernel/swf9/LzXMLTranslator.as"
 #include "kernel/swf9/LzHTTPLoader.as"
     //#include "kernel/swf/LzMouseKernel.as"
+#include "kernel/swf9/LzBrowserKernel.lzs"
 #include "kernel/swf9/LzKeyboardKernel.as"
     //#include "kernel/swf/LzAudio.as"
 #include "kernel/swf9/LzScreenKernel.as"

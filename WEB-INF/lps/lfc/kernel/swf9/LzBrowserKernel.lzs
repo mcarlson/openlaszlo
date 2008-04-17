@@ -1,0 +1,146 @@
+/**
+  *
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @affects lzbrowserkernel
+  * @topic LFC
+  * @subtopic Views
+  */
+
+/**
+  * @access private
+  */
+class LzBrowserKernel {
+
+#passthrough (toplevel:true) {  
+  import flash.net.*;
+  import flash.system.Capabilities;
+}#
+
+/**
+  * Loads a URL in the browser, optionally in a target
+  * 
+  * @param String url: URL to load
+  * @param String target: Optionally specifies a named frame to display the contents of the URL.
+  * The document specified by URL is loaded into the current browser frame by default.
+  */
+static function loadURL ( url, target=null, features=null ){
+  navigateToURL(new URLRequest(url), target);
+}
+
+
+/**
+  * Runs Javascript in the browser using a javascript: url, optionally in a
+  * target
+  * 
+  * @param String js: Javascrit string to execute
+  * @param String target: Optionally specifies a named frame to display the contents of the URL.
+  * By default, the javascript specified in 'js' is executed in the current
+  * browser frame .
+  */
+static function loadJS ( js, target ){
+  navigateToURL(new URLRequest('javascript:' + js + ';void(0);'), target);
+}
+
+
+/**
+  * Runs a Javascript method in the browser, returning the result  
+  * @keywords flashspecific
+  * 
+  * @param String js: Browser javascript to execute
+  */
+static function callJS (js, callback, args) {
+//TODO Not Implemented
+  throw new Error("callJS not implemented");
+}
+
+static var _os = null;
+static var _ver = null;
+
+/**
+  * Returns version information about the browser
+  */
+static function getVersion () {
+    if (!LzBrowserKernel._ver) {
+        var o = Capabilities.version.split(' ');
+        LzBrowserKernel._os = o[0]; 
+        o = o[1].split(',');
+        LzBrowserKernel._ver = String(Number(o[0] + '.' + o[2]));
+    }
+    return LzBrowserKernel._ver;
+}
+
+/**
+  * Returns the URL from which the application was loaded.
+  * @return String : the URL the swf was loaded from
+  * 
+  */
+static function getLoadURL () {
+  return LFCApplication.stage.loaderInfo.loaderURL;
+}
+
+
+/**
+  * This function returns the value of a key in the request string that 
+  * requested the the lzx app. This can be used to communicate server to an lzx
+  * app without forcing the app to make a request
+  * 
+  * @return String: The value for a key that appears in the request to the lps
+  * server
+  */
+static function getInitArg (name) {
+  var parameters = LFCApplication.stage.loaderInfo.parameters;
+  if (parameters == null)
+    return null;
+
+  return parameters[name];
+}
+
+/**
+  * Turns the flash context menu on or off
+  * @keywords flashspecific private
+  * @param Boolean truefalse: boolean value - true for on, false for off.
+  */
+static function showMenu (truefalse) {
+  //TODO Not implemented
+  throw new Error("showMenu not implemented");
+}
+
+
+/**
+  * Sets the system clipboard to the specified string
+  * @keywords flashspecific
+  * 
+  * @param String str: String to set the system clipboard to
+  */
+static function setClipboard (str){
+  //TODO Not implemented
+  throw new Error("setClipboard not implemented");
+}
+
+/**
+  * Determines if the a screen reader is active and the Flash player is focused
+  * @keywords flashspecific
+  * 
+  * @return: True if a screen reader is active and the Flash player is focused
+  */
+static function isAAActive (){
+  //TODO Not implemented
+  throw new Error("isAAActive not implemented");
+  return false;
+}
+
+/**
+  * Updates accessibility data
+  * @keywords flashspecific
+  * @access private
+  */
+static function updateAccessibility () {
+  //TODO Not implemented
+  throw new Error("updateAccessibility not implemented");
+}
+
+
+} // End of LzBrowserKernel
