@@ -213,7 +213,6 @@ dynamic class LzCanvas extends LzView {
         // Set applyArgs ordering kludges.
         this.__LZdelayedSetters = LzView.__LZdelayedSetters;
         this.earlySetters = LzView.earlySetters;
-        this.__LZapplyArgs( args );
 
         if (!('version' in this && this.version)){
             this.version = this.lpsversion;
