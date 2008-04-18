@@ -16,6 +16,7 @@ dynamic public class LzSprite extends Sprite {
   import flash.display.*;
   import flash.events.*;
   import flash.ui.*;
+  import flash.geom.*;
   import mx.controls.Button;
   import flash.net.URLRequest;  
 }#
@@ -40,7 +41,6 @@ dynamic public class LzSprite extends Sprite {
       public var resource:String = null;
       public var source:String = null;
       public var clip:Boolean = false;
-      public var stretches:String = null;
       public var resourcewidth:Number = 0;
       public var resourceheight:Number = 0;
       public var isroot:Boolean = false;
@@ -110,7 +110,9 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function draw():void {
-          if (this.bgcolor != null){
+          if (this.bgcolor == null){
+              this.graphics.clear();
+          } else {
               this.graphics.clear();
               this.graphics.beginFill(this.bgcolor);
               this.graphics.drawRect(0, 0, this.lzwidth, this.lzheight);
@@ -120,8 +122,6 @@ dynamic public class LzSprite extends Sprite {
 
 
       var skiponload = false;
-      var resourceWidth;
-      var resourceHeight;
       var baseurl;
       function  __preloadFrames () { }
 
@@ -159,65 +159,13 @@ dynamic public class LzSprite extends Sprite {
               return;
           }
 
-          this.resourceWidth = res.width;
-          this.resourceHeight = res.height;
-          this.skiponload = true;
+          this.resourcewidth = res.width;
+          this.resourceheight = res.height;
+          this.owner.setTotalFrames (res.frames.length);
 
-          this.owner.resourceload({
-              width:  this.resourceWidth,
-                      height: this.resourceHeight,
-                      sprite: this,
-                      resource: r,
-                      skiponload: true});
-
-          var asset:DisplayObject = null;
-          var prev_resource:DisplayObject;
-
-          // TODO [hqm 2008-01] How do we deal with multiframe embedded resources??
-          if ('assetclass' in res) {
-              var assetclass = res['assetclass'];
-              asset = new assetclass();
-              prev_resource = this.resourceObj;
-              this.resourceObj = asset;
-              addChild(asset);
-              // remove previous asset, and display new one
-              if (prev_resource != null) {
-                  removeChild(prev_resource);
-              }
-              return;
-          }
-
-          var urls = res.frames;
-
-          //Update the view's totalframes
-          this.owner.setTotalFrames (urls.length);
-
-          // It could be a multi-frame resource. Take first frame.
-          var url = urls[0];
-          if (url is Class) {
-              // resource is an embedded asset class
-              asset = new url();
-              prev_resource = this.resourceObj;
-              this.resourceObj = asset;
-              addChild(asset);
-              // remove previous asset, and display new one
-              if (prev_resource != null) {
-                  removeChild(prev_resource);
-              }
-          } else {
-              // resource is a string, so it's an URL
-              this.baseurl = '';
-              if (res.ptype) {
-                  if (res.ptype == 'sr') {
-                      this.baseurl = lzOptions.ServerRoot + '/';
-                  }
-                  //Debug.write('ptype', res.ptype, this.baseurl);
-              }
-
-              this.frames = urls;
-              this.__preloadFrames();
-              this.setSource(url, true);
-          }
+          // instantiate resource at frame 1
+          this.stop(1);
+          updateResourceSize();
       }
 
 
@@ -405,8 +353,9 @@ dynamic public class LzSprite extends Sprite {
           o Sets the sprite to the specified width 
       */
       public function setWidth( v:* ):void {
-          //trace('..sprite setWidth', v);
+          trace('..sprite setWidth', v, this.owner);
           this.lzwidth = v;
+          this.applyStretchResource();
           // TODO [hqm 2008-01] We need to add back in the code here to
           // update the clipping mask size, and resource stretching as well, see swf8 kernel
           if (this.clickregion != null) {
@@ -428,8 +377,9 @@ dynamic public class LzSprite extends Sprite {
           o Sets the sprite to the specified height 
       */
       public function setHeight( v:* ):void {
-          //trace('..sprite setHeight', v);
+          trace('..sprite setHeight', v, this.owner);
           this.lzheight = v;
+          this.applyStretchResource();
           // TODO [hqm 2008-01] We need to add back in the code here to
           // update the clipping mask size, and resource stretching as well, see swf8 kernel
           if (this.clickregion != null) {
@@ -522,55 +472,38 @@ dynamic public class LzSprite extends Sprite {
           // So frames are one based, not zero based? 
           var framenumber = fn - 1;
           if (this.resource == null) {
-              //trace("LzSprite.stop(",framenumber,") resource is null", this.owner, this.owner.name);
               return;
           }
-          var res = LzResourceLibrary[this.resource];
-          var frames = res.frames;
-
-          //trace('stop(', framenumber, ')  this.resource', this.resource, res, res.frames[framenumber]);
-
+          var resinfo = LzResourceLibrary[this.resource];
+          var frames = resinfo.frames;
           var prev_resource  = this.resourceObj;
-          var assetclass = frames[framenumber];
+          var assetclass;
 
+          // single frame resources get an entry in LzResourceLibrary which has
+          // 'assetclass' pointing to the resource Class object.
+          if (resinfo.assetclass is Class) {
+              assetclass = resinfo.assetclass;
+          } else {
+              // Multiframe resources have an array of Class objects in frames[]
+              assetclass = frames[framenumber];
+          }
           if (this.resourceCache == null) {
               this.resourceCache = [];
           }
           var asset:DisplayObject = this.resourceCache[framenumber];
-
           if (asset == null) {
               //trace('CACHE MISS, new ',assetclass);
               asset = new assetclass();
+              asset.scaleX = 1.0
+              asset.scaleY = 1.0;
               this.resourceCache[framenumber] = asset;
           }
-
           this.resourceObj = asset;
           addChild(asset);
           if (prev_resource != null && prev_resource != asset) {
               removeChild(prev_resource);
           }
-          this.applyStretchResourceLoaded();
-      }
-
-      public function applyStretchResourceLoaded():void {
-          if (this.resourceObj) {
-              if (this._setrescwidth) {
-                  this.resourcewidth = this.resourceObj.width;
-                  this.scaleX =  this.lzwidth / this.resourcewidth;
-                  //trace("scaleX = ", this.scaleX, this.lzwidth, '/', this.resourcewidth);
-              } else {
-                  //trace("scaleX = 1.0");
-                  this.scaleX = 1.0;
-              }
-              if (this._setrescheight) {
-                  this.resourceheight = this.resourceObj.height;
-                  this.scaleY =  this.lzheight / this.resourceheight;
-                  //trace("scaleY = ", this.scaleY, this.lzheight, '/', this.resourceheight);
-              } else {
-                  //trace("scaleY = 1.0");
-                  this.scaleY = 1.0;
-              }
-          }
+          this.applyStretchResource();
       }
 
 
@@ -619,11 +552,17 @@ dynamic public class LzSprite extends Sprite {
 
 
       /** stretchResource( String:axes )
-          o Causes the sprite to stretch its resource along axes, either 'width' 'height' or 'both' so the resource is the same size as the sprite along those axes.
-          o If axes is not 'width', 'height' or 'both', the resource is sized to its natural/default size, rather than the sprite's size 
+
+          o Causes the sprite to stretch its resource along axes,
+          either 'width' 'height' or 'both' so the resource is the
+          same size as the sprite along those axes.
+
+          o If axes is not 'width', 'height' or 'both', the resource
+          is sized to its natural/default size, rather than the
+          sprite's size
       */
       public function stretchResource( xory:String ):void {
-          //trace("stretchResource imgLoader="+imgLoader);
+          trace("stretchResource resourceObj=",this.resourceObj);
           if ( xory == null || xory == "x" || xory=="width" || xory=="both" ){
               this._setrescwidth = true;
           }
@@ -635,20 +574,20 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function applyStretchResource():void {
-          if (this.resourceLoaded) {
-              if (this._setrescwidth) {
-                  this.resourcewidth = imgLoader.width;
-                  this.scaleX =  this.lzwidth / this.resourcewidth;
-              } else {
-                  this.scaleX = 1.0;
-              }
-              if (this._setrescheight) {
-                  this.resourceheight = imgLoader.height;
-                  this.scaleY =  this.lzheight / this.resourceheight;
-              } else {
-                  this.scaleY = 1.0;
-              }
-          }
+          var res = this.resourceObj;
+          trace("applyStretchResource resourceObj=", this.resourceObj, this.resourcewidth, this.resourceheight, this._setrescwidth, this._setrescheight, 'lzwidth', this.lzwidth, 'lzheight', this.lzheight);
+          // Don't try to do anything while an image is loading
+          if ( (res == null) || (res is Loader && !this.resourceLoaded)) { return; }
+
+          res.scaleX = 1.0;
+          if (this._setrescwidth) {
+              res.scaleX =  this.lzwidth / this.resourcewidth;
+          } 
+
+          res.scaleY = 1.0;
+          if (this._setrescheight) {
+              res.scaleY =  this.lzheight / this.resourceheight;
+          } 
       }
 
 
@@ -809,7 +748,7 @@ dynamic public class LzSprite extends Sprite {
 
 
       function updateResourceSize () {
-          this.owner.resourceload({width: this.resourceWidth, height: this.resourceHeight, resource: this.resource, skiponload: true});
+          this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
       }
 
 
