@@ -30,9 +30,6 @@ public class LzTextSprite extends LzSprite {
         public static var DEFAULT_SIZE = 11;
 
         var font = null;
-        public var fontsize:String = "11";
-        public var fontstyle:String = "plain";
-        public var fontname:String = "Verdana";
         public var lineheight = 11;
 
         public var colorstring:String = "#000000";
@@ -193,7 +190,7 @@ public class LzTextSprite extends LzSprite {
            o Sets the name of the font
            o Can be a comma-separated list of font names 
         */
-        public function setFontName ( fname:String ):void{
+        override public function setFontName ( fname:String , prop=null):void{
             this.fontname = fname;
             this.__setFormat();
             // force recompute of height if needed
@@ -216,9 +213,11 @@ public class LzTextSprite extends LzSprite {
          * @param Number c: The color for the text -- from 0x0 (black) to 0xFFFFFF (white)
          */
         public override function setColor ( col:* ):void {
-            this.colorstring = "#" + col.toString( 16 );
-            this.__setFormat();
-            this.setText( this.text );
+            if (col) {
+                this.colorstring = "#" + col.toString( 16 );
+                this.__setFormat();
+                this.setText( this.text );
+            }
         }
 
 

@@ -249,13 +249,13 @@ override function setText ( t, force = null){
     if (this.maxlength != null && t.length > this.maxlength){
         t = t.substring(0, this.maxlength);
     }
-    this.sprite.setText(t);
+    (this.sprite cast LzInputTextSprite).setText(t);
     this.text =  t;
     // [todo 2006-06 hqm] when should we send onwidth and onheight events?
 
     // recalculate height
     if (this.height < 9 || this.sizeToHeight) {
-        this.height = this.sprite.getTextfieldHeight();
+        this.height = (this.sprite cast LzInputTextSprite).getTextfieldHeight();
         if (this.onheight.ready) this.onheight.sendEvent();
         if (this.height > 0) {
             this.setHeight(this.height);
@@ -266,7 +266,7 @@ override function setText ( t, force = null){
 }
 
 override function getText ( ){
-    return this.sprite.getText();    
+    return (this.sprite cast LzInputTextSprite).getText();    
 }
 
 /** 

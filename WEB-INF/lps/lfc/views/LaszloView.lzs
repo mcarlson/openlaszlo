@@ -718,7 +718,7 @@ function $lzc$set_xoffset(v) { this.setXOffset(v); }
 function $lzc$set_yoffset(v) { this.setYOffset(v); }
 
 /** @access private */
-var sprite = null;
+var sprite:LzSprite = null;
 
 /** A value of true means that this view is shown. A
   * value of false means that this view is hidden.
@@ -1799,14 +1799,14 @@ function setValign ( valign ){
 }
 
 /** @access private */
-function __LZvalignMiddle () {
+function __LZvalignMiddle (e=null) {
   var vip:LzView = (this.immediateparent cast LzView);
   this.setAttribute( "y" , vip.height /2
                      - this.height /2);
 }
 
 /** @access private */
-function __LZvalignBottom () {
+function __LZvalignBottom (e=null) {
   var vip:LzView = (this.immediateparent cast LzView);
   this.setAttribute( "y" , vip.height
                      - this.height);

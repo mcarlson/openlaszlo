@@ -9,7 +9,7 @@
   * @author Henry Minsky &lt;hminsky@laszlosystems.com&gt;
   */
 
-public class LzSprite extends Sprite {
+dynamic public class LzSprite extends Sprite {
 
       #passthrough (toplevel:true) {  
 
@@ -24,7 +24,7 @@ public class LzSprite extends Sprite {
 
       public var owner:* = null;
 
-      public var bgColor:* = null;
+      public var bgcolor:* = null;
 
       public var lzwidth:* = 0;
       public var lzheight:* = 0;
@@ -44,6 +44,10 @@ public class LzSprite extends Sprite {
       public var resourcewidth:Number = 0;
       public var resourceheight:Number = 0;
       public var isroot:Boolean = false;
+
+      public var fontsize:String = "11";
+      public var fontstyle:String = "plain";
+      public var fontname:String = "Verdana";
 
       var resourceObj:DisplayObject = null;
       // Cache for instantiated assets in a multiframe resource set
@@ -106,9 +110,9 @@ public class LzSprite extends Sprite {
       }
 
       public function draw():void {
-          if (this.bgColor != null){
+          if (this.bgcolor != null){
               this.graphics.clear();
-              this.graphics.beginFill(this.bgColor);
+              this.graphics.beginFill(this.bgcolor);
               this.graphics.drawRect(0, 0, this.lzwidth, this.lzheight);
               this.graphics.endFill();
           }
@@ -468,8 +472,16 @@ public class LzSprite extends Sprite {
           trace('LzSprite.getColor not yet implemented');
       }
 
+      public function getColorTransform (){
+          trace('LzSprite.getColorTransform not yet implemented');
+      }
+
       public function setColorTransform(o=null) {
           trace('LzSrpite.setColorTransform not yet implemented');
+      }
+
+      public function setFontName ( fname:String, prop=null ):void{
+          this.fontname = fname;
       }
 
       /** setBGColor( String/Number:color )
@@ -477,8 +489,8 @@ public class LzSprite extends Sprite {
           o Can be a number (0xff00ff):void or a string ('#ff00ff'):void 
       */
       public function setBGColor( c:* ):void {
-          if (this.bgColor == c) return;
-          this.bgColor = c;
+          if (this.bgcolor == c) return;
+          this.bgcolor = c;
           draw();
       }
 
@@ -496,7 +508,7 @@ public class LzSprite extends Sprite {
           o Plays a multiframe resource starting at the specified framenumber
           o Plays from the current frame if framenumber is null 
       */
-      public function play( framenumber:* ):void {
+      public function play( framenumber:*, rel=null ):void {
           // TODO [hqm 2008-04] what to do about playing movies? 
           stop(framenumber);
       }
@@ -796,6 +808,54 @@ public class LzSprite extends Sprite {
       }
 
 
+      function updateResourceSize () {
+          this.owner.resourceload({width: this.resourceWidth, height: this.resourceHeight, resource: this.resource, skiponload: true});
+      }
+
+
+      function __LZsetClickRegion ( cr ){
+          //STUB
+          trace('click regions are not currently implemented in swf9.');
+      }
+
+      function setCursor ( c ){
+          trace('setCursor not currently implemented in swf9.');
+      }
+
+      function setVolume (v) {
+          trace('setVolume not currently implemented in swf9.');
+      }
+
+      function getVolume () {
+          trace('getVolume not currently implemented in swf9.');
+      }
+
+      function setPan (v) {
+          trace('setPan not currently implemented in swf9.');
+      }
+
+      function getPan () {
+          trace('getPan not currently implemented in swf9.');
+      }
+
+      function setShowHandCursor ( s ){
+          trace('setShowHandCursor not currently implemented in swf9.');
+      }
+
+      function setAAActive(s, mc) {
+      }
+
+      function setAAName(s, mc) {
+      }
+
+      function setAADescription(s, mc) {
+      }
+
+      function setAATabIndex(s, mc) {
+      }
+
+      function setAASilent(s, mc) {
+      }
 
   }#
   }
