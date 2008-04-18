@@ -13,7 +13,7 @@
   <handler name="myevent">
      this.setme = true;
   </handler>
-  <method name="somemethod">
+  <method name="somemethod" args="v">
     // Debug.write("called mynode.somemethod()");
     this.foo = 259;
   </method>
@@ -94,6 +94,6 @@ testEventsSuite.addTest( test_events_delegates );
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
