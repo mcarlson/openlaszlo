@@ -1,4 +1,4 @@
-<canvas width="1800" debug="true">
+<canvas width="1800">
   <include href="lztest/lztestmanager.lzx" /> 
 
 <!--
@@ -99,7 +99,7 @@ var suite = new LzTestSuite("LaszloLayout/simplelayout Test Suite");
 // test1:  Test setup with no layouts
 suite.test1 = function() {
   LzTestManager.assertEquals (00, view1.x, "view1.x failure");
-  LzTestManager.assertEquals (10, view1.y, "view1.y failure");_
+  LzTestManager.assertEquals (10, view1.y, "view1.y failure");
   LzTestManager.assertEquals (0, view1.v1.x, "view1.v1.x failure");
   LzTestManager.assertEquals (0, view1.v1.y, "view1.v1.y failure");
   LzTestManager.assertEquals (0, view1.v2.x, "view1.v2.x failure");
@@ -121,7 +121,7 @@ suite.test1 = function() {
 // test2:  simple layout x-axis
 suite.test2 = function() {
   LzTestManager.assertEquals (215, view2.x, "view2.x failure");
-  LzTestManager.assertEquals (10, view2.y, "view2.y failure");_
+  LzTestManager.assertEquals (10, view2.y, "view2.y failure");
   LzTestManager.assertEquals (0, view2.v1.x, "view2.v1.x failure");
   LzTestManager.assertEquals (0, view2.v1.y, "view2.v1.y failure");
   LzTestManager.assertEquals (50, view2.v2.x, "view2.v2.x failure");
@@ -143,7 +143,7 @@ suite.test2 = function() {
 // test3:  simple layout y-axis
 suite.test3 = function() {
   LzTestManager.assertEquals (430, view3.x, "view3.x failure");
-  LzTestManager.assertEquals (10, view3.y, "view3.y failure");_
+  LzTestManager.assertEquals (10, view3.y, "view3.y failure");
   LzTestManager.assertEquals (0, view3.v1.x, "view3.v1.x failure");
   LzTestManager.assertEquals (0, view3.v1.y, "view3.v1.y failure");
   LzTestManager.assertEquals (0, view3.v2.x, "view3.v2.x failure");
@@ -165,7 +165,7 @@ suite.test3 = function() {
 // test4:  simple layout x-axis, with spacing
 suite.test4 = function() {
   LzTestManager.assertEquals (645, view4.x, "view4.x failure");
-  LzTestManager.assertEquals (10, view4.y, "view4.y failure");_
+  LzTestManager.assertEquals (10, view4.y, "view4.y failure");
   LzTestManager.assertEquals (0, view4.v1.x, "view4.v1.x failure");
   LzTestManager.assertEquals (0, view4.v1.y, "view4.v1.y failure");
   LzTestManager.assertEquals (55, view4.v2.x, "view4.v2.x failure");
@@ -188,7 +188,7 @@ suite.test4 = function() {
 // test5:  toggle axis
 suite.test5 = function() {
   LzTestManager.assertEquals (860, view5.x, "view5.x failure");
-  LzTestManager.assertEquals (10, view5.y, "view5.y failure");_
+  LzTestManager.assertEquals (10, view5.y, "view5.y failure");
   LzTestManager.assertEquals (0, view5.v1.x, "view5.v1.x failure");
   LzTestManager.assertEquals (0, view5.v1.y, "view5.v1.y failure");
   LzTestManager.assertEquals (60, view5.v2.x, "view5.v2.x failure");
@@ -208,7 +208,7 @@ suite.test5 = function() {
 //  LzTestManager.assertEquals (1, view5.n_onaxis, "view5.n_onaxis failure");
 
   LzTestManager.assertEquals (860, view5.x, "view5.x failure");
-  LzTestManager.assertEquals (10, view5.y, "view5.y failure");_
+  LzTestManager.assertEquals (10, view5.y, "view5.y failure");
   LzTestManager.assertEquals (0, view5.v1.x, "view5.v1.x failure");
   LzTestManager.assertEquals (0, view5.v1.y, "view5.v1.y failure");
   LzTestManager.assertEquals (60, view5.v2.x, "view5.v2.x failure");
@@ -237,7 +237,7 @@ suite.test6 = function() {
 
   // Test ignore
   LzTestManager.assertEquals (645, view4.x, "view4.x failure");
-  LzTestManager.assertEquals (10, view4.y, "view4.y failure");_
+  LzTestManager.assertEquals (10, view4.y, "view4.y failure");
   LzTestManager.assertEquals (0, view4.v1.x, "view4.v1.x failure");
   LzTestManager.assertEquals (0, view4.v1.y, "view4.v1.y failure");
   LzTestManager.assertEquals (55, view4.v2.x, "view4.v2.x failure");
@@ -312,7 +312,7 @@ suite.test6 = function() {
 
   // Test removal
   LzTestManager.assertEquals (1075, view6.x, "view6.x failure");
-  LzTestManager.assertEquals (10, view6.y, "view6.y failure");_
+  LzTestManager.assertEquals (10, view6.y, "view6.y failure");
   LzTestManager.assertEquals (0, view6.v1.x, "view6.v1.x failure");
   LzTestManager.assertEquals (0, view6.v1.y, "view6.v1.y failure");
   LzTestManager.assertEquals (55, view6.v2.x, "view6.v2.x failure");
@@ -369,7 +369,7 @@ suite.test6 = function() {
 // test7:  Test other simplelayout
 suite.test7 = function() {
   LzTestManager.assertEquals (1290, view7.x, "view7.x failure");
-  LzTestManager.assertEquals (10, view7.y, "view7.y failure");_
+  LzTestManager.assertEquals (10, view7.y, "view7.y failure");
   LzTestManager.assertEquals (0, view7.v1.x, "view7.v1.x failure");
   LzTestManager.assertEquals (0, view7.v1.y, "view7.v1.y failure");
   LzTestManager.assertEquals (60, view7.v2.x, "view7.v2.x failure");
@@ -384,7 +384,7 @@ suite.test7 = function() {
   LzTestManager.assertEquals (5, view7.sl1.inset, "view7.sl1.inset failure");
 
   LzTestManager.assertEquals (1290, view7.x, "view7.x failure");
-  LzTestManager.assertEquals (10, view7.y, "view7.y failure");_
+  LzTestManager.assertEquals (10, view7.y, "view7.y failure");
   LzTestManager.assertEquals (5, view7.v1.x, "view7.v1.x failure");
   LzTestManager.assertEquals (0, view7.v1.y, "view7.v1.y failure");
   LzTestManager.assertEquals (65, view7.v2.x, "view7.v2.x failure");
@@ -398,7 +398,7 @@ suite.test7 = function() {
 // test8:  Test 2 simplelayout
 suite.test8 = function() {
   LzTestManager.assertEquals (1505, view8.x, "view8.x failure");
-  LzTestManager.assertEquals (10, view8.y, "view8.y failure");_
+  LzTestManager.assertEquals (10, view8.y, "view8.y failure");
   LzTestManager.assertEquals (0, view8.v1.x, "view8.v1.x failure");
   LzTestManager.assertEquals (0, view8.v1.y, "view8.v1.y failure");
   LzTestManager.assertEquals (60, view8.v2.x, "view8.v2.x failure");
