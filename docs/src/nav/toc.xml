@@ -149,8 +149,7 @@
     <category title="Scripting">
         <item title="handler" href="tag.handler.html" />
         <item title="event" href="tag.event.html" />        
-        <item title="LzBrowser (swf)" href="LzBrowser+swf7+swf8+swf9.html" />
-        <item title="LzBrowser (dhtml)" href="LzBrowser+dhtml.html" />        
+        <item title="LzBrowser" href="LzBrowser.html" />
         <item title="method" href="tag.method.html" />
         <item title="node (LzNode)" href="LzNode.html" />
         <item title="script" href="LzScript.html" />
