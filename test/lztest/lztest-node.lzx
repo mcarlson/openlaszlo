@@ -42,8 +42,8 @@ suiteTestNode.testParent = function() {
 
 suiteTestNode.testChildOf = function() {
     var sn = node1.subnodes;
-    LzTestManager.assertTrue(sn[0].childOf(n1));
-    LzTestManager.assertTrue(sn[1].childOf(n1));
+    LzTestManager.assertTrue(sn[0].childOf(n1), 'sn[0].childOf(n1)');
+    LzTestManager.assertTrue(sn[1].childOf(n1), 'sn[0].childOf(n1)');
 }
       
 suiteTestNode.testImmediateParent = function() {
@@ -77,7 +77,7 @@ suiteTestNode.addTest(suiteTestNode.testNodeLevel);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
