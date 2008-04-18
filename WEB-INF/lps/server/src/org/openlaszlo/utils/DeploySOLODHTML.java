@@ -227,6 +227,7 @@ public class DeploySOLODHTML {
         // The absolute path to the application directory we are packaging
         // e.g., demos/amazon
         File appdir = sourcefile.getParentFile();
+        if (appdir ==null) { appdir = new File("."); }
         appdir = appdir.getCanonicalFile();
 
         // Keep track of which files we have output to the zip archive, so we don't
