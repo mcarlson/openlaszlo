@@ -24,7 +24,7 @@ suiteJoe.testSameness = function () {
 
 
 suiteJoe.testTasty = function( meal ) {
-    LzTestManager.assertTrue( meal == "tamales" ); 
+    LzTestManager.assertTrue( meal == "tamales", 'meal == "tamales"' ); 
 }
 
 suiteJoe.addTest( function() {
@@ -47,7 +47,7 @@ suiteJoe.addTest( function() {
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
