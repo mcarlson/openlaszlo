@@ -1,4 +1,4 @@
-<canvas debug="true">
+<canvas>
   <font name="mono" src="../../lps/fonts/mono-7-bold-regular-s.ttf"/>
 
   <include href="lztest/lztestmanager.lzx" /> 
@@ -225,11 +225,11 @@ suite.test3 = function() {
   text3.addText ("2");
   LzTestManager.assertEquals (w, text3.getWidth(), "text3.getTextWidth() failure");
   LzTestManager.assertEquals (h, text3.getHeight(), "text3.getTextHeight() failure");
-  LzTestManager.assertTrue (text3.getTextWidth() != text3.getWidth());
+  LzTestManager.assertTrue (text3.getTextWidth() != text3.getWidth(), "text3.getTextWidth() != text3.getWidth()");
 
   text3.setResize (true);
   text3.addText ("3");
-  LzTestManager.assertTrue (text3.getTextWidth() == text3.getWidth());
+  LzTestManager.assertTrue (text3.getTextWidth() == text3.getWidth(), "text3.getTextWidth() == text3.getWidth()");
 
   // clearText ()
   LzTestManager.assertEquals ('123', text3.getText(),  "text3.getText() failure");  
@@ -495,7 +495,7 @@ suite.addTest(suite.test9);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
