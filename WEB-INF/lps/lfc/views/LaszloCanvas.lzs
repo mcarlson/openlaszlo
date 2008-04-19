@@ -30,6 +30,8 @@
   * -- e.g. before a view displays, or before a layout affects its
   * subviews.
   *
+  * <event>onafterinit</event> This event is sent after oninit
+  *
   * <p>In addition to any fields documented in the section at the end, these fields are also available:
   * <ul>
   * <li><attribute>anm_multipler</attribute> A <type>Number</type> specifying the animation speed.</li>
@@ -294,6 +296,9 @@ var onpercentcreated = LzDeclaredEvent;
 /** Sent whenever the mouse moves 
   * @lzxtype event */
 var onmousemove = LzDeclaredEvent;
+/** Sent after oninit
+  * @lzxtype event */
+var onafterinit = LzDeclaredEvent;
 
 /** version number of the LPS that generated this application (for .lzo files,
   * this is the version number of the server that generated the optimized file, not the one 
@@ -551,6 +556,7 @@ override function __LZcallInit ( an = null ){
     // Canvas-only: This is so the canvas sprite knows when to show its children
     this.sprite.init(true);
     if (this.oninit.ready) this.oninit.sendEvent( this );
+    if (this.onafterinit.ready) this.onafterinit.sendEvent( this );
     if (this.datapath && this.datapath.__LZApplyDataOnInit) {
         this.datapath.__LZApplyDataOnInit();
     }

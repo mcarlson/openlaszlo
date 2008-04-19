@@ -6,8 +6,6 @@
 -->
 
 <script when="immediate"><![CDATA[
-
-
 dynamic class LzTestSuite {
 public var name = "Default Name";
 public var curtest = 0;
@@ -60,7 +58,7 @@ public var resultstring = "";
 public var startTestsDelegate;
 
 function LzTestManagerClass () {
-  this.startTestsDelegate = new LzDelegate(this, "startTests", canvas, "oninit");
+  this.startTestsDelegate = new LzDelegate(this, "startTests", canvas, "onafterinit");
 }
 
 function startTests ( args ) {
