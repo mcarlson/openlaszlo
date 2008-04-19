@@ -129,7 +129,7 @@ override function loadURL ( url, target=null, features=null )
 { LzBrowserKernel.loadURL (url, target, features);}
 
 override function loadJS ( js, target=null )
-{ LzBrowserKernel.loadJS (js, target)}
+{ LzBrowserKernel.loadJS.apply (null, arguments);}
 
 // apply() is used to make sure all optional arguments are passed
 override function callJS ( js, callback=null, args=null )
