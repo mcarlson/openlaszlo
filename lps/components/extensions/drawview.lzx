@@ -252,13 +252,234 @@
 
   </interface> <!-- drawview -->
 
+  <!-- these methods are shared across runtimes -->
+  <script when="immediate"><![CDATA[
+    mixin DrawviewShared {
+        function arc(x, y, radius, startAngle, endAngle, clockwise) {
+            var sx = x + radius*Math.cos(startAngle);
+            var sy = y + radius*Math.sin(2 * Math.PI - startAngle);
+            startAngle *= 180/Math.PI;
+            endAngle *= 180/Math.PI;
+            var arc = clockwise == true ? ((endAngle - startAngle) - 360): endAngle - startAngle;
+            //move pen to the point along the circle at startAngle
+            this.moveTo(sx, sy);
+            //retain the center of the arc as the center point passed in.
+            return this._drawArc(x, y, radius, arc, startAngle);
+        }
+
+        function rect(x, y, w, h, cornerRadius) {
+            if (arguments.length<4) {
+                return;
+            }
+            // if the user has defined cornerRadius our task is a bit more complex. :)
+            if (cornerRadius>0) {
+                // init vars
+                var theta, angle, cx, cy, px, py;
+                // make sure that w + h are larger than 2*cornerRadius
+                if (cornerRadius>Math.min(w, h)/2) {
+                    cornerRadius = Math.min(w, h)/2;
+                }
+                // theta = 45 degrees in radians
+                theta = Math.PI/4;
+                // draw top line
+                this.moveTo(x+cornerRadius, y);
+                this.lineTo(x+w-cornerRadius, y);
+                //angle is currently 90 degrees
+                angle = -Math.PI/2;
+                // draw tr corner in two parts
+                cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                this.quadraticCurveTo(cx, cy, px, py);
+                angle += theta;
+                cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                this.quadraticCurveTo(cx, cy, px, py);
+                // draw right line
+                this.lineTo(x+w, y+h-cornerRadius);
+                // draw br corner
+                angle += theta;
+                cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                this.quadraticCurveTo(cx, cy, px, py);
+                angle += theta;
+                cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                this.quadraticCurveTo(cx, cy, px, py);
+                // draw bottom line
+                this.lineTo(x+cornerRadius, y+h);
+                // draw bl corner
+                angle += theta;
+                cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                this.quadraticCurveTo(cx, cy, px, py);
+                angle += theta;
+                cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                this.quadraticCurveTo(cx, cy, px, py);
+                // draw left line
+                this.lineTo(x, y+cornerRadius);
+                // draw tl corner
+                angle += theta;
+                cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                this.quadraticCurveTo(cx, cy, px, py);
+                angle += theta;
+                cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                this.quadraticCurveTo(cx, cy, px, py);
+            } else {
+                // cornerRadius was not defined or = 0. This makes it easy.
+                this.moveTo(x, y);
+                this.lineTo(x+w, y);
+                this.lineTo(x+w, y+h);
+                this.lineTo(x, y+h);
+                this.lineTo(x, y);
+            }
+        }
+
+        function oval(x, y, radius, yRadius) {
+            if (arguments.length<3) {
+                return;
+            }
+            // init variables
+            var theta, xrCtrl, yrCtrl, angle, angleMid, px, py, cx, cy;
+            // if only yRadius is undefined, yRadius = radius
+            if (yRadius == undefined) {
+                yRadius = radius;
+            }
+            var s = (radius < 20 && yRadius < 20) ? 5 : 8;
+            // covert to radians for our calculations
+            theta = Math.PI/ (s / 2);
+            // calculate the distance for the control point
+            xrCtrl = radius/Math.cos(theta/2);
+            yrCtrl = yRadius/Math.cos(theta/2);
+            // start on the right side of the circle
+            angle = 0;
+            this.moveTo(x+radius, y);
+            // this loop draws the circle in n segments
+            for (var i = 0; i<s; i++) {
+                // increment our angles
+                angle += theta;
+                angleMid = angle-(theta/2);
+                // calculate our control point
+                cx = x+Math.cos(angleMid)*xrCtrl;
+                cy = y+Math.sin(angleMid)*yrCtrl;
+                // calculate our end point
+                px = x+Math.cos(angle)*radius;
+                py = y+Math.sin(angle)*yRadius;
+                // draw the circle segment
+                this.quadraticCurveTo(cx, cy, px, py);
+            }
+            return {x:px, y:py};
+        }
+
+        function _drawArc(x, y, radius, arc, startAngle, yRadius) {
+            if (arguments.length<5) {
+                return;
+            }
+            // if yRadius is undefined, yRadius = radius
+            if (yRadius == undefined) {
+                yRadius = radius;
+            }
+            // Init vars
+            var segAngle, theta, angle, angleMid, segs,bx, by, cx, cy;
+            // no sense in drawing more than is needed :)
+            if (Math.abs(arc)>360) {
+                arc = 360;
+            }
+            // Flash uses 8 segments per circle, to match that, we draw in a maximum
+            // of 45 degree segments. First we calculate how many segments are needed
+            // for our arc.
+            segs = Math.ceil(Math.abs(arc)/45);
+            // Now calculate the sweep of each segment
+            segAngle = arc/segs;
+            // The math requires radians rather than degrees. To convert from degrees
+            // use the formula (degrees/180)*Math.PI to get radians. 
+            theta = -(segAngle/180)*Math.PI;
+            // convert angle startAngle to radians
+            angle = -(startAngle/180)*Math.PI;
+
+            // if our arc is larger than 45 degrees, draw as 45 degree segments
+            // so that we match Flash's native circle routines.
+            if (segs>0) {
+                // Loop for drawing arc segments
+                for (var i = 0; i<segs; i++) {
+                    // increment our angle
+                    angle += theta;
+                    // find the angle halfway between the last angle and the new
+                    angleMid = angle-(theta/2);
+                    // calculate our end point
+                    bx = x+Math.cos(angle)*radius;
+                    by = y+Math.sin(angle)*yRadius;
+                    // calculate our control point
+                    cx = x+Math.cos(angleMid)*(radius/Math.cos(theta/2));
+                    cy = y+Math.sin(angleMid)*(yRadius/Math.cos(theta/2));
+                    // draw the arc segment
+                    this.quadraticCurveTo(cx, cy, bx, by);
+                }
+            }
+            // In the native draw methods the user must specify the end point
+            // which means that they always know where they are ending at, but
+            // here the endpoint is unknown unless the user calculates it on their 
+            // own. Lets be nice and let save them the hassle by passing it back. 
+            return {x:bx, y:by};
+        }
+
+        function distance(p0, p1) {
+            // These would be useful generally, but put them inside the
+            // function so they don't pollute the general namespace.
+            var dx = p1.x - p0.x;
+            var dy = p1.y - p0.y;
+            return Math.sqrt(dx*dx+dy*dy);
+        }
+
+        function intersection(p0, p1, p2, p3) {
+                // returns null if they're collinear and non-identical
+                // returns -1 if they're collinear and identical
+                var u = (p3.x-p2.x)*(p0.y-p2.y) - (p3.y-p2.y)*(p0.x-p2.x);
+                var d = (p3.y-p2.y)*(p1.x-p0.x) - (p3.x-p2.x)*(p1.y-p0.y);
+                if (!d) {
+                if (!u) {
+                    return -1;//identical
+                } else {
+                    return null;//non-identical
+                }
+                }
+                u /= d;
+                return {x: p0.x + (p1.x-p0.x) * u,
+                        y: p0.y + (p1.y-p0.y) * u};
+        }
+
+        function midpoint(p0, p1) {
+            return {x: (p0.x+p1.x)/2, y: (p0.y+p1.y)/2};
+        }
+    }
+  ]]></script>
+
+  <!-- runtime-specific implementations -->
   <switch>
     <when runtime="dhtml">
       <script when="immediate"><![CDATA[
       
         // Classes that implement an interface must obey the LZX
         // tag->class mapping convention
-        class $lzc$class_drawview extends LzView {
+        class $lzc$class_drawview extends LzView with DrawviewShared {
             // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
@@ -559,7 +780,7 @@
 
         // Classes that implement an interface must obey the LZX
         // tag->class mapping convention
-        class $lzc$class_drawview extends LzView {
+        class $lzc$class_drawview extends LzView with DrawviewShared {
             // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
@@ -571,13 +792,21 @@
             var fillStyle = '#000000';
             var context = null;
             var cachebitmap = true;
+            var __path = [];
+            var __pathisopen = false;
             var __MOVETO_OP = 0;
             var __LINETO_OP = 1;
             var __QCURVE_OP = 2;
             
             var oncontext = LzDeclaredEvent;
     
-            function construct(parent,args) {
+            function $lzc$class_drawview(parent, attrs, children, async) {
+                if ($as2) {
+                    super(parent, attrs, children, async);
+                }
+            }
+
+            override function construct(parent,args) {
                 super.construct(parent, args);
                 this.context = this.getMCRef();
                 this.context.cacheAsBitmap = args['cachebitmap'] != null ? args['cachebitmap'] : this.cachebitmap;
@@ -586,7 +815,7 @@
                 new LzDelegate( this , "_oninit" , this , "oninit" );
             }
     
-            function _oninit() {
+            function _oninit(v) {
                 this.oncontext.sendEvent();
             }
 
@@ -786,6 +1015,7 @@
                 this.context._visible = this.visible;
             }
     
+            if ($as2) {    
             function clip () {
                 if (this.sprite.mask)
                     this.sprite.removeMask(); // Remove any mask created by clip="true"
@@ -794,6 +1024,7 @@
                 }
                 //Debug.write('mask', this.__LZmaskClip, this.masked, this.__LZmovieClipRef);
                 this.fill(this.sprite.__LZmaskClip);
+            }
             }
     
             function stroke() {
@@ -852,7 +1083,8 @@
                 //Debug.write('createRadialGradient', {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r});
                 return g;
             }
-        }
+        } // End of drawview
+        ConstructorMap[$lzc$class_drawview.tagname] = $lzc$class_drawview;
 
         /**
           * <p>
@@ -865,262 +1097,49 @@
           * An LzCanvasGradient is returned by drawview.createRadialGradient or  
           * drawview.createRadialGradient.
           */
-        function LzCanvasGradient(c, m, isradial) {
-            this._context = c;
-            this._m = m;
-            this._t = isradial ? 'radial' : 'linear';
-            this._c = [];
-            this._a = [];
-            this._o = [];
-        }
-
-
-        /**
-          * Adds a new stop to a gradient. gradients are rendered such that at the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used.  globalAlpha is stored for each gradient step added.
-          * @param Number o: The offset this stop used for placement in the gradient.  Gradients are rendered such that for the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used and all colors between those offsets are blended.  Must be less than 0 or greater than 1.
-          * @param Number c: The color to be used at this color.  A hexadecimal value, e.g. 0xffffff
-          */
-        LzCanvasGradient.prototype.addColorStop = function(o, c) {
-            this._o[this._o.length] = o * 255;
-            var ccache = lz.drawview._colorcache;
-            var cstopColor = ccache[c];
-            if (cstopColor == null) {
-                cstopColor = LzUtils.hextoint(c);
-                ccache[c] = cstopColor;
+        class LzCanvasGradient {
+            var _context = null;
+            var _m = null;
+            var _t = null;
+            var _c = [];
+            var _a = [];
+            var _o = [];
+            
+            function LzCanvasGradient(c, m, isradial) {
+                this._context = c;
+                this._m = m;
+                this._t = isradial ? 'radial' : 'linear';
+                this._c = [];
+                this._a = [];
+                this._o = [];
             }
-            this._c[this._c.length] = cstopColor;
-            this._a[this._a.length] = this._context.globalAlpha * 100;
-        }
 
-        /**
-          * @access private
-          */
-        LzCanvasGradient.prototype.__applyTo = function(m) {
-            //Debug.write('LzCanvasGradient.__applyTo', this._t, this._c, this._a, this._o, this._m);
-            m.beginGradientFill(this._t, this._c, this._a, this._o, this._m)
+            /**
+            * Adds a new stop to a gradient. gradients are rendered such that at the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used.  globalAlpha is stored for each gradient step added.
+            * @param Number o: The offset this stop used for placement in the gradient.  Gradients are rendered such that for the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used and all colors between those offsets are blended.  Must be less than 0 or greater than 1.
+            * @param Number c: The color to be used at this color.  A hexadecimal value, e.g. 0xffffff
+            */
+            function addColorStop(o, c) {
+                this._o[this._o.length] = o * 255;
+                var ccache = lz.drawview._colorcache;
+                var cstopColor = ccache[c];
+                if (cstopColor == null) {
+                    cstopColor = LzUtils.hextoint(c);
+                    ccache[c] = cstopColor;
+                }
+                this._c[this._c.length] = cstopColor;
+                this._a[this._a.length] = this._context.globalAlpha * 100;
+            }
+
+            /**
+            * @access private
+            */
+            function __applyTo(m) {
+                //Debug.write('LzCanvasGradient.__applyTo', this._t, this._c, this._a, this._o, this._m);
+                m.beginGradientFill(this._t, this._c, this._a, this._o, this._m)
+            }
         }
       ]]></script>
     </otherwise>
   </switch>
-  
-  <!-- these methods are implemented the same in all runtimes -->
-  <script when="immediate"><![CDATA[
-  
-    lz.drawview.addProperty('arc', function (x, y, radius, startAngle, endAngle, clockwise) {
-        var sx = x + radius*Math.cos(startAngle);
-        var sy = y + radius*Math.sin(2 * Math.PI - startAngle);
-        startAngle *= 180/Math.PI;
-        endAngle *= 180/Math.PI;
-        var arc = clockwise == true ? ((endAngle - startAngle) - 360): endAngle - startAngle;
-        //move pen to the point along the circle at startAngle
-        this.moveTo(sx, sy);
-        //retain the center of the arc as the center point passed in.
-        return this._drawArc(x, y, radius, arc, startAngle);
-    });
-
-    lz.drawview.addProperty('rect', function (x, y, w, h, cornerRadius) {
-        if (arguments.length<4) {
-            return;
-        }
-        // if the user has defined cornerRadius our task is a bit more complex. :)
-        if (cornerRadius>0) {
-            // init vars
-            var theta, angle, cx, cy, px, py;
-            // make sure that w + h are larger than 2*cornerRadius
-            if (cornerRadius>Math.min(w, h)/2) {
-                cornerRadius = Math.min(w, h)/2;
-            }
-            // theta = 45 degrees in radians
-            theta = Math.PI/4;
-            // draw top line
-            this.moveTo(x+cornerRadius, y);
-            this.lineTo(x+w-cornerRadius, y);
-            //angle is currently 90 degrees
-            angle = -Math.PI/2;
-            // draw tr corner in two parts
-            cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-            py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-            this.quadraticCurveTo(cx, cy, px, py);
-            angle += theta;
-            cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-            py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-            this.quadraticCurveTo(cx, cy, px, py);
-            // draw right line
-            this.lineTo(x+w, y+h-cornerRadius);
-            // draw br corner
-            angle += theta;
-            cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-            py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-            this.quadraticCurveTo(cx, cy, px, py);
-            angle += theta;
-            cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-            py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-            this.quadraticCurveTo(cx, cy, px, py);
-            // draw bottom line
-            this.lineTo(x+cornerRadius, y+h);
-            // draw bl corner
-            angle += theta;
-            cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-            py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-            this.quadraticCurveTo(cx, cy, px, py);
-            angle += theta;
-            cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-            py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-            this.quadraticCurveTo(cx, cy, px, py);
-            // draw left line
-            this.lineTo(x, y+cornerRadius);
-            // draw tl corner
-            angle += theta;
-            cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-            py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-            this.quadraticCurveTo(cx, cy, px, py);
-            angle += theta;
-            cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-            px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-            py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-            this.quadraticCurveTo(cx, cy, px, py);
-        } else {
-            // cornerRadius was not defined or = 0. This makes it easy.
-            this.moveTo(x, y);
-            this.lineTo(x+w, y);
-            this.lineTo(x+w, y+h);
-            this.lineTo(x, y+h);
-            this.lineTo(x, y);
-        }
-    });
-
-    lz.drawview.addProperty('oval', function (x, y, radius, yRadius) {
-        if (arguments.length<3) {
-            return;
-        }
-        // init variables
-        var theta, xrCtrl, yrCtrl, angle, angleMid, px, py, cx, cy;
-        // if only yRadius is undefined, yRadius = radius
-        if (yRadius == undefined) {
-            yRadius = radius;
-        }
-        var s = (radius < 20 && yRadius < 20) ? 5 : 8;
-        // covert to radians for our calculations
-        theta = Math.PI/ (s / 2);
-        // calculate the distance for the control point
-        xrCtrl = radius/Math.cos(theta/2);
-        yrCtrl = yRadius/Math.cos(theta/2);
-        // start on the right side of the circle
-        angle = 0;
-        this.moveTo(x+radius, y);
-        // this loop draws the circle in n segments
-        for (var i = 0; i<s; i++) {
-            // increment our angles
-            angle += theta;
-            angleMid = angle-(theta/2);
-            // calculate our control point
-            cx = x+Math.cos(angleMid)*xrCtrl;
-            cy = y+Math.sin(angleMid)*yrCtrl;
-            // calculate our end point
-            px = x+Math.cos(angle)*radius;
-            py = y+Math.sin(angle)*yRadius;
-            // draw the circle segment
-            this.quadraticCurveTo(cx, cy, px, py);
-        }
-        return {x:px, y:py};
-    });
-
-    lz.drawview.addProperty('_drawArc', function (x, y, radius, arc, startAngle, yRadius) {
-        if (arguments.length<5) {
-            return;
-        }
-        // if yRadius is undefined, yRadius = radius
-        if (yRadius == undefined) {
-            yRadius = radius;
-        }
-        // Init vars
-        var segAngle, theta, angle, angleMid, segs,bx, by, cx, cy;
-        // no sense in drawing more than is needed :)
-        if (Math.abs(arc)>360) {
-            arc = 360;
-        }
-        // Flash uses 8 segments per circle, to match that, we draw in a maximum
-        // of 45 degree segments. First we calculate how many segments are needed
-        // for our arc.
-        segs = Math.ceil(Math.abs(arc)/45);
-        // Now calculate the sweep of each segment
-        segAngle = arc/segs;
-        // The math requires radians rather than degrees. To convert from degrees
-        // use the formula (degrees/180)*Math.PI to get radians. 
-        theta = -(segAngle/180)*Math.PI;
-        // convert angle startAngle to radians
-        angle = -(startAngle/180)*Math.PI;
-
-        // if our arc is larger than 45 degrees, draw as 45 degree segments
-        // so that we match Flash's native circle routines.
-        if (segs>0) {
-            // Loop for drawing arc segments
-            for (var i = 0; i<segs; i++) {
-                // increment our angle
-                angle += theta;
-                // find the angle halfway between the last angle and the new
-                angleMid = angle-(theta/2);
-                // calculate our end point
-                bx = x+Math.cos(angle)*radius;
-                by = y+Math.sin(angle)*yRadius;
-                // calculate our control point
-                cx = x+Math.cos(angleMid)*(radius/Math.cos(theta/2));
-                cy = y+Math.sin(angleMid)*(yRadius/Math.cos(theta/2));
-                // draw the arc segment
-                this.quadraticCurveTo(cx, cy, bx, by);
-            }
-        }
-        // In the native draw methods the user must specify the end point
-        // which means that they always know where they are ending at, but
-        // here the endpoint is unknown unless the user calculates it on their 
-        // own. Lets be nice and let save them the hassle by passing it back. 
-        return {x:bx, y:by};
-    });
-
-    lz.drawview.addProperty('distance', function (p0, p1) {
-        // These would be useful generally, but put them inside the
-        // function so they don't pollute the general namespace.
-        var dx = p1.x - p0.x;
-        var dy = p1.y - p0.y;
-        return Math.sqrt(dx*dx+dy*dy);
-    });
-
-    lz.drawview.addProperty('intersection', function (p0, p1, p2, p3) {
-          // returns null if they're collinear and non-identical
-          // returns -1 if they're collinear and identical
-          var u = (p3.x-p2.x)*(p0.y-p2.y) - (p3.y-p2.y)*(p0.x-p2.x);
-          var d = (p3.y-p2.y)*(p1.x-p0.x) - (p3.x-p2.x)*(p1.y-p0.y);
-          if (!d) {
-            if (!u) {
-              return -1;//identical
-            } else {
-              return null;//non-identical
-            }
-          }
-          u /= d;
-          return {x: p0.x + (p1.x-p0.x) * u,
-                  y: p0.y + (p1.y-p0.y) * u};
-    });
-
-    lz.drawview.addProperty('midpoint', function (p0, p1) {
-        return {x: (p0.x+p1.x)/2, y: (p0.y+p1.y)/2};
-    });
-    
-  ]]></script>
-  
 </library>
