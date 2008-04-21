@@ -814,9 +814,17 @@ function __LZdiffArrays ( a , b ){
   * @access private
   */
 override function updateData () {
-    var l = this.clones.length; 
-    for ( var i = 0; i < l; i++ ){
-        this.clones[ i ].datapath.updateData( );
+    this.__LZupdateData();
+}
+
+/**
+  * @access private
+  */
+override function __LZupdateData (recursive:Boolean = false) :void {
+    var cls:Array = this.clones;
+    var len:int = cls.length; 
+    for (var i:int = 0; i < len; i++) {
+        cls[ i ].datapath.updateData();
     }
 }
 

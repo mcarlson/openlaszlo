@@ -76,23 +76,33 @@ override function setDataContext ( dc, implicit = null ){
     super.setDataContext( dc || this.pathparent, implicit );
 }
 
+/**
+  * @access private
+  */
+override function updateData() {
+    this.__LZupdateData();
+}
 
-
-function updateData (){
+/**
+  * @devnote: the function signature must match LzDatapath#__LZupdateData(Boolean)
+  * @access private
+  */
+function __LZupdateData (recursive:Boolean = false) :void {
     //this code is largely copied from LzDatapath, but it's slightly different
-    var dat = this.node[ this.setAttr ];
-    if ( this.data == dat ) return;
     var ppdo = this.parsedPath.operator;
-    if ( ppdo != null){
-        if ( ppdo =="nodeName" ){
-            this.setNodeName( dat );
-        } else  if ( ppdo =="__LZgetText" ){
-            this.setNodeText( dat );
-        } else  if ( ppdo =="attributes" ){
-            this.p.setAttrs( dat );
-        } else {
-            //remove the "attributes." from the operator
-            this.setNodeAttribute( ppdo.substring( 11 ) , dat );
+    if (ppdo != null) {
+        var dat = this.node[ this.setAttr ];
+        if (this.data != dat) {
+            if (ppdo == "nodeName") {
+                this.setNodeName( dat );
+            } else if (ppdo == "__LZgetText") {
+                this.setNodeText( dat );
+            } else if (ppdo == "attributes") {
+                this.p.setAttrs( dat );
+            } else {
+                //remove the "attributes." from the operator
+                this.setNodeAttribute( ppdo.substring( 11 ) , dat );
+            }
         }
     }
 }

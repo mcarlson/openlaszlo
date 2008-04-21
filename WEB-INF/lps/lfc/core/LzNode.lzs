@@ -1654,8 +1654,6 @@ function setDatapath ( dp ) {
     if (this.ondata.ready) this.ondata.sendEvent(data);
   }
 
-
-// hack to create an 'abstract' method to hang the doc off of
 /**
   * Called on any node that is declared with a datapath that matches a
   * terminal selector, such as <code>text()</code> or
@@ -1665,6 +1663,32 @@ function setDatapath ( dp ) {
   * @param String data: a string representing the matching data
   */
 function applyData ( data ){
+}
+
+/**
+  * see <method>LzDatapointer#updateData()</method>
+  * FIXME: [20080419 anba] doc: LPP-4259
+  * FIXME: [20080419 anba] return type: LPP-4077
+  * 
+  * @access protected
+  */
+function updateData () /* :String */ {
+    return void(0);
+}
+
+/**
+  * FIXME: [20080419 anba] document me!
+  * There is definitely a lack of documentation about selection
+  * i) if you use LzSelectionManager, you can decide the selection method, 
+  * see "sel" property on LzSelectionManager
+  * ii) but LzDataSelectionManager forces you to override "setSelected",
+  * see LzDatapath#setSelected(Boolean)
+  * -> that's way too confusing!
+  *
+  * @access protected
+  * @param boolean sel: true when this node was selected, false when it lost selection
+  */
+function setSelected (sel:Boolean) /* :void */ {
 }
 
 

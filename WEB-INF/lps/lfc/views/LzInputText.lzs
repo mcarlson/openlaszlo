@@ -202,7 +202,7 @@ function inputtextevent (eventname, value = null) {
   * <code>LzDatapath.updateData</code> for more on this.
   * @access protected
   */
-function updateData (){
+override function updateData () {
     var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
     return isprite.getText();
 }

@@ -213,7 +213,9 @@
   <method name="setExpectedAttribute"/>
   <method name="setOption"/>
   <method name="setProp"/>
+  <method name="setSelected" />
   <method name="toString"/>
+  <method name="updateData"/>
 
 </interface>
 
@@ -654,7 +656,6 @@
       <method name="inputtextevent"/>
       <method name="setEnabled"/>
       <method name="setHTML"/>
-      <method name="updateData"/>
 
 </interface>
 
@@ -896,8 +897,6 @@
   <method name="setComparator"/>
   <method name="setNodes"/>
   <method name="setOrder"/>
-  <method name="setSelected"/>
-  <method name="updateData"/>
 </interface>
 
 

@@ -83,6 +83,8 @@ var parentNode:* = null;
 var ownerDocument:*;
 /** @access private */
 var __LZo:* = -1;
+/** @access private */
+var sel:Boolean = false;
 
 /** An array of children of this node
   * @type LzDataNode

@@ -2537,7 +2537,7 @@ function setClickable ( amclickable ){
 /**
   * Sets the cursor to the given resource when the mouse is over this view
   * @param String cursor: The name of the resource to use as a cursor when it is over
-  * this view.
+  * this view. Or '' for default cursor.
   */
 function setCursor ( cursor ){
     this.sprite.setCursor(cursor);

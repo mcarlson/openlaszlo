@@ -24,8 +24,6 @@ class LzMiniNode {
 
 /** @access private */
   var __LZdeleted:Boolean = false;
-/** @access private */
-  var _selstate; // Was also defined in LzDatapath
 
 /**
   * Sets the named attribute to the given value. If there is no setter for the

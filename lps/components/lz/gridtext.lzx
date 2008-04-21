@@ -101,15 +101,12 @@
             <state pooling="true" apply="${parent.editing}" 
                    onremove="parent.editbox.datapath.updateData()">
                 <edittext datapath="$once{parent.parent.rowdp}" 
-                          name="editbox" width="${parent.width}">
+                          name="editbox" width="${parent.width}" visibility="visible" >
                     <method name="init">
                         this.globalMouseDel = new LzDelegate( this, 
                                                               "checkMouse" );
                         super.init();
                     </method>
-                    <datapath>
-                        <attribute name="datacontrolsvisibility" value="false"/>
-                    </datapath>
                     <method name="applyData" args="d">
                         //because of the monkeying with init that this
                         //componentdoes, the data for this thing can sometimes

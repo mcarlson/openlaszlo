@@ -219,7 +219,7 @@ override function isSelected ( o){
 
 /**
   * sets the selected attribute of the data, if there is a clone, it will
-  * call setselected on the clone
+  * call <method>setSelected(Boolean)</method> on the clone's datapath
   * @param LzDataElement p: the node we want to set
   * @param Boolean val: new value for selected
   * @access private

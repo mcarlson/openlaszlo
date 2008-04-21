@@ -888,7 +888,9 @@ function getNodeAttributes (){
         }
         return;
     }
-    return this.p.attributes;
+    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+        return this.p.attributes;
+    }
 }
 
 /**

@@ -98,7 +98,7 @@ var __LZneedsUpdateAfterInit;
 /** @access private */
 var __LZdepChildren;
 /** @access private */
-// var _selstate; // Defined in LzMiniNode
+var sel:Boolean = false;
 
 
 /** Sent when the datapath's data changes.
@@ -431,11 +431,11 @@ override function destroy(){
   * datapath's <attribute>xpath</attribute> ends in a terminal selector
   * (an attribute, <code>text()</code>, or <code>name()</code>
   * expression), then the datapath attempts to call its parent's
-  * <method>updateData</method> method. If this method is defined, the
-  * datapath sets the data element's attribute, text, or name,
-  * respectively, to <method>updateData</method>'s return value. The
-  * method then calls any other <method>updateData</method> on any
-  * datapaths which depend on this one for context.
+  * <method>updateData</method> method. If this method returns a 
+  * non-undefined value, the datapath sets the data element's 
+  * attribute, text, or name, respectively, to <method>updateData</method>'s 
+  * return value. The method then calls any other <method>updateData</method> 
+  * on any datapaths which depend on this one for context.
   *
   * In short, to make datamapping work both ways for a given UI
   * control, define a <method>updateData</method> method that returns
@@ -444,34 +444,44 @@ override function destroy(){
   * for any other LFC classes.
   *
   */
-function updateData( ){
+override function updateData() {
+    this.__LZupdateData();
+}
 
-    if ( !arguments[ 0 ] && this.p){
+/**
+  * @access private
+  */
+function __LZupdateData (recursive:Boolean = false) :void {
+    if (!recursive && this.p) {
         this.p.__LZlockFromUpdate( this );
     }
 
     var ppdo = this.parsedPath ? this.parsedPath.operator : null;
-    if ( this.immediateparent is LzDatapath && ppdo != null){
-        var dat = (this.immediateparent cast LzDatapath).updateData();
-        if ( ppdo =="nodeName" ){
-            this.setNodeName( dat );
-        } else  if ( ppdo =="__LZgetText" ){
-            this.setNodeText( dat );
-        } else  if ( ppdo =="attributes" ){
-            this.p.setAttrs( dat );
-        } else {
-            //remove the "attributes." from the operator
-            this.setNodeAttribute( ppdo.substring( 11 ) , dat );
+    if (ppdo != null) {
+        var dat = (this.immediateparent cast LzNode).updateData();
+        if (dat !== void(0)) {
+            if (ppdo == "nodeName") {
+                this.setNodeName( dat );
+            } else if (ppdo == "__LZgetText") {
+                this.setNodeText( dat );
+            } else if (ppdo == "attributes") {
+                this.p.setAttrs( dat );
+            } else {
+                //remove the "attributes." from the operator
+                this.setNodeAttribute( ppdo.substring( 11 ) , dat );
+            }
         }
     }
 
-    if (this.__LZdepChildren != null) {
-        for ( var i = 0; i < this.__LZdepChildren.length; i++ ){
-            this.__LZdepChildren[ i ].updateData( true );
+    var depChildren:Array = this.__LZdepChildren;
+    if (depChildren != null) {
+        for (var i:int = 0; i < depChildren.length; i++) {
+            //depChildren: Array of LzDatapath and LzDataAttrBind!
+            depChildren[ i ].__LZupdateData( true );
         }
     }
 
-    if ( !arguments[ 0 ] && this.p){
+    if (!recursive && this.p) {
         this.p.__LZunlockFromUpdate( this );
     }
 }
@@ -582,7 +592,7 @@ function __LZmanager ( m ) {
   * @access private
   */
 function setClonePointer( p ) {
-    //Debug.write("%s: for %w, was %w (dp._selstate=%w, p._selstate=%w)", arguments.callee, p, this.p, this._selstate, p._selstate);
+    //Debug.write("%s: for %w, was %w (dp.sel=%w, p.sel=%w)", arguments.callee, p, this.p, this.sel, p.sel);
     var pc = this.p !=p;
     this.p = p;
 
@@ -590,11 +600,9 @@ function setClonePointer( p ) {
     //if ( pc || true ) {
     if ( pc ) {
 
-        if ( p && this._selstate != p._selstate ){
-            this._selstate = p._selstate || false;
-            if ( this.immediateparent is LzDatapath){
-                (this.immediateparent cast LzDatapath).setSelected( this._selstate );
-            }
+        if ( p && this.sel != p.sel ){
+            this.sel = p.sel || false;
+            (this.immediateparent cast LzNode).setSelected( this.sel );
         }
 
         this.__LZpchanged = true;
@@ -642,13 +650,11 @@ function setComparator( comparator ) {
 /**
   * @access private
   */
-function setSelected( torf ){
-    this.p._selstate =  torf;
-    this._selstate = torf;
+override function setSelected (torf:Boolean) {
+    this.p.sel = torf;
+    this.sel = torf;
 
-    if ( this.immediateparent is LzDatapath){
-        (this.immediateparent cast LzDatapath).setSelected( torf );
-    }
+    (this.immediateparent cast LzNode).setSelected( torf );
 }
 
 /**
