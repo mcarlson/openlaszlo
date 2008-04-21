@@ -501,12 +501,16 @@
 
         <!--- Removes the current sort if one is set, and restores the 
               original order of the dataset. -->
-        <method name="clearSort">
+        <method name="clearSort"><![CDATA[
             var repl = this._getReplicator();
-            repl.setOrder( null );
-            this._setSortCol( null );
-            repl.setXPath( repl.xpath );
-        </method>
+            if (repl != null && repl is LzReplicationManager) {
+                repl.setOrder( null );
+                this._setSortCol( null );
+                repl.setXPath( repl.xpath );
+            } else {
+                this._setSortCol( null );
+            }
+        ]]></method>
 
         <!--- @keywords private -->
         <method name="_setRowHeight" args="h">
