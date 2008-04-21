@@ -262,6 +262,13 @@ public class Compiler {
 
   // Set internal flags that depend on external flags
   public void defaultOptions() {
+
+    // TODO: [2008-04-21 dda] defaultOptions() can be called multiple
+    // times: from Compiler() default constructor and also from
+    // Compiler.setProperties().  This makes the maintenence of this
+    // code needlessly tricky.  Should be reworked to only call this
+    // once.
+
     if (options.getBoolean(DEBUG)) {
       options.put(WARN_UNDEFINED_REFERENCES, Boolean.TRUE);
       if (! options.containsKey(WARN_GLOBAL_ASSIGNMENTS)) {
@@ -296,6 +303,9 @@ public class Compiler {
     }
     if (options.getBoolean(PROFILE)) {
       options.putBoolean(NAME_FUNCTIONS, true);
+    }
+    if (! options.containsKey(TRACK_LINES) && options.getBoolean(NAME_FUNCTIONS)) {
+      options.putBoolean(TRACK_LINES, true);
     }
     options.putBoolean(GENERATE_FUNCTION_2, true);
     options.putBoolean(GENERATE_FUNCTION_2_FOR_LZX, true);
