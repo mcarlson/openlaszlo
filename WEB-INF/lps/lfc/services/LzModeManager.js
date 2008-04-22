@@ -235,6 +235,3 @@ static function getModalView ( ){
     return modeArray[ modeArray.length - 1] || null;
 }
 }
-
-// Register for callbacks from the kernel
-    //LzMouseKernel.setCallback(LzModeManager, 'rawMouseEvent');

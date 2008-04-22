@@ -7,6 +7,8 @@
               values. -->
     <class name="baseslider" extends="basevaluecomponent" width="200" >
 
+        <attribute name="track"/>
+
         <!--- The height of the track. -->
         <attribute name="trackheight" value="8" type="number"/>
         <!--- The width of the thumb. -->
@@ -302,7 +304,7 @@
         
         <!--- constrain to parents bounds, and adjust slider value when dragged
               @keywords private -->
-        <method name="setX" args="x"><![CDATA[
+        <method name="setX" args="x,force=null"><![CDATA[
             var boundedx = x;
             
             var w = this.width;

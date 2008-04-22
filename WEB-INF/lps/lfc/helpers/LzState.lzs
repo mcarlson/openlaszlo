@@ -213,7 +213,7 @@ function apply ( ){
     // release any constraints you are about to override
     var pia = parent._instanceAttrs;
     for (var key in this.heldArgs) {
-      if (pia && pia[key] instanceof LzConstraintExpr) {
+      if (pia && pia[key] is LzConstraintExpr) {
         if (this.releasedconstraints == null) { this.releasedconstraints = []; }
         var constraintMethodName = pia[key].methodName;
         if (parent.releaseConstraintMethod(constraintMethodName)) {
@@ -277,7 +277,7 @@ function remove () {
         var ac = this.appliedChildren[ i ];
         if ( this.pooling ){
             //if it's a view, we pool it -- otherwise we'll just reconstruct it
-            if (ac instanceof LzView){
+            if (ac is LzView){
                 this.__LZpool.push ( this.__LZdetach( ac ) );
             } else {
                 ac.destroy();

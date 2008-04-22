@@ -103,9 +103,9 @@ static var tagname = 'view';
     var __LZstoredbounds;
 
     /** @access private */
-    var __movecounter;
+    var __movecounter = 0;
     /** @access private */
-    var __mousecache;
+    var __mousecache = null;
 
     /** @access private */
     var __lzcheckframe;
@@ -1680,14 +1680,14 @@ function setAlign ( align ){
 }
 
 /** @access private */
-function __LZalignCenter () {
+function __LZalignCenter (e=null) {
   var vip:LzView = (this.immediateparent cast LzView);
   this.setAttribute( "x" , vip.width /2
                      - this.width /2);
 }
 
 /** @access private */
-function __LZalignRight () {
+function __LZalignRight (e=null) {
   var vip:LzView = (this.immediateparent cast LzView);
   this.setAttribute( "x" , vip.width
                      - this.width);
@@ -2327,7 +2327,7 @@ function mouseevent(eventname) {
   * @return Number: The position of the mouse relative to this view.
   */
 function getMouse( xory ) {
-    if (this.__movecounter != LzGlobalMouse.__movecounter) {
+    if (this.__movecounter != LzGlobalMouse.__movecounter || this.__mousecache == null) {
         this.__movecounter = LzGlobalMouse.__movecounter;
         this.__mousecache = this.sprite.getMouse(xory);
     }
@@ -2336,7 +2336,7 @@ function getMouse( xory ) {
 }
 
 /** @access private */
-function $lzc$getMouse_dependencies( ) {
+function $lzc$getMouse_dependencies(...ignore ) {
     return [ LzIdle, "idle" ];
 }
 

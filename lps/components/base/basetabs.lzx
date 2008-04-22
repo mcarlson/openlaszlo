@@ -335,14 +335,14 @@
 
             // Intercept basetabpane initstage for its content. Note: createChildren
             // gets called before init.
-            var is = "late"
+            var istage = "late"
             if (this['initstage'] != null) {
-                is = this.initstage;
+                istage = this.initstage;
             }
             this.initstage = null;
             myChildren.push( { name: "basetabpanecontent", 
                                attrs: { name: 'content', parent: this, 
-                                        initstage: is },
+                                        initstage: istage },
                                children: c } );
             super.createChildren( myChildren );
         ]]>

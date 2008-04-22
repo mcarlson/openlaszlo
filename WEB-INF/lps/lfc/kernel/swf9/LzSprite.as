@@ -353,7 +353,6 @@ dynamic public class LzSprite extends Sprite {
           o Sets the sprite to the specified width 
       */
       public function setWidth( v:* ):void {
-          trace('..sprite setWidth', v, this.owner);
           this.lzwidth = v;
           this.applyStretchResource();
           // TODO [hqm 2008-01] We need to add back in the code here to
@@ -377,7 +376,6 @@ dynamic public class LzSprite extends Sprite {
           o Sets the sprite to the specified height 
       */
       public function setHeight( v:* ):void {
-          trace('..sprite setHeight', v, this.owner);
           this.lzheight = v;
           this.applyStretchResource();
           // TODO [hqm 2008-01] We need to add back in the code here to
@@ -562,7 +560,6 @@ dynamic public class LzSprite extends Sprite {
           sprite's size
       */
       public function stretchResource( xory:String ):void {
-          trace("stretchResource resourceObj=",this.resourceObj);
           if ( xory == null || xory == "x" || xory=="width" || xory=="both" ){
               this._setrescwidth = true;
           }
@@ -575,7 +572,6 @@ dynamic public class LzSprite extends Sprite {
 
       public function applyStretchResource():void {
           var res = this.resourceObj;
-          trace("applyStretchResource resourceObj=", this.resourceObj, this.resourcewidth, this.resourceheight, this._setrescwidth, this._setrescheight, 'lzwidth', this.lzwidth, 'lzheight', this.lzheight);
           // Don't try to do anything while an image is loading
           if ( (res == null) || (res is Loader && !this.resourceLoaded)) { return; }
 
@@ -605,8 +601,8 @@ dynamic public class LzSprite extends Sprite {
       /** getMouse( String:xory )
           o Returns the mouse position for this sprite, for either 'x' or 'y' 
       */
-      public function getMouse( xory:String ):Number {
-          return (xory == "x" ) ? this.mouseX : this.mouseY;
+      public function getMouse( xory:String ):Object {
+          return {x: Math.round(this.mouseX), y: Math.round(this.mouseY)};
       }
 
       /** getWidth()

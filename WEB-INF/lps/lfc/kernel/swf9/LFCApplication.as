@@ -67,6 +67,10 @@ public class LFCApplication extends Sprite {
         LzScreenKernel.stage = stage;
         stage.addEventListener(Event.RESIZE, resizeHandler);
 
+
+        // Register for callbacks from the kernel
+        LzMouseKernel.setCallback(LzModeManager, 'rawMouseEvent');
+
         
         /* TODO [hqm 2008-01] Do we want to do anything with other
          * events, like click, or mousewheel ?

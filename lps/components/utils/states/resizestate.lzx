@@ -5,13 +5,13 @@
         <attribute name="xroffset"
                    value="this.x - this.width + this.getMouse( 'x' )" when="once" />
         <attribute name="width" 
-                   value="${this.immediateparent.getMouse( 'x' )- xroffset}"/>
+                   value="${this.immediateparent.getMouse( 'x' )- this.xroffset}"/>
 
         <!--- the y offset from the mouse -->
         <attribute name="yroffset"
                    value="this.y - this.height + this.getMouse( 'y' )" when="once" />
         <attribute name="height" 
-                   value="${this.immediateparent.getMouse( 'y' )- yroffset}"/>
+                   value="${this.immediateparent.getMouse( 'y' )- this.yroffset}"/>
         <doc>
           <tag name="shortdesc"><text>A standard resize behavior.</text></tag>
           <text>
@@ -37,7 +37,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

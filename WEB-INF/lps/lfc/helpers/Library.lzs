@@ -11,11 +11,7 @@
 #include "helpers/LzFont.lzs"
 #include "helpers/LzSelectionManager.lzs"
 #include "helpers/LzDataSelectionManager.lzs"
-
-if ($swf9) {
-} else {
 #include "helpers/LzCommand.lzs"
-}
 
 if ($as2) {
 } else if ($swf9) {

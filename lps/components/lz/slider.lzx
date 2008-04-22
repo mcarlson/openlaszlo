@@ -6,11 +6,11 @@
 
         <slidertrack/>
 
-        <state apply="${classroot.showrange}">
+        <state apply="${this.classroot.showrange}">
             <text y="${classroot.track.y + classroot.track.height + 2}"
                 text="${classroot.minvalue}" fgcolor="${classroot.style ? classroot.style.textcolor : this.fgcolor}"
             />
-            <text y="${classroot.track.y + classroot.track.height + 2}" resize="true"
+            <text y="${this.classroot.track.y + this.classroot.track.height + 2}" resize="true"
                 x="${classroot.track.x+classroot.track.width-width}"
                 text="${classroot.maxvalue}" fgcolor="${classroot.style ? classroot.style.textcolor : this.fgcolor}"
             />
@@ -72,7 +72,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
