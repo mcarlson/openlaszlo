@@ -360,12 +360,6 @@ var onafterinit = LzDeclaredEvent;
   */
 var lpsversion;
 
-/** An alias for lpsversion
-  * @type Number
-  * @keywords final
-  */
-var version;
-
 /** release of the LPS that generated this application (for .lzo files,
   * this is the release of the server that generated the optimized file, not the one that 
   * served it).

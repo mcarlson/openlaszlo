@@ -989,13 +989,13 @@ var resource:String = null;
   * @keywords readonly
   * @lzxtype number
   */
-var resourcewidth:Number = null;
+var resourcewidth = null;
 /**
   * The height of the resource that this view attached
   * @keywords readonly
   * @lzxtype number
   */
-var resourceheight:Number  = null;
+var resourceheight = null;
 
 /** @access private */ var __LZbgColorO = null;
 /** @access private */ var __LZbgRef = null;
