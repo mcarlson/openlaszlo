@@ -1,7 +1,7 @@
 /**
   * LzSprite.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -386,7 +386,7 @@ LzSprite.prototype.__updateFrame = function(force) {
         //Debug.info('__updateFrame', this.frame, url);
         this.setSource(url);
     }
-    if (this.owner.frame != this.frame - 1) this.owner.spriteAttribute('frame', this.frame);
+    if (this.owner.frame != this.frame - 1) this.owner.__spriteAttribute('frame', this.frame);
 }
 
 LzSprite.prototype.preloadFrames = function() {

@@ -56,6 +56,9 @@
   */
 dynamic class LzView extends LzNode {
 
+    /** @access private
+      * @modifiers override 
+      */
     function LzView ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
         super(parent,attrs,children,instcall);
     }
@@ -70,7 +73,9 @@ static var tagname = 'view';
   static var attributes = new LzInheritedHash(LzNode.attributes);
   // We add some more kludges to those in LzNode.  See #construct
   // where we override the LzNode setting
+/** @access private */
   static var __LZdelayedSetters = new LzInheritedHash(LzNode.__LZdelayedSetters);
+/** @access private */
   static var earlySetters = new LzInheritedHash(LzNode.earlySetters);
 
 
@@ -102,6 +107,7 @@ static var tagname = 'view';
     /** @access private */
     var __mousecache;
 
+    /** @access private */
     var __lzcheckframe;
 
     var playing = false;
@@ -350,19 +356,21 @@ var ondblclick = LzDeclaredEvent;
 /** @access private */
 var DOUBLE_CLICK_TIME = 500;
 
-/** @access private */
 // TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
 if ($swf9) {
+    /** @access private */
     var capabilities = LzSprite.capabilities;
 } else {
+    /** @access private */
     var capabilities = LzSprite.prototype.capabilities;
 }
 
 /**
-  * Base level constructor for views. See <method
+  * Base level constructor for views. See LzNode.<method
   * classname="LzNode">construct</method> for more on this.
-  * 
-  * @access public
+  * @param LzView parent: Parent view to attach to
+  * @param Object args: Initialization args
+  * @access private
   */
 override function construct ( parent , args) {
     //this.callInherited( "construct" , arguments.callee , parent ,args );
@@ -419,9 +427,12 @@ override function construct ( parent , args) {
     }
 }
 
-/** Receive attribute/event change from sprite
+/** Receive attribute/event change from sprites
+  * @param String attrname: Attribute name
+  * @param value: Value to set to
+  * @access private
   */
-function spriteAttribute(attrname, value){
+function __spriteAttribute(attrname:String, value){
     if (this[attrname]) this.setAttribute(attrname, value);
 }
 
@@ -532,12 +543,17 @@ var focustrap;
   * @keywords final
   */
 var clip = false;
+/** @access private */
 var $lzc$set_clip =  -1;
+/** @access private */
 function $lzc$set_x(v) { this.setX(v) }
+/** @access private */
 function $lzc$set_y(v) { this.setY(v) }
 
 
+/** @access private */
 function $lzc$set_rotation(v) { this.setRotation(v); }
+/** @access private */
 function $lzc$set_opacity(v) { this.setOpacity(v); }
 /** @access private */
 function $lzc$set_alpha(v) { this.setOpacity(v); }
@@ -550,6 +566,7 @@ function $lzc$set_visibility(v) { this.setVisibility(v) }
   * @keywords final
   */
 var align = "left";
+/** @access private */
 function $lzc$set_align(v) { this.setAlign(v) }
 
 /**
@@ -560,6 +577,7 @@ function $lzc$set_align(v) { this.setAlign(v) }
   * @lzxdefault "top"
   */
 var valign = "top";
+/** @access private */
 function $lzc$set_valign(v) { this.setValign(v) }
 
 /** The URL from which to load the resource for this
@@ -587,6 +605,7 @@ function $lzc$set_bgcolor(v) { this.setBGColor(v) }
   * to its container.  This defaults to true if the view defines a mouse
   * event handler or a cursor.
   * @lzxtype boolean
+  * @access private
   */
 function $lzc$set_clickable(v) { this.setClickable(v); }
 /** Setting clickRegion to a vector-based SWF turns the SWF shape into a clickable hotspot.
@@ -594,6 +613,7 @@ function $lzc$set_clickable(v) { this.setClickable(v); }
   * @lzxtype string
   */
 var clickregion;   
+/** @access private */
 function $lzc$set_clickregion(v) { this.__LZsetClickRegion(v); }
 /** The cursor to display when the mouse is over this view. Any
   * resource can be used as a cursor. This attribute can be set for
@@ -602,6 +622,7 @@ function $lzc$set_clickregion(v) { this.__LZsetClickRegion(v); }
   * @lzxtype token
   */
 var cursor;  
+/** @access private */
 function $lzc$set_cursor(v) { this.setCursor(v); }
 /** A color to use to render object that appears inside this view,
   * which includes any vector or bitmap art in the view's resource
@@ -609,6 +630,7 @@ function $lzc$set_cursor(v) { this.setCursor(v); }
   * @lzxtype color
   */
 var fgcolor;   
+/** @access private */
 function $lzc$set_fgcolor(v) { this.setColor(v); }
 /** The font to use for any @c{&lt;text>} or @c{&lt;inputtext>} elements that
   * appear inside this view. Like all the font properties
@@ -620,6 +642,7 @@ function $lzc$set_fgcolor(v) { this.setColor(v); }
   * @lzxtype string
   */
 var font;  
+/** @access private */
 function $lzc$set_font(v) { this.setFontName(v) ; }
 
 /** The style to use to render text fields that appear inside of
@@ -644,12 +667,10 @@ var fontsize;
   * @lzxdefault "none"
   */
 var stretches = "none"; 
-/** If true, the resource attached to this view begins playing when
-  * the view is instantiated.
-  * @lzxtype boolean
-  */
+/** @access private */
 function $lzc$set_play(v) { this.setPlay(v); }
-/** Show or hide the handcursor for this view, if clickable */
+/** Show or hide the handcursor for this view, if clickable 
+  * @access private */
 function $lzc$set_showhandcursor(v) { this.setShowHandCursor(v); }
 
 /** A CSS property when declared in the tag: value sequence of layout
@@ -664,6 +685,7 @@ function $lzc$set_showhandcursor(v) { this.setShowHandCursor(v); }
   * @access public
   */
 var layout; 
+/** @access private */
 function $lzc$set_layout(v) { this.setLayout(v); }
 
 /** Activate/inactivate children for accessibility
@@ -671,48 +693,48 @@ function $lzc$set_layout(v) { this.setLayout(v); }
   * @lzxtype boolean
   */
 var aaactive; 
+/** @access private */
 function $lzc$set_aaactive(v) { this.setAAActive(v); }
 /** Set accessibility name
   * @type String
   * @lzxtype string
   */
 var aaname;
+/** @access private */
 function $lzc$set_aaname(v) { this.setAAName(v); }
 /** Set accessibility description
   * @type String
   * @lzxtype string
   */
 var aadescription; 
+/** @access private */
 function $lzc$set_aadescription(v) { this.setAADescription(v); }
 /** Set accessibility tab order
   * @type Number
   * @lzxtype number
   */
 var aatabindex;   
+/** @access private */
 function $lzc$set_aatabindex(v) { this.setAATabIndex(v); }
 /** Set accessibility silencing/unsilencing
   * @type Boolean
   * @lzxtype boolean
   */
 var aasilent; 
+/** @access private */
 function $lzc$set_aasilent(v) { this.setAASilent(v); }
 
 LzView.__LZdelayedSetters.layout = "$lzc$set_layout";
 LzView.earlySetters.clickregion = 7;
 LzView.earlySetters.stretches = 8;
 
-/** A value to be added to the
-  * <attribute>x</attribute> position of this view before drawing
-  * it. This affects the apparent rotation point of the view, as well as
-  * its apparent <attribute>x</attribute> position. It does not affect the view's width or its
-  * internal coordinate system.
+/** 
   * @type Number
+  * @access private 
   */
 function $lzc$set_xoffset(v) { this.setXOffset(v); }
-/** A value to be added to the <attribute>y</attribute> position of this view
-  * before drawing it. This affects the apparent rotation point of the view, as
-  * well as its apparent <attribute>y</attribute> position. It does not affect the view's width or its
-  * internal coordinate system.
+/**
+  * @access private 
   * @type Number
   */
 function $lzc$set_yoffset(v) { this.setYOffset(v); }
@@ -739,7 +761,6 @@ var visible =   true;
   * @type String
   * @lzxtype string
   * @lzxdefault "collapse"
-  * @access private
   */
 var visibility = "collapse";
 
@@ -790,6 +811,7 @@ var rotation =   0;
   * @lzxtype sizeExpression
   */
 var width =   0;
+/** @access private */
 function $lzc$set_width(v) { this.setWidth(v); }
 
 /**
@@ -799,6 +821,7 @@ function $lzc$set_width(v) { this.setWidth(v); }
   * @lzxtype sizeExpression
   */
 var height =   0;
+/** @access private */
 function $lzc$set_height(v) { this.setHeight(v); }
 
 /** If stretches is not set to none, the width
@@ -872,6 +895,7 @@ var totalframes =   0;
   * know what frame the resource is showing while it is playing.
   */
 var frame =   0;
+/** @access private */
 function $lzc$set_frame(v) { this.setResourceNumber(v); }
 
 /** @keywords deprecated 
@@ -936,6 +960,11 @@ var pixellock = null;
 /** @access private */
 var setButtonSize = null;
 
+/** If true, this view intercepts click events; otherwise they are passed
+  * to its container.  This defaults to true if the view defines a mouse
+  * event handler or a cursor.
+  * @lzxtype boolean
+  */ 
 var clickable = false;
 
 /** Show or hide the hand cursor for this view, if clickable
@@ -958,13 +987,15 @@ var resource:String = null;
 /**
   * The width of the resource that this view attached
   * @keywords readonly
+  * @lzxtype number
   */
-var resourcewidth = null;
+var resourcewidth:Number = null;
 /**
   * The height of the resource that this view attached
   * @keywords readonly
+  * @lzxtype number
   */
-var resourceheight = null;
+var resourceheight:Number  = null;
 
 /** @access private */ var __LZbgColorO = null;
 /** @access private */ var __LZbgRef = null;
@@ -1146,6 +1177,7 @@ function setResource(v) {
     this.$lzc$set_resource(v);    
 }
 
+/** @access private */
 function $lzc$set_resource( resourceName ) {
     if (resourceName == null || resourceName == this._resource) return;
     this.resource = this._resource = resourceName;
@@ -1318,7 +1350,7 @@ function __LZFinishDestroyOnIdle (){
   * This method sets the <attribute>visible</attribute> attribute of the view
   * and also disables or re-enables any click region associated with the view.
   * 
-  * @param Boolean|Null amVisible: Controls the visibility of a view.
+  * @param Boolean|Null v: Controls the visibility of a view.
   * `true` makes the view visible, `false` makes the view hidden,
   * `null` will make the view visible only if it has a data binding.
   * @deprecated Use setAttribute('visible', ...) instead.
@@ -1328,6 +1360,7 @@ function setVisible(v) {
     this.$lzc$set_visible(v)
 }
 
+/** @access private */
 function $lzc$set_visible( amVisible ) {
     if (this._visible == amVisible) return;
     this._visible = amVisible;
@@ -1850,6 +1883,7 @@ function getColor (){
   * o.ab: overall offset (-255 to 255);
   *
   * @runtimes as2
+  * @param Object o: A color transformation dictionary
   */
 function setColorTransform ( o ){
     if (this.capabilities.colortransform) {
@@ -2432,6 +2466,7 @@ function stretchResource(v) {
     this.$lzc$set_stretches(v); 
 }
 
+/** @access private */
 function $lzc$set_stretches( stretch ){
     if (!(stretch == "none" || stretch == "both" || stretch == "width" || stretch == "height")) {
         //TODO: Remove null, x, y options from here when components are moved
@@ -2524,7 +2559,7 @@ function __LZsetClickRegion ( cr ){
 
 /**
   * Makes a view clickable or not clickable.
-  * @param amclickable: Boolean indicating the view's clickability
+  * @param Boolean amclickable: Boolean indicating the view's clickability
   */
 function setClickable ( amclickable ){
     this.sprite.setClickable(amclickable);
@@ -2718,6 +2753,7 @@ function getID3 ( ){
 }
 
 
+/** @access private */
 var __LZdidPPwarn = false;
 
 /** @access private */

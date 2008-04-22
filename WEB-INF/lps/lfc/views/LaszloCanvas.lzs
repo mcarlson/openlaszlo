@@ -32,18 +32,6 @@
   *
   * <event>onafterinit</event> This event is sent after oninit
   *
-  * <p>In addition to any fields documented in the section at the end, these fields are also available:
-  * <ul>
-  * <li><attribute>anm_multipler</attribute> A <type>Number</type> specifying the animation speed.</li>
-  * <li><attribute>embedfonts</attribute> A <type>Boolean</type> true | false. Whether to embed fonts in the compiled application.</li>
-  * <li><attribute>lpsbuild</attribute> A <type>String</type> specifying the LPS build revision and the build directory: e.g. "4075 /Users/maxcarlson/openlaszlo/legals"</li>
-  * <li><attribute>lpsbuilddate</attribute> A <type>String</type> specifying the date and time of the LPS build. "2007-03-05T15:33:42-0800"</li>
-  * <li><attribute>lpsrelease</attribute> A <type>String</type> specifying the LPS release type, e.g. "Latest" </li>
-  * <li><attribute>lpsversion</attribute> A <type>String</type> specifying the LPS version, e.g. "4.0.x"</li>
-  * <li><attribute>proxied</attribute> A <type>Boolean</type> true | false</li>
-  * <li><attribute>runtime</attribute> A <type>String</type> describing the target runtime. "dhtml" | "swf7" | "swf8" are currently supported. Others are in development.</li>
-  * <li><attribute>version</attribute>A String. The same as lpsversion. </li>
-  * </ul></p>
   * @see LzView
   * @lzxname canvas
   * @shortdesc The top-most view in a Laszlo application.
@@ -52,6 +40,8 @@
   * @access public
   * @initarg Boolean accessible: Specifies if this application is intended to be accessible
   * @initarg Boolean debug: If true, the application is compiled with debugging enabled.
+  * @initarg Number width: Specifies the width of the canvas
+  * @initarg Number height: Specifies the height of the canvas
   * See the <a href="${dguide}debugging.html">Debugging</a> chapter of
   * the Guide for more information about debugging.
   */
@@ -67,29 +57,91 @@ dynamic class LzCanvas extends LzView {
 /** @access private */
   static var attributes = new LzInheritedHash(LzView.attributes);
 
+    /**
+      * @access private
+      */
     var updatePercentCreatedEnabled:Boolean = true;
 
+    /**
+      * @access private
+      */
     var resourcetable:*;
+    /**
+      * @access private
+      */
     var _lzinitialsubviews:Array = [];
+    /**
+      * @access private
+      */
     var totalnodes:*;
+    /**
+      * @access private
+      */
     var framerate:*;
+    /**
+      * @access private
+      */
     var creatednodes:*;
 
     /* These are passed in by the compiler as attributes */
+    /**
+      * Compiled in proxied value
+      * @access private
+      */
     var __LZproxied;
+    /** Whether to embed fonts in the compiled application.
+      * @type Boolean
+      * @keywords final
+      */
     var embedfonts;
+    /** A String specifying the LPS build revision and the build directory: e.g. "4075 /Users/maxcarlson/openlaszlo/legals"
+      * @type String
+      * @keywords final
+      */
     var lpsbuild;
+    /** A String specifying the date and time of the LPS build. "2007-03-05T15:33:42-0800"
+      * @type String
+      * @keywords final
+      */
     var lpsbuilddate;
+    /** A String describing the target runtime. "dhtml" | "swf7" | "swf8" are currently supported. Others are in development.
+      * @type String
+      * @keywords final
+      */
     var runtime;
 
+    /**
+      * For onmouseup event
+      * @access private
+      */
     var __LZmouseupDel:LzDelegate;
+    /**
+      * For onmousedown event
+      * @access private
+      */
     var __LZmousedownDel:LzDelegate;
+    /**
+      * For onmousemove event
+      * @access private
+      */
     var __LZmousemoveDel:LzDelegate;    
 
+    /**
+      * @access private
+      * LzCanvas 
+      * 
+      * @param Object args: a hash of arguments specifying the way the canvas was compiled, e.g. {__LZproxied: "true", bgcolor: 16777215, embedfonts: true, fontname: "Verdana,Vera,sans-serif", fontsize: 11, fontstyle: "plain", height: "100%", lpsbuild: "8763 /Users/maxcarlson/openlaszlo/trunk", lpsbuilddate: "2008-04-17T18:17:33-0700", lpsrelease: "Yodel Production", lpsversion: "4.2a2", runtime: "swf8", width: "100%"}
+      */
     function LzCanvas ( args = null) {
         super(null,args);
     }
 
+    /**
+      * @access private
+      * LzCanvas 
+      * @param LzView parent: Parent view to attach to
+      * @param Object args: Initialization args
+      */
     override function construct (parent , args) {
         var capabilities;
 
@@ -308,6 +360,12 @@ var onafterinit = LzDeclaredEvent;
   */
 var lpsversion;
 
+/** An alias for lpsversion
+  * @type Number
+  * @keywords final
+  */
+var version;
+
 /** release of the LPS that generated this application (for .lzo files,
   * this is the release of the server that generated the optimized file, not the one that 
   * served it).
@@ -351,6 +409,7 @@ var medialoadtimeout = 30000;
 
 /** A number from 0-1 that represents the
   * percentage of the app that has been instantiated.
+  * @type Number
   */
 var percentcreated;
 
@@ -471,6 +530,9 @@ override function init (){
     }
 }
 
+/**
+  * @access private
+  */
 var deferInit = true;
 
 /**
