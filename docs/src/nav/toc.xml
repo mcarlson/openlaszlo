@@ -223,13 +223,13 @@
     </category>
     
     <category title="Charts and Graphs">
+      <item title="axis" href="lz.axis.html"/>
       <item title="axisstyle" href="lz.axisstyle.html"/>
       <item title="barchart" href="lz.barchart.html"/>
       <item title="basestyle" href="lz.basestyle.html"/>
       <item title="chart" href="lz.chart.html"/>
       <item title="chartbgstyle" href="lz.chartbgstyle.html"/>
       <item title="chartstyle" href="lz.chartstyle.html"/>
-      <item title="axis" href="lz.axis.html"/>
       <item title="columnchart" href="lz.columnchart.html"/>
       <item title="datacolumn" href="lz.datacolumn.html"/>
       <item title="datamarker" href="lz.datamarker.html"/>

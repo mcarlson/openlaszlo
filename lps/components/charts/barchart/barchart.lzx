@@ -105,6 +105,7 @@
                 </text>
             </tag>
             <text>
+                <warning>This component is of Beta quality and is subject to change.</warning>
                 <p>The following is a barchart that uses series data.</p>
 
                 <example title="Simple barchart">

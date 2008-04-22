@@ -13,7 +13,7 @@
               default = 0 -->
         <!-- attribute name="startAngle" type="number" value="0"/-->
         <!--- The segment of the circle that defines the current pie slice -->
-        <attribute name="arc" type="number" value="10"/>
+        <attribute name="arcvalue" type="number" value="10"/>
         <!--- The y radius of the slice. default = null -->
         <attribute name="yRadius" type="number" value="${null}"/>
         <!--- The strokestyle object that is applied to the pie slice border -->
@@ -154,7 +154,7 @@
         <![CDATA[
             this.clear();
             this.beginPath();                                 
-            this.renderCircleSegment(0, 0, this.angle, this.arc, this.radius, null);
+            this.renderCircleSegment(0, 0, this.angle, this.arcvalue, this.radius, null);
             this.closePath();
             
             this.fillStyle = this.style.region.color;
@@ -177,7 +177,7 @@
             if (this.style.region.gradient == 'linear') {           
             
                 var angle = this.angle;
-                var arc = this.arc;
+                var arc = this.arcvalue;
                 var radius = this.radius;
                 
                 var halfAngle, halfRadius, positionX, positionY;
@@ -217,14 +217,14 @@
                 this.objStroke.strokeColor = this.style.line.color;
                 this.objStroke.dottedLength = 5;
                 this.objStroke.spaceLength = 5;
-                this.renderCircleLines(0,0,this.angle, this.radius, this.radius, this.arc);            
+                this.renderCircleLines(0,0,this.angle, this.radius, this.radius, this.arcvalue);            
                 this.closePath();
             
                 var myarc, mystep;
                 myarc=1.5;
                 mystep=3;
                 // render the dotted circle
-                for (var i=this.angle; i<=this.arc+this.angle; i+=mystep) {
+                for (var i=this.angle; i<=this.arcvalue+this.angle; i+=mystep) {
                     this.renderMyCircle(0, 0, i, myarc, this.radius, this.radius);
                 }
             
@@ -237,14 +237,14 @@
                 this.objStroke.strokeColor = this.style.line.color;
                 this.objStroke.dottedLength = 10;
                 this.objStroke.spaceLength = 10;
-                this.renderCircleLines(0,0,this.angle, this.radius, this.radius, this.arc);
+                this.renderCircleLines(0,0,this.angle, this.radius, this.radius, this.arcvalue);
                 this.closePath();
             
                 var myarc, mystep;
                 myarc=3;
                 mystep=7;
                 // render the dotted circle
-                for (var i=this.angle; i<=this.arc+this.angle; i+=mystep) {
+                for (var i=this.angle; i<=this.arcvalue+this.angle; i+=mystep) {
                     this.renderMyCircle(0, 0, i, myarc, this.radius, this.radius);
                 }
             
@@ -260,10 +260,10 @@
       <method name="renderOutlineWedge" args="offset">
         var angle, miniRadius, positionX, positionY, startRadius;
         // cut the angle of the piece to the half
-        var midAngle = arc/2 + this.angle;
+        var midAngle = arcvalue/2 + this.angle;
 
         // reduce the radius of the inner piece
-        startRadius = offset / Math.sin(arc/2/180*Math.PI);
+        startRadius = offset / Math.sin(arcvalue/2/180*Math.PI);
 
         if (!isFinite(startRadius))
             return;
@@ -277,7 +277,7 @@
         positionX = Math.cos(midAngle/180*Math.PI)*startRadius;
         positionY = Math.sin(-midAngle/180*Math.PI)*startRadius;
 
-        this.renderCircleSegment(positionX, positionY, this.angle, this.arc, miniRadius, null);
+        this.renderCircleSegment(positionX, positionY, this.angle, this.arcvalue, miniRadius, null);
 
       </method>
       <!--- @keyword private -->

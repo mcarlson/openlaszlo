@@ -13,6 +13,11 @@
          @access public
          -->
         <class name="piechartplotarea"   extends="drawview">
+        <doc>
+          <text>
+            <warning>This component is of Beta quality and is subject to change.</warning>
+          </text>
+        </doc>
         <!--- Array that holds the attributes regarding the dimension and position
               of the pie slices
               TODO::Change type - html
@@ -84,7 +89,7 @@
                     v.setAttribute( "x", lx );
                     v.setAttribute( "y", ly );
                     v.setAttribute( "angle", angle );
-                    v.setAttribute( "arc", arc );
+                    v.setAttribute( "arcvalue", arc );
                     v.setAttribute( "radius", radius );
                       
                     v.setAttribute( "style", parent.style.getDataStyle(i));

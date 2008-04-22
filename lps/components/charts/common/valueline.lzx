@@ -12,6 +12,11 @@
        @access public
        -->
     <class name="valueline" extends="drawview">       
+        <doc>
+          <text>
+            <warning>This component is of Beta quality and is subject to change.</warning>
+          </text>
+        </doc>
         <!--- the value will be draw -->
         <attribute name="data" type="string" value=""/>
         <!--- the label will be display next to the line -->

@@ -9,6 +9,9 @@
   -->
 <class name="basestyle"  extends="view" opacity="0">
 
+    <doc><text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+    </text></doc>
     <!-- below are the methods copied over from the style class of basecomponents -->
 
     <!--- set a specific style attribute, generating an onstylechanged event
@@ -85,6 +88,11 @@
       @access public
       -->
 <class name="pointstyle" extends="basestyle" width="5" height="5">
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     <!--- RGB color -->
     <attribute name="color" type="color" value="black"/> 
     <!--- 'circle','square','triangle', [name of resource] -->
@@ -105,6 +113,11 @@
       @access public
       -->
 <class name="linestyle" extends="basestyle" >
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     <!--- pixel size for the stroke of the line -->
     <attribute name="size" type="number" value="1"/> 
     <!--- RGB color on the axis line -->
@@ -119,6 +132,11 @@
       @access public
       -->
 <class name="regionstyle" extends="basestyle"  stretches="both">
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     <!--- RGB color on the axis line -->
     <attribute name="color" type="color" value="0xFF0000"/>
     <!--- value between 0-1 --> 
@@ -134,6 +152,11 @@
       @access public
       -->
 <class name="labelstyle" extends="basestyle" >
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     <!--- size of border of label background  -->                  
     <attribute name="linesize" type="number" value="null"/> 
     <!--- color of bounding box border -->
@@ -163,6 +186,11 @@
      @access public
      -->
 <class name="tickstyle" extends="linestyle" >
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     <!--- length of tick in pixels perpendicualr to the axis -->
     <attribute  name="length" type="number" value="5"/> 
     <!--- inside | outside | centered | none  --> 
@@ -177,6 +205,11 @@
      @access public
      -->
 <class name="valuelinestyle" extends="basestyle" >
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
   <?STRUCTURE ... 
     <linestyle  name="line" /> <!--- instance of linestyle -->
     <labelstyle name="label" /> <!--- an instance of labelstyle -->
@@ -189,6 +222,11 @@
      @access public
      -->
 <class name="valuepointstyle" extends="basestyle" >
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
   <?STRUCTURE ... 
     <pointstyle name="point"/> <!--- an instance of pointstyle -->
     <labelstyle name="label" /> <!--- an instance of labelstyle -->
@@ -200,6 +238,11 @@
       @access public
   -->
 <class name="axisstyle" extends="basestyle" >
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     <!--- direction of the axis: x or y -->
     <attribute name="direction" value="y | x" type="string" />
 
@@ -218,6 +261,11 @@
       @access public
       -->
 <class name="plotstyle" extends="basestyle">
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     <!--- size of border of the plot area -->
     <attribute name="linesize" type="number" value="0"/> 
     <!--- color of the border for the plot area -->
@@ -232,6 +280,11 @@
       @access public
       -->
 <class name="chartbgstyle" extends="basestyle">
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     <?STRUCTURE ...
         <linestyle name="line"/>        <!--- instance of linestyle -->
         <regionstyle name="region"/>    <!--- instance of regionstyle -->
@@ -242,6 +295,11 @@
       @access public
   -->
 <class name="datastyle" extends="basestyle" >
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
 
   <?STRUCTURE ... 
     <pointstyle  name="point"   /> <!--- instance of pointstyle -->
@@ -258,6 +316,11 @@
       @access public
   -->
 <class name="valueregionstyle" extends="basestyle" >
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
 
   <?STRUCTURE ... 
     <linestyle   name="line"    /> <!--- instance of linestyle -->
@@ -272,6 +335,11 @@
       @access public
   -->
 <class name="chartstyle" extends="basestyle"  >
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
     <!--- @keyword private -->
     <attribute name="datastyleindex" value="0" type="number"/>
     <attribute name="version" value="0" type="number"/>
@@ -339,6 +407,11 @@
       @access public
   -->
 <class name="datastylelist" extends="basestyle">
+    <doc>
+      <text>
+        <warning>This component is of Beta quality and is subject to change.</warning>
+      </text>
+    </doc>
 </class>
 
 </library>

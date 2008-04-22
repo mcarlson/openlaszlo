@@ -155,6 +155,11 @@
     
     <!--- chart zoom area -->
     <class name="zoomarea" extends="basezoomarea" bgcolor="blue" opacity="0.4">
+        <doc>
+          <text>
+            <warning>This component is of Beta quality and is subject to change.</warning>
+          </text>
+        </doc>
         <!--- change the chart to the virtual boundary 
             @param Number minx: min x of the zooomarea
             @param Number miny: min y of the zooomarea
