@@ -249,10 +249,9 @@ public class NodeModel implements Cloneable {
       } else if (when.equals(WHEN_PATH)) {
         installer = "dataBindAttribute";
       } else if (when.equals(WHEN_STYLE)) {
-        // Styles are processed as constraints, although
-        // they are not compiled as constraints.  Whether
-        // a style results in a constraint or not cannot
-        // be determined until the style property value is
+        // Styles are processed at the same time as constraints.
+        // Whether a style actually results in a constraint or not
+        // cannot be determined until the style property value is
         // derived (at run time)
         installer = "__LZstyleBindAttribute";
       }
@@ -296,14 +295,13 @@ public class NodeModel implements Cloneable {
         if (when.equals(WHEN_ONCE) || when.equals(WHEN_PATH)) {
           // default
         } else if (when.equals(WHEN_STYLE)) {
-          // Styles are processed as constraints, although
-          // they are not compiled as constraints.  Whether
-          // a style results in a constraint or not cannot
-          // be determined until the style property value is
+          // Styles are processed at the same time as constraints.
+          // Whether a style actually results in a constraint or not
+          // cannot be determined until the style property value is
           // derived (at run time)
           kind = "LzConstraintExpr";
         } else if (when.equals(WHEN_ALWAYS)) {
-          kind = "LzConstraintExpr";
+          kind = "LzAlwaysExpr";
           // Always constraints have a second value, the dependencies method
           return new BindingExpr("new " + kind + "(" + 
                                  ScriptCompiler.quote(bindername) + ", " +

@@ -356,12 +356,13 @@ override function __LZapplyArgs ( args , constcall = null){
       held[key] = val;
     }
   }
-  // If any stateArgs are LzInitExpr's, we need to move the
+  // If any stateArgs are LzOnceExpr's, we need to move the
   // methods they call from held to stateArgs
   for (var key in stateArgs) {
     var val = stateArgs[key];
-    if (val is LzInitExpr) {
-      var methodName = val.methodName;
+    // TODO: [2008-03-24 ptw] Use `switch type`...
+    if (val is LzOnceExpr) {
+      var methodName = (val cast LzOnceExpr).methodName;
       // Method could be in held args
       if (methodName in held) {
         stateArgs[methodName] = held[methodName];
@@ -369,8 +370,10 @@ override function __LZapplyArgs ( args , constcall = null){
       } else {
         // If it is already a method on the state, nothing to do
       }
-      if (val is LzConstraintExpr) {
-        var dependenciesName = val.dependenciesName;
+      // Now worry about dependency methods in LzAlwaysExpr's.
+      // TODO: [2008-03-24 ptw] Use `switch type`...
+      if (val is LzAlwaysExpr) {
+        var dependenciesName = (val cast LzAlwaysExpr).dependenciesName;
         // Method could be in held args
         if (dependenciesName in held) {
           stateArgs[dependenciesName] = held[dependenciesName];
@@ -382,13 +385,13 @@ override function __LZapplyArgs ( args , constcall = null){
     }
   }
 
-  // If any held args are LzInitExprs, we need to rename their methods
+  // If any held args are LzOnceExprs, we need to rename their methods
   // so they do not clober the parent's methods
   // TODO: [2008-02-13 ptw] This should take place at compile time.
   var rename = null;
   for (var key in held) {
     var val = held[key];
-    if (val is LzInitExpr) {
+    if (val is LzOnceExpr) {
       if (rename == null) { rename = []; }
       rename.push(key, val);
     }
@@ -410,8 +413,9 @@ override function __LZapplyArgs ( args , constcall = null){
         // attach it to the parent
         held[newMethodName] = this[methodName];
       }
-      if (expr is LzConstraintExpr) {
-        var dependenciesName = expr.dependenciesName;
+      // TODO: [2008-03-24 ptw] Use `switch type`...
+      if (expr is LzAlwaysExpr) {
+        var dependenciesName = (expr cast LzAlwaysExpr).dependenciesName;
         var newDependenciesName = dependenciesName + this.__LZUID;
         if (held[dependenciesName] is Function) {
           // Method could be in held args, in which case we just rename

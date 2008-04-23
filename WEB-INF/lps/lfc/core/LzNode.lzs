@@ -115,7 +115,7 @@ public dynamic class LzNode extends LzMiniNode{
                     }
                 }
                 // Debug.debug("%w.%s: NOT merging %s (%w)", this, arguments.callee, k, attrk);
-                // Just a normal value (or LzInitExpr), install it
+                // Just a normal value, install it
                 dattrs[k] = attrk;
             }
         }
@@ -959,10 +959,13 @@ function __LZapplyArgs ( args , constcall = null ){
           oset[ a ] = true;
 
           if (val is LzInitExpr) {
+            // Ordering is important, constraint is a subclass of once
             if (val instanceof LzConstraintExpr) {
+              // A style or always constraint
               if (constraints == null) { constraints = []; }
               constraints.push(val);
             } else if (val instanceof LzOnceExpr) {
+              // A once constraint
               if (inits == null) { inits = []; }
               inits.push(val);
             } else if ($debug) {
@@ -1487,7 +1490,7 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
 }
 
     /** @access private */
-    function applyConstraintExpr(expr:LzOnceExpr) {
+    function applyConstraintExpr(expr:LzConstraintExpr) {
         // Apply the constraint method
         var constraintMethodName = expr.methodName;
         if ($debug) {
@@ -1497,8 +1500,8 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
         }
         var dependencies = null;
         // TODO: [2008-03-24 ptw] Use `switch type`...
-        if (expr instanceof LzConstraintExpr) {
-            var c:LzConstraintExpr = (expr cast LzConstraintExpr);
+        if (expr instanceof LzAlwaysExpr) {
+            var c:LzAlwaysExpr = (expr cast LzAlwaysExpr);
             var dependenciesMethodName = c.dependenciesName;
             if ($debug) {
                 if (!(this[dependenciesMethodName] is Function)) {

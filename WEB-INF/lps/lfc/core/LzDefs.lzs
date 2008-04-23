@@ -83,12 +83,20 @@ var LzDeclaredEvent:LzNullEvent = new LzNullEvent();
 
 
 /**
+ * Private class used to define a value whose computation must be
+ * deferred until runtime, such as a CSS style
+ * @access private
+ */
+class LzValueExpr {
+}
+
+/**
  * Private class used to distinguish an init expression from an
  * initial value in node attributes.  All forms of 'constraints' are a
  * subclass of this class
  * @access private
  */
-class LzInitExpr {
+class LzInitExpr extends LzValueExpr {
 }
 
 /**
@@ -103,12 +111,24 @@ class LzOnceExpr extends LzInitExpr {
 }
 
 /**
- * Private class used to define an 'always' constraint
+ * Private class used to define a 'style' (and as a subclass, an
+ * 'always') constraint
  * @access private
  */
 class LzConstraintExpr extends LzOnceExpr {
+  function LzConstraintExpr(constraintMethod:String) {
+    super(constraintMethod);
+  }
+};
+
+/**
+ * Private class used to define an 'always' constraint (which also has
+ * a dependency method)
+ * @access private
+ */
+class LzAlwaysExpr extends LzConstraintExpr {
   var dependenciesName:String;
-  function LzConstraintExpr(constraintMethod:String, dependenciesMethod:String) {
+  function LzAlwaysExpr(constraintMethod:String, dependenciesMethod:String) {
     super(constraintMethod);
     this.dependenciesName = dependenciesMethod;
   }
@@ -118,7 +138,7 @@ class LzConstraintExpr extends LzOnceExpr {
  * Private class used to define a constraint in a style value
  * @access private
  */
-class LzStyleExpr extends LzInitExpr {
+class LzStyleExpr extends LzValueExpr {
   var sourceAttributeName:String;
   function LzStyleExpr(sourceAttributeName:String) {
     this.sourceAttributeName = sourceAttributeName;
