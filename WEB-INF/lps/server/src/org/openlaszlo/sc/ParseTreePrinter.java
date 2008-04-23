@@ -329,7 +329,7 @@ public class ParseTreePrinter {
       return lnum(node, visitLiteral(node, children));
     }
     if (node instanceof ASTLabeledStatement) {
-      return lnum(visitLabeledStatement(node, children));
+      return lnum(node, visitLabeledStatement(node, children));
     }
     if (node instanceof ASTObjectLiteral) {
       return lnum(node, visitObjectLiteral(node, children));
@@ -528,7 +528,7 @@ public class ParseTreePrinter {
     return "break" + (children.length > 0 ? delimit(children[0]) : "");
   }
   public String visitLabeledStatement(SimpleNode node, String[] children) {
-    return children[0] + ":" delimit(children[1]);
+    return children[0] + ":" + delimit(children[1]);
   }
   public String visitUnaryExpression(SimpleNode node, String[] children) {
     // Prefix and Unary are the same node
