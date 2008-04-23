@@ -328,6 +328,9 @@ public class ParseTreePrinter {
     if (node instanceof ASTLiteral) {
       return lnum(node, visitLiteral(node, children));
     }
+    if (node instanceof ASTLabeledStatement) {
+      return lnum(visitLabeledStatement(node, children));
+    }
     if (node instanceof ASTObjectLiteral) {
       return lnum(node, visitObjectLiteral(node, children));
     }
@@ -368,7 +371,7 @@ public class ParseTreePrinter {
   }
   
   public String defaultVisitor(SimpleNode node, String[] children) {
-    return lnum(node, "//\u00AB" + node.toString() + "(" + join(COMMA, children) + ")\u00BB");
+    throw new CompilerError("Don't know how to unparse: \u00AB" + node.toString() + "(" + join(COMMA, children) + ")\u00BB");
   }
   
   // Copied (and massaged) from Parser.jjt
@@ -523,6 +526,9 @@ public class ParseTreePrinter {
   }
   public String visitBreakStatement(SimpleNode node, String[] children) {
     return "break" + (children.length > 0 ? delimit(children[0]) : "");
+  }
+  public String visitLabeledStatement(SimpleNode node, String[] children) {
+    return children[0] + ":" delimit(children[1]);
   }
   public String visitUnaryExpression(SimpleNode node, String[] children) {
     // Prefix and Unary are the same node
