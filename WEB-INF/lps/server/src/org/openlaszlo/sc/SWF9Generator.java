@@ -360,9 +360,10 @@ public class SWF9Generator extends JavascriptGenerator {
 
       if (ref.realsuper != null) {
         superClass = (SimpleNode)classes.get(ref.realsuper);
-        if (superClass == null) {
-          throw new CompilerError("Superclass " + ref.realsuper + " not defined for mixin: " + ref.mixinname);
-        }
+
+        // If superClass is null, then we don't know anything about
+        // it: it may be in an included library, etc.  For that case,
+        // we currently require the caller to provide a constructor.
       }
       result.set(result.size(), createInterstitial(mixin, isname, ref, superClass));
     }
@@ -518,6 +519,15 @@ public class SWF9Generator extends JavascriptGenerator {
     ischildren[3] = newIdentifier(mixref.mixinname);
     System.arraycopy(mixinchildren, 4, ischildren, 4, origlen - 4);
     if (mixinconstructor == null) {
+      if (supernode == null && mixref.realsuper != null) {
+
+        // For an unknown superclass, we require the mixin programmer
+        // to provide a constructor that handles all the cases it
+        // might be used.  This is a temporary measure - we currently
+        // have no knowledge of superclasses that live in other libraries.
+
+        throw new CompilerError("Superclass " + mixref.realsuper + " used by mixin not defined, and no constructor supplied for mixin: " + mixref.mixinname);
+      }
       ischildren[origlen] = createInterstitialConstructor(isname, supernode);
     }
     
