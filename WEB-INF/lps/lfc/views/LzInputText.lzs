@@ -76,6 +76,12 @@ dynamic public class LzInputText extends LzText {
     super(parent,attrs,children,instcall);
   }
 
+/** If true, the inputtext contents will be obscured
+  * @lzxtype booleanLiteral
+  * @type Boolean
+  * @modifiers read-only
+  */
+    var password;
 
 /** @access private
   * @modifiers override 
@@ -112,6 +118,7 @@ var _modemanagerDel = null;
   * @access private
   */
 override function construct ( parent , args ){
+    this.password = ('password' in args && args.password)  ? true : false;
     this.focusable = true;
     super.construct.apply(this, arguments);
     this._onfocusDel = new LzDelegate( this , "_gotFocusEvent" , this,
@@ -153,6 +160,7 @@ override function __makeSprite(args) {
     this.sprite = new LzInputTextSprite(this, args);
 }
 
+/** @access private */
 var _focused = false;
 
 /** @access private */
@@ -207,6 +215,11 @@ override function updateData () {
     return isprite.getText();
 }
 
+
+/** If true, the inputtext will be enabled
+  * @lzxtype booleanLiteral
+  * @type Boolean
+  */
     public var enabled = true;
 
 

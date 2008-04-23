@@ -689,6 +689,7 @@ LzSprite.prototype.__clickDispatcher = function(e) {
   * @access private
   */
 LzSprite.prototype.__mouseEvent = function ( e ){
+    // send option/shift/ctrl key events
     if (LzKeyboardKernel && LzKeyboardKernel['__keyboardEvent']) LzKeyboardKernel.__keyboardEvent(e);
     var skipevent = false;
     var eventname = 'on' + e.type;

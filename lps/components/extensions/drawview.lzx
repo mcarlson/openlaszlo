@@ -118,7 +118,7 @@
     <!--- If true, the bitmap result will be cached where possible.
       @access public
     -->
-    <attribute name="cachebitmap" value="true"/>
+    <attribute name="cachebitmap" value="true" type="boolean"/>
     
     <!--- Sent when the context is ready to use, which can take some time in IE.
       @access public
@@ -137,6 +137,8 @@
 
     <!---
       Sets the current position to the given coordinate and creates a new subpath with that point as its first (and only) point. If there was a previous subpath, and it consists of just one point, then that subpath is removed from the path.
+      @param Number x: x position to move to
+      @param Number y: y position to move to
     -->
     <method name="moveTo" args="x, y"/>
 
@@ -229,7 +231,7 @@
 
     <!---
       Rect creates a new subpath containing just the rectangle with top left coordinate (x, y), width w and height h.
-      based on mc.drawRect() - by Ric Ewing (ric@formequalsfunction.com)
+      Based on mc.drawRect() - by Ric Ewing (ric@formequalsfunction.com)
       
       @param Number x: starting x position
       @param Number y: starting y position
@@ -241,7 +243,7 @@
 
     <!--
       Draws an oval at the origin x, y with a radius radius.  If yRadius is specified, radius is the x radius of the oval.
-      based on mc.drawOval() - by Ric Ewing (ric@formequalsfunction.com) - version 1.1 - 4.7.2002
+      Based on mc.drawOval() - by Ric Ewing (ric@formequalsfunction.com) - version 1.1 - 4.7.2002
       
       @param Number x: Starting x position
       @param Number y: Starting y position

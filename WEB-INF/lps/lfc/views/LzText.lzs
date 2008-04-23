@@ -35,7 +35,6 @@
   * @devnote This is for regular and input text. 
   * @lzxname text
   *
-  * @initarg Boolean password
   * @initarg Boolean multiline
   * @initarg String font
   * @initarg Number fontsize
@@ -73,23 +72,53 @@
   */
 dynamic class LzText extends LzView with LzFormatter {
 
+/** The number of lines that will fit in the current height
+  * @lzxtype Number
+  * @type Number
+  * @modifiers read-only
+  */
     var maxlines = 1;
+/** If true, the text is selectable
+  * @lzxtype booleanLiteral
+  * @type Boolean
+  * @modifiers read-only
+  */
     var selectable = false;
+// these 4 are only available in swf8 and higher
+/** @access private */
     var antiAliasType = "normal";
+/** @access private */
     var gridFit = "subpixel";
+/** @access private */
     var sharpness = 0;
+/** @access private */
     var thickness = 0;
+
     function LzText ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
         super(parent,attrs,children,instcall);
     }
     
 
-    var password;
+/** @access private */
     var sizeToHeight;
 
+/**
+  * The y scroll position of the textfield.
+  * @lzxtype Number
+  * @type Number
+  * @modifiers read-only
+  */
     var yscroll;
+
+/**
+  * The x scroll position of the textfield.
+  * @lzxtype Number
+  * @type Number
+  * @modifiers read-only
+  */
     var xscroll;
 
+/** @access private */
     var scrollheight;
 
 
@@ -172,6 +201,7 @@ LzText.attributes.pixellock = true;
   *
   * @keywords final
   * @lzxtype boolean
+  * @type Boolean
   * @lzxdefault "false"
   */
 var multiline;
@@ -182,6 +212,7 @@ var multiline;
   * the width of the widest line.  Defaults to true. 
   *
   * @lzxtype booleanLiteral
+  * @type Boolean
   * @modifiers read-only
   */
 var resize = true;
@@ -189,6 +220,7 @@ var resize = true;
 /**
   * The text to display in this text field.
   * @lzxtype string
+  * @type String
   */
 var text;
 
@@ -202,10 +234,8 @@ override function init () {
     // [max] had to do this because text fields don't have a height until they're attached into the DOM.
     // multiline resizable fields adjust their height
     if (this.sizeToHeight) {
-
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-
-    var h = tsprite.getTextfieldHeight();
+        var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+        var h = tsprite.getTextfieldHeight();
         if (h > 0) {
             this.setHeight(h);
         }
@@ -217,7 +247,6 @@ override function init () {
   */
 override function construct ( parent, args ) {
 
-    this.password = ('password' in args && args.password)  ? true : false;
     this.multiline = ('multiline' in args) ? args.multiline : null;
 
     super.construct.apply(this, arguments);
@@ -331,6 +360,7 @@ override function construct ( parent, args ) {
         if (! LzText.setters.antiAliasType) {
             /**
             * @lzxtype string
+            * @type String
             * @modifiers virtual
             */
             // no var decl since this is a virtual field
@@ -396,14 +426,17 @@ function $lzc$set_xscroll(v) { this.setXScroll(v); }
   * If true, the text is selectable
   *
   * @lzxtype booleanLiteral
+  * @type Boolean
   * @modifiers virtual
-  */
 // no var decl since this is a virtual field
+  * @access private
+  */
 function $lzc$set_selectable(v) { this.setSelectable(v); }
 LzText.attributes.selectable = false;
 
 /**
   * @lzxtype numberExpression
+  * @type Number
   * @modifiers read-only
   */
 var maxlength; 
@@ -412,6 +445,7 @@ function $lzc$set_maxlength(v) { this.setMaxLength(v); }
 
 /**
   * @lzxtype string
+  * @type String
   * @modifiers read-only
   */
 var pattern; 
@@ -446,29 +480,13 @@ override function setWidth ( val ){
     super.setWidth.apply(this, arguments);
     // recalculate height
     if (this.sizeToHeight) {
-    var h = tsprite.getTextfieldHeight();
+        var h = tsprite.getTextfieldHeight();
         if (h > 0) {
             this.setHeight(h);
         }
     }
 }
 
-
-/**
-  * @access private
-  */
-/*
-function updateMaxLines (){
-
-    var newlin = Math.floor( this.height / (  this.font.height -1 ) );
-    if ( newlin != this.maxlines ){
-        this.maxlines = newlin;
-    }
-}
-*/
-
-//Abstract method
-//LzText.prototype.setText
 
 /**
   * Appends the string to the current text in the textfield.
@@ -630,7 +648,8 @@ function getBottomScroll ( ){
 function setXScroll ( n ){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     tsprite.setXScroll(n);
-    //this.onxscroll.sendEvent(??);
+    this.xscroll = n;
+    this.onxscroll.sendEvent(n);
 }
 
 /**
@@ -641,7 +660,8 @@ function setXScroll ( n ){
 function setYScroll ( n ){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     tsprite.setYScroll(n);
-    //this.onyscroll.sendEvent(this.yscroll);
+    this.yscroll = n;
+    this.onyscroll.sendEvent(n);
 }
 
 /**
@@ -776,7 +796,7 @@ function setText ( t, force = null){
 
     //resizable fields adjust their height
     if (this.sizeToHeight) {
-    var h = tsprite.getTextfieldHeight();
+        var h = tsprite.getTextfieldHeight();
         if (h > 0) {
             this.setHeight(h);
         }
@@ -826,6 +846,7 @@ function $lzc$getText_dependencies ( who , self){
       return [ self , "text" ];
 }
 
+/** @access private */
 static var escapeChars = { '>': '&gt;', '<': '&lt;'};
 
 /**

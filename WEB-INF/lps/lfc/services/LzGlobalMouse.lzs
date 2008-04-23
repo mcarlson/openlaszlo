@@ -73,11 +73,23 @@
   * view that was clicked. If no view was clicked, the argument is null. 
   */
 public class LzGlobalMouse {
+/** Sent whenever the mouse moves 
+  * @access public
+  * @lzxtype event 
+  */
+    var onmousemove = LzDeclaredEvent;
+/** Sent whenever the mouse button goes up 
+  * @access public
+  * @lzxtype event 
+  */
+    var onmouseup = LzDeclaredEvent;
+/** Sent whenever the mouse button goes down 
+  * @access public
+  * @lzxtype event 
+  */
+    var onmousedown = LzDeclaredEvent;
 
-    static var onmousemove = LzDeclaredEvent;
-    static var onmouseup = LzDeclaredEvent;
-    static var onmousedown = LzDeclaredEvent;
-
+/** @access private */
     static var __movecounter = 0;
 
 /** @access private */
