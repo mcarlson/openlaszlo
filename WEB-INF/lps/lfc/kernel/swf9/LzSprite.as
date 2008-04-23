@@ -234,27 +234,21 @@ dynamic public class LzSprite extends Sprite {
       
       //// Mouse event trampoline
       public function attachMouseEvents(dobj:DisplayObject) {
-          dobj.addEventListener(MouseEvent.CLICK, handleMouse_CLICK, false);
+          dobj.addEventListener(MouseEvent.CLICK, __mouseEvent, false);
           dobj.addEventListener(MouseEvent.DOUBLE_CLICK, handleMouse_DOUBLE_CLICK, false);
-          dobj.addEventListener(MouseEvent.MOUSE_DOWN, handleMouse_MOUSE_DOWN, false);
-          dobj.addEventListener(MouseEvent.MOUSE_UP, handleMouse_MOUSE_UP, false);
-          dobj.addEventListener(MouseEvent.MOUSE_OVER, handleMouse_MOUSE_OVER, false);
-          dobj.addEventListener(MouseEvent.MOUSE_OUT, handleMouse_MOUSE_OUT, false);
+          dobj.addEventListener(MouseEvent.MOUSE_DOWN, __mouseEvent, false);
+          dobj.addEventListener(MouseEvent.MOUSE_UP, __mouseEvent, false);
+          dobj.addEventListener(MouseEvent.MOUSE_OVER, __mouseEvent, false);
+          dobj.addEventListener(MouseEvent.MOUSE_OUT, __mouseEvent, false);
       }
 
       public function removeMouseEvents(dobj:DisplayObject) {
-          dobj.removeEventListener(MouseEvent.CLICK, handleMouse_CLICK, false);
+          dobj.removeEventListener(MouseEvent.CLICK, __mouseEvent, false);
           dobj.removeEventListener(MouseEvent.DOUBLE_CLICK, handleMouse_DOUBLE_CLICK, false);
-          dobj.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouse_MOUSE_DOWN, false);
-          dobj.removeEventListener(MouseEvent.MOUSE_UP, handleMouse_MOUSE_UP, false);
-          dobj.removeEventListener(MouseEvent.MOUSE_OVER, handleMouse_MOUSE_OVER, false);
-          dobj.removeEventListener(MouseEvent.MOUSE_OUT, handleMouse_MOUSE_OUT, false);
-      }
-
-
-      public function handleMouse_CLICK (event:MouseEvent) {
-          LzModeManager.handleMouseEvent( owner, 'onclick');
-          event.stopPropagation();
+          dobj.removeEventListener(MouseEvent.MOUSE_DOWN, __mouseEvent, false);
+          dobj.removeEventListener(MouseEvent.MOUSE_UP, __mouseEvent, false);
+          dobj.removeEventListener(MouseEvent.MOUSE_OVER, __mouseEvent, false);
+          dobj.removeEventListener(MouseEvent.MOUSE_OUT, __mouseEvent, false);
       }
 
       public function handleMouse_DOUBLE_CLICK (event:MouseEvent) {
@@ -262,27 +256,44 @@ dynamic public class LzSprite extends Sprite {
           event.stopPropagation();
       }
 
-      public function handleMouse_MOUSE_DOWN (event:MouseEvent) {
-          LzModeManager.handleMouseEvent( owner, 'onmousedown');
-          event.stopPropagation();
+        // called by LzMouseKernel when mouse goes up on another sprite
+        public function __globalmouseup( e:MouseEvent ){
+            if (this.__mousedown) {
+                this.__mouseEvent(e);
+                this.__mouseEvent(new MouseEvent('mouseupoutside'));
+            }
+        }
+
+      public function __mouseEvent( e:MouseEvent ){
+            var skipevent = false;
+            var eventname = 'on' + e.type.toLowerCase();
+            if (eventname == 'onmousedown') {
+                // cancel mousedown event bubbling...
+                e.stopPropagation();
+                this.__mousedown = true;
+                LzMouseKernel.__lastMouseDown = this;
+            } else if (eventname == 'onmouseup') {
+                if (LzMouseKernel.__lastMouseDown == this) {
+                    this.__mousedown = false;
+                    LzMouseKernel.__lastMouseDown = null;
+                } else {
+                    skipevent = true;
+                }
+            }
+
+            //Debug.write('__mouseEvent', eventname, this.owner);
+            if (skipevent == false && this.owner.mouseevent) {
+                LzModeManager.handleMouseEvent(this.owner, eventname);
+
+                if (this.__mousedown) {
+                    if (eventname == 'onmouseover') {
+                        LzModeManager.handleMouseEvent(this.owner, 'onmousedragin');
+                    } else if (eventname == 'onmouseout') {
+                        LzModeManager.handleMouseEvent(this.owner, 'onmousedragout');
+                    }
+                }
+            }
       }
-
-      public function handleMouse_MOUSE_UP (event:MouseEvent) {
-          LzModeManager.handleMouseEvent( owner, 'onmouseup');
-          event.stopPropagation();
-      }
-
-      public function handleMouse_MOUSE_OVER (event:MouseEvent) {
-          LzModeManager.handleMouseEvent( owner, 'onmouseover');
-          event.stopPropagation();
-      }
-
-      public function handleMouse_MOUSE_OUT (event:MouseEvent) {
-          LzModeManager.handleMouseEvent( owner, 'onmouseout');
-          event.stopPropagation();
-      }
-
-
 
       /** setClickable( Boolean:clickable )
           o If true, sets the sprite to be clickable and receive mouse events
@@ -685,12 +696,6 @@ dynamic public class LzSprite extends Sprite {
 
       public function setAccessible(accessible:*) {
           trace('LzSprite.setAccessible not yet implemented');
-      }
-
-
-      public function mouseDown(event:MouseEvent):void {
-          trace("mouse down on "+event.target);
-          event.target.startDrag();
       }
 
       public function getMCRef () {

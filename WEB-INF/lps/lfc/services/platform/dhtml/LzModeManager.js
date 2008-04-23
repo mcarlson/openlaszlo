@@ -9,22 +9,20 @@
   * @subtopic Services
   */
 
-LzModeManager.rawMouseEvent = function(me) {
-    this.handleMouseEvent( null , me );
-}
-
-LzModeManager.handleMouseButton = function(view, eventName) {
-    this.handleMouseEvent( view , eventName );
-}
-    
-/**
-  * Finds the view for if the mouse event occurred in an input text field 
-  * TODO: implement
-  * @access private
-  */
-LzModeManager.__findInputtextSelection = function () {
-    if (LzInputTextSprite.prototype.__focusedSprite 
-        && LzInputTextSprite.prototype.__focusedSprite.owner) {
-        return LzInputTextSprite.prototype.__focusedSprite.owner;
+public class LzModeManagerClass extends LzModeManagerBase {
+    /**
+     * Finds the view for if the mouse event occurred in an input text field 
+     * TODO: implement
+     * @access private
+     */
+    override function __findInputtextSelection  () {
+        if (LzInputTextSprite.__focusedSprite 
+            && LzInputTextSprite.__focusedSprite.owner) {
+            return LzInputTextSprite.__focusedSprite.owner;
+        }
     }
 }
+
+var LzModeManager:LzModeManagerClass = new LzModeManagerClass();
+// Register for callbacks from the kernel
+LzMouseKernel.setCallback(LzModeManager, 'rawMouseEvent');

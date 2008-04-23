@@ -24,19 +24,29 @@ class LzMouseKernel  {
     }
     static var __callback = null;
     static var __scope = null;
+    static var __lastMouseDown = null;
     static var __listeneradded:Boolean = false ;
 
     static function setCallback (scope, funcname) {
         LzMouseKernel.__scope = scope;
         LzMouseKernel.__callback = funcname;
         if (LzMouseKernel.__listeneradded == false) {
-            LzScreenKernel.stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+            LFCApplication.stage.addEventListener(MouseEvent.MOUSE_MOVE, __mouseHandler);
+            LFCApplication.stage.addEventListener(MouseEvent.MOUSE_UP, __mouseHandler);
+            LFCApplication.stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseHandler);
             LzMouseKernel.__listeneradded = true;
         }
     }    
 
-    static function mouseMoveHandler(event:MouseEvent):void {
-        LzGlobalMouse.__mouseEvent('onmousemove', null);
+    static function __mouseHandler(event:MouseEvent):void {
+        var eventname = 'on' + event.type.toLowerCase();
+        //Debug.write('__mouseHandler', eventname);
+
+        if (eventname == 'onmouseup' && __lastMouseDown != null) {
+            // call mouseup on the sprite that got the last mouse down  
+            LzMouseKernel.__lastMouseDown.__globalmouseup(event);
+        }
+        LzGlobalMouse.__mouseEvent(eventname, null);
     }
 
     /**
@@ -84,7 +94,4 @@ class LzMouseKernel  {
         LzMouseKernel.__amLocked = false;
         LzMouseKernel.restoreCursor(); 
     }
-    
 }
-
-

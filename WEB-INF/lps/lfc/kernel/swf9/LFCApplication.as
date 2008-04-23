@@ -27,7 +27,7 @@ public class LFCApplication extends Sprite {
 
 
     // Allow anyone access to the stage object (see ctor below)
-    public static var stage:Stage;
+    public static var stage:Stage = null;
 
     // Allow anyone access to write to the debugger
     public static var write:Function;
@@ -63,8 +63,6 @@ public class LFCApplication extends Sprite {
         //Stage.align = ('canvassalign' in global && global.canvassalign != null) ? global.canvassalign : "LT";
         //Stage.scaleMode = ('canvasscale' in global && global.canvasscale != null) ? global.canvasscale : "noScale";
 
-        // Give LzScreenKernel a pointer to the Stage
-        LzScreenKernel.stage = stage;
         stage.addEventListener(Event.RESIZE, resizeHandler);
 
 
@@ -178,22 +176,11 @@ public class LFCApplication extends Sprite {
 
 
 
-      function reportWheel(event:MouseEvent):void
-    {
-        trace(event.currentTarget.toString() + 
-              " dispatches MouseWheelEvent. delta = " + event.delta);
-        //        LzKeys.__mousewheelEvent(event.delta);
-    }
-
-
-    function reportClick(event:MouseEvent):void
-    {
+    function reportWheel(event:MouseEvent):void {
         /*
-          trace(event.currentTarget.toString() + 
-              " dispatches MouseEvent. Local coords [" + 
-              event.localX + "," + event.localY + "] Stage coords [" + 
-              event.stageX + "," + event.stageY + "]");
-        */
+        Debug.write(event.currentTarget.toString() + 
+              " dispatches MouseWheelEvent. delta = " + event.delta); */
+        LzKeys.__mousewheelEvent(event.delta);
     }
 
     function resizeHandler(event:Event):void {

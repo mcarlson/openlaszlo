@@ -17,12 +17,11 @@ public class LzScreenKernel {
     import flash.utils.*;
     }#
 
-    public static var stage:Stage = null;
     public static var width = null;
     public static var height = null;
     public static function handleResizeEvent():void {
-        LzScreenKernel.width = stage.stageWidth;
-        LzScreenKernel.height = stage.stageHeight;
+        LzScreenKernel.width = LFCApplication.stage.stageWidth;
+        LzScreenKernel.height = LFCApplication.stage.stageHeight;
         if (LzScreenKernel.__callback) {
             LzScreenKernel.__scope[LzScreenKernel.__callback]({width: LzScreenKernel.width, height: LzScreenKernel.height});
             //trace('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});

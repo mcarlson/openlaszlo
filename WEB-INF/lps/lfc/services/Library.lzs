@@ -11,11 +11,7 @@
 #include "services/LzGlobalMouse.lzs"
 #include "services/LzBrowser.lzs"
 
-if ($swf9) {
-    #include "services/LzModeManager.js"
-} else {
-    #include "services/LzModeManager.lzs"
-}
+#include "services/LzModeManager.lzs"
 
 if ($swf9) {
 #include "services/LzURL.js"
@@ -31,7 +27,7 @@ if ($js1) {
     #include "services/platform/dhtml/LzHistory.js"
 } else if ($swf9) {
     #include "services/platform/swf9/LzKeys.js"
-//    #include "services/platform/dhtml/LzModeManager.js"
+    #include "services/platform/swf9/LzModeManager.js"
 } else if ($as2) {
     #include "services/platform/swf/LzModeManager.as"
     #include "services/platform/swf/LzKeys.as"

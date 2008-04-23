@@ -47,186 +47,208 @@
   * @devnote Manages the modal states of views and also notifies views ( that have
   * registered with it ) when their focus has changed.
   */
-var LzModeManager = new Object();
-
-/** Sent when the mode changes. */
-LzModeManager.onmode = LzDeclaredEvent;
-
-/** @access private */
-LzModeManager.__LZlastclick = null;
-LzModeManager.willCall = false;
-LzModeManager.eventsLocked = false;
-
-LzModeManager.modeArray = new Array();
-
-LzModeManager.toString = function (){
-    return "mode manager";
-}
-
-
-/**
-  * Pushes the view onto the stack of modal views
-  * @param LzView view: The view intending to have modal iteraction
-  */
-LzModeManager.makeModal = function ( view ) {
-    if (this.modeArray.length == 0 || !this.hasMode( view )) {
-        this.modeArray.push( view );
-        if (this.onmode.ready) this.onmode.sendEvent( view );
-        var f = LzFocus.getFocus();
-        if ( f && ! f.childOf( view ) ){
-            LzFocus.clearFocus();
-        }
+public class LzModeManagerBase extends LzNode {
+    if ($swf9) {
+        #passthrough (toplevel:true) {  
+        import flash.utils.*;
+        }#
     }
-}
 
-/**
-  * Removes the view (and all the views below it) from the stack of modal views
-  * @param LzView view: The view to be released of modal interaction
-  */
-LzModeManager.release = function ( view ) {
-    //releases all views past this one in the modelist as well
-    for ( var i = this.modeArray.length-1 ; i >=0 ; i-- ){
-        if ( this.modeArray[ i ] == view ){
-            this.modeArray.splice( i , this.modeArray.length - i );
-            var newmode = this.modeArray[ i - 1 ];
-            if (this.onmode.ready) this.onmode.sendEvent( newmode || null );
+    /** Sent when the mode changes.
+    * @lzxtype event
+    * @access public
+    */
+    var onmode = LzDeclaredEvent;
+
+    /** @access private */
+    var __LZlastclick = null;
+    /** @access private */
+    var __LZlastClickTime = 0;
+    /** @access private */
+    var willCall = false;
+    /** @access private */
+    var eventsLocked = false;
+    /** @access private */
+    var modeArray = new Array();
+
+    /**
+    * Pushes the view onto the stack of modal views
+    * @param LzView view: The view intending to have modal iteraction
+    */
+    function makeModal ( view ) {
+        if (this.modeArray.length == 0 || !this.hasMode( view )) {
+            this.modeArray.push( view );
+            if (this.onmode.ready) this.onmode.sendEvent( view );
             var f = LzFocus.getFocus();
-            if ( newmode && f && ! f.childOf( newmode ) ){
+            if ( f && ! f.childOf( view ) ){
                 LzFocus.clearFocus();
             }
+        }
+    }
+
+    /**
+    * Removes the view (and all the views below it) from the stack of modal views
+    * @param LzView view: The view to be released of modal interaction
+    */
+    function release ( view ) {
+        //releases all views past this one in the modelist as well
+        for ( var i = this.modeArray.length-1 ; i >=0 ; i-- ){
+            if ( this.modeArray[ i ] == view ){
+                this.modeArray.splice( i , this.modeArray.length - i );
+                var newmode = this.modeArray[ i - 1 ];
+                if (this.onmode.ready) this.onmode.sendEvent( newmode || null );
+                var f = LzFocus.getFocus();
+                if ( newmode && f && ! f.childOf( newmode ) ){
+                    LzFocus.clearFocus();
+                }
+                return;
+            }
+        }
+    }
+
+    /**
+    * Clears all modal views from the stack
+    */
+    function releaseAll ( ) {
+        // reset array to remove all views
+        this.modeArray = new Array();
+        if (this.onmode.ready) this.onmode.sendEvent( null );
+    }
+
+    /**
+    * Check to see if the current event should be passed to its intended view
+    * @access private
+    * 
+    * @param LzView view: the view that received the event
+    * @param String eventStr: the event string
+    */
+    function handleMouseEvent ( view, eventStr ) {
+        //Debug.warn("%w, %w", view , eventStr);
+        if (eventStr == "onmouseup") LzTrack.__LZmouseup();
+
+        var dosend = true;
+        var isinputtext = false;
+
+        if (view == null ) {  // check if the mouse event is in a inputtext
+            view = this.__findInputtextSelection(); 
+        }
+
+        LzGlobalMouse.__mouseEvent(eventStr, view);
+
+        if ( this.eventsLocked == true ){
             return;
         }
-    }
-}
 
-/**
-  * Clears all modal views from the stack
-  */
-LzModeManager.releaseAll = function ( ) {
-    // reset array to remove all views
-    this.modeArray = new Array();
-    if (this.onmode.ready) this.onmode.sendEvent( null );
-}
+        var i = this.modeArray.length-1;
+        while( dosend && i >= 0 ){
+            var mView = this.modeArray[ i-- ];
+            // exclude the debugger from the mode
+            if ($debug) {
+                if (view && Debug && view.childOf(Debug))
+                    break;
+            }
 
-/**
-  * Check to see if the current event should be passed to its intended view
-  * @access private
-  * 
-  * @param LzView view: the view that received the event
-  * @param String eventStr: the event string
-  */
-LzModeManager.handleMouseEvent= function ( view, eventStr ) {
-    //Debug.warn("%w, %w", view , eventStr);
-
-    if (eventStr == "onmouseup") LzTrack.__LZmouseup();
-
-
-    var dosend = true;
-    var isinputtext = false;
-
-    if (view == null ) {  // check if the mouse event is in a inputtext
-        view = this.__findInputtextSelection(); 
-    }
-
-    LzGlobalMouse.__mouseEvent(eventStr, view);
-
-    if ( this.eventsLocked == true ){
-        return;
-    }
-
-    var i = this.modeArray.length-1;
-    while( dosend && i >= 0 ){
-        var mView = this.modeArray[ i-- ];
-        // exclude the debugger from the mode
-        if ($debug) {
-             if (view && Debug && view.childOf(Debug))
+            if (view && view.childOf( mView ) ){
                 break;
-        }
-
-        if (view && view.childOf( mView ) ){
-            break;
-        } else if (mView) {
-            dosend = mView.passModeEvent ? mView.passModeEvent( eventStr , view ) : null;
-        }
-    }
-
-    if ( dosend ){
-        //check for double-click
-        if ( eventStr == "onclick" ){
-            if ( this.__LZlastclick == view  &&
-               ('ondblclick' in view && view.ondblclick) && 
-               (view.ondblclick.getDelegateCount() > 0) &&
-                (getTimer() - this.__LZlastClickTime)< view.DOUBLE_CLICK_TIME ){
-                    //this is a double-click
-                    eventStr = "ondblclick";
-                    this.__LZlastclick = null;
-            } else {
-                this.__LZlastclick = view;
-                this.__LZlastClickTime = getTimer();
+            } else if (mView) {
+                dosend = mView.passModeEvent ? mView.passModeEvent( eventStr , view ) : null;
             }
         }
 
-        //Debug.warn("sending %w, %w", view , eventStr);
+        if ( dosend ){
+            //check for double-click
+            if ( eventStr == "onclick" ){
+                if ( this.__LZlastclick == view && view.ondblclick.ready &&
+                    (getTimer() - this.__LZlastClickTime)< view.DOUBLE_CLICK_TIME ){
+                        //this is a double-click
+                        eventStr = "ondblclick";
+                        this.__LZlastclick = null;
+                } else {
+                    this.__LZlastclick = view;
+                    this.__LZlastClickTime = getTimer();
+                }
+            }
 
-        if (view) view.mouseevent( eventStr );
-        if ( eventStr == "onmousedown" ){
-            LzFocus.__LZcheckFocusChange( view );
-        }
-    } 
+            //Debug.warn("sending %w, %w", view , eventStr);
+
+            if (view) view.mouseevent( eventStr );
+            if ( eventStr == "onmousedown" ){
+                LzFocus.__LZcheckFocusChange( view );
+            }
+        } 
 
 
-    //this on matters for onmouseup and onmousedown, but it's easier to just
-    //set it regardless
-    this[ "haveGlobal" + eventStr ] = false;
+        //this on matters for onmouseup and onmousedown, but it's easier to just
+        //set it regardless
+        //this[ "haveGlobal" + eventStr ] = false;
 
-}
-
-/**
-  * return true if the given view is allowed to receive the focus
-  * any view that is a child of the view that has the mode may be focused
-  * other views may not
-  * @access private
-  */
-LzModeManager.__LZallowFocus= function ( view ) {
-    var len = this.modeArray.length;
-    return len == 0 || view.childOf ( this.modeArray[len-1] );
-}
-
-/**
-  * Prevents all mouse events from firing.
-  * */
-LzModeManager.globalLockMouseEvents = function (){
-    this.eventsLocked = true;
-}
-
-/**
-  * Restore normal mouse event firing.
-  * */
-LzModeManager.globalUnlockMouseEvents = function (){
-    this.eventsLocked = false;
-}
-
-/**
-  * Tests whether the given view is in the modelist.
-  * @param LzView view: The mode to be tested to see if it is in the modelist
-  * @return Boolean: true if the view is in the modelist
-  * 
-  */
-LzModeManager.hasMode = function ( view ){
-    for ( var i = this.modeArray.length -1 ; i >= 0; i-- ){
-        if ( view == this.modeArray[ i ] ){
-            return true;
-        }
     }
-    return false;
-}
 
-/**
-  * @access private
-  */
-LzModeManager.getModalView = function ( ){
-    return this.modeArray[ this.modeArray.length - 1] || null;
-}
+    /**
+    * return true if the given view is allowed to receive the focus
+    * any view that is a child of the view that has the mode may be focused
+    * other views may not
+    * @access private
+    */
+    function __LZallowFocus ( view ) {
+        var len = this.modeArray.length;
+        return len == 0 || view.childOf ( this.modeArray[len-1] );
+    }
 
-// Register for callbacks from the kernel
-LzMouseKernel.setCallback(LzModeManager, 'rawMouseEvent');
+    /**
+    * Prevents all mouse events from firing.
+    * */
+    function globalLockMouseEvents (){
+        this.eventsLocked = true;
+    }
+
+    /**
+    * Restore normal mouse event firing.
+    * */
+    function globalUnlockMouseEvents (){
+        this.eventsLocked = false;
+    }
+
+    /**
+    * Tests whether the given view is in the modelist.
+    * @param LzView view: The mode to be tested to see if it is in the modelist
+    * @return Boolean: true if the view is in the modelist
+    * 
+    */
+    function hasMode ( view ){
+        for ( var i = this.modeArray.length -1 ; i >= 0; i-- ){
+            if ( view == this.modeArray[ i ] ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+    * @access private
+    */
+    function getModalView ( ){
+        return this.modeArray[ this.modeArray.length - 1] || null;
+    }
+
+    /**
+    * @access private
+    */
+    function __findInputtextSelection( ){
+        return null;
+    }
+
+    /**
+    * @access private
+    */
+    function rawMouseEvent(me) {
+        this.handleMouseEvent( null , me );
+    }
+
+    /**
+    * @access private
+    */
+    function handleMouseButton(view, eventName) {
+        this.handleMouseEvent( view , eventName );
+    }
+}
