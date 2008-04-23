@@ -721,6 +721,95 @@ of the system is present.</p>
       &lt;/security&gt;
       </code>
     </text></tag>
+    <text>
+      <p>
+        Java classes used in JavaRPC application must be declared in a security
+        element. Classes not defined in a security element are not allowed to be
+        accessed or instantiated. The format of the security element looks like:
+      </p>
+      <!--<example extract="false">-->
+      <programlisting class="code">
+        &lt;security&gt;
+        &lt;allow&gt;
+        &lt;pattern&gt;CLASS1&lt;/pattern&gt;
+        &lt;pattern&gt;CLASS2&lt;/pattern&gt;
+        ...
+        &lt;pattern&gt;CLASSN&lt;/pattern&gt;
+        &lt;/allow&gt;
+        &lt;/security&gt;
+      </programlisting>
+      <!--</example>-->
+
+      <p>Each &lt;pattern&gt; is a regular expression.</p>
+      
+      <!--<example extract="false" 
+               title="Allow classes that start with org.openlaszlo">-->
+      <programlisting class="code">
+        &lt;security&gt;
+        &lt;allow&gt;
+        &lt;pattern&gt;^org\.openlaszlo&lt;/pattern&gt;
+        &lt;/allow&gt;
+        &lt;/security&gt;
+      </programlisting>
+      <!--</example>-->
+      
+      <p>A javarpc object who's class is not declared in a security tag will result in
+        a load error.</p>
+      
+      <example><![CDATA[<canvas debug="true" height="300">
+ 
+    <debug x="10" y="40" height="240" />
+
+    <security>
+        <allow>
+            <pattern>^examples\.ConstructExample</pattern>
+        </allow>
+    </security>
+
+    <!-- See $LPS_HOME/WEB-INF/classes/examples/ConstructExample.java for java
+        source. -->
+    <javarpc name="ce" scope="session" remoteclassname="examples.ConstructExample"
+             createargs="[1]" autoload="false">
+        <handler name="onerror" args="err">
+            Debug.write("onerror:", err)
+        </handler>
+        <handler name="onload">
+            Debug.write("proxy loaded:", this.proxy);
+        </handler>
+    </javarpc>
+
+    <!-- See $LPS_HOME/WEB-INF/classes/examples/TypesExample.java for java
+         source. This will fail because class is not declared in security
+         pattern-->
+    <javarpc name="te" scope="session" remoteclassname="examples.TypesExample"
+             autoload="false">
+        <handler name="onerror" args="err">
+            Debug.write("onerror:", err)
+        </handler>
+        <handler name="onload">
+            Debug.write("proxy loaded:", this.proxy);
+        </handler>
+    </javarpc>
+    
+    <view x="10" y="10" layout="axis: x; spacing: 5">
+        <button text="Load ConstructExample (allowed)"
+                onclick="canvas.ce.load()" />
+        <button text="Load TypesExample (not allowed)" 
+                onclick="canvas.te.load()" />
+    </view>
+
+</canvas>
+]]></example>
+      
+      <p><b>See Also:</b></p>
+      <ul>
+        <li><a href="../reference/lz.rpc.html"><code class="classname">rpc</code></a></li>
+        <li><a href="../reference/lz.javarpc.html"><code class="classname">javarpc</code></a></li>
+        <li><a href="${dguide}/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a></li>
+        <li><a href="${dguide}/rpc-javarpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: JavaRPC chapter</a></li>
+      </ul>
+                    
+    </text>
   </doc>
   <class>
   </class>
