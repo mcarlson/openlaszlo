@@ -1,0 +1,178 @@
+/**
+  *
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @affects lzcontextmenukernel
+  * @topic LFC
+  * @subtopic Views
+  */
+
+/**
+  * @access private
+  */
+class LzContextMenuKernel {
+
+function LzContextMenuKernel (newowner:LzContextMenu)
+{
+    this.owner = newowner;
+
+    // set callback for Flash "onSelect" event
+    this.cm = new ContextMenu();
+    this.cm.hideBuiltInItems();
+}
+
+var owner:LzContextMenu = null;
+var cm:ContextMenu = null;
+
+
+/**
+  * LzContextMenu.setDelegate
+  * Sets the delegate which will be called when the menu is opened
+  * @param LzDelegate delegate: delegate which is executed when item is selected. An
+  * onmenuopen event is also sent.
+  * 
+  * @access private
+  */
+function setDelegate (delegate) {
+    var __litem__ = this.owner;
+    var callback =  function (mc,cmitem) {
+        if (delegate != null) delegate.execute(__litem__);
+        if (__litem__.onmenuopen.ready) __litem__.onmenuopen.sendEvent(__litem__);
+    };
+    this.cm.onSelect = callback;
+}
+
+
+/**
+  * LzContextMenu.addItem
+  * Adds a menu items into a menu
+  * @param LzContextMenuItem item: LzContextMenuItem to install on this menu
+  * @access private
+  */
+function addItem (item) {
+    this.cm.customItems.push(item.kernel.cmenuitem);
+}
+
+/**
+  * LzContextMenu.hideBuiltInItems
+  * @access private
+  */
+function hideBuiltInItems () {
+    this.cm.hideBuiltInItems();
+}
+
+/**
+  * LzContextMenu.clearItems
+  * Remove all custom items from a menu
+  * @access private
+  */
+function clearItems () {
+    this.cm.customItems = [];
+}
+
+/**
+  * ContextMenu.__LZcontextMenu
+  * Returns Flash ContextMenu object
+  * @access private
+  */
+function __LZcontextMenu () {
+   return this.cm;
+}
+
+}; // End of LzContextMenuKernel
+
+
+
+/**
+  * @access private
+  */
+class LzContextMenuItemKernel {
+
+function LzContextMenuItemKernel (newowner:LzContextMenuItem, title, del)
+{
+    this.owner = newowner;
+    this.cmenuitem = new ContextMenuItem(title);
+    this.setDelegate (del);
+}
+
+var owner:LzContextMenuItem = null;
+var cmenuitem:ContextMenuItem = null;
+
+
+/**
+  * LzContextMenuItem.setDelegate
+  * Sets the delegate which will be called when the menu item is selected
+  * @param LzDelegate delegate: delegate which is executed when item is 
+  * selected. An onselect event is also sent.
+  * 
+  * @access private
+  */
+function setDelegate (delegate) {
+  var __litem__ = this.owner;
+  var callback =  function (mc,cmitem) {
+      if (delegate != null) {
+          if (typeof(delegate) == 'function') {
+              delegate();
+          } else if (delegate instanceof LzDelegate) {
+              delegate.execute(__litem__);
+          } else {
+              Debug.error("LzContextMenuItem.setDelegate must be passed a delegate or function", this, delegate);
+          }
+      }
+      if (__litem__.onselect.ready) __litem__.onselect.sendEvent(__litem__);
+  };
+  this.cmenuitem.onSelect = callback;
+}
+
+/**
+  * LzContextMenuItem.setCaption
+  * Sets the text string which is displayed for the menu item
+  * @param String caption: text string to display
+  * @access public
+  */
+function setCaption (caption) {
+    this.cmenuitem.caption = caption;
+}
+
+/**
+  * LzContextMenuItem.getCaption
+  * Gets the text string which is displayed for the menu item
+  * @access public
+  */
+function getCaption () {
+    return this.cmenuitem.caption;
+}
+
+/**
+  * LzContextMenuItem.setEnabled
+  * @param boolean val: if false, menu item is grayed out and will not respond to clicks
+  * @access public
+  */
+function setEnabled (val) {
+    this.cmenuitem.enabled = val;
+}
+
+/**
+  * LzContextMenuItem.separatorBefore
+  * Draw a horizontal separator line before this item in the menu
+  * @param boolean val: sets visibility of separator line
+  * @access public
+  */
+
+function setSeparatorBefore (val) {
+    this.cmenuitem.separatorBefore = val;
+}
+
+/**
+  * LzContextMenuItem.setVisible
+  * Sets the visibility of the menu item
+  * @param boolean val: sets visibility
+  * @access public
+  */
+function setVisible (val) {
+    this.cmenuitem.visible = val;
+}
+
+}; // End of LzContextMenuItemKernel

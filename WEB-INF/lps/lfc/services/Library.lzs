@@ -10,6 +10,7 @@
 #include "services/LzInstantiator.lzs"
 #include "services/LzGlobalMouse.lzs"
 #include "services/LzBrowser.lzs"
+#include "services/LzContextMenu.lzs"
 
 #include "services/LzModeManager.lzs"
 

@@ -20,4 +20,4 @@
 #include "kernel/dhtml/LzXMLTranslator.js"
 #include "kernel/dhtml/LzHTTPLoader.js"
 #include "kernel/dhtml/LzScreenKernel.js"
-#include "kernel/dhtml/LzContextMenu.js"
+#include "kernel/dhtml/LzContextMenuKernel.lzs"

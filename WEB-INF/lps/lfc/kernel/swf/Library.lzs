@@ -29,6 +29,6 @@
 #include "kernel/swf/LzKeyboardKernel.as"
 #include "kernel/swf/LzAudio.as"
 #include "kernel/swf/LzScreenKernel.as"
-#include "kernel/swf/LzContextMenu.lzs"
+#include "kernel/swf/LzContextMenuKernel.lzs"
 #include "kernel/swf/dojo/Library.lzs"
 

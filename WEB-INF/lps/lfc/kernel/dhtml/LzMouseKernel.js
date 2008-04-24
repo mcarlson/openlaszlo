@@ -47,11 +47,11 @@ var LzMouseKernel = {
             if (e.button == 2 && eventname != 'oncontextmenu') return;
             if (eventname == 'oncontextmenu') {
                 if (targ && targ.owner && targ.owner.__contextmenu) {
-                    targ.owner.__contextmenu.__show();
-                    return targ.owner.__contextmenu.showbuiltins;
+                    targ.owner.__contextmenu.kernel.__show();
+                    return targ.owner.__contextmenu.kernel.showbuiltins;
                 } else if (LzMouseKernel.__defaultcontextmenu) {
-                    LzMouseKernel.__defaultcontextmenu.__show();
-                    return LzMouseKernel.__defaultcontextmenu.showbuiltins;
+                    LzMouseKernel.__defaultcontextmenu.kernel.__show();
+                    return LzMouseKernel.__defaultcontextmenu.kernel.showbuiltins;
                 }
             } else {
                 return LzMouseKernel.__scope[LzMouseKernel.__callback](eventname);

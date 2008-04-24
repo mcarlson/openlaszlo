@@ -19,16 +19,18 @@
   */
 class LzContextMenu extends LzNode {
 
-function LzContextMenu (del) {
-                               // set callback for Flash "onSelect" event
-                               this.cm = new ContextMenu();
-                               this.cm.hideBuiltInItems();
-                               this.items = [];
-                               this.setDelegate(del);
-                           }
+function LzContextMenu (del=null) {
+    this.kernel = new LzContextMenuKernel(this);
 
+    this.items = [];
+    this.setDelegate(del);
+}
+
+//var onselect = LzDeclaredEvent;
 var onmenuopen = LzDeclaredEvent;
-var onselect = LzDeclaredEvent;
+
+var kernel:LzContextMenuKernel = null;
+var items:Array = null;
 
 
 /**
@@ -40,12 +42,7 @@ var onselect = LzDeclaredEvent;
   * @access public
   */
 function setDelegate (delegate) {
-  var __litem__ = this;
-  var callback =  function (mc,cmitem) {
-      if (delegate != null) delegate.execute(__litem__);
-      if (__litem__.onmenuopen.ready) __litem__.onmenuopen.sendEvent(__litem__);
-  };
-  this.cm.onSelect = callback;
+    this.kernel.setDelegate (delegate);
 }
 
 /**
@@ -56,16 +53,15 @@ function setDelegate (delegate) {
   */
 function addItem (item) {
     this.items.push(item);
-    this.cm.customItems.push(item.cmenuitem);
+    this.kernel.addItem (item);
 }
 
 /**
   * LzContextMenu.hideBuiltInItems
-  * Removes Flash-installed default menu items
   * @access public
   */
 function hideBuiltInItems () {
-    this.cm.hideBuiltInItems();
+    this.kernel.hideBuiltInItems ();
 }
 
 /**
@@ -75,7 +71,6 @@ function hideBuiltInItems () {
   */
 function clearItems () {
     this.items = [];
-    this.cm.customItems = [];
 }
 
 /**
@@ -99,15 +94,6 @@ function makeMenuItem (title, callback) {
   return item;
 }
 
-/**
-  * ContextMenu.__LZcontextMenu
-  * Returns Flash ContextMenu object
-  * @access private
-  */
-function __LZcontextMenu () {
-   return this.cm;
-}
-
 }; // End of LzContextMenu
 
 
@@ -122,35 +108,24 @@ function __LZcontextMenu () {
 class LzContextMenuItem extends LzNode {
 
 function LzContextMenuItem (title, del) {
-    this.cmenuitem = new ContextMenuItem(title);
-    this.setDelegate(del);
-}; // End of LzContextMenuItem
+    this.kernel = new LzContextMenuItemKernel(this, title, del);
+};
+
+var onselect = LzDeclaredEvent;
+
+var kernel:LzContextMenuItemKernel = null;
 
 
 /**
   * LzContextMenuItem.setDelegate
   * Sets the delegate which will be called when the menu item is selected
-  * @param LzDelegate delegate: delegate which is executed when item is selected. An
-  * onselect event is also sent. For back compatibility, a function can be passed instead
-  * of a delegate.
+  * @param LzDelegate delegate: delegate which is executed when item is 
+  * selected. An onselect event is also sent.
   * 
   * @access public
   */
 function setDelegate (delegate) {
-  var __litem__ = this;
-  var callback =  function (mc,cmitem) {
-      if (delegate != null) {
-          if (typeof(delegate) == 'function') {
-              delegate();
-          } else if (delegate instanceof LzDelegate) {
-              delegate.execute(__litem__);
-          } else {
-              Debug.error("LzContextMenuItem.setDelegate must be passed a delegate or function", this, delegate);
-          }
-      }
-      if (__litem__.onselect.ready) __litem__.onselect.sendEvent(__litem__);
-  };
-  this.cmenuitem.onSelect = callback;
+    this.kernel.setDelegate (delegate);
 }
 
 /**
@@ -160,8 +135,18 @@ function setDelegate (delegate) {
   * @access public
   */
 function setCaption (caption) {
-    this.cmenuitem.caption = caption;
+    this.kernel.setCaption (caption);
 }
+
+/**
+  * LzContextMenuItem.getCaption
+  * Gets the text string which is displayed for the menu item
+  * @access public
+  */
+function getCaption () {
+    return this.kernel.getCaption();
+}
+
 
 /**
   * LzContextMenuItem.setEnabled
@@ -169,7 +154,7 @@ function setCaption (caption) {
   * @access public
   */
 function setEnabled (val) {
-    this.cmenuitem.enabled = val;
+    this.kernel.setEnabled (val);
 }
 
 /**
@@ -180,17 +165,17 @@ function setEnabled (val) {
   */
 
 function setSeparatorBefore (val) {
-    this.cmenuitem.separatorBefore = val;
+    this.kernel.setSeparatorBefore (val);
 }
 
 /**
   * LzContextMenuItem.setVisible
-  * Sets the function which will be called when the menu item is selected
+  * Sets the visibility of the menu item
   * @param boolean val: sets visibility
   * @access public
   */
 function setVisible (val) {
-    this.cmenuitem.visible = val;
+    this.kernel.setVisible (val);
 }
 
 }; // End of LzContextMenuItem

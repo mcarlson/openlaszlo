@@ -722,7 +722,7 @@ dynamic public class LzSprite extends Sprite {
           } else {
               // For back compatibility, we accept either LzContextMenu or (Flash primitive) ContextMenu
               this.__contextmenu = lzmenu;
-              var cmenu:ContextMenu = lzmenu.__LZcontextMenu();
+              var cmenu:ContextMenu = lzmenu.kernel.__LZcontextMenu();
 
               // TODO [hqm 2008-04] make this do the more complex stuff that swf8 LzSprite does now,
               // where it checks for a resource or bgcolor sprite, in order to make the clickable region
@@ -735,7 +735,9 @@ dynamic public class LzSprite extends Sprite {
 
       function setDefaultContextMenu ( cmenu ){
           if (cmenu != null) {
-              // stage.contextMenu = cmenu.__LZcontextMenu();
+// LPP-5868
+// Generates: Error #2071: The Stage class does not implement this property or method
+//              LFCApplication.stage.contextMenu = cmenu.kernel.__LZcontextMenu();
           }
       }
 

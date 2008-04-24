@@ -1,4 +1,5 @@
-<canvas width="100%" height="80%" >
+<!-- This is based on /test/contextmenu/api.lzx and written to run on swf9 -->
+<canvas>
   <simplelayout/>
 
   <handler name="oninit">
@@ -7,9 +8,8 @@
     var item1 = nm.makeMenuItem('Canvas Hello', function () { Debug.write("Hi, I'm this canvas", this); } );
     nm.addItem(item1);
     this.setDefaultContextMenu(nm);
-    Debug.write("setting new contextmenu on canvas from api.lzx");
+    Debug.write("setting new contextmenu on canvas from contextmenu.lzx");
   </handler>
-
 
 <view width="100" height="100" bgcolor="#cccccc" name="v1">
   <handler name="oninit">
@@ -55,22 +55,14 @@
     Debug.write("handle item handlerightclick, val=", val.getCaption());
   </method>
 
-  <method name="showdialog">
-    md.open();
+  <method name="showdialog" args="ignore">
+    Debug.write("showdialog running");
   </method>
 
   
 
 </view>
 
-
-
-
-<modaldialog id="md" width="200" height="200">
-  <simplelayout/>
-  <text>This is your dialog</text>
-  <button onclick="md.close()" isdefault="true">OK</button>
-</modaldialog>
 
 
 </canvas>

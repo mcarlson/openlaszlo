@@ -1652,7 +1652,7 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
     // For back compatibility, we accept either LzContextMenu or (Flash primitive) ContextMenu
     if (! (cmenu instanceof ContextMenu)) {
         this.__contextmenu = cmenu;
-        cmenu = cmenu.__LZcontextMenu();
+        cmenu = cmenu.kernel.__LZcontextMenu();
     } else {
       if ($debug) {
         Debug.info("Passing a Flash ContextMenu to LzView.setContextMenu is deprecated, use LzContextMenu instead");
@@ -1695,7 +1695,7 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
 }
 
 LzSprite.prototype.setDefaultContextMenu = function ( cmenu ){
-    MovieClip.prototype.menu = cmenu.__LZcontextMenu();
+    MovieClip.prototype.menu = cmenu.kernel.__LZcontextMenu();
 }
 
 /**
