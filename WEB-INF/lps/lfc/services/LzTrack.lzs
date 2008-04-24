@@ -22,7 +22,7 @@
   * <p>
   * In using LzTrack, views register with a particular group.
   * Activation of that group is typically triggered by a user event.  When a group
-  * is active, the LzTrack service will events to views in the active group, whenever
+  * is active, the LzTrack service will send events to views in the active group, whenever
   * the mouse position enters (<event>ontrackover</event>), leaves (<event>ontrackout</event>) or when the mouse
   * button goes up (<event>ontrackup</event>).
   * </p>
@@ -131,7 +131,7 @@ function LzTrackClass (){
 
 
 /**
-  * register a view to be tracked for a particular track group
+  * register a view to be tracked by a particular track group
   * @param LzView v: a reference to the view to add to the track group
   * @param String group: the name of the track group
   * @access public
@@ -156,6 +156,9 @@ function register ( v, group ){
 }
 
 /**
+  * unregister a view to be tracked by a particular track group
+  * @param LzView v: a reference to the view to remove from the track group
+  * @param String group: the name of the track group
   * @access public
   */
 function unregister ( v, group ){
@@ -207,7 +210,8 @@ function activate ( group ){
 }
 
 /**
-  * deactivate tracking for the currently active group
+  * deactivate tracking for a particular group
+  * @param String group: the name of the track group to deactivate
   */
 function deactivate ( group ) {
     for (var i in this.__LZactivegroups) {
