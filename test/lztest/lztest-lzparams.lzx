@@ -10,15 +10,14 @@
 <![CDATA[
 
 function test_lzparams() {
-   var lp = new LzParam();
-   var items = lp.parseQueryString("a=10&b=259&c=foobar&d=%2e%2f%2d");
+   var items = LzParam.parseQueryString("a=10&b=259&c=foobar&d=%2e%2f%2d");
     // {a: 10, b: 259, c: foobar, d: ./-}
    LzTestManager.assertEquals(10, items.a);
    LzTestManager.assertEquals(259, items.b);
    LzTestManager.assertEquals("foobar", items.c);
    LzTestManager.assertEquals("./-", items.d);
 
-   lp = new LzParam();
+   var lp = new LzParam();
    lp.addObject({a: 10, b: 259, c: 'foobar'});
    LzTestManager.assertEquals(10, lp.getValue('a'));
    LzTestManager.assertEquals(259, lp.getValue('b'));
@@ -32,14 +31,14 @@ function test_lzparams() {
 }
 
 function test_lpremove () {   
-   lp = new LzParam();
+   var lp = new LzParam();
    lp.addObject({a: 10, b: 259, c: 'foobar'});
    lp.remove('b');
    LzTestManager.assertEquals(lp.getValue('b'), null);
 }
 
 function test_lpset () {   
-   lp = new LzParam();
+   var lp = new LzParam();
    lp.addObject({a: 10, b: 259, c: 'foobar'});
    lp.setValue('color', 'orange');
    LzTestManager.assertEquals(lp.getValue('color'), 'orange');
@@ -53,7 +52,7 @@ function test_lpset () {
 }
 
 function test_lpadd () {   
-   lp = new LzParam();
+   var lp = new LzParam();
    lp.addObject({a: 10, b: 259, c: 'foobar'});
 
    lp.addValue("a", 20);
@@ -72,6 +71,6 @@ testLzParamSuite.addTest( test_lpadd );
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

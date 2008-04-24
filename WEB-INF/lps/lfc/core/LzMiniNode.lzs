@@ -25,6 +25,9 @@ class LzMiniNode {
 /** @access private */
   var __LZdeleted:Boolean = false;
 
+/** @access private */
+function childOf ( node, ignore=null ) { return false;}
+
 /**
   * Sets the named attribute to the given value. If there is no setter for the
   * property, this[ prop ] is set to the value, and the event this [ "on"+prop ]

@@ -56,7 +56,7 @@ function test_lzdatanode() {
 
 
  //__LZXMLescape
-  LzTestManager.assertEquals(node1.__LZXMLescape("foo&bar<>"), "foo&amp;bar&lt;&gt;", "[7] __LZXMLescape");
+  LzTestManager.assertEquals(LzDataNode.__LZXMLescape("foo&bar<>"), "foo&amp;bar&lt;&gt;", "[7] __LZXMLescape");
 
 
 
@@ -77,6 +77,6 @@ testDataNodeSuite.addTest( test_lzdatanode );
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -146,14 +146,10 @@ function $lzc$getNextSibling_dependencies( who, self ){
 
 
 
-/**
-  * Tells whether the given node is above this one in the node hierarchy.
-  * @param LzDataElement el: The LzDataElement to test to see if it is above
-  * this one
-  * @param Boolean allowself: If true, this function returns true if the given
-  * node is the same as this node.
+/** @access private
+  * Renamed from childOf to avoid conflict with LzNode.childOf.
+  * childOf still exists because it is part of the public API.
   */
-// Renamed from childOf to avoid conflict with LzNode.childOf
 function childOfNode ( el , allowself ) {
     var p = allowself ? this : this.parentNode
     while ( p ){
@@ -162,6 +158,18 @@ function childOfNode ( el , allowself ) {
     }
     return false;
 }
+
+/**
+  * Tells whether the given node is above this one in the node hierarchy.
+  * @param LzDataElement el: The LzDataElement to test to see if it is above
+  * this one
+  * @param Boolean allowself: If true, this function returns true if the given
+  * node is the same as this node.
+  */
+override function childOf ( el , allowself=false ) {
+  return this.childOfNode (el, allowself);
+}
+
 
 /**
   * Sets the LzDataNode which is the ownerDocument for this node.
@@ -253,7 +261,7 @@ static function __LZXMLescape ( t ){
   * @return LzDataElement: An LzDataElement which is the top of the hierarchy
   * generated from the string
   */
-static function stringToLzData( str, trimwhitespace, nsprefix ) {
+static function stringToLzData( str, trimwhitespace=false, nsprefix=false ) {
     // [todo hqm 2006-06] if we had try-catch, I'd try to catch errors in parseXML
     // and return null in that case. 
     if (str != null && str != "") {

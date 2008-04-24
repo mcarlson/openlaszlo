@@ -1894,9 +1894,10 @@ function getUID (){
   *
   * @param LzNode node: The node to test to see if it is somewhere above
   * this one in the node hierarchy
+  * @param Boolean ignore: Not used by LzNode, but see LzDataNodeMixin
   * @return Boolean: true if this node is a child of the given node.
   */
-function childOf( node ){
+override function childOf( node, ignore=null ){
     if (node == null) { return false; }
     var pv = this;
     while ( pv.nodeLevel >= node.nodeLevel ) {
@@ -1907,6 +1908,7 @@ function childOf( node ){
     }
     return false;
 }
+
 
 /**
   * Deletes the node and all the subnodes.

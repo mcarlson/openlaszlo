@@ -80,9 +80,12 @@ function setData ( newdata ) {
 }
 
 /**
+  * Returns a copy of this node.
+  * @param ignore: This parameter is necessary because LzDataElementMixin
+  *                defines cloneNode() with an argument.
   * @access private
   */
-function cloneNode ( ){
+function cloneNode (ignore=null){
     var n = new LzDataText(this.data);
     return n;
 }

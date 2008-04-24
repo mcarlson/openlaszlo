@@ -86,6 +86,19 @@ static function parseQueryString ( query ) {
 }
 
 /**
+  * Parse a URL query string, returns an object with key-value pairs
+  * @return Object
+  * @deprecated: Use LzParam.parseQueryString() instead
+  */
+function parseQueryString ( query ) {
+    if ($debug) {
+        Debug.info (this, ".parseQueryString is deprecated. Use LzParam.parseQueryString instead");
+    }
+    return LzParam.parseQueryString (query);
+}
+
+
+/**
   * @access private
   */
 override function createChildren ( children ){
@@ -110,9 +123,13 @@ function addObject(o) {
 
 /**
   * Returns a clone of this LzParam
+  * @deprecated: Argument is deprecated
   * @return LzParam
   */
-function clone(o) {
+function clone(arg=null) {
+    if (arg && $debug) {
+        Debug.info("%w.%s is deprecated. Do not pass as argument to clone()", this, arguments.callee);
+    }
     var o = new LzParam();
     for ( var n in this.d ) {
         o.d[ n ] = this.d[ n ].concat();
@@ -169,7 +186,7 @@ function setValue(name, val, enc = null) {
   * @param String val: The value to set
   * @param Boolean enc: If true, URI-encodes the value
   */
-function addValue(name, val, enc) {
+function addValue(name, val, enc=false) {
     if ( enc ) val = encodeURIComponent( val );
     var a = this.d[ name ];
     if ( a == null ) {
