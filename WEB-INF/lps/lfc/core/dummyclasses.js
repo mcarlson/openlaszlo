@@ -60,7 +60,3 @@ class lzcoreutils {
     }
               }#
 }
-
-class LzTimer {
-    static function addTimer( ...rest ) { }
-}

@@ -2921,7 +2921,6 @@ static function __LZcheckProxyPolicy ( url ){
   * proxied by the LPS server; made directly to the URL; or should be passed to
   * the next policy function in the list. The default policy function returns
   * the value of canvas.proxied
-  * @access private
   */
 static function addProxyPolicy ( f ){
    LzView.__LZproxypolicies.push ( f );
@@ -2934,7 +2933,6 @@ static function addProxyPolicy ( f ){
   * @param Function f: The function to remove from the policy list
   * @return Boolean: Returns true if the function was found and removed, false
   * if not
-  * @access private
   */
 static function removeProxyPolicy ( f ){
     var pol = LzView.__LZproxypolicies;

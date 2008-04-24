@@ -53,6 +53,11 @@
   *
   */
 class LzTimerClass {
+    if ($swf9) {
+        #passthrough (toplevel:true) {  
+        import flash.utils.*;
+        }#
+    }
 
 /** @access private */
 var timerList = new Object;
@@ -174,6 +179,11 @@ function resetTimer ( d  , milisecs ){
 }
 
 if ($debug) {
+/**
+  * DEBUG ONLY: Returns the number of timers registered for a delegate 
+  * 
+  * @param LzDelegate d: The delegate called by the timer to be reset.
+  */
   function countTimers ( d ){
     var tle = this.timerList[d.__delegateID];
     if (tle == null)

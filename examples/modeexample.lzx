@@ -6,7 +6,7 @@
 <!--                                                                       -->
 <!--=======================================================================-->
 
-<canvas  bgcolor="#EAEAEA" width="640" height="540" font="tahoe" fontsize="8">
+<canvas  bgcolor="#EAEAEA">
     <font src="lztahoe8.ttf" name="tahoe" />
     <debug  y="100"/>
 
@@ -119,8 +119,8 @@
                     this.clickDel.unregisterAll();
                 </handler>
                 <method name="checkForClick"> <![CDATA[
-                    xpos = this.getMouse('x');
-                    ypos = this.getMouse('y');
+                    var xpos = this.getMouse('x');
+                    var ypos = this.getMouse('y');
                     //Debug.write('checkForClick', xpos, ypos);
 
                     if (xpos > 0 && xpos < this.width && ypos > 0 && ypos < this.height) {
