@@ -620,7 +620,6 @@ LzSprite.prototype.setWidth = function ( v ){
     }
     this.width = v;
 
-    if ( this.owner.pixellock ) v = Math.floor( v );
     if ( this._setrescwidth ){
         // <scale as fraction> = ( <desired dim in px> / <resource dim
         // in px> ) Note the empty resource is a 100x100px clip
@@ -674,7 +673,6 @@ LzSprite.prototype.setHeight = function ( v ){
     }
     this.height = v;
 
-    if ( this.owner.pixellock ) v = Math.floor( v );
     if ( this._setrescheight ){
         // <scale as fraction> = ( <desired dim in px> / <resource dim
         // in px> ) Note the empty resource is a 100x100px clip
@@ -1699,7 +1697,6 @@ LzSprite.prototype.setDefaultContextMenu = function ( cmenu ){
 }
 
 /**
-  * LzView.getContextMenu
   * Return the current context menu
   */
 LzSprite.prototype.getContextMenu = function() {

@@ -77,6 +77,41 @@
         </handler>
     </drawview>
     
+    <drawview width="200" height="200" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()">
+        <dragstate name="dragger"/>
+        <handler name="oncontext"><![CDATA[
+            this.beginPath();
+            this.rect(0,0,200,200, null);
+            this.fillStyle = 0xff0000;
+            this.fill();
+
+            this.beginPath();
+            this.moveTo(0,0);
+            this.lineTo(200, 100);
+            this.lineTo(0, 200);
+            this.fillStyle = 0;
+            this.fill();
+            this.clipButton();
+        ]]></handler>
+    </drawview>
+
+    <drawview width="200" height="200" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()">
+        <dragstate name="dragger"/>
+        <handler name="oncontext"><![CDATA[
+            this.beginPath();
+            this.moveTo(0,0);
+            this.lineTo(200, 100);
+            this.lineTo(0, 200);
+            this.lineTo(0, 0);
+            this.clip();
+
+            this.beginPath();
+            this.rect(0,0,200,200, null);
+            this.fillStyle = 0xff0000;
+            this.fill();
+        ]]></handler>
+    </drawview>
+
     <!-- this snippet demonstrates LPP-4001. It gives an error in dhtml, 
          this.context has no properties. -->
     <drawview width="200" height="200">

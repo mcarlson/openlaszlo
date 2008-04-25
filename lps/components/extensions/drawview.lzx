@@ -257,7 +257,18 @@
   <!-- these methods are shared across runtimes -->
   <script when="immediate"><![CDATA[
     mixin DrawviewShared {
-        function arc(x, y, radius, startAngle, endAngle, clockwise) {
+        function DrawviewShared ( parent:LzView? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
+            if ($swf9) {
+            } else {
+                super(parent, attrs, children, instcall);
+            }
+        }
+        function lineTo(x,y) { }
+        function moveTo(x,y) { }
+        function quadraticCurveTo(cx, cy, px, py) {}
+
+        function arc(x, y, radius, startAngle, endAngle,...args) {
+            var clockwise = args[0];
             var sx = x + radius*Math.cos(startAngle);
             var sy = y + radius*Math.sin(2 * Math.PI - startAngle);
             startAngle *= 180/Math.PI;
@@ -269,10 +280,8 @@
             return this._drawArc(x, y, radius, arc, startAngle);
         }
 
-        function rect(x, y, w, h, cornerRadius) {
-            if (arguments.length<4) {
-                return;
-            }
+        function rect(x, y, w, h,...args) {
+            var cornerRadius = args[0];
             // if the user has defined cornerRadius our task is a bit more complex. :)
             if (cornerRadius>0) {
                 // init vars
@@ -355,10 +364,8 @@
             }
         }
 
-        function oval(x, y, radius, yRadius) {
-            if (arguments.length<3) {
-                return;
-            }
+        function oval(x, y, radius,...args) {
+            var yRadius = args[0];
             // init variables
             var theta, xrCtrl, yrCtrl, angle, angleMid, px, py, cx, cy;
             // if only yRadius is undefined, yRadius = radius
@@ -391,10 +398,8 @@
             return {x:px, y:py};
         }
 
-        function _drawArc(x, y, radius, arc, startAngle, yRadius) {
-            if (arguments.length<5) {
-                return;
-            }
+        function _drawArc(x, y, radius, arc, startAngle,...args) {
+            var yRadius = args[0];
             // if yRadius is undefined, yRadius = radius
             if (yRadius == undefined) {
                 yRadius = radius;
@@ -714,6 +719,12 @@
                     Debug.warn('Drawview.clip() is not currently supported in DHTML.');
                 }
             }
+
+            function clipButton() {
+                if ($debug) {
+                    Debug.warn('Drawview.clipButton() is not currently supported in DHTML.');
+                }
+            }
     
             function stroke() {
                 this.__playPath();
@@ -803,7 +814,8 @@
             var oncontext = LzDeclaredEvent;
     
             function $lzc$class_drawview(parent, attrs, children, async) {
-                if ($as2) {
+                if ($swf9) {
+                } else {
                     super(parent, attrs, children, async);
                 }
             }
@@ -811,7 +823,12 @@
             override function construct(parent,args) {
                 super.construct(parent, args);
                 this.context = this.getMCRef();
-                this.context.cacheAsBitmap = args['cachebitmap'] != null ? args['cachebitmap'] : this.cachebitmap;
+                if ($as2) {
+                    if (args['cachebitmap'] != null) {
+                        this.cachebitmap = args['cachebitmap'];
+                    }
+                    this.context.cacheAsBitmap = this.cachebitmap;
+                }
                 this.beginPath();
 
                 new LzDelegate( this , "_oninit" , this , "oninit" );
@@ -847,21 +864,21 @@
                 }
             }
     
-            function moveTo(x, y) {
+            override function moveTo(x, y) {
                 if (this.__pathisopen) {
                     this.__path[this.__path.length] = [this.__MOVETO_OP, x, y];
                 }
                 //Debug.write('moveTo', this.__path);
             }
     
-            function lineTo (x, y) {
+            override function lineTo (x, y) {
                 if (this.__pathisopen) {
                     this.__path[this.__path.length] = [this.__LINETO_OP, x, y];
                 }
                 //Debug.write('lineTo', this.__path);
             }
     
-            function quadraticCurveTo(cpx, cpy, x, y) {
+            override function quadraticCurveTo(cpx, cpy, x, y) {
                 if (this.__pathisopen) {
                     this.__path[this.__path.length] = [this.__QCURVE_OP, cpx, cpy, x, y];
                 }
@@ -1018,14 +1035,34 @@
             }
     
             if ($as2) {    
-            function clip () {
-                if (this.sprite.mask)
-                    this.sprite.removeMask(); // Remove any mask created by clip="true"
-                if (this.sprite.__LZmaskClip == null){
-                    this.sprite.applyMask(true);
+            function clip() {
+                if ($as2 && this.cachebitmap) {
+                    Debug.warn('drawview.clip() automatically disables bitmap caching');
+                    this.cachebitmap = this.context.cacheAsBitmap = false;
                 }
-                //Debug.write('mask', this.__LZmaskClip, this.masked, this.__LZmovieClipRef);
-                this.fill(this.sprite.__LZmaskClip);
+                this.sprite.applyMask(true);
+                var __clipmc = this.sprite.__LZmaskClip;
+                this.closePath();
+                __clipmc.clear();
+                __clipmc.beginFill(0xffffff, 100);
+                this.__playPath(__clipmc);
+                __clipmc.endFill();
+                this.updateResourceSize();
+            }
+            function clipButton() {
+                var mc = this.getMCRef();
+                //Debug.write('clip', this, mc, this.sprite.__LZbuttonRef);
+                if (! this['__clipmc']) {
+                    this.__clipmc = this.sprite.__LZmovieClipRef.createEmptyMovieClip("$lzclipmc", 6);
+                    this.sprite.__LZbuttonRef.setMask(this.__clipmc);
+                }
+                this.closePath();
+
+                this.__clipmc.clear();
+                this.__clipmc.beginFill(0xffffff, 100);
+                this.__playPath(this.__clipmc);
+                this.__clipmc.endFill();
+                this.updateResourceSize();
             }
             }
     

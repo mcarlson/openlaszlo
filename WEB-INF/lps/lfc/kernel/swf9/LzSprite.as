@@ -699,7 +699,7 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function getMCRef () {
-          trace("LzSprite.getMCRef not implemented in this runtime");
+          return this.graphics; 
       }
 
       /**
