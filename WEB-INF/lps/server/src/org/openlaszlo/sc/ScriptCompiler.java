@@ -28,7 +28,8 @@ import org.openlaszlo.compiler.CompilationError;
  */
 public class ScriptCompiler extends Cache {
     private static Logger mLogger = Logger.getLogger(ScriptCompiler.class);
-    
+    private static Writer intermediateWriter = null;
+
     static public final String SCRIPT_CACHE_NAME = "scache";
 
     /** Map(String properties+script, byte[] bytes), or null if the
@@ -45,6 +46,10 @@ public class ScriptCompiler extends Cache {
 
     public static ScriptCompiler getScriptCompilerCache() {
         return mScriptCache;
+    }
+
+    public static void setIntermediateWriter(Writer writer) {
+        intermediateWriter = writer;
     }
 
     public static synchronized ScriptCompiler initScriptCompilerCache(File cacheDirectory, Properties initprops)
@@ -148,7 +153,22 @@ public class ScriptCompiler extends Cache {
         return propstring;
     }
 
-
+    /** Collects the script into an intermediate output file
+     * if we are configured to do so.
+     *
+     * @param script a script
+     */
+    private static void writeIntermediateFile(String script)
+    {
+        if (intermediateWriter != null) {
+            try {
+                intermediateWriter.write(script);
+            }
+            catch (IOException ioe) {
+                throw new CompilationError("Could not create intermediate script file: " + ioe);
+            }
+        }
+    }
 
     /** Compiles the specified script into bytecode
      *
@@ -158,9 +178,8 @@ public class ScriptCompiler extends Cache {
     public static byte[] compileToByteArray(String script,
                                             Properties properties) {
 
-        if (mLogger.getLevel() == Level.ALL) {
-            System.out.println(script);
-        }
+        writeIntermediateFile(script);
+
         // We only want to keep off the properties that affect the
         // compilation.  Currently, "filename" is the only property
         // that tends to change and that the script compiler ignores,

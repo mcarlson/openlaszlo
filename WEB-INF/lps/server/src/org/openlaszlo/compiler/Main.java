@@ -124,6 +124,7 @@ public class Main {
         boolean flushScriptCache = true;
         Boolean forceTransCode = null;
         String outFileArg = null;
+        boolean saveScriptOption = false;
 
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].intern();
@@ -170,9 +171,7 @@ public class Main {
                       return 1;
                     }
                 } else if (arg == "-S" || arg == "--script") {
-                    // TODO: [2007-05-25 ptw] This is bogus -- should write out a .lzs file
-                    Logger.getLogger(org.openlaszlo.sc.ScriptCompiler.class)
-                        .setLevel(Level.ALL);
+                    saveScriptOption = true;
                 } else if (arg == "--script-cache-dir") {
                     scriptCacheDir = safeArg("--script-cache-dir", args, ++i);
                     if (scriptCacheDir == null) {
@@ -290,9 +289,17 @@ public class Main {
         int status = 0;
         for (Iterator iter = files.iterator(); iter.hasNext(); ) {
             String sourceName = (String) iter.next();
-            if (files.size() > 1)
-                System.err.println("Compiling " + sourceName);
-            status += compile(compiler, logger, sourceName, outFileName, outDir);
+            String intermediateName = null;
+
+            if (saveScriptOption) {
+                if (sourceName.endsWith(".lzx")) {
+                    intermediateName = sourceName.replaceAll(".lzx$", ".lzs");
+                }
+                else {
+                    intermediateName = sourceName + ".lzs";
+                }
+            }
+            status += compile(compiler, logger, sourceName, intermediateName, outFileName, outDir);
         }
         return status;
     }
@@ -320,6 +327,7 @@ public class Main {
     static private int compile(Compiler compiler,
                                 Logger logger,
                                 String sourcePath,
+                                String intermediateName,
                                 String outName,
                                 String outDir)
     {
@@ -345,7 +353,13 @@ public class Main {
           outDir = sourceFile.getParent();
         }
         File objectFile = new File(outDir, outName);
+        BufferedWriter intermediate = null;
         try {
+          if (intermediateName != null) {
+            intermediate = new BufferedWriter(new FileWriter(intermediateName));
+            org.openlaszlo.sc.ScriptCompiler.setIntermediateWriter(intermediate);
+          }
+
           System.err.println("Compiling: " + sourceFile + " to " + objectFile);
             compiler.compile(sourceFile, objectFile, new Properties());
             if (finalName != null) {
@@ -378,6 +392,19 @@ public class Main {
                     Main.class.getName(),"051018-259", new Object[] {e.getMessage()})
                 );
             return 3;
+        }
+        finally {
+            if (intermediate != null) {
+                org.openlaszlo.sc.ScriptCompiler.setIntermediateWriter(null);
+                try {
+                    // The output often does not end with a newline
+                    intermediate.write("\n");
+                    intermediate.close();
+                }
+                catch (IOException ioe) {
+                    throw new CompilationError("Could not create intermediate script file: " + ioe);
+                }
+            }
         }
         return 0;
     }
