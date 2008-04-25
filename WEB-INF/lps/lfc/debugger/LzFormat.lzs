@@ -1,9 +1,7 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
 /**
-  * Generic low-level output
-  *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -11,12 +9,20 @@
   * @subtopic Debugging
   */
 
-// Output state
+/**
+ * Output state
+ * @access private
+ */
 Debug.atFreshLine = true;
+/**
+ * Output state
+ * @access private
+ */
 Debug.atPrompt = false;
 
 /**
   * Puts the typeout on a fresh line
+  * @access private
   */
 Debug.freshLine = function () {
     if (! this.atFreshLine) {
@@ -27,6 +33,7 @@ Debug.freshLine = function () {
 
 /**
   * Emit a prompt if not at one
+  * @access private
   */
 Debug.freshPrompt = function () {
   if (! this.atPrompt) {
@@ -73,8 +80,9 @@ Debug.writeInternal = function (objects) {
   * Display one or more objects on the debug console.
   *
   * Note: <xref linkend="Debug+debug.format"/> allows more control
-  * over displaying multiple objects. Use it instead of Debug.write.
-  * 
+  * over displaying multiple objects. Use it instead of
+  * Debug.write.
+  *
   * <code>Debug.write</code> displays objects on the debug console in
   * an informative format.  Simple objects are represented as
   * themselves.  Printed Complex objects are represented by their type
@@ -88,7 +96,7 @@ Debug.writeInternal = function (objects) {
   * objects are separated by spaces, so <code>Debug.write("The answer
   * is:", 39+3)</code> will display: <code>The answer is: 42</code>
   *
-  * @devnote This alias allows platform-specific overrides that 
+  * @devnote This alias allows platform-specific overrides that
   * call writeInternal
   */
 Debug.write = function () {
@@ -103,20 +111,26 @@ Debug.write = function () {
 /* TODO: [2007-07-05 ptw] When the debugger is 'classified'
  * these can be acquired through the LzFormatter mixin
  */
+/** @access private */
 Debug.pad = LzFormatter.prototype.pad;
+/** @access private */
 Debug.formatToString = LzFormatter.prototype.formatToString;
 
 /**
-  * Formatted output.
-  * Formats its arguments using <xref linkend="LzFormatter.formatToString"/>.
+  * Display formatted output to the debug console.
+  *
+  * Formats its arguments using <xref
+  * linkend="LzFormatter.prototype.formatToString"/>.
   *
   * @param string control: A control string where % indicates a
   * subsequent argument is to be substituted
   *
-  * @param *... args: arguments to be formatted according to the
-  * control string
+  * @param [*] ...args: Any number of arguments to be formatted
+  * according to the control string
+  *
+  * @devnote Can't use `...args` as swf9 will omit `arguments` if you
+  * do
   */
-
 Debug.format = function (control, args) {
   Debug.__write(this.formatToString.apply(this, arguments));
 }
@@ -125,4 +139,3 @@ Debug.format = function (control, args) {
 //* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
-

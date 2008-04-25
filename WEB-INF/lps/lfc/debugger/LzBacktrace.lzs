@@ -206,9 +206,9 @@ LzBacktrace.prototype._dbg_typename = "Backtrace";
   * can be printed or inspected
   * 
   * Only available if lfc is compiled with --option debugBacktrace=true
-  * @param skip:Number number of frames to omit from the
+  * @param Number skip: Number number of frames to omit from the
   * backtrace.  Defaults to 1.
-  * @access public
+  * @access private
   */
 Debug.backtrace = function (skip) {
   if (arguments.length < 1) {

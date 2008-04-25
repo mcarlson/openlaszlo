@@ -35,19 +35,24 @@ global._dbg_name = 'global';
   * Debug.write will truncate the printed representation of any object
   * whose length is greater than Debug.printLength (default value
   * 1024).
-  * 
-  * See also: Debug.inspect.printLength
+  *
+  * @type Number
+  * @see: Debug.inspect.printLength
   */
 Debug.printLength = 1024;
 
 /**
   * Debug.write will print 'pretty' versions of objects if this is
   * true (default is true).
+  *
+  * @type Boolean
   */
 Debug.printPretty = true;
 
 /**
  * Possible values of Debug.messageLevel (q.v.)
+ * @keywords readonly
+ * @type Object
  */
 Debug.messageLevels = {ALL: 0, MONITOR: 1, TRACE: 2, DEBUG: 3, INFO: 4, WARNING: 5, ERROR: 6, NONE: 7};
 
@@ -56,6 +61,8 @@ Debug.messageLevels = {ALL: 0, MONITOR: 1, TRACE: 2, DEBUG: 3, INFO: 4, WARNING:
  * setting of Debug.messageLevel.  The valid levels are one of the
  * keys of Debug.messageLevels.  All messages of a lower level than
  * the current setting will be suppressed
+ *
+ * @type String
  */
 Debug.messageLevel = 'ALL';
 
@@ -70,6 +77,8 @@ Debug.internalPropertyPrefixes = [ '$', '__' ];
 /**
   * Debug.inspect will show internal properties if this is true
   * (default is false).
+  *
+  * @type Boolean
   */
 Debug.showInternalProperties = false;
 
@@ -80,7 +89,11 @@ Debug.showInternalProperties = false;
 Debug.environment = {};
 
 /**
-  * Display version info
+  * Display version info.
+  *
+  * Displays various version information about the running application
+  * such as the URL it was loaded from, the version of the LPS that is
+  * running and the underlying runtime version.
   */
 Debug.versionInfo = function () {
   this.write(LzCanvas.versionInfoString());
@@ -110,8 +123,9 @@ Debug.inspect = function (obj, reserved) {
   * Debug.inspect will truncate the printed representation of any properties
   * whose length is greater than Debug.inspect.printLength (default value
   * 256).
-  * 
-  * See also Debug.printLength
+  *
+  * @type Number
+  * @see Debug.printLength
   */
 Debug.inspect.printLength = 256;
 
@@ -375,7 +389,7 @@ Debug.ObjectForID = function (id) {
 };
 
 /**
- * Format information about an error suitably for reporting a bug
+ * Format information about an error suitably for reporting a bug.
  *
  * This method can be used to create a report suitable for
  * copy/pasting into a bug report.  To use it, enable backtraces and
@@ -383,7 +397,7 @@ Debug.ObjectForID = function (id) {
  * bug, then invoke `Debug.bugReport()` in the debugger.  Copy and
  * paste the output of that call into your bug report.
  *
- * @param error: An error message or ID.  Defaults to the last error
+ * @param * error: An error message or ID.  Defaults to the last error
  * that was inspected.
  * @param Boolean verbose: If true, each frame
  * argument in the backtrace will be inspected.  Defaults to the value
@@ -474,6 +488,8 @@ Debug.bugReport = function (error, verbose) {
  * @param indices:Array the array to append indices to @param
  * limit:Number don't accumulate more than this many properties (used
  * to limit computation on large objects), default Infinity
+ *
+ * @access private
  */
 Debug.objectOwnProperties = function (obj, names, indices, limit) {
   if (!limit) { limit = Infinity; };

@@ -3,7 +3,7 @@
 /**
   * Support for monitoring properties in the debugger
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -33,7 +33,7 @@ LzMonitor.prototype.color = '#00cc00';
   * @param String control: a format control string
   * @param any... args: the arguments to the format control
   * 
-  * @seealso Debug.format
+  * @see Debug.format
   * 
   * @access private
   * 
@@ -46,15 +46,40 @@ Debug.monitorMessage = function (control, args) {
 };
 
 // Debug.monitor and Debug.unmonitor have platform-specific
-// implementations
+// implementations, we document them here so the doc tool will pick it
+// up
 if ($as2) {
   #include "debugger/platform/swf/LzMonitor.as"
 } else if ($dhtml) {
   #include "debugger/platform/dhtml/LzMonitor.js"
 } else {
+  /**
+   * Monitor a property of an object.
+   *
+   * Will monitor the named property of the object and print a message
+   * to the Debug console each time it is modified.  The message
+   * includes a timestamp, the function that modified the property, the
+   * object and property, and the old and new values.
+   *
+   * If backtraces are enabled, inspecting the message will reveal the
+   * call chain that caused the modification.
+   *
+   * @param Object who: the object whose property to monitor
+   * @param String what: the name of the property to monitor
+   *
+   * @see Debug.unmonitor
+   */
   Debug.monitor = function () {
     Debug.error("Debug.monitor not supported on $s", $runtime);
   };
+  /**
+   * Stop monitoring a property of an object.
+   *
+   * @param Object who: the object whose property to not monitor
+   * @param String what: the name of the property to not monitor
+   *
+   * @see Debug.monitor
+   */
   Debug.unmonitor = function () {
     Debug.error("Debug.unmonitor not supported on $s", $runtime);
   };

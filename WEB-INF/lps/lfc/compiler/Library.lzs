@@ -15,19 +15,13 @@
  */
 
 if ($swf9) {
-
-// Debugger requires this, so must be loaded very early
-#include "compiler/LzFormatter.lzs"
-
-
 } else {
-
 // Basic runtime and stubs
 #include "compiler/LzRuntime.lzs"
 // Class runtime for js1 runtimes
 // TODO [2007-12-17 ptw] Move to platform/js1
 #include "compiler/Class.lzs"
+}
+
 // Debugger requires this, so must be loaded very early
 #include "compiler/LzFormatter.lzs"
-
-}

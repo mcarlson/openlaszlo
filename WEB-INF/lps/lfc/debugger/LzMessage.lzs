@@ -267,7 +267,7 @@ LzMessage.prototype.toHTML = function () {
   * @param Number line: line number or null
   * @param LzMessage message: the warning message
   * 
-  * @seealso LzSourceMessage.format
+  * @see LzSourceMessage.format
   * @access private
   */
 function LzSourceMessage (file, line, message) {
@@ -478,7 +478,7 @@ LzInfo.prototype.type = 'INFO';
 LzInfo.prototype.color = '#0066cc';
 
 /**
-  * An Debug is a sourceMessage with the tag 'DEBUG'
+  * A Debug is a sourceMessage with the tag 'DEBUG'
   * @access private
   */
 function LzDebug (file, line, message) {
@@ -497,48 +497,89 @@ LzDebug.prototype.color = '#00cc00';
 // Debug.warnInternal in kernel
 
 /**
-  * Display a warning on the console
-  * Takes a format control and any number of arguments.  Cf.,
-  * Debug.format
+  * Display a warning message on the console.
+  *
+  * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
+  * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+  *
+  * @param string control: A control string where % indicates a
+  * subsequent argument is to be substituted
+  *
+  * @param [*] ...args: Any number of arguments to be formatted
+  * according to the control string
+  *
+  * @devnote Can't use `...args` as swf9 will omit `arguments` if you
+  * do
   */
-Debug.warn = function (control, args) {
+Debug.warn = function (control:String, args) {
   return this.warnInternal.apply(this, [LzWarning].concat(Array.prototype.slice.call(arguments, 0)));
 }
 /**
-  * Display an error on the console
-  * Takes a format control and any number of arguments.  Cf.,
-  * Debug.format
+  * Display an error message on the console.
+  *
+  * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
+  * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+  *
+  * @param string control: A control string where % indicates a
+  * subsequent argument is to be substituted
+  *
+  * @param [*] ...args: Any number of arguments to be formatted
+  * according to the control string
+  *
+  * @devnote Can't use `...args` as swf9 will omit `arguments` if you
+  * do
   */
-Debug.error = function (control, args) {
+  Debug.error = function (control:String, args) {
   return this.warnInternal.apply(this, [LzError].concat(Array.prototype.slice.call(arguments, 0)));
 }
 
 /**
-  * Display an info on the console
-  * Takes a format control and any number of arguments.  Cf.,
-  * Debug.format
+  * Display an informational message on the console.
+  *
+  * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
+  * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+  *
+  * @param string control: A control string where % indicates a
+  * subsequent argument is to be substituted
+  *
+  * @param [*] ...args: Any number of arguments to be formatted
+  * according to the control string
+  *
+  * @devnote Can't use `...args` as swf9 will omit `arguments` if you
+  * do
   */
-Debug.info = function (control, args) {
+Debug.info = function (control:String, args) {
   return this.warnInternal.apply(this, [LzInfo].concat(Array.prototype.slice.call(arguments, 0)));
 }
 
 /**
-  * Display an debug on the console
-  * Takes a format control and any number of arguments.  Cf.,
-  * Debug.format
+  * Display a debugging message on the console.
+  *
+  * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
+  * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+  *
+  * @param string control: A control string where % indicates a
+  * subsequent argument is to be substituted
+  *
+  * @param [*] ...args: Any number of arguments to be formatted
+  * according to the control string
+  *
+  * @devnote Can't use `...args` as swf9 will omit `arguments` if you
+  * do
   */
-Debug.debug = function (control, args) {
+Debug.debug = function (control:String, args) {
   return this.warnInternal.apply(this, [LzDebug].concat(Array.prototype.slice.call(arguments, 0)));
 };
 
 
 /**
- * Deprecation message
+ * Deprecation message.
  * @param lznode obj: The object the deprecated method is being called
  * on (usually `this`).
  * @param Function method: The method being called (usually
  * arguments.callee)
  * @param Function method: The replacement method
+ * @access private
  */
 Debug.deprecated = function (obj, method, replacement) {
   Debug.info("%w.%s is deprecated.  Use %w.%s instead", obj, method, obj, replacement);

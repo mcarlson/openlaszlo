@@ -808,7 +808,7 @@ function setText ( t, force = null){
 /**
   * Formatted output.
   * Formats its arguments using <xref
-  * linkend="LzFormatter.formatToString"/> and sets the text of the
+  * linkend="LzFormatter.prototype.formatToString"/> and sets the text of the
   * view to the result.
   *
   * @param string control: A control string where % indicates a

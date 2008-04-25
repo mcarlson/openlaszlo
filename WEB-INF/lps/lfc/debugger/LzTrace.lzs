@@ -58,12 +58,12 @@ Debug.traceMessage = function (control, args) {
   * returned (if any).
   * 
   * If backtraces are enabled, inspecting the message will reveal the
-  * call chain that caused the modification.
+  * call chain that caused the invocation.
   *
   * @param Object who: the object whose method to trace
   * @param String what: the name of the method to trace
   * 
-  * @seealso Debug.untrace
+  * @see Debug.untrace
   */
 Debug.trace = function(who, what) {
   if (who[what] instanceof Function) {
@@ -98,7 +98,7 @@ Debug.trace = function(who, what) {
   * @param Object who: the object whose method to not trace
   * @param String what: the name of the method to not trace
   * 
-  * @seealso Debug.trace
+  * @see Debug.trace
   */
 Debug.untrace = function(who, what) {
   // Object.unwatch is Flash-specific
