@@ -7,8 +7,8 @@
         <item title="include" href="tag.include.html" />
         <item title="library" href="tag.library.html" />
         <!-- TODO handle changing this to dhtml-specific when this is run in dhtml runtime [bshine 10.17.2007] -->        
-        <item title="LzContextMenu" href="LzContextMenu+swf7+swf8+swf9.html" /> 
-        <item title="LzContextMenuItem" href="LzContextMenuItem+swf7+swf8+swf9.html" />
+        <item title="LzContextMenu" href="LzContextMenu.html" /> 
+        <item title="LzContextMenuItem" href="LzContextMenuItem.html" />
         <item title="splash" href="tag.splash+as2.html" />
         <item title="view" href="LzView.html" />
     </category>
