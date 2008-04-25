@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- quick-index.xslt --> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -35,7 +35,7 @@
         </ul>
         <hr/>
 <!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
-<p class="copyright">Copyright © 2002-2008 <a target="_top"
+<p class="copyright">Copyright &#xA9; 2002-2008 <a target="_top"
 href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
 All Rights Reserved. Unauthorized use, duplication or
 distribution is strictly prohibited. This is the proprietary
