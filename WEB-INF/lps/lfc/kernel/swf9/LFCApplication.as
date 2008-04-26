@@ -41,21 +41,13 @@ public class LFCApplication extends Sprite {
         // trace("LFCApplication.stage = " + LFCApplication.stage);
         // trace("  loaderInfo.loaderURL = " + LFCApplication.stage.loaderInfo.loaderURL);
 
-        // Start up idle service timer. LzIdle is a global
-        LzIdle = new LzIdleClass ();
-        
-        LzIdleKernel.addCallback( this, '__idleupdate' );
-
         var idleTimerPeriod = 14; // msecs
-        //var idleTimerPeriod = 31; // msecs
 
         //trace('idle timer period = ', idleTimerPeriod , 'msecs');
         LzIdleKernel.startTimer( idleTimerPeriod );
 
-
         stage.addEventListener(KeyboardEvent.KEY_DOWN,reportKeyDown);
         stage.addEventListener(KeyboardEvent.KEY_UP,reportKeyUp);
-
 
         // necessary for consistent behavior - in netscape browsers HTML is ignored
         stage.align = StageAlign.TOP_LEFT;
@@ -205,20 +197,6 @@ public class LFCApplication extends Sprite {
         */
         LzKeyboardKernel.__keyboardEvent(event.charCode, 'onkeydown');
     }
-
-        /**
-         * __idleupdate is a callback function from LzIdleKernel.
-         * Treat it as a static function (ie. Don't reference 'this')
-         * @access private
-         */
-    public function __idleupdate (etime) {
-        var oi = LzIdle.onidle;
-        if (oi.ready) {
-            oi.sendEvent( etime );
-        }
-    }
-
-
 }
 
 // Resource library

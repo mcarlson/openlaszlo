@@ -34,21 +34,25 @@
   */
 class LzIdleClass {
 
-  var __LZdeferDelegates:Boolean = false;
+  /** @access private */
+  public var __LZdeleted:Boolean = false;
+  /** @access private */
+  public var __LZdeferDelegates:Boolean = false;
 
-/** This is the idle event for the system, sent by this service 
- * @lzxtype event
- */
-var onidle = LzDeclaredEvent;
-
+  /** @access private */
   var coi;
+  /** @access private */
+  var regNext;
+  /** @access private */
+  var _events = null;
 
 
 var removeCOI = null;
 function LzIdleClass () {
-  // Create array on instance, not prototype
-  this.coi = new Array;
-  this.removeCOI = new LzDelegate( this , "removeCallIdleDelegates" );
+    // Create array on instance, not prototype
+    this.coi = new Array;
+    this.removeCOI = new LzDelegate( this , "removeCallIdleDelegates" );
+    LzIdleKernel.addCallback( this, '__idleupdate' );
 }
 
 
@@ -84,31 +88,27 @@ function removeCallIdleDelegates ( t ){
     }
 }
 
+/** This is the idle event for the system, sent by this service 
+ * @lzxtype event
+ */
+var onidle = LzDeclaredEvent;
+
 function toString () { return "LzIdle" }; // LzIdle in case somebody checks it
-
-} // End of LzIdleClass
-
-
-// Avoid idle noise in the profiler
-{
-#pragma "profile=false"
-
-/**
-  * @access private
-  */
-var LzIdle = new LzIdleClass ();
 
 /**
   * __idleupdate is a callback function from LzIdleKernel.
   * Treat it as a static function (ie. Don't reference 'this')
   * @access private
   */
-function __idleupdate () {
-  var oi = LzIdle.onidle;
-  if (oi.ready) {
-    oi.sendEvent( LzTimeKernel.getTimer() );
-  }
+function __idleupdate (t) {
+    if (this.onidle.ready) {
+        this.onidle.sendEvent(t);
+    }
+}
 }
 
-LzIdleKernel.addCallback( this, '__idleupdate' );
+// Avoid idle noise in the profiler
+{
+#pragma "profile=false"
+var LzIdle = new LzIdleClass ();
 }
