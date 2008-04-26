@@ -9,6 +9,7 @@
   */
 
 #include "kernel/swf/LzRequires.as"
+#include "kernel/swf/LzTimeKernel.as"
 #include "kernel/swf/LzSprite.as"
 #include "kernel/swf/LzTextSprite.as"
 #include "kernel/swf/LzInputTextSprite.as"

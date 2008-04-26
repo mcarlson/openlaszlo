@@ -53,12 +53,6 @@
   *
   */
 class LzTimerClass {
-    if ($swf9) {
-        #passthrough (toplevel:true) {  
-        import flash.utils.*;
-        }#
-    }
-
 /** @access private */
 var timerList = new Object;
 
@@ -87,7 +81,7 @@ function addTimer ( d , milisecs ){
             if (! del.c.__LZdeleted && del.c[del.f]) del.c[del.f]( (new Date()).getTime() );
         }
     }
-    var id = setInterval(f, milisecs);
+    var id = LzTimeKernel.setInterval(f, milisecs);
     if ($debug) {
         // Debug.format("created timer %w for delegate %w\n", id, d);
         if (id instanceof Array)
@@ -120,12 +114,12 @@ function removeTimer ( d ){
     if (tle != null) {
         if (tle instanceof Array) {
             id = tle.shift();
-            clearInterval(id);
+            LzTimeKernel.clearInterval(id);
             if (tle.length == 0)
                 delete this.timerList[d.__delegateID];
         } else {
             id = tle;
-            clearInterval(id);
+            LzTimeKernel.clearInterval(id);
             delete this.timerList[d.__delegateID];
         }
         // Debug.format("cleared timer %w for delegate %w (2)\n", id, d);
@@ -149,7 +143,7 @@ function removeTimerWithID ( d, id ){
             for (i=0; i<tle.length; i++) {
                 var id2 = tle[i];
                 if (id2 == id) {
-                    clearInterval(id);
+                    LzTimeKernel.clearInterval(id);
                     tle.splice(i,1);
                     break;
                 }
@@ -157,7 +151,7 @@ function removeTimerWithID ( d, id ){
             if (tle.length == 0)
                 delete this.timerList[d.__delegateID];
         } else if (tle == id) {
-            clearInterval(id);
+            LzTimeKernel.clearInterval(id);
             delete this.timerList[d.__delegateID];
         }
     }

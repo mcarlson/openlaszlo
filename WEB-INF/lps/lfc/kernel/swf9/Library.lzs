@@ -17,6 +17,7 @@
 #include "kernel/swf9/LzTextSprite.as"
 #include "kernel/swf9/LzInputTextSprite.as"
 #include "kernel/swf9/LzFontManager.as"
+#include "kernel/swf9/LzTimeKernel.as"
 
     //#include "kernel/swf9/LzRequires.as"
     //#include "kernel/swf9/LzInputTextSprite.as"

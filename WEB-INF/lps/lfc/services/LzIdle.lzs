@@ -106,7 +106,7 @@ var LzIdle = new LzIdleClass ();
 function __idleupdate () {
   var oi = LzIdle.onidle;
   if (oi.ready) {
-    oi.sendEvent( getTimer() );
+    oi.sendEvent( LzTimeKernel.getTimer() );
   }
 }
 

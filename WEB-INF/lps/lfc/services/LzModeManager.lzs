@@ -48,12 +48,6 @@
   * registered with it ) when their focus has changed.
   */
 public class LzModeManagerBase extends LzNode {
-    if ($swf9) {
-        #passthrough (toplevel:true) {  
-        import flash.utils.*;
-        }#
-    }
-
     /** Sent when the mode changes.
     * @lzxtype event
     * @access public
@@ -159,13 +153,13 @@ public class LzModeManagerBase extends LzNode {
             //check for double-click
             if ( eventStr == "onclick" ){
                 if ( this.__LZlastclick == view && view.ondblclick.ready &&
-                    (getTimer() - this.__LZlastClickTime)< view.DOUBLE_CLICK_TIME ){
+                    (LzTimeKernel.getTimer() - this.__LZlastClickTime)< view.DOUBLE_CLICK_TIME ){
                         //this is a double-click
                         eventStr = "ondblclick";
                         this.__LZlastclick = null;
                 } else {
                     this.__LZlastclick = view;
-                    this.__LZlastClickTime = getTimer();
+                    this.__LZlastClickTime = LzTimeKernel.getTimer();
                 }
             }
 

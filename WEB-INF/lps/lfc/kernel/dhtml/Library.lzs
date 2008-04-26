@@ -6,6 +6,7 @@
   *
   */
 
+#include "kernel/dhtml/LzTimeKernel.js"
 #include "kernel/dhtml/LFC.js"
 //#include "kernel/dhtml/LzRequires.js"
 #include "kernel/dhtml/LzPool.js"
