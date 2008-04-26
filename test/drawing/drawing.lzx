@@ -103,7 +103,7 @@
             this.lineTo(200, 100);
             this.lineTo(0, 200);
             this.lineTo(0, 0);
-            this.clip();
+            this.clipPath();
 
             this.beginPath();
             this.rect(0,0,200,200, null);

@@ -258,10 +258,7 @@
   <script when="immediate"><![CDATA[
     mixin DrawviewShared {
         function DrawviewShared ( parent:LzView? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
-            if ($swf9) {
-            } else {
-                super(parent, attrs, children, instcall);
-            }
+            super(parent, attrs, children, instcall);
         }
         function lineTo(x,y) { }
         function moveTo(x,y) { }
@@ -714,9 +711,9 @@
                 }
             }
     
-            function clip() {
+            function clipPath() {
                 if ($debug) {
-                    Debug.warn('Drawview.clip() is not currently supported in DHTML.');
+                    Debug.warn('Drawview.clipPath() is not currently supported in DHTML.');
                 }
             }
 
@@ -814,10 +811,7 @@
             var oncontext = LzDeclaredEvent;
     
             function $lzc$class_drawview(parent, attrs, children, async) {
-                if ($swf9) {
-                } else {
-                    super(parent, attrs, children, async);
-                }
+                super(parent, attrs, children, async);
             }
 
             override function construct(parent,args) {
@@ -1014,7 +1008,7 @@
             }
     
             function __playPath(m) {
-                this.context._visible = false;
+                if ($as2) this.context._visible = false;
                 var p = this.__path;
                 //Debug.write(p, m);
                 for (var i = 0; i < p.length; i++) {
@@ -1031,13 +1025,29 @@
                         m.curveTo(op[1], op[2], op[3], op[4]);
                     }
                 }
-                this.context._visible = this.visible;
+                if ($as2) this.context._visible = this.visible;
             }
     
-            if ($as2) {    
+            if ($swf9) {    
+            function clipPath() {
+                if ($debug) {
+                    Debug.warn('Drawview.clipPath() is not currently supported in swf9.');
+                }
+            }
+
+            function clipButton() {
+                if ($debug) {
+                    Debug.warn('Drawview.clipButton() is not currently supported in swf9.');
+                }
+            }
+            } else {
             function clip() {
+                if ($debug) Debug.warn('drawview.clip() is deprecated.  Use clipPath() instead.');
+                this.clipPath();
+            }
+            function clipPath() {
                 if ($as2 && this.cachebitmap) {
-                    Debug.warn('drawview.clip() automatically disables bitmap caching');
+                    if ($debug) Debug.warn('drawview.clip() automatically disables bitmap caching');
                     this.cachebitmap = this.context.cacheAsBitmap = false;
                 }
                 this.sprite.applyMask(true);
@@ -1137,6 +1147,11 @@
           * drawview.createRadialGradient.
           */
         class LzCanvasGradient {
+            if ($swf9) {
+                #passthrough (toplevel:true) {  
+                import flash.geom.Matrix;
+                }#
+            }
             var _context = null;
             var _m = null;
             var _t = null;
@@ -1146,6 +1161,10 @@
             
             function LzCanvasGradient(c, m, isradial) {
                 this._context = c;
+                if ($swf9) {
+                    var matrix = new Matrix();
+                    m = matrix.createGradientBox(m.w,m.h,m.r,m.x,m.y);
+                }
                 this._m = m;
                 this._t = isradial ? 'radial' : 'linear';
                 this._c = [];
