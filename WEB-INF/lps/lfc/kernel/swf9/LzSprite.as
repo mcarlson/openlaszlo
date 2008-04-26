@@ -279,6 +279,8 @@ dynamic public class LzSprite extends Sprite {
                 } else {
                     skipevent = true;
                 }
+            } else {
+                e.stopPropagation();
             }
 
             //Debug.write('__mouseEvent', eventname, this.owner);
