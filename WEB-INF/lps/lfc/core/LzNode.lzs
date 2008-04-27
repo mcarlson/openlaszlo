@@ -981,7 +981,7 @@ function __LZapplyArgs ( args , constcall = null ){
             // implemented by a setter, so it never clobbers the
             // method... er, unless you set the attribute to a
             // function.  YOW!
-            if (! this[a]) {this[a] = null;}
+            if (this[a] === void(0)) {this[a] = null;} 
           } else if (! this[setr]) {
             // TODO: should already be declared, so we should just be
             // able to set it, but that doesn't work if this is a
