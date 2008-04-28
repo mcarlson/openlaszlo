@@ -294,6 +294,7 @@ function toAbsoluteURL (url, secure) {
 
 /**
   * Escape special characters in message: &amp; and &lt;.
+  * @param String str: The string to escape
   */
 function xmlEscape (str) {
     return LzDataNode.__LZXMLescape( str );
@@ -301,7 +302,7 @@ function xmlEscape (str) {
 
 /**
   * Escape a string using URL encoding.
-  * @param str: The string to escape
+  * @param String str: The string to escape
   * @return: An URL escaped string
   */
 function urlEscape (str) {
@@ -309,7 +310,7 @@ function urlEscape (str) {
 }
 /**
   * Escape a string using URL encoding.
-  * @param str: The string to unescape
+  * @param String str: The string to unescape
   * @return: An URL decoded string
   */
 function urlUnescape (str) {
