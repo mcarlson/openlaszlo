@@ -221,8 +221,14 @@ tr.segtitle > th {
     font-family:"Courier New",Courier,monospace;
 }
 
-.classsynopsis .classname, .methodsynopsis .fieldsynopsis .varname {
+.classsynopsis .methodsynopsis .fieldsynopsis .varname {
     font-weight:bold;
+}
+
+.classname {
+    font-weight:bold;
+    color : #646464;
+    background-color : #eaeaea;
 }
 
 .methodsynopsis .parameter {
