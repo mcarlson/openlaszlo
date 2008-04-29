@@ -127,7 +127,7 @@
         </method>
 
         <!--- @keywords private -->
-        <handler name="onkeydown" method="dokeydown" />
+        <handler name="onkeydown" method="_dokeydown" />
         <!--- @keywords private -->
         <method name="_dokeydown" args="kc">
             <![CDATA[
