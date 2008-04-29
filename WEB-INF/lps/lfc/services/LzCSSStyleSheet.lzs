@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzcssstylesheet
@@ -24,20 +24,22 @@
   * 
   */
 
+class LzCSSStyleSheet extends LzStyleSheet {
+
 // How do I represent inheritance here? 
 function LzCSSStyleSheet( title, href, media, sstype, ownerRule, cssRules ) {
-    // this is DUPLICATED from LzStyleSheet
-    this.type = sstype;
-    this.disabled = false; 
-    this.ownerNode = null;
-    this.parentStyleSheet = null;
-    this.href = href;
-    this.title = title;
-    this.media = media; 
-    
+    super (title, href, media, sstype);
+
     this.ownerRule = ownerRule;
     this.cssRules = cssRules;
 }
+
+/** @access private */
+var ownerRule = null;
+
+/** @access private */
+var cssRules = null;
+
 
 /**
  * insertRule Used to insert a new rule into the style sheet. The new rule now
@@ -68,7 +70,7 @@ function LzCSSStyleSheet( title, href, media, sstype, ownerRule, cssRules ) {
  * NO_MODIFICATION_ALLOWED_ERR: Raised if this style sheet is readonly.
  * SYNTAX_ERR: Raised if the specified rule has a syntax error and is unparsable
  */ 
-LzCSSStyleSheet.prototype.insertRule = function(rule, index) {
+function insertRule (rule, index) {
     if (!this.cssRules) {
         this.cssRules = [];
     }
@@ -90,7 +92,5 @@ LzCSSStyleSheet.prototype.insertRule = function(rule, index) {
     // INDEX_SIZE_ERR
     return null; 
 }
-    
 
-    
-    
+} // End of LzCSSStyleSheet

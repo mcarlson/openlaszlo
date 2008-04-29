@@ -15,15 +15,24 @@
   * from here: http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-ViewCSS
   * </p>
   */
+class LzCSSStyleRule {
+
 function LzCSSStyleRule(){
-}
-LzCSSStyleRule.prototype.properties = null;
-LzCSSStyleRule.prototype.selector = null;
+} 
+
+/** @access private */
+var properties = null;
+/** @access private */
+var selector = null;
 //No rule has a specificity of zero
-LzCSSStyleRule.prototype.specificity = 0;
+/** @access private */
+var specificity = 0;
+
+/** @access private */
+var parsed = null;
 
 // this is inlined in __compareSpecificity() - keep in sync
-LzCSSStyleRule.prototype.getSpecificity = function () {
+function getSpecificity () {
     
     // Only calculate this once. Store it after we've calculated it once.     
     // No rule has a specificity of 0
@@ -49,7 +58,7 @@ LzCSSStyleRule.prototype.getSpecificity = function () {
   * easy checks for sentinel characters. 
   * @access private
   */ 
-LzCSSStyleRule._getSimpleSelectorSpecificity = function ( selarr, k ) {
+function _getSimpleSelectorSpecificity ( selarr, k ) {
     var sel = selarr[k];
     //Debug.write( 'selarr' , selarr , "sel" , sel );
 
@@ -72,16 +81,23 @@ LzCSSStyleRule._getSimpleSelectorSpecificity = function ( selarr, k ) {
     return 1 ;
 }
 
-var LzCSSStyle = {};
+} // End of LzCSSStyleRule
 
-LzCSSStyle.getComputedStyle = function ( node ){
+
+
+class LzCSSStyleClass {
+
+function LzCSSStyleClass () {}
+
+
+function getComputedStyle ( node ){
     var csssd = new LzCSSStyleDeclaration( );
     csssd.setNode( node );
     return csssd;
 }
 
 //LzCSSStyle.time1 = 0;
-LzCSSStyle.getPropertyValueFor = function ( initialnode , pname ){
+function getPropertyValueFor ( initialnode , pname ){
     //Debug.warn("node: %w, pname: %w, rules: %w\n", node, pname, this._rules);
 
     //var t = getTimer();
@@ -113,14 +129,14 @@ LzCSSStyle.getPropertyValueFor = function ( initialnode , pname ){
                     while (curnode != canvas){
                         //recursively loop through selectors, ensuring each applies to the current node or a parent 
                         var nrp = rp[sindex]
-                        t = nrp.type;
+                        var t = nrp.type;
 
                         if ( t == this._sel_star ||
                             (t == this._sel_id && nrp.id == curnode.id) ||
                             (t == this._sel_tag && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
                             (t == this._sel_attribute && curnode[ nrp.attrname ] == nrp.attrvalue) ||
                             (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
-                            (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode, true ))){
+                            (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode ))){
                             if ( sindex-- == 0 ){
                                 result = true;
                                 break;
@@ -175,7 +191,7 @@ LzCSSStyle.getPropertyValueFor = function ( initialnode , pname ){
                                 (t == this._sel_tag && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
                                 (t == this._sel_attribute && curnode[ nrp.attrname ] == nrp.attrvalue) ||
                                 (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
-                                (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode, true ))){
+                                (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode ))){
                                 if ( sindex-- == 0 ){
                                     result = true;
                                     break;
@@ -242,7 +258,7 @@ LzCSSStyle.getPropertyValueFor = function ( initialnode , pname ){
 }
 
 // this is inlined in __compareSpecificity() - keep in sync
-LzCSSStyle.getSelectorSpecificity = function ( parsedsel ){
+function getSelectorSpecificity ( parsedsel ){
     // Go through all the selectors in the selector, keeping a running
     // count of various kinds of selectors:
     /*
@@ -269,7 +285,7 @@ LzCSSStyle.getSelectorSpecificity = function ( parsedsel ){
 }
 
 /** @access private */
-LzCSSStyle.__compareSpecificity = function (rA, rB) {
+function __compareSpecificity (rA, rB) {
     // if rA specificity  is less than rB specifity, return -1
     // if they're equal specificity, return 0
     // if rB specifitity is less than rA specificity, return 1
@@ -441,7 +457,7 @@ LzCSSStyle.__compareSpecificity = function (rA, rB) {
 }
 
 /** @access private */
-LzCSSStyle._printRuleArray = function (arr) {
+function _printRuleArray (arr) {
     for (var i = 0; i < arr.length; i++) {
         Debug.write(i, arr[i]);
     }
@@ -451,7 +467,7 @@ LzCSSStyle._printRuleArray = function (arr) {
 /** @access private 
  *  This is inlined above in getPropertyValueFor() - make sure they stan in sync
  */
-LzCSSStyle._compoundSelectorApplies = function (rp , node){
+function _compoundSelectorApplies (rp , node){
     var curnode = node; 
     var sindex = rp.length - 1;
     var firstone = true;
@@ -467,7 +483,7 @@ LzCSSStyle._compoundSelectorApplies = function (rp , node){
             (t == this._sel_tag && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
             (t == this._sel_attribute && curnode[ nrp.attrname ] == nrp.attrvalue) ||
             (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
-            (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode, true ))){
+            (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode ))){
             if ( sindex-- == 0 ){
                 result = true;
                 break;
@@ -487,32 +503,32 @@ LzCSSStyle._compoundSelectorApplies = function (rp , node){
 }
 
 /** @access private */
-LzCSSStyle._sel_unknown = 0;
+var _sel_unknown = 0;
 /** @access private */
-LzCSSStyle._sel_star = 1;
+var _sel_star = 1;
 /** @access private */
-LzCSSStyle._sel_id = 2;
+var _sel_id = 2;
 /** @access private */
-LzCSSStyle._sel_tag = 3
+var _sel_tag = 3
 /** @access private */
-LzCSSStyle._sel_compound = 4
+var _sel_compound = 4
 /** @access private */
-LzCSSStyle._sel_attribute = 5
+var _sel_attribute = 5
 /** @access private */
-LzCSSStyle._sel_tagAndAttr = 6
+var _sel_tagAndAttr = 6
 
 /** @access private */
-LzCSSStyle._rules = new Array();
+var _rules = new Array();
 
 /** optimization for selectors which use [name="value"]
   * @access private */
-LzCSSStyle._nameRules = {};
+var _nameRules = {};
 
 /** @access private */
-LzCSSStyle._rulenum = 0
+var _rulenum = 0
 
 /** @access private */
-LzCSSStyle._addRule = function ( r ){
+function _addRule ( r ){
     //do some preprocessing to speed up lookups
     r._lexorder = this._rulenum++;
 
@@ -546,7 +562,7 @@ LzCSSStyle._addRule = function ( r ){
 }
 
 /** @access private */
-LzCSSStyle._parseSelector = function( sel ){
+function _parseSelector ( sel ){
     switch ( typeof ( sel ) ){
         case "object":
             if (sel.simpleselector) {
@@ -563,7 +579,7 @@ LzCSSStyle._parseSelector = function( sel ){
 }
 
 /** @access private */
-LzCSSStyle._parseStringSelector = function ( sel ){
+function _parseStringSelector ( sel ){
     var parsed = { };
     if ( sel == "*" ) {
         parsed.type = this._sel_star;
@@ -592,7 +608,7 @@ LzCSSStyle._parseStringSelector = function ( sel ){
   * classes, because they will have undefined behavior when used together with CSS.
   * @access private
  */ 
-LzCSSStyle._normalizeClassname = function ( cn ){
+function _normalizeClassname ( cn ){
     switch (cn) {
         case "view":        return "LzView";
         case "animator":    return "LzAnimator";
@@ -608,19 +624,28 @@ LzCSSStyle._normalizeClassname = function ( cn ){
     }
 }
 
+} // End of LzCSSStyleClass
+
+var LzCSSStyle = new LzCSSStyleClass ();
+
+
 /** These objects implement
   * Interface CSSStyleDeclaration (introduced in DOM Level 2) from
   * http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration
   */
+class LzCSSStyleDeclaration {
+
 function LzCSSStyleDeclaration (){ };
 
 /** @access private */
-LzCSSStyleDeclaration.prototype._node = null;
+var _node = null;
 
-LzCSSStyleDeclaration.prototype.getPropertyValue = function ( pname ){
+function getPropertyValue ( pname ){
     return LzCSSStyle.getPropertyValueFor( this._node , pname );
 }
 
-LzCSSStyleDeclaration.prototype.setNode = function ( node ){
+function setNode ( node ){
     this._node = node;
 }
+
+} // End of LzCSSStyleDeclaration

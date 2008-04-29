@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzstylesheet
@@ -25,6 +25,7 @@
   * };
   */
 
+class LzStyleSheet {
 
 function LzStyleSheet( title, href, media, sstype ) {
     this.type = sstype;
@@ -35,3 +36,27 @@ function LzStyleSheet( title, href, media, sstype ) {
     this.title = title;
     this.media = media; 
 }
+
+/** @access private */
+var type = null;
+
+/** @access private */
+var disabled = null;
+
+/** @access private */
+var ownerNode = null;
+
+/** @access private */
+var parentStyleSheet = null;
+
+/** @access private */
+var href = null;
+
+/** @access private */
+var title = null;
+
+/** @access private */
+var media = null;
+
+} // End of LzStyleSheet
+

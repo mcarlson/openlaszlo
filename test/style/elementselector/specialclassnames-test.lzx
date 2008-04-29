@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <stylesheet>
         view {
@@ -31,8 +31,8 @@
         <view id="gJean" name="jean" width="250" height="150" bgcolor="$style{'nicebgcolor'}" />
 
         <method name="testview">
-            assertEquals( '0x366d3c', gView.getAttribute("bgcolor") );
-            assertEquals( "Frank", gView.getAttribute("name"))
+            assertEquals( '0x366d3c', this.gView.getAttribute("bgcolor") );
+            assertEquals( "Frank", this.gView.getAttribute("name"))
         </method>
 
         <method name="testtext">
@@ -40,7 +40,7 @@
         </method>
 
         <method name="testclassattr">
-            assertEquals( '0x81103f', gJean.getAttribute("bgcolor"));
+            assertEquals( '0x81103f', this.gJean.getAttribute("bgcolor"));
         </method>
     </class>
     

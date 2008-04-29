@@ -32,12 +32,6 @@ var canvas:LzCanvas;
 // #include "core/dummydata.js"
 
 
-public class LzCSSStyle {
-
-    public static  function  getPropertyValueFor(a:*, b:*):* { return null;}
-}
-
-
 public class LzTrack {
     static function __LZmouseup() {
     }
