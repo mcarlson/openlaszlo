@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <xsl:stylesheet version="1.0"
@@ -135,10 +135,15 @@
     </varname>
   </xsl:template>
   
-  <xsl:template match="class|tag|tagname|api" mode="html2dbk">
+  <xsl:template match="class|tag|api" mode="html2dbk">
     <classname>
       <xsl:apply-templates mode="html2dbk"/>
     </classname>
+  </xsl:template>
+
+  <!-- TODO [dda 4/29/08] should 'tag' above be treated like this? -->
+  <xsl:template match="tagname" mode="html2dbk">
+    <varname>&lt;<xsl:apply-templates mode="html2dbk"/>&gt;</varname>
   </xsl:template>
   
   <xsl:template match="param" mode="html2dbk">
