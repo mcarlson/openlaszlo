@@ -75,6 +75,7 @@ public class LFCApplication extends Sprite {
         // cheapo debug console
         lzconsole = this;
         var tfield:TextField = new TextField();
+        tfield.visible = false;
         tfield.background = true;
         tfield.backgroundColor = 0xcccccc;
         tfield.x = 0;
@@ -88,6 +89,7 @@ public class LFCApplication extends Sprite {
 
         var ci:TextField =  new TextField();
         consoleinputtext = ci;
+        ci.visible = false;
         ci.background = true;
         ci.backgroundColor = 0xffcccc;
         ci.x = 0;
@@ -160,6 +162,8 @@ public class LFCApplication extends Sprite {
     public var consoleinputtext:TextField;
     
     public function write (...args) {
+        consoletext.visible = true;
+        consoleinputtext.visible = true;
         consoletext.appendText( "\n" + args.join(" "));
         consoletext.scrollV = consoletext.maxScrollV;
     }
