@@ -147,20 +147,20 @@ var timeoutDel;
   * @type Boolean
   */
 var rerunxpath = false;
-
-/** @lzxtype event */
+/** @lzxtype event
+    @access private */
 var onp = LzDeclaredEvent;
-/** @lzxtype event */
-var onDocumentChange = LzDeclaredEvent;
-/** Sent when the data selected by this datapointer's <attribute>xpath</attribute>
+/** @lzxtype event
+  * @access private
+  * Sent when the data selected by this datapointer's <attribute>xpath</attribute>
   * changes. For XPaths which select a datanode, this means that the
   * datapointer is pointing to a new node. For XPaths which select text data,
   * this means that the datapointer is pointing to a new node, or that the
   * text selected by the <attribute>xpath</attribute> has changed. Note that a datapointer mapped to
   * a data node will not receive <event>ondata</event> when the node, say, changes one of
-  * its attributes.
-  * @lzxtype event
-  */
+  * its attributes. */
+var onDocumentChange = LzDeclaredEvent;
+/** @lzxtype event */
 // var ondata = LzDeclaredEvent;
 /** Sent when the dataset that the datapointer 
   * is pointing to generates an error.
@@ -172,7 +172,8 @@ var onerror = LzDeclaredEvent;
   * @lzxtype event  
   */
 var ontimeout = LzDeclaredEvent;
-/** @lzxtype event */
+/** @lzxtype event
+  * @access private */
 var onrerunxpath = LzDeclaredEvent;
 
     function LzDatapointer ( parent:* = null , attrs:* = null, children:* = null, instcall:*  = null) {
