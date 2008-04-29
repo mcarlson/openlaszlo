@@ -468,8 +468,9 @@ All Rights Reserved. Use is subject to license terms.</p>
 
     <mkdir dir="${reference.build.dir}"/>
     <property name="server.dir" value="${lps.server.dir}"/>
-    <property name="js2doc.args" value=" --dir ${reference.build.dir} ${LPS_HOME}/lps/includes/source/embednew.js" />
-    <ant dir="${server.dir}" target="js2doc" />
+    <ant dir="${server.dir}" target="js2doc">
+      <property name="js2doc.args" value="-v --dir ${reference.build.dir} ${LPS_HOME}/lps/includes/source/embednew.js" />
+    </ant>
 
     <jing rngfile="${server.dir}/lib/js2doc.rng">
       <fileset dir="${reference.build.dir}" includes="embednew.xml" />
