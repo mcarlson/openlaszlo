@@ -109,7 +109,6 @@ class LineMetrics {
     /** Add a run of text to the current text block, tracking the max width
      and accumulating the text into a buffer.  */
     void addSpan (String str, FontInfo fontInfo, SWFWriter generator) {
-        System.err.println("addSpan |"+str+"|");
         if (str.length() > 0) {
             if (generator != null) {
                 double sw = TextCompiler.getTextWidth(str, fontInfo, generator, this);
