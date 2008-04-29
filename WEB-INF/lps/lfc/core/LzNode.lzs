@@ -456,7 +456,6 @@ var subnodes = null;
   *
   * @type String
   * @lzxtype string
-  * @keywords readonly
   */
 var datapath = null;
 

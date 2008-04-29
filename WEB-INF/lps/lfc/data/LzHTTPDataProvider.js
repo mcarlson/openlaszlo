@@ -322,5 +322,21 @@ class LzHTTPDataRequest extends LzDataRequest {
 
 }
 
+/**
+  * <p>
+  * <varname>httpdataprovider</varname> is a global variable bound to the system default HTTP DataProvider.   
+  * </p>  
+  * This will be an instance of <classname>LzHTTPDataProvider</classname>, which implements HTTP request
+  * transport. The default  value of the global <varname>defaultdataprovider</varname> is initially set to point
+  * to this same object. 
+  */
 var httpdataprovider = new LzHTTPDataProvider();
+
+/**
+  * <p>
+  * <varname>defaultdataprovider</varname> is a global variable bound to the system default DataProvider.   
+  * </p>  
+  * By default, this will be an instance of <classname>LzHTTPDataProvider</classname>, which will also be pointed to by
+  * the global <varname>httpdataprovider</varname>.
+  */
 var defaultdataprovider = httpdataprovider;
