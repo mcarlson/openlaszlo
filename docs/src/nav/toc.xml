@@ -151,7 +151,7 @@
         <item title="method" href="tag.method.html" />
         <item title="node (LzNode)" href="LzNode.html" />
         <item title="script" href="LzScript.html" />
-<!-- TODO [dda 3.29.2008] defined in lfc/services/LzCSSStyleSheet.js, but not as class       <item title="stylesheet (LzCSSStylesheet)" href="LzCSSStyleSheet.html" /> -->
+        <item title="stylesheet (LzCSSStylesheet)" href="LzCSSStyleSheet.html" />
     </category>
     <category title="States">
         <item title="dragstate" href="lz.dragstate.html" />
