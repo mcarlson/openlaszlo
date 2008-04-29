@@ -251,7 +251,7 @@ override function __LZHandleMultiNodes ( nodes ){
   * henceforth the replication set can *only* be controlled by calling
   * setNodes.
   *
-  * @param [LzDataElement] nodes: A list of LzDataElements to replicate over.
+  * @param Array nodes: A list of LzDataElements to replicate over.
   */
 function setNodes ( nodes ){
     //Debug.write( "before context" ,this.context );
@@ -632,7 +632,7 @@ function setOrder( xpath , comparator ) {
 /**
   * Sets the comparator for the sort used by the replication manager.
   *
-  * @param Function|String comparator: "ascending" or "descending" for the
+  * @param Function comparator: "ascending" or "descending" for the
   * appropriate dictionary sort, or a function to be used for comparison that
   * takes two arguments and returns 1 if the second argument should follow the
   * first, -1 if the first argument should follow the second, and 0 if the two
