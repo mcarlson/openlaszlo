@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -109,6 +109,7 @@ class LineMetrics {
     /** Add a run of text to the current text block, tracking the max width
      and accumulating the text into a buffer.  */
     void addSpan (String str, FontInfo fontInfo, SWFWriter generator) {
+        System.err.println("addSpan |"+str+"|");
         if (str.length() > 0) {
             if (generator != null) {
                 double sw = TextCompiler.getTextWidth(str, fontInfo, generator, this);
@@ -194,13 +195,16 @@ class LineMetrics {
         // Do not put blank space at beginning of text
         if (buf.length() == 0) return;
 
-        // Count how many trailing newlines at end of output string
+        // Count how many trailing newlines or <br/> tags at end of output string
         trailing_newlines = 0;
         for (int i = buf.length()-1; i >= 0; i--) {
             char c = buf.charAt(i);
             if (c == '\t' || c == ' ') continue;
             if (c == '\n') {
                 trailing_newlines++;
+            } else if (buf.toString().endsWith("<br/>")) {
+                trailing_newlines++;
+                i -= "<br/>".length();
             } else {
                 break;
             }
@@ -212,6 +216,8 @@ class LineMetrics {
         } else {
             // don't need any more trailing newlines
         }
+
+        trim = true;
     }
 
 }
