@@ -10,28 +10,17 @@
 #include "data/LzDataNode.lzs"
 #include "data/LzDataElement.lzs"
 #include "data/LzDataText.lzs"
-
-// new DataProvider classes
 #include "data/LzDataRequest.lzs"
 #include "data/LzDataProvider.lzs"
 #include "data/LzHTTPDataProvider.lzs"
-
 #include "data/LzDataset.lzs"
 #include "data/LzDatapointer.lzs"
 #include "data/LzParam.lzs"
 #include "data/LzParsedPath.lzs"
 #include "data/LzDatapath.lzs"
 #include "data/LzReplicationManager.lzs"
-#include "data/LzDatasource.lzs"
-#include "data/LzHTTPDatasource.lzs"
 #include "data/LzDataAttrBind.lzs"
-
-
 #include "data/LzLazyReplicationManager.lzs"
 #include "data/LzResizeReplicationManager.lzs"
 
 
-if ($as2) {
-    #include "data/platform/swf/LzConnection.lzs"
-    #include "data/platform/swf/LzConnectionDatasource.lzs"
-}

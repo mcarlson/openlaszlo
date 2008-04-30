@@ -130,10 +130,8 @@
         <item title="datapointer (LzDatapointer)" href="LzDatapointer.html" />
         <item title="dataselectionmanager (LzDataSelectionManager)" href="LzDataSelectionManager.html" />
         <item title="dataset (LzDataset)" href="LzDataset.html" />
-        <item title="datasource (LzDatasource)" href="LzDatasource.html" />
         <item title="defaultdataprovider" href="defaultdataprovider.html" />        
         <item title="httpdataprovider" href="httpdataprovider.html" />
-   <!--     <item title="LzConnectionDatasource" href="LzConnectionDatasource.html" />     -->
         <item title="LzDataElement" href="LzDataElement.html" />
         <item title="LzDataNode" href="LzDataNode.html" />
         <item title="LzDataProvider" href="LzDataProvider.html" />
@@ -141,7 +139,6 @@
         <item title="LzDataText" href="LzDataText.html" />
         <item title="LzHTTPDataProvider" href="LzHTTPDataProvider.html" />
         <item title="LzHTTPDataRequest" href="LzHTTPDataRequest.html" />
-        <item title="LzHTTPDatasource" href="LzHTTPDatasource.html" />        
     </category>
     
     <category title="Scripting">
