@@ -622,17 +622,28 @@ public class NodeModel implements Cloneable {
     }
 
     /** Is this element a direct child of the canvas? */
-    // FIXME [2004-06-03 ows]: Use CompilerUtils.isTopLevel instead.
-    // This implementation misses children of <library> and <switch>.
-    // Since it's only used for compiler warnings about duplicate
-    // names this doesn't break program compilation.
-    boolean topLevelDeclaration() {
-        Element parent = element.getParentElement();
+    boolean topLevelDeclaration(Element elt) {
+        Element parent = elt.getParentElement();
         if (parent == null) {
             return false;
         }
-        return ("canvas".equals(parent.getName()));
+        String pname = parent.getName();
+
+        if ("canvas".equals(pname) || "library".equals(pname)) {
+            return true;
+        }
+
+        // Pass up through any <switch> clauses
+        if ("switch".equals(pname) ||
+            "when".equals(pname) ||
+            "otherwise".equals(pname)) {
+            return topLevelDeclaration(parent);
+        } else {
+            return false;
+        }
     }
+
+
 
     // Not used at present
 //     private static String buildNameBinderBody (String symbol) {
@@ -771,7 +782,7 @@ public class NodeModel implements Cloneable {
             //
             if ((name.equals("id")) ||
                 (name.equals("name") &&
-                 topLevelDeclaration() &&
+                 topLevelDeclaration(element) &&
                  (! ("class".equals(className) || "interface".equals(className) || "mixin".equals(className))))) {
                 if ("name".equals(name)) {
                     this.globalName = value;
@@ -889,7 +900,7 @@ solution =
                         attrs.put("$lzc$bind_id", idbinder);
                     }
                     // Ditto for top-level name "name"
-                    if (topLevelDeclaration() && "name".equals(name)) {
+                    if (topLevelDeclaration(element) && "name".equals(name)) {
                         String symbol = value;
                         // A top-level name is also an ID, for
                         // hysterical reasons
