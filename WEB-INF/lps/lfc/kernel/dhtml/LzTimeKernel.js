@@ -10,10 +10,18 @@
 
 // Receives and sends timing events
 var LzTimeKernel = {
-    setTimeout: setTimeout
-    ,setInterval: setInterval
-    ,clearTimeout: clearTimeout
-    ,clearInterval: clearInterval
+    setTimeout: function() {
+        return window.setTimeout.apply(null, arguments);
+    }
+    ,setInterval: function() {
+        return window.setInterval.apply(null, arguments);
+    }
+    ,clearTimeout: function() {
+        return window.clearTimeout.apply(null, arguments);
+    }
+    ,clearInterval: function() {
+        return window.clearInterval.apply(null, arguments);
+    }
 
     // Implement actionscript API to get ms since startup time 
     ,startTime: (new Date()).valueOf()   
