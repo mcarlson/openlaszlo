@@ -11,12 +11,12 @@
 
 /** */
 public class LzModeManagerClass extends LzModeManagerBase {
+    private static const WAIT_FOR_CLICK:int = 4; 
 
     function LzModeManagerClass() {
         this.clickStream = new Array();
         this.clstDel = new LzDelegate( this , "checkClickStream" );
         this.clstDict ={ onmouseup : 1 , onmousedown: 2 };
-    var WAIT_FOR_CLICK = 4;
     }
 
     /**

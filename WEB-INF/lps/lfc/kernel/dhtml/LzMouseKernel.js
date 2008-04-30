@@ -30,10 +30,7 @@ var LzMouseKernel = {
                 LzInputTextSprite.prototype.__hideIfNotFocused();
             }
         }
-        if (eventname == 'onmouseup' && LzMouseKernel.__lastMouseDown != null) {
-            // call mouseup on the sprite that got the last mouse down  
-            LzMouseKernel.__lastMouseDown.__globalmouseup(e);
-        } else if (eventname == 'onmousemove') {
+        if (eventname == 'onmousemove') {
             if (e.pageX || e.pageY) {
                 LzMouseKernel.__x = e.pageX;
                 LzMouseKernel.__y = e.pageY;
@@ -61,13 +58,22 @@ var LzMouseKernel = {
     }
     ,__callback: null
     ,__scope: null
+    ,__mouseupEvent: function (e) {
+        if (LzMouseKernel.__lastMouseDown != null) {
+            // call mouseup on the sprite that got the last mouse down  
+            LzMouseKernel.__lastMouseDown.__globalmouseup(e);
+            LzMouseKernel.__lastMouseDown = null;
+        } else {
+            LzMouseKernel.__mouseEvent(e);
+        }
+    }
     ,setCallback: function (scope, funcname) {
         this.__scope = scope;
         this.__callback = funcname;
 
         Lz.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
         Lz.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
-        Lz.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseEvent');
+        Lz.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
         // Prevent context menus in Firefox 1.5 - see LPP-2678
         document.oncontextmenu = LzMouseKernel.__mouseEvent;
     }    

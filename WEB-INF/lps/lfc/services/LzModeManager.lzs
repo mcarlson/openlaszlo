@@ -234,9 +234,14 @@ public class LzModeManagerBase extends LzNode {
 
     /**
     * @access private
+    * overridden by some implementations...
     */
     function rawMouseEvent(me) {
-        this.handleMouseEvent( null , me );
+        if (me == 'onmousemove') {
+            LzGlobalMouse.__mouseEvent('onmousemove'); 
+        } else {
+            this.handleMouseEvent( null , me );
+        }
     }
 
     /**

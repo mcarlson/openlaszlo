@@ -703,7 +703,6 @@ LzSprite.prototype.__mouseEvent = function ( e ){
         e.cancelBubble = false;
         if (window['LzMouseKernel'] && LzMouseKernel.__lastMouseDown == this) {
             this.__mousedown = false;
-            LzMouseKernel.__lastMouseDown = null;
         } else {
             skipevent = true;
         }
