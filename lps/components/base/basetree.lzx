@@ -327,7 +327,7 @@
               classes. -->
         <method name="getChildClass">
             if (this.isleaf) return null;
-            return this.constructor.classname;
+            return this.constructor;
         </method>
 
         <!--- Check to see if this is the root of the tree.
@@ -624,14 +624,14 @@
 
         <method name="openChildren" args="o"> <![CDATA[
             var makevisible = ( o && children.subviews != null );
-            children.setVisible(makevisible);
+            children.setAttribute("visible", makevisible);
             ]]>
         </method>
 
         <!-- View to place child trees. -->
         <view name="children" x="${parent.xindent}" y="${parent.yindent}">
             <method name="init"> <![CDATA[
-                setVisible(classroot.open && this.subviews != null );
+                this.setAttribute("visible", classroot.open && this.subviews != null );
                 super.init();
                 ]]>
             </method>
