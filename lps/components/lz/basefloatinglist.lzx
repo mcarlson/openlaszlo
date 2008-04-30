@@ -304,11 +304,15 @@
         
         <!-- recalculate position when width changes
              @keywords private -->
-        <handler name="onwidth" method="updateAttachLocation"/>
+        <handler name="onwidth">
+          this.updateAttachLocation();
+        </handler>
         
         <!-- recalculate position when height changes
              @keywords private -->
-        <handler name="onheight" method="updateAttachLocation"/>
+        <handler name="onheight">
+          this.updateAttachLocation();
+        </handler>
         
         <!--- @keywords private -->
         <handler name="onvisible" args="v">

@@ -31,7 +31,7 @@ LzMonitor.prototype.color = '#00cc00';
 /**
   * Create a monitor message from a format string
   * @param String control: a format control string
-  * @param any... args: the arguments to the format control
+  * @param Array * args: the arguments to the format control
   * 
   * @see Debug.format
   * 
@@ -41,8 +41,8 @@ LzMonitor.prototype.color = '#00cc00';
   * instance that is automatically appended.  Perhaps all warnings
   * should be timestamped?
   */
-Debug.monitorMessage = function (control, args) {
-  return this.warnInternal.apply(this, [LzMonitor].concat(Array.prototype.slice.call(arguments, 0)));
+Debug.monitorMessage = function (control:String, ...args) {
+  return this.warnInternal.apply(this, [LzMonitor, control].concat(args));
 };
 
 // Debug.monitor and Debug.unmonitor have platform-specific
@@ -65,22 +65,22 @@ if ($as2) {
    * call chain that caused the modification.
    *
    * @param Object who: the object whose property to monitor
-   * @param String what: the name of the property to monitor
+   * @param String propertyName: the name of the property to monitor
    *
    * @see Debug.unmonitor
    */
-  Debug.monitor = function () {
+  Debug.monitor = function (who:Object, propertyName:String) {
     Debug.error("Debug.monitor not supported on $s", $runtime);
   };
   /**
    * Stop monitoring a property of an object.
    *
    * @param Object who: the object whose property to not monitor
-   * @param String what: the name of the property to not monitor
+   * @param String propertyName: the name of the property to not monitor
    *
    * @see Debug.monitor
    */
-  Debug.unmonitor = function () {
+  Debug.unmonitor = function (who:Object, propertyName:String) {
     Debug.error("Debug.unmonitor not supported on $s", $runtime);
   };
 }

@@ -72,7 +72,7 @@
                     this._openedmenu = 0;
                     
                     // deactiavte basetracker
-                    this.mbarcontent.deactivateTrackgroup();
+                    this.mbarcontent.deactivateTrackgroup(null);
                     
                     // set clickcounter back to zero
                     this._clickcounter = 0;
@@ -171,7 +171,7 @@
 
         <!--- @keywords private -->
         <handler name="onmouseout" method="showout"/>
-        <method name="showout" >
+        <method name="showout" args="ignore">
             if ( !this.parent._clickcounter ) {
                 this.showUp();
             }

@@ -118,7 +118,7 @@ public class LzModeManagerBase extends LzNode {
     */
     function handleMouseEvent ( view, eventStr ) {
         //Debug.warn("%w, %w", view , eventStr);
-        if (eventStr == "onmouseup") LzTrack.__LZmouseup();
+        if (eventStr == "onmouseup") LzTrack.__LZmouseup(null);
 
         var dosend = true;
         var isinputtext = false;

@@ -48,6 +48,12 @@ class LzMessage {
 /**
  * Formatted output support
  *
+ * <p>See <xref linkend="LzText" />s <xref
+ * linkend="LzText.prototype.format" /> and <xref linkend="Debug+debug"
+ * />s <xref linkend="Debug+debug.format" /> methods for
+ * examples of how to present formatted text to the user
+ * interface.</p>
+ *
  * @access public
  * @topic LZX
  * @subtopic Formatted Output
@@ -186,10 +192,10 @@ mixin LzFormatter {
    * be represented (i.e., linked to) by the formatted string; thus
    * permitting custom representations.
    *
-   * @param string control: A control string where % indicates a
+   * @param String control: A control string where % indicates a
    * subsequent argument is to be substituted.
    *
-   * @param ...args: arguments to be formatted according to the
+   * @param Array * args: arguments to be formatted according to the
    * control string.
    *
    * @return LzMessage: the return value is an LzMessage which can be

@@ -14,7 +14,7 @@
 
         <!--- @keywords private -->
         <handler name="onclick" method="doClick" />
-        <method name="doClick">
+        <method name="doClick" args="ignore">
             if (this._enabled) this.setValue(!this.value);
         </method>
 

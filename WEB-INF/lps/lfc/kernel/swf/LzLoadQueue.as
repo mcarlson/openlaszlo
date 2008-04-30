@@ -56,10 +56,6 @@ LzLoadQueue.queueSorters = [];
 /**
   * @access private
   */
-LzLoadQueue.timeoutDel = new LzDelegate( LzLoadQueue , "checkTimeout" );
-/**
-  * @access private
-  */
 LzLoadQueue.nextcheck = Infinity;
 
 /**
@@ -127,7 +123,7 @@ LzLoadQueue.XMLOnDataHandler = function (src) {
 /**
   * @access private
   */
-LzLoadQueue.checkTimeout = function( ){
+LzLoadQueue.checkTimeout = function(ignore){
     // A timed out load may cause new entries on loading, so it is
     // important to make a second pass to compute the next timeout
     var ct = getTimer();
@@ -162,6 +158,11 @@ LzLoadQueue.checkTimeout = function( ){
         this.nextcheck = Infinity;
     }
 }
+
+/**
+  * @access private
+  */
+LzLoadQueue.timeoutDel = new LzDelegate( LzLoadQueue , "checkTimeout" );
 
 /**
   * @access private

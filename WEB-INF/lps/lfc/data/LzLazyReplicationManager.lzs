@@ -143,11 +143,19 @@ override function construct ( odp , args ){
 
     this.__LZdataoffset = 0;
 
-    this.updateDel = new LzDelegate( this , "__LZadjustVisibleClones" );
+    this.updateDel = new LzDelegate( this , "__LZhandleUpdate" );
     this.updateDel.register( this.cloneimmediateparent , "on" + this.axis );
     this.updateDel.register( this.mask , "on" + this.sizeAxis );
 }
 
+
+/**
+ * Need to adjust the arglist coming from the event
+ * @access private
+ */
+function __LZhandleUpdate (ignore) {
+  this.__LZadjustVisibleClones(null, null);
+}
 
 /** @access private */
 var viewsize = 0;

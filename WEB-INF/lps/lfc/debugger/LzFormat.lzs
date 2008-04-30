@@ -92,15 +92,15 @@ Debug.writeInternal = function (objects) {
   * the link will invoke <xref linkend="Debug+debug.inspect"/> on the object,
   * giving more detail.
   *
-  * @param Object... objects: One or more objects to display.  Multiple
-  * objects are separated by spaces, so <code>Debug.write("The answer
+  * @param Array * any: One or more values to display.  Multiple
+  * values are separated by spaces, so <code>Debug.write("The answer
   * is:", 39+3)</code> will display: <code>The answer is: 42</code>
   *
   * @devnote This alias allows platform-specific overrides that
   * call writeInternal
   */
-Debug.write = function () {
-    return this.writeInternal.apply(this, arguments);
+Debug.write = function (...any) {
+    return this.writeInternal.apply(this, any);
 }
 
 
@@ -122,17 +122,14 @@ Debug.formatToString = LzFormatter.prototype.formatToString;
   * Formats its arguments using <xref
   * linkend="LzFormatter.prototype.formatToString"/>.
   *
-  * @param string control: A control string where % indicates a
+  * @param String control: A control string where % indicates a
   * subsequent argument is to be substituted
   *
-  * @param [*] ...args: Any number of arguments to be formatted
+  * @param Array * args: Any number of arguments to be formatted
   * according to the control string
-  *
-  * @devnote Can't use `...args` as swf9 will omit `arguments` if you
-  * do
   */
-Debug.format = function (control, args) {
-  Debug.__write(this.formatToString.apply(this, arguments));
+Debug.format = function (control, ...args) {
+  Debug.__write(this.formatToString.apply(this, [control].concat(args)));
 }
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************

@@ -10,76 +10,83 @@
   * @subtopic Runtime
   */
 
-/** Sentinel value for events
-  * @access private
-  */
-public class LzDeclaredEventClass /* implements LzEvent */ {
+/**
+ * The type of the initial value for an event that has no delegates
+ * registered to receive the event.  Automatically replaced with an
+ * <xref linkend="LzEvent" /> when an <xref linkend="LzDelegate" />
+ * registers to receive the event.
+ *
+ * @access public
+ */
+public class LzDeclaredEventClass {
 
-    public function LzDeclaredEventClass () {
-      // Debug.debug("%w.%s(%w)", this, arguments.callee, arguments);
+  /** @access private */
+  public function LzDeclaredEventClass () {
+    // Debug.debug("%w.%s(%w)", this, arguments.callee, arguments);
     super();
   }
 
-/** True when event is ready to be sent.
-  * @type Boolean
-  * @keywords readonly
-  * @devnote TODO: [2008-03-20 ptw] This really should just be:
-  * function get ready() { return this.delegateList.length > 0; }
-  */
+  /** True when event is ready to be sent.
+   * @type Boolean
+   * @keywords readonly
+   * @access private
+   * @devnote TODO: [2008-03-20 ptw] This really should just be:
+   * function get ready() { return this.delegateList.length > 0; }
+   */
+  public var ready:Boolean = false;
 
-public var ready:Boolean = false;
 
+  /**
+   * Sends an event to all the delegates that are registered to receive
+   * this event.  Each registered delegate's method will be called with
+   * the single argument of sendEvent.
+   *
+   *  @param * eventValue: (Optional) The value to pass when executing
+   *  the delegates registered to receive the event.  If omitted,
+   *  <code>null</code> will be sent.
+   */
+  public function  sendEvent (eventValue = null ){
+    // TODO [hqm 2008-03] This would be useful debugging info to see
+    // when apps call sendEvent on null events.
+    /*
+      if ($debug) {
+        Debug.debug('Inefficient call to %s', arguments.callee);
+      }
+    */
+  };
 
-/**
-  *  Sends the event, passing its argument as the data to all the called
-  *  delegates
-  * 
-  *  @param sd: The data to send with the event.
-  */
+  /**
+   * @access private
+   */
+  public function clearDelegates ( ){ };
 
-public function  sendEvent (sd = null ){};
+  /**
+   * @access private
+   */
+  public function removeDelegate (d = null){ };
 
-/**
-  * @access private
-  */
-public function clearDelegates ( ){ };
+  /**
+   * @access private
+   */
+  public function getDelegateCount ( ){return 0};
 
-/**
-  * @access private
-  */
-public function removeDelegate (d = null){ };
-
-/**
-  * @access private
-  */
-public function getDelegateCount ( ){return 0};
-
-/**
-  * @access private
-  */
-public function toString ( ){
+  /**
+   * @access private
+   */
+  public function toString ( ){
     return "LzDeclaredEvent";
-}
-
-}
-
-public class LzNullEvent extends LzDeclaredEventClass {
-    public function LzNullEvent () {
-    }
-
-    public override function sendEvent (sd = null) {
-        // TODO [hqm 2008-03] This would be useful debugging info to see
-        // when apps call sendEvent on null events.
-        /*
-          if ($debug) {
-          Debug.debug('Inefficient call to %s', arguments.callee);
-          }
-        */
   }
 }
 
-
-var LzDeclaredEvent:LzNullEvent = new LzNullEvent();
+/**
+ * The initial value for an event.  Automatically replaced with an
+ * <xref linkend="LzEvent" /> when an <xref linkend="LzDelegate" />
+ * registers to receive the event.
+ *
+ * @access public
+ * @keywords readonly
+ */
+var LzDeclaredEvent:LzDeclaredEventClass = new LzDeclaredEventClass();
 
 
 /**

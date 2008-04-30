@@ -1,8 +1,9 @@
 <toc>
     <category title="Structure">
         <item title="attribute"  href="tag.attribute.html" />
+        <item title="handler (LzDelegate)" href="LzDelegate.html" />
+        <item title="event (LzEvent)" href="LzEvent.html" />
         <item title="canvas (LzCanvas)" href="LzCanvas.html" />
-        <item title="event"  href="tag.event.html" />
         <item title="import" href="tag.import.html" />
         <item title="include" href="tag.include.html" />
         <item title="library" href="tag.library.html" />
@@ -86,9 +87,8 @@
     </category>
     
     <category title="Events">
-        <item title="event" href="tag.event.html" />        
-        <item title="LzDelegate" href="LzDelegate.html" />
-        <item title="LzEvent" href="LzEvent.html" />
+        <item title="handler (LzDelegate)" href="LzDelegate.html" />
+        <item title="event (LzEvent)" href="LzEvent.html" />
         <item title="LzGlobalMouse" href="LzGlobalMouse.html" />
         <item title="LzIdleClass" href="LzIdleClass.html" />
         <item title="LzKeys (dhtml)" href="LzKeys+dhtml.html" />
@@ -142,8 +142,8 @@
     </category>
     
     <category title="Scripting">
-        <item title="handler" href="tag.handler.html" />
-        <item title="event" href="tag.event.html" />        
+        <item title="handler (LzDelegate)" href="LzDelegate.html" />
+        <item title="event (LzEvent)" href="LzEvent.html" />
         <item title="LzBrowser" href="LzBrowser.html" />
         <item title="method" href="tag.method.html" />
         <item title="node (LzNode)" href="LzNode.html" />

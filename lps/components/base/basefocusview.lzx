@@ -150,7 +150,7 @@
    
         <!--- @keywords private -->
         <handler name="onstop" method="stopanim"/>
-        <method name="stopanim" >  <![CDATA[
+        <method name="stopanim" args="ignore">  <![CDATA[
             this._animatorcounter -= 1;
             if ( this._animatorcounter < 1 ) {
                 // user has stopped tabbing for a bit,
@@ -216,13 +216,13 @@
              this._widthdel.register(newtarget, 'onwidth');
              this._heightdel.register(newtarget, 'onheight');
 
-             followXY();
-             followWidth();
-             followHeight();
+             followXY(null);
+             followWidth(null);
+             followHeight(null);
         ]]> </method>
 
         <!--- keeps the position of the focusview in sync with its target-->
-        <method name="followXY">
+        <method name="followXY" args="ignore">
             var rct = null;
                if ( target['getFocusRect'] ) rct = target.getFocusRect();
                if ( rct ) {
@@ -235,7 +235,7 @@
         </method>
 
         <!--- keeps the width of the focusview in sync with its target-->
-        <method name="followWidth">
+        <method name="followWidth" args="ignore">
             var rct = null;
                if ( target['getFocusRect'] ) rct = target.getFocusRect();
                if ( rct ) {
@@ -246,7 +246,7 @@
         </method>
 
         <!--- keeps the height of the focusview in sync with its target-->
-        <method name="followHeight">
+        <method name="followHeight" args="ignore">
             var rct = null;
                if ( target['getFocusRect'] ) rct = target.getFocusRect();
                if ( rct ) {

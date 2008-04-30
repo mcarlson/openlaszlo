@@ -88,7 +88,7 @@
         <!--- @keywords private -->
         <handler name="onfocus" method="_doFocus" />
         <!--- @keywords private -->
-        <method name="_doFocus">
+        <method name="_doFocus" args="ignore">
             <![CDATA[
             // the hiliteview is used for keyboard nav hiliting
                 if (this['_selector']) {
@@ -103,7 +103,7 @@
         <!--- @keywords private -->
         <handler name="onblur" method="_doblur" />
         <!--- @keywords private -->
-        <method name="_doblur">
+        <method name="_doblur" args="ignore">
         <![CDATA[
           if (this._hiliteview && this._hiliteview.setHilite) {
               this._hiliteview['setHilite'](false);

@@ -131,7 +131,7 @@
         </method>
 
         <!--- @access private -->
-        <method name="_doMousedown" args="e=null"> 
+        <method name="_doMousedown" args="e"> 
         </method>
 
         <!--- Called if this component has the focus and the space bar goes 

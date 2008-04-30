@@ -20,7 +20,7 @@
 
     <handler name="oninit" reference="canvas" method="_showEnabled" />
     <!--- @keywords private -->
-    <method name="_showEnabled">
+    <method name="_showEnabled" args="ignore">
         <![CDATA[
         if (!_enabled) {
             var newbgcolor = this.disabledbgcolor;

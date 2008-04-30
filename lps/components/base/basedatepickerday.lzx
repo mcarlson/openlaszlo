@@ -44,13 +44,13 @@
         <!--- This method is called when this day has focus, and the 
               enter key is pushed. 
               @keywords protected --> 
-        <method name="buttonpush" />
+        <method name="buttonpush" args="ignore" />
 
         <handler name="onmouseup" method="buttonrelease" />
         <!--- This method is called when this day has focus, and the 
               enter key is released. 
               @keywords protected --> 
-        <method name="buttonrelease" />
+        <method name="buttonrelease" args="ignore" />
 
         <doc>
           <tag name="shortdesc"><text>An abstract class representing a day for use with <classname>basedatepicker</classname></text></tag>

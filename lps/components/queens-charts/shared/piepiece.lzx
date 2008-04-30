@@ -73,7 +73,7 @@
         </handler>
         
         <!--- Draws this piece, per specifications in attributes. -->
-        <method name="renderThis">
+        <method name="renderThis" args="ignore">
             <![CDATA[
             if(this.pieceopacity != null && typeof this.pieceopacity != 'undefined'){
                 this.globalAlpha = this.pieceopacity;
@@ -183,7 +183,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

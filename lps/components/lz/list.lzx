@@ -174,9 +174,9 @@
         </method>
 
          <!--- @keywords private -->
-         <method name="_doFocus">
+         <method name="_doFocus" args="ignore">
              <![CDATA[
-                 super._doFocus();
+                 super._doFocus(ignore);
                  var sel = getSelection();
                  if (this.multiselect) {
                      sel = (sel.length == 0) ? null : sel[0];

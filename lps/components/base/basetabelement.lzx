@@ -78,7 +78,7 @@
                this.dlo.register( anm, "onstop" );
             } else {
                this.setAttribute( "height", h+this.minheight );
-               this.openned();
+               this.openned(null);
             }
             this.setAttribute ('focusable' , false );
 
@@ -128,7 +128,7 @@
         </method>
 
         <!--- Called when the tabelement is completely opened. -->
-        <method name="openned">
+        <method name="openned" args="ignore">
             if ( onopenstop ) this.onopenstop.sendEvent();
             this.isopening -= 1;
             if (this.isopening == 0) {
@@ -186,7 +186,7 @@
 
  </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

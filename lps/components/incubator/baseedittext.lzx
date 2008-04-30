@@ -48,7 +48,7 @@
         </handler>
         <!--- Sent whenever a user enters a valid new character. -->
         <handler name="ontext" method="doOnText" />
-        <method name="doOnText">
+        <method name="doOnText" args="ignore">
             if (! this.ignorecallup) {
                 parent.setValue(this.getText(),false,true);
             }

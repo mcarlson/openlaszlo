@@ -131,7 +131,9 @@
         <!--- Wedge the mouse is currently over -->
         <attribute name="wedgeover" value="$once{null}"/>
 
-        <handler name="oninit" method="buildPie"/>
+        <handler name="oninit">
+          this.buildPie();
+        </handler>
         
         <!--- If a piece is clicked on, send that event to that piece.
             If not, zoom in and out from this particular pie. -->

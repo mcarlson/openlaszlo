@@ -244,7 +244,7 @@
         <!-- Public methods. -->
 
         <!--- Mostly just checks to make sure values are in order. -->
-        <method name="valueCheck">
+        <method name="valueCheck" args="ignore">
             <![CDATA[
             if(this.draggable && this.zoomable){
                 this.setAttribute('draggable', false);

@@ -1548,7 +1548,7 @@ function releaseConstraintMethod (constraintMethodName) {
     if (dels) {
         for (var i = 0; i < dels.length; ) {
             var del = dels[i];
-            if (del.c === this && del.f == constraintMethodName) {
+            if (del.c === this && del.m === this[constraintMethodName]) {
                 del.unregisterAll();
                 dels.splice(i, 1);
                 result = true;

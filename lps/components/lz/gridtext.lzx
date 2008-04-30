@@ -82,7 +82,7 @@
                 <handler name="ontext" method="_setCalcX" />
                 <handler name="onwidth" method="_setCalcX" />
 
-                <method name="_setCalcX"><![CDATA[
+                <method name="_setCalcX" args="ignore"><![CDATA[
                         if (classroot.textalign == "center") {
                             var x = ((this.width /2) - (this.getTextWidth() /2));
                             if (x < 0) x = 0;

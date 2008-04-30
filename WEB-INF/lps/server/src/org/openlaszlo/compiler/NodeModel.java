@@ -260,7 +260,7 @@ public class NodeModel implements Cloneable {
         // Binders are called by LzDelegate.execute, which passes the
         // value sent by sendEvent, so we have to accept it, but we
         // ignore it
-        "$lzc$ignore=null",
+        "$lzc$ignore",
         pragmas,
         "this." + installer + "(" +
         ScriptCompiler.quote(name) + "," +
@@ -1177,7 +1177,7 @@ solution =
         String args = CompilerUtils.attributeLocationDirective(element, "args") +
             // Handlers get called with one argument, default to
             // ignoring that
-            XMLUtils.getAttributeValue(element, "args", "$lzc$ignore=null");
+            XMLUtils.getAttributeValue(element, "args", "$lzc$ignore");
         if ((event == null || !ScriptCompiler.isIdentifier(event))) {
             env.warn("handler needs a non-null name attribute");
             return;
@@ -1210,7 +1210,7 @@ solution =
         String parent_name = element.getAttributeValue("id");
         // Handlers get called with one argument, default to ignoring
         // that
-        addHandlerInternal(element, parent_name, event, null, "$lzc$ignore=null", body, null);
+        addHandlerInternal(element, parent_name, event, null, "$lzc$ignore", body, null);
     }
 
     /**

@@ -33,7 +33,7 @@ var canvas:LzCanvas;
 
 
 public class LzTrack {
-    static function __LZmouseup() {
+    static function __LZmouseup(ignore) {
     }
 
 }

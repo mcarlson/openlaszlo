@@ -52,7 +52,7 @@ This class complete the chart style class in case the developer has not defined 
         </method>
         <handler name="onisleaf" method="readLeafNode" />
         <!--- @keyword private-->
-        <method name="readLeafNode">
+        <method name="readLeafNode" args="ignore">
         if( this.style != null )
             if( this.style.constructor.tagname == this.defaultstyle.constructor.tagname ) {
                 // continue;

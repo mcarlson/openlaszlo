@@ -3,7 +3,7 @@
 /**
   * Runtime support for Debug
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -110,24 +110,22 @@ Debug.warnInternal = function (xtor, control, args) {
   var sourceMessage = LzSourceMessage;
   var level = sourceMessage.level
   if (level > sourceMessage.levelMax) { return; }
-  // TODO: [2006-04-19 ptw] uncomment try when it works in swf back
-  // end
-//   try {
+  try {
     sourceMessage.level = level + 1;
     // Safari and Firefox do not implement arguments as an array
     var msg = xtor.format.apply(xtor, [null, null].concat(Array.prototype.slice.call(arguments, 1)));
-  {
-    var mls = this.messageLevels;
-    var t = xtor.prototype.type;
-    // Default to printing any 'unknown' types
-    if ((t in mls) ? (mls[t] >= mls[this.messageLevel]) : true) {
-      this.freshLine();
-      this.__write(msg);
+    {
+      var mls = this.messageLevels;
+      var t = xtor.prototype.type;
+      // Default to printing any 'unknown' types
+      if ((t in mls) ? (mls[t] >= mls[this.messageLevel]) : true) {
+        this.freshLine();
+        this.__write(msg);
+      }
     }
   }
-//   }
-//   finally {
+  finally {
     sourceMessage.level = level;
-//   }
+  }
   return msg;
 }

@@ -34,7 +34,7 @@ LzTrace.prototype.color = '#00cc00';
 /**
   * Create a trace message from a format string
   * @param String control: a format control string
-  * @param any... args: the arguments to the format control
+  * @param Array * args: the arguments to the format control
   * 
   * See also: Debug.format
   * 
@@ -43,8 +43,8 @@ LzTrace.prototype.color = '#00cc00';
 // TODO: [2005-08-15 ptw] Make the timestamp an attribute of the
 // instance that is automatically appended.  Perhaps all warnings
 // should be timestamped?
-Debug.traceMessage = function (control, args) {
-  return this.warnInternal.apply(this, [LzTrace].concat(Array.prototype.slice.call(arguments, 0)));
+Debug.traceMessage = function (control:String, ...args) {
+  return this.warnInternal.apply(this, [LzTrace, control].concat(args));
 }
 
 /**
@@ -61,13 +61,13 @@ Debug.traceMessage = function (control, args) {
   * call chain that caused the invocation.
   *
   * @param Object who: the object whose method to trace
-  * @param String what: the name of the method to trace
+  * @param String methodName: the name of the method to trace
   * 
   * @see Debug.untrace
   */
-Debug.trace = function(who, what) {
-  if (who[what] instanceof Function) {
-    var f = who[what];
+Debug.trace = function(who, methodName) {
+  if (who[methodName] instanceof Function) {
+    var f = who[methodName];
     var m = function () {
       Debug.traceMessage("[%6.2f] %s.apply(%w, %w)",
                            (new Date).getTime() % 1000000,
@@ -81,13 +81,13 @@ Debug.trace = function(who, what) {
     m._dbg_previous_definition = f;
     // Use addProperty for our classes, otherwise just jam it in
     if (who is Instance) {
-      who.addProperty(what, m);
+      who.addProperty(methodName, m);
     } else {
-      who[what] = m;
+      who[methodName] = m;
     }
-    return who[what] === m;
+    return who[methodName] === m;
   } else {
-    Debug.error('%w.%s is not a function', who, what);
+    Debug.error('%w.%s is not a function', who, methodName);
   }
   return false;
 }
@@ -96,35 +96,35 @@ Debug.trace = function(who, what) {
   * Stop tracing a method of an object.
   *
   * @param Object who: the object whose method to not trace
-  * @param String what: the name of the method to not trace
+  * @param String methodName: the name of the method to not trace
   * 
   * @see Debug.trace
   */
-Debug.untrace = function(who, what) {
+Debug.untrace = function(who, methodName) {
   // Object.unwatch is Flash-specific
-  if (who[what] instanceof Function) {
-    var f = who[what];
+  if (who[methodName] instanceof Function) {
+    var f = who[methodName];
     var p = f['_dbg_previous_definition'];
     if (p) {
       // Try just removing trace
-      if (who.hasOwnProperty(what)) {
-        delete who[what];
+      if (who.hasOwnProperty(methodName)) {
+        delete who[methodName];
       }
       // If that didn't work, apply previous
-      if (who[what] !== p) {
+      if (who[methodName] !== p) {
         // Use addProperty for our classes, otherwise just jam it in
         if (who is Instance) {
-          who.addProperty(what, p);
+          who.addProperty(methodName, p);
         } else {
-          who[what] = p;
+          who[methodName] = p;
         }
       }
-      return who[what] === p;
+      return who[methodName] === p;
     } else {
-        Debug.error('%w.%s is not being traced', who, what);
+        Debug.error('%w.%s is not being traced', who, methodName);
     }
   } else {
-    Debug.error('%w.%s is not a function', who, what);
+    Debug.error('%w.%s is not a function', who, methodName);
   }
   return false;
 }

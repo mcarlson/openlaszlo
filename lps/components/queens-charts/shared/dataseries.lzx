@@ -224,7 +224,7 @@
         <!--- Processes all the data, reading xpathQueries on locations
             specified in attributes into different arrays, to be used in
             the chart. -->
-        <method name="sortData">
+        <method name="sortData" args="ignore">
             <![CDATA[
             var dp = this.datapath;
 

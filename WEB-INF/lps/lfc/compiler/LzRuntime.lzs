@@ -156,6 +156,7 @@ if ($debug) {
    * of the canvas, and can be resized as necessary.</p>
    *
    * @shortdesc The Laszlo debugger
+   * @lzxname debug
    * @keywords private_constructor
    * @access public
    * @topic LZX

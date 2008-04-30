@@ -410,7 +410,7 @@
             new LzDelegate(this, 'checkHeaders', canvas.datasets.bug1046, 'ondata')
             canvas.datasets.bug1046.doRequest();
         </method>
-        <method name="checkHeaders">
+        <method name="checkHeaders" args="ignore">
                 assertEquals('', canvas.datasets.bug1046.getAllResponseHeaders().toString())
         </method>
     </class>

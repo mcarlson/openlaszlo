@@ -142,7 +142,7 @@
         </handler>
 
         <handler name="onmouseover" method="domouseover" />
-        <method name="domouseover">
+        <method name="domouseover" args="ignore">
             if ( !selectable ) return;
 
             parent.classroot._setHiliteview( this , true );
@@ -150,7 +150,7 @@
         </method>
 
         <handler  name="onmouseout" method="domouseout" />
-        <method name="domouseout">
+        <method name="domouseout" arg="ignore">
             if ( !selectable ) return;
             this.setAttribute( "highlighted" , false );
             this.setAttribute( 'focusable' , true );

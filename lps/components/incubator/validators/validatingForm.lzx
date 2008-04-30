@@ -20,7 +20,7 @@
         <attribute name="errorcount" type="number" value="0" />
         
         <handler name="oninit" method="classinit" />
-        <method name="classinit">
+        <method name="classinit" args="ignore">
             this.errors = new Array();
             this.validators = new Array();
             recursive(this);

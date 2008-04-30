@@ -296,7 +296,7 @@ function __LZtrackgroup (group,hitlist) {
   * called on idle when the mouse is down, sends events to topmost view
   * NOTE: it would be good to have bounding rectangles on these groups
   */
-function __LZtrack ()
+function __LZtrack (ignore)
 {
     var found = false;
     var foundviews = [];
@@ -336,7 +336,7 @@ function __LZtrack ()
   * @access private
   * called before mouseup event is sent
   */
-function __LZmouseup ()
+function __LZmouseup(ignore)
 {
     //Debug.info('LzTrack.__LZmouseup');
     for (var i in this.__LZactivegroups) {

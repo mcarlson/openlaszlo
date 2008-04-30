@@ -204,7 +204,7 @@
                 this.heightDel = new LzDelegate( this , "scrollbarSizeUpdate",
                     this.scrolltrack, "on" + this.sizeAxis);
 
-                scrollbarSizeUpdate();
+                scrollbarSizeUpdate(null);
             }
             super.init();
 
@@ -276,7 +276,7 @@
         </method>
 
         <!--- @keywords private -->
-        <method name="targetSizeUpdate">
+        <method name="targetSizeUpdate" args="ignore">
             <![CDATA[
             if (this.scrolltarget) {
                 var sm = this.scrolltarget[this.sizeAxis];
@@ -284,13 +284,13 @@
                     sm += this[this.otherSizeAxis];
                 }
                 this.setAttribute("scrollmax", sm);
-                this.scrollbarSizeUpdate();
+                this.scrollbarSizeUpdate(null);
             }
             ]]>
         </method>
 
         <!---  @keywords private -->
-        <method name="scrollbarSizeUpdate">
+        <method name="scrollbarSizeUpdate" args="ignore">
         <![CDATA[
             // should hide thumb if the target view is smaller than the scrollbar
             // Calendar does not need this feature, so it is unimplemented
@@ -317,7 +317,7 @@
         </method>
 
         <!---  @keywords private -->
-        <method name="targetPosUpdate">
+        <method name="targetPosUpdate" args="ignore">
            // when the position of the target view changes then update
            //  the thumb position, not called when thumb is dragging
            this.updateThumbPos();
@@ -353,14 +353,14 @@
                     if (this.scrollable) {
                         this.setAttribute('scrollable',false);
                         if (this.othersb) // hint othersb about our disappearance...
-                        this.othersb.targetSizeUpdate();
+                        this.othersb.targetSizeUpdate(null);
                     }
                     return;
             } else {
                 if (!this.scrollable) {
                  this.setAttribute('scrollable', true);
                      if (this.othersb) // hint othersb about our appearance...
-                     this.othersb.targetSizeUpdate();
+                     this.othersb.targetSizeUpdate(null);
                 }
            }
             

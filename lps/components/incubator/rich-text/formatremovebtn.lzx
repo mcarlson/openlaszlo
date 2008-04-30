@@ -11,7 +11,7 @@
         of the selection.
         @keywords private -->
     <handler name="onclick" method="doClick" />
-    <method name="doClick">
+    <method name="doClick" args="ignore">
         // Debug.write("unformat"); 
         if (this.toolbar._passthruchanges) {
         this.editor._resetFormatToDefaults();

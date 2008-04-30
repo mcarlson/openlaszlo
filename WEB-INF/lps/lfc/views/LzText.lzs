@@ -20,6 +20,31 @@
   *   &lt;text&gt;Hello world!&lt;/text&gt;
   * &lt;/canvas&gt;
   * </example>
+  *
+  * <p>Text objects can also display text that is computed at
+  * runtime.</p>
+  *
+  * <example><![CDATA[
+  *     <canvas height="30">
+  *       <class name="clickClock" extends="text">
+  *         <attribute name="dayTable"
+  *                    value='["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]'
+  *                    />
+  *         <handler name="onclick">
+  *           var now = new Date;
+  *           this.format("You clicked me at %02d:%02d:%02d on %s",
+  *                       now.getHours(),
+  *                       now.getMinutes(),
+  *                       now.getSeconds(),
+  *                       dayTable[now.getDay()]);
+  *         </handler>
+  *       </class>
+  *       <clickClock>
+  *         Click Me!
+  *       </clickClock>
+  *     </canvas>
+  * ]]></example>
+  *
   * <p>
   * Note that certain attributes on text objects, such as opacity and rotation, only work on 
   * embedded fonts. They do not work on client fonts (also called platform fonts, native fonts, 
@@ -810,14 +835,14 @@ function setText ( t, force = null){
   * linkend="LzFormatter.prototype.formatToString"/> and sets the text of the
   * view to the result.
   *
-  * @param string control: A control string where % indicates a
+  * @param String control: A control string where % indicates a
   * subsequent argument is to be substituted
   *
-  * @param *... args: arguments to be formatted according to the
+  * @param Array * args: arguments to be formatted according to the
   * control string
   */
-function format (control, args) {
-  this.setText(this.formatToString.apply(this, arguments));
+function format (control:String, ...args) {
+  this.setText(this.formatToString.apply(this, [control].concat(args)));
 }
 
 /**
