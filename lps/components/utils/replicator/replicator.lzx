@@ -137,7 +137,7 @@ class $lzc$class_replicator extends LzNode {
 
     // @keywords private
     function init() {
-      super.init.apply(this, arguments);
+      super.init();
       if (this.dataset && this.xpath) {
         this._pointer = this.dataset.getPointer();
         this._ondatadel = new LzDelegate(this, '_updateChildren', this.dataset, 'onDocumentChange')
@@ -267,7 +267,7 @@ class $lzc$class_replicator extends LzNode {
         var v;
         if ( this._clonepool.length ) {
             v  = this._clonepool.pop();
-            if (v.visible != true) v.setVisible( true );
+            if (v.visible != true) v.setAttribute('visible', true );
         } else {
             v =  this._makeClone();
         }
@@ -286,7 +286,7 @@ class $lzc$class_replicator extends LzNode {
     //  @keywords private
     function poolClone (c) {
         if ( c.clonenumber ) this.unbind( c );
-        if (c.visible != false) c.setVisible( false );
+        if (c.visible != false) c.setAttribute('visible', false );
         this._clonepool.push( c );
     }
 
@@ -352,16 +352,15 @@ class $lzc$class_replicator extends LzNode {
     //         the mask
     //         @param Number n: The offset of the clone to scroll in view
     function ensureInView (n) {
-
+        var y = this.container.y;
         var pos = n*this.replicatedsize;
-        var ny = this.y;
+        var ny = y;
 
-        if ( this.replicatedsize+pos >= mask.height -this.y) {
-            ny = mask.height - pos-this.replicatedsize;
-        } else if ( pos < -this.y ) ny = -pos;
+        if (this.replicatedsize+pos >= this.mask.height - y) {
+            ny = this.mask.height - pos - this.replicatedsize;
+        } else if (pos < -y) ny = -pos;
 
-        if ( this.y != ny ) this.setY( ny );
-
+        if (y != ny) this.container.setY(ny);
     }
 }
   ]]>
