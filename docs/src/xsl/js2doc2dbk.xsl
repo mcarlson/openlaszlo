@@ -1014,7 +1014,42 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>
-  
+
+  <xsl:template name="show-super-link">
+    <xsl:param name="superclass"/>
+    <xsl:choose>
+      <xsl:when test="contains($visibility.filter, $superclass/@access)">
+        <!-- if visible, show it with a link -->
+        <link linkend="{$superclass/@id}">
+          <xsl:choose>
+            <xsl:when test="$superclass/doc/tag[@name='lzxname']/text">
+              <xsl:text>&lt;</xsl:text>
+              <xsl:value-of select="$superclass/doc/tag[@name='lzxname']/text"/>
+              <xsl:text>&gt;</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$superclass/@name"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </link>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- not visible, show the name but without a link -->
+        <xsl:choose>
+          <xsl:when test="$superclass/doc/tag[@name='lzxname']/text">
+            <xsl:text>&lt;</xsl:text>
+            <xsl:value-of select="$superclass/doc/tag[@name='lzxname']/text"/>
+            <xsl:text>&gt;</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$superclass/@name"/>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>&nbsp;(private)&nbsp;</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
   <xsl:template name="describe-inherited-attributes">
     <xsl:param name="class"/>        
     
@@ -1028,18 +1063,25 @@
       <refsect2>
         <title>
           <xsl:text>Attributes inherited from&nbsp;</xsl:text>
-          <link linkend="{$superclass/@id}">
-            <xsl:text>&lt;</xsl:text>
-            <xsl:value-of select="$superclass/doc/tag[@name='lzxname']/text"/>
-            <xsl:text>&gt;</xsl:text>
-          </link>
+          <xsl:call-template name="show-super-link">
+            <xsl:with-param name="superclass" select="$superclass"/>
+          </xsl:call-template>
         </title>
         <para>
           <xsl:variable name="inheritedattrs" select="$superclass/class/property[@name='__ivars__']/object/property[@access='public']"></xsl:variable>
           <xsl:variable name="allinheritedattrs" select="$inheritedattrs[not &isevent;]" />
           <xsl:for-each select="$allinheritedattrs">
             <xsl:sort select="@name"/>            
-            <link linkend="{@id}"><xsl:value-of select="@name"/></link>
+            <!-- even if attributes are public, if the class is not, there will
+                 be no class page to link to, so link must not appear -->
+            <xsl:choose>
+              <xsl:when test="contains($visibility.filter, $superclass/@access)">
+                <link linkend="{@id}"><xsl:value-of select="@name"/></link>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="@name"/>
+              </xsl:otherwise>
+            </xsl:choose>
             <xsl:text>, </xsl:text>
           </xsl:for-each>
         </para>
@@ -1073,16 +1115,23 @@
       <xsl:variable name="inheritedmethods" select="$superclass/class/property/object/property[@access='public']/function"></xsl:variable>      
         <title>
           <xsl:text>Methods inherited from&nbsp;</xsl:text>          
-          <link linkend="{$superclass/@id}">
-            <xsl:text>&lt;</xsl:text>            
-            <xsl:value-of select="$superclass/doc/tag[@name='lzxname']/text"/>
-            <xsl:text>&gt;</xsl:text>            
-          </link>
+          <xsl:call-template name="show-super-link">
+            <xsl:with-param name="superclass" select="$superclass"/>
+          </xsl:call-template>
         </title>
         <para>
           <xsl:for-each select="$inheritedmethods">
             <xsl:sort select="../@name"/>            
-            <link linkend="{../@id}"><xsl:value-of select="../@name"/></link>
+            <!-- even if methods are public, if the class is not, there will
+                 be no class page to link to, so link must not appear -->
+            <xsl:choose>
+              <xsl:when test="contains($visibility.filter, $superclass/@access)">
+                <link linkend="{../@id}"><xsl:value-of select="../@name"/></link>
+              </xsl:when>
+              <xsl:otherwise>
+               <xsl:value-of select="../@name"/>
+              </xsl:otherwise>
+            </xsl:choose>
             <xsl:text>, </xsl:text>
           </xsl:for-each>
         </para>
@@ -1117,16 +1166,23 @@
       <refsect2>
         <title>
           <xsl:text>Events inherited from&nbsp;</xsl:text>
-          <link linkend="{$superclass/@id}">
-            <xsl:text>&lt;</xsl:text>            
-            <xsl:value-of select="$superclass/doc/tag[@name='lzxname']/text"/>
-            <xsl:text>&gt;</xsl:text>            
-          </link>
+          <xsl:call-template name="show-super-link">
+            <xsl:with-param name="superclass" select="$superclass"/>
+          </xsl:call-template>
         </title>
         <para>
           <xsl:for-each select="$inheritedevents">
             <xsl:sort select="@name" />
-            <link linkend="{@id}"><xsl:value-of select="@name"/></link>
+            <!-- even if eventss are public, if the class is not, there will
+                 be no class page to link to, so link must not appear -->
+            <xsl:choose>
+              <xsl:when test="contains($visibility.filter, $superclass/@access)">
+                <link linkend="{@id}"><xsl:value-of select="@name"/></link>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="@name"/>
+              </xsl:otherwise>
+            </xsl:choose>
             <xsl:text>, </xsl:text>
           </xsl:for-each>
         </para>
