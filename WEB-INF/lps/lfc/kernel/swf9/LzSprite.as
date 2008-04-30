@@ -68,6 +68,8 @@ dynamic public class LzSprite extends Sprite {
       //resource
       public var _setrescheight:Boolean = false;
 
+      private var __mousedown:Boolean = false;
+
 
       public static var capabilities:* = {
       rotation: true
