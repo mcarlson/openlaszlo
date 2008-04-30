@@ -783,6 +783,31 @@ TestError.prototype.toString = function toString() {
         if (cur_meth.selectNext())
             callNext()
     </method>
+        <doc>
+            <tag name="shortdesc">
+                <text>An extension of TestCase for testing asynchronous objects safely.</text>
+            </tag>
+            <text> 
+            <p>SyncTester is an extension of TestCase that is useful for testing objects whose method are to be called sequentially, in effect synchronizing methods with potentially asynchronous behavior.</p>
+                <p>To take advantage of this helper class, you must declare a dataset named "&lt;instance name&gt;_methods", with a root node whose children are the method names to be called synchronously. The method nodes must be named "call", and have at least the "name" attribute defined. If the method needs to be called with arguments, specify them as value of the optional "args" attribute (only one argument is currently supported).</p>
+                    
+                    <p>Your specific tests will only run once a method returns. It is possible to provide an inspector method for each of the asynchronous methods declared; you reference it with the "tester" attribute of a node in the dataset. These inspector methods must be defined on the SyncTester object. If you don't specify a tester for a method, the default handler named <attribute>inspect</attribute> will be called with the result of the method call as an argument. You should override this method if you want to have a generic inspector for most or all of your methods.</p>
+                    
+                    <p>Generally speaking, you would expect that an event is sent when a method is done. This framework allows you to specify what event indicates the end of method execution by declaring the "event" attribute. It is assumed that the sender of the event is the object referenced by the <class>tested_object</class> attribute, or that the following method accepts a delegate to call on completion, as the last argument. If neither of these assumptions is correct, the flow of method execution will break.</p>
+                    
+                    <p>For example, if you have an instance of this class named "userinfo", then your list of methods might be declared like this:</p>
+                <programlisting>
+                    <![CDATA[    
+    <dataset name="userinfo_methods">
+        <suite>
+            <call name="isAuthenticated" args="admin"/>
+            <call name="getExpiration" event="ondata"/>
+            <call name="createAccount" event="onload" tester="checkAcct"/>
+        </suite>
+    </dataset>]]>
+                </programlisting>
+            </text>
+        </doc>
 </class>
 
 <!---
@@ -974,7 +999,7 @@ TestError.prototype.toString = function toString() {
   lz.TestResult.prototype.toString = lz.TestResult.prototype.myToString;
 </script>
 
-<!---
+<!--
   A TestSuite is a view with any number of children.  The children
   that are TestCases will have all their test... methods run when the
   TestSuite is displayed.
@@ -1228,6 +1253,91 @@ TestError.prototype.toString = function toString() {
           width="100%" height="100%"
          />
     </view>
+    <doc>
+        <tag name="shortdesc">
+            <text>A view that comprises a suite of LZUnit tests.</text>
+        </tag>
+        <text> 
+            <p>
+                This is the LZUnit library.  LZUnit is an implementation of the
+                xUnit testing framework for <code>LZX</code> programs (cf., <a href="http://junit.sourceforge.net/doc/cookstour/cookstour.htm" shape="rect">JUnit
+                    A Cook's Tour</a>).
+            </p>
+            
+            
+            <p>
+                Each of the xUnit components is implemented as an LZX tag with the
+                corresponding name.  Tests can be written by defining a subclass of
+                <code>TestCase</code> and defining <code>test<i>...</i></code>
+                methods.  A test suite can be created by enclosing any number of
+                <code>TestCases</code> in a <code>TestSuite</code>.
+            </p>
+            
+            
+            <p>
+                The usual helper methods, <code>assertTrue</code>,
+                <code>assertEquals</code>, <code>assertWithin</code>,
+                <code>assertSame</code>, etc. are available for implementing the
+                tests.  (See the documentation of <code>Test</code> for a full
+                list.)
+            </p>
+            
+            
+            <p>
+                An <code>LZX</code> program that consists of a
+                <code>TestSuite</code> will, when loaded, automatically run all of
+                its child <code>TestCases</code> and report the number of test cases
+                run, the number of failures, and the number of errors.  If any error
+                occurs, an obvious error message is presented.
+            </p>
+
+            <p>
+                Below is a simple example of the use of LZUnit demonstrating a
+                successful test, a failed test, and a test that causes an error.
+            </p>
+            <note><para>You must run LZUnit with debugging on for it to detect errors.</para></note>   
+            <p>For a more in depth discussion, please see the <a href="../guide/lzunit.html" target="laszlo-dguide" shape="rect">Developer's Guide</a>.</p>
+            <example>
+                <programlisting>
+                    &lt;canvas debug="true"&gt;
+                    &lt;debug y="275"/&gt;
+                    &lt;include href="lzunit"/&gt;
+                    
+                    &lt;class name="Tautologies" extends="TestCase"&gt;
+                    &lt;method name="testSuccess"&gt;
+                    assertTrue(true);
+                    assertFalse(false);
+                    assertEquals(null, undefined);
+                    assertWithin(0, .001, .01);
+                    assertSame(null, null);
+                    assertNotSame(null, undefined);
+                    assertNull(null);
+                    assertNotNull(undefined);
+                    assertUndefined(undefined);
+                    assertNotUndefined(null);
+                    &lt;/method&gt;
+                    &lt;/class&gt;
+                    
+                    &lt;class name="IntentionalBugs" extends="TestCase"&gt;
+                    &lt;method name="testFailure"&gt;
+                    fail("This is an intentional failure");
+                    &lt;/method&gt;
+                    
+                    &lt;method name="testError"&gt;
+                    error("This is an intentional error");
+                    &lt;/method&gt;
+                    &lt;/class&gt;
+                    
+                    &lt;TestSuite&gt;
+                    &lt;Tautologies/&gt;
+                    &lt;IntentionalBugs/&gt;
+                    &lt;/TestSuite&gt;
+                    &lt;/canvas&gt;  
+                </programlisting>
+                
+            </example>
+        </text>
+    </doc>
 </class>
 
 
