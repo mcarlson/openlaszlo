@@ -1,893 +1,547 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-  <head>
-    <meta name="generator"
-    content="HTML Tidy for Mac OS X (vers 1st December 2004), see www.w3.org" />
-    <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0066)http://svn.openlaszlo.org/openlaszlo/trunk/docs/release-notes.html -->
+<HTML lang=en xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>OpenLaszlo 4.2a3 Release Notes</TITLE>
+<META content="MSHTML 6.00.2900.3314" name=GENERATOR><!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-    <title>OpenLaszlo 4.2a3 Release Notes</title>
-    <meta http-equiv="Content-Type"
-    content="text/html; charset=us-ascii" />
-    <link rel="stylesheet" href="../lps/includes/explore.css"
-    type="text/css" />
-    <link rel="SHORTCUT ICON"
-    href="http://www.laszlosystems.com/images/laszlo.ico" />
-    <script src="sorttable.js" type="text/javascript"></script>
-  </head>
-  <body class="release-notes">
-    <h1>Release Notes for OpenLaszlo 4.2a3</h1>
-    <p class="bodytext">OpenLaszlo 4.2a3 is the latest step in
-    OpenLaszlo's development effort to support the SWF9 runtime.
-    There will be frequent iterations, as this branch is under
-    heavy development.</p>
-    <p>You can find and add specific SWF9 test cases in the
-    test/swf9 directory. We rely on these test cases to detect
-    SWF9-specific regressions so that they can be swiftly resolved
-    during the incremental development process. In addition, there
-    is a JIRA project, DevilDog, for tracking SWF9-specific issues
-    found here: 
-    <a href="http://www.openlaszlo.org/jira/browse/lpp">
-    http://www.openlaszlo.org/jira/browse/lpp</a>. Because
-    development is also being merged to trunk, other bug reports
-    more generally related to adding another runtime are included
-    in RingDing.</p>
-    <p>For every release, we rely on the OpenLaszlo community to
-    help ensure the quality of the platform release and to
-    determine its future direction. To propose or participate in
-    discussion of new features, see 
-    <a href="http://wiki.openlaszlo.org/Enhancement_Proposals">the
-    wiki.</a>We encourage you to report any problems, and to make
-    suggestions for enhancements, through our 
-    <a href="http://www.openlaszlo.org/jira/browse/LPP">JIRA bug
-    tracking system.</a></p>
-    <p>Please see the 
-    <a href="http://download.openlaszlo.org/4.0.0/release-notes.html">
-    OpenLaszlo 4.0 Release Notes</a> for an overview of significant
-    changes since 3.x.</p>
-    <h1>New Features in 4.2a3</h1>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><LINK 
+href="OpenLaszlo 4_2a3 Release Notes_files/explore.css" type=text/css 
+rel=stylesheet><LINK href="http://www.laszlosystems.com/images/laszlo.ico" 
+rel="SHORTCUT ICON">
+<SCRIPT src="OpenLaszlo 4_2a3 Release Notes_files/sorttable.js" 
+type=text/javascript></SCRIPT>
+</HEAD>
+<BODY class=release-notes>
+<H1>Release Notes for OpenLaszlo 4.2a3</H1>
+<P class=bodytext>OpenLaszlo 4.2a3 is the latest step in OpenLaszlo's 
+development effort to support the SWF9 runtime. There will be frequent 
+iterations, as this branch is under heavy development.</P>
+<P>You can find and add specific SWF9 test cases in the test/swf9 directory. We 
+rely on these test cases to detect SWF9-specific regressions so that they can be 
+swiftly resolved during the incremental development process. In addition, there 
+is a JIRA project, DevilDog, for tracking SWF9-specific issues found here: <A 
+href="http://www.openlaszlo.org/jira/browse/lpp">http://www.openlaszlo.org/jira/browse/lpp</A>. 
+Because development is also being merged to trunk, other bug reports more 
+generally related to adding another runtime are included in RingDing.</P>
+<P>For every release, we rely on the OpenLaszlo community to help ensure the 
+quality of the platform release and to determine its future direction. To 
+propose or participate in discussion of new features, see <A 
+href="http://wiki.openlaszlo.org/Enhancement_Proposals">the wiki.</A>We 
+encourage you to report any problems, and to make suggestions for enhancements, 
+through our <A href="http://www.openlaszlo.org/jira/browse/LPP">JIRA bug 
+tracking system.</A></P>
+<P>Please see the <A 
+href="http://download.openlaszlo.org/4.0.0/release-notes.html">OpenLaszlo 4.0 
+Release Notes</A> for an overview of significant changes since 3.x.</P>
+<H1>New Features in 4.2a3</H1>
 
-    <h1>Bugs Fixed in 4.2a3</h1>
-    <p>You can sort the table by clicking on the table header
-      "Key".</p>
-    <table class="sortable" border="1" cellpadding="3"
-      width="100%">
-      <tr>
-        <th class="sorttable_numeric">
-          <b>Key</b>
-        </th>
-        <th>
-          <b>Summary</b>
-        </th>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5884">
-            LPP-5884</a>
-        </td>
-        <td>Lazy replication broken as of
-          r8818</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5883">
-            LPP-5883</a>
-        </td>
-        <td>Regression in
-          test/swf9/hello.lzx?lzr=swf9</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5882">
-            LPP-5882</a>
-        </td>
-        <td>Remodularize getTimer(),
-          get/setTimout() and get/setInterval() calls across
-          runtimes</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5880">
-            LPP-5880</a>
-        </td>
-        <td>SWF: Components: Tree: " Hominidid
-          evolution" overlaps frame around it (regression)</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5864">
-            LPP-5864</a>
-        </td>
-        <td>replicator.ensureInView() should use
-          container reference for position...</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5852">
-            LPP-5852</a>
-        </td>
-        <td>swf9: add support for ondblclick,
-          onmousedragover/out and onmouseupoutside</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5850">
-            LPP-5850</a>
-        </td>
-        <td>LzCSSStyleSheet and LzStyleSheet should
-          be coded using 'class' keyword.</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5849">
-            LPP-5849</a>
-        </td>
-        <td>state with constraint on 'apply'
-          attribute causes swf9 runtime error in lznode</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5848">
-            LPP-5848</a>
-        </td>
-        <td>lzc -c producing broken libraries</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5845">
-            LPP-5845</a>
-        </td>
-        <td>Need interface for LzContextMenu and
-          LzContextMenuItem</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5843">
-            LPP-5843</a>
-        </td>
-        <td>clip() method in drawview not
-          working</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5838">
-            LPP-5838</a>
-        </td>
-        <td>swf9: lztest runs before any other
-          calls registered to canvas.oninit</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5834">
-            LPP-5834</a>
-        </td>
-        <td>swf9: drawview instances fail to compile</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5833">
-            LPP-5833</a>
-        </td>
-        <td>swf9: Drawview fails to run</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5820">
-            LPP-5820</a>
-        </td>
-        <td>SWF:DHTML: Arrow buttons stopped
-          working on radio buttons and comboboxes for kb control</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5818">
-            LPP-5818</a>
-        </td>
-        <td>Warn when methods registered for events
-          aren't expecting exactly one argument from sendEvent()</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5816">
-            LPP-5816</a>
-        </td>
-        <td>simple test case for line numbers still
-          off in script output</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5789">
-            LPP-5789</a>
-        </td>
-        <td>swf9: button height does not match text
-          size</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5764">
-            LPP-5764</a>
-        </td>
-        <td>CSS styles do not work anymore</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5754">
-            LPP-5754</a>
-        </td>
-        <td>IWBRNI lzc --script would create a .lzs
-          file rather than just spew to stdout</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5748">
-            LPP-5748</a>
-        </td>
-        <td>Components: Tree example does not load
-          in DHTML (regression)</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5634">
-            LPP-5634</a>
-        </td>
-        <td>Cannot sort a grid which has only a
-          single row</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5201">
-            LPP-5201</a>
-        </td>
-        <td>Index pane not resizable in nightly
-          reference</td>
-      </tr>
-    </table>
-    
-    <h1>New Features in 4.2a2</h1>
-    <p>Many bugs that were introduced by the remodularization of
-    the LZX tag compiler to emit JS2 class declarations have been
-    repaired. LZX instances that add methods are now compiled as
-    anonymous classes. The internal class structure of the LFC has
-    been simplified. LZX script blocks work in swf9. Node ID's and
-    global names are now properly handled in swf9. The longstanding
-    bug of not being able to make forward references to class
-    definitions has been resolved.</p>
-    <p>Support for API's deprecated before 4.0 has been
-    removed.</p>
-    <p>Great progress has been made in getting the automated test
-    harness running in swf9. Many of the individual tests are
-    passing.</p>
-    <p>Great progress has been made in getting datasets working in
-    swf9. Many of the dataset tests are now passing.</p>
-    <p>It will continue to be useful to test your application
-    against this release as a way of preparing for the final swf9
-    release because the remodularizations and reorganizations of
-    the LZX compiler and class system have been made across all
-    runtimes, hence testing against swf8 and/or dhtml is useful for
-    verifying that your application will be ready to run on
-    swf9.</p>
-    <h1>Bugs Fixed in 4.2a2</h1>
-    <p>You can sort the table by clicking on the table header
-    "Key".</p>
-    <table class="sortable" id="issuetable" border="1"
-    cellpadding="3" width="100%">
-      <tr>
-        <th class="sorttable_numeric">
-          <b>Key</b>
-        </th>
-        <th>
-          <b>Summary</b>
-        </th>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5481">
-          LPP-5481</a>
-        </td>
-        <td>XML-RPC does not work in
-        openlaszlo-4.0.9.1</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5798">
-            LPP-5798</a>
-        </td>
-        <td>DHTML: items on navbar cannot be selected</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5814">
-          LPP-5814</a>
-        </td>
-        <td>
-        test/lztest/lztest-node-initsequence.lzx zorched</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5796">
-          LPP-5796</a>
-        </td>
-        <td>swf/swf9/dhtml: canvas oninit() is
-        called twice</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5795">
-          LPP-5795</a>
-        </td>
-        <td>DHTML: resource is not source!</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5790">
-          LPP-5790</a>
-        </td>
-        <td>swf9: default font does not match
-        swf8/dhtml</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5788">
-          LPP-5788</a>
-        </td>
-        <td>swf9: canvas does not show up for
-        fixed/pixel canvas width/height values</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5786">
-          LPP-5786</a>
-        </td>
-        <td>Mark newly added variables as
-        private</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5785">
-          LPP-5785</a>
-        </td>
-        <td>swf9: Fix proxied=true</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5784">
-          LPP-5784</a>
-        </td>
-        <td>Need option to track input line
-        numbers to output code</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5782">
-          LPP-5782</a>
-        </td>
-        <td>$lzc$bind_id and $lzc$bind_name
-        causing warnings in the debugger</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5781">
-          LPP-5781</a>
-        </td>
-        <td>swf9 - Can't override a userclass
-        method in an instance</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5780">
-          LPP-5780</a>
-        </td>
-        <td>Make selectionmanager and
-        dataselectionmanager compile for swf9</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5778">
-          LPP-5778</a>
-        </td>
-        <td>Changes to turn off swf7 and
-        profile builds in trunk for a bit break laszlo-explorer in
-        swf</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5773">
-          LPP-5773</a>
-        </td>
-        <td>id's do not work in swf9</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5759">
-          LPP-5759</a>
-        </td>
-        <td>Turn swf7 and profile builds back
-        on for releases</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5755">
-          LPP-5755</a>
-        </td>
-        <td>Images not loading in lzpix dhtml
-        after r8600</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5746">
-          LPP-5746</a>
-        </td>
-        <td>Write Release Notes for 4.2a2
-        (Yodel)</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5744">
-          LPP-5744</a>
-        </td>
-        <td>Make LzMiniNode a superclass of
-        LzNode</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5733">
-          LPP-5733</a>
-        </td>
-        <td>lzpix dragging broken:
-        dhtml/swf</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5732">
-          LPP-5732</a>
-        </td>
-        <td>Regression in Amazon @ 8592</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5731">
-          LPP-5731</a>
-        </td>
-        <td>Remove "LzNode#deleteNode(..)"</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5725">
-          LPP-5725</a>
-        </td>
-        <td>In swf9, script when="immediate"
-        should be included before any top-level methods</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5719">
-          LPP-5719</a>
-        </td>
-        <td>lztestmanager fails to run in
-        swf9</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5713">
-          LPP-5713</a>
-        </td>
-        <td>SWF/DHTML: combobox is broken in
-        trunk</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5710">
-          LPP-5710</a>
-        </td>
-        <td>
-        test/components/base/lzunit-baseslider.lzx failing</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5702">
-          LPP-5702</a>
-        </td>
-        <td>minor drawview improvements</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5701">
-          LPP-5701</a>
-        </td>
-        <td>swf9 canvas requires a width and
-        height attribute</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5700">
-          LPP-5700</a>
-        </td>
-        <td>drawview broken</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5698">
-          LPP-5698</a>
-        </td>
-        <td>trunk deployed on openlaszlo has no
-        menus in the navbar</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5697">
-          LPP-5697</a>
-        </td>
-        <td>Appendix B. ECMAScript / Formating
-        Error in Table B.1. Supported ECMAScript Properties</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5696">
-          LPP-5696</a>
-        </td>
-        <td>various data-class fixes</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5693">
-          LPP-5693</a>
-        </td>
-        <td>View name's and id's must be valid
-        JS identifiers</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5691">
-          LPP-5691</a>
-        </td>
-        <td>lzpix swf7/swf8: picture 'Tags' are
-        not displayed correctly.</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5674">
-          LPP-5674</a>
-        </td>
-        <td>Remove
-        "LzDatapointer#getXPath()"</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5656">
-          LPP-5656</a>
-        </td>
-        <td>webapprpc reference page
-        problems</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5645">
-          LPP-5645</a>
-        </td>
-        <td>
-        test/components/base/lzunit-basedatacombobox.lzx broken by
-        r8239</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5642">
-          LPP-5642</a>
-        </td>
-        <td>Can't drag to select photos in
-        lzpix after r8279</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5625">
-          LPP-5625</a>
-        </td>
-        <td>Implement instances with methods as
-        singleton classes</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5614">
-          LPP-5614</a>
-        </td>
-        <td>compiler must not redeclare
-        instance variables in subclasses</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5609">
-          LPP-5609</a>
-        </td>
-        <td>LzView and the clip-attribute</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5571">
-          LPP-5571</a>
-        </td>
-        <td>Compiler options for script
-        cache/media cache and filename</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-5411">
-          LPP-5411</a>
-        </td>
-        <td>SWF: make cursor work as in
-        DHTML</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-4687">
-          LPP-4687</a>
-        </td>
-        <td>Datacombobox doesn't obey
-        itemdatapath for selection</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-4469">
-          LPP-4469</a>
-        </td>
-        <td>Update testcase (Was: Datasets
-        inside a state don't work)</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-4285">
-          LPP-4285</a>
-        </td>
-        <td>Two memory leaks in
-        basedatacombobox</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-3260">
-          LPP-3260</a>
-        </td>
-        <td>DeclareEvent is inefficient</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-3235">
-          LPP-3235</a>
-        </td>
-        <td>"Align" attribute should be
-        stored</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-2777">
-          LPP-2777</a>
-        </td>
-        <td>Views that stretch their content
-        fail to be clickable</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-1183">
-          LPP-1183</a>
-        </td>
-        <td>align and valign cannot be modified
-        once they are set initially</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-1128">
-          LPP-1128</a>
-        </td>
-        <td>LzNode.releaseConstraint doesn't
-        appear to work</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-1064">
-          LPP-1064</a>
-        </td>
-        <td>Forward references to classes are
-        not permitted</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-683">
-          LPP-683</a>
-        </td>
-        <td>Remove deprecated
-        Datapointer.getOtherNodeText()</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-363">
-          LPP-363</a>
-        </td>
-        <td>Dataset destruction problem and
-        view datapath rebinding weirdness</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-274">
-          LPP-274</a>
-        </td>
-        <td>applyArgs passes an undocumented
-        2nd argument to all setters</td>
-      </tr>
-      <tr valign="top">
-        <td style="white-space: nowrap;">
-          <a href="http://www.openlaszlo.org/jira/browse/LPP-151">
-          LPP-151</a>
-        </td>
-        <td>Compiler should emit classes
-        first</td>
-      </tr>
-    </table>
-    <h1>New Features in 4.2a1</h1>
-    <p>Release 4.2a1 provides preliminary support for classes,
-    user-defined classes, layouts, constraints, views, and text
-    (with the exception of multi-line text, which is partially
-    implemented ). 4.2a1 also supports optional argument syntax, as
-    defined by AS3. This was added because SWF9 requires you to
-    either exactly match the function signature's number of
-    arguments or use the AS3 optional argument syntax. Other
-    low-level changes to support SWF9 include a new SWF9 sprite, as
-    well as many changes to the compiler.</p>
-    <p>User-defined classes and layouts basically work in SWF9.</p>
-    <p>There are some new test cases in test/swf9: one for
-    user-defined classes to test adding of override declarations
-    and one to test 
-    <code>&lt;simplelayout&gt;</code>.</p>
-    <h1>Application Changes Needed Before Using 4.2a1</h1>
-    <p>This section contains changes you should make to ensure that
-    your code runs faster and without errors in SWF9. For
-    instructions on setting up a SWF9 build environment see 
-    <a href="http://wiki.openlaszlo.org/BuildingSWF9">
-    BuildingSWF9</a>.</p>
-    <!-- The following (up to the next comment) is from Tucker's email "Changes coming..." -->
-    <h2>
-    <code>&lt;method event="eventname"&gt;</code>is deprecated</h2>
-    <p>The syntax 
-    <code>&lt;method event="eventname"&gt;</code>is now deprecated
-    and will trigger a compiler warning. You should update your
-    code to use 
-    <code>&lt;handler name="eventname"&gt;</code>;. In the case
-    where the method is named ( 
-    <code>&lt;method event="eventname"
-    name="methodname"&gt;</code>) you will have to split the
-    declaration into a handler ( 
-    <code>&lt;handler name="eventname" method="methodname"
-    /&gt;</code>) and a method ( 
-    <code>&lt;method name="methodname"&gt;</code>). [This syntax
-    allows subclasses to override the method that will be handling
-    the event. See the documentation for 
-    <code>handler</code>for further details and examples.</p>
-    <h2>Using 
-    <code>&lt;class name="name"&gt;</code></h2>
-    <p>Classes defined using the 
-    <code>&lt;class name="name"&gt;</code>
-    <em>must</em>be referenced in script as 
-    <code>&lt;lz.name&gt;</code>, there will no longer be a global
-    alias 
-    <code>name</code>that refers to the class implementing the
-    tag.</p>
-    <h2>LZX-defined classes now have an internal name</h2>
-    <p>The classes that represent LZX-defined classes now have an
-    internal name. If you want to know the name of the tag that
-    defined an object, you should ask 
-    <code>&lt;object&gt;.constructor.tagname</code>, not 
-    <code>&lt;object&gt;.constructor.classname&gt;</code>.</p>
-    <h2>Method 
-    <code>getattribute()</code>deprecated</h2>
-    <p>
-    <code>getAttribute</code>is deprecated. You should just
-    reference the attribute directly; getters are no longer
-    supported.</p>
-    <h2>Change should 
-    <em>not</em> affect user code</h2>
-    <p>Initial values, initial expressions ($once, $path, $style,
-    and $always), are now created as a unified list in the tag
-    compiler solving several issues with overriding/inheritance of
-    attribute values and constraints and enabling the solution to
-    an issue with states and constraints. As a result, if you
-    override 
-    <code>LzNode#construct</code>, and attempt to manipulate the 
-    <code>args</code>list, you must be aware that some values in
-    that list will be 
-    <code>LzInitExpr</code>`s and cannot be directly inspected.
-    These value represent consraints that will be applied by 
-    <code>LzNode#__LZapplyArgs</code>.</p>
-    <p>If you 
-    <em>do</em>have classes that override 
-    <code>construct</code>
-    <em>and</em>expect to manipulate the args to that method, you
-    will have to update your code when moving to revision
-    4.2a1.</p>
-    <!-- The following is from the wiki page at http://wiki.openlaszlo.org/SWF9_Conversion -->
-    <h2>You cannot delete "fixtures" (declared instance vars) of an
-    instance</h2>
-    <p>We have code in the LFC that deletes var in order to free up
-    memory or null them out. These have to be checked, and in most
-    cases converted to just set the value to null when possible.
-    For cases where the property really has to be deleted to remove
-    shadowing of an instance var, we need to rewrite that code to
-    use some other approach.</p>
-    <h2>Need to put call to add tagname to constructor map
-    *outside* of the class def</h2>
-    <pre>
-        class LzNode { 
+<P>With OpenLaszlo 4.2a3, the data classes are now built into the swf9
+kernel. The data tests in the /test/swf9/ directory run correctly in
+all supported runtimes (including swf9). Porting of components to swf9
+is underway, and until that effort is complete, most data-driven
+applications won't run. OpenLaszlo 4.2a3 also adds support for mouse
+events, such as onmousewheel, ondblclick, onmousedragover, on
+mousedragout, and onmouseupoutside (partial).  A number of important
+issues have been addressed: CSS styles work again, an interface has
+been added for LzContextMenu and LzContextMenuItem, and some grid
+regressions have been corrected.</P>  
+
+<P>By request, a bitmap caching API has been added. A cachebitmap
+attribute has been added to LzView. Setting the cachebitmap attribute
+to true will turn on bitmap caching for views and view subclasses.  Note that text
+defaults to cachebitmap='true'. This currently works only in Flash.</P>
+
+<P>One change requires that you update your application code. In DHTML and swf9,
+you will get a warning if you create a delegate or attach a handler
+method that does not accept 1 argument. When creating a delegate <CODE> new
+LzDelegate(&lt;object&gt;, &lt;methodname&gt;), &lt;methodname&gt; </CODE>must be a method of
+one argument, because it will be invoked by <CODE>LzDelegate#execute</CODE> with
+one argument (typically the argument that is passed to
+<CODE>LzEvent#sendEvent</CODE> when that delegate is registered to receive
+events). If <CODE>&lt;methodname&gt</CODE>; is called elsewhere, it will have to be
+called with a suitable argument). Similarly if the handler tag is used
+to connect an event to a method, the method must be a method of one
+argument.</P>
+
+<H1>Bugs Fixed in 4.2a3</H1>
+<P>You can sort the table by clicking on the table header "Key".</P>
+<TABLE class=sortable cellPadding=3 width="100%" border=1>
+  <TBODY>
+  <TR>
+    <TH class=sorttable_numeric><B>Key</B> </TH>
+    <TH><B>Summary</B> </TH></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5884">LPP-5884</A> </TD>
+    <TD>Lazy replication broken as of r8818</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5904">LPP-5904</A> </TD>
+    <TD>Add bitmap caching API</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5903">LPP-5903</A> </TD>
+    <TD>Write Release Notes for 4.2a3</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5883">LPP-5883</A> </TD>
+    <TD>Regression in test/swf9/hello.lzx?lzr=swf9</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5882">LPP-5882</A> </TD>
+    <TD>Remodularize getTimer(), get/setTimout() and get/setInterval() calls 
+      across runtimes</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5880">LPP-5880</A> </TD>
+    <TD>SWF: Components: Tree: " Hominidid evolution" overlaps frame around it 
+      (regression)</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5864">LPP-5864</A> </TD>
+    <TD>replicator.ensureInView() should use container reference for 
+      position...</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5852">LPP-5852</A> </TD>
+    <TD>swf9: add support for ondblclick, onmousedragover/out and 
+      onmouseupoutside</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5850">LPP-5850</A> </TD>
+    <TD>LzCSSStyleSheet and LzStyleSheet should be coded using 'class' 
+    keyword.</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5849">LPP-5849</A> </TD>
+    <TD>state with constraint on 'apply' attribute causes swf9 runtime error 
+      in lznode</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5848">LPP-5848</A> </TD>
+    <TD>lzc -c producing broken libraries</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5845">LPP-5845</A> </TD>
+    <TD>Need interface for LzContextMenu and LzContextMenuItem</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5843">LPP-5843</A> </TD>
+    <TD>clip() method in drawview not working</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5838">LPP-5838</A> </TD>
+    <TD>swf9: lztest runs before any other calls registered to 
+  canvas.oninit</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5834">LPP-5834</A> </TD>
+    <TD>swf9: drawview instances fail to compile</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5833">LPP-5833</A> </TD>
+    <TD>swf9: Drawview fails to run</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5820">LPP-5820</A> </TD>
+    <TD>SWF:DHTML: Arrow buttons stopped working on radio buttons and 
+      comboboxes for kb control</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5818">LPP-5818</A> </TD>
+    <TD>Warn when methods registered for events aren't expecting exactly one 
+      argument from sendEvent()</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5816">LPP-5816</A> </TD>
+    <TD>simple test case for line numbers still off in script output</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5789">LPP-5789</A> </TD>
+    <TD>swf9: button height does not match text size</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5764">LPP-5764</A> </TD>
+    <TD>CSS styles do not work anymore</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5754">LPP-5754</A> </TD>
+    <TD>IWBRNI lzc --script would create a .lzs file rather than just spew to 
+      stdout</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5748">LPP-5748</A> </TD>
+    <TD>Components: Tree example does not load in DHTML (regression)</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5634">LPP-5634</A> </TD>
+    <TD>Cannot sort a grid which has only a single row</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5201">LPP-5201</A> </TD>
+    <TD>Index pane not resizable in nightly reference</TD></TR></TBODY></TABLE>
+<H1>New Features in 4.2a2</H1>
+<P>Many bugs that were introduced by the remodularization of the LZX tag 
+compiler to emit JS2 class declarations have been repaired. LZX instances that 
+add methods are now compiled as anonymous classes. The internal class structure 
+of the LFC has been simplified. LZX script blocks work in swf9. Node ID's and 
+global names are now properly handled in swf9. The longstanding bug of not being 
+able to make forward references to class definitions has been resolved.</P>
+<P>Support for API's deprecated before 4.0 has been removed.</P>
+<P>Great progress has been made in getting the automated test harness running in 
+swf9. Many of the individual tests are passing.</P>
+<P>Great progress has been made in getting datasets working in swf9. Many of the 
+dataset tests are now passing.</P>
+<P>It will continue to be useful to test your application against this release 
+as a way of preparing for the final swf9 release because the remodularizations 
+and reorganizations of the LZX compiler and class system have been made across 
+all runtimes, hence testing against swf8 and/or dhtml is useful for verifying 
+that your application will be ready to run on swf9.</P>
+<H1>Bugs Fixed in 4.2a2</H1>
+<P>You can sort the table by clicking on the table header "Key".</P>
+<TABLE class=sortable id=issuetable cellPadding=3 width="100%" border=1>
+  <TBODY>
+  <TR>
+    <TH class=sorttable_numeric><B>Key</B> </TH>
+    <TH><B>Summary</B> </TH></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5481">LPP-5481</A> </TD>
+    <TD>XML-RPC does not work in openlaszlo-4.0.9.1</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5798">LPP-5798</A> </TD>
+    <TD>DHTML: items on navbar cannot be selected</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5814">LPP-5814</A> </TD>
+    <TD>test/lztest/lztest-node-initsequence.lzx zorched</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5796">LPP-5796</A> </TD>
+    <TD>swf/swf9/dhtml: canvas oninit() is called twice</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5795">LPP-5795</A> </TD>
+    <TD>DHTML: resource is not source!</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5790">LPP-5790</A> </TD>
+    <TD>swf9: default font does not match swf8/dhtml</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5788">LPP-5788</A> </TD>
+    <TD>swf9: canvas does not show up for fixed/pixel canvas width/height 
+      values</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5786">LPP-5786</A> </TD>
+    <TD>Mark newly added variables as private</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5785">LPP-5785</A> </TD>
+    <TD>swf9: Fix proxied=true</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5784">LPP-5784</A> </TD>
+    <TD>Need option to track input line numbers to output code</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5782">LPP-5782</A> </TD>
+    <TD>$lzc$bind_id and $lzc$bind_name causing warnings in the debugger</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5781">LPP-5781</A> </TD>
+    <TD>swf9 - Can't override a userclass method in an instance</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5780">LPP-5780</A> </TD>
+    <TD>Make selectionmanager and dataselectionmanager compile for swf9</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5778">LPP-5778</A> </TD>
+    <TD>Changes to turn off swf7 and profile builds in trunk for a bit break 
+      laszlo-explorer in swf</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5773">LPP-5773</A> </TD>
+    <TD>id's do not work in swf9</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5759">LPP-5759</A> </TD>
+    <TD>Turn swf7 and profile builds back on for releases</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5755">LPP-5755</A> </TD>
+    <TD>Images not loading in lzpix dhtml after r8600</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5746">LPP-5746</A> </TD>
+    <TD>Write Release Notes for 4.2a2 (Yodel)</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5744">LPP-5744</A> </TD>
+    <TD>Make LzMiniNode a superclass of LzNode</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5733">LPP-5733</A> </TD>
+    <TD>lzpix dragging broken: dhtml/swf</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5732">LPP-5732</A> </TD>
+    <TD>Regression in Amazon @ 8592</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5731">LPP-5731</A> </TD>
+    <TD>Remove "LzNode#deleteNode(..)"</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5725">LPP-5725</A> </TD>
+    <TD>In swf9, script when="immediate" should be included before any 
+      top-level methods</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5719">LPP-5719</A> </TD>
+    <TD>lztestmanager fails to run in swf9</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5713">LPP-5713</A> </TD>
+    <TD>SWF/DHTML: combobox is broken in trunk</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5710">LPP-5710</A> </TD>
+    <TD>test/components/base/lzunit-baseslider.lzx failing</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5702">LPP-5702</A> </TD>
+    <TD>minor drawview improvements</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5701">LPP-5701</A> </TD>
+    <TD>swf9 canvas requires a width and height attribute</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5700">LPP-5700</A> </TD>
+    <TD>drawview broken</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5698">LPP-5698</A> </TD>
+    <TD>trunk deployed on openlaszlo has no menus in the navbar</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5697">LPP-5697</A> </TD>
+    <TD>Appendix B. ECMAScript / Formating Error in Table B.1. Supported 
+      ECMAScript Properties</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5696">LPP-5696</A> </TD>
+    <TD>various data-class fixes</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5693">LPP-5693</A> </TD>
+    <TD>View name's and id's must be valid JS identifiers</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5691">LPP-5691</A> </TD>
+    <TD>lzpix swf7/swf8: picture 'Tags' are not displayed correctly.</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5674">LPP-5674</A> </TD>
+    <TD>Remove "LzDatapointer#getXPath()"</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5656">LPP-5656</A> </TD>
+    <TD>webapprpc reference page problems</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5645">LPP-5645</A> </TD>
+    <TD>test/components/base/lzunit-basedatacombobox.lzx broken by r8239</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5642">LPP-5642</A> </TD>
+    <TD>Can't drag to select photos in lzpix after r8279</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5625">LPP-5625</A> </TD>
+    <TD>Implement instances with methods as singleton classes</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5614">LPP-5614</A> </TD>
+    <TD>compiler must not redeclare instance variables in subclasses</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5609">LPP-5609</A> </TD>
+    <TD>LzView and the clip-attribute</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5571">LPP-5571</A> </TD>
+    <TD>Compiler options for script cache/media cache and filename</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-5411">LPP-5411</A> </TD>
+    <TD>SWF: make cursor work as in DHTML</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-4687">LPP-4687</A> </TD>
+    <TD>Datacombobox doesn't obey itemdatapath for selection</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-4469">LPP-4469</A> </TD>
+    <TD>Update testcase (Was: Datasets inside a state don't work)</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-4285">LPP-4285</A> </TD>
+    <TD>Two memory leaks in basedatacombobox</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-3260">LPP-3260</A> </TD>
+    <TD>DeclareEvent is inefficient</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-3235">LPP-3235</A> </TD>
+    <TD>"Align" attribute should be stored</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-2777">LPP-2777</A> </TD>
+    <TD>Views that stretch their content fail to be clickable</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-1183">LPP-1183</A> </TD>
+    <TD>align and valign cannot be modified once they are set initially</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-1128">LPP-1128</A> </TD>
+    <TD>LzNode.releaseConstraint doesn't appear to work</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-1064">LPP-1064</A> </TD>
+    <TD>Forward references to classes are not permitted</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-683">LPP-683</A> </TD>
+    <TD>Remove deprecated Datapointer.getOtherNodeText()</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-363">LPP-363</A> </TD>
+    <TD>Dataset destruction problem and view datapath rebinding 
+weirdness</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-274">LPP-274</A> </TD>
+    <TD>applyArgs passes an undocumented 2nd argument to all setters</TD></TR>
+  <TR vAlign=top>
+    <TD style="WHITE-SPACE: nowrap"><A 
+      href="http://www.openlaszlo.org/jira/browse/LPP-151">LPP-151</A> </TD>
+    <TD>Compiler should emit classes first</TD></TR></TBODY></TABLE>
+<H1>New Features in 4.2a1</H1>
+<P>Release 4.2a1 provides preliminary support for classes, user-defined classes, 
+layouts, constraints, views, and text (with the exception of multi-line text, 
+which is partially implemented ). 4.2a1 also supports optional argument syntax, 
+as defined by AS3. This was added because SWF9 requires you to either exactly 
+match the function signature's number of arguments or use the AS3 optional 
+argument syntax. Other low-level changes to support SWF9 include a new SWF9 
+sprite, as well as many changes to the compiler.</P>
+<P>User-defined classes and layouts basically work in SWF9.</P>
+<P>There are some new test cases in test/swf9: one for user-defined classes to 
+test adding of override declarations and one to test 
+<CODE>&lt;simplelayout&gt;</CODE>.</P>
+<H1>Application Changes Needed Before Using 4.2a1</H1>
+<P>This section contains changes you should make to ensure that your code runs 
+faster and without errors in SWF9. For instructions on setting up a SWF9 build 
+environment see <A 
+href="http://wiki.openlaszlo.org/BuildingSWF9">BuildingSWF9</A>.</P><!-- The following (up to the next comment) is from Tucker's email "Changes coming..." -->
+<H2><CODE>&lt;method event="eventname"&gt;</CODE>is deprecated</H2>
+<P>The syntax <CODE>&lt;method event="eventname"&gt;</CODE>is now deprecated and 
+will trigger a compiler warning. You should update your code to use 
+<CODE>&lt;handler name="eventname"&gt;</CODE>;. In the case where the method is 
+named ( <CODE>&lt;method event="eventname" name="methodname"&gt;</CODE>) you 
+will have to split the declaration into a handler ( <CODE>&lt;handler 
+name="eventname" method="methodname" /&gt;</CODE>) and a method ( 
+<CODE>&lt;method name="methodname"&gt;</CODE>). [This syntax allows subclasses 
+to override the method that will be handling the event. See the documentation 
+for <CODE>handler</CODE>for further details and examples.</P>
+<H2>Using <CODE>&lt;class name="name"&gt;</CODE></H2>
+<P>Classes defined using the <CODE>&lt;class name="name"&gt;</CODE> 
+<EM>must</EM>be referenced in script as <CODE>&lt;lz.name&gt;</CODE>, there will 
+no longer be a global alias <CODE>name</CODE>that refers to the class 
+implementing the tag.</P>
+<H2>LZX-defined classes now have an internal name</H2>
+<P>The classes that represent LZX-defined classes now have an internal name. If 
+you want to know the name of the tag that defined an object, you should ask 
+<CODE>&lt;object&gt;.constructor.tagname</CODE>, not 
+<CODE>&lt;object&gt;.constructor.classname&gt;</CODE>.</P>
+<H2>Method <CODE>getattribute()</CODE>deprecated</H2>
+<P><CODE>getAttribute</CODE>is deprecated. You should just reference the 
+attribute directly; getters are no longer supported.</P>
+<H2>Change should <EM>not</EM> affect user code</H2>
+<P>Initial values, initial expressions ($once, $path, $style, and $always), are 
+now created as a unified list in the tag compiler solving several issues with 
+overriding/inheritance of attribute values and constraints and enabling the 
+solution to an issue with states and constraints. As a result, if you override 
+<CODE>LzNode#construct</CODE>, and attempt to manipulate the 
+<CODE>args</CODE>list, you must be aware that some values in that list will be 
+<CODE>LzInitExpr</CODE>`s and cannot be directly inspected. These value 
+represent consraints that will be applied by 
+<CODE>LzNode#__LZapplyArgs</CODE>.</P>
+<P>If you <EM>do</EM>have classes that override <CODE>construct</CODE> 
+<EM>and</EM>expect to manipulate the args to that method, you will have to 
+update your code when moving to revision 4.2a1.</P><!-- The following is from the wiki page at http://wiki.openlaszlo.org/SWF9_Conversion -->
+<H2>You cannot delete "fixtures" (declared instance vars) of an instance</H2>
+<P>We have code in the LFC that deletes var in order to free up memory or null 
+them out. These have to be checked, and in most cases converted to just set the 
+value to null when possible. For cases where the property really has to be 
+deleted to remove shadowing of an instance var, we need to rewrite that code to 
+use some other approach.</P>
+<H2>Need to put call to add tagname to constructor map *outside* of the class 
+def</H2><PRE>        class LzNode { 
         ...
         }
         
         ConstructorMap['node'] = LzNode;
     
-</pre>
-    <h2>If you override a superclass method, you must use the
-    override keyword</h2>
-    <pre>
-public override function setWidth (...) { ... }
-</pre>
-    <h2>All setter methods need to accept a second optional
-    arg</h2>
-    <p>For now, declare them like this:</p>
-    <pre>
-function setResize ( val, ignore = null ){
-</pre>
-    <p>We will fix this soon so you don't need to add the second
-    arg.</p>
-    <h2>Dependency functions don't work yet</h2>
-    <p>Code that declares constraint dependencies by annotating the
-    method will not work in swf9.</p>
-    <pre>
-prototype.getText.dependencies = function(who, self) {
+</PRE>
+<H2>If you override a superclass method, you must use the override keyword</H2><PRE>public override function setWidth (...) { ... }
+</PRE>
+<H2>All setter methods need to accept a second optional arg</H2>
+<P>For now, declare them like this:</P><PRE>function setResize ( val, ignore = null ){
+</PRE>
+<P>We will fix this soon so you don't need to add the second arg.</P>
+<H2>Dependency functions don't work yet</H2>
+<P>Code that declares constraint dependencies by annotating the method will not 
+work in swf9.</P><PRE>prototype.getText.dependencies = function(who, self) {
         return [ self, "text" ];
         }
-</pre>
-    <p>or</p>
-    <pre>
-prototype.getAttributeRelative.dependencies = function( who,self,
+</PRE>
+<P>or</P><PRE>prototype.getAttributeRelative.dependencies = function( who,self,
 prop ,
         refView ){
     
-</pre>
-    <p>for now rename these to have a well-known name by appending 
-    <code>$dependencies$</code>to the method name, like 
-    <code>$lzc$dependencies_getAttributeRelative</code>.</p>
-    <h2>Overriding variable definitions</h2>
-    <p>You cannot initialize a variable that is already defined in
-    a base class using this syntax:</p>
-    <pre>
-var nodeType = LzDataNode.TEXT_NODE;  // Done in the derived class
-</pre>
-    <p>Instead, initialize the value in the constructor:</p>
-    <pre>
-   function LzDataText(text) {
+</PRE>
+<P>for now rename these to have a well-known name by appending 
+<CODE>$dependencies$</CODE>to the method name, like 
+<CODE>$lzc$dependencies_getAttributeRelative</CODE>.</P>
+<H2>Overriding variable definitions</H2>
+<P>You cannot initialize a variable that is already defined in a base class 
+using this syntax:</P><PRE>var nodeType = LzDataNode.TEXT_NODE;  // Done in the derived class
+</PRE>
+<P>Instead, initialize the value in the constructor:</P><PRE>   function LzDataText(text) {
         super();
         ....
         this.nodeType = LzDataNode.TEXT_NODE;
     
-</pre>
-    <h2>Be careful using the 
-    <code>in</code>operator</h2>
-    <p>Using 
-    <code>in</code>to see if an object contains a method only works
-    in swf9 if that method is labeled public.</p>
-    <p>For example:</p>
-    <pre>
- if (this.context &amp;&amp; 'getContext' in this.context)
-</pre>
-    <p>will fail. One solution is to make sure the base class has a
-    definition for 
-    <code>getContext()</code>.</p>
-    <h2>Use 
-    <code>is</code>operator instead of looking for a property</h2>
-    <p>This line of code:</p>
-    <pre>
- }else if (n.length) {
-</pre>
-    <p>fails in swf9 if n does not have a property named 
-    <code>length</code>. This check is trying to determine if the
-    object is an Array. This can be rewritten as:</p>
-    <pre>
-}else if (n is Array) {
-</pre>
-  </body>
-</html>
+</PRE>
+<H2>Be careful using the <CODE>in</CODE>operator</H2>
+<P>Using <CODE>in</CODE>to see if an object contains a method only works in swf9 
+if that method is labeled public.</P>
+<P>For example:</P><PRE> if (this.context &amp;&amp; 'getContext' in this.context)
+</PRE>
+<P>will fail. One solution is to make sure the base class has a definition for 
+<CODE>getContext()</CODE>.</P>
+<H2>Use <CODE>is</CODE>operator instead of looking for a property</H2>
+<P>This line of code:</P><PRE> }else if (n.length) {
+</PRE>
+<P>fails in swf9 if n does not have a property named <CODE>length</CODE>. This 
+check is trying to determine if the object is an Array. This can be rewritten 
+as:</P><PRE>}else if (n is Array) {
+</PRE></BODY></HTML>
