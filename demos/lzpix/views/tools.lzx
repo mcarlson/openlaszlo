@@ -58,7 +58,7 @@
                 drag_min_x="5"
                 drag_max_x="117"/>
     
-            <method name="startdragging" args="dragImage">
+            <method name="startdragging" args="dragImage=null">
                 dragging.apply();
                 photoscontainer.lyt.calcpageparams = true;
                 photoscontainer.lyt.setAttribute('textvisible',false);

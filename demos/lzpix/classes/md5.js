@@ -129,7 +129,7 @@ function core_md5(x, len)
     c = safe_add(c, oldc);
     d = safe_add(d, oldd);
   }
-  return Array(a, b, c, d);
+  return new Array(a, b, c, d);
 
 }
 
@@ -165,7 +165,7 @@ function core_hmac_md5(key, data)
   var bkey = str2binl(key);
   if(bkey.length > 16) bkey = core_md5(bkey, key.length * chrsz);
 
-  var ipad = Array(16), opad = Array(16);
+  var ipad = new Array(16), opad = new Array(16);
   for(var i = 0; i < 16; i++)
   {
     ipad[i] = bkey[i] ^ 0x36363636;
@@ -201,7 +201,7 @@ function bit_rol(num, cnt)
  */
 function str2binl(str)
 {
-  var bin = Array();
+  var bin = new Array();
   var mask = (1 << chrsz) - 1;
   for(var i = 0; i < str.length * chrsz; i += chrsz)
     bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (i%32);
@@ -257,7 +257,7 @@ function binl2b64(binarray)
 }
 
 /*
-Copyright (c) 1998 - 2002, Paul Johnston & Contributors
+Copyright (c) 1998 - 2002, 2008, Paul Johnston & Contributors
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

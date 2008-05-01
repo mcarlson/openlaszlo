@@ -122,6 +122,14 @@ var __LZoptimizeforaxis = 'x';
 /** @access private */
 var __LZmouseupDel = null;
 
+var __LZlastmouseup = null;
+var __LZlasthit = null;
+
+var __LZdestroydel:LzDelegate = null;
+
+var __LZdeferDelegates = false;
+var __LZdeleted = false;
+
 function LzTrackClass (){
     super();
 

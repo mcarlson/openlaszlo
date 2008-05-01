@@ -6,7 +6,7 @@
     <attribute name="dontupdate" value="true" />
 
     <!--- @keywords private -->
-    <method name="reset">
+    <method name="reset" args="e=null">
         if ( this.locked || (this.subviews &amp;&amp; this.subviews.length &lt; 2 )) { return; }
         this.subviews[ 1 ].setAttribute(this.axis ,
                             this.subviews[ 0 ][(this.sizeAxis )] );

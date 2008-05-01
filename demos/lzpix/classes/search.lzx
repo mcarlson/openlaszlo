@@ -103,8 +103,8 @@
             this.content.txt.setText(t);
         </method>
 
-        <method name="getText" args="t" >
-            return this.content.txt.getText(t);
+        <method name="getText">
+            return this.content.txt.getText();
         </method>
     </class>
 

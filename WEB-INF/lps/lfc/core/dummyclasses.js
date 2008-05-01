@@ -31,15 +31,7 @@ var canvas:LzCanvas;
 
 // #include "core/dummydata.js"
 
-
-public class LzTrack {
-    static function __LZmouseup(ignore) {
-    }
-
-}
-
 var lzOptions = {};
-
 
 class lzcoreutils {
     /// TODO [hqm 2008-01] just for debugging until we get debugger up
@@ -54,3 +46,4 @@ class lzcoreutils {
     }
               }#
 }
+

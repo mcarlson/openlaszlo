@@ -36,10 +36,7 @@ if ($js1) {
     Debug.error('services/Library.lzs unsupported runtime %s', $runtime);
 }
 
-if ($swf9) {
-} else {
 #include "services/LzTrack.lzs"
-}
 #include "services/LzIdle.lzs"
 #include "services/LzCSSStyle.lzs"
 #include "services/LzStyleSheet.lzs"

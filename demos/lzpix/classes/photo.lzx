@@ -19,6 +19,11 @@
         <attribute name="_diwmult" value="0"/>
         <attribute name="_dihmult" value="0"/>
 
+        <attribute name="_mdtime"/>
+        <attribute name="_ddcxp"/>
+        <attribute name="_ddcyp"/>
+
+
         <attribute name="intwidth" value="${ this._wmult * this.width }"/>
         <attribute name="intheight" value="${ this._hmult * this.height }"/>
 
@@ -157,15 +162,15 @@
         <view name="borderbg" bgcolor="white" />
         
         <!-- interior -->
-        <view name="intparent" clip="true" x="$once{ classroot.border }" 
-              y="$once{ classroot.border }">
+        <view name="intparent" clip="true" x="$once{ this.classroot.border }" 
+              y="$once{ this.classroot.border }">
             <view name="interior" bgcolor="0xd9d9d9" stretches="both">
-                <state apply="${classroot.doesdrag}">
+                <state apply="${this.classroot.doesdrag}">
                     <handler name="onmousedown">
-                        classroot.onmousedown.sendEvent();
+                        this.classroot.onmousedown.sendEvent();
                     </handler>
                     <handler name="onmouseup">
-                        classroot.onmouseup.sendEvent();
+                        this.classroot.onmouseup.sendEvent();
                     </handler>
                 </state>
             </view>
@@ -215,7 +220,7 @@
 
         <method name="startDragCheck">
             //info('startDragCheck');
-            _mdtime = new Date();
+            this._mdtime = LzTimeKernel.getTimer();
             this.ddcdel.register( LzIdle, "onidle" );
             this._ddcxp = this.getMouse( "x" );
             this._ddcyp = this.getMouse( "y" );
@@ -228,17 +233,17 @@
 
         <method name="doDragCheck">
             <![CDATA[
-            var dx = this.getMouse( "x" ) - _ddcxp;
-            var dy =  this.getMouse( "y" ) - _ddcyp;
-            if ( ( ( new Date() ) - _mdtime > mousedownBeforeDrag ) ||
+            var dx = this.getMouse( "x" ) - this._ddcxp;
+            var dy =  this.getMouse( "y" ) - this._ddcyp;
+            if ( ( LzTimeKernel.getTimer() - this._mdtime > mousedownBeforeDrag ) ||
                  ( 5 < ( Math.abs( dx ) + Math.abs( dy ) ) ) ){
-                this.startDrag( dx, dy );
+                this.startDrag(dx, dy );
             }
             ]]>
         </method>
 
         <attribute name="mousedownBeforeDrag" value="300"/>
-        <method name="startDrag">
+        <method name="startDrag" args="dx,dy">
             this.ddcdel.unregisterAll();
             this.setAttribute ( "draginitiator" , true );
         </method>

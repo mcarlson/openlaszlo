@@ -206,7 +206,7 @@
                 tls.enableZoom();
             </handler>
 
-            <method name="showPhotoDetails"  args="show,ph_arg" ><![CDATA[
+            <method name="showPhotoDetails"  args="show,ph_arg=null" ><![CDATA[
                 if ( show ) {
                     var photoid = ph_arg.datapath.p.getAttr("id"); 
                     canvas.details.setVisible( true ); 
@@ -368,7 +368,7 @@
                 <attribute name="selected" value="false"/>
 
                 <method name="startDrag" args="offx, offy">
-                    super.startDrag();
+                    super.startDrag(offx, offy);
                     if ( !isselected ) parent.selman.select( this );
                     gDragged.startDrag( this, parent.selman.getSelection() , offx, offy );
                 </method>
@@ -381,7 +381,7 @@
 
                 <attribute name="isselected" value="false"/>
 
-                <method name="setSelected" args="s">
+                <method name="setSelected" args="s:Boolean">
                     this.borderbg.setBGColor(s ? "0xFFD800" : "0xFFFFFF"); 
                     this.setAttribute( "isselected" , s );
                     this.intparent.setOpacity( s ? .5 : 1 );
@@ -432,7 +432,7 @@
                     ]]>
                 </method>
 
-                <method name="stop">
+                <method name="stop" args="f = null, rel = null">
                     this.setVisible( false );
                     this.updel.unregisterAll();
                     this.parent.selectInRectangle( this._sx , this._sy , 

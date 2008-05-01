@@ -260,7 +260,7 @@ public class NodeModel implements Cloneable {
         // Binders are called by LzDelegate.execute, which passes the
         // value sent by sendEvent, so we have to accept it, but we
         // ignore it
-        "$lzc$ignore",
+        "$lzc$ignore=null",
         pragmas,
         "this." + installer + "(" +
         ScriptCompiler.quote(name) + "," +

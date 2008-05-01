@@ -3,6 +3,7 @@
     <class name="draggedphotos" extends="photocollection">
 
         <attribute name="stackoffset" value="4"/>
+        <attribute name="sellist"/>
 
         <method name="startDrag" args="who, sel , ix , iy">
             this.setX( who.getAttributeRelative( 'x', this ) + ix );
@@ -14,6 +15,7 @@
             ds.apply();
 
             LzTrack.activate( "photos" );
+
             gClipboard.dragStarted();
         </method>
 
@@ -50,6 +52,6 @@
 </library>
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

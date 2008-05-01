@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
 
 
@@ -80,7 +80,7 @@
               controlled by the layout change their size , or when the size of
               layout's immediateparent changes. However it can be called directly
               to force the layout to update -->
-       <method name="update">
+       <method name="update" args="ignore=null">
             <![CDATA[
             if ( this.locked ) return;
             this.locked = true;

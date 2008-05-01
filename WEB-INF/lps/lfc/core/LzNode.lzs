@@ -2122,3 +2122,25 @@ function $lzc$set_$datapath( dpobj ){
 } // End of LzNode
 
 ConstructorMap[LzNode.tagname] = LzNode;
+
+
+////////////////////////////////////////////////////////////////
+
+/**
+  * @access private
+  * @todo [2006-09-28 ptw] This is a wart, needed for backward
+  * compatibility with the current implementation of
+  * defaultplacement.  There is no such tag as &lt;__LZUserClassPlacementObject&gt;!
+  */
+
+public class LzUserClassPlacement {
+    public function LzUserClassPlacement ( parent:LzNode? = null,
+                                           placement:Object? = null,
+                                           ignore = null,
+                                           ignoremetoo = null){
+        parent.defaultplacement = placement;
+    };
+}
+
+ConstructorMap["__LZUserClassPlacementObject"] = LzUserClassPlacement;
+

@@ -6,7 +6,7 @@
             this.updateDelegate.register( parent,  "onwidth" );
         </handler>
         
-        <method name="update" >
+        <method name="update" args="ignore=null">
             if ( this.locked ) return;
             this.locked = true;
             parent.update();
@@ -92,7 +92,7 @@
             else anm_slightlower.doStart();
         </method>
         
-        <method name="update" >
+        <method name="update" args="ignore=null">
             this.tp.setX( this.tplft.width );
             this.tprgt.setX( width - this.tprgt.width );
             this.tp.setWidth( width - this.tplft.width - this.tprgt.width );

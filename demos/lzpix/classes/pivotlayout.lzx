@@ -127,7 +127,7 @@
             }
        </method>
        
-       <method name="update">
+       <method name="update" args="ignore=null">
             <![CDATA[
             if ( this.locked ) return;  
             this.locked = true;

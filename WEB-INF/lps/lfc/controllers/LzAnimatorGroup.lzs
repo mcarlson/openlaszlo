@@ -225,22 +225,12 @@ var animatorProps = { attribute : true, from : true ,
   */
 LzAnimatorGroup.attributes.ignoreplacement = true;
 
-
-    var vip:LzView = null;
-
 /**
   * @access private
   */
 override function construct ( parent, args ) {
 
     super.construct.apply(this, arguments);
-
-    if ($swf9) {
-        this.vip = LzView(this.immediateparent);
-    } else {
-        this.vip = this.immediateparent;
-    }
-
 
     if ( (this.immediateparent) is ( LzAnimatorGroup ) ){
         for ( var k in this.animatorProps ){

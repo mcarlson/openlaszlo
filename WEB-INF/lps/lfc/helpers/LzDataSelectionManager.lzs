@@ -68,6 +68,11 @@
     
 class LzDataSelectionManager extends LzSelectionManager {
 
+function LzDataSelectionManager ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
+    super(parent,attrs,children,instcall);
+}
+
+
 /** @access private
   * @modifiers override 
   */
