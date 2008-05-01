@@ -143,7 +143,7 @@ function clone(arg=null) {
   * @param String name: The name of the value to remove.  If null, removes 
   * all values
   */
-function remove( name ) {
+function remove( name = null) {
     if ( null == name ) {
         this.d = {};
     } else if ( null != this.d[ name ] ) {
