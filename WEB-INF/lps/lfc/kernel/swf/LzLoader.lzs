@@ -477,7 +477,7 @@ var copyQueue = null;
 /**
   * @access private
   */
-function copyFlashData () {
+function copyFlashData ( ignore ) {
     //    Debug.write("copyFlashData [1]", this.copyQueue.ptr);
     if (this.copyQueue != null) {
         //Debug.write("copyFlashData [2]");

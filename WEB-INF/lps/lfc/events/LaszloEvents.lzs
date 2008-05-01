@@ -183,9 +183,7 @@ public function register ( eventSender , eventName){
     var anEvent = eventSender[ eventName ];
 
     var m = this.m;
-    if ($as2) {
-      // AS2 does not support the length property of Function
-    } else if (m && m.length != 1) {
+    if (m && m.length != 1) {
       if ($debug) {
         Debug.warn("Invalid delegate: %#w (must accept one argument to handle %w.%s)",
                    m, eventSender, eventName);

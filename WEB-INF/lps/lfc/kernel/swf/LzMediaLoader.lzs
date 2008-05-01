@@ -47,7 +47,7 @@ var LOADERDEPTH = 9;
 /**
   * @access private
   */
-function removeLoadChecker() {
+function removeLoadChecker(ignore) {
     // Remove loadChecker delegate
     this.loadChecker.unregisterAll();
     this.removeLoadCheckerDel.unregisterAll();
@@ -201,7 +201,7 @@ function request( req , cache , headers ) {
 /**
   * @access private
   */
-function testLoad (){
+function testLoad (ignore){
     //skip first check because this can get called before load starts, in 
     //which case load info is wrong
     //getBytesTotal is wrong before the header of the movie has loaded

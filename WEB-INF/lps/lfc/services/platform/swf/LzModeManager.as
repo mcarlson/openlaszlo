@@ -66,7 +66,7 @@ public class LzModeManagerClass extends LzModeManagerBase {
     * Cleanup method for raw mouseup
     * @access private
     */
-    function checkClickStream (){
+    function checkClickStream (ignore){
         this.willCall = false;
 
         //clickstream that looks like this

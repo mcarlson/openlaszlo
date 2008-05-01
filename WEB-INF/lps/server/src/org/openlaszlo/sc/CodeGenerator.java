@@ -2191,29 +2191,27 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         // Function expression leaves function on stack
         collector.emit(Instructions.DUP);
       }
+      // Save that so we can set function length in debug mode..
+      collector.emit(Instructions.DUP);
+      if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
+        // Save for filename and line
+        collector.emit(Instructions.DUP);
+        collector.emit(Instructions.DUP);
+      }
       collector.push("name");
       collector.push(userFunctionName);
+      collector.emit(Instructions.SetMember);
+      collector.push("length");
+      collector.push(parameters.size());
       collector.emit(Instructions.SetMember);
       if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
         // TODO: [2007-09-04 ptw] Come up with a better way to
         // distinguish LFC from user stack frames.  See
         // lfc/debugger/LzBactrace
         String fn = (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ? "lfc/" : "") + filename;
-        if (functionName != null) {
-          collector.push(functionName);
-          collector.emit(Instructions.GetVariable);
-        } else {
-          collector.emit(Instructions.DUP);
-        }
         collector.push("_dbg_filename");
         collector.push(fn);
         collector.emit(Instructions.SetMember);
-        if (functionName != null) {
-          collector.push(functionName);
-          collector.emit(Instructions.GetVariable);
-        } else {
-          collector.emit(Instructions.DUP);
-        }
         collector.push("_dbg_lineno");
         collector.push(lineno);
         collector.emit(Instructions.SetMember);

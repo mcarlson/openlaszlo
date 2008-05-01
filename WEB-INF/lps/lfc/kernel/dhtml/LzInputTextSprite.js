@@ -154,7 +154,7 @@ LzInputTextSprite.prototype.__setglobalclickable = function(c) {
     }
 }
 
-LzInputTextSprite.prototype.__hide = function() {
+LzInputTextSprite.prototype.__hide = function(ignore) {
     if (this.__shown != true || this.disabled == true) return;
     LzInputTextSprite.prototype.__lastshown = null;
     this.__shown = false;

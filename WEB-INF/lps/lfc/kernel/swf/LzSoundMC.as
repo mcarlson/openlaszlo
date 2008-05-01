@@ -114,7 +114,7 @@ SoundMC.prototype.unload = function( ) {
 /**
   * @access private
   */
-SoundMC.prototype.testPlay = function() {
+SoundMC.prototype.testPlay = function(ignore) {
     this._totalframes = Math.floor(this._sound.duration * .001 * this._fps);
     this._currentframe = Math.floor(this._sound.position * .001 * this._fps);
     this._framesloaded = Math.floor((this._sound.getBytesLoaded() / this._sound.getBytesTotal()) * this._totalframes)

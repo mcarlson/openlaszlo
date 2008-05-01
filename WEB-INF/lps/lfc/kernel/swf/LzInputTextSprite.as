@@ -257,7 +257,7 @@ TextField.prototype.__lostFocus = function ( ){
   * cleared, the button doesn't send mouse events.
   * @access private
   */
-TextField.prototype.__handlelostFocus = function ( ){
+TextField.prototype.__handlelostFocus = function ( ignore ){
     //Debug.write('lostfocus', this.__lzview.hasFocus, LzFocus.lastfocus, this, LzFocus.getFocus(), this.__lzview, this.__lzview.inputtextevent);
     if (this.__lzview == LzFocus.getFocus()) {
         LzFocus.clearFocus();

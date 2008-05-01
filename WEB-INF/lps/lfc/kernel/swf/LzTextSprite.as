@@ -753,7 +753,7 @@ LzTextSprite.prototype.getThickness = function() {
 /**
   * @access private
   */
-LzTextSprite.prototype.__LZforceScrollAttrs = function () {
+LzTextSprite.prototype.__LZforceScrollAttrs = function ( ignore ) {
     this.__LZtextclip.onScroller();
 }
 

@@ -1375,7 +1375,7 @@ LzSprite.prototype.setCursor = function( cursor ){
 }
 
 /** @access private */
-LzSprite.prototype._cursorGotMouseover = function() {
+LzSprite.prototype._cursorGotMouseover = function(ignore) {
     LzMouseKernel.setCursorGlobal(this._cures);
 }
 
@@ -1416,7 +1416,7 @@ LzSprite.prototype.stopTrackPlay = function() {
   * Updates the play percentage
   * @access private
   */
-LzSprite.prototype.updatePlayStatus = function (){
+LzSprite.prototype.updatePlayStatus = function (ignore){
     var c = this.getMCRef()._currentframe;
     //Debug.write('updatePlayStatus', c);
 
@@ -1472,7 +1472,7 @@ LzSprite.prototype.checkPlayStatus = function (){
   * Called after one frame by checkPlayStatus2 to see the frame number has 
   * changed.  May call itself
   */
-LzSprite.prototype.checkPlayStatus2 = function (){
+LzSprite.prototype.checkPlayStatus2 = function (ignore){
     //Debug.write('checkPlayStatus2 ', this);
     this.updatePlayStatus();
     this.__lzskipplaycheck++;
@@ -1569,7 +1569,7 @@ LzSprite.prototype.queuePlayAction = function ( a , arg1 , arg2 ){
 /**
   * @access private
   */
-LzSprite.prototype.doQueuedPlayAction = function (){
+LzSprite.prototype.doQueuedPlayAction = function (ignore){
     for (var i=0; i < this.queuedplayaction.length; i++) {
         var qa = this.queuedplayaction[i];
         //Debug.write('doQueuedPlayAction', qa);

@@ -174,7 +174,7 @@ LzMakeLoadSprite.setResource = function ( nresc ){
   * Updates movieclip properties after the resource has loaded
   * @access private
   */
-LzMakeLoadSprite.updateAfterLoad = function (){
+LzMakeLoadSprite.updateAfterLoad = function (ignore){
 
     this.isloaded = true;
     var mc = this.getMCRef();
