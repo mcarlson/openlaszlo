@@ -26,7 +26,16 @@
 
 class LzCSSStyleSheet extends LzStyleSheet {
 
-// How do I represent inheritance here? 
+
+/**
+  * @param String title: Title
+  * @param String href: Location of the style sheet.
+  * @param String media: Media where the document is to be rendered.
+  * @param String sstype: Language of the style sheet resource.
+  * @param String ownerRule:
+  * @param Array cssRules: Initial stylesheet rules array
+  * @access public
+ */ 
 function LzCSSStyleSheet( title, href, media, sstype, ownerRule, cssRules ) {
     super (title, href, media, sstype);
 
