@@ -17,10 +17,10 @@
   * @shortdesc Handles application instantiation.
   */
 
-dynamic public class LzInstantiatorClass {
+dynamic public class LzInstantiatorService extends LzMiniNode {
 
 var checkQDel = null;
-function LzInstantiatorClass () {
+function LzInstantiatorService () {
   this.checkQDel = new LzDelegate( this , "checkQ" );
 }
 
@@ -318,8 +318,8 @@ function drainQ (limit) {
   return (! this.isUpdating);
 }
 
-} // End of LzInstantiatorClass
+} // End of LzInstantiatorService
 
 
-var LzInstantiator:LzInstantiatorClass = new LzInstantiatorClass ();
+var LzInstantiator:LzInstantiatorService = new LzInstantiatorService ();
 

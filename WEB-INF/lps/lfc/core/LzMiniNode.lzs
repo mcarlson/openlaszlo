@@ -22,8 +22,13 @@ class LzMiniNode {
   function LzMiniNode ( parent:* = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
   }
 
+
 /** @access private */
-  var __LZdeleted:Boolean = false;
+var __LZdeleted:Boolean = false;
+
+/** @access private */
+var __LZdeferDelegates:Boolean = false;
+
 
 /** @access private */
 function childOf ( node, ignore=null ) { return false;}

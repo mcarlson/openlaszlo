@@ -41,17 +41,23 @@ public dynamic class LzNode extends LzMiniNode{
     /** @access private */
     static var attributes = new LzInheritedHash();
     
-     var __LZdeferDelegates:Boolean = false;
+    /** @access private */
      var __LZisnew:Boolean = false;
+    /** @access private */
      var __LZstyleConstraints:* = null;
      //     var  syncNew:Boolean = null;
+    /** @access private */
      var __LZdeferredcarr:Array = null;
+    /** @access private */
      var _events:Array = null;
      var data:* = null;
-     var classChildren:Array = null;
-     var __LZvizDat:Boolean = true;
-     var animators:Array = null;
 
+    /** @access private */
+    var classChildren:Array = null;
+    /** @access private */
+     var __LZvizDat:Boolean = true;
+    /** @access private */
+     var animators:Array = null;
 
     if ($swf9) {
     ///////////////////////////////////////////////////////////////////
@@ -1485,7 +1491,7 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
     // Whether there are dependencies or not, we need to invoke the
     // constraint function (since the dependencies may have 'fired'
     // before the constraint was installed).
-    this[constraintMethodName]();
+    this[constraintMethodName](null);
 }
 
     /** @access private */

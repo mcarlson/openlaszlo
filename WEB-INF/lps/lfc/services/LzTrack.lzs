@@ -100,7 +100,7 @@
   * @shortdesc Enables tracking mouse events over a group of views.
   */
 
-class LzTrackClass {
+class LzTrackClass extends LzMiniNode {
 
 /**
   * @event onmousetrackover:  sent when the mouse is over a view that is registered to
@@ -127,8 +127,6 @@ var __LZlasthit = null;
 
 var __LZdestroydel:LzDelegate = null;
 
-var __LZdeferDelegates = false;
-var __LZdeleted = false;
 
 function LzTrackClass (){
     super();

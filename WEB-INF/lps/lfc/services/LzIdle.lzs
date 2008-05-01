@@ -32,12 +32,7 @@
   * @devnote This object sends an 'onidle' event when there is no synchronous script
   * running after each frame update.
   */
-class LzIdleClass {
-
-  /** @access private */
-  public var __LZdeleted:Boolean = false;
-  /** @access private */
-  public var __LZdeferDelegates:Boolean = false;
+class LzIdleClass extends LzMiniNode {
 
   /** @access private */
   var coi;
@@ -93,7 +88,7 @@ function removeCallIdleDelegates ( t ){
  */
 var onidle = LzDeclaredEvent;
 
-function toString () { return "LzIdle" }; // LzIdle in case somebody checks it
+override function toString () { return "LzIdle" }; // LzIdle in case somebody checks it
 
 /**
   * __idleupdate is a callback function from LzIdleKernel.

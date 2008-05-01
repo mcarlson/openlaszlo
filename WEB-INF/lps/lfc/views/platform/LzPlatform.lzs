@@ -13,7 +13,7 @@
   Platform-specific definitions 
 */
 
-public class LzPlatformClass {
+public class LzPlatformService extends LzMiniNode {
 
     public  function initCanvas (canvasobj) {
         LzPlatform.buildDefaultMenu(canvasobj);
@@ -70,7 +70,7 @@ public class LzPlatformClass {
     }
 }
 
-var LzPlatform:LzPlatformClass = new LzPlatformClass();
+var LzPlatform:LzPlatformService = new LzPlatformService();
 
 
 

@@ -95,7 +95,7 @@ public dynamic final class LzDelegate {
   * @param String eventName: (Optional, but required if eventSender is used) The name
   * of the event to register the new delegate for.
   */
-public function LzDelegate (context, methodName, eventSender = null, eventName = null) {
+public function LzDelegate (context:LzMiniNode, methodName, eventSender = null, eventName = null) {
   super();
   // too expensive to leave on all the time
 //     if ($debug) {
