@@ -8,7 +8,7 @@
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-    <title>OpenLaszlo 4.2a2 Release Notes</title>
+    <title>OpenLaszlo 4.2a3 Release Notes</title>
     <meta http-equiv="Content-Type"
     content="text/html; charset=us-ascii" />
     <link rel="stylesheet" href="../lps/includes/explore.css"
@@ -18,8 +18,8 @@
     <script src="sorttable.js" type="text/javascript"></script>
   </head>
   <body class="release-notes">
-    <h1>Release Notes for OpenLaszlo 4.2a2</h1>
-    <p class="bodytext">OpenLaszlo 4.2a2 is the second step in
+    <h1>Release Notes for OpenLaszlo 4.2a3</h1>
+    <p class="bodytext">OpenLaszlo 4.2a3 is the latest step in
     OpenLaszlo's development effort to support the SWF9 runtime.
     There will be frequent iterations, as this branch is under
     heavy development.</p>
@@ -45,8 +45,206 @@
     tracking system.</a></p>
     <p>Please see the 
     <a href="http://download.openlaszlo.org/4.0.0/release-notes.html">
-    OpenLaszlo 4.0 Release Notes</a>for an overview of significant
+    OpenLaszlo 4.0 Release Notes</a> for an overview of significant
     changes since 3.x.</p>
+    <h1>New Features in 4.2a3</h1>
+
+    <h1>Bugs Fixed in 4.2a3</h1>
+    <p>You can sort the table by clicking on the table header
+      "Key".</p>
+    <table class="sortable" border="1" cellpadding="3"
+      width="100%">
+      <tr>
+        <th class="sorttable_numeric">
+          <b>Key</b>
+        </th>
+        <th>
+          <b>Summary</b>
+        </th>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5884">
+            LPP-5884</a>
+        </td>
+        <td>Lazy replication broken as of
+          r8818</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5883">
+            LPP-5883</a>
+        </td>
+        <td>Regression in
+          test/swf9/hello.lzx?lzr=swf9</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5882">
+            LPP-5882</a>
+        </td>
+        <td>Remodularize getTimer(),
+          get/setTimout() and get/setInterval() calls across
+          runtimes</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5880">
+            LPP-5880</a>
+        </td>
+        <td>SWF: Components: Tree: " Hominidid
+          evolution" overlaps frame around it (regression)</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5864">
+            LPP-5864</a>
+        </td>
+        <td>replicator.ensureInView() should use
+          container reference for position...</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5852">
+            LPP-5852</a>
+        </td>
+        <td>swf9: add support for ondblclick,
+          onmousedragover/out and onmouseupoutside</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5850">
+            LPP-5850</a>
+        </td>
+        <td>LzCSSStyleSheet and LzStyleSheet should
+          be coded using 'class' keyword.</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5849">
+            LPP-5849</a>
+        </td>
+        <td>state with constraint on 'apply'
+          attribute causes swf9 runtime error in lznode</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5848">
+            LPP-5848</a>
+        </td>
+        <td>lzc -c producing broken libraries</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5845">
+            LPP-5845</a>
+        </td>
+        <td>Need interface for LzContextMenu and
+          LzContextMenuItem</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5843">
+            LPP-5843</a>
+        </td>
+        <td>clip() method in drawview not
+          working</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5838">
+            LPP-5838</a>
+        </td>
+        <td>swf9: lztest runs before any other
+          calls registered to canvas.oninit</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5834">
+            LPP-5834</a>
+        </td>
+        <td>swf9: drawview instances fail to compile</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5833">
+            LPP-5833</a>
+        </td>
+        <td>swf9: Drawview fails to run</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5820">
+            LPP-5820</a>
+        </td>
+        <td>SWF:DHTML: Arrow buttons stopped
+          working on radio buttons and comboboxes for kb control</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5818">
+            LPP-5818</a>
+        </td>
+        <td>Warn when methods registered for events
+          aren't expecting exactly one argument from sendEvent()</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5816">
+            LPP-5816</a>
+        </td>
+        <td>simple test case for line numbers still
+          off in script output</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5789">
+            LPP-5789</a>
+        </td>
+        <td>swf9: button height does not match text
+          size</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5764">
+            LPP-5764</a>
+        </td>
+        <td>CSS styles do not work anymore</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5754">
+            LPP-5754</a>
+        </td>
+        <td>IWBRNI lzc --script would create a .lzs
+          file rather than just spew to stdout</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5748">
+            LPP-5748</a>
+        </td>
+        <td>Components: Tree example does not load
+          in DHTML (regression)</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5634">
+            LPP-5634</a>
+        </td>
+        <td>Cannot sort a grid which has only a
+          single row</td>
+      </tr>
+      <tr valign="top">
+        <td style="white-space: nowrap;">
+          <a href="http://www.openlaszlo.org/jira/browse/LPP-5201">
+            LPP-5201</a>
+        </td>
+        <td>Index pane not resizable in nightly
+          reference</td>
+      </tr>
+    </table>
+    
     <h1>New Features in 4.2a2</h1>
     <p>Many bugs that were introduced by the remodularization of
     the LZX tag compiler to emit JS2 class declarations have been
