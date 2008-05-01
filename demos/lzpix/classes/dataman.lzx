@@ -40,7 +40,7 @@
             if (noFlickr == 'true') gGlobals.setAttribute("SHOULDCONNECT", false); 
         </handler>
 
-        <method name="dsError">
+        <method name="dsError" args="ignore">
             gError.show();
         </method>
         

@@ -19,7 +19,7 @@
   * 
   * @shortdesc Handles keyboard focus.
   */
-dynamic class LzFocusClass {
+dynamic class LzFocusService extends LzMiniNode {
 
     /** Sent when the focus changes, with the argument being the view
      * that was just focused. If nothing is focussed, this event is sent with null.
@@ -33,7 +33,7 @@ dynamic class LzFocusClass {
     var csel = null;
     var cseldest = null;
 
-    function LzFocusClass () {
+    function LzFocusService () {
     }
 
     function initialize () {
@@ -354,6 +354,6 @@ dynamic class LzFocusClass {
     }
 }
 
-var LzFocus = new LzFocusClass();
+var LzFocus = new LzFocusService();
 LzFocus.initialize();
 

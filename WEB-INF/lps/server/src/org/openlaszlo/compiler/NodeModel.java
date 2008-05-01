@@ -1,4 +1,4 @@
-/* -*- mode: Java; c-basic-offset: 4; -*- */
+/* -*- mode: Java; c-basic-offset: 2; -*- */
 /* ***************************************************************************
  * NodeModel.java
  * ***************************************************************************/
@@ -244,8 +244,12 @@ public class NodeModel implements Cloneable {
       String body = "\n#beginAttribute\n" + srcloc + value + "\n#endAttribute\n)";
       String pragmas =
         "\n#pragma 'withThis'\n";
-      if (when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+      String args = "";
+      if (when.equals(WHEN_ONCE)) {
         // default
+      } else if (when.equals(WHEN_ALWAYS)) {
+        // will be called from sendEvent, so needs to take one arg
+        args="$lzc$ignore";
       } else if (when.equals(WHEN_PATH)) {
         installer = "dataBindAttribute";
       } else if (when.equals(WHEN_STYLE)) {
@@ -260,7 +264,7 @@ public class NodeModel implements Cloneable {
         // Binders are called by LzDelegate.execute, which passes the
         // value sent by sendEvent, so we have to accept it, but we
         // ignore it
-        "$lzc$ignore",
+        args,
         pragmas,
         "this." + installer + "(" +
         ScriptCompiler.quote(name) + "," +

@@ -18,7 +18,7 @@
         </handler>
     </mybutton>
 
-    <method name="show" args="etext">
+    <method name="show" args="etext=null">
         this.setVisible( true );
     </method>
 </view>
