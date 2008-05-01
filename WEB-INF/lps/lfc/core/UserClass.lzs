@@ -73,14 +73,6 @@
  * documentation, and the support class below:
  */
 
-/**
-  * @access private
-  * @todo [2006-09-28 ptw] This is a wart, needed for backward
-  * compatibility with the current implementation of
-  * defaultplacement.  There is no such tag as &lt;__LZUserClassPlacementObject&gt;!
-  */
-ConstructorMap.__LZUserClassPlacementObject = function __LZUserClassPlacementObject ( parent , placement ){
-    parent.defaultplacement = placement;
-};
+
 
 

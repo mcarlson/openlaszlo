@@ -33,15 +33,20 @@
               LPS. If secure is false, this value is ignored.  -->
         <attribute name="secureport" value="null" type="number" />
 
-        <!--- This event is triggered when the remote object is loaded. -->
+        <!--- This event is triggered when the remote object is loaded.
+              @access public -->
         <event name="onload" />
-        <!--- This event is triggered when the remote object is unloaded. -->
+        <!--- This event is triggered when the remote object is unloaded.
+              @access public
+        -->
         <event name="onunload" />
         <!--- This event is triggered when declared inner calls do not handle
-              their ondata events. -->
+              their ondata events. 
+              @access public -->
         <event name="ondata" />
         <!--- This event is triggered when an error or timeout occurs associated
-              with getting this object or calling one of its remote methods. -->
+              with getting this object or calling one of its remote methods. 
+              @access public -->
         <event name="onerror" />
 
         <!--- @keywords private -->
