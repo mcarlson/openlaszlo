@@ -83,6 +83,7 @@ dynamic public class LzSprite extends Sprite {
       ,accessibility: true
       ,htmlinputtext: true
       ,advancedfonts: true
+      ,bitmapcaching: true
       }
 
       public function LzSprite (newowner = null, isroot = null, args = null) {
@@ -703,7 +704,15 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function getMCRef () {
+          return this; 
+      }
+
+      public function getContext () {
           return this.graphics; 
+      }
+
+      public function setBitmapCache(cache) {
+          this.cacheAsBitmap = cache;
       }
 
       /**

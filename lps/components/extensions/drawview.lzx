@@ -496,7 +496,6 @@
             var strokeStyle = '#000000';
             var fillStyle = '#000000';
             var context = null;
-            var cachebitmap = true;
             
             var oncontext = LzDeclaredEvent;
     
@@ -801,7 +800,6 @@
             var strokeStyle = '#000000';
             var fillStyle = '#000000';
             var context = null;
-            var cachebitmap = true;
             var __path = [];
             var __pathisopen = false;
             var __MOVETO_OP = 0;
@@ -815,14 +813,10 @@
             }
 
             override function construct(parent,args) {
+                // default to bitmap caching on    
+                if (args['cachebitmap'] == null) args['cachebitmap'] = true;
                 super.construct(parent, args);
-                this.context = this.getMCRef();
-                if ($as2) {
-                    if (args['cachebitmap'] != null) {
-                        this.cachebitmap = args['cachebitmap'];
-                    }
-                    this.context.cacheAsBitmap = this.cachebitmap;
-                }
+                this.context = this.sprite.getContext();
                 this.beginPath();
 
                 new LzDelegate( this , "_oninit" , this , "oninit" );
@@ -1046,10 +1040,6 @@
                 this.clipPath();
             }
             function clipPath() {
-                if ($as2 && this.cachebitmap) {
-                    if ($debug) Debug.warn('drawview.clip() automatically disables bitmap caching');
-                    this.cachebitmap = this.context.cacheAsBitmap = false;
-                }
                 this.sprite.applyMask(true);
                 var __clipmc = this.sprite.__LZmaskClip;
                 this.closePath();

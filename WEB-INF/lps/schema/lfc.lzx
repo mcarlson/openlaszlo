@@ -257,6 +257,7 @@
   <attribute name="aatabindex" type="number"/>
   <attribute name="aasilent" type="boolean"/>
   <attribute name="showhandcursor" type="boolean"/>
+  <attribute name="cachebitmap" type="boolean"/>
   <event name="onaddsubresource"/>
   <event name="onaddsubview"/>
   <event name="onbgcolor"/>
@@ -346,6 +347,7 @@
   <method name="$lzc$set_xoffset"/>
   <method name="$lzc$set_y"/>
   <method name="$lzc$set_yoffset"/>
+  <method name="$lzc$set_cachebitmap"/>
   <method name="__LZFinishDestroyOnIdle"/>
   <method name="__LZalignCenter"/>
   <method name="__LZalignRight"/>

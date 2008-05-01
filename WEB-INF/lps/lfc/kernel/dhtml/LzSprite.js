@@ -247,6 +247,7 @@ LzSprite.prototype.capabilities = {
     ,accessibility: false
     ,htmlinputtext: false
     ,advancedfonts: false
+    ,bitmapcaching: false
 }
 
 LzSprite.prototype.__updateQuirks = function () {
@@ -1403,6 +1404,11 @@ LzSprite.prototype.setShowHandCursor = function ( s ){
 LzSprite.prototype.getMCRef = function ( ){
     //TODO: implement
     return this.__LZdiv;
+}
+
+LzSprite.prototype.getContext = function ( ){
+    //TODO: move from drawview
+    return this.getMCRef();
 }
 
 LzSprite.prototype.bringToFront = function() {

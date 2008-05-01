@@ -42,7 +42,6 @@ var LzTextSprite = function(newowner, args) {
 
     //Debug.write('created', textclip, 'in', mc, txtname);
 
-    textclip.cacheAsBitmap = true;
     this.__LZtextclip = textclip;
     // set a pointer back to this view from the TextField object
     textclip.__lzview = this.owner;
@@ -53,7 +52,9 @@ var LzTextSprite = function(newowner, args) {
 
     //    textclip._quality = "BEST";
     ///   textclip._highquality = 2;
-    
+
+    // default to bitmap caching being on 
+    if (args.cachebitmap == null) args.cachebitmap = true;
 }
 
 LzTextSprite.prototype = new LzSprite(null);

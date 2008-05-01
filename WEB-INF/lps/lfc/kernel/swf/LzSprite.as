@@ -63,6 +63,7 @@ LzSprite.prototype.capabilities = {
     ,accessibility: true
     ,htmlinputtext: true
     ,advancedfonts: true
+    ,bitmapcaching: true
 }
 
 /**
@@ -807,6 +808,11 @@ LzSprite.prototype.applyMask = function (s) {
                     this);
         return;
     }
+    if (s && this.cachebitmap) {
+        if ($debug) Debug.warn('Clipping automatically disables bitmap caching');
+        this.setBitmapCache(false);
+    }
+
     var mc = this.__LZmovieClipRef;
     if (s) {
         var mask = mc.createEmptyMovieClip("$mcM", this.MASK_DEPTH);
@@ -1028,7 +1034,6 @@ LzSprite.prototype.getMouse = function() {
 
 /**
   * Get a reference to the control mc - may be overridden by loader
-  * @access private
   */
 LzSprite.prototype.getMCRef = function () {
     if (this.__LZmovieClipRef == null){
@@ -1702,6 +1707,21 @@ LzSprite.prototype.setDefaultContextMenu = function ( cmenu ){
 LzSprite.prototype.getContextMenu = function() {
     return this.__contextmenu;
 }
+
+/**
+  * Allows bitmap caching to be enabled/disabled where available.
+  * @param Boolean cache: Whether or not to cache bitmaps for this view
+  */
+LzSprite.prototype.setBitmapCache = function(cache) {
+    this.cachebitmap = cache;
+    var mc = this.getMCRef();
+    mc.cacheAsBitmap = cache;
+}
+
+/**
+  * Get a reference to the graphics context
+  */
+LzSprite.prototype.getContext = LzSprite.prototype.getMCRef;
 
 /**
   * Register for update when the button gets the focus.

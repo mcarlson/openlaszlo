@@ -2983,6 +2983,27 @@ function getNextSelection() {
   */
 function getPrevSelection() {
 }
+
+/** A value of true means that this view's bitmap will be cached, if available.
+  * @type Boolean
+  * @lzxtype boolean
+  * @lzxdefault false
+  */
+var cachebitmap = false;
+/**
+  * @param Boolean cache: Whether or not to cache bitmaps for this view
+  * @access private 
+  */
+function $lzc$set_cachebitmap( cache ) {
+    if (cache != this.cachebitmap) {
+        this.cachebitmap = cache;
+        if (this.capabilities.bitmapcaching) {
+            this.sprite.setBitmapCache(cache);
+        } else {
+            if ($debug) this.__warnCapability('view.cachebitmap'); 
+        }
+    }
+}
 } // End of LzView
 
 ConstructorMap[LzView.tagname] = LzView;
