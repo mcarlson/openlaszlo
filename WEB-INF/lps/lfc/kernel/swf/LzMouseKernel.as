@@ -1,7 +1,7 @@
 /**
   * LzMouseKernel.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -82,6 +82,8 @@ var LzMouseKernel = {
         onMouseMove: function () { 
             LzGlobalMouse.__mouseEvent('onmousemove');
         }
+        ,onMouseWheel: function(d) {
+            LzKeys.__mousewheelEvent(d);
+        }
     }
-    
 }

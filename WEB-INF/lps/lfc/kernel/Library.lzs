@@ -7,9 +7,6 @@
   * @access private
   */
 
- #include "kernel/LzUtils.lzs"
-
-
 if ($swf9) {
 } else {
     #include "kernel/LzIdleKernel.lzs"

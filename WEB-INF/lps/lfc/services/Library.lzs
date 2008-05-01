@@ -7,6 +7,7 @@
   * @access private
   */
 
+#include "services/LzUtils.lzs"
 #include "services/LzInstantiator.lzs"
 #include "services/LzGlobalMouse.lzs"
 #include "services/LzBrowser.lzs"
@@ -22,16 +23,14 @@ if ($swf9) {
 #include "services/LzURL.lzs"
 }
 
+#include "services/LzKeys.lzs"
 if ($js1) {
     #include "services/platform/dhtml/LzModeManager.js"
-    #include "services/platform/dhtml/LzKeys.js"
     #include "services/platform/dhtml/LzHistory.js"
 } else if ($swf9) {
-    #include "services/platform/swf9/LzKeys.js"
     #include "services/platform/swf9/LzModeManager.js"
 } else if ($as2) {
     #include "services/platform/swf/LzModeManager.as"
-    #include "services/platform/swf/LzKeys.as"
     #include "services/platform/swf/LzHistory.as"
 } else {
     Debug.error('services/Library.lzs unsupported runtime %s', $runtime);
@@ -39,7 +38,6 @@ if ($js1) {
 
 if ($swf9) {
 } else {
-#include "services/LzIdle.lzs"
 #include "services/LzTrack.lzs"
 }
 #include "services/LzIdle.lzs"

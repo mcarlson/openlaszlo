@@ -77,8 +77,9 @@ function addTimer ( d , milisecs ){
         var del = p.delegate;
         // Inlining LzDelegate.execute()
         if (del.enabled && del.c) {
-            //p.delegate.execute( (new Date()).getTime() ); inlined
-            if (! del.c.__LZdeleted && del.c[del.f]) del.c[del.f]( (new Date()).getTime() );
+            p.delegate.execute( (new Date()).getTime() ); 
+            // TODO: inlining causes problems with DHTML
+            //if (! del.c.__LZdeleted && del.c[del.f]) del.c[del.f]( (new Date()).getTime() );
         }
     }
     var id = LzTimeKernel.setInterval(f, milisecs);

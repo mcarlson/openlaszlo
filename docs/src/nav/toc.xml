@@ -91,8 +91,7 @@
         <item title="event (LzEvent)" href="LzEvent.html" />
         <item title="LzGlobalMouse" href="LzGlobalMouse.html" />
         <item title="LzIdleClass" href="LzIdleClass.html" />
-        <item title="LzKeys (dhtml)" href="LzKeys+dhtml.html" />
-        <item title="LzKeys (swf7+swf8+swf9)" href="LzKeys+swf7+swf8+swf9.html" />
+        <item title="LzKeys" href="LzKeys.html" />
         <item title="LzModeManager" href="LzModeManagerBase.html" />
         <item title="LzTimer" href="LzTimerClass.html" />
         <item title="LzTrackClass" href="LzTrackClass+dhtml+j2me+svg+swf7+swf8.html" />

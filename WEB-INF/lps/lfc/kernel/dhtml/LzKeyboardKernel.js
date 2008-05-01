@@ -17,13 +17,13 @@ var LzKeyboardKernel = {
         var delta = {};
         var dirty = false;
         var k = e['keyCode'];
+        var t = e.type; 
         var dh = LzKeyboardKernel.__downKeysHash;
+        // TODO: really, all control characters should be skipped...
         // skip shift, ctrl, option keys to prevent duplicate sending - see LPP-4267
-        // really, all control characters should be skipped...
         if (k >= 0 && k != 16 && k != 17 && k != 18) {
             // TODO: add mapping to flash character codes?
             var s = String.fromCharCode(k).toLowerCase();
-            var t = e.type; 
             if (t == 'keyup') {
                 if (dh[s] != false) {
                     delta[s] = false;
@@ -57,7 +57,11 @@ var LzKeyboardKernel = {
         dh['alt'] = e['altKey'] 
         dh['control'] = e['ctrlKey'] 
         dh['shift'] = e['shiftKey']
-        if (dirty && LzKeyboardKernel.__callback) LzKeyboardKernel.__scope[LzKeyboardKernel.__callback](delta, k, 'on' + t);
+        if (dirty && LzKeyboardKernel.__scope && LzKeyboardKernel.__scope[LzKeyboardKernel.__callback]) {
+            LzKeyboardKernel.__scope[LzKeyboardKernel.__callback](delta, k, 'on' + t);
+        } 
+        
+        // cancel bubbling
         if (k >= 0) {
             if (k == 9) {
                 //Debug.write('canceling tab');

@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzbrowser
@@ -530,9 +530,6 @@ LzKeys.keyCodes['IME']  = 229 ;
 //}
 
 
-/** @access private */
-var mouseListener = new Object();
-
 /**
   * @field Number mousewheeldelta: the amount the mouse wheel last moved.  Use
   * onmousewheeldelta to learn when this value changes.
@@ -544,13 +541,3 @@ LzKeys.__mousewheelEvent = function(d) {
     this.mousewheeldelta = d;
     if (this.onmousewheeldelta.ready) this.onmousewheeldelta.sendEvent(d);
 }
-
-/**
-  * @access private
-  */
-mouseListener.onMouseWheel = function(d) {
-    LzKeys.__mousewheelEvent(d);
-}
-// SWF-specific
-Mouse.addListener(mouseListener);
-

@@ -1,7 +1,7 @@
 /**
   * LzKeyboardKernel.as
   *
-  * @copyright Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -13,7 +13,18 @@ var LzKeyboardKernel = {
     __downKeysHash: {}
     ,__keyboardEvent: function ( k, t ){   
         var delta = {};
-        var s = String.fromCharCode(k).toLowerCase();
+        var ascii = Key.getAscii();
+        if (ascii != 0) {
+            var s = String.fromCharCode(k).toLowerCase();
+        } else {
+            // send keycode instead of char - see http://livedocs.adobe.com/flash/8/main/00001686.html 
+            s = k;
+            if (LzKeyboardKernel.__codes[k]) {
+                s = LzKeyboardKernel.__codes[k];
+                //} else if (k > 0 && k < 27 && k != 32) {
+                // control keys map here on the mac - apple == control in flash
+            }
+        }
         var dh = LzKeyboardKernel.__downKeysHash;
         var dirty = false;
         if (t == 'onkeyup') {
@@ -33,6 +44,7 @@ var LzKeyboardKernel = {
         //Debug.write('downKeysHash', t, k, dh, delta);
         if (dirty && LzKeyboardKernel.__callback) LzKeyboardKernel.__scope[LzKeyboardKernel.__callback](delta, k, t);
     }
+    ,__codes: {16: 'shift', 17: 'control'}
     ,__callback: null
     ,__scope: null
     ,setCallback: function (scope, funcname) {
