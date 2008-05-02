@@ -282,14 +282,13 @@
         <doc>
             <tag name="shortdesc"><text>A camera that can be connected to a rtmpserver.</text></tag>
             <text>
-            <p>In order to use a camera in an LZX application, the <attribute>visible</attribute> and <attribute>allowed</attribute> attributes must be set to true. The <attribute>visible</attribute> indicates the program's intent and the <attribute>allowed</attribute> attribute indicates the user's permission. To protect privacy, camera operation must be explicitly approved by the user.</p>
+            <p>In order to use a camera in an LZX application, the <attribute>visible</attribute> and <attribute>allowed</attribute> attributes must be set to <attribute>true</attribute>. The <attribute>visible</attribute> indicates the program's intent and the <attribute>allowed</attribute> attribute indicates the user's permission. To protect privacy, camera operation must be explicitly approved by the user.</p>
             <programlisting>
-                <![CDATA[<canvas height="100">
-                    <camera id="rtc" src="rtmp://localhost/test" autoconnect="false"/>
-                    <text text="${rtc.status}"/>
-                    <button onclick="rtc.connect()">Click to Connect</button>
-                </canvas>]]>
-            </programlisting>
+    <![CDATA[<canvas height="100">
+        <camera id="rtc" src="rtmp://localhost/test" autoconnect="false"/>
+        <text text="${rtc.status}"/>
+        <button onclick="rtc.connect()">Click to Connect</button>
+    </canvas>]]></programlisting>
             </text>
         </doc>
     </class>

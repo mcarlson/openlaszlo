@@ -1110,7 +1110,49 @@
           ]]>
         </method>
 
-
+        <doc>
+            <tag name="shortdesc">
+                <text>A connection to an RTMP server.</text>
+            </tag>
+            <text>
+                <p>A <class>&lt;mediastream&gt;</class> opens a connection for recieving streaming media.</p>
+                    
+                    <note><para>Total time is only defined for FLV's delivered over http if they have "metaData" defined, and we don't know the stream length until it starts playing.</para></note>
+                <p>The following example shows a media stream.</p>
+<programlisting>
+&lt;canvas&gt; 
+    &lt;simplelayout axis=&quot;y&quot; inset=&quot;10&quot; spacing=&quot;5&quot;/&gt;
+    &lt;constantlayout axis=&quot;x&quot; value=&quot;10&quot;/&gt;
+    &lt;videoview&gt;
+        &lt;mediastream id=&quot;s&quot; 
+            url=&quot;http://localhost:8080/video/test/video/videos/good-dog.flv&quot;
+            debug=&quot;true&quot;
+        /&gt;
+    &lt;/videoview&gt;
+    &lt;button
+        text=&quot;play&quot; 
+        onclick=&quot;s.play()&quot;
+    /&gt;
+    &lt;button
+        text=&quot;pause&quot; 
+        onclick=&quot;s.pause()&quot;
+    /&gt;
+    &lt;text
+        text=&quot;${&apos;playtime: &apos; + s.playtime}&quot;
+    /&gt;
+    &lt;text
+        text=&quot;${&apos;totaltime: &apos; + s.totaltime}&quot;
+    /&gt;
+    &lt;text
+        width=&quot;300&quot; 
+        multiline=&quot;true&quot;
+        &gt;
+    &lt;/text&gt;
+&lt;/canvas&gt;
+</programlisting>
+          
+            </text>
+            </doc>
     </class>
 
 

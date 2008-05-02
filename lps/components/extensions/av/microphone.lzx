@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -194,7 +194,90 @@
             }
           ]]>
         </method>
-
+        <doc>
+            <tag name="shortdesc">
+                <text>A microphone connection to a media server.</text>
+            </tag>
+            <text>
+                <p>The <class>&lt;microphone&gt;</class> element allows you to set up and control a microphone that is connected to a media server. For privacy protection, the <attribute>allowed</attribute> attribute must be set to <attribute>true</attribute> by the user.</p>
+                <p>The following figure shows a microphone control.</p>
+                    <programlisting>
+    &lt;canvas&gt;
+        
+        &lt;microphone id=&quot;m&quot; 
+            capturing=&quot;${controlpanel.capturing.value}&quot;
+        /&gt;
+        
+        &lt;view
+            x=&quot;10&quot; 
+            y=&quot;20&quot; 
+            width=&quot;102&quot; 
+            height=&quot;12&quot; 
+            bgcolor=&quot;black&quot;
+            &gt;
+            &lt;view
+                x=&quot;1&quot; 
+                y=&quot;1&quot; 
+                bgcolor=&quot;yellow&quot; 
+                width=&quot;${m.level}&quot; 
+                height=&quot;10&quot;
+            /&gt;
+        &lt;/view&gt;
+        &lt;view
+            y=&quot;100&quot;
+            &gt;
+            &lt;simplelayout
+                axis=&quot;x&quot; 
+                inset=&quot;10&quot; 
+                spacing=&quot;20&quot;
+            /&gt;
+            &lt;view
+                layout=&quot;axis: y; spacing: 4&quot;
+                &gt;
+                &lt;text
+                    text=&quot;${&apos;deviceindex: &apos; + m.deviceindex}&quot; 
+                    resize=&quot;true&quot;
+                /&gt;
+                &lt;text
+                    text=&quot;${&apos;devicename: &apos; + m.devicename}&quot; 
+                    resize=&quot;true&quot;
+                /&gt;
+                &lt;text
+                    text=&quot;${&apos;capturing: &apos; + m.capturing}&quot;
+                    resize=&quot;true&quot;
+                /&gt;
+                &lt;text
+                    text=&quot;${&apos;allowed: &apos; + m.allowed}&quot;
+                    resize=&quot;true&quot;
+                /&gt;
+                &lt;text
+                    text=&quot;${&apos;level: &apos; + m.level}&quot; 
+                    resize=&quot;true&quot;
+                /&gt;
+            &lt;/view&gt;
+            &lt;view
+                width=&quot;1&quot; 
+                height=&quot;100&quot; 
+                bgcolor=&quot;black&quot;
+            /&gt;
+            &lt;view id=&quot;controlpanel&quot; 
+                layout=&quot;axis: y; spacing: 10&quot;
+                &gt;
+                &lt;checkbox name=&quot;capturing&quot;
+                    text=&quot;Capturing&quot;
+                    value=&quot;false&quot;
+                /&gt;
+                &lt;button
+                    text=&quot;Show Settings&quot;
+                    onclick=&quot;m.showSettings()&quot;
+                /&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+                        
+   &lt;/canvas&gt;
+                    </programlisting>
+            </text>
+            </doc>
 
     </class>
 

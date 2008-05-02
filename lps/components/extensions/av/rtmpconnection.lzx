@@ -5,12 +5,7 @@
 
 
 <library>
-
-
-    <!---
-        RTMP connection.
-        @todo document
-    -->
+    
     <class name="rtmpconnection" extends="node">
 
 
@@ -238,7 +233,40 @@
 
           ]]>
         </method>
-
+        <doc>
+            <tag name="shortdesc">
+                <text>A connection to an RTMP server.</text>
+            </tag>
+            <text>
+                <p>An <class>rtmpconnection</class> represents a connection to an RTMP server, such as the Flash Media Server or Red5, enabling two-way streaming audio/video. This allows you to broadcast and receive live audio and/or video, as well as recording video from a webcam or audio from a microphone to files on the server. Recorded files may be played back over http (using <class>stream</class> and <class>&lt;videoview&gt;</class> classes) or with RTMP to allow seeking within and playback of long files that are impractical to load into memory.</p>
+                <p>The following example shows a simple RTMP connection.</p>
+                
+<programlisting>
+ &lt;canvas&gt;
+    
+    &lt;simplelayout inset=&quot;10&quot; spacing=&quot;10&quot;/&gt;
+    &lt;rtmpconnection id=&quot;rtc&quot; 
+        src=&quot;rtmp://localhost/test&quot;
+        autoconnect=&quot;false&quot;
+        debug=&quot;true&quot;
+    /&gt;
+    &lt;view
+        layout=&quot;axis: x; spacing: 4&quot;
+        &gt;
+        &lt;rtmpstatus/&gt;
+        &lt;text
+            text=&quot;${rtc.status}&quot;
+            resize=&quot;true&quot;
+        /&gt;
+    &lt;/view&gt;
+    &lt;button
+        onclick=&quot;rtc.connect()&quot;
+        &gt;Click to Connect&lt;/button&gt;
+    
+&lt;/canvas&gt;
+</programlisting>
+            </text>
+        </doc>
 
     </class>
 

@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -423,7 +423,14 @@
             this.setAttribute("active", active);
           ]]>
         </method>
-
+        <doc>
+            <tag name="shortdesc">
+                <text>The base class for media devices.</text>
+            </tag>
+            <text>
+                <p>As of OpenLaszlo release 4.0, subclasses of this class are <class>&lt;microphone&gt;</class> and <class>&lt;camera&gt;</class>.</p>
+            </text>
+            </doc>
 
     </class>
 

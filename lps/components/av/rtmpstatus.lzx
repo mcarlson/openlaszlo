@@ -48,7 +48,27 @@
         this.setAttribute('frame', this.rtmpc.stage + 1);
         ]]>
         </method>
-
+        <doc>
+            <tag name="shortdesc">
+                <text>An indicator "light" that shows status of connection to a media server.</text>
+            </tag>
+            <text>
+                <p>
+                    This element causes a small indicator "light" to show the status of the connection:</p>
+                    <itemizedlist>
+                    <listitem><para>red: no connection</para></listitem>
+                    <listitem><para>green: working connection</para></listitem>
+                    </itemizedlist>
+                <p>The following example shows a trivial rtmpstatus example.</p>
+                <example class="program">
+&lt;canvas height=&quot;40&quot;&gt;
+    &lt;simplelayout spacing=&quot;5&quot;/&gt;
+    &lt;text text=&quot;The indidcator light is red because there is no rtmp connection.&quot;/&gt;
+    &lt;rtmpstatus/&gt;
+&lt;/canvas&gt;
+                </example>
+            </text>
+            </doc>
 
     </class>
 
