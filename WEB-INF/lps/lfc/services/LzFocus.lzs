@@ -22,27 +22,36 @@
 dynamic class LzFocusService extends LzMiniNode {
 
     /** Sent when the focus changes, with the argument being the view
-     * that was just focused. If nothing is focussed, this event is sent with null.
+     * that was just focused. If nothing is focused, this event is sent with null.
+     * @access public
+     * @lzxtype event 
      */
     var onfocus = LzDeclaredEvent;
 
     /** A reference to the last view that held the focus
      * @type LzView
+     * @keywords readonly
      */
     var lastfocus = null;
+    /** @access private */
     var csel = null;
+    /** @access private */
     var cseldest = null;
 
+    /** @access private */
     function LzFocusService () {
     }
 
+    /** @access private */
     function initialize () {
         this.upDel = new LzDelegate( LzFocus , "gotKeyUp", LzKeys, "onkeyup");
         this.downDel = new LzDelegate( LzFocus , "gotKeyDown", LzKeys, "onkeydown");
     }
 
 
+    /** @access private */
     var upDel;
+    /** @access private */
     var downDel;
 
     /** This attribute is set to true when the focus has moved
@@ -51,6 +60,7 @@ dynamic class LzFocusService extends LzMiniNode {
      * false. If the focus moves through programmatic control, the value is
      * unchanged from its last value.
      * @type Boolean
+     * @keywords readonly
      */
     var focuswithkey = false;
 
@@ -353,7 +363,8 @@ dynamic class LzFocusService extends LzMiniNode {
         return focusgroup[index];
     }
 }
-
+/**
+  * LzFocus is a shortcut for <a href="LzFocusService.html">LzFocusService</a>.
+  */
 var LzFocus = new LzFocusService();
 LzFocus.initialize();
-
