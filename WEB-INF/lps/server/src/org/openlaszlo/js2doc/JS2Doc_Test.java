@@ -4,7 +4,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -508,16 +508,16 @@ public class JS2Doc_Test extends XMLTestCase {
             "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/></js2doc>",
             
             "if ($swf8) { var foo; } else { var bar; }",
-            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml+j2me+svg+swf9\" runtimes=\"dhtml j2me svg swf9\"/></js2doc>",
+            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml+swf9\" runtimes=\"dhtml swf9\"/></js2doc>",
             
             "if ($swf8) { var foo; } else { var bar; var baz; }",
-            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml+j2me+svg+swf9\" runtimes=\"dhtml j2me svg swf9\"/><property name=\"baz\" id=\"baz+dhtml+j2me+svg+swf9\" runtimes=\"dhtml j2me svg swf9\"/></js2doc>",
+            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml+swf9\" runtimes=\"dhtml swf9\"/><property name=\"baz\" id=\"baz+dhtml+swf9\" runtimes=\"dhtml swf9\"/></js2doc>",
             
             "if ($swf8) { var foo; } else { if ($dhtml) { var bar; } }",
             "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml\" runtimes=\"dhtml\"/></js2doc>",
             
             "if ($swf8) { var foo; } else { if ($dhtml) { var bar; } var baz; }",
-            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml\" runtimes=\"dhtml\"/><property name=\"baz\" id=\"baz+dhtml+j2me+svg+swf9\" runtimes=\"dhtml j2me svg swf9\"/></js2doc>",
+            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml\" runtimes=\"dhtml\"/><property name=\"baz\" id=\"baz+dhtml+swf9\" runtimes=\"dhtml swf9\"/></js2doc>",
             
             "if ($swf8) { var foo; } else if ($dhtml) { var bar; }",
             "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml\" runtimes=\"dhtml\"/></js2doc>",
@@ -526,19 +526,19 @@ public class JS2Doc_Test extends XMLTestCase {
             "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"fab\" id=\"fab+swf9\" runtimes=\"swf9\"/><property name=\"bar\" id=\"bar+dhtml\" runtimes=\"dhtml\"/></js2doc>",
 
             "if ($swf8) { var foo; } else if (!$swf8) { var bar; }",
-            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml+j2me+svg+swf9\" runtimes=\"dhtml j2me svg swf9\"/></js2doc>",
+            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml+swf9\" runtimes=\"dhtml swf9\"/></js2doc>",
             
             "if ($swf8) { var foo; } else if (false) { var bar; }",
             "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/></js2doc>",
 
             "if ($swf8) { var foo; } else if (true) { var bar; }",
-            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml+j2me+svg+swf9\" runtimes=\"dhtml j2me svg swf9\"/></js2doc>",
+            "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+dhtml+swf9\" runtimes=\"dhtml swf9\"/></js2doc>",
 
             "if (! $dhtml) { var foo; }",
-            "<js2doc><property name=\"foo\" id=\"foo+j2me+svg+swf8+swf9\" runtimes=\"j2me svg swf8 swf9\"/></js2doc>",
+            "<js2doc><property name=\"foo\" id=\"foo+swf8+swf9\" runtimes=\"swf8 swf9\"/></js2doc>",
 
             "if (! ($swf8 || $swf9)) { var foo; }",
-            "<js2doc><property name=\"foo\" id=\"foo+dhtml+j2me+svg\" runtimes=\"dhtml j2me svg\"/></js2doc>",
+            "<js2doc><property name=\"foo\" id=\"foo+dhtml\" runtimes=\"dhtml\"/></js2doc>",
 
             "if (true || false) { var foo; }",
             "<js2doc><property id=\"foo\" name=\"foo\"/></js2doc>",
@@ -568,7 +568,7 @@ public class JS2Doc_Test extends XMLTestCase {
             "<js2doc><property name=\"foo\" id=\"foo+swf9\" runtimes=\"swf9\"/></js2doc>",
 
             "if ($swf8 || $swf9) { var foo; } else { var bar; }",
-            "<js2doc><property name=\"foo\" id=\"foo+swf8+swf9\" runtimes=\"swf8 swf9\"/><property name=\"bar\" id=\"bar+dhtml+j2me+svg\" runtimes=\"dhtml j2me svg\"/></js2doc>",
+            "<js2doc><property name=\"foo\" id=\"foo+swf8+swf9\" runtimes=\"swf8 swf9\"/><property name=\"bar\" id=\"bar+dhtml\" runtimes=\"dhtml\"/></js2doc>",
 
             "if ($swf8 || !$swf9) { var foo; } else { var bar; }",
             "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"/><property name=\"bar\" id=\"bar+swf9\" runtimes=\"swf9\"/></js2doc>",
@@ -623,7 +623,7 @@ public class JS2Doc_Test extends XMLTestCase {
             //"<js2doc><property name=\"foo\" id=\"foo+debug\" includebuilds=\"debug\"><function><property name=\"bar\" id=\"foo+debug.bar+swf8\" value=\"10\" runtimes=\"swf8\" /></function></property></js2doc>",
             
             "if (! $swf9) { if (! $swf8) { var foo; } }",
-            "<js2doc><property name=\"foo\" id=\"foo+dhtml+j2me+svg\" runtimes=\"dhtml j2me svg\"/></js2doc>",
+            "<js2doc><property name=\"foo\" id=\"foo+dhtml\" runtimes=\"dhtml\"/></js2doc>",
             
             "if ($swf8) { class foo { var bar; function baz () {}; } }",
             "<js2doc><property name=\"foo\" id=\"foo+swf8\" runtimes=\"swf8\"><class><property name=\"__ivars__\" id=\"foo+swf8.__ivars__\"><object><property id=\"foo+swf8.__ivars__.bar\" name=\"bar\"/></object></property><property name=\"prototype\" id=\"foo+swf8.prototype\"><object><property id=\"foo+swf8.prototype.baz\" name=\"baz\"><function/></property></object></property></class></property></js2doc>",
@@ -711,11 +711,11 @@ public class JS2Doc_Test extends XMLTestCase {
         iterateTests(tests);
     }
     
-    static final String[] runtimeOptionStrings = { "swf8", "swf9", "dhtml", "svg", "j2me" };
+    static final String[] runtimeOptionStrings = { "swf8", "swf9", "dhtml" };
     static final Set runtimeOptions = new HashSet(Arrays.asList(runtimeOptionStrings));
     static final String[][] runtimeAliasStrings = { { "as2", "swf8", "swf9" },
                                                     { "as3", "swf9" },
-                                                    { "js1", "dhtml", "j2me", "svg" } };
+                                                    { "js1", "dhtml" } };
     static final List runtimeAliases = Arrays.asList(runtimeAliasStrings);                                                 
     static final String[] buildOptionStrings = { "debug", "profile" };
     static final List buildOptions = Arrays.asList(buildOptionStrings);
@@ -726,7 +726,7 @@ public class JS2Doc_Test extends XMLTestCase {
             String source = (String) iter.next();
             assertTrue(iter.hasNext());
             String result = (String) iter.next();
-            result = result.replace("<js2doc", "<js2doc buildoptions=\"debug profile\" runtimeoptions=\"dhtml j2me svg swf8 swf9\"");
+            result = result.replace("<js2doc", "<js2doc buildoptions=\"debug profile\" runtimeoptions=\"dhtml swf8 swf9\"");
             result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + result;
             
             try {

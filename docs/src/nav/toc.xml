@@ -196,7 +196,7 @@
     
     <category title="Menus and Commands">
         <item title="command (LzCommand)" href="LzCommand.html" />
-        <item title="LzCursor" href="LzCursor+dhtml+j2me+svg+swf7+swf8.html" />
+        <item title="LzCursor" href="LzCursor+dhtml+swf7+swf8.html" />
         <item title="selectionmanager" href="LzSelectionManager.html" />
     </category>
     <category title="RPC">

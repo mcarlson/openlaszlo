@@ -4,7 +4,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -41,11 +41,11 @@ public class WholeFile_Test extends XMLTestCase {
         }
     }
     
-    static final String[] runtimeOptionStrings = { "swf7", "swf8", "swf9", "dhtml", "svg", "j2me" };
+    static final String[] runtimeOptionStrings = { "swf7", "swf8", "swf9", "dhtml" };
     static final Set runtimeOptions = new HashSet(Arrays.asList(runtimeOptionStrings));
     static final String[][] runtimeAliasStrings = { { "as2", "swf7", "swf8", "swf9" },
                                                     { "as3", "swf9" },
-                                                    { "js1", "dhtml", "j2me", "svg" } };
+                                                    { "js1", "dhtml" } };
     static final List runtimeAliases = Arrays.asList(runtimeAliasStrings);                                                 
     static final String[] buildOptionStrings = { "debug", "profile" };
     static final List buildOptions = Arrays.asList(buildOptionStrings);
