@@ -92,7 +92,7 @@
         <item title="LzGlobalMouse" href="LzGlobalMouse.html" />
         <item title="LzIdleClass" href="LzIdleClass.html" />
         <item title="LzKeys" href="LzKeys.html" />
-        <item title="LzModeManager" href="LzModeManagerBase.html" />
+        <item title="LzModeManager" href="LzModeManagerService.html" />
         <item title="LzTimer" href="LzTimerClass.html" />
         <item title="LzTrackClass" href="LzTrackClass.html" />
         <item title="LzHistory (dhtml)" href="LzHistory+dhtml.html" />
