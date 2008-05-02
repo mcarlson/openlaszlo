@@ -18,8 +18,9 @@ class LzMouseKernel  {
     }#
 
 
-    static function __mouseEvent(eventname) {
-        if (LzMouseKernel.__callback) LzMouseKernel.__scope[LzMouseKernel.__callback](eventname);
+    // sends mouse events to the callback
+    static function __sendEvent(view, eventname) {
+        if (LzMouseKernel.__callback) LzMouseKernel.__scope[LzMouseKernel.__callback](eventname, view);
         //Debug.write('LzMouseKernel event', eventname);
     }
     static var __callback = null;
@@ -38,6 +39,7 @@ class LzMouseKernel  {
         }
     }    
 
+    // handles global mouse events
     static function __mouseHandler(event:MouseEvent):void {
         var eventname = 'on' + event.type.toLowerCase();
         //Debug.write('__mouseHandler', eventname);
@@ -45,8 +47,10 @@ class LzMouseKernel  {
         if (eventname == 'onmouseup' && __lastMouseDown != null) {
             // call mouseup on the sprite that got the last mouse down  
             LzMouseKernel.__lastMouseDown.__globalmouseup(event);
+            __lastMouseDown = null;
+        } else {
+            LzMouseKernel.__sendEvent(null, eventname);
         }
-        LzGlobalMouse.__mouseEvent(eventname, null);
     }
 
     /**

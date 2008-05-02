@@ -18,6 +18,7 @@ var LzMouseKernel = {
     ,owner: null
     ,__showncontextmenu: null
     ,__defaultcontextmenu: null
+    // handles global mousedown, move events
     ,__mouseEvent: function(e) {
         if (!e) e = window.event;
         var eventname = 'on' + e.type;
@@ -40,24 +41,30 @@ var LzMouseKernel = {
             }
         }    
 
-        if (LzMouseKernel.__callback) {
-            if (e.button == 2 && eventname != 'oncontextmenu') return;
-            if (eventname == 'oncontextmenu') {
-                if (targ && targ.owner && targ.owner.__contextmenu) {
-                    targ.owner.__contextmenu.kernel.__show();
-                    return targ.owner.__contextmenu.kernel.showbuiltins;
-                } else if (LzMouseKernel.__defaultcontextmenu) {
-                    LzMouseKernel.__defaultcontextmenu.kernel.__show();
-                    return LzMouseKernel.__defaultcontextmenu.kernel.showbuiltins;
-                }
-            } else {
-                return LzMouseKernel.__scope[LzMouseKernel.__callback](eventname);
+        if (e.button == 2 && eventname != 'oncontextmenu') return;
+        if (eventname == 'oncontextmenu') {
+            if (targ && targ.owner && targ.owner.__contextmenu) {
+                targ.owner.__contextmenu.kernel.__show();
+                return targ.owner.__contextmenu.kernel.showbuiltins;
+            } else if (LzMouseKernel.__defaultcontextmenu) {
+                LzMouseKernel.__defaultcontextmenu.kernel.__show();
+                return LzMouseKernel.__defaultcontextmenu.kernel.showbuiltins;
             }
+        } else {
+            LzMouseKernel.__sendEvent(eventname);
+        }
+        //Debug.write('LzMouseKernel event', eventname);
+    }
+    // sends mouse events to the callback
+    ,__sendEvent: function(eventname, view) {
+        if (LzMouseKernel.__callback) {
+            LzMouseKernel.__scope[LzMouseKernel.__callback](eventname, view);
         }
         //Debug.write('LzMouseKernel event', eventname);
     }
     ,__callback: null
     ,__scope: null
+    // handles global mouseup events
     ,__mouseupEvent: function (e) {
         if (LzMouseKernel.__lastMouseDown != null) {
             // call mouseup on the sprite that got the last mouse down  

@@ -348,6 +348,18 @@ LzInputTextSprite.prototype.getTextfieldHeight = function ( ){
     return this.__LZtextclip._height
 }
 
-LzTextSprite.prototype.getText = function ( ){
+LzInputTextSprite.prototype.getText = function ( ){
     return this.__LZtextclip.text;
+}
+
+/**
+ * If a mouse event occurs in an input text field, find the focused view
+ */
+LzInputTextSprite.prototype.findSelection = function ( ){
+    var ss = Selection.getFocus();
+    if ( ss != null ){
+        var focusview = eval(ss + '.__lzview');
+        //Debug.warn("Selection.getFocus: %w, %w, %w", focusview, ss);
+        if ( focusview != undefined ) return focusview;
+    }
 }

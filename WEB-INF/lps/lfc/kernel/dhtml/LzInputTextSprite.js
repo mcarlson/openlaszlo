@@ -846,6 +846,16 @@ LzInputTextSprite.prototype.getTextHeight = function () {
     return h;
 }
 
+/**
+ * If a mouse event occurs in an input text field, find the focused view
+ */
+LzInputTextSprite.findSelection = function ( ){
+    if (LzInputTextSprite.__focusedSprite 
+        && LzInputTextSprite.__focusedSprite.owner) {
+        return LzInputTextSprite.__focusedSprite.owner;
+    }
+}
+
 // prevent text selection in IE
 // can't use Lz.attachEventHandler because we need to cancel events
 document.onselectstart = LzTextSprite.prototype.__cancelhandler;

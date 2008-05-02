@@ -25,12 +25,9 @@ if ($swf9) {
 
 #include "services/LzKeys.lzs"
 if ($js1) {
-    #include "services/platform/dhtml/LzModeManager.js"
     #include "services/platform/dhtml/LzHistory.js"
 } else if ($swf9) {
-    #include "services/platform/swf9/LzModeManager.js"
 } else if ($as2) {
-    #include "services/platform/swf/LzModeManager.as"
     #include "services/platform/swf/LzHistory.as"
 } else {
     Debug.error('services/Library.lzs unsupported runtime %s', $runtime);

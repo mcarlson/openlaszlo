@@ -255,17 +255,17 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function handleMouse_DOUBLE_CLICK (event:MouseEvent) {
-          LzModeManager.handleMouseEvent( owner, 'ondblclick');
+          LzMouseKernel.__sendEvent( owner, 'ondblclick');
           event.stopPropagation();
       }
 
-        // called by LzMouseKernel when mouse goes up on another sprite
-        public function __globalmouseup( e:MouseEvent ){
-            if (this.__mousedown) {
-                this.__mouseEvent(e);
-                this.__mouseEvent(new MouseEvent('mouseupoutside'));
-            }
-        }
+      // called by LzMouseKernel when mouse goes up on another sprite
+      public function __globalmouseup( e:MouseEvent ){
+          if (this.__mousedown) {
+              this.__mouseEvent(e);
+              this.__mouseEvent(new MouseEvent('mouseupoutside'));
+          }
+      }
 
       public function __mouseEvent( e:MouseEvent ){
             var skipevent = false;
@@ -278,7 +278,6 @@ dynamic public class LzSprite extends Sprite {
             } else if (eventname == 'onmouseup') {
                 if (LzMouseKernel.__lastMouseDown == this) {
                     this.__mousedown = false;
-                    LzMouseKernel.__lastMouseDown = null;
                 } else {
                     skipevent = true;
                 }
@@ -288,13 +287,13 @@ dynamic public class LzSprite extends Sprite {
 
             //Debug.write('__mouseEvent', eventname, this.owner);
             if (skipevent == false && this.owner.mouseevent) {
-                LzModeManager.handleMouseEvent(this.owner, eventname);
+                LzMouseKernel.__sendEvent(this.owner, eventname);
 
                 if (this.__mousedown) {
                     if (eventname == 'onmouseover') {
-                        LzModeManager.handleMouseEvent(this.owner, 'onmousedragin');
+                        LzMouseKernel.__sendEvent(this.owner, 'onmousedragin');
                     } else if (eventname == 'onmouseout') {
-                        LzModeManager.handleMouseEvent(this.owner, 'onmousedragout');
+                        LzMouseKernel.__sendEvent(this.owner, 'onmousedragout');
                     }
                 }
             }

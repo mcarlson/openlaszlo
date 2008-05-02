@@ -47,7 +47,7 @@
   * @devnote Manages the modal states of views and also notifies views ( that have
   * registered with it ) when their focus has changed.
   */
-public class LzModeManagerBase extends LzNode {
+public class LzModeManagerService extends LzNode {
     /** Sent when the mode changes.
     * @lzxtype event
     * @access public
@@ -226,28 +226,31 @@ public class LzModeManagerBase extends LzNode {
     }
 
     /**
+    * If a mouse event occurs in an input text field, find the focused view
     * @access private
     */
     function __findInputtextSelection( ){
-        return null;
+        return LzInputTextSprite.findSelection();
     }
 
     /**
     * @access private
-    * overridden by some implementations...
+    * receives mouse events from LzMouseKernel 
     */
-    function rawMouseEvent(me) {
-        if (me == 'onmousemove') {
+    function rawMouseEvent(eventname, view) {
+        if (eventname == 'onmousemove') {
             LzGlobalMouse.__mouseEvent('onmousemove', null); 
         } else {
-            this.handleMouseEvent( null , me );
+            this.handleMouseEvent( view , eventname );
         }
     }
+}
 
-    /**
-    * @access private
-    */
-    function handleMouseButton(view, eventName) {
-        this.handleMouseEvent( view , eventName );
-    }
+/**
+  * LzModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService</a>.
+  */
+var LzModeManager = new LzModeManagerService();
+if ($swf9) {
+} else {
+    LzMouseKernel.setCallback(LzModeManager, 'rawMouseEvent');
 }

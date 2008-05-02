@@ -182,6 +182,14 @@ class LzInputTextSprite extends LzTextSprite {
         return this.textfield.height;
     }
 
+    /**
+    * If a mouse event occurs in an input text field, find the focused view
+    * TODO: implement
+    */
+    static function findSelection(){
+        return null;
+    }
+
     }#  // #passthrough
 
 } // End of LzInputTextSprite

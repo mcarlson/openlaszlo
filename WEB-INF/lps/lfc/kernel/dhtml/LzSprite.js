@@ -710,14 +710,14 @@ LzSprite.prototype.__mouseEvent = function ( e ){
     }
 
     //Debug.write('__mouseEvent', eventname, this.owner);
-    if (skipevent == false && this.owner.mouseevent && LzModeManager && LzModeManager['handleMouseButton']) {
-        LzModeManager.handleMouseButton(this.owner, eventname);
+    if (skipevent == false && this.owner.mouseevent && LzMouseKernel && LzMouseKernel['__sendEvent']) {
+        LzMouseKernel.__sendEvent(eventname, this.owner);
 
         if (this.__mousedown) {
             if (eventname == 'onmouseover') {
-                LzModeManager.handleMouseButton(this.owner, 'onmousedragin');
+                LzMouseKernel.__sendEvent('onmousedragin', this.owner);
             } else if (eventname == 'onmouseout') {
-                LzModeManager.handleMouseButton(this.owner, 'onmousedragout');
+                LzMouseKernel.__sendEvent('onmousedragout', this.owner);
             }
         }
     }

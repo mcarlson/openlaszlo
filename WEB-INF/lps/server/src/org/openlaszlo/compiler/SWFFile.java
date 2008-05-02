@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -155,9 +155,9 @@ class SWFFile extends FlashFile {
             ca.addAction(new ClipAction(ClipAction.KEY_DOWN, program(s)));
             s = "_root.LzKeyboardKernel.__keyboardEvent(Key.getCode(), 'onkeyup')";
             ca.addAction(new ClipAction(ClipAction.KEY_UP, program(s)));
-            s = "_root.LzMouseKernel.__mouseEvent('onmousedown')";
+            s = "_root.LzMouseKernel.rawMouseEvent('onmousedown')";
             ca.addAction(new ClipAction(ClipAction.MOUSE_DOWN, program(s)));
-            s = "_root.LzMouseKernel.__mouseEvent('onmouseup')";
+            s = "_root.LzMouseKernel.rawMouseEvent('onmouseup')";
             ca.addAction(new ClipAction(ClipAction.MOUSE_UP, program(s)));
             inst.actions = ca;
 
@@ -210,23 +210,23 @@ class SWFFile extends FlashFile {
             but.addButtonRecord(new ButtonRecord(ButtonRecord.Up, rectShape, 1, at, new CXForm()));
             but.addButtonRecord(new ButtonRecord(states, rectShape, 1, at, new CXForm()));
             but.addActionCondition(ActionCondition.onPress(program(
-                "_root.LzModeManager.handleMouseButton( myView, 'onmousedown')")));
+                "_root.LzMouseKernel.handleMouseButton( myView, 'onmousedown')")));
             but.addActionCondition(ActionCondition.onRelease(program(
-                "_root.LzModeManager.handleMouseButton( myView, 'onmouseup');" + 
-                "_root.LzModeManager.handleMouseEvent( myView, 'onclick')")));
+                "_root.LzMouseKernel.handleMouseButton( myView, 'onmouseup');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onclick')")));
             but.addActionCondition(ActionCondition.onReleaseOutside(program(
-                "_root.LzModeManager.handleMouseButton( myView, 'onmouseup');" + 
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseupoutside')")));
+                "_root.LzMouseKernel.handleMouseButton( myView, 'onmouseup');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseupoutside')")));
             but.addActionCondition(ActionCondition.onRollOver(program(
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseover')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseover')")));
             but.addActionCondition(ActionCondition.onRollOut(program(
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseout')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseout')")));
             but.addActionCondition(ActionCondition.onDragOut(program(
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseout');" + 
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmousedragout')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseout');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmousedragout')")));
             but.addActionCondition(ActionCondition.onDragOver(program(
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseover');" + 
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmousedragin')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseover');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmousedragin')")));
             movieClip.getFrameAt(0).addInstance(but, 1, at, null, "but");
 
             // 7. A movieclip with the export identifier "swatch" which has a white 100x100 rectangle.
