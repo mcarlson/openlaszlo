@@ -10,7 +10,6 @@
   */
 
 /**
-  * <p>NOTE: You must load your lzx with the lzt=history wrapper HTML to use LzHistory.</p>
   * <p>The LzHistory service manages interaction with the browser history and back button.  Save state as often as you like, and advance the
   *  history when a new 'page' of values is required.</p>
   * 
@@ -24,46 +23,49 @@
   * @shortdesc Manages interaction with the browser history and back button.
   */
 
-var LzHistory = new Object;
+public class LzHistoryService extends LzNode {
+/**
+  * true if history system is ready to receive events (for 3.x compatibility)
+  */
+var isReady = false;
 
 /**
-  * true if history system is ready (for 3.x compatibility)
+  * If true, persistence is on.
+  * @type Boolean
+  * @keywords readonly
   */
-LzHistory.isReady = true;
+var persist = false;
+
+/**
+  * If set, use this persisted object.
+  * @type Object
+  * @keywords readonly
+  */
+var _persistso = null;
+
+/**
+  * The current offset (zero-based) in the history value stack.  Listen for the onoffset event to find out when LzHistory value changes.
+  * @type Number
+  * @keywords readonly
+  */
+var offset = 0;
+/** @access private */
+var __lzdirty = false;
+/** @access private */
+var __lzhistq = [];
+/** @access private */
+var __lzcurrstate = {};
+
+/** Sent when the history offset changes.
+  * @lzxtype event
+  * @access public
+  */
+var onoffset = LzDeclaredEvent;
 
 /**
   * @access private
   */
-LzHistory.__setHistory = function(s) {
-    //Debug.write('__setHistory', s);
-    LzBrowserKernel._jsreset();
-    LzBrowserKernel.callJS('Lz.history.set', null, s);
-}
-
-/**
-  * @access private
-  */
-LzHistory.getPersist = function(n) {
-    return SharedObject.getLocal(n);
-}
-
-LzHistory.persist = false;
-
-// The current offset (zero-based) in the history value stack. 
-LzHistory.offset = 0;
-/** @access private */
-LzHistory.__lzdirty = false;
-/** @access private */
-LzHistory.__lzhistq = [];
-/** @access private */
-LzHistory.__lzcurrstate = {};
-
-LzHistory.onoffset = LzDeclaredEvent;
-
-/**
-  * @access private
-  */
-LzHistory.receiveHistory = function(o){
+function receiveHistory(o){
     if (this.persist && ! this._persistso) {
         this.__initPersist();
     }
@@ -78,25 +80,21 @@ LzHistory.receiveHistory = function(o){
     var h = this.__lzhistq[o];
     for (var u in h) {
         var obj = h[u];
-        //Debug.write('restoring state ', global[obj], obj, obj.n, obj.v);
-        global[u].setAttribute(obj.n, obj.v);
+        //Debug.write('restoring state ', global[obj.c], obj.c, obj.n, obj.v);
+        global[obj.c].setAttribute(obj.n, obj.v);
     }
 
     this.offset = o;
     //Debug.write('onhistory ', o, this.__lzhistq);
     if (this.onoffset.ready) this.onoffset.sendEvent(o);
-    if ($swf7) {
-        _root._currenthistory = o + '';
-    } else {
-        LzBrowserKernel.callJS('Lz.history.__receivedhistory', false, o + '');
-    }
+    LzBrowserKernel.receivedHistory(o);
     return true;
 }
 
 /**
   * @access private
   */
-LzHistory.receiveEvent = function(n, v){
+function receiveEvent(n, v){
     //Debug.write('got event', n, v);
     canvas[n] = v;
     if (canvas['on' + n].ready) canvas['on' + n].sendEvent(v);
@@ -105,72 +103,23 @@ LzHistory.receiveEvent = function(n, v){
 /**
   * @access private
   */
-LzHistory.getCanvasAttribute = function(n){
+function getCanvasAttribute(n){
     return canvas[n];
 }    
 
 /**
   * @access private
   */
-LzHistory.setCanvasAttribute = LzHistory.receiveEvent;
+function setCanvasAttribute(n, v) {
+    this.receiveEvent(n,v);
+}
 
 /**
+  * Invoked by browser JavaScript to call a method
   * @access private
   */
-LzHistory.callMethod = function(js) { 
-    if (LzBrowserKernel.__jslocked) LzBrowserKernel._jsreset();
-    var scope = canvas;
-    //Debug.write('callMethod', js);
-    var s = js.indexOf('(')
-    if (s != -1) {
-        var e = js.indexOf(')')
-        var args = (js.substring(s + 1, e)).split(',');
-        js = js.substring(0, s);
-    }
-
-    var path = js.split('.');
-    for (var i = 0; i < path.length; i++) {
-        var n = path[i];
-        if (i == 0 && ! scope[n]) {
-            // look in global scope if canvas lookup fails
-            scope = global;
-        }
-        var lastscope = scope;
-        scope = scope[n];
-        //Debug.write('found', n, 'in scope', scope);  
-    }
-
-    // cast arguments to type
-    for (var i = 0; i < args.length; i++) {
-        var a = args[i];
-
-        // strip whitespace
-        while (a.charAt(0) == ' ') {
-            a = a.substring(1, a.length);
-        }
-
-        var n = parseFloat(a);
-        if (! isNaN(n)) {
-            //number
-            args[i] = n;
-            //Debug.write('found number', args[i], a);
-        } else if (a.indexOf("'") != -1) {
-            // TODO - handle "
-            var s = a.indexOf("'") + 1;
-            var e = a.lastIndexOf("'");
-            args[i] = a.substring(s, e);
-            //Debug.write('found string', args[i], a);
-        } else if (a == 'true' || a == 'false'){
-            args[i] = a == 'true';
-            //Debug.write('found boolean', args[i], a);
-        } else if (lastscope[a]) {
-            args[i] = lastscope[a];
-            //Debug.write('found property', args[i], a);
-        }
-    }
-
-    //Debug.write('found scope', scope, 'args', args, 'for path', path);  
-    return scope.apply(lastscope, args);
+function callMethod(js) { 
+    return LzBrowserKernel.callMethod(js);
 }
 
 /**
@@ -178,15 +127,18 @@ LzHistory.callMethod = function(js) {
   * history stack.  When the browser back button causes the history offset 
   * to change, the attribute will get set to the value saved at that offset,
   * e.g. scope.setAttribute('attribute_name_to_set', value). 
+  * @param String who: Global id of the scope to be used
+  * @param String prop: Attribute name to be set
+  * @param val: Value to set the attribute to
   */
-LzHistory.save = function(who, prop, val) {
+function save(who, prop, val) {
     if (typeof who != 'string') {
         if (who['id']) who = who['id'];
-        if ($debug) Debug.warn('Warning: LzHistory.save() requires a view ID to be passed in as a string for the first argument.');
+        if ($debug) Debug.warn('Warning: this.save() requires a view ID to be passed in as a string for the first argument.');
+        if (! who) return;
     }
-    // strip off __ so keys can be listed
     if (val == null) val = global[who][prop];
-    this.__lzcurrstate[who] = {n: prop, v: val};
+    this.__lzcurrstate[who] = {c: who, n: prop, v: val};
     this.__lzdirty = true;
     //Debug.write('set state of ',who,' to ', this.__lzcurrstate);
 }
@@ -197,7 +149,7 @@ LzHistory.save = function(who, prop, val) {
   * Must be called to commit registered values.  Called automatically by 
   * next and prev. 
   */
-LzHistory.commit = function() {
+function commit() {
     if (! this.__lzdirty) return;
     this.__lzhistq[this.offset] = this.__lzcurrstate;
     
@@ -221,7 +173,7 @@ LzHistory.commit = function() {
 /**
   * @access private
   */
-LzHistory.move = function(by) {
+function move(by) {
     this.commit();
     if (! by) by = 1;
     var o = this.offset + by;
@@ -230,31 +182,29 @@ LzHistory.move = function(by) {
     if (this.__lzhistq.length >= o) {
         //Debug.write('move', o, this.__lzhistq.length, this.__lzhistq);
         //this.offset = o;
-        this.__setHistory(o);
+        LzBrowserKernel.setHistory(o);
     }
 }
 
 /**
-  * Step back one step in the history stack.  Adds an item to the browser history
-  * stack. 
+  * Moves forward one step in the history stack.  Adds an item to the browser history.
   */
-LzHistory.next = function() {
+function next() {
     this.move(1);
 }
 
 /**
-  * Step forward one step in the history stack.  Adds an item to the  browser history
-  * stack. 
+  * Moves back one step in the history stack.  Adds an item to the browser history
   */
-LzHistory.prev = function() {
+function prev() {
     this.move(-1);
 }
 
 /** @access private */
-LzHistory.__initPersist = function() {
+function __initPersist() {
     if (this.persist) {
         if (! this._persistso) {
-            this._persistso = this.getPersist('historystate');
+            this._persistso = LzBrowserKernel.getPersistedObject('historystate');
         }
         var d = this._persistso.data;
         if (d) {
@@ -269,10 +219,14 @@ LzHistory.__initPersist = function() {
     }    
 }
 
-LzHistory.clear = function() {
+
+/**
+  * Clears out the history state.
+  */
+function clear() {
     if (this.persist) {
         if (! this._persistso) {
-            this._persistso = this.getPersist('historystate');
+            this._persistso = LzBrowserKernel.getPersistedObject('historystate');
         }
         this._persistso.clear();
         //this._persistso.flush();
@@ -282,9 +236,23 @@ LzHistory.clear = function() {
     if (this.onoffset.ready) this.onoffset.sendEvent(0);
 }
 
-LzHistory.setPersist = function(p) {
-    this.persist = p;
-    this.__initPersist();
+/**
+  * Turns history persistence across app reloads on or off
+  * @param Boolean p: If true, persistence will be turned on
+  */
+function setPersist(p) {
+    if (LzView.prototype.capabilities.persistence) {
+        this.persist = p;
+        this.__initPersist();
+    } else {
+        if ($debug) {
+            Debug.warn('The %s runtime does not support %s', canvas['runtime'], 'LzHistory.setPersist()');
+        }
+    }
+}
 }
 
-LzHistory.__initPersist();
+/**
+  * LzHistory is a shortcut for <a href="LzHistoryService.html">LzHistoryService</a>.
+  */
+var LzHistory = new LzHistoryService();

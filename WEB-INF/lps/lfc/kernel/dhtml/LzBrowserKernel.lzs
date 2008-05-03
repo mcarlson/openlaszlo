@@ -40,7 +40,7 @@ static function loadURL ( url, target=null, features=null ){
   * browser frame .
   */
 static function loadJS ( js, target ){
-    this.loadURL('javascript:' + js + ';void(0);', target);
+    LzBrowserKernel.loadURL('javascript:' + js + ';void(0);', target);
 }
 
 
@@ -51,6 +51,30 @@ static function loadJS ( js, target ){
   * @param String js: Browser javascript to execute
   */
 static function callJS (js, callback, args) {
+    return eval(js);
+}
+
+/**
+  * Notify the browser we received the history state - not required in dhtml.
+  * @access private
+  */
+static function receivedHistory(n) {
+}
+
+/**
+  * Sets the browser history to a specified offset.
+  * @access private
+  */
+static function setHistory(n) {
+    //Debug.write('setHistory', n);
+    Lz.history.set(n);
+}
+
+/**
+  * Invoked by browser JavaScript to call a method
+  * @access private
+  */
+static function callMethod(js) { 
     return eval(js);
 }
 

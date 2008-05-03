@@ -56,6 +56,83 @@ static function callJS (js, callback, args) {
   throw new Error("callJS not implemented");
 }
 
+/**
+  * Sets the browser history to a specified offset.
+  * @access private
+  */
+static function setHistory(n) {
+    //Debug.write('__setHistory', n);
+    LzBrowserKernel.callJS('Lz.history.set', null, n);
+}
+
+static function getPersistedObject(n) {
+    return SharedObject.getLocal(n);
+}
+
+/**
+  * Invoked by browser JavaScript to call a method
+  * @access private
+  */
+static function callMethod(js) { 
+    var scope = canvas;
+    //Debug.write('callMethod', js);
+    var s = js.indexOf('(')
+    if (s != -1) {
+        var e = js.indexOf(')')
+        var args = (js.substring(s + 1, e)).split(',');
+        js = js.substring(0, s);
+    }
+
+    var path = js.split('.');
+    for (var i = 0; i < path.length; i++) {
+        var n = path[i];
+        if (i == 0 && ! scope[n]) {
+            // look in global scope if canvas lookup fails
+            scope = global;
+        }
+        var lastscope = scope;
+        scope = scope[n];
+        //Debug.write('found', n, 'in scope', scope);  
+    }
+
+    // cast arguments to type
+    for (var i = 0; i < args.length; i++) {
+        var a = args[i];
+
+        // strip whitespace
+        while (a.charAt(0) == ' ') {
+            a = a.substring(1, a.length);
+        }
+
+        var n = parseFloat(a);
+        if (! isNaN(n)) {
+            //number
+            args[i] = n;
+            //Debug.write('found number', args[i], a);
+        } else if (a.indexOf("'") != -1) {
+            // TODO - handle "
+            var s = a.indexOf("'") + 1;
+            var e = a.lastIndexOf("'");
+            args[i] = a.substring(s, e);
+            //Debug.write('found string', args[i], a);
+        } else if (a == 'true' || a == 'false'){
+            args[i] = a == 'true';
+            //Debug.write('found boolean', args[i], a);
+        } else if (lastscope[a]) {
+            args[i] = lastscope[a];
+            //Debug.write('found property', args[i], a);
+        }
+    }
+
+    //Debug.write('found scope', scope, 'args', args, 'for path', path);  
+    return scope.apply(lastscope, args);
+}
+
+static function receivedHistory(n) {
+  //TODO Not implemented
+  throw new Error("receivedHistory not implemented");
+}
+
 static var _os = null;
 static var _ver = null;
 

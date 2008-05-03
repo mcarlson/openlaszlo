@@ -248,6 +248,7 @@ LzSprite.prototype.capabilities = {
     ,htmlinputtext: false
     ,advancedfonts: false
     ,bitmapcaching: false
+    ,persistence: false
 }
 
 LzSprite.prototype.__updateQuirks = function () {
@@ -411,9 +412,12 @@ LzSprite.prototype.init = function(v) {
         if (this.quirks['safari_visibility_instead_of_display']) {
             this.__LZdiv.style.visibility = 'visible';
         }
+        // Register the canvas for callbacks
         if (this._id) {
             Lz[this._id]._ready(this.owner);
         }
+        // Tell LzHistory we're ready to send/receive events
+        LzHistory.isReady = true; 
     }
 }
 

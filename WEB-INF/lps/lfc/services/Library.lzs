@@ -25,14 +25,13 @@ if ($swf9) {
 
 #include "services/LzKeys.lzs"
 if ($js1) {
-    #include "services/platform/dhtml/LzHistory.js"
 } else if ($swf9) {
 } else if ($as2) {
-    #include "services/platform/swf/LzHistory.as"
 } else {
     Debug.error('services/Library.lzs unsupported runtime %s', $runtime);
 }
 
+#include "services/LzHistory.lzs"
 #include "services/LzTrack.lzs"
 #include "services/LzIdle.lzs"
 #include "services/LzCSSStyle.lzs"

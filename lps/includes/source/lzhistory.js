@@ -200,7 +200,7 @@ Lz.history = {
             if (Lz.loaded && Lz.callMethod && h != Lz.history._lasthash) {
                 _this.__setFlash(h);
             }
-            if (Lz.__dhtmlhistoryready && LzHistory && LzHistory['receiveHistory']) {
+            if (window['LzHistory'] && LzHistory['isReady'] && LzHistory['receiveHistory']) {
                 //alert('dhtml ' + h);
                 LzHistory.receiveHistory(h);
                 _this._lasthash = h;

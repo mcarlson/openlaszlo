@@ -90,13 +90,12 @@
         <item title="handler (LzDelegate)" href="LzDelegate.html" />
         <item title="event (LzEvent)" href="LzEvent.html" />
         <item title="LzGlobalMouse" href="LzGlobalMouse.html" />
-        <item title="LzIdleClass" href="LzIdleClass.html" />
+        <item title="LzIdle" href="LzIdle.html" />
         <item title="LzKeys" href="LzKeys.html" />
-        <item title="LzModeManager" href="LzModeManagerService.html" />
-        <item title="LzTimer" href="LzTimerClass.html" />
-        <item title="LzTrackClass" href="LzTrackClass.html" />
-        <item title="LzHistory (dhtml)" href="LzHistory+dhtml.html" />
-        <item title="LzHistory (swf7+swf8+swf9)" href="LzHistory+swf7+swf8+swf9.html" />        
+        <item title="LzModeManager" href="LzModeManager.html" />
+        <item title="LzTimer" href="LzTimer.html" />
+        <item title="LzTrack" href="LzTrackClass.html" />
+        <item title="LzHistory" href="LzHistory.html" />
     </category>
     
     

@@ -34,28 +34,86 @@
   *
   * @shortdesc Keyboard input service.
   */
-public class LzKeys {
+public class LzKeysService extends LzNode {
+    /** @access private */
+    function LzKeysService() {
+        super();
+
+        // add additional codes
+        this.keyCodes['add'] = 107;
+        // Backspace doesn't work in the Authoring tool player...
+        this.keyCodes['delete'] = 46;
+        this.keyCodes['0']  = 48 ;
+        this.keyCodes['1']  = 49 ;
+        this.keyCodes['2']  = 50 ;
+        this.keyCodes['3']  = 51 ;
+        this.keyCodes['4']  = 52 ;
+        this.keyCodes['5']  = 53 ;
+        this.keyCodes['6']  = 54 ;
+        this.keyCodes['7']  = 55 ;
+        this.keyCodes['8']  = 56 ;
+        this.keyCodes['9']  = 57 ;
+
+        this.keyCodes[')']  = 48 ;
+        this.keyCodes['!']  = 49 ;
+        this.keyCodes['@']  = 50 ;
+        this.keyCodes['#']  = 51 ;
+        this.keyCodes['$']  = 52 ;
+        this.keyCodes['%']  = 53 ;
+        this.keyCodes['^']  = 54 ;
+        this.keyCodes['&']  = 55 ;
+        this.keyCodes['*']  = 56 ;
+        this.keyCodes['(']  = 57 ;
+
+        this.keyCodes[';']  = 186 ;
+        this.keyCodes[':']  = 186 ;
+        this.keyCodes['=']  = 187 ;
+        this.keyCodes['+']  = 187 ;
+
+        this.keyCodes['<']  = 188 ;
+        this.keyCodes[',']  = 188 ;
+        this.keyCodes['-']  = 189 ;
+        this.keyCodes['_']  = 189; 
+        this.keyCodes['>']  = 190 ;
+        this.keyCodes['.']  = 190 ;
+        this.keyCodes['/']  = 191 ;
+        this.keyCodes['?']  = 191 ;
+
+        this.keyCodes['`']  = 192 ;
+        this.keyCodes['~']  = 192 ;
+        this.keyCodes['[']  = 219 ;
+        this.keyCodes['{']  = 219 ;
+        this.keyCodes['\\']  = 220 ;
+        this.keyCodes['|']  =  220; 
+        this.keyCodes[']']  = 221 ;
+        this.keyCodes['}']  = 221 ;
+        this.keyCodes['\"']  = 222 ;
+        this.keyCodes['\'']  = 222 ;
+
+        this.keyCodes['IME']  = 229 ;
+    }
+        
     /**
      * A hash where each of the keys that is currently 
      * down on the keyboard is set to true.
      * @type Object
      * @access private
      */
-    static var downKeysHash = {};
+    var downKeysHash = {};
 
     /**
      * An array of currently pressed key codes.
      * @type Array
      * @access private
      */
-    static var downKeysArray = [];
+    var downKeysArray = [];
 
     /**
      * An object used by callOnKeyCombo() to track kep combinations  
      * @type Object
      * @access private
      */
-    static var keycombos = {};
+    var keycombos = {};
 
     /**
      * Sent when a key is pressed; sent with keycode 
@@ -81,16 +139,16 @@ public class LzKeys {
 
 
     /** @access private */
-    static static function __keyEvent ( delta, k, type ){
+    function __keyEvent ( delta, k, type ){
         //Debug.write('LzKeys.__keyEvent', delta, k, type);
 
         //for each key change, send the corresponding event
         for (var key in delta) {
             var down = delta[key];
             if (down) {
-                LzKeys.gotKeyDown(k);
+                this.gotKeyDown(k);
             } else {
-                LzKeys.gotKeyUp(k);
+                this.gotKeyUp(k);
             }    
         }
     }    
@@ -103,19 +161,19 @@ public class LzKeys {
      * @param Number kC: The Flash keycode for the key that is down.
      * @param String info: if "extra" then ignore if you already got one
      */
-    static function gotKeyDown ( kC, info = null ){
-        if ( LzKeys.downKeysArray.length > 0 ){
+    function gotKeyDown ( kC, info = null ){
+        if ( this.downKeysArray.length > 0 ){
             var badkeys = null;
 
-            for ( var i = LzKeys.downKeysArray.length-1 ; i >=0; i-- ){
-                var dkC = LzKeys.downKeysArray[ i ];
+            for ( var i = this.downKeysArray.length-1 ; i >=0; i-- ){
+                var dkC = this.downKeysArray[ i ];
                 if (  dkC == kC ) continue;
             }
         }
-        var firstkeydown = !LzKeys.downKeysHash[ kC ];
+        var firstkeydown = !this.downKeysHash[ kC ];
         if (firstkeydown) {
-            LzKeys.downKeysHash[ kC ] = true;
-            LzKeys.downKeysArray.push (  kC );
+            this.downKeysHash[ kC ] = true;
+            this.downKeysArray.push (  kC );
         } 
         // send key down event first, so inputtext will get key event
         // before a command that may change the focus
@@ -124,14 +182,14 @@ public class LzKeys {
             // won't send repeated key events in player XXX ?
 
             // check for IME
-            if (LzKeys.downKeysHash[229] != true) {
-                if (LzKeys['onkeydown'].ready) LzKeys['onkeydown'].sendEvent( kC );
+            if (this.downKeysHash[229] != true) {
+                if (LzKeys.onkeydown.ready) LzKeys.onkeydown.sendEvent( kC );
             }
         }
 
         if ( firstkeydown ){
-            var cp = LzKeys.keycombos;
-            var dkeys = LzKeys.downKeysArray;
+            var cp = this.keycombos;
+            var dkeys = this.downKeysArray;
             dkeys.sort();
             for ( var i = 0 ; i < dkeys.length && cp != null ; i++ ){
                 cp  = cp[ dkeys[ i ] ];
@@ -139,7 +197,7 @@ public class LzKeys {
 
             if (cp != null && 'delegates' in cp) {
                 for ( var i = 0 ; i < cp.delegates.length ; i++ ){
-                    cp.delegates[ i ].execute( LzKeys.downKeysArray );
+                    cp.delegates[ i ].execute( this.downKeysArray );
                 }
             }
         }
@@ -157,24 +215,24 @@ public class LzKeys {
      * @access private
      * @param Number kC: The Flash keycode for the key that was released.
      */
-    static function gotKeyUp ( kC ){
+    function gotKeyUp ( kC ){
 
-        if (!LzKeys.downKeysHash[ kC ]) {
+        if (!this.downKeysHash[ kC ]) {
             // Debug.write("derived keyDown", kC);
         }
     
-        if ( LzKeys.downKeysHash[229] != true && !LzKeys.downKeysHash[ kC ]) {
+        if ( this.downKeysHash[229] != true && !this.downKeysHash[ kC ]) {
             // in FP5 some keys don't get a keydown event, but do get a keyup
-            LzKeys.gotKeyDown( kC );
+            this.gotKeyDown( kC );
         }
 
-        delete LzKeys.downKeysHash[ kC ];
+        delete this.downKeysHash[ kC ];
 
-        LzKeys.downKeysArray = [];
-        for ( var k in LzKeys.downKeysHash ){
-            LzKeys.downKeysArray.push( k );
+        this.downKeysArray = [];
+        for ( var k in this.downKeysHash ){
+            this.downKeysArray.push( k );
         }
-        if (LzKeys['onkeyup'].ready) LzKeys['onkeyup'].sendEvent( kC );
+        if (LzKeys.onkeyup.ready) LzKeys.onkeyup.sendEvent( kC );
 
     }
 
@@ -183,14 +241,14 @@ public class LzKeys {
      * @param k: The name of the key to check for downness or an array of
      * key names, e.g. ['shift', 'tab']
      */
-    static function isKeyDown ( k ){
+    function isKeyDown ( k ){
         if (typeof(k) == "string") {
-            return (LzKeys.downKeysHash[ LzKeys.keyCodes[ k.toLowerCase() ] ] == true);
+            return (this.downKeysHash[ this.keyCodes[ k.toLowerCase() ] ] == true);
         } else {
             // an array of keys was passed
             var down = true;
             for (var i=0; i < k.length; i++) {
-                down = down && (LzKeys.downKeysHash[LzKeys.keyCodes[k[i].toLowerCase()]]
+                down = down && (this.downKeysHash[this.keyCodes[k[i].toLowerCase()]]
                                 == true);
             }
             return down;
@@ -295,16 +353,16 @@ public class LzKeys {
      * @param Array kCArr: Array of strings indicating which keys constitute the
      * keycombo. This array may be in any order.
      */
-    static function callOnKeyCombo ( d , kCArr ){
+    function callOnKeyCombo ( d , kCArr ){
 
         var kcSorted = [];
         for (var i = 0; i < kCArr.length; i++ ){
-            kcSorted.push( LzKeys.keyCodes[ kCArr[ i ].toLowerCase() ] );
+            kcSorted.push( this.keyCodes[ kCArr[ i ].toLowerCase() ] );
         }
     
         kcSorted.sort();
     
-        var cp = LzKeys.keycombos;
+        var cp = this.keycombos;
         for ( var i = 0 ; i < kcSorted.length; i++ ){
 
             if ( cp[ kcSorted[ i ] ] == null ){
@@ -323,14 +381,14 @@ public class LzKeys {
      * @param Array kCArr: An array of strings indicating which keys 
      * constituted the keycombo.
      */
-    static function removeKeyComboCall ( d , kCArr ){
+    function removeKeyComboCall ( d , kCArr ){
         var kcSorted = [];
         for (var i = 0; i < kCArr.length; i++ ){
-            kcSorted.push( LzKeys.keyCodes[ kCArr[ i ].toLowerCase() ] );
+            kcSorted.push( this.keyCodes[ kCArr[ i ].toLowerCase() ] );
         }
         kcSorted.sort();
 
-        var cp = LzKeys.keycombos;
+        var cp = this.keycombos;
         for ( var i = 0 ; i < kcSorted.length; i++ ){
             if ( cp[ kcSorted[ i ] ] == null ){
                 return false; //error
@@ -347,7 +405,7 @@ public class LzKeys {
     /**
      * @access private
      */
-    static function enableEnter ( onroff ){
+    function enableEnter ( onroff ){
         //Debug.write("enableEnter: "+onroff);
         // SWF-specific
         Debug.write('LzKeys.enableEnter not yet defined');
@@ -364,13 +422,13 @@ public class LzKeys {
       * @default 0
       * @keywords readonly
       */
-    static var mousewheeldelta = 0;
+    var mousewheeldelta = 0;
 
     /** @access private */
-    static function __mousewheelEvent(d) {
+    function __mousewheelEvent(d) {
         //Debug.write('__mousewheelEvent', d);
-        LzKeys.mousewheeldelta = d;
-        if (LzKeys['onmousewheeldelta'].ready) LzKeys['onmousewheeldelta'].sendEvent(d);
+        this.mousewheeldelta = d;
+        if (LzKeys.onmousewheeldelta.ready) LzKeys.onmousewheeldelta.sendEvent(d);
     }
 
     /**
@@ -378,7 +436,7 @@ public class LzKeys {
      * @type Object
      * @access private
      */
-    static var keyCodes = {
+    var keyCodes = {
     a : 65 ,
     b : 66 ,
     c : 67 ,
@@ -455,62 +513,12 @@ public class LzKeys {
     numlock : 144
     }
 
-         keyCodes['add'] = 107;
-    // Backspace doesn't work in the Authoring tool player...
-    keyCodes['delete'] = 46;
-    keyCodes['0']  = 48 ;
-    keyCodes['1']  = 49 ;
-    keyCodes['2']  = 50 ;
-    keyCodes['3']  = 51 ;
-    keyCodes['4']  = 52 ;
-    keyCodes['5']  = 53 ;
-    keyCodes['6']  = 54 ;
-    keyCodes['7']  = 55 ;
-    keyCodes['8']  = 56 ;
-    keyCodes['9']  = 57 ;
-
-    keyCodes[')']  = 48 ;
-    keyCodes['!']  = 49 ;
-    keyCodes['@']  = 50 ;
-    keyCodes['#']  = 51 ;
-    keyCodes['$']  = 52 ;
-    keyCodes['%']  = 53 ;
-    keyCodes['^']  = 54 ;
-    keyCodes['&']  = 55 ;
-    keyCodes['*']  = 56 ;
-    keyCodes['(']  = 57 ;
-
-    keyCodes[';']  = 186 ;
-    keyCodes[':']  = 186 ;
-    keyCodes['=']  = 187 ;
-    keyCodes['+']  = 187 ;
-
-    keyCodes['<']  = 188 ;
-    keyCodes[',']  = 188 ;
-    keyCodes['-']  = 189 ;
-    keyCodes['_']  = 189; 
-    keyCodes['>']  = 190 ;
-    keyCodes['.']  = 190 ;
-    keyCodes['/']  = 191 ;
-    keyCodes['?']  = 191 ;
-
-    keyCodes['`']  = 192 ;
-    keyCodes['~']  = 192 ;
-    keyCodes['[']  = 219 ;
-    keyCodes['{']  = 219 ;
-    keyCodes['\\']  = 220 ;
-    keyCodes['|']  =  220; 
-    keyCodes[']']  = 221 ;
-    keyCodes['}']  = 221 ;
-    keyCodes['\"']  = 222 ;
-    keyCodes['\'']  = 222 ;
-
-    keyCodes['IME']  = 229 ;
-
-    //for ( ks in keyCodes ){
-    //    trace ( ks add " :  " add keyCodes[ ks ] );
-    //}
 }
+
+/**
+  * LzKeys is a shortcut for <a href="LzKeysService.html">LzKeysService</a>.
+  */
+var LzKeys = new LzKeysService();
 
 if ($swf9) {
 } else {

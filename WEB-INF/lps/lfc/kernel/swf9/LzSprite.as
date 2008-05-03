@@ -84,6 +84,7 @@ dynamic public class LzSprite extends Sprite {
       ,htmlinputtext: true
       ,advancedfonts: true
       ,bitmapcaching: true
+      ,persistence: true
       }
 
       public function LzSprite (newowner = null, isroot = null, args = null) {

@@ -64,6 +64,7 @@ LzSprite.prototype.capabilities = {
     ,htmlinputtext: true
     ,advancedfonts: true
     ,bitmapcaching: true
+    ,persistence: true
 }
 
 /**
@@ -262,6 +263,9 @@ LzSprite.prototype.init = function( ) {
 
         // Tell JavaScript that you are ready to have method calls
         DojoExternalInterface.loaded();
+
+        // Tell LzHistory we're ready to send events
+        LzHistory.isReady = true; 
     }
 }
 
