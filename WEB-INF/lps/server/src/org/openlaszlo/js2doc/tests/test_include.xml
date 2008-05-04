@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
-<js2doc buildoptions="debug profile" runtimeoptions="dhtml j2me svg swf7 swf8 swf9"><unit id="test.test_include.js" path="WEB-INF/lps/server/src/org/openlaszlo/js2doc/tests/test_include.js"/><unit id="test.more.more.js" path="WEB-INF/lps/server/src/org/openlaszlo/js2doc/tests/more/more.js" unitid="test.test_include.js"/><property id="baz" name="baz" unitid="test.more.more.js"/><property id="foo" name="foo" unitid="test.test_include.js"/></js2doc>
+<js2doc buildoptions="debug profile" runtimeoptions="dhtml swf7 swf8 swf9"><unit id="test.test_include.js" path="WEB-INF/lps/server/src/org/openlaszlo/js2doc/tests/test_include.js"/><unit id="test.more.more.js" path="WEB-INF/lps/server/src/org/openlaszlo/js2doc/tests/more/more.js" unitid="test.test_include.js"/><property id="baz" name="baz" unitid="test.more.more.js"/><property id="foo" name="foo" unitid="test.test_include.js"/></js2doc>
