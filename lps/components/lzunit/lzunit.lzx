@@ -65,75 +65,120 @@
   </canvas>
 -->
 
-<script>
-<![CDATA[
+<script when="immediate" ><![CDATA[
+    //---
+    // The TestFailure class is used to record a failed test and the
+    // reason for its failure.
+    //
+    // @keywords private
+    //
+    // @param failedTest: the test that failed
+    // @param String reasonForFailure: the reason the test failed
+    //---
+    public final class TestFailure {
+        public var test:String;
+        public var reason:String;
+        
+        public function TestFailure (failedTest:String, reasonForFailure:String) {
+            this.test = failedTest;
+            this.reason = reasonForFailure;
+        }
+        
+        public function toString() :String {
+            return "TestFailure: " + this.test + " failed: " + this.reason;
+        }
+    }
+    
+    //---
+    // The TestError class is used to record a test that casued a runtime 
+    // error and the reason for the error. This is different from 
+    // TestFailure in that sometimes we want to differentiate the two
+    //
+    // @keywords private
+    //
+    // @param erroredTest: the test that failed
+    // @param String reasonForError: the reason the test failed
+    //---
+    public final class TestError {
+        public var test:String;
+        public var reason:String;
+        
+        public function TestError (erroredTest:String, reasonForError:String) {
+            this.test = erroredTest;
+            this.reason = reasonForError;
+        }
+        
+        public function toString() :String {
+            return "TestError: " + this.test + " failed: " + this.reason;
+        }
+    }
+    
+    
+    // TODO: [2002-11-09 ptw] (ActionScript condition incompatible JavaScript)
+    // ActionScript does not obey Javascript semantics for testing whether
+    // an expression is true in a conditional
+    function jsTrue(condition) {
+        var t = typeof(condition);
+        if (t == "string") {
+            return condition.length > 0;
+        } else if (t == "object") {
+            return true;
+        // Safe test for undefined
+        } else if (t == "undefined") {
+            return false;
+        } else {
+            return !!condition;
+        }
+    }
+    
+    
+    // compare two XML objects for lisp-style EQUAL 
 
-// Features that can be disabled
-var catchErrors = true;
-var asynchronousTests = true;
-canvas.runTests = 0;
+    // this takes two string
+    function xmlstringequals (str1, str2) {
+        var xml1 = LzDataNode.stringToLzData(str1)
+        var xml2 = LzDataNode.stringToLzData(str2)
+        return xmlequals(xml1, xml2);
+    }
+    
+    function xmlequals(x1, x2) {
+        if (x1.nodeType != x2.nodeType) return false;
+        // text node
+        if (x1.nodeType == 3) {
+            if (x1.data != x2.data) return false;
+        } else if (x1.nodeType ==  1){
+            // shouldn't ever happen, childNodes should always be non-null
+            if ( ((x1.childNodes == null) && (x2.childNodes != null)) ||
+                 ((x1.childNodes != null) && (x2.childNodes == null))) return false;
+    
+            if (x1.childNodes.length != x2.childNodes.length) return false;
+    
+            // compare attributes
+            for (var attr in x1.attributes) {
+                var v1 = x1.attributes[attr];
+                var v2 = x2.attributes[attr];
+                if (v1 != v2) return false;
+            }
+            // recurse
+            var val = false;
+            for (var i = 0; i < x1.childNodes.length; i++) {
+                if (!xmlequals(x1.childNodes[i], x2.childNodes[i])) {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+]]></script>
 
-// TODO: [2002-11-09 ptw] (ActionScript condition incompatible JavaScript)
-// ActionScript does not obey Javascript semantics for testing whether
-// an expression is true in a conditional
-function jsTrue(condition) {
-  var t = typeof(condition);
-  if (t == "string") {
-    return condition.length > 0;
-  } else if (t == "object") {
-    return true;
-  // Safe test for undefined
-  } else if (t == "undefined") {
-    return false;
-  } else {
-    return !!condition;
-  }
-}
-
-//---
-// The TestFailure class is used to record a failed test and the
-// reason for its failure.
-//
-// @keywords private
-//
-// @param failedTest: the test that failed
-// @param String reasonForFailure: the reason the test failed
-//---
-function TestFailure(failedTest, reasonForFailure) {
-    this.test = failedTest;
-    this.reason = reasonForFailure;
-}
-
-TestFailure.prototype.toString = function toString() {
-    return "TestFailure: " + this.test +
-        " failed: " + this.reason;
-}
-/* /class TestFailure */
-
-//---
-// The TestError class is used to record a test that casued a runtime 
-// error and the reason for the error. This is different from 
-// TestFailure in that sometimes we want to differentiate the two
-//
-// @keywords private
-//
-// @param erroredTest: the test that failed
-// @param String reasonForError: the reason the test failed
-//---
-function TestError(erroredTest, reasonForError) {
-    this.test = erroredTest;
-    this.reason = reasonForError;
-}
-
-TestError.prototype.toString = function toString() {
-    return "TestError: " + this.test +
-        " failed: " + this.reason;
-}
-/* /class TestError */
-
-
-]]>
-</script>
+<script><![CDATA[
+    // Features that can be disabled
+    var catchErrors = true;
+    var asynchronousTests = true;
+    canvas.runTests = 0;
+]]></script>
 
 <!---
   DebugObject is a base class for all the other classes in LZUnit that
@@ -1339,57 +1384,6 @@ TestError.prototype.toString = function toString() {
         </text>
     </doc>
 </class>
-
-
-<script>
-<![CDATA[
-
-// compare two XML objects for lisp-style EQUAL 
-
-// this takes two string
-function xmlstringequals (str1, str2) {
-    var xml1 = LzDataNode.stringToLzData(str1)
-    var xml2 = LzDataNode.stringToLzData(str2)
-    return xmlequals(xml1, xml2);
-}
-
-function xmlequals(x1, x2) {
-    if (x1.nodeType != x2.nodeType) return false;
-    // text node
-    if (x1.nodeType == 3) {
-        if (x1.data != x2.data) return false;
-    } else if  (x1.nodeType ==  1){
-
-        // shouldn't ever happen, childNodes should always be non-null
-        if ( ((x1.childNodes == null) && (x2.childNodes != null)) ||
-             ((x1.childNodes != null) && (x2.childNodes == null))) return false;
-
-        if (x1.childNodes.length != x2.childNodes.length) return false;
-
-
-        // compare attributes
-        for (var attr in x1.attributes) {
-            var v1 = x1.attributes[attr];
-            var v2 = x2.attributes[attr];
-            if (v1 != v2) return false;
-        }
-        // recurse
-        var val  = false;       // 
-        for (var i = 0; i < x1.childNodes.length; i++) {
-            if (!xmlequals(x1.childNodes[i], x2.childNodes[i])) {
-                return false;
-            }
-        }
-    } else {
-        return false;
-    }
-    return true;
-
-}
-
-]]>
-</script>
-
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
