@@ -1,7 +1,7 @@
 /**
   * LaszloEvents.lzs 
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzevent lzdelegate
