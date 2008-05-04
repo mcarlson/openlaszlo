@@ -37,12 +37,12 @@ class LzIdleClass extends LzMiniNode {
   /** @access private */
   var coi;
   /** @access private */
-  var regNext;
+  var regNext:Boolean = false;
   /** @access private */
   var _events = null;
-
-
-var removeCOI = null;
+  /** @access private */
+  var removeCOI = null;
+  
 function LzIdleClass () {
     // Create array on instance, not prototype
     this.coi = new Array;
@@ -58,7 +58,7 @@ function LzIdleClass () {
   */
 function callOnIdle ( d ){
     this.coi.push(d);
-    if (!('regNext' in this && this.regNext) ){
+    if (!this.regNext) {
         this.regNext = true;
         this.removeCOI.register( this , "onidle" );
     }
@@ -92,7 +92,6 @@ override function toString () { return "LzIdle" }; // LzIdle in case somebody ch
 
 /**
   * __idleupdate is a callback function from LzIdleKernel.
-  * Treat it as a static function (ie. Don't reference 'this')
   * @access private
   */
 function __idleupdate (t) {

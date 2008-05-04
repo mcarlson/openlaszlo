@@ -183,7 +183,7 @@ public class LzKeysService extends LzNode {
 
             // check for IME
             if (this.downKeysHash[229] != true) {
-                if (LzKeys.onkeydown.ready) LzKeys.onkeydown.sendEvent( kC );
+                if (this.onkeydown.ready) this.onkeydown.sendEvent( kC );
             }
         }
 
@@ -232,7 +232,7 @@ public class LzKeysService extends LzNode {
         for ( var k in this.downKeysHash ){
             this.downKeysArray.push( k );
         }
-        if (LzKeys.onkeyup.ready) LzKeys.onkeyup.sendEvent( kC );
+        if (this.onkeyup.ready) this.onkeyup.sendEvent( kC );
 
     }
 
@@ -408,7 +408,7 @@ public class LzKeysService extends LzNode {
     function enableEnter ( onroff ){
         //Debug.write("enableEnter: "+onroff);
         // SWF-specific
-        Debug.write('LzKeys.enableEnter not yet defined');
+        if ($debug) Debug.write('LzKeys.enableEnter not yet defined');
         // TODO [hqm 2008-01] What is the way to do this in SWF9 ??
         /*   _root.entercontrol.gotoAndStop( onroff ? 1 : 2 );
          */
@@ -428,7 +428,7 @@ public class LzKeysService extends LzNode {
     function __mousewheelEvent(d) {
         //Debug.write('__mousewheelEvent', d);
         this.mousewheeldelta = d;
-        if (LzKeys.onmousewheeldelta.ready) LzKeys.onmousewheeldelta.sendEvent(d);
+        if (this.onmousewheeldelta.ready) this.onmousewheeldelta.sendEvent(d);
     }
 
     /**

@@ -116,7 +116,7 @@ function __show () {
 }
 
 /** @access private */
-function __hide() {
+function __hide(ignore) {
     var s = document.getElementById('lzcontextmenu')
     if (! s) return;
     s.style.display = 'none';

@@ -355,7 +355,7 @@ LzInputTextSprite.prototype.getText = function ( ){
 /**
  * If a mouse event occurs in an input text field, find the focused view
  */
-LzInputTextSprite.prototype.findSelection = function ( ){
+LzInputTextSprite.findSelection = function ( ){
     var ss = Selection.getFocus();
     if ( ss != null ){
         var focusview = eval(ss + '.__lzview');
