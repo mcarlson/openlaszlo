@@ -82,12 +82,13 @@
   *
   * @initarg Boolean toggle: If true, a re-selected element will lose
   * the selection.
-  * @initarg private Boolean selFuncName: The name of the method to call (with true or
+  * @initarg Boolean sel: The name of the method to call (with true or
   * false to represent selectedness) when an element changes its selectedness
   */
   
 class LzSelectionManager extends LzNode {
 
+/** @access private */
 function LzSelectionManager ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
     super(parent,attrs,children,instcall);
 }
@@ -104,22 +105,25 @@ static var tagname = 'selectionmanager';
   * when an object's selectedness changes.  The method is called with a single Boolean argument.  The default value for this 
   * field is <code>setSelected</code>.
   * @type String
-  * @type token
+  * @lzxtype string
   */
-var sel;
+var sel = "setSelected";
 
 /** A hash of currently selected objects (by UID)
+  * @access private
   * @type Object
   */
 var selectedHash;
 
 /** An array that represents the current selection
+  * @access private
   * @type Array
   */
 var selected;
 
 /** If true, a re-selected element will lose the selection
   * @type Boolean
+  * @lzxtype boolean
   */
 var toggle;
 
@@ -141,7 +145,9 @@ override function construct ( view , args ) {
 
     this.toggle = args.toggle == true;
 
-    this.sel = args.selFuncName == null ? "setSelected" : args.selFuncName;
+    if (args.sel != null) {
+        this.sel = args.sel;
+    }
     
     this.selected = new Array;
     this.selectedHash = new Object;
@@ -199,7 +205,6 @@ function makeSelected ( s )  {
 
 /**
   * Unselects the given object.
-  * @access protected
   * @param LzView o: The object to make unselected
   */
 function unselect ( o ){
@@ -264,7 +269,6 @@ function selectRange ( s , e ){
 /**
   * Determines whether the an additional selection should be multi-selected or
   * should replace the existing selection
-  * @access protected
   * @return Boolean:  If true, multi select. If false, don't multi select
   */
 function isMultiSelect ( ){
@@ -274,18 +278,17 @@ function isMultiSelect ( ){
 /**
   * Determines whether the an additional selection should be range-selected or
   * should replace the existing selection
-  * @access protected
   * @return Boolean: If true, range select. If false, don't range select
   */
 function isRangeSelect(  ){
     return LzKeys.isKeyDown( "shift" );
 }
 
+/**
+  * @access private
+  */
 override function toString (){
     return "LzSelectionManager";
 }
 
 } // End of LzSelectionManager
-
-
-
