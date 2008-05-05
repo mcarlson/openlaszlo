@@ -1163,17 +1163,26 @@ solution =
         }
     }
 
+   void warnIfHasChildren(Element element) {
+     if (element.getChildren().size() > 0) {
+       CompilationError cerr = new CompilationError(
+           "The "+element.getName()+" tag cannot have child tags in this context", element);
+       throw(cerr);        
+     }
+   }
+
     void addPropertyElement(Element element) {
-        String tagName = element.getName();
-        if (tagName.equals("method")) {
-            addMethodElement(element);
-        } else if (tagName.equals("handler")) {
-            addHandlerElement(element);
-        } else if (tagName.equals("event")) {
-          addEventElement(element);
-        } else if (tagName.equals("attribute")) {
-            addAttributeElement(element);
-        }
+      warnIfHasChildren(element);
+      String tagName = element.getName();
+      if (tagName.equals("method")) {
+        addMethodElement(element);
+      } else if (tagName.equals("handler")) {
+        addHandlerElement(element);
+      } else if (tagName.equals("event")) {
+        addEventElement(element);
+      } else if (tagName.equals("attribute")) {
+        addAttributeElement(element);
+      }
     }
 
     /** Defines an event handler.

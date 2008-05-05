@@ -342,6 +342,13 @@ public class Compiler {
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 Compiler.class.getName(),"051018-303", new Object[] {file.getAbsolutePath()})
 );
+            // Initialize the schema from the base LFC interface file
+            try {
+                env.getSchema().loadSchema(env);
+            } catch (org.jdom.JDOMException e) {
+                throw new ChainedException(e);
+            }
+
 
             Document doc = env.getParser().parse(file, env);
             Element root = doc.getRootElement();
@@ -367,13 +374,6 @@ public class Compiler {
             } 
 
             mLogger.debug("Making a writer...");
-
-            // Initialize the schema from the base LFC interface file
-            try {
-                env.getSchema().loadSchema(env);
-            } catch (org.jdom.JDOMException e) {
-                throw new ChainedException(e);
-            }
             ViewSchema schema = env.getSchema();
             Set externalLibraries = null;
             // If we are not linking, then we consider all external

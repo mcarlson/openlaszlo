@@ -523,6 +523,19 @@ public class ViewSchema extends Schema {
     }
 
 
+    /**
+     * Throw an error if there are any unknown attributes on a tag
+     */
+    public void checkValidAttributeNames(Element elt) {
+        for (Iterator iter = elt.getAttributes().iterator(); iter.hasNext(); ) {
+            Attribute attr = (Attribute) iter.next();
+            String name = attr.getName();
+            AttributeSpec attrspec = getAttributeSpec(elt.getName(), name);
+            if (attrspec == null) {
+                throw new CompilationError("Unknown attribute '"+name+"' on tag "+elt.getName(), elt);
+            }
+        }
+    }
 
     /**
      * Finds the AttributeSpec definition of an attribute, on a class

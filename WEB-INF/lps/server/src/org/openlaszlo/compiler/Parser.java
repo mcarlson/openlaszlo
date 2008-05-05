@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -514,6 +514,12 @@ public class Parser {
 
 
             if (child.getName().equals("include")) {
+                // Ensure there are no child elements
+                if (child.getChildren().size() > 0) {
+                    throw new CompilationError("'include' tag must not contain child elements", child);
+                }
+                // Ensure there are no illegal attributes
+                env.getSchema().checkValidAttributeNames(child);
                 String base = new File(getSourcePathname(element)).getParent();
                 String type = XMLUtils.getAttributeValue(child, "type", "xml");
                 String href = child.getAttributeValue("href");

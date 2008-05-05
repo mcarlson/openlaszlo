@@ -1,0 +1,27 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+
+<class name="DataSource" width="80" height="25">
+    <event name="onfoo">
+        <dataset name="dataSet" src="http:sample.xml" request="true" />
+        <attribute name="title" type="string"/>
+        datapath="dataSet:/object/subtopic/de"
+        this.setAttribute(datapath="title/text()", title) ;
+        return this.title;
+    </event>
+
+
+    <method name="getTitle">
+        <dataset name="dataSet" src="http:sample.xml" request="true" />
+        <attribute name="title" type="string"/>
+        datapath="dataSet:/object/subtopic/de"
+        this.setAttribute(datapath="title/text()", title) ;
+        return this.title;
+    </method>
+</class>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
