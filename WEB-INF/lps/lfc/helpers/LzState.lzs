@@ -116,6 +116,7 @@ var onremove = LzDeclaredEvent;
   * application <code>this</code> will refer to the view that encloses
   * the state, rather than the state itself.
   * @type Boolean
+  * @access private
   */
 function $lzc$set_apply(v) { this.setApply(v); }
 
@@ -126,11 +127,14 @@ var asyncnew = false;
 /** @access private */
 var subh = null;
 var pooling = false;
+
+/** @access private */
 function $lzc$set_asyncnew(v) { this.__LZsetProperty(v, 'asyncnew'); }
 
 /** If true, the state will merely hide any views it has created 
   * when it is removed, instead of destroying them. 
   * @type Boolean
+  * @access private
   */
 function $lzc$set_pooling(v) { this.__LZsetProperty(v, 'pooling'); }
 
