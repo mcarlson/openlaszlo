@@ -21,6 +21,7 @@ import org.openlaszlo.css.CSSParser;
 import org.openlaszlo.sc.Function;
 import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
+import org.openlaszlo.sc.CompilerImplementationError;
 import org.openlaszlo.server.*;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.ListFormat;
@@ -45,6 +46,7 @@ public class NodeModel implements Cloneable {
     public static final String WHEN_STYLE = "style";
     public static final String ALLOCATION_INSTANCE = "instance";
     public static final String ALLOCATION_CLASS = "class";
+
     private static final String SOURCE_LOCATION_ATTRIBUTE_NAME = "__LZsourceLocation";
 
     final ViewSchema schema;
@@ -57,12 +59,8 @@ public class NodeModel implements Cloneable {
     /** A set {eventName: String -> True) of names of event handlers
      * declared with <handler name="xxx"/>. */
     LinkedHashMap delegates = new LinkedHashMap();
-    /* Unused */
-    LinkedHashMap events = new LinkedHashMap();
-    LinkedHashMap references = new LinkedHashMap();
     LinkedHashMap classAttrs = new LinkedHashMap();
     LinkedHashMap setters = new LinkedHashMap();
-    LinkedHashMap styles = new LinkedHashMap();
 
     NodeModel     datapath = null;
 
@@ -84,11 +82,8 @@ public class NodeModel implements Cloneable {
         }
         copy.attrs = new LinkedHashMap(copy.attrs);
         copy.delegates = new LinkedHashMap(copy.delegates);
-        copy.events = new LinkedHashMap(copy.events);
-        copy.references = new LinkedHashMap(copy.references);
         copy.classAttrs = new LinkedHashMap(copy.classAttrs);
         copy.setters = new LinkedHashMap(copy.setters);
-        copy.styles = new LinkedHashMap(copy.styles);
         copy.delegateList = new Vector(copy.delegateList);
         copy.children = new Vector();
         for (Iterator iter = children.iterator(); iter.hasNext(); ) {
@@ -213,7 +208,7 @@ public class NodeModel implements Cloneable {
       return compiler = new org.openlaszlo.sc.Compiler();
     }
 
-      public CompiledAttribute (String name, Schema.Type type, String value, String when, Element source, CompilationEnvironment env) {
+    public CompiledAttribute (String name, Schema.Type type, String value, String when, Element source, CompilationEnvironment env) {
       this.name = name;
       this.type = type;
       this.value = value;
@@ -340,16 +335,10 @@ public class NodeModel implements Cloneable {
             buffer.append(" attrs=" + attrs.keySet());
         if (!delegates.isEmpty())
             buffer.append(" delegates=" + delegates.keySet());
-        if (!events.isEmpty())
-            buffer.append(" events=" + events.keySet());
-        if (!references.isEmpty())
-            buffer.append(" references=" + references.keySet());
         if (!classAttrs.isEmpty())
             buffer.append(" classAttrs=" + classAttrs.keySet());
         if (!setters.isEmpty())
             buffer.append(" setters=" + setters.keySet());
-        if (!styles.isEmpty())
-            buffer.append(" styles=" + styles.keySet());
         if (!delegateList.isEmpty())
             buffer.append(" delegateList=" + delegateList);
         if (!children.isEmpty())
@@ -394,15 +383,16 @@ public class NodeModel implements Cloneable {
     /** Returns true iff clickable should default to true. */
     private static boolean computeDefaultClickable(ViewSchema schema,
                                                    Map attrs,
-                                                   Map events,
                                                    Map delegates) {
         if ("true".equals(attrs.get("cursor"))) {
             return true;
         }
-        for (Iterator iter = events.keySet().iterator(); iter.hasNext();) {
+        for (Iterator iter = attrs.keySet().iterator(); iter.hasNext();) {
             String eventName = (String) iter.next();
             if (schema.isMouseEventAttribute(eventName)) {
-                return true;
+              // TODO: [2008-05-05 ptw] See if it really is an event,
+              // not just an attribute with a coincidental name?
+              return true;
             }
         }
         for (Iterator iter = delegates.keySet().iterator(); iter.hasNext();) {
@@ -453,7 +443,6 @@ public class NodeModel implements Cloneable {
     {
         NodeModel model = new NodeModel(elt, schema, env);
         LinkedHashMap attrs = model.attrs;
-        Map events = model.events;
         Map delegates = model.delegates;
         model.addAttributes(env);
 
@@ -473,9 +462,9 @@ public class NodeModel implements Cloneable {
             }
 
             if (contentIsLiteralXMLData) {
-                // Default to legacy behavior, treat all children as XML literal data.
-                attrs.put("initialdata", getDatasetContent(elt, env));
-                includeChildren = false;
+              // Default to legacy behavior, treat all children as XML literal data.
+              model.addProperty("initialdata", getDatasetContent(elt, env), ALLOCATION_INSTANCE, elt);
+              includeChildren = false;
             }
         }
 
@@ -483,8 +472,8 @@ public class NodeModel implements Cloneable {
             model.addChildren(env);
             model.addText();
             if (!attrs.containsKey("clickable")
-                && computeDefaultClickable(schema, attrs, events, delegates)) {
-                attrs.put("clickable", "true");
+                && computeDefaultClickable(schema, attrs, delegates)) {
+              model.addProperty("clickable", "true", ALLOCATION_INSTANCE, elt);
             }
         }
         // Record the model in the element for classes
@@ -567,18 +556,31 @@ public class NodeModel implements Cloneable {
     }
 
     ViewSchema.Type getAttributeTypeInfoFromParent(
-        Element elt, String attrname)
+      Element elt, String attrname, String allocation)
         throws UnknownAttributeException
     {
         Element parent = elt.getParentElement();
+        // TODO: [2008-05-05 ptw] Schema needs to learn about
+        // allocation
+        assert ALLOCATION_INSTANCE.equals(allocation);
         return schema.getAttributeType(parent, attrname);
+    }
+
+    ViewSchema.Type getAttributeTypeInfoFromParent(
+      Element elt, String attrname)
+        throws UnknownAttributeException
+    {
+      return getAttributeTypeInfoFromParent(elt, attrname, ALLOCATION_INSTANCE);
     }
 
     // Should only be called on a <class> or <interface> definition element.
     ViewSchema.Type getAttributeTypeInfoFromSuperclass(
-        Element classDefElement, String attrname)
+      Element classDefElement, String attrname, String allocation)
         throws UnknownAttributeException
     {
+        // TODO: [2008-05-05 ptw] Schema needs to learn about
+        // allocation
+        assert ALLOCATION_INSTANCE.equals(allocation);
         String superclassname = classDefElement.getAttributeValue("extends", ClassCompiler.DEFAULT_SUPERCLASS_NAME);
         ClassModel superclassModel = schema.getClassModel(superclassname);
 
@@ -605,11 +607,22 @@ public class NodeModel implements Cloneable {
         return superclassModel.getAttributeTypeOrException(attrname);
     }
 
+    ViewSchema.Type getAttributeTypeInfoFromSuperclass(
+      Element classDefElement, String attrname)
+        throws UnknownAttributeException
+    {
+      return getAttributeTypeInfoFromSuperclass(classDefElement, attrname, ALLOCATION_INSTANCE);
+    }
+
     // Get an attribute value, defaulting to the
     // inherited value, or ultimately the supplied default
     String getAttributeValueDefault(String attribute,
+                                    String allocation,
                                     String name,
                                     String defaultValue) {
+        // TODO: [2008-05-05 ptw] Schema needs to learn about
+        // allocation
+        assert ALLOCATION_INSTANCE.equals(allocation);
         // Look for an inherited value
         if (this.parentClassModel != null) {
             AttributeSpec attrSpec =
@@ -623,6 +636,12 @@ public class NodeModel implements Cloneable {
         }
 
         return defaultValue;
+    }
+
+    String getAttributeValueDefault(String attribute,
+                                    String name,
+                                    String defaultValue) {
+      return getAttributeValueDefault(attribute, ALLOCATION_INSTANCE, name, defaultValue);
     }
 
     /** Is this element a direct child of the canvas? */
@@ -683,6 +702,12 @@ public class NodeModel implements Cloneable {
             "}\n";
     }
 
+    /**
+     * Add the attributes that are specified in the open tag.  These
+     * attributes are by definition instance attributes.  If you want
+     * class attributes, you have to use the longhand (attribute child
+     * node) form.
+     */
     void addAttributes(CompilationEnvironment env) {
         // Add source locators, if requested.  Added here because it
         // is not in the schema
@@ -695,8 +720,7 @@ public class NodeModel implements Cloneable {
                 element, SOURCE_LOCATION_ATTRIBUTE_NAME,
                 location, ViewSchema.STRING_TYPE,
                 WHEN_IMMEDIATELY);
-            addAttribute(cattr, SOURCE_LOCATION_ATTRIBUTE_NAME, 
-                         attrs, events, references, classAttrs, styles);
+            addProperty(SOURCE_LOCATION_ATTRIBUTE_NAME, cattr, ALLOCATION_INSTANCE);
         }
 
         // Add file/line information if debugging
@@ -706,11 +730,11 @@ public class NodeModel implements Cloneable {
           String filename = Parser.getSourceMessagePathname(element);
           CompiledAttribute cattr =
             compileAttribute(element, name, filename, ViewSchema.STRING_TYPE, WHEN_IMMEDIATELY);
-          addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
+          addProperty(name, cattr, ALLOCATION_INSTANCE);
           name = "_dbg_lineno";
           Integer lineno = Parser.getSourceLocation(element, Parser.LINENO);
           cattr = compileAttribute(element, name, lineno.toString(), ViewSchema.NUMBER_TYPE, WHEN_IMMEDIATELY);
-          addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
+          addProperty(name, cattr, ALLOCATION_INSTANCE);
         }
 
         ClassModel classModel = getClassModel();
@@ -775,8 +799,7 @@ public class NodeModel implements Cloneable {
  */
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 NodeModel.class.getName(),"051018-532", new Object[] {getMessageName(), name, value, value})
-                    ,element);                    
-
+                    ,element);
             }
 
             // Catch duplicated id/name attributes which may shadow
@@ -841,10 +864,12 @@ public class NodeModel implements Cloneable {
                         type = getAttributeTypeInfoFromParent(element, name);
                     }
                 } else {
-                    // NOTE [2007-06-14 ptw]: Querying the classModel
+                    // NOTE: [2007-06-14 ptw] Querying the classModel
                     // directly will NOT work, because the schema
                     // method has some special kludges in it for canvas
                     // width and height!
+                    // NOTE: [2008-05-05 ptw] These are instance
+                    // attributes by definition
                     type = schema.getAttributeType(element, name);
                 }
 
@@ -886,14 +911,10 @@ solution =
                 }
                 String when = this.getAttributeValueDefault(
                     name, "when", WHEN_IMMEDIATELY);
-                // NYI
-                String allocation = this.getAttributeValueDefault(
-                    name, "allocation", ALLOCATION_INSTANCE);
                 try {
                     CompiledAttribute cattr = compileAttribute(
                         element, name, value, type, when);
-                    addAttribute(cattr, name, attrs, events,
-                                 references, classAttrs, styles);
+                    addProperty(name, cattr, ALLOCATION_INSTANCE);
                     // If this attribute is "id", you need to bind the
                     // id
                     if ("id".equals(name)) {
@@ -901,7 +922,7 @@ solution =
                         Function idbinder = new Function(
                             "$lzc$node:LzNode, $lzc$bind:Boolean=true",
                             buildIdBinderBody(symbol, true));
-                        attrs.put("$lzc$bind_id", idbinder);
+                        addProperty("$lzc$bind_id", idbinder, ALLOCATION_INSTANCE);
                     }
                     // Ditto for top-level name "name"
                     if (topLevelDeclaration(element) && "name".equals(name)) {
@@ -915,7 +936,7 @@ solution =
                         Function namebinder = new Function (
                             "$lzc$node:LzNode, $lzc$bind:Boolean=true",
                             buildIdBinderBody(symbol, false));
-                        attrs.put("$lzc$bind_name", namebinder);
+                        addProperty("$lzc$bind_name", namebinder, ALLOCATION_INSTANCE);
                     }
 
                     // Check if we are aliasing another 'name'
@@ -948,28 +969,49 @@ solution =
         }
     }
 
-    void addAttribute(CompiledAttribute cattr, String name,
-                      LinkedHashMap attrs, LinkedHashMap events,
-                      LinkedHashMap references, LinkedHashMap classAttrs,
-                      LinkedHashMap styles) {
-        if (attrs.containsKey(name)) {
-            env.warn(
+  void addProperty(String name, Object value, String allocation, Element source) {
+    if (frozen) {
+      throw new CompilerImplementationError("Attempting to addProperty when NodeModel frozen");
+    }
+
+    LinkedHashMap attrs;
+    if (ALLOCATION_INSTANCE.equals(allocation)) {
+      attrs = this.attrs;
+    } else if (ALLOCATION_CLASS.equals(allocation)) {
+      attrs = this.classAttrs;
+    } else {
+      throw new CompilationError("Unknown allocation: " + allocation, source);
+    }
+    // TODO: [2008-05-05 ptw] Make warning say whether it is a
+    // class or instance property that is conflicting
+    if (attrs.containsKey(name)) {
+      env.warn(
                 /* (non-Javadoc)
                  * @i18n.test
                  * @org-mes="an attribute or method named '" + p[0] + "' already is defined on " + p[1]
                  */
                 org.openlaszlo.i18n.LaszloMessages.getMessage(
-                    NodeModel.class.getName(),"051018-682", new Object[] {name, getMessageName()})
-                ,element);
-        }
-        if (cattr.bindername != null) {
-            attrs.put(cattr.bindername, cattr.getBinderMethod());
-        }
-        if (cattr.dependenciesname != null) {
-            attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod());
-        }
-        attrs.put(name, cattr.getInitialValue());
+                  NodeModel.class.getName(),"051018-682", new Object[] {name, getMessageName()})
+                ,source);
     }
+    if (value instanceof CompiledAttribute) {
+      // Special handling for attribute with binders
+      CompiledAttribute cattr = (CompiledAttribute)value;
+      if (cattr.bindername != null) {
+        attrs.put(cattr.bindername, cattr.getBinderMethod());
+      }
+      if (cattr.dependenciesname != null) {
+        attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod());
+      }
+      attrs.put(name, cattr.getInitialValue());
+    } else {
+      attrs.put(name, value);
+    }
+  }
+
+  void addProperty(String name, Object value, String allocation) {
+    addProperty(name, value, allocation, element);
+  }
 
     static String getDatasetContent(Element element, CompilationEnvironment env) {
         return getDatasetContent(element, env, false);
@@ -1153,7 +1195,7 @@ solution =
                     // methods can be resolved at compile-time
                     String childName = child.getAttributeValue("name");
                     if (childName != null) {
-                        attrs.put(childName, null);
+                      addProperty(childName, null, ALLOCATION_INSTANCE, child);
                     }
                     totalSubnodes += childModel.totalSubnodes();
                 }
@@ -1279,7 +1321,7 @@ solution =
                 reference + "\n#endAttribute\n)");
             // Add reference computation as a method (so it can have
             // 'this' references work)
-            attrs.put(referencename, referencefn);
+            addProperty(referencename, referencefn, ALLOCATION_INSTANCE, element);
         }
 
         if (body != null) {
@@ -1296,7 +1338,7 @@ solution =
                          body + "\n#endContent",
                          src_loc);
             // Add hander as a method
-            attrs.put(method, fndef);
+            addProperty(method, fndef, ALLOCATION_INSTANCE, element);
         }
 
         // Put everything into the delegate list
@@ -1382,17 +1424,7 @@ solution =
             // And the user may know better than any of us
             "true".equals(element.getAttributeValue("override"));
         boolean isfinal = "true".equals(element.getAttributeValue("final"));
-
-        if (attrs.containsKey(name)) {
-            env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="an attribute or method named '" + p[0] + "' already is defined on " + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-922", new Object[] {name, getMessageName()})
-                ,element);
-        }
+        String allocation = XMLUtils.getAttributeValue(element, "allocation", ALLOCATION_INSTANCE);
 
         if (!override) {
             // Just check method declarations on regular node.
@@ -1437,7 +1469,7 @@ solution =
                        name_loc,
                        adjectives);
         }
-        attrs.put(name, fndef);
+        addProperty(name, fndef, allocation, element);
     }
 
 
@@ -1641,22 +1673,11 @@ solution =
                 , element);
         }
 
-        if (events.containsKey(name)) {
-            env.warn(
-                /* (non-Javadoc)
-                 * @i18n.test
-                 * @org-mes="redefining event '" + p[0] + "' which has already been defined on " + p[1]
-                 */
-                org.openlaszlo.i18n.LaszloMessages.getMessage(
-                    NodeModel.class.getName(),"051018-694", new Object[] {name, getMessageName()})
-                ,element);
-        }
-
         // An event is really just an attribute with an implicit
         // default (sentinal) value
         CompiledAttribute cattr =
-            new CompiledAttribute(name, EVENT_TYPE, "LzDeclaredEvent", WHEN_IMMEDIATELY, element, env);
-        addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
+          new CompiledAttribute(name, EVENT_TYPE, "LzDeclaredEvent", WHEN_IMMEDIATELY, element, env);
+        addProperty(name, cattr, ALLOCATION_INSTANCE, element);
     }
 
     void addAttributeElement(Element element) {
@@ -1677,6 +1698,7 @@ solution =
         String value = element.getAttributeValue("value");
         String when = element.getAttributeValue("when");
         String typestr = element.getAttributeValue("type");
+        String allocation = XMLUtils.getAttributeValue(element, "allocation", ALLOCATION_INSTANCE);
         Element parent = element.getParentElement();
         String parent_name = parent.getAttributeValue("id");
 
@@ -1692,16 +1714,22 @@ solution =
 
         Schema.Type type = null;
         Schema.Type parenttype = null;
+        boolean forceOverride = false;
 
-        AttributeSpec parentAttrSpec = schema.getAttributeSpec(parent.getName(), name);
-        boolean forceOverride = parentAttrSpec != null && "false".equals(parentAttrSpec.isfinal);
+        // Class methods are not inherited, hence do not override
+        if (ALLOCATION_INSTANCE.equals(allocation)) {
+          AttributeSpec parentAttrSpec = schema.getAttributeSpec(parent.getName(), name);
+          forceOverride = parentAttrSpec != null && "false".equals(parentAttrSpec.isfinal);
+        }
 
         try {
             if ("class".equals(className) || "interface".equals(className)) {
-                parenttype = getAttributeTypeInfoFromSuperclass(parent, name);
+              parenttype = getAttributeTypeInfoFromSuperclass(parent, name, allocation);
             }  else {
-                parenttype = schema.getAttributeType(parent, name);
-
+              // TODO: [2008-05-05 ptw] Schema needs to learn about
+              // allocation
+              assert ALLOCATION_INSTANCE.equals(allocation);
+              parenttype = schema.getAttributeType(parent, name);
             }
         } catch (UnknownAttributeException e) {
             // If attribute type is not defined on parent, leave
@@ -1774,7 +1802,7 @@ solution =
             String srcloc = CompilerUtils.sourceLocationDirective(element, true);
             cattr = new CompiledAttribute(name, type, null, WHEN_IMMEDIATELY, element, env);
         }
-        addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
+        addProperty(name, cattr, allocation, element);
 
         // Add entry for attribute setter function
         String setter = element.getAttributeValue("setter");
@@ -1827,7 +1855,7 @@ solution =
                                                    ViewSchema.XML_LITERAL,
                                                    WHEN_IMMEDIATELY);
 
-        addAttribute(cattr, name, attrs, events, references, classAttrs, styles);
+        addProperty(name, cattr, ALLOCATION_INSTANCE, element);
     }
 
         
@@ -1861,7 +1889,7 @@ solution =
             String text = TextCompiler.getHTMLContent(element);
             if (text.length() != 0) {
                 if (!attrs.containsKey("text")) {
-                    attrs.put("text", ScriptCompiler.quote(text));
+                  addProperty("text", ScriptCompiler.quote(text), ALLOCATION_INSTANCE);
                 }
             }
         } else if (schema.hasTextContent(element)) {
@@ -1872,7 +1900,7 @@ solution =
             text = TextCompiler.getInputText(element);
             if (text.length() != 0) {
                 if (!attrs.containsKey("text")) {
-                    attrs.put("text", ScriptCompiler.quote(text));
+                  addProperty("text", ScriptCompiler.quote(text), ALLOCATION_INSTANCE);
                 }
             }
         }
@@ -1880,27 +1908,19 @@ solution =
 
     void updateAttrs() {
         if (frozen) return;
-        // Only used for checking multiple definitions now
-//         if (!setters.isEmpty()) {
-//             attrs.put("$setters", setters);
-//         }
         if (!delegateList.isEmpty()) {
-            attrs.put("$delegates", delegateList);
-        }
-        if (!references.isEmpty()) {
-            assert false : "There should not be any $refs";
+          addProperty("$delegates", delegateList, ALLOCATION_INSTANCE);
         }
         if (datapath != null) {
-            attrs.put("$datapath", datapath.asMap());
-            // If we've got an explicit datapath value, we have to
-            // null out the "datapath" attribute with the magic
-            // LzNode._ignoreAttribute value, so it doesn't get
-            // overridden by an inherited value from the class.
-            attrs.put("datapath", "LzNode._ignoreAttribute");
+          addProperty("$datapath", datapath.asMap(), ALLOCATION_INSTANCE);
+          // If we've got an explicit datapath value, we have to null
+          // out the "datapath" attribute with the magic
+          // LzNode._ignoreAttribute value, so it doesn't get
+          // overridden by an inherited value from the class.
+          addProperty("datapath", "LzNode._ignoreAttribute", ALLOCATION_INSTANCE);
         }
-        if (!styles.isEmpty()) {
-            assert false : "There should not be any $styles";
-        }
+        // This can only happen once.
+        frozen = true;
     }
 
     Map getAttrs() {
@@ -1924,10 +1944,10 @@ solution =
     }
 
     Map asMap() {
+        if (frozen) {
+          throw new CompilerImplementationError("Attempting to asMap when NodeModel frozen");
+        }
         updateAttrs();
-        // Ok, freeze them now, so our manipulations below are not
-        // thwarted
-        frozen = true;
         assert classAttrs.isEmpty();
         Map map = new LinkedHashMap();
         String tagName = className;
@@ -2002,7 +2022,7 @@ solution =
         Integer d = new Integer(depth);
         for (Iterator i = children.iterator(); i.hasNext(); ) {
             NodeModel child = (NodeModel)i.next();
-            child.attrs.put("$classrootdepth", d);
+            child.addProperty("$classrootdepth", d, ALLOCATION_INSTANCE);
             child.assignClassRoot(depth);
         }
     }
@@ -2070,22 +2090,6 @@ solution =
     void updateMembers(NodeModel source) {
         final String OPTIONS_ATTR_NAME = "options";
 
-        // FIXME [2004-06-04]: only compare events with the same reference
-        if (CollectionUtils.containsAny(
-                events.keySet(), source.events.keySet())) {
-            Collection sharedEvents = CollectionUtils.intersection(
-                events.keySet(), source.events.keySet());
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Both the class and the instance or subclass define the " + p[0] + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-1388", new Object[] {new ChoiceFormat("1#event |1<events ").format(sharedEvents.size()), new ListFormat("and").format(sharedEvents)})
-                );
-                        
-        }
-
         // Check for duplicate methods.  Collect all the keys that name
         // a Method in both the source and target.
         List sharedMethods = new Vector();
@@ -2135,11 +2139,8 @@ solution =
             attrs.put(OPTIONS_ATTR_NAME, newOptions);
         }
         delegates.putAll(source.delegates);
-        events.putAll(source.events);
-        references.putAll(source.references);
         classAttrs.putAll(source.classAttrs);
         setters.putAll(source.setters);
-        styles.putAll(source.styles);
         delegateList.addAll(source.delegateList);
         // TBD: warn on children that share a name?
         // TBD: update the node count
