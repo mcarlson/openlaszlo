@@ -158,25 +158,6 @@ public class JS2DocUtils {
             node.setAttribute(attr, oldvalue + " " + value.trim());
     }
 
-    /**
-     * If the set has all elements from the complete set
-     * except one, return the single missing element.
-     */
-    static String findStateException(Set set, Set complete) {
-        Set notseen = new HashSet();
-
-        notseen.addAll(complete);
-        for (Iterator iter = set.iterator(); iter.hasNext();) {
-            notseen.remove((String)iter.next());
-        }
-        if (notseen.size() == 1) {
-            return (String)notseen.iterator().next();
-        }
-        else {
-            return null;
-        }
-    }
-
     static void describeConditionalState(ConditionalState state, org.w3c.dom.Element docNode) {
         if (state.inferredValue == ConditionalState.indeterminateValue) {
             Set includeSet = new HashSet();
@@ -185,9 +166,12 @@ public class JS2DocUtils {
             state.describeExclusiveConditions(includeSet);
             
             if (includeSet.isEmpty() == false) {
-                String except = findStateException(includeSet, Main.runtimeOptions);
-                if (except != null) {
-                    docNode.setAttribute("runtimes", "except " + except);
+                // Show the complement (e.g. 'except foo bar')
+                // if that list is shorter than the original list.
+                Set complement = new HashSet(Main.runtimeOptions);
+                complement.removeAll(includeSet);
+                if (complement.size() > 0 && complement.size() < includeSet.size()) {
+                    docNode.setAttribute("runtimes", "except " + optionsToString(complement));
                 } else {
                     docNode.setAttribute("runtimes", optionsToString(includeSet));
                 }
