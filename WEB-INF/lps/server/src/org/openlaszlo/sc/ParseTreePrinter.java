@@ -749,7 +749,7 @@ public class ParseTreePrinter {
     String txt = "";
     // Add location information if not compressing
     if ((!this.compress) && (node.filename != null) && (node.beginLine != 0)) {
-      txt = ("\n/* -*- file: " + Compiler.getLocationString(node) + " -*- */\n" );
+      txt = annotateFileLineNumber(Compiler.getLocationString(node));
     }
     txt += "function" + (useName ? (" " + name) : "") + OPENPAREN + args + CLOSEPAREN;
     if (!inmixin) {
@@ -889,6 +889,7 @@ public class ParseTreePrinter {
   public static final char ANNOTATE_OP_CLASSEND = 'c';
   public static final char ANNOTATE_OP_INSERTSTREAM = 'i';
   public static final char ANNOTATE_OP_LINENUM = 'L';
+  public static final char ANNOTATE_OP_FILE_LINENUM = 'F';
   public static final char ANNOTATE_OP_NODENAME = 'N';
   public static final char ANNOTATE_OP_NODEEND = 'n';
   public static final char ANNOTATE_OP_TEXT = 'T';
@@ -950,6 +951,10 @@ public class ParseTreePrinter {
     return sb.toString();
   }
 
+  public String annotateFileLineNumber(String encodedFileLineNumber) {
+    return makeAnnotation(ANNOTATE_OP_FILE_LINENUM, encodedFileLineNumber);
+  }
+
   /**
    * Add annotations, which look like \u0001 opchar operand \u0001
    * opchar is a single character.
@@ -995,6 +1000,12 @@ public class ParseTreePrinter {
           switch (op) {
           case ANNOTATE_OP_TEXT:
             return operand;
+          case ANNOTATE_OP_FILE_LINENUM:
+            /* File/linenums annotations are added only when
+             * nameFunctions is on.  Here we pass them through
+             * unconditionally.
+             */
+            return "\n/* -*- file: " + operand + " -*- */\n";
           }
           return "";
         }
@@ -1011,6 +1022,8 @@ public class ParseTreePrinter {
             return operand;
           case ANNOTATE_OP_LINENUM:
             return "#line " + operand + ": ";
+          case ANNOTATE_OP_FILE_LINENUM:
+            return "#fileline " + operand + ": ";
           case ANNOTATE_OP_CLASSNAME:
             return "#class " + operand + ": ";
           case ANNOTATE_OP_CLASSEND:
@@ -1033,6 +1046,12 @@ public class ParseTreePrinter {
     return ap.process(annotated);
   }
 
+  public int extractLineNumber(String str) {
+    int linenumPos = str.indexOf('#');
+    int linenumEnd = str.indexOf('.', linenumPos+1);
+    return Integer.parseInt(str.substring(linenumPos+1, linenumEnd));
+  }
+
   public List makeTranslationUnits(String annotated) {
     final ArrayList tunits = new ArrayList();
     final TranslationUnit defaulttu = new TranslationUnit(true);
@@ -1046,6 +1065,8 @@ public class ParseTreePrinter {
         TranslationUnit curtu = defaulttu;
         boolean atBol = true;
         int linenumDiff = 0;
+        int newdiff;
+        int linenum;
 
         public String notify(char op, String operand) {
           switch (op) {
@@ -1060,15 +1081,32 @@ public class ParseTreePrinter {
               }
             }
             return "";
+
+          /* We always emit the FILE_LINENUM annotations (they appear
+           * at beginning of functions) but plain old line number
+           * annotations are emitted only if the line information
+           * cannot be determined from the previous 'file: ' marker
+           * and simple incrementing.  We keep track of the difference
+           * between the line number we would generate and the number
+           * of lines we've actually output, if the difference
+           * changes, we know an observer of the output would be off
+           * and it's time to output a line number marker.
+           */
           case ANNOTATE_OP_LINENUM:
-            int linenum = Integer.parseInt(operand);
+            linenum = Integer.parseInt(operand);
             if (trackLines && atBol && linenum != 0) {
-              int newdiff = curtu.getTextLineNumber() - linenum;
+              newdiff = curtu.getTextLineNumber() - linenum;
               if (newdiff != linenumDiff) {
                 curtu.addText("/* -*- file: #" + linenum + " -*- */\n");
-                linenumDiff = newdiff + 1;  // account for the line just added
+                linenumDiff = curtu.getTextLineNumber() - linenum;
               }
             }
+            curtu.setInputLineNumber(linenum);
+            return "";
+          case ANNOTATE_OP_FILE_LINENUM:
+            linenum = extractLineNumber(operand);
+            curtu.addText("\n/* -*- file: " + operand + " -*- */\n");
+            linenumDiff = curtu.getTextLineNumber() - linenum;
             curtu.setInputLineNumber(linenum);
             return "";
           case ANNOTATE_OP_CLASSNAME:
