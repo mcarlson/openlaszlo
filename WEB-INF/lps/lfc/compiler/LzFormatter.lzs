@@ -35,12 +35,24 @@ class LzMessage {
     }
   }
 
-  function toString () {
-    return this.message;
+  // TODO: [2005-05-08 ptw] (LPP-5394) When toString is declared
+  // public, remove the swf9 special-case
+  if ($swf9) {
+    prototype.toString = function () { return this.message; }
+  } else {
+    function toString () {
+      return this.message;
+    }
   }
 
   function toHTML () {
-    return this.toString();
+    // TODO: [2005-05-08 ptw] (LPP-5394) When toString is declared
+    // public, remove the swf9 special-case
+    if ($swf9) {
+      return this['toString']();
+    } else {
+      return this.toString();
+    }
   }
 }
 
@@ -65,7 +77,8 @@ mixin LzFormatter {
    * pad or trim a string to a specified length
    *
    * @param * value: the value to pad, will be coerced to a string if not a number
-   * @param Number widthMin: the minimum width, if negative pad on the right
+   * @param Number widthMin: the minimum width, if negative pad on the
+   * right, default 0
    * @param Number decMax: for numbers: ensure decimals characters to the right
    * of '.', padding with 0, otherwise maximum width
    * @param String pad: character to pad on left with, default ' '
@@ -73,23 +86,14 @@ mixin LzFormatter {
    * @param Number radix: radix to represent numbers in, default 10
    * @param Boolean force: ensure numbers always have a decimal
    */
-  function pad (value, widthMin, decMax, pad, sign, radix, force) {
-    switch (arguments.length) {
-      case 0:
-        value = '';
-      case 1:
-        widthMin = null;
-      case 2:
-        decMax = null;
-      case 3:
-        pad = ' ';
-      case 4:
-        sign = '-';
-      case 5:
-        radix = 10;
-      case 6:
-        force = false;
-    }
+  function pad (value='',
+                widthMin:Number=0,
+                // Why can't I say Number?=null
+                decMax=null,
+                pad:String=' ',
+                sign:String='-',
+                radix:Number=10,
+                force:Boolean=false) {
     var isNumber = typeof(value) == 'number';
     // coerce to be string
     if (isNumber) {
@@ -135,9 +139,6 @@ mixin LzFormatter {
     }
     // enforce minimum width
     strlen = value.length;
-    if (! widthMin) {
-      widthMin = 0;
-    }
     var leftJustify = false;
     if (widthMin < 0) {
       widthMin = (- widthMin);
@@ -206,21 +207,20 @@ mixin LzFormatter {
    * linkend="Debug+debug.write"/>, if control is not a string or
    * control has no formatting directives but there are multiple
    * arguments, all the arguments are emitted separated by spaces.
-   *
-   * @devnote Can't use `...args` as swf9 will omit `arguments` if you
-   * do
    */
-  function formatToString (control, args) {
-    var al = arguments.length;
+  function formatToString (control='', ...args) {
+    var al = args.length;
     // 'write compatibility mode': control is not a string or # of
     // arguments is incompatible with control directives.
     if ((! (typeof control == 'string' || control instanceof String)) ||
-        ((al > 1) != (control.indexOf('%') >= 0))) {
+        ((al > 0) != (control.indexOf('%') >= 0))) {
       // Process each value to individually so they can be
       // 'presented' as objects if applicable
+      args.unshift(control);
+      al++;
       var out = new LzMessage;
       for (var i = 0; i < al; i++) {
-        var arg = arguments[i];
+        var arg = args[i];
         var sep = ((i == (al-1)) ? '\n' : ' ');
         out.append(arg);
         // separator is always pretty
@@ -229,11 +229,9 @@ mixin LzFormatter {
       return out;
     }
     // Normal mode
-    if (al < 1) { control = '' };
     var ctrl = '' + control;
-    // skip control
-    var argno = 1;
-    var arglist = arguments;
+    // Zero-based
+    var argno = 0;
     function getarg(i) {
       if (i >= al) {
         if ($debug) {
@@ -241,7 +239,7 @@ mixin LzFormatter {
         }
         return null;
       }
-      return arglist[i];
+      return args[i];
     }
     var base = 0, limit = ctrl.length;
     var start = 0, end = 0;
@@ -275,14 +273,19 @@ mixin LzFormatter {
         // but also permits invalid ones, whose behaviour is
         // undefined.
         switch (char) {
-          case '-': length = char; break;
+          case '-':
+            length = char;
+            break;
           case '+': case ' ':
             sign = char;
             break;
-          case '#': alternate = true; break;
+          case '#':
+            alternate = true;
+            break;
           case '0':
             if (length === '' && precision === null) {
-              pad = char; break;
+              pad = char;
+              break;
             }
           case '1': case '2': case '3': case '4': case '5':
           case '6': case '7': case '8': case '9':
@@ -293,7 +296,8 @@ mixin LzFormatter {
             }
             break;
           case '$':
-            argno = length;
+            // $ is 1-based, argno is 0-based
+            argno = length-1;
             length = '';
             break;
           case '*':
@@ -305,8 +309,11 @@ mixin LzFormatter {
               argno++;
             }
             break;
-          case '.': precision = ''; break;
-          case 'h': case 'l': break;
+          case '.':
+            precision = '';
+            break;
+          case 'h': case 'l':
+            break;
           case '=':
             // Take the next argument to be the object represented
             object = getarg(argno);
@@ -359,9 +366,11 @@ mixin LzFormatter {
       var radix = 10;
       switch (directive) {
         case 'o': case 'O':
-          radix = 8; break;
+          radix = 8;
+          break;
         case 'x': case'X':
-          radix = 16; break;
+          radix = 16;
+          break;
       }
       //     Debug.write('directive', directive, 'value', value, 'length', length,
       //                 'decimals', decimals, 'pad', pad, 'sign', sign, 'radix', radix);
@@ -380,6 +389,7 @@ mixin LzFormatter {
             var max = Math.pow(radix, wid);
             value = max - value;
           }
+          break;
       }
       //     Debug.write('directive', directive, 'value', value, 'length', length,
       //                 'decimals', decimals, 'pad', pad, 'sign', sign, 'radix', radix);
