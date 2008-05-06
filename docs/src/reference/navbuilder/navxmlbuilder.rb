@@ -90,6 +90,27 @@ def tagname_for(filename)
   tag
 end
 
+# If the title of this document does not have a tag name, return it.
+def nontagname_for(filename)
+  name = nil;
+  open(filename) {|f|
+      f.each_line { |line|
+          line.chomp!
+          if (line =~ /<title>.*<\/title>/) then
+              if (line =~ /<title>.*<\/title>/ &&
+                  line !~ /<title>&lt;.*&gt;.*<\/title>/) then
+                  name = line.sub(/.*<title>/, '').sub(/<\/title>.*/, '')
+              end
+          end
+          if (line =~ /<link.*\.Incubator\./) then
+             name = nil
+             break
+          end
+      }
+  }
+  name
+end
+
 opts = GetoptLong.new(
   [ '--help', GetoptLong::NO_ARGUMENT ],
   [ '--inputdir', GetoptLong::REQUIRED_ARGUMENT ],
@@ -119,7 +140,10 @@ debug(1, "debug level is set to " + $debuglevel.to_s)
 generate_index("{[Ll]z,tag}*.html", $outdir + "/tags.xml", "index") { | file,fullname |
     tagname_for(fullname);
  }
-generate_index("Lz*.html", $outdir + "/classes.xml", "index") { | file,ignored | 
-   file.sub(/\.html/, '').sub(/([^+]*)\+(.*)/, '\1 (\2)').gsub(/\+/, ' ').
-        sub('swf7 swf8 swf9', 'swf');
+generate_index("Lz*.html", $outdir + "/classes.xml", "index") { | file,fullname | 
+   name = nontagname_for(fullname);
+   if (!name) then
+      name = file.sub(/\.html/, '').sub(/([^+]*)\+(.*)/, '\1 (\2)').gsub(/\+/, ' ');
+   end
+   name
 }
