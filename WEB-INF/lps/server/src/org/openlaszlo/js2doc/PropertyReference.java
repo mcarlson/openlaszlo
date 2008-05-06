@@ -183,12 +183,28 @@ public class PropertyReference {
                 throw new InternalError("unexpected node type parsing extends", extendsNode);
         }
         
-        SimpleNode inheritsNode = (SimpleNode) iter.next();
-        if (inheritsNode instanceof ASTTraitsList) {
-            logger.fine("Processing traits list is NYI");
+        SimpleNode inheritsList = (SimpleNode) iter.next();
+        if (inheritsList instanceof ASTTraitsList) {
+            String inherits = "";
+            SimpleNode[] inheritsChildren = inheritsList.getChildren();
+            Iterator iter2 = Arrays.asList(inheritsChildren).iterator();
+            while (iter2.hasNext()) {
+                SimpleNode inheritsNode = (SimpleNode)iter2.next();
+                if (! (inheritsNode instanceof ASTIdentifier)) {
+                    throw new InternalError("unexpected node in inherits list", inheritsNode);
+                }
+                if (inherits.length() > 0) {
+                    inherits += ",";
+                }
+                inherits += ((ASTIdentifier)inheritsNode).getName();
+            }
+
+            if (inherits.length() > 0) {
+                classNode.setAttribute("inherits", inherits);
+            }
         } else {
-            if (! (inheritsNode instanceof ASTEmptyExpression))
-                throw new InternalError("unexpected node type parsing inherits", inheritsNode);
+            if (! (inheritsList instanceof ASTEmptyExpression))
+                throw new InternalError("unexpected node type parsing inherits", inheritsList);
         }
         
         this.cachedValue = classNode;

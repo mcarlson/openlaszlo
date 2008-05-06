@@ -867,6 +867,28 @@
       </xsl:if>
     </xsl:template>
     
+    <xsl:template name="describe-mixin-chain">
+      <xsl:param name="mixins"/>
+      <xsl:if test="$mixins != ''">
+      <xsl:choose>
+        <xsl:when test="contains($mixins, ',')">
+          <xsl:call-template name="describe-mixin-chain">
+            <xsl:with-param name="mixins" select="substring-before($mixins,',')"/>
+          </xsl:call-template>
+          <xsl:text>,&nbsp;</xsl:text>
+          <xsl:call-template name="describe-mixin-chain">
+            <xsl:with-param name="mixins" select="substring-after($mixins,',')"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="show-super-link">
+            <xsl:with-param name="superclass" select="(key('id',$mixins) | key('name-lzx',$mixins))[1]"/>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
+    </xsl:template>
+
     <!-- ACCESS -->
 
     <xsl:template match="*[not(@access)]" mode="access">
@@ -987,6 +1009,16 @@
           </xsl:call-template>
         </refsect1>
       </xsl:if>
+      <xsl:if test="child::class/@inherits">
+        <xsl:variable name="inheritslist" select="child::class/@inherits"/>
+        <refsect1>
+          <xsl:text>With </xsl:text>
+          <xsl:call-template name="describe-mixin-chain">
+            <xsl:with-param name="mixins" select="$inheritslist"/>
+          </xsl:call-template>
+        </refsect1>
+      </xsl:if>
+     
           
       <?ignore
         <!-- need to turn path into webapp url, not sure how to do that -->
@@ -1050,6 +1082,57 @@
     </xsl:choose>
 </xsl:template>
 
+  <!-- iterate-inherited($values,$memberkind)
+       For each classname in the comma separated $values list, call one of
+       describe-inherited-{methods,attributes,events}-for
+       with the contents of the class.  The implementation breaks up the list
+       at first comma and calls recursively.
+       @param $values : a comma separated list of classnames to show
+                         inheritance from, entries may be blank.
+                         e.g. 'LzView,LzFormatter' or 'LzMiniNode,'
+       @param $memberkind : one of 'methods', 'attributes', 'events'
+    -->  
+  <xsl:template name="iterate-inherited">
+    <xsl:param name="values"/>
+    <xsl:param name="memberkind"/>
+    <xsl:if test="$values != ''">
+      <xsl:choose>
+        <xsl:when test="contains($values, ',')">
+          <xsl:call-template name="iterate-inherited">
+            <xsl:with-param name="values" select="substring-before($values,',')"/>
+            <xsl:with-param name="memberkind" select="$memberkind"/>
+          </xsl:call-template>
+          <xsl:call-template name="iterate-inherited">
+            <xsl:with-param name="values" select="substring-after($values,',')"/>
+            <xsl:with-param name="memberkind" select="$memberkind"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:choose>
+            <xsl:when test="$memberkind = 'methods'">
+              <xsl:call-template name="describe-inherited-methods-for">
+                <xsl:with-param name="superclass" select="(key('id',$values) | key('name-lzx',$values))[1]"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$memberkind = 'attributes'">
+              <xsl:call-template name="describe-inherited-attributes-for">
+                <xsl:with-param name="superclass" select="(key('id',$values) | key('name-lzx',$values))[1]"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$memberkind = 'events'">
+              <xsl:call-template name="describe-inherited-events-for">
+                <xsl:with-param name="superclass" select="(key('id',$values) | key('name-lzx',$values))[1]"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+            </xsl:otherwise>
+          </xsl:choose>
+
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template name="describe-inherited-attributes">
     <xsl:param name="class"/>        
     
@@ -1057,8 +1140,15 @@
     <xsl:variable name="lzxname" select="&tagname;"/>
     
     <xsl:variable name="extends" select="$class/@extends"/>
-    <xsl:variable name="superclass" select="(key('id',$extends) | key('name-lzx',$extends))[1]"/>
-    
+    <xsl:variable name="inheritslist" select="$class/@inherits"/>
+     <xsl:call-template name="iterate-inherited">
+       <xsl:with-param name="values" select="concat($extends,',',$inheritslist)"/>
+       <xsl:with-param name="memberkind" select="'attributes'"/>
+     </xsl:call-template>
+  </xsl:template>  
+
+  <xsl:template name="describe-inherited-attributes-for">
+    <xsl:param name="superclass"/>
     <xsl:if test="$superclass">
       <refsect2>
         <title>
@@ -1108,8 +1198,18 @@
     <xsl:variable name="lzxname" select="&tagname;"/>
     
     <xsl:variable name="extends" select="$class/@extends"/>
-    <xsl:variable name="superclass" select="(key('id',$extends) | key('name-lzx',$extends))[1]"/>
+    <xsl:variable name="inheritslist" select="$class/@inherits"/>
     
+     <xsl:call-template name="iterate-inherited">
+       <xsl:with-param name="values" select="concat($extends,',',$inheritslist)"/>
+       <xsl:with-param name="memberkind" select="'methods'"/>
+     </xsl:call-template>
+  </xsl:template>  
+
+  
+  <xsl:template name="describe-inherited-methods-for">
+    <xsl:param name="superclass"/>
+  
     <xsl:if test="$superclass">
       <refsect2>              
       <xsl:variable name="inheritedmethods" select="$superclass/class/property/object/property[@access='public']/function"></xsl:variable>      
@@ -1160,7 +1260,17 @@
     <xsl:variable name="lzxname" select="&tagname;"/>
     
     <xsl:variable name="extends" select="$class/@extends"/>
-    <xsl:variable name="superclass" select="(key('id',$extends) | key('name-lzx',$extends))[1]"/>
+    <xsl:variable name="inheritslist" select="$class/@inherits"/>
+
+     <xsl:call-template name="iterate-inherited">
+       <xsl:with-param name="values" select="concat($extends,',',$inheritslist)"/>
+       <xsl:with-param name="memberkind" select="'events'"/>
+     </xsl:call-template>
+  </xsl:template>  
+  
+  <xsl:template name="describe-inherited-events-for">
+    <xsl:param name="superclass"/>
+  
     <xsl:if test="$superclass">  
       <xsl:variable name="inheritedevents" select="$superclass/class/property[@name='__ivars__']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &ispublic;]"></xsl:variable>
       <refsect2>
