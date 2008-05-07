@@ -1,0 +1,79 @@
+<canvas>
+    <include href="lztest/lztestmanager.lzx" /> 
+
+    <!--
+  covers-tags: class smoketest
+  
+  tests for static methods and attributes of lzx classes
+
+    -->
+
+<class name="myclass">
+
+  <method name="foo" args="a,b">
+    return "instance method " + a + " " + b;
+  </method>
+
+  <method name="foo" allocation="class" args="a,b">
+    return "static class method " + a + " " + b;
+  </method>
+
+  <method name="bar" allocation="class" args="a,b">
+    return "static class method " + a + " " + b;
+  </method>
+
+  <attribute name="iblah" value="259"/>
+  <attribute name="cblah" value="123" allocation="class"/>
+
+  <!-- instance attr shadows class attr with same name -->
+  <attribute name="flavor" value="vanilla" type="string" allocation="instance"/>
+  <attribute name="flavor" value="chocolate" type="string" allocation="class"/>
+
+</class>
+
+<class name="mysubclass" extends="myclass">
+  <method name="foo" allocation="class" args="a,b">
+    return "subclass static class method " + a + " " + b;
+  </method>
+
+  <!-- should override superclass class attribute without complaining -->
+  <attribute name="cblah" type="color" allocation="class"/> 
+
+</class>
+
+
+
+<script><![CDATA[
+
+var suiteAllocation = new LzTestSuite("Allocation"); 
+
+suiteAllocation.testAlloc = function() {
+
+  var inst = new lz.myclass(canvas, {});
+
+  LzTestManager.assertEquals( 259, inst.iblah );
+
+  LzTestManager.assertEquals( 123, lz.myclass.cblah , " CLASS VAR.2");
+
+  LzTestManager.assertEquals( "static class method 1 2", lz.myclass.foo(1,2) );
+  LzTestManager.assertEquals( "instance method 3 4", inst.foo(3,4) );
+  LzTestManager.assertEquals( "vanilla", inst.flavor);
+  LzTestManager.assertEquals( "chocolate", lz.myclass.flavor );
+
+}
+
+
+
+suiteAllocation.addTest(suiteAllocation.testAlloc); 
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

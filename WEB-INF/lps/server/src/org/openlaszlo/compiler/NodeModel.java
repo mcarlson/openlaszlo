@@ -563,7 +563,7 @@ public class NodeModel implements Cloneable {
         // TODO: [2008-05-05 ptw] Schema needs to learn about
         // allocation
         assert ALLOCATION_INSTANCE.equals(allocation);
-        return schema.getAttributeType(parent, attrname);
+        return schema.getAttributeType(parent, attrname, allocation);
     }
 
     ViewSchema.Type getAttributeTypeInfoFromParent(
@@ -597,14 +597,14 @@ public class NodeModel implements Cloneable {
 
         // Check if this attribute is defined on the parent class, if
         // so, return that type
-        AttributeSpec attr = superclassModel.getAttribute(attrname);
+        AttributeSpec attr = superclassModel.getAttribute(attrname, allocation);
         if (attr != null) {
             return attr.type;
         }
         // Otherwise, check if it's defined on the "class" element
         // (e.g., 'name', 'extends', or 'with')
         superclassModel = schema.getClassModel("class");
-        return superclassModel.getAttributeTypeOrException(attrname);
+        return superclassModel.getAttributeTypeOrException(attrname, allocation);
     }
 
     ViewSchema.Type getAttributeTypeInfoFromSuperclass(
@@ -626,7 +626,7 @@ public class NodeModel implements Cloneable {
         // Look for an inherited value
         if (this.parentClassModel != null) {
             AttributeSpec attrSpec =
-                this.parentClassModel.getAttribute(attribute);
+              this.parentClassModel.getAttribute(attribute, allocation);
             if (attrSpec != null) {
                 Element source = attrSpec.source;
                 if (source != null) {
@@ -859,7 +859,7 @@ public class NodeModel implements Cloneable {
                     // Special case for "state", it can have any attribute
                     // which belongs to the parent. 
                     try {
-                        type = schema.getAttributeType(element, name);
+                      type = schema.getAttributeType(element, name, ALLOCATION_INSTANCE);
                     } catch (UnknownAttributeException e) {
                         type = getAttributeTypeInfoFromParent(element, name);
                     }
@@ -870,7 +870,7 @@ public class NodeModel implements Cloneable {
                     // width and height!
                     // NOTE: [2008-05-05 ptw] These are instance
                     // attributes by definition
-                    type = schema.getAttributeType(element, name);
+                  type = schema.getAttributeType(element, name, ALLOCATION_INSTANCE);
                 }
 
             } catch (UnknownAttributeException e) {
@@ -1139,8 +1139,10 @@ solution =
      */
     void checkChildNameConflict(String parentName, Element child, CompilationEnvironment env) {
         String attrName = child.getAttributeValue("name");
+        String allocation = child.getAttributeValue("allocation", ALLOCATION_INSTANCE);
+
         if (attrName != null) {
-            AttributeSpec attrSpec = schema.getClassAttribute ( parentName, attrName) ;
+          AttributeSpec attrSpec = schema.getClassAttribute ( parentName, attrName, allocation) ;
             // Only warn if the attribute we are shadowing has a declared initial value.
             if (attrSpec != null && attrSpec.defaultValue != null) {
                 // TODO [2007-09-26 hqm] i18n this
@@ -1355,6 +1357,7 @@ solution =
     void addMethodElement(Element element) {
         String name = element.getAttributeValue("name");
         String event = element.getAttributeValue("event");
+        String allocation = XMLUtils.getAttributeValue(element, "allocation", ALLOCATION_INSTANCE);
         String args = CompilerUtils.attributeLocationDirective(element, "args") +
             XMLUtils.getAttributeValue(element, "args", "");
         String body = element.getText();
@@ -1406,10 +1409,10 @@ solution =
             return;
         }
 
-        addMethodInternal(name, args, body, element);
+        addMethodInternal(name, args, body, element, allocation);
     }
 
-    void addMethodInternal(String name, String args, String body, Element element) {
+  void addMethodInternal(String name, String args, String body, Element element, String allocation) {
         String srcloc = CompilerUtils.sourceLocationDirective(element, true);
         ClassModel superclassModel = getParentClassModel();
         // Override will be required if there is an inherited method
@@ -1417,14 +1420,13 @@ solution =
         boolean override = 
             // This gets methods from the schema, in particular, the
             // LFC interface
-            superclassModel.getAttribute(name) != null ||
+          superclassModel.getAttribute(name, allocation) != null ||
             // This gets methods the compiler has added, in
             // particular, setter methods
             superclassModel.getMergedMethods().containsKey(name) ||
             // And the user may know better than any of us
             "true".equals(element.getAttributeValue("override"));
         boolean isfinal = "true".equals(element.getAttributeValue("final"));
-        String allocation = XMLUtils.getAttributeValue(element, "allocation", ALLOCATION_INSTANCE);
 
         if (!override) {
             // Just check method declarations on regular node.
@@ -1718,18 +1720,20 @@ solution =
 
         // Class methods are not inherited, hence do not override
         if (ALLOCATION_INSTANCE.equals(allocation)) {
-          AttributeSpec parentAttrSpec = schema.getAttributeSpec(parent.getName(), name);
+          AttributeSpec parentAttrSpec = schema.getAttributeSpec(parent.getName(), name, allocation);
           forceOverride = parentAttrSpec != null && "false".equals(parentAttrSpec.isfinal);
         }
 
         try {
             if ("class".equals(className) || "interface".equals(className)) {
-              parenttype = getAttributeTypeInfoFromSuperclass(parent, name, allocation);
+              if (allocation.equals(ALLOCATION_INSTANCE)) {
+                parenttype = getAttributeTypeInfoFromSuperclass(parent, name, allocation);
+              }
             }  else {
               // TODO: [2008-05-05 ptw] Schema needs to learn about
               // allocation
               assert ALLOCATION_INSTANCE.equals(allocation);
-              parenttype = schema.getAttributeType(parent, name);
+              parenttype = schema.getAttributeType(parent, name, allocation);
             }
         } catch (UnknownAttributeException e) {
             // If attribute type is not defined on parent, leave
@@ -1819,7 +1823,8 @@ solution =
                 name,
                 // The body of the setter method
                 setter,
-                element);
+                element,
+                allocation);
 
             // This is just for nice error messages
             if (setters.get(name) != null) {

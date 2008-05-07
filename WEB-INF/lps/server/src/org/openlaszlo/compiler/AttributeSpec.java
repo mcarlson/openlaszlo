@@ -28,6 +28,12 @@ class AttributeSpec {
     /** When does the initial value for this attribute get evaluated? */
     String when = NodeModel.WHEN_IMMEDIATELY;
 
+    /**
+     * Is this property allocated on the instance or the class.
+     * Legal values are NodeModel.ALLOCATION_INSTANCE, and NodeModel.ALLOCATION_CLASS
+     */
+    String allocation = NodeModel.ALLOCATION_INSTANCE;
+
     /** If this is a method, the arglist */
     String arglist = null;
 
@@ -54,7 +60,7 @@ class AttributeSpec {
   }
 
   public String toLZX(String indent, ClassModel superclass) {
-    AttributeSpec superSpec = superclass.getAttribute(name);
+    AttributeSpec superSpec = superclass.getAttribute(name, allocation);
     if (ViewSchema.METHOD_TYPE.equals(type)) {
       return indent + "  <method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " />";
     }
@@ -76,7 +82,7 @@ class AttributeSpec {
         attrs += " value='" + defaultValue + "'";
       }
       if (type != null &&
-          (! type.equals(superclass.getAttributeType(name)))) {
+          (! type.equals(superclass.getAttributeType(name, allocation)))) {
         attrs += " type='" + typeToLZX() + "'";
       }
       if (when != null &&
@@ -95,7 +101,7 @@ class AttributeSpec {
 
   public String toString() {
     if (ViewSchema.METHOD_TYPE.equals(type)) {
-      return "[AttributeSpec: method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " isfinal="+(isfinal  == null ?  "null" : ("'"+isfinal+"'"))+"]";
+      return "[AttributeSpec: method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " isfinal="+(isfinal  == null ?  "null" : ("'"+isfinal+"'"))+ " allocation="+allocation+"]";
     } 
     if (ViewSchema.EVENT_HANDLER_TYPE.equals(type)) {
       return "[AttributeSpec: event name='" + name + "' ]";
@@ -105,6 +111,7 @@ class AttributeSpec {
         ((type != null)?(" type='" + typeToLZX() + "'"):"") +
         ((when != NodeModel.WHEN_IMMEDIATELY)?(" when='" + when + "'"):"") + 
         (required?(" required='true'"):"") +
+      " allocation="+allocation+
         " ";
   }
     

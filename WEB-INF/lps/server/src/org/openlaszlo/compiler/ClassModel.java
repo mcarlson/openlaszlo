@@ -38,6 +38,7 @@ class ClassModel implements Comparable {
     protected boolean supportsTextAttribute = false;
     /** Map attribute name to type */
     protected final Map attributeSpecs = new LinkedHashMap();
+    protected final Map classAttributeSpecs = new LinkedHashMap();
 
     protected boolean inline = false;
     protected String sortkey = null;
@@ -180,7 +181,7 @@ class ClassModel implements Comparable {
       Map.Entry entry = (Map.Entry) i.next();
       String key = (String) entry.getKey();
       Object value = entry.getValue();
-      boolean redeclared = (superclassModel.getAttribute(key) != null);
+      boolean redeclared = (superclassModel.getAttribute(key, NodeModel.ALLOCATION_INSTANCE) != null);
       if ((value instanceof NodeModel.BindingExpr)) {
         // Bindings always have to be installed as an init
         if (! redeclared) {
@@ -197,7 +198,7 @@ class ClassModel implements Comparable {
       } else if (value != null) {
         // If this is a re-declared attribute, we just init it,
         // don't re-declare it
-        if (superclassModel.getAttribute(key) != null) {
+        if (superclassModel.getAttribute(key, NodeModel.ALLOCATION_INSTANCE) != null) {
           inits.put(key, value);
         }
         // If there is a setter for this attribute, or this is a
@@ -373,20 +374,26 @@ class ClassModel implements Comparable {
         Only returns locally defined attribute, does not follow up the
         class hierarchy.
     */
-    AttributeSpec getLocalAttribute(String attrName) {
-      return (AttributeSpec) attributeSpecs.get(attrName);
+    AttributeSpec getLocalAttribute(String attrName, String allocation) {
+      if (allocation.equals(NodeModel.ALLOCATION_INSTANCE)) {
+        return (AttributeSpec) attributeSpecs.get(attrName);
+      } else {
+        return (AttributeSpec) classAttributeSpecs.get(attrName);
+      }
     }
+
 
     /** Return the AttributeSpec for the attribute named attrName.  If
      * the attribute is not defined on this class, look up the
      * superclass chain.
      */
-    AttributeSpec getAttribute(String attrName) {
-        AttributeSpec attr = (AttributeSpec) attributeSpecs.get(attrName);
+  AttributeSpec getAttribute(String attrName, String allocation) {
+        Map attrtable = allocation.equals(NodeModel.ALLOCATION_INSTANCE) ? attributeSpecs : classAttributeSpecs;
+        AttributeSpec attr = (AttributeSpec) attrtable.get(attrName);
         if (attr != null) {
             return attr;
         } else if (superclass != null) {
-            return(superclass.getAttribute(attrName));
+          return(superclass.getAttribute(attrName, allocation));
         } else {
             return null;
         }
@@ -413,10 +420,10 @@ class ClassModel implements Comparable {
         }
     }
 
-    ViewSchema.Type getAttributeTypeOrException(String attrName)
+  ViewSchema.Type getAttributeTypeOrException(String attrName, String allocation)
         throws UnknownAttributeException
     {
-        AttributeSpec attr = getAttribute(attrName);
+      AttributeSpec attr = getAttribute(attrName, allocation);
         if (attr != null) {
             return attr.type;
         }  
@@ -430,8 +437,8 @@ class ClassModel implements Comparable {
         return type;
     }
     
-    ViewSchema.Type getAttributeType(String attrName) {
-        AttributeSpec attr = getAttribute(attrName);
+    ViewSchema.Type getAttributeType(String attrName, String allocation) {
+        AttributeSpec attr = getAttribute(attrName, allocation);
         if (attr != null) {
             return attr.type;
         }  

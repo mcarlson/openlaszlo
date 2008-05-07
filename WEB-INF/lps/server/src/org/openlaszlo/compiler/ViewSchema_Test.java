@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -127,25 +127,25 @@ public class ViewSchema_Test extends TestCase {
 
         assertEquals("mynewclass foo-width type",
                      schema.SIZE_EXPRESSION_TYPE,
-                     schema.getAttributeType(class1, "foo-width"));
+                     schema.getAttributeType(class1, "foo-width", NodeModel.ALLOCATION_INSTANCE));
 
         assertEquals("mynewclass barbaz type",
                      schema.STRING_TYPE,
-                     schema.getAttributeType(class1, "barbaz"));
+                     schema.getAttributeType(class1, "barbaz", NodeModel.ALLOCATION_INSTANCE));
 
         // Check subclass attribute types
         assertEquals("mynewsubclass foo-width type",
                      schema.SIZE_EXPRESSION_TYPE,
-                     schema.getAttributeType(subclass, "foo-width"));
+                     schema.getAttributeType(subclass, "foo-width", NodeModel.ALLOCATION_INSTANCE));
 
         assertEquals("mynewsubclass baz-width type",
                      schema.SIZE_EXPRESSION_TYPE,
-                     schema.getAttributeType(subclass, "baz-width"));
+                     schema.getAttributeType(subclass, "baz-width", NodeModel.ALLOCATION_INSTANCE));
 
         // Attribute type of subclass should override superclass type
         assertEquals("mynewsubclass barbaz type",
                      schema.EVENT_HANDLER_TYPE,
-                     schema.getAttributeType(subclass, "barbaz"));
+                     schema.getAttributeType(subclass, "barbaz", NodeModel.ALLOCATION_INSTANCE));
 
         // test for duplicate attributes, undefined superclass, redefined class, attr inheritance
 

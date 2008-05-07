@@ -17,16 +17,16 @@
 <interface name="Instance" extends="Object">
   <method name="validateClassStructure" final="true"/>
   <method name="initialize" />
+  <method name="addProperty" final="true" />
   <method name="nextMethod" final="true"/>
-  <method name="addProperty" final="true"/>
-  <method name="constructor" final="true"/>
-  <method name="hasOwnProperty" final="true"/>
+  <method name="constructor" final="true" />
+  <method name="hasOwnProperty" final="true" />
   <method name="isPropertyEnumerable" final="true"/>
   <method name="isPrototypeOf" final="true"/>
-  <method name="toLocaleString" final="true"/>
-  <method name="prototype" final="true"/>
-  <method name="apply" final="true"/> 
-  <method name="call" final="true"/>
+  <method name="toLocaleString" final="true" />
+  <method name="prototype" final="true" allocation="class"/>
+  <method name="apply" final="true" allocation="class"/> 
+  <method name="call" final="true" allocation="class"/>
 </interface>
 
 <interface name="canvas" extends="Instance">

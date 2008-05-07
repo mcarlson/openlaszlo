@@ -70,7 +70,7 @@ public abstract class Schema {
     public static final Schema DEFAULT_SCHEMA =
         new Schema() {
             /** @see Schema */
-            public Type getAttributeType(Element element, String name) {
+            public Type getAttributeType(Element element, String name, String allocation) {
                 return UNKNOWN_TYPE;
             }
         };
@@ -84,5 +84,6 @@ public abstract class Schema {
      * @return a value represting the type of the attribute's
      */
     public abstract Type getAttributeType(Element element,
-                                         String attributeName);
+                                          String attributeName,
+                                          String allocation);
 }

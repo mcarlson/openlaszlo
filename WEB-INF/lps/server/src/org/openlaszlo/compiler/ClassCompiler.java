@@ -60,6 +60,26 @@ class ClassCompiler extends ViewCompiler  {
         return element.getName().equals("class");
     }
 
+    /**
+     * Check that the 'allocation' attribute of a tag is either "instance" or "class".
+     * The return value defaults to "instance".
+     * @param element a method or attribute element
+     * @return an AttributeSpec allocation type (either 'instance' or 'class')
+     */
+    String getAllocation(Element element) {
+        // allocation type defaults to 'instance'
+        String allocation = element.getAttributeValue("allocation");
+        if (allocation == null) {
+            allocation = NodeModel.ALLOCATION_INSTANCE;
+        } else if (!(allocation.equals(NodeModel.ALLOCATION_INSTANCE) ||
+                     allocation.equals(NodeModel.ALLOCATION_CLASS))) {
+          throw new CompilationError(
+              "the value of the 'allocation' attribute must be either 'instance', or 'class'" , element);
+        }
+        return allocation;
+
+    }
+     
     /** Parse out an XML class definition, add the superclass and
      * attribute types to the schema.
      *
@@ -142,10 +162,12 @@ class ClassCompiler extends ViewCompiler  {
                                     "'name' is a required attribute of <" + child.getName() + "> and must be a valid identifier", child);
                             }
                         }
+                        String allocation = getAllocation(child);
                         ViewSchema.Type attrType = ViewSchema.METHOD_TYPE;
                         AttributeSpec attrSpec = 
                             new AttributeSpec(attrName, attrType, null, null, child);
                         attrSpec.isfinal = child.getAttributeValue("final");
+                        attrSpec.allocation = allocation;
                         attributeDefs.add(attrSpec);
                     }
                     
@@ -173,12 +195,13 @@ class ClassCompiler extends ViewCompiler  {
                     String attrDefault = child.getAttributeValue("default");
                     String attrSetter = child.getAttributeValue("setter");
                     String attrRequired = child.getAttributeValue("required");
+                    String allocation = getAllocation(child);
                     
                     ViewSchema.Type attrType;
                     if (attrTypeName == null) {
                         // Check if this attribute exists in ancestor classes,
                         // and if so, default to that type.
-                        attrType = superclassinfo.getAttributeType(attrName);
+                        attrType = superclassinfo.getAttributeType(attrName, allocation);
                         if (attrType == null) {
                             // The default attribute type
                             attrType = ViewSchema.EXPRESSION_TYPE;
@@ -202,6 +225,7 @@ class ClassCompiler extends ViewCompiler  {
                     AttributeSpec attrSpec = 
                         new AttributeSpec(attrName, attrType, attrDefault,
                                           attrSetter, child);
+                    attrSpec.allocation = allocation;
                     attrSpec.isfinal = child.getAttributeValue("final");
                     if (attrName.equals("text") && attrTypeName != null) {
                         if ("text".equals(attrTypeName))

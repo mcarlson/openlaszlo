@@ -156,7 +156,8 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-168", new Object[] {classname})
             );
         }
-        if (classModel.attributeSpecs.get(attrName) != null) {
+        if (classModel.getLocalAttribute(attrName, attrspec.allocation) != null) {
+            AttributeSpec conf = classModel.getLocalAttribute(attrName, attrspec.allocation);
             throw new CompilationError(
 /* (non-Javadoc)
  * @i18n.test
@@ -166,7 +167,11 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-178", new Object[] {classname, attrName})
                 , elt);
         }
-        classModel.attributeSpecs.put(attrName, attrspec);
+        if (attrspec.allocation.equals(NodeModel.ALLOCATION_INSTANCE)) {
+            classModel.attributeSpecs.put(attrName, attrspec);
+        } else {
+            classModel.classAttributeSpecs.put(attrName, attrspec);
+        }
 
         if (attrName.equals("text")) {
             classModel.supportsTextAttribute = true;
@@ -179,6 +184,7 @@ public class ViewSchema extends Schema {
      * Does the superclass allow overriding of this method?
      */
     public void checkMethodDeclaration (Element elt, String classname, String methodName,
+                                        String allocation,
                                         CompilationEnvironment env) {
         ClassModel classModel = getClassModel(classname);
         if (classModel == null) {
@@ -191,7 +197,7 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-168", new Object[] {classname})
                                        );
         }
-        AttributeSpec localAttr = classModel.getLocalAttribute(methodName);
+        AttributeSpec localAttr = classModel.getLocalAttribute(methodName, allocation);
         if ( localAttr != null) {
             if (localAttr.type == METHOD_TYPE) {
                 env.warn(
@@ -210,7 +216,7 @@ public class ViewSchema extends Schema {
             }
         }
 
-        if (!methodOverrideAllowed(classname, methodName)) {
+        if (!methodOverrideAllowed(classname, methodName, allocation)) {
             env.warn("Method "+classname+"."+methodName+" is overriding a superclass method"
                      + " of the same name which has been declared final" , elt);
         }
@@ -233,7 +239,7 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-168", new Object[] {classname})
                                        );
         }
-        AttributeSpec attrspec = classModel.getAttribute(methodName);
+        AttributeSpec attrspec = classModel.getAttribute(methodName, NodeModel.ALLOCATION_INSTANCE);
         if ( attrspec != null) {
             if (attrspec.type != METHOD_TYPE) {
                 env.warn(
@@ -243,7 +249,7 @@ public class ViewSchema extends Schema {
             }
         }
 
-        if (!methodOverrideAllowed(classname, methodName)) {
+        if (!methodOverrideAllowed(classname, methodName, NodeModel.ALLOCATION_INSTANCE)) {
             env.warn("Method "+classname+"."+methodName+" is overriding a superclass method"
                      + " of the same name which has been declared final" , elt);
         }
@@ -280,14 +286,19 @@ public class ViewSchema extends Schema {
         return superclass;
     }
 
-    /** Does this class or its ancestors have this attribute declared for it? */
-    AttributeSpec getClassAttribute (String classname, String attrName) {
+    /** Get the AttributeSpec for an attribute named ATTRNAME, on class CLASNAME.
+     * Default to 'instance' allocation type
+     * @param classname the name of the class
+     * @param attrName the name of the attribute
+     * @param allocation 'class' or 'instance'
+     */
+    AttributeSpec getClassAttribute (String classname, String attrName, String allocation) {
         // OK, walk up the superclasses, checking for existence of this attribute
         ClassModel info = getClassModel(classname);
         if (info == null) {
             return null;
         } else {
-            return info.getAttribute(attrName);
+            return info.getAttribute(attrName, allocation);
         }
     }
 
@@ -299,7 +310,7 @@ public class ViewSchema extends Schema {
      * @param attributeDefs list of attribute name/type defs
      */
     public void addElement (Element elt, String className,
-                            String superclassName, List attributeDefs,
+                            String superclassName, List attributeDefs, 
                             CompilationEnvironment env)
     {
         ClassModel superclass = getClassModel(superclassName);
@@ -405,13 +416,13 @@ public class ViewSchema extends Schema {
                 // different type.
 
                 Type parentType = null;
-                if (getClassAttribute(classname, attr.name) != null) {
+                if (getClassAttribute(classname, attr.name, attr.allocation) != null) {
                     // Check that the overriding type is the same as the superclass' type
-                    parentType = getAttributeType(classname, attr.name);
+                    parentType = getAttributeType(classname, attr.name, attr.allocation);
 
                     // Does the parent attribute definition have final=false or final=null?
                     // If not, we're not going to warn if the types mismatch.
-                    AttributeSpec parentAttrSpec = getAttributeSpec(classname, attr.name);
+                    AttributeSpec parentAttrSpec = getAttributeSpec(classname, attr.name, attr.allocation);
                     boolean forceOverride = parentAttrSpec != null && (! "true".equals(parentAttrSpec.isfinal));
 
                     if (!forceOverride &&  (parentType != attr.type)) {
@@ -428,7 +439,7 @@ public class ViewSchema extends Schema {
                 }
 
                 if (attr.type == ViewSchema.METHOD_TYPE && !("false".equals(attr.isfinal))) {
-                    checkMethodDeclaration(sourceElement, classname, attr.name, env);
+                    checkMethodDeclaration(sourceElement, classname, attr.name, attr.allocation, env);
                 }
 
                 // Update the in-memory attribute type table
@@ -472,8 +483,8 @@ public class ViewSchema extends Schema {
      * @param attrName an attribute name
      * @return a value represting the type of the attribute's
      */
-    public Type getAttributeType(Element e, String attrName) {
-        return getAttributeType(e.getName(), attrName);
+    public Type getAttributeType(Element e, String attrName, String allocation) {
+        return getAttributeType(e.getName(), attrName, allocation);
     }
 
     /**
@@ -484,7 +495,7 @@ public class ViewSchema extends Schema {
      * @param attrName an attribute name
      * @return a value represting the type of the attribute's
      */
-    public Type getAttributeType(String elt, String attrName)
+    public Type getAttributeType(String elt, String attrName, String allocation)
         throws UnknownAttributeException
     {
         String elementName = elt.intern();
@@ -506,7 +517,7 @@ public class ViewSchema extends Schema {
         
         if (classModel != null) {
             try {
-                type = classModel.getAttributeTypeOrException(attrName);
+                type = classModel.getAttributeTypeOrException(attrName, allocation);
             } catch (UnknownAttributeException e) {
                 e.setName(attrName);
                 e.setElementName(elt);
@@ -530,12 +541,13 @@ public class ViewSchema extends Schema {
         for (Iterator iter = elt.getAttributes().iterator(); iter.hasNext(); ) {
             Attribute attr = (Attribute) iter.next();
             String name = attr.getName();
-            AttributeSpec attrspec = getAttributeSpec(elt.getName(), name);
+            AttributeSpec attrspec  = getAttributeSpec(elt.getName(), name, NodeModel.ALLOCATION_INSTANCE);
             if (attrspec == null) {
                 throw new CompilationError("Unknown attribute '"+name+"' on tag "+elt.getName(), elt);
             }
         }
     }
+
 
     /**
      * Finds the AttributeSpec definition of an attribute, on a class
@@ -545,7 +557,7 @@ public class ViewSchema extends Schema {
      * @param attrName an attribute name
      * @return the AttributeSpec or null
      */
-    public AttributeSpec getAttributeSpec(String elt, String attrName)
+    public AttributeSpec getAttributeSpec(String elt, String attrName, String allocation)
     {
         String elementName = elt.intern();
 
@@ -553,7 +565,7 @@ public class ViewSchema extends Schema {
         ClassModel classModel = getClassModel(elementName);
         
         if (classModel != null) {
-            return classModel.getAttribute(attrName);
+            return classModel.getAttribute(attrName, allocation);
         } else {
             return null;
         }
@@ -565,9 +577,9 @@ public class ViewSchema extends Schema {
      * @param methodName a method name
      * @return boolean if the method exists on the class or superclass
      */
-    public boolean methodOverrideAllowed(String classname, String methodName)
+    public boolean methodOverrideAllowed(String classname, String methodName, String allocation)
     {
-        AttributeSpec methodspec = getClassAttribute(classname, methodName);
+        AttributeSpec methodspec = getClassAttribute(classname, methodName, allocation);
 
         if (methodspec == null) {
             return true;

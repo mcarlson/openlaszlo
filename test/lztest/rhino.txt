@@ -1,4 +1,5 @@
-# Copyright 2007 Laszlo Systems
+# Copyright 2007, 2008 Laszlo Systems
+test/lztest/lztest-static-attrs.lzx
 test/lztest/lztest-textstyle.lzx
 test/lztest/lztest-align.lzx
 # test/lztest/lztest-animator.lzx
