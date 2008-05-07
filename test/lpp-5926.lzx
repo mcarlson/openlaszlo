@@ -1,0 +1,47 @@
+<canvas>
+  <attribute name="timer0"/>
+  <attribute name="delay" type="number" value="1000"/>
+  <attribute name="t0" type="number"/>
+  <attribute name="t1" type="number"/>
+
+  <method name="interval"><![CDATA[
+    LzTimeKernel.clearInterval(canvas.timer0);
+    canvas.t1 = LzTimeKernel.getTimer();
+
+    var delta = canvas.t1 - canvas.t0;
+
+    if ((delta > 1.1*canvas.delay) || delta < 0.9*canvas.delay) {
+      Debug.error("setInterval FAILED", delta);
+    }
+    else {
+      Debug.write("setInterval passed", delta);
+    }
+
+    // Start the timeout test
+    canvas.timer0 = LzTimeKernel.setTimeout(canvas.timeout, 1000);
+    canvas.t0 = LzTimeKernel.getTimer();
+  ]]></method>
+
+  <method name="timeout"><![CDATA[
+    LzTimeKernel.clearTimeout(canvas.timer0); // Not needed, only for test
+    canvas.t1 = LzTimeKernel.getTimer();
+
+    var delta = canvas.t1 - canvas.t0;
+
+    if ((delta > 1.1*canvas.delay) || delta < 0.9*canvas.delay) {
+      Debug.error("setTimeout FAILED", delta);
+    }
+    else {
+      Debug.write("setTimeout passed", delta);
+    }
+  ]]></method>
+
+  <handler name="oninit">
+    canvas.timer0 = LzTimeKernel.setInterval(canvas.interval, 1000);
+    canvas.t0 = LzTimeKernel.getTimer();
+  </handler>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

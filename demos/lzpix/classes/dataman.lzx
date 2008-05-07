@@ -1,5 +1,5 @@
 <library>
-    <script src="md5.js" />
+    <script src="md5.js" when="immediate" />
 
     <!--
         GLOBALS

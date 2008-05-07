@@ -9,18 +9,39 @@
   */
 
 // Receives and sends timing events
+
+// On IE6/7 window.setTimeout, window.setInterval cannot be called using
+// apply(). A workaround can be found here:
+// http://webreflection.blogspot.com/2007/06/simple-settimeout-setinterval-extra.html
+
+if (Lz.__BrowserDetect.isIE) {
+  (function(f){
+    window.setTimeout = f(window.setTimeout);
+    window.setInterval = f(window.setInterval);
+  })(function(f){
+    return function(c,t){
+      var a = Array.prototype.slice.call(arguments,2);
+      if(typeof c != "function")
+        c = new Function(c);
+        return f(function(){
+        c.apply(this, a)
+      }, t)
+    }
+  });
+}
+
 var LzTimeKernel = {
     setTimeout: function() {
-        return window.setTimeout.apply(null, arguments);
+        return window.setTimeout.apply(window, arguments);
     }
     ,setInterval: function() {
-        return window.setInterval.apply(null, arguments);
+        return window.setInterval.apply(window, arguments);
     }
-    ,clearTimeout: function() {
-        return window.clearTimeout.apply(null, arguments);
+    ,clearTimeout: function(id) {
+        return window.clearTimeout(id);
     }
-    ,clearInterval: function() {
-        return window.clearInterval.apply(null, arguments);
+    ,clearInterval: function(id) {
+        return window.clearInterval(id);
     }
 
     // Implement actionscript API to get ms since startup time 
