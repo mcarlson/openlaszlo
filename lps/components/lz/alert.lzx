@@ -97,47 +97,25 @@
         </view>
         <doc>
           <tag name="shortdesc"><text>
-              A window.
+              A simple alert.
           </text></tag>
           <text>
-
-            <p>The <tagname>window</tagname> tag creates a floating view that may
-              be moved and optionally resized by the user.  Set the
-              <attribute>closeable</attribute> attribute to <code>true</code> in
-              order to show a window close button.</p>
-
+              <p>A simple subclass of <tagname>modaldialog</tagname>, <tagname>alert</tagname> provides a modal alert box that displays its text attribute (or content) and an OK button. (If you need to display more than text in an alert, use <tagname>modaldialog</tagname> itself).</p>
             <example>
-              &lt;canvas height="250"&gt;
-              &lt;window x="10" y="10" width="300" height="200"
-              title="my window"
-              resizable="true" closeable="true"&gt;
-              &lt;text&gt;Hello&lt;/text&gt;
-              &lt;/window&gt;
-              &lt;/canvas&gt;
+    &lt;canvas height=&quot;140&quot;&gt;
+        &lt;alert name=&quot;myalert&quot;&gt;
+            Danger! Danger, Will Robinson!
+        &lt;/alert&gt;
+        
+        &lt;button onclick=&quot;canvas.myalert.open()&quot;&gt;Show Alert&lt;/button&gt;
+    &lt;/canvas&gt;
             </example>
 
-            <p>Views placed within a <tagname>window</tagname> tag will be placed
-              inside the smaller content area within the window.  Because of this,
-              you will often want to constrain to the dimensions of the content
-              area, rather than to the window dimensions.  To do this, tags placed
-              within a window can use the <field>immediateparent</field> property
-              rather than the <field>parent</field> property.</p>
+<p><b>See also:</b></p>
+              <ul>
+                  <li><p><a href="lz.modaldialog.html"><tagname>modaldialog</tagname></a></p></li>
+              </ul>
 
-            <example title="Sizing to the content area">
-              &lt;canvas height="150"&gt;
-              &lt;window x="10" y="10" width="200" height="100"
-              resizable="true"&gt;
-              &lt;button width="${immediateparent.width}"
-              height="${immediateparent.height}"&gt;
-              This is a really big button
-              &lt;/button&gt;
-              &lt;/window&gt;
-              &lt;/canvas&gt;
-            </example>
-
-            <seealso>
-              <tags>modaldialog alert</tags>
-            </seealso>
           </text>
         </doc>
 
