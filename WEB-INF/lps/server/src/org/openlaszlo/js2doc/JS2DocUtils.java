@@ -24,9 +24,9 @@ public class JS2DocUtils {
 
     static private Logger logger = Logger.getLogger("org.openlaszlo.js2doc");
 
-    static class InternalError extends RuntimeException {
+    public static class InternalError extends RuntimeException {
 
-        SimpleNode node;
+        public SimpleNode node;
         
         /** Constructs an instance.
          * @param message a string
@@ -158,7 +158,7 @@ public class JS2DocUtils {
             node.setAttribute(attr, oldvalue + " " + value.trim());
     }
 
-    static void describeConditionalState(ConditionalState state, org.w3c.dom.Element docNode) {
+    public static void describeConditionalState(ConditionalState state, org.w3c.dom.Element docNode) {
         if (state.inferredValue == ConditionalState.indeterminateValue) {
             Set includeSet = new HashSet();
             Set excludeSet = new HashSet();
@@ -242,7 +242,7 @@ public class JS2DocUtils {
         return classPrefix + propertyName + conditionSuffix;
     }
     
-    static String optionsToString(Collection options) {
+    public static String optionsToString(Collection options) {
         List c = new ArrayList(options);
         Collections.sort(c);
         String s = "";
@@ -266,7 +266,7 @@ public class JS2DocUtils {
             return "";
     }
     
-    static void debugPrintNode(SimpleNode parseNode) {
+    public static void debugPrintNode(SimpleNode parseNode) {
         debugPrintNode(parseNode, 0, 0);
     }
     
@@ -281,7 +281,7 @@ public class JS2DocUtils {
         }
     }
 
-    static void checkChildrenLowerBounds(SimpleNode node, int min, int expectedMax, String methodName) {
+    public static void checkChildrenLowerBounds(SimpleNode node, int min, int expectedMax, String methodName) {
         SimpleNode[] children = node.getChildren();
 
         if (children.length < min) {

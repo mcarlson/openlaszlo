@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -96,6 +96,15 @@ public class CachedInfo implements Serializable {
         p.writeObject(this);
         p.flush();
         ostream.close();
+    }
+    
+    /**
+     * @return <code>true</code> if this {@link CachedInfo} instance has a
+     *         {@link Canvas} associated with it, or <code>false</code>
+     *         otherwise.
+     */
+    public boolean hasCanvas() {
+        return this.mCanvas != null;
     }
 
     public Canvas getCanvas() {

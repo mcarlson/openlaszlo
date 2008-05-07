@@ -12,19 +12,19 @@ import org.jdom.Element;
 
 /** Contains information about an attribute of a laszlo viewsystem class.
  */
-class AttributeSpec {
+public class AttributeSpec {
     /** The source Element from which this attribute was parsed */
     Element source = null;
     /** The attribute name */
-    String name;
+    public String name;
     /** The default value */
-    String defaultValue = null;
+    public String defaultValue = null;
     /** The setter function */
     String setter;
     /** The type of the attribute value*/ 
-    Type type;
+    public Type type;
     /** Is this attribute required to instantiate an instance of this class? */
-    boolean required = false;
+    public boolean required = false;
     /** When does the initial value for this attribute get evaluated? */
     String when = NodeModel.WHEN_IMMEDIATELY;
 
@@ -35,7 +35,7 @@ class AttributeSpec {
     String allocation = NodeModel.ALLOCATION_INSTANCE;
 
     /** If this is a method, the arglist */
-    String arglist = null;
+    public String arglist = null;
 
     /** Can this attribute be overridden without a warning? value is null, 'true' or 'false' */
     String isfinal = null;
@@ -134,7 +134,7 @@ class AttributeSpec {
         this.when = XMLUtils.getAttributeValue(source, "when", NodeModel.WHEN_IMMEDIATELY);
     }
 
-    AttributeSpec (String name, Type type, String defaultValue, String setter) {
+    public AttributeSpec (String name, Type type, String defaultValue, String setter) {
         this.name = name;
         this.type = type;
         this.defaultValue = defaultValue;

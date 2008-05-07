@@ -124,10 +124,12 @@ public class DeploySOLODHTML {
             org.openlaszlo.compiler.Compiler compiler = new org.openlaszlo.compiler.Compiler();
 
             //FIXME: this may create temp file anywhere
-            String mediaCacheDir = LPS.getWorkDirectory() + File.separator + "cache" + File.separator + "cmcache";
-            CompilerMediaCache cache = new CompilerMediaCache(new File(mediaCacheDir), new Properties());
+            File cacheDir = File.createTempFile("cmcache", "", null);
+            cacheDir.delete();
+            cacheDir.mkdir();
+            cacheDir.deleteOnExit();
+            CompilerMediaCache  cache = new CompilerMediaCache(cacheDir, new Properties());
             compiler.setMediaCache(cache);
-            LPS.initialize();
 
             canvas = compiler.compile(sourcefile, tempFile, compilationProperties);
         }
@@ -154,7 +156,7 @@ public class DeploySOLODHTML {
             "lps=\"" + lpspath + "\" " +
             "url=\"" + url + "\" " +
             "/>";
-        
+
         String canvasXML = canvas.getXML(request);
         Properties properties = new Properties();
         TransformUtils.applyTransform(styleSheetPathname, properties, canvasXML, wrapperbuf);

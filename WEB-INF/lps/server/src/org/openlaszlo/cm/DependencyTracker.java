@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -23,7 +23,7 @@ import org.openlaszlo.utils.ChainedException;
  *
  * @author Oliver steele
  */
-class DependencyTracker implements java.io.Serializable {
+public class DependencyTracker implements java.io.Serializable {
     private static Logger mLogger  = Logger.getLogger(DependencyTracker.class);
 
     /** Records information about the version of a file.
@@ -74,7 +74,7 @@ class DependencyTracker implements java.io.Serializable {
     private Properties mProperties;
     private String mWebappPath;
 
-    DependencyTracker(Properties properties) {
+    public DependencyTracker(Properties properties) {
         this.mProperties = properties;
         this.mWebappPath = LPS.HOME(); // get it from global
     }
@@ -82,7 +82,7 @@ class DependencyTracker implements java.io.Serializable {
     /** Add the specified file to the list of file dependencies.
      * @param file a file
      */
-    void addFile(File file) {
+    public void addFile(File file) {
         mLogger.debug("addFile Path is " + file.getPath());
         FileInfo fi = new FileInfo(file.getPath());
         try {
@@ -98,7 +98,7 @@ class DependencyTracker implements java.io.Serializable {
      * Copy file info from the given tracker to me, omitting
      * omitting then given file.
      */
-    void copyFiles(DependencyTracker t, File omitMe) {
+    public void copyFiles(DependencyTracker t, File omitMe) {
         try {
             for (Iterator e = t.mDependencies.iterator(); e.hasNext(); ) {
                 FileInfo f = (FileInfo)e.next();
@@ -116,7 +116,7 @@ class DependencyTracker implements java.io.Serializable {
      * webappPath once the DependencyTracker object has been reconstitutded
      * from ondisk cache.
      */
-    void updateWebappPath() {
+    public void updateWebappPath() {
         String webappPath = LPS.HOME(); // get it from global
         if (webappPath.equals(mWebappPath))
             return;
@@ -161,13 +161,18 @@ class DependencyTracker implements java.io.Serializable {
         }
         mWebappPath = webappPath;
     }
+    
+    public boolean isUpToDate(Properties properties) {
+        return isUpToDate(properties, null);
+    }
 
     /** Returns true iff all the files listed in this tracker's
      * dependency list exist and are at the same version as when they
      * were recorded.
      * @return a boolean
      */
-    boolean isUpToDate(Properties properties) {
+    public boolean isUpToDate(Properties properties, List staleDeps) 
+    {
         Iterator e;
         
         // fixes bug 962 
@@ -211,6 +216,8 @@ class DependencyTracker implements java.io.Serializable {
                 }
             }
         }
+        
+        boolean isUpToDate = true;
 
         for (e = mDependencies.iterator(); e.hasNext(); ) {
             FileInfo saved = (FileInfo) e.next();
@@ -219,9 +226,17 @@ class DependencyTracker implements java.io.Serializable {
                 mLogger.debug(saved.mPathname + " has changed");
                 mLogger.debug("was " + saved.mLastMod);
                 mLogger.debug(" is " + current.mLastMod);
-                return false;
+                
+                isUpToDate = false;
+                
+                if (staleDeps != null) {
+                    staleDeps.add(new File(saved.mPathname));
+                } else {
+                    break;
+                }
             }
         }
-        return true;
+        
+        return isUpToDate;
     }
 }

@@ -26,6 +26,10 @@ import org.openlaszlo.xml.internal.XMLUtils;
  */
 public class CompilationEnvironment {
     private final Properties mProperties;
+    
+    // TODO this is suspicious. What if we want to change the build folder?
+    public static final String DEFAULT_OUTPUT_DIR = "build";
+    
     public static final String RUNTIME_PROPERTY = "runtime";
     public static final String PROXIED_PROPERTY           = "lzproxied";
     public static final String DEBUG_PROPERTY             = "debug";
@@ -50,7 +54,10 @@ public class CompilationEnvironment {
     // tag manually. If they didn't, we need to add a call to instantiate one.
     public static final String USER_DEBUG_WINDOW     = "userdebugwindow";
 
-
+    // Flag used by tooling - causes the compiler to skip code generation, and
+    // build the ViewSchema only.
+    public static final String NO_CODE_GENERATION = "nocodegeneration";
+    
     /** Cache for holding DOM tree from parsing library file */
     public HashMap parsedLibraryCache = new HashMap();
 
@@ -186,9 +193,9 @@ public class CompilationEnvironment {
         mParser.basePathnames.add(LPS.getLFCDirectory());
     }
 
-  void setObjectFile(File file) {
-    mObjectFile = file;
-  }
+    public void setObjectFile(File file) {
+      mObjectFile = file;
+    }
 
     // For an app named /path/to/myapp.lzx, returns /path/to/build/myapp
     public String getLibPrefix() {
@@ -202,7 +209,7 @@ public class CompilationEnvironment {
             parent = ".";
         }
 
-        String path = parent + "/" + "build" + "/" + basename;
+        String path = parent + "/" + DEFAULT_OUTPUT_DIR + "/" + basename;
         return path;
     }
 
@@ -213,7 +220,7 @@ public class CompilationEnvironment {
 
         String basename = FileUtils.getBase(appname);
 
-        String path = "build" + "/" + basename;
+        String path = DEFAULT_OUTPUT_DIR + "/" + basename;
         return path;
     }
 

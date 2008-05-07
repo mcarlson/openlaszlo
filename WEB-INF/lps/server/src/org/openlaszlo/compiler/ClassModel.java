@@ -11,13 +11,14 @@ import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.ScriptClass;
 
-class ClassModel implements Comparable {
+public class ClassModel implements Comparable {
     protected final ViewSchema schema;
     /** This is really the LZX tag name */
-    protected final String className;
+    public final String className;
     protected boolean builtin = false;
     // This is null for the root class
-    protected final ClassModel superclass;
+    protected ClassModel superclass;
+    
     // This is null for the root class
     protected final Element definition;
     protected String kind;
@@ -33,14 +34,16 @@ class ClassModel implements Comparable {
     protected String superclassName = null;
     protected boolean hasInputText = false;
     protected boolean isInputText = false;
+        
+    public Set traitNames = new HashSet(2, 0.6f);
     
     /* Class or superclass has an <attribute type="text"/>  */
     protected boolean supportsTextAttribute = false;
     /** Map attribute name to type */
-    protected final Map attributeSpecs = new LinkedHashMap();
+    public final Map attributeSpecs = new LinkedHashMap();
     protected final Map classAttributeSpecs = new LinkedHashMap();
 
-    protected boolean inline = false;
+    public boolean inline = false;
     protected String sortkey = null;
 
     public String toString() {
@@ -53,7 +56,7 @@ class ClassModel implements Comparable {
     }
 
     // Construct a user-defined class
-    ClassModel(String className, ClassModel superclass,
+    public ClassModel(String className, ClassModel superclass,
                ViewSchema schema, Element definition) {
         this.className = className;
         this.superclass = superclass;
@@ -68,6 +71,11 @@ class ClassModel implements Comparable {
           this.sortkey = superclass.sortkey + "." + this.sortkey;
         }
     }
+
+  // Construct a builtin class
+  public ClassModel(String className, ViewSchema schema) {
+    this(className, null, schema, null);
+  }
 
   public int compareTo(Object other) throws ClassCastException {
     ClassModel o = (ClassModel)other;
@@ -299,9 +307,9 @@ class ClassModel implements Comparable {
     return isBuiltin() || hasNodeModel() || "interface".equals(kind);
   }
 
-    ClassModel getSuperclassModel() {
+  public ClassModel getSuperclassModel() {
       return superclass;
-    }
+  }
 
   private Map mergedAttributes;
 
@@ -355,12 +363,12 @@ class ClassModel implements Comparable {
   }
 
     /** This is really the LZX tag name */
-    String getClassName () {
+    public String getClassName () {
      return this.className;
     }
     
     /** This is really the LZX tag name */
-    String getSuperclassName() {
+    public String getSuperclassName() {
         if (superclassName != null) {
             return superclassName; 
         } else if (superclass == null) {
@@ -368,6 +376,14 @@ class ClassModel implements Comparable {
         }  else {
             return superclass.className;
         }
+    }
+    
+    public void setSuperclassName(String name) {
+        this.superclassName = name;
+    }
+    
+    void setSuperclassModel(ClassModel superclass) {
+        this.superclass = superclass;
     }
     
     /** Return the AttributeSpec for the attribute named attrName.
@@ -483,6 +499,10 @@ class ClassModel implements Comparable {
                 return true;
         }
         return false;
+    }
+        
+    public Collection getLocalAttributes () {
+        return Collections.unmodifiableCollection(attributeSpecs.values());
     }
     
     NodeModel applyClass(NodeModel instance) {

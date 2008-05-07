@@ -596,6 +596,15 @@ public class ViewSchema extends Schema {
         return (ClassModel) mClassMap.get(elementName);
     }
 
+    /**
+     * @return a readonly {@link Map} with all of the {@link ClassModel}
+     * instances known by this {@link ViewSchema}, indexed by their
+     * {@link String} names.
+     */
+    public Map getClassMap() {
+        return Collections.unmodifiableMap(mClassMap);
+    }
+
     public String toLZX() {
       return toLZX("");
     }

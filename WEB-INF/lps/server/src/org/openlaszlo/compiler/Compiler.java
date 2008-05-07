@@ -212,6 +212,10 @@ public class Compiler {
             }
         }
     }
+    
+    public Properties getProperties() {
+        return (Properties)mProperties.clone();
+    }
 
   ObjectWriter createObjectWriter(Properties props,  OutputStream ostr, CompilationEnvironment env, Element root) {
         if ("false".equals(props.getProperty(env.LINK_PROPERTY))) {
@@ -259,6 +263,7 @@ public class Compiler {
         // runtime) from props arg to CompilationEnvironment
         String runtime = props.getProperty(env.RUNTIME_PROPERTY);
         boolean linking = (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY)));
+        boolean noCodeGeneration = "true".equals(env.getProperty(CompilationEnvironment.NO_CODE_GENERATION));
 
         if (runtime != null) {
             mLogger.info("canvas compiler compiling runtime = " + runtime);
@@ -391,6 +396,11 @@ public class Compiler {
                 );
             }
             Compiler.updateRootSchema(root, env, schema, externalLibraries);
+                        
+            if (noCodeGeneration) {
+                return null;
+            }
+            
             Properties nprops = (Properties) env.getProperties().clone();
             Map compileTimeConstants = new HashMap();
             compileTimeConstants.put("$debug", new Boolean(
