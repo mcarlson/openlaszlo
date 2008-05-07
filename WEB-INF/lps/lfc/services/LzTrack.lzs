@@ -100,7 +100,7 @@
   * @shortdesc Enables tracking mouse events over a group of views.
   */
 
-class LzTrackClass extends LzMiniNode {
+class LzTrackService extends LzMiniNode {
 
 /**
   * @event onmousetrackover:  sent when the mouse is over a view that is registered to
@@ -122,13 +122,17 @@ var __LZoptimizeforaxis = 'x';
 /** @access private */
 var __LZmouseupDel = null;
 
+/** @access private */
 var __LZlastmouseup = null;
+/** @access private */
 var __LZlasthit = null;
 
+/** @access private */
 var __LZdestroydel:LzDelegate = null;
 
 
-function LzTrackClass (){
+/** @access private */
+function LzTrackService (){
     super();
 
     this.__LZtrackDel = new LzDelegate( this, "__LZtrack" );// called on idle
@@ -359,10 +363,10 @@ function __LZmouseup(ignore)
     }
 }
 
-} // End of LzTrackClass
+} // End of LzTrackService
 
 
-/** The single instance of this class
-  * @access private
+/**
+  * LzTrack is a shortcut for <a href="LzTrackService.html">LzTrackService</a>.
   */
-var LzTrack = new LzTrackClass();
+var LzTrack = new LzTrackService();

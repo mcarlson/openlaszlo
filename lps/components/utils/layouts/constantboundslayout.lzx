@@ -3,14 +3,16 @@
 
         <!--- The constant value that is applied to the attribute
               ( defined in 'axis' as 'x' or 'y' ) of each subview in the layout. --> 
-        <attribute name="value" value="0" />
+        <attribute name="value" value="0" type="expression"/>
         
         <!--- The axis in which this layout operates either 'x' or 'y'.  -->
         <attribute name="axis" value="y" type="string"/>
 
         <!--- this method is called by the layout class as each new subview is added
               to a layout. It is extended here to define which events on a subview
-              will activate the update method of this particular layout -->
+              will activate the update method of this particular layout
+              @keywords private 
+              @param LzView newsub: The subview to add.  -->
         <method name="addSubview" args="newsub">
             this.updateDelegate.register( newsub,  "onx");
             this.updateDelegate.register( newsub,  "ony");

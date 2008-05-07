@@ -31,6 +31,7 @@
             return this.rowdp;
         </method>
 
+        <!--- @keywords private -->
         <method name="_applystyle" args="s">
             super._applystyle( s );
             this.setAttribute( '_textcolor' , s.textcolor );

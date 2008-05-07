@@ -225,10 +225,10 @@
         <attribute name="delaytime" value="300" />
         
         <!--- the command object assigned to be executed when this menuitem is selected -->
-        <attribute name="command"   value="null" 
+        <attribute name="command" value="null" type="command"
                    setter="this.setCommand( command )"   when="once" />
                            
-        <!--- this event is sent to the menuitem when it is seleted -->
+        <!--- this event is sent to the menuitem when it is selected -->
         <event name="onselect" />
 
         <!---  @keywords private -->
@@ -311,7 +311,7 @@
         
          <!---  Called automatically by the menu. The default action uses the colors
                 defined in a styles object to change the colors of the background and text. 
-                @params boolean ishilite: true shows hilite and false restores it back-->
+                @param boolean ishilite: true shows the hilite and false restores it back-->
          <method name="setHilite" args="ishilite" >
             super.setHilite( ishilite );
             if ( !_initcomplete ) return;
@@ -364,7 +364,8 @@
         </method>
                     
         <!--- call this method to set the command associated with a menuitem 
-             @param Command cmd: -->
+             @param LzCommand cmd: the command object to be executed when this menuitem is selected 
+             -->
        <method name="setCommand" args="cmd" >
             this.command = cmd;
             if ( this.command ) {

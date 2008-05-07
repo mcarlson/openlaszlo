@@ -52,7 +52,7 @@
   * code complexity.
   *
   */
-class LzTimerClass {
+class LzTimerService {
 /** @access private */
 var timerList = new Object;
 
@@ -190,6 +190,9 @@ if ($debug) {
   }
 }
 
-} // End of LzTimerClass
+} // End of LzTimerService
 
-var LzTimer = new LzTimerClass ();
+/**
+  * LzTimer is a shortcut for <a href="LzTimerService.html">LzTimerService</a>.
+  */
+var LzTimer = new LzTimerService();
