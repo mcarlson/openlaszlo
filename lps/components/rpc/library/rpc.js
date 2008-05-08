@@ -5,7 +5,7 @@
 
 /* LZ_COPYRIGHT_BEGIN */
 /****************************************************************************
- * Copyright (c) 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.       *
+ * Copyright (c) 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.       *
  * Use is subject to license terms                                          *
  ****************************************************************************/
 /* LZ_COPYRIGHT_END */
@@ -73,7 +73,7 @@ function __LZloaderReturnData (loadmc, data, responseheaders) {
                             stub: stub, stubinfo: stubinfo,
                             seqnum: seqnum } );
 
-    } else if ((data instanceof LzDataNode) && data.childNodes[0].nodeName == 'error') {
+    } else if ((data instanceof LzDataNodeMixin) && data.childNodes[0].nodeName == 'error') {
 
         var error = data.childNodes[0].attributes['msg'];
 

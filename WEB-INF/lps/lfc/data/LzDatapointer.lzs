@@ -99,10 +99,10 @@ static var tagname = 'datapointer';
   /** @access private */
   function $lzc$set_p (v) { this.setPointer(v); }
 
-/** The LzDataNode that the datapointer is pointing
+/** The LzDataNodeMixin that the datapointer is pointing
   * to. Calling <method>setAttribute</method> on attribute calls
   * <method>LzDatapointer.setPointer</method>.
-  * @type LzDataNode
+  * @type LzDataNodeMixin
   */
 var p = null;
 // var data = null;
@@ -269,7 +269,7 @@ function $lzc$xpathQuery_dependencies ( who , self , p ){
 
 /**
   * Points this datapointer at p.
-  * @param LzDataNode p: The new target for this datapointer.
+  * @param LzDataNodeMixin p: The new target for this datapointer.
   */
 function setPointer ( p ) {
     this.setXPath( null );
@@ -638,7 +638,7 @@ function __LZgetNodes ( pathobj , p , startpoint = null ){
         if (p.childNodes) {
           for ( var j = 0; j < p.childNodes.length;j++ ){
             //remove nulls and text nodes
-            if ( p.childNodes[ j ].nodeType==LzDataNode.ELEMENT_NODE){
+            if ( p.childNodes[ j ].nodeType==LzDataElement.ELEMENT_NODE){
               cnt++;
               if ( !range || cnt >= range[ 0 ] ){
                 np.push( p.childNodes[ j ] );
@@ -830,8 +830,8 @@ function selectNextParent ( ){
 
 /**
   * Gets the nodeType of the node that the datapointer is pointing to.
-  * @return Integer: one of LzDataNode.ELEMENT_NODE, LzDataNode.TEXT_NODE, 
-  * LzDataNode.DOCUMENT_NODE or <code>undefined</code> if this datapointer 
+  * @return Integer: one of LzDataElement.ELEMENT_NODE, LzDataElement.TEXT_NODE, 
+  * LzDataElement.DOCUMENT_NODE or <code>undefined</code> if this datapointer 
   * does not point to a valid node
   */
 function getNodeType (){
@@ -870,7 +870,7 @@ function setNodeName (name){
         }
         return;
     }
-    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+    if (this.p.nodeType != LzDataElement.TEXT_NODE) {
     this.p.setNodeName( name );
 }
 }
@@ -889,7 +889,7 @@ function getNodeAttributes (){
         }
         return;
     }
-    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+    if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         return this.p.attributes;
     }
 }
@@ -906,7 +906,7 @@ function getNodeAttribute (name){
         }
         return;
     }
-    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+    if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         return this.p.attributes[ name ];
     }
 }
@@ -924,7 +924,7 @@ function setNodeAttribute (name, val) {
         }
         return;
     }
-    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+    if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         this.p.setAttr( name, val );
     }
 }
@@ -940,7 +940,7 @@ function deleteNodeAttribute (name) {
         }
         return;
     }
-    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+    if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         this.p.removeAttr( name );
     }
 }
@@ -959,7 +959,7 @@ function getNodeText (){
         }
         return;
     }
-    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+    if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         return this.p.__LZgetText();
     }
 }
@@ -981,11 +981,11 @@ function setNodeText (val) {
         return;
     }
 
-    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+    if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         // set the first text node you find; otherwise add one
         var foundit = false;
         for (var i = 0; i < this.p.childNodes.length; i++) {
-            if ( this.p.childNodes[i].nodeType == LzDataNode.TEXT_NODE ) {
+            if ( this.p.childNodes[i].nodeType == LzDataElement.TEXT_NODE ) {
                 this.p.childNodes[i].setData( val );
                 foundit = true;
                 break;
@@ -1004,7 +1004,7 @@ function setNodeText (val) {
   * @return Integer: The number of child nodes for the current node
   */
 function getNodeCount (){ 
-    if (! this.p || this.p.nodeType == LzDataNode.TEXT_NODE) return 0;
+    if (! this.p || this.p.nodeType == LzDataElement.TEXT_NODE) return 0;
     return this.p.childNodes.length || 0;
 }
 
@@ -1031,7 +1031,7 @@ function addNode ( name, text , attrs ){
         nn.appendChild( new LzDataText( text ) );
     }
 
-    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+    if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         this.p.appendChild( nn );
     }
     
@@ -1101,7 +1101,7 @@ function addNodeFromPointer ( dp ){
 
     var n = dp.p.cloneNode( true );
     
-    if (this.p.nodeType != LzDataNode.TEXT_NODE) {
+    if (this.p.nodeType != LzDataElement.TEXT_NODE) {
     this.p.appendChild( n );
     }
     
@@ -1310,7 +1310,7 @@ function __LZneedsOpUpdate ( chgpkg = null ){
                        chgpkg.who ==  this.p
                      ) || 
                     ( chgpkg.who.parentNode ==  this.p &&
-                      chgpkg.who.nodeType == LzDataNode.TEXT_NODE 
+                      chgpkg.who.nodeType == LzDataElement.TEXT_NODE 
                     )                               
                   )
               :

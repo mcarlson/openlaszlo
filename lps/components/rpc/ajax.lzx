@@ -187,7 +187,7 @@
         </method>
 
         <doc>
-            <tag name="shortdesc"><text>An implementation of XMLHttpRequest (also called "AJAX")</text></tag>
+            <tag name="shortdesc"><text>An implementation of XMLHttpRequest (also called "AJAX") for compatibility in SWF runtimes</text></tag>
             <text>
                 <p>This class implements the XMLHTTPRequest as <a href="http://developer.apple.com/internet/webcontent/xmlhttpreq.html" shape="rect">
                     specified</a> by the <a href="http://www.whatwg.org/specs/web-apps/current-work/#scripted-http" shape="rect">WHATWG</a> consortium.</p> 
@@ -205,6 +205,12 @@
                     <li>Username/password Auth args to send() not supported</li>
                     
                 </ul>
+
+                This implementation is simply a convenience wrapper
+                for the LzDataset API, which is the preferred way to
+                write runtime-portable code which loads XML data over
+                the network.
+
                 <programlisting>
     &lt;script&gt;
         function loadXMLDoc(url) {

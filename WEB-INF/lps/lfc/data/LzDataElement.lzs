@@ -10,7 +10,7 @@
 
 /**
   * @shortdesc A node of hierarchical data.
-  * @see LzDataNode LzDataText LzDataPointer
+  * @see LzDataNodeMixin LzDataText LzDataPointer
   * @access public
   */
 mixin LzDataElementMixin {
@@ -63,9 +63,9 @@ var nodeName:* = null;
 var attributes:* = null;
 
 
-/** Inserts the given LzDataNode before another node in this node's childNodes
-  * @param LzDataNode newChild: the LzDataNode to insert
-  * @param LzDataNode refChild: the LzDataNode to insert newChild before
+/** Inserts the given LzDataNodeMixin before another node in this node's childNodes
+  * @param LzDataNodeMixin newChild: the LzDataNodeMixin to insert
+  * @param LzDataNodeMixin refChild: the LzDataNodeMixin to insert newChild before
   * @return LzDataElement: The new child, or null if the refChild wasn't found
   */
 function insertBefore (newChild, refChild){
@@ -91,9 +91,9 @@ function insertBefore (newChild, refChild){
 
 
 /**
-  * Replaces a given LzDataNode in this node's childNodes with a new one.
-  * @param LzDataNode newChild: the LzDataNode to add
-  * @param LzDataNode oldChild: the LzDataNode to be replaced by the newChild
+  * Replaces a given LzDataNodeMixin in this node's childNodes with a new one.
+  * @param LzDataNodeMixin newChild: the LzDataNodeMixin to add
+  * @param LzDataNodeMixin oldChild: the LzDataNodeMixin to be replaced by the newChild
   * @return LzDataElement: The new child, or null if the oldChild wasn't found
   */
 function replaceChild (newChild, oldChild){
@@ -118,8 +118,8 @@ function replaceChild (newChild, oldChild){
 
 /**
   * Removes a given node from this node's childNodes
-  * @param LzDataNode oldChild: The LzDataNode to remove
-  * @return LzDataNode: The removed child, or null if the oldChild was not found
+  * @param LzDataNodeMixin oldChild: The LzDataNodeMixin to remove
+  * @return LzDataNodeMixin: The removed child, or null if the oldChild was not found
   */
 function removeChild (oldChild){
     var reval = null;
@@ -138,8 +138,8 @@ function removeChild (oldChild){
 
 /**
   * Adds a child to this node's list of childNodes
-  * @param LzDataNode newChild: The LzDataNode to add.
-  * @return LzDataNode: The newChild.
+  * @param LzDataNodeMixin newChild: The LzDataNodeMixin to add.
+  * @return LzDataNodeMixin: The newChild.
   */
 function appendChild (newChild){
     if ( this.childNodes ){
@@ -173,7 +173,7 @@ function hasChildNodes (){
   * Returns a copy of this node.
   * @param Boolean deep: If true, the children of this node will be part of the
   * new node
-  * @return LzDataNode: A copy of this node.
+  * @return LzDataNodeMixin: A copy of this node.
   */
 function cloneNode ( deep ){
     var n = new LzDataElement(this.nodeName);
@@ -256,7 +256,7 @@ function $lzc$hasAttr_dependencies (who , self){
 
 /**
   * Returns the first child of this node.
-  * @return LzDataNode: The first child of this node
+  * @return LzDataNodeMixin: The first child of this node
   */
 function getFirstChild (){
     return this.childNodes[ 0 ];
@@ -268,7 +268,7 @@ function $lzc$getFirstChild_dependencies( who, self ){
 
 /**
   * Returns the last child of this node.
-  * @return LzDataNode: The last child of this node
+  * @return LzDataNodeMixin: The last child of this node
   */
 function getLastChild (){
     return this.childNodes[ this.childNodes.length-1 ];
@@ -307,7 +307,7 @@ function setAttrs ( attrs ){
 
 /**
   * Sets the children of this node to the given array.
-  * @param [LzDataNode] children: An array of LzDataNodes to be the new children
+  * @param [LzDataNodeMixin] children: An array of LzDataNodeMixins to be the new children
   * of this node
   */
 function setChildNodes ( children ){
@@ -356,7 +356,7 @@ function __LZgetText ( dummyarg = null ){
     var s= "";
     for ( var i = 0; i < this.childNodes.length; i++ ){
         var c = this.childNodes[ i ]
-        if ( c.nodeType == LzDataNode.TEXT_NODE ){
+        if ( c.nodeType == LzDataElement.TEXT_NODE ){
             s += c.data;
         }
     }
@@ -366,7 +366,7 @@ function __LZgetText ( dummyarg = null ){
 /**
   * Returns a list of the childNodes of this node which have a given name
   * @param String name: The name of the node to look for.
-  * @return [LzDataNode]: A list of childNodes which have the given name.
+  * @return [LzDataNodeMixin]: A list of childNodes which have the given name.
   */
 function getElementsByTagName (name) {
     var r = [];
@@ -452,7 +452,7 @@ function serializeInternal (len=Infinity) {
 
     //Debug.info('k', this.attributes);
     for ( var k in this.attributes ){
-        s += " " + k + '="' + LzDataNode.__LZXMLescape( this.attributes[ k ] ) + '"';
+        s += " " + k + '="' + LzDataElement.__LZXMLescape( this.attributes[ k ] ) + '"';
         if (s.length > len) { break; }
     }
 
@@ -485,7 +485,7 @@ override function _dbg_name () {
   * way. This method sends the onDocumentChange event, which triggers
   * datapointer updates
   * @param String what: A description of what changed.
-  * @param LzDataNode who: The node that changed.
+  * @param LzDataNodeMixin who: The node that changed.
   * @param Number type: private
   */
 function handleDocumentChange ( what , who , type, cobj=null ){
@@ -561,11 +561,11 @@ function __LZdoUnlock ( locker ){
 
 /**
   * <p>
-  * An LzDataElement represents a node a in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or <classname>LzDataText</classname>, which represents a text node. See the example on <classname>LzDataNode</classname>. 
+  * An LzDataElement represents a node a in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or <classname>LzDataText</classname>, which represents a text node. See the example on <classname>LzDataNodeMixin</classname>. 
   * </p>
   *
   * @shortdesc A node of hierarchical data.
-  * @see LzDataNode LzDataText LzDataPointer
+  * @see LzDataNodeMixin LzDataText LzDataPointer
   * @access public
   */
 class LzDataElement extends LzMiniNode with LzDataElementMixin, LzDataNodeMixin
@@ -575,7 +575,7 @@ class LzDataElement extends LzMiniNode with LzDataElementMixin, LzDataNodeMixin
     function LzDataElement ( name , attributes = null, children = null) {
             super(name, attributes, children);
             this.nodeName = name;
-            this.nodeType = LzDataNode.ELEMENT_NODE;
+            this.nodeType = LzDataElement.ELEMENT_NODE;
             this.attributes = attributes;
             this.ownerDocument = this;
             if (children == null) {
@@ -663,5 +663,100 @@ static function __LZv2E ( o ) {
 
     return c;
 }
+
+
+
+//@problem: how do I document these?
+static var ELEMENT_NODE = 1;
+static var TEXT_NODE = 3;
+static var DOCUMENT_NODE = 9;
+
+/** this is similar to the escape routine in LzText, but that one's shorter
+  * since flash it's just for escaping &gt;&lt;
+  * @access private
+  */
+static var __LZescapechars = 
+{ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'};
+
+
+/**
+  * @access private
+  */
+static function __LZXMLescape ( t ){
+    if ( typeof( t ) != "string" ) return t;
+
+    var olen = t.length;
+    var r = "";
+    for ( var i = 0; i < olen; i++ ){
+        //handle newlines
+        var code = t.charCodeAt( i );
+        if ( code < 32 ){
+            r += "&#x" + LzUtils.dectohex(code,0) + ";";
+        } else {
+            var c = t.charAt( i );
+            if ( LzDataElement.__LZescapechars[ c ] != null ){
+                r += LzDataElement.__LZescapechars[ c ];
+            } else {
+                r += c;
+            }
+        }
+    }
+
+    return r;
+}
+
+
+/**
+  * Converts string to XML data.
+  * @param String str: A valid string of XML. If the string is simple text, or
+  * that there isn't a single root element, this function returns null. In cases
+  * where the string is an invalid but well formatted snippet of XML, this
+  * function will close any tags to make for a valid XML document
+  * @param boolean trimwhitespace: if true, text nodes have whitespace trimmed from start and end.
+  * @param boolean nsprefix: if true, preserve namespace prefixes on node names and attribute names.
+  * @return LzDataElement: An LzDataElement which is the top of the hierarchy
+  * generated from the string
+  */
+static function stringToLzData( str, trimwhitespace=false, nsprefix=false ) {
+    // [todo hqm 2006-06] if we had try-catch, I'd try to catch errors in parseXML
+    // and return null in that case. 
+    if (str != null && str != "") {
+        //Debug.info("stringToLzData: parsing: ", typeof(str), str);
+        var nativexml = LzXMLParser.parseXML(str, trimwhitespace, nsprefix);
+        var lfcnode = LzXMLTranslator.copyXML(nativexml, trimwhitespace, nsprefix);
+        return lfcnode;
+    } else {
+        return null;
+    }
+}
+
+static var whitespaceChars = {' ': true, '\r': true, '\n': true, '\t': true};
+
+
+/**
+  * trim whitespace from start and end of string
+  * @access private
+  */
+static function trim( str ) {
+    var whitech = LzDataElement.whitespaceChars;
+    var len = str.length;
+    var sindex = 0;
+    var eindex = str.length -1;
+    var ch;
+    while (sindex < len) {
+        ch = str.charAt(sindex);
+        if (whitech[ch] != true) break;
+        sindex++;
+    }
+
+    while (eindex > sindex) {
+        ch = str.charAt(eindex);
+        if (whitech[ch] != true) break;
+        eindex--;
+    }
+        
+    return str.slice(sindex,eindex+1);
+}
+
 
 } // End of LzDataElement

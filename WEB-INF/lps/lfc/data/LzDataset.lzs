@@ -186,7 +186,7 @@ function $lzc$set_querytype (v) { this.setQueryType(v); }
   */
 var trimwhitespace = false;
 
-// var nodeType = LzDataNode.DOCUMENT_NODE;
+// var nodeType = LzDataElement.DOCUMENT_NODE;
 
 /** When true, the server will attempt to cache 
   * response (defaults to false).  There are security concerns 
@@ -249,7 +249,7 @@ function $lzc$set_initialdata(v) { this.setInitialData(v); }
 /** @access private */
 
 override function construct ( parent , args ){
-    this.nodeType = LzDataNode.DOCUMENT_NODE;
+    this.nodeType = LzDataElement.DOCUMENT_NODE;
     this.queuerequests = false; // default to false, to emulate browser default
 
     this.oncanvas = parent == canvas || parent == null;
@@ -857,7 +857,7 @@ function setHeader ( k , val ){
 /** @access private */
 function setInitialData ( d ){
     if (d != null) {
-        var e = LzDataNode.stringToLzData(d, this.trimwhitespace, this.nsprefix);
+        var e = LzDataElement.stringToLzData(d, this.trimwhitespace, this.nsprefix);
         if (e != null)
             this.setData(e.childNodes);
     }

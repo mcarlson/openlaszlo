@@ -338,7 +338,7 @@ class $lzc$class_replicator extends LzNode {
     }
 
     //  Gets the clone for the given datanode
-    //          @param LzDataNode datanode: The datanode of the clone to get
+    //          @param LzDataNodeMixin datanode: The datanode of the clone to get
     function getCloneForNode (datanode) {
         var l = this.clones.length; 
         for ( var i = 0; i < l; i++ ){

@@ -77,9 +77,8 @@ var onownerDocument = LzDeclaredEvent;
   */
 var nodeType:*; // This is undefined. Set elsewhere
 
-/** @access private */
 var parentNode:* = null;
-/** @access private */
+
 var ownerDocument:*;
 /** @access private */
 var __LZo:* = -1;
@@ -87,7 +86,7 @@ var __LZo:* = -1;
 var sel:Boolean = false;
 
 /** An array of children of this node
-  * @type LzDataNode
+  * @type LzDataNodeMixin
   */
 var childNodes:* = null;
 
@@ -97,7 +96,7 @@ var __LZcoDirty = true;
 
 /**
   * Returns the sibling before this one this node's parentNodes List of children
-  * @return LzDataNode: The node preceeding this one in this node's childNodes
+  * @return LzDataNodeMixin: The node preceeding this one in this node's childNodes
   */
 function getPreviousSibling (){
     if (!this.parentNode) return null;
@@ -107,7 +106,7 @@ function getPreviousSibling (){
 
 /**
  * Returns the parent of this node
- * @return LzDataNode: the parent of this node
+ * @return LzDataNodeMixin: the parent of this node
  */
 function getParent () {
   return this.parentNode;
@@ -131,7 +130,7 @@ function $lzc$getPreviousSibling_dependencies( who, self ){
 
 /**
   * Returns the sibling after this one this node's parentNodes List of children
-  * @return LzDataNode: The node succeeding this one in this node's childNodes
+  * @return LzDataNodeMixin: The node succeeding this one in this node's childNodes
   */
 function getNextSibling (){
     if (!this.parentNode) return null;
@@ -172,8 +171,8 @@ override function childOf ( el , allowself=false ) {
 
 
 /**
-  * Sets the LzDataNode which is the ownerDocument for this node.
-  * @param LzDataNode ownerDoc: The LzDataNode to act as the ownerDocument for
+  * Sets the LzDataNodeMixin which is the ownerDocument for this node.
+  * @param LzDataNodeMixin ownerDoc: The LzDataNodeMixin to act as the ownerDocument for
   * this node.
   */
 function setOwnerDocument ( ownerDoc ){
@@ -208,47 +207,10 @@ function __LZunlockFromUpdate ( locker ){
 
 // Only static methods and variables remain here
 
-class LzDataNode {
-
-//@problem: how do I document these?
-static var ELEMENT_NODE = 1;
-static var TEXT_NODE = 3;
-static var DOCUMENT_NODE = 9;
-
-/** this is similar to the escape routine in LzText, but that one's shorter
-  * since flash it's just for escaping &gt;&lt;
-  * @access private
-  */
-static var __LZescapechars = 
-{ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'};
-
-
 /**
-  * @access private
-  */
-static function __LZXMLescape ( t ){
-    if ( typeof( t ) != "string" ) return t;
-
-    var olen = t.length;
-    var r = "";
-    for ( var i = 0; i < olen; i++ ){
-        //handle newlines
-        var code = t.charCodeAt( i );
-        if ( code < 32 ){
-            r += "&#x" + LzUtils.dectohex(code,0) + ";";
-        } else {
-            var c = t.charAt( i );
-            if ( LzDataNode.__LZescapechars[ c ] != null ){
-                r += LzDataNode.__LZescapechars[ c ];
-            } else {
-                r += c;
-            }
-        }
-    }
-
-    return r;
-}
-
+ *  @access private
+ */
+class LzDataNode {
 
 /**
   * Converts string to XML data.
@@ -260,46 +222,16 @@ static function __LZXMLescape ( t ){
   * @param boolean nsprefix: if true, preserve namespace prefixes on node names and attribute names.
   * @return LzDataElement: An LzDataElement which is the top of the hierarchy
   * generated from the string
+  * @deprecated Use <code>LzDataElement.stringToLzData</code> 
   */
 static function stringToLzData( str, trimwhitespace=false, nsprefix=false ) {
-    // [todo hqm 2006-06] if we had try-catch, I'd try to catch errors in parseXML
-    // and return null in that case. 
-    if (str != null && str != "") {
-        //Debug.info("stringToLzData: parsing: ", typeof(str), str);
-        var nativexml = LzXMLParser.parseXML(str, trimwhitespace, nsprefix);
-        var lfcnode = LzXMLTranslator.copyXML(nativexml, trimwhitespace, nsprefix);
-        return lfcnode;
-    } else {
-        return null;
+    if ( $debug ){
+      Debug.info("%s.%w is deprecated.  Use `LzDataElement.stringToLzData` instead.",
+                 this, arguments.callee);
     }
+    return LzDataElement.stringToLzData(str, trimwhitespace, nsprefix);
+
 }
 
-static var whitespaceChars = {' ': true, '\r': true, '\n': true, '\t': true};
-
-
-/**
-  * trim whitespace from start and end of string
-  * @access private
-  */
-static function trim( str ) {
-    var whitech = LzDataNode.whitespaceChars;
-    var len = str.length;
-    var sindex = 0;
-    var eindex = str.length -1;
-    var ch;
-    while (sindex < len) {
-        ch = str.charAt(sindex);
-        if (whitech[ch] != true) break;
-        sindex++;
-    }
-
-    while (eindex > sindex) {
-        ch = str.charAt(eindex);
-        if (whitech[ch] != true) break;
-        eindex--;
-    }
-        
-    return str.slice(sindex,eindex+1);
-}
 
 } // End of LzDataNode

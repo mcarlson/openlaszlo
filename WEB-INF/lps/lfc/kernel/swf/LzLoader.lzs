@@ -422,7 +422,7 @@ function copyFlashXML (node, trimwhitespace, nsprefix) {
     // text node?
     if (node.nodeType == 3) {
         if (trimwhitespace == true) {
-            nv = LzDataNode.trim(nv);
+            nv = LzDataElement.trim(nv);
         }
         lfcnode = new LzDataText(nv);
     } else {
@@ -472,7 +472,7 @@ function copyFlashXML (node, trimwhitespace, nsprefix) {
 var copyQueue = null;
 
 // Task that is called periodically from Idle loop.
-// This does the work of copying the Flash XML tree into a LzDataNode tree.
+// This does the work of copying the Flash XML tree into a LzDataElement tree.
 // Run the copy queue
 /**
   * @access private
@@ -513,7 +513,7 @@ var copyLoopsPerFrame = 1000;
 var maxLoopTime = 2000; // 2 seconds
 
 // Iterative implementation, using a queue, to translate a XMLNode tree into
-// a tree of LzDataNode.
+// a tree of LzDataElement.
 //
 // Queue contains list of XMLNodes to be copied
 /**
@@ -548,10 +548,10 @@ function queuedCopyFlashXML_internal () {
         // text node?
         if (node.nodeType == 3) {
             if (trimwhitespace == true) {
-                nv = LzDataNode.trim(nv);
+                nv = LzDataElement.trim(nv);
             }
             // FIXME: [2008-3-31 pbr] This bypasses initialization
-            lfcnode = {__proto__: LzDataText.prototype, data: nv, parentNode: lfcparent, nodeType: LzDataNode.TEXT_NODE};
+            lfcnode = {__proto__: LzDataText.prototype, data: nv, parentNode: lfcparent, nodeType: LzDataElement.TEXT_NODE};
         } else {
             // Do we need to copy attributes list as well?
             // After this works, try bashing the __proto__
@@ -593,7 +593,7 @@ function queuedCopyFlashXML_internal () {
 
             // FIXME: [2008-3-31 pbr] This bypasses initialization
             lfcnode = { __proto__: LzDataElement.prototype,
-                        nodeType: LzDataNode.ELEMENT_NODE,
+                        nodeType: LzDataElement.ELEMENT_NODE,
                         nodeName: nodename,
                         attributes: cattrs,
                         ownerDocument: lfcparent.ownerDocument,

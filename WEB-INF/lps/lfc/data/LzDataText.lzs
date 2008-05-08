@@ -9,10 +9,10 @@
   */
 
 /**
-  * An LzDataText represents a text node a in a hierarchical dataset. An LzDataText can only contain text data. It can be a child a of an <classname>LzDataElement</classname>. See the example on <classname>LzDataNode</classname>. 
+  * An LzDataText represents a text node a in a hierarchical dataset. An LzDataText can only contain text data. It can be a child a of an <classname>LzDataElement</classname>. See the example on <classname>LzDataNodeMixin</classname>. 
   *
   * @shortdesc Represents a text node in a set of data.
-  * @see lzdatanode, lzdataelement, datapointer
+  * @see lzdatanodemixin, lzdataelement, datapointer
   * @fixme [2006-07-26] (LPP-2412) The Instance reference is required for lzpix
   *                                to run.
   */
@@ -23,7 +23,7 @@ class LzDataText extends LzMiniNode with LzDataNodeMixin {
   */
 function LzDataText ( text ){
     super();
-    this.nodeType = LzDataNode.TEXT_NODE;
+    this.nodeType = LzDataElement.TEXT_NODE;
     this.data = text;
 }
 
@@ -45,7 +45,7 @@ var ondata = LzDeclaredEvent;
 
 /** This property is of type String, can raise a DOMException object on setting
   * and can raise a DOMException object on retrieval. */
-//var nodeType = LzDataNode.TEXT_NODE;
+//var nodeType = LzDataElement.TEXT_NODE;
 
 /** The name of this node.
  * According to W3C-specs, nodeName for LzDataText should return
@@ -94,7 +94,7 @@ function cloneNode (ignore=null){
   * @access private
   */
 function serialize (len=null){
-    return LzDataNode.__LZXMLescape( this.data );
+    return LzDataElement.__LZXMLescape( this.data );
 }
 
 /**

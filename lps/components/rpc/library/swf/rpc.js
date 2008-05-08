@@ -75,7 +75,7 @@ function __LZloaderReturnData (loadmc, data, responseheaders) {
                             stub: stub, stubinfo: stubinfo,
                             seqnum: seqnum } );
 
-    } else if ((data instanceof LzDataNode) && data.childNodes[0].nodeName == 'error') {
+    } else if ((data instanceof LzDataNodeMixin) && data.childNodes[0].nodeName == 'error') {
 
         var error = data.childNodes[0].attributes['msg'];
 

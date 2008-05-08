@@ -297,7 +297,7 @@ function toAbsoluteURL (url, secure) {
   * @param String str: The string to escape
   */
 function xmlEscape (str) {
-    return LzDataNode.__LZXMLescape( str );
+    return LzDataElement.__LZXMLescape( str );
 }
 
 /**

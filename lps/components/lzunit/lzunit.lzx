@@ -136,8 +136,8 @@
 
     // this takes two string
     function xmlstringequals (str1, str2) {
-        var xml1 = LzDataNode.stringToLzData(str1)
-        var xml2 = LzDataNode.stringToLzData(str2)
+        var xml1 = LzDataElement.stringToLzData(str1)
+        var xml2 = LzDataElement.stringToLzData(str2)
         return xmlequals(xml1, xml2);
     }
     
