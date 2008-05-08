@@ -234,6 +234,7 @@ LzSprite.prototype.quirks = {
     ,safari_paste_event: false
     ,text_event_charcode: true
     ,keypress_function_keys: true
+    ,ie_timer_closure: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -273,6 +274,9 @@ LzSprite.prototype.__updateQuirks = function () {
             }
 
             quirks['ie_opacity'] = true;
+
+            // IE needs closure around setTimeout, setInterval in LzTimeKernel
+            quirks['ie_timer_closure'] = true;
 
             // IE DOM leak prevention
             quirks['ie_leak_prevention'] = true;
