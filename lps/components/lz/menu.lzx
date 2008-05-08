@@ -225,7 +225,7 @@
         <attribute name="delaytime" value="300" />
         
         <!--- the command object assigned to be executed when this menuitem is selected -->
-        <attribute name="command" value="null" type="command"
+        <attribute name="command" value="null" type="expression"
                    setter="this.setCommand( command )"   when="once" />
                            
         <!--- this event is sent to the menuitem when it is selected -->

@@ -26,6 +26,36 @@ static function copyXML (xmlobj, trimwhitespace, nsprefix) {
     return fc;
 }
 
+
+static var whitespaceChars = {' ': true, '\r': true, '\n': true, '\t': true};
+
+
+/**
+  * trim whitespace from start and end of string
+  * @access private
+  */
+static function trim( str ) {
+    var whitech = whitespaceChars;
+    var len = str.length;
+    var sindex = 0;
+    var eindex = str.length -1;
+    var ch;
+    while (sindex < len) {
+        ch = str.charAt(sindex);
+        if (whitech[ch] != true) break;
+        sindex++;
+    }
+
+    while (eindex > sindex) {
+        ch = str.charAt(eindex);
+        if (whitech[ch] != true) break;
+        eindex--;
+    }
+        
+    return str.slice(sindex,eindex+1);
+}
+
+
 // Recursively copy a Flash XML(Node) tree into a LzDataElement
 // tree. Used by LzDataNode.stringToLzData
 /**
@@ -39,7 +69,7 @@ static function copyFlashXML (node, trimwhitespace, nsprefix) {
     if (node.nodeKind() == 'text') {
         var nv = node.toString();
         if (trimwhitespace == true) {
-            nv = LzDataNode.trim(nv);
+            nv = trim(nv);
         }
         lfcnode = new LzDataText(nv);
 //PBR Changed to match swf kernel

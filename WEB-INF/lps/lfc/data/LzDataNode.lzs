@@ -212,6 +212,15 @@ function __LZunlockFromUpdate ( locker ){
  */
 class LzDataNode {
 
+
+// @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead
+static var ELEMENT_NODE = 1;
+// @deprecated Use <code>LzDataElement.TEXT_NODE</code> instead
+static var TEXT_NODE = 3;
+// @deprecated Use <code>LzDataElement.DOCUMENT_NODE</code> instead
+static var DOCUMENT_NODE = 9;
+
+
 /**
   * Converts string to XML data.
   * @param String str: A valid string of XML. If the string is simple text, or
