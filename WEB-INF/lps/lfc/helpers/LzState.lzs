@@ -190,7 +190,7 @@ function setApply ( doapply ){
 
     if ( doapply ){
         if ( this.isinited ){
-            this.apply(null);
+            this.apply();
         } else {
             new LzDelegate( this , "apply" , this , "oninit" );
         }
@@ -205,7 +205,7 @@ function setApply ( doapply ){
   * Applies the state to the state's parent. If the state is already applied,
   * has no effect
   */
-function apply (ignore){
+function apply (){
     //@field Boolean isapplied: true if the state is currently applied
     if ( this.isapplied ){
         return;
