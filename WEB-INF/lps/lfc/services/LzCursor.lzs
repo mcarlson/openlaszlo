@@ -12,6 +12,7 @@
 /**
  * Interface to the kernel cursor controls
  * @devnote TODO: [2008-03-20 ptw] This should be `interface` not `class`.
+ * @access private 
  */
 class LzCursorInterface {
   /**
