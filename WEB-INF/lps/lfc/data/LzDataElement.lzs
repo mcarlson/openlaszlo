@@ -667,11 +667,11 @@ static function __LZv2E ( o ) {
 
 
 /** constant for LZX DOM data element node type */
-static final var ELEMENT_NODE = 1;
+static  var ELEMENT_NODE = 1;
 /** constant for LZX DOM data text node type*/
-static final var TEXT_NODE = 3;
+static  var TEXT_NODE = 3;
 /** constant for LZX DOM document root node type */
-static final var DOCUMENT_NODE = 9;
+static  var DOCUMENT_NODE = 9;
 
 /** this is similar to the escape routine in LzText, but that one's shorter
   * since flash it's just for escaping &gt;&lt;
