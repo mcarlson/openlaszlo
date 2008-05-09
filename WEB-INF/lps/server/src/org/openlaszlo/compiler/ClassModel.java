@@ -336,7 +336,7 @@ public class ClassModel implements Comparable {
   Map getMergedMethods() {
     if (mergedMethods != null) { return mergedMethods; }
     if (nodeModel == null) { return mergedMethods = new LinkedHashMap(); }
-    Map merged = mergedMethods = superclass.getMergedMethods();
+    Map merged = mergedMethods = new LinkedHashMap(superclass.getMergedMethods());
     // Merge in the our methods
     for (Iterator i = nodeModel.getAttrs().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
