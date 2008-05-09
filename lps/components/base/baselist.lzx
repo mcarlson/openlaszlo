@@ -3,7 +3,6 @@
     <include href="base/listselector.lzx"/>
     <include href="base/datalistselector.lzx"/>
 
-    <!--- An abstract class which all list components should subclass. -->
     <class name="baselist" extends="baseformitem">
         <!--- The name of the class for new items that will be created with
               addItem(). -->
@@ -404,7 +403,7 @@
             return this.getValue();
         </method>
         <doc>
-          <tag name="shortdesc"><text>contains a group of baselistitems</text></tag>
+            <tag name="shortdesc"><text>An abstract class which all list components should subclass.</text></tag>
           <text>
             <p>This class is a container for a group of
             <classname>baselistitem</classname>s.  To use
@@ -430,7 +429,7 @@
             <p>or replicated from data: </p>
             
             <example>
-            &lt;canvas height="70"&gt;
+            &lt;canvas height="90"&gt;
              &lt;dataset name="items"&gt;
                 &lt;item&gt;one&lt;/item&gt;
                 &lt;item&gt;two&lt;/item&gt;
