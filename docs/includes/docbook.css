@@ -76,8 +76,17 @@ td {
     margin-bottom: 5px;
 }
 
-.refsynopsisdiv .term {
+.refsynopsisdiv {
     font-style: normal;
+}
+
+.term {
+    font-style: normal;
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 13px;
+    font-weight : bold;
+    color: #000000;
+    background-color: #e8e8e8;
 }
 .indexdiv dl dd {
     padding-bottom: inherit;
@@ -208,9 +217,15 @@ tr.segtitle > th {
 
 /* Synopsis */
 
+.methodclass {
+    color: #333333;
+    font-size: 14px;
+}
+
 .methodname {
     color: #333333;
     font-size: 14px;
+    font-weight:bold;
 }
 
 .methodparam {

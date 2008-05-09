@@ -249,8 +249,6 @@
     
     <xsl:template match="property" mode="refentry-details">
       <refsect1>
-        <title>Details</title> 
-
         <xsl:variable name="jsname" select="@name"/>
         <xsl:variable name="lzxname" select="&tagname;"/>
         <xsl:variable name="ivars" select="&objectvalue;/property[@name='__ivars__']/object/property[&isvisible;]"/>
@@ -493,7 +491,7 @@
     
     <xsl:variable name="visible-members" select="$members[contains($visibility.filter,@access)]"/>
     <xsl:if test="count($visible-members) > 0">
-      <refsect2><title><xsl:value-of select="$title"/></title>
+      <variablelist><title><xsl:value-of select="$title"/></title></variablelist>
       <informaltable frame="none" colsep="0">
         <tgroup cols="4">
           <colspec colname="Name" />
@@ -522,7 +520,6 @@
           </tbody>
         </tgroup>
       </informaltable>
-      </refsect2>
     </xsl:if>
   </xsl:template>
   
@@ -541,7 +538,7 @@
     </xsl:variable>
     
     <xsl:if test="count($visible-members) > 0">
-      <refsect2><title>Events</title>
+      <variablelist><title>Events</title></variablelist>
       <informaltable frame="none" colsep="0" rowsep="0">        
         <tgroup cols="2">
           <colspec colname="Name" />
@@ -572,9 +569,7 @@
           </tbody>
         </tgroup>
       </informaltable>      
-      </refsect2>
     </xsl:if>
-
   </xsl:template>
 
     <xsl:template match="initarg|property" mode="describe-member">
@@ -1003,7 +998,7 @@
       
       <xsl:if test="child::class[@extends]">
         <refsect1>
-          <xsl:text>Extends </xsl:text>
+          <xsl:text>extends </xsl:text>
           <xsl:call-template name="describe-superclass-chain">
             <xsl:with-param name="class" select="child::class"/>
           </xsl:call-template>
@@ -1012,7 +1007,7 @@
       <xsl:if test="child::class/@inherits">
         <xsl:variable name="inheritslist" select="child::class/@inherits"/>
         <refsect1>
-          <xsl:text>With </xsl:text>
+          <xsl:text>with </xsl:text>
           <xsl:call-template name="describe-mixin-chain">
             <xsl:with-param name="mixins" select="$inheritslist"/>
           </xsl:call-template>
@@ -1142,7 +1137,7 @@
     <xsl:variable name="extends" select="$class/@extends"/>
     <xsl:variable name="inheritslist" select="$class/@inherits"/>
      <xsl:call-template name="iterate-inherited">
-       <xsl:with-param name="values" select="concat($extends,',',$inheritslist)"/>
+       <xsl:with-param name="values" select="concat($inheritslist,',',$extends)"/>
        <xsl:with-param name="memberkind" select="'attributes'"/>
      </xsl:call-template>
   </xsl:template>  
@@ -1150,7 +1145,10 @@
   <xsl:template name="describe-inherited-attributes-for">
     <xsl:param name="superclass"/>
     <xsl:if test="$superclass">
-      <refsect2>
+      <xsl:variable name="inheritedattrs" select="$superclass/class/property[@name='__ivars__']/object/property[@access='public']"></xsl:variable>
+      <xsl:variable name="allinheritedattrs" select="$inheritedattrs[not &isevent;]" />
+      <xsl:if test="count($allinheritedattrs) > 0">
+       <refsect2>
         <title>
           <xsl:text>Attributes inherited from&nbsp;</xsl:text>
           <xsl:call-template name="show-super-link">
@@ -1158,8 +1156,6 @@
           </xsl:call-template>
         </title>
         <para>
-          <xsl:variable name="inheritedattrs" select="$superclass/class/property[@name='__ivars__']/object/property[@access='public']"></xsl:variable>
-          <xsl:variable name="allinheritedattrs" select="$inheritedattrs[not &isevent;]" />
           <xsl:for-each select="$allinheritedattrs">
             <xsl:sort select="@name"/>            
             <!-- even if attributes are public, if the class is not, there will
@@ -1172,10 +1168,13 @@
                 <xsl:value-of select="@name"/>
               </xsl:otherwise>
             </xsl:choose>
-            <xsl:text>, </xsl:text>
+            <xsl:if test="position() != last()">
+              <xsl:text>, </xsl:text>
+            </xsl:if>
           </xsl:for-each>
         </para>
-      </refsect2>                       
+       </refsect2>                       
+      </xsl:if>
       <xsl:choose>
         <xsl:when test="contains($visibility.filter, $superclass/@access)">
           <xsl:call-template name="describe-inherited-attributes">
@@ -1191,6 +1190,7 @@
      
   </xsl:template>  
   
+
   <xsl:template name="describe-inherited-methods">
     <xsl:param name="class"/>        
     
@@ -1201,7 +1201,7 @@
     <xsl:variable name="inheritslist" select="$class/@inherits"/>
     
      <xsl:call-template name="iterate-inherited">
-       <xsl:with-param name="values" select="concat($extends,',',$inheritslist)"/>
+       <xsl:with-param name="values" select="concat($inheritslist,',',$extends)"/>
        <xsl:with-param name="memberkind" select="'methods'"/>
      </xsl:call-template>
   </xsl:template>  
@@ -1211,8 +1211,9 @@
     <xsl:param name="superclass"/>
   
     <xsl:if test="$superclass">
-      <refsect2>              
       <xsl:variable name="inheritedmethods" select="$superclass/class/property/object/property[@access='public']/function"></xsl:variable>      
+      <xsl:if test="count($inheritedmethods) > 0">
+       <refsect2>              
         <title>
           <xsl:text>Methods inherited from&nbsp;</xsl:text>          
           <xsl:call-template name="show-super-link">
@@ -1232,10 +1233,13 @@
                <xsl:value-of select="../@name"/>
               </xsl:otherwise>
             </xsl:choose>
-            <xsl:text>, </xsl:text>
+            <xsl:if test="position() != last()">
+              <xsl:text>, </xsl:text>
+            </xsl:if>
           </xsl:for-each>
         </para>
-      </refsect2>  
+       </refsect2>  
+      </xsl:if>
       <xsl:choose>
         <xsl:when test="contains($visibility.filter, $superclass/@access)">
           <xsl:call-template name="describe-inherited-methods">
@@ -1263,7 +1267,7 @@
     <xsl:variable name="inheritslist" select="$class/@inherits"/>
 
      <xsl:call-template name="iterate-inherited">
-       <xsl:with-param name="values" select="concat($extends,',',$inheritslist)"/>
+       <xsl:with-param name="values" select="concat($inheritslist,',',$extends)"/>
        <xsl:with-param name="memberkind" select="'events'"/>
      </xsl:call-template>
   </xsl:template>  
@@ -1273,7 +1277,8 @@
   
     <xsl:if test="$superclass">  
       <xsl:variable name="inheritedevents" select="$superclass/class/property[@name='__ivars__']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &ispublic;]"></xsl:variable>
-      <refsect2>
+      <xsl:if test="count($inheritedevents) > 0">
+       <refsect2>
         <title>
           <xsl:text>Events inherited from&nbsp;</xsl:text>
           <xsl:call-template name="show-super-link">
@@ -1293,10 +1298,13 @@
                 <xsl:value-of select="@name"/>
               </xsl:otherwise>
             </xsl:choose>
-            <xsl:text>, </xsl:text>
+            <xsl:if test="position() != last()">
+              <xsl:text>, </xsl:text>
+            </xsl:if>
           </xsl:for-each>
         </para>
-      </refsect2>
+       </refsect2>
+      </xsl:if>
       <xsl:choose>
         <xsl:when test="contains($visibility.filter, $superclass/@access)">
           <xsl:call-template name="describe-inherited-events">
