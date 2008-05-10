@@ -96,7 +96,7 @@ public class LzTextSprite extends LzSprite {
             textclip.displayAsPassword = this.password;
 
             textclip.selectable = args.selectable;
-            textclip.autoSize = TextFieldAutoSize.LEFT;
+            textclip.autoSize = TextFieldAutoSize.NONE;
 
             // TODO [hqm 2008-01] have to figure out how the Flex textfield multiline
             // maps to Laszlo model.
@@ -108,6 +108,12 @@ public class LzTextSprite extends LzSprite {
             this.fontstyle = args.fontstyle;
             textclip.background = false;
 
+            // multiline text fields are left justified
+            if (args.multiline) {
+                textclip.autoSize = TextFieldAutoSize.LEFT;
+            }
+
+
             // To compute our width:
             // + if text is multiline:
             //    if no width is supplied, use parent width
@@ -117,9 +123,6 @@ public class LzTextSprite extends LzSprite {
 
 
             //(args.width == null && typeof(args.$refs.width) != "function")
-
-
-            textclip.autoSize = TextFieldAutoSize.LEFT;
 
             // To compute our height:
             // + If height is supplied, use it.
@@ -255,7 +258,7 @@ public class LzTextSprite extends LzSprite {
         
             if (this.resize && (this.multiline == false)) {
                 // single line resizable fields adjust their width to match the text
-            var w:Number = this.getTextWidth();
+                var w:Number = this.getTextWidth();
                 //trace('lztextsprite resize setwidth ', w, this.lzheight );
                 if (w != this.lzwidth) {
                     this.setWidth(w);

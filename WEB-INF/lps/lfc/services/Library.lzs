@@ -15,13 +15,9 @@
 
 #include "services/LzModeManager.lzs"
 
-if ($swf9) {
-#include "services/LzURL.js"
-} else {
-
 #include "services/LzCursor.lzs"
 #include "services/LzURL.lzs"
-}
+
 
 #include "services/LzKeys.lzs"
 if ($js1) {
