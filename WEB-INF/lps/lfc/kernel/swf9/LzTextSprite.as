@@ -32,7 +32,7 @@ public class LzTextSprite extends LzSprite {
         var font = null;
         public var lineheight = 11;
 
-        public var colorstring:String = "#000000";
+        public var textcolor = 0;
         public var text:String = "";
 
         public var resize:Boolean = true;
@@ -72,6 +72,7 @@ public class LzTextSprite extends LzSprite {
         }
 
         override public function setHeight( h:* ):void {
+            Debug.write('setHeight ', h);
             super.setHeight(h);
             if (h) {
                 this.textfield.height = h;
@@ -216,8 +217,8 @@ public class LzTextSprite extends LzSprite {
          * @param Number c: The color for the text -- from 0x0 (black) to 0xFFFFFF (white)
          */
         public override function setColor ( col:* ):void {
-            if (col) {
-                this.colorstring = "#" + col.toString( 16 );
+            if (col != null) {
+                this.textcolor = col;
                 this.__setFormat();
                 this.setText( this.text );
             }
@@ -267,9 +268,8 @@ public class LzTextSprite extends LzSprite {
 
             //multiline resizable fields adjust their height
             if (this.sizeToHeight) {
-                this.setHeight(this.textfield.height);
+                this.setHeight(this.textfield.textHeight);
             }
-
             //this.textfield.cacheAsBitmap = true;
         }
 
@@ -292,7 +292,7 @@ public class LzTextSprite extends LzSprite {
             var tf:TextFormat = new TextFormat();
             tf.size = this.fontsize;
             tf.font = (this.font == null ? cfontname : this.font.name);
-            tf.color = this.colorstring;
+            tf.color = this.textcolor;
 
             // If there is no font found, assume a device font
             if (this.font == null) {
