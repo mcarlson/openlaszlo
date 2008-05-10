@@ -193,10 +193,13 @@
               &lt;/basetabs&gt;
             &lt;/canvas&gt;
             </example>
-            
-            <seealso>
-            <tags>basetab basetabs</tags>
-            </seealso>
+              <p><b>See Also:</b></p>
+              <ul>
+                  <li>
+                      <a href="lz.basetab.html" target="_self">&lt;basetab&gt;</a>, 
+                      and <a href="lz.basetabs.html" target="_self">&lt;basetabs&gt;</a>
+                  </li>
+              </ul>                       
           </text>
         </doc>
     </class> <!-- class basetabsbar -->
@@ -431,10 +434,14 @@
               &lt;/basetabs&gt;
             &lt;/canvas&gt;
             </example>
-            
-            <seealso>
-            <tags>basetab basetabs basetabscontent</tags>
-            </seealso>
+              <p><b>See Also:</b></p>
+              <ul>
+                  <li>
+                      <a href="lz.basetab.html" target="_self">&lt;basetab&gt;</a>, 
+                      <a href="lz.basetabs.html" target="_self">&lt;basetabs&gt;</a>, 
+                      and <a href="lz.basetabscontent.html" target="_self">&lt;basetabscontent&gt;</a>
+                  </li>
+              </ul>                       
           </text>
         </doc>
         
@@ -445,11 +452,7 @@
     <!--  BASETABSCONTENT  -->
     <!-- ================= -->
 
-    <!--- Basetabscontent should be in basetabs. If width and height are not
-          set, basetabscontent will stretch to the largest content item. You can
-          pass the name of this class in the 'contentclass' attribute of
-          basetabs and tabs. Basetabs uses this class as its default
-          'contentclass'.-->
+   
     <class name="basetabscontent" extends="basecomponent" focusable="false"
            height="${parent._contentHeight}" width="${parent._contentWidth}"
            initstage="immediate">
@@ -478,6 +481,13 @@
             your <classname>basetabs</classname> a look, e.g., adding borders to
             your content. <classname>basetabscontent</classname> is a child of the
             <classname>basetabs</classname> component.</p>
+              <p><classname>basetabscontent</classname> should be in <classname>basetabs</classname>. If
+                  <attribute>width</attribute> and <attribute>height</attribute> are not set,
+                  <classname>basetabscontent</classname> will stretch to the largest content item. You can
+                  pass the name of this class in the <attribute>contentclass</attribute> attribute of
+                  <classname>basetabs</classname> and <classname>tabs</classname>.
+                  <classname>basetabs</classname> uses this class as its default
+                  <classname>contentclass</classname></p>
             
             <example title="custom basetabscontent with borders">
             &lt;canvas width="150" height="75"&gt;
@@ -516,9 +526,13 @@
             &lt;/canvas&gt;
             </example>
             
-            <seealso>
-            <tags>basetabpane basetabs</tags>
-            </seealso>
+              <p><b>See Also:</b></p>
+              <ul>
+                  <li>
+                      <a href="../reference/lz.basetabpane.html" target="_self">&lt;basetabpane&gt;</a>
+                      and <a href="lz.basetabs.html" target="_self">&lt;basetabs&gt;</a>
+                  </li>
+              </ul>
           </text>
         </doc>
     </class> <!-- class basetabscontent -->
@@ -799,10 +813,15 @@
               &lt;/basetabs&gt;
             &lt;/canvas&gt;
             </example>
-            
-            <seealso>
-            <tags>basetab basetabsbar basetabpane basetabscontent</tags>
-            </seealso>
+              <p><b>See Also:</b></p>
+              <ul>
+                  <li>
+                      <a href="lz.basetab.html" target="_self">&lt;basetab&gt;</a>, 
+                      <a href="lz.basetabsbar.html" target="_self">&lt;basetabsbar&gt;</a>, 
+                      <a href="lz.basetabpane.html" target="_self">&lt;basetabpane&gt;</a>, 
+                      and <a href="lz.basetabscontent.html" target="_self">&lt;basetabscontent&gt;</a>
+                  </li>
+              </ul>            
           </text>
         </doc>
     </class> <!-- class basetabs -->
