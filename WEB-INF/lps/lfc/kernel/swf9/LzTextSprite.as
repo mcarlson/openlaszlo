@@ -72,7 +72,6 @@ public class LzTextSprite extends LzSprite {
         }
 
         override public function setHeight( h:* ):void {
-            Debug.write('setHeight ', h);
             super.setHeight(h);
             if (h) {
                 this.textfield.height = h;
@@ -268,7 +267,7 @@ public class LzTextSprite extends LzSprite {
 
             //multiline resizable fields adjust their height
             if (this.sizeToHeight) {
-                this.setHeight(this.textfield.textHeight);
+                this.setHeight(Math.max(this.textfield.textHeight, this.textfield.height));
             }
             //this.textfield.cacheAsBitmap = true;
         }
