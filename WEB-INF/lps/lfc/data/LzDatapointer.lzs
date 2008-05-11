@@ -599,7 +599,7 @@ function __LZgetNodes ( pathobj , p , startpoint = null ){
       var cp = pathobj.selectors[ i ];
       var specialop = this.pathSymbols [ cp ];
       var posnext = pathobj.selectors[ i+1 ];
-      if ( posnext && posnext.pred == "range" ){
+      if ( posnext && !(posnext is String) && posnext['pred'] == "range" ){
         //next is range operator
         //we'll handle that in this pass, so increment counter again
         var range = pathobj.selectors[ ++i ];
