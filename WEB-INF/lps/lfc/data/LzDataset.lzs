@@ -107,7 +107,9 @@ static var slashPat = "/";
 
 /** @access private */
 var dataprovider = defaultdataprovider;
-/** @access private */
+/**  Create a new data request object for each request. Defaults to false.
+ * @type Boolean
+ */
 var multirequest = false;
 /** @access private */
 var dataRequest = null; 
@@ -119,15 +121,16 @@ var dsloadDel = null;
 var errorstring;
 /** @access private */
 var reqOnInitDel;
-/** @access private */
+/** TCP port number to use for secure (HTTPS) requests
+ * @type Number
+*/
 var secureport;
 
-/** @lzxtype event */
-// var ondata = LzDeclaredEvent;
 /** Sent when the dataset's request results in an error. 
  * @lzxtype event
  */
 var onerror = LzDeclaredEvent;
+
 /** Sent when the request made by the dataset times out. 
   * @lzxtype event
   */
@@ -176,9 +179,11 @@ var getresponseheaders = false;
         super(parent,args,children,instcall);
     }
 
-/**  HTTP method */
-
+/**  HTTP request method. Value must be one of "GET" or "POST".
+ * @type String
+ */
 var querytype = "GET";
+/** @access private */
 function $lzc$set_querytype (v) { this.setQueryType(v); }
 
 /** When true, the server will trim 
@@ -219,10 +224,16 @@ function $lzc$set_data(v) { this.setData(v); }
   * @type String
   */
 var src = null;
+/** @access private */
 function $lzc$set_src(v) { this.setSrc(v); }
 
 
+/** If autorequest is true, a new request will be issued automatically when the source or query params are modified.
+ * @type Boolean
+ * @lzxdefault "false"
+*/
 var autorequest = false;
+
 /** @access private */
 function $lzc$set_autorequest(v) { this.setAutorequest(v); }
 
@@ -231,11 +242,13 @@ function $lzc$set_autorequest(v) { this.setAutorequest(v); }
   * @type Boolean
   */
 var request = false;
+/** @access private */
 function $lzc$set_request(v) { this.setRequest(v); }
 
 /** @access private */
 var headers = null;
-/** @access private */
+/** Proxy data requests via the proxy server. Inherits value from canvas.proxied flag.
+ @type Boolean or null*/
 var proxied = null;
 /** @access private */
 var responseheaders = null;
@@ -780,8 +793,7 @@ function getRequestHeaderParams ( ){
 }
 
 /**
-  * Clears any request header parameters
-  * @access protected
+  * Clears all request header parameters which were set from <method>setHeader</method>
   */
 function clearRequestHeaderParams ( ){ 
     if (this.headers)
