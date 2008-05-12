@@ -80,13 +80,14 @@ class LzHTTPDataProvider extends LzDataProvider {
      * Interrupts any load in progress for the given dataset.
      * @access protected
      * @param LzDataRequest dreq: The data request for which to interrupt the load.
+     * @access public
      */
     function abortLoadForRequest( dreq ) {
         dreq.loader.abort();        
     }
 
     /**
-     * @access private
+     * @access public
      */
     override function doRequest ( dreq ) {
         // dreq.src can be null if the dataset is loaded from initialdata
@@ -224,30 +225,43 @@ class LzHTTPDataProvider extends LzDataProvider {
         tloader.send (/* content */ postbody);
     }
 
+    /**
+     * @access private
+     */
     function loadSuccess ( loader, data ) { 
         var dreq = loader.dataRequest;
         dreq.status = LzDataRequest.SUCCESS;
         loader.owner.loadResponse( dreq, data );
     }
 
+    /**
+     * @access private
+     */
     function loadError( loader, data ) { 
         var dreq = loader.dataRequest;
         dreq.status = "error";
         loader.owner.loadResponse( dreq, data );
     }
 
+    /**
+     * @access private
+     */
     function loadTimeout( loader, data ) { 
         var dreq = loader.dataRequest;
         dreq.status = LzDataRequest.TIMEOUT;
         dreq.onstatus.sendEvent( dreq );
     }
 
+    /**
+     * @access private
+     */
     function setRequestError (dreq, msg) {
         dreq.error = msg;
         dreq.status = LzDataRequest.ERROR;
     }
 
     /**
+     * @access private
      * @param dataRequest dreq:
      * @param LzDataElement data:
      */

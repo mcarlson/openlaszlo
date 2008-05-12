@@ -212,7 +212,8 @@
     <category title="Services">
         <item title="LzFocus" href="LzFocus.html" />    
         <item title="LzCursor" href="LzCursor.html" />
-        <item title="LzTrack" href="LzCursor.html" />
+        <item title="LzTrack" href="LzTrack.html" />
+        <item title="LzURL" href="LzURL.html" />
     </category>
     
     <category title="Charts and Graphs">

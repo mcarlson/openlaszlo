@@ -210,7 +210,11 @@ function __LZunlockFromUpdate ( locker ){
 /**
  *  @access private
  */
-class LzDataNode {
+class LzDataNode extends  LzMiniNode {
+
+    function LzDataNode ( name , attributes = null, children = null) {
+        super();
+    }
 
 
 // @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead

@@ -568,7 +568,7 @@ function __LZdoUnlock ( locker ){
   * @see LzDataNodeMixin LzDataText LzDataPointer
   * @access public
   */
-class LzDataElement extends LzMiniNode with LzDataElementMixin, LzDataNodeMixin
+class LzDataElement extends LzDataNode with LzDataElementMixin, LzDataNodeMixin
 {
     // N.B.: LzDataElement is not an LzNode so has a different
     // initialize signature.
