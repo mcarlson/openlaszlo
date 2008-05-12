@@ -133,7 +133,9 @@ var onerror = LzDeclaredEvent;
   */
 var ontimeout = LzDeclaredEvent;
 
-/** @access private */
+/** The numer of milliseconds to wait before the request times out, and an ontimeout event is sent.
+ * @lzxtype Number
+ */
 var timeout = 60000;
 
 /** @access private */
