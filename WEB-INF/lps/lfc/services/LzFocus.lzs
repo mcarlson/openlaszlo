@@ -365,6 +365,9 @@ dynamic class LzFocusService extends LzMiniNode {
 }
 /**
   * LzFocus is a shortcut for <a href="LzFocusService.html">LzFocusService</a>.
+  * This service manages the keyboard focus. At any time, at most one view has the keyboard focus. This is the view that receives key events when a key is pressed. 
+  *
+  * @shortdesc Handles keyboard focus.
   */
 var LzFocus = new LzFocusService();
 LzFocus.initialize();
