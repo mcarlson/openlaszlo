@@ -141,7 +141,6 @@
     <category title="Scripting">
         <item title="handler (LzDelegate)" href="LzDelegate.html" />
         <item title="event (LzEvent)" href="LzEvent.html" />
-        <item title="LzBrowser" href="LzBrowser.html" />
         <item title="method" href="tag.method.html" />
         <item title="node (LzNode)" href="LzNode.html" />
         <item title="script" href="LzScript.html" />
@@ -210,8 +209,9 @@
     </category>
     
     <category title="Services">
-        <item title="LzFocus" href="LzFocus.html" />    
+        <item title="LzBrowser" href="LzBrowser.html" />
         <item title="LzCursor" href="LzCursor.html" />
+        <item title="LzFocus" href="LzFocus.html" />    
         <item title="LzTrack" href="LzTrack.html" />
         <item title="LzURL" href="LzURL.html" />
     </category>

@@ -188,6 +188,7 @@ dynamic public class LzSprite extends Sprite {
           var info:LoaderInfo = imgLoader.contentLoaderInfo;
           info.addEventListener(Event.INIT,       loaderInitHandler);
           info.addEventListener(IOErrorEvent.IO_ERROR,       loaderEventHandler);
+          Debug.write('sprite setsource load ', url);
           imgLoader.load(new URLRequest(url));
       }
 

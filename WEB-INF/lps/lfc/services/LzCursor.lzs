@@ -108,7 +108,7 @@ public class LzCursorService {
  * </example>
  *
  * @type LzCursorService
- * @shortdesc  LzCursor is a shortcut for <a href="LzCursorService.html">LzCursorService</a>.LzCursor
+ * @shortdesc  LzCursor is a shortcut for <link linkend="LzCursorService">LzCursorService.LzCursor</link>
  */
 var LzCursor = new LzCursorService();
 LzCursorService.LzCursor = LzCursor;
