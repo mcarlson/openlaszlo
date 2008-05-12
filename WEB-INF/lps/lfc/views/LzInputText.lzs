@@ -37,7 +37,7 @@
   * the length of the <attribute>width</attribute> attribute, and the user
   * can press Enter to create multiple lines of input.</p>
   * 
-  * <example title="Simple inputtext"><programlisting>&lt;canvas height="20"&gt;
+  * <example title="Simple inputtext"><programlisting>&lt;canvas height="50"&gt;
   *   &lt;inputtext width="150" multiline="true"&gt;This text is editable.&lt;/inputtext&gt;
   * &lt;/canvas&gt;</programlisting></example>
   * 
@@ -52,20 +52,6 @@
   *   &lt;inputtext width="100" password="true"&gt;password.&lt;/inputtext&gt;
   * &lt;/canvas&gt;</programlisting></example>
   * 
-  * 
-  * <h2 id="fixedsize-optimization">Optimizing <code>inputtext</code></h2>
-  * 
-  * <p>A large <tagname>inputtext</tagname> view will respond to character
-  * input slowly.  In many cases, it will not be able to keep up with
-  * reasonable typing speed, even on a fast machine.</p>
-  * 
-  * <p>If an instance of <tagname>inputtext</tagname> will not be resized
-  * at runtime, and the compiler can determine its size at compile time,
-  * the compiler can substitute a <tagname>inputtext</tagname> view that
-  * is optimized to accept text at that size for the generic resizable
-  * <tagname>inputtext</tagname> view.  This optimized
-  * <tagname>inputtext</tagname> view can keep up with typing speed even
-  * at large sizes or on a slow computer.</p>
   * 
   * @shortdesc The basic input-text element.
   * @lzxname inputtext
@@ -92,10 +78,15 @@ static var tagname = 'inputtext';
   LzNode.mergeAttributes({selectable: true, enabled: true}, LzInputText.attributes);
 
 
-/** @lzxtype event */
+/** Sent whenever the text field is enabled.
+  * @lzxtype event
+  */
 var onenabled = LzDeclaredEvent;
 
-/** @lzxtype event */
+
+/** @access private
+  * @lzxtype event
+  */
 var onselect = LzDeclaredEvent;
 
 /** 
@@ -177,7 +168,10 @@ function _gotBlurEvent(e=null){
     isprite.gotBlur();
 }
 
-// Receive input text events from sprite
+
+/** @access private 
+ * Receive input text events from sprite
+ */
 function inputtextevent (eventname, value = null) {
     //Debug.warn('inputtextevent', eventname, value);
     if (eventname == 'onfocus' && this._focused) return;
@@ -242,6 +236,7 @@ function $lzc$set_enabled(v) { this.setEnabled(v); }
 
 /**
   * Set the html flag on this text view
+  * @param Boolean htmlp: If true, the text content is treated as HTML when displayed.
   */
 function setHTML (htmlp) {
     if (this.capabilities['htmlinputtext']) {
