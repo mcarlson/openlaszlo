@@ -58,7 +58,8 @@ if ($swf9) {
 } else {
   if ($as2) {
     // Initialize the DojoExternalInterface class
-    DojoExternalInterface = new DojoExternalInterfaceClass();
+    var id = LzBrowserKernel.getInitArg('id');
+    DojoExternalInterface = new DojoExternalInterfaceClass(id);
   }
   if ($debug) {
     // Must be loaded last -- tells the core debugger loading is done

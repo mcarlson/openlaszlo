@@ -15,7 +15,7 @@
  * embeded, add this line:</para>
  * <example executable="false">
  *   &lt;script language="JavaScript" type="text/javascript">
- *     lz.swfEmbed({url: '<replaceable>myapp.lzx</replaceable>?lzt=swf', bgcolor: '#000000', width: '<replaceable>800</replaceable>', height: '<replaceable>600</replaceable>'});
+ *     Lz.swfEmbed({url: '<replaceable>myapp.lzx</replaceable>?lzt=swf', bgcolor: '#000000', width: '<replaceable>800</replaceable>', height: '<replaceable>600</replaceable>'});
  *   &lt;/script></example>
  *
  * <para>where the url matches the URI that the application is served from, and
@@ -27,7 +27,7 @@
  *     Lz.dhtmlEmbedLFC('<replaceable>{$lps}</replaceable>/lps/includes/lfc/LFCdhtml.js');
  *   &lt;script&gt;</example>
  *
- * And of course DHTML embedding uses the <code>lz.dhtmlEmbed</code> call instead of <code>lz.swfEmbed</code>.
+ * And of course DHTML embedding uses the <code>Lz.dhtmlEmbed</code> call instead of <code>Lz.swfEmbed</code>.
  * 
  * @shortdesc JavaScript library for embedding Laszlo applications
  */
@@ -104,7 +104,8 @@ Lz = {
         };
 
         // Add entry for this application 
-        var app = Lz[properties.id] = { 
+        if (Lz[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
+        var app = Lz[properties.id] = Lz.applications[properties.id] = { 
             runtime: 'swf'
             ,_id: properties.id
             ,setCanvasAttribute: Lz._setCanvasAttributeSWF
@@ -123,14 +124,7 @@ Lz = {
             app._onload.push(Lz.history.init);
         }
         // for callbacks onload
-        Lz._swfid = properties.id;
-        dojo.flash.addLoadedListener(Lz._loaded);
-        if (! Lz['setCanvasAttribute']) {
-            Lz.setCanvasAttribute = app.setCanvasAttribute;
-        }
-        if (! Lz['getCanvasAttribute']) Lz.getCanvasAttribute = app.getCanvasAttribute;
-        if (! Lz['callMethod']) Lz.callMethod = app.callMethod;
-
+        dojo.flash.addLoadedListener(Lz._loaded, app);
         dojo.flash.setSwf(swfargs, minimumVersion);
         Lz.__BrowserDetect.init();
         if (Lz.__BrowserDetect.OS == 'Mac' || 
@@ -212,8 +206,9 @@ Lz = {
             ,url: url
         };
 
+        if (Lz[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
         // Add entry for this application 
-        var app = Lz[properties.id] = { 
+        var app = Lz[properties.id] = Lz.applications[properties.id] = { 
             runtime: 'dhtml'
             ,_id: properties.id
             ,_ready: Lz._ready
@@ -226,11 +221,11 @@ Lz = {
         if (properties.history != false) {
             app._onload.push(Lz.history.init);
         }
-        if (! Lz['setCanvasAttribute']) Lz.setCanvasAttribute = app.setCanvasAttribute;
-        if (! Lz['getCanvasAttribute']) Lz.getCanvasAttribute = app.getCanvasAttribute;
 
         this.__dhtmlLoadScript(url)
     }
+    ,/** A hash of applications installed on the page keyed by id */
+    applications: {}
 
     ,/** @access private */
     __dhtmlLoadScript: function (url) {
@@ -362,11 +357,12 @@ Lz = {
      * @param hist:Boolean value - if true, add a history event.
      */
     _setCanvasAttributeSWF: function (name, value, hist) {
-        if (this.loaded && dojo.flash.comm['callMethod']) {
+        //console.log('_setCanvasAttributeSWF', name, value, hist);
+        if (this.loaded && dojo.flash.comm[this._id] && dojo.flash.comm[this._id]['callMethod']) {
             if (hist) {
                 Lz.history._store(name, value);
             } else {
-                dojo.flash.comm.setCanvasAttribute(name, value + '');
+                dojo.flash.comm[this._id].setCanvasAttribute(name, value + '');
             }
         } else {
             if (this._setCanvasAttributeQ == null) {
@@ -394,12 +390,14 @@ Lz = {
     }
     ,/** @access private */
     // called by flash/js 
-    _loaded: function () {
+    _loaded: function (id) {
+        //console.log('_loaded', id);
+        if (Lz[id].loaded) return;
         if (dojo.flash.info.commVersion == 8) {
             // wait a bit longer for Flash to init
-            setTimeout('Lz["'+Lz._swfid +'"]._ready.call(Lz["'+Lz._swfid+'"])', 100);
+            setTimeout('Lz["'+ id +'"]._ready.call(Lz["'+ id +'"])', 100);
         } else {
-            Lz[Lz._swfid]._ready.call(Lz[Lz._swfid]);
+            Lz[id]._ready.call(Lz[id]);
         }
     }
     ,/** @access private */
@@ -412,7 +410,6 @@ Lz = {
     ,/** @access private called on canvas init */
     _ready: function (cref) {
         this.loaded = true;
-        Lz.loaded = true;
         if (this._setCanvasAttributeQ) {
             this._setCanvasAttributeDequeue();
         }
@@ -422,9 +419,11 @@ Lz = {
             var f = this._onload[i];
             if (typeof f == 'function') f(this);
         }
+        //console.log('_ready', this, this.onload);
         // for backward compatibility and simplicity
         if (this.onload && typeof this.onload == 'function') {
-            this.onload();
+            //alert('onload');
+            this.onload(this);
         }
     }
 
@@ -436,7 +435,7 @@ Lz = {
      */
     _getCanvasAttributeSWF: function (name) {
         if (this.loaded) {
-            return dojo.flash.comm.getCanvasAttribute(name);
+            return dojo.flash.comm[this._id].getCanvasAttribute(name);
         } else {
             alert('Flash is not ready: getCanvasAttribute' + name);
         }
@@ -579,13 +578,32 @@ Lz = {
      */
     _callMethodSWF: function (js) {
         if (this.loaded) {
-            return dojo.flash.comm.callMethod(js);
+            return dojo.flash.comm[this._id].callMethod(js);
         } else {
             var f = function() {
-                dojo.flash.comm.callMethod(js);
+                dojo.flash.comm[this._id].callMethod(js);
             };
-            dojo.flash.addLoadedListener(f);
+            dojo.flash.addLoadedListener(f, this);
+            //console.log('addlistener', this, f);
         }
+    }
+    ,/** @access private */
+    _broadcastMethod: function(methodname) {
+        var args = [].slice.call(arguments, 1);
+        for (var i in Lz.applications) {
+            var app = Lz.applications[i];
+            if (! app.loaded) continue;
+            if (app[methodname]) {
+                //console.log(methodname, app, arguments);
+                app[methodname].apply(app, args);
+            }
+        }
+    }
+    ,setCanvasAttribute: function(name, value, history) {
+        Lz._broadcastMethod('setCanvasAttribute', name, value, history);
+    }
+    ,callMethod: function(js) {
+        Lz._broadcastMethod('callMethod', js);
     }
     ,/** @access private */
     _getAppendDiv: function(id, appenddivid) {
@@ -599,7 +617,7 @@ Lz = {
     }
     ,/** @access private */
     _getSWFDiv: function() {
-        return dojo.flash.obj.get();
+        return dojo.flash.obj[this._id].get();
     }
     ,/** @access private */
     _sendMouseWheel: function(d) {

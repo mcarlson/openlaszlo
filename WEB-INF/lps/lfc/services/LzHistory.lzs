@@ -25,9 +25,19 @@
 
 public class LzHistoryService extends LzNode {
 /**
-  * true if history system is ready to receive events (for 3.x compatibility)
+  * true if history system is ready to receive events (for 3.x compatibility).  Use the LzHistory.onready event instead.
++ * @deprecated  
   */
 var isReady = false;
+/**
+  * true if history system is ready to receive events
+  */
+var ready = false;
+/** Sent when history events are ready to be sent and received.
+  * @lzxtype event
+  * @access public
+  */
+var onready = LzDeclaredEvent;
 
 /**
   * If true, persistence is on.
@@ -70,25 +80,24 @@ function receiveHistory(o){
         this.__initPersist();
     }
     var l = this.__lzhistq.length;
-    o *= 1;
-    if (! o) {
-        o = 0;
-    } else if (o > l - 1) {
-        o = l;
+    var offset = o * 1;
+    if (! offset) {
+        offset = 0;
+    } else if (offset > l - 1) {
+        offset = l;
     }
 
-    var h = this.__lzhistq[o];
+    var h = this.__lzhistq[offset];
     for (var u in h) {
         var obj = h[u];
         //Debug.write('restoring state ', global[obj.c], obj.c, obj.n, obj.v);
         global[obj.c].setAttribute(obj.n, obj.v);
     }
 
-    this.offset = o;
-    //Debug.write('onhistory ', o, this.__lzhistq);
-    if (this.onoffset.ready) this.onoffset.sendEvent(o);
-    LzBrowserKernel.receivedHistory(o);
-    return true;
+    //Debug.write('onhistory ', offset, this.__lzhistq);
+    this.setAttribute('offset', offset);
+    //LzBrowserKernel.receivedHistory(o);
+    return offset * 1;
 }
 
 /**
@@ -96,8 +105,7 @@ function receiveHistory(o){
   */
 function receiveEvent(n, v){
     //Debug.write('got event', n, v);
-    canvas[n] = v;
-    if (canvas['on' + n].ready) canvas['on' + n].sendEvent(v);
+    canvas.setAttribute(n, v);
 }
 
 /**
@@ -249,6 +257,15 @@ function setPersist(p) {
             Debug.warn('The %s runtime does not support %s', canvas['runtime'], 'LzHistory.setPersist()');
         }
     }
+}
+
+/** Called by the canvas sprite after init
+  * @access private 
+  */
+function __start() {
+    //Debug.write('setReady', isReady);
+    this.isReady = true;
+    this.setAttribute('ready', true);
 }
 }
 

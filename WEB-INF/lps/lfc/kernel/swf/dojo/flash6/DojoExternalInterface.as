@@ -7,18 +7,20 @@
 
 class DojoExternalInterfaceClass {
 	var available;
-	var dojoPath = "";
+	//var dojoPath = "";
 	var _fscommandReady = false;
 	var _callbacks = [];
+	var _id;
 
-	function DojoExternalInterfaceClass(){ 
+	function DojoExternalInterfaceClass(id){ 
 		//getURL("javascript:alert('FLASH:DojoExternalInterface initialize')");
 		//Debug.write('DojoExternalInterface.initialize()');
 		// FIXME: Set available variable by testing for capabilities
-		DojoExternalInterface.available = true;
+		this.available = true;
+		this._id = id;
 		
 		// extract the dojo base path
-		DojoExternalInterface.dojoPath = DojoExternalInterface.__getDojoPath();
+		//DojoExternalInterface.dojoPath = DojoExternalInterface.__getDojoPath();
 		//getURL("javascript:alert('FLASH:dojoPath="+DojoExternalInterface.dojoPath+"')");
 		//Debug.write('DojoExternalInterface.dojoPath', DojoExternalInterface.dojoPath);
 		
@@ -84,14 +86,14 @@ class DojoExternalInterfaceClass {
 		// argument being the method name. JavaScript takes the method name,
 		// retrieves the arguments using GetVariable, executes the method,
 		// and then places the return result in a Flash variable
-		// named "_returnResult".
+		// named "_fsreturnResult".
 		_root._numArgs = arguments.length - 2;
 		for(var i = 2; i < arguments.length; i++){
 			var argIndex = i - 2;
 			_root["_" + argIndex] = arguments[i];
 		}
 		
-		_root._returnResult = undefined;
+		_root._fsreturnResult = '~~~foo`~~';
 		fscommand("call", methodName);
 		//Debug.write("call", methodName, resultsCallback);
 		
@@ -102,12 +104,11 @@ class DojoExternalInterfaceClass {
 		
 		// check at regular intervals for return results	
 		var resultsChecker = function resultsChecker(){
-			if((typeof _root._returnResult != "undefined")&&
-				(_root._returnResult != "undefined")){
+			if(_root._fsreturnResult != '~~~foo`~~'){
 				clearInterval(_root._callbackID);
 				_root._callbackID = null;
 				//Debug.write('resultsChecker clear', _root._callbackID);
-				resultsCallback.call(null, _root._returnResult);
+				resultsCallback.call(null, _root._fsreturnResult);
 			}
 		};	
 		_root._callbackID = setInterval(resultsChecker, 100);
@@ -183,8 +184,9 @@ class DojoExternalInterfaceClass {
 			fscommand("addCallback", DojoExternalInterface._callbacks[i]);
 			//Debug.write('addCallback', DojoExternalInterface._callbacks[i]);
 		}
-		DojoExternalInterface.call("dojo.flash.loaded");
-		LzBrowserKernel.__jsready();
+		DojoExternalInterface.call("dojo.flash.loaded", null, DojoExternalInterface._id);
+		// Delay until the system is initted - make sure the loaded() call goes through.
+		setTimeout(LzBrowserKernel.__jsready, 40);
 	}
 	
 	/** 
@@ -195,7 +197,7 @@ class DojoExternalInterfaceClass {
 	*/
 	function _initializeFlashRunner(){
 		// figure out where our Flash movie is
-		var swfLoc = DojoExternalInterface.dojoPath + "/flash6_gateway.swf";
+		//var swfLoc = DojoExternalInterface.dojoPath + "/flash6_gateway.swf";
 		
 		// load our gateway helper file
 		//_root.createEmptyMovieClip("flashRunner", 199);

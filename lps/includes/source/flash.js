@@ -285,21 +285,31 @@ dojo.flash = function(){
 };
 
 dojo.flash = {
-    flash6_version: null,
-    flash8_version: null,
-    ready: false,
-    _visible: true,
-    width: 500,
-    height: 400,
-    bgcolor: '#ffffff',
-    wmode: 'window',
-    flashvars: '',
-    minimumVersion: 7,
-    id: 'flashObject',
-    appenddiv: null,
+    // Default values for embedding
+    defaults: {
+        flash6: null,
+        flash8: null,
+        ready: false,
+        visible: true,
+        width: 500,
+        height: 400,
+        bgcolor: '#ffffff',
+        wmode: 'window',
+        flashvars: '',
+        minimumVersion: 7,
+        id: 'flashObject',
+        appenddiv: null
+    },
+    // Embed objects by id
+    obj: {},
+    // Communicator objects by id
+    comm: {},
 
     _loadedListeners: [],
+    _loadedListenerScopes: [],
     _installingListeners: [],
+    _installingListenerScopes: [],
+
     
     setSwf: function(/* Object */ fileInfo, minimumVersion){
         // summary: Sets the SWF files and versions we are using.
@@ -317,61 +327,35 @@ dojo.flash = {
         if(fileInfo == null){
             return;
         }
-        
-        if(fileInfo.flash6 != null){
-            this.flash6_version = fileInfo.flash6;
+
+        // unique hash of app properties based on defaults, overridden by fileInfo
+        var properties = {};
+
+        for (var key in this.defaults) {
+            var val = fileInfo[key];
+            if (val != null) {
+                properties[key] = val;
+            } else {
+                properties[key] = this.defaults[key]; 
+            }
         }
         
-        if(fileInfo.flash8 != null){
-            this.flash8_version = fileInfo.flash8;
-        }
-        
-        if(fileInfo.width != null){
-            this.width = fileInfo.width;
-        }
-
-        if(fileInfo.height != null){
-            this.height = fileInfo.height;
-        }
-
-        if(fileInfo.id != null){
-            this.id = fileInfo.id;
-        }
-
-        if(fileInfo.bgcolor != null){
-            this.bgcolor = fileInfo.bgcolor;
-        }
-
-        if(fileInfo.wmode != null){
-            this.wmode = fileInfo.wmode;
-        }
-
-        if(fileInfo.visible != null){
-            this._visible = fileInfo.visible;
-        }    
-        
-        if(fileInfo.flashvars != null){
-            this.flashvars = fileInfo.flashvars;
-        }    
-
-        if(fileInfo.appenddiv != null){
-            this.appenddiv = fileInfo.appenddiv;
-        }    
-
         if(minimumVersion != null) {
             this.minimumVersion = minimumVersion;
         }        
 
         // initialize ourselves        
-        this._initialize();
+        this._initialize(properties);
     },
     
-    useFlash6: function(){ /* Boolean */
+    useFlash6: function(id){ /* Boolean */
         // summary: Returns whether we are using Flash 6 for communication on this platform.
         
-        if(this.flash6_version == null){
+        var app = dojo.flash.obj[id].properties;
+        //console.log('useFlash6', app.flash6, id, app);
+        if(app.flash6 == null){
             return false;
-        }else if (this.flash6_version != null && dojo.flash.info.commVersion == 6){
+        }else if (app.flash6 != null && dojo.flash.info.commVersion == 6){
             // if we have a flash 6 version of this SWF, and this browser supports 
             // communicating using Flash 6 features...
             return true;
@@ -380,12 +364,13 @@ dojo.flash = {
         }
     },
     
-    useFlash8: function(){ /* Boolean */
+    useFlash8: function(id){ /* Boolean */
         // summary: Returns whether we are using Flash 8 for communication on this platform.
         
-        if(this.flash8_version == null){
+        var app = dojo.flash.obj[id].properties;
+        if(app.flash8 == null){
             return false;
-        }else if (this.flash8_version != null && dojo.flash.info.commVersion == 8){
+        }else if (app.flash8 != null && dojo.flash.info.commVersion == 8){
             // if we have a flash 8 version of this SWF, and this browser supports
             // communicating using Flash 8 features...
             return true;
@@ -394,7 +379,7 @@ dojo.flash = {
         }
     },
     
-    addLoadedListener: function(/* Function */ listener){
+    addLoadedListener: function(/* Function */ listener, scope){
         // summary:
         //    Adds a listener to know when Flash is finished loading. 
         //    Useful if you don't want a dependency on dojo.event.
@@ -402,9 +387,10 @@ dojo.flash = {
         //    A function that will be called when Flash is done loading.
         
         this._loadedListeners.push(listener);
+        this._loadedListenerScopes.push(scope);
     },
 
-    addInstallingListener: function(/* Function */ listener){
+    addInstallingListener: function(/* Function */ listener, scope){
         // summary:
         //    Adds a listener to know if Flash is being installed. 
         //    Useful if you don't want a dependency on dojo.event.
@@ -413,9 +399,11 @@ dojo.flash = {
         //    installed
         
         this._installingListeners.push(listener);
+        this._installingListenerScopes.push(scope);
     },    
     
-    loaded: function(){
+    loaded: function(id){
+        //console.log('loaded', id);
         // summary: Called back when the Flash subsystem is finished loading.
         // description:
         //    A callback when the Flash subsystem is finished loading and can be
@@ -433,7 +421,9 @@ dojo.flash = {
         dojo.flash.ready = true;
         if(dojo.flash._loadedListeners.length > 0){
             for(var i = 0;i < dojo.flash._loadedListeners.length; i++){
-                dojo.flash._loadedListeners[i].call(null);
+                var scope = dojo.flash._loadedListenerScopes[i];
+                if (id != scope._id) continue;
+                dojo.flash._loadedListeners[i].apply(scope, [scope._id]);
             }
         }
     },
@@ -450,16 +440,17 @@ dojo.flash = {
         //dojo.debug("installing");
         if(dojo.flash._installingListeners.length > 0){
             for(var i = 0; i < dojo.flash._installingListeners.length; i++){
-                dojo.flash._installingListeners[i].call(null);
+                var scope = dojo.flash._installingListenerScopes[i];
+                dojo.flash._installingListeners[i].apply(scope, [scope._id]);
             }
         }
     },
     
     // Initializes dojo.flash.
-    _initialize: function(){
+    _initialize: function(properties){
         //dojo.debug("dojo.flash._initialize");
         // see if we need to rev or install Flash on this platform
-        var installer = new dojo.flash.Install();
+        var installer = new dojo.flash.Install(properties.id);
         dojo.flash.installer = installer;
 
         if(installer.needed() == true){        
@@ -467,11 +458,12 @@ dojo.flash = {
         }else{
             //alert("Writing object out");
             // write the flash object into the page
-            dojo.flash.obj = new dojo.flash.Embed(this._visible, this.width, this.height, this.bgcolor, this.wmode, this.id, this.flashvars, this.appenddiv);
-            dojo.flash.obj.write(dojo.flash.info.commVersion);
+            var embed = new dojo.flash.Embed(properties);
+            dojo.flash.obj[properties.id] = embed;
+            embed.write(dojo.flash.info.commVersion);
             
             // initialize the way we do Flash/JavaScript communication
-            dojo.flash.comm = new dojo.flash.Communicator();
+            dojo.flash.comm[properties.id] = new dojo.flash.Communicator(properties.id);
         }
     }
 };
@@ -674,47 +666,13 @@ dojo.flash.Info.prototype = {
     }
 };
 
-dojo.flash.Embed = function(visible, width, height, bgcolor, wmode, id, flashvars, appenddiv){
+dojo.flash.Embed = function(properties){
     // summary: A class that is used to write out the Flash object into the page.
     
-    this._visible = visible;
-    this.width = width ? width : 215;
-    this.height = height ? height : 138;
-    this.bgcolor = bgcolor ? bgcolor : '#ffffff';
-    this.wmode = wmode ? wmode : 'window';
-    this.id = id ? id : 'flashObject';
-    this.flashvars = flashvars ? flashvars : '';
-    this.appenddiv = appenddiv;
+    this.properties = properties;
 };
 
 dojo.flash.Embed.prototype = {
-    // width: int
-    //    The width of this Flash applet. The default is the minimal width
-    //    necessary to show the Flash settings dialog. Current value is 
-    //  215 pixels.
-    width: 215,
-    
-    // height: int 
-    //    The height of this Flash applet. The default is the minimal height
-    //    necessary to show the Flash settings dialog. Current value is
-    // 138 pixels.
-    height: 138,
-
-    bgcolor: '#ffffff',
-
-    wmode: 'window',
-    
-    flashvars: '',
-
-    appenddiv: null,
-
-    // id: String
-    //     The id of the Flash object. Current value is 'flashObject'.
-    id: "flashObject",
-    
-    // Controls whether this is a visible Flash applet or not.
-    _visible: true,
-
     protocol: function(){
         switch(window.location.protocol){
             case "https:":
@@ -749,9 +707,9 @@ dojo.flash.Embed.prototype = {
         //dojo.debug("write");
         // determine our container div's styling
         var containerStyle = '';
-        containerStyle+= ("width: " + this.__getCSSValue(this.width) + ';');
-        containerStyle+=("height: " + this.__getCSSValue(this.height)+ ';' );
-        if(this._visible == false){
+        containerStyle+= ("width: " + this.__getCSSValue(this.properties.width) + ';');
+        containerStyle+=("height: " + this.__getCSSValue(this.properties.height)+ ';' );
+        if(this.properties.visible == false){
             containerStyle+=("position: absolute; ");
             containerStyle+=("z-index: 10000; ");
             containerStyle+=("top: -1000px; ");
@@ -765,15 +723,15 @@ dojo.flash.Embed.prototype = {
         //var dojoPath = lzOptions.baseRelativePath;
         // Flash 6
         if(flashVer == 6){
-            swfloc = dojo.flash.flash6_version;
+            swfloc = this.properties.flash6;
             objectHTML = 
-                          '<embed id="' + this.id + '" src="' + swfloc + '" '
+                          '<embed id="' + this.properties.id + '" src="' + swfloc + '" '
                         + '    type="application/x-shockwave-flash" '
-                        + '    quality="high" bgcolor="' + this.bgcolor + '"'
-                        + '    width="' + this.width + '" height="' + this.height + '" '
-                        + '    name="' + this.id + '" '
-                        + '    wmode="' + this.wmode + '" '
-                        + '    FlashVars="'+ this.flashvars +'"' 
+                        + '    quality="high" bgcolor="' + this.properties.bgcolor + '"'
+                        + '    width="' + this.properties.width + '" height="' + this.properties.height + '" '
+                        + '    name="' + this.properties.id + '" '
+                        + '    wmode="' + this.properties.wmode + '" '
+                        + '    FlashVars="'+ this.properties.flashvars +'"' 
                         + '    align="middle" '
                         + '    allowScriptAccess="sameDomain" '
                         + '    swLiveConnect="true" '
@@ -782,9 +740,9 @@ dojo.flash.Embed.prototype = {
                         + '://www.macromedia.com/go/getflashplayer">';
         }else{ // Flash 8
             if (flashVer > dojo.flash.version) doExpressInstall = true;
-            swfloc = dojo.flash.flash8_version;
-            var swflocObjectVars = this.flashvars;
-            var swflocEmbedVars = this.flashvars;
+            swfloc = this.properties.flash8;
+            var swflocObjectVars = this.properties.flashvars;
+            var swflocEmbedVars = this.properties.flashvars;
             if(doExpressInstall){
                 // the location to redirect to after installing
                 var redirectURL = escape(window.location);
@@ -804,26 +762,26 @@ dojo.flash.Embed.prototype = {
                     + this.protocol()
                     + '://fpdownload.macromedia.com/pub/shockwave/cabs/flash/'
                     + 'swflash.cab#version=8,0,0,0" '
-                  + 'width="' + this.width + '" '
-                  + 'height="' + this.height + '" '
-                  + 'id="' + this.id + '" '
+                  + 'width="' + this.properties.width + '" '
+                  + 'height="' + this.properties.height + '" '
+                  + 'id="' + this.properties.id + '" '
                   + 'align="middle"> '
                   + '<param name="allowScriptAccess" value="sameDomain" /> '
                   + '<param name="movie" value="' + swfloc + '" /> '
                   + '<param name="quality" value="high" /> '
                   + '<param name="FlashVars" value="' + swflocObjectVars + '" /> '
-                  + '<param name="bgcolor" value="' + this.bgcolor + '" /> '
-                  + '<param name="wmode" value="' + this.wmode + '" /> '
+                  + '<param name="bgcolor" value="' + this.properties.bgcolor + '" /> '
+                  + '<param name="wmode" value="' + this.properties.wmode + '" /> '
                   + '</object>';
             } else {          
                 objectHTML = '<embed src="' + swfloc+ '" '
                   + 'quality="high" '
-                  + 'bgcolor="' + this.bgcolor + '" '
-                  + 'wmode="' + this.wmode + '" '
-                  + 'width="' + this.width + '" '
-                  + 'height="' + this.height + '" '
-                  + 'id="' + this.id + '" '
-                  + 'name="' + this.id + '" '
+                  + 'bgcolor="' + this.properties.bgcolor + '" '
+                  + 'wmode="' + this.properties.wmode + '" '
+                  + 'width="' + this.properties.width + '" '
+                  + 'height="' + this.properties.height + '" '
+                  + 'id="' + this.properties.id + '" '
+                  + 'name="' + this.properties.id + '" '
                   + 'FlashVars="'+ swflocEmbedVars +'" ' 
                   + 'swLiveConnect="true" '
                   + 'align="middle" '
@@ -835,8 +793,8 @@ dojo.flash.Embed.prototype = {
             }
         }
 
-        var divid = this.id + 'Container';
-        var div = this.appenddiv;
+        var divid = this.properties.id + 'Container';
+        var div = this.properties.appenddiv;
 
         // now write everything out
         if (div) {
@@ -859,7 +817,7 @@ dojo.flash.Embed.prototype = {
         // more robust way to get Flash object; version above can break
         // communication on IE sometimes
         try {
-            var i = document.getElementById(this.id + '');
+            var i = document.getElementById(this.properties.id + '');
         } catch (e) {};    
         //alert('get' + i + ', ' + n + ', ' + i.innerHTML)
         return i;
@@ -868,7 +826,7 @@ dojo.flash.Embed.prototype = {
     setVisible: function(/* Boolean */ visible){
         // summary: Sets the visibility of this Flash object.
         
-        var container = document.getElementById(this.id + "Container");
+        var container = document.getElementById(this.properties.id + "Container");
         if(visible == true){
             container.style.visibility = "visible";
         }else{
@@ -882,8 +840,8 @@ dojo.flash.Embed.prototype = {
     center: function(){
         // summary: Centers the flash applet on the page.
         
-        var elementWidth = this.width;
-        var elementHeight = this.height;
+        var elementWidth = this.properties.width;
+        var elementHeight = this.properties.height;
 
         /* TODO: max
         // compute the centered position    
@@ -895,14 +853,14 @@ dojo.flash.Embed.prototype = {
         var y = 0;
 
         // set the centered position
-        var container = document.getElementById(this.id + "Container");
+        var container = document.getElementById(this.properties.id + "Container");
         container.style.top = y + "px";
         container.style.left = x + "px";
     }
 };
 
 
-dojo.flash.Communicator = function(){
+dojo.flash.Communicator = function(id){
     // summary:
     //    A class that is used to communicate between Flash and JavaScript in 
     //    a way that can pass large amounts of data back and forth reliably,
@@ -915,17 +873,18 @@ dojo.flash.Communicator = function(){
     //    presenting a common interface to JavaScript irrespective of the underlying
     //    Flash version.
 
-    if(dojo.flash.useFlash6()){
+    this._id = id;
+    if(dojo.flash.useFlash6(id)){
         this._writeFlash6();
-    }else if (dojo.flash.useFlash8()){
+    }else if (dojo.flash.useFlash8(id)){
         this._writeFlash8();
     }
 };
 
 dojo.flash.Communicator.prototype = {
     _writeFlash6: function(){
-        //alert('_writeFlash6');
-        var id = dojo.flash.obj.id;
+        var id = dojo.flash.obj[this._id].properties.id;
+        //console.log('_writeFlash6', id);
         
         // global function needed for Flash 6 callback;
         // we write it out as a script tag because the VBScript hook for IE
@@ -933,7 +892,7 @@ dojo.flash.Communicator.prototype = {
         // within the Dojo system
         document.writeln('<script language="JavaScript">');
         document.writeln('  function ' + id + '_DoFSCommand(command, args){ ');
-        document.writeln('    dojo.flash.comm._handleFSCommand(command, args); ');
+        document.writeln('    dojo.flash.comm.' + id + '._handleFSCommand(command, args, "' + id + '"); ');
         document.writeln('}');
         document.writeln('</script>');
         
@@ -942,7 +901,7 @@ dojo.flash.Communicator.prototype = {
             document.writeln('<SCRIPT LANGUAGE=VBScript> ');
             document.writeln('on error resume next ');
             document.writeln('Sub ' + id + '_FSCommand(ByVal command, ByVal args)');
-            document.writeln(' call ' + id + '_DoFSCommand(command, args)');
+            document.writeln(' call ' + id + '_DoFSCommand(command, args, ' + id + ')');
             document.writeln('end sub');
             document.writeln('</SCRIPT> ');
         }
@@ -958,8 +917,8 @@ dojo.flash.Communicator.prototype = {
     //Flash 6 communication.
     
     // Handles fscommand's from Flash to JavaScript. Flash 6 communication.
-    _handleFSCommand: function(command, args){
-        //alert("fscommand, command="+command+", args="+args);
+    _handleFSCommand: function(command, args, id){
+        //console.log("fscommand, command="+command+", args="+args, id);
         // Flash 8 on Mac/Firefox precedes all commands with the string "FSCommand:";
         // strip it off if it is present
     if(command != null && RegExp("^FSCommand:(.*)").test(command) == true){
@@ -967,35 +926,35 @@ dojo.flash.Communicator.prototype = {
         }
          
         if(command == "addCallback"){ // add Flash method for JavaScript callback
-            this._fscommandAddCallback(command, args);
+            this._fscommandAddCallback(command, args, id);
         }else if(command == "call"){ // Flash to JavaScript method call
-            this._fscommandCall(command, args);
+            this._fscommandCall(command, args, id);
         }else if(command == "fscommandReady"){ // see if fscommands are ready
-            this._fscommandReady();
+            this._fscommandReady(id);
         }
     },
     
     // Handles registering a callable Flash function. Flash 6 communication.
-    _fscommandAddCallback: function(command, args){
-        //alert('_fscommandAddCallback ' +  command + ', ' + args);
+    _fscommandAddCallback: function(command, args, id){
+        //console.log('_fscommandAddCallback ' +  command + ', ' + args);
         var functionName = args;
             
         // do a trick, where we link this function name to our wrapper
         // function, _call, that does the actual JavaScript to Flash call
         var callFunc = function(){
-            return dojo.flash.comm._call(functionName, arguments);
+            return dojo.flash.comm[id]._call(functionName, arguments, id);
         };            
-        dojo.flash.comm[functionName] = callFunc;
+        dojo.flash.comm[id][functionName] = callFunc;
         
         // indicate that the call was successful
-        var p = dojo.flash.obj.get();
+        var p = dojo.flash.obj[id].get();
         if (p) p.SetVariable("_succeeded", true);
     },
     
     // Handles Flash calling a JavaScript function. Flash 6 communication.
-    _fscommandCall: function(command, args){
-        //alert('_fscommandCall ' +  command + ', ' + args);
-        var plugin = dojo.flash.obj.get();
+    _fscommandCall: function(command, args, id){
+        //console.log('_fscommandCall ' +  command + ', ' + args, arguments);
+        var plugin = dojo.flash.obj[id].get();
         var functionName = args;
         
         if (! plugin) return;
@@ -1029,25 +988,25 @@ dojo.flash.Communicator.prototype = {
         results += '';
         
         // return the results to flash
-        plugin.SetVariable("_returnResult", results);
+        plugin.SetVariable("_fsreturnResult", results);
     },
     
     // Reports that fscommands are ready to run if executed from Flash.
-    _fscommandReady: function(){
-        var plugin = dojo.flash.obj.get();
+    _fscommandReady: function(id){
+        var plugin = dojo.flash.obj[id].get();
         if (plugin) plugin.SetVariable("fscommandReady", "true");
         //alert("_fscommandReady");
     },
     
     // The actual function that will execute a JavaScript to Flash call; used
     // by the Flash 6 communication method. 
-    _call: function(functionName, args){
+    _call: function(functionName, args, id){
         // we do JavaScript to Flash method calls by setting a Flash variable
         // "_functionName" with the function name; "_numArgs" with the number
         // of arguments; and "_0", "_1", etc for each numbered argument. Flash
         // reads these, executes the function call, and returns the result
         // in "_returnResult"
-        var plugin = dojo.flash.obj.get();
+        var plugin = dojo.flash.obj[id].get();
         plugin.SetVariable("_functionName", functionName);
         plugin.SetVariable("_numArgs", args.length);
         for(var i = 0; i < args.length; i++){
@@ -1074,6 +1033,7 @@ dojo.flash.Communicator.prototype = {
         // we double encoded all null characters as //0 because Flash breaks
         // if they are present; turn the //0 back into /0
         results = results.replace(RegExp("\\\\0", "g"), "\0");
+        //console.log('_call', functionName, args, id, results)
         
         return results;
     },
@@ -1082,7 +1042,7 @@ dojo.flash.Communicator.prototype = {
     
     // Registers the existence of a Flash method that we can call with
     // JavaScript, using Flash 8's ExternalInterface. 
-    _addExternalInterfaceCallback: function(methodName){
+    _addExternalInterfaceCallback: function(methodName, id){
         var wrapperCall = function(){
             // some browsers don't like us changing values in the 'arguments' array, so
             // make a fresh copy of it
@@ -1092,10 +1052,11 @@ dojo.flash.Communicator.prototype = {
             }
             methodArgs.length = arguments.length;
             //alert('_addExternalInterfaceCallback '  + methodName  + ', ' + methodArgs);
-            return dojo.flash.comm._execFlash(methodName, methodArgs);
+            return dojo.flash.comm[id]._execFlash(methodName, methodArgs, id);
         };
         
-        dojo.flash.comm[methodName] = wrapperCall;
+        dojo.flash.comm[id][methodName] = wrapperCall;
+        //console.log('creating', id, methodName, dojo.flash.comm)
     },
     
     // Encodes our data to get around ExternalInterface bugs.
@@ -1153,8 +1114,8 @@ dojo.flash.Communicator.prototype = {
     // Sends our method arguments over to Flash in chunks in order to
     // have ExternalInterface's performance not be O(n^2).
     // Flash 8 communication.
-    _chunkArgumentData: function(value, argIndex){
-        var plugin = dojo.flash.obj.get();
+    _chunkArgumentData: function(value, argIndex, id){
+        var plugin = dojo.flash.obj[id].get();
         
         // cut up the string into pieces, and push over each piece one
         // at a time
@@ -1191,8 +1152,8 @@ dojo.flash.Communicator.prototype = {
     
     // Gets our method return data in chunks for better performance.
     // Flash 8 communication.
-    _chunkReturnData: function(){
-        var plugin = dojo.flash.obj.get();
+    _chunkReturnData: function(id){
+        var plugin = dojo.flash.obj[id].get();
         
         var numSegments = plugin.getReturnLength();
         var resultsArray = [];
@@ -1228,8 +1189,8 @@ dojo.flash.Communicator.prototype = {
     // Executes a Flash method; called from the JavaScript wrapper proxy we
     // create on dojo.flash.comm.
     // Flash 8 communication.
-    _execFlash: function(methodName, methodArgs){
-        var plugin = dojo.flash.obj.get();
+    _execFlash: function(methodName, methodArgs, id){
+        var plugin = dojo.flash.obj[id].get();
         //alert(plugin + ', ' + plugin.startExec);
                 
         // begin Flash method execution
@@ -1240,14 +1201,14 @@ dojo.flash.Communicator.prototype = {
         
         // chunk and send over each argument
         for(var i = 0; i < methodArgs.length; i++){
-            this._chunkArgumentData(methodArgs[i], i);
+            this._chunkArgumentData(methodArgs[i], i, id);
         }
         
         // execute the method
         plugin.exec(methodName);
                                                         
         // get the return result
-        var results = this._chunkReturnData();
+        var results = this._chunkReturnData(id);
         
         // decode the results
         results = this._decodeData(results);
@@ -1259,12 +1220,13 @@ dojo.flash.Communicator.prototype = {
     }
 };
 
-dojo.flash.Install = function(){
+dojo.flash.Install = function(id){
     // summary: Helps install Flash plugin if needed.
     // description:
     //    Figures out the best way to automatically install the Flash plugin
     //    for this browser and platform. Also determines if installation or
     //    revving of the current plugin is needed on this platform.
+    this._id = id;
 };
 
 dojo.flash.Install.prototype = {
@@ -1314,18 +1276,18 @@ dojo.flash.Install.prototype = {
             // the user to install things
 
             // upgrade URL to flash 8...
-            var url = dojo.flash.flash8_version;
+            var url = dojo.flash.obj[this._id].properties.flash8;
             var i = url.indexOf('swf7')
             if (i != -1) {
                 dojo.flash._tempurl = url;
                 url = url.substring(0, i + 3) + '8' + url.substring(i + 4, url.length);
-                dojo.flash.flash8_version = url;
+                 dojo.flash.obj[this._id].properties.flash8 = url;
             }
-            var installObj = new dojo.flash.Embed(true, '100%', '100%');
+            var installObj = new dojo.flash.Embed({visible: true, width: '100%', height: '100%'});
             installObj.write(8); // write out HTML for Flash 8 version+
         }else if(dojo.flash.info.isVersionOrAbove(6, 0, 65)){ // Express Install
             //dojo.debug("Express install");
-            var installObj = new dojo.flash.Embed(false, '100%', '100%');
+            var installObj = new dojo.flash.Embed({visible: false, width: '100%', height: '100%'});
             installObj.write(8, true); // write out HTML for Flash 8 version+
             installObj.setVisible(true);
             installObj.center();
@@ -1359,7 +1321,7 @@ dojo.flash.Install.prototype = {
 dojo.flash.info = new dojo.flash.Info();
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 

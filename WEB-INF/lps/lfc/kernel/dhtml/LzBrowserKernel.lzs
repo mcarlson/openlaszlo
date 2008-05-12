@@ -55,13 +55,6 @@ static function callJS (js, callback, args) {
 }
 
 /**
-  * Notify the browser we received the history state - not required in dhtml.
-  * @access private
-  */
-static function receivedHistory(n) {
-}
-
-/**
   * Sets the browser history to a specified offset.
   * @access private
   */

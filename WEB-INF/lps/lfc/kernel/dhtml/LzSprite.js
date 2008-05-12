@@ -421,7 +421,7 @@ LzSprite.prototype.init = function(v) {
             Lz[this._id]._ready(this.owner);
         }
         // Tell LzHistory we're ready to send/receive events
-        LzHistory.isReady = true; 
+        LzHistory.__start(); 
     }
 }
 

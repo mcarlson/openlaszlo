@@ -93,7 +93,7 @@ static var __jscallq = [];
 // called from DojoExternalInterface
 /** @access private */ 
 static function __jsready () { 
-    //Debug.write('jsready');
+    //Debug.write('jsready', LzBrowserKernel.__jscallq);
     LzBrowserKernel.jsready=true;
     LzBrowserKernel._dequeueJS();
 }
@@ -113,31 +113,12 @@ static function _dequeueJS (a) {
     if (LzBrowserKernel.__jscallq.length > 0) {
         var a = LzBrowserKernel.__jscallq.pop();
         //Debug.write('calling with args q', a);
-        LzBrowserKernel.callJS.apply(this, a);
+        LzBrowserKernel.callJS.apply(LzBrowserKernel, a);
     }
-}
-
-/** @access private */ 
-static function _jsreset () {
-    LzBrowserKernel.__jslocked = false;
-    LzBrowserKernel.__jscallback = null;
-    LzBrowserKernel.__jscallq = [];
 }
 
 static function getPersistedObject(n) {
     return SharedObject.getLocal(n);
-}
-
-/**
-  * Notify the browser we received the history state
-  * @access private
-  */
-static function receivedHistory(n) {
-    if ($swf7) {
-        _root._currenthistory = n + '';
-    } else {
-        LzBrowserKernel.callJS('Lz.history.__receivedhistory', false, n + '');
-    }
 }
 
 /**
@@ -146,7 +127,6 @@ static function receivedHistory(n) {
   */
 static function setHistory(n) {
     //Debug.write('__setHistory', n);
-    LzBrowserKernel._jsreset();
     LzBrowserKernel.callJS('Lz.history.set', null, n);
 }
 
@@ -155,7 +135,6 @@ static function setHistory(n) {
   * @access private
   */
 static function callMethod(js) { 
-    if (LzBrowserKernel.__jslocked) LzBrowserKernel._jsreset();
     var scope = canvas;
     //Debug.write('callMethod', js);
     var s = js.indexOf('(')

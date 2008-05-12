@@ -265,7 +265,7 @@ LzSprite.prototype.init = function( ) {
         DojoExternalInterface.loaded();
 
         // Tell LzHistory we're ready to send events
-        LzHistory.isReady = true; 
+        LzHistory.__start(); 
     }
 }
 

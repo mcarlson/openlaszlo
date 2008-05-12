@@ -128,11 +128,6 @@ static function callMethod(js) {
     return scope.apply(lastscope, args);
 }
 
-static function receivedHistory(n) {
-  //TODO Not implemented
-  throw new Error("receivedHistory not implemented");
-}
-
 static var _os = null;
 static var _ver = null;
 

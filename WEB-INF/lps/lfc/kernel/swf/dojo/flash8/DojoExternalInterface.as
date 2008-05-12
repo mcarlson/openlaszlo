@@ -22,8 +22,9 @@ class DojoExternalInterfaceClass {
 	var numArgs = null;
 	var argData = null;
 	var resultData = null;
+	var _id;
 	
-	function DojoExternalInterfaceClass(){
+	function DojoExternalInterfaceClass(id){
 		// extract the dojo base path
 		//Debug.write('initialize', flash.external.ExternalInterface.addCallback);
 		
@@ -32,6 +33,7 @@ class DojoExternalInterfaceClass {
 		if(install.needsUpdate){
 			install.init();
 		}
+		this._id = id;
 		
 		// register our callback functions
 		var s = flash.external.ExternalInterface.addCallback("startExec", this, this.startExec);
@@ -54,7 +56,8 @@ class DojoExternalInterfaceClass {
 		this.flashMethods[methodName] = instance;
 		
 		// tell JavaScript about DojoExternalInterface new method so we can create a proxy
-		flash.external.ExternalInterface.call("dojo.flash.comm._addExternalInterfaceCallback", methodName);
+		//Debug.write('calling dojo.flash.comm.' + this._id + "._addExternalInterfaceCallback", methodName, this._id);
+		flash.external.ExternalInterface.call("dojo.flash.comm." + this._id + "._addExternalInterfaceCallback", methodName, this._id);
 													 
 		return true;
 	}
@@ -86,7 +89,7 @@ class DojoExternalInterfaceClass {
 			interact with the Flash file.
 	*/
 	function loaded(){
-		DojoExternalInterface.call("dojo.flash.loaded");
+		DojoExternalInterface.call("dojo.flash.loaded", null, this._id);
 		LzBrowserKernel.__jsready();
 	}
 	

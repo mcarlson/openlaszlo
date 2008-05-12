@@ -142,8 +142,8 @@
       <view name="controls" x="70">
         <view name="firstrow" y="4">
             <text fontsize="11" x="8" y="7"><b>Compile Options:</b></text>
-            <view x="125" width="475" height="32" bgcolor="black">
-                <view x="1" y="1" width="473" height="30" bgcolor="#9494ad"/>
+            <view x="125" width="466" height="32" bgcolor="black">
+                <view x="1" y="1" width="464" height="30" bgcolor="#9494ad"/>
             </view>
             <view x="125" name="compilecontrols">
                 <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:4" x="6" y="8.75">

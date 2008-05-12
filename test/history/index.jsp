@@ -50,28 +50,30 @@ Lz.dhtmlEmbedLFC('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js')
             }
         	
         	img { border: 0 none; }
-        </style></head><body><div style="top: 150px; position: absolute; ">
+        </style></head><body><div>
 <form>
     <input type="button" value="0" onclick="Lz.setCanvasAttribute('foo', 0)">
     <input type="button" value="1" onclick="Lz.setCanvasAttribute('foo', 1)">
     <input type="button" value="0 hist" onclick="Lz.setCanvasAttribute('foo', 0, true)">
     <input type="button" value="1 hist" onclick="Lz.setCanvasAttribute('foo', 1, true)">
-    <input type="button" value="foo and bar" onclick="Lz.setCanvasAttribute(['foo', 'foo', 'bar', 'bar'], true, true)">
+    <input type="button" value="foo and bar" onclick="Lz.setCanvasAttribute({foo: 'foo', bar: 'bar'}, null, true)">
 </form>
 </div> 
         <script type="text/javascript">
-              Lz.swfEmbed({url: 'history.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzapp', accessible: 'false'});
+              Lz.swfEmbed({url: 'history.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf8', accessible: 'false'});
             </script>
-            <script type="text/javascript">
-              Lz.dhtmlEmbed({url: 'history.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzapp'});
-</script><noscript>
+        <script type="text/javascript">
+              Lz.swfEmbed({url: 'history.lzx?lzt=swf&lzr=swf7', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf7', accessible: 'false'});
+            </script>
+        <script type="text/javascript">
+              Lz.dhtmlEmbed({url: 'history.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzdhtml'});
+        </script>
+        <noscript>
             Please enable JavaScript in order to use this application.
         </noscript>
-
-
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

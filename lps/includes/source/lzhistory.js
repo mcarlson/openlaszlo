@@ -8,8 +8,12 @@
 
 Lz.history = {
     _currentstate: null 
-    ,init: function() {
+    ,_apps: []
+    ,init: function(app) {
         var _this = Lz.history;
+        // Store a reference to the app
+        _this._apps.push(app);
+        //console.log('init', _this._apps);
         _this._title = top.document.title;
         Lz.__BrowserDetect.init();
         var currstate = _this.get();
@@ -105,18 +109,6 @@ Lz.history = {
                 this._parse(h);
             }
         }
-        if (dojo.flash.obj && Lz.loaded) {
-            var p = dojo.flash.obj.get();
-            if (p) {
-                var cid = p.GetVariable("_callbackID");
-                if (cid != 'null') return;
-                var val = p.GetVariable("_currenthistory");
-                if (val && val != 'null' && val != Lz.history._lasthash) {
-                    //alert('val ' + val);
-                    Lz.history._lasthash = val;
-                }
-            }
-        }
     }
     ,/** */
     set: function(s) {
@@ -179,63 +171,65 @@ Lz.history = {
     ,/** @access private */
     _parse: function(h) {
         var _this = Lz.history;
-        // TODO: send events to all apps
-        if (h.length == 0 || h == _this._lasthash) return;
-        if (Lz.loaded && h.indexOf('_lz') != -1) {
-            // TODO: use rison
-            _this._lasthash = h;
-            h = h.substring(3);
-            var a = h.split(',');
-            for (var j = 0; j < a.length; j++) {
-                var v = a[j];
-                var i = v.indexOf('=');
-                var name = unescape(v.substring(0, i));
-                var val = unescape(v.substring(i + 1));
-                Lz.setCanvasAttribute(name, val);
-                if (window['canvas']) canvas.setAttribute(name, val);
-            }
-        } else {
+        if (h.length == 0) return;
+        for (var id in Lz.history._apps) {
+            var app = Lz.history._apps[id];
+            if (! app.loaded || app._lasthash == h) continue;
+            //console.log('sending for app', app._id, h);
+            app._lasthash = h;
+            if (h.indexOf('_lz') != -1) {
+                // TODO: use rison
+                h = h.substring(3);
+                var a = h.split(',');
+                for (var j = 0; j < a.length; j++) {
+                    var v = a[j];
+                    var i = v.indexOf('=');
+                    var name = unescape(v.substring(0, i));
+                    var val = unescape(v.substring(i + 1));
+                    Lz.setCanvasAttribute(name, val);
+                    if (window['canvas']) canvas.setAttribute(name, val);
+                }
+            } else {
             //alert('_parse test' + h + ', ' + _this._lasthash);
             //history id
-            if (Lz.loaded && Lz.callMethod && h != Lz.history._lasthash) {
-                _this.__setFlash(h);
-            }
-            if (window['LzHistory'] && LzHistory['isReady'] && LzHistory['receiveHistory']) {
-                //alert('dhtml ' + h);
-                LzHistory.receiveHistory(h);
-                _this._lasthash = h;
+                if (app.runtime == 'swf') {
+                    _this.__setFlash(h, app._id);
+                } else if (window['LzHistory'] && LzHistory['isReady'] && LzHistory['receiveHistory']) {
+                    //console.log('dhtml ' + h);
+                    LzHistory.receiveHistory(h);
+                }
             }
         }
     }
     ,/** @access private */
     _store: function(name, value) {
-        if (name instanceof Array) {
+        if (name instanceof Object) {
             var o = '';
-            for (var i = 0; i < name.length; i = i + 2) {
-                o += escape(name[i]) + '=' + escape(name[i + 1]) +'';
-                if (i < name.length - 2) o += ',';
+            for (var i in name) {
+                if (o != '') o += ',';
+                o += escape(i) + '=' + escape(name[i]);
             }
         } else {
-            var o = escape(name) + '=' + escape(value) +'';
+            var o = escape(name) + '=' + escape(value);
         }
         this.set('_lz' + o);
+        //console.log(o);
         //window.frames['_lzhist'].location = newurl;
     }
-    ,/** @access private called from flash */
-    __receivedhistory: function(h) {
-        Lz.history._lasthash = h + '';
-        //alert('__receivedhistory '+ Lz.history._lasthash);
-    }
-    ,/** @access private called from flash */
-    __setFlash: function(h) {
-        var p = dojo.flash.obj.get();
-        if (p) {
-            var cid = p.GetVariable("_callbackID") + '';
-            if (cid == 'null') {
-                Lz.callMethod("LzHistory.receiveHistory(" + h + ")");
-            } else {
-                setTimeout('Lz.history.__setFlash(' + h + ')', 10);
+    ,/** @access private called from history mechanism */
+    __setFlash: function(h, id) {
+        var app = Lz[id];
+        if (app && app.loaded && app.runtime == 'swf') {
+            //console.log('__setFlash', h, app, id);
+            var p = app._getSWFDiv();
+            if (p) {
+                var cid = p.GetVariable("_callbackID") + '';
+                if (cid == 'null') {
+                    Lz[id]._lasthash = app.callMethod("LzHistory.receiveHistory(" + h + ")");
+                } else {
+                    setTimeout('Lz.history.__setFlash(' + h + ',"' + id + '")', 10);
                 //alert('busy');
+                }
             }
         }
     }
