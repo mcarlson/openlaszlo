@@ -208,6 +208,7 @@
     <!--- @keywords public -->
     <attribute name="allowdrag" type="boolean" value="true"/>
 
+    <!--- @keywords private -->
         <method name="init"> 
             super.init();
             this.main.toolbar_view.yearcombo.addYears( this.earliestdate.getFullYear(), 
@@ -222,6 +223,7 @@
         </method> 
 
 
+        <!--- @keywords private --> 
         <handler name="onselecteddate">
         <![CDATA[   
             if( this._basedatepicker_inited && this.startAsIcon ) {
@@ -232,14 +234,17 @@
 
 
 
+        <!--- @keywords private --> 
         <method name="doSpaceUp">
             this.handleSelected();
         </method> 
 
+        <!--- @keywords private --> 
         <method name="doEnterUp">
             this.handleSelected();
         </method>
 
+        <!--- @keywords private --> 
         <method name="handleSelected"> 
             if( this.icon.visible ) { 
                 this.expandFromIcon(); 
@@ -250,6 +255,7 @@
         </method> 
 
 
+        <!--- @keywords private --> 
         <method name="expandFromIcon"> 
             this.icon.setVisible( false ); 
             this.content.setVisible( true ); 
@@ -257,6 +263,7 @@
             this.content.bringToFront() 
         </method>
 
+        <!--- @keywords private --> 
         <method name="shrinkToIcon">
             this.icon.setVisible(true );
             this.content.setVisible( false );
