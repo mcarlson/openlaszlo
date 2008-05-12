@@ -16,16 +16,14 @@
   * italic).</p>
   * 
   * <note>An <classname>LzFont</classname> object represents a named font
-  * in a given style.  The <classname>LzFontManager</classname> eservice
-  * stores these object.  The constructor of this class is for internal
+  * in a given style.  The <classname>LzFontManager</classname> service
+  * stores these object. The constructor of this class is for internal
   * use only.</note>
   * 
-  * <fixme>Say something about accessing fonts through script</fixme>
-  * 
-  * <p>A font element within a <tagname>canvas</tagname> or
-  * <tagname>library</tagname> defines a font, which can be referenced by
+  * <p>A font element within a <a href="LzCanvas.html"><code class="tagname">&lt;canvas&gt;</code></a> or
+  * <a href="tag.library.html"><code class="tagname">&lt;library&gt;</code></a> defines a font, 
+  *  which can be referenced by
   * the <attribute>font</attribute> attribute of a view, or by the
-  * 
   * <attribute>face</attribute> attribute of the <tagname
   * link="true">font</tagname> tag within HTML markup.  A font element can
   * define a single font face or style, by using the
@@ -34,11 +32,10 @@
   * 
   * <p>For example</p>
   * 
-  * <example executable="false">
-  * 
+  * <pre>
   * &lt;font name="MyFont"
   *       src="myfont.ttf"/&gt;
-  * </example>
+  * </pre>
   * 
   * <p>defines a font whose data is read from the TrueType file named
   * <code>myfont.ttf</code>, and that can be referred to as
@@ -46,32 +43,30 @@
   * 
   * <pre>&lt;text font="MyFont"&gt;some text in MyFont&lt;/text&gt;</pre>
   * 
-  * <p>A font element can also define a font family <!--index-->, which
+  * <p>A font element can also define a font family, which
   * contains a set of nested font elements which each define a font face
   * or style.  For example:</p>
   * 
-  * <example executable="false">
+  * <pre>
   * &lt;font name="MyFont"&gt;
   *   &lt;face src="myfont.ttf"/&gt; 
   *   &lt;face style="bold" src="myfontB.ttf"/&gt;
   *   &lt;face style="italic" src="myfontI.ttf"/&gt;
   * &lt;/font&gt;
-  * 
-  * </example>
+  * </pre>
   * 
   * <p>defines a font with three faces, plain, bold, and italic, which can
   * be used as in:</p>
   * 
   * <pre>&lt;text font="MyFont" fontstyle="bold"&gt;bold&lt;/text&gt;</pre>
   * 
-  * <example executable="false">
+  * <pre>
   * &lt;text font="MyFont"&gt;
   *   plain 
   *   &lt;b&gt;bold&lt;/b&gt; 
   *   and &lt;i&gt;italic&lt;/i&gt;
-  * 
   * &lt;/text&gt;
-  * </example>
+  * </pre>
   * 
   * <p>Here is a simple example of importing a font and using it.</p>
   * 
@@ -79,7 +74,6 @@
   * &lt;canvas height="50" fontsize="14"&gt;
   *   &lt;font src="helmetr.ttf" name="Helvetica"/&gt;
   *   &lt;text font="Helvetica"&gt;Here is some text in Helvetica&lt;/text&gt;
-  * 
   * &lt;/canvas&gt;
   * </example>
   * 
