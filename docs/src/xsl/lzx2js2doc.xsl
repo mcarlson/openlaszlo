@@ -242,6 +242,9 @@
           <xsl:when test="@type">
             <tag name="lzxtype"><text><xsl:value-of select="@type"/></text></tag>
           </xsl:when>
+          <xsl:when test="self::event">
+            <tag name="lzxtype"><text>event</text></tag>
+          </xsl:when>
           <xsl:otherwise>
             <tag name="lzxtype"><text>expression</text></tag>
           </xsl:otherwise>

@@ -255,7 +255,7 @@
         <xsl:variable name="svars" select="&objectvalue;/property[@name='setters']/object/property[&isvisible;]"/>
         <xsl:variable name="pvars" select="&objectvalue;/property[@name='prototype']/object/property[&isvisible;]"/>
         <xsl:variable name="ovars" select="&objectvalue;/property[not(&privateslot;) and &isvisible;]"/>
-        <xsl:variable name="events" select="&objectvalue;/property[@name='__ivars__']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &isvisible;]" />
+        <xsl:variable name="events" select="&objectvalue;/property[@name='__ivars__' or @name='prototype']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &isvisible;]" />
         <xsl:variable name="initargs" select="class/initarg[not(contains(@access, 'private'))]" />       
         
         
