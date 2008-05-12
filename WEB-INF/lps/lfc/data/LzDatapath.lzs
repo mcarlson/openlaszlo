@@ -85,7 +85,7 @@ static var tagname = 'datapath';
 /** This attribute is deprecated, and should not be used. Developers should use
   * a view's <attribute>visible</attribute> property to control visibility.
   * @type Boolean
-  * @modifiers deprecated
+  * @access private
   */
 var datacontrolsvisibility = true;
 
@@ -112,44 +112,110 @@ var sel:Boolean = false;
   */
 /* var ontimeout = LzDeclaredEvent; */
 
-/** This attribute applies to datapaths
-  * which match multiple nodes and force replication. See the
-  * section on <a
-  * href="${dguide}databinding.html#databinding.pooling">Pooling</a>
-  * in the Guide for information about the use of this attribute.
-  * @type Boolean
-  */
-var pooling;
+/**
+ * This attribute applies to datapaths which match multiple nodes and
+ * force replication.
+ *
+ * If pooling is true, views that are data-bound to this datapath are
+ * recycled if the dataset changes.  Otherwise, views are deleted when
+ * the data nodes they are bound to disappear, and created when new
+ * data nodes match the datapath.
+ *
+ * See the section on <a
+ * href="${dguide}databinding.html#databinding.pooling">Pooling</a> in
+ * the Guide for information about the use of this attribute.
+ *
+ * @type Boolean
+ * @lzxtype boolean
+ * @lzxdefault false
+ * @keywords final
+ */
+var pooling = false;
 
-/** Determines whether to use normal or
-  * lazy replication, if the datapath matches more than one node.
-  * See the section on <a
-  * href="${dguide}databinding.html#databinding.replication">Replication</a>
-  * in the Guide for information about the use of this attribute.
-  * @type String
-  * @lzxtype token
-  */
+/** 
+ * Determines whether to use normal or lazy replication, if the
+ * datapath matches more than one node.
+ *
+ * See the section on <a
+ * href="${dguide}databinding.html#databinding.replication">Replication</a>
+ * in the Guide for information about the use of this attribute.
+ *
+ * @type String
+ * @lzxtype 'normal' | 'lazy' | 'resize'
+ * @lzxdefault 'normal'
+ * @keywords final
+ */
 var replication;
 
-/** An XPath to use to obtain the sort key for
-  * sorting if replication occurs. To change this attribute, call
-  * the setOrder method.
-  * @type String
-  */
+/**
+ * An XPath to use to obtain the sort key for sorting if replication
+ * occurs. To change this attribute, use
+ * <code>.setAttribute('sortpath', ...)</code>,
+ *
+ * @type String
+ * @lzxtype string
+ */
 var sortpath;
+/** @access private */
+function $lzc$set_sortpath (xpath) {
+  this.setOrder(xpath);
+}
 
-/** The order to use to
-  * sort the dataset if replication occurs. One of
-  * <code>ascending</code> or <code>descending</code> to use
-  * built in dictionary sort, or a function which compares
-  * two strings and returns <code>1</code> if the strings
-  * are in order, <code>0</code> if they are the same, and
-  * <code>-1</code> if they are out of order. To change this
-  * attribute, call the setOrder or setComparator method.
-  * @type Object
-  * @lzxtype expression
+/**
+  * Orders the replicated nodes based on the value of the path passed in.
+  *
+  * @param String xpath: An XPath giving the value to use for comparison.
+  * @param Function|String comparator: See the <param>comparator</param>
+  * parameter of <method>setComparator</method> for details.
+  *
+  * @access private
   */
+function setOrder( xpath , comparator=null ) {
+  if ( this.__LZisclone ){
+      this.immediateparent.cloneManager.setOrder( xpath , comparator );
+  } else {
+      this.sortpath = xpath;
+      if (comparator != null){
+          this.sortorder = comparator;
+      }
+  }
+}
+
+/**
+ * The order to use to sort the dataset if replication occurs. One of
+ * <code>"ascending"</code> or <code>"descending"</code> to use built
+ * in dictionary sort, or a function which compares two strings and
+ * returns <code>1</code> if the strings are in order, <code>0</code>
+ * if they are the same, and <code>-1</code> if they are out of
+ * order. To change this attribute, use <code>setAttribute('sortorder',
+ * ...)</code>.
+ *
+ * @type String|Function
+ * @lzxtype expression
+ */
 var sortorder;
+/** @access private */
+function $lzc$set_sortorder( comparator) {
+  this.setComparator(comparator);
+}
+/**
+  * Sets the comparator for the sort used by the replication manager.
+  *
+  * @param Function comparator: "ascending" or "descending" for the
+  * appropriate dictionary sort, or a function to be used for comparison that
+  * takes two arguments and returns 1 if the second argument should follow the
+  * first, -1 if the first argument should follow the second, and 0 if the two
+  * arguments are equivalent
+  *
+  * @access private
+  */
+function setComparator( comparator ) {
+    if ( this.__LZisclone ){
+        this.immediateparent.cloneManager.setComparator( comparator );
+    } else {
+        this.sortorder = comparator;
+    }
+}
 
 /**
   * @access private
@@ -158,6 +224,7 @@ function LzDatapath ( v , args:* = null, children:* = null, instcall:* = null ){
     super(v, args, children, instcall);
 }
 
+/** @access private */
 override function construct ( v , args ){
     this.rerunxpath = true; // Defined in LzDatapointer
 
@@ -443,6 +510,8 @@ override function destroy(){
   * for the base <classname>LzInputText</classname> class, but not
   * for any other LFC classes.
   *
+  * @devnote Although this is an override, it is overriding the empty
+  * definition in LzNode, so we document the implementation here.
   */
 override function updateData() {
     this.__LZupdateData();
@@ -577,9 +646,7 @@ function $lzc$set_datacontrolsvisibility (v)
   * @access private
   * @devnote Setter for __LZmanager
   */
-function $lzc$set___LZmanager (m) { this.__LZmanager(m); }
-
-function __LZmanager ( m ) {
+function $lzc$set___LZmanager (m) { 
     this.__LZisclone = true;
     this.immediateparent.cloneManager = m;
     this.parsedPath = m.parsedPath;
@@ -609,43 +676,6 @@ function setClonePointer( p ) {
         this.__LZsetData( );
     }
 }
-
-/**
-  * Orders the replicated nodes based on the value of the path passed in.
-  *
-  * @param String xpath: An XPath giving the value to use for comparison.
-  * @param Function|String comparator: See the <param>comparator</param>
-  * parameter of <method>setComparator</method> for details.
-  */
-function setOrder( xpath , comparator ) {
-    if ( this.__LZisclone ){
-        this.immediateparent.cloneManager.setOrder( xpath , comparator );
-    } else {
-        this.sortpath = xpath;
-        //might be a function...
-        if ( comparator || comparator != null ){
-            this.sortorder = comparator;
-        }
-    }
-}
-
-/**
-  * Sets the comparator for the sort used by the replication manager.
-  *
-  * @param Function comparator: "ascending" or "descending" for the
-  * appropriate dictionary sort, or a function to be used for comparison that
-  * takes two arguments and returns 1 if the second argument should follow the
-  * first, -1 if the first argument should follow the second, and 0 if the two
-  * arguments are equivalent
-  */
-function setComparator( comparator ) {
-    if ( this.__LZisclone ){
-        this.immediateparent.cloneManager.setComparator( comparator );
-    } else {
-        this.sortorder = comparator;
-    }
-}
-
 
 /**
   * @access private

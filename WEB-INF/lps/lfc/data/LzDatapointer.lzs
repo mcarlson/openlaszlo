@@ -519,6 +519,7 @@ function __LZsimpleOperatorUpdate ( ){
     this.__LZsendUpdate( dchanged );
 }
 
+/** @access private */
 static var ppcache = {};
 
 /**
@@ -575,6 +576,7 @@ function getLocalDataContext(pp) {
 }
 
 //Table of xpath node operator symbols and the functions they call
+/** @access private */
 var pathSymbols= { '/': 1, '..': 2, '*': 3, '.': 4};
 
 

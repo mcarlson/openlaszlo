@@ -12,47 +12,47 @@
   * <p>If a datapath's <attribute>replication</attribute> attribute is set
   * to <code>lazy</code>, then a match to multiple nodes will create an
   * <classname>LzLazyReplicationManager</classname> instead of an
-  * 
+  *
   * <classname>LzReplicationManager</classname>. The lazy replication
   * manager creates only enough replicated views in order to display the
   * data, so there is not a view for each data node. This enables the
   * display of very large datasets.</p>
-  * 
+  *
   * <p>See <a href="${dguide}databinding.html#databinding.lazy-replication">Lazy
   * Replication</a> in the Guide for examples of how to use lazy
   * replication, and restrictions on its use.</p>
-  * 
+  *
   * <p>Also see the <a href="${examples}paging.lzx">paging.lzx example</a>
   * for an example of lazy replication.</p>
   *
-  * <p>In addition to any fields documented in the section below, these fields are also available:
-  *
-  * <attribute>axis</attribute>: The axis for layout of replicated views.
-  *
-  * <attribute>spacing</attribute>: The spacing between replicated views</p>
+  * <p>The lazy replicator implicitly includes a simple layout (since
+  * it needs to calculate how many replications will fit), hence it
+  * has two additional parameters (that are spedified in the datapath)
+  * <attribute>axis</attribute>, and
+  * <attribute>spacing</attribute>.</p>
   *
   * @shortdesc An optimization for displaying large sets of data.
-  * 
+  *
   * @devnote A lazy replication manager is most like a regular replication manager
-  * except that it is design to limit the amount of replication by recognizing
-  * a mask above the replicated views. The lazy replication manager creates 
-  * only as many views as are necessary to display underneath the mask. As the 
+  * except that it is designed to limit the amount of replication by recognizing
+  * a mask above the replicated views. The lazy replication manager creates
+  * only as many views as are necessary to display underneath the mask. As the
   * view containing the replicated views is moved, the data for each view is
   * updated to give the appearance that there is a much larger set of views.
-  * 
-  * @devnote Views replicated by a lazy replication manager ignore layouts -- the 
+  *
+  * @devnote Views replicated by a lazy replication manager ignore layouts -- the
   * replication manager controls the layout completely.
-  * 
-  * @initarg Boolean pooling
-  * @initarg String axis
-  * @initarg Number spacing
   */
 class LzLazyReplicationManager extends LzReplicationManager {
 
-// prototype.pooling = true; // Defined in LzReplicationManager
-
-/** The axis for layout of replicated views */
-/** @access private */
+/**
+ *  The direction in which the replicated elements will be layed out.
+ *
+ * @type String
+ * @lzxtype 'x'|'y'
+ * @lzxdefault 'y'
+ * @keywords final
+ */
 var axis = "y"
 /** @access private */
 var sizeAxis;
@@ -62,11 +62,15 @@ var cloneimmediateparent;
 var updateDel;
 /** @access private */
 var __LZoldnodelen;
-/** @access private */
-var cloneimmediateparnt;
 
-/** The spacing between replicated views */
-/** @access private */
+/**
+ * The spacing (in pixels) between replicated views.
+ *
+ * @type Number
+ * @lzxtype number
+ * @lzxdefault 0
+ * @keywords final
+ */
 var spacing = 0;
 /** @access private */
 var mask = null;
@@ -78,6 +82,7 @@ function LzLazyReplicationManager ( odp , args, children:* = null, instcall:* = 
     super(odp, args, children, instcall);
 }
 
+/** @access private */
 override function construct ( odp , args ){
     //replication argument needs to control pooling
     this.pooling = true; // Defined in LzReplicationManager
@@ -192,7 +197,7 @@ override function __LZHandleNoNodes( ) {
   * When the situation changes, we end up with a situation where we want
   * the window to be like
   * this.clones=[ l , m , n , o ]
-  * 
+  *
   * This algorithm moves the old list of clones to a temporary identifier
   * and then constructs a new array for the clones going through one by one
   * It keeps an offset, which represents the difference in position of the
@@ -200,7 +205,8 @@ override function __LZHandleNoNodes( ) {
   *
   * Ideally, this would use a view linkage if necessary
   * for now, the paging action will only happen in response to movement of
-  * the immediate parent of the replicated views  
+  * the immediate parent of the replicated views
+  *
   * @access private
   */
 override function __LZadjustVisibleClones (ln,nn){
@@ -211,7 +217,7 @@ override function __LZadjustVisibleClones (ln,nn){
 
     if (nodelen != null) {
         if ( this.__LZoldnodelen != this.nodes.length ){
-            this.cloneimmediateparent.setAttribute( this.sizeAxis , this.nodes.length* 
+            this.cloneimmediateparent.setAttribute( this.sizeAxis , this.nodes.length*
                                                this.totalsize -
                                                this.spacing );
             this.__LZoldnodelen = this.nodes.length;
@@ -220,11 +226,11 @@ override function __LZadjustVisibleClones (ln,nn){
 
 
     if (! (this.mask && this.mask[ "hasset" + this.sizeAxis ]) ) return;
-    
+
     var newstart = 0;
 
     if (this.totalsize != 0) {
-        newstart = Math.floor( - this.cloneimmediateparent[ this.axis ] 
+        newstart = Math.floor( - this.cloneimmediateparent[ this.axis ]
                                / this.totalsize );
     }
 
@@ -234,14 +240,14 @@ override function __LZadjustVisibleClones (ln,nn){
     var oldlength = this.clones.length;
     var offset = newstart - this.__LZdataoffset;
 
-    var remainder = ( newstart * this.totalsize ) + 
+    var remainder = ( newstart * this.totalsize ) +
                     this.cloneimmediateparent[this.axis];
     var newlength = 0;
 
     if (typeof(remainder) == 'number') {
-        newlength= 1 + Math.floor( ( this.mask[ this.sizeAxis ] - remainder ) / 
+        newlength= 1 + Math.floor( ( this.mask[ this.sizeAxis ] - remainder ) /
                                      this.totalsize );
-    } 
+    }
 
     //newstart is the new absolute lowerbound of the data winodw
     //newlength is the new length of the data window
@@ -308,7 +314,7 @@ override function __LZadjustVisibleClones (ln,nn){
     this.__LZdataoffset = newstart;
     LzInstantiator.clearDataReplicationQueue( );
 }
-            
+
 /**
   * @access private
   */
@@ -317,8 +323,8 @@ override function toString (){
 }
 
 /**
-  * @access private
-  */
+ * @access private
+ */
 override function getCloneForNode ( p , dontmake = null ){
     var cl = super.getCloneForNode( p ) ||
              null;
@@ -337,10 +343,8 @@ override function getCloneForNode ( p , dontmake = null ){
 
 
 /**
-  * Retuns a pointer to the nth clone controlled by the replication manager
-  * @param Number n: The zero-based offset of the clone to retrieve
-  * @return LzView: A pointer to the nth clone
-  */
+ * @access private
+ */
 override function getCloneNumber ( n ){
     return this.getCloneForNode(this.nodes[n]);
 }

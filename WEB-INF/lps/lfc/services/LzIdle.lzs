@@ -39,10 +39,8 @@ class LzIdleClass extends LzMiniNode {
   /** @access private */
   var regNext:Boolean = false;
   /** @access private */
-  var _events = null;
-  /** @access private */
   var removeCOI = null;
-  
+
 function LzIdleClass () {
     // Create array on instance, not prototype
     this.coi = new Array;

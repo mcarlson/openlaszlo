@@ -49,7 +49,6 @@ public dynamic class LzNode extends LzMiniNode{
     /** @access private */
      var __LZdeferredcarr:Array = null;
     /** @access private */
-     var _events:Array = null;
      var data:* = null;
 
     /** @access private */
@@ -1284,6 +1283,7 @@ function dataBindAttribute ( attr , path  ) {
 static var __LZdelayedSetters = new LzInheritedHash({
     $refs : "$lzc$set_$refs"
         });
+/** @access private */
 var __LZdelayedSetters;
 
 
@@ -1295,6 +1295,7 @@ static var earlySetters = new LzInheritedHash({
     $classrootdepth : 4 ,
     $datapath       : 5
         });
+/** @access private */
 var earlySetters;
 
 /**
@@ -1386,12 +1387,11 @@ function __LZresolveReferences () {
 
 // TODO: [2008-02-14 ptw] Remove at 4.1 or later
 if ($debug) {
-/**
-  * @access private
-  */
+/** @access private */
 function __LZresolveRefs ( refs ){
     Debug.error("$refs: %s is no longer supported", refs);
 }
+/** @access private */
 function $lzc$set_$refs(v) { this.__LZresolveRefs(v); }
 }
 

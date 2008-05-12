@@ -8,17 +8,17 @@
   */
 
 /**
-  * LzNode superclass containing just enough of LzNode to make setters work
-  * for DataElements.
-  * @access public
-  * @topic LZX
-  * @subtopic Runtime
-  * @devnote this is public because public classes inherit from it. Put it
-  * in LZX.Runtime to semi-sorta obscure it.
-  */
-
+ * Base class for all LZX classes that wish to send or receive events.
+ *
+ * @access public
+ * @topic LZX
+ * @subtopic Runtime
+ * @devnote this is public because public classes inherit from it. Put it
+ * in LZX.Runtime to semi-sorta obscure it.
+ */
 class LzMiniNode {
 
+  /** @access private */
   function LzMiniNode ( parent:* = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
   }
 
@@ -29,6 +29,8 @@ var __LZdeleted:Boolean = false;
 /** @access private */
 var __LZdeferDelegates:Boolean = false;
 
+  /** @access private */
+  var _events:Array = null;
 
 /** @access private */
 function childOf ( node, ignore=null ) { return false;}

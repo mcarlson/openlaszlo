@@ -85,35 +85,40 @@ public dynamic final class LzDelegate {
     /** @access private */
     var __delegateID:int = 0;
 
-/**
-  *
-  * @param Object context: The object whose method will be called by execute.
-  * @param String methodName: The name of the method to call (a
-  * string). Must be a method of one parameter.
-  * @param Object eventSender: (Optional) The sender of the event to register the
-  * new delegate for.
-  * @param String eventName: (Optional, but required if eventSender is used) The name
-  * of the event to register the new delegate for.
-  */
-public function LzDelegate (context:LzMiniNode, methodName, eventSender = null, eventName = null) {
-  super();
-  // too expensive to leave on all the time
-//     if ($debug) {
-//         this._dbg_created = Debug.backtrace();
-//     }
-  this.c = context;
-  var m = context[methodName];
-  if (m is Function) {
-    this.m = m;
-  } else if ($debug) {
-    Debug.error("Invalid delegate: %s.%s => %w (must be a Function)", context, methodName, m);
-  }
-  if ( eventSender != null ){
-    this.register( eventSender , eventName );
-  }
+  /**
+   * Create an LzDelegate
+   *
+   * @param LzMiniNode context: The object whose method will be called by execute.
+   * @param String methodName: The name of the method to call (a
+   * string). Must be a method of one parameter.
+   * @param LzMiniNode eventSender: (Optional) The sender of the event to register the
+   * new delegate for.
+   * @param String eventName: (Optional, but required if eventSender is used) The name
+   * of the event to register the new delegate for.
+   */
+  public function LzDelegate (context:LzMiniNode, methodName:String, eventSender:LzMiniNode = null, eventName:String = null) {
+    super();
+    // This type-check is superfluous in JS2, but we want it as an aid
+    // to portability in JS1
+    if (context is LzMiniNode) {
+      // We set it anyways below, for back-compatibility
+    } else if ($debug) {
+      // This causes too many warnings right now
+//       Debug.error("Invalid context: %w (for method %s)", context, methodName);
+    }
+    this.c = context;
+    var m = context[methodName];
+    if (m is Function) {
+      this.m = m;
+    } else if ($debug) {
+      Debug.error("Invalid delegate: %s.%s => %w (must be a Function)", context, methodName, m);
+    }
+    if ( eventSender != null ){
+      this.register( eventSender , eventName );
+    }
 
-  this.__delegateID = LzDelegate.__nextID++;
-}
+    this.__delegateID = LzDelegate.__nextID++;
+  }
 
 /** @access private */
     static var __nextID:int = 1;
@@ -163,7 +168,7 @@ public function execute (eventValue){
   * Registers the delegate for the named event in the given
   * context.
   *
-  * @param Object eventSender: The object which publishes the event.
+  * @param LzMiniNode eventSender: The object which publishes the event.
   * @param String eventName: The name of the event to register for.
   *
   * @devnote An event is initially declared to contain the sentinel
@@ -172,12 +177,13 @@ public function execute (eventValue){
   * delegate attempts to register on this sentinel, the sentinel will
   * automatically be replaced with a functional LzEvent.
   */
-public function register ( eventSender , eventName){
-    if (! eventSender) {
-        if ($debug) {
-            Debug.error('Invalid event sender: %w (for event %s)', eventSender, eventName);
-        }
-        return;
+  public function register ( eventSender:LzMiniNode , eventName:String) {
+    if (! (eventSender && (eventSender is LzMiniNode))) {
+      if ($debug) {
+        // This causes too many warnings right now
+//         Debug.error('Invalid event sender: %w (for event %s)', eventSender, eventName);
+      }
+      return;
     }
 
     var anEvent = eventSender[ eventName ];
@@ -195,37 +201,18 @@ public function register ( eventSender , eventName){
     }
 
     if (! (anEvent is LzEvent)){
-        if ($debug) {
-          if (anEvent && (! (anEvent is LzDeclaredEventClass))) {
-            Debug.error("Invalid event: %w.%s => %w", eventSender, eventName, anEvent);
-          }
+      if ($debug) {
+        if (anEvent && (! (anEvent is LzDeclaredEventClass))) {
+          Debug.error("Invalid event: %w.%s => %w", eventSender, eventName, anEvent);
         }
-        // The call used to be unrolled here for swf. I removed it since it
-        // was done during the swf5 days
-        anEvent = new LzEvent( eventSender, eventName , this );
+      }
+      anEvent = new LzEvent( eventSender, eventName , this );
     } else {
-        anEvent.addDelegate( this );
+      anEvent.addDelegate( this );
     }
 
     this[ this.lastevent++ ] = anEvent;
-
-    // If debugging, add an informative name
-    if ($debug) {
-        var anEvent = eventSender[ eventName ];
-        if (! anEvent.hasOwnProperty('_dbg_eventSender')) {
-            anEvent._dbg_eventSender = eventSender;
-            anEvent._dbg_eventName = eventName;
-            // too expensive to leave on all the time
-//             anEvent._dbg_created = Debug.backtrace();
-        }
-    }
-    if ($profile) {
-        var anEvent = eventSender[ eventName ];
-        if (! anEvent.hasOwnProperty('_dbg_profileName')) {
-            anEvent._dbg_profileName = eventName;
-        }
-    }
-}
+  }
 
 /**
   * Unregisters the delegate for all of the events it is registered for.
@@ -424,46 +411,41 @@ public final class LzEvent extends LzDeclaredEventClass {
     /** @access private */
     var delegateList:Array = null;
 
-/**
-  * @param Object eventSender: The owner of this event
-  * @param String eventName: The name of this event.
-  * @access private
-  */
-    function LzEvent ( eventSender:* , eventName:* , d:* = null){
+  /**
+   * @param LzMiniNode eventSender: The owner of this event
+   * @param String eventName: The name of this event.
+   * @access private
+   */
+  function LzEvent ( eventSender:LzMiniNode , eventName:String , d:* = null) {
     super();
-    // If debugging, add an informative name
+    var _evs = eventSender['_events'];
+    if (_evs == null ){
+      eventSender._events = [ this ];
+    } else {
+      _evs.push ( this );
+    }
+    eventSender[ eventName ] = this;
+    if ( d ){
+      this.delegateList = [d];
+      this.ready = true;
+    }else{
+      this.delegateList = [];
+    }
+    // If debugging or profiling, add an informative name
     if ($debug) {
       this._dbg_eventSender = eventSender;
       this._dbg_eventName = eventName;
     }
-
-    var _evs = eventSender['_events'];
-    if (_evs == null ){
-        eventSender._events = [ this ];
-    } else {
-        _evs.push ( this );
-    }
-    eventSender[ eventName ] = this;
-    if ( d ){
-        this.delegateList = [d];
-        this.ready = true;
-    }else{
-        this.delegateList = [];
-    }
-
     if ($profile) {
       this._dbg_profileName = eventName;
     }
-}
+  }
 
 /** True when event is being sent.
   * @type Boolean
   * @access private
   */
     var locked:Boolean = false;
-
-// public var ready:Boolean = false;
-
 
 /**
   * Adds the given delegate to the event's delegate list. Should

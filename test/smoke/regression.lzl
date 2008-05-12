@@ -98,7 +98,7 @@
             <method name="setupDelegate">
                 this.repeatevent = new LzEvent(moveright, "myrepeatEvent")
                 moveright.setAttribute("onrepeat", repeatevent)
-                this.del = new LzDelegate(parent, "verifyPos", moveright, "myrepeatEvent")
+                this.del = new LzDelegate(parent, "repeatEventHandler", moveright, "myrepeatEvent")
             </method>
         </view>
         <method name="testAnimate">
@@ -111,6 +111,9 @@
             redbox.destroy()
         </method>
 
+        <method name="repeatEventHandler" args="value">
+          this.verifyPos();
+        </method>
         <method name="verifyPos">
             this.abs_x += 100
             assertEquals(abs_x, Math.round(redbox.x))

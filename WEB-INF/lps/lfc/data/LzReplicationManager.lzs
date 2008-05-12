@@ -68,6 +68,7 @@
   * </example>
   * 
   * @shortdesc The controller for views replicated by data.
+  *
   * @devnote A replication manager controls the replication of views as a result of 
   * multiple matches to a datapath's xpath. When a datapath matches more than
   * one node, it immediate halts its own processing and creates a replication 
@@ -78,15 +79,7 @@
   */
 class LzReplicationManager extends LzDatapath {
 
-/** If true, the replication manager will reuse views it
-  * has alreay created if the data changes if possible. If false, the 
-  * replication manager will always destroy views whose data has changed and
-  * create new ones.
-  */
-// var pooling = false;
-
-function $lzc$set_sortpath(v) { this.setOrder(v, 'sortpath'); }
-function $lzc$set_sortorder(v) { this.setComparator(v); }
+/** @access private */
 override function $lzc$set_datapath(v) { this.setXPath(v); }
 
 /** @access private */
@@ -122,25 +115,47 @@ var op_orderf;    // Was this.orderf.op
   */ 
 // var __LZtakeDPSlot = false;
 
+/**
+ * Globally controls the visibility of the clones this replication
+ * manager creates.
+ *
+ * @type Boolean
+ * @lzxtype boolean
+ * @lzxdefault true
+ * @keywords final
+ */
 var visible = true;
 /** @access private */
 var __LZpreventXPathUpdate = false;
 
-/** The nodes that this replication manager will map to views */
+/**
+ * The data that this replication manager will map to views
+ * @type [*]
+ */
 var nodes;
 
-/** The LzNodes which this LzReplicationManager has created.
-  * @type [LzNode]
-  */
+/**
+ * The views which this LzReplicationManager has created.
+ * @type [LzNode]
+ */
 var clones;
 
 /** @access private */
 var __LZdataoffset = 0;
-/** @lzxtype event */
+/**
+ * Sent when <code>nodes</code> is changed
+ * @lzxtype event
+ */
 var onnodes = LzDeclaredEvent;
-/** @lzxtype event */
+/**
+ * Sent when <code>clones</code> is changed
+ * @lzxtype event
+ */
 var onclones = LzDeclaredEvent;
-/** @lzxtype event */
+/**
+ * Sent when <code>visible</code< is changed
+ * @lzxtype event
+ */
 var onvisible = LzDeclaredEvent;
 
 /**
@@ -151,6 +166,7 @@ function LzReplicationManager ( odp , args, children:* = null, instcall:* = null
     super(odp, args, children, instcall);
 }
 
+/** @access private */
 override function construct ( odp , args ){
     this.__LZtakeDPSlot = false; // Defined in LzDatapath
     this.datacontrolsvisibility = false; // Defined in LzDatapath
@@ -566,18 +582,10 @@ function descDict ( a , b ){
   * @param Function|String comparator: See the <code>comparator</code> paramater
   * of <code>setComparator</code> for details.
   */
-override function setOrder( xpath , comparator ) {
+override function setOrder( xpath , comparator=null ) {
     this.orderpath = null;
 
-    //handle case where this was called by a setter, in which case second
-    //arg is the name of the attribute that was set
-    comparator = comparator == "sortpath" ? null : comparator;
-
-    //comparator can be a function or a string, so need to test against
-    //both null and as a boolean
-    if ( comparator ||
-         comparator != null || 
-         typeof( this.comp_orderf ) != "function" ){
+    if ( comparator != null ){
         this.setComparator( comparator );
     }
 
@@ -594,7 +602,7 @@ override function setOrder( xpath , comparator ) {
 /**
   * Sets the comparator for the sort used by the replication manager.
   * @access private
-  * 
+  *
   * @param Function|String comparator: "ascending" or "descending" for the
   * appropriate dictionary sort, or a function to be used for comparison that
   * takes two arguments and returns 1 if the second argument should follow the
@@ -602,22 +610,23 @@ override function setOrder( xpath , comparator ) {
   * arguments are equivalent
   */
 override function setComparator( comparator ){
-    if ( typeof( comparator ) != "function" ){
-        if ( comparator == "descending" ){
-            comparator = this.descDict;
-        } else {
-            comparator = this.ascDict;
-        }
-    }
+  if ( comparator == "descending" ){
+    comparator = this.descDict;
+  } else if ( comparator == "ascending" ){
+    comparator = this.ascDict;
+  } else if ( comparator is Function ) {
+    // Just use it
+  } else if ($debug) {
+    Debug.error("Invalid comparator: %s", comparator);
+  }
 
-    this.comp_orderf = comparator;
-
-    if ( this.orderpath != null && this.nodes.length ){
-        //reset nodes in order now
-        this.__LZHandleMultiNodes( this.nodes );
-    }
+  this.comp_orderf = comparator;
+  if ( this.orderpath != null && this.nodes.length ){
+    //reset nodes in order now
+    this.__LZHandleMultiNodes( this.nodes );
+  }
 }
-            
+
 /**
   * @access private
   */
@@ -632,7 +641,7 @@ function getNewClone ( forceNew = null ){
                                      this.cloneChildren, 
                                      forceNew == null ?this.asyncnew: !forceNew);
     }
-    if ( this.visible == false ) v.setVisible( false );
+    if ( this.visible == false ) v.$lzc$set_visible( false );
     return v;
 }
 
@@ -658,6 +667,7 @@ function destroyClone ( v ) {
   * over the slot that a named replicated view occupied in the parent. (See
   * comment on the class as a whole, above.)
   * @param String xp: An xpath.
+  * @access private
   */
 override function setDatapath ( xp ){
     this.setXPath( xp );
@@ -710,12 +720,17 @@ override function toString (){
 /**
   * Sets the visibility of all the clones controlled by the replication manager
   * @param Boolean vis: The value to set the visibility to.
+  * @access private
+  * @devnote TODO: [2008-05-07 ptw] This should probably just be a
+  * setter rather than being handled specially by construcWithArgs,
+  * but I didn't want to mess with that now.  In any case, there is no
+  * reason for this to be a public method.
   */
 function setVisible ( vis ){
     this.visible = vis;
     var l = this.clones.length; 
     for ( var i = 0; i < l; i++ ){
-        this.clones[ i ].setVisible( vis );
+        this.clones[ i ].$lzc$set_visible( vis );
     }
     if (this.onvisible.ready) this.onvisible.sendEvent( vis );
 }
@@ -760,7 +775,7 @@ override function getContext ( chgpkg = null ){
 function detachClone ( cl ){
     if ( cl.isdetatchedclone ) return;
 
-    cl.setVisible( false );
+    cl.$lzc$set_visible(false);
     cl.addedToParent = false;
 
     var svs =  cl.immediateparent.subviews;
@@ -784,7 +799,7 @@ function reattachClone ( cl ){
     if ( !cl.isdetatchedclone ) return cl;
 
     cl.immediateparent.addSubview( cl );
-    cl.setVisible( this.visible );
+    cl.$lzc$set_visible( this.visible );
     cl.isdetatchedclone = false;
     return cl;
 }
