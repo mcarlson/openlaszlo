@@ -110,7 +110,7 @@ SKIP: {
 }
 
 <FILENAME> SKIP: {
-  < (~["\n","\r"])+ >
+  < (~["\n","\r"])* >
   {pathname = image.toString();} : DEFAULT
 }
 

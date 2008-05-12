@@ -54,7 +54,7 @@ class ScriptElementCompiler extends ElementCompiler {
             // If it is when=immediate, emit code inline
             if ("immediate".equals(element.getAttributeValue("when"))) {
                 mEnv.compileScript(
-                    CompilerUtils.sourceLocationDirective(element, true) + script, 
+                    CompilerUtils.sourceLocationDirective(element, true) + script + CompilerUtils.endSourceLocationDirective,
                     element);
             } else {
                 // Compile scripts to run at construction time in the view
@@ -63,13 +63,14 @@ class ScriptElementCompiler extends ElementCompiler {
                 mEnv.compileScript(
                     // Provide file info for anonymous function name
                     CompilerUtils.sourceLocationDirective(element, true) +
-                    VIEW_INSTANTIATION_FNAME + 
+                    VIEW_INSTANTIATION_FNAME +
                     "({name: 'script', attrs: " +
                     "{script: function () {\n" +
                     "#beginContent\n" +
                     "#pragma 'scriptElement'\n" +
                     CompilerUtils.sourceLocationDirective(element, true) +
                     script +
+                    CompilerUtils.endSourceLocationDirective +
                     "\n#endContent\n" +
                     // Scripts have no children
                     "}}}, 1)",
@@ -85,9 +86,3 @@ class ScriptElementCompiler extends ElementCompiler {
         }
     }
 }
-
-
-
-
-
-

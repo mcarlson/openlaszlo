@@ -139,6 +139,8 @@ public class CompilerUtils  {
         return buffer.toString();
     }
     
+    public static String endSourceLocationDirective = sourceLocationDirective("", null, null);
+
     public static String sourceLocationPrettyString(Element elt) {
         // Parser adds these attributes.
         String pathname = Parser.getSourceMessagePathname(elt);

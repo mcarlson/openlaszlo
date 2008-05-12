@@ -49,13 +49,15 @@ public class Function {
 
   public String toString() {
 
-    return (adjectives != null?(adjectives + " "):"") + 
-      "function " + name + "(" + args + ") {\n" + 
-      preface + 
+    return (adjectives != null?(adjectives + " "):"") +
+      "function " + name + "(" + args + ") {\n" +
+      preface +
       // we do not inject a newline after sourceLocation, it was
       // carefully positioned to be at the right column
-      (sourceLocation != null?sourceLocation:"") + 
-      body + 
+      (sourceLocation != null?sourceLocation:"") +
+      body +
+      // mark the end of the user sourceLocation
+      (sourceLocation != null?org.openlaszlo.compiler.CompilerUtils.endSourceLocationDirective:"") +
       "\n}";
   }
 }

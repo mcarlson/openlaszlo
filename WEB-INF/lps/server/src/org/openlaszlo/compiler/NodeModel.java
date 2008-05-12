@@ -236,7 +236,7 @@ public class NodeModel implements Cloneable {
         return null;
       }
       String installer = "setAttribute";
-      String body = "\n#beginAttribute\n" + srcloc + value + "\n#endAttribute\n)";
+      String body = "\n#beginAttribute\n" + srcloc + value + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n)";
       String pragmas =
         "\n#pragma 'withThis'\n";
       String args = "";
@@ -319,7 +319,7 @@ public class NodeModel implements Cloneable {
           // here...
           return value;
         } else {
-          return "\n#beginAttribute\n" + srcloc + value + "\n#endAttribute\n";
+          return "\n#beginAttribute\n" + srcloc + value + CompilerUtils.endSourceLocationDirective +"\n#endAttribute\n";
         }
       } else {
         throw new CompilationError("invalid when value '" +
@@ -1021,9 +1021,6 @@ solution =
     // child literal content as an escaped string, which could be used
     // to initialize the dataset at runtime.
     static String getDatasetContent(Element element, CompilationEnvironment env, boolean trimwhitespace) {
-        String srcloc =
-            CompilerUtils.sourceLocationDirective(element, true);
-
         // If type='http' or the path starts with http: or https:,
         // then don't attempt to include the data at compile
         // time. The runtime will have to recognize it as runtime
@@ -1413,7 +1410,6 @@ solution =
     }
 
   void addMethodInternal(String name, String args, String body, Element element, String allocation) {
-        String srcloc = CompilerUtils.sourceLocationDirective(element, true);
         ClassModel superclassModel = getParentClassModel();
         // Override will be required if there is an inherited method
         // of the same name
@@ -1803,7 +1799,6 @@ solution =
         if (value != null) {
           cattr = compileAttribute(element, name, value, type, when);
         } else {
-            String srcloc = CompilerUtils.sourceLocationDirective(element, true);
             cattr = new CompiledAttribute(name, type, null, WHEN_IMMEDIATELY, element, env);
         }
         addProperty(name, cattr, allocation, element);

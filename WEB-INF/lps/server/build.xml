@@ -5,7 +5,7 @@
 
 <project name="server" default="build" basedir=".">
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -273,6 +273,10 @@ javac (1.4);
           unless="sc-parser.uptodate"
           description="Run JavaCC to create the parser *.java files."
           >
+    <!-- If we rebuild the parser, the compiler has to be rebuilt to pick up the correct constant definitions -->
+    <delete failonerror="false">
+      <fileset dir="${build}" includes="**/*.class"/>
+    </delete>
     <mkdir dir="${buildsrc.sc.1.4}"/>
     <mkdir dir="${buildsrc.sc.1.4}/parser"/>
 
