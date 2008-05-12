@@ -29,9 +29,9 @@
               }
             })(null, null);
           }
-        </script><script type="text/javascript">
-            lzOptions = { ServerRoot: '<%= request.getContextPath() %>'};
-        </script><script type="text/javascript" src="<%= request.getContextPath() %>/lps/includes/embed-compressed.js"></script>
+        </script><script type="text/javascript" src="<%= request.getContextPath() %>/lps/includes/embed-compressed.js"></script><script type="text/javascript">
+            Lz.options.ServerRoot = '<%= request.getContextPath() %>';
+        </script>
 <script type="text/javascript">
 Lz.dhtmlEmbedLFC('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js');
 </script><style type="text/css">
@@ -71,9 +71,9 @@ Lz.dhtmlEmbedLFC('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js')
         <noscript>
             Please enable JavaScript in order to use this application.
         </noscript>
-</body>
-</html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
+</body>
+</html>
