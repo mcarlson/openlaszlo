@@ -62,9 +62,9 @@
             <p>A <classname>combobox</classname> is a common UI element for
               displaying a pop-up list associated with a text field. The selected
               text of the combobox is displayed within the text field.  This field
-              is an <classname>LzInputText</classname> field if the
+              is an <a href="LzInputText.html" target="_self"><code class="tagname">&lt;LzInputText&gt;</code></a> field if the
               <attribute>editable</attribute> of the combobox is <code>true</code>
-              (the default), or a static <classname>LzText</classname> field if it
+                (the default), or a static <a href="LzText.html" target="_self"><code class="tagname">&lt;LzText&gt;</code></a> field if it
               is <code>false</code>.</p>
 
             <p>The number of items shown in the combobox can be set using the
@@ -73,7 +73,7 @@
               automatically.</p>
 
             <p>The list of items in a combobox can be created explicity using the
-              <tagname>textlistitem</tagname> tag with assigned
+                <a href="lz.textlistitem.html" target="_self"><code class="tagname">&lt;textlistitem&gt;</code></a> tag with assigned
               <attribute>text</attribute> and <attribute>value</attribute>
               attributes.</p>
 
@@ -117,7 +117,7 @@
             </example>
 
             <p>Finally, a combox can also have custom items in its list by tending
-              the <classname>listitem</classname> class. An example of this is shown
+                the <a href="lz.listitem.html" target="_self"><code class="tagname">&lt;listitem&gt;</code></a> class. An example of this is shown
               below:</p>
 
             <example>
@@ -157,7 +157,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
