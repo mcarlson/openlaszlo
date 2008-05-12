@@ -711,7 +711,7 @@
             </example>
             
             <p>For more use cases of <tagname>basecombobox</tagname>, see examples
-            in <tagname>combobox</tagname>.</p>
+                in <a href="lz.combobox.html" target="_self"><code class="tagname">&lt;combobox&gt;</code></a>.</p>
           </text>
         </doc>
     </class>
