@@ -573,7 +573,7 @@ class LzDataElement extends LzDataNode with LzDataElementMixin, LzDataNodeMixin
     // N.B.: LzDataElement is not an LzNode so has a different
     // initialize signature.
     function LzDataElement ( name , attributes = null, children = null) {
-            super(name, attributes, children);
+            super(attributes, children);
             this.nodeName = name;
             this.nodeType = LzDataElement.ELEMENT_NODE;
             this.attributes = attributes;

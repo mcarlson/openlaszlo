@@ -212,7 +212,7 @@ function __LZunlockFromUpdate ( locker ){
  */
 class LzDataNode extends  LzMiniNode {
 
-    function LzDataNode ( name , attributes = null, children = null) {
+    function LzDataNode ( attributes = null, children = null) {
         super();
     }
 
