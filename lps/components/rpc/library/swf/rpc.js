@@ -75,7 +75,7 @@ function __LZloaderReturnData (loadmc, data, responseheaders) {
                             stub: stub, stubinfo: stubinfo,
                             seqnum: seqnum } );
 
-    } else if ((data instanceof LzDataNodeMixin) && data.childNodes[0].nodeName == 'error') {
+    } else if ((data is LzDataNode) && data.childNodes[0].nodeName == 'error') {
 
         var error = data.childNodes[0].attributes['msg'];
 
@@ -130,11 +130,11 @@ function __LZloaderReturnData (loadmc, data, responseheaders) {
     } else {
 
         if (delegate['dataobject'] != null) {
-            if ( delegate.dataobject instanceof LzDataset ) {
+            if ( delegate.dataobject is LzDataset ) {
                 var element = LzDataElement.valueToElement(data);
                 // the child nodes of element will be placed in datasets childNodes
                 delegate.dataobject.setData( element.childNodes );
-            } else if ( delegate.dataobject instanceof LzDataElement ) {
+            } else if ( delegate.dataobject is LzDataElement ) {
                 var element = LzDataElement.valueToElement(data);
                 // xpath: element/value
                 delegate.dataobject.appendChild( element );
