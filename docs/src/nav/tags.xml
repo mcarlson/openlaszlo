@@ -19,6 +19,7 @@
     <item href="lz.basedatepickerday.html" title="basedatepickerday" />
     <item href="lz.basedatepickerweek.html" title="basedatepickerweek" />
     <item href="lz.basefloatinglist.html" title="basefloatinglist" />
+    <item href="lz.basefocusview.html" title="basefocusview" />
     <item href="lz.baseform.html" title="baseform" />
     <item href="lz.baseformitem.html" title="baseformitem" />
     <item href="lz.basegrid.html" title="basegrid" />
@@ -82,6 +83,7 @@
     <item href="tag.event.html" title="event" />
     <item href="tag-face.html" title="face" />
     <item href="lz.floatinglist.html" title="floatinglist" />
+    <item href="lz.focusoverlay.html" title="focusoverlay" />
     <item href="LzFont.html" title="font" />
     <item href="lz.form.html" title="form" />
     <item href="tag-frame.html" title="frame" />

@@ -1,4 +1,5 @@
 <library>
+    <include href="lz/focusoverlay.lzx"/>
 <!-- style.lzx is not included here, even thought it is required.
     lz._componentmanager needs style to be defined before it is used, but style
     has script in it that needs lz._componentmanager, so don't include it here.

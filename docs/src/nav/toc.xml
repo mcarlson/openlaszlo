@@ -33,6 +33,7 @@
         <item title="edittext" href="lz.edittext.html" />
         <item title="floatinglist" href="lz.floatinglist.html" />
         <item title="form" href="lz.form.html" />
+        <item title="focusoverlay" href="lz.focusoverlay.html" />
         <item title="grid" href="lz.grid.html" />
         <item title="gridcolumn" href="lz.gridcolumn.html" />
         <item title="gridtext" href="lz.gridtext.html" />
@@ -164,6 +165,7 @@
         <item title="basedragimage" href="lz.basedragimage.html" />
         <item title="baseedittext" href="lz.baseedittext.html" />
         <item title="basefloatinglist" href="lz.basefloatinglist.html" />
+        <item title="basefocusview" href="lz.basefocusview.html" />
         <item title="baseform" href="lz.baseform.html" />
         <item title="baseformitem" href="lz.baseformitem.html" />
         <item title="basegrid" href="lz.basegrid.html" />
