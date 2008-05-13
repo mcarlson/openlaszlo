@@ -575,9 +575,17 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="merge.file" expression="${reference.src.dir}/wrappers.xml"/>
     </style>
     
+    <style style="xsl/js2doc-append.xsl"
+           in="${reference.build.dir}/LaszloLibrary-5.js2doc"
+           out="${reference.build.dir}/LaszloLibrary-6.js2doc">
+      <xmlcatalog refid="commonDTDs"/>
+      <xmlcatalog refid="docbook.local.xsl"/>
+      <param name="merge.file" expression="${reference.src.dir}/info.xml"/>
+    </style>
+    
     <!-- make certain information explicit to ease processing by js2doc2dbk.xsl -->
     <style style="xsl/js2doc-verbose.xsl"
-           in="${reference.build.dir}/LaszloLibrary-5.js2doc"
+           in="${reference.build.dir}/LaszloLibrary-6.js2doc"
            out="${reference.build.dir}/LaszloLibrary-verbose.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>

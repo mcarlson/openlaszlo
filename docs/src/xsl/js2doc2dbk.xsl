@@ -491,8 +491,8 @@
     
     <xsl:variable name="visible-members" select="$members[contains($visibility.filter,@access)]"/>
     <xsl:if test="count($visible-members) > 0">
-      <variablelist><title><xsl:value-of select="$title"/></title></variablelist>
-      <informaltable frame="none" colsep="0" rowsep="1" width="100%">
+      <variablelist><title><link linkend="info-attributes"><xsl:value-of select="$title"/></link></title></variablelist>
+      <informaltable frame="none" colsep="0" rowsep="1" pgwide="1">
         <tgroup cols="4">
           <colspec colname="Name" />
           <colspec colname="TypeTag" />

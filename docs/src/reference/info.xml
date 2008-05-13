@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<!-- the content of this file was derived from files
+     info-{attribinfo,attributes,categories,reservedwords,tiers}.html
+     in the 3.4 docs/src/hardpages directory. -->
+
+<js2doc>
+
+<property id="info-attributes" topic="LZX" subtopic="General Information" access="public">
+<doc>
+<tag name="lzxname"><text>An introduction to Attributes</text></tag>
+<text>
+<p>Attributes can be an element of a tag or a property of a JavaSctipt
+  class.  Attributes are declared and set in tags, but they can also
+  be set and read in script.  Not all attributes can be set in script,
+  similarly not all attributes can be in tags. Attributes are
+  characterized based on this behaviour into five categories. See <a
+  href="#types">below</a> for more information on the various
+  categories.</p>
+
+<p>An attribute can be declared in a tag header as follows:</p>
+
+<example title="Setting an attribute value in the tag header">&lt;canvas height="20"&gt;
+  &lt;view <span class="redText">width="20"</span> height="20" bgcolor="red"/&gt;
+&lt;/canvas&gt;</example>
+
+<p>An alternative (although more verbose) way to set the attribute is
+using the <tagname link="true">attribute</tagname> tag as a child of
+the tag whose attribute is being set:</p>
+
+<example title="Using the attribute element to set an attribute value">&lt;canvas height="20"&gt;
+  &lt;view&gt;
+    <span class="redText">&lt;attribute name="width" type="number" value="20"/&gt;</span>
+    &lt;attribute name="height" type="number" value="20"/&gt;
+    &lt;attribute name="bgcolor" type="color" value="red"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;</example>
+
+<p>This second example is actually the same as saying &lt;view width="20" height="20" bgcolor="red"/&gt;. The <tagname>attribute</tagname> tag becomes useful when writing classes as well as when performing complicated constraints of existing attributes.</p>
+
+<p>In script, the values of most attributes are can be retrieved using
+dot syntax:</p>
+
+<example title="Using dot syntax to retrieve an attribute value">&lt;canvas height="20"&gt;
+  &lt;view name="myView" width="20" height="20" bgcolor="red"/&gt;
+
+  &lt;script&gt;
+    var myAttributeValue = <span class="redText">myView.x</span>;
+    // myAttributeValue now has the value 20
+  &lt;/script&gt;
+&lt;/canvas&gt;</example>
+
+<p>Additionally attributes can be read using the
+<method>getAttribute</method> method. This is unnecessary most of the
+time, but can be useful for retrieving the value of an arbitrary
+attribute, whose name is represented by a string.</p>
+
+<example title="Using getAttribute to retrieve an attribute value">&lt;canvas height="20"&gt;
+  &lt;view name="myView" width="20" height="20" bgcolor="red"/&gt;
+
+  &lt;script&gt;
+    var myAttributeName = "x";
+    var myAttributeValue = <span class="redText">myView.getAttribute(myAttributeName)</span>;
+    // myAttributeValue now has the value 20
+  &lt;/script&gt;
+&lt;/canvas&gt;</example>
+
+<p>All attributes that are settable in script (see below) can be set
+using the <method>setAttribute</method> method:</p>
+
+<example title="Using setAttribute to set an attribute value">&lt;canvas height="20"&gt;
+  &lt;view width="20" height="20" bgcolor="red"
+      oninit="<span class="redText">this.setAttribute('width', 50);</span>"/&gt;
+&lt;/canvas&gt;</example>
+
+
+
+<p>For more infomation see the reference page for <a
+href="tag.attribute.html">Attribute</a>.  The <a
+href="${tutorials}classes-tutorial.html">Classes</a> tutorial describes how to
+use attributes to define a class.</p>
+
+<!-- TODO: [2008-05-13 dda] hrule should go here and between each section -->
+
+<p><a name="types"></a>There are five kinds of attributes: </p>
+<ul>
+  <li><a href="#setter">Attributes (with setter)</a></li>
+  <li><a href="#defaultsetter">Attributes (without setter)</a></li>
+  <li><a href="#eventhandler">Event Handler</a> <a href="#final"> (script may
+      be defined XML tag)</a></li>
+  <li><a href="#final">Final Attributes (defined only in XML tag)</a></li>
+  <li><a href="#readonly">Read-only Attributes (JavaScript fields)</a><br /> 
+  </li>
+</ul>
+
+<a name="setter"></a>
+<simplesect>
+<h2>Attributes (with setter)</h2>
+<p>Built-in attributes which have setters may be modified at runtime
+and used in constraint expressions. When <method>setAttribute</method>
+is called, the appropriate setter will be called automatically. The
+value of an attribute can be retrieved through script using dot
+syntax, (e.g. myView.opacity). </p>
+
+<p>For example:</p>
+<example title="Using setAttribute to update a constraint">&lt;canvas height="20"&gt;
+  &lt;view id="myView" onclick="setAttribute('opacity', 1.5 - this.opacity)" bgcolor="red"&gt;
+    &lt;text text="${'My opacity is ' + myView.opacity + '.  Click to change it.'}"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;</example>
+
+<p>Most setters follow the naming convention "set" + "attribute name".
+For example, the x attribute for a view has the setX() method defined
+in the LzView API. You can use these methods as a convenience, instead
+of setAttribute.  They are documented with the other class
+methods.</p>
+
+<p align="right"><ulink url="#top">More on attributes</ulink></p>
+</simplesect>
+
+<a name="defaultsetter"></a>
+<simplesect>
+<h2>Attributes (without setter)</h2>
+<p>Some attributes are usable in a tag, but do not have a predefined
+setter method. Instead they use the default setter method
+(<method>setAttribute</method>) to set their values at
+run-time. Typically they are custom attributes that have been declared
+in components using the <tagname>attribute</tagname> tag. Therefore they can be
+declared and set in tags too.</p>
+
+<example title="An attribute without a setter method">&lt;canvas&gt;
+    &lt;window <span class="redText">title="My Window"</span> onclick="this.setAttribute('title', 'Hello World');"/&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<p align="right"><ulink url="#top">More on attributes</ulink></p>
+</simplesect>
+
+<a name="eventhandler"></a>
+<simplesect>
+<h2>Event Handler Attributes</h2>
+<p>Event Handler attributes are instructions for what to perform when a particular event happens. They always contain script, and cannot be changed at run-time (i.e. from script). Their values cannot (and do not need to) be retrieved from script.</p>
+
+<programlisting class="code">
+&lt;canvas&gt;
+    &lt;view width="50" height="50" bgcolor="red" <span class="redText">onclick="Debug.write('Hello, World!');"</span> /&gt;
+&lt;/canvas&gt;
+</programlisting>
+
+<!-- TODO: [2008-05-13 dda] how to do alignment right ? -->
+<p align="right"><ulink url="#top">More on attributes</ulink></p>
+</simplesect>
+
+<a name="final"></a>
+<simplesect>
+<h2>Final Attributes</h2>
+<p>Final attributes are declared and set in the tag, but cannot be changed in using script. Good examples of final attributes are name and id. They can be read from script using dot syntax (e.g. myView.name).</p>
+
+
+<p align="right"><ulink url="#top">More on attributes</ulink></p>
+</simplesect>
+
+<a name="readonly"></a>
+<simplesect>
+<h2>Read Only Attributes (Fields)</h2>
+<p>Read Only attributes, sometimes called "Fields", are only available through
+  the element's API. Since they are read-only, they cannot be set in a &lt;tag&gt;.
+  Their values can be retrieved using dot syntax (e.g. myView.subviews).</p>
+<p align="right"><ulink url="#top">More on attributes</ulink></p>
+</simplesect>
+
+</text>
+</doc>
+</property>
+
+</js2doc>
