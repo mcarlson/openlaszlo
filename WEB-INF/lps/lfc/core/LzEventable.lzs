@@ -2,15 +2,19 @@
  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
- * @access public
  * @topic LFC
  * @subtopic Events
  * @access public
- *
- * LzEventable is the base class for any class that wishes to send
+ */
+
+/**
+ * <p>LzEventable is the base class for any class that wishes to send
  * and receive events.  It defines the setAttribute protocol that
  * creates implicit events for every attribute that is modified using
- * setAttribute.
+ * setAttribute.</p>
+ *
+ * <p>See <xref linkend="LzEvent"/> and <xref
+ * linkend="LzDelegate"/>.</p>
  *
  * @shortdesc Base class for all LZX classes that wish to send or
  * receive events.

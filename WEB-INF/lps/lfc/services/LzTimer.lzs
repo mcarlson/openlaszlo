@@ -6,7 +6,9 @@
  * @topic LFC
  * @subtopic Services
  * @access public
- *
+ */
+
+/**
  * <p>LzTimer is used to invoke functionality after a specific
  * amount of time. By using a <xref linkend="LzDelegate"/> to refer
  * to a particular method, and then by adding a timer to that
