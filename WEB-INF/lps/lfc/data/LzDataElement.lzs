@@ -572,9 +572,15 @@ function __LZdoUnlock ( locker ){
   */
 class LzDataElement extends LzDataNode with LzDataElementMixin, LzDataNodeMixin
 {
-    // N.B.: LzDataElement is not an LzNode so has a different
-    // initialize signature.
+    /** DEFINE OBJECT: LzDataElement
+     * This object represents a hierarchical data node.
+     * @param String name: The name for this node.
+     * @param Object attributes: A optional dictionary of attributes for this node.
+     * @param [LzDataNode] children: An optional array of children for this node
+     */
     function LzDataElement ( name , attributes = null, children = null) {
+        // N.B.: LzDataElement is not an LzNode so has a different
+        // initialize signature.
             super(attributes, children);
             this.nodeName = name;
             this.nodeType = LzDataElement.ELEMENT_NODE;

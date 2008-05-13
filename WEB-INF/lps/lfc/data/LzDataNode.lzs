@@ -55,8 +55,8 @@
   * </example>
   * 
   * @shortdesc The base class for a node of hierarchical data.
-  * @devnote LzDataNode is the abstract baseclass for LzDataElement and LzDataText.
-  * N.B.: LzDataNode may or may not be an LzNode, so _if_ it were
+  * @devnote LzDataNodeMixin is the abstract baseclass for LzDataElement and LzDataText.
+  * N.B.: LzDataNodeMixin may or may not be an LzNode, so _if_ it were
   * to have an initialize method, it would have to match
   * LzNode.initialize's signature.
   *
@@ -208,20 +208,36 @@ function __LZunlockFromUpdate ( locker ){
 // Only static methods and variables remain here
 
 /**
- *  @access private
+ * @topic LFC
+ * @subtopic Data
+ *
+ * @shortdesc The base class for a node of hierarchical data.
+ *
+ * <p> LzDataNode is deprecated, all methods and constants have been moved to <link linkend="LzDataElement">LzDataElement</link></p>
+ *
+ * @access public
+ * @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead. The methods and constants in this class are deprecated
+ *
  */
 class LzDataNode extends  LzEventable {
 
+    
+/**
+  * @access private
+  */
     function LzDataNode ( attributes = null, children = null) {
         super();
     }
 
 
-// @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead
+/** @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead
+ */
 static var ELEMENT_NODE = 1;
-// @deprecated Use <code>LzDataElement.TEXT_NODE</code> instead
+/** @deprecated Use <code>LzDataElement.TEXT_NODE</code> instead
+ */
 static var TEXT_NODE = 3;
-// @deprecated Use <code>LzDataElement.DOCUMENT_NODE</code> instead
+/** @deprecated Use <code>LzDataElement.DOCUMENT_NODE</code> instead
+ */
 static var DOCUMENT_NODE = 9;
 
 

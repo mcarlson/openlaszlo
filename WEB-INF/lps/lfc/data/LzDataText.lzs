@@ -19,8 +19,9 @@
 class LzDataText extends LzDataNode with LzDataNodeMixin {
 
 /**
-  * @param String text: The text that this node holds.
-  */
+ * This object represents a text node in a set of data.
+ * @param String text: The text that this node holds.
+ */
 function LzDataText ( text ){
     super();
     this.nodeType = LzDataElement.TEXT_NODE;
