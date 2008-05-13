@@ -153,7 +153,7 @@ var onnodes = LzDeclaredEvent;
  */
 var onclones = LzDeclaredEvent;
 /**
- * Sent when <code>visible</code< is changed
+ * Sent when <code>visible</code> is changed
  * @lzxtype event
  */
 var onvisible = LzDeclaredEvent;
