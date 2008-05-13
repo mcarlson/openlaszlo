@@ -19,7 +19,7 @@
   * named method of an object. Delegates are mostly registered with
   * events, but they can be used anywhere a function callback would
   * traditionally be called for: for instance, <xref
-  * linkend="LzTimerClass.prototype.addTimer"/> takes a delegate as
+  * linkend="LzTimerService.prototype.addTimer"/> takes a delegate as
   * its argument.</p>
   *
   * <p>You can create a delegate explicitly using the <classname
@@ -88,23 +88,25 @@ public dynamic final class LzDelegate {
   /**
    * Create an LzDelegate
    *
-   * @param LzMiniNode context: The object whose method will be called by execute.
+   * @param LzEventable context: The object whose method will be called by execute.
    * @param String methodName: The name of the method to call (a
    * string). Must be a method of one parameter.
-   * @param LzMiniNode eventSender: (Optional) The sender of the event to register the
+   * @param LzEventable eventSender: (Optional) The sender of the event to register the
    * new delegate for.
    * @param String eventName: (Optional, but required if eventSender is used) The name
    * of the event to register the new delegate for.
    */
-  public function LzDelegate (context:LzMiniNode, methodName:String, eventSender:LzMiniNode = null, eventName:String = null) {
+  public function LzDelegate (context:LzEventable, methodName:String, eventSender:LzEventable = null, eventName:String = null) {
     super();
-    // This type-check is superfluous in JS2, but we want it as an aid
-    // to portability in JS1
-    if (context is LzMiniNode) {
-      // We set it anyways below, for back-compatibility
+    if ($swf9) {
+      // This type-check is superfluous in JS2, but we want it as an
+      // aid to portability in JS1
+    } else if (context is LzEventable) {
+      // Ok
     } else if ($debug) {
       // This causes too many warnings right now
 //       Debug.error("Invalid context: %w (for method %s)", context, methodName);
+      // We proceed anyways below, for back-compatibility
     }
     this.c = context;
     var m = context[methodName];
@@ -168,7 +170,7 @@ public function execute (eventValue){
   * Registers the delegate for the named event in the given
   * context.
   *
-  * @param LzMiniNode eventSender: The object which publishes the event.
+  * @param LzEventable eventSender: The object which publishes the event.
   * @param String eventName: The name of the event to register for.
   *
   * @devnote An event is initially declared to contain the sentinel
@@ -177,13 +179,21 @@ public function execute (eventValue){
   * delegate attempts to register on this sentinel, the sentinel will
   * automatically be replaced with a functional LzEvent.
   */
-  public function register ( eventSender:LzMiniNode , eventName:String) {
-    if (! (eventSender && (eventSender is LzMiniNode))) {
+  public function register ( eventSender:LzEventable , eventName:String) {
+    if ($swf9) {
+      // This type-check is superfluous in JS2, but we want it as an
+      // aid to portability in JS1
+    } else if (eventSender is LzEventable) {
+      // Ok
+    } else if (! eventSender) {
       if ($debug) {
-        // This causes too many warnings right now
-//         Debug.error('Invalid event sender: %w (for event %s)', eventSender, eventName);
+        Debug.error('Invalid event sender: %w (for event %s)', eventSender, eventName);
       }
       return;
+    } else if ($debug) {
+      // This causes too many warnings right now
+//       Debug.error('Invalid event sender: %w (for event %s)', eventSender, eventName);
+      // We proceed anyways, for back-compatibility
     }
 
     var anEvent = eventSender[ eventName ];
@@ -346,7 +356,7 @@ function _dbg_name (){
   *
   * <p>Events are sent with a single argument, which usually conveys
   * information about the property that changed. The default behavior
-  * of the <xref linkend="LzMiniNode.prototype.setAttribute"/> method is
+  * of the <xref linkend="LzEventable.prototype.setAttribute"/> method is
   * to set the named property and send the event called "on" +
   * property. This is general mechanism that updates constraints in a
   * OpenLaszlo programs. For instance, when a view changes its
@@ -412,11 +422,11 @@ public final class LzEvent extends LzDeclaredEventClass {
     var delegateList:Array = null;
 
   /**
-   * @param LzMiniNode eventSender: The owner of this event
+   * @param LzEventable eventSender: The owner of this event
    * @param String eventName: The name of this event.
    * @access private
    */
-  function LzEvent ( eventSender:LzMiniNode , eventName:String , d:* = null) {
+  function LzEvent ( eventSender:LzEventable , eventName:String , d:* = null) {
     super();
     var _evs = eventSender['_events'];
     if (_evs == null ){

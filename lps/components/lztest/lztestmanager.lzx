@@ -42,7 +42,7 @@ function printResults() {
 }
 }
 
-dynamic class LzTestManagerClass extends LzMiniNode {
+dynamic class LzTestManagerClass extends LzEventable {
 public var totalsuites = 0;
 public var passedsuites = 0;
 public var failedsuites = 0;

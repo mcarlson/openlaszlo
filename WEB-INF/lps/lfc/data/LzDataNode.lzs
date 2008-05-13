@@ -210,7 +210,7 @@ function __LZunlockFromUpdate ( locker ){
 /**
  *  @access private
  */
-class LzDataNode extends  LzMiniNode {
+class LzDataNode extends  LzEventable {
 
     function LzDataNode ( attributes = null, children = null) {
         super();

@@ -1,0 +1,137 @@
+/**
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ *
+ * @access public
+ * @topic LFC
+ * @subtopic Events
+ * @access public
+ *
+ * LzEventable is the base class for any class that wishes to send
+ * and receive events.  It defines the setAttribute protocol that
+ * creates implicit events for every attribute that is modified using
+ * setAttribute.
+ *
+ * @shortdesc Base class for all LZX classes that wish to send or
+ * receive events.
+ *
+ * @devnote Eventually we should be able to implicitly track the
+ * creation of delegates here, so that no user class has to manually
+ * manage its delegates to prevent memory leaks, by moving
+ * __LZdelegates and the associated protocols from LzNode to here (and
+ * automatically pushing new LzDelegates onto that queue in
+ * LzDelegate).
+ *
+ * @devnote Eventually we should be able to simplify the
+ * implementation of events and delegates by recording them here
+ * _en_masse_, rather than allocating them as individual objects,
+ * which should improve both time and space efficiency.
+ */
+class LzEventable {
+
+  /** @access private */
+  function LzEventable ( parent:* = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
+  }
+
+  /**
+   * Flag to record if we have been destroyed.  Events will not be
+   * sent to destroyed instances (so they are not resurrected).
+   * @access private
+   */
+  var __LZdeleted:Boolean = false;
+
+  /**
+   * All the events this instance generates.  Used to clear any
+   * delegates registered for events on this instance when it is
+   * destroyed.
+   *
+   * @access private
+   */
+  var _events:Array = null;
+
+  /**
+   * Sent just before an instance is destroyed
+   *
+   * @lzxtype event
+   */
+  var ondestroy = LzDeclaredEvent;
+
+  /**
+   * Marks an instance as no longer eligible to participate in the
+   * event system.  If it is registered to receive events, events will
+   * no longer be sent to it (to prevent it from being resurrected).
+   *
+   * @devnote Eventually we should be able to use the accounting
+   * structures here to automatically remove the instance from all
+   * events it is listening to, instead of having to make sendEvent
+   * look for the __LZdeleted flag.
+   */
+  function destroy () {
+    // Must be sent _before_ we mark ourself as deleted, or no
+    // delegates will be executed.  This is our last and final act
+    // before we actually will be destroyed.
+    if (this.ondestroy.ready) this.ondestroy.sendEvent( this );
+
+    // To keep delegates from resurrecting us.  See LzDelegate#execute
+    this.__LZdeleted = true;
+
+    //remove events
+    if (this._events != null) {
+        for (var i = this._events.length-1; i >=0; i--){
+            this._events[i].clearDelegates();
+        }
+    }
+    this._events = null;
+  }
+
+  /**
+   * Private protocol with LzNode to cause events to delegates to be
+   * queued while a node is being constructed.  See LzEvent.
+   * @access private
+   */
+  var __LZdeferDelegates:Boolean = false;
+
+  /** @access private */
+  function childOf ( node, ignore=null ) { return false;}
+
+  /**
+   * Sets the named attribute to the given value. If there is no setter for the
+   * property, this[ prop ] is set to the value, and the event this [ "on"+prop ]
+   * is sent.
+   *
+   * @param String prop: A string naming the key of attribute to set
+   * @param any val: The value for that attribute
+   * @param Boolean ifchanged: If true, only set the attribute if the value
+   * changed
+   *
+   * @devnote Note: this is inlined by the script compiler, so that
+   * must be updated if you change this function
+   */
+  function setAttribute(prop, val, ifchanged = null) {
+    if (this.__LZdeleted || (ifchanged && (this[prop] == val))) return;
+
+    // Must agree with NodeModel in tag compiler
+    var s = ('$lzc$set_' + prop);
+    if (this[s] is Function) {
+      this[s](val);
+    } else {
+      this[ prop ] = val;
+      var evt = ("on" + prop);
+      if (this[evt] is LzEvent) {
+        if (this[evt].ready) this[ evt ].sendEvent( val );
+      }
+    }
+  }
+
+  /** @access private */
+  function _dbg_name ()
+    { return "LzEventable";}
+
+  /** @access private */
+  function toString ()
+    { return _dbg_name();}
+
+  /** @access private */
+  function __LZupdateShown( ) {}
+
+} // End of LzEventable

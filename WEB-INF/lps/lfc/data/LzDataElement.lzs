@@ -466,18 +466,20 @@ function serializeInternal (len=Infinity) {
     } else {
         s += "/" + this.__LZgt;
     }
-//PBR DEBUG Make Debug when it's ported
-    if (s.length > len) { s = LzDataElement.abbreviate(s, len); }
+    if ($debug) {
+      if (s.length > len) { s = Debug.abbreviate(s, len); }
+    }
     return s;
 }
 
+if ($debug) {
 /**
   * For debugging.  Same as serialize, but will abbreviate at printLength.
   * @access private
   */
 override function _dbg_name () {
-//PBR DEBUG Make Debug when it's ported
-    return this.serializeInternal(LzDataElement.printLength);
+    return this.serializeInternal(Debug.printLength);
+}
 }
 
 /**
@@ -598,18 +600,6 @@ static function makeNodeList(count, name) {
     }
     return a;
 }
-
-//TODO Used instead of Debug.abbreviate. You can remove this when Debug is
-// moved to swf9
-static var printLength = 1024;
-static function abbreviate (s, l) {
-  var ellipsis = '...'; // '\u2026' doesn't work, wah.
-  if (s.length > (l - ellipsis.length)) {
-    s = s.substring(0, l - ellipsis.length) + ellipsis;
-  }
-  return s;
-}
-
 
 /**
   * Get LzDataElement representation of primitive type, array, or object value.

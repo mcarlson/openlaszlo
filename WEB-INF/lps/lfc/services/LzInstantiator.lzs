@@ -28,7 +28,7 @@
  *
  * @access private
  */
-dynamic public class LzInstantiatorService extends LzMiniNode {
+dynamic public class LzInstantiatorService extends LzEventable {
 
   /** @access private */
   var checkQDel = null;

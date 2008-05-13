@@ -75,7 +75,7 @@
  * rollover or button state changes.  The argument sent with the events is the
  * view that was clicked. If no view was clicked, the argument is null.
  */
-public class LzGlobalMouseService extends LzMiniNode {
+public class LzGlobalMouseService extends LzEventable {
   /**
    * The global mouse service.  Also available as the global
    * <code>LzGlobalMouse</code>.

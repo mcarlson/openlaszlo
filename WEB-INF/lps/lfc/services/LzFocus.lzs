@@ -19,7 +19,7 @@
   * 
   * @shortdesc Handles keyboard focus.
   */
-dynamic class LzFocusService extends LzMiniNode {
+dynamic class LzFocusService extends LzEventable {
 
     /** Sent when the focus changes, with the argument being the view
      * that was just focused. If nothing is focused, this event is sent with null.

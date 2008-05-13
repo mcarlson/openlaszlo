@@ -90,6 +90,7 @@
     <category title="Events">
         <item title="handler (LzDelegate)" href="LzDelegate.html" />
         <item title="event (LzEvent)" href="LzEvent.html" />
+        <item title="LzEventable" href="LzEventable.html" />
         <item title="LzGlobalMouse" href="LzGlobalMouse.html" />
         <item title="LzIdle" href="LzIdle.html" />
         <item title="LzKeys" href="LzKeys.html" />

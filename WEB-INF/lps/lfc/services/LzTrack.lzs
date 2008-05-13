@@ -100,7 +100,7 @@
   * @shortdesc Enables tracking mouse events over a group of views.
   */
 
-class LzTrackService extends LzMiniNode {
+class LzTrackService extends LzEventable {
 
 /**
   * @event onmousetrackover:  sent when the mouse is over a view that is registered to

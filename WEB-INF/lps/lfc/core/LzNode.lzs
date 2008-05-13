@@ -32,7 +32,7 @@
   * defaultplacement in lexical parent). See the 
   * <method>LzNode.determinePlacement</method> method. Defaults to false.
   */
-public dynamic class LzNode extends LzMiniNode{
+public dynamic class LzNode extends LzEventable{
 
     /** @access private
      * @modifiers override 
@@ -405,11 +405,6 @@ var clonenumber = null;
   * @lzxtype event
   */ 
 var onclonenumber = LzDeclaredEvent;
-/** 
-  * @lzxtype event
-  * @access private
-  */ 
-var ondestroy = LzDeclaredEvent;
 
 /** @access private */
 var __LZlateinit = null;
@@ -582,7 +577,7 @@ var placement = null;
 /** @access private */
 var $cfn = 0;
 /** @access private */
-// var __LZdeleted = false;  // Moved to LzMiniNode
+// var __LZdeleted = false;  // Moved to LzEventable
 
 /** Reference to this nodes's parent
   * in the node hierarchy.  This will be different from "parent"
@@ -1083,7 +1078,7 @@ function getAttribute(prop) {
 
 
 /*
-setAttribute moved to LzMiniNode.lzs
+setAttribute moved to LzEventable.lzs
 function setAttribute(prop, val, ifchanged = null)
 */
 
@@ -1917,20 +1912,13 @@ override function childOf( node, ignore=null ){
 
 /**
   * Deletes the node and all the subnodes.
-  * @param Boolean recursiveCall: internal use only
   */
-function destroy( ){
+override function destroy( ){
     if (this.__LZdeleted == true) {
         return;
     }
 
-    // Must be sent _before_ we mark ourself as deleted, or no
-    // delegates will be executed.  This is our last and final act
-    // before we actually will be destroyed.
-    if (this.ondestroy.ready) this.ondestroy.sendEvent( this );
-
-    // To keep delegates from resurrecting us.  See LzDelegate#execute
-    this.__LZdeleted = true;
+    super.destroy();
 
     //don't allow a call on this method if I'm deleted
     if ($swf9) {
@@ -1970,14 +1958,6 @@ function destroy( ){
         }
     }
     this.__LZdelegates = null;
-
-    //remove events
-    if (('_events' in this) &&  (this._events != null)) {
-        for (var i = this._events.length-1; i >=0; i--){
-            this._events[i].clearDelegates();
-        }
-    }
-    this._events = null;
 
     if (this.immediateparent && this.immediateparent.subnodes) {
         for( var i = this.immediateparent.subnodes.length - 1; i >= 0; i-- ){

@@ -13,7 +13,7 @@
 if ($swf9) {
     #include "core/dummyclasses.js"
 }
-#include "core/LzMiniNode.lzs"
+#include "core/LzEventable.lzs"
 #include "core/LzNode.lzs"
 
 

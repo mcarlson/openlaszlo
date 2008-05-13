@@ -29,7 +29,7 @@
  * @devnote This object sends an 'onidle' event when there is no synchronous script
  * running after each frame update.
  */
-class LzIdleService extends LzMiniNode {
+class LzIdleService extends LzEventable {
   /** @access private */
   var coi;
   /** @access private */
