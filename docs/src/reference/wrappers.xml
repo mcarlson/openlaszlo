@@ -319,7 +319,7 @@ rates: 11.025 khz, 22.5 khz, and 44.1 khz, and encoded at no more than
 <p>Defines a font face or style within the font family that the
 outer element defines.</p>
 <p>
-See the <a href="font.html">font</a> element for details.
+See the <a href="LzFont.html" target="_self">font</a> element for details.
 </p>
 </text>
 </doc>
