@@ -17,7 +17,6 @@
   <include href="math.lzl" />
   <include href="canvas-attributes.lzl"/>
   <include href="constraint.lzl"/>
-  <include href="data.lzl"/>
   <include href="ecma.lzl"/>
   <include href="regression.lzl"/>
   <include href="lztext.lzl"/>
@@ -59,9 +58,6 @@
     <GSViewTest />
 
     <ViewTest />
-
-    <!-- a couple of data tests are in here -->
-    <TestData />
 
     <!-- Funny ecma cases to look at: -->
     <TestSwitch />
