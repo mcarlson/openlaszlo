@@ -115,6 +115,7 @@
     
     <category title="Media" >
         <item title="audio" href="tag-audio.html"/>
+        <item title="LzAudio" href="LzAudio.html" />
         <item title="font" href="LzFont.html" />
         <item title="face" href="tag-face.html"/>
         <item title="frame" href="tag-frame.html"/>

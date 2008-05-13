@@ -419,7 +419,7 @@ public class LzKeysService extends LzNode {
       * onmousewheeldelta event to learn when this value changes.
       * @type Number
       * @lzxtype Number
-      * @default 0
+      * @lzxdefault 0
       * @keywords readonly
       */
     var mousewheeldelta = 0;

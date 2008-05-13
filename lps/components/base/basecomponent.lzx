@@ -293,11 +293,11 @@
         <!--- colorizes a view, such that 50% gray appears as the given color
               with shades of color darker and lighter.  This will not tint the
               background color (unless its a swatchview) but will tint any
-              resources and all subviews.  
-              <br/>param LzView v: the view to colorize 
-              <br/>param Number color: the color to use for tinting (e.g.
+              resources and all subviews.  Only available on some runtimes.
+              @param LzView v: the view to colorize 
+              @param Number color: the color to use for tinting (e.g.
                    0xddddff) 
-              <br/>param Number brightness: -255 to 255, optional parameter
+              @param Number brightness: -255 to 255, optional parameter
                    will lighten or darken everything that is colorized -->
         <method name="setTint" args="v, color, brightness=0">
             <![CDATA[

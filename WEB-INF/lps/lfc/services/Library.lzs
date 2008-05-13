@@ -27,6 +27,7 @@ if ($js1) {
     Debug.error('services/Library.lzs unsupported runtime %s', $runtime);
 }
 
+#include "services/LzAudio.lzs"
 #include "services/LzHistory.lzs"
 #include "services/LzTrack.lzs"
 #include "services/LzIdle.lzs"

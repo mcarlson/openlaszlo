@@ -1599,7 +1599,7 @@ LzSprite.prototype.setVolume = function (v) {
     if (m.isaudio == true) {
         m.setVolume(v);
     } else {
-        LzAudio.setVolume(v, m);
+        LzAudioKernel.setVolume(v, m);
     }
 }
 
@@ -1612,7 +1612,7 @@ LzSprite.prototype.getVolume = function() {
     if (m.isaudio == true) {
         return m.getVolume();
     } else {
-        return LzAudio.getVolume(m);
+        return LzAudioKernel.getVolume(m);
     }
 }
 
@@ -1625,7 +1625,7 @@ LzSprite.prototype.setPan = function(p) {
     if (m.isaudio == true) {
         m.setPan(p);
     } else {
-        LzAudio.setPan(p, m);
+        LzAudioKernel.setPan(p, m);
     }
 }
 
@@ -1638,7 +1638,7 @@ LzSprite.prototype.getPan = function() {
     if (m.isaudio == true) {
         return m.getPan();
     } else {
-        return LzAudio.getPan(m);
+        return LzAudioKernel.getPan(m);
     }
 }
 

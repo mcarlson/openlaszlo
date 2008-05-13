@@ -28,8 +28,7 @@
 #include "kernel/swf/LzMouseKernel.as"
 #include "kernel/swf/LzBrowserKernel.lzs"
 #include "kernel/swf/LzKeyboardKernel.as"
-#include "kernel/swf/LzAudio.as"
+#include "kernel/swf/LzAudioKernel.as"
 #include "kernel/swf/LzScreenKernel.as"
 #include "kernel/swf/LzContextMenuKernel.lzs"
 #include "kernel/swf/dojo/Library.lzs"
-

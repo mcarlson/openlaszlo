@@ -1,0 +1,78 @@
+/**
+  * LzAudioKernel.as
+  *
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic Kernel
+  * @subtopic AS2
+  */
+
+/**
+  * @shortdesc This service manages audio resource playback.
+  * @access public
+  * 
+  */
+class LzAudioKernel{
+/*    
+{
+#pragma "passThrough=true"
+LzAudioKernel.globalSound = new Sound();
+}
+LzAudioKernel.globalSound.$xxx = "globsnd" ;
+*/
+
+/**
+  * Sets the current sound resource and starts playing it. 
+  * @param String snd: Name of a sound resource to play
+  */
+static function playSound( snd , ...t ){
+}
+
+/**
+  * Stop playing the current sound
+  * */
+static function stopSound( ...t ){
+}
+
+/**
+  * Start playing the current sound
+  * */
+static function startSound(...t) {
+}
+
+/**
+  * @access private
+  */
+static function getSoundObject(...t) {
+}
+
+/**
+  * Get the global volume
+  * @param Object t: MovieClip for sound to act upon
+  * @return Number: volume from 0 to 100 (0 is silent).
+  */
+static function getVolume(...t) {
+}
+
+/**
+  * Set the global volume.
+  * @param Number v: linear volume from 0 to 100 (0 is silent).
+  */
+static function setVolume(v, ...t) {
+}
+
+/**
+  * Get the global pan.
+  * @return Number: linear pan from -100 to +100 (left to right)
+  */
+static function getPan(...t) {
+}
+
+/**
+  * Set the global pan.
+  * @param Number p: linear pan from -100 to +100 (left to right)
+  */
+static function setPan(p, ...t) {
+}
+}
