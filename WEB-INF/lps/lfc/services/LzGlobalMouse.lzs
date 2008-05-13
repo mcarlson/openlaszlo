@@ -168,6 +168,7 @@ public class LzGlobalMouseService extends LzMiniNode {
 }
 
 /**
+ * @deprecated
  * @shortdesc Alias for <link linkend="LzGlobalMouseService">LzGlobalMouseService.LzGlobalMouse</link>
  */
-var LzGlobalMouse = LzGlobalMouseService.LzGlobalMouse;
+var LzGlobalMouse:LzGlobalMouseService = LzGlobalMouseService.LzGlobalMouse;
