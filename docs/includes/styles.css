@@ -376,6 +376,7 @@ tt.varname {
 
 /* Attributes List ****************** */
 td .literal {
+    background-color: white;
     font-size: 12px;
     font-weight: bold; 
     line-height: 18px;

@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -98,7 +98,7 @@
   </div>
 </xsl:template>
 
-<xsl:template match="type|varname|initializer|methodname|parameter" mode="lzx">
+<xsl:template match="type|varname|initializer|methodname|methodclass|methodstaticclass|parameter" mode="lzx">
   <span class="{name(.)}"><xsl:apply-templates mode="lzx"/></span>
 </xsl:template>
 
@@ -126,6 +126,8 @@
     </xsl:if>
     <!-- TODO: add modifiers as preceding js2doc comment -->
     <xsl:text>&lt;method name="</xsl:text>
+    <xsl:apply-templates select="methodclass" mode="lzx"/>
+    <xsl:apply-templates select="methodstaticclass" mode="lzx"/>
     <xsl:apply-templates select="methodname" mode="lzx"/>
     <xsl:text>"</xsl:text>
     <xsl:if test="methodparam">

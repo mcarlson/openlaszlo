@@ -222,6 +222,11 @@ tr.segtitle > th {
     font-size: 14px;
 }
 
+.methodstaticclass {
+    color: #333333;
+    font-size: 14px;
+}
+
 .methodname {
     color: #333333;
     font-size: 14px;

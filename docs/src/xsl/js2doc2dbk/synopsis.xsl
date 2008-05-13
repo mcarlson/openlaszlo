@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -166,24 +166,26 @@
             <methodname><link linkend="{$id}"><xsl:value-of select="@name"/></link></methodname>
           </xsl:when>
           <xsl:otherwise>
-            <methodname>
               <xsl:choose>
               <xsl:when test="$static">
                 <!-- For static methods, show the class name --> 
-                <xsl:value-of select="../../@name"/>.<xsl:value-of select="@name"/>
+                <methodstaticclass><xsl:value-of select="../../@name"/>.</methodstaticclass><methodname><xsl:value-of select="@name"/></methodname>
               </xsl:when>
               <xsl:when test="ancestor::property/doc/tag[@name='lzxname']/text">
-                <!-- For instance methods, show the name of the class --> 
-                <xsl:value-of select="ancestor::property/doc/tag[@name='lzxname']/text"/>.<xsl:value-of select="@name"/>
+                <!-- For instance methods, show name of tag if there is one --> 
+                <methodclass><xsl:value-of select="ancestor::property/doc/tag[@name='lzxname']/text"/>.</methodclass><methodname><xsl:value-of select="@name"/></methodname>
+              </xsl:when>
+              <xsl:when test="ancestor::property/@name">
+                <!-- Or for instance methods, show the name of the class --> 
+                <methodclass><xsl:value-of select="ancestor::property/@name"/>.</methodclass><methodname><xsl:value-of select="@name"/></methodname>
               </xsl:when>
                <xsl:otherwise>        
                  <xsl:if test="$warn.classname.not.found">
                    <xsl:message>No class name found for function synopsis: <xsl:value-of select="@id"/></xsl:message>
                  </xsl:if>                   
-                 <xsl:value-of select="@name"/>                                    
+                 <methodname><xsl:value-of select="@name"/></methodname>
                </xsl:otherwise>
               </xsl:choose>                
-            </methodname>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:for-each select="function/parameter">
