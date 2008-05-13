@@ -30,7 +30,7 @@
  *
  * <example class="program" title="Using LzTimer to invoke method" id="lztimer-1"><programlisting><![CDATA[
  * <canvas height="50" >
- *     <button text="Show then Fade" onclick="showText()" />
+ *     <button text="Show then Fade" onclick="canvas.showText()" />
  *     <text name="myText" opacity="0.0" bgcolor="#CCCCCC">The Invisible Man</text>
  *     <simplelayout axis="y" spacing="10" />
  *
