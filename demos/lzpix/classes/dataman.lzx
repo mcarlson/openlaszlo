@@ -113,7 +113,7 @@
     
 
                 // sign call
-                var api_sig = hex_md5(api_sig_string);                
+                var api_sig = md5.hex_md5(api_sig_string);                
                 ds.setQueryParam("api_sig", api_sig);
 
                 // make actual request
@@ -181,7 +181,7 @@
             api_sig_string+="frob"+frob;
             api_sig_string+="permswrite";            
 
-            var sig=hex_md5(api_sig_string);
+            var sig=md5.hex_md5(api_sig_string);
 
             // authenticate user
             var url="http://flickr.com/services/auth/?api_key="+gGlobals.API_KEY
