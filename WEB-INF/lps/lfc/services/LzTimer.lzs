@@ -116,22 +116,25 @@ class LzTimerService {
         //if (! del.c.__LZdeleted && del.c[del.f]) del.c[del.f]( (new Date()).getTime() );
       }
     }
-    var id = LzTimeKernel.setInterval(f, millisecs);
+    var id = LzTimeKernel.setTimeout(f, millisecs);
     if ($debug) {
       // Debug.format("created timer %w for delegate %w\n", id, d);
       if (id instanceof Array)
-        // we rely on the setInterval value being a non-array, otherwise
+        // we rely on the setTimeout value being a non-array, otherwise
         // our storage scheme won't work. Error if this happens -- should only
         // occur when bootstrapping a new runtime.
-        Debug.error("setInterval result type is unexpected; LzTimer will fail");
+        Debug.error("setTimeout result type is unexpected; LzTimer will fail");
     }
     p.id = id;
     var tle = this.timerList[d.__delegateID];
     if (tle == null) {
+      // single items don't use an array  
       this.timerList[d.__delegateID] = id;
     } else if (! (tle instanceof Array)) {
+      // create an array to track ids 
       this.timerList[d.__delegateID] = [tle, id];
     } else {
+      // add onto the array  
       tle.push(id);
     }
     return id;
@@ -151,12 +154,12 @@ class LzTimerService {
     if (tle != null) {
       if (tle instanceof Array) {
         id = tle.shift();
-        LzTimeKernel.clearInterval(id);
+        LzTimeKernel.clearTimeout(id);
         if (tle.length == 0)
           delete this.timerList[d.__delegateID];
       } else {
         id = tle;
-        LzTimeKernel.clearInterval(id);
+        LzTimeKernel.clearTimeout(id);
         delete this.timerList[d.__delegateID];
       }
       // Debug.format("cleared timer %w for delegate %w (2)\n", id, d);
@@ -180,7 +183,6 @@ class LzTimerService {
         for (i=0; i<tle.length; i++) {
           var id2 = tle[i];
           if (id2 == id) {
-            LzTimeKernel.clearInterval(id);
             tle.splice(i,1);
             break;
           }
@@ -188,7 +190,6 @@ class LzTimerService {
         if (tle.length == 0)
           delete this.timerList[d.__delegateID];
       } else if (tle == id) {
-        LzTimeKernel.clearInterval(id);
         delete this.timerList[d.__delegateID];
       }
     }

@@ -21,3 +21,22 @@ var LzTimeKernel = {
         return (new Date()).valueOf() - LzTimeKernel.startTime;
     }    
 }
+
+if ($swf7) {
+    LzTimeKernel.setTimeout = function setTimeout() {
+        // workaround for missing method in Flash 7 player
+        // See http://jira.openlaszlo.org/jira/browse/LPP-2270
+        var arg = arguments;
+
+        if( typeof arg[0] != "function" ) arg[0] = arg.shift()[arg[0]];
+
+        var func = function() {
+            clearInterval( Number( arg[1] ) );
+            arg[0].apply( null, arg.slice( 2 ) );
+        }
+        return (arg[1] = setInterval( func, arg[1] ));
+    }
+    LzTimeKernel.clearTimeout = function( id ){
+        return clearInterval(id);
+    }
+}
