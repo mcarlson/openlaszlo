@@ -240,7 +240,7 @@
                     
                     // Clear the selection
                     this._selectedIndex = -1;
-                    if (this._cblist['_selector']) {
+                    if (this['_cblist'] && this._cblist['_selector']) {
                         this._cblist._selector.clearSelection();
                     }
                 } else {
