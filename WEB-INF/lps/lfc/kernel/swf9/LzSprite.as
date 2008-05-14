@@ -798,19 +798,19 @@ dynamic public class LzSprite extends Sprite {
           trace('setShowHandCursor not currently implemented in swf9.');
       }
 
-      function setAAActive(s, mc) {
+      function setAAActive(s) {
       }
 
-      function setAAName(s, mc) {
+      function setAAName(s) {
       }
 
-      function setAADescription(s, mc) {
+      function setAADescription(s) {
       }
 
-      function setAATabIndex(s, mc) {
+      function setAATabIndex(s) {
       }
 
-      function setAASilent(s, mc) {
+      function setAASilent(s) {
       }
 
   }#

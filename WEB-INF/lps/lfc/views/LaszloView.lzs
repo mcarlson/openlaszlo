@@ -1191,7 +1191,7 @@ var _resource = null;
 
 /**
   * This method associates a view with a named library element. If the
-  * view's <attribute>isVisible</attribute> property is true, the
+  * view's <attribute>visible</attribute> property is true, the
   * resource will be displayed when it is attached
   * 
   * @deprecated Use setAttribute('resource', ...) instead.
@@ -2822,9 +2822,9 @@ function setAccessible (accessible) {
   * Activate/inactivate children for accessibility
   * @param Boolean s: If true, activate the current view and all of its children
   */
-function setAAActive ( s, mc = null){
+function setAAActive ( s ){
     if (this.capabilities.accessibility) {
-        this.sprite.setAAActive(s, mc);
+        this.sprite.setAAActive(s);
     } else if ($debug) {
         this.__warnCapability('view.setAAActive()'); 
     }
@@ -2835,9 +2835,9 @@ function setAAActive ( s, mc = null){
   * Set accessibility name
   * @param string s: Sets the accessibility name for this view
   */
-function setAAName ( s, mc = null){
+function setAAName ( s ){
     if (this.capabilities.accessibility) {
-        this.sprite.setAAName(s, mc);
+        this.sprite.setAAName(s);
     } else if ($debug) {
         this.__warnCapability('view.setAAName()'); 
     }
@@ -2847,9 +2847,9 @@ function setAAName ( s, mc = null){
   * Set accessibility description
   * @param string s: Sets the accessibility name for this view
   */
-function setAADescription ( s, mc = null){
+function setAADescription ( s ){
     if (this.capabilities.accessibility) {
-        this.sprite.setAADescription(s, mc);
+        this.sprite.setAADescription(s);
     } else if ($debug) {
         this.__warnCapability('view.setAADescription()'); 
     }
@@ -2859,9 +2859,9 @@ function setAADescription ( s, mc = null){
   * Set accessibility tab order
   * @param number s: The tab order index for this view.  Must be a unique number.
   */
-function setAATabIndex ( s, mc = null){
+function setAATabIndex ( s ){
     if (this.capabilities.accessibility) {
-        this.sprite.setAATabIndex(s, mc);
+        this.sprite.setAATabIndex(s);
     } else if ($debug) {
         this.__warnCapability('view.setAATabIndex()'); 
     }
@@ -2872,9 +2872,9 @@ function setAATabIndex ( s, mc = null){
   * @param string s: If true, this view is made silent to the screen reader.  
   * If false, it is active to the screen reader.
   */
-function setAASilent ( s, mc = null){
+function setAASilent ( s ){
     if (this.capabilities.accessibility) {
-        this.sprite.setAASilent(s, mc);
+        this.sprite.setAASilent(s);
     } else if ($debug) {
         this.__warnCapability('view.setAASilent()'); 
     }
