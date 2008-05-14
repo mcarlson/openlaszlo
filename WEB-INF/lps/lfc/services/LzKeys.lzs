@@ -38,6 +38,11 @@ public class LzKeysService extends LzNode {
     /** @access private */
     function LzKeysService() {
         super();
+        if ($swf9) {
+        } else {
+            LzKeyboardKernel.setCallback(this, '__keyEvent');
+        }
+
 
         // add additional codes
         this.keyCodes['add'] = 107;
@@ -137,6 +142,9 @@ public class LzKeysService extends LzNode {
      */
     var onmousewheeldelta = LzDeclaredEvent;
 
+    /** For mapping key names (control, shift, alt) back to character codes
+      * @access private */
+    var codemap = {shift: 16, control: 17, alt: 18};
 
     /** @access private */
     function __keyEvent ( delta, k, type ){
@@ -145,6 +153,7 @@ public class LzKeysService extends LzNode {
         //for each key change, send the corresponding event
         for (var key in delta) {
             var down = delta[key];
+            if (this.codemap[key] != null) k = this.codemap[key];
             if (down) {
                 this.gotKeyDown(k);
             } else {
@@ -520,10 +529,6 @@ public class LzKeysService extends LzNode {
   */
 var LzKeys = new LzKeysService();
 
-if ($swf9) {
-} else {
-    LzKeyboardKernel.setCallback(LzKeys, '__keyEvent');
-}
 if ($dhtml) {
     // Need to explicitly register this
     LzMousewheelKernel.setCallback(LzKeys, '__mousewheelEvent');

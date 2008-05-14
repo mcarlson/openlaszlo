@@ -87,9 +87,14 @@ var LzKeyboardKernel = {
         this.__callback = keyboardcallback;
         if (lzOptions.dhtmlKeyboardControl != false) {
             // can't use Lz.attachEventHandler because we need to cancel events selectively
-            document.onkeydown = LzKeyboardKernel.__keyboardEvent;
-            document.onkeyup = LzKeyboardKernel.__keyboardEvent;
-            document.onkeypress = LzKeyboardKernel.__keyboardEvent;
+            if (LzSprite.prototype.quirks.keyboardlistentotop) {
+                var doc = window.top.document;
+            } else {
+                var doc = document;
+            }
+            doc.onkeydown = this.__keyboardEvent;
+            doc.onkeyup = this.__keyboardEvent;
+            doc.onkeypress = this.__keyboardEvent;
         }
     }    
 }

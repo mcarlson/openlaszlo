@@ -13,7 +13,8 @@ class LzKeyboardKernelClass
 {
     var __downKeysHash = {};
 
-    function __keyboardEvent ( k, t ){   
+    function __keyboardEvent ( e, t ){   
+        var k = e.charCode;
         var delta = {};
         var s = String.fromCharCode(k).toLowerCase();
         var dh = this.__downKeysHash;
@@ -31,6 +32,23 @@ class LzKeyboardKernelClass
             }    
             dh[s] = true;
         }    
+
+        if (dh['alt'] != e.altKey) {
+            delta['alt'] = e.altKey;
+            dirty = true;
+        }    
+        if (dh['control'] != e.ctrlKey) {
+            delta['control'] = e.ctrlKey;
+            dirty = true;
+        }    
+        if (dh['shift'] != e.shiftKey) {
+            delta['shift'] = e.shiftKey;
+            dirty = true;
+        }    
+
+        dh['alt'] = e.altKey 
+        dh['control'] = e.ctrlKey 
+        dh['shift'] = e.shiftKey
 
         //Debug.write('downKeysHash', t, k, dh, delta);
         if (dirty && this.__callback) this.__scope[this.__callback](delta, k, t);

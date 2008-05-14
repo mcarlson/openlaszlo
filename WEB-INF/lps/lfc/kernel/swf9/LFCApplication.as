@@ -190,7 +190,7 @@ public class LFCApplication extends Sprite {
               " (key code: " + event.keyCode + " character code: " + 
               event.charCode + ")");
         */
-        LzKeyboardKernel.__keyboardEvent(event.charCode, 'onkeyup');
+        LzKeyboardKernel.__keyboardEvent(event, 'onkeyup');
     }
 
     function reportKeyDown(event:KeyboardEvent):void {
@@ -199,7 +199,7 @@ public class LFCApplication extends Sprite {
               " (key code: " + event.keyCode + " character code: " 
               + event.charCode + ")");
         */
-        LzKeyboardKernel.__keyboardEvent(event.charCode, 'onkeydown');
+        LzKeyboardKernel.__keyboardEvent(event, 'onkeydown');
     }
 }
 

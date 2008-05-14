@@ -235,6 +235,7 @@ LzSprite.prototype.quirks = {
     ,text_event_charcode: true
     ,keypress_function_keys: true
     ,ie_timer_closure: false
+    ,keyboardlistentotop: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -339,6 +340,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['safari_paste_event'] = true;
             // Safari does not send onkeypress for function keys
             quirks['keypress_function_keys'] = false;
+            // Safari 3.x does not send global key events to apps embedded in an iframe
+            quirks['keyboardlistentotop'] = true;
         } else if (Lz.__BrowserDetect.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
