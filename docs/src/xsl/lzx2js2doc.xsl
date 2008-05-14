@@ -255,20 +255,38 @@
       </doc>
     </xsl:template>
     
-    <!--- precondition: args param has normalized space, is comma-separated -->
+    <!--- precondition: args param has normalized space, is comma-separated,
+          but each param may contain '=' to represent initializer -->
     <xsl:template name="processargs">
       <xsl:param name="args" select="''"/>
       <xsl:choose>
         <xsl:when test="contains($args, ',')">
           <xsl:variable name="first-arg" select="substring-before($args, ',')"/>
-          <parameter name="{normalize-space($first-arg)}"/>
+          <xsl:call-template name="process-one-arg">
+            <xsl:with-param name="arg" select="$first-arg"/>
+          </xsl:call-template>
           <xsl:call-template name="processargs">
             <xsl:with-param name="args" select="substring-after($args,',')"/>
           </xsl:call-template>
         </xsl:when>
         <!-- TO DO: ? handle case where contains($args,' ')? -->
         <xsl:otherwise>
-          <parameter name="{normalize-space($args)}"/>
+          <xsl:call-template name="process-one-arg">
+            <xsl:with-param name="arg" select="$args"/>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="process-one-arg">
+      <xsl:param name="arg"/>
+      <xsl:choose>
+        <xsl:when test="contains($arg, '=')">
+          <parameter name="{normalize-space(substring-before($arg, '='))}"/>
+          <!-- TODO [dda 2008-05-14] handle initializers for method args -->
+        </xsl:when>
+        <xsl:otherwise>
+          <parameter name="{normalize-space($arg)}"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>
