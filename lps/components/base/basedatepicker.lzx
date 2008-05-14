@@ -630,8 +630,8 @@
                 
                 &lt;class name="mydatepicker" 
                        extends="basedatepicker" 
-                       weekclass="myweek"
-                       dayclass="myday"
+                       weekclass="lz.myweek"
+                       dayclass="lz.myday"
                        xinset="0"
                        yinset="0"&gt;
             
@@ -692,7 +692,7 @@
     </class> 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
