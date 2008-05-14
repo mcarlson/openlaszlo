@@ -477,7 +477,7 @@
       </variablelist>
     </xsl:if>
   </xsl:template>
-  
+
   <xsl:template name="describe-members-grid">
     <xsl:param name="members"/>
     <xsl:param name="static"/>
@@ -600,7 +600,21 @@
               <xsl:value-of select="$name"/>
             </primary>
           </indexterm>
-          <xsl:value-of select="$desc"/>
+          <!-- TODO [dda 2008-05-14] handle postprocess tags in docbook.
+               We need to inject certain HTML formatting that is hard
+               to work out in docbook/XSL in a timely manner.  The
+               technique is to put a <postprocess-*> tag in place, let
+               docbook warn us about it (but leave a doctored version
+               in place), and then a ruby script, postprocess.rb, does
+               a final clean up pass by locating and replacing the
+               doctored postprocess tags.
+               
+               The postprocess-methodname tag puts a grey background
+               against the method name and stretches it the entire width.
+            -->
+          <postprocess-methodname>
+            <xsl:value-of select="$desc"/>
+          </postprocess-methodname>
         </term>
         <listitem>
             <refsect3>
@@ -633,7 +647,10 @@
                   <tbody>
                     <xsl:for-each select="function/parameter">
                       <row>
-                        <entry><xsl:attribute name="class">parametername</xsl:attribute><xsl:value-of select="@name"/></entry>
+                        <!-- The postprocess-html-b tag puts a <b> tag
+                             around the method name.
+                             See also 'handle postprocess tags' comment.  -->
+                        <entry><postprocess-html-b><xsl:value-of select="@name"/></postprocess-html-b></entry>
                         <entry><xsl:value-of select="@type"/></entry>
                         <entry><xsl:value-of select="doc/text"/></entry>
                       </row>                      
@@ -666,6 +683,11 @@
               </informaltable>
             </refsect3>             
           </xsl:if>          
+          <refsect3>
+            <!-- The postprocess-method-end tag puts an hrule after the method.
+                 See also 'handle postprocess tags' comment.  -->
+            <postprocess-method-end/>
+          </refsect3>
         </listitem>
       </varlistentry>
     </xsl:template>
