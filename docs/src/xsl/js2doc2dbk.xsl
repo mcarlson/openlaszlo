@@ -647,10 +647,11 @@
                   <tbody>
                     <xsl:for-each select="function/parameter">
                       <row>
-                        <!-- The postprocess-html-b tag puts a <b> tag
-                             around the method name.
-                             See also 'handle postprocess tags' comment.  -->
-                        <entry><postprocess-html-b><xsl:value-of select="@name"/></postprocess-html-b></entry>
+                        <entry>
+                          <emphasis role="bold">
+                            <xsl:value-of select="@name"/>
+                          </emphasis>
+                        </entry>
                         <entry><xsl:value-of select="@type"/></entry>
                         <entry><xsl:value-of select="doc/text"/></entry>
                       </row>                      
