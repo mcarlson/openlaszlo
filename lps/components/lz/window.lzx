@@ -45,7 +45,7 @@
         </view>
         <view name="toolbar" width="${parent.wframe.width}" clip="true"
             oninit="classroot.toolbar = this">
-            <!-- placement for menubar -->
+            <!-- placement for toolbar -->
         </view>
         <view name="wframe"
             width="${wcontent.width+2}" height="${wcontent.height+2}"
@@ -75,14 +75,45 @@
                  this.setTint(this._resizeControl, s.basecolor);
             }
        </method>
-
+        <doc>
+            <tag name="shortdesc"><text>
+                A window.
+            </text></tag>
+            <text>
+                <p>The <tagname>window</tagname> tag creates a floating view that may be moved and optionally resized by the user. Set the <attribute>closeable</attribute> attribute to <attribute>true</attribute> in order to show a window close button.</p>
+    <example>&lt;canvas height=&quot;250&quot;&gt;
+    &lt;window x=&quot;10&quot; y=&quot;10&quot; width=&quot;300&quot; height=&quot;200&quot;
+        title=&quot;my window&quot;
+        resizable=&quot;true&quot; closeable=&quot;true&quot;&gt;
+        &lt;text&gt;Hello&lt;/text&gt;
+    &lt;/window&gt;
+&lt;/canvas&gt;
+    </example>
+                <p>Views placed within a <tagname>window</tagname> tag will be placed inside the smaller content area within the window. Because of this, you will often want to constrain to the dimensions of the content area, rather than to the window dimensions. To do this, tags placed within a window can use the <attribute>immediateparent</attribute> property rather than the <attribute>parent</attribute> property.</p>
+                <example>&lt;canvas height=&quot;150&quot;&gt;
+    &lt;window x=&quot;10&quot; y=&quot;10&quot; width=&quot;200&quot; height=&quot;100&quot;
+        resizable=&quot;true&quot;&gt;
+        &lt;button width=&quot;${immediateparent.width}&quot;
+            height=&quot;${immediateparent.height}&quot;&gt;
+            This is a really big button
+        &lt;/button&gt;
+    &lt;/window&gt;
+&lt;/canvas&gt;
+                </example>
+                <p><b>See also:</b></p>
+                <ul>
+                    <li><p><a href="lz.modaldialog.html"><tagname>modaldialog</tagname></a> and <a href="lz.alert.html"><tagname>alert</tagname></a></p></li>
+                </ul>
+                
+            </text>
+        </doc>
     </class>
 
  
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
