@@ -20,8 +20,7 @@
     >
 
 
-        <!--- If true, show camera on immediateparent videoview. 
-              @access private -->
+        <!--- If true, show camera on immediateparent videoview.  -->
         <attribute name="show" value="false" setter="this._setShow(show)"/>
 
         <!--- The width (resolution) that will be captured by the camera. -->
