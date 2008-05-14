@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -114,7 +114,7 @@ public class LZReturnObject
         //------------------------------------------------------------
         // varname.class = classname
         body.append("{");
-        body.append("class: "+ScriptCompiler.quote(classname));
+        body.append("\"class\": "+ScriptCompiler.quote(classname));
 
         if (mObjRetType == RETTYPE_JAVA_BEAN) {
             pushObjectJavaBean(object);
