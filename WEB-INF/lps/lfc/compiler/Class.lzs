@@ -28,7 +28,7 @@ var Instance = function constructor () {
   this.constructor = arguments.callee
   this.$lzsc$initialize.apply(this, arguments);
 };
-Instance.prototype.constructor = Instance; 
+Instance.prototype.constructor = Instance;
 Instance.prototype.__initialized = false;
 Instance.classname = 'Instance';
 Instance.prototype.classname = 'Object';
@@ -248,7 +248,7 @@ var Class = {
 //         while (over && (over.constructor !== Instance) && (! (over.constructor.prototype.hasOwnProperty(name)))) {
 //           over = over.constructor.prototype;
 //         }
-//         Debug.debug("%s.prototype.%s (%w) overrides %s.prototype.%s (%w)", 
+//         Debug.debug("%s.prototype.%s (%w) overrides %s.prototype.%s (%w)",
 //                     this, name, value,
 //                     over.constructor, name, over.constructor.prototype[name]);
 //       }
@@ -261,7 +261,7 @@ var Class = {
     // override
 //     if ($debug) {
 //       if ((name in nc) && (nc[name] !== value)) {
-//         Debug.debug("%s.%s (%w) overrides %s.%s (%w)", 
+//         Debug.debug("%s.%s (%w) overrides %s.%s (%w)",
 //                     nc, name, value,
 //                     nc.prototype.constructor, name, nc[name]);
 //       }
@@ -343,7 +343,8 @@ var Class = {
     if (traitsAndSuperclass instanceof Array) {
       for (var i = traitsAndSuperclass.length - 1; i >= 0; i--) {
         var t = traitsAndSuperclass[i];
-        prototype = t.makeInterstitial(prototype, i > 0);
+        // The second argument is the class this will be the prototype for
+        prototype = t.makeInterstitial(prototype, i > 0 ? traitsAndSuperclass[i -1] : nc);
       }
     }
     // Install the staticProperties
@@ -432,16 +433,13 @@ var Trait = {
   makeInterstitial: function makeInterstitial (superclassInstance, sharable) {
     var impls = this.implementations;
     // Remember combinations and re-use them if possible
-    var mash = this.classname + '+' + superclassInstance.constructor.classname;
-    // TODO: [2006-05-19 ptw] When is sharing permissible?
-    // Clearly not when the last interstitial defines a class, as
-    // then you would have some class that shares being a
-    // subclass, when it should not be.
-    if (false) {
-      if (impls.hasOwnProperty(mash)) {
-        // Debug.debug('Found ', mash, ' for ', this.classname);
-        return impls[mash];
+    var interstitialname = this.classname + '+' + superclassInstance.constructor.classname;
+    var prototypename = sharable.classname + '|' + interstitialname;
+    if (impls[prototypename]) {
+      if ($debug) {
+        Debug.debug('Sharable interstitial: %s', prototypename);
       }
+      return impls[prototypename];
     }
     // Add the properties to the prototype (superclassInstance)
     var ip = this.instanceProperties;
@@ -468,7 +466,7 @@ var Trait = {
     }
     // Unique name must identify superclass chain, punctuation is
     // added for debugging
-    xtor.classname = mash;
+    xtor.classname = interstitialname;
     if ($debug) {
       xtor._dbg_typename = 'Interstitial Constructor';
       xtor._dbg_name = xtor.classname;
@@ -476,14 +474,14 @@ var Trait = {
     #pragma "passThrough=true"
     var t = new xtor();
     // Remember
-    impls[mash] = t;
+    impls[prototypename] = t;
     return t;
   },
   // Implements `is` operator for traits
   $lzsc$isa: function $lzsc$isa (obj) {
     var impls = this.implementations;
-    for (var mash in impls) {
-      if (obj instanceof impls[mash].constructor) {
+    for (var prototypename in impls) {
+      if (obj instanceof impls[prototypename].constructor) {
         return true;
       }
     }

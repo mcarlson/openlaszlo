@@ -262,5 +262,14 @@ static function stringToLzData( str, trimwhitespace=false, nsprefix=false ) {
 
 }
 
+  /**
+   * Needed because LzDataElementMixin wants to override this, and it is
+   * mixed in to both this and LzNode which defines toString, so _we_
+   * have to define it too.
+   * @access private
+   */
+  function toString ()
+    { return "LzDataNode";}
+
 
 } // End of LzDataNode

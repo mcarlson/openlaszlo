@@ -127,15 +127,7 @@ class LzEventable {
     }
   }
 
-  /** @access private */
-  function _dbg_name ()
-    { return "LzEventable";}
-
-  /** @access private */
-  function toString ()
-    { return _dbg_name();}
-
-  /** @access private */
+   /** @access private */
   function __LZupdateShown( ) {}
 
 } // End of LzEventable

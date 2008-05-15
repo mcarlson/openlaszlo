@@ -32,7 +32,7 @@
   * defaultplacement in lexical parent). See the 
   * <method>LzNode.determinePlacement</method> method. Defaults to false.
   */
-public dynamic class LzNode extends LzEventable{
+public dynamic class LzNode extends LzEventable {
 
     /** @access private
      * @modifiers override 
@@ -2025,7 +2025,7 @@ function animate( prop, to, duration, isRelative = null, moreargs = null ) {
 /**
   * @access private
   */
-override function toString (){
+function toString (){
     return this.getDebugIdentification();
 }
 
@@ -2059,7 +2059,7 @@ function getDebugIdentification (){
   *
   * @access private
   */
-override function _dbg_name (){
+function _dbg_name (){
   if ((typeof(this.id) == 'string') && 
       (global[this.id] === this)) {
     return "#" + this.id;

@@ -477,7 +477,7 @@ if ($debug) {
   * For debugging.  Same as serialize, but will abbreviate at printLength.
   * @access private
   */
-override function _dbg_name () {
+function _dbg_name () {
     return this.serializeInternal(Debug.printLength);
 }
 }
