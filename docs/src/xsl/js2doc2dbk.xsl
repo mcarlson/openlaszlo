@@ -1299,7 +1299,8 @@
     <xsl:param name="superclass"/>
   
     <xsl:if test="$superclass">  
-      <xsl:variable name="inheritedevents" select="$superclass/class/property[@name='__ivars__']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &ispublic;]"></xsl:variable>
+      <xsl:variable name="inheritedevents" select="$superclass/class/property/object/property[doc/tag[@name='lzxtype']/text = 'event'  and &ispublic;]"></xsl:variable>
+
       <xsl:if test="count($inheritedevents) > 0">
        <refsect2>
         <title>
