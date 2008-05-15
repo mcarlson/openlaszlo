@@ -27,7 +27,7 @@
             setAttribute('_usecontentheight', false);
         </method>
 
-        <state name="resizeable" apply="${this.classroot.resizable}">
+        <state name="resizeable" applied="${this.classroot.resizable}">
             <view name="_resizeControl" placement="null"
                 x="${classroot.width - this.width - classroot.inset_right}"
                 y="${classroot.height - this.height - classroot.inset_right}"
@@ -52,10 +52,10 @@
             options="releasetolayout" bgcolor="0x6A6A6A">
             <view name="wcontent" x="1" y="1"
                 clip="true" bgcolor="${classroot.content.bgcolor}">
-                <state apply="${!classroot._usecontentwidth}">
+                <state applied="${!classroot._usecontentwidth}">
                     <attribute name="width" value="${parent.immediateparent.width - 2}"/>
                 </state>
-                <state apply="${!classroot._usecontentheight}">
+                <state applied="${!classroot._usecontentheight}">
                     <attribute name="height"
                         value="${parent.immediateparent.height -
                                 parent.immediateparent.menubar.height -

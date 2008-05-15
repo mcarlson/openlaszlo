@@ -1,7 +1,7 @@
 <canvas debug="true">
   <simplelayout/>
   <view>
-    <state name="clickState" apply="false">
+    <state name="clickState" applied="false">
       <window x="40" y="40" title="foo"/>
     </state>
     <button text="apply">

@@ -48,7 +48,7 @@
 
                 <!-- THIS SECTION FOR THE TIME GRID -->
                 <view name="timeview">
-                    <state apply="${classroot.opened}"
+                    <state applied="${classroot.opened}"
                        onapply="parent.setTimeOffset(7.5);
                                 parent.parent.scrollview.scrollState.apply()"
                        onremove="parent.parent.scrollview.scrollState.remove();
@@ -91,7 +91,7 @@
                         <!-- no harm in calling apply on a state that's already
                             been applied -->
 
-                        <state name="showData" apply="false">
+                        <state name="showData" applied="false">
                             <calendar_event name="events" pixellock="true">
                                 <datapath pooling="true" xpath="event">
                                     <!-- this forces the replication to happen
@@ -105,11 +105,11 @@
                     </view>
                 </view>
 
-                <state apply="${classroot.opened}">
+                <state applied="${classroot.opened}">
                     <scrollbar visible="${scrollable}"/>
                 </state>
                 <view name="scrollview" visible="false">
-                    <state name="scrollState" apply="false" 
+                    <state name="scrollState" applied="false" 
                            onapply="parent.bringToFront()">
                     </state>
                 </view>

@@ -968,8 +968,10 @@ element attribute "
 <interface name="state" extends="node">
   <!-- This is unfortunately both a setter attribute AND a method. No
        real nice way to represent that.
+       @keywords deprecated in 4.1
    -->
   <attribute name="apply" final="false" />
+  <attribute name="applied" final="false" />
 
   <!-- If pooling is true, views that are created by the state are not
        destroyed when the state is removed - instead they just act as

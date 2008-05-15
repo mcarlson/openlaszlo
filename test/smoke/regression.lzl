@@ -614,7 +614,7 @@
         
         <view/>
         <button/>
-        <state apply="false"/>
+        <state applied="false"/>
         <animator start="false" attribute="height"/>
                 <radiogroup>
           <radiobutton value="1" text="one"/>
@@ -1005,11 +1005,11 @@
 
             <attribute name="datamapped" value="false"/>
 
-            <state apply="${parent.datamapped}">
+            <state applied="${parent.datamapped}">
                 <attribute name="attrone" value="$path{ '@dataone' }"/>
             </state>
 
-            <state apply="${!parent.datamapped}">
+            <state applied="${!parent.datamapped}">
                 <attribute name="attrone" value="${parent.someval}"/>
             </state>
 

@@ -6,7 +6,7 @@
 
         <slidertrack/>
 
-        <state apply="${this.classroot.showrange}">
+        <state applied="${this.classroot.showrange}">
             <text y="${classroot.track.y + classroot.track.height + 2}"
                 text="${classroot.minvalue}" fgcolor="${classroot.style ? classroot.style.textcolor : this.fgcolor}"
             />

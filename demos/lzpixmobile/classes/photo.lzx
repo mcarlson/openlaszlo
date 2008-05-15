@@ -164,7 +164,7 @@
               height="${parent.height - 2*classroot.border}" >             
 
             <view name="interior" stretches="both"> <!-- 0xd9d9d9 -->
-                <state apply="${classroot.doesdrag}">
+                <state applied="${classroot.doesdrag}">
                     <handler name="onmousedown">
                         classroot.onmousedown.sendEvent();
                     </handler>

@@ -99,7 +99,7 @@
 
             </text>
 
-            <state pooling="true" apply="${parent.editing}" 
+            <state pooling="true" applied="${parent.editing}" 
                    onremove="parent.editbox.datapath.updateData()">
                 <edittext datapath="$once{parent.parent.rowdp}" 
                           name="editbox" width="${parent.width}" visibility="visible" >

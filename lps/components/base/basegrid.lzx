@@ -103,7 +103,7 @@
             </view>
         </view>
 
-        <state apply="${parent.sizetoheader}">
+        <state applied="${parent.sizetoheader}">
             <attribute name="width" 
                         value="${ header.hcontent.width }"/>
         </state>

@@ -31,11 +31,11 @@
             height="${mdcontent.height + parent.content_inset_top + parent.content_inset_bottom}">
             <view x="${classroot.content_inset_left}" y="${classroot.content_inset_top}"
                 name="mdcontent">
-            <state apply="${!classroot._usecontentwidth}">
+            <state applied="${!classroot._usecontentwidth}">
                 <attribute name="width" value="${parent.immediateparent.width
                      - classroot.content_inset_left- classroot.content_inset_right }"/>
             </state>
-            <state apply="${!classroot._usecontentheight}">
+            <state applied="${!classroot._usecontentheight}">
                 <attribute name="height"
                     value="${parent.immediateparent.height
                             - classroot.content_inset_top- classroot.content_inset_bottom}"/>
@@ -71,7 +71,7 @@
    
  </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1,8 +1,10 @@
 <library>
   <view width="40" height="40" bgcolor="green" >
-    <state name="goBlue" apply="false">
+    <state name="goBlue" applied="false">
 </state>
-    <state name="goRed" apply="true">
+    <state name="goRed" applied="true">
 </state>
   </view>
 </library>
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->
+

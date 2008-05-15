@@ -115,10 +115,10 @@
         <attribute name="titlearea_inset_top" value="6"/>
         <attribute name="defaultplacement" value="content" type="string"/>
 
-        <state apply="${parent._usecontentwidth}">
+        <state applied="${parent._usecontentwidth}">
             <attribute name="width" value="${this.content.width + this.inset_left + this.inset_right}" />
         </state>
-        <state apply="${parent._usecontentheight}">
+        <state applied="${parent._usecontentheight}">
             <attribute name="height" value="${this.content.height + this.inset_top + this.inset_bottom}" />
         </state>
 
@@ -255,8 +255,7 @@
                 clip="true" frame="${classroot.state}"/>
 
             <view name="controls">
-                <state name="closeable">
-                    <attribute name="apply" value="classroot.closeable" when="always"/>
+                <state name="closeable" applied="${classroot.closeable}">
                     <basebutton x="2" name="close_btn" styleable="true"
                         resource="window_closebtn_rsc"
                         onclick="classroot.close()" />
@@ -267,10 +266,10 @@
 
         <view name="content" x="${parent.inset_left}" y="${parent.inset_top}"
             bgcolor="${classroot.bgcolor}" clip="true">
-            <state apply="${!classroot._usecontentwidth}">
+            <state applied="${!classroot._usecontentwidth}">
                 <attribute name="width" value="${classroot.width - classroot.inset_left - classroot.inset_right}"/>
             </state>
-            <state apply="${!classroot._usecontentheight}">
+            <state applied="${!classroot._usecontentheight}">
                 <attribute name="height" value="${classroot.height - classroot.inset_bottom - classroot.inset_top}"/>
             </state>
             <!-- this is the defaultplacement view -->

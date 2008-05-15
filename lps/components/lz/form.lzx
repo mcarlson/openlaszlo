@@ -33,12 +33,12 @@
         <attribute name="_useformheight" value="true"/>
 
         <!--- @keywords private -->
-        <state name="_noformwidth" apply="${!classroot._useformwidth}">
+        <state name="_noformwidth" applied="${!classroot._useformwidth}">
             <attribute name="width" 
                value="${this.inset_left + this.content.width + 
                         this.inset_right}"/>
         </state>
-        <state name="_noformheight" apply="${!classroot._useformheight}">
+        <state name="_noformheight" applied="${!classroot._useformheight}">
             <attribute name="height" 
               value="${this.inset_top + this.content.height + 
                  (buttonplace.height != 0 ?  buttonplace.height + spacing : 0) +
@@ -84,12 +84,12 @@
               x="${classroot.inset_left}" 
               y="${classroot.inset_top}" >
 
-            <state name="_useformwidth" apply="${classroot._useformwidth}">
+            <state name="_useformwidth" applied="${classroot._useformwidth}">
                 <attribute name="width" 
                     value="${classroot.width - classroot.inset_left 
                                              - classroot.inset_right}" />
             </state>
-            <state name="_useformheight" apply="${classroot._useformheight}">
+            <state name="_useformheight" applied="${classroot._useformheight}">
                 <attribute name="height" 
                     value="${classroot.height - classroot.inset_top 
                                 - classroot.inset_bottom
@@ -103,20 +103,20 @@
         <view name="buttonplace" 
               layout="class: simplelayout; axis: x; spacing: 10">
 
-              <state name="_noformwidth" apply="${!classroot._useformwidth}">
+              <state name="_noformwidth" applied="${!classroot._useformwidth}">
                   <attribute name="x" 
                        value="${classroot.content.x + 
                                 classroot.content.width + 
                                 - this.width}" />
               </state>
               <state name="_formwidth" 
-                     apply="${classroot._useformwidth}">
+                     applied="${classroot._useformwidth}">
                   <attribute name="x" 
                        value="${classroot.width - classroot.inset_right 
                                                 - this.width}" />
               </state>
 
-              <state name="_noformheight" apply="${!classroot._useformheight}">
+              <state name="_noformheight" applied="${!classroot._useformheight}">
                   <attribute name="y" 
                        value="${classroot.content.y + 
                                 classroot.content.height +
@@ -124,7 +124,7 @@
               </state>
 
               <state name="_formheight" 
-                     apply="${classroot._useformheight}">
+                     applied="${classroot._useformheight}">
                   <attribute name="y" 
                        value="${classroot.height - classroot.inset_bottom
                                                  - this.height}" />
@@ -192,7 +192,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

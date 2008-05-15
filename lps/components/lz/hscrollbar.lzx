@@ -93,7 +93,7 @@
     </view>
     <stableborderlayout axis="x"/>
 
-    <state apply="${parent.othersb}">
+    <state applied="${parent.othersb}">
         <view name="patch" x="${parent.width}"
             bgcolor="${(parent._enabled || parent.othersb._enabled)
                 ? 0xbdbdbd : parent.disabledbgcolor}"

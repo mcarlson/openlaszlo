@@ -20,30 +20,30 @@
             }
         </handler>
         <view name="leftview" stretches="height">
-            <method name="adjheight">
+            <method name="adjheight" args="ignore">
                  this.setAttribute('height', this.immediateparent.height);
             </method>
             <attribute name="frame" value="${parent.frame}"/>
             <handler name="onconstruct">
-                this.setResource(parent.left);
+                this.setAttribute('resource', parent.left);
             </handler>
         </view>
         <view name="middleview" stretches="both">
-            <method name="adjheight">
+            <method name="adjheight" args="ignore">
                  this.setAttribute('height', this.immediateparent.height);
             </method>
             <attribute name="frame" value="${parent.frame}"/>
             <handler name="onconstruct">
-                this.setResource(parent.middle);
+                this.setAttribute('resource', parent.middle);
             </handler>
         </view>
         <view name="rightview" stretches="height">
-            <method name="adjheight">
+            <method name="adjheight" args="ignore">
                  this.setAttribute('height', this.immediateparent.height);
             </method>
             <attribute name="frame" value="${parent.frame}"/>
             <handler name="onconstruct">
-                this.setResource(parent.right);
+                this.setAttribute('resource', parent.right);
             </handler>
         </view>
         <stableborderlayout name="sbl" axis="x"/>
@@ -73,19 +73,19 @@
         <view name="topview" stretches="width">
             <attribute name="frame" value="${parent.frame}"/>
             <handler name="onconstruct">
-                this.setResource(parent.top);
+                this.setAttribute('resource', parent.top);
             </handler>
         </view>
         <view name="middleview" stretches="both">
             <attribute name="frame" value="${parent.frame}"/>
             <handler name="onconstruct">
-                this.setResource(parent.middle);
+                this.setAttribute('resource', parent.middle);
             </handler>
         </view>
         <view name="bottomview" stretches="width">
             <attribute name="frame" value="${parent.frame}"/>
             <handler name="onconstruct">
-                this.setResource(parent.bottom);
+                this.setAttribute('resource', parent.bottom);
             </handler>
         </view>
         <stableborderlayout name="sbl" axis="y"/>

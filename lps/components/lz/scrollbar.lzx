@@ -39,7 +39,7 @@
     ]]>
     </method>
 
-    <state apply="${parent.axis == 'y'}">
+    <state applied="${parent.axis == 'y'}">
         <attribute name="width" value="14"/>
 
         <!-- up arrow -->
@@ -96,7 +96,7 @@
      </state>
 
 
-    <state apply="${parent.axis == 'x'}">
+    <state applied="${parent.axis == 'x'}">
         <attribute name="height" value="14"/>
 
         <!-- left arrow -->
@@ -152,7 +152,7 @@
         <stableborderlayout axis="x"/>
      </state>
 
-    <state apply="${parent.axis == 'x' &amp;&amp; parent.othersb}">
+    <state applied="${parent.axis == 'x' &amp;&amp; parent.othersb}">
         <view name="patch" x="${parent.width}"
             bgcolor="${(parent._enabled || parent.othersb._enabled)
                 ? 0xbdbdbd : parent.disabledbgcolor}"

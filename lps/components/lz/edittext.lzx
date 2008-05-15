@@ -130,7 +130,7 @@
 
         <view name="_outerbezel" 
             width="${parent.width}" height="${parent.height}">
-            <state apply="${this.classroot.enabled}" pooling="true">
+            <state applied="${this.classroot.enabled}" pooling="true">
                 <view bgcolor="0x989898" width="100%" height="1"/>
                 <view bgcolor="0x989898" width="1" height="100%"/>
                 <view bgcolor="0xe1e1e1" width="1" align="right" height="100%"/>
@@ -139,12 +139,12 @@
         </view>
         <view name="_innerbezel" 
             x="1" y="1" width="${parent.width-2}" height="${parent.height-2}">
-            <state apply="${this.classroot.enabled}" pooling="true">
+            <state applied="${this.classroot.enabled}" pooling="true">
                 <view bgcolor="0x262626" width="${parent.width - 1}" height="1"/>
                 <view bgcolor="0x262626" width="1" height="100%"/>
                 <view bgcolor="0xefefef" valign="bottom" width="100%" height="1"/>
             </state>
-            <state apply="${! this.classroot.enabled}" pooling="true">
+            <state applied="${! this.classroot.enabled}" pooling="true">
                 <view bgcolor="0xa4a4a4" width="100%" height="100%"/>
                 <view bgcolor="white" x="1" y="1" width="${parent.width - 2}" height="${parent.height - 2}"/>
             </state>

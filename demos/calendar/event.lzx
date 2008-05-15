@@ -114,7 +114,7 @@
             }
         </method>
 
-        <state name="timeLayout" apply="${this.parent.classroot.opened}"
+        <state name="timeLayout" applied="${this.parent.classroot.opened}"
                onapply="parent.openToggle(true)"
                onremove="parent.openToggle(false)">
 

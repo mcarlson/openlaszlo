@@ -90,7 +90,7 @@
             setVisible(true); ]]>
         </method>
 
-        <state name="followstate" apply="false">
+        <state name="followstate" applied="false">
             <attribute name="x" value="${dayview.getAttributeRelative( 'x',
                                                         canvas )}"/>
             <attribute name="y" value="${dayview.getAttributeRelative( 'y',

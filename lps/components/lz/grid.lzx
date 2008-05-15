@@ -38,7 +38,7 @@
             parent.sizetoheader == false}"/>
 
         <!--- @keywords private -->
-        <state apply="${ parent._showHeaderFill }">
+        <state applied="${ parent._showHeaderFill }">
             <button clickable="false" 
                     placement="header"
                     x="${ immediateparent.hcontent.width }"

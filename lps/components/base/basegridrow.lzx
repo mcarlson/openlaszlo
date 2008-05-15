@@ -166,7 +166,7 @@
             this.updateBGColor();
         </method>
 
-        <state apply="$once{parent.ownerGrid.showhlines}">
+        <state applied="$once{parent.ownerGrid.showhlines}">
             <view bgcolor="${parent.lineColor}" height="1" 
                   options="ignorelayout">
                 <attribute name="width" value="${Math.max( 

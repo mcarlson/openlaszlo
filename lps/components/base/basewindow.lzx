@@ -178,7 +178,7 @@
               drag behavior. Subclasses may override to create different
               behavior.
               @keywords private -->
-        <method name="_mousedown">
+        <method name="_mousedown" args="ignore">
             this.setAttribute('haswindowfocus', true);
             this._startDrag();
         </method>
@@ -186,7 +186,7 @@
         <!--- Called onmouseup, stops the drag behavior.  Subclasses may
               override to create different behavior.
               @keywords private -->
-        <method name="_mouseup">
+        <method name="_mouseup" args="ignore">
             this._stopDrag();
         </method>
 

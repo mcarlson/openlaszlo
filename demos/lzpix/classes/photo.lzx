@@ -165,7 +165,7 @@
         <view name="intparent" clip="true" x="$once{ this.classroot.border }" 
               y="$once{ this.classroot.border }">
             <view name="interior" bgcolor="0xd9d9d9" stretches="both">
-                <state apply="${this.classroot.doesdrag}">
+                <state applied="${this.classroot.doesdrag}">
                     <handler name="onmousedown">
                         this.classroot.onmousedown.sendEvent();
                     </handler>

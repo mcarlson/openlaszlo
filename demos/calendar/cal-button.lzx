@@ -44,25 +44,25 @@
         <view name="bkgnd" width="100%">
             <view name="lft">
                 <state name="oval">
-                    <attribute name="apply" value="classroot.leftcap == 'oval'" when="always"/>
+                    <attribute name="applied" value="classroot.leftcap == 'oval'" when="always"/>
                     <attribute name="resource"   value="leftcap_oval" />
                     <attribute name="leftinset"  value="classroot.leftinset == 0?  8:classroot.leftinset" when="always" />
                </state>
 
                 <state name="roundrect">
-                    <attribute name="apply" value="classroot.leftcap == 'roundrect'" when="always"/>
+                    <attribute name="applied" value="classroot.leftcap == 'roundrect'" when="always"/>
                     <attribute name="resource" value="leftcap_roundrect" />
                     <attribute name="leftinset"  value="classroot.leftinset == 0?  5:classroot.leftinset" when="always" />
                 </state>
 
                 <state name="rect">
-                    <attribute name="apply" value="classroot.leftcap == 'rect'" when="always"/>
+                    <attribute name="applied" value="classroot.leftcap == 'rect'" when="always"/>
                     <attribute name="resource" value="leftcap_rect" />
                     <attribute name="leftinset"  value="classroot.leftinset == 0?  6:classroot.leftinset" when="always" />
                 </state>
 
                  <state name="shear">
-                    <attribute name="apply" value="classroot.leftcap == 'shear'" when="always"/>
+                    <attribute name="applied" value="classroot.leftcap == 'shear'" when="always"/>
                     <attribute name="resource" value="leftcap_shear" />
                     <attribute name="leftinset"  value="classroot.leftinset == 0?  3:classroot.leftinset" when="always" />
                 </state>
@@ -72,25 +72,25 @@
 
             <view name="rgt">
                 <state name="oval">
-                    <attribute name="apply" value="classroot.rightcap == 'oval'" when="always"/>
+                    <attribute name="applied" value="classroot.rightcap == 'oval'" when="always"/>
                     <attribute name="resource"    value="rightcap_oval" />
                     <attribute name="rightinset"  value="classroot.rightinset == 0?  12:classroot.rightinset" when="always" />
                 </state>
 
                 <state name="rect">
-                    <attribute name="apply" value="classroot.rightcap == 'rect'" when="always"/>
+                    <attribute name="applied" value="classroot.rightcap == 'rect'" when="always"/>
                     <attribute name="resource" value="rightcap_rect" />
                     <attribute name="rightinset"  value="classroot.rightinset == 0?  9:classroot.rightinset" when="always" />
                </state>
 
                 <state name="roundrect">
-                    <attribute name="apply" value="classroot.rightcap == 'roundrect'" when="always"/>
+                    <attribute name="applied" value="classroot.rightcap == 'roundrect'" when="always"/>
                     <attribute name="resource" value="rightcap_roundrect" />
                     <attribute name="rightinset"  value="classroot.rightinset == 0?  9:classroot.rightinset" when="always" />
               </state>
 
                 <state name="shear">
-                    <attribute name="apply" value="classroot.rightcap == 'shear'" when="always"/>
+                    <attribute name="applied" value="classroot.rightcap == 'shear'" when="always"/>
                     <attribute name="resource" value="rightcap_shear" />
                     <attribute name="rightinset"  value="classroot.rightinset == 0?  5:classroot.rightinset" when="always" />
                 </state>
@@ -100,8 +100,8 @@
 
         <!-- EXTRA STATES FOR SUPPORTING VIEWS AND METHODS FOR UPDATING -->
         <state name="measuretextwidth" >
-            <attribute name="apply"   value="classroot.label != ''" when="always"/>
-            <!-- if apply is TRUE, then button has a label so add text view support -->
+            <attribute name="applied"   value="classroot.label != ''" when="always"/>
+            <!-- if applied is TRUE, then button has a label so add text view support -->
 
             <text name="title_hilite" opacity=".4" width="200" fgcolor="#143B45" >
                 <attribute name="y"    value="parent.yadjust - 1" when="once"/>
@@ -142,8 +142,8 @@
         </state>
 
         <state name="measureiconwidth" >
-            <attribute name="apply" value="classroot.icon != ''" when="always"/>
-            <!-- if apply is TRUE, then button has an icon so add icon support -->
+            <attribute name="applied" value="classroot.icon != ''" when="always"/>
+            <!-- if applied is TRUE, then button has an icon so add icon support -->
 
             <view name="iconv" x="${parent.leftinset}" oninit="this.placeicon()" >
                 <attribute name="resource" value="parent.icon" when="always"/>
@@ -170,8 +170,8 @@
         </state>
 
         <state name="measureboth">
-            <attribute name="apply" value="(classroot.icon != '') &amp;&amp; (classroot.label != '')" when="always"/>
-            <!-- if apply is TRUE, then button has an icon and text so add support for both-->
+            <attribute name="applied" value="(classroot.icon != '') &amp;&amp; (classroot.label != '')" when="always"/>
+            <!-- if applied is TRUE, then button has an icon and text so add support for both-->
 
             <method name="update" >
                 this.iconv.setX( this.bkgnd.lft.leftinset);

@@ -46,7 +46,7 @@
     <!-- 
     <button>
       <attribute name="countdown" type="number"/>
-      <state name="idle" onapply="this.setText('Begin Autosurf')" apply="true"/>
+      <state name="idle" onapply="this.setText('Begin Autosurf')" applied="true"/>
       </state>
       <state name="asurf" onapply="this.setText('Stop autosurf ['+this.countdown+']')">
       </state>

@@ -132,7 +132,7 @@
 
         <view resource="weather_bg" />
 
-        <state name="splashstate" pooling="true" apply="true">
+        <state name="splashstate" pooling="true" applied="true">
             <view name="splash" resource="weather_splash" >
                 <text id="error" fontstyle="bold" width="240"
                     fgcolor="#000099" x="15" y="230"/>
@@ -182,12 +182,12 @@
             <text name="zip" fontstyle="bold" fgcolor="#CAD0EC" width="100"
                   x="194" y="1" />
 
-            <state apply="${parent.on == true}">
+            <state applied="${parent.on == true}">
                 <animator attribute="opacity" to="1" duration="333"/>
                 <animator attribute="y" to="0" duration="333"/>
             </state>
 
-            <state apply="${parent.on == false}">
+            <state applied="${parent.on == false}">
                 <animator attribute="opacity" to="0" duration="333"/>
                 <animator attribute="y" to="-16" duration="333"/>
             </state>

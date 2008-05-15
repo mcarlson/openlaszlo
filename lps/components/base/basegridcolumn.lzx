@@ -228,7 +228,7 @@
         </method>
 
         <!--- @keywords private -->
-        <state apply="${parent.parent.showvlines}">
+        <state applied="${parent.parent.showvlines}">
             <view bgcolor="${parent._lineColor}" width="1" 
                   x="${parent.x + parent.colwidth + parent.immediateparent.x}" 
                   height="${immediateparent.height}"
