@@ -110,14 +110,23 @@ dynamic class LzText extends LzView with LzFormatter {
     var selectable = false;
 // these 4 are only available in swf8 and higher
 /** @access private */
-    var antiAliasType = "normal";
+    var antiAliasType = "advanced";
+/** @access private */
+    function $lzc$set_antiAliasType(v) { this.setAntiAliasType(v) }
 /** @access private */
     var gridFit = "subpixel";
 /** @access private */
+    function $lzc$set_gridFit(v) { this.setGridFit(v) }
+/** @access private */
     var sharpness = 0;
 /** @access private */
+    function $lzc$set_sharpness(v) { this.setSharpness(v) }
+/** @access private */
     var thickness = 0;
+/** @access private */
+    function $lzc$set_thickness(v) { this.setThickness(v) }
 
+/** @access private */
     function LzText ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
         super(parent,attrs,children,instcall);
     }
@@ -354,52 +363,11 @@ override function construct ( parent, args ) {
 
 
     if (this.capabilities.advancedfonts) {
-        if ('antiAliasType' in args && args.antiAliasType != null) {
-            this.setAntiAliasType(args.antiAliasType);
-        } else {
-            this.setAntiAliasType("normal"); 
+        if (! 'antiAliasType' in args && args.antiAliasType == null) {
+            this.setAntiAliasType("advanced"); 
         }
-
-        if ('gridFit' in args && args.gridFit != null) {
-            this.setGridFit(args.gridFit);
-        } else {
-            this.setGridFit("subpixel");
-        }
-
-        if ('sharpness' in args && args.sharpness != null) {
-            this.setSharpness(args.sharpness);
-        } else {
-            this.setSharpness(0);
-        }
-
-        if ('thickness' in args && args.thickness != null) {
-            this.setThickness(args.thickness);
-        } else {
-            this.setThickness(0);
-        }
-        if ($swf9) {
-            // TODO [hqm 2008-03] what should we be doing in swf9 here?? 
-        } else {
-        // ---+++--- WTF? ---+++---
-        if (! LzText.setters.antiAliasType) {
-            /**
-            * @lzxtype string
-            * @type String
-            * @modifiers virtual
-            */
-            // no var decl since this is a virtual field
-            LzText.setters.antiAliasType = "setAntiAliasType";
-            LzText.attributes.antiAliasType = "normal";
-
-            LzText.setters.gridFit = "setGridFit";
-            LzText.attributes.gridfit = "subpixel";
-
-            LzText.setters.sharpness = "setSharpness";
-            LzText.attributes.sharpness = 0;
-
-            LzText.setters.thickness = "setThickness";
-            LzText.attributes.thickness = 0;
-        }
+        if (! 'gridFit' in args && args.gridFit == null) {
+            this.setGridFit("subpixel"); 
         }
     }
 }
@@ -625,8 +593,8 @@ function _dbg_name ( ){
 }
 }
 
-/**
-  * @access private
+/** Sets the vertical scroll position
+  * @param Number h: scroll position
   */
 function setScroll ( h ){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
@@ -982,7 +950,7 @@ function setEmbedFonts ( onroff ){
 /***
  * Sets what type of antialiasing the text field should use. Only works in swf8
  * and higher. 
- * @param aliasType "normal" or "advanced"
+ * @param String aliasType: "normal" or "advanced"
  */
 function setAntiAliasType( aliasType ){
     if (this.capabilities.advancedfonts) {    
@@ -1000,6 +968,7 @@ function setAntiAliasType( aliasType ){
 
 /**
  * Gets the kind of antialiasing set on this text object
+ * @return String: The current setting for text antialiasing
  */ 
 function getAntiAliasType() {
     if (this.capabilities.advancedfonts) {    
@@ -1012,7 +981,7 @@ function getAntiAliasType() {
 /***
  * Sets what type of grid fitting the text field should use. 
  * Only works in swf8 and higher. 
- * @param gridFit "none", "pixel", or "subpixel"
+ * @param String gridFit: "none", "pixel", or "subpixel"
  */
 function setGridFit( gridFit ){
     if (this.capabilities.advancedfonts) {    
@@ -1030,6 +999,7 @@ function setGridFit( gridFit ){
 
 /**
  * Gets the kind of grid fitting set on this text object
+ * @return String: The current setting for grid fitting
  */ 
 function getGridFit() {
     if (this.capabilities.advancedfonts) {
@@ -1043,7 +1013,7 @@ function getGridFit() {
 /***
  * Sets the sharpness for the text rendering 
  * Only works in swf8 and higher. 
- * @param sharpness -400 to 400
+ * @param Number sharpness: -400 to 400
  */
 function setSharpness( sharpness ){
     if (this.capabilities.advancedfonts) {
@@ -1061,6 +1031,7 @@ function setSharpness( sharpness ){
 
 /**
  * Gets the sharpness rendering property of this text object
+ * @return Number: The current sharpness rendering 
  */ 
 function getSharpness() {
     if (this.capabilities.advancedfonts) {    
@@ -1074,7 +1045,7 @@ function getSharpness() {
 /***
  * Sets the thickness for the text rendering 
  * Only works in swf8 and higher. 
- * @param thickness -200 to 200
+ * @param Number thickness: -200 to 200
  */
 function setThickness( thickness ){
     if (this.capabilities.advancedfonts) {
@@ -1092,6 +1063,7 @@ function setThickness( thickness ){
 
 /**
  * Gets the thickness rendering property of this text object
+ * @return Number: The current thickness rendering 
  */ 
 function getThickness() {
     if (this.capabilities.advancedfonts) {    
@@ -1113,8 +1085,8 @@ function __LZforceScrollAttrs () {
 }
 */
 
-/**
-  * 
+/** Sets the horizontal scroll position
+  * @param Number s: horizontal scroll position
   */
 function setHScroll (s){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
