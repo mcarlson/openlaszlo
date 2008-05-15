@@ -7,12 +7,9 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
-    <xsl:output
-      doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-      doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
+    <xsl:output method="html" indent="yes" />
     <!-- [2007-09-24 jgrandy] (LPP-2771) we should use method="xhtml" below, but the XSLT processor used on many people's machines doesn't support this nonstandard extension.
          See http://www.velocityreviews.com/forums/t167968-xhtml-doctype-and-output.html -->
-    <xsl:output method="xml" indent="yes" />
 
     <xsl:template match="/menu">
         <html>
