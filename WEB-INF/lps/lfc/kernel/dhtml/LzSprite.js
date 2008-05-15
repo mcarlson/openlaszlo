@@ -525,9 +525,14 @@ LzSprite.prototype.CSSDimension = function (value, units) {
 }
 
 LzSprite.prototype.loading = false;
-LzSprite.prototype.setSource = function (url, indirect){
-    if (indirect != true){
+LzSprite.prototype.setSource = function (url, usecache){
+    if (usecache != true){
+        // called by a user
         this.skiponload = false;
+    }
+    if (usecache == 'memorycache') {
+        // use the memory cache - explictly turned on my the user
+        usecache = true;
     }
 
     //Debug.info('setSource ' + url)
@@ -536,7 +541,7 @@ LzSprite.prototype.setSource = function (url, indirect){
     if (! this.__ImgPool) {
         this.__ImgPool = new LzPool(LzSprite.prototype.__getImage, LzSprite.prototype.__gotImage, LzSprite.prototype.__destroyImage, this);
     }
-    var im = this.__ImgPool.get(url);
+    var im = this.__ImgPool.get(url, usecache != true);
 
     if (this.__LZimg) {
         this.__LZdiv.replaceChild(im, this.__LZimg);
@@ -967,7 +972,7 @@ LzSprite.prototype.__preloadFrames = function() {
             }
             LzSprite.prototype.__preloadurls[src] = true;
         }
-        var im = this.__ImgPool.get(src, true);
+        var im = this.__ImgPool.get(src, false, true);
         if (this.quirks.ie_alpha_image_loader) {
             this.__updateIEAlpha(im);
         }

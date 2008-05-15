@@ -1,7 +1,7 @@
 /**
   * LzPool.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -22,14 +22,19 @@ var LzPool = function(getter, cacheHit, destroyer, owner) {
 LzPool.prototype.cache = null;
 
 // Retrieves an item from the cache
-LzPool.prototype.get = function(id) {
-    if (this.cache[id] == null) {
-        this.cache[id] = this.getter(id, Array.prototype.slice.apply(arguments, [1]));
+LzPool.prototype.get = function(id, skipcache) {
+    if (skipcache) {
+        return this.getter(id, args);
     } else {
-        if (this.cacheHit) this.cacheHit(id, this.cache[id], Array.prototype.slice.apply(arguments, [1]));
+        var args = Array.prototype.slice.apply(arguments, [2]);
+        if (this.cache[id] == null) {
+            this.cache[id] = this.getter(id, args);
+        } else {
+            if (this.cacheHit) this.cacheHit(id, this.cache[id], args);
+        }
+        if (this.owner) this.cache[id].owner = this.owner;
+        return this.cache[id];
     }
-    if (this.owner) this.cache[id].owner = this.owner;
-    return this.cache[id];
 }
 // Flushes an item from the cache
 LzPool.prototype.flush = function(id) {
