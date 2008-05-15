@@ -56,11 +56,11 @@ class LzBrowserService {
   /**
    * Runs a Javascript method in the browser, optionally returning the result
    *
-   * @param String js: Browser javascript method name to execute
-   * @param Function callback: Optionall callback function to get the return value of the javascript call
-   * @param * arguments to call
+   * @param String methodname: Browser javascript method name to execute
+   * @param Function callback: Optional callback function to receive the return value of the javascript call
+   * @param * arguments to call the method with
    */
-  function callJS ( js, callback=null, args=null )
+  function callJS ( methodname, callback=null, args=null )
     { LzBrowserKernel.callJS.apply (null, arguments);}
 
   /**

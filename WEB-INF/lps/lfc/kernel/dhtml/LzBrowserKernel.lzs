@@ -48,10 +48,19 @@ static function loadJS ( js, target ){
   * Runs a Javascript method in the browser, returning the result  
   * @keywords flashspecific
   * 
-  * @param String js: Browser javascript to execute
+  * @param String methodname: javascript method name to execute
+  * @param Function callback: Optional callback function to receive the return value of the javascript call
+  * @param Optional arguments to call
   */
-static function callJS (js, callback, args) {
-    return eval(js);
+static function callJS (methodname, callback) {
+    var method = eval(methodname);
+    var args = [].slice.call(arguments, 2);
+    if (method) {
+        // method.apply() fails for native methods, e.g. window.prompt() in IE 6
+        var ret = method.apply(null, args);
+    }
+    if (callback && typeof callback == 'function') callback(ret);
+    return ret;
 }
 
 /**
