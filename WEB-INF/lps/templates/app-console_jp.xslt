@@ -149,6 +149,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
                           <input id="LaszloDebuggerInput" type="text" />
                           <input type="button" value="eval" onclick="$modules.lz.Debug.doEval(document.getElementById('LaszloDebuggerInput').value); return false"/>
                           <input type="button" value="clear" onclick="$modules.lz.Debug.clear(); return false"/>
+                          <input type="button" value="bug report" onclick="$modules.lz.Debug.bugReport(); return false"/>
                         </div>
                       </form>
                   </div>
@@ -181,7 +182,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
     <xsl:choose>
     <xsl:when test="@runtime = 'dhtml'">
         <script type="text/javascript">
-        Lz.dhtmlEmbed({url: '<xsl:value-of select="$lps"/>/lps/admin/dev-console.lzx.js?lzappuid=<xsl:value-of select="$appuid"/>&amp;lzt=dhtml&amp;appinfo=<xsl:value-of select="$appinfo"/>', bgcolor: '#9494ad', width: '100%', height: '<xsl:value-of select="$consoleheight"/>', appenddivid: 'console'}, true);
+        Lz.dhtmlEmbed({url: '<xsl:value-of select="$lps"/>/lps/admin/dev-console.lzx.js?lzappuid=<xsl:value-of select="$appuid"/>&amp;lzt=dhtml&amp;appinfo=<xsl:value-of select="$appinfo"/>', bgcolor: '#9494ad', width: '100%', height: '<xsl:value-of select="$consoleheight"/>', appenddivid: 'console'});
         </script>
     </xsl:when>
     </xsl:choose>
@@ -213,7 +214,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
         <xsl:otherwise>
             <iframe id="dhtml-application"
                     src="{$lps}/lps/admin/dev-console.html?lzappuid={$appuid}&amp;appinfo={$appinfo}"
-                    style="width: 100%; height: {$consoleheight}px" width="100%" height="70"/>
+                    style="width: 100%; height: {$consoleheight}px" width="100%" height="{$consoleheight}"/>
         </xsl:otherwise>
       </xsl:choose>
 
@@ -317,6 +318,14 @@ If you edit this file, please validate your work using http://validator.w3.org/
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="error">
+    <xsl:call-template name="str.subst">
+      <xsl:with-param name="str" select="." />
+      <xsl:with-param name="from" select="'&#xA;'" />
+      <xsl:with-param name="to"><br/></xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
   <xsl:template match="/errors">
     <div style="border-top: 1px solid; border-bottom: 1px solid; background-color: #fcc; padding: 1pt; padding-left: 2pt">
       このアプリケーションは次のエラーによりコンパイルできませんでした。:
@@ -342,10 +351,30 @@ If you edit this file, please validate your work using http://validator.w3.org/
     <xsl:call-template name="footer"/>
   </xsl:template>
 
+  <xsl:template name="str.subst">
+    <xsl:param name="str" />
+    <xsl:param name="from" />
+    <xsl:param name="to"><br /></xsl:param>
+    <xsl:choose>
+      <xsl:when test="contains($str, $from)">
+        <xsl:value-of select="substring-before($str, $from)" />
+        <xsl:copy-of select="$to" />
+        <xsl:call-template name="str.subst">
+          <xsl:with-param name="str" select="substring-after($str, $from)" />
+          <xsl:with-param name="from" select="$from" />
+          <xsl:with-param name="to" select="$to" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$str" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

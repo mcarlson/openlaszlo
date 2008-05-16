@@ -139,26 +139,8 @@ Lz = {
      * function is called to load the LFC.  Must be called before dhtmlEmbed().
      *
      * @param url:String url to LFC
-     *
-     * @param allowUnsupported:(true|false|undefined) if true, there
-     * will be no check for unsupported browsers -- the LFC and app
-     * will be loaded and executed.  If false, unsupported browsers
-     * will not be permitted and a notice that the browser is not
-     * supported will be displayed.  If undefined or omitted, the user
-     * will queried if they want to 'try anyway' if the browser is
-     * unsupported -- clicking `OK` (or `Cancel) will have the same
-     * effect as a `true` (or `false`) value for this parameter
      */
-    dhtmlEmbedLFC: function (url, allowUnsupported) {
-        if (allowUnsupported) {
-            // turn off checking
-            this.supportedBrowser = true;
-            Lz.__BrowserDetect.init();
-        } else if (! this.__isSupportedBrowser(allowUnsupported === false)) {
-            document.write('<div style="margin: 5%; width: auto; background-color: #fff; padding: 1em; overflow: visible"><div><a href="http://www.openlaszlo.org/" target="_top"><img src="http://openlaszlo.org/themes/manji/images/ol_logo_small.gif" height="46" width="204" alt="OpenLaszlo" ></a></div><p>The OpenLaszlo DHTML runtime is not fully supported on this browser.  More information is available <a href="http://www.openlaszlo.org/" target="_top">here</a>.</p></div>');
-            return;
-        }
-
+    dhtmlEmbedLFC: function (url) {
         if (Lz.__BrowserDetect.isIE) {
             var scripturl = lzOptions.ServerRoot+ '/lps/includes/excanvas.js';
             this.__dhtmlLoadScript(scripturl)
@@ -183,17 +165,10 @@ Lz = {
      * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600'}
      *
      * Note: dhtmlEmbedLFC must have already been called, to load the
-     * LFC and to do any browser-checking.  If dhtmlEmbedLFC has not
-     * been called or the browser-check did not pass, this call will
-     * not load the application.
+     * LFC.  If dhtmlEmbedLFC has not been called or the browser-check 
+     * did not pass, this call will not load the application.
      */
-    dhtmlEmbed: function (properties, allowUnsupported) {
-        if (allowUnsupported) {
-            // turn off checking
-        } else if (! this.supportedBrowser) {
-            return;
-        }
-
+    dhtmlEmbed: function (properties) {
         var queryvals = this.__getqueryurl(properties.url, true);
         var url = queryvals.url + '?lzt=object&' + queryvals.query;
 
@@ -311,40 +286,6 @@ Lz = {
     __setAttr: function(s, n, v) {
 #pragma "passThrough=true"
         s.setAttribute(n, v);
-    }
-
-    ,/**
-     * Check that the browser is a supported browser
-     *
-     * @param dontAsk:boolean If false and the browser is not
-     * supported, the user will be asked if they want to 'try
-     * anyway'. If true, unsupported browsers will not be permitted.
-     * @access private
-     */
-    __isSupportedBrowser: function (dontAsk) {
-      if (this.hasOwnProperty('supportedBrowser')) {
-        return this.supportedBrowser;
-      }
-      var b = Lz.__BrowserDetect;
-      b.init();
-      b.isSupported = (b.isFirefox && b.version >= 1.5) ||
-                        (b.isIE && b.version >= 6.0) ||
-                        (b.isSafari && b.version >= 418.9);
-
-      if (b.isSupported) {
-        this.supportedBrowser = true;
-      } else if (dontAsk) {
-        this.supportedBrowser = false;
-      } else {
-        if (document.cookie == 'supportedBrowser=true') {
-          this.supportedBrowser = true;
-        } else {
-          this.supportedBrowser = confirm("The OpenLaszlo DHTML runtime is not fully supported on this browser.  Click OK to try it anyway.  [ Detected browser " + b.browser + ' version ' + b.version + ']');
-          if (this.supportedBrowser) document.cookie = 'supportedBrowser=true';
-        }
-      }
-
-      return this.supportedBrowser;
     }
 
     ,/**
