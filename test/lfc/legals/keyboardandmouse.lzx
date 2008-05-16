@@ -27,12 +27,7 @@
         <text text="global mouse events turn green"/> 
         <eventtester eventname="onmousedown" reference="LzGlobalMouse"/>
         <eventtester eventname="onmouseup" reference="LzGlobalMouse"/>
-        <eventtester eventname="onmousemove" reference="LzGlobalMouse">
-            <handler name="onvalue" args="v">
-                if (v == null) return;
-                this.setX(this.x + v);
-            </handler>
-        </eventtester>
+        <eventtester eventname="onmousemove" reference="LzGlobalMouse" verbose="false"/>
     </view>
     <view>
         <simplelayout/>

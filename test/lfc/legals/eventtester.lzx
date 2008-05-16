@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -8,6 +8,7 @@
     <class name="eventtester" width="150">
         <attribute name="eventname" value="" type="text"/> 
         <attribute name="reference" value="null" type="reference"/> 
+        <attribute name="verbose" value="true"/> 
         <attribute name="value" value="null"/> 
         <handler name="oninit">
             if (eventname == '') Debug.warn('Must specify event name.')
@@ -15,10 +16,12 @@
             this.evDel = new LzDelegate(this, 'update', this.reference, eventname); 
         </handler>
         <method name="update" args="d">
-            if ($debug) Debug.write(eventname, d);
+            <![CDATA[
+            if ($debug && this.verbose) Debug.write(eventname, d);
             this.setAttribute('value', d);
             this.txt.setText(eventname + ': '+ d);
             this.bg.setBGColor(green);
+            ]]>
         </method>
 
         <view name="bg" bgcolor="red" opacity=".5" width="100%" height="100%"/>
