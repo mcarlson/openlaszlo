@@ -2082,7 +2082,9 @@ public dynamic class LzNode extends LzEventable {
 
   //+++++ Wacky class stuff
 
-  if ($swf9) {     // TODO [hqm 2008-03] This is just a debugging print utility function for swf9
+  if ($swf9) {
+    // TODO [hqm 2008-03] This is just a debugging print utility function for swf9
+    /** @access private */
     public static function objAsString(obj) {
       var s = "";
       for (var k in obj) {

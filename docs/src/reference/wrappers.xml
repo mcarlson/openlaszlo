@@ -376,6 +376,33 @@ For details on multi-frame resources, see <a href="frame.html">frame</a>.
 </p>
 </text>
 </doc>
+  <class>
+    <property name="__ivars__" access="public">
+      <object>
+        <property name="name" type="" modifiers="final">
+          <doc>
+            <tag name="lzxtype"><text>token</text></tag>
+            <text>The name of a variable that will be set to this
+            object when the application is started.  If this element
+            is directly within a
+            <a href="../reference/canvas.html">canvas</a>
+            or
+            <a herf="../reference/library.html">library</a>
+            element, the global variable and the canvas property with
+            this name will be set to this object.  If this element is
+            within another object, that object's property with this
+            name will be set to this object.</text>
+          </doc>
+        </property>
+        <property name="src" type="" modifiers="final">
+          <doc>
+            <tag name="lzxtype"><text>URL</text></tag>
+            <text>The path of a file that contains the source for this object.</text>
+          </doc>
+        </property>
+      </object>
+    </property>
+  </class>
 </property>
 
 <property id="tag-frame" topic="LZX" subtopic="Media" access="public">

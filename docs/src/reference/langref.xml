@@ -60,7 +60,7 @@ defines an attribute that can be set in instances of the class.</p>
   &lt;class name="mybutton" extends="button"&gt;
       &lt;attribute name="myattr" type="string" value="after"/&gt;
   &lt;/class&gt;
-  &lt;mybutton text="before" 
+  &lt;mybutton text="before"
             onclick="setAttribute('text', this.myattr)"&gt;
     <em>&lt;attribute name="myattr" value="perhaps later"/&gt;</em>
   &lt;/mybutton&gt;
@@ -71,7 +71,7 @@ defines an attribute that can be set in instances of the class.</p>
 </ol>
 
 <p>See the <a href="${dguide}methods-events-attributes.html">Developer's Guide</a> for
-a complete discussion.  
+a complete discussion.
 </p>
 
 <p>
@@ -116,7 +116,7 @@ a complete discussion.
                   changes</dd>
               </dl>
               The default is @c{when="immediately"}.
-              
+
               The setting for @c{when} can be overridden
               when assigning a value to an attribute by using the
               syntax <code><var>attribute
@@ -150,7 +150,7 @@ a complete discussion.
             <text>True if this is a required attribute.</text>
           </doc>
         </property>
-        <property name="setter" type="Object" access="protected" id="attribute.__ivars__.setter">    
+        <property name="setter" type="Object" access="protected" id="attribute.__ivars__.setter">
           <doc>
             <tag name="lzxtype"><text>script</text></tag>
             <tag name="since"><text>1.1</text></tag>
@@ -172,7 +172,7 @@ a complete discussion.
   </doc>
   <class>
     <property name="__ivars__" access="public">
-      <object> 
+      <object>
         <property name="href" type="String">
           <doc>
             <tag name="lzxtype"><text>xsd:anyURI</text></tag>
@@ -224,7 +224,7 @@ a complete discussion.
   </doc>
   <class>
     <property name="__ivars__" access="public">
-      <object> 
+      <object>
         <property name="href" type="String">
           <doc>
             <tag name="lzxtype"><text>xsd:anyURI</text></tag>
@@ -310,40 +310,31 @@ For example, if a method is defined via:</p>
 </programlisting>
 <!--</example>-->
 
-<p>
-then script code
-can invoke <code>obj.f(1, 2)</code> to add two
+<p>then script code can invoke <code>obj.f(1, 2)</code> to add two
 numbers.</p>
     </text>
   </doc>
   <class>
     <property name="__ivars__" access="public">
-      <object> 
-        <property name="name" modifiers="final">
+      <object>
+        <property name="name" type="" modifiers="final">
           <doc>
             <tag name="lzxtype"><text>token</text></tag>
-            <text>The name of the method.</text>
+            <text>The name of a variable that will be set to this
+            object when the application is started.  If this element
+            is directly within a
+            <a href="../reference/canvas.html">canvas</a>
+            or
+            <a herf="../reference/library.html">library</a>
+            element, the global variable and the canvas property with
+            this name will be set to this object.  If this element is
+            within another object, that object's property with this
+            name will be set to this object.</text>
           </doc>
         </property>
-        <property name="event" type="String">
+        <property name="args" type="" modifiers="final">
           <doc>
-            <text>The name of the event that this method is invoked in response
-              to.</text>
-          </doc>
-        </property>
-        <property name="reference" type="Object">
-          <doc>
-            <tag name="lzxdefault"><text>"this"</text></tag>
-            <tag name="lzxtype"><text>reference</text></tag>
-            <text>If this attribute is present, it is a JavaScript expression
-              that evaluates to an object.  The code in this method executes
-              when this object sends the event named by the @a{event}
-              attribute.  This attribute may be present only if
-              the @a{event} attribute is present too.</text>
-          </doc>
-        </property>
-        <property name="args" type="String" modifiers="final">
-          <doc>
+            <tag name="lzxtype"><text>string</text></tag>
             <text>The parameter names of this method.  The value of this attribute
               is a comma-separated list of JavaScript identifiers.</text>
           </doc>
@@ -367,12 +358,12 @@ numbers.</p>
     <img src="/trunk/lps/includes/spinner.gif" style="display: block; margin: 20% auto"/>
   </p>
 </div>
-<script type="text/javascript"> 
-  Lz.dhtmlEmbed({url: 'copy-of-hello.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp'}); 
-  Lz.lzapp.onload = function loaded() { 
-  var s = document.getElementById('lzsplash'); 
-  if (s) LzSprite.prototype.__discardElement(s); 
-  } 
+<script type="text/javascript">
+  Lz.dhtmlEmbed({url: 'copy-of-hello.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp'});
+  Lz.lzapp.onload = function loaded() {
+  var s = document.getElementById('lzsplash');
+  if (s) LzSprite.prototype.__discardElement(s);
+  }
 </script>]]></programlisting>
       </note>
 <p>The <tagname>splash</tagname> tag controls the presentation while
@@ -422,7 +413,7 @@ load process is complete.</p>
   </doc>
   <class>
     <property name="__ivars__" access="public">
-      <object>  
+      <object>
         <property name="hideafterinit" type="Boolean" access="private">
           <doc>
             <tag name="lzxtype"><text>boolean</text></tag>
@@ -546,8 +537,8 @@ of the system is present.</p>
       <!--</example>-->
 
       <p>Each &lt;pattern&gt; is a regular expression.</p>
-      
-      <!--<example extract="false" 
+
+      <!--<example extract="false"
                title="Allow classes that start with org.openlaszlo">-->
       <programlisting class="code">
         &lt;security&gt;
@@ -557,12 +548,12 @@ of the system is present.</p>
         &lt;/security&gt;
       </programlisting>
       <!--</example>-->
-      
+
       <p>A javarpc object who's class is not declared in a security tag will result in
         a load error.</p>
-      
+
       <example><![CDATA[<canvas debug="true" height="300">
- 
+
     <debug x="10" y="40" height="240" />
 
     <security>
@@ -595,17 +586,17 @@ of the system is present.</p>
             Debug.write("proxy loaded:", this.proxy);
         </handler>
     </javarpc>
-    
+
     <view x="10" y="10" layout="axis: x; spacing: 5">
         <button text="Load ConstructExample (allowed)"
                 onclick="canvas.ce.load()" />
-        <button text="Load TypesExample (not allowed)" 
+        <button text="Load TypesExample (not allowed)"
                 onclick="canvas.te.load()" />
     </view>
 
 </canvas>
 ]]></example>
-      
+
       <p><b>See Also:</b></p>
       <ul>
         <li><a href="../reference/lz.rpc.html"><code class="classname">rpc</code></a></li>
@@ -613,7 +604,7 @@ of the system is present.</p>
         <li><a href="${dguide}/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a></li>
         <li><a href="${dguide}/rpc-javarpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: JavaRPC chapter</a></li>
       </ul>
-                    
+
     </text>
   </doc>
   <class>
