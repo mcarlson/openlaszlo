@@ -30,7 +30,7 @@
             })(null, null);
           }
         </script><script type="text/javascript" src="<%= request.getContextPath() %>/lps/includes/embed-compressed.js"></script><script type="text/javascript">
-            Lz.options.ServerRoot = '<%= request.getContextPath() %>';
+            lzOptions.ServerRoot = '<%= request.getContextPath() %>';
         </script>
 <script type="text/javascript">
 Lz.dhtmlEmbedLFC('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js');
