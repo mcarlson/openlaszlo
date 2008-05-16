@@ -207,7 +207,7 @@
                     // to send them to a dead object. The class method
                     // forwards the message to all existing mediadevices.
 
-                    mediadevice.prototype._onStatusStatic(info);
+                    lz.mediadevice.prototype._onStatusStatic(info);
                 };
 
                 // Set up initial values for device properties.
@@ -228,7 +228,7 @@
                     !dev.muted;
                 //Debug.write("mediadevice", this, "allowed", this.allowed, "startDevice devallowed", devallowed);
                 if (this.allowed != devallowed) {
-                    mediadevice.prototype._updateAllAllowedStatic(devallowed);
+                    lz.mediadevice.prototype._updateAllAllowedStatic(devallowed);
                 }
             }
 
@@ -438,9 +438,9 @@
     <script><![CDATA[
 
         // Initialize the shared class variables in mediadevice.prototype. 
-        mediadevice.prototype.allowed = false;
-        mediadevice.prototype._allowedknown = false;
-        mediadevice.prototype._instances = [];
+        lz.mediadevice.prototype.allowed = false;
+        lz.mediadevice.prototype._allowedknown = false;
+        lz.mediadevice.prototype._instances = [];
 
       ]]>
     </script>

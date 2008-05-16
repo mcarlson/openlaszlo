@@ -306,7 +306,7 @@
                         // keep one of these around for any http mediastream
                         // we need (weird flash thing that we need a 
                         // null NetConnection)
-                        mediastream.prototype._nullnc = new NetConnection();
+                        lz.mediastream.prototype._nullnc = new NetConnection();
                         this._nullnc.connect(null);
                         //Debug.write("_findnc made new _nullnc", this._nullnc);
                     }
