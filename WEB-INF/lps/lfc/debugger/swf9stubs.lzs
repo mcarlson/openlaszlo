@@ -10,29 +10,31 @@
 // This file implements the debugger stubs, so that DHTML apps can make refernces to
 // Debug.write, etc, when the full debugger is not compiled/linked in.
 
-dynamic class Debug {
-    static public function write(...args):void {
+dynamic class LzDebugService {
+    public function write(...args):void {
         trace.apply(Debug, args);
         LFCApplication.write.apply(LFCApplication, args);
     }
-    static public function info(...args):void {
+    public function info(...args):void {
         args.unshift('Info: ');
         write.apply(Debug, args);
     }
-    static public function warn(...args):void {
+    public function warn(...args):void {
         args.unshift('Warn: ');
         write.apply(Debug, args);
     }
-    static public function error(...args):void {
+    public function error(...args):void {
         args.unshift('Error: ');
         write.apply(Debug, args);
     }
-    static public function debug(...args):void {
+    public function debug(...args):void {
         args.unshift('Debug: ');
         write.apply(Debug, args);
     }
-    static public function monitor(...args):void {
+    public function monitor(...args):void {
         args.unshift('Monitor: ');
         write.apply(Debug, args);
     }
 }
+
+var Debug = new LzDebugService();

@@ -70,7 +70,7 @@
     </method>
 
     <!--- @keywords private -->
-    <method name="reset" args="e">
+    <method name="reset" args="e=null">
         <![CDATA[
         if ( this.locked ) { return; }
         var l = this.subviews.length;

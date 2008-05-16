@@ -125,7 +125,7 @@
                    resource="scrolldragdimpleshorz_rsc" options="ignorelayout" 
                    x="6" y="4" />
 
-           <method name="setX" args="x" > 
+           <method name="setX" args="x, force=null" > 
               super.setX( Math.max(parent.arrowbuttonwidth-1 , Math.min( x, parent.width - parent.arrowbuttonwidth))); 
            </method> 
 
@@ -255,7 +255,7 @@
               this.dimples.setResourceNumber(n)
            </method>
 
-           <method name="setY" args="y" > 
+           <method name="setY" args="y, force=null" > 
               super.setY( Math.max(parent.arrowbuttonheight-1 , Math.min( y , parent.height - (parent.thumbheight + parent.arrowbuttonheight)))); 
            </method> 
 

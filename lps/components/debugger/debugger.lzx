@@ -170,11 +170,11 @@
        }
     </method> 
 
-    <method name="setX" args="x" > 
+    <method name="setX" args="x, force=null" > 
         super.setX( Math.max( 0-(this.width-10), Math.min( x , canvas.width - 4) ) ); 
     </method> 
 
-    <method name="setY" args="y" > 
+    <method name="setY" args="y, force=null" > 
         super.setY( Math.max( 0 , Math.min( y , canvas.height - 4) ) ); 
     </method> 
 
@@ -452,9 +452,9 @@
         var objs = expr.split('.');
         var part = null;
         if (objs[0]['constructor']) {
-          obj = eval(objs[0]) || global;
+          var obj = eval(objs[0]) || global;
         } else {
-          obj = global;
+          var obj = global;
         }
         // descend to the partial member
         for (var i = (obj == global ? 0 : 1); i < objs.length; i++) {
@@ -570,7 +570,7 @@
               choices.sort(function (a, b) {
                 var al = a.toLowerCase();
                 var bl = b.toLowerCase();
-                return (al > bl) - (al < bl);
+                return ((al > bl)?1:0) - ((al < bl)?1:0);
               });
               Debug.info('Possible completions: %s', choices.join(' '));
             } else {
@@ -758,7 +758,7 @@
 
        <state name="splitter">
           <attribute name="height" 
-                value="${classroot.height - classroot.getMouse('y') }"/>
+                value="${this.classroot.height - this.classroot.getMouse('y') }"/>
        </state>
 
        <stableborderlayout axis="x" />

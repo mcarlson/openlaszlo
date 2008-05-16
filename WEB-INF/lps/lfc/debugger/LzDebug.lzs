@@ -464,7 +464,7 @@ Debug.bugReport = function (error, verbose) {
     keys.sort(function (a, b) {
         var al = parseInt(a);
         var bl = parseInt(b);
-        return (al > bl) - (al < bl);
+        return ((al > bl)?1:0) - ((al < bl)?1:0);
       });
     for (var i = 0; i < keys.length; i++) {
       var obj = inspected[keys[i]];

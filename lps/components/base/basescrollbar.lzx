@@ -256,13 +256,13 @@
         ]]></method>
 
         <!---  @keywords private -->
-        <method name="activateMouseWheel">  <![CDATA[
+        <method name="activateMouseWheel" args="ignore" >  <![CDATA[
             this.setAttribute('mousewheelactive', true);
             ]]>
         </method>
 
         <!---  @keywords private -->
-        <method name="deactivateMouseWheel">  <![CDATA[
+        <method name="deactivateMouseWheel" args="ignore" >  <![CDATA[
             this.setAttribute('mousewheelactive', false);
             ]]>
         </method>

@@ -58,7 +58,7 @@
                 super.init();
             </method>
 
-            <method name="startEditing">
+            <method name="startEditing" args="ignore" >
                 immediateparent.select();
                 this.setAttribute( 'editing' , true );
                 LzFocus.setFocus( editbox );

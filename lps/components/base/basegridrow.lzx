@@ -141,16 +141,20 @@
             this.select();
         </handler>
 
-        <handler name="onmouseover" method="domouseover" />
-        <method name="domouseover" args="ignore">
+        <handler name="onmouseover" >
+            this.domouseover();
+        </handler>
+        <method name="domouseover" >
             if ( !selectable ) return;
 
             parent.classroot._setHiliteview( this , true );
             this.setAttribute( 'focusable' , false );
         </method>
 
-        <handler  name="onmouseout" method="domouseout" />
-        <method name="domouseout" arg="ignore">
+        <handler name="onmouseout" >
+            this.domouseout();
+        </handler>
+        <method name="domouseout" >
             if ( !selectable ) return;
             this.setAttribute( "highlighted" , false );
             this.setAttribute( 'focusable' , true );
@@ -184,7 +188,7 @@
             sv._updateIt();
         </handler>
         <attribute name="_updateIt" 
-                   value="function(){this.setX( this.ownerColumn.x );
+                   value="function(ignore){this.setX( this.ownerColumn.x );
                                 this.setWidth( this.ownerColumn.colwidth)}"/>
         <doc>
           <tag name="shortdesc"><text></text></tag>

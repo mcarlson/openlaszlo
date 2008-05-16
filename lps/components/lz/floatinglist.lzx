@@ -129,7 +129,7 @@
                     this.subviews[i].setResourceNumber(r);
                 } 
              ]]> </method>
-            <method name="setY" args="y"> <![CDATA[
+            <method name="setY" args="y, force=null"> <![CDATA[
                 super.setY(y);
                 if ( y < 0 ) {
                     this.setResourceNumber(1);
@@ -195,7 +195,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
