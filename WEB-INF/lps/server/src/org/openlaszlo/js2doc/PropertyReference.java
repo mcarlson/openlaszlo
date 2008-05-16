@@ -421,5 +421,16 @@ public class PropertyReference {
             }
         }
     }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer("PropertyReference[");
+        sb.append("owner=" + propertyOwner);
+        sb.append(", name=" + propertyName);
+        sb.append(", state=" + state);
+        sb.append(", cachedProp=" + cachedProperty);
+        sb.append(", cachedValue=" + cachedValue);
+        sb.append("]");
+        return sb.toString();
+    }
     
 }

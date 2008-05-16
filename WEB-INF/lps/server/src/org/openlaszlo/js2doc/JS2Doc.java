@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -259,6 +259,53 @@ public class JS2Doc {
             }
         }
 
+        protected boolean isClassName(org.w3c.dom.Element docNode, String nm) {
+            org.w3c.dom.Element root = docNode;
+            while (root.getParentNode() != null && !"js2doc".equals(root.getNodeName())) {
+                root = (org.w3c.dom.Element)root.getParentNode();
+            }
+            org.w3c.dom.Element prop = JS2DocUtils.findFirstChildElementWithAttribute(root, "property", "name", nm);
+            if (prop == null) {
+                return false;
+            }
+            org.w3c.dom.Node cl = JS2DocUtils.firstChildNodeWithName(prop, "class");
+            return (cl != null);
+        }
+
+        /**
+         * Determine if we should process an assignment statement.
+         */
+        protected boolean shouldProcessSimpleAssignment(org.w3c.dom.Element docNode,
+                                                        SimpleNode lhs,
+                                                        SimpleNode op,
+                                                        SimpleNode rhs) {
+
+            if (((ASTOperator)op).getOperator() != ParserConstants.ASSIGN) {
+                return false;
+            }
+
+            // TODO [dda 2008/05/15] workaround for LPP-5995.  When
+            // static variable has been already defined and is now
+            // being assigned, the doc attached to the assigment
+            // (which is typically *nothing*) is clobbering all the
+            // doc attached to the static variable declaration.  We
+            // recognize and avoid this situation here by preventing
+            // the doc for the assignment from being processed.  But
+            // the real solution to this has to do with getting the
+            // property reference for the lhs of the assignment to
+            // resolve properly to the existing static class element.
+            //
+            if (lhs instanceof ASTPropertyIdentifierReference &&
+                lhs.size() == 2) {
+                SimpleNode l = lhs.getChildren()[0];
+                if (l instanceof ASTIdentifier &&
+                    isClassName(docNode, ((ASTIdentifier)l).getName())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         protected void visitTopLevelAssignmentExpression(SimpleNode parseNode, org.w3c.dom.Element docNode) {
             // child 1 is the lhs, child 2 is the assignment operator, child 3 is the rhs
             checkChildrenLowerBounds(parseNode, 3, 3, "visitTopLevelAssignmentExpression");
@@ -268,10 +315,8 @@ public class JS2Doc {
                         op = children[1],
                        rhs = children[2];
             
-            boolean opIsSimpleAssignment = (((ASTOperator)op).getOperator() == ParserConstants.ASSIGN);
-            
-            if (opIsSimpleAssignment) {
-            
+            if (shouldProcessSimpleAssignment(docNode, lhs, op, rhs)) {
+
                 try {
                     PropertyReference propRef = this.resolveBinding(docNode, lhs, this.currentState);
                     
@@ -500,9 +545,7 @@ public class JS2Doc {
             SimpleNode op = children[1];
             SimpleNode rhs = children[2];
 
-            boolean opIsSimpleAssignment = (((ASTOperator)op).getOperator() == ParserConstants.ASSIGN);
-            
-            if (opIsSimpleAssignment) {
+            if (shouldProcessSimpleAssignment(docNode, lhs, op, rhs)) {
                 PropertyReference propRef = this.resolveBinding(docNode, lhs, this.currentState);
                 propRef.redefineProperty(parseNode.getComment());
                 if (propRef.hasProperty())
