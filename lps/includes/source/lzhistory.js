@@ -9,6 +9,7 @@
 Lz.history = {
     _currentstate: null 
     ,_apps: []
+    ,_intervalID: null
     ,init: function(app) {
         var _this = Lz.history;
         // Store a reference to the app
@@ -70,7 +71,7 @@ Lz.history = {
             }
         }
         //alert('init ' + currstate);
-        setInterval('Lz.history._checklocationhash()', 100)
+        if (this._intervalID == null) this._intervalID = setInterval('Lz.history._checklocationhash()', 100)
     }
 
     ,/** @access private */
