@@ -1,634 +1,634 @@
-/* -*- mode: JavaScript; c-basic-offset: 4; -*- */
+/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 /**
-  * LzNode.lzs
-  *
-  *   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
-  *            Use is subject to license terms.
-  *
-  * @topic LZX
-  * @subtopic Basics
-  * @affects lznode
-  * @access public
-  */
+ * LzNode.lzs
+ *
+ *   *
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ *
+ * @topic LZX
+ * @subtopic Basics
+ * @affects lznode
+ * @access public
+ */
 
-/** The LzNode class provides the basic interface for OpenLaszlo objects: 
-  * parent/child hierarchy, setters, interaction with the instantiator, and 
-  * reference resolution. New nodes (and subclasses thereof) can be created by 
-  * new-ing the class, like this: 
-  * <code> var mynode= new LzNode( parent , args );</code> 
-  * where <code>parent</code> is the parent for the new node, and args is an 
-  * Object whose name/value pairs are attributes to be set on the new node.
-  *
-  * @devnote LzNode implements the 'node' tag.  Its subclasses override this
-  * value with the tag that they implement and the class initializer
-  * installs the class as the handler for the named tag in
-  * ConstructorMap.  (So we would like some way to say this must be
-  * overridden, but abstract won't cut it!)
-  *
-  * @shortdesc The base class for all Laszlo classes.
-  * @lzxname node
-  * @initarg ignoreplacement: Overrides placement attribute (and 
-  * defaultplacement in lexical parent). See the 
-  * <method>LzNode.determinePlacement</method> method. Defaults to false.
-  */
+/** The LzNode class provides the basic interface for OpenLaszlo objects:
+ * parent/child hierarchy, setters, interaction with the instantiator, and
+ * reference resolution. New nodes (and subclasses thereof) can be created by
+ * new-ing the class, like this:
+ * <code> var mynode= new LzNode( parent , args );</code>
+ * where <code>parent</code> is the parent for the new node, and args is an
+ * Object whose name/value pairs are attributes to be set on the new node.
+ *
+ * @devnote LzNode implements the 'node' tag.  Its subclasses override this
+ * value with the tag that they implement and the class initializer
+ * installs the class as the handler for the named tag in
+ * ConstructorMap.  (So we would like some way to say this must be
+ * overridden, but abstract won't cut it!)
+ *
+ * @shortdesc The base class for all Laszlo classes.
+ * @lzxname node
+ * @initarg ignoreplacement: Overrides placement attribute (and
+ * defaultplacement in lexical parent). See the
+ * <method>LzNode.determinePlacement</method> method. Defaults to false.
+ */
 public dynamic class LzNode extends LzEventable {
 
-    /** @access private
-     * @modifiers override 
-     */
-    static var tagname = 'node';
-    /** @access private */
-    static var attributes = new LzInheritedHash();
-    
-    /** @access private */
-     var __LZisnew:Boolean = false;
-    /** @access private */
-     var __LZstyleConstraints:* = null;
-     //     var  syncNew:Boolean = null;
-    /** @access private */
-     var __LZdeferredcarr:Array = null;
-    /** @access private */
-     var data:* = null;
+  /** @access private
+   * @modifiers override
+   */
+  static var tagname = 'node';
+  /** @access private */
+  static var attributes = new LzInheritedHash();
 
-    /** @access private */
-    var classChildren:Array = null;
-    /** @access private */
-     var __LZvizDat:Boolean = true;
-    /** @access private */
-     var animators:Array = null;
+  /** @access private */
+  var __LZisnew:Boolean = false;
+  /** @access private */
+  var __LZstyleConstraints:* = null;
+  //     var  syncNew:Boolean = null;
+  /** @access private */
+  var __LZdeferredcarr:Array = null;
+  /** @access private */
+  var data:* = null;
 
-    if ($swf9) {
+  /** @access private */
+  var classChildren:Array = null;
+  /** @access private */
+  var __LZvizDat:Boolean = true;
+  /** @access private */
+  var animators:Array = null;
+
+  if ($swf9) {
     ///////////////////////////////////////////////////////////////////
     // TODO [hqm 2008-01]  This won't work for adding methods that
     // call super(). Need to make those real compile time methods (and setters).
+    /** @access private */
     function addProperty(key:*,val:*):void {
-        this[key] = val;
+      this[key] = val;
     }
-    }
-
-
-    /**
-     * Helper function to merge an class or instance's attributes with
-     * those of its superclass.  Broken out because it is called by
-     * user classes.
-     *
-     * @param LzInheritedHash dattrs: A copy of the attributes that
-     * are inherited from the parent (and into which the resulting
-     * merge will be made)..
-     * @param Object attrs: The new attributes to be merged in
-     * @access private
-     */
-    static function mergeAttributes (attrs, dattrs) {
-        // Check for object and array merges, 'ignored' attributes
-        // (i.e., binders that have been overridden by a constant),
-        // and decls that the compiler could not detect because it
-        // does not know the built-in setters (see ClassCompiler).
-        for ( var k in attrs ) {
-            var attrk = attrs[ k ];
-            if ( attrk === LzNode._ignoreAttribute ) {
-                delete dattrs[k];
-            } else if (attrk is LzInitExpr) {
-                dattrs[k] = attrk;
-            } else {
-                // NOTE: [2008-01-22 ptw] This is just whacky, but it
-                // is required for back-compatibility.  IWBNI this
-                // were handled at compile-time
-                //
-                // NOTE: [2008-03-17 ptw] We have to make sure the
-                // 'objects' we merge are just hash tables.  We should
-                // _use_ hash tables, not Objects and then there would
-                // not be any confusion!  Hence the check for the
-                // constructor.
-                if (attrk is Object) {
-                    var dattrk = dattrs[ k ];
-                    if (dattrk is Object) {
-                        if ( attrk is Array && dattrk is Array) {
-                            // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
-                            dattrs[ k ] = attrk.concat( dattrk );
-                            continue;
-                        } else if ((attrk.constructor === Object || attrk is LzInheritedHash) &&
-                                   (dattrk.constructor === Object || dattrk is LzInheritedHash)) {
-                            // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
-                            var tmp = new LzInheritedHash(dattrk);
-                            for (var j in attrk) {
-                                tmp[j] = attrk[j];
-                            }
-                            dattrs[ k ] = tmp;
-                            continue;
-                        }
-                    }
-                }
-                // Debug.debug("%w.%s: NOT merging %s (%w)", this, arguments.callee, k, attrk);
-                // Just a normal value, install it
-                dattrs[k] = attrk;
-            }
-        }
-    }
-
-    /**
-     * Helper function to merge a class or instance's children with
-     * those of its superclass.  Used by user classes
-     *
-     * @param Array? children: the children of this class or instance
-     * @param Array? superclasschildren: the children of the
-     * superclass
-     * @return Array?: the merged result
-     * @access private
-     */
-    static function  mergeChildren(children, superclasschildren) {
-        if (superclasschildren is Array) {
-            children = superclasschildren.concat(children is Array ? children : []);
-        }
-        return children;
-    }
-
-
-    /** @access private
-     * @devnote Used by replication to clone instances */
-     var _instanceAttrs:* = null;
-
-    /** @access private
-     * @devnote Used by replication to clone instances */
-     var _instanceChildren:Array = null;
-
-
-/**
-  * @param LzNode parent: a node above this one in the hierarchy -- not
-  * necessarily the immediate parent -- that will decide where this node goes
-  * @param Object attrs: a dictionary of attributes used to initialize
-  * this node.
-  * @param Object children
-  * @param Boolean instcall
-  * @access private
-  */
-function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
-        super();
-        this.__LZUID = "__U" + ++LzNode.__UIDs;
-        this.__LZdeferDelegates = true;
-        var qpos = LzDelegate.__LZdelegatesQueue.length;
-        // These have to be called really early on, we can't wait for
-        // setters.  Someday they can just be in-lined in the custom
-        // constructor the tag compiler writes...
-        if (attrs) {
-            if (attrs['$lzc$bind_id']) {
-                this.$lzc$bind_id = attrs.$lzc$bind_id;
-                delete attrs.$lzc$bind_id;
-            }
-            if (attrs['$lzc$bind_name']) {
-                this.$lzc$bind_name = attrs.$lzc$bind_name;
-                delete attrs.$lzc$bind_name;
-            }
-        }
-        // The binders are intentionally called with this as a
-        // parameter, not as the value of `this` so they will be
-        // evaluated in the global scope
-        var bindid = this.$lzc$bind_id;
-        if (bindid) { bindid.call(null, this) };
-        // This will only exist if you were lexically on the canvas,
-        // in which case your name is also an it
-        var bindname = this.$lzc$bind_name;
-        if (bindname) { bindname.call(null, this) };
-
-        this.__LZUID = "__U" + ++LzNode.__UIDs;
-        this.__LZdeferDelegates = true;
-        var qpos = LzDelegate.__LZdelegatesQueue.length;
-
-        // Node node start
-        if ($profile) {
-            var nm = null;
-            // Have to extract name from attrs
-            if (attrs) {
-                if (attrs['id'] && (attrs.id != LzNode._ignoreAttribute)) {
-                    nm = '#' + attrs.id;
-                } else if (attrs['name'] && (attrs.name != LzNode._ignoreAttribute)) {
-                    nm = ((parent === canvas)?'#':'.') + attrs.name;
-                } else if (attrs['_profile_name']) {
-                    nm = attrs._profile_name;
-                }
-            }
-            if (nm) {
-                this._profile_name = nm;
-                Profiler.event('start: ' + nm);
-                Profiler.event(nm, 'calls');
-            }
-        }
-
-        // Squirrel away instance attributes and children for cloning...
-        this._instanceAttrs = attrs;
-        this._instanceChildren = children;
-
-        // Get our inherited class attributes
-        var iargs = new LzInheritedHash(this['constructor'].attributes);
-        // Install any class decls that the tag compiler could't
-        // figure out (because it does not know the built-in class
-        // setters, c.f., ClassCompiler.java)
-        // NOTE: [2008-04-11 ptw] This loop _only_ runs on the class
-        // initial values, not on the instance initial values, which
-        // many constructors expect to see, whether there are setters
-        // or not
-        if (! (this is LzState)) {
-            for (var key in iargs) {
-                var val = iargs[key];
-                if (! (val is LzInitExpr)) {
-                    // If there is no setter for this attr the value
-                    // should just be installed as a declaration
-                    var setr = '$lzc$set_' + key;
-                    if (! this[setr]) {
-                        if ($debug) {
-                            // Methods should only be added in
-                            // instance attributes (for now:
-                            // eventually instances with methods
-                            // should be instantiations of singleton
-                            // classes and then you should never be
-                            // adding methods at instantiation
-                            // time).
-                            if (val is Function && val != attrs[key]) {
-                                Debug.debug("Dynamic method? %s[%#w] = %s", this, key, val);
-                            }
-                        }
-                        this.addProperty(key, val);
-                        delete iargs[key];
-                    } else {
-                        // NOTE: [2008-03-18 ptw] this is for
-                        // back-compatibility: it appears that an
-                        // attribute with a setter is expected to be
-                        // initially `null` not undefined
-                        if (this[key] === void 0) {
-                            this.addProperty(key, null);
-                        }
-                    }
-                }
-            }
-        }
-        // Merge in our instantiation attrs (if any).  Taking care to
-        // merge Array and Object attrs (for back-compatibility).  No
-        // special magic is needed to compute attributes overriding
-        // constraints, because they all come as attrs now and
-        // overriding will be automatic from the InheritedHash (except
-        // for the bizarre merging of arrays and hashes!)
-        if (attrs) {
-            LzNode.mergeAttributes(attrs, iargs);
-        }
-
-        // TODO: [2006-05-22 ptw] What is the purpose of this copy?
-        // construct or constructWithArgs destructively modify args?
-        var maskedargs = new LzInheritedHash(iargs);
-
-        //Flag if this was newed by the instantiator
-        this.__LZisnew = !instcall;
-
-        var classChildren = this['constructor']['children'];
-        if ( classChildren is Array ){
-            children = LzNode.mergeChildren(children, classChildren);
-        }
-
-        this.construct(  parent , maskedargs );
-
-        // Construct may, through many tangled webs of replication and
-        // placement, actually end up deleting us!  Bail out.
-        if (this.__LZdeleted) { return; }
-
-        //        this.setClassEvents( this.constructor );
-
-        this.__LZapplyArgs( maskedargs , true );
-
-        // If a replicator was made, we're deleted, if pooling is off.
-        if (this.__LZdeleted) { return; }
-
-        /**
-          * @todo 2006-05-24 ptw Adam says this is a hack that we should get
-          * rid of.
-          */
-        this.constructWithArgs( maskedargs );
-
-        this.__LZdeferDelegates = null;
-        if (qpos != LzDelegate.__LZdelegatesQueue.length) {
-            // Drain the events queue back to where we started
-            LzDelegate.__LZdrainDelegatesQueue(qpos);
-        }
-
-        if (this.onconstruct.ready) this.onconstruct.sendEvent( this );
-
-        if ( children && children.length ){
-            this.createChildren( children );
-        } else {
-            this.__LZinstantiationDone( );
-        }
-
-        if ($profile) {
-            var nm = this['_profile_name'];
-            if (nm) {
-                Profiler.event(nm, 'returns');
-                this._profile_instantiator_name = nm;
-            }
-            // Set _profile_instantiator_name to constructor._dbg_name for
-            // annotation in LzInstantiator.makeSomeViews
-            else {
-                this._profile_instantiator_name = this['constructor']._dbg_name;
-            }
-        }
-}
-
-/**
-  * @access private
-  */
-function constructWithArgs(args:*) { }
-    
-
-/**
-  * Link up the getter/setter/defaultattr inheritance
-  * @access private
-  * @param Object prototype: the class prototype
-  */
-
-// class initializer
-if ($swf9) {
-
-} else {
-  static function initialize (prototype) {
-
-  // Install in constructor map
-  // this in a class initializer, is the class
-  if (this.hasOwnProperty('tagname')) {
-    var tagname = this.tagname;
-    if (tagname) {
-      if (ConstructorMap[tagname] !== this) {
-        if ($debug) {
-          if (tagname in ConstructorMap) {
-            Debug.warn("Redefining tag %s from %w to %w",
-                       tagname, ConstructorMap[tagname], this);
-          }
-//           Debug.debug("ConstructorMap[%s] = %s", tagname, this);
-        }
-        ConstructorMap[tagname] = this;
-      }
-      if ($debug) {
-        // Use the package tag name as the typename
-        this._dbg_name = prototype._dbg_typename = 'lz.' + tagname;
-      }
-    }
-//   } else {
-//     if ($debug) {
-//       Debug.debug("No tag for node class %w", this);
-//     }
   }
-}
-}
 
-/** This event is sent right before a node becomes active --
-  * e.g. before a view displays, or before a layout affects its subviews.
-  * @lzxtype event
-  */
-var oninit = LzDeclaredEvent;
 
-/** This is the first event a node sends, right
-  * at the end of the instantiation process, but before any subnodes
-  * have been created or references resolved
-  * @lzxtype event
-  */
-var onconstruct = LzDeclaredEvent;
+  /**
+   * Helper function to merge an class or instance's attributes with
+   * those of its superclass.  Broken out because it is called by
+   * user classes.
+   *
+   * @param LzInheritedHash dattrs: A copy of the attributes that
+   * are inherited from the parent (and into which the resulting
+   * merge will be made)..
+   * @param Object attrs: The new attributes to be merged in
+   * @access private
+   */
+  static function mergeAttributes (attrs, dattrs) {
+    // Check for object and array merges, 'ignored' attributes
+    // (i.e., binders that have been overridden by a constant),
+    // and decls that the compiler could not detect because it
+    // does not know the built-in setters (see ClassCompiler).
+    for ( var k in attrs ) {
+      var attrk = attrs[ k ];
+      if ( attrk === LzNode._ignoreAttribute ) {
+        delete dattrs[k];
+      } else if (attrk is LzInitExpr) {
+        dattrs[k] = attrk;
+      } else {
+        // NOTE: [2008-01-22 ptw] This is just whacky, but it
+        // is required for back-compatibility.  IWBNI this
+        // were handled at compile-time
+        //
+        // NOTE: [2008-03-17 ptw] We have to make sure the
+        // 'objects' we merge are just hash tables.  We should
+        // _use_ hash tables, not Objects and then there would
+        // not be any confusion!  Hence the check for the
+        // constructor.
+        if (attrk is Object) {
+          var dattrk = dattrs[ k ];
+          if (dattrk is Object) {
+            if ( attrk is Array && dattrk is Array) {
+              // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
+              dattrs[ k ] = attrk.concat( dattrk );
+              continue;
+            } else if ((attrk.constructor === Object || attrk is LzInheritedHash) &&
+                       (dattrk.constructor === Object || dattrk is LzInheritedHash)) {
+              // Debug.debug("%w.%s: merging %s (%w)", this, arguments.callee, k, attrk);
+              var tmp = new LzInheritedHash(dattrk);
+              for (var j in attrk) {
+                tmp[j] = attrk[j];
+              }
+              dattrs[ k ] = tmp;
+              continue;
+            }
+          }
+        }
+        // Debug.debug("%w.%s: NOT merging %s (%w)", this, arguments.callee, k, attrk);
+        // Just a normal value, install it
+        dattrs[k] = attrk;
+      }
+    }
+  }
 
-/** The ondata script is executed when the data selected by a view's datapath
-  * changes.
-  * @lzxtype event  
-  */
-var ondata = LzDeclaredEvent;
-/**
-  * If replicated, the index of this clone
-  * @lzxtype event
-  * @access private
-  */
-var clonenumber = null;
-/** 
-  * @access private 
-  * @lzxtype event
-  */ 
-var onclonenumber = LzDeclaredEvent;
+  /**
+   * Helper function to merge a class or instance's children with
+   * those of its superclass.  Used by user classes
+   *
+   * @param Array? children: the children of this class or instance
+   * @param Array? superclasschildren: the children of the
+   * superclass
+   * @return Array?: the merged result
+   * @access private
+   */
+  static function  mergeChildren(children, superclasschildren) {
+    if (superclasschildren is Array) {
+      children = superclasschildren.concat(children is Array ? children : []);
+    }
+    return children;
+  }
 
-/** @access private */
-var __LZlateinit = null;
-/** @access private */
-var __LZpreventSubInit = null;
-/** @access private */
-var __LZresolveDict = null;
-/** @access private */
-var __LZsourceLocation = null;
-/** @access private */
-var __LZUID = null;
-/** @access private */
-var __LZPropertyCache = null;
-/** @access private */
-var __LZRuleCache = null;
-/** @access private */
-var __LZdelegates = null;
 
-/**
- * Indicates that a <varname>node</varname>'s <method>init</method> method has been
- * called.  The execution of the <method>init</method> method is under
- * control of the <attribute>initstage</attribute> attribute.
- *
- * @type boolean
- * @keywords read-only
- * @see initstage
- * @see oninit
- * @access private
- */
-var isinited = false;
+  /** @access private
+   * @devnote Used by replication to clone instances */
+  var _instanceAttrs:* = null;
 
-/** An array of all of the LzNodes which consider
-  * this LzNode their parent. This list is similar to the subviews list,
-  * but it contains all the children of this node, not just the view
-  * children.
-  *
-  * @type Array
-  * @keywords readonly
-  */
-var subnodes = null;
+  /** @access private
+   * @devnote Used by replication to clone instances */
+  var _instanceChildren:Array = null;
 
-/** Specifies the data source for this node and its children.
-  * If the value begins with an identifier followed by a colon, the
-  * identifier names a dataset, and the portion of the string after
-  * the colon is an XPath description of a portion of the data.
-  * Otherwise the entire attribute value is an XPath description of
-  * the data, relative to the data source of this node's parent element.
-  * Examples: "mydata:", "mydata:/a/b", "/a/b".
-  *
-  * @type String
-  * @lzxtype string
-  */
-var datapath = null;
 
-/** The execution of a <class>node</class>'s <method>init</method> method and
-  * sending of the <event>oninit</event> event is under the control
-  * of its <attribute>initstage</attribute> attribute, as follows:
-  * <dl>
-  * <dt><constant>immediate</constant></dt><dd>The <method>init</method> method is called immediately as the
-  * last stage of instantiation.
-  * </dd>
-  * <dt><constant>early</constant></dt><dd>The <method>init</method> method is called immediately after the
-  * view and its children have been instantiated.
-  * </dd>
-  * <dt><constant>normal</constant></dt><dd>The <method>init</method> method is called when the parent
-  * is initialized.
-  * </dd>
-  * <dt><constant>late</constant></dt><dd>The <method>init</method> method is called during idle time.
-  * To check whether <method>init</method> has been called, check the <attribute>isinited</attribute>
-  * property.  Force calling <method>init</method> using the <method>completeInstantiation</method> method.
-  * </dd>
-  * <dt><constant>defer</constant></dt><dd>The <method>init</method> method will not be called unless
-  * explicitly requested by the <method>completeInstantiation</method> method.
-  * </dd>
-  * </dl>
-  * @lzxtype "early" | "normal" | "late" | "immediate" | "defer"
-  * @lzxdefault "normal"
-  * @keywords final
-  */
-var initstage = null;
-/** @access private */
-var $isstate = false;
-/** @access private */
-var doneClassRoot = false;
+  /**
+   * @param LzNode parent: a node above this one in the hierarchy -- not
+   * necessarily the immediate parent -- that will decide where this node goes
+   * @param Object attrs: a dictionary of attributes used to initialize
+   * this node.
+   * @param Object children
+   * @param Boolean instcall
+   * @access private
+   */
+  function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
+    super();
+    this.__LZUID = "__U" + ++LzNode.__UIDs;
+    this.__LZdeferDelegates = true;
+    var qpos = LzDelegate.__LZdelegatesQueue.length;
+    // These have to be called really early on, we can't wait for
+    // setters.  Someday they can just be in-lined in the custom
+    // constructor the tag compiler writes...
+    if (attrs) {
+      if (attrs['$lzc$bind_id']) {
+        this.$lzc$bind_id = attrs.$lzc$bind_id;
+        delete attrs.$lzc$bind_id;
+      }
+      if (attrs['$lzc$bind_name']) {
+        this.$lzc$bind_name = attrs.$lzc$bind_name;
+        delete attrs.$lzc$bind_name;
+      }
+    }
+    // The binders are intentionally called with this as a
+    // parameter, not as the value of `this` so they will be
+    // evaluated in the global scope
+    var bindid = this.$lzc$bind_id;
+    if (bindid) { bindid.call(null, this) };
+    // This will only exist if you were lexically on the canvas,
+    // in which case your name is also an it
+    var bindname = this.$lzc$bind_name;
+    if (bindname) { bindname.call(null, this) };
 
-/** Reference to the node that was passed as this
-  * node's ancestor in the constructor.  If this node was created
-  * by declaring it in a tag, the parent will be its lexical parent.
-  * Its lexical parent is the tag that encloses it. Allow a null parent
-  * so that nodes can be garbage collected when they are no longer needed.
-  * See also, immediateparent.
-  * @keywords readonly
-  */
-var parent;
+    this.__LZUID = "__U" + ++LzNode.__UIDs;
+    this.__LZdeferDelegates = true;
+    var qpos = LzDelegate.__LZdelegatesQueue.length;
 
-/** If this node is replicated due to data
-  * replication, the LzReplicationManager which controls this node.
-  * @type LzNode
-  * @keywords readonly
-  */
-var cloneManager = null;
+    // Node node start
+    if ($profile) {
+      var nm = null;
+      // Have to extract name from attrs
+      if (attrs) {
+        if (attrs['id'] && (attrs.id != LzNode._ignoreAttribute)) {
+          nm = '#' + attrs.id;
+        } else if (attrs['name'] && (attrs.name != LzNode._ignoreAttribute)) {
+          nm = ((parent === canvas)?'#':'.') + attrs.name;
+        } else if (attrs['_profile_name']) {
+          nm = attrs._profile_name;
+        }
+      }
+      if (nm) {
+        this._profile_name = nm;
+        Profiler.event('start: ' + nm);
+        Profiler.event(nm, 'calls');
+      }
+    }
 
-/** The name for this subnode. If given, then this node's
-  * parent and immediate parent will store a pointer to this node as the
-  * given name value.
-  * @type String
-  * @keywords final
-  * @lzxtype token
-  */
-var name = null;
-    /** @access private
-     * If you are lexically on the canvas and have a name, the
-     * compiler will generate a binder that will be called by the
-     * constructor
+    // Squirrel away instance attributes and children for cloning...
+    this._instanceAttrs = attrs;
+    this._instanceChildren = children;
+
+    // Get our inherited class attributes
+    var iargs = new LzInheritedHash(this['constructor'].attributes);
+    // Install any class decls that the tag compiler could't
+    // figure out (because it does not know the built-in class
+    // setters, c.f., ClassCompiler.java)
+    // NOTE: [2008-04-11 ptw] This loop _only_ runs on the class
+    // initial values, not on the instance initial values, which
+    // many constructors expect to see, whether there are setters
+    // or not
+    if (! (this is LzState)) {
+      for (var key in iargs) {
+        var val = iargs[key];
+        if (! (val is LzInitExpr)) {
+          // If there is no setter for this attr the value
+          // should just be installed as a declaration
+          var setr = '$lzc$set_' + key;
+          if (! this[setr]) {
+            if ($debug) {
+              // Methods should only be added in
+              // instance attributes (for now:
+              // eventually instances with methods
+              // should be instantiations of singleton
+              // classes and then you should never be
+              // adding methods at instantiation
+              // time).
+              if (val is Function && val != attrs[key]) {
+                Debug.debug("Dynamic method? %s[%#w] = %s", this, key, val);
+              }
+            }
+            this.addProperty(key, val);
+            delete iargs[key];
+          } else {
+            // NOTE: [2008-03-18 ptw] this is for
+            // back-compatibility: it appears that an
+            // attribute with a setter is expected to be
+            // initially `null` not undefined
+            if (this[key] === void 0) {
+              this.addProperty(key, null);
+            }
+          }
+        }
+      }
+    }
+    // Merge in our instantiation attrs (if any).  Taking care to
+    // merge Array and Object attrs (for back-compatibility).  No
+    // special magic is needed to compute attributes overriding
+    // constraints, because they all come as attrs now and
+    // overriding will be automatic from the InheritedHash (except
+    // for the bizarre merging of arrays and hashes!)
+    if (attrs) {
+      LzNode.mergeAttributes(attrs, iargs);
+    }
+
+    // TODO: [2006-05-22 ptw] What is the purpose of this copy?
+    // construct or constructWithArgs destructively modify args?
+    var maskedargs = new LzInheritedHash(iargs);
+
+    //Flag if this was newed by the instantiator
+    this.__LZisnew = !instcall;
+
+    var classChildren = this['constructor']['children'];
+    if ( classChildren is Array ){
+      children = LzNode.mergeChildren(children, classChildren);
+    }
+
+    this.construct(  parent , maskedargs );
+
+    // Construct may, through many tangled webs of replication and
+    // placement, actually end up deleting us!  Bail out.
+    if (this.__LZdeleted) { return; }
+
+    //        this.setClassEvents( this.constructor );
+
+    this.__LZapplyArgs( maskedargs , true );
+
+    // If a replicator was made, we're deleted, if pooling is off.
+    if (this.__LZdeleted) { return; }
+
+    /**
+     * @todo 2006-05-24 ptw Adam says this is a hack that we should get
+     * rid of.
      */
-    var $lzc$bind_name = null;
+    this.constructWithArgs( maskedargs );
 
-/** A unique identifier for this element.  Can be used as a global
-  * variable name in JavaScript code.
-  *
-  * @type String
-  * @lzxtype ID
-  * @keywords final
-  * @lzxtype token
-  */
-var id = null;
-    /** @access private
-     * You can't set id
+    this.__LZdeferDelegates = null;
+    if (qpos != LzDelegate.__LZdelegatesQueue.length) {
+      // Drain the events queue back to where we started
+      LzDelegate.__LZdrainDelegatesQueue(qpos);
+    }
+
+    if (this.onconstruct.ready) this.onconstruct.sendEvent( this );
+
+    if ( children && children.length ){
+      this.createChildren( children );
+    } else {
+      this.__LZinstantiationDone( );
+    }
+
+    if ($profile) {
+      var nm = this['_profile_name'];
+      if (nm) {
+        Profiler.event(nm, 'returns');
+        this._profile_instantiator_name = nm;
+      }
+      // Set _profile_instantiator_name to constructor._dbg_name for
+      // annotation in LzInstantiator.makeSomeViews
+      else {
+        this._profile_instantiator_name = this['constructor']._dbg_name;
+      }
+    }
+  }
+
+  /**
+   * @access private
+   */
+  function constructWithArgs(args:*) { }
+
+
+  // class initializer
+  if ($swf9) {
+
+  } else {
+    /**
+     * Link up the getter/setter/defaultattr inheritance
+     * @access private
+     * @param Object prototype: the class prototype
      */
-    var $lzc$set_id = -1;
-    /** @access private
-     * If you have a name, the compiler will generate a binder that
-     * will be called by the constructor
-     */
-    var $lzc$bind_id = null;
+    static function initialize (prototype) {
 
-/** An attribute used in container classes. If
-  * set to a non-null value, this forces this node to run its determinePlacement
-  * method for any node whose parent is this node. If the subnode has its own
-  * placement attribute, determinePlacement will be called with that value,
-  * otherwise it will be called with this value. Note that a class's
-  * defaultplacement attribute only applies to children in subclasses or in
-  * instances, not to the children of the class itself. This means that if a
-  * class and its subclass both define a defaultplacement attribute, the
-  * attribute will be set to one value before the subclass children are created
-  * and to a different one after they are created. See the
-  * determinePlacement method.
-  * @type String
-  * @lzxtype token
-  * @keywords final
-  */
-var defaultplacement = null;
+      // Install in constructor map
+      // this in a class initializer, is the class
+      if (this.hasOwnProperty('tagname')) {
+        var tagname = this.tagname;
+        if (tagname) {
+          if (ConstructorMap[tagname] !== this) {
+            if ($debug) {
+              if (tagname in ConstructorMap) {
+                Debug.warn("Redefining tag %s from %w to %w",
+                           tagname, ConstructorMap[tagname], this);
+              }
+              //           Debug.debug("ConstructorMap[%s] = %s", tagname, this);
+            }
+            ConstructorMap[tagname] = this;
+          }
+          if ($debug) {
+            // Use the package tag name as the typename
+            this._dbg_name = prototype._dbg_typename = 'lz.' + tagname;
+          }
+        }
+        //   } else {
+        //     if ($debug) {
+        //       Debug.debug("No tag for node class %w", this);
+        //     }
+      }
+    }
+  }
 
-/** Instructions to this element's container about where it should go
-  * within its container's internal hierarchy. See
-  * the <method>LzNode.determinePlacement</method> method.
-  * Defaults to the container itself.
-  * @lzxtype string
-  * @keywords final
-  */
-var placement = null;
-    /** @access private
-     * Kludge for LzState
-     * @devnote States rely on setters to identify which attributes
-     * belong to them vs. their parent
-     */
-    var $lzc$set_placement = -1;
+  /** This event is sent right before a node becomes active --
+   * e.g. before a view displays, or before a layout affects its subviews.
+   * @lzxtype event
+   */
+  var oninit = LzDeclaredEvent;
 
-// Initial values
-/** @access private */
-var $cfn = 0;
-/** @access private */
-// var __LZdeleted = false;  // Moved to LzEventable
+  /** This is the first event a node sends, right
+   * at the end of the instantiation process, but before any subnodes
+   * have been created or references resolved
+   * @lzxtype event
+   */
+  var onconstruct = LzDeclaredEvent;
 
-/** Reference to this nodes's parent
-  * in the node hierarchy.  This will be different from "parent"
-  * when a class uses placement or defaultplacement to assign a
-  * subnode a specific place.  For example, always use immediateparent
-  * to get a mouse position in your views coordinate system.
-  *
-  * @type LzNode
-  * @keywords readonly
-  */
-var immediateparent = null;
+  /** The ondata script is executed when the data selected by a view's datapath
+   * changes.
+   * @lzxtype event
+   */
+  var ondata = LzDeclaredEvent;
+  /**
+   * If replicated, the index of this clone
+   * @lzxtype event
+   * @access private
+   */
+  var clonenumber = null;
+  /**
+   * @access private
+   * @lzxtype event
+   */
+  var onclonenumber = LzDeclaredEvent;
 
-/** @access private */ 
-var dependencies = null;
+  /** @access private */
+  var __LZlateinit = null;
+  /** @access private */
+  var __LZpreventSubInit = null;
+  /** @access private */
+  var __LZresolveDict = null;
+  /** @access private */
+  var __LZsourceLocation = null;
+  /** @access private */
+  var __LZUID = null;
+  /** @access private */
+  var __LZPropertyCache = null;
+  /** @access private */
+  var __LZRuleCache = null;
+  /** @access private */
+  var __LZdelegates = null;
 
-/** A reference to the node that is an instance
-  * of the <code>&lt;class&gt;</code> where this node is defined.
-  * Members of state subclasses do not define classroot.
-  * This is convenient to use when you want to access an attribute of the
-  * class in a method or event handler that is nested deep in the node
-  * hierarchy.  For example, to set the bgcolor of the class object,
-  * instead of
-  * <code>parent.parent.parent.setAttribute(bgcolor, 0xFFFFFF)</code>
-  * you can simply use <code>classroot.setAttribute(bgcolor, 0xFFFFFF)</code>.
-  * @type LzNode
-  * @keywords readonly
-  */
-var classroot;
+  /**
+   * Indicates that a <varname>node</varname>'s <method>init</method> method has been
+   * called.  The execution of the <method>init</method> method is under
+   * control of the <attribute>initstage</attribute> attribute.
+   *
+   * @type boolean
+   * @keywords read-only
+   * @see initstage
+   * @see oninit
+   * @access private
+   */
+  var isinited = false;
 
-/** The depth of this node in the overall node hierarchy
-  * @type Number
-  * @keywords readonly
-  */
-var nodeLevel = 0;
+  /** An array of all of the LzNodes which consider
+   * this LzNode their parent. This list is similar to the subviews list,
+   * but it contains all the children of this node, not just the view
+   * children.
+   *
+   * @type Array
+   * @keywords readonly
+   */
+  var subnodes = null;
 
-if ($debug) {
+  /** Specifies the data source for this node and its children.
+   * If the value begins with an identifier followed by a colon, the
+   * identifier names a dataset, and the portion of the string after
+   * the colon is an XPath description of a portion of the data.
+   * Otherwise the entire attribute value is an XPath description of
+   * the data, relative to the data source of this node's parent element.
+   * Examples: "mydata:", "mydata:/a/b", "/a/b".
+   *
+   * @type String
+   * @lzxtype string
+   */
+  var datapath = null;
+
+  /** The execution of a <class>node</class>'s <method>init</method> method and
+   * sending of the <event>oninit</event> event is under the control
+   * of its <attribute>initstage</attribute> attribute, as follows:
+   * <dl>
+   * <dt><constant>immediate</constant></dt><dd>The <method>init</method> method is called immediately as the
+   * last stage of instantiation.
+   * </dd>
+   * <dt><constant>early</constant></dt><dd>The <method>init</method> method is called immediately after the
+   * view and its children have been instantiated.
+   * </dd>
+   * <dt><constant>normal</constant></dt><dd>The <method>init</method> method is called when the parent
+   * is initialized.
+   * </dd>
+   * <dt><constant>late</constant></dt><dd>The <method>init</method> method is called during idle time.
+   * To check whether <method>init</method> has been called, check the <attribute>isinited</attribute>
+   * property.  Force calling <method>init</method> using the <method>completeInstantiation</method> method.
+   * </dd>
+   * <dt><constant>defer</constant></dt><dd>The <method>init</method> method will not be called unless
+   * explicitly requested by the <method>completeInstantiation</method> method.
+   * </dd>
+   * </dl>
+   * @lzxtype "early" | "normal" | "late" | "immediate" | "defer"
+   * @lzxdefault "normal"
+   * @keywords final
+   */
+  var initstage = null;
+  /** @access private */
+  var $isstate = false;
+  /** @access private */
+  var doneClassRoot = false;
+
+  /** Reference to the node that was passed as this
+   * node's ancestor in the constructor.  If this node was created
+   * by declaring it in a tag, the parent will be its lexical parent.
+   * Its lexical parent is the tag that encloses it. Allow a null parent
+   * so that nodes can be garbage collected when they are no longer needed.
+   * See also, immediateparent.
+   * @keywords readonly
+   */
+  var parent;
+
+  /** If this node is replicated due to data
+   * replication, the LzReplicationManager which controls this node.
+   * @type LzNode
+   * @keywords readonly
+   */
+  var cloneManager = null;
+
+  /** The name for this subnode. If given, then this node's
+   * parent and immediate parent will store a pointer to this node as the
+   * given name value.
+   * @type String
+   * @keywords final
+   * @lzxtype token
+   */
+  var name = null;
+  /** @access private
+   * If you are lexically on the canvas and have a name, the
+   * compiler will generate a binder that will be called by the
+   * constructor
+   */
+  var $lzc$bind_name = null;
+
+  /** A unique identifier for this element.  Can be used as a global
+   * variable name in JavaScript code.
+   *
+   * @type String
+   * @lzxtype ID
+   * @keywords final
+   * @lzxtype token
+   */
+  var id = null;
+  /** @access private
+   * You can't set id
+   */
+  var $lzc$set_id = -1;
+  /** @access private
+   * If you have a name, the compiler will generate a binder that
+   * will be called by the constructor
+   */
+  var $lzc$bind_id = null;
+
+  /** An attribute used in container classes. If
+   * set to a non-null value, this forces this node to run its determinePlacement
+   * method for any node whose parent is this node. If the subnode has its own
+   * placement attribute, determinePlacement will be called with that value,
+   * otherwise it will be called with this value. Note that a class's
+   * defaultplacement attribute only applies to children in subclasses or in
+   * instances, not to the children of the class itself. This means that if a
+   * class and its subclass both define a defaultplacement attribute, the
+   * attribute will be set to one value before the subclass children are created
+   * and to a different one after they are created. See the
+   * determinePlacement method.
+   * @type String
+   * @lzxtype token
+   * @keywords final
+   */
+  var defaultplacement = null;
+
+  /** Instructions to this element's container about where it should go
+   * within its container's internal hierarchy. See
+   * the <method>LzNode.determinePlacement</method> method.
+   * Defaults to the container itself.
+   * @lzxtype string
+   * @keywords final
+   */
+  var placement = null;
+  /** @access private
+   * Kludge for LzState
+   * @devnote States rely on setters to identify which attributes
+   * belong to them vs. their parent
+   */
+  var $lzc$set_placement = -1;
+
+  // Initial values
+  /** @access private */
+  var $cfn = 0;
+  /** @access private */
+  // var __LZdeleted = false;  // Moved to LzEventable
+
+  /** Reference to this nodes's parent
+   * in the node hierarchy.  This will be different from "parent"
+   * when a class uses placement or defaultplacement to assign a
+   * subnode a specific place.  For example, always use immediateparent
+   * to get a mouse position in your views coordinate system.
+   *
+   * @type LzNode
+   * @keywords readonly
+   */
+  var immediateparent = null;
+
+  /** @access private */
+  var dependencies = null;
+
+  /** A reference to the node that is an instance
+   * of the <code>&lt;class&gt;</code> where this node is defined.
+   * Members of state subclasses do not define classroot.
+   * This is convenient to use when you want to access an attribute of the
+   * class in a method or event handler that is nested deep in the node
+   * hierarchy.  For example, to set the bgcolor of the class object,
+   * instead of
+   * <code>parent.parent.parent.setAttribute(bgcolor, 0xFFFFFF)</code>
+   * you can simply use <code>classroot.setAttribute(bgcolor, 0xFFFFFF)</code>.
+   * @type LzNode
+   * @keywords readonly
+   */
+  var classroot;
+
+  /** The depth of this node in the overall node hierarchy
+   * @type Number
+   * @keywords readonly
+   */
+  var nodeLevel = 0;
+
+  if ($debug) {
     /** The source locator table maps source locations to nodes
-      * @access private
-      */ 
+     * @access private
+     */
     static var sourceLocatorTable = {};
 
     /**
-      * Translate a source locator to the corresponding node
-      * @param String sourceLocator: the locator to translate
-      * @return any: Either the corresponding LzNode or undefined if
-      * the source locator is unknown
-      */
+     * Translate a source locator to the corresponding node
+     * @param String sourceLocator: the locator to translate
+     * @return any: Either the corresponding LzNode or undefined if
+     * the source locator is unknown
+     */
     function lookupSourceLocator (sourceLocator) {
-        return LzNode.sourceLocatorTable[sourceLocator];
+      return LzNode.sourceLocatorTable[sourceLocator];
     }
-}
+  }
 
   /**
    * Bind an attribute to a (CSS) style property
@@ -677,172 +677,172 @@ if ($debug) {
     }
   };
 
-/**
-  * The <code>construct</code> method of a node is called as part of
-  * the process of constructing a node.  It is called <i>after</i>
-  * attributes with constant initial values have been filled in, but
-  * before any attributes that have setters or have been constrained
-  * have been applied.
-  *
-  * This is the method to override if you need to initialize instances
-  * of an LZX class as they are constructed.  If you override this
-  * method, you <b>must</b> call the superclass method (the simplest
-  * way to do this is to say <code>super.construct.apply(this,
-  * arguments)</code>. Note that construct can only be overriden within
-  * a subclass definition, not within a customized instance.
-  *
-  * The construct method is also responsible for placing the newly-built view
-  * into the appropriate place within its lexical parent's view hierarchy. The
-  * process for this is as follows:
-  *
-  * <ul><li>First, if the view has an <attribute>ignoreplacement</attribute>
-  * attribute with a <code>true</code> value, then the view will be placed
-  * directly under its lexical parent in all cases. The next steps are
-  * skipped. </li>
-  *
-  * <li>Second, the placement view name is determined from the first of the
-  * following that matches:
-  * <ul><li>the view's <attribute>placement</attribute> attribute, if that
-  * exists; or</li>
-  * <li>the lexical parent's <attribute>defaultplacement</attribute> attribute,
-  * if that exists; or</li>
-  * <li>nil.</li></ul></li>
-  *
-  * <li>Third, if there is no placement view name, the subview is placed within
-  * its lexical parent (that is,
-  * <code>view.immediateparent = view.parent</code>),
-  * and the next steps are skipped.</li>
-  *
-  * <li>Fourth, the placement view name is looked up within the lexical parent by
-  * calling <code>determinePlacement</code>, and the result is taken as the
-  * view's placement view.</li>
-  *
-  * <li>If this new placement view is a subview and it has a
-  * <attribute>defaultplacement</attribute> attribute,
-  * <code>determinePlacement</code> is called again. This process is repeated
-  * until no defaultplacement attribute is found to ensure that all placement
-  * directives are correctly followed.</li></ul>
-  *
-  * @param LzNode parent: The node that encloses this node in source,
-  * or the node to which to attach this node.
-  * @param Object args: A dictionary of attribute initializations for
-  * attributes that have setters or that have been constrained.  In
-  * general, your constructor should not modify this dictionary.  It
-  * may verify that an attribute is named in the dictionary to
-  * determine if the attribute will be modified by a setter or
-  * constraint.
-  *
-  */
-function construct ( parent , args ){
-  // Set applyArgs ordering kludges.  LzView overrides these
-  this.__LZdelayedSetters = LzNode.__LZdelayedSetters;
-  this.earlySetters = LzNode.earlySetters;
+  /**
+   * The <code>construct</code> method of a node is called as part of
+   * the process of constructing a node.  It is called <i>after</i>
+   * attributes with constant initial values have been filled in, but
+   * before any attributes that have setters or have been constrained
+   * have been applied.
+   *
+   * This is the method to override if you need to initialize instances
+   * of an LZX class as they are constructed.  If you override this
+   * method, you <b>must</b> call the superclass method (the simplest
+   * way to do this is to say <code>super.construct.apply(this,
+   * arguments)</code>. Note that construct can only be overriden within
+   * a subclass definition, not within a customized instance.
+   *
+   * The construct method is also responsible for placing the newly-built view
+   * into the appropriate place within its lexical parent's view hierarchy. The
+   * process for this is as follows:
+   *
+   * <ul><li>First, if the view has an <attribute>ignoreplacement</attribute>
+   * attribute with a <code>true</code> value, then the view will be placed
+   * directly under its lexical parent in all cases. The next steps are
+   * skipped. </li>
+   *
+   * <li>Second, the placement view name is determined from the first of the
+   * following that matches:
+   * <ul><li>the view's <attribute>placement</attribute> attribute, if that
+   * exists; or</li>
+   * <li>the lexical parent's <attribute>defaultplacement</attribute> attribute,
+   * if that exists; or</li>
+   * <li>nil.</li></ul></li>
+   *
+   * <li>Third, if there is no placement view name, the subview is placed within
+   * its lexical parent (that is,
+   * <code>view.immediateparent = view.parent</code>),
+   * and the next steps are skipped.</li>
+   *
+   * <li>Fourth, the placement view name is looked up within the lexical parent by
+   * calling <code>determinePlacement</code>, and the result is taken as the
+   * view's placement view.</li>
+   *
+   * <li>If this new placement view is a subview and it has a
+   * <attribute>defaultplacement</attribute> attribute,
+   * <code>determinePlacement</code> is called again. This process is repeated
+   * until no defaultplacement attribute is found to ensure that all placement
+   * directives are correctly followed.</li></ul>
+   *
+   * @param LzNode parent: The node that encloses this node in source,
+   * or the node to which to attach this node.
+   * @param Object args: A dictionary of attribute initializations for
+   * attributes that have setters or that have been constrained.  In
+   * general, your constructor should not modify this dictionary.  It
+   * may verify that an attribute is named in the dictionary to
+   * determine if the attribute will be modified by a setter or
+   * constraint.
+   *
+   */
+  function construct ( parent , args ){
+    // Set applyArgs ordering kludges.  LzView overrides these
+    this.__LZdelayedSetters = LzNode.__LZdelayedSetters;
+    this.earlySetters = LzNode.earlySetters;
 
-  var lp = parent; // lp == lexical parent
-  this.parent = lp;
+    var lp = parent; // lp == lexical parent
+    this.parent = lp;
 
-  if (lp) {
-    var ip = lp; // ip == immediate parent
+    if (lp) {
+      var ip = lp; // ip == immediate parent
 
-    // Obey ignoreplacement
-    // TODO: [2008-04-11 ptw] Is this only ever allowed as an instance
-    // attribute, or could I set it on a class to cause instances of
-    // the class to ignore placement, in which case, I need to look at
-    // this.ignoreplacement too
-    if (args['ignoreplacement'] || this.ignoreplacement) {
+      // Obey ignoreplacement
+      // TODO: [2008-04-11 ptw] Is this only ever allowed as an instance
+      // attribute, or could I set it on a class to cause instances of
+      // the class to ignore placement, in which case, I need to look at
+      // this.ignoreplacement too
+      if (args['ignoreplacement'] || this.ignoreplacement) {
         this.placement = null;
-    } else {
+      } else {
         // Placement has a fake setter, so we know it will be in
         // args.  Default to parent's placement
         var thisplacement = args['placement'] || lp.defaultplacement;
         while (thisplacement != null) {
-            if (ip.determinePlacement == LzNode.prototype.determinePlacement) {
-                // this is the fast path -- basically inline the relevant part
-                // of LzNode.prototype.determinePlacement, below
-                var pp = ip.searchSubnodes("name", thisplacement);
-                if (pp == null) pp = ip;
-            } else {
-                // slow path if a subclass has overriden determinePlacement
-                var pp = ip.determinePlacement( this , thisplacement , args );
-            }
+          if (ip.determinePlacement == LzNode.prototype.determinePlacement) {
+            // this is the fast path -- basically inline the relevant part
+            // of LzNode.prototype.determinePlacement, below
+            var pp = ip.searchSubnodes("name", thisplacement);
+            if (pp == null) pp = ip;
+          } else {
+            // slow path if a subclass has overriden determinePlacement
+            var pp = ip.determinePlacement( this , thisplacement , args );
+          }
 
-            thisplacement = (pp != ip) ? pp.defaultplacement : null;
-            ip = pp;
+          thisplacement = (pp != ip) ? pp.defaultplacement : null;
+          ip = pp;
         }
         this.placement = thisplacement;
-    }
-    var ip_subnodes = ip.subnodes;
-    if (ip_subnodes == null) {
-      ip_subnodes = new Array;
-      ip.subnodes = ip_subnodes;
-    }
-  
-    ip_subnodes[ip_subnodes.length] = this;
-    
-    var nl = ip.nodeLevel; // nl == nodeLevel
-    this.nodeLevel = nl ? nl + 1 : 1;
+      }
+      var ip_subnodes = ip.subnodes;
+      if (ip_subnodes == null) {
+        ip_subnodes = new Array;
+        ip.subnodes = ip_subnodes;
+      }
 
-    this.immediateparent = ip;
+      ip_subnodes[ip_subnodes.length] = this;
 
-  } else {
-    this.nodeLevel = 1;
+      var nl = ip.nodeLevel; // nl == nodeLevel
+      this.nodeLevel = nl ? nl + 1 : 1;
+
+      this.immediateparent = ip;
+
+    } else {
+      this.nodeLevel = 1;
+    }
+
   }
 
-}
-
-/**
-  * Called at the same time that the node sends its oninit event -- usually
-  * when the node's siblings are instantiated, and always after the node's
-  * children are instantiated.
-  */
-function init ( ){
+  /**
+   * Called at the same time that the node sends its oninit event -- usually
+   * when the node's siblings are instantiated, and always after the node's
+   * children are instantiated.
+   */
+  function init ( ){
 
     return;
-}
+  }
 
-/**
-  * Called when the node's subnodes have finished instantiating.
-  * If this node's parent is inited, this method clears the queue of nodes
-  * awaiting init.
-  *
-  * @access private
-  */
-function __LZinstantiationDone (){
+  /**
+   * Called when the node's subnodes have finished instantiating.
+   * If this node's parent is inited, this method clears the queue of nodes
+   * awaiting init.
+   *
+   * @access private
+   */
+  function __LZinstantiationDone (){
     if ( !this.immediateparent ||  this.immediateparent.isinited ||
          ( this.initstage == "early" ) ||
          ( this.__LZisnew && LzInstantiator.syncNew ) ){
-        //we need to init this and its subnodes
-        this.__LZcallInit( );
+      //we need to init this and its subnodes
+      this.__LZcallInit( );
     }
-}
+  }
 
-/**
-  * @access private
-  */
-function __LZsetPreventInit ( ){
+  /**
+   * @access private
+   */
+  function __LZsetPreventInit ( ){
     this.__LZpreventSubInit = [];
-}
+  }
 
-/**
-  * @access private
-  */
-function __LZclearPreventInit ( ){
+  /**
+   * @access private
+   */
+  function __LZclearPreventInit ( ){
     var lzp = this.__LZpreventSubInit;
     this.__LZpreventSubInit = null;
     var l = lzp.length;
     for ( var i = 0; i < l; i++ ){
-        lzp[ i ].__LZcallInit();
+      lzp[ i ].__LZcallInit();
     }
-}
+  }
 
-/**
-  * @access private
-  * @devnote LzCanvas replaces this method, so must be kept in sync
-  */
-function __LZcallInit (an:* = null ){
+  /**
+   * @access private
+   * @devnote LzCanvas replaces this method, so must be kept in sync
+   */
+  function __LZcallInit (an:* = null ){
     if ( this.parent && this.parent.__LZpreventSubInit ){
-        this.parent.__LZpreventSubInit.push( this );
-        return;
+      this.parent.__LZpreventSubInit.push( this );
+      return;
     }
 
     //do this now, so that others know that they're too late
@@ -853,316 +853,316 @@ function __LZcallInit (an:* = null ){
 
     var sl = this.subnodes;
     if (sl) {
-        var i = 0;
-        var l = sl.length;
-        while(i < l){
-            var s = sl[ i++ ];
-            //remember next one too
-            var t = sl[ i ]
-                if ( s.isinited || s.__LZlateinit ) continue;
-            s.__LZcallInit( );
-            //if the next one is not where it was, back up till we find it or to
-            //the beginning of the array
-            if ( t != sl[ i ] ){
-                // When does this ever happen?
-                //             Debug.warn('subnodes array changed after %w -> sl[%d]: %w', t, i, sl[i]);
-                while ( i > 0 ){
-                    if ( t == sl[ --i ] ) break;
-                }
-            }
+      var i = 0;
+      var l = sl.length;
+      while(i < l){
+        var s = sl[ i++ ];
+        //remember next one too
+        var t = sl[ i ]
+          if ( s.isinited || s.__LZlateinit ) continue;
+        s.__LZcallInit( );
+        //if the next one is not where it was, back up till we find it or to
+        //the beginning of the array
+        if ( t != sl[ i ] ){
+          // When does this ever happen?
+          //             Debug.warn('subnodes array changed after %w -> sl[%d]: %w', t, i, sl[i]);
+          while ( i > 0 ){
+            if ( t == sl[ --i ] ) break;
+          }
         }
+      }
     }
 
     // Register in the source locator table, if debugging
     if ($debug) {
-        if (this.__LZsourceLocation) {
-            LzNode.sourceLocatorTable[this.__LZsourceLocation] = this;
-        }
+      if (this.__LZsourceLocation) {
+        LzNode.sourceLocatorTable[this.__LZsourceLocation] = this;
+      }
     }
 
     this.init();
     if (this.oninit.ready) this.oninit.sendEvent( this );
     if (this.datapath && this.datapath.__LZApplyDataOnInit) {
-        this.datapath.__LZApplyDataOnInit();
+      this.datapath.__LZApplyDataOnInit();
     }
 
     // Note node end
     if ($profile) {
-        var nm = this['_profile_name'];
-        if (nm) {
-            Profiler.event('done: ' + nm);
-        }
+      var nm = this['_profile_name'];
+      if (nm) {
+        Profiler.event('done: ' + nm);
+      }
     }
-}
+  }
 
-/**
-  * Ensures that the children of this node have been created, and this
-  * node has been inited.  The LFC does this automatically for nodes
-  * with initstage other than <constant>late</constant> or <constant>defer</constant>.  Call this function to
-  * force instantiation to complete synchronously for nodes with
-  * initstage=<constant>late</constant>, and to force it to happen at all for nodes with
-  * initstage=<constant>defer</constant>.
-  */
-function completeInstantiation (){
+  /**
+   * Ensures that the children of this node have been created, and this
+   * node has been inited.  The LFC does this automatically for nodes
+   * with initstage other than <constant>late</constant> or <constant>defer</constant>.  Call this function to
+   * force instantiation to complete synchronously for nodes with
+   * initstage=<constant>late</constant>, and to force it to happen at all for nodes with
+   * initstage=<constant>defer</constant>.
+   */
+  function completeInstantiation (){
     if ( !this.isinited ){
-        var myis = this.initstage;
+      var myis = this.initstage;
 
-        //this node should init right after this call, even if the parents
-        //aren't done initing
-        this.initstage = 'early';
-        if ( myis == "defer" ){
-            LzInstantiator.createImmediate( this ,this.__LZdeferredcarr );
-        } else {
-            LzInstantiator.completeTrickle( this );
-        }
+      //this node should init right after this call, even if the parents
+      //aren't done initing
+      this.initstage = 'early';
+      if ( myis == "defer" ){
+        LzInstantiator.createImmediate( this ,this.__LZdeferredcarr );
+      } else {
+        LzInstantiator.completeTrickle( this );
+      }
     }
-}
+  }
 
-/** Setting an argument attribute to this value in the
-  * construct routine of a subclass of LzNode will prevent further processing
-  * of the attribute
-  * @type Boolean
-  * @access private
-  */
-static var _ignoreAttribute = {toString: function () {
-                                        return '_ignoreAttribute'}};
-                                        
-/** 
-  * Overrides placement attribute (and defaultplacement in lexical parent). 
-  * See the LzNode.determinePlacement method. Defaults to false.
-  * @type Boolean
-  * @keywords final
-  * @lzxdefault "false"
-  */
-var ignoreplacement = false;  
-                                        
+  /** Setting an argument attribute to this value in the
+   * construct routine of a subclass of LzNode will prevent further processing
+   * of the attribute
+   * @type Boolean
+   * @access private
+   */
+  static var _ignoreAttribute = {toString: function () {
+      return '_ignoreAttribute'}};
 
-/**
-  * Applies a dictionary of args
-  * @access private
-  */
-function __LZapplyArgs ( args , constcall = null ){
-      var oset = {};
-      var hasset = null;
-      var hasearly = null;
+  /**
+   * Overrides placement attribute (and defaultplacement in lexical parent).
+   * See the LzNode.determinePlacement method. Defaults to false.
+   * @type Boolean
+   * @keywords final
+   * @lzxdefault "false"
+   */
+  var ignoreplacement = false;
 
-      var inits = null;
-      var constraints = null;
 
-      for ( var a in args ){
-          var val = args[a];
-          /* To see if it has a setter.  Cf., setAttribute */
-          var setr = '$lzc$set_' + a;
-          //handle flash bug where objects slots are enumerated multiple times
-          if ( oset[a] || args[a] === LzNode._ignoreAttribute ) continue;
-          oset[ a ] = true;
+  /**
+   * Applies a dictionary of args
+   * @access private
+   */
+  function __LZapplyArgs ( args , constcall = null ){
+    var oset = {};
+    var hasset = null;
+    var hasearly = null;
 
-          if (val is LzInitExpr) {
-            // Ordering is important, constraint is a subclass of once
-            if (val instanceof LzConstraintExpr) {
-              // A style or always constraint
-              if (constraints == null) { constraints = []; }
-              constraints.push(val);
-            } else if (val instanceof LzOnceExpr) {
-              // A once constraint
-              if (inits == null) { inits = []; }
-              inits.push(val);
-            } else if ($debug) {
-              Debug.debug("Unknown init expr: %w", val);
-            }
-            // NOTE: [2007-05-16 ptw] This check ensures that each
-            // constrained attribute exists in the new instance.
-            // Necessary because of 'implicit this', which will make a
-            // free reference (error in Javascript) otherwise.  We
-            // have to not shadow inherited values because in some
-            // cases (e.g., lz.state), we actually have a method and
-            // an attribute of the same name!  The attribute is
-            // implemented by a setter, so it never clobbers the
-            // method... er, unless you set the attribute to a
-            // function.  YOW!
-            if (this[a] === void(0)) {this[a] = null;} 
-          } else if (! this[setr]) {
-            // TODO: should already be declared, so we should just be
-            // able to set it, but that doesn't work if this is a
-            // method
-            this.addProperty(a, val);
-            if (! constcall) {
-              //then we need to notify the rest of the system that this
-              //value changed.
-              var evt = ("on" + a);
-              if (this[evt] is LzEvent) {
-                if (this[evt].ready) this[ evt ].sendEvent( args[ a ] );
-              } 
-            }
-          } else if (this[setr] is Function) {
-              if (a in this.earlySetters) {
-                  if (hasearly == null) { hasearly = []; }
-                  hasearly[this.earlySetters[a]] = a;
-              } else {
-                  if (hasset == null) { hasset = []; }
-                  hasset.push(a);
-              }
+    var inits = null;
+    var constraints = null;
+
+    for ( var a in args ){
+      var val = args[a];
+      /* To see if it has a setter.  Cf., setAttribute */
+      var setr = '$lzc$set_' + a;
+      //handle flash bug where objects slots are enumerated multiple times
+      if ( oset[a] || args[a] === LzNode._ignoreAttribute ) continue;
+      oset[ a ] = true;
+
+      if (val is LzInitExpr) {
+        // Ordering is important, constraint is a subclass of once
+        if (val instanceof LzConstraintExpr) {
+          // A style or always constraint
+          if (constraints == null) { constraints = []; }
+          constraints.push(val);
+        } else if (val instanceof LzOnceExpr) {
+          // A once constraint
+          if (inits == null) { inits = []; }
+          inits.push(val);
+        } else if ($debug) {
+          Debug.debug("Unknown init expr: %w", val);
+        }
+        // NOTE: [2007-05-16 ptw] This check ensures that each
+        // constrained attribute exists in the new instance.
+        // Necessary because of 'implicit this', which will make a
+        // free reference (error in Javascript) otherwise.  We
+        // have to not shadow inherited values because in some
+        // cases (e.g., lz.state), we actually have a method and
+        // an attribute of the same name!  The attribute is
+        // implemented by a setter, so it never clobbers the
+        // method... er, unless you set the attribute to a
+        // function.  YOW!
+        if (this[a] === void(0)) {this[a] = null;}
+      } else if (! this[setr]) {
+        // TODO: should already be declared, so we should just be
+        // able to set it, but that doesn't work if this is a
+        // method
+        this.addProperty(a, val);
+        if (! constcall) {
+          //then we need to notify the rest of the system that this
+          //value changed.
+          var evt = ("on" + a);
+          if (this[evt] is LzEvent) {
+            if (this[evt].ready) this[ evt ].sendEvent( args[ a ] );
           }
+        }
+      } else if (this[setr] is Function) {
+        if (a in this.earlySetters) {
+          if (hasearly == null) { hasearly = []; }
+          hasearly[this.earlySetters[a]] = a;
+        } else {
+          if (hasset == null) { hasset = []; }
+          hasset.push(a);
+        }
       }
+    }
 
-      if (hasearly) {
-          for (var i = 1, l = hasearly.length; i < l; i++) {
-            if (i in hasearly) {
-              var a = hasearly[i];
-              var setr = '$lzc$set_' + a;
-              this[setr]( args[a] );
-            }
-          }
-      }
-
-      if (hasset) {
-        for (var i = hasset.length - 1; i >= 0; i--) {
-          var a = hasset[i];
+    if (hasearly) {
+      for (var i = 1, l = hasearly.length; i < l; i++) {
+        if (i in hasearly) {
+          var a = hasearly[i];
           var setr = '$lzc$set_' + a;
           this[setr]( args[a] );
         }
       }
+    }
 
-      // process inits and constraints
-      // TODO: [2008-02-06 ptw] This can be much more efficient.  For
-      // now, we just collect the inits and constraints (once their
-      // inheritance has been computed correctly above) and use the
-      // existing $refs-like mechanism to install them.
-      this.__LZstoreAttr(inits, '$inits');
-      this.__LZstoreAttr(constraints, '$constraints');
-}
+    if (hasset) {
+      for (var i = hasset.length - 1; i >= 0; i--) {
+        var a = hasset[i];
+        var setr = '$lzc$set_' + a;
+        this[setr]( args[a] );
+      }
+    }
 
-/**
-  * This function is used to instantiate subnodes.
-  * LzNodes may override or extend this method to change the
-  * meaning of attached subnodes.
-  *
-  * @access public
-  *
-  * @param Array carr: an array of children where the structure of each child [c]
-  * takes the form:
-  * c.name = a string containing the name of the child -- usually its
-  * constructor
-  * c.args = a dictionary of attributes and values to be passed to the
-  * constructor of that child
-  * c.children = an array of children for the new child
-  */
-function createChildren ( carr  ){
+    // process inits and constraints
+    // TODO: [2008-02-06 ptw] This can be much more efficient.  For
+    // now, we just collect the inits and constraints (once their
+    // inheritance has been computed correctly above) and use the
+    // existing $refs-like mechanism to install them.
+    this.__LZstoreAttr(inits, '$inits');
+    this.__LZstoreAttr(constraints, '$constraints');
+  }
+
+  /**
+   * This function is used to instantiate subnodes.
+   * LzNodes may override or extend this method to change the
+   * meaning of attached subnodes.
+   *
+   * @access public
+   *
+   * @param Array carr: an array of children where the structure of each child [c]
+   * takes the form:
+   * c.name = a string containing the name of the child -- usually its
+   * constructor
+   * c.args = a dictionary of attributes and values to be passed to the
+   * constructor of that child
+   * c.children = an array of children for the new child
+   */
+  function createChildren ( carr  ){
 
     if ( this.__LZdeleted ) return;
 
     if ( "defer" == this.initstage ){
-        this.__LZlateinit = true;
-        this.__LZdeferredcarr = carr;
+      this.__LZlateinit = true;
+      this.__LZdeferredcarr = carr;
     } else if ( "late" == this.initstage ){
-        this.__LZlateinit = true;
-        LzInstantiator.trickleInstantiate( this , carr );
+      this.__LZlateinit = true;
+      LzInstantiator.trickleInstantiate( this , carr );
     } else if ( ( this.__LZisnew && LzInstantiator.syncNew ) ||
                 "immediate" == this.initstage ){
-        LzInstantiator.createImmediate( this , carr );
+      LzInstantiator.createImmediate( this , carr );
     } else {
-        LzInstantiator.requestInstantiation( this , carr );
+      LzInstantiator.requestInstantiation( this , carr );
     }
-}
-/**
-  * returns the value for a property
-  *
-  * @param String prop: a string specifying the key of attribute to return.
-  * @return any: value of named property
-  * @deprecated
-  */
-function getAttribute(prop) {
+  }
+  /**
+   * returns the value for a property
+   *
+   * @param String prop: a string specifying the key of attribute to return.
+   * @return any: value of named property
+   * @deprecated
+   */
+  function getAttribute(prop) {
     Debug.info("%w.%s(%#w) is deprecated.  Use %w[%#w] instead.", this, arguments.callee, prop, this, prop);
     return this[ prop ];
-}
+  }
 
 
-/*
-setAttribute moved to LzEventable.lzs
-function setAttribute(prop, val, ifchanged = null)
-*/
-
-/**
-  * returns the expected value for the specified property, which is the value of
-  * the property after all executing animators are complete.
-  *
-  * FUTURE ENHANCEMENT: add a time parameter to specify expected value at a
-  * specific time.
-  * @access private
-  *
-  * @param prop: a string specifying the property to return.
-  * public properties are: x, y, width, height, rotation, alpha
-  *
-  * @return value of named property
+  /*
+    setAttribute moved to LzEventable.lzs
+    function setAttribute(prop, val, ifchanged = null)
   */
-function getExpectedAttribute(prop) {
+
+  /**
+   * returns the expected value for the specified property, which is the value of
+   * the property after all executing animators are complete.
+   *
+   * FUTURE ENHANCEMENT: add a time parameter to specify expected value at a
+   * specific time.
+   * @access private
+   *
+   * @param prop: a string specifying the property to return.
+   * public properties are: x, y, width, height, rotation, alpha
+   *
+   * @return value of named property
+   */
+  function getExpectedAttribute(prop) {
     var e_prop = "e_" + prop;
     if ( !this[ e_prop ] ) this[ e_prop ] = {}
     if ( this[e_prop].v == null ) return this[prop];
     return this[ e_prop ].v;
-}
+  }
 
-/**
-  * @access private
-  * @param prop: A string naming the attribute to set
-  * @param val: The value for that attribute
-  */
-function setExpectedAttribute(prop, val) {
+  /**
+   * @access private
+   * @param prop: A string naming the attribute to set
+   * @param val: The value for that attribute
+   */
+  function setExpectedAttribute(prop, val) {
     var e_prop = "e_" + prop;
     if ( !this[e_prop] ) this[e_prop] = {}
     this[ e_prop ].v = val;
-}
+  }
 
-/**
-  * @access private
-  * @param prop: A string naming the attribute to set
-  * @param val: The value for that attribute
-  */
-function addToExpectedAttribute(prop, val) {
+  /**
+   * @access private
+   * @param prop: A string naming the attribute to set
+   * @param val: The value for that attribute
+   */
+  function addToExpectedAttribute(prop, val) {
     var e_prop = "e_" + prop;
     if ( !this[e_prop] ) this[e_prop] = {}
     if ( this[e_prop].v == null ) this[e_prop].v = this[prop];
     this[ e_prop ].v += val;
-}
+  }
 
-/**
-  * @access private
-  * @param prop: A string naming the attribute to set
-  */
-function __LZincrementCounter(prop) {
+  /**
+   * @access private
+   * @param prop: A string naming the attribute to set
+   */
+  function __LZincrementCounter(prop) {
     var e_prop = "e_" + prop;
     var tep = this[e_prop];
     if (!tep) {
-        tep = this[e_prop] = {}
+      tep = this[e_prop] = {}
     }
     if (!tep.c) {
-        tep.c = 0;
+      tep.c = 0;
     }
     tep.c += 1;
-}
+  }
 
-/**
-  * Makes a child to the specification given in the child hash argument,
-  * calling the constructor with <i>this</i> as the value for the ancestorView.
-  *
-  * @access private
-  *
-  * @todo [2005-04-20 ptw] 'makeChild' really just ought to be called
-  * 'make' and take the parent as a first argument, so we can
-  * wrap/override construction for profiling, wysiwyg-ing, automating,
-  * etc.
-  *
-  * @param e: A hash with the following elements:
-  * <ul>
-  * <li>name : [the name of the constructor to use for child]</li>
-  * <li>attrs: [a hash of named attributes to pass to the constructor for the
-  * new object</li>
-  * <li>children: [an array of child objects (to the same specification) for the
-  * new child</li>
-  * </ul>
-  * @param async: If true, children of new node will be created asynchronously
-  */
-function makeChild ( e , async ){
+  /**
+   * Makes a child to the specification given in the child hash argument,
+   * calling the constructor with <i>this</i> as the value for the ancestorView.
+   *
+   * @access private
+   *
+   * @todo [2005-04-20 ptw] 'makeChild' really just ought to be called
+   * 'make' and take the parent as a first argument, so we can
+   * wrap/override construction for profiling, wysiwyg-ing, automating,
+   * etc.
+   *
+   * @param e: A hash with the following elements:
+   * <ul>
+   * <li>name : [the name of the constructor to use for child]</li>
+   * <li>attrs: [a hash of named attributes to pass to the constructor for the
+   * new object</li>
+   * <li>children: [an array of child objects (to the same specification) for the
+   * new child</li>
+   * </ul>
+   * @param async: If true, children of new node will be created asynchronously
+   */
+  function makeChild ( e , async ){
     //e.type = what this child is
     //e.name = subtype
     //e.attrs = init args
@@ -1170,52 +1170,52 @@ function makeChild ( e , async ){
     // This can happen if constructing a sibling destroys the parent
     // (which can be triggered by a changed dataset)
     if (this.__LZdeleted) {
-        return;
+      return;
     }
     // This should not happen
     if ($debug) {
-        for (var p = this; p != canvas; p = p.immediateparent) {
-            if (p == null) break;
-            if (p.__LZdeleted) {
-                Debug.error("%w.makeChild(%w, %w) when %w.__LZdeleted", this, e, async, p);
-            }
+      for (var p = this; p != canvas; p = p.immediateparent) {
+        if (p == null) break;
+        if (p.__LZdeleted) {
+          Debug.error("%w.makeChild(%w, %w) when %w.__LZdeleted", this, e, async, p);
         }
+      }
     }
     var x = ConstructorMap[ e.name ];
     // TODO: [2005-03-24 ptw] Remove this if we ever enable
     // warnings in the LFC as this will be redundant
     if ($swf9) {
-    // TODO [hqm 2008-01] enable this warning unconditionally for now for swf9 debugging
-    //    if ($debug) {
-        if ((! x) || (! (x is Class))) {
-            Debug.error('Class for tag ', e.name, ' has not been defined yet', x);
-        }
+      // TODO [hqm 2008-01] enable this warning unconditionally for now for swf9 debugging
+      //    if ($debug) {
+      if ((! x) || (! (x is Class))) {
+        Debug.error('Class for tag ', e.name, ' has not been defined yet', x);
+      }
     } else {
-        if ($debug) {
-            if ((! x) || (! (x instanceof Function))) { Debug.error('Class for tag %s has not been defined yet', e.name); }
-        }
+      if ($debug) {
+        if ((! x) || (! (x instanceof Function))) { Debug.error('Class for tag %s has not been defined yet', e.name); }
+      }
     }
     // TODO: [2005-04-20 ptw] Don't know what this means, preserved
     // for posterity:
     // ... new eval(namespace) [e.name]...
     var w;
     if (x) {
-        w = new x(this, e.attrs , ('children' in e) ? e.children : null , async );
+      w = new x(this, e.attrs , ('children' in e) ? e.children : null , async );
     }
     return w;
-}
+  }
 
-    /**
-     * @access private
-     * @devnote kludge for applyArgs
-     * TODO: [2008-03-18 ptw] _Are_ there $setters any more?
-     */
-    var $lzc$set_$setters = -1;
+  /**
+   * @access private
+   * @devnote kludge for applyArgs
+   * TODO: [2008-03-18 ptw] _Are_ there $setters any more?
+   */
+  var $lzc$set_$setters = -1;
 
-/**
-  * @access private
-  */
-function $lzc$set_$classrootdepth ( d ) {
+  /**
+   * @access private
+   */
+  function $lzc$set_$classrootdepth ( d ) {
 
     if (!d) return;
 
@@ -1223,40 +1223,40 @@ function $lzc$set_$classrootdepth ( d ) {
     while ( --d > 0){ p = p.parent }
 
     this.classroot = p;
-}
+  }
 
-if ($debug) {
-/**
- * @deprecated
- * @devnote remove after 4.1
- * @access private
- */
-function __LZsetSetters ( o ) {
-    Debug.error("%w.%s is no longer supported", this, arguments.callee);
-}
-}
+  if ($debug) {
+    /**
+     * @deprecated
+     * @devnote remove after 4.1
+     * @access private
+     */
+    function __LZsetSetters ( o ) {
+      Debug.error("%w.%s is no longer supported", this, arguments.callee);
+    }
+  }
 
-if ($debug) {
-/**
- * @deprecated
- * @devnote remove after 4.1
- * @access private
- */
-function __LZaddSetter ( key , val ) {
-    Debug.error("%w.%s is no longer supported", this, arguments.callee);
-}
-}
+  if ($debug) {
+    /**
+     * @deprecated
+     * @devnote remove after 4.1
+     * @access private
+     */
+    function __LZaddSetter ( key , val ) {
+      Debug.error("%w.%s is no longer supported", this, arguments.callee);
+    }
+  }
 
-/**
-  * Binds the named attribute to the given path, relative to this node's
-  * datapath. This is the method that is called when the $path{} constraint
-  * is used. Note that the binding is two-way -- changing the value of the
-  * attribute will update the data.
-  * @param String attr: The name of the attribute to bind to the given path.
-  * @param String path: The xpath (relative to this node's datapath) to which to
-  * bind the attribute.
-  */
-function dataBindAttribute ( attr , path  ) {
+  /**
+   * Binds the named attribute to the given path, relative to this node's
+   * datapath. This is the method that is called when the $path{} constraint
+   * is used. Note that the binding is two-way -- changing the value of the
+   * attribute will update the data.
+   * @param String attr: The name of the attribute to bind to the given path.
+   * @param String path: The xpath (relative to this node's datapath) to which to
+   * bind the attribute.
+   */
+  function dataBindAttribute ( attr , path  ) {
     if ( $debug ){
       if ( path == null ){
         Debug.warn( 'No value for %w.%s="$path{%w}"', this, attr, path );
@@ -1264,254 +1264,254 @@ function dataBindAttribute ( attr , path  ) {
     }
 
     if ( !this.datapath ){
-        this.setDatapath( "." );
+      this.setDatapath( "." );
     }
 
     if ( ! this.__LZdelegates ){
-        this.__LZdelegates = [];
+      this.__LZdelegates = [];
     }
 
     this.__LZdelegates.push ( new LzDataAttrBind( this.datapath, attr , path ));
-}
+  }
 
-/** @access private */
-static var __LZdelayedSetters = new LzInheritedHash({
+  /** @access private */
+  static var __LZdelayedSetters = new LzInheritedHash({
     $refs : "$lzc$set_$refs"
-        });
-/** @access private */
-var __LZdelayedSetters;
+    });
+  /** @access private */
+  var __LZdelayedSetters;
 
 
-/** @access private */
-static var earlySetters = new LzInheritedHash({
+  /** @access private */
+  static var earlySetters = new LzInheritedHash({
     name            : 1 ,
     $events         : 2 ,
     $delegates      : 3 ,
     $classrootdepth : 4 ,
     $datapath       : 5
-        });
-/** @access private */
-var earlySetters;
+    });
+  /** @access private */
+  var earlySetters;
 
-/**
-  * @access private
-  */
-function $lzc$set_$delegates ( delarr ){
+  /**
+   * @access private
+   */
+  function $lzc$set_$delegates ( delarr ){
     //delarr is a sequence of triplets of the form
     //... eventname, methodname, referencemethodname
 
     var resarray = [];
     var l = delarr.length;
     for ( var i = 0; i < l;i +=3 ){
-        if ( delarr[i + 2] ) {
-            //let's resolve this later
-            resarray.push ( delarr[ i ] , delarr[ i +1 ] , delarr[ i + 2 ] );
-        } else {
-            var m = delarr[i + 1];
-            if ( !this.__LZdelegates ){
-                this.__LZdelegates = [];
-            }
-            this.__LZdelegates.push( new LzDelegate( this , m , this , delarr[i] ) );
+      if ( delarr[i + 2] ) {
+        //let's resolve this later
+        resarray.push ( delarr[ i ] , delarr[ i +1 ] , delarr[ i + 2 ] );
+      } else {
+        var m = delarr[i + 1];
+        if ( !this.__LZdelegates ){
+          this.__LZdelegates = [];
         }
+        this.__LZdelegates.push( new LzDelegate( this , m , this , delarr[i] ) );
+      }
     }
 
     if ( resarray.length ){
-        this.__LZstoreAttr( resarray , "$delegates" );
+      this.__LZstoreAttr( resarray , "$delegates" );
     }
 
-}
+  }
 
-if ($debug) {
-/**
- * @deprecated
- * @devnote remove after 4.1
- * @access private
- */
-function __LZstoreRefs ( val , prop ){
-    Debug.error("%w.%s is no longer supported", this, arguments.callee);
-}
-}
+  if ($debug) {
+    /**
+     * @deprecated
+     * @devnote remove after 4.1
+     * @access private
+     */
+    function __LZstoreRefs ( val , prop ){
+      Debug.error("%w.%s is no longer supported", this, arguments.callee);
+    }
+  }
 
-/**
-  * @access private
-  */
-function __LZstoreAttr ( val , prop ){
+  /**
+   * @access private
+   */
+  function __LZstoreAttr ( val , prop ){
     if ( this.__LZresolveDict == null ){
-        this.__LZresolveDict = {};
+      this.__LZresolveDict = {};
     }
 
     this.__LZresolveDict[ prop ] = val;
-};
+  };
 
-/**
-  * @access private
-  */
-function __LZresolveReferences () {
+  /**
+   * @access private
+   */
+  function __LZresolveReferences () {
     var rdict = this.__LZresolveDict;
     if (rdict != null) {
-        this.__LZresolveDict = null;
-        var inits = rdict['$inits'];
-        if (inits != null) {
-            for (var i = 0, l = inits.length; i < l; i++) {
-                // invoke the init method
-                this[inits[i].methodName]();
-            }
+      this.__LZresolveDict = null;
+      var inits = rdict['$inits'];
+      if (inits != null) {
+        for (var i = 0, l = inits.length; i < l; i++) {
+          // invoke the init method
+          this[inits[i].methodName]();
         }
-        // Install constraints
-        // NOTE: [2008-02-13 ptw] Keep in sync with LzState#remove
-        var constraints = rdict['$constraints'];
-        if (constraints != null) {
-            for (var i = 0, l = constraints.length; i < l; i++) {
-                this.applyConstraintExpr(constraints[i]);
-            }
+      }
+      // Install constraints
+      // NOTE: [2008-02-13 ptw] Keep in sync with LzState#remove
+      var constraints = rdict['$constraints'];
+      if (constraints != null) {
+        for (var i = 0, l = constraints.length; i < l; i++) {
+          this.applyConstraintExpr(constraints[i]);
         }
-        // Backward compatibility -- are there any other delayed setters?
-        for ( var r in rdict ){
-            if ( r == "$inits" || r == "$constraints" || r == "$delegates" ) continue;
-            if (r in this.__LZdelayedSetters) {
-                this[  this.__LZdelayedSetters[ r ] ] ( rdict[ r ] );
-            } else if ($debug) {
-                Debug.warn("No delayed setter for %s", r);
-            }
+      }
+      // Backward compatibility -- are there any other delayed setters?
+      for ( var r in rdict ){
+        if ( r == "$inits" || r == "$constraints" || r == "$delegates" ) continue;
+        if (r in this.__LZdelayedSetters) {
+          this[  this.__LZdelayedSetters[ r ] ] ( rdict[ r ] );
+        } else if ($debug) {
+          Debug.warn("No delayed setter for %s", r);
         }
-        // Install delegates
-        // $delegates : "__LZsetDelegates"
-        if (rdict['$delegates']) this.__LZsetDelegates( rdict.$delegates );
+      }
+      // Install delegates
+      // $delegates : "__LZsetDelegates"
+      if (rdict['$delegates']) this.__LZsetDelegates( rdict.$delegates );
     }
-}
+  }
 
-// TODO: [2008-02-14 ptw] Remove at 4.1 or later
-if ($debug) {
-/** @access private */
-function __LZresolveRefs ( refs ){
-    Debug.error("$refs: %s is no longer supported", refs);
-}
-/** @access private */
-function $lzc$set_$refs(v) { this.__LZresolveRefs(v); }
-}
+  // TODO: [2008-02-14 ptw] Remove at 4.1 or later
+  if ($debug) {
+    /** @access private */
+    function __LZresolveRefs ( refs ){
+      Debug.error("$refs: %s is no longer supported", refs);
+    }
+    /** @access private */
+    function $lzc$set_$refs(v) { this.__LZresolveRefs(v); }
+  }
 
-/**
-  * @access private
-  */
-function __LZsetDelegates ( delarr ){
+  /**
+   * @access private
+   */
+  function __LZsetDelegates ( delarr ){
     if ( delarr.length && !this.__LZdelegates ){
-        this.__LZdelegates = [];
+      this.__LZdelegates = [];
     }
 
     var l = delarr.length;
     for ( var i = 0; i < l;i +=3 ){
-        var sendermethodname = delarr[i + 2];
-        var sender = (sendermethodname != null) ? this[sendermethodname]() : null;
-        if ( sender == null ) sender = this;
-        var meth = delarr[i + 1];
-        this.__LZdelegates.push( new LzDelegate( this , meth ,sender , delarr[i] ) );
+      var sendermethodname = delarr[i + 2];
+      var sender = (sendermethodname != null) ? this[sendermethodname]() : null;
+      if ( sender == null ) sender = this;
+      var meth = delarr[i + 1];
+      this.__LZdelegates.push( new LzDelegate( this , meth ,sender , delarr[i] ) );
     }
 
-};
+  };
 
-    // TODO: [2008-02-12 ptw] Backwards compatibility, remove in next
-    // release
-    /**
-     * Applies a function as a constraint.
-     *
-     * @deprecated: Constraints should be methods and should be applied
-     * using applyConstraintMethod
-     *
-     * @param String attribute: Putatively the attribute being
-     * constrained, but actually ignored
-     * @param Function constraint: A function that will be `call`-ed on
-     * `this` when any of the dependencies change
-     * @param Array dependencies: A property list of (reference,
-     * attribute) that should cause the constraint function to be invoked.
-     */
-    function applyConstraint(attribute, constraint, dependencies) {
-        if ($debug) {
-            Debug.deprecated(this, arguments.callee, this.applyConstraintMethod);
-        }
-        var constraintMethodName = "$cf" + this.$cfn++;
-        this.addProperty(constraintMethodName, constraint);
-        return this.applyConstraintMethod(constraintMethodName, dependencies);
-    }
-
-/**
-  * Applies a method as a constraint.
-  *
-  * @param String constraintMethodName: The name of the method that
-  * will be invoked when any of the dependencies changes.  Typically
-  * this method 'constrains' an attribute to a computation on the
-  * dependent attributes.  E.g. `function constrain_foo () {
-  * this.setAttribute( 'foo' , this.x + myfriend.width ) }`.  This
-  * method _must_ be a method on the instance to which you are
-  * applying the constraint.
-  *
-  * @param Array dependencies: An array of (reference, attribute)
-  * pairs that the constraint depends on. For instance, if the
-  * constraint depends on my x and my friend's width, the dependencies
-  * array would look like this: `[ this, "x" , myfriend, "width" ]`
-  */
-function applyConstraintMethod ( constraintMethodName, dependencies ){
+  // TODO: [2008-02-12 ptw] Backwards compatibility, remove in next
+  // release
+  /**
+   * Applies a function as a constraint.
+   *
+   * @deprecated: Constraints should be methods and should be applied
+   * using applyConstraintMethod
+   *
+   * @param String attribute: Putatively the attribute being
+   * constrained, but actually ignored
+   * @param Function constraint: A function that will be `call`-ed on
+   * `this` when any of the dependencies change
+   * @param Array dependencies: A property list of (reference,
+   * attribute) that should cause the constraint function to be invoked.
+   */
+  function applyConstraint(attribute, constraint, dependencies) {
     if ($debug) {
-        if (! ((arguments.length == 2) &&
-               (typeof constraintMethodName == 'string') &&
-               (this[constraintMethodName] instanceof Function) &&
-               (dependencies == null || (dependencies instanceof Array)))) {
-            Debug.error("%w.%s: invalid arguments %w", this, arguments.callee, arguments);
-        }
+      Debug.deprecated(this, arguments.callee, this.applyConstraintMethod);
+    }
+    var constraintMethodName = "$cf" + this.$cfn++;
+    this.addProperty(constraintMethodName, constraint);
+    return this.applyConstraintMethod(constraintMethodName, dependencies);
+  }
+
+  /**
+   * Applies a method as a constraint.
+   *
+   * @param String constraintMethodName: The name of the method that
+   * will be invoked when any of the dependencies changes.  Typically
+   * this method 'constrains' an attribute to a computation on the
+   * dependent attributes.  E.g. `function constrain_foo () {
+   * this.setAttribute( 'foo' , this.x + myfriend.width ) }`.  This
+   * method _must_ be a method on the instance to which you are
+   * applying the constraint.
+   *
+   * @param Array dependencies: An array of (reference, attribute)
+   * pairs that the constraint depends on. For instance, if the
+   * constraint depends on my x and my friend's width, the dependencies
+   * array would look like this: `[ this, "x" , myfriend, "width" ]`
+   */
+  function applyConstraintMethod ( constraintMethodName, dependencies ){
+    if ($debug) {
+      if (! ((arguments.length == 2) &&
+             (typeof constraintMethodName == 'string') &&
+             (this[constraintMethodName] instanceof Function) &&
+             (dependencies == null || (dependencies instanceof Array)))) {
+        Debug.error("%w.%s: invalid arguments %w", this, arguments.callee, arguments);
+      }
     }
     if (dependencies && dependencies.length > 0){
-        if ( !this.__LZdelegates ){
-            this.__LZdelegates = [];
-        }
+      if ( !this.__LZdelegates ){
+        this.__LZdelegates = [];
+      }
 
-        // NOTE: [2006-05-30 ptw] You may think to yourself 'this is
-        // not my large automobile', I can move that `new LzDelegate`
-        // out of the loop and register it against each dependency.
-        // But that will break, at least, the centering of text in a
-        // component button.  My suspicion is that this is because of
-        // the mechanism in sendEvent that prevents the same delegate
-        // from being called more than once in an event chain.  This
-        // little inefficiency permits the same constraint function to
-        // be called more than once in an event chain, because it gets
-        // a separate delegate for each dependency, and people have
-        // written code that only works because of this loophole...
-        var dp;
-        for (var i = 0, l = dependencies.length; i < l; i += 2) {
-            dp = dependencies[i];
-            if (dp) {
-                var d = new LzDelegate(this, constraintMethodName, dp, "on" + dependencies[i + 1]);
-                this.__LZdelegates.push(d);
-            }
+      // NOTE: [2006-05-30 ptw] You may think to yourself 'this is
+      // not my large automobile', I can move that `new LzDelegate`
+      // out of the loop and register it against each dependency.
+      // But that will break, at least, the centering of text in a
+      // component button.  My suspicion is that this is because of
+      // the mechanism in sendEvent that prevents the same delegate
+      // from being called more than once in an event chain.  This
+      // little inefficiency permits the same constraint function to
+      // be called more than once in an event chain, because it gets
+      // a separate delegate for each dependency, and people have
+      // written code that only works because of this loophole...
+      var dp;
+      for (var i = 0, l = dependencies.length; i < l; i += 2) {
+        dp = dependencies[i];
+        if (dp) {
+          var d = new LzDelegate(this, constraintMethodName, dp, "on" + dependencies[i + 1]);
+          this.__LZdelegates.push(d);
         }
+      }
     }
     // Whether there are dependencies or not, we need to invoke the
     // constraint function (since the dependencies may have 'fired'
     // before the constraint was installed).
     this[constraintMethodName](null);
-}
+  }
 
-    /** @access private */
-    function applyConstraintExpr(expr:LzConstraintExpr) {
-        // Apply the constraint method
-        var constraintMethodName = expr.methodName;
-        if ($debug) {
-            if (!(this[constraintMethodName] is Function)) {
-                Debug.debug("Bad constraint %w on %w", expr, this);
-            }
-        }
-        var dependencies = null;
-        // TODO: [2008-03-24 ptw] Use `switch type`...
-        if (expr instanceof LzAlwaysExpr) {
-            var c:LzAlwaysExpr = (expr cast LzAlwaysExpr);
-            var dependenciesMethodName = c.dependenciesName;
-            if ($debug) {
-                if (!(this[dependenciesMethodName] is Function)) {
-                    Debug.debug("Bad constraint dependencies %w on %w", expr, this);
-                }
-            }
-            dependencies = this[dependenciesMethodName]();
-        }
-        this.applyConstraintMethod(constraintMethodName , dependencies);
+  /** @access private */
+  function applyConstraintExpr(expr:LzConstraintExpr) {
+    // Apply the constraint method
+    var constraintMethodName = expr.methodName;
+    if ($debug) {
+      if (!(this[constraintMethodName] is Function)) {
+        Debug.debug("Bad constraint %w on %w", expr, this);
+      }
     }
+    var dependencies = null;
+    // TODO: [2008-03-24 ptw] Use `switch type`...
+    if (expr instanceof LzAlwaysExpr) {
+      var c:LzAlwaysExpr = (expr cast LzAlwaysExpr);
+      var dependenciesMethodName = c.dependenciesName;
+      if ($debug) {
+        if (!(this[dependenciesMethodName] is Function)) {
+          Debug.debug("Bad constraint dependencies %w on %w", expr, this);
+        }
+      }
+      dependencies = this[dependenciesMethodName]();
+    }
+    this.applyConstraintMethod(constraintMethodName , dependencies);
+  }
 
   /**
    * Release a constraint on an attribute
@@ -1534,114 +1534,114 @@ function applyConstraintMethod ( constraintMethodName, dependencies ){
     return false;
   }
 
-/**
-  * Release a constraint method
-  *
-  * @param String constraintMethodName: the constraint to release
-  *
-  * @devnote TODO: [2008-02-07 ptw] This could probably be made more
-  * efficient, but at least it should work now.  The previous
-  * implementation was nonesense.
-  */
-function releaseConstraintMethod (constraintMethodName) {
+  /**
+   * Release a constraint method
+   *
+   * @param String constraintMethodName: the constraint to release
+   *
+   * @devnote TODO: [2008-02-07 ptw] This could probably be made more
+   * efficient, but at least it should work now.  The previous
+   * implementation was nonesense.
+   */
+  function releaseConstraintMethod (constraintMethodName) {
     var result = false;
     var dels = this.__LZdelegates;
     if (dels) {
-        for (var i = 0; i < dels.length; ) {
-            var del = dels[i];
-            if (del.c === this && del.m === this[constraintMethodName]) {
-                del.unregisterAll();
-                dels.splice(i, 1);
-                result = true;
-            } else {
-                i++;
-            }
+      for (var i = 0; i < dels.length; ) {
+        var del = dels[i];
+        if (del.c === this && del.m === this[constraintMethodName]) {
+          del.unregisterAll();
+          dels.splice(i, 1);
+          result = true;
+        } else {
+          i++;
         }
+      }
     }
     return result;
-}
+  }
 
-/**
-  * Sets the name of the node.
-  * @access protected
-  * @param String name: A string to use for the name of this node.
-  */
-function $lzc$set_name ( name ){
+  /**
+   * Sets the name of the node.
+   * @access protected
+   * @param String name: A string to use for the name of this node.
+   */
+  function $lzc$set_name ( name ){
     if ((typeof(name) == 'string') && name.length) {
+      if ($debug) {
+        if (this.parent && this.parent[name] && this.parent[name] !== this) {
+          Debug.warn('Redefining %w.%s from %w to %w',
+                     this.parent, name, this.parent[name], this);
+        }
+      }
+      if (this.parent) this.parent[ name ] = this;
+      //unless placement is used, this is called twice, but it's faster
+      //than checking to see if parent == immediateparent
+      //this supports name tunneling.
+      if ($debug) {
+        if (this.immediateparent && this.immediateparent[name] && this.immediateparent[name] !== this) {
+          Debug.warn('Redefining %w.%s from %w to %w',
+                     this.immediateparent, name, this.immediateparent[name], this);
+        }
+      }
+      if (this.immediateparent) this.immediateparent[  name ] = this;
+      this.name = name;
+      if ( this.parent === canvas ){
+        //it's an id
         if ($debug) {
-            if (this.parent && this.parent[name] && this.parent[name] !== this) {
-                Debug.warn('Redefining %w.%s from %w to %w', 
-                           this.parent, name, this.parent[name], this);
-            }
+          if (global[name] && global[name] !== this) {
+            Debug.warn('Redefining #%s from %w to %w',
+                       name, global[name], this);
+          }
         }
-        if (this.parent) this.parent[ name ] = this;
-        //unless placement is used, this is called twice, but it's faster
-        //than checking to see if parent == immediateparent
-        //this supports name tunneling.
-        if ($debug) {
-            if (this.immediateparent && this.immediateparent[name] && this.immediateparent[name] !== this) {
-                Debug.warn('Redefining %w.%s from %w to %w', 
-                           this.immediateparent, name, this.immediateparent[name], this);
-            }
+        // admit it!  the name is also an id in this case
+        if (! this.hasOwnProperty('id')) {
+          this.id = name;
         }
-        if (this.immediateparent) this.immediateparent[  name ] = this;
-        this.name = name;
-        if ( this.parent === canvas ){
-            //it's an id
-            if ($debug) {
-                if (global[name] && global[name] !== this) {
-                    Debug.warn('Redefining #%s from %w to %w', 
-                               name, global[name], this);
-                }
-            }
-            // admit it!  the name is also an id in this case
-            if (! this.hasOwnProperty('id')) {
-                this.id = name;
-            }
-            // TODO: [2006-03-22 ptw] Should id's really go in the user/canvas module?
-            global[ name ] = this;
-        }
+        // TODO: [2006-03-22 ptw] Should id's really go in the user/canvas module?
+        global[ name ] = this;
+      }
     } else {
-        if ($debug) {
-            // Name is permitted to be null or undefined, meaning
-            // "don't name me"
-            if (name) {
-                Debug.error('Invalid name %w for %w', name, this);
-            }
+      if ($debug) {
+        // Name is permitted to be null or undefined, meaning
+        // "don't name me"
+        if (name) {
+          Debug.error('Invalid name %w for %w', name, this);
         }
+      }
     }
-}
+  }
 
-/**
-  * @access private
-  */
-function defaultSet ( val ,prop ){
+  /**
+   * @access private
+   */
+  function defaultSet ( val ,prop ){
     if ( val != null ){
-        this[ prop ] = val ;
+      this[ prop ] = val ;
     }
-}
+  }
 
 
-/**
-  * Sets the datacontext for the node to the xpath given as an argument
-  * @access public
-  * @param String dp: The string to use as the datapath.
-  */
-function setDatapath ( dp ) {
+  /**
+   * Sets the datacontext for the node to the xpath given as an argument
+   * @access public
+   * @param String dp: The string to use as the datapath.
+   */
+  function setDatapath ( dp ) {
     if (null != this.datapath && dp != LzNode._ignoreAttribute) {
-        this.datapath.setXPath(dp);
+      this.datapath.setXPath(dp);
     } else {
-        // LzDatapath will set datapath of its immediateparent
-        new LzDatapath ( this, { xpath : dp } );
+      // LzDatapath will set datapath of its immediateparent
+      new LzDatapath ( this, { xpath : dp } );
     }
-}
-    /**
-     * Setter for datapath
-     * @access private
-     */
-    function $lzc$set_datapath (dp) {
-        this.setDatapath(dp);
-    }
+  }
+  /**
+   * Setter for datapath
+   * @access private
+   */
+  function $lzc$set_datapath (dp) {
+    this.setDatapath(dp);
+  }
 
   /**
    * Sets the datacontext for the node to the data element given as an
@@ -1657,64 +1657,64 @@ function setDatapath ( dp ) {
     if (this.ondata.ready) this.ondata.sendEvent(data);
   }
 
-/**
-  * Called on any node that is declared with a datapath that matches a
-  * terminal selector, such as <code>text()</code> or
-  * <code>@attribute</code> when the data it matches is
-  * changed.
-  * @access public
-  * @param String data: a string representing the matching data
-  */
-function applyData ( data ){
-}
-
-/**
-  * see <method>LzDatapointer#updateData()</method>
-  * FIXME: [20080419 anba] doc: LPP-4259
-  * FIXME: [20080419 anba] return type: LPP-4077
-  * 
-  * @access protected
-  */
-function updateData () /* :String */ {
-    return void(0);
-}
-
-/**
-  * FIXME: [20080419 anba] document me!
-  * There is definitely a lack of documentation about selection
-  * i) if you use LzSelectionManager, you can decide the selection method, 
-  * see "sel" property on LzSelectionManager
-  * ii) but LzDataSelectionManager forces you to override "setSelected",
-  * see LzDatapath#setSelected(Boolean)
-  * -> that's way too confusing!
-  *
-  * @access protected
-  * @param boolean sel: true when this node was selected, false when it lost selection
-  */
-function setSelected (sel:Boolean) /* :void */ {
-}
-
-
-/**
-  * A list of CSS property names and values that configure the
-  * behavior of objects, such as data binding and view layouts, that
-  * operate on this view.
-  *
-  * @devnote The initial value for this object is a type-correct sentinel
-  * that allows getting options by node.options['name'], but options
-  * _must_ be set using the setter, or the sentinel will be smashed.
-  *
-  * @lzxtype css
-  * @keywords final
-  * @access private
-  */
-prototype.options = {};
+  /**
+   * Called on any node that is declared with a datapath that matches a
+   * terminal selector, such as <code>text()</code> or
+   * <code>@attribute</code> when the data it matches is
+   * changed.
+   * @access public
+   * @param String data: a string representing the matching data
+   */
+  function applyData ( data ){
+  }
 
   /**
-    * Setter to install options on a class or instance
-    *
-    * @access private
-    */
+   * see <method>LzDatapointer#updateData()</method>
+   * FIXME: [20080419 anba] doc: LPP-4259
+   * FIXME: [20080419 anba] return type: LPP-4077
+   *
+   * @access protected
+   */
+  function updateData () /* :String */ {
+    return void(0);
+  }
+
+  /**
+   * FIXME: [20080419 anba] document me!
+   * There is definitely a lack of documentation about selection
+   * i) if you use LzSelectionManager, you can decide the selection method,
+   * see "sel" property on LzSelectionManager
+   * ii) but LzDataSelectionManager forces you to override "setSelected",
+   * see LzDatapath#setSelected(Boolean)
+   * -> that's way too confusing!
+   *
+   * @access protected
+   * @param boolean sel: true when this node was selected, false when it lost selection
+   */
+  function setSelected (sel:Boolean) /* :void */ {
+  }
+
+
+  /**
+   * A list of CSS property names and values that configure the
+   * behavior of objects, such as data binding and view layouts, that
+   * operate on this view.
+   *
+   * @devnote The initial value for this object is a type-correct sentinel
+   * that allows getting options by node.options['name'], but options
+   * _must_ be set using the setter, or the sentinel will be smashed.
+   *
+   * @lzxtype css
+   * @keywords final
+   * @access private
+   */
+  prototype.options = {};
+
+  /**
+   * Setter to install options on a class or instance
+   *
+   * @access private
+   */
   function $lzc$set_options(hash) {
     // Ensure you have your own private options dictionary, not the one
     // inherited from your class, nor the default empty one inherited
@@ -1728,211 +1728,211 @@ prototype.options = {};
   }
 
 
-/**
-  * Returns the value for an option (set with the options= attribute) for nodes
-  * created from LZX, or from the dictionary passed as the options attribute
-  * to the node constructor from script
-  * @param String key: The option to retrieve
-  * @return any: The value for that option (or undefined, if the option
-  * has not been set)
-  */
-public function getOption ( key ){
+  /**
+   * Returns the value for an option (set with the options= attribute) for nodes
+   * created from LZX, or from the dictionary passed as the options attribute
+   * to the node constructor from script
+   * @param String key: The option to retrieve
+   * @return any: The value for that option (or undefined, if the option
+   * has not been set)
+   */
+  public function getOption ( key ){
     return this.options[ key ];
-}
+  }
 
-/**
-  * Sets the value for an option (also set with the options= attribute for nodes
-  * created from LZX, or from the dictionary passed as the options attribute
-  * to the node constructor from script)
-  * @param String key: The option to set
-  * @param any val: The value for the option.
-  */
-public function setOption ( key , val ){
+  /**
+   * Sets the value for an option (also set with the options= attribute for nodes
+   * created from LZX, or from the dictionary passed as the options attribute
+   * to the node constructor from script)
+   * @param String key: The option to set
+   * @param any val: The value for the option.
+   */
+  public function setOption ( key , val ){
     // Ensure you have your own private options dictionary, not the one
     // inherited from your class, nor the default empty one inherited
     // from LzNode!
 
-    // TODO [hqm 2008-03] Will this work in swf9???? 
+    // TODO [hqm 2008-03] Will this work in swf9????
     if (this.options === this['constructor'].prototype.options) {
       this.options = new LzInheritedHash(this.options);
     }
     this.options[ key ] = val;
-}
+  }
 
-// The access for doc is public, since it is referred to several times in doc
-/**
-  * Determines the immediateparent for a subnode whose parent is this node.
-  * This method will only be called for subnodes which have a placement
-  * attribute, or for all subnodes if this node has a non-null defaultplacement.
-  * The placement attribute of a subnode overrides a parent's defaultplacement.
-  * This method looks for a subnode with the name given in the placement
-  * parameter, and returns that node.  If no such named node exists, it returns
-  * 'this'.
-  *
-  * A subclass might implement this method to cause the "placement" parameter
-  * to have a different behavior or additional effects.
-  *
-  * <note>This function is not currently designed to be called by anyone but
-  * LzNode.construct. Do not expect to be able to 'place' a view properly after
-  * it has been constructed.</note>
-  *
-  * @access public
-  * @param LzNode aSub: The new subnode
-  * @param String placement: The placement attribute for the new subnode
-  * @param dictionary args: The initialization args for the new subnode
-  * @return LzNode : the node which will be the immediateparent of aSub
-  */
-function determinePlacement ( aSub , placement,
-                                                         args) {
+  // The access for doc is public, since it is referred to several times in doc
+  /**
+   * Determines the immediateparent for a subnode whose parent is this node.
+   * This method will only be called for subnodes which have a placement
+   * attribute, or for all subnodes if this node has a non-null defaultplacement.
+   * The placement attribute of a subnode overrides a parent's defaultplacement.
+   * This method looks for a subnode with the name given in the placement
+   * parameter, and returns that node.  If no such named node exists, it returns
+   * 'this'.
+   *
+   * A subclass might implement this method to cause the "placement" parameter
+   * to have a different behavior or additional effects.
+   *
+   * <note>This function is not currently designed to be called by anyone but
+   * LzNode.construct. Do not expect to be able to 'place' a view properly after
+   * it has been constructed.</note>
+   *
+   * @access public
+   * @param LzNode aSub: The new subnode
+   * @param String placement: The placement attribute for the new subnode
+   * @param dictionary args: The initialization args for the new subnode
+   * @return LzNode: the node which will be the immediateparent of aSub
+   */
+  function determinePlacement ( aSub , placement,
+                                args) {
     // Note that if you modify this function, please check that
     // LzNode.prototype.construct (in this file) is in sync -- it
     // basically inlines this code as an optimization.
 
     if ( placement == null ){
-        var p = null;
+      var p = null;
     } else {
-        var p = this.searchSubnodes( "name" , placement );
+      var p = this.searchSubnodes( "name" , placement );
     }
 
     return p == null ? this : p;
-}
+  }
 
-/**
-  * Searches immediate subnodes for the given value of the given property. 
-  * @param String prop: The attribute name to search for
-  * @param any val: The value of the attribute.
-  * @return LzNode: A pointer to a subnode with the given property, or null.
-  */
-function searchImmediateSubnodes (prop, val) {
+  /**
+   * Searches immediate subnodes for the given value of the given property.
+   * @param String prop: The attribute name to search for
+   * @param any val: The value of the attribute.
+   * @return LzNode: A pointer to a subnode with the given property, or null.
+   */
+  function searchImmediateSubnodes (prop, val) {
     var s = this.subnodes;
     if (s == null) return null;
     for (var i = s.length-1; i >=0; i-- ){
-        var si = s[ i ];
-        if (si[ prop ] == val ){
-            return si;
-        }
+      var si = s[ i ];
+      if (si[ prop ] == val ){
+        return si;
+      }
     }
     return null;
-}
+  }
 
-/**
-  * Searches subnodes for the given value of the given property. Note that in
-  * this release, searchSubnodes actually searches only subviews (and thus is
-  * identical to LzView.searchSubiews). This bug will be fixed in a future 
-  * release.
-  * @param String prop: The attribute name to search for
-  * @param any val: The value of the attribute.
-  * @return LzNode: The a pointer to subnode with the given property
-  */
-function searchSubnodes ( prop , val) {
+  /**
+   * Searches subnodes for the given value of the given property. Note that in
+   * this release, searchSubnodes actually searches only subviews (and thus is
+   * identical to LzView.searchSubiews). This bug will be fixed in a future
+   * release.
+   * @param String prop: The attribute name to search for
+   * @param any val: The value of the attribute.
+   * @return LzNode: The a pointer to subnode with the given property
+   */
+  function searchSubnodes ( prop , val) {
     var nextS = (this.subnodes) ? this.subnodes.concat() : [];
 
     while ( nextS.length > 0  ){
-        var s = nextS;
-        nextS = new Array;
-        for (var i = s.length-1; i >=0; i-- ){
-            var si = s[ i ];
-            if (si[ prop ] == val ){
-                return si;
-            }
-            var sis = si.subnodes;
-            if (sis) {
-                for (var j = sis.length - 1; j>=0; j-- ){
-                    nextS.push( sis[j] );
-                }
-            }
+      var s = nextS;
+      nextS = new Array;
+      for (var i = s.length-1; i >=0; i-- ){
+        var si = s[ i ];
+        if (si[ prop ] == val ){
+          return si;
         }
+        var sis = si.subnodes;
+        if (sis) {
+          for (var j = sis.length - 1; j>=0; j-- ){
+            nextS.push( sis[j] );
+          }
+        }
+      }
     }
     return null;
-}
+  }
 
-/**
-  * Search up parent views for a named property. For now, returns when it finds
-  * the first one.
-  * 
-  * @param String prop: named property
-  * @return LzView: the first view which has a non-null value for <param>prop</param>
-  * or <i>null</i> if none is found
-  * @access private
-  */
-function searchParents ( prop ){
+  /**
+   * Search up parent views for a named property. For now, returns when it finds
+   * the first one.
+   *
+   * @param String prop: named property
+   * @return LzView: the first view which has a non-null value for <param>prop</param>
+   * or <i>null</i> if none is found
+   * @access private
+   */
+  function searchParents ( prop ){
     var sview = this;
     do{
-        sview = sview.immediateparent;
+      sview = sview.immediateparent;
 
-    if ($debug) {
+      if ($debug) {
         // TODO [hqm 2008-02] put this check in a $debug, when that is working for swf9
         if (sview == null) {
-            Debug.error('searchParents got null immediateparent', this);
-            return;
+          Debug.error('searchParents got null immediateparent', this);
+          return;
         }
-    }
+      }
 
-        if (sview[ prop ] != null ){
-            return sview;
-        }
+      if (sview[ prop ] != null ){
+        return sview;
+      }
     }while ( sview != canvas );
-}
+  }
 
-/**
-  * @access private
-  */
-static var __UIDs = 0;
+  /**
+   * @access private
+   */
+  static var __UIDs = 0;
 
-/**
-  * Returns the unique ID of the node.
-  * @return String: A string representing a unique ID for the node.
-  */
-function getUID (){
+  /**
+   * Returns the unique ID of the node.
+   * @return String: A string representing a unique ID for the node.
+   */
+  function getUID (){
     return this.__LZUID;
-}
+  }
 
 
-/**
-  * Tests whether the given node is a parent (or grand-parent, etc.) of this
-  * node.
-  *
-  * @param LzNode node: The node to test to see if it is somewhere above
-  * this one in the node hierarchy
-  * @param Boolean ignore: Not used by LzNode, but see LzDataNodeMixin
-  * @return Boolean: true if this node is a child of the given node.
-  */
-override function childOf( node, ignore=null ){
+  /**
+   * Tests whether the given node is a parent (or grand-parent, etc.) of this
+   * node.
+   *
+   * @param LzNode node: The node to test to see if it is somewhere above
+   * this one in the node hierarchy
+   * @param Boolean ignore: Not used by LzNode, but see LzDataNodeMixin
+   * @return Boolean: true if this node is a child of the given node.
+   */
+  override function childOf( node, ignore=null ){
     if (node == null) { return false; }
     var pv = this;
     while ( pv.nodeLevel >= node.nodeLevel ) {
-        if( pv == node ){
-            return true;
-        }
-        pv = pv.immediateparent;
+      if( pv == node ){
+        return true;
+      }
+      pv = pv.immediateparent;
     }
     return false;
-}
+  }
 
 
-/**
-  * Deletes the node and all the subnodes.
-  */
-override function destroy( ){
+  /**
+   * Deletes the node and all the subnodes.
+   */
+  override function destroy( ){
     if (this.__LZdeleted == true) {
-        return;
+      return;
     }
 
     super.destroy();
 
     //don't allow a call on this method if I'm deleted
     if ($swf9) {
-        // TODO [hqm 2008-03]
-        // flex compiler gives error if you assign a function to null, what do we do here?
+      // TODO [hqm 2008-03]
+      // flex compiler gives error if you assign a function to null, what do we do here?
     } else {
-        this.__LZinstantiationDone = null;
+      this.__LZinstantiationDone = null;
     }
 
     //remove this and all subnodes
     if (this.subnodes != null) {
-        for (var i = this.subnodes.length -1; i >=0 ; i-- ){
-            this.subnodes[i].destroy( );
-        }
+      for (var i = this.subnodes.length -1; i >=0 ; i-- ){
+        this.subnodes[i].destroy( );
+      }
     }
 
     // unbind the id, if any
@@ -1943,72 +1943,72 @@ override function destroy( ){
     var parent = this.parent;
     var name = this.name;
     if ((parent != null) && (name != null)) {
-        if (parent[ name ] === this) {
-            parent[ name ] = null;
-        }
-        if (this.immediateparent[ name ] === this) {
-            this.immediateparent[ name ] == null;
-        }
+      if (parent[ name ] === this) {
+        parent[ name ] = null;
+      }
+      if (this.immediateparent[ name ] === this) {
+        this.immediateparent[ name ] == null;
+      }
     }
 
     //remove __LZdelegates
     if (this.__LZdelegates != null) {
-        for ( var i = this.__LZdelegates.length - 1; i >= 0; i-- ){
-            this.__LZdelegates[ i ].unregisterAll();
-        }
+      for ( var i = this.__LZdelegates.length - 1; i >= 0; i-- ){
+        this.__LZdelegates[ i ].unregisterAll();
+      }
     }
     this.__LZdelegates = null;
 
     if (this.immediateparent && this.immediateparent.subnodes) {
-        for( var i = this.immediateparent.subnodes.length - 1; i >= 0; i-- ){
-            if ( this.immediateparent.subnodes[ i ] == this ){
-                this.immediateparent.subnodes.splice( i , 1 );
-                break;
-            }
+      for( var i = this.immediateparent.subnodes.length - 1; i >= 0; i-- ){
+        if ( this.immediateparent.subnodes[ i ] == this ){
+          this.immediateparent.subnodes.splice( i , 1 );
+          break;
         }
+      }
     }
 
     this.data = null;
 
     if ($profile) {
-        var nm = this['_profile_name'];
-        if (nm) {
-            Profiler.event('destroy: ' + nm);
-        }
+      var nm = this['_profile_name'];
+      if (nm) {
+        Profiler.event('destroy: ' + nm);
+      }
     }
 
-}
+  }
 
-//+++++ Debug stuff
+  //+++++ Debug stuff
 
-/**
-  * animate is the simplest way to animate a property of a node. This method
-  * creates an animator which will change the value of the given property over
-  * the given duration. The result of this call is an LzAnimator object. Note
-  * that the animation is asynchronous -- that is, code that follows this call
-  * will be executed before the animation finishes. Calling this method with a
-  * duration of 0 does not create an animator, but instead just calls
-  * setAttribute.
-  *
-  * @keywords changing
-  *
-  * @param String prop: a string specifying the property to animate.
-  *              public properties are: x, y, width, height, rotation, alpha
-  * @param Number to: the end value of the animation
-  * @param Number duration: the duration of the animation
-  * @param Boolean isRelative: is the animator applied to the property
-  * relatively or not
-  * @param Object moreargs: A dictionary of attributes to pass to the LzAnimator
-  * constructor
-  * @return LzAnimator: a reference to the animator that was added
-  */
+  /**
+   * animate is the simplest way to animate a property of a node. This method
+   * creates an animator which will change the value of the given property over
+   * the given duration. The result of this call is an LzAnimator object. Note
+   * that the animation is asynchronous -- that is, code that follows this call
+   * will be executed before the animation finishes. Calling this method with a
+   * duration of 0 does not create an animator, but instead just calls
+   * setAttribute.
+   *
+   * @keywords changing
+   *
+   * @param String prop: a string specifying the property to animate.
+   *              public properties are: x, y, width, height, rotation, alpha
+   * @param Number to: the end value of the animation
+   * @param Number duration: the duration of the animation
+   * @param Boolean isRelative: is the animator applied to the property
+   * relatively or not
+   * @param Object moreargs: A dictionary of attributes to pass to the LzAnimator
+   * constructor
+   * @return LzAnimator: a reference to the animator that was added
+   */
 
-function animate( prop, to, duration, isRelative = null, moreargs = null ) {
+  function animate( prop, to, duration, isRelative = null, moreargs = null ) {
 
     if ( duration == 0 ){
-        var val = isRelative ? this[ prop ] + to : to;
-        this.setAttribute( prop, val );
-        return null;
+      var val = isRelative ? this[ prop ] + to : to;
+      this.setAttribute( prop, val );
+      return null;
     }
 
     var args = { attribute : prop , to: to,  duration : duration ,
@@ -2020,90 +2020,90 @@ function animate( prop, to, duration, isRelative = null, moreargs = null ) {
     var animator = new LzAnimator( null, args );
 
     return animator;
-}
+  }
 
-/**
-  * @access private
-  */
-function toString (){
+  /**
+   * @access private
+   */
+  function toString (){
     return this.getDebugIdentification();
-}
+  }
 
-/**
-  * @access private
-  * The old way of identifying nodes.  Not so useful with the modern
-  * debugger.
-  */
-function getDebugIdentification (){
+  /**
+   * @access private
+   * The old way of identifying nodes.  Not so useful with the modern
+   * debugger.
+   */
+  function getDebugIdentification (){
     var s = this['constructor'].tagname + " ";
     if ( this.name != null ){
-        s += " name: " + this.name + " ";
+      s += " name: " + this.name + " ";
     }
     if ( this.id != null ){
-        s += " id: " + this.id + " ";
+      s += " id: " + this.id + " ";
     }
     return s;
-}
+  }
 
-/**
-  * debugString hook
-  *
-  * If the node has an id (and is the value of that id), return that
-  * (prefixed by #, as a css id would be), if it has a name (and is the
-  * value of that name in its parent), return that (prefixed by ., as a
-  * property would be.
-  *
-  * If the node has no valid name or id, call the toString method (for
-  * backward compatibility).  TODO: [2005-07-30 ptw] rewrite all those
-  * toString methods that really should be _dbg_name methods.
-  *
-  * @access private
-  */
-function _dbg_name (){
-  if ((typeof(this.id) == 'string') && 
-      (global[this.id] === this)) {
-    return "#" + this.id;
-  } else if ((typeof(this.name) == 'string') &&
-             (this.parent[this.name] === this)) {
-    return '.' + this.name;
-  } else {
+  /**
+   * debugString hook
+   *
+   * If the node has an id (and is the value of that id), return that
+   * (prefixed by #, as a css id would be), if it has a name (and is the
+   * value of that name in its parent), return that (prefixed by ., as a
+   * property would be.
+   *
+   * If the node has no valid name or id, call the toString method (for
+   * backward compatibility).  TODO: [2005-07-30 ptw] rewrite all those
+   * toString methods that really should be _dbg_name methods.
+   *
+   * @access private
+   */
+  function _dbg_name (){
+    if ((typeof(this.id) == 'string') &&
+        (global[this.id] === this)) {
+      return "#" + this.id;
+    } else if ((typeof(this.name) == 'string') &&
+               (this.parent[this.name] === this)) {
+      return '.' + this.name;
+    } else {
       // Don't use LzNode.toString, which is lame
       var ts = this.toString();
       if (ts == this.getDebugIdentification()) {
-          // Return empty string so __String does not call
-          // LzNode#toString, which won't add any information
-          return "";
+        // Return empty string so __String does not call
+        // LzNode#toString, which won't add any information
+        return "";
       } else {
-          return ts;
+        return ts;
       }
-  }
-}
-
-
-//+++++ Wacky class stuff
-
-if ($swf9) {     // TODO [hqm 2008-03] This is just a debugging print utility function for swf9
-public static function objAsString(obj) {
-    var s = "";
-        for (var k in obj) {
-            s+= k +": "+obj[k];
-            s+=", ";
-        }
-        return s;
     }
-}
-/**
-  * @access private
-  * setter for $datapath
-  */
-function $lzc$set_$datapath( dpobj ){
-  if (! (dpobj instanceof Object)) {
-    if ($debug) {
+  }
+
+
+  //+++++ Wacky class stuff
+
+  if ($swf9) {     // TODO [hqm 2008-03] This is just a debugging print utility function for swf9
+    public static function objAsString(obj) {
+      var s = "";
+      for (var k in obj) {
+        s+= k +": "+obj[k];
+        s+=", ";
+      }
+      return s;
+    }
+  }
+  /**
+   * @access private
+   * setter for $datapath
+   */
+  function $lzc$set_$datapath( dpobj ){
+    if (! (dpobj instanceof Object)) {
+      if ($debug) {
         Debug.debug('%s on non-object %w?', arguments.callee, dpobj)
+          }
     }
+    this.makeChild( dpobj , true);
   }
-  this.makeChild( dpobj , true);
-}
 
 } // End of LzNode
 
@@ -2113,20 +2113,19 @@ ConstructorMap[LzNode.tagname] = LzNode;
 ////////////////////////////////////////////////////////////////
 
 /**
-  * @access private
-  * @todo [2006-09-28 ptw] This is a wart, needed for backward
-  * compatibility with the current implementation of
-  * defaultplacement.  There is no such tag as &lt;__LZUserClassPlacementObject&gt;!
-  */
+ * @access private
+ * @todo [2006-09-28 ptw] This is a wart, needed for backward
+ * compatibility with the current implementation of
+ * defaultplacement.  There is no such tag as &lt;__LZUserClassPlacementObject&gt;!
+ */
 
 public class LzUserClassPlacement {
-    public function LzUserClassPlacement ( parent:LzNode? = null,
-                                           placement:Object? = null,
-                                           ignore = null,
-                                           ignoremetoo = null){
-        parent.defaultplacement = placement;
-    };
+  public function LzUserClassPlacement ( parent:LzNode? = null,
+                                         placement:Object? = null,
+                                         ignore = null,
+                                         ignoremetoo = null){
+    parent.defaultplacement = placement;
+  };
 }
 
 ConstructorMap["__LZUserClassPlacementObject"] = LzUserClassPlacement;
-
