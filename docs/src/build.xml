@@ -20,6 +20,8 @@
   http://labs.openlaszlo.org/trunk-nightly/docs/developers/developers.doctools.html
   
   [bshine 12.29.2007]
+
+  For a trimmed-down build for testing doc tools, you can run "ant clean reference -DQUICK=true" 
 -->
 <project name="reference" default="build">
     
