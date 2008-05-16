@@ -1480,7 +1480,7 @@ All Rights Reserved. Use is subject to license terms.</p>
 
   <!-- don't build the contributor's guide, because I don't want to and it takes too long [bshine 10.17.2007] -->
   <target name="build" description="Make the documentation"
-          depends="users,reference.frameset.generate,reference.html.disclaimer" 
+          depends="users,reference.frameset.generate" 
           unless="skip.doc"/> 
 
   <target name="clean" description="clean up generated files"
