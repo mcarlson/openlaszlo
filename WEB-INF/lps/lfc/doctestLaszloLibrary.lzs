@@ -1,0 +1,18 @@
+/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
+
+/**
+  * Definition of the basic LFC Library 
+  *
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access private
+  */
+
+/** @access private */
+var _Copyright = "Portions of this file are copyright (c) 2001-2007 by Laszlo Systems, Inc.  All rights reserved.";
+
+#include "core/Library.lzs"
+#include "events/Library.lzs"
+#include "views/Library.lzs"
+

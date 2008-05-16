@@ -37,6 +37,22 @@
          location="dtds/xhtml1-transitional.dtd"/>
   </xmlcatalog>
 
+<if>
+  <equals arg1="${QUICK}" arg2="true" />
+  <then>
+    <echo message="Building quick test version docs for debugging doc tools" />
+    <property name="LaszloLibraryName" value="doctestLaszloLibrary"/>
+    <property name="library.filename" value="doctest-library.lzx"/>
+    <property name="refindex" value="doctest-index.dbk"/>
+
+  </then>
+  <else>
+    <property name="LaszloLibraryName" value="LaszloLibrary"/>
+    <property name="library.filename" value="library.lzx"/>
+    <property name="refindex" value="index.dbk"/>
+  </else>
+</if>
+
   <target name="init" description="Init tasks for documentation generation"
           unless="docs.src.done.init" depends="build-opt">
       
@@ -406,7 +422,7 @@ All Rights Reserved. Use is subject to license terms.</p>
           unless="lfc.js2doc.uptodate">
 
     <mkdir dir="${js2doc.build.dir}" />
-    <property name="js2doc.args" value="--dir ${js2doc.build.dir} ${lfc.src.dir}/LaszloLibrary.lzs" />
+    <property name="js2doc.args" value="--dir ${js2doc.build.dir} ${lfc.src.dir}/${LaszloLibraryName}.lzs" />
     <ant dir="${lps.server.dir}" target="js2doc" />
 
   </target>
@@ -416,7 +432,7 @@ All Rights Reserved. Use is subject to license terms.</p>
    <condition property="lfc.js2doc.uptodate">
      <or>
        <isset property="reference.skip"/>
-       <uptodate targetfile="${js2doc.build.dir}/LaszloLibrary.xml">
+       <uptodate targetfile="${js2doc.build.dir}/${LaszloLibraryName}.xml">
            <srcfiles dir="${lfc.src.dir}" includes="**/*.lzs" />
            <srcfiles dir="${lfc.src.dir}" includes="**/*.as" />
            <srcfiles dir="${lfc.src.dir}" includes="**/*.js" />
@@ -430,7 +446,7 @@ All Rights Reserved. Use is subject to license terms.</p>
   <target name="lfc.js2doc.test" depends="lfc.js2doc.generate,js2doc.rng"
         unless="reference.skip">
     <jing rngfile="${lps.server.dir}/lib/js2doc.rng">
-      <fileset dir="${js2doc.build.dir}" includes="LaszloLibrary.xml" />
+      <fileset dir="${js2doc.build.dir}" includes="${LaszloLibraryName}.xml" />
     </jing>
   </target>
 
@@ -477,12 +493,14 @@ All Rights Reserved. Use is subject to license terms.</p>
     </jing>
 
   </target>
+
+
   
   <target name="components.js2doc.generate" depends="init"
           unless="reference.skip">
           
     <antcall target="lzx2js2doc.transform" inheritAll="true">
-      <param name="local.input.file" value="${components.dir}/library.lzx"/>
+      <param name="local.input.file" value="${components.dir}/${library.filename}"/>
       <param name="local.output.file" value="${reference.build.dir}/components-raw.xml"/>
       <param name="lzx.base.dir" value="${components.dir}"/>
       <param name="lzx.root.path" value="lps/components/"/>
@@ -498,7 +516,7 @@ All Rights Reserved. Use is subject to license terms.</p>
           unless="reference.skip">
           
     <antcall target="lzx2js2doc.transform" inheritAll="true">
-      <param name="local.input.file" value="${incubator.dir}/library.lzx"/>
+      <param name="local.input.file" value="${incubator.dir}/${library.filename}"/>
       <param name="local.output.file" value="${reference.build.dir}/incubator-raw.xml"/>
       <param name="lzx.base.dir" value="${incubator.dir}"/>
       <param name="lzx.root.path" value="lps/components/incubator/"/>
@@ -536,48 +554,48 @@ All Rights Reserved. Use is subject to license terms.</p>
     <!-- bundle together the LFC, LZX, and Components js2doc output -->
     
     <style style="xsl/js2doc-append.xsl"
-           in="${js2doc.build.dir}/LaszloLibrary.xml"
-           out="${reference.build.dir}/LaszloLibrary-1.js2doc">
+           in="${js2doc.build.dir}/${LaszloLibraryName}.xml"
+           out="${reference.build.dir}/${LaszloLibraryName}-1.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.src.dir}/langref.xml"/>
     </style>
     
     <style style="xsl/js2doc-append.xsl"
-           in="${reference.build.dir}/LaszloLibrary-1.js2doc"
-           out="${reference.build.dir}/LaszloLibrary-2.js2doc">
+           in="${reference.build.dir}/${LaszloLibraryName}-1.js2doc"
+           out="${reference.build.dir}/${LaszloLibraryName}-2.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.build.dir}/components.xml"/>
     </style>
     
     <style style="xsl/js2doc-append.xsl"
-           in="${reference.build.dir}/LaszloLibrary-2.js2doc"
-           out="${reference.build.dir}/LaszloLibrary-3.js2doc">
+           in="${reference.build.dir}/${LaszloLibraryName}-2.js2doc"
+           out="${reference.build.dir}/${LaszloLibraryName}-3.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.build.dir}/incubator.xml"/>
     </style>
     
     <style style="xsl/js2doc-append.xsl"
-           in="${reference.build.dir}/LaszloLibrary-3.js2doc"
-           out="${reference.build.dir}/LaszloLibrary-4.js2doc">
+           in="${reference.build.dir}/${LaszloLibraryName}-3.js2doc"
+           out="${reference.build.dir}/${LaszloLibraryName}-4.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.build.dir}/embednew.xml"/>
     </style>
     
     <style style="xsl/js2doc-append.xsl"
-           in="${reference.build.dir}/LaszloLibrary-4.js2doc"
-           out="${reference.build.dir}/LaszloLibrary-5.js2doc">
+           in="${reference.build.dir}/${LaszloLibraryName}-4.js2doc"
+           out="${reference.build.dir}/${LaszloLibraryName}-5.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.src.dir}/wrappers.xml"/>
     </style>
     
     <style style="xsl/js2doc-append.xsl"
-           in="${reference.build.dir}/LaszloLibrary-5.js2doc"
-           out="${reference.build.dir}/LaszloLibrary-6.js2doc">
+           in="${reference.build.dir}/${LaszloLibraryName}-5.js2doc"
+           out="${reference.build.dir}/${LaszloLibraryName}-6.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.src.dir}/info.xml"/>
@@ -585,8 +603,8 @@ All Rights Reserved. Use is subject to license terms.</p>
     
     <!-- make certain information explicit to ease processing by js2doc2dbk.xsl -->
     <style style="xsl/js2doc-verbose.xsl"
-           in="${reference.build.dir}/LaszloLibrary-6.js2doc"
-           out="${reference.build.dir}/LaszloLibrary-verbose.js2doc">
+           in="${reference.build.dir}/${LaszloLibraryName}-6.js2doc"
+           out="${reference.build.dir}/${LaszloLibraryName}-verbose.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
     </style>
@@ -597,14 +615,14 @@ All Rights Reserved. Use is subject to license terms.</p>
           unless="reference.skip">
     <antcall target="js2doc.validate" inheritAll="true">
       <param name="local.input.dir" value="${reference.build.dir}"/>
-      <param name="local.input.file" value="LaszloLibrary-verbose.js2doc"/>
+      <param name="local.input.file" value="${LaszloLibraryName}-verbose.js2doc"/>
     </antcall>
   </target>
     
   <target name="reference.dbk.build" depends="init,reference.js2doc.build,docbook.catalog.generate"
           unless="reference.skip">
 
-    <property name="ref.file.in" value="${reference.build.dir}/LaszloLibrary-verbose.js2doc"/>
+    <property name="ref.file.in" value="${reference.build.dir}/${LaszloLibraryName}-verbose.js2doc"/>
     <property name="ref.visibility.filter" value="public"/>
     <property name="ref.show.comments" value="${show.comments}"/>
     <property name="ref.show.fixmes" value="${show.fixmes}"/>
@@ -715,7 +733,7 @@ All Rights Reserved. Use is subject to license terms.</p>
 
     <antcall target="dbk.examples.preprocess" inheritAll="true">
       <param name="local.input.dir" value="${docs.build.dir}"/>
-      <param name="local.input.index" value="reference/index.dbk"/>
+      <param name="local.input.index" value="reference/${refindex}"/>
       <param name="local.output.dir" value="${reference.output.dir}"/>
       <param name="local.output.index" value="reference.dbk"/>
       <param name="local.worksheet" value="xsl/dbkpreprocessexamples.xsl"/>
@@ -849,7 +867,7 @@ All Rights Reserved. Use is subject to license terms.</p>
     
     <!-- Transform lzx components code into js2doc -->
     <antcall target="lzx2js2doc.transform" inheritAll="true">
-      <param name="local.input.file" value="${components.dir}/library.lzx"/>
+      <param name="local.input.file" value="${components.dir}/${library.filename}"/>
       <param name="local.output.file" value="${reference.build.dir}/components-raw.xml"/>
       <param name="lzx.base.dir" value="${components.dir}"/>
       <param name="lzx.root.path" value="lps/components/"/>
@@ -916,7 +934,7 @@ All Rights Reserved. Use is subject to license terms.</p>
   <target name="contribref.dbk.build" depends="init,reference.js2doc.build,docbook.catalog.generate"
           unless="reference.skip">
 
-    <property name="contribref.file.in" value="${reference.build.dir}/LaszloLibrary-verbose.js2doc"/>
+    <property name="contribref.file.in" value="${reference.build.dir}/${LaszloLibraryName}-verbose.js2doc"/>
     <property name="contribref.visibility.filter" value="public protected private"/>
     <property name="contribref.show.comments" value="1"/>
     <property name="contribref.show.fixmes" value="1"/>
