@@ -16,6 +16,7 @@
   * <p>
   * See <a href="${dguide}input-devices.html">The Software Developer's Guide</a> for a discussion of keyboard focus.
   * </p>
+  * <p>Note that the view.getNextSelection() and view.getPrevSelection() methods can be overridden to change the tab order</p>
   * 
   * @shortdesc Handles keyboard focus.
   */

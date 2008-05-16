@@ -2539,7 +2539,7 @@ function setBGColor ( bgc ) {
   * 
   * @param String source: The URL from which to load the resource for this view.
   * @param String cache: If set, controls caching behavior. Choices are
-  * <code>none</code> , <code>clientonly</code> , <code>serveronly</code> , <code>both</code> (the default).
+  * <code>none</code> , <code>clientonly</code> , <code>serveronly</code> , <code>both</code> (the default for Flash).  DHTML applications cache media on the client only.  DHTML supports the <code>memorycache</code> option which enables in-memory resource caching.  This enhances performance when swapping resources quickly, and is used internally for multi-frame resources.  Media loaded with <code>memorycache</code> will remain in memory until the page is unloaded or unload() is called.
   * @param String headers: Headers to send with the request, if any.
   */
 function setSource ( source , cache = null, headers = null){
