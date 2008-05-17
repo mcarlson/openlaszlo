@@ -38,7 +38,10 @@
             <checkbox id="showValueCheckbox" value="true">show value</checkbox>
             <checkbox id="showFillCheckbox" value="true">show fill</checkbox>
             <checkbox id="showRangeCheckbox" value="true">show range</checkbox>
-                 </view>
+        </view>
+        <view x="150" y="105">
+            <text>(not greater than maxValue)</text>
+        </view>
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
