@@ -286,7 +286,7 @@ public dynamic class LzNode extends LzEventable {
 
     // If a 'datapath' init arg was passed, we must override any existing $datapath
     if (maskedargs['datapath'] != null) {
-      maskedargs.$datapath = LzNode._ignoreAttribute;
+      delete maskedargs["$datapath"];
     }
 
     this.construct(  parent , maskedargs );
