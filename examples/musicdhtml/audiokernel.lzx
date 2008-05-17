@@ -1,4 +1,4 @@
-<canvas bgcolor="#EAEAEA" width="640" height="140" >
+<canvas width="0" height="0" >
     <view name="audioplayer" y="40">
         <method name="quieter">
             this.setVolume( this.getVolume() - 10)
@@ -14,7 +14,7 @@
         </method>
         <handler name="onlastframe">
             //Debug.write("Got lastframe");
-            //LzBrowser.callJS('setCanAttr', null, 'lastframe'); 
+            LzBrowser.callJS('setCanAttr', null, 'lastframe'); 
         </handler>
         <handler name="onstop">
             //Debug.write("Got stop");
