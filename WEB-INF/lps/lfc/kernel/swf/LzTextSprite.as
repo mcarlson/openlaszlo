@@ -460,6 +460,13 @@ LzTextSprite.prototype.parseImgAttributes = function(attrs, str) {
 }
 
 /**
+  * Returns the field's text.
+  */
+LzTextSprite.prototype.getText = function() {
+    return this.text;
+}
+
+/**
   * setText sets the text of the field to display
   * @param String t: the string to which to set the text
   */
@@ -604,7 +611,7 @@ LzTextSprite.prototype.setFontName = function ( fname ){
     this.fontname = fname;
     this.__setFormat();
     // force recompute of height if needed
-    this.setText( this.text );
+    this.setText( this.getText() );
 }
 
 /**
@@ -614,7 +621,7 @@ LzTextSprite.prototype.setFontSize = function ( fsize ){
     this.fontsize = fsize;
     this.__setFormat();
     // force recompute of height if needed
-    this.setText( this.text );
+    this.setText( this.getText() );
 
 }
 
@@ -625,7 +632,7 @@ LzTextSprite.prototype.setFontStyle = function ( fstyle ){
     this.fontstyle = fstyle;
     this.__setFormat();
     // force recompute of height if needed
-    this.setText( this.text );
+    this.setText( this.getText() );
 }
 
 /**
@@ -635,7 +642,7 @@ LzTextSprite.prototype.setFontStyle = function ( fstyle ){
 LzTextSprite.prototype.setColor = function ( c ){
     this.colorstring = "#" + c.toString( 16 );
     this.__setFormat();
-    this.setText( this.text );
+    this.setText( this.getText() );
 }
 
 /**
