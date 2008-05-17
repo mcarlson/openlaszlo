@@ -210,16 +210,16 @@ LzInputTextSprite.prototype.setText = function(t) {
 LzInputTextSprite.prototype.__setTextEvents = function(c) {
     //Debug.info('__setTextEvents', c);
     if (c) {
-        this.__LzInputDiv.onblur = function (e) { this.owner.__textEvent(e, 'onblur') }
-        this.__LzInputDiv.onmousedown = function (e) { this.owner.__textEvent(e, 'onmousedown') }
-        this.__LzInputDiv.onmouseout = function (e) { this.owner.__textEvent(e, 'onmouseout') }
-        this.__LzInputDiv.onfocus = function (e) { this.owner.__textEvent(e, 'onfocus') }
-        this.__LzInputDiv.onclick = function (e) { this.owner.__textEvent(e, 'onclick') }
-        this.__LzInputDiv.onkeyup = function (e) { this.owner.__textEvent(e, 'onkeyup') }
-        this.__LzInputDiv.onkeydown = function (e) { this.owner.__textEvent(e, 'onkeydown') }
-        this.__LzInputDiv.onkeypress = function (e) { this.owner.__textEvent(e, 'onkeypress') }
-        this.__LzInputDiv.onselect = function (e) { this.owner.__textEvent(e, 'onselect') }
-        this.__LzInputDiv.onchange = function (e) { this.owner.__textEvent(e, 'onchange') }
+        this.__LzInputDiv.onblur = this.__textEvent;
+        this.__LzInputDiv.onmousedown = this.__textEvent;
+        this.__LzInputDiv.onmouseout = this.__textEvent;
+        this.__LzInputDiv.onfocus = this.__textEvent;
+        this.__LzInputDiv.onclick = this.__textEvent;
+        this.__LzInputDiv.onkeyup = this.__textEvent;
+        this.__LzInputDiv.onkeydown = this.__textEvent;
+        this.__LzInputDiv.onkeypress = this.__textEvent;
+        this.__LzInputDiv.onselect = this.__textEvent;
+        this.__LzInputDiv.onchange = this.__textEvent;
         if (this.quirks.ie_paste_event || this.quirks.safari_paste_event) {
             this.__LzInputDiv.onpaste = function (e) { this.owner.__pasteHandlerEx(e) }
         }
@@ -332,38 +332,59 @@ LzInputTextSprite.prototype.__pasteHandler = function () {
     }, 1);
 }
 
-LzInputTextSprite.prototype.__textEvent = function ( e, eventname ){
-    if (this.__LZdeleted == true) return;
+// Called from the scope of the div - use owner property
+LzInputTextSprite.prototype.__textEvent = function ( e ){
+    if (! e) e = window.event;
+    if (this.owner.__LZdeleted == true) return;
+    if (this.owner.__skipevent) {
+        this.owner.__skipevent = false;
+        return;
+    }
+    var eventname = 'on' + e.type;
+    if (this.owner.__shown != true) {
+        // this only happens when tabbing in from outside the app
+        if (eventname == 'onfocus') {
+            this.owner.__skipevent = true;
+            //this.owner.select()
+            this.owner.__show();
+            this.owner.__LzInputDiv.blur();
+            LzInputTextSprite.__lastfocus = this.owner;
+            LzKeyboardKernel.setKeyboardControl(true);
+        }
+        return; 
+    } else if (this.owner.__shown == false) {
+        return;
+    }
     var keycode = e ? e.keyCode : event.keyCode;
     if (eventname == 'onfocus' || eventname == 'onmousedown') {
         if (eventname == 'onfocus') {
             LzInputTextSprite.prototype.__setglobalclickable(false);
         }
-        LzInputTextSprite.prototype.__focusedSprite = this;         
-        this.__show();
-        if (eventname == 'onfocus' && this._cancelfocus) {
-            this._cancelfocus = false;
+        LzInputTextSprite.prototype.__focusedSprite = this.owner;         
+        this.owner.__show();
+        if (eventname == 'onfocus' && this.owner._cancelfocus) {
+            this.owner._cancelfocus = false;
             return;
         }
         if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = false;
     } else if (eventname == 'onblur') {
         if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = true;
-        if (LzInputTextSprite.prototype.__focusedSprite == this) {
+        if (LzInputTextSprite.prototype.__focusedSprite == this.owner) {
             LzInputTextSprite.prototype.__focusedSprite = null;         
         }    
-        this.__hide();
-        if (this._cancelblur) {
-            this._cancelblur = false;
+        this.owner.__hide();
+        if (this.owner._cancelblur) {
+            this.owner._cancelblur = false;
             return;
         }
     } else if (eventname == 'onmouseout') {
-        this.__setglobalclickable(true);
+        this.owner.__setglobalclickable(true);
     }
 
-    if (this.multiline && this.owner.maxlength > 0) {
+    if (this.owner.multiline && this.owner.owner.maxlength > 0) {
         if (eventname == 'onkeypress') {
             var evt = e ? e : event;
-            var charcode = this.quirks.text_event_charcode ? evt.charCode : evt.keyCode;
+            var charcode = this.owner.quirks.text_event_charcode ? evt.charCode : evt.keyCode;
             
             /* BUG:
              * env: Safari - Win
@@ -376,16 +397,16 @@ LzInputTextSprite.prototype.__textEvent = function ( e, eventname ){
             //Debug.write("charCode = %s, keyCode = %s, ctrlKey = %s, altKey = %s, shiftKey = %s", charcode, keycode, evt.ctrlKey, evt.altKey, evt.shiftKey);
             
             if (!(evt.ctrlKey || evt.altKey) && (charcode || keycode == 13) && keycode != 8) {
-                var selsize = this.getSelectionSize();
+                var selsize = this.owner.getSelectionSize();
                 //[TODO anba 2008-01-06] use selsize==0 when LPP-5330 is fixed
                 if (selsize <= 0) {
-                    if (this.quirks.text_ie_carriagereturn) {
-                        var val = this.__LzInputDiv.value.replace(this.____crregexp, '\n');
+                    if (this.owner.quirks.text_ie_carriagereturn) {
+                        var val = this.owner.__LzInputDiv.value.replace(this.owner.____crregexp, '\n');
                     } else {
-                        var val = this.__LzInputDiv.value;
+                        var val = this.owner.__LzInputDiv.value;
                     }
                     
-                    var len = val.length, max = this.owner.maxlength;
+                    var len = val.length, max = this.owner.owner.maxlength;
                     if (len >= max) {
                         evt.returnValue = false;
                         if (evt.preventDefault) {
@@ -396,16 +417,16 @@ LzInputTextSprite.prototype.__textEvent = function ( e, eventname ){
             } else {
                 /* IE and Safari do not send 'onkeypress' for function-keys, */
                 /* but Firefox and Opera! */
-                if (this.quirks.keypress_function_keys) {
+                if (this.owner.quirks.keypress_function_keys) {
                     if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
                         var c = String.fromCharCode(charcode);
                         /* 'v' for Firefox and 'V' for Opera */
                         if (c == 'v' || c == 'V') {
                             //pasting per ctrl + v
                             //[TODO anba 2008-01-06] how to detect paste per context-menu?
-                            var len = this.__LzInputDiv.value.length, max = this.owner.maxlength;
-                            if (len < max || this.getSelectionSize() > 0) {
-                                this.__pasteHandler();
+                            var len = this.owner.__LzInputDiv.value.length, max = this.owner.owner.maxlength;
+                            if (len < max || this.owner.getSelectionSize() > 0) {
+                                this.owner.__pasteHandler();
                             } else {
                                 evt.returnValue = false;
                                 if (evt.preventDefault) {
@@ -425,17 +446,17 @@ LzInputTextSprite.prototype.__textEvent = function ( e, eventname ){
     }
 
     //Debug.info('__textEvent', eventname, keycode);
-    if (this.owner) {
+    if (this.owner.owner) {
         // Generate the event. onkeyup/onkeydown sent by LzKeys.js
         if (eventname == 'onkeydown' || eventname == 'onkeyup') {
-            var v = this.__LzInputDiv.value;
-            if (v != this.text) {
-                this.text = v;
-                this.owner.inputtextevent('onchange', v);
+            var v = this.owner.__LzInputDiv.value;
+            if (v != this.owner.text) {
+                this.owner.text = v;
+                this.owner.owner.inputtextevent('onchange', v);
             }
         }
         else {
-            this.owner.inputtextevent(eventname, keycode);
+            this.owner.owner.inputtextevent(eventname, keycode);
         }
     }
 }

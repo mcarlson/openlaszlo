@@ -29,6 +29,12 @@ dynamic class LzFocusService extends LzEventable {
      */
     var onfocus = LzDeclaredEvent;
 
+    /** Sent when the last focusable object has been reached.
+     * @access public
+     * @lzxtype event 
+     */
+    var onescapefocus = LzDeclaredEvent;
+
     /** A reference to the last view that held the focus
      * @type LzView
      * @keywords readonly
@@ -47,6 +53,8 @@ dynamic class LzFocusService extends LzEventable {
     function initialize () {
         this.upDel = new LzDelegate( LzFocus , "gotKeyUp", LzKeys, "onkeyup");
         this.downDel = new LzDelegate( LzFocus , "gotKeyDown", LzKeys, "onkeydown");
+        // This must be registered here after both LzFocus and LzKeys are initted 
+        this.lastfocusDel = new LzDelegate(LzKeys, 'gotLastFocus', LzFocus, 'onescapefocus');
     }
 
 
@@ -54,6 +62,8 @@ dynamic class LzFocusService extends LzEventable {
     var upDel;
     /** @access private */
     var downDel;
+    /** @access private */
+    var lastfocusDel;
 
     /** This attribute is set to true when the focus has moved
      * because the user has hit the next or prev focus key (usually 'tab' and
@@ -355,6 +365,10 @@ dynamic class LzFocusService extends LzEventable {
                 index = Number(i);
                 break;
             }
+
+        if (index == focusgroup.length - 1) {
+            this.onescapefocus.sendEvent();
+        }
         // If the current focus group doesn't include v, mvdir==1 should select
         // the first item and mvdir==-1 should select the last item.  index==-1
         // and mvdir==1 will already work for the first case.  Fix the second:

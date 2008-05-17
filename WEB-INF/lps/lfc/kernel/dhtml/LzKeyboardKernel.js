@@ -86,15 +86,29 @@ var LzKeyboardKernel = {
         this.__scope = scope;
         this.__callback = keyboardcallback;
         if (lzOptions.dhtmlKeyboardControl != false) {
-            // can't use Lz.attachEventHandler because we need to cancel events selectively
-            if (LzSprite.prototype.quirks.keyboardlistentotop) {
-                var doc = window.top.document;
-            } else {
-                var doc = document;
-            }
-            doc.onkeydown = this.__keyboardEvent;
-            doc.onkeyup = this.__keyboardEvent;
-            doc.onkeypress = this.__keyboardEvent;
+            this.setKeyboardControl(true);
         }
     }    
+    ,setKeyboardControl: function (dhtmlKeyboardControl) {
+        var kc = null;
+        //console.log('setKeyboardControl' + dhtmlKeyboardControl);
+        if (lzOptions.dhtmlKeyboardControl != false && dhtmlKeyboardControl) {
+            kc = LzKeyboardKernel.__keyboardEvent;
+        }
+        // can't use Lz.attachEventHandler because we need to cancel events selectively
+// can't use Lz.attachEventHandler because we need to cancel events selectively
+        if (LzSprite.prototype.quirks.keyboardlistentotop) {
+            var doc = window.top.document;
+        } else {
+            var doc = document;
+        }
+        doc.onkeydown = kc;
+        doc.onkeyup = kc;
+        doc.onkeypress = kc;
+    }
+    // Called by LzKeys when the last focusable element was reached.
+    ,gotLastFocus: function () {
+        //console.log('gotLastFocus', canvas.sprite.__LZdiv.mouseisover);
+        if (! canvas.sprite.__LZdiv.mouseisover) LzKeyboardKernel.setKeyboardControl(false);
+    }
 }

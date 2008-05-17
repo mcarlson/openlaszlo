@@ -522,6 +522,12 @@ public class LzKeysService extends LzNode {
     numlock : 144
     }
 
+    /** Called when the last focusable element is reached
+      * @access private 
+      */
+    function gotLastFocus() {
+        LzKeyboardKernel.gotLastFocus();
+    }
 }
 
 /**

@@ -51,4 +51,7 @@ var LzKeyboardKernel = {
         this.__scope = scope;
         this.__callback = funcname;
     }    
+    // Called by LzKeys when the last focusable element was reached.
+    ,gotLastFocus: function () {
+    }
 }

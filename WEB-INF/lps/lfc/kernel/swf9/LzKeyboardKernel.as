@@ -61,6 +61,9 @@ class LzKeyboardKernelClass
         this.__scope = scope;
         this.__callback = funcname;
     }    
+    // Called by LzKeys when the last focusable element was reached.
+    function gotLastFocus() {
+    }
 } // End of LzKeyboardKernelClass
 
 var LzKeyboardKernel = new LzKeyboardKernelClass ();

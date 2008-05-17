@@ -57,6 +57,27 @@ var LzSprite = function(owner, isroot) {
             root.appendChild(cdiv);
             this.__LZclickdiv = cdiv;
         }
+
+        // Mouse detection for activiation/deactivation of keyboard events
+        div.mouseisover = false;
+        div.onmouseover = function(e) {
+            this.mouseisover = true;
+            div.focus();
+            LzKeyboardKernel.setKeyboardControl(true);
+            //console.log('onmouseover', e, this.mouseisover);
+        }
+        div.onmouseout = function(e) {
+            if (! e) e = window.event;
+            if (e.relatedTarget && e.relatedTarget.owner && e.relatedTarget.className.indexOf('lz') == 0) {
+                this.focus();
+                this.mouseisover = true;
+            } else {
+                this.blur();
+                this.mouseisover = false;
+                LzKeyboardKernel.setKeyboardControl(false);
+            }
+            //Debug.write('onmouseout', this.mouseisover, e);
+        }
     } else {
         this.__LZdiv = document.createElement('div');
         this.__LZdiv.className = 'lzdiv';
