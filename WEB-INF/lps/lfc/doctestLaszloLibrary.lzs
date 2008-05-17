@@ -14,5 +14,6 @@ var _Copyright = "Portions of this file are copyright (c) 2001-2007 by Laszlo Sy
 
 #include "core/Library.lzs"
 #include "events/Library.lzs"
+#include "compiler/LzFormatter.lzs"
 #include "views/Library.lzs"
 
