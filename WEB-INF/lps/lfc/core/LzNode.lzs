@@ -284,6 +284,11 @@ public dynamic class LzNode extends LzEventable {
       children = LzNode.mergeChildren(children, classChildren);
     }
 
+    // If a 'datapath' init arg was passed, we must override any existing $datapath
+    if (maskedargs['datapath'] != null) {
+      maskedargs.$datapath = LzNode._ignoreAttribute;
+    }
+
     this.construct(  parent , maskedargs );
 
     // Construct may, through many tangled webs of replication and
@@ -2099,7 +2104,10 @@ public dynamic class LzNode extends LzEventable {
    * setter for $datapath
    */
   function $lzc$set_$datapath( dpobj ){
-    if (! (dpobj instanceof Object)) {
+    if (dpobj == LzNode._ignoreAttribute) {
+      // a 'datapath' attribute overrode our $datapath
+      return;
+    } else if (! (dpobj instanceof Object)) {
       if ($debug) {
         Debug.debug('%s on non-object %w?', arguments.callee, dpobj)
           }
