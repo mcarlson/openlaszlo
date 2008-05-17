@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="1.0">
+<xsl:stylesheet
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    version="1.0">
+
   <!-- Specify a doctype. Fixes LPP-5207. [bshine 12.17.2007] -->
   <xsl:param name="chunker.output.method" select="'html'"/>
   <xsl:param name="chunker.output.doctype-public" select="'-//W3C//DTD HTML 4.01 Transitional//EN'"/>
@@ -24,8 +26,8 @@
   <!-- Extensions -->
   <xsl:param name="graphicsize.extension" select="0"/>
   <xsl:param name="linenumbering.everyNth" select="10"/>
-  <xsl:param name="use.extensions" select="'1'"/>
-  <xsl:param name="tablecolumns.extension" select="0"/>
+  <xsl:param name="use.extensions" select="1"/>
+  <xsl:param name="tablecolumns.extension" select="1"/>
   <!-- Automatic labeling -->
   <xsl:param name="section.autolabel" select="1"/>
   <!-- Indexing -->
@@ -40,11 +42,11 @@
   <!-- Meta/*.info -->
   <xsl:param name="make.year.ranges" select="1"/>
   <!-- Meta/*.info -->
-  <!--xsl:param name="table.frame.border.thickness" select="'1'"/>
-  <xsl:param name="table.cell.border.thickness" select="'1'"/>
+  <xsl:param name="table.frame.border.thickness" select="'thin'"/>
+  <xsl:param name="table.cell.border.thickness" select="'thin'"/>
   <xsl:param name="table.cell.border.style" select="'solid'"/>
-  <xsl:param name="table.cell.border.color" select="'red'"/>
-  <xsl:param name="table.borders.with.css" select="1"/-->
+  <!-- This is too verbose, we use a style sheet instead -->
+  <xsl:param name="table.borders.with.css" select="0"/>
   <!-- Chunking -->
   <xsl:param name="chunk.fast" select="1"/>
   <xsl:param name="chunk.section.depth" select="0"/>

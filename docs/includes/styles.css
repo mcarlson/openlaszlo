@@ -108,7 +108,7 @@ th {
 
 /* ************************************************************************ */
 
-a[href^="http:"] {
+a[href~="http:"] {
     /* from http://www.web-graphics.com/ */
     background: url(aoutside.gif) right center no-repeat;
     padding-right: 8px;
@@ -271,9 +271,9 @@ body.doc-index {
 
 /* Code ******************************************* */
 
-.code, .program, .fragment, tt, .varname {
+.literal, .code, .program, .fragment, tt, .varname {
     font-family : "Courier New", Courier, monospace;
-    font-size : 13px;
+    font-size : 1.08em;
     font-weight : bold;
     color : #646464;
     background-color : #eaeaea;
@@ -377,7 +377,4 @@ tt.varname {
 /* Attributes List ****************** */
 td .literal {
     background-color: white;
-    font-size: 12px;
-    font-weight: bold; 
-    line-height: 18px;
 }

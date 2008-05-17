@@ -167,27 +167,22 @@ code.fieldsynopsis {
 .refentry .table thead {
     color:#333333;
     font-family:Verdana,Geneva,Arial,Helvetica,sans-serif;
-    font-size:10px;
+    font-size: 11px;
     font-weight:bold;    
-}
-
-.refentry .table td {
-    font-size: 10px;
 }
 
 .refentry .table thead tr {
     background-color: #e6e6e6;
-    font-size: 10px;    
 }
 
 .refentry td {
-    font-size: 10px;
+    font-size: 11px;
     border-bottom-width: 1px;
 }
 
 .refentry .table thead th {
     background-color: #e6e6e6;
-    font-size: 10px;
+    font-size: 11px;
 }
 
 
@@ -195,6 +190,14 @@ code.fieldsynopsis {
     font-size: 12px;
     line-height:16px;
     color: purple;
+}
+
+.variablelist table {
+    border-collapse: collapse;
+}
+
+.variablelist tbody td.attrdesc {
+    border-bottom: 1px solid #e6e6e6;
 }
 
 /* Segmented Lists */
@@ -217,27 +220,17 @@ tr.segtitle > th {
 
 /* Synopsis */
 
-.methodclass {
+.methodclass, .methodstaticclass, .methodname {
+    font-size: 1.08em
     color: #333333;
-    font-size: 14px;
-}
-
-.methodstaticclass {
-    color: #333333;
-    font-size: 14px;
 }
 
 .methodname {
-    color: #333333;
-    font-size: 14px;
     font-weight:bold;
 }
 
-.methodparam {
-    font-size: 14px;
-}
-
 .classsynopsis, .methodsynopsis, .fieldsynopsis {
+    font-size: 14px;
     font-family:"Courier New",Courier,monospace;
 }
 

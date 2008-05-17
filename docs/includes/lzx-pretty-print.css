@@ -1,6 +1,6 @@
 /* * Stylesheet for LPS viewer */
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -17,11 +17,6 @@
 .comment-markup {color: gray; }
 .constraint-markup {color: gray}
 .constraint-expression {color: red}
-.literal {
-    background-color: #eaeaea;
-    font-family: "Courier New",Courier,monospace;
-    font-size: 13;
-}
 
 .refpurpose {
     margin-top: 20px;
