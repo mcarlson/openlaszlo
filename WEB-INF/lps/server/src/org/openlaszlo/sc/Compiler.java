@@ -263,11 +263,8 @@ public class Compiler {
   // Set internal flags that depend on external flags
   public void defaultOptions() {
 
-    // TODO: [2008-04-21 dda] defaultOptions() can be called multiple
-    // times: from Compiler() default constructor and also from
-    // Compiler.setProperties().  This makes the maintenence of this
-    // code needlessly tricky.  Should be reworked to only call this
-    // once.
+    // TODO: [2008-05-18 dda] It may be possible to clean this up
+    // a little now that we know this is only called once.
 
     if (options.getBoolean(DEBUG)) {
       options.put(WARN_UNDEFINED_REFERENCES, Boolean.TRUE);
@@ -301,37 +298,15 @@ public class Compiler {
     if (! options.containsKey(PROFILE)) {
       options.putBoolean(PROFILE, false);
     }
+    if (!options.containsKey(DISABLE_TRACK_LINES) &&
+        options.getBoolean(NAME_FUNCTIONS)) {
+      options.putBoolean(TRACK_LINES, true);
+    }
     if (options.getBoolean(PROFILE)) {
       options.putBoolean(NAME_FUNCTIONS, true);
     }
-    if (! options.containsKey(TRACK_LINES) && options.getBoolean(NAME_FUNCTIONS)) {
-      options.putBoolean(TRACK_LINES, true);
-    }
     options.putBoolean(GENERATE_FUNCTION_2, true);
     options.putBoolean(GENERATE_FUNCTION_2_FOR_LZX, true);
-  }
-
-  public void setProperties(Map properties) {
-    // Canonicalize String-valued properties.  This is pretty bogus
-    // (dispatching on the value to decide if the property is a
-    // boolean-valued property, but it is the way the compiler always
-    // worked.
-    for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
-      Object key = i.next();
-      Object value = properties.get(key);
-      if (value instanceof String) {
-        String v = (String)value;
-        if ("true".equalsIgnoreCase(v) || "false".equalsIgnoreCase(v)) {
-          options.putBoolean(key, v);
-          continue;
-        }
-      }
-      options.put(key, value);
-    }
-    defaultOptions();
-    if (options.getBoolean(PRINT_COMPILER_OPTIONS)) {
-      System.err.println("set compiler options" +  options.toString());
-    }
   }
 
   public byte[] compile(String source) {
@@ -478,6 +453,7 @@ public class Compiler {
   public static String DUMP_AST_INPUT = "dumpASTInput";
   public static String DUMP_AST_OUTPUT = "dumpASTOutput";
   public static String DISABLE_CONSTANT_POOL = "disableConstantPool";
+  public static String DISABLE_TRACK_LINES = "disableTrackLines";
   public static String ELIMINATE_DEAD_EXPRESSIONS = "eliminateDeadExpressions";
   public static String FLASH_COMPILER_COMPATABILITY = "flashCompilerCompatability";
   public static String GENERATE_FUNCTION_2 = "generateFunction2";
@@ -786,7 +762,7 @@ public class Compiler {
     public SimpleNode substitute(String str, Map keys) {
       // Since the parser can't parse an Expression, turn the source
       // into a Program, and extract the Expression from the parse tree.
-      SimpleNode node = parse("x = \n#file Compiler.substitute\n#line 0\n" + str).get(0).get(0).get(2);
+      SimpleNode node = parse("x = \n#file [Compiler.substitute]\n#line 0\n" + str).get(0).get(0).get(2);
       return visit(node, keys);
     }
 
@@ -798,7 +774,7 @@ public class Compiler {
     }
 
     public SimpleNode substituteStmt(String str, Map keys) {
-      SimpleNode node = parse("#file Compiler.substitute\n#line 0\n" + str).get(0);
+      SimpleNode node = parse("#file [Compiler.substitute]\n#line 0\n" + str).get(0);
       return visit(node, keys);
     }
 

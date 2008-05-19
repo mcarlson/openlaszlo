@@ -222,11 +222,15 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
 
     // Everything inserted by #passthrough (toplevel:true) goes here.
     sb.append(annotateInsertStream(TOP_LEVEL_STREAM));
-    if ("class".equals(unannotate(children[0]))) {
+    String classtype = unannotate(children[0]);
+    if ("class".equals(classtype)) {
       sb.append("class");
     }
-    else {
+    else if ("interface".equals(classtype) || "trait".equals(classtype)) {
       sb.append("interface");
+    }
+    else {
+      throw new CompilerError("Internal error: bad classtype: " + classtype);
     }
     sb.append(SPACE + classnm + SPACE);
     if (unannotate(children[2]).length() > 0)

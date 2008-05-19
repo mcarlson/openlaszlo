@@ -168,7 +168,7 @@ public abstract class CommonGenerator implements ASTVisitor {
     code =
       "{" +
       "\n#pragma 'warnUndefinedReferences=false'\n" +
-      "\n#file JavascriptGenerator.parseFragment\n#line 0\n" +
+      "\n#file [CommonGenerator.parseFragment]\n#line 0\n" +
       code +
       "}";
     // Extract the statement list from the program

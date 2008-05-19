@@ -108,8 +108,7 @@ public class ScriptCompiler extends Cache {
     private static byte[] _compileToByteArray(String script,
                                               Properties properties) {
         org.openlaszlo.sc.Compiler compiler =
-            new org.openlaszlo.sc.Compiler();
-        compiler.setProperties(properties);
+            new org.openlaszlo.sc.Compiler(properties);
         try {
             return compiler.compile(script);
         } catch (org.openlaszlo.sc.parser.TokenMgrError e) {

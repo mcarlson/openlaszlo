@@ -172,7 +172,7 @@
           // warnings, the options can be changed to simply --debug
           dobuild(dest,
                   "dhtml",
-                  "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+                  "--option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
         }
         if (buildDebugSimple) {
           var dest = LFCdir + "LFCdhtml-debug-simple.js";
@@ -181,7 +181,7 @@
             // warnings, the options can be changed to simply --debug
             dobuild(dest,
                     "dhtml",
-                    "--option debugSimple --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+                    "--option debugSimple --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
           }
         }
         var dest = LFCdir + "LFCdhtml-backtrace.js";
@@ -190,7 +190,7 @@
           // warnings, the options can be changed to simply -g3
           dobuild(dest,
                   "dhtml",
-                  "--option debugBacktrace --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+                  "--option debugBacktrace --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
         }
         if (buildDebugSimple) {
           var dest = LFCdir + "LFCdhtml-backtrace-simple.js";
@@ -199,7 +199,7 @@
             // warnings, the options can be changed to simply -g3
             dobuild(dest,
                     "dhtml",
-                    "--option debugSimple --option debugBacktrace --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+                    "--option debugSimple --option debugBacktrace --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
           }
         }
       }
