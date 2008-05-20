@@ -1,19 +1,18 @@
 
 <canvas height="180" width="500" debug="true">
   <dataset name="myData" src="resources/myShowData.xml" />
-  
-  <datapointer xpath="myData:/" ondata="processData()">
-    <method name="processData">
-      this.selectChild(1); 
-      do {
-        if (this.xpathQuery( '@show' ) == 'south park') {
-            Debug.write(this.xpathQuery('firstName/text()'));
-        }
+  <datapointer xpath="myData:/myXML" ondata="processData()"> 
+    <method name="processData"> 
+      this.selectChild(); 
+      do { 
+      if (this.xpathQuery( '@show' ) == 'south park') { 
+      Debug.write(this.xpathQuery('firstName/text()')); 
+      } 
       } while (this.selectNext()); 
-    </method>
-  </datapointer>
+    </method> 
+  </datapointer> 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

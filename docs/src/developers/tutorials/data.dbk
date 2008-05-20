@@ -234,7 +234,7 @@
 
 <para/></section></section><section id="data-tutorial.including"><title>Ways to include data</title>
 
-<para>So far we've been using embedded data; i.e. XML that is written into the document. This is fine for very small amounts of static data, but there are other methods better suited to larger (or dynamic) data.</para>
+<para>So far we've been using embedded data (XML that is written into the document). This is fine for very small amounts of static data, but there are other methods better suited to larger (or dynamic) data.</para>
  
 <informaltable><tgroup cols="3"><thead><row><entry>How is it included?</entry>
 <entry>When is it loaded?</entry><entry>Syntax</entry></row></thead><tbody><row><entry><link linkend="data-tutorial.embedded">Embedded</link></entry><entry>Compile-time</entry><entry>
@@ -289,7 +289,7 @@
 
 <para>Datapaths are extremely handy, but if you need more control over the data, they can become cumbersome. Datapaths are actually extensions of datapointers, but are easier to learn, which is why we introduced them first. A datapointer is a pointer into the dataset, which can be moved around. It can only be in one place of the dataset at a time, but you can have multiple datapointers, each pointing to a different part of a dataset.</para>
 
-<para>Datapointers are not bound to views like datapaths are, but they do have a place in the view hierarchy (i.e. they know about parents and children).</para>
+<para>Datapointers are not bound to views like datapaths are, but they do have a place in the view hierarchy (that is, they know about parents and children).</para>
 
 <para>You will use a datapointer when you need to operate on the data in some way. For example, using the same format of data as in the previous examples, say you wanted to find all the people who were in the South Park show:</para>
 
@@ -331,15 +331,36 @@
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/data-tutorial-$6.lzx></example?>
 
-<para>For brevity's sake, we are writing to the debugger, and we are including the data from a local file. You can download that XML file at http://www.openlaszlo.org/lps-latest/docs/guide/myShowData.xml.</para>
+  <para>For brevity's sake, we are writing to the debugger, and we are including the data from a local file. You can download that XML file <ulink url="http://labs.openlaszlo.org/trunk-nightly/docs/developers/programs/resources/myShowData.xml">here</ulink>, and here's what it looks like:</para>
+  <programlisting>
+    &lt;myXML&gt;
+      &lt;person show=&quot;simpsons&quot;&gt;
+        &lt;firstName&gt;Homer&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show=&quot;simpsons&quot;&gt;
+        &lt;firstName&gt;Marge&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show=&quot;simpsons&quot;&gt;
+        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+        &lt;lastName&gt;Burns&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show=&quot;south park&quot;&gt;
+        &lt;firstName&gt;Eric&lt;/firstName&gt;
+        &lt;lastName&gt;Cartman&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show=&quot;south park&quot;&gt;
+        &lt;firstName&gt;Stan&lt;/firstName&gt;
+        &lt;lastName&gt;Marsh&lt;/lastName&gt;
+      &lt;/person&gt;
+    &lt;/myXML&gt;</programlisting>
 
-<para>The first <literal>selectNext(2)</literal> method call selects first the <indexterm><primary>myXML</primary></indexterm><sgmltag class="element">&lt;myXML&gt;</sgmltag> node, then the South Park <indexterm><primary>person</primary></indexterm><sgmltag class="element">&lt;person&gt;</sgmltag> node. It selects two because of the depth argument "2" we pass it (otherwise it would default to 1.</para>
+<para>The first <literal>selectNext()</literal> method call selects the first <literal>&lt;person&gt;</literal> node.</para>
 
-<para>The other <literal>selectNext</literal> method call returns <literal>true</literal> as long as an XML node was successfully selected (i.e. until there aren't any more). We exploit this by using it in a <literal>do <replaceable>…</replaceable> while</literal> loop, so that the same iteration occurs for every <indexterm><primary>person</primary></indexterm><sgmltag class="element">&lt;person&gt;</sgmltag> node.</para>
+<para>The other <literal>selectNext()</literal> method call returns <literal>true</literal> as long as an XML node was successfully selected (that is, until there aren't any more). We exploit this by using it in a <literal>do <replaceable>…</replaceable> while</literal> loop, so that the same iteration occurs for every <literal>&lt;person&gt;</literal> node.</para>
 
-<para>We could also have given the <indexterm><primary>datapointer</primary></indexterm><sgmltag class="element">&lt;datapointer&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: datapointer-->
- <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal> and <indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal> event handlers to capture any problems. </para>
+<para>We could also have given the <literal>&lt;datapointer&gt;</literal> <literal>onerror</literal> and <literal>ontimeout</literal> event handlers to capture any problems. </para>
 
 <para/>
 <section>
