@@ -605,10 +605,11 @@
               <xsl:value-of select="$name"/>
             </primary>
           </indexterm>
-          <!-- TODO [dda 2008-05-14] handle postprocess tags in docbook.
-               We need to inject certain HTML formatting that is hard
-               to work out in docbook/XSL in a timely manner.  The
-               technique is to put a <postprocess-*> tag in place, let
+          <!-- TODO [dda 2008-05-14] handle postprocess tags in
+               docbook.  We need to inject certain HTML formatting
+               that is hard to work out in docbook/XSL in a timely
+               manner.  The technique is to put a
+               <para role="postprocess-XXXX"> tag in place, let
                docbook warn us about it (but leave a doctored version
                in place), and then a ruby script, postprocess.rb, does
                a final clean up pass by locating and replacing the
@@ -617,9 +618,9 @@
                The postprocess-methodname tag puts a grey background
                against the method name and stretches it the entire width.
             -->
-          <postprocess-methodname>
+          <para role="postprocess-methodname">
             <xsl:value-of select="$desc"/>
-          </postprocess-methodname>
+          </para>
         </term>
         <listitem>
             <refsect3>
@@ -697,7 +698,7 @@
           <refsect3>
             <!-- The postprocess-method-end tag puts an hrule after the method.
                  See also 'handle postprocess tags' comment.  -->
-            <postprocess-method-end/>
+            <para role="postprocess-method-end"/>
           </refsect3>
         </listitem>
       </varlistentry>

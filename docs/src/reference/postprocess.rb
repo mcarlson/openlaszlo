@@ -50,32 +50,37 @@ def process ( fname, outname )
   open(fname) {|f|
     open(outname, "w") {|outf|
       f.each_line { |line|
-        if (line =~ /<font color="red">&lt;/) then
+        if (line =~ /class="postprocess/) then
           foundthis = true
-          if (line =~ /&lt;postprocess-html-/) then
+          pptagname = line.sub(/.*<p class=\".*postprocess-([^"]*)".*/, '\1').chomp
+
+          if (pptagname =~ /^html-/) then
             # A simple html tag that we want to pass through
-            line.gsub!(/&lt;(\/*)postprocess-html-([^&]*)&gt;/, '<\1\2>')
-          elsif (line =~ /&lt;postprocess-methodname/)
+            htmltagname = pptagname.sub(/html-/, '')
+            line.gsub!(/<p class="postprocess-html-([^>]*)>/, '<' + htmltagname + '>')
+            line.gsub!(/<\/p>/, '</' + htmltagname + '>')
+          elsif (pptagname =~ /^methodname$/)
             # We want to have a band with the background color stretched
             # the entire width.
-            line.gsub!(/&lt;postprocess-methodname&gt;/, '<table width="100%" style="border-left: 0px;"><tr><th style="background-color:#e8e8e8; font-size: 14px;" align="left">')
-            line.gsub!(/&lt;\/postprocess-methodname&gt;/, '</th></tr></table>')
-          elsif (line =~ /&lt;postprocess-method-end/)
+            line.gsub!(/<p class="postprocess-methodname([^>]*)>/, '<table width="100%" style="border-left: 0px;"><tr><th style="background-color:#e8e8e8; font-size: 14px;" align="left">')
+            line.gsub!(/<\/p>/, '</th></tr></table>')
+          elsif (pptagname =~ /^method-end$/)
             # Create an horizontal rule
             outf.write('<hr/>')
-            line.gsub!(/&lt;(\/*)postprocess-method-end&gt;/, '')
-          elsif (line =~ /&lt;postprocess-attribute-end/)
+            line.gsub!(/<p class="postprocess-method-end([^>]*)>/, '')
+            line.gsub!(/<\/p>/, '')
+          elsif (pptagname =~ /^attribute-end$/)
             # Create an horizontal rule
             outf.write('<hr/>')
-            line.gsub!(/&lt;(\/*)postprocess-attribute-end&gt;/, '')
+            line.gsub!(/<p class="postprocess-method-end([^>]*)>/, '')
+            line.gsub!(/<\/p>/, '')
           else
             foundthis = false
           end
-          if (foundthis)
-            line.gsub!(/<font color="red">/, '')
-            line.gsub!(/<\/font>/, '')
+          # if (foundthis) ... could do extra cleanup here
+        end
+        if (foundthis)
             found = true
-          end
         end
         outf.write(line)
       }

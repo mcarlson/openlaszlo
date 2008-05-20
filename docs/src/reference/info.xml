@@ -84,8 +84,8 @@ href="tag.attribute.html">Attribute</a>.  The <a
 href="${tutorials}classes-tutorial.html">Classes</a> tutorial describes how to
 use attributes to define a class.</p>
 
-<!-- TODO: [2008-05-13 dda] hrule should go here and between each section -->
-<postprocess-html-hrule/>
+<!-- This is our current workaround for inserting an hrule -->
+<para role="postprocess-html-hr"/>
 
 <p><a name="types"></a>There are five kinds of attributes: </p>
 <ul>
@@ -98,7 +98,7 @@ use attributes to define a class.</p>
   </li>
 </ul>
 
-<postprocess-html-hrule/>
+<para role="postprocess-html-hr"/>
 <a name="setter"></a>
 <simplesect>
 <h2>Attributes (with setter)</h2>
@@ -124,7 +124,7 @@ methods.</p>
 <p align="right"><ulink url="#top">More on attributes</ulink></p>
 </simplesect>
 
-<postprocess-html-hrule/>
+<para role="postprocess-html-hr"/>
 <a name="defaultsetter"></a>
 <simplesect>
 <h2>Attributes (without setter)</h2>
@@ -144,7 +144,7 @@ declared and set in tags too.</p>
 <p align="right"><ulink url="#top">More on attributes</ulink></p>
 </simplesect>
 
-<postprocess-html-hrule/>
+<para role="postprocess-html-hr"/>
 <a name="eventhandler"></a>
 <simplesect>
 <h2>Event Handler Attributes</h2>
@@ -160,7 +160,7 @@ declared and set in tags too.</p>
 <p align="right"><ulink url="#top">More on attributes</ulink></p>
 </simplesect>
 
-<postprocess-html-hrule/>
+<para role="postprocess-html-hr"/>
 <a name="final"></a>
 <simplesect>
 <h2>Final Attributes</h2>
@@ -170,7 +170,7 @@ declared and set in tags too.</p>
 <p align="right"><ulink url="#top">More on attributes</ulink></p>
 </simplesect>
 
-<postprocess-html-hrule/>
+<para role="postprocess-html-hr"/>
 <a name="readonly"></a>
 <simplesect>
 <h2>Read Only Attributes (Fields)</h2>
