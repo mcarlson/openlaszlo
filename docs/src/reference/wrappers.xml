@@ -34,21 +34,6 @@ text containers such as <tagname>text</tagname>.</p>
   &lt;/text&gt;
 &lt;/canvas&gt;
 </example>
-<p/>The user agent will interpret the <tagname>a</tagname> tag depending on the following value of the target attribute:
-<ul>
-  <li>_blank<p/>
-    The user agent should load the designated document in a new, unnamed window.
-  </li>
-  <li>_parent<p/>
-    The user agent should load the document into the full, original window (thus canceling all other frames). This value is equivalent to _self if the current frame has no parent.
-  </li>
-  <li>_self<p/>
-    The user agent should load the document in the same frame as the element that refers to this target.
-  </li>
-  <li>_top<p/>
-    The user agent should load the document into the immediate FRAMESET parent of the current frame. This value is equivalent to _self if the current frame has no parent.
-  </li>
-</ul>
 </text>
 </doc>
 
@@ -66,7 +51,42 @@ text containers such as <tagname>text</tagname>.</p>
         <doc>
           <tag name="lzxtype"><text>_blank | _parent | _self | _top</text></tag>
           <text>
-            The value of this attribute determines where the link target will be displayed. The interpretation is the same as in HTML, where the "current frame" is the frame containing the LZX application. The value must be a name beginning with an alphabetic character, or one of: "_blank", "_parent", "_self", "_top"
+            The value of this attribute determines where the link target will be displayed. The interpretation is the same as in HTML, where the "current frame" is the frame containing the LZX application. The value must be a name beginning with an alphabetic character, or one of the following:
+            <dl>
+              <dt> 
+                _blank
+              </dt>
+              <dd>
+                The user agent should load the designated
+                document in a new, unnamed window.
+              </dd>
+              <dt> 
+                _parent
+              </dt>
+              <dd>
+                The user agent should load the document into the full,
+                original window (thus canceling all other
+                frames). This value is equivalent
+                to <code>_self</code> if the current frame has no
+                parent.
+              </dd>
+              <dt> 
+                _self
+              </dt>
+              <dd>
+                The user agent should load the document in
+                the same frame as the element that refers to this target.
+              </dd>
+              <dt> 
+                _top
+              </dt>
+              <dd>
+                The user agent should load the document into the
+                immediate FRAMESET parent of the current frame. This
+                value is equivalent to <code>_self</code> if the
+                current frame has no parent.
+              </dd>
+            </dl>
           </text>
         </doc>
       </property>
@@ -84,6 +104,7 @@ text containers such as <tagname>text</tagname>.</p>
 <p>HTML bold character markup.  This tag can only occur inside XHTML
 text containers such as <tagname>text</tagname> and
 <tagname>button</tagname>.</p>
+
 
 <example>
 &lt;canvas height="30"&gt;

@@ -200,6 +200,17 @@ code.fieldsynopsis {
     border-bottom: 1px solid #e6e6e6;
 }
 
+.attrdesc dt .term {
+    font-size: 11px;
+}
+
+.attrdesc dd {
+    line-height: 14px;
+    margin-left: 10px;
+    padding-bottom: 5px;
+    padding-left: 45px;
+}
+
 /* Segmented Lists */
 
 .segmentedlist > .title {
