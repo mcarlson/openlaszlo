@@ -10,7 +10,7 @@
   */
 
 /** @access private */
-var _Copyright = "Portions of this file are copyright (c) 2001-2007 by Laszlo Systems, Inc.  All rights reserved.";
+var _Copyright = "Portions of this file are copyright (c) 2001-2008 by Laszlo Systems, Inc.  All rights reserved.";
 
 // Compiler runtime support first
 #include "compiler/Library.lzs"
