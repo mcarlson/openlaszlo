@@ -92,14 +92,11 @@ If you edit this file, please validate your work using http://validator.w3.org/
             })(<xsl:value-of select="$windowwidth"/>, <xsl:value-of select="$windowheight"/>);
           }
         </script>
-        <script type="text/javascript">
-            lzOptions = { ServerRoot: '<xsl:value-of select="/canvas/request/@lps"/>'};
-        </script>  
         <script type="text/javascript" src="{/canvas/request/@lps}/lps/includes/embed-compressed.js"/>
         <xsl:choose>
           <xsl:when test="/canvas/@runtime = 'dhtml'">
             <script type="text/javascript">
-              Lz.dhtmlEmbedLFC('<xsl:value-of select="/canvas/request/@lps"/>/<xsl:value-of select="/canvas/@lfc"/>');
+              Lz.dhtmlEmbedLFC('<xsl:value-of select="/canvas/request/@lps"/>/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>');
             </script>  
           </xsl:when>
         </xsl:choose>

@@ -16,7 +16,7 @@
 
     
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -203,10 +203,10 @@ probably not what you want.
         //wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*'", ".lzx.js'");
         wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*?'", ".lzx.js'");
 
-        // Replace the ServerRoot with a relative path
-        // lzOptions = { ServerRoot: '/legals', splashhtml: '<img src="lps/includes/spinner.gif">', appendDivID: 'lzdhtmlappdiv'};
+        // Replace the resourceroot with a relative path
+        // Lz.dhtmlEmbedLFC('/trunk/lps/includes/lfc/LFCdhtml.js', '/trunk');
 
-        wrapper = wrapper.replaceFirst("ServerRoot:\\s*'/.*?'", "ServerRoot: 'lps/resources'");
+        wrapper = wrapper.replaceFirst("'" + request.getContextPath() + "'", "'lps"+File.separator+"resources'");
 
         // debugging print
         if (false) {

@@ -24,7 +24,7 @@
  * <para>DHTML applications must in addition make the following call in the page head:</para>
  * <example executable="false">
  *   &lt;script language="JavaScript" type="text/javascript"&gt;
- *     Lz.dhtmlEmbedLFC('<replaceable>{$lps}</replaceable>/lps/includes/lfc/LFCdhtml.js');
+ *     Lz.dhtmlEmbedLFC('<replaceable>{$lps}</replaceable>/lps/includes/lfc/LFCdhtml.js', '<replaceable>{$lps}</replaceable>');
  *   &lt;script&gt;</example>
  *
  * And of course DHTML embedding uses the <code>Lz.dhtmlEmbed</code> call instead of <code>Lz.swfEmbed</code>.
@@ -33,8 +33,12 @@
  */
 
 Lz = {
-    /** @access private */
-    __dhtmlhistoryready: false,
+    /** A hash of options used by the embedding system.  Must be set 
+     * resourceroot: the root url to load resources from
+     * cancelkeyboardcontrol: if true, dhtml keyboard control is canceled
+     * @access private 
+     */
+    options: {}
     /**
      * Writes the necessary HTML to embed a swf file in the document where the 
      * function is called.  
@@ -45,7 +49,7 @@ Lz = {
      * @param minimumVersion:Number the version the flash player should 
      * upgrade to if necessary.  Defaults to 7.
      */
-    swfEmbed: function (properties, minimumVersion) {
+    ,swfEmbed: function (properties, minimumVersion) {
         // don't upgrade flash unless asked
         if (minimumVersion == null) minimumVersion = 7;
 
@@ -130,7 +134,9 @@ Lz = {
         if (Lz.__BrowserDetect.OS == 'Mac' || 
             // fix for LPP-5393
             ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && Lz.__BrowserDetect.OS == 'Windows' && (Lz.__BrowserDetect.isOpera || Lz.__BrowserDetect.isFirefox))) {
-            LzMousewheelKernel.setCallback(app, '_sendMouseWheel');
+            if (Lz['mousewheel']) {
+                Lz.mousewheel.setCallback(app, '_sendMouseWheel');
+            }
         }
     }
 
@@ -139,10 +145,16 @@ Lz = {
      * function is called to load the LFC.  Must be called before dhtmlEmbed().
      *
      * @param url:String url to LFC
+     * @param resourceroot:String Base URL to load resources from. 
      */
-    dhtmlEmbedLFC: function (url) {
+    dhtmlEmbedLFC: function (url, resourceroot) {
+        if (! resourceroot || typeof resourceroot != 'string') {
+            alert('WARNING: dhtmlEmbedLFC requires resourceroot to be specified.'); 
+            return;
+        }
+        Lz.options.resourceroot = resourceroot;
         if (Lz.__BrowserDetect.isIE) {
-            var scripturl = lzOptions.ServerRoot+ '/lps/includes/excanvas.js';
+            var scripturl = resourceroot + '/lps/includes/excanvas.js';
             this.__dhtmlLoadScript(scripturl)
         }
         if ((Lz.__BrowserDetect.isIE && Lz.__BrowserDetect.version < 7) || (Lz.__BrowserDetect.isSafari && Lz.__BrowserDetect.version <= 419.3)) {
@@ -162,11 +174,13 @@ Lz = {
      * where this function is called to load the LZX Application.
      *
      * @param properties:Object properties used to write the dhtml, e.g. 
-     * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600'}
+     * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600', id: 'dhtmlapp'}
      *
+     * DHTML adds support for the cancelkeyboardcontrol option.  Setting cancelkeyboardcontrol to true will prevent the application from grabbing keyboard events for tab, arrow and enter keys, and disables application activation.
+     * 
      * Note: dhtmlEmbedLFC must have already been called, to load the
-     * LFC.  If dhtmlEmbedLFC has not been called or the browser-check 
-     * did not pass, this call will not load the application.
+     * LFC.  If dhtmlEmbedLFC has not been called this call will not load the 
+     * application.
      */
     dhtmlEmbed: function (properties) {
         var queryvals = this.__getqueryurl(properties.url, true);
@@ -179,6 +193,8 @@ Lz = {
             ,id: properties.id
             ,appenddiv: Lz._getAppendDiv(properties.id, properties.appenddivid)
             ,url: url
+            ,cancelkeyboardcontrol: properties.cancelkeyboardcontrol
+            ,resourceroot: properties.resourceroot
         };
 
         if (Lz[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
@@ -619,4 +635,16 @@ Lz = {
         //alert('_cleanupHandlers');
     }
 };
+
+// for backward compatibility
+#pragma "passThrough=true"
+try {
+    if (lzOptions) {
+        if (lzOptions.dhtmlKeyboardControl) alert('WARNING: this page uses lzOptions.dhtmlKeyboardControl.  Please use the cancelkeyboardcontrol embed argument for dhtmlEmbed() instead.'); 
+        if (lzOptions.ServerRoot) alert('WARNING: this page uses lzOptions.ServerRoot.  Please use the second argument of dhtmlEmbedLFC() instead.'); 
+    }
+} catch (e) {
+}    
+
+// Clean up global handlers
 Lz.attachEventHandler(window, 'beforeunload', Lz, '_cleanupHandlers');

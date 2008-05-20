@@ -1,5 +1,5 @@
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -7,12 +7,8 @@
 load("3rd-party/tools/BUFakeDom.js"); 
 
 // some setup to fake what the html embed does 
-lzOptions = {ServerRoot: '/legals'};
 Lz = {__propcache: { appenddiv: document.createElement() } };
-LzMousewheelKernel = {
-  setCallback: function() {}
-  
-};
+
 // Fake the browser DOM
 // Laszlo app expects to run in an iframe
 window = this;

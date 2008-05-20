@@ -647,9 +647,9 @@ dojo.flash.Info.prototype = {
         }
         
         // detect if the user has over-ridden the default flash version
-        if (typeof lzOptions["forceFlashComm"] != "undefined" &&
-                typeof lzOptions["forceFlashComm"] != null){
-            this.commVersion = lzOptions["forceFlashComm"];
+        if (typeof Lz.options["forceFlashComm"] != "undefined" &&
+                typeof Lz.options["forceFlashComm"] != null){
+            this.commVersion = Lz.options["forceFlashComm"];
             return;
         }
         
@@ -720,7 +720,7 @@ dojo.flash.Embed.prototype = {
         // for this Flash version
         var objectHTML;
         var swfloc;
-        //var dojoPath = lzOptions.baseRelativePath;
+        //var dojoPath = Lz.options.baseRelativePath;
         // Flash 6
         if(flashVer == 6){
             swfloc = this.properties.flash6;

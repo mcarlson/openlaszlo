@@ -44,6 +44,13 @@ var LzSprite = function(owner, isroot) {
         if (p.id) {
             this._id = p.id;
         }
+        if (p.cancelkeyboardcontrol) {
+            Lz.options.cancelkeyboardcontrol = p.cancelkeyboardcontrol;
+        }
+        // Needed by debugger which has an embedded LFC.
+        if (p.resourceroot) {
+            Lz.options.resourceroot = p.resourceroot;
+        }
         if (this.quirks.canvas_div_cannot_be_clipped  == false && p.width && p.width.indexOf('%') == -1 && p.height && p.height.indexOf('%') == -1 ) {
             div.style.clip = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
             div.style.overflow = 'hidden';
@@ -70,6 +77,7 @@ var LzSprite = function(owner, isroot) {
             if (! e) e = window.event;
             if (e.relatedTarget && e.relatedTarget.owner && e.relatedTarget.className.indexOf('lz') == 0) {
                 this.focus();
+                LzKeyboardKernel.setKeyboardControl(true);
                 this.mouseisover = true;
             } else {
                 this.blur();
@@ -423,7 +431,7 @@ LzSprite.prototype.playing = false;
 LzSprite.prototype.clickable = false;
 LzSprite.prototype.frame = 1;
 LzSprite.prototype.frames = null;
-LzSprite.prototype.blankimage = lzOptions.ServerRoot + '/lps/includes/blank.gif';
+LzSprite.prototype.blankimage = '/lps/includes/blank.gif';
 LzSprite.prototype.resource = null;
 LzSprite.prototype.visible = null;
 LzSprite.prototype.text = null;
@@ -527,7 +535,7 @@ LzSprite.prototype.setResource = function ( r ){
         this.baseurl = '';
         if (res.ptype) {
             if (res.ptype == 'sr') {
-                this.baseurl = lzOptions.ServerRoot + '/';
+                this.baseurl = Lz.options.resourceroot + '/';
             }
             //Debug.write('ptype', res.ptype, this.baseurl);
         }
@@ -627,7 +635,7 @@ LzSprite.prototype.setClickable = function(c) {
         if (! this.__LZclick) {
             if (this.quirks.fix_ie_clickable) {
                 this.__LZclick = document.createElement('img');
-                this.__LZclick.src = LzSprite.prototype.blankimage;
+                this.__LZclick.src = Lz.options.resourceroot + LzSprite.prototype.blankimage;
             } else {
                 this.__LZclick = document.createElement('div');
             }
@@ -657,7 +665,7 @@ LzSprite.prototype.setClickable = function(c) {
             if (! this.__LZclick) {
                 if (this.quirks.fix_ie_clickable) {
                     this.__LZclick = document.createElement('img');
-                    this.__LZclick.src = LzSprite.prototype.blankimage;
+                    this.__LZclick.src = Lz.options.resourceroot + LzSprite.prototype.blankimage;
                 } else {
                     this.__LZclick = document.createElement('div');
                 }
@@ -881,7 +889,7 @@ LzSprite.prototype.setBGColor = function ( c ){
     this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzUtils.inttohex(c);
     if (this.quirks.fix_ie_background_height) {
         if (this.height != null && this.height < 2) {
-            this.setSource(LzSprite.prototype.blankimage, true);
+            this.setSource(Lz.options.resourceroot + LzSprite.prototype.blankimage, true);
         } else if (! this._fontSize) {
             this.__LZdiv.style.fontSize = '0px';
         }

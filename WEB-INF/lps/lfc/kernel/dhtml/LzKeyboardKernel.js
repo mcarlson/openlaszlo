@@ -85,14 +85,13 @@ var LzKeyboardKernel = {
     ,setCallback: function (scope, keyboardcallback) {
         this.__scope = scope;
         this.__callback = keyboardcallback;
-        if (lzOptions.dhtmlKeyboardControl != false) {
-            this.setKeyboardControl(true);
-        }
+        this.setKeyboardControl(true);
     }    
     ,setKeyboardControl: function (dhtmlKeyboardControl) {
         var kc = null;
-        //console.log('setKeyboardControl' + dhtmlKeyboardControl);
-        if (lzOptions.dhtmlKeyboardControl != false && dhtmlKeyboardControl) {
+        var ck = (Lz && Lz.options && Lz.options.cancelkeyboardcontrol != true) || true;
+        if (ck && dhtmlKeyboardControl) {
+            //console.log('setKeyboardControl' + dhtmlKeyboardControl);
             kc = LzKeyboardKernel.__keyboardEvent;
         }
         // can't use Lz.attachEventHandler because we need to cancel events selectively

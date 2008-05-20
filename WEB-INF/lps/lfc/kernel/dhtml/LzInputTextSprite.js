@@ -70,7 +70,7 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable) {
             this.__LZinputclickdiv = document.createElement('img');
-            this.__LZinputclickdiv.src = LzSprite.prototype.blankimage;
+            this.__LZinputclickdiv.src = Lz.options.resourceroot + LzSprite.prototype.blankimage;
         } else {
             this.__LZinputclickdiv = document.createElement('div');
         }

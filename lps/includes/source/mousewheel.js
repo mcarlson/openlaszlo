@@ -1,4 +1,4 @@
-LzMousewheelKernel = { 
+Lz.mousewheel = { 
     __mousewheelEvent: function ( e ){   
         if (!e) e = window.event;
         var delta = 0;
@@ -12,11 +12,11 @@ LzMousewheelKernel = {
         }
         if (e.preventDefault) e.preventDefault();
         e.returnValue = false;
-        var l = LzMousewheelKernel.__callbacks.length;
+        var l = Lz.mousewheel.__callbacks.length;
         if (delta != null && l > 0) {
             for (var i = 0; i < l; i += 2) {
-                var scope = LzMousewheelKernel.__callbacks[i];
-                var name = LzMousewheelKernel.__callbacks[i + 1];
+                var scope = Lz.mousewheel.__callbacks[i];
+                var name = Lz.mousewheel.__callbacks[i + 1];
                 //console.log('__mousewheelEvent', scope, name);
                 if (scope && scope[name]) scope[name](delta);
             }
@@ -24,17 +24,18 @@ LzMousewheelKernel = {
     }
     ,__callbacks: []
     ,setCallback: function (scope, mousewheelcallback) {
-        if (LzMousewheelKernel.__callbacks.length == 0 && lzOptions.dhtmlKeyboardControl != false) {
+        var ck = (Lz && Lz.options && Lz.options.cancelkeyboardcontrol != true) || true;
+        if (Lz.mousewheel.__callbacks.length == 0 && ck) {
             if (window.addEventListener) {
-                Lz.attachEventHandler(window, 'DOMMouseScroll', LzMousewheelKernel, '__mousewheelEvent');
+                Lz.attachEventHandler(window, 'DOMMouseScroll', Lz.mousewheel, '__mousewheelEvent');
             }
-            Lz.attachEventHandler(document, 'mousewheel', LzMousewheelKernel, '__mousewheelEvent');
+            Lz.attachEventHandler(document, 'mousewheel', Lz.mousewheel, '__mousewheelEvent');
         }
-        LzMousewheelKernel.__callbacks.push(scope, mousewheelcallback);
-        //console.log('setCallback', LzMousewheelKernel.__callbacks);
+        Lz.mousewheel.__callbacks.push(scope, mousewheelcallback);
+        //console.log('setCallback', Lz.mousewheel.__callbacks);
     }    
 }
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/

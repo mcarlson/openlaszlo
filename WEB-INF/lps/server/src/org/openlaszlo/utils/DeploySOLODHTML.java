@@ -190,18 +190,13 @@ public class DeploySOLODHTML {
         wrapper = wrapper.replaceAll(lpspath + "/", "");
         
         // Replace object file URL with SOLO filename
-        // Lz.dhtmlEmbedLFC({url: 'animation.lzx?lzt=object&lzproxied=false&lzr=dhtml'
         // Lz.dhtmlEmbed({url: 'animation.lzx?lzt=object&lzr=dhtml&_canvas_debug=false',
         //                 bgcolor: '#eaeaea', width: '800', height: '300', id: 'lzapp'});
 
+        // Replace the resourceroot with a relative path
+        // Lz.dhtmlEmbedLFC('/trunk/lps/includes/lfc/LFCdhtml.js', '/trunk');
 
-        // Replace the ServerRoot with a relative path
-        // lzOptions = { ServerRoot: '/legals', splashhtml: '<img src="lps/includes/spinner.gif">', appendDivID: 'lzdhtmlappdiv'};
-
-        wrapper = wrapper.replaceFirst("ServerRoot:\\s*'_.*?'", "ServerRoot: 'lps"+File.separator+"resources'");
-
-
-
+        wrapper = wrapper.replaceFirst("'" + lpspath + "'", "'lps"+File.separator+"resources'");
         
         // replace title
         // wrapper = wrapper.replaceFirst("<title>.*</title>", "<title>"+title+"</title>\n");

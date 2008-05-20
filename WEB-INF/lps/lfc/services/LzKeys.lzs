@@ -525,7 +525,7 @@ public class LzKeysService extends LzNode {
     /** Called when the last focusable element is reached
       * @access private 
       */
-    function gotLastFocus() {
+    function gotLastFocus(ignore) {
         LzKeyboardKernel.gotLastFocus();
     }
 }
@@ -536,6 +536,9 @@ public class LzKeysService extends LzNode {
 var LzKeys = new LzKeysService();
 
 if ($dhtml) {
-    // Need to explicitly register this
-    LzMousewheelKernel.setCallback(LzKeys, '__mousewheelEvent');
+    // Need to explicitly register this.  Make sure Lz.mousewheel is there for 
+    // lztest
+    if (Lz['mousewheel']) {
+        Lz.mousewheel.setCallback(LzKeys, '__mousewheelEvent');
+    }
 }
