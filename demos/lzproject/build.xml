@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Build file for LZProject application
+
+   Notes:
+     - The jar file produced when you 'ant build' is checked in at
+       /WEB-INF/lib/lzproject.jar. If you change any java files you should
+       checkin lzproject.jar.
+-->
+
+<project name="OL4 blueprint app" default="build" basedir=".">
+
+	<description>LZProject OpenLaszlo 4.0 blueprint application</description>
+
+	<loadfile property="copyright" srcFile="copyright.txt"/>
+
+	<!-- Environment vars -->
+	<property environment="env"/>
+
+	<!-- name of Java web application / WAR-file
+             in case of SOLO war the char sequence "-SOLO" is added -->
+	<property name="webapp.name" value="lzproject" />
+
+	<!-- Markers in the LZX files like @copyright@ which will be replaced -->
+	<property name="marker.copyright" value="copyright" />
+	<property name="marker.webapp" value="webapp_name" />
+
+	<!-- OpenLaszlo version used.
+             To compile the application, a version OpenLaszlo servlet distribution
+             has to be unzipped into the openlaszlo folder,
+             e.g. ./openlaszo/opernlaszlo-4.0.3.
+	     The directory name can then be adjusted in the ant.properties file -->
+	<property name="openlaszlo.dir" location="openlaszlo" />
+	<!-- OpenLaszlo version has to be set in my.properties property file -->
+	<property name="LPS_HOME" value="${env.LPS_HOME}" />
+
+	<!-- Default directories  -->
+	<property name="build.dir" location="builder" />
+	<property name="conf.dir" location="conf" />
+	<property name="derby.dir" location="derby" />
+	<property name="dist.dir" location="distribution" />
+	<property name="externalLib.dir" location="library/externalLib" />
+	<property name="lib.dir" location="library/lib" />
+	<property name="ant.speciallib.dir" value="${lib.dir}/antSpecialLib" />
+	<property name="merge.dir" location="mergedir" />
+	<property name="src.dir" location="java-source" />
+	<property name="junit.src.dir" location="unitTest/src" />
+	<property name="xdoclet.dir" location="xdoclet" />
+	<property name="lzx.dir" location="lzx" />
+	<property name="lzx.temp" location="temp/${lzx.dir}" />
+        <property name="lzx.lzxdocsdir" location="temp/lzproject/lzdocs"/>
+
+	<!-- Generated directories -->
+	<property name="javadoc.dir" location="temp/lzproject/javadocs" />
+	<property name="temp.dir" location="temp" />
+	<property name="webapp.dir" location="${build.dir}/webapp" />
+	<property name="webapp.webinf.dir" location="${webapp.dir}/WEB-INF" />
+	<property name="webapp.classes.dir" location="${build.dir}/classes" />
+	<property name="webapp.war.dir" location="${dist.dir}" />
+
+	<!-- Tomcat properties -->
+	<property name="tomcat.url" value="http://${tomcat.host}:${tomcat.port}/manager" />
+	<property name="tomcat.context" value="/${webapp.name}" />
+	<property name="tomcat.home" value="${env.CATALINA_HOME}" />
+
+	<!-- Libraries -->
+	<property name="servlet.jar" location="library/servlet/servlet.jar" />
+	<property name="catalina.jar" location="${tomcat.home}/server/lib/catalina.jar" />
+	<property name="catalina-ant.jar" location="library/antSpecialLib/catalina-ant.jar" />
+
+	<!-- XDoclet Libraries -->
+	<property name="xdoclet.dir" location="xdoclet" />
+
+	<!-- Standard CLASSPATH -->
+	<path id="compile.classpath">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+		<fileset dir="${externalLib.dir}" includes="*.jar" />
+		<pathelement location="${servlet.jar}"/>
+		<pathelement location="${catalina.jar}"/>
+		<pathelement location="${catalina-ant.jar}"/>
+	</path>
+
+	<!-- CLASSPATH for XDoclet Tasks -->
+	<path id="xdoclet.classpath">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+		<fileset dir="${externalLib.dir}" includes="*.jar" />
+		<pathelement location="${servlet.jar}"/>
+		<fileset dir="${xdoclet.dir}" includes="*.jar"/>
+	</path>
+
+	<!-- CLASSPATH for Laszlo compiler lzc -->
+	<path id="laszlo.compiler.classpath">
+		<pathelement location="${LPS_HOME}/WEB-INF/lps/server/build"/>
+		<pathelement location="${LPS_HOME}/WEB-INF/classes"/>
+		<pathelement location="${servlet.jar}"/>
+		<fileset dir="${LPS_HOME}/WEB-INF/lib" includes="**/*.jar"/>
+	</path>
+
+	<!-- Delete all temporary and generated files and folders -->
+	<target name="clean">
+		<echo message="${ant.version}" />
+		<delete dir="${build.dir}" />
+		<delete dir="${lzx.lzxdocsdir}" />
+		<delete dir="${javadoc.dir}" />
+		<delete dir="${temp.dir}" />
+		<delete dir="${webapp.classes.dir}" />
+		<delete dir="${webapp.dir}" />
+		<delete dir="${webapp.war.dir}" />
+	</target>
+
+	<!-- Create all temporary directories -->
+	<target name="init" depends="clean">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${javadoc.dir}" />
+		<mkdir dir="${temp.dir}" />
+		<mkdir dir="${webapp.dir}" />
+		<mkdir dir="${webapp.classes.dir}" />
+		<mkdir dir="${webapp.war.dir}" />
+	</target>
+
+	<!-- Copy LZX, JSP and other text files into folder ${temp.dir}  -->
+	<target name="copy-files-temp" depends="init">
+		<echo message="Copying files from ${lzx.dir} to ${temp.dir}" />
+		<echo message="Replacing @${marker.webapp}@ with ${webapp.name} in all copied files" />
+		<copy todir="${temp.dir}">
+			<fileset dir="${lzx.dir}" casesensitive="no">
+				<include name="**/*.lzx" />
+				<include name="**/*.xml" />
+				<include name="**/*.jsp" />
+				<include name="**/*.html" />
+				<include name="**/*.js" />
+				<!-- Don't replace markers for binary files, they'll be copied later -->
+				<exclude name="**/*.css" />
+				<exclude name="**/*.gif" />
+				<exclude name="**/*.jpg" />
+				<exclude name="**/*.mp3" />
+				<exclude name="**/*.pdf" />
+				<exclude name="**/*.png" />
+				<exclude name="**/*.swf" />
+				<exclude name="**/*.ttf" />
+				<!-- Don't copy the prototype HTML files for either SOLO or proxied deployment -->
+				<exclude name="**/__SOLO_html/**" />
+				<exclude name="**/__PROXIED_html/**" />
+			</fileset>
+			<filterset>
+				<!-- If you use the webapp name inside LZX, just place this marker there
+				     and it will be replaced: @webapp_name@ -->
+				<filter token="${marker.webapp}" value="${webapp.name}" />
+				<!-- automatically add copyright information -->
+				<filter token="${marker.copyright}" value="${copyright}" />
+			</filterset>
+		</copy>
+                <!-- Now copy the files where don't have to check for markers -->
+		<copy todir="${temp.dir}">
+			<fileset dir="${lzx.dir}"  casesensitive="no">
+				<include name="**/*.css" />
+				<include name="**/*.gif" />
+				<include name="**/*.jpg" />
+				<include name="**/*.mp3" />
+				<include name="**/*.pdf" />
+				<include name="**/*.png" />
+				<include name="**/*.swf" />
+				<include name="**/*.ttf" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Compile Java classes -->
+	<target name="compile" depends="copy-files-temp">
+		<echo message="Starting compilation ..." />
+		<javac destdir="${webapp.classes.dir}"
+			   classpathref="compile.classpath"
+			   debug="on"
+			   encoding="UTF-8"
+			   target="1.4"
+			   source="1.4">
+			<src path="${src.dir}" />
+		</javac>
+		<echo message="Copying message bundles from ${src.dir} to ${webapp.classes.dir}" />
+		<copy todir="${webapp.classes.dir}">
+			<fileset dir="${src.dir}" casesensitive="no">
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Compile the unit test files -->
+	<target name="compile-unittest" depends="compile">
+		<echo message="Compiling Unit Tests ..." />
+		<echo message="" />
+		<javac destdir="${webapp.classes.dir}" classpathref="compile.classpath">
+			<src path="${junit.src.dir}" />
+		</javac>
+	</target>
+
+	<!-- Generate web.xml -->
+	<target name="make-webxml" depends="compile">
+		<taskdef name="webdoclet"
+					classname="xdoclet.modules.web.WebDocletTask"
+					classpathref="xdoclet.classpath"/>
+		<webdoclet destdir="${webapp.webinf.dir}"
+				   mergedir="${merge.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<deploymentdescriptor servletspec="2.3" validatexml="true">
+				<welcomefile file="index.jsp" />
+			</deploymentdescriptor>
+		</webdoclet>
+	</target>
+
+	<!-- Generate lzproject.jar file -->
+	<target name="build-jar" depends="make-solo-war" description="Generate lzproject.jar">
+            <jar destfile="${LPS_HOME}/WEB-INF/lib/lzproject.jar"
+                 basedir="${build.dir}/classes"
+            />
+        </target>
+
+	<!-- Build -->
+	<target name="build" depends="build-jar" description="Complete build">
+	    <echo message="Building LZProject OL 4.0 app..." />
+            <echo message="***** Don't forget to check in /WEB-INF/lib/lzproject.jar" />
+	</target>
+
+	<target name="make-java-source-zip">
+		<!-- Java source files as zip -->
+		<zip destfile="${temp.dir}/lzproject/lzproject-java-source.zip"
+		       basedir="${src.dir}"
+		       update="false"
+		  />
+	</target>
+
+	<target name="make-LZX-source-zip">
+		<!-- Java source files as zip -->
+		<zip destfile="${temp.dir}/lzproject/lzproject-LZX-source.zip"
+		       basedir="${temp.dir}/lzproject"
+		       update="false"
+		  />
+	</target>
+
+	<!-- Generate WAR file containing OpenLaszlo and LZProject -->
+	<target name="make-war" depends="make-webxml,javadoc,make-java-source-zip">
+		<echo message="Making WAR file:" />
+		<echo message="Using web.xml at ${webapp.webinf.dir}/web.xml" />
+		<echo message="Adding classes from ${LPS_HOME}/WEB-INF/classes" />
+		<echo message="Adding libs from ${LPS_HOME}/WEB-INF/libs" />
+		<!-- now copy the proxied DHTML wrapper -->
+		<copy todir="${temp.dir}/lzproject" verbose="true">
+			<fileset dir="${lzx.dir}/lzproject/__PROXIED_html" casesensitive="no">
+				<include name="*.html" />
+			</fileset>
+		</copy>
+		<war destfile="${webapp.war.dir}/${webapp.name}.war"
+			 webxml="${webapp.webinf.dir}/web.xml">
+			<!-- LzTrack java classes -->
+			<classes dir="${webapp.classes.dir}" />
+			<!-- OpenLaszlo java classes -->
+			<classes dir="${LPS_HOME}/WEB-INF/classes">
+				<!-- Drop OpenLaszlo Java class source code and log4j.properties -->
+				<exclude name="**/*.java" />
+				<exclude name="log4j.properties" />
+			</classes>
+			<lib dir="${lib.dir}" includes="*.jar" />
+			<lib dir="${LPS_HOME}/WEB-INF/lib" includes="*.jar" />
+			<!-- OpenLaszlo client files: LZX, *.js, *.html, *.css, ... -->
+			<fileset dir="${temp.dir}">
+				<include name="**/*.*"/>
+			</fileset>
+			<!-- OpenLaszlo files -->
+			<fileset dir="${LPS_HOME}">
+				<include name="**/*.*" />
+				<!-- web.xml is generated, don't take the one shipped with the OpenLaszlo server -->
+				<exclude name="WEB-INF/web.xml" />
+				<!-- jars are handled separately -->
+				<exclude name="**/WEB-INF/lib/*.*"/>
+			</fileset>
+			<!-- Configuration files -->
+			<fileset dir="${conf.dir}">
+				<include name="**/*.*" />
+			</fileset>
+			<!-- the Apache Derby DB files -->
+			<fileset dir="${derby.dir}" >
+				<include name="**/*.*" />
+			</fileset>
+		</war>
+	</target>
+
+	<!-- Copy DHTML SOLO files from OpenLaszlo -->
+	<target name="copy-dhtml-solo-files">
+		<copy todir="${temp.dir}/lps/includes">
+			<fileset dir="${LPS_HOME}/lps/includes" casesensitive="no">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/lps/components">
+			<fileset dir="${LPS_HOME}/lps/components" casesensitive="no">
+				<include name="**/*.png" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Generate WAR file containing SOLO LZProject -->
+	<target name="make-solo-war" depends="make-webxml,javadoc,make-java-source-zip,compile-for-solo,copy-dhtml-solo-files">
+		<echo message="Making WAR file with SOLO LZProject application with OpenLaszlo server:" />
+		<echo message="Using web.xml at ${webapp.webinf.dir}/web.xml" />
+		<!-- now copy the SOLO DHTML wrapper -->
+		<copy todir="${temp.dir}/lzproject" verbose="true">
+			<fileset dir="${lzx.dir}/lzproject/__SOLO_html" casesensitive="no">
+				<include name="*.html" />
+			</fileset>
+		</copy>
+		<echo message="Unzip lzxdocs to ${temp.dir}/lzproject}" />
+                <unzip src="documentation/lzxdocs.zip" dest="${temp.dir}/lzproject/lzxdocs" />
+		<war destfile="${webapp.war.dir}/${webapp.name}-solo.war"
+			 webxml="${webapp.webinf.dir}/web.xml">
+			<!-- LzTrack java classes -->
+			<classes dir="${webapp.classes.dir}" />
+			<lib dir="${lib.dir}" includes="*.jar" />
+			<!-- OpenLaszlo JavaScript and resources for DHTML -->
+			<fileset dir="${LPS_HOME}" >
+				<include name="/lps/includes/**/*.*" />
+			</fileset>
+
+			<fileset dir="${conf.dir}">
+				<include name="**/*.*" />
+			</fileset>
+			<!-- OpenLaszlo client files: LZX, *.js, *.html, *.css, ... -->
+			<fileset dir="${temp.dir}">
+				<exclude name="**/*.lzx"/>
+				<include name="**/*.*"/>
+			</fileset>
+			<!-- the Apache Derby DB files -->
+			<fileset dir="${derby.dir}" >
+				<include name="**/*.*" />
+			</fileset>
+		</war>
+                <!-- The WAR has to be encapsulated into the WAR file for download -->
+		<copy todir="${temp.dir}/war" verbose="true">
+			<fileset dir="${webapp.war.dir}" casesensitive="no">
+				<include name="${webapp.name}-solo.war" />
+			</fileset>
+		</copy>
+		<!-- Delete the WAR file and generate a new one containing the WAR itself -->
+                <delete file="${webapp.war.dir}/${webapp.name}-solo.war"/>
+		<war destfile="${webapp.war.dir}/${webapp.name}-solo.war"
+			 webxml="${webapp.webinf.dir}/web.xml">
+			<!-- LzTrack java classes -->
+			<classes dir="${webapp.classes.dir}" />
+			<lib dir="${lib.dir}" includes="*.jar" />
+			<!-- OpenLaszlo JavaScript and resources for DHTML -->
+			<fileset dir="${LPS_HOME}" >
+				<include name="/lps/includes/**/*.*" />
+			</fileset>
+
+			<fileset dir="${conf.dir}">
+				<include name="**/*.*" />
+			</fileset>
+			<!-- OpenLaszlo client files: LZX, *.js, *.html, *.css, ... -->
+			<fileset dir="${temp.dir}">
+				<exclude name="**/*.lzx"/>
+				<include name="**/*.*"/>
+			</fileset>
+			<!-- the Apache Derby DB files -->
+			<fileset dir="${derby.dir}" >
+				<include name="**/*.*" />
+			</fileset>
+		</war>
+	</target>
+
+        <!-- TODO: implement Docbook style docs generation -->
+        <target name="doc"
+                description="Build documentation"
+                depends="init" unless="skip.doc">
+
+                <!-- Build the docs -->
+                <ant dir="docbook" />
+        </target>
+
+
+	<!-- deploy proxied WAR -->
+	<target name="deploy-war" depends="make-war">
+		<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpathref="compile.classpath"/>
+		<deploy path="${tomcat.context}"
+				password="${tomcat.password}"
+	    		username="${tomcat.user}"
+				url="${tomcat.url}"
+				war="${webapp.war.dir}/${webapp.name}.war" />
+                <echo message="You can access the application at http://${tomcat.host}:${tomcat.port}/${webapp.name}" />
+	</target>
+
+	<!-- deploy SOLO WAR -->
+	<target name="deploy-solo-war" depends="make-solo-war">
+		<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpathref="compile.classpath"/>
+		<deploy path="${tomcat.context}-solo"
+				password="${tomcat.password}"
+	    		username="${tomcat.user}"
+				url="${tomcat.url}"
+				war="${webapp.war.dir}/${webapp.name}-solo.war" />
+                <echo message="You can access the application at http://${tomcat.host}:${tomcat.port}/${webapp.name}-solo" />
+	</target>
+
+	<!-- Undeploy proxied webapp-->
+	<target name="undeploy-webapp">
+		<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask"  classpathref="compile.classpath"/>
+		<undeploy url="${tomcat.url}"
+				path="/${webapp.name}"
+    			username="${tomcat.user}"
+				password="${tomcat.password}" />
+	</target>
+
+	<!-- Undeploy SOLO webapp -->
+	<target name="undeploy-solo-webapp">
+		<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask"  classpathref="compile.classpath"/>
+		<undeploy url="${tomcat.url}"
+				path="/${webapp.name}-solo"
+    			username="${tomcat.user}"
+				password="${tomcat.password}" />
+	</target>
+
+	<!-- Generate Java documentation-->
+	<target name="javadoc">
+		<javadoc author="true"
+				 destdir="${javadoc.dir}"
+				 sourcepath="${src.dir}"
+				 packagenames="*"
+				 use="true"
+				 version="true"
+				 windowtitle="LZProject OpenLaszlo 4.0 blueprint application"
+				 private="true">
+                        <bottom> <![CDATA[
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->
+                        ]]>
+                        </bottom>
+			<classpath refid="compile.classpath" />
+		</javadoc>
+	</target>
+
+	<!--  Precompile the application -->
+	<target name="compile-for-solo" depends="copy-files-temp,make-LZX-source-zip" >
+		<echo message="Compiling LZProject for Flash7 and DHTML runtime (SOLO)"/>
+		<antcall target="solo-compile-file">
+			<param name="file" value="${temp.dir}/lzproject/LZProject.lzx" />
+			<param name="args" value="--runtime=dhtml" />
+		</antcall>
+		<!-- the naming scheme for files compiled through lzc is different
+		     from the server, correct that -->
+		<!--move file="${temp.dir}/lzproject/LZProject.lzx.lzr=null.swf"
+			  tofile="${temp.dir}/lzproject/LzTrack.lzx.lzr=swf8.swf"
+			  verbose="true" /-->
+		<antcall target="solo-compile-file">
+			<param name="file" value="${temp.dir}/lzproject/LZProject.lzx" />
+			<param name="args" value="--runtime=swf8" />
+		</antcall>
+		<!-- the naming scheme for files compiled through lzc is different
+		     from the server, correct that -->
+		<move file="${temp.dir}/lzproject/LZProject.js"
+			  tofile="${temp.dir}/lzproject/LZProject.lzx.js"
+			  verbose="true" />
+		<!-- This extra file seems to be generated by lzc, delete it now -->
+		<delete file="${temp.dir}/lzproject/LZProject.lzx.lzr=null.swf" />
+		<!-- Now delete LZX source files -->
+		<delete>
+			<fileset dir="${temp.dir}/lzproject/">
+			    <include name="**/*.lzx"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<!-- solo-compile-all-file: compiles ${file}, using options {args} -->
+	<target name="solo-compile-file" description="Compile the file handed to this target by solo-compile-all-files">
+		<echo message="Compiling ${file}"/>
+		<echo message="arg: ${args} ${file}"/>
+		<echo message="Using LPS_HOME: ${LPS_HOME}"/>
+		<java classpathref="laszlo.compiler.classpath" classname="org.openlaszlo.compiler.Main" fork="yes">
+			<jvmarg value="-Xmx1024M"/>
+			<jvmarg value="-DLPS_HOME=${LPS_HOME}"/>
+			<arg line="${args} ${file}"/>
+		</java>
+	</target>
+
+	<!-- Generate documentation for LzTrack app -->
+	<!-- Will be replaced by docbook style documentation generation -->
+        <target name="lzxdoc" description="Build docs for LZX files" depends="copy-files-temp">
+		<echo message="Starting LZXDoc. Using config dir ${basedir}/tools/lzxdoc" />
+		<!-- configdir: the file containing the lzxdoc python files, etc -->
+		<property name="configdir" value="${basedir}/tools/lzxdoc" />
+		<!-- outputdir: the directory in which docs will get created -->
+		<property name="outputdir" value="${lzx.lzxdocsdir}" />
+		<delete dir="${outputdir}" />
+		<!-- sourcedirs: space-separated list of directories containing LZX
+		     source files.  These are relative to basedir. (Note that lzx2html
+		     ignores files with "test/" or "tests/" in their pathname.) -->
+		<property name="sourcedirs" value="." />
+		<exec dir="${basedir}/temp/lzproject" executable="python" failonerror="true">
+		     <arg value="${configdir}/lzx2html.py"/>
+		     <arg line="--configdir ${configdir}"/>
+		     <arg line="--outputdir ${outputdir}"/>
+		     <arg line="${sourcedirs}"/>
+		</exec>
+	</target>
+
+</project>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

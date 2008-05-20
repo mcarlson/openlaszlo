@@ -1,0 +1,333 @@
+ <library>
+ <!-- Includes all BackendServices used for LZTrack -->
+
+  <!-- i18n resources for the application -->
+  <dataset name="i18nDS" src="http://localhost:8080/trunk/lzproject/rest/application/i18n" type="http" request="false" proxied="true" />
+  <BackendService name="i18n"
+    successDatapath="i18nDS:/app/currentLocale">
+    <handler name="oninit">
+      // Automatically start this request on initialization
+      this.startRequest();
+    </handler>
+    <handler name="ontrigger" args="obj">
+      this.prepareParams(obj.collectValues());
+    </handler>
+    <method name="handleSuccess">
+      Debug.write('Resource bundle loaded');
+      // If we are already logged in, we have to reload the data
+      // containing I18N strings
+      if (canvas.loggedIn) {
+        canvas.services.listTasks.startRequest();
+        canvas.services.listProjects.startRequest();
+        canvas.services.listUsers.startRequest();
+      }
+    </method>
+  </BackendService>
+
+
+  <!-- Login -->
+  <dataset name="loginDS" src="http://localhost:8080/trunk/lzproject/rest/user/login" type="http" request="false" proxied="true" />
+    <BackendService name="login"
+    successDatapath="loginDS:/response/success/message"
+    failureDatapath="loginDS:/response/failure/errorMsg"
+    clearDelay="2000"
+        httpMethod="POST">
+    <handler name="ontrigger" args="obj">
+      this._connector.form.disable();
+      this.prepareParams(obj.collectValues());
+    </handler>
+    <method name="handleFailure" args="errorMsg">
+      Debug.write('Error message: ', errorMsg);
+      // either client side validation or server side
+      // authentication failed. Display error message
+      this._connector.form.showError(errorMsg);
+    </method>
+    <method name="handleSuccess" args="msg, p">
+      // Extract the login for this user
+      var dataPointer = p.ownerDocument.getPointer();
+      dataPointer.setXPath('/response/success/login');
+      // store the login name as canvas attribute for use within
+      // logout process
+      canvas.login= dataPointer.getNodeText();
+      this._connector.handleResult(msg);
+      // Now load all data for the application
+      canvas.services.listProjects.startRequest();
+      canvas.services.listUsers.startRequest();
+      canvas.services.listTasks.startRequest()
+      canvas.setAttribute('loggedIn', true);
+    </method>
+    <method name="clearMessage">
+      if (canvas.loggedIn) {
+        // user authenticated, show main screen
+            this._connector.form.setAttribute('visible', false);
+        this._connector.form.reset();
+          app.setAttribute('visible', true);
+      } else {
+        // clear the error message and show the default
+        // login message
+        loginScreen.showMessage('loginMessage');
+        Debug.write('now enable');
+        loginScreen.enable();
+      }
+    </method>
+  </BackendService>
+
+  <!-- Logout -->
+  <dataset name="logoutDS" src="http://localhost:8080/trunk/lzproject/rest/user/logout" type="http" request="false" proxied="true" />
+    <BackendService name="logout"
+    successDatapath="logoutDS:/response/success"
+    failureDatapath="logoutDS:/response/failure/errorMsg"
+        httpMethod="POST">
+    <handler name="ontrigger" args="obj">
+      this.startRequest();
+    </handler>
+    <method name="handleError">
+      // user is not logged in any more
+      Debug.error("Error calling REST web service " + this.name);
+    </method>
+    <method name="handleFailure" args="errorMsg">
+      Debug.warn('Web: ', errorMsg);
+    </method>
+    <method name="handleSuccess">
+      canvas.setAttribute('loggedIn', false);
+      canvas.setAttribute('login', '');
+      Debug.write('User ' + canvas.login + " logged out!");
+      // show the login screen
+      loginScreen.setAttribute('visible', true);
+      loginScreen.enable();
+      // main screen should not be visible
+      app.setAttribute('visible', false);
+    </method>
+  </BackendService>
+
+
+  <!-- List projects -->
+  <dataset name="listProjectsDS" src="http://localhost:8080/trunk/lzproject/rest/project/list" type="http" request="false" proxied="true" /> <BackendService name="listProjects"
+    successDatapath="listProjectsDS:/response/projects"
+        failureDatapath="listProjectsDS:/response/failure/errorMessage"
+        httpMethod="POST">
+    <method name="handleError">
+      Debug.error('Error loading project list!');
+    </method>
+    <method name="handleSuccess">
+      Debug.write('Project list loaded');
+    </method>
+  </BackendService>
+
+
+  <!-- Create project -->
+  <dataset name="createProjectDS" src="http://localhost:8080/trunk/lzproject/rest/project/create" type="http" request="false" proxied="true" />
+  <BackendService name="createProject"
+    successDatapath="createProjectDS:/response/success/message"
+        failureDatapath="createProjectDS:/response/failure/errorMsg"
+        httpMethod="POST">
+    <handler name="ontrigger" args="obj">
+      this.prepareParams(obj.collectValues());
+    </handler>
+    <method name="handleError">
+      Debug.error('Error creating project!');
+    </method>
+    <method name="handleSuccess" args="message">
+      Debug.write('Project created');
+      this._connector.handleResult(message);
+      canvas.services.listProjects.startRequest();
+      this._connector.form.reset();
+    </method>
+    <method name="handleFailure" args="message">
+      Debug.write(message);
+      this._connector.handleResult(message);
+    </method>
+    <method name="clearMessage">
+      this._connector.handleResult('');
+    </method>
+  </BackendService>
+
+  <!-- List users -->
+  <dataset name="listUsersDS" src="http://localhost:8080/trunk/lzproject/rest/user/list" type="http" request="false" proxied="true" />
+  <BackendService name="listUsers"
+    successDatapath="listUsersDS:/response/users"
+        failureDatapath="listUsersDS:/response/failure/errorMessage"
+        httpMethod="POST">
+    <method name="handleError">
+      Debug.write('Error loading user list!');
+    </method>
+    <method name="handleSuccess">
+      Debug.write('User list loaded');
+    </method>
+  </BackendService>
+
+  <!-- Create user -->
+  <dataset name="createUserDS" src="http://localhost:8080/trunk/lzproject/rest/user/create" type="http" request="false" proxied="true" />
+  <BackendService name="createUser"
+    successDatapath="createUserDS:/response/success/message"
+        failureDatapath="createUserDS:/response/failure/errorMsg"
+        httpMethod="POST">
+    <handler name="ontrigger" args="obj">
+      Debug.write('action ' + this.name + ' triggered');
+      this.prepareParams(obj.collectValues());
+    </handler>
+    <method name="handleError">
+      Debug.write('Error creating user!');
+    </method>
+    <method name="handleSuccess" args="message,p">
+      Debug.write('User created');
+      this._connector.handleResult(message);
+      canvas.services.listUsers.startRequest();
+      createUserForm.clear()
+    </method>
+    <method name="handleFailure" args="message">
+      Debug.write('Error creating user');
+      this._connector.handleResult(message);
+    </method>
+    <method name="clearMessage">
+      this._connector.handleResult('');
+    </method>
+  </BackendService>
+
+  <!-- Update user -->
+  <dataset name="updateUserDS" src="http://localhost:8080/trunk/lzproject/rest/user/update" type="http" request="false" proxied="true" />
+  <BackendService name="updateUser"
+    successDatapath="updateUserDS:/response/success/message"
+        failureDatapath="updateUserDS:/response/failure/errorMsg"
+        httpMethod="POST">
+    <handler name="ontrigger" args="obj">
+      Debug.write('action ' + this.name + ' triggered');
+      this.prepareParams(obj.collectValues());
+    </handler>
+    <method name="handleError">
+      Debug.write('Error saving user!');
+    </method>
+    <method name="handleSuccess" args="message">
+      Debug.write('User updated');
+      canvas.services.listUsers.startRequest();
+      createUserForm.clear();
+      this._connector.handleResult(message);
+    </method>
+    <method name="handleFailure" args="message">
+      Debug.write('Error saving user');
+      this._connector.handleResult(message);
+    </method>
+    <method name="clearMessage">
+      this._connector.handleResult('');
+    </method>
+  </BackendService>
+
+  <!-- Delete user -->
+  <dataset name="deleteUserDS" src="http://localhost:8080/trunk/lzproject/rest/user/delete" type="http" request="false" proxied="true" />
+  <BackendService name="deleteUser"
+    successDatapath="deleteUserDS:/response/success"
+        failureDatapath="deleteUserDS:/response/failure/errorMsg"
+        httpMethod="POST">
+    <handler name="ontrigger" args="obj">
+      Debug.write('action ' + this.name + ' triggered');
+      this.prepareParams(obj.collectValues());
+    </handler>
+    <method name="handleError">
+      Debug.write('Error deleting user!');
+    </method>
+    <method name="handleSuccess">
+      Debug.write('User deleted');
+      // Reload the list of users
+      canvas.services.listUsers.startRequest();
+    </method>
+    <method name="handleFailure" args="message">
+      Debug.write('Error deleting user');
+      Debug.write(message);
+    </method>
+  </BackendService>
+
+  <!-- List tasks -->
+  <dataset name="listTasksDS" src="http://localhost:8080/trunk/lzproject/rest/task/list" type="http" request="false"
+         proxied="true"/>
+  <BackendService name="listTasks"
+    successDatapath="listTasksDS:/response/tasks"
+        failureDatapath="listTasksDS:/response/failure/errorMessage"
+        httpMethod="POST">
+    <method name="handleError">
+      Debug.write('Error loading task list!');
+    </method>
+    <method name="handleSuccess">
+      Debug.write('Task list loaded');
+    </method>
+  </BackendService>
+
+  <!-- Create task -->
+  <dataset name="createTaskDS" src="http://localhost:8080/trunk/lzproject/rest/task/create" type="http" request="false"
+         proxied="true"/>
+  <BackendService name="createTask"
+    successDatapath="createTaskDS:/response/success/message"
+        failureDatapath="createTaskDS:/response/failure/errorMsg"
+        httpMethod="POST">
+    <handler name="ontrigger" args="obj">
+      Debug.write('action ' + this.name + ' triggered');
+      this.prepareParams(obj.collectValues());
+    </handler>
+    <method name="handleError">
+      Debug.write('Error creating task!');
+    </method>
+    <method name="handleSuccess" args="message">
+      Debug.write('Task created');
+      canvas.services.listTasks.startRequest();
+      createTaskForm.clear();
+      createTaskForm.setMessage(message);
+    </method>
+    <method name="handleFailure" args="message">
+      Debug.write('Error saving task: ' + message);
+      createTaskForm.setMessage(message);
+    </method>
+    <method name="clearMessage">
+      createTaskForm.setMessage('');
+    </method>
+  </BackendService>
+
+  <!-- Mark task as finished-->
+  <dataset name="markAsFinishedDS" src="http://localhost:8080/trunk/lzproject/rest/task/markAsFinished" type="http" request="false"
+         proxied="true"/>
+  <BackendService name="markAsFinished"
+    successDatapath="markAsFinishedDS:/response/success/message"
+        failureDatapath="markAsFinishedDS:/response/failure/errorMsg"
+        httpMethod="POST">
+    <handler name="ontrigger" args="obj">
+      Debug.write('action ' + this.name + ' triggered');
+      this.prepareParams(obj.collectValues());
+    </handler>
+    <method name="handleError">
+      Debug.write('Error marking tasked as finished!');
+    </method>
+    <method name="handleSuccess" args="message">
+      Debug.write('Task marked as finished');
+      canvas.services.listTasks.startRequest();
+    </method>
+    <method name="handleFailure" args="message">
+      Debug.write('Error marking task as finished: ' + message);
+    </method>
+  </BackendService>
+
+  <!-- Delete task-->
+  <dataset name="deleteTaskDS" src="http://localhost:8080/trunk/lzproject/rest/task/delete" type="http" request="false" proxied="true" />
+  <BackendService name="deleteTask"
+    successDatapath="deleteTaskDS:/response/success/message"
+        failureDatapath="deleteTaskDS:/response/failure/errorMsg"
+        httpMethod="POST">
+    <handler name="ontrigger" args="obj">
+      Debug.write('action ' + this.name + ' triggered');
+      this.prepareParams(obj.collectValues());
+    </handler>
+    <method name="handleError">
+      Debug.write('Error deleting task!');
+    </method>
+    <method name="handleSuccess" args="message">
+      Debug.write('Task deleted');
+      canvas.services.listTasks.startRequest();
+    </method>
+    <method name="handleFailure" args="message">
+      Debug.write('Error deleting task: ' + message);
+    </method>
+  </BackendService>
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

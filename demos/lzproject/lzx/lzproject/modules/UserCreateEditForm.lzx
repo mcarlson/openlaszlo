@@ -1,0 +1,167 @@
+<library>
+
+  <class name="UserCreateEditForm" extends="BorderedBox" width="$once{this.content.width+26}"
+       height="${this.content.height+26}" borderColor="#777777" bgcolor="#f8f3aa" inset="10">
+
+        <!-- PUBLIC ATTRIBUTE SECTION -->
+    <attribute name="user" type="expression" value="null" />
+
+    <!-- i18n messages for client side validation -->
+    <node name="i18n" datapath="i18nDS:/app/user/create">
+      <attribute name="missingParameters" type="string" value="$path{'missingParameters/text()'}" />
+      <attribute name="passwordMissmatch" type="string" value="$path{'passwordMissmatch/text()'}" />
+    </node>
+
+    <!-- SERVICE CONNECTORS -->
+    <!-- Connector used for createUser action -->
+    <ServiceConnector name="createUserConn" form="$once{parent}">
+      <method name="handleResult" args="message">
+        form.searchSubnodes("name", "messageBox").setText(message);
+      </method>
+    </ServiceConnector>
+
+    <!-- Connector used for updateUser action -->
+    <ServiceConnector name="updateUserConn" form="$once{parent}">
+      <method name="handleResult" args="message">
+        form.searchSubnodes("name", "messageBox").setText(message);
+      </method>
+    </ServiceConnector>
+
+
+        <!-- METHOD SECTION -->
+    <method name="clear">
+      searchSubnodes("name", "login").setText('');
+      searchSubnodes("name", "realName").setText('');
+      searchSubnodes("name", "email").setText('');
+      searchSubnodes("name", "password1").setText('');
+      searchSubnodes("name", "password2").setText('');
+      parent.user = null;
+      content.createState.apply();
+      content.updateState.remove();
+    </method>
+
+    <!--- Store the values to be passed to the backend service in an array -->
+    <method name="collectValues">
+      var values = new Array();
+      values['login'] = parent.searchSubnodes("name", "login").getText();
+      values['password'] = parent.searchSubnodes("name", "password1").getText();
+      values['email'] = parent.searchSubnodes("name", "email").getText();
+      values['realname'] = parent.searchSubnodes("name", "realName").getText();
+      if (this.user != null) {
+        values['id'] = user.userId;
+      }
+      return values;
+    </method>
+
+    <!--- Call the createUser service -->
+    <method name="createUser">
+      createUserConn.callService();
+    </method>
+
+    <!--- Load data of existing user into form -->
+    <method name="loadUser" args="user">
+      this.user = user;
+      parent.searchSubnodes("name", "login").setText(user.login);
+      parent.searchSubnodes("name", "realName").setText(user.realName);
+      parent.searchSubnodes("name", "email").setText(user.email);
+      content.createState.remove();
+      content.updateState.apply();
+    </method>
+
+    <!--- Call the updateUser service -->
+    <method name="updateUser">
+      updateUserConn.callService();
+    </method>
+
+    <!--- Validate the form data -->
+    <method name="validate" args="conn">
+      var errorMessage = null;
+      var name = searchSubnodes("name", "login").getText();
+      var pass1 = searchSubnodes("name", "password1").getText();
+      var pass2 = searchSubnodes("name", "password2").getText();
+      var email = searchSubnodes("name", "email").getText();
+      var realName = searchSubnodes("name", "realName").getText();
+      if (name.length == 0 || email.length == 0 || realName.length == 0 || pass1.length == 0) {
+          errorMessage = this.i18n.missingParameters;
+      } else if (pass1 != pass2) {
+          errorMessage = this.i18n.passwordMissmatch;
+      }
+      if (errorMessage != null) {
+          conn.showValidatonError(errorMessage);
+          return false;
+      } else {
+          return true;
+      }
+    </method>
+
+        <!-- DISPPLAY AREA -->
+    <view name="content" width="$once{classroot.innerWidth}">
+
+      <simplelayout axis="y" spacing="5" />
+      <!-- Form for entering tasks -->
+
+      <BorderedBox name="messageBox" align="center" y="60" height="0" width="${parent.width-40}" borderColor="#777777"
+             bgcolor="#cccccc" borderSize="2" visible="true" clip="true">
+        <method name="setText" args="t">
+          if (t.length > 0) {
+            this.textField.setText(t);
+            this.setAttribute("visible", true);
+            this.animate('height', 30, 400);
+          } else {
+            this.animate('height', 0, 400);
+          }
+        </method>
+        <text name="textField" align="center" fgcolor="#2c4c62" fontsize="12" />
+      </BorderedBox>
+
+      <view height="10" />
+
+      <view name="buttonYRef" height="40">
+        <text y="3" fontsize="10" fontstyle="bold" datapath="i18nDS:/app/login/user/text()" />
+        <edittext name="login" x="100" width="180" />
+      </view>
+
+      <view height="40">
+        <text y="3" fontsize="10" fontstyle="bold" datapath="i18nDS:/app/main/peopleTab/realName/text()" />
+        <edittext name="realName" x="100" width="180" />
+      </view>
+
+      <view height="40">
+        <text y="3" fontsize="10" fontstyle="bold" datapath="i18nDS:/app/main/peopleTab/email/text()" />
+        <edittext name="email" x="100" width="180"/>
+      </view>
+
+      <view height="40">
+        <text y="3" fontsize="10" fontstyle="bold" datapath="i18nDS:/app/login/password/text()" />
+        <edittext name="password1" x="100" width="180" password="true"/>
+      </view>
+
+      <view height="40">
+        <text y="3" fontsize="10" fontstyle="bold"
+            datapath="i18nDS:/app/login/password/text()" />
+        <edittext name="password2" x="100" width="180" password="true"/>
+      </view>
+
+      <state name="createState" pooling="true" apply="true">
+        <button name="createButton" y="${parent.buttonYRef.y}" datapath="i18nDS:/app/main/peopleTab/newUser/text()"
+          align="right" options="ignorelayout" onclick="classroot.createUser()" />
+      </state>
+
+      <state name="updateState" pooling="true">
+        <button name="editButton" y="${parent.buttonYRef.y}" datapath="i18nDS:/app/main/peopleTab/editUser/text()"
+        align="right" options="ignorelayout" onclick="classroot.updateUser()" />
+      </state>
+
+      <button name="cancelButton" y="${parent.buttonYRef.y+40}" datapath="i18nDS:/app/main/peopleTab/cancel/text()"
+        align="right" options="ignorelayout" onclick="classroot.clear()" />
+
+    </view>
+    </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

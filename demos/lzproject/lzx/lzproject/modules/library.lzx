@@ -1,0 +1,37 @@
+<library>
+
+    <!-- Backend integration modules -->
+  <include href="BackendService.lzx" />
+  <include href="ServiceConnector.lzx" />
+
+
+  <!-- Visual classes -->
+  <include href="BorderedBox.lzx" />
+  <include href="ApplicationVisualizer.lzx" />
+    <include href="UserCreateEditForm.lzx" />
+    <include href="TaskCreateEditForm.lzx" />
+    <include href="NewProjectWindow.lzx" />
+
+
+  <!-- View areay -->
+  <include href="People.lzx" />
+  <include href="Task.lzx" />
+
+  <!-- Login Screen -->
+  <include href="I18NFlag.lzx" />
+  <include href="LoginScreen.lzx" />
+
+
+  <!-- General application -->
+    <include href="DynamicApplicationSizer.lzx" />
+
+  <!-- Backend module -->
+  <include href="BackendModule.lzx" />
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

@@ -1,0 +1,189 @@
+<library>
+
+  <!---
+         BackendService: Class connecting to a REST webservice and handling success
+                   of failure of the service call.
+
+         Usage:
+         @START_CODE
+         <canvas>
+      <dataset name="i18nDS" src="http:labs.openlaszlo.org/lzproject/lzproject/rest/application/i18n" type="http" request="true" proxied="true" />
+      <BackendService name="i18n"
+        successDatapath="i18nDS:/app/currentLocale">
+        <handler name="ontrigger" args="obj">
+          this.prepareParams(obj.collectValues());
+        </handler>
+        <method name="handleError">
+          Debug.write('Error requesting application resource bundle (i18n)!');
+        </method>
+        <method name="handleSuccess">
+          Debug.write('Resource bundle loaded');
+          // If we are already logged in, we have to reload the data
+          // containing I18N strings
+          if (canvas.loggedIn) {
+            canvas.services.listTasks.startRequest();
+            canvas.services.listProjects.startRequest();
+            canvas.services.listUsers.startRequest();
+          }
+        </method>
+      </BackendService>
+         </canvas>
+         @END
+    -->
+  <class name="BackendService" extends="node">
+        <!-- PUBLIC ATTRIBUTE SECTION -->
+        <!--- The xpath which has to match for a successful request -->
+    <attribute name="successDatapath" type="string" value="" />
+    <!--- The xpath singalling a request error -->
+    <attribute name="failureDatapath" type="string" value="" />
+    <!--- Used as an event sender by the ServiceConnectors connecting to this service -->
+    <attribute name="trigger" type="number" value="0" />
+    <!--- If we display an error message in a form we fwant to be able to clear that
+         message after a certain time. This is the delegate used for the timer -->
+    <attribute name="clearMessageDel" type="expression" value="null" />
+    <!--- How much time should we wait before removing the error message. Of course this
+         value can be overriden in any instance -->
+    <attribute name="clearDelay" type="number" value="2500" />
+    <!--- HTTP method: POST or GET -->
+    <attribute name="httpMethod" type="string" value="GET" />
+
+        <!-- PRIVATE ATTRIBUTE SECTION -->
+    <!--- @keywords private Reference to a service connector. Is set by from within
+          the ServiceConnector class -->
+    <attribute name="_connector" type="expression" value="null" />
+        <!--- @keywords private Reference to the dataset used by this service -->
+    <attribute name="_dsRef" type="expression" value="null" />
+        <!--- @keywords last message returned by webservice -->
+    <attribute name="_errorCount" type="number" value="0" />
+        <!--- @keywords last message returned by webservice -->
+    <attribute name="_lastMessage" type="string" value="" />
+        <!--- @keywords timestamp for last request -->
+    <attribute name="_lastRequestTime" type="expression" value="null" />
+        <!--- @keywords counting the total number of request for this service -->
+    <attribute name="_requestCount" type="number" value="0" />
+        <!--- @keywords counting the total number of request for this service -->
+    <attribute name="_xmlSerialized" type="string" value="no XML document received yet" />
+
+    <!-- Service state constants -->
+    <attribute name="IDLE" type="string" value="idle" />
+    <attribute name="REQUEST_STARTED" type="string" value="request started" />
+    <attribute name="PROCESSING_RESPONSE" type="string" value="processing response" />
+    <attribute name="WAITING_FOR_CLEAR" type="string" value="idle" />
+
+
+    <!-- DATAPOINTERS -->
+    <!-- Datapointer for catching a success -->
+    <datapointer name="_successDP" rerunxpath="true">
+      <handler name="ondata" args="p">
+           if (p !=null) {
+             var dupe = this.dupePointer();
+             dupe.setXPath("/");
+             classroot._xmlSerialized = dupe.serialize();
+           classroot._lastMessage = this.getNodeText();
+           classroot.handleSuccess(this.getNodeText(), p);
+          classroot.setupTimer();
+          classroot.ondata.sendEvent();
+          }
+      </handler>
+      <handler name="onerror" args="err">
+        classroot._errorCount++;
+          classroot.handleError();
+      </handler>
+      <handler name="ontimeout" args="e">
+        Debug.error(e);
+        Debug.error('Timeout for REST webservice ' + this.name);
+      </handler>
+
+    </datapointer>
+
+    <!-- Datapointer for catching an erraneous service request -->
+    <datapointer name="_failureDP" rerunxpath="true">
+      <handler name="ondata" args="p">
+         if (p !=null) {
+             var dupe = this.dupePointer();
+             dupe.setXPath("/");
+             classroot._xmlSerialized = dupe.serialize();
+           classroot._lastMessage = this.getNodeText();
+          classroot.handleFailure(this.getNodeText());
+          classroot.setupTimer();
+          classroot.ondata.sendEvent();
+        }
+        </handler>
+
+    </datapointer>
+
+        <!-- EVENT & HANDLER SECTION -->
+        <!-- Event for the trigger starting a service request -->
+    <event name="ontrigger" />
+    <event name="ondata" />
+
+    <!-- Constructor -->
+    <handler name="onconstruct">
+      if (typeof(canvas.services) == 'undefined') {
+          canvas.services = new Array();
+      }
+    </handler>
+
+
+    <!-- METHOD SECTION -->
+      <!--- set the timer which will call the clear() method after an error
+            message has been displayed. -->
+    <method name="setupTimer">
+      if (typeof this.clearMessage == 'function') {
+        if (this.clearMessageDel == null) {
+          this.clearMessageDel = new LzDelegate( this, "clearMessage" );
+        } else {
+          this.clearMessageDel.unregisterAll();
+        }
+        LzTimer.addTimer( this.clearMessageDel, this.clearDelay);
+      }
+    </method>
+
+        <!-- METHOD SECTION -->
+        <!--- init method  -->
+        <method name="init">
+      super.init();
+      _successDP.setAttribute('xpath', this.successDatapath);
+      // While the succuss datapath is is a requirement, the
+      // failure datapath is optional.
+      if (this.failureDatapath != null) {
+          _failureDP.setAttribute('xpath', this.failureDatapath);
+      }
+      this._dsRef = eval(this.getAttribute('name')+'DS');
+      // Push this service object to the canvas.services array
+      canvas.services[this.name] =  this;
+    </method>
+
+      <!--- Turn the associative array returned by the form into params for
+            an HTTP reqeust.
+            @param array values: An associative array containing the values
+                                 passed to the service -->
+       <method name="prepareParams" args="values">
+      for (var key in values) {
+          Debug.write('Adding var ' + key + '=' + values[key] + ' to params');
+          this._dsRef.setQueryParam(key, values[key]);
+      }
+      this.startRequest();
+    </method>
+
+    <method name="handleError">
+      Debug.error("Error calling REST web service " + this.name);
+    </method>
+
+    <!--- Start the request to the REST webservice -->
+    <method name="startRequest">
+      this._lastRequestTime = new Date();
+      this._requestCount++;
+      this._dsRef.setQueryType(this.httpMethod);
+      this._dsRef.doRequest();
+    </method>
+
+  </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

@@ -1,0 +1,53 @@
+<library>
+
+  <!---
+         I18NFlag: A flag on which the user can click to switch to a different locale.
+
+         Usage:
+         @START_CODE
+         <canvas>
+      <I18NFlag imageUrl="resources/flags/us.jpg" language="en" />
+      <I18NFlag imageUrl="resources/flags/de.jpg" language="de" />
+         </canvas>
+         @END
+    -->
+  <class name="I18NFlag" extends="view">
+        <!-- PUBLIC ATTRIBUTE SECTION -->
+
+    <ServiceConnector name="i18nConn" form="$once{parent}">
+      <method name="handleResult" args="message">
+        // Nothing to do
+      </method>
+    </ServiceConnector>
+
+    <!-- PRIVATE ATTRIBUTE SECTION -->
+    <attribute name="imageUrl" type="string" value="" />
+    <attribute name="language" type="string" value="" />
+
+        <!-- EVENT & HANDLER SECTION -->
+    <handler name="onclick">
+      this.i18nConn.callService(this);
+    </handler>
+
+    <handler name="oninit">
+      this.flagView.setSource(this.imageUrl);
+    </handler>
+
+        <!-- METHOD SECTION -->
+        <!--- Store the values to be passed to the backend service in an array -->
+    <method name="collectValues">
+      return {'language': this.language };
+    </method>
+
+        <!-- DISPPLAY AREA -->
+    <view name="flagView" width="27" height="17" />
+
+  </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

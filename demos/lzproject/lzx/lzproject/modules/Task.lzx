@@ -1,0 +1,80 @@
+<library>
+
+  <!---
+         Task:
+
+         Usage:
+         @START_CODE
+         <canvas>
+                 <Task datapath="dashboardDS:/response/dashboard/todos/todo" />
+         </canvas>
+         @END
+    -->
+  <class name="Task" extends="view">
+        <!-- PUBLIC ATTRIBUTE SECTION -->
+    <attribute name="taskId" type="string" value="$path{'@id'}" />
+    <attribute name="projectId" type="string" value="$path{'projectName/@id'}" />
+    <attribute name="description" type="html" value="$path{'description/text()'}" />
+    <attribute name="projectName" type="html" value="$path{'projectName/text()'}" />
+    <attribute name="deadline" type="string" value="$path{'deadline/text()'}" />
+    <attribute name="taskName" type="string" value="$path{'name/text()'}" />
+    <attribute name="deadlineMillis" type="string" value="$path{'@deadlineMillis'}" />
+    <attribute name="showFinished" type="boolean" value="false" />
+    <attribute name="showDelete" type="boolean" value="false" />
+
+        <!-- PRIVATE ATTRIBUTE SECTION -->
+
+    <ServiceConnector name="markAsFinishedConn" form="$once{parent}">
+      <method name="handleResult" args="message">
+        // Nothing to do
+      </method>
+    </ServiceConnector>
+    <ServiceConnector name="deleteTaskConn" form="$once{parent}">
+      <method name="handleResult" args="message">
+        // Nothing to do
+      </method>
+    </ServiceConnector>
+
+        <!-- EVENT & HANDLER SECTION -->
+
+        <!-- METHOD SECTION -->
+        <!-- collect all the values to be passed to the web service -->
+        <method name="collectValues">
+      return {'id': this.taskId };
+    </method>
+
+    <!--- Call the deleteTask service through the connector -->
+     <method name="deleteTask">
+      this.deleteTaskConn.callService(this);
+    </method>
+
+    <!--- calls the task markAsFinished service through the connector -->
+    <method name="markAsFinished">
+      Debug.write('Lets try');
+      this.markAsFinishedConn.callService(this);
+    </method>
+
+        <!-- DISPPLAY AREA -->
+        <simplelayout axis="y" spacing="2" />
+       <text fontsize="9" fontstyle="bold" text="${classroot.deadline}" />
+       <text fontsize="9" fontstyle="bold" text="${classroot.taskName}" />
+      <text fontsize="9" width="$once{parent.width}" text="${classroot.projectName}"
+        multiline="true"/>
+      <text fontsize="9" width="$once{parent.width}" text="${classroot.description}"
+        multiline="true"/>
+
+        <text fontsize="9" onclick="classroot.markAsFinished()" align="right" options="ignorelayout"
+              visible="${classroot.showFinished}" resize="true"><u>Finished</u></text>
+        <text fontsize="9" onclick="classroot.deleteTask()" align="right" options="ignorelayout"
+            visible="${classroot.showDelete}" resize="true"><u>Delete</u></text>
+
+         <view width="${parent.width}" height="1" bgcolor="#030109" />
+  </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

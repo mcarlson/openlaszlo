@@ -1,0 +1,29 @@
+
+  <!-- OpenLaszlo Servlets -->
+    <servlet>
+        <servlet-name>LPS</servlet-name>
+        <servlet-class>org.openlaszlo.servlets.LZServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LZViewer</servlet-name>
+        <servlet-class>org.openlaszlo.servlets.LZViewer</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AuthenticationServlet</servlet-name>
+        <servlet-class>AuthenticationServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>AxisServlet</servlet-name>
+      <servlet-class>
+          org.apache.axis.transport.http.AxisServlet
+      </servlet-class>
+    </servlet>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

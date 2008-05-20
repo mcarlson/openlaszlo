@@ -1,0 +1,32 @@
+
+  <!-- OpenLaszlo Servlet Mappings -->
+    <servlet-mapping>
+        <servlet-name>LPS</servlet-name>
+        <url-pattern>*.lzx</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LPS</servlet-name>
+        <url-pattern>*.lzo</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LZViewer</servlet-name>
+        <url-pattern>/LZViewer</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AuthenticationServlet</servlet-name>
+        <url-pattern>/AuthenticationServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+      <servlet-name>AxisServlet</servlet-name>
+      <url-pattern>*.jws</url-pattern>
+    </servlet-mapping>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

@@ -1,0 +1,66 @@
+<library>
+
+  <!---
+         DynamicApplicationSizer: Sizes the application within the given values
+
+         Usage:
+         @START_CODE
+         <canvas>
+              <DynamicApplicationSizer x="20" width="917" height="726" />
+         </canvas>
+         @END
+    -->
+    <class name="DynamicApplicationSizer" extends="view" defaultplacement="content">
+
+        <!-- PUBLIC ATTRIBUTE SECTION -->
+        <attribute name="maxWidth" type="number" value="900" />
+        <attribute name="minWidth" type="number" value="800" />
+        <attribute name="maxHeight" type="number" value="726" />
+        <attribute name="minHeight" type="number" value="620" />
+
+        <!-- PRIVATE ATTRIBUTE SECTION -->
+
+        <!-- EVENT & HANDLER SECTION -->
+        <handler name="onheight" reference="canvas"><![CDATA[
+            var newHeight = canvas.height - 77;
+            if (newHeight <= this.maxHeight && newHeight >= minHeight) {
+                this.setAttribute('height', newHeight);
+            } else if (newHeight > this.maxHeight) {
+                this.setAttribute('height', this.maxHeight);
+            } else {
+                this.setAttribute('height', this.minHeight);
+            }
+        ]]></handler>
+
+        <handler name="onwidth" reference="canvas"><![CDATA[
+            var newWidth = canvas.width - 200;
+            if (newWidth <= this.maxWidth && newWidth >= minWidth) {
+                this.setAttribute('width', newWidth);
+            } else if (newWidth > this.maxWidth) {
+                this.setAttribute('width', this.maxWidth);
+            } else {
+                this.setAttribute('width', this.minWidth);
+            }
+        ]]></handler>
+
+        <!-- METHOD SECTION -->
+        <method name="init"><![CDATA[
+            super.init();
+            // Trigger an event for canvas resize to adjust size at startup
+            canvas.onwidth.sendEvent();
+          canvas.onheight.sendEvent();
+        ]]></method>
+
+        <!-- DISPPLAY AREA -->
+        <view name="content" width="${classroot.width}" height="${classroot.height}"
+            clip="true" bgcolor="${COLORS.APPLICATION_BG}"/>
+
+    </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

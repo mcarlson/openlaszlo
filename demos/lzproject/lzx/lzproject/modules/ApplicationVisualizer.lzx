@@ -1,0 +1,185 @@
+<library>
+
+  <!---
+         ApplicationVisualizer: LZ X-Ray application visualizer
+
+         Usage:
+         @START_CODE
+         <canvas>
+       <ApplicationVisualizer id="appVisualizer" />
+         </canvas>
+         @END
+    -->
+  <class name="ApplicationVisualizer" extends="window" x="$once{50}" y="50" width="600" height="550"
+         title="&lt;b&gt;LZ X-Ray&lt;/b&gt;" visible="false" closeable="true">
+
+        <!-- PUBLIC ATTRIBUTE SECTION -->
+        <!--- Marker signaling if the backend serviced have been added to the list -->
+        <attribute name="servicesLoaded" type="boolean" value="false" />
+        <!-- The active service selected right now -->
+        <attribute name="selectedService" type="expression" value="null" />
+        <!-- Delegate for updating the service in case of changes on the dataset -->
+        <attribute name="updateDel" type="expression" value="null" />
+
+        <!-- PRIVATE ATTRIBUTE SECTION -->
+
+
+        <!-- EVENT & HANDLER SECTION -->
+
+        <!-- METHOD SECTION -->
+        <!--- Update the data in LZ X-Ray -->
+        <method name="updateValues">
+          // Now create a delegate for monitoring service calls
+          if (this.updateDel == null) {
+            this.updateDel = new LzDelegate(this, "updateValues");
+          } else {
+            this.updateDel.unregisterAll();
+          }
+          // Set a delegate for the ondata events both of successDP and failureDP
+      this.updateDel.register(selectedService, "ondata");
+          searchSubnodes("name", "successDatapath").setText(selectedService.successDatapath);
+          searchSubnodes("name", "failureDatapath").setText(selectedService.failureDatapath);
+          searchSubnodes("name", "lastRequestTime").setText(selectedService._lastRequestTime);
+          searchSubnodes("name", "errorCount").setText(selectedService._errorCount);
+          searchSubnodes("name", "requestCount").setText(selectedService._requestCount);
+          searchSubnodes("name", "lastMessage").setText(selectedService._lastMessage);
+          searchSubnodes("name", "xmlSerialized").setText(selectedService._xmlSerialized);
+          // Now get the URL for this REST web service
+          var host = LzBrowser.getLoadURLAsLzURL().host;
+          var path = LzBrowser.getLoadURLAsLzURL().path;
+          var port = LzBrowser.getLoadURLAsLzURL().port;
+          var base = LzBrowser.getLoadURLAsLzURL();
+          var datasetSrc = selectedService._dsRef.src;
+          searchSubnodes("name", "serviceUrl").setText(datasetSrc);
+          // Check if we have a connector and a form for the service
+          var connector = selectedService._connector;
+          if (connector != null) {
+
+          }
+        </method>
+
+        <!--- Start a backend request to the selected service -->
+        <method name="callSelectedService">
+        <![CDATA[
+          Debug.write('should be calling' + this.selectedService);
+          if (typeof selectedService._connector != 'undefined' && selectedService._connector != null) {
+            Debug.write('Service connector found', selectedService._connector);
+        selectedService.ontrigger.sendEvent(selectedService._connector);
+          } else {
+            Debug.write('No service connector found');
+            selectedService.startRequest();
+          }
+        ]]>
+        </method>
+
+        <!--- Called by the content menu entry to open LZ X-Ray  -->
+    <method name="visualize">
+           <![CDATA[
+           var serviceList = this.searchSubnodes("name", "servicesList");
+           if (!servicesLoaded) {
+            // Iterate through all the services we have
+            var counter = 0;
+            // Sort array for sorting the keys in canvas.services
+            servicesSorted = new Array();
+            for (var key in canvas.services) {
+              servicesSorted[counter] = key;
+              counter++;
+            }
+            servicesSorted.sort();
+            for (counter = 0; counter < servicesSorted.length; counter++) {
+          var key = servicesSorted[counter];
+              var newItem = new lz.textlistitem(serviceList, {'text': key, 'value': canvas.services[key]});
+              if (counter == 0) {
+                newItem.setAttribute("selected", true);
+                this.setAttribute("selectedService", canvas.services[key]);
+              }
+            }
+            this.servicesLoaded = true;
+          }
+          // If we are not logged in, deactive all items but login and i18n
+
+          this.updateValues();
+          this.setAttribute("visible", true);
+          ]]>
+        </method>
+
+        <!-- DISPPLAY AREA -->
+        <simplelayout axis="y" spacing="15" inset="10"/>
+
+        <view x="10">
+          <text fontsize="10" y="4" fontstyle="bold">REST Web Service</text>
+          <list name="servicesList" y="24" width="200" shownitems="7">
+            <handler name="onselect" args="c">
+              if (typeof c != 'undefined') {
+                classroot.setAttribute("selectedService", this.value)
+                classroot.updateValues();
+              }
+            </handler>
+          </list>
+
+        <!-- Statistics and infos for this web service -->
+        <view x="225" y="20" options="ignorelayout">
+          <simplelayout axis="y" spacing="10" />
+          <view>
+              <text fontsize="10" fontstyle="bold">Last request:</text>
+              <text name="lastRequestTime" resize="true" x="100" />
+            </view>
+          <view>
+              <text fontsize="10" fontstyle="bold">Request count:</text>
+              <text name="requestCount" resize="true" x="100" />
+            </view>
+          <view>
+              <text fontsize="10" fontstyle="bold">Error count:</text>
+              <text name="errorCount" resize="true" x="100" />
+            </view>
+          <view>
+              <text fontsize="10" fontstyle="bold">Last message:</text>
+              <text name="lastMessage" resize="true" y="20" multiline="true"
+                  bgcolor="#cccccc" width="320" height="40"/>
+            </view>
+      </view>
+
+      </view>
+
+      <!-- Button for starting the selected service's request -->
+      <button x="10" text="Test service" onclick="classroot.callSelectedService()" />
+
+      <view x="10">
+        <simplelayout axis="y" spacing="5" />
+        <view>
+            <text fontsize="10" fontstyle="bold">Webservice URL:</text>
+            <text name="serviceUrl" resize="true" x="120" />
+          </view>
+        <view>
+            <text fontsize="10" fontstyle="bold">successDatapath:</text>
+            <text name="successDatapath" resize="true" x="120" />
+          </view>
+        <view>
+            <text fontsize="10" fontstyle="bold">failureDatapath:</text>
+            <text name="failureDatapath" resize="true" x="120" />
+          </view>
+      </view>
+
+
+      <view x="10">
+        <simplelayout axis="y" spacing="10" />
+            <text fontsize="10" fontstyle="bold">REST XML document:</text>
+          <BorderedBox clip="true" height="150" width="${classroot.width-40}" borderColor="#6eaed8"
+                  bgcolor="#c6dff0">
+          <view width="${parent.width}">
+            <inputtext x="5" name="xmlSerialized" multiline="true" width="${parent.width-30}"/>
+          </view>
+          <vscrollbar />
+
+        </BorderedBox>
+    </view>
+
+  </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

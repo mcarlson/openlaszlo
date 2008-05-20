@@ -1,0 +1,79 @@
+<library>
+
+  <!---
+         People:
+
+         Usage:
+         @START_CODE
+         <canvas>
+          <People width="210">
+            <datapath xpath="listUsersDS:/response/users/user" pooling="true" />
+          </People>
+         </canvas>
+         @END
+    -->
+  <class name="People" extends="view">
+    <!--- The ID of this person -->
+    <attribute name="userId" type="string" value="$path{'id/text()'}" />
+    <!--- Email address -->
+    <attribute name="email" type="string" value="$path{'email/text()'}" />
+    <!--- Login name -->
+    <attribute name="login" type="string" value="$path{'login/text()'}" />
+    <!--- Real name -->
+    <attribute name="realName" type="string" value="$path{'realName/text()'}" />
+    <!--- Time of last login as a localized date & time -->
+    <attribute name="lastLogin" type="string" value="$path{'lastLogin/text()'}" />
+    <!--- switch for showing or hiding edit/delete buttons -->
+    <attribute name="showControls" type="boolean" value="false" />
+
+        <!-- PUBLIC ATTRIBUTE SECTION -->
+
+        <!-- PRIVATE ATTRIBUTE SECTION -->
+
+        <!-- EVENT & HANDLER SECTION -->
+        <handler name="ondata">
+            if (this.login == 'laszlo') {
+                this.setAttribute('showControls', false);
+            } else {
+                this.setAttribute('showControls', true);
+            }
+        </handler>
+
+        <!-- METHOD SECTION -->
+        <!--- call the deleteUser service -->
+    <method name="deleteUser">
+      canvas.services.deleteUser.ontrigger.sendEvent(this);
+    </method>
+
+    <!--- Prepare the values to be passed with the request -->
+    <method name="collectValues">
+      var values = new Array();
+      values['login'] = this.login;
+      return values;
+    </method>
+
+
+        <!-- DISPPLAY AREA -->
+        <simplelayout axis="y" spacing="2" />
+       <text fontsize="9" fontstyle="bold" text="${'Login: ' + classroot.login}" />
+       <text fontsize="9" fontstyle="bold" text="${classroot.realName}" />
+      <text fontsize="9" width="$once{parent.width}" text="${classroot.email}"/>
+      <text fontsize="9" width="$once{parent.width}" text="${classroot.lastLogin}"/>
+      <!-- Separator line between the entries -->
+    <view width="${parent.width-10}" height="2" bgcolor="#030109" />
+    <!-- Controls for editing and deleting users -->
+      <view options="ignorelayout" align="right"
+        visible="${classroot.showControls}">
+        <simplelayout axis="x" spacing="5" />
+        <text fontsize="9" onclick="createUserForm.loadUser(classroot)" ><u>Edit</u></text>
+        <text fontsize="9" onclick="classroot.deleteUser()"><u>Delete</u></text>
+      </view>
+  </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

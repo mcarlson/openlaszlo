@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<canvas height="100%" width="100%" debug="false" bgcolor="#e5e5e5" proxied="false">
+
+  <attribute name="loggedIn" type="boolean" value="false" />
+  <attribute name="login" type="string" value="" />
+
+    <!--whitestyle isdefault="true" /-->
+
+    <!-- LIBRARIES -->
+    <include href="./css"/>
+    <include href="./modules"/>
+
+  <debug y="10" width="500" align="right"/>
+
+  <!-- LZ X-Ray tool instance -->
+  <ApplicationVisualizer id="appVisualizer" />
+
+    <!-- Context menu -->
+    <handler name="oninit"><![CDATA[
+      // Remove 'show source
+    var contextMenu = new LzContextMenu();
+    contextMenu.clearItems();
+    contextMenu.addItem(contextMenu.makeMenuItem('LZ X-Ray',
+      new LzDelegate(appVisualizer, 'visualize')));
+    var switchTo = null;
+    if (canvas.runtime == "dhtml") switchTo = "Switch to Flash";
+    else switchTo = "Switch to DHTML";
+    contextMenu.addItem(contextMenu.makeMenuItem(switchTo,
+      new LzDelegate(this, 'switchRuntime')));
+    contextMenu.addItem(contextMenu.makeMenuItem('Show LZXDocs',
+      new LzDelegate(this, 'showLzxDocs')));
+    contextMenu.addItem(contextMenu.makeMenuItem('Show Javadocs',
+      new LzDelegate(this, 'showJavaDocs')));
+    contextMenu.addItem(contextMenu.makeMenuItem('Download OpenLaszlo',
+      new LzDelegate(this, 'downloadOpenLaszlo')));
+    contextMenu.addItem(contextMenu.makeMenuItem('OL 4 Blueprint App White Paper',
+      new LzDelegate(this, 'getWhitePaper')));
+    contextMenu.addItem(contextMenu.makeMenuItem('Laszlo Webtop',
+      new LzDelegate(this, 'tryLaszloWebtop')));
+    contextMenu.addItem(contextMenu.makeMenuItem('About OpenLaszlo',
+      new LzDelegate(this, 'gotoOpenLaszlo')));
+    canvas.setDefaultContextMenu(contextMenu);
+    ]]></handler>
+
+
+    <!-- This method is called when the context menu item "About OpenLaszlo" is
+         selected -->
+  <method name="gotoOpenLaszlo"><![CDATA[
+        LzBrowser.loadURL('http://www.openlaszlo.org', 'blank');
+    ]]></method>
+
+    <!-- This method is called when the context menu item "About OpenLaszlo" is
+         selected -->
+  <method name="getWhitePaper"><![CDATA[
+        LzBrowser.loadURL('../whitepaper/LZProject-OpenLaszlo4-Blueprint-Application.pdf', 'blank');
+    ]]></method>
+
+    <!-- This method is called when the context menu item "Try Laszlo Webtop" is
+         selected -->
+  <method name="tryLaszloWebtop"><![CDATA[
+        LzBrowser.loadURL('http://www.laszlosystems.com/software/webtop', 'blank');
+    ]]></method>
+
+    <!-- This method is called when the context menu item "About OpenLaszlo" is
+         selected -->
+  <method name="downloadOpenLaszlo"><![CDATA[
+        LzBrowser.loadURL('http://www.openlaszlo.org/download', 'blank');
+    ]]></method>
+
+    <!-- This method is called when the context menu item "Show LZXDocs" is
+         selected -->
+  <method name="showLzxDocs"><![CDATA[
+        LzBrowser.loadURL('lzxdocs/index.html', 'blank');
+    ]]></method>
+
+    <!-- This method is called when the context menu item "Show Javadocs" is
+         selected -->
+  <method name="showJavaDocs"><![CDATA[
+        LzBrowser.loadURL('javadocs/index.html', 'blank');
+    ]]></method>
+
+    <!-- This method is called when the context menu item "Switch runtime" is
+         selected -->
+  <method name="switchRuntime"><![CDATA[
+       if (canvas.runtime == "dhtml") {
+           LzBrowser.loadURL("./LZProject.lzx?lzt=html&lzr=swf8");
+       } else {
+           LzBrowser.loadURL("./LZProject.lzx?lzt=html&lzr=dhtml");
+       }
+    ]]></method>
+
+
+    <!-- APPLICATION WITH SCROLLBARS -->
+    <!-- Both outer views are used for showing the scrollbars within the application -->
+     <view height="${canvas.height}" width="${canvas.width}" clip="true" align="center">
+
+
+        <!-- This view is used to show the application scrollbars. As soon as this
+             view is bigger than the surrounding view the scrollbars will show. -->
+        <view id="scrollContent" x="0" width="${app.width+55}" height="${app.height+76}" align="center"
+            pixellock="true">
+
+            <simplelayout axis="y" spacing="10" />
+
+            <view x="20" width="${app.width}" height="26"  />
+
+            <!-- Our application container with a minimum and maximum size -->
+            <DynamicApplicationSizer id="app" align="center" y="40"
+               bgcolor="$once{COLORS.APPLICATION_BG}" visible="false">
+
+
+        <!-- Application header with flags, last login info, etc. -->
+              <BorderedBox width="${app.width}" height="${app.height}" bgcolor="#ffffff" borderColor="#c0c0c0"
+                borderSize="3" inset="0">
+                <datapath xpath="i18nDS:/app/" pooling="true" />
+
+          <view width="${parent.innerWidth}" height="25" bgcolor="#2a1f6d" />
+
+          <!-- Flags for language selection -->
+          <view x="10" y="4">
+            <simplelayout axis="x" spacing="15" />
+            <I18NFlag imageUrl="resources/flags/us.jpg" language="en" />
+            <I18NFlag imageUrl="resources/flags/de.jpg" language="de" />
+            <I18NFlag imageUrl="resources/flags/ko.jpg" language="ko" />
+            <!-- I18NFlag imageUrl="resources/flags/jp.jpg" language="ja" /-->
+          </view>
+
+          <view x="${parent.innerWidth-this.width-20}" y="5">
+            <simplelayout axis="x" spacing="15" />
+
+          <text fgcolor="#eeeeee" fontsize="10" datapath="user/login">
+            <attribute name="i18nUser" type="string" value="$path{'../../login/user/text()'}" />
+            <handler name="ondata" args="p">
+              if (p != null) {
+                  this.setText(this.i18nUser + ": " + p.childNodes[0]);
+              }
+            </handler>
+          </text>
+          <text fgcolor="#eeeeee" fontsize="10" datapath="user/lastLogin" resize="true">
+            <attribute name="i18nLastLogin" type="string"
+              value="$path{'../../main/lastLogin/text()'}" />
+            <handler name="ondata" args="p">
+              if (p != null) {
+                  this.setText(this.i18nLastLogin + ": " + p.childNodes[0]);
+              }
+            </handler>
+          </text>
+
+            <ServiceConnector name="logoutConn" form="$once{parent}" />
+
+            <button id="logoutButton" height="19" y="-2" datapath="i18nDS:/app/main/logout/text()"
+                    onclick="parent.logoutConn.callService()"/>
+          </view>
+              </BorderedBox>
+
+              <!-- Laszlo Project logo -->
+        <view x="20" y="38" resource="resources/LZProject.jpg" />
+
+              <!-- button to change to other runtime -->
+        <switch>
+           <when runtime="dhtml">
+               <view x="${app.width-this.width-80}" y="40" resource="http:resources/ShowFlash.jpg"
+                 onclick="canvas.switchRuntime()"></view>
+           </when>
+           <otherwise>
+               <view x="${app.width-this.width-80}" y="40" resource="http:resources/ShowDHTML.jpg"
+                 onclick="canvas.switchRuntime()"></view>
+           </otherwise>
+        </switch>
+
+                <!-- The three main tabpanes -->
+        <tabs name="tabs" y="90" x="2" _contentHeight="${app.height-this.y-30}" _contentWidth="${app.width-4}">
+          <node datapath="i18nDS:/app/main">
+            <attribute name="dashboardTabTitle" type="string" value="$path{'dashboard/text()'}" />
+            <attribute name="projectTabTitle" type="string" value="$path{'project/text()'}" />
+            <attribute name="peopleTabTitle" type="string" value="$path{'people/text()'}" />
+            <handler name="ondata">
+              parent.dashboard.setAttribute("text", this.dashboardTabTitle);
+              parent.project.setAttribute("text", this.projectTabTitle);
+              parent.people.setAttribute("text", this.peopleTabTitle);
+            </handler>
+
+          </node>
+
+          <!-- DASHBOARD -->
+          <tabpane name="dashboard" bgcolor="#d2d2d2"
+            width="${app.width-6}" height="${parent.height-30}" >
+
+            <!-- Project selector -->
+            <view x="20" y="20" width="400">
+              <simplelayout axis="x" spacing="10" />
+              <text fontsize="12" fontstyle="bold" datapath="i18nDS:/app/main/project/text()" />
+
+              <combobox id="projComboDashboard" width="300" datapath="listProjectsDS:/response/projects/"
+                      editable="false">
+                        <textlistitem datapath="project">
+                  <attribute name="projectName" type="string" value="$path{'name/text()'}" />
+                  <handler name="ondata" args="p">
+                    this.setAttribute('text', this.projectName);
+                    this.value = p.attributes.id;
+                    if (this.value == 1) {
+                      parent.selectItem(1);
+                    }
+                  </handler>
+                </textlistitem>
+                    </combobox>
+
+                  </view>
+
+                  <!-- Project statistics -->
+                  <view x="20" y="65">
+                      <simplelayout axis="x" spacing="10" />
+                      <text datapath="">
+                              <!-- The trigger for a change of this text is the selection of a different
+                                   project throught the combobox -->
+                              <handler name="onvalue" reference="projComboDashboard" args="projectID">
+                                  var dp = listProjectsDS.getPointer();
+                                  dp.setXPath("listProjectsDS:/response/projects/project[@id = '"
+                                      +projectID+"']/running"),
+                                  this.setText(dp.getNodeText());
+                              </handler>
+                      </text>
+                  </view>
+
+                  <!-- Project details -->
+            <view x="20" y="100" width="420">
+              <simplelayout axis="y" spacing="5" />
+                    <text fontsize="10" fontstyle="bold" datapath="i18nDS:/app/main/dashboardTab/description/text()"/>
+                    <BorderedBox height="150" width="${parent.width}"
+                                 borderColor="#9bc0ff" bgcolor="#d8ebff" borderSize="3">
+                  <text width="$once{parent.innerWidth}" height="$once{parent.innerHeight}" multiline="true">
+                              <!-- The trigger for a change of this text is the selection of a different
+                                   project throught the combobox -->
+                              <handler name="onvalue" reference="projComboDashboard" args="projectID">
+                                  var dp = listProjectsDS.getPointer();
+                                  dp.setXPath("listProjectsDS:/response/projects/project[@id = '"
+                                      +projectID+"']/description"),
+                                  this.setText(dp.getNodeText());
+                              </handler>
+                  </text>
+                    </BorderedBox>
+
+                  </view>
+
+                  <!-- Already late on this -->
+            <view x="20" y="300" width="420">
+              <simplelayout axis="y" spacing="5" />
+                    <text fontsize="10" fontstyle="bold" datapath="i18nDS:/app/main/dashboardTab/overdue/text()" />
+                    <BorderedBox height="${app.tabs.dashboard.height-parent.y-50}" width="${parent.width}"
+                      borderColor="#d54b0e" bgcolor="#f5c9bb" borderSize="3">
+                        <view clip="true" width="$once{parent.innerWidth}">
+                          <simplelayout axis="y" spacing="10" />
+                          <Task width="${parent.width-25}" visible="false"
+                                showFinished="true">
+                            <datapath xpath="listTasksDS:/response/tasks/task" pooling="true" />
+                    <handler name="ondata" args="p">
+                      var date = new Date();
+                      var nowMillis = date.getTime();
+                      if (nowMillis > deadlineMillis) this.setAttribute('visible', true);
+                    </handler>
+                  </Task>
+                          </view>
+                        <vscrollbar />
+                    </BorderedBox>
+                  </view>
+
+            <tabslider x="${parent.width-this.width-40}" y="20" width="250" initstage="late"
+                     height="${app.tabs.dashboard.height-this.y-26}">
+              <!-- TODO: why is it not possible to directly add an attribute with a $path{} expression
+                 to the tabslider or tabelement?  Nothing will show then! -->
+              <node datapath="i18nDS:/app/main/">
+                <attribute name="people" type="string" value="$path{'people/text()'}" />
+                <attribute name="tasks" type="string" value="$path{'tasks/text()'}" />
+                <attribute name="finishedTasks" type="string" value="$path{'finishedTasks/text()'}" />
+                <handler name="ondata">
+                  parent.peopleTab.setAttribute('text', this.people);
+                  parent.tasksTab.setAttribute('text', this.tasks);
+                  parent.finishedTasksTab.setAttribute('text', this.finishedTasks);
+                </handler>
+              </node>
+
+              <!-- ToDo list -->
+                      <tabelement name="tasksTab" text="Tasks" selected="true" bgcolor="#d1fdda">
+                        <view>
+                          <simplelayout axis="y" spacing="10" />
+                          <Task width="210">
+                            <datapath xpath="listTasksDS:/response/tasks/task" pooling="true" />
+                          </Task>
+                        </view>
+                        <vscrollbar />
+                      </tabelement>
+
+                      <!-- List of all users without edit/delete controls -->
+                      <tabelement name="peopleTab" text="People" bgcolor="#f8f3aa">
+                        <view>
+                          <simplelayout axis="y" spacing="10" />
+                          <People width="210">
+                            <datapath xpath="listUsersDS:/response/users/user" pooling="true" />
+                          </People>
+                        </view>
+                        <vscrollbar />
+                      </tabelement>
+
+              <!-- Finished -->
+                      <tabelement name="finishedTasksTab" bgcolor="#cccccc">
+                        <view>
+                          <simplelayout axis="y" spacing="10" />
+                          <Task width="210">
+                            <datapath xpath="listTasksDS:/response/finishedTasks/task" pooling="true" />
+                          </Task>
+                          </view>
+                        <vscrollbar />
+                      </tabelement>
+
+                  </tabslider>
+
+          </tabpane>
+
+
+          <!-- PROJECT TAB -->
+          <tabpane name="project" bgcolor="#d2d2d2" width="${parent.width-2}" height="${parent.height-30}">
+            <!-- Project selector -->
+            <view name="projectSelector" x="20" y="20" width="420">
+              <simplelayout axis="x" spacing="10" />
+              <text fontsize="10" fontstyle="bold" datapath="i18nDS:/app/main/project/text()" />
+
+              <combobox id="projComboProject" width="200" datapath="listProjectsDS:/response/projects/"
+                      editable="false">
+                        <textlistitem datapath="project">
+                  <attribute name="projectName" type="string" value="$path{'name/text()'}" />
+                  <handler name="ondata" args="p">
+                    this.setAttribute('text', this.projectName);
+                    this.value = p.attributes.id;
+                    if (this.value == 1) {
+                      parent.selectItem(1);
+                    }
+                  </handler>
+                </textlistitem>
+                    </combobox>
+
+                    <button options="ignorelayout" datapath="i18nDS:/app/main/projectTab/createButton/text()"
+                        height="20" fontsize="10"
+                        onclick="newProjectWindow.setVisible(true)" align="right"/>
+                  </view>
+
+                  <!-- Project details -->
+            <view name="details" x="20" y="60" width="420">
+              <simplelayout axis="y" spacing="5" />
+                    <text fontsize="10" fontstyle="bold" datapath="i18nDS:/app/main/dashboardTab/description/text()"/>
+                    <BorderedBox height="120" width="${parent.width}"
+                                 borderColor="#9bc0ff" bgcolor="#d8ebff" borderSize="3">
+                         <text width="$once{parent.innerWidth}" height="$once{parent.innerHeight}" multiline="true">
+                              <!-- The trigger for a change of this text is the selection of a different
+                                   project throught the combobox -->
+                              <handler name="onvalue" reference="projComboProject" args="projectID">
+                                  var dp = listProjectsDS.getPointer();
+                                  dp.setXPath("listProjectsDS:/response/projects/project[@id = '"
+                                      +projectID+"']/description"),
+                                  this.setText(dp.getNodeText());
+                              </handler>
+                        </text>
+                    </BorderedBox>
+                  </view>
+
+                  <TaskCreateEditForm id="createTaskForm" x="20" y="220" width="420" height="${app.tabs.dashboard.height-this.y-26}" />
+
+            <tabslider x="${parent.width-this.width-40}" y="20" width="250"
+                   height="${app.tabs.project.height-this.y-26}">
+              <!-- i18n message container -->
+              <node datapath="i18nDS:/app/main/">
+                <attribute name="tasks" type="string" value="$path{'tasks/text()'}" />
+                <attribute name="finishedTasks" type="string" value="$path{'finishedTasks/text()'}" />
+                <handler name="ondata">
+                  parent.tasksTab.setAttribute('text', this.tasks);
+                  parent.finishedTasksTab.setAttribute('text', this.finishedTasks);
+                </handler>
+              </node>
+
+              <!--  Unfinished taks and finished tasks -->
+                      <tabelement name="tasksTab" selected="true" bgcolor="#d1fdda">
+                        <view>
+                          <!-- Only display the tasks belonging to this project. Two events
+                               have to be monitored here: 1) cloning of Tasks 2) selection of a different
+                               project in the combobox -->
+                          <handler name="onclones" reference="this.tasks">
+                    this.filterTasks(projComboProject.getValue());
+
+                  </handler>
+                          <handler name="onvalue" reference="projComboProject" args="comboValue">
+                    this.filterTasks(comboValue);
+                  </handler>
+                          <method name="filterTasks" args="comboValue">
+                            <![CDATA[
+                            if (tasks.constructor.classname == "LzReplicationManager") {
+                              // Replication manager, now step through the clones array
+                              for (var i=0; i<tasks.clones.length; i++) {
+                                var task = tasks.clones[i];
+                                // Only show tasks belonging to this project
+                                if (task.projectId != comboValue) {
+                                  task.setAttribute("visible", false);
+                                } else {
+                                  task.setAttribute("visible", true);
+                                }
+                              }
+
+                            }
+                            ]]>
+                  </method>
+                          <simplelayout axis="y" spacing="10" />
+                          <Task name="tasks"  width="210" showFinished="true">
+                            <datapath xpath="listTasksDS:/response/tasks/task" pooling="true" />
+                          </Task>
+                        </view>
+                        <vscrollbar />
+                      </tabelement>
+
+              <!-- Finished -->
+                      <tabelement name="finishedTasksTab" bgcolor="#cccccc">
+                        <view>
+                          <!-- Only display the finished tasks belonging to this project. -->
+                          <handler name="onclones" reference="this.finishedTasks">
+                    this.filterTasks(projComboProject.getValue());
+                  </handler>
+                          <handler name="onvalue" reference="projComboProject" args="comboValue">
+                    this.filterTasks(comboValue);
+                  </handler>
+                          <method name="filterTasks" args="comboValue">
+                            <![CDATA[
+                            if (finishedTasks.constructor.classname == "LzReplicationManager") {
+                              // Replication manager, now step through the clones array
+                              for (var i=0; i<finishedTasks.clones.length; i++) {
+                                var task = finishedTasks.clones[i];
+                                // Only show tasks belonging to this project
+                                if (task.projectId != comboValue) {
+                                  task.setAttribute("visible", false);
+                                } else {
+                                  task.setAttribute("visible", true);
+                                }
+                              }
+
+                            }
+                            ]]>
+                  </method>                                 <simplelayout axis="y" spacing="10" />
+                          <Task name="finishedTasks" width="210" showDelete="true">
+                            <datapath xpath="listTasksDS:/response/finishedTasks/task" pooling="true" />
+                          </Task>
+                          </view>
+                        <vscrollbar />
+                      </tabelement>
+
+                  </tabslider>
+
+          </tabpane>
+
+
+          <!-- PEOPLE -->
+          <tabpane name="people" bgcolor="#d2d2d2" width="${parent.width-2}" height="${parent.height-30}">
+
+            <!-- Form for creating or updating user information -->
+            <UserCreateEditForm id="createUserForm" x="20" y="20" width="450" />
+
+                  <!-- User management tabslider -->
+            <tabslider x="${parent.width-this.width-40}" y="20" width="250"
+                     height="${app.tabs.dashboard.height-this.y-26}">
+
+              <!-- i18n container for tabelement title -->
+              <node datapath="i18nDS:/app/main/">
+                <attribute name="people" type="string" value="$path{'people/text()'}" />
+                <handler name="ondata">
+                  parent.peopleTab.setAttribute('text', this.people);
+                </handler>
+              </node>
+
+                      <!-- tabelement for all users with edit and delete button -->
+                      <tabelement name="peopleTab" text="People" bgcolor="#f8f3aa" selected="true">
+                        <view>
+                          <simplelayout axis="y" spacing="10" />
+                          <People width="210" showControls="true">
+                            <datapath xpath="listUsersDS:/response/users/user" pooling="true" />
+                          </People>
+                        </view>
+                        <vscrollbar />
+                      </tabelement>
+
+                  </tabslider>
+
+          </tabpane>
+
+        </tabs>
+            </DynamicApplicationSizer>
+
+
+
+      <LoginScreen id="loginScreen" align="center" valign="middle" options="ignorelayout" />
+
+      <NewProjectWindow id="newProjectWindow"   visible="false" align="center" valign="middle"
+                        bgcolor="#efefef" initstage="late" />
+
+      </view><!-- end of scroll content -->
+
+
+        <!-- APP SCROLLBARS -->
+        <vscrollbar name="vscroll" x="${canvas.width-this.width}" height="${this.scrollheight}"
+            scrolltarget="${scrollContent}" visible="${scrollContent.height-15>=canvas.height}">
+            <attribute name="scrollheight" value="0"/>
+            <handler name="onheight" reference="canvas">
+                if (parent.hscroll.visible == true){
+                    var h = canvas.height-15;
+                }else{
+                    var h = canvas.height+1;
+                }
+                this.setAttribute('scrollheight', h);
+            </handler>
+        </vscrollbar>
+        <hscrollbar name="hscroll" y="${canvas.height-this.height}" width="${this.scrollwidth}"
+            scrolltarget="${scrollContent}" visible="${scrollContent.width-20>=canvas.width}"
+      options="ignorelayout" initstage="late">
+            <attribute name="scrollwidth" value="0"/>
+            <handler name="onwidth" reference="canvas">
+                if (parent.vscroll.visible == true){
+                    var w = canvas.width-15;
+                }else{
+                    var w = canvas.width+1;
+                }
+                this.setAttribute('scrollwidth', w);
+            </handler>
+      <handler name="oninit">
+          canvas.onwidth.sendEvent();
+      </handler>
+        </hscrollbar>
+
+
+        <!-- BOX IN BOTTOM RIGHT CORNER -->
+    <view align="right" valign="bottom" bgcolor="$once{canvas.bgcolor}" clickable="false" width="15" height="15"
+            visible="${parent.hscroll.visible &amp;&amp; parent.vscroll.visible}">
+            <handler name="onmouseover">
+                LzCursor.showHandCursor(false);
+            </handler>
+            <handler name="onmouseout">
+                LzCursor.showHandCursor(true);
+            </handler>
+        </view>
+
+
+    </view><!-- clipping view -->
+
+</canvas>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

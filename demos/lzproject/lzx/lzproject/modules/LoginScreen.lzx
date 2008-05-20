@@ -1,0 +1,162 @@
+<library>
+
+  <!---
+         LoginScreen: The login form displayed at application startup.
+
+         Usage:
+         @START_CODE
+         <canvas>
+      <LoginScreen id="loginScreen" align="center" valign="middle" options="ignorelayout" />
+         </canvas>
+         @END
+    -->
+  <class name="LoginScreen" extends="BorderedBox" bgcolor="$once{COLORS.LOGIN_BG}"
+       width="500" height="325" borderColor="$once{COLORS.LOGIN_BORDER}">
+
+    <!-- i18n message container -->
+    <node name="i18n" datapath="i18nDS:/app/login">
+        <attribute name="loginSuccess" type="string" value="$path{'success/text()'}" />
+        <attribute name="loginMessage" type="string" value="$path{'loginMessage/text()'}" />
+        <attribute name="missingData" type="string" value="$path{'missingData/text()'}" />
+    </node>
+
+    <!-- Service connector connecting to login service -->
+    <ServiceConnector name="loginConn" form="$once{parent}">
+      <method name="handleResult" args="message">
+        form.searchSubnodes("name", "messageBox").setText(message);
+      </method>
+    </ServiceConnector>
+
+    <!-- PUBLIC ATTRIBUTE SECTION -->
+    <!--- The border size for the login screen -->
+        <attribute name="bordersize" type="number" value="4" />
+
+        <!-- EVENT & HANDLER SECTION -->
+
+        <!-- METHOD SECTION -->
+    <!--- Store the values to be passed to the backend service in an array -->
+    <method name="collectValues">
+      var values = new Array();
+      values['login'] = this.loginName.getText();
+      values['password'] = this.password.getText();
+      return values;
+    </method>
+
+    <!---  Disable the submit button -->
+    <method name="disable">
+      this.commit.setAttribute('enabled', false);
+    </method>
+
+        <!--- Enable the submit button -->
+    <method name="enable">
+      this.commit.setAttribute('enabled', true);
+    </method>
+
+
+    <!---  Call the login service -->
+    <method name="login">
+      i18nConn.callService();
+    </method>
+
+    <!--- Display an error message for the user -->
+    <method name="showError" args="messageTxt">
+      this.messageBox.setText(messageTxt);
+    </method>
+
+    <!--- Show a localized message from the i18n container -->
+    <method name="showMessage" args="key">
+      if (key != null) {
+          this.messageBox.setText(this.i18n[key]);
+      } else {
+          this.messageBox.setText('');
+      }
+    </method>
+
+    <!--- Reset the form -->
+    <method name="reset">
+      loginName.setText('');
+      password.setText('');
+    </method>
+
+    <!--- Validate the form data -->
+    <method  name="validate" args="conn">
+    <![CDATA[
+      var login = this.searchSubnodes("name", "loginName").getText();
+      var password = this.searchSubnodes("name", "password").getText();
+      if (login.length == 0 || password.length == 0) {
+        conn.showValidatonError(this.i18n.missingData);
+        return false;
+      } else {
+        return true;
+      }
+
+    ]]>
+    </method>
+
+      <!-- DISPPLAY AREA -->
+
+        <!-- button to change to other runtime -->
+    <switch>
+       <when runtime="dhtml">
+           <view x="6" resource="http:../resources/ShowFlash.jpg" onclick="canvas.switchRuntime()"></view>
+       </when>
+       <otherwise>
+           <view x="6" resource="http:../resources/ShowDHTML.jpg" onclick="canvas.switchRuntime()"></view>
+       </otherwise>
+    </switch>
+
+    <!-- Box for displaying messages to user -->
+    <BorderedBox name="messageBox" x="20" y="70" height="32" width="${parent.width-40}" borderColor="#6eaed8"
+         bgcolor="#c6dff0">
+      <method name="setText" args="t">
+        this.textField.setText(t);
+      </method>
+        <text name="textField" align="center" fgcolor="#2c4c62" fontsize="14" datapath="i18nDS:/app/login/loginMessage/text()" />
+    </BorderedBox>
+
+    <!-- The input field for the login name -->
+    <text x="20" y="117" fontsize="14" datapath="i18nDS:/app/login/user/text()" />
+    <edittext name="loginName" x="110" y="115" width="200" fontsize="14" height="30" doesenter="true" maxlength="8">laszlo
+        <method name="doEnterDown">
+          if (parent.commit.enabled) {
+          parent.commit.onclick.sendEvent();
+          }
+      </method>
+    </edittext>
+
+    <!-- The input field for the password -->
+    <text x="20" y="155" fontsize="14" datapath="i18nDS:/app/login/password/text()" />
+    <edittext name="password" x="110" y="158" width="200" fontsize="14" height="30" password="true"
+      doesenter="true" maxlength="10">openlaszlo
+        <method name="doEnterDown">
+          if (parent.commit.enabled) {
+          parent.commit.onclick.sendEvent();
+          }
+      </method>
+    </edittext>
+
+    <!-- Submit button for login form -->
+    <button name="commit" x="110" y="200" fontsize="14" onclick="classroot.loginConn.callService()"
+      datapath="i18nDS:/app/login/loginButton/text()"/>
+
+    <!-- LZTrack logo -->
+    <view x="20" y="${parent.height-this.height-20}" resource="../resources/LZProject.jpg" />
+
+    <!-- Flags for localiziation/language selection  -->
+    <view x="${classroot.width-this.width-20}" y="25">
+      <simplelayout axis="x" spacing="15" />
+      <I18NFlag imageUrl="resources/flags/us.jpg" language="en" />
+      <I18NFlag imageUrl="resources/flags/de.jpg" language="de" />
+      <I18NFlag imageUrl="resources/flags/ko.jpg" language="ko" />
+      <!-- I18NFlag imageUrl="resources/flags/jp.jpg" language="ja" /-->
+    </view>
+
+  </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

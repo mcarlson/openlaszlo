@@ -1,0 +1,21 @@
+
+  <!-- Axis Mime Mappings -->
+
+  <!-- currently the W3C havent settled on a media type for WSDL;
+  http://www.w3.org/TR/2003/WD-wsdl12-20030303/#ietf-draft
+  for now we go with the basic 'it's XML' response -->
+  <mime-mapping>
+    <extension>wsdl</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+
+  <mime-mapping>
+    <extension>xsd</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

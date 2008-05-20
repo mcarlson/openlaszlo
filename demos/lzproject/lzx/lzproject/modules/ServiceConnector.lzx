@@ -1,0 +1,84 @@
+<library>
+
+  <!---
+         ServiceForm:
+
+         Usage:
+         @START_CODE
+         <canvas>
+
+         </canvas>
+         @END
+    -->
+  <class name="ServiceConnector" extends="view">
+        <!-- PUBLIC ATTRIBUTE SECTION -->
+    <attribute name="form" type="expression" value="null" />
+    <attribute name="service" type="expression" value="null" />
+
+        <!-- PRIVATE ATTRIBUTE SECTION -->
+
+        <!-- EVENT & HANDLER SECTION -->
+        <handler name="oninit">
+          // By convention the ServiceConnector should have a name like
+          // verbNoun+"Serv" (createUserServ). This corresponds to the
+          // BackendService naming. So a ServiceConnector called
+          // name="createUserConn" will automatically look for a BackendService
+          // which can be found at canvas.services['createUser']
+            var serviceName = this.name.substring(0, this.name.length-4);
+          this.service = canvas.services[serviceName];
+          this.service._connector = this;
+        </handler>
+
+        <!-- METHOD SECTION -->
+        <!--- Call the service this connector is connecting to -->
+        <method name="callService">
+          // Register this connector witht the service
+          this.service._connector = this;
+          this.service
+      if (this.form != null) {
+        // Is there a validate method to call?
+        if (typeof this.form.validate == 'function') {
+          Debug.write("validate() method found for form " + this.form);
+            if (this.form.validate(this)) {
+              // Validation successful
+              Debug.write('Data in form is valid');
+              this.service.ontrigger.sendEvent(this);
+            }
+        } else {
+          // No client side validation
+          Debug.write('No client side validation possible. Calling service now');
+            this.service.ontrigger.sendEvent(this);
+        }
+      } else {
+        Debug.write("No form object registered with ServiceConnector ", this,
+                    " connecting to Service" + this.service);
+        Debug.warn("Cannot call service ", this.service);
+      }
+    </method>
+
+    <!--- Show an error message when validation failes
+          @param -->
+    <method name="showValidatonError" args="errorMessage">
+        service.handleFailure(errorMessage);
+        service.setupTimer();
+    </method>
+
+    <!-- -->
+    <method name="collectValues">
+      return this.form.collectValues();
+    </method>
+
+        <method name="handleResult" args="message">
+      // Just a default method which can be overwritten
+      // to implement any reaction to the web service result
+    </method>
+
+  </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

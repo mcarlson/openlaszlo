@@ -1,0 +1,58 @@
+<library>
+
+  <!---
+       MyClass:
+
+       Usage:
+       @START_CODE
+       <canvas>
+          <BorderedBox height="150" width="${parent.width}"
+            borderColor="#9bc0ff" bgcolor="#d8ebff" borderSize="3">
+          </BorderedBox>
+       </canvas>
+       @END
+  -->
+  <class name="BorderedBox" extends="view" defaultplacement="inner">
+      <!-- PUBLIC ATTRIBUTE SECTION -->
+      <!--- Border size in pixels -->
+      <attribute name="borderSize" type="number" value="3" />
+    <!--- Border color -->
+      <attribute name="borderColor" type="color" value="#000000" />
+      <!--- The inset from the inner side of the border in pixels -->
+    <attribute name="inset" type="number" value="3" />
+    <!--- Width of the content view -->
+    <attribute name="innerWidth" type="number" value="${this.border.inner.width}" />
+    <!--- Height of the content view -->
+    <attribute name="innerHeight" type="number" value="${this.border.inner.height}" />
+
+      <!-- PRIVATE ATTRIBUTE SECTION -->
+
+        <!-- EVENT & HANDLER SECTION -->
+        <handler name="oninit"><![CDATA[
+          this.border.setAttribute('bgcolor', this.bgcolor);
+          this.setAttribute('bgcolor', this.borderColor);
+        ]]>
+        </handler>
+
+        <!-- METHOD SECTION -->
+
+        <!-- DISPPLAY AREA -->
+    <view name="border" x="${classroot.borderSize}" y="${classroot.borderSize}"
+          width="${classroot.width-classroot.borderSize * 2}"
+          height="${classroot.height-classroot.borderSize*2}">
+
+      <view name="inner" x="${classroot.inset}" y="${classroot.inset}"
+          width="${parent.width-classroot.inset*2}"
+          height="${parent.height-classroot.inset*2}" clip="true"/>
+
+    </view>
+
+  </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

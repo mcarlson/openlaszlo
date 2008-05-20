@@ -1,0 +1,114 @@
+<library>
+
+  <!---
+         NewProjectWindow: Window for adding new projects to LZTrack
+
+         Usage:
+         @START_CODE
+         <canvas>
+      <NewProjectWindow id="newProjectWindow"   visible="false" align="center" valign="middle"
+        bgcolor="#efefef" initstage="late" />
+    </canvas>
+         @END
+    -->
+     <class name="NewProjectWindow" extends="window" title="&lt;b>New Project&lt;b>" align="center" valign="middle"
+            allowdrag="false" width="450" height="380" focustrap="true">
+
+    <!-- i18n messages for client side validation -->
+    <node name="i18n" datapath="i18nDS:/app/project/create">
+      <attribute name="newProjectMessage" type="string" value="$path{'newProjectMessage/text()'}" />
+      <attribute name="missingParameters" type="string" value="$path{'missingParameters/text()'}" />
+    </node>
+
+    <!-- SERVICE CONNECTORS -->
+    <!-- connector connecting to createProject service -->
+    <ServiceConnector name="createProjectConn" form="$once{parent}">
+      <method name="handleResult" args="message">
+        form.searchSubnodes("name", "messageBox").setText(message);
+      </method>
+    </ServiceConnector>
+
+    <!-- HANDLER & EVENTS -->
+    <handler name="onvisible">
+      if (this.visible) {
+        LzModeManager.makeModal(this);
+        LzFocus.setFocus(this.searchSubnodes("name", "projectTitle"));
+      } else {
+        LzFocus.setFocus(null);
+              LzModeManager.release( this )
+      }
+    </handler>
+
+    <handler name="onmouseout">
+      LzCursor.showHandCursor(true);
+    </handler>
+
+    <handler name="onmouseover">
+      LzCursor.showHandCursor(false);
+    </handler>
+
+    <!-- METHOD SECTION -->
+    <!--- Prepare the values to be passed with the request -->
+    <method name="collectValues">
+      var values = new Array();
+      values['name'] = parent.searchSubnodes("name", "projectName").getText();
+      values['description'] = parent.searchSubnodes("name", "description").getText();
+      return values;
+    </method>
+
+    <!--- Reset the form -->
+    <method name="reset">
+      parent.searchSubnodes("name", "projectName").setText('');
+      parent.searchSubnodes("name", "description").setText('');
+      this.setAttribute("visible", false);
+    </method>
+
+    <!-- DISPPLAY AREA -->
+    <simplelayout axis="y" spacing="20" />
+
+    <!-- Message box for displaying localized message after client side validation or after REST requests -->
+    <BorderedBox name="messageBox" align="center" height="30" width="${parent.width-60}" borderColor="#777777"
+           bgcolor="#cccccc" borderSize="2" visible="true" clip="true">
+      <method name="setText" args="t">
+          if (t.length > 0) {
+            this.textField.setText(t);
+          } else {
+            this.textField.setText(classroot.i18n.newProjectMessage);
+          }
+      </method>
+      <text name="textField" align="center" fgcolor="#2c4c62" fontsize="12"
+           datapath="i18nDS:/app/project/create/newProjectMessage/text()" />
+    </BorderedBox>
+
+    <!-- Description for this project -->
+    <view align="center">
+      <simplelayout axis="y" spacing="5" />
+        <text fontsize="10" fontstyle="bold">Project Title</text>
+        <edittext name="projectName" width="300" />
+            <text fontsize="10"><b>Project Description</b></text>
+            <BorderedBox height="140" width="400" bgcolor="#d8ebff" borderColor="#777777">
+              <inputtext name="description" width="${parent.innerWidth}"
+                height="${parent.innerHeight}" multiline="true">
+              </inputtext>
+            </BorderedBox>
+        </view>
+
+        <!-- Submit and cancle button -->
+        <!-- TODO: i18n -->
+       <view align="center">
+         <simplelayout axis="x" spacing="100" />
+         <button datapath="i18nDS:/app/project/create/save/text()"
+           onclick="classroot.createProjectConn.callService()" />
+         <button datapath="i18nDS:/app/project/create/cancel/text()"
+           onclick="classroot.reset()"/>
+       </view>
+
+    </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

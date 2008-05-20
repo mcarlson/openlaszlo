@@ -1,0 +1,164 @@
+<library>
+
+  <!---
+         TaskCreateEditForm: The form for editing and creating tasks.
+
+         Usage:
+         @START_CODE
+         <canvas>
+
+         </canvas>
+         @END
+    -->
+  <class name="TaskCreateEditForm" extends="BorderedBox" borderColor="#777777" bgcolor="#d1fdda" inset="10">
+
+        <!-- PUBLIC ATTRIBUTE SECTION -->
+    <attribute name="mode" type="string" value="" />
+
+    <!-- i18n messages for client side validation -->
+    <node name="i18n" datapath="i18nDS:/app/user/create">
+      <attribute name="missingParameters" type="string" value="$path{'missingParameters/text()'}" />
+      <attribute name="passwordMissmatch" type="string" value="$path{'passwordMissmatch/text()'}" />
+    </node>
+
+    <ServiceConnector name="createTaskConn" form="$once{parent}">
+      <method name="handleResult" args="message">
+        form.searchSubnodes("name", "messageBox").setText(message);
+      </method>
+    </ServiceConnector>
+
+        <!-- EVENT & HANDLER SECTION -->
+    <handler name="onselect" reference="parent.tab">
+      // in case there's still data left in the form, clear it now
+      this.clear(true);
+    </handler>
+
+        <!-- METHOD SECTION -->
+    <method name="clear">
+      parent.user = null;
+      searchSubnodes("name", "title").setText('');
+      searchSubnodes("name", "description").setText('');
+    </method>
+
+
+    <method name="collectValues">
+      var values = new Array();
+      values['title'] = searchSubnodes("name", "title").getText();
+      values['deadline'] = searchSubnodes("name", "deadlinePicker").selecteddate.getTime();
+      values['description'] = searchSubnodes("name", "description").getText();
+      values['projectId'] = projComboProject.value;
+      return values;
+    </method>
+
+    <method name="createTask">
+      this.mode = 'createTask';
+      if (this.validate()) {
+          canvas.services.createTask.ontrigger.sendEvent(this);
+      }
+    </method>
+
+
+    <method name="loadUser" args="user">
+
+    </method>
+
+    <method name="setMessage" args="msg">
+      messageBox.setText(msg);
+    </method>
+
+    <method name="updateTask">
+      this.mode = 'update';
+      if (this.validate()) {
+          canvas.services.updateTask.ontrigger.sendEvent(this);
+      }
+    </method>
+
+    <method name="validate">
+      var errorMessage = null;
+      var title = searchSubnodes("name", "title").getText();
+      var deadline = searchSubnodes("name", "deadlinePicker").selecteddate.getTime();
+      var description = searchSubnodes("name", "description").getText();
+      if (title.length == 0) {
+          errorMessage = this.i18n.missingParameters;
+      }
+      if (errorMessage != null) {
+          canvas.services[mode].handleFailure(errorMessage);
+          canvas.services[mode].setupTimer();
+          return false;
+      } else {
+          return true;
+      }
+    </method>
+
+        <!-- DISPPLAY AREA -->
+    <simplelayout axis="y" spacing="10" />
+
+    <BorderedBox name="messageBox" align="center" height="0" width="${parent.innerWidth}" borderColor="#777777"
+           bgcolor="#cccccc" borderSize="2" visible="false" clip="true">
+      <method name="setText" args="t">
+        if (t.length > 0) {
+          this.textField.setText(t);
+          this.setAttribute("visible", true);
+          this.animate('height', 30, 400);
+        } else {
+          this.animate('height', 0, 400);
+        }
+      </method>
+      <text name="textField" align="center" fgcolor="#2c4c62" fontsize="12" />
+    </BorderedBox>
+
+        <!-- Form for entering tasks -->
+    <view height="40" name="titleBox">
+            <text y="3" fontsize="10" fontstyle="bold" datapath="i18nDS:/app/main/projectTab/title/text()" />
+      <edittext name="title" x="70" width="230" />
+    </view>
+
+    <view height="40">
+            <text fontsize="10" fontstyle="bold" datapath="i18nDS:/app/main/projectTab/deadline/text()" />
+      <text name="deadline" x="70" width="100" fontstyle="bold" />
+
+      <datepicker name="deadlinePicker" x="160" y="0" options="ignorelayout" showingdate="new Date()" allowdrag="false"
+                        selecteddate="new Date()" earliestdate="new Date()">
+        <handler name="onselecteddate">
+            <![CDATA[
+          if( this.selecteddate != null ) {
+            var day = this.selecteddate.getDate();
+            var month = this.selecteddate.getMonth();
+            var year = this.selecteddate.getFullYear();
+            parent.deadline.setText(year+"/"+(month+1)+"/"+day);
+          }
+          ]]>
+        </handler>
+        <handler name="onvisible" reference="this.icon">
+            if (this.icon.visible) {
+                this.shrink();
+            }
+        </handler>
+        <method name="expandFromIcon">
+            super.expandFromIcon();
+            parent.bringToFront();
+          this.animate("x", 210, 500, false, {options: "easeout"});
+          classroot.description.animate("width", 160, 300, false, {options: "easeout"});
+        </method>
+        <method name="shrink">
+          this.animate("x", 160, 250, false, {options: "easeout"});
+          classroot.description.animate("width", classroot.width, 500, false, {options: "easeout"});
+        </method>
+          </datepicker>
+    </view>
+
+        <text fontsize="10" fontstyle="bold" datapath="i18nDS:/app/main/projectTab/description/text()" />
+        <edittext name="description" width="${parent.width}" multiline="true" height="${classroot.innerHeight-this.y}"/>
+
+        <button y="${parent.titleBox.y}" align="right" datapath="i18nDS:/app/main/projectTab/newTask/text()"
+              options="ignorelayout" onclick="classroot.createTask()" height="20" fontsize="10"/>
+
+  </class>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->

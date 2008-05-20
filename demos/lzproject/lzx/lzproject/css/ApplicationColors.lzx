@@ -1,0 +1,42 @@
+<library>
+
+  <!---
+         ApplicationColors: contains the color constants for the colors
+                            used within the application.
+
+         Usage:
+         @START_CODE
+        <script>
+        <![CDATA[
+            var COLORS = new ApplicationColors();
+        ]]>
+        </script>
+         @END
+    -->
+    <!-- Colorvalues for the Skinning of the Application -->
+    <class name="ApplicationColors" extends="node">
+
+        <!-- Application -->
+        <!--- Application Background Color - DynamicApplicationSizer.lzx -->
+        <attribute name="APPLICATION_BG" type="color" value="#FFFFFF"/>
+
+        <!--- Login screen -->
+        <attribute name="LOGIN_BORDER" type="color" value="#cccccc"/>
+        <attribute name="LOGIN_BG" type="color" value="#FFFFFF"/>
+
+    </class>
+
+    <!-- Instantiate the COLORS object -->
+    <script>
+    <![CDATA[
+        var COLORS = new lz.ApplicationColors();
+    ]]>
+    </script>
+
+</library>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->
