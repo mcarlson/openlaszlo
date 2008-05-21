@@ -202,7 +202,7 @@ LzSprite.prototype.__mouseEvent = function ( e, eventname ){
             skipevent = true;
         }
     }
-    if (skipevent == false && this.owner.mouseevent) LzModeManager.handleMouseButton(this.owner, eventname); 
+    if (skipevent == false && this.owner.mouseevent) lz.ModeManager.handleMouseButton(this.owner, eventname); 
 }
 
 // called by LzMouseKernel when mouse goes up on another sprite

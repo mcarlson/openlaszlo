@@ -69,7 +69,7 @@ public class LFCApplication extends Sprite {
            stage.addEventListener(MouseEvent.MOUSE_WHEEL, reportWheel);
         */
 
-        LzKeyboardKernel.setCallback(LzKeys, '__keyEvent');
+        LzKeyboardKernel.setCallback(lz.Keys, '__keyEvent');
 
         ////////////////////////////////////////////////////////////////
         // cheapo debug console
@@ -176,7 +176,7 @@ public class LFCApplication extends Sprite {
         /*
         Debug.write(event.currentTarget.toString() + 
               " dispatches MouseWheelEvent. delta = " + event.delta); */
-        LzKeys.__mousewheelEvent(event.delta);
+        lz.Keys.__mousewheelEvent(event.delta);
     }
 
     function resizeHandler(event:Event):void {

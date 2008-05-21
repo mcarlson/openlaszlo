@@ -272,7 +272,7 @@ function selectRange ( s , e ){
   * @return Boolean:  If true, multi select. If false, don't multi select
   */
 function isMultiSelect ( ){
-    return LzKeys.isKeyDown( "control" );
+    return lz.Keys.isKeyDown( "control" );
 }
 
 /**
@@ -281,7 +281,7 @@ function isMultiSelect ( ){
   * @return Boolean: If true, range select. If false, don't range select
   */
 function isRangeSelect(  ){
-    return LzKeys.isKeyDown( "shift" );
+    return lz.Keys.isKeyDown( "shift" );
 }
 
 /**

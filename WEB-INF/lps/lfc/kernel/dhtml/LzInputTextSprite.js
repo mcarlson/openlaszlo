@@ -447,7 +447,7 @@ LzInputTextSprite.prototype.__textEvent = function ( e ){
 
     //Debug.info('__textEvent', eventname, keycode);
     if (this.owner.owner) {
-        // Generate the event. onkeyup/onkeydown sent by LzKeys.js
+        // Generate the event. onkeyup/onkeydown sent by lz.Keys.js
         if (eventname == 'onkeydown' || eventname == 'onkeyup') {
             var v = this.owner.__LzInputDiv.value;
             if (v != this.owner.text) {
@@ -806,7 +806,7 @@ LzInputTextSprite.prototype.setHeight = function (h) {
 LzInputTextSprite.prototype.setColor = function (c) {
     if (this.color == c) return;
     this.color = c;
-    this.__LzInputDiv.style.color = LzUtils.inttohex(c);
+    this.__LzInputDiv.style.color = lz.Utils.inttohex(c);
 }
 
 LzInputTextSprite.prototype.getText = function () {

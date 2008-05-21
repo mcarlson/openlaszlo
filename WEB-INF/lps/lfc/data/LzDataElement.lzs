@@ -689,7 +689,7 @@ static function __LZXMLescape ( t ){
         //handle newlines
         var code = t.charCodeAt( i );
         if ( code < 32 ){
-            r += "&#x" + LzUtils.dectohex(code,0) + ";";
+            r += "&#x" + lz.Utils.dectohex(code,0) + ";";
         } else {
             var c = t.charAt( i );
             if ( LzDataElement.__LZescapechars[ c ] != null ){

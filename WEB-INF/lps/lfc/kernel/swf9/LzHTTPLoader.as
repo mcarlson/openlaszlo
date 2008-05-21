@@ -154,7 +154,7 @@ public class LzHTTPLoader {
     //   @param  String reqtype: 'POST' or 'GET'
     //   @param Object headers: hash table of HTTP request headers
     public function makeProxiedURL ( url,  reqtype, lzt, headers, postbody) {
-        var proxyurl = LzBrowser.getBaseURL( ).toString();
+        var proxyurl = lz.Browser.getBaseURL( ).toString();
 
         var qargs = {
         lzt: (lzt != null) ? lzt : "xmldata",
@@ -162,7 +162,7 @@ public class LzHTTPLoader {
         sendheaders: this.options.sendheaders,
         trimwhitespace: this.options.trimwhitespace,
         nsprefix: this.options.nsprefix,
-        url: LzBrowser.toAbsoluteURL(url, this.secure),
+        url: lz.Browser.toAbsoluteURL(url, this.secure),
         timeout: this.timeout,
         cache: this.options.cacheable,
         ccache: this.options.ccache

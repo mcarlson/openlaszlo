@@ -39,7 +39,7 @@ class LzIdleService extends LzEventable {
 
   /**
    * The idle service.  Also available as the global
-   * <code>LzIdle</code>.
+   * <code>lz.Idle</code>.
    *
    * @type LzIdleService
    * @keywords readonly
@@ -118,7 +118,13 @@ class LzIdleService extends LzEventable {
 }
 
 /**
- * @deprecated
  * @shortdesc Alias for <link linkend="LzIdleService">LzIdleService.LzIdle</link>
  */
-var LzIdle:LzIdleService = LzIdleService.LzIdle;
+lz.Idle = LzIdleService.LzIdle;
+
+/**
+ * @deprecated
+ * @shortdesc Alias for <link linkend="LzIdleService">LzIdleService.LzIdle</link>
+ * Use lz.Idle instead.
+ */
+var LzIdle:LzIdleService = lz.Idle;

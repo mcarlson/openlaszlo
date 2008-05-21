@@ -168,7 +168,7 @@ dynamic public class LzInstantiatorService extends LzEventable {
    */
   function checkUpdate (){
     if ( ! this.isUpdating && !this.halted ){
-      this.checkQDel.register( LzIdle, "onidle" );
+      this.checkQDel.register( lz.Idle, "onidle" );
       this.isUpdating = true;
     }
   }
@@ -363,7 +363,13 @@ dynamic public class LzInstantiatorService extends LzEventable {
 } // End of LzInstantiatorService
 
 /**
- * @deprecated
  * @shortdesc Alias for <link linkend="LzInstantiatorService">LzInstantiatorService.LzInstantiator</link>
  */
-var LzInstantiator:LzInstantiatorService = LzInstantiatorService.LzInstantiator;
+lz.Instantiator = LzInstantiatorService.LzInstantiator;
+
+/**
+ * @deprecated
+ * @shortdesc Alias for <link linkend="LzInstantiatorService">LzInstantiatorService.LzInstantiator</link>
+ * Use lz.Instantiator instead.
+ */
+var LzInstantiator:LzInstantiatorService = lz.Instantiator;

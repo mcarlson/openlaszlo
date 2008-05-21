@@ -24,7 +24,7 @@
   *     <li> <a href="${demos}contacts/contacts.lzx">Contacts</a></li>
   * 
   * </ul>
-  * Also, see <xref linkend="LzKeys+dhtml"/> or <xref linkend="LzKeys+swf7+swf8+swf9"/>.
+  * Also, see <xref linkend="LzKeys"/>.
   * 
   * @devnote A command is an object that sends an event in response to keyboard input.
   * @shortdesc An element that sends events in response to keyboard input.
@@ -73,7 +73,7 @@ function LzCommand ( parent:LzNode? = null, attrs:Object? = null, children:Array
   */
 function setKeys ( k ){
     this.keys = k;
-    LzKeys.callOnKeyCombo( this , k );
+    lz.Keys.callOnKeyCombo( this , k );
 }
 
 /**

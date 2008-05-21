@@ -20,7 +20,7 @@
             if ($debug && this.verbose) Debug.write(eventname, d);
             this.setAttribute('value', d);
             this.txt.setText(eventname + ': '+ d);
-            this.bg.setBGColor(green);
+            this.bg.setBGColor('green');
             ]]>
         </method>
 

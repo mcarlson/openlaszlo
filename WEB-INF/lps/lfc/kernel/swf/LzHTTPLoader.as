@@ -170,14 +170,14 @@ LzHTTPLoader.prototype.send = function (content) {
 //   @param Object headers: hash table of HTTP request headers
 //   @param String postbody: optional, post body content
 LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers, postbody) {
-    var proxyurl = LzBrowser.getBaseURL( );
+    var proxyurl = lz.Browser.getBaseURL( );
     var qargs = {
         lzt: (lzt != null) ? lzt : "xmldata",
         reqtype: reqtype,
         sendheaders: this.options.sendheaders,
         trimwhitespace: this.options.trimwhitespace,
         nsprefix: this.options.trimwhitespace,
-        url: LzBrowser.toAbsoluteURL(url, this.secure),
+        url: lz.Browser.toAbsoluteURL(url, this.secure),
         timeout: this.timeout,
         cache: this.options.cacheable,
         ccache: this.options.ccache

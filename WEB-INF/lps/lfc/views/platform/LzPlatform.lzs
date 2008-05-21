@@ -25,7 +25,7 @@ public class LzPlatformService extends LzEventable {
      */
      function __LZdefaultMenuItemHandler (obj, item) {
         // load a url 
-        LzBrowser.loadURL("http://www.openlaszlo.org", "lz_about");
+        lz.Browser.loadURL("http://www.openlaszlo.org", "lz_about");
     }
 
 
@@ -35,14 +35,14 @@ public class LzPlatformService extends LzEventable {
      function __LZviewSourceMenuItemHandler (obj, item) {
         // view source for this app
         // /examples/components/edittext_example.lzx
-        var url = LzBrowser.getBaseURL();
+        var url = lz.Browser.getBaseURL();
         if (canvas.proxied) {
             url = url.toString() + "?lzt=source";
         } else {
             // SOLO app named foo.lzx looks for a source zipfile named foo.lzx.zip
             url = url.toString() + ".zip";
         }
-        LzBrowser.loadURL(url, "lz_source");
+        lz.Browser.loadURL(url, "lz_source");
     }
 
     /**

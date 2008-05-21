@@ -116,7 +116,7 @@ override function construct ( parent , args ){
                                             "onfocus" );
     this._onblurDel = new LzDelegate( this , "_gotBlurEvent" , this,
                                             "onblur" );
-    this._modemanagerDel = new LzDelegate( this, "_modechanged", LzModeManager,
+    this._modemanagerDel = new LzDelegate( this, "_modechanged", lz.ModeManager,
                                             "onmode" );
 }
 
@@ -178,9 +178,9 @@ function inputtextevent (eventname, value = null) {
     if (eventname == 'onblur' && ! this._focused) return;
     if (eventname == 'onfocus' || eventname == 'onmousedown') {
         this._focused = true;
-        if (LzFocus.getFocus() != this) {
-            var tabdown = LzKeys.isKeyDown('tab');
-            LzFocus.setFocus(this, tabdown);
+        if (lz.Focus.getFocus() != this) {
+            var tabdown = lz.Keys.isKeyDown('tab');
+            lz.Focus.setFocus(this, tabdown);
             return;
         }
     } else if (eventname == 'onchange') {
@@ -290,15 +290,15 @@ var _allowselectable=true;
 var _selectable;
 
 /** 
-  * Catch all LzModeManager events
+  * Catch all lz.ModeManager events
   * @access private
   */
 function _modechanged(modalview) {
-    // !modalview = "LzModeManager release a view" => so allowselectable
+    // !modalview = "lz.ModeManager release a view" => so allowselectable
     if ( !modalview ) {
         this._setallowselectable(true);
     } else {
-        // LzModeManager make modalview as modal
+        // lz.ModeManager make modalview as modal
         // (modalview.nodeLevel > this.nodeLevel) = "This cannot be a child of the setted modal view"
         // so not allowselectable
         if ( modalview.nodeLevel > this.nodeLevel ) {

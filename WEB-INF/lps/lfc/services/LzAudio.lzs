@@ -31,7 +31,7 @@ function playSound( snd ){
     if (this.capabilities.audio) {
         LzAudioKernel.playSound(snd);
     } else if ($debug) {
-        this.__warnCapability('LzAudio.playSound()'); 
+        this.__warnCapability('lz.Audio.playSound()'); 
     }
 }
 
@@ -42,7 +42,7 @@ function stopSound(){
     if (this.capabilities.audio) {
         LzAudioKernel.stopSound();
     } else if ($debug) {
-        this.__warnCapability('LzAudio.stopSound()'); 
+        this.__warnCapability('lz.Audio.stopSound()'); 
     }
 }
 
@@ -54,7 +54,7 @@ function startSound() {
     if (this.capabilities.audio) {
         LzAudioKernel.startSound();
     } else if ($debug) {
-        this.__warnCapability('LzAudio.startSound()'); 
+        this.__warnCapability('lz.Audio.startSound()'); 
     }
 }
 
@@ -66,7 +66,7 @@ function getVolume() {
     if (this.capabilities.audio) {
         return LzAudioKernel.getVolume();
     } else if ($debug) {
-        this.__warnCapability('LzAudio.getVolume()'); 
+        this.__warnCapability('lz.Audio.getVolume()'); 
     }
 }
 
@@ -78,7 +78,7 @@ function setVolume(v) {
     if (this.capabilities.audio) {
         LzAudioKernel.setVolume(v);
     } else if ($debug) {
-        this.__warnCapability('LzAudio.setVolume()'); 
+        this.__warnCapability('lz.Audio.setVolume()'); 
     }
 }
 
@@ -90,7 +90,7 @@ function getPan() {
     if (this.capabilities.audio) {
         return LzAudioKernel.getPan();
     } else if ($debug) {
-        this.__warnCapability('LzAudio.getPan()'); 
+        this.__warnCapability('lz.Audio.getPan()'); 
     }
 }
 
@@ -102,7 +102,7 @@ function setPan(p) {
     if (this.capabilities.audio) {
         LzAudioKernel.setPan(p);
     } else if ($debug) {
-        this.__warnCapability('LzAudio.setPan()'); 
+        this.__warnCapability('lz.Audio.setPan()'); 
     }
 }
 
@@ -114,6 +114,13 @@ function __warnCapability(msg) {
 } // End of LzAudioService
 
 /**
-  * LzAudio is a shortcut for <a href="LzAudioService.html">LzAudioService</a>.
+  * lz.Audio is a shortcut for <a href="LzAudioService.html">LzAudioService</a>.
   */
-var LzAudio = new LzAudioService();
+lz.Audio = new LzAudioService();
+
+/**
+  * LzAudio is a shortcut for <a href="LzAudioService.html">LzAudioService</a>.
+  * Use lz.Audio instead.
+  * @deprecated
+  */
+var LzAudio = lz.Audio

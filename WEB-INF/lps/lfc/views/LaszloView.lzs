@@ -2352,8 +2352,8 @@ function mouseevent(eventname) {
   * @return Number: The position of the mouse relative to this view.
   */
 function getMouse( xory ) {
-    if (this.__movecounter != LzGlobalMouse.__movecounter || this.__mousecache == null) {
-        this.__movecounter = LzGlobalMouse.__movecounter;
+    if (this.__movecounter != lz.GlobalMouse.__movecounter || this.__mousecache == null) {
+        this.__movecounter = lz.GlobalMouse.__movecounter;
         this.__mousecache = this.sprite.getMouse(xory);
     }
     if (xory == null) return this.__mousecache;
@@ -2526,9 +2526,10 @@ function $lzc$set_stretches( stretch ){
   * @param Integer bgc: The 0-FFFFFF number to be used for the new background color.
   */
 function setBGColor ( bgc ) {
+    bgc = lz.Utils.hextoint(bgc);
     //trace('setting bgcolor ',bgc, this, this.sprite);
     this.sprite.setBGColor(bgc);
-    if (bgc != null) this.bgcolor = Number(bgc);
+    if (bgc != null) this.bgcolor = bgc;
     if (this.onbgcolor.ready) this.onbgcolor.sendEvent( bgc );
 }
 

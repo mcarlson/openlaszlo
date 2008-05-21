@@ -154,7 +154,7 @@ Debug.localConnectionPropertyList = function(objid) {
   * @access private
   */
 Debug.createLocalConnections = function () {
-    //var appname = LzBrowser.getBaseURL().file;
+    //var appname = lz.Browser.getBaseURL().file;
     // [TODO hqm 2006-05: use a constant app name of "XXX", while we debug
     // the remote debugger]
     var appname = "XXX";
@@ -166,7 +166,7 @@ Debug.createLocalConnections = function () {
   * @access private
   */
 Debug.openConsoleConnection = function () {
-    //this.write("Application: "+LzBrowser.getLoadURLAsLzURL()+" connected to debug console.");
+    //this.write("Application: "+lz.Browser.getLoadURLAsLzURL()+" connected to debug console.");
     this.receivingLC = new LocalConnection();
 
     // Set up RPC functions:
@@ -194,14 +194,14 @@ Debug.openConsoleConnection = function () {
 Debug.writeConsoleInitMessage = function () {
     if (typeof(canvas) != 'undefined') {
         this.cdSendMsg("connection from app: " +
-                       LzBrowser.getLoadURLAsLzURL() + 
+                       lz.Browser.getLoadURLAsLzURL() + 
                        ", build:  "+ canvas.lpsbuild + 
                        ", lpsversion: "+ canvas.lpsversion + 
                        ", lpsrelease: "+ canvas.lpsrelease +
                        ", runtime: " + canvas.runtime);
     } else {
         this.cdSendMsg("connection from app: " +
-                       //LzBrowser.getLoadURLAsLzURL() +
+                       //lz.Browser.getLoadURLAsLzURL() +
                        " ['canvas' has not been defined yet, eval won't work] ");
     }
 }

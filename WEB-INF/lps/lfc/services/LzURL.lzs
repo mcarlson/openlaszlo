@@ -172,7 +172,7 @@ public class  LzURL {
 
     /** @access private */ 
     function dupe (){
-        //make this function fast, because it is called by LzBrowser.toAbsoluteURL
+        //make this function fast, because it is called by lz.Browser.toAbsoluteURL
         //which is called frequently by the loader
         var o = new LzURL();
         o.protocol = this.protocol;
@@ -196,7 +196,7 @@ public class  LzURL {
             out += this.protocol + ":";
             if (this.host != null) {
                 out += "//" + this.host;
-                if (null != this.port &&  LzBrowser.defaultPortNums[this.protocol] != this.port ) {
+                if (null != this.port &&  lz.Browser.defaultPortNums[this.protocol] != this.port ) {
                     out += ":" + this.port;
                 }
             }

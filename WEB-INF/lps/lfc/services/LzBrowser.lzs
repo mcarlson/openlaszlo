@@ -294,23 +294,32 @@ class LzBrowserService {
 
 
 /**
+ * <p>The <code>lz.Browser</code> service provides methods for
+ * communicating with the browser that embeds the application.</p>
+ *
+ * @access public
+ * @type LzBrowserService
+ * @shortdesc  LzBrowser is a shortcut for <link linkend="LzBrowserService">LzBrowserService.LzBrowser</link>
+ */
+lz.Browser = LzBrowserService.LzBrowser;
+
+/**
  * <p>The <code>LzBrowser</code> service provides methods for
  * communicating with the browser that embeds the application.</p>
+ * Use lz.Browser instead.
  *
  * @deprecated
  * @access public
  * @type LzBrowserService
  * @shortdesc  LzBrowser is a shortcut for <link linkend="LzBrowserService">LzBrowserService.LzBrowser</link>
  */
-var LzBrowser:LzBrowserService = LzBrowserService.LzBrowser;
-
-
+var LzBrowser:LzBrowserService = lz.Browser
 
 if ($as2){
   // proxy object for browser Lz
   Lz = {
   setCanvasAttribute: function (name, value, hist) {
-      LzBrowser.callJS('Lz.setCanvasAttribute', false, name, value, hist);
+      lz.Browser.callJS('Lz.setCanvasAttribute', false, name, value, hist);
     }
   }
 }

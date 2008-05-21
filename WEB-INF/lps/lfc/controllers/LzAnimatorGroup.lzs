@@ -327,7 +327,7 @@ function doStart (){
     this.crepeat = this.repeat;
 
     this.prepareStart();
-    this.updateDel.register( LzIdle , "onidle" );
+    this.updateDel.register( lz.Idle , "onidle" );
     return true;
 }
 

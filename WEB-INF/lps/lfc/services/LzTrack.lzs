@@ -15,14 +15,14 @@
   * mouse is down, standard view events such as <event>onmousedragin</event>
   * and <event>onmousedragout</event> are only sent to the view which received
   * the onmousedown events.  When views are registered using the
-  * <classname>LzTrack</classname> service, they will receive events
+  * <classname>lz.Track</classname> service, they will receive events
   * independent of the mouse button state.
   * 
   * </p>
   * <p>
-  * In using LzTrack, views register with a particular group.
+  * In using lz.Track, views register with a particular group.
   * Activation of that group is typically triggered by a user event.  When a group
-  * is active, the LzTrack service will send events to views in the active group, whenever
+  * is active, the lz.Track service will send events to views in the active group, whenever
   * the mouse position enters (<event>ontrackover</event>), leaves (<event>ontrackout</event>) or when the mouse
   * button goes up (<event>ontrackup</event>).
   * </p>
@@ -42,7 +42,7 @@
   * <p>The code below defines the class "colorspot" which represents a
   * tracked view.  This class handles visual state changes triggered by
   * the track events and sends an event to its parent when a new color is
-  * selected.  <method>LzTrack.register</method> is called by
+  * selected.  <method>lz.Track.register</method> is called by
   * <event>oninit</event> to add the instance of the view to its group.
   * The group name is defined as an attribute of the class, but simply
   * bound to an attribute of the parent.  For simple menu tracking, it is
@@ -50,7 +50,7 @@
   * however, tracked views that share the same trackgroup may be anywhere
   * in view hierarchy.</p>
   * 
-  * <example title="Using LzTrack to build a color chooser">
+  * <example title="Using lz.Track to build a color chooser">
   * &lt;canvas height="60"&gt;
   *   &lt;class name="colorspot" clickable="true"
   *     width="22" height="22" bgcolor="0x000000"&gt;
@@ -60,7 +60,7 @@
   *     &lt;view name="spot" bgcolor="${parent.mycolor}"
   *         x="2" y="2" width="18" height="18"/&gt;
   * &lt;handler name="oninit"&gt;
-  *         LzTrack.register(this, this.trackgroup);
+  *         lz.Track.register(this, this.trackgroup);
   *     &lt;/handler&gt;
   *     &lt;handler name="onmousetrackover"&gt;
   *         setAttribute('bgcolor', 0xdedede); // hilite: gray
@@ -75,8 +75,8 @@
   *   &lt;/class&gt;
   * 
   *   &lt;view bgcolor="0x0000ff" width="20" height="20"
-  *       onmousedown="this.colorpicker.setVisible(true); LzTrack.activate('mymenu');"
-  *       onmouseup="this.colorpicker.setVisible(false); LzTrack.deactivate('mymenu');"&gt;
+  *       onmousedown="this.colorpicker.setVisible(true); lz.Track.activate('mymenu');"
+  *       onmouseup="this.colorpicker.setVisible(false); lz.Track.deactivate('mymenu');"&gt;
   *     &lt;view name="colorpicker" visible="false" x="10" y="10"&gt;
   *       &lt;attribute name="trackgroup" value="mymenu" type="string"/&gt;
   *       &lt;handler name="onnewcolor" args="newcolor"&gt;
@@ -207,7 +207,7 @@ function activate ( group ){
     if (this.__LZactivegroups == null) {
         // don't want to re-register, in case we are just switching active groups
         this.__LZactivegroups = [];
-        this.__LZtrackDel.register( LzIdle, "onidle" );
+        this.__LZtrackDel.register( lz.Idle, "onidle" );
     }
     // see if group is already active
     var found = false;
@@ -348,7 +348,7 @@ function __LZtrack (ignore)
   */
 function __LZmouseup(ignore)
 {
-    //Debug.info('LzTrack.__LZmouseup');
+    //Debug.info('lz.Track.__LZmouseup');
     for (var i in this.__LZactivegroups) {
         var thisgroup = this.__LZactivegroups[i];
         //Debug.info('i', i, thisgroup, thisgroup.__LZlasthit, thisgroup.__LZlasthit.onmousetrackup);
@@ -367,6 +367,13 @@ function __LZmouseup(ignore)
 
 
 /**
-  * LzTrack is a shortcut for <a href="LzTrackService.html">LzTrackService</a>.
+  * lz.Track is a shortcut for <a href="LzTrackService.html">LzTrackService</a>.
   */
-var LzTrack = new LzTrackService();
+lz.Track = new LzTrackService();
+
+/**
+  * LzTrack is a shortcut for <a href="LzTrackService.html">LzTrackService</a>.
+  * @deprecated
+  * Use lz.Track instead.
+  */
+var LzTrack = lz.Track;

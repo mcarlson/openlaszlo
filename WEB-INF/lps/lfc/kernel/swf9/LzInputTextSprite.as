@@ -129,7 +129,7 @@ class LzInputTextSprite extends LzTextSprite {
     function __lostFocus (event:Event){
         trace('lost focus', event.target);
         //if (this['__handlelostFocusdel'] == null) this.__handlelostFocusdel = new LzDelegate(this, "__handlelostFocus");
-        //LzIdle.callOnIdle(this.__handlelostFocusdel);
+        //lz.Idle.callOnIdle(this.__handlelostFocusdel);
     }
 
     /**
@@ -141,8 +141,8 @@ class LzInputTextSprite extends LzTextSprite {
      * @access private
      */
     function __handlelostFocus (evt ){
-        if (owner == LzFocus.getFocus()) {
-            LzFocus.clearFocus();
+        if (owner == lz.Focus.getFocus()) {
+            lz.Focus.clearFocus();
             if (owner) owner.inputtextevent('onblur');
         }    
     }

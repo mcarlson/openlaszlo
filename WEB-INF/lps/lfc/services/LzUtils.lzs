@@ -12,18 +12,18 @@
 class ColorUtilsClass {
 
     function hextoint (value) {
-        Debug.info("LzUtils.color.hextoint is deprecated, use Lzutils.hextoint");
-        return LzUtils.hextoint(value);
+        Debug.info("LzUtils.color.hextoint is deprecated, use lz.Utils.hextoint");
+        return lz.Utils.hextoint(value);
     }
 
     function inttohex (c) {
-        Debug.info("LzUtils.color.inttohex is deprecated, use Lzutils.inttohex");
-        return LzUtils.inttohex(c);
+        Debug.info("LzUtils.color.inttohex is deprecated, use lz.Utils.inttohex");
+        return lz.Utils.inttohex(c);
     }
 
     function torgb (s) {
-        Debug.info("LzUtils.color.torgb is deprecated, use Lzutils.torgb");
-        return LzUtils.torgb(s);
+        Debug.info("LzUtils.color.torgb is deprecated, use lz.Utils.torgb");
+        return lz.Utils.torgb(s);
     }
 }
 
@@ -37,29 +37,29 @@ class LzUtilsClass {
         * Returns a callback as a string, suitable for setTimeout
         */
         public  function getcallbackstr(scope:*, name:*) {
-            var sc = LzUtils.__scopeid++;
+            var sc = lz.Utils.__scopeid++;
             if (scope.__callbacks == null) {
                 scope.__callbacks = {sc: sc}
             } else {
                 scope.__callbacks[sc] = sc;
             }
-            LzUtils.__scopes[sc] = scope;
-            return 'if (LzUtils.__scopes[' + sc + ']) LzUtils.__scopes[' + sc + '].' + name + '.apply(LzUtils.__scopes[' + sc + '], [])';
+            lz.Utils.__scopes[sc] = scope;
+            return 'if (lz.Utils.__scopes[' + sc + ']) lz.Utils.__scopes[' + sc + '].' + name + '.apply(lz.Utils.__scopes[' + sc + '], [])';
         }
 
         /**
         * Returns a callback function
         */
         public  function getcallbackfunc(scope, name, args) {
-            var sc = LzUtils.__scopeid++;
+            var sc = lz.Utils.__scopeid++;
             if (scope.__callbacks == null) {
                 scope.__callbacks = {sc: sc}
             } else {
                 scope.__callbacks[sc] = sc;
             }
-            LzUtils.__scopes[sc] = scope;
+            lz.Utils.__scopes[sc] = scope;
             var val = function  () {
-                var s = LzUtils.__scopes[sc];
+                var s = lz.Utils.__scopes[sc];
                 if (s) return s[name].apply(s, args);
             };
             return val;
@@ -70,7 +70,7 @@ class LzUtilsClass {
                 for (var i in scope.__callbacks) {
                     var sc = scope.__callbacks[i]
                     //Debug.write('removing', sc);
-                    delete LzUtils.__scopes[sc];
+                    delete lz.Utils.__scopes[sc];
                 }
                 delete scope.__callbacks;
             }
@@ -97,7 +97,11 @@ class LzUtilsClass {
 
     // ***** color *****
     public  function hextoint(value:*) {
-        if (typeof value != 'string') return value;
+        if (lz.Utils.colornames[value]) {
+            return lz.Utils.colornames[value];
+        } else if (typeof value != 'string') {
+            return value;
+        }
         if (value.charAt(0) == '#') {
             var n = parseInt(value.slice(1), 16);
             switch (!isNaN(n) && value.length-1) {
@@ -120,19 +124,23 @@ class LzUtilsClass {
         }
         return 0;
     }
-    public  function inttohex(c:*) {
+    public function inttohex(c:*) {
         if (typeof c == 'string') {
-            c = c * 1;
+            if (lz.Utils.colornames[c]) {
+                c = lz.Utils.colornames[c];
+            } else {
+                c = Number(c);
+            }
         }
 
         if (typeof c == 'number') {
-            var hex = LzUtils.dectohex(c & 0xffffff, 6);
+            var hex = lz.Utils.dectohex(c & 0xffffff, 6);
             c = '#' + hex;
         }
         return c;
     }
     public  function torgb(s:*) {
-        if (typeof s == 'number') s = LzUtils.inttohex(s); 
+        if (typeof s == 'number') s = lz.Utils.inttohex(s); 
         if (typeof s != 'string') return s; 
         if (s.length < 6) {
             // expand #036 or #0369
@@ -148,6 +156,41 @@ class LzUtilsClass {
             (s.length > 7 ? ',' + parseInt(s.substring(7, 9), 16) : '') +
         ')';
     }
+
+    /**
+      * CSS color names from
+      * http://www.w3.org/TR/2001/WD-css3-color-20010305.  These match the
+      * names in the compiler.
+      * @access public
+      */
+    var colornames = {
+        black: 0x000000
+        ,green: 0x008000
+        ,silver: 0xC0C0C0
+        ,lime: 0x00FF00
+        ,gray: 0x808080
+        ,olive: 0x808000
+        ,white: 0xFFFFFF
+        ,yellow: 0xFFFF00
+        ,maroon: 0x800000
+        ,navy: 0x000080
+        ,red: 0xFF0000
+        ,blue: 0x0000FF
+        ,purple: 0x800080
+        ,teal: 0x008080
+        ,fuchsia: 0xFF00FF
+        ,aqua: 0x00FFFF
+    }
 }
 
-var LzUtils:LzUtilsClass = new LzUtilsClass();
+/**
+ * @shortdesc Alias for <link linkend="LzUtilsClass">LzUtilsClass</link>
+ */
+lz.Utils = new LzUtilsClass();
+
+/**
+ * @deprecated
+ * @shortdesc Alias for <link linkend="LzUtilsClass">LzUtilsClass</link>
+ * Use lz.Utils instead.
+ */
+var LzUtils:LzUtilsClass = lz.Utils;

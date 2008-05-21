@@ -105,7 +105,7 @@ var LzKeyboardKernel = {
         doc.onkeyup = kc;
         doc.onkeypress = kc;
     }
-    // Called by LzKeys when the last focusable element was reached.
+    // Called by lz.Keys when the last focusable element was reached.
     ,gotLastFocus: function () {
         //console.log('gotLastFocus', canvas.sprite.__LZdiv.mouseisover);
         if (! canvas.sprite.__LZdiv.mouseisover) LzKeyboardKernel.setKeyboardControl(false);

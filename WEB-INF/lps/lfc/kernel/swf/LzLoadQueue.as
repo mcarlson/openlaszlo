@@ -153,7 +153,7 @@ LzLoadQueue.checkTimeout = function(ignore){
 
     if ( nexttimeout < Infinity ){
         this.nextcheck = nexttimeout + ct;
-        LzTimer.addTimer( this.timeoutDel , nexttimeout );
+        lz.Timer.addTimer( this.timeoutDel , nexttimeout );
     } else {
         this.nextcheck = Infinity;
     }
@@ -187,7 +187,7 @@ LzLoadQueue.loadFinished = function( loadmc ){
     }
 
     if ( ! this.loading.length)  {
-        LzTimer.removeTimer( this.timeoutDel );
+        lz.Timer.removeTimer( this.timeoutDel );
         this.nextcheck = Infinity;
     }
 }
@@ -309,9 +309,9 @@ LzLoadQueue.makeRequest = function( loadobj ){
     if ( loadobj.timeout != null &&
          ( this.nextcheck > loadobj.loadtime + loadobj.timeout ) ){
         if (this.nextcheck < Infinity) {
-            LzTimer.resetTimer( this.timeoutDel , loadobj.timeout );
+            lz.Timer.resetTimer( this.timeoutDel , loadobj.timeout );
         } else {
-            LzTimer.addTimer( this.timeoutDel , loadobj.timeout );
+            lz.Timer.addTimer( this.timeoutDel , loadobj.timeout );
         }
         this.nextcheck = loadobj.loadtime + loadobj.timeout;
     }
@@ -336,18 +336,18 @@ LzLoadQueue.makeRequest = function( loadobj ){
 LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
     var reqstr;
     if ( !loadobj.proxied ) {
-        reqstr = LzBrowser.toAbsoluteURL(loadobj.reqobj.url, false);
+        reqstr = lz.Browser.toAbsoluteURL(loadobj.reqobj.url, false);
     } else {
 
         delete loadobj.proxied;
-        reqstr = LzBrowser.getBaseURL( loadobj.secure,
+        reqstr = lz.Browser.getBaseURL( loadobj.secure,
                                        loadobj.secureport ).toString();
         //fix up URL
         var url = loadobj.reqobj.url;
         if ( url != null) {
             // [2005 03 10] we don't try to munge URLs to HTTPS anymore,
             // the user specifies the URL protocol explicitly if they want https.
-            loadobj.reqobj.url = LzBrowser.toAbsoluteURL(url, false);
+            loadobj.reqobj.url = lz.Browser.toAbsoluteURL(url, false);
         }
         //set cache parameters
         if ( loadobj.reqobj.cache ){
@@ -381,7 +381,7 @@ LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
 
         if (dopost) {
             loadobj.reqobj.ccache = loadobj.reqobj.cache = false;
-            loadobj.reqobj.fpv = LzBrowser.getVersion();
+            loadobj.reqobj.fpv = lz.Browser.getVersion();
         }
     }
     // [2005-08-19 ptw] the movie that will be loaded is attached to
@@ -473,10 +473,10 @@ LzLoadQueue.loadXML = function (loadobj) {
 
     if (solo && dopost) {
         // For a SOLO POST, request the complete URL including query args
-        reqstr = LzBrowser.toAbsoluteURL( loadobj.url, loadobj.secure );
+        reqstr = lz.Browser.toAbsoluteURL( loadobj.url, loadobj.secure );
     } else {
         // otherwise, get the url with the query string trimmed off
-        reqstr = LzBrowser.toAbsoluteURL( url_noquery, loadobj.secure );
+        reqstr = lz.Browser.toAbsoluteURL( url_noquery, loadobj.secure );
     }
 
     if (loadobj.proxied) {

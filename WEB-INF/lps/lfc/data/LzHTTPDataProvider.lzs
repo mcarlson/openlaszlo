@@ -62,7 +62,7 @@ class LzHTTPDataProvider extends LzDataProvider {
             }
         }
         if (secure) {
-            tloader.baserequest = LzBrowser.getBaseURL( secure, dreq.secureport );
+            tloader.baserequest = lz.Browser.getBaseURL( secure, dreq.secureport );
             //Debug.write('basereq ' + tloader.baserequest);
         }
         tloader.secure = secure;

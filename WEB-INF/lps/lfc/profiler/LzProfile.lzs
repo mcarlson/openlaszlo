@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzprofile
@@ -140,9 +140,9 @@
     startBackground: function () {
       var dd = this.dumpDel;
       if (dd) {
-        dd.register(LzIdle, 'onidle');
+        dd.register(lz.Idle, 'onidle');
       } else {
-        this.dumpDel = new LzDelegate(Profiler, 'dump', LzIdle, 'onidle');
+        this.dumpDel = new LzDelegate(Profiler, 'dump', lz.Idle, 'onidle');
       }
     },
 
@@ -180,7 +180,7 @@
       $lzprofiler = this.buffers;
       var dd = this.dumpDel;
       if (dd) {
-        dd.register(LzIdle, 'onidle');
+        dd.register(lz.Idle, 'onidle');
       }
     },
 
@@ -194,10 +194,10 @@
         // We can't connect until we can figure out our host
         if (! this.host) {
           if (! this.url) {
-            if (! global.LzBrowser) {
+            if (! global.lz.Browser) {
               return false;
             }
-            this.url = LzBrowser.getLoadURLAsLzURL();
+            this.url = lz.Browser.getLoadURLAsLzURL();
           }
           // Get the host we were loaded from, as that is the only host we
           // are allowed to talk to (and the one we want to talk to).
@@ -293,7 +293,7 @@
   */
     info: function (str) {
       // xml output
-      // this.element('info', LzBrowser.xmlEscape(str));
+      // this.element('info', lz.Browser.xmlEscape(str));
       this.write(str + '\n');
     },
 
@@ -457,7 +457,7 @@
 /**
   * Called to dump the accumulated profile information.
   * 
-  * @param ignoreme  LzEvent callback from LzIdle passes clock arg, ignore it
+  * @param ignoreme  LzEvent callback from lz.Idle passes clock arg, ignore it
   * @param Number loops: limit on the number of loop iterations,
   * defaults to 1000
   * @param Number ms: limit on the number of milliseconds to run,
@@ -511,13 +511,13 @@
             // Write the header
             this.info("Profile version: " + this.version);
             this.info("Date: " + (new Date).toString());
-            this.info("Profiling: " + LzBrowser.getLoadURL());
+            this.info("Profiling: " + lz.Browser.getLoadURL());
             this.info("LPS Version: " + canvas.lpsversion);
             this.info("LPS Release: " + canvas.lpsrelease);
             this.info("LPS Build: " + canvas.lpsbuild);
             this.info("LPS Build Date: " + canvas.lpsbuilddate);
             this.info("LPS Target: " + canvas.runtime);
-            this.info("Runtime: " + LzBrowser.getVersion());
+            this.info("Runtime: " + lz.Browser.getVersion());
             this.lpsVersionDone = true;
         }
 

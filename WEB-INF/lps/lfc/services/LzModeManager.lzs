@@ -14,7 +14,7 @@
   * The mode manager controls the dispatch of mouse events to the rest 
   * of the system. The mode manager keeps a stack of modal views. When a 
   * view is made <i>modal</i> (with the 
-  * call <xref linkend="LzModeManager.makeModal"/>) only it and 
+  * call <xref linkend="lz.ModeManager.makeModal"/>) only it and 
   * its children receive mouse events. </p>
   * 
   * <p>
@@ -31,10 +31,10 @@
   * 
   *     &lt;method name="openWindow"&gt;
   *       this.open();
-  *       LzModeManager.makeModal(this);
+  *       lz.ModeManager.makeModal(this);
   *     &lt;/method&gt;
   *     &lt;method name="close"&gt;
-  *       LzModeManager.release(this);
+  *       lz.ModeManager.release(this);
   *       super.close();
   *     &lt;/method&gt;
   *   &lt;/window&gt;
@@ -73,9 +73,9 @@ public class LzModeManagerService extends LzNode {
         if (this.modeArray.length == 0 || !this.hasMode( view )) {
             this.modeArray.push( view );
             if (this.onmode.ready) this.onmode.sendEvent( view );
-            var f = LzFocus.getFocus();
+            var f = lz.Focus.getFocus();
             if ( f && ! f.childOf( view ) ){
-                LzFocus.clearFocus();
+                lz.Focus.clearFocus();
             }
         }
     }
@@ -91,9 +91,9 @@ public class LzModeManagerService extends LzNode {
                 this.modeArray.splice( i , this.modeArray.length - i );
                 var newmode = this.modeArray[ i - 1 ];
                 if (this.onmode.ready) this.onmode.sendEvent( newmode || null );
-                var f = LzFocus.getFocus();
+                var f = lz.Focus.getFocus();
                 if ( newmode && f && ! f.childOf( newmode ) ){
-                    LzFocus.clearFocus();
+                    lz.Focus.clearFocus();
                 }
                 return;
             }
@@ -118,7 +118,7 @@ public class LzModeManagerService extends LzNode {
     */
     function handleMouseEvent ( view, eventStr ) {
         //Debug.warn("%w, %w", view , eventStr);
-        if (eventStr == "onmouseup") LzTrack.__LZmouseup(null);
+        if (eventStr == "onmouseup") lz.Track.__LZmouseup(null);
 
         var dosend = true;
         var isinputtext = false;
@@ -127,7 +127,7 @@ public class LzModeManagerService extends LzNode {
             view = this.__findInputtextSelection(); 
         }
 
-        LzGlobalMouse.__mouseEvent(eventStr, view);
+        lz.GlobalMouse.__mouseEvent(eventStr, view);
 
         if ( this.eventsLocked == true ){
             return;
@@ -167,7 +167,7 @@ public class LzModeManagerService extends LzNode {
 
             if (view) view.mouseevent( eventStr );
             if ( eventStr == "onmousedown" ){
-                LzFocus.__LZcheckFocusChange( view );
+                lz.Focus.__LZcheckFocusChange( view );
             }
         } 
 
@@ -239,7 +239,7 @@ public class LzModeManagerService extends LzNode {
     */
     function rawMouseEvent(eventname, view) {
         if (eventname == 'onmousemove') {
-            LzGlobalMouse.__mouseEvent('onmousemove', null); 
+            lz.GlobalMouse.__mouseEvent('onmousemove', null); 
         } else {
             this.handleMouseEvent( view , eventname );
         }
@@ -247,10 +247,18 @@ public class LzModeManagerService extends LzNode {
 }
 
 /**
-  * LzModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService</a>.
+  * lz.ModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService</a>.
   */
-var LzModeManager = new LzModeManagerService();
+lz.ModeManager = new LzModeManagerService();
+
+/**
+  * LzModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService</a>.
+  * @deprecated
+  * Use lz.ModeManager instead.
+  */
+var LzModeManager = lz.ModeManager;
+
 if ($swf9) {
 } else {
-    LzMouseKernel.setCallback(LzModeManager, 'rawMouseEvent');
+    LzMouseKernel.setCallback(lz.ModeManager, 'rawMouseEvent');
 }

@@ -190,8 +190,8 @@ dynamic class LzCanvas extends LzView {
             // Default to the 'baked in' value set by the compiler
             var lzproxied_query_arg = (args.__LZproxied == "true");
             // Override with the lzproxied query arg supplied at runtime, if present.
-            if (LzBrowser.getInitArg('lzproxied') != null) {
-                lzproxied_query_arg = (LzBrowser.getInitArg('lzproxied') == "true"); // convert string to boolean
+            if (lz.Browser.getInitArg('lzproxied') != null) {
+                lzproxied_query_arg = (lz.Browser.getInitArg('lzproxied') == "true"); // convert string to boolean
             }
             this.proxied = lzproxied_query_arg;
         } else {
@@ -292,7 +292,7 @@ dynamic class LzCanvas extends LzView {
 
         LzPlatform.initCanvas(this);
 
-        this.id = LzBrowser.getInitArg('id');
+        this.id = lz.Browser.getInitArg('id');
 
         if ($swf9) {
             ////////////////////////////////////////////////////////////////
@@ -689,13 +689,13 @@ function setDefaultContextMenu ( cmenu ){
   */
 static function versionInfoString () {
   return (
-    'URL: ' + LzBrowser.getLoadURL() + '\n' +
+    'URL: ' + lz.Browser.getLoadURL() + '\n' +
     'Version: ' + canvas.lpsversion + '\n' +
     'Release: ' + canvas.lpsrelease + '\n' +
     'Build: ' + canvas.lpsbuild + '\n' +
     'Date: ' + canvas.lpsbuilddate + '\n' +
     'Target: ' + canvas.runtime + '\n' +
-    'Runtime: ' + LzBrowser.getVersion() + '\n');
+    'Runtime: ' + lz.Browser.getVersion() + '\n');
 }
 
 /**

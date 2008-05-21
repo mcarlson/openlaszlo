@@ -89,7 +89,7 @@ LzSprite.prototype.setAAActive = function( s, mc ){
         if (mc._accProps == null) mc._accProps = {};
         mc._accProps.forceSimple = s;
     }
-    //LzBrowser.updateAccessibility();
+    //LzSprite.updateAccessibility();
     this.aaactive = s;
 }
 
@@ -98,7 +98,7 @@ LzSprite.prototype.setAAActive = function( s, mc ){
   * Set accessibility name
   * @param string s: Sets the accessibility name for this view
   */
-LzBrowser.prototype.setAAName = function( s, mc ){
+LzSprite.prototype.setAAName = function( s, mc ){
     if (mc == null || mc == 'aaname') mc = this.getMCRef();
     //Debug.write('setAAName ', s + ' ' + mc);
     if (mc._accProps == null) mc._accProps = {};
@@ -107,7 +107,7 @@ LzBrowser.prototype.setAAName = function( s, mc ){
         if (mc._accProps == null) mc._accProps = {};
         mc._accProps.name = s;
     }
-    //LzBrowser.updateAccessibility();
+    //LzSprite.updateAccessibility();
     this.aaname = s;
 }
 
@@ -115,7 +115,7 @@ LzBrowser.prototype.setAAName = function( s, mc ){
   * Set accessibility description
   * @param string s: Sets the accessibility name for this view
   */
-LzBrowser.prototype.setAADescription = function( s, mc ){
+LzSprite.prototype.setAADescription = function( s, mc ){
     if (mc == null || mc == 'aadescription') mc = this.getMCRef();
     //Debug.write('setAADescription ', s + ' ' + mc);
     if (mc._accProps == null) mc._accProps = {};
@@ -124,7 +124,7 @@ LzBrowser.prototype.setAADescription = function( s, mc ){
         if (mc._accProps == null) mc._accProps = {};
         mc._accProps.description = s;
     }
-    //LzBrowser.updateAccessibility();
+    //LzSprite.updateAccessibility();
     this.aadescription = s;
 }
 
@@ -132,7 +132,7 @@ LzBrowser.prototype.setAADescription = function( s, mc ){
   * Set accessibility tab order
   * @param number s: The tab order index for this view.  Must be a unique number.
   */
-LzBrowser.prototype.setAATabIndex = function( s, mc ){
+LzSprite.prototype.setAATabIndex = function( s, mc ){
     if (mc == null || mc == 'aatabindex') mc = this.getMCRef();
     //Debug.write('setAATabIndex ', mc);
     mc.tabIndex = s;
@@ -144,7 +144,7 @@ LzBrowser.prototype.setAATabIndex = function( s, mc ){
   * @param string s: If true, this view is made silent to the screen reader.  
   * If false, it is active to the screen reader.
   */
-LzBrowser.prototype.setAASilent = function( s, mc ){
+LzSprite.prototype.setAASilent = function( s, mc ){
     if (mc == null || mc == 'aasilent') mc = this.getMCRef();
     //Debug.write('setAASilent ', s + ' ' + mc);
     if (mc._accProps == null) mc._accProps = {};
@@ -153,7 +153,7 @@ LzBrowser.prototype.setAASilent = function( s, mc ){
         if (mc._accProps == null) mc._accProps = {};
         mc._accProps.silent = s;
     }
-    //LzBrowser.updateAccessibility();
+    //LzSprite.updateAccessibility();
     this.aasilent = s;
 }
 
@@ -172,7 +172,7 @@ LzSprite.prototype.FOREGROUND_DEPTH_OFFSET = 0;
 
 //@field Boolean focusable: If true, this view will participate in keyboard
 // focus and will receive focus events and keyboard events
-// when it has the focus. (see LzFocus for more details)
+// when it has the focus. (see lz.Focus for more details)
 LzSprite.prototype.focusable = false;
 
 LzSprite.prototype.visible =   true;
@@ -256,16 +256,16 @@ LzSprite.prototype.init = function( ) {
     this.__LZbgRef._visible = this.visible;
     if (this.isroot) {
         // Expose your methods
-        DojoExternalInterface.addCallback("getCanvasAttribute", LzHistory, LzHistory.getCanvasAttribute);
-        DojoExternalInterface.addCallback("setCanvasAttribute", LzHistory, LzHistory.setCanvasAttribute);
-        DojoExternalInterface.addCallback("callMethod", LzHistory, LzHistory.callMethod);
-        DojoExternalInterface.addCallback("receiveHistory", LzHistory, LzHistory.receiveHistory);
+        DojoExternalInterface.addCallback("getCanvasAttribute", lz.History, lz.History.getCanvasAttribute);
+        DojoExternalInterface.addCallback("setCanvasAttribute", lz.History, lz.History.setCanvasAttribute);
+        DojoExternalInterface.addCallback("callMethod", lz.History, lz.History.callMethod);
+        DojoExternalInterface.addCallback("receiveHistory", lz.History, lz.History.receiveHistory);
 
         // Tell JavaScript that you are ready to have method calls
         DojoExternalInterface.loaded();
 
-        // Tell LzHistory we're ready to send events
-        LzHistory.__start(); 
+        // Tell lz.History we're ready to send events
+        lz.History.__start(); 
     }
 }
 
@@ -1738,9 +1738,9 @@ Button.prototype.__gotFocus = function ( oldfocus ){
   // SWF-specific
     if (_root._focusrect != true) return;
     //Debug.write('__gotFocus', oldfocus);
-    if (!(LzFocus.getFocus() == this.__lzview)) {
-        var tabdown = LzKeys.isKeyDown('tab');
-        LzFocus.setFocus(this.__lzview, false);
+    if (!(lz.Focus.getFocus() == this.__lzview)) {
+        var tabdown = lz.Keys.isKeyDown('tab');
+        lz.Focus.setFocus(this.__lzview, false);
     }
 }
 
@@ -1751,6 +1751,6 @@ Button.prototype.__lostFocus = function ( ){
   // SWF-specific
     if (_root._focusrect != true) return;
     //Debug.write('__lostFocus');
-    if (this.__lzview.hasFocus) LzFocus.clearFocus();
+    if (this.__lzview.hasFocus) lz.Focus.clearFocus();
 }
 }

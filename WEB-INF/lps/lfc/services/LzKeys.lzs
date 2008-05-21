@@ -10,17 +10,17 @@
   */
 
 /**
-  * LzKeys is a service that provides key handling messages. Objects can also
+  * lz.Keys is a service that provides key handling messages. Objects can also
   * register callbacks to be sent when specific key combinitions are down.
   * 
   * <p>Here is a simple example:</p>
   * 
-  * <example title="LzKeys">
+  * <example title="lz.Keys">
   * <programlisting>&lt;canvas height="140" debug="true"&gt;
-  *   &lt;handler name="onkeydown" reference="LzKeys" args="k"&gt;
+  *   &lt;handler name="onkeydown" reference="lz.Keys" args="k"&gt;
   *     Debug.write("key " + k + " down");
   *   &lt;/handler&gt;
-  *   &lt;handler name="onkeyup" reference="LzKeys" args="k"&gt;
+  *   &lt;handler name="onkeyup" reference="lz.Keys" args="k"&gt;
   *     Debug.write("key " + k + " up");
   *   &lt;/handler&gt;
   *   &lt;method name="pressA"&gt;
@@ -28,7 +28,7 @@
   *   &lt;/method&gt;
   *   &lt;handler name="oninit"&gt;
   *     del = new LzDelegate(this, "pressA");
-  *     LzKeys.callOnKeyCombo(del, ["A"]);
+  *     lz.Keys.callOnKeyCombo(del, ["A"]);
   *   &lt;/handler&gt; 
   * &lt;/canvas&gt;</programlisting></example>
   *
@@ -148,7 +148,7 @@ public class LzKeysService extends LzNode {
 
     /** @access private */
     function __keyEvent ( delta, k, type ){
-        //Debug.write('LzKeys.__keyEvent', delta, k, type);
+        //Debug.write('lz.Keys.__keyEvent', delta, k, type);
 
         //for each key change, send the corresponding event
         for (var key in delta) {
@@ -417,7 +417,7 @@ public class LzKeysService extends LzNode {
     function enableEnter ( onroff ){
         //Debug.write("enableEnter: "+onroff);
         // SWF-specific
-        if ($debug) Debug.write('LzKeys.enableEnter not yet defined');
+        if ($debug) Debug.write('lz.Keys.enableEnter not yet defined');
         // TODO [hqm 2008-01] What is the way to do this in SWF9 ??
         /*   _root.entercontrol.gotoAndStop( onroff ? 1 : 2 );
          */
@@ -531,14 +531,21 @@ public class LzKeysService extends LzNode {
 }
 
 /**
-  * LzKeys is a shortcut for <a href="LzKeysService.html">LzKeysService</a>.
+  * lz.Keys is a shortcut for <a href="LzKeysService.html">LzKeysService</a>.
   */
-var LzKeys = new LzKeysService();
+lz.Keys = new LzKeysService();
+
+/**
+  * LzKeys is a shortcut for <a href="LzKeysService.html">LzKeysService</a>.
+  * @deprecated
+  * Use lz.Keys instead.
+  */
+var LzKeys = lz.Keys;
 
 if ($dhtml) {
     // Need to explicitly register this.  Make sure Lz.mousewheel is there for 
     // lztest
     if (Lz['mousewheel']) {
-        Lz.mousewheel.setCallback(LzKeys, '__mousewheelEvent');
+        Lz.mousewheel.setCallback(lz.Keys, '__mousewheelEvent');
     }
 }

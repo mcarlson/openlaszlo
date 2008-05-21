@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -19,7 +19,7 @@ Debug.inEvalRequest = false;
   * @access private
   */
 Debug.sockOpen = function (port) {
-  var url = LzBrowser.getLoadURLAsLzURL();
+  var url = lz.Browser.getLoadURLAsLzURL();
   // Security requires us to talk back to the server we were loaded from
   var host = url.host;
   this.xsock = new XMLSocket();
@@ -36,7 +36,7 @@ Debug.sockOpen = function (port) {
   * @access private
   */
 Debug.writeInitMessage = function () {
-    var filename = LzBrowser.getLoadURLAsLzURL();
+    var filename = lz.Browser.getLoadURLAsLzURL();
     var myXML = new XML();
     var init = myXML.createElement("init"); 
     myXML.appendChild(init);

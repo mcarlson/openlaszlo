@@ -248,7 +248,7 @@ TextField.prototype.__onChanged = function ( ){
   */
 TextField.prototype.__lostFocus = function ( ){
     if (this['__handlelostFocusdel'] == null) this.__handlelostFocusdel = new LzDelegate(this, "__handlelostFocus");
-    LzIdle.callOnIdle(this.__handlelostFocusdel);
+    lz.Idle.callOnIdle(this.__handlelostFocusdel);
 }
 
 /**
@@ -258,9 +258,9 @@ TextField.prototype.__lostFocus = function ( ){
   * @access private
   */
 TextField.prototype.__handlelostFocus = function ( ignore ){
-    //Debug.write('lostfocus', this.__lzview.hasFocus, LzFocus.lastfocus, this, LzFocus.getFocus(), this.__lzview, this.__lzview.inputtextevent);
-    if (this.__lzview == LzFocus.getFocus()) {
-        LzFocus.clearFocus();
+    //Debug.write('lostfocus', this.__lzview.hasFocus, lz.Focus.lastfocus, this, lz.Focus.getFocus(), this.__lzview, this.__lzview.inputtextevent);
+    if (this.__lzview == lz.Focus.getFocus()) {
+        lz.Focus.clearFocus();
         if (this.__lzview) this.__lzview.inputtextevent('onblur');
     }    
 }
@@ -332,7 +332,7 @@ LzInputTextSprite.prototype.setText = function ( t ){
 
     if (this.multiline && this.scroll == 0 ) {
         var scrolldel = new LzDelegate(this, "__LZforceScrollAttrs");
-        LzIdle.callOnIdle(scrolldel);
+        lz.Idle.callOnIdle(scrolldel);
     }
 
     // Fix for lpp-5449

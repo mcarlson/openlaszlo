@@ -51,10 +51,10 @@ dynamic class LzFocusService extends LzEventable {
 
     /** @access private */
     function initialize () {
-        this.upDel = new LzDelegate( LzFocus , "gotKeyUp", LzKeys, "onkeyup");
-        this.downDel = new LzDelegate( LzFocus , "gotKeyDown", LzKeys, "onkeydown");
-        // This must be registered here after both LzFocus and LzKeys are initted 
-        this.lastfocusDel = new LzDelegate(LzKeys, 'gotLastFocus', LzFocus, 'onescapefocus');
+        this.upDel = new LzDelegate( lz.Focus , "gotKeyUp", lz.Keys, "onkeyup");
+        this.downDel = new LzDelegate( lz.Focus , "gotKeyDown", lz.Keys, "onkeydown");
+        // This must be registered here after both lz.Focus and lz.Keys are initted 
+        this.lastfocusDel = new LzDelegate(lz.Keys, 'gotLastFocus', lz.Focus, 'onescapefocus');
     }
 
 
@@ -94,11 +94,11 @@ dynamic class LzFocusService extends LzEventable {
      * @access private
      */
     function gotKeyDown( kC ){
-        //Debug.write("gotKeyDown ", kC, LzKeys.isKeyDown('shift'));
+        //Debug.write("gotKeyDown ", kC, lz.Keys.isKeyDown('shift'));
         if (this.csel && this.csel.onkeydown.ready)
             this.csel.onkeydown.sendEvent( kC );
-        if ( kC == LzKeys.keyCodes.tab ){
-            if ( LzKeys.isKeyDown( 'shift' ) ){
+        if ( kC == lz.Keys.keyCodes.tab ){
+            if ( lz.Keys.isKeyDown( 'shift' ) ){
                 this.prev();
             } else {
                 this.next();
@@ -295,7 +295,7 @@ dynamic class LzFocusService extends LzEventable {
         }
 
         if ( sel == null ){
-            sel = LzModeManager.getModalView();
+            sel = lz.ModeManager.getModalView();
         }
 
         var v = null;
@@ -304,7 +304,7 @@ dynamic class LzFocusService extends LzEventable {
             v = this.moveSelSubview( sel , movedir ) ;
         }
 
-        if ( !LzModeManager.__LZallowFocus( v ) ){
+        if ( !lz.ModeManager.__LZallowFocus( v ) ){
             return;
         }
 
@@ -379,10 +379,20 @@ dynamic class LzFocusService extends LzEventable {
     }
 }
 /**
-  * LzFocus is a shortcut for <link linkend="LzFocusService">LzFocusService.LzFocus</link>
+  * lz.Focus is a shortcut for <link linkend="LzFocusService">LzFocusService.LzFocus</link>
   * This service manages the keyboard focus. At any time, at most one view has the keyboard focus. This is the view that receives key events when a key is pressed. 
   *
   * @shortdesc Handles keyboard focus.
   */
-var LzFocus = new LzFocusService();
-LzFocus.initialize();
+lz.Focus= new LzFocusService();
+lz.Focus.initialize();
+
+/**
+  * LzFocus is a shortcut for <link linkend="LzFocusService">LzFocusService.LzFocus</link>
+  * This service manages the keyboard focus. At any time, at most one view has the keyboard focus. This is the view that receives key events when a key is pressed. 
+  * Use lz.Focus instead.
+  *
+  * @deprecated
+  * @shortdesc Handles keyboard focus.
+  */
+var LzFocus = lz.Focus;

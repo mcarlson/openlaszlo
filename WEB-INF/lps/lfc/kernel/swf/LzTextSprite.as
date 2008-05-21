@@ -138,7 +138,7 @@ LzTextSprite.prototype.getMCRef = function () {
 
 /**
   * Save a copy of the current selection position/size. This is called
-  * from LzModeManager.rawMouseEvent. This function is needed because 
+  * from lz.ModeManager.rawMouseEvent. This function is needed because 
   * the Selection object changes when the focus moves. By caching the
   * position, getSelectionPosition() and getSelectionSize() works during
   * this transition.
@@ -504,7 +504,7 @@ LzTextSprite.prototype.setText = function ( t ){
 
     if (this.multiline && this.scroll == 0 ) {
         var scrolldel = new LzDelegate(this, "__LZforceScrollAttrs");
-        LzIdle.callOnIdle(scrolldel);
+        lz.Idle.callOnIdle(scrolldel);
     }
 
     // Fix for lpp-5449

@@ -9,15 +9,15 @@
  */
 
 /**
- * <p>LzTimer is used to invoke functionality after a specific
+ * <p>lz.Timer is used to invoke functionality after a specific
  * amount of time. By using a <xref linkend="LzDelegate"/> to refer
  * to a particular method, and then by adding a timer to that
  * delegate, the developer can control the timing of the method's
- * start.  Use LzTimer to tweak sequence and timing of visual
+ * start.  Use lz.Timer to tweak sequence and timing of visual
  * animations, delay the effects of user events, or implement user
  * experiences with expiration features.</p>
  *
- * <p>It should be noted that the time passed to the LzTimer service
+ * <p>It should be noted that the time passed to the lz.Timer service
  * describes the time <i>before</i> which the delegate may not run --
  * it is not guaranteed that the delegate will run at that time.
  * Depending on application needs and client performance, the
@@ -25,10 +25,10 @@
  * amount of time specified.</p>
  *
  * <p>The following example displays some text when a button is
- * clicked, and uses LzTimer to fade the text away after three
+ * clicked, and uses lz.Timer to fade the text away after three
  * seconds.</p>
  *
- * <example class="program" title="Using LzTimer to invoke method" id="lztimer-1"><programlisting><![CDATA[
+ * <example class="program" title="Using lz.Timer to invoke method" id="lztimer-1"><programlisting><![CDATA[
  * <canvas height="50" >
  *     <button text="Show then Fade" onclick="canvas.showText()" />
  *     <text name="myText" opacity="0.0" bgcolor="#CCCCCC">The Invisible Man</text>
@@ -36,7 +36,7 @@
  *
  *     <method name="showText">
  *         myText.setAttribute( "opacity", 1.0 );
- *         LzTimerService.LzTimer.addTimer( new LzDelegate( this, "fadeText" ), 3000 );
+ *         lz.Timer.addTimer( new LzDelegate( this, "fadeText" ), 3000 );
  *     </method>
  *
  *     <method name="fadeText">
@@ -51,7 +51,7 @@
  * @devnote The timer calls a given delegate in a specified number of
  * miliseconds.
  *
- * @devnote Unfortunately the original semantics of LzTimer allows
+ * @devnote Unfortunately the original semantics of lz.Timer allows
  * one to add more than one timer to a single delegate, but only
  * allows one to remove the oldest timer from a delegate -- there's
  * no way of specifying which one.  The logic below is faithful to
@@ -70,7 +70,7 @@ class LzTimerService {
 
   /**
    * The timer service.  Also available as the global
-   * <code>LzTimer</code>.
+   * <code>lz.Timer</code>.
    *
    * @type LzTimerService
    * @keywords readonly
@@ -105,9 +105,9 @@ class LzTimerService {
       // This closure captures 'p', and relies on the fact that p.id will
       // have been set by the time the closure is invoked.
 
-      // User LzTimer explicitly below; "this" is not the outer function's
+      // User lz.Timer explicitly below; "this" is not the outer function's
       // this here.
-      LzTimer.removeTimerWithID(p.delegate, p.id);
+      lz.Timer.removeTimerWithID(p.delegate, p.id);
       var del = p.delegate;
       // Inlining LzDelegate.execute()
       if (del.enabled && del.c) {
@@ -123,7 +123,7 @@ class LzTimerService {
         // we rely on the setTimeout value being a non-array, otherwise
         // our storage scheme won't work. Error if this happens -- should only
         // occur when bootstrapping a new runtime.
-        Debug.error("setTimeout result type is unexpected; LzTimer will fail");
+        Debug.error("setTimeout result type is unexpected; lz.Timer will fail");
     }
     p.id = id;
     var tle = this.timerList[d.__delegateID];
@@ -236,8 +236,15 @@ class LzTimerService {
 } // End of LzTimerService
 
 /**
- * @deprecated
  * @shortdesc Alias for <link linkend="LzTimerService">LzTimerService.LzTimer</link>
  */
-var LzTimer:LzTimerService = LzTimerService.LzTimer;
+lz.Timer = LzTimerService.LzTimer;
+
+/**
+ * @deprecated
+ * @shortdesc Alias for <link linkend="LzTimerService">LzTimerService.LzTimer</link>
+ * Use lz.Timer instead.
+ */
+var LzTimer:LzTimerService = lz.Timer;
+
 

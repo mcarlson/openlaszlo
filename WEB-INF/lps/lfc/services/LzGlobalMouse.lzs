@@ -12,7 +12,7 @@
 /**
  * <p>The <code>LzGlobalMouse</code> service sends events any time the
  * mouse button state changes, even if mouse events are locked using
- * the <classname>LzModeManager</classname> API. The LzGlobalMouse is
+ * the <classname>lz.ModeManager</classname> API. The LzGlobalMouse is
  * also useful for detecting when the mouse button goes up or down on
  * a non-clickable view.</p>
  *
@@ -23,7 +23,7 @@
  *   <checkbox>Lock mouse events
  *     <handler name="onvalue">
  *       if (this.value){
- *         LzModeManager.globalLockMouseEvents();
+ *         lz.ModeManager.globalLockMouseEvents();
  *       }
  *     </handler>
  *
@@ -33,7 +33,7 @@
  *       //receives the events, so we can just unlock it here, and the
  *       //checkbox can do its normal onclick handling.
  *       if (this.value &amp;&amp; who == this){
- *         LzModeManager.globalUnlockMouseEvents();
+ *         lz.ModeManager.globalUnlockMouseEvents();
  *       }
  *     </handler>
  *   </checkbox>
@@ -66,7 +66,7 @@
  * </canvas>
  * ]]></programlisting></example>
  *
- * <p>Use the LzGlobalMouse service in conjunction with <classname>LzModeManager</classname>'s event lock.</p>
+ * <p>Use the LzGlobalMouse service in conjunction with <classname>lz.ModeManager</classname>'s event lock.</p>
  *
  * @shortdesc Application-wide control of and information about the mouse.
  * @see mode example
@@ -168,7 +168,13 @@ public class LzGlobalMouseService extends LzEventable {
 }
 
 /**
- * @deprecated
  * @shortdesc Alias for <link linkend="LzGlobalMouseService">LzGlobalMouseService.LzGlobalMouse</link>
  */
-var LzGlobalMouse:LzGlobalMouseService = LzGlobalMouseService.LzGlobalMouse;
+lz.GlobalMouse = LzGlobalMouseService.LzGlobalMouse;
+
+/**
+ * @deprecated
+ * @shortdesc Alias for <link linkend="LzGlobalMouseService">LzGlobalMouseService.LzGlobalMouse</link>
+ * Use lz.GlobalMouse instead.
+ */
+var LzGlobalMouse:LzGlobalMouseService = lz.GlobalMouse;

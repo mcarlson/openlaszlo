@@ -85,11 +85,11 @@ var LzMouseKernel = {
             LzMouseKernel.handleMouseEvent(null, 'onmousemove');
         }
         ,onMouseWheel: function(d) {
-            LzKeys.__mousewheelEvent(d);
+            lz.Keys.__mousewheelEvent(d);
         }
     }
 
-    // Mouse event processing code, formerly from LzModeManager.as
+    // Mouse event processing code, formerly from lz.ModeManager.as
     ,__clickStream: []
     ,__clstDict: { onmouseup : 1 , onmousedown: 2 }
     ,__WAIT_FOR_CLICK: 4
@@ -210,7 +210,7 @@ var LzMouseKernel = {
     ,__callNext: function(){
         if ( !this.willCall ){
             this.willCall = true;
-            LzIdle.callOnIdle( this.__clstDel );
+            lz.Idle.callOnIdle( this.__clstDel );
         }
     }
 }
