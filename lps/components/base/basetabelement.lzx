@@ -41,9 +41,6 @@
         <event name="onclosestart" />
         <!--- Sent at the start of the close animation. -->
         <event name="onclosestop" />
-        <!--- Deprecated: now use onclosestop.
-              @keywords private -->
-        <attribute name="setvisiblestate"  value="null" />
         <!--- Can be use in subclasses if the height in the tag is needed.
               @keywords private -->
         <attribute name="_originalheight"  value="null" />
@@ -57,9 +54,9 @@
 
         <!--- @keywords private -->
         <handler name="onconstruct">
-            this._originalheight = height;
-            if ( headerheight ) this.height = headerheight
-            else this.height = minheight;
+            this._originalheight = this.height;
+            if ( this.headerheight ) this.height = this.headerheight;
+            else this.height = this.minheight;
         </handler>
 
         <!--- Called to open this tabelement by a certain height.
@@ -71,7 +68,7 @@
             <![CDATA[ 
             this.setAttribute( "contentvisible" , true );
             this.isopening += 1;
-            if ( onopenstart ) this.onopenstart.sendEvent();
+            if ( this.onopenstart ) this.onopenstart.sendEvent();
             if( withAnimation ) {
                var anm = this.animate( "height", h, d, true );
                if ( !this.dlo ) this.dlo = new LzDelegate( this, "openned" );
@@ -92,7 +89,7 @@
               -->
         <method name="close" args="h,d">
             var anm = this.animate( "height", h, d, true );
-            if ( onclosestart ) this.onclosestart.sendEvent();
+            if ( this.onclosestart ) this.onclosestart.sendEvent();
             if ( !this.dlc ) this.dlc = new LzDelegate( this,"closed" );
             this.dlc.register( anm, "onstop" );
             this.setAttribute( 'focusable' , true );
@@ -129,7 +126,7 @@
 
         <!--- Called when the tabelement is completely opened. -->
         <method name="openned" args="ignore">
-            if ( onopenstop ) this.onopenstop.sendEvent();
+            if ( this.onopenstop ) this.onopenstop.sendEvent();
             this.isopening -= 1;
             if (this.isopening == 0) {
                 //now we can savely call unregisterAll
@@ -140,13 +137,7 @@
         </method>
 
         <!--- Called when the tabelement is completely closed. -->
-        <method name="closed"> <![CDATA[
-            // deprecate 'setvisiblestate' later
-            // instead use the 'onclosestop' event
-            // or constrain to the 'contentvisible' attribute
-
-            // backwards compatibility deprecate later
-            if ( this.setvisiblestate ) this.setvisiblestate.sendEvent( false );
+        <method name="closed" args="ignore"> <![CDATA[
             if ( this.onclosestop ) this.onclosestop.sendEvent();
 
             // stop listening for close events
@@ -160,14 +151,14 @@
 
         <!--- @keywords private -->
         <method name="destroy" ><![CDATA[
-            if (dlo in this) {
+            if (this.dlo) {
                 this.dlo.unregisterAll();
-                delete this.dlo;
+                this.dlo = null;
             }
             
-            if (dlc in this) {
+            if (this.dlc) {
                 this.dlc.unregisterAll();
-                delete this.dlc;
+                this.dlc = null;
             }
             
             super.destroy.apply(this, arguments);
