@@ -37,31 +37,39 @@
  * <canvas>
  *   <window id="demo" title="state demo" width="400" height="300">
  *     <attribute name="maximized" value="true" />
- *     <state applied="${demo.maximized}">
+ *
+ *     <state name="big" applied="${demo.maximized}">
  *       <animatorgroup duration="1000" process="simultaneous">
  *         <animator attribute="width" to="400"/>
  *         <animator attribute="height" to="300"/>
  *         <animator attribute="x" to="100"/>
  *         <animator attribute="y" to="100"/>
  *       </animatorgroup>
- *       <text align="center" y="20%">M a x i m i z e d</text>
  *     </state>
- * 
- *     <state applied="${! demo.maximized}">
+ *
+ *     <state name="little" applied="${! demo.maximized}">
  *       <animatorgroup duration="1000" process="simultaneous">
  *         <animator attribute="width" to="170"/>
  *         <animator attribute="height" to="100"/>
  *         <animator attribute="x" to="0"/>
  *         <animator attribute="y" to="0"/>
  *       </animatorgroup>
- *       <text align="center" valign="middle">Minimized</text>
  *     </state>
- * 
- *     <button placement="title_area" align="right" height="16"> Toggle
+ *
+ *     <button text="Toggle" placement="title_area" align="right" height="16">
  *       <handler name="onclick">
  *         demo.setAttribute('maximized', (! demo.maximized));
  *       </handler>
  *     </button>
+ *
+ *     <text name="display"
+ *           align="center" valign="middle"
+ *           width="120" multiline="true" />
+ *
+ *     <handler name="onapplied" reference="big">
+ *       demo.display.format("big.applied = %s\nlittle.applied = %s",
+ *                           demo.big.applied, demo.little.applied);
+ *     </handler>
  *   </window>
  * </canvas>
  * ]]></programlisting></example>
@@ -102,22 +110,44 @@ dynamic class LzState extends LzNode {
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
   /**
-   * Sent when the state is applied.
+   * Sent after a state is applied.  The event argument is the state
+   * that is being applied.
    * @lzxtype event
    */
-  var onapply = LzDeclaredEvent;
+  var onapply:LzDeclaredEventClass = LzDeclaredEvent;
 
   /**
-   * Sent when the state is removed
+   * Sent before a state is removed.  The event argument is the state
+   * that is being removed.
    * @lzxtype event
    */
-  var onremove = LzDeclaredEvent;
+  var onremove:LzDeclaredEventClass = LzDeclaredEvent;
+
+  /**
+   * Sent when a state is applied or removed.  The event argument is
+   * the new value of <code>applied</code> (<code>true</code> if the
+   * state is being applied, <code>false</code> if the state is being
+   * removed).
+   *
+   * @devnote This is actually sent by apply and remove at the same
+   * time as onapply and onremove are sent, since they directly
+   * manipulate applied.
+   *
+   * @lzxtype event
+   */
+  var onapplied:LzDeclaredEventClass = LzDeclaredEvent;
 
   /**
    * Whether or not the state is applied.
    * <code>setAttribute('applied', true)</code> will apply the state.
    * <code>setAttribute('applied', false)</code> will remove the
    * state.
+   *
+   * @devnote The actual setting of applied (and sending of the
+   * onapplied event) is handled by apply or remove.  The setter is
+   * just a thin veneer over those methods.  If it turned out that
+   * binding applied was much more popular than calling the methods,
+   * this could be inverted.
    *
    * @type Boolean
    * @lzxtype boolean
@@ -239,7 +269,7 @@ dynamic class LzState extends LzNode {
   /**
    * Applies the state to the state's parent. If the state is already applied,
    * has no effect.  This is the programmatic equivalent of
-   * <code>setAttributed('applied', true)</code>.
+   * <code>setAttribute('applied', true)</code>.
    */
   function apply (){
     if ( this.applied ){
@@ -288,22 +318,25 @@ dynamic class LzState extends LzNode {
     parent.__LZdelegates = od;
 
     if (this.onapply.ready) this.onapply.sendEvent( this );
+    if (this.onapplied.ready) this.onapplied.sendEvent( true );
   }
 
   /**
    * Removes the constraints and views made when the state was applied. This
    * method does <em>not</em> restore the previous values of any attributes that
    * were changed by the state.  This is the programmatic equivalent of
-   * <code>setAttributed('applied', false)</code>.
+   * <code>setAttribute('applied', false)</code>.
    */
   function remove () {
     if ( !this.applied ){
       return;
     }
 
-    if (this.onremove.ready) this.onremove.sendEvent( this );
     // TODO [2008-05-14 ptw] Removed isapplied after 4.1
     this.applied = this.isapplied = false;
+
+    if (this.onremove.ready) this.onremove.sendEvent( this );
+    if (this.onapplied.ready) this.onapplied.sendEvent( false );
 
     if (this.__LZstatedelegates) {
       for ( var i = 0; i < this.__LZstatedelegates.length; i++ ){

@@ -103,6 +103,11 @@ public dynamic final class LzDelegate {
       // aid to portability in JS1
     } else if (context is LzEventable) {
       // Ok
+    } else if (! (context is Object)) {
+      if ($debug) {
+        Debug.error('Invalid context: %w (for method %s)', context, methodName);
+      }
+      return;
     } else if ($debug) {
       // This causes too many warnings right now
 //       Debug.error("Invalid context: %w (for method %s)", context, methodName);
@@ -178,6 +183,10 @@ public function execute (eventValue){
   * actually support registering for and sending events.  When a
   * delegate attempts to register on this sentinel, the sentinel will
   * automatically be replaced with a functional LzEvent.
+  *
+  * @devnote The valid event logic is duplicated in
+  * NodeModel#addHandlerInternal (to give better location information
+  * for handler references).
   */
   public function register ( eventSender:LzEventable , eventName:String) {
     if ($swf9) {
@@ -185,7 +194,7 @@ public function execute (eventValue){
       // aid to portability in JS1
     } else if (eventSender is LzEventable) {
       // Ok
-    } else if (! eventSender) {
+    } else if (! (eventSender is Object)) {
       if ($debug) {
         Debug.error('Invalid event sender: %w (for event %s)', eventSender, eventName);
       }

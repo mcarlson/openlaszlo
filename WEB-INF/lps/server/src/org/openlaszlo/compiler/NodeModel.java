@@ -273,7 +273,7 @@ public class NodeModel implements Cloneable {
         return null;
       }
       String preface = "\n#pragma 'withThis'\n";
-      String body = "return " + getCompiler().dependenciesForExpression(value);
+      String body = "return (" + getCompiler().dependenciesForExpression(value) + ")";
       Method dependencies = new Method(
         dependenciesname,
         "",
@@ -1250,9 +1250,6 @@ solution =
         String parent_name =
             element.getParentElement().getAttributeValue("id");
         String reference = element.getAttributeValue("reference");
-        if (reference != null) {
-            reference = CompilerUtils.attributeLocationDirective(element, "reference") + reference;
-        }
         String body = element.getText();
         if (body.trim().length() == 0) { body = null; }
         // If non-empty body AND method name are specified, flag an error
@@ -1294,7 +1291,6 @@ solution =
             return;
         }
 
-        String src_loc = CompilerUtils.sourceLocationDirective(element, true);
         if (parent_name == null) {
             parent_name = CompilerUtils.attributeUniqueName(element, "handler");
         }
@@ -1309,15 +1305,24 @@ solution =
         // this view.
         if (reference == null) {
             delegates.put(event, Boolean.TRUE);
-        } else { 
+        } else {
+            // TODO [2008-05-20 ptw] Replace the $debug code with actual
+            // type declarations if/when they are enforced in all run
+            // times
             referencename = "$lzc$" + "handle_" + event + "_reference" + unique;
             Object referencefn = new Method(
                 referencename,
                 "",
-                "\n#pragma 'withThis'\n" +
-                "return (" +
+                "\n#pragma 'withThis'\n",
+                "var $lzc$reference = (" +
                 "#beginAttribute\n" +
-                reference + "\n#endAttribute\n)");
+                reference + "\n#endAttribute\n);\n" +
+                "if ($lzc$reference is LzEventable) {\n" +
+                "  return $lzc$reference;\n" +
+                "} else if ($debug) {\n" +
+                "  Debug.error('Invalid event sender: " + reference + " => %w (for event " + event + ")', $lzc$reference);\n" +
+                "}",
+                CompilerUtils.attributeLocationDirective(element, "reference"));
             // Add reference computation as a method (so it can have
             // 'this' references work)
             addProperty(referencename, referencefn, ALLOCATION_INSTANCE, element);
@@ -1335,7 +1340,7 @@ solution =
                          "\n#pragma 'methodName=" + method + "'\n" +
                          "\n#pragma 'withThis'\n",
                          body + "\n#endContent",
-                         src_loc);
+                         CompilerUtils.sourceLocationDirective(element, true));
             // Add hander as a method
             addProperty(method, fndef, ALLOCATION_INSTANCE, element);
         }
