@@ -168,6 +168,8 @@
       <!-- Exclude images, because we don't want to replace VERSIONID inside images. --> 
       <exclude name="**/*.png" />      
       <exclude name="**/*.gif" />                          
+      <exclude name="**/*.jpg" />
+      <exclude name="**/*.jpeg" />
 
       <include name="guide_fr/**" />
 
@@ -181,6 +183,8 @@
       <!-- these are relative to the docs subdirectory, but only contain images -->
       <include name="images/*.png" />
       <include name="images/*.gif" />
+      <include name="images/*.jpg" />
+      <include name="images/*.jpeg" />
       
       <include name="includes/**/*.png" />
       <include name="developers/**/*.png" />
@@ -203,6 +207,28 @@
       <include name="contribref/**/*.gif" />
       <include name="guide_fr/**/*.gif" />
       <include name="installation/**/*.gif" />
+
+      <include name="includes/**/*.jpg" />
+      <include name="developers/**/*.jpg" />
+      <include name="deployers/**/*.jpg" />
+      <include name="component-design/**/*.jpg" />
+      <include name="component-browser/**/*.jpg" />      
+      <include name="reference/**/*.jpg" />
+      <include name="contributors/**/*.jpg" />
+      <include name="contribref/**/*.jpg" />
+      <include name="guide_fr/**/*.jpg" />
+      <include name="installation/**/*.jpg" />
+
+      <include name="includes/**/*.jpeg" />
+      <include name="developers/**/*.jpeg" />
+      <include name="deployers/**/*.jpeg" />
+      <include name="component-design/**/*.jpeg" />
+      <include name="component-browser/**/*.jpeg" />      
+      <include name="reference/**/*.jpeg" />
+      <include name="contributors/**/*.jpeg" />
+      <include name="contribref/**/*.jpeg" />
+      <include name="guide_fr/**/*.jpeg" />
+      <include name="installation/**/*.jpeg" />
 
       
   </patternset> 
