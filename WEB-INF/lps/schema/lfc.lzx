@@ -966,23 +966,15 @@ element attribute "
 </interface>
 
 <interface name="state" extends="node">
-  <!-- This is unfortunately both a setter attribute AND a method. No
-       real nice way to represent that.
-       @keywords deprecated in 4.1
-   -->
-  <attribute name="apply" final="false" />
-  <attribute name="applied" final="false" />
+  <attribute name="applied" type="boolean" value="false" />
+  <attribute name="pooling" type="boolean" value="false" />
 
-  <!-- If pooling is true, views that are created by the state are not
-       destroyed when the state is removed - instead they just act as
-       if they were by sending the onremovesubview event and setting
-       their visibility to false.
-    -->
-  <attribute name="pooling" type="boolean" value="false"/>
-  <!--  Script that is executed when the state is applied to its parent.  -->
-  <event name="onapply"/>
-  <!-- Script that is executed when the state is removed from its parent. -->
-  <event name="onremove"/>
+  <method name="apply" final="false" />
+  <method name="remove" final="false" />
+
+  <event name="onapplied" />
+  <event name="onapply" />
+  <event name="onremove" />
 </interface>
 
 <interface name="datarequest" extends="node"/>
