@@ -57,9 +57,9 @@ public class BaseRestController extends HttpServlet {
      */
     protected String getRestMethod(String url, String contextPath, String noun) {
         // Take the last section of the servlet path as the command to execute
-        // /lzproject/rest/user/
+        // /demos/lzproject/lzx/lzproject/rest/user/
         log.debug("ContextPath: " + contextPath);
-        String command = url.replaceAll(contextPath + "\\/lzproject\\/rest\\/"
+        String command = url.replaceAll(contextPath + "\\/demos/lzproject/lzx/lzproject\\/rest\\/"
                 + noun + "\\/", "");
         log.debug("REST command: " + noun + "/" + command);
         return command;

@@ -123,7 +123,7 @@ public class SecurityFilter implements Filter {
      */
     protected String getRestMethod(String url, String contextPath) {
         // Take the last section of the servlet path as the command to execute
-        String command = url.replaceAll("\\" + contextPath + "\\/lzproject\\/rest\\/", "");
+        String command = url.replaceAll("\\" + contextPath + "\\/demos/lzproject/lzx/lzproject\\/rest\\/", "");
         return command;
     }
 

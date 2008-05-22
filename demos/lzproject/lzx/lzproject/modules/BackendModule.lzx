@@ -2,7 +2,7 @@
  <!-- Includes all BackendServices used for LZTrack -->
 
   <!-- i18n resources for the application -->
-  <dataset name="i18nDS" src="http://localhost:8080/trunk/lzproject/rest/application/i18n" type="http" request="false" proxied="true" />
+  <dataset name="i18nDS" src="rest/application/i18n" type="http" request="false" proxied="true" />
   <BackendService name="i18n"
     successDatapath="i18nDS:/app/currentLocale">
     <handler name="oninit">
@@ -26,7 +26,7 @@
 
 
   <!-- Login -->
-  <dataset name="loginDS" src="http://localhost:8080/trunk/lzproject/rest/user/login" type="http" request="false" proxied="true" />
+  <dataset name="loginDS" src="rest/user/login" type="http" request="false" proxied="true" />
     <BackendService name="login"
     successDatapath="loginDS:/response/success/message"
     failureDatapath="loginDS:/response/failure/errorMsg"
@@ -73,7 +73,7 @@
   </BackendService>
 
   <!-- Logout -->
-  <dataset name="logoutDS" src="http://localhost:8080/trunk/lzproject/rest/user/logout" type="http" request="false" proxied="true" />
+  <dataset name="logoutDS" src="rest/user/logout" type="http" request="false" proxied="true" />
     <BackendService name="logout"
     successDatapath="logoutDS:/response/success"
     failureDatapath="logoutDS:/response/failure/errorMsg"
@@ -102,7 +102,8 @@
 
 
   <!-- List projects -->
-  <dataset name="listProjectsDS" src="http://localhost:8080/trunk/lzproject/rest/project/list" type="http" request="false" proxied="true" /> <BackendService name="listProjects"
+  <dataset name="listProjectsDS" src="rest/project/list" type="http" request="false" proxied="true" />
+    <BackendService name="listProjects"
     successDatapath="listProjectsDS:/response/projects"
         failureDatapath="listProjectsDS:/response/failure/errorMessage"
         httpMethod="POST">
@@ -116,7 +117,7 @@
 
 
   <!-- Create project -->
-  <dataset name="createProjectDS" src="http://localhost:8080/trunk/lzproject/rest/project/create" type="http" request="false" proxied="true" />
+  <dataset name="createProjectDS" src="rest/project/create" type="http" request="false" proxied="true" />
   <BackendService name="createProject"
     successDatapath="createProjectDS:/response/success/message"
         failureDatapath="createProjectDS:/response/failure/errorMsg"
@@ -143,7 +144,7 @@
   </BackendService>
 
   <!-- List users -->
-  <dataset name="listUsersDS" src="http://localhost:8080/trunk/lzproject/rest/user/list" type="http" request="false" proxied="true" />
+  <dataset name="listUsersDS" src="rest/user/list" type="http" request="false" proxied="true" />
   <BackendService name="listUsers"
     successDatapath="listUsersDS:/response/users"
         failureDatapath="listUsersDS:/response/failure/errorMessage"
@@ -157,7 +158,7 @@
   </BackendService>
 
   <!-- Create user -->
-  <dataset name="createUserDS" src="http://localhost:8080/trunk/lzproject/rest/user/create" type="http" request="false" proxied="true" />
+  <dataset name="createUserDS" src="rest/user/create" type="http" request="false" proxied="true" />
   <BackendService name="createUser"
     successDatapath="createUserDS:/response/success/message"
         failureDatapath="createUserDS:/response/failure/errorMsg"
@@ -185,7 +186,7 @@
   </BackendService>
 
   <!-- Update user -->
-  <dataset name="updateUserDS" src="http://localhost:8080/trunk/lzproject/rest/user/update" type="http" request="false" proxied="true" />
+  <dataset name="updateUserDS" src="rest/user/update" type="http" request="false" proxied="true" />
   <BackendService name="updateUser"
     successDatapath="updateUserDS:/response/success/message"
         failureDatapath="updateUserDS:/response/failure/errorMsg"
@@ -213,7 +214,7 @@
   </BackendService>
 
   <!-- Delete user -->
-  <dataset name="deleteUserDS" src="http://localhost:8080/trunk/lzproject/rest/user/delete" type="http" request="false" proxied="true" />
+  <dataset name="deleteUserDS" src="rest/user/delete" type="http" request="false" proxied="true" />
   <BackendService name="deleteUser"
     successDatapath="deleteUserDS:/response/success"
         failureDatapath="deleteUserDS:/response/failure/errorMsg"
@@ -237,8 +238,7 @@
   </BackendService>
 
   <!-- List tasks -->
-  <dataset name="listTasksDS" src="http://localhost:8080/trunk/lzproject/rest/task/list" type="http" request="false"
-         proxied="true"/>
+  <dataset name="listTasksDS" src="rest/task/list" type="http" request="false" proxied="true"/>
   <BackendService name="listTasks"
     successDatapath="listTasksDS:/response/tasks"
         failureDatapath="listTasksDS:/response/failure/errorMessage"
@@ -252,8 +252,7 @@
   </BackendService>
 
   <!-- Create task -->
-  <dataset name="createTaskDS" src="http://localhost:8080/trunk/lzproject/rest/task/create" type="http" request="false"
-         proxied="true"/>
+  <dataset name="createTaskDS" src="rest/task/create" type="http" request="false" proxied="true"/>
   <BackendService name="createTask"
     successDatapath="createTaskDS:/response/success/message"
         failureDatapath="createTaskDS:/response/failure/errorMsg"
@@ -281,8 +280,7 @@
   </BackendService>
 
   <!-- Mark task as finished-->
-  <dataset name="markAsFinishedDS" src="http://localhost:8080/trunk/lzproject/rest/task/markAsFinished" type="http" request="false"
-         proxied="true"/>
+  <dataset name="markAsFinishedDS" src="rest/task/markAsFinished" type="http" request="false" proxied="true"/>
   <BackendService name="markAsFinished"
     successDatapath="markAsFinishedDS:/response/success/message"
         failureDatapath="markAsFinishedDS:/response/failure/errorMsg"
@@ -304,7 +302,7 @@
   </BackendService>
 
   <!-- Delete task-->
-  <dataset name="deleteTaskDS" src="http://localhost:8080/trunk/lzproject/rest/task/delete" type="http" request="false" proxied="true" />
+  <dataset name="deleteTaskDS" src="rest/task/delete" type="http" request="false" proxied="true" />
   <BackendService name="deleteTask"
     successDatapath="deleteTaskDS:/response/success/message"
         failureDatapath="deleteTaskDS:/response/failure/errorMsg"
