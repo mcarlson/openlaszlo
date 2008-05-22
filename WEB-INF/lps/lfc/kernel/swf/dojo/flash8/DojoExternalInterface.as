@@ -33,6 +33,10 @@ class DojoExternalInterfaceClass {
 		if(install.needsUpdate){
 			install.init();
 		}
+
+		// not loaded from the wrapper JS...
+		if (id == null) return; 
+
 		this._id = id;
 		
 		// register our callback functions
