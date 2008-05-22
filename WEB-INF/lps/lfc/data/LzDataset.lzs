@@ -890,7 +890,7 @@ override function toString () {
 
 } // End of LzDataset
 
-ConstructorMap[LzDataset.tagname] = LzDataset;
+lz[LzDataset.tagname] = LzDataset;
 
 
 

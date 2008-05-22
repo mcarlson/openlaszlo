@@ -57,4 +57,4 @@ class LzDataProvider extends LzNode {
     }
 }
 
-ConstructorMap[LzDataProvider.tagname] = LzDataProvider;
+lz[LzDataProvider.tagname] = LzDataProvider;

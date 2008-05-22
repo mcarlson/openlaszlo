@@ -1081,7 +1081,7 @@ function setLayout ( layoutobj ){
             this.__LZlayout = null;
             return;
         }    
-        this.__LZlayout = new ConstructorMap[ classname ] (this, o);
+        this.__LZlayout = new lz[ classname ] (this, o);
    }
  }
 
@@ -3007,4 +3007,4 @@ function $lzc$set_cachebitmap( cache ) {
 }
 } // End of LzView
 
-ConstructorMap[LzView.tagname] = LzView;
+lz[LzView.tagname] = LzView;

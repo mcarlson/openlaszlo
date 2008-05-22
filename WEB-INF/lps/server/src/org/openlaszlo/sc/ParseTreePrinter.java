@@ -441,6 +441,7 @@ public class ParseTreePrinter {
     on.set(Ops.VOID, "void");
     on.set(Ops.NEW, "new");
     on.set(Ops.CAST, "cast");
+    on.set(Ops.IS, "is");
     
     OperatorNames = (String[])on.toArray(OperatorNames);
   }

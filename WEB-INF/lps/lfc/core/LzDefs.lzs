@@ -231,14 +231,6 @@ function LzInheritedHash (parent)  {
 }
 
 }
-/** A map of element names, to functions that create instances of the
-  * appropriate type.
-  * Each built-in class that defines the implementation of a tag adds
-  * itself to this table
-  *
-  * @access private
-  */
-var ConstructorMap = {};
 
 /** The `lz` object is a pseudo-package for all LZX globals. Any declared LZX tag
   * can be accessed from JavaScript using the tag name and the `lz` object.
@@ -251,5 +243,15 @@ var ConstructorMap = {};
   * @short-desc Pseudo-package for all LZX globals
   * @access public
   */
-var lz = ConstructorMap;
+var lz;
+
+((function () {
+    if (lz is Object) {
+      // In some runtimes, lz is already defined by the embedding script
+    } else if (!lz) {
+      lz = new LzInheritedHash();
+    } else if ($debug) {
+      Debug.error("Can't create `lz` namespace, already bound to %w", lz);
+    }
+  })());
 

@@ -717,4 +717,4 @@ override function __LZgetPosition( ){
 
 } // End of LzDatapth
 
-ConstructorMap[LzDatapath.tagname] = LzDatapath;
+lz[LzDatapath.tagname] = LzDatapath;

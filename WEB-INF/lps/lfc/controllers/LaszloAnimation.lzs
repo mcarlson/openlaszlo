@@ -424,4 +424,4 @@ override function toString(){
 } // End of LzAnimator
 
 
-ConstructorMap[LzAnimator.tagname] = LzAnimator;
+lz[LzAnimator.tagname] = LzAnimator;

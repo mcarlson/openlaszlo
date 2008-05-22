@@ -557,4 +557,4 @@ override function toString(  ) {
 
 } // End of LzAnimatorGroup
 
-ConstructorMap[LzAnimatorGroup.tagname] = LzAnimatorGroup;
+lz[LzAnimatorGroup.tagname] = LzAnimatorGroup;

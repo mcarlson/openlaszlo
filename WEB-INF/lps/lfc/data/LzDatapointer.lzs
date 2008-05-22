@@ -1415,4 +1415,4 @@ function __LZsetTracking ( who, force = null, needscheck = null ){
 
 } // End of LzDatapointer
 
-ConstructorMap[LzDatapointer.tagname] = LzDatapointer;
+lz[LzDatapointer.tagname] = LzDatapointer;

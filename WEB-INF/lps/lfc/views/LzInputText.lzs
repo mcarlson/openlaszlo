@@ -336,6 +336,6 @@ override function setSelectable(value) {
 
 } // End of LzInputText
 
-ConstructorMap[LzInputText.tagname] = LzInputText;
+lz[LzInputText.tagname] = LzInputText;
 
 

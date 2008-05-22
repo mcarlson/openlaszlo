@@ -35,18 +35,6 @@
   */
 
 
-/* This constructor map overwrites the regular ConstructorMap *just* for the 
- * doc generation. e.g. dataset cannot have an API (the LFC would break), but
- * the generated LZX Reference is going to look stupid if the dataset tag is
- * not linked to the Dataset API.
- * In short, this allows for intuitive linking for the docs ONLY. LFC does not
- * use this array at all. 
-ConstructorMapDocs = {
-    datasource : "Datasource",
-    dataset : "LzDataset"
-};
-*/
-
 /** Create an object from an XML element.  Operates recursively on the
   * element and its children, whose instances which are added to the
   * instance created from the element.  If the element has an "id"

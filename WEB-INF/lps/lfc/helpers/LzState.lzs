@@ -587,4 +587,4 @@ dynamic class LzState extends LzNode {
 
 } // End of LzState
 
-ConstructorMap[LzState.tagname] = LzState;
+lz[LzState.tagname] = LzState;

@@ -118,5 +118,5 @@ function keysToString ( ) {
 }
 
 }; // End of LzCommand
-ConstructorMap[LzCommand.tagname] = LzCommand;
+lz[LzCommand.tagname] = LzCommand;
 

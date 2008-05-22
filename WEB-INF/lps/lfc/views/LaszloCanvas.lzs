@@ -719,7 +719,7 @@ function __windowResize(size) {
 }
 
 } // End of LzCanvas
-ConstructorMap[LzCanvas.tagname] = LzCanvas;
+lz[LzCanvas.tagname] = LzCanvas;
 
 
 

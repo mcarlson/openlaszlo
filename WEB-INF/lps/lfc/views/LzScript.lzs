@@ -76,4 +76,4 @@ dynamic class LzScript extends LzNode {
   }
 }; // End of LzScript
 
-ConstructorMap[LzScript.tagname] = LzScript;
+lz[LzScript.tagname] = LzScript;

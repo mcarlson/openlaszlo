@@ -23,7 +23,7 @@
  * @devnote LzNode implements the 'node' tag.  Its subclasses override this
  * value with the tag that they implement and the class initializer
  * installs the class as the handler for the named tag in
- * ConstructorMap.  (So we would like some way to say this must be
+ * lz.  (So we would like some way to say this must be
  * overridden, but abstract won't cut it!)
  *
  * @shortdesc The base class for all Laszlo classes.
@@ -358,15 +358,15 @@ public dynamic class LzNode extends LzEventable {
       if (this.hasOwnProperty('tagname')) {
         var tagname = this.tagname;
         if (tagname) {
-          if (ConstructorMap[tagname] !== this) {
+          if (lz[tagname] !== this) {
             if ($debug) {
-              if (tagname in ConstructorMap) {
+              if (tagname in lz) {
                 Debug.warn("Redefining tag %s from %w to %w",
-                           tagname, ConstructorMap[tagname], this);
+                           tagname, lz[tagname], this);
               }
-              //           Debug.debug("ConstructorMap[%s] = %s", tagname, this);
+              //           Debug.debug("lz[%s] = %s", tagname, this);
             }
-            ConstructorMap[tagname] = this;
+            lz[tagname] = this;
           }
           if ($debug) {
             // Use the package tag name as the typename
@@ -1186,7 +1186,7 @@ public dynamic class LzNode extends LzEventable {
         }
       }
     }
-    var x = ConstructorMap[ e.name ];
+    var x = lz[ e.name ];
     // TODO: [2005-03-24 ptw] Remove this if we ever enable
     // warnings in the LFC as this will be redundant
     if ($swf9) {
@@ -2117,7 +2117,7 @@ public dynamic class LzNode extends LzEventable {
 
 } // End of LzNode
 
-ConstructorMap[LzNode.tagname] = LzNode;
+lz[LzNode.tagname] = LzNode;
 
 
 ////////////////////////////////////////////////////////////////
@@ -2138,4 +2138,4 @@ public class LzUserClassPlacement {
   };
 }
 
-ConstructorMap["__LZUserClassPlacementObject"] = LzUserClassPlacement;
+lz["__LZUserClassPlacementObject"] = LzUserClassPlacement;

@@ -2045,7 +2045,7 @@ solution =
 
         // TODO: [2006-09-28 ptw] There must be a better way.  See
         // comment in LFC where __LZUserClassPlacementObject is
-        // inserted in ConstructorMap regarding the wart this is.  You
+        // inserted in lz regarding the wart this is.  You
         // need some way to not set defaultplacement until the
         // class-defined children are instantiated, only the
         // instance-defined children should get default placement.

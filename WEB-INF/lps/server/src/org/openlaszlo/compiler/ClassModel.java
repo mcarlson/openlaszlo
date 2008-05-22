@@ -259,7 +259,7 @@ public class ClassModel implements Comparable {
                       classBody);
     env.compileScript(scriptClass.toString(), definition);
     // Install in constructor map
-    env.compileScript("ConstructorMap[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");
+    env.compileScript("lz[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");
   }
 
   /**
