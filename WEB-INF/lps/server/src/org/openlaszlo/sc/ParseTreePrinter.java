@@ -747,12 +747,7 @@ public class ParseTreePrinter {
     } else {
       return defaultVisitor(node, children);
     }
-    String txt = "";
-    // Add location information if not compressing
-    if ((!this.compress) && (node.filename != null) && (node.beginLine != 0)) {
-      txt = annotateFileLineNumber(Compiler.getLocationString(node), true);
-    }
-    txt += "function" + (useName ? (" " + name) : "") + OPENPAREN + args + CLOSEPAREN;
+    String txt = "function" + (useName ? (" " + name) : "") + OPENPAREN + args + CLOSEPAREN;
     if (!inmixin) {
       txt += makeBlock(body);
     }
@@ -1027,6 +1022,9 @@ public class ParseTreePrinter {
   //
   public String annotateFileLineNumber(String fileLineNumber, boolean force
 ) {
+    // TODO: [2008-05-21 dda] FORCE no longer needed, it
+    // and all it implies could be removed
+
     char op = force ? ANNOTATE_OP_FILE_LINENUM_FORCE : ANNOTATE_OP_FILE_LINENUM;
     return makeAnnotation(op, fileLineNumber);
   }
