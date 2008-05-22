@@ -140,8 +140,8 @@ class CanvasCompiler extends ToplevelCompiler {
         String script;
         try {
             java.io.Writer writer = new java.io.StringWriter();
-            writer.write("canvas = new LzCanvas(");
-            ScriptCompiler.writeObject(map, writer);
+            writer.write("canvas = new lz[" + map.get("name") + "](");
+            ScriptCompiler.writeObject(map.get("attrs"), writer);
             writer.write(");"); 
             script = writer.toString();
         } catch (java.io.IOException e) {
@@ -195,7 +195,9 @@ class CanvasCompiler extends ToplevelCompiler {
             }
         }
         collectObjectProperties(element, model, visited);
-        Map attrs = model.getAttrs();
+        // Cheating, but canvas needs to munge it's model before it
+        // gets turned into a map...
+        Map attrs = model.attrs;
 
         // default width is 100% by 100%
         if (attrs.get("width") == null) attrs.put("width", "100%"); 
@@ -225,7 +227,7 @@ class CanvasCompiler extends ToplevelCompiler {
         attrs.remove("debug");
         // Remove this since it isn't a JavaScript expression.
         attrs.remove("libraries");
-        return attrs;
+        return model.asMap();
     }
     
     protected void setDimension(Map attrs, String name, int value) {
