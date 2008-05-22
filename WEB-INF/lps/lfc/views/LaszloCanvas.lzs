@@ -261,7 +261,7 @@ dynamic class LzCanvas extends LzView {
         }
 
         if (capabilities.readcanvassizefromsprite == true) {
-            this.bgcolor = LzUtils.hextoint(args.bgcolor);
+            this.bgcolor = lz.Utils.hextoint(args.bgcolor);
         } else {
             this.bgcolor = args.bgcolor;
         }

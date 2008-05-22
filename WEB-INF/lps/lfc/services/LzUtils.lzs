@@ -101,6 +101,12 @@ class LzUtilsClass {
         } else if (typeof value != 'string') {
             return value;
         }
+
+        // Handle strings in the format '0xffffff' - see lzpix 
+        if (value.indexOf('0x') == 0) {
+            return parseInt(value);
+        }
+
         if (value.charAt(0) == '#') {
             var n = parseInt(value.slice(1), 16);
             switch (!isNaN(n) && value.length-1) {
@@ -114,10 +120,6 @@ class LzUtilsClass {
                 }
             }
         }
-        //TODO pbr Need a workaround for eval
-//            if (typeof eval(value) == 'number') {
-//                return eval(value);
-//            }
         if ($debug) {
             Debug.warn('unknown color format: ' + value);
         }
