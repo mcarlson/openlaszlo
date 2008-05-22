@@ -110,19 +110,27 @@ public class ParseTreePrinter {
     where.println(visit(node));
   }
   
-  public String delimit(String phrase, boolean force) {
+  public String delimit(String phrase, boolean force, boolean parenMultiline) {
     // Strip the phrase of annotations so we can look at the first char
     String plain = unannotate(phrase);
     if (plain.length() > 0) {
-      return ((('(' != plain.charAt(0)) && force)?" ":SPACE) + phrase;
+      boolean hasParen = '(' == plain.charAt(0);
+      phrase = ((!hasParen && force)?" ":SPACE) + phrase;
+      if (!hasParen && parenMultiline && plain.indexOf('\n') >= 0) {
+        phrase = "(" + phrase + ")";
+      }
     }
     return phrase;
   }
   
   public String delimit(String phrase) {
-    return delimit(phrase, true);
+    return delimit(phrase, true, false);
   }
-  
+
+  public String delimitWithParen(String phrase) {
+    return delimit(phrase, true, true);
+  }
+
   public String elideSemi(String phrase) {
     // Strip the phrase of annotations so we can look at the ending
     if (unannotate(phrase).endsWith(SEMI)) {
@@ -441,7 +449,7 @@ public class ParseTreePrinter {
     int thisPrec = prec(((ASTOperator)node.get(1)).getOperator(), false);
     assert children.length == 3;
     children[2] = maybeAddParens(thisPrec, node.get(2), children[2], true);
-    return children[0] + SPACE + children[1] + delimit(children [2], false);
+    return children[0] + SPACE + children[1] + delimit(children [2], false, false);
   }
   public String visitCallExpression(SimpleNode node, String[] children) {
     int thisPrec = prec(Ops.LPAREN, true);
@@ -517,7 +525,7 @@ public class ParseTreePrinter {
     return children[0] + "[" + children[1] + "]";
   }
   public String visitReturnStatement(SimpleNode node, String[] children) {
-    return "return" + delimit(children[0]);
+    return "return" + delimitWithParen(children[0]);
   }
   public String visitThisReference(SimpleNode node, String[] children) {
     return "this";
@@ -665,7 +673,7 @@ public class ParseTreePrinter {
     int thisPrec = prec(isAnd ? Ops.SC_AND : Ops.SC_OR, false);
     children[0] = maybeAddParens(thisPrec, node.get(0), children[0], true);
     for (int i = 1; i < children.length; i++) {
-      children[i] = delimit(maybeAddParens(thisPrec, node.get(i), children[i]), false);
+      children[i] = delimit(maybeAddParens(thisPrec, node.get(i), children[i]), false, false);
     }
     return join(isAnd ? (SPACE + "&&") : (SPACE + "||"), children);
   }
@@ -710,7 +718,7 @@ public class ParseTreePrinter {
       sb.append(space);
       sb.append(op);
       // Disambiguate `a + ++b`, `a++ + b` etc.
-      sb.append(delimit(child, required || opChar == unannotate(child).charAt(0)));
+      sb.append(delimit(child, required || opChar == unannotate(child).charAt(0), false));
     }
     return(sb.toString());
   }

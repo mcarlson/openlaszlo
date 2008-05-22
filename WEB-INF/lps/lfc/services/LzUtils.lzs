@@ -58,11 +58,10 @@ class LzUtilsClass {
                 scope.__callbacks[sc] = sc;
             }
             lz.Utils.__scopes[sc] = scope;
-            var val = function  () {
+            return function  () {
                 var s = lz.Utils.__scopes[sc];
                 if (s) return s[name].apply(s, args);
             };
-            return val;
             
         }
         public  function removecallback(scope) {
