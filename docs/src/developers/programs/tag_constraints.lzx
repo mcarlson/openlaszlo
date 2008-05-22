@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<canvas height="160">
+    <simplelayout spacing="5" />
+    <slider id = "m" value="25" minvalue="0" maxvalue="100" />
+    <text text = "$immediately{'immediately: ' + m.value}" />
+    <text text = "$once{'once: ' + m.value}" />
+    <text text = "$always{'always: ' + m.value}" />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

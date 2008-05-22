@@ -13,6 +13,7 @@ positioned relative to one another. Specific elements can appear only
 under certain conditions; and those conditions may be declared with a
 simple expression. Constraints may be used for non-visual attributes
 as well.</para>
+<note><para>You can only use constraints with read/write attributes.</para></note>
 
 <para/></section><section><title>Syntax for creating and removing constraints</title>
 <para>Constraints may be created as follows:</para>
@@ -22,19 +23,40 @@ as well.</para>
 <!--unknown tag: state-->
 s.</para>
 
-<para/><section><title>Creating Constraints in Tags</title>
+<section><title>Creating Constraints in Tags</title>
 
 <para>The syntax for coding a constraint is:</para> 
 
 <programlisting>$<replaceable>when</replaceable>{<replaceable>expression</replaceable>}</programlisting>
 
 <para>where:</para>
-<itemizedlist spacing="compact"><listitem><para><literal>$</literal> is the token indicating a constraint</para></listitem><listitem><para><literal><replaceable>when</replaceable></literal> is an optional compiler directive:
-  <literal>immediately</literal>, <literal>once</literal>, or <literal>always</literal>.
-  <literal>$always{<replaceable>expression</replaceable>}</literal> can be abbreviated to
-  <literal>${<replaceable>expression</replaceable>}</literal> </para></listitem><listitem><para><literal>{</literal> and <literal>}</literal> are tokens delimiting the
-  expression to be evaluated</para></listitem><listitem><para><literal><replaceable>expression</replaceable></literal> is a JavaScript expression</para></listitem></itemizedlist>
-<para/></section><section><title>Creating constraints from script</title> 
+<itemizedlist spacing="compact"><listitem><para><literal>$</literal> is the token indicating a constraint.</para></listitem>
+ <listitem><para><literal><replaceable>when</replaceable></literal> is an optional compiler directive, and is one of:</para>
+  <itemizedlist>
+   <listitem> <literal>immediately</literal>: evaluated at load time; it is the default, but should only be used for constant expressions. <literal>$immediately{<replaceable>expression</replaceable>}</literal> is the same as <literal><replaceable>expression</replaceable></literal>.</listitem> 
+   <listitem><literal>once</literal>: evaluated at initialization time; it can refer to other nodes that precede this one.</listitem>
+   <listitem><literal>always</literal>: will track changes in the values referred to. <literal>$always{<replaceable>expression</replaceable>}</literal> can be abbreviated to
+    <literal>${<replaceable>expression</replaceable>}</literal></listitem>
+  </itemizedlist>
+ </listitem><listitem><para><literal>{</literal> and <literal>}</literal> are tokens delimiting the
+  expression to be evaluated</para></listitem><listitem><para><literal><replaceable>expression</replaceable></literal> is a JavaScript expression</para></listitem>
+</itemizedlist>
+ <para>The following example shows the use of constraints in tags:</para>
+ <example role="live-example">
+  <title>Constraints in tags</title>
+  <programlisting language="lzx">
+   <textobject><textdata fileref="programs/tag_constraints.lzx"/></textobject> 
+  </programlisting>
+ </example>
+ <para>Here's what the different values for <literal>when</literal> do:</para>
+ <itemizedlist>
+  <listitem> <literal>immediately</literal>: undefined, because the slider does not exist until the program runs. 
+   If you run this example with the debugger on, you will see a warning.</listitem> 
+  <listitem><literal>once</literal>: set to the slider value when the program loads.</listitem>
+  <listitem><literal>always</literal>: track changes in the slider value.</listitem>
+ </itemizedlist>
+</section>
+ <section><title>Creating constraints from script</title> 
 
 <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis> note the lousy explanation below </remark></para>
 
