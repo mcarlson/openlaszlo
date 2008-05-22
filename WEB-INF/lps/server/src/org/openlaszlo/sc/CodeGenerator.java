@@ -83,6 +83,12 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     Instructions.setRuntime(runtime);
   }
 
+  // does nothing here - may be overridden to set options
+  public void setGeneratorOptions() {
+    globalprefix = this.options.getBoolean(Compiler.SWF_LOADABLE_LIB) ? "_level0." : "";
+  }
+
+
   public SimpleNode translate(SimpleNode program) {
     // Make a new collector each time, since the old one may be
     // referenced by the instruction cache

@@ -482,6 +482,7 @@ public class Compiler {
   public static String WARN_UNUSED_LOCALS = "warnUnusedLocals";
   public static String WARN_UNUSED_PARAMETERS = "warnUnusedParameters";
   public static String WITH_THIS = "withThis";
+  public static String SWF_LOADABLE_LIB = "SWFLoadableLib";
 
   //
   // Parser

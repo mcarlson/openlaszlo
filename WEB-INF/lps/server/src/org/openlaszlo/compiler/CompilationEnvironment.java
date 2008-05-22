@@ -133,6 +133,9 @@ public class CompilationEnvironment {
     /** Default SWF version to compile to */
     private String mDefaultRuntime = LPS.getRuntimeDefault();
 
+    /** Used for compiling SWF loadable libraries to refer to _level0 */
+    private String mGlobalPrefix = "";
+
     /** Constructs an instance.
      * @param properties compilation properties
      * @param resolver
@@ -232,6 +235,14 @@ public class CompilationEnvironment {
     return mObjectFile;
   }
 
+    public void setGlobalPrefix(String prefix) {
+        mGlobalPrefix = prefix;
+    }
+
+    public String getGlobalPrefix() {
+        return mGlobalPrefix;
+    }
+        
     public void setMediaCache(CompilerMediaCache cache) {
         this.mMediaCache = cache;
     }

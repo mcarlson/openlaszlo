@@ -2012,7 +2012,13 @@ solution =
             // Declare node id (if any) as a global
             // property so that references to it from methods
             // can be resolved at compile time
-            env.compileScript("var " + id + " = null;", element);
+          //          env.compileScript("var " + env.getGlobalPrefix() + id + " = null;", element);
+          if (!("".equals(env.getGlobalPrefix()))) {
+            // For SWF7,SWF8, we need to set a binding for the instance's ID in the main app's namespace
+            env.compileScript(env.getGlobalPrefix()+id + " = null;", element);
+          } else {
+            env.compileScript("var " +id + " = null;", element);
+          }
         }
         if (globalName != null) {
             // Ditto for a named top-level element

@@ -4,7 +4,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -60,6 +60,8 @@ class SWFWriter extends ObjectWriter {
     /** True iff close() has been called. */
     private boolean mCloseCalled = false;
 
+    /** If true, wrap 'with (_level0) { ...} ' around code blocks */
+    private boolean level0 = false;
     
     /** Total number of frames in the movie **/
     private int mLastFrame = 0;
@@ -138,6 +140,11 @@ class SWFWriter extends ObjectWriter {
         } catch (CompilationError e) {
             throw new ChainedException(e);
         }
+    }
+
+    /** Wrap a 'with (_level0) { ...}' around compiled code blocks */
+    void setLevel0(boolean val) {
+        this.level0 = val;
     }
 
     public void importBaseLibrary(String library, CompilationEnvironment env) {
@@ -338,6 +345,10 @@ class SWFWriter extends ObjectWriter {
      * @return the number of bytes
      */
     public int addScript(String script) {
+        if (level0) {
+            script = "with (_level0) { "+script + "}";
+        }
+
          byte[] action = ScriptCompiler.compileToByteArray(script, mProperties);
          //scriptWriter.println(script);
          Program program = new Program(action, 0, action.length);
@@ -360,6 +371,9 @@ class SWFWriter extends ObjectWriter {
      * @param offset of frame to add to
      */
     private void addScript(String script, int offset) {
+        if (level0) {
+            script = "with (_level0) { "+script + "}";
+        }
          byte[] action = ScriptCompiler.compileToByteArray(script, mProperties);
          //scriptWriter.println(script);
          Program program = new Program(action, 0, action.length);

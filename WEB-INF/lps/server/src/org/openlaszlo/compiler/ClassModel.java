@@ -125,6 +125,7 @@ public class ClassModel implements Comparable {
     LFCTag2JSClass.put("dataset", "LzDataset");
     LFCTag2JSClass.put("datasource", "LzDatasource");
     LFCTag2JSClass.put("lzhttpdataprovider", "LzHTTPDataProvider");
+    LFCTag2JSClass.put("import", "LzLibrary");
   }
 
   public static String LZXTag2JSClass(String s) {
@@ -134,6 +135,7 @@ public class ClassModel implements Comparable {
     String lzcPackagePrefix = "$lzc$class_";
     return lzcPackagePrefix + s;
   }
+
 
   /**
    * Emits a class model as a JS2 class declaration.  This is used
@@ -246,7 +248,7 @@ public class ClassModel implements Comparable {
     nodeModel.setClassAttribute("attributes", "new LzInheritedHash(" + superclassName + ".attributes)");
     classBody += "LzNode.mergeAttributes(" +
       ScriptCompiler.objectAsJavascript(inits) +
-      ", " + className + ".attributes);\n";
+      ", "+env.getGlobalPrefix() + className + ".attributes);\n";
 
     // Emit the class decl
     ScriptClass scriptClass =

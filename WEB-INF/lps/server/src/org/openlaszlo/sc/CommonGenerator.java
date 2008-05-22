@@ -89,6 +89,9 @@ public abstract class CommonGenerator implements ASTVisitor {
   boolean debugVisit = false;
   InstructionCollector collector = null;
 
+  // Used for swf8 loadable libraries, to put stuff into _level0 namespace
+  String globalprefix = "";
+
   public CommonGenerator() {
     setGeneratorOptions();
   }
@@ -362,8 +365,11 @@ public abstract class CommonGenerator implements ASTVisitor {
 
   public SimpleNode visitClassDefinition(SimpleNode node, SimpleNode[] children) {
 //     System.err.println("enter visitClassDefinition: " +  (new ParseTreePrinter()).text(node));
+
     ASTIdentifier classortrait = (ASTIdentifier)children[0];
     ASTIdentifier classname = (ASTIdentifier)children[1];
+    // The classname, with possibly prefix of "_level0.", for SWF8 runtime loadable libraries
+    ASTIdentifier globalclassname = new ASTIdentifier(globalprefix + classname.getName());
     String classnameString = classname.getName();
     SimpleNode superclass = children[2];
     SimpleNode traits = children[3];
@@ -414,7 +420,7 @@ public abstract class CommonGenerator implements ASTVisitor {
                                                             ", _2, _3, _4);",
                                                             map);
     SimpleNode varNode = new ASTVariableDeclaration(0);
-    varNode.set(0, classname);
+    varNode.set(0, globalclassname);
     varNode.set(1, newNode);
     SimpleNode replNode = varNode;
 
@@ -422,13 +428,13 @@ public abstract class CommonGenerator implements ASTVisitor {
       SimpleNode statements = new ASTStatementList(0);
       statements.setChildren((SimpleNode[])(stmts.toArray(new SimpleNode[0])));
       map.put("_5", statements);
-      SimpleNode stmtNode = (new Compiler.Parser()).substitute("(function () { with(_1) with(_1.prototype) { _5 }})()",
+      SimpleNode stmtNode = (new Compiler.Parser()).substitute("(function () { with("+globalprefix+"_1"+")"+
+                                                               "with("+globalprefix+"_1.prototype) { _5 }})()",
                                                                map);
       replNode = new ASTStatementList(0);
       replNode.set(0, varNode);
       replNode.set(1, stmtNode);
     }
-//     System.err.println("exit visitClassDefinition: " +  (new ParseTreePrinter()).text(replNode));
     return visitStatement(replNode);
   }
 

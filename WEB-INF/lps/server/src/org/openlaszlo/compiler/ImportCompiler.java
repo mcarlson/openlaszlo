@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -148,10 +148,14 @@ class ImportCompiler extends ToplevelCompiler {
 
                 String runtime = env.getProperty(env.RUNTIME_PROPERTY);
                 if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
-                    writer = new DHTMLWriter(env.getProperties(), ostream,
+                    writer = new DHTMLWriter(props, ostream,
                                              env.getMediaCache(), false, env);
                 } else if (Compiler.SWF_RUNTIMES.contains(runtime)) {
-                    writer = new SWFWriter(env.getProperties(), ostream,
+                    // Set the "SWF_LOADABLE_LIB" flag to true for this compiler
+                    props.setProperty(org.openlaszlo.sc.Compiler.SWF_LOADABLE_LIB, "true");
+                    // Ensures that _level0 is prefixed where needed in snippets code
+                    env.setGlobalPrefix("_level0.");
+                    writer = new SWFWriter(props, ostream,
                                            env.getMediaCache(), false, env);
                 } else {
                     throw new CompilationError("runtime "+runtime+" not supported for generating an import library", element);
@@ -174,27 +178,45 @@ class ImportCompiler extends ToplevelCompiler {
                 
                 writer.openSnippet(liburl);
 
-                // allows snippet code to call out to LzInstantiateView in the main app:
-                // var LzInstantiateView = _level0.LzInstantiateView;
-                if (Compiler.SWF_RUNTIMES.contains(runtime)) {
-                    env.compileScript("var "+VIEW_INSTANTIATION_FNAME+" = _level0."+VIEW_INSTANTIATION_FNAME, element);
-                }
+                env.compileScript("// BEGIN compiling <IMPORT> Library "+liburl+"\n");
 
                 // Note: canvas.initDone() resets the _lzinitialsubviews list, so
                 // that has to be called when the library finishes loading. This is currently
                 // done by LzLibraryLoader.snippetLoaded(), which is the callback
                 // that we emit at the end of our snippet file.
 
+                // Setting "level0" is a hack for loading SWF movie
+                // clips, which puts with (_level0) { ... } around
+                // every script block emitted by
+                // env.compileScript(). This is an attempt to get code
+                // in the snippet to act like it is being run in the
+                // main app.
+                //
+                // It's not a complete solution, anything that
+                // declares a global var needs to put _level0.xxx as a
+                // prefix. But this covers global var lookups inside
+                // of a library.
+                if (Compiler.SWF_RUNTIMES.contains(runtime)) {
+                    ((SWFWriter) env.getGenerator()).setLevel0(true);                    
+                }
+
+
                 for (Iterator iter = element.getChildren().iterator();
                      iter.hasNext(); ) {
                     Element child = (Element) iter.next();
                     if (!NodeModel.isPropertyElement(child)) {
                         Compiler.compileElement(child, env);
+
                     }
                 }
+                if (Compiler.SWF_RUNTIMES.contains(runtime)) {
+                    ((SWFWriter) env.getGenerator()).setLevel0(false);
+                }
+
 
                 ViewCompiler.checkUnresolvedResourceReferences (env);
                 writer.closeSnippet();
+                env.compileScript("// FINISH compiling <IMPORT> Library "+liburl+"\n");
             } finally {
                 ostream.close();
             }
