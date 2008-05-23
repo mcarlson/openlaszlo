@@ -19,8 +19,8 @@ var LzSprite = function(owner, isroot) {
         var div = document.createElement('div');
         div.className = 'lzcanvasdiv';
 
-        // grab values stored by Lz.dhtmlEmbed()
-        var p = Lz.__propcache;
+        // grab values stored by lz.embed.dhtml()
+        var p = lz.embed.__propcache;
         var root = p.appenddiv;
 
         if (p.bgcolor) {
@@ -44,12 +44,15 @@ var LzSprite = function(owner, isroot) {
         if (p.id) {
             this._id = p.id;
         }
+        if (p.url) {
+            this._url = p.url;
+        }
         if (p.cancelkeyboardcontrol) {
-            Lz.options.cancelkeyboardcontrol = p.cancelkeyboardcontrol;
+            lz.embed.options.cancelkeyboardcontrol = p.cancelkeyboardcontrol;
         }
         // Needed by debugger which has an embedded LFC.
         if (p.resourceroot) {
-            Lz.options.resourceroot = p.resourceroot;
+            lz.embed.options.resourceroot = p.resourceroot;
         }
         if (this.quirks.canvas_div_cannot_be_clipped  == false && p.width && p.width.indexOf('%') == -1 && p.height && p.height.indexOf('%') == -1 ) {
             div.style.clip = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
@@ -283,8 +286,7 @@ LzSprite.prototype.capabilities = {
 }
 
 LzSprite.prototype.__updateQuirks = function () {
-    if (window['Lz'] && Lz.__BrowserDetect) {
-        Lz.__BrowserDetect.init();
+    if (window['lz'] && lz.embed && lz.embed.browser) {
         var quirks = this.quirks;
 
         if (quirks['inner_html_strips_newlines'] == true) {
@@ -295,8 +297,8 @@ LzSprite.prototype.__updateQuirks = function () {
         // that's not a parent. See LPP-2680.
         // off for now
         //quirks['fix_clickable'] = true;
-        if (Lz.__BrowserDetect.isIE) {
-            if (Lz.__BrowserDetect.version < 7) {
+        if (lz.embed.browser.isIE) {
+            if (lz.embed.browser.version < 7) {
                 // Provide IE PNG/opacity support
                 quirks['ie_alpha_image_loader'] = true;
             } else {
@@ -343,7 +345,7 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['keypress_function_keys'] = false;
             // IE does not use charCode for onkeypress
             quirks['text_event_charcode'] = false;
-        } else if (Lz.__BrowserDetect.isSafari) {
+        } else if (lz.embed.browser.isSafari) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             // TODO: Tucker claims this is fixed in the latest version of webkit
             quirks['invisible_parent_image_sizing_fix'] = true;
@@ -361,7 +363,7 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['absolute_position_accounts_for_offset'] = true;
             quirks['canvas_div_cannot_be_clipped'] = true;
             quirks['document_size_use_offsetheight'] = true;
-            if (Lz.__BrowserDetect.version > 523.10) {
+            if (lz.embed.browser.version > 523.10) {
                 this.capabilities['rotation'] = true;
             }
             
@@ -371,7 +373,7 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['keypress_function_keys'] = false;
             // Safari 3.x does not send global key events to apps embedded in an iframe
             quirks['keyboardlistentotop'] = true;
-        } else if (Lz.__BrowserDetect.isOpera) {
+        } else if (lz.embed.browser.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
             quirks['no_cursor_colresize'] = true;
@@ -380,7 +382,7 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['document_size_use_offsetheight'] = true;
             // Opera does not use charCode for onkeypress
             quirks['text_event_charcode'] = false;
-        } else if (Lz.__BrowserDetect.isFirefox && Lz.__BrowserDetect.version < 2) {
+        } else if (lz.embed.browser.isFirefox && lz.embed.browser.version < 2) {
             // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
             quirks['firefox_autocomplete_bug'] = true;
         }
@@ -450,7 +452,7 @@ LzSprite.prototype.init = function(v) {
         }
         // Register the canvas for callbacks
         if (this._id) {
-            Lz[this._id]._ready(this.owner);
+            lz.embed[this._id]._ready(this.owner);
         }
         // Tell lz.History we're ready to send/receive events
         lz.History.__start(); 
@@ -535,7 +537,7 @@ LzSprite.prototype.setResource = function ( r ){
         this.baseurl = '';
         if (res.ptype) {
             if (res.ptype == 'sr') {
-                this.baseurl = Lz.options.resourceroot + '/';
+                this.baseurl = lz.embed.options.resourceroot + '/';
             }
             //Debug.write('ptype', res.ptype, this.baseurl);
         }
@@ -635,7 +637,7 @@ LzSprite.prototype.setClickable = function(c) {
         if (! this.__LZclick) {
             if (this.quirks.fix_ie_clickable) {
                 this.__LZclick = document.createElement('img');
-                this.__LZclick.src = Lz.options.resourceroot + LzSprite.prototype.blankimage;
+                this.__LZclick.src = lz.embed.options.resourceroot + LzSprite.prototype.blankimage;
             } else {
                 this.__LZclick = document.createElement('div');
             }
@@ -665,7 +667,7 @@ LzSprite.prototype.setClickable = function(c) {
             if (! this.__LZclick) {
                 if (this.quirks.fix_ie_clickable) {
                     this.__LZclick = document.createElement('img');
-                    this.__LZclick.src = Lz.options.resourceroot + LzSprite.prototype.blankimage;
+                    this.__LZclick.src = lz.embed.options.resourceroot + LzSprite.prototype.blankimage;
                 } else {
                     this.__LZclick = document.createElement('div');
                 }
@@ -889,7 +891,7 @@ LzSprite.prototype.setBGColor = function ( c ){
     this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : lz.Utils.inttohex(c);
     if (this.quirks.fix_ie_background_height) {
         if (this.height != null && this.height < 2) {
-            this.setSource(Lz.options.resourceroot + LzSprite.prototype.blankimage, true);
+            this.setSource(lz.embed.options.resourceroot + LzSprite.prototype.blankimage, true);
         } else if (! this._fontSize) {
             this.__LZdiv.style.fontSize = '0px';
         }
@@ -1352,7 +1354,7 @@ LzSprite.prototype.__getPos = function() {
     var pos = {};
     var box;
 
-    if (Lz.__BrowserDetect.isIE) { // IE
+    if (lz.embed.browser.isIE) { // IE
         box = el.getBoundingClientRect();
         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
@@ -1690,5 +1692,5 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
         }
         LzSprite.prototype.__sprites = {};
     }
-    Lz.attachEventHandler(window, 'beforeunload', window, '__cleanUpForIE');
+    lz.embed.attachEventHandler(window, 'beforeunload', window, '__cleanUpForIE');
 }

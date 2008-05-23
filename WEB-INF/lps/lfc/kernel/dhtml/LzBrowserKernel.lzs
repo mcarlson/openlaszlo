@@ -69,7 +69,7 @@ static function callJS (methodname, callback) {
   */
 static function setHistory(n) {
     //Debug.write('setHistory', n);
-    Lz.history.set(n);
+    lz.embed.history.set(n);
 }
 
 /**
@@ -94,7 +94,7 @@ static function getVersion () {
   */
 static function getLoadURL () {
     // get url app was loaded from
-    var url = Lz.__propcache.url;
+    var url = LzSprite.__rootSprite._url;
     if (! url) url = new String(window.location);
     var colon = url.indexOf(':');
     var slash = url.indexOf('/');

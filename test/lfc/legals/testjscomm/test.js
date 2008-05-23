@@ -3,7 +3,7 @@ var limit = 30;
 var str = '';
 
 function simulateTyping() {
-    var app = Lz.lzappa;
+    var app = lz.embed.lzappa;
     str += String.fromCharCode((Math.random() * 26) + 32 )
     if (counter < limit) {
         app.setCanvasAttribute('mytext', str);
@@ -28,7 +28,7 @@ function testMethodCalls(app) {
 }
 
 function getUserAgent() {
-    return navigator.userAgent + ', flash comm: ' + dojo.flash.info.commVersion;
+    return navigator.userAgent + ', flash comm: ' + lz.embed.dojo.info.commVersion;
 }  
 
 var testscope = {

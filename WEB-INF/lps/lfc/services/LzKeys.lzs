@@ -543,9 +543,9 @@ lz.Keys = new LzKeysService();
 var LzKeys = lz.Keys;
 
 if ($dhtml) {
-    // Need to explicitly register this.  Make sure Lz.mousewheel is there for 
+    // Need to explicitly register this.  Make sure lz.embed.mousewheel is there for 
     // lztest
-    if (Lz['mousewheel']) {
-        Lz.mousewheel.setCallback(lz.Keys, '__mousewheelEvent');
+    if (lz.embed['mousewheel']) {
+        lz.embed.mousewheel.setCallback(lz.Keys, '__mousewheelEvent');
     }
 }

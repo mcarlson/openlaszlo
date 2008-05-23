@@ -1,10 +1,10 @@
-Lz.mousewheel = { 
+lz.embed.mousewheel = { 
     __mousewheelEvent: function ( e ){   
         if (!e) e = window.event;
         var delta = 0;
         if (e.wheelDelta) {
             delta = e.wheelDelta / 120;
-            if (Lz.__BrowserDetect.isOpera) {
+            if (lz.embed.browser.isOpera) {
                 delta = -delta;
             }
         } else if (e.detail) {
@@ -12,11 +12,11 @@ Lz.mousewheel = {
         }
         if (e.preventDefault) e.preventDefault();
         e.returnValue = false;
-        var l = Lz.mousewheel.__callbacks.length;
+        var l = lz.embed.mousewheel.__callbacks.length;
         if (delta != null && l > 0) {
             for (var i = 0; i < l; i += 2) {
-                var scope = Lz.mousewheel.__callbacks[i];
-                var name = Lz.mousewheel.__callbacks[i + 1];
+                var scope = lz.embed.mousewheel.__callbacks[i];
+                var name = lz.embed.mousewheel.__callbacks[i + 1];
                 //console.log('__mousewheelEvent', scope, name);
                 if (scope && scope[name]) scope[name](delta);
             }
@@ -24,15 +24,15 @@ Lz.mousewheel = {
     }
     ,__callbacks: []
     ,setCallback: function (scope, mousewheelcallback) {
-        var ck = (Lz && Lz.options && Lz.options.cancelkeyboardcontrol != true) || true;
-        if (Lz.mousewheel.__callbacks.length == 0 && ck) {
+        var ck = (lz && lz.embed && lz.embed.options && lz.embed.options.cancelkeyboardcontrol != true) || true;
+        if (lz.embed.mousewheel.__callbacks.length == 0 && ck) {
             if (window.addEventListener) {
-                Lz.attachEventHandler(window, 'DOMMouseScroll', Lz.mousewheel, '__mousewheelEvent');
+                lz.embed.attachEventHandler(window, 'DOMMouseScroll', lz.embed.mousewheel, '__mousewheelEvent');
             }
-            Lz.attachEventHandler(document, 'mousewheel', Lz.mousewheel, '__mousewheelEvent');
+            lz.embed.attachEventHandler(document, 'mousewheel', lz.embed.mousewheel, '__mousewheelEvent');
         }
-        Lz.mousewheel.__callbacks.push(scope, mousewheelcallback);
-        //console.log('setCallback', Lz.mousewheel.__callbacks);
+        lz.embed.mousewheel.__callbacks.push(scope, mousewheelcallback);
+        //console.log('setCallback', lz.embed.mousewheel.__callbacks);
     }    
 }
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************

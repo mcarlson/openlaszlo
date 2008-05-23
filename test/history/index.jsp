@@ -30,10 +30,7 @@
             })(null, null);
           }
         </script><script type="text/javascript" src="<%= request.getContextPath() %>/lps/includes/embed-compressed.js"></script><script type="text/javascript">
-            lzOptions.ServerRoot = '<%= request.getContextPath() %>';
-        </script>
-<script type="text/javascript">
-Lz.dhtmlEmbedLFC('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js');
+lz.embed.lfc('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js', '<%= request.getContextPath() %>');
 </script><style type="text/css">
         	html, body
         	{
@@ -52,21 +49,21 @@ Lz.dhtmlEmbedLFC('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js')
         	img { border: 0 none; }
         </style></head><body><div>
 <form>
-    <input type="button" value="0" onclick="Lz.setCanvasAttribute('foo', 0)">
-    <input type="button" value="1" onclick="Lz.setCanvasAttribute('foo', 1)">
-    <input type="button" value="0 hist" onclick="Lz.setCanvasAttribute('foo', 0, true)">
-    <input type="button" value="1 hist" onclick="Lz.setCanvasAttribute('foo', 1, true)">
-    <input type="button" value="foo and bar" onclick="Lz.setCanvasAttribute({foo: 'foo', bar: 'bar'}, null, true)">
+    <input type="button" value="0" onclick="lz.embed.setCanvasAttribute('foo', 0)">
+    <input type="button" value="1" onclick="lz.embed.setCanvasAttribute('foo', 1)">
+    <input type="button" value="0 hist" onclick="lz.embed.setCanvasAttribute('foo', 0, true)">
+    <input type="button" value="1 hist" onclick="lz.embed.setCanvasAttribute('foo', 1, true)">
+    <input type="button" value="foo and bar" onclick="lz.embed.setCanvasAttribute({foo: 'foo', bar: 'bar'}, null, true)">
 </form>
 </div> 
         <script type="text/javascript">
-              Lz.swfEmbed({url: 'history.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf8', accessible: 'false'});
+              lz.embed.swf({url: 'history.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf8', accessible: 'false'});
             </script>
         <script type="text/javascript">
-              Lz.swfEmbed({url: 'history.lzx?lzt=swf&lzr=swf7', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf7', accessible: 'false'});
+              lz.embed.swf({url: 'history.lzx?lzt=swf&lzr=swf7', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf7', accessible: 'false'});
             </script>
         <script type="text/javascript">
-              Lz.dhtmlEmbed({url: 'history.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzdhtml'});
+              lz.embed.dhtml({url: 'history.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzdhtml'});
         </script>
         <noscript>
             Please enable JavaScript in order to use this application.

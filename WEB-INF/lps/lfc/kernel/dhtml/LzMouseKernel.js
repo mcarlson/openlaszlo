@@ -78,9 +78,9 @@ var LzMouseKernel = {
         this.__scope = scope;
         this.__callback = funcname;
 
-        Lz.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
-        Lz.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
-        Lz.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+        lz.embed.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
+        lz.embed.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
+        lz.embed.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
         // Prevent context menus in Firefox 1.5 - see LPP-2678
         document.oncontextmenu = LzMouseKernel.__mouseEvent;
     }    

@@ -41,15 +41,15 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
     //Debug.write('Multiline', this, this.multiline, this.owner.multiline);
     if (this.owner && this.owner.password) {
         this.__LzInputDiv = document.createElement('input');
-        Lz.__setAttr(this.__LzInputDiv, 'type', 'password');
+        lz.embed.__setAttr(this.__LzInputDiv, 'type', 'password');
     } else if (this.owner && this.owner.multiline) {
         this.__LzInputDiv = document.createElement('textarea');
     } else {    
         this.__LzInputDiv = document.createElement('input');
-        Lz.__setAttr(this.__LzInputDiv, 'type', 'text');
+        lz.embed.__setAttr(this.__LzInputDiv, 'type', 'text');
     }
     if (this.quirks.firefox_autocomplete_bug) {
-        Lz.__setAttr(this.__LzInputDiv, 'autocomplete', 'off');
+        lz.embed.__setAttr(this.__LzInputDiv, 'autocomplete', 'off');
     }
     this.__LzInputDiv.owner = this;
     if (this.quirks.emulate_flash_font_metrics) {
@@ -63,14 +63,14 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
         this.__LzInputDiv.className = 'lzinputtext';
     }    
     if (this.owner) {
-        Lz.__setAttr(this.__LzInputDiv, 'name', this.owner.name);
+        lz.embed.__setAttr(this.__LzInputDiv, 'name', this.owner.name);
     }
     if (t == null) t = '';
-    Lz.__setAttr(this.__LzInputDiv, 'value', t);
+    lz.embed.__setAttr(this.__LzInputDiv, 'value', t);
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable) {
             this.__LZinputclickdiv = document.createElement('img');
-            this.__LZinputclickdiv.src = Lz.options.resourceroot + LzSprite.prototype.blankimage;
+            this.__LZinputclickdiv.src = lz.embed.options.resourceroot + LzSprite.prototype.blankimage;
         } else {
             this.__LZinputclickdiv = document.createElement('div');
         }
@@ -121,7 +121,7 @@ LzInputTextSprite.prototype.__show = function() {
     }
     //Debug.write('show');
     // turn on text selection in IE
-    // can't use Lz.attachEventHandler because we need to cancel events selectively
+    // can't use lz.embed.attachEventHandler because we need to cancel events selectively
     document.onselectstart = null;
 }
 
@@ -184,7 +184,7 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
     this.__LZdiv.appendChild(this.__LzInputDiv);
     //Debug.write('hide');
     // turn off text selection in IE
-    // can't use Lz.attachEventHandler because we need to cancel events selectively
+    // can't use lz.embed.attachEventHandler because we need to cancel events selectively
     document.onselectstart = LzTextSprite.prototype.__cancelhandler;
 }
 
@@ -878,6 +878,6 @@ LzInputTextSprite.findSelection = function ( ){
 }
 
 // prevent text selection in IE
-// can't use Lz.attachEventHandler because we need to cancel events
+// can't use lz.embed.attachEventHandler because we need to cancel events
 document.onselectstart = LzTextSprite.prototype.__cancelhandler;
 document.ondrag =  LzTextSprite.prototype.__cancelhandler;

@@ -160,7 +160,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
             </xsl:when>
             <xsl:otherwise>
               <script type="text/javascript">
-                Lz.swfEmbed({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
+                lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
               </script>
             </xsl:otherwise>
           </xsl:choose>
@@ -175,7 +175,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
     <xsl:choose>
     <xsl:when test="@runtime = 'dhtml'">
         <script type="text/javascript">
-        Lz.dhtmlEmbed({url: '<xsl:value-of select="$lps"/>/lps/admin/dev-console.lzx.js?lzappuid=<xsl:value-of select="$appuid"/>&amp;lzt=dhtml&amp;appinfo=<xsl:value-of select="$appinfo"/>', bgcolor: '#9494ad', width: '100%', height: '<xsl:value-of select="$consoleheight"/>', appenddivid: 'console', cancelkeyboardcontrol: true, resourceroot: '<xsl:value-of select="/canvas/request/@lps"/>', history: false});
+        lz.embed.dhtml({url: '<xsl:value-of select="$lps"/>/lps/admin/dev-console.lzx.js?lzappuid=<xsl:value-of select="$appuid"/>&amp;lzt=dhtml&amp;appinfo=<xsl:value-of select="$appinfo"/>', bgcolor: '#9494ad', width: '100%', height: '<xsl:value-of select="$consoleheight"/>', appenddivid: 'console', cancelkeyboardcontrol: true, resourceroot: '<xsl:value-of select="/canvas/request/@lps"/>', history: false});
         </script>
     </xsl:when>
     </xsl:choose>

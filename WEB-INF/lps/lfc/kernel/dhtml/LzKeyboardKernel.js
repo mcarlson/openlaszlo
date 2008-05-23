@@ -89,13 +89,12 @@ var LzKeyboardKernel = {
     }    
     ,setKeyboardControl: function (dhtmlKeyboardControl) {
         var kc = null;
-        var ck = (Lz && Lz.options && Lz.options.cancelkeyboardcontrol != true) || true;
+        var ck = (lz && lz.embed && lz.embed.options && lz.embed.options.cancelkeyboardcontrol != true) || true;
         if (ck && dhtmlKeyboardControl) {
             //console.log('setKeyboardControl' + dhtmlKeyboardControl);
             kc = LzKeyboardKernel.__keyboardEvent;
         }
-        // can't use Lz.attachEventHandler because we need to cancel events selectively
-// can't use Lz.attachEventHandler because we need to cancel events selectively
+        // can't use lz.embed.attachEventHandler because we need to cancel events selectively
         if (LzSprite.prototype.quirks.keyboardlistentotop) {
             var doc = window.top.document;
         } else {

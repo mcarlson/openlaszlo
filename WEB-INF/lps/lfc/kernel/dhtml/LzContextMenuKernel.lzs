@@ -71,8 +71,8 @@ function __show () {
     var s = document.getElementById('lzcontextmenu')
     if (! s) {
         s = document.createElement('div');
-        Lz.__setAttr(s, 'id', 'lzcontextmenu');
-        Lz.__setAttr(s, 'style', 'display: none');
+        lz.embed.__setAttr(s, 'id', 'lzcontextmenu');
+        lz.embed.__setAttr(s, 'style', 'display: none');
         document.body.appendChild(s);
     }
     if (this.owner.onmenuopen.ready) this.owner.onmenuopen.sendEvent(this.owner);

@@ -15,7 +15,7 @@
  * embeded, add this line:</para>
  * <example executable="false">
  *   &lt;script language="JavaScript" type="text/javascript">
- *     Lz.swfEmbed({url: '<replaceable>myapp.lzx</replaceable>?lzt=swf', bgcolor: '#000000', width: '<replaceable>800</replaceable>', height: '<replaceable>600</replaceable>'});
+ *     lz.embed.swf({url: '<replaceable>myapp.lzx</replaceable>?lzt=swf', bgcolor: '#000000', width: <replaceable>800</replaceable>, height: <replaceable>600</replaceable>, id: '<replaceable>swfapp</replaceable>}');
  *   &lt;/script></example>
  *
  * <para>where the url matches the URI that the application is served from, and
@@ -24,15 +24,15 @@
  * <para>DHTML applications must in addition make the following call in the page head:</para>
  * <example executable="false">
  *   &lt;script language="JavaScript" type="text/javascript"&gt;
- *     Lz.dhtmlEmbedLFC('<replaceable>{$lps}</replaceable>/lps/includes/lfc/LFCdhtml.js', '<replaceable>{$lps}</replaceable>');
+ *     lz.embed.lfc<replaceable>{$lps}</replaceable>/lps/includes/lfc/LFCdhtml.js', '<replaceable>{$lps}</replaceable>');
  *   &lt;script&gt;</example>
  *
- * And of course DHTML embedding uses the <code>Lz.dhtmlEmbed</code> call instead of <code>Lz.swfEmbed</code>.
+ * And of course DHTML embedding uses the <code>lz.embed.dhtml</code> call instead of <code>lz.embed.swf</code>.
  * 
  * @shortdesc JavaScript library for embedding Laszlo applications
  */
 
-Lz = {
+lz.embed = {
     /** A hash of options used by the embedding system.  Must be set 
      * resourceroot: the root url to load resources from
      * cancelkeyboardcontrol: if true, dhtml keyboard control is canceled
@@ -49,7 +49,7 @@ Lz = {
      * @param minimumVersion:Number the version the flash player should 
      * upgrade to if necessary.  Defaults to 7.
      */
-    ,swfEmbed: function (properties, minimumVersion) {
+    ,swf: function (properties, minimumVersion) {
         // don't upgrade flash unless asked
         if (minimumVersion == null) minimumVersion = 7;
 
@@ -71,13 +71,13 @@ Lz = {
         var requestVersion = url.substring(i, i + 1) * 1;
 
         // Check flash comm version
-        if (dojo.flash.info.commVersion > requestVersion) {
-            url = url.substring(0, i) + dojo.flash.info.commVersion + url.substring(i + 1, url.length);
+        if (lz.embed.dojo.info.commVersion > requestVersion) {
+            url = url.substring(0, i) + lz.embed.dojo.info.commVersion + url.substring(i + 1, url.length);
             //alert('updated version ' + url);
-            minimumVersion = dojo.flash.info.commVersion;
-        } else if (dojo.flash.info.commVersion <= 7 && requestVersion > 7) {
+            minimumVersion = lz.embed.dojo.info.commVersion;
+        } else if (lz.embed.dojo.info.commVersion <= 7 && requestVersion > 7) {
             // if requested lzr=swf8, set dojo comm version to 8
-            dojo.flash.info.commVersion = 8;
+            lz.embed.dojo.info.commVersion = 8;
         }
 
         if (requestVersion > minimumVersion) {
@@ -104,60 +104,59 @@ Lz = {
             ,flashvars: queryvals.flashvars
             ,flash6: url
             ,flash8: url
-            ,appenddiv: Lz._getAppendDiv(properties.id, properties.appenddivid)
+            ,appenddiv: lz.embed._getAppendDiv(properties.id, properties.appenddivid)
         };
 
         // Add entry for this application 
-        if (Lz[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
-        var app = Lz[properties.id] = Lz.applications[properties.id] = { 
+        if (lz.embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
+        var app = lz.embed[properties.id] = lz.embed.applications[properties.id] = { 
             runtime: 'swf'
             ,_id: properties.id
-            ,setCanvasAttribute: Lz._setCanvasAttributeSWF
-            ,getCanvasAttribute: Lz._getCanvasAttributeSWF
-            ,callMethod: Lz._callMethodSWF
-            ,_ready: Lz._ready
+            ,setCanvasAttribute: lz.embed._setCanvasAttributeSWF
+            ,getCanvasAttribute: lz.embed._getCanvasAttributeSWF
+            ,callMethod: lz.embed._callMethodSWF
+            ,_ready: lz.embed._ready
             // List of functions to call when the app is loaded
             ,_onload: []
-            ,_getSWFDiv: Lz._getSWFDiv
+            ,_getSWFDiv: lz.embed._getSWFDiv
             ,loaded: false
-            ,_sendMouseWheel: Lz._sendMouseWheel
-            ,_setCanvasAttributeDequeue: Lz._setCanvasAttributeDequeue
+            ,_sendMouseWheel: lz.embed._sendMouseWheel
+            ,_setCanvasAttributeDequeue: lz.embed._setCanvasAttributeDequeue
         }
         // listen for history unless properties.history == false
         if (properties.history != false) {
-            app._onload.push(Lz.history.init);
+            app._onload.push(lz.embed.history.init);
         }
         // for callbacks onload
-        dojo.flash.addLoadedListener(Lz._loaded, app);
-        dojo.flash.setSwf(swfargs, minimumVersion);
-        Lz.__BrowserDetect.init();
-        if (Lz.__BrowserDetect.OS == 'Mac' || 
+        lz.embed.dojo.addLoadedListener(lz.embed._loaded, app);
+        lz.embed.dojo.setSwf(swfargs, minimumVersion);
+        if (lz.embed.browser.OS == 'Mac' || 
             // fix for LPP-5393
-            ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && Lz.__BrowserDetect.OS == 'Windows' && (Lz.__BrowserDetect.isOpera || Lz.__BrowserDetect.isFirefox))) {
-            if (Lz['mousewheel']) {
-                Lz.mousewheel.setCallback(app, '_sendMouseWheel');
+            ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && lz.embed.browser.OS == 'Windows' && (lz.embed.browser.isOpera || lz.embed.browser.isFirefox))) {
+            if (lz.embed['mousewheel']) {
+                lz.embed.mousewheel.setCallback(app, '_sendMouseWheel');
             }
         }
     }
 
     ,/**
      * Write &lt;script/> tags into the document at the location where this 
-     * function is called to load the LFC.  Must be called before dhtmlEmbed().
+     * function is called to load the LFC.  Must be called before dhtml().
      *
      * @param url:String url to LFC
      * @param resourceroot:String Base URL to load resources from. 
      */
-    dhtmlEmbedLFC: function (url, resourceroot) {
+    lfc: function (url, resourceroot) {
         if (! resourceroot || typeof resourceroot != 'string') {
-            alert('WARNING: dhtmlEmbedLFC requires resourceroot to be specified.'); 
+            alert('WARNING: lfc requires resourceroot to be specified.'); 
             return;
         }
-        Lz.options.resourceroot = resourceroot;
-        if (Lz.__BrowserDetect.isIE) {
+        lz.embed.options.resourceroot = resourceroot;
+        if (lz.embed.browser.isIE) {
             var scripturl = resourceroot + '/lps/includes/excanvas.js';
             this.__dhtmlLoadScript(scripturl)
         }
-        if ((Lz.__BrowserDetect.isIE && Lz.__BrowserDetect.version < 7) || (Lz.__BrowserDetect.isSafari && Lz.__BrowserDetect.version <= 419.3)) {
+        if ((lz.embed.browser.isIE && lz.embed.browser.version < 7) || (lz.embed.browser.isSafari && lz.embed.browser.version <= 419.3)) {
             // use the 'simple' version of the LFC: LFCdhtml-{debug,backtrace}-simple.js for Safari 2 and IE 6
             var i = url.indexOf('debug.js') || url.indexOf('backtrace.js')
             if (i != -1) {
@@ -178,39 +177,39 @@ Lz = {
      *
      * DHTML adds support for the cancelkeyboardcontrol option.  Setting cancelkeyboardcontrol to true will prevent the application from grabbing keyboard events for tab, arrow and enter keys, and disables application activation.
      * 
-     * Note: dhtmlEmbedLFC must have already been called, to load the
-     * LFC.  If dhtmlEmbedLFC has not been called this call will not load the 
+     * Note: lfc must have already been called, to load the
+     * LFC.  If lfc has not been called this call will not load the 
      * application.
      */
-    dhtmlEmbed: function (properties) {
+    dhtml: function (properties) {
         var queryvals = this.__getqueryurl(properties.url, true);
         var url = queryvals.url + '?lzt=object&' + queryvals.query;
 
-        Lz.__propcache = {
+        lz.embed.__propcache = {
             bgcolor: properties.bgcolor
             ,width: properties.width.indexOf('%') == -1 ? properties.width + 'px' : properties.width
             ,height: properties.height.indexOf('%') == -1 ? properties.height + 'px' : properties.height
             ,id: properties.id
-            ,appenddiv: Lz._getAppendDiv(properties.id, properties.appenddivid)
+            ,appenddiv: lz.embed._getAppendDiv(properties.id, properties.appenddivid)
             ,url: url
             ,cancelkeyboardcontrol: properties.cancelkeyboardcontrol
             ,resourceroot: properties.resourceroot
         };
 
-        if (Lz[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
+        if (lz.embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
         // Add entry for this application 
-        var app = Lz[properties.id] = Lz.applications[properties.id] = { 
+        var app = lz.embed[properties.id] = lz.embed.applications[properties.id] = { 
             runtime: 'dhtml'
             ,_id: properties.id
-            ,_ready: Lz._ready
+            ,_ready: lz.embed._ready
             ,_onload: []
             ,loaded: false
-            ,setCanvasAttribute: Lz._setCanvasAttributeDHTML
-            ,getCanvasAttribute: Lz._getCanvasAttributeDHTML
+            ,setCanvasAttribute: lz.embed._setCanvasAttributeDHTML
+            ,getCanvasAttribute: lz.embed._getCanvasAttributeDHTML
         }
         // listen for history unless properties.history == false
         if (properties.history != false) {
-            app._onload.push(Lz.history.init);
+            app._onload.push(lz.embed.history.init);
         }
 
         this.__dhtmlLoadScript(url)
@@ -315,11 +314,11 @@ Lz = {
      */
     _setCanvasAttributeSWF: function (name, value, hist) {
         //console.log('_setCanvasAttributeSWF', name, value, hist);
-        if (this.loaded && dojo.flash.comm[this._id] && dojo.flash.comm[this._id]['callMethod']) {
+        if (this.loaded && lz.embed.dojo.comm[this._id] && lz.embed.dojo.comm[this._id]['callMethod']) {
             if (hist) {
-                Lz.history._store(name, value);
+                lz.embed.history._store(name, value);
             } else {
-                dojo.flash.comm[this._id].setCanvasAttribute(name, value + '');
+                lz.embed.dojo.comm[this._id].setCanvasAttribute(name, value + '');
             }
         } else {
             if (this._setCanvasAttributeQ == null) {
@@ -340,7 +339,7 @@ Lz = {
      */
     _setCanvasAttributeDHTML: function (name, value, hist) {
         if (hist) {
-            Lz.history._store(name, value);
+            lz.embed.history._store(name, value);
         } else if (canvas) {
             canvas.setAttribute(name, value);
         }
@@ -349,12 +348,12 @@ Lz = {
     // called by flash/js 
     _loaded: function (id) {
         //console.log('_loaded', id);
-        if (Lz[id].loaded) return;
-        if (dojo.flash.info.commVersion == 8) {
+        if (lz.embed[id].loaded) return;
+        if (lz.embed.dojo.info.commVersion == 8) {
             // wait a bit longer for Flash to init
-            setTimeout('Lz["'+ id +'"]._ready.call(Lz["'+ id +'"])', 100);
+            setTimeout('lz.embed["'+ id +'"]._ready.call(lz.embed["'+ id +'"])', 100);
         } else {
-            Lz[id]._ready.call(Lz[id]);
+            lz.embed[id]._ready.call(lz.embed[id]);
         }
     }
     ,/** @access private */
@@ -392,7 +391,7 @@ Lz = {
      */
     _getCanvasAttributeSWF: function (name) {
         if (this.loaded) {
-            return dojo.flash.comm[this._id].getCanvasAttribute(name);
+            return lz.embed.dojo.comm[this._id].getCanvasAttribute(name);
         } else {
             alert('Flash is not ready: getCanvasAttribute' + name);
         }
@@ -411,7 +410,7 @@ Lz = {
     ,/** @devnote from http://www.quirksmode.org/js/detect.html 
          @access private
        */
-    __BrowserDetect: {
+    browser: {
         init: function () {
             if (this.initted) return;
             this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
@@ -535,20 +534,20 @@ Lz = {
      */
     _callMethodSWF: function (js) {
         if (this.loaded) {
-            return dojo.flash.comm[this._id].callMethod(js);
+            return lz.embed.dojo.comm[this._id].callMethod(js);
         } else {
             var f = function() {
-                dojo.flash.comm[this._id].callMethod(js);
+                lz.embed.dojo.comm[this._id].callMethod(js);
             };
-            dojo.flash.addLoadedListener(f, this);
+            lz.embed.dojo.addLoadedListener(f, this);
             //console.log('addlistener', this, f);
         }
     }
     ,/** @access private */
     _broadcastMethod: function(methodname) {
         var args = [].slice.call(arguments, 1);
-        for (var i in Lz.applications) {
-            var app = Lz.applications[i];
+        for (var i in lz.embed.applications) {
+            var app = lz.embed.applications[i];
             if (! app.loaded) continue;
             if (app[methodname]) {
                 //console.log(methodname, app, arguments);
@@ -557,10 +556,10 @@ Lz = {
         }
     }
     ,setCanvasAttribute: function(name, value, history) {
-        Lz._broadcastMethod('setCanvasAttribute', name, value, history);
+        lz.embed._broadcastMethod('setCanvasAttribute', name, value, history);
     }
     ,callMethod: function(js) {
-        Lz._broadcastMethod('callMethod', js);
+        lz.embed._broadcastMethod('callMethod', js);
     }
     ,/** @access private */
     _getAppendDiv: function(id, appenddivid) {
@@ -574,12 +573,13 @@ Lz = {
     }
     ,/** @access private */
     _getSWFDiv: function() {
-        return dojo.flash.obj[this._id].get();
+        return lz.embed.dojo.obj[this._id].get();
     }
     ,/** @access private */
     _sendMouseWheel: function(d) {
         if (d != null) this.callMethod("LzKeys.__mousewheelEvent(" + d + ")"); 
     }
+
     ,/**
      * Utility method for attaching DOM events
      *
@@ -631,20 +631,23 @@ Lz = {
     _handlers: {} 
     ,/** @access private */
     _cleanupHandlers: function() {
-        Lz._handlers = {};
+        lz.embed._handlers = {};
         //alert('_cleanupHandlers');
     }
 };
+
+// init browser detection
+lz.embed.browser.init();
+
+// Clean up global handlers
+lz.embed.attachEventHandler(window, 'beforeunload', lz.embed, '_cleanupHandlers');
 
 // for backward compatibility
 #pragma "passThrough=true"
 try {
     if (lzOptions) {
-        if (lzOptions.dhtmlKeyboardControl) alert('WARNING: this page uses lzOptions.dhtmlKeyboardControl.  Please use the cancelkeyboardcontrol embed argument for dhtmlEmbed() instead.'); 
-        if (lzOptions.ServerRoot) alert('WARNING: this page uses lzOptions.ServerRoot.  Please use the second argument of dhtmlEmbedLFC() instead.'); 
+        if (lzOptions.dhtmlKeyboardControl) alert('WARNING: this page uses lzOptions.dhtmlKeyboardControl.  Please use the cancelkeyboardcontrol embed argument for dhtml() instead.'); 
+        if (lzOptions.ServerRoot) alert('WARNING: this page uses lzOptions.ServerRoot.  Please use the second argument of lz.embed.lfc() instead.'); 
     }
 } catch (e) {
-}    
-
-// Clean up global handlers
-Lz.attachEventHandler(window, 'beforeunload', Lz, '_cleanupHandlers');
+}

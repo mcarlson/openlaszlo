@@ -1,5 +1,5 @@
 /**
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   * from r26 of http://excanvas.svn.sourceforge.net/svnroot/excanvas/excanvas.js
   */
@@ -53,7 +53,7 @@ if (!window.CanvasRenderingContext2D) {
   var G_vmlCanvasManager_ = {
     init: function (opt_doc) {
       var doc = opt_doc || document;
-      if (Lz.__BrowserDetect.isIE) {
+      if (lz.embed.browser.isIE) {
         var self = this;
         doc.attachEvent("onreadystatechange", function () {
           self.init_(doc);

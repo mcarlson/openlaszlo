@@ -117,7 +117,7 @@ function load (){
         return;
     }
     this.loading = true;
-    Lz.__dhtmlLoadLibrary(this.href);
+    lz.embed.__dhtmlLoadLibrary(this.href);
 }
 
 /** 

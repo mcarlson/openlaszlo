@@ -55,7 +55,7 @@ var LzScreenKernel = {
         //Debug.write('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});
     }
     ,__init: function() {
-        Lz.attachEventHandler(window.top, 'resize', LzScreenKernel, '__resizeEvent');
+        lz.embed.attachEventHandler(window.top, 'resize', LzScreenKernel, '__resizeEvent');
     }
     ,__callback: null
     ,__scope: null

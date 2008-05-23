@@ -286,8 +286,8 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
 
     if (! root) {
         root = document.createElement('div');
-        Lz.__setAttr(root, 'id', 'lzTextSizeCache');
-        Lz.__setAttr(root, 'style', 'top: 4000px;');
+        lz.embed.__setAttr(root, 'id', 'lzTextSizeCache');
+        lz.embed.__setAttr(root, 'style', 'top: 4000px;');
         document.body.appendChild(root);
     }
 
@@ -321,7 +321,7 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
             var mdiv = _textsizecache['lzdiv~~~' + tagname];
             if (mdiv == null) {
                 mdiv = document.createElement(tagname);
-                Lz.__setAttr(mdiv, 'style', style);
+                lz.embed.__setAttr(mdiv, 'style', style);
                 root.appendChild(mdiv);
                 _textsizecache['lzdiv~~~' + tagname] = mdiv;
             }

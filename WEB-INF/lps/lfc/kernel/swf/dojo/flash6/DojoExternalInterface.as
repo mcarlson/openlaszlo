@@ -184,7 +184,7 @@ class DojoExternalInterfaceClass {
 			fscommand("addCallback", DojoExternalInterface._callbacks[i]);
 			//Debug.write('addCallback', DojoExternalInterface._callbacks[i]);
 		}
-		DojoExternalInterface.call("dojo.flash.loaded", null, DojoExternalInterface._id);
+		DojoExternalInterface.call("lz.embed.dojo.loaded", null, DojoExternalInterface._id);
 		// Delay until the system is initted - make sure the loaded() call goes through.
 		setTimeout(LzBrowserKernel.__jsready, 40);
 	}

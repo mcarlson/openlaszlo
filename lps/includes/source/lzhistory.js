@@ -6,19 +6,18 @@
   * Use is subject to license terms.
   */
 
-Lz.history = {
+lz.embed.history = {
     _currentstate: null 
     ,_apps: []
     ,_intervalID: null
     ,init: function(app) {
-        var _this = Lz.history;
+        var _this = lz.embed.history;
         // Store a reference to the app
         _this._apps.push(app);
         //console.log('init', _this._apps);
         _this._title = top.document.title;
-        Lz.__BrowserDetect.init();
         var currstate = _this.get();
-        if (Lz.__BrowserDetect.isSafari) {
+        if (lz.embed.browser.isSafari) {
             // must track state ourselves...
             _this._historylength = history.length;
             _this._history = [];
@@ -39,17 +38,17 @@ Lz.history = {
             if (currstate != '') {
                 _this.set(currstate)
             }
-        } else if (Lz.__BrowserDetect.isIE) {
+        } else if (lz.embed.browser.isIE) {
             var currstate = top.location.hash;
             if (currstate) currstate = currstate.substring(1);
             // use an iframe;
             var i = document.createElement('iframe');
-            Lz.__setAttr(i, 'id', 'lzHistory');
-            Lz.__setAttr(i, 'frameborder', 'no');
-            Lz.__setAttr(i, 'scrolling', 'no');
-            Lz.__setAttr(i, 'width', '0');
-            Lz.__setAttr(i, 'height', '0');
-            Lz.__setAttr(i, 'src', 'javascript:""');
+            lz.embed.__setAttr(i, 'id', 'lzHistory');
+            lz.embed.__setAttr(i, 'frameborder', 'no');
+            lz.embed.__setAttr(i, 'scrolling', 'no');
+            lz.embed.__setAttr(i, 'width', '0');
+            lz.embed.__setAttr(i, 'height', '0');
+            lz.embed.__setAttr(i, 'src', 'javascript:""');
             document.body.appendChild(i);
             i = document.getElementById('lzHistory');
             _this._iframe = i;
@@ -71,13 +70,13 @@ Lz.history = {
             }
         }
         //alert('init ' + currstate);
-        if (this._intervalID == null) this._intervalID = setInterval('Lz.history._checklocationhash()', 100)
+        if (this._intervalID == null) this._intervalID = setInterval('lz.embed.history._checklocationhash()', 100)
     }
 
     ,/** @access private */
     _checklocationhash: function() {
-        if (dojo.flash && dojo.flash.info && dojo.flash.info.installing) return;
-        if (Lz.__BrowserDetect.isSafari) {
+        if (lz.embed.dojo && lz.embed.dojo.info && lz.embed.dojo.info.installing) return;
+        if (lz.embed.browser.isSafari) {
             var h = this._history[this._historylength - 1];
             if (h == '' || h == '#') h = '#0';
             if (!this._skip && this._historylength != history.length) {
@@ -92,11 +91,11 @@ Lz.history = {
                 this._parse(h.substring(1));
             }
         } else {
-            var h = Lz.history.get();
+            var h = lz.embed.history.get();
             // Make sure initial history event is sent even if the hash is empty
             if (h == '') h = '0';
 
-            if (Lz.__BrowserDetect.isIE) {
+            if (lz.embed.browser.isIE) {
                 if (h != this._currentstate) {
                     top.location.hash = h == '0' ? '' : '#' + h;
                     this._currentstate = h;
@@ -114,29 +113,29 @@ Lz.history = {
     ,/** */
     set: function(s) {
         if (s == null) s = '';
-        if (Lz.history._currentstate == s) return;
-        Lz.history._currentstate = s;
+        if (lz.embed.history._currentstate == s) return;
+        lz.embed.history._currentstate = s;
 
         var hash = '#' + s;
 
-        if (Lz.__BrowserDetect.isIE) {
+        if (lz.embed.browser.isIE) {
             top.location.hash = hash == '#0' ? '' : hash;
-            var doc = Lz.history._iframe.contentDocument || Lz.history._iframe.contentWindow.document;
+            var doc = lz.embed.history._iframe.contentDocument || lz.embed.history._iframe.contentWindow.document;
             doc.open();
             doc.close();
             doc.location.hash = hash;
-            Lz.history._parse(s + '');
-        } else if (Lz.__BrowserDetect.isSafari) {
-            Lz.history._history[history.length] = hash;
-            Lz.history._historylength = history.length + 1;
-            if (Lz.__BrowserDetect.version < 412) {
+            lz.embed.history._parse(s + '');
+        } else if (lz.embed.browser.isSafari) {
+            lz.embed.history._history[history.length] = hash;
+            lz.embed.history._historylength = history.length + 1;
+            if (lz.embed.browser.version < 412) {
                 // can't preserve query strings :( do nothing if there is one.
                 if (top.location.search == '') {
-                    Lz.history._form.action = hash;
-                    top.document.location.lzaddr.history = Lz.history._history.toString();
-                    Lz.history._skip = true;
-                    Lz.history._form.submit()
-                    Lz.history._skip = false;
+                    lz.embed.history._form.action = hash;
+                    top.document.location.lzaddr.history = lz.embed.history._history.toString();
+                    lz.embed.history._skip = true;
+                    lz.embed.history._form.submit()
+                    lz.embed.history._skip = false;
                 }
             } else {
                 var evt = document.createEvent('MouseEvents');
@@ -147,16 +146,16 @@ Lz.history = {
             }
         } else {
             top.location.hash = hash;
-            Lz.history._parse(s + '');
+            lz.embed.history._parse(s + '');
         }
         return true;
     }
     ,/** */
     get: function() {
         var h = '';
-        if (Lz.__BrowserDetect.isIE) {
-            if (Lz.history._iframe) {
-                var doc = Lz.history._iframe.contentDocument || Lz.history._iframe.contentWindow.document;
+        if (lz.embed.browser.isIE) {
+            if (lz.embed.history._iframe) {
+                var doc = lz.embed.history._iframe.contentDocument || lz.embed.history._iframe.contentWindow.document;
                 h = doc.location.hash;
             }
         } else {
@@ -171,10 +170,10 @@ Lz.history = {
     }
     ,/** @access private */
     _parse: function(h) {
-        var _this = Lz.history;
+        var _this = lz.embed.history;
         if (h.length == 0) return;
-        for (var id in Lz.history._apps) {
-            var app = Lz.history._apps[id];
+        for (var id in lz.embed.history._apps) {
+            var app = lz.embed.history._apps[id];
             if (! app.loaded || app._lasthash == h) continue;
             //console.log('sending for app', app._id, h);
             app._lasthash = h;
@@ -187,7 +186,7 @@ Lz.history = {
                     var i = v.indexOf('=');
                     var name = unescape(v.substring(0, i));
                     var val = unescape(v.substring(i + 1));
-                    Lz.setCanvasAttribute(name, val);
+                    lz.embed.setCanvasAttribute(name, val);
                     if (window['canvas']) canvas.setAttribute(name, val);
                 }
             } else {
@@ -219,23 +218,23 @@ Lz.history = {
     }
     ,/** @access private called from history mechanism */
     __setFlash: function(h, id) {
-        var app = Lz[id];
+        var app = lz.embed[id];
         if (app && app.loaded && app.runtime == 'swf') {
-            //console.log('__setFlash', h, app, id);
             var p = app._getSWFDiv();
             if (p) {
+                //console.log('__setFlash', h, app, id, p);
                 var cid = p.GetVariable("_callbackID") + '';
                 if (cid == 'null') {
-                    Lz[id]._lasthash = app.callMethod("LzHistory.receiveHistory(" + h + ")");
+                    lz.embed[id]._lasthash = app.callMethod("LzHistory.receiveHistory(" + h + ")");
                 } else {
-                    setTimeout('Lz.history.__setFlash(' + h + ',"' + id + '")', 10);
+                    setTimeout('lz.embed.history.__setFlash(' + h + ',"' + id + '")', 10);
                 //alert('busy');
                 }
             }
         }
     }
 };
-if (Lz.__BrowserDetect.isFirefox) {
+if (lz.embed.browser.isFirefox) {
     // If this is present, then Firefox does not do its Javascript caching and onload will get fired when coming back to the page.  Thanks Jes! 
     window.onunload = function() {};
 }

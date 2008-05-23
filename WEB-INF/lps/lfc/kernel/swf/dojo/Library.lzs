@@ -1,5 +1,5 @@
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -11,5 +11,4 @@ if ($swf8) {
 }
 
 // required for GetVariable to not fail in IE/ActiveX
-_root._currenthistory = null;
 _root._callbackID = null;

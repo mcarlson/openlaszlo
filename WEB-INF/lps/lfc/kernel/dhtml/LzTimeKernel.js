@@ -15,7 +15,6 @@
 // http://webreflection.blogspot.com/2007/06/simple-settimeout-setinterval-extra.html
 
 if (LzSprite.prototype.quirks.ie_timer_closure) {
-//if (Lz.__BrowserDetect.isIE) {
   (function(f){
     window.setTimeout = f(window.setTimeout);
     window.setInterval = f(window.setInterval);

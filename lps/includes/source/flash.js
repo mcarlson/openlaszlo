@@ -1,7 +1,4 @@
-Lz.__BrowserDetect.init();
-dojo = {};
-
-dojo.flash = function(){
+lz.embed.dojo = function(){
     // summary:
     //    The goal of dojo.flash is to make it easy to extend Flash's capabilities
     //    into an AJAX/DHTML environment.
@@ -284,7 +281,7 @@ dojo.flash = function(){
     //    Author- Brad Neuberg, bkn3@columbia.edu
 };
 
-dojo.flash = {
+lz.embed.dojo = {
     // Default values for embedding
     defaults: {
         flash6: null,
@@ -351,11 +348,11 @@ dojo.flash = {
     useFlash6: function(id){ /* Boolean */
         // summary: Returns whether we are using Flash 6 for communication on this platform.
         
-        var app = dojo.flash.obj[id].properties;
+        var app = lz.embed.dojo.obj[id].properties;
         //console.log('useFlash6', app.flash6, id, app);
         if(app.flash6 == null){
             return false;
-        }else if (app.flash6 != null && dojo.flash.info.commVersion == 6){
+        }else if (app.flash6 != null && lz.embed.dojo.info.commVersion == 6){
             // if we have a flash 6 version of this SWF, and this browser supports 
             // communicating using Flash 6 features...
             return true;
@@ -367,10 +364,10 @@ dojo.flash = {
     useFlash8: function(id){ /* Boolean */
         // summary: Returns whether we are using Flash 8 for communication on this platform.
         
-        var app = dojo.flash.obj[id].properties;
+        var app = lz.embed.dojo.obj[id].properties;
         if(app.flash8 == null){
             return false;
-        }else if (app.flash8 != null && dojo.flash.info.commVersion == 8){
+        }else if (app.flash8 != null && lz.embed.dojo.info.commVersion == 8){
             // if we have a flash 8 version of this SWF, and this browser supports
             // communicating using Flash 8 features...
             return true;
@@ -413,17 +410,17 @@ dojo.flash = {
         //    dojo.event.connect(dojo.flash, "loaded", myInstance, "myCallback");
         
         // reload the page if installing for the first time
-        if (dojo.flash._isinstaller) {
+        if (lz.embed.dojo._isinstaller) {
             top.location = top.location + '';
         }
-        dojo.flash.info.installing = false;
-        //dojo.debug("dojo.flash.loaded");
-        dojo.flash.ready = true;
-        if(dojo.flash._loadedListeners.length > 0){
-            for(var i = 0;i < dojo.flash._loadedListeners.length; i++){
-                var scope = dojo.flash._loadedListenerScopes[i];
+        lz.embed.dojo.info.installing = false;
+        //dojo.debug("lz.embed.dojo.loaded");
+        lz.embed.dojo.ready = true;
+        if(lz.embed.dojo._loadedListeners.length > 0){
+            for(var i = 0;i < lz.embed.dojo._loadedListeners.length; i++){
+                var scope = lz.embed.dojo._loadedListenerScopes[i];
                 if (id != scope._id) continue;
-                dojo.flash._loadedListeners[i].apply(scope, [scope._id]);
+                lz.embed.dojo._loadedListeners[i].apply(scope, [scope._id]);
             }
         }
     },
@@ -438,10 +435,10 @@ dojo.flash = {
         //    dojo.event.connect(dojo.flash, "installing", myInstance, "myCallback");
          
         //dojo.debug("installing");
-        if(dojo.flash._installingListeners.length > 0){
-            for(var i = 0; i < dojo.flash._installingListeners.length; i++){
-                var scope = dojo.flash._installingListenerScopes[i];
-                dojo.flash._installingListeners[i].apply(scope, [scope._id]);
+        if(lz.embed.dojo._installingListeners.length > 0){
+            for(var i = 0; i < lz.embed.dojo._installingListeners.length; i++){
+                var scope = lz.embed.dojo._installingListenerScopes[i];
+                lz.embed.dojo._installingListeners[i].apply(scope, [scope._id]);
             }
         }
     },
@@ -450,26 +447,26 @@ dojo.flash = {
     _initialize: function(properties){
         //dojo.debug("dojo.flash._initialize");
         // see if we need to rev or install Flash on this platform
-        var installer = new dojo.flash.Install(properties.id);
-        dojo.flash.installer = installer;
+        var installer = new lz.embed.dojo.Install(properties.id);
+        lz.embed.dojo.installer = installer;
 
         if(installer.needed() == true){        
             installer.install();
         }else{
             //alert("Writing object out");
             // write the flash object into the page
-            var embed = new dojo.flash.Embed(properties);
-            dojo.flash.obj[properties.id] = embed;
-            embed.write(dojo.flash.info.commVersion);
+            var embed = new lz.embed.dojo.Embed(properties);
+            lz.embed.dojo.obj[properties.id] = embed;
+            embed.write(lz.embed.dojo.info.commVersion);
             
             // initialize the way we do Flash/JavaScript communication
-            dojo.flash.comm[properties.id] = new dojo.flash.Communicator(properties.id);
+            lz.embed.dojo.comm[properties.id] = new lz.embed.dojo.Communicator(properties.id);
         }
     }
 };
 
 
-dojo.flash.Info = function(){
+lz.embed.dojo.Info = function(){
     // summary: A class that helps us determine whether Flash is available.
     // description:
     //    A class that helps us determine whether Flash is available,
@@ -485,7 +482,7 @@ dojo.flash.Info = function(){
     
     // Visual basic helper required to detect Flash Player ActiveX control 
     // version information on Internet Explorer
-    if(Lz.__BrowserDetect.isIE){
+    if(lz.embed.browser.isIE){
         document.writeln('<script language="VBScript" type="text/vbscript">');
         document.writeln('Function VBGetSwfVer(i)');
         document.writeln('  on error resume next');
@@ -504,7 +501,7 @@ dojo.flash.Info = function(){
     this._detectCommunicationVersion();
 };
 
-dojo.flash.Info.prototype = {
+lz.embed.dojo.Info.prototype = {
     // version: String
     //        The full version string, such as "8r22".
     version: -1,
@@ -570,7 +567,7 @@ dojo.flash.Info.prototype = {
         
         // loop backwards through the versions until we find the newest version    
         for(var testVersion = 25; testVersion > 0; testVersion--){
-            if(Lz.__BrowserDetect.isIE){
+            if(lz.embed.browser.isIE){
                 versionStr = VBGetSwfVer(testVersion);
             }else{
                 versionStr = this._JSFlashInfo(testVersion);        
@@ -581,7 +578,7 @@ dojo.flash.Info.prototype = {
                 return;
             }else if(versionStr != 0){
                 var versionArray;
-                if(Lz.__BrowserDetect.isIE){
+                if(lz.embed.browser.isIE){
                     var tempArray = versionStr.split(" ");
                     var tempString = tempArray[1];
                     versionArray = tempString.split(",");
@@ -647,9 +644,9 @@ dojo.flash.Info.prototype = {
         }
         
         // detect if the user has over-ridden the default flash version
-        if (typeof Lz.options["forceFlashComm"] != "undefined" &&
-                typeof Lz.options["forceFlashComm"] != null){
-            this.commVersion = Lz.options["forceFlashComm"];
+        if (typeof lz.embed.options["forceFlashComm"] != "undefined" &&
+                typeof lz.embed.options["forceFlashComm"] != null){
+            this.commVersion = lz.embed.options["forceFlashComm"];
             return;
         }
         
@@ -658,7 +655,7 @@ dojo.flash.Info.prototype = {
         
         // at this point, we don't have a flash file to detect features on,
         // so we need to instead look at the browser environment we are in
-        if(Lz.__BrowserDetect.isSafari == true || Lz.__BrowserDetect.isOpera == true){
+        if(lz.embed.browser.isSafari == true || lz.embed.browser.isOpera == true){
             this.commVersion = 8;
         }else{
             this.commVersion = 6;
@@ -666,13 +663,13 @@ dojo.flash.Info.prototype = {
     }
 };
 
-dojo.flash.Embed = function(properties){
+lz.embed.dojo.Embed = function(properties){
     // summary: A class that is used to write out the Flash object into the page.
     
     this.properties = properties;
 };
 
-dojo.flash.Embed.prototype = {
+lz.embed.dojo.Embed.prototype = {
     protocol: function(){
         switch(window.location.protocol){
             case "https:":
@@ -720,7 +717,7 @@ dojo.flash.Embed.prototype = {
         // for this Flash version
         var objectHTML;
         var swfloc;
-        //var dojoPath = Lz.options.baseRelativePath;
+        //var dojoPath = lz.embed.options.baseRelativePath;
         // Flash 6
         if(flashVer == 6){
             swfloc = this.properties.flash6;
@@ -739,7 +736,7 @@ dojo.flash.Embed.prototype = {
                         + this.protocol()
                         + '://www.macromedia.com/go/getflashplayer">';
         }else{ // Flash 8
-            if (flashVer > dojo.flash.version) doExpressInstall = true;
+            if (flashVer > lz.embed.dojo.version) doExpressInstall = true;
             swfloc = this.properties.flash8;
             var swflocObjectVars = this.properties.flashvars;
             var swflocEmbedVars = this.properties.flashvars;
@@ -755,7 +752,7 @@ dojo.flash.Embed.prototype = {
                                 + "&MMplayerType=PlugIn";
             }
 
-            if (Lz.__BrowserDetect.isIE) {
+            if (lz.embed.browser.isIE) {
                 objectHTML =
                 '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" '
                   + 'codebase="'
@@ -860,7 +857,7 @@ dojo.flash.Embed.prototype = {
 };
 
 
-dojo.flash.Communicator = function(id){
+lz.embed.dojo.Communicator = function(id){
     // summary:
     //    A class that is used to communicate between Flash and JavaScript in 
     //    a way that can pass large amounts of data back and forth reliably,
@@ -874,16 +871,16 @@ dojo.flash.Communicator = function(id){
     //    Flash version.
 
     this._id = id;
-    if(dojo.flash.useFlash6(id)){
+    if(lz.embed.dojo.useFlash6(id)){
         this._writeFlash6();
-    }else if (dojo.flash.useFlash8(id)){
+    }else if (lz.embed.dojo.useFlash8(id)){
         this._writeFlash8();
     }
 };
 
-dojo.flash.Communicator.prototype = {
+lz.embed.dojo.Communicator.prototype = {
     _writeFlash6: function(){
-        var id = dojo.flash.obj[this._id].properties.id;
+        var id = lz.embed.dojo.obj[this._id].properties.id;
         //console.log('_writeFlash6', id);
         
         // global function needed for Flash 6 callback;
@@ -892,12 +889,12 @@ dojo.flash.Communicator.prototype = {
         // within the Dojo system
         document.writeln('<script language="JavaScript">');
         document.writeln('  function ' + id + '_DoFSCommand(command, args){ ');
-        document.writeln('    dojo.flash.comm.' + id + '._handleFSCommand(command, args, "' + id + '"); ');
+        document.writeln('    lz.embed.dojo.comm.' + id + '._handleFSCommand(command, args, "' + id + '"); ');
         document.writeln('}');
         document.writeln('</script>');
         
         // hook for Internet Explorer to receive FSCommands from Flash
-        if(Lz.__BrowserDetect.isIE){
+        if(lz.embed.browser.isIE){
             document.writeln('<SCRIPT LANGUAGE=VBScript> ');
             document.writeln('on error resume next ');
             document.writeln('Sub ' + id + '_FSCommand(ByVal command, ByVal args)');
@@ -942,19 +939,19 @@ dojo.flash.Communicator.prototype = {
         // do a trick, where we link this function name to our wrapper
         // function, _call, that does the actual JavaScript to Flash call
         var callFunc = function(){
-            return dojo.flash.comm[id]._call(functionName, arguments, id);
+            return lz.embed.dojo.comm[id]._call(functionName, arguments, id);
         };            
-        dojo.flash.comm[id][functionName] = callFunc;
+        lz.embed.dojo.comm[id][functionName] = callFunc;
         
         // indicate that the call was successful
-        var p = dojo.flash.obj[id].get();
+        var p = lz.embed.dojo.obj[id].get();
         if (p) p.SetVariable("_succeeded", true);
     },
     
     // Handles Flash calling a JavaScript function. Flash 6 communication.
     _fscommandCall: function(command, args, id){
         //console.log('_fscommandCall ' +  command + ', ' + args, arguments);
-        var plugin = dojo.flash.obj[id].get();
+        var plugin = lz.embed.dojo.obj[id].get();
         var functionName = args;
         
         if (! plugin) return;
@@ -968,7 +965,7 @@ dojo.flash.Communicator.prototype = {
         
         // get the function instance; we technically support more capabilities
         // than ExternalInterface, which can only call global functions; if
-        // the method name has a dot in it, such as "dojo.flash.loaded", we
+        // the method name has a dot in it, such as "lz.embed.dojo.loaded", we
         // eval it so that the method gets run against an instance
         var runMe;
         var scope = window;
@@ -993,7 +990,7 @@ dojo.flash.Communicator.prototype = {
     
     // Reports that fscommands are ready to run if executed from Flash.
     _fscommandReady: function(id){
-        var plugin = dojo.flash.obj[id].get();
+        var plugin = lz.embed.dojo.obj[id].get();
         if (plugin) plugin.SetVariable("fscommandReady", "true");
         //alert("_fscommandReady");
     },
@@ -1006,7 +1003,7 @@ dojo.flash.Communicator.prototype = {
         // of arguments; and "_0", "_1", etc for each numbered argument. Flash
         // reads these, executes the function call, and returns the result
         // in "_returnResult"
-        var plugin = dojo.flash.obj[id].get();
+        var plugin = lz.embed.dojo.obj[id].get();
         plugin.SetVariable("_functionName", functionName);
         plugin.SetVariable("_numArgs", args.length);
         for(var i = 0; i < args.length; i++){
@@ -1052,11 +1049,11 @@ dojo.flash.Communicator.prototype = {
             }
             methodArgs.length = arguments.length;
             //alert('_addExternalInterfaceCallback '  + methodName  + ', ' + methodArgs);
-            return dojo.flash.comm[id]._execFlash(methodName, methodArgs, id);
+            return lz.embed.dojo.comm[id]._execFlash(methodName, methodArgs, id);
         };
         
-        dojo.flash.comm[id][methodName] = wrapperCall;
-        //console.log('creating', id, methodName, dojo.flash.comm)
+        lz.embed.dojo.comm[id][methodName] = wrapperCall;
+        //console.log('creating', id, methodName, lz.embed.dojo.comm)
     },
     
     // Encodes our data to get around ExternalInterface bugs.
@@ -1115,7 +1112,7 @@ dojo.flash.Communicator.prototype = {
     // have ExternalInterface's performance not be O(n^2).
     // Flash 8 communication.
     _chunkArgumentData: function(value, argIndex, id){
-        var plugin = dojo.flash.obj[id].get();
+        var plugin = lz.embed.dojo.obj[id].get();
         
         // cut up the string into pieces, and push over each piece one
         // at a time
@@ -1153,7 +1150,7 @@ dojo.flash.Communicator.prototype = {
     // Gets our method return data in chunks for better performance.
     // Flash 8 communication.
     _chunkReturnData: function(id){
-        var plugin = dojo.flash.obj[id].get();
+        var plugin = lz.embed.dojo.obj[id].get();
         
         var numSegments = plugin.getReturnLength();
         var resultsArray = [];
@@ -1190,7 +1187,7 @@ dojo.flash.Communicator.prototype = {
     // create on dojo.flash.comm.
     // Flash 8 communication.
     _execFlash: function(methodName, methodArgs, id){
-        var plugin = dojo.flash.obj[id].get();
+        var plugin = lz.embed.dojo.obj[id].get();
         //alert(plugin + ', ' + plugin.startExec);
                 
         // begin Flash method execution
@@ -1220,7 +1217,7 @@ dojo.flash.Communicator.prototype = {
     }
 };
 
-dojo.flash.Install = function(id){
+lz.embed.dojo.Install = function(id){
     // summary: Helps install Flash plugin if needed.
     // description:
     //    Figures out the best way to automatically install the Flash plugin
@@ -1229,31 +1226,31 @@ dojo.flash.Install = function(id){
     this._id = id;
 };
 
-dojo.flash.Install.prototype = {
+lz.embed.dojo.Install.prototype = {
     needed: function(){ /* Boolean */
         // summary:
         //    Determines if installation or revving of the current plugin is 
         //    needed. 
     
         // do we even have flash?
-        if(dojo.flash.info.capable == false){
+        if(lz.embed.dojo.info.capable == false){
             return true;
         }
 
         // are we on the Mac? Safari needs Flash version 8 to do Flash 8
         // communication, while Firefox/Mac needs Flash 8 to fix bugs it has
         // with Flash 6 communication
-        if(Lz.__BrowserDetect.isSafari == true && !dojo.flash.info.isVersionOrAbove(8, 0, 0)){
+        if(lz.embed.browser.isSafari == true && !lz.embed.dojo.info.isVersionOrAbove(8, 0, 0)){
             return true;
         }
 
         // pay attention to the minimum requirements  
-        if (dojo.flash.minimumVersion > dojo.flash.info.versionMajor) {
+        if (lz.embed.dojo.minimumVersion > lz.embed.dojo.info.versionMajor) {
             return true;
         }        
 
         // other platforms need at least Flash 6 or above
-        if(!dojo.flash.info.isVersionOrAbove(6, 0, 0)){
+        if(!lz.embed.dojo.info.isVersionOrAbove(6, 0, 0)){
             return true;
         }
 
@@ -1266,28 +1263,28 @@ dojo.flash.Install.prototype = {
         
         //dojo.debug("install");
         // indicate that we are installing
-        dojo.flash.info.installing = true;
-        dojo.flash.installing();
+        lz.embed.dojo.info.installing = true;
+        lz.embed.dojo.installing();
         
-        dojo.flash.ready = false;
-        if(dojo.flash.info.capable == false){ // we have no Flash at all
-            dojo.flash._isinstaller = true;
+        lz.embed.dojo.ready = false;
+        if(lz.embed.dojo.info.capable == false){ // we have no Flash at all
+            lz.embed.dojo._isinstaller = true;
             // write out a simple Flash object to force the browser to prompt
             // the user to install things
 
             // upgrade URL to flash 8...
-            var url = dojo.flash.obj[this._id].properties.flash8;
+            var url = lz.embed.dojo.obj[this._id].properties.flash8;
             var i = url.indexOf('swf7')
             if (i != -1) {
-                dojo.flash._tempurl = url;
+                lz.embed.dojo._tempurl = url;
                 url = url.substring(0, i + 3) + '8' + url.substring(i + 4, url.length);
-                 dojo.flash.obj[this._id].properties.flash8 = url;
+                 lz.embed.dojo.obj[this._id].properties.flash8 = url;
             }
-            var installObj = new dojo.flash.Embed({visible: true, width: '100%', height: '100%'});
+            var installObj = new lz.embed.dojo.Embed({visible: true, width: '100%', height: '100%'});
             installObj.write(8); // write out HTML for Flash 8 version+
-        }else if(dojo.flash.info.isVersionOrAbove(6, 0, 65)){ // Express Install
+        }else if(lz.embed.dojo.info.isVersionOrAbove(6, 0, 65)){ // Express Install
             //dojo.debug("Express install");
-            var installObj = new dojo.flash.Embed({visible: false, width: '100%', height: '100%'});
+            var installObj = new lz.embed.dojo.Embed({visible: false, width: '100%', height: '100%'});
             installObj.write(8, true); // write out HTML for Flash 8 version+
             installObj.setVisible(true);
             installObj.center();
@@ -1303,7 +1300,7 @@ dojo.flash.Install.prototype = {
     _onInstallStatus: function(msg){
         if (msg == "Download.Complete"){
             // Installation is complete.
-            dojo.flash._initialize();
+            lz.embed.dojo._initialize();
         }else if(msg == "Download.Cancelled"){
             alert("This content requires a more recent version of the Macromedia "
                         +" Flash Player.");
@@ -1318,7 +1315,7 @@ dojo.flash.Install.prototype = {
 };
 
 // find out if Flash is installed
-dojo.flash.info = new dojo.flash.Info();
+lz.embed.dojo.info = new lz.embed.dojo.Info();
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
