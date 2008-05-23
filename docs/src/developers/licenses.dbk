@@ -333,6 +333,20 @@
       <seg>http://www.mozilla.org/MPL/</seg>
     </seglistitem>
     <seglistitem>
+      <seg>derby.jar</seg>
+      <seg>WEB-INF/lib/derby.jar</seg>
+      <seg>10.2 (F)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>derbytools.jar</seg>
+      <seg>WEB-INF/lib/derbytools.jar</seg>
+      <seg>10.2 (F)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
       <seg>DocBook XML 4.5</seg>
       <seg>vendor/docbook-xml-4.5</seg>
       <seg>4.5</seg>
@@ -804,11 +818,11 @@
       <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
     </seglistitem>
     <seglistitem>
-      <seg>swflib.jar</seg>
-      <seg>WEB-INF/lib/swflib.jar</seg>
-      <seg>?</seg>
-      <seg>?</seg>
-      <seg>?</seg>
+      <seg>taglibs-i18n.jar</seg>
+      <seg>WEB-INF/lib/taglibs-i18n.jar</seg>
+      <seg>1.0 (F)</seg>
+      <seg>Apache License, Version 2.0</seg>
+      <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
     </seglistitem>
     <seglistitem>
       <seg>tomcat-coyote.jar</seg>

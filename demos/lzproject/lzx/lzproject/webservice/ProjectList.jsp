@@ -31,7 +31,7 @@ if (list != null) {
 			<description><![CDATA[<%= project.getDescription() %>]]></description>
 			<running><i18n:message key="main.dashboard.running">
 					 	<i18n:messageArg value="<%= longFormat.format(project.getStarted()) %>"/>
-					 	<i18n:messageArg value="<%= project.getDaysRunning() %>" />
+					 	<i18n:messageArg value="<%= new Integer(project.getDaysRunning()) %>" />
 				 	</i18n:message></running>
 		</project>
 <%

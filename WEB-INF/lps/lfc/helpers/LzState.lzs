@@ -263,7 +263,7 @@ dynamic class LzState extends LzNode {
       this.addProperty('apply', doapply);
       return;
     }
-    $lzc$set_applied(doapply);
+    this.$lzc$set_applied(doapply);
   }
 
   /**
