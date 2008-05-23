@@ -1,6 +1,8 @@
-if (! window['lz']) {
-    window.lz = {};
-}
+try {
+    if (lz) {}
+} catch (e) {
+    lz = {};
+}    
 
 #include "embednew.js"
 #include "flash.js"
