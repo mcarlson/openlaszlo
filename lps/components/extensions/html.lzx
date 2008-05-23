@@ -10,32 +10,33 @@
     </when>
     <otherwise>
 <script>
-// proxy object for browser Lz.iframemanager
-Lz.iframemanager = {
+// proxy object for browser lz.embed.iframemanager
+lz.embed  = {}
+lz.embed.iframemanager = {
     owners: {}
     ,create: function(owner, name, appendto) {
-        LzBrowser.callJS('Lz.iframemanager.create', function (id) { 
-                Lz.iframemanager.owners[id] = owner;
+        LzBrowser.callJS('lz.embed.iframemanager.create', function (id) { 
+                lz.embed.iframemanager.owners[id] = owner;
                 owner.setiframeid(id); 
             }, canvas.id, name, appendto);
     }
     ,setPosition: function(id, x, y, width, height, v) {
-        LzBrowser.callJS('Lz.iframemanager.setPosition', false, id, x, y, width, height, v);
+        LzBrowser.callJS('lz.embed.iframemanager.setPosition', false, id, x, y, width, height, v);
     }
     ,setSrc: function(id, src, history) {
-        LzBrowser.callJS('Lz.iframemanager.setSrc', null, id, src, history);
+        LzBrowser.callJS('lz.embed.iframemanager.setSrc', null, id, src, history);
     }
     ,setVisible: function(id, v) {
-        LzBrowser.callJS('Lz.iframemanager.setVisible', false, id, v);
+        LzBrowser.callJS('lz.embed.iframemanager.setVisible', false, id, v);
     }
     ,bringToFront: function(id) {
-        LzBrowser.callJS('Lz.iframemanager.bringToFront', null, id);
+        LzBrowser.callJS('lz.embed.iframemanager.bringToFront', null, id);
     }
     ,sendToBack: function(id) {
-        LzBrowser.callJS('Lz.iframemanager.sendToBack', null, id);
+        LzBrowser.callJS('lz.embed.iframemanager.sendToBack', null, id);
     }
     ,__gotload: function(id) {
-        if (Lz.iframemanager.owners[id]) Lz.iframemanager.owners[id].__gotload();
+        if (lz.embed.iframemanager.owners[id]) lz.embed.iframemanager.owners[id].__gotload();
     }
 }
 </script>
@@ -76,7 +77,7 @@ Lz.iframemanager = {
     <attribute name="visible" type="boolean" value="true" setter="this.setVisible(visible)"/>
     <method name="setVisible" args="v">
         this.visible = v;
-        if (this['iframeid']) Lz.iframemanager.setVisible(this.iframeid, v);
+        if (this['iframeid']) lz.embed.iframemanager.setVisible(this.iframeid, v);
         if (this['onvisible']) this.onvisible.sendEvent(v);
     </method>
 
@@ -86,7 +87,7 @@ Lz.iframemanager = {
         this.src = s;
         this.setAttribute('loading', true);
         if (this['iframeid']) {
-            Lz.iframemanager.setSrc(this.iframeid, s, this.history);
+            lz.embed.iframemanager.setSrc(this.iframeid, s, this.history);
         } else {
             this.srcset = s;
         }
@@ -100,7 +101,7 @@ Lz.iframemanager = {
         if (this['target'] == null) {
             this.setAttribute('target', this.parent);
         }
-        var i = Lz.iframemanager.create(this, this.framename);
+        var i = lz.embed.iframemanager.create(this, this.framename);
         if (i) this.setiframeid(i);
     </method>
 
@@ -111,7 +112,7 @@ Lz.iframemanager = {
         var width = this.target.getAttributeRelative("width", canvas) + this.widthoffset;
         var height = this.target.getAttributeRelative("height", canvas) + this.heightoffset;
         if (this['iframeid']) {
-            Lz.iframemanager.setPosition(this.iframeid, x, y, width, height, this.visible);
+            lz.embed.iframemanager.setPosition(this.iframeid, x, y, width, height, this.visible);
         }
     </method>
     <!--- @access private -->
@@ -120,7 +121,7 @@ Lz.iframemanager = {
         this.iframeid = id;
         this.__updatepos();
         if (this['isfront']) this.bringToFront();
-        if (this['srcset']) Lz.iframemanager.setSrc(id, this.srcset, this.history);
+        if (this['srcset']) lz.embed.iframemanager.setSrc(id, this.srcset, this.history);
         this.setAttribute('ready', true);
     </method>
     <method name="__gotload">
@@ -131,12 +132,12 @@ Lz.iframemanager = {
     <method name="bringToFront">
         if (this['isfront'] == true) return;
         this.isfront = true;
-        if (this['iframeid']) Lz.iframemanager.bringToFront(this.iframeid);
+        if (this['iframeid']) lz.embed.iframemanager.bringToFront(this.iframeid);
     </method>
     <method name="sendToBack">
         if (this['isfront'] == false) return;
         this.isfront = false;
-        if (this['iframeid']) Lz.iframemanager.sendToBack(this.iframeid);
+        if (this['iframeid']) lz.embed.iframemanager.sendToBack(this.iframeid);
     </method>
 </class>
 </library>

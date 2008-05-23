@@ -7,7 +7,7 @@
       <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico">
       <title>OpenLaszlo Application</title><script type="text/javascript">
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
           // If loaded bare into a browser, set the browser size to the canvas size
@@ -35,7 +35,6 @@
               }
             })(null, null);
           }
-        lzOptions = { ServerRoot: '<%= request.getContextPath() %>' };
         </script><script type="text/javascript" src="<%= request.getContextPath() %>/lps/includes/embed-compressed.js"></script><style type="text/css">
         	html, body
         	{
@@ -54,7 +53,7 @@
         	img { border: 0 none; }
         </style></head>
    <body><script type="text/javascript">
-              Lz.swfEmbed({url: 'html.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp', accessible: 'false', wmode: 'transparent'});
+              lz.embed.swf({url: 'html.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp', accessible: 'false', wmode: 'transparent'});
               // wmode: 'transparent' is required for the html to show through.
             </script><noscript>
          Please enable JavaScript in order to use this application.
