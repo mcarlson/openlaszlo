@@ -7,7 +7,8 @@
 load("3rd-party/tools/BUFakeDom.js"); 
 
 // some setup to fake what the html embed does 
-Lz = {__propcache: { appenddiv: document.createElement() } };
+lz = {};
+lz.embed = {__propcache: { appenddiv: document.createElement() } };
 
 // Fake the browser DOM
 // Laszlo app expects to run in an iframe
@@ -38,7 +39,7 @@ var navigator = {userAgent: "lztest",
                 platform: "unknown"}; // This is expected to be in the top level namespace. 
                 
 
-Lz.attachEventHandler = function () {
+lz.embed.attachEventHandler = function () {
   // Just a stub
 }                
 
