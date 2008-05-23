@@ -126,7 +126,7 @@
     <link rel="stylesheet" href="{$rootpath}includes/lzx-pretty-print.css" type="text/css"/>
     <script type="text/javascript" language="JavaScript" src="{$rootpath}{$root.relative.lps.includes}embed-compressed.js"/>
     <script type="text/javascript" language="JavaScript" src="{$rootpath}includes/docs.js"/>
-    <script type="text/javascript"><xsl:text>//Lz.dhtmlEmbedLFC('</xsl:text><xsl:value-of select="$rootpath"/><xsl:value-of select="$root.relative.lps.includes"/><xsl:text>lfc/LFCdhtml.js', '</xsl:text><xsl:value-of select="$rootpath"/><xsl:text>../');</xsl:text></script>
+    <script type="text/javascript"><xsl:text>//lz.embed.lfc('</xsl:text><xsl:value-of select="$rootpath"/><xsl:value-of select="$root.relative.lps.includes"/><xsl:text>lfc/LFCdhtml.js', '</xsl:text><xsl:value-of select="$rootpath"/><xsl:text>../');</xsl:text></script>
   </xsl:template>
   
   <xsl:template name="body.attributes">
@@ -248,15 +248,15 @@
         <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', history: false <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
         <xsl:variable name="dhtml-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=html&amp;lzr=dhtml', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'DHTML')"/>', cancelkeyboardcontrol: true, <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
         <!-- To test examples in DHTML, uncomment the second script block below
-             and the call to Lz.dhtmlEmbedLFC() above.
+             and the call to lz.embed.lfc() above.
              If you don't want to see the SWF version as well, comment out the 
              first script block. -->
         <script language="JavaScript" type="text/javascript">
-          Lz.swfEmbed(<xsl:value-of select="$swf-embed-params"/>);
+          lz.embed.swf(<xsl:value-of select="$swf-embed-params"/>);
         </script>
 <?ignore
         <script language="JavaScript" type="text/javascript">
-          Lz.dhtmlEmbed(<xsl:value-of select="$dhtml-embed-params"/>);
+          lz.embed.dhtml(<xsl:value-of select="$dhtml-embed-params"/>);
         </script>
 ?>
       </div>
