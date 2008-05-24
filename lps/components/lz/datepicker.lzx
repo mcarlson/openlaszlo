@@ -104,11 +104,11 @@
 
         <handler name="onselected"> 
             if( this.selected ) { 
-                this.buttonview.setVisible( true );  
+                this.buttonview.setAttribute('visible', true );  
                 this.buttonview.setAttribute('frame', 3 );
             } else { 
                 this.buttonview.setAttribute('frame', 1 ); 
-                this.buttonview.setVisible( false );
+                this.buttonview.setAttribute('visible', false );
             }
         </handler>
 
@@ -167,8 +167,7 @@
 
         </basecomponent>
         
-        <text y="$once{parent.height/2 - this.height/2}"
-              text="${classroot.daynum}" 
+        <text text="${classroot.daynum}" 
               resize="true" 
               align="center" 
               valign="middle"

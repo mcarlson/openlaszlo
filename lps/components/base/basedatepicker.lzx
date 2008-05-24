@@ -174,22 +174,15 @@
 
             this.selecteddatepickerday = d;
 
-            if( this.selecteddate == null ) { 
+            //only set a new selected date if it has changed or wasn't yet set
+            var seldate = this.selecteddate;
+            if( seldate == null || 
+                    (seldate.getDate() != d.daynum ||
+                     seldate.getFullYear() != this.showingyear ||
+                     seldate.getMonth() != this.showingmonth) ) { 
                 this.setAttribute('selecteddate', new Date( this.showingyear,
                                                             this.showingmonth,
                                                             d.daynum ) );
-            } else { 
-
-                //only set a new selected date if it has changed
-                if( this.selecteddate.getDate() != d.daynum ||
-                    this.selecteddate.getFullYear() != this.showingyear ||
-                    this.selecteddate.getMonth() != this.showingmonth ) { 
-
-                    this.selecteddate.setDate( d.daynum );
-                    this.selecteddate.setYear( this.showingyear );
-                    this.selecteddate.setMonth( this.showingmonth ); 
-                    this.setAttribute('selecteddate', this.selecteddate );
-                }
             }
         ]]>
         </method>
