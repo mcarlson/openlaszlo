@@ -64,6 +64,7 @@ var LzSprite = function(owner, isroot) {
         if (this.quirks.fix_clickable) {
             var cdiv = document.createElement('div');
             cdiv.className = 'lzcanvasclickdiv';
+            cdiv.id = 'lzcanvasclickdiv';
             root.appendChild(cdiv);
             this.__LZclickdiv = cdiv;
         }
@@ -71,16 +72,22 @@ var LzSprite = function(owner, isroot) {
         // Mouse detection for activiation/deactivation of keyboard events
         div.mouseisover = false;
         div.onmouseover = function(e) {
-            this.mouseisover = true;
             div.focus();
             LzKeyboardKernel.setKeyboardControl(true);
+            this.mouseisover = true;
             //console.log('onmouseover', e, this.mouseisover);
         }
         div.onmouseout = function(e) {
-            if (! e) e = window.event;
-            if (e.relatedTarget && e.relatedTarget.owner && e.relatedTarget.className.indexOf('lz') == 0) {
+            if (! e) {
+                e = window.event;
+                var el = e.fromElement;
+            } else {
+                var el = e.relatedTarget;
+            }
+            if (el && el.owner && el.className.indexOf('lz') == 0) {
                 this.focus();
                 LzKeyboardKernel.setKeyboardControl(true);
+                LzMouseKernel.__resetMouse();
                 this.mouseisover = true;
             } else {
                 this.blur();

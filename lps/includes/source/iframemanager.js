@@ -3,35 +3,37 @@
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 lz.embed.iframemanager = {
-    __highestz: 0
+    __counter: 0
     ,__frames: {}
     ,__namebyid: {}
-    ,create: function(owner, name, appendto) {
-        //alert(owner + ', ' + name + ', ' + appendto)
+    ,create: function(owner, name, scrollbars, appendto, defaultz) {
+        //console.log(owner + ', ' + name + ', ' + scrollbars + ', ' + appendto + ', ' + defaultz)
         var i = document.createElement('iframe');
         i.owner = owner;
         i.skiponload = true;
 
-        var id = '__lz' + lz.embed.iframemanager.__highestz++;
+        var id = '__lz' + lz.embed.iframemanager.__counter++;
         lz.embed.iframemanager.__frames[id] = i;
 
-        if (name == null || name == 'null') name = id;
+        if (name == null || name == 'null' || name == '') name = id;
         if (name != "") lz.embed.__setAttr(i, 'name', name);
-        this.__namebyid[id] = name;
+        //console.log('using name', name);
+        lz.embed.iframemanager.__namebyid[id] = name;
 
         lz.embed.__setAttr(i, 'src', 'javascript:""');
 
         if (appendto == null || appendto == "undefined") {
             appendto = document.body;
         }
-        appendto.appendChild(i);
         lz.embed.__setAttr(i, 'id', id);
+        if (scrollbars != true) lz.embed.__setAttr(i, 'scrolling', 'no');
+        this.appendTo(id, appendto);
 
         var iframe = lz.embed.iframemanager.getFrame(id);
         lz.embed.__setAttr(iframe, 'onload', 'lz.embed.iframemanager.__gotload("' + id + '")');
         iframe.__gotload = lz.embed.iframemanager.__gotload;
-        iframe._defaultz = 99900 + lz.embed.iframemanager.__highestz;
-        iframe.style.zIndex = iframe._defaultz;
+        iframe._defaultz = defaultz ? defaultz : 99900;
+        this.setZ(id, iframe._defaultz);
 
         lz.embed.iframemanager.__topiframe = id;
         if (document.getElementById && !(document.all) ) {
@@ -42,7 +44,7 @@ lz.embed.iframemanager = {
             lz.embed.__setAttr(iframe, 'allowtransparency', 'true');
 
             var metadata = lz.embed[iframe.owner]
-            if (metadata.runtime == 'swf') { 
+            if (metadata && metadata.runtime == 'swf') { 
                 // register for onfocus event for swf movies - see LPP-5482 
                 var div = metadata._getSWFDiv();
                 div.onfocus = lz.embed.iframemanager.__refresh;
@@ -51,25 +53,37 @@ lz.embed.iframemanager = {
         iframe.style.position = 'absolute';
         return id + '';
     }
+    ,appendTo: function(id, div) { 
+        var iframe = lz.embed.iframemanager.getFrame(id);
+        //console.log('appendTo', id, div, iframe.__appended);
+        if (div.__appended == div) return;
+        if (iframe.__appended) {
+            // remove 
+            //console.log('remove', iframe, iframe.__appended);
+            old = iframe.__appended.removeChild(iframe);
+            div.appendChild(old);
+        } else {
+            div.appendChild(iframe);
+        }
+        iframe.__appended = div;
+    }
     ,getFrame: function(id) { 
         return lz.embed.iframemanager.__frames[id];
     }
     ,setSrc: function(id, s, history) { 
-        //console.log('setSrc', id, s)
+        //console.log('setSrc', id, s, history)
         if (history) {
             var iframe = lz.embed.iframemanager.getFrame(id);
             if (! iframe) return;
             lz.embed.__setAttr(iframe, 'src', s);
-            return true;
         } else {
             var id = lz.embed.iframemanager.__namebyid[id];
             var iframe = window[id];
             if (! iframe) return;
             iframe.location.replace(s);
-            return true;
         }
     }
-    ,setPosition: function(id, x, y, width, height, visible) { 
+    ,setPosition: function(id, x, y, width, height, visible, z) { 
         //Debug.write('setPosition', id);
         //console.log('setPosition', id, x, y, width, height, visible)
         var iframe = lz.embed.iframemanager.getFrame(id);
@@ -84,8 +98,7 @@ lz.embed.iframemanager = {
             }
             iframe.style.display = visible ? 'block' : 'none';
         }
-        
-        return true;
+        if (z != null) this.setZ(id, z + iframe._defaultz);
     }
     ,setVisible: function(id, v) { 
         if (typeof v == 'string') {
@@ -96,27 +109,21 @@ lz.embed.iframemanager = {
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
         iframe.style.display = v ? 'block' : 'none';
-        return true;
     }
     ,bringToFront: function(id) { 
-        //console.log('bringToFront', id)
-        //Debug.write('bringToFront', id);
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
-        iframe.style.zIndex = 100000 + lz.embed.iframemanager.__highestz;
+        iframe._defaultz = 100000;
+        this.setZ(id, iframe._defaultz);
         lz.embed.iframemanager.__topiframe = id;
-        return true;
     }
     ,sendToBack: function(id) { 
-        //console.log('sendToBack', id)
-        //Debug.write('bringToFront', id);
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
-        iframe.style.zIndex = iframe._defaultz;
-        return true;
+        iframe._defaultz = 99900;
+        this.setZ(id, iframe._defaultz);
     }
     ,__gotload: function(id) { 
-        //Debug.write('__gotload', id);
         var iframe = lz.embed.iframemanager.getFrame(id);
         //console.log('__gotload', iframe, iframe.skiponload);
         if (! iframe) return;
@@ -141,5 +148,18 @@ lz.embed.iframemanager = {
                 iframe.style.display = 'block'; 
             }
         }
+    }
+    ,setZ: function(id, z) { 
+        var iframe = lz.embed.iframemanager.getFrame(id);
+        if (! iframe) return;
+        //console.log('setZ', z, iframe); 
+        iframe.style.zIndex = z;
+    }
+    ,scrollBy: function(id, x, y) { 
+        var id = lz.embed.iframemanager.__namebyid[id];
+        var iframe = window.frames[id];
+        if (! iframe) return;
+        //console.log('scrollBy', x, y, iframe); 
+        iframe.scrollBy(x, y);
     }
 }

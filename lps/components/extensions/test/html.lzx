@@ -6,22 +6,24 @@
     <include href="extensions/html.lzx"/>
 
     <class name="browser" extends="window" resizable="true" bgcolor="silver">
-        <simplelayout axis="x"/>
-        <edittext name="txt" text="http://w3.org/" width="300"/> 
-        <button>Load
-            <handler name="onclick">
-                parent.main.setAttribute('src', parent.txt.getText()); 
-                parent.main.setAttribute('visible', true); 
-            </handler>
-        </button> 
-        <button>Clear
-            <handler name="onclick">
-                parent.main.setVisible(false);
-                parent.main.setSrc(''); 
-            </handler>
-        </button> 
-        <text name="status" y="3" fontstyle="bold" visible="${parent.main.loading}">Loading...</text>
-        <html name="main" heightoffset="-74" widthoffset="-19" xoffset="7" yoffset="50" history="true">
+        <simplelayout axis="y" spacing="2"/>
+        <hbox width="100%">
+            <edittext name="txt" text="http://w3.org/" width="300"/> 
+            <button>Load
+                <handler name="onclick">
+                    classroot.main.setAttribute('src', parent.txt.getText()); 
+                    classroot.main.setAttribute('visible', true); 
+                </handler>
+            </button> 
+            <button>Clear
+                <handler name="onclick">
+                    classroot.main.setVisible(false);
+                    classroot.main.setSrc(''); 
+                </handler>
+            </button> 
+            <text name="status" y="3" fontstyle="bold" visible="${classroot.main.loading}">Loading...</text>
+        </hbox>    
+        <html name="main" history="false" width="100%" height="${classroot.height - this.y - 44}">
             <handler name="oninit">
                 this.bringToFront();
             </handler>

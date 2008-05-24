@@ -145,4 +145,20 @@ var LzMouseKernel = {
         LzMouseKernel.__amLocked = false;
         LzMouseKernel.restoreCursor(); 
     }
+
+    ,disableMouseTemporarily: function (){
+        this.setGlobalClickable(false);
+        this.__resetonmouseover = true; 
+    }
+    ,__resetonmouseover: false
+    ,__resetMouse: function (){
+        if (this.__resetonmouseover) {
+            this.__resetonmouseover = false;
+            this.setGlobalClickable(true);
+        }
+    }
+    ,setGlobalClickable: function (isclickable){
+        var el = document.getElementById('lzcanvasclickdiv');
+        el.style.display = isclickable ? 'block' : 'none';
+    }
 }

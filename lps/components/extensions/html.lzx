@@ -14,14 +14,14 @@
 lz.embed  = {}
 lz.embed.iframemanager = {
     owners: {}
-    ,create: function(owner, name, appendto) {
+    ,create: function(owner, name, scrollbars) {
         LzBrowser.callJS('lz.embed.iframemanager.create', function (id) { 
                 lz.embed.iframemanager.owners[id] = owner;
                 owner.setiframeid(id); 
-            }, canvas.id, name, appendto);
+            }, canvas.id, name, scrollbars);
     }
-    ,setPosition: function(id, x, y, width, height, v) {
-        LzBrowser.callJS('lz.embed.iframemanager.setPosition', false, id, x, y, width, height, v);
+    ,setPosition: function(id, x, y, width, height, v, z) {
+        LzBrowser.callJS('lz.embed.iframemanager.setPosition', false, id, x, y, width, height, v, z);
     }
     ,setSrc: function(id, src, history) {
         LzBrowser.callJS('lz.embed.iframemanager.setSrc', null, id, src, history);
@@ -35,6 +35,9 @@ lz.embed.iframemanager = {
     ,sendToBack: function(id) {
         LzBrowser.callJS('lz.embed.iframemanager.sendToBack', null, id);
     }
+    ,scrollBy: function(id, x, y) {
+        LzBrowser.callJS('lz.embed.iframemanager.scrollBy', false, id, x, y);
+    }
     ,__gotload: function(id) {
         if (lz.embed.iframemanager.owners[id]) lz.embed.iframemanager.owners[id].__gotload();
     }
@@ -43,11 +46,10 @@ lz.embed.iframemanager = {
 </otherwise>
 </switch>
 
-<class name="html" extends="node">
-    <attribute name="xoffset" type="number" value="0"/>
-    <attribute name="yoffset" type="number" value="0"/>
+<class name="html" extends="view">
     <attribute name="widthoffset" type="number" value="0"/>
     <attribute name="heightoffset" type="number" value="0"/>
+    <attribute name="scrollbars" type="boolean" value="true"/>
     <attribute name="loading" type="boolean" value="false"/>
     <attribute name="appendto" value="null"/>
     <attribute name="ready" value="false"/>
@@ -74,7 +76,7 @@ lz.embed.iframemanager = {
         if (this['ontarget']) this.ontarget.sendEvent(t);
     </method>
 
-    <attribute name="visible" type="boolean" value="true" setter="this.setVisible(visible)"/>
+    <attribute name="visible" type="expression" value="true" setter="this.setVisible(visible)"/>
     <method name="setVisible" args="v">
         this.visible = v;
         if (this['iframeid']) lz.embed.iframemanager.setVisible(this.iframeid, v);
@@ -101,27 +103,42 @@ lz.embed.iframemanager = {
         if (this['target'] == null) {
             this.setAttribute('target', this.parent);
         }
-        var i = lz.embed.iframemanager.create(this, this.framename);
+        if ($dhtml) {
+            
+            var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars, this.sprite.__LZdiv, 0);
+        } else {
+            var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars);
+        }
         if (i) this.setiframeid(i);
     </method>
 
     <!--- @access private -->
-    <method name="__updatepos">
-        var x = this.target.getAttributeRelative("x", canvas) + this.xoffset;
-        var y = this.target.getAttributeRelative("y", canvas) + this.yoffset;
-        var width = this.target.getAttributeRelative("width", canvas) + this.widthoffset;
-        var height = this.target.getAttributeRelative("height", canvas) + this.heightoffset;
-        if (this['iframeid']) {
-            lz.embed.iframemanager.setPosition(this.iframeid, x, y, width, height, this.visible);
+    <method name="__updatepos" args="ignore">
+        if (! this['iframeid']) return;
+
+        if ($dhtml) {
+            var x = 0;
+            var y = 0;
+            var z = this.sprite.getZ();
+        } else {
+            var x = this.getAttributeRelative("x", canvas);
+            var y = this.getAttributeRelative("y", canvas);
+            var z = this.target.sprite.getZ();
         }
+        var width = this.width;
+        var height = this.height;
+        lz.embed.iframemanager.setPosition(this.iframeid, x, y, width, height, this.visible, z);
     </method>
     <!--- @access private -->
     <method name="setiframeid" args="id">
         //Debug.write('setiframeid', id, this)
         this.iframeid = id;
-        this.__updatepos();
         if (this['isfront']) this.bringToFront();
         if (this['srcset']) lz.embed.iframemanager.setSrc(id, this.srcset, this.history);
+        this.__updatepos();
+        if ($dhtml) {
+            this.setClickable(true);
+        }
         this.setAttribute('ready', true);
     </method>
     <method name="__gotload">
@@ -130,14 +147,47 @@ lz.embed.iframemanager = {
         this.onload.sendEvent();
     </method>
     <method name="bringToFront">
-        if (this['isfront'] == true) return;
+        super.bringToFront();
+        if (this['isfront'] == true || ! this['iframeid']) return;
         this.isfront = true;
-        if (this['iframeid']) lz.embed.iframemanager.bringToFront(this.iframeid);
+        if ($dhtml) {
+            lz.embed.iframemanager.setZ(this.iframeid, this.sprite.getZ());
+        } else {
+            lz.embed.iframemanager.bringToFront(this.iframeid);
+        }
     </method>
     <method name="sendToBack">
-        if (this['isfront'] == false) return;
+        super.sendToBack();
+        if (this['isfront'] == false || ! this['iframeid']) return;
         this.isfront = false;
         if (this['iframeid']) lz.embed.iframemanager.sendToBack(this.iframeid);
+        if ($dhtml) {
+            lz.embed.iframemanager.setZ(this.iframeid, this.sprite.getZ());
+        } else {
+            lz.embed.iframemanager.sendToBack(this.iframeid);
+        }
     </method>
+    <method name="scrollBy" args="x, y">
+        if (this['iframeid']) lz.embed.iframemanager.scrollBy(this.iframeid, x, y);
+    </method>
+    <switch>
+        <when runtime="dhtml">
+        <attribute name="_mouseisdown" value="false"/>
+        <handler name="onmouseover" reference="LzGlobalMouse" args="e">
+            <![CDATA[
+            if (! this['iframeid']) return;
+            if (e == this && this._mouseisdown == false) {
+                LzMouseKernel.disableMouseTemporarily();
+            }
+            ]]>
+        </handler>
+        <handler name="onmousedown" reference="LzGlobalMouse" args="e">
+            if (e == this) this._mouseisdown = true;
+        </handler>
+        <handler name="onmouseup" reference="LzGlobalMouse" args="e">
+            if (e == this) this._mouseisdown = false;
+        </handler>
+        </when>
+    </switch>
 </class>
 </library>
