@@ -286,21 +286,22 @@ override function construct ( parent, args ) {
 
     this.sizeToHeight = false;
 
-    this.fontname  = ('font' in args)       ? args.font      : this.searchParents( "fontname"  ).fontname ;
-    this.fontsize  = ('fontsize' in args)   ? args.fontsize  : this.searchParents( "fontsize"  ).fontsize ;
-    this.fontstyle = ('fontstyle' in args)  ? args.fontstyle : this.searchParents( "fontstyle" ).fontstyle ;
+    //need to save three different states, so use null and undefined and rely on null !== undefined
+    var argfname = ('font' in args) ? (args.font is LzInitExpr) ? args.font : null : void(0);
+    var argfsize = ('fontsize' in args) ? (args.fontsize is LzInitExpr) ? args.fontsize : null : void(0);
+    var argfstyle = ('fontstyle' in args) ? (args.fontstyle is LzInitExpr) ? args.fontstyle : null : void(0);
+    
+    this.fontname  = args.font      = (argfname  === null ? args.font      : this.searchParents( "fontname"  ).fontname);
+    this.fontsize  = args.fontsize  = (argfsize  === null ? args.fontsize  : this.searchParents( "fontsize"  ).fontsize);
+    this.fontstyle = args.fontstyle = (argfstyle === null ? args.fontstyle : this.searchParents( "fontstyle" ).fontstyle);
 
-    args.font = this.fontname;
-    args.fontsize = this.fontsize;
-    args.fontstyle = this.fontstyle;
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     tsprite.__initTextProperties(args);
 
-    args.font      = LzNode._ignoreAttribute;
-    args.fontsize  = LzNode._ignoreAttribute;
-    args.fontstyle = LzNode._ignoreAttribute;
+    args.font      = argfname == null ? argfname : LzNode._ignoreAttribute;
+    args.fontsize  = argfsize == null ? argfsize : LzNode._ignoreAttribute;
+    args.fontstyle = argfstyle == null ? argfstyle : LzNode._ignoreAttribute;
 
-    //this.callInherited( "construct", arguments.callee ,  parent , args );
     this.yscroll = 0;
     this.xscroll = 0;
 
