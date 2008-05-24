@@ -415,6 +415,11 @@ String exampleURL = (request.getContextPath()+"/" + appUrl + "?lzr=dhtml&lzproxi
              copyFileToZipFile(zout, srcfile, dstfile, zippedfiles);
          }
 
+         // special case for IE7, need to copy lps/includes/blank.gif to lps/resources/lps/includes/blank.gif
+         String srcfile = basedir + "/" + "lps/includes/blank.gif";
+         String dstfile = "lps/resources/lps/includes/blank.gif";
+         copyFileToZipFile(zout, srcfile, dstfile, zippedfiles);
+
         // Copy the DHTML LFC to lps/includes/LFC-dhtml.js
          ArrayList lfcfiles = new ArrayList();
          listFiles(lfcfiles, new File(basedir + "/lps/includes/lfc"));
