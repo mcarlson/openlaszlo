@@ -17,7 +17,7 @@ as well.</para>
 
 <para/></section><section><title>Syntax for creating and removing constraints</title>
 <para>Constraints may be created as follows:</para>
-<itemizedlist spacing="compact"><listitem><para>in a tag, using the ${} syntax to tie the value of one attribute to that of another</para></listitem><listitem><para>in script, using the <indexterm><primary><literal>applyConstraintMethod()</literal></primary></indexterm><methodname>applyConstraintMethod()</methodname> method</para></listitem><listitem><para>in script, using delegates</para></listitem></itemizedlist>
+ <itemizedlist spacing="compact"><listitem><para>in a tag, using the ${} syntax to tie the value of one attribute to that of another (this is the preferred method, and the most simple)</para></listitem><listitem><para>in script, using the <indexterm><primary><literal>applyConstraintMethod()</literal></primary></indexterm><methodname>applyConstraintMethod()</methodname> method</para></listitem><listitem><para>in script, using delegates</para></listitem></itemizedlist>
 <para>These are described in turn below.</para>
 <para>There is no method for removing constraints.  Therefore if you have a constraint that you wish to sometimes be in force and other times not be in force, you should use <indexterm><primary>state</primary></indexterm><sgmltag class="element">&lt;state&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: state-->
