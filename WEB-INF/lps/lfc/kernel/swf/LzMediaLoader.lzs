@@ -145,7 +145,7 @@ static var unsupportedMediaTypesSWF7 = {
 /**
   * @access private
   */
-function request( req , cache , headers ) {
+function request( req , cache , headers, filetype ) {
     var o = { url: req , lzt: "media", timeout: this.timeout };
 
     if ( cache == "none" ){
@@ -162,16 +162,20 @@ function request( req , cache , headers ) {
         o.ccache = true;
     }
 
-    var policy = LzView.__LZcheckProxyPolicy( req );
+    var policy = this.owner.owner.__LZcheckProxyPolicy( req );
     this.proxied = policy;
     o.proxied = policy;
 
     if (!this.proxied) {
         // warn for unsupported media types
-        var suffix = null;
-        var si = req.lastIndexOf(".");
-        if (si != -1) {
-            suffix = req.substring(si+1, si.length).toLowerCase();
+        if (filetype == null) {
+            var suffix = null;
+            var si = req.lastIndexOf(".");
+            if (si != -1) {
+                suffix = req.substring(si+1, si.length).toLowerCase();
+            }
+        } else {
+            var suffix = filetype;
         }
         if ($debug) {
             if (suffix != null && ((LzMediaLoader.unsupportedMediaTypes[suffix] == true)

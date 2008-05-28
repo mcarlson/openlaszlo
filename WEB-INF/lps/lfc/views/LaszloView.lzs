@@ -2542,9 +2542,10 @@ function setBGColor ( bgc ) {
   * @param String cache: If set, controls caching behavior. Choices are
   * <code>none</code> , <code>clientonly</code> , <code>serveronly</code> , <code>both</code> (the default for Flash).  DHTML applications cache media on the client only.  DHTML supports the <code>memorycache</code> option which enables in-memory resource caching.  This enhances performance when swapping resources quickly, and is used internally for multi-frame resources.  Media loaded with <code>memorycache</code> will remain in memory until the page is unloaded or unload() is called.
   * @param String headers: Headers to send with the request, if any.
+  * @param String filetype: Filetype, e.g. 'mp3' or 'jpg'.  If not specified, it will be derived from the URL.
   */
-function setSource ( source , cache = null, headers = null){
-    this.sprite.setSource(source, cache, headers);
+function setSource ( source , cache = null, headers = null, filetype = null){
+    this.sprite.setSource(source, cache, headers, filetype);
 }
 
 /**
@@ -2902,7 +2903,12 @@ var blurring = false;
 static var __LZproxypolicies = [];
 
 /** @access private */
-static function __LZcheckProxyPolicy ( url ){
+function __LZcheckProxyPolicy ( url ){
+    // TODO: walk up parent chain and look for __proxypolicy properties.
+    if (this.__proxypolicy != null) {
+        return this.__proxypolicy( url );
+    }
+
     var pol = LzView.__LZproxypolicies;
 
     for ( var i = pol.length-1; i >=0; i-- ){
@@ -2947,6 +2953,17 @@ static function removeProxyPolicy ( f ){
     return false;
 }
 
+/**
+  * Sets a proxy policy function on a per-view basis.
+  * 
+  * @param Function f: The function to use for this view's proxy policy 
+  */
+function setProxyPolicy ( f ){
+    this.__proxypolicy = f;
+}
+
+/** @access private */ 
+var __proxypolicy = null;
 
 /**
   * LzView.setContextMenu

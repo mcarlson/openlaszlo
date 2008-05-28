@@ -937,12 +937,12 @@ LzSprite.prototype._setButtonSize = function ( axis , bsize ){
   * <code>none</code> , <code>clientonly</code> , <code>serveronly</code> , <code>both</code> (the default).
   * @param String headers: Headers to send with the request, if any.
   */
-LzSprite.prototype.setSource = function ( source , cache, headers){
+LzSprite.prototype.setSource = function ( source, cache, headers, filetype){
     //@event onerror: Sent when there is an error loading the view's resource.
     //The argument sent with the event is the error string sent by the server.
     //@event ontimeout: Sent when the request to load media for the view times
     //out
-    LzMakeLoadSprite.transform( this , source , cache , headers );
+    LzMakeLoadSprite.transform( this, source, cache, headers, filetype);
     //after this call, setSource  and doReplaceResource have been over-ridden
 }
 

@@ -21,7 +21,7 @@ LzMakeLoadSprite.transformerID = 0;
 /**
   * Makes the given view able to load a remote resource
   */
-LzMakeLoadSprite.transform = function ( v , src , cache, headers ){
+LzMakeLoadSprite.transform = function ( v , src , cache, headers, filetype ){
     //super.transform( v );
 
     for ( var k in this){
@@ -46,6 +46,7 @@ LzMakeLoadSprite.transform = function ( v , src , cache, headers ){
     v.firstsrc = src;
     v.firstcache = cache;
     v.firstheaders = headers;
+    v.firstfiletype = filetype;
 
     if ( v.__LZmovieClipRef == null ){
         v.makeContainerResource();
@@ -97,7 +98,7 @@ LzMakeLoadSprite.createLoader = function (){
 
     //Debug.write('LzMakeLoadSprite.createLoader', this.firstsrc)
     if ( this.firstsrc != null ){
-        this.setSource( this.firstsrc , this.firstcache, this.firstheaders );
+        this.setSource( this.firstsrc , this.firstcache, this.firstheaders, this.firstfiletype );
     }
 }
 
@@ -109,8 +110,9 @@ LzMakeLoadSprite.createLoader = function (){
   * @param String cache: If set, controls caching behavior. Choices are
   * "none" , "clientonly" , "serveronly" , "both" -- where both is the default.
   * @param String headers: Headers to send with the request (if any.)
+  * @param String filetype: Filetype, e.g. 'mp3' or 'jpg'.  If not specified, it will be derived from the URL.
   */
-LzMakeLoadSprite.setSource = function ( newSrc , cache , headers ){
+LzMakeLoadSprite.setSource = function ( newSrc , cache , headers , filetype ){
     if (this.loader.mc.loading == true) {
         LzLoadQueue.unloadRequest(this.loader.mc);
     }
@@ -132,7 +134,7 @@ LzMakeLoadSprite.setSource = function ( newSrc , cache , headers ){
 
     this.owner.__LZvizLoad = false; 
     this.owner.__LZupdateShown();
-    this.loader.request( newSrc , cache , headers );
+    this.loader.request( newSrc , cache , headers, filetype );
 }
 
 /**

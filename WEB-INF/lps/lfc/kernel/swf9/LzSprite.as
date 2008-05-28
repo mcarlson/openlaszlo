@@ -180,7 +180,7 @@ dynamic public class LzSprite extends Sprite {
           o Loads and displays media from the specified url
           o Uses the resourceload callback method when the resource finishes loading 
       */
-      public function setSource (url:String, cache = null, headers = null):void {
+      public function setSource (url:String, cache = null, headers = null, filetype = null):void {
           this.resourceURL = url;
           imgLoader = new Loader();
           this.resourceObj = imgLoader;
