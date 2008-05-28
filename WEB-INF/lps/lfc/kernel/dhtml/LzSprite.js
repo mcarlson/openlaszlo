@@ -553,6 +553,9 @@ LzSprite.prototype.setResource = function ( r ){
         this.__preloadFrames();
         this.setSource(url, true);
     } else {
+        //FIXME: [20080203 anba] does this ever get executed? 
+        //because <resource name="res" src="foo.png" /> generates a multi-frame resource, too!
+        //Debug.debug("loading single-resource: '%s'", r);
         this.setSource(r, true);
     }
     //Debug.info('setResource ', r, this.frames)
@@ -569,8 +572,16 @@ LzSprite.prototype.setSource = function (url, usecache){
         this.skiponload = false;
     }
     if (usecache == 'memorycache') {
-        // use the memory cache - explictly turned on my the user
+        // use the memory cache - explictly turned on by the user
         usecache = true;
+    }
+
+    //cancel current load
+    if (this.loading) {
+        if (this.__ImgPool) {
+            this.__ImgPool.flush(this.resource);
+        }
+        this.__LZimg = null;
     }
 
     //Debug.info('setSource ' + url)
@@ -588,12 +599,26 @@ LzSprite.prototype.setSource = function (url, usecache){
         this.__LZimg = im;
         this.__LZdiv.appendChild(this.__LZimg);
     }
-    if (this.stretches) this.__updateStretches();
-    if (this.clickable) this.setClickable(true);
-
-    if (this.quirks.ie_alpha_image_loader) {
-        this.__updateIEAlpha(im);
+    
+    if (this.loading) {
+        //FIXME: [20080203 anba] if this is a single-frame resource, "loading" won't be updated,
+        //also see fixme in setResource(..)
+        
+        //update stretches for IE6, actually only necessary for single-frame resources, 
+        //because multi-frame resources get preloaded+stretched beforehand, 
+        //but do we ever get a single-frame resource? see fixme in setResource(..)
+        if (this.skiponload && this.quirks.ie_alpha_image_loader) this.__updateIEAlpha(im);
+    } else {
+        //this was a cache-hit
+        if (this.quirks.ie_alpha_image_loader) {
+            //always update stretches for IE6
+            this.__updateIEAlpha(im);
+        } else if (this.stretches) {
+            this.__updateStretches();
+        }
     }
+    //FIXME: [20080126 anba] this is a no-op, why was it added here?
+    if (this.clickable) this.setClickable(true);
 }
 
 /**
@@ -604,8 +629,6 @@ if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
   * @access private
   */
     LzSprite.prototype.__updateIEAlpha = function(who) {
-        if (who._hasax == true) return;
-        //who._hasax = true;
         var w = this.resourceWidth;
         var h = this.resourceHeight;
         if (this.stretches == 'both') {
@@ -619,11 +642,10 @@ if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
 
         //IE6 needs a width and a height
         if (w == null)
-            w = (this.width == null) ? '100%' : this.width;
+            w = (this.width == null) ? '100%' : this.CSSDimension(this.width);
         if (h == null)
-            h = (this.height == null) ? '100%' : this.height;
+            h = (this.height == null) ? '100%' : this.CSSDimension(this.height);
 
-        if (w == null || h == null) return;
         who.style.width = w;
         who.style.height = h;
     }
@@ -1036,96 +1058,155 @@ LzSprite.prototype.__findParents = function ( prop ){
 /**
   * @access private
   */
-LzSprite.prototype.__imgonload = function(i) {
+LzSprite.prototype.__imgonload = function(i, cacheHit) {
     if (this.loading != true) return;
-    if (this.__imgtimoutid != null) clearTimeout(this.__imgtimoutid);
-    this.__imgtimoutid = null;
+    if (this.__imgtimoutid != null) {
+        clearTimeout(this.__imgtimoutid);
+        this.__imgtimoutid = null;
+    }
     this.loading = false;
-    this.resourceWidth = i.width;
-    this.resourceHeight = i.height;
-    if (LzSprite.prototype.quirks.invisible_parent_image_sizing_fix && this.resourceWidth == 0) {
-        // This or any parent divs who aren't visible measure 0x0
-        // Make this and all parents visible, measure them, then restore their
-        // state
-        var sprites = this.__findParents('visible');
-        //Debug.info('LzSprite.onload', i, i.width, i.height, sprites);
-        if (sprites.length > 0) {
-            var vals = [];
-            var l = sprites.length;
-            for (var n = 0; n < l; n++) {
-                var v = sprites[n];
-                vals[n] = v.__LZdiv.style.display;
-                v.__LZdiv.style.display = 'block';
-            }
-            this.resourceWidth = i.width;
-            this.resourceHeight = i.height;
-            for (var n = 0; n < l; n++) {
-                var v = sprites[n];
-                v.__LZdiv.style.display = vals[n];
+    this.resourceWidth = (cacheHit && '__LZreswidth' in i ? i.__LZreswidth : i.width);
+    this.resourceHeight = (cacheHit && '__LZresheight' in i ? i.__LZresheight : i.height);
+    
+    if (!cacheHit) {
+        if (this.quirks.invisible_parent_image_sizing_fix && this.resourceWidth == 0) {
+            // This or any parent divs who aren't visible measure 0x0
+            // Make this and all parents visible, measure them, then restore their
+            // state
+            var sprites = this.__findParents('visible');
+            //Debug.info('LzSprite.onload', i, i.width, i.height, sprites);
+            if (sprites.length > 0) {
+                var vals = [];
+                var l = sprites.length;
+                for (var n = 0; n < l; n++) {
+                    var v = sprites[n];
+                    vals[n] = v.__LZdiv.style.display;
+                    v.__LZdiv.style.display = 'block';
+                }
+                this.resourceWidth = i.width;
+                this.resourceHeight = i.height;
+                for (var n = 0; n < l; n++) {
+                    var v = sprites[n];
+                    v.__LZdiv.style.display = vals[n];
+                }
             }
         }
+        //TODO: Tear down filtered image and set to new size?
+    
+        if (this.quirks.ie_alpha_image_loader) {
+            i._parent.__lastcondition = '__imgonload';
+        } else {
+            i.__lastcondition = '__imgonload';
+            i.__LZreswidth = this.resourceWidth;
+            i.__LZresheight = this.resourceHeight;
+        }
+    
+        //don't update stretches if this was a cache-hit, because __LZimg still points to the prev img
+        if (this.quirks.ie_alpha_image_loader) {
+            this.__updateIEAlpha(this.__LZimg);
+        } else if (this.stretches) {
+            this.__updateStretches();
+        }
     }
-    //TODO: Tear down filtered image and set to new size?
-
-    if (this.stretches) this.__updateStretches();
-    i.__lastcondition = '__imgonload';
+    
     this.owner.resourceload({width: this.resourceWidth, height: this.resourceHeight, resource: this.resource, skiponload: this.skiponload});
 }
 
 /**
   * @access private
   */
-LzSprite.prototype.__imgonerror = function(i) {
+LzSprite.prototype.__imgonerror = function(i, cacheHit) {
     if (this.loading != true) return;
-    if (this.__LZimg) this.__LZimg.__lastcondition = '__imgonerror';
-    if (this.__imgtimoutid != null) clearTimeout(this.__imgtimoutid);
-    this.__imgtimoutid = null;
+    if (this.__imgtimoutid != null) {
+        clearTimeout(this.__imgtimoutid);
+        this.__imgtimoutid = null;
+    }
     this.loading = false;
     this.resourceWidth = 1;
     this.resourceHeight = 1;
-    if (this.stretches) this.__updateStretches();
+    
+    if (!cacheHit) {
+        if (this.quirks.ie_alpha_image_loader) {
+            i._parent.__lastcondition = '__imgonerror';
+        } else {
+            i.__lastcondition = '__imgonerror';
+        }
+    
+        //don't update stretches if this was a cache-hit, because __LZimg still points to the prev img
+        if (this.quirks.ie_alpha_image_loader) {
+            this.__updateIEAlpha(this.__LZimg);
+        } else if (this.stretches) {
+            this.__updateStretches();
+        }
+    }
+    
     this.owner.resourceloaderror({resource: this.resource});
 }
 
 /**
   * @access private
   */
-LzSprite.prototype.__imgontimeout = function(i) {
+LzSprite.prototype.__imgontimeout = function(i, cacheHit) {
     if (this.loading != true) return;
-    if (this.__LZimg) this.__LZimg.__lastcondition = '__imgontimeout';
     this.__imgtimoutid = null;
     this.loading = false;
     this.resourceWidth = 1;
     this.resourceHeight = 1;
-    if (this.stretches) this.__updateStretches();
+    
+    if (!cacheHit) {
+        if (this.quirks.ie_alpha_image_loader) {
+            i._parent.__lastcondition = '__imgontimeout';
+        } else {
+            i.__lastcondition = '__imgontimeout';
+        }
+    
+        //don't update stretches if this was a cache-hit, because __LZimg still points to the prev img
+        if (this.quirks.ie_alpha_image_loader) {
+            this.__updateIEAlpha(this.__LZimg);
+        } else if (this.stretches) {
+            this.__updateStretches();
+        }
+    }
+    
     this.owner.resourceloadtimeout({resource: this.resource});
 }
 
-// These three methods are called by the image pool
+/*
+ * @devnote: These three methods are called by the image pool.
+ * So "this" refers to an LzPool instance and not to this LzSprite.
+ * To get the actual sprite use "this.owner".
+ */
+ 
 /**
   * @access private
   */
 LzSprite.prototype.__destroyImage = function (url, img) {
-    if (img && img.owner) {
-        if (img.owner.__imgtimoutid != null) {
-            clearTimeout(img.owner.__imgtimoutid);
-            img.owner.__imgtimoutid = null;
+    if (img) {
+        if (img.owner) {
+            var owner = img.owner;//= the sprite
+            if (owner.__imgtimoutid != null) {
+                clearTimeout(owner.__imgtimoutid);
+                owner.__imgtimoutid = null;
+            }
+            //@devnote: remember, this will remove all callback-functions for this sprite!
+            lz.Utils.removecallback(owner);
         }
-        lz.Utils.removecallback(img.owner);
+        if (LzSprite.prototype.quirks.ie_alpha_image_loader && img.sizer) {
+            var sizer = img.sizer;
+            if (sizer.tId) clearTimeout(sizer.tId);
+            sizer.onerror = null;
+            sizer.onload = null;
+            sizer.onloadforeal = null;
+            sizer._parent = null;
+            img.sizer = null;
+            LzSprite.prototype.__discardElement(sizer);
+            LzSprite.prototype.__discardElement(img);
+        } else {
+            img.onerror = null;
+            img.onload = null
+            LzSprite.prototype.__discardElement(img);
+        }
     }
-    if (LzSprite.prototype.quirks.ie_alpha_image_loader && img.sizer) {
-        if (img.sizer.tId) clearTimeout(img.sizer.tId);
-        LzSprite.prototype.__discardElement(img.sizer);
-        img.sizer.onerror = null;
-        img.sizer.onload = null;
-        img.sizer.onloadforeal = null;
-        img.sizer = null;
-    } else if (img) {
-        img.onerror = null;
-        img.onload = null
-        LzSprite.prototype.__discardElement(img);
-    }
-    img = null;
     if (LzSprite.prototype.quirks.preload_images_only_once) {
         LzSprite.prototype.__preloadurls[url] = null;
     }
@@ -1134,10 +1215,19 @@ LzSprite.prototype.__destroyImage = function (url, img) {
 /**
   * @access private
   */
-LzSprite.prototype.__gotImage = function(url, obj) {
+LzSprite.prototype.__gotImage = function(url, obj, skiploader) {
     //Debug.info('got', url, this.owner.resourceWidth, this.owner.resourceHeight);
     // this is calling the sprite
-    this.owner[obj.__lastcondition]({width: this.owner.resourceWidth, height: this.owner.resourceHeight});
+    if (this.owner.skiponload || skiploader == true) {
+        //loading a resource (non-http)
+        this.owner[obj.__lastcondition]({width: this.owner.resourceWidth, height: this.owner.resourceHeight}, true);
+    } else {
+        if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
+            this.owner[obj.__lastcondition](obj.sizer, true);
+        } else {
+            this.owner[obj.__lastcondition](obj, true);
+        }
+    }
 }
 
 /**
@@ -1145,30 +1235,26 @@ LzSprite.prototype.__gotImage = function(url, obj) {
   */
 LzSprite.prototype.__getImage = function(url, skiploader) {
     if (this.owner.baseurl) url = this.owner.baseurl + url;
-    //Debug.info('__getImage ', url, skiploader, im)
-    //var ispng = url.substr(url.length - 4, url.length) == '.png';
+    
     if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
         var im = document.createElement('div');
+        //im.className = 'lzdiv';//FIXME: LPP-5422
         im.style.overflow = 'hidden';
-        //Debug.info('filter', im.style.filter, "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + url + "')");
 
-        if (this.owner && skiploader + '' != 'true') {
+        if (this.owner && skiploader != true) {
             //Debug.info('sizer', skiploader, skiploader != true);
             im.owner = this.owner;
             if (! im.sizer) {
                 im.sizer = document.createElement('img');
+                im.sizer._parent = im;
             }
             im.sizer.onload = function() {
                 // This resolves all sorts of timing-related image loading bugs
                 im.sizer.tId = setTimeout(this.onloadforeal, 1);
             }
-            im.sizer.onerror = function() {
-                im.owner.__imgonerror(im.sizer);
-            }
-            im.sizer.onloadforeal = function() {
-                im.owner.__imgonload(im.sizer);
-            }
-            var callback = lz.Utils.getcallbackstr(this.owner, '__imgontimeout');
+            im.sizer.onloadforeal = lz.Utils.getcallbackfunc(this.owner, '__imgonload', [im.sizer]);
+            im.sizer.onerror = lz.Utils.getcallbackfunc(this.owner, '__imgonerror', [im.sizer]);
+            var callback = lz.Utils.getcallbackfunc(this.owner, '__imgontimeout', [im.sizer]);
             this.owner.__imgtimoutid = setTimeout(callback, canvas.medialoadtimeout);
             im.sizer.src = url;
         }
@@ -1180,12 +1266,12 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
     } else {
         var im = document.createElement('img');
         im.className = 'lzdiv';
-        if (this.owner && skiploader  + '' != 'true') {
+        if (this.owner && skiploader != true) {
             //Debug.info('sizer', skiploader == true, skiploader != true, skiploader);
             im.owner = this.owner;
             im.onload = lz.Utils.getcallbackfunc(this.owner, '__imgonload', [im]);
             im.onerror = lz.Utils.getcallbackfunc(this.owner, '__imgonerror', [im]);
-            var callback = lz.Utils.getcallbackstr(this.owner, '__imgontimeout');
+            var callback = lz.Utils.getcallbackfunc(this.owner, '__imgontimeout', [im]);
             this.owner.__imgtimoutid = setTimeout(callback, canvas.medialoadtimeout);
 
         }
@@ -1235,6 +1321,7 @@ LzSprite.prototype.stretchResource = function(s) {
     s = (s != "none" ? s : null);//convert "none" to null
     if (this.stretches == s) return;
     this.stretches = s;
+    //TODO: update 'sizingMethod' for IE6
     this.__updateStretches();
 }
 
@@ -1243,6 +1330,7 @@ LzSprite.prototype.stretchResource = function(s) {
   */
 LzSprite.prototype.__updateStretches = function() {
     if ( this.loading ) return;
+    if (this.quirks.ie_alpha_image_loader) return;
     if (this.__LZimg) {
         if (this.stretches == 'both') {
             this.__LZimg.width = this.width;
@@ -1624,6 +1712,8 @@ LzSprite.prototype.updateResourceSize = function () {
 
 LzSprite.prototype.unload = function () {
     this.resource = null;
+    this.resourceWidth = null;
+    this.resourceHeight = null;
     if (this.__ImgPool) {
         this.__ImgPool.destroy();
         this.__ImgPool = null;

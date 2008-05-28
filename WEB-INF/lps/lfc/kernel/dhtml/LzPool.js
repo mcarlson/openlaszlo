@@ -22,19 +22,18 @@ var LzPool = function(getter, cacheHit, destroyer, owner) {
 LzPool.prototype.cache = null;
 
 // Retrieves an item from the cache
-LzPool.prototype.get = function(id, skipcache) {
-    if (skipcache) {
-        return this.getter(id, args);
-    } else {
-        var args = Array.prototype.slice.apply(arguments, [2]);
-        if (this.cache[id] == null) {
-            this.cache[id] = this.getter(id, args);
-        } else {
-            if (this.cacheHit) this.cacheHit(id, this.cache[id], args);
-        }
-        if (this.owner) this.cache[id].owner = this.owner;
-        return this.cache[id];
+LzPool.prototype.get = function(id, skipcache, ...args) {
+    var itm;
+    if (skipcache || (itm = this.cache[id]) == null) {
+        args.unshift(id);
+        itm = this.getter.apply(this, args);
+        if (!skipcache) this.cache[id] = itm;
+    } else if (this.cacheHit) {
+        args.unshift(id, itm);
+        this.cacheHit.apply(this, args);
     }
+    if (this.owner) itm.owner = this.owner;
+    return itm;
 }
 // Flushes an item from the cache
 LzPool.prototype.flush = function(id) {
