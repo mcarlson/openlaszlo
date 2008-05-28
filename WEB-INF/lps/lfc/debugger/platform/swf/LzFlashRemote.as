@@ -114,6 +114,14 @@ Debug.startupConsoleRemote = function () {
       this.addHTMLText(str);
     };
     // @keywords private -- appease doc tool doc tool
+    Debug.displayObj = function (id) {
+        var obj = this.ObjectForID(id);
+        // Make it look like you executed a command, even though
+        // you don't need to compile to do this
+        this.freshPrompt();
+        this.addHTMLText(this.inspectInternal(obj));
+    };
+    // @keywords private -- appease doc tool doc tool
     Debug.makeObjectLink = function (rep, id, attrs) {
       var color = '#0000ff';
       switch (arguments.length) {

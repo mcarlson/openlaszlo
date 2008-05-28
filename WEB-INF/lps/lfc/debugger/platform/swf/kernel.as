@@ -21,7 +21,12 @@
   * @access private
   */
 Debug.makeDebugWindow = function () {
-  LzInstantiateView({attrs: {}, name: "LzDebugWindow"});
+  if (typeof(global.lzconsoledebug) != 'undefined') {
+    // Open the remote debugger socket 
+    __LzDebug.startupConsoleRemote();
+  } else {
+    LzInstantiateView({attrs: {}, name: "LzDebugWindow"});
+  }
 }
 
 // Messages that will be displayed once the debug window is insantiated
