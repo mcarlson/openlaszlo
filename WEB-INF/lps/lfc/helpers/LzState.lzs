@@ -160,7 +160,7 @@ dynamic class LzState extends LzNode {
       if ( this.isinited ){
         this.apply();
       } else {
-        new LzDelegate( this , "apply" , this , "oninit" );
+        this.applyOnInit = true;
       }
     } else {
       if ( this.isinited ){
@@ -224,6 +224,8 @@ dynamic class LzState extends LzNode {
   var releasedconstraints;
   /** @access private */
   var appliedChildren;
+  /** @access private */
+  var applyOnInit :Boolean = false;
 
   /**
    * @access private
@@ -233,6 +235,16 @@ dynamic class LzState extends LzNode {
     this.heldArgs = {};
     this.handlerMethodNames = {};
     this.appliedChildren = [];
+  }
+  
+  /**
+   * @access private
+   */
+  override function init () {
+    super.init();
+    if (this.applyOnInit) {
+      this.apply();
+    }
   }
 
   /**
@@ -282,12 +294,14 @@ dynamic class LzState extends LzNode {
 
     // release any constraints you are about to override
     var pia = parent._instanceAttrs;
-    for (var key in this.heldArgs) {
-      if (pia && pia[key] is LzConstraintExpr) {
-        if (this.releasedconstraints == null) { this.releasedconstraints = []; }
-        var constraintMethodName = pia[key].methodName;
-        if (parent.releaseConstraintMethod(constraintMethodName)) {
-          this.releasedconstraints.push(constraintMethodName);
+    if (pia) {
+      for (var key in this.heldArgs) {
+        if (pia[key] is LzConstraintExpr) {
+          if (this.releasedconstraints == null) { this.releasedconstraints = []; }
+          var constraintMethodName = pia[key].methodName;
+          if (parent.releaseConstraintMethod(constraintMethodName)) {
+            this.releasedconstraints.push(constraintMethodName);
+          }
         }
       }
     }
@@ -573,7 +587,7 @@ dynamic class LzState extends LzNode {
    * @access private
    */
   function __LZdetach ( aview ){
-    aview.setVisible( false );
+    aview.setAttribute("visible", false);
     return aview;
   }
 
@@ -581,7 +595,7 @@ dynamic class LzState extends LzNode {
    * @access private
    */
   function __LZretach ( aview ){
-    aview.setVisible( true );
+    aview.setAttribute("visible", true);
     return aview;
   }
 
