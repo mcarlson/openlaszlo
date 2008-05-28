@@ -12,10 +12,10 @@
     <view name="mousetester" clickable="true">
         <simplelayout/>
         <text text="mouse events turn green"/> 
-        <eventtester eventname="onmouseover"/>
-        <eventtester eventname="onmouseout"/>
         <eventtester eventname="onmousedown"/>
         <eventtester eventname="onmouseup"/>
+        <eventtester eventname="onmouseover"/>
+        <eventtester eventname="onmouseout"/>
         <eventtester eventname="onclick"/>
         <eventtester eventname="ondblclick"/>
         <eventtester eventname="onmousedragin"/>
@@ -27,6 +27,13 @@
         <text text="global mouse events turn green"/> 
         <eventtester eventname="onmousedown" reference="LzGlobalMouse"/>
         <eventtester eventname="onmouseup" reference="LzGlobalMouse"/>
+        <eventtester eventname="onmouseover" reference="LzGlobalMouse"/>
+        <eventtester eventname="onmouseout" reference="LzGlobalMouse"/>
+        <eventtester eventname="onclick" reference="LzGlobalMouse"/>
+        <eventtester eventname="ondblclick" reference="LzGlobalMouse"/>
+        <eventtester eventname="onmousedragin" reference="LzGlobalMouse"/>
+        <eventtester eventname="onmousedragout" reference="LzGlobalMouse"/>
+        <eventtester eventname="onmouseupoutside" reference="LzGlobalMouse"/>
         <eventtester eventname="onmousemove" reference="LzGlobalMouse" verbose="false"/>
     </view>
     <view>
@@ -34,6 +41,8 @@
         <text text="keyboard events turn green"/> 
         <eventtester eventname="onkeydown" reference="LzKeys"/>
         <eventtester eventname="onkeyup" reference="LzKeys"/>
+        <eventtester eventname="onkeydown" reference="LzKeys" label="Shift key down" test="function (k) { if (k == 16) return true; }"/>
+        <eventtester eventname="onkeydown" reference="LzKeys" label="Control key down" test="function (k) { if (k == 17) return true; }"/>
         <eventtester eventname="onmousewheeldelta" reference="LzKeys">
             <handler name="onvalue" args="v">
                 if (v == null) return;

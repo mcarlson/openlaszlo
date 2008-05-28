@@ -7,7 +7,9 @@
 <library>
     <class name="eventtester" width="150">
         <attribute name="eventname" value="" type="text"/> 
+        <attribute name="label" value="${this.eventname}" type="text"/> 
         <attribute name="reference" value="null" type="reference"/> 
+        <attribute name="test" value="null"/> 
         <attribute name="verbose" value="true"/> 
         <attribute name="value" value="null"/> 
         <handler name="oninit">
@@ -17,14 +19,17 @@
         </handler>
         <method name="update" args="d">
             <![CDATA[
-            if ($debug && this.verbose) Debug.write(eventname, d);
+            if (this.test != null) {
+                if (this.test(d) != true) return;
+            }
+            if ($debug && this.verbose) Debug.warn(this.label, d);
             this.setAttribute('value', d);
-            this.txt.setText(eventname + ': '+ d);
+            this.txt.setText(this.label + ': '+ d);
             this.bg.setBGColor('green');
             ]]>
         </method>
 
         <view name="bg" bgcolor="red" opacity=".5" width="100%" height="100%"/>
-        <text name="txt" text="${classroot.eventname}" width="150"/>
+        <text name="txt" text="${classroot.label}" width="150"/>
     </class>
 </library>
