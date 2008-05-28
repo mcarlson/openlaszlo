@@ -83,25 +83,23 @@ class LzReplicationManager extends LzDatapath {
 override function $lzc$set_datapath(v) { this.setXPath(v); }
 
 /** @access private */
-var asyncnew = true;
+var asyncnew :Boolean = true;
 /** @access private */
-var initialnodes;
+var initialnodes :Array;
 /** @access private */
-var clonePool;
+var clonePool :Array;
 /** @access private */
 var cloneClass;
 /** @access private */
-var cloneParent;
+var cloneParent :LzNode;
 /** @access private */
-var cloneAttrs;
+var cloneAttrs :Object;
 /** @access private */
-var cloneChildren;
+var cloneChildren :Array;
 /** @access private */
-var hasdata;
+var hasdata :Boolean;
 /** @access private */
-var _t;
-/** @access private */
-var orderpath;
+var orderpath :*;
 
 /** @access private */
 var comp_orderf;  // Was this.orderf.comp
@@ -124,39 +122,39 @@ var op_orderf;    // Was this.orderf.op
  * @lzxdefault true
  * @keywords final
  */
-var visible = true;
+var visible :Boolean = true;
 /** @access private */
-var __LZpreventXPathUpdate = false;
+var __LZpreventXPathUpdate :Boolean = false;
 
 /**
  * The data that this replication manager will map to views
  * @type [*]
  */
-var nodes;
+var nodes :Array;
 
 /**
  * The views which this LzReplicationManager has created.
  * @type [LzNode]
  */
-var clones;
+var clones :Array;
 
 /** @access private */
-var __LZdataoffset = 0;
+var __LZdataoffset :int = 0;
 /**
  * Sent when <code>nodes</code> is changed
  * @lzxtype event
  */
-var onnodes = LzDeclaredEvent;
+var onnodes :LzDeclaredEventClass = LzDeclaredEvent;
 /**
  * Sent when <code>clones</code> is changed
  * @lzxtype event
  */
-var onclones = LzDeclaredEvent;
+var onclones :LzDeclaredEventClass = LzDeclaredEvent;
 /**
  * Sent when <code>visible</code> is changed
  * @lzxtype event
  */
-var onvisible = LzDeclaredEvent;
+var onvisible :LzDeclaredEventClass = LzDeclaredEvent;
 
 /**
   * @access private
@@ -175,7 +173,7 @@ override function construct ( odp , args ){
         this.pooling = false; // Defined in LzDatapath
 
     //odp: original datapath
-    var view = odp.immediateparent;
+    var view:LzNode = odp.immediateparent;
     if (view === canvas) {
         // Initialize vars to reduce dhtml errors
         this.nodes = [];
@@ -193,7 +191,7 @@ override function construct ( odp , args ){
 
     // replace the view with us,
     // fixing up any name or id
-    var name =  view.name;
+    var name:String =  view.name;
     if (name != null) {
       args.name = name;
       // remove view we replace to avoid warning in LzNode.$lzc$set_name
@@ -201,7 +199,7 @@ override function construct ( odp , args ){
       view.parent[name] = null;
     }
     // ditto with global binders
-    var idbinder =  view.$lzc$bind_id;
+    var idbinder:Function =  view.$lzc$bind_id;
     if (idbinder != null) {
       // remove view binding
       idbinder.call(null, view, false);
@@ -209,7 +207,7 @@ override function construct ( odp , args ){
       this.$lzc$bind_id = idbinder;
       idbinder.call(null, this);
     }
-    var namebinder =  view.$lzc$bind_name;
+    var namebinder:Function =  view.$lzc$bind_name;
     if (namebinder != null) {
       // remove view binding
       namebinder.call(null, view, false);
@@ -274,9 +272,9 @@ override function construct ( odp , args ){
       }
     }
 
-    var hadxpathconstraint = false;
-    var ia = view._instanceAttrs;
-    var oa = odp._instanceAttrs;
+    var hadxpathconstraint:Boolean = false;
+    var ia:Object = view._instanceAttrs;
+    var oa:Object = odp._instanceAttrs;
     if (ia && 'datapath' in ia && ia.datapath instanceof LzConstraintExpr) {
         // <view datapath="${ ... }"/>
         hadxpathconstraint = true;
@@ -321,7 +319,7 @@ override function construct ( odp , args ){
         this.pooling = args.pooling;
     }
     
-    var mycontext = odp.context;
+    var mycontext:* = odp.context;
 
     //clone pool is used to store available views   
     this.clones = [];
@@ -351,7 +349,7 @@ override function construct ( odp , args ){
   * @access private
   */
 // See subclasses for definition
-function __LZsetCloneAttrs () {}
+function __LZsetCloneAttrs () :void {}
 
 /**
   * @access private
@@ -374,23 +372,25 @@ override function constructWithArgs ( args ){
 /**
   * @access private
   */
-override function setDataContext ( p , implicit = null ){
-    var args = arguments; 
-    if (p == null && this.immediateparent != null && 'datapath' in this.immediateparent && this.immediateparent.datapath != null){
-        args[0] = this.immediateparent.datapath;
-        args[1] = true;
+override function setDataContext (p, implicit:Boolean = false) :void {
+    if (p == null && this.immediateparent != null && this.immediateparent['datapath'] != null){
+        p = this.immediateparent.datapath;
+        implicit = true;
     }
-    super.setDataContext.apply(this, args);
+    super.setDataContext(p, implicit);
 }
 
 /**
+  * TODO: [20080428 anba] no reference to this function in the LFC, remove it?
+  * 
   * @access private
   */
-function getNodeOffset ( p ){
-    if (this.nodes != null) {
-        var l = this.nodes.length; 
-        for ( var i = 0; i < l; i++ ){
-            if ( p == this.nodes[ i ] ){
+function getNodeOffset ( p ) :Number? {
+    var nds:Array = this.nodes;
+    if (nds != null) {
+        var len:int = nds.length; 
+        for ( var i:int = 0; i < len; i++ ){
+            if ( p == nds[ i ] ){
                 return i;
             }
         }
@@ -402,20 +402,21 @@ function getNodeOffset ( p ){
   * @param Number n: The zero-based offset of the clone to retrieve
   * @return LzView: A pointer to the nth clone
   */
-function getCloneNumber ( n ){
+function getCloneNumber ( n:int ) :LzNode {
     return this.clones[ n ];
 }
 
 /**
   * @access private
   */
-override function __LZHandleNoNodes() {
+override function __LZHandleNoNodes() :void {
     this.nodes = [];
-    while ( this.clones.length ){
+    var cls:Array = this.clones;
+    while ( cls.length ){
         if ( this.pooling ){
             this.poolClone();
         } else {
-            var v = this.clones.pop();
+            var v:LzNode = cls.pop();
             this.destroyClone( v );
         }
     }
@@ -424,31 +425,30 @@ override function __LZHandleNoNodes() {
 /**
   * @access private
   */
-override function __LZHandleSingleNode ( n ){ 
+override function __LZHandleSingleNode ( n/*:LzDataNodeMixin*/ ) :void { 
     this.__LZHandleMultiNodes( [n] );
 }
 
 /**
   * @access private
   */
-function mergesort ( arr , l , h ) {
-    if ( l < h ) {
-        var m = l + Math.floor ( (h - l) / 2 );
-        var a = this.mergesort( arr , l , m );
-        var b = this.mergesort( arr , m+1 , h );
+function mergesort ( arr:Array, lo:int, hi:int ) :Array {
+    if ( lo < hi ) {
+        var mid:int = lo + Math.floor ( (hi - lo) / 2 );
+        var a:Array = this.mergesort( arr, lo, mid );
+        var b:Array = this.mergesort( arr, mid + 1, hi );
     } else if( arr.length == 0 ) {
         return [];
-    }
-    else {
-        return [ arr[ l ] ];
+    } else {
+        return [ arr[ lo ] ];
     }
 
     //now merge
-    var r=[];
-    var ia = 0;
-    var ib = 0;
-    var al = a.length
-    var bl = b.length
+    var r:Array = [];
+    var ia:int = 0;
+    var ib:int = 0;
+    var al:int = a.length;
+    var bl:int = b.length;
     while ( ia < al && ib < bl ){
         if ( this.orderf( b[ ib ] , a[ ia ] ) == 1 ){
             r.push( b[ ib++ ] );
@@ -465,13 +465,13 @@ function mergesort ( arr , l , h ) {
 /**
   * @access private
   */
-override function __LZHandleMultiNodes ( n ){
-    var layouts = this.parent && this.parent.layouts ? this.parent.layouts : [];
-    for (var i in layouts) {
+override function __LZHandleMultiNodes ( n:Array ) :LzReplicationManager {
+    var layouts:Array = this.parent && this.parent.layouts ? this.parent.layouts : [];
+    for (var i:int = 0; i < layouts.length; ++i) {
         layouts[i].lock();
     }
     this.hasdata = true;
-    var lastnodes = this.nodes;
+    var lastnodes:Array = this.nodes;
     this.nodes = n;
     if (this.onnodes.ready) this.onnodes.sendEvent( this.nodes );
 
@@ -483,12 +483,11 @@ override function __LZHandleMultiNodes ( n ){
 
     this.__LZadjustVisibleClones( lastnodes , true );
 
-
-    var l = this.clones.length;
-    for (var i = 0; i < l; i++ ){
-        var cl = this.clones[ i ] ;
-        var iplusoffset = i + this.__LZdataoffset; 
-        cl.clonenumber = iplusoffset ;
+    var len:int = this.clones.length;
+    for (var i:int = 0; i < len; i++ ){
+        var cl:LzNode = this.clones[ i ];
+        var iplusoffset:int = i + this.__LZdataoffset; 
+        cl.clonenumber = iplusoffset;
 
         if (this.nodes) {
             cl.datapath.setClonePointer( this.nodes[ iplusoffset ] );
@@ -496,20 +495,23 @@ override function __LZHandleMultiNodes ( n ){
         if (cl.onclonenumber.ready) cl.onclonenumber.sendEvent( iplusoffset );
     }
     if (this.onclones.ready) this.onclones.sendEvent( this.clones );
-    for (var i in layouts) {
+    
+    for (var i:int = 0; i < layouts.length; ++i) {
         layouts[i].unlock();
     }
+    
+    return void(0);
 }
 
 /**
   * @access private
   */
-function __LZadjustVisibleClones( lastnodes , newnodes){
-    var stpt = this.__LZdiffArrays( lastnodes , this.nodes);
+function __LZadjustVisibleClones( lastnodes:Array , newnodes:Boolean) :void {
+    var stpt:int = this.__LZdiffArrays( lastnodes , this.nodes);
 
     if ( ! this.pooling ) {
         while ( this.clones.length > stpt ){
-            var v = this.clones.pop();
+            var v:LzNode = this.clones.pop();
             this.destroyClone( v );
         }
     }
@@ -519,7 +521,7 @@ function __LZadjustVisibleClones( lastnodes , newnodes){
     LzInstantiator.enableDataReplicationQueuing( );
 
     while ( this.nodes && this.nodes.length > this.clones.length ){
-        var cl = this.getNewClone();
+        var cl:LzNode = this.getNewClone();
         if (!cl)
             break;
         this.clones.push( cl );
@@ -562,15 +564,23 @@ function orderf ( a , b ){
 /**
   * @access private
   */
-function ascDict ( a , b ){
-    if ( a.toLowerCase() < b.toLowerCase() ) return 1;
+function ascDict ( a:String, b:String ) :int {
+    if (a.toLowerCase() < b.toLowerCase()) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 /**
   * @access private
   */
-function descDict ( a , b ){
-    if ( a.toLowerCase() > b.toLowerCase() ) return 1;
+function descDict ( a:String, b:String ) :int {
+    if (a.toLowerCase() > b.toLowerCase()) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 
@@ -582,7 +592,7 @@ function descDict ( a , b ){
   * @param Function|String comparator: See the <code>comparator</code> paramater
   * of <code>setComparator</code> for details.
   */
-override function setOrder( xpath , comparator=null ) {
+override function setOrder( xpath:String, comparator:* = null ) :void {
     this.orderpath = null;
 
     if ( comparator != null ){
@@ -609,7 +619,7 @@ override function setOrder( xpath , comparator=null ) {
   * first, -1 if the first argument should follow the second, and 0 if the two
   * arguments are equivalent
   */
-override function setComparator( comparator ){
+override function setComparator( comparator:* ) :void {
   if ( comparator == "descending" ){
     comparator = this.descDict;
   } else if ( comparator == "ascending" ){
@@ -630,16 +640,16 @@ override function setComparator( comparator ){
 /**
   * @access private
   */
-function getNewClone ( forceNew = null ){
+function getNewClone ( forceNew = null ) :LzNode {
     if (!this.cloneParent) {
         return null;
     }
     if ( this.clonePool.length ){
-        var v = this.reattachClone( this.clonePool.pop() );
+        var v:LzNode = this.reattachClone( this.clonePool.pop() );
     } else {
-        var v = new this.cloneClass( this.cloneParent , this.cloneAttrs ,
+        var v:LzNode = new this.cloneClass( this.cloneParent , this.cloneAttrs ,
                                      this.cloneChildren, 
-                                     forceNew == null ?this.asyncnew: !forceNew);
+                                     forceNew == null ? this.asyncnew : !forceNew);
     }
     if ( this.visible == false ) v.$lzc$set_visible( false );
     return v;
@@ -648,16 +658,18 @@ function getNewClone ( forceNew = null ){
 /**
   * @access private
   */
-function poolClone ( ){
-    var v = this.clones.pop();
+function poolClone ( ) :void {
+    var v:LzNode = this.clones.pop();
     this.detachClone( v );
     this.clonePool.push ( v );
 }
 
 /**
+  * TODO: [20080428 anba] do we still need this overhead?
+  * 
   * @access private
   */
-function destroyClone ( v ) {
+function destroyClone (v:LzNode) :void {
     v.destroy();
 }
 
@@ -676,16 +688,18 @@ override function setDatapath ( xp ){
 /**
   * @access private
   */
-override function setXPath ( xp ){
+override function setXPath ( xp:String ) :Boolean? {
     if ( this.__LZpreventXPathUpdate ) return;
     super.setXPath.apply(this, arguments); 
 }
 
 /**
+  * TODO: [20080428 anba] no reference to this function in the LFC, remove it?
+  * 
   * @access private
   */
-function handleDeletedNode ( c ){
-    var tclone = this.clones[ c ];
+function handleDeletedNode ( c:int ) :void {
+    var tclone:LzNode = this.clones[ c ];
     if ( this.pooling ){
         this.detachClone( tclone );
         this.clonePool.push ( tclone );
@@ -701,11 +715,12 @@ function handleDeletedNode ( c ){
   * @param LzDataElement p: The data node for which to return the clone.
   * @return LzView: A clone mapped to the given data.
   */
-function getCloneForNode ( p, dontmake=null ){
-    var l = this.clones.length; 
-    for ( var i = 0; i < l; i++ ){
-        if ( this.clones[ i ].datapath.p == p ){
-            return this.clones[ i ];
+function getCloneForNode ( p, dontmake:Boolean = false ){
+    var cls:Array = this.clones;
+    var len:int = cls.length; 
+    for ( var i:int = 0; i < len; i++ ){
+        if ( cls[ i ].datapath.p == p ){
+            return cls[ i ];
         }
     }
 }
@@ -713,7 +728,7 @@ function getCloneForNode ( p, dontmake=null ){
 /**
   * @access private
   */
-override function toString (){
+override function toString () :String {
     return "ReplicationManager in " + this.immediateparent;
 }
 
@@ -726,11 +741,12 @@ override function toString (){
   * but I didn't want to mess with that now.  In any case, there is no
   * reason for this to be a public method.
   */
-function setVisible ( vis ){
+function setVisible ( vis:Boolean ) :void {
     this.visible = vis;
-    var l = this.clones.length; 
-    for ( var i = 0; i < l; i++ ){
-        this.clones[ i ].$lzc$set_visible( vis );
+    var cls:Array = this.clones;
+    var len:int = cls.length; 
+    for ( var i:int = 0; i < len; i++ ){
+        cls[ i ].$lzc$set_visible( vis );
     }
     if (this.onvisible.ready) this.onvisible.sendEvent( vis );
 }
@@ -738,48 +754,55 @@ function setVisible ( vis ){
 /**
   * @access private
   */
-override function __LZcheckChange ( chgpkg ){
+override function __LZcheckChange (chgpkg:Object) :Boolean {
     this.p = this.nodes[ 0 ];
-    var didrun = super.__LZcheckChange.apply(this, arguments);
+    var didrun:Boolean = super.__LZcheckChange.apply(this, arguments);
     this.p = null;
 
     if ( !didrun ){
         var who = chgpkg.who;
-        var l = this.clones.length; 
-        for ( var i = 0; i < l; i++ ){
-            var cl = this.clones[ i ];
-            if ( cl.datapath.__LZneedsOpUpdate( chgpkg ) ){
-                cl.datapath.__LZsetData();
+        var cls:Array = this.clones;
+        var len:int = cls.length; 
+        for ( var i:int = 0; i < len; i++ ){
+            var cl:LzNode = cls[ i ];
+            var dp:LzDatapath = cl.datapath;
+            if ( dp.__LZneedsOpUpdate( chgpkg ) ){
+                dp.__LZsetData();
             }
-            if ( who.childOfNode( cl.datapath.p , true ) ){
-                if (cl.datapath.onDocumentChange.ready) cl.datapath.onDocumentChange.sendEvent( chgpkg ) ;
+            if ( who.childOfNode( dp.p , true ) ){
+                if (dp.onDocumentChange.ready) dp.onDocumentChange.sendEvent( chgpkg ) ;
             }
         }
     }
+    
+    return false;
 }
 
 
 /** @access private */
-override function __LZneedsOpUpdate ( chgpkg = null ){ return false }
+override function __LZneedsOpUpdate (chgpkg:Object? = null) :Boolean {
+    return false;
+}
 
 /**
   * @access private
   */
-override function getContext ( chgpkg = null ){
+override function getContext ( chgpkg = null ) :* {
     return this.nodes[ 0 ];
 }
 
 /**
   * @access private
   */
-function detachClone ( cl ){
+function detachClone ( cl:LzNode ){
+    //cl is instance of LzView
     if ( cl.isdetatchedclone ) return;
 
     cl.$lzc$set_visible(false);
     cl.addedToParent = false;
 
-    var svs =  cl.immediateparent.subviews;
-    for( var i = svs.length - 1; i >= 0; i-- ){
+    var svs:Array =  cl.immediateparent.subviews;
+    for( var i:int = svs.length - 1; i >= 0; i-- ){
         if ( svs[ i ] == cl ){
             svs.splice( i , 1 );
             break;
@@ -795,7 +818,7 @@ function detachClone ( cl ){
 /**
   * @access private
   */
-function reattachClone ( cl ){
+function reattachClone ( cl:LzView ) :LzView {
     if ( !cl.isdetatchedclone ) return cl;
 
     cl.immediateparent.addSubview( cl );
@@ -808,11 +831,11 @@ function reattachClone ( cl ){
   * returns the index at which the arrays differ
   * @access private
   */
-function __LZdiffArrays ( a , b ){
-    var i = 0;
+function __LZdiffArrays ( a:Array, b:Array ) :int {
+    var i:int = 0;
 
-    var al = a ? a.length : 0;
-    var bl = b ? b.length : 0;
+    var al:int = a ? a.length : 0;
+    var bl:int = b ? b.length : 0;
 
     while( i < al && i < bl ){
         if ( a[ i ] != b[ i ] ){

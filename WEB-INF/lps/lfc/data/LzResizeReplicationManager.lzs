@@ -125,7 +125,7 @@ var __LZHandleCloneResize = function ( s) {
     var osize = this.datapath.p[ datasizevar ] || cloneManager.viewsize;
     if ( s != osize ){
         this.datapath.p[ datasizevar ] = s;
-        cloneManager.__LZadjustVisibleClones(null, null);
+        cloneManager.__LZadjustVisibleClones(null, false);
     }
 }
 
@@ -180,7 +180,7 @@ function __LZreleaseClone ( v ){
   * (as opposed to, for example, when
   * the mask changes its height or item changes size
   */
-override function __LZadjustVisibleClones(ln,nn){
+override function __LZadjustVisibleClones(ln:Array, nn:Boolean) :void {
     //if the mask doesn't have a set size in the replication axis, don't affect
     //it
 

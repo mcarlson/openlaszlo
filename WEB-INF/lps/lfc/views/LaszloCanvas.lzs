@@ -165,8 +165,8 @@ dynamic class LzCanvas extends LzView {
         if ($profile) {
             Profiler.event('start: #canvas');
         }
-        this.datapath = {};
         this.immediateparent = this;
+        this.datapath = new LzDatapath(this);
 
         this.mask = null;
 

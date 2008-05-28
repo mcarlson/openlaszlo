@@ -72,9 +72,9 @@ class LzDatapath extends LzDatapointer {
 /** @access private
   * @modifiers override 
   */
-static var tagname = 'datapath';
+static var tagname :String = 'datapath';
 /** @access private */
-  static var attributes = new LzInheritedHash(LzDatapointer.attributes);
+static var attributes :Object = new LzInheritedHash(LzDatapointer.attributes);
 
 /** By default, this is false for instances
   * of <classname>datapointer</classname>, and true for instances of
@@ -87,19 +87,21 @@ static var tagname = 'datapath';
   * @type Boolean
   * @access private
   */
-var datacontrolsvisibility = true;
+var datacontrolsvisibility :Boolean = true;
 
 /** @access private */
-var __LZtakeDPSlot = true;
+var __LZtakeDPSlot :Boolean = true;
 /** @access private */
-var storednodes;
+var storednodes :Array = null;
 /** @access private */
-var __LZneedsUpdateAfterInit;
+var __LZneedsUpdateAfterInit :Boolean = false;
 /** @access private */
-var __LZdepChildren;
+var __LZdepChildren :Array = null;
 /** @access private */
-var sel:Boolean = false;
+var sel :Boolean = false;
 
+/** @access private */
+var __LZisclone :Boolean = false;
 
 /** Sent when the datapath's data changes.
   */
@@ -130,7 +132,7 @@ var sel:Boolean = false;
  * @lzxdefault false
  * @keywords final
  */
-var pooling = false;
+var pooling :Boolean = false;
 
 /** 
  * Determines whether to use normal or lazy replication, if the
@@ -145,7 +147,7 @@ var pooling = false;
  * @lzxdefault 'normal'
  * @keywords final
  */
-var replication;
+var replication :String;
 
 /**
  * An XPath to use to obtain the sort key for sorting if replication
@@ -155,9 +157,9 @@ var replication;
  * @type String
  * @lzxtype string
  */
-var sortpath;
+var sortpath :String;
 /** @access private */
-function $lzc$set_sortpath (xpath) {
+function $lzc$set_sortpath (xpath:String) :void {
   this.setOrder(xpath);
 }
 
@@ -170,7 +172,7 @@ function $lzc$set_sortpath (xpath) {
   *
   * @access private
   */
-function setOrder( xpath , comparator=null ) {
+function setOrder( xpath:String , comparator:* = null ) :void {
   if ( this.__LZisclone ){
       this.immediateparent.cloneManager.setOrder( xpath , comparator );
   } else {
@@ -193,9 +195,9 @@ function setOrder( xpath , comparator=null ) {
  * @type String|Function
  * @lzxtype expression
  */
-var sortorder;
+var sortorder :*;
 /** @access private */
-function $lzc$set_sortorder( comparator) {
+function $lzc$set_sortorder( comparator:* ) :void {
   this.setComparator(comparator);
 }
 /**
@@ -209,7 +211,7 @@ function $lzc$set_sortorder( comparator) {
   *
   * @access private
   */
-function setComparator( comparator ) {
+function setComparator( comparator:* ) :void {
     if ( this.__LZisclone ){
         this.immediateparent.cloneManager.setComparator( comparator );
     } else {
@@ -225,7 +227,7 @@ function LzDatapath ( v , args:* = null, children:* = null, instcall:* = null ){
 }
 
 /** @access private */
-override function construct ( v , args ){
+override function construct ( v , args ) :void {
     this.rerunxpath = true; // Defined in LzDatapointer
 
     super.construct.apply(this, arguments);
@@ -240,35 +242,35 @@ override function construct ( v , args ){
     }
 
     if ( this.__LZtakeDPSlot ){
+        if ($debug) {
+            if (this.immediateparent.datapath != null) {
+                Debug.warn("overring datapath %w with %w", this.immediateparent.datapath, this);
+            }
+        }
         this.immediateparent.datapath = this;
-        var pdp = null;
-        var tarr = null;
-// [2008-03-12 pbr] Removed the 'in' test. not needed
-//        if ('searchParents' in this.immediateparent) {
-            pdp = this.immediateparent.searchParents( "datapath" ).datapath;
-
-            tarr = pdp.__LZdepChildren;
-//        }
-
-        //set it early, so that it's right when xpath first runs
-        if ( tarr != null ){
-            pdp.__LZdepChildren = [];
-
-            for ( var i =  tarr.length - 1 ; i >= 0 ; i-- ){
-                var c = tarr[ i ];
-                if ( c != this &&
-                      !(c is LzDataAttrBind) &&
-// [2008-03-12 pbr] Changed check because swf9 doesn't like it
-//                    !c.$pathbinding &&
-                    c.immediateparent != this.immediateparent &&
-                    c.immediateparent.childOf( this.immediateparent )){
-                    c.setDataContext( this ,true );
-                } else {
-                    pdp.__LZdepChildren.push( c );
+        var pdp:LzDatapath = this.immediateparent.searchParents( "datapath" ).datapath;
+        
+        if (pdp != null) {
+            //set it early, so that it's right when xpath first runs
+            var tarr:Array = pdp.__LZdepChildren;
+            if ( tarr != null ){
+                pdp.__LZdepChildren = [];
+            
+                for ( var i:int = tarr.length - 1; i >= 0; i-- ){
+                    var c:* = tarr[ i ];
+                    if ( c !== this && !(c is LzDataAttrBind) &&
+                        c.immediateparent != this.immediateparent &&
+                        c.immediateparent.childOf( this.immediateparent )){
+                        c.setDataContext( this ,true );
+                    } else {
+                        pdp.__LZdepChildren.push( c );
+                    }
                 }
 
 
             }
+        } else if ($debug) {
+            Debug.warn("unexpected state for '%w', couldn't find parent-datapath!", this);
         }
     }
 }
@@ -276,7 +278,7 @@ override function construct ( v , args ){
 /**
   * @access private
   */
-override function __LZHandleMultiNodes ( nodes ){
+override function __LZHandleMultiNodes ( nodes:Array ) :LzReplicationManager {
     //uhoh! this should be a clone
 
     //Because we're about to start making siblings to this view,
@@ -286,6 +288,7 @@ override function __LZHandleMultiNodes ( nodes ){
 
     //ok to call if already added
 
+    //FIXME: type? Function or Class?
     var clonetype;
     switch ( this.replication ){
         case "lazy":
@@ -302,7 +305,7 @@ override function __LZHandleMultiNodes ( nodes ){
     //TODO: [20080327 anba] "storednodes" should be passed directly 
     // to the ReplicationManager, instead of doing this kludge 
     this.storednodes = nodes;
-    var rman = new clonetype( this, this._instanceAttrs);
+    var rman:LzReplicationManager = new clonetype( this, this._instanceAttrs);
     this.storednodes = null;
 
     return rman;
@@ -320,12 +323,12 @@ override function __LZHandleMultiNodes ( nodes ){
   *
   * @param Array nodes: A list of LzDataElements to replicate over.
   */
-function setNodes ( nodes ){
+function setNodes ( nodes:Array ) :void {
     //Debug.write( "before context" ,this.context );
     //this.setDataContext( nodes , false );
     //Debug.write( "context" ,this.context );
 
-    var rman = this.__LZHandleMultiNodes( nodes );
+    var rman:LzDatapath = this.__LZHandleMultiNodes( nodes );
 
     //__LZHandleMultiNodes will return the replication manager if "this" is a
     //datapath
@@ -334,9 +337,9 @@ function setNodes ( nodes ){
     rman.__LZsetTracking( null );
 
     if (nodes) {
-        for ( var i = 0; i < nodes.length; i++ ){
-            var n = nodes[ i ];
-            var own = n.ownerDocument;
+        for ( var i:int = 0; i < nodes.length; i++ ){
+            var n:LzDataElement = nodes[ i ];
+            var own:LzDataElementMixin = n.ownerDocument;
             //third arg is an optimization -- if the node is unique, then we
             //know we're not tracking it
             rman.__LZsetTracking( own , true , n != own );
@@ -347,9 +350,9 @@ function setNodes ( nodes ){
 /**
   * @access private
   */
-override function __LZsendUpdate( upd = null, upp = null ) {
-    var pchg = this.__LZpchanged;
-    if ( !super.__LZsendUpdate.apply(this, arguments) ){
+override function __LZsendUpdate( upd:Boolean = false, upp:Boolean = false ) :Boolean {
+    var pchg:Boolean = this.__LZpchanged;
+    if ( !super.__LZsendUpdate(upd, upp) ){
         return false;
     }
 
@@ -366,44 +369,42 @@ override function __LZsendUpdate( upd = null, upp = null ) {
 /**
   * @access private
   */
-function __LZApplyDataOnInit( ) {
+function __LZApplyDataOnInit( ) :void {
     if ( this.__LZneedsUpdateAfterInit ){
         this.__LZApplyData();
-        this.__LZneedsUpdateAfterInit = null;
+        this.__LZneedsUpdateAfterInit = false;
     }
 }
 
 /**
   * @access private
   */
-function __LZApplyData( force = null) {
-
-    var ip = this.immediateparent;
+function __LZApplyData( force:Boolean = false) :void {
+    var ip:LzNode = this.immediateparent;
 
     if ( this.datacontrolsvisibility ){
-        this.immediateparent.__LZvizDat = this.p != null; 
+        ip.__LZvizDat = this.p != null; 
           // [2008-03-12 pbr] Removed because swf9 doesn't like it. It can
           // also be a LZMiniNode but it's a null def.
-          if (this.immediateparent is LzView)
-//        if ('__LZupdateShown' in this.immediateparent)
-            this.immediateparent.__LZupdateShown();
+          if (ip is LzView)
+//        if ('__LZupdateShown' in ip)
+            ip.__LZupdateShown();
     }
 
-    var cdat = force ||
+    var cdat:Boolean = force ||
                ip.data != this.data ||
                (this.parsedPath && this.parsedPath.operator == "attributes");
 
     this.data = this.data == null ? null : this.data;
     ip.data = this.data;
-
-
-    if ( cdat && ip.ondata.ready){
-        ip.ondata.sendEvent( this.data );
-    }
-
-    if ( this.parsedPath && ( this.parsedPath.operator != null ||
-           this.parsedPath.aggOperator != null ) && cdat ){
-        if (ip.applyData) ip.applyData( this.data );
+    
+    if (cdat) {
+        if (ip.ondata.ready) ip.ondata.sendEvent( this.data );
+        
+        var ppath:LzParsedPath = this.parsedPath;
+        if (ppath && (ppath.operator != null || ppath.aggOperator != null)) {
+            ip.applyData( this.data );
+        }
     }
 
 }
@@ -411,10 +412,14 @@ function __LZApplyData( force = null) {
 /**
   * @access private
   */
-override function setDataContext ( p , implicit = null ){
+override function setDataContext ( p, implicit:Boolean = false) :void {
     if (p == null && this.immediateparent != null) {
         p = this.immediateparent.searchParents( "datapath" ).datapath;
         implicit = true;
+    } else if ($debug) {
+        if (this.immediateparent == null) {
+           Debug.warn("immediateparent is null for %w in '%s'", this, arguments.callee);
+        }
     }
 
     if ( p == this.context ) return;
@@ -428,19 +433,19 @@ override function setDataContext ( p , implicit = null ){
     } else {
         //not a depedent child
 
-        var dclist = null;
+        var dclist:Array = null;
         if ( this.context ) dclist = this.context.__LZdepChildren;
         if ( dclist ){
             //remove self from list
-            for ( var i = 0; i < dclist.length; i++ ){
-                if ( dclist[ i ] == this ){
+            for ( var i:int = 0; i < dclist.length; i++ ){
+                if ( dclist[ i ] === this ){
                     dclist.splice( i , 1 );
                     break;
                 }
             }
         }
     }
-    // this.callInherited
+    
     super.setDataContext( p );
 }
 
@@ -452,15 +457,14 @@ override function setDataContext ( p , implicit = null ){
 override function destroy(){
     this.__LZupdateLocked = true; //so won't set data
 
-    if ( this.context && !this.context.__LZdeleted && 
-         this.context is LzDatapath ){
-//         this.context.__LZdepChildren ){
+    var context:* = this.context;
+    if ( context && !context.__LZdeleted && context is LzDatapath ){
         //remove self from __LZdepChildren
-        var dca = this.context.__LZdepChildren;
+        var dca:Array = context.__LZdepChildren;
 
         if (dca != null) {
-            for ( var i = 0; i < dca.length ; i++ ){
-                if ( dca [ i ] == this ){
+            for ( var i:int = 0; i < dca.length; i++ ){
+                if ( dca [ i ] === this ){
                     dca.splice( i , 1 );
                     break;
                 }
@@ -469,24 +473,26 @@ override function destroy(){
 
     }
 
+    var ip:LzNode = this.immediateparent;
+
     //if immediate parent was deleted, don't worry about the datapaths dependent
     //on this one -- they'll be deleted too
-    if ( ! this.immediateparent.__LZdeleted ){
-        if ( this.__LZdepChildren != null &&
-             this.__LZdepChildren.length ){
+    if ( ! ip.__LZdeleted ){
+        var depChildren = this.__LZdepChildren;
+        if (depChildren != null && depChildren.length > 0) {
             //need to assign __LZdepChildren to parent
-            var dnpar = this.immediateparent.searchParents( "datapath" ).
-                                                                    datapath;
-
-            for ( var i = 0; i < this.__LZdepChildren.length ; i++ ){
-                this.__LZdepChildren[ i ].setDataContext( dnpar , true );
+            var dnpar:LzDatapath = ip.searchParents( "datapath" ).datapath;
+            
+            for ( var i:int = 0; i < depChildren.length; i++ ){
+                depChildren[ i ].setDataContext( dnpar, true );
             }
-
+            
+            this.__LZdepChildren = null;
         }
     }
 
-    if ( this.immediateparent.datapath == this ){
-        this.immediateparent.datapath = null;
+    if (ip.datapath === this) {
+        ip.datapath = null;
     }
 
     super.destroy.apply(this, arguments);
@@ -525,7 +531,7 @@ function __LZupdateData (recursive:Boolean = false) :void {
         this.p.__LZlockFromUpdate( this );
     }
 
-    var ppdo = this.parsedPath ? this.parsedPath.operator : null;
+    var ppdo:String = this.parsedPath ? this.parsedPath.operator : null;
     if (ppdo != null) {
         var dat = (this.immediateparent cast LzNode).updateData();
         if (dat !== void(0)) {
@@ -558,28 +564,21 @@ function __LZupdateData (recursive:Boolean = false) :void {
 /**
   * @access private
   */
-override function toString( ){
+override function toString() :String {
     return "Datapath for " + this.immediateparent;
 }
 
-
-/**
-  * these are the events that datapaths publish. This is used by the replication
-  * manager to copy and delegates that are registered when it replaces the
-  * original datapath
-  * @access private
-  */
-var _dpevents = [ 'ondata' , 'onerror' , 'ontimeout' ];
-
 /**
   * @access private
   */
-override function __LZcheckChange ( chgpkg ){
-    if ( !super.__LZcheckChange.apply(this, arguments) ){
+override function __LZcheckChange (chgpkg:Object) :Boolean {
+    if ( !super.__LZcheckChange(chgpkg) ){
         if ( chgpkg.who.childOfNode( this.p , true ) && this.onDocumentChange.ready){
             this.onDocumentChange.sendEvent( chgpkg );
         }
     }
+    
+    return false;
 }
 
 
@@ -594,17 +593,15 @@ override function __LZcheckChange ( chgpkg ){
   *
   * @access private
   */
-override function __LZsetTracking ( who, additive = null, needscheck = null ) {
+override function __LZsetTracking ( who, additive:Boolean = false, needscheck:Boolean = false) :void {
 #pragma 'warnUndefinedReferences=true'
-    var tracking;
-    var trackDel;
     // If setting tracking to null or not in additive mode, just
     // invoke the superclass method, forcing tracking
     if ((! who) || (! additive)) {
         return super.__LZsetTracking(who, true);
     }
-    tracking = this.__LZtracking;
-    trackDel = this.__LZtrackDel;
+    var tracking:Array = this.__LZtracking;
+    var trackDel:LzDelegate = this.__LZtrackDel;
     // This appears to be an assumption of the previous
     // implementation.  Check that it is true.
     if ($debug) {
@@ -614,8 +611,8 @@ override function __LZsetTracking ( who, additive = null, needscheck = null ) {
     }
     // Are we already tracking this?
     if ( needscheck ){
-        var l = tracking.length;
-        for ( var i = 0; i < l; i++ ) {
+        var len:int = tracking.length;
+        for ( var i:int = 0; i < len; i++ ) {
             if( tracking[ i ] === who ) {
                 return;
             }
@@ -632,21 +629,19 @@ override function __LZsetTracking ( who, additive = null, needscheck = null ) {
     trackDel.register( who , "onDocumentChange" );
 }
 
-/** @access private */
-var __LZisclone = false;
-
 /**
   * @access private
   * @devnote Setter for datacontrolsvisiblity
   */
-function $lzc$set_datacontrolsvisibility (v)
-{ this.datacontrolsvisibility = v;}
+function $lzc$set_datacontrolsvisibility (v) :void { 
+    this.datacontrolsvisibility = v;
+}
 
 /**
   * @access private
   * @devnote Setter for __LZmanager
   */
-function $lzc$set___LZmanager (m) { 
+function $lzc$set___LZmanager ( m:LzReplicationManager ) :void {
     this.__LZisclone = true;
     this.immediateparent.cloneManager = m;
     this.parsedPath = m.parsedPath;
@@ -658,9 +653,9 @@ function $lzc$set___LZmanager (m) {
   * Called by the clone manager to point the datapath to the right node
   * @access private
   */
-function setClonePointer( p ) {
+function setClonePointer( p /*:LzDataNodeMixin*/ ) :void {
     //Debug.write("%s: for %w, was %w (dp.sel=%w, p.sel=%w)", arguments.callee, p, this.p, this.sel, p.sel);
-    var pc = this.p !=p;
+    var pc:Boolean = this.p != p;
     this.p = p;
 
     //FIXME: [20080327 anba] LPP-5328
@@ -680,7 +675,7 @@ function setClonePointer( p ) {
 /**
   * @access private
   */
-override function setSelected (torf:Boolean) {
+override function setSelected (torf:Boolean) :void {
     this.p.sel = torf;
     this.sel = torf;
 
@@ -690,29 +685,33 @@ override function setSelected (torf:Boolean) {
 /**
   * @access private
   */
-override function __LZgetLast( ){
-    if ( this.__LZisclone ) return this.context.nodes.length;
-
-    else if ( this.p == this.context.getContext() &&
-              this.context.__LZgetLast ){
-        return this.context.__LZgetLast();
+override function __LZgetLast() :int {
+    var context:* = this.context;
+    if ( this.__LZisclone ) {
+        return context.nodes.length;
+    } else if ( this.p == context.getContext() &&
+              context is LzDatapointer ){
+        return context.__LZgetLast();
+    } else {
+        return 1;
     }
-
-    return 1;
 }
 
 /**
   * @access private
   */
-override function __LZgetPosition( ){
-    if ( this.__LZisclone ) return this.immediateparent.clonenumber + 1;
-
-    else if ( this.p == this.context.getContext() &&
-              this.context.__LZgetPosition ){
-        return this.context.__LZgetPosition();
+override function __LZgetPosition() :int {
+    if ( this.__LZisclone ) {
+        return this.immediateparent.clonenumber + 1;
+    } else {
+        var context:* = this.context;
+        if ( this.p == context.getContext() &&
+              context is LzDatapointer ){
+           return context.__LZgetPosition();
+        } else {
+            return 1;
+        }
     }
-
-    return 1;
 }
 
 } // End of LzDatapth

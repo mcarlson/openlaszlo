@@ -11,8 +11,8 @@
 /** @access private */
 class LzDataAttrBind extends LzDatapointer {
 
-function LzDataAttrBind ( ndpath , attr, path ){
-                            super (ndpath, attr)
+function LzDataAttrBind ( ndpath:LzDatapath, attr:String, path:String ){
+                            super (ndpath);
                             this.setAttr = attr;
                             this.pathparent = ndpath;
                             this.node = ndpath.immediateparent;
@@ -28,26 +28,29 @@ function LzDataAttrBind ( ndpath , attr, path ){
 
 
 // prototype.rerunxpath = true; // Override value defined in LzDatapointer
-/** @access private */
-var $pathbinding = true;
-/** @access private */
-var setAttr;
-/** @access private */
-var pathparent;
-/** @access private */
-var node;
 
-override function __LZsendUpdate ( a = null , b = null ){ 
+/** @access private */
+var $pathbinding :Boolean = true;
+/** @access private */
+var setAttr :String;
+/** @access private */
+var pathparent :LzDatapath;
+/** @access private */
+var node :LzNode;
+
+/**
+  * @access private
+  */
+override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boolean { 
     var pchg = this.__LZpchanged;
-    if ( ! super.__LZsendUpdate.apply(this, arguments) ) return;
-    if ( pchg ||
-         this.node[ this.setAttr ] != this.data ||
-         this.parsedPath.operator == "attributes" ){
-         this.node.setAttribute( this.setAttr , this.data == null ? 
-                                               null : this.data );
-                                               //this test is necessary or 
-                                               //or properties get set to
-                                               //undefined
+    if ( super.__LZsendUpdate(upd, upp) ) {
+        var data:* = this.data;
+        var node:LzNode = this.node;
+        var attr:String = this.setAttr;
+        if (pchg || node[ attr ] != data || this.parsedPath.operator == "attributes") {
+                //this test is necessary or properties get set to undefined
+                node.setAttribute( attr, data == null ? null : data );
+        }
     }
 }
 
@@ -56,12 +59,12 @@ override function __LZsendUpdate ( a = null , b = null ){
   * This matches the LzDelegate method of the same name so that these objects
   * can be stored in a node's __LZdelegates array.
   */
-function unregisterAll ( ){ 
-    var dca = this.pathparent.__LZdepChildren;
+function unregisterAll () :void { 
+    var dca:Array = this.pathparent.__LZdepChildren;
 
     if (dca != null) {
-        for ( var i = 0; i < dca.length ; i++ ){
-            if ( dca [ i ] == this ){
+        for (var i:int = 0; i < dca.length; i++) {
+            if ( dca [ i ] === this ){
                 dca.splice( i , 1 );
                 break;
             }
@@ -71,9 +74,11 @@ function unregisterAll ( ){
     this.destroy();
 }
 
-
-override function setDataContext ( dc, implicit = null ){
-    super.setDataContext( dc || this.pathparent, implicit );
+/**
+  * @access private
+  */
+override function setDataContext (dc, implicit:Boolean = false) :void {
+    super.setDataContext(dc || this.pathparent, implicit);
 }
 
 /**
@@ -107,7 +112,7 @@ function __LZupdateData (recursive:Boolean = false) :void {
     }
 }
 
-override function toString ( ){ 
+override function toString () :String { 
     return 'binder ' + this.xpath;
 }
 
