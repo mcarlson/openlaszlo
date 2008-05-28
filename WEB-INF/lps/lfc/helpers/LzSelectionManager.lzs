@@ -161,12 +161,12 @@ override function construct ( view , args ) {
   */
 function select ( o ){
     if (  this.isSelected( o ) && ( this.toggle ||
-                                                this.isMultiSelect() ) ) {
+                                                this.isMultiSelect(o) ) ) {
         this.unselect( o );
         return;
     }
 
-    if (this.selected.length > 0 && this.isRangeSelect() ){
+    if (this.selected.length > 0 && this.isRangeSelect(o) ){
         var s = this.lastRange != null ? this.lastRange : this.selected[ 0 ];
         if ( s != o ){
             this.selectRange( s , o );
@@ -174,7 +174,7 @@ function select ( o ){
         return;
     }
 
-    if ( ! this.isMultiSelect() ){
+    if ( ! this.isMultiSelect(o) ){
         this.clearSelection();
     }
     this.makeSelected( o );
@@ -269,18 +269,20 @@ function selectRange ( s , e ){
 /**
   * Determines whether the an additional selection should be multi-selected or
   * should replace the existing selection
+  * @param LzView o: The newly selected view
   * @return Boolean:  If true, multi select. If false, don't multi select
   */
-function isMultiSelect ( ){
+function isMultiSelect (o){
     return lz.Keys.isKeyDown( "control" );
 }
 
 /**
   * Determines whether the an additional selection should be range-selected or
   * should replace the existing selection
+  * @param LzView o: The newly selected view
   * @return Boolean: If true, range select. If false, don't range select
   */
-function isRangeSelect(  ){
+function isRangeSelect(o){
     return lz.Keys.isKeyDown( "shift" );
 }
 
