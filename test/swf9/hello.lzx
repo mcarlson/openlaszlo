@@ -41,7 +41,7 @@
       Debug.write("resource onerror event", arg);
     </handler>
     <handler name="ontimeout" args="arg">
-      lzconsole.write("resource ontimeout event", arg);
+      Debug.write("resource ontimeout event", arg);
     </handler>
 
     <handler name="onclick">
@@ -171,8 +171,8 @@
 
   <script>
     with (global) {
-    lzconsole.write  ((f1.doit() == "foobar") ? "Base method test passed" : "Base method test failed");
-    lzconsole.write  ((b1.doit() == "baz") ? "Subclass method test passed" : "Subclass method test failed");
+    Debug.write  ((f1.doit() == "foobar") ? "Base method test passed" : "Base method test failed");
+    Debug.write  ((b1.doit() == "baz") ? "Subclass method test passed" : "Subclass method test failed");
    }
   </script>
 
