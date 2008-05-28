@@ -521,7 +521,7 @@
                     this._fillStyle = null;
                     this._strokeStyle = null;
                     this._globalAlpha = null;
-                    if (Lz.__BrowserDetect.isIE) {
+                    if (lz.embed.browser.isIE) {
                         LzSprite.prototype.__discardElement(this.__LZcanvas);
                     } else {
                         this.__LZcanvas.setAttribute('width', width);
@@ -544,7 +544,7 @@
                 var div = this.getMCRef();
                 div.appendChild(this.__LZcanvas);
     
-                if (Lz.__BrowserDetect.isIE) {
+                if (lz.embed.browser.isIE) {
                     // IE can take a while to start up.
                     this._hidden = false;
                     this.maxTries = 10;
@@ -745,7 +745,8 @@
             function createRadialGradient(x0, y0, r0, x1, y1, r1) {
                 return new LzCanvasGradient(this.context.createRadialGradient(x0, y0, r0, x1, y1, r1));
             }
-        }        
+        } // End of drawview
+        lz[$lzc$class_drawview.tagname] = $lzc$class_drawview;
 
         /**
           * <p>
@@ -1123,7 +1124,7 @@
                 return g;
             }
         } // End of drawview
-        ConstructorMap[$lzc$class_drawview.tagname] = $lzc$class_drawview;
+        lz[$lzc$class_drawview.tagname] = $lzc$class_drawview;
 
         /**
           * <p>
