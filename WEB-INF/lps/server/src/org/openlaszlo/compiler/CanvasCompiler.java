@@ -140,7 +140,7 @@ class CanvasCompiler extends ToplevelCompiler {
         String script;
         try {
             java.io.Writer writer = new java.io.StringWriter();
-            writer.write("canvas = new lz[" + map.get("name") + "](");
+            writer.write("canvas = new lz[" + map.get("name") + "](null, ");
             ScriptCompiler.writeObject(map.get("attrs"), writer);
             writer.write(");"); 
             script = writer.toString();
@@ -195,39 +195,47 @@ class CanvasCompiler extends ToplevelCompiler {
             }
         }
         collectObjectProperties(element, model, visited);
-        // Cheating, but canvas needs to munge it's model before it
-        // gets turned into a map...
-        Map attrs = model.attrs;
+        // Cheating, but canvas needs to add inits, since the compiler
+        // does not know that these are already properties of the
+        // superclass
+        Map inits = new LinkedHashMap();
 
         // default width is 100% by 100%
-        if (attrs.get("width") == null) attrs.put("width", "100%"); 
-        if (attrs.get("height") == null) attrs.put("height", "100%"); 
+        if (model.attrs.get("width") == null) inits.put("width", "100%"); 
+        if (model.attrs.get("height") == null) inits.put("height", "100%"); 
 
-        setDimension(attrs, "width", canvas.getWidth());
-        setDimension(attrs, "height", canvas.getHeight());
+        setDimension(inits, "width", canvas.getWidth());
+        setDimension(inits, "height", canvas.getHeight());
         
-        attrs.put("lpsbuild", ScriptCompiler.quote(LPS.getBuild()));
-        attrs.put("lpsbuilddate", ScriptCompiler.quote(LPS.getBuildDate()));
-        attrs.put("lpsversion", ScriptCompiler.quote(LPS.getVersion()));
-        attrs.put("lpsrelease", ScriptCompiler.quote(LPS.getRelease()));
-        attrs.put("runtime", ScriptCompiler.quote(canvas.getRuntime()));
-        attrs.put("__LZproxied",
+        inits.put("lpsbuild", ScriptCompiler.quote(LPS.getBuild()));
+        inits.put("lpsbuilddate", ScriptCompiler.quote(LPS.getBuildDate()));
+        inits.put("lpsversion", ScriptCompiler.quote(LPS.getVersion()));
+        inits.put("lpsrelease", ScriptCompiler.quote(LPS.getRelease()));
+        inits.put("runtime", ScriptCompiler.quote(canvas.getRuntime()));
+        inits.put("__LZproxied",
                   ScriptCompiler.quote(
                       mEnv.getProperty(mEnv.PROXIED_PROPERTY, APP_PROXIED_DEFAULT ? "true" : "false")));
         
-        attrs.put("embedfonts", Boolean.toString(mEnv.getEmbedFonts()));
-        attrs.put("bgcolor", new Integer(canvas.getBGColor()));
+        inits.put("embedfonts", Boolean.toString(mEnv.getEmbedFonts()));
+        inits.put("bgcolor", new Integer(canvas.getBGColor()));
         FontInfo fontInfo = canvas.getFontInfo();
-        attrs.put("fontname", ScriptCompiler.quote(fontInfo.getName()));
-        attrs.put("fontsize", new Integer(fontInfo.getSize()));
-        attrs.put("fontstyle", ScriptCompiler.quote(fontInfo.getStyle()));
+        inits.put("fontname", ScriptCompiler.quote(fontInfo.getName()));
+        inits.put("fontsize", new Integer(fontInfo.getSize()));
+        inits.put("fontstyle", ScriptCompiler.quote(fontInfo.getStyle()));
         if (element.getAttribute("id") != null)
-            attrs.put("id", ScriptCompiler.quote(element.getAttributeValue("id")));
+            inits.put("id", ScriptCompiler.quote(element.getAttributeValue("id")));
         // Remove this so that Debug.write works in canvas methods.
-        attrs.remove("debug");
+        model.attrs.remove("debug");
         // Remove this since it isn't a JavaScript expression.
-        attrs.remove("libraries");
-        return model.asMap();
+        model.attrs.remove("libraries");
+        Map map = model.asMap();
+        LinkedHashMap modelinits = (LinkedHashMap)map.get("attrs");
+        if (modelinits == null) {
+          map.put("attrs", inits);
+        } else {
+          modelinits.putAll(inits);
+        }
+        return map;
     }
     
     protected void setDimension(Map attrs, String name, int value) {

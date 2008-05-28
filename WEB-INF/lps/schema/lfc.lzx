@@ -71,6 +71,11 @@
   <attribute name="accessible" type="boolean" value="false"/>
   <!-- Set recursion and timeout limits -->
   <attribute name="scriptlimits" type="css" />
+  <attribute name="lpsversion" type="string" final="true" />
+  <attribute name="lpsrelease" type="string" final="true" />
+  <attribute name="lpsbuild" type="string" final="true" />
+  <attribute name="lpsbuilddate" type="string" final="true" />
+  <attribute name="runtime" type="string" final="true" />
 
   <containsElements>
     <element>view</element>

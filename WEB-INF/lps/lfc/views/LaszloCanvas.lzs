@@ -98,17 +98,17 @@ dynamic class LzCanvas extends LzView {
       * @type String
       * @keywords final
       */
-    var lpsbuild;
+    public var lpsbuild;
     /** A String specifying the date and time of the LPS build. "2007-03-05T15:33:42-0800"
       * @type String
       * @keywords final
       */
-    var lpsbuilddate;
+    public var lpsbuilddate;
     /** A String describing the target runtime. "dhtml" | "swf7" | "swf8" are currently supported. Others are in development.
       * @type String
       * @keywords final
       */
-    var runtime;
+    public var runtime;
 
     /**
       * For onmouseup event
@@ -130,10 +130,20 @@ dynamic class LzCanvas extends LzView {
       * @access private
       * LzCanvas 
       * 
-      * @param Object args: a hash of arguments specifying the way the canvas was compiled, e.g. {__LZproxied: "true", bgcolor: 16777215, embedfonts: true, fontname: "Verdana,Vera,sans-serif", fontsize: 11, fontstyle: "plain", height: "100%", lpsbuild: "8763 /Users/maxcarlson/openlaszlo/trunk", lpsbuilddate: "2008-04-17T18:17:33-0700", lpsrelease: "Yodel Production", lpsversion: "4.2a2", runtime: "swf8", width: "100%"}
+      * @param Object args: a hash of arguments specifying the way the
+      * canvas was compiled, e.g. {__LZproxied: "true", bgcolor:
+      * 16777215, embedfonts: true, fontname:
+      * "Verdana,Vera,sans-serif", fontsize: 11, fontstyle: "plain",
+      * height: "100%", lpsbuild: "8763
+      * /Users/maxcarlson/openlaszlo/trunk", lpsbuilddate:
+      * "2008-04-17T18:17:33-0700", lpsrelease: "Yodel Production",
+      * lpsversion: "4.2a2", runtime: "swf8", width: "100%"}
+      *
+      * @devnote The parameter pattern has to match LzNode, since we
+      * claim to be a subclass of LzNode.
       */
-    function LzCanvas ( args = null) {
-        super(null,args);
+    function LzCanvas ( parent = null, args = null, children = null, async = null) {
+      super(parent, args, children, async);
     }
 
     /**
