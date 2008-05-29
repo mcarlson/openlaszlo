@@ -351,6 +351,9 @@
 
         <!--- @access private -->
         <method name="destroy">
+            if ( this.isdefault) {
+                lz._componentmanager.service.unmakeDefault( this );
+            } 
             if (this._otherstyledel) {
                 this._otherstyledel.unregisterAll();
                 delete this._otherstyledel;
