@@ -729,31 +729,38 @@ LzSprite.prototype.__setClickable = function(c, who) {
     who._clickable = c;
     if (c) {
         var f = LzSprite.prototype.__clickDispatcher;
-        // must capture the owner in a closure... this is bad for IE 6
         who.onclick = f;
-        who.onmouseover = f;
-        who.onmouseout = f;
         // Prevent context menus in Firefox 1.5 - see LPP-2678
         who.onmousedown = f;
         who.onmouseup = f;
         if (this.quirks.fix_ie_clickable) {
             who.ondrag = f;
+            who.ondblclick = f;
+            who.onmouseenter = f;
+            who.onmouseleave = f;
+        } else {
+            who.onmouseover = f;
+            who.onmouseout = f;
         }
     } else {
         who.onclick = null;
-        who.onmouseover = null;
-        who.onmouseout = null;
         who.onmousedown = null;
         who.onmouseup = null;
         if (this.quirks.fix_ie_clickable) {
             who.ondrag = null;
+            who.ondblclick = null;
+            who.onmouseenter = null;
+            who.onmouseleave = null;
+        } else {
+            who.onmouseover = null;
+            who.onmouseout = null;
         }
     }
 }
 
 /**
   * @access private
-  * dispatches click events
+  * dispatches click events, called from the scope of the click div
   */
 LzSprite.prototype.__clickDispatcher = function(e) {
     // capture events in IE
@@ -765,31 +772,61 @@ LzSprite.prototype.__clickDispatcher = function(e) {
 /**
   * @access private
   */
-LzSprite.prototype.__mouseEvent = function ( e ){
-    // send option/shift/ctrl key events
-    if (LzKeyboardKernel && LzKeyboardKernel['__keyboardEvent']) LzKeyboardKernel.__keyboardEvent(e);
+LzSprite.prototype.__mouseEvent = function ( e , artificial){
+    if (artificial) {
+        var eventname = e;
+        e = {};
+    } else {
+        // send option/shift/ctrl key events
+        var eventname = 'on' + e.type;
+        if (LzKeyboardKernel && LzKeyboardKernel['__keyboardEvent']) LzKeyboardKernel.__keyboardEvent(e);
+    }
+
+    if (this.quirks.fix_ie_clickable) {
+        // rename ie-specific events to be compatible
+        if (eventname == 'onmouseenter') {
+            eventname = 'onmouseover';
+        } else if (eventname == 'onmouseleave') {
+            eventname = 'onmouseout';
+        }
+    }
+
     var skipevent = false;
-    var eventname = 'on' + e.type;
     if (window['LzInputTextSprite'] && eventname == 'onmouseover' && LzInputTextSprite.prototype.__lastshown != null) LzInputTextSprite.prototype.__hideIfNotFocused();
-    if (eventname == 'onmousedown') {
+    if (this.quirks.fix_ie_clickable && eventname == 'ondblclick') {
+        // Send artificial events to mimic other browsers
+        this.__mouseEvent('onmousedown', true);
+        this.__mouseEvent('onmouseup', true);
+        this.__mouseEvent('onclick', true);
+        return;
+    } else if (eventname == 'onmousedown') {
         // cancel mousedown event bubbling...
         e.cancelBubble = true;
-        this.__mousedown = true;
-        if (window['LzMouseKernel']) LzMouseKernel.__lastMouseDown = this;
+        this.__mouseisdown = true;
+        if (window['LzMouseKernel']) {
+            LzMouseKernel.__lastMouseDown = this;
+        }
     } else if (eventname == 'onmouseup') {
         e.cancelBubble = false;
-        if (window['LzMouseKernel'] && LzMouseKernel.__lastMouseDown == this) {
-            this.__mousedown = false;
+        if (window['LzMouseKernel'] && LzMouseKernel.__lastMouseDown == this && this.__mouseisover) {
+            this.__mouseisdown = false;
         } else {
             skipevent = true;
         }
+    } else if (eventname == 'onmouseover') {
+        this.__mouseisover = true;
+    } else if (eventname == 'onmouseout') {
+        this.__mouseisover = false;
+    } else if (eventname == 'onmouseupoutside') {
+        this.__mouseisdown = false;
+        this.__mouseisover = false;
     }
 
     //Debug.write('__mouseEvent', eventname, this.owner);
     if (skipevent == false && this.owner.mouseevent && LzMouseKernel && LzMouseKernel['__sendEvent']) {
         LzMouseKernel.__sendEvent(eventname, this.owner);
 
-        if (this.__mousedown) {
+        if (this.__mouseisdown) {
             if (eventname == 'onmouseover') {
                 LzMouseKernel.__sendEvent('onmousedragin', this.owner);
             } else if (eventname == 'onmouseout') {
@@ -804,9 +841,9 @@ LzSprite.prototype.__mouseEvent = function ( e ){
   * @access private
   */
 LzSprite.prototype.__globalmouseup = function ( e ){
-    if (this.__mousedown) {
+    if (this.__mouseisdown) {
         this.__mouseEvent(e);
-        this.__mouseEvent({type: 'mouseupoutside'});
+        this.__mouseEvent('onmouseupoutside', true);
     }
 }
 

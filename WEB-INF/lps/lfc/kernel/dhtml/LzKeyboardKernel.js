@@ -11,7 +11,7 @@
 
 // Receives keyboard events from the runtime
 var LzKeyboardKernel = { 
-    __downKeysHash: {}
+    __downKeysHash: {alt: false, control: false, shift: false}
     ,__keyboardEvent: function ( e ){   
         if (!e) e = window.event;
         var delta = {};

@@ -156,6 +156,7 @@ public class LzModeManagerService extends LzNode {
                     (LzTimeKernel.getTimer() - this.__LZlastClickTime)< view.DOUBLE_CLICK_TIME ){
                         //this is a double-click
                         eventStr = "ondblclick";
+                        lz.GlobalMouse.__mouseEvent(eventStr, view);
                         this.__LZlastclick = null;
                 } else {
                     this.__LZlastclick = view;
