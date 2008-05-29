@@ -22,9 +22,14 @@
               @keywords readonly -->
         <attribute name="text" value="${this.tabpane.text}" type="text"/>
 
+        <!-- @keywords private -->
+        <method name="handletpdestroy" args="ignore">
+          this.destroy();
+        </method>
+
         <!--- @keywords private -->
         <handler name="onconstruct">
-            this.tpDestroyDel = new LzDelegate(this, 'destroy' , 
+            this.tpDestroyDel = new LzDelegate(this, 'handletpdestroy' , 
                                                this.tabpane, 'ondestroy' );
         </handler>
 
@@ -89,11 +94,11 @@
                     this.tabpane.content.completeInstantiation();
                 }
                 this.setAttribute("clickable",false);
-                this.tabpane.setVisible(true);
+                this.tabpane.setAttribute('visible', true);
                 this.setAttribute ('focusable' , false );
             } else {
                 this.setAttribute("clickable",true);
-                this.tabpane.setVisible(false);
+                this.tabpane.setAttribute('visible', false);
                 this.setAttribute ('focusable' , true );
             }
             super.setSelected(s);
@@ -225,8 +230,8 @@
         <!--- @keywords private -->
         <method name="init">
             super.init();
-            _recalculateContentWidth();
-            _recalculateContentHeight();
+            _recalculateContentWidth(null);
+            _recalculateContentHeight(null);
             this._contentWDel = 
                 new LzDelegate(this, "_recalculateContentWidth", this, "onwidth");
             this._contentHDel = 
@@ -234,7 +239,7 @@
         </method>
 
         <!--- @keywords private -->
-        <method name="_recalculateContentWidth">
+        <method name="_recalculateContentWidth" args="ignore">
             parent.parent._calculateContentWidth(this.width, 
                                                  parent.inset_left, 
                                                  parent.inset_right, 
@@ -242,7 +247,7 @@
         </method>
 
         <!--- @keywords private -->
-        <method name="_recalculateContentHeight">
+        <method name="_recalculateContentHeight" args="ignore">
             parent.parent._calculateContentHeight(this.height,
                                                   parent.inset_top,
                                                   parent.inset_bottom,

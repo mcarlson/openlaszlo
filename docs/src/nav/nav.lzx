@@ -46,15 +46,15 @@
         <simplelayout axis="x"/>
         <edittext name="token" width="120" >
             <handler name="onkeydown" args="k">
-                if ( k == 13 ) parent.find.doClick();
+                if ( k == 13 ) parent.doClick();
             </handler>
         </edittext>
-        <button height="${parent.token.height}" name="find">
+        <button height="${parent.token.height}" name="find" onclick="parent.doClick()">
             Find
-            <method name="doClick" event="onclick">
-                parent.parent.treeparent.findNext( parent.token.getText() );
-            </method>
         </button>
+        <method name="doClick">
+          parent.treeparent.findNext( token.getText() );
+        </method>
       </view>
       <link text="Welcome"
             onclick="LzBrowser.loadURL('ref.preface.html', target)"/>
@@ -70,8 +70,10 @@
             var sgroup = cgroup;
             var sleaf = cleaf;
             var canwrap = true;
-            this.lastfound.setAttribute( 'fgcolor', black );
-            this.lastfound = null;
+            if (this.lastfound) {
+              this.lastfound.setAttribute( 'fgcolor', black );
+              this.lastfound = null;
+            }
             while( !this.lastfound && 
                     ( canwrap || ( sgroup > cgroup ) ||
                       (sgroup == cgroup && sleaf > cleaf) ) ){

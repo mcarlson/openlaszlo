@@ -200,9 +200,9 @@ class CanvasCompiler extends ToplevelCompiler {
         // superclass
         Map inits = new LinkedHashMap();
 
-        // default width is 100% by 100%
-        if (model.attrs.get("width") == null) inits.put("width", "100%"); 
-        if (model.attrs.get("height") == null) inits.put("height", "100%"); 
+        // default dimension is 100% by 100%
+        inits.put("width",  model.attrs.containsKey("width") ? model.attrs.get("width") : "100%");
+        inits.put("height",  model.attrs.containsKey("height") ? model.attrs.get("height") : "100%");
 
         setDimension(inits, "width", canvas.getWidth());
         setDimension(inits, "height", canvas.getHeight());
