@@ -504,15 +504,18 @@ LzLoadQueue.loadXML = function (loadobj) {
             for ( header in headers) {
                 lvar.addRequestHeader(header, headers[header]);
             }
-
             var lzpostbody = loadobj.rawpostbody;
-            // Copy the postbody data onto the LoadVars, it will be POST'ed
-            var pdata = LzParam.parseQueryString(lzpostbody);
-            for ( var key in pdata) {
-                lvar[key] = pdata[key];
+            if (lzpostbody != null) {
+                var xmlraw = new XML();
+                var tnode = xmlraw.createTextNode(lzpostbody);
+                xmlraw.appendChild(tnode);
+                for ( header in headers) {
+                    xmlraw.addRequestHeader(header, headers[header]);
+                }
+                xmlraw.sendAndLoad(reqstr, loadobj);
+            } else {
+                lvar.sendAndLoad(reqstr , loadobj , "POST");
             }
-
-            lvar.sendAndLoad(reqstr , loadobj , "POST");
         } else {
             // For a GET request, all query args have been placed on
             // the lvar object already.
