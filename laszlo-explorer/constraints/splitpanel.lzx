@@ -6,23 +6,27 @@
         onmousedown="dragging.apply()"
         onmouseup="dragging.remove()">   
     <state name="dragging">
-      <attribute name="x" 
-                 value="${parent.getMouse('x')}"/>
+      <attribute name="x" value="${Math.min(parent.width-this.width, 
+                                   Math.max(0, parent.getMouse('x')))}"/> 
     </state>
   </view>
 
   <!-- constrain width to x of 'divider' -->
   <view name="left" bgcolor="#999999" y="30"
-        width="${divider.x}" height="200" >
+        width="${divider.x}" height="200" clip="true" >
     <text x="5" y="5" >Left Panel</text>
   </view>
   
   <!-- constrain to properties of 'divider' -->
   <view name="right" bgcolor="#CAD0EC" y="30"
         x="${divider.x+divider.width}" 
-        width="${parent.width-this.x}" height="200" >
+        width="${parent.width-this.x}" height="200" clip="true" >
     <text x="5" y="5" >Right Panel</text>
   </view>
 </canvas>
 
-
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
