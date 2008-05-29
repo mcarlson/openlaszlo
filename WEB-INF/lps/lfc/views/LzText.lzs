@@ -285,22 +285,34 @@ override function construct ( parent, args ) {
     super.construct.apply(this, arguments);
 
     this.sizeToHeight = false;
-
-    this.fontname  = ('font' in args)       ? args.font      : this.searchParents( "fontname"  ).fontname ;
-    this.fontsize  = ('fontsize' in args)   ? args.fontsize  : this.searchParents( "fontsize"  ).fontsize ;
-    this.fontstyle = ('fontstyle' in args)  ? args.fontstyle : this.searchParents( "fontstyle" ).fontstyle ;
-
-    args.font = this.fontname;
-    args.fontsize = this.fontsize;
-    args.fontstyle = this.fontstyle;
+    
+    var fontMap:Object = {font:'fontname', fontsize:'fontsize', fontstyle:'fontstyle'};
+    var fontCpy:Object = {};
+    for (var key:String in fontMap) {
+        var hasArg:Boolean = (key in args) ? true : false;//can't just write "key in args" in swf9..
+        var initExpr:Boolean = hasArg && args[key] is LzInitExpr;
+        fontCpy[key] = initExpr ? args[key] : LzNode._ignoreAttribute;
+        if (hasArg && !initExpr) {
+            // a normal value, just install it
+            this[fontMap[key]] = args[key];
+        } else {
+            // font-attribute wasn't specified or it was a constraint, 
+            // need to lookup for initial font-attribute
+            var val:String = fontMap[key];
+            this[val] = args[key] = this.searchParents( val )[ val ];
+        }
+    }
+    
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     tsprite.__initTextProperties(args);
+    
+    for (var key:String in fontCpy) {
+        // if font-attribute was a constraint, copy it back, 
+        // else set it to LzNode._ignoreAttribute, 
+        // so it won't be processed by LzNode#__LZapplyArgs(..)
+        args[key] = fontCpy[key];
+    }
 
-    args.font      = LzNode._ignoreAttribute;
-    args.fontsize  = LzNode._ignoreAttribute;
-    args.fontstyle = LzNode._ignoreAttribute;
-
-    //this.callInherited( "construct", arguments.callee ,  parent , args );
     this.yscroll = 0;
     this.xscroll = 0;
 
