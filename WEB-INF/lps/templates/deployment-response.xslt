@@ -13,6 +13,30 @@
               doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
               doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
   
+  <xsl:template name="containerdiv">
+    <xsl:param name="methodname" />
+      <p>By default, applications are placed inside a new div with the id 'Container' appended to the app id, or '<code><xsl:value-of select="/canvas/@id"/>Container</code>' for the application above.  To place the application inside an existing div, you can specify the div's id as an argument to <code>lz.embed.<xsl:value-of select="$methodname"/>({... appenddivid: 'divid'})</code>.  Alternatively, you can change the id of an existing div or add a new one, e.g. '<code>&lt;div id="<xsl:value-of select="/canvas/@id"/>Container">...&lt;/div></code>'.</p>
+  </xsl:template>
+
+  <xsl:template name="solodeployment">
+    <xsl:param name="jspname" />
+      <h2>SOLO Deployment</h2>
+      There is a <a href='{canvas/request/@lps}/lps/admin/{$jspname}.jsp?appurl={canvas/request/@relurl}'>SOLO Deployment</a> tool on the OpenLaszlo server which can assist in packaging an application for standalone use.
+  </xsl:template>
+
+  <xsl:template name="disablehistory">
+    <xsl:param name="methodname" />
+      <p>To disable the history feature for an application, you can set the <code>history</code> argument to false, e.g. <code>lz.embed.<xsl:value-of select="$methodname"/>({... history: false}...)</code>.</p>
+  </xsl:template>
+
+  <xsl:template name="exampledeployment">
+      <p>Click <a href="{/canvas/request/@url}?lzt=html{/canvas/request/@query_args}">here</a> to see an example deployment page.</p>
+      
+      <p>If the HTML is located in a different directory than the
+      lzx source file, the value of the 'url' parameter will need to
+      be changed.</p>
+  </xsl:template>
+
   <xsl:template match="/">
 <html>
   <head>
@@ -79,56 +103,125 @@
   &lt;param name="menu" value="false" />
 &lt;/object></pre>
       
-      <h2>Deployment with the JavaScript <code>embed-compressed.js</code> Library</h2>
-      <p>To deploy using the JavaScript <code>embed-compressed.js</code> library,
+      <h2>Deployment with the <code>embed-compressed.js</code> Library</h2>
+      <p>To deploy using the <code>embed-compressed.js</code> JavaScript library,
       place the following line within the <code>&lt;head&gt;</code>
       section of the HTML document that embeds the OpenLaszlo
       application:</p>
       
       <pre>&lt;script src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/embed-compressed.js" type="text/javascript">&lt;/script></pre>
       
-      <p>Place the following element within the <code>&lt;body></code>
+      <p>Next, place the following element within the <code>&lt;body></code>
       section of the document, at the location where the Laszlo
       application should appear:</p>
       
       <pre>&lt;script type="text/javascript"&gt;
-          Lz.swfEmbed({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
+    lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
 &lt;/script></pre>
 
-      <p>Click <a href="{/canvas/request/@url}?lzt=html{/canvas/request/@query_arg}">here</a> to see an example deployment page.</p>
+      <xsl:call-template name="exampledeployment"/>
       
+      <xsl:call-template name="disablehistory"><xsl:with-param name="methodname" select="'swf'" /></xsl:call-template>
+
+      <xsl:call-template name="containerdiv"><xsl:with-param name="methodname" select="'swf'" /></xsl:call-template>
+
       <p>You can also use the <code>js</code> request type to generate
-      the call to <code>Lz.swfEmbed</code>:</p>
+      the call to <code>lz.embed.swf()</code>:</p>
       
       <pre>&lt;script src="<xsl:value-of select="/canvas/request/@url"/>?lzt=js" type="text/javascript"&gt;
 &lt;/script></pre>
-      
-      <p>If the HTML page is moved to a different directory than the
-      lzx source file, the value of the 'url' parameter will need to
-      be changed.</p>
-      
-     
+
+      <p>To upgrade the Flash player where necessary, specify a version number with the second argument to <code>lz.embed.swf(properties[, minimumVersion])</code>.  The default version number is 7.  Currently, Safari requires Flash 8, and will automatically use that version and upgrade the player where required.  This example would always use Flash Player 8 or later: 
+      <pre>lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'}, 8)</pre> 
+      </p>
+
 <h2>Passing Parameters to SOLO applications</h2>
 <p>
-If you are deploying a SOLO application and wish to pass parameters down to the application from the base URL, you need to make some
+If you are deploying a SOLO application and wish to pass parameters down to the application from the browser location bar, you need to make some
  modifications to the stock html wrapper page that the server provides. 
 </p>
 <p>
-Here is an <code>Lz.swfEmbed</code> line that passes all of the query params down to the Laszlo app undamaged:</p>
+Here is an example call to <code>lz.embed.swf()</code> that passes all of the query params down to the Laszlo app undamaged:</p>
 <pre>
-Lz.swfEmbed({url: 'main.lzx.lzr=swf7.swf?'+window.location.search.substring(1), bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
+lz.embed.swf({url: 'main.lzx.lzr=swf7.swf?'+window.location.search.substring(1), bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
 </pre>
 <p>
 
 The thing that's different is the alteration to <code>main.lzx.lzr=swf7.swf? </code>from <code>main.lzx?lzt=swf</code> and the addition of 
-<code>'+window.location.search.substring(1)'</code>
+<code>'+window.location.search.substring(1)'</code> to read the query string from the URL typed into the browser
 </p>
 
-<h3><a href='{canvas/request/@lps}/lps/admin/solo-deploy.jsp?appurl={canvas/request/@relurl}'>SOLO Deployment Wizard</a></h3>
-There is also a <a href='{canvas/request/@lps}/lps/admin/solo-deploy.jsp?appurl={canvas/request/@relurl}'>SOLO Deployment Wizard</a> application on the OpenLaszlo server which can assist in packaging an entire application directory for SOLO use.
+      <xsl:call-template name="solodeployment"><xsl:with-param name="jspname" select="'solo-deploy'" /></xsl:call-template>
 
-</xsl:when></xsl:choose>
+</xsl:when><xsl:otherwise>
 
+      <h2>Deployment with the <code>embed-compressed.js</code> Library</h2>
+      <p>To deploy using the <code>embed-compressed.js</code> JavaScript library,
+      place the following line within the <code>&lt;head&gt;</code>
+      section of the HTML document that embeds the OpenLaszlo
+      application:</p>
+      
+      <pre>&lt;script src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/embed-compressed.js" type="text/javascript">&lt;/script></pre>
+
+      Next, you'll need to load a copy of the LFC inside the <code>&lt;head&gt;</code> section of the HTML document that embeds the application.  <code>lz.embed.lfc()</code> writes a  &lt;script/> tag into the document to load the LFC.  It expects two arguments: the URL for the LFC to be loaded, and the base URL to load resources from.  This only needs to be done once per page.  Note that these URLs may change for applications deployed using SOLO deployment.  For this application, you can use aa call like this: 
+      <pre>&lt;script type="text/javascript"&gt;
+    lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>');
+&lt;/script></pre>
+      
+      <p>Finally, place the following element within the <code>&lt;body></code>
+      section of the document, at the location where the Laszlo
+      application should appear:</p>
+      
+      <pre>
+&lt;script type="text/javascript"&gt;
+    lz.embed.dhtml({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=object<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>'});
+    lz.embed.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
+        //Called when the application finishes loading
+    }
+&lt;/script></pre>
+
+      <xsl:call-template name="exampledeployment"/>
+
+      <xsl:call-template name="disablehistory"><xsl:with-param name="methodname" select="'dhtml'" /></xsl:call-template>
+
+      <xsl:call-template name="containerdiv"><xsl:with-param name="methodname" select="'dhtml'" /></xsl:call-template>
+
+      <xsl:call-template name="solodeployment"><xsl:with-param name="jspname" select="'solo-dhtml-deploy'" /></xsl:call-template>
+</xsl:otherwise></xsl:choose>
+
+      <h2>Accessing applications from browser JavaScript</h2>
+      <p>Each application reserves its own place inside <code>lz.embed</code>, depending on the id passed for <code>lz.embed.swf(...)</code> or <code>lz.embed.dhtml(...)</code>.  In addition, <code>lz.embed.applications</code> keeps track of all applications embedded on the page by id.  For example, an application embedded with <code>id: 'foo'</code> can be accessed at <code>lz.embed.foo</code> or <code>lz.embed.applications.foo</code>.  This application can be accessed at <code>lz.embed.<xsl:value-of select="/canvas/@id"/></code> or <code>lz.embed.applications.<xsl:value-of select="/canvas/@id"/></code>.</p> 
+
+      <p>Before accessing an application, you can check the 'loaded' property to make sure it's set to <code>true</code>: 
+      <pre>lz.embed.<xsl:value-of select="/canvas/@id"/>.loaded</pre>
+      </p>
+
+      <p>To find out when an application is loaded and ready to be called, use: 
+      <pre>
+lz.embed.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
+    ...
+}
+      </pre>
+      </p>
+
+      <p>To read a canvas attribute in an application, use: 
+      <pre>value = lz.embed.<xsl:value-of select="/canvas/@id"/>.getCanvasAttribute('attributename')</pre></p>
+      
+      <p>To set a canvas attribute in an application, use: 
+      <pre>lz.embed.<xsl:value-of select="/canvas/@id"/>.setCanvasAttribute('attributename', value)</pre></p>
+
+      <p>To set canvas attributes for all applications on the page, use:
+      <pre>lz.embed.setCanvasAttribute('attributename', value[, history])</pre>
+      If the optional <code>history</code> argument is <code>true</code> the browser's history mechanism will track the call to setCanvasAttribute(), and will reset the canvas attribute value when the browser's forward or back buttons are pressed.</p>
+     
+      <p>To call a method in an application, use: 
+      <pre>value = lz.embed.<xsl:value-of select="/canvas/@id"/>.callMethod('globalreference.reference.anyMethod(...)')</pre> 
+      passing a string representation of the method and any arguments you wish to pass.  You can call any available method in the application as long as '<code>globalreference</code>' can be found in the global scope.</p>
+
+      <p>To call a method in all applications on the page, use:
+      <pre>lz.embed.callMethod('globalreference.reference.anyMethod(...)')</pre> 
+      </p>
+      
       <h2>More Information</h2>
       <ul>
         <li><a href="{/canvas/request/@lps}/docs/deployers/">System Administrator's Guide to Deploying OpenLaszlo Applications</a></li>

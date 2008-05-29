@@ -141,7 +141,7 @@ lz.embed = {
 
     ,/**
      * Write &lt;script/> tags into the document at the location where this 
-     * function is called to load the LFC.  Must be called before dhtml().
+     * function is called to load the LFC.  Must be called before lz.embed.dhtml().
      *
      * @param url:String url to LFC
      * @param resourceroot:String Base URL to load resources from. 
@@ -177,9 +177,8 @@ lz.embed = {
      *
      * DHTML adds support for the cancelkeyboardcontrol option.  Setting cancelkeyboardcontrol to true will prevent the application from grabbing keyboard events for tab, arrow and enter keys, and disables application activation.
      * 
-     * Note: lfc must have already been called, to load the
-     * LFC.  If lfc has not been called this call will not load the 
-     * application.
+     * Note: lz.embed.lfc() must have already been called to load the
+     * LFC.
      */
     dhtml: function (properties) {
         var queryvals = this.__getqueryurl(properties.url, true);
@@ -407,8 +406,9 @@ lz.embed = {
         return canvas[name];
     }
 
-    ,/** @devnote from http://www.quirksmode.org/js/detect.html 
-         @access private
+    ,/** 
+       * Browser detection object, with flags set for most browsers.  Includes the boolean properties isFirefox, isOpera, isSafari and isIE.  The version property contains the version number of the browser.
+       * @devnote adapted from http://www.quirksmode.org/js/detect.html 
        */
     browser: {
         init: function () {
@@ -646,7 +646,7 @@ lz.embed.attachEventHandler(window, 'beforeunload', lz.embed, '_cleanupHandlers'
 #pragma "passThrough=true"
 try {
     if (lzOptions) {
-        if (lzOptions.dhtmlKeyboardControl) alert('WARNING: this page uses lzOptions.dhtmlKeyboardControl.  Please use the cancelkeyboardcontrol embed argument for dhtml() instead.'); 
+        if (lzOptions.dhtmlKeyboardControl) alert('WARNING: this page uses lzOptions.dhtmlKeyboardControl.  Please use the cancelkeyboardcontrol embed argument for lz.embed.dhtml() instead.'); 
         if (lzOptions.ServerRoot) alert('WARNING: this page uses lzOptions.ServerRoot.  Please use the second argument of lz.embed.lfc() instead.'); 
     }
 } catch (e) {
