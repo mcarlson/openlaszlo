@@ -91,7 +91,7 @@
             <simplelayout axis="x" spacing="4"/>
             <mouseview resource="ok_butt">
                 <handler name="onclick">
-                    parent.parent.form.datapath.retrieveData();
+                    parent.parent.form.datapath.updateData();
                     if (parent.parent.mode=="new") {
                         Debug.write("new");
                         var dp=canvas.datasets.dsCreditCardList.getPointer();
