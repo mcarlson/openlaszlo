@@ -43,7 +43,7 @@ class LzBrowserService {
 
   /**
    * Runs Javascript in the browser using a javascript: url, optionally in a
-   * target
+   * target window.  Note that Flash limits the javascript string to a maximum of 508 characters.  See callJS() for a higher-performance alternative.
    *
    * @param String js: Javascript string to execute
    * @param String target: Optionally specifies a named frame to display the contents of the URL.
@@ -54,7 +54,7 @@ class LzBrowserService {
     { LzBrowserKernel.loadJS.apply (null, arguments);}
 
   /**
-   * Runs a Javascript method in the browser, optionally returning the result
+   * Runs a Javascript method in the browser, optionally returning the result.  Note that this feature requires the application to be embedded by the embed-compressed.js library. 
    *
    * @param String methodname: Browser javascript method name to execute
    * @param Function callback: Optional callback function to receive the return value of the javascript call
