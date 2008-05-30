@@ -26,7 +26,7 @@
             gClipboard.dragFinished( sellist );
         </method>
 
-        <method name="showAfterLoad">
+        <method name="showAfterLoad" args="ignore">
             <![CDATA[
             var animdur = 250;
             var adur = activephotos.length > 1 ? animdur : 0;
@@ -34,7 +34,7 @@
                 var p = activephotos[ i ];
                 if ( !( p.loaded && !p.visible ) ) continue;
                 var e = sellist[ i ];
-                p.setVisible( true );
+                p.setAttribute('visible',  true );
                 p.setX( e.getAttributeRelative( 'x', p ) );
                 p.setY( e.getAttributeRelative( 'y', p ) );
                 p.setAttribute( "clipfactor" , 0 );

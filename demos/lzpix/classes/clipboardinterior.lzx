@@ -15,12 +15,12 @@
 
     <wrappinglayout axis="x" yinset="3" xinset="3" spacing="3"/>
 
-    <method name="showAfterLoad">
+    <method name="showAfterLoad" args="ignore">
         <![CDATA[
         for ( var i = activephotos.length -1; i >=0; i-- ){
             var p = activephotos[ i ];
             if ( !( p.loaded && !p.visible ) ) continue;
-            p.setVisible( true );
+            p.setAttribute('visible',  true );
         }
         ]]>
     </method>

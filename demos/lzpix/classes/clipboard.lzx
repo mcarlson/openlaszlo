@@ -18,7 +18,7 @@
     <class name="clipboardphoto" extends="photo" border="1"
            width="30" height="30" clipfactor="1">
         <handler name="oninit">
-            shadow.setVisible( false );
+            shadow.setAttribute('visible',  false );
         </handler>
         <!-- Clicking on a photo in the clipboard brings that photo into
         details view. The animation is a bit odd, because the photo thumbnail
@@ -114,7 +114,7 @@
                 this.anm_close.doStart();
             } else {
                 this.anm_open.doStart();
-                scrn.setVisible(true);
+                scrn.setAttribute('visible', true);
                 this.bringToFront();
                 gDragged.bringToFront();
             }
@@ -122,7 +122,7 @@
        </method>
 
        <handler name="onstop" reference="anm_close" >
-            scrn.setVisible(false);
+            scrn.setAttribute('visible', false);
        </handler>
        
     </class>

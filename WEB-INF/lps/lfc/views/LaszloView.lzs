@@ -423,10 +423,10 @@ override function construct ( parent , args) {
     }
     if($debug){
         if(args['valign'] && args['y']){
-            Debug.warn("y attribute ignored; superseded by valign constraint.");
+            Debug.warn(this, "y attribute ignored; superseded by valign constraint.");
         }
         if(args['align'] && args['x']){
-            Debug.warn("x attribute ignored; superseded by align constraint.");
+            Debug.warn(this, "x attribute ignored; superseded by align constraint.");
         }
     }
 }

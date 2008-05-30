@@ -39,13 +39,13 @@
         </method>
 
         <method name="enableZoom">
-            thmb.setVisible(true);
-            zoomScreen.setVisible(false); 
+            thmb.setAttribute('visible', true);
+            zoomScreen.setAttribute('visible', false); 
         </method>
         
         <method name="disableZoom">
-            thmb.setVisible(false);
-            zoomScreen.setVisible(true); 
+            thmb.setAttribute('visible', false);
+            zoomScreen.setAttribute('visible', true); 
         </method>
 
         <view name="zoombg" resource="../assets/tools/zoom-bkgnd.gif" 

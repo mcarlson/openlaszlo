@@ -474,7 +474,7 @@ function $lzc$set_duration (duration) {
         if(sn){
             for(var i = 0; i < sn.length; ++i){
                 if(sn[i] is LzAnimatorGroup){
-                    sn[i].setDuration(duration);
+                    sn[i].setAttribute('duration', duration);
                 }
             }
         }

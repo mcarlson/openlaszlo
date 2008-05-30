@@ -156,7 +156,7 @@
             <method name="displaytext"  args="show" ><![CDATA[
                 var i;
                 for (i in photoscontainer.lyt.subviews) {
-                   if (photoscontainer.lyt.subviews[i].txt && photoscontainer.lyt.subviews[i].txt.setVisible) photoscontainer.lyt.subviews[i].txt.setVisible( show );
+                   if (photoscontainer.lyt.subviews[i].txt && photoscontainer.lyt.subviews[i].txt.setVisible) photoscontainer.lyt.subviews[i].txt.setAttribute('visible',  show );
                 }
             ]]></method>
             
@@ -174,7 +174,7 @@
                 canvas.details.ph.setWidth( maxdim );
                 canvas.details.ph.setHeight( maxdim );
 
-                canvas.details.setVisible( true );
+                canvas.details.setAttribute('visible',  true );
 
                 this.lyt.setAttribute('textvisible',false);
                 this.lyt.setAttribute('isgrid',false);
@@ -184,7 +184,7 @@
                 //adjust an animation parameter before starting transition
                 this.lyt.updateOnIdle( true );
                 canvas.interior.details_bkgnd.setHeight(2);
-                canvas.interior.details_bkgnd.setVisible( true );
+                canvas.interior.details_bkgnd.setAttribute('visible',  true );
                 this.lyt.transitiontolinear_anm.grp.yspacing.setAttribute('to', -photoscontainer.lyt.photodimension*photoscontainer.lyt.photoscale);
                 this.lyt.transitiontolinear_anm.doStart();
                 // canvas.details.ph.posme.doStart(); //max's edit?
@@ -198,7 +198,7 @@
             <handler name="onstop" reference="this.lyt.transitiontogrid_anm" >
                 //Debug.write("TOOLS back onclick", photoscontainer.detailphoto);
                 canvas.interior.details_bkgnd.setHeight(0);
-                canvas.interior.details_bkgnd.setVisible( false );
+                canvas.interior.details_bkgnd.setAttribute('visible',  false );
                 this.lyt.isgrid = true;
                 this.lyt.myreset();
                 this.lyt.setAttribute('textvisible',true); this.lyt.update();
@@ -209,7 +209,7 @@
             <method name="showPhotoDetails"  args="show,ph_arg=null" ><![CDATA[
                 if ( show ) {
                     var photoid = ph_arg.datapath.p.getAttr("id"); 
-                    canvas.details.setVisible( true ); 
+                    canvas.details.setAttribute('visible',  true ); 
                     canvas.details.loadDetails( photoid ); 
                     canvas.details.loadUserInfo( ph_arg.datapath.p.getAttr("owner"));
                     
@@ -217,7 +217,7 @@
                     tls.disableZoom(); 
                 } else  {
                 
-                    canvas.details.setVisible( false );
+                    canvas.details.setAttribute('visible',  false );
                     canvas.details.info.setX(1500);
                 }
                 
@@ -266,14 +266,14 @@
                 this.doneDel.register( lc, "oninit" );
             </method>
                         
-            <method name="initialReplicationDone">
+            <method name="initialReplicationDone" args="ignore">
                 <![CDATA[
                 //this.setAttribute( "initialDone", true );
                 //Debug.write("initialReplicationDone");
                 photoscontainer.lyt.unlock();
                 photoscontainer.lyt.update();
-                photoscontainer.setVisible(true);
-                spnr.setVisible(false);
+                photoscontainer.setAttribute('visible', true);
+                spnr.setAttribute('visible', false);
                 ]]>
             </method>
 
@@ -403,7 +403,7 @@
 
                 <attribute name="updel" value="$once{ new LzDelegate( this , 'update' ) }"/>
                 <method name="start">
-                    this.setVisible( true );
+                    this.setAttribute('visible',  true );
                     this._sx = parent.getMouse( "x" );
                     this._sy = parent.getMouse( "y" );
                     this.updel.register( LzIdle, "onidle" );
@@ -411,7 +411,7 @@
                     this.update();
                 </method>
 
-                <method name="update">
+                <method name="update" args="ignore">
                     <![CDATA[
                     var mx = this.parent.getMouse( 'x' );
                     var my = this.parent.getMouse( 'y' );
@@ -433,7 +433,7 @@
                 </method>
 
                 <method name="stop" args="f = null, rel = null">
-                    this.setVisible( false );
+                    this.setAttribute('visible',  false );
                     this.updel.unregisterAll();
                     this.parent.selectInRectangle( this._sx , this._sy , 
                                                 this.parent.getMouse( 'x' ),
@@ -504,8 +504,8 @@
         <view bgcolor="0xffffff" width="${parent.width}" height="1" y="${parent.height - 1}" />
         
         <handler name="onstop" reference="this.anm" >
-            this.parent.large_cam.setVisible( false );
-            this.parent.little_cam.setVisible( true );
+            this.parent.large_cam.setAttribute('visible',  false );
+            this.parent.little_cam.setAttribute('visible',  true );
         </handler>
     </view>
 
@@ -585,15 +585,15 @@
     
     <search name="srch" id="gSearch" width="156" x="475" y="315">
         <attribute name="firsttime" value="true"/>
-        <method name="sendsearch" >
-            photoscontainer.setVisible(false); 
+        <method name="sendsearch" args="ignore">
+            photoscontainer.setAttribute('visible', false); 
             //Debug.write("sendsearch: photoscontainer.lyt.lock called");
             photoscontainer.lyt.isgrid = true;
             photoscontainer.lyt.myreset();
             photoscontainer.lyt.lock();
-            canvas.spnr.setVisible( true );
+            canvas.spnr.setAttribute('visible',  true );
             photoscontainer.lyt.transitiontogrid_anm.doStart();
-            canvas.details.setVisible( false );
+            canvas.details.setAttribute('visible',  false );
             if (this.firsttime) {
                 this.firsttime = false;
                 photoscontainer.lyt.calcpageparams = true;
@@ -637,7 +637,7 @@
             this.topview.anm.doStart();
             this.bottom.anm.doStart();
             this.isopen = true; 
-            this.links.setVisible( false );
+            this.links.setAttribute('visible',  false );
             return this.bottom.anm;
         }
     </method>

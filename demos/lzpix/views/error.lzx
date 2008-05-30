@@ -12,14 +12,14 @@
     </text>
 
     <mybutton x="260" y="32">
-        <text x="8" y="10" valign="middle">ok</text>
+        <text x="8" valign="middle">ok</text>
         <handler name="onclick">
             LzBrowser.loadURL( "javascript:window.location.href=window.location.href" );
         </handler>
     </mybutton>
 
     <method name="show" args="etext=null">
-        this.setVisible( true );
+        this.setAttribute('visible',  true );
     </method>
 </view>
 <!--

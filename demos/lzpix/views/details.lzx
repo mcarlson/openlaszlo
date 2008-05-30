@@ -49,7 +49,7 @@
 
         <handler name="onload" reference="interior">
             this.setDimensions();
-            this.setVisible( true );
+            this.setAttribute('visible',  true );
             this.anm_opacity.doStart();
         </handler>
         
@@ -180,7 +180,7 @@
 
             <!-- Set the low res, thumbnail image -->
             <method name="reset">                
-                 this.setVisible( true );
+                 this.setAttribute('visible',  true );
                  this.intparent2.setAttribute('opacity',0);
                  this.intparent.setAttribute('opacity',0);
             </method>
