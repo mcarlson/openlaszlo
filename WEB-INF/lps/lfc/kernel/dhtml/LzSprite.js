@@ -290,6 +290,7 @@ LzSprite.prototype.capabilities = {
     ,advancedfonts: false
     ,bitmapcaching: false
     ,persistence: false
+    ,clickmasking: false
 }
 
 LzSprite.prototype.__updateQuirks = function () {
@@ -920,16 +921,6 @@ LzSprite.prototype.setMaxLength = function ( v ){
   */
 LzSprite.prototype.setPattern = function ( v ){
     //overridden by LzTextSprite
-}
-
-/**
-  * @access private
-  */
-LzSprite.prototype.__LZsetClickRegion = function ( cr ){
-//STUB
-    if ($debug) {
-        Debug.warn('click regions are not currently implemented in dhtml.');
-    }
 }
 
 LzSprite.prototype.setVisible = function ( v ){

@@ -361,7 +361,6 @@
   <method name="__LZcheckheightFunction"/>
   <method name="__LZcheckwidthFunction"/>
   <method name="__LZinstantiationDone"/>
-  <method name="__LZsetClickRegion"/>
   <method name="__LZupdateShown"/>
   <method name="__LZvalignBottom"/>
   <method name="__LZvalignMiddle"/>

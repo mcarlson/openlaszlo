@@ -65,6 +65,7 @@ LzSprite.prototype.capabilities = {
     ,advancedfonts: true
     ,bitmapcaching: true
     ,persistence: true
+    ,clickmasking: true
 }
 
 /**
@@ -842,7 +843,8 @@ LzSprite.prototype.applyMask = function (s) {
 /**
   * @access private
   * */
-LzSprite.prototype.__LZsetClickRegion = function ( cr ){
+LzSprite.prototype.setClickRegion = function ( cr ){
+    if (cr == null) cr = "LzMouseEvents";
     this.__LZclickregion = cr;
 }
 

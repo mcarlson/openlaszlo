@@ -85,6 +85,7 @@ dynamic public class LzSprite extends Sprite {
       ,advancedfonts: true
       ,bitmapcaching: true
       ,persistence: true
+      ,clickmasking: false
       }
 
       public function LzSprite (newowner = null, isroot = null, args = null) {
@@ -766,12 +767,6 @@ dynamic public class LzSprite extends Sprite {
 
       function updateResourceSize () {
           this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
-      }
-
-
-      function __LZsetClickRegion ( cr ){
-          //STUB
-          trace('click regions are not currently implemented in swf9.');
       }
 
       function setCursor ( c ){

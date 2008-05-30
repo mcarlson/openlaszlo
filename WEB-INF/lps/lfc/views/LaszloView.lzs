@@ -618,14 +618,21 @@ function $lzc$set_bgcolor(v) { this.setBGColor(v) }
   * @access private
   */
 function $lzc$set_clickable(v) { this.setClickable(v); }
-/** Setting clickRegion to a vector-based SWF turns the SWF shape into a clickable hotspot.
+/** Setting to a vector-based resource changes the clickable hotspot for the mouse.  Check capabilities.clickregion befure using to avoid debugger warnings.
   * @access public
   * @type String
   * @lzxtype string
   */
 var clickregion;   
 /** @access private */
-function $lzc$set_clickregion(v) { this.__LZsetClickRegion(v); }
+function $lzc$set_clickregion(cr) { 
+    if (this.capabilities.clickregion) {
+        this.sprite.setClickRegion(cr);
+    } else if ($debug) {
+        this.__warnCapability('view.setClickRegion()'); 
+    }
+    this.clickregion = cr;
+}
 /** The cursor to display when the mouse is over this view. Any
   * resource can be used as a cursor. This attribute can be set for
   * any view with clickable=true, or any view whose class defaults
@@ -2576,13 +2583,7 @@ function removeMask () {
 }
 
 
-/**
-  * Setting clickRegion to a vector-based SWF turns the SWF shape into a clickable hotspot.
-  * @access private
-  */
-function __LZsetClickRegion ( cr ){
-    this.sprite.__LZsetClickRegion(cr);
-}
+
 
 /**
   * Makes a view clickable or not clickable.
