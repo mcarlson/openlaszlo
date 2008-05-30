@@ -320,11 +320,7 @@
   <view width="200" height="$once{canvas.height}" > 
     <view x="-15" resource="navbg"/>
     <basebutton resource="logobtn" x="2" y="6"
-        onclick="this.gotoWWW()">
-            <method name="gotoWWW">
-                LzBrowser.loadURL('javascript:window.open("http://www.openlaszlo.org","test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); void(0);' );
-            </method>
-    </basebutton>
+        onclick="LzBrowser.loadURL('http://www.openlaszlo.org', '_blank')"/>
     <view x="10" y="570" layout="axis:y">
       <text resize="true" fgcolor="white" font="smallfont,verdana,sans-serif" fontsize="8" text="${'Version: ' + canvas.version + ' (' + canvas.runtime + ')'}" />
       <view>
