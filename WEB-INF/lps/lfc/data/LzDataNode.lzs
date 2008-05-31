@@ -149,7 +149,7 @@ function $lzc$getNextSibling_dependencies( who, self ){
   * Renamed from childOf to avoid conflict with LzNode.childOf.
   * childOf still exists because it is part of the public API.
   */
-function childOfNode ( el , allowself ) {
+function childOfNode ( el , allowself=false ) {
     var p = allowself ? this : this.parentNode
     while ( p ){
         if ( p == el ) return true;

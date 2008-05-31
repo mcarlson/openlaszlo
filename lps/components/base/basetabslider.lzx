@@ -171,7 +171,7 @@
         <!--- Deprecated: use this.select(atabview) instead.
               @param basetabelement tabelement: tabelement to open. 
               @param boolean withAnimation: unused. -->
-        <method name="openTab" args="tabelement,withAnimation" > <![CDATA[
+        <method name="openTab" args="tabelement,withAnimation=false" > <![CDATA[
             var didopen = false;
             var ot = this._selector.getSelection()[0];
             if ( ot != tabelement ){
@@ -201,9 +201,10 @@
 
         <!--- Add the new item (instantiated using itemclassname) and a new
               tabelement.
-              @param String txt: The name of the tabelement. -->
-        <method name="addItem" args="txt" > <![CDATA[
-            var v = new lz[this.itemclassname](this,{text:txt});
+              @param String txt: The name of the tabelement. 
+              @param Object value: The value of the tabelement. -->
+        <method name="addItem" args="txt, value" > <![CDATA[
+            var v = new lz[this.itemclassname](this,{text:txt, value:value});
             this.onheight.sendEvent(); // force an update
         ]]> </method>
 

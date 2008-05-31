@@ -136,25 +136,25 @@
 
         <!--- Called if this component has the focus and the space bar goes 
               down -->
-        <method name="doSpaceDown"  args="e=null">
+        <method name="doSpaceDown" >
             return false;
         </method>
 
         <!--- Called if this component has the focus and the space bar goes 
               up -->
-        <method name="doSpaceUp"  args="e=null">
+        <method name="doSpaceUp" >
             return false;
         </method>
 
         <!--- Called if this component has the focus and the component
               has doesenter set to true and the enter key goes down -->
-        <method name="doEnterDown"  args="e=null">
+        <method name="doEnterDown" >
             return false;
         </method>
 
         <!--- Called if this component has the focus and the component
               has doesenter set to true and the enter key goes up -->
-        <method name="doEnterUp"  args="e=null">
+        <method name="doEnterUp" >
             return false;
         </method>
 

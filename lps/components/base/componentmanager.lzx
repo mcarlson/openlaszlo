@@ -83,7 +83,7 @@
             ]]>
         </method>
 
-        <method name="dispatchKeyTimer">
+        <method name="dispatchKeyTimer" args="ignore" >
             <![CDATA[
             if ( this._lastkeydown == 32 && this.lastsdown != null ){
                 this.lastsdown.doSpaceUp();

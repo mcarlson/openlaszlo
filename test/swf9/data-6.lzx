@@ -6,7 +6,7 @@
 
     <handler name="ondata">
 Debug.warn("ondata");
-       canvas.message.setText(LzDataNode.__LZXMLescape(this.serialize()));
+       canvas.message.setText(LzDataElement.__LZXMLescape(this.serialize()));
 
        trace("got data " + this.serialize());
     </handler>

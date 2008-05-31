@@ -14,7 +14,8 @@
        <!--- @keywords private -->
        <attribute name="_forcemulti" value="false"/>
 
-       <attribute name="cloneManager" value="null"/>
+       <!-- already defined in LzNode -->
+       <!--<attribute name="cloneManager" value="null"/>-->
        <method name="isRangeSelect" args="item">
            var allowselect = false;
            if (multiselect) allowselect = super.isRangeSelect(item);

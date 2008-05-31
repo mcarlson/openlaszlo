@@ -38,6 +38,10 @@
               @keywords private -->
         <attribute name="_initialselection" value="null"/>
 
+        <!--- the selector for this list (lz.listselector or lz.datalistselector)
+              @keywords private -->
+        <attribute name="_selector" value="null" />
+        
         <!--- This event is triggered whenever the user makes a selection it may
               used as a script in the tag or as an event method. -->
         <event name="onselect"/>
