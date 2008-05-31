@@ -1,6 +1,7 @@
 <section>
+  <title>Preface</title>
 <!-- change title per LPP-4804, IORIO 16 oct 2007 -->
-<para>OpenLaszlo applications are written in the LZX language and compiled to .swf files that execute in the Flash Player. This 
+  <para>OpenLaszlo applications are written in the LZX language and compiled to any of several runtime targets. This 
 Guide explains how to make those applications available to users on the Web. The <ulink url="../developers/">OpenLaszlo Application Developer's Guide</ulink> explains how to construct and test applications before you deploy them for general use.</para>
 
 <para/><section><title>Audience and rationale for this book</title>
@@ -11,9 +12,9 @@ Guide explains how to make those applications available to users on the Web. The
 
 
 <para>
-As explained in the Architecture chapter, there are two distinct ways to deploy applications:</para>
-<itemizedlist spacing="compact"><listitem><para>Using the OpenLaszlo Server (formerly called LPS), to serve .swf files and <emphasis role="i">proxy</emphasis>, that is, mediate the connection, between the client browser and any back-end services on the web.
-In this model you make available files having an .lzx or .lzo extension, which the server compiles to swf as necessary.</para></listitem><listitem><para>SOLO .swf files, <emphasis role="i">unproxied</emphasis>. In this model the developer simply precomiles LZX files, and deployment is trivial.</para></listitem></itemizedlist>
+  As explained in <xref linkend="deployers.architecture" />, there are two distinct ways to deploy applications:</para>
+<itemizedlist spacing="compact"><listitem><para>Using the OpenLaszlo Server (formerly called LPS) to mediate the connection between the client browser and any back-end services on the web.
+In this model you make available files having an .lzx or .lzo extension, which the server compiles to swf as necessary.</para></listitem><listitem><para>SOLO files, <emphasis role="i">unproxied</emphasis>. In this model the developer simply precomiles LZX files, and deployment is trivial.</para></listitem></itemizedlist>
 <para>
 This <emphasis role="i">Guide</emphasis> is virtually all concerned with proxied deployment. If you're deploying your OpenLaszlo application as .swf 
 files you probably will not need to consult this manual.</para>
@@ -21,7 +22,7 @@ files you probably will not need to consult this manual.</para>
 
 
 <para/></section><section><title>Typographic Conventions</title>
-<para>Code is displayed thus: <literal>var a = f(2)</literal>.  Longer sections of code and other verbatim information is displayed in a separate paragraph:</para>
+<para>Code is displayed like this: <literal>var a = f(2)</literal>.  Longer sections of code and other verbatim information is displayed in a separate paragraph:</para>
 
 <programlisting>
 An example file
@@ -29,7 +30,7 @@ that spans several
 lines
 </programlisting>
 
-<para>Example programs are shown thus:</para>
+<para>Example programs are shown like this:</para>
 <informalexample role="live-example"><programlisting>&lt;canvas height="20"&gt;
   &lt;text&gt;Hello World!&lt;/text&gt;
 &lt;/canvas&gt;</programlisting></informalexample>
