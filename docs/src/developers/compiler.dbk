@@ -16,10 +16,31 @@
 <para>
 The Developer's Console is a small OpenLaszlo application for selecting things like the target runtime, the deployment mode (proxied or SOLO) and whether the debugger is included.  When you first compile an OpenLaszlo application (as explained below), by default it is returned with the Developer's Console appearing at the bottom of the application.</para>
 <para>
-Depending on whether your compile to SWF (the default) or DHTML, a slightly different version of the Developer's Console is returned. The illustrations below call out features of both versions.
+Depending on whether your compile to SWF (the default) or DHTML, a slightly different version of the Developer's Console is returned. The fugures below show both versions.
 </para> 
-<informalfigure><mediaobject><imageobject><imagedata fileref="images/dev_console_dhtml.gif"/></imageobject></mediaobject></informalfigure>
-
+  <figure>
+    <title>Developer's console for DHTML compilation</title>
+    <mediaobject><imageobject><imagedata fileref="images/dhtmlconsole.png"/></imageobject></mediaobject>
+  </figure>
+  <para>The developer's console for DHTML has the following features:</para>
+  <itemizedlist>
+    <listitem><para>Compile option buttons: select the runtime.</para></listitem>
+    <listitem><para>Server and SOLO buttons: select the deployment mode. See <xref linkend="deploymentmodes"></xref> in the Administrator's Guide for more information.</para></listitem>
+    <listitem><para>View Source button: view the LZX source code.</para></listitem>
+    <listitem><para>Compile button: click to compile your application.</para></listitem>
+    <listitem><para>Debug checkbox: compile the application with the debugger enabled.</para></listitem>
+    <listitem><para>Backtrace checkbox: compile and maintain a call stack.</para></listitem>
+  </itemizedlist>
+  <figure>
+    <title>Developer's console for SWF compilation</title>
+    <mediaobject><imageobject><imagedata fileref="images/swfconsole.png"/></imageobject></mediaobject>
+  </figure>
+  <para>The developer's console for SWF has all the features of the DHTML console, and adds the following features:</para>
+  <itemizedlist>
+    <listitem><para>Console Remote Debug checkbox: Enable the standalone debugger (not compiled into the application). See <xref linkend="debugging"></xref> in the Developer's Guide for more information.</para></listitem>
+    <listitem><para>Size Profile link: opens an HTML page that displays details about the application.</para></listitem>
+  </itemizedlist>
+  
 <para/></section></section><section><title>The Command Line Compiler</title>
 <para>
 In OpenLaszlo, 'the compiler' consists (currently) of two phases: 1) 'the view compiler', which compiles LZX to JavaScript, and 2) 'the script compiler', which compiles JavaScript to the target runtime  (SWF7, SWF8 and DHTML). `lzc` invokes both those phases (although you can ask for the intermediate output).
