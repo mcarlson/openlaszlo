@@ -146,6 +146,14 @@ class LzInputTextSprite extends LzTextSprite {
             if (owner) owner.inputtextevent('onblur');
         }    
     }
+    
+    /**
+     * Get the current text for this inputtext-sprite.
+     * @protected
+     */
+    override public function getText():String {
+            return textfield.text;
+    }
 
     /**
      * Retrieves the contents of the text field for use by a datapath. See
