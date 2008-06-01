@@ -269,7 +269,7 @@ if (whatpage.equals("configure")) {
 <br>
      
 <table><tr><td width=600>
-     This wizard will generate a zip file containing all the resources you need to deploy a serverless (SOLO) application. For deployments which do not require browser the Javscript browser integration support files, it  will also generate some simple HTML wrappers which can be cut and pasted into HTML pages.
+     This wizard will generate a zip file containing all the resources you need to deploy a serverless (SOLO) application. For deployments which do not require the Javscript browser integration support files, it  will also generate some simple HTML wrappers which can be cut and pasted into HTML pages.
 </td></tr><table>
 
 <form  method="POST" action="<%= sUrl %>">
@@ -306,7 +306,7 @@ The SOLO deployment tool creates a
 Zip archive of <i>all</i> files, recursively, from the <i>directory</i> that
 contains your specified application source file. So it is best to use this SOLO tool
 on an application which resides in its own directory.                                         
-If your there are other applications in the same directory, this tool will copy
+If there are other applications in the same directory, this tool will copy
 all of those apps and their assets (and subdirectories) into the Zip file. That may not be what you want.
 
 
