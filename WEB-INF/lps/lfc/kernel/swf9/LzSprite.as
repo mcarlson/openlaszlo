@@ -280,6 +280,8 @@ dynamic public class LzSprite extends Sprite {
                 LzMouseKernel.__lastMouseDown = this;
             } else if (eventname == 'onmouseup') {
                 if (LzMouseKernel.__lastMouseDown == this) {
+                    // cancel mousedown event bubbling...
+                    e.stopPropagation();
                     this.__mousedown = false;
                 } else {
                     skipevent = true;
