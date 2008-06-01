@@ -653,6 +653,7 @@
            field; any text typed in appears as "****" characters in the
            current font. -->
       <attribute name="password" type="boolean" value="false"/>
+      <attribute name="enabled" type="boolean" value="true"/>
 
       <method name="$lzc$set_enabled"/>
       <method name="_gotBlurEvent"/>

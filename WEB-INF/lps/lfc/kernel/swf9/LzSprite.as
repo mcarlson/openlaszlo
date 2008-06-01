@@ -95,6 +95,7 @@ dynamic public class LzSprite extends Sprite {
           if (isroot) {
               this.isroot = true;
           }
+          this.mouseEnabled = false;
       }
 
       public function init (v:Boolean = true):void {
@@ -312,13 +313,14 @@ dynamic public class LzSprite extends Sprite {
       public function setClickable( c:Boolean ):void {
           if (this.clickable == c) return;
           this.clickable = c;
+          this.buttonMode = c;
+          this.mouseEnabled = c;
           attachMouseEvents(this);
           var cb:SimpleButton = this.clickbutton;
           //trace('sprite setClickable' , c, 'cb',cb);
           if (this.clickable) {
               // TODO [hqm 2008-01] The Flash Sprite docs 
               // explain how to add a sprite to the tab order using tabEnabled property. 
-              this.buttonMode = true;
               if (cb == null) {
                   this.clickbutton = cb = new SimpleButton();
                   addChild(cb);
@@ -337,7 +339,6 @@ dynamic public class LzSprite extends Sprite {
               cb.hitTestState = cr;
               attachMouseEvents(cb);
           } else {
-              this.buttonMode = false;
               removeMouseEvents(this);
               if (cb) {
                   removeMouseEvents(cb);

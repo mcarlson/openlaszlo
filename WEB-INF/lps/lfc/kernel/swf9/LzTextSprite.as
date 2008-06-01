@@ -85,6 +85,7 @@ public class LzTextSprite extends LzSprite {
             tfield.width = w;
             tfield.height = h;
             tfield.border = false;
+            tfield.mouseEnabled = false;
             //tfield.cacheAsBitmap = true;
             addChild(tfield);
             return tfield;
