@@ -5,7 +5,7 @@
   *            Use is subject to license terms.
   *
   * @topic Kernel
-  * @subtopic DHTML
+  * @subtopic swf9
   * @affects lzloader
   */
 
@@ -18,29 +18,38 @@ public class LzHTTPLoader {
         import flash.xml.*;  
     }#
 
-        var __abort;
-    var __loaderid = 1;
-    var __timeout;
-    var gstart;
-    var options;
-    var owner;
-    var requestheaders;
-    var requestmethod;
-    var requesturl;
-    var responseText;
-    var secure;
-    var responseXML:XML;
-    var dataRequest;
+    // holds list of outstanding data requests, to handle timeouts
+    static const activeRequests :Object = {};
+    static var loaderIDCounter :uint = 0;
+
+    const owner:*;
+    const __loaderid:uint;
+    var __abort:Boolean = false;
+    var __timeout:Boolean = false;
+    var gstart:Number;
+    var secure:Boolean;
+    var options:Object;
+    // Default infinite timeout
+    var timeout:Number = Infinity;
+    
+    var requestheaders:Object;
+    var requestmethod:String;
+    var requesturl:String;
+    
+    var responseText:String;
+    var responseXML:XML = null;
 
     // The URLLoader object
-    var loader:URLLoader;
+    var loader:URLLoader = null;
 
-    static var GET_METHOD    = "GET";
-    static var POST_METHOD   = "POST";
-    static var PUT_METHOD    = "PUT";
-    static var DELETE_METHOD = "DELETE";
+    var dataRequest:LzDataRequest = null;
 
-    public function LzHTTPLoader (owner, proxied) {
+    static const GET_METHOD:String    = "GET";
+    static const POST_METHOD:String   = "POST";
+    static const PUT_METHOD:String    = "PUT";
+    static const DELETE_METHOD:String = "DELETE";
+
+    public function LzHTTPLoader (owner:*, proxied:Boolean) {
         this.owner = owner;
         this.options = {parsexml: true};
         this.requestheaders = {};
@@ -54,18 +63,20 @@ public class LzHTTPLoader {
     public var loadTimeout:Function;
 
     /* Returns the response as a string  */
-    public function getResponse () {
+    public function getResponse () :String {
         return this.responseText;
     }
 
     /* Returns numeric status code (200, 404, 500, etc...) */
-    public function getResponseStatus () {
-        // nyi
+    public function getResponseStatus () :int {
+        // nyi - only available in IE, see doc: flash.events.HTTPStatusEvent#status
+        return 0;
     }
 
     /* Returns an array of response headers  */
-    public function getResponseHeaders () {
+    public function getResponseHeaders () :Array {
         // There seems to be no way to get response headers in the flash.net URLLoader API
+        // flash.events.HTTPStatusEvent docs say response headers are AIR-only
         return null;
     }
 
@@ -73,7 +84,7 @@ public class LzHTTPLoader {
     /* @param Object obj:  A hash table of headers for the HTTP request
        @access public
     */
-    public function setRequestHeaders (obj) {
+    public function setRequestHeaders (obj:Object) :void {
         this.requestheaders = obj;
     }
 
@@ -81,12 +92,11 @@ public class LzHTTPLoader {
        @param String val:  header value
        @access public
     */
-
-    public function setRequestHeader (key, val) {
+    public function setRequestHeader (key:String, val:String) :void {
         this.requestheaders[key] = val;
     }
 
-    public function abort () {
+    public function abort () :void {
         if (this.loader) {
             this.__abort = true;
             this.loader.close();
@@ -96,24 +106,24 @@ public class LzHTTPLoader {
     }
 
     /* @public */
-    public function setOption (key, val) {
+    public function setOption (key:String, val:*) :void {
         this.options[key] = val;
     }
 
 
     /* @public */
-    public function setProxied (proxied) {
+    public function setProxied (proxied:Boolean) :void {
         this.setOption('proxied', proxied);
     }
 
     /* @public
      */
-    public function setQueryParams (qparams) {
+    public function setQueryParams (qparams) :void {
     }
 
     /* @public
      */
-    public function setQueryString (qstring) {
+    public function setQueryString (qstring) :void {
     }
 
     /*
@@ -121,12 +131,12 @@ public class LzHTTPLoader {
       If queueRequests is false, subsequent requests will interrupt requests already in process
     */
 
-    public function setQueueing (queuing) {
+    public function setQueueing (queuing:Boolean) :void {
         this.setOption('queuing', queuing);
         // [todo hqm 2006-07] NYI
     }
 
-    public function getResponseHeader (key) {
+    public function getResponseHeader (key:String) :String {
         // There seems to be no way to get response headers in the flash.net URLLoader API
         trace('getResponseHeader not implemented in swf9');
         return null;
@@ -134,7 +144,7 @@ public class LzHTTPLoader {
 
 
     // headers can be a hashtable or null
-    public function open (method, url, username = null, password = null) {
+    public function open (method:String, url:String, username:String = null, password:String = null) :void {
         if (this.loader) {
             Debug.warn("pending request for id=%s", this.__loaderid);
         }
@@ -153,10 +163,10 @@ public class LzHTTPLoader {
     //   @param String url: url, including query args
     //   @param  String reqtype: 'POST' or 'GET'
     //   @param Object headers: hash table of HTTP request headers
-    public function makeProxiedURL ( url,  reqtype, lzt, headers, postbody) {
-        var proxyurl = lz.Browser.getBaseURL( ).toString();
+    public function makeProxiedURL ( url:String, reqtype:String, lzt:String, headers:Object, postbody:String) :String {
+        var proxyurl:String = lz.Browser.getBaseURL( ).toString();
 
-        var qargs = {
+        var qargs:Object = {
         lzt: (lzt != null) ? lzt : "xmldata",
         reqtype: reqtype,
         sendheaders: this.options.sendheaders,
@@ -175,11 +185,10 @@ public class LzHTTPLoader {
 
 
         // Set HTTP headers
-        var hname;
-        var headerString = "";
+        var headerString:String = "";
         if (headers != null) {
-            for (hname in headers) {
-                headerString += (hname + ": " + headers[hname]+"\n");
+            for (var hname:String in headers) {
+                headerString += (hname + ": " + headers[hname] + "\n");
             }
         }
 
@@ -195,9 +204,9 @@ public class LzHTTPLoader {
 
         // append query args onto url
         proxyurl += "?";
-        var sep = "";
-        for (var key in qargs) {
-            var val = qargs[key];
+        var sep:String = "";
+        for (var key:String in qargs) {
+            var val:* = qargs[key];
             if (typeof(val) == "string") {
                 val = encodeURIComponent(val);
                 val = val.replace(LzDataset.slashPat, "%2F");
@@ -208,16 +217,7 @@ public class LzHTTPLoader {
         return proxyurl;
     }
 
-
-    // holds list of outstanding data requests, to handle timeouts
-    //LzHTTPLoader.activeRequests = [];
-    static var activeRequests = {};
-    static var loaderIDCounter = 0;
-
-    // Default infinite timeout
-    var timeout = Infinity;
-
-    public function setTimeout (timeout) {
+    public function setTimeout (timeout:Number) :void {
         this.timeout = timeout;
         // [todo hqm 2006-07] Should we have  an API method for setting LzLoader timeout?
     }
@@ -230,39 +230,37 @@ public class LzHTTPLoader {
       setTimeout("LzHTTPLoader.__LZcheckXMLHTTPTimeouts()", duration);
       }
     */
-    public function setupTimeout (obj, duration) {
-        var endtime = (new Date()).getTime() + duration;
+    public function setupTimeout (obj:LzHTTPLoader, duration:Number) :void {
+        var endtime:Number = (new Date()).getTime() + duration;
         //obj.__loaderid = LzHTTPLoader.loaderIDCounter++;//uncomment to give LzHTTPLoader-instance a new loader-id
-        var lid = obj.__loaderid;
+        var lid:uint = obj.__loaderid;
     
         LzHTTPLoader.activeRequests[lid] = [obj, endtime];
-        var callback = function () {
+        var callback:Function = function () {
             LzHTTPLoader.__LZcheckXMLHTTPTimeouts(lid);
         }
-        var timeoutid = flash.utils.setTimeout(callback, duration);
+        var timeoutid:uint = flash.utils.setTimeout(callback, duration);
         LzHTTPLoader.activeRequests[lid][2] = timeoutid;
     }
     
     // Remove a loader from the timeouts list.
-    public function removeTimeout (target) {
-        var lid = target.__loaderid;
+    public function removeTimeout (target:LzHTTPLoader) :void {
+        var lid:uint = target.__loaderid;
         //Debug.write("remove timeout for id=%s", lid);
-        if (lid != null) {
-            var reqarr = LzHTTPLoader.activeRequests[lid];
-            if (reqarr && reqarr[0] === target) {
-                clearTimeout(reqarr[2]);
-                delete LzHTTPLoader.activeRequests[lid];
-            }
+        var reqarr:Array = LzHTTPLoader.activeRequests[lid];
+        if (reqarr && reqarr[0] === target) {
+            clearTimeout(reqarr[2]);
+            delete LzHTTPLoader.activeRequests[lid];
         }
     }
     
     // Check if any outstanding requests have timed out. 
-    static function __LZcheckXMLHTTPTimeouts (lid) {
-        var req = LzHTTPLoader.activeRequests[lid];
+    static function __LZcheckXMLHTTPTimeouts (lid) :void {
+        var req:Array = LzHTTPLoader.activeRequests[lid];
         if (req) {
-            var now = (new Date()).getTime();
-            var httploader = req[0];
-            var dstimeout = req[1];
+            var now:Number = (new Date()).getTime();
+            var httploader:LzHTTPLoader = req[0];
+            var dstimeout:Number = req[1];
             //Debug.write("diff %d", now - dstimeout);
             if (now >= dstimeout) {
                 //Debug.write("timeout for %s", lid);
@@ -273,31 +271,20 @@ public class LzHTTPLoader {
             } else {
                 // if it hasn't timed out, add it back to the list for the future
                 //Debug.write("recheck timeout");
-                var callback = function () {
+                var callback:Function = function () {
                     LzHTTPLoader.__LZcheckXMLHTTPTimeouts(lid);
                 }
-                var timeoutid = flash.utils.setTimeout(callback, now - dstimeout);
+                var timeoutid:uint = flash.utils.setTimeout(callback, now - dstimeout);
                 req[2] = timeoutid;
             }
         }
     }
 
-        public function getElapsedTime () {
-            return  ((new Date()).getTime() - this.gstart);
-        }
-
-
-    public function __setRequestHeaders (xhr, headers) {
-        if (headers != null) {
-            for (var key in headers) {
-                var val = headers[key];
-                // This gives error in Firefox ??
-                xhr.setRequestHeader(key, val);
-            }
-        }
+    public function getElapsedTime () :Number {
+        return  ((new Date()).getTime() - this.gstart);
     }
 
-    public function send (content = null) {
+    public function send (content:String = null) :void {
         this.loadXMLDoc(/* method */ this.requestmethod,
                         /* url */ this.requesturl,
                         /* headers */ this.requestheaders,
@@ -322,8 +309,7 @@ public class LzHTTPLoader {
             //trace('typeof data:', typeof(loader.data), loader.data.length, 'parsexml=', options.parsexml);
             responseText = loader.data;
 
-            var elt = null;
-            var lzxdata = null;
+            var lzxdata:LzDataElementMixin = null;
             removeTimeout(this);
 
             // Parse data into flash native XML and then convert to LFC LzDataElement tree
@@ -340,10 +326,12 @@ public class LzHTTPLoader {
                 }
             } catch (err) {
                 trace("caught error parsing xml", err);
+                loader = null;
                 loadError(this, null);
                 return;
             }
 
+            loader = null;
             loadSuccess(this, lzxdata);
         }
     }
@@ -359,6 +347,7 @@ public class LzHTTPLoader {
     private function securityErrorHandler(event:SecurityErrorEvent):void {
         trace("securityErrorHandler: " + event);
         removeTimeout(this);
+        loader = null;
         loadError(this, null);
     }
 
@@ -369,6 +358,7 @@ public class LzHTTPLoader {
     private function ioErrorHandler(event:IOErrorEvent):void {
         trace("ioErrorHandler: " + event);
         removeTimeout(this);
+        loader = null;
         loadError(this, null);
     }
 
@@ -376,7 +366,7 @@ public class LzHTTPLoader {
     // public
     // parseXML flag : if true, translate native XML tree into LzDataNode tree,
     //                 if false, don't attempt to translate the XML (if it exists)
-    public function loadXMLDoc (method, url, headers, postbody:String, ignorewhite) {
+    public function loadXMLDoc (method:String, url:String, headers:Object, postbody:String, ignorewhite:Boolean) :void {
         if (this.loader == null) {
             // TODO [hqm 2008-01] wonder if we should be throwing an
             // exception or returning some indication that the send
@@ -391,14 +381,14 @@ public class LzHTTPLoader {
 
         configureListeners(this.loader);
 
-        var request = new URLRequest(url);
+        var request:URLRequest = new URLRequest(url);
         request.data = postbody;
         request.method = (method == LzHTTPLoader.GET_METHOD) ? URLRequestMethod.GET : URLRequestMethod.POST;
 
-        var contentType = false;
+        var contentType:Boolean = false;
 
         var rhArray:Array = new Array();
-        for (var k in headers) {
+        for (var k:String in headers) {
             request.requestHeaders.push(new URLRequestHeader(k, headers[k]));
             if (k.toLowerCase() == "content-type") {
                 contentType = true;
