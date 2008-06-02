@@ -68,7 +68,8 @@
   * @lzxname datapath
   */
 class LzDatapath extends LzDatapointer {
-
+  #pragma "warnUndefinedReferences=true"
+  
 /** @access private
   * @modifiers override 
   */
@@ -675,7 +676,7 @@ function setClonePointer( p /*:LzDataNodeMixin*/ ) :void {
 /**
   * @access private
   */
-override function setSelected (torf:Boolean) :void {
+override function setSelected (torf) :void {
     this.p.sel = torf;
     this.sel = torf;
 

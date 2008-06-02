@@ -1696,7 +1696,7 @@ public dynamic class LzNode extends LzEventable {
    * @access protected
    * @param boolean sel: true when this node was selected, false when it lost selection
    */
-  function setSelected (sel:Boolean) /* :void */ {
+  function setSelected (sel) /* :void */ {
   }
 
 
