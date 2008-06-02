@@ -12,7 +12,7 @@
 
 <para>You can cause compilation either by implicitly calling the compiler through the OpenLaszlo Server, or by explicitly calling it from the command line. The most usual way to invoke the server is using the Developer's Console.</para>
 
-<para/><section><title>The Developer's Console</title>
+<para/><section id="dguide_dev_console"><title>The Developer's Console</title>
 <para>
 The Developer's Console is a small OpenLaszlo application for selecting things like the target runtime, the deployment mode (proxied or SOLO) and whether the debugger is included.  When you first compile an OpenLaszlo application (as explained below), by default it is returned with the Developer's Console appearing at the bottom of the application.</para>
 <para>

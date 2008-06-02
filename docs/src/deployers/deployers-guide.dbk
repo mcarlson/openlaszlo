@@ -7,7 +7,11 @@
 OpenLaszlo Server. If you deploy your applications SOLO, that is, not proxied by the OpenLaszlo Server, you do not need to read this chapter.</para>
  
 <para>An OpenLaszlo application is the set of LZX files and accompanying art
-assets and data files that are used by that application.</para>
+assets and data files that are used by that application. The easiest way to package
+these files is to use the Developer's Console. Clicking on the Server
+button in the Developer's Console opens an HTML page with complete documentation to guide
+you through the process. See <xref linkend="dguide_dev_console"></xref> in the Developer's Guide
+for a complete description. </para>
 
 <para>The OpenLaszlo Server is a set of 100% pure Java classes (along with some
 configuration files) that can be used to develop and deploy OpenLaszlo
