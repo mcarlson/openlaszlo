@@ -1139,9 +1139,8 @@ solution =
         String allocation = child.getAttributeValue("allocation", ALLOCATION_INSTANCE);
 
         if (attrName != null) {
-          AttributeSpec attrSpec = schema.getClassAttribute ( parentName, attrName, allocation) ;
-            // Only warn if the attribute we are shadowing has a declared initial value.
-            if (attrSpec != null && attrSpec.defaultValue != null) {
+          AttributeSpec attrSpec = schema.getClassAttribute ( parentName, attrName, allocation );
+            if (attrSpec != null && attrSpec.type != ViewSchema.NODE_TYPE) {
                 // TODO [2007-09-26 hqm] i18n this
                 env.warn(
                     "Child tag '" + child.getName() +
@@ -1567,7 +1566,9 @@ solution =
                 if (when.equals(WHEN_IMMEDIATELY)) {
                     value = ScriptCompiler.quote(value);
                 }
-            } else if ((type == ViewSchema.EXPRESSION_TYPE) || (type == ViewSchema.BOOLEAN_TYPE)) {
+            } else if ((type == ViewSchema.EXPRESSION_TYPE) ||
+                       (type == ViewSchema.BOOLEAN_TYPE) ||
+                       (type == ViewSchema.NODE_TYPE)) {
                 // No change currently, possibly analyze expressions
                 // and default non-constant to when="once" in the
                 // future

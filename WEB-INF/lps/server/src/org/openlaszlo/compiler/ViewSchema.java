@@ -62,27 +62,28 @@ public class ViewSchema extends Schema {
     public boolean enforceValidIdentifier = false;
 
     /** Type of script expressions. */
-    public static final Type EXPRESSION_TYPE = newType("expression");
+    public static final Type EXPRESSION_TYPE          = newType("expression");
 
     /** 'boolean' is compiled the same as an expression type */
-    public static final Type BOOLEAN_TYPE = newType("boolean");
+    public static final Type BOOLEAN_TYPE             = newType("boolean");
 
-    public static final Type REFERENCE_TYPE = newType("reference");
+    public static final Type REFERENCE_TYPE           = newType("reference");
     /** Type of event handler bodies. */
-    public static final Type EVENT_HANDLER_TYPE = newType("script");
+    public static final Type EVENT_HANDLER_TYPE       = newType("script");
 
     /** Type of attribute setter function */
-    public static final Type SETTER_TYPE = newType("setter");
+    public static final Type SETTER_TYPE              = newType("setter");
 
     /** Type of tokens. */
-    public static final Type TOKEN_TYPE = newType("token");
-    public static final Type COLOR_TYPE = newType("color");
-    public static final Type NUMBER_EXPRESSION_TYPE = newType("numberExpression");
-    public static final Type SIZE_EXPRESSION_TYPE = newType("size");
-    public static final Type CSS_TYPE = newType("css");
+    public static final Type TOKEN_TYPE               = newType("token");
+    public static final Type COLOR_TYPE               =  newType("color");
+    public static final Type NUMBER_EXPRESSION_TYPE   = newType("numberExpression");
+    public static final Type SIZE_EXPRESSION_TYPE     = newType("size");
+    public static final Type CSS_TYPE                 = newType("css");
     public static final Type INHERITABLE_BOOLEAN_TYPE = newType("inheritableBoolean");
-    public static final Type XML_LITERAL = newType("xmlLiteral");
-    public static final Type METHOD_TYPE = newType("method");
+    public static final Type XML_LITERAL              = newType("xmlLiteral");
+    public static final Type METHOD_TYPE              = newType("method");
+    public static final Type NODE_TYPE                = newType("node");
     
     static {
 
