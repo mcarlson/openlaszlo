@@ -218,7 +218,7 @@ processors result in more frames and smoother animation, but the same
 duration of transition.</para>
 <para/></section><section><title>Accessibility</title>
 <para>
-OpenLaszlo provides partial support for the <ulink url="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/msaa/msaastart_9w2t.asp">Microsoft Active Accessibility</ulink> specification, which states, "[b]y using Active Accessibility and following accessible design practices, developers can make applications running on Windows more accessible to many people with vision, hearing, or motion disabilities."  For a discussion of this feature, see <xref linkend="program-structure"/>.
+ OpenLaszlo provides partial support for the <ulink url="http://msdn.microsoft.com/en-us/library/ms697707(VS.85).aspx">Microsoft Active Accessibility</ulink> specification, which states, "By using Active Accessibility and following accessible design practices, developers can make applications running on Windows more accessible to many people with vision, hearing, or motion disabilities."  For a discussion of this feature, see <xref linkend="program-structure"/>.
 This support requires installation of third party software on the client machine, and is only available in the OpenLaszlo targets that run the Flash Player under Internet Explorer.
 </para>
 
