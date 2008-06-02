@@ -42,7 +42,9 @@ h3 { margin-left : 0; }
 td { 
     vertical-align: top;
 }
-
+.rightalign {
+	text-align: right;
+}
 
 .remark {
     background-color: yellow;

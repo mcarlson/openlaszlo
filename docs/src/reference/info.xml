@@ -87,26 +87,25 @@ use attributes to define a class.</p>
 <!-- This is our current workaround for inserting an hrule -->
 <para role="postprocess-html-hr"/>
 
-<p><a name="types"></a>There are five kinds of attributes: </p>
+<p><a name="types"></a>There are four kinds of attributes:</p>
 <ul>
-  <li><a href="#setter">Attributes (with setter)</a></li>
-  <li><a href="#defaultsetter">Attributes (without setter)</a></li>
-  <li><a href="#eventhandler">Event Handler</a> <a href="#final"> (script may
+  <li><a href="#setter"><literal>read/write</literal> attributes</a></li>
+  <li><a href="#eventhandler"><literal>event-handler</literal></a> <a href="#final"> (script may
       be defined XML tag)</a></li>
-  <li><a href="#final">Final Attributes (defined only in XML tag)</a></li>
-  <li><a href="#readonly">Read-only Attributes (JavaScript fields)</a><br /> 
+  <li><a href="#final"><literal>initialize-only</literal> attributes (defined only in XML tag)</a></li>
+  <li><a href="#readonly"><literal>read-only</literal> attributes (JavaScript fields)</a><br /> 
   </li>
 </ul>
 
 <para role="postprocess-html-hr"/>
 <a name="setter"></a>
 <simplesect>
-<h2>Attributes (with setter)</h2>
-<p>Built-in attributes which have setters may be modified at runtime
+  <h2><literal>read/write</literal> attributes</h2>
+  <p><literal>read/write</literal> attributes may be modified at runtime
 and used in constraint expressions. When <method>setAttribute</method>
 is called, the appropriate setter will be called automatically. The
 value of an attribute can be retrieved through script using dot
-syntax, (e.g. myView.opacity). </p>
+syntax, (for example, myView.opacity). </p>
 
 <p>For example:</p>
 <example title="Using setAttribute to update a constraint">&lt;canvas height="20"&gt;
@@ -115,69 +114,63 @@ syntax, (e.g. myView.opacity). </p>
   &lt;/view&gt;
 &lt;/canvas&gt;</example>
 
-<p>Most setters follow the naming convention "set" + "attribute name".
-For example, the x attribute for a view has the setX() method defined
-in the LzView API. You can use these methods as a convenience, instead
-of setAttribute.  They are documented with the other class
-methods.</p>
-
-<p align="right"><ulink url="#top">More on attributes</ulink></p>
-</simplesect>
-
-<para role="postprocess-html-hr"/>
 <a name="defaultsetter"></a>
-<simplesect>
-<h2>Attributes (without setter)</h2>
-<p>Some attributes are usable in a tag, but do not have a predefined
-setter method. Instead they use the default setter method
+
+<p>Some attributes use the setter method
 (<method>setAttribute</method>) to set their values at
 run-time. Typically they are custom attributes that have been declared
 in components using the <tagname>attribute</tagname> tag. Therefore they can be
 declared and set in tags too.</p>
 
-<example title="An attribute without a setter method">&lt;canvas&gt;
-    &lt;window <span class="redText">title="My Window"</span> onclick="this.setAttribute('title', 'Hello World');"/&gt;
+<example title="Using SetAttribute to set a window title">&lt;canvas height="50"&gt;
+    &lt;window width="140" <span class="redText">title="My Window"</span> onclick="this.setAttribute('title', 'Hello World');"/&gt;
 &lt;/canvas&gt;
 </example>
 
-
-<p align="right"><ulink url="#top">More on attributes</ulink></p>
+  <para role="rightalign"><ulink>More on attributes</ulink></para>
 </simplesect>
 
 <para role="postprocess-html-hr"/>
 <a name="eventhandler"></a>
 <simplesect>
-<h2>Event Handler Attributes</h2>
-<p>Event Handler attributes are instructions for what to perform when a particular event happens. They always contain script, and cannot be changed at run-time (i.e. from script). Their values cannot (and do not need to) be retrieved from script.</p>
+  <h2><literal>event-handler</literal> attributes</h2>
+  <p><literal>event-handler</literal> attributes are instructions for what to perform when a particular event happens. They always contain script, and cannot be changed at run-time (that is, from script). Their values cannot (and do not need to) be retrieved from script.</p>
 
-<programlisting class="code">
-&lt;canvas&gt;
+<example title="Using event-handler attributes">
+&lt;canvas height="150" debug="true"&gt;
     &lt;view width="50" height="50" bgcolor="red" <span class="redText">onclick="Debug.write('Hello, World!');"</span> /&gt;
 &lt;/canvas&gt;
-</programlisting>
+</example>
 
-<!-- TODO: [2008-05-13 dda] how to do alignment right ? -->
-<p align="right"><ulink url="#top">More on attributes</ulink></p>
+  <para role="rightalign"><ulink>More on attributes</ulink></para>
 </simplesect>
 
 <para role="postprocess-html-hr"/>
 <a name="final"></a>
 <simplesect>
-<h2>Final Attributes</h2>
-<p>Final attributes are declared and set in the tag, but cannot be changed in using script. Good examples of final attributes are name and id. They can be read from script using dot syntax (e.g. myView.name).</p>
-
-
-<p align="right"><ulink url="#top">More on attributes</ulink></p>
+  <h2><literal>initialize-only</literal> attributes</h2>
+  <p><literal>initialize-only</literal> attributes are declared and set in the tag, but cannot be changed in using script. Good examples of <literal>initialize-only</literal> attributes are name and id. They can be read from script using dot syntax.</p>
+  <example title="Using initialize-only attributes">
+&lt;canvas height="50"&gt;
+    &lt;view width="50" height="50" bgcolor="red" <span class="redText">align="center"</span> /&gt;
+&lt;/canvas&gt;
+  </example>
+  <para role="rightalign"><ulink>More on attributes</ulink></para>
 </simplesect>
 
 <para role="postprocess-html-hr"/>
 <a name="readonly"></a>
 <simplesect>
-<h2>Read Only Attributes (Fields)</h2>
-<p>Read Only attributes, sometimes called "Fields", are only available through
+  <h2><literal>read-only</literal> attributes</h2>
+  <p><literal>read-only</literal> attributes, sometimes called "Fields", are only available through
   the element's API. Since they are read-only, they cannot be set in a &lt;tag&gt;.
-  Their values can be retrieved using dot syntax (e.g. myView.subviews).</p>
-<p align="right"><ulink url="#top">More on attributes</ulink></p>
+  Their values can be retrieved using dot syntax.</p>
+  <example title="Using read-only attributes">
+&lt;canvas height="150" debug="true"&gt;
+  &lt;view width="50" height="50" bgcolor="red" <span class="redText">onclick="Debug.write('subview' + canvas.subviews);"</span> /&gt;
+&lt;/canvas&gt;
+  </example>
+  <para role="rightalign"><ulink>More on attributes</ulink></para>
 </simplesect>
 
 </text>
