@@ -9,48 +9,40 @@
 <!--=======================================================================-->
 
 <canvas width="240" height="320" bgcolor="#EAEAEA" title="Laszlo Weather">
-    <!-- the actual size of the app is:  width="240" height="320"
-         this app is sized larger to appear consistent with other samples -->
+    <!-- disable standard focus-overlay, doesn't look pretty in this demo -->
+    <attribute name="focusclass" value="null" type="expression" />
+    
     <splash/>
 
-    <!-- FONTS -->
-    <font name="lztahoe8">
-        <face style="plain" src="lztahoe8.ttf" />
-        <face style="bold" src="lztahoe8b.ttf" />
-    </font>
-
-    <font src="helmetr.ttf" name="Helvetica"/>
-    <font src="helmetb.ttf" name="Helvetica" style="bold" />
-
     <!-- IMAGE RESOURCES -->
-    <resource src="tab.swf"             name="tabtop" />
-    <resource src="weather_bg.jpg"      name="weather_bg" />
-    <resource src="weather_splash2.jpg" name="weather_splash" />
-    <resource src="weather_topbar2.gif" name="weather_topBar" />
-    <resource src="slider_icon2.png"    name="slider_icon" />
-    <resource src="zipbutton.swf"       name="zipButtonArt" />
+    <resource src="resources/tab.png"             name="tabtop" />
+    <resource src="resources/weather_bg.jpg"      name="weather_bg" />
+    <resource src="resources/weather_splash2.jpg" name="weather_splash" />
+    <resource src="resources/weather_topbar2.gif" name="weather_topBar" />
+    <resource src="resources/slider_icon2.png"    name="slider_icon" />
+    <resource name="zipButtonArt">
+        <frame src="resources/zipbutton0001.png"/>
+        <frame src="resources/zipbutton0001.png"/>
+        <frame src="resources/zipbutton0002.png"/>
+    </resource>
 
     <!-- DATA SOURCE -->
     <dataset name="weatherdata"
              src="http://weather.yahooapis.com/forecastrss" nsprefix="true"/>
 
-    <!-- LASZLO CLASSES -->
-    <include href="base/basetabslider.lzx"/>
-    <include href="lz/simpletext.lzx"/>
-
     <class name="image">
         <method name="applyData" args="d" >
-           if (d == null) { return; }
-            setSource( d );
+            if (d != null) this.setSource( d );
         </method>
     </class>
    
     <!-- Retrieve icon of weather condition based on numeric code. -->
     <class name="yahooImageCode">
         <method name="applyData" args="d" >
-           if (d == null) { return; }
-           var url = "http://l.yimg.com/us.yimg.com/i/us/we/52/" + d + ".gif";
-           setSource( url );
+            if (d != null) { 
+                var url = "http://l.yimg.com/us.yimg.com/i/us/we/52/" + d + ".gif";
+                this.setSource( url );
+            }
         </method>
     </class>
 
@@ -71,7 +63,7 @@
         <view name="top" width="100%"
               font="Tahoma,Geneva,sans-serif"
               fontstyle="bold"
-              onclick="classroot.parent.openTab(classroot,true)" >
+              onclick="classroot.parent.select(classroot)" >
             <view name="bg" resource="tabtop"
                   width="${parent.width}"
                   stretches="width"  />
@@ -81,36 +73,37 @@
             <text name="titlebox"   text="${classroot.label}"
                   width="240" fgcolor="#CAD0EC" x="15" y="4" />
         </view>
-        <view name="container"
-              width="${parent.width}"
+        <view name="container" width="${parent.width}"
               visible="${classroot.contentvisible}"
-              options="releasetolayout"
-              y="25"
-              clip="true">
+              options="releasetolayout" y="25" clip="true">
             <view name="details" width="${parent.width}" />
         </view>
         <resizelayout axis="y" />
 
         <!-- METHODS -->
-        <!-- the 'onopenstart' event is sent by the tabelement class' -->
-        <!-- there is also an 'onopenstop' that is not used in this weather -->
-        <!-- example -->
-        <handler name="onopenstart">
+        <method name="open" args="h,d,withAnimation" override="true" >
+            //only animate if weatherContent is visible
+            super.open(h, d, weatherContent.visible);
+            this.setAttribute("focusable", true);
+            LzFocus.setFocus(this);
+        </method>
+
+        <!-- HANDLERS -->
+        <handler name="onfocus" >
+            this.parent.select(this);
             this.top.bg.animate("opacity",.33,333,false);
             this.top.titlebox.setColor(0xFFFFFF);
         </handler>
-
-        <!-- the 'onclosestart' event is sent by the tabelement class' there -->
-        <!-- is also an 'onclosestop' that is not used in this example -->
-        <handler name="onclosestart">
+        
+        <handler name="onblur" >
             this.top.bg.animate("opacity",1,333,false);
             this.top.titlebox.setColor(0xCAD0EC);
         </handler>
     </class>
 
     <!-- CLASS: weatherSummary -->
-    <class name="weatherSummary" font="Helvetica"
-           fontsize="12" bgcolor="#000000" width="34" height="34" x="10">
+    <class name="weatherSummary" fontsize="12" font="Helvetica" bgcolor="#000000"
+          width="34" height="34" x="10">
         <yahooImageCode name="icon" width="32" height="32" stretches="both" x="1" y="1"
                datapath="@code"/>
         <text name="day"  x="42" fgcolor="#FFFFFF" width="140"
@@ -121,8 +114,8 @@
               fontstyle="bold" datapath="@high">Hi 80 F</text>
         <text name="templo" x="168" y="14" width="60" fgcolor="#FFFFFF"
               fontstyle="bold" datapath="@low">Lo 80 F</text>
-    <text x="145" fgcolor="#FFFFFF" fontstyle="bold" pixellock="true">Hi:</text>
-    <text x="145" y="14" fgcolor="#FFFFFF" fontstyle="bold" pixellock="true">Lo:</text>
+        <text x="145" fgcolor="#FFFFFF" fontstyle="bold" pixellock="true">Hi:</text>
+        <text x="145" y="14" fgcolor="#FFFFFF" fontstyle="bold" pixellock="true">Lo:</text>
     </class>
 
 
@@ -131,225 +124,225 @@
         font="Tahoma,Geneva,sans-serif" fontsize="9">
 
         <view resource="weather_bg" />
-
-        <state name="splashstate" pooling="true" applied="true">
-            <view name="splash" resource="weather_splash" >
-                <text id="error" fontstyle="bold" width="240"
-                    fgcolor="#000099" x="15" y="230"/>
-                <view id="zipBtn" x="0" y="245">
-                    <view name="bkgnd" resource="zipButtonArt" opacity=".7"
-                        onmousedown="parent.doMouseDown()"
-                        onmouseup="parent.doMouseUp()"  />
-                    <text width="240" fgcolor="#222222"
-                          x="16" y="7"><b>Enter Zip Code:</b></text>
-                    <text width="240" fgcolor="#FFFFFF"
-                          x="15" y="7"><b>Enter Zip Code:</b></text>
-                    <edittext id="zipcode" fontstyle="bold" font="Tahoma,Geneva,sans-serif"
-                        width="80" x="120" y="5" height="20">
-                        <handler name="onkeydown" args="key">
-                            if (key == 13) {
-                                weatherApp.loadWeather();
-                            }
-                        </handler>
-                    </edittext>
-                    <text width="240" fgcolor="#222222" x="206" y="7">
-                        <b>OK</b>
-                    </text>
-                    <text width="240" fgcolor="#FFFFFF" x="205" y="7">
-                        <b>OK</b>
-                    </text>
-                    <method name="doMouseDown">
-                        this.setAttribute('x', this.getAttribute('x') + 1);
-                        this.setAttribute('y', this.getAttribute('y') + 1);
-                        bkgnd.setResourceNumber(2);
-                    </method>
-                    <method name="doMouseUp">
-                        this.setAttribute('x', this.getAttribute('x') - 1);
-                        this.setAttribute('y', this.getAttribute('y') - 1);
-                        bkgnd.setResourceNumber(1);
-                        weatherApp.loadWeather();
-                    </method>
-                </view>
-            </view>
-        </state>
-
         <view name="topBar" resource="weather_topBar" y="-16"
-              opacity="0"
-              onmouseup="weatherApp.hideWeather()">
+              opacity="0" onmouseup="weatherApp.hideWeather()" focusable="true">
 
-            <attribute name="on" value="null"/>
+            <handler name="onfocus" >
+                this.zip.setAttribute('fgcolor', 0xFFFFFF);
+            </handler>
+            
+            <handler name="onblur" >
+                this.zip.setAttribute('fgcolor', 0xCAD0EC);
+            </handler>
+
+            <method name="getPrevSelection" >
+                //first focusable view
+                return this;
+            </method>
 
             <text name="zip" fontstyle="bold" fgcolor="#CAD0EC" width="100"
-                  x="194" y="1" />
+                  x="194" />
 
-            <state applied="${parent.on == true}">
+            <animatorgroup name="comein" process="simultaneous" start="false">
                 <animator attribute="opacity" to="1" duration="333"/>
                 <animator attribute="y" to="0" duration="333"/>
-            </state>
-
-            <state applied="${parent.on == false}">
+            </animatorgroup>
+            <animatorgroup name="goout" process="simultaneous" start="false">
                 <animator attribute="opacity" to="0" duration="333"/>
                 <animator attribute="y" to="-16" duration="333"/>
-            </state>
+            </animatorgroup>
         </view>
 
         <basetabslider id="weatherContent" name="content"
-                   x="0" y="15"
-                   height="305"
-                   slideduration="300"
-                   width="100%"
-                   datapath="weatherdata:/rss[1]/channel[1]" >
+              focusable="false" visible="false" 
+              x="0" y="15" height="305" slideduration="300"
+              width="100%" datapath="weatherdata:/rss[1]/channel[1]">
 
-      <weathertab name="tab1" label="Current Conditions" font="Tahoma,Geneva,sans-serif" > <!--  -->
-        <view id="currentData" width="240" y="10" >
-          <view  name="form" width="240" font="Helvetica"
-             fontsize="14">
-        <attribute name="city" value="$path{'yweather:location/@city '}"/>
-        <attribute name="region" value="$path{'yweather:location/@region'}"/>
-        <text name="where" width="240" x="15" fgcolor="#FFFFFF"
-              fontstyle="bold" text="${parent.city + ', ' + parent.region}"/>
-        <view bgcolor="#FFFFFF" x="26" y="28" width="52"
-                height="52"/>
-        <yahooImageCode name="icon"  x="26" y="28" width="64"
-                height="64"
-                datapath="item[1]/yweather:condition/@code"/>
-        <text name="temp"  x="95" y="20" width="240"
-              fontsize="60"
-              fgcolor="#FFFFFF" fontstyle="bold"
-              datapath="item[1]/yweather:condition/@temp"/>
-        <text name="description" width="240" x="15" y="90"
-              fgcolor="#FFFFFF" fontstyle="bold"
-              datapath="item[1]/yweather:condition/@text"/>
-          </view>
-          <view name="moredata" x="15" pixellock="true">
-        <view name="labels" font="Tahoma,Geneva,sans-serif" >
-          <text fgcolor="#FFFFFF" width="90"><b>Humidity:</b></text>
-          <text fgcolor="#FFFFFF"><b>Barometer:</b></text>
-          <text fgcolor="#FFFFFF"><b>Windspeed:</b></text>
-          <text fgcolor="#FFFFFF"><b>Sunrise:</b></text>
-          <text fgcolor="#FFFFFF"><b>Sunset:</b></text>
-          <text fgcolor="#FFFFFF"><b>Wind Chill:</b></text>
-          
-          <simplelayout axis="y" spacing="1" />
-        </view>
-        <view name="fields">
-          <text name="humidity" width="160"
-            fgcolor="#FFFFFF"
-            datapath="yweather:atmosphere[1]/@humidity"/>
-          <text name="barometer" width="160"
-            fgcolor="#FFFFFF"
-            datapath="yweather:atmosphere[1]/@pressure"/>
-          <text name="windspeed" width="160"
-                  fgcolor="#FFFFFF"
-                  datapath="yweather:wind[1]/@speed"/>
-            <text name="sunrise" width="160"
-                  fgcolor="#FFFFFF"
-                  datapath="yweather:astronomy[1]/@sunrise"/>
-            <text name="sunset" width="160"
-                  fgcolor="#FFFFFF"
-                  datapath="yweather:astronomy[1]/@sunset"/>
-            <text name="windchill" width="160"
-                  fgcolor="#FFFFFF"
-                  datapath="yweather:wind[1]/@chill"/>
-            <text name="when" width="160"
-                  fgcolor="#FFFFFF"
-                  datapath="item[1]/condition[1]/@date"/>
-        <simplelayout axis="y" spacing="1" />
-        </view>
-        <simplelayout axis="x" spacing="-10" />
-          </view>
-          <simplelayout axis="y" spacing="10" />
-        </view>
-      </weathertab>
-
-
+            <weathertab name="tab1" label="Current Conditions" font="Tahoma,Geneva,sans-serif" > <!--  -->
+                <view id="currentData" width="240" y="10" >
+                    <view  name="form" width="240" fontsize="14" font="Helvetica">
+                        <attribute name="city" value="$path{'yweather:location/@city '}"/>
+                        <attribute name="region" value="$path{'yweather:location/@region'}"/>
+                        <text name="where" width="240" x="15" fgcolor="#FFFFFF"
+                              fontstyle="bold" text="${parent.city + ', ' + parent.region}"/>
+                        <view bgcolor="#FFFFFF" x="26" y="28" width="52"
+                                height="52"/>
+                        <yahooImageCode name="icon"  x="26" y="28" width="64"
+                                height="64" datapath="item[1]/yweather:condition/@code"/>
+                        <text name="temp"  x="95" y="20" width="240"
+                              fontsize="60" fgcolor="#FFFFFF" fontstyle="bold"
+                              datapath="item[1]/yweather:condition/@temp"/>
+                        <text name="description" width="240" x="15" y="90"
+                              fgcolor="#FFFFFF" fontstyle="bold"
+                              datapath="item[1]/yweather:condition/@text"/>
+                    </view>
+                    <view name="moredata" x="15" pixellock="true">
+                        <view name="labels" font="Tahoma,Geneva,sans-serif" >
+                            <text fgcolor="#FFFFFF" width="90" fontstyle="bold">Humidity:</text>
+                            <text fgcolor="#FFFFFF" fontstyle="bold">Barometer:</text>
+                            <text fgcolor="#FFFFFF" fontstyle="bold">Windspeed:</text>
+                            <text fgcolor="#FFFFFF" fontstyle="bold">Sunrise:</text>
+                            <text fgcolor="#FFFFFF" fontstyle="bold">Sunset:</text>
+                            <text fgcolor="#FFFFFF" fontstyle="bold">Wind Chill:</text>
+                            <simplelayout axis="y" spacing="1" />
+                        </view>
+                        <view name="fields">
+                            <text name="humidity" width="160" fgcolor="#FFFFFF"
+                                datapath="yweather:atmosphere[1]/@humidity"/>
+                            <text name="barometer" width="160" fgcolor="#FFFFFF"
+                                datapath="yweather:atmosphere[1]/@pressure"/>
+                            <text name="windspeed" width="160" fgcolor="#FFFFFF"
+                                datapath="yweather:wind[1]/@speed"/>
+                            <text name="sunrise" width="160" fgcolor="#FFFFFF"
+                                datapath="yweather:astronomy[1]/@sunrise"/>
+                            <text name="sunset" width="160" fgcolor="#FFFFFF"
+                                datapath="yweather:astronomy[1]/@sunset"/>
+                            <text name="windchill" width="160" fgcolor="#FFFFFF"
+                                datapath="yweather:wind[1]/@chill"/>
+                            <text name="when" width="160" fgcolor="#FFFFFF"
+                                datapath="item[1]/condition[1]/@date"/>
+                            <simplelayout axis="y" spacing="1" />
+                        </view>
+                        <simplelayout axis="x" spacing="-10" />
+                    </view>
+                    <simplelayout axis="y" spacing="10" />
+                </view>
+            </weathertab>
             <weathertab name="tab2" label="Radar Maps">
                 <view id="radarData" y="10" align="center" width="240" height="162">
                     <view name="shadow" x="23" y="23" width="200"
-                          height="135" bgcolor="#000000"
-                          opacity=".33"/>
+                          height="135" bgcolor="#000000" opacity=".33"/>
                     <image name="radarscan" x="20" y="20" 
-                           width="200" height="135"
-                           stretches="both">
-                      <handler name="oninit">
-                        this.setSource("http://weather.yahoo.com/images/ussat_440x297.jpg");
-                      </handler>
+                           width="200" height="135" stretches="both">
+                        <handler name="oninit">
+                            this.setSource("http://weather.yahoo.com/images/ussat_440x297.jpg");
+                        </handler>
                     </image>
                 </view>
             </weathertab>
-
-            
             <weathertab name="tab3" label="Forecast">
                 <view id="forecastData" y="10">
                     <weatherSummary datapath="item[1]/yweather:forecast"/>
                     <simplelayout axis="y" spacing="10"/>
                 </view>
+                <method name="getNextSelection" >
+                    //last focusable view
+                    return this;
+                </method>
             </weathertab>
+        </basetabslider>
+        
+        <datapointer xpath="weatherdata:/*[1]" >
+            <!-- When data is received from the datasource, do this -->
+            <handler name="ondata">
+                var title = this.xpathQuery("/rss/channel/title/text()");
+                if ( title.indexOf( "Error" ) != -1 ) {
+                    error.setText("Error: " +
+                          this.xpathQuery( '/rss/channel/item/title/text()' ) );
+                    zipBtn.animate('x',0,333,false);
+                    return;
+                }
+                error.setText("                               ");
 
-            <handler name="oninit">
-                // open "Tab1" as the default
-                this.openTab(tab1,true)
+                zipBtn.animate('x',-2000,333,false);
+                weatherApp.showWeather();
             </handler>
 
-            <datapointer xpath="weatherdata:/*" ondata="processData();"
-                onerror="showError();"
-                ontimeout="showTimeout();">
-                <!-- When data is received from the datasource, do this -->
-                <method name="processData">
-                    var title = this.xpathQuery("/rss/channel/title/text()");
-                    if ( title.indexOf( "Error" ) != -1 ) {
-                        error.setText("Error: " +
-                                      this.xpathQuery( '/rss/channel/item/title/text()' ) );
-                        zipBtn.animate('x',0,333,false);
-                        return;
-                    }
-                    error.setText("                               ");
+            <handler name="onerror">
+                error.setText("Server error: " +
+                               this.getDataset().getErrorString());
+                zipBtn.animate('x',0,333,false);
+            </handler>
 
-                    zipBtn.animate('x',-2000,333,false);
-                    weatherApp.showWeather();
+            <handler name="ontimeout">
+                error.setText("Error: Load timed out.");
+                zipBtn.animate('x',0,333,false);
+            </handler>
+        </datapointer>
+
+        <view name="splash" id="weathersplash" resource="weather_splash" >
+            <text id="error" fontstyle="bold" width="240"
+                fgcolor="#000099" x="15" y="230"/>
+            <view id="zipBtn" x="0" y="245">
+                <view name="bkgnd" resource="zipButtonArt" opacity=".7"
+                    onmousedown="parent.doMouseDown()"
+                    onmouseup="parent.doMouseUp()"/>
+                <text width="240" fgcolor="#222222"
+                      x="16" y="7" fontstyle="bold">Enter Zip Code:</text>
+                <text width="240" fgcolor="#FFFFFF"
+                      x="15" y="7" fontstyle="bold">Enter Zip Code:</text>
+                <edittext id="zipcode" fontstyle="bold" font="Tahoma,Geneva,sans-serif"
+                    width="80" x="120" y="5" height="20" text="94403" doesenter="true" >
+                    <handler name="oninit">
+                        LzFocus.setFocus(this.field);
+                    </handler>
+                    <method name="doEnterDown" >
+                        weatherApp.loadWeather();
+                    </method>
+                </edittext>
+                <text width="240" fgcolor="#222222" x="206" y="7" fontstyle="bold">
+                    OK
+                </text>
+                <text width="240" fgcolor="#FFFFFF" x="205" y="7" fontstyle="bold">
+                    OK
+                </text>
+                <method name="doMouseDown">
+                    this.setAttribute('x', this.x + 1);
+                    this.setAttribute('y', this.y + 1);
+                    bkgnd.setResourceNumber(2);
                 </method>
-
-                <method name="showError">
-                    error.setText("Server error: " +
-                                   this.getDataset().getErrorString());
-                    zipBtn.animate('x',0,333,false);
+                <method name="doMouseUp">
+                    this.setAttribute('x', this.x - 1);
+                    this.setAttribute('y', this.y - 1);
+                    bkgnd.setResourceNumber(1);
+                    weatherApp.loadWeather();
                 </method>
-
-                <method name="showTimeout">
-                    error.setText("Error: Load timed out.");
-                    zipBtn.animate('x',0,333,false);
-                </method>
-            </datapointer>
-
-        </basetabslider>
+            </view>
+        </view>
+        
+        <node name="navmanager">
+            <handler name="onkeyup" reference="LzKeys" args="k">
+                <![CDATA[
+                if(k == 40){
+                    LzFocus.next();
+                } else if(k == 38){
+                    LzFocus.prev();
+                } else if(k == 13 && LzFocus.getFocus() === weatherApp.topBar){
+                    weatherApp.hideWeather();
+                }
+                ]]>
+            </handler>
+        </node>
 
         <!-- METHODS for weatherApp -->
         <method name="loadWeather">
             var z = zipcode.getText();
             zipBtn.animate('x',-2000,333,true);
             error.setText("Loading weather data...");
-            //Debug.write("zip=" + z);
-            weatherContent.datapath.getDataset().setQueryString({p:  z});
-            weatherContent.datapath.getDataset().doRequest();
-            //Debug.write( "dataset: " + weatherApp.datapath.getDataset() );
+            weatherdata.setQueryString({p:  z});
+            weatherdata.doRequest();
             weatherApp.topBar.zip.setText(z);
         </method>
 
         <method name="showWeather">
-            topBar.setAttribute( 'on' , true );
-            splashstate.remove();
+            topBar.comein.doStart();
+            LzFocus.setFocus(weatherContent.tab1);
+            weatherContent.setAttribute('visible', true);
+            weathersplash.setAttribute('visible', false);
         </method>
 
         <method name="hideWeather">
-            splashstate.apply();
+            weathersplash.setAttribute('visible', true);
+            weatherContent.setAttribute('visible', false);
             zipBtn.animate('x',0,333,false);
-            topBar.setAttribute( 'on' , false );
-            content.openTab(content.tab1);
+            topBar.goout.doStart();
+            zipcode.setText('');
+            LzFocus.setFocus(zipcode.field);
         </method>
     </view> <!-- END WeatherApp -->
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
