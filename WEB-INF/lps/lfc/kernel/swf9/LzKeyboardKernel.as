@@ -11,12 +11,22 @@
 // Receives keyboard events from the runtime
 class LzKeyboardKernelClass
 {
-    var __downKeysHash = {};
+    private var __downKeysHash:Object = {'alt': false, 'control': false, 'shift': false};
+    private const __codes:Object = {16: 'shift', 17: 'control'};
 
     function __keyboardEvent ( e, t ){   
-        var k = e.charCode;
         var delta = {};
-        var s = String.fromCharCode(k).toLowerCase();
+        var s, k = e.charCode;
+        if (k != 0) {
+            s = String.fromCharCode(k).toLowerCase();
+        } else {
+            k = e.keyCode;
+            if (this.__codes[k]) {
+                s = this.__codes[k];
+            } else {
+                s = k;
+            }
+        }
         var dh = this.__downKeysHash;
         var dirty = false;
         if (t == 'onkeyup') {

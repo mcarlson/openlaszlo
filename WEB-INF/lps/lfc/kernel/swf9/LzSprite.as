@@ -314,6 +314,7 @@ dynamic public class LzSprite extends Sprite {
           if (this.clickable == c) return;
           this.clickable = c;
           this.buttonMode = c;
+          this.tabEnabled = false;
           this.mouseEnabled = c;
           attachMouseEvents(this);
           var cb:SimpleButton = this.clickbutton;
@@ -326,6 +327,7 @@ dynamic public class LzSprite extends Sprite {
                   addChild(cb);
               }
               cb.useHandCursor = true;
+              cb.tabEnabled = false;
               var cr = new Shape();
               this.clickregion = cr;
               cr.graphics.beginFill(0xffffff);
