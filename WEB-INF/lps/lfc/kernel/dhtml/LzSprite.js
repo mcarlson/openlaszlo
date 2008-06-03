@@ -809,8 +809,15 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         }
     } else if (eventname == 'onmouseup') {
         e.cancelBubble = false;
-        if (window['LzMouseKernel'] && LzMouseKernel.__lastMouseDown == this && this.__mouseisover) {
-            this.__mouseisdown = false;
+        if (window['LzMouseKernel'] && LzMouseKernel.__lastMouseDown == this) {
+            if (this.quirks.fix_ie_clickable) {
+                // Must be done for onmouseupoutside to work
+                if (this.__mouseisover) {
+                    this.__mouseisdown = false;
+                }
+            } else {
+                this.__mouseisdown = false;
+            }
         } else {
             skipevent = true;
         }
@@ -846,6 +853,7 @@ LzSprite.prototype.__globalmouseup = function ( e ){
         this.__mouseEvent(e);
         this.__mouseEvent('onmouseupoutside', true);
     }
+    LzMouseKernel.__lastMouseDown = null;
 }
 
 LzSprite.prototype.setX = function ( x ){

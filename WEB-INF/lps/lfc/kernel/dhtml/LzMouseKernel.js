@@ -69,7 +69,6 @@ var LzMouseKernel = {
         if (LzMouseKernel.__lastMouseDown != null) {
             // call mouseup on the sprite that got the last mouse down  
             LzMouseKernel.__lastMouseDown.__globalmouseup(e);
-            LzMouseKernel.__lastMouseDown = null;
         } else {
             LzMouseKernel.__mouseEvent(e);
         }
