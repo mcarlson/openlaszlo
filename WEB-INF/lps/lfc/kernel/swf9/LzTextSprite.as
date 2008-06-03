@@ -131,18 +131,13 @@ public class LzTextSprite extends LzSprite {
             //    if  single line, use font line height
             //    else get height from flash textobject.textHeight 
             // 
-            if (args.height == null && (args.$ref == null || typeof(args.$refs.height) != "function")) {
+            if (args['height'] == null) {
                 this.sizeToHeight = true;
-                //trace('sizeToHeight == true');
-                // set autoSize to get text measured
-                if (!this.multiline) {
-                    // But turn off autosizing for single line text, now that
-                    // we got a correct line height from flash.
-                    //textclip.autoSize = TextFieldAutoSize.NONE;
-                }
             }  else {
                 // Does setting height of the text object do the right thing in swf9?
-                textclip.height = args.height;
+                if (!(args.height is LzInitExpr)) {
+                    textclip.height = args.height;
+                }
             }
             // Default the scrollheight to the visible height.
             this.scrollheight = this.height;
@@ -152,6 +147,16 @@ public class LzTextSprite extends LzSprite {
             // out how to suppress the other calls from setters.
             this.__setFormat();
             this.setText(args.text);
+            
+            if (this.sizeToHeight) {
+                //text and format is set, measure it
+                var lm:TextLineMetrics = textclip.getLineMetrics(0);
+                var h = lm.ascent + lm.descent + lm.leading;
+                //TODO [anba 20080602] is this ok for multiline? 
+                if (this.multiline) h *= textclip.numLines;
+                h += 4;//2*2px gutter, see flash docs for flash.text.TextLineMetrics 
+                this.setHeight(h);
+            }
         }
 
         override public function setBGColor( c:* ):void {
@@ -268,7 +273,19 @@ public class LzTextSprite extends LzSprite {
 
             //multiline resizable fields adjust their height
             if (this.sizeToHeight) {
-                this.setHeight(Math.max(this.textfield.textHeight, this.textfield.height));
+                if (this.multiline) {
+                    //FIXME [20080602 anba] won't possibly work, example: 
+                    //textfield.textHeight=100
+                    //textfield.height=10
+                    //=> setHeight(Math.max(100, 10)) == setHeight(100)
+                    //setHeight sets textfield.height to 100
+                    //next round:
+                    //textfield.textHeight=10 (new text was entered)
+                    //textfield.height=100 (set above!)
+                    //=> setHeight(Math.max(10, 100)) == setHeight(100)
+                    // => textfield.height still 100, sprite-height didn't change, but it should!
+                    this.setHeight(Math.max(this.textfield.textHeight, this.textfield.height));
+                }
             }
             //this.textfield.cacheAsBitmap = true;
         }

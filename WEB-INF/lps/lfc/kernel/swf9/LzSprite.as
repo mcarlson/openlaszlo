@@ -217,6 +217,8 @@ dynamic public class LzSprite extends Sprite {
       var info:LoaderInfo = LoaderInfo(loader.contentLoaderInfo);
           if (event.type == Event.COMPLETE) {
               this.resourceLoaded = true;
+              this.resourcewidth = loader.width;
+              this.resourceheight = loader.height;
               // Apply stretch if needed, now that we know the asset dimensions.
               this.applyStretchResource();
               if (this.owner != null) {
