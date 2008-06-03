@@ -351,7 +351,8 @@
 
         <!--- @access private -->
         <method name="destroy">
-            if ( this.isdefault) {
+            <![CDATA[
+            if (this['isdefault'] && this.isdefault) {
                 lz._componentmanager.service.unmakeDefault( this );
             } 
             if (this._otherstyledel) {
@@ -363,6 +364,7 @@
                 delete this._styledel;
             }
             super.destroy.apply(this, arguments);
+            ]]>
         </method>
 
         <!--- @access private -->
