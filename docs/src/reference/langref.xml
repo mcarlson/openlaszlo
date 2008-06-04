@@ -167,9 +167,17 @@ a complete discussion.
 </property>
 
 <property id="tag.import" topic="LZX" subtopic="Basics" access="public">
-  <doc>
-    <tag name="lzxname"><text>import</text></tag>
-  </doc>
+    <doc>
+      <tag name="shortdesc"><text>Imports code at runtime from other files.</text></tag>
+      <tag name="lzxname"><text>import</text></tag>
+      <text>
+        <p>The <tagname>import</tagname> tag is used to import, at run time, source code
+          contained in another (library) file.  See the <a
+            href="${dguide}program-structure.html#program-structure.include-tag">Guide</a> for a complete
+          discussion.  Also see the <tagname link="true">library</tagname>
+          tag.</p>
+      </text>
+    </doc>
   <class>
     <property name="__ivars__" access="public">
       <object>
