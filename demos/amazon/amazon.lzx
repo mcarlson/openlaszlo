@@ -120,19 +120,19 @@
                     <simplelayout axis="y" spacing="4"/>
 
                     <view id="cdlist" width="${parent.width-2}"> 
-                        <simplelayout axis="y" spacing="4"/>
+                        <simplelayout axis="y" spacing="2"/>
                         <view width="17" height="17" />
                         <!-- Repeated view displaying the list of items 
                              matching the keyword search -->
-                        <view name="searchResults" 
+                        <view name="searchResults" height="28"
                               width="${parent.width}">
                             <datapath xpath="dsKeyword:/ItemSearchResponse/Items/Item" pooling="true" />
                             <view width="${parent.width}" clickable="true"
                                 onmouseover="setBGColor(0xFFFFFF)"
                                 onmouseout="setBGColor(0xCAD0EC)">
                                 <simplelayout axis="y"/>
-                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="ItemAttributes/Title/text()" width="${parent.width-6}" resize="false"/>
-                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="ItemAttributes/Artist[1]/text()" width="${parent.width-6}" resize="false"/>
+                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="ItemAttributes/Title/text()" width="${parent.width-6}" fontsize="10" resize="false"/>
+                                <text x="4" font="lztahoe8,Arial,Helvetica" datapath="ItemAttributes/Artist[1]/text()" width="${parent.width-6}" fontsize="10" resize="false"/>
 
                                 <!-- When one item is clicked, a request is sent to Amazon for deatailed informations about the item -->
                                 <handler name="onclick">
