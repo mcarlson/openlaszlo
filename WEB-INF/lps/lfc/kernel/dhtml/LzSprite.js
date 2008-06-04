@@ -582,6 +582,7 @@ LzSprite.prototype.setSource = function (url, usecache){
         if (this.__ImgPool) {
             this.__ImgPool.flush(this.resource);
         }
+        this.__destroyImage(null, this.__LZimg);
         this.__LZimg = null;
     }
 
@@ -1101,8 +1102,17 @@ LzSprite.prototype.__imgonload = function(i, cacheHit) {
         this.__imgtimoutid = null;
     }
     this.loading = false;
-    this.resourceWidth = (cacheHit && '__LZreswidth' in i ? i.__LZreswidth : i.width);
-    this.resourceHeight = (cacheHit && '__LZresheight' in i ? i.__LZresheight : i.height);
+    // show image div
+    if (! cacheHit) {
+        if (this.quirks.ie_alpha_image_loader) {
+            i._parent.style.display = '';
+        } else {
+            i.style.display = '';
+        }
+    }
+
+    this.resourceWidth = (cacheHit && i['__LZreswidth']) ? i.__LZreswidth : i.width;
+    this.resourceHeight = (cacheHit && i['__LZresheight']) ? i.__LZresheight : i.height;
     
     if (!cacheHit) {
         if (this.quirks.invisible_parent_image_sizing_fix && this.resourceWidth == 0) {
@@ -1294,6 +1304,8 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
             this.owner.__imgtimoutid = setTimeout(callback, canvas.medialoadtimeout);
             im.sizer.src = url;
         }
+        // show again in onload
+        if (! skiploader) im.style.display = 'none'
         if (this.owner.stretches) {
             im.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + url + "',sizingMethod='scale')";
         } else {
@@ -1302,6 +1314,8 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
     } else {
         var im = document.createElement('img');
         im.className = 'lzdiv';
+        // show again in onload
+        if (! skiploader) im.style.display = 'none'
         if (this.owner && skiploader != true) {
             //Debug.info('sizer', skiploader == true, skiploader != true, skiploader);
             im.owner = this.owner;
@@ -1754,8 +1768,10 @@ LzSprite.prototype.unload = function () {
         this.__ImgPool.destroy();
         this.__ImgPool = null;
     }
-    if (this.__LZimg) this.__discardElement(this.__LZimg);
-    this.__LZimg = null;
+    if (this.__LZimg) {
+        this.__destroyImage(null, this.__LZimg);
+        this.__LZimg = null;
+    }
 }
 
 /**
