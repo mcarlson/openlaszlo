@@ -74,7 +74,8 @@
   * @see LzDataset
   */
 class LzDatapointer extends LzNode {
-
+  #pragma "warnUndefinedReferences=true"
+  
 /** @access private
   * @modifiers override 
   */
@@ -235,7 +236,24 @@ function xpathQuery ( p:Object ) :* {
             if (nodes is Array) {
                 return nodes.length;
             } else {
-                return this.__LZgetLast();
+                if (!ppcontext && nodes === this.p) {
+                    // @devnote: if we supplied the current datanode 'this.p' to __LZgetNodes(..), 
+                    // but __LZgetNodes(..) didn't actually do any processing, the user expects that 
+                    // the xpath will be evaluated against this datanode, but we need to 
+                    // protect against special cases because of replication:
+                    // n datanodes are replicated, this datanode is at x, x=[1..n], 
+                    // "last()" should return n, but "../*[x]/last()" should return 1!
+                    if (pp.selectors && pp.selectors.length > 0) {
+                        var sel:Array = pp.selectors;
+                        var i:int = 0;
+                        while (sel[i] == "." && i < sel.length) { ++i; }
+                        return i != sel.length ? 1 : this.__LZgetLast();
+                    } else {
+                        return this.__LZgetLast();
+                    }
+                } else {
+                    return 1;
+                }
             }
         } else if (pp.aggOperator == 'position') {
             if (nodes is Array) {
@@ -245,7 +263,19 @@ function xpathQuery ( p:Object ) :* {
                 }
                 return rarr;
             } else {
-                return this.__LZgetPosition();
+                if (!ppcontext && nodes === this.p) {
+                    // @devnote: see comment for "last()"
+                    if (pp.selectors && pp.selectors.length > 0) {
+                        var sel:Array = pp.selectors;
+                        var i:int = 0;
+                        while (sel[i] == "." && i < sel.length) { ++i; }
+                        return i != sel.length ? 1 : this.__LZgetPosition();
+                    } else {
+                        return this.__LZgetPosition();
+                    }
+                } else {
+                    return 1;
+                }
             }
         }
     } else if ( pp.operator != null  ){
@@ -463,13 +493,13 @@ function __LZsetData () :void {
 
 /** @access private */
 function __LZgetLast () :int { 
-    if ( this.context === this ) return 1;
+    if ( this.context == null || this.context === this ) return 1;
     return this.context.__LZgetLast() || 1;
 }
 
 /** @access private */
 function __LZgetPosition () :int { 
-    if ( this.context === this ) return 1;
+    if ( this.context == null || this.context === this ) return 1;
     return this.context.__LZgetPosition() || 1;
 }
 
