@@ -133,11 +133,9 @@ public class LzTextSprite extends LzSprite {
             // 
             if (args['height'] == null) {
                 this.sizeToHeight = true;
-            }  else {
+            } else if (! args.height is LzValueExpr) {
                 // Does setting height of the text object do the right thing in swf9?
-                if (!(args.height is LzInitExpr)) {
-                    textclip.height = args.height;
-                }
+                textclip.height = args.height;
             }
             // Default the scrollheight to the visible height.
             this.scrollheight = this.height;
