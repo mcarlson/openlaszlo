@@ -27,17 +27,21 @@ var LzSprite = function(owner, isroot) {
             div.style.backgroundColor = p.bgcolor; 
             this.bgcolor = p.bgcolor; 
         }
-        if (p.width) {
-            root.style.width = p.width; 
-            div.style.width = p.width; 
-            var w = p.width.indexOf('%') != -1 ? p.width : parseInt(p.width);
+        var width = p.width;
+        if (width) {
+            root.style.width = width; 
+            div.style.width = width; 
+            var widthispercentage = width.indexOf('%') != -1;
+            var w = widthispercentage ? width : parseInt(width);
             this._w = w;
             this.width = w;
         }
-        if (p.height) {
-            root.style.height = p.height; 
-            div.style.height = p.height; 
-            var h = p.height.indexOf('%') != -1 ? p.height : parseInt(p.height);
+        var height = p.height;
+        if (height) {
+            root.style.height = height; 
+            div.style.height = height; 
+            var heightispercentage = height.indexOf('%') != -1;
+            var h = heightispercentage ? height : parseInt(height);
             this._h = h;
             this.height = h;
         }
@@ -54,7 +58,7 @@ var LzSprite = function(owner, isroot) {
         if (p.resourceroot) {
             lz.embed.options.resourceroot = p.resourceroot;
         }
-        if (this.quirks.canvas_div_cannot_be_clipped  == false && p.width && p.width.indexOf('%') == -1 && p.height && p.height.indexOf('%') == -1 ) {
+        if (! this.quirks.canvas_div_cannot_be_clipped && width && widthispercentage && height && heightispercentage) {
             div.style.clip = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
             div.style.overflow = 'hidden';
         }
@@ -275,6 +279,7 @@ LzSprite.prototype.quirks = {
     ,keypress_function_keys: true
     ,ie_timer_closure: false
     ,keyboardlistentotop: false
+    ,document_size_compute_correct_height: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -309,6 +314,8 @@ LzSprite.prototype.__updateQuirks = function () {
             if (lz.embed.browser.version < 7) {
                 // Provide IE PNG/opacity support
                 quirks['ie_alpha_image_loader'] = true;
+                // IE 6 reports incorrect clientHeight for embedded iframes with scrollbars
+                quirks['document_size_compute_correct_height'] = true;
             } else {
                 quirks['invisible_parent_image_sizing_fix'] = true;
             }
@@ -1342,7 +1349,7 @@ LzSprite.prototype.setClip = function(c) {
   * @access private
   */
 LzSprite.prototype.__updateClip = function() {
-    if (this.isroot && this.capabilities.canvas_div_cannot_be_clipped == true) return;
+    if (this.isroot && this.capabilities.canvas_div_cannot_be_clipped) return;
     if (this.clip && this.width != null && this.width >= 0 && this.height != null && this.height >= 0) {
         var s = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
         this.__LZdiv.style.clip = s

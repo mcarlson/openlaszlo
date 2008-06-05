@@ -15,41 +15,36 @@ var LzScreenKernel = {
     ,height: null
     ,__resizeEvent: function() {
         // thanks quirksmode!  http://www.quirksmode.org/viewport/compatibility.html
-
-        var sc = window.top.document.body;
-        if (LzSprite.prototype.quirks.document_size_use_offsetheight) {
-            sc = window.document.body;
-            LzScreenKernel.width = sc.offsetWidth; 
-            LzScreenKernel.height = sc.offsetHeight; 
-        } else if (window.top.innerHeight) {
-            // all except Explorer
-            sc = window;
-            LzScreenKernel.width = sc.innerWidth;
-            LzScreenKernel.height = sc.innerHeight;
-        } else if (window.top.document.documentElement && window.top.document.documentElement.clientHeight) {
-            // Explorer 6 Strict Mode
-            sc = window.top.document.documentElement;
-            LzScreenKernel.width = sc.clientWidth;
-            LzScreenKernel.height = sc.clientHeight;
-        } else if (sc) {
-            // other Explorers
-            LzScreenKernel.width = sc.clientWidth;
-            LzScreenKernel.height = sc.clientHeight;
+        // Also see http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
+        var q = LzSprite.prototype.quirks;
+        if (q.document_size_use_offsetheight) {
+            var scope = window.document.body;
+            LzScreenKernel.width = scope.offsetWidth; 
+            LzScreenKernel.height = scope.offsetHeight; 
+        } else if (window.innerHeight) {
+            // all except Explorer in strict mode
+            var scope = window;
+            LzScreenKernel.width = scope.innerWidth;
+            LzScreenKernel.height = scope.innerHeight;
+        } else if (document.documentElement && document.documentElement.clientWidth) {
+            // IE 6+ Strict Mode
+            var scope = document.documentElement;
+            if (q.document_size_compute_correct_height && window.top != window) {
+                var topscope = window.top.document.documentElement;
+                // IE 6 doesn't report the correct clientHeight for embedded iframes with scrollbars.  Measure the difference between this window and the parents, allowing 24px of slop.
+                if (Math.abs(topscope.clientWidth - scope.clientWidth) < 24 
+                    || Math.abs(topscope.clientHeight - scope.clientHeight) < 24) {
+                    scope = topscope;
+                }
+            }
+            LzScreenKernel.width = scope.clientWidth;
+            LzScreenKernel.height = scope.clientHeight;
+        } else if (window.document.body) {
+            var scope = window.document.body;
+            // IE 4
+            LzScreenKernel.width = scope.clientWidth;
+            LzScreenKernel.height = scope.clientHeight;
         }
-
-        /*
-        var test1 = window.top.document.body.scrollHeight;
-        var test2 = window.top.document.body.offsetHeight
-        if (test1 > test2) { 
-            // all but Explorer Mac
-            LzScreenKernel.width = window.top.document.body.scrollWidth;
-            LzScreenKernel.height = window.top.document.body.scrollHeight;
-        } else { 
-            // Explorer Mac;
-            //would also work in Explorer 6 Strict, Mozilla and Safari
-            LzScreenKernel.width = window.top.document.body.offsetWidth;
-            LzScreenKernel.height = window.top.document.body.offsetHeight;
-        }*/
 
         if (LzScreenKernel.__callback) LzScreenKernel.__scope[LzScreenKernel.__callback]({width: LzScreenKernel.width, height: LzScreenKernel.height});
         //Debug.write('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});
