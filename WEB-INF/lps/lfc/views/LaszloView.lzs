@@ -33,7 +33,7 @@
   * which is the fundamental abstract class of LZX.</p>
   * 
   * <p>For an introduction to views see the <a
-  * href="${tutorials}">Laszlo tutorials</a>, particularly <a
+  * href="${dguide}developers.tutorials.html">Laszlo tutorials</a>, particularly <a
   * href="${tutorials}laszlo_basics.html">OpenLaszlo Basics</a> and <a
   * href="${tutorials}views-tutorial.html">Introduction to Views</a>. For a more
   * rigorous explanation of views see the <a href="${dguide}">Application Developer's Guide</a>, particularly the <a
