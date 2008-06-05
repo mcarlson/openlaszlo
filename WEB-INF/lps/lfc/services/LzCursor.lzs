@@ -10,9 +10,36 @@
  */
 
 /**
- * Implementation of cursor controls
+* <p>This example shows how the cursor can be set on a view so that
+ * it will change when the mouse is over that view:</p>
+*
+* <example title="Setting the cursor for a view">
+ * &lt;canvas height="30"&gt;
+ *   &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
+ *   &lt;view bgcolor="yellow" cursor="waitcursor"&gt;
+ *     &lt;text&gt;Roll over to change the cursor&lt;/text&gt;
+ *   &lt;/view&gt;
+ * &lt;/canvas&gt;
+ * </example>
+*
+* <p>This example changes the cursor for 1/2 second when the button is
+ * clicked:</p>
+*
+* <example title="Changing the cursor with LzCursor">
+ * &lt;canvas height="30"&gt;
+ *   &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
+ *   &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
+ *     &lt;method name="setCursor"&gt;
+ *       lz.Cursor.setCursorGlobal('waitcursor');
+ *       var del= new LzDelegate(LzCursor, 'unlock');
+ *       lz.Timer.addTimer(del, 500);
+ *     &lt;/method&gt;
+ *   &lt;/button&gt;
+ * &lt;/canvas&gt;
+ * </example>
  * @devnote TODO: [2008-03-20 ptw] This should be `implements` not `extends`.
  * @access public
+ * @shortdesc LzCursorService provides methods for changing the mouse cursor.
  */
 public class LzCursorService {
   /** The cursor service.  Also available as the global
@@ -114,40 +141,10 @@ lz.Cursor = new LzCursorService();
 
 /**
  *
- * <p>The <code>LzCursor</code> service provides methods for
- * changing the mouse cursor.</p>
- *
- * <p>This example shows how the cursor can be set on a view so that
- * it will change when the mouse is over that view:</p>
- *
- * <example title="Setting the cursor for a view">
- * &lt;canvas height="30"&gt;
- *   &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
- *   &lt;view bgcolor="yellow" cursor="waitcursor"&gt;
- *     &lt;text&gt;Roll over to change the cursor&lt;/text&gt;
- *   &lt;/view&gt;
- * &lt;/canvas&gt;
- * </example>
- *
- * <p>This example changes the cursor for 1/2 second when the button is
- * clicked:</p>
- *
- * <example title="Changing the cursor with LzCursor">
- * &lt;canvas height="30"&gt;
- *   &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
- *   &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
- *     &lt;method name="setCursor"&gt;
- *       LzCursor.setCursorGlobal('waitcursor');
- *       var del= new LzDelegate(LzCursor, 'unlock');
- *       lz.Timer.addTimer(del, 500);
- *     &lt;/method&gt;
- *   &lt;/button&gt;
- * &lt;/canvas&gt;
- * </example>
  *
  * @type LzCursorService
- * @deprecated
- * @shortdesc  LzCursor is a shortcut for <link linkend="LzCursorService">LzCursorService.LzCursor</link>
+ * @keywords deprecated
+ * @shortdesc LzCursor is a shortcut for <link linkend="LzCursorService">LzCursorService.LzCursor</link>. Use lz.Cursor instead.
  */
 var LzCursor = lz.Cursor;
 
