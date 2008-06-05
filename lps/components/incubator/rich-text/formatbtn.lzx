@@ -62,7 +62,9 @@
             Called when the user clicks the button. Asks the editor to apply the 
             format.
             @keywords private -->
-        <handler name="onclick" name="doClick">
+
+        <handler name="onclick" method="doClick"/>
+        <method name="doClick">
 
             // toggle it
             this.setActive(!this.isactive);
@@ -74,7 +76,7 @@
         // Unlike the combo boxes, buttons aren't focusable, so we can just 
         // restore the selection in the same frame. No need for a delegate [ben 9.21.05]
            this.editor._restoreSelection();
-        </handler>
+        </method>
 
         <!--- @keywords private -->
         <handler name="onmouseover">          

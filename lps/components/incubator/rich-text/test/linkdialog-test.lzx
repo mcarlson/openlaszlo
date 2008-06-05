@@ -49,7 +49,7 @@
     </view> 
 </view>
 
-<TestSuite name="linkdialog-test">
+<TestSuite name="linkdialog_test">
     <TestCase>
         <method name="testTextIsPresent">
             assertNotNull(grte.getText()); 

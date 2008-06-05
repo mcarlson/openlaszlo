@@ -5,53 +5,6 @@
 <library>
     <include href="scrollrichedittext.lzx"/>
         
-        
-        
-  <!-- 
-      This is a fix for EM-1129 and LPP-4396: clicking bold moves the insertion
-      point. We need to store the selection before losing the selection to 
-      another view. [bshine 2007.08.13]
-    -->
-    <script><![CDATA[
-        LzModeManager.rawMouseEvent = function ( eName ) {
-            //Debug.warn("rawmouseevent %w", eName);
-            //assume this happens before handleMouseEvent though order is
-            //not guaranteed
-            
-            // Store the selection in the currently focused text editor
-            // (if any). Useful for restoring a text field's selection
-            // after a click event.
-            var focus = Selection.getFocus();
-            if (focus) {
-                // Debug.info("got focus: %w", focus);             
-                // focus is a path string - we have to eval() it to get
-                // an actual movieclip
-                var textclip = eval(focus); // apologies - dstowell
-                // [NB dstowell] __LZrte is a field I created to
-                // store a reference to a rich text editor view
-                // in the textclip itself. This field is _not_ part
-                // of the LFC.
-                if ("__LZrte" in textclip) {
-                    // if we get here, it means that the focus is 
-                    // currently the rich text editor. Before
-                    // we handle the mouse event, store the selection. 
-                    var beginIndex = Selection.getBeginIndex();
-                    var endIndex   = Selection.getEndIndex();
-                    if (-1 != beginIndex && -1 != endIndex) {
-                        // Debug.warn("rawMouseEvent is changing the ssel and esel to %d-%d", beginIndex, endIndex); 
-                        textclip.__LZrte._ssel = beginIndex;
-                        textclip.__LZrte._esel = endIndex;
-                    }
-                }
-            }
-
-            this.clickStream.push( this.clstDict[ eName ] );
-            //call the cleanup delegate
-
-            this.callNext();
-        }
-    ]]></script>
-            
     <!--- 
     A view which contains the text area for a rich text editor. Combine with a 
     richtexttoolbar to make an actual editor. 
