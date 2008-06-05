@@ -1,6 +1,6 @@
 <menu>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
     <section name="Welcome" src="/laszlo-explorer/coverpages/welcome/" title="OpenLaszlo Server" 
@@ -41,6 +41,16 @@
                      popup="/demos/lzpix/app.lzx" runtime="swf7" />
             <subitem title="Source Code Explorer"
                 src="/demos/lzpix/app.lzx" name="Source" action="source" />
+        </item>
+        <item title="LZProject" name="LZProject"  
+              src="/laszlo-explorer/coverpages/lzproject_cover.html"
+              text="A demonstration of OpenLaszlo's multiple runtime capabilities." >
+            <subitem title="Launch in DHTML" name="View in DHTML" action="popup" target="_blank"
+                     popup="/demos/lzproject/lzx/lzproject/lzproject.lzx" runtime="dhtml" />
+            <subitem title="Launch in Flash" name="View in Flash" action="popup" target="_blank"
+                     popup="/demos/lzproject/lzx/lzproject/lzproject.lzx" runtime="swf7" />
+            <subitem title="Source Code Explorer"
+                src="/demos/lzproject/lzx/lzproject/lzproject.lzx" name="Source" action="source" />
         </item>
     </section>
     
