@@ -488,6 +488,7 @@ LzSprite.prototype.__parent = null;
 LzSprite.prototype.__children = null;
 
 LzSprite.prototype.addChildSprite = function(sprite) {
+    if (sprite.__parent != null) return;
     //Debug.info('appendChild', sprite.__LZdiv);
     if ($debug) {
         if (this.stretches != null && this.__warnstretches != true) {
