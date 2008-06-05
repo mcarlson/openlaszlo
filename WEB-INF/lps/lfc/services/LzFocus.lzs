@@ -388,11 +388,9 @@ lz.Focus= new LzFocusService();
 lz.Focus.initialize();
 
 /**
-  * LzFocus is a shortcut for <link linkend="LzFocusService">LzFocusService.LzFocus</link>
-  * This service manages the keyboard focus. At any time, at most one view has the keyboard focus. This is the view that receives key events when a key is pressed. 
-  * Use lz.Focus instead.
   *
-  * @deprecated
-  * @shortdesc Handles keyboard focus.
+  *
+  * @keywords deprecated
+  * @shortdesc LzFocus is a shortcut for <link linkend="LzFocusService">LzFocusService.LzFocus</link>. Use lz.Focus instead.
   */
 var LzFocus = lz.Focus;

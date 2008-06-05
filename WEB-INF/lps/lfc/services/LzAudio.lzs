@@ -119,8 +119,7 @@ function __warnCapability(msg) {
 lz.Audio = new LzAudioService();
 
 /**
-  * LzAudio is a shortcut for <a href="LzAudioService.html">LzAudioService</a>.
-  * Use lz.Audio instead.
-  * @deprecated
+  * @shortdesc LzAudio is a shortcut for <a href="LzAudioService.html">LzAudioService</a>. Use lz.Audio instead.
+  * @keywords deprecated
   */
 var LzAudio = lz.Audio

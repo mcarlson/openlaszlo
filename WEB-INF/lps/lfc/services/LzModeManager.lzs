@@ -253,9 +253,8 @@ public class LzModeManagerService extends LzNode {
 lz.ModeManager = new LzModeManagerService();
 
 /**
-  * LzModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService</a>.
-  * @deprecated
-  * Use lz.ModeManager instead.
+  * @shortdesc LzModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService</a>. Use lz.ModeManager instead.
+  * @keywords deprecated
   */
 var LzModeManager = lz.ModeManager;
 

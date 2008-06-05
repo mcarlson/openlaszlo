@@ -304,11 +304,7 @@ class LzBrowserService {
 lz.Browser = LzBrowserService.LzBrowser;
 
 /**
- * <p>The <code>LzBrowser</code> service provides methods for
- * communicating with the browser that embeds the application.</p>
- * Use lz.Browser instead.
- *
- * @deprecated
+ * @keywords deprecated
  * @access public
  * @type LzBrowserService
  * @shortdesc  LzBrowser is a shortcut for <link linkend="LzBrowserService">LzBrowserService.LzBrowser</link>

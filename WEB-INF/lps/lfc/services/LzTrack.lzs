@@ -372,8 +372,7 @@ function __LZmouseup(ignore)
 lz.Track = new LzTrackService();
 
 /**
-  * LzTrack is a shortcut for <a href="LzTrackService.html">LzTrackService</a>.
-  * @deprecated
-  * Use lz.Track instead.
+* @shortdesc LzTrack is a shortcut for <a href="LzTrackService.html">LzTrackService</a>. Use lz.Track instead.
+  * @keywords deprecated
   */
 var LzTrack = lz.Track;
