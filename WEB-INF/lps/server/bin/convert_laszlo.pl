@@ -52,6 +52,7 @@ Options:
                 setattribute  - setVisible -> setAttribute('visible', ...) etc.
                 widthheight   - getWidth(),getHeight() to width,height
                 tagname       - constructor.classname to constructor.tagname
+                states        - apply=" -> applied=", state.apply()/remove() -> setAttribute('applied', true|false)
 
    -v
            show version number and exit
@@ -80,6 +81,7 @@ $xform{method}=1;       # transform <method event=
 $xform{setattribute}=1; # transform calls like setVisible into setAttribute(...
 $xform{widthheight}=1;  # transform getWidth(),getHeight() to width,height
 $xform{tagname}=1;      # transform constructor.classname to constructor.tagname
+$xform{states}=1;       # transform apply=" -> applied=", state.apply()/remove() -> setAttribute('applied', true|false)
 
 ##
 # Other global variables
@@ -307,6 +309,17 @@ sub emit_content {
     if ($xform{tagname}) {
         s/[.]constructor[.]classname/.constructor.tagname/g;
     }
+
+    #### transform states
+    #
+    # apply=" -> applied=", state.apply()/remove() -> setAttribute('applied', true|false)
+
+    if ($xform{states}) {
+        s/apply="/applied="/g;
+        s/[.]apply\w*?\(\w*?\)/.setAttribute('applied', true)/g;
+        s/[.]remove\w*?\(\w*?\)/.setAttribute('applied', false)/g;
+    }
+
 
     debugln(3, "   EMIT CONTENT: " . $_);
     print $FH $_;
