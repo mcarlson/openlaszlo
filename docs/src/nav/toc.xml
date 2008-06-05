@@ -139,6 +139,8 @@
         <item title="LzDataText" href="LzDataText.html" />
         <item title="LzHTTPDataProvider" href="LzHTTPDataProvider.html" />
         <item title="LzHTTPDataRequest" href="LzHTTPDataRequest.html" />
+        <item title="LzLazyReplicationManager" href="LzLazyReplicationManager.html" />
+        <item title="LzReplicationManager" href="LzReplicationManager.html" />
     </category>
     
     <category title="Scripting">
