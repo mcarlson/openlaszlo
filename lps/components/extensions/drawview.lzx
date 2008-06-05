@@ -241,7 +241,7 @@
     -->
     <method name="rect" args="x, y, w, h, cornerRadius" />
 
-    <!--
+    <!---
       Draws an oval at the origin x, y with a radius radius.  If yRadius is specified, radius is the x radius of the oval.
       Based on mc.drawOval() - by Ric Ewing (ric@formequalsfunction.com) - version 1.1 - 4.7.2002
       
