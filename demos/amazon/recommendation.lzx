@@ -58,7 +58,7 @@
             <![CDATA[
                 infoLoader.show();
                 var asin = this.datapath.xpathQuery("ASIN/text()");
-                var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=" + asin + "&ResponseGroup=ItemAttributes,OfferSummary,Images,Tracks,Reviews,EditorialReview";
+                var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=" + asin + "&ResponseGroup=ItemAttributes,OfferFull,Images,Tracks,Reviews,EditorialReview";
                 dsAsin.setSrc(url);
                 dsAsin.doRequest();
             ]]>
@@ -74,7 +74,7 @@
 
         <method name="getRecommendations">
             <![CDATA[
-                var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=B00005YW4H,B00006IX86,B000005J56,B00006AAJF,B0002RUPH4,B00006IX6E,B000069HKH,B00006JP29,B000000QFU,B000002L2Z&ResponseGroup=ItemAttributes,OfferSummary,Images";
+                var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=B00005YW4H,B00006IX86,B000005J56,B00006AAJF,B0002RUPH4,B00006IX6E,B000069HKH,B00006JP29,B000000QFU,B000002L2Z&ResponseGroup=ItemAttributes,OfferFull,Images";
                 dsRecommend.setSrc(url);
                 dsRecommend.doRequest();
             ]]>
