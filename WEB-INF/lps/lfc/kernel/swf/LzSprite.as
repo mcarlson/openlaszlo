@@ -309,6 +309,7 @@ LzSprite.prototype.setResource = function ( resourceName ) {
     }
 
     this.resource = resourceName;
+    this.updateResourceSize(true);
 }
 
 
@@ -382,18 +383,6 @@ LzSprite.prototype.setMovieClip = function ( mc , mcID) {
         this.checkPlayStatus();
     }
 
-    //@field Number resourcewidth: The width of the resource that
-    //this view attached
-    //@field Number resourceheight: The height of the resource that this
-    //view attached
-    var rt = canvas.resourcetable[ mcID ];
-    if ( rt ){
-        this.resourcewidth = rt.width;
-        this.resourceheight = rt.height;
-    } else {
-        this.resourcewidth = mc._width;
-        this.resourceheight = mc._height;
-    }
     //unrolled this loop because it is called frequently
     if (this.x != 0) this.setX(this.x);
     if (this.y != 0) this.setY(this.y);
@@ -405,8 +394,7 @@ LzSprite.prototype.setMovieClip = function ( mc , mcID) {
     } else if ( this.owner.visibility != "collapse" ){
         this.__LZmovieClipRef._visible = this.visible;
     }
-    // only send onload if we have a resource
-    this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: this.__LZhaser});
+    this.updateResourceSize();
 }
 
 /**
@@ -744,12 +732,21 @@ LzSprite.prototype.setOpacity = function ( v ){
   * (before the load started) and what we really want is the size of
   * the loaded resource.
   */
-LzSprite.prototype.updateResourceSize = function ( ){
-    var mc = this.__LZmovieClipRef;
-    // Get the true size by unscaling. Note: clip scale is in percent
-    this.resourcewidth = mc._width/(mc._xscale/100);
-    this.resourceheight = mc._height/(mc._yscale/100);
-    this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
+LzSprite.prototype.updateResourceSize = function (skipsend){
+    var mc = this.getMCRef();
+    this.setWidth(this.hassetwidth?this.width:null);
+    this.setHeight(this.hassetheight?this.height:null);
+    var rt = canvas.resourcetable[ this.resource ];
+    if ( rt ){
+        this.resourcewidth = rt.width;
+        this.resourceheight = rt.height;
+    } else {
+        // Get the true size by unscaling. Note: clip scale is in percent
+        this.resourcewidth = mc._width/(mc._xscale/100);
+        this.resourceheight = mc._height/(mc._yscale/100);
+    }
+
+    if (! skipsend) this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
 }
 
 /**
