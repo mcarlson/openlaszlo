@@ -202,6 +202,13 @@ body.doc-index {
     text-decoration: none;
 }
 
+.refsect1 .title a:visited {
+    color: #00ffff;
+}
+
+.refsect1 .title a:hover {
+    color: #6666ff;
+}
 .informaltable th {
     background-color: #F3F3F3;
     font-size: 10px;
