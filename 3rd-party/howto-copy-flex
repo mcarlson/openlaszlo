@@ -1,0 +1,51 @@
+# 
+# version of flex checked in
+URL: http://opensource.adobe.com/svn/opensource/flex/sdk/trunk
+Repository Root: http://opensource.adobe.com/svn/opensource
+Repository UUID: a9308255-753e-0410-a2e9-80b3fbc4fff6
+Revision: 1912
+Node Kind: directory
+Schedule: normal
+Last Changed Author: preilly@adobe.com
+Last Changed Rev: 1904
+Last Changed Date: 2008-05-30 16:12:21 -0400 (Fri, 30 May 2008)
+
+================================================================
+
+# assumes adobe flex tree is at ~/openlaszlo/adobe/trunk
+
+cp -r ~/openlaszlo/adobe/trunk/lib/*.jar $LPS_HOME/WEB-INF/lib
+cp -r ~/openlaszlo/adobe/trunk/frameworks $LPS_HOME/WEB-INF
+cp -r ~/openlaszlo/adobe/trunk/frameworks $LPS_HOME/WEB-INF
+cp -r ~/openlaszlo/adobe/trunk/bin $LPS_HOME/WEB-INF
+
+
+# get rid of some unneeded source files
+cd $LPS_HOME/WEB-INF
+rm -rf frameworks/projects/framework/src
+rm -rf frameworks/projects/framework/asdoc
+rm -rf frameworks/projects/rpc/src
+
+rm -rf frameworks/libs/air
+rm -rf frameworks/projects/airframework
+rm -rf frameworks/projects/flash-integration
+rm -rf frameworks/projects/flex
+rm -rf frameworks/projects/framework/asdoc
+rm -rf frameworks/projects/framework/src
+rm -rf frameworks/projects/haloclassic
+rm -rf frameworks/projects/rpc/src
+rm -rf frameworks/projects/utilities
+rm -rf frameworks/rsls
+rm -rf frameworks/tests
+rm -rf frameworks/themes
+
+
+
+================================================================
+
+OEM compiler API at
+
+  /Users/hqm/openlaszlo/adobe/trunk/modules/compiler/src/java/flex2/tools/oem:
+
+
+find . -type d -name ".svn" -print | xargs rm -rf
