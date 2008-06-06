@@ -60,7 +60,7 @@
         <!-- METHODS -->
 
         <method name="hide"> <![CDATA[
-            setVisible(false);
+            setAttribute('visible', false);
         ]]></method>
 
         <method name="setOpened" args="o">
@@ -87,7 +87,7 @@
                 this.followstate.apply();
             }
 
-            setVisible(true); ]]>
+            setAttribute('visible', true); ]]>
         </method>
 
         <state name="followstate" applied="false">

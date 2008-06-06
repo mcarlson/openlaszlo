@@ -102,7 +102,7 @@
         </handler>
 
         <method name="hide">
-            bar.setVisible(false);
+            bar.setAttribute('visible', false);
             bar.followstate.remove();
             this.followview = null;
             this.clipdel.unregisterAll();
@@ -142,7 +142,7 @@
 
 
             // update eventselector view
-            bar.setVisible( true );
+            bar.setAttribute('visible',  true );
             this.bringToFront();
 
 
@@ -219,13 +219,13 @@
             }]]>
         </handler>
 
-        <method name="checkClip"><![CDATA[
+        <method name="checkClip" args="v"><![CDATA[
             if ( followview.classroot.opened && this.freedragging ){
                 this.setAttribute( "freedragging" , false );
             }]]>
         </method>
 
-        <method name="checkHide"><![CDATA[
+        <method name="checkHide" args="v"><![CDATA[
             if ( !followview.classroot.visible ){
                 this.hide();
             }]]>
@@ -238,7 +238,7 @@
         </handler>
 
         <handler name="onmousedown" method="domousedown"/>
-        <method name="domousedown"><![CDATA[
+        <method name="domousedown" args="v"><![CDATA[
             //wait 150ms before starting drag; prevents moving the 
             //event selector on a click -- 150ms is empirical
             this.origx = bar.x;
@@ -250,7 +250,7 @@
             ]]>
         </method>
 
-        <method name="startDrag">   <![CDATA[
+        <method name="startDrag" args="v">   <![CDATA[
             this.mdel.register( LzIdle, "onidle" );
             bar.followstate.remove();
             this.setAttribute('freedragging', !followview.classroot.opened );
@@ -259,7 +259,7 @@
         </method>
 
         <handler name="onmouseup" method="domouseup"/>
-        <method name="domouseup"><![CDATA[
+        <method name="domouseup" args="v"><![CDATA[
             if ( this.dragging ){
                 this.mdel.unregisterAll( );
                 this.setAttribute('dragging',false);
@@ -298,7 +298,7 @@
 
         <attribute name="snapEdge" value="30"/>
 
-        <method name="trackmouse"><![CDATA[
+        <method name="trackmouse" args="v"><![CDATA[
             //may not be free dragging anymore
             var needset = true;
 

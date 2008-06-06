@@ -18,10 +18,10 @@
                    
         <method name="animateTo" args="tox,toy,towidth,toheight">
             // Debug.write("animateTo",tox,toy,towidth,toheight, this);
-            slideranim.xanim.setTo(tox);
-            slideranim.yanim.setTo(toy);
-            slideranim.widthanim.setTo(towidth);
-            slideranim.heightanim.setTo(toheight);
+            slideranim.xanim.setAttribute("to", tox);
+            slideranim.yanim.setAttribute("to", toy);
+            slideranim.widthanim.setAttribute("to", towidth);
+            slideranim.heightanim.setAttribute("to", toheight);
             slideranim.doStart();
         </method>
                 

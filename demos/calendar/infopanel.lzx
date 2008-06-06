@@ -44,7 +44,7 @@
         <!-- METHODS -->
         <handler name="onopenstart" >
             // tab is about to open
-            this.interior.setVisible(true);
+            this.interior.setAttribute('visible', true);
             this.top.setBGColor(0xE2E4DF);
             this.top.tline.setBGColor(0xB8B9B5)
             this.top.bline.setBGColor(0xFDFFFF)
@@ -59,7 +59,7 @@
 
         <handler name="onclosestop" >
             //tab is closed
-            this.interior.setVisible(false);
+            this.interior.setAttribute('visible', false);
         </handler>
 
         <method name="toggle">
@@ -315,7 +315,7 @@
 
             calgrid.contract();
 
-            this.setVisible(true);
+            this.setAttribute('visible', true);
             this.setOpacity(1);
             this.slideopen1.doStart();
             this.slideopen2.doStart();
@@ -334,7 +334,7 @@
         <method name="close_done" >
             //Debug.write("close_done");
             calgrid.expand();
-            this.setVisible(false);
+            this.setAttribute('visible', false);
         </method>
 
         <method name="unselectEvent" >

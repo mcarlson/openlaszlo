@@ -58,12 +58,12 @@
                 <!-- shows the day titles if necessary when the grid stops
                      updating -->
                 <handler name="onupdatestop" method="showalldaytitles" reference="calgrid.gridlayout" />
-                <method name="showalldaytitles">
+                <method name="showalldaytitles" args="v">
                   <![CDATA[
                     if ( calgrid.gridlayout.displaymode != 'cell' ){
                         var svs = this.subviews;
                         for (var i = 0; i < 7; i++) {
-                            svs[i].setVisible(true);
+                            svs[i].setAttribute('visible', true);
                         }
                     } ]]>
                 </method>
@@ -233,7 +233,7 @@
 
           <!-- METHODS -->
           <method name="finishStartSequence">
-              cal_interior.setVisible( true );
+              cal_interior.setAttribute('visible',  true );
               var now = new Date();
               this.setMonthAndYear(now.getMonth(), now.getFullYear());
               cal_interior.fadeUp.doStart();
@@ -331,9 +331,9 @@
               var svs = toppanel.weekbkgnd.daynames.subviews;
               for (var i = 0; i < 7; i++){
                   if (i == dayindex)
-                      svs[i].setVisible(true);
+                      svs[i].setAttribute('visible', true);
                   else
-                      svs[i].setVisible(false);
+                      svs[i].setAttribute('visible', false);
               }
           ]]> </method>
 

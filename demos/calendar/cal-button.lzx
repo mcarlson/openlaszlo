@@ -214,7 +214,7 @@
    </handler>
 
     <!-- OTHER METHODS -->
-    <method name="safeclick" >
+    <method name="safeclick" args="v" >
         this.ocd.unregisterAll()
         if (this.onsafeclick) {
             this.onsafeclick.sendEvent();

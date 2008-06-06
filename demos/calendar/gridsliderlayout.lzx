@@ -228,7 +228,7 @@
 
     <event name="onupdatestart" />
     <!-- METHOD: update -->
-    <method name="update" >
+    <method name="update" args="v">
         <![CDATA[
         if ( this['locked'] ) { return }
         if (this.onupdatestart) {
@@ -327,7 +327,7 @@
                         if (s.y != y)       s.setY(y);
                         if (s.width != w)   s.setWidth(w);
                         if (s.height != h)  s.setHeight(h);
-                        if (!s.visible) s.setVisible(true);
+                        if (!s.visible) s.setAttribute('visible', true);
                     }
                 } else {
                    if (rowi ==0) {
@@ -341,7 +341,7 @@
                             if (s.width != w)   s.setWidth(w);
                         }
                     }
-                    if (s.visible) s.setVisible(false);
+                    if (s.visible) s.setAttribute('visible', false);
                     s.update_vis_later = false;
                 }
 
@@ -358,7 +358,7 @@
          // Check to see if we need the last row, and if not hide these days
          if (nrows == 5) { // hide last row
             for (var c = 35; c < 42; c++) {
-                this.subviews[c].setVisible(false);
+                this.subviews[c].setAttribute('visible', false);
                 this.subviews[c].update_vis_later = false;
              }
          }
@@ -381,15 +381,15 @@
     </method>
 
     <event name="onupdatestop" />
-    <method name="resetVisibility" ><![CDATA[
+    <method name="resetVisibility" args="v"><![CDATA[
         // Debug.write("resetting visibility");
         // Now show the views that were hidden
         var s;
         for (var i =0; i < this.subviews.length; i++) {
             s = this.subviews[i];
             if (s['update_vis_later']){
-                if (!s.opened && s.details.bgrect.dataview) s.details.bgrect.dataview.setY(0);            
-                s.setVisible(true);
+                if (!s.opened && s.details.bgrect.container.dataview) s.details.bgrect.container.dataview.setY(0);            
+                s.setAttribute('visible', true);
             }
 
         }
@@ -423,7 +423,7 @@
         }
     </method>
 
-    <method name="checkMousePosition" ><![CDATA[
+    <method name="checkMousePosition" args="v"><![CDATA[
         //this runs every frame while dragging -- it's private to the layout
         var x = immediateparent.getMouse( 'x' );
         var y = immediateparent.getMouse( 'y' );

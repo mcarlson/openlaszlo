@@ -102,11 +102,11 @@
 
         <method name="openToggle" args="o">
             if ( o ){
-                this.timeArea.setVisible( false );
+                this.timeArea.setAttribute('visible',  false );
                 this.smalltitletext.setX( 10 );
                 this.timekgnd.setBGColor(this.bkgndColor);
             } else {
-                this.timeArea.setVisible( true );
+                this.timeArea.setAttribute('visible',  true );
                 this.smalltitletext.setX( 25 );
                 this.setX( 0 );
                 this.setHeight(22);
