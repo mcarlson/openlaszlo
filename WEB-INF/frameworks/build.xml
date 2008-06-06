@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+
+<!--
+
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2006-2007 Adobe Systems Incorporated
+	All Rights Reserved.
+
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<project name="frameworks" default="main" basedir=".">
+
+	<property name="FLEX_HOME" location="${basedir}"/>
+
+	<property file="${FLEX_HOME}/build.properties"/>
+
+	<target name="main" depends="clean,prepare,framework,rpc,airframework,flex,utilities,haloclassic,flash_integration" description="Clean build of all SWCs"/>
+
+    <target name="airframework" description="Clean build of airframework.swc">
+		<ant dir="${basedir}/projects/airframework"/>
+    </target>
+
+    <target name="flex" description="Clean build of flex.swc">
+		<ant dir="${basedir}/projects/flex"/>
+    </target>
+
+    <target name="framework" description="Clean build of framework.swc and its resource bundles">
+		<ant dir="${basedir}/projects/framework"/>
+    </target>
+
+    <target name="haloclassic" description="Clean build of haloclassic.swc">
+		<ant dir="${basedir}/projects/haloclassic"/>
+    </target>
+
+	<target name="flash_integration" description="Clean build of FlexComponentBase.swc">
+		<ant dir="${basedir}/projects/flash-integration"/>
+	</target>
+	
+    <target name="rpc" description="Clean build of rpc.swc">
+		<ant dir="${basedir}/projects/rpc"/>
+    </target>
+
+    <target name="utilities" description="Clean build of utilities.swc">
+		<ant dir="${basedir}/projects/utilities"/>
+    </target>
+
+	<target name="clean" description="Cleans all SWCs and their resource bundles">
+		<!-- Delete AIR files from 'prepare' target -->
+		<delete file="${FLEX_HOME}/bin/adl"/>
+		<delete file="${FLEX_HOME}/bin/adl.exe"/>
+		<delete file="${FLEX_HOME}/bin/adt"/>
+		<delete file="${FLEX_HOME}/bin/adt.bat"/>
+		<delete file="${FLEX_HOME}/frameworks/libs/air/airglobal.swc"/>
+		<delete file="${FLEX_HOME}/frameworks/libs/air/servicemonitor.swc"/>
+		<delete file="${FLEX_HOME}/lib/adt.jar"/>
+		<delete dir="${FLEX_HOME}/runtimes"/>
+		<delete dir="${FLEX_HOME}/samples/badge"/>
+		<delete file="${FLEX_HOME}/samples/descriptor-sample.xml"/>
+		<delete dir="${FLEX_HOME}/samples/icons"/>
+		<delete dir="${FLEX_HOME}/templates/air"/>
+		<!-- Delete output from SWC projects -->
+		<ant dir="${basedir}/projects/framework" target="clean"/>
+		<ant dir="${basedir}/projects/airframework" target="clean"/>
+		<ant dir="${basedir}/projects/flex" target="clean"/>
+		<ant dir="${basedir}/projects/utilities" target="clean"/>
+		<ant dir="${basedir}/projects/haloclassic" target="clean"/>
+		<ant dir="${basedir}/projects/flash-integration" target="clean"/>
+		<ant dir="${basedir}/projects/rpc" target="clean"/>
+		<!-- Delete empty folders -->
+		<delete dir="${basedir}/libs/air"/>
+		<delete dir="${basedir}/locale"/>
+		<delete dir="${basedir}/themes/haloclassic"/>
+	</target>
+
+	<target name="prepare" description="Prepares for building framework SWCs">
+		<!-- Expand the Mac AIK on top of the SDK -->
+        <copy file="${FLEX_HOME}/in/air/mac/AIR Integration Kit.tbz2" todir="${FLEX_HOME}"/>
+		<echo file="${FLEX_HOME}/air_unzip.sh">#!/bin/sh
+tar -xjf "AIR Integration Kit.tbz2" .
+		</echo>
+		<exec executable="sh" dir="${FLEX_HOME}">
+			<arg line="${FLEX_HOME}/air_unzip.sh"/>
+		</exec> 
+		<delete file="${FLEX_HOME}/air_unzip.sh"/>
+		<delete file="${FLEX_HOME}/AIR Integration Kit.tbz2"/>
+		<!-- Expand the Win AIK on top of the SDK -->
+		<unzip src="${FLEX_HOME}/in/air/win/AIR Integration Kit.zip" dest="${FLEX_HOME}"/>
+		<!-- Delete AIK files that we don't put in the SDK -->
+		<delete file="${FLEX_HOME}/frameworks/libs/air/AIRAliases.js"/>
+		<delete file="${FLEX_HOME}/frameworks/libs/air/airglobal.abc"/>
+		<delete file="${FLEX_HOME}/frameworks/libs/air/servicemonitor.swf"/>
+	</target>
+
+	<target name="compile" description="Builds all SWCs but not their resource bundles">
+		<ant dir="${basedir}/projects/framework" target="compile"/>
+		<ant dir="${basedir}/projects/airframework" target="compile"/>
+		<ant dir="${basedir}/projects/flex" target="compile"/>
+		<ant dir="${basedir}/projects/utilities" target="compile"/>
+		<ant dir="${basedir}/projects/haloclassic" target="compile"/>
+	</target>
+
+	<target name="other.locales" description ="Builds resource SWCs for other locales">
+		<ant dir="${basedir}/projects/framework" target="other.locales"/>
+		<ant dir="${basedir}/projects/airframework" target="other.locales"/>
+		<ant dir="${basedir}/projects/rpc" target="other.locales"/>
+	</target>
+
+</project>

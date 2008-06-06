@@ -18,6 +18,19 @@ import java.util.regex.Pattern;
 import org.openlaszlo.sc.parser.*;
 import org.openlaszlo.server.LPS;
 
+/** Flex OEM compiler API 
+ * See http://livedocs.adobe.com/flex/3/compilerAPI_flex3.pdf 
+ *
+ * source code in flex sources at modules/compiler/src/java/flex2/tools/oem/internal/*.java
+ */
+import flex2.tools.oem.Application;
+import flex2.tools.oem.Configuration;
+import flex2.tools.oem.Library;
+import flex2.tools.oem.Builder; 
+import flex2.tools.oem.Message; 
+import flex2.tools.oem.Logger; 
+
+
 /**
  * The SWF9External manages communication with the
  * external compiler - generation of source files,
@@ -230,22 +243,26 @@ public class SWF9External {
     private int origlinenum = -1;
     private int linenum;
     private int colnum;
+
+    // The error message
     private String error;
+
+    private String path; // pathname of source file
     private String code = "";
     private String cleanedCode = "";
-    private String orig = "";
+
     private TranslationUnit tunit;
 
     ExternalCompilerError() {
-      this(null, -1, -1, "", "");
+      this(null, -1, -1, "", "", "");
     }
 
-    ExternalCompilerError(TranslationUnit tunit, int linenum, int colnum, String error, String orig) {
+    ExternalCompilerError(TranslationUnit tunit, int linenum, int colnum, String path, String error, String code) {
       this.tunit = tunit;
       this.linenum = linenum;
       this.colnum = colnum;
       this.error = error;
-      this.orig = orig;
+      this.code = this.cleanedCode = code;
     }
 
     public String toString() {
@@ -264,11 +281,6 @@ public class SWF9External {
       return error;
     }
 
-    // returns the original untouched compiler error message
-    public String originalErrorString() {
-      return orig;
-    }
-
     // returns the complete the compiler error,
     // but without the positional 'caret', and
     // an indication of where the code starts,
@@ -282,21 +294,6 @@ public class SWF9External {
       }
       result += ", in line: " + cleanedCode;
       return result;
-    }
-
-    public void addCodeLine(String str) {
-      if (code.length() > 0) {
-        code += "\n";
-      }
-      code += str;
-
-      // In cleanedCode, don't keep lines with just spaces and caret (^)
-      if (!str.matches("^[ ^]*$")) {
-        if (cleanedCode.length() > 0) {
-          cleanedCode += "\n";
-        }
-        cleanedCode += str;
-      }
     }
 
     public String getCode() {
@@ -326,74 +323,6 @@ public class SWF9External {
       // should be 'impossible' as the pattern matcher should only
       // give us valid numbers.
       throw new CompilerError("Bad linenumber translation: " + s);
-    }
-  }
-
-  /**
-   * Collect the error stream, digesting them into individual
-   * ExternalCompilerErrors.
-   */
-  public class ExternalCompilerErrorCollector extends OutputCollector {
-
-    private String inputFilename;
-    private Pattern errPattern;
-    private List errors = new ArrayList();
-    private ExternalCompilerError lastError = null;
-    private TranslationUnit[] tunits;
-
-    // we don't expect this to be terribly big, can fit in memory
-    StringBuffer sb = new StringBuffer();
-
-    public ExternalCompilerErrorCollector(InputStream is, List tunits) {
-      super(is);
-      this.inputFilename = inputFilename;
-      this.tunits = (TranslationUnit[])tunits.toArray(new TranslationUnit[0]);
-
-      // Expect errors to look like File.as(48): col: 1 Error: some message
-
-      String pat = "([^\\/]+)\\.as\\(([0-9]+)\\): *col: *([0-9]*) *(.*)";
-      errPattern = Pattern.compile(pat);
-      //System.out.println("Using error pattern: " + pat);
-    }
-
-    public TranslationUnit locateTranslationUnit(String nm)
-    {
-      for (int i=0; i<tunits.length; i++) {
-        if (nm.equals(tunits[i].getName()))
-          return tunits[i];
-      }
-      return null;
-    }
-
-    public void collect(String str) {
-      
-      // We expect errors from this compiler to start with the file name.
-      // anything else is just showing us the contents of the line.
-      
-      Matcher matcher = errPattern.matcher(str);
-      if (matcher.find()) {
-        String classnm = matcher.group(1);
-        String linenumstr = matcher.group(2);
-        String colstr = matcher.group(3);
-        TranslationUnit tunit = locateTranslationUnit(classnm);
-        lastError = new ExternalCompilerError(tunit, safeInt(linenumstr),
-                                               safeInt(colstr),
-                                               matcher.group(4),
-                                               str);
-        errors.add(lastError);
-      }
-      else {
-        if (lastError == null) {
-          System.err.println("Stray error string from external compiler: " + str);
-          // Capture it in an error message not tied to a particular line
-          lastError = new ExternalCompilerError();
-        }
-        lastError.addCodeLine(str);
-      }
-    }
-    
-    public List getErrors() {
-      return errors;
     }
   }
 
@@ -431,112 +360,134 @@ public class SWF9External {
     return cmdstr;
   }
 
+
+  static class FlexLogger implements Logger { 
+    private List errors = new ArrayList();
+    private ExternalCompilerError lastError = null;
+    private TranslationUnit[] tunits;
+
+
+    // Parse out FILENAME from "FILENAME.as", to get classname
+    static String pat = "([^\\/]+)\\.as";
+    private Pattern errPattern;
+
+    FlexLogger(List tunits) {
+      this.tunits = (TranslationUnit[])tunits.toArray(new TranslationUnit[0]);
+      errPattern = Pattern.compile(pat);
+    } 
+    
+    public TranslationUnit locateTranslationUnit(String nm)
+    {
+      for (int i=0; i<tunits.length; i++) {
+        if (nm.equals(tunits[i].getName()))
+          return tunits[i];
+      }
+      return null;
+    }
+
+    public void log(Message msg, int errorCode, String source) { 
+      // errors.add(...)
+      String level  =  msg.getLevel(); 
+      String path   =  msg.getPath(); 
+      int line   =  msg.getLine(); 
+      int column =  msg.getColumn(); 
+
+      if (path != null) {
+        Matcher matcher = errPattern.matcher(path);
+        if (matcher.find()) {
+          String classnm = matcher.group(1);
+          TranslationUnit tunit = locateTranslationUnit(classnm);
+          lastError = new ExternalCompilerError(tunit, line, column, path, msg.toString(), source);
+          errors.add(lastError);
+        }
+      }
+
+    }
+
+    public List getErrors() {
+      return errors;
+    }
+
+
+  }
+
   /**
-   * Run the compiler using the command/arguments in cmd.
+   * Run the Flex compiler via the Builder API
    * Collect and report any errors, and check for the existence
    * of the output file.
    * @throw CompilerError if there are errors messages from the external
    *        compiler, or if any part of the compilation process has problems
    */
-  public void execCompileCommand(List cmd, String dir, List tunits,
-                                 String outfileName)
+  public void buildAndProcessErrors(Builder builder, List tunits, String outfilename)
     throws IOException          // TODO: [2007-11-20 dda] clean up, why catch only some exceptions?
   {
-    String[] cmdstr = (String[])cmd.toArray(new String[0]);
-    String prettycmd = prettyCommand(cmd);
-    System.err.println("Executing compiler: (cd " + dir + "; " + prettycmd + ")");
+    FlexLogger logger = new FlexLogger(tunits);
+
+    // Receives compiler warnings and errors, via the Logger api
+    builder.setLogger(logger);
+
+    // TODO [2008-06-04 hqm] This is setting "incremental compile" to
+    // true, which won't really help but seems like it can't do any
+    // harm, right? Someday if we use the VirtualLocalFileSystem API
+    // then we could do incremental compiles.
+    long exitval = builder.build(true);
+
     String bigErrorString = "";
     int bigErrorCount = 0;
 
-    // Generate a small script (unix style) to document how
-    // to build this batch of files.
-    String buildsh = "#!/bin/sh\n";
-    buildsh += "cd " + dir + "\n";
-    buildsh += prettycmd + "\n";
-    Compiler.emitFile(workDirectoryName("build.sh"), buildsh);
+    List errs = logger.getErrors();
+    if (errs.size() > 0) {
+      System.err.println("ERRORS: ");
+      for (Iterator iter = errs.iterator(); iter.hasNext(); ) {
+        ExternalCompilerError err = (ExternalCompilerError)iter.next();
+        TranslationUnit tunit = err.getTranslationUnit();
+        String srcLineStr;
+        int srcLine;
 
-    Process proc = Runtime.getRuntime().exec(cmdstr, null, null);
-    try {
-      OutputStream os = proc.getOutputStream();
-      OutputCollector outcollect = new OutputCollector(proc.getInputStream());
-      ExternalCompilerErrorCollector errcollect = new ExternalCompilerErrorCollector(proc.getErrorStream(), tunits);
-      os.close();
-      outcollect.start();
-      errcollect.start();
-      int exitval = proc.waitFor();
-      outcollect.join();
-      errcollect.join();
+        // actualSrcLine is the name/linenumber of the actual files
+        // used in compilation, not the original sources.
+        String actualSrcFile = null;
+        if (tunit == null) {
+          actualSrcFile = "(unknown)";
+        }
+        else  {
+          actualSrcFile = tunit.getSourceFileName();
+          if (actualSrcFile == null)
+            actualSrcFile = "(" + tunit.getName() + ")";
+        }
 
-      if (outcollect.getException() != null) {
-        System.err.println("Error collecting compiler output: " + outcollect.getException());
-        // TODO: [2007-11-20 dda] log this
-      }
-      String compilerOutput = outcollect.getOutput();
-      if (compilerOutput.length() > 0) {
-        System.err.println("compiler output:\n" + compilerOutput);
-      }
+        String actualSrcLine = "[" + actualSrcFile + ": " + err.getLineNumber() + "] ";
 
-      if (errcollect.getException() != null) {
-        System.err.println("Error collecting compiler output: " + errcollect.getException());
-        // TODO: [2007-11-20 dda] log this
-      }
-      List errs = errcollect.getErrors();
-      if (errs.size() > 0) {
-        System.err.println("ERRORS: ");
-        for (Iterator iter = errs.iterator(); iter.hasNext(); ) {
-          ExternalCompilerError err = (ExternalCompilerError)iter.next();
-          TranslationUnit tunit = err.getTranslationUnit();
-          String srcLineStr;
-          int srcLine;
+        if (tunit == null ||
+            ((srcLine = tunit.originalLineNumber(err.getLineNumber())) <= 0)) {
+          srcLineStr = "line unknown: ";
+        }
+        else {
+          srcLineStr = "line " + String.valueOf(srcLine) + ": ";
+        }
+        System.err.println(actualSrcLine + srcLineStr + err.getErrorString());
 
-          // actualSrcLine is the name/linenumber of the actual files
-          // used in compilation, not the original sources.
-          String actualSrcFile = null;
-          if (tunit == null) {
-            actualSrcFile = "(unknown)";
-          }
-          else  {
-            actualSrcFile = tunit.getSourceFileName();
-            if (actualSrcFile == null)
-              actualSrcFile = "(" + tunit.getName() + ")";
-          }
-
-          String actualSrcLine = "[" + actualSrcFile + ": " + err.getLineNumber() + "] ";
-
-          if (tunit == null ||
-              ((srcLine = tunit.originalLineNumber(err.getLineNumber())) <= 0)) {
-            srcLineStr = "line unknown: ";
-          }
-          else {
-            srcLineStr = "line " + String.valueOf(srcLine) + ": ";
-          }
-          System.err.println(actualSrcLine + srcLineStr + err.getErrorString());
-
-          // bigErrorString will be passed as an exception.
-          if (bigErrorString.length() > 0) {
-            bigErrorString += "\n";
-          }
-          bigErrorCount++;
-          if (bigErrorCount < MAX_ERRORS_SHOWN) {
-            bigErrorString += srcLineStr + err.cleanedErrorString();
-          }
-          else if (bigErrorCount == 50) {
-            bigErrorString += ".... more than " + MAX_ERRORS_SHOWN +
-              " errors, additional errors not shown.";
-          }
+        // bigErrorString will be passed as an exception.
+        if (bigErrorString.length() > 0) {
+          bigErrorString += "\n";
+        }
+        bigErrorCount++;
+        if (bigErrorCount < MAX_ERRORS_SHOWN) {
+          bigErrorString += srcLineStr + err.cleanedErrorString();
+        }
+        else if (bigErrorCount == 50) {
+          bigErrorString += ".... more than " + MAX_ERRORS_SHOWN +
+            " errors, additional errors not shown.";
         }
       }
-
-      if (exitval != 0) {
-        System.err.println("FAIL: compiler returned " + exitval);
-      }
     }
-    catch (InterruptedException ie) {
-      throw new CompilerError("Interrupted compiler");
+
+    if (!(exitval > 0)) {
+      System.err.println("FAIL: compiler returned " + exitval);
     }
     System.err.println("Done executing compiler");
-    if (!new File(outfileName).exists()) {
-      System.err.println("Intermediate file " + outfileName + ": does not exist");
+    if (!new File(outfilename).exists()) {
+      System.err.println("Intermediate file " + outfilename + ": does not exist");
       if (bigErrorString.length() > 0) {
         throw new CompilerError(bigErrorString);
       }
@@ -589,60 +540,71 @@ public class SWF9External {
   public byte[] compileTranslationUnits(List tunits, boolean buildSharedLibrary)
     throws IOException
   {
-    List cmd = new ArrayList();
     String outfilebase;
-    String exeSuffix = isWindows() ? ".exe" : "";
-    
-    if (buildSharedLibrary) {
-      outfilebase = "app.swc";
-      cmd.add(getFlexPathname("bin/compc" + exeSuffix));
-    }
-    else {
-      outfilebase = "app.swf";
-      cmd.add(getFlexPathname("bin/mxmlc" + exeSuffix));
-    }
+    Builder builder; 
+    ArrayList files = new ArrayList();
 
-    String outfilename = workdir.getPath() + File.separator + outfilebase;
-    boolean swf9Warnings = getLPSBoolean("compiler.swf9.warnings", true);
-    
-    if (!swf9Warnings) {
-      cmd.add("-compiler.show-actionscript-warnings=false");
-    }
-    
-    cmd.add("-compiler.source-path+=" + workdir.getPath());
-    if (USE_COMPILER_DEBUG_FLAG) {
-      cmd.add("-debug=true");
-    }
-    cmd.add("-output");
-    cmd.add(outfilename);
-    
-    if (!buildSharedLibrary) {
-      cmd.add("-default-size");
-      cmd.add(options.get(Compiler.CANVAS_WIDTH, "800"));
-      cmd.add(options.get(Compiler.CANVAS_HEIGHT, "600"));
-      cmd.add("-library-path+=" + getLFCLibrary());
-    }
-    else {
-      // must be last before list of classes to follow.
-      cmd.add("-include-classes");
-    }
-    
+    // Collect up the file (or files, for a library) we are compiling
     for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
       TranslationUnit tunit = (TranslationUnit)iter.next();
-      
       // For the application, we just list the main .as file
       // For a library, we list all the classes.
       if (!buildSharedLibrary) {
         if (tunit.isMainTranslationUnit()) {
-          cmd.add(workdir.getPath() + File.separator + tunit.getName()+".as");
+          files.add(new File(workdir.getPath() + File.separator + tunit.getName()+".as"));
         }
-      }
-      else {
-        cmd.add(tunit.getName());
+      } else {
+        files.add(new File(tunit.getName()));
       }
     }
     
-    execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
+    // Set compiler config options
+    Configuration config;
+    String outfilename;
+
+    if (buildSharedLibrary) {
+      // For a library, add all the 'components'
+      builder = new Library();
+      config = builder.getDefaultConfiguration(); 
+      for (int i = 0; i < files.size(); i++) {
+        ((Library)builder).addComponent(((File)(files.get(i))).getName());
+      }
+      outfilebase = "app.swc";
+      outfilename =  workdir.getPath() + File.separator + outfilebase;
+      ((Library)builder).setOutput(new File(outfilename));
+    }
+    else {
+      // For an application, compile just one 'main' class
+      builder = new Application((File) files.get(0));
+      config = builder.getDefaultConfiguration(); 
+      outfilebase = "app.swf";
+      outfilename =  workdir.getPath() + File.separator + outfilebase;
+      ((Application)builder).setOutput(new File(outfilename));
+
+    }
+
+    boolean swf9Warnings = getLPSBoolean("compiler.swf9.warnings", true);
+
+    // set reporting of warnings
+    config.showActionScriptWarnings(swf9Warnings);
+    config.showBindingWarnings(swf9Warnings); 
+    config.showShadowedDeviceFontWarnings(swf9Warnings);
+    config.showUnusedTypeSelectorWarnings(swf9Warnings);
+
+    //  Append path using the 'source-path+=' option
+    config.addSourcePath(new File[] {workdir});
+
+    config.enableDebugging(USE_COMPILER_DEBUG_FLAG, "");
+    
+    if (!buildSharedLibrary) {
+      config.setDefaultSize(safeInt((String)(options.get(Compiler.CANVAS_WIDTH, "800"))),
+                            safeInt((String)(options.get(Compiler.CANVAS_HEIGHT, "600"))));
+
+      config.addLibraryPath(new File[] {new File(getLFCLibrary())});
+    } 
+
+    builder.setConfiguration(config); 
+    buildAndProcessErrors(builder, tunits, outfilename);
     return getBytes(outfilename);
   }
 

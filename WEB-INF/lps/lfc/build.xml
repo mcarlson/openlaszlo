@@ -222,15 +222,6 @@
       // Check whether the options tell us to build this runtime at all
       var buildThisRuntime = lfc.getProperty("build.lfc.runtime.swf" + v);
 
-      // If FLEX_HOME is not set, just issue a warning, but do not build SWF9
-      if (v == 9) {
-         if (lfc.getProperty("env.FLEX_HOME") == "") {
-             var echo = lfc.createTask("echo");
-             echo.setMessage("WARNING: $FLEX_HOME is not set, skipping build of SWF9 libraries");
-             echo.execute();
-             buildThisRuntime = null;
-         }
-      }
       if (buildThisRuntime != null) {
         var plain = LFCdir + "LFC" + v + ext;
         if (!(new File(plain)).exists()) {
