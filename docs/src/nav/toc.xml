@@ -154,6 +154,7 @@
     <category title="States">
         <item title="dragstate" href="lz.dragstate.html" />
         <item title="resizestate" href="lz.resizestate.html" />
+        <item title="resizestatemin" href="lz.resizestatemin.html" />
         <item title="state (LzState)" href="LzState.html" />
     </category>
     
