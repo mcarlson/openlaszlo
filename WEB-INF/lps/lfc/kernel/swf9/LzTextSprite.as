@@ -54,7 +54,7 @@ public class LzTextSprite extends LzSprite {
         override public function setClickable( c:Boolean ):void {
           if (this.clickable == c) return;
 
-          this.textfield.mouseEnabled = c;
+          this.textfield.mouseEnabled = c || this.textfield.selectable;
 
           this.clickable = c;
           if (c) {
@@ -351,6 +351,7 @@ public class LzTextSprite extends LzSprite {
          */
         public function setSelectable ( isSel:Boolean ):void {
             this.textfield.selectable = isSel;
+            this.textfield.mouseEnabled = isSel || this.clickable;
         }
       
         public function getTextWidth ( ):Number {
