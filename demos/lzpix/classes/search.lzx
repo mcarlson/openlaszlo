@@ -57,7 +57,7 @@
         <!-- Only search for photos with a creative commons license:
             http://creativecommons.org/licenses/by/2.0/
         -->
-        <method name="sendsearch">
+        <method name="sendsearch" args="ignore=null">
             var tags = this.getText();
             var argobj;
             if (tags == "interesting") {

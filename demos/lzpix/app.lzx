@@ -266,7 +266,7 @@
                 this.doneDel.register( lc, "oninit" );
             </method>
                         
-            <method name="initialReplicationDone" args="ignore">
+            <method name="initialReplicationDone" args="ignore=null">
                 <![CDATA[
                 //this.setAttribute( "initialDone", true );
                 //Debug.write("initialReplicationDone");
@@ -293,7 +293,7 @@
 
 
             <selectionmanager name="selman" toggle="false">
-                <method name="isMultiSelect">
+                <method name="isMultiSelect" args="s" >
                     return LzKeys.isKeyDown( "control" ) || LzKeys.isKeyDown( "shift" ) ||
                            parent.isRectangleSelecting;
                 </method>
@@ -302,7 +302,7 @@
             <attribute name="isRectangleSelecting" value="false"/>
             <method name="selectInRectangle" args="x1, y1, x2, y2">
                 <![CDATA[
-                if ( !selman.isMultiSelect() ){
+                if ( !selman.isMultiSelect(null) ){
                     selman.clearSelection();
                 }
                 this.setAttribute( "isRectangleSelecting", true );
@@ -333,7 +333,7 @@
                 <!-- this is what should trigger photo editing -->
                 
                 <handler name="onplainclick">
-                    if ( parent.selman.isMultiSelect() ){
+                    if ( parent.selman.isMultiSelect(null) ){
                         // Debug.write( this , " other click." );
                         parent.selman.select( this );
                         
@@ -381,7 +381,7 @@
 
                 <attribute name="isselected" value="false"/>
 
-                <method name="setSelected" args="s:Boolean">
+                <method name="setSelected" args="s">
                     this.borderbg.setBGColor(s ? "0xFFD800" : "0xFFFFFF"); 
                     this.setAttribute( "isselected" , s );
                     this.intparent.setOpacity( s ? .5 : 1 );
@@ -411,7 +411,7 @@
                     this.update();
                 </method>
 
-                <method name="update" args="ignore">
+                <method name="update" args="ignore=null">
                     <![CDATA[
                     var mx = this.parent.getMouse( 'x' );
                     var my = this.parent.getMouse( 'y' );
@@ -585,7 +585,7 @@
     
     <search name="srch" id="gSearch" width="156" x="475" y="315">
         <attribute name="firsttime" value="true"/>
-        <method name="sendsearch" args="ignore">
+        <method name="sendsearch" args="ignore=null">
             photoscontainer.setAttribute('visible', false); 
             //Debug.write("sendsearch: photoscontainer.lyt.lock called");
             photoscontainer.lyt.isgrid = true;
