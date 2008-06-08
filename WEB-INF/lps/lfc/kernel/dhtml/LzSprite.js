@@ -58,7 +58,7 @@ var LzSprite = function(owner, isroot) {
         if (p.resourceroot) {
             lz.embed.options.resourceroot = p.resourceroot;
         }
-        if (! this.quirks.canvas_div_cannot_be_clipped && width && widthispercentage && height && heightispercentage) {
+        if (! this.quirks.canvas_div_cannot_be_clipped && width && ! widthispercentage && height && ! heightispercentage) {
             div.style.clip = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
             div.style.overflow = 'hidden';
         }
