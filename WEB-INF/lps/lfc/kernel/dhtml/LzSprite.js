@@ -451,6 +451,7 @@ LzSprite.prototype.frame = 1;
 LzSprite.prototype.frames = null;
 LzSprite.prototype.blankimage = '/lps/includes/blank.gif';
 LzSprite.prototype.resource = null;
+LzSprite.prototype.source = null;
 LzSprite.prototype.visible = null;
 LzSprite.prototype.text = null;
 LzSprite.prototype.clip = null;
@@ -519,13 +520,13 @@ LzSprite.prototype.addChildSprite = function(sprite) {
 
 LzSprite.prototype.setResource = function ( r ){
     if (this.resource == r) return;
+    this.resource = r;
     if ( r.indexOf('http:') == 0 || r.indexOf('https:') == 0){
         this.skiponload = false;
         this.setSource( r );
         return;
     }
 
-    this.resource = r;
     var urls = this.getResourceUrls(r);
 
     this.owner.setTotalFrames(urls.length);
@@ -571,6 +572,7 @@ LzSprite.prototype.setSource = function (url, usecache){
     if (usecache != true){
         // called by a user
         this.skiponload = false;
+        this.resource = url;
     }
     if (usecache == 'memorycache') {
         // use the memory cache - explictly turned on by the user
@@ -579,8 +581,8 @@ LzSprite.prototype.setSource = function (url, usecache){
 
     //cancel current load
     if (this.loading) {
-        if (this.__ImgPool) {
-            this.__ImgPool.flush(this.resource);
+        if (this.__ImgPool && this.source) {
+            this.__ImgPool.flush(this.source);
         }
         this.__destroyImage(null, this.__LZimg);
         this.__LZimg = null;
@@ -588,7 +590,7 @@ LzSprite.prototype.setSource = function (url, usecache){
 
     //Debug.info('setSource ' + url)
     this.loading = true;
-    this.resource = url;
+    this.source = url;
     if (! this.__ImgPool) {
         this.__ImgPool = new LzPool(LzSprite.prototype.__getImage, LzSprite.prototype.__gotImage, LzSprite.prototype.__destroyImage, this);
     }
@@ -1745,6 +1747,7 @@ LzSprite.prototype.updateResourceSize = function () {
 
 LzSprite.prototype.unload = function () {
     this.resource = null;
+    this.source = null;
     this.resourceWidth = null;
     this.resourceHeight = null;
     if (this.__ImgPool) {

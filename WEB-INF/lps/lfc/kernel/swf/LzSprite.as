@@ -294,6 +294,7 @@ LzSprite.prototype.setResource = function ( resourceName ) {
     }
 
     this.__LZhaser = resourceName == "empty";
+    this.resource = resourceName;
 
     if (this.__LZmovieClipRef != null ){
         this.doReplaceResource(resourceName);
@@ -308,7 +309,6 @@ LzSprite.prototype.setResource = function ( resourceName ) {
         mv.menu = oldmenu;
     }
 
-    this.resource = resourceName;
     this.updateResourceSize(true);
 }
 
@@ -746,7 +746,7 @@ LzSprite.prototype.updateResourceSize = function (skipsend){
         this.resourceheight = mc._height/(mc._yscale/100);
     }
 
-    if (! skipsend) this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
+    if (! skipsend && ! this.__LZhaser) this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
 }
 
 /**

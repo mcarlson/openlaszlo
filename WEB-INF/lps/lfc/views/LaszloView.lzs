@@ -91,8 +91,6 @@ static var tagname = 'view';
     /** @access private */
     var _x:Number;
     /** @access private */
-    var __LZhaser;
-    /** @access private */
     var __LZlayout
 
     /** @access private */
@@ -1214,12 +1212,7 @@ function setResource(v) {
 function $lzc$set_resource( resourceName ) {
     if (resourceName == null || resourceName == this._resource) return;
     this.resource = this._resource = resourceName;
-
-    if (resourceName != 'empty') this.sprite.setResource(resourceName);
-    
-    this.__LZhaser = resourceName == "empty";
-
-    if (this.onresource.ready) this.onresource.sendEvent( resourceName );
+    this.sprite.setResource(resourceName);
 }
 
 /**
