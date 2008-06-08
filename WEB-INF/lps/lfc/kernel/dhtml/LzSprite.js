@@ -244,6 +244,7 @@ LzSprite.prototype.__defaultStyles['#lzcontextmenu'] = {
 LzSprite.prototype.uid = 0;
 
 LzSprite.prototype.quirks = {
+    // Creates a separate tree of divs for handling mouse events.
     fix_clickable: true
     ,fix_ie_background_height: false
     ,fix_ie_clickable: false
@@ -525,49 +526,40 @@ LzSprite.prototype.setResource = function ( r ){
     }
 
     this.resource = r;
+    var urls = this.getResourceUrls(r);
 
+    this.owner.setTotalFrames(urls.length);
+    this.frames = urls;
+    this.__preloadFrames();
+
+    this.skiponload = true;
+    this.setSource(urls[0], true);
+}
+
+LzSprite.prototype.getResourceUrls = function (resourcename) {
     // look up resource name in LzResourceLibrary
     // LzResourceLibrary is in the format:
     // LzResourceLibrary.lzscrollbar_xthumbleft_rsc={ptype:"ar"||"sr",frames:["lps/components/lz/resources/scrollbar/scrollthumb_x_lft.png"],width:1.0,height:12.0}
-
-    var res = LzResourceLibrary[r];
+    var res = LzResourceLibrary[resourcename];
     if (! res) {
         if ($debug) {
-            Debug.warn('Could not find resource', r);
+            Debug.warn('Could not find resource', resourcename);
         }
         return;
     }
-    var urls = res.frames;
 
-    //this.owner.onimload.sendEvent({width: res.width, height: res.height});
     this.resourceWidth = res.width;
     this.resourceHeight = res.height;
-    this.skiponload = true;
 
-    //Update the view's totalframes
-    this.owner.setTotalFrames (urls.length);
-
-    // It could be a multi-frame resource. Take first frame.
-    var url = urls[0];
-    if (url) {
-        this.baseurl = '';
-        if (res.ptype) {
-            if (res.ptype == 'sr') {
-                this.baseurl = lz.embed.options.resourceroot + '/';
-            }
-            //Debug.write('ptype', res.ptype, this.baseurl);
-        }
-
-        this.frames = urls;
-        this.__preloadFrames();
-        this.setSource(url, true);
-    } else {
-        //FIXME: [20080203 anba] does this ever get executed? 
-        //because <resource name="res" src="foo.png" /> generates a multi-frame resource, too!
-        //Debug.debug("loading single-resource: '%s'", r);
-        this.setSource(r, true);
+    var urls = []; 
+    var baseurl = '';
+    if (res.ptype && res.ptype == 'sr') {
+        baseurl = lz.embed.options.resourceroot + '/';
     }
-    //Debug.info('setResource ', r, this.frames)
+    for (var i = 0; i < res.frames.length; i++) {
+        urls[i] = baseurl + res.frames[i];
+    }
+    return urls;
 }
 
 LzSprite.prototype.CSSDimension = function (value, units) {
@@ -734,37 +726,22 @@ LzSprite.prototype.setClickable = function(c) {
 /**
   * @access private
   */
-LzSprite.prototype.__setClickable = function(c, who) {
-    if (who._clickable == c) return;
-    who._clickable = c;
-    if (c) {
-        var f = LzSprite.prototype.__clickDispatcher;
-        who.onclick = f;
-        // Prevent context menus in Firefox 1.5 - see LPP-2678
-        who.onmousedown = f;
-        who.onmouseup = f;
-        if (this.quirks.fix_ie_clickable) {
-            who.ondrag = f;
-            who.ondblclick = f;
-            who.onmouseenter = f;
-            who.onmouseleave = f;
-        } else {
-            who.onmouseover = f;
-            who.onmouseout = f;
-        }
+LzSprite.prototype.__setClickable = function(c, div) {
+    if (div._clickable == c) return;
+    div._clickable = c;
+    var f = c ? LzSprite.prototype.__clickDispatcher : null;
+    div.onclick = f;
+    // Prevent context menus in Firefox 1.5 - see LPP-2678
+    div.onmousedown = f;
+    div.onmouseup = f;
+    if (this.quirks.fix_ie_clickable) {
+        div.ondrag = f;
+        div.ondblclick = f;
+        div.onmouseenter = f;
+        div.onmouseleave = f;
     } else {
-        who.onclick = null;
-        who.onmousedown = null;
-        who.onmouseup = null;
-        if (this.quirks.fix_ie_clickable) {
-            who.ondrag = null;
-            who.ondblclick = null;
-            who.onmouseenter = null;
-            who.onmouseleave = null;
-        } else {
-            who.onmouseover = null;
-            who.onmouseout = null;
-        }
+        div.onmouseover = f;
+        div.onmouseout = f;
     }
 }
 
@@ -1288,8 +1265,6 @@ LzSprite.prototype.__gotImage = function(url, obj, skiploader) {
   * @access private
   */
 LzSprite.prototype.__getImage = function(url, skiploader) {
-    if (this.owner.baseurl) url = this.owner.baseurl + url;
-    
     if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
         var im = document.createElement('div');
         //im.className = 'lzdiv';//FIXME: LPP-5422

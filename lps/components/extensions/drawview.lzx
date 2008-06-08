@@ -583,6 +583,38 @@
                     this.__LZcanvas.style.visibility = "hidden";
                 }
             }
+
+            static var images = {};
+
+            function getImage(url) {
+                var i = lz.drawview.images[url];
+                if (! i) {
+                    if ( url.indexOf('http:') != 0 && url.indexOf('https:') != 0 ) {
+                        url = this.sprite.getResourceUrls(url);
+                        url = url[0];
+                    }
+                    i = new Image();
+                    i.src = url;
+                    lz.drawview.images[url] = i;
+                }
+                return i;
+            }
+
+            function drawImage(image, x, y, w, h, r) {
+                if ($debug) this.__checkContext();
+                if (typeof image == 'string') {
+                    image = this.getImage(image);
+                }
+                var tr = r ? r : 0;
+                this.context.save();
+                this.clear();
+                var tx = x ? x : 0;
+                var ty = y ? y : 0;
+                this.context.translate(tx, ty);
+                this.context.rotate(tr);
+                this.context.drawImage(image, 0, 0, w, h);
+                this.context.restore();
+            }
  
             function __initie() {
                 try {
@@ -824,6 +856,13 @@
             }
     
             function _oninit(v) {
+                if ($swf8) {
+                    // Add bitmap data drawing layer
+                    this.bitmapmc = this.context.createEmptyMovieClip("bmp",this.context.getNextHighestDepth());
+                    this.bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
+                    this.bitmapmc.attachBitmap(this.bitmapdata, 2, "auto", true);
+                }
+
                 this.oncontext.sendEvent();
             }
 
@@ -872,6 +911,61 @@
                     this.__path[this.__path.length] = [this.__QCURVE_OP, cpx, cpy, x, y];
                 }
                 //Debug.write('quadraticCurveTo', this.__path);
+            }
+
+            static var images = {};
+
+            if ($swf8) {
+            function getImage(name) {
+                var i = lz.drawview.images[name];
+                if (! i) {
+                    if ( name.indexOf('http:') == 0 || name.indexOf('https:') == 0 ) {
+                        var loadMC = createEmptyMovieClip("preLoad",getNextHighestDepth());
+                        var tmpMC = loadMC.createEmptyMovieClip("tmp",loadMC.getNextHighestDepth());
+                        tmpMC.loadMovie(name);
+                        loadMC.onEnterFrame = function() {
+                            if(tmpMC._width>0) {
+                                var bmp = new flash.display.BitmapData(tmpMC._width, tmpMC._height, true, 0x000000ff);
+                                bmp.draw(tmpMC);
+                                lz.drawview.images[name] = i = bmp;
+                                loadMC.removeMovieClip();
+                                delete this.onEnterFrame;
+                            }
+                        }
+                    } else {
+                        var loadMC = createEmptyMovieClip("preLoad",getNextHighestDepth());
+                        loadMC.attachMovie( name, 'resc', loadMC.getNextHighestDepth());
+                        var bmp = new flash.display.BitmapData(loadMC._width, loadMC._height, true, 0x000000ff);
+                        bmp.draw(loadMC);
+                        lz.drawview.images[name] = i = bmp;
+                        loadMC.removeMovieClip();
+                    }
+                }
+                return i;
+            }
+            }
+
+            if ($swf9) {
+            } else {
+            function drawImage(image, x, y, w, h, r) {
+                if ($swf7) {
+                    if ($debug) Debug.warn('Drawview.drawImage() is supported in swf7.');
+                } else {
+                    if (typeof image == 'string') {
+                        image = this.getImage(image);
+                    }
+                    if (! image) return;
+                    var m = new flash.geom.Matrix()
+                    var tx = x ? x : 0;
+                    var ty = y ? y : 0;
+                    var tw = w ? w / image.width : 1;
+                    var th = h ? h / image.height : 1;
+                    m.scale(tw, th);
+                    if (r != null) m.rotate(r);
+                    m.translate(tx, ty);
+                    this.bitmapdata.draw(image, m, 'layer', 'normal');
+                }
+            }
             }
     
             var bezierCurveTo_error = 10;
@@ -1088,6 +1182,10 @@
     
             function clear() {
                 this.context.clear();
+                if ($swf8) {
+                    var rect = new flash.geom.Rectangle(0, 0, this.width, this.height);
+                    this.bitmapdata.fillRect(rect, 0x000000ff);
+                }
             }
     
             function clearMask() {

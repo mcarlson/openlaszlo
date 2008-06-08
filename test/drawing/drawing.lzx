@@ -1,4 +1,5 @@
 <canvas>
+    <resource name="alphapng" src="../resources/png/alphagrad.png"/>
     <simplelayout axis="x"/>
     <drawview width="205" height="230" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()" bgcolor="green">
         <dragstate name="dragger"/>
@@ -110,6 +111,21 @@
             this.fillStyle = 0xff0000;
             this.fill();
         ]]></handler>
+    </drawview>
+
+    <drawview width="200" height="200" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()">
+        <dragstate name="dragger"/>
+        <attribute name="angle" value="45" type="number"/>
+        <handler name="onangle" method="redraw"/>
+        <handler name="oncontext" method="redraw"/>
+        <method name="redraw" args="ignore">
+            if (! this.context) return;
+            this.clear();
+            this.drawImage('alphapng', 100, 100, 100, 20, this.angle * (Math.PI / 180));    
+        </method>
+        <handler name="onclick">
+            this.animate('angle', 180, 2000, true);
+        </handler>
     </drawview>
 
     <!-- this snippet demonstrates LPP-4001. It gives an error in dhtml, 
