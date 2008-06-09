@@ -220,6 +220,8 @@ class LzHTTPDataProvider extends LzDataProvider {
             url = lzurl.toString();
         }
    
+        dreq.loadstarttime = (new Date()).getTime();
+
         dreq.status =  "loading";
         tloader.open ( proxied ? "POST" : dreq.method, url, /* username */ null, /* password */ null);
         tloader.send (/* content */ postbody);
@@ -248,6 +250,7 @@ class LzHTTPDataProvider extends LzDataProvider {
      */
     function loadTimeout( loader, data ) { 
         var dreq = loader.dataRequest;
+        dreq.loadtime = (new Date()).getTime() - dreq.loadstart;
         dreq.status = LzDataRequest.TIMEOUT;
         dreq.onstatus.sendEvent( dreq );
     }
@@ -272,6 +275,7 @@ class LzHTTPDataProvider extends LzDataProvider {
         // all its values.
         var content = null;
 
+        dreq.loadtime = (new Date()).getTime() - dreq.loadstarttime;
 
         if (data == null) {
             this.setRequestError(dreq, "client could not parse XML from server");
@@ -382,6 +386,7 @@ class LzHTTPDataRequest extends LzDataRequest {
         @type Number
     */
     var loadtime = 0;
+    var loadstarttime;
 
     var secure = false;
     var secureport;

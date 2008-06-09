@@ -555,10 +555,7 @@ function setRequest( b ) {
   * @return Int: Number of miliseconds it took to load the last request.
   */
 function getLoadTime( ) {
-    if ( $debug ){
-      Debug.info("%w.%s is deprecated.  Look at `%w.loadtime` object instead.",
-                 this, arguments.callee, this.dataRequest);
-    }
+    return this.dataRequest.loadtime;
 }
 
 /**
