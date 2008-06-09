@@ -77,10 +77,8 @@
   * name, so that it can be referred to the same way the non-replicated view
   * would have been. 
   */
-dynamic class LzReplicationManager extends LzDatapath {
-
-/** @access private */
-override function $lzc$set_datapath(v) { this.setXPath(v); }
+class LzReplicationManager extends LzDatapath {
+  #pragma "warnUndefinedReferences=true"
 
 /** @access private */
 var asyncnew :Boolean = true;
@@ -99,12 +97,21 @@ var cloneChildren :Array;
 /** @access private */
 var hasdata :Boolean;
 /** @access private */
-var orderpath :*;
+var orderpath :String;
 
 /** @access private */
-var comp_orderf;  // Was this.orderf.comp
+var comp_orderf :Function;  // Was this.orderf.comp
 /** @access private */
-var op_orderf;    // Was this.orderf.op
+var op_orderf :String;    // Was this.orderf.op
+
+/** Slot for constraint-method, see LzReplicationManager#construct(..)
+  * @access private 
+  */
+var __LZxpathconstr: Function = null;
+/** Slot for dependency-method, see LzReplicationManager#construct(..)
+  * @access private 
+  */
+var __LZxpathdepend: Function = null;
 
 // var datacontrolsvisibility = false; // Defined in LzDatapath
 /** 
@@ -162,16 +169,13 @@ var onvisible :LzDeclaredEventClass = LzDeclaredEvent;
 function LzReplicationManager ( odp , args, children:* = null, instcall:* = null ){
     //the real parent for this is datapaths view's (immediateparent) parent
     super(odp, args, children, instcall);
+    this.pooling = false; // Defined in LzDatapath
+    this.__LZtakeDPSlot = false; // Defined in LzDatapath
+    this.datacontrolsvisibility = false; // Defined in LzDatapath
 }
 
 /** @access private */
 override function construct ( odp , args ){
-    this.__LZtakeDPSlot = false; // Defined in LzDatapath
-    this.datacontrolsvisibility = false; // Defined in LzDatapath
-
-    if (this.pooling == null)
-        this.pooling = false; // Defined in LzDatapath
-
     //odp: original datapath
     var view:LzNode = odp.immediateparent;
     if (view === canvas) {
@@ -235,7 +239,7 @@ override function construct ( odp , args ){
         if ( odp.__LZdotdotCheckDel ){
             odp.__LZdotdotCheckDel.unregisterAll();
         }
-        odp.__LZspecialDotDot = null;
+        odp.__LZspecialDotDot = false;
     }
         
 
@@ -272,68 +276,81 @@ override function construct ( odp , args ){
       }
     }
 
-    var hadxpathconstraint:Boolean = false;
+    //set visible-property
+    if (odp.datacontrolsvisibility) {
+        this.visible = true;
+    } else {
+        if (!view.isinited) {
+            var via:Object = view._instanceAttrs;
+            if (via != null && 'visible' in via && !(via.visible is LzInitExpr)) {
+                this.visible = via.visible;
+            } else {
+                this.visible = view.visible;
+            }
+        } else {
+            this.visible = view.visible;
+        }
+    }
+
+    if ( args.pooling != null ){
+        this.pooling = args.pooling;
+    }
+
     var ia:Object = view._instanceAttrs;
     var oa:Object = odp._instanceAttrs;
-    if (ia && 'datapath' in ia && ia.datapath is LzConstraintExpr) {
+    if (ia && 'datapath' in ia && ia.datapath is LzAlwaysExpr) {
         // <view datapath="${ ... }"/>
-        hadxpathconstraint = true;
         // we need to mask this constraint
+        
         // NOTE: [2008-02-07 ptw] Why?  Why can't this just execute as
         // a constraint on the clone via the normal mechanism?
         // but, we want the constraint to apply to this object instead
-        this.__LZpreventXPathUpdate = true;
-        var methodName:String = ia.datapath.methodName;
         if ($swf9) {
             //FIXME: cannot copy a method in swf9, because 'this' is bound!
-            this[methodName] = function (ignore) {};
+            this.__LZxpathconstr = function (ignore) {};
+            this.__LZxpathdepend = function () {return [];};
         } else {
-            this[methodName] = view[methodName];
-        }
-        if (ia.datapath is LzAlwaysExpr) {
-            var dependencyName:String = ia.datapath.dependenciesName;
-            if ($swf9) {
-                //FIXME: cannot copy a method in swf9, because 'this' is bound!
-                this[dependencyName] = function () {return [];};
-            } else {
-                this[dependencyName] = view[dependencyName];
-            }
+            this.__LZxpathconstr = view[ia.datapath.methodName];
+            this.__LZxpathdepend = view[ia.datapath.dependenciesName];
         }
         // NOTE: [2008-02-07 ptw] The method had better be available
         // on the clone (which means we really want a clone class here
         // to instantiate, rather than an instance to clone).
-        this.applyConstraintExpr(ia.datapath);
-        this.__LZpreventXPathUpdate = false;
-    } else if (oa && 'xpath' in oa && oa.xpath is LzConstraintExpr){
-        //<view><datapath xpath="${ ... }"/>
-        hadxpathconstraint = true;
-        //we want the constraint to apply to this object instead
         this.__LZpreventXPathUpdate = true;
+        this.applyConstraintExpr(new LzAlwaysExpr("__LZxpathconstr", "__LZxpathdepend"));
+        this.__LZpreventXPathUpdate = false;
+        
+        if (this.pooling) {
+            //if we're pooling, release constraint from view so it won't run again
+            view.releaseConstraint("datapath");
+        }
+    } else if (oa && 'xpath' in oa && oa.xpath is LzAlwaysExpr){
+        //<view><datapath xpath="${ ... }"/>
+        //we want the constraint to apply to this object instead
+        
         // we need to have an intermediate node, so relative constraints 
         // like "xpath='${this.immediateparent.parent.anyproperty}'" 
         // work for a replication-manager 
         var refObj:LzRefNode = new LzRefNode(this);
-        var methodName:String = oa.xpath.methodName;
         if ($swf9) {
             //FIXME: cannot copy a method in swf9, because 'this' is bound!
-            refObj[methodName] = function (ignore) {};
+            refObj.__LZxpathconstr = function (ignore) {};
+            refObj.__LZxpathdepend = function () {return [];};
         } else {
-            refObj[methodName] = odp[methodName];
-        }
-        if (oa.xpath is LzAlwaysExpr) {
-            var dependencyName:String = oa.xpath.dependenciesName;
-            if ($swf9) {
-                //FIXME: cannot copy a method in swf9, because 'this' is bound!
-                refObj[dependencyName] = function () {return [];};
-            } else {
-                refObj[dependencyName] = odp[dependencyName];
-            }
+            refObj.__LZxpathconstr = odp[oa.xpath.methodName];
+            refObj.__LZxpathdepend = odp[oa.xpath.dependenciesName];
         }
         // NOTE: [2008-02-07 ptw] The method had better be available
         // on the clone (which means the compiler really has to move
         // it from the datapath subnode to the clone class).
-        refObj.applyConstraintExpr(oa.xpath);
+        this.__LZpreventXPathUpdate = true;
+        refObj.applyConstraintExpr(new LzAlwaysExpr("__LZxpathconstr", "__LZxpathdepend"));
         this.__LZpreventXPathUpdate = false;
+        
+        if (this.pooling) {
+            //if we're pooling, release constraint from datapath so it won't run again
+            odp.releaseConstraint("xpath");
+        }
     }
 
     this.__LZsetCloneAttrs();
@@ -344,14 +361,6 @@ override function construct ( odp , args ){
     } else {
         this.cloneChildren = [];
     }
-
-    this.visible = odp.datacontrolsvisibility ||
-        (!view.isinited &&
-            (view._instanceAttrs != null && 'visible' in view._instanceAttrs) ? view._instanceAttrs.visible : view.visible);
-
-    if ( args.pooling != null ){
-        this.pooling = args.pooling;
-    }
     
     var mycontext:* = odp.context;
 
@@ -361,12 +370,6 @@ override function construct ( odp , args ){
 
     if ( this.pooling ){
         odp.$lzc$set___LZmanager( this );
-        //make sure that the original view and datapath don't get their xpath 
-        //set by a constraint..
-        if ( hadxpathconstraint ){
-            //FIXME: breaks in swf9!
-            odp.setXPath =  LzReplicationManager.__LZemptyFuntion;
-        }
         this.clones.push ( view );
         // Because we're about to start making siblings to this view, (i.e. out
         // of lexical order) make sure that the replicated view has been added
@@ -385,13 +388,6 @@ override function construct ( odp , args ){
   */
 // See subclasses for definition
 function __LZsetCloneAttrs () :void {}
-
-/**
-  * @access private
-  */
-static function __LZemptyFuntion ( ){
-    return;
-}
 
 /**
   * @access private
@@ -575,16 +571,14 @@ function __LZadjustVisibleClones( lastnodes:Array , newnodes:Boolean) :void {
   * @access private
   */
 //PBR TODO
-function orderf ( a , b ){
+function orderf ( a , b ) :int {
     //a and b are dataset nodes
-
-
-    var op = this.op_orderf;
+    var op:String = this.op_orderf;
 
     this.p = a;
-    var aa = this.xpathQuery( op );
+    var aa:* = this.xpathQuery( op );
     this.p = b;
-    var bb = this.xpathQuery( op );
+    var bb:* = this.xpathQuery( op );
     this.p = null;
 
     //this is lame, but comparison with null and "" doens't work right
@@ -603,6 +597,7 @@ function ascDict ( a:String, b:String ) :int {
     if (a.toLowerCase() < b.toLowerCase()) {
         return 1;
     } else {
+        //could also be -1, but we don't care..
         return 0;
     }
 }
@@ -614,6 +609,7 @@ function descDict ( a:String, b:String ) :int {
     if (a.toLowerCase() > b.toLowerCase()) {
         return 1;
     } else {
+        //could also be -1, but we don't care..
         return 0;
     }
 }
@@ -694,7 +690,7 @@ function getNewClone ( forceNew = null ) :LzNode {
   * @access private
   */
 function poolClone ( ) :void {
-    var v:LzNode = this.clones.pop();
+    var v:LzView = this.clones.pop();
     this.detachClone( v );
     this.clonePool.push ( v );
 }
@@ -720,6 +716,11 @@ override function setDatapath ( xp ){
     this.setXPath( xp );
 }
 
+/** @access private */
+override function $lzc$set_datapath(v) :void {
+    this.setXPath(v);
+}
+
 /**
   * @access private
   */
@@ -734,7 +735,7 @@ override function setXPath ( xp:String ) :Boolean? {
   * @access private
   */
 function handleDeletedNode ( c:int ) :void {
-    var tclone:LzNode = this.clones[ c ];
+    var tclone:LzView = this.clones[ c ];
     if ( this.pooling ){
         this.detachClone( tclone );
         this.clonePool.push ( tclone );
@@ -750,7 +751,7 @@ function handleDeletedNode ( c:int ) :void {
   * @param LzDataElement p: The data node for which to return the clone.
   * @return LzView: A clone mapped to the given data.
   */
-function getCloneForNode ( p, dontmake:Boolean = false ){
+function getCloneForNode ( p, dontmake:Boolean = false ) :LzNode {
     var cls:Array = this.clones;
     var len:int = cls.length; 
     for ( var i:int = 0; i < len; i++ ){
@@ -791,11 +792,11 @@ function setVisible ( vis:Boolean ) :void {
   */
 override function __LZcheckChange (chgpkg:Object) :Boolean {
     this.p = this.nodes[ 0 ];
-    var didrun:Boolean = super.__LZcheckChange.apply(this, arguments);
+    var didrun:Boolean = super.__LZcheckChange(chgpkg);
     this.p = null;
 
     if ( !didrun ){
-        var who = chgpkg.who;
+        var who /*:LzDataNodeMixin*/ = chgpkg.who;
         var cls:Array = this.clones;
         var len:int = cls.length; 
         for ( var i:int = 0; i < len; i++ ){
@@ -829,8 +830,7 @@ override function getContext ( chgpkg = null ) :* {
 /**
   * @access private
   */
-function detachClone ( cl:LzNode ){
-    //cl is instance of LzView
+function detachClone ( cl:LzView ) :void {
     if ( cl.isdetatchedclone ) return;
 
     cl.$lzc$set_visible(false);
@@ -845,7 +845,8 @@ function detachClone ( cl:LzNode ){
     }
 
     cl.datapath.__LZtrackDel.unregisterAll();
-    if (cl.immediateparent.onremovesubview.ready) cl.immediateparent.onremovesubview.sendEvent( cl );
+    var onremsub:LzDeclaredEventClass = cl.immediateparent.onremovesubview;
+    if (onremsub.ready) onremsub.sendEvent( cl );
     cl.isdetatchedclone = true;
     cl.p = null;
 }
@@ -904,7 +905,16 @@ override function __LZupdateData (recursive:Boolean = false) :void {
 } // End of LzReplicationManager
 
 /** @access private */
-dynamic class LzRefNode extends LzNode {
+class LzRefNode extends LzNode {
+    /** Slot for constraint-method, see LzReplicationManager#construct(..)
+      * @access private 
+      */
+    var __LZxpathconstr: Function = null;
+    /** Slot for dependency-method, see LzReplicationManager#construct(..)
+      * @access private 
+      */
+    var __LZxpathdepend: Function = null;
+    
     /**
       * @access private
       */

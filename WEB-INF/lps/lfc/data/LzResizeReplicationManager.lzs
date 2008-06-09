@@ -82,30 +82,27 @@
   */
 class LzResizeReplicationManager extends LzLazyReplicationManager {
   #pragma "warnUndefinedReferences=true"
-//need to destroy the original clone for resize in order to insert the
-//appropriate setHeight call
 
 /** @access private */
-var datasizevar;
+var datasizevar :String;
 /** @access private */
-var __LZresizeupdating;
+var __LZresizeupdating :Boolean;
 
 /**
   * @access private
   */
 function LzResizeReplicationManager ( odp , args, children:* = null, instcall:* = null ){
     super(odp, args, children, instcall);
+    //need to destroy the original clone for resize in order to insert the
+    //appropriate onwidth-/onheight-delegate
+    this.pooling = false; // Defined in LzDatapath
 }
 
 /** @access private */
 override function construct ( odp , args ){
-    this.pooling = false; // Defined in LzReplicationManager
-    //Debug.write( 'making resize repl' );
-
     super.construct.apply(this, arguments);
 
     this.datasizevar = '$' + this.getUID() + 'track';
-
 }
 
 /**
@@ -118,11 +115,11 @@ override function construct ( odp , args ){
   * @devnote:  This could be a closure over the cloneManager, but we
   * believe this is a more efficient implementation
   */
-var __LZHandleCloneResize = function ( s) {
+var __LZHandleCloneResize = function ( s:Number ) {
     if (! this.datapath.p) return;
-    var cloneManager = this.cloneManager;
-    var datasizevar = cloneManager.datasizevar;
-    var osize = this.datapath.p[ datasizevar ] || cloneManager.viewsize;
+    var cloneManager:LzResizeReplicationManager = this.cloneManager cast LzResizeReplicationManager;
+    var datasizevar:String = cloneManager.datasizevar;
+    var osize:Number = this.datapath.p[ datasizevar ] || cloneManager.viewsize;
     if ( s != osize ){
         this.datapath.p[ datasizevar ] = s;
         cloneManager.__LZadjustVisibleClones(null, false);
@@ -132,33 +129,34 @@ var __LZHandleCloneResize = function ( s) {
 /**
   * @access private
   */
-override function __LZsetCloneAttrs (){
-  super.__LZsetCloneAttrs.apply(this, arguments);
+override function __LZsetCloneAttrs () :void {
+  super.__LZsetCloneAttrs();
 
-  this.cloneAttrs.__LZHandleCloneResize = this.__LZHandleCloneResize;
-  if (! this.cloneAttrs['$delegates']) {
-    this.cloneAttrs.$delegates = [];
+  var cattrs:Object = this.cloneAttrs;
+  cattrs.__LZHandleCloneResize = this.__LZHandleCloneResize;
+  if (! cattrs['$delegates']) {
+    cattrs.$delegates = [];
   }
-  this.cloneAttrs.$delegates.push('on' + (this.axis == 'y' ? 'height' : 'width'),
+  cattrs.$delegates.push('on' + (this.axis == 'y' ? 'height' : 'width'),
                                  '__LZHandleCloneResize',
                                  null);
 }
 
 /**
+  * TODO: [20080605 anba] no reference to this function in the LFC, remove it?
   * @access private
   */
-function getPositionByNode ( n ){
-    var pos = -this.spacing;
-    var cnode;
+function getPositionByNode ( n ) :Number? {
+    var pos:Number = -this.spacing;
+    var cnode /*:LzDataNodeMixin*/;
     if (this.nodes != null) {
-        for ( var i = 0; i < this.nodes.length; i++ ){
+        for ( var i:int = 0; i < this.nodes.length; i++ ){
             cnode = this.nodes[ i ];
             if ( n == this.nodes[ i ] ){
                 return pos + this.spacing;
             }
 
             pos += this.spacing + ( cnode[this.datasizevar] || this.viewsize );
-
         }
     }
 }
@@ -167,67 +165,65 @@ function getPositionByNode ( n ){
 /**
   * @access private
   */
-function __LZreleaseClone ( v ){
+function __LZreleaseClone ( v:LzView ) :void {
     this.detachClone( v );
     this.clonePool.push ( v );
 }
 
 /**
   * @access private
-  * ln: lastnodes, old list of nodes
-  * nn: newnodes, boolean flag, true when __LZadjustVisibleClones is called
+  * lastnodes: old list of nodes
+  * newnodes: boolean flag, true when __LZadjustVisibleClones is called
   * because of a change in the node list (e.g. setdatapointer, sort, etc)
   * (as opposed to, for example, when
   * the mask changes its height or item changes size
   */
-override function __LZadjustVisibleClones(ln:Array, nn:Boolean) :void {
-    //if the mask doesn't have a set size in the replication axis, don't affect
-    //it
+override function __LZadjustVisibleClones(lastnodes:Array, newnodes:Boolean) :void {
+    //if the mask doesn't have a set size in the replication axis, don't affect it
 
     if (! this.mask[ "hasset" + this.sizeAxis ] ) return;
     if ( this.__LZresizeupdating ) return;
     this.__LZresizeupdating = true;
-    //Debug.write( 'adj viz' , this.clones.length, this.nodes.length );
 
-    var nl = (this.nodes != null) ? this.nodes.length : 0;
-    var newstart =  - this.cloneimmediateparent[ this.axis ];
-    var newstart =  0 > newstart ? 0 : Math.floor( newstart );
-    var masksize = this.mask[ this.sizeAxis ];
+    var nodelen:int = (this.nodes != null) ? this.nodes.length : 0;
+    var newstart:int = Math.floor( - this.cloneimmediateparent[ this.axis ] );
+    if (0 > newstart) newstart = 0;
+    var masksize:Number = this.mask[ this.sizeAxis ];
 
-    var newoffset = -1;
-    var oldoffset = this.__LZdataoffset;
-    if ( nn ){
+    var newoffset:int = -1;
+    var oldoffset:int = this.__LZdataoffset;
+    if ( newnodes ){
         while( this.clones.length ) this.poolClone();
-        var oldclones = null;
-        var ocl = 0;
+        var oldclones:Array = null;
+        var ocl:int = 0;
     } else {
-        var oldclones = this.clones;
-        var ocl = oldclones.length;
+        var oldclones:Array = this.clones;
+        var ocl:int = oldclones.length;
     }
 
     this.clones = [];
 
-
     //cpos is used at the end of this method to size the immediateparent
     //of the replication manager
-    var cpos = -this.spacing;
-    var inwindow = false;
-    var newend = -1;
+    var cpos:Number = -this.spacing;
+    var inwindow:Boolean = false;
+    var newend:int = -1;
+    var newstartpos:Number;
 
     //Debug.write( 'oldclones', oldclones );
-    var notfirst = true;
-    for ( var i = 0; i < nl; i++ ){
-        var cnode = this.nodes[ i ];
-        var ds = cnode[ this.datasizevar ];
-        var csiz = ( ds == null ) ? this.viewsize : ds;
+    var notfirst:Boolean = true;
+    for ( var i:int = 0; i < nodelen; i++ ){
+        var cnode /*:LzDataNodeMixin*/ = this.nodes[ i ];
+        var ds:* = cnode[ this.datasizevar ];
+        var csiz:Number = ( ds == null ) ? this.viewsize : ds;
 
         cpos += this.spacing;
 
         if ( !inwindow && newoffset == -1  && cpos - newstart +csiz >= 0 ) {
             //Debug.write( 'inwindow at ' + i );
-            var notfirst = i != 0;
+            notfirst = i != 0;
             inwindow = true;
-            var newstartpos = cpos;
+            newstartpos = cpos;
             newoffset = i;
             //we can keep what we had
             var firstkept = i - oldoffset;
@@ -236,9 +232,8 @@ override function __LZadjustVisibleClones(ln:Array, nn:Boolean) :void {
             //Debug.write( 'firstkept' , firstkept );
             //don't setup loop unless we have to
             if ( firstkept > 0 ) {
-                for ( var j =0; j < firstkept; j++ ){
-
-                    var v = oldclones[ j ];
+                for ( var j:int = 0; j < firstkept; j++ ){
+                    var v:LzView = oldclones[ j ];
                     //can't call poolClone here...
                     this.__LZreleaseClone( v );
                 }
@@ -247,14 +242,13 @@ override function __LZadjustVisibleClones(ln:Array, nn:Boolean) :void {
             inwindow = false;
             //pool any left over clones here
             newend = i - newoffset;
-            var lastkept = i - oldoffset;
+            var lastkept:int = i - oldoffset;
             lastkept = lastkept < 0 ? 0 : lastkept;
             //Debug.write( 'lk' , lastkept , ocl );
             //don't setup loop unless we have to
             if ( lastkept < ocl ) {
-                for ( var j =lastkept; j < ocl; j++ ){
-
-                    var v = oldclones[ j ];
+                for ( var j:int = lastkept; j < ocl; j++ ){
+                    var v:LzView = oldclones[ j ];
                     //if ( v == null ) Debug.write( 'bad pool', j , lastkept );
                     //can't call poolClone here...
                     this.__LZreleaseClone( v );
@@ -265,28 +259,26 @@ override function __LZadjustVisibleClones(ln:Array, nn:Boolean) :void {
         if ( inwindow ){
             if ( i >= oldoffset && i < oldoffset + ocl ){
                 //we can keep what we had
-                var cl = oldclones[ i - oldoffset ];
+                var cl:LzView = oldclones[ i - oldoffset ];
                 //if ( cl == null ) Debug.write( 'bad keep' , i );
             } else {
-                var cl = null;
+                var cl:LzView = null;
                 //if ( cl == null ) Debug.write( 'bad get' , i );
             }
 
             //Debug.write( i, newoffset );
             this.clones[ i - newoffset ] = cl;
-
         }
 
         cpos += csiz;
-
     }
 
-    var clpos = newstartpos;
+    var clpos:Number = newstartpos;
     if ( notfirst ) clpos += this.spacing;
-    for( var i = 0; i < this.clones.length; i++ ){
-        var cnode = this.nodes[ i + newoffset ];
+    for( var i:int = 0; i < this.clones.length; i++ ){
+        var cnode /*:LzDataNodeMixin*/ = this.nodes[ i + newoffset ];
 
-        var cl = this.clones[ i ];
+        var cl:LzView = this.clones[ i ];
         if ( !cl ){
             cl = this.getNewClone( );
             cl.clonenumber = i + newoffset;
@@ -298,13 +290,12 @@ override function __LZadjustVisibleClones(ln:Array, nn:Boolean) :void {
 
         this.clones[ i ] = cl;
         cl.setAttribute( this.axis , clpos );
-        var ds = cnode[ this.datasizevar ];
-        var csiz = ( ds == null ) ? this.viewsize : ds;
+        var ds:* = cnode[ this.datasizevar ];
+        var csiz:Number = ( ds == null ) ? this.viewsize : ds;
         if ( cl[ this.sizeAxis ] != csiz ){
             cl.setAttribute( this.sizeAxis, csiz, true );
         }
         clpos += csiz + this.spacing;
-
     }
 
     //Debug.write( 'newoffset' , newoffset );
@@ -312,7 +303,6 @@ override function __LZadjustVisibleClones(ln:Array, nn:Boolean) :void {
     this.__LZdataoffset = newoffset;
     //Debug.write( 'clones' , this.clones.length, 'pool', this.clonePool.length);
     //Debug.write( 'oldclones' , oldclones );
-    //clo = this.clones;
     this.cloneimmediateparent.setAttribute( this.sizeAxis , cpos );
     this.__LZresizeupdating = false;
 }

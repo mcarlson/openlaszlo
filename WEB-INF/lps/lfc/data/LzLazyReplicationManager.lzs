@@ -53,15 +53,15 @@ class LzLazyReplicationManager extends LzReplicationManager {
  * @lzxdefault 'y'
  * @keywords final
  */
-var axis = "y"
+var axis :String = "y"
 /** @access private */
-var sizeAxis;
+var sizeAxis :String;
 /** @access private */
-var cloneimmediateparent;
+var cloneimmediateparent :LzView;
 /** @access private */
-var updateDel;
+var updateDel :LzDelegate;
 /** @access private */
-var __LZoldnodelen;
+var __LZoldnodelen :int;
 
 /**
  * The spacing (in pixels) between replicated views.
@@ -71,22 +71,25 @@ var __LZoldnodelen;
  * @lzxdefault 0
  * @keywords final
  */
-var spacing = 0;
+var spacing :Number = 0;
 /** @access private */
-var mask = null;
+var viewsize :Number = 0;
+/** @access private */
+var totalsize :Number = 0;
+/** @access private */
+var mask :LzView = null;
 
 /**
   * @access private
   */
 function LzLazyReplicationManager ( odp , args, children:* = null, instcall:* = null ){
     super(odp, args, children, instcall);
+    //replication argument needs to control pooling
+    this.pooling = true; // Defined in LzDatapath
 }
 
 /** @access private */
 override function construct ( odp , args ){
-    //replication argument needs to control pooling
-    this.pooling = true; // Defined in LzReplicationManager
-
     if ( args.pooling != null ){
         args.pooling = true;
         if ( $debug ){
@@ -106,18 +109,23 @@ override function construct ( odp , args ){
 
     this.mask = odp.immediateparent.immediateparent.mask;
 
-
-    var cloneopt = { ignorelayout : true };
+    /* TODO [20080605 anba]: why do we need this copy?
+     * isn't this done by __LZsetCloneAttrs() in LzReplicationManager#construct(..)!?
+     */
+    var cloneopt:Object;
     if ( this.cloneAttrs.options != null ){
         cloneopt = new LzInheritedHash(this.cloneAttrs.options);
+        cloneopt['ignorelayout'] = true;
+    } else {
+        cloneopt = { ignorelayout : true };
     }
 
-    var firstcl = this.clones[ 0 ];
+    var firstcl:LzView = this.clones[ 0 ];
     if (firstcl) {
         firstcl.setOption( 'ignorelayout', true );
-        var layo = firstcl.immediateparent.layouts;
+        var layo:Array = firstcl.immediateparent.layouts;
         if (layo != null) {
-            for ( var i = 0; i < layo.length; i++ ){
+            for ( var i:int = 0; i < layo.length; i++ ){
                 layo[ i ].removeSubview( firstcl );
             }
         }
@@ -125,7 +133,7 @@ override function construct ( odp , args ){
 
     this.cloneAttrs.options = cloneopt;
 
-    var v = this.getNewClone( true );
+    var v:LzView = this.getNewClone( true );
     //datamap the new view, to make sure that any members which are datamapped
     //are shown
     this.cloneimmediateparent = v.immediateparent;
@@ -162,18 +170,16 @@ function __LZhandleUpdate (ignore) :void {
   this.__LZadjustVisibleClones(null, null);
 }
 
-/** @access private */
-var viewsize = 0;
-/** @access private */
-var totalsize = 0;
-
 /**
   * @access private
   */
 override function __LZsetCloneAttrs () :void {
-    var cloneopt = { ignorelayout : true };
+    var cloneopt:Object;
     if ( this.cloneAttrs.options != null ){
         cloneopt = new LzInheritedHash(this.cloneAttrs.options);
+        cloneopt['ignorelayout'] = true;
+    } else {
+        cloneopt = { ignorelayout : true };
     }
     this.cloneAttrs.options = cloneopt;
 }
@@ -209,51 +215,49 @@ override function __LZHandleNoNodes() :void {
   *
   * @access private
   */
-override function __LZadjustVisibleClones (ln:Array, nn:Boolean) :void {
-    var nodelen = null;
-    if (this.nodes) {
-        nodelen = this.nodes.length;
-    }
-
-    if (nodelen != null) {
-        if ( this.__LZoldnodelen != this.nodes.length ){
-            this.cloneimmediateparent.setAttribute( this.sizeAxis , this.nodes.length*
-                                               this.totalsize -
-                                               this.spacing );
-            this.__LZoldnodelen = this.nodes.length;
+override function __LZadjustVisibleClones (lastnodes:Array, newnodes:Boolean) :void {
+    var cloneip:LzView = this.cloneimmediateparent;
+    
+    var _nodes:Array = this.nodes;
+    var _axis:String = this.axis;
+    var _sizeAxis:String = this.sizeAxis;
+    var _totalsize:Number = this.totalsize;
+    
+    if (_nodes) {
+        var nodelen:int = _nodes.length;
+        if ( this.__LZoldnodelen != nodelen ){
+            cloneip.setAttribute( _sizeAxis, nodelen * _totalsize - this.spacing );
+            this.__LZoldnodelen = nodelen;
         }
     }
 
 
-    if (! (this.mask && this.mask[ "hasset" + this.sizeAxis ]) ) return;
+    if (! (this.mask && this.mask[ "hasset" + _sizeAxis ]) ) return;
 
-    var newstart = 0;
+    var newstart:int = 0;
 
-    if (this.totalsize != 0) {
-        newstart = Math.floor( - this.cloneimmediateparent[ this.axis ]
-                               / this.totalsize );
+    if (_totalsize != 0) {
+        newstart = Math.floor( - cloneip[ _axis ] / _totalsize );
+        if ( 0 > newstart  ) newstart = 0;
     }
 
-    if ( 0 > newstart  ) newstart = 0;
+    var oldstart:int = 0;
+    var oldlength:int = this.clones.length;
+    var offset:int = newstart - this.__LZdataoffset;
 
-    var oldstart = 0;
-    var oldlength = this.clones.length;
-    var offset = newstart - this.__LZdataoffset;
-
-    var remainder = ( newstart * this.totalsize ) +
-                    this.cloneimmediateparent[this.axis];
-    var newlength = 0;
+    var remainder:* = ( newstart * _totalsize ) + cloneip[_axis];
+    var newlength:int = 0;
 
     if (typeof(remainder) == 'number') {
-        newlength= 1 + Math.floor( ( this.mask[ this.sizeAxis ] - remainder ) /
-                                     this.totalsize );
+        newlength = 1 + Math.floor( ( this.mask[ _sizeAxis ] - remainder ) / _totalsize );
     }
 
     //newstart is the new absolute lowerbound of the data winodw
     //newlength is the new length of the data window
-    if (this.nodes != null) {
-        if ( newlength + newstart >  this.nodes.length ) {
-            newlength = this.nodes.length - newstart;
+    if (_nodes != null) {
+        var nodelen:int = _nodes.length;
+        if ( newlength + newstart > nodelen ) {
+            newlength = nodelen - newstart;
         }
     }
 
@@ -261,12 +265,12 @@ override function __LZadjustVisibleClones (ln:Array, nn:Boolean) :void {
     if ( offset == 0 && newlength == oldlength ) return;
 
     LzInstantiator.enableDataReplicationQueuing( );
-    var oldclones = this.clones;
-    this.clones = [];
+    var oldclones:Array = this.clones;
+    this.clones = new Array(newlength);
 
-    for ( var i = 0 ; i < newlength; i++ ){
+    for ( var i:int = 0; i < newlength; i++ ){
         //before the new beginning
-        var cl = false;
+        var cl:LzView = null;
         if ( i + offset < 0 ){
             //this comes before the old data window
             if ( newlength + offset < oldlength  && oldlength > 0){
@@ -287,10 +291,10 @@ override function __LZadjustVisibleClones (ln:Array, nn:Boolean) :void {
 
         if ( cl ){
             this.clones[ i ] = cl;
-            cl.setAttribute( this.axis , ( i + newstart ) * this.totalsize );
+            cl.setAttribute( _axis, ( i + newstart ) * _totalsize );
             cl.clonenumber = newstart + i ;
-            if (this.nodes) {
-                cl.datapath.setClonePointer( this.nodes[ newstart + i ]);
+            if (_nodes) {
+                cl.datapath.setClonePointer( _nodes[ newstart + i ]);
             }
             if (cl.onclonenumber.ready) cl.onclonenumber.sendEvent( i );
         } else {
@@ -299,16 +303,17 @@ override function __LZadjustVisibleClones (ln:Array, nn:Boolean) :void {
         }
     }
 
+    var cpool:Array = this.clonePool;
     while ( oldstart < offset  && oldstart < oldlength ){
-        var v = oldclones[ oldstart++ ];
+        var v:LzView = oldclones[ oldstart++ ];
         this.detachClone( v );
-        this.clonePool.push ( v );
+        cpool.push ( v );
     }
 
     while ( oldlength > newlength + offset && oldlength > 0 ){
-        var v = oldclones[ --oldlength ];
+        var v:LzView = oldclones[ --oldlength ];
         this.detachClone( v );
-        this.clonePool.push ( v );
+        cpool.push ( v );
     }
 
     this.__LZdataoffset = newstart;
@@ -326,8 +331,7 @@ override function toString () :String {
  * @access private
  */
 override function getCloneForNode ( p , dontmake:Boolean = false ) :LzNode {
-    var cl:LzNode = super.getCloneForNode( p ) ||
-             null;
+    var cl:LzView = (super.getCloneForNode( p ) cast LzView) || null;
     if ( !cl && !dontmake ){
         //even though we're going to return this to the pool immediately,
         //use the class API to get a clone
@@ -338,7 +342,6 @@ override function getCloneForNode ( p , dontmake:Boolean = false ) :LzNode {
     }
 
     return cl;
-
 }
 
 
