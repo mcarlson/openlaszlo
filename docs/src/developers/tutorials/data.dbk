@@ -356,9 +356,9 @@
       &lt;/person&gt;
     &lt;/myXML&gt;</programlisting>
 
-<para>The first <literal>selectNext()</literal> method call selects the first <literal>&lt;person&gt;</literal> node.</para>
+<para>The first time the <literal>selectChild()</literal> method is called, it selects the first <literal>&lt;person&gt;</literal> node.</para>
 
-<para>The other <literal>selectNext()</literal> method call returns <literal>true</literal> as long as an XML node was successfully selected (that is, until there aren't any more). We exploit this by using it in a <literal>do <replaceable>…</replaceable> while</literal> loop, so that the same iteration occurs for every <literal>&lt;person&gt;</literal> node.</para>
+<para>The <literal>selectNext()</literal> method call returns <literal>true</literal> as long as an XML node was successfully selected (that is, until there aren't any more). We exploit this by using it in a <literal>do <replaceable>…</replaceable> while</literal> loop, so that the same iteration occurs for every <literal>&lt;person&gt;</literal> node.</para>
 
 <para>We could also have given the <literal>&lt;datapointer&gt;</literal> <literal>onerror</literal> and <literal>ontimeout</literal> event handlers to capture any problems. </para>
 
