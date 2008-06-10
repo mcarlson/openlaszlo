@@ -8,6 +8,7 @@
 
 #include "kernel/dhtml/LFC.js"
 //#include "kernel/dhtml/LzRequires.js"
+#include "kernel/dhtml/LzBrowserUtils.js"
 #include "kernel/dhtml/LzPool.js"
 #include "kernel/dhtml/LzKeyboardKernel.js"
 #include "kernel/dhtml/LzMouseKernel.js"

@@ -1222,7 +1222,7 @@ LzSprite.prototype.__destroyImage = function (url, img) {
                 owner.__imgtimoutid = null;
             }
             //@devnote: remember, this will remove all callback-functions for this sprite!
-            lz.Utils.removecallback(owner);
+            lz.BrowserUtils.removecallback(owner);
         }
         if (LzSprite.prototype.quirks.ie_alpha_image_loader && img.sizer) {
             var sizer = img.sizer;
@@ -1283,9 +1283,9 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
                 // This resolves all sorts of timing-related image loading bugs
                 im.sizer.tId = setTimeout(this.onloadforeal, 1);
             }
-            im.sizer.onloadforeal = lz.Utils.getcallbackfunc(this.owner, '__imgonload', [im.sizer]);
-            im.sizer.onerror = lz.Utils.getcallbackfunc(this.owner, '__imgonerror', [im.sizer]);
-            var callback = lz.Utils.getcallbackfunc(this.owner, '__imgontimeout', [im.sizer]);
+            im.sizer.onloadforeal = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgonload', [im.sizer]);
+            im.sizer.onerror = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgonerror', [im.sizer]);
+            var callback = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgontimeout', [im.sizer]);
             this.owner.__imgtimoutid = setTimeout(callback, canvas.medialoadtimeout);
             im.sizer.src = url;
         }
@@ -1304,9 +1304,9 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
         if (this.owner && skiploader != true) {
             //Debug.info('sizer', skiploader == true, skiploader != true, skiploader);
             im.owner = this.owner;
-            im.onload = lz.Utils.getcallbackfunc(this.owner, '__imgonload', [im]);
-            im.onerror = lz.Utils.getcallbackfunc(this.owner, '__imgonerror', [im]);
-            var callback = lz.Utils.getcallbackfunc(this.owner, '__imgontimeout', [im]);
+            im.onload = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgonload', [im]);
+            im.onerror = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgonerror', [im]);
+            var callback = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgontimeout', [im]);
             this.owner.__imgtimoutid = setTimeout(callback, canvas.medialoadtimeout);
 
         }
