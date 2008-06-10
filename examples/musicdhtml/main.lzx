@@ -4,44 +4,44 @@
     </method>
 
     <!--handler name="oninit">
-        Lz.callMethod('audioplayer.setSource(\'music.mp3\')');
+        lz.embed.audiokernel.callMethod('audioplayer.setSource(\'music.mp3\')');
     </handler-->
 
     <view name="audioplayer">
         <view>
             <simplelayout axis="x" spacing="-1" />
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.setSource(\'music.mp3\')')">
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.setSource(\'music.mp3\')')">
                Load
             </button>
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.play(1)');" >
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.play(1)');" >
                <view resource="icons/rewind_all.png"  y="6" align="center"/>
             </button>
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.seek(-2)');" >
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.seek(-2)');" >
                 <view resource="icons/rewind.png"  y="6" align="center"/>
             </button>        
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.stop()')" >
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.stop()')" >
                 <view resource="icons/stop.png"  y="6" align="center"/>
             </button>
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.play()')" >
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.play()')" >
                 <view resource="icons/play.png"  y="5" align="center"/>
             </button>
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.seek(2)')" >
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.seek(2)')" >
                 <view resource="icons/fastfwd.png"  y="6" align="center"/>
             </button>
         </view>
         
         <view>
             <simplelayout axis="x" spacing="-1" />
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.quieter()')">
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.quieter()')">
                     <view resource="icons/quieter.png"  y="5" align="center"/>
                 </button>
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.louder()')">
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.louder()')">
                     <view resource="icons/louder.png"  y="5" align="center"/>
                 </button>
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.panLeft()')" >
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.panLeft()')" >
                     <view resource="icons/pan_left.png"  y="5" align="center"/>
             </button>
-            <button width="40" height="22" onclick="Lz.callMethod('audioplayer.panRight()')" >
+            <button width="40" height="22" onclick="lz.embed.audiokernel.callMethod('audioplayer.panRight()')" >
                     <view resource="icons/pan_right.png"  y="5" align="center"/>
             </button>
         </view>

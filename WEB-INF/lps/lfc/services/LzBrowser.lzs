@@ -313,9 +313,12 @@ var LzBrowser:LzBrowserService = lz.Browser
 
 if ($as2){
   // proxy object for browser Lz
-  Lz = {
-  setCanvasAttribute: function (name, value, hist) {
-      lz.Browser.callJS('Lz.setCanvasAttribute', false, name, value, hist);
+  lz.embed = {
+    setCanvasAttribute: function (name, value, hist) {
+      lz.Browser.callJS('lz.embed.setCanvasAttribute', false, name, value, hist);
+    }
+    ,callMethod: function (js) {
+      lz.Browser.callJS('lz.embed.callMethod', false, js);
     }
   }
 }

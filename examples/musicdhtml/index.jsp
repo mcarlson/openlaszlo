@@ -29,10 +29,8 @@
               }
             })(640, 140);
           }
-        </script><script type="text/javascript">
-            lzOptions = { ServerRoot: '<%= request.getContextPath() %>'};
         </script><script type="text/javascript" src="<%= request.getContextPath() %>/lps/includes/embed-compressed.js"></script><script type="text/javascript">
-              Lz.dhtmlEmbedLFC('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js');
+              lz.embed.lfc('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js', '<%= request.getContextPath() %>');
             </script><style type="text/css">
         	html, body
         	{
@@ -47,15 +45,15 @@
         	img { border: 0 none; }
         </style></head><body>
         <div id="lzsplash" style="z-index: 10000000; top: 0; left: 0; width: 640px; height: 140px; position: fixed; display: table"><p style="display: table-cell; vertical-align: middle;"><img src="<%= request.getContextPath() %>/lps/includes/spinner.gif" style="display: block; margin: 20% auto"></p></div><div id="lzdhtmlappdiv" style="position: absolute;"></div><script type="text/javascript">
-              Lz.swfEmbed({url: 'audiokernel.lzx?lzt=swf', bgcolor: '#eaeaea', width: '0', height: '0', id: 'audiokernel'});
-              Lz.dhtmlEmbed({url: 'main.lzx?lzt=object&lzr=dhtml&_canvas_debug=false', bgcolor: '#ffffff', width: '100%', height: '150', id: 'lzdhtmlapp'});
+              lz.embed.swf({url: 'audiokernel.lzx?lzt=swf', bgcolor: '#eaeaea', width: '0', height: '0', id: 'audiokernel'});
+              lz.embed.dhtml({url: 'main.lzx?lzt=object&lzr=dhtml&_canvas_debug=false', bgcolor: '#ffffff', width: '100%', height: '150', id: 'lzdhtmlapp'});
 
-              Lz.lzdhtmlapp.onload = function loaded() {
+              lz.embed.lzdhtmlapp.onload = function loaded() {
                 var s = document.getElementById('lzsplash');
                 if (s) LzSprite.prototype.__discardElement(s);
               }
               function setCanAttr(n, v) {
-                Lz.lzdhtmlapp.canvas.setAttr(n, v);
+                lz.embed.lzdhtmlapp.canvas.setAttr(n, v);
               }
             </script><noscript>
          Please enable JavaScript in order to use this application.
