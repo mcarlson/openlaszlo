@@ -19,6 +19,14 @@ cp -r ~/openlaszlo/adobe/trunk/frameworks $LPS_HOME/WEB-INF
 cp -r ~/openlaszlo/adobe/trunk/frameworks $LPS_HOME/WEB-INF
 cp -r ~/openlaszlo/adobe/trunk/bin $LPS_HOME/WEB-INF
 
+# remove these XML parsers, they cause doc build to fail.
+# flex seems happy without them, maybe only needed for compiling MXML?
+rm $LPS_HOME/WEB-INF/lib xalan.jar
+rm $LPS_HOME/WEB-INF/lib xercesImpl.jar
+rm $LPS_HOME/WEB-INF/lib xercesImpl_ja.jar
+rm $LPS_HOME/WEB-INF/lib xercesPatch.jar
+rm $LPS_HOME/WEB-INF/lib xmlParserAPIs.jar
+
 
 # get rid of some unneeded source files
 cd $LPS_HOME/WEB-INF
