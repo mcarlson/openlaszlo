@@ -59,7 +59,7 @@
         <method name="init">
             <![CDATA[
             super.init();
-            if (this.dataset && this.xpath) {
+            if (this['dataset'] && this['xpath']) {
                 this._pointer = this.dataset.getPointer();
                 this._ondatadel = new LzDelegate(this, '_updateChildren', this.dataset, 'onDocumentChange')
                 this._updateChildren();
