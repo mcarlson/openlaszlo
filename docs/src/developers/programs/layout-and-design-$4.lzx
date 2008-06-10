@@ -1,5 +1,5 @@
 
-<canvas height="50">
+<canvas height="120">
     <hbox spacing="10">
     <vbox spacing="10" name="column1" bgcolor="red">
         <handler name="onclick">
@@ -31,7 +31,7 @@
     </hbox>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
