@@ -126,6 +126,32 @@ dynamic class LzCanvas extends LzView {
       */
     var __LZmousemoveDel:LzDelegate;    
 
+
+
+    /**
+     * <p>
+     * <varname>httpdataprovider</varname> is bound to the system default HTTP DataProvider.   
+     * </p>  
+     * This will be an instance of <classname>LzHTTPDataProvider</classname>, which implements HTTP request
+     * transport. The default  value of the <varname>canvas.defaultdataprovider</varname> is initially set to point
+     * to this same object. 
+     * @access public
+     */
+
+    var httpdataprovider = null;
+
+
+    /**
+     * <p>
+     * <varname>defaultdataprovider</varname> is bound to the system default DataProvider.
+     * </p>  
+     * By default, this will be an instance of <classname>LzHTTPDataProvider</classname>, which will also be pointed to by
+     * the <varname>canvas.httpdataprovider</varname>.
+     * @access public
+     */
+
+    var defaultdataprovider = null;
+
     /**
       * @access private
       * LzCanvas 
@@ -299,6 +325,10 @@ dynamic class LzCanvas extends LzView {
         this.__LZmouseupDel = new LzDelegate( this , "__LZmouseup", LzGlobalMouse, 'onmouseup');// called on global mouseup
         this.__LZmousedownDel = new LzDelegate( this , "__LZmousedown", LzGlobalMouse, 'onmousedown');// called on global mousedown
         this.__LZmousemoveDel = new LzDelegate( this , "__LZmousemove", LzGlobalMouse, 'onmousemove');// called on global mousemove
+
+        // Create the default dataprovider
+        this.defaultdataprovider = this.httpdataprovider = new LzHTTPDataProvider();
+
 
         LzPlatform.initCanvas(this);
 

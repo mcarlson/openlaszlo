@@ -750,6 +750,9 @@
   <!-- The ontimeout event is recevied when a request times out -->
   <event name="ontimeout" />
  
+  <!-- An instance of LzDataprovider, which handles data requests -->
+  <attribute name="dataprovider" type="expression"/>
+
   <!-- HTTP request method = post | get -->
   <attribute name="querytype" type="string" value="GET" enum="post|get|put|delete|POST|GET|PUT|DELETE" />
 

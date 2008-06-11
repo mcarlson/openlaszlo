@@ -106,7 +106,8 @@ LzDataset.attributes.name = 'localdata';
 static var slashPat = "/";
 
 /** @access private */
-var dataprovider = defaultdataprovider;
+var dataprovider;
+
 /**  Create a new data request object for each request. Defaults to false.
  * @type Boolean
  */
@@ -280,6 +281,12 @@ override function construct ( parent , args ){
         this.timeout = args.timeout;
     } else {
         this.timeout = canvas.dataloadtimeout;
+    }
+
+    if ('dataprovider' in  args && args.dataprovider) {
+        this.dataprovider = args.dataprovider;
+    } else {
+        this.dataprovider = canvas.defaultdataprovider;
     }
 
     super.construct.apply(this, arguments);
