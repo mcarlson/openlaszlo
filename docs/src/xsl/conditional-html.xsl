@@ -103,7 +103,7 @@
   </xsl:template>
   
   <xsl:template match="para[@condition]">
-<?ignore
+
     <div class="warning">
       <xsl:call-template name="condition-glyph-bar">
         <xsl:with-param name="conditions" select="@condition"/>
@@ -112,13 +112,14 @@
         <xsl:apply-imports/>
       </div>
     </div>
-?>
+<?ignore
     <div class="condition-sidebar">
       <xsl:call-template name="condition-glyph-bar">
         <xsl:with-param name="conditions" select="@condition"/>
       </xsl:call-template>
     </div>
     <xsl:apply-imports/>
+ ?>   
   </xsl:template>
   
 </xsl:stylesheet>
