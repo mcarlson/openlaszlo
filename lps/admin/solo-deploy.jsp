@@ -161,7 +161,7 @@ certainly not what you want.
         in.close();
 
         // load a copy of the swf 7 version
-        in = new BufferedReader(new InputStreamReader(swf8Url.openStream()));
+        in = new BufferedReader(new InputStreamReader(swf7Url.openStream()));
         while ((str = in.readLine()) != null) 
         {
         }
