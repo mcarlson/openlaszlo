@@ -105,7 +105,9 @@ LzDataset.attributes.name = 'localdata';
 /** @access private */
 static var slashPat = "/";
 
-/** @access private */
+/** Holds a pointer to the DataProvider which handles data load requests for this dataset. 
+ * Default value is canvas.defaultdataprovider
+ */
 var dataprovider;
 
 /**  Create a new data request object for each request. Defaults to false.
