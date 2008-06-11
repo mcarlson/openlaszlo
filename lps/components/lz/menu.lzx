@@ -114,7 +114,7 @@
     <!-- An instance of this class automatically created when a menu is a subview
         of a menubar -->
     <class name="menubutton" extends="button" 
-           respondtomouseout="false"
+           respondtomouseout="false" text="${this._menuref.text}" 
            height="${parent.height}" doesenter="false" focusable="false">
         
         <!--- Reference to menu that created this button.
@@ -139,7 +139,7 @@
 
         <!--- override the button's showDown method to also display the associated menu
               @keywords private -->
-        <method name="showDown" >
+        <method name="showDown" args="sd=null">
             super.showDown();
             if ( this._menuref ) 
                 parent.openMenu(this._menuref,true);
@@ -302,7 +302,7 @@
                 // and close this menuitem's menu and all of its hierarchy
                 parent.owner.open( false );
                 if ( command ) command.onselect.sendEvent();
-                if ( onselect  ) this.onselect.sendEvent();
+                if ( this.onselect  ) this.onselect.sendEvent();
             } 
             // else do nothing because hiliting this menuitem
             // has already opened the submenu if there is one       
@@ -328,7 +328,7 @@
         <!--- if a menuitem is hilited and has a submenu then this method is 
              called by a delegate after a period of time specified by delaytime 
              @keywords private -->
-        <method name="showSubmenu" >
+        <method name="showSubmenu" args="ignore" >
             // this method is called by a delegate which was activated by a timer.
             // First, make sure we still want to show the submenu by checking
             // the _doshowsubmenu flag.
@@ -338,7 +338,7 @@
         <!--- if a menuitem is unhilited and has a submenu then this method is 
              called by a delegate after a period of time specified by delaytime
              @keywords private -->
-        <method name="hideSubmenu" >
+        <method name="hideSubmenu" args="ignore" >
             if ( !_doshowsubmenu ) this._submenu.setOpen(false);
         </method>
         
@@ -385,7 +385,7 @@
         <!--- @keywords private -->
         <method name="_showEnabled"> <![CDATA[
              if (_initcomplete) {
-                _applystyle();
+                _applystyle(this.style);
             }
         ]]>
         </method>
@@ -448,7 +448,7 @@
                 }
             } else { // need to clear hilite                
                 if ( _hiliteview )  {
-                    this_hiliteview.setHilite( false );
+                    this._hiliteview.setHilite( false );
                     this._hiliteview= null;
                 }
             }
@@ -542,18 +542,8 @@
                 // Since the parent is a menubar ...
                           
                 // Create a menubutton and have the menu keep a reference to it.
-                this._menubutton = new lz.menubutton( parent,{text:this.text}, null, false);
-                
-                //Likewise, have the menubutton keep a reference to this menu
-                this._menubutton._menuref = this;
-                
-                // Apply a constraint so that the menubutton's title changes if
-                // the menu's title changes.
-                var f = function() {
-                    this.setAttribute("text", this._menuref.text);
-                }
-                var d = [this, "text"];
-                this._menubutton.applyConstraint("text", f, d);
+                // Likewise, have the menubutton keep a reference to this menu
+                this._menubutton = new lz.menubutton(parent, {_menuref:this}, null, false);
                 
                 // Have the floating list constrain to the menubutton and not
                 // the parent of the menu ( which would have been menubar in
@@ -704,12 +694,12 @@
                     this.flist.setHilite(null);
                     this.flist.setAttribute('tracking',true);
                     this.flist._updateifsubmenu = true;
-                    this.flist.setVisible( true );
+                    this.flist.setAttribute('visible', true);
                 } else {
                     LzModeManager.release( this );
                     this.flist.setHilite(null);
                     this.flist.setAttribute('tracking',false);
-                    this.flist.setVisible( false );
+                    this.flist.setAttribute('visible', false);
                 }
                 if ( onopened ) this.onopened.sendEvent( this.opened );
             } else this.opened = isopened;

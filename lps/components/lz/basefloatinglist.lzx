@@ -74,11 +74,16 @@
             // Since we are constructed on the canvas, we need to
             // listen for out parent being destroyed and clean up after
             // ourselves.
-            new LzDelegate(this, 'destroy', parent, 'ondestroy');
+            new LzDelegate(this, '_handledestroy', parent, 'ondestroy');
+        </method>
+        
+        <!--- @keywords private -->
+        <method name="_handledestroy" args="ignore" >
+            this.destroy();
         </method>
 
         <!--- @keywords private -->
-        <method name="destroy" args="recursiveCall">
+        <method name="destroy" >
           // make sure owner and attachTarget don't know about us.
           if (this.owner != null) {
               if (this['wouldbename'] != null) {
@@ -166,16 +171,21 @@
 
             this.setAttribute('y', startY);
             this.setAttribute('_currentattachy', myAttach);
-            this._setShownItems(items, true);
+            this._keepshownitems = true;
+            this._setShownItems(items);
+            this._keepshownitems = false;
             this.setAttribute('scrollable', true);
         ]]></method>
 
+        <!--- @keywords private -->
+        <attribute name="_keepshownitems" value="false" type="boolean" />
+
         <!--- Save original shown items unless overridden by user call or is initial call.
               @keywords private -->
-        <method name="_setShownItems" args="n,keeporig">
+        <method name="_setShownItems" args="n">
         <![CDATA[
             super._setShownItems(n);
-            if (this._origshownitems == -2 || ! keeporig ) {
+            if (this._origshownitems == -2 || ! this._keepshownitems ) {
                 this._origshownitems = n;
             }
         ]]>
@@ -239,8 +249,9 @@
             }
             
             // Adjust Y
-
-            this._setShownItems(this._origshownitems, true);
+            this._keepshownitems = true;
+            this._setShownItems(this._origshownitems);
+            this._keepshownitems = false;
             this.setAttribute('scrollable', false);
 
             var doneonce = false;

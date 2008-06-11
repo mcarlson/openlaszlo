@@ -225,18 +225,16 @@
          <!--- @keywords private -->
         <attribute name="_hasSetHeight" value="false"/>
 
-        <!--- this should not be called internally -->
-        <!--- TODO: [2005-02-25 ptw] (Bug 5036) When setters are
-             called from __LZapplyArgs they get a second argument that
-             is the name of the slot being set.  Ignore that.  If Bug
-             5036 gets addressed, update this method. -->
         <!--- @keywords private -->
-        <method name="setHeight" args="h, prop, internal"> <![CDATA[
-            if (h != null && !internal) {
+        <attribute name="_heightinternal" value="false" type="boolean" />
+
+        <!--- @keywords private -->
+        <method name="setHeight" args="h"> <![CDATA[
+            if (h != null && !this._heightinternal) {
                 this._hasSetHeight = true;
             } else {
                 this._hasSetHeight = false;
-                if (!internal) {
+                if (!this._heightinternal) {
                     var hgt = this.calcMyHeight();
                     h = hgt + border_top + border_bottom;
                 }
@@ -268,8 +266,9 @@
                 checkscrollbar();
             } else {
                 var hgt = this.calcMyHeight();
-                // TODO: [2005-02-25 ptw] (Bug 5036) See comment on setHeight
-                this.setHeight( hgt + border_top + border_bottom, 'height', true);
+                this._heightinternal = true;
+                this.setHeight( hgt + border_top + border_bottom);
+                this._heightinternal = false;
             }
         ]]></method>
 
@@ -286,13 +285,14 @@
 
          <!--- @keywords private -->
          <attribute name="_bgcolor" value="null"/>
+         <!--- @keywords private -->
+         <attribute name="_setbordercolor" value="false" type="boolean" />
 
-         <!--- border == true : call super to set border color
+         <!--- this._setbordercolor == true : call super to set border color
                else set _bgcolor for "interior" view
                @keywords private -->
-         <method name="setBGColor" args="c, border">
-             if (border) {
-
+         <method name="setBGColor" args="c">
+             if (this._setborderbg) {
                 super.setBGColor(c);
              } else {
                  // don't actually set the bgcolor,  'interior' view
@@ -308,8 +308,10 @@
         <method name="_applystyle" args="s">
             if (this.style != null) {
                 super._applystyle(s);
-                setBGColor(s.bordercolor, true);
-                if (this._bgcolor == null) interior.setBGColor(s.bgcolor);
+                this._setbordercolor = true;
+                this.setBGColor(s.bordercolor);
+                this._setbordercolor = false;
+                if (this._bgcolor == null) this.interior.setBGColor(s.bgcolor);
             }
         </method>
 

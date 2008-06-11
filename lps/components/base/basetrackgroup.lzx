@@ -63,7 +63,7 @@
         <event name="onmousetrackoutleft" />
 
         <!--- @keywords private -->
-        <method name="construct">
+        <method name="construct" args="parent, args">
             super.construct.apply(this, arguments);
             
             this._activateDL    = new LzDelegate(this,'activateTrackgroup');

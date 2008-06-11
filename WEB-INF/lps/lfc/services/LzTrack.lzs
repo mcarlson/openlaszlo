@@ -231,7 +231,7 @@ function deactivate ( group ) {
     }
     if ( this.__LZactivegroups == []) this.__LZtrackDel.unregisterAll();
     if (typeof(this.__LZreg[group]) != "undefined") {
-        this.__LZreg[group].__LZlasthit = 0;   // should send ontrackmouseout ?
+        this.__LZreg[group].__LZlasthit = null;   // should send ontrackmouseout ?
     }
 }
 
@@ -320,12 +320,18 @@ function __LZtrack (ignore)
         if (thisgroup) this.__LZtrackgroup(thisgroup,hitlist);
 
         if ( !hitlist.length && thisgroup && thisgroup.__LZlasthit ) {  // over no tracked views
-                if (thisgroup.__LZlasthit.onmousetrackout && thisgroup.__LZlasthit.onmousetrackout.ready) thisgroup.__LZlasthit.onmousetrackout.sendEvent(thisgroup.__LZlasthit);
-                thisgroup.__LZlasthit = 0;
+                var onmtrackout:LzDeclaredEventClass = thisgroup.__LZlasthit.onmousetrackout;
+                if (onmtrackout && onmtrackout.ready)
+                    onmtrackout.sendEvent(thisgroup.__LZlasthit);
+                thisgroup.__LZlasthit = null;
         }  else {
             var fd = this.__LZfindTopmost(hitlist);
             if ( fd &&  fd != thisgroup.__LZlasthit ) { 
-                if (thisgroup.__LZlasthit.onmousetrackout && thisgroup.__LZlasthit.onmousetrackout.ready) thisgroup.__LZlasthit.onmousetrackout.sendEvent( thisgroup.__LZlasthit );
+                if (thisgroup.__LZlasthit) {
+                    var onmtrackout:LzDeclaredEventClass = thisgroup.__LZlasthit.onmousetrackout;
+                    if (onmtrackout && onmtrackout.ready)
+                        onmtrackout.sendEvent( thisgroup.__LZlasthit );
+                }
                  // save this found value so that we can send the onmousetrackover
                  // after ALL of the onmousetrackouts from all trackgroups are sent
                 found = true;
@@ -352,12 +358,15 @@ function __LZmouseup(ignore)
     for (var i in this.__LZactivegroups) {
         var thisgroup = this.__LZactivegroups[i];
         //Debug.info('i', i, thisgroup, thisgroup.__LZlasthit, thisgroup.__LZlasthit.onmousetrackup);
-        if (thisgroup && thisgroup.__LZlasthit.onmousetrackup && thisgroup.__LZlasthit.onmousetrackup.ready) {
-            if (this['__LZlastmouseup'] == thisgroup.__LZlasthit) {
-                this.__LZlastmouseup = null;
-            } else {
-                thisgroup.__LZlasthit.onmousetrackup.sendEvent(this.__LZlasthit);
-                this.__LZlastmouseup = thisgroup.__LZlasthit;
+        if (thisgroup && thisgroup.__LZlasthit) {
+            var onmtrackup:LzDeclaredEventClass = thisgroup.__LZlasthit.onmousetrackup;
+            if (onmtrackup && onmtrackup.ready) {
+                if (this['__LZlastmouseup'] == thisgroup.__LZlasthit) {
+                    this.__LZlastmouseup = null;
+                } else {
+                    onmtrackup.sendEvent(this.__LZlasthit);
+                    this.__LZlastmouseup = thisgroup.__LZlasthit;
+                }
             }
         }
     }

@@ -17,9 +17,12 @@
           the bgcolor of its closest parent that has a bgcolor defined.  -->
     <attribute name="disabledbgcolor" value="null"/>
 
-    <handler name="oninit" reference="canvas" method="_showEnabled" />
+    <handler name="oninit" reference="canvas" >
+        this._showEnabled();
+    </handler>
+    
     <!--- @keywords private -->
-    <method name="_showEnabled" args="ignore">
+    <method name="_showEnabled">
         <![CDATA[
         if (!_enabled) {
             var newbgcolor = this.disabledbgcolor;

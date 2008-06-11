@@ -46,14 +46,14 @@
         <!--- @keywords private -->
         <method name="setSelected" args="isSelected" >
             super.setSelected(isSelected);
-            if (this._initcomplete) _applystyle();
+            if (this._initcomplete) _applystyle(this.style);
         </method>
 
         <!--- @keywords private -->
         <method name="setHilite" args="ishilited" >
             if (ishilited != this.hilited) {
                 this.hilited = ishilited;
-                if (this._initcomplete) _applystyle();
+                if (this._initcomplete) _applystyle(this.style);
             }
         </method>
 
@@ -83,7 +83,7 @@
         <method name="_showEnabled"> <![CDATA[
              setAttribute('clickable', _enabled);
              if (_initcomplete) {
-                _applystyle();
+                _applystyle(this.style);
             }
         ]]>
         </method>
@@ -112,7 +112,7 @@
      </class> <!-- END listitem -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

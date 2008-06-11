@@ -18,6 +18,12 @@
               @keywords final -->
         <attribute name="axis" value="y" type="string"/>
 
+        <!--- @keywords private -->
+        <attribute name="sizeAxis" type="string" />
+    
+        <!--- @keywords private -->
+        <attribute name="otherSizeAxis" type="string" />
+    
         <!--- The attribute of the scrolltarget that is modified by the scrollbar,
               default: value of axis attribute.
               @keywords final -->
@@ -81,24 +87,27 @@
         <!--- Reference to the other scrollbar, if there is one.
               This value is set oninit.
               @keywords private -->
-        <attribute name="othersb" value="0"/>
+        <attribute name="othersb" value="null" />
+
+        <!--- @keywords private -->
+        <attribute name="thumb" value="null" />
 
         <!-- if the scrollbar is vertical and the developer has not set a height
              then the scrollbar should be its parent's height, see oninit -->
         <state name="heightConstraint">
             <attribute name="height"
-                value="${othersb &amp;&amp; othersb.visible 
-                       ? immediateparent.height - othersb.height
-                       : immediateparent.height}"/>
+                value="${this.othersb &amp;&amp; this.othersb.visible 
+                       ? this.immediateparent.height - this.othersb.height
+                       : this.immediateparent.height}"/>
         </state>
 
         <!-- if the scrollbar is horizontal and the developer has not set a width
              then the scrollbar should be its parent's width, see oninit -->
         <state name="widthConstraint">
             <attribute name="width"
-                value="${othersb &amp;&amp; othersb.visible
-                       ? immediateparent.width - othersb.width 
-                       : immediateparent.width }"/>
+                value="${this.othersb &amp;&amp; this.othersb.visible
+                       ? this.immediateparent.width - this.othersb.width 
+                       : this.immediateparent.width }"/>
         </state>
 
         <!---  @keywords private -->

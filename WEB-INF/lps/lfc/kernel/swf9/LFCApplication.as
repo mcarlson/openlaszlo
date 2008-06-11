@@ -59,7 +59,7 @@ public class LFCApplication extends Sprite {
 
 
         // Register for callbacks from the kernel
-        LzMouseKernel.setCallback(LzModeManager, 'rawMouseEvent');
+        LzMouseKernel.setCallback(lz.ModeManager, 'rawMouseEvent');
 
         
         /* TODO [hqm 2008-01] Do we want to do anything with other
