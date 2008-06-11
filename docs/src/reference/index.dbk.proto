@@ -21,8 +21,8 @@
 <book xmlns:xi="http://www.w3.org/2003/XInclude">
   <?dbhtml dir="reference" ?>
   <?dbhtml filename="index.html" ?>
-  <title>OpenLaszlo 4.1 Reference</title>
-  <titleabbrev>OL4.1 Reference</titleabbrev>
+  <title>OpenLaszlo @VERSIONID@ Reference</title>
+  <titleabbrev>OL@VERSIONID@ Reference</titleabbrev>
 
   <xi:include href="book-info.dbk"></xi:include>
   
@@ -46,12 +46,23 @@
     <xi:fallback><para>Missing: Extensions Reference</para></xi:fallback>
   </xi:include>
 
+  <xi:include href="devref.dbk">
+    <xi:fallback><para>Missing: Development Reference</para></xi:fallback>
+  </xi:include>
+
+  <xi:include href="embedref.dbk">
+    <xi:fallback><para>Missing: Embedding Reference</para></xi:fallback>
+  </xi:include>
+
 <?ignore skip for faster builds
   <xi:include href="chartref.dbk">
     <xi:fallback><para>Missing: Charting Reference</para></xi:fallback>
   </xi:include>
 ?>  
 
+  <xi:include href="incref.dbk">
+    <xi:fallback><para>Missing: Incubator Reference</para></xi:fallback>
+  </xi:include>
 
 <?ignore skip for faster builds
   <xi:include href="xref.dbk">

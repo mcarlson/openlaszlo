@@ -155,7 +155,16 @@
           <pathelement path="${JUNIT_JAR}" />
           <fileset dir="${LPS_HOME}/3rd-party/jars/dev" />
       </path>
- 
+
+      <!-- Filter any @VERSIONID@'s from .proto files -->
+      <copy todir="docs/src" >
+        <fileset dir="." includes="**/*.proto" />
+        <mapper type="glob" from="*.proto" to="*" />
+        <filterset>
+          <filter token="VERSIONID" value="${version.id}"/>
+        </filterset>
+      </copy>
+
       <property name="docs.src.done.init" value="true" />
       
   </target>

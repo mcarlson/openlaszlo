@@ -2,7 +2,7 @@
    "http://www.w3.org/TR/html4/frameset.dtd">
 <HTML>
 <HEAD>
-<TITLE>OpenLaszlo 4.1.x Reference</TITLE>
+<TITLE>OpenLaszlo @VERSIONID@ Reference</TITLE>
 </HEAD>
 <FRAMESET cols="240px, *" >
   <FRAME name="lzxdocnavframe" src="nav.lzx?lzr=swf8&lzt=swf&target=content" />
@@ -10,5 +10,5 @@
 </FRAMESET>
 </HTML>
 
-<!-- Copyright 2007 Laszlo Systems -->
+<!-- Copyright 2007, 2008 Laszlo Systems -->
 

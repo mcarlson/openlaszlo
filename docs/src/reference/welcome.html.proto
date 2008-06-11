@@ -15,7 +15,7 @@
 -->
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>LZX 4.1.x Reference Manual</title>
+    <title>LZX @VERSIONID@ Reference Manual</title>
       <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
       <link rel="stylesheet" href="../includes/lzx-pretty-print.css" type="text/css">    
   </head>
@@ -119,6 +119,6 @@ and testing.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
