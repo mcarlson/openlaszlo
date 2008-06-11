@@ -498,6 +498,10 @@
             var context = null;
             
             var oncontext = LzDeclaredEvent;
+
+            function getContext(type) {
+                return this.context;
+            }
     
             function construct(parent,args) {
                 super.construct(parent, args);
@@ -623,12 +627,12 @@
                         if (this.tId) clearTimeout(this.tId);
                         this.setAttribute('context', this.__LZcanvas.getContext("2d"));
                     } else {
-                        var callback = LzUtils.getcallbackstr(this, '__initie');
+                        var callback = lz.BrowserUtils.getcallbackstr(this, '__initie');
                         this.tId = setTimeout(callback, 50);
                     }
                 } catch (e) {
                     if (this.maxTries-- > 0) {
-                        var callback = LzUtils.getcallbackstr(this, '__initie');
+                        var callback = lz.BrowserUtils.getcallbackstr(this, '__initie');
                         this.tId = setTimeout(callback, 50);
                     }
                 }
@@ -680,6 +684,24 @@
                 this.__playPath();
                 this.context.fill();
             }
+
+            function __updateFillStyle() {
+                if (this._fillStyle != this.fillStyle) {
+                    if (this.fillStyle instanceof LzCanvasGradient) {
+                        //Debug.write('before apply');
+                        this.fillStyle.__applyTo(this.context);
+                    } else {
+                        var ccache = lz.drawview._colorcache;
+                        var fillStyleColor = ccache[this.fillStyle];
+                        if (fillStyleColor == null) {
+                            fillStyleColor = lz.Utils.torgb(this.fillStyle);
+                            ccache[this.fillStyle] = fillStyleColor;
+                        }
+                        this.context.fillStyle = fillStyleColor;
+                    }
+                    this._fillStyle = this.fillStyle;
+                }
+            }
     
             function __playPath() {
                 if (this.__path.length == 0) return;
@@ -692,36 +714,23 @@
                     this.context.lineCap = this.lineCap;
                     this._lineCap = this.lineCap;
                 }
-                if (this._fillStyle != this.fillStyle) {
-                    if (this.fillStyle instanceof LzCanvasGradient) {
-                        //Debug.write('before apply');
-                        this.fillStyle.__applyTo(this.context);
-                    } else {
-                        var ccache = lz.drawview._colorcache;
-                        var fillStyleColor = ccache[this.fillStyle];
-                        if (fillStyleColor == null) {
-                            fillStyleColor = LzUtils.torgb(this.fillStyle);
-                            ccache[this.fillStyle] = fillStyleColor;
-                        }
-                        this.context.fillStyle = fillStyleColor;
-                    }
-                    this._fillStyle = this.fillStyle;
-                }
-    
-                if (this._strokeStyle != this.strokeStyle) {
-                    var ccache = lz.drawview._colorcache;
-                    var strokeStyleColor = ccache[this.strokeStyle];
-                    if (strokeStyleColor == null) {
-                        strokeStyleColor = LzUtils.torgb(this.strokeStyle);
-                        ccache[this.strokeStyle] = strokeStyleColor;
-                    }
-                    this.context.strokeStyle = strokeStyleColor;
-                    this._strokeStyle = this.strokeStyle;
-                }
 
                 if (this._globalAlpha != this.globalAlpha) {
                     this.context.globalAlpha = this.globalAlpha;
                     this._globalAlpha = this.globalAlpha;
+                }
+
+                this.__updateFillStyle();
+
+                if (this._strokeStyle != this.strokeStyle) {
+                    var ccache = lz.drawview._colorcache;
+                    var strokeStyleColor = ccache[this.strokeStyle];
+                    if (strokeStyleColor == null) {
+                        strokeStyleColor = lz.Utils.torgb(this.strokeStyle);
+                        ccache[this.strokeStyle] = strokeStyleColor;
+                    }
+                    this.context.strokeStyle = strokeStyleColor;
+                    this._strokeStyle = this.strokeStyle;
                 }
 
                 this.context.beginPath();
@@ -777,6 +786,29 @@
             function createRadialGradient(x0, y0, r0, x1, y1, r1) {
                 return new LzCanvasGradient(this.context.createRadialGradient(x0, y0, r0, x1, y1, r1));
             }
+
+            function rotate(r) {
+                this.context.rotate(r);
+            }
+
+            function translate(x, y) {
+                this.context.translate(x, y);
+            }
+
+            function save() {
+                this._fillStyle = this._strokeStyle = null
+                this.context.save();
+            }
+
+            function restore() {
+                this._fillStyle = this._strokeStyle = null
+                this.context.restore();
+            }
+
+            function fillRect(x, y, w, h) {
+                this.__updateFillStyle();
+                this.context.fillRect(x, y, w, h);
+            }
         } // End of drawview
         lz[$lzc$class_drawview.tagname] = $lzc$class_drawview;
 
@@ -804,7 +836,7 @@
             var ccache = lz.drawview._colorcache;
             var cstopColor = ccache[c];
             if (cstopColor == null) {
-                cstopColor = LzUtils.torgb(c);
+                cstopColor = lz.Utils.torgb(c);
                 ccache[c] = cstopColor;
             }
             this._g.addColorStop(o, cstopColor);
@@ -823,6 +855,13 @@
         // Classes that implement an interface must obey the LZX
         // tag->class mapping convention
         class $lzc$class_drawview extends LzView with DrawviewShared {
+            if ($swf9) {
+                #passthrough (toplevel:true) {  
+                import flash.geom.Matrix;
+                import flash.geom.Rectangle;
+                import flash.display.BitmapData;
+                }#
+            }
             // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
@@ -838,6 +877,11 @@
             var __MOVETO_OP = 0;
             var __LINETO_OP = 1;
             var __QCURVE_OP = 2;
+            var __contexts = null;
+            var __bitmapmc = null;
+            var __bitmapdata = null;
+            var __drawing = null;
+            var __matrix = null;
             
             var oncontext = LzDeclaredEvent;
     
@@ -849,21 +893,42 @@
                 // default to bitmap caching on    
                 if (args['cachebitmap'] == null) args['cachebitmap'] = true;
                 super.construct(parent, args);
-                this.context = this.sprite.getContext();
-                this.beginPath();
+                this.__contexts = [];
 
                 new LzDelegate( this , "_oninit" , this , "oninit" );
+                new LzDelegate( this , "rebuildBitmap" , this , "onwidth" );
+                new LzDelegate( this , "rebuildBitmap" , this , "onheight" );
+            }
+
+            // Add bitmap data drawing layer
+            function rebuildBitmap (v) {
+                if (this['__bitmapmc']) {
+                    this.__bitmapmc.removeMovieClip();
+                }
+
+                var context = this.sprite.getContext();
+                this.__bitmapmc = context.createEmptyMovieClip("__bitmapmc",1000);
+                if ($swf9) {
+                    this.__bitmapdata = new BitmapData(this.width, this.height, true, 0x000000ff);
+                } else {
+                    this.__bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
+                }
+                this.__bitmapmc.attachBitmap(this.__bitmapdata, 2, "auto", true);
             }
     
             function _oninit(v) {
+                var context = this.sprite.getContext();
                 if ($swf8) {
-                    // Add bitmap data drawing layer
-                    this.bitmapmc = this.context.createEmptyMovieClip("bmp",this.context.getNextHighestDepth());
-                    this.bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
-                    this.bitmapmc.attachBitmap(this.bitmapdata, 2, "auto", true);
-                }
+                    this.rebuildBitmap();
+                    this.drawcontainer = context.createEmptyMovieClip("drawcontainer",context.getNextHighestDepth());
+                    this.__drawing = this.drawcontainer.createEmptyMovieClip("drawing",this.drawcontainer.getNextHighestDepth());
 
-                this.oncontext.sendEvent();
+                    context = this.drawcontainer;
+                }
+                this.context = context;
+                this.beginPath();
+
+                this.oncontext.sendEvent(context);
             }
 
     
@@ -916,56 +981,59 @@
             static var images = {};
 
             if ($swf8) {
-            function getImage(name) {
-                var i = lz.drawview.images[name];
-                if (! i) {
-                    if ( name.indexOf('http:') == 0 || name.indexOf('https:') == 0 ) {
-                        var loadMC = createEmptyMovieClip("preLoad",getNextHighestDepth());
-                        var tmpMC = loadMC.createEmptyMovieClip("tmp",loadMC.getNextHighestDepth());
-                        tmpMC.loadMovie(name);
-                        loadMC.onEnterFrame = function() {
-                            if(tmpMC._width>0) {
-                                var bmp = new flash.display.BitmapData(tmpMC._width, tmpMC._height, true, 0x000000ff);
-                                bmp.draw(tmpMC);
-                                lz.drawview.images[name] = i = bmp;
-                                loadMC.removeMovieClip();
-                                delete this.onEnterFrame;
+                function getImage(name) {
+                    var bitmap = lz.drawview.images[name];
+                    if (! bitmap) {
+                        var container = createEmptyMovieClip("loader",getNextHighestDepth());
+                        if ( name.indexOf('http:') == 0 || name.indexOf('https:') == 0 ) {
+                            var loader = container.createEmptyMovieClip("loader",container.getNextHighestDepth());
+                            loader.loadMovie(name);
+                            container.onEnterFrame = function() {
+                                if(loader._width>0) {
+                                    bitmap = this.copyBitmap(loader, loader._width, loader._height);
+                                    lz.drawview.images[name] = bitmap;
+                                    delete this.onEnterFrame;
+                                    container.removeMovieClip();
+                                }
                             }
+                        } else {
+                            // measure size
+                            container.attachMovie( name, 'resc', container.getNextHighestDepth());
+                            bitmap = this.copyBitmap(container, container._width, container._height);
+                            lz.drawview.images[name] = bitmap;
+                            container.removeMovieClip();
                         }
-                    } else {
-                        var loadMC = createEmptyMovieClip("preLoad",getNextHighestDepth());
-                        loadMC.attachMovie( name, 'resc', loadMC.getNextHighestDepth());
-                        var bmp = new flash.display.BitmapData(loadMC._width, loadMC._height, true, 0x000000ff);
-                        bmp.draw(loadMC);
-                        lz.drawview.images[name] = i = bmp;
-                        loadMC.removeMovieClip();
                     }
+                    return bitmap;
                 }
-                return i;
-            }
             }
 
             if ($swf9) {
             } else {
-            function drawImage(image, x, y, w, h, r) {
-                if ($swf7) {
-                    if ($debug) Debug.warn('Drawview.drawImage() is supported in swf7.');
-                } else {
-                    if (typeof image == 'string') {
-                        image = this.getImage(image);
+                function drawImage(image, x, y, w, h, r) {
+                    if ($swf7) {
+                        if ($debug) Debug.warn('Drawview.drawImage() is supported in swf7.');
+                    } else {
+                        if (typeof image == 'string') {
+                            image = this.getImage(image);
+                        }
+                        if (! image) return;
+
+                        var m = this.getIdentityMatrix();
+
+                        var tw = w ? w / image.width : 1;
+                        var th = h ? h / image.height : 1;
+                        m.scale(tw, th);
+
+                        if (r != null) m.rotate(r);
+
+                        var tx = x ? x : 0;
+                        var ty = y ? y : 0;
+                        m.translate(tx, ty);
+
+                        this.copyBitmap(image, this.width, this.height, this.__bitmapdata, m);
                     }
-                    if (! image) return;
-                    var m = new flash.geom.Matrix()
-                    var tx = x ? x : 0;
-                    var ty = y ? y : 0;
-                    var tw = w ? w / image.width : 1;
-                    var th = h ? h / image.height : 1;
-                    m.scale(tw, th);
-                    if (r != null) m.rotate(r);
-                    m.translate(tx, ty);
-                    this.bitmapdata.draw(image, m, 'layer', 'normal');
                 }
-            }
             }
     
             var bezierCurveTo_error = 10;
@@ -1077,18 +1145,28 @@
                 }
             }
 
+            function __getColor(val) {
+                var ccache = lz.drawview._colorcache;
+                var cachedColor = ccache[val];
+                if (cachedColor == null) {
+                    cachedColor = lz.Utils.hextoint(val);
+                    var values = String(cachedColor).split('.');
+                    var color = values[0];
+                    var alpha = values.length > 1 ? Number('.' + values[1]) * 100 : null;
+                    //Debug.write(color, alpha, val, cachedColor, values);
+                    cachedColor = ccache[val] = {c: color, a: alpha}; 
+                }
+                return cachedColor;
+            }
     
             function fill() {
                 if (this.fillStyle instanceof LzCanvasGradient) {
                     this.fillStyle.__applyTo(this.context);
                 } else {
-                    var ccache = lz.drawview._colorcache;
-                    var fillStyleColor = ccache[this.fillStyle];
-                    if (fillStyleColor == null) {
-                        fillStyleColor = LzUtils.hextoint(this.fillStyle);
-                        ccache[this.fillStyle] = fillStyleColor;
-                    }
-                    this.context.beginFill(fillStyleColor, this.globalAlpha * 100);
+                    var color = this.__getColor(this.fillStyle);
+                    var alpha = color.a != null ? color.a : this.globalAlpha;
+                    //Debug.info(this.fillStyle, color.c, alpha, color.a, this.globalAlpha);
+                    this.context.beginFill(color.c, alpha * 100);
                 }
                 this.closePath();
                 this.__playPath(this.context);
@@ -1168,13 +1246,9 @@
                     }
                     return;
                 }
-                var ccache = lz.drawview._colorcache;
-                var strokeStyleColor = ccache[this.strokeStyle];
-                if (strokeStyleColor == null) {
-                    strokeStyleColor = LzUtils.hextoint(this.strokeStyle);
-                    ccache[this.strokeStyle] = strokeStyleColor;
-                }
-                this.context.lineStyle(this.lineWidth, strokeStyleColor, this.globalAlpha * 100);
+                var color = this.__getColor(this.strokeStyle);
+                var alpha = color.a != null ? color.a : this.globalAlpha;
+                this.context.lineStyle(this.lineWidth, color.c, alpha * 100);
                 this.__playPath(this.context);
                 this.context.lineStyle(undefined);
                 this.sprite.updateResourceSize();
@@ -1182,9 +1256,10 @@
     
             function clear() {
                 this.context.clear();
-                if ($swf8) {
+                if ($swf9) {
+                } else {
                     var rect = new flash.geom.Rectangle(0, 0, this.width, this.height);
-                    this.bitmapdata.fillRect(rect, 0x000000ff);
+                    this.__bitmapdata.fillRect(rect, 0x000000ff);
                 }
             }
     
@@ -1221,6 +1296,90 @@
                 //Debug.write('createRadialGradient', {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r});
                 return g;
             }
+
+            // accumulate rotation
+            var _tr = 0
+            function rotate(r) {
+                this._tr += r;
+            }
+
+            // accumulate translation
+            var _tx = 0;
+            var _ty = 0;
+            function translate(x, y) {
+                this._tx += x;
+                this._ty += y;
+            }
+
+            function save() {
+                // Store this context.
+                this.__contexts.push(this.context);
+
+                // Create new context to draw in
+                var depth = this.__drawing.getNextHighestDepth();
+                this.context = this.__drawing.createEmptyMovieClip('draw' + depth, depth); 
+                // Offset to the center to ensure we can grab the whole thing 
+                this.context._x = this.width * .5;
+                this.context._y = this.height * .5;
+                this.__matrix = this.getIdentityMatrix()
+            }
+
+            function copyBitmap(from, w, h, to, m) {
+                if ($swf9) {
+                    var tmp = new BitmapData(w, h, true, 0x000000ff);
+                } else {
+                    var tmp = new flash.display.BitmapData(w, h, true, 0x000000ff);
+                }
+
+                tmp.draw(from);
+
+                // If to wasn't supplied, return the bitmap as-is.
+                if (! to) {
+                    return tmp;
+                }
+                to.draw(tmp, m, null, null, null, true);
+                tmp.dispose();
+            }
+
+            function restore() {
+                var m = this.getIdentityMatrix()
+                // Move back
+                m.translate(- this.context._x, - this.context._y);
+
+                // apply accumulated translations
+                m.rotate(this._tr);
+                m.translate(this._tx, this._ty);
+                this._tr = this._tx = this._ty = 0;
+
+                //Debug.write(this.context._width, this.context._height);
+                this.copyBitmap(this.__drawing, this.width * 2, this.height * 2, this.__bitmapdata, m)
+
+                this.context.removeMovieClip();
+                this.context = this.__contexts.pop();
+            }
+
+            function fillRect(x, y, w, h) {
+                var color = this.__getColor(this.fillStyle);
+                var alpha = color.a != null ? color.a : this.globalAlpha;
+                var alpha = (color.a * 255) << 24;
+                var colorval = color.c | alpha;
+                //Debug.info(colorval, alpha, color, this.fillStyle)
+
+                if ($swf9) {
+                    var rect = new Rectangle(x, y, w, h);
+                } else {
+                    var rect = new flash.geom.Rectangle(x, y, w, h);
+                }
+                this.__bitmapdata.fillRect(rect, colorval);
+            }
+
+            function getIdentityMatrix() {
+                if ($swf9) {
+                    return new Matrix();
+                } else {
+                    return new flash.geom.Matrix();
+                }
+            }
         } // End of drawview
         lz[$lzc$class_drawview.tagname] = $lzc$class_drawview;
 
@@ -1237,7 +1396,7 @@
           */
         class LzCanvasGradient {
             if ($swf9) {
-                #passthrough (toplevel:true) {  
+                #passthrough (toplevel:true) {
                 import flash.geom.Matrix;
                 }#
             }
@@ -1268,14 +1427,11 @@
             */
             function addColorStop(o, c) {
                 this._o[this._o.length] = o * 255;
-                var ccache = lz.drawview._colorcache;
-                var cstopColor = ccache[c];
-                if (cstopColor == null) {
-                    cstopColor = LzUtils.hextoint(c);
-                    ccache[c] = cstopColor;
-                }
-                this._c[this._c.length] = cstopColor;
-                this._a[this._a.length] = this._context.globalAlpha * 100;
+                var color = this._context.__getColor(c);
+                this._c[this._c.length] = color.c;
+                var alpha = color.a != null ? color.a : this._context.globalAlpha;
+                //Debug.info(c, color.c, alpha, color.a, this._context.globalAlpha);
+                this._a[this._a.length] = alpha * 100;
             }
 
             /**
