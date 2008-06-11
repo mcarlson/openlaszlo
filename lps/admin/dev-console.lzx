@@ -7,7 +7,7 @@
 <!--=======================================================================-->
 
 
-<canvas width="100%"  height="370" proxied="false" bgcolor="#9494ad">
+<canvas width="100%"  height="370" proxied="false" bgcolor="#938fdc">
  <switch>
     <when runtime="dhtml">
     </when>
@@ -142,27 +142,27 @@
       <view name="controls" x="70">
         <view name="firstrow" y="4">
             <text fontsize="11" x="8" y="7"><b>Compile Options:</b></text>
-            <view x="125" width="466" height="32" bgcolor="black">
-                <view x="1" y="1" width="464" height="30" bgcolor="#9494ad"/>
+            <view x="125" width="494" height="32" bgcolor="black">
+                <view x="1" y="1" width="492" height="30" bgcolor="#cccccc"/>
             </view>
             <view x="125" name="compilecontrols">
-                <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:4" x="6" y="8.75">
-                    <radiobutton id="rb7" value="'swf7'" 
-                    selected="${app_runtime == 'swf7'}">swf7</radiobutton >
+                <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:8" x="6" y="8.75">
                     <radiobutton id="rb8" value="'swf8'"
-                    selected="${app_runtime == 'swf8'}">swf8</radiobutton >
+                                 selected="${app_runtime == 'swf8'}">swf8</radiobutton >
                     <radiobutton id="rb9" value="'swf9'"
-                    selected="${app_runtime == 'swf9'}">swf9</radiobutton >
+                                 selected="${app_runtime == 'swf9'}">swf9</radiobutton >
+                    <radiobutton id="rb10" value="'swf10'" 
+                                 enabled="false"
+                                 selected="${app_runtime == 'swf10'}">swf10</radiobutton >
                     <radiobutton id="rbdhtml" value="'dhtml'"
-                    selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
-
+                                 selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
                 </radiogroup>
-                <view height="14" width="1" bgcolor="black" x="225" y="9.5"/>
+                <view height="14" width="1" bgcolor="black" x="247" y="9.5"/>
                 <checkbox id="cb_debug" value="${app_debug == 'true'}"
-                          x="236" y="8.25">Debug</checkbox>
+                          x="258" y="8.25">Debug</checkbox>
                 <checkbox id="cb_backtrace" 
-                          value="${app_backtrace == 'true'}" x="305" y="8.25">Backtrace</checkbox>
-                <button onclick="canvas.gotoApp()" x="390" y="3">Compile</button>
+                          value="${app_backtrace == 'true'}" x="330" y="8.25">Backtrace</checkbox>
+                <button onclick="canvas.gotoApp()" x="416" y="3">Compile</button>
                 <handler name="onvalue" reference="cb_backtrace">
                   if (cb_backtrace.value) {
                      cb_debug.setAttribute('value', true);
