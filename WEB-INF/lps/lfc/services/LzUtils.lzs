@@ -35,7 +35,7 @@ class LzUtilsClass {
     // Converts a CSS #RRGGBBAA string to a rgb.0a floating point 
     public function hextoint(s:*) {
         var n = lz.Utils.stringToColor(s);
-        if (! isNaN(n) && typeof n == 'number') return n;
+        if (typeof n != 'string') return n;
 
         var hex = s;
 
@@ -74,11 +74,12 @@ class LzUtilsClass {
     }
 
     // Converts a decimal number to hexadecimal with padding
-    public function dectohex(s:*, p:*) {
+    public function dectohex(n:*, p:*) {
+        if (typeof n != 'number') return n;
         p = p ? p : 0;
 
-        s = s & 0xffffff;
-        var hex = s.toString(16);
+        n = n & 0xffffff;
+        var hex = n.toString(16);
         var pad = p - hex.length;
         while (pad > 0) {
             hex = '0' + hex;
@@ -134,7 +135,6 @@ class LzUtilsClass {
         if (s.indexOf('rgb') == -1) return this.stringToColor(s);
 
         var parts = s.substring(s.indexOf('(') + 1, s.indexOf(')')).split(',');
-
 
         var color = (parts[0] << 16) + (parts[1] << 8) + (parts[2] * 1);
 
