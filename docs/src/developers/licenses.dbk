@@ -399,7 +399,7 @@
       <seg>iso-relax.jar</seg>
       <seg>WEB-INF/lib/iso-relax.jar</seg>
       <seg>20030108 (M)</seg>
-      <seg>Copyright (c) 2001-2002, SourceForge ISO-RELAX Project</seg>
+      <seg>Copyright (c) 2001-2002, 2008, SourceForge ISO-RELAX Project</seg>
     </seglistitem>
     <seglistitem>
       <seg>jakarta-regexp-1.2.jar</seg>
@@ -1005,6 +1005,184 @@
       <seg>1.1.3.4d_b4 (M)</seg>
       <seg>Apache License, Version 2.0</seg>
       <seg>http://www.apache.org/licenses/LICENSE-2.0.txt</seg>
+    </seglistitem>
+    <seglistitem>
+      <seglistitem>
+        <seg>adt.jar</seg>
+        <seg>WEB-INF/lib/adt.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>afe.jar</seg>
+        <seg>WEB-INF/lib/afe.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>aglj32.jar</seg>
+        <seg>WEB-INF/lib/aglj32.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>asc.jar</seg>
+        <seg>WEB-INF/lib/asc.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>asdoc.jar</seg>
+        <seg>WEB-INF/lib/asdoc.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>batik-all-flex.jar</seg>
+        <seg>WEB-INF/lib/batik-all-flex.jar</seg>
+        <seg>?</seg>
+        <seg>Apache License, Version 2.0</seg>
+        <seg>http://xmlgraphics.apache.org/batik/license.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>compc.jar</seg>
+        <seg>WEB-INF/lib/compc.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>copylocale.jar</seg>
+        <seg>WEB-INF/lib/copylocale.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>digest.jar</seg>
+        <seg>WEB-INF/lib/digest.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>fcsh.jar</seg>
+        <seg>WEB-INF/lib/fcsh.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>fdb.jar</seg>
+        <seg>WEB-INF/lib/fdb.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>flex-compiler-oem.jar</seg>
+        <seg>WEB-INF/lib/flex-compiler-oem.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>flex-fontkit.jar</seg>
+        <seg>WEB-INF/lib/flex-fontkit.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>flex-messaging-common.jar</seg>
+        <seg>WEB-INF/lib/flex-messaging-common.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>flexTasks-internal.jar</seg>
+        <seg>WEB-INF/lib/flexTasks-internal.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>flexTasks.jar</seg>
+        <seg>WEB-INF/lib/flexTasks.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>javacc.jar</seg>
+        <seg>WEB-INF/lib/javacc.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>license.jar</seg>
+        <seg>WEB-INF/lib/license.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>mxmlc.jar</seg>
+        <seg>WEB-INF/lib/mxmlc.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>mxmlc_ja.jar</seg>
+        <seg>WEB-INF/lib/mxmlc_ja.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>optimizer.jar</seg>
+        <seg>WEB-INF/lib/optimizer.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>rideau.jar</seg>
+        <seg>WEB-INF/lib/rideau.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>swfdump.jar</seg>
+        <seg>WEB-INF/lib/swfdump.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>swfutils.jar</seg>
+        <seg>WEB-INF/lib/swfutils.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>velocity-dep-1.4-flex.jar</seg>
+        <seg>WEB-INF/lib/velocity-dep-1.4-flex.jar</seg>
+        <seg>?</seg>
+        <seg>Mozilla Public License (MPL)</seg>
+        <seg>http://www.mozilla.org/MPL/mpl-faq.html</seg>
+      </seglistitem>
+
     </seglistitem>
     <seglistitem />
     <seglistitem />
