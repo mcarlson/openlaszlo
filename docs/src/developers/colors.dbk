@@ -90,7 +90,7 @@ To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes
 
 <para/></section><section><title>Opacity</title>
 <para>
-In OpenLaszlo, a view has a color and an opacity which are handled separately. The opacity attribute ranges from 0 (transparent) to 1 (opaque).
+In OpenLaszlo, a view has a color and an opacity which are handled separately. The <literal>opacity</literal> attribute ranges from 0 (transparent) to 1 (opaque).
 </para>
 
 <example role="live-example">
@@ -101,7 +101,7 @@ In OpenLaszlo, a view has a color and an opacity which are handled separately. T
 </example>
 
 
-<para>When a view's opacity=0, the 'visible' attribute of that view turns to false.</para>
+<para>When a view's <literal>opacity</literal> is set to 0, the <literal>visible</literal> attribute of that view turns to false.</para>
 
 <para/></section></section><section><title>When Red Isn't Red</title>
 
