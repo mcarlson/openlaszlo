@@ -48,6 +48,7 @@
     <property file="${LPS_HOME}/WEB-INF/lps/config/lps.properties" />
     <property name="LFCdir" value="${LPS_HOME}/${compiler.runtime.dir}" />
     <property name="lfc.src.dir" value="${LPS_HOME}/WEB-INF/lps/lfc" />
+    <property name="schema.dir" value="${LPS_HOME}/WEB-INF/lps/schema" />
 
     <condition property="JAVA_DEBUG" value="" else="-ea">
       <equals arg1="${build.debug}" arg2="off" />
@@ -111,6 +112,10 @@
     </ant>     
   </target>
 
+  <fileset id="lfc.depend.lzx" dir="." excludes="*.lzl" />
+  <fileset id="lfc.depend.scgrammar" dir="${sc.dir}" includes="**/*" />
+  <fileset id="lfc.depend.sc" dir="${LPS_HOME}/WEB-INF/lps/server/src/org/openlaszlo/sc" includes="**/*" />
+
   <!-- We want to build the cross-product of [dhtml, swf7, swf8] with [ regular, debug, backtrace, profile ] -->
   <target name="lfcs"
           depends="init">
@@ -121,6 +126,7 @@
       <srcfileset dir="${sc.dir}" includes="**/*" />
       <srcfileset dir="${LPS_HOME}/WEB-INF/lps/server/src/org/openlaszlo/sc" includes="**/*" />
       <targetfileset dir="${LFCdir}" includes="*.js,*.lzl,*.swc" excludes="lzpreloader.lzl"/>
+      <targetfileset dir="${schema.dir}" includes="lfc-new.lzx"/>
     </dependset>
 
     <script language="javascript">
@@ -256,6 +262,8 @@
       }
     }
     ]]> </script>
+    <ant dir="${schema.dir}"  target="lfc.schema" />
+
   </target>
 
   <target name="doc" />

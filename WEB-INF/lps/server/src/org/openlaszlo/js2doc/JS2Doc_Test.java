@@ -732,7 +732,7 @@ public class JS2Doc_Test extends XMLTestCase {
             try {
                 Document control = XMLUnit.buildControlDocument(result);
                 
-                Document test = JS2Doc.toXML(source, null, null, null, runtimeOptions, runtimeAliases, buildOptions);
+                Document test = JS2Doc.toXML(source, null, null, null, runtimeOptions, runtimeAliases, buildOptions, null);
                 
                 Diff diff = new Diff(control, test);
                 

@@ -36,6 +36,13 @@ public class JS2DocUtils {
             super(message);
             this.node = node;
         }
+
+        /** Constructs an instance.
+         * @param e an exception
+         */
+        public InternalError(Exception e) {
+            super(e);
+        }
     }
 
 
@@ -59,7 +66,16 @@ public class JS2DocUtils {
         return stringResult;
     }
 
-    public static void xmlToFile(org.w3c.dom.Node node, String filename) throws RuntimeException {
+    static final String XALAN_INDENT_AMOUNT = 
+        "{http://xml.apache.org/xslt}" + "indent-amount"; 
+
+    private static void setReadable(Transformer xformer) {
+        xformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); 
+        xformer.setOutputProperty(OutputKeys.INDENT, "yes"); 
+        xformer.setOutputProperty(XALAN_INDENT_AMOUNT, "2"); 
+    }
+
+    public static void xmlToFile(org.w3c.dom.Node node, String filename, boolean readable) throws RuntimeException {
         try {
             // Prepare the DOM document for writing
             Source source = new DOMSource(node);
@@ -70,6 +86,7 @@ public class JS2DocUtils {
     
             // Write the DOM document to the file
             Transformer xformer = TransformerFactory.newInstance().newTransformer();
+            setReadable(xformer);
             xformer.transform(source, result);
         } catch (TransformerConfigurationException e) {
             e.printStackTrace();

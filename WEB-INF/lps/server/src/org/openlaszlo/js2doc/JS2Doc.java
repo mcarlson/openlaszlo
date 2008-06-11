@@ -428,6 +428,8 @@ public class JS2Doc {
                 visitModifiedDefinition(parseNode, docNode);
             } else if (parseNode instanceof ASTPragmaDirective) {
                 // do nothing
+            } else if (parseNode instanceof ASTPassthroughDirective) {
+                // do nothing
             } else {
                 logger.warning("Unhandled class statement type " + parseNode.getClass().getName());
             }
@@ -819,9 +821,16 @@ public class JS2Doc {
         }
     }
     
+    static class XMLGenerateOptions {
+        boolean createSchema = false;
+    }
+
     static public Document toXML(String inputString, 
                                  File sourceFile, String sourceRoot, String libraryID,
-                                 Set runtimeOptions, List runtimeAliases, List buildOptions) {
+                                 Set runtimeOptions, List runtimeAliases, List buildOptions, XMLGenerateOptions xmlOptions) {
+        if (xmlOptions == null) {
+            xmlOptions = new XMLGenerateOptions();
+        }
         org.openlaszlo.sc.Compiler.Parser p = new org.openlaszlo.sc.Compiler.Parser();
         SimpleNode parseRoot = p.parse(inputString);
         
@@ -873,6 +882,17 @@ public class JS2Doc {
             
             ReprocessComments.reprocess(docRoot, true);
             
+            Element schemaRoot = null;
+            if (xmlOptions.createSchema) {
+                org.w3c.dom.Document schemaDoc = factory.newDocumentBuilder().newDocument();
+                org.w3c.dom.Element libraryNode = schemaDoc.createElement("library");
+                schemaDoc.appendChild(libraryNode);
+                (new SchemaBuilder(docRoot)).build(libraryNode);
+
+                // Emit the schema document instead of the original js2doc doc
+                doc = schemaDoc;
+            }
+
             doc.normalizeDocument();
             
         } catch (javax.xml.parsers.ParserConfigurationException e) {

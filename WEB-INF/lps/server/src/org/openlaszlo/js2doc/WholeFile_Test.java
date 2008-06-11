@@ -80,7 +80,7 @@ public class WholeFile_Test extends XMLTestCase {
     
                 Document control = XMLUnit.buildControlDocument(result);
                 
-                Document test = JS2Doc.toXML(source, sourceFile, sourceRoot, "test", runtimeOptions, runtimeAliases, buildOptions);
+                Document test = JS2Doc.toXML(source, sourceFile, sourceRoot, "test", runtimeOptions, runtimeAliases, buildOptions, null);
                 
                 Diff diff = new Diff(control, test);
                 

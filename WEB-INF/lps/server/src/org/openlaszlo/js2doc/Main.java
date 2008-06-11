@@ -30,6 +30,8 @@ public class Main {
         "  Test mode: validate result against schema given",
         "--reprocess",
         "  Reprocess comments",
+        "--schema",
+        "  Produce schema file for lfc.lzx",
         "--help",
         "  Prints this message.",
         "",
@@ -87,6 +89,7 @@ public class Main {
         boolean reprocessOnly = false;
         String libraryID = null;
         String schemaFilename = null; // used for --test mode
+        JS2Doc.XMLGenerateOptions xmlOptions = new JS2Doc.XMLGenerateOptions();
         
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].intern();
@@ -121,6 +124,8 @@ public class Main {
                         libraryID = args[i];
                     } else
                         badform = true;
+                } else if (arg.equals("--schema")) {
+                    xmlOptions.createSchema = true;
                 } else if (arg.equals("--help")) {
                     for (int j = 0; j < USAGE.length; j++) {
                         System.err.println(USAGE[j]);
@@ -156,11 +161,11 @@ public class Main {
             } else if (reprocessOnly) {
                 if (files.size() > 1)
                     System.err.println("Reprocessing documentation within " + sourceName);
-                reprocess(sourceName, outFileName, outDir, libraryID, runtimeOptions, runtimeAliases, buildOptions);
+                reprocess(sourceName, outFileName, outDir, libraryID, runtimeOptions, runtimeAliases, buildOptions, xmlOptions);
             } else {
                 if (files.size() > 1)
                     System.err.println("Extracting documentation from " + sourceName);
-                process(sourceName, outFileName, outDir, libraryID, runtimeOptions, runtimeAliases, buildOptions);
+                process(sourceName, outFileName, outDir, libraryID, runtimeOptions, runtimeAliases, buildOptions, xmlOptions);
             }
         }
         return 0;
@@ -172,7 +177,8 @@ public class Main {
                                String libraryID,
                                Set runtimeOptions,
                                List runtimeAliases,
-                               List buildOptions)
+                               List buildOptions,
+                               JS2Doc.XMLGenerateOptions xmlOptions)
     {
         File sourceFile = new File(sourceName);
         if (outFileName == null) {
@@ -189,9 +195,9 @@ public class Main {
             String script = "#file " + sourceName + "\n" + "#line 1\n" + scriptContents;
             // TODO [jgrandy 2007/01/11] pass in or retrieve JS2DOC_HOME
             String sourceRoot = System.getProperty("JS2DOC_LIBROOT");
-            Document descr = JS2Doc.toXML(script, sourceFile, sourceRoot, libraryID, runtimeOptions, runtimeAliases, buildOptions);
+            Document descr = JS2Doc.toXML(script, sourceFile, sourceRoot, libraryID, runtimeOptions, runtimeAliases, buildOptions, xmlOptions);
             
-            JS2DocUtils.xmlToFile(descr, outFileName);
+            JS2DocUtils.xmlToFile(descr, outFileName, true);
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -205,7 +211,8 @@ public class Main {
                                String libraryID,
                                Set runtimeOptions,
                                List runtimeAliases,
-                               List buildOptions)
+                               List buildOptions,
+                               JS2Doc.XMLGenerateOptions xmlOptions)
     {
         File sourceFile = new File(sourceName);
         if (outFileName == null) {
@@ -216,13 +223,12 @@ public class Main {
                 FileUtils.getBase(sourceFile.getName()) + ".xml";
             }
         } 
-        File scriptFile = new File(outFileName);
         try {
             String scriptContents = FileUtils.readFileString(sourceFile);
 
             Document descr = ReprocessComments.reprocess(scriptContents);
             
-            JS2DocUtils.xmlToFile(descr, outFileName);
+            JS2DocUtils.xmlToFile(descr, outFileName, true);
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -242,7 +248,7 @@ public class Main {
             String sourceContents = FileUtils.readFileString(sourceFile);
             String source = "#file " + sourceName + "\n" + "#line 1\n" + sourceContents;
             String sourceRoot = System.getProperty("JS2DOC_LIBROOT");
-            Document test = JS2Doc.toXML(source, sourceFile, sourceRoot, libraryID, runtimeOptions, runtimeAliases, buildOptions);
+            Document test = JS2Doc.toXML(source, sourceFile, sourceRoot, libraryID, runtimeOptions, runtimeAliases, buildOptions, null);
             
             String expectName = FileUtils.getBase(sourceName) + ".xml";
             File expectFile = new File(expectName);

@@ -388,6 +388,28 @@ javac (1.4);
     </java>
   </target>
   
+  <!--===============  Target [js2doc.schema]    =================-->
+  <!-- extract documentation from .js file(s) given -->
+  <!-- Note that we don't depend on "build" here, which means you need to manually
+     - build if server sources change. The reason to skip this check is to avoid
+     - repeatedly touching the lps-*.jar file, which causes the java task to always
+     - re-run js2doc in this task. -->
+  <target name="js2doc.schema" depends="init" if="hasdom3"
+        description="extract schema from the .js file(s) given">
+    <!-- fork=true is necessary, otherwise we get a FNF error trying to create the .xml file -->
+    <java classname="org.openlaszlo.js2doc.Main"
+          fork="yes"
+          failonerror="true">
+        <classpath>
+            <path refid="3rd.party.classpath"/>
+            <pathelement path="${LPS_JAR}"/>
+        </classpath> 
+        <sysproperty key="LPS_HOME" value="${LPS_HOME}"/>
+        <sysproperty key="JS2DOC_LIBROOT" value="${LPS_HOME}"/>
+        <arg line="${js2doc.args}"/>
+    </java>
+  </target>
+  
   <!--===============  Target [js2doc.rng]    =================-->
   <target name="js2doc.rng" 
           depends="js2doc.rng.dep"

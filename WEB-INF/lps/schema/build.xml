@@ -1,7 +1,7 @@
 <project name="schema" default="build">
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -15,11 +15,16 @@
   <target name="init">
     <tstamp/>
     <property name="build" value="./build"/>
+    <property name="build.dir" value="${LPS_HOME}/WEB-INF/lps/schema/build"/>
     <property name="rnc" value="lzx.rnc"/>
     <property name="docrng" value="lzxdoc.rng"/>
     <property name="rng" value="lzx.rng"/>
     <property name="xsd" value="lzx.xsd"/>
+    <property name="lfc.schema.file" value="lfc-new.lzx"/>
     <property name="html" value="lzx-reference.html"/>
+    <property name="server.dir" value="${LPS_HOME}/WEB-INF/lps/server" />
+    <property name="lfc.src.dir" value="${LPS_HOME}/WEB-INF/lps/lfc" />
+    <property name="js2doc.src.dir" value="${LPS_HOME}/WEB-INF/lps/server/src/org/openlaszlo/js2doc/" />
 
     <mkdir dir="build"/>
     <condition property="schemas.uptodate">
@@ -57,13 +62,31 @@
     <delete file="${rng}"/>
     <delete file="${xsd}"/>
     <delete file="${dtd}"/>
+    <delete file="${lfc.schema.file}"/>
     <delete quiet="true">
       <fileset dir="." defaultexcludes="no" includes="**/*~"/>
       <fileset dir="." defaultexcludes="no" includes="**/*.pyc"/>
     </delete>
   </target>
 
-    
+  <target name="lfc.schema.uptodate" depends="init">
+    <condition property="uptodate">
+      <uptodate property="lfc.schema.uptodate" targetfile="${lfc.schema.file}">
+        <srcfiles dir="${lfc.src.dir}" includes="**/*" />
+        <srcfiles dir="${js2doc.src.dir}" includes="**/*" />
+      </uptodate>
+    </condition>
+  </target>
+
+  <!-- The lfc.schema target is called from lfc/build.xml -->
+  <target name="lfc.schema" description="build the lfc-new.lzx schema description"
+          depends="lfc.schema.uptodate" unless="uptodate">
+    <property name="js2doc.args" value="--schema --out ${build.dir}/lfc-new.xml --dir ${build.dir} ${lfc.src.dir}/LaszloLibrary.lzs" />
+    <ant dir="${server.dir}" target="js2doc.schema" />
+    <copy file="${build.dir}/lfc-new.xml" tofile="${lfc.schema.file}"/>
+
+  </target>
+
   <target name="build" 
           description="Build generated schema files" depends="rng"
           unless="schemas.uptodate"> <!-- don't build dtd unless it is explicitly requested -->
