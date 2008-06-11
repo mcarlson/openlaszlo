@@ -542,7 +542,11 @@ instances of the class. The resource for the display is also included in the dis
 
 <para>We used the same id attribute that we had in the <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> tag of the display in the <emphasis role="i">instance</emphasis> of the calcDisplay class.
 The calculator app is now broken up across three files:</para>
-<orderedlist spacing="compact"><listitem><para>calculator_main.lzx</para></listitem><listitem><para>calculator_display.lzx</para></listitem><listitem><para>calculator_display.lzx</para></listitem></orderedlist>
+<orderedlist spacing="compact">
+  <listitem><para>calculator_button.lzx</para></listitem>
+  <listitem><para>calculator_display.lzx</para>
+  </listitem><listitem><para>calculator_main.lzx</para></listitem>
+</orderedlist>
 <para>At the very least, classes help minimize the amount of typing you have to do, as well as giving you an intuitive system 
 for dividing up and organizing your code. LZX was designed to be an Object Oriented language, and the use of classes in LZX goes much 
 further than saving you typing. </para>
