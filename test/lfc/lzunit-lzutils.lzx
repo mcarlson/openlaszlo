@@ -24,7 +24,7 @@
             assertEquals(0xffff00, LzUtils.hextoint('0xffff00'), "Convert to decimal");
             assertEquals(0x800080, LzUtils.hextoint('purple'), "Convert to decimal");
             assertEquals(0xff00ff, LzUtils.hextoint('rgb(255,0,255)'), "Convert to decimal");
-            assertEquals(16776960.01, LzUtils.hextoint('#ffff00ff'), "Convert to decimal");
+            assertEquals(16776960.002, LzUtils.hextoint('#ffff0033'), "Convert to decimal");
 
             assertEquals('rgb(221,221,221)', LzUtils.torgb('#DDD'), "Convert to RGB");
             assertEquals('rgb(221,221,221)', LzUtils.torgb('#DDDDDD'), "Convert to RGB");
