@@ -122,8 +122,8 @@ function addObject(o) {
 }
 
 /**
-  * Returns a clone of this LzParam
-  * @deprecated: Argument is deprecated
+  * Returns a clone of this LzParam. Argument is deprecated.
+  * @keywords deprecated: Argument is deprecated
   * @return LzParam
   */
 function clone(arg=null) {

@@ -1177,8 +1177,8 @@ var layouts = null;
 
 
 /**
-  * Releases all the layouts applied to this view.
-  * @deprecated
+  * Releases all the layouts applied to this view. <method>releaseLayouts()</method> has been deprecated.
+  * @keywords deprecated
   */
 function releaseLayouts( ) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);

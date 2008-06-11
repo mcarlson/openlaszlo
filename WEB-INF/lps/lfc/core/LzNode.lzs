@@ -1070,11 +1070,11 @@ public dynamic class LzNode extends LzEventable {
     }
   }
   /**
-   * returns the value for a property
+   * Returns the value for a property. <method>getAttribute()</method> is deprecated.
    *
    * @param String prop: a string specifying the key of attribute to return.
    * @return any: value of named property
-   * @deprecated
+   * @keywords deprecated
    */
   function getAttribute(prop) {
     Debug.info("%w.%s(%#w) is deprecated.  Use %w[%#w] instead.", this, arguments.callee, prop, this, prop);
@@ -1417,9 +1417,10 @@ public dynamic class LzNode extends LzEventable {
   // TODO: [2008-02-12 ptw] Backwards compatibility, remove in next
   // release
   /**
-   * Applies a function as a constraint.
+  * Applies a function as a constraint. Deprecated: Constraints should be methods and should be applied
+  * using <method>applyConstraintMethod()</method>
    *
-   * @deprecated: Constraints should be methods and should be applied
+   * @keywords deprecated: Constraints should be methods and should be applied
    * using applyConstraintMethod
    *
    * @param String attribute: Putatively the attribute being
