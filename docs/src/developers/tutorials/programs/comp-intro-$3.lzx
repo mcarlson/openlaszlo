@@ -7,12 +7,12 @@
   </button>
   <script>
   //And here is a button created with using script 
-   var b = new button();
-   b.setAttribute("width", 50);
-    b.setAttribute("height", 50);
+   var b = new lz.button();
+     b.setAttribute("width", 50);
+     b.setAttribute("height", 50);
    </script>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
