@@ -85,7 +85,7 @@ Nevertheless, as a developer you have to decide whether to:
 <orderedlist spacing="compact"><listitem><para>optimize for swf (employ swf-only APIs, (and maybe even touch Flash APIs))</para></listitem><listitem><para>optimize for dhtml (employ dhtml-only APIs)</para></listitem><listitem><para>code to lowest common denominator ("core" APIs only)</para></listitem><listitem><para>conditionalize (include both. An example would be including comma separated list of embedded and system fonts; when compiled to swf you get embedded font, to dhtml you get system font).</para></listitem></orderedlist>
 <!-- change title per LPP-4804, IORIO 16 oct 2007 -->
 <para>
-The focus of the <emphasis role="i">OpenLaszlo Application Developer's Guide</emphasis> is (c), the lowest common denominator; runtime-specific APIs and engineering approaches are presented as adjuncts.  Graphic devices ("glyphs") in the margin call attention to non core/non SOLO information.
+The focus of the <emphasis role="i">OpenLaszlo Application Developer's Guide</emphasis> is (3), the lowest common denominator; runtime-specific APIs and engineering approaches are presented as adjuncts.  Graphic devices ("glyphs") in the margin call attention to non core/non SOLO information.
 </para>
 <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>illustrate the glyphs here when they're ready</remark></para>
 <para>
