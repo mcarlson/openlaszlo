@@ -99,7 +99,8 @@ class LzUtilsClass {
         if (s.indexOf('rgb') != -1) return this.fromrgb(s);
 
         // Handle strings in the format '0xffffff' - see lzpix 
-        return Number(s);
+        var n = Number(s);
+        return isNaN(n) ? s : n;
     }
 
     // Converts a floating point rgb.0a to a CSS rgba(r,g,b,a) string 
