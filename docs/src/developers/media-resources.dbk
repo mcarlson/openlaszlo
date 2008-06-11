@@ -107,7 +107,7 @@
             JFIF Specification</ulink>. 
             <note>
               <para>
-              <emphasis>Progressive</emphasis>files are re-encoded
+              <emphasis>Progressive</emphasis> files are re-encoded
               in the OpenLaszlo Server.</para>
             </note></para>
           </listitem>
