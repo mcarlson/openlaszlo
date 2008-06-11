@@ -8,7 +8,7 @@
 <%@ page import="org.openlaszlo.utils.FileUtils.*" %>
     
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -161,7 +161,7 @@ certainly not what you want.
         in.close();
 
         // load a copy of the swf 7 version
-        in = new BufferedReader(new InputStreamReader(swf7Url.openStream()));
+        in = new BufferedReader(new InputStreamReader(swf8Url.openStream()));
         while ((str = in.readLine()) != null) 
         {
         }
@@ -174,7 +174,7 @@ certainly not what you want.
         // remove the servlet prefix and leading slash
         lzhistwrapper = lzhistwrapper.replaceAll(request.getContextPath()+"/", "");
         lzhistwrapper = lzhistwrapper.replaceAll(request.getContextPath(), "");
-        lzhistwrapper = lzhistwrapper.replaceAll("[.]lzx[?]lzt=swf", ".lzx.lzr=swf7.swf?");
+        lzhistwrapper = lzhistwrapper.replaceAll("[.]lzx[?]lzt=swf", ".lzx.lzr=swf8.swf?");
 
     } 
     catch (MalformedURLException e) { %>
@@ -278,7 +278,7 @@ try {
 <p>
 
 <%
-String soloURL = (request.getContextPath()+"/" + appUrl + ".lzr=swf7.swf?lzproxied=false");
+String soloURL = (request.getContextPath()+"/" + appUrl + ".lzr=swf8.swf?lzproxied=false");
 %>
 
 <tt>Using URL</tt> <a href="<%= soloURL %>"><tt><%= soloURL %></tt></a>
@@ -434,8 +434,8 @@ Paste this wrapper into a browser to deploy your app:
           html, body { margin: 0; padding: 0; height: 100%; }
           body { background-color: #eaeaea; }
         </style></head>
-   <body><object type="application/x-shockwave-flash" data="<%= appUrl %>.lzr=swf7.swf?lzproxied=false" width="640" height="400">
-         <param name="movie" value="<%= appUrl %>.lzr=swf7.swf?lzproxied=false">
+   <body><object type="application/x-shockwave-flash" data="<%= appUrl %>.lzr=swf8.swf?lzproxied=false" width="640" height="400">
+         <param name="movie" value="<%= appUrl %>.lzr=swf8.swf?lzproxied=false">
          <param name="quality" value="high">
          <param name="scale" value="noscale">
          <param name="salign" value="LT">
@@ -481,8 +481,8 @@ swin.document.write('<style type=\'text/css\'>');
 swin.document.write('          html, body { margin: 0; padding: 0; height: 100%; }');
 swin.document.write('          body { background-color: #eaeaea; }');
 swin.document.write('        </style></head>');
-swin.document.write('   <body><object type=\'application/x-shockwave-flash\' data=\'<%= appUrl %>.lzr=swf7.swf?lzproxied=false\' width=\'640\' height=\'400\'>');
-swin.document.write('         <param name=\'movie\' value=\'<%= appUrl %>.lzr=swf7.swf?lzproxied=false\'>');
+swin.document.write('   <body><object type=\'application/x-shockwave-flash\' data=\'<%= appUrl %>.lzr=swf8.swf?lzproxied=false\' width=\'640\' height=\'400\'>');
+swin.document.write('         <param name=\'movie\' value=\'<%= appUrl %>.lzr=swf8.swf?lzproxied=false\'>');
 swin.document.write('         <param name=\'quality\' value=\'high\'>');
 swin.document.write('         <param name=\'scale\' value=\'noscale\'>');
 swin.document.write('         <param name=\'salign\' value=\'LT\'>');
