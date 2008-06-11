@@ -5,7 +5,7 @@
 <title>Building a Calculator</title>
 <section>
 <title>Introduction</title>
-<para>In this section we draw on the concepts presented thus far to create a simple — calculator as shown below.</para>
+<para>In this section we draw on the concepts presented thus far to create a simple calculator.</para>
 <para condition="swf">
 When you compile this application for SWF, you can uncomment the lines that embed fonts. This will import fonts that give a somewhat more polished look to the calculator.
 </para>
@@ -49,13 +49,11 @@ from scripts (for example, to change the text in the display).</para>
 convenient because it allows us to position the text tag relative to the display, which is how we think of it.
 </para>
     
-
 <para>The buttons are all the same size, and they're arranged in a grid. The buttons are actually arranged in rows 
-(or you might describe them as columns, but for the purposes of this tutorial, we're going to treat them as rows):</para>
+(or you might describe them as columns, but for the purposes of this tutorial, we're going to treat them as rows).</para>
  
 <informalfigure><mediaobject><imageobject><imagedata fileref="img/d_t_calculator_2.gif"/></imageobject></mediaobject></informalfigure>
-<para>Ignore the fact that the first row of two buttons is odd (we'll come to that later). The above diagram shows how we're going 
-to arrange them. Each button will be a view with a resource attached to it. We could have used images
+<para>Each button will be a view with a resource attached to it. We could have used images
  for the labels, but it is far easier to use text.</para>
 <para>Here's the code for a single button:</para>
 <example role="live-example"><title>code for a single button</title><programlisting>
