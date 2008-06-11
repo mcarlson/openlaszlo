@@ -363,8 +363,8 @@ their <emphasis role="i">own</emphasis> view, and that view will then become a s
 <para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>
 mention property that we're illustrating here--views grow to accommodate
 </remark></para>
-<para>That's better.  By using the attribute<literal>bgcolor</literal> (background
-color) attribute we can see how big the view is; it's 
+<para>That's better. By using the attribute <literal>bgcolor</literal> (background
+color) we can see how big the view is; it's 
 only as big as it needs to be. We haven't specified either a height or width, so it is just large
 enough to accommodate the buttons.</para>
 
