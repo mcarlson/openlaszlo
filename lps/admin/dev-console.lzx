@@ -7,7 +7,7 @@
 <!--=======================================================================-->
 
 
-<canvas width="100%"  height="370" proxied="false" bgcolor="#938fdc">
+<canvas width="100%"  height="370" proxied="false" bgcolor="#9494ad">
  <switch>
     <when runtime="dhtml">
     </when>
