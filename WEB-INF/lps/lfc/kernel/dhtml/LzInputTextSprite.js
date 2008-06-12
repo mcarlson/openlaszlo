@@ -474,7 +474,10 @@ LzInputTextSprite.prototype.setMaxLength = function ( val ){
 LzInputTextSprite.prototype.select = function (){
     this._cancelblur = true;
     this.__show();
-    this.__LzInputDiv.focus();
+    // Setting focus can generate an error in IE7/dhtml (LPP-6142)
+    try {
+        this.__LzInputDiv.focus();
+    } catch (err) {}
     LzInputTextSprite.__lastfocus = this;
     setTimeout('LzInputTextSprite.__lastfocus.__LzInputDiv.select()', 50);
     //this.__LzInputDiv.select();
