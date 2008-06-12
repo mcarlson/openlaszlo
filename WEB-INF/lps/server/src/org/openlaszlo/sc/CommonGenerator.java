@@ -555,6 +555,16 @@ public abstract class CommonGenerator implements ASTVisitor {
   
   static SimpleNode undefined = parseFragment("void 0").get(1).get(0);
 
+  static private void addVarProp(SimpleNode v, List p) {
+    assert v instanceof ASTVariableDeclaration : v.getClass();
+    p.add(new ASTLiteral(((ASTIdentifier)v.get(0)).getName()));
+    if (v.getChildren().length > 1) {
+      p.add(v.get(1));
+    } else {
+      p.add(undefined);
+    }
+  }
+
   // translate the class directives according to the 'how' argument.
   // If how is AS_PROPERTY_LIST, function name/values and variable
   // name/initvalues are added to either classProps (for statics)
@@ -622,14 +632,15 @@ public abstract class CommonGenerator implements ASTVisitor {
           }
         } else if (n instanceof ASTVariableStatement && how == TranslateHow.AS_PROPERTY_LIST) {
           SimpleNode [] c = n.getChildren();
-          for (int j = 0, len = c.length; j < len; j++) {
+          for (int j = 0, clen = c.length; j < clen; j++) {
             SimpleNode v = c[j];
-            assert v instanceof ASTVariableDeclaration : v.getClass();
-            p.add(new ASTLiteral(((ASTIdentifier)v.get(0)).getName()));
-            if (v.getChildren().length > 1) {
-              p.add(v.get(1));
+            if (v instanceof ASTVariableDeclarationList) {
+              SimpleNode [] d = v.getChildren();
+              for (int k = 0, dlen = d.length ; k < dlen; k++) {
+                addVarProp(d[k], p);
+              }
             } else {
-              p.add(undefined);
+              addVarProp(v, p);
             }
           }
         } else if (n instanceof ASTClassDirectiveBlock) {
