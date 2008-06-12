@@ -35,7 +35,7 @@
                     <li>calendar (<a href="demos/calendar/calendar.lzx?lzr=swf7">flash</a>) (<a href="demos/calendar/calendar.lzx?lzr=dhtml">dhtml</a>)</li>
                     <li>chat (<a href="demos/chat/chat.lzx?lzr=swf7">flash</a>) (<a href="demos/chat/chat.lzx?lzr=dhtml">dhtml</a>)</li>
                     <li>lzpix (<a href="demos/lzpix/app.lzx?lzr=swf7">flash</a>) (<a href="demos/lzpix/app.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>lzproject (<a href="demos/lzproject/lzx/lzproject/lzproject.lzx?lzr=swf7">flash</a>) (<a href="demos/lzproject/lzx/lzproject/lzproject.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>lzproject (<a href="demos/lzproject/lzx/lzproject/LZProject.lzx?lzr=swf7">flash</a>) (<a href="demos/lzproject/lzx/lzproject/LZProject.lzx?lzr=dhtml">dhtml</a>)</li>
                     <li>noughts (<a href="demos/noughts/noughts.lzx?lzr=swf7">flash</a>) (<a href="demos/noughts/noughts.lzx?lzr=dhtml">dhtml</a>)</li>
                     <li>vacation-survey (<a href="demos/vacation-survey/vacation-survey.lzx?lzr=swf7">flash</a>) (<a href="demos/vacation-survey/vacation-survey.lzx?lzr=dhtml">dhtml</a>)</li>
                     <li>weather (<a href="demos/weather/weather.lzx?lzr=swf7">flash</a>)  (<a href="demos/weather/weather.lzx?lzr=dhtml">dhtml</a>)</li>
