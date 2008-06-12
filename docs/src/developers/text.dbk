@@ -24,8 +24,7 @@
     <primary>LzInputText</primary>
   </indexterm>
   <classname>LzInputText</classname>classes). It assumes you're
-  familiar with basic LZX concepts such as views (
-  <xref linkend="views" />), methods, and attributes.</para>
+  familiar with basic LZX concepts such as views (<xref linkend="views" />), methods, and attributes.</para>
   <para>For a gentle introduction, see 
   <xref linkend="text-tutorial" />.</para>
      <!-- remove empty para tag LI LPP-4642 9/4/2007-->
@@ -77,14 +76,14 @@
     <para>LZX also includes a text object, 
     <literal>lz.text</literal>, which can be instantiated by using
     the 
-    <sgmltag class="element">&lt;text&gt;</sgmltag>tag.</para>
+    <sgmltag class="element">&lt;text&gt;</sgmltag> tag.</para>
     <para>In addition to the HTML markup properties of text
     attributes, 
-    <sgmltag class="element">lz.text</sgmltag>objects have
+    <sgmltag class="element">lz.text</sgmltag> objects have
     additional properties such as maximum length, selectability,
     and so forth, which are described later on in this chapter.
     Oddly enough, one of the attributes of the 
-    <sgmltag class="element">&lt;lz.text&gt;</sgmltag>object is 
+    <sgmltag class="element">&lt;lz.text&gt;</sgmltag> object is 
     <literal>text</literal>.</para>
     <para>Thus,</para>
     <programlisting>&lt;text id="sam" text="King Samuel was a fine
@@ -93,7 +92,7 @@
     <programlisting>&lt;text id="sam"&gt; King Samuel was a fine
     hamster &lt;/text&gt;</programlisting>
     <para>In each case we have defined an 
-    <literal>lz.text</literal>object with an id of "sam" whose text
+    <literal>lz.text</literal> object with an id of "sam" whose text
     attribute is set to the string King Samuel was a fine hamster,
     which can be marked up with the supported HTML markup supported
     by LZX, as defined below. In this document, we have tried to
@@ -101,8 +100,8 @@
     are talking about text as an lz.text object. However, we may
     have been loose at times. If you keep in mind that many
     objects, including the 
-    <literal>lz.text</literal>object have 
-    <literal>text</literal>attributes.</para>
+    <literal>lz.text</literal> object have 
+    <literal>text</literal> attributes.</para>
   </section>
   <!-- <para /> -->
     <!-- remove empty para tag LI LPP-4642 9/4/2007-->
@@ -199,7 +198,7 @@
       <indexterm>
         <primary>img</primary>
       </indexterm>
-      <sgmltag class="element">&lt;img&gt;</sgmltag>is also
+      <sgmltag class="element">&lt;img&gt;</sgmltag> is also
       supported, but with some caveats. See below.</para>
       <para>The examples below show how to use XHTML tags in text
       content:</para>
@@ -217,7 +216,7 @@
         <primary>fontsize</primary>
       </indexterm>
       <sgmltag class="attribute">
-      fontsize</sgmltag>attributes:</para>
+      fontsize</sgmltag> attributes:</para>
       <example role="live-example">
         <title>Setting font, fontstyle and fontsize</title>
         <programlisting language="lzx">
@@ -259,7 +258,7 @@
       <indexterm>
         <primary>color</primary>
       </indexterm>
-      <sgmltag class="attribute">color</sgmltag>attributes. The
+      <sgmltag class="attribute">color</sgmltag> attributes. The
       color must be specified as an RGB hex string of the form "
       <literal>#
       <varname>RRGGBB</varname></literal>".</para>
@@ -273,8 +272,8 @@
       </example>
       <para>If you wish to include HTML escape characters in the
       text value, you can use entity codes such as 
-      <literal>&amp;amp;</literal>or 
-      <literal>&amp;lt;</literal>(or the numeric codes 
+      <literal>&amp;amp;</literal> or 
+      <literal>&amp;lt;</literal> (or the numeric codes 
       <literal>&amp;#
       <varname>ddd</varname>;</literal>), or you may enclose the
       characters using a CDATA region:</para>
@@ -295,13 +294,13 @@
             <literal>setXScroll()</literal>
           </primary>
         </indexterm>
-        <methodname>setXScroll()</methodname>and 
+        <methodname>setXScroll()</methodname> and 
         <indexterm>
           <primary>
             <literal>setYScroll()</literal>
           </primary>
         </indexterm>
-        <methodname>setYScroll()</methodname>methods. The arguments
+        <methodname>setYScroll()</methodname> methods. The arguments
         to these functions set the pixel position of the top line
         of text relative to the text view bounding box, and should
         be less than or equal to zero. When the text is scrolled
@@ -309,11 +308,11 @@
         <indexterm>
           <primary>onscrollx event</primary>
         </indexterm>
-        <literal>onscrollx</literal>or 
+        <literal>onscrollx</literal> or 
         <indexterm>
           <primary>onscrolly event</primary>
         </indexterm>
-        <literal>onscrolly</literal>event will be sent.</para>
+        <literal>onscrolly</literal> event will be sent.</para>
         <para />
       </section>
     </section>
@@ -470,14 +469,14 @@
     <section>
       <title>Idiosyncrasies of lz.text views</title>
       <para>
-      <literal>lz.text</literal>extends 
+      <literal>lz.text</literal> extends 
       <literal>lz.view</literal>, but some of its behaviors are
       different from what you might expect. For example, 
-      <literal>lz.text</literal>inherits opacity from view, as well
+      <literal>lz.text</literal> inherits opacity from view, as well
       as rotation. But these attributes don't work in all cases, as
       described below.</para>
       <para>
-      <literal>lz.text</literal>has the following additional
+      <literal>lz.text</literal> has the following additional
       peculiarities:</para>
         
       <itemizedlist spacing="compact">
@@ -515,7 +514,7 @@
       <indexterm>
         <primary>multiline</primary>
       </indexterm>
-      <sgmltag class="attribute">multiline</sgmltag>sets whether
+      <sgmltag class="attribute">multiline</sgmltag> sets whether
       wrapping is enabled. The default is a single-line text
       field.</para>
       <example role="live-example">
@@ -531,12 +530,12 @@
       <indexterm>
         <primary>multiline</primary>
       </indexterm>
-      <sgmltag class="attribute">multiline</sgmltag>to false. When
+      <sgmltag class="attribute">multiline</sgmltag> to false. When
       multiline=false, the linebreaks will only be placed where you
       specify them in the text content, either as 
-      <literal>&lt;br/&gt;</literal>tags for HTML content, or
+      <literal>&lt;br/&gt;</literal> tags for HTML content, or
       newlines inside of a 
-      <literal>&lt;pre/&gt;</literal>preformatted text
+      <literal>&lt;pre/&gt;</literal> preformatted text
       region.</para>
       <example role="live-example">
         <title>Multiline text with explicit line breaks</title>
@@ -568,11 +567,11 @@
       <indexterm>
         <primary>resize</primary>
       </indexterm>
-      <sgmltag class="attribute">resize</sgmltag>on a text field
+      <sgmltag class="attribute">resize</sgmltag> attribute on a text field
       will cause it to be resized to fit its text content at
       runtime, whenever the 
       <methodname role="LzText.prototype.setText">
-      setText()</methodname>method is called.</para>
+      setText()</methodname> method is called.</para>
       <para>Note: If no initial text content is specified, i.e.,
       you have an empty tag such as &lt;text/&gt; , then the text
       view will be sized to some nonzero default width and height.
@@ -774,9 +773,9 @@
       <indexterm>
         <primary>text</primary>
       </indexterm>
-      <sgmltag class="element">&lt;text&gt;</sgmltag>element, or
+      <sgmltag class="element">&lt;text&gt;</sgmltag> element, or
       within an HTML element that a &lt;text&gt; element
-      contains</para>
+      contains.</para>
       <para condition="swf">When you're compiling to SWF, the image
       you include must be natively supported by the Flash Player
       (regardless whether your application is SOLO or
@@ -786,7 +785,7 @@
         <indexterm>
           <primary>img</primary>
         </indexterm>
-        <sgmltag class="element">&lt;img&gt;</sgmltag>tag does not
+        <sgmltag class="element">&lt;img&gt;</sgmltag> tag does not
         work inside 
         <indexterm>
           <primary>inputtext</primary>
@@ -802,7 +801,7 @@
       <indexterm>
         <primary sortas="multiline">@multiline</primary>
       </indexterm>
-      <sgmltag class="attribute">@multiline</sgmltag>attribute of
+      <sgmltag class="attribute">@multiline</sgmltag> attribute of
       the &lt;text&gt; element is true.</para>
       <para condition="dhtml">Applications compiled to DTHML may
       not match exactly the appearance of those compiled to SWF.
@@ -892,7 +891,7 @@
       <indexterm>
         <primary>img</primary>
       </indexterm>
-      <sgmltag class="element">&lt;img&gt;</sgmltag>tag.</para>
+      <sgmltag class="element">&lt;img&gt;</sgmltag> tag.</para>
       <example role="live-example">
         <title>Basic use of &lt;img&gt; tag</title>
         <programlisting language="lzx">
@@ -916,15 +915,15 @@
       <indexterm>
         <primary>height</primary>
       </indexterm>
-      <sgmltag class="attribute">height</sgmltag>and 
+      <sgmltag class="attribute">height</sgmltag> and 
       <indexterm>
         <primary>width</primary>
       </indexterm>
-      <sgmltag class="attribute">width</sgmltag>attributes on the 
+      <sgmltag class="attribute">width</sgmltag> attributes on the 
       <indexterm>
         <primary>img</primary>
       </indexterm>
-      <sgmltag class="element">&lt;img&gt;</sgmltag>tag, you can
+      <sgmltag class="element">&lt;img&gt;</sgmltag> tag, you can
       scale the image:</para>
       <example role="live-example">
         <title>Scaling an image included in text</title>
@@ -938,7 +937,7 @@
       <indexterm>
         <primary>align</primary>
       </indexterm>
-      <sgmltag class="attribute">align</sgmltag></para>
+      <sgmltag class="attribute">align</sgmltag> attribute.</para>
       <example role="live-example">
         <title>Scaled and left-aligned image</title>
         <programlisting language="lzx">
@@ -951,12 +950,12 @@
       <indexterm>
         <primary>img</primary>
       </indexterm>
-      <sgmltag class="element">&lt;img&gt;</sgmltag>tags within the
+      <sgmltag class="element">&lt;img&gt;</sgmltag> tags within the
       same 
       <indexterm>
         <primary>text</primary>
       </indexterm>
-      <sgmltag class="element">&lt;text&gt;</sgmltag>elements. Take
+      <sgmltag class="element">&lt;text&gt;</sgmltag> elements. Take
       care with the positioning; it's possible to position the
       images on top of each other, so you may not get the effect
       you want.</para>
@@ -977,17 +976,17 @@
       <primary>inputtext</primary>
     </indexterm>
     <sgmltag class="element">
-    &lt;inputtext&gt;</sgmltag>View</title>
+    &lt;inputtext&gt;</sgmltag> View</title>
     <para>Editable text fields are created with the 
     <indexterm>
       <primary>inputtext</primary>
     </indexterm>
-    <sgmltag class="element">&lt;inputtext&gt;</sgmltag>tag. Like
+    <sgmltag class="element">&lt;inputtext&gt;</sgmltag> tag. Like
     the non-editable 
     <indexterm>
       <primary>text</primary>
     </indexterm>
-    <sgmltag class="element">&lt;text&gt;</sgmltag>view, an input
+    <sgmltag class="element">&lt;text&gt;</sgmltag> view, an input
     text field can be single line or multiline (wrapped).</para>
     <!-- remove empty para tag LI LPP-4642 9/4/2007-->
       <!--    <para /> -->
@@ -1000,13 +999,13 @@
           <literal>getSelectionPosition()</literal>
         </primary>
       </indexterm>
-      <methodname>getSelectionPosition()</methodname>and 
+      <methodname>getSelectionPosition()</methodname> and 
       <indexterm>
         <primary>
           <literal>getSelectionSize()</literal>
         </primary>
       </indexterm>
-      <methodname>getSelectionSize()</methodname>methods can be
+      <methodname>getSelectionSize()</methodname> methods can be
       used to obtain the offset and length of the selected text.
       The 
       <indexterm>
@@ -1014,7 +1013,7 @@
           <literal>setSelection()</literal>
         </primary>
       </indexterm>
-      <methodname>setSelection()</methodname>selects a region of
+      <methodname>setSelection()</methodname> selects a region of
       text in the view.</para>
      <!-- remove empty para tag LI LPP-4642 9/4/2007-->
         <!--     <para />  -->
