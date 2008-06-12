@@ -157,7 +157,7 @@
       </path>
 
       <!-- Filter any @VERSIONID@'s from .proto files -->
-      <copy todir="docs/src" >
+      <copy todir="." >
         <fileset dir="." includes="**/*.proto" />
         <mapper type="glob" from="*.proto" to="*" />
         <filterset>
