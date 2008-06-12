@@ -497,11 +497,18 @@ For non-MSAA compliant screen readers such as R&amp;W Gold, OpenLaszlo supports 
 <para>
 In this example, there are two views that provide accessibility information. When the first view is clicked, it uses the scripting API to unsilence the button.
 </para>
-<example role="live-example"><title>Specifying accessibility parameters</title><programlisting>
-&lt;view aaactive="true" aaname="Activation Button" aadescription="This button allows you to access more information by activating important views." aatabindex="1" onclick="important.setAASilent(false)"&gt;
+<programlisting>
+&lt;view aaactive="true" aaname="Activation Button" 
+    aadescription="This button allows you to access more information by activating important views." 
+    aatabindex="1" 
+    onclick="important.setAASilent(false)"&gt;
 
-&lt;button id="important" aaactive="true" aaname="Important Information" aadescription="Here is some important information." aatabindex="2" aasilent="true"/&gt;
-</programlisting></example>
+&lt;button id="important" 
+    aaactive="true" 
+    aaname="Important Information" 
+    aadescription="Here is some important information." 
+    aatabindex="2" aasilent="true"/&gt;
+</programlisting>
 <para/><section><title>Compatibility Notes</title>
 <para>
 The Flash Player has basic support for screen readers with Flash Player versions 6 and above. For best results, we recommend upgrading to Flash 8. OpenLaszlo's built-in version detection feature can facilitate automatic upgrades.
