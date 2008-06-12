@@ -36,12 +36,12 @@ moments to get familiar with the range of components that ship with OpenLaszlo.
 </para>
 <para>
 The example below shows a miscellaneous collection of components. It's an abbreviated version of the sampler
-in the <ulink url="../../laszlo-explorer/index.jsp">OpenLaszlo Explorer,</ulink> which contains a visual tour of all the components. The code that implements
+in the <ulink url="../../../laszlo-explorer/index.jsp">OpenLaszlo Explorer,</ulink> which contains a visual tour of all the components. The code that implements
 these components may look a little intimidating if you have not worked with this kind of language before, but don't be put off.
 In fact you may not even want to look at the code yet. Your goal here is to start thinking about the kinds of things you can do in 
 an OpenLaszlo application, and components provide your quickest route to productivity.</para>
 <para>
-The <ulink url="../reference/">LZX Reference</ulink> documents all the tags, attributes and methods associated with each component.
+The <ulink url="../../reference/">LZX Reference</ulink> documents all the tags, attributes and methods associated with each component.
 </para>
 <example role="live-example">
    <title>Components miscellany</title>
