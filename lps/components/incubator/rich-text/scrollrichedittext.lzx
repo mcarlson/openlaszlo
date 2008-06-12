@@ -101,7 +101,7 @@
             <method name="setPos" args="p">
                 
                 if (this.isinited) {
-                    this.setScroll(1 - (p / this.lineheight));
+                    this.setScroll(Math.ceil(1 - (p / this.lineheight)));
                     this.pos = p;
                     if (this.onpos) this.onpos.sendEvent(p);
                 }
