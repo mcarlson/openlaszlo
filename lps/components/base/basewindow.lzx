@@ -68,7 +68,7 @@
         </method> 
 
         <!-- resizestatemin uses minwidth and minheight attribute-->
-        <resizestatemin name="_windowResize" onapply="parent.setAttribute('haswindowfocus', true)"/>
+        <resizestatemin name="_windowResize" resize_min_width="${this.minwidth}" resize_min_height="${this.minheight}" onapply="parent.setAttribute('haswindowfocus', true)"/>
 
         <!--- @keywords private -->
         <method name="construct" args="parent,args">

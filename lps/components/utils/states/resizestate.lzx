@@ -2,16 +2,16 @@
     <!--- resizes its immediateparent in response to mouse events, when applied -->
     <class name="resizestate" extends="state" >
         <!--- the x offset from the mouse -->
-        <attribute name="xroffset"
+        <attribute name="__resize_xroffset"
                    value="this.x - this.width + this.getMouse( 'x' )" when="once" />
         <attribute name="width" 
-                   value="${this.immediateparent.getMouse( 'x' )- this.xroffset}"/>
+                   value="${this.immediateparent.getMouse( 'x' )- this.__resize_xroffset}"/>
 
         <!--- the y offset from the mouse -->
-        <attribute name="yroffset"
+        <attribute name="__resize_yroffset"
                    value="this.y - this.height + this.getMouse( 'y' )" when="once" />
         <attribute name="height" 
-                   value="${this.immediateparent.getMouse( 'y' )- this.yroffset}"/>
+                   value="${this.immediateparent.getMouse( 'y' )- this.__resize_yroffset}"/>
         <doc>
           <tag name="shortdesc"><text>A standard resize behavior.</text></tag>
           <text>
