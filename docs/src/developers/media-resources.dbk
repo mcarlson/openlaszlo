@@ -183,7 +183,7 @@
     most basic viewable element in an OpenLaszlo application and it
     is described in 
     <xref linkend="views" />. A view may have a 
-    <emphasis>resource</emphasis>attached to it. The resource
+    <emphasis>resource</emphasis> attached to it. The resource
     represents a piece of media (image, audio, video, or animation)
     that the view controls. For images, the view typically displays
     the image. For time-based media (audio, video, animation), the
@@ -503,7 +503,7 @@
     <indexterm significance="preferred">
       <primary>resource loading</primary>
     </indexterm>
-    <glossterm>resource loading</glossterm>and LZX provides
+    <glossterm>resource loading</glossterm> and LZX provides
     flexibility over how and when the application loads resources.
     The most important choice is whether a resource should be
     loaded at 
