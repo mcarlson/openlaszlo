@@ -316,8 +316,9 @@ sub emit_content {
 
     if ($xform{states}) {
         s/apply="/applied="/g;
-        s/[.]apply\w*?\(\w*?\)/.setAttribute('applied', true)/g;
-        s/[.]remove\w*?\(\w*?\)/.setAttribute('applied', false)/g;
+        # May cause problems with function.apply() but what can you do? 
+        s/\.apply\(\w*?\)/.setAttribute('applied', true)/g;
+        s/\.remove\(\w*?\)/.setAttribute('applied', false)/g;
     }
 
 
