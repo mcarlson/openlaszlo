@@ -188,6 +188,6 @@
 
   <!--index/-->
 
-  <xi:include href="book-info.dbk"/>
+<!--  <xi:include href="book-info.dbk"/>-->
 
 </book>
