@@ -179,7 +179,7 @@
   <section>
     <title>Views and resources</title>
     <para>The 
-    <sgmltag class="element" role="LzView">view</sgmltag>is the
+    <sgmltag class="element" role="LzView">view</sgmltag> is the
     most basic viewable element in an OpenLaszlo application and it
     is described in 
     <xref linkend="views" />. A view may have a 
@@ -197,7 +197,7 @@
     <para>Resources may be declared directly inside a view using
     the view's 
     <sgmltag class="attribute" role="LzView.__ivars__.resource">
-    resource</sgmltag>attribute:</para>
+    resource</sgmltag> attribute:</para>
     <example role="live-example">
       <title>Importing a resource</title>
       <programlisting language="lzx">
@@ -222,8 +222,8 @@
       <title>Resources are not views</title>
       <para>Note that a 
       <sgmltag class="element" role="LzView.__ivars__.resource">
-      resource</sgmltag>is 
-      <emphasis>not</emphasis>itself a view. Resources do not have
+      resource</sgmltag> is 
+      <emphasis>not</emphasis> itself a view. Resources do not have
       x and y positions, or background color, or any of the 49 or
       so attributes that views have. A resource that is not
       attached to a view is essentially invisible to the
@@ -234,7 +234,7 @@
     <section>
       <title>Summary of APIs that act on resources</title>
       <para>There are a number of 
-      <sgmltag class="element">view</sgmltag>APIs (methods, fields,
+      <sgmltag class="element">view</sgmltag> APIs (methods, fields,
       and events) that can be used to find out about and control a
       view's resource.</para>
       <itemizedlist spacing="compact">
@@ -253,7 +253,7 @@
               resourceheight</sgmltag>
             </listitem>
             <listitem>
-              <property role="LzView.stretches">
+              <property role="LzView">
               stretches</property>
             </listitem>
             <listitem>
@@ -416,9 +416,9 @@
       given a name. The namespace for resources is global to the
       entire application. Resource tags can only be used as direct
       children of either the 
-      <sgmltag class="element" role="LzCanvas">canvas</sgmltag>or 
+      <sgmltag class="element" role="LzCanvas">canvas</sgmltag> or 
       <sgmltag class="element" role="tag.library">
-      library</sgmltag>tags.</para>
+      library</sgmltag> tags.</para>
       <para>This style of resource inclusion makes it simpler to
       separate out art assets from code and can make for improved
       designer/developer interactions.</para>
@@ -545,7 +545,7 @@
       The first is to use special syntax that is understood by the 
       <sgmltag class="element" role="LzView">view</sgmltag>'s 
       <sgmltag class="attribute" role="LzView.__ivars__.resource">
-      resource</sgmltag>attribute. If you specify a value for this
+      resource</sgmltag> attribute. If you specify a value for this
       attribute that is an HTTP url, the compiler assumes that this
       resource should be loaded at runtime:</para>
       <example role="live-example">
@@ -579,7 +579,7 @@
         <primary>setSource</primary>
       </indexterm>
       <methodname role="LzView.prototype.setSource">
-      setSource()</methodname>provides more control over the
+      setSource()</methodname> provides more control over the
       loading of the resource. Using this method, you can:</para>
       <itemizedlist spacing="compact">
         <listitem>
@@ -606,7 +606,7 @@
         (or proxies) the resource. The server uses the URL for the
         resource to determine how and where to get the resource.
         The term 
-        <emphasis>back-end</emphasis>is used to refer to the server
+        <emphasis>back-end</emphasis> is used to refer to the server
         that is ultimately providing the resource. Depending on
         your configuration, the back-end can be the OpenLaszlo
         Server host itself. Or it may be another distinct
@@ -624,7 +624,7 @@
         <title>Caching</title>
         <para>By default, in proxied applications, media that is
         accessed at runtime is cached both in the server 
-        <emphasis role="bold">and</emphasis>in the client browser.
+        <emphasis role="bold">and</emphasis> in the client browser.
         The OpenLaszlo Server uses the standard HTTP
         If-Modified-Since/Last-Modified caching mechanism specified
         in the 
@@ -647,7 +647,7 @@
         the OpenLaszlo compiler. The settings for the Media Cache
         can affect server performance. See the 
         <!-- change title per LPP-4804, IORIO 15 oct 2007 -->
-        <ulink url="../deployers/">OpenLaszlo System Administrator's Guide</ulink>for details.</para>
+        <ulink url="../deployers/">OpenLaszlo System Administrator's Guide</ulink> for details.</para>
         <para>The example below provides a text input area for you
         to type in urls that you'd like to test. To run the
         example, copy it into your local environment and compile
@@ -666,13 +666,12 @@
   <section>
     <title>Using the &lt;image&gt; tag</title>
     <para>The 
-    <sgmltag class="element" role="lz.image">image</sgmltag>tag has
+    <sgmltag class="element" role="lz.image">image</sgmltag> tag has
     the effect of declaring a view and associating a resource with
     it. This is a convenient shorthand that can make your programs
     easier to read and maintain. Do not confuse the 
-    <sgmltag class="element" role="lz.image">image</sgmltag>tag
-    with the 
-    <sgmltag class="element" role="img">img</sgmltag>tag. The
+    <sgmltag class="element" role="lz.image">image</sgmltag> tag
+      with the <literal>&lt;img&gt;</literal> tag. The
     latter is used to include images inside HTML text and behaves
     like the &lt;img&gt; tag in HTML.</para>
   </section>
