@@ -156,8 +156,10 @@ var LzMouseKernel = {
             if (  !( cl[i] == 1 || cl[i]==2 )){
                 //if we encounter a button mouse event here, it means we sent
                 //a global mouse event too soon
-                if ( cl[i] != 0 ) {
-                    Debug.warn( "Sent extra global mouse event" );
+                if ($debug) {
+                    if ( cl[i] != 0 ) {
+                        Debug.warn( "Sent extra global mouse event" );
+                    }
                 }
 
                 //advance pointer

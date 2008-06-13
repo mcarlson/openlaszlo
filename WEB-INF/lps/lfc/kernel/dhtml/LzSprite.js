@@ -281,6 +281,7 @@ LzSprite.prototype.quirks = {
     ,ie_timer_closure: false
     ,keyboardlistentotop: false
     ,document_size_compute_correct_height: false
+    ,ie_mouse_events: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -361,6 +362,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['keypress_function_keys'] = false;
             // IE does not use charCode for onkeypress
             quirks['text_event_charcode'] = false;
+            // IE requires special handling of mouse events see LPP-6027, LPP-6141
+            quirks['ie_mouse_events'] = true; 
         } else if (lz.embed.browser.isSafari) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             // TODO: Tucker claims this is fixed in the latest version of webkit
@@ -736,7 +739,7 @@ LzSprite.prototype.__setClickable = function(c, div) {
     // Prevent context menus in Firefox 1.5 - see LPP-2678
     div.onmousedown = f;
     div.onmouseup = f;
-    if (this.quirks.fix_ie_clickable) {
+    if (this.quirks.ie_mouse_events) {
         div.ondrag = f;
         div.ondblclick = f;
         div.onmouseenter = f;
@@ -771,24 +774,24 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         if (LzKeyboardKernel && LzKeyboardKernel['__keyboardEvent']) LzKeyboardKernel.__keyboardEvent(e);
     }
 
-    if (this.quirks.fix_ie_clickable) {
+    if (this.quirks.ie_mouse_events) {
         // rename ie-specific events to be compatible
         if (eventname == 'onmouseenter') {
             eventname = 'onmouseover';
         } else if (eventname == 'onmouseleave') {
             eventname = 'onmouseout';
+        } else if (eventname == 'ondblclick') {
+            // Send artificial events to mimic other browsers
+            this.__mouseEvent('onmousedown', true);
+            this.__mouseEvent('onmouseup', true);
+            this.__mouseEvent('onclick', true);
+            return;
         }
     }
 
-    var skipevent = false;
     if (window['LzInputTextSprite'] && eventname == 'onmouseover' && LzInputTextSprite.prototype.__lastshown != null) LzInputTextSprite.prototype.__hideIfNotFocused();
-    if (this.quirks.fix_ie_clickable && eventname == 'ondblclick') {
-        // Send artificial events to mimic other browsers
-        this.__mouseEvent('onmousedown', true);
-        this.__mouseEvent('onmouseup', true);
-        this.__mouseEvent('onclick', true);
-        return;
-    } else if (eventname == 'onmousedown') {
+
+    if (eventname == 'onmousedown') {
         // cancel mousedown event bubbling...
         e.cancelBubble = true;
         this.__mouseisdown = true;
@@ -797,39 +800,53 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         }
     } else if (eventname == 'onmouseup') {
         e.cancelBubble = false;
+        // only send the event if this is same sprite the mouse button went down on
         if (window['LzMouseKernel'] && LzMouseKernel.__lastMouseDown == this) {
-            if (this.quirks.fix_ie_clickable) {
+            if (this.quirks.ie_mouse_events) {
                 // Must be done for onmouseupoutside to work
-                if (this.__mouseisover) {
+                if (this.__isMouseOver()) {
                     this.__mouseisdown = false;
                 }
             } else {
                 this.__mouseisdown = false;
             }
         } else {
-            skipevent = true;
+            // skip sending the event
+            return;
         }
-    } else if (eventname == 'onmouseover') {
-        this.__mouseisover = true;
-    } else if (eventname == 'onmouseout') {
-        this.__mouseisover = false;
     } else if (eventname == 'onmouseupoutside') {
         this.__mouseisdown = false;
-        this.__mouseisover = false;
     }
 
     //Debug.write('__mouseEvent', eventname, this.owner);
-    if (skipevent == false && this.owner.mouseevent && LzMouseKernel && LzMouseKernel['__sendEvent']) {
-        LzMouseKernel.__sendEvent(eventname, this.owner);
-
-        if (this.__mouseisdown) {
-            if (eventname == 'onmouseover') {
-                LzMouseKernel.__sendEvent('onmousedragin', this.owner);
-            } else if (eventname == 'onmouseout') {
-                LzMouseKernel.__sendEvent('onmousedragout', this.owner);
+    if (this.owner.mouseevent && LzMouseKernel && LzMouseKernel['__sendEvent']) {
+        // send dragin/out events if the mouse is currently down
+        if (LzMouseKernel.__lastMouseDown) {
+            if (eventname == 'onmouseover' || eventname == 'onmouseout') {
+                if (this.quirks.ie_mouse_events) {
+                    // only send mouseover/out events if the mouse is over this sprite
+                    if (this.__isMouseOver()) {
+                        LzMouseKernel.__sendEvent(eventname, this.owner);
+                    }
+                } else {
+                    // only send mouseover/out if the mouse went down on this sprite
+                    if (LzMouseKernel.__lastMouseDown == this) {
+                        LzMouseKernel.__sendEvent(eventname, this.owner);
+                    }
+                }
+                var dragname = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
+                LzMouseKernel.__sendEvent(dragname, this.owner);
+                return;
             }
         }
+
+        LzMouseKernel.__sendEvent(eventname, this.owner);
     }
+}
+
+LzSprite.prototype.__isMouseOver = function ( e ){
+    var p = this.getMouse();
+    return p.x >= 0 && p.y >= 0 && p.x <= this.width && p.y <= this.height;
 }
 
 // called by LzMouseKernel when mouse goes up on another sprite
@@ -838,7 +855,10 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
   */
 LzSprite.prototype.__globalmouseup = function ( e ){
     if (this.__mouseisdown) {
-        this.__mouseEvent(e);
+        // the event is already sent in IE
+        if (! this.quirks.ie_mouse_events) {
+            this.__mouseEvent(e);
+        }
         this.__mouseEvent('onmouseupoutside', true);
     }
     LzMouseKernel.__lastMouseDown = null;

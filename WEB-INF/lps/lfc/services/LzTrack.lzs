@@ -308,7 +308,6 @@ function __LZtrackgroup (group,hitlist) {
   */
 function __LZtrack (ignore)
 {
-    var found = false;
     var foundviews = [];
     for ( var i in this.__LZactivegroups ) {
         var hitlist =[];
@@ -334,14 +333,14 @@ function __LZtrack (ignore)
                 }
                  // save this found value so that we can send the onmousetrackover
                  // after ALL of the onmousetrackouts from all trackgroups are sent
-                found = true;
                 foundviews.push(fd);
                 thisgroup.__LZlasthit = fd;
             }
         }
     } 
-    if ( found ) {
-        for (var i=0; i < foundviews.length; i++) {
+    var l = foundviews.length;
+    if ( l ) {
+        for (var i=0; i < l; i++) {
             var v = foundviews[i]
             if (v.onmousetrackover.ready) v.onmousetrackover.sendEvent( v );
         }
