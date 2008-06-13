@@ -178,7 +178,7 @@ a complete discussion.
           tag.</p>
       </text>
     </doc>
-  <class>
+  <class extends="LzView">
     <property name="__ivars__" access="public">
       <object>
         <property name="href" type="String">
