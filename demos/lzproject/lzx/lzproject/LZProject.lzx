@@ -10,7 +10,7 @@
     <include href="./css"/>
     <include href="./modules"/>
 
-  <debug y="10" width="500" align="right"/>
+  <debug y="10" width="500"/>
 
   <!-- LZ X-Ray tool instance -->
   <ApplicationVisualizer id="appVisualizer" />
@@ -340,7 +340,7 @@
 
                     <button options="ignorelayout" datapath="i18nDS:/app/main/projectTab/createButton/text()"
                         height="20" fontsize="10"
-                        onclick="newProjectWindow.setVisible(true)" align="right"/>
+                        onclick="newProjectWindow.setAttribute('visible', true)" align="right"/>
                   </view>
 
                   <!-- Project details -->
@@ -391,7 +391,7 @@
                   </handler>
                           <method name="filterTasks" args="comboValue">
                             <![CDATA[
-                            if (tasks.constructor.classname == "LzReplicationManager") {
+                            if (tasks is LzReplicationManager) {
                               // Replication manager, now step through the clones array
                               for (var i=0; i<tasks.clones.length; i++) {
                                 var task = tasks.clones[i];
@@ -426,7 +426,7 @@
                   </handler>
                           <method name="filterTasks" args="comboValue">
                             <![CDATA[
-                            if (finishedTasks.constructor.classname == "LzReplicationManager") {
+                            if (finishedTasks is LzReplicationManager) {
                               // Replication manager, now step through the clones array
                               for (var i=0; i<finishedTasks.clones.length; i++) {
                                 var task = finishedTasks.clones[i];

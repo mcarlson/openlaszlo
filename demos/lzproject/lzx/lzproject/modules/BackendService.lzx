@@ -149,7 +149,7 @@
       if (this.failureDatapath != null) {
           _failureDP.setAttribute('xpath', this.failureDatapath);
       }
-      this._dsRef = eval(this.getAttribute('name')+'DS');
+      this._dsRef = eval(this.name+'DS');
       // Push this service object to the canvas.services array
       canvas.services[this.name] =  this;
     </method>
