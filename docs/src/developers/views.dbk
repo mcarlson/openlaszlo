@@ -373,12 +373,12 @@ demonstrates this. See below for an explanation of what's going on in this progr
 
 <para>
 The reason that the intersection point does not move is that the parent view (in this case the canvas) is 
-placing the colored view at that point, and that point does not change. it is only the <literal>xoffset</literal> and <literal>yoffset</literal>
+placing the colored view at that point, and that point does not change. It is only the <literal>xoffset</literal> and <literal>yoffset</literal>
 that are changing, not the <literal>x</literal> and <literal>y</literal> of the colored view.
 </para>
 <para>
 Views rotate around the registration point. By default, <literal>xoffset</literal> and <literal>yoffset</literal> values are both zero and the 
-registration point is in the upper left corner of a each view. Offsets allow you to change the rotation point.  In the example below,
+registration point is in the upper left corner of each view. Offsets allow you to change the rotation point.  In the example below,
 the pivot point of the red square is the origin is its upper left corner; the pivot point of the blue square is its center (where x and y are set to "20").
 
 </para>
