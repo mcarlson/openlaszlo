@@ -228,7 +228,7 @@
       // Check whether the options tell us to build this runtime at all
       var buildThisRuntime = lfc.getProperty("build.lfc.runtime.swf" + v);
 
-      if (buildThisRuntime != null) {
+      if (buildThisRuntime != null && buildThisRuntime != "false") {
         var plain = LFCdir + "LFC" + v + ext;
         if (!(new File(plain)).exists()) {
           dobuild(plain, "swf" + v, shlibopt);
