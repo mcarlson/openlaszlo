@@ -93,9 +93,13 @@ var __LZresizeupdating :Boolean;
   */
 function LzResizeReplicationManager ( odp , args, children:* = null, instcall:* = null ){
     super(odp, args, children, instcall);
+}
+
+/** @access private */
+override protected function getDefaultPooling () :Boolean {
     //need to destroy the original clone for resize in order to insert the
     //appropriate onwidth-/onheight-delegate
-    this.pooling = false; // Defined in LzDatapath
+    return false;
 }
 
 /** @access private */

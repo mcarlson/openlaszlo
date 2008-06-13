@@ -167,11 +167,16 @@ var onvisible :LzDeclaredEventClass = LzDeclaredEvent;
   * @access private
   */
 function LzReplicationManager ( odp , args, children:* = null, instcall:* = null ){
-    //the real parent for this is datapaths view's (immediateparent) parent
-    super(odp, args, children, instcall);
-    this.pooling = false; // Defined in LzDatapath
+    this.pooling = this.getDefaultPooling(); // Defined in LzDatapath
     this.__LZtakeDPSlot = false; // Defined in LzDatapath
     this.datacontrolsvisibility = false; // Defined in LzDatapath
+    //the real parent for this is datapaths view's (immediateparent) parent
+    super(odp, args, children, instcall);
+}
+
+/** @access private */
+protected function getDefaultPooling () :Boolean {
+    return false;
 }
 
 /** @access private */

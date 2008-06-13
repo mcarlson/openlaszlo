@@ -84,8 +84,12 @@ var mask :LzView = null;
   */
 function LzLazyReplicationManager ( odp , args, children:* = null, instcall:* = null ){
     super(odp, args, children, instcall);
+}
+
+/** @access private */
+override protected function getDefaultPooling () :Boolean {
     //replication argument needs to control pooling
-    this.pooling = true; // Defined in LzDatapath
+    return true;
 }
 
 /** @access private */

@@ -245,7 +245,7 @@ override function construct ( v , args ) :void {
     if ( this.__LZtakeDPSlot ){
         if ($debug) {
             if (this.immediateparent.datapath != null) {
-                Debug.warn("overring datapath %w with %w", this.immediateparent.datapath, this);
+                Debug.warn("overriding datapath %w with %w", this.immediateparent.datapath, this);
             }
         }
         this.immediateparent.datapath = this;
