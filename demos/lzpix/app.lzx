@@ -559,7 +559,7 @@
         <!-- [TODO: change link and fix this comment ] load flash app in place -->        
         <linkbutton label="Flash application" 
             width="500"
-            url="http:app-loader.html?lzr=swf7"
+            url="http:app.lzx?lzr=swf8&amp;lzt=html"
             targetframe="_top" 
             windowopts="" 
         />
@@ -567,7 +567,7 @@
         <!-- [TODO: change link and fix this comment ] load dhtml app in place -->
         <linkbutton label="DHTML application" 
             width="500"
-            url="http:app-loader.html?lzr=dhtml"
+            url="http:app.lzx?lzr=dhtml&amp;lzt=html"
             targetframe="_top" 
             windowopts="" 
         />
