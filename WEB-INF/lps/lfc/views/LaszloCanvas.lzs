@@ -245,6 +245,19 @@ dynamic class LzCanvas extends LzView {
             if (this.sprite.bgcolor) {
                 args.bgcolor = this.sprite.bgcolor;
             }
+        } else {
+            // read from init args
+            if (lz.Browser.getInitArg('width') != null) {
+                args.width = lz.Browser.getInitArg('width');
+            }
+
+            if (lz.Browser.getInitArg('height') != null) {
+                args.height = lz.Browser.getInitArg('height');
+            }
+
+            if (lz.Browser.getInitArg('bgcolor') != null) {
+                args.bgcolor = lz.Browser.getInitArg('bgcolor');
+            }
         }
 
         this.__canvaswidthratio = null;
@@ -296,11 +309,7 @@ dynamic class LzCanvas extends LzView {
             LzScreenKernel.setCallback(this, '__windowResize');
         }
 
-        if (capabilities.readcanvassizefromsprite == true) {
-            this.bgcolor = lz.Utils.hextoint(args.bgcolor);
-        } else {
-            this.bgcolor = args.bgcolor;
-        }
+        this.bgcolor = lz.Utils.hextoint(args.bgcolor);
         delete args.bgcolor;
 
         this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;

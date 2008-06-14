@@ -91,7 +91,14 @@ lz.embed = {
         if (properties.accessible == 'true') {
             queryvals.flashvars += '&accessible=true';
         }
-        queryvals.flashvars += '&id=' + properties.id;
+        if (properties.bgcolor != null) {
+            queryvals.flashvars += '&bgcolor=' + escape(properties.bgcolor);
+        }
+        queryvals.flashvars += '&width=' + escape(properties.width);
+        queryvals.flashvars += '&height=' + escape(properties.height);
+        queryvals.flashvars += '&__lzurl=' + escape(url);
+        queryvals.flashvars += '&__lzminimumversion=' + escape(minimumVersion);
+        queryvals.flashvars += '&id=' + escape(properties.id);
 
         var url = queryvals.url + '?' + queryvals.query;
 
