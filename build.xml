@@ -1033,6 +1033,10 @@
       <property name="webinf"    value="${webapp}/WEB-INF" />
       <property name="libdir"    value="${webinf}/lib" />
       <property name="docdir"    value="${webapp}/docs" />
+      <!-- flex compiler support -->
+      <property name="flexbin"    value="${webinf}/bin" />
+      <property name="flex_frameworks"    value="${webinf}/frameworks" />
+
 
       <!-- Remove old builddir -->
       <delete dir="${builddir}" failonerror="true" />
@@ -1115,6 +1119,16 @@
                <filter token="VERSIONIDUPPER" value="${version.id.upper}"/>
                <filter token="RELEASEID" value="${release.id}"/>
           </filterset>
+      </copy>
+
+
+      <!-- flex compiler support files -->
+      <copy todir="${flexbin}" >
+          <fileset dir="WEB-INF/bin" />
+      </copy>
+
+      <copy todir="${flex_frameworks}" >
+          <fileset dir="WEB-INF/frameworks" />
       </copy>
 
       <!-- some sanity checking for weird characters and missed filtered -->

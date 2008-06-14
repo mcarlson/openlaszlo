@@ -16,7 +16,6 @@ Last Changed Date: 2008-05-30 16:12:21 -0400 (Fri, 30 May 2008)
 
 cp -r ~/openlaszlo/adobe/trunk/lib/*.jar $LPS_HOME/WEB-INF/lib
 cp -r ~/openlaszlo/adobe/trunk/frameworks $LPS_HOME/WEB-INF
-cp -r ~/openlaszlo/adobe/trunk/frameworks $LPS_HOME/WEB-INF
 cp -r ~/openlaszlo/adobe/trunk/bin $LPS_HOME/WEB-INF
 
 # remove these XML parsers, they cause doc build to fail.
