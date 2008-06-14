@@ -16,13 +16,11 @@ Note that when we refer to animation in LZX applications, we mean anything that 
 <!--unknown tag: animator-->
  tag.</para>
 
-<example role="live-example"><title>A simple animator</title><programlisting>
-&lt;canvas height="100" width="500"&gt;
-  &lt;window&gt;
-    &lt;animator attribute="x" to="100" duration="1000"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting></example>
+<example role="live-example"><title>A simple animator</title>
+  <programlisting language="lzx">
+    <textobject><textdata fileref="programs/simpleanimation.lzx"/></textobject> 
+  </programlisting>
+</example>
 
 <para>
 An animator starts with the current value of an attribute unless otherwise specified.  
@@ -30,13 +28,11 @@ In the next example the application defines an animator for a window that first 
 of <literal>x="50"</literal>, and then animates the window to a position of <literal>x="100"</literal> over 1 second.
 </para>
 
-<example role="live-example"><title>Specifying starting conditions</title><programlisting>
-&lt;canvas height="100" width="500"&gt;
-  &lt;window x="50"&gt;
-    &lt;animator attribute="x" from="50" to="100" duration="1000"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting></example>
+<example role="live-example"><title>Specifying starting conditions</title>
+  <programlisting language="lzx">
+    <textobject><textdata fileref="programs/startanimation.lzx"/></textobject> 
+  </programlisting>
+</example>
 
 <para>
 Animators, by default, change an object's attribute by easing in and out of the <indexterm><primary>from</primary></indexterm><sgmltag class="attribute">from</sgmltag> and 
@@ -46,13 +42,11 @@ For example, the following  code shows a window which moves linearly across the 
 The values for the motion tag are: <literal>easeboth</literal>, <literal>easein</literal>, <literal>easeout</literal>, and <literal>linear</literal>.
 </para>
  
-<example role="live-example"><title>linear movement</title><programlisting>
-&lt;canvas height="100" width="500"&gt;
-  &lt;window&gt;
-    &lt;animator attribute="x" to="100" duration="1000" motion="linear"/&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting></example>
+<example role="live-example"><title>Linear movement</title>
+  <programlisting language="lzx">
+    <textobject><textdata fileref="programs/linearanimation.lzx"/></textobject> 
+  </programlisting>
+</example>
 
 <para>
 Animators, like views, can be named so that they can be controlled later via scripts. This next example shows a common practice to activate an animator when a view is clicked, rather than when a view is first instantiated. Animators can be initially dormant by setting <literal>start="false"</literal>, and then activated on demand by calling its <indexterm><primary><literal>start()</literal></primary></indexterm><methodname>start()</methodname> method.
