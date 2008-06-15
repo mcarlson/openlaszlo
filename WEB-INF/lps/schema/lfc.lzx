@@ -238,7 +238,7 @@
   <attribute name="fontstyle" type="string"/>
   <attribute name="fontsize" type="size"/>
   <attribute name="resource" type="string"/>
-  <attribute name="source" type="expression" />
+  <attribute name="source" type="string" />
   <attribute name="clip" type="boolean" value="false"/>
   <attribute name="align" value="left"  type="string" enum="left|center|right|constraint" />
   <attribute name="valign" type="string" value="top" enum="top|middle|bottom|constraint" />

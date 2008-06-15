@@ -591,7 +591,7 @@ function $lzc$set_valign(v) { this.setValign(v) }
   * view.  If this attribute is set, the media for the view is loaded
   * at runtime.
   * @type String
-  * @lzxtype expression
+  * @lzxtype string
   * @access public
   */
 var source;
