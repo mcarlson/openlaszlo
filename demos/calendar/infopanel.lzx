@@ -157,9 +157,8 @@
                 <view name="times" x="0" y="50">
                     <method name="getLongTime" args="attrs">
                         if (!attrs) return;
-                        if (!attrs.hour) return;
                         var h = attrs.hour;
-                        if (h=="") return;
+                        if (Number(h)==0 || h==null) h='0';
                         var m = attrs[ 'minute' ];
 
                         if (Number(m)==0 || m==null) m='0';

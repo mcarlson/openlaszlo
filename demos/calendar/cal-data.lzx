@@ -229,18 +229,22 @@
             currenteventDP.setPointer( noEvent.getFirstChild() );
         </method>
 
-        <method name="changeEventTime" args="shour, smin">
+        <method name="changeEventTime" args="shour, smin"> <![CDATA[
             // Changes the current event's time
             tempDP.setFromPointer( currenteventDP );
 
 
-            var emintmp = tempDP.xpathQuery( "end[1]/@min" );
-            var smintmp = tempDP.xpathQuery( "start[1]/@min" );
+            var ehourtmp = tempDP.xpathQuery( "end[1]/@hour" );
+            var shourtmp = tempDP.xpathQuery( "start[1]/@hour" );
+
+            var emintmp = tempDP.xpathQuery( "end[1]/@minute" );
+            var smintmp = tempDP.xpathQuery( "start[1]/@minute" );
             if (typeof(emintmp) == 'undefined') emintmp = 0;
             if (typeof(smintmp) == 'undefined') smintmp = 0;
 
-            var evlen = tempDP.xpathQuery( "end[1]/@hour" ) * 60 + emintmp - 
-                        ( tempDP.xpathQuery( "start[1]/@hour" ) * 60 - smintmp  );
+            var evlen = ehourtmp * 60 + emintmp - (shourtmp * 60 + smintmp);
+            if (evlen < 0) evlen += 60*24;
+            if (evlen == 0) evlen = 15;
 
             var evlenhour = Math.floor( evlen / 60 );
             var evlenmin = evlen - ( evlenhour * 60 );
@@ -251,10 +255,18 @@
 
             tempDP.setXPath('../end[1]');
 
-            tempDP.setNodeAttribute('hour', shour + evlenhour);
-            tempDP.setNodeAttribute('minute', smin + evlenmin );
+            var emin = smin + evlenmin;
+            var ehour = shour + evlenhour;
+            if (emin >= 60) {
+                emin = emin % 60;
+                ehour = ehour+1;
+            }
 
-        </method>
+            if (ehour < 0) ehour += 24;
+            ehour = ehour % 24;
+            tempDP.setNodeAttribute('hour', ehour);
+            tempDP.setNodeAttribute('minute', emin);
+        ]]></method>
 
         <method name="getNewNode" args="dp,node">    <![CDATA[
             //Returns the pointer to the requested node and makes one if needed
@@ -372,8 +384,17 @@
             var sMinute = Number(currenteventDP.xpathQuery('start[1]/@minute'));
             if (sHour + '' == 'NaN') sHour = 0;
             if (sMinute + '' == 'NaN') sMinute = 0;
-            if ( startEnd == "start" ){
 
+            var eHour = Number(currenteventDP.xpathQuery('end[1]/@hour'));
+            var eMinute = Number(currenteventDP.xpathQuery('end[1]/@minute'));
+
+            if (eHour + '' == 'NaN') eHour = 0;
+            if (eMinute + '' == 'NaN') eMinute = 0;
+
+            var evlen = (eHour * 60 + eMinute) - (sHour * 60 + sMinute);
+            if (eHour < sHour)  evlen += 60*24;
+
+            if ( startEnd == "start" ){
                 sMinute += 15 * whichWay;
                 if ( sMinute < 0 ) {
                     sMinute += 60;
@@ -382,14 +403,10 @@
                     sMinute -= 60;
                     sHour += 1;
                 }
-                this.changeEventTime( sHour, sMinute );
+                if (sHour >= 0 && sHour < 24)
+                    this.changeEventTime( sHour, sMinute );
             }else{
-                var eHour = Number(currenteventDP.xpathQuery('end[1]/@hour'));
-                var eMinute = Number(currenteventDP.xpathQuery('end[1]/@minute'));
-
-                if ( eHour * 60 + eMinute + whichWay * 15 > 
-                         sHour * 60 + sMinute )  {
-
+                if (evlen + 15 * whichWay < 60*24 && evlen + 15 * whichWay > 0) {
                     eMinute += 15 * whichWay;
                     if ( eMinute < 0 ) {
                         eMinute += 60;
@@ -398,6 +415,8 @@
                         eMinute -= 60;
                         eHour += 1;
                     }
+                    if (eHour < 0) eHour += 24;
+                    eHour = eHour % 24;
                     tempDP.setFromPointer( currenteventDP );
                     tempDP.setXPath('end[1]');
                     tempDP.setNodeAttribute( 'hour' , eHour );
