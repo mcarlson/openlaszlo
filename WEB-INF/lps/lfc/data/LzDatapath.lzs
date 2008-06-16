@@ -64,10 +64,16 @@
   * &lt;/view&gt;</programlisting>
   * <programlisting>&lt;view datapath="<em>xpath</em>" /&gt;</programlisting>
   *
+  * @devnote This class is dynamic because it will acquire methods and
+  * attributes at runtime.  Not really optimal, since most likely
+  * these are intended for the replicator that this will create, but
+  * we can't be sure...  It would be better if we made implicit
+  * replication obsolete
+  *
   * @shortdesc The binder between data and nodes.
   * @lzxname datapath
   */
-class LzDatapath extends LzDatapointer {
+dynamic class LzDatapath extends LzDatapointer {
   #pragma "warnUndefinedReferences=true"
   
 /** @access private

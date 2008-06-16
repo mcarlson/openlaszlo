@@ -72,6 +72,10 @@ public class NodeModel implements Cloneable {
     final CompilationEnvironment env;
     // Used to freeze the definition for generation
     protected boolean frozen = false;
+    // Datapaths and States don't have methods because they "donate"
+    // their methods to other instances.  Where we would normally make
+    // a method, we make a closure instead
+    protected boolean canHaveMethods = true;
 
     public Object clone() {
         NodeModel copy;
@@ -100,6 +104,10 @@ public class NodeModel implements Cloneable {
         this.className = element.getName();
         // Cache ClassModel for parent
         this.parentClassModel = this.getParentClassModel();
+        if (parentClassModel.isSubclassOf(schema.getClassModel("state")) ||
+            parentClassModel.isSubclassOf(schema.getClassModel("datapath"))) {
+            this.canHaveMethods = false;
+        }
         this.initstage =
             this.element.getAttributeValue("initstage");
         if (this.initstage != null) {
@@ -231,7 +239,7 @@ public class NodeModel implements Cloneable {
       }
     }
 
-    public Method getBinderMethod() {
+    public Function getBinderMethod(boolean canHaveMethods) {
       if (! (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS))) {
         return null;
       }
@@ -254,32 +262,33 @@ public class NodeModel implements Cloneable {
         // derived (at run time)
         installer = "__LZstyleBindAttribute";
       }
-      Method binder = new Method(
-        bindername,
-        // Binders are called by LzDelegate.execute, which passes the
-        // value sent by sendEvent, so we have to accept it, but we
-        // ignore it
-        args,
-        pragmas,
-        "this." + installer + "(" +
-        ScriptCompiler.quote(name) + "," +
-        body,
-        srcloc);
+      body = "this." + installer + "(" +
+          ScriptCompiler.quote(name) + "," +
+          body;
+      Function binder;
+      // Binders are called by LzDelegate.execute, which passes the
+      // value sent by sendEvent, so we have to accept it, but we
+      // ignore it
+      if (canHaveMethods) {
+          binder = new Method(bindername, args, pragmas, body, srcloc);
+      } else {
+          binder = new Function(bindername, args, pragmas, body, srcloc);
+      }
       return binder;
     }
 
-    public Method getDependenciesMethod() {
+    public Function getDependenciesMethod(boolean canHaveMethods) {
       if (! when.equals(WHEN_ALWAYS)) {
         return null;
       }
       String preface = "\n#pragma 'withThis'\n";
       String body = "return (" + getCompiler().dependenciesForExpression(value) + ")";
-      Method dependencies = new Method(
-        dependenciesname,
-        "",
-        preface,
-        body,
-        srcloc);
+      Function dependencies;
+      if (canHaveMethods) {
+          dependencies = new Method(dependenciesname, "", preface, body, srcloc);
+      } else {
+          dependencies = new Function(dependenciesname, "", preface, body, srcloc);
+      }
       return dependencies;
     }
 
@@ -998,10 +1007,10 @@ solution =
       // Special handling for attribute with binders
       CompiledAttribute cattr = (CompiledAttribute)value;
       if (cattr.bindername != null) {
-        attrs.put(cattr.bindername, cattr.getBinderMethod());
+        attrs.put(cattr.bindername, cattr.getBinderMethod(canHaveMethods));
       }
       if (cattr.dependenciesname != null) {
-        attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod());
+        attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(canHaveMethods));
       }
       attrs.put(name, cattr.getInitialValue());
     } else {
@@ -1298,6 +1307,7 @@ solution =
         // libraries, so append parent (class) name
         String unique = "$" + parent_name + "_"  + env.methodNameGenerator.next();
         String referencename = null;
+        String srcloc =  CompilerUtils.sourceLocationDirective(element, true);
         // delegates is only used to determine whether to
         // default clickable to true.  Clickable should only
         // default to true if the event handler is attached to
@@ -1309,19 +1319,21 @@ solution =
             // type declarations if/when they are enforced in all run
             // times
             referencename = "$lzc$" + "handle_" + event + "_reference" + unique;
-            Object referencefn = new Method(
-                referencename,
-                "",
-                "\n#pragma 'withThis'\n",
-                "var $lzc$reference = (" +
+            String pragmas = "\n#pragma 'withThis'\n";
+            String refbody = "var $lzc$reference = (" +
                 "#beginAttribute\n" +
                 reference + "\n#endAttribute\n);\n" +
                 "if ($lzc$reference is LzEventable) {\n" +
                 "  return $lzc$reference;\n" +
                 "} else if ($debug) {\n" +
                 "  Debug.error('Invalid event sender: " + reference + " => %w (for event " + event + ")', $lzc$reference);\n" +
-                "}",
-                CompilerUtils.attributeLocationDirective(element, "reference"));
+                "}";
+            Function referencefn;
+            if (canHaveMethods) {
+                referencefn = new Method(referencename, "", pragmas, refbody, srcloc);
+            } else {
+                referencefn = new Function(referencename, "", pragmas, refbody, srcloc);
+            }
             // Add reference computation as a method (so it can have
             // 'this' references work)
             addProperty(referencename, referencefn, ALLOCATION_INSTANCE, element);
@@ -1331,16 +1343,17 @@ solution =
             if (method == null) {
                 method = "$lzc$" + "handle_" + event + unique;
             }
-            Method fndef = new
-                Method(method,
-                         //"#beginAttribute\n" +
-                         args,
-                         "\n#beginContent\n" +
-                         "\n#pragma 'methodName=" + method + "'\n" +
-                         "\n#pragma 'withThis'\n",
-                         body + "\n#endContent",
-                         CompilerUtils.sourceLocationDirective(element, true));
-            // Add hander as a method
+            String pragmas = "\n#beginContent\n" +
+                "\n#pragma 'methodName=" + method + "'\n" +
+                "\n#pragma 'withThis'\n";
+            body = body + "\n#endContent";
+            Function fndef;
+            if (canHaveMethods) {
+                fndef = new Method(method, args, pragmas, body, srcloc);
+            } else {
+                fndef = new Function(method, args, pragmas, body, srcloc);
+            }
+            // Add handler as a method
             addProperty(method, fndef, ALLOCATION_INSTANCE, element);
         }
 
@@ -1442,34 +1455,20 @@ solution =
              CompilerUtils.attributeLocationDirective(element, "handler") :
              CompilerUtils.attributeLocationDirective(element, "name"));
         String adjectives = "";
-
-        Function fndef;
-        // States 'methods' are only closures that will be attached to
-        // their dynamic parent, so they will not be override or final
-        if (parentClassModel.isSubclassOf(schema.getClassModel("state"))) {
-            fndef = new
-                Function(name,
-                         //"#beginAttribute\n" +
-                         args,
-                         "\n#beginContent\n" +
-                         "\n#pragma 'methodName=" + name + "'\n" +
-                         "\n#pragma 'withThis'\n",
-                         body + "\n#endContent",
-                         name_loc,
-                         "");
-        } else {
+        // Closures do not get override or final
+        if (canHaveMethods) {
             if (override) { adjectives += " override"; }
             if (isfinal) { adjectives += " final"; }
-            fndef = new
-                Method(name,
-                       //"#beginAttribute\n" +
-                       args,
-                       "\n#beginContent\n" +
-                       "\n#pragma 'methodName=" + name + "'\n" +
-                       "\n#pragma 'withThis'\n",
-                       body + "\n#endContent",
-                       name_loc,
-                       adjectives);
+        }
+        Function fndef;
+        String pragmas = "\n#beginContent\n" +
+            "\n#pragma 'methodName=" + name + "'\n" +
+            "\n#pragma 'withThis'\n";
+        body = body + "\n#endContent";
+        if (canHaveMethods) {
+            fndef = new Method(name, args, pragmas, body, name_loc, adjectives);
+        } else {
+            fndef = new Function(name, args, pragmas, body, name_loc, adjectives);
         }
         addProperty(name, fndef, allocation, element);
     }

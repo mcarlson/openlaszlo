@@ -42,8 +42,11 @@
   *
   * @devnote Views replicated by a lazy replication manager ignore layouts -- the
   * replication manager controls the layout completely.
+  *
+  * @devnote This class is dynamic because it will acquire methods and
+  * attributes at runtime from the datapath that creates it.
   */
-class LzLazyReplicationManager extends LzReplicationManager {
+dynamic class LzLazyReplicationManager extends LzReplicationManager {
 
 /**
  *  The direction in which the replicated elements will be layed out.

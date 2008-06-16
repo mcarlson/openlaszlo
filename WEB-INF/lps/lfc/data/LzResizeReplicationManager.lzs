@@ -78,9 +78,12 @@
   * </canvas>
   * ]]></programlisting></example>
   *
+  * @devnote This class is dynamic because it will acquire methods and
+  * attributes at runtime from the datapath that creates it.
+  *
   * @shortdesc An optimization for displaying large sets of data that allows the elements to resize.
   */
-class LzResizeReplicationManager extends LzLazyReplicationManager {
+dynamic class LzResizeReplicationManager extends LzLazyReplicationManager {
   #pragma "warnUndefinedReferences=true"
 
 /** @access private */

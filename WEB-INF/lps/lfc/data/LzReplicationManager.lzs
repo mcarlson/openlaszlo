@@ -76,8 +76,11 @@
   * the datapath being replicated was named, the replication manager assumes that
   * name, so that it can be referred to the same way the non-replicated view
   * would have been. 
+  *
+  * @devnote This class is dynamic because it will acquire methods and
+  * attributes at runtime from the datapath that creates it.
   */
-class LzReplicationManager extends LzDatapath {
+dynamic class LzReplicationManager extends LzDatapath {
   #pragma "warnUndefinedReferences=true"
 
 /** @access private */
