@@ -351,22 +351,21 @@ This is handy in UI programming, where there are a number of objects with one-of
 incremental program development, where it creates the possibility for a novel kind of refactoring.</para>
 
 <para>The following two XML documents are complete LZX applications.  Each defines a view named <varname>myview</varname>, that contains a method named <indexterm><primary><literal>f()</literal></primary></indexterm><methodname>f()</methodname>.  Evaluating <literal>myview.f()</literal> in either application will result in <literal>100</literal>.</para>
-
-<example role="live-example"><title>A trivial method</title><programlisting>
+ <para>A trivial method:</para>
+<programlisting>
 &lt;canvas&gt;
   &lt;view id="myview"&gt;
     &lt;method name="f"&gt;return 100;&lt;/method&gt;
   &lt;/view&gt;
-&lt;/canvas&gt;</programlisting></example>
-
-<example role="live-example"><title>A trivial method in a class</title><programlisting>
+&lt;/canvas&gt;</programlisting>
+ <para>A trivial method in a class:</para>
+<programlisting>
 &lt;canvas&gt;
   &lt;class name="myclass"&gt;
     &lt;method name="f"&gt;return 100;&lt;/method&gt;
   &lt;/view&gt;
-  
   &lt;myclass id="myview"/&gt;
-&lt;/canvas&gt;</programlisting></example>
+&lt;/canvas&gt;</programlisting>
 
 <para/><section><title>Instance-First Development</title>
 
