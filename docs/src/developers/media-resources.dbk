@@ -253,8 +253,9 @@
               resourceheight</sgmltag></para>
             </listitem>
             <listitem>
-              <para><property role="LzView">
-              stretches</property></para>
+              <para><sgmltag class="attribute"
+              role="LzView.__ivars__.stretches">
+              stretches</sgmltag></para>
             </listitem>
             <listitem>
               <para><methodname role="LzView.prototype.stretchResource">
@@ -304,20 +305,24 @@
               framesloadratio</sgmltag></para>
             </listitem>
             <listitem>
-              <para><property role="LzView.prototype.onload">
-              onload</property></para>
+              <para><sgmltag class="attribute"
+	      role="LzView.__ivars__.onload">
+              onload</sgmltag></para>
             </listitem>
             <listitem>
-              <para><property role="LzView.prototype.onerror">
-              onerror</property></para>
+              <para><sgmltag class="attribute"
+	      role="LzView.__ivars__.onerror">
+              onerror</sgmltag></para>
             </listitem>
             <listitem>
-             <para> <property role="LzView.prototype.ontimeout">
-              ontimeout</property></para>
+             <para> <sgmltag class="attribute"
+	     role="LzView.__ivars__.ontimeout">
+              ontimeout</sgmltag></para>
             </listitem>
             <listitem>
-              <para><property role="LzView.prototype.onaddsubresource">
-              onaddsubresource</property></para>
+              <para><sgmltag class="attribute"
+	      role="LzView.__ivars__.onaddsubresource">
+              onaddsubresource</sgmltag></para>
             </listitem>
           </itemizedlist>
         </listitem>
@@ -358,16 +363,19 @@
               totalframes</sgmltag></para>
             </listitem>
             <listitem>
-              <para><property role="LzView.prototype.onlastframe">
-              onlastframe</property></para>
+              <para><sgmltag class="attribute"
+	      role="LzView.__ivars__.onlastframe">
+              onlastframe</sgmltag></para>
             </listitem>
             <listitem>
-              <para><property role="LzView.prototype.onplay">
-              onplay</property></para>
+              <para><sgmltag class="attribute"
+	      role="LzView.__ivars__.onplay">
+              onplay</sgmltag></para>
             </listitem>
             <listitem>
-              <para><property role="LzView.prototype.onstop">
-              onstop</property></para>
+              <para><sgmltag class="attribute"
+	      role="LzView.__ivars__.onstop">
+              onstop</sgmltag></para>
             </listitem>
           </itemizedlist>
         </listitem>
@@ -448,12 +456,12 @@
 
     <para>You can use a multi-frame resource to construct an
     animation that moves between frames when you call the 
-    <interface>LzView.play()</interface>method. Conversely, when
+    <literal>LzView.play()</literal> method. Conversely, when
     you import a resource that contains an animation, each frame of
     the animation automatically becomes a frame in that resource.
     In other words, art assets that contain multiple frames
     themselves 
-    <emphasis>are</emphasis>multi-frame resources. Just as with
+    <emphasis>are</emphasis> multi-frame resources. Just as with
     multi-frame resources that are constructed in LZX by importing
     each frame individually, you can control the frame that is
     currently displayed.</para>
@@ -507,7 +515,7 @@
     flexibility over how and when the application loads resources.
     The most important choice is whether a resource should be
     loaded at 
-    <glossterm>compile time</glossterm>or 
+    <glossterm>compile time</glossterm> or 
     <glossterm>run time</glossterm>.</para>
     <section>
       <title>Compile time resources</title>
@@ -652,7 +660,7 @@
         to type in urls that you'd like to test. To run the
         example, copy it into your local environment and compile
         it:</para>
-        <example>
+        <example role="live-example">
           <title>Testing runtime resource loading</title>
           <programlisting language="lzx">
             <textobject>
