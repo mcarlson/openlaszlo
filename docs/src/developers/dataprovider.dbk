@@ -87,7 +87,7 @@
         </listitem>
         <listitem>
           <para><literal>multirequest</literal>: True if multiple sequential requests
-          can be made without override previous requests. Default
+          can be made without overriding previous requests. Default
           is false for backward compatibility.</para>
         </listitem>
         <listitem>
