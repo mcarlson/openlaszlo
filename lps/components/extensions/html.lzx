@@ -21,13 +21,13 @@ lz.embed.iframemanager = {
             }, canvas.id, name, scrollbars);
     }
     ,setPosition: function(id, x, y, width, height, v, z) {
-        LzBrowser.callJS('lz.embed.iframemanager.setPosition', false, id, x, y, width, height, v, z);
+        LzBrowser.callJS('lz.embed.iframemanager.setPosition', null, id, x, y, width, height, v, z);
     }
     ,setSrc: function(id, src, history) {
         LzBrowser.callJS('lz.embed.iframemanager.setSrc', null, id, src, history);
     }
     ,setVisible: function(id, v) {
-        LzBrowser.callJS('lz.embed.iframemanager.setVisible', false, id, v);
+        LzBrowser.callJS('lz.embed.iframemanager.setVisible', null, id, v);
     }
     ,bringToFront: function(id) {
         LzBrowser.callJS('lz.embed.iframemanager.bringToFront', null, id);
@@ -36,7 +36,7 @@ lz.embed.iframemanager = {
         LzBrowser.callJS('lz.embed.iframemanager.sendToBack', null, id);
     }
     ,scrollBy: function(id, x, y) {
-        LzBrowser.callJS('lz.embed.iframemanager.scrollBy', false, id, x, y);
+        LzBrowser.callJS('lz.embed.iframemanager.scrollBy', null, id, x, y);
     }
     ,__gotload: function(id) {
         if (lz.embed.iframemanager.owners[id]) lz.embed.iframemanager.owners[id].__gotload();
