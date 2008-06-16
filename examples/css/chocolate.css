@@ -1,15 +1,15 @@
 myview {
     logorsc: "resources/chocolate/logo.gnp";        
     boxrsc: "resources/chocolate/box.gnp";
-    lightbgcolor: "0xcaa76b";
-    themename:  "<font size=\"24\">Chocolate Tasties</font>";
+    lightbgcolor: "#caa76b";
+    themename:  "Chocolate Tasties";
 
 }
 
 #gTitle {
     xpos: 40;
     ypos: 45;
-    textcolor:  "0x441a0a";
+    textcolor:  "#441a0a";
 }
 
-/* Copyright 2006 Laszlo Systems */ 
+/* Copyright 2008 Laszlo Systems */ 

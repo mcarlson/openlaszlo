@@ -70,9 +70,9 @@
         </optionmenuitem>
         
         <method name="showMenu" args="vis" >
-            this.op1.setVisible( vis );
-            this.op2.setVisible( vis );
-            this.op3.setVisible( vis );
+            this.op1.setAttribute('visible',  vis );
+            this.op2.setAttribute('visible',  vis );
+            this.op3.setAttribute('visible',  vis );
         </method>
     </view>
 
@@ -101,7 +101,7 @@
         this.setWidth( parent.container.width );
         this.setHeight( container.height - 67 );
         this.setOpacity( 0 );
-        this.setVisible( b );
+        this.setAttribute('visible',  b );
        
         if ( b ) {
             this.lastfocus = navmanager.focused;
@@ -110,7 +110,7 @@
 
 
             //this.list.image.setImage( photoview.getThumbnailURL() );
-            canvas.highlight.setVisible( true );
+            canvas.highlight.setAttribute('visible',  true );
             navmanager.focus( this.list.op1 ) 
             var anm = this.animate('opacity',1,300);
             anm_delegate.unregisterAll();

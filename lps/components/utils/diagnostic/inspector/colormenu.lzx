@@ -42,11 +42,11 @@
          this.setX(newx - 5);
          this.setY(newy - 5);
          this.bringToFront();
-         this.setVisible(true);
+         this.setAttribute('visible', true);
          LzTrack.activate('mymenu');
     </method>
     <method name="close">
-         this.setVisible(false);
+         this.setAttribute('visible', false);
          LzTrack.deactivate('mymenu');
     </method>
     <simplelayout axis="x"/>

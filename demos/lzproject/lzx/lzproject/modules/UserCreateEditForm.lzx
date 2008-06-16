@@ -36,8 +36,8 @@
       searchSubnodes("name", "password1").setText('');
       searchSubnodes("name", "password2").setText('');
       parent.user = null;
-      content.createState.apply();
-      content.updateState.remove();
+      content.createState.setAttribute('applied', true);
+      content.updateState.setAttribute('applied', false);
     </method>
 
     <!--- Store the values to be passed to the backend service in an array -->
@@ -64,8 +64,8 @@
       parent.searchSubnodes("name", "login").setText(user.login);
       parent.searchSubnodes("name", "realName").setText(user.realName);
       parent.searchSubnodes("name", "email").setText(user.email);
-      content.createState.remove();
-      content.updateState.apply();
+      content.createState.setAttribute('applied', false);
+      content.updateState.setAttribute('applied', true);
     </method>
 
     <!--- Call the updateUser service -->
@@ -142,7 +142,7 @@
         <edittext name="password2" x="100" width="180" password="true"/>
       </view>
 
-      <state name="createState" pooling="true" apply="true">
+      <state name="createState" pooling="true" applied="true">
         <button name="createButton" y="${parent.buttonYRef.y}" datapath="i18nDS:/app/main/peopleTab/newUser/text()"
           align="right" options="ignorelayout" onclick="classroot.createUser()" />
       </state>

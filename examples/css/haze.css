@@ -1,14 +1,14 @@
 myview {
     logorsc: "resources/haze/logo.gnp";        
     boxrsc: "resources/haze/box.gnp";
-    lightbgcolor: "0xCCCCCC";
-    themename:  "<b><font size=\"24\">Haze Foam</font></b>";
+    lightbgcolor: "#CCCCCC";
+    themename:  "Haze Foam";
 }
 
 #gTitle {
     xpos: 40;
     ypos: 45;
-    textcolor:  "0x1e4d75";
+    textcolor:  "#1e4d75";
 }
 
-/* Copyright 2006 Laszlo Systems */ 
+/* Copyright 2008 Laszlo Systems */ 

@@ -112,8 +112,8 @@
                    onclick="parent.scrollRight(32)" />
 
     <view name="dragger" width="${parent.thumbwidth}" x="12"
-              onmousedown="this.hdrag.apply()"
-              onmouseup="this.hdrag.remove()" >
+              onmousedown="this.hdrag.setAttribute('applied', true)"
+              onmouseup="this.hdrag.setAttribute('applied', false)" >
 
             <_dbg_lzhdrag name="hdrag" />
             <stableborderlayout axis="x" />
@@ -235,8 +235,8 @@
                    onclick="parent.parent.scrolly(1)" />
 
        <view name="dragger" height="${parent.thumbheight}" y="12"
-              onmousedown="this.drag.apply()"
-              onmouseup="this.drag.remove()" 
+              onmousedown="this.drag.setAttribute('applied', true)"
+              onmouseup="this.drag.setAttribute('applied', false)" 
               onmouseover="higlight_dragger(2)"
               onmouseout="higlight_dragger(1)" >
             <_dbg_lzvdrag name="drag" />
@@ -377,7 +377,7 @@
      <method name="computeDraggerYPos">
        // subtract out height of up and down buttons
        var bh = this.scrollbar.arrowbuttonheight;
-       var real_scroll_height = (this.scrollbar.getHeight() - (bh * 2 + this.scrollbar.thumbheight)) + 2;
+       var real_scroll_height = (this.scrollbar.height - (bh * 2 + this.scrollbar.thumbheight)) + 2;
        var ypos = Math.floor( (this.lineptr / (this.textlines.length - this.visiblelines)) * real_scroll_height);
        return bh -1  + ypos;
      </method>

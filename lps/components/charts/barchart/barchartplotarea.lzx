@@ -58,14 +58,14 @@
         <![CDATA[   
             var v = _barspool.getView();
 
-            v.setVisible(false);
+            v.setAttribute('visible', false);
             v.setX(this._xoffset);
             v.setY(x * this._yscale + this._yoffset);
             v.setWidth(height * this._xscale);
             v.setHeight(width * this._yscale);
             v.style = style;
             v.render();
-            v.setVisible(true);
+            v.setAttribute('visible', true);
 
             return v;
         ]]>
@@ -83,7 +83,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

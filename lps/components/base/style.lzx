@@ -131,7 +131,7 @@
     <!--- called if this style extends another
         so that the onstylechanged event will get propagated
         @keywords private -->
-    <method name="_forwardstylechanged"> <![CDATA[
+    <method name="_forwardstylechanged" args="v"> <![CDATA[
         if (this.onstylechanged) this.onstylechanged.sendEvent(this);
     ]]> </method>
 

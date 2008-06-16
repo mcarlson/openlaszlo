@@ -3,8 +3,8 @@
   
   <view id="divider" x="110" y="30"
         width="10" height="200" bgcolor="#666699"
-        onmousedown="dragging.apply()"
-        onmouseup="dragging.remove()">   
+        onmousedown="dragging.setAttribute('applied', true)"
+        onmouseup="dragging.setAttribute('applied', false)">   
     <state name="dragging">
       <attribute name="x" value="${Math.min(parent.width-this.width, 
                                    Math.max(0, parent.getMouse('x')))}"/> 

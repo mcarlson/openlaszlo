@@ -15,11 +15,11 @@
       this.bringToFront();
     </handler>
     <handler name="onclick">
-        this.setVisible(false);
+        this.setAttribute('visible', false);
     </handler>
   </class>
 </library>
 
-<!-- Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <!-- Use is subject to license terms. -->
 

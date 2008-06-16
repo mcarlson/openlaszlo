@@ -832,7 +832,7 @@
 
         <!--- Update the time, progress and fps attributes. 
               @keywords private -->
-        <method name="_updateTime"><![CDATA[
+        <method name="_updateTime" args="v"><![CDATA[
             // don't update if new mediastream about to start
             if (this._pendingstreamname != "") {
                 return;

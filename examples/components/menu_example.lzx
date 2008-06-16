@@ -35,10 +35,10 @@
                 </menu>
             </menuitem>            
             <menuitem text="item 3" >
-                <menu name="submenu-depth-1 " >subedit
+                <menu name="smenud1" >subedit
                     <menuitem text="subitem 1" />
                     <menuitem text="subitem 2" >
-                        <menu name="submenu-depth-2" width="200" >subedit            
+                        <menu name="smenud2" width="200" >subedit            
                             <menuitem text="subitem 1" command="cmd_new" />
                             <menuitem text="subitem 2" />
                             <menuitem text="subitem 3" />
@@ -76,10 +76,10 @@
                 </menu>
             </menuitem>            
             <menuitem text="item 3" >
-                <menu name="submenu-depth-1 " >subedit            
+                <menu name="smenud1" >subedit            
                     <menuitem text="subitem 1" />
                     <menuitem text="subitem 2" >
-                        <menu name="submenu-depth-2" width="200" >subedit            
+                        <menu name="smenud2" width="200" >subedit            
                             <menuitem text="subitem 1" command="cmd_new" />
                             <menuitem text="subitem 2" />
                             <menuitem text="subitem 3" />

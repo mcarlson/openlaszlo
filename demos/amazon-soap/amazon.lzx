@@ -130,8 +130,8 @@
                             remotecontext="$once{canvas.amazon}" dataobject="$once{dsCDInfo}"/>
 
                 <handler name="ondata" args="mydata">
-                    recommend.setVisible( false );
-                    cdinfo.setVisible( true );
+                    recommend.setAttribute('visible',  false );
+                    cdinfo.setAttribute('visible',  true );
                     cdinfo.bringToFront();
                     infoLoader.hide();
                 </handler>
@@ -202,7 +202,7 @@
                         onmouseover="setResourceNumber(2);"
                         onmouseout="setResourceNumber(1);"
                         onmouseup="setResourceNumber(1);"
-                        onclick="recommend.setVisible( true); cdinfo.setVisible( false ); recommend.bringToFront();"/>
+                        onclick="recommend.setAttribute('visible',  true); cdinfo.setAttribute('visible',  false ); recommend.bringToFront();"/>
 
 
                     <view name="info" width="${parent.width}" height="136">
@@ -526,12 +526,12 @@
 
         <method name="start" args="dragImage">
             this.setSource(dragImage);
-            dragging.apply();
+            dragging.setAttribute('applied', true);
             this.setAttribute("visible", true);
         </method>
 
         <method name="stop">
-            dragging.remove();
+            dragging.setAttribute('applied', false);
             this.setAttribute("visible", false);
         </method>
 
@@ -547,13 +547,13 @@
     <view name="dragsmall" visible="false">
         <attribute name="dragging" value="false"/>
         <view name="img" x="12" y="5" width="50" height="50" clip="true" opacity="0.7"/>
-        <view name="frame" resource="dragframe" x="${parent.img.x-12}" y="${parent.img.y-5}"/>
+        <view name="dragframe" resource="dragframe" x="${parent.img.x-12}" y="${parent.img.y-5}"/>
 
         <dragstate name="drag"/>
 
         <method name="start">
             this.dragging=true;
-            drag.apply();
+            drag.setAttribute('applied', true);
             this.setAttribute("visible", true);
         </method>
 
@@ -570,7 +570,7 @@
 
         <method name="stop">
             this.dragging=false;
-            drag.remove();
+            drag.setAttribute('applied', false);
             this.setAttribute("visible", false);
         </method>
 

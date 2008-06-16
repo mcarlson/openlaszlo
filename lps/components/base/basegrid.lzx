@@ -440,7 +440,7 @@
         </method>
 
         <!--- @keywords private -->
-        <method name="inferColumns">
+        <method name="inferColumns" args="v">
             <![CDATA[ 
             var res = this.datapath.xpathQuery( this.contentdatapath );
             if ( ! res ) return;

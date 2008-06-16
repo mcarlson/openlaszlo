@@ -47,7 +47,7 @@
   <class name="closeanimator" extends="animatorgroup" process="sequential" start="false">
     <attribute name="item" value="null"/>
     <animatorgroup name="items" process="simultaneous" duration="200"  start="false"
-        onstop="parent.item.children.setVisible(false);">
+        onstop="parent.item.children.setAttribute('visible', false);">
         <!-- note the spacing & inset from -6, since the shadow is 6 pixels high -->
         <animator attribute="spacing" to="${-parent.parent.parent.hgt}" from="-6"
             start="false"
@@ -139,7 +139,7 @@
             if (o) {
                 this.itemlist.childlayout.setAttribute('spacing', -item_hgt);
                 this.itemlist.childlayout.setAttribute('inset', -item_hgt);
-                this.children.setVisible(true);
+                this.children.setAttribute('visible', true);
                 this.itemlist.childlayout.doOpen();
             } else {
                 this.itemlist.childlayout.doClose();
@@ -215,7 +215,7 @@
         this.setAttribute("isleaf", !this.datapath.p.hasChildNodes());
 
         var tagtype = dp.xpathQuery("name()");
-        this.background.setResource(tagtype + "_btn");
+        this.background.setAttribute('resource', tagtype + "_btn");
         if (tagtype == 'subitem') {
              this.smalltext();
         } else {
@@ -229,7 +229,7 @@
     </handler>
 
     <handler name="onopen" reference="classroot" method="doaction"/>
-    <method name="doaction">  <![CDATA[
+    <method name="doaction" args="v">  <![CDATA[
         var dp = this.datapath;
         var autoselect = dp.xpathQuery("@autoselect");
         if (autoselect == "true") {
@@ -276,7 +276,7 @@
     </method>
     
     <handler name="onclick" method="open"/>
-    <method name="open">
+    <method name="open" args="v">
       <![CDATA[
         var dp = this.datapath;
         var tagtype = dp.xpathQuery("name()");
@@ -294,7 +294,7 @@
     </method>
 
     <handler name="onopen" reference="classroot" method="showUp"/>
-    <method name="showUp">
+    <method name="showUp" args="v">
         background.setResourceNumber(classroot.open ? 4 : 1);
         // Only toggle arrow if there are subnodes
         if (this.datapath.getNodeCount()) {

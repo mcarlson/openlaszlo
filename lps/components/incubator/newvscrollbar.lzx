@@ -84,7 +84,7 @@
         this.setOpacity( enabled ? 1 : 0.6 );
         this.setBGColor( enabled ? this._obgcolor : parent.bgcolor );
         this.thumb.setClickable( enabled );
-        this.thumb.setVisible(true);
+        this.thumb.setAttribute('visible', true);
     </method>
 </class>
 </library>

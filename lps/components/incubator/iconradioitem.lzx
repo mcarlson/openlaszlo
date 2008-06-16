@@ -52,23 +52,23 @@
             if ( leftrsc != "" )
             {
                 // set resource.  also need to set tint again.
-                this.left.setResource(leftrsc);
+                this.left.setAttribute('resource', leftrsc);
                 if (this.style != null && this.style.basecolor != null)
                     this.setTint(this.left, this.style.basecolor);
             }
                 
             if ( middlersc != "" )
             {
-                this.middle.setResource(middlersc);
+                this.middle.setAttribute('resource', middlersc);
                 this.setTint(this.middle, this.style.basecolor);
             }
             
             if ( rightrsc != "" )
             {
-                this.right.setResource(rightrsc);
+                this.right.setAttribute('resource', rightrsc);
                 this.setTint(this.right, this.style.basecolor);
             } else {
-                this.line.setVisible(true);
+                this.line.setAttribute('visible', true);
             }
             ]]>
        </method>

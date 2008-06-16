@@ -359,7 +359,7 @@
                     this._setupcblist();
                 
                     this._cblist.bringToFront();
-                    this._cblist.setVisible(true);
+                    this._cblist.setAttribute('visible', true);
                 
                     LzFocus.setFocus( this._cblist, false );
                 

@@ -108,7 +108,7 @@
         <!--- @keywords private -->
         <method name="_doblur" args="ignore">
         <![CDATA[
-          if (this._hiliteview && this._hiliteview.setHilite) {
+          if (this._hiliteview && this._hiliteview['setHilite']) {
               this._hiliteview['setHilite'](false);
           }
           this._hiliteview = null;
@@ -120,7 +120,7 @@
         <method name="setHilite" args="v" >
         <![CDATA[
             if (this._selector.allowhilite(v)) {
-                if ( this._hiliteview && this._hiliteview.setHilite) this._hiliteview['setHilite'](false);
+                if ( this._hiliteview && this._hiliteview['setHilite']) this._hiliteview['setHilite'](false);
                 this._hiliteview = v;
                 if (this._hiliteview) {
                     v['setHilite'](true);

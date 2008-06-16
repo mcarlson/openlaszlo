@@ -145,8 +145,8 @@
     <!--- Basesliderthumb expects to be within a baseslidertrack (or its
           subclass). In other words, its "classroot" should be a slidertrack. -->
     <class name="basesliderthumb" extends="button" width="${parent.classroot.thumbwidth}" height="${parent.classroot.thumbheight}"
-        onmousedown="thedragstate.apply();"
-        onmouseup="thedragstate.remove();"
+        onmousedown="thedragstate.setAttribute('applied', true);"
+        onmouseup="thedragstate.setAttribute('applied', false);"
         focusable="false"
         y="${(parent.height-height)/2}"
     >
@@ -169,8 +169,8 @@
               @keywords private -->
         <method name="setX" args="x">
             var boundedx = x;
-            if ( x > parent.getWidth()-getWidth() ) {
-              var constrainX = parent.getWidth()-getWidth();
+            if ( x > parent.width-width ) {
+              var constrainX = parent.width-width;
               boundedx = constrainX;
             } else
             if (parent.x > x) {

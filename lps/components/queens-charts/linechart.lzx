@@ -458,12 +458,12 @@
                 height="${parent.parent.scaledmax - parent.parent.scaledmin}">
                 <handler name="onmousedown">
                     if(parent.parent.draggable){
-                        dragger.apply();
+                        dragger.setAttribute('applied', true);
                     }
                 </handler>
                 <handler name="onmouseup">
                     if(parent.parent.draggable){
-                        dragger.remove();
+                        dragger.setAttribute('applied', false);
                         parent.parent.setAttribute('paneslider', this.x);
                         parent.parent.setAttribute('altslider', this.y);
                     }

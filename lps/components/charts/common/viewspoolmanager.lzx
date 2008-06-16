@@ -55,7 +55,7 @@
                 marker =  new lz[viewclass](parentview, args);                               
             }
             this.used.push(marker);
-            marker.setVisible(true);
+            marker.setAttribute('visible', true);
             return marker;            
         </method>
         
@@ -64,7 +64,7 @@
         <![CDATA[
              for(var i = 0; i < this.used.length; i++)
              {
-                this.used[i].setVisible(false);
+                this.used[i].setAttribute('visible', false);
                 
                 if(this.used[i]["clear"] != null)
                 {
@@ -134,7 +134,7 @@
             }
             else
             {
-                this.vlist[index].setVisible(true);
+                this.vlist[index].setAttribute('visible', true);
             }
             return this.vlist[index];            
         </method>   
@@ -145,7 +145,7 @@
              for(var i = 0; i < vlist.length; i++)
              {                
                  if(vlist[i] != undefined){
-                    vlist[i].setVisible(false);
+                    vlist[i].setAttribute('visible', false);
                     //vlist[i].clear();
                 }
              }

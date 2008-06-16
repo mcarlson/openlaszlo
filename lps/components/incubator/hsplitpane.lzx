@@ -43,11 +43,11 @@
                 
                 
                 <handler name="onmousedown">
-                    parent.dragger.apply();
+                    parent.dragger.setAttribute('applied', true);
                 </handler>
                 
                 <handler name="onmouseup">
-                    parent.dragger.remove();
+                    parent.dragger.setAttribute('applied', false);
                 </handler>
             </view>
             <dragstate 

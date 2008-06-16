@@ -213,12 +213,12 @@
             this.main.toolbar_view.yearcombo.addYears( this.earliestdate.getFullYear(), 
                                                        this.latestdate.getFullYear() );
             if( this.startAsIcon ) {
-                this.content.setVisible( false );
-                this.main.setVisible( false ); 
+                this.content.setAttribute('visible',  false );
+                this.main.setAttribute('visible',  false ); 
             } 
 
-            this.main.title_area.gripper_right.setVisible( false );
-            this.main.title_area.gripper_left.setVisible( false );
+            this.main.title_area.gripper_right.setAttribute('visible',  false );
+            this.main.title_area.gripper_left.setAttribute('visible',  false );
         </method> 
 
 
@@ -256,17 +256,17 @@
 
         <!--- @keywords private --> 
         <method name="expandFromIcon"> 
-            this.icon.setVisible( false ); 
-            this.content.setVisible( true ); 
-            this.main.setVisible( true ); 
+            this.icon.setAttribute('visible',  false ); 
+            this.content.setAttribute('visible',  true ); 
+            this.main.setAttribute('visible',  true ); 
             this.content.bringToFront() 
         </method>
 
         <!--- @keywords private --> 
         <method name="shrinkToIcon">
-            this.icon.setVisible(true );
-            this.content.setVisible( false );
-            this.main.setVisible( false );
+            this.icon.setAttribute('visible', true );
+            this.content.setAttribute('visible',  false );
+            this.main.setAttribute('visible',  false );
         </method>
     
         <!--- Set the month to show in the basedatepicker.  
@@ -494,9 +494,9 @@
                     </handler>
                     <method name="buttonpush">
                         classroot.main.close();     
-                        classroot.content.setVisible( false ); 
+                        classroot.content.setAttribute('visible',  false ); 
                         if( classroot.startAsIcon ) {
-                            classroot.icon.setVisible( true );
+                            classroot.icon.setAttribute('visible',  true );
                         } 
                     </method>
                 </basebutton>

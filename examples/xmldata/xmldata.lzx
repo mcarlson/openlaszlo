@@ -73,17 +73,17 @@
                     super.select(v);
                     control.curDataset = v.value;
                     if (v.value == 1 || v.value == 2) {
-                        query.setVisible(false);
-                        delay.setVisible(false);
-                        secure.setVisible(false);
+                        query.setAttribute('visible', false);
+                        delay.setAttribute('visible', false);
+                        secure.setAttribute('visible', false);
                     } else if (v.value == 3) {
-                        query.setVisible(true);
-                        delay.setVisible(true);
-                        secure.setVisible(false);
+                        query.setAttribute('visible', true);
+                        delay.setAttribute('visible', true);
+                        secure.setAttribute('visible', false);
                     } else if (v.value == 4) {
-                        query.setVisible(true);
-                        delay.setVisible(true);
-                        secure.setVisible(true);
+                        query.setAttribute('visible', true);
+                        delay.setAttribute('visible', true);
+                        secure.setAttribute('visible', true);
                     }
                 </method>
                 <radiobutton name="rb1" text="file:swatch.xml" value="1" />

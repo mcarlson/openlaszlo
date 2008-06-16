@@ -74,30 +74,30 @@
                 <view name="tip" bgcolor="0xffffaa" height="50" width="210" visible="false">
                     <text x="6" multiline="true" y="20">this could be some helpful text<br/>to tell you how to
                           fill in this field</text>
-                    <text x="180" y="30" align="right" bgcolor="0xaaffaa" name="more"
-                        clickable="true" onclick="parent.animate('height',100, 500); this.setVisible(false)"
+                    <text y="30" align="right" bgcolor="0xaaffaa" name="more"
+                        clickable="true" onclick="parent.animate('height',100, 500); this.setAttribute('visible', false)"
                         text="moreinfo"/>
                     <text x="6" y="52" multiline="true">more information about how to fill<br/>
                         out this field could go into this expanded area</text>
                     <handler name="onvisible" args="isvisible">
                         if (isvisible) {
-                            more.setVisible(true);
+                            more.setAttribute('visible', true);
                             this.setHeight(50);
                         }
                     </handler>
                 </view>
 
-                <view name="frame" x="4" y="4" width="200" bgcolor="black" height="${input.height+2}">
+                <view name="framer" x="4" y="4" width="200" bgcolor="black" height="${input.height+2}">
                     <inputtext x="1" y="1" bgcolor="white" width="198" name="input">type something here</inputtext>
                 </view>
-                <handler name="onfocus" reference="frame.input">
+                <handler name="onfocus" reference="framer.input">
                     //Debug.write('onfocus', this);
                     this.open();
                 </handler>
                 <method name="open">
                     if (!this.isopen) {
                         this.isopen=true;
-                        tip.setVisible(true);
+                        tip.setAttribute('visible', true);
                         LzModeManager.makeModal( this );
                         if (typeof(this.tabDel) == "undefined") {
                             this.tabDel = new LzDelegate( this , "releaseMode" );
@@ -110,15 +110,15 @@
                 <method name="close">
                     if (this.isopen) {
                         this.isopen = false;
-                        tip.setVisible(false);
+                        tip.setAttribute('visible', false);
                         LzModeManager.release( this );
                         this.tabDel.unregisterAll();
                     }
                 </method>
-                <handler name="onblur"  reference="frame.input">
+                <handler name="onblur"  reference="framer.input">
                     this.clickDel.unregisterAll();
                 </handler>
-                <method name="checkForClick"> <![CDATA[
+                <method name="checkForClick" args="v"> <![CDATA[
                     var xpos = this.getMouse('x');
                     var ypos = this.getMouse('y');
                     //Debug.write('checkForClick', xpos, ypos);
@@ -181,7 +181,7 @@
                 onmousedown="report( 'onmousedown' ); "
                 onmouseup="report( 'onmouseup' ); " >
 
-                <text x="10" y="15" width="100" name="mytext">Mouse Event Tester</text>
+                <text y="15" width="100" name="mytext">Mouse Event Tester</text>
                 <method name="report" args="t" >
                     this.mytext.setText( t );
                 </method>
@@ -191,7 +191,7 @@
                     height="120" width="250" pixellock="true" bgcolor="silver">
                 <simplelayout spacing="3" inset="5"/>
                 <text align="center">-- global mouse event tester --</text>
-                <text x="5" width="240" bgcolor="white"
+                <text width="240" bgcolor="white"
                         oninit="createDelegates();" >
                     <method name="createDelegates" >
                         new LzDelegate( this , "globalMouseUp" , LzGlobalMouse ,
@@ -222,7 +222,7 @@
 
 
                 </text>
-                <text x="5" width="${parent.width-5}" multiline="true">
+                <text width="${parent.width-5}" multiline="true">
                     note: the LzGlobalMouse service continues to send events
                     even when someone has the mode, but only the view which
                     has the mode receives view events</text>
@@ -235,13 +235,13 @@
         focustrap="true"
         defaultplacement="content" options="ignorelayout"
         visible="false"
-        width="${frame.content.width+20}" height="${frame.content.height+30}">
+        width="${framer.content.width+20}" height="${framer.content.height+30}">
         <attribute name="title" value="a dialog" type="string"/>
         <attribute name="bgcolor" value="black"/>  <!-- border color -->
-        <view x="1" y="1" name="frame" bgcolor="white"
+        <view x="1" y="1" name="framer" bgcolor="white"
             width="${parent.width-2}" height="${parent.height-2}">
             <simplelayout spacing="2"/>
-            <text x="10" name="mytitle" text="${classroot.title}" align="center" resize="true"/>
+            <text name="mytitle" text="${classroot.title}" align="center" resize="true"/>
             <view x="10" width="${parent.width-20}" height="1" bgcolor="black"/>
             <view x="10" name="content">
                 <!-- whatever is declared inside the simpledialogexample tag
@@ -250,13 +250,13 @@
         </view>
         <method name="open">
             LzModeManager.makeModal( this );
-            this.setVisible( true );
+            this.setAttribute('visible',  true );
             this.bringToFront();
             LzFocus.setFocus(this);
         </method>
 
         <method name="close">
-            this.setVisible( false );
+            this.setAttribute('visible',  false );
             LzFocus.setFocus(null);
             LzModeManager.release( this );
         </method>
@@ -271,13 +271,13 @@
         align="center" y="60" pixellock="true">
         <view width="400">
             <simplelayout spacing="10"/>
-            <text x="10" width="380" multiline="true">
+            <text width="380" multiline="true">
                 Mouse events only go to the dialog view and its
                 children, because it returns false from passModeEvents.
                 The dialog also sets focustrap="true" so that focus is kept
                 within this view.
             </text>
-            <text x="10" width="380" multiline="true" >
+            <text width="380" multiline="true" >
                This simple dialog is declared on the canvas so that
                it will float above all other views. Alternately, a class
                can be created from script with its parent as the canvas.
@@ -300,7 +300,7 @@
         width="120" height="100"
         align="center" y="100" pixellock="true" >
         <simplelayout spacing="3"/>
-        <text x="10" width="100" multiline="true">
+        <text width="100" multiline="true">
             simple example to show that modes may be nested
         </text>
         <button x="60" onclick="parent.close()">OK</button>

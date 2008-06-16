@@ -97,7 +97,7 @@
          </handler>
          <colorsquare x="11" y="3" name="csq" drawsquare="true">
              <method name="setColor" args="color">
-                 this.setVisible( color != null );
+                 this.setAttribute('visible',  color != null );
                  if (this.visible) {
                  this.setAttribute('swatchcolor', color);
                  }

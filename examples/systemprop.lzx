@@ -25,7 +25,7 @@
         </allow>
     </security>
 
-    <javarpc name="systemprop" scope="none" classname="SystemProp">
+    <javarpc name="systemprop" scope="none" remoteclassname="SystemProp">
 
         <handler name="onload">
             this.getProperties.invoke();

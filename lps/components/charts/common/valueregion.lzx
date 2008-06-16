@@ -193,9 +193,9 @@
                 this.setWidth( highDeviceX - lowDeviceX + this.objStroke.strokeWidth );
 
                 if( (highDeviceX - lowDeviceX) != 0 )
-                    this.setVisible(this.regionEnabled);
+                    this.setAttribute('visible', this.regionEnabled);
                 else
-                    this.setVisible( false );
+                    this.setAttribute('visible',  false );
 
             } else  if ( this.axis == 'y' ) {
                 this.setX(parent.plotarea.x);
@@ -227,9 +227,9 @@
                 this.setHeight( highDeviceY - lowDeviceY + this.objStroke.strokeWidth );
 
                 if( (highDeviceY - lowDeviceY) != 0 )
-                    this.setVisible(this.regionEnabled);
+                    this.setAttribute('visible', this.regionEnabled);
                 else
-                    this.setVisible( false );
+                    this.setAttribute('visible',  false );
             }
 
             this.beginPath();

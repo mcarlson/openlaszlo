@@ -28,14 +28,14 @@
         <animator 
             name="_animShow" attribute="y" to="0" 
             from="${-parent.height}" 
-            duration="500" start="false" onstart="parent.setVisible(true)" 
+            duration="500" start="false" onstart="parent.setAttribute('visible', true)" 
         />
         
         <!--- Used to hide dialog.
             @keywords private -->
         <animator name="_animHide" attribute="y" from="0" 
             to="${-parent.height}" 
-            duration="200" start="false" onstop="parent.setVisible(false)" 
+            duration="200" start="false" onstop="parent.setAttribute('visible', false)" 
         />
         
         <!--- show

@@ -147,7 +147,7 @@
                 // It should be applied only to the image by using globalAlpha (see commented)
                 // line above.
                 this.chartBackground.setAttribute( "opacity", s.region.opacity );
-                this.chartBackground.stretchResource();
+                this.chartBackground.setAttribute('stretches', both);
             } else {
                 this.chartBackground.fillStyle = s.region.color;
                 this.chartBackground.globalAlpha = s.region.opacity;

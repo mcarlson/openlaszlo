@@ -15,7 +15,7 @@
     
     <footerbutton  name="btn" text="Clips" width="${parent.width}" xtext="13" onmouseup="parent.close_anm.doStart(); highlight.hide()" >
         <handler name="onstop" reference="parent.close_anm" >
-            parent.setVisible( false );
+            parent.setAttribute('visible',  false );
             navmanager.focus( clipsmainbtn );
         </handler>
         <handler name="onstop" reference="parent.open_anm" >

@@ -48,7 +48,7 @@
               text="${parent.text}"/>
 
         <state applied="${parent.editing}" pooling="true"
-               onapply="parent.editbox.setText(parent.text)"
+               onapplied="parent.editbox.setText(parent.text)"
                onremove="parent.setAttribute('text', parent.editbox.getText())">
             <edittext name="editbox" width="${parent.t.width + 10}">
                 <method name="init">
@@ -100,7 +100,7 @@
         <view layout="axis:x; spacing:4">
             <text text="..." onclick="Debug.write(classroot.reference)"/>
             <text text="${classroot.reference.visible ? 'o ' : 'x '}" resize="true"
-                onclick="classroot.reference.setVisible(!classroot.reference['visible'])"/>
+                onclick="classroot.reference.setAttribute('visible', !classroot.reference['visible'])"/>
             <text text="${classroot.reference.name == null ?
                     classroot.reference.constructor.tagname : classroot.reference.name}"
                 onclick="classroot.toggle()"

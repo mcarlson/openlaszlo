@@ -103,10 +103,10 @@
         
         <!-- Make all red lines disappear -->
         <method name="reset">
-            this.horizLine.setVisible( false );
-            this.vertLine.setVisible( false );
-            this.forSlashLine.setVisible( false );
-            this.bakSlashLine.setVisible( false );
+            this.horizLine.setAttribute('visible',  false );
+            this.vertLine.setAttribute('visible',  false );
+            this.forSlashLine.setAttribute('visible',  false );
+            this.bakSlashLine.setAttribute('visible',  false );
             this.horizLine.setAttribute( "y", this.initHorizLineY );
             this.vertLine.setAttribute( "x", this.initVertLineX );
         </method>
@@ -122,7 +122,7 @@
                 var newY = this.horizLine.y + (rowNumber 
                            * this.horizLineSpacing);
                 this.horizLine.setAttribute( "y", newY );
-                this.horizLine.setVisible( true );
+                this.horizLine.setAttribute('visible',  true );
                 return;
             }
 
@@ -132,20 +132,20 @@
                 var newX = this.vertLine.x + (colNumber
                            * this.vertLineSpacing);
                 this.vertLine.setAttribute( "x", newX );
-                this.vertLine.setVisible( true );
+                this.vertLine.setAttribute('visible',  true );
                 return;
             }
 
             // forward slash
             if (( this.firstCol < this.secondCol ) == 
                 ( this.firstRow > this.secondRow )) {
-                this.forSlashLine.setVisible( true );
+                this.forSlashLine.setAttribute('visible',  true );
             }
 
             // back slash
             if (( this.firstCol < this.secondCol ) == 
                 ( this.firstRow < this.secondRow )) {
-                this.bakSlashLine.setVisible( true );
+                this.bakSlashLine.setAttribute('visible',  true );
             }
             ]]>
         </method>
@@ -348,19 +348,19 @@
     <!-- semi-transparent background -->
     <view id="gameOverScreen" x="0" y="0" 
           width="800" height="800"
-          oninit="this.setVisible(false);"
+          oninit="this.setAttribute('visible', false);"
           bgcolor="#ffffff" opacity=".40">
     </view>
 
     <!-- game over dialog box -->
     <view id="gameOver" x="300" y="200" 
           width="200" height="125"
-          oninit="this.setVisible( false );"
+          oninit="this.setAttribute('visible',  false );"
           resource="dialogBox">
 
         <method name="showGameOver" args="message">
-            this.setVisible( true );
-            gameOverScreen.setVisible( true );
+            this.setAttribute('visible',  true );
+            gameOverScreen.setAttribute('visible',  true );
 
             // Prevent the user from clicking anything else
             LzModeManager.makeModal( this );
@@ -374,8 +374,8 @@
             // dialog box
             LzModeManager.release(this); 
 
-            this.setVisible( false );
-            gameOverScreen.setVisible( false );
+            this.setAttribute('visible',  false );
+            gameOverScreen.setAttribute('visible',  false );
 
             // reset globals
             currentPlayer = "O";
@@ -390,7 +390,7 @@
 
         <!-- The message in the "dialog" box -->
         <text align="center" multiline="false" resize="true" 
-              name="message" x="10" y="40" width="${parent.width}" />
+              name="message" y="40" width="${parent.width}" />
 
         <button text="OK" y="80" onclick="this.parent.playAgain()"
                 align="center" />
@@ -398,7 +398,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -64,7 +64,7 @@
             <method name="update" > <![CDATA[
                 var np = Math.round( parent.content.height/parent.height ) + 1;
                 for (var i = 0; i < this.subviews.length; i++) {
-                    this.subviews[i].setVisible( i < np );
+                    this.subviews[i].setAttribute('visible',  i < np );
                 }            
             ]]></method>   
         </view>

@@ -338,12 +338,12 @@
                 <attribute name="anicomplete" type="boolean" value="false"/>
                 <handler name="onmousedown">
                     if(parent.parent.draggable){
-                        dragger.apply();
+                        dragger.setAttribute('applied', true);
                     }
                 </handler>
                 <handler name="onmouseup">
                     if(parent.parent.draggable){
-                        dragger.remove();
+                        dragger.setAttribute('applied', false);
                     }
                 </handler>
                 

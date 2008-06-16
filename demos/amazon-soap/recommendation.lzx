@@ -57,8 +57,8 @@
                 remotecontext="$once{canvas.amazon}" dataobject="$once{dsCDInfo}">
 
       <handler name="ondata" args="mydata">
-        recommend.setVisible( false );
-        cdinfo.setVisible( true );
+        recommend.setAttribute('visible',  false );
+        cdinfo.setAttribute('visible',  true );
         cdinfo.bringtofront();
         infoLoader.hide();
       </handler>

@@ -492,12 +492,12 @@
 
         <method name="start" args="dragImage">
             this.setSource(dragImage);
-            dragging.apply();
+            dragging.setAttribute('applied', true);
             this.setAttribute("visible", true);
         </method>
 
         <method name="stop">
-            dragging.remove();
+            dragging.setAttribute('applied', false);
             this.setAttribute("visible", false);
         </method>
 
@@ -519,7 +519,7 @@
 
         <method name="start">
             this.dragging=true;
-            drag.apply();
+            drag.setAttribute('applied', true);
             this.setAttribute("visible", true);
         </method>
 
@@ -536,7 +536,7 @@
 
         <method name="stop">
             this.dragging=false;
-            drag.remove();
+            drag.setAttribute('applied', false);
             this.setAttribute("visible", false);
         </method>
 

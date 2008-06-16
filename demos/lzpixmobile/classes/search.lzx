@@ -28,11 +28,11 @@
         </method>
 
         <handler name="onstop" reference="this.close" >
-            this.setVisible( false );
+            this.setAttribute('visible',  false );
         </handler>
 
         <handler name="onstart" reference="this.open" >
-            this.setVisible( true );
+            this.setAttribute('visible',  true );
         </handler>
         
         <handler name="onstop" reference="this.open" >

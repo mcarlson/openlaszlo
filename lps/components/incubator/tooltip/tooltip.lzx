@@ -127,13 +127,13 @@
         canvas.tooltipview.setY( tipy );
         canvas.tooltipview.setPointerX( this._lastmousex, pointerontop );
         canvas.tooltipview.bringToFront( this.text );
-        canvas.tooltipview.setVisible( true );
+        canvas.tooltipview.setAttribute('visible',  true );
     ]]></method>
 
     <!--- @keywords private -->
     <method name="hideTip">
         this._mousein = false;
-        canvas.tooltipview.setVisible( false );
+        canvas.tooltipview.setAttribute('visible',  false );
     </method>
 </class>
 

@@ -30,7 +30,7 @@
         <text name="title" resize="true"
               text="${classroot.text}"
               font="Helvetica" fontsize="12" fontstyle="bold"
-              fgcolor="#FFFFFF" oninit="setVisible(false)" >
+              fgcolor="#FFFFFF" oninit="setAttribute('visible', false)" >
             <handler name="ontext" >
                 this.setX(-this.getTextWidth() - 2 );
             </handler>
@@ -49,7 +49,7 @@
   
         <method name="init" >
             super.init();
-            this.rsc.setResource(this.subresource);
+            this.rsc.setAttribute('resource', this.subresource);
         </method>
            
         <handler name="onmouseover" >
@@ -74,16 +74,16 @@
             container.showSection(this.section);
         </handler>
  
-        <method name="showText" >
+        <method name="showText" args="v">
             if ( this.hilite == true ) {
-                this.title.setVisible(true);
+                this.title.setAttribute('visible', true);
                 this.title.setAttribute("opacity",.1);
                 this.title.animate("opacity",1,200,false);
             }
         </method>
         
         <method name="hideText" >
-            this.title.setVisible(false);
+            this.title.setAttribute('visible', false);
         </method>
         
     </class>
@@ -135,7 +135,6 @@
                        options="ignorelayout"/>
                 
                 <!-- LINKS TO EXTERNAL RESOURCES  -->
-                <custom_image resource="http://www.laszlosystems.com/images/horses/horse-1-sm.jpg" />
                 <custom_image resource="http://www.laszlosystems.com/images/horses/horse-2-sm.jpg" />
                 <custom_image resource="http://www.laszlosystems.com/images/horses/horse-3-sm.jpg" />
                 <custom_image resource="http://www.laszlosystems.com/images/horses/horse-4-sm.jpg" />
@@ -168,28 +167,28 @@
         <!-- METHODS for view "container" -->  
         <method name="hilitePicture" args="picture,show" >
             if ( show == true ) {
-                var x= picture.getAttribute("x") - 2;
-                var y= picture.getAttribute("y") - 2;
-                var w= picture.getAttribute("width") + 4;
-                var h= picture.getAttribute("height") + 4;
+                var x= picture.x - 2;
+                var y= picture.y - 2;
+                var w= picture.width + 4;
+                var h= picture.height + 4;
                 yellowRect.setAttribute("x",x);
                 yellowRect.setAttribute("y",y);
                 yellowRect.setAttribute("width",w); 
                 yellowRect.setAttribute("height",h);
-                yellowRect.setVisible(true);
+                yellowRect.setAttribute('visible', true);
             } else {
-                yellowRect.setVisible(false);
+                yellowRect.setAttribute('visible', false);
             }
         </method>
 
         <method name="doMouseDown" >
-            yellowRect.setAttribute("x",yellowRect.getAttribute("x") - 1);
-            yellowRect.setAttribute("y",yellowRect.getAttribute("y") - 1);
+            yellowRect.setAttribute("x",yellowRect.x - 1);
+            yellowRect.setAttribute("y",yellowRect.y - 1);
             yellowRect.setAttribute(
-                            "width",yellowRect.getAttribute("width") + 2);
+                            "width",yellowRect.width + 2);
             yellowRect.setAttribute(
-                            "height",yellowRect.getAttribute("height") + 2);
-            yellowRect.setVisible(true);
+                            "height",yellowRect.height + 2);
+            yellowRect.setAttribute('visible', true);
         </method>
 
         <method name="doMouseUp">
@@ -197,13 +196,13 @@
                     animations.anim1.stop();
                 }  
 
-            yellowRect.setAttribute("x",yellowRect.getAttribute("x") + 1);
-            yellowRect.setAttribute("y",yellowRect.getAttribute("y") + 1);
+            yellowRect.setAttribute("x",yellowRect.x + 1);
+            yellowRect.setAttribute("y",yellowRect.y + 1);
             yellowRect.setAttribute(
-                            "width",yellowRect.getAttribute("width") - 2);
+                            "width",yellowRect.width - 2);
             yellowRect.setAttribute(
-                            "height",yellowRect.getAttribute("height") - 2);
-            yellowRect.setVisible(true);
+                            "height",yellowRect.height - 2);
+            yellowRect.setAttribute('visible', true);
         </method>
 
         <method name="showSection" args="section">
@@ -216,9 +215,9 @@
             }
         </method>
 
-        <method name="fadeInNewSection" >
-            this.currentSection.setVisible(false);
-            this.newSection.setVisible(true);
+        <method name="fadeInNewSection" args="v">
+            this.currentSection.setAttribute('visible', false);
+            this.newSection.setAttribute('visible', true);
             this.newSection.setAttribute("opacity",.1);
             this.newSection.animate("opacity",1,200,false);
             this.currentSection = this.newSection;

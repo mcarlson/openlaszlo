@@ -11,14 +11,14 @@
             this.sellist = sel.concat();
             this.addSelection( sellist );
 
-            ds.apply();
+            ds.setAttribute('applied', true);
 
             LzTrack.activate( "photos" );
             gClipboard.dragStarted();
         </method>
 
         <method name="stopDrag">
-            ds.remove();
+            ds.setAttribute('applied', false);
             this.poolAll();
             LzTrack.deactivate( "photos" );
             gClipboard.dragFinished( sellist );
@@ -32,7 +32,7 @@
                 var p = activephotos[ i ];
                 if ( !( p.loaded && !p.visible ) ) continue;
                 var e = sellist[ i ];
-                p.setVisible( true );
+                p.setAttribute('visible',  true );
                 p.setX( e.getAttributeRelative( 'x', p ) );
                 p.setY( e.getAttributeRelative( 'y', p ) );
                 p.setAttribute( "clipfactor" , 0 );

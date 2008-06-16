@@ -20,7 +20,7 @@
         <fflist name="flist" />
         
         <handler name="onclick">
-            flist.setVisible(!flist.visible);
+            flist.setAttribute('visible', !flist.visible);
         </handler>
 
         <method name="animate">
@@ -70,7 +70,7 @@
                        value='$path{"@value"}'/>
         <handler name="onx" reference="owner">
             updateAttachLocation();
-            if (!visible) setVisible(true);
+            if (!visible) setAttribute('visible', true);
         </handler>
         <handler name="ony" reference="owner">
             updateAttachLocation();
@@ -86,7 +86,7 @@
             <text>Notice that the floatinglists are aware of the canvas bounds and</text>
             <text>always appear in a visible location.</text>
             <text></text>
-            <checkbox name="animate">animate
+            <checkbox name="makeanimate">animate
                 <handler name="onvalue">
                     if (this.isinited) {
                         if (value==true) {

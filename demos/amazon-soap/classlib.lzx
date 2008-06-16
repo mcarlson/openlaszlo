@@ -76,7 +76,7 @@
                                            -( (canvas.width
                                                -classroot.getAttributeRelative('x', canvas))
                                            -classroot.width );
-                    classroot.panelDragger.apply();
+                    classroot.panelDragger.setAttribute('applied', true);
                 </handler>
                 <handler name="onmouseup">
                     if ( !classroot.opened ) classroot.opened = 'true';
@@ -86,7 +86,7 @@
                         classroot.opened = 'false'
                     }
                     parent.tabButton.setResourceNumber(classroot.opened=='true'?4:1);
-                    classroot.panelDragger.remove();
+                    classroot.panelDragger.setAttribute('applied', false);
                 </handler>
 
             </vtabsliderbutton>
@@ -98,17 +98,19 @@
         </view>
 
         <method name="open">
-            this.container.content.setVisible(true);
+            this.container.content.setAttribute('visible', true);
             this.animate("width",openingsize,333,false);
         </method>
 
         <method name="close">
+            <![CDATA[
             var a = this.animate("width",tab.width,333,false);
-            if (! this.__closeDel) this.__closeDel = new LzDelegate(this, 'hidecontent', a, 'onstop');
+            if (! this['__closeDel']) this.__closeDel = new LzDelegate(this, 'hidecontent', a, 'onstop');
+            ]]>
         </method>
 
-        <method name="hidecontent">
-            this.container.content.setVisible(false);
+        <method name="hidecontent" args="v">
+            this.container.content.setAttribute('visible', false);
         </method>
 
         <!-- Nudge the tab left then right to give feedback that something's
@@ -191,10 +193,10 @@
            options="ignorelayout">
         <method name="show">
             this.bringToFront();
-            this.setVisible( true );
+            this.setAttribute('visible',  true );
         </method>
         <method name="hide">
-            this.setVisible( false );
+            this.setAttribute('visible',  false );
         </method>
     </class>
 

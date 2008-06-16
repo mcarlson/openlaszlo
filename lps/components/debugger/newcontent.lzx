@@ -116,8 +116,8 @@
                    onclick="parent.scrollRight(32)" />
 
     <view name="dragger" width="${parent.thumbwidth}" x="12"
-              onmousedown="this.hdrag.apply()"
-              onmouseup="this.hdrag.remove()" >
+              onmousedown="this.hdrag.setAttribute('applied', true)"
+              onmouseup="this.hdrag.setAttribute('applied', false)" >
 
             <_dbg_lzhdrag name="hdrag" />
             <stableborderlayout axis="x" />
@@ -231,8 +231,8 @@
                    onclick="parent.parent.incScroll(1)" />
 
        <view name="dragger" height="${parent.thumbheight}" y="12"
-              onmousedown="this.drag.apply()"
-              onmouseup="this.drag.remove()" 
+              onmousedown="this.drag.setAttribute('applied', true)"
+              onmouseup="this.drag.setAttribute('applied', false)" 
               onmouseover="higlight_dragger(2)"
               onmouseout="higlight_dragger(1)" >
             <_dbg_lzvdrag name="drag" />

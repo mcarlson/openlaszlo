@@ -33,7 +33,7 @@
             } else {
                 r = new photoclass( this , { visible : false } );
                 new LzDatapath( r );
-                r.txt.setVisible( false )
+                r.txt.setAttribute('visible',  false )
             }
             showdel.register( r, "onloaded" );
             return r;
@@ -49,7 +49,7 @@
         <method name="poolAll">
             while( activephotos.length ){
                 var p = activephotos.pop();
-                p.setVisible( false );
+                p.setAttribute('visible',  false );
                 p.datapath.setPointer( null );
                 photopool.push( p );
             }

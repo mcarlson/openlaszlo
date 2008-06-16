@@ -41,7 +41,7 @@
         <text font="Helmet,Arial,Helvetica,sans-serif" fontsize="14" name="dayandampm" x="130" y="132" visible="false" >SUN  AM
             <handler name="ontext" >
                 this.setX(100 - Math.floor(this.getTextWidth()/2.0));
-                this.setVisible(true);
+                this.setAttribute('visible', true);
             </handler>
         </text>
 
@@ -131,6 +131,6 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-200 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

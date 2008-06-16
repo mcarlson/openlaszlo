@@ -80,7 +80,7 @@
                                            -( (canvas.width
                                                -classroot.getAttributeRelative('x', canvas))
                                            -classroot.width );
-                    classroot.panelDragger.apply();
+                    classroot.panelDragger.setAttribute('applied', true);
                     if(classroot.container.content.visible != true){
                         classroot.container.content.setAttribute('visible', true);
                     }
@@ -94,7 +94,7 @@
                         classroot.container.content.setAttribute('visible', false);
                     }
                     parent.tabButton.setResourceNumber(classroot.opened=='true'?4:1);
-                    classroot.panelDragger.remove();
+                    classroot.panelDragger.setAttribute('applied', false);
                 </handler>
 
             </vtabsliderbutton>

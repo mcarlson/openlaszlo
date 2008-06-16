@@ -76,7 +76,7 @@
                     this.applyRotation(style.fontangle, style.fontname);                                    
                 }
                             
-                this.setVisible(true);
+                this.setAttribute('visible', true);
                 this.bringToFront();
             }            
                 

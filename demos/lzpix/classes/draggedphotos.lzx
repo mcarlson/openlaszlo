@@ -12,7 +12,7 @@
             this.sellist = sel.concat();
             this.addSelection( sellist );
 
-            ds.apply();
+            ds.setAttribute('applied', true);
 
             LzTrack.activate( "photos" );
 
@@ -20,7 +20,7 @@
         </method>
 
         <method name="stopDrag">
-            ds.remove();
+            ds.setAttribute('applied', false);
             this.poolAll();
             LzTrack.deactivate( "photos" );
             gClipboard.dragFinished( sellist );

@@ -1,5 +1,6 @@
 <canvas height="600" width="600" bgcolor="0xeaeaea">
     <resource name="cherry" src="testmedia/cherry.png"/>
+    <include href="testmedia/frosty.lzx" />
     
     <class name="scrollview" defaultplacement="content" clip="true" focusable="true">
         <attribute name="scrollto" value="0" type="number"/>
@@ -10,7 +11,7 @@
     
     <class name="testoldstyle" clip="true" height="250" width="200" >
         <view options="releasetolayout">
-            <include href="testmedia/frosty.lzx" />
+            <frosty/>
         </view>
         <scrollbar height="${parent.height}" axis="y"/>
         <resizelayout axis="x"/>
@@ -23,7 +24,7 @@
                     <scrollview id="sv1" width="${parent.width-2}"
                          height="${parent.height-2}" x="1" y="1" 
                          scrollto="50" bgcolor="white">
-                        <include href="testmedia/frosty.lzx" />
+                        <frosty/>
                 </scrollview>
                 </view>
                 <view>
@@ -62,7 +63,7 @@
             <view bgcolor="0x848484" height="200" width="200" >
                 <scrollview id="sv3" bgcolor="white" width="${parent.width-2}"
                     height="${parent.height-2}" x="1" y="1">
-                <include href="testmedia/frosty.lzx" />
+                <frosty/>
             </scrollview>
             </view>
             <simplelayout axis="x" spacing="20"/>
@@ -72,7 +73,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -122,20 +122,20 @@
             if ( leftrsc != "" )
             {
                 // set resource.  also need to set tint again.
-                this.left.setResource(leftrsc);
+                this.left.setAttribute('resource', leftrsc);
                 if (this.style != null && this.style.basecolor != null)
                     this.setTint(this.left, this.style.basecolor);
             }
                 
             if ( middlersc != "" )
             {
-                this.middle.setResource(middlersc);
+                this.middle.setAttribute('resource', middlersc);
                 this.setTint(this.middle, this.style.basecolor);
             }
             
             if ( rightrsc != "" )
             {
-                this.right.setResource(rightrsc);
+                this.right.setAttribute('resource', rightrsc);
                 this.setTint(this.right, this.style.basecolor);
             }
             ]]>
@@ -208,7 +208,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

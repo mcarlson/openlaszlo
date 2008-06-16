@@ -7,7 +7,7 @@
     </colormenu>
 
     <class name="colorbox" width="12" height="12"
-        bgcolor="${color == null ? 0xeaeaea : 0x000000}">
+        bgcolor="${this['color'] == null ? 0xeaeaea : 0x000000}">
         <attribute name="obj" value="null" when="always"/>
 <!--        <attribute name="color" value="${obj == null ? null : obj.bgcolor}"/>-->
         <attribute name="color"/>
@@ -15,7 +15,7 @@
             new LzDelegate(this, 'updatecolor', obj, 'onbgcolor');
             updatecolor();
         </handler>
-        <method name="updatecolor">
+        <method name="updatecolor" args="v">
             setAttribute('color', this.obj.bgcolor);
         </method>
 
@@ -42,8 +42,8 @@
               y="$once{ parent.height /2 - this.height/2}"
               text="${parent.text}"/>
 
-        <state apply="${parent.editing}" pooling="true"
-               onapply="parent.editbox.setText(parent.text)"
+        <state applied="${parent.editing}" pooling="true"
+               onapplied="parent.editbox.setText(parent.text)"
                onremove="parent.setAttribute('text', parent.editbox.getText())">
             <edittext name="editbox" width="${parent.t.width + 10}">
                 <method name="init">
@@ -95,13 +95,13 @@
         <view layout="axis:x; spacing:4">
             <text text="..." onclick="Debug.write(classroot.reference)"/>
             <text text="${classroot.reference.visible ? 'o ' : 'x '}" resize="true"
-                onclick="classroot.reference.setVisible(!classroot.reference.visible)"/>
+                onclick="classroot.reference.setAttribute('visible', !classroot.reference.visible)"/>
             <text text="${classroot.reference.name == null ?
                     classroot.reference.classname : classroot.reference.name}"
                 onclick="classroot.toggle()"
                 onmouseover="parent.setBGColor(0xddddff)"
                 onmouseout="parent.setBGColor(null)"/>
-            <state apply="${classroot.reference instanceof LzView}">
+            <state applied="${classroot.reference instanceof LzView}">
                 <colorbox y="1" obj="classroot.reference"/>
                 <propedit text="${classroot.reference.x}" obj="classroot.reference" prop="x"/>
                 <propedit text="${classroot.reference.y}" obj="classroot.reference" prop="y"/>
@@ -162,7 +162,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

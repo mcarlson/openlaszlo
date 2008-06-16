@@ -33,7 +33,7 @@
                 }
             }
             if ( this.showheader ){
-                mybutton.widthConstraint.apply();
+                mybutton.widthConstraint.setAttribute('applied', true);
             }
             super.init();
         </method>
@@ -86,8 +86,8 @@
                     name="resizer"
                     clickable="$once{parent.resizable}"
                     cursor="colResize"
-                    onmousedown="LzCursor.lock();parent.rs.apply()"
-                    onmouseup="LzCursor.unlock();parent.rs.remove()" >
+                    onmousedown="LzCursor.lock();parent.rs.setAttribute('applied', true)"
+                    onmouseup="LzCursor.unlock();parent.rs.setAttribute('applied', false)" >
                     <view resource="resources/grid/column_resize_top.swf"/>
                     <view resource="resources/grid/column_resize_mid.swf"
                         stretches="height"/>

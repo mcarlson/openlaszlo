@@ -25,8 +25,8 @@
               stretches="both" visible="false"  x="-6" y="-6" />
 
         <view name="dot" resource="images/dot.png" stretches="both" x="-4" y="-4"
-              onmouseover="this.parent.dothilite.setVisible(true)"
-              onmouseout="this.parent.dothilite.setVisible(false)"
+              onmouseover="this.parent.dothilite.setAttribute('visible', true)"
+              onmouseout="this.parent.dothilite.setAttribute('visible', false)"
               onclick="this.parent.activateclock( myclock )" />
 
         <text name="titlesdhw" x="${parent.title.x + 1}" y="${parent.title.y + 1}"
@@ -119,6 +119,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

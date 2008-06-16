@@ -58,7 +58,7 @@
         <method name="setImage" args="s">
              //Debug.write("set source s=",s);
              // TODO: [mc 7-31-2006] Reversing these two lines causes IE image loading bugs - see lps/includes/lfc/test/resourceload.lzx.  Fix here for now. 
-             this.intparent.setVisible(false);
+             this.intparent.setAttribute('visible', false);
              this.intparent.interior.setSource(s);
         </method>
    
@@ -139,7 +139,7 @@
             this.updateY( true );
             this.setAttribute( "loaded", true );
             intparent.interior.setAttribute("opacity", 0);
-            this.intparent.setVisible(true);
+            this.intparent.setAttribute('visible', true);
             intparent.interior.animate('opacity', 1, 200);
         </handler>
 

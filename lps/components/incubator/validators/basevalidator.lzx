@@ -98,16 +98,16 @@
             <view name="ok" resource="rsc_ok" visible="false" width="10" height="10" />
             <view name="error" resource="rsc_error" visible="false" width="10" height="10" />
             <method name="setok">
-                this.ok.setVisible(true);
-                this.error.setVisible(false);
+                this.ok.setAttribute('visible', true);
+                this.error.setAttribute('visible', false);
             </method>
             <method name="seterror">
-                this.ok.setVisible(false);
-                this.error.setVisible(true);
+                this.ok.setAttribute('visible', false);
+                this.error.setAttribute('visible', true);
             </method>
             <method name="clear">
-                this.ok.setVisible(false);
-                this.error.setVisible(false);
+                this.ok.setAttribute('visible', false);
+                this.error.setAttribute('visible', false);
             </method>
         </view>
         

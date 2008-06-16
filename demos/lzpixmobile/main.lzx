@@ -67,8 +67,8 @@
             <attribute name="pagesize" value="9" type="number" />
             <attribute name="length" value="0" type="number" />
             <attribute name="scale" value="100" type="number"/>
-            <animator name="showanim" attribute="opacity" to="1" duration="300" start="false" onstart="parent.setVisible(true)"/>
-            <animator name="hideanim" attribute="opacity" to="0" duration="300" start="false" onstop="parent.setVisible(false)"/>
+            <animator name="showanim" attribute="opacity" to="1" duration="300" start="false" onstart="parent.setAttribute('visible', true)"/>
+            <animator name="hideanim" attribute="opacity" to="0" duration="300" start="false" onstop="parent.setAttribute('visible', false)"/>
             <animator name="zoominanim" attribute="scale" to="170" duration="300" start="false" onstop="parent.update()"/>
             <animator name="zoomoutanim" attribute="scale" to="100" duration="300" start="false" onstop="parent.update()"/>
             <animator name="leftanim" attribute="x" to="${- this.parent.width}" duration="300" start="false" onstop="parent.update()"/>
@@ -162,11 +162,11 @@
             </view>
             
             <view name="tools" width="100%" clip="true" height="$once{parent.toolsheight}"  >
-                <animator name="showanim" attribute="height" to="${footer.toolsheight}" duration="300" start="false" onstart="parent.setVisible(true)"/>
-                <animator name="hideanim" attribute="height" to="0" duration="300" start="false" onstop="parent.setVisible(false)"/>
+                <animator name="showanim" attribute="height" to="${footer.toolsheight}" duration="300" start="false" onstart="parent.setAttribute('visible', true)"/>
+                <animator name="hideanim" attribute="height" to="0" duration="300" start="false" onstop="parent.setAttribute('visible', false)"/>
                 <simplelayout  axis="x" />
                 <footerbutton  text="Clips" width="60" id="clipsmainbtn" 
-                               onmouseup="clips.setVisible( true ); 
+                               onmouseup="clips.setAttribute('visible',  true ); 
                                           clips.open_anm.doStart();
                                           highlight.hide()" />
                 <footerbutton  width="60" iconresource="icon_grid4_rsc"     onmouseup="gContent.zoomin()"/>
@@ -274,14 +274,14 @@
         </method>
         <handler name="onfocused" reference="navmanager" method="show"/>
         <method name="hide">
-            this.setVisible(false);
+            this.setAttribute('visible', false);
         </method>
         <method name="show" args="v, speed">
             if (v == null) {
                 this.hide();
             } else {
                 if (speed == null) speed = 300
-                this.setVisible(true);
+                this.setAttribute('visible', true);
                 if ( v['getCanvasFocusRect'] ) f_rect = v.getCanvasFocusRect();
                 else  {
                     f_rect = [ v.getAttributeRelative('x', canvas),

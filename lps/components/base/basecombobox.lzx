@@ -350,11 +350,11 @@
            this.editable = isEditable;
            if (this._initcomplete) {
                 if (isEditable) {
-                     this.interior.non_editable_state.remove();
-                     this.interior.editable_state.apply();
+                     this.interior.non_editable_state.setAttribute('applied', false);
+                     this.interior.editable_state.setAttribute('applied', true);
                 } else {
-                     this.interior.editable_state.remove();
-                     this.interior.non_editable_state.apply();
+                     this.interior.editable_state.setAttribute('applied', false);
+                     this.interior.non_editable_state.setAttribute('applied', true);
                 }
                 this._showEnabled();
                 this.interior.setupText();

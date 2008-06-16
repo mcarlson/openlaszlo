@@ -4,8 +4,8 @@
   <i>dragging</i> library.</text>
   
   <view resource="../images/laszlo_explorer_logo.png"
-        onmousedown="dragging.apply()"
-        onmouseup="dragging.remove(); stop()">
+        onmousedown="dragging.setAttribute('applied', true)"
+        onmouseup="dragging.setAttribute('applied', false); stop()">
     <dragstate name="dragging"/>
   </view>
   
@@ -14,12 +14,16 @@
   constraints.</text>
   
   <view resource="../images/laszlo_explorer_logo.png"
-        onmousedown="dragging.apply()"
-        onmouseup="dragging.remove()">
+        onmousedown="dragging.setAttribute('applied', true)"
+        onmouseup="dragging.setAttribute('applied', false)">
     <state name="dragging">
       <attribute name="x" value="${parent.getMouse('x')}"/>
     </state>
   </view>
 </canvas>
-
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
 

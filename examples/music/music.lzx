@@ -55,10 +55,10 @@
         </view>
         
         <simplelayout axis="x" spacing="10"/>
-        <method name="lastoff">
+        <method name="lastoff" args="v">
             Debug.write("Got last");
         </method>
-        <method name="stopped">
+        <method name="stopped" args="v">
             Debug.write("Got stopped");
         </method>
         <view name="background" bgcolor="black" width="202" height="15" y="50" options="ignorelayout;">
@@ -71,7 +71,7 @@
     </view>
 </canvas>    
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

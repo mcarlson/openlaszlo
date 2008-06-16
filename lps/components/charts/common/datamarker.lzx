@@ -32,7 +32,7 @@
             if( this.style.point.image != null ) {
                 //Must be a resource
                 this.pointrepresentation.setSource(this.style.point.image);
-                this.pointrepresentation.stretchResource();
+                this.pointrepresentation.setAttribute('stretches', both);
                 this.pointrepresentation.setOpacity(this.style.point.opacity);
             } else if (this.style.point.shape=='circle' || 
                        this.style.point.shape=='triangle' ||

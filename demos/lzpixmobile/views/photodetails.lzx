@@ -5,8 +5,8 @@
 * X_LZ_COPYRIGHT_END ******************************************************-->
 <view id="photodetails" opacity="0" width="${parent.width}" y="${parent.header.height}" clip="true" visible="false">
         
-    <animator name="showanim" attribute="opacity" to="1" duration="300"  start="false" onstart="parent.setVisible(true)"/>
-    <animator name="hideanim" attribute="opacity" to="0" duration="300"  start="false" onstop="parent.setVisible(false)"/>
+    <animator name="showanim" attribute="opacity" to="1" duration="300"  start="false" onstart="parent.setAttribute('visible', true)"/>
+    <animator name="hideanim" attribute="opacity" to="0" duration="300"  start="false" onstop="parent.setAttribute('visible', false)"/>
 
     <method name="setPhoto" args="p" >
         fullview.setImage( p.getPhotoURL() );

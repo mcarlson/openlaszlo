@@ -51,7 +51,7 @@
          
              <colorsquare x="11" y="3" name="csq" drawsquare="true">
                      <method name="setColor" args="color">
-                         this.setVisible( color != null );
+                         this.setAttribute('visible',  color != null );
                          if (this.visible) {
                             this.setAttribute('swatchcolor', color);
                          }
@@ -107,7 +107,7 @@
                 <!---  @keywords private
                 apply state for late instantiation of local data -->
                 <handler name="onconstruct" >
-                    this.parent.laterState.apply();
+                    this.parent.laterState.setAttribute('applied', true);
                 </handler>                
         </lzcombobox>
         
@@ -146,7 +146,7 @@
             
             <method name="testStates">
                 Debug.info("about to apply odelay state"); 
-                odelay.apply(); 
+                odelay.setAttribute('applied', true); 
                 Debug.info("done applying odelay state."); 
                 assertEquals(0, allan.getValue());   // [bshine 08.09.2007] This fails! demonstrating LPP-4469
             </method>

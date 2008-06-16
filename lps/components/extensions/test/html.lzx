@@ -17,7 +17,7 @@
             </button> 
             <button>Clear
                 <handler name="onclick">
-                    classroot.main.setVisible(false);
+                    classroot.main.setAttribute('visible', false);
                     classroot.main.setSrc(''); 
                 </handler>
             </button> 

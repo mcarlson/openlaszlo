@@ -71,12 +71,12 @@
                 width="${parent.width - 2*classroot.headerpadding}" 
                 height="100%" stretches="both" >
                 <handler name="onmousedown">
-                    classroot.container.shdw.setVisible(false);
+                    classroot.container.shdw.setAttribute('visible', false);
 
                     parent.header.setY(classroot._mdoffset);
                 </handler>
                 <handler name="onmouseup">
-                    classroot.container.shdw.setVisible(classroot.shadowvisible);
+                    classroot.container.shdw.setAttribute('visible', classroot.shadowvisible);
                     parent.header.setY(0);
                </handler>
                <handler name="onclick">
@@ -157,7 +157,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

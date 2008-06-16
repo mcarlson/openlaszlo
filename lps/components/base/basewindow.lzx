@@ -68,7 +68,7 @@
         </method> 
 
         <!-- resizestatemin uses minwidth and minheight attribute-->
-        <resizestatemin name="_windowResize" resize_min_width="${this.minwidth}" resize_min_height="${this.minheight}" onapply="parent.setAttribute('haswindowfocus', true)"/>
+        <resizestatemin name="_windowResize" resize_min_width="${this.minwidth}" resize_min_height="${this.minheight}" onapplied="parent.setAttribute('haswindowfocus', true)"/>
 
         <!--- @keywords private -->
         <method name="construct" args="parent,args">
@@ -197,7 +197,7 @@
         <method name="_startDrag">
        <![CDATA[
         if (this.allowdrag){
-            this._windowDrag.apply();}
+            this._windowDrag.setAttribute('applied', true);}
 
        ]]>
         </method>
@@ -207,7 +207,7 @@
               anywhere on the window.
               @keywords private -->
         <method name="_stopDrag">
-            this._windowDrag.remove();
+            this._windowDrag.setAttribute('applied', false);
             setAttribute('state', 1);
         </method>
 
@@ -216,7 +216,7 @@
               resizer control.
               @keywords private -->
         <method name="_startResize">
-            this._windowResize.apply();
+            this._windowResize.setAttribute('applied', true);
             setAttribute('state', 5);
         </method>
 
@@ -225,7 +225,7 @@
              control.
              @keywords private -->
         <method name="_stopResize">
-            this._windowResize.remove();
+            this._windowResize.setAttribute('applied', false);
             setAttribute('state', 1);
         </method>
 
@@ -346,14 +346,14 @@
             ]]>
         </method>
 
-        <!--- Hides the window, same as setVisible(false). -->
+        <!--- Hides the window, same as setAttribute('visible', false). -->
         <method name="close">
-            this.setVisible(false);
+            this.setAttribute('visible', false);
         </method>
 
-        <!--- Shows the window, same as setVisible(true). -->
+        <!--- Shows the window, same as setAttribute('visible', true). -->
         <method name="open">
-            this.setVisible( true );
+            this.setAttribute('visible',  true );
         </method>
 
         <!--- @keywords private -->

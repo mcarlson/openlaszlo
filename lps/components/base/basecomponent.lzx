@@ -376,7 +376,7 @@
             if (this['id'] != null) idstring = "  id="+this.id;
             if (this['name'] != null) namestring = " named \""+this.name+"\"";
             if (this['text'] && this.text != "") textstring = "  text="+this.text;
-            return this.constructor.classname + namestring + idstring + textstring;
+            return this.constructor.tagname + namestring + idstring + textstring;
             ]]>
         </method>
 

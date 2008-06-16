@@ -7,7 +7,7 @@
   
   <window title="Multi-state window" y="100" id="msw" visible="false">
     <!-- initial state -->
-    <state name="s1" apply="true">
+    <state name="s1" applied="true">
       <!-- same as the content of the single-state window above -->
       <attribute name="bgcolor" value="yellow"/>
       <simplelayout axis="y"/>
@@ -26,7 +26,12 @@
     </state>
     
     <method name="setstate" args="s">
-      s1.remove(); s2.remove(); s.apply();
+      s1.setAttribute('applied', false); s2.setAttribute('applied', false); s.setAttribute('applied', true);
     </method>
   </window>
 </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

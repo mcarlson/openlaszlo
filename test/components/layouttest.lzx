@@ -20,7 +20,7 @@
   </box>
   </view>
 
-<button onclick="new box('cont',{bgcolor:green})">foo</button>
+<button onclick="new lz.box(cont,{bgcolor:green})">foo</button>
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

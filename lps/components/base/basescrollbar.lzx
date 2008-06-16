@@ -172,13 +172,13 @@
             // set width or height if not defined for sizeAxis
             if (this.sizeAxis == 'width') {
                 if (!hassetwidth) {
-                    this.widthConstraint.apply();
+                    this.widthConstraint.setAttribute('applied', true);
                 }
             }
 
             if (this.sizeAxis == 'height') {
                 if (!hassetheight) {
-                    this.heightConstraint.apply();
+                    this.heightConstraint.setAttribute('applied', true);
                 }
             }
 
@@ -521,8 +521,8 @@
     <class name="basescrollthumb" extends="basecomponent"
            focusable="false" styleable="false"
            onmousedown="classroot.targetPosDel.disable(); this.startDrag = true;
-                        this[classroot.axis+'thumbdrag'].apply()"
-           onmouseup="this[classroot.axis+'thumbdrag'].remove();
+                        this[classroot.axis+'thumbdrag'].setAttribute('applied', true)"
+           onmouseup="this[classroot.axis+'thumbdrag'].setAttribute('applied', false);
                       classroot.targetPosDel.enable();">
         <!--- @keywords private -->
        <handler name="oninit">

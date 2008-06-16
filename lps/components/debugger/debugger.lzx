@@ -654,8 +654,8 @@
         <view name="background" width="${parent.width}"  clip="true"
             onmouseover="grabber.setResourceNumber(2)"
             onmouseout="grabber.setResourceNumber(1)"
-            onmousedown="classroot.bringToFront(); parent.parent.drag.apply()"
-            onmouseup="parent.parent.drag.remove()"
+            onmousedown="classroot.bringToFront(); parent.parent.drag.setAttribute('applied', true)"
+            onmouseup="parent.parent.drag.setAttribute('applied', false)"
         oninit="this.right.bringToFront()">
             <stableborderlayout axis="x" />
             <view name="left"  resource="topLeft_rsc" />
@@ -830,8 +830,8 @@
 
              
               <view name="handle" x="${(parent.width / 2)}" resource="handleOver_rsc" 
-                    onmousedown="parent.parent.splitter.apply()"
-                    onmouseup="parent.parent.splitter.remove(); classroot.adjustMultiline()" />
+                    onmousedown="parent.parent.splitter.setAttribute('applied', true)"
+                    onmouseup="parent.parent.splitter.setAttribute('applied', false); classroot.adjustMultiline()" />
 
         </view>
         <!-- END BOTTOM-CENTER -->
@@ -858,8 +858,8 @@
                      x="${parent.width - 11}"
                      onmouseover="this.setResourceNumber(2);"
                      onmouseout="this.setResourceNumber(1);"
-                     onmousedown="this.setResourceNumber(2); classroot.bringToFront(); classroot.resize.apply()"
-                     onmouseup="this.setResourceNumber(1); classroot.resize.remove()"
+                     onmousedown="this.setResourceNumber(2); classroot.bringToFront(); classroot.resize.setAttribute('applied', true)"
+                     onmouseup="this.setResourceNumber(1); classroot.resize.setAttribute('applied', false)"
                  />
 
          </view> <!-- END BOTTOM-RIGHT -->

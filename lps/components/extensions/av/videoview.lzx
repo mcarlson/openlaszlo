@@ -157,7 +157,7 @@
 
         <!--- Set the play stream. 
               @keywords private -->
-        <method name="_setPlayStream"><![CDATA[
+        <method name="_setPlayStream" args="v"><![CDATA[
             //Debug.write("_setPlayStream", this.stream._flashstream, this.stream.playing);
             if (this.stream.playing) {
                 var vid = this._getflashvideo();

@@ -67,13 +67,13 @@
         <basebutton align="center" resource="slider_arrow">
             <handler name="onmousedown">
                 parent.setAttribute("isMouseDown", true);
-                parent.dragger.apply();
+                parent.dragger.setAttribute('applied', true);
                 classroot.bringToFront();
                 
             </handler>
             <handler name="onmouseup">
                 parent.setAttribute("isMouseDown", false);
-                parent.dragger.remove();
+                parent.dragger.setAttribute('applied', false);
                 
             </handler>
         </basebutton>

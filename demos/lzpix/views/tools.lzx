@@ -59,14 +59,14 @@
                 drag_max_x="117"/>
     
             <method name="startdragging" args="dragImage=null">
-                dragging.apply();
+                dragging.setAttribute('applied', true);
                 photoscontainer.lyt.calcpageparams = true;
                 photoscontainer.lyt.setAttribute('textvisible',false);
                 photoscontainer.lyt.update();
             </method>
     
             <method name="stopdragging">
-                dragging.remove();
+                dragging.setAttribute('applied', false);
                 photoscontainer.lyt.setAttribute('textvisible',true);
                 photoscontainer.lyt.update();
             </method>

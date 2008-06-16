@@ -37,11 +37,11 @@
          this.setX(newx - 5);
          this.setY(newy - 5);
          this.bringToFront();
-         this.setVisible(true);
+         this.setAttribute('visible', true);
          LzTrack.activate('mymenu');
     </method>
     <method name="close">
-         this.setVisible(false);
+         this.setAttribute('visible', false);
          LzTrack.deactivate('mymenu');
     </method>
     <simplelayout axis="x"/>
@@ -65,7 +65,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

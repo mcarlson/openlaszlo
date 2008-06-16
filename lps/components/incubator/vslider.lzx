@@ -22,7 +22,7 @@
   
   <class name="vsliderthumb" extends="button" bgcolor="0x999999" 
         height="10" width="20" 
-    onmousedown="dragger.apply()" onmouseup="dragger.remove()">
+    onmousedown="dragger.setAttribute('applied', true)" onmouseup="dragger.setAttribute('applied', false)">
         <attribute name="drag_min" value="0" type="number" />
         <attribute name="showvalue" type="boolean" value="true" />
         <attribute name="drag_max" value="0" type="number" />

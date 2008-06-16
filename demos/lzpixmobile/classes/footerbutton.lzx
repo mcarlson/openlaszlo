@@ -34,7 +34,7 @@
         <text text="${classroot.text}" fgcolor="0x1f13b1"
               x="${ classroot.xtext > 0 ? classroot.xtext : Math.round((parent.width - this.getTextWidth())/2.0) }" y="5" fontstyle="bold"/>
         <handler name="oninit" >
-            if (this['iconresource']) this.icon.setResource( this.iconresource );
+            if (this['iconresource']) this.icon.setAttribute('resource',  this.iconresource );
         </handler>
     </class>
 </library>

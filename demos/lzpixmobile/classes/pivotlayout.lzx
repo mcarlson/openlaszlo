@@ -176,7 +176,7 @@
                 // set the position of that subview
                 s.setX( xpos );
                 s.setY( ypos );
-                s.txt.setVisible( this.textvisible );
+                s.txt.setAttribute('visible',  this.textvisible );
                 
                 // set width and height of that subview
                 s.setWidth( itemwidth );
@@ -191,10 +191,10 @@
                     notinside = notinside || ((s.y + s.height ) > this.immediateparent.height ); //is view off the bottom
                     
                     if ( notinside ) {
-                        s.setVisible( false );
+                        s.setAttribute('visible',  false );
                         if ( vis_index_end == -1 && vis_index_start > -1 ) vis_index_end = i - 1;
                     } else {
-                        s.setVisible( true );
+                        s.setAttribute('visible',  true );
                         if ( vis_index_start == -1 ) vis_index_start = i;
                     }
                 }

@@ -14,7 +14,7 @@
         <!--- sets visible to true and positioned the object
             @keyword private-->
         <method name="show" args="txt">
-            this.setVisible(true);
+            this.setAttribute('visible', true);
             this.bringToFront();   
             this.setX(parent.getMouse("x") - 5);
             this.setY(parent.getMouse("y") - 15);
@@ -25,7 +25,7 @@
         <!--- sets visible to false
             @keyword private-->
         <method name="hide">
-            this.setVisible(false);
+            this.setAttribute('visible', false);
         </method>                
         <doc>
           <tag name="shortdesc"><text>

@@ -50,14 +50,14 @@
         <method name="open">
             //need to show this before taking the mode, so that any default
             //buttons contained by the this window will get hasdefault=true
-            this.setVisible( true );
+            this.setAttribute('visible',  true );
             LzModeManager.makeModal( this );
             this.bringToFront();
         </method>
 
         <!--- Closes the dialog. -->
         <method name="close">
-            this.setVisible( false );
+            this.setAttribute('visible',  false );
             LzFocus.clearFocus();
             LzModeManager.release( this );
         </method>

@@ -10,11 +10,11 @@
         &lt;class name="dragger" &gt;
             ...
             &lt;handler name="onmousedown"&gt;
-                checkdrag.apply();
+                checkdrag.setAttribute('applied', true);
             &lt;/handler>
             &lt;handler name="onmouseup"&gt;
                 canvas.dragimage.stopdrag(this);
-                checkdrag.remove();
+                checkdrag.setAttribute('applied', false);
             &lt;/handler&gt;
 
             &lt;checkdragstate name="checkdrag" draggername="dragimage"/&gt;
@@ -120,14 +120,14 @@
       this.setX(this.startx);
       this.setY(this.starty);
       this.bringToFront();
-      this.setVisible(true);
+      this.setAttribute('visible', true);
       this.source = src;
       this.dropped = false;
       
       // set up the offset from the source mouse offset
       if (this.xdoffset == null) this.xdoffset = xoffset;
       if (this.ydoffset == null) this.ydoffset = yoffset;
-      ds.apply();
+      ds.setAttribute('applied', true);
       LzTrack.activate(this.dropgroup);
     </method>
     
@@ -136,19 +136,19 @@
         Otherwise it disappears (successful drop).-->
     <method name="stopdrag">
       if (dropped) {
-        this.setVisible(false);
+        this.setAttribute('visible', false);
       } else {
         var anm = this.animate('x', startx, 200);
         this.animate('y', starty, 200);
         if ( !this._onstopdel )  this._onstopdel = new LzDelegate( this, 'hideme' );
         this._onstopdel.register( anm, 'onstop' );
       }
-      ds.remove();
+      ds.setAttribute('applied', false);
       LzTrack.deactivate(this.dropgroup);
     </method>
     <!--- @keywords private -->
     <method name="hideme">
-      setVisible(false);
+      setAttribute('visible', false);
     </method>
     <!--- @keywords private -->
     <method name="dropcomplete" args="source">

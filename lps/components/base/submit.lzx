@@ -40,19 +40,19 @@
         </method>
 
         <!--- @access private -->
-        <method name="_recvdata" >
+        <method name="_recvdata" args="v">
             this.setAttribute('status', 'ok');
         </method>
 
         <!--- @access private -->
-        <method name="_recverror" >
+        <method name="_recverror" args="v">
             Debug.error('form submission error: %s', this.data);
             this.setAttribute('status', 'error');
             this.setAttribute('error', this.data.getErrorString());
         </method>
 
         <!--- @access private -->
-        <method name="_recvtimeout" >
+        <method name="_recvtimeout" args="v">
             Debug.error('form submission timeout');
             this.setAttribute('status', 'timeout');
             this.setAttribute('error', this.data.getErrorString());

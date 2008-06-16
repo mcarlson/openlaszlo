@@ -351,8 +351,9 @@
         
     <!--- Render a tickmark label
             @keywords private -->
-    <method name="renderTickMarkLabel" 
-        args="pLabel,pPos,pOffset,pI"> <![CDATA[    
+    <method name="renderTickMarkLabel"
+        args="pLabel,pPos,pOffset,pI">
+        <![CDATA[
             //create label and set text
             var lLabel = _labelspool.getView();    
             var lHeight=0; 
@@ -513,7 +514,7 @@
         this.objStroke.setAttribute('strokeWidth', this.style.axisline.size);
         this.objStroke.setAttribute('opacity', this.style.axisline.opacity);
            
-        this.setVisible(axisEnabled);
+        this.setAttribute('visible', axisEnabled);
         setAxisTitleAttributes();
         renderAxis();
         renderTick();    

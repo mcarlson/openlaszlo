@@ -54,7 +54,7 @@
         <example class="program" id="dragstate-1" title="Simple use of a dragstate">
         &lt;canvas width="200" height="100"&gt;
             &lt;view bgcolor="blue" width="20" height="20"
-                  onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+                  onmousedown="dragger.setAttribute('applied', true)" onmouseup="dragger.setAttribute('applied', false)"&gt;
                 &lt;dragstate name="dragger"/&gt;
             &lt;/view&gt;
         &lt;/canvas&gt;
@@ -63,7 +63,7 @@
         <example class="program" id="dragstate-2" title="Horizontal drag">
         &lt;canvas width="200" height="100"&gt;
             &lt;view bgcolor="red" width="20" height="20"
-                  onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+                  onmousedown="dragger.setAttribute('applied', true)" onmouseup="dragger.setAttribute('applied', false)"&gt;
                 &lt;dragstate name="dragger" drag_axis="x"/&gt;
             &lt;/view&gt;
         &lt;/canvas&gt;
@@ -73,7 +73,7 @@
             title="Horizontal drag with simple bounds checking">
         &lt;canvas width="200" height="100"&gt;
             &lt;view bgcolor="red" width="20" height="20"
-                  onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+                  onmousedown="dragger.setAttribute('applied', true)" onmouseup="dragger.setAttribute('applied', false)"&gt;
                 &lt;dragstate name="dragger" drag_axis="x"
                         drag_min_x="0"  drag_max_x="100"/&gt;
             &lt;/view&gt;
@@ -85,7 +85,7 @@
         &lt;canvas width="500" height="350"&gt;
             &lt;view bgcolor="blue" x="100" y="40" width="300" height="200"&gt;
                 &lt;view bgcolor="red" width="20" height="20"
-                      onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+                      onmousedown="dragger.setAttribute('applied', true)" onmouseup="dragger.setAttribute('applied', false)"&gt;
                     &lt;dragstate name="dragger" drag_axis="both"
                         drag_min_x="0"
                         drag_max_x="$once{parent.width - this.width}"

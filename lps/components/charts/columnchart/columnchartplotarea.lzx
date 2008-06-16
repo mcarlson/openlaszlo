@@ -1,5 +1,6 @@
 <library>
     <include href="../common/datalabel.lzx"/>
+    <include href="../common/virtualdrawview.lzx"/>
     
     <!--- @keywords private
      plotarea of column chart -->
@@ -55,7 +56,7 @@
                     
                         label.setX( lx+label.width>this.width?this.width-label.width:lx<0?2:lx-5);
                         label.setY( ly<this.y?2:ly);
-                        label.setVisible( v.x>0 && v.x <this.width )
+                        label.setAttribute('visible',  v.x>0 && v.x <this.width )
                     }
                 }
             }
@@ -75,7 +76,7 @@
         <method name="renderBar" args="x, width, height, style">            
         <![CDATA[   
             var v = _barspool.getView();
-            v.setVisible(false);
+            v.setAttribute('visible', false);
             
             
             v.setX(x * this._xscale + this._xoffset);
@@ -85,7 +86,7 @@
             v.setHeight((height * this._yscale*-1));
             v.style = style;        
             v.render()
-            v.setVisible(true);
+            v.setAttribute('visible', true);
             return v;
             
             
@@ -104,7 +105,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

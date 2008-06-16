@@ -309,7 +309,7 @@
     <attribute name="debugLZUnit" value="false" />
 
     <method name="_dbg_name">
-        return this.constructor.classname;
+        return this.constructor.tagname;
     </method>
 
     <method name="debugFields">
@@ -518,8 +518,7 @@
       @param delta: the tolerance
       @param message: (optional) the failure message
     -->
-    <method name="assertWithin" args="expected, actual, delta,
-            message">
+    <method name="assertWithin" args="expected, actual, delta, message">
         <![CDATA[
             // handle infinite expected
             if (expected == actual) return;
@@ -659,7 +658,7 @@
       @keywords constructor
      -->
     <method name="construct" args="parent, args">
-        this.name = jsTrue(args["testName"]) ? args.testName : this.constructor.classname;
+        this.name = jsTrue(args["testName"]) ? args.testName : this.constructor.tagname;
 
         super.construct(parent, args);
 

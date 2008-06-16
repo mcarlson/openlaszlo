@@ -40,7 +40,7 @@
                 apply state for late instantiation of local data -->
              <method name="construct" args="parent, args">
                  super.construct(parent, args);
-                 fontFaceData.apply();
+                 fontFaceData.setAttribute('applied', true);
              </method>
             
             <!--- When the user selects an item from the combo box, 

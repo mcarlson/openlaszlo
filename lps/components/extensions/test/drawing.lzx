@@ -2,7 +2,7 @@
     <include href="extensions/drawview.lzx"/>
 
     <simplelayout axis="x"/>
-    <drawview width="205" height="230" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()" bgcolor="green">
+    <drawview width="205" height="230" onmousedown="this.dragger.setAttribute('applied', true)" onmouseup="this.dragger.setAttribute('applied', false)" bgcolor="green">
         <dragstate name="dragger"/>
         <handler name="oncontext">
             this.moveTo(100, 100);

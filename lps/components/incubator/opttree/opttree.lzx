@@ -244,7 +244,7 @@
                     movedel.register( LzIdle, "onidle" );
                 } else {
                     movedel.unregisterAll();
-                    this.setVisible( false );
+                    this.setAttribute('visible',  false );
                 }
             </method>
 
@@ -278,7 +278,7 @@
                 }
 
                 if ( visible != !dragisover ){
-                    this.setVisible( !dragisover );
+                    this.setAttribute('visible',  !dragisover );
                 }
                 ]]>
             </method>
@@ -287,7 +287,7 @@
         <!--- @access private -->
         <method name="_setupDrag">
             this.dragged = new nodeclass( this );
-            dragged.setVisible( false );
+            dragged.setAttribute('visible',  false );
             this.dragupdel = new LzDelegate( this, "_updateDragged" );
             this.dragindent = dragged.indent;
         </method>
@@ -299,7 +299,7 @@
             }
             dragged.setAttributeRelative( 'x', who );
 
-            dragged.setVisible( true );
+            dragged.setAttribute('visible',  true );
             this.dragdata = who.datapath.p;
             var dragparent = dragdata.parentNode
 
@@ -324,7 +324,7 @@
         <method name="endDrag" args="who">
             <![CDATA[
             dragupdel.unregisterAll();
-            dragged.setVisible( false );
+            dragged.setAttribute('visible',  false );
             _clicker.drag( false );
 
             if ( _clicker.dragisover ){
