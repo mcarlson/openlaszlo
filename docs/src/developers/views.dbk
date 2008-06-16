@@ -45,7 +45,7 @@ an audio file.
 
 <para>The following example shows that the view, although invisible, is
 indeed present.  To see that this is so, click in the upper left
-corner, and then elsewhere on the canvas.</para>
+corner.</para>
 
 
 <example role="live-example">
@@ -58,7 +58,7 @@ corner, and then elsewhere on the canvas.</para>
 <para/></section><section><title>view visibility</title>
 <para>A view is only visible if it has a color or an image assigned to it, and if the height and width are greater than zero.
  For example, the following code displays only two images even though four views are defined. The second and third views exist but
- they are completely transparent. The second has no color assigned to it and the third has zero height. They still, however, affect the
+ they are completely transparent. The second has no color assigned to it and the third has zero width. They still, however, affect the
  arrangement of the other two views. </para>
 
 <example role="live-example">
@@ -69,7 +69,7 @@ corner, and then elsewhere on the canvas.</para>
 </example>
 
     <!-- added para tags: callout can not contain CDATA LI LPP-4643 9.4.2007 -->
-<calloutlist><callout arearefs="N10058"><para>This view is a red square.</para></callout><callout arearefs="N1005B"><para>This view has no visual representation because it has no color, but it still exists and displaces other views.</para></callout><callout arearefs="N1005E"><para>This view has no visual representation because it has no width, but it still exists.</para></callout><callout arearefs="N10061"><para>This view displays the jpg image.</para></callout></calloutlist>
+<calloutlist><callout arearefs="N10058"><para>This view is a red square.</para></callout><callout arearefs="N1005B"><para>This view has no visual representation because it has no color, but it still exists and displaces other views.</para></callout><callout arearefs="N1005E"><para>This view has no visual representation because it has no width, but it still exists.</para></callout><callout arearefs="N10061"><para>This view displays the  image.</para></callout></calloutlist>
 
 <para/></section><section><title>Z Axis</title>
 
