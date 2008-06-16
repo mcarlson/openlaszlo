@@ -210,8 +210,8 @@ width.</para>
 <literal><varname>object</varname></literal> is an expression that evaluates to a
 JavaScript object, displays an <indexterm significance="preferred"><primary>inspectable representation</primary></indexterm><glossterm>inspectable representation</glossterm>
 of the object in the debugger (not the actual object). Long objects are abbreviated based on the value of <literal>Debug.printLength</literal> (see <xref linkend="configuring-debugger"/>). Abbreviated objects are shown enclosed in double angle quotes, with an ellipsis indicating abbreviation like this:
+<blockquote><para><literal>«object...»</literal></para></blockquote>
 </para>
-<literal><blockquote><para>«object...»</para></blockquote></literal>
 <para>If you inspect the abbreviated output, it will print the full object. </para>
 
 
