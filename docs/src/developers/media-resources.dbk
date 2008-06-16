@@ -243,34 +243,34 @@
           stretching:</para>
           <itemizedlist spacing="compact">
             <listitem>
-              <sgmltag class="attribute"
+              <para><sgmltag class="attribute"
               role="LzView.__ivars__.resourcewidth">
-              resourcewidth</sgmltag>
+              resourcewidth</sgmltag></para>
             </listitem>
             <listitem>
-              <sgmltag class="attribute"
+              <para><sgmltag class="attribute"
               role="LzView.__ivars__.resourceheight">
-              resourceheight</sgmltag>
+              resourceheight</sgmltag></para>
             </listitem>
             <listitem>
-              <property role="LzView">
-              stretches</property>
+              <para><property role="LzView">
+              stretches</property></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.stretchResource">
-              stretchResource()</methodname>
+              <para><methodname role="LzView.prototype.stretchResource">
+              stretchResource()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.measureWidth">
-              measureWidth()</methodname>
+              <para><methodname role="LzView.prototype.measureWidth">
+              measureWidth()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.measureHeight">
-              measureHeight()</methodname>
+              <para><methodname role="LzView.prototype.measureHeight">
+              measureHeight()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.updateResourceSize">
-              updateResourceSize()</methodname>
+              <para><methodname role="LzView.prototype.updateResourceSize">
+              updateResourceSize()</methodname></para>
             </listitem>
           </itemizedlist>
           <remark role="fixme">Discuss how view and resource sizes
@@ -283,41 +283,41 @@
           below</link>):</para>
           <itemizedlist spacing="compact">
             <listitem>
-              <sgmltag class="attribute"
-              role="LzView.__ivars__.resource">resource</sgmltag>
+              <para><sgmltag class="attribute"
+              role="LzView.__ivars__.resource">resource</sgmltag></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.setSource">
-              setSource()</methodname>
+              <para><methodname role="LzView.prototype.setSource">
+              setSource()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.unload">
-              unload()</methodname>
+              <para><methodname role="LzView.prototype.unload">
+              unload()</methodname></para>
             </listitem>
             <listitem>
-              <sgmltag class="attribute"
-              role="LzView.__ivars__.loadratio">loadratio</sgmltag>
+              <para><sgmltag class="attribute"
+              role="LzView.__ivars__.loadratio">loadratio</sgmltag></para>
             </listitem>
             <listitem>
-              <sgmltag class="attribute"
+              <para><sgmltag class="attribute"
               role="LzView.__ivars__.framesloadratio">
-              framesloadratio</sgmltag>
+              framesloadratio</sgmltag></para>
             </listitem>
             <listitem>
-              <property role="LzView.prototype.onload">
-              onload</property>
+              <para><property role="LzView.prototype.onload">
+              onload</property></para>
             </listitem>
             <listitem>
-              <property role="LzView.prototype.onerror">
-              onerror</property>
+              <para><property role="LzView.prototype.onerror">
+              onerror</property></para>
             </listitem>
             <listitem>
-              <property role="LzView.prototype.ontimeout">
-              ontimeout</property>
+             <para> <property role="LzView.prototype.ontimeout">
+              ontimeout</property></para>
             </listitem>
             <listitem>
-              <property role="LzView.prototype.onaddsubresource">
-              onaddsubresource</property>
+              <para><property role="LzView.prototype.onaddsubresource">
+              onaddsubresource</property></para>
             </listitem>
           </itemizedlist>
         </listitem>
@@ -325,49 +325,49 @@
           <para>Animation/video/frames:</para>
           <itemizedlist spacing="compact">
             <listitem>
-              <methodname role="LzView.prototype.play">
-              play()</methodname>
+              <para><methodname role="LzView.prototype.play">
+              play()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.stop">
-              stop()</methodname>
+             <para> <methodname role="LzView.prototype.stop">
+              stop()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.seek">
-              seek()</methodname>
+              <para><methodname role="LzView.prototype.seek">
+              seek()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.getTotalTime">
-              getTotalTime()</methodname>
+              <para><methodname role="LzView.prototype.getTotalTime">
+              getTotalTime()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.getCurrentTime">
-              getCurrentTime()</methodname>
+              <para><methodname role="LzView.prototype.getCurrentTime">
+              getCurrentTime()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.setResourceNumber">
-              setResourceNumber()</methodname>
+              <para><methodname role="LzView.prototype.setResourceNumber">
+              setResourceNumber()</methodname></para>
             </listitem>
             <listitem>
-              <sgmltag class="attribute"
-              role="LzView.__ivars__.frame">frame</sgmltag>
+              <para><sgmltag class="attribute"
+              role="LzView.__ivars__.frame">frame</sgmltag></para>
             </listitem>
             <listitem>
-              <sgmltag class="attribute"
+              <para><sgmltag class="attribute"
               role="LzView.__ivars__.totalframes">
-              totalframes</sgmltag>
+              totalframes</sgmltag></para>
             </listitem>
             <listitem>
-              <property role="LzView.prototype.onlastframe">
-              onlastframe</property>
+              <para><property role="LzView.prototype.onlastframe">
+              onlastframe</property></para>
             </listitem>
             <listitem>
-              <property role="LzView.prototype.onplay">
-              onplay</property>
+              <para><property role="LzView.prototype.onplay">
+              onplay</property></para>
             </listitem>
             <listitem>
-              <property role="LzView.prototype.onstop">
-              onstop</property>
+              <para><property role="LzView.prototype.onstop">
+              onstop</property></para>
             </listitem>
           </itemizedlist>
         </listitem>
@@ -375,36 +375,36 @@
           <para>Audio:</para>
           <itemizedlist spacing="compact">
             <listitem>
-              <methodname role="LzView.prototype.getVolume">
-              getVolume()</methodname>
+              <para><methodname role="LzView.prototype.getVolume">
+              getVolume()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.setVolume">
-              setVolume()</methodname>
+              <para><methodname role="LzView.prototype.setVolume">
+              setVolume()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.getPan">
-              getPan()</methodname>
+              <para><methodname role="LzView.prototype.getPan">
+              getPan()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.setPan">
-              setPan()</methodname>
+              <para><methodname role="LzView.prototype.setPan">
+              setPan()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.play">
-              play()</methodname>
+              <para><methodname role="LzView.prototype.play">
+              play()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.stop">
-              stop()</methodname>
+              <para><methodname role="LzView.prototype.stop">
+              stop()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.getTotalTime">
-              getTotalTime()</methodname>
+              <para><methodname role="LzView.prototype.getTotalTime">
+              getTotalTime()</methodname></para>
             </listitem>
             <listitem>
-              <methodname role="LzView.prototype.getCurrentTime">
-              getCurrentTime()</methodname>
+              <para><methodname role="LzView.prototype.getCurrentTime">
+              getCurrentTime()</methodname></para>
             </listitem>
           </itemizedlist>
         </listitem>
