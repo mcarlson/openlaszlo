@@ -7,11 +7,18 @@
 # built on OSX 10.4 with ruby 1.8.6
 # Copyright 2008 Laszlo Systems. Use according to license terms. 
 #
-# Some of the doc XSL processing leaves in undefined tags
-# of the form <postprocess-...>....</postprocess>.  These
-# are converted to <font color="red">&lt;postprocess-....
-# and this ruby script recognizes that and converts them.
-# Someday we'll pull this all back into the XSL world.
+# To handle difficult cases, some of the doc XSL processing
+# leaves in undefined tags of the form
+#    <para role="postprocess-XXXX">....</para>.
+# These are converted to one of:
+#    <p class="postprocess-XXXX"/>
+#    <p class="postprocess-XXXX">....</p>.
+#
+# Each XXXX is an 'operation' telling this script what to do.
+# The script recognizes these and applies special ad hoc conversions.
+# These handle all the strange cases that can not be easily
+# handled within docbook XSL, although we have hopes to
+# someday pull this all back into the XSL world.
 
 require 'getoptlong'
 require 'rdoc/usage'
