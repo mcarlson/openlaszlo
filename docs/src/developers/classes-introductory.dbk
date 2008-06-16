@@ -220,10 +220,6 @@ class attribute that identifies by name the subview where a child
 should be attached.  In this example, the interior view is named and
 the defaultplacement attribute is given that name.</para>
 
-<warning><para>Known bug: Values for the
-<indexterm><primary>defaultplacement</primary></indexterm><sgmltag class="attribute">defaultplacement</sgmltag> attribute must be double
-quoted.</para></warning>
-
 <example role="live-example">
    <title>Using placement within a class</title>
    <programlisting language="lzx">
@@ -363,7 +359,7 @@ incremental program development, where it creates the possibility for a novel ki
 &lt;canvas&gt;
   &lt;class name="myclass"&gt;
     &lt;method name="f"&gt;return 100;&lt;/method&gt;
-  &lt;/view&gt;
+  &lt;/class&gt;
   &lt;myclass id="myview"/&gt;
 &lt;/canvas&gt;</programlisting>
 

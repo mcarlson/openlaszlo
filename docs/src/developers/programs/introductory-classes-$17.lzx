@@ -1,5 +1,4 @@
-
-<canvas debug="true">
+<canvas height="75">
   <script>
     var foo = new LzView(canvas, {width: 50, height: 50, 
                                   x: 150, y: 0,
@@ -15,6 +14,6 @@
   </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** --> 
