@@ -137,6 +137,7 @@ function LzTrackService (){
 
     this.__LZtrackDel = new LzDelegate( this, "__LZtrack" );// called on idle
     this.__LZmouseupDel = new LzDelegate( this, "__LZmouseup", LzGlobalMouse, 'onmouseup');// called on global mouseup
+    this.__LZactivegroups = [];
 }
 
 
@@ -204,9 +205,8 @@ function __LZdestroyitem (v){
   * @param String group: the name of the track group to activate
   */
 function activate ( group ){
-    if (this.__LZactivegroups == null) {
+    if (this.__LZactivegroups.length == 0) {
         // don't want to re-register, in case we are just switching active groups
-        this.__LZactivegroups = [];
         this.__LZtrackDel.register( lz.Idle, "onidle" );
     }
     // see if group is already active
@@ -229,7 +229,9 @@ function deactivate ( group ) {
             this.__LZactivegroups.splice(i, 1);
          }
     }
-    if ( this.__LZactivegroups == []) this.__LZtrackDel.unregisterAll();
+    if ( this.__LZactivegroups.length == 0) {
+      this.__LZtrackDel.unregisterAll();
+    }
     if (typeof(this.__LZreg[group]) != "undefined") {
         this.__LZreg[group].__LZlasthit = null;   // should send ontrackmouseout ?
     }
