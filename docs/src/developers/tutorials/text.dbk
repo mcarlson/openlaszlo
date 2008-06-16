@@ -156,7 +156,7 @@ In applications compiled for DHTML, the <indexterm><primary>html</primary></inde
 <para>
 OpenLaszlo provides capabilities for specifying the which fonts will appear in your application. All applications can use fonts that are provided by the local system. In addition, applications compiled to SWF can also embed fonts.
 </para>
-<para/><section><title condition="swf">Fonts in SWF applications"</title>
+<para/><section><title condition="swf">Fonts in SWF applications</title>
 <para>
 In applications compiled to SWF, OpenLaszlo supports both <emphasis role="i">embedded </emphasis>fonts, which are downloaded with your application, and <emphasis role="i">client</emphasis> fonts, which reside natively on the machines on which your application is used. By default, client fonts are used. Client fonts have certain limitations; for example they cannot be rotated or changed in opacity (due to a limitation of the Flash Player).  See <xref linkend="fonts"/>.
 </para>
@@ -290,7 +290,7 @@ When compiling to SWF, you can embed fonts using the <indexterm><primary>src</pr
    </programlisting>
 </example>
 
-<para><literal>getText()</literal> and <literal>setAgrument()</literal> methods will work on <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag> fields as well.</para>
+<para><literal>getText()</literal> and <literal>setArgument()</literal> methods will work on <indexterm><primary>inputtext</primary></indexterm><sgmltag class="element">&lt;inputtext&gt;</sgmltag> fields as well.</para>
 
 <para>To overcome the problem of the text field not being recognizable, OpenLaszlo provides the <indexterm><primary>edittext</primary></indexterm><sgmltag class="element">&lt;edittext&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: edittext-->
