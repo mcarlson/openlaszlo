@@ -335,13 +335,15 @@ LzLoadQueue.makeRequest = function( loadobj ){
   */
 LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
     var reqstr;
-    if ( !loadobj.proxied ) {
+    // TODO [2008-06 hqm] We will eventually deprecate the "proxied" flag, and just use
+    // proxyurl != null to indicate that we are proxied via the PROXYURL.
+    var proxied = (loadobj.proxied || loadobj.reqobj.proxyurl);
+    if ( !proxied ) {
         reqstr = lz.Browser.toAbsoluteURL(loadobj.reqobj.url, false);
     } else {
-
         delete loadobj.proxied;
-        reqstr = lz.Browser.getBaseURL( loadobj.secure,
-                                       loadobj.secureport ).toString();
+        reqstr = loadobj.reqobj.proxyurl;
+        delete loadobj.reqobj.proxyurl;
         //fix up URL
         var url = loadobj.reqobj.url;
         if ( url != null) {

@@ -290,6 +290,86 @@ class LzBrowserService {
   function supportsPost (){
     return true;
   }
+
+    /**   @access public
+     *   @param Object params a hash table of key-value pairs
+     * The params arg has keys that have the following meaning:
+     * <ul>
+     * <li>url: url, including query args</li>
+     * <li>httpmethod: 'post' or 'get'</li>
+     * <li>service: 'xmldata' or 'media'</li>
+     * <li>headers: hash table of HTTP request headers</li>
+     * <li>postbody: optional, post body data string</li>
+     * <li>proxyurl: the url of the proxy server host. Should be just a path, must not contain a query string.</li>
+     * <li>nsprefix: boolean, if true preserve namespace prefixes in data response</li>
+     * <li>timeout: milliseconds for timeout</li>
+     * <li> cacheable: boolean, cache on server</li>
+     * <li> ccache: boolean, cache at client</li>
+     * <li> sendheaders: boolean, server sends back HTTP headers with data response</li>
+     * <li> secure: boolean, will be used when converting relative to absolute url, to make it https</li>
+     * <li> trimwhitespace: boolean</li>
+     *</ul>
+     */
+    public function makeProxiedURL (params:Object):String {
+        var headers:Object = params.headers;
+        var postbody:String = params.postbody;
+        var proxyurl:String = params.proxyurl;
+        var secure:Boolean = params.secure;
+        var qargs = {
+            lzt: params.service,
+            reqtype: params.httpmethod.toUpperCase(),
+            sendheaders: params.sendheaders,
+            trimwhitespace: params.trimwhitespace,
+            nsprefix: params.trimwhitespace,
+            url: this.toAbsoluteURL(params.url, params.secure),
+            timeout: params.timeout,
+            cache: params.cacheable,
+            ccache: params.ccache
+        };
+
+        //If a postbody string is supplied, pass it to the proxy server as 'lzpostbody' arg.
+        if (postbody != null) {
+            qargs.lzpostbody = postbody;
+        }
+            
+        // Set HTTP headers
+        var hname;
+        var headerString = "";
+        if (headers != null) {
+            for (hname in headers) {
+                headerString += (hname + ": " + headers[hname]+"\n");
+            }
+        }
+
+        if (headerString != "") {
+            qargs['headers'] = headerString;
+        }
+
+        // break the browser cache by creating an arg with a unique value
+        if (!params.ccache) {
+            qargs.__lzbc__ = (new Date()).getTime();
+        }
+
+        // append query args onto url
+        var sep = "?";
+        for (var key in qargs) {
+            var val = qargs[key];
+            if (typeof(val) == "string") {
+                val = encodeURIComponent(val);
+                if ($dhtml) {
+                    // workaround bug with DHTML runtime's URL encoding
+                    val = val.replace(LzDataset.slashPat, "%2F");
+                }
+            }
+            proxyurl += sep + key + "=" + val;
+            sep = "&";
+        }
+
+        return proxyurl;
+    }
+
+
+
 } // End of LzBrowserService
 
 

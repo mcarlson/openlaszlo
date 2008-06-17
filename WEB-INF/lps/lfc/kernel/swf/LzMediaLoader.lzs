@@ -163,10 +163,13 @@ function request( req , cache , headers, filetype ) {
     }
 
     var policy = this.owner.owner.__LZcheckProxyPolicy( req );
+    var proxyurl = this.owner.owner.getProxyURL(req);
     this.proxied = policy;
     o.proxied = policy;
 
-    if (!this.proxied) {
+    if (this.proxied) {
+        o.proxyurl = proxyurl;
+    } else {
         // warn for unsupported media types
         if (filetype == null) {
             var suffix = null;

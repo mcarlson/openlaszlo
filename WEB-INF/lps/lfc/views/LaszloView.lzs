@@ -415,6 +415,7 @@ override function construct ( parent , args) {
         this.$lzc$set_stretches(args.stretches);
         args.stretches = LzNode._ignoreAttribute;
     }
+
     if (args['resource'] != null && (! (args.resource instanceof LzInitExpr)) ){
         this.$lzc$set_resource( args.resource );
         args.resource = LzNode._ignoreAttribute;
@@ -2892,7 +2893,24 @@ function shouldYieldFocus ( ){
   */
 var blurring = false;
 
-
+/** @access public
+ * @param url the url of the media resource being requested.
+ * @return returns a URL of a server through which to proxy the request
+ */
+function getProxyURL ( url = null ){
+    var proxy = this.proxyurl;
+    if (proxy == null) {
+        return null;
+    } else if (typeof(proxy) == "string") {
+        return proxy;
+    } else if (typeof(proxy) == "function") {
+        return proxy(url);
+    } else {
+        if ($debug) {
+            Debug.error("Unknown value for proxyurl expression %w on %w", proxy, this);
+        }
+    }
+}
 
 /** @access private */
 static var __LZproxypolicies = [];
@@ -2959,6 +2977,42 @@ function setProxyPolicy ( f ){
 
 /** @access private */ 
 var __proxypolicy = null;
+
+/**
+  * Sets a proxy policy function on a per-view basis.
+  * 
+  * @param Object f: If a string, use as a URL to the proxy server. If a function, it should take a URL of a resource, and return the URL of the proxy server to use to load that resource.
+  */
+function setProxyURL ( f ){
+    this.proxyurl = f;
+}
+
+/** @access private */ 
+function $lzc$set_proxyurl( f ){
+    this.setProxyURL(f);
+}
+
+
+/** The url of the proxy server, if the app is running in proxied mode.
+ *
+ * proxyurl can be null, a URL string, or a function.
+ *
+ * <ul>
+ * <li> If the value is a string, treat it a URL to the proxy server. </li>
+ * <li> If the value is  a function, it should return the URL of the proxy server. </li>
+ * </ul>
+ * The default proxy policy references the proxyurl of the canvas.
+ * @type Object
+ * @lzxtype expression
+ * @lzxdefault function
+  */
+var proxyurl = function (url:String) {
+    /* TODO: It might be useful someday to implement a proxyurl
+     * function that searches up the parent chain instead of going
+     * directly to the canvas.
+     */
+    return canvas.getProxyURL(url);
+};
 
 /**
   * LzView.setContextMenu

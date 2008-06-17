@@ -193,7 +193,7 @@ class LzHTTPDataProvider extends LzDataProvider {
         if (proxied) {
             // TODO [hqm 2007-08-03] make the API for makeProxiedURL take an explicit host arg,
             // so we can set the proxy from user code
-            url = tloader.makeProxiedURL(lzurl.toString(), dreq.method, "xmldata" , headers, postbody);
+            url = tloader.makeProxiedURL(dreq.proxyurl, lzurl.toString(), dreq.method, "xmldata" , headers, postbody);
 
             // We need to move the proxy string query data to the
             // postbody; can't leave it in the URL string since it
@@ -334,12 +334,13 @@ class LzHTTPDataRequest extends LzDataRequest {
         super(requestor);
     } 
 
-    var method = "GET"; //  : String; // GET, POST, PUT, DELETE
-    var postbody; // : String
-    var proxied;  // : boolean
+    var method:String = "GET"; //  : String; // GET, POST, PUT, DELETE
+    var postbody:String;
+    var proxied:Boolean;
+    var proxyurl:String;  
 
-    var multirequest = false;
-    var queuerequests = false;
+    var multirequest:Boolean = false;
+    var queuerequests:Boolean = false;
 
     /** An LzParams object which holds query key-value pairs.
         @type LzParam

@@ -129,6 +129,9 @@ var reqOnInitDel;
 */
 var secureport;
 
+/** The URL of the proxy server, for proxied requests */
+var proxyurl:String = null;
+
 /** Sent when the dataset's request results in an error. 
  * @lzxtype event
  */
@@ -275,6 +278,11 @@ override function construct ( parent , args ){
     // bwcompat 1.0 support for port
     if (('port' in args && args.port) && !('secureport' in args && args.secureport)) {
         args.secureport = args.port;
+    }
+
+    // Default the proxyurl to the canvas value
+    if (!('proxyurl' in args)) {
+        this.proxyurl = canvas.getProxyURL();
     }
 
     this.ownerDocument = this;
@@ -723,6 +731,7 @@ function doRequest(ignore=null) {
     }
 
     dreq.proxied            = this.isProxied();
+    dreq.proxyurl           = this.proxyurl;
 
     // TODO [hqm 2007-08] does this interact with 'multirequests' flag?
     dreq.queuerequests      = this.queuerequests;

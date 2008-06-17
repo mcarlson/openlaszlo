@@ -169,58 +169,24 @@ LzHTTPLoader.prototype.send = function (content) {
 //   @param  String lzt: LPS server Responder type, default is "xmldata"
 //   @param Object headers: hash table of HTTP request headers
 //   @param String postbody: optional, post body content
-LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers, postbody) {
-    var proxyurl = lz.Browser.getBaseURL( );
-    var qargs = {
-        lzt: (lzt != null) ? lzt : "xmldata",
-        reqtype: reqtype,
+LzHTTPLoader.prototype.makeProxiedURL = function ( proxyurl, url,  httpmethod, lzt, headers, postbody) {
+        var params = {
         sendheaders: this.options.sendheaders,
         trimwhitespace: this.options.trimwhitespace,
-        nsprefix: this.options.trimwhitespace,
-        url: lz.Browser.toAbsoluteURL(url, this.secure),
+        nsprefix: this.options.nsprefix,
         timeout: this.timeout,
         cache: this.options.cacheable,
-        ccache: this.options.ccache
-    };
-
-    //If a postbody string is supplied, pass it to the proxy server as 'lzpostbody' arg.
-    if (postbody != null) {
-        qargs.lzpostbody = postbody;
-    }
-            
-    // Set HTTP headers
-    var hname;
-    var headerString = "";
-    if (headers != null) {
-        for (hname in headers) {
-            headerString += (hname + ": " + headers[hname]+"\n");
-        }
-    }
-
-    if (headerString != "") {
-        qargs['headers'] = headerString;
-    }
-
-    // break the browser cache by creating an arg with a unique value
-    if (!this.options.ccache) {
-        qargs.__lzbc__ = (new Date()).getTime();
-    }
-
-    // append query args onto url
-    proxyurl += "?";
-    var sep = "";
-    for (var key in qargs) {
-        var val = qargs[key];
-        if (typeof(val) == "string") {
-            val = escape(val);
-        }
-        proxyurl += sep + key + "=" + val;
-        sep = "&";
-    }
-
-    return proxyurl;
+        ccache: this.options.ccache,
+        proxyurl: proxyurl,
+        url: url,
+        secure: this.secure,
+        postbody: postbody,
+        headers: headers,
+        httpmethod: httpmethod,
+        service: lzt
+        };
+        return lz.Browser.makeProxiedURL(params);
 }
-
 
 LzHTTPLoader.prototype.timeout = Infinity;
 

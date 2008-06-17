@@ -163,59 +163,30 @@ public class LzHTTPLoader {
     //   @param String url: url, including query args
     //   @param  String reqtype: 'POST' or 'GET'
     //   @param Object headers: hash table of HTTP request headers
-    public function makeProxiedURL ( url:String, reqtype:String, lzt:String, headers:Object, postbody:String) :String {
-        var proxyurl:String = lz.Browser.getBaseURL( ).toString();
-
-        var qargs:Object = {
-        lzt: (lzt != null) ? lzt : "xmldata",
-        reqtype: reqtype,
+    public function makeProxiedURL( proxyurl:String,
+                                    url:String,
+                                    httpmethod:String,
+                                    lzt:String,
+                                    headers:Object,
+                                    postbody:String):String {
+        var params:Object = {
         sendheaders: this.options.sendheaders,
         trimwhitespace: this.options.trimwhitespace,
         nsprefix: this.options.nsprefix,
-        url: lz.Browser.toAbsoluteURL(url, this.secure),
         timeout: this.timeout,
         cache: this.options.cacheable,
-        ccache: this.options.ccache
+        ccache: this.options.ccache,
+        proxyurl: proxyurl,
+        url: url,
+        secure: this.secure,
+        postbody: postbody,
+        headers: headers,
+        httpmethod: httpmethod,
+        service: lzt
         };
-
-        //If a postbody string is supplied, pass it to the proxy server as 'lzpostbody' arg.
-        if (postbody != null) {
-            qargs.lzpostbody = postbody;
-        }
-
-
-        // Set HTTP headers
-        var headerString:String = "";
-        if (headers != null) {
-            for (var hname:String in headers) {
-                headerString += (hname + ": " + headers[hname] + "\n");
-            }
-        }
-
-        if (headerString != "") {
-            qargs['headers'] = headerString;
-        }
-
-
-        // break the browser cache by creating an arg with a unique value
-        if (!this.options.ccache) {
-            qargs.__lzbc__ = (new Date()).getTime();
-        }
-
-        // append query args onto url
-        proxyurl += "?";
-        var sep:String = "";
-        for (var key:String in qargs) {
-            var val:* = qargs[key];
-            if (typeof(val) == "string") {
-                val = encodeURIComponent(val);
-                val = val.replace(LzDataset.slashPat, "%2F");
-            }
-            proxyurl += sep + key + "=" + val;
-            sep = "&";
-        }
-        return proxyurl;
+        return lz.Browser.makeProxiedURL(params);
     }
+
 
     public function setTimeout (timeout:Number) :void {
         this.timeout = timeout;

@@ -54,6 +54,7 @@
   <attribute name="validate" type="boolean" value="true"/>
   <!-- If true, media and data requests are proxied -->
   <attribute name="proxied" type="inheritableBoolean" value="inherit"/>
+  <attribute name="proxyurl" type="string"/>
   <!-- If true, enable debugging in the application -->
   <attribute name="debug" type="boolean" value="false"/>
   <!-- If true, enable backtraces in debugger -->
@@ -244,6 +245,7 @@
   <attribute name="valign" type="string" value="top" enum="top|middle|bottom|constraint" />
   <attribute name="layout" type="css"/>
   <attribute name="pixellock" type="boolean" value="false"/>
+  <attribute name="proxyurl" type="string"/>
   <attribute name="rotation" type="numberExpression" value="0"/>
   <attribute name="xoffset" type="numberExpression" value="0"/>
   <attribute name="yoffset" type="numberExpression" value="0"/>
@@ -702,6 +704,8 @@
   <attribute name="timeout" type="number"  />
   <!--  If true, proxy data requests through a server -->
   <attribute name="proxied" type="inheritableBoolean" value="inherit" />
+  <!--  URL of the proxy server. Defaults to canvas proxyurl string -->
+  <attribute name="proxyurl" type="string"/>
   <!-- If this is a pathname, it specifies an XML file whose content
        is compiled into the application as the value of the dataset.
        If it is a URL, it specifies the location to request data from at runtime.

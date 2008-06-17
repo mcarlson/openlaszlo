@@ -136,61 +136,24 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
 //   @param String url: url, including query args
 //   @param  String reqtype: 'POST' or 'GET'
 //   @param Object headers: hash table of HTTP request headers
-    LzHTTPLoader.prototype.makeProxiedURL = function ( url,  reqtype, lzt, headers, postbody) {
-    var proxyurl = lz.Browser.getBaseURL( );
-
-    var qargs = {
-        lzt: (lzt != null) ? lzt : "xmldata",
-        reqtype: reqtype,
+LzHTTPLoader.prototype.makeProxiedURL = function ( proxyurl, url,  httpmethod, lzt, headers, postbody) {
+        var params = {
         sendheaders: this.options.sendheaders,
         trimwhitespace: this.options.trimwhitespace,
         nsprefix: this.options.nsprefix,
-        url: lz.Browser.toAbsoluteURL(url, this.secure),
         timeout: this.timeout,
         cache: this.options.cacheable,
-        ccache: this.options.ccache
-    };
-
-    //If a postbody string is supplied, pass it to the proxy server as 'lzpostbody' arg.
-    if (postbody != null) {
-        qargs.lzpostbody = postbody;
-    }
-
-
-    // Set HTTP headers
-    var hname;
-    var headerString = "";
-    if (headers != null) {
-        for (hname in headers) {
-            headerString += (hname + ": " + headers[hname]+"\n");
-        }
-    }
-
-    if (headerString != "") {
-        qargs['headers'] = headerString;
-    }
-
-
-    // break the browser cache by creating an arg with a unique value
-    if (!this.options.ccache) {
-        qargs.__lzbc__ = (new Date()).getTime();
-    }
-
-    // append query args onto url
-    proxyurl += "?";
-    var sep = "";
-    for (var key in qargs) {
-        var val = qargs[key];
-        if (typeof(val) == "string") {
-            val = encodeURIComponent(val);
-            val = val.replace(LzDataset.slashPat, "%2F");
-        }
-        proxyurl += sep + key + "=" + val;
-        sep = "&";
-    }
-    return proxyurl;
+        ccache: this.options.ccache,
+        proxyurl: proxyurl,
+        url: url,
+        secure: this.secure,
+        postbody: postbody,
+        headers: headers,
+        httpmethod: httpmethod,
+        service: lzt
+        };
+        return lz.Browser.makeProxiedURL(params);
 }
-
 
 LzHTTPLoader.prototype.send = function (content) {
     this.loadXMLDoc(/* method */ this.requestmethod,
@@ -200,9 +163,6 @@ LzHTTPLoader.prototype.send = function (content) {
                     /* ignorewhite */ true,
                     /* parseXML */ true);
 }
-
-
-
 
 // holds list of outstanding data requests, to handle timeouts
 //LzHTTPLoader.activeRequests = [];
@@ -322,6 +282,7 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
                         var elt = null;
                         var xml = __pthis__.req.responseXML;
                         __pthis__.responseXML = xml;
+                        __pthis__.responseText = __pthis__.req.responseText;
                         var lzxdata = null;
                         if (xml != null && parsexml) {
                             var nodes = __pthis__.req.responseXML.childNodes;
@@ -337,8 +298,6 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
                                                         __pthis__.options.trimwhitespace,
                                                         __pthis__.options.nsprefix);
                         }
-                    
-                        __pthis__.responseText = __pthis__.req.responseText;
                         __pthis__.removeTimeout(__pthis__);
                     
                     

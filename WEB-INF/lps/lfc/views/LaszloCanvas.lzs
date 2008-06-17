@@ -233,6 +233,12 @@ dynamic class LzCanvas extends LzView {
         } else {
             this.proxied = (args.proxied == true);
         }
+
+        // If no explicit proxyurl defined, set the default proxyurl to our app baseurl
+        if (typeof(args.proxyurl) == "undefined") {
+            this.proxyurl = lz.Browser.getBaseURL( ).toString();
+        } 
+
         delete args.proxied;
 
         if (capabilities.readcanvassizefromsprite == true) {

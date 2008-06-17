@@ -328,6 +328,7 @@ function request ( o ){
     }
 
     lmv.lzt = o.lzt;
+    o.proxyurl = canvas.getProxyURL(o.url);
 
     if (typeof(o.proxied) != undefined && o.proxied != null) {
         lmv.proxied = o.proxied;
