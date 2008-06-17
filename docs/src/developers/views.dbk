@@ -460,7 +460,8 @@ but not to contain the red and silver squares, which have negative x and y value
 <example role="live-example">
    <title>Positive and negative offsets</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/views-$20.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/views-$20.lzx"/></textobject>
+     <parameter role="canvas">height:250, bgcolor:'gray'</parameter>
    </programlisting>
 </example>
 
@@ -471,12 +472,12 @@ but not to contain the red and silver squares, which have negative x and y value
 <para>Subpixel positioning gets blurry lines and images, with more positioning possibilities. This makes it look worse 
 for static images, and better for animation, and for drawing 
 sets of evenly spaced images where the average spacing isn't an integral number of pixels. If you do something which causes a view 
-to end up at a non-integer x and y position, setting <indexterm><primary>pixellock</primary></indexterm> to "true" will snap it the nearest
+to end up at a non-integer x and y position, setting <indexterm><primary>pixellock</primary></indexterm><sgmltag class="attribute">pixellock</sgmltag> to "true" will snap it the nearest
 integer values.</para>
-<para>pixellock intercedes between the communication between
-Laszlo and the flash player. It's important to have setAttribute actually
+<para><sgmltag class="attribute">pixellock</sgmltag> intercedes between the communication between
+Laszlo and the flash player. It's important to have <methodname>setAttribute()</methodname> actually
 set the value you pass it, especially for animators. </para>
-<note><para>If you set pixellock to "true" for a view, you must also set pixellock to "true" for all of that view's 
+<note><para>If you set <sgmltag class="attribute">pixellock</sgmltag> to <literal>true</literal> for a view, you must also set <sgmltag class="attribute">pixellock</sgmltag> to <literal>true</literal> for all of that view's 
 parents.</para></note>
 </section>
 </section>
@@ -583,8 +584,8 @@ you can use <indexterm><primary>node</primary></indexterm><sgmltag class="elemen
 s for most of the abstract
 infrastructure (dataset manipulation, content management, polling, etc.), the compiler complains when putting datapointers and
 datasets in nodes.  
-Nodes are only created
-through script; there is no tag for creating them.</para>
+Though a tag does exist for <sgmltag class="element">&lt;node&gt;</sgmltag>, new <sgmltag class="element">&lt;node&gt;</sgmltag>s must be created in script. 
+See the <sgmltag class="element" role="LzView">&lt;node&gt;</sgmltag> entry in the reference guide for details.</para>
 <para> 
 As discussed in later chapters, in situations when you are trying to squeeze out the last bit of performance, you may want to
 examine how much overhead there is in using a view versus a node (when there's no
@@ -624,7 +625,7 @@ summary:</para>
    or <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> methods having been run. 
 </para>
  <para/><section><title>Adding subviews</title>
-<para>When an view is built, <literal>subviews[] </literal>is initialized to an empty array. (In releases before OpenLaszlo 3.0 it was null.)</para>
+<para>When an view is built, <literal>subviews[]</literal> is initialized to an empty array. (In releases before OpenLaszlo 3.0 it was null.)</para>
 <para><indexterm><primary><literal>addSubview()</literal></primary></indexterm><methodname>addSubview()</methodname> is like an event handler; it's a protected method of view that is called when a view is added to its 
 parent. You can't call it directly, but you can override it.  However, in most cases you will want to use
 the <indexterm><primary>onaddsubview</primary></indexterm><sgmltag class="attribute">onaddsubview</sgmltag> event instead.</para>
@@ -633,13 +634,23 @@ the <indexterm><primary>onaddsubview</primary></indexterm><sgmltag class="attrib
 <para>If you have experience doing graphics programming, you may be interested in the following paragraph.
 Otherwise you can safely skip this topic.</para>
 <para>The fundamental properties of a view are:</para>
-<itemizedlist spacing="compact"><listitem><para><emphasis role="i">stretches</emphasis> —which says whether to scale or not and in which dimensions</para></listitem><listitem><para><emphasis role="i">unstretched{height,width}</emphasis>—which are the original's dimensions (and can be used to implement a scale factor)</para></listitem><listitem><para><emphasis role="i">{height,width}</emphasis>—which will clip or scale according to the setting of `stretches`</para></listitem></itemizedlist>
+<itemizedlist spacing="compact">
+<listitem>
+	<para><sgmltag class="attribute">stretches</sgmltag> —which says whether to scale or not and in which dimensions</para>
+</listitem>
+<listitem>
+	<para><sgmltag class="attribute">unstretched{height,width}</sgmltag>—which are the original's dimensions (and can be used to implement a scale factor)</para>
+</listitem>
+<listitem>
+	<para><sgmltag class="attribute">{height,width}</sgmltag>—which will clip or scale according to the setting of <sgmltag class="attribute">stretches</sgmltag></para>
+</listitem>
+</itemizedlist>
 <para>
-The OpenLaszlo system is equivalent to the Flash Player's, but syntactically OpenLaszlo is closer to HTML/CSS standard (and would be if stretches defaulted to `both` instead of `none`).</para>
+The OpenLaszlo system is equivalent to the Flash Player's, but syntactically OpenLaszlo is closer to HTML/CSS standard (and would be equivalent if <sgmltag class="attribute">stretches</sgmltag> defaulted to <literal>both</literal> instead of <literal>none</literal>).</para>
 <para>Other systems define
 only a translation, or only a translation and scale, or allow an
 arbitrary 3x2 or 3x3 transformation.  OpenLaszlo is distinctive both in
-not defining a translation ('x' and 'y' position the bounds of the
+not defining a translation (<literal>x</literal> and <literal>y</literal> position the bounds of the
 view within its parent as well as defining a translation that precedes
 the rotate/scale, so it can't be used for this), and in representing
 the matrix in terms of its ops (which leaves some gaps, such
@@ -653,9 +664,4 @@ designers expect them to be view-like, and there's a pull to make them view-like
 retrieve their bounds.  (This is largely independent from the fact that they're represented as ids 
 instead of objects.)   
 </para> 
-
- 
-
-
-
 <para/></section></chapter>
