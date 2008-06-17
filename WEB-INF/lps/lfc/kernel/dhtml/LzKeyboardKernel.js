@@ -88,11 +88,15 @@ var LzKeyboardKernel = {
         this.setKeyboardControl(true);
     }    
     ,setKeyboardControl: function (dhtmlKeyboardControl) {
-        var kc = null;
-        var ck = (lz && lz.embed && lz.embed.options && lz.embed.options.cancelkeyboardcontrol != true) || true;
-        if (ck && dhtmlKeyboardControl) {
+        var handler = null;
+        var setcontrol = (lz && lz.embed && lz.embed.options && lz.embed.options.cancelkeyboardcontrol != true) || true;
+        if (setcontrol && dhtmlKeyboardControl) {
             //console.log('setKeyboardControl' + dhtmlKeyboardControl);
-            kc = LzKeyboardKernel.__keyboardEvent;
+            handler = LzKeyboardKernel.__keyboardEvent;
+        }
+        if ( LzInputTextSprite.prototype.__focusedSprite ) {
+            // hide any focused inputtexts
+            LzInputTextSprite.prototype.__focusedSprite.__hide();
         }
         // can't use lz.embed.attachEventHandler because we need to cancel events selectively
         if (LzSprite.prototype.quirks.keyboardlistentotop) {
@@ -100,9 +104,9 @@ var LzKeyboardKernel = {
         } else {
             var doc = document;
         }
-        doc.onkeydown = kc;
-        doc.onkeyup = kc;
-        doc.onkeypress = kc;
+        doc.onkeydown = handler;
+        doc.onkeyup = handler;
+        doc.onkeypress = handler;
     }
     // Called by lz.Keys when the last focusable element was reached.
     ,gotLastFocus: function () {
