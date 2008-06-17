@@ -83,7 +83,7 @@ public class DependencyTracker implements java.io.Serializable {
      * @param file a file
      */
     public void addFile(File file) {
-        mLogger.debug("addFile Path is " + file.getPath());
+        //mLogger.debug("addFile Path is " + file.getPath());
         FileInfo fi = new FileInfo(file.getPath());
         try {
             fi.mPathname = file.getCanonicalPath();

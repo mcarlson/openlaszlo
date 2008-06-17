@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -112,14 +112,6 @@ class DefaultFileResolver implements FileResolver {
             protocol = pathname.substring(0, pos);
             pathname = pathname.substring(pos + 1);
         }
-        mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Resolving pathname: " + p[0] + " and base: " + p[1]
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                FileResolver.class.getName(),"051018-68", new Object[] {pathname, base})
-);
         if (!FILE_PROTOCOL.equals(protocol)) {
             throw new CompilationError(
 /* (non-Javadoc)

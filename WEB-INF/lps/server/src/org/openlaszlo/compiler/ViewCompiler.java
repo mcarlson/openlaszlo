@@ -368,7 +368,7 @@ public class ViewCompiler extends ElementCompiler {
                     throw new ChainedException(e);
                 }
                 elt.removeAttribute(RESOURCE_ATTR_NAME);
-                elt.setAttribute("source", ScriptCompiler.quote(value));
+                elt.setAttribute("source", value);
 
             } else {
                 // pathname: turn into an id
