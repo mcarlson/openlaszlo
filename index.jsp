@@ -24,62 +24,62 @@
             </li>
             <li>Laszlo Explorer
                 <ul>
-                <li>Laszlo Explorer (<a href="laszlo-explorer/index.jsp?lzr=swf7&amp;bookmark=Welcome">flash</a>) (<a href="laszlo-explorer/index.jsp?lzr=dhtml&amp;bookmark=Welcome">dhtml</a>)</li>
+                <li>Laszlo Explorer (<a href="laszlo-explorer/index.jsp?lzr=swf8&amp;bookmark=Welcome">flash</a>) (<a href="laszlo-explorer/index.jsp?lzr=dhtml&amp;bookmark=Welcome">dhtml</a>)</li>
                 <li>World Clock (<a href="lps/utils/welcome_support/coverpages/welcome_cover.lzx">flash</a>) (<strike>dhtml</strike>)</li>
                 </ul>
             </li>
             <li><a href="demos">Demos</a>
                 <ul>
-                    <li>amazon (<a href="demos/amazon/amazon.lzx?lzr=swf7">flash</a>) (<a href="demos/amazon/amazon.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>amazon-soap (<a href="demos/amazon-soap/amazon.lzx?lzr=swf7">flash</a>) (<a href="demos/amazon-soap/amazon.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>calendar (<a href="demos/calendar/calendar.lzx?lzr=swf7">flash</a>) (<a href="demos/calendar/calendar.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>chat (<a href="demos/chat/chat.lzx?lzr=swf7">flash</a>) (<a href="demos/chat/chat.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>lzpix (<a href="demos/lzpix/app.lzx?lzr=swf7">flash</a>) (<a href="demos/lzpix/app.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>lzproject (<a href="demos/lzproject/lzx/lzproject/LZProject.lzx?lzr=swf7">flash</a>) (<a href="demos/lzproject/lzx/lzproject/LZProject.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>noughts (<a href="demos/noughts/noughts.lzx?lzr=swf7">flash</a>) (<a href="demos/noughts/noughts.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>vacation-survey (<a href="demos/vacation-survey/vacation-survey.lzx?lzr=swf7">flash</a>) (<a href="demos/vacation-survey/vacation-survey.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>weather (<a href="demos/weather/weather.lzx?lzr=swf7">flash</a>)  (<a href="demos/weather/weather.lzx?lzr=dhtml">dhtml</a>)</li>
-                    <li>youtube (<a href="demos/youtube/youtube.lzx?lzr=swf7">flash</a>)</li>
+                    <li>amazon (<a href="demos/amazon/amazon.lzx?lzr=swf8">flash</a>) (<a href="demos/amazon/amazon.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>amazon-soap (<a href="demos/amazon-soap/amazon.lzx?lzr=swf8">flash</a>) (<a href="demos/amazon-soap/amazon.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>calendar (<a href="demos/calendar/calendar.lzx?lzr=swf8">flash</a>) (<a href="demos/calendar/calendar.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>chat (<a href="demos/chat/chat.lzx?lzr=swf8">flash</a>) (<a href="demos/chat/chat.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>lzpix (<a href="demos/lzpix/app.lzx?lzr=swf8">flash</a>) (<a href="demos/lzpix/app.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>lzproject (<a href="demos/lzproject/lzx/lzproject/LZProject.lzx?lzr=swf8">flash</a>) (<a href="demos/lzproject/lzx/lzproject/LZProject.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>noughts (<a href="demos/noughts/noughts.lzx?lzr=swf8">flash</a>) (<a href="demos/noughts/noughts.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>vacation-survey (<a href="demos/vacation-survey/vacation-survey.lzx?lzr=swf8">flash</a>) (<a href="demos/vacation-survey/vacation-survey.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>weather (<a href="demos/weather/weather.lzx?lzr=swf8">flash</a>)  (<a href="demos/weather/weather.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>youtube (<a href="demos/youtube/youtube.lzx?lzr=swf8">flash</a>)</li>
                 </ul>
             </li>
             <li><a href="examples">Examples</a>
                 <ul>
-                <li>animation (<a href="examples/animation/animation.lzx?lzr=swf7">flash</a>) (<a href="examples/animation/animation.lzx?lzr=dhtml">dhtml</a>)</li>
-                <li>contactlist (<a href="examples/contactlist/contactlist.lzx?lzr=swf7">flash</a>) (<a href="examples/contactlist/contactlist.lzx?lzr=dhtml">dhtml</a>)</li>
-                <li>image-loading (<a href="examples/image-loading/dataimage.lzx?lzr=swf7">flash</a>) (<a href="examples/image-loading/dataimage.lzx?lzr=dhtml">dhtml</a>)</li>
-                <li>music (<a href="examples/music/music.lzx?lzr=swf7">flash</a>) (<a href="examples/music/music.lzx?lzr=dhtml">dhtml</a>)</li>
+                <li>animation (<a href="examples/animation/animation.lzx?lzr=swf8">flash</a>) (<a href="examples/animation/animation.lzx?lzr=dhtml">dhtml</a>)</li>
+                <li>contactlist (<a href="examples/contactlist/contactlist.lzx?lzr=swf8">flash</a>) (<a href="examples/contactlist/contactlist.lzx?lzr=dhtml">dhtml</a>)</li>
+                <li>image-loading (<a href="examples/image-loading/dataimage.lzx?lzr=swf8">flash</a>) (<a href="examples/image-loading/dataimage.lzx?lzr=dhtml">dhtml</a>)</li>
+                <li>music (<a href="examples/music/music.lzx?lzr=swf8">flash</a>) (<a href="examples/music/music.lzx?lzr=dhtml">dhtml</a>)</li>
                 <li><a href="examples/components">Components</a>
                     <ul>
-                    <li>Component Sampler (<a href="examples/components/style_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/style_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>Component Sampler (<a href="examples/components/style_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/style_example.lzx?lzr=dhtml">dhtml</a>)</li>
                     <li>Form Components
                         <ul>
-                        <li>button (<a href="examples/components/button_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/button_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>checkbox (<a href="examples/components/checkbox_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/checkbox_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>combobox (<a href="examples/components/combobox_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/combobox_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>datacombobox (<a href="examples/components/datacombobox_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/datacombobox_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>datepicker (<a href="examples/components/datepicker_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/datepicker_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>edittext (<a href="examples/components/edittext_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/edittext_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>form (<a href="examples/components/form_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/form_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>list (<a href="examples/components/list_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/list_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>radiogroup (<a href="examples/components/radiogroup_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/radiogroup_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>slider (<a href="examples/components/slider_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/slider_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>button (<a href="examples/components/button_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/button_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>checkbox (<a href="examples/components/checkbox_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/checkbox_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>combobox (<a href="examples/components/combobox_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/combobox_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>datacombobox (<a href="examples/components/datacombobox_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/datacombobox_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>datepicker (<a href="examples/components/datepicker_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/datepicker_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>edittext (<a href="examples/components/edittext_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/edittext_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>form (<a href="examples/components/form_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/form_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>list (<a href="examples/components/list_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/list_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>radiogroup (<a href="examples/components/radiogroup_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/radiogroup_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>slider (<a href="examples/components/slider_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/slider_example.lzx?lzr=dhtml">dhtml</a>)</li>
                         </ul>
                     </li>
                     <li>General Components
                         <ul>
-                        <li>grid (<a href="examples/components/grid_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/grid_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>menu (<a href="examples/components/menu_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/menu_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>floatinglist (<a href="examples/components/floatinglist_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/floatinglist_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>scrollbar (<a href="examples/components/scrollbar_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/scrollbar_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>tabs (<a href="examples/components/tabs_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/tabs_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>tabslider (<a href="examples/components/tabslider_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/tabslider_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>tree (<a href="examples/components/tree_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/tree_example.lzx?lzr=dhtml">dhtml</a>)</li>
-                        <li>window (<a href="examples/components/window_example.lzx?lzr=swf7">flash</a>) (<a href="examples/components/window_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>grid (<a href="examples/components/grid_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/grid_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>menu (<a href="examples/components/menu_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/menu_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>floatinglist (<a href="examples/components/floatinglist_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/floatinglist_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>scrollbar (<a href="examples/components/scrollbar_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/scrollbar_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>tabs (<a href="examples/components/tabs_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/tabs_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>tabslider (<a href="examples/components/tabslider_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/tabslider_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>tree (<a href="examples/components/tree_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/tree_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                        <li>window (<a href="examples/components/window_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/window_example.lzx?lzr=dhtml">dhtml</a>)</li>
                         </ul>
                     </li>
                     </ul>
                 </li>
-                <li>class hierarchy (<a href="docs/component-browser/components.lzx?lzr=swf7">flash</a>) (<a href="docs/component-browser/components.lzx?lzr=dhtml">dhtml</a>)</li>
+                <li>class hierarchy (<a href="docs/component-browser/components.lzx?lzr=swf8">flash</a>) (<a href="docs/component-browser/components.lzx?lzr=dhtml">dhtml</a>)</li>
                 </ul>
             </li>
             <li><a href="test">Tests</a> (these won't ship with the product)</li>
