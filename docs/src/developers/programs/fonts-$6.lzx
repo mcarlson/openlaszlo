@@ -1,5 +1,5 @@
 
-<canvas height="100">
+<canvas height="120">
    <simplelayout axis="y"/>
    <text font="sans-serif">Some text</text>
    <text font="Helvetica">Some text</text>
@@ -9,6 +9,6 @@
    <text font="monospace">Some text</text>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

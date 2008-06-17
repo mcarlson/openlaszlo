@@ -134,7 +134,10 @@ s and classes derived from views, and the <indexterm><primary>font</primary></in
 </para>
 <para/><section><title>The "font" attribute in opening tags</title>
 <para>
-The <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute specifies font to be used for any &lt;text&gt; or &lt;inputtext&gt; elements that appear inside this view. Like all the font properties (fontstyle and fontsize too) these properties cascade down the view hierarchy until a new value is specified. When the font attributes are modified at runtime, using JavaScript, the font is changed for the view itself, not for any of its subviews.
+The <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> attribute specifies font to be used for any 
+<sgmltag class="element">&lt;text&gt;</sgmltag> or <sgmltag class="element">&lt;inputtext&gt;</sgmltag> elements that appear inside this view. 
+Like all the font properties (fontstyle and fontsize too) these properties cascade down the view hierarchy until a new value is specified. 
+When the font attributes are modified at runtime, using JavaScript, the font is changed for the view itself, not for any of its subviews.
 </para>
 <para>
 For example,
