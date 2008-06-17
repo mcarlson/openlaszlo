@@ -1,30 +1,12 @@
 
-<canvas>
-  <text multiline="true" width="100%">
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. 
-    <img src="./images/horse-3.jpg"/>
-Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. 
-    <img src="./images/horse-3.jpg"/>
-Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. 
-    <img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/>
-Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante. Suspendisse accumsan, mauris dapibus pretium laoreet, nibh purus imperdiet lectus, a euismod elit enim a mi. Morbi commodo lacus quis nisl. 
-    <img src="./images/horse-3.jpg" align="left"/>
- Duis leo tortor, gravida eget, euismod non, ullamcorper quis, metus. Phasellus ornare facilisis metus. Aliquam at est.
-    <img src="./images/horse-3.jpg" align="right"/>
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. Phasellus eget massa sit amet lorem condimentum porta. Ut nec lorem. Pellentesque quam. Sed porttitor, elit vitae faucibus porta, enim nibh cursus augue, vitae iaculis enim lorem at eros. 
-    <img src="./images/horse-3.jpg" width="20" height="20" hspace="50"/>
-Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. 
-    <img src="http:horse-3.jpg"/>
-Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. Nulla facilisi. Aenean metus. Nullam vitae sem id risus accumsan luctus. Nam sit amet velit. Mauris ut est. Proin id sem ullamcorper pede luctus tristique. Pellentesque dapibus, neque et pellentesque tincidunt, sapien diam imperdiet ipsum, nec porttitor turpis lectus nec libero. Praesent ut elit.
+<canvas height="350">  
+  <text multiline="true" height="300">
+    Some text and
     <img src="./images/horse-3.jpg" width="20" height="20" align="left"/>
-Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante.  Etiam adipiscing urna quis tellus. Nam aliquam vehicula arcu.
-    <img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/>
-Nunc malesuada. Curabitur tortor metus, malesuada et, suscipit ut, convallis ac, magna. Nam venenatis viverra ipsum. Phasellus dignissim sagittis urna. Phasellus cursus. Cras pede arcu, tempus a, consectetuer vel, faucibus fermentum, diam. Donec lacus. 
-<img src="./images/horse-3.jpg"/>Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. In suscipit congue dolor. 
-</text>
-<scrollbar/>
+    some more text
+  </text>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

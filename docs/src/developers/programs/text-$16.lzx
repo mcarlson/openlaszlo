@@ -1,11 +1,11 @@
 
-<canvas height="220" >
-  <text multiline="true" width="200" height="200">
-    <!--Hello dear friends on the Red Planet! How is the Garden today?-->
+<canvas height="320" >
+  <text multiline="true" width="300" height="300">
+    Hello dear friends on the Red Planet! How is the Garden today?
     <img src="./images/horse-3.jpg"/>
   </text>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

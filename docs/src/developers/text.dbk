@@ -19,7 +19,7 @@
   <indexterm>
     <primary>LzText</primary>
   </indexterm>
-  <classname>LzText</classname>and 
+  <classname>LzText</classname> and 
   <indexterm>
     <primary>LzInputText</primary>
   </indexterm>
@@ -118,7 +118,7 @@
     <indexterm>
       <primary>text</primary>
     </indexterm>
-    <sgmltag class="element">&lt;text&gt;</sgmltag>element contains
+    <sgmltag class="element">&lt;text&gt;</sgmltag> element contains
     an 
     <indexterm>
       <primary>img</primary>
@@ -260,8 +260,7 @@
       </indexterm>
       <sgmltag class="attribute">color</sgmltag> attributes. The
       color must be specified as an RGB hex string of the form "
-      <literal>#
-      <varname>RRGGBB</varname></literal>".</para>
+      <literal>#<varname>RRGGBB</varname></literal>".</para>
       <example role="live-example">
         <title>Setting text colors using RGB strings</title>
         <programlisting language="lzx">
@@ -274,8 +273,7 @@
       text value, you can use entity codes such as 
       <literal>&amp;amp;</literal> or 
       <literal>&amp;lt;</literal> (or the numeric codes 
-      <literal>&amp;#
-      <varname>ddd</varname>;</literal>), or you may enclose the
+      <literal>&amp;#<varname>ddd</varname>;</literal>), or you may enclose the
       characters using a CDATA region:</para>
       <example role="live-example">
         <title>Escaping HTML characters</title>
@@ -331,19 +329,19 @@
       width, the only way a linebreak will occur is if you have an
       explicit HTML linebreak code such as 
       <literal>&lt;br/&gt;</literal>, 
-      <literal>&lt;p/&gt;</literal>or a newline inside of the text
+      <literal>&lt;p/&gt;</literal> or a newline inside of the text
       contents of a 
       <indexterm>
         <primary>pre</primary>
       </indexterm>
-      <sgmltag class="element">&lt;pre&gt;</sgmltag>element.</para>
+      <sgmltag class="element">&lt;pre&gt;</sgmltag> element.</para>
       <para>The text view will default to a height which encloses
       all of the lines of text.</para>
       <para>If you want to know the total height of the text in a
       text field (if you want to know how large to draw a
       scrollbar, for example) there are a couple of ways to figure
       this out: For a 
-      <literal>multiline=false</literal>text field (i.e., one in
+      <literal>multiline=false</literal> text field (i.e., one in
       which wrapping is not being done automatically by the
       system), you can use the 
       <indexterm>
@@ -357,19 +355,19 @@
       </indexterm>
       <classname>LzText</classname>.</para>
       <para>For a 
-      <literal>multiline=true</literal>output text field, the
+      <literal>multiline=true</literal> output text field, the
       system computes a property 
       <indexterm>
         <primary>text.scrollHeight</primary>
       </indexterm>
-      <sgmltag class="attribute">text.scrollHeight</sgmltag>which
+      <sgmltag class="attribute">text.scrollHeight</sgmltag> which
       which you may examine. This field is not maintained for input
       text.</para>
       <para>There are two basic classes for displaying text, 
       <indexterm>
         <primary>text</primary>
       </indexterm>
-      <sgmltag class="element">&lt;text&gt;</sgmltag>and 
+      <sgmltag class="element">&lt;text&gt;</sgmltag> and 
       <indexterm>
         <primary>inputtext</primary>
       </indexterm>
@@ -431,7 +429,7 @@
     <indexterm>
       <primary>text</primary>
     </indexterm>
-    <sgmltag class="element">&lt;text&gt;</sgmltag>View</title>
+    <sgmltag class="element">&lt;text&gt;</sgmltag> View</title>
     <para>The 
     <indexterm>
       <primary>text</primary>
@@ -531,7 +529,7 @@
         <primary>multiline</primary>
       </indexterm>
       <sgmltag class="attribute">multiline</sgmltag> to false. When
-      multiline=false, the linebreaks will only be placed where you
+      <literal>multiline=false</literal>, the linebreaks will only be placed where you
       specify them in the text content, either as 
       <literal>&lt;br/&gt;</literal> tags for HTML content, or
       newlines inside of a 
@@ -573,7 +571,7 @@
       <methodname role="LzText.prototype.setText">
       setText()</methodname> method is called.</para>
       <para>Note: If no initial text content is specified, i.e.,
-      you have an empty tag such as &lt;text/&gt; , then the text
+      you have an empty tag such as <literal>&lt;text/&gt;</literal>, then the text
       view will be sized to some nonzero default width and height.
       This helps in debugging applications, (especially in the case
       of text views which are initialized from datapaths) because
@@ -595,7 +593,7 @@
       <indexterm>
         <primary>selectable</primary>
       </indexterm>
-      <sgmltag class="attribute">selectable</sgmltag>attribute.
+      <sgmltag class="attribute">selectable</sgmltag> attribute.
       This allows copy operations (and cut and paste, for 
       <indexterm>
         <primary>inputtext</primary>
@@ -726,34 +724,13 @@
           </tbody>
         </tgroup>
       </table>
-      <para>To see the example below, compile it and run it in your
-      local environment (Openlaszlo's live examples cannot include
-      CDATA sections).</para>
       <example role="live-example">
         <title>HTML tags in text views</title>
-        <programlisting>&lt;canvas height="125"&gt; &lt;font
-        name="Times Roman"&gt; &lt;face src="timmonsr.ttf" /&gt;
-        &lt;face src="timmonsb.ttf" style="bold"/&gt; &lt;face
-        src="timmonsi.ttf" style="italic"/&gt; &lt;face
-        src="timmonsbi.ttf" style="bold italic"/&gt; &lt;/font&gt;
-        &lt;splash/&gt; &lt;view font="Times Roman"
-        fontsize="16"&gt; &lt;simplelayout axis="y"/&gt;
-        &lt;text&gt; normal &lt;i&gt;italic&lt;/i&gt;
-        &lt;b&gt;bold&lt;/b&gt;
-        &lt;b&gt;&lt;i&gt;bold-italic&lt;/i&gt;&lt;/b&gt; HTML
-        Metachars: &amp;lt; &amp;gt; &amp;amp; &amp;quot;
-        &lt;/text&gt; &lt;text&gt; &lt;font
-        color="#FF0000"&gt;C&lt;/font&gt;&lt;font
-        color="#FFFF00"&gt;O&lt;/font&gt;&lt;font
-        color="#00FFCC"&gt;L&lt;/font &gt;&lt;font
-        color="#CC00CC"&gt;O&lt;/font&gt;&lt;font
-        color="#AABB00"&gt;R&lt;/font&gt;&lt;font
-        color="#DDA00A"&gt;S&lt;/font&gt; &lt;/text&gt;
-        &lt;text&gt;&lt;![CDATA[&lt;b&gt;this text shouldn't be
-        bold, it's CDATA&lt;/b&gt;]]&gt;&lt;/text&gt; &lt;text
-        height="30"&gt;&lt;font size="24"&gt;This is a 24 point
-        font.&lt;/font&gt;&lt;/text&gt; &lt;/view&gt;
-        &lt;/canvas&gt;</programlisting>
+        <programlisting language="lzx">
+	   <textobject>
+            <textdata fileref="programs/text-$15.lzx" />
+           </textobject>
+	</programlisting>
       </example>
          <!-- remove empty para tag LI LPP-4642 9/4/2007-->
         <!-- <para /> -->
@@ -797,7 +774,7 @@
         <sgmltag class="element">&lt;text&gt;</sgmltag>.</para>
       </note>
       <para>Due to implementation details of the Flash Player, the
-      &lt;img&gt; tag is only rendered when the 
+      <sgmltag class="element">&lt;img&gt;</sgmltag> tag is only rendered when the 
       <indexterm>
         <primary sortas="multiline">@multiline</primary>
       </indexterm>
@@ -806,7 +783,7 @@
       <para condition="dhtml">Applications compiled to DTHML may
       not match exactly the appearance of those compiled to SWF.
       You may find that you need to "tweak" the layout using things
-      like &lt;br&gt; tags. However, remember that applications
+      like <sgmltag class="element">&lt;br&gt;</sgmltag> tags. However, remember that applications
       compiled to DHTML can make use of the 
       <indexterm>
         <primary>HTML</primary>
@@ -820,12 +797,12 @@
       <indexterm>
         <primary>src</primary>
       </indexterm>
-      <sgmltag class="attribute">src</sgmltag>attribute. All
+      <sgmltag class="attribute">src</sgmltag> attribute. All
       attributes must be specified as literals (not constraints) in
       the program source.</para>
       <itemizedlist spacing="compact">
         <listitem>
-          <para>@src: This attribute is either a URI, or a
+          <para><sgmltag class="attribute">@src</sgmltag>: This attribute is either a URI, or a
           JavaScript identifier. If it is a URI, it specifies the
           location of the image resource, which must be a JPEG or
           (Flash deployment targets only) SWF file. If it is a
@@ -834,7 +811,7 @@
           required.</para>
         </listitem>
         <listitem>
-          <para>@align = bottom | middle | top | left | right. The
+          <para><sgmltag class="attribute">@align</sgmltag> = bottom | middle | top | left | right. The
           values have the same meaning as in HTML:</para>
         </listitem>
         <listitem>
@@ -861,32 +838,32 @@
         vertically aligned with the top of the current text
         line.</para></listitem>
         <listitem>
-          <para>@alt: string. When specified, the content of this
+          <para><sgmltag class="attribute">@alt</sgmltag>: string. When specified, the content of this
           attribute is made available to screen readers.</para>
         </listitem>
         <listitem>
-          <para>@width, @height: When specified, the width and
+          <para><sgmltag class="attribute">@width</sgmltag>, <sgmltag class="attribute">@height</sgmltag>: When specified, the width and
           height attributes scale the natural image size to these
-          values. The value of @width and @height is a literal
+          values. The value of <sgmltag class="attribute">@width</sgmltag> and <sgmltag class="attribute">@height</sgmltag> is a literal
           number of pixels.</para>
         </listitem>
         <listitem>
-          <para>@hspace: This attribute specifies the amount of
+          <para><sgmltag class="attribute">@hspace</sgmltag>: This attribute specifies the amount of
           white space to be inserted to the left and right of an
           IMG. The default value is not specified, but is generally
           a small, non-zero length. (On the Flash deployment
           target, this value is 8 pixels.)</para>
         </listitem>
         <listitem>
-          <para>@vspace: This attribute specifies the amount of
+          <para><sgmltag class="attribute">@vspace</sgmltag>: This attribute specifies the amount of
           white space to be inserted above and below an IMG. The
           default value is not specified, but is generally a small,
           non-zero length. (On the Flash deployment target, this
           value is 8 pixels.)</para>
         </listitem>
       </itemizedlist>
-      <para>The &lt;text&gt; view is not by default sized to the
-      content of the &lt;img&gt; tag.</para>
+      <para>The <sgmltag class="element">&lt;text&gt;</sgmltag> view is not by default sized to the
+      content of the <sgmltag class="element">&lt;img&gt;</sgmltag> tag.</para>
       <para>Here's an example of the basic use of the 
       <indexterm>
         <primary>img</primary>
@@ -896,7 +873,7 @@
         <title>Basic use of &lt;img&gt; tag</title>
         <programlisting language="lzx">
           <textobject>
-            <textdata fileref="programs/text-$15.lzx" />
+            <textdata fileref="programs/text-$16.lzx" />
           </textobject>
         </programlisting>
       </example>
@@ -907,7 +884,7 @@
         <title>You must include text with images</title>
         <programlisting language="lzx">
           <textobject>
-            <textdata fileref="programs/text-$16.lzx" />
+            <textdata fileref="programs/text-$17.lzx" />
           </textobject>
         </programlisting>
       </example>
@@ -929,7 +906,7 @@
         <title>Scaling an image included in text</title>
         <programlisting language="lzx">
           <textobject>
-            <textdata fileref="programs/text-$17.lzx" />
+            <textdata fileref="programs/text-$18.lzx" />
           </textobject>
         </programlisting>
       </example>
@@ -942,7 +919,7 @@
         <title>Scaled and left-aligned image</title>
         <programlisting language="lzx">
           <textobject>
-            <textdata fileref="programs/text-$18.lzx" />
+            <textdata fileref="programs/text-$19.lzx" />
           </textobject>
         </programlisting>
       </example>
@@ -963,7 +940,7 @@
         <title>Multiple images in text</title>
         <programlisting language="lzx">
           <textobject>
-            <textdata fileref="programs/text-$19.lzx" />
+            <textdata fileref="programs/text-$20.lzx" />
           </textobject>
         </programlisting>
       </example>

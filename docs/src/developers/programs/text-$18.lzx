@@ -1,12 +1,12 @@
 
-<canvas height="350">  
-  <text multiline="true" height="300">
+<canvas height="100">  
+  <text multiline="true" height="80">
     Some text and
     <img src="./images/horse-3.jpg" width="20" height="20" align="left"/>
     some more text
   </text>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

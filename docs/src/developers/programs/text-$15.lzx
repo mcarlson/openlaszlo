@@ -1,11 +1,38 @@
 
-<canvas height="320" >
-  <text multiline="true" width="300" height="300">
-    Hello dear friends on the Red Planet! How is the Garden today?
-    <img src="./images/horse-3.jpg"/>
-  </text>
+<canvas height="125">
+     <font name="Times Roman">
+          <face src="timmonsr.ttf" />
+          <face src="timmonsb.ttf" style="bold"/>
+          <face src="timmonsi.ttf" style="italic"/>
+          <face src="timmonsbi.ttf" style="bold italic"/>
+     </font>
+     <splash/>
+     <view font="Times Roman" fontsize="16">
+          <simplelayout axis="y"/>
+          <text> normal <i>italic</i>
+               <b>bold</b>
+               <b>
+                    <i>bold-italic</i>
+               </b> HTML
+        Metachars: &amp;lt; &amp;gt; &amp;amp; &amp;quot;
+        </text>
+          <text>
+               <font color="#FF0000">C</font>
+               <font color="#FFFF00">O</font>
+               <font color="#00FFCC">L</font>
+               <font color="#CC00CC">O</font>
+               <font color="#AABB00">R</font>
+               <font color="#DDA00A">S</font>
+          </text>
+          <text><![CDATA[<b>this text shouldn't be
+        bold, it's CDATA</b>]]></text>
+          <text height="30">
+               <font size="24">This is a 24 point
+        font.</font>
+          </text>
+     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
