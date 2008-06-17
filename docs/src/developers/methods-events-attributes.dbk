@@ -189,7 +189,7 @@ There are two syntaxes that you can use to define handlers:</para>
 For convenience, you can use the onevent syntax for short handlers for some kinds of events, such as onclick, as explained below. For readability, however, the <indexterm><primary>
 handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag> syntax is often better.
 </para>
-<para/><section><title>"Onevent" open tag syntax</title>
+<para/><section><title>"onevent" open tag syntax</title>
 <para>
 The "onevent" syntax is available for attributes that correspond to the CSS event model—onclick, onmouseover, and so
 forth. For such events, the simplest way to declare an event handler is simply to include it in the definition tag of the node that contains the
@@ -623,29 +623,78 @@ The two types are equivalent in LZX, but you must use the XML name in XML constr
 <para>Colors can have the following values:</para>
 <variablelist><varlistentry><term>colorLiteral</term><listitem><para>A color of the form <literal>#hhh</literal>, <literal>#hhhhhh</literal>, <literal>rgb(rv, gv, bv)</literal> or a CSS color name, where <varname>h</varname> is a hexadecimal digit, <varname>rv</varname>, <varname>gv</varname>, and <varname>bv</varname> are numbers between 0.0 and 1.0 inclusive, and the CSS color names are from the table below.</para></listitem></varlistentry></variablelist>
 
-<informaltable><tgroup cols="3"><tbody><row><entry>black</entry><entry>000000</entry><entry/></row><row><entry>green</entry><entry>008000</entry><entry/></row><row><entry>silver</entry><entry>C0C0C0</entry><entry/></row><row><entry>lime</entry><entry>00FF00</entry><entry/></row><row><entry>gray</entry><entry>808080</entry><entry/></row><row><entry>olive</entry><entry>808000</entry><entry/></row><row><entry>white</entry><entry>FFFFFF</entry><entry/></row><row><entry>yellow</entry><entry>FFFF00</entry><entry/></row><row><entry>maroon</entry><entry>800000</entry><entry/></row><row><entry>navy</entry><entry>000080</entry><entry/></row><row><entry>red</entry><entry>FF0000</entry><entry/></row><row><entry>blue</entry><entry>0000FF</entry><entry/></row><row><entry>purple</entry><entry>800080</entry><entry/></row><row><entry>teal</entry><entry>008080</entry><entry/></row><row><entry>fuchsia</entry><entry>FF00FF</entry><entry/></row><row><entry>aqua</entry><entry>00FFFF</entry><entry/></row></tbody></tgroup></informaltable>
-
-
-
-
+<table><title>CSS color names</title>
+	<tgroup cols="2">
+	<thead>
+		<row><entry>CSS Name</entry><entry>Hex Value</entry></row>
+	</thead>
+	<tbody>
+		<row><entry>black</entry><entry>000000</entry></row>
+		<row><entry>green</entry><entry>008000</entry></row>
+		<row><entry>silver</entry><entry>C0C0C0</entry></row>
+		<row><entry>lime</entry><entry>00FF00</entry></row>
+		<row><entry>gray</entry><entry>808080</entry></row>
+		<row><entry>olive</entry><entry>808000</entry></row>
+		<row><entry>white</entry><entry>FFFFFF</entry></row>
+		<row><entry>yellow</entry><entry>FFFF00</entry></row>
+		<row><entry>maroon</entry><entry>800000</entry></row>
+		<row><entry>navy</entry><entry>000080</entry></row>
+		<row><entry>red</entry><entry>FF0000</entry></row>
+		<row><entry>blue</entry><entry>0000FF</entry></row>
+		<row><entry>purple</entry><entry>800080</entry></row>
+		<row><entry>teal</entry><entry>008080</entry></row>
+		<row><entry>fuchsia</entry><entry>FF00FF</entry></row>
+		<row><entry>aqua</entry><entry>00FFFF</entry></row>
+	</tbody>
+	</tgroup>
+</table>
 
 <para/></section><section><title>JavaScript attribute types</title>
 <para>JavaScript types start with a capital letter. These may be one of the native
   JavaScript types, listed below or an LZX class. </para>
-<informaltable><tgroup cols="3"><tbody><row><entry><para>Native JavaScript types</para></entry></row><row><entry><para/></entry><entry><para>Boolean</para></entry><entry><para>true or false</para></entry></row><row><entry><para/></entry><entry><para>String</para></entry><entry><para>single or double quotes may be used to specify a sequence of characters
-        (e.g. var s = 'test' or var s = "test"</para></entry></row><row><entry><para/></entry><entry><para>Number</para></entry><entry><para>used to specify simple values (e.g. var n = 4 or var n=4.2). Number
-        type is also commonly used to specify a color, for which it is often
-        convenient to use hexadecimal notation (e.g. var c = 0xFFFFFF for white,
-        or 0x0099BB for turquoise)</para></entry></row><row><entry><para/></entry><entry><para>Array</para></entry><entry><para>an ordered list of elements. The elements may be of any type and need
-        not be of the same type.</para></entry></row><row><entry><para/>
-    <para>Notes on documentation:</para></entry></row><row><entry><para/></entry><entry><para>[LzNode]</para></entry><entry><para>An LZX class enclosed in brackets indicates an Array of these types.</para>
-    </entry></row><row><entry><para/></entry><entry><para>dictionary</para></entry><entry><para>Also known as a hash, or JavaScript Object, the dictionary type indicates
-        an unordered collection of name-value pairs. For example: {width:100,
-        height:50, title:"my title"}</para>
-    </entry></row><row><entry><para/></entry><entry><para>any</para></entry><entry><para>JavaScript APIs will often allow a parameter of any type. This is indicated
-      by the word "any" in the type column. </para>
-      </entry></row></tbody></tgroup></informaltable>
+<table>
+	<title>Native JavaScript types</title>
+	<tgroup cols="2">
+		<thead><row>
+			<entry>Type</entry>
+			<entry>Legal Values</entry>
+		</row></thead>
+		<tbody>
+			<row><entry>Boolean</entry><entry>true or false</entry></row>
+			<row><entry>String></entry><entry>single or double quotes may be used to 
+				specify a sequence of characters 
+				(e.g. var s = 'test' or var s = "test")</entry></row>
+			<row><entry>Number</entry><entry>used to specify simple values 
+				(e.g. var n = 4 or var n=4.2). Number type is also commonly 
+				used to specify a color, for which it is often convenient to 
+				use hexadecimal notation (e.g. var c = 0xFFFFFF for white, 
+				or 0x0099BB for turquoise)</entry></row>
+			<row><entry>Array</entry><entry>an ordered list of elements. 
+				The elements may be of any type and need not be of the same type.
+				</entry></row>
+		</tbody>
+	</tgroup>
+</table>
 
+<table>
+	<title>Notes on Documentation</title>
+	<tgroup cols="2">
+		<thead><row>
+			<entry>Symbol</entry>
+			<entry>Notes</entry>
+		</row></thead>
+		<tbody>
+			<row><entry>[LzNode]</entry><entry>An LZX class enclosed in brackets 
+				indicates an Array of these types</entry></row>
+			<row><entry>dictionary</entry><entry>Also known as a hash, or JavaScript
+				Object, the dictionary type indicates an unordered collection
+				of name-value pairs. For Example: {width:100, height:50, title:"my title"}
+				</entry></row>
+			<row><entry>any</entry><entry>JavaScript APIs wil ofter allow a parameter of any
+				type. This is indicated by the word "any" in the type column</entry></row>
+		</tbody>
+	</tgroup>
+</table>
 
 <para/></section></section><section><title>Attribute evaluation time</title>
 
