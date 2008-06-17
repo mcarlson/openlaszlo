@@ -32,7 +32,7 @@ NEED INFO ON SOLO dhtml deployment!
 With SOLO deployment, the LZX source is pre-compiled into a either a stand-alone SWF
 file that can be placed within the HTML docs directory of a common HTTP Web
 Server (such as Apache or IIS), or to a JavaScript file. SOLO deployments are simple to manage, and
-supported by nearly any Web hosting service, such as, for example Apache. </para>
+supported by nearly any Web hosting service, such as Apache. </para>
 <para>
 Colloquially, SOLO deployment is sometimes called "serverless," because the
  OpenLaszlo Server is not required for operation of the application.
@@ -79,8 +79,8 @@ model is determined by the request type on the URL used to specify the file, as 
 Most often, however, it will be you, the developer, who must decide on the deployment
 method. This is because you will know whether the application relies on the OpenLaszlo Server, and if it does rely on the server (and thus
 must be deployed proxied) you may
-want to make some internal optimizations that rely on this fact. In such cases the application may contain <literal>proxied="true"</literal>
-in the <indexterm><primary>canvas </primary></indexterm><sgmltag class="element">&lt;canvas &gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+want to make some internal optimizations that rely on this fact. In such cases the application may contain <literal>proxied="true"</literal> 
+in the <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">&lt;canvas&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: canvas -->
  tag, which means that trying to deploy it SOLO will generate an error.
 </para>
@@ -161,11 +161,11 @@ If the canvas contains the <literal>proxied="false"</literal> attribute, that me
 Data and media requests are unproxied, and the compiler performs 
 error detection:
 </para>
-<itemizedlist spacing="compact"><listitem><para>All data and media requests are unproxied.</para></listitem><listitem><para>The presence of the &lt;connection&gt; or RPC tag results in a compiler warning.</para></listitem><listitem><para>The presence of e.g. &lt;view resource="http:logo.png"/&gt;, where the compiler can easily infer that the value of the resource attribute
+<itemizedlist spacing="compact"><listitem><para>All data and media requests are unproxied.</para></listitem><listitem><para>The presence of the <sgmltag class="element">&lt;connection&gt;</sgmltag> or RPC tag results in a compiler warning.</para></listitem><listitem><para>The presence of e.g. <literal>&lt;view resource="http:logo.png"/&gt;</literal>, where the compiler can easily infer that the value of the resource attribute
  will result in a runtime request for a media type that is not supported in an unproxied media request, results in a compiler warning.</para></listitem><listitem><para>A runtime request for an unsupported service (e.g. <literal>myView.setResource('http:logo.png')</literal>) will result in a debugger warning, if debugging is enabled. </para></listitem></itemizedlist>
 <para/><section><title>Libraries</title>
 <para>
-The &lt;canvas&gt; tag has an optional attribute <indexterm><primary>proxied="true|false|inherit"</primary></indexterm><sgmltag class="attribute">proxied="true|false|inherit"</sgmltag>, which defaults to "inherit".  
+The <sgmltag class="element">&lt;canvas&gt;</sgmltag> tag has an optional attribute <indexterm><primary>proxied="true|false|inherit"</primary></indexterm><sgmltag class="attribute">proxied="true|false|inherit"</sgmltag>, which defaults to "inherit".  
 If <literal>proxied="true|false"</literal>, the application can only be compiled in that mode.  
 It is an error to provide a request parameter with a different compiler setting, and the developer console UI disables options that
  generate this request.  If <literal>proxied="inherit"</literal>, the application is compiled either for proxied or unproxied operation,
@@ -174,7 +174,7 @@ value of a compilation switch (which defaults to unproxied).
 </para>
 <para>
 In other words, a canvas file may include only library files that have the same value for their proxied attribute, or the (default) 
-value of "inherit".  You can't mix and match, and the presence of the &lt;library&gt; <indexterm><primary>proxied</primary></indexterm><sgmltag class="attribute">proxied</sgmltag> attribute is a way to 
+value of "inherit".  You can't mix and match, and the presence of the <sgmltag class="element">&lt;library&gt;</sgmltag> <indexterm><primary>proxied</primary></indexterm><sgmltag class="attribute">proxied</sgmltag> attribute is a way to 
 document to developers and to the compiler that a library can only work in one mode of operation.
 </para>
 <para/></section><section><title>Whitespace, namespace and http response header considerations</title>
@@ -246,7 +246,7 @@ from a separate server, even if it resides on the same host.
 For OpenLaszlo applications that will be deployed as SOLO SWF, you can add a crossdomain.xml file to the server, as follows:
 </para>
 <para>
-1. put a crossdomain.xml on the data server with this code:
+1. Put a crossdomain.xml on the data server with this code:
 </para>
 <programlisting>
 &lt;?xml version="1.0"?&gt;
@@ -260,7 +260,7 @@ SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd"&gt;
 Using 'domain="*"' is very liberal; it gives access to this file to any program. you can tighten the settings to be more specific to the OpenLaslzo application.
 </para>
 <para>
-2. put this code in your OpenLaszlo application:
+2. Put this code in your OpenLaszlo application:
 </para>
 <!-- fix LPP-4927: Chapter 25 Section 3.1.1 misleading example url and minor error in following information. IORIO 31 oct 2007 -->
 <programlisting>
@@ -294,7 +294,7 @@ Development/deployment workflow with for serverless applications:
 <para>
 The development process for serverless applications is a simple variation on the usual Laszlo cycle:
 </para>
-<orderedlist spacing="compact"><listitem><para># Develop the application using OpenLaszlo Server</para></listitem><listitem><para># Compile static (.swf) files</para></listitem><listitem><para># Place application files on web server</para></listitem></orderedlist>
+<orderedlist spacing="compact"><listitem><para>Develop the application using OpenLaszlo Server</para></listitem><listitem><para>Compile static (.swf) files</para></listitem><listitem><para>Place application files on web server</para></listitem></orderedlist>
 <para>
 Compiling <literal>dir/canvas.lzx</literal> creates the file <literal>dir/canvas.lzx.swf</literal>.
 </para>
@@ -321,7 +321,7 @@ This will result in creation of the file:
         filename.swf
 </programlisting>
 <para>
-in same directory as the source. The compiled file can be deployed by any application server, such as apache.
+in same directory as the source. The compiled file can be deployed by any application server, such as Apache.
 </para>
 <para>
 Alternatively you can cause the compilation as a side effect of requesting unproxied deployment, as explained in the next section.
@@ -346,11 +346,11 @@ You can specify deployment by using:
 <orderedlist spacing="compact"><listitem><para>the <literal>lzproxied</literal> query parameter to the lzx  request type in the URL, for example <literal>http://somedomain.com/laszlo-app.lzx?lzproxied=false</literal></para></listitem><listitem><para>the <literal>proxied</literal> attribute in the <literal>&lt;canvas&gt;</literal> tag.</para></listitem><listitem><para>the query parameter and attribute together.</para></listitem></orderedlist>
 <para>
 Requesting a SOLO application <literal>/path/to/canvas.lzx</literal> has the side effect of creating a file <literal>/path/to/canvas.lzx.swf</literal>.  This file, or the 
-directory that contains this file, can be copied to the <literal>htdoc</literal> directory of a server that doesn't include the Openlaszlo Server.
+directory that contains this file, can be copied to the <literal>htdoc</literal> directory of a server that doesn't include the OpenLaszlo Server.
 </para>
 <para>
 The file is called <literal>canvas.lzx.swf</literal> instead of <literal>canvas.swf</literal> to preserve OpenLaszlo "branding"—just as the presence of .php or .jsp in
- a URL is good for the awareness of PHP and Java, even though <literal>.htaccess </literal>can be configured not to require this filename extensions in the URL.
+ a URL is good for the awareness of PHP and Java, even though <literal>.htaccess</literal> can be configured not to require this filename extensions in the URL.
   This also makes it less likely that compiling an application (for example, <literal>logo.lzx</literal>) will overwrite a file that it includes
  (if <literal>logo.lzx</literal> includes <literal>
 logo.swf</literal>).
@@ -360,8 +360,8 @@ The file is placed in the same directory as the source file so that relative ref
 </para>
 <para/><section><title>proxied attribute</title>
 <para>
-The <literal>proxied</literal> attribute on the &lt;canvas&gt; tag can take the following values:</para>
-<itemizedlist spacing="compact"><listitem><para>true: the application is proxied by the OpenLaszlo Server</para></listitem><listitem><para>false: the application is not proxied</para></listitem><listitem><para>inherit: the value is determined by the lzproxied query parameter</para></listitem></itemizedlist>
+The <sgmltag class="attribute">proxied</sgmltag> attribute on the <sgmltag class="element">&lt;canvas&gt;</sgmltag> tag can take the following values:</para>
+<itemizedlist spacing="compact"><listitem><para><literal>true</literal>: the application is proxied by the OpenLaszlo Server</para></listitem><listitem><para><literal>false</literal>: the application is not proxied</para></listitem><listitem><para><literal>inherit</literal>: the value is determined by the lzproxied query parameter</para></listitem></itemizedlist>
 
 <para/></section><section><title>lzproxied query parameter</title>
 
@@ -378,37 +378,79 @@ affects the way an application is compiled.
 
 </para>
 
-<programlisting>
-{|
-! lzproxied query parameter
-!	&lt;canvas proxied=&gt;
-!	result
-|-
-| not present ||	not present ||	proxied
-|-
-| not present ||	inherit	 || proxied
-|-
-| not present ||	true ||	proxied
-|-
-| not present ||	false ||	unproxied
-|-
-| true	|| not present ||	proxied
-|-
-| true ||	inherit ||	proxied
-|-
-| true ||	true ||	proxied
-|-
-| true ||	false ||	error
-|-
-| false ||	not present ||	unproxied
-|-
-| false ||	inherit ||	unproxied
-|-
-| false ||	true ||	error
-|-
-| false ||	false ||	unproxied
-|}
-</programlisting>
+<informaltable>
+<tgroup cols="3" align="left" colsep="1" rowsep="1">
+<thead>
+<row>
+	<entry>lzproxied query parameter</entry>
+	<entry><sgmltag class="element">&lt;canvas proxied=&gt;</sgmltag></entry>
+	<entry>Result</entry>
+</row>
+</thead>
+<tbody>
+<row>
+	<entry>not present</entry>
+	<entry>not present</entry>
+	<entry>proxied</entry>
+</row>
+<row>
+	<entry>not present</entry>
+	<entry>inherit</entry>
+	<entry>proxied</entry>
+</row>
+<row>
+	<entry>not present</entry>
+	<entry>true</entry>
+	<entry>proxied</entry>
+</row>
+<row>
+	<entry>not present</entry>
+	<entry>false</entry>
+	<entry>unproxied</entry>
+</row>
+<row>
+	<entry>true</entry>
+	<entry>not present</entry>
+	<entry>proxied</entry>
+</row>
+<row>
+	<entry>true</entry>
+	<entry>inherit</entry>
+	<entry>proxied</entry>
+</row>
+<row>
+	<entry>true</entry>
+	<entry>true</entry>
+	<entry>proxied</entry>
+</row>
+<row>
+	<entry>true</entry>
+	<entry>false</entry>
+	<entry>error</entry>
+</row>
+<row>
+	<entry>false</entry>
+	<entry>not present</entry>
+	<entry>unproxied</entry>
+</row>
+<row>
+	<entry>false</entry>
+	<entry>inherit</entry>
+	<entry>unproxied</entry>
+</row>
+<row>
+	<entry>false</entry>
+	<entry>true</entry>
+	<entry>error</entry>
+</row>
+<row>
+	<entry>false</entry>
+	<entry>false</entry>
+	<entry>unproxied</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
 <para>
 The existence of the query parameter means that an application can work in either proxied or SOLO mode, can be compiled for either mode
  without changes to its source code.  In particular, this makes it easy to compare the proxied and unproxied operation of an application,
@@ -445,8 +487,8 @@ The thing that's different is the alteration to <literal>main.lzx.swf? </literal
 <para>
 During development, an HTTP request for a SOLO application that is backed by <literal>/path/to/canvas.lzx</literal> may cause the compiler 
 to create a file <literal>/path/to/canvas.lzx.swf </literal>(the object file).  Recompilation occurs when all of the following conditions are true:
-</para><itemizedlist spacing="compact"><listitem><para>The allowRecompile OpenLaszlo Server configuration property is 'true'</para></listitem><listitem><para>The compMgrDependencyOption OpenLaszlo Server configuration property is not 'never'</para></listitem><listitem><para>One or more of the following conditions is true:
-    <itemizedlist spacing="compact"><listitem><para> The object file does not exist</para></listitem><listitem><para> The object file is older than any of the application source files</para></listitem><listitem><para> The value of the allowRecompile property is 'always'</para></listitem></itemizedlist>
+</para><itemizedlist spacing="compact"><listitem><para>The allowRecompile OpenLaszlo Server configuration property is <literal>true</literal> or <literal>always</literal></para></listitem><listitem><para>The compMgrDependencyOption OpenLaszlo Server configuration property is not <literal>never</literal></para></listitem><listitem><para>One or more of the following conditions is true:
+    <itemizedlist spacing="compact"><listitem><para> The object file does not exist</para></listitem><listitem><para> The object file is older than any of the application source files</para></listitem><listitem><para> The value of the allowRecompile property is <literal>always</literal></para></listitem></itemizedlist>
     </para></listitem></itemizedlist>
 
 <para>
@@ -474,133 +516,112 @@ You can chose whether or not to make visible the source code to your application
 
 <para/></section></section></section><section><title>Examples</title>
 <para>Here are examples of applications that do not require the OpenLaszlo server at run time:</para>
-<programlisting>
-  &lt;canvas proxied="false"&gt;
+<simplelist type="vert" columns="1">
+<member><programlisting>&lt;canvas proxied="false"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
-  &lt;/canvas&gt;
-</programlisting>
+&lt;/canvas&gt;</programlisting></member>
 
-<programlisting>
-  &lt;canvas proxied="false"&gt;
+<member><programlisting>&lt;canvas proxied="false"&gt;
     &lt;include href="lib-ds-unproxied.lzx"/&gt;
-  &lt;/canvas&gt;
-</programlisting>
+&lt;/canvas&gt;</programlisting></member>
 
-<programlisting>  
-  &lt;canvas proxied="false"&gt;
+<member><programlisting>&lt;canvas proxied="false"&gt;
     &lt;include href="lib-ds-default.lzx"/&gt;
-  &lt;/canvas&gt;
-</programlisting>
+&lt;/canvas&gt;</programlisting></member>
+</simplelist>
+  
 <para>
 with these support files:
 </para>
-<programlisting>
-lib-ds-proxied.lzx:
-</programlisting>
-<programlisting> 
-  &lt;library proxied="true"&gt;
+
+<simplelist type="vert" columns="1">
+<member>lib-ds-proxied.lzx:
+<programlisting>&lt;library proxied="true"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
-  &lt;/library&gt;
-</programlisting>
-<programlisting>
-lib-ds-unproxied.lzx:
-</programlisting>
-<programlisting> 
-  &lt;library proxied="false"&gt;
+&lt;/library&gt;</programlisting></member>
+  
+<member>lib-ds-unproxied.lzx:
+<programlisting>&lt;library proxied="false"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
-  &lt;/library&gt;
-</programlisting>
-<programlisting>
-lib-ds-default.lzx:
-</programlisting>
-<programlisting> 
-  &lt;library proxied="default"&gt;
+&lt;/library&gt;</programlisting></member>
+
+<member>lib-ds-default.lzx:
+<programlisting>&lt;library proxied="default"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
-  &lt;/library&gt;
-</programlisting>
+&lt;/library&gt;</programlisting></member>
+</simplelist>
+
 <para/><section><title>Examples of Proxied applications</title>
 <para>
 These programs create applications that use the OpenLaszlo Server to proxy the dataset request:
 </para>
-<programlisting> 
-  &lt;canvas proxied="true"&gt;
+<simplelist type="vert" columns="1">
+<member><programlisting>&lt;canvas proxied="true"&gt;
     &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
     &lt;text datapath="ds:/root/text()"/&gt;
-  &lt;/canvas&gt;
-</programlisting>
-<programlisting> 
-  &lt;canvas proxied="true"&gt;
+&lt;/canvas&gt;</programlisting></member>
+<member><programlisting>&lt;canvas proxied="true"&gt;
     &lt;include href="lib-ds-proxied.lzx"/&gt;
-  &lt;/canvas&gt;
-</programlisting>
-<programlisting>   
-  &lt;canvas proxied="true"&gt;
+&lt;/canvas&gt;</programlisting></member>
+<member><programlisting>&lt;canvas proxied="true"&gt;
     &lt;include href="lib-ds-default.lzx"/&gt;
-  &lt;/canvas&gt;
-</programlisting>
+&lt;/canvas&gt;</programlisting></member>
+</simplelist>
 <para>
 Compiler errors are returned for these cases:
 </para>
-<para>
-A proxied canvas that includes an unproxied library:
-</para>
-<programlisting>  
-  &lt;canvas proxied="true"&gt;
+<simplelist type="vert" columns="1">
+<member>A proxied canvas that includes an unproxied library:
+<programlisting>&lt;canvas proxied="true"&gt;
     &lt;!--Error:proxied canvas that includes an unproxied library:--&gt;
     &lt;include href="lib-ds-unproxied.lzx"/&gt;
-  &lt;/canvas&gt;
-</programlisting>
-<para>
-A unproxied canvas that includes a proxied library:
-</para>
-<example role="live-example"><title>Serverless canvas cannot contain proxied library</title><programlisting>
-  &lt;canvas proxied="false"&gt;
+&lt;/canvas&gt;</programlisting></member>
+<member>A unproxied canvas that includes a proxied library:
+<programlisting>&lt;canvas proxied="false"&gt;
     &lt;!--Error:A serverless canvas that includes a proxied library--&gt;
     &lt;include href="lib-ds-proxied.lzx"/&gt;
-  &lt;/canvas&gt;
-</programlisting></example>
-<para/></section><section><title>Globally Proxied Media</title>
+&lt;/canvas&gt;</programlisting></member>
+</simplelist>
+</section>
+<section><title>Globally Proxied Media</title>
 <para>
 Media requests use the global canvas attribute.
 </para>
 <para>
 These programs make media requests through the server:
 </para>
-<programlisting>  
-  &lt;canvas proxied="true"&gt;
+<simplelist type="vert" columns="1">
+<member><programlisting>&lt;canvas proxied="true"&gt;
     &lt;view src="http:logo.jpg"/&gt;
-  &lt;/canvas&gt;
-</programlisting>
-<programlisting>  
-  &lt;canvas proxied="inherit"&gt;
+&lt;/canvas&gt;</programlisting></member>
+<member><programlisting>&lt;canvas proxied="inherit"&gt;
     &lt;view src="http:logo.jpg"/&gt;
-  &lt;/canvas&gt;
-</programlisting>
+&lt;/canvas&gt;</programlisting></member>
+</simplelist>
+
 <para>This example shows a data request that is mediated by the OpenLaszlo Server:</para>
-<example role="live-example"><title>Proxied</title><programlisting>  
-  &lt;canvas&gt;
+<programlisting>&lt;canvas&gt;
     &lt;view src="http:logo.jpg"/&gt;
-  &lt;/canvas&gt;
-</programlisting></example>
+&lt;/canvas&gt;</programlisting>
+  
 <para>
 This program makes a direct (serverless) media request:
 </para>
-<example role="live-example"><title>Serverless (direct) media request</title><programlisting>  
-  &lt;canvas proxied="false"&gt;
+<programlisting>&lt;canvas proxied="false"&gt;
     &lt;view src="http:logo.jpg"/&gt;
-  &lt;/canvas&gt;
-</programlisting></example>
+&lt;/canvas&gt;</programlisting>
+  
 <para/></section></section><section><title>Moving from Proxied Development to SOLO Deployment</title>
 <para>
 Unlike proxied applications, SOLO applications require URLs to be relative. This means that absolute URLS that you use when developing your program no longer work when you deploy it unless you edit them.  You can get around this problem by storing URLs in an external XML file.  When you switch from proxied to SOLO, you merely switch out that file; you don't have to touch the code.</para>
 <para>
 The example below shows how to load dataset URLs from an external XML file called <literal>paths.xml</literal>. 
 This is the code in "canvas": </para>
-<example role="live-example"><title>Storing URLS in an external file</title><programlisting>
+<example><title>Storing URLS in an external file</title><programlisting>
 &lt;dataset name="ds_paths" request="true" type="http" src="paths.xml" /&gt;
 &lt;dataset name="ds1"/&gt;
 &lt;datapointer xpath="ds_paths:/paths/ds1"&gt;
@@ -624,7 +645,7 @@ This is the code in "canvas": </para>
 <para>
 The contents of paths.xml looks something like this:
 </para>
-<example role="live-example"><title>XML file to hold URLS</title><programlisting>
+<example><title>XML file to hold URLS</title><programlisting>
 &lt;paths&gt;
    &lt;ds1&gt;http://www.domain.com/dsservlet/getds1&lt;/ds1&gt;
    &lt;ds2&gt;http://www.domain.com/dsservlet/getds2&lt;/ds2&gt;
@@ -635,7 +656,7 @@ The contents of paths.xml looks something like this:
 <para/></section><section><title>Creating your own Proxy</title>
 
 <para>
-The OpenLaszlo server can perform a lot of different functions, including transcoding, proxying and compiling programs, not all of which are needed by every application. In fact, most applications need none of these functions, which is why they can be run SOLO. However, in some cases you may need proxying without all the other things the go with the OpenLazlo Server. In such cases you may consider creating a proxy of your own.
+The OpenLaszlo server can perform a lot of different functions, including transcoding, proxying and compiling programs, not all of which are needed by every application. In fact, most applications need none of these functions, which is why they can be run SOLO. However, in some cases you may need proxying without all the other things the go with the OpenLaszlo Server. In such cases you may consider creating a proxy of your own.
 </para>
 <para/><section><title>Reasons to Build Your Own Proxy</title>
 <para>
