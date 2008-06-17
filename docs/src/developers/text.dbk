@@ -629,8 +629,7 @@
                 <literal>&lt;b&gt;</literal>
               </entry>
               <entry>
-                <programlisting>&lt;b&gt;bold
-                text&lt;/b&gt;</programlisting>
+                <programlisting>&lt;b&gt;bold text&lt;/b&gt;</programlisting>
               </entry>
             </row>
             <row>
@@ -638,20 +637,15 @@
                 <literal>&lt;a href="url"&gt;</literal>
               </entry>
               <entry>
-                <programlisting>&lt;a
-                href="http://www.boston.com"&gt;The Boston
-                Globe&lt;/a&gt;</programlisting>
+                <programlisting>&lt;a href="http://www.boston.com"&gt;The Boston Globe&lt;/a&gt;</programlisting>
               </entry>
             </row>
             <row>
               <entry>
-                <literal>&lt;font [color="#xxxxxx"] [face="Type
-                Face"] [size="Type Size"]&gt;</literal>
+                <literal>&lt;font [color="#xxxxxx"] [face="Type Face"] [size="Type Size"]&gt;</literal>
               </entry>
               <entry>
-                <programlisting>&lt;font color="#ff0000"
-                face="myfont" size="12"&gt;Red text in LPS font
-                'myfont'&lt;/font&gt;</programlisting>
+                <programlisting>&lt;font color="#ff0000" face="myfont" size="12"&gt;Red text in LPS font 'myfont'&lt;/font&gt;</programlisting>
               </entry>
             </row>
             <row>
@@ -659,8 +653,7 @@
                 <literal>&lt;i&gt;</literal>
               </entry>
               <entry>
-                <programlisting>&lt;i&gt;italic
-                text&lt;/i&gt;</programlisting>
+                <programlisting>&lt;i&gt;italic text&lt;/i&gt;</programlisting>
               </entry>
             </row>
             <row>
@@ -668,8 +661,7 @@
                 <literal>&lt;p&gt;</literal>
               </entry>
               <entry>
-                <programlisting>line break &lt;p&gt; after p
-                tag</programlisting>
+                <programlisting>line break &lt;p&gt; after p tag</programlisting>
               </entry>
             </row>
             <row>
@@ -677,8 +669,7 @@
                 <literal>u</literal>
               </entry>
               <entry>
-                <programlisting>&lt;u&gt;underline
-                text&lt;/u&gt;</programlisting>
+                <programlisting>&lt;u&gt;underline text&lt;/u&gt;</programlisting>
               </entry>
             </row>
             <row>
