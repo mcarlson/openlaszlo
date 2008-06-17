@@ -34,8 +34,8 @@
 dynamic class LzAnimator extends LzAnimatorGroup {
 
   function LzAnimator ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
-      super(parent,attrs,children,instcall);
       this.calcMethod = this.calcNextValue;
+      super(parent,attrs,children,instcall);
    }
 
 
